@@ -37,7 +37,7 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
  */
 public class NewWizardMenu extends BaseNewWizardMenu {
 
-	private static final List<String> PROJECT_WIZARD_ID = new ArrayList<String>();
+	private static final List<String> PROJECT_WIZARD_ID = new ArrayList<>();
 
 	static {
 		PROJECT_WIZARD_ID.add("org.eclipse.php.ui.wizards.PHPFileCreationWizard"); //$NON-NLS-1$
@@ -134,12 +134,13 @@ public class NewWizardMenu extends BaseNewWizardMenu {
 	 * @see org.eclipse.ui.actions.BaseNewWizardMenu#addItems(org.eclipse.jface.
 	 * action .IContributionManager)
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	protected void addItems(List list) {
-		ArrayList shortCuts = new ArrayList();
+		ArrayList<ActionContributionItem> shortCuts = new ArrayList<>();
 		addShortcuts(shortCuts);
 
-		for (Iterator iterator = shortCuts.iterator(); iterator.hasNext();) {
+		for (Iterator<ActionContributionItem> iterator = shortCuts.iterator(); iterator.hasNext();) {
 			Object curr = iterator.next();
 			if (curr instanceof ActionContributionItem
 					&& isNewProjectWizardAction(((ActionContributionItem) curr).getAction())) {
@@ -164,10 +165,10 @@ public class NewWizardMenu extends BaseNewWizardMenu {
 		list.add(new ActionContributionItem(getShowDialogAction()));
 	}
 
-	private ArrayList sortShortcuts(ArrayList shortCuts) {
-		ArrayList result = new ArrayList();
+	private ArrayList<ActionContributionItem> sortShortcuts(ArrayList<ActionContributionItem> shortCuts) {
+		ArrayList<ActionContributionItem> result = new ArrayList<>();
 		for (String id : PROJECT_WIZARD_ID) {
-			for (Iterator iterator = shortCuts.iterator(); iterator.hasNext();) {
+			for (Iterator<ActionContributionItem> iterator = shortCuts.iterator(); iterator.hasNext();) {
 				Object curr = iterator.next();
 				if (curr instanceof ActionContributionItem) {
 					ActionContributionItem item = (ActionContributionItem) curr;

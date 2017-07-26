@@ -64,7 +64,7 @@ public class BuildPathParser {
 	@Deprecated
 	public List<String> getPaths() {
 		TreeSet<BuildPathInfo> pathsInfo = getPathsInfo();
-		List<String> pathes = new ArrayList<String>(pathsInfo.size());
+		List<String> pathes = new ArrayList<>(pathsInfo.size());
 		for (BuildPathInfo info : pathsInfo) {
 			pathes.add(info.path);
 		}
@@ -77,7 +77,7 @@ public class BuildPathParser {
 		String vendor = project.getVendorDir();
 
 		// empty list for found package paths
-		TreeSet<BuildPathInfo> paths = new TreeSet<BuildPathInfo>();
+		TreeSet<BuildPathInfo> paths = new TreeSet<>();
 
 		// add source paths from this package
 		parsePackage(composer, paths, EMPTY, BuildPathInfo.SOURCE);

@@ -180,10 +180,12 @@ public class DebugError implements Cloneable {
 		return text;
 	}
 
+	@Override
 	public Object clone() throws CloneNotSupportedException {
-		return (DebugError) super.clone();
+		return super.clone();
 	}
 
+	@Override
 	public String toString() {
 		StringBuilder buffer = new StringBuilder();
 		buffer.append(getCodeName());

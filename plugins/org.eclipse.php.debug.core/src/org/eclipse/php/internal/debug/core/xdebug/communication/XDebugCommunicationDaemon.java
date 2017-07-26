@@ -53,7 +53,6 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpMultiSessionTar
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.IDBGpSessionListener;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.eclipse.php.ui.util.LinkMessageDialog;
@@ -62,7 +61,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.*;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.osgi.service.prefs.BackingStoreException;
 
@@ -74,7 +72,6 @@ import com.ibm.icu.text.MessageFormat;
  * @author Shalom Gibly
  * @since PDT 1.0
  */
-@SuppressWarnings("restriction")
 public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 
 	public static final String XDEBUG_DEBUGGER_ID = "org.eclipse.php.debug.core.xdebugDebugger"; //$NON-NLS-1$
@@ -93,6 +90,7 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 				this.session = session;
 			}
 
+			@Override
 			public void run() {
 				String insert = session.getRemoteAddress().getCanonicalHostName() + "/" //$NON-NLS-1$
 						+ session.getRemoteAddress().getHostAddress();
@@ -153,6 +151,7 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 								button.setText(
 										PHPDebugCoreMessages.XDebugCommunicationDaemon_Dont_show_this_message_again);
 								button.addSelectionListener(new SelectionAdapter() {
+									@Override
 									public void widgetSelected(SelectionEvent e) {
 										IEclipsePreferences preferences = InstanceScope.INSTANCE
 												.getNode(PHPDebugPlugin.ID);
@@ -186,14 +185,17 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 			init();
 		}
 
+		@Override
 		public int getReceiverPort() {
 			return port;
 		}
 
+		@Override
 		public boolean isDebuggerDaemon() {
 			return true;
 		}
 
+		@Override
 		public String getDebuggerID() {
 			return XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID;
 		}
@@ -203,6 +205,7 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 		 * 
 		 * @param socket
 		 */
+		@Override
 		protected void startConnection(Socket socket) {
 			/*
 			 * A socket has been accepted by the listener. This runs on the
@@ -290,7 +293,7 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 				IProcess process = new PHPProcess(remoteLaunch,
 						PHPDebugCoreMessages.XDebugWebLaunchConfigurationDelegate_PHP_process);
 				process.setAttribute(IProcess.ATTR_PROCESS_TYPE, IPHPDebugConstants.PHPProcessType);
-				((DBGpTarget) target).setProcess(process);
+				target.setProcess(process);
 				((PHPProcess) process).setDebugTarget(target);
 				remoteLaunch.addProcess(process);
 				/*
@@ -321,7 +324,7 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 				 * Need to add ourselves as a session listener for future
 				 * sessions.
 				 */
-				DBGpSessionHandler.getInstance().addSessionListener((IDBGpSessionListener) target);
+				DBGpSessionHandler.getInstance().addSessionListener(target);
 			} else {
 				// CLI launch or multisession web launch: create a single target
 				target = new DBGpTarget(remoteLaunch, null /* no script name */, session.getIdeKey(),
@@ -339,7 +342,7 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 				// We are a multisession web launch
 				DBGpMultiSessionTarget multiSessionTarget = new DBGpMultiSessionTarget(remoteLaunch, null, null,
 						session.getIdeKey(), stopAtFirstLine);
-				DBGpSessionHandler.getInstance().addSessionListener((IDBGpSessionListener) multiSessionTarget);
+				DBGpSessionHandler.getInstance().addSessionListener(multiSessionTarget);
 				remoteLaunch.addDebugTarget(multiSessionTarget);
 				multiSessionTarget.sessionReceived((DBGpBreakpointFacade) IDELayerFactory.getIDELayer(),
 						XDebugPreferenceMgr.createSessionPreferences(), target, mapper);
@@ -358,7 +361,7 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 
 	}
 
-	private List<AbstractDebuggerCommunicationDaemon> daemons = new ArrayList<AbstractDebuggerCommunicationDaemon>();
+	private List<AbstractDebuggerCommunicationDaemon> daemons = new ArrayList<>();
 	private IPreferenceChangeListener defaultPortListener = null;
 	private IDebuggerSettingsListener debuggerSettingsListener = null;
 
@@ -485,7 +488,7 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 
 	private synchronized void reset() {
 		Set<Integer> ports = PHPDebugUtil.getDebugPorts(getDebuggerID());
-		List<AbstractDebuggerCommunicationDaemon> daemonsToSet = new ArrayList<AbstractDebuggerCommunicationDaemon>();
+		List<AbstractDebuggerCommunicationDaemon> daemonsToSet = new ArrayList<>();
 		// Shutdown daemons that should not listen anymore
 		for (AbstractDebuggerCommunicationDaemon daemon : daemons) {
 			boolean isRedundant = true;

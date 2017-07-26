@@ -115,7 +115,7 @@ public class WorkingSetAwarePHPExplorerContentProvider extends PHPExplorerConten
 				if (isKnownWorkingSet) {
 					result.add(element);
 				} else {
-					IProject project = (IProject) element.getAdapter(IProject.class);
+					IProject project = element.getAdapter(IProject.class);
 					if (project != null && project.exists()) {
 						IScriptProject jp = DLTKCore.create(project);
 						if (jp != null && jp.exists()) {
@@ -154,16 +154,16 @@ public class WorkingSetAwarePHPExplorerContentProvider extends PHPExplorerConten
 			TreePath path = new TreePath(new Object[] { element });
 			return new TreePath[] { path };
 		}
-		List modelParents = getModelPath(element);
-		List result = new ArrayList();
+		List<Object> modelParents = getModelPath(element);
+		List<TreePath> result = new ArrayList<>();
 		for (int i = 0; i < modelParents.size(); i++) {
 			result.addAll(getTreePaths(modelParents, i));
 		}
-		return (TreePath[]) result.toArray(new TreePath[result.size()]);
+		return result.toArray(new TreePath[result.size()]);
 	}
 
-	private List getModelPath(Object element) {
-		List result = new ArrayList();
+	private List<Object> getModelPath(Object element) {
+		List<Object> result = new ArrayList<>();
 		result.add(element);
 		Object parent = super.getParent(element);
 		Object input = getViewerInput();
@@ -176,13 +176,13 @@ public class WorkingSetAwarePHPExplorerContentProvider extends PHPExplorerConten
 		return result;
 	}
 
-	private List/* <TreePath> */ getTreePaths(List modelParents, int index) {
-		List result = new ArrayList();
+	private List/* <TreePath> */<TreePath> getTreePaths(List<Object> modelParents, int index) {
+		List<TreePath> result = new ArrayList<>();
 		Object input = getViewerInput();
 		Object element = modelParents.get(index);
 		Object[] parents = fWorkingSetModel.getAllParents(element);
 		for (int i = 0; i < parents.length; i++) {
-			List chain = new ArrayList();
+			List<Object> chain = new ArrayList<>();
 			if (!parents[i].equals(input))
 				chain.add(parents[i]);
 			for (int m = index; m < modelParents.size(); m++) {
@@ -206,7 +206,7 @@ public class WorkingSetAwarePHPExplorerContentProvider extends PHPExplorerConten
 	}
 
 	@Override
-	protected void augmentElementToRefresh(List toRefresh, int relation, Object affectedElement) {
+	protected void augmentElementToRefresh(List<Object> toRefresh, int relation, Object affectedElement) {
 		// we are refreshing the ScriptModel and are in working set mode.
 		if (DLTKCore.create(ResourcesPlugin.getWorkspace().getRoot()).equals(affectedElement)) {
 			toRefresh.remove(affectedElement);
@@ -217,11 +217,11 @@ public class WorkingSetAwarePHPExplorerContentProvider extends PHPExplorerConten
 				toRefresh.addAll(Arrays.asList(fWorkingSetModel.getAllParents(parent)));
 			}
 		}
-		List nonProjetTopLevelElemens = fWorkingSetModel.getNonProjectTopLevelElements();
+		List<?> nonProjetTopLevelElemens = fWorkingSetModel.getNonProjectTopLevelElements();
 		if (nonProjetTopLevelElemens.isEmpty())
 			return;
-		List toAdd = new ArrayList();
-		for (Iterator iter = nonProjetTopLevelElemens.iterator(); iter.hasNext();) {
+		List<Object> toAdd = new ArrayList<>();
+		for (Iterator<?> iter = nonProjetTopLevelElemens.iterator(); iter.hasNext();) {
 			Object element = iter.next();
 			if (isChildOf(element, toRefresh))
 				toAdd.add(element);
@@ -232,7 +232,7 @@ public class WorkingSetAwarePHPExplorerContentProvider extends PHPExplorerConten
 	private void workingSetModelChanged(PropertyChangeEvent event) {
 		String property = event.getProperty();
 		Object newValue = event.getNewValue();
-		List toRefresh = new ArrayList(1);
+		List<Object> toRefresh = new ArrayList<>(1);
 		if (WorkingSetModel.CHANGE_WORKING_SET_MODEL_CONTENT.equals(property)) {
 			toRefresh.add(fWorkingSetModel);
 		} else if (IWorkingSetManager.CHANGE_WORKING_SET_CONTENT_CHANGE.equals(property)) {
@@ -240,17 +240,17 @@ public class WorkingSetAwarePHPExplorerContentProvider extends PHPExplorerConten
 		} else if (IWorkingSetManager.CHANGE_WORKING_SET_NAME_CHANGE.equals(property)) {
 			toRefresh.add(newValue);
 		}
-		ArrayList runnables = new ArrayList();
+		ArrayList<Runnable> runnables = new ArrayList<>();
 		postRefresh(toRefresh, true, runnables);
 		executeRunnables(runnables);
 	}
 
-	private boolean isChildOf(Object element, List potentialParents) {
+	private boolean isChildOf(Object element, List<Object> potentialParents) {
 		// Calling super get parent to bypass working set mapping
 		Object parent = super.getParent(element);
 		if (parent == null)
 			return false;
-		for (Iterator iter = potentialParents.iterator(); iter.hasNext();) {
+		for (Iterator<Object> iter = potentialParents.iterator(); iter.hasNext();) {
 			Object potentialParent = iter.next();
 			while (parent != null) {
 				if (parent.equals(potentialParent))

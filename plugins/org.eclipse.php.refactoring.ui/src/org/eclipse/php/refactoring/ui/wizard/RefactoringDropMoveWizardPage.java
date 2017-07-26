@@ -46,6 +46,7 @@ public class RefactoringDropMoveWizardPage extends UserInputWizardPage {
 	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
 	 * widgets .Composite)
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
 		processor = getPHPMoveProcessor();
@@ -92,7 +93,7 @@ public class RefactoringDropMoveWizardPage extends UserInputWizardPage {
 	}
 
 	private PHPMoveProcessor getPHPMoveProcessor() {
-		return (PHPMoveProcessor) getRefactoring().getAdapter(PHPMoveProcessor.class);
+		return getRefactoring().getAdapter(PHPMoveProcessor.class);
 	}
 
 	private void addUpdateReferenceComponent(Composite result) {
@@ -107,6 +108,7 @@ public class RefactoringDropMoveWizardPage extends UserInputWizardPage {
 		getRefactoringWizard().setForcePreviewReview(true);
 
 		fReferenceCheckbox.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				processor.setUpdateReferences(((Button) e.widget).getSelection());
 				getRefactoringWizard().setForcePreviewReview(processor.getUpdateReferences());

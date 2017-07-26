@@ -105,6 +105,7 @@ public class DebugSessionStartedNotification extends DebugMessageNotificationImp
 		return protocolID;
 	}
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setServerProtocol(in.readInt()); // read the protocal id (For future
 											// use);
@@ -114,10 +115,12 @@ public class DebugSessionStartedNotification extends DebugMessageNotificationImp
 		setOptions(CommunicationUtilities.readString(in));
 	}
 
+	@Override
 	public int getType() {
 		return 2005;
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		CommunicationUtilities.writeString(out, getFileName());

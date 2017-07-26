@@ -29,9 +29,11 @@ public class PHPWebPageLaunchConfigurationTab extends ServerLaunchConfigurationT
 		super();
 	}
 
+	@Override
 	public void createExtensionControls(Composite parent) {
 	}
 
+	@Override
 	protected void applyExtension(ILaunchConfigurationWorkingCopy configuration) {
 		configuration.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true); // Always
 																					// run
@@ -40,18 +42,22 @@ public class PHPWebPageLaunchConfigurationTab extends ServerLaunchConfigurationT
 																					// info
 	}
 
+	@Override
 	protected boolean isValidExtension(ILaunchConfiguration launchConfig) {
 		return true;
 	}
 
+	@Override
 	protected void createServerSelectionControl(Composite parent) {
 		super.createServerSelectionControl(parent);
 	}
 
+	@Override
 	public String[] getRequiredNatures() {
 		return LaunchUtil.getRequiredNatures();
 	}
 
+	@Override
 	public String[] getFileExtensions() {
 		return LaunchUtil.getFileExtensions();
 	}

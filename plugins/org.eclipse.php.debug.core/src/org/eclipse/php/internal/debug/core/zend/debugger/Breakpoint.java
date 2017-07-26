@@ -57,7 +57,7 @@ public class Breakpoint implements Cloneable {
 
 	protected String fileName = ""; //$NON-NLS-1$
 	protected int lineNumber = -1;
-	transient protected Collection listeners; // XXX: never set
+	transient protected Collection<?> listeners; // XXX: never set
 
 	/**
 	 * Creates new Breakpoint
@@ -229,11 +229,13 @@ public class Breakpoint implements Cloneable {
 		return enable;
 	}
 
+	@Override
 	public String toString() {
 		return "id: " + id + " type: " + type + "  file name: " + getFileName() //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				+ " line: " + getLineNumber(); //$NON-NLS-1$
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (super.equals(obj)) {
 			return true;
@@ -248,7 +250,7 @@ public class Breakpoint implements Cloneable {
 
 	protected void fireBreakpointChanged(Breakpoint breakpoint, String property, Object oldValue, Object newValue) {
 		if (listeners != null) {
-			Iterator i = listeners.iterator();
+			Iterator<?> i = listeners.iterator();
 			while (i.hasNext()) {
 				BreakpointListener curr = (BreakpointListener) i.next();
 				curr.breakpointChanged(breakpoint, property, oldValue, newValue);
@@ -273,6 +275,7 @@ public class Breakpoint implements Cloneable {
 	 * 
 	 * @return a copy of this Breakpoint.
 	 */
+	@Override
 	public Object clone() {
 		try {
 			Breakpoint ble = (Breakpoint) super.clone();

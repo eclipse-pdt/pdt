@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Display;
  */
 public class ImageDescriptorRegistry {
 
-	private HashMap fRegistry = new HashMap(10);
+	private HashMap<ImageDescriptor, Image> fRegistry = new HashMap<>(10);
 	private Display fDisplay;
 
 	/**
@@ -62,7 +62,7 @@ public class ImageDescriptorRegistry {
 		if (descriptor == null)
 			descriptor = ImageDescriptor.getMissingImageDescriptor();
 
-		Image result = (Image) fRegistry.get(descriptor);
+		Image result = fRegistry.get(descriptor);
 		if (result != null)
 			return result;
 
@@ -77,8 +77,8 @@ public class ImageDescriptorRegistry {
 	 * Disposes all images managed by this registry.
 	 */
 	public void dispose() {
-		for (Iterator iter = fRegistry.values().iterator(); iter.hasNext();) {
-			Image image = (Image) iter.next();
+		for (Iterator<Image> iter = fRegistry.values().iterator(); iter.hasNext();) {
+			Image image = iter.next();
 			image.dispose();
 		}
 		fRegistry.clear();

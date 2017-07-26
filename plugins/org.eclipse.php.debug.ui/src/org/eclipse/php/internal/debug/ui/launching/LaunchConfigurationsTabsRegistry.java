@@ -35,7 +35,7 @@ public class LaunchConfigurationsTabsRegistry {
 
 	// Hold a Dictionary of Lists that contains the factories used for the
 	// creation of the tabs.
-	private List factories = new ArrayList(5);
+	private List<TabFactory> factories = new ArrayList<>(5);
 
 	private static LaunchConfigurationsTabsRegistry instance;
 
@@ -51,10 +51,10 @@ public class LaunchConfigurationsTabsRegistry {
 	 */
 	public static AbstractLaunchConfigurationTab[] getLaunchTabs(String launchConfigurationTabGroupId, String mode) {
 		LaunchConfigurationsTabsRegistry registry = getInstance();
-		List fragments = registry.factories;
-		List factoriesList = new ArrayList();
+		List<TabFactory> fragments = registry.factories;
+		List<AbstractLaunchConfigurationTab> factoriesList = new ArrayList<>();
 		for (int i = 0; i < fragments.size(); i++) {
-			TabFactory factory = (TabFactory) fragments.get(i);
+			TabFactory factory = fragments.get(i);
 			boolean modeOK = factory.getModes().length() == 0 || factory.getModes().indexOf(mode) > -1;
 			// Sort out only the tabs that are related to the requested
 			// configuration tab group and launch mode.
@@ -71,7 +71,7 @@ public class LaunchConfigurationsTabsRegistry {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPDebugUIPlugin.ID,
 				EXTENSION_POINT_NAME);
-		ArrayList mightOverride = new ArrayList(5);
+		ArrayList<TabFactory> mightOverride = new ArrayList<>(5);
 
 		for (int i = 0; i < elements.length; i++) {
 			final IConfigurationElement element = elements[i];
@@ -94,7 +94,7 @@ public class LaunchConfigurationsTabsRegistry {
 						// identifier is from
 						// an external plugin. The procedure will take the first
 						// overidden id.
-						TabFactory factory = (TabFactory) factories.get(j);
+						TabFactory factory = factories.get(j);
 						if (id.equals(factory.id)) {
 							override = true;
 							if (!element.getNamespaceIdentifier().startsWith("org.eclipse.php.")) { //$NON-NLS-1$
@@ -114,7 +114,7 @@ public class LaunchConfigurationsTabsRegistry {
 		// This check is needed since we cannot trust the extension loading
 		// order.
 		for (int i = 0; i < mightOverride.size(); i++) {
-			TabFactory tag = (TabFactory) mightOverride.get(i);
+			TabFactory tag = mightOverride.get(i);
 			int index = factories.indexOf(tag);
 			if (index > -1) {
 				// Found one that needs to be overidden.
@@ -133,10 +133,10 @@ public class LaunchConfigurationsTabsRegistry {
 		// Scan the factories and separate the factories that lacks the
 		// place-after property from
 		// those that have it.
-		ArrayList rootsFragments = new ArrayList(factories.size());
-		ArrayList nonRootFragments = new ArrayList(factories.size());
+		ArrayList<List<TabFactory>> rootsFragments = new ArrayList<>(factories.size());
+		ArrayList<List<TabFactory>> nonRootFragments = new ArrayList<>(factories.size());
 		for (int i = 0; i < factories.size(); i++) {
-			TabFactory factory = (TabFactory) factories.get(i);
+			TabFactory factory = factories.get(i);
 			if (factory.getPlaceAfter() == null || factory.getPlaceAfter().equals("")) { //$NON-NLS-1$
 				addAsList(rootsFragments, factory);
 			} else {
@@ -166,19 +166,19 @@ public class LaunchConfigurationsTabsRegistry {
 		// sorted.
 		factories.clear();
 		for (int i = 0; i < rootsFragments.size(); i++) {
-			List list = (List) rootsFragments.get(i);
+			List<TabFactory> list = rootsFragments.get(i);
 			for (int j = 0; j < list.size(); j++) {
 				factories.add(list.get(j));
 			}
 		}
 	}
 
-	private boolean placeFragment(List factories, TabFactory factory) {
+	private boolean placeFragment(List<List<TabFactory>> factories, TabFactory factory) {
 		String placeAfter = factory.getPlaceAfter();
 		for (int i = 0; i < factories.size(); i++) {
-			List list = (List) factories.get(i);
+			List<TabFactory> list = factories.get(i);
 			for (int j = 0; j < list.size(); j++) {
-				TabFactory nextFactory = (TabFactory) list.get(j);
+				TabFactory nextFactory = list.get(j);
 				if (nextFactory.getID().equals(placeAfter)) {
 					// This list is the list we should add to
 					list.add(factory);
@@ -189,14 +189,14 @@ public class LaunchConfigurationsTabsRegistry {
 		return false;
 	}
 
-	private TabFactory getFactory(List nonRootFragments, int i) {
-		List list = (List) nonRootFragments.get(i);
-		return (TabFactory) list.get(0);
+	private TabFactory getFactory(List<List<TabFactory>> nonRootFragments, int i) {
+		List<TabFactory> list = nonRootFragments.get(i);
+		return list.get(0);
 	}
 
 	// add an element to a List by wrapping it in another List.
-	private void addAsList(List target, Object element) {
-		List list = new ArrayList(3);
+	private void addAsList(List<List<TabFactory>> target, TabFactory element) {
+		List<TabFactory> list = new ArrayList<>(3);
 		list.add(element);
 		target.add(list);
 	}
@@ -228,6 +228,7 @@ public class LaunchConfigurationsTabsRegistry {
 		public AbstractLaunchConfigurationTab createFragmentFactory() {
 			SafeRunner.run(new SafeRunnable(
 					"Error creation extension for extension-point org.eclipse.php.server.ui.serverTabs") { //$NON-NLS-1$
+				@Override
 				public void run() throws Exception {
 					factory = (AbstractLaunchConfigurationTab) element.createExecutableExtension(CLASS_ATTRIBUTE);
 				}
@@ -254,6 +255,7 @@ public class LaunchConfigurationsTabsRegistry {
 			return modes;
 		}
 
+		@Override
 		public boolean equals(Object other) {
 			if (other == this) {
 				return true;

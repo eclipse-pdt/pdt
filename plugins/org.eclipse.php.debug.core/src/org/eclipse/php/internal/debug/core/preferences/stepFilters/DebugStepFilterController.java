@@ -35,7 +35,7 @@ public class DebugStepFilterController implements IDebugStepFilterPrefListener {
 	private DebugStepFilter[] enabledFilters = null; // filters that are enabled
 	private DebugStepFilter[] extendedFilters = null; // filters that come from
 														// extension point
-	private HashMap<String, Boolean> filtersCheckCache = new HashMap<String, Boolean>();
+	private HashMap<String, Boolean> filtersCheckCache = new HashMap<>();
 
 	private DebugStepFilterController() {
 	}
@@ -128,7 +128,7 @@ public class DebugStepFilterController implements IDebugStepFilterPrefListener {
 		IPreferenceStore store = PHPUiPlugin.getDefault().getPreferenceStore();
 		String[] parsedFilters = parseList(store.getString(IPHPDebugConstants.PREF_STEP_FILTERS_LIST));
 
-		ArrayList<DebugStepFilter> list = new ArrayList<DebugStepFilter>();
+		ArrayList<DebugStepFilter> list = new ArrayList<>();
 		for (int i = 0; i < parsedFilters.length; i++) {
 			String[] tokens = parsedFilters[i].split("\\" //$NON-NLS-1$
 					+ DebugStepFilter.FILTER_TOKENS_DELIM);
@@ -156,18 +156,19 @@ public class DebugStepFilterController implements IDebugStepFilterPrefListener {
 
 	// Parses the comma separated string into an array of strings
 	private String[] parseList(String listString) {
-		ArrayList<String> list = new ArrayList<String>();
+		ArrayList<String> list = new ArrayList<>();
 		StringTokenizer tokenizer = new StringTokenizer(listString, DebugStepFilter.FILTERS_PREF_LIST_DELIM);
 		while (tokenizer.hasMoreTokens()) {
 			String token = tokenizer.nextToken();
 			list.add(token);
 		}
-		return (String[]) list.toArray(new String[list.size()]);
+		return list.toArray(new String[list.size()]);
 	}
 
+	@Override
 	public void debugStepFilterModified(DebugStepFilterEvent event) {
 		filtersCheckCache.clear();
-		ArrayList<DebugStepFilter> list = new ArrayList<DebugStepFilter>();
+		ArrayList<DebugStepFilter> list = new ArrayList<>();
 		DebugStepFilter[] newFilters = event.getNewFilters();
 		for (DebugStepFilter newFilter : newFilters) {
 			if (newFilter.isEnabled()) {
@@ -179,7 +180,7 @@ public class DebugStepFilterController implements IDebugStepFilterPrefListener {
 	}
 
 	private void readExtensionsList() {
-		ArrayList<DebugStepFilter> listToAdd = new ArrayList<DebugStepFilter>();
+		ArrayList<DebugStepFilter> listToAdd = new ArrayList<>();
 		String stepFilterExtensionName = "org.eclipse.php.debug.core.phpDebugStepFilters"; //$NON-NLS-1$
 		IConfigurationElement[] elements = Platform.getExtensionRegistry()
 				.getConfigurationElementsFor(stepFilterExtensionName);

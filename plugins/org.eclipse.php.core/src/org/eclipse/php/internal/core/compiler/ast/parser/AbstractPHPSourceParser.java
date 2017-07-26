@@ -34,6 +34,7 @@ public abstract class AbstractPHPSourceParser extends AbstractSourceParser imple
 		this(null);
 	}
 
+	@Override
 	public IModuleDeclaration parse(IModuleSource input, IProblemReporter reporter) {
 		try {
 			return parse(new CharArrayReader(input.getContentsAsCharArray()), reporter,

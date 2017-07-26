@@ -44,16 +44,19 @@ public class EvalResponse extends DebugMessageResponseImpl implements IDebugResp
 		return result;
 	}
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		setStatus(in.readInt());
 		setResult(CommunicationUtilities.readString(in));
 	}
 
+	@Override
 	public int getType() {
 		return 1031;
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());

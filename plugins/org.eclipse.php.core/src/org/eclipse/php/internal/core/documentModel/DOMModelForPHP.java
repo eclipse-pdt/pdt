@@ -29,16 +29,19 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 	/*
 	 * This is modeled after what is done for JSP
 	 */
+	@Override
 	protected Document internalCreateDocument() {
 		DOMDocumentForPHP document = new DOMDocumentForPHP();
 		document.setModel(this);
 		return document;
 	}
 
+	@Override
 	protected XMLModelParser createModelParser() {
 		return new PHPDOMModelParser(this);
 	}
 
+	@Override
 	protected XMLModelUpdater createModelUpdater() {
 		return new PHPDOMModelUpdater(this);
 	}

@@ -29,9 +29,9 @@ import org.eclipse.test.internal.performance.data.Scalar;
 class TestPerformanceMeter extends InternalPerformanceMeter {
     	
 	private long fStartTime;
-	private List fDataPoints= new ArrayList();
-	private Map fStart= new HashMap();
-	private Map fStop= new HashMap();
+	private List<DataPoint> fDataPoints= new ArrayList<>();
+	private Map<Dim, Scalar> fStart= new HashMap<>();
+	private Map<Dim, Scalar> fStop= new HashMap<>();
 	
 	/**
 	 * @param scenarioId the scenario id
@@ -49,6 +49,7 @@ class TestPerformanceMeter extends InternalPerformanceMeter {
 	/*
 	 * @see org.eclipse.test.performance.PerformanceMeter#dispose()
 	 */
+	@Override
 	public void dispose() {
 	    fDataPoints= null;
 	    super.dispose();
@@ -57,15 +58,17 @@ class TestPerformanceMeter extends InternalPerformanceMeter {
 	/*
 	 * @see org.eclipse.test.internal.performance.InternalPerformanceMeter#getSample()
 	 */
+	@Override
 	public Sample getSample() {
 	    if (fDataPoints != null)
-	        return new Sample(getScenarioName(), fStartTime, new HashMap(), (DataPoint[]) fDataPoints.toArray(new DataPoint[fDataPoints.size()]));
+	        return new Sample(getScenarioName(), fStartTime, new HashMap<>(), fDataPoints.toArray(new DataPoint[fDataPoints.size()]));
 	    return null;
 	}
 	
 	/*
 	 * @see org.eclipse.test.performance.PerformanceMeter#start()
 	 */
+	@Override
 	public void start() {
 	    fDataPoints.add(new DataPoint(BEFORE, fStart));
 	}
@@ -73,6 +76,7 @@ class TestPerformanceMeter extends InternalPerformanceMeter {
     /*
 	 * @see org.eclipse.test.performance.PerformanceMeter#stop()
 	 */
+	@Override
 	public void stop() {
 	    fDataPoints.add(new DataPoint(AFTER, fStop));
 	}

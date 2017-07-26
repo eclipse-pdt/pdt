@@ -242,8 +242,8 @@ public class CustomFiltersActionGroup extends ActionGroup {
 		Iterator<Entry<String, Boolean>> iter = fEnabledFilterIds.entrySet().iterator();
 		while (iter.hasNext()) {
 			Entry<String, Boolean> entry = iter.next();
-			String id = (String) entry.getKey();
-			boolean isEnabled = ((Boolean) entry.getValue()).booleanValue();
+			String id = entry.getKey();
+			boolean isEnabled = entry.getValue().booleanValue();
 			if (isEnabled)
 				enabledFilterIds.add(id);
 		}
@@ -268,7 +268,7 @@ public class CustomFiltersActionGroup extends ActionGroup {
 		Set<String> newFilters = new HashSet<>();
 		for (int i = 0; i < enabledFilters.length; i++) {
 			String filterName = enabledFilters[i];
-			ViewerFilter filter = (ViewerFilter) fInstalledBuiltInFilters.get(filterName);
+			ViewerFilter filter = fInstalledBuiltInFilters.get(filterName);
 			if (filter == null)
 				newFilters.add(filterName);
 			else if (isSelected(parent, element, contentProvider, filter))
@@ -420,8 +420,8 @@ public class CustomFiltersActionGroup extends ActionGroup {
 		for (int i = 0; i < recentlyChangedFilterIds.length; i++) {
 			String id = recentlyChangedFilterIds[i];
 			fFilterIdsUsedInLastViewMenu[i] = id;
-			boolean state = fEnabledFilterIds.containsKey(id) && ((Boolean) fEnabledFilterIds.get(id)).booleanValue();
-			FilterDescriptor filterDesc = (FilterDescriptor) fFilterDescriptorMap.get(id);
+			boolean state = fEnabledFilterIds.containsKey(id) && fEnabledFilterIds.get(id).booleanValue();
+			FilterDescriptor filterDesc = fFilterDescriptorMap.get(id);
 			if (filterDesc != null) {
 				IContributionItem item = new FilterActionMenuContributionItem(this, id, filterDesc.getName(), state,
 						i + 1);
@@ -492,8 +492,8 @@ public class CustomFiltersActionGroup extends ActionGroup {
 		Iterator<Entry<String, Boolean>> iter = fEnabledFilterIds.entrySet().iterator();
 		while (iter.hasNext()) {
 			Entry<String, Boolean> entry = iter.next();
-			String id = (String) entry.getKey();
-			boolean isEnabled = ((Boolean) entry.getValue()).booleanValue();
+			String id = entry.getKey();
+			boolean isEnabled = entry.getValue().booleanValue();
 			if (isEnabled && !installedFilters.contains(id))
 				filtersToAdd.add(id);
 			else if (!isEnabled && installedFilters.contains(id))
@@ -515,7 +515,7 @@ public class CustomFiltersActionGroup extends ActionGroup {
 					}
 				}
 				if (filtersToRemove.contains(id)) {
-					fViewer.removeFilter((ViewerFilter) fInstalledBuiltInFilters.get(id));
+					fViewer.removeFilter(fInstalledBuiltInFilters.get(id));
 					fInstalledBuiltInFilters.remove(id);
 				}
 			}
@@ -554,10 +554,10 @@ public class CustomFiltersActionGroup extends ActionGroup {
 		Iterator<Entry<String, Boolean>> iter = fEnabledFilterIds.entrySet().iterator();
 		while (iter.hasNext()) {
 			Entry<String, Boolean> entry = iter.next();
-			String id = (String) entry.getKey();
+			String id = entry.getKey();
 			// set default to value from plugin contributions (fixes
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=73991 ):
-			store.setDefault(id, ((Boolean) entry.getValue()).booleanValue());
+			store.setDefault(id, entry.getValue().booleanValue());
 			Boolean isEnabled = Boolean.valueOf(store.getBoolean(id));
 			fEnabledFilterIds.put(id, isEnabled);
 		}
@@ -586,8 +586,8 @@ public class CustomFiltersActionGroup extends ActionGroup {
 		Iterator<Entry<String, Boolean>> iter = fEnabledFilterIds.entrySet().iterator();
 		while (iter.hasNext()) {
 			Entry<String, Boolean> entry = iter.next();
-			String id = (String) entry.getKey();
-			boolean isEnabled = ((Boolean) entry.getValue()).booleanValue();
+			String id = entry.getKey();
+			boolean isEnabled = entry.getValue().booleanValue();
 			store.setValue(id, isEnabled);
 		}
 
@@ -626,8 +626,8 @@ public class CustomFiltersActionGroup extends ActionGroup {
 			Iterator<Entry<String, Boolean>> iter = fEnabledFilterIds.entrySet().iterator();
 			while (iter.hasNext()) {
 				Entry<String, Boolean> entry = iter.next();
-				String id = (String) entry.getKey();
-				Boolean isEnabled = (Boolean) entry.getValue();
+				String id = entry.getKey();
+				Boolean isEnabled = entry.getValue();
 				IMemento child = xmlDefinedFilters.createChild(TAG_CHILD);
 				child.putString(TAG_FILTER_ID, id);
 				child.putString(TAG_IS_ENABLED, isEnabled.toString());

@@ -23,6 +23,7 @@ public class ExceptionClassStrategy extends ExceptionClassInstantiationStrategy 
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		ICompletionContext context = getContext();
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;

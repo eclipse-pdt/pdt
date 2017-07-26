@@ -54,7 +54,7 @@ public class NewWizard extends Wizard {
 		IWizardCategory root = WorkbenchPlugin.getDefault().getNewWizardRegistry().getRootCategory();
 		IWizardDescriptor[] primary = new IWizardDescriptor[0];
 		if (projectsOnly) {
-			List<IWizardDescriptor> wizards = new ArrayList<IWizardDescriptor>();
+			List<IWizardDescriptor> wizards = new ArrayList<>();
 			fillWizards(root, wizards);
 			primary = wizards.toArray(new IWizardDescriptor[wizards.size()]);
 		}

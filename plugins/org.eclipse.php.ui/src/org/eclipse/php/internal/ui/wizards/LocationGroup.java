@@ -114,7 +114,7 @@ public class LocationGroup extends Observable implements Observer, IStringButton
 	 */
 	protected void createLocalServersGroup(final Group group, final int numColumns) {
 		Server[] servers = ServersManager.getServers();
-		List<String> docRoots = new ArrayList<String>();
+		List<String> docRoots = new ArrayList<>();
 		for (int i = 0; i < servers.length; i++) {
 			String docRoot = servers[i].getDocumentRoot();
 			if (docRoot != null && !"".equals(docRoot.trim())) { //$NON-NLS-1$
@@ -227,7 +227,7 @@ public class LocationGroup extends Observable implements Observer, IStringButton
 	@Override
 	public void changeControlPressed(DialogField field) {
 		IEnvironment environment = getEnvironment();
-		IEnvironmentUI environmentUI = (IEnvironmentUI) environment.getAdapter(IEnvironmentUI.class);
+		IEnvironmentUI environmentUI = environment.getAdapter(IEnvironmentUI.class);
 		if (environmentUI != null) {
 			String selectedDirectory = environmentUI.selectFolder(shell);
 

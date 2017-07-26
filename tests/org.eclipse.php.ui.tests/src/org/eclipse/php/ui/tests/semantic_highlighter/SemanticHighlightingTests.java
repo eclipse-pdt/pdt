@@ -94,7 +94,7 @@ public class SemanticHighlightingTests {
 	protected PHPVersion phpVersion;
 
 	@Parameters
-	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<>();
 
 	static {
 		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/semantic_highlighting/php5" });
@@ -108,7 +108,7 @@ public class SemanticHighlightingTests {
 		return PHPUiTests.getDefault().getBundle();
 	}
 
-	private static Map<String, AbstractSemanticHighlighting> highlighters = new HashMap<String, AbstractSemanticHighlighting>();
+	private static Map<String, AbstractSemanticHighlighting> highlighters = new HashMap<>();
 
 	static {
 		highlighters.put("class", new ClassHighlighting());
@@ -271,7 +271,7 @@ public class SemanticHighlightingTests {
 	protected void createFile(PdttFile pdttFile) throws Exception {
 		testFile = TestUtils.createFile(project, "test.php", new String(pdttFile.getFile().getBytes()));
 		String[] otherFiles = pdttFile.getOtherFiles();
-		this.otherFiles = new ArrayList<IFile>(otherFiles.length);
+		this.otherFiles = new ArrayList<>(otherFiles.length);
 		int i = 0;
 		for (String otherFileContent : otherFiles) {
 			IFile tmp = TestUtils.createFile(project, String.format("test%s.php", i), otherFileContent);

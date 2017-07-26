@@ -30,8 +30,8 @@ public class BreakpointSet {
 	public BreakpointSet(IProject project, boolean isPHPCGI) {
 
 		fProject = project;
-		fDirectories = new ArrayList<String>();
-		fProjects = new ArrayList<IProject>();
+		fDirectories = new ArrayList<>();
+		fProjects = new ArrayList<>();
 
 		if (project != null) {
 			IBuildpathEntry[] entries = null;

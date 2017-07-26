@@ -29,16 +29,19 @@ public class IniAlteredNotification extends DebugMessageNotificationImpl impleme
 	private String oldValue;
 	private String newValue;
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setName(CommunicationUtilities.readString(in));
 		setOldValue(CommunicationUtilities.readString(in));
 		setNewValue(CommunicationUtilities.readString(in));
 	}
 
+	@Override
 	public int getType() {
 		return 2011;
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		CommunicationUtilities.writeString(out, getName());

@@ -23,5 +23,5 @@ import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IBreakp
 public interface IPHPBreakpointProvider extends IBreakpointProvider, IExecutableExtension {
 
 	IBreakpoint createBreakpoint(IEditorInput input, IResource resource, int lineNumber, int charStart, int charEnd,
-			Map<String, String> attributes) throws CoreException;
+			Map<String, Comparable<?>> attributes) throws CoreException;
 }

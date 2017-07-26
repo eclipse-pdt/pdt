@@ -69,6 +69,7 @@ public class NamespaceReference extends TypeReference {
 		this.local = local;
 	}
 
+	@Override
 	public String getName() {
 		StringBuilder buf = new StringBuilder();
 		if (global) {

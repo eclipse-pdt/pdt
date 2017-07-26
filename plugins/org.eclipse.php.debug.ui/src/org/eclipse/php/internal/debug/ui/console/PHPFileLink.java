@@ -66,6 +66,7 @@ public class PHPFileLink implements IHyperlink {
 		this.url = url;
 	}
 
+	@Override
 	public void linkActivated() {
 		Object element = findSourceModule(fileName);
 		try {
@@ -126,9 +127,11 @@ public class PHPFileLink implements IHyperlink {
 		return lookup.findSourceModuleByLocalPath(path);
 	}
 
+	@Override
 	public void linkEntered() {
 	}
 
+	@Override
 	public void linkExited() {
 	}
 }

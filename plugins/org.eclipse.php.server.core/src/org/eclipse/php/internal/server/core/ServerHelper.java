@@ -25,11 +25,11 @@ public class ServerHelper {
 	protected Map<String, String> map;
 
 	// property change listeners
-	private transient ListenerList propertyListeners = new ListenerList();
+	private transient ListenerList<PropertyChangeListener> propertyListeners = new ListenerList<>();
 	private Server server;
 
 	public ServerHelper(Server server) {
-		this.map = new HashMap<String, String>();
+		this.map = new HashMap<>();
 		this.server = server;
 	}
 

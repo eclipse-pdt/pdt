@@ -34,13 +34,13 @@ public class ImagesOnFileSystemRegistry {
 
 	private static final String IMAGE_DIR = "pdt-images"; //$NON-NLS-1$
 
-	private HashMap fURLMap;
+	private HashMap<ImageDescriptor, URL> fURLMap;
 	private final File fTempDir;
 	private final PHPModelLabelProvider fLabelProvider;
 	private int fImageCount;
 
 	public ImagesOnFileSystemRegistry() {
-		fURLMap = new HashMap();
+		fURLMap = new HashMap<>();
 		fTempDir = getTempDir();
 		fLabelProvider = new PHPModelLabelProvider();
 		fImageCount = 0;
@@ -89,7 +89,7 @@ public class ImagesOnFileSystemRegistry {
 		if (fTempDir == null)
 			return null;
 
-		URL url = (URL) fURLMap.get(descriptor);
+		URL url = fURLMap.get(descriptor);
 		if (url != null)
 			return url;
 

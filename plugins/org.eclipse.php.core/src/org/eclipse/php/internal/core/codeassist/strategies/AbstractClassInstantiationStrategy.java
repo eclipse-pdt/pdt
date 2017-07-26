@@ -34,6 +34,7 @@ public abstract class AbstractClassInstantiationStrategy extends GlobalTypesStra
 		this(context, 0, 0);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 
 		ICompletionContext context = getContext();
@@ -91,6 +92,7 @@ public abstract class AbstractClassInstantiationStrategy extends GlobalTypesStra
 		reporter.reportMethod(ctorMethod, "", replacementRange); //$NON-NLS-1$
 	}
 
+	@Override
 	public String getSuffix(AbstractCompletionContext abstractContext) {
 		boolean insertMode = isInsertMode();
 

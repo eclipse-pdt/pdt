@@ -28,7 +28,7 @@ import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionConte
  */
 public class FunctionReturnTypeStrategy extends GlobalTypesStrategy {
 
-	private static final List<SimpleProposal> TYPES = new ArrayList<SimpleProposal>(
+	private static final List<SimpleProposal> TYPES = new ArrayList<>(
 			Arrays.asList(SimpleProposal.BASIC_TYPES));
 
 	static {

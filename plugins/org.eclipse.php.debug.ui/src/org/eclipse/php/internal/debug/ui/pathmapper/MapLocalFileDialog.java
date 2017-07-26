@@ -53,6 +53,7 @@ public class MapLocalFileDialog extends TrayDialog {
 	 */
 	private class LabelProvider extends ScriptUILabelProvider {
 
+		@Override
 		public Image getImage(Object element) {
 			if (element instanceof IBuildpathEntry) {
 				IBuildpathEntry includePathEntry = (IBuildpathEntry) element;
@@ -68,6 +69,7 @@ public class MapLocalFileDialog extends TrayDialog {
 			return super.getImage(element);
 		}
 
+		@Override
 		public String getText(Object element) {
 			if (element == EXTERNAL_CONTAINER) {
 				return Messages.OpenLocalFileSearchFilter_External_files;
@@ -115,9 +117,10 @@ public class MapLocalFileDialog extends TrayDialog {
 	 */
 	private class ContentProvider implements ITreeContentProvider {
 
+		@Override
 		public Object[] getChildren(Object parentElement) {
 			if (parentElement == MapLocalFileDialog.this) {
-				Set<Object> containers = new HashSet<Object>();
+				Set<Object> containers = new HashSet<>();
 				for (PathEntry entry : pathEntries) {
 					if (entry.getType() == Type.EXTERNAL) {
 						containers.add(EXTERNAL_CONTAINER);
@@ -134,7 +137,7 @@ public class MapLocalFileDialog extends TrayDialog {
 				return EMPTY;
 			}
 
-			Set<PathEntry> entries = new HashSet<PathEntry>();
+			Set<PathEntry> entries = new HashSet<>();
 			for (PathEntry entry : pathEntries) {
 				if (entry.getType() == Type.EXTERNAL && parentElement == EXTERNAL_CONTAINER) {
 					entries.add(entry);
@@ -149,6 +152,7 @@ public class MapLocalFileDialog extends TrayDialog {
 			return entries.toArray();
 		}
 
+		@Override
 		public Object getParent(Object element) {
 			if (element == MapLocalFileDialog.this) {
 				return null;
@@ -178,6 +182,7 @@ public class MapLocalFileDialog extends TrayDialog {
 			return null;
 		}
 
+		@Override
 		public boolean hasChildren(Object element) {
 			if (element instanceof PathEntry) {
 				return false;
@@ -185,13 +190,16 @@ public class MapLocalFileDialog extends TrayDialog {
 			return true;
 		}
 
+		@Override
 		public Object[] getElements(Object inputElement) {
 			return getChildren(inputElement);
 		}
 
+		@Override
 		public void dispose() {
 		}
 
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		}
 
@@ -208,6 +216,7 @@ public class MapLocalFileDialog extends TrayDialog {
 			comparator = new BestMatchPathComparator(path);
 		}
 
+		@Override
 		public int compare(Viewer viewer, Object e1, Object e2) {
 			if (e1 instanceof PathEntry && e2 instanceof PathEntry) {
 				return comparator.compare((PathEntry) e1, (PathEntry) e2);
@@ -267,6 +276,7 @@ public class MapLocalFileDialog extends TrayDialog {
 		newShell.setText(Messages.OpenLocalFileSearchFilter_Open_file_request);
 		newShell.setData(WorkbenchHelpSystem.HELP_KEY, IPHPHelpContextIds.PATH_MAPPING);
 		newShell.addHelpListener(new HelpListener() {
+			@Override
 			public void helpRequested(HelpEvent arg0) {
 				org.eclipse.swt.program.Program.launch(IPHPHelpContextIds.PATH_MAPPING);
 			}
@@ -344,6 +354,7 @@ public class MapLocalFileDialog extends TrayDialog {
 		entriesViewer.setSorter(new Sorter());
 		entriesViewer.setInput(this);
 		entriesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				validate();
 			}

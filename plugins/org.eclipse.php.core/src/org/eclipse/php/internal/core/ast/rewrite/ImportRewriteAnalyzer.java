@@ -609,7 +609,7 @@ public final class ImportRewriteAnalyzer {
 				resEdit.addChild(new InsertEdit(currPos, lineDelim));
 			}
 
-			ArrayList<String> stringsToInsert = new ArrayList<String>();
+			ArrayList<String> stringsToInsert = new ArrayList<>();
 
 			int nPackageEntries = this.packageEntries.get(namespace).size();
 			for (int i = 0; i < nPackageEntries; i++) {
@@ -807,6 +807,7 @@ public final class ImportRewriteAnalyzer {
 		return root.getPosition(line, column) - 1;
 	}
 
+	@Override
 	public String toString() {
 		StringBuilder buf = new StringBuilder("\n-----------------------\n"); //$NON-NLS-1$
 		if (namespaces.size() > 0) {
@@ -983,6 +984,7 @@ public final class ImportRewriteAnalyzer {
 			return "!".equals(this.name); //$NON-NLS-1$
 		}
 
+		@Override
 		public String toString() {
 			StringBuilder buf = new StringBuilder();
 			if (isComment()) {

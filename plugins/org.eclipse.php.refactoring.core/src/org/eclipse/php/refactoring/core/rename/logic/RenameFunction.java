@@ -32,6 +32,7 @@ public class RenameFunction extends AbstractRename {
 	/**
 	 * on class method declaration, we skip the function declaration name
 	 */
+	@Override
 	public boolean visit(MethodDeclaration methodDeclaration) {
 		Block body = methodDeclaration.getFunction().getBody();
 		if (body != null) {
@@ -43,6 +44,7 @@ public class RenameFunction extends AbstractRename {
 	/**
 	 * change the name of the function
 	 */
+	@Override
 	public boolean visit(FunctionDeclaration functionDeclaration) {
 		assert functionDeclaration.getParent().getType() != ASTNode.METHOD_DECLARATION;
 
@@ -58,6 +60,7 @@ public class RenameFunction extends AbstractRename {
 	/**
 	 * skip static call invocation, and add to changes list the global calls
 	 */
+	@Override
 	public boolean visit(FunctionInvocation functionInvocation) {
 		final Expression functionName = functionInvocation.getFunctionName()
 				.getName();
@@ -74,6 +77,7 @@ public class RenameFunction extends AbstractRename {
 		return true;
 	}
 
+	@Override
 	public String getRenameDescription() {
 		return RenameFunction.RENAME_FUNCTION;
 	}

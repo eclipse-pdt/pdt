@@ -175,7 +175,7 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 		// get the source elements that the user removed in the source tab
 		List<BPListElement> removedElements = buildPathSourcePage.getRemovedElements();
 
-		List<IBuildpathEntry> buildPathEntries = new ArrayList<IBuildpathEntry>();
+		List<IBuildpathEntry> buildPathEntries = new ArrayList<>();
 		IProject project = fCurrScriptProject.getProject();
 
 		// in case there are any, the user is prompted with a question
@@ -233,8 +233,8 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 			}
 		}
 
-		List<BPListElement> exportedEntries = new ArrayList<BPListElement>();
-		List<BPListElement> allEntries = new ArrayList<BPListElement>();
+		List<BPListElement> exportedEntries = new ArrayList<>();
+		List<BPListElement> allEntries = new ArrayList<>();
 		if (buildpathEntries != null) {
 			for (int i = 0; i < buildpathEntries.length; i++) {
 				IBuildpathEntry curr = buildpathEntries[i];

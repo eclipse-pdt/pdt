@@ -47,6 +47,7 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		ICompletionContext context = getContext();
 		if (!(context instanceof ArrayKeyContext)) {
@@ -107,7 +108,7 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 	}
 
 	class ArrayKeyFinder extends PHPASTVisitor {
-		private Set<String> names = new HashSet<String>();
+		private Set<String> names = new HashSet<>();
 		private String prefix;
 		private int ignoredOffset;
 
@@ -116,10 +117,12 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 			this.ignoredOffset = ignoredOffset;
 		}
 
+		@Override
 		public boolean visit(ArrayCreation s) throws Exception {
 			return super.visit(s);
 		}
 
+		@Override
 		public boolean visit(ArrayElement s) throws Exception {
 			if (s.getKey() instanceof Scalar) {
 				Scalar scalar = (Scalar) s.getKey();
@@ -134,6 +137,7 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 			return super.visit(s);
 		}
 
+		@Override
 		public boolean visit(ArrayVariableReference s) throws Exception {
 			if (s.start() < ignoredOffset && s.end() > ignoredOffset) {
 				return super.visit(s);
@@ -151,6 +155,7 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 			return super.visit(s);
 		}
 
+		@Override
 		public boolean visit(ReflectionArrayVariableReference s) throws Exception {
 			if (s.getIndex() instanceof Scalar) {
 				Scalar scalar = (Scalar) s.getIndex();

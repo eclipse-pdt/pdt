@@ -48,7 +48,7 @@ public class PHPOutlineInformationControl extends ScriptOutlineInformationContro
 	@Override
 	protected ITypeHierarchy getSuperTypeHierarchy(org.eclipse.dltk.core.IType type) {
 
-		ITypeHierarchy th = (ITypeHierarchy) fTypeHierarchies.get(type);
+		ITypeHierarchy th = fTypeHierarchies.get(type);
 		if (th == null) {
 			try {
 				th = SuperTypeHierarchyCache.getTypeHierarchy(type, getProgressMonitor());

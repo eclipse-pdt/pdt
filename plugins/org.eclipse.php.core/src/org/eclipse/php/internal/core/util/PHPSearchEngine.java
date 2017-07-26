@@ -52,7 +52,7 @@ public class PHPSearchEngine implements IIncludepathListener {
 	private static PHPSearchEngine instance = new PHPSearchEngine();
 
 	private PHPSearchEngine() {
-		projectIncludePaths = new HashMap<IProject, IncludePath[]>();
+		projectIncludePaths = new HashMap<>();
 		IncludePathManager.getInstance().registerIncludepathListener(this);
 	}
 
@@ -107,7 +107,7 @@ public class PHPSearchEngine implements IIncludepathListener {
 			// ./ or ../
 			return searchExternalOrWorkspaceFile(currentWorkingDir, path);
 		}
-		List<Result> list = new ArrayList<PHPSearchEngine.Result>();
+		List<Result<?, ?>> list = new ArrayList<>();
 
 		// look into include path:
 		IncludePath[] includePaths = buildIncludePath(currentProject);
@@ -120,7 +120,7 @@ public class PHPSearchEngine implements IIncludepathListener {
 				}
 			} else if (includePath.getEntry() instanceof IFile) {
 				IFile resource = (IFile) includePath.getEntry();
-				Result result = new ResourceResult(resource);
+				Result<?, ?> result = new ResourceResult(resource);
 				if (exclusiveFiles == null || (resource.getLocation() != null
 						&& !exclusiveFiles.contains(resource.getLocation().toOSString()))) {
 					return result;
@@ -131,7 +131,7 @@ public class PHPSearchEngine implements IIncludepathListener {
 				IContainer container = (IContainer) includePath.getEntry();
 				IResource resource = container.findMember(path);
 				if ((resource instanceof IFile)) {
-					Result result = new ResourceResult((IFile) resource);
+					Result<?, ?> result = new ResourceResult((IFile) resource);
 					if (exclusiveFiles == null || (resource.getLocation() != null
 							&& !exclusiveFiles.contains(resource.getLocation().toOSString()))) {
 						return result;
@@ -308,7 +308,7 @@ public class PHPSearchEngine implements IIncludepathListener {
 	 *         IncludePathEntry)
 	 */
 	public static IncludePath[] buildIncludePath(IProject project) {
-		Set<IncludePath> results = new LinkedHashSet<IncludePath>();
+		Set<IncludePath> results = new LinkedHashSet<>();
 		buildIncludePath(project, results);
 		return results.toArray(new IncludePath[results.size()]);
 	}
@@ -344,6 +344,7 @@ public class PHPSearchEngine implements IIncludepathListener {
 		return includePaths;
 	}
 
+	@Override
 	public void refresh(IProject project) {
 		IncludePath[] includePaths = IncludePathManager.getInstance().getIncludePaths(project);
 		projectIncludePaths.put(project, includePaths);

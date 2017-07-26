@@ -58,9 +58,9 @@ public class PHPexeItem implements IUniqueIdentityElement, IPHPexeItemProperties
 	/**
 	 * store the php version list that use this PHPexeItem as default PHPexeItem
 	 */
-	private List<PHPVersion> defaultForPHPVersionList = new ArrayList<PHPVersion>();
+	private List<PHPVersion> defaultForPHPVersionList = new ArrayList<>();
 	private final Map<String, Object> properties;
-	private final ListenerList listeners = new ListenerList();
+	private final ListenerList<IPHPexeItemListener> listeners = new ListenerList<>();
 	private final EventNotifier notifier;
 
 	/**
@@ -68,7 +68,7 @@ public class PHPexeItem implements IUniqueIdentityElement, IPHPexeItemProperties
 	 */
 	public PHPexeItem() {
 		setUniqueId(UniqueIdentityElementUtil.generateId(ID_PREFIX));
-		properties = new HashMap<String, Object>();
+		properties = new HashMap<>();
 		notifier = new EventNotifier();
 		setDebuggerID(PHPDebuggersRegistry.NONE_DEBUGGER_ID);
 	}
@@ -315,7 +315,7 @@ public class PHPexeItem implements IUniqueIdentityElement, IPHPexeItemProperties
 		// Unique ID should always be the same for copy
 		copy.uniqueId = uniqueId;
 		copy.editable = editable;
-		copy.defaultForPHPVersionList = new ArrayList<PHPVersion>(defaultForPHPVersionList);
+		copy.defaultForPHPVersionList = new ArrayList<>(defaultForPHPVersionList);
 		copy.setExecutable(getExecutable());
 		copy.setSapiType(getSapiType());
 		copy.setName(getName());

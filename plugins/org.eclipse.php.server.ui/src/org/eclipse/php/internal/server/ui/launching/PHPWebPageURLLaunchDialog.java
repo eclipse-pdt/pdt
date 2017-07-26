@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Group;
  */
 public class PHPWebPageURLLaunchDialog extends MessageDialog {
 
-	private static Set previousURLs = new TreeSet();
+	private static Set<String> previousURLs = new TreeSet<>();
 	private ILaunchConfigurationWorkingCopy launchConfiguration;
 	private Combo combo;
 	private final Server server;
@@ -72,6 +72,7 @@ public class PHPWebPageURLLaunchDialog extends MessageDialog {
 	/**
 	 * Create a drop-down list for the URL.
 	 */
+	@Override
 	protected Control createCustomArea(Composite parent) {
 		Group group = new Group(parent, SWT.NONE);
 		group.setText(Messages2.PHPWebPageURLLaunchDialog_2);
@@ -105,6 +106,7 @@ public class PHPWebPageURLLaunchDialog extends MessageDialog {
 	 * Override the okPressed to save the URL to the URLs history for this PHP
 	 * IDE session. Also, add the URL to the launch configuration attributes.
 	 */
+	@Override
 	protected void buttonPressed(int buttonId) {
 		if (buttonId == OK) {
 			String url = combo.getText().trim();

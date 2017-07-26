@@ -24,6 +24,7 @@ import org.eclipse.php.internal.core.search.Messages;
 
 public class PHPSourceParserFactory extends AbstractSourceParser implements ISourceParserFactory, ISourceParser {
 
+	@Override
 	public ISourceParser createSourceParser() {
 		return this;
 	}

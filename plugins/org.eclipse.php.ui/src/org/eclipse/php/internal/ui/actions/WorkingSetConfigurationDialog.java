@@ -67,7 +67,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 			ImageDescriptor imageDescriptor = workingSet.getImageDescriptor();
 			if (imageDescriptor == null)
 				return null;
-			Image icon = (Image) fIcons.get(imageDescriptor);
+			Image icon = fIcons.get(imageDescriptor);
 			if (icon == null) {
 				icon = imageDescriptor.createImage();
 				fIcons.put(imageDescriptor, icon);
@@ -100,7 +100,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 				return false;
 			for (int i = 0; i < elements.length; i++) {
 				IAdaptable element = elements[i];
-				IProject p = (IProject) element.getAdapter(IProject.class);
+				IProject p = element.getAdapter(IProject.class);
 				if (p == null || p.exists())
 					return true;
 			}
@@ -342,7 +342,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 	@Override
 	protected void okPressed() {
 		List<IWorkingSet> newResult = getResultWorkingSets();
-		fResult = (IWorkingSet[]) newResult.toArray(new IWorkingSet[newResult.size()]);
+		fResult = newResult.toArray(new IWorkingSet[newResult.size()]);
 		setResult(newResult);
 		super.okPressed();
 	}
@@ -403,7 +403,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 				.getFirstElement();
 		IWorkingSetEditWizard wizard = manager.createWorkingSetEditWizard(editWorkingSet);
 		WizardDialog dialog = new WizardDialog(getShell(), wizard);
-		IWorkingSet originalWorkingSet = (IWorkingSet) fEditedWorkingSets.get(editWorkingSet);
+		IWorkingSet originalWorkingSet = fEditedWorkingSets.get(editWorkingSet);
 		boolean firstEdit = originalWorkingSet == null;
 
 		// save the original working set values for restoration when selection

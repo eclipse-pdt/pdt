@@ -63,7 +63,7 @@ public class CastExpression extends Expression {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(3);
 		properyList.add(EXPRESSION_PROPERTY);
 		properyList.add(CASTING_TYPE_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
@@ -83,6 +83,7 @@ public class CastExpression extends Expression {
 		super(ast);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -112,20 +113,24 @@ public class CastExpression extends Expression {
 		}
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		expression.accept(visitor);
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		expression.traverseTopDown(visitor);
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		expression.traverseBottomUp(visitor);
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<CastExpression"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -134,6 +139,7 @@ public class CastExpression extends Expression {
 		buffer.append("\n").append(tab).append("</CastExpression>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.CAST_EXPRESSION;
 	}
@@ -164,12 +170,13 @@ public class CastExpression extends Expression {
 		postValueChange(CASTING_TYPE_PROPERTY);
 	}
 
+	@Override
 	int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
 		if (property == CASTING_TYPE_PROPERTY) {
 			if (get) {
 				return getCastingType();
 			} else {
-				setCastingType((Integer) value);
+				setCastingType(value);
 				return 0;
 			}
 		}
@@ -210,6 +217,7 @@ public class CastExpression extends Expression {
 		postReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
 	}
 
+	@Override
 	final Object internalGetSetObjectProperty(SimplePropertyDescriptor property, boolean get, Object value) {
 		if (property == CASTING_TYPE_PROPERTY) {
 			if (get) {
@@ -223,6 +231,7 @@ public class CastExpression extends Expression {
 		return super.internalGetSetObjectProperty(property, get, value);
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == EXPRESSION_PROPERTY) {
 			if (get) {
@@ -239,6 +248,7 @@ public class CastExpression extends Expression {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

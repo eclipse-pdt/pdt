@@ -25,10 +25,12 @@ public class ProblemsProperty extends ASTAttribute {
 		fRoot= root;
 	}
 
+	@Override
 	public Object getParent() {
 		return fRoot;
 	}
 
+	@Override
 	public Object[] getChildren() {
 		// TODO : how to get the IProblems
 		//IProblem[] problems= null ; // fRoot.getProblems();
@@ -40,14 +42,17 @@ public class ProblemsProperty extends ASTAttribute {
 		return res;
 */	}
 
+	@Override
 	public String getLabel() {
 		return "> compiler problems (" /*+  fRoot.getProblems().length*/ + ")";  //$NON-NLS-1$//$NON-NLS-2$
 	}
 
+	@Override
 	public Image getImage() {
 		return null;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -57,6 +62,7 @@ public class ProblemsProperty extends ASTAttribute {
 		return true;
 	}
 	
+	@Override
 	public int hashCode() {
 		return 18;
 	}

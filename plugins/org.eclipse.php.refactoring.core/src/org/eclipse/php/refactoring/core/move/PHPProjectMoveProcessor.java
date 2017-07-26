@@ -56,6 +56,7 @@ public class PHPProjectMoveProcessor extends MoveProcessor {
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#
 	 * checkInitialConditions(org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public RefactoringStatus checkInitialConditions(IProgressMonitor pm)
 			throws OperationCanceledException {
 		return new RefactoringStatus();
@@ -68,6 +69,7 @@ public class PHPProjectMoveProcessor extends MoveProcessor {
 	 * checkFinalConditions(org.eclipse.core.runtime.IProgressMonitor,
 	 * org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext)
 	 */
+	@Override
 	public RefactoringStatus checkFinalConditions(IProgressMonitor pm,
 			CheckConditionsContext context) throws OperationCanceledException {
 		return new RefactoringStatus();
@@ -79,6 +81,7 @@ public class PHPProjectMoveProcessor extends MoveProcessor {
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#
 	 * createChange(org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public Change createChange(IProgressMonitor pm) throws CoreException,
 			OperationCanceledException {
 		return new PHPProjectMoveChange(URIUtil.toURI(fResourceDestination),
@@ -91,6 +94,7 @@ public class PHPProjectMoveProcessor extends MoveProcessor {
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#
 	 * getElements()
 	 */
+	@Override
 	public Object[] getElements() {
 		return new Object[] { fProject };
 	}
@@ -101,6 +105,7 @@ public class PHPProjectMoveProcessor extends MoveProcessor {
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#
 	 * getIdentifier()
 	 */
+	@Override
 	public String getIdentifier() {
 		return getClass().getName();
 	}
@@ -111,6 +116,7 @@ public class PHPProjectMoveProcessor extends MoveProcessor {
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#
 	 * getProcessorName()
 	 */
+	@Override
 	public String getProcessorName() {
 		return PHPRefactoringCoreMessages.getString("PHPMoveProcessor.0"); //$NON-NLS-1$
 	}
@@ -121,6 +127,7 @@ public class PHPProjectMoveProcessor extends MoveProcessor {
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#
 	 * isApplicable()
 	 */
+	@Override
 	public boolean isApplicable() {
 		return true;
 	}
@@ -132,6 +139,7 @@ public class PHPProjectMoveProcessor extends MoveProcessor {
 	 * loadParticipants(org.eclipse.ltk.core.refactoring.RefactoringStatus,
 	 * org.eclipse.ltk.core.refactoring.participants.SharableParticipants)
 	 */
+	@Override
 	public RefactoringParticipant[] loadParticipants(RefactoringStatus status,
 			SharableParticipants sharedParticipants) {
 
@@ -140,7 +148,7 @@ public class PHPProjectMoveProcessor extends MoveProcessor {
 					.computeAffectedNatures(fProject);
 			MoveArguments arguments = new MoveArguments(fResourceDestination,
 					getUpdateReferences());
-			List list = new ArrayList();
+			List<IProject> list = new ArrayList<>();
 			list.add(fProject);
 			return ParticipantManager.loadMoveParticipants(status, this, list,
 					arguments, null, affectedNatures, sharedParticipants);

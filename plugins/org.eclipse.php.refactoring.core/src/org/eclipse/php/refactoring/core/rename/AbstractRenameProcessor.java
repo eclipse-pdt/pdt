@@ -94,7 +94,7 @@ public abstract class AbstractRenameProcessor<R extends IResource> extends Renam
 
 		try {
 
-			participantFiles = new HashMap<IFile, Program>();
+			participantFiles = new HashMap<>();
 
 			if (resource instanceof IFile && PHPToolkitUtil.isPHPFile((IFile) resource)) {
 
@@ -229,6 +229,7 @@ public abstract class AbstractRenameProcessor<R extends IResource> extends Renam
 	 * @see org.eclipse.php.refactoring.core.rename.INameUpdating#
 	 * getCurrentElementName ()
 	 */
+	@Override
 	public abstract String getCurrentElementName();
 
 	/*
@@ -237,13 +238,16 @@ public abstract class AbstractRenameProcessor<R extends IResource> extends Renam
 	 * @see
 	 * org.eclipse.php.refactoring.core.rename.INameUpdating#getNewElement()
 	 */
+	@Override
 	public abstract Object getNewElement() throws CoreException;
 
+	@Override
 	public void setNewElementName(String newName) {
 		Assert.isNotNull(newName);
 		fNewElementName = newName;
 	}
 
+	@Override
 	public String getNewElementName() {
 		return fNewElementName;
 	}
@@ -261,6 +265,7 @@ public abstract class AbstractRenameProcessor<R extends IResource> extends Renam
 	 * org.eclipse.php.refactoring.core.rename.INameUpdating#checkNewElementName
 	 * (java.lang.String)
 	 */
+	@Override
 	public RefactoringStatus checkNewElementName(String newName) throws CoreException {
 		if (!isValidIdentifier(newName)) {
 			return getFatalError(newName);

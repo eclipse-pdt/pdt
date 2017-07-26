@@ -29,7 +29,6 @@ import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
  * 
  * @author shalom
  */
-@SuppressWarnings("restriction")
 public class PHPModelPresentationRegistry {
 
 	private static final String EXTENSION_POINT_NAME = "phpDebugModelPresentations"; //$NON-NLS-1$
@@ -39,7 +38,7 @@ public class PHPModelPresentationRegistry {
 
 	/* Instance of this registry */
 	private static PHPModelPresentationRegistry instance = null;
-	private Dictionary<String, DebugModelPresentationFactory> debugModelPresentations = new Hashtable<String, DebugModelPresentationFactory>();
+	private Dictionary<String, DebugModelPresentationFactory> debugModelPresentations = new Hashtable<>();
 	private IDebugModelPresentation bestMatchPresentation;
 
 	private PHPModelPresentationRegistry() {
@@ -109,6 +108,7 @@ public class PHPModelPresentationRegistry {
 
 			SafeRunner.run(new SafeRunnable(
 					"Error creation extension for extension-point org.eclipse.php.internal.debug.core.phpDebugParametersInitializers") { //$NON-NLS-1$
+				@Override
 				public void run() throws Exception {
 					modelPresentation = (IDebugModelPresentation) element.createExecutableExtension(CLASS_ATTRIBUTE);
 				}

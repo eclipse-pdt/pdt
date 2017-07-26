@@ -36,7 +36,7 @@ public class ChangeIncludePath extends AbstractVisitor {
 	/**
 	 * {@link TextEditGroup}
 	 */
-	protected final List<TextEditGroup> groups = new LinkedList<TextEditGroup>();
+	protected final List<TextEditGroup> groups = new LinkedList<>();
 	private IFile file;
 	private IPath destinationPath;
 	private IResource[] selectedResource;
@@ -50,6 +50,7 @@ public class ChangeIncludePath extends AbstractVisitor {
 		this.selectedResource = selectedResources;
 	}
 
+	@Override
 	public boolean visit(Include include) {
 		Scalar scalar = null;
 		if (include.getExpression() instanceof ParenthesisExpression) {

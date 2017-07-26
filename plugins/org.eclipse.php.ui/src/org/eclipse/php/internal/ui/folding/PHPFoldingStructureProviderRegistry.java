@@ -35,7 +35,7 @@ public class PHPFoldingStructureProviderRegistry {
 	private static final String EXTENSION_POINT = "foldingStructureProviders"; //$NON-NLS-1$
 
 	/** The map of descriptors, indexed by their identifiers. */
-	private Map fDescriptors;
+	private Map<String, PHPFoldingStructureProviderDescriptor> fDescriptors;
 
 	/**
 	 * Creates a new instance.
@@ -54,7 +54,7 @@ public class PHPFoldingStructureProviderRegistry {
 	public PHPFoldingStructureProviderDescriptor[] getFoldingProviderDescriptors() {
 		synchronized (this) {
 			ensureRegistered();
-			return (PHPFoldingStructureProviderDescriptor[]) fDescriptors.values()
+			return fDescriptors.values()
 					.toArray(new PHPFoldingStructureProviderDescriptor[fDescriptors.size()]);
 		}
 	}
@@ -71,7 +71,7 @@ public class PHPFoldingStructureProviderRegistry {
 	public PHPFoldingStructureProviderDescriptor getFoldingProviderDescriptor(String id) {
 		synchronized (this) {
 			ensureRegistered();
-			return (PHPFoldingStructureProviderDescriptor) fDescriptors.get(id);
+			return fDescriptors.get(id);
 		}
 	}
 
@@ -112,7 +112,7 @@ public class PHPFoldingStructureProviderRegistry {
 	 */
 	public void reloadExtensions() {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		Map map = new HashMap();
+		Map<String, PHPFoldingStructureProviderDescriptor> map = new HashMap<>();
 
 		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPUiPlugin.getPluginId(),
 				EXTENSION_POINT);

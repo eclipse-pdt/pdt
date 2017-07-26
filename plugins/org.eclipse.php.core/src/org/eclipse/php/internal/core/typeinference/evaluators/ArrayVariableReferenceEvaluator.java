@@ -35,6 +35,7 @@ public class ArrayVariableReferenceEvaluator extends GoalEvaluator {
 		super(goal);
 	}
 
+	@Override
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
 
@@ -47,14 +48,16 @@ public class ArrayVariableReferenceEvaluator extends GoalEvaluator {
 				expr.sourceEnd(), ((ArrayVariableReference) expr).getName())) };
 	}
 
+	@Override
 	public Object produceResult() {
 		return result;
 	}
 
+	@Override
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		if (result instanceof AmbiguousType) {
 			IEvaluatedType[] possibleTypes = ((AmbiguousType) result).getPossibleTypes();
-			List<IEvaluatedType> types = new ArrayList<IEvaluatedType>();
+			List<IEvaluatedType> types = new ArrayList<>();
 			for (IEvaluatedType type : possibleTypes) {
 				if (type instanceof MultiTypeType) {
 					types.addAll(((MultiTypeType) type).getTypes());

@@ -20,6 +20,7 @@ public abstract class DebugMessageRequestImpl extends DebugMessageImpl implement
 	/**
 	 * Set the request id.
 	 */
+	@Override
 	public void setID(int id) {
 		this.id = id;
 	}
@@ -27,6 +28,7 @@ public abstract class DebugMessageRequestImpl extends DebugMessageImpl implement
 	/**
 	 * Return the request id.
 	 */
+	@Override
 	public int getID() {
 		return this.id;
 	}

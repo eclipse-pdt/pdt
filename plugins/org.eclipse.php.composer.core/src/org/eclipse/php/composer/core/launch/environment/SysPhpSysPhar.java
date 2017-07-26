@@ -28,14 +28,17 @@ public class SysPhpSysPhar implements Environment {
 		phar = composerPhar;
 	}
 
+	@Override
 	public boolean isAvailable() {
 		return php != null && phar != null;
 	}
 
+	@Override
 	public void setUp(IProject project) {
 
 	}
 
+	@Override
 	public CommandLine getCommand() {
 		CommandLine cmd = new CommandLine(php.trim());
 		cmd.addArgument(phar.trim());

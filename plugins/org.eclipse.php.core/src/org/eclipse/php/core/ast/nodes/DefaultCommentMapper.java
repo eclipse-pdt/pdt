@@ -583,6 +583,7 @@ public class DefaultCommentMapper {
 		int[][] parentLineRange = new int[10][];
 		int siblingPtr = -1;
 
+		@Override
 		protected boolean apply(ASTNode node) {
 
 			// Get default previous end
@@ -650,6 +651,7 @@ public class DefaultCommentMapper {
 			return true;
 		}
 
+		@Override
 		public void endVisitNode(ASTNode node) {
 
 			// Look if a child node is waiting for trailing comments computing
@@ -670,10 +672,12 @@ public class DefaultCommentMapper {
 			}
 		}
 
+		@Override
 		public boolean visit(Program node) {
 			return true;
 		}
 
+		@Override
 		public boolean visit(Comment node) {
 			// don't visit comments
 			return false;

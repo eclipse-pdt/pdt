@@ -52,7 +52,7 @@ public class SelectionEngineTests {
 
 	protected static final String SELECTION_CHAR = "|";
 	@Parameters
-	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<>();
 
 	static {
 		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/selection/php5" });
@@ -74,7 +74,7 @@ public class SelectionEngineTests {
 
 	protected IProject project;
 	protected IFile testFile = null;
-	protected List<IFile> otherFiles = new ArrayList<IFile>();
+	protected List<IFile> otherFiles = new ArrayList<>();
 	protected PHPVersion version;
 
 	public SelectionEngineTests(PHPVersion version, String[] fileNames) {

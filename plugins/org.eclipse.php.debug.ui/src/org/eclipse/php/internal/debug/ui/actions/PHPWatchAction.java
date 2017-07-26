@@ -33,9 +33,11 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 public class PHPWatchAction extends WatchExpressionAction
 		implements IWorkbenchWindowActionDelegate, IEditorActionDelegate {
 
+	@Override
 	public void init(IWorkbenchWindow window) {
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		if (selection instanceof ITextSelection) {
 			ITextSelection textSelection = (ITextSelection) selection;
@@ -43,9 +45,11 @@ public class PHPWatchAction extends WatchExpressionAction
 		}
 	}
 
+	@Override
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 	}
 
+	@Override
 	public void run(IAction action) {
 		IStructuredSelection selection = getCurrentSelection();
 		if (selection instanceof TextSelection) {
@@ -72,6 +76,7 @@ public class PHPWatchAction extends WatchExpressionAction
 	/**
 	 * @since 3.4
 	 */
+	@Override
 	public void dispose() {
 	}
 

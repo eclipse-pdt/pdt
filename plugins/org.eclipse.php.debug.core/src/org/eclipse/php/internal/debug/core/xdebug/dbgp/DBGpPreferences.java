@@ -35,7 +35,7 @@ public class DBGpPreferences {
 	public static final String DBGP_CAPTURE_STDERR_PROPERTY = "CaptureStderr"; //$NON-NLS-1$
 	public static final String DBGP_MAX_DATA_PROPERTY = "MaxData"; //$NON-NLS-1$
 
-	private Map<String, Object> preferences = new HashMap<String, Object>();
+	private Map<String, Object> preferences = new HashMap<>();
 
 	public void setValue(String name, int value) {
 		preferences.put(name, value);

@@ -31,6 +31,7 @@ public class PHPProjectMoveWizard extends RefactoringWizard {
 		setDefaultPageTitle(PHPRefactoringUIMessages.getString("PHPMoveWizard.0")); //$NON-NLS-1$
 	}
 
+	@Override
 	protected void addUserInputPages() {
 		addPage(new RefactoringProjectMoveWizardPage(project));
 	}

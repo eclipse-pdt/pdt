@@ -35,7 +35,6 @@ import org.eclipse.php.internal.server.core.manager.ServersManager;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public abstract class AbstractDebuggerSettingsProvider implements IDebuggerSettingsProvider {
 
 	/**
@@ -53,14 +52,14 @@ public abstract class AbstractDebuggerSettingsProvider implements IDebuggerSetti
 
 		@Override
 		public Map<String, Object> storeToMap() {
-			Map<String, Object> settingsMap = new HashMap<String, Object>();
-			Map<String, String> attributes = new HashMap<String, String>();
+			Map<String, Object> settingsMap = new HashMap<>();
+			Map<String, String> attributes = new HashMap<>();
 			attributes.put(TAG_OWNER, settings.getOwnerId());
 			for (String key : settings.getAttributes().keySet()) {
 				attributes.put(key, settings.getAttribute(key));
 			}
 			settingsMap.put(TAG_SETTINGS, attributes);
-			return (Map<String, Object>) settingsMap;
+			return settingsMap;
 		}
 
 		@Override
@@ -70,8 +69,8 @@ public abstract class AbstractDebuggerSettingsProvider implements IDebuggerSetti
 
 	}
 
-	private final Map<String, IDebuggerSettings> settingsCache = new HashMap<String, IDebuggerSettings>();
-	private final Map<String, IDebuggerSettings> defaultsCache = new HashMap<String, IDebuggerSettings>();
+	private final Map<String, IDebuggerSettings> settingsCache = new HashMap<>();
+	private final Map<String, IDebuggerSettings> defaultsCache = new HashMap<>();
 	private boolean cleanup = false;
 	private String id;
 
@@ -116,7 +115,7 @@ public abstract class AbstractDebuggerSettingsProvider implements IDebuggerSetti
 	 */
 	@Override
 	public List<IDebuggerSettings> getAll() {
-		return new ArrayList<IDebuggerSettings>(settingsCache.values());
+		return new ArrayList<>(settingsCache.values());
 	}
 
 	/*
@@ -249,7 +248,7 @@ public abstract class AbstractDebuggerSettingsProvider implements IDebuggerSetti
 	 * Saves settings to XML preferences.
 	 */
 	void save() {
-		List<IXMLPreferencesStorable> persistentSettings = new ArrayList<IXMLPreferencesStorable>();
+		List<IXMLPreferencesStorable> persistentSettings = new ArrayList<>();
 		for (IDebuggerSettings settings : settingsCache.values()) {
 			persistentSettings.add(new PersistentSettings(settings));
 		}
@@ -268,7 +267,7 @@ public abstract class AbstractDebuggerSettingsProvider implements IDebuggerSetti
 			hookSettings();
 		for (Map<String, Object> settings : settingsList) {
 			settings = (Map<String, Object>) settings.get(PersistentSettings.TAG_SETTINGS);
-			Map<String, String> attributes = new HashMap<String, String>();
+			Map<String, String> attributes = new HashMap<>();
 			String ownerId = null;
 			for (String key : settings.keySet()) {
 				if (key.equals(PersistentSettings.TAG_OWNER)) {

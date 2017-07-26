@@ -80,7 +80,7 @@ public enum ProjectOutlineGroups {
 			IDLTKSearchScope scope = SearchEngine.createSearchScope(ProjectOutlineContentProvider.scripProject,
 					IDLTKSearchScope.SOURCES);
 
-			TreeSet<IModelElement> childrenList = new TreeSet<IModelElement>(new Comparator<IModelElement>() {
+			TreeSet<IModelElement> childrenList = new TreeSet<>(new Comparator<IModelElement>() {
 				@Override
 				public int compare(IModelElement o1, IModelElement o2) {
 					int res = o1.getElementName().compareTo(o2.getElementName());
@@ -99,13 +99,13 @@ public enum ProjectOutlineGroups {
 			case GROUP_NAMESPACES:
 				IType[] namespaces = PHPModelAccess.getDefault().findNamespaces(null, null, MatchRule.PREFIX, 0, 0,
 						scope, null);
-				Map<String, List<IType>> nsByName = new HashMap<String, List<IType>>();
+				Map<String, List<IType>> nsByName = new HashMap<>();
 				if (namespaces != null) {
 					for (IType namespace : namespaces) {
 						String namespaceName = namespace.getElementName();
 						List<IType> nsList = nsByName.get(namespaceName);
 						if (nsList == null) {
-							nsList = new LinkedList<IType>();
+							nsList = new LinkedList<>();
 							nsByName.put(namespaceName, nsList);
 						}
 						nsList.add(namespace);

@@ -97,7 +97,7 @@ public class BestMatchHover extends AbstractPHPEditorTextHover
 			return null;
 
 		for (Iterator<ITextHover> iterator = fInstantiatedTextHovers.iterator(); iterator.hasNext();) {
-			ITextHover hover = (ITextHover) iterator.next();
+			ITextHover hover = iterator.next();
 			String s = hover.getHoverInfo(textViewer, hoverRegion);
 			if (s != null && s.trim().length() > 0) {
 				fBestHover = hover;
@@ -122,7 +122,7 @@ public class BestMatchHover extends AbstractPHPEditorTextHover
 			return null;
 
 		for (Iterator<ITextHover> iterator = fInstantiatedTextHovers.iterator(); iterator.hasNext();) {
-			ITextHover hover = (ITextHover) iterator.next();
+			ITextHover hover = iterator.next();
 
 			if (hover instanceof ITextHoverExtension2) {
 				Object info = ((ITextHoverExtension2) hover).getHoverInfo2(textViewer, hoverRegion);

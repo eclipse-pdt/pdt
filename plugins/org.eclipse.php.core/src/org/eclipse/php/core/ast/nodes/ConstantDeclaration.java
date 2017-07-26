@@ -31,8 +31,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  */
 public class ConstantDeclaration extends BodyDeclaration {
 
-	private final ASTNode.NodeList<Identifier> names = new ASTNode.NodeList<Identifier>(NAMES_PROPERTY);
-	private final ASTNode.NodeList<Expression> initializers = new ASTNode.NodeList<Expression>(INITIALIZERS_PROPERTY);
+	private final ASTNode.NodeList<Identifier> names = new ASTNode.NodeList<>(NAMES_PROPERTY);
+	private final ASTNode.NodeList<Expression> initializers = new ASTNode.NodeList<>(INITIALIZERS_PROPERTY);
 
 	/**
 	 * The structural property of this node type.
@@ -52,7 +52,7 @@ public class ConstantDeclaration extends BodyDeclaration {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(3);
 		properyList.add(NAMES_PROPERTY);
 		properyList.add(INITIALIZERS_PROPERTY);
 		properyList.add(MODIFIER_PROPERTY);
@@ -102,6 +102,7 @@ public class ConstantDeclaration extends BodyDeclaration {
 		super(ast);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -110,6 +111,7 @@ public class ConstantDeclaration extends BodyDeclaration {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		Iterator<Identifier> iterator1 = names.iterator();
 		Iterator<Expression> iterator2 = initializers.iterator();
@@ -119,6 +121,7 @@ public class ConstantDeclaration extends BodyDeclaration {
 		}
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		Iterator<Identifier> iterator1 = names.iterator();
@@ -129,6 +132,7 @@ public class ConstantDeclaration extends BodyDeclaration {
 		}
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		Iterator<Identifier> iterator1 = names.iterator();
 		Iterator<Expression> iterator2 = initializers.iterator();
@@ -139,6 +143,7 @@ public class ConstantDeclaration extends BodyDeclaration {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<ConstantDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -162,6 +167,7 @@ public class ConstantDeclaration extends BodyDeclaration {
 		buffer.append(tab).append("</ConstantDeclaration>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.CONSTANT_DECLARATION;
 	}
@@ -180,7 +186,8 @@ public class ConstantDeclaration extends BodyDeclaration {
 		return this.names;
 	}
 
-	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+	@Override
+	final List<? extends ASTNode> internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == NAMES_PROPERTY) {
 			return names();
 		}
@@ -194,6 +201,7 @@ public class ConstantDeclaration extends BodyDeclaration {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

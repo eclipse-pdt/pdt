@@ -65,7 +65,7 @@ public class Variable extends VariableBase {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(2);
 		propertyList.add(NAME_PROPERTY);
 		propertyList.add(DOLLARED_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
@@ -114,6 +114,7 @@ public class Variable extends VariableBase {
 		return new Identifier(start, end, ast, idName);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -122,20 +123,24 @@ public class Variable extends VariableBase {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		name.accept(visitor);
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		name.traverseTopDown(visitor);
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		name.traverseBottomUp(visitor);
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<Variable"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -145,6 +150,7 @@ public class Variable extends VariableBase {
 		buffer.append(tab).append("</Variable>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.VARIABLE;
 	}
@@ -212,6 +218,7 @@ public class Variable extends VariableBase {
 		postReplaceChild(oldChild, expression, nameProperty);
 	}
 
+	@Override
 	ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == getNameProperty()) {
 			if (get) {
@@ -225,12 +232,13 @@ public class Variable extends VariableBase {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
+	@Override
 	boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean value) {
 		if (property == getDollaredProperty()) {
 			if (get) {
 				return isDollared();
 			} else {
-				setIsDollared((Boolean) value);
+				setIsDollared(value);
 				return false;
 			}
 		}
@@ -241,6 +249,7 @@ public class Variable extends VariableBase {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

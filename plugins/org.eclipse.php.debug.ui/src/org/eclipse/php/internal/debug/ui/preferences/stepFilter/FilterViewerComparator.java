@@ -24,6 +24,7 @@ import org.eclipse.ui.model.WorkbenchViewerComparator;
  * @author yaronm
  */
 public class FilterViewerComparator extends WorkbenchViewerComparator {
+	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
 		DebugStepFilter f1 = (DebugStepFilter) e1;
 		DebugStepFilter f2 = (DebugStepFilter) e2;

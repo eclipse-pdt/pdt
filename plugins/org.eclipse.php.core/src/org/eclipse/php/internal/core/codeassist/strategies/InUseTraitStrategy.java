@@ -45,6 +45,7 @@ public class InUseTraitStrategy extends AbstractCompletionStrategy {
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		ICompletionContext context = getContext();
 		if (!(context instanceof AbstractCompletionContext)) {

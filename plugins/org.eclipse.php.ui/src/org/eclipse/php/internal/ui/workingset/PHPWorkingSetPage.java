@@ -213,7 +213,7 @@ public class PHPWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	@Override
 	public void finish() {
 		String workingSetName = fWorkingSetName.getText();
-		List<IAdaptable> elements = new ArrayList<>(10);
+		List<Object> elements = new ArrayList<>(10);
 		findCheckedElements(elements, fTree.getInput());
 		if (fWorkingSet == null) {
 			IWorkingSetManager workingSetManager = PlatformUI.getWorkbench().getWorkingSetManager();
@@ -291,7 +291,7 @@ public class PHPWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		return false;
 	}
 
-	private void findCheckedElements(List checkedResources, Object parent) {
+	private void findCheckedElements(List<Object> checkedResources, Object parent) {
 		Object[] children = fTreeContentProvider.getChildren(parent);
 		for (int i = 0; i < children.length; i++) {
 			if (fTree.getGrayed(children[i]))

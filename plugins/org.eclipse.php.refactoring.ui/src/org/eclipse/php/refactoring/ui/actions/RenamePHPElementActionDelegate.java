@@ -49,6 +49,7 @@ public class RenamePHPElementActionDelegate implements IPHPActionDelegator {
 	private IWorkbenchWindow fWindow;
 	private ISelection selection;
 
+	@Override
 	public void run(IAction action) {
 		// The action is run from a editor.
 		if (selection instanceof ITextSelection) {
@@ -200,6 +201,7 @@ public class RenamePHPElementActionDelegate implements IPHPActionDelegator {
 
 		} else {
 			RenameResourceAction renameAction = new RenameResourceAction(new IShellProvider() {
+				@Override
 				public Shell getShell() {
 					return fWindow.getShell();
 				}
@@ -234,17 +236,21 @@ public class RenamePHPElementActionDelegate implements IPHPActionDelegator {
 		return object instanceof IScriptFolder || object instanceof IScriptProject || object instanceof ProjectFragment;
 	}
 
+	@Override
 	public void dispose() {
 	}
 
+	@Override
 	public void init(IWorkbenchWindow window) {
 		this.fWindow = window;
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.selection = selection;
 	}
 
+	@Override
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 	}
 

@@ -89,7 +89,7 @@ public class ClassDeclaration extends TypeDeclaration implements IPHPDocAwareDec
 
 	public void addInterface(TypeReference iface) {
 		if (interfaceList == null) {
-			interfaceList = new LinkedList<TypeReference>();
+			interfaceList = new LinkedList<>();
 		}
 		interfaceList.add(iface);
 	}
@@ -98,6 +98,7 @@ public class ClassDeclaration extends TypeDeclaration implements IPHPDocAwareDec
 		this.interfaceList = interfaceList;
 	}
 
+	@Override
 	public ASTListNode getSuperClasses() {
 		int start = getBodyStart() - 1;
 		ASTListNode listNode = new ASTListNode(start, start);
@@ -119,8 +120,9 @@ public class ClassDeclaration extends TypeDeclaration implements IPHPDocAwareDec
 		return listNode;
 	}
 
+	@Override
 	public List<String> getSuperClassNames() {
-		List<String> names = new LinkedList<String>();
+		List<String> names = new LinkedList<>();
 		if (superClass != null) {
 			names.add(superClass.getName());
 		}
@@ -132,18 +134,22 @@ public class ClassDeclaration extends TypeDeclaration implements IPHPDocAwareDec
 		return names;
 	}
 
+	@Override
 	public final void addSuperClass(ASTNode expression) {
 		throw new IllegalStateException("Use setSuperClass() or setInterfaceList()/addInterface() instead"); //$NON-NLS-1$
 	}
 
+	@Override
 	public final void setSuperClasses(ASTListNode exprList) {
 		throw new IllegalStateException("Use setSuperClass() or setInterfaceList()/addInterface() instead"); //$NON-NLS-1$
 	}
 
+	@Override
 	public PHPDocBlock getPHPDoc() {
 		return phpDoc;
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.CLASS_DECLARATION;
 	}
@@ -155,6 +161,7 @@ public class ClassDeclaration extends TypeDeclaration implements IPHPDocAwareDec
 	 * org.eclipse.php.internal.core.compiler.ast.nodes.IRecoverable#isRecovered
 	 * ()
 	 */
+	@Override
 	public boolean isRecovered() {
 		return isRecovered;
 	}
@@ -165,6 +172,7 @@ public class ClassDeclaration extends TypeDeclaration implements IPHPDocAwareDec
 	 * @see org.eclipse.php.internal.core.compiler.ast.nodes.IRecoverable#
 	 * setRecovered(boolean)
 	 */
+	@Override
 	public void setRecovered(boolean isRecovered) {
 		this.isRecovered = isRecovered;
 	}
@@ -172,9 +180,11 @@ public class ClassDeclaration extends TypeDeclaration implements IPHPDocAwareDec
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
+	@Override
 	public final void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}

@@ -82,6 +82,7 @@ public class PHPNamespaceConstantType implements IEvaluatedType {
 		return valueType;
 	}
 
+	@Override
 	public String getTypeName() {
 		if (valueType != null) {
 			return valueType.getTypeName();
@@ -107,6 +108,7 @@ public class PHPNamespaceConstantType implements IEvaluatedType {
 		return global;
 	}
 
+	@Override
 	public boolean subtypeOf(IEvaluatedType type) {
 		return false;
 	}
@@ -115,6 +117,7 @@ public class PHPNamespaceConstantType implements IEvaluatedType {
 		return constantName;
 	}
 
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -123,6 +126,7 @@ public class PHPNamespaceConstantType implements IEvaluatedType {
 		return result;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

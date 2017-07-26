@@ -29,7 +29,6 @@ import org.eclipse.php.internal.core.util.PHPSearchEngine;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 
-@SuppressWarnings("restriction")
 public class PHPINIUtil {
 
 	private static final String PHP_INI_FILE = "php.ini"; //$NON-NLS-1$
@@ -98,7 +97,7 @@ public class PHPINIUtil {
 		// Modify include path:
 		if (project != null) {
 			IncludePath[] path = PHPSearchEngine.buildIncludePath(project);
-			List<String> includePath = new ArrayList<String>(path.length);
+			List<String> includePath = new ArrayList<>(path.length);
 			for (IncludePath pathObject : path) {
 				if (pathObject.isBuildpath()) {
 					IBuildpathEntry entry = (IBuildpathEntry) pathObject.getEntry();

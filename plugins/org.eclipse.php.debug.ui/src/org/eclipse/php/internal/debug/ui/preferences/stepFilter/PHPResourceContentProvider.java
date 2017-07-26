@@ -46,10 +46,11 @@ import org.eclipse.ui.PlatformUI;
  */
 public class PHPResourceContentProvider implements ITreeContentProvider {
 
+	@Override
 	public Object[] getChildren(Object parentElement) {
 		try {
 			if (parentElement instanceof IContainer) {
-				List<Object> r = new LinkedList<Object>();
+				List<Object> r = new LinkedList<>();
 				// Add all members:
 				IContainer container = (IContainer) parentElement;
 				IResource[] members = container.members();
@@ -101,7 +102,7 @@ public class PHPResourceContentProvider implements ITreeContentProvider {
 				File file = ipFile.file;
 				if (file.isDirectory()) {
 					File files[] = file.listFiles();
-					List<Object> r = new ArrayList<Object>(files.length);
+					List<Object> r = new ArrayList<>(files.length);
 					for (File currentFile : files) {
 						r.add(new IncPathFile(ipFile.IBuildpathEntry, currentFile));
 					}
@@ -121,6 +122,7 @@ public class PHPResourceContentProvider implements ITreeContentProvider {
 		return false;
 	}
 
+	@Override
 	public Object getParent(Object element) {
 		if (element instanceof IResource) {
 			return ((IResource) element).getParent();
@@ -132,17 +134,21 @@ public class PHPResourceContentProvider implements ITreeContentProvider {
 		return null;
 	}
 
+	@Override
 	public boolean hasChildren(Object element) {
 		return getChildren(element).length > 0;
 	}
 
+	@Override
 	public Object[] getElements(Object inputElement) {
 		return getChildren(inputElement);
 	}
 
+	@Override
 	public void dispose() {
 	}
 
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 	}
 }
@@ -160,10 +166,12 @@ class IncPathFile {
 		return IBuildpathEntry;
 	}
 
+	@Override
 	public int hashCode() {
 		return file.hashCode() + 13 * IBuildpathEntry.hashCode();
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof IncPathFile)) {
 			return false;
@@ -175,6 +183,7 @@ class IncPathFile {
 
 class PHPResLabelProvider extends ScriptUILabelProvider {
 
+	@Override
 	public Image getImage(Object element) {
 		if (element instanceof IBuildpathEntry) {
 			IBuildpathEntry buildpathEntry = (IBuildpathEntry) element;
@@ -195,6 +204,7 @@ class PHPResLabelProvider extends ScriptUILabelProvider {
 		return super.getImage(element);
 	}
 
+	@Override
 	public String getText(Object element) {
 		if (element instanceof IBuildpathEntry) {
 			IBuildpathEntry includePathEntry = (IBuildpathEntry) element;

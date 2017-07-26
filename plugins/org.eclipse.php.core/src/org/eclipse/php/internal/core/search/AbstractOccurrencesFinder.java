@@ -43,7 +43,7 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 	protected ProblemDesc[] fProblems;
 
 	protected NamespaceDeclaration fCurrentNamespace;
-	protected Map<String, UseStatementPart> fLastUseParts = new HashMap<String, UseStatementPart>();
+	protected Map<String, UseStatementPart> fLastUseParts = new HashMap<>();
 
 	static class ProblemDesc {
 		int kind;
@@ -70,6 +70,7 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 	 * org.eclipse.php.internal.ui.search.IOccurrencesFinder#initialize(org.
 	 * eclipse.php.internal.core.ast.nodes.Program, int, int)
 	 */
+	@Override
 	public String initialize(Program root, int offset, int length) {
 		return initialize(root, NodeFinder.perform(root, offset, length));
 	}
@@ -80,8 +81,9 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 	 * @see
 	 * org.eclipse.php.internal.ui.search.IOccurrencesFinder#getOccurrences()
 	 */
+	@Override
 	public OccurrenceLocation[] getOccurrences() {
-		fResult = new ArrayList<OccurrenceLocation>();
+		fResult = new ArrayList<>();
 		findOccurrences();
 		if (fResult.isEmpty())
 			return null;
@@ -175,6 +177,7 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 	 * 
 	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getASTRoot()
 	 */
+	@Override
 	public Program getASTRoot() {
 		return fASTRoot;
 	}
@@ -184,6 +187,7 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 	 * 
 	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getJobLabel()
 	 */
+	@Override
 	public String getJobLabel() {
 		return "OccurrencesFinder_job_label"; //$NON-NLS-1$
 	}
@@ -194,6 +198,7 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 	 * @see
 	 * org.eclipse.php.internal.ui.search.IOccurrencesFinder#getSearchKind()
 	 */
+	@Override
 	public int getSearchKind() {
 		return IOccurrencesFinder.K_OCCURRENCE;
 	}
@@ -204,6 +209,7 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 	 * @seeorg.eclipse.php.internal.ui.search.IOccurrencesFinder#
 	 * getUnformattedPluralLabel()
 	 */
+	@Override
 	public String getUnformattedPluralLabel() {
 		return "OccurrencesFinder_label_plural"; //$NON-NLS-1$
 	}
@@ -214,21 +220,25 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 	 * @seeorg.eclipse.php.internal.ui.search.IOccurrencesFinder#
 	 * getUnformattedSingularLabel()
 	 */
+	@Override
 	public String getUnformattedSingularLabel() {
 		return "OccurrencesFinder_label_singular"; //$NON-NLS-1$
 	}
 
+	@Override
 	public boolean visit(NamespaceDeclaration namespaceDeclaration) {
 		fCurrentNamespace = namespaceDeclaration;
 		fLastUseParts.clear();
 		return true;
 	}
 
+	@Override
 	public void endVisit(NamespaceDeclaration namespaceDeclaration) {
 		fCurrentNamespace = null;
 		fLastUseParts.clear();
 	}
 
+	@Override
 	public boolean visit(UseStatement useStatement) {
 		List<UseStatementPart> useParts = useStatement.parts();
 		for (UseStatementPart part : useParts) {

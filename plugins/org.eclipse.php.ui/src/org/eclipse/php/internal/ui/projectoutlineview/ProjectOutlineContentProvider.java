@@ -49,7 +49,7 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 	private Object fInput;
 	static IScriptProject scripProject = null;
 
-	private Collection fPendingUpdates;
+	private Collection<Runnable> fPendingUpdates;
 
 	/**
 	 * Creates a new content provider for Java elements.
@@ -72,7 +72,7 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 	 */
 	@Override
 	public void elementChanged(final ElementChangedEvent event) {
-		final ArrayList runnables = new ArrayList();
+		final ArrayList<Runnable> runnables = new ArrayList<>();
 		try {
 			// 58952 delete project does not update Package Explorer [package
 			// explorer]
@@ -90,7 +90,7 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 		}
 	}
 
-	protected final void executeProjOutlineRunnables(final Collection runnables) {
+	protected final void executeProjOutlineRunnables(final Collection<Runnable> runnables) {
 
 		// now post all collected runnables
 		Control ctrl = fViewer.getControl();
@@ -122,7 +122,7 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 	 */
 	@Override
 	public void runPendingUpdates() {
-		Collection pendingUpdates;
+		Collection<Runnable> pendingUpdates;
 		synchronized (this) {
 			pendingUpdates = fPendingUpdates;
 			fPendingUpdates = null;
@@ -135,14 +135,14 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 		}
 	}
 
-	private void runUpdates(final Collection runnables) {
-		Iterator runnableIterator = runnables.iterator();
+	private void runUpdates(final Collection<Runnable> runnables) {
+		Iterator<Runnable> runnableIterator = runnables.iterator();
 		while (runnableIterator.hasNext()) {
-			((Runnable) runnableIterator.next()).run();
+			runnableIterator.next().run();
 		}
 	}
 
-	private boolean inputDeleted(final Collection runnables) {
+	private boolean inputDeleted(final Collection<Runnable> runnables) {
 		if (fInput == null) {
 			return false;
 		}
@@ -239,7 +239,7 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 	 * @throws JavaModelException
 	 *             thrown when the access to an element failed
 	 */
-	private boolean processDelta(final IModelElementDelta delta, final Collection runnables) throws ModelException {
+	private boolean processDelta(final IModelElementDelta delta, final Collection<Runnable> runnables) throws ModelException {
 
 		int kind = delta.getKind();
 		IModelElement element = delta.getElement();
@@ -280,7 +280,7 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 								IModelElement itemData = (IModelElement) treeItem.getData();
 								if (itemData != null) {
 									if (removedPath.isPrefixOf(itemData.getPath())) {
-										postRemove((IModelElement) treeItem.getData(), runnables);
+										postRemove(treeItem.getData(), runnables);
 									}
 								}
 							}
@@ -300,7 +300,7 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 	}
 
 	/* package */void handleAffectedChildren(final IModelElementDelta delta, final IModelElement element,
-			final Collection runnables) throws ModelException {
+			final Collection<Runnable> runnables) throws ModelException {
 
 		IModelElementDelta[] affectedChildren = delta.getAffectedChildren();
 

@@ -16,6 +16,7 @@ import org.eclipse.jface.text.IDocument;
 
 public class PHPDocumentSetupParticipant implements IDocumentSetupParticipant {
 
+	@Override
 	public void setup(IDocument document) {
 	}
 

@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.mapping.IResourceChangeDescriptionFactory;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.corext.refactoring.reorg.RefactoringModifications;
 import org.eclipse.dltk.internal.corext.refactoring.util.ModelElementUtil;
@@ -37,12 +38,12 @@ import org.eclipse.ltk.core.refactoring.participants.*;
  */
 public class DeleteModifications extends RefactoringModifications {
 
-	private List fDelete;
-	private List fPackagesToDelete;
+	private List<IAdaptable> fDelete;
+	private List<IModelElement> fPackagesToDelete;
 
 	public DeleteModifications() {
-		fDelete = new ArrayList();
-		fPackagesToDelete = new ArrayList();
+		fDelete = new ArrayList<>();
+		fPackagesToDelete = new ArrayList<>();
 	}
 
 	public void delete(IResource resource) {
@@ -115,9 +116,9 @@ public class DeleteModifications extends RefactoringModifications {
 
 	}
 
-	public List postProcess() throws CoreException {
-		ArrayList resourcesCollector = new ArrayList();
-		for (Iterator iter = fPackagesToDelete.iterator(); iter.hasNext();) {
+	public List<IResource> postProcess() throws CoreException {
+		ArrayList<IResource> resourcesCollector = new ArrayList<>();
+		for (Iterator<IModelElement> iter = fPackagesToDelete.iterator(); iter.hasNext();) {
 			IScriptFolder pack = (IScriptFolder) iter.next();
 			handleScriptFolderDelete(pack, resourcesCollector);
 		}
@@ -126,7 +127,7 @@ public class DeleteModifications extends RefactoringModifications {
 
 	@Override
 	public void buildDelta(IResourceChangeDescriptionFactory deltaFactory) {
-		for (Iterator iter = fDelete.iterator(); iter.hasNext();) {
+		for (Iterator<IAdaptable> iter = fDelete.iterator(); iter.hasNext();) {
 			Object element = iter.next();
 			if (element instanceof IResource) {
 				deltaFactory.delete((IResource) element);
@@ -138,13 +139,13 @@ public class DeleteModifications extends RefactoringModifications {
 	@Override
 	public RefactoringParticipant[] loadParticipants(RefactoringStatus status, RefactoringProcessor owner,
 			String[] natures, SharableParticipants shared) {
-		List result = new ArrayList();
-		for (Iterator iter = fDelete.iterator(); iter.hasNext();) {
+		List<RefactoringParticipant> result = new ArrayList<>();
+		for (Iterator<IAdaptable> iter = fDelete.iterator(); iter.hasNext();) {
 			result.addAll(Arrays.asList(ParticipantManager.loadDeleteParticipants(status, owner, iter.next(),
 					new DeleteArguments(), natures, shared)));
 		}
 		result.addAll(Arrays.asList(getResourceModifications().getParticipants(status, owner, natures, shared)));
-		return (RefactoringParticipant[]) result.toArray(new RefactoringParticipant[result.size()]);
+		return result.toArray(new RefactoringParticipant[result.size()]);
 	}
 
 	/**
@@ -158,7 +159,7 @@ public class DeleteModifications extends RefactoringModifications {
 	 * @param resourcesCollector
 	 * 
 	 */
-	private void handleScriptFolderDelete(IScriptFolder pack, ArrayList resourcesCollector) throws CoreException {
+	private void handleScriptFolderDelete(IScriptFolder pack, ArrayList<IResource> resourcesCollector) throws CoreException {
 		final IContainer container = (IContainer) pack.getResource();
 		if (container == null)
 			return;

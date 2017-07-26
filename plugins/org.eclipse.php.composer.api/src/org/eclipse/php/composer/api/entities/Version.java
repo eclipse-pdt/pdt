@@ -26,7 +26,7 @@ public class Version extends Entity implements Comparable<Version> {
 	public final static int BEGIN = 0;
 	public final static int END = 1;
 
-	private List<Version> versions = new ArrayList<Version>();
+	private List<Version> versions = new ArrayList<>();
 
 	/**
 	 * Passed version string
@@ -68,6 +68,7 @@ public class Version extends Entity implements Comparable<Version> {
 			for (int i = 1; i < parts.length; i++) {
 				Version v = new Version(parts[i]);
 				v.addPropertyChangeListener(new PropertyChangeListener() {
+					@Override
 					public void propertyChange(PropertyChangeEvent evt) {
 						reset();
 					}
@@ -333,6 +334,7 @@ public class Version extends Entity implements Comparable<Version> {
 	/**
 	 * @return the version
 	 */
+	@Override
 	public String toString() {
 		if ("".equals(version) || version == null) { //$NON-NLS-1$
 			version = build();
@@ -518,6 +520,7 @@ public class Version extends Entity implements Comparable<Version> {
 		firePropertyChange("prefix", this.prefix, this.prefix = prefix); //$NON-NLS-1$
 	}
 
+	@Override
 	public int compareTo(Version anotherVersion) {
 		if ("dev-master".equals(toString())) { //$NON-NLS-1$
 			return -1;

@@ -67,7 +67,7 @@ public class ParameterInfo {
 	 */
 	public static ParameterInfo createInfoForAddedParameter(String type,
 			String name) {
-		ParameterInfo info = new ParameterInfo("", INDEX_FOR_ADDED); //$NON-NLS-1$ //$NON-NLS-2$
+		ParameterInfo info = new ParameterInfo("", INDEX_FOR_ADDED); //$NON-NLS-1$ 
 		info.setNewTypeName(type);
 		info.setNewName(name);
 		info.setResolve(false);
@@ -80,7 +80,7 @@ public class ParameterInfo {
 
 	public static ParameterInfo createInfoForAddedParameter(String type,
 			String name, String defaultValue) {
-		ParameterInfo info = new ParameterInfo("", INDEX_FOR_ADDED); //$NON-NLS-1$ //$NON-NLS-2$
+		ParameterInfo info = new ParameterInfo("", INDEX_FOR_ADDED); //$NON-NLS-1$ 
 		info.setNewTypeName(type);
 		info.setNewName(name);
 		info.setDefaultValue(defaultValue);
@@ -90,7 +90,7 @@ public class ParameterInfo {
 	public static ParameterInfo createInfoForAddedParameter(
 			ITypeBinding typeBinding, String type, String name,
 			String defaultValue) {
-		ParameterInfo info = new ParameterInfo(null, "", INDEX_FOR_ADDED); //$NON-NLS-1$ //$NON-NLS-2$
+		ParameterInfo info = new ParameterInfo(null, "", INDEX_FOR_ADDED); //$NON-NLS-1$ 
 		info.setNewTypeName(type);
 		info.setNewName(name);
 		info.setDefaultValue(defaultValue);
@@ -203,8 +203,9 @@ public class ParameterInfo {
 		fDefaultValue = value;
 	}
 
+	@Override
 	public String toString() {
-		return fOldName + " @" + fOldIndex + " -> " //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+		return fOldName + " @" + fOldIndex + " -> " //$NON-NLS-1$//$NON-NLS-2$
 				+ fNewTypeName + " " + fNewName + ": " + fDefaultValue //$NON-NLS-1$//$NON-NLS-2$
 				+ (fIsDeleted ? " (deleted)" : " (stays)"); //$NON-NLS-1$//$NON-NLS-2$
 	}

@@ -46,7 +46,7 @@ public class InstallActionDelegate implements IDelegate {
 		final ICommand buildCommand = description.newCommand();
 		buildCommand.setBuilderName(ComposerBuildPathManagementBuilder.ID);
 
-		final List<ICommand> commands = new ArrayList<ICommand>();
+		final List<ICommand> commands = new ArrayList<>();
 		commands.add(buildCommand);
 		commands.addAll(Arrays.asList(description.getBuildSpec()));
 

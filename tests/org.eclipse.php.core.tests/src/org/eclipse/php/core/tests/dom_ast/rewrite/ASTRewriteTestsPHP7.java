@@ -42,6 +42,7 @@ public class ASTRewriteTestsPHP7 extends ASTRewriteTestsPHP56 {
 		return PHPVersion.PHP7_0;
 	}
 
+	@Override
 	@Test
 	public void staticMemberWithArray() throws Exception {
 		String str = "<?php MyClass::$$a[5];?>";
@@ -109,6 +110,7 @@ public class ASTRewriteTestsPHP7 extends ASTRewriteTestsPHP56 {
 		checkResult("<?php class Test { public function test($tmp) {} }\n ?>");
 	}
 
+	@Override
 	@Ignore
 	public void refernceInstanciation() throws Exception {
 		// no longer valid for PHP7+

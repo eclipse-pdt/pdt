@@ -37,22 +37,28 @@ public class TextImplForPHP extends TextImpl implements IAdaptable, IImplForPHP 
 		setData(data);
 	}
 
+	@Override
 	protected boolean isNotNestedContent(String regionType) {
 		return regionType != PHPRegionContext.PHP_CONTENT;
 	}
 
+	@Override
 	protected void setOwnerDocument(Document ownerDocument) {
 		super.setOwnerDocument(ownerDocument);
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
 	public Object getAdapter(Class adapter) {
 		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
 
+	@Override
 	public IModelElement getModelElement() {
 		return modelElement;
 	}
 
+	@Override
 	public void setModelElement(IModelElement modelElement) {
 		this.modelElement = modelElement;
 	}

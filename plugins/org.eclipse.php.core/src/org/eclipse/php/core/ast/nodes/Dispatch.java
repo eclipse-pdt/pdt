@@ -69,6 +69,7 @@ public abstract class Dispatch extends VariableBase {
 		postReplaceChild(oldChild, dispatcher, getDispatcherProperty());
 	}
 
+	@Override
 	ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == getDispatcherProperty()) {
 			if (get) {

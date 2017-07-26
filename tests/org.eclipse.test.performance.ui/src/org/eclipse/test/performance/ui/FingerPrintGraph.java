@@ -86,7 +86,7 @@ public class FingerPrintGraph {
 	int imageHeight;
 	int graphWidth;
 	int graphHeight;
-	Map resources = new HashMap();
+	Map<String, Resource> resources = new HashMap<>();
 
 	// Data fields
 	int count = 0;
@@ -107,7 +107,7 @@ public class FingerPrintGraph {
 	 * This area applies to a configuration results and is made of several zones.
 	 */
 	class BarGraphArea {
-		List zones;
+		List<AreaZone> zones;
 		private ConfigResults configResults;
 
 		/*
@@ -149,14 +149,14 @@ public class FingerPrintGraph {
 
 		 BarGraphArea(ConfigResults results) {
 			this.configResults = results;
-			this.zones = new ArrayList();
+			this.zones = new ArrayList<>();
         }
 
 		void print(PrintStream stream) {
 			String url = this.configResults.getName() + "/" + ((ScenarioResults) this.configResults.getParent()).getFileName() + ".html";
 			int size = this.zones.size();
 			for (int i=0; i<size; i++) {
-				AreaZone zone = (AreaZone) this.zones.get(i);
+				AreaZone zone = this.zones.get(i);
 				zone.print(url, stream);
 			}
 		}
@@ -169,7 +169,7 @@ public class FingerPrintGraph {
 	}
 
 
-FingerPrintGraph(File dir, String fileName, int width, List results) {
+FingerPrintGraph(File dir, String fileName, int width, List<?> results) {
     super();
     this.imageWidth = width;
     this.count = results.size();
@@ -626,9 +626,9 @@ final public void paint(PrintStream stream) {
 	}
 
 	// Dispose created graphic resources
-	Iterator iterator = this.resources.values().iterator();
+	Iterator<Resource> iterator = this.resources.values().iterator();
 	while (iterator.hasNext()) {
-		Resource resource = (Resource) iterator.next();
+		Resource resource = iterator.next();
 		resource.dispose();
 	}
 	this.resources.clear();

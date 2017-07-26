@@ -165,6 +165,7 @@ public class DebugSearchEngine {
 		final PathEntry[] localFile = new PathEntry[1];
 
 		Job findJob = new Job(Messages.DebugSearchEngine_0) {
+			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				// First, look into the path mapper:
 				localFile[0] = pathMapper.getLocalFile(remoteFile);
@@ -193,14 +194,14 @@ public class DebugSearchEngine {
 					return Status.OK_STATUS;
 				}
 
-				List<PathEntry> results = new LinkedList<PathEntry>();
+				List<PathEntry> results = new LinkedList<>();
 
 				IncludePath[] includePaths;
 				IBuildpathEntry[] buildPaths = null;
 
 				// Search in the whole workspace:
-				Set<IncludePath> s = new LinkedHashSet<IncludePath>();
-				Set<IBuildpathEntry> b = new LinkedHashSet<IBuildpathEntry>();
+				Set<IncludePath> s = new LinkedHashSet<>();
+				Set<IBuildpathEntry> b = new LinkedHashSet<>();
 				IProject[] projects = null;
 				if (currentProject != null && currentProject.isOpen()) {
 					projects = new IProject[] { currentProject };
@@ -373,7 +374,7 @@ public class DebugSearchEngine {
 				// search in opened editors
 				searchOpenedEditors(results, abstractPath);
 				// Remove duplicated entries
-				results = new LinkedList<PathEntry>(new LinkedHashSet<PathEntry>(results));
+				results = new LinkedList<>(new LinkedHashSet<>(results));
 
 				if (!foundInWorkspace && results.size() == 1 && abstractPath.equals(results.get(0).getAbstractPath())) {
 					localFile[0] = results.get(0);
@@ -417,7 +418,7 @@ public class DebugSearchEngine {
 
 	private static List<PathEntry> preFilterItems(VirtualPath remotePath, List<PathEntry> entries,
 			IDebugTarget debugTarget) {
-		final List<PathEntry> filtered = new LinkedList<PathEntry>();
+		final List<PathEntry> filtered = new LinkedList<>();
 		final List<PathEntry> mostMatchEntries = getMostMatchEntries(entries, remotePath);
 		PathEntry matchByConfig = null;
 		if (mostMatchEntries.size() == 0 || mostMatchEntries.size() > 1) {
@@ -461,7 +462,7 @@ public class DebugSearchEngine {
 		if (remotePath.getSegmentsCount() == 1) {
 			return entries;
 		}
-		Map<Integer, List<PathEntry>> map = new HashMap<Integer, List<PathEntry>>();
+		Map<Integer, List<PathEntry>> map = new HashMap<>();
 		int mostMatchSegmentsNumber = 1;
 		for (int i = 0; i < entries.size(); i++) {
 			PathEntry pathEntry = entries.get(i);
@@ -472,7 +473,7 @@ public class DebugSearchEngine {
 			}
 			List<PathEntry> list = map.get(matchSegmentsNumber);
 			if (list == null) {
-				list = new ArrayList<PathEntry>();
+				list = new ArrayList<>();
 				map.put(matchSegmentsNumber, list);
 			}
 			list.add(pathEntry);
@@ -500,7 +501,7 @@ public class DebugSearchEngine {
 
 	private static void searchOpenedEditors(List<PathEntry> results, VirtualPath remotePath) {
 		// Collect open editor references:
-		List<IEditorReference> editors = new ArrayList<IEditorReference>(0);
+		List<IEditorReference> editors = new ArrayList<>(0);
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
 		for (IWorkbenchWindow element : windows) {
@@ -539,7 +540,7 @@ public class DebugSearchEngine {
 
 	private static synchronized IPathEntryFilter[] initializePathEntryFilters() {
 		if (filters == null) {
-			Map<String, IPathEntryFilter> filtersMap = new HashMap<String, IPathEntryFilter>();
+			Map<String, IPathEntryFilter> filtersMap = new HashMap<>();
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
 			IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPDebugPlugin.getID(),
 					"pathEntryFilters"); //$NON-NLS-1$
@@ -618,8 +619,10 @@ public class DebugSearchEngine {
 			return;
 		}
 		WorkspaceJob findJob = new WorkspaceJob("") { //$NON-NLS-1$
+			@Override
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				resource.accept(new IResourceVisitor() {
+					@Override
 					public boolean visit(IResource resource) throws CoreException {
 						if (!resource.isAccessible()) {
 							return false;
@@ -662,10 +665,12 @@ public class DebugSearchEngine {
 			phpFilePattern = Pattern.compile(buf.toString(), Pattern.CASE_INSENSITIVE);
 		}
 
+		@Override
 		public void contentTypeChanged(ContentTypeChangeEvent event) {
 			buildPHPFilePattern();
 		}
 
+		@Override
 		public boolean accept(File pathname) {
 			if (pathname.isDirectory() || phpFilePattern.matcher(pathname.getName()).matches()) {
 				return true;

@@ -21,14 +21,15 @@ import org.eclipse.test.internal.performance.data.Dim;
 
 public class TimeLineGraph extends LineGraph{
 
-    Hashtable fItemGroups;
+    Hashtable<String, List<TimeLineGraphItem>> fItemGroups;
 
     public TimeLineGraph (String title, Dim dim) {
         super(title, dim);
-        this.fItemGroups=new Hashtable();
+        this.fItemGroups=new Hashtable<>();
     }
 
-    public void paint(Image im) {
+    @Override
+	public void paint(Image im) {
 
         Rectangle bounds= im.getBounds();
 
@@ -75,11 +76,11 @@ public class TimeLineGraph extends LineGraph{
 
         setCoordinates(right-left,left,bottom-top,bottom,max-min);
 
-        Enumeration _enum=this.fItemGroups.elements();
-        Comparator comparator=new TimeLineGraphItem.GraphItemComparator();
+        Enumeration<List<TimeLineGraphItem>> _enum=this.fItemGroups.elements();
+        Comparator<Object> comparator=new TimeLineGraphItem.GraphItemComparator();
 
         while (_enum.hasMoreElements()) {
- 			List items = (List) _enum.nextElement();
+ 			List<?> items = _enum.nextElement();
 			Object[] fItemsArray=items.toArray();
 			Arrays.sort(fItemsArray,comparator);
 			int lastx = 0;
@@ -155,20 +156,21 @@ public class TimeLineGraph extends LineGraph{
 	}
 
     public void addItem(String groupName,String name, String description, double value, Color col, boolean display, long timestamp,boolean isSpecial,boolean drawBaseline) {
-      	List items = (List) this.fItemGroups.get(groupName);
+      	List<TimeLineGraphItem> items = this.fItemGroups.get(groupName);
   		if (this.fItemGroups.get(groupName) == null) {
-  			items=new ArrayList();
+  			items=new ArrayList<>();
   			this.fItemGroups.put(groupName, items);
   		}
   		items.add(new TimeLineGraphItem(name, description, value, col, display,
   				timestamp,isSpecial,drawBaseline));
     }
 
-    public double getMaxItem() {
-    	Enumeration _enum=this.fItemGroups.elements();
+    @Override
+	public double getMaxItem() {
+    	Enumeration<List<TimeLineGraphItem>> _enum=this.fItemGroups.elements();
         double maxItem= 0;
     	while (_enum.hasMoreElements()) {
-			List items = (List) _enum.nextElement();
+			List<?> items = _enum.nextElement();
 			for (int i = 0; i < items.size(); i++) {
 				TimeLineGraphItem graphItem = (TimeLineGraphItem) items.get(i);
 				if (graphItem.value > maxItem)
@@ -180,12 +182,13 @@ public class TimeLineGraph extends LineGraph{
         return maxItem;
     }
 
-    public double getMinItem() {
-       	Enumeration _enum = this.fItemGroups.elements();
+    @Override
+	public double getMinItem() {
+       	Enumeration<List<TimeLineGraphItem>> _enum = this.fItemGroups.elements();
 		double minItem = getMaxItem();
 
 		while (_enum.hasMoreElements()) {
-			List items = (List) _enum.nextElement();
+			List<?> items = _enum.nextElement();
 			for (int i = 0; i < items.size(); i++) {
 				TimeLineGraphItem graphItem = (TimeLineGraphItem) items.get(i);
 				if (graphItem.value < minItem)
@@ -197,13 +200,13 @@ public class TimeLineGraph extends LineGraph{
         return minItem;
     }
 
-    private TimeLineGraphItem getMostRecent(Hashtable lineGraphGroups) {
-		Enumeration _enum = lineGraphGroups.elements();
+    private TimeLineGraphItem getMostRecent(Hashtable<String, List<TimeLineGraphItem>> lineGraphGroups) {
+		Enumeration<List<TimeLineGraphItem>> _enum = lineGraphGroups.elements();
 		long mostRecentTimestamp = 0;
 		TimeLineGraphItem mostRecentItem = null;
 
 		while (_enum.hasMoreElements()) {
-			List items = (List) _enum.nextElement();
+			List<?> items = _enum.nextElement();
 			for (int i = 0; i < items.size(); i++) {
 				if (items.size() == 1)
 					return (TimeLineGraphItem) items.get(i);
@@ -221,10 +224,10 @@ public class TimeLineGraph extends LineGraph{
 
     private void setCoordinates(int width, int xOffset, int height, int yOffset, int yValueRange){
 
-        List mainGroup=(ArrayList)this.fItemGroups.get("main");
-        List referenceGroup=(ArrayList)this.fItemGroups.get("reference");
+        List<?> mainGroup=this.fItemGroups.get("main");
+        List<?> referenceGroup=this.fItemGroups.get("reference");
 
-        Comparator comparator=new TimeLineGraphItem.GraphItemComparator();
+        Comparator<Object> comparator=new TimeLineGraphItem.GraphItemComparator();
 
  		Object[] fItemsArray=mainGroup.toArray();
 		Arrays.sort(fItemsArray,comparator);
@@ -258,8 +261,8 @@ public class TimeLineGraph extends LineGraph{
     }
 
 
-	private void setRelativeXPosition (TimeLineGraphItem thisItem, List items){
-			Comparator comparator=new TimeLineGraphItem.GraphItemComparator();
+	private void setRelativeXPosition (TimeLineGraphItem thisItem, List<?> items){
+			Comparator<Object> comparator=new TimeLineGraphItem.GraphItemComparator();
 			Object[] fItemsArray=items.toArray();
 			Arrays.sort(fItemsArray,comparator);
 

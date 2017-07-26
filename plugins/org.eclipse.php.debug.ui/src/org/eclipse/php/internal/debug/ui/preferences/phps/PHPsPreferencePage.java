@@ -51,6 +51,7 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements IWorkb
 	/**
 	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
+	@Override
 	public void init(IWorkbench workbench) {
 		PHPExeVerifier.verify(PHPexes.getInstance().getAllItems());
 	}
@@ -59,6 +60,7 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements IWorkb
 	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse
 	 *      .swt.widgets.Composite)
 	 */
+	@Override
 	protected Control createContents(Composite ancestor) {
 		initializeDialogUnits(ancestor);
 
@@ -86,6 +88,7 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements IWorkb
 	/**
 	 * @see org.eclipse.jface.preference.IPreferencePage#performOk()
 	 */
+	@Override
 	public boolean performOk() {
 		fPHPBlock.commitChanges();
 		return super.performOk();

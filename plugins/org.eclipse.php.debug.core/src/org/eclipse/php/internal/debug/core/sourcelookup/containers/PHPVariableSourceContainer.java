@@ -35,6 +35,7 @@ public class PHPVariableSourceContainer extends CompositeSourceContainer {
 		updateExtentionList();
 	}
 
+	@Override
 	protected ISourceContainer[] createSourceContainers() throws CoreException {
 		IPath path = DLTKCore.getResolvedVariablePath(fPath);
 		File file = path.toFile();
@@ -52,10 +53,12 @@ public class PHPVariableSourceContainer extends CompositeSourceContainer {
 		return container;
 	}
 
+	@Override
 	public String getName() {
 		return fPath.toString();
 	}
 
+	@Override
 	public ISourceContainerType getType() {
 		return null;
 	}

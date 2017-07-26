@@ -36,7 +36,7 @@ public class INIFileModifier {
 
 		public INIFileSection(String name) {
 			this.name = name;
-			this.lines = new LinkedList<String>();
+			this.lines = new LinkedList<>();
 		}
 	}
 
@@ -65,7 +65,7 @@ public class INIFileModifier {
 	 */
 	public INIFileModifier(File configFile) throws IOException {
 		this.configFile = configFile;
-		this.sections = new LinkedList<INIFileSection>();
+		this.sections = new LinkedList<>();
 
 		read();
 	}

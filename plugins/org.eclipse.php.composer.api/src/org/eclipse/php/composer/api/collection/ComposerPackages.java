@@ -49,6 +49,7 @@ public class ComposerPackages extends AbstractJsonArray<ComposerPackage> {
 		fromJson(reader);
 	}
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	protected void doParse(Object obj) {
 		clear();

@@ -118,6 +118,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 * 
 	 * @return the number of keys in this hashtable.
 	 */
+	@Override
 	public int size() {
 		return count;
 	}
@@ -128,6 +129,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 * @return <code>true</code> if this hashtable maps no keys to values;
 	 *         <code>false</code> otherwise.
 	 */
+	@Override
 	public boolean isEmpty() {
 		return count == 0;
 	}
@@ -155,7 +157,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 * @see #values()
 	 * @see Map
 	 */
-	public synchronized Enumeration elements() {
+	public synchronized Enumeration<?> elements() {
 		return getEnumeration(VALUES);
 	}
 
@@ -207,6 +209,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 * @see Map
 	 * @since 1.2
 	 */
+	@Override
 	public boolean containsValue(Object value) {
 		return contains(value);
 	}
@@ -221,6 +224,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 *         <code>false</code> otherwise.
 	 * @see #contains(Object)
 	 */
+	@Override
 	public synchronized boolean containsKey(int key) {
 		Entry tab[] = table;
 		int hash = key;// .hashCode();
@@ -242,6 +246,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 *         <code>null</code> if the key is not mapped to any value in this
 	 *         hashtable.
 	 */
+	@Override
 	public synchronized Object get(int key) {
 		Entry tab[] = table;
 		int hash = key;// .hashCode();
@@ -302,6 +307,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 *                if the key or value is <code>null</code>.
 	 * @see Object#equals(Object)
 	 */
+	@Override
 	public synchronized Object put(/* Object */int key, Object value) {
 		// Make sure the value is not null
 		if (value == null) {
@@ -345,6 +351,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 * @return the value to which the key had been mapped in this hashtable, or
 	 *         <code>null</code> if the key did not have a mapping.
 	 */
+	@Override
 	public synchronized Object remove(/* Object */int key) {
 		Entry tab[] = table;
 		int hash = key;// .hashCode();
@@ -375,8 +382,9 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 *            Mappings to be stored in this map.
 	 * @since 1.2
 	 */
+	@Override
 	public synchronized void putAll(IntMap t) {
-		Iterator i = t.entrySet().iterator();
+		Iterator<?> i = t.entrySet().iterator();
 		while (i.hasNext()) {
 			IntMap.Entry e = (IntMap.Entry) i.next();
 			put(e.getKey(), e.getValue());
@@ -386,6 +394,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	/**
 	 * Clears this hashtable so that it contains no keys.
 	 */
+	@Override
 	public synchronized void clear() {
 		Entry tab[] = table;
 		modCount++;
@@ -401,6 +410,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 * 
 	 * @return a clone of the hashtable.
 	 */
+	@Override
 	public synchronized Object clone() {
 		try {
 			IntHashtable t = (IntHashtable) super.clone();
@@ -431,10 +441,11 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 * 
 	 * @return a string representation of this hashtable.
 	 */
+	@Override
 	public synchronized String toString() {
 		int max = size() - 1;
 		StringBuilder buf = new StringBuilder();
-		Iterator it = entrySet().iterator();
+		Iterator<?> it = entrySet().iterator();
 
 		buf.append("{"); //$NON-NLS-1$
 		for (int i = 0; i <= max; i++) {
@@ -447,14 +458,14 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 		return buf.toString();
 	}
 
-	private Enumeration getEnumeration(int type) {
+	private Enumeration<?> getEnumeration(int type) {
 		if (count == 0) {
 			return emptyEnumerator;
 		}
 		return new Enumerator(type, false);
 	}
 
-	private Iterator getIterator(int type) {
+	private Iterator<Object> getIterator(int type) {
 		if (count == 0) {
 			return emptyIterator;
 		}
@@ -464,8 +475,8 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	// Views
 
 	// private transient Set keySet = null;
-	private transient Set entrySet = null;
-	private transient Collection values = null;
+	private transient Set<?> entrySet = null;
+	private transient Collection<?> values = null;
 
 	/**
 	 * Returns a Set view of the keys contained in this Hashtable. The Set is
@@ -498,17 +509,20 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 * @see Map.Entry
 	 * @since 1.2
 	 */
-	public Set entrySet() {
+	@Override
+	public Set<?> entrySet() {
 		if (entrySet == null)
 			entrySet = Collections.synchronizedSet(new EntrySet());
 		return entrySet;
 	}
 
-	private class EntrySet extends AbstractSet {
-		public Iterator iterator() {
+	private class EntrySet extends AbstractSet<Object> {
+		@Override
+		public Iterator<Object> iterator() {
 			return getIterator(ENTRIES);
 		}
 
+		@Override
 		public boolean contains(Object o) {
 			if (!(o instanceof IntMap.Entry))
 				return false;
@@ -524,6 +538,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 			return false;
 		}
 
+		@Override
 		public boolean remove(Object o) {
 			if (!(o instanceof IntMap.Entry))
 				return false;
@@ -549,10 +564,12 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 			return false;
 		}
 
+		@Override
 		public int size() {
 			return count;
 		}
 
+		@Override
 		public void clear() {
 			IntHashtable.this.clear();
 		}
@@ -568,25 +585,30 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 * @return a collection view of the values contained in this map.
 	 * @since 1.2
 	 */
-	public Collection values() {
+	@Override
+	public Collection<?> values() {
 		if (values == null)
 			values = Collections.synchronizedCollection(new ValueCollection());
 		return values;
 	}
 
-	private class ValueCollection extends AbstractCollection {
-		public Iterator iterator() {
+	private class ValueCollection extends AbstractCollection<Object> {
+		@Override
+		public Iterator<Object> iterator() {
 			return getIterator(VALUES);
 		}
 
+		@Override
 		public int size() {
 			return count;
 		}
 
+		@Override
 		public boolean contains(Object o) {
 			return containsValue(o);
 		}
 
+		@Override
 		public void clear() {
 			IntHashtable.this.clear();
 		}
@@ -602,6 +624,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 * @see Map#equals(Object)
 	 * @since 1.2
 	 */
+	@Override
 	public synchronized boolean equals(Object o) {
 		if (o == this)
 			return true;
@@ -612,7 +635,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 		if (t.size() != size())
 			return false;
 
-		Iterator i = entrySet().iterator();
+		Iterator<?> i = entrySet().iterator();
 		while (i.hasNext()) {
 			IntMap.Entry e = (IntMap.Entry) i.next();
 			/* Object */int key = e.getKey();
@@ -635,9 +658,10 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 * @see Map#hashCode()
 	 * @since 1.2
 	 */
+	@Override
 	public synchronized int hashCode() {
 		int h = 0;
-		Iterator i = entrySet().iterator();
+		Iterator<?> i = entrySet().iterator();
 		while (i.hasNext())
 			h += i.next().hashCode();
 		return h;
@@ -719,20 +743,24 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 			this.next = next;
 		}
 
+		@Override
 		protected Object clone() {
 			return new Entry(hash, key, value, (next == null ? null : (Entry) next.clone()));
 		}
 
 		// Map.Entry Ops
 
+		@Override
 		public int getKey() {
 			return key;
 		}
 
+		@Override
 		public Object getValue() {
 			return value;
 		}
 
+		@Override
 		public Object setValue(Object value) {
 			if (value == null)
 				throw new NullPointerException();
@@ -742,6 +770,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 			return oldValue;
 		}
 
+		@Override
 		public boolean equals(Object o) {
 			if (!(o instanceof IntMap.Entry))
 				return false;
@@ -751,10 +780,12 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 					&& (value == null ? e.getValue() == null : value.equals(e.getValue()));
 		}
 
+		@Override
 		public int hashCode() {
 			return hash ^ (value == null ? 0 : value.hashCode());
 		}
 
+		@Override
 		public String toString() {
 			return key/* .toString() */ + "=" + value.toString(); //$NON-NLS-1$
 		}
@@ -771,7 +802,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 * Iterator methods disabled. This is necessary to avoid unintentionally
 	 * increasing the capabilities granted a user by passing an Enumeration.
 	 */
-	private class Enumerator implements Enumeration, Iterator {
+	private class Enumerator implements Enumeration<Object>, Iterator<Object> {
 		Entry[] table = IntHashtable.this.table;
 		int index = table.length;
 		Entry entry = null;
@@ -796,6 +827,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 			this.iterator = iterator;
 		}
 
+		@Override
 		public boolean hasMoreElements() {
 			Entry e = entry;
 			int i = index;
@@ -809,6 +841,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 			return e != null;
 		}
 
+		@Override
 		public Object nextElement() {
 			Entry et = entry;
 			int i = index;
@@ -829,16 +862,19 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 		}
 
 		// Iterator methods
+		@Override
 		public boolean hasNext() {
 			return hasMoreElements();
 		}
 
+		@Override
 		public Object next() {
 			if (modCount != expectedModCount)
 				throw new ConcurrentModificationException();
 			return nextElement();
 		}
 
+		@Override
 		public void remove() {
 			if (!iterator)
 				throw new UnsupportedOperationException();
@@ -876,15 +912,17 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 * A hashtable enumerator class for empty hash tables, specializes the
 	 * general Enumerator
 	 */
-	private static class EmptyEnumerator implements Enumeration {
+	private static class EmptyEnumerator implements Enumeration<Object> {
 
 		EmptyEnumerator() {
 		}
 
+		@Override
 		public boolean hasMoreElements() {
 			return false;
 		}
 
+		@Override
 		public Object nextElement() {
 			throw new NoSuchElementException("Hashtable Enumerator"); //$NON-NLS-1$
 		}
@@ -893,19 +931,22 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	/**
 	 * A hashtable iterator class for empty hash tables
 	 */
-	private static class EmptyIterator implements Iterator {
+	private static class EmptyIterator implements Iterator<Object> {
 
 		EmptyIterator() {
 		}
 
+		@Override
 		public boolean hasNext() {
 			return false;
 		}
 
+		@Override
 		public Object next() {
 			throw new NoSuchElementException("Hashtable Iterator"); //$NON-NLS-1$
 		}
 
+		@Override
 		public void remove() {
 			throw new IllegalStateException("Hashtable Iterator"); //$NON-NLS-1$
 		}

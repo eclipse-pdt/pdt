@@ -41,6 +41,7 @@ public class TestBuildpathInitializer extends BuildpathContainerInitializer {
 
 	private static final String LIBRARY = ".LIBRARY."; //$NON-NLS-1$
 
+	@Override
 	public void initialize(IPath containerPath, IScriptProject project) throws CoreException {
 
 		if (containerPath.segmentCount() > 0) {
@@ -92,18 +93,22 @@ public class TestBuildpathInitializer extends BuildpathContainerInitializer {
 			return buildPathEntries != null ? buildPathEntries : new IBuildpathEntry[0];
 		}
 
+		@Override
 		public String getDescription() {
 			return description;
 		}
 
+		@Override
 		public int getKind() {
 			return K_SYSTEM;
 		}
 
+		@Override
 		public IPath getPath() {
 			return containerPath;
 		}
 
+		@Override
 		public IBuildpathEntry[] getBuildpathEntries() {
 			return getBuildpathEntries(fProject);
 		}

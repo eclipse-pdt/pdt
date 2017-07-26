@@ -21,6 +21,7 @@ public class NullPerformanceMeter extends PerformanceMeter {
 	/*
 	 * @see org.eclipse.test.performance.PerformanceMeter#start()
 	 */
+	@Override
 	public void start() {
 		// do nothing
 	}
@@ -28,6 +29,7 @@ public class NullPerformanceMeter extends PerformanceMeter {
 	/*
 	 * @see org.eclipse.test.performance.PerformanceMeter#stop()
 	 */
+	@Override
 	public void stop() {
 		// do nothing
 	}
@@ -35,6 +37,7 @@ public class NullPerformanceMeter extends PerformanceMeter {
 	/*
 	 * @see org.eclipse.test.performance.PerformanceMeter#commit()
 	 */
+	@Override
 	public void commit() {
 		// do nothing
 	}
@@ -42,6 +45,7 @@ public class NullPerformanceMeter extends PerformanceMeter {
 	/*
 	 * @see org.eclipse.test.performance.PerformanceMeter#dispose()
 	 */
+	@Override
 	public void dispose() {
 		// do nothing
 	}

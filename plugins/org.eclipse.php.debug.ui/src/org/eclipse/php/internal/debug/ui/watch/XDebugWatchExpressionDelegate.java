@@ -44,6 +44,7 @@ public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 	 * @see org.eclipse.debug.core.model.IWatchExpressionDelegate#getValue(java.lang.String,
 	 *      org.eclipse.debug.core.model.IDebugElement)
 	 */
+	@Override
 	public void evaluateExpression(String expression, IDebugElement context, IWatchExpressionListener listener) {
 		expressionText = expression;
 		watchListener = listener;
@@ -73,6 +74,7 @@ public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 			setSystem(true);
 		}
 
+		@Override
 		public IStatus run(IProgressMonitor monitor) {
 
 			try {
@@ -141,14 +143,17 @@ public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 			}
 		}
 
+		@Override
 		public IValue getValue() {
 			return evalResult;
 		}
 
+		@Override
 		public boolean hasErrors() {
 			return hasErrors;
 		}
 
+		@Override
 		public String[] getErrorMessages() {
 			if (hasErrors) {
 				// failed to evaluate expression.
@@ -157,14 +162,17 @@ public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 			return null;
 		}
 
+		@Override
 		public String getExpressionText() {
 			return expressionText;
 		}
 
+		@Override
 		public DebugException getException() {
 			return null;
 		}
 
+		@Override
 		public IDebugTarget getDebugTarget() {
 			return debugTarget;
 		}

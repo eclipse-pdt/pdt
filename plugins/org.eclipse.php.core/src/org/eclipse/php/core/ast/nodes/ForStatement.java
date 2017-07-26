@@ -32,9 +32,9 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  */
 public class ForStatement extends Statement {
 
-	private final ASTNode.NodeList<Expression> initializers = new ASTNode.NodeList<Expression>(INITIALIZERS_PROPERTY);
-	private final ASTNode.NodeList<Expression> conditions = new ASTNode.NodeList<Expression>(EXPRESSION_PROPERTY);
-	private final ASTNode.NodeList<Expression> updaters = new ASTNode.NodeList<Expression>(UPDATERS_PROPERTY);
+	private final ASTNode.NodeList<Expression> initializers = new ASTNode.NodeList<>(INITIALIZERS_PROPERTY);
+	private final ASTNode.NodeList<Expression> conditions = new ASTNode.NodeList<>(EXPRESSION_PROPERTY);
+	private final ASTNode.NodeList<Expression> updaters = new ASTNode.NodeList<>(UPDATERS_PROPERTY);
 	private Statement body;
 
 	/**
@@ -56,7 +56,7 @@ public class ForStatement extends Statement {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(4);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(4);
 		properyList.add(INITIALIZERS_PROPERTY);
 		properyList.add(EXPRESSION_PROPERTY);
 		properyList.add(UPDATERS_PROPERTY);
@@ -96,6 +96,7 @@ public class ForStatement extends Statement {
 		super(ast);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -104,6 +105,7 @@ public class ForStatement extends Statement {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		for (ASTNode node : this.initializers) {
 			node.accept(visitor);
@@ -117,6 +119,7 @@ public class ForStatement extends Statement {
 		body.accept(visitor);
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		for (ASTNode node : this.initializers) {
 			node.traverseTopDown(visitor);
@@ -130,6 +133,7 @@ public class ForStatement extends Statement {
 		body.traverseTopDown(visitor);
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		for (ASTNode node : this.initializers) {
 			node.traverseBottomUp(visitor);
@@ -143,6 +147,7 @@ public class ForStatement extends Statement {
 		body.traverseBottomUp(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<ForStatement"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -170,6 +175,7 @@ public class ForStatement extends Statement {
 		buffer.append(tab).append("</ForStatement>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.FOR_STATEMENT;
 	}
@@ -261,6 +267,7 @@ public class ForStatement extends Statement {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
@@ -283,7 +290,8 @@ public class ForStatement extends Statement {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
-	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+	@Override
+	final List<? extends ASTNode> internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == INITIALIZERS_PROPERTY) {
 			return initializers();
 		}
@@ -297,6 +305,7 @@ public class ForStatement extends Statement {
 		return super.internalGetChildListProperty(property);
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == BODY_PROPERTY) {
 			if (get) {

@@ -301,11 +301,11 @@ import org.eclipse.php.refactoring.core.visitor.ScopeSyntaxErrorsVisitor;
 
 	public ASTNode getEnclosingBodyDeclaration() {
 		// Class method case
-		fEnclosingBodyDeclaration = (BodyDeclaration) ASTNodes.getParent(getFirstSelectedNode(), BodyDeclaration.class);
+		fEnclosingBodyDeclaration = ASTNodes.getParent(getFirstSelectedNode(), BodyDeclaration.class);
 
 		// Global Function case
 		if (fEnclosingBodyDeclaration == null) {
-			fEnclosingBodyDeclaration = (Statement) ASTNodes.getParent(getFirstSelectedNode(),
+			fEnclosingBodyDeclaration = ASTNodes.getParent(getFirstSelectedNode(),
 					FunctionDeclaration.class);
 		}
 
@@ -391,7 +391,7 @@ import org.eclipse.php.refactoring.core.visitor.ScopeSyntaxErrorsVisitor;
 	}
 
 	private IVariableBinding[] removeSelectedDeclarations(IVariableBinding[] bindings) {
-		List<IVariableBinding> result = new ArrayList<IVariableBinding>(bindings.length);
+		List<IVariableBinding> result = new ArrayList<>(bindings.length);
 		Selection selection = getSelection();
 
 		for (int i = 0; i < bindings.length; i++) {

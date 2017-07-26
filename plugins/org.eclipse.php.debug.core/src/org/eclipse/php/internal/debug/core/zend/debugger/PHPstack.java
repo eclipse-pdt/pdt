@@ -24,13 +24,13 @@ import java.util.Vector;
  */
 public class PHPstack {
 
-	private Vector layers;
+	private Vector<StackLayer> layers;
 
 	/**
 	 * Creates new PHPstack
 	 */
 	public PHPstack() {
-		layers = new Vector();
+		layers = new Vector<>();
 	}
 
 	public void addLayer(StackLayer layer) {
@@ -38,7 +38,7 @@ public class PHPstack {
 	}
 
 	public StackLayer removeLayer(int depth) {
-		return (StackLayer) layers.remove(depth);
+		return layers.remove(depth);
 	}
 
 	public int getSize() {
@@ -46,7 +46,7 @@ public class PHPstack {
 	}
 
 	public StackLayer getLayer(int depth) {
-		return (StackLayer) layers.get(depth);
+		return layers.get(depth);
 	}
 
 	public StackLayer[] getLayers() {
@@ -55,9 +55,10 @@ public class PHPstack {
 		return arrayLeyers;
 	}
 
+	@Override
 	public String toString() {
 		String toReturn = "***\n"; //$NON-NLS-1$
-		Enumeration e = layers.elements();
+		Enumeration<StackLayer> e = layers.elements();
 		while (e.hasMoreElements()) {
 			toReturn += e.nextElement().toString() + "\n" + "***\n"; //$NON-NLS-1$ //$NON-NLS-2$
 		}

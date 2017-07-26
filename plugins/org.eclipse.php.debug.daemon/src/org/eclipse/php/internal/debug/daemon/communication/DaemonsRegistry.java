@@ -84,7 +84,7 @@ public class DaemonsRegistry {
 	 * @return all daemons
 	 */
 	public static final List<ICommunicationDaemon> getDaemons() {
-		return new ArrayList<ICommunicationDaemon>(getDaemonsMap().values());
+		return new ArrayList<>(getDaemonsMap().values());
 	}
 
 	protected static DaemonsRegistry getDefault() {
@@ -98,7 +98,7 @@ public class DaemonsRegistry {
 	 * Reads the extension point
 	 */
 	protected Map<String, ICommunicationDaemon> readFromExtensionPoint() {
-		final List<Entry> entries = new ArrayList<Entry>();
+		final List<Entry> entries = new ArrayList<>();
 		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry()
 				.getConfigurationElementsFor(EXTENSION_POINT_ID);
 		for (final IConfigurationElement element : configurationElements) {
@@ -123,8 +123,8 @@ public class DaemonsRegistry {
 	}
 
 	private Map<String, ICommunicationDaemon> fetchDaemons(List<Entry> entries) {
-		Map<String, ICommunicationDaemon> daemons = new HashMap<String, ICommunicationDaemon>();
-		List<Entry> topHierarchyEntries = new ArrayList<Entry>();
+		Map<String, ICommunicationDaemon> daemons = new HashMap<>();
+		List<Entry> topHierarchyEntries = new ArrayList<>();
 		for (Entry entryToCheck : entries) {
 			boolean isTopHierarchy = true;
 			for (Entry entry : entries) {

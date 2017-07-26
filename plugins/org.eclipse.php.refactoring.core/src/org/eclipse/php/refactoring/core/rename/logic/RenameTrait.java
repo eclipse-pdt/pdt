@@ -39,6 +39,7 @@ public class RenameTrait extends AbstractRename {
 		this.types = types;
 	}
 
+	@Override
 	public boolean visit(StaticConstantAccess staticDispatch) {
 		Expression className = staticDispatch.getClassName();
 		Identifier identifier = null;
@@ -55,16 +56,19 @@ public class RenameTrait extends AbstractRename {
 		return false;
 	}
 
+	@Override
 	public boolean visit(StaticFieldAccess staticDispatch) {
 		checkIdentifier((Identifier) staticDispatch.getClassName());
 		return false;
 	}
 
+	@Override
 	public boolean visit(StaticMethodInvocation staticDispatch) {
 		checkIdentifier((Identifier) staticDispatch.getClassName());
 		return false;
 	}
 
+	@Override
 	public boolean visit(ClassName className) {
 		if (className.getName() instanceof Identifier) {
 			Identifier identifier = (Identifier) className.getName();
@@ -81,6 +85,7 @@ public class RenameTrait extends AbstractRename {
 		return false;
 	}
 
+	@Override
 	public boolean visit(TraitDeclaration classDeclaration) {
 		ITypeBinding originalType = null;
 
@@ -102,6 +107,7 @@ public class RenameTrait extends AbstractRename {
 		return true;
 	}
 
+	@Override
 	public boolean visit(TraitUseStatement part) {
 		for (NamespaceName namespace : part.getTraitList()) {
 			if (namespace instanceof Identifier) {
@@ -111,6 +117,7 @@ public class RenameTrait extends AbstractRename {
 		return true;
 	}
 
+	@Override
 	public boolean visit(TraitPrecedenceStatement tps) {
 		if (tps.getPrecedence().getMethodReference().getClassName() instanceof Identifier) {
 			checkIdentifier(tps.getPrecedence().getMethodReference().getClassName());
@@ -123,6 +130,7 @@ public class RenameTrait extends AbstractRename {
 		return false;
 	}
 
+	@Override
 	public boolean visit(TraitAliasStatement tas) {
 		int type = tas.getAlias().getTraitMethod().getType();
 		if (type == ASTNode.FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE) {
@@ -167,6 +175,7 @@ public class RenameTrait extends AbstractRename {
 		return identifier != null && identifier.getName() != null && identifier.getName().equalsIgnoreCase(oldName);
 	}
 
+	@Override
 	public String getRenameDescription() {
 		return RenameTrait.RENAME_CLASS;
 	}

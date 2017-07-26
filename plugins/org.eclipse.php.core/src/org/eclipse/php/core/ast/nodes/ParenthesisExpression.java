@@ -45,7 +45,7 @@ public class ParenthesisExpression extends VariableBase {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(1);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(1);
 		propertyList.add(EXPRESSION_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
@@ -68,6 +68,7 @@ public class ParenthesisExpression extends VariableBase {
 		setExpression(expr);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -76,12 +77,14 @@ public class ParenthesisExpression extends VariableBase {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		if (expression != null) {
 			expression.accept(visitor);
 		}
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		if (expression != null) {
@@ -89,6 +92,7 @@ public class ParenthesisExpression extends VariableBase {
 		}
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		if (expression != null) {
 			expression.traverseBottomUp(visitor);
@@ -96,6 +100,7 @@ public class ParenthesisExpression extends VariableBase {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<ParenthesisExpression"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -107,6 +112,7 @@ public class ParenthesisExpression extends VariableBase {
 		buffer.append(tab).append("</ParenthesisExpression>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.PARENTHESIS_EXPRESSION;
 	}
@@ -143,6 +149,7 @@ public class ParenthesisExpression extends VariableBase {
 		postReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == EXPRESSION_PROPERTY) {
 			if (get) {
@@ -159,6 +166,7 @@ public class ParenthesisExpression extends VariableBase {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

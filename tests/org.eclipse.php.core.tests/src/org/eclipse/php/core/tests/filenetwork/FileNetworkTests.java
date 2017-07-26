@@ -47,6 +47,7 @@ public class FileNetworkTests extends AbstractModelTests {
 		super(PHPCoreTests.PLUGIN_ID, name);
 	}
 
+	@Override
 	public void setUpSuite() throws Exception {
 		deleteProject(PROJECT);
 		if (SCRIPT_PROJECT != null) {
@@ -56,11 +57,13 @@ public class FileNetworkTests extends AbstractModelTests {
 		super.setUpSuite();
 	}
 
+	@Override
 	public void tearDownSuite() throws Exception {
 		deleteProject(PROJECT);
 		super.tearDownSuite();
 	}
 
+	@Override
 	protected void setUp() throws Exception {
 		if (SCRIPT_PROJECT == null) {
 			SCRIPT_PROJECT = setUpScriptProject(PROJECT);
@@ -127,7 +130,7 @@ public class FileNetworkTests extends AbstractModelTests {
 
 	public void testCachedReferencedFiles() throws Exception {
 		ISourceModule sourceModule = getSourceModule(getFilePath("test2/a.php"));
-		HashMap<ISourceModule, Node> cache = new HashMap<ISourceModule, Node>();
+		HashMap<ISourceModule, Node> cache = new HashMap<>();
 
 		ReferenceTree tree = FileNetworkUtility.buildReferencedFilesTree(sourceModule, cache, null);
 		tree = FileNetworkUtility.buildReferencedFilesTree(sourceModule, cache, null);

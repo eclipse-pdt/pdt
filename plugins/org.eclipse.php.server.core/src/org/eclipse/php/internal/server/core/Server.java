@@ -255,6 +255,7 @@ public class Server implements IXMLPreferencesStorable, IAdaptable, IUniqueIdent
 		return getAttribute(Server.DEBUGGER, null);
 	}
 
+	@Override
 	public int hashCode() {
 		if (getName() != null) {
 			return getName().hashCode();
@@ -262,6 +263,7 @@ public class Server implements IXMLPreferencesStorable, IAdaptable, IUniqueIdent
 		return 1;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Server)) {
 			return false;
@@ -283,6 +285,7 @@ public class Server implements IXMLPreferencesStorable, IAdaptable, IUniqueIdent
 	 * 
 	 * @return java.lang.String
 	 */
+	@Override
 	public String toString() {
 		return "Server [" + getName() + "::" + getHost() + ']'; //$NON-NLS-1$ //$NON-NLS-2$
 	}
@@ -294,6 +297,7 @@ public class Server implements IXMLPreferencesStorable, IAdaptable, IUniqueIdent
 	 * org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable
 	 * #restoreFromMap(java.util.HashMap)
 	 */
+	@Override
 	public void restoreFromMap(Map<String, Object> map) {
 		@SuppressWarnings("unchecked")
 		Map<String, Object> properties = (Map<String, Object>) map.get(SERVER_ELEMENT);
@@ -315,9 +319,10 @@ public class Server implements IXMLPreferencesStorable, IAdaptable, IUniqueIdent
 	 * org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable
 	 * #storeToMap()
 	 */
+	@Override
 	public Map<String, Object> storeToMap() {
-		Map<String, Object> properties = new HashMap<String, Object>(helper.map);
-		Map<String, Object> serverMap = new HashMap<String, Object>(1);
+		Map<String, Object> properties = new HashMap<>(helper.map);
+		Map<String, Object> serverMap = new HashMap<>(1);
 		serverMap.put(SERVER_ELEMENT, properties);
 		return serverMap;
 	}
@@ -339,7 +344,9 @@ public class Server implements IXMLPreferencesStorable, IAdaptable, IUniqueIdent
 		return false;
 	}
 
-	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public Object getAdapter(Class adapter) {
 		return null;
 	}
 
@@ -350,7 +357,7 @@ public class Server implements IXMLPreferencesStorable, IAdaptable, IUniqueIdent
 	 */
 	public Server makeCopy() {
 		Server copy = new Server();
-		copy.helper.map = new HashMap<String, String>(helper.map);
+		copy.helper.map = new HashMap<>(helper.map);
 		return copy;
 	}
 
@@ -370,7 +377,7 @@ public class Server implements IXMLPreferencesStorable, IAdaptable, IUniqueIdent
 			helper.setAttribute(key, copy.helper.map.get(key));
 		}
 		// Remove the attributes that were removed in a copy
-		List<String> attributesToRemove = new ArrayList<String>();
+		List<String> attributesToRemove = new ArrayList<>();
 		for (String key : helper.map.keySet()) {
 			if (!copy.helper.map.containsKey(key))
 				attributesToRemove.add(key);

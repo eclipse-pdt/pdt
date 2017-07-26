@@ -44,6 +44,7 @@ public class IfStatement extends Statement {
 		this.falseStatement = falseStatement;
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -56,6 +57,7 @@ public class IfStatement extends Statement {
 		visitor.endvisit(this);
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.IF_STATEMENT;
 	}
@@ -75,9 +77,11 @@ public class IfStatement extends Statement {
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
+	@Override
 	public final void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}

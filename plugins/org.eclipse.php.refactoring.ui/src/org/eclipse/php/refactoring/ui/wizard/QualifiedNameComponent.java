@@ -57,12 +57,14 @@ public class QualifiedNameComponent extends Composite {
 			refactoring.setFilePatterns(text);
 		}
 		fPatterns.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				refactoring.setFilePatterns(fPatterns.getText());
 			}
 		});
 	}
 
+	@Override
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
 		Control[] children = getChildren();

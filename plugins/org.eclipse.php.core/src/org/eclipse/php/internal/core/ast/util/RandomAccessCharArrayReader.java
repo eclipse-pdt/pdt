@@ -39,6 +39,7 @@ public class RandomAccessCharArrayReader extends Reader {
 	 * 
 	 * @see java.io.Reader#close()
 	 */
+	@Override
 	public void close() {
 		input = null;
 	}
@@ -60,6 +61,7 @@ public class RandomAccessCharArrayReader extends Reader {
 	 *                In case this method was called after the reader was
 	 *                closed.
 	 */
+	@Override
 	public int read(char[] cbuf, int off, int len) {
 		if (input == null) {
 			throw new IllegalStateException("The char array reader was closed."); //$NON-NLS-1$

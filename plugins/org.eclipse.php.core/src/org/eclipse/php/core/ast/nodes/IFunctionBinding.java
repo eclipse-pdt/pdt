@@ -33,6 +33,7 @@ public interface IFunctionBinding extends IBinding {
 	 * @return the name of this method, or the declared name of this
 	 *         constructor's declaring class
 	 */
+	@Override
 	public String getName();
 
 	/**

@@ -82,19 +82,18 @@ public class RenameConfigurationChange extends Change {
 		return new RefactoringStatus();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Change perform(IProgressMonitor pm) throws CoreException {
 
 		final IPath dest = fDest.append(fNewName);
 
 		// Collect launch configurations:
-		fConfigurationChanges = new HashMap<ILaunchConfiguration, Map<String, String>>();
+		fConfigurationChanges = new HashMap<>();
 		ILaunchConfiguration[] launchConfigurations = DebugPlugin.getDefault().getLaunchManager()
 				.getLaunchConfigurations();
 		for (ILaunchConfiguration launchConfiguration : launchConfigurations) {
 			Map<String, Object> attributes = launchConfiguration.getAttributes();
-			Map<String, String> changes = new HashMap<String, String>();
+			Map<String, String> changes = new HashMap<>();
 			for (Entry<String, Object> attribute : attributes.entrySet()) {
 				Object attributeValue = attribute.getValue();
 				if (!(attributeValue instanceof String)) {

@@ -30,16 +30,19 @@ public class ReturnDetector extends PHPASTVisitor {
 		return !found;
 	}
 
+	@Override
 	public boolean visit(ReturnStatement node) {
 		found = true;
 		return false;
 	}
 
+	@Override
 	public boolean visit(YieldExpression node) {
 		found = true;
 		return false;
 	}
 
+	@Override
 	public boolean visit(MethodDeclaration dec) {
 		return false;
 	}
@@ -48,6 +51,7 @@ public class ReturnDetector extends PHPASTVisitor {
 		return false;
 	}
 
+	@Override
 	public boolean visit(TypeDeclaration dec) {
 		return false;
 	}

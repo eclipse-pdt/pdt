@@ -387,7 +387,7 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 		TextChange change;
 		if (!cu.getResource().exists()) {
 			IDocument doc = null;
-			Enumeration openBuffers = BufferManager.getDefaultBufferManager().getOpenBuffers();
+			Enumeration<?> openBuffers = BufferManager.getDefaultBufferManager().getOpenBuffers();
 			while (openBuffers.hasMoreElements()) {
 				Object nextElement = openBuffers.nextElement();
 				if (nextElement instanceof DocumentAdapter) {

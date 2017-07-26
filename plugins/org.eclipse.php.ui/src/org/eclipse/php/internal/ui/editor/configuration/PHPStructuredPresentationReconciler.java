@@ -130,7 +130,7 @@ public class PHPStructuredPresentationReconciler extends StructuredPresentationR
 								repairer.createPresentation(presentation, r);
 								for (Iterator<StyleRange> iterator = presentation.getAllStyleRangeIterator(); iterator
 										.hasNext();) {
-									StyleRange styleRange = (StyleRange) iterator.next();
+									StyleRange styleRange = iterator.next();
 									// the styleRange's scope may be out of
 									// the
 									// region see
@@ -228,7 +228,7 @@ public class PHPStructuredPresentationReconciler extends StructuredPresentationR
 				TextPresentation presentation = new TextPresentation(damage, 1000);
 				presentation = new TextPresentation(damage, fRanges.size());
 				for (Iterator<StyleRange> iterator = fRanges.iterator(); iterator.hasNext();) {
-					StyleRange styleRange = (StyleRange) iterator.next();
+					StyleRange styleRange = iterator.next();
 					if (styleRange.start + styleRange.length <= damage.getOffset()) {
 						continue;
 					} else if (styleRange.start <= damage.getOffset()

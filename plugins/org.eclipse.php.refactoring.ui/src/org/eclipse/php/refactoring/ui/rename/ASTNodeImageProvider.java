@@ -135,7 +135,7 @@ public class ASTNodeImageProvider {
 	 * <code>null</code> if no image could be found.
 	 */
 	public ImageDescriptor getWorkbenchImageDescriptor(IAdaptable adaptable, int flags) {
-		IWorkbenchAdapter wbAdapter = (IWorkbenchAdapter) adaptable.getAdapter(IWorkbenchAdapter.class);
+		IWorkbenchAdapter wbAdapter = adaptable.getAdapter(IWorkbenchAdapter.class);
 		if (wbAdapter == null) {
 			return null;
 		}

@@ -33,13 +33,13 @@ public class RenameUserInterfaceStarter extends UserInterfaceStarter {
 	private static class SelectionState {
 		private Display fDisplay;
 		private Object fElement;
-		private List fParts;
-		private List fSelections;
+		private List<IWorkbenchPart> fParts;
+		private List<IStructuredSelection> fSelections;
 
 		public SelectionState(Object element) {
 			fElement = element;
-			fParts = new ArrayList();
-			fSelections = new ArrayList();
+			fParts = new ArrayList<>();
+			fSelections = new ArrayList<>();
 			init();
 		}
 
@@ -66,7 +66,7 @@ public class RenameUserInterfaceStarter extends UserInterfaceStarter {
 				return;
 			ISetSelectionTarget target = null;
 			if (!(part instanceof ISetSelectionTarget)) {
-				target = (ISetSelectionTarget) part.getAdapter(ISetSelectionTarget.class);
+				target = part.getAdapter(ISetSelectionTarget.class);
 				if (target == null)
 					return;
 			} else {
@@ -89,7 +89,7 @@ public class RenameUserInterfaceStarter extends UserInterfaceStarter {
 			if (fDisplay == null)
 				return;
 			for (int i = 0; i < fParts.size(); i++) {
-				IStructuredSelection currentSelection = (IStructuredSelection) fSelections.get(i);
+				IStructuredSelection currentSelection = fSelections.get(i);
 				boolean changed = false;
 				final ISetSelectionTarget target = (ISetSelectionTarget) fParts.get(i);
 				final IStructuredSelection[] newSelection = new IStructuredSelection[1];
@@ -121,6 +121,7 @@ public class RenameUserInterfaceStarter extends UserInterfaceStarter {
 				}
 				if (changed) {
 					fDisplay.asyncExec(new Runnable() {
+						@Override
 						public void run() {
 							target.selectReveal(newSelection[0]);
 						}
@@ -141,12 +142,13 @@ public class RenameUserInterfaceStarter extends UserInterfaceStarter {
 		}
 	}
 
+	@Override
 	public boolean activate(Refactoring refactoring, Shell parent, boolean save) throws CoreException {
-		RenameProcessor processor = (RenameProcessor) refactoring.getAdapter(RenameProcessor.class);
+		RenameProcessor processor = refactoring.getAdapter(RenameProcessor.class);
 		Object[] elements = processor.getElements();
 		SelectionState state = elements.length == 1 ? new SelectionState(elements[0]) : null;
 		boolean executed = super.activate(refactoring, parent, save);
-		INameUpdating nameUpdating = (INameUpdating) refactoring.getAdapter(INameUpdating.class);
+		INameUpdating nameUpdating = refactoring.getAdapter(INameUpdating.class);
 		if (executed && nameUpdating != null && state != null) {
 			Object newElement = nameUpdating.getNewElement();
 			if (newElement != null) {

@@ -339,7 +339,7 @@ public class ProfileStore {
 		final Iterator<String> keyIter = ProfileManager.getKeys().iterator();
 
 		while (keyIter.hasNext()) {
-			final String key = (String) keyIter.next();
+			final String key = keyIter.next();
 			final String value = (String) profile.getSettings().get(key);
 			if (value != null) {
 				final Element setting = document.createElement(XML_NODE_SETTING);

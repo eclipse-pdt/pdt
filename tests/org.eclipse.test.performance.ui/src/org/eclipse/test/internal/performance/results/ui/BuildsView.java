@@ -65,6 +65,7 @@ public class BuildsView extends PerformancesView {
 	final class GenerateAction extends Action {
 		IStatus status;
 
+		@Override
 		public void run() {
 
 			// Ask for output directory
@@ -133,6 +134,7 @@ public class BuildsView extends PerformancesView {
 			// Create runnable
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {
 
+				@Override
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
 						monitor.beginTask("Generate performance results", 10000);
@@ -196,6 +198,7 @@ public class BuildsView extends PerformancesView {
 			this.force = force;
 		}
 
+		@Override
 		public void run() {
 
 			// Verify that directories are set
@@ -210,6 +213,7 @@ public class BuildsView extends PerformancesView {
 			// Progress dialog
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {
 
+				@Override
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
 						updateBuilds(monitor);
@@ -254,6 +258,7 @@ public class BuildsView extends PerformancesView {
 //			return elements != null;
 //		}
 
+		@Override
 		void updateBuilds(IProgressMonitor monitor) {
 			BuildsView.this.updateAllBuilds(monitor, this.force);
 		}
@@ -264,7 +269,8 @@ public class BuildsView extends PerformancesView {
 	 *
 	 * @see Util#getBuildDate(String)
 	 */
-	class BuildDateComparator implements Comparator {
+	class BuildDateComparator implements Comparator<Object> {
+		@Override
 		public int compare(Object o1, Object o2) {
 	        String s1 = (String) o1;
 	        String s2 = (String) o2;
@@ -321,6 +327,7 @@ String[] buildsToUpdate() {
 /* (non-Javadoc)
  * @see org.eclipse.test.internal.performance.results.ui.PerformancesView#createPartControl(org.eclipse.swt.widgets.Composite)
  */
+@Override
 public void createPartControl(Composite parent) {
 	super.createPartControl(parent);
 
@@ -329,6 +336,7 @@ public void createPartControl(Composite parent) {
 
 	// Set the content provider: first level is builds list
 	WorkbenchContentProvider contentProvider = new WorkbenchContentProvider() {
+		@Override
 		public Object[] getElements(Object o) {
 			return getBuilds();
 		}
@@ -339,6 +347,7 @@ public void createPartControl(Composite parent) {
 	WorkbenchLabelProvider labelProvider = new WorkbenchLabelProvider() {
 
 		// Set an italic font when no local data have been read
+		@Override
 		public Font getFont(Object element) {
 			Font font = super.getFont(element);
 			if (element instanceof BuildResultsElement) {
@@ -355,6 +364,7 @@ public void createPartControl(Composite parent) {
 		}
 
 		// Set font in gray when no local data is available (i.e. local data needs to be updated)
+		@Override
 		public Color getForeground(Object element) {
 			Color color = super.getForeground(element);
 			if (element instanceof BuildResultsElement) {
@@ -372,6 +382,7 @@ public void createPartControl(Composite parent) {
 
 		// Sort children using specific comparison (see the implementation
 		// of the #compareTo(Object) in the ResultsElement hierarchy
+		@Override
 		public int compare(Viewer view, Object e1, Object e2) {
 			if (e2 instanceof ResultsElement) {
 				return ((ResultsElement) e2).compareTo(e1);
@@ -389,6 +400,7 @@ public void createPartControl(Composite parent) {
 /* (non-Javadoc)
  * @see org.eclipse.ui.part.WorkbenchPart#dispose()
  */
+@Override
 public void dispose() {
 	if (this.italicFont != null) {
 		this.italicFont.dispose();
@@ -400,6 +412,7 @@ public void dispose() {
  * (non-Javadoc)
  * @see org.eclipse.test.internal.performance.results.ui.PerformancesView#fillContextMenu(org.eclipse.jface.action.IMenuManager)
  */
+@Override
 void fillContextMenu(IMenuManager manager) {
 	super.fillContextMenu(manager);
 	manager.add(this.generate);
@@ -410,6 +423,7 @@ void fillContextMenu(IMenuManager manager) {
 /*
  * Fill the local data drop-down menu
  */
+@Override
 void fillLocalDataDropDown(IMenuManager manager) {
 	super.fillLocalDataDropDown(manager);
 	manager.add(new Separator());
@@ -430,6 +444,7 @@ Object[] getBuilds() {
 /*
  * Return the components view.
  */
+@Override
 PerformancesView getSiblingView() {
 	if (this.componentsView == null) {
 		this.componentsView = (PerformancesView) getWorkbenchView("org.eclipse.test.internal.performance.results.ui.ComponentsView");
@@ -441,6 +456,7 @@ PerformancesView getSiblingView() {
  * (non-Javadoc)
  * @see org.eclipse.test.internal.performance.results.ui.PerformancesView#makeActions()
  */
+@Override
 void makeActions() {
 
 	super.makeActions();
@@ -531,6 +547,7 @@ public void resetView() {
  * (non-Javadoc)
  * @see org.eclipse.test.internal.performance.results.ui.PerformancesView#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
  */
+@Override
 public void selectionChanged(SelectionChangedEvent event) {
 	super.selectionChanged(event);
 

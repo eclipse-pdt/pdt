@@ -20,12 +20,12 @@ import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 /* package */class SnippetFinder extends AbstractVisitor {
 
 	public static class Match {
-		private List fNodes;
-		private Map fLocalMappings;
+		private List<ASTNode> fNodes;
+		private Map<IVariableBinding, Identifier> fLocalMappings;
 
 		public Match() {
-			fNodes = new ArrayList(10);
-			fLocalMappings = new HashMap();
+			fNodes = new ArrayList<>(10);
+			fLocalMappings = new HashMap<>();
 		}
 
 		public void add(ASTNode node) {
@@ -36,7 +36,7 @@ import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 			if (fNodes.size() == 0)
 				return true;
 			ASTNode parent = node.getParent();
-			if (((ASTNode) fNodes.get(0)).getParent() != parent)
+			if (fNodes.get(0).getParent() != parent)
 				return false;
 			// Here we know that we have two elements. In this case the
 			// parent must be a block or a switch statement. Otherwise a
@@ -47,7 +47,7 @@ import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 		}
 
 		public ASTNode[] getNodes() {
-			return (ASTNode[]) fNodes.toArray(new ASTNode[fNodes.size()]);
+			return fNodes.toArray(new ASTNode[fNodes.size()]);
 		}
 
 		public void addLocal(IVariableBinding org, Identifier local) {
@@ -55,7 +55,7 @@ import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 		}
 
 		public Identifier getMappedName(IVariableBinding org) {
-			return (Identifier) fLocalMappings.get(org);
+			return fLocalMappings.get(org);
 		}
 
 		public IVariableBinding getMappedBinding(IVariableBinding org) {
@@ -76,7 +76,7 @@ import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 		 * @return whether the duplicte is the whole method body
 		 */
 		public boolean isMethodBody() {
-			ASTNode first = (ASTNode) fNodes.get(0);
+			ASTNode first = fNodes.get(0);
 			if (first.getParent() == null)
 				return false;
 			ASTNode candidate = first.getParent().getParent();
@@ -87,12 +87,13 @@ import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 		}
 
 		public MethodDeclaration getEnclosingMethod() {
-			ASTNode first = (ASTNode) fNodes.get(0);
+			ASTNode first = fNodes.get(0);
 			return (MethodDeclaration) ASTNodes.getParent(first, ASTNode.METHOD_DECLARATION);
 		}
 	}
 
 	private class Matcher extends ASTMatcher {
+		@Override
 		public boolean match(Identifier candidate, Object s) {
 			if (!(s instanceof Identifier))
 				return false;
@@ -126,7 +127,7 @@ import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 		}
 	}
 
-	private List fResult = new ArrayList(2);
+	private List<Match> fResult = new ArrayList<>(2);
 	private Match fMatch;
 	private ASTNode[] fSnippet;
 	private int fIndex;
@@ -145,8 +146,8 @@ import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 				start instanceof ClassDeclaration || start instanceof FunctionDeclaration || start instanceof Program);
 		SnippetFinder finder = new SnippetFinder(snippet);
 		start.accept(finder);
-		for (Iterator iter = finder.fResult.iterator(); iter.hasNext();) {
-			Match match = (Match) iter.next();
+		for (Iterator<Match> iter = finder.fResult.iterator(); iter.hasNext();) {
+			Match match = iter.next();
 			ASTNode[] nodes = match.getNodes();
 			// doesn't match if the candidate is the left hand side of an
 			// assignment and the snippet consists of a single node.
@@ -155,7 +156,7 @@ import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 				iter.remove();
 			}
 		}
-		return (Match[]) finder.fResult.toArray(new Match[finder.fResult.size()]);
+		return finder.fResult.toArray(new Match[finder.fResult.size()]);
 	}
 
 	private static boolean isLeftHandSideOfAssignment(ASTNode node) {
@@ -170,6 +171,7 @@ import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 	// return visitNode(node);
 	// }
 
+	@Override
 	public boolean visit(ExpressionStatement node) {
 		return visitNode(node);
 	}
@@ -179,12 +181,14 @@ import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 	// super.endVisit(node);
 	// }
 
+	@Override
 	public boolean visit(FunctionDeclaration node) {
 		if (++fTypes > 1)
 			return false;
 		return super.visit(node);
 	}
 
+	@Override
 	public void endVisit(FunctionDeclaration node) {
 		--fTypes;
 		super.endVisit(node);

@@ -52,7 +52,7 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 	protected int IDX_ADD_LINK = 2;
 	protected int IDX_EDIT = 3;
 
-	private List<BPListElement> fAddedElements = new ArrayList<BPListElement>(1);
+	private List<BPListElement> fAddedElements = new ArrayList<>(1);
 
 	private boolean addToBuildPath = false;
 
@@ -64,7 +64,7 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 		return fAddedElements;
 	}
 
-	public PHPIncludePathSourcePage(ListDialogField buildpathList) {
+	public PHPIncludePathSourcePage(ListDialogField<BPListElement> buildpathList) {
 		super(buildpathList);
 	}
 
@@ -101,7 +101,7 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 	}
 
 	@Override
-	protected boolean canRemove(List selElements) {
+	protected boolean canRemove(List<?> selElements) {
 		if (selElements.size() == 0) {
 			return false;
 		}
@@ -142,7 +142,7 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 
 	@Override
 	protected void updateFoldersList() {
-		ArrayList folders = new ArrayList();
+		ArrayList<BPListElement> folders = new ArrayList<>();
 
 		IncludePath[] includePath = IncludePathManager.getInstance().getIncludePaths(fCurrJProject.getProject());
 
@@ -209,8 +209,8 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 			if (index == IDX_ADD) {
 				IProject project = fCurrJProject.getProject();
 				if (project.exists() && hasFolders(project)) {
-					List existingElements = fFoldersList.getElements();
-					BPListElement[] existing = (BPListElement[]) existingElements
+					List<?> existingElements = fFoldersList.getElements();
+					BPListElement[] existing = existingElements
 							.toArray(new BPListElement[existingElements.size()]);
 					CreateMultipleSourceFoldersDialog dialog = new CreateMultipleSourceFoldersDialog(fCurrJProject,
 							existing, getShell());
@@ -231,7 +231,7 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 	}
 
 	@Override
-	protected void refresh(List insertedElements, List removedElements, List modifiedElements) {
+	protected void refresh(List<?> insertedElements, List<?> removedElements, List<?> modifiedElements) {
 
 		fAddedElements.clear();
 
@@ -242,7 +242,7 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 		// in case it is not, add the entry to the added elements list
 		// and ask the user if he would like to add it to the build path as well
 
-		for (Iterator iterator = insertedElements.iterator(); iterator.hasNext();) {
+		for (Iterator<?> iterator = insertedElements.iterator(); iterator.hasNext();) {
 			BPListElement element = (BPListElement) iterator.next();
 			if (!BuildPathUtils.isContainedInBuildpath(element.getPath(), fCurrJProject)) {
 				fAddedElements.add(element);
@@ -257,14 +257,14 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 			}
 		}
 
-		for (Iterator iter = insertedElements.iterator(); iter.hasNext();) {
+		for (Iterator<?> iter = insertedElements.iterator(); iter.hasNext();) {
 			BPListElement element = (BPListElement) iter.next();
 			fFoldersList.expandElement(element, 3);
 		}
 
 		fFoldersList.removeElements(removedElements);
 
-		for (Iterator iter = modifiedElements.iterator(); iter.hasNext();) {
+		for (Iterator<?> iter = modifiedElements.iterator(); iter.hasNext();) {
 			BPListElement element = (BPListElement) iter.next();
 			fFoldersList.refresh(element);
 			fFoldersList.expandElement(element, 3);

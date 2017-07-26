@@ -34,18 +34,22 @@ public class TypeContext extends InstanceContext implements INamespaceContext, I
 		}
 	}
 
+	@Override
 	public String getNamespace() {
 		return namespaceName;
 	}
 
+	@Override
 	public IModelAccessCache getCache() {
 		return cache;
 	}
 
+	@Override
 	public void setCache(IModelAccessCache cache) {
 		this.cache = cache;
 	}
 
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
@@ -53,6 +57,7 @@ public class TypeContext extends InstanceContext implements INamespaceContext, I
 		return result;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

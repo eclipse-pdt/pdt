@@ -25,12 +25,13 @@ import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 
 public class ConditionalExpressionEvaluator extends GoalEvaluator {
 
-	private final List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
+	private final List<IEvaluatedType> evaluated = new LinkedList<>();
 
 	public ConditionalExpressionEvaluator(IGoal goal) {
 		super(goal);
 	}
 
+	@Override
 	public Object produceResult() {
 		if (!evaluated.isEmpty()) {
 			return PHPTypeInferenceUtils.combineTypes(evaluated);
@@ -38,11 +39,12 @@ public class ConditionalExpressionEvaluator extends GoalEvaluator {
 		return null;
 	}
 
+	@Override
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
 		ConditionalExpression conditionalExpression = (ConditionalExpression) typedGoal.getExpression();
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=339405
-		List<IGoal> result = new ArrayList<IGoal>();
+		List<IGoal> result = new ArrayList<>();
 		if (conditionalExpression.getIfTrue() != null) {
 			result.add(new ExpressionTypeGoal(goal.getContext(), conditionalExpression.getIfTrue()));
 		}
@@ -52,6 +54,7 @@ public class ConditionalExpressionEvaluator extends GoalEvaluator {
 		return result.toArray(new IGoal[result.size()]);
 	}
 
+	@Override
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		if (state != GoalState.RECURSIVE && result != null) {
 			evaluated.add((IEvaluatedType) result);

@@ -36,7 +36,7 @@ public class PharUtil {
 		int versionNumberLength = 4;
 		String[] s = version.split("\\."); //$NON-NLS-1$
 
-		List<Integer> versionNumbers = new ArrayList<Integer>();
+		List<Integer> versionNumbers = new ArrayList<>();
 
 		for (int i = 0; i < s.length; i++) {
 			versionNumbers.add(Integer.valueOf(s[i]));

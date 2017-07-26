@@ -92,6 +92,7 @@ public abstract class AbstractPHPLexer implements Scanner, PHPRegionTypes {
 		return state;
 	}
 
+	@Override
 	@SuppressWarnings("null")
 	public @NonNull LexerState createLexicalStateMemento() {
 		// buffered token state
@@ -116,15 +117,18 @@ public abstract class AbstractPHPLexer implements Scanner, PHPRegionTypes {
 	}
 
 	// lex to the EOF. and return the ending state.
+	@Override
 	public @NonNull LexerState getEndingState() throws IOException {
 		lexToEnd();
 		return createLexicalStateMemento();
 	}
 
+	@Override
 	public int getMarkedPos() {
 		return getZZMarkedPos();
 	}
 
+	@Override
 	public void getText(final int start, final int length, final Segment s) {
 		if (start + length > getZZEndRead())
 			throw new RuntimeException("bad segment !!"); //$NON-NLS-1$
@@ -137,6 +141,7 @@ public abstract class AbstractPHPLexer implements Scanner, PHPRegionTypes {
 		return getZZStartRead() - getZZPushBackPosition();
 	}
 
+	@Override
 	public void initialize(final int state) {
 		phpStack = new StateStack();
 		heredocIds = null;
@@ -154,6 +159,7 @@ public abstract class AbstractPHPLexer implements Scanner, PHPRegionTypes {
 	 */
 
 	// lex to the end of the stream.
+	@Override
 	public @Nullable String lexToEnd() throws IOException {
 		String curr = yylex();
 		String last = curr;
@@ -211,6 +217,7 @@ public abstract class AbstractPHPLexer implements Scanner, PHPRegionTypes {
 		asp_tags = b;
 	}
 
+	@Override
 	public void setState(final Object state) {
 		((LexerState) state).restoreState(this);
 	}
@@ -241,7 +248,7 @@ public abstract class AbstractPHPLexer implements Scanner, PHPRegionTypes {
 		String yylex = yylex();
 		if (PHPPartitionTypes.isPHPDocRegion(yylex)) {
 			int length = 0;
-			bufferedTokens = new LinkedList<ITextRegion>();
+			bufferedTokens = new LinkedList<>();
 			while (PHPPartitionTypes.isPHPDocRegion(yylex)) {
 				if (PHPPartitionTypes.isPHPDocTagState(yylex)) {
 					if (length > 0) {
@@ -264,7 +271,7 @@ public abstract class AbstractPHPLexer implements Scanner, PHPRegionTypes {
 			}
 			yylex = removeFromBuffer();
 		} else if (PHPPartitionTypes.isPHPCommentState(yylex)) {
-			bufferedTokens = new LinkedList<ITextRegion>();
+			bufferedTokens = new LinkedList<>();
 			bufferedTokens.add(new ContextRegion(yylex, 0, yylength(), yylength()));
 			yylex = removeFromBuffer();
 		}
@@ -280,7 +287,7 @@ public abstract class AbstractPHPLexer implements Scanner, PHPRegionTypes {
 	 * @return the last token from buffer
 	 */
 	private String removeFromBuffer() {
-		ITextRegion region = (ITextRegion) bufferedTokens.removeFirst();
+		ITextRegion region = bufferedTokens.removeFirst();
 		bufferedLength = region.getLength();
 		return region.getType();
 	}
@@ -329,6 +336,7 @@ public abstract class AbstractPHPLexer implements Scanner, PHPRegionTypes {
 			return true;
 		}
 
+		@Override
 		public boolean equalsCurrentStack(final LexerState obj) {
 			if (this == obj)
 				return true;
@@ -346,6 +354,7 @@ public abstract class AbstractPHPLexer implements Scanner, PHPRegionTypes {
 			return true;
 		}
 
+		@Override
 		public boolean equalsTop(final LexerState obj) {
 			return obj != null && obj.getTopState() == lexicalState;
 		}
@@ -356,10 +365,12 @@ public abstract class AbstractPHPLexer implements Scanner, PHPRegionTypes {
 			return phpStack;
 		}
 
+		@Override
 		public int getTopState() {
 			return lexicalState;
 		}
 
+		@Override
 		public boolean isSubstateOf(final int state) {
 			if (lexicalState == state)
 				return true;
@@ -369,6 +380,7 @@ public abstract class AbstractPHPLexer implements Scanner, PHPRegionTypes {
 			return activeStack.contains(state);
 		}
 
+		@Override
 		public void restoreState(final Scanner scanner) {
 			final AbstractPHPLexer lexer = (AbstractPHPLexer) scanner;
 
@@ -428,6 +440,7 @@ public abstract class AbstractPHPLexer implements Scanner, PHPRegionTypes {
 			return true;
 		}
 
+		@Override
 		public boolean equalsCurrentStack(final LexerState obj) {
 			if (this == obj)
 				return true;
@@ -438,18 +451,22 @@ public abstract class AbstractPHPLexer implements Scanner, PHPRegionTypes {
 			return theState.equals(((HeredocState) obj).theState);
 		}
 
+		@Override
 		public boolean equalsTop(final LexerState obj) {
 			return theState.equalsTop(obj);
 		}
 
+		@Override
 		public int getTopState() {
 			return theState.getTopState();
 		}
 
+		@Override
 		public boolean isSubstateOf(final int state) {
 			return theState.isSubstateOf(state);
 		}
 
+		@Override
 		public void restoreState(final Scanner scanner) {
 			final AbstractPHPLexer lexer = (AbstractPHPLexer) scanner;
 			theState.restoreState(lexer);

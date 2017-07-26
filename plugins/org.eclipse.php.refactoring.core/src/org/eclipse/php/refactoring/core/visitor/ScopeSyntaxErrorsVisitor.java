@@ -26,10 +26,12 @@ public class ScopeSyntaxErrorsVisitor extends AbstractVisitor {
 
 	public boolean hasSyntaxError = false;
 
+	@Override
 	public boolean visit(FunctionDeclaration node) {
 		return false;
 	}
 
+	@Override
 	public boolean visit(ASTError error) {
 		hasSyntaxError = true;
 		return false;

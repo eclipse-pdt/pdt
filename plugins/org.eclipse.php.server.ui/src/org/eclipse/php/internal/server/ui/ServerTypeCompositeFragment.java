@@ -21,8 +21,8 @@ import org.eclipse.php.internal.ui.wizards.IControlHandler;
 import org.eclipse.php.server.core.types.IServerType;
 import org.eclipse.php.server.core.types.ServerTypesManager;
 import org.eclipse.php.server.ui.types.IServerTypeDescriptor;
-import org.eclipse.php.server.ui.types.ServerTypesDescriptorRegistry;
 import org.eclipse.php.server.ui.types.IServerTypeDescriptor.ImageType;
+import org.eclipse.php.server.ui.types.ServerTypesDescriptorRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.layout.GridData;
@@ -31,7 +31,6 @@ import org.eclipse.swt.widgets.*;
 /**
  * Composite fragment for server type selection page.
  */
-@SuppressWarnings("restriction")
 public class ServerTypeCompositeFragment extends CompositeFragment {
 
 	private class TypesLabelProvider extends StyledCellLabelProvider {
@@ -79,6 +78,7 @@ public class ServerTypeCompositeFragment extends CompositeFragment {
 		return true;
 	}
 
+	@Override
 	public void setData(Object server) throws IllegalArgumentException {
 		if (server != null && !(server instanceof Server)) {
 			throw new IllegalArgumentException("The given object is not a Server"); //$NON-NLS-1$
@@ -112,18 +112,22 @@ public class ServerTypeCompositeFragment extends CompositeFragment {
 		TableViewer viewer = new TableViewer(parent);
 		Table table = viewer.getTable();
 		table.addListener(SWT.MeasureItem, new Listener() {
+			@Override
 			public void handleEvent(Event event) {
 				event.height = 40;
 			}
 		});
 		table.setLayoutData(new GridData(GridData.FILL_BOTH));
 		viewer.setContentProvider(new IStructuredContentProvider() {
+			@Override
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			}
 
+			@Override
 			public void dispose() {
 			}
 
+			@Override
 			public Object[] getElements(Object input) {
 				if (input instanceof Collection<?>) {
 					Collection<?> entries = (Collection<?>) input;
@@ -135,6 +139,7 @@ public class ServerTypeCompositeFragment extends CompositeFragment {
 		viewer.setLabelProvider(new TypesLabelProvider());
 		viewer.setInput(types);
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				ISelection selection = event.getSelection();
 				IStructuredSelection structuredSelection = (IStructuredSelection) selection;

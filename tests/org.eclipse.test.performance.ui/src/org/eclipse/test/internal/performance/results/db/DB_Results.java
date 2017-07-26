@@ -310,6 +310,7 @@ public class DB_Results {
 			this.times = new long[10];
     		this.buffers = new StringBuffer[10];
     	}
+		@Override
 		public String toString() {
 	        return LOG_STR_WRITER.toString();
         }
@@ -338,7 +339,8 @@ public class DB_Results {
             	// not started as plugin
 	            Runtime.getRuntime().addShutdownHook(
 	                new Thread() {
-	                    public void run() {
+	                    @Override
+						public void run() {
 	                    	shutdown();
 	                    }
 	                }
@@ -663,7 +665,7 @@ public static String getLastCurrentBuild() {
  * @return The list of all scenarios matching the pattern for a given build.
  * @see #internalQueryBuildScenarios(String, String)
  */
-public static List getScenarios() {
+public static List<String> getScenarios() {
 	return Arrays.asList(SCENARII);
 }
 
@@ -694,7 +696,7 @@ public static void initDbContants() {
  *
  * @return A list of all scenario names matching the default pattern
  */
-public static Map queryAllScenarios() {
+public static Map<String, List<ScenarioResults>> queryAllScenarios() {
 	return getDefault().internalQueryBuildScenarios("%", null); //$NON-NLS-1$
 }
 
@@ -707,7 +709,7 @@ public static Map queryAllScenarios() {
  * 	The map keys are component names and values are the scenarios list for
  * 	each component.
  */
-static Map queryAllScenarios(String scenarioPattern) {
+static Map<String, List<ScenarioResults>> queryAllScenarios(String scenarioPattern) {
 	String pattern = scenarioPattern==null ? "%" : scenarioPattern; //$NON-NLS-1$
 	return getDefault().internalQueryBuildScenarios(pattern, null);
 }
@@ -720,7 +722,7 @@ static Map queryAllScenarios(String scenarioPattern) {
  * @param buildName The build name
  * @return A list of scenario names matching the given pattern
  */
-static Map queryAllScenarios(String scenarioPattern, String buildName) {
+static Map<String, List<ScenarioResults>> queryAllScenarios(String scenarioPattern, String buildName) {
 	return getDefault().internalQueryBuildScenarios(scenarioPattern, buildName);
 }
 
@@ -1004,7 +1006,7 @@ private void internalQueryAllVariations(String configPattern) {
 	}
 }
 
-private Map internalQueryBuildScenarios(String scenarioPattern, String buildName) {
+private Map<String, List<ScenarioResults>> internalQueryBuildScenarios(String scenarioPattern, String buildName) {
 	if (this.fSQL == null) return null;
 	long start = System.currentTimeMillis();
 	if (DEBUG) {
@@ -1013,7 +1015,7 @@ private Map internalQueryBuildScenarios(String scenarioPattern, String buildName
 		if (buildName != null) DEBUG_WRITER.print(" for build: "+buildName); //$NON-NLS-1$
 	}
 	ResultSet result = null;
-	Map allScenarios = new HashMap();
+	Map<String, List<ScenarioResults>> allScenarios = new HashMap<>();
 	try {
 		if (buildName == null) {
 			result = this.fSQL.queryBuildAllScenarios(scenarioPattern);
@@ -1021,8 +1023,8 @@ private Map internalQueryBuildScenarios(String scenarioPattern, String buildName
 			result = this.fSQL.queryBuildScenarios(scenarioPattern, buildName);
 		}
 		int previousId = -1;
-		List scenarios = null;
-		List scenariosNames = new ArrayList();
+		List<ScenarioResults> scenarios = null;
+		List<String> scenariosNames = new ArrayList<>();
 		for (int i = 0; result.next(); i++) {
 			int id = result.getInt(1);
 			String name = result.getString(2);
@@ -1030,7 +1032,7 @@ private Map internalQueryBuildScenarios(String scenarioPattern, String buildName
 			String shortName = result.getString(3);
 			int component_id = storeComponent(getComponentNameFromScenario(name));
 			if (component_id != previousId) {
-				allScenarios.put(COMPONENTS[component_id], scenarios = new ArrayList());
+				allScenarios.put(COMPONENTS[component_id], scenarios = new ArrayList<>());
 				previousId = component_id;
 			}
 			scenarios.add(new ScenarioResults(id, name, shortName));

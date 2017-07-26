@@ -72,6 +72,7 @@ public class VariableBinding implements IVariableBinding {
 	 * @return the constant value, or <code>null</code> if none
 	 * @since 3.0
 	 */
+	@Override
 	public Object getConstantValue() {
 		// TODO ?
 		return null;
@@ -89,6 +90,7 @@ public class VariableBinding implements IVariableBinding {
 	 * @return the binding of the class or interface that declares this field,
 	 *         or <code>null</code> if none
 	 */
+	@Override
 	public ITypeBinding getDeclaringClass() {
 		if (declaringClassTypeBinding == null) {
 			IType parent = modelElement.getDeclaringType();
@@ -105,6 +107,7 @@ public class VariableBinding implements IVariableBinding {
 	 * @see org.eclipse.php.internal.core.ast.nodes.IVariableBinding#
 	 * getDeclaringFunction ()
 	 */
+	@Override
 	public IFunctionBinding getDeclaringFunction() {
 		// TODO ?
 		return null;
@@ -115,6 +118,7 @@ public class VariableBinding implements IVariableBinding {
 	 * 
 	 * @see org.eclipse.php.internal.core.ast.nodes.IVariableBinding#getName()
 	 */
+	@Override
 	public String getName() {
 		return modelElement.getElementName();
 	}
@@ -124,6 +128,7 @@ public class VariableBinding implements IVariableBinding {
 	 * 
 	 * @see org.eclipse.php.internal.core.ast.nodes.IVariableBinding#getType()
 	 */
+	@Override
 	public ITypeBinding getType() {
 		// TODO: Do we need type information for PHP Element?
 		return null;
@@ -135,6 +140,7 @@ public class VariableBinding implements IVariableBinding {
 	 * @see
 	 * org.eclipse.php.internal.core.ast.nodes.IVariableBinding#getVariableId()
 	 */
+	@Override
 	public int getVariableId() {
 		return id;
 	}
@@ -144,6 +150,7 @@ public class VariableBinding implements IVariableBinding {
 	 * 
 	 * @see org.eclipse.php.internal.core.ast.nodes.IVariableBinding#isField()
 	 */
+	@Override
 	public boolean isField() {
 		return IModelElement.FIELD == modelElement.getElementType() && !isFakeField && getDeclaringClass() != null;
 	}
@@ -153,6 +160,7 @@ public class VariableBinding implements IVariableBinding {
 	 * 
 	 * @see org.eclipse.php.internal.core.ast.nodes.IVariableBinding#isGlobal()
 	 */
+	@Override
 	public boolean isGlobal() {
 		// TODO Auto-generated method stub
 		return false;
@@ -163,6 +171,7 @@ public class VariableBinding implements IVariableBinding {
 	 * 
 	 * @see org.eclipse.php.internal.core.ast.nodes.IVariableBinding#isLocal()
 	 */
+	@Override
 	public boolean isLocal() {
 		return IModelElement.FIELD == modelElement.getElementType() && !isFakeField && getDeclaringClass() == null;
 	}
@@ -173,6 +182,7 @@ public class VariableBinding implements IVariableBinding {
 	 * @see
 	 * org.eclipse.php.internal.core.ast.nodes.IVariableBinding#isParameter()
 	 */
+	@Override
 	public boolean isParameter() {
 		// TODO Auto-generated method stub
 		return false;
@@ -183,6 +193,7 @@ public class VariableBinding implements IVariableBinding {
 	 * 
 	 * @see org.eclipse.php.internal.core.ast.nodes.IBinding#getKey()
 	 */
+	@Override
 	public String getKey() {
 		return modelElement.getHandleIdentifier();
 	}
@@ -192,6 +203,7 @@ public class VariableBinding implements IVariableBinding {
 	 * 
 	 * @see org.eclipse.php.internal.core.ast.nodes.IBinding#getKind()
 	 */
+	@Override
 	public int getKind() {
 		return IBinding.VARIABLE;
 	}
@@ -202,6 +214,7 @@ public class VariableBinding implements IVariableBinding {
 	 * @return the bit-wise or of <code>Modifiers</code> constants
 	 * @see Modifiers
 	 */
+	@Override
 	public int getModifiers() {
 		if (isField()) {
 			try {
@@ -220,6 +233,7 @@ public class VariableBinding implements IVariableBinding {
 	 * 
 	 * @see org.eclipse.php.internal.core.ast.nodes.IBinding#getPHPElement()
 	 */
+	@Override
 	public IModelElement getPHPElement() {
 		return modelElement;
 	}
@@ -229,6 +243,7 @@ public class VariableBinding implements IVariableBinding {
 	 * 
 	 * @see org.eclipse.php.internal.core.ast.nodes.IBinding#isDeprecated()
 	 */
+	@Override
 	public boolean isDeprecated() {
 		return false;
 	}

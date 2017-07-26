@@ -24,8 +24,8 @@ public class PHPVersionChangedHandler implements IResourceChangeListener {
 
 	private static final String PHP_VERSION = PHPCoreConstants.PHP_OPTIONS_PHP_VERSION;
 
-	private HashMap<IProject, HashSet<IPreferencesPropagatorListener>> projectListeners = new HashMap<IProject, HashSet<IPreferencesPropagatorListener>>();
-	private HashMap<IProject, PreferencesPropagatorListener> preferencesPropagatorListeners = new HashMap<IProject, PreferencesPropagatorListener>();
+	private HashMap<IProject, HashSet<IPreferencesPropagatorListener>> projectListeners = new HashMap<>();
+	private HashMap<IProject, PreferencesPropagatorListener> preferencesPropagatorListeners = new HashMap<>();
 
 	private PreferencesPropagator preferencesPropagator;
 	private static final String NODES_QUALIFIER = PHPCorePlugin.ID;
@@ -59,6 +59,7 @@ public class PHPVersionChangedHandler implements IResourceChangeListener {
 			this.project = project;
 		}
 
+		@Override
 		public void preferencesEventOccured(PreferencesPropagatorEvent event) {
 			if (event.getNewValue() == null) {
 				// We take the workspace settings since there was a move from
@@ -85,6 +86,7 @@ public class PHPVersionChangedHandler implements IResourceChangeListener {
 			projectVersionChanged(project, event);
 		}
 
+		@Override
 		public IProject getProject() {
 			return project;
 		}
@@ -176,6 +178,7 @@ public class PHPVersionChangedHandler implements IResourceChangeListener {
 		}
 	}
 
+	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
 		checkProjectsBeingAddedOrRemoved(event.getDelta());
 	}

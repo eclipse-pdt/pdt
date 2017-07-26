@@ -55,7 +55,7 @@ public class PrefixExpression extends Expression implements IOperationNode {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(2);
 		propertyList.add(VARIABLE_PROPERTY);
 		propertyList.add(OPERATOR_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
@@ -76,6 +76,7 @@ public class PrefixExpression extends Expression implements IOperationNode {
 		setOperator(operator);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -84,20 +85,24 @@ public class PrefixExpression extends Expression implements IOperationNode {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		variable.accept(visitor);
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		variable.traverseTopDown(visitor);
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		variable.traverseBottomUp(visitor);
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<PrefixExpression"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -119,6 +124,7 @@ public class PrefixExpression extends Expression implements IOperationNode {
 		}
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.PREFIX_EXPRESSION;
 	}
@@ -139,6 +145,7 @@ public class PrefixExpression extends Expression implements IOperationNode {
 	 * org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString
 	 * ()
 	 */
+	@Override
 	public String getOperationString() {
 		return getOperator(this.getOperator());
 	}
@@ -150,6 +157,7 @@ public class PrefixExpression extends Expression implements IOperationNode {
 	 * org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString
 	 * (int)
 	 */
+	@Override
 	public String getOperationString(int op) {
 		return getOperator(op);
 	}
@@ -171,6 +179,7 @@ public class PrefixExpression extends Expression implements IOperationNode {
 		postValueChange(OPERATOR_PROPERTY);
 	}
 
+	@Override
 	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
 		if (property == OPERATOR_PROPERTY) {
 			if (get) {
@@ -216,6 +225,7 @@ public class PrefixExpression extends Expression implements IOperationNode {
 		postReplaceChild(oldChild, variable, VARIABLE_PROPERTY);
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == VARIABLE_PROPERTY) {
 			if (get) {
@@ -232,6 +242,7 @@ public class PrefixExpression extends Expression implements IOperationNode {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

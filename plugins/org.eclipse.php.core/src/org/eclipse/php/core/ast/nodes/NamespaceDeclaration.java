@@ -53,7 +53,7 @@ public class NamespaceDeclaration extends Statement {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(2);
 		properyList.add(NAME_PROPERTY);
 		properyList.add(BODY_PROPERTY);
 		properyList.add(BRACKETED_PROPERTY);
@@ -173,6 +173,7 @@ public class NamespaceDeclaration extends Statement {
 		postReplaceChild(oldChild, name, NAME_PROPERTY);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		NamespaceName name = getName();
 		if (name != null) {
@@ -182,6 +183,7 @@ public class NamespaceDeclaration extends Statement {
 		body.accept(visitor);
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		NamespaceName name = getName();
@@ -192,6 +194,7 @@ public class NamespaceDeclaration extends Statement {
 		body.accept(visitor);
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		NamespaceName name = getName();
 		if (name != null) {
@@ -202,6 +205,7 @@ public class NamespaceDeclaration extends Statement {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<NamespaceDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -220,6 +224,7 @@ public class NamespaceDeclaration extends Statement {
 		buffer.append(tab).append("</NamespaceDeclaration>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -228,6 +233,7 @@ public class NamespaceDeclaration extends Statement {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.NAMESPACE;
 	}
@@ -235,6 +241,7 @@ public class NamespaceDeclaration extends Statement {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
@@ -243,6 +250,7 @@ public class NamespaceDeclaration extends Statement {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
+	@Override
 	ASTNode clone0(AST target) {
 		final NamespaceName name = ASTNode.copySubtree(target, getName());
 		final Block body = ASTNode.copySubtree(target, getBody());
@@ -257,6 +265,7 @@ public class NamespaceDeclaration extends Statement {
 		return PROPERTY_DESCRIPTORS;
 	}
 
+	@Override
 	boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean value) {
 		if (property == BRACKETED_PROPERTY) {
 			if (get) {
@@ -269,6 +278,7 @@ public class NamespaceDeclaration extends Statement {
 		return super.internalGetSetBooleanProperty(property, get, value);
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == BODY_PROPERTY) {
 			if (get) {

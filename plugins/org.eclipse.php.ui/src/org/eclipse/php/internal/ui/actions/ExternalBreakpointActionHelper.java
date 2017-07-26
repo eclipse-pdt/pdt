@@ -117,7 +117,7 @@ public class ExternalBreakpointActionHelper {
 	public static IMarker[] getMarkers(ITextEditor textEditor, IResource resource, IDocument document,
 			AbstractMarkerAnnotationModel annotationModel, IVerticalRulerInfo rulerInfo) {
 
-		List<IMarker> markers = new ArrayList<IMarker>();
+		List<IMarker> markers = new ArrayList<>();
 		if (resource != null && annotationModel != null) {
 			try {
 				IMarker[] allMarkers;
@@ -152,7 +152,7 @@ public class ExternalBreakpointActionHelper {
 			} catch (CoreException x) {
 			}
 		}
-		return (IMarker[]) markers.toArray(new IMarker[0]);
+		return markers.toArray(new IMarker[0]);
 	}
 
 	/**

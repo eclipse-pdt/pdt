@@ -31,11 +31,13 @@ public class EmptyStatement extends Statement {
 		super(start, end);
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		visitor.visit(this);
 		visitor.endvisit(this);
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.EMPTY_STATEMENT;
 	}
@@ -43,9 +45,11 @@ public class EmptyStatement extends Statement {
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
+	@Override
 	public final void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}

@@ -1202,7 +1202,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 
 		computeFoldingStructure(ctx);
 		Map<Object, Position> newStructure = ctx.fMap;
-		Map<IModelElement, Object> oldStructure = computeCurrentStructure(ctx);
+		Map<IModelElement, List<Tuple>> oldStructure = computeCurrentStructure(ctx);
 
 		for (Entry<Object, Position> entry : newStructure.entrySet()) {
 			PHPProjectionAnnotation newAnnotation = (PHPProjectionAnnotation) entry.getKey();
@@ -1221,12 +1221,12 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 			 */
 			boolean isMalformedAnonymousType = newPosition.getOffset() == 0
 					&& element.getElementType() == IModelElement.TYPE;
-			List annotations = (List) oldStructure.get(element);
+			List<?> annotations = oldStructure.get(element);
 			if (annotations == null) {
 				if (!isMalformedAnonymousType)
 					additions.put(newAnnotation, newPosition);
 			} else {
-				Iterator x = annotations.iterator();
+				Iterator<?> x = annotations.iterator();
 				boolean matched = false;
 				while (x.hasNext()) {
 					Tuple tuple = (Tuple) x.next();
@@ -1260,7 +1260,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		}
 
 		for (Object v : oldStructure.values()) {
-			List list = (List) v;
+			List<?> list = (List<?>) v;
 			int size = list.size();
 			for (int i = 0; i < size; i++)
 				deletions.add(((Tuple) list.get(i)).annotation);
@@ -1732,17 +1732,17 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		return null;
 	}
 
-	private Map<IModelElement, Object> computeCurrentStructure(FoldingStructureComputationContext ctx) {
-		Map<IModelElement, Object> map = new HashMap<>();
+	private Map<IModelElement, List<Tuple>> computeCurrentStructure(FoldingStructureComputationContext ctx) {
+		Map<IModelElement, List<Tuple>> map = new HashMap<>();
 		ProjectionAnnotationModel model = ctx.getModel();
-		Iterator e = model.getAnnotationIterator();
+		Iterator<?> e = model.getAnnotationIterator();
 		while (e.hasNext()) {
 			Object annotation = e.next();
 			if (annotation instanceof PHPProjectionAnnotation) {
 				PHPProjectionAnnotation java = (PHPProjectionAnnotation) annotation;
 				Position position = model.getPosition(java);
 				Assert.isNotNull(position);
-				List<Tuple> list = (List<Tuple>) map.get(java.getElement());
+				List<Tuple> list = map.get(java.getElement());
 				if (list == null) {
 					list = new ArrayList<>(2);
 					map.put(java.getElement(), list);
@@ -1751,14 +1751,14 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 			}
 		}
 
-		Comparator comparator = new Comparator() {
+		Comparator<Tuple> comparator = new Comparator<Tuple>() {
 			@Override
-			public int compare(Object o1, Object o2) {
-				return ((Tuple) o1).position.getOffset() - ((Tuple) o2).position.getOffset();
+			public int compare(Tuple o1, Tuple o2) {
+				return o1.position.getOffset() - o2.position.getOffset();
 			}
 		};
-		for (Iterator<Object> it = map.values().iterator(); it.hasNext();) {
-			List list = (List) it.next();
+		for (Iterator<List<Tuple>> it = map.values().iterator(); it.hasNext();) {
+			List<Tuple> list = it.next();
 			Collections.sort(list, comparator);
 		}
 		return map;
@@ -1824,7 +1824,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 			return;
 
 		List<PHPProjectionAnnotation> modified = new ArrayList<>();
-		Iterator iter = model.getAnnotationIterator();
+		Iterator<?> iter = model.getAnnotationIterator();
 		while (iter.hasNext()) {
 			Object annotation = iter.next();
 			if (annotation instanceof PHPProjectionAnnotation) {

@@ -72,11 +72,12 @@ public class XDebugDebuggerExeSettings extends AbstractDebuggerSettings {
 	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerSettings
 	 * #createAttributes()
 	 */
+	@Override
 	protected Map<String, String> createAttributes() {
 		XDebugDebuggerConfiguration debuggerConf = (XDebugDebuggerConfiguration) PHPDebuggersRegistry
 				.getDebuggerConfiguration(getDebuggerId());
 		// Set up initial attributes
-		Map<String, String> attributes = new HashMap<String, String>();
+		Map<String, String> attributes = new HashMap<>();
 		String clientPort = debuggerConf.getAttribute(XDebugPreferenceMgr.XDEBUG_PREF_PORT);
 		attributes.put(PROP_CLIENT_PORT, clientPort != null ? clientPort : DEFAULT_CLIENT_PORT);
 		String useProxy = String.valueOf(XDebugPreferenceMgr.useProxy());

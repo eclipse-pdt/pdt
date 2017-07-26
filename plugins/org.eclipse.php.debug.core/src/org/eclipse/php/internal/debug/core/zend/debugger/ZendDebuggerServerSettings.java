@@ -73,11 +73,12 @@ public class ZendDebuggerServerSettings extends AbstractDebuggerSettings {
 	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerSettings
 	 * #createAttributes()
 	 */
+	@Override
 	protected Map<String, String> createAttributes() {
 		ZendDebuggerConfiguration debuggerConf = (ZendDebuggerConfiguration) PHPDebuggersRegistry
 				.getDebuggerConfiguration(getDebuggerId());
 		// Set up initial attributes
-		Map<String, String> attributes = new HashMap<String, String>();
+		Map<String, String> attributes = new HashMap<>();
 		String clientIp = debuggerConf.getAttribute(CLIENT_IP);
 		attributes.put(PROP_CLIENT_IP, clientIp != null ? clientIp : DEFAULT_CLIENT_IP);
 		String clientPort = debuggerConf.getAttribute(ZEND_DEBUG_PORT);

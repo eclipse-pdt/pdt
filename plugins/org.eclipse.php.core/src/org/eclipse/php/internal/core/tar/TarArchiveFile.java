@@ -23,7 +23,7 @@ import org.eclipse.dltk.core.IArchiveEntry;
 public class TarArchiveFile implements IArchive {
 	private TarFile tarFile;
 	private boolean mapInited = false;
-	private Map<String, TarArchiveEntry> map = new HashMap<String, TarArchiveEntry>();
+	private Map<String, TarArchiveEntry> map = new HashMap<>();
 
 	public TarArchiveFile(String filename) throws TarException, IOException {
 		tarFile = new TarFile(filename);
@@ -33,15 +33,18 @@ public class TarArchiveFile implements IArchive {
 		tarFile = new TarFile(file);
 	}
 
+	@Override
 	public Enumeration<? extends IArchiveEntry> getArchiveEntries() {
-		final Enumeration e = tarFile.entries();
+		final Enumeration<Object> e = tarFile.entries();
 
 		return new Enumeration<IArchiveEntry>() {
 
+			@Override
 			public boolean hasMoreElements() {
 				return e.hasMoreElements();
 			}
 
+			@Override
 			public IArchiveEntry nextElement() {
 				TarEntry tarEntry = (TarEntry) e.nextElement();
 				if (map.containsKey(tarEntry.getName())) {
@@ -57,6 +60,7 @@ public class TarArchiveFile implements IArchive {
 		};
 	}
 
+	@Override
 	public IArchiveEntry getArchiveEntry(String name) {
 		// if (map.containsKey(name)) {
 		// return map.get(name);
@@ -80,6 +84,7 @@ public class TarArchiveFile implements IArchive {
 		mapInited = true;
 	}
 
+	@Override
 	public InputStream getInputStream(IArchiveEntry entry) throws IOException {
 		if (entry instanceof TarArchiveEntry) {
 			TarArchiveEntry tarArchiveEntry = (TarArchiveEntry) entry;
@@ -92,10 +97,12 @@ public class TarArchiveFile implements IArchive {
 		return null;
 	}
 
+	@Override
 	public void close() throws IOException {
 		tarFile.close();
 	}
 
+	@Override
 	public String getName() {
 		return tarFile.getName();
 	}

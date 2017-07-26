@@ -25,6 +25,7 @@ public class NullValidator extends ValidationComponent {
 		super();
 	}
 
+	@Override
 	public void validate(IndexedRegion node) {
 		return;
 	}

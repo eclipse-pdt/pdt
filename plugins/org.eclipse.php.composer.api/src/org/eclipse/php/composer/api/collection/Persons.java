@@ -27,6 +27,7 @@ public class Persons extends AbstractJsonArray<Person> implements Iterable<Perso
 	public Persons() {
 	}
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	protected void doParse(Object obj) {
 		clear();

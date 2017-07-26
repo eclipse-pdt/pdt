@@ -178,6 +178,7 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 		dropSupport.start();
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Object getAdapter(Class key) {
 		if (key == IShowInSource.class) {

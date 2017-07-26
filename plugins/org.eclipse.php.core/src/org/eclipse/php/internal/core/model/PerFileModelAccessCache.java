@@ -75,6 +75,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 		return sourceModule;
 	}
 
+	@Override
 	public ITypeHierarchy getSuperTypeHierarchy(IType type, IProgressMonitor monitor) throws ModelException {
 		if (!PHPToolkitUtil.isFromPHPProject(type)) {
 			return new FakeTypeHierarchy();
@@ -96,6 +97,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	 * @param monitor
 	 *            Progress monitor
 	 */
+	@Override
 	public ReferenceTree getFileHierarchy(ISourceModule sourceModule, IProgressMonitor monitor) {
 
 		if (!this.sourceModule.equals(sourceModule)) {
@@ -120,6 +122,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	 *            Progress monitor
 	 * @return filtered elements
 	 */
+	@Override
 	public <T extends IModelElement> Collection<T> filterModelElements(ISourceModule sourceModule,
 			Collection<T> elements, IProgressMonitor monitor) {
 		return PHPModelUtils.fileNetworkFilter(sourceModule, elements, this, monitor);
@@ -137,6 +140,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	 *            Progress monitor
 	 * @return filtered elements
 	 */
+	@Override
 	public <T extends IModelElement> Collection<T> filterSameModelElements(ISourceModule sourceModule,
 			Collection<T> elements, IProgressMonitor monitor) {
 		return PHPModelUtils.filterElements(sourceModule, elements, this, monitor);
@@ -154,12 +158,13 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	 * @return a collection of functions according to a given name, or
 	 *         <code>null</code> if not found
 	 */
+	@Override
 	public Collection<IMethod> getGlobalFunctions(ISourceModule sourceModule, String functionName,
 			IProgressMonitor monitor) {
 
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=342465
 		if (functionName == null) {
-			return new ArrayList<IMethod>();
+			return new ArrayList<>();
 		}
 		Collection<IMethod> functions;
 
@@ -183,7 +188,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 
 					IMethod[] allFunctions = PHPModelAccess.getDefault().findFunctions(functionName, MatchRule.EXACT, 0,
 							0, scope, monitor);
-					Collection<IMethod> funcList = new ArrayList<IMethod>(allFunctions.length);
+					Collection<IMethod> funcList = new ArrayList<>(allFunctions.length);
 					for (IMethod function : allFunctions) {
 						funcList.add(function);
 					}
@@ -209,6 +214,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	 * @return a collection of types according to a given name, or
 	 *         <code>null</code> if not found
 	 */
+	@Override
 	public Collection<IType> getTypes(ISourceModule sourceModule, String typeName, String namespaceName,
 			IProgressMonitor monitor) {
 
@@ -265,6 +271,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	 *            Progress monitor
 	 * @return namespaces collection if found, otherwise <code>null</code>
 	 */
+	@Override
 	public Collection<IType> getNamespaces(ISourceModule sourceModule, String namespaceName, IProgressMonitor monitor) {
 
 		Collection<IType> namespaces;
@@ -306,6 +313,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	 * @return a collection of traits according to a given name, or
 	 *         <code>null</code> if not found
 	 */
+	@Override
 	public Collection<IType> getTraits(ISourceModule sourceModule, String typeName, String namespaceName,
 			IProgressMonitor monitor) {
 
@@ -363,13 +371,14 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	 * @return classes collection if found, otherwise <code>null</code>
 	 * @throws ModelException
 	 */
+	@Override
 	public Collection<IType> getClasses(ISourceModule sourceModule, String name, String namespaceName,
 			IProgressMonitor monitor) throws ModelException {
 		Collection<IType> allTypes = getTypes(sourceModule, name, namespaceName, monitor);
 		if (allTypes == null) {
 			return null;
 		}
-		Collection<IType> result = new LinkedList<IType>();
+		Collection<IType> result = new LinkedList<>();
 		for (IType type : allTypes) {
 			if (PHPFlags.isClass(type.getFlags())) {
 				result.add(type);
@@ -392,13 +401,14 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	 * @return interfaces collection if found, otherwise <code>null</code>
 	 * @throws ModelException
 	 */
+	@Override
 	public Collection<IType> getInterfaces(ISourceModule sourceModule, String name, String namespaceName,
 			IProgressMonitor monitor) throws ModelException {
 		Collection<IType> allTypes = getTypes(sourceModule, name, namespaceName, monitor);
 		if (allTypes == null) {
 			return null;
 		}
-		Collection<IType> result = new LinkedList<IType>();
+		Collection<IType> result = new LinkedList<>();
 		for (IType type : allTypes) {
 			if (PHPFlags.isInterface(type.getFlags())) {
 				result.add(type);
@@ -421,6 +431,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	 * @return classes collection if found, otherwise <code>null</code>
 	 * @throws ModelException
 	 */
+	@Override
 	public Collection<IType> getClassesOrInterfaces(ISourceModule sourceModule, String name, String namespaceName,
 			IProgressMonitor monitor) throws ModelException {
 		return getTypes(sourceModule, name, namespaceName, monitor);

@@ -82,6 +82,7 @@ public class DebugOutput {
 		return fHeader.toString();
 	}
 
+	@Override
 	public String toString() {
 		return fOutput.toString();
 	}

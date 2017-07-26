@@ -108,7 +108,7 @@ public class CloseTagAutoEditStrategyPHP implements IAutoEditStrategy {
 				if (editor != null) {
 					if (editor instanceof ITextEditor)
 						return editor;
-					ITextEditor textEditor = (ITextEditor) editor.getAdapter(ITextEditor.class);
+					ITextEditor textEditor = editor.getAdapter(ITextEditor.class);
 					if (textEditor != null)
 						return textEditor;
 					return editor;

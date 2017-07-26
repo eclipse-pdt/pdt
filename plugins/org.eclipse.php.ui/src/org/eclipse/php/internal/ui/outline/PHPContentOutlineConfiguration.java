@@ -31,7 +31,6 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.*;
-import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.actions.SortAction;
@@ -269,9 +268,9 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 			fLabelProviderHTML.fShowAttributes = fShowAttributes;
 		}
 		if (MODE_PHP == mode) {
-			return new PHPStyledDecoratingModelLabelProvider((IStyledLabelProvider) fLabelProvider);
+			return new PHPStyledDecoratingModelLabelProvider(fLabelProvider);
 		} else if (MODE_HTML == mode) {
-			return new PHPStyledDecoratingModelLabelProvider((IStyledLabelProvider) fLabelProviderHTML);
+			return new PHPStyledDecoratingModelLabelProvider(fLabelProviderHTML);
 		}
 		return (ILabelProvider) viewer.getLabelProvider();
 	}

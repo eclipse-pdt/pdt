@@ -616,6 +616,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 	/**
 	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#isValid(ILaunchConfiguration)
 	 */
+	@Override
 	public boolean isValid(ILaunchConfiguration launchConfig) {
 		setMessage(null);
 		setErrorMessage(null);
@@ -696,6 +697,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 	/**
 	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#getName()
 	 */
+	@Override
 	public String getName() {
 		return PHPServerUIMessages.getString("ServerTab.server"); //$NON-NLS-1$
 	}

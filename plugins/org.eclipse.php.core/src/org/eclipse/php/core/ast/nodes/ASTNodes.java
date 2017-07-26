@@ -23,7 +23,7 @@ import org.eclipse.php.core.ast.visitor.AbstractVisitor;
  */
 public class ASTNodes {
 
-	public static ASTNode getParent(ASTNode node, Class parentClass) {
+	public static ASTNode getParent(ASTNode node, Class<?> parentClass) {
 		if (node == null)
 			return null;
 

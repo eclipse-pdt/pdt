@@ -134,7 +134,7 @@ public final class PHPExeUtil {
 
 	private static final Pattern PATTERN_PHP_VERSION = Pattern.compile("PHP (\\d\\.\\d\\.\\d+).*? \\((.*?)\\)"); //$NON-NLS-1$
 
-	private static final Map<File, PHPExeInfo> phpInfos = new HashMap<File, PHPExeInfo>();
+	private static final Map<File, PHPExeInfo> phpInfos = new HashMap<>();
 
 	private PHPExeUtil() {
 	};
@@ -252,7 +252,7 @@ public final class PHPExeUtil {
 	 * @return list of installed module names
 	 */
 	public static List<PHPModuleInfo> getModules(PHPexeItem phpExeItem) {
-		List<PHPModuleInfo> modules = new ArrayList<PHPExeUtil.PHPModuleInfo>();
+		List<PHPModuleInfo> modules = new ArrayList<>();
 		String result;
 		PHPVersion phpVersion = new PHPVersion(phpExeItem);
 		File exec = phpExeItem.getExecutable();
@@ -327,7 +327,7 @@ public final class PHPExeUtil {
 	 */
 	public static String fetchVersion(File exec) throws IOException {
 		File emptyIni = PHPINIUtil.createTemporaryPHPINIFile();
-		return PHPExeUtil.exec(exec.getAbsolutePath(), "-c", //$NON-NLS-1$ //$NON-NLS-2$
+		return PHPExeUtil.exec(exec.getAbsolutePath(), "-c", //$NON-NLS-1$ 
 				emptyIni.getParentFile().getAbsolutePath(), "-v"); //$NON-NLS-1$
 	}
 
@@ -343,7 +343,7 @@ public final class PHPExeUtil {
 	 * @return
 	 */
 	private static String[] filterNulls(String[] cmd) {
-		ArrayList<String> result = new ArrayList<String>(cmd.length);
+		ArrayList<String> result = new ArrayList<>(cmd.length);
 		for (String el : cmd) {
 			if (el != null) {
 				result.add(el);

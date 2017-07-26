@@ -86,7 +86,7 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 			}
 
 			if (entry instanceof IResource) {
-				return (getImage((IResource) entry));
+				return (getImage(entry));
 
 			}
 			return null;

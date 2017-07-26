@@ -55,6 +55,7 @@ public class ArrayKeyContext extends AbstractCompletionContext {
 		return hasQuotes;
 	}
 
+	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
@@ -105,6 +106,7 @@ public class ArrayKeyContext extends AbstractCompletionContext {
 		return true;
 	}
 
+	@Override
 	public int getPrefixEnd() throws BadLocationException {
 		int prefixEnd = super.getPrefixEnd();
 		if (hasQuotes) {

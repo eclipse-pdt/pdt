@@ -23,6 +23,7 @@ public class GotoStatementContext extends StatementContext {
 
 	private IModelElement currentElement;
 
+	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;

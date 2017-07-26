@@ -28,6 +28,7 @@ import org.eclipse.dltk.core.ISourceModule;
  */
 public class InterfaceExtendsContext extends InterfaceDeclarationContext {
 
+	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;

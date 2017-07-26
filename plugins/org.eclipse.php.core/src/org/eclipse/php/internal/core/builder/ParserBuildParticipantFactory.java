@@ -49,6 +49,7 @@ public class ParserBuildParticipantFactory extends AbstractBuildParticipantType 
 
 	private String natureId = null;
 
+	@Override
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
 			throws CoreException {
 		natureId = config.getAttribute("nature"); //$NON-NLS-1$
@@ -62,6 +63,7 @@ public class ParserBuildParticipantFactory extends AbstractBuildParticipantType 
 			this.parser = parser;
 		}
 
+		@Override
 		public void build(IBuildContext context) throws CoreException {
 			IModelElement element = context.getModelElement();
 			if (LibraryFolderManager.getInstance().isInLibraryFolder(element.getResource())) {

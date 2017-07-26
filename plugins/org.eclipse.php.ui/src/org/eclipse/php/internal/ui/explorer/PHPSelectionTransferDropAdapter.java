@@ -83,9 +83,10 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 
 	}
 
+	@SuppressWarnings("unchecked")
 	private void handleDropMove(final Object target)
 			throws ModelException, InvocationTargetException, InterruptedException {
-		List<?> elements = ((IStructuredSelection) getSelection()).toList();
+		List<Object> elements = ((IStructuredSelection) getSelection()).toList();
 		IResource[] resources = getResources(elements);
 
 		ReorgMoveAction action = new ReorgMoveAction();
@@ -107,7 +108,7 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 
 	private void handleDropCopy(final Object target)
 			throws ModelException, InvocationTargetException, InterruptedException {
-		List elements = ((IStructuredSelection) getSelection()).toList();
+		List<?> elements = ((IStructuredSelection) getSelection()).toList();
 		IModelElement[] modelElements = ReorgUtils.getModelElements(elements);
 		IResource[] resources = getResources(modelElements);
 		ReorgCopyStarter starter = null;
@@ -265,7 +266,7 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 		return false;
 	}
 
-	private IResource[] getResources(List elements) {
+	private IResource[] getResources(List<Object> elements) {
 		List<IResource> resources = new ArrayList<>(elements.size());
 		for (Iterator<Object> iter = elements.iterator(); iter.hasNext();) {
 			Object element = iter.next();
@@ -306,7 +307,7 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 		ISelection s = LocalSelectionTransfer.getTransfer().getSelection();
 		if (!(s instanceof IStructuredSelection)) {
 			fSelection = StructuredSelection.EMPTY;
-			fElements = Collections.EMPTY_LIST;
+			fElements = Collections.emptyList();
 			return;
 		}
 		fSelection = s;

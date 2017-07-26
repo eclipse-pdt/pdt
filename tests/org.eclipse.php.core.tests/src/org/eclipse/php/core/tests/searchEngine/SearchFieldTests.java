@@ -48,7 +48,7 @@ public class SearchFieldTests {
 
 	// protected static final char SELECTION_CHAR = '|';
 	@Parameters
-	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<>();
 
 	static {
 		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/searchEngine/php5" });
@@ -138,9 +138,10 @@ public class SearchFieldTests {
 
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule, getSearchFlags(false));
 		ISearchEngine searchEngine = ModelAccess.getSearchEngine(scope.getLanguageToolkit());
-		final List<String> paths = new ArrayList<String>();
+		final List<String> paths = new ArrayList<>();
 		if (searchEngine != null) {
 			ISearchRequestor requestor = new ISearchRequestor() {
+				@Override
 				public void match(int elementType, int flags, int offset, int length, int nameOffset, int nameLength,
 						String elementName, String metadata, String doc, String qualifier, String parent,
 						ISourceModule sourceModule, boolean isReference) {

@@ -25,7 +25,7 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 
 public class ArchieveFileFilter extends ViewerFilter {
 
-	private List fExcludes;
+	private List<IFile> fExcludes;
 	private boolean fRecursive;
 	private static String[] fFilterExtensions = { "*.zip", "*.jar" }; // defaults //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -47,7 +47,7 @@ public class ArchieveFileFilter extends ViewerFilter {
 		fFilterExtensions = filterExtensions;
 	}
 
-	public ArchieveFileFilter(List excludedFiles, boolean recusive, String[] filterExtensions) {
+	public ArchieveFileFilter(List<IFile> excludedFiles, boolean recusive, String[] filterExtensions) {
 		fExcludes = excludedFiles;
 		fRecursive = recusive;
 		fFilterExtensions = filterExtensions;

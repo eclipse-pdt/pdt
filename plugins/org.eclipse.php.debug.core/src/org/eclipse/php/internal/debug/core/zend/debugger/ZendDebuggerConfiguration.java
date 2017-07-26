@@ -60,6 +60,7 @@ public class ZendDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#
 	 *      openConfigurationDialog(org.eclipse.swt.widgets.Shell)
 	 */
+	@Override
 	public void openConfigurationDialog(Shell parentShell) {
 		new ZendDebuggerConfigurationDialog(this, parentShell).open();
 	}
@@ -68,6 +69,7 @@ public class ZendDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	 * @see org.eclipse.php.internal.debug.core.debugger.
 	 *      AbstractDebuggerConfiguration #getPort()
 	 */
+	@Override
 	public int getPort() {
 		return Platform.getPreferencesService().getInt(PHPDebugPlugin.ID, PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT,
 				0, null);
@@ -77,6 +79,7 @@ public class ZendDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	 * @see org.eclipse.php.internal.debug.core.debugger.
 	 *      AbstractDebuggerConfiguration #setPort(int)
 	 */
+	@Override
 	public void setPort(int port) {
 		preferences.putInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT, port);
 	}
@@ -142,6 +145,7 @@ public class ZendDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	/**
 	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#getScriptLaunchDelegateClass()
 	 */
+	@Override
 	public String getScriptLaunchDelegateClass() {
 		return PHPExecutableLaunchDelegate.class.getName();
 	}
@@ -149,6 +153,7 @@ public class ZendDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	/**
 	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#getWebLaunchDelegateClass()
 	 */
+	@Override
 	public String getWebLaunchDelegateClass() {
 		return PHPWebPageLaunchDelegate.class.getName();
 	}
@@ -157,6 +162,7 @@ public class ZendDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	 * @see org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration
 	 *      #applyDefaults()
 	 */
+	@Override
 	public void applyDefaults() {
 		setPort(defaultPreferences.getInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT, 0));
 		preferences.put(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO,
@@ -171,6 +177,7 @@ public class ZendDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	 * @see org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration
 	 *      #validate()
 	 */
+	@Override
 	public IStatus validate(PHPexeItem item) {
 		File executable = item.getExecutable();
 		PHPexes.changePermissions(executable);

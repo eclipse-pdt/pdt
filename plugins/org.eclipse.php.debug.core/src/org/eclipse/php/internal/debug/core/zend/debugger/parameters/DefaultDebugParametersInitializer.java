@@ -58,8 +58,9 @@ public class DefaultDebugParametersInitializer extends AbstractDebugParametersIn
 	 * IDebugParametersInitializer
 	 * #generateQueryParameters(org.eclipse.debug.core.ILaunch)
 	 */
+	@Override
 	public Hashtable<String, String> getDebugParameters(ILaunch launch) {
-		Hashtable<String, String> parameters = new Hashtable<String, String>();
+		Hashtable<String, String> parameters = new Hashtable<>();
 		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
 		parameters.put(START_DEBUG, "1"); //$NON-NLS-1$
 
@@ -169,6 +170,7 @@ public class DefaultDebugParametersInitializer extends AbstractDebugParametersIn
 	 * IDebugParametersInitializer
 	 * #getRequestURL(org.eclipse.debug.core.ILaunch)
 	 */
+	@Override
 	public URL getRequestURL(ILaunch launch) {
 		String url = launch.getAttribute(IDebugParametersKeys.ORIGINAL_URL);
 		try {
@@ -186,22 +188,27 @@ public class DefaultDebugParametersInitializer extends AbstractDebugParametersIn
 		return false;
 	}
 
+	@Override
 	public Hashtable<String, String> getRequestCookies(ILaunch launch) {
 		return null;
 	}
 
+	@Override
 	public Hashtable<String, String> getRequestHeaders(ILaunch launch) {
 		return null;
 	}
 
+	@Override
 	public String getRequestMethod(ILaunch launch) {
 		return null;
 	}
 
+	@Override
 	public Hashtable<String, String> getRequestParameters(ILaunch launch) {
 		return null;
 	}
 
+	@Override
 	public String getRequestRawData(ILaunch launch) {
 		return null;
 	}

@@ -34,7 +34,6 @@ import org.eclipse.swt.widgets.Group;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class AbstractDebugExeLaunchSettingsSection implements IDebuggerLaunchSettingsSection {
 
 	protected WidgetListener widgetListener;

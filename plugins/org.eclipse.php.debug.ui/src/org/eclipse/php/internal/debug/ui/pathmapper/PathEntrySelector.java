@@ -32,9 +32,11 @@ public class PathEntrySelector implements IPathEntryFilter {
 	public PathEntrySelector() {
 	}
 
+	@Override
 	public PathEntry[] filter(final PathEntry[] entries, final VirtualPath remotePath, final IDebugTarget debugTarget) {
-		final List<PathEntry> l = new LinkedList<PathEntry>();
+		final List<PathEntry> l = new LinkedList<>();
 		Runnable r = new Runnable() {
+			@Override
 			public void run() {
 				// grab usable shell from somewhere:
 				Shell shell = Display.getDefault().getActiveShell();

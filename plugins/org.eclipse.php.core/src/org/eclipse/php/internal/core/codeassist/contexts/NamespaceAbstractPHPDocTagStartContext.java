@@ -44,6 +44,7 @@ public abstract class NamespaceAbstractPHPDocTagStartContext extends NamespacePH
 	private IType currentNS;
 	private String nsPrefix;
 
+	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
@@ -55,7 +56,7 @@ public abstract class NamespaceAbstractPHPDocTagStartContext extends NamespacePH
 		TextSequence statementText = getStatementText();
 		String statementTextString = statementText.toString();
 		StringTokenizer st = new StringTokenizer(statementTextString);
-		Stack<String> stack = new Stack<String>();
+		Stack<String> stack = new Stack<>();
 		while (st.hasMoreElements()) {
 			stack.add((String) st.nextElement());
 		}
@@ -188,6 +189,7 @@ public abstract class NamespaceAbstractPHPDocTagStartContext extends NamespacePH
 		return getPrefixWithoutProcessing().endsWith(lastWord);
 	}
 
+	@Override
 	public int getPrefixEnd() throws BadLocationException {
 		ITextRegion phpToken = getPHPToken();
 		if (phpToken.getType() == PHPRegionTypes.PHP_NS_SEPARATOR

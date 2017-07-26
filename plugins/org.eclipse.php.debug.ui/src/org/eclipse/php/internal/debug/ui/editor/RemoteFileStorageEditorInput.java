@@ -48,6 +48,7 @@ public class RemoteFileStorageEditorInput extends ExternalStorageEditorInput
 	 * @see org.eclipse.dltk.internal.ui.editor.ExternalStorageEditorInput#
 	 * getImageDescriptor()
 	 */
+	@Override
 	public ImageDescriptor getImageDescriptor() {
 		return PHPDebugUIImages.getImageDescriptor(PHPDebugUIImages.IMG_OBJ_REMOTE_FILE);
 	}
@@ -57,6 +58,7 @@ public class RemoteFileStorageEditorInput extends ExternalStorageEditorInput
 	 * 
 	 * @see org.eclipse.ui.IURIEditorInput#getURI()
 	 */
+	@Override
 	public URI getURI() {
 		if (storageURI == null) {
 			try {
@@ -75,6 +77,7 @@ public class RemoteFileStorageEditorInput extends ExternalStorageEditorInput
 	 * @see org.eclipse.dltk.internal.ui.editor.ExternalStorageEditorInput#
 	 * getToolTipText()
 	 */
+	@Override
 	public String getToolTipText() {
 		return getStorage().getFullPath().toString();
 	}
@@ -85,6 +88,7 @@ public class RemoteFileStorageEditorInput extends ExternalStorageEditorInput
 	 * @see org.eclipse.php.internal.ui.editor.input.
 	 * IPlatformIndependentPathEditorInput#getPath()
 	 */
+	@Override
 	public String getPath() {
 		return ((RemoteFileStorage) getStorage()).getFileName();
 	}
@@ -95,6 +99,7 @@ public class RemoteFileStorageEditorInput extends ExternalStorageEditorInput
 	 * @see
 	 * org.eclipse.dltk.internal.ui.editor.ExternalStorageEditorInput#hashCode()
 	 */
+	@Override
 	public int hashCode() {
 		return getURI().hashCode();
 	}
@@ -106,6 +111,7 @@ public class RemoteFileStorageEditorInput extends ExternalStorageEditorInput
 	 * org.eclipse.dltk.internal.ui.editor.ExternalStorageEditorInput#equals(
 	 * java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object object) {
 		if (object == this) {
 			return true;

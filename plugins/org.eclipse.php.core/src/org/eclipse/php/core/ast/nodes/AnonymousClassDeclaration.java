@@ -22,7 +22,7 @@ import org.eclipse.php.core.ast.visitor.Visitor;
 public class AnonymousClassDeclaration extends Expression {
 
 	private Expression superClass;
-	protected ASTNode.NodeList<Identifier> interfaces = new ASTNode.NodeList<Identifier>(INTERFACES_PROPERTY);
+	protected ASTNode.NodeList<Identifier> interfaces = new ASTNode.NodeList<>(INTERFACES_PROPERTY);
 	private Block body;
 
 	/**
@@ -45,7 +45,7 @@ public class AnonymousClassDeclaration extends Expression {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(3);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(3);
 		propertyList.add(SUPER_CLASS_PROPERTY);
 		propertyList.add(INTERFACES_PROPERTY);
 		propertyList.add(BODY_PROPERTY);
@@ -192,6 +192,7 @@ public class AnonymousClassDeclaration extends Expression {
 		return new AnonymousClassDeclaration(getStart(), getEnd(), target, superClass, interfaces, body);
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == BODY_PROPERTY) {
 			if (get) {
@@ -213,7 +214,8 @@ public class AnonymousClassDeclaration extends Expression {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
-	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+	@Override
+	final List<? extends ASTNode> internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == INTERFACES_PROPERTY) {
 			return getInterfaces();
 		}

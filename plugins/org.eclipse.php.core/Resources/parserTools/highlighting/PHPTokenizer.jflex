@@ -76,7 +76,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 	private String fCurrentTagName = null;
 
 	// the list of tag name BlockMarkers
-	private List fBlockMarkers = new ArrayList();
+	private List<BlockMarker> fBlockMarkers = new ArrayList<>();
 
 	// required to not seek text blocks on an end tag
 	private boolean fIsBlockingEnabled = false;
@@ -93,7 +93,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
  */
 protected final boolean containsTagName(char[] markerTagName, int offset, int tagnameLength) {
 	for (int j = 0; j < fBlockMarkers.size(); j++) {
-		BlockMarker marker = (BlockMarker) fBlockMarkers.get(j);
+		BlockMarker marker = fBlockMarkers.get(j);
 		if (marker.getTagName().length() == tagnameLength) {
 			boolean matchesSoFar = true;
 			for (int i = 0; i < tagnameLength && matchesSoFar; i++) {
@@ -117,8 +117,8 @@ protected final boolean containsTagName(char[] markerTagName, int offset, int ta
  * Return ALL of the regions scannable within the remaining text
  * Note: for verification use
  */
-public final List getRegions() {
-	List tokens = new ArrayList();
+public final List<ITextRegion> getRegions() {
+	List<ITextRegion> tokens = new ArrayList<>();
 	ITextRegion region = null;
 	try {
 		region = getNextToken();
@@ -144,9 +144,9 @@ public final List getRegions() {
  * user method
  */
 protected final boolean containsTagName(String markerTagName) {
-	Iterator blocks = fBlockMarkers.iterator();
+	Iterator<BlockMarker> blocks = fBlockMarkers.iterator();
 	while (blocks.hasNext()) {
-		BlockMarker marker = (BlockMarker) blocks.next();
+		BlockMarker marker = blocks.next();
 		if (marker.isCaseSensitive()) {
 			if (marker.getTagName().equals(markerTagName))
 				return true;
@@ -160,6 +160,7 @@ protected final boolean containsTagName(String markerTagName) {
 /**
  * user method
  */
+@Override
 public final void addBlockMarker(BlockMarker marker) {
 	if (containsTagName(marker.getTagName()))
 		return;
@@ -168,17 +169,19 @@ public final void addBlockMarker(BlockMarker marker) {
 /**
  * user method
  */
+@Override
 public final void removeBlockMarker(BlockMarker marker) {
 	fBlockMarkers.remove(marker);
 }
 /**
  * user method
  */
+@Override
 public final void removeBlockMarker(String tagname) {
 	if (fBlockMarkers != null) {
-		Iterator blocks = fBlockMarkers.iterator();
+		Iterator<BlockMarker> blocks = fBlockMarkers.iterator();
 		while (blocks.hasNext()) {
-			if (((BlockMarker) blocks.next()).getTagName().equals(tagname))
+			if (blocks.next().getTagName().equals(tagname))
 				blocks.remove();
 		}
 	}
@@ -189,9 +192,9 @@ public boolean getBlockMarkerCaseSensitivity() {
 }
 /* user method */
 public boolean getBlockMarkerCaseSensitivity(String name) {
-	Iterator iterator = fBlockMarkers.iterator();
+	Iterator<BlockMarker> iterator = fBlockMarkers.iterator();
 	while (iterator.hasNext()) {
-		BlockMarker marker = (BlockMarker) iterator.next();
+		BlockMarker marker = iterator.next();
 		boolean casesensitive = marker.isCaseSensitive();
 		if (casesensitive && marker.getTagName().equals(name))
 			return casesensitive;
@@ -206,19 +209,21 @@ public String getBlockMarkerContext() {
 }
 /* user method */
 public String getBlockMarkerContext(String name) {
-	Iterator iterator = fBlockMarkers.iterator();
+	Iterator<BlockMarker> iterator = fBlockMarkers.iterator();
 	while (iterator.hasNext()) {
-		BlockMarker marker = (BlockMarker) iterator.next();
+		BlockMarker marker = iterator.next();
 		if (marker.getTagName().equals(name))
 			return marker.getContext();
 	}
 	return BLOCK_TEXT;
 }
 /* user method */
-public List getBlockMarkers() {
+@Override
+public List<BlockMarker> getBlockMarkers() {
 	return fBlockMarkers;
 }
 /* user method */
+@Override
 public final int getOffset() {
 	return fOffset + yychar;
 }
@@ -233,6 +238,7 @@ private final boolean isBlockMarker(String tagName) {
 /**
  * user method
  */
+@Override
 public final void beginBlockTagScan(String newTagName) {
 	beginBlockMarkerScan(newTagName, BLOCK_TEXT);
 }
@@ -257,6 +263,7 @@ public final void beginBlockTagScan(String newTagName) {
  *	XML_CONTENT: 50-57
  *
  */
+@Override
 public final void beginBlockMarkerScan(String newTagName, String blockcontext) {
 	yybegin(ST_BLOCK_TAG_SCAN);
 	fCurrentTagName = newTagName;
@@ -696,6 +703,7 @@ public int[] getParameters() {
  * Note that this algorithm caches the token following the one being returned
  * so that whitespace can be collapsed.
  */
+@Override
 public final ITextRegion getNextToken() throws IOException {
 	fEmbeddedContainer = null;
 	// load the starting non-whitespace token (assume that it is so)
@@ -800,22 +808,27 @@ public PHPTokenizer(char[] charArray) {
 	this(new CharArrayReader(charArray));
 }
 /* user method */
+@Override
 public void reset(char[] charArray) {
 	reset(new CharArrayReader(charArray), 0);
 }
 /* user method */
+@Override
 public void reset(char[] charArray, int newOffset) {
 	reset(new CharArrayReader(charArray), newOffset);
 }
 /* user method */
+@Override
 public void reset(java.io.InputStream in) {
 	reset(new java.io.InputStreamReader(in), 0);
 }
 /* user method */
+@Override
 public void reset(java.io.InputStream in, int newOffset) {
 	reset(new java.io.InputStreamReader(in), newOffset);
 }
 /* user method */
+@Override
 public void reset(java.io.Reader in) {
 	reset(in, 0);
 }
@@ -829,6 +842,7 @@ public void reset(java.io.Reader in) {
  * <em>generated</em> output of this specification before this method was
  * added.  Those code blocks were under the above copyright.
  */
+@Override
 public void reset(java.io.Reader in, int newOffset) {
 	if (Debug.debugTokenizer) {
 		System.out.println("resetting tokenizer");//$NON-NLS-1$
@@ -907,12 +921,13 @@ public void reset(java.io.Reader in, int newOffset) {
 	 * user method
 	 *
 	 */
+	@Override
 	public BlockTokenizer newInstance() {
 		PHPTokenizer newInstance = new PHPTokenizer();
 		// global tagmarkers can be shared; they have no state and
 		// are never destroyed (e.g. 'release')
 		for (int i = 0; i < fBlockMarkers.size(); i++) {
-			BlockMarker blockMarker = (BlockMarker) fBlockMarkers.get(i);
+			BlockMarker blockMarker = fBlockMarkers.get(i);
 			if (blockMarker.isGlobal())
 				newInstance.addBlockMarker(blockMarker);
 		}

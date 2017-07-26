@@ -27,9 +27,9 @@ import com.ibm.icu.text.MessageFormat;
 /**
  * Renders PHP debug elements
  */
-@SuppressWarnings("restriction")
 public class XDebugModelPresentation extends PHPModelPresentation implements IDebugModelPresentation {
 
+	@Override
 	protected String getStackFrameText(IStackFrame frame) {
 		if (frame instanceof DBGpStackFrame) {
 			try {

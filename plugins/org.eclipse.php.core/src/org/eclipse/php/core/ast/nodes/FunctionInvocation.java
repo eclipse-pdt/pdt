@@ -32,7 +32,7 @@ import org.eclipse.php.core.ast.visitor.Visitor;
 public class FunctionInvocation extends VariableBase {
 
 	private FunctionName functionName;
-	private final ASTNode.NodeList<Expression> parameters = new ASTNode.NodeList<Expression>(PARAMETERS_PROPERTY);
+	private final ASTNode.NodeList<Expression> parameters = new ASTNode.NodeList<>(PARAMETERS_PROPERTY);
 	/**
 	 * The "expressions" structural property of this node type.
 	 */
@@ -48,7 +48,7 @@ public class FunctionInvocation extends VariableBase {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(2);
 		propertyList.add(FUNCTION_PROPERTY);
 		propertyList.add(PARAMETERS_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
@@ -69,6 +69,7 @@ public class FunctionInvocation extends VariableBase {
 		this.parameters.addAll(parameters);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -77,6 +78,7 @@ public class FunctionInvocation extends VariableBase {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		functionName.accept(visitor);
 		for (ASTNode node : parameters) {
@@ -84,6 +86,7 @@ public class FunctionInvocation extends VariableBase {
 		}
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		functionName.traverseTopDown(visitor);
@@ -92,6 +95,7 @@ public class FunctionInvocation extends VariableBase {
 		}
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		functionName.traverseBottomUp(visitor);
 		for (ASTNode node : parameters) {
@@ -100,6 +104,7 @@ public class FunctionInvocation extends VariableBase {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<FunctionInvocation"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -115,6 +120,7 @@ public class FunctionInvocation extends VariableBase {
 		buffer.append(tab).append("</FunctionInvocation>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.FUNCTION_INVOCATION;
 	}
@@ -151,6 +157,7 @@ public class FunctionInvocation extends VariableBase {
 		postReplaceChild(oldChild, functionname, FUNCTION_PROPERTY);
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == FUNCTION_PROPERTY) {
 			if (get) {
@@ -164,7 +171,8 @@ public class FunctionInvocation extends VariableBase {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
-	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+	@Override
+	final List<? extends ASTNode> internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == PARAMETERS_PROPERTY) {
 			return parameters();
 		}
@@ -182,6 +190,7 @@ public class FunctionInvocation extends VariableBase {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

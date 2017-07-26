@@ -33,7 +33,7 @@ public class SearchResult {
 
 			next = (String) json.get("next"); //$NON-NLS-1$
 			total = json.get("total").toString(); //$NON-NLS-1$
-			results = new LinkedList<MinimalPackage>();
+			results = new LinkedList<>();
 			Object r = json.get("results"); //$NON-NLS-1$
 
 			if (r instanceof LinkedList) {

@@ -52,12 +52,14 @@ public class OpenRemoteFileExternalRequestor implements IRemoteFileContentReques
 	 * IRemoteFileContentRequestor#fileContentReceived(byte[], java.lang.String,
 	 * java.lang.String, java.lang.String, int)
 	 */
+	@Override
 	public void fileContentReceived(final byte[] content, final String serverAddress, final String originalURL,
 			final String fileName, final int lineNumber) {
 		final IEditorInput editorInput = getEditorInput(content, serverAddress, originalURL, fileName);
 		if (editorInput == null)
 			return;
 		Display.getDefault().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				openEditor(editorInput, lineNumber);
 			}
@@ -70,6 +72,7 @@ public class OpenRemoteFileExternalRequestor implements IRemoteFileContentReques
 	 * @see org.eclipse.php.internal.debug.core.zend.communication.
 	 * IRemoteFileContentRequestor#requestCompleted(java.lang.Exception)
 	 */
+	@Override
 	public void requestCompleted(Exception e) {
 		// ignore
 	}

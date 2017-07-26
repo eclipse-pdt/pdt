@@ -53,14 +53,17 @@ public class DebugScriptEndedNotification extends DebugMessageNotificationImpl i
 		return status;
 	}
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setStatus(in.readInt());
 	}
 
+	@Override
 	public int getType() {
 		return 2002;
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 	}

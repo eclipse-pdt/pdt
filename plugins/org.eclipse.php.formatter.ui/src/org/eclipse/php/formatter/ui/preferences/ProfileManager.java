@@ -302,7 +302,7 @@ public class ProfileManager extends Observable implements IProfileManager {
 	private static final Map<String, Object> EMPTY_MAP = Collections.emptyMap();;
 
 	static {
-		fKeys = new ArrayList<String>(CodeFormatterPreferences.getDefaultPreferences().getMap().keySet());
+		fKeys = new ArrayList<>(CodeFormatterPreferences.getDefaultPreferences().getMap().keySet());
 		Collections.sort(fKeys);
 	}
 
@@ -314,8 +314,8 @@ public class ProfileManager extends Observable implements IProfileManager {
 	 *            <code>CustomProfile</code>)
 	 */
 	public ProfileManager(List<Profile> profiles, IScopeContext context) {
-		fProfiles = new HashMap<String, Profile>();
-		fProfilesByName = new ArrayList<Profile>();
+		fProfiles = new HashMap<>();
+		fProfilesByName = new ArrayList<>();
 
 		addBuiltinProfiles(fProfiles, fProfilesByName);
 
@@ -413,7 +413,7 @@ public class ProfileManager extends Observable implements IProfileManager {
 	 *            The project context
 	 */
 	public Map<String, Object> readFromPreferenceStore(IScopeContext context, Profile workspaceProfile) {
-		final Map<String, Object> profileOptions = new HashMap<String, Object>();
+		final Map<String, Object> profileOptions = new HashMap<>();
 		IEclipsePreferences prefs = context.getNode(FormatterCorePlugin.PLUGIN_ID);
 
 		boolean hasValues = false;

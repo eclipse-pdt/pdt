@@ -79,7 +79,7 @@ public class OrganizeUseStatementsActionTests {
 	protected ProfileManager profileManager;
 
 	@Parameters
-	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<>();
 
 	static {
 		TESTS.put(PHPVersion.PHP7_0, new String[] { "/workspace/organize-imports/php53",

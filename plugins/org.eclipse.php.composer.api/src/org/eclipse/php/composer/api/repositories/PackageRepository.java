@@ -58,6 +58,7 @@ public class PackageRepository extends Repository {
 	 * 
 	 * @see java.lang.Object#clone()
 	 */
+	@Override
 	public PackageRepository clone() {
 		PackageRepository clone = new PackageRepository();
 		cloneProperties(clone);

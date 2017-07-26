@@ -22,6 +22,7 @@ public class ControlAccessibleListener extends AccessibleAdapter {
 		controlName = name;
 	}
 
+	@Override
 	public void getName(AccessibleEvent e) {
 		e.result = controlName;
 	}

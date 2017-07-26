@@ -127,6 +127,7 @@ void contributeToActionBars() {
  * (non-Javadoc)
  * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
  */
+@Override
 public void createPartControl(Composite parent) {
 
 	// Create the tab folder
@@ -134,6 +135,7 @@ public void createPartControl(Composite parent) {
 
 	// Add results view as listener to viewer selection changes
 	Display.getDefault().asyncExec(new Runnable() {
+		@Override
 		public void run() {
 			PerformancesView performancesView = (PerformancesView) PerformancesView.getWorkbenchView("org.eclipse.test.internal.performance.results.ui.ComponentsView");
 			if (performancesView != null) {
@@ -184,6 +186,7 @@ void createTabs() {
  * (non-Javadoc)
  * @see org.eclipse.ui.part.WorkbenchPart#dispose()
  */
+@Override
 public void dispose() {
 	this.tabFolder.dispose();
 	int length = this.tabs==null ? 0 : this.tabs.length;
@@ -228,6 +231,7 @@ void fillLocalToolBar(IToolBarManager manager) {
  * (non-Javadoc)
  * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
  */
+@Override
 public void init(IViewSite site, IMemento memento) throws PartInitException {
 	super.init(site, memento);
 	this.viewState = memento;
@@ -244,6 +248,7 @@ void makeActions() {
 
 	// Full line selection action
 	this.fullLineSelection = new Action("", IAction.AS_CHECK_BOX) {
+		@Override
 		public void run() {
 			resetTabFolders(false/*refresh*/);
 		}
@@ -254,6 +259,7 @@ void makeActions() {
 
 	// Filter non-fingerprints action
 	this.filterAdvancedScenarios = new Action("Advanced &Scenarios", IAction.AS_CHECK_BOX) {
+		@Override
 		public void run() {
 			ComponentResultsView.this.preferences.putBoolean(IPerformancesConstants.PRE_FILTER_ADVANCED_SCENARIOS, isChecked());
 			resetTabFolders(false/*refresh*/);
@@ -264,6 +270,7 @@ void makeActions() {
 
 	// Filter non-important builds action
 	this.filterOldBuilds = new Action("&Old Builds", IAction.AS_CHECK_BOX) {
+		@Override
 		public void run() {
 			ComponentResultsView.this.preferences.putBoolean(IPerformancesConstants.PRE_FILTER_OLD_BUILDS, isChecked());
 			resetTabFolders(false/*refresh*/);
@@ -274,6 +281,7 @@ void makeActions() {
 
 	// Filter nightly action
 	this.filterNightlyBuilds = new Action("&Nightly", IAction.AS_CHECK_BOX) {
+		@Override
 		public void run() {
 			ComponentResultsView.this.preferences.putBoolean(IPerformancesConstants.PRE_FILTER_NIGHTLY_BUILDS, isChecked());
 			resetTabFolders(false/*refresh*/);
@@ -285,6 +293,7 @@ void makeActions() {
 /* (non-Javadoc)
  * @see org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener#preferenceChange(org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent)
  */
+@Override
 public void preferenceChange(PreferenceChangeEvent event) {
 	String propertyName = event.getKey();
 	Object newValue = event.getNewValue();
@@ -399,6 +408,7 @@ void restoreState() {
  * (non-Javadoc)
  * @see org.eclipse.ui.part.ViewPart#saveState(org.eclipse.ui.IMemento)
  */
+@Override
 public void saveState(IMemento memento) {
 	super.saveState(memento);
 	memento.putBoolean(IPerformancesConstants.PRE_FULL_LINE_SELECTION, this.fullLineSelection.isChecked());
@@ -408,6 +418,7 @@ public void saveState(IMemento memento) {
  * (non-Javadoc)
  * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
  */
+@Override
 public void selectionChanged(SelectionChangedEvent event) {
 	ResultsElement selectedElement = (ResultsElement) ((TreeSelection) event.getSelection()).getFirstElement();
 	ComponentResultsElement componentElement = null;
@@ -461,6 +472,7 @@ public void selectionChanged(SelectionChangedEvent event) {
  * (non-Javadoc)
  * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
  */
+@Override
 public void setFocus() {
 	// do nothing
 }
