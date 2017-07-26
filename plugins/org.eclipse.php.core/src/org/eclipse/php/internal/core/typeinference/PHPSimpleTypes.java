@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.evaluation.types.SimpleType;
@@ -34,7 +35,7 @@ public class PHPSimpleTypes {
 		public IEvaluatedType type;
 		public PHPVersion hintableSince;
 
-		public TypeInfo(IEvaluatedType type, PHPVersion hintableSince) {
+		public TypeInfo(@NonNull IEvaluatedType type, @Nullable PHPVersion hintableSince) {
 			this.type = type;
 			this.hintableSince = hintableSince;
 		}
@@ -43,7 +44,7 @@ public class PHPSimpleTypes {
 			return hintableSince != null;
 		}
 
-		public boolean isHintable(PHPVersion phpVersion) {
+		public boolean isHintable(@Nullable PHPVersion phpVersion) {
 			if (!isHintable()) {
 				return false;
 			}
@@ -120,11 +121,17 @@ public class PHPSimpleTypes {
 	 * @param type
 	 * @return
 	 */
+	@Nullable
 	public static IEvaluatedType fromString(@Nullable String type) {
 		if (type == null) {
 			return null;
 		}
-		return fromStringCS(type.toLowerCase());
+		TypeInfo typeInfo = SIMPLE_TYPES.get(type.toLowerCase());
+		if (typeInfo != null) {
+			return typeInfo.type;
+		}
+
+		return null;
 	}
 
 	/**
@@ -133,8 +140,14 @@ public class PHPSimpleTypes {
 	 * @param type
 	 * @return
 	 * @since 3.5
+	 * @deprecated
+	 * @see PHPSimpleTypes#fromString(String)
 	 */
-	public static IEvaluatedType fromStringCS(String type) {
+	@Nullable
+	public static IEvaluatedType fromStringCS(@Nullable String type) {
+		if (type == null) {
+			return null;
+		}
 		TypeInfo typeInfo = SIMPLE_TYPES.get(type);
 		if (typeInfo != null) {
 			return typeInfo.type;
@@ -149,8 +162,13 @@ public class PHPSimpleTypes {
 	 * @param type
 	 * @return
 	 * @since 3.5
+	 * @deprecated
+	 * @see PHPSimpleTypes#isSimpleType(String)
 	 */
-	public static boolean isSimpleTypeCS(String type) {
+	public static boolean isSimpleTypeCS(@Nullable String type) {
+		if (type == null) {
+			return false;
+		}
 		return SIMPLE_TYPES.containsKey(type);
 	}
 
@@ -161,7 +179,10 @@ public class PHPSimpleTypes {
 	 * @return
 	 * @since 4.0
 	 */
-	public static boolean isSimpleType(String type) {
+	public static boolean isSimpleType(@Nullable String type) {
+		if (type == null) {
+			return false;
+		}
 		return SIMPLE_TYPES.containsKey(type.toLowerCase());
 	}
 
@@ -171,7 +192,10 @@ public class PHPSimpleTypes {
 	 * @return
 	 * @since 4.0
 	 */
-	public static boolean isHintable(String name, PHPVersion phpVersion) {
+	public static boolean isHintable(@Nullable String name, @Nullable PHPVersion phpVersion) {
+		if (name == null) {
+			return false;
+		}
 		TypeInfo typeInfo = SIMPLE_TYPES.get(name.toLowerCase());
 		if (typeInfo != null) {
 			return typeInfo.isHintable(phpVersion);
@@ -185,7 +209,10 @@ public class PHPSimpleTypes {
 	 * @return
 	 * @since 4.0
 	 */
-	private static TypeInfo findInfo(IEvaluatedType type) {
+	private static TypeInfo findInfo(@Nullable IEvaluatedType type) {
+		if (type == null) {
+			return null;
+		}
 		for (TypeInfo info : SIMPLE_TYPES.values()) {
 			if (info.type.equals(type)) {
 				return info;
@@ -199,7 +226,7 @@ public class PHPSimpleTypes {
 	 * @return
 	 * @since 4.0
 	 */
-	public static boolean isSimpleType(IEvaluatedType type) {
+	public static boolean isSimpleType(@Nullable IEvaluatedType type) {
 		return findInfo(type) != null;
 	}
 
@@ -209,7 +236,7 @@ public class PHPSimpleTypes {
 	 * @return
 	 * @since 4.0
 	 */
-	public static boolean isHintable(IEvaluatedType type, PHPVersion phpVersion) {
+	public static boolean isHintable(@Nullable IEvaluatedType type, @Nullable PHPVersion phpVersion) {
 		TypeInfo info = findInfo(type);
 		if (info != null) {
 			return info.isHintable(phpVersion);
