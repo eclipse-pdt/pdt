@@ -53,6 +53,7 @@ public class CodeCoverageTextViewer extends PHPSourceViewer implements IProperty
 	 * org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse
 	 * .jface.util.PropertyChangeEvent)
 	 */
+	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		if (COVERED_LINES_COLOR_DEF.equals(event.getProperty())) {
 			fCoveredLineBackground = fThemeManager.getCurrentTheme().getColorRegistry().get(COVERED_LINES_COLOR_DEF);
@@ -70,6 +71,7 @@ public class CodeCoverageTextViewer extends PHPSourceViewer implements IProperty
 	 * 
 	 * @see org.eclipse.swt.widgets.Widget#dispose()
 	 */
+	@Override
 	public void dispose() {
 		fThemeManager.removePropertyChangeListener(this);
 		fUncoveredSignificantBackground.dispose();
@@ -81,6 +83,7 @@ public class CodeCoverageTextViewer extends PHPSourceViewer implements IProperty
 	 * 
 	 * @see org.eclipse.php.internal.ui.editor.PHPSourceViewer#applyStyles()
 	 */
+	@Override
 	public void applyStyles() {
 		super.applyStyles();
 		StyledText text = getTextWidget();

@@ -27,6 +27,7 @@ public class TraitDeclaration extends ClassDeclaration {
 	/**
 	 * Used to walk on tree. traverse order: superclasses, body.
 	 */
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 
 		if (visitor.visit(this)) {

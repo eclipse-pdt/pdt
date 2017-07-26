@@ -20,9 +20,9 @@ public class LineCommentEndOffsets {
 
 	private static final int[] EMPTY_INT_ARRAY = {};
 	private int[] offsets;
-	private final List commentList;
+	private final List<?> commentList;
 
-	public LineCommentEndOffsets(List commentList) {
+	public LineCommentEndOffsets(List<?> commentList) {
 		this.commentList = commentList;
 		this.offsets = null; // create on demand
 	}

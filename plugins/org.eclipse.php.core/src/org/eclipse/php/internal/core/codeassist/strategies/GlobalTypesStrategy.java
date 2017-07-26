@@ -61,6 +61,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		this(context, 0, 0);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 
 		ICompletionContext context = getContext();
@@ -240,7 +241,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 			return PHPModelAccess.getDefault().findTypes(prefix, MatchRule.EXACT, trueFlag, falseFlag, scope, null);
 		}
 
-		List<IType> result = new LinkedList<IType>();
+		List<IType> result = new LinkedList<>();
 		if (prefix.length() > 1 && prefix.toUpperCase().equals(prefix)) {
 			// Search by camel-case
 			IType[] types = PHPModelAccess.getDefault().findTypes(prefix, MatchRule.CAMEL_CASE, trueFlag, falseFlag,
@@ -311,6 +312,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 							FakeMethod ctorMethod = new FakeMethod((ModelElement) selfClassData, "self", //$NON-NLS-1$
 									sourceRange.getOffset(), sourceRange.getLength(), sourceRange.getOffset(),
 									sourceRange.getLength()) {
+								@Override
 								public boolean isConstructor() throws ModelException {
 									return true;
 								}

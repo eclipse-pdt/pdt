@@ -279,6 +279,7 @@ public class PHPDebugPlugin extends Plugin {
 	/**
 	 * This method is called upon plug-in activation
 	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		ExtDirSupport.setExtDirInPHPIniFile();
@@ -297,6 +298,7 @@ public class PHPDebugPlugin extends Plugin {
 	/**
 	 * This method is called when the plug-in is stopped
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		plugin = null;
@@ -495,7 +497,7 @@ public class PHPDebugPlugin extends Plugin {
 		IDebugTarget debugTarget = null;
 		IAdaptable adaptable = DebugUITools.getDebugContext();
 		if (adaptable != null) {
-			IDebugElement element = (IDebugElement) adaptable.getAdapter(IDebugElement.class);
+			IDebugElement element = adaptable.getAdapter(IDebugElement.class);
 			if (element != null) {
 				debugTarget = element.getDebugTarget();
 			}
@@ -524,6 +526,7 @@ public class PHPDebugPlugin extends Plugin {
 	//
 	private class AutoRemoveOldLaunchesListener implements IPropertyChangeListener {
 
+		@Override
 		public void propertyChange(PropertyChangeEvent event) {
 			if (IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES.equals(event.getProperty())) {
 				if (fLaunchChangedAutoRemoveLaunches) {

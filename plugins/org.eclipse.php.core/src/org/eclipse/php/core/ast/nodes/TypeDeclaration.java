@@ -19,7 +19,7 @@ import java.util.List;
 public abstract class TypeDeclaration extends Statement {
 
 	private Identifier name;
-	protected ASTNode.NodeList<Identifier> interfaces = new ASTNode.NodeList<Identifier>(getInterfacesProperty());;
+	protected ASTNode.NodeList<Identifier> interfaces = new ASTNode.NodeList<>(getInterfacesProperty());;
 	private Block body;
 
 	/**
@@ -125,6 +125,7 @@ public abstract class TypeDeclaration extends Statement {
 		postReplaceChild(oldChild, id, getNameProperty());
 	}
 
+	@Override
 	ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == getNameProperty()) {
 			if (get) {
@@ -149,7 +150,8 @@ public abstract class TypeDeclaration extends Statement {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
-	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+	@Override
+	final List<? extends ASTNode> internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == getInterfacesProperty()) {
 			return interfaces();
 		}

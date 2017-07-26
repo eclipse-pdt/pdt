@@ -31,7 +31,6 @@ import org.eclipse.php.internal.server.core.manager.IServersManagerListener;
 import org.eclipse.php.internal.server.core.manager.ServerManagerEvent;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
 
-@SuppressWarnings("restriction")
 public class PathMapperRegistry implements IXMLPreferencesStorable {
 
 	private class MapperOwnerListener implements IServersManagerListener, IPHPExesListener {
@@ -44,6 +43,7 @@ public class PathMapperRegistry implements IXMLPreferencesStorable {
 		 * serverAdded(org.eclipse.php.internal.server.core.manager.
 		 * ServerManagerEvent)
 		 */
+		@Override
 		public void serverAdded(ServerManagerEvent event) {
 			if (!serverPathMapper.containsKey(event.getServer())) {
 				serverPathMapper.put(event.getServer(), new PathMapper());
@@ -58,6 +58,7 @@ public class PathMapperRegistry implements IXMLPreferencesStorable {
 		 * serverModified(org.eclipse.php.internal.server.core.manager.
 		 * ServerManagerEvent)
 		 */
+		@Override
 		public void serverModified(ServerManagerEvent event) {
 		}
 
@@ -69,6 +70,7 @@ public class PathMapperRegistry implements IXMLPreferencesStorable {
 		 * serverRemoved(org.eclipse.php.internal.server.core.manager.
 		 * ServerManagerEvent)
 		 */
+		@Override
 		public void serverRemoved(ServerManagerEvent event) {
 			serverPathMapper.remove(event.getServer());
 		}
@@ -81,6 +83,7 @@ public class PathMapperRegistry implements IXMLPreferencesStorable {
 		 * phpExeAdded(org.eclipse.php.internal.debug.core.preferences.
 		 * PHPExesEvent)
 		 */
+		@Override
 		public void phpExeAdded(PHPExesEvent event) {
 			if (!phpExePathMapper.containsKey(event.getPHPExeItem())) {
 				phpExePathMapper.put(event.getPHPExeItem(), new PathMapper());
@@ -95,6 +98,7 @@ public class PathMapperRegistry implements IXMLPreferencesStorable {
 		 * phpExeRemoved(org.eclipse.php.internal.debug.core.preferences.
 		 * PHPExesEvent)
 		 */
+		@Override
 		public void phpExeRemoved(PHPExesEvent event) {
 			phpExePathMapper.remove(event.getPHPExeItem());
 		}
@@ -111,9 +115,9 @@ public class PathMapperRegistry implements IXMLPreferencesStorable {
 
 	private PathMapperRegistry() {
 		// Make it weak to remove entry after dropping the launch configuration
-		launchConfigPathMapper = new WeakHashMap<ILaunchConfiguration, PathMapper>();
-		serverPathMapper = new HashMap<Server, PathMapper>();
-		phpExePathMapper = new HashMap<PHPexeItem, PathMapper>();
+		launchConfigPathMapper = new WeakHashMap<>();
+		serverPathMapper = new HashMap<>();
+		phpExePathMapper = new HashMap<>();
 		ownerListener = new MapperOwnerListener();
 		// Load persistent mappings from preferences
 		List<Map<String, Object>> elements = XMLPreferencesReader
@@ -224,6 +228,7 @@ public class PathMapperRegistry implements IXMLPreferencesStorable {
 	 * org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable#
 	 * restoreFromMap(java.util.Map)
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public synchronized void restoreFromMap(Map<String, Object> map) {
 		if (map == null) {
@@ -264,12 +269,13 @@ public class PathMapperRegistry implements IXMLPreferencesStorable {
 	 * org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable#
 	 * storeToMap()
 	 */
+	@Override
 	public synchronized Map<String, Object> storeToMap() {
-		Map<String, Object> elements = new HashMap<String, Object>();
+		Map<String, Object> elements = new HashMap<>();
 		Iterator<?> i = serverPathMapper.keySet().iterator();
 		int c = 1;
 		while (i.hasNext()) {
-			Map<String, Object> entry = new HashMap<String, Object>();
+			Map<String, Object> entry = new HashMap<>();
 			Server server = (Server) i.next();
 			PathMapper pathMapper = serverPathMapper.get(server);
 			entry.put("server", server.getName()); //$NON-NLS-1$
@@ -280,7 +286,7 @@ public class PathMapperRegistry implements IXMLPreferencesStorable {
 		}
 		i = phpExePathMapper.keySet().iterator();
 		while (i.hasNext()) {
-			Map<String, Object> entry = new HashMap<String, Object>();
+			Map<String, Object> entry = new HashMap<>();
 			PHPexeItem phpExeItem = (PHPexeItem) i.next();
 			PathMapper pathMapper = phpExePathMapper.get(phpExeItem);
 			entry.put("phpExe", phpExeItem.getExecutable().toString()); //$NON-NLS-1$
@@ -290,7 +296,7 @@ public class PathMapperRegistry implements IXMLPreferencesStorable {
 			entry.put("mapper", pathMapper.storeToMap()); //$NON-NLS-1$
 			elements.put("item" + (c++), entry); //$NON-NLS-1$
 		}
-		Map<String, Object> root = new HashMap<String, Object>();
+		Map<String, Object> root = new HashMap<>();
 		root.put("pathMappers", elements); //$NON-NLS-1$
 		return root;
 	}

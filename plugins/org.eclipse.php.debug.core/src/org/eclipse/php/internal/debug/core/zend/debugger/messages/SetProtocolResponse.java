@@ -30,15 +30,18 @@ public class SetProtocolResponse extends DebugMessageResponseImpl implements IDe
 		return fProtocolID;
 	}
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		setProtocolID(in.readInt());
 	}
 
+	@Override
 	public int getType() {
 		return 11000;
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());

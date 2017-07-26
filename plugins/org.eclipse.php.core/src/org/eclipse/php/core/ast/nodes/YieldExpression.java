@@ -65,7 +65,7 @@ public class YieldExpression extends Expression {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(2);
 		propertyList.add(EXPRESSION_PROPERTY);
 		propertyList.add(KEY_PROPERTY);
 		propertyList.add(OPERATOR_PROPERTY);
@@ -104,6 +104,7 @@ public class YieldExpression extends Expression {
 		this.operator = operator;
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -112,6 +113,7 @@ public class YieldExpression extends Expression {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		if (key != null) {
 			key.accept(visitor);
@@ -121,6 +123,7 @@ public class YieldExpression extends Expression {
 		}
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		if (key != null) {
@@ -131,6 +134,7 @@ public class YieldExpression extends Expression {
 		}
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		if (key != null) {
 			key.traverseBottomUp(visitor);
@@ -141,6 +145,7 @@ public class YieldExpression extends Expression {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<YieldExpression"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -159,6 +164,7 @@ public class YieldExpression extends Expression {
 		buffer.append(tab).append("</YieldExpression>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.YIELD_STATEMENT;
 	}
@@ -226,6 +232,7 @@ public class YieldExpression extends Expression {
 		return operator;
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == EXPRESSION_PROPERTY) {
 			if (get) {
@@ -246,6 +253,7 @@ public class YieldExpression extends Expression {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
+	@Override
 	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
 		if (property == OPERATOR_PROPERTY) {
 			if (get) {
@@ -262,6 +270,7 @@ public class YieldExpression extends Expression {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

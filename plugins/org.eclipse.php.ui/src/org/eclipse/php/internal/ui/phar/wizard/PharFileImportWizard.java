@@ -74,7 +74,7 @@ public class PharFileImportWizard extends Wizard implements IImportWizard {
 	public void init(IWorkbench workbench, IStructuredSelection currentSelection) {
 		this.workbench = workbench;
 		this.selection = currentSelection;
-		List selectedResources = IDE.computeSelectedResources(currentSelection);
+		List<?> selectedResources = IDE.computeSelectedResources(currentSelection);
 		if (!selectedResources.isEmpty()) {
 			this.selection = new StructuredSelection(selectedResources);
 		}

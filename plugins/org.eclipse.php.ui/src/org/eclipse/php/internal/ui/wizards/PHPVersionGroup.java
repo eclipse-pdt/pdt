@@ -103,7 +103,7 @@ public class PHPVersionGroup implements SelectionListener {
 	@Override
 	public void widgetDefaultSelected(SelectionEvent e) {
 		String prefID = PHPInterpreterPreferencePage.PREF_ID;
-		Map data = null;
+		Map<?, ?> data = null;
 		PreferencesUtil.createPreferenceDialogOn(fPage.getShell(), prefID, new String[] { prefID }, data).open();
 		if (!fEnableProjectSettings.getSelection()) {
 			fConfigurationBlock.performRevert();

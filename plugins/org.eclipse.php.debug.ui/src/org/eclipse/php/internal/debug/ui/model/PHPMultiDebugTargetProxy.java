@@ -25,7 +25,6 @@ import org.eclipse.debug.internal.ui.viewers.update.DebugTargetProxy;
  * 
  * @author Bartlomiej Laczkowski, 2014
  */
-@SuppressWarnings("restriction")
 public class PHPMultiDebugTargetProxy extends DebugTargetProxy {
 
 	private IDebugTarget debugTarget;
@@ -82,6 +81,7 @@ public class PHPMultiDebugTargetProxy extends DebugTargetProxy {
 	 * getNextSuspendedThreadDelta(org.eclipse.debug.core.model.IThread,
 	 * boolean)
 	 */
+	@Override
 	protected ModelDelta getNextSuspendedThreadDelta(IThread currentThread, boolean reverse) {
 		if (debugTarget != null) {
 			try {
@@ -90,7 +90,7 @@ public class PHPMultiDebugTargetProxy extends DebugTargetProxy {
 				ILaunch launch = debugTarget.getLaunch();
 				int launchIndex = indexOf(manager.getLaunches(), debugTarget.getLaunch());
 				int targetIndex = indexOf(debugTarget.getLaunch().getChildren(), debugTarget);
-				List<IThread> chosen = new ArrayList<IThread>();
+				List<IThread> chosen = new ArrayList<>();
 				// Select & unfold all suspended threads
 				boolean takeNext = currentThread == null;
 				int startIdx = reverse ? threads.length - 1 : 0;

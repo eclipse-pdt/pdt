@@ -35,15 +35,18 @@ public class AssignValueResponse extends DebugMessageResponseImpl implements IDe
 		return variableValue;
 	}
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		setStatus(in.readInt());
 	}
 
+	@Override
 	public int getType() {
 		return 1033;
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());

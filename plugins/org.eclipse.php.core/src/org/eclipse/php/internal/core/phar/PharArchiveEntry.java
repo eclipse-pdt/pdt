@@ -27,14 +27,17 @@ public class PharArchiveEntry implements IArchiveEntry {
 		this.pharEntry = pharEntry;
 	}
 
+	@Override
 	public String getName() {
 		return pharEntry.getName();
 	}
 
+	@Override
 	public boolean isDirectory() {
 		return pharEntry.isDirectory();
 	}
 
+	@Override
 	public long getSize() {
 		return pharEntry.getSize();
 	}

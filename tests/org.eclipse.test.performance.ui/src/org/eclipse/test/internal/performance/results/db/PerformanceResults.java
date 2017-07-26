@@ -41,7 +41,7 @@ import org.eclipse.test.internal.performance.results.utils.Util;
 public class PerformanceResults extends AbstractResults {
 
 	String[] allBuildNames = null;
-	Map allScenarios;
+	Map<String, List<ScenarioResults>> allScenarios;
 	String baselineName; // Name of the baseline build used for comparison
 	String baselinePrefix;
 	private String scenarioPattern = "%"; //$NON-NLS-1$
@@ -160,7 +160,7 @@ public String[] getComponents() {
  * @param componentName The component name. Should not be <code>null</code>
  * @return A list of {@link ScenarioResults scenario results}
  */
-public List getComponentScenarios(String componentName) {
+public List<?> getComponentScenarios(String componentName) {
 	ComponentResults componentResults = (ComponentResults) getResults(componentName);
 	if (componentResults == null) return null;
 	return Collections.unmodifiableList(componentResults.children);
@@ -173,10 +173,10 @@ public List getComponentScenarios(String componentName) {
  * @param config Configuration name
  * @return A list of {@link ScenarioResults scenario results} which have a summary
  */
-public List getComponentSummaryScenarios(String componentName, String config) {
+public List<?> getComponentSummaryScenarios(String componentName, String config) {
 	if (componentName == null) {
 		int size = size();
-		List scenarios = new ArrayList();
+		List<ScenarioResults> scenarios = new ArrayList<>();
 		for (int i=0; i< size; i++) {
 			ComponentResults componentResults = (ComponentResults) this.children.get(i);
 			scenarios.addAll(componentResults.getSummaryScenarios(true, config));
@@ -289,6 +289,7 @@ public String getLastBuildName(int kind) {
 	return this.name;
 }
 
+@Override
 public String getName() {
 	if (this.name == null) {
 		setAllBuildNames();
@@ -300,6 +301,7 @@ public String getName() {
  * (non-Javadoc)
  * @see org.eclipse.test.internal.performance.results.AbstractResults#getPerformance()
  */
+@Override
 PerformanceResults getPerformance() {
 	return this;
 }
@@ -387,7 +389,7 @@ private String[] read(boolean local, String buildName, String[][] configs, boole
 	RemainingTimeGuess timeGuess = null;
 	for (int i=0; i<componentsLength; i++) {
 		String componentName = this.components[i];
-		List scenarios = this.allScenarios == null ? null : (List) this.allScenarios.get(componentName);
+		List<?> scenarios = this.allScenarios == null ? null : (List<?>) this.allScenarios.get(componentName);
 
 		// Manage monitor
 		int percentage = (int) ((((double)(i+1)) / (componentsLength+1)) * 100);
@@ -595,11 +597,11 @@ void readLocalFile(File dir) {
 		length = stream.readInt();
 		println("		+ "+length+" components");
 		this.components = new String[length];
-		this.allScenarios = new HashMap();
+		this.allScenarios = new HashMap<>();
 		for (int i = 0; i < length; i++) {
 			this.components[i] = stream.readUTF();
 			int size = stream.readInt();
-			List scenarios = new ArrayList(size);
+			List<ScenarioResults> scenarios = new ArrayList<>(size);
 			for (int j=0; j<size; j++) {
 				scenarios.add(new ScenarioResults(stream.readInt(), stream.readUTF(), stream.readUTF()));
 			}
@@ -631,13 +633,13 @@ private int readScenarios(String buildName, SubMonitor subMonitor) throws Operat
 	this.allScenarios = DB_Results.queryAllScenarios(this.scenarioPattern, buildName);
 	if (this.allScenarios == null) return -1;
 	int allScenariosSize = 0;
-	List componentsSet = new ArrayList(this.allScenarios.keySet());
+	List<String> componentsSet = new ArrayList<>(this.allScenarios.keySet());
 	Collections.sort(componentsSet);
 	int componentsSize = componentsSet.size();
 	componentsSet.toArray(this.components = new String[componentsSize]);
 	for (int i=0; i<componentsSize; i++) {
 		String componentName = this.components[i];
-		List scenarios = (List) this.allScenarios.get(componentName);
+		List<?> scenarios = this.allScenarios.get(componentName);
 		allScenariosSize += scenarios.size();
 	}
 	println(" -> "+allScenariosSize+" found in "+(System.currentTimeMillis()-start)+"ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -648,7 +650,7 @@ private int readScenarios(String buildName, SubMonitor subMonitor) throws Operat
 
 void reset(File dataDir) {
 	this.allBuildNames = null;
-	this.children = new ArrayList();
+	this.children = new ArrayList<>();
 //	this.name = null;
 	this.components = null;
 	this.allScenarios = null;
@@ -656,12 +658,12 @@ void reset(File dataDir) {
 }
 
 private void setAllBuildNames() {
-	SortedSet builds = new TreeSet(Util.BUILD_DATE_COMPARATOR);
+	SortedSet<String> builds = new TreeSet<>(Util.BUILD_DATE_COMPARATOR);
 	int size = size();
 	if (size == 0) return;
 	for (int i=0; i<size; i++) {
 		ComponentResults componentResults = (ComponentResults) this.children.get(i);
-		Set names = componentResults.getAllBuildNames();
+		Set<String> names = componentResults.getAllBuildNames();
 		builds.addAll(names);
 	}
 	int buildsSize = builds.size();
@@ -909,7 +911,7 @@ void writeData(File dir) {
 		stream.writeInt(length);
 		for (int i = 0; i < length; i++) {
 			stream.writeUTF(this.components[i]);
-			List scenarios = (List) this.allScenarios.get(this.components[i]);
+			List<?> scenarios = this.allScenarios.get(this.components[i]);
 			int size = scenarios.size();
 			stream.writeInt(size);
 			for (int j=0; j<size; j++) {

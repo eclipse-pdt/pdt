@@ -96,10 +96,10 @@ public class ConfigureHostsDialog extends MessageDialog {
 	private List<Inet4Address> inputIPs;
 	private List<Inet4Address> detectedIPs;
 	private List<Inet4Address> mergedIPs;
-	private Map<Inet4Address, Boolean> initialState = new LinkedHashMap<Inet4Address, Boolean>();
+	private Map<Inet4Address, Boolean> initialState = new LinkedHashMap<>();
 	private CheckboxTableViewer ipsTableViewer;
 	private Button resetButton;
-	private List<Inet4Address> selectedIPs = new ArrayList<Inet4Address>();
+	private List<Inet4Address> selectedIPs = new ArrayList<>();
 
 	/**
 	 * Opens configure IPs dialog.
@@ -160,7 +160,7 @@ public class ConfigureHostsDialog extends MessageDialog {
 	private void mergeAddresses(List<Inet4Address> allIPs, List<Inet4Address> detectedIPs) {
 		this.inputIPs = allIPs;
 		this.detectedIPs = detectedIPs;
-		mergedIPs = new ArrayList<Inet4Address>();
+		mergedIPs = new ArrayList<>();
 		mergedIPs.addAll(allIPs);
 		for (Inet4Address ip : detectedIPs) {
 			if (!mergedIPs.contains(ip))
@@ -257,6 +257,7 @@ public class ConfigureHostsDialog extends MessageDialog {
 			}
 		});
 		ipsTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				ISelection selection = event.getSelection();
 				if (selection instanceof IStructuredSelection) {
@@ -348,7 +349,7 @@ public class ConfigureHostsDialog extends MessageDialog {
 	}
 
 	private void setInitialState() {
-		initialState = new LinkedHashMap<Inet4Address, Boolean>();
+		initialState = new LinkedHashMap<>();
 		for (Inet4Address address : mergedIPs) {
 			initialState.put(address, false);
 		}

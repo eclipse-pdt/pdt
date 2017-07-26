@@ -185,7 +185,7 @@ public interface IntMap {
 	 * 
 	 * @return a collection view of the values contained in this map.
 	 */
-	public Collection values();
+	public Collection<?> values();
 
 	/**
 	 * Returns a set view of the mappings contained in this map. Each element in
@@ -200,7 +200,7 @@ public interface IntMap {
 	 * 
 	 * @return a set view of the mappings contained in this map.
 	 */
-	public Set entrySet();
+	public Set<?> entrySet();
 
 	/**
 	 * A map entry (key-value pair). The <tt>Map.entrySet</tt> method returns a
@@ -277,6 +277,7 @@ public interface IntMap {
 		 * @return <tt>true</tt> if the specified object is equal to this map
 		 *         entry.
 		 */
+		@Override
 		boolean equals(Object o);
 
 		/**
@@ -297,6 +298,7 @@ public interface IntMap {
 		 * @see Object#equals(Object)
 		 * @see #equals(Object)
 		 */
+		@Override
 		int hashCode();
 	}
 
@@ -315,6 +317,7 @@ public interface IntMap {
 	 *            object to be compared for equality with this map.
 	 * @return <tt>true</tt> if the specified object is equal to this map.
 	 */
+	@Override
 	boolean equals(Object o);
 
 	/**
@@ -330,5 +333,6 @@ public interface IntMap {
 	 * @see Object#equals(Object)
 	 * @see #equals(Object)
 	 */
+	@Override
 	int hashCode();
 }

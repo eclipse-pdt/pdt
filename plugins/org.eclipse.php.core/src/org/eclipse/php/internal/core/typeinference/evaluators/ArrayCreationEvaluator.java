@@ -25,27 +25,30 @@ import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 
 public class ArrayCreationEvaluator extends GoalEvaluator {
 
-	private List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
+	private List<IEvaluatedType> evaluated = new LinkedList<>();
 
 	public ArrayCreationEvaluator(IGoal goal) {
 		super(goal);
 	}
 
+	@Override
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
 		ArrayCreation arrayCreation = (ArrayCreation) typedGoal.getExpression();
 
-		List<IGoal> subGoals = new LinkedList<IGoal>();
+		List<IGoal> subGoals = new LinkedList<>();
 		for (ArrayElement arrayElement : arrayCreation.getElements()) {
 			subGoals.add(new ExpressionTypeGoal(typedGoal.getContext(), arrayElement.getValue()));
 		}
 		return subGoals.toArray(new IGoal[subGoals.size()]);
 	}
 
+	@Override
 	public Object produceResult() {
 		return PHPTypeInferenceUtils.combineMultiType(evaluated);
 	}
 
+	@Override
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		if (state != GoalState.RECURSIVE) {
 			evaluated.add((IEvaluatedType) result);

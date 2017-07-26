@@ -31,7 +31,7 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  */
 public class ArrayCreation extends VariableBase {
 
-	private final ASTNode.NodeList<ArrayElement> elements = new ASTNode.NodeList<ArrayElement>(ELEMENTS_PROPERTY);
+	private final ASTNode.NodeList<ArrayElement> elements = new ASTNode.NodeList<>(ELEMENTS_PROPERTY);
 	private boolean hasArrayKey;
 
 	/**
@@ -49,7 +49,7 @@ public class ArrayCreation extends VariableBase {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(3);
 		properyList.add(ELEMENTS_PROPERTY);
 		properyList.add(HAS_ARRAY_KEY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
@@ -93,6 +93,7 @@ public class ArrayCreation extends VariableBase {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
+	@Override
 	final boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean value) {
 		if (property == HAS_ARRAY_KEY) {
 			if (get) {
@@ -106,17 +107,20 @@ public class ArrayCreation extends VariableBase {
 		return super.internalGetSetBooleanProperty(property, get, value);
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		for (ASTNode node : this.elements) {
 			node.accept(visitor);
 		}
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		for (ASTNode node : this.elements) {
@@ -124,6 +128,7 @@ public class ArrayCreation extends VariableBase {
 		}
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		for (ASTNode node : this.elements) {
 			node.traverseBottomUp(visitor);
@@ -131,6 +136,7 @@ public class ArrayCreation extends VariableBase {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<ArrayCreation"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -142,6 +148,7 @@ public class ArrayCreation extends VariableBase {
 		buffer.append(tab).append("</ArrayCreation>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -150,6 +157,7 @@ public class ArrayCreation extends VariableBase {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.ARRAY_CREATION;
 	}
@@ -166,6 +174,7 @@ public class ArrayCreation extends VariableBase {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
@@ -174,6 +183,7 @@ public class ArrayCreation extends VariableBase {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
+	@Override
 	ASTNode clone0(AST target) {
 		final List<ArrayElement> elements = ASTNode.copySubtrees(target, elements());
 		return new ArrayCreation(this.getStart(), this.getEnd(), target, elements, isHasArrayKey());
@@ -187,7 +197,8 @@ public class ArrayCreation extends VariableBase {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
-	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+	@Override
+	final List<? extends ASTNode> internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == ELEMENTS_PROPERTY) {
 			return elements();
 		}

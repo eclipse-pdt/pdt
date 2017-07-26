@@ -53,9 +53,9 @@ public class ConfigResultsElement extends ResultsElement {
 	private static final PropertyDescriptor CONFIG_DELTA_DESCRIPTOR = new PropertyDescriptor(P_ID_CONFIG_DELTA, P_STR_CONFIG_DELTA);
 	private static final PropertyDescriptor CONFIG_ERROR_DESCRIPTOR = new PropertyDescriptor(P_ID_CONFIG_ERROR, P_STR_CONFIG_ERROR);
 
-    private static Vector DESCRIPTORS;
-    static Vector initDescriptors(int status) {
-		DESCRIPTORS = new Vector();
+    private static Vector<PropertyDescriptor> DESCRIPTORS;
+    static Vector<PropertyDescriptor> initDescriptors(int status) {
+		DESCRIPTORS = new Vector<>();
 		// Status category
 		DESCRIPTORS.add(getInfosDescriptor(status));
 		DESCRIPTORS.add(getWarningsDescriptor(status));
@@ -84,7 +84,7 @@ public class ConfigResultsElement extends ResultsElement {
 		return DESCRIPTORS;
 	}
     static ComboBoxPropertyDescriptor getInfosDescriptor(int status) {
-		List list = new ArrayList();
+		List<String> list = new ArrayList<>();
 		if ((status & SMALL_VALUE) != 0) {
 			list.add("This test and/or its variation has a small value on this machine, hence it may not be necessary to spend time on fixing it if a regression occurs");
 		}
@@ -100,7 +100,7 @@ public class ConfigResultsElement extends ResultsElement {
 		return infoDescriptor;
 	}
     static PropertyDescriptor getWarningsDescriptor(int status) {
-		List list = new ArrayList();
+		List<String> list = new ArrayList<>();
 		if ((status & BIG_ERROR) != 0) {
 			list.add("The error on this machine is over the 3% threshold, hence its result may not be really reliable");
 		}
@@ -127,7 +127,7 @@ public class ConfigResultsElement extends ResultsElement {
 		warningDescriptor.setCategory("Status");
 		return warningDescriptor;
 	}
-    static Vector getDescriptors() {
+    static Vector<PropertyDescriptor> getDescriptors() {
     	return DESCRIPTORS;
 	}
 
@@ -135,10 +135,12 @@ public ConfigResultsElement(AbstractResults results, ResultsElement parent) {
 	super(results, parent);
 }
 
+@Override
 public int compareTo(Object o) {
 	// TODO Auto-generated method stub
 	return super.compareTo(o);
 }
+@Override
 ResultsElement createChild(AbstractResults testResults) {
 	return new BuildResultsElement(testResults, this);
 }
@@ -171,6 +173,7 @@ BuildResultsElement getCurrentBuild() {
 	return this.currentBuild;
 }
 
+@Override
 public String getLabel(Object o) {
 	String description = getConfigResults().getDescription();
 	int index = description.indexOf(" (");
@@ -180,6 +183,7 @@ public String getLabel(Object o) {
 	return description.substring(0, index);
 }
 
+@Override
 void initStatus() {
 	ConfigResults configResults = getConfigResults();
 	if (configResults.isValid()) {
@@ -194,8 +198,9 @@ void initStatus() {
  *
  * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyDescriptors()
  */
+@Override
 public IPropertyDescriptor[] getPropertyDescriptors() {
-	Vector descriptors = getDescriptors();
+	Vector<PropertyDescriptor> descriptors = getDescriptors();
 	if (descriptors == null) {
 		descriptors = initDescriptors(getStatus());
 	}
@@ -204,7 +209,7 @@ public IPropertyDescriptor[] getPropertyDescriptors() {
 	descriptorsArray[0] = getInfosDescriptor(getStatus());
 	descriptorsArray[1] = getWarningsDescriptor(getStatus());
 	for (int i=2; i<size; i++) {
-		descriptorsArray[i] = (IPropertyDescriptor) descriptors.get(i);
+		descriptorsArray[i] = descriptors.get(i);
 	}
 	return descriptorsArray;
 }
@@ -216,6 +221,7 @@ public IPropertyDescriptor[] getPropertyDescriptors() {
  * org.eclipse.ui.views.properties.IPropertySource#getPropertyValue(java.lang
  * .Object)
  */
+@Override
 public Object getPropertyValue(Object propKey) {
 	ConfigResults configResults = getConfigResults();
 	if (propKey.equals(P_ID_CONFIG_NAME)) {

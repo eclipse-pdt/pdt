@@ -46,7 +46,7 @@ public abstract class AbstractDebuggerConfiguration implements IDebuggerConfigur
 	 * AbstractDebuggerConfiguration constructor.
 	 */
 	public AbstractDebuggerConfiguration() {
-		attributes = new HashMap<String, String>();
+		attributes = new HashMap<>();
 		preferences = PHPDebugPlugin.getInstancePreferences();
 		defaultPreferences = PHPDebugPlugin.getDefaultPreferences();
 		Platform.getPreferencesService();
@@ -74,6 +74,7 @@ public abstract class AbstractDebuggerConfiguration implements IDebuggerConfigur
 	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#
 	 *      getAttribute(java.lang.String)
 	 */
+	@Override
 	public String getAttribute(String id) {
 		String attribute = attributes.get(id);
 		if (attribute == null) {
@@ -95,6 +96,7 @@ public abstract class AbstractDebuggerConfiguration implements IDebuggerConfigur
 	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#
 	 *      getDebuggerId()
 	 */
+	@Override
 	public String getDebuggerId() {
 		return getAttribute(DEBUGGER_ID);
 	}
@@ -112,6 +114,7 @@ public abstract class AbstractDebuggerConfiguration implements IDebuggerConfigur
 	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#
 	 *      getName ()
 	 */
+	@Override
 	public String getName() {
 		return getAttribute(DEBUGGER_NAME);
 	}
@@ -128,6 +131,7 @@ public abstract class AbstractDebuggerConfiguration implements IDebuggerConfigur
 	 * 
 	 * @return The debugger's port number. -1, if none is defined.
 	 */
+	@Override
 	public abstract int getPort();
 
 	/**
@@ -161,6 +165,7 @@ public abstract class AbstractDebuggerConfiguration implements IDebuggerConfigur
 	/**
 	 * Save any plug-in preferences that needs to be saved.
 	 */
+	@Override
 	public void save() {
 		try {
 			preferences.flush();

@@ -33,6 +33,7 @@ public class NamespaceUseConstNameStrategy extends AbstractCompletionStrategy {
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		ICompletionContext context = getContext();
 		if (!(context instanceof NamespaceUseConstNameContext)) {
@@ -51,7 +52,7 @@ public class NamespaceUseConstNameStrategy extends AbstractCompletionStrategy {
 	public IField[] getFields(NamespaceUseConstNameContext context) throws BadLocationException {
 		String prefix = context.getPrefix();
 
-		List<IField> result = new LinkedList<IField>();
+		List<IField> result = new LinkedList<>();
 		for (IType ns : context.getNamespaces()) {
 			try {
 				for (IField field : ns.getFields()) {

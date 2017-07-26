@@ -48,14 +48,14 @@ public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 	private static final String SRCBIN_SRCNAME = PreferenceConstants.SRCBIN_SRCNAME;
 	private static final String SRCBIN_BINNAME = PreferenceConstants.SRCBIN_BINNAME;
 
-	private ArrayList fRadioButtons;
+	private ArrayList<Button> fRadioButtons;
 	private Button fProjectAsSourceFolder;
 	private Button fFoldersAsSourceFolder;
 
 	private Label fSrcFolderNameLabel;
 	private Label fBinFolderNameLabel;
 
-	private ArrayList fTextControls;
+	private ArrayList<Text> fTextControls;
 	private Text fSrcFolderNameText;
 	private Text fBinFolderNameText;
 
@@ -69,8 +69,8 @@ public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 		// setTitle(PHPUIMessages.getString("PHPBuildPreferencePage_title"));
 		setDescription(PreferencesMessages.NewPHPProjectPreferencePage_description);
 
-		fRadioButtons = new ArrayList();
-		fTextControls = new ArrayList();
+		fRadioButtons = new ArrayList<>();
+		fTextControls = new ArrayList<>();
 
 		fSelectionListener = new SelectionListener() {
 			@Override
@@ -329,12 +329,12 @@ public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 		IPreferenceStore store = getPreferenceStore();
 
 		for (int i = 0; i < fRadioButtons.size(); i++) {
-			Button button = (Button) fRadioButtons.get(i);
+			Button button = fRadioButtons.get(i);
 			String[] info = (String[]) button.getData();
 			button.setSelection(info[1].equals(store.getDefaultString(info[0])));
 		}
 		for (int i = 0; i < fTextControls.size(); i++) {
-			Text text = (Text) fTextControls.get(i);
+			Text text = fTextControls.get(i);
 			String key = (String) text.getData();
 			text.setText(store.getDefaultString(key));
 		}
@@ -351,14 +351,14 @@ public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 	public boolean performOk() {
 		IPreferenceStore store = getPreferenceStore();
 		for (int i = 0; i < fRadioButtons.size(); i++) {
-			Button button = (Button) fRadioButtons.get(i);
+			Button button = fRadioButtons.get(i);
 			if (button.getSelection()) {
 				String[] info = (String[]) button.getData();
 				store.setValue(info[0], info[1]);
 			}
 		}
 		for (int i = 0; i < fTextControls.size(); i++) {
-			Text text = (Text) fTextControls.get(i);
+			Text text = fTextControls.get(i);
 			String key = (String) text.getData();
 			store.setValue(key, text.getText());
 		}

@@ -45,6 +45,7 @@ public class UseTraitNameStrategy extends GlobalTypesStrategy {
 		super.apply(reporter);
 	}
 
+	@Override
 	protected IType[] getTypes(AbstractCompletionContext context) throws BadLocationException {
 
 		String prefix = context.getPrefix();
@@ -57,7 +58,7 @@ public class UseTraitNameStrategy extends GlobalTypesStrategy {
 			return PHPModelAccess.getDefault().findTypes(prefix, MatchRule.EXACT, trueFlag, falseFlag, scope, null);
 		}
 
-		List<IType> result = new LinkedList<IType>();
+		List<IType> result = new LinkedList<>();
 		if (prefix.length() > 1 && prefix.toUpperCase().equals(prefix)) {
 			// Search by camel-case
 			IType[] types = PHPModelAccess.getDefault().findTraits(prefix, MatchRule.CAMEL_CASE, trueFlag, falseFlag,
@@ -68,7 +69,7 @@ public class UseTraitNameStrategy extends GlobalTypesStrategy {
 				scope, null);
 		result.addAll(Arrays.asList(types));
 
-		return (IType[]) result.toArray(new IType[result.size()]);
+		return result.toArray(new IType[result.size()]);
 	}
 
 	public String getNSSuffix(AbstractCompletionContext abstractContext) {

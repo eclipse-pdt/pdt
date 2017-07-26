@@ -51,7 +51,7 @@ public class MethodDeclaration extends BodyDeclaration {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(2);
 		propertyList.add(FUNCTION_PROPERTY);
 		propertyList.add(MODIFIER_PROPERTY);
 		propertyList.add(COMMENT_PROPERTY);
@@ -76,6 +76,7 @@ public class MethodDeclaration extends BodyDeclaration {
 		super(ast);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -84,12 +85,14 @@ public class MethodDeclaration extends BodyDeclaration {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		if (comment != null)
 			comment.accept(visitor);
 		function.accept(visitor);
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		if (comment != null)
@@ -97,6 +100,7 @@ public class MethodDeclaration extends BodyDeclaration {
 		function.traverseTopDown(visitor);
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		function.traverseBottomUp(visitor);
 		if (comment != null)
@@ -104,6 +108,7 @@ public class MethodDeclaration extends BodyDeclaration {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<MethodDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -113,6 +118,7 @@ public class MethodDeclaration extends BodyDeclaration {
 		buffer.append(tab).append("</MethodDeclaration>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.METHOD_DECLARATION;
 	}
@@ -163,6 +169,7 @@ public class MethodDeclaration extends BodyDeclaration {
 		return comment;
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == FUNCTION_PROPERTY) {
 			if (get) {
@@ -188,6 +195,7 @@ public class MethodDeclaration extends BodyDeclaration {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

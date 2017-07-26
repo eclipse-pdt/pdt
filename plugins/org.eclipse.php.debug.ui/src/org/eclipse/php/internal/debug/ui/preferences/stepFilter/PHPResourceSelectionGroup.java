@@ -193,6 +193,7 @@ public class PHPResourceSelectionGroup extends Composite {
 		treeViewer.setLabelProvider(new PHPResLabelProvider());
 		treeViewer.setUseHashlookup(true);
 		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				resourceSelectionChanged(selection.getFirstElement()); // allow
@@ -200,6 +201,7 @@ public class PHPResourceSelectionGroup extends Composite {
 			}
 		});
 		treeViewer.addDoubleClickListener(new IDoubleClickListener() {
+			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				ISelection selection = event.getSelection();
 				if (selection instanceof IStructuredSelection) {
@@ -264,7 +266,7 @@ public class PHPResourceSelectionGroup extends Composite {
 		selectedResource = resource;
 
 		// expand to and select the specified container
-		List itemsToExpand = new ArrayList();
+		List<IContainer> itemsToExpand = new ArrayList<>();
 		IContainer parent = resource.getParent();
 		while (parent != null) {
 			itemsToExpand.add(0, parent);

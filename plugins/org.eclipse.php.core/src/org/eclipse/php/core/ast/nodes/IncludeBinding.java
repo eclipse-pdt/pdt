@@ -33,22 +33,27 @@ public class IncludeBinding implements IIncludeBinding {
 		this.includedSourceModule = FileNetworkUtility.findSourceModule(this.model, this.name);
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
 
+	@Override
 	public String[] getNameComponents() {
 		return null;
 	}
 
+	@Override
 	public String getKey() {
 		return model.getHandleIdentifier() + "#" + name; //$NON-NLS-1$
 	}
 
+	@Override
 	public int getKind() {
 		return IBinding.INCLUDE;
 	}
 
+	@Override
 	public int getModifiers() {
 		return 0;
 	}
@@ -56,10 +61,12 @@ public class IncludeBinding implements IIncludeBinding {
 	/**
 	 * TODO handle dirname(__FILE__) or other expressions
 	 */
+	@Override
 	public IModelElement getPHPElement() {
 		return this.includedSourceModule;
 	}
 
+	@Override
 	public boolean isDeprecated() {
 		return false;
 	}

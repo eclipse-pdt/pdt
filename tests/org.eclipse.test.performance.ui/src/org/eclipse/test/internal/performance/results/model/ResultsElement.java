@@ -39,7 +39,7 @@ import org.osgi.service.prefs.BackingStoreException;
 /**
  * An Organization Element
  */
-public abstract class ResultsElement implements IAdaptable, IPropertySource, IWorkbenchAdapter, Comparable {
+public abstract class ResultsElement implements IAdaptable, IPropertySource, IWorkbenchAdapter, Comparable<Object> {
 
 	// Image descriptors
 	private static final ISharedImages WORKBENCH_SHARED_IMAGES = PlatformUI.getWorkbench().getSharedImages();
@@ -96,11 +96,11 @@ public abstract class ResultsElement implements IAdaptable, IPropertySource, IWo
 	static final String P_STR_STATUS_COMMENT = "comment"; //$NON-NLS-1$
 	static final String[] NO_VALUES = new String[0];
 
-	private static Vector DESCRIPTORS;
+	private static Vector<PropertyDescriptor> DESCRIPTORS;
 	static final TextPropertyDescriptor COMMENT_DESCRIPTOR = new TextPropertyDescriptor(P_ID_STATUS_COMMENT, P_STR_STATUS_COMMENT);
 	static final TextPropertyDescriptor ERROR_DESCRIPTOR = new TextPropertyDescriptor(P_ID_STATUS_ERROR, P_STR_STATUS_ERROR);
-    static Vector initDescriptors(int status) {
-		DESCRIPTORS = new Vector();
+    static Vector<PropertyDescriptor> initDescriptors(int status) {
+		DESCRIPTORS = new Vector<>();
 		// Status category
 		DESCRIPTORS.add(getInfosDescriptor(status));
 		DESCRIPTORS.add(getWarningsDescriptor(status));
@@ -111,11 +111,11 @@ public abstract class ResultsElement implements IAdaptable, IPropertySource, IWo
 		COMMENT_DESCRIPTOR.setCategory("Survey");
 		return DESCRIPTORS;
 	}
-    static Vector getDescriptors() {
+    static Vector<PropertyDescriptor> getDescriptors() {
     	return DESCRIPTORS;
 	}
     static ComboBoxPropertyDescriptor getInfosDescriptor(int status) {
-		List list = new ArrayList();
+		List<String> list = new ArrayList<>();
 		if ((status & SMALL_VALUE) != 0) {
 			list.add("Some builds have tests with small values");
 		}
@@ -131,7 +131,7 @@ public abstract class ResultsElement implements IAdaptable, IPropertySource, IWo
 		return infoDescriptor;
 	}
     static PropertyDescriptor getWarningsDescriptor(int status) {
-		List list = new ArrayList();
+		List<String> list = new ArrayList<>();
 		if ((status & BIG_ERROR) != 0) {
 			list.add("Some builds have tests with error over 3%");
 		}
@@ -170,6 +170,7 @@ ResultsElement(String name, ResultsElement parent) {
 	this.name = name;
 }
 
+@Override
 public int compareTo(Object o) {
 	if (this.results == null) {
 		if (o instanceof ResultsElement && this.name != null) {
@@ -189,6 +190,8 @@ abstract ResultsElement createChild(AbstractResults testResults);
 /* (non-Javadoc)
  * Method declared on IAdaptable
  */
+@SuppressWarnings({ "rawtypes", "unchecked" })
+@Override
 public Object getAdapter(Class adapter) {
     if (adapter == IPropertySource.class) {
         return this;
@@ -215,6 +218,7 @@ public ResultsElement[] getChildren() {
 /* (non-Javadoc)
  * Method declared on IWorkbenchAdapter
  */
+@Override
 public Object[] getChildren(Object o) {
 	if (this.results == null) {
 		return new Object[0];
@@ -228,6 +232,7 @@ public Object[] getChildren(Object o) {
 /* (non-Javadoc)
  * Method declared on IPropertySource
  */
+@Override
 public Object getEditableValue() {
     return this;
 }
@@ -246,6 +251,7 @@ private StringBuffer getId(StringBuffer buffer) {
 /* (non-Javadoc)
  * Method declared on IWorkbenchAdapter
  */
+@Override
 public ImageDescriptor getImageDescriptor(Object object) {
 	if (object instanceof ResultsElement) {
 		ResultsElement resultsElement = (ResultsElement) object;
@@ -279,6 +285,7 @@ public ImageDescriptor getImageDescriptor(Object object) {
 /* (non-Javadoc)
  * Method declared on IWorkbenchAdapter
  */
+@Override
 public String getLabel(Object o) {
     return getName();
 }
@@ -296,6 +303,7 @@ public String getName() {
 /**
  * Returns the parent
  */
+@Override
 public Object getParent(Object o) {
     return this.parent;
 }
@@ -303,8 +311,9 @@ public Object getParent(Object o) {
 /* (non-Javadoc)
  * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyDescriptors()
  */
+@Override
 public IPropertyDescriptor[] getPropertyDescriptors() {
-	Vector descriptors = getDescriptors();
+	Vector<PropertyDescriptor> descriptors = getDescriptors();
 	if (descriptors == null) {
 		descriptors = initDescriptors(getStatus());
 	}
@@ -313,7 +322,7 @@ public IPropertyDescriptor[] getPropertyDescriptors() {
 	descriptorsArray[0] = getInfosDescriptor(getStatus());
 	descriptorsArray[1] = getWarningsDescriptor(getStatus());
 	for (int i=2; i<size; i++) {
-		descriptorsArray[i] = (IPropertyDescriptor) descriptors.get(i);
+		descriptorsArray[i] = descriptors.get(i);
 	}
 	return descriptorsArray;
 }
@@ -321,6 +330,7 @@ public IPropertyDescriptor[] getPropertyDescriptors() {
 /* (non-Javadoc)
  * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyValue(java.lang.Object)
  */
+@Override
 public Object getPropertyValue(Object propKey) {
 	if (propKey.equals(P_ID_STATUS_INFO)) {
 		if ((getStatus() & INFO_MASK) != 0) {
@@ -503,6 +513,7 @@ public boolean isInitialized() {
 /* (non-Javadoc)
  * Method declared on IPropertySource
  */
+@Override
 public boolean isPropertySet(Object property) {
     return false;
 }
@@ -517,6 +528,7 @@ boolean onlyFingerprints() {
 /* (non-Javadoc)
  * Method declared on IPropertySource
  */
+@Override
 public void resetPropertyValue(Object property) {
 }
 
@@ -531,6 +543,7 @@ void resetStatus() {
 	}
 }
 
+@Override
 public void setPropertyValue(Object name, Object value) {
 	if (name.equals(P_ID_STATUS_COMMENT)) {
 		IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode(IPerformancesConstants.PLUGIN_ID);
@@ -549,6 +562,7 @@ public void setPropertyValue(Object name, Object value) {
 void setImageDescriptor(ImageDescriptor desc) {
 //    this.imageDescriptor = desc;
 }
+@Override
 public String toString() {
 	if (this.results == null) {
 		return getName();

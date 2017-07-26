@@ -25,12 +25,14 @@ public class PHPConsoleListener implements IPHPConsoleEventListener {
 	protected DebugConsoleMonitor fConsoleMonitor;
 	protected PHPHyperLink fPHPHyperLink;
 
+	@Override
 	public void init(ILaunch launch, DebugConsoleMonitor consoleMonitor, PHPHyperLink link) {
 		fLaunch = launch;
 		fConsoleMonitor = consoleMonitor;
 		fPHPHyperLink = link;
 	}
 
+	@Override
 	public void handleEvent(DebugError debugError) {
 		IHyperlink link = createLink(debugError);
 		String message = debugError.toString().trim();

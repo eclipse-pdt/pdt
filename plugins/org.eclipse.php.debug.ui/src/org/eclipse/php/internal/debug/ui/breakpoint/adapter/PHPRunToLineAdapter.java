@@ -49,6 +49,7 @@ public class PHPRunToLineAdapter implements IRunToLineTarget {
 	 * .IWorkbenchPart, org.eclipse.jface.viewers.ISelection,
 	 * org.eclipse.debug.core.model.ISuspendResume)
 	 */
+	@Override
 	public void runToLine(IWorkbenchPart part, ISelection selection, ISuspendResume target) throws CoreException {
 		IEditorPart editorPart = (IEditorPart) part;
 		IEditorInput input = editorPart.getEditorInput();
@@ -99,7 +100,7 @@ public class PHPRunToLineAdapter implements IRunToLineTarget {
 				if (lineNumber > 0) {
 					if (getValidPosition(document, lineNumber) != -1) {
 						if (target instanceof IAdaptable) {
-							IDebugTarget debugTarget = (IDebugTarget) ((IAdaptable) target)
+							IDebugTarget debugTarget = ((IAdaptable) target)
 									.getAdapter(IDebugTarget.class);
 							if (debugTarget != null) {
 								IFile file = getFile(textEditor);
@@ -121,6 +122,7 @@ public class PHPRunToLineAdapter implements IRunToLineTarget {
 				errorMessage, null));
 	}
 
+	@Override
 	public boolean canRunToLine(IWorkbenchPart part, ISelection selection, ISuspendResume target) {
 		// TODO: PHP Debug elements should have a shared marker and test for
 		// here

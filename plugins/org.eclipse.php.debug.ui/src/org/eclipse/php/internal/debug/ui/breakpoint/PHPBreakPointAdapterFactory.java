@@ -21,6 +21,8 @@ public class PHPBreakPointAdapterFactory implements IAdapterFactory {
 	 * org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object,
 	 * java.lang.Class)
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		if (adapterType == IToggleBreakpointsTarget.class) {
 			return new ScriptLineBreakpointAdapter();
@@ -33,8 +35,9 @@ public class PHPBreakPointAdapterFactory implements IAdapterFactory {
 	 * 
 	 * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
 	 */
-	public Class[] getAdapterList() {
-		return new Class[] { IToggleBreakpointsTarget.class };
+	@Override
+	public Class<?>[] getAdapterList() {
+		return new Class<?>[] { IToggleBreakpointsTarget.class };
 	}
 
 }

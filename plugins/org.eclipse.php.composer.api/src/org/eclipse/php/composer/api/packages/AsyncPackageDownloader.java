@@ -18,7 +18,7 @@ import org.eclipse.php.composer.api.RepositoryPackage;
 
 public class AsyncPackageDownloader extends AsyncDownloadClient {
 
-	private List<PackageListenerInterface> pkgListeners = new ArrayList<PackageListenerInterface>();
+	private List<PackageListenerInterface> pkgListeners = new ArrayList<>();
 
 	public AsyncPackageDownloader(String baseUrl) {
 		super(baseUrl);

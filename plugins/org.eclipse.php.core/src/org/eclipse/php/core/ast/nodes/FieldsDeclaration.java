@@ -31,7 +31,7 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  */
 public class FieldsDeclaration extends BodyDeclaration {
 
-	private final ASTNode.NodeList<SingleFieldDeclaration> fields = new ASTNode.NodeList<SingleFieldDeclaration>(
+	private final ASTNode.NodeList<SingleFieldDeclaration> fields = new ASTNode.NodeList<>(
 			FIELDS_PROPERTY);
 
 	/**
@@ -54,20 +54,20 @@ public class FieldsDeclaration extends BodyDeclaration {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(1);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(1);
 		properyList.add(FIELDS_PROPERTY);
 		properyList.add(MODIFIER_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
-	public FieldsDeclaration(int start, int end, AST ast, int modifier, List variablesAndDefaults) {
+	public FieldsDeclaration(int start, int end, AST ast, int modifier, List<SingleFieldDeclaration> variablesAndDefaults) {
 		super(start, end, ast, modifier);
 
 		if (variablesAndDefaults == null || variablesAndDefaults.size() == 0) {
 			throw new IllegalArgumentException();
 		}
 
-		for (Iterator iter = variablesAndDefaults.iterator(); iter.hasNext();) {
+		for (Iterator<SingleFieldDeclaration> iter = variablesAndDefaults.iterator(); iter.hasNext();) {
 			final Object next = iter.next();
 			if (next instanceof SingleFieldDeclaration) {
 				this.fields.add((SingleFieldDeclaration) next);
@@ -90,6 +90,7 @@ public class FieldsDeclaration extends BodyDeclaration {
 		return result;
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -98,12 +99,14 @@ public class FieldsDeclaration extends BodyDeclaration {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		for (ASTNode node : this.fields) {
 			node.accept(visitor);
 		}
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		for (ASTNode node : this.fields) {
@@ -111,6 +114,7 @@ public class FieldsDeclaration extends BodyDeclaration {
 		}
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		for (ASTNode node : this.fields) {
 			node.traverseBottomUp(visitor);
@@ -118,6 +122,7 @@ public class FieldsDeclaration extends BodyDeclaration {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<FieldsDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -138,6 +143,7 @@ public class FieldsDeclaration extends BodyDeclaration {
 		buffer.append(tab).append("</FieldsDeclaration>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.FIELD_DECLARATION;
 	}
@@ -169,7 +175,8 @@ public class FieldsDeclaration extends BodyDeclaration {
 		return result;
 	}
 
-	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+	@Override
+	final List<? extends ASTNode> internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == FIELDS_PROPERTY) {
 			return fields();
 		}
@@ -180,6 +187,7 @@ public class FieldsDeclaration extends BodyDeclaration {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

@@ -31,6 +31,7 @@ public class InstalledDebuggersPreferencePage extends PreferencePage implements 
 		setPreferenceStore(PHPUiPlugin.getDefault().getPreferenceStore());
 	}
 
+	@Override
 	protected Control createContents(Composite parent) {
 		Composite comp = new Composite(parent, SWT.NONE);
 		comp.setLayout(new GridLayout());
@@ -57,6 +58,7 @@ public class InstalledDebuggersPreferencePage extends PreferencePage implements 
 		table.createControl(composite);
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 	}
 
@@ -64,6 +66,7 @@ public class InstalledDebuggersPreferencePage extends PreferencePage implements 
 	 * Overrides the super preformDefaults to make sure that the debuggers table
 	 * also gets updated to its default values.
 	 */
+	@Override
 	public void performDefaults() {
 		table.performDefaults();
 		super.performDefaults();

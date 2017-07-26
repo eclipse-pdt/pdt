@@ -36,7 +36,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-@SuppressWarnings("restriction")
 public class PHPExeEditDialog extends TitleAreaDialog implements IControlHandler {
 
 	protected static final String FRAGMENT_GROUP_ID = "org.eclipse.php.debug.ui.phpExeWizardCompositeFragment"; //$NON-NLS-1$
@@ -52,7 +51,7 @@ public class PHPExeEditDialog extends TitleAreaDialog implements IControlHandler
 		// Work on a simple working copy
 		this.phpExeItem = phpExeItem.makeCopy();
 		this.existingItems = existingItems;
-		runtimeComposites = new ArrayList<CompositeFragment>(3);
+		runtimeComposites = new ArrayList<>(3);
 	}
 
 	public PHPExeEditDialog(Shell shell, PHPexeItem phpExeItem, PHPexeItem[] existingItems, String tabID) {
@@ -60,6 +59,7 @@ public class PHPExeEditDialog extends TitleAreaDialog implements IControlHandler
 		this.tabID = tabID;
 	}
 
+	@Override
 	public void setDescription(String desc) {
 		super.setMessage(desc);
 	}
@@ -76,10 +76,12 @@ public class PHPExeEditDialog extends TitleAreaDialog implements IControlHandler
 		return phpExeItem;
 	}
 
+	@Override
 	public void setImageDescriptor(ImageDescriptor image) {
 		super.setTitleImage(image.createImage());
 	}
 
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		// Create a tabbed container that will hold all the fragments
 		tabs = SWTUtil.createTabFolder(parent);
@@ -99,6 +101,7 @@ public class PHPExeEditDialog extends TitleAreaDialog implements IControlHandler
 			runtimeComposites.add(fragment);
 		}
 		tabs.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				CTabItem item = (CTabItem) e.item;
 				CompositeFragment fragment = (CompositeFragment) item.getControl();
@@ -116,6 +119,7 @@ public class PHPExeEditDialog extends TitleAreaDialog implements IControlHandler
 		return tabs;
 	}
 
+	@Override
 	protected void cancelPressed() {
 		Iterator<CompositeFragment> composites = runtimeComposites.iterator();
 		while (composites.hasNext()) {
@@ -124,6 +128,7 @@ public class PHPExeEditDialog extends TitleAreaDialog implements IControlHandler
 		super.cancelPressed();
 	}
 
+	@Override
 	protected void okPressed() {
 		Iterator<CompositeFragment> composites = runtimeComposites.iterator();
 		while (composites.hasNext()) {
@@ -143,6 +148,7 @@ public class PHPExeEditDialog extends TitleAreaDialog implements IControlHandler
 		super.handleShellCloseEvent();
 	}
 
+	@Override
 	public void update() {
 		Button button = getButton(IDialogConstants.OK_ID);
 		if (button != null) {

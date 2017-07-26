@@ -132,6 +132,7 @@ public class Person extends JsonObject implements Cloneable {
 	 * 
 	 * @see java.lang.Object#clone()
 	 */
+	@Override
 	public Person clone() {
 		Person clone = new Person();
 		cloneProperties(clone);

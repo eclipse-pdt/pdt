@@ -51,7 +51,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	/**
 	 * Listeners for PHP version change map (per project)
 	 */
-	private Map<IProject, IPreferencesPropagatorListener> project2PhpVerListener = new HashMap<IProject, IPreferencesPropagatorListener>();
+	private Map<IProject, IPreferencesPropagatorListener> project2PhpVerListener = new HashMap<>();
 
 	/**
 	 * Language model paths initializers
@@ -90,6 +90,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 			return;
 		}
 		IPreferencesPropagatorListener versionChangeListener = new IPreferencesPropagatorListener() {
+			@Override
 			public void preferencesEventOccured(PreferencesPropagatorEvent event) {
 				try {
 					// Re-initialize when PHP version changes
@@ -99,6 +100,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 				}
 			}
 
+			@Override
 			public IProject getProject() {
 				return project;
 			}
@@ -108,6 +110,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		PHPVersionChangedHandler.getInstance().addPHPVersionChangedListener(versionChangeListener);
 
 		ProjectRemovedObserversAttacher.getInstance().addProjectClosedObserver(project, new IProjectClosedObserver() {
+			@Override
 			public void closed() {
 				PHPVersionChangedHandler.getInstance()
 						.removePHPVersionChangedListener(project2PhpVerListener.get(project));
@@ -187,7 +190,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		if (!found) {
 			IBuildpathEntry containerEntry = DLTKCore.newContainerEntry(LANGUAGE_CONTAINER_PATH);
 			int newSize = rawBuildpath.length + 1;
-			List<IBuildpathEntry> newRawBuildpath = new ArrayList<IBuildpathEntry>(newSize);
+			List<IBuildpathEntry> newRawBuildpath = new ArrayList<>(newSize);
 			newRawBuildpath.addAll(Arrays.asList(rawBuildpath));
 			newRawBuildpath.add(containerEntry);
 			project.setRawBuildpath(newRawBuildpath.toArray(new IBuildpathEntry[newSize]), null);
@@ -196,7 +199,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 
 	static ILanguageModelProvider[] getContributedProviders() {
 		if (LanguageModelInitializer.providers == null) {
-			List<ILanguageModelProvider> providers = new LinkedList<ILanguageModelProvider>();
+			List<ILanguageModelProvider> providers = new LinkedList<>();
 			providers.add(new DefaultLanguageModelProvider()); // add default
 
 			IConfigurationElement[] elements = Platform.getExtensionRegistry()
@@ -210,7 +213,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 					}
 				}
 			}
-			LanguageModelInitializer.providers = (ILanguageModelProvider[]) providers
+			LanguageModelInitializer.providers = providers
 					.toArray(new ILanguageModelProvider[providers.size()]);
 		}
 		return LanguageModelInitializer.providers;
@@ -231,8 +234,8 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	 */
 	public static void cleanup(IProgressMonitor monitor) throws CoreException {
 		final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-		Set<IPath> inUse = new HashSet<IPath>();
-		Set<IPath> toDrop = new HashSet<IPath>();
+		Set<IPath> inUse = new HashSet<>();
+		Set<IPath> toDrop = new HashSet<>();
 		for (IProject project : projects) {
 			if (!PHPToolkitUtil.isPHPProject(project)) {
 				continue;

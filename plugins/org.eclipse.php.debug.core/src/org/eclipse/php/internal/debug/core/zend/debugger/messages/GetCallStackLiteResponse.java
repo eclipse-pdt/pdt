@@ -32,6 +32,7 @@ import org.eclipse.php.internal.debug.core.zend.debugger.StackLayer;
  * @author michael
  * @deprecated
  */
+@Deprecated
 public class GetCallStackLiteResponse extends DebugMessageResponseImpl implements IDebugResponseMessage {
 
 	private PHPstack stack;
@@ -50,6 +51,7 @@ public class GetCallStackLiteResponse extends DebugMessageResponseImpl implement
 		return stack;
 	}
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		PHPstack stack = new PHPstack();
@@ -63,10 +65,12 @@ public class GetCallStackLiteResponse extends DebugMessageResponseImpl implement
 		setPHPstack(stack);
 	}
 
+	@Override
 	public int getType() {
 		return 1037;
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());

@@ -42,9 +42,9 @@ public class DebugParametersInitializersRegistry {
 	private static final String PROFILE = "profile"; //$NON-NLS-1$
 
 	/** Debug parameters initializers stored by ID */
-	private Dictionary runInitializers = new Hashtable();
-	private Dictionary debugInitializers = new Hashtable();
-	private Dictionary profileInitializers = new Hashtable();
+	private Dictionary<String, DebugParametersInitializerFactory> runInitializers = new Hashtable<>();
+	private Dictionary<String, DebugParametersInitializerFactory> debugInitializers = new Hashtable<>();
+	private Dictionary<String, DebugParametersInitializerFactory> profileInitializers = new Hashtable<>();
 
 	/** Instance of this registry */
 	private static DebugParametersInitializersRegistry instance = null;
@@ -79,7 +79,7 @@ public class DebugParametersInitializersRegistry {
 		return instance;
 	}
 
-	private Dictionary getInitializersFactories(String mode) {
+	private Dictionary<String, DebugParametersInitializerFactory> getInitializersFactories(String mode) {
 		if (RUN.equals(mode)) {
 			return runInitializers;
 		}
@@ -98,14 +98,14 @@ public class DebugParametersInitializersRegistry {
 	 * @return A new instance of an IDebugParametersInitializer
 	 */
 	public static IDebugParametersInitializer getParametersInitializer(String id) throws Exception {
-		DebugParametersInitializerFactory initializerFactory = (DebugParametersInitializerFactory) getInstance()
+		DebugParametersInitializerFactory initializerFactory = getInstance()
 				.getInitializersFactories(RUN).get(id);
 		if (initializerFactory == null) {
-			initializerFactory = (DebugParametersInitializerFactory) getInstance().getInitializersFactories(PROFILE)
+			initializerFactory = getInstance().getInitializersFactories(PROFILE)
 					.get(id);
 		}
 		if (initializerFactory == null) {
-			initializerFactory = (DebugParametersInitializerFactory) getInstance().getInitializersFactories(DEBUG)
+			initializerFactory = getInstance().getInitializersFactories(DEBUG)
 					.get(id);
 		}
 		if (initializerFactory != null) {
@@ -141,11 +141,11 @@ public class DebugParametersInitializersRegistry {
 	 */
 	public static IDebugParametersInitializer getBestMatchDebugParametersInitializer(ILaunch launch) {
 		try {
-			Dictionary factories = getInstance().getInitializersFactories(launch.getLaunchMode());
+			Dictionary<String, DebugParametersInitializerFactory> factories = getInstance().getInitializersFactories(launch.getLaunchMode());
 
 			// 1st try to get the one with matching configuration type
-			for (Enumeration e = factories.elements(); e.hasMoreElements();) {
-				DebugParametersInitializerFactory initializerFactory = (DebugParametersInitializerFactory) e
+			for (Enumeration<DebugParametersInitializerFactory> e = factories.elements(); e.hasMoreElements();) {
+				DebugParametersInitializerFactory initializerFactory = e
 						.nextElement();
 				String configurationTypeId = initializerFactory.element
 						.getAttribute(LAUNCH_CONFIGURATION_TYPE_ATTRIBUTE);
@@ -156,8 +156,8 @@ public class DebugParametersInitializersRegistry {
 			}
 			// Then if not found try to get with empty configuration type and
 			// not a default one
-			for (Enumeration e = factories.elements(); e.hasMoreElements();) {
-				DebugParametersInitializerFactory initializerFactory = (DebugParametersInitializerFactory) e
+			for (Enumeration<DebugParametersInitializerFactory> e = factories.elements(); e.hasMoreElements();) {
+				DebugParametersInitializerFactory initializerFactory = e
 						.nextElement();
 				String configurationTypeId = initializerFactory.element
 						.getAttribute(LAUNCH_CONFIGURATION_TYPE_ATTRIBUTE);
@@ -168,8 +168,8 @@ public class DebugParametersInitializersRegistry {
 				}
 			}
 			// Last, if nothing found get the default
-			for (Enumeration e = factories.elements(); e.hasMoreElements();) {
-				DebugParametersInitializerFactory initializerFactory = (DebugParametersInitializerFactory) e
+			for (Enumeration<DebugParametersInitializerFactory> e = factories.elements(); e.hasMoreElements();) {
+				DebugParametersInitializerFactory initializerFactory = e
 						.nextElement();
 				if (PHPDebugPlugin.getID().equals(initializerFactory.element.getNamespaceIdentifier())) {
 					return initializerFactory.createParametersInitializer();
@@ -196,6 +196,7 @@ public class DebugParametersInitializersRegistry {
 		public IDebugParametersInitializer createParametersInitializer() {
 			SafeRunner.run(new SafeRunnable(
 					"Error creation extension for extension-point org.eclipse.php.internal.debug.core.phpDebugParametersInitializers") { //$NON-NLS-1$
+				@Override
 				public void run() throws Exception {
 					parametersInitializer = (IDebugParametersInitializer) element
 							.createExecutableExtension(CLASS_ATTRIBUTE);

@@ -79,6 +79,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 		this.pathEntries = pathEntries;
 	}
 
+	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 
@@ -88,6 +89,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell, IPHPHelpContextIds.PATH_MAPPING);
 	}
 
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		parent = (Composite) super.createDialogArea(parent);
 		GridLayout layout = (GridLayout) parent.getLayout();
@@ -108,6 +110,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 		layoutData.horizontalSpan = 2;
 		selectMappingBtn.setLayoutData(layoutData);
 		selectMappingBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				boolean enabled = selectMappingBtn.getSelection();
 				entriesViewer.getControl().setEnabled(enabled);
@@ -139,6 +142,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 		entriesViewer.setSorter(new Sorter());
 		entriesViewer.setInput(this);
 		entriesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				validate();
 			}
@@ -151,6 +155,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 		layoutData.horizontalSpan = 2;
 		ignoreMappingBtn.setLayoutData(layoutData);
 		ignoreMappingBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				boolean enabled = ignoreMappingBtn.getSelection();
 				entriesViewer.getControl().setEnabled(!enabled);
@@ -173,6 +178,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 		configurePathBtn.setEnabled(false);
 		configurePathBtn.setText(Messages.PathEntrySelectionDialog_3);
 		configurePathBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				ConfigurePathDialog dialog = new ConfigurePathDialog(ignorePathResult);
 				if (dialog.open() == Window.OK) {
@@ -186,6 +192,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 		return parent;
 	}
 
+	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		Button okButton = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 		okButton.setEnabled(false);
@@ -255,6 +262,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 			return result;
 		}
 
+		@Override
 		protected Control createDialogArea(Composite parent) {
 			parent = (Composite) super.createDialogArea(parent);
 
@@ -273,6 +281,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 			treeViewer.setLabelProvider(new LabelProvider());
 			treeViewer.setInput(Integer.valueOf(0));
 			treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+				@Override
 				public void selectionChanged(SelectionChangedEvent event) {
 					Integer segmentNum = (Integer) ((IStructuredSelection) event.getSelection()).getFirstElement();
 					if (segmentNum != null) {
@@ -298,6 +307,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 
 		class ContentProvider implements ITreeContentProvider {
 
+			@Override
 			public Object[] getChildren(Object parentElement) {
 				Integer segmentNum = (Integer) parentElement;
 				if (segmentNum < path.getSegmentsCount()) {
@@ -306,6 +316,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 				return EMPTY;
 			}
 
+			@Override
 			public Object getParent(Object element) {
 				Integer segmentNum = (Integer) element;
 				if (segmentNum > 0) {
@@ -314,26 +325,31 @@ public class PathEntrySelectionDialog extends TrayDialog {
 				return null;
 			}
 
+			@Override
 			public boolean hasChildren(Object element) {
 				Integer segmentNum = (Integer) element;
 				return (segmentNum < path.getSegmentsCount());
 			}
 
+			@Override
 			public Object[] getElements(Object inputElement) {
 				return getChildren(inputElement);
 			}
 
+			@Override
 			public void dispose() {
 			}
 
+			@Override
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			}
 		}
 
 		class LabelProvider extends org.eclipse.jface.viewers.LabelProvider {
 
-			private Map<String, Image> images = new HashMap<String, Image>();
+			private Map<String, Image> images = new HashMap<>();
 
+			@Override
 			public Image getImage(Object element) {
 				Integer segmentNum = (Integer) element;
 				if (segmentNum < path.getSegmentsCount()) {
@@ -359,11 +375,13 @@ public class PathEntrySelectionDialog extends TrayDialog {
 				return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
 			}
 
+			@Override
 			public String getText(Object element) {
 				Integer segmentNum = (Integer) element;
 				return path.getSegments()[segmentNum - 1];
 			}
 
+			@Override
 			public void dispose() {
 				Iterator<Image> i = images.values().iterator();
 				while (i.hasNext()) {
@@ -384,6 +402,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 			comparator = new BestMatchPathComparator(path);
 		}
 
+		@Override
 		public int compare(Viewer viewer, Object e1, Object e2) {
 			if (e1 instanceof PathEntry && e2 instanceof PathEntry) {
 				return comparator.compare((PathEntry) e1, (PathEntry) e2);
@@ -403,6 +422,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 	 */
 	class LabelProvider extends ScriptUILabelProvider {
 
+		@Override
 		public Image getImage(Object element) {
 
 			if (element instanceof IBuildpathEntry) {
@@ -421,6 +441,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 			return super.getImage(element);
 		}
 
+		@Override
 		public String getText(Object element) {
 			if (element == EXTERNAL_CONTAINER) {
 				return Messages.PathEntrySelectionDialog_6;
@@ -471,10 +492,11 @@ public class PathEntrySelectionDialog extends TrayDialog {
 	 */
 	class ContentProvider implements ITreeContentProvider {
 
+		@Override
 		public Object[] getChildren(Object parentElement) {
 
 			if (parentElement == PathEntrySelectionDialog.this) {
-				Set<Object> containers = new HashSet<Object>();
+				Set<Object> containers = new HashSet<>();
 				for (PathEntry entry : pathEntries) {
 					if (entry.getType() == Type.EXTERNAL) {
 						containers.add(EXTERNAL_CONTAINER);
@@ -491,7 +513,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 				return EMPTY;
 			}
 
-			Set<PathEntry> entries = new HashSet<PathEntry>();
+			Set<PathEntry> entries = new HashSet<>();
 			for (PathEntry entry : pathEntries) {
 				if (entry.getType() == Type.EXTERNAL && parentElement == EXTERNAL_CONTAINER) {
 					entries.add(entry);
@@ -506,6 +528,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 			return entries.toArray();
 		}
 
+		@Override
 		public Object getParent(Object element) {
 
 			if (element == PathEntrySelectionDialog.this) {
@@ -539,6 +562,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 			return null;
 		}
 
+		@Override
 		public boolean hasChildren(Object element) {
 			if (element instanceof PathEntry) {
 				return false;
@@ -546,13 +570,16 @@ public class PathEntrySelectionDialog extends TrayDialog {
 			return true;
 		}
 
+		@Override
 		public Object[] getElements(Object inputElement) {
 			return getChildren(inputElement);
 		}
 
+		@Override
 		public void dispose() {
 		}
 
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		}
 	}

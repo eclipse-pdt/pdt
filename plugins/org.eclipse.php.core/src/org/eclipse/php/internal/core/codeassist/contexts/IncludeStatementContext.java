@@ -31,6 +31,7 @@ public class IncludeStatementContext extends AbstractCompletionContext {
 
 	private int variantLength = 0;
 
+	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
@@ -59,10 +60,12 @@ public class IncludeStatementContext extends AbstractCompletionContext {
 				|| isIncludeStatement(statementText, "include_once") || isIncludeStatement(statementText, "include"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
+	@Override
 	public boolean isExclusive() {
 		return true;
 	}
 
+	@Override
 	public String getPrefix() throws BadLocationException {
 		if (hasWhitespaceBeforeCursor()) {
 			return ""; //$NON-NLS-1$

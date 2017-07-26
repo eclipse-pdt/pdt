@@ -208,6 +208,7 @@ public class ZendDebuggerWebLaunchSettingsSection extends AbstractDebugWebLaunch
 		sessionGroup.setLayout(new GridLayout(3, false));
 		sessionGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		openBrowser.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent se) {
 				Button b = (Button) se.getSource();
 				boolean isOpenInBrowser = b.getSelection();
@@ -243,6 +244,7 @@ public class ZendDebuggerWebLaunchSettingsSection extends AbstractDebugWebLaunch
 		resetBt = SWTFactory.createPushButton(sessionGroup, Messages.ZendDebuggerWebLaunchSettingsSection_Default,
 				null);
 		resetBt.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (getConfiguration() != null) {
 					try {
@@ -259,6 +261,7 @@ public class ZendDebuggerWebLaunchSettingsSection extends AbstractDebugWebLaunch
 		data.horizontalIndent = 40;
 		// Add listeners
 		debugStartFromBt.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				updateDebugFrom();
 			}
@@ -290,6 +293,7 @@ public class ZendDebuggerWebLaunchSettingsSection extends AbstractDebugWebLaunch
 			}
 		}
 		Display.getDefault().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					boolean debugFromSelected = debugStartFromBt.getSelection();

@@ -35,6 +35,7 @@ public class PHPElementResolver implements IElementResolver {
 	private static final char RETURN_TYPE_CHAR = ':';
 	private static final String[] EMPTY = new String[0];
 
+	@Override
 	public IModelElement resolve(int elementType, int flags, int offset, int length, int nameOffset, int nameLength,
 			String elementName, String metadata, String doc, String qualifier, String parent,
 			ISourceModule sourceModule) {
@@ -145,7 +146,7 @@ public class PHPElementResolver implements IElementResolver {
 		if (doc == null) {
 			return null;
 		}
-		Map<String, String> info = new HashMap<String, String>();
+		Map<String, String> info = new HashMap<>();
 		StringTokenizer tok = new StringTokenizer(doc, ";"); //$NON-NLS-1$
 		while (tok.hasMoreTokens()) {
 			String key = tok.nextToken();
@@ -177,22 +178,27 @@ public class PHPElementResolver implements IElementResolver {
 			this.occurrenceCount = occurrenceCount;
 		}
 
+		@Override
 		public int getFlags() throws ModelException {
 			return flags;
 		}
 
+		@Override
 		public ISourceRange getNameRange() throws ModelException {
 			return nameRange;
 		}
 
+		@Override
 		public ISourceRange getSourceRange() throws ModelException {
 			return sourceRange;
 		}
 
+		@Override
 		public boolean isDeprecated() {
 			return PHPFlags.isDeprecated(flags);
 		}
 
+		@Override
 		public String[] getReturnTypes() {
 			return null;
 		}
@@ -277,18 +283,22 @@ public class PHPElementResolver implements IElementResolver {
 			this.occurrenceCount = occurrenceCount;
 		}
 
+		@Override
 		public int getFlags() throws ModelException {
 			return flags;
 		}
 
+		@Override
 		public ISourceRange getNameRange() throws ModelException {
 			return super.getNameRange();
 		}
 
+		@Override
 		public ISourceRange getSourceRange() throws ModelException {
 			return sourceRange;
 		}
 
+		@Override
 		public IParameter[] getParameters() throws ModelException {
 			return parameters;
 		}
@@ -298,14 +308,17 @@ public class PHPElementResolver implements IElementResolver {
 			return SourceMethodUtils.getParameterNames(parameters);
 		}
 
+		@Override
 		public boolean isConstructor() throws ModelException {
 			return (flags & IPHPModifiers.Constructor) != 0;
 		}
 
+		@Override
 		public boolean isDeprecated() {
 			return PHPFlags.isDeprecated(flags);
 		}
 
+		@Override
 		public String[] getReturnTypes() {
 			if (returnType != null) {
 				return new String[] { returnType };
@@ -350,26 +363,32 @@ public class PHPElementResolver implements IElementResolver {
 			this.occurrenceCount = occurrenceCount;
 		}
 
+		@Override
 		public int getFlags() throws ModelException {
 			return flags;
 		}
 
+		@Override
 		public ISourceRange getNameRange() throws ModelException {
 			return super.getNameRange();
 		}
 
+		@Override
 		public ISourceRange getSourceRange() throws ModelException {
 			return sourceRange;
 		}
 
+		@Override
 		public String[] getSuperClasses() throws ModelException {
 			return superClassNames;
 		}
 
+		@Override
 		public boolean isDeprecated() {
 			return PHPFlags.isDeprecated(flags);
 		}
 
+		@Override
 		public String[] getReturnTypes() {
 			return null;
 		}

@@ -32,6 +32,7 @@ public class PHPDocParamVariableStrategy extends FunctionArgumentsStrategy {
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		ICompletionContext context = getContext();
 		if (!(context instanceof PHPDocTagContext)) {

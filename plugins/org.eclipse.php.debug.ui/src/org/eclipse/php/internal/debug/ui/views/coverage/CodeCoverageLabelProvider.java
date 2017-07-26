@@ -46,6 +46,7 @@ public class CodeCoverageLabelProvider extends AppearanceAwareLabelProvider
 	 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang
 	 * .Object, int)
 	 */
+	@Override
 	public Image getColumnImage(Object element, final int columnIndex) {
 		switch (columnIndex) {
 		case 0:
@@ -64,6 +65,7 @@ public class CodeCoverageLabelProvider extends AppearanceAwareLabelProvider
 	 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang
 	 * .Object, int)
 	 */
+	@Override
 	public String getColumnText(Object element, final int columnIndex) {
 		CodeCoverageResult coverageResult = cProvider.getCodeCoverageResult(element);
 		switch (columnIndex) {
@@ -95,6 +97,7 @@ public class CodeCoverageLabelProvider extends AppearanceAwareLabelProvider
 	 * org.eclipse.jface.viewers.ITableColorProvider#getBackground(java.lang
 	 * .Object, int)
 	 */
+	@Override
 	public Color getBackground(Object element, int columnIndex) {
 		return null;
 	}
@@ -106,6 +109,7 @@ public class CodeCoverageLabelProvider extends AppearanceAwareLabelProvider
 	 * org.eclipse.jface.viewers.ITableColorProvider#getForeground(java.lang
 	 * .Object, int)
 	 */
+	@Override
 	public Color getForeground(Object element, int columnIndex) {
 		if (columnIndex == 1) {
 			if (element instanceof ISourceModule || element instanceof IFile) {
@@ -122,6 +126,7 @@ public class CodeCoverageLabelProvider extends AppearanceAwareLabelProvider
 	 * org.eclipse.jface.viewers.ITableFontProvider#getFont(java.lang.Object,
 	 * int)
 	 */
+	@Override
 	public Font getFont(Object element, int columnIndex) {
 		if (columnIndex == 1) {
 			if (element instanceof ISourceModule || element instanceof IFile) {

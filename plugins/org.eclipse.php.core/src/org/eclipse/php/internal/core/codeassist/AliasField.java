@@ -31,12 +31,12 @@ public class AliasField extends SourceField {
 
 	@Override
 	public ISourceRange getSourceRange() throws ModelException {
-		return ((IField) field).getSourceRange();
+		return field.getSourceRange();
 	}
 
 	@Override
 	public int getFlags() throws ModelException {
-		return ((IField) field).getFlags();
+		return field.getFlags();
 	}
 
 	public String getAlias() {

@@ -32,6 +32,7 @@ import org.eclipse.php.internal.core.format.PHPHeuristicScanner;
 public final class ClassStatementContext extends AbstractGlobalStatementContext {
 	private boolean isAssignment = false;
 
+	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;

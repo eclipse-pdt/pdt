@@ -49,7 +49,6 @@ import org.eclipse.text.edits.TextEdit;
  * @author Eden K., 2007
  * 
  */
-@SuppressWarnings("restriction")
 public class MoveDelegate {
 
 	private PHPMoveProcessor fProcessor;
@@ -73,11 +72,10 @@ public class MoveDelegate {
 	 * @return status
 	 * @throws OperationCanceledException
 	 */
-	public RefactoringStatus checkInitialConditions()
-			throws OperationCanceledException {
+	public RefactoringStatus checkInitialConditions() throws OperationCanceledException {
 		IResource[] sourceResources = fProcessor.getSourceSelection();
 
-		phpFiles = new HashSet<IFile>();
+		phpFiles = new HashSet<>();
 		MoveUtils.getAllPHPFiles(sourceResources, phpFiles);
 		return new RefactoringStatus();
 	}
@@ -88,16 +86,13 @@ public class MoveDelegate {
 	 * @return status
 	 * @throws OperationCanceledException
 	 */
-	public RefactoringStatus checkFinalConditions()
-			throws OperationCanceledException {
+	public RefactoringStatus checkFinalConditions() throws OperationCanceledException {
 		RefactoringStatus status = new RefactoringStatus();
 		IContainer destination = fProcessor.getDestination();
-		IProject sourceProject = fProcessor.getSourceSelection()[0]
-				.getProject();
+		IProject sourceProject = fProcessor.getSourceSelection()[0].getProject();
 		IProject destinationProject = destination.getProject();
 		if (sourceProject != destinationProject)
-			status.merge(MoveUtils.checkMove(phpFiles, sourceProject,
-					destination));
+			status.merge(MoveUtils.checkMove(phpFiles, sourceProject, destination));
 
 		// Checks if one of the resources already exists with the same name in
 		// the destination
@@ -105,10 +100,8 @@ public class MoveDelegate {
 		IResource[] sourceResources = fProcessor.getSourceSelection();
 
 		for (IResource element : sourceResources) {
-			String newFilePath = dest.toOSString() + File.separatorChar
-					+ element.getName();
-			IResource resource = ResourcesPlugin.getWorkspace().getRoot()
-					.findMember(new Path(newFilePath));
+			String newFilePath = dest.toOSString() + File.separatorChar + element.getName();
+			IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(new Path(newFilePath));
 			if (resource != null && resource.exists()) {
 				status.merge(RefactoringStatus.createFatalErrorStatus(NLS.bind(
 						PHPRefactoringCoreMessages.getString("MoveDelegate.6"), element.getName(), dest.toOSString()))); //$NON-NLS-1$
@@ -150,12 +143,10 @@ public class MoveDelegate {
 	 *            - the root change that the new changes are added to
 	 * @return the root change after the additions
 	 */
-	private Change createSimpleMoveChange(final IProgressMonitor pm,
-			final CompositeChange rootChange) throws CoreException,
-			OperationCanceledException {
+	private Change createSimpleMoveChange(final IProgressMonitor pm, final CompositeChange rootChange)
+			throws CoreException, OperationCanceledException {
 		try {
-			pm.beginTask(
-					PHPRefactoringCoreMessages.getString("MoveDelegate.0"), 100); //$NON-NLS-1$
+			pm.beginTask(PHPRefactoringCoreMessages.getString("MoveDelegate.0"), 100); //$NON-NLS-1$
 
 			IResource[] sourceResources = fProcessor.getSourceSelection();
 			createMoveChange(sourceResources, rootChange);
@@ -179,17 +170,14 @@ public class MoveDelegate {
 	 *            - the root change that the new changes are added to
 	 * @return the root change after the additions
 	 */
-	private Change createReferenceUpdatingMoveChange(IProgressMonitor pm,
-			CompositeChange rootChange) throws CoreException,
-			OperationCanceledException {
+	private Change createReferenceUpdatingMoveChange(IProgressMonitor pm, CompositeChange rootChange)
+			throws CoreException, OperationCanceledException {
 		try {
-			pm.beginTask(
-					PHPRefactoringCoreMessages.getString("MoveDelegate.0"), 100); //$NON-NLS-1$
+			pm.beginTask(PHPRefactoringCoreMessages.getString("MoveDelegate.0"), 100); //$NON-NLS-1$
 
 			IResource[] sourceResources = fProcessor.getSourceSelection();
 
-			createTextChanges(new SubProgressMonitor(pm, 80), rootChange,
-					phpFiles, sourceResources);
+			createTextChanges(new SubProgressMonitor(pm, 80), rootChange, phpFiles, sourceResources);
 			pm.worked(80);
 
 			// update configuration file.
@@ -217,26 +205,22 @@ public class MoveDelegate {
 		return rootChange;
 	}
 
-	private void createRenameLibraryFolderChange(IResource[] sourceResources,
-			CompositeChange rootChange) {
+	private void createRenameLibraryFolderChange(IResource[] sourceResources, CompositeChange rootChange) {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		LibraryFolderManager lfm = LibraryFolderManager.getInstance();
 
 		for (IResource resource : sourceResources) {
-			if (resource.getType() == IResource.FOLDER
-					&& lfm.isInLibraryFolder(resource)) {
+			if (resource.getType() == IResource.FOLDER && lfm.isInLibraryFolder(resource)) {
 				IPath newPath = fMainDestinationPath.append(resource.getName());
 				IFolder newFolder = root.getFolder(newPath);
 
-				RenameLibraryFolderChange change = new RenameLibraryFolderChange(
-						(IFolder) resource, newFolder);
+				RenameLibraryFolderChange change = new RenameLibraryFolderChange((IFolder) resource, newFolder);
 				rootChange.add(change);
 			}
 		}
 	}
 
-	private void createBuildPathChange(IResource[] sourceResources,
-			CompositeChange rootChange) throws ModelException {
+	private void createBuildPathChange(IResource[] sourceResources, CompositeChange rootChange) throws ModelException {
 		IResource[] uniqueSourceResources = removeDuplicateResources(sourceResources);
 		for (IResource element : uniqueSourceResources) {
 			// only container need handle build/include path.
@@ -244,30 +228,23 @@ public class MoveDelegate {
 				IProject project = element.getProject();
 
 				// if moving to another project
-				if (RefactoringUtility.getResource(fMainDestinationPath)
-						.getProject() != project) {
+				if (RefactoringUtility.getResource(fMainDestinationPath).getProject() != project) {
 					removeBuildPath(element, project);
 					IPath path = element.getFullPath().removeLastSegments(1);
-					RenameBuildAndIcludePathChange biChange = new RenameBuildAndIcludePathChange(
-							path, path, element.getName(), "", oldBuildEntries, //$NON-NLS-1$
-							newBuildEntries, oldIncludePath,
-							newIncludePathEntries);
+					RenameBuildAndIcludePathChange biChange = new RenameBuildAndIcludePathChange(path, path,
+							element.getName(), "", oldBuildEntries, //$NON-NLS-1$
+							newBuildEntries, oldIncludePath, newIncludePathEntries);
 
-					if (newBuildEntries.size() > 0
-							|| newIncludePathEntries.size() > 0) {
+					if (newBuildEntries.size() > 0 || newIncludePathEntries.size() > 0) {
 						rootChange.add(biChange);
 					}
 
 				} else {
 					updateBuildPath(element, project);
 					RenameBuildAndIcludePathChange biChange = new RenameBuildAndIcludePathChange(
-							element.getFullPath().removeLastSegments(1),
-							fMainDestinationPath, element.getName(),
-							element.getName(), oldBuildEntries,
-							newBuildEntries, oldIncludePath,
-							newIncludePathEntries);
-					if (newBuildEntries.size() > 0
-							|| newIncludePathEntries.size() > 0) {
+							element.getFullPath().removeLastSegments(1), fMainDestinationPath, element.getName(),
+							element.getName(), oldBuildEntries, newBuildEntries, oldIncludePath, newIncludePathEntries);
+					if (newBuildEntries.size() > 0 || newIncludePathEntries.size() > 0) {
 						rootChange.add(biChange);
 					}
 				}
@@ -283,7 +260,7 @@ public class MoveDelegate {
 
 		oldBuildEntries = Arrays.asList(projrct.readRawBuildpath());
 
-		newBuildEntries = new ArrayList<IBuildpathEntry>();
+		newBuildEntries = new ArrayList<>();
 
 		newBuildEntries.addAll(oldBuildEntries);
 
@@ -296,19 +273,17 @@ public class MoveDelegate {
 			if (mattchedPath == filePath.segmentCount()) {
 				newBuildEntries.remove(fEntryToChange);
 			} else {
-				IBuildpathEntry newEntry = RefactoringUtility
-						.createNewBuildpathEntry(fEntryToChange,
-								fEntryToChange.getPath(), filePath, ""); //$NON-NLS-1$
+				IBuildpathEntry newEntry = RefactoringUtility.createNewBuildpathEntry(fEntryToChange,
+						fEntryToChange.getPath(), filePath, ""); //$NON-NLS-1$
 				newBuildEntries.remove(fEntryToChange);
 				newBuildEntries.add(newEntry);
 			}
 		}
 
-		oldIncludePath = new ArrayList<IBuildpathEntry>();
+		oldIncludePath = new ArrayList<>();
 
-		newIncludePathEntries = new ArrayList<IBuildpathEntry>();
-		List<IncludePath> includePathEntries = Arrays.asList(IncludePathManager
-				.getInstance().getIncludePaths(project));
+		newIncludePathEntries = new ArrayList<>();
+		List<IncludePath> includePathEntries = Arrays.asList(IncludePathManager.getInstance().getIncludePaths(project));
 
 		for (IncludePath entry : includePathEntries) {
 			Object includePathEntry = entry.getEntry();
@@ -317,17 +292,14 @@ public class MoveDelegate {
 				includeResource = (IResource) includePathEntry;
 				IPath entryPath = includeResource.getFullPath();
 
-				IBuildpathEntry oldEntry = RefactoringUtility
-						.createNewBuildpathEntry(IBuildpathEntry.BPE_SOURCE,
-								entryPath);
-				oldIncludePath.add((IBuildpathEntry) oldEntry);
+				IBuildpathEntry oldEntry = RefactoringUtility.createNewBuildpathEntry(IBuildpathEntry.BPE_SOURCE,
+						entryPath);
+				oldIncludePath.add(oldEntry);
 
-				if (filePath.isPrefixOf(entryPath)
-						|| entryPath.equals(filePath)) {
+				if (filePath.isPrefixOf(entryPath) || entryPath.equals(filePath)) {
 				} else {
-					IBuildpathEntry newEntry = RefactoringUtility
-							.createNewBuildpathEntry(
-									IBuildpathEntry.BPE_SOURCE, entryPath);
+					IBuildpathEntry newEntry = RefactoringUtility.createNewBuildpathEntry(IBuildpathEntry.BPE_SOURCE,
+							entryPath);
 					newIncludePathEntries.add(newEntry);
 				}
 			} else {
@@ -345,7 +317,7 @@ public class MoveDelegate {
 
 		oldBuildEntries = Arrays.asList(projrct.readRawBuildpath());
 
-		newBuildEntries = new ArrayList<IBuildpathEntry>();
+		newBuildEntries = new ArrayList<>();
 
 		newBuildEntries.addAll(oldBuildEntries);
 
@@ -358,20 +330,18 @@ public class MoveDelegate {
 			if (mattchedPath == filePath.segmentCount()) {
 				newBuildEntries.remove(fEntryToChange);
 			} else {
-				IBuildpathEntry newEntry = RefactoringUtility
-						.createNewBuildpathEntry(fEntryToChange,
-								fEntryToChange.getPath(), filePath, ""); //$NON-NLS-1$
+				IBuildpathEntry newEntry = RefactoringUtility.createNewBuildpathEntry(fEntryToChange,
+						fEntryToChange.getPath(), filePath, ""); //$NON-NLS-1$
 
 				newBuildEntries.remove(fEntryToChange);
 				newBuildEntries.add(newEntry);
 			}
 		}
 
-		oldIncludePath = new ArrayList<IBuildpathEntry>();
+		oldIncludePath = new ArrayList<>();
 
-		newIncludePathEntries = new ArrayList<IBuildpathEntry>();
-		List<IncludePath> includePathEntries = Arrays.asList(IncludePathManager
-				.getInstance().getIncludePaths(project));
+		newIncludePathEntries = new ArrayList<>();
+		List<IncludePath> includePathEntries = Arrays.asList(IncludePathManager.getInstance().getIncludePaths(project));
 
 		for (IncludePath entry : includePathEntries) {
 			Object includePathEntry = entry.getEntry();
@@ -380,34 +350,26 @@ public class MoveDelegate {
 				includeResource = (IResource) includePathEntry;
 				IPath entryPath = includeResource.getFullPath();
 
-				IBuildpathEntry oldEntry = RefactoringUtility
-						.createNewBuildpathEntry(IBuildpathEntry.BPE_SOURCE,
-								entryPath);
-				oldIncludePath.add((IBuildpathEntry) oldEntry);
+				IBuildpathEntry oldEntry = RefactoringUtility.createNewBuildpathEntry(IBuildpathEntry.BPE_SOURCE,
+						entryPath);
+				oldIncludePath.add(oldEntry);
 
-				if (filePath.isPrefixOf(entryPath)
-						|| entryPath.equals(filePath)) {
-					int mattchedPath = entryPath
-							.matchingFirstSegments(filePath);
+				if (filePath.isPrefixOf(entryPath) || entryPath.equals(filePath)) {
+					int mattchedPath = entryPath.matchingFirstSegments(filePath);
 					IPath truncatedPath = entryPath.uptoSegment(mattchedPath);
-					IPath remaingPath = entryPath
-							.removeFirstSegments(mattchedPath);
+					IPath remaingPath = entryPath.removeFirstSegments(mattchedPath);
 					IPath newPath;
 					if (mattchedPath == filePath.segmentCount()) {
-						newPath = truncatedPath.removeLastSegments(1)
-								.append(newElementName).append(remaingPath);
+						newPath = truncatedPath.removeLastSegments(1).append(newElementName).append(remaingPath);
 					} else {
-						newPath = truncatedPath.append(newElementName).append(
-								remaingPath);
+						newPath = truncatedPath.append(newElementName).append(remaingPath);
 					}
-					IBuildpathEntry newEntry = RefactoringUtility
-							.createNewBuildpathEntry(
-									IBuildpathEntry.BPE_SOURCE, newPath);
+					IBuildpathEntry newEntry = RefactoringUtility.createNewBuildpathEntry(IBuildpathEntry.BPE_SOURCE,
+							newPath);
 					newIncludePathEntries.add(newEntry);
 				} else {
-					IBuildpathEntry newEntry = RefactoringUtility
-							.createNewBuildpathEntry(
-									IBuildpathEntry.BPE_SOURCE, entryPath);
+					IBuildpathEntry newEntry = RefactoringUtility.createNewBuildpathEntry(IBuildpathEntry.BPE_SOURCE,
+							entryPath);
 					newIncludePathEntries.add(newEntry);
 				}
 			} else {
@@ -419,16 +381,14 @@ public class MoveDelegate {
 
 	}
 
-	private void createBreakPointChange(IResource[] sourceResources,
-			CompositeChange rootChange) throws CoreException {
+	private void createBreakPointChange(IResource[] sourceResources, CompositeChange rootChange) throws CoreException {
 		IResource[] uniqueSourceResources = removeDuplicateResources(sourceResources);
 		for (IResource element : uniqueSourceResources) {
 			collectBrakePoint(element);
 
 			RenameBreackpointChange breakePointchanges = new RenameBreackpointChange(
-					element.getFullPath().removeLastSegments(1),
-					fMainDestinationPath, element.getName(), element.getName(),
-					fBreakpoints, fBreakpointAttributes);
+					element.getFullPath().removeLastSegments(1), fMainDestinationPath, element.getName(),
+					element.getName(), fBreakpoints, fBreakpointAttributes);
 
 			if (fBreakpoints.getKeys().size() > 0) {
 				rootChange.add(breakePointchanges);
@@ -437,32 +397,27 @@ public class MoveDelegate {
 	}
 
 	protected void collectBrakePoint(IResource resource) throws CoreException {
-		fBreakpoints = new BucketMap<IResource, IBreakpoint>(6);
-		fBreakpointAttributes = new HashMap<IBreakpoint, Map<String, Object>>(6);
-		final IBreakpointManager breakpointManager = DebugPlugin.getDefault()
-				.getBreakpointManager();
-		IMarker[] markers = resource.findMarkers(
-				IBreakpoint.LINE_BREAKPOINT_MARKER, true,
-				IResource.DEPTH_INFINITE);
+		fBreakpoints = new BucketMap<>(6);
+		fBreakpointAttributes = new HashMap<>(6);
+		final IBreakpointManager breakpointManager = DebugPlugin.getDefault().getBreakpointManager();
+		IMarker[] markers = resource.findMarkers(IBreakpoint.LINE_BREAKPOINT_MARKER, true, IResource.DEPTH_INFINITE);
 		for (IMarker marker : markers) {
 			IResource markerResource = marker.getResource();
 			IBreakpoint breakpoint = breakpointManager.getBreakpoint(marker);
 			if (breakpoint != null) {
 				fBreakpoints.add(markerResource, breakpoint);
-				fBreakpointAttributes.put(breakpoint, breakpoint.getMarker()
-						.getAttributes());
+				fBreakpointAttributes.put(breakpoint, breakpoint.getMarker().getAttributes());
 			}
 		}
 	}
 
-	private void createRunConfigurationChange(IResource[] sourceResources,
-			CompositeChange rootChange) {
+	private void createRunConfigurationChange(IResource[] sourceResources, CompositeChange rootChange) {
 
 		IResource[] uniqueSourceResources = removeDuplicateResources(sourceResources);
 		for (IResource element : uniqueSourceResources) {
 			RenameConfigurationChange configPointchanges = new RenameConfigurationChange(
-					element.getFullPath().removeLastSegments(1),
-					fMainDestinationPath, element.getName(), element.getName());
+					element.getFullPath().removeLastSegments(1), fMainDestinationPath, element.getName(),
+					element.getName());
 
 			rootChange.add(configPointchanges);
 		}
@@ -481,13 +436,11 @@ public class MoveDelegate {
 	 * @return the root change after the additions
 	 * @throws CoreException
 	 */
-	private Change createTextChanges(IProgressMonitor pm,
-			CompositeChange rootChange, Set<IFile> phpFiles,
+	private Change createTextChanges(IProgressMonitor pm, CompositeChange rootChange, Set<IFile> phpFiles,
 			IResource[] sourceResources) throws CoreException {
-		List<ProgramFileChange> changes = new ArrayList<ProgramFileChange>();
+		List<ProgramFileChange> changes = new ArrayList<>();
 		try {
-			pm.beginTask(
-					PHPRefactoringCoreMessages.getString("MoveDelegate.1"), 100); //$NON-NLS-1$
+			pm.beginTask(PHPRefactoringCoreMessages.getString("MoveDelegate.1"), 100); //$NON-NLS-1$
 
 			// creat text changes:
 			// for each file that will be moved, update its includes
@@ -498,8 +451,7 @@ public class MoveDelegate {
 			for (Iterator<IFile> it = phpFiles.iterator(); it.hasNext();) {
 				IFile currentMovedResource = it.next();
 
-				Map<IFile, Program> participantFiles = collectReferencingFiles(
-						currentMovedResource, pm);
+				Map<IFile, Program> participantFiles = collectReferencingFiles(currentMovedResource, pm);
 
 				for (Entry<IFile, Program> entry : participantFiles.entrySet()) {
 					final IFile file = entry.getKey();
@@ -508,9 +460,8 @@ public class MoveDelegate {
 					}
 					final Program program = entry.getValue();
 
-					final ChangeIncludePath rename = new ChangeIncludePath(
-							currentMovedResource, file, fMainDestinationPath,
-							false, uniqueSourceResources);
+					final ChangeIncludePath rename = new ChangeIncludePath(currentMovedResource, file,
+							fMainDestinationPath, false, uniqueSourceResources);
 					// aggregate the changes identifiers
 					program.accept(rename);
 
@@ -520,8 +471,7 @@ public class MoveDelegate {
 					pm.worked(1);
 
 					if (rename.hasChanges()) {
-						ProgramFileChange change = new ProgramFileChange(
-								file.getName(), file, program);
+						ProgramFileChange change = new ProgramFileChange(file.getName(), file, program);
 						change.setEdit(new MultiTextEdit());
 						change.setTextType("php"); //$NON-NLS-1$
 
@@ -530,23 +480,19 @@ public class MoveDelegate {
 					}
 				}
 
-				ISourceModule sourceModule = DLTKCore
-						.createSourceModuleFrom(currentMovedResource);
+				ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(currentMovedResource);
 
 				if (sourceModule instanceof ISourceModule) {
 
 					Program program = null;
 					try {
-						program = ASTUtils
-								.createProgramFromSource(sourceModule);
+						program = ASTUtils.createProgramFromSource(sourceModule);
 					} catch (Exception e) {
 					}
 
 					if (program != null) {
-						final ChangeIncludePath rename = new ChangeIncludePath(
-								currentMovedResource, currentMovedResource,
-								fMainDestinationPath, true,
-								uniqueSourceResources);
+						final ChangeIncludePath rename = new ChangeIncludePath(currentMovedResource,
+								currentMovedResource, fMainDestinationPath, true, uniqueSourceResources);
 
 						// aggregate the changes identifiers
 						program.accept(rename);
@@ -557,8 +503,7 @@ public class MoveDelegate {
 						pm.worked(1);
 
 						if (rename.hasChanges()) {
-							ProgramFileChange change = new ProgramFileChange(
-									currentMovedResource.getName(),
+							ProgramFileChange change = new ProgramFileChange(currentMovedResource.getName(),
 									currentMovedResource, program);
 							change.setEdit(new MultiTextEdit());
 							change.setTextType("php"); //$NON-NLS-1$
@@ -573,30 +518,29 @@ public class MoveDelegate {
 
 		} finally {
 			pm.done();
-		}// getChildren()
+		} // getChildren()
 
-		Map<IFile, List<TextEdit>> changeMap = new HashMap<IFile, List<TextEdit>>();
-		Map<IFile, ProgramFileChange> fileMap = new HashMap<IFile, ProgramFileChange>();
+		Map<IFile, List<TextEdit>> changeMap = new HashMap<>();
+		Map<IFile, ProgramFileChange> fileMap = new HashMap<>();
 		for (ProgramFileChange programFileChange : changes) {
 			List<TextEdit> list = changeMap.get(programFileChange.getFile());
 			if (list == null) {
-				list = new ArrayList<TextEdit>();
+				list = new ArrayList<>();
 				changeMap.put(programFileChange.getFile(), list);
 				fileMap.put(programFileChange.getFile(), programFileChange);
 			} else {
 
 			}
-			list.addAll(Arrays
-					.asList(programFileChange.getEdit().getChildren()));
+			list.addAll(Arrays.asList(programFileChange.getEdit().getChildren()));
 		}
 		for (IFile file : changeMap.keySet()) {
-			ProgramFileChange change = new ProgramFileChange(file.getName(),
-					file, fileMap.get(file).getProgram());
+			ProgramFileChange change = new ProgramFileChange(file.getName(), file, fileMap.get(file).getProgram());
 			change.setEdit(new MultiTextEdit());
 			change.setTextType("php"); //$NON-NLS-1$
 
 			List<TextEdit> list = changeMap.get(file);
 			Collections.sort(list, new Comparator<TextEdit>() {
+				@Override
 				public int compare(TextEdit o1, TextEdit o2) {
 					return o2.getOffset() - o1.getOffset();
 				}
@@ -605,8 +549,8 @@ public class MoveDelegate {
 			for (TextEdit textEdit : list) {
 				if (textEdit instanceof ReplaceEdit) {
 					ReplaceEdit replaceEdit = (ReplaceEdit) textEdit;
-					change.addEdit(new ReplaceEdit(replaceEdit.getOffset(),
-							replaceEdit.getLength(), replaceEdit.getText()));
+					change.addEdit(
+							new ReplaceEdit(replaceEdit.getOffset(), replaceEdit.getLength(), replaceEdit.getText()));
 				}
 			}
 			rootChange.add(change);
@@ -621,7 +565,7 @@ public class MoveDelegate {
 			return sourceResources;
 		}
 
-		ArrayList<IResource> result = new ArrayList<IResource>();
+		ArrayList<IResource> result = new ArrayList<>();
 
 		for (IResource source : sourceResources) {
 			if (result.size() == 0) {
@@ -665,12 +609,10 @@ public class MoveDelegate {
 	 * @param sourceResources
 	 * @param rootChange
 	 */
-	private void createMoveChange(IResource[] sourceResources,
-			CompositeChange rootChange) {
+	private void createMoveChange(IResource[] sourceResources, CompositeChange rootChange) {
 		IResource[] uniqueSourceResources = removeDuplicateResources(sourceResources);
 		for (IResource element : uniqueSourceResources) {
-			MoveResourceChange moveResource = new MoveResourceChange(element,
-					fProcessor.getDestination());
+			MoveResourceChange moveResource = new MoveResourceChange(element, fProcessor.getDestination());
 			rootChange.add(moveResource);
 		}
 	}
@@ -686,46 +628,34 @@ public class MoveDelegate {
 
 		Assert.isNotNull(destination);
 		if (!destination.exists() || destination.isPhantom())
-			return RefactoringStatus
-					.createFatalErrorStatus(PHPRefactoringCoreMessages
-							.getString("MoveDelegate.2")); //$NON-NLS-1$
+			return RefactoringStatus.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("MoveDelegate.2")); //$NON-NLS-1$
 		if (!destination.isAccessible())
-			return RefactoringStatus
-					.createFatalErrorStatus(PHPRefactoringCoreMessages
-							.getString("MoveDelegate.3")); //$NON-NLS-1$
+			return RefactoringStatus.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("MoveDelegate.3")); //$NON-NLS-1$
 		Assert.isTrue(destination.getType() != IResource.ROOT);
 
 		IResource[] sourceResources = fProcessor.getSourceSelection();
 		for (IResource element : sourceResources) {
 			if (destination.equals(element.getParent()))
-				return RefactoringStatus
-						.createFatalErrorStatus(PHPRefactoringCoreMessages
-								.getString("MoveDelegate.4")); //$NON-NLS-1$
+				return RefactoringStatus.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("MoveDelegate.4")); //$NON-NLS-1$
 			if (destination.equals(element)) {
-				return RefactoringStatus
-						.createFatalErrorStatus(PHPRefactoringCoreMessages
-								.getString("MoveDelegate.5")); //$NON-NLS-1$
+				return RefactoringStatus.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("MoveDelegate.5")); //$NON-NLS-1$
 			}
 		}
 		return status;
 	}
 
-	private Map<IFile, Program> collectReferencingFiles(IFile sourceFile,
-			IProgressMonitor pm) {
-		ISourceModule sourceModule = DLTKCore
-				.createSourceModuleFrom(sourceFile);
+	private Map<IFile, Program> collectReferencingFiles(IFile sourceFile, IProgressMonitor pm) {
+		ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(sourceFile);
 
-		Map<IFile, Program> participantFiles = new HashMap<IFile, Program>();
+		Map<IFile, Program> participantFiles = new HashMap<>();
 
-		Collection<Node> references = MoveUtils
-				.getReferencingFiles(sourceModule);
+		Collection<Node> references = MoveUtils.getReferencingFiles(sourceModule);
 		if (references != null) {
 			for (Iterator<Node> it = references.iterator(); it.hasNext();) {
 				Node node = it.next();
 				IFile file = (IFile) node.getFile().getResource();
 				try {
-					participantFiles.put(file,
-							RefactoringUtility.getProgramForFile(file));
+					participantFiles.put(file, RefactoringUtility.getProgramForFile(file));
 				} catch (Exception e) {
 				}
 			}

@@ -77,12 +77,13 @@ public abstract class BodyDeclaration extends Statement {
 		postValueChange(getModifierProperty());
 	}
 
+	@Override
 	int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
 		if (property == getModifierProperty()) {
 			if (get) {
 				return getModifier();
 			} else {
-				setModifier((Integer) value);
+				setModifier(value);
 				return 0;
 			}
 		}

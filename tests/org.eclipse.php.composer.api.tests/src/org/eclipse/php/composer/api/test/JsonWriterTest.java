@@ -23,6 +23,7 @@ public class JsonWriterTest extends ComposertTestCase {
 	/*
 	 * would be better in a @BeforeClass as so, this does not work for me
 	 */
+	@Override
 	public void setUp() {
 		phpPackage = createDummyPackage();
 		json = phpPackage.toJson();

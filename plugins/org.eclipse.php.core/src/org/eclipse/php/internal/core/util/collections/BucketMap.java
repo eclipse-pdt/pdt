@@ -19,10 +19,10 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 public class BucketMap<K, V> {
 	private Map<K, Set<V>> map;
 
-	private Set<V> defaultSet = new HashSet<V>(1);
+	private Set<V> defaultSet = new HashSet<>(1);
 
 	public BucketMap() {
-		map = new HashMap<K, Set<V>>();
+		map = new HashMap<>();
 	}
 
 	public BucketMap(Set<V> set) {
@@ -31,7 +31,7 @@ public class BucketMap<K, V> {
 	}
 
 	public BucketMap(int size) {
-		map = new HashMap<K, Set<V>>(size);
+		map = new HashMap<>(size);
 	}
 
 	public void add(K key, V value) {
@@ -58,7 +58,7 @@ public class BucketMap<K, V> {
 			return defaultSet.getClass().newInstance();
 		} catch (Exception e) {
 			PHPCorePlugin.log(e);
-			return new HashSet<V>(1);
+			return new HashSet<>(1);
 		}
 	}
 

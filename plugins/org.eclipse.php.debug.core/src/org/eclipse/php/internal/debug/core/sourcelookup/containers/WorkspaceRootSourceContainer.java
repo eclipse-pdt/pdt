@@ -24,6 +24,7 @@ public class WorkspaceRootSourceContainer extends ContainerSourceContainer {
 		super(ResourcesPlugin.getWorkspace().getRoot(), false);
 	}
 
+	@Override
 	public ISourceContainerType getType() {
 		return getSourceContainerType(TYPE_ID);
 	}

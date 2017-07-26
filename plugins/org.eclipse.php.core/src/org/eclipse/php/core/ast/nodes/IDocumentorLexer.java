@@ -11,9 +11,11 @@
  *******************************************************************************/
 package org.eclipse.php.core.ast.nodes;
 
+import org.eclipse.php.core.compiler.ast.nodes.PHPDocBlock;
+
 public interface IDocumentorLexer {
 
-	public Object parse();
+	public PHPDocBlock parse();
 
 	public void reset(java.io.Reader reader, char[] buffer, int[] parameters);
 

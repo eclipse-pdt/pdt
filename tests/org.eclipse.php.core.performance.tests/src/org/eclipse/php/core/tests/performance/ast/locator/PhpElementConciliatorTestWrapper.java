@@ -56,7 +56,7 @@ public class PhpElementConciliatorTestWrapper extends AbstractPDTTTest {
 		super("");
 	}
 
-	public Test suite(final Map map) {
+	public Test suite(final Map<?, ?> map) {
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject(map.get(ProjectSuite.PROJECT).toString());
 		perfMonitor = PHPCorePerformanceTests.getPerformanceMonitor();
 		TestSuite suite = new TestSuite("Locator Tests");
@@ -69,6 +69,7 @@ public class PhpElementConciliatorTestWrapper extends AbstractPDTTTest {
 				try {
 					final PdttFile pdttFile = new PdttFile(PHPCorePerformanceTests.getDefault().getBundle(), fileName);
 					PhpElementConciliatorTest test = new PhpElementConciliatorTest(fileName) {
+						@Override
 						protected void tearDown() throws Exception {
 							if (testFile != null) {
 								testFile.delete(true, null);
@@ -76,6 +77,7 @@ public class PhpElementConciliatorTestWrapper extends AbstractPDTTTest {
 							}
 						}
 
+						@Override
 						protected void runTest() throws Throwable {
 							executeLocator(pdttFile.getFile(), fileName);
 						}
@@ -89,6 +91,7 @@ public class PhpElementConciliatorTestWrapper extends AbstractPDTTTest {
 						// file
 						// parsing
 						// failure
+						@Override
 						protected void runTest() throws Throwable {
 							throw e;
 						}
@@ -131,6 +134,7 @@ public class PhpElementConciliatorTestWrapper extends AbstractPDTTTest {
 		// ASTNode selectedNode = NodeFinder.perform(astRoot, offset, 0);
 		final int finalOffset = offset;
 		perfMonitor.execute("PerformanceTests.testPhpElementConciliator" + "_" + fileName, new Operation() {
+			@Override
 			public void run() throws Exception {
 				NodeFinder.perform(astRoot, finalOffset, 0);
 			}

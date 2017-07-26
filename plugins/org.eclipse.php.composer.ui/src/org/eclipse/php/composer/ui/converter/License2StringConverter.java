@@ -27,7 +27,7 @@ public class License2StringConverter extends Converter {
 			return ""; //$NON-NLS-1$
 		}
 		License licenses = (License) fromObject;
-		return StringUtils.join((String[]) licenses.toArray(new String[] {}), ", "); //$NON-NLS-1$
+		return StringUtils.join(licenses.toArray(new String[] {}), ", "); //$NON-NLS-1$
 	}
 
 }

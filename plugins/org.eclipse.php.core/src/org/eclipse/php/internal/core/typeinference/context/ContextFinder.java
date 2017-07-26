@@ -44,7 +44,7 @@ import org.eclipse.php.internal.core.typeinference.evaluators.PHPTraitType;
  */
 public abstract class ContextFinder extends ASTVisitor {
 
-	protected Stack<IContext> contextStack = new Stack<IContext>();
+	protected Stack<IContext> contextStack = new Stack<>();
 	private ISourceModule sourceModule;
 
 	IType declaringType;
@@ -69,6 +69,7 @@ public abstract class ContextFinder extends ASTVisitor {
 		return null;
 	}
 
+	@Override
 	public boolean visit(ModuleDeclaration node) throws Exception {
 		contextStack.push(new FileContext(sourceModule, node));
 
@@ -79,6 +80,7 @@ public abstract class ContextFinder extends ASTVisitor {
 		return visitGeneral;
 	}
 
+	@Override
 	public boolean visit(TypeDeclaration node) throws Exception {
 		if (node instanceof NamespaceDeclaration) {
 			FileContext fileContext = (FileContext) contextStack.peek();
@@ -149,10 +151,11 @@ public abstract class ContextFinder extends ASTVisitor {
 		return visitGeneral(node);
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public boolean visit(MethodDeclaration node) throws Exception {
-		List<String> argumentsList = new LinkedList<String>();
-		List<IEvaluatedType> argTypes = new LinkedList<IEvaluatedType>();
+		List<String> argumentsList = new LinkedList<>();
+		List<IEvaluatedType> argTypes = new LinkedList<>();
 		List<Argument> args = node.getArguments();
 		for (Argument a : args) {
 			argumentsList.add(a.getName());
@@ -172,18 +175,21 @@ public abstract class ContextFinder extends ASTVisitor {
 		return visitGeneral;
 	}
 
+	@Override
 	public boolean endvisit(ModuleDeclaration node) throws Exception {
 		contextStack.pop();
 		endvisitGeneral(node);
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(TypeDeclaration node) throws Exception {
 		contextStack.pop();
 		endvisitGeneral(node);
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(MethodDeclaration node) throws Exception {
 		contextStack.pop();
 		endvisitGeneral(node);

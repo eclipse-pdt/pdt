@@ -102,7 +102,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 public class ASTView extends ViewPart implements IShowInSource {
 
 	private class ASTViewSelectionProvider implements ISelectionProvider {
-		ListenerList fListeners = new ListenerList(ListenerList.IDENTITY);
+		ListenerList<ISelectionChangedListener> fListeners = new ListenerList<ISelectionChangedListener>(ListenerList.IDENTITY);
 
 		@Override
 		public void addSelectionChangedListener(ISelectionChangedListener listener) {
@@ -112,8 +112,8 @@ public class ASTView extends ViewPart implements IShowInSource {
 		@Override
 		public ISelection getSelection() {
 			IStructuredSelection selection = (IStructuredSelection) fViewer.getSelection();
-			ArrayList externalSelection = new ArrayList();
-			for (Iterator iter = selection.iterator(); iter.hasNext();) {
+			ArrayList<Object> externalSelection = new ArrayList<Object>();
+			for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
 				Object unwrapped = ASTView.unwrapAttribute(iter.next());
 				if (unwrapped != null)
 					externalSelection.add(unwrapped);
@@ -339,7 +339,7 @@ public class ASTView extends ViewPart implements IShowInSource {
 	private ISourceModule fSourceRoot;
 	private Program fRoot;
 	private IDocument fCurrentDocument;
-	private ArrayList fTrayRoots;
+	private ArrayList<?> fTrayRoots;
 
 	private boolean fDoLinkWithEditor;
 	private boolean fCreateBindings;
@@ -494,7 +494,7 @@ public class ASTView extends ViewPart implements IShowInSource {
 		fViewer.setInput(root);
 		fViewer.getTree().setEnabled(root != null);
 		fSash.setMaximizedControl(fViewer.getTree());
-		fTrayRoots = new ArrayList();
+		fTrayRoots = new ArrayList<Object>();
 		setASTUptoDate(root != null);
 		fClearAction.setEnabled(root != null);
 		fFindDeclaringNodeAction.setEnabled(root != null);
@@ -718,7 +718,7 @@ public class ASTView extends ViewPart implements IShowInSource {
 		bars.setGlobalActionHandler(ActionFactory.REFRESH.getId(), fFocusAction);
 		bars.setGlobalActionHandler(ActionFactory.DELETE.getId(), fDeleteAction);
 
-		IHandlerService handlerService = (IHandlerService) getViewSite().getService(IHandlerService.class);
+		IHandlerService handlerService = getViewSite().getService(IHandlerService.class);
 		handlerService.activateHandler(LINK_WITH_EDITOR_COMMAND_ID, new ActionHandler(fLinkWithEditor));
 	}
 
@@ -1342,7 +1342,7 @@ public class ASTView extends ViewPart implements IShowInSource {
 	protected void performDelete() {
 		boolean removed = false;
 		IStructuredSelection selection = (IStructuredSelection) fTray.getSelection();
-		for (Iterator iter = selection.iterator(); iter.hasNext();) {
+		for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
 			Object obj = iter.next();
 			if (obj instanceof DynamicAttributeProperty)
 				obj = ((DynamicAttributeProperty) obj).getParent();

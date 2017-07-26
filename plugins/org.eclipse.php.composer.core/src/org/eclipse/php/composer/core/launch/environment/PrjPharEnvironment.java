@@ -28,6 +28,7 @@ public abstract class PrjPharEnvironment implements Environment {
 
 	protected String phar;
 
+	@Override
 	public void setUp(IProject project) throws ScriptNotFoundException {
 		IResource phar = getScript(project);
 		if (phar == null) {

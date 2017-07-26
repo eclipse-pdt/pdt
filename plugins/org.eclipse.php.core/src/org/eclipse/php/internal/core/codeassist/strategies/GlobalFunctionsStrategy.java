@@ -45,6 +45,7 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		ICompletionContext context = getContext();
 

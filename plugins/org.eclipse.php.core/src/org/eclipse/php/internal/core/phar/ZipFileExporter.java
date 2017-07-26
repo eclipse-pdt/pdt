@@ -48,6 +48,7 @@ public class ZipFileExporter extends AbstractFileExporter {
 	 * 
 	 * @exception java.io.IOException
 	 */
+	@Override
 	public void finished() throws IOException {
 		// super.finished();
 
@@ -115,18 +116,21 @@ public class ZipFileExporter extends AbstractFileExporter {
 	 * @exception java.io.IOException
 	 * @exception org.eclipse.core.runtime.CoreException
 	 */
+	@Override
 	public void write(IFile resource, String destinationPath) throws IOException, CoreException {
 		ZipEntry newEntry = new ZipEntry(destinationPath);
 		completeEntry(newEntry, resource.getContents(false));
 		write(newEntry, resource.getContents(false));
 	}
 
+	@Override
 	public void writeStub(IStub stub) throws IOException, CoreException {
 		ZipEntry newEntry = new ZipEntry(PharConstants.STUB_PATH);
 		completeEntry(newEntry, PharUtil.getStubInputStream(stub));
 		write(newEntry, PharUtil.getStubInputStream(stub));
 	}
 
+	@Override
 	public void write(IFolder resource, String destinationPath) throws IOException, CoreException {
 		ZipEntry newEntry = new ZipEntry(destinationPath);
 
@@ -134,6 +138,7 @@ public class ZipFileExporter extends AbstractFileExporter {
 		outputStream.closeEntry();
 	}
 
+	@Override
 	public void doWriteSignature() throws IOException {
 
 		byte[] signature = fileContentStream.getSignature();

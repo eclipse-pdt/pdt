@@ -49,11 +49,11 @@ public class DefineMethodUtils {
 			PHPModuleDeclaration phpModule = (PHPModuleDeclaration) module;
 			List<PHPDocBlock> phpDocBlocks = phpModule.getPHPDocBlocks();
 			if (phpDocBlocks != null && !phpDocBlocks.isEmpty()) {
-				List statements = phpModule.getStatements();
+				List<ASTNode> statements = phpModule.getStatements();
 				ISourceRange sourceRange = field.getNameRange();
 				ASTNode previousStatement = null;
-				for (Iterator iterator = statements.iterator(); iterator.hasNext();) {
-					ASTNode statement = (ASTNode) iterator.next();
+				for (Iterator<ASTNode> iterator = statements.iterator(); iterator.hasNext();) {
+					ASTNode statement = iterator.next();
 					if (statement.sourceStart() <= sourceRange.getOffset()
 							&& statement.sourceEnd() >= (sourceRange.getOffset() + sourceRange.getLength())) {
 						// define statement
@@ -62,6 +62,7 @@ public class DefineMethodUtils {
 							return null;
 						}
 						Collections.sort(phpDocBlocks, new Comparator<PHPDocBlock>() {
+							@Override
 							public int compare(PHPDocBlock o1, PHPDocBlock o2) {
 								return o1.sourceStart() - o2.sourceStart();
 							}
@@ -87,9 +88,9 @@ public class DefineMethodUtils {
 	}
 
 	private static List<PHPDocBlock> getPHPDocBlockBetweenRange(int start, int end, List<PHPDocBlock> phpDocBlocks) {
-		List<PHPDocBlock> result = new ArrayList<PHPDocBlock>();
-		for (Iterator iterator = phpDocBlocks.iterator(); iterator.hasNext();) {
-			PHPDocBlock phpDocBlock = (PHPDocBlock) iterator.next();
+		List<PHPDocBlock> result = new ArrayList<>();
+		for (Iterator<PHPDocBlock> iterator = phpDocBlocks.iterator(); iterator.hasNext();) {
+			PHPDocBlock phpDocBlock = iterator.next();
 			if (phpDocBlock.sourceStart() >= start && phpDocBlock.sourceEnd() <= end) {
 				result.add(phpDocBlock);
 			}
@@ -125,7 +126,7 @@ public class DefineMethodUtils {
 			if (s.getName().equals(DEFINE)) {
 				CallArgumentsList args = s.getArgs();
 				if (args != null && args.getChilds() != null) {
-					ASTNode argument = (ASTNode) args.getChilds().get(0);
+					ASTNode argument = args.getChilds().get(0);
 					if (argument instanceof Scalar) {
 						String constant = ASTUtils.stripQuotes(((Scalar) argument).getValue());
 						if (constant.equals(elementName)) {
@@ -155,6 +156,7 @@ public class DefineMethodUtils {
 			return true;
 		}
 
+		@Override
 		public boolean visit(Expression s) throws Exception {
 			if (!interesting(s)) {
 				return false;
@@ -162,6 +164,7 @@ public class DefineMethodUtils {
 			return true;
 		}
 
+		@Override
 		public boolean visit(Statement s) throws Exception {
 			if (!interesting(s)) {
 				return false;
@@ -175,6 +178,7 @@ public class DefineMethodUtils {
 			return true;
 		}
 
+		@Override
 		public boolean visit(ModuleDeclaration s) throws Exception {
 			if (!interesting(s)) {
 				return false;
@@ -182,6 +186,7 @@ public class DefineMethodUtils {
 			return true;
 		}
 
+		@Override
 		public boolean visitGeneral(ASTNode s) throws Exception {
 			if (!interesting(s)) {
 				return false;

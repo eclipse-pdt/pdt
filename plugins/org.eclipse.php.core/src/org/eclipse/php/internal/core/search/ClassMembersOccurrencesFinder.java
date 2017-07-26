@@ -46,6 +46,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	 *            the selected node (must be an {@link Identifier} instance)
 	 * @return returns a message if there is a problem
 	 */
+	@Override
 	public String initialize(Program root, ASTNode node) {
 		fASTRoot = root;
 		fProblems = getProblems(root);
@@ -299,6 +300,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#
 	 * findOccurrences ()
 	 */
+	@Override
 	protected void findOccurrences() {
 		if (isMethod) {
 			fDescription = Messages.format(BASE_DESCRIPTION, classMemberName + BRACKETS);
@@ -318,11 +320,13 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	/**
 	 * context + Mark var on: ... public $a; ...
 	 */
+	@Override
 	public boolean visit(ClassDeclaration classDeclaration) {
 		checkTypeDeclaration(classDeclaration);
 		return false;
 	}
 
+	@Override
 	public boolean visit(TraitDeclaration traitDeclaration) {
 		checkTypeDeclaration(traitDeclaration);
 		return false;
@@ -331,6 +335,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	/**
 	 * context
 	 */
+	@Override
 	public boolean visit(InterfaceDeclaration interfaceDeclaration) {
 		checkTypeDeclaration(interfaceDeclaration);
 		return false;
@@ -339,6 +344,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	/**
 	 * Mark foo() on: $a->foo();
 	 */
+	@Override
 	public boolean visit(MethodInvocation methodInvocation) {
 		if (isMethod) {
 			checkDispatch(methodInvocation.getMethod().getFunctionName().getName());
@@ -349,6 +355,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	/**
 	 * Mark var on: $a->var;
 	 */
+	@Override
 	public boolean visit(FieldAccess fieldAccess) {
 		if (!isMethod) {
 			checkDispatch(fieldAccess.getField().getName());
@@ -359,6 +366,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	/**
 	 * Mark CON on: MyClass::CON;
 	 */
+	@Override
 	public boolean visit(StaticConstantAccess classConstantAccess) {
 		Identifier constant = classConstantAccess.getConstant();
 		if (!isMethod && classMemberName.equals(constant.getName())) {
@@ -378,6 +386,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	/**
 	 * Mark foo() on: MyClass::foo();
 	 */
+	@Override
 	public boolean visit(StaticMethodInvocation methodInvocation) {
 		if (isMethod) {
 			checkDispatch(methodInvocation.getMethod().getFunctionName().getName());
@@ -388,6 +397,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	/**
 	 * Mark var on: MyClass::var;
 	 */
+	@Override
 	public boolean visit(FullyQualifiedTraitMethodReference fieldAccess) {
 		// if (isMethod) {
 		checkDispatch(fieldAccess.getFunctionName());
@@ -396,6 +406,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 		return super.visit(fieldAccess);
 	}
 
+	@Override
 	public boolean visit(StaticFieldAccess fieldAccess) {
 		if (!isMethod) {
 			checkDispatch(fieldAccess.getField().getName());
@@ -404,6 +415,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 		return super.visit(fieldAccess);
 	}
 
+	@Override
 	public boolean visit(TraitAlias node) {
 		if (dispatcherType != null) {
 			Expression expression = node.getTraitMethod();
@@ -535,6 +547,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * getOccurrenceReadWriteType
 	 * (org.eclipse.php.internal.core.ast.nodes.ASTNode)
 	 */
+	@Override
 	protected int getOccurrenceType(ASTNode node) {
 		// Default return is F_READ_OCCURRENCE, although the implementation of
 		// the Scalar visit might also use F_WRITE_OCCURRENCE
@@ -570,6 +583,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * @see
 	 * org.eclipse.php.internal.ui.search.IOccurrencesFinder#getElementName()
 	 */
+	@Override
 	public String getElementName() {
 		return classMemberName;
 	}
@@ -579,6 +593,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * 
 	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getID()
 	 */
+	@Override
 	public String getID() {
 		return ID;
 	}

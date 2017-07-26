@@ -62,6 +62,7 @@ public class ExtractFunctionInputPage extends UserInputWizardPage {
 		fSignaturePreviewDocument = ""; //$NON-NLS-1$
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		fRefactoring = (ExtractFunctionRefactoring) getRefactoring();
 		loadSettings();
@@ -131,6 +132,7 @@ public class ExtractFunctionInputPage extends UserInputWizardPage {
 				if (data[i].equals(visibility))
 					radio.setSelection(true);
 				radio.addSelectionListener(new SelectionAdapter() {
+					@Override
 					public void widgetSelected(SelectionEvent event) {
 						setVisibility((Integer) event.widget.getData());
 					}
@@ -142,14 +144,17 @@ public class ExtractFunctionInputPage extends UserInputWizardPage {
 		if (!fRefactoring.getParameterInfos().isEmpty()) {
 			ChangeParametersControl cp = new ChangeParametersControl(result, SWT.NONE,
 					RefactoringMessages.ExtractMethodInputPage_parameters, new IParameterListChangeListener() {
+						@Override
 						public void parameterChanged(ParameterInfo parameter) {
 							parameterModified();
 						}
 
+						@Override
 						public void parameterListChanged() {
 							parameterModified();
 						}
 
+						@Override
 						public void parameterAdded(ParameterInfo parameter) {
 							updatePreview(getText());
 						}
@@ -180,6 +185,7 @@ public class ExtractFunctionInputPage extends UserInputWizardPage {
 		setGeneratePHPdoc(generate);
 		checkBox.setSelection(generate);
 		checkBox.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				setGeneratePHPdoc(((Button) e.widget).getSelection());
 			}
@@ -205,6 +211,7 @@ public class ExtractFunctionInputPage extends UserInputWizardPage {
 		checkBox.setEnabled(enabled);
 
 		checkBox.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				fRefactoring.setReplaceDuplicates(((Button) e.widget).getSelection());
 			}
@@ -245,6 +252,7 @@ public class ExtractFunctionInputPage extends UserInputWizardPage {
 	private Text createTextInputField(Composite parent, int style) {
 		Text result = new Text(parent, style);
 		result.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				textModified(getText());
 			}
@@ -343,6 +351,7 @@ public class ExtractFunctionInputPage extends UserInputWizardPage {
 	// ---- Input validation
 	// ------------------------------------------------------
 
+	@Override
 	public void setVisible(boolean visible) {
 		if (visible) {
 			if (fFirstTime) {
@@ -398,8 +407,8 @@ public class ExtractFunctionInputPage extends UserInputWizardPage {
 
 	private RefactoringStatus validateParameters() {
 		RefactoringStatus result = new RefactoringStatus();
-		List parameters = fRefactoring.getParameterInfos();
-		for (Iterator iter = parameters.iterator(); iter.hasNext();) {
+		List<?> parameters = fRefactoring.getParameterInfos();
+		for (Iterator<?> iter = parameters.iterator(); iter.hasNext();) {
 			ParameterInfo info = (ParameterInfo) iter.next();
 			if ("".equals(info.getNewName())) { //$NON-NLS-1$
 				result.addFatalError(RefactoringMessages.ExtractMethodInputPage_validation_emptyParameterName);

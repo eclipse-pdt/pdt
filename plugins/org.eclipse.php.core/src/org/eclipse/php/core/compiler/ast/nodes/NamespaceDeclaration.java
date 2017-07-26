@@ -56,6 +56,7 @@ public class NamespaceDeclaration extends TypeDeclaration implements IPHPDocAwar
 		return getName() == GLOBAL;
 	}
 
+	@Override
 	public PHPDocBlock getPHPDoc() {
 		return phpDoc;
 	}
@@ -69,6 +70,7 @@ public class NamespaceDeclaration extends TypeDeclaration implements IPHPDocAwar
 		setEnd(statement.sourceEnd());
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.NAMESPACE_DECLARATION;
 	}
@@ -76,9 +78,11 @@ public class NamespaceDeclaration extends TypeDeclaration implements IPHPDocAwar
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
+	@Override
 	public final void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}

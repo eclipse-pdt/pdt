@@ -42,7 +42,6 @@ import org.eclipse.swt.widgets.*;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class XDebugDebuggerExeSettingsSection implements IDebuggerSettingsSection {
 
 	protected IDebuggerSettingsWorkingCopy settingsWorkingCopy;
@@ -90,6 +89,7 @@ public class XDebugDebuggerExeSettingsSection implements IDebuggerSettingsSectio
 	 * @see org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#
 	 * validate ()
 	 */
+	@Override
 	public void validate() {
 		// Reset state
 		compositeFragment.setMessage(compositeFragment.getDescription(), IMessageProvider.NONE);
@@ -104,7 +104,7 @@ public class XDebugDebuggerExeSettingsSection implements IDebuggerSettingsSectio
 			}
 		}
 		// Check errors
-		String clientPort = (String) settingsWorkingCopy.getAttribute(PROP_CLIENT_PORT);
+		String clientPort = settingsWorkingCopy.getAttribute(PROP_CLIENT_PORT);
 		if (clientPort == null || clientPort.isEmpty()) {
 			compositeFragment.setMessage(Messages.XDebugDebuggerSettingsSection_Client_port_is_missing,
 					IMessageProvider.ERROR);
@@ -184,6 +184,7 @@ public class XDebugDebuggerExeSettingsSection implements IDebuggerSettingsSectio
 		clientPortText.setLayoutData(cptLayoutData);
 		clientPortText.setText(settingsWorkingCopy.getAttribute(PROP_CLIENT_PORT));
 		clientPortText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				String port = clientPortText.getText();
 				settingsWorkingCopy.setAttribute(PROP_CLIENT_PORT, port);
@@ -211,6 +212,7 @@ public class XDebugDebuggerExeSettingsSection implements IDebuggerSettingsSectio
 		proxyIdeKeyText.setLayoutData(pikLayoutData);
 		proxyIdeKeyText.setText(settingsWorkingCopy.getAttribute(PROP_PROXY_IDE_KEY));
 		proxyIdeKeyText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				String ideKey = proxyIdeKeyText.getText();
 				settingsWorkingCopy.setAttribute(PROP_PROXY_IDE_KEY, ideKey);
@@ -225,6 +227,7 @@ public class XDebugDebuggerExeSettingsSection implements IDebuggerSettingsSectio
 		proxyAddressText.setLayoutData(patLayoutData);
 		proxyAddressText.setText(settingsWorkingCopy.getAttribute(PROP_PROXY_ADDRESS));
 		proxyAddressText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				String proxyAddress = proxyAddressText.getText();
 				settingsWorkingCopy.setAttribute(PROP_PROXY_ADDRESS, proxyAddress);

@@ -37,7 +37,8 @@ public final class Util implements IPerformancesConstants {
 private static String[] MILESTONES;
 public static final BuildDateComparator BUILD_DATE_COMPARATOR = new BuildDateComparator();
 
-static class BuildDateComparator implements Comparator {
+static class BuildDateComparator implements Comparator<Object> {
+	@Override
 	public int compare(Object o1, Object o2) {
 		String s1 = (String) o1;
 		String s2 = (String) o2;
@@ -300,6 +301,7 @@ public static int getMilestonesLength() {
 /**
  * @deprecated
  */
+@Deprecated
 public static boolean matchPattern(String name, String pattern) {
 	if (pattern.equals("*")) return true; //$NON-NLS-1$
 	if (pattern.indexOf('*') < 0 && pattern.indexOf('?') < 0) {
@@ -334,6 +336,7 @@ public static boolean matchPattern(String name, String pattern) {
 /**
  * @deprecated
  */
+@Deprecated
 public static double round(double value) {
 	return Math.round(value * 10000) / 10000.0;
 }
@@ -341,6 +344,7 @@ public static double round(double value) {
 /**
  * @deprecated
  */
+@Deprecated
 public static double round(double value, int precision) {
 	if (precision < 0) {
 		throw new IllegalArgumentException("Should have a precision at least greater than 0!");

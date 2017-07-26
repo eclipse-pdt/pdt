@@ -118,7 +118,7 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 		BuildPathAdapter adapter = new BuildPathAdapter();
 		String[] buttonLabels = new String[] { NewWizardMessages.BuildPathsBlock_buildpath_up_button,
 				NewWizardMessages.BuildPathsBlock_buildpath_down_button };
-		fBuildPathList = new ListDialogField(null, buttonLabels, new PHPIPListLabelProvider());
+		fBuildPathList = new ListDialogField<>(null, buttonLabels, new PHPIPListLabelProvider());
 		fBuildPathList.setDialogFieldListener(adapter);
 		fBuildPathList.setLabelText(NewWizardMessages.BuildPathsBlock_buildpath_label);
 		fBuildPathList.setUpButtonIndex(0);
@@ -248,7 +248,7 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 
 		// get the source elements that the user added in the source tab
 		List<BPListElement> addedElements = includePathSourcePage.getAddedElements();
-		List<IBuildpathEntry> buildPathEntries = new ArrayList<IBuildpathEntry>();
+		List<IBuildpathEntry> buildPathEntries = new ArrayList<>();
 
 		// in case there are any, the user is prompted with a question
 		if (addedElements.size() > 0) {
@@ -272,7 +272,7 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 	 * Creates the script project and sets the configured build path and output
 	 * location. If the project already exists only build paths are updated.
 	 */
-	public static void flush(List buildpathEntries, IScriptProject javaProject, IProgressMonitor monitor)
+	public static void flush(List<BPListElement> buildpathEntries, IScriptProject javaProject, IProgressMonitor monitor)
 			throws CoreException, OperationCanceledException {
 		if (monitor == null) {
 			monitor = new NullProgressMonitor();
@@ -287,14 +287,14 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 				throw new OperationCanceledException();
 			}
 
-			List<IBuildpathEntry> newBuildPathEntries = new ArrayList<IBuildpathEntry>();
-			List<IBuildpathEntry> newIncludePathEntries = new ArrayList<IBuildpathEntry>();
+			List<IBuildpathEntry> newBuildPathEntries = new ArrayList<>();
+			List<IBuildpathEntry> newIncludePathEntries = new ArrayList<>();
 
 			// go over the dialog entries. collect all of the source entries for
 			// the include path array
 			// and the rest for the build path array
-			for (Iterator<IBuildpathEntry> iter = buildpathEntries.iterator(); iter.hasNext();) {
-				BPListElement entry = (BPListElement) iter.next();
+			for (Iterator<BPListElement> iter = buildpathEntries.iterator(); iter.hasNext();) {
+				BPListElement entry = iter.next();
 				newIncludePathEntries.add(entry.getBuildpathEntry());
 				if (entry.getEntryKind() != IBuildpathEntry.BPE_SOURCE) {
 					newBuildPathEntries.add(entry.getBuildpathEntry());
@@ -345,7 +345,7 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 	public void init(IScriptProject jproject, IBuildpathEntry[] buildpathEntries) {
 		fCurrScriptProject = jproject;
 
-		List<BPListElement> newBuildpath = new ArrayList<BPListElement>();
+		List<BPListElement> newBuildpath = new ArrayList<>();
 		IProject project = fCurrScriptProject.getProject();
 
 		IncludePath[] includePathEntries = IncludePathManager.getInstance().getIncludePaths(project);

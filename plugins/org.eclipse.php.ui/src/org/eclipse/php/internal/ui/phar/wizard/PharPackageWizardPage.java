@@ -195,7 +195,7 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 					Digest.DIGEST_MAP.size(), 1));
 			signatureButtons = new ArrayList<>();
 			for (Iterator<String> iterator = Digest.DIGEST_MAP.keySet().iterator(); iterator.hasNext();) {
-				final String type = (String) iterator.next();
+				final String type = iterator.next();
 				Button signatureButton = new Button(signatureTypeGroup, SWT.RADIO | SWT.LEFT);
 				signatureButton.setText(type);
 
@@ -993,18 +993,18 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 			setErrorMessage(null);
 	}
 
-	static boolean contains(java.util.List resources, IFile file) {
+	static boolean contains(java.util.List<?> resources, IFile file) {
 		if (resources == null || file == null)
 			return false;
 
 		if (resources.contains(file))
 			return true;
 
-		Iterator iter = resources.iterator();
+		Iterator<?> iter = resources.iterator();
 		while (iter.hasNext()) {
 			IResource resource = (IResource) iter.next();
 			if (resource != null && resource.getType() != IResource.FILE) {
-				java.util.List children = null;
+				java.util.List<IResource> children = null;
 				try {
 					children = Arrays.asList(((IContainer) resource).members());
 				} catch (CoreException ex) {
@@ -1026,10 +1026,10 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 	 *            elements for which to retrieve the resources from
 	 * @return a List with the selected resources
 	 */
-	public static java.util.List asResources(Object[] elements) {
+	public static java.util.List<?> asResources(Object[] elements) {
 		if (elements == null)
 			return null;
-		java.util.List selectedResources = new ArrayList(elements.length);
+		List<Object> selectedResources = new ArrayList<>(elements.length);
 		for (int i = 0; i < elements.length; i++) {
 			Object element = elements[i];
 			if (element instanceof IModelElement) {
@@ -1086,7 +1086,7 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 	}
 
 	@Override
-	protected Iterator getSelectedResourcesIterator() {
+	protected Iterator<?> getSelectedResourcesIterator() {
 		return fInputGroup.getAllCheckedListItems();
 	}
 
@@ -1095,7 +1095,7 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 	 */
 	@Override
 	protected void setupBasedOnInitialSelections() {
-		Iterator iterator = fInitialSelection.iterator();
+		Iterator<?> iterator = fInitialSelection.iterator();
 		while (iterator.hasNext()) {
 			Object selectedElement = iterator.next();
 
@@ -1143,17 +1143,16 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 			updatePageCompletion();
 	}
 
-	@SuppressWarnings("unchecked")
 	Object[] getSelectedElementsWithoutContainedChildren() {
 		// Iterator itemIterator = getSelectedResourcesIterator();
 
-		Set elements = new HashSet();
-		for (Iterator iterator = getSelectedResourcesIterator(); iterator.hasNext();) {
+		Set<Object> elements = new HashSet<>();
+		for (Iterator<?> iterator = getSelectedResourcesIterator(); iterator.hasNext();) {
 			elements.add(iterator.next());
 		}
-		Map map = new HashMap();
-		for (Iterator iterator = elements.iterator(); iterator.hasNext();) {
-			Object element = (Object) iterator.next();
+		Map<Object, Object> map = new HashMap<>();
+		for (Iterator<?> iterator = elements.iterator(); iterator.hasNext();) {
+			Object element = iterator.next();
 			Object resource = element;
 			if (element instanceof IModelElement) {
 				try {
@@ -1165,8 +1164,8 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 			map.put(resource, element);
 		}
 
-		for (Iterator iterator = map.entrySet().iterator(); iterator.hasNext();) {
-			Entry entry = (Entry) iterator.next();
+		for (Iterator<?> iterator = map.entrySet().iterator(); iterator.hasNext();) {
+			Entry<?, ?> entry = (Entry<?, ?>) iterator.next();
 			if (entry.getKey() instanceof IResource) {
 				if (isDescendent(map, (IResource) entry.getKey())) {
 					elements.remove(entry.getValue());
@@ -1186,7 +1185,7 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 	 * @param child
 	 *            org.eclipse.core.resources.IResource
 	 */
-	protected boolean isDescendent(Map resources, IResource child) {
+	protected boolean isDescendent(Map<Object, Object> resources, IResource child) {
 		if (child.getType() == IResource.PROJECT) {
 			return false;
 		}

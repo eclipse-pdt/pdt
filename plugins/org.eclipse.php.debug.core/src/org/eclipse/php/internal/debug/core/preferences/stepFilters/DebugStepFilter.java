@@ -95,6 +95,7 @@ public class DebugStepFilter {
 		return fType;
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (o instanceof DebugStepFilter) {
 			DebugStepFilter other = (DebugStepFilter) o;
@@ -106,6 +107,7 @@ public class DebugStepFilter {
 		return false;
 	}
 
+	@Override
 	public int hashCode() {
 		return getPath().hashCode() + getType();
 	}

@@ -147,7 +147,7 @@ public class FileUtils {
 
 		// get the current buildpath entries, in order to remove the given
 		// entries
-		List<IBuildpathEntry> newRawBuildpath = new ArrayList<IBuildpathEntry>();
+		List<IBuildpathEntry> newRawBuildpath = new ArrayList<>();
 
 		for (IBuildpathEntry entry : entries) {
 			if (!(entry.getPath().equals(buidlEntryPath))) {

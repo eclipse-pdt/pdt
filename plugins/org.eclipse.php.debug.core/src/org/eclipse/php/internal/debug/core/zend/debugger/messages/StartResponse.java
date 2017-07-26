@@ -27,15 +27,18 @@ import org.eclipse.php.debug.core.debugger.messages.IDebugResponseMessage;
  */
 public class StartResponse extends DebugMessageResponseImpl implements IDebugResponseMessage {
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		setStatus(in.readInt());
 	}
 
+	@Override
 	public int getType() {
 		return 1001;
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());

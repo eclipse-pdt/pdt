@@ -47,15 +47,18 @@ public class DebuggerErrorNotification extends DebugMessageNotificationImpl impl
 		this.errorText = errorText;
 	}
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setErrorLevel(in.readInt());
 		setErrorText(CommunicationUtilities.readString(in));
 	}
 
+	@Override
 	public int getType() {
 		return 2007;
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getErrorLevel());

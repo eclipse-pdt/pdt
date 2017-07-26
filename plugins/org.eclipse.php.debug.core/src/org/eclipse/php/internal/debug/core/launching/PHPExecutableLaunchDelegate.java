@@ -51,6 +51,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 	/**
 	 * Override the extended getLaunch to create a PHPLaunch.
 	 */
+	@Override
 	public ILaunch getLaunch(ILaunchConfiguration configuration, String mode) throws CoreException {
 		return new PHPLaunch(configuration, mode, null);
 	}
@@ -93,6 +94,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		}
 	}
 
+	@Override
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
 			throws CoreException {
 		// Check for previous launches.
@@ -266,7 +268,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			IProcess process = null;
 
 			// add process type to process attributes
-			Map<String, String> processAttributes = new HashMap<String, String>();
+			Map<String, String> processAttributes = new HashMap<>();
 			String programName = phpExe.lastSegment();
 			String extension = phpExe.getFileExtension();
 
@@ -338,6 +340,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 	private void displayErrorMessage(final String message) {
 		final Display display = Display.getDefault();
 		display.asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				MessageDialog.openError(display.getActiveShell(), PHPDebugCoreMessages.Debugger_LaunchError_title,
 						message);
@@ -345,6 +348,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		});
 	}
 
+	@Override
 	protected boolean saveBeforeLaunch(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor)
 			throws CoreException {
 		String filePath = configuration.getAttribute(IPHPDebugConstants.ATTR_FILE, ""); //$NON-NLS-1$

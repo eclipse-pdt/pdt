@@ -63,7 +63,7 @@ public class BuildPathManager {
 		// project prefs
 		IEclipsePreferences prefs = ComposerPlugin.getDefault().getProjectPreferences(project);
 		IPath[] inclusions;
-		List<IPath> exs = new ArrayList<IPath>();
+		List<IPath> exs = new ArrayList<>();
 
 		try {
 			String encoded = prefs.get(ComposerPreferenceConstants.BUILDPATH_INCLUDES_EXCLUDES, ""); //$NON-NLS-1$
@@ -93,7 +93,7 @@ public class BuildPathManager {
 		exclusions = exs.toArray(new IPath[] {});
 
 		// clean build path
-		List<IBuildpathEntry> buildPath = new ArrayList<IBuildpathEntry>(
+		List<IBuildpathEntry> buildPath = new ArrayList<>(
 				Arrays.asList(scriptProject.getRawBuildpath()));
 
 		for (Iterator<IBuildpathEntry> it = buildPath.iterator(); it.hasNext();) {
@@ -169,7 +169,7 @@ public class BuildPathManager {
 
 		// add path as exclusion to found parent
 		if (parent != null) {
-			List<IPath> exclusions = new ArrayList<IPath>();
+			List<IPath> exclusions = new ArrayList<>();
 			exclusions.addAll(Arrays.asList(parent.getExclusionPatterns()));
 
 			IPath diff = path.removeFirstSegments(path.matchingFirstSegments(parent.getPath()));
@@ -202,7 +202,7 @@ public class BuildPathManager {
 
 			// add exclusions
 		} else {
-			List<IPath> ex = new ArrayList<IPath>();
+			List<IPath> ex = new ArrayList<>();
 
 			// find the applying exclusion patterns for the new entry
 			for (IPath exclusion : exclusions) {

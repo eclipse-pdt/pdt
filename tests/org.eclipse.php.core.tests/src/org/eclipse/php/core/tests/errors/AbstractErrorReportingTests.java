@@ -35,8 +35,8 @@ abstract public class AbstractErrorReportingTests {
 	protected IProject project;
 	protected int count;
 	protected final String[] fileNames;
-	protected Map<String, IFile> files = new HashMap<String, IFile>();
-	protected Map<String, PdttFile> pdttFiles = new HashMap<String, PdttFile>();
+	protected Map<String, IFile> files = new HashMap<>();
+	protected Map<String, PdttFile> pdttFiles = new HashMap<>();
 
 	public AbstractErrorReportingTests(String[] fileNames) {
 		this.fileNames = fileNames;

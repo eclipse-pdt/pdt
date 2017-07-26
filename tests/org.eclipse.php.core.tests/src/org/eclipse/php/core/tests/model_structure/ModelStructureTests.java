@@ -48,7 +48,7 @@ public class ModelStructureTests {
 	public static TestWatcher watcher = new TestSuiteWatcher();
 
 	@Parameters
-	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<>();
 
 	static {
 		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/model_structure/php53" });
@@ -120,6 +120,7 @@ public class ModelStructureTests {
 			this.stream = stream;
 		}
 
+		@Override
 		public boolean visit(IModelElement element) {
 			try {
 				String tabs = getTabs(element);

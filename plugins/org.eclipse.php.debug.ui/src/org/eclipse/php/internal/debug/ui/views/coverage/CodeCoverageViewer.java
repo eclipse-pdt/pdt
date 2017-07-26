@@ -31,6 +31,7 @@ public class CodeCoverageViewer extends TreeViewer {
 		super(parent, SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL);
 		createColumns();
 		getTree().addDisposeListener(new DisposeListener() {
+			@Override
 			public void widgetDisposed(DisposeEvent e) {
 				dispose();
 			}

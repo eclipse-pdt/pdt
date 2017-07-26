@@ -23,7 +23,7 @@ import org.eclipse.text.edits.TextEdit;
 class OrganizeIncludesChange extends TextFileChange {
 	private OrganizeIncludesProcessorDelegate processorDelegate;
 
-	private Map<String, TextEditChangeGroup> editGroups = new LinkedHashMap<String, TextEditChangeGroup>();
+	private Map<String, TextEditChangeGroup> editGroups = new LinkedHashMap<>();
 
 	private int includeInsertionOffset;
 

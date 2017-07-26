@@ -40,18 +40,19 @@ import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnType
 
 public class MethodReturnTypeEvaluator extends AbstractMethodReturnTypeEvaluator {
 
-	private final List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
-	private final List<IEvaluatedType> yieldEvaluated = new LinkedList<IEvaluatedType>();
-	private final List<IGoal> yieldGoals = new LinkedList<IGoal>();
+	private final List<IEvaluatedType> evaluated = new LinkedList<>();
+	private final List<IEvaluatedType> yieldEvaluated = new LinkedList<>();
+	private final List<IGoal> yieldGoals = new LinkedList<>();
 
 	public MethodReturnTypeEvaluator(IGoal goal) {
 		super(goal);
 	}
 
+	@Override
 	public IGoal[] init() {
 		MethodElementReturnTypeGoal goal = (MethodElementReturnTypeGoal) getGoal();
 
-		final List<IGoal> subGoals = new LinkedList<IGoal>();
+		final List<IGoal> subGoals = new LinkedList<>();
 		MethodsAndTypes mat = getMethodsAndTypes();
 		for (int i = 0; i < mat.methods.length; i++) {
 			IMethod method = mat.methods[i];
@@ -90,6 +91,7 @@ public class MethodReturnTypeEvaluator extends AbstractMethodReturnTypeEvaluator
 					}
 				}
 				ASTVisitor visitor = new ASTVisitor() {
+					@Override
 					public boolean visitGeneral(ASTNode node) throws Exception {
 						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=464921
 						// do not evaluate content of inner lambda functions
@@ -136,6 +138,7 @@ public class MethodReturnTypeEvaluator extends AbstractMethodReturnTypeEvaluator
 		return subGoals.toArray(new IGoal[subGoals.size()]);
 	}
 
+	@Override
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		if (state != GoalState.RECURSIVE && result != null) {
 			if (!yieldGoals.contains(subgoal)) {
@@ -147,6 +150,7 @@ public class MethodReturnTypeEvaluator extends AbstractMethodReturnTypeEvaluator
 		return IGoal.NO_GOALS;
 	}
 
+	@Override
 	public Object produceResult() {
 		if (yieldEvaluated.size() > 0 || yieldGoals.size() > 0) {
 			GeneratorClassType generatorClassType = new GeneratorClassType();

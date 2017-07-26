@@ -31,6 +31,7 @@ class DefaultLanguageModelProvider implements ILanguageModelProvider {
 
 	private static final String LANGUAGE_LIBRARY_PATH = "$nl$/Resources/language/php"; //$NON-NLS-1$
 
+	@Override
 	public IPath getPath(IScriptProject project) {
 		try {
 			return new Path(getLanguageLibraryPath(project, ProjectOptions.getPHPVersion(project)));
@@ -40,6 +41,7 @@ class DefaultLanguageModelProvider implements ILanguageModelProvider {
 		}
 	}
 
+	@Override
 	public String getName() {
 		return Messages.DefaultLanguageModelProvider_1;
 	}
@@ -66,6 +68,7 @@ class DefaultLanguageModelProvider implements ILanguageModelProvider {
 		return LANGUAGE_LIBRARY_PATH + "71"; //$NON-NLS-1$
 	}
 
+	@Override
 	public Plugin getPlugin() {
 		return PHPCorePlugin.getDefault();
 	}

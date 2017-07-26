@@ -23,7 +23,6 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * Wizard fragment for server type selection page.
  */
-@SuppressWarnings("restriction")
 public class ServerTypeWizardFragment extends CompositeWizardFragment {
 
 	private ServerTypeCompositeFragment comp;
@@ -33,6 +32,7 @@ public class ServerTypeWizardFragment extends CompositeWizardFragment {
 	 * 
 	 * @see org.eclipse.wst.server.ui.task.WizardFragment#createComposite()
 	 */
+	@Override
 	public Composite createComposite(Composite parent, IWizardHandle wizard) {
 		comp = new ServerTypeCompositeFragment(parent, new WizardControlWrapper(wizard), false);
 		return comp;
@@ -43,6 +43,7 @@ public class ServerTypeWizardFragment extends CompositeWizardFragment {
 	 * 
 	 * @see org.eclipse.wst.server.ui.wizard.WizardFragment#enter()
 	 */
+	@Override
 	public void enter() {
 		if (comp != null) {
 			try {
@@ -62,6 +63,7 @@ public class ServerTypeWizardFragment extends CompositeWizardFragment {
 	 * 
 	 * @see org.eclipse.wst.server.ui.wizard.WizardFragment#exit()
 	 */
+	@Override
 	public void exit() {
 		if (comp != null) {
 			comp.performApply();
@@ -69,6 +71,7 @@ public class ServerTypeWizardFragment extends CompositeWizardFragment {
 		}
 	}
 
+	@Override
 	public Composite getComposite() {
 		return comp;
 	}
@@ -78,6 +81,7 @@ public class ServerTypeWizardFragment extends CompositeWizardFragment {
 	 * 
 	 * @see org.eclipse.wst.server.ui.wizard.WizardFragment#isComplete()
 	 */
+	@Override
 	public boolean isComplete() {
 		if (comp == null) {
 			return super.isComplete();
@@ -92,6 +96,7 @@ public class ServerTypeWizardFragment extends CompositeWizardFragment {
 	 * org.eclipse.php.internal.server.ui.wizard.WizardFragment#performFinish
 	 * (org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public boolean performFinish(IProgressMonitor monitor) throws CoreException {
 		boolean result = super.performFinish(monitor);
 		if (comp != null) {

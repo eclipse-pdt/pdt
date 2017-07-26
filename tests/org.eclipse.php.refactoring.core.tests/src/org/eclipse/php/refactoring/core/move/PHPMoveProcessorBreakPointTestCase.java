@@ -62,7 +62,7 @@ public class PHPMoveProcessorBreakPointTestCase {
 				IFolder folder = TestUtils.createFolder(project1, "src");
 				IFile file = TestUtils.createFile(folder, "RunBreakPoint.php", "<?php class TestRenameClass{}?>");
 				folder.getFile("RunBreakPoint.php");
-				Map<String, String> attributes = new HashMap<String, String>();
+				Map<String, Comparable<?>> attributes = new HashMap<>();
 				attributes.put(IMarker.LOCATION, file.getFullPath().toString());
 				attributes.put("org.eclipse.wst.sse.ui.extensions.breakpoint.path", file.getFullPath().toString());
 				new PHPConditionalBreakpoint(file, 1, -1, -1, attributes);

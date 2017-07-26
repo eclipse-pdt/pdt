@@ -86,7 +86,7 @@ public class FileNetworkUtility {
 	 */
 	public static ReferenceTree buildReferencingFilesTree(ISourceModule file, IProgressMonitor monitor) {
 
-		HashSet<ISourceModule> processedFiles = new HashSet<ISourceModule>();
+		HashSet<ISourceModule> processedFiles = new HashSet<>();
 		processedFiles.add(file);
 
 		Node root = new Node(file);
@@ -103,7 +103,7 @@ public class FileNetworkUtility {
 		if (file instanceof ExternalSourceModule) {
 			try {
 				IProjectFragment fileFragment = ((ExternalSourceModule) file).getProjectFragment();
-				List<IModelElement> scopeElements = new LinkedList<IModelElement>();
+				List<IModelElement> scopeElements = new LinkedList<>();
 				scopeElements.add(fileFragment);
 
 				IScriptProject[] scriptProjects = ModelManager.getModelManager().getModel().getScriptProjects();
@@ -123,7 +123,7 @@ public class FileNetworkUtility {
 
 		IScriptProject scriptProject = file.getScriptProject();
 		IProject[] referencingProjects = scriptProject.getProject().getReferencingProjects();
-		ArrayList<IScriptProject> scopeProjects = new ArrayList<IScriptProject>();
+		ArrayList<IScriptProject> scopeProjects = new ArrayList<>();
 		scopeProjects.add(scriptProject);
 		for (IProject referencingProject : referencingProjects) {
 			if (referencingProject.isAccessible()) {
@@ -131,7 +131,7 @@ public class FileNetworkUtility {
 			}
 		}
 		return SearchEngine.createSearchScope(
-				(IScriptProject[]) scopeProjects.toArray(new IScriptProject[scopeProjects.size()]),
+				scopeProjects.toArray(new IScriptProject[scopeProjects.size()]),
 				IDLTKSearchScope.SOURCES, PHPLanguageToolkit.getDefault());
 	}
 
@@ -221,7 +221,7 @@ public class FileNetworkUtility {
 	public static ReferenceTree buildReferencedFilesTree(ISourceModule file, Map<ISourceModule, Node> cachedTrees,
 			IProgressMonitor monitor) {
 
-		HashSet<ISourceModule> processedFiles = new HashSet<ISourceModule>();
+		HashSet<ISourceModule> processedFiles = new HashSet<>();
 		processedFiles.add(file);
 
 		Node root;
@@ -247,7 +247,7 @@ public class FileNetworkUtility {
 			return;
 		}
 
-		List<Node> nodesToBuild = new LinkedList<Node>();
+		List<Node> nodesToBuild = new LinkedList<>();
 		for (IField include : includes) {
 			String filePath = ((IncludeField) include).getFilePath();
 			ISourceModule testFile = findSourceModule(sourceModule, filePath);

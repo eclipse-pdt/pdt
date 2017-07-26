@@ -27,6 +27,7 @@ import org.eclipse.dltk.core.ISourceModule;
  */
 public class FunctionParameterVariableContext extends FunctionParameterContext {
 
+	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;

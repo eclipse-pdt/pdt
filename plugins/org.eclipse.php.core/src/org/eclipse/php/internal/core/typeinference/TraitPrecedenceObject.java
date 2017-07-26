@@ -17,6 +17,6 @@ import java.util.List;
 public class TraitPrecedenceObject {
 	public String traitName;
 	public String traitMethodName;
-	public List<String> insteadofTraitNameList = new ArrayList<String>();
+	public List<String> insteadofTraitNameList = new ArrayList<>();
 
 }

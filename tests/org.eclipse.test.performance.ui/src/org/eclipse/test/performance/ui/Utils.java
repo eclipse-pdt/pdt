@@ -124,7 +124,7 @@ public class Utils {
 	 * Copy all bundle files contained in the given path
 	 */
 	public static void copyBundleFiles(Bundle bundle, String path, String pattern, File output) {
-		Enumeration imageFiles = bundle.findEntries(path, pattern, false);
+		Enumeration<?> imageFiles = bundle.findEntries(path, pattern, false);
 		while (imageFiles.hasMoreElements()) {
 			URL url = (URL) imageFiles.nextElement();
 			try {
@@ -162,11 +162,12 @@ public class Utils {
 		return minIndex;
 	}
 
-	static class ColorCounter implements Comparable {
+	static class ColorCounter implements Comparable<Object> {
 		RGB rgb;
 
 		int count;
 
+		@Override
 		public int compareTo(Object o) {
 			return ((ColorCounter) o).count - this.count;
 		}
@@ -178,7 +179,7 @@ public class Utils {
 			return data;
 
 		// compute a histogram of color frequencies
-		HashMap freq = new HashMap();
+		HashMap<RGB, ColorCounter> freq = new HashMap<>();
 		int width = data.width;
 		int[] pixels = new int[width];
 		int[] maskPixels = new int[width];
@@ -186,7 +187,7 @@ public class Utils {
 			data.getPixels(0, y, width, pixels, 0);
 			for (int x = 0; x < width; ++x) {
 				RGB rgb = data.palette.getRGB(pixels[x]);
-				ColorCounter counter = (ColorCounter) freq.get(rgb);
+				ColorCounter counter = freq.get(rgb);
 				if (counter == null) {
 					counter = new ColorCounter();
 					counter.rgb = rgb;

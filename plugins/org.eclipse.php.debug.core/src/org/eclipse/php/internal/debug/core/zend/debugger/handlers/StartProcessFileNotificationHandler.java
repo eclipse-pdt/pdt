@@ -54,6 +54,7 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 		isFirstFileToDebug = true;
 	}
 
+	@Override
 	public void handle(IDebugMessage message, PHPDebugTarget debugTarget) {
 
 		// do everything we need in order to prepare for processing current file
@@ -148,7 +149,7 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 			return new IBreakpoint[0];
 		}
 		IBreakpoint[] breakpoints = breakpointManager.getBreakpoints(IPHPDebugConstants.ID_PHP_DEBUG_CORE);
-		List<IBreakpoint> matches = new LinkedList<IBreakpoint>();
+		List<IBreakpoint> matches = new LinkedList<>();
 		for (IBreakpoint bp : breakpoints) {
 			if (bp instanceof IPHPExceptionBreakpoint || PharPath.isPharPath(new Path(processFileLocation))) {
 				/*

@@ -31,8 +31,8 @@ public class PHPModuleDeclaration extends ModuleDeclaration {
 	private List<ASTError> errors;
 	private boolean hasErrors;
 	private List<VarComment> varComments;
-	private List<PHPDocBlock> phpDocBlocks = new LinkedList<PHPDocBlock>();
-	private List<Comment> commentList = new LinkedList<Comment>();
+	private List<PHPDocBlock> phpDocBlocks = new LinkedList<>();
+	private List<Comment> commentList = new LinkedList<>();
 
 	public PHPModuleDeclaration(int start, int end, List<ASTNode> statements, List<ASTError> errors,
 			List<VarComment> varComments) {
@@ -48,17 +48,19 @@ public class PHPModuleDeclaration extends ModuleDeclaration {
 	 * This method goes over the AST and builds a list of types and methods
 	 * declared in this file
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public void doRebuild() {
-		List statements = getStatements();
+		List<?> statements = getStatements();
 		if (statements != null) {
-			Iterator i = statements.iterator();
+			Iterator<?> i = statements.iterator();
 			while (i.hasNext()) {
 				final ASTNode node = (ASTNode) i.next();
 				try {
 					node.traverse(new ASTVisitor() {
-						private Stack<ASTNode> parentStack = new Stack<ASTNode>();
+						private Stack<ASTNode> parentStack = new Stack<>();
 
+						@Override
 						public boolean visit(MethodDeclaration s) throws Exception {
 							if (s != node
 									&& (parentStack.isEmpty() || !(parentStack.peek() instanceof TypeDeclaration))) {
@@ -67,6 +69,7 @@ public class PHPModuleDeclaration extends ModuleDeclaration {
 							return super.visit(s);
 						}
 
+						@Override
 						public boolean visit(TypeDeclaration s) throws Exception {
 							if (s instanceof NamespaceDeclaration && ((NamespaceDeclaration) s).isGlobal()) {
 								return super.visit(s);
@@ -76,6 +79,7 @@ public class PHPModuleDeclaration extends ModuleDeclaration {
 							return super.visit(s);
 						}
 
+						@Override
 						public boolean endvisit(TypeDeclaration s) throws Exception {
 							if (s instanceof NamespaceDeclaration && ((NamespaceDeclaration) s).isGlobal()) {
 								return super.endvisit(s);
@@ -100,9 +104,11 @@ public class PHPModuleDeclaration extends ModuleDeclaration {
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
+	@Override
 	public final void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}
@@ -151,13 +157,14 @@ public class PHPModuleDeclaration extends ModuleDeclaration {
 	}
 
 	private class ErrorSearcher extends ASTVisitor {
-		private List<ASTError> errors = new LinkedList<ASTError>();
+		private List<ASTError> errors = new LinkedList<>();
 
 		public boolean visit(ASTError error) throws Exception {
 			errors.add(error);
 			return false;
 		}
 
+		@Override
 		public boolean visit(Statement s) throws Exception {
 			if (s.getKind() == ASTNodeKinds.AST_ERROR) {
 				return visit((ASTError) s);

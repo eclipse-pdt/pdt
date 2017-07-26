@@ -173,7 +173,7 @@ public class ExtractFunctionRefactoring extends Refactoring {
 	private void initializeParameterInfos() {
 		IVariableBinding[] arguments = fAnalyzer.getArguments();
 		if (arguments != null) {
-			fParameterInfos = new ArrayList<ParameterInfo>(arguments.length);
+			fParameterInfos = new ArrayList<>(arguments.length);
 			for (int i = 0; i < arguments.length; i++) {
 				IVariableBinding argument = arguments[i];
 				if (argument == null)
@@ -364,12 +364,12 @@ public class ExtractFunctionRefactoring extends Refactoring {
 					// Work ground for now.
 					Statement node = statements.get(length - 1);
 					if (length >= 2 && (node instanceof InLineHtml)) {
-						container.insertBefore(function, (ASTNode) statements.get(length - 2), insertDesc);
+						container.insertBefore(function, statements.get(length - 2), insertDesc);
 						if (funcComment != null) {
 							container.insertBefore(funcComment, function, insertDesc);
 						}
 					} else if (length > 1 && node instanceof EmptyStatement) {
-						container.insertBefore(function, (ASTNode) statements.get(length - 1), insertDesc);
+						container.insertBefore(function, statements.get(length - 1), insertDesc);
 						if (funcComment != null) {
 							container.insertBefore(funcComment, function, insertDesc);
 						}
@@ -496,7 +496,7 @@ public class ExtractFunctionRefactoring extends Refactoring {
 	}
 
 	private ASTNode[] filterComments(ASTNode[] selectedNodes) {
-		ArrayList<ASTNode> nodes = new ArrayList<ASTNode>(selectedNodes.length);
+		ArrayList<ASTNode> nodes = new ArrayList<>(selectedNodes.length);
 		for (ASTNode node : selectedNodes) {
 			if (!(node instanceof Comment)) {
 				nodes.add(node);
@@ -516,13 +516,12 @@ public class ExtractFunctionRefactoring extends Refactoring {
 		return binding.getName();
 	}
 
-	@SuppressWarnings("unchecked")
 	private ASTNode[] createCallNodes(Object duplicate) {
-		List result = new ArrayList(2);
+		List<ASTNode> result = new ArrayList<>(2);
 
 		Expression invocation = null;
 
-		List arguments = null;
+		List<Expression> arguments = null;
 		if (isClassMethod()) {
 			if (isStaticMethod()) {
 				invocation = fAST.newStaticMethodInvocation();
@@ -549,7 +548,7 @@ public class ExtractFunctionRefactoring extends Refactoring {
 		}
 
 		for (int i = 0; i < fParameterInfos.size(); i++) {
-			ParameterInfo parameter = (ParameterInfo) fParameterInfos.get(i);
+			ParameterInfo parameter = fParameterInfos.get(i);
 			arguments.add(fAST.newScalar(parameter.getOldName()));
 		}
 
@@ -575,7 +574,7 @@ public class ExtractFunctionRefactoring extends Refactoring {
 			call = fAST.newExpressionStatement((Expression) call);
 		}
 		result.add(call);
-		return (ASTNode[]) result.toArray(new ASTNode[result.size()]);
+		return result.toArray(new ASTNode[result.size()]);
 	}
 
 	private String removeDollar(String name) {
@@ -593,7 +592,7 @@ public class ExtractFunctionRefactoring extends Refactoring {
 
 		List<FormalParameter> parameters = result.formalParameters();
 		for (int i = 0; i < fParameterInfos.size(); i++) {
-			ParameterInfo info = (ParameterInfo) fParameterInfos.get(i);
+			ParameterInfo info = fParameterInfos.get(i);
 			FormalParameter parameter = fAST.newFormalParameter();
 			parameter.setParameterName(fAST.newScalar(info.getNewName()));
 			parameters.add(parameter);

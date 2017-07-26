@@ -178,7 +178,7 @@ public class PHPManual {
 			if (path == null) {
 
 				String className = type.getElementName();
-				path = (String) getPHPEntityPathMap().get(className.toLowerCase());
+				path = getPHPEntityPathMap().get(className.toLowerCase());
 				if (path == null) {
 					path = buildPathForClass(type.getElementName());
 				}
@@ -213,12 +213,12 @@ public class PHPManual {
 			if (declaringType != null) {
 				String functionName = declaringType.getElementName() + "::" //$NON-NLS-1$
 						+ method.getElementName();
-				path = (String) getPHPEntityPathMap().get(functionName.toLowerCase());
+				path = getPHPEntityPathMap().get(functionName.toLowerCase());
 				if (path == null) {
 					path = buildPathForMethod(declaringType.getElementName(), method.getElementName());
 				}
 			} else {
-				path = (String) getPHPEntityPathMap().get(method.getElementName().toLowerCase());
+				path = getPHPEntityPathMap().get(method.getElementName().toLowerCase());
 				if (path == null) {
 					path = buildPathForMethod(null, method.getElementName());
 				}

@@ -213,7 +213,7 @@ public class PHPCorrectionProcessor
 			}
 
 			private String getQuickAssistBinding() {
-				final IBindingService bindingSvc = (IBindingService) PlatformUI.getWorkbench()
+				final IBindingService bindingSvc = PlatformUI.getWorkbench()
 						.getAdapter(IBindingService.class);
 				return bindingSvc.getBestActiveBindingFormattedFor(ITextEditorActionDefinitionIds.QUICK_ASSIST);
 			}
@@ -290,7 +290,7 @@ public class PHPCorrectionProcessor
 		}
 		MultiStatus resStatus = null;
 
-		IProblemLocation[] problemLocations = (IProblemLocation[]) problems
+		IProblemLocation[] problemLocations = problems
 				.toArray(new IProblemLocation[problems.size()]);
 		if (addQuickFixes) {
 			IStatus status = collectCorrections(context, problemLocations, proposals);
@@ -536,7 +536,7 @@ public class PHPCorrectionProcessor
 		if (res == null) {
 			return null;
 		}
-		return (IProblemLocation[]) res.toArray(new IProblemLocation[res.size()]);
+		return res.toArray(new IProblemLocation[res.size()]);
 	}
 
 	public static IStatus collectAssists(IInvocationContext context, IProblemLocation[] locations,

@@ -42,7 +42,7 @@ public class DBGpStringValue extends AbstractDBGpValue {
 
 		private String fName;
 		private IValue fValue;
-		private Set<Facet> fFacets = new HashSet<Facet>();
+		private Set<Facet> fFacets = new HashSet<>();
 
 		public InfoVariable(String name, IValue value, IDebugTarget debugTarget, Facet... facets) {
 			super(debugTarget);
@@ -57,36 +57,45 @@ public class DBGpStringValue extends AbstractDBGpValue {
 			this.fValue = value;
 		}
 
+		@Override
 		public String getName() throws DebugException {
 			return fName;
 		}
 
+		@Override
 		public String getReferenceTypeName() throws DebugException {
 			return fValue.getReferenceTypeName();
 		}
 
+		@Override
 		public IValue getValue() throws DebugException {
 			return fValue;
 		}
 
+		@Override
 		public boolean hasValueChanged() throws DebugException {
 			return false;
 		}
 
+		@Override
 		public void setValue(String expression) throws DebugException {
 		}
 
+		@Override
 		public void setValue(IValue value) throws DebugException {
 		}
 
+		@Override
 		public boolean supportsValueModification() {
 			return false;
 		}
 
+		@Override
 		public boolean verifyValue(String expression) throws DebugException {
 			return true;
 		}
 
+		@Override
 		public boolean verifyValue(IValue value) throws DebugException {
 			return true;
 		}
@@ -112,10 +121,12 @@ public class DBGpStringValue extends AbstractDBGpValue {
 			this.fValue = value;
 		}
 
+		@Override
 		public String getReferenceTypeName() throws DebugException {
 			return "byte"; //$NON-NLS-1$
 		}
 
+		@Override
 		public String getValueString() throws DebugException {
 			String valStr = Integer.toHexString(fValue & 0xFF);
 			if (valStr.length() == 1) {
@@ -124,14 +135,17 @@ public class DBGpStringValue extends AbstractDBGpValue {
 			return valStr;
 		}
 
+		@Override
 		public IVariable[] getVariables() throws DebugException {
 			return new IVariable[0];
 		}
 
+		@Override
 		public boolean hasVariables() throws DebugException {
 			return false;
 		}
 
+		@Override
 		public boolean isAllocated() throws DebugException {
 			return false;
 		}
@@ -148,10 +162,12 @@ public class DBGpStringValue extends AbstractDBGpValue {
 			this.fTotalLength = wantedValue;
 		}
 
+		@Override
 		public String getReferenceTypeName() throws DebugException {
 			return null;
 		}
 
+		@Override
 		public String getValueString() throws DebugException {
 			if (fCurrentLength == fTotalLength) {
 				return Integer.toString(fCurrentLength);
@@ -161,14 +177,17 @@ public class DBGpStringValue extends AbstractDBGpValue {
 			}
 		}
 
+		@Override
 		public IVariable[] getVariables() throws DebugException {
 			return new IVariable[0];
 		}
 
+		@Override
 		public boolean hasVariables() throws DebugException {
 			return false;
 		}
 
+		@Override
 		public boolean isAllocated() throws DebugException {
 			return false;
 		}
@@ -303,6 +322,7 @@ public class DBGpStringValue extends AbstractDBGpValue {
 	 * @see org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#setValue(java.lang.
 	 * String )
 	 */
+	@Override
 	protected void setValue(String value) {
 		fStringInfo = null;
 		if (value != null) {
@@ -328,6 +348,7 @@ public class DBGpStringValue extends AbstractDBGpValue {
 	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
 	 * verifyValue(java.lang.String)
 	 */
+	@Override
 	protected boolean verifyValue(String expression) {
 		// any string is ok
 		return true;

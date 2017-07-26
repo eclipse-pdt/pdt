@@ -26,6 +26,7 @@ public class WatchExpressionFactoryAdapter implements IWatchExpressionFactoryAda
 
 	private final String STATIC_MEMBER_PATTERN = "{0}::${1}"; //$NON-NLS-1$
 
+	@Override
 	public String createWatchExpression(IVariable variable) throws CoreException {
 		if (variable instanceof PHPVariable) {
 			PHPVariable phpVariable = (PHPVariable) variable;

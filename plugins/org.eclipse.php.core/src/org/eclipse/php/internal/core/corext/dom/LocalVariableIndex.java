@@ -24,7 +24,7 @@ public class LocalVariableIndex extends AbstractVisitor {
 	// in case we are in the program scope
 	// we don't want to descend into function/class/interface scope
 	private static boolean isProgramScope = false;
-	private final Set<String> variablesSet = new HashSet<String>();
+	private final Set<String> variablesSet = new HashSet<>();
 
 	/**
 	 * Computes the maximum number of local variable declarations in the given
@@ -43,10 +43,10 @@ public class LocalVariableIndex extends AbstractVisitor {
 			return internalPerform(((MethodDeclaration) node).getFunction());
 		case ASTNode.FUNCTION_DECLARATION:
 			isProgramScope = false;
-			return internalPerform((FunctionDeclaration) node);
+			return internalPerform(node);
 		case ASTNode.PROGRAM:
 			isProgramScope = true;
-			return internalPerform((Program) node);
+			return internalPerform(node);
 		default:
 			Assert.isTrue(false);
 		}
@@ -63,6 +63,7 @@ public class LocalVariableIndex extends AbstractVisitor {
 	 * Insert to the variables Name set each variable that is first encountered
 	 * in the flow
 	 */
+	@Override
 	public boolean visit(Variable variable) {
 		Expression name = variable.getName();
 		if ((variable.isDollared() || ASTNodes.isQuotedDollaredCurlied(variable))
@@ -78,18 +79,22 @@ public class LocalVariableIndex extends AbstractVisitor {
 
 	}
 
+	@Override
 	public boolean visit(FunctionDeclaration function) {
 		return !isProgramScope;
 	}
 
+	@Override
 	public boolean visit(ClassDeclaration classDeclaration) {
 		return !isProgramScope;
 	}
 
+	@Override
 	public boolean visit(TraitDeclaration classDeclaration) {
 		return !isProgramScope;
 	}
 
+	@Override
 	public boolean visit(InterfaceDeclaration interfaceDeclaration) {
 		return !isProgramScope;
 	}

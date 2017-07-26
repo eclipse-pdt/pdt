@@ -44,7 +44,7 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor imple
 	private static final String REFACTORING_ACTION_INTERNAL_ERROR = PHPRefactoringCoreMessages
 			.getString("RenameProcessorBase.internalerror"); //$NON-NLS-1$
 	private static final String ID_RENAME_FOLDER = "php.refactoring.ui.rename.folder"; //$NON-NLS-1$
-	private Map<String, String> attributes = new HashMap<String, String>();
+	private Map<String, String> attributes = new HashMap<>();
 	/**
 	 * holds wether or not we want to change also the inlined text
 	 */
@@ -158,7 +158,7 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor imple
 
 		oldBuildEntries = Arrays.asList(projrct.readRawBuildpath());
 
-		newBuildEntries = new ArrayList<IBuildpathEntry>();
+		newBuildEntries = new ArrayList<>();
 
 		newBuildEntries.addAll(oldBuildEntries);
 
@@ -189,9 +189,9 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor imple
 
 		}
 
-		oldIncludePath = new ArrayList<IBuildpathEntry>();
+		oldIncludePath = new ArrayList<>();
 
-		newIncludePathEntries = new ArrayList<IBuildpathEntry>();
+		newIncludePathEntries = new ArrayList<>();
 		List<IncludePath> includePathEntries = Arrays.asList(IncludePathManager.getInstance().getIncludePaths(project));
 
 		for (IncludePath entry : includePathEntries) {
@@ -203,7 +203,7 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor imple
 
 				IBuildpathEntry oldEntry = RefactoringUtility.createNewBuildpathEntry(IBuildpathEntry.BPE_SOURCE,
 						entryPath);
-				oldIncludePath.add((IBuildpathEntry) oldEntry);
+				oldIncludePath.add(oldEntry);
 
 				if (filePath.isPrefixOf(entryPath) || entryPath.equals(filePath)) {
 					int mattchedPath = entryPath.matchingFirstSegments(filePath);
@@ -293,6 +293,7 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor imple
 	 * @see org.eclipse.php.refactoring.core.rename.AbstractRenameProcessor#
 	 * checkInitialConditions(org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public RefactoringStatus checkInitialConditions(IProgressMonitor pm) throws OperationCanceledException {
 		RefactoringStatus status = new RefactoringStatus();
 
@@ -303,13 +304,13 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor imple
 		try {
 			boolean hasExternalDependencies = false;
 
-			participantFiles = new HashMap<IFile, Program>();
+			participantFiles = new HashMap<>();
 
 			if (resource instanceof IContainer) {
 
 				IContainer container = (IContainer) resource;
 
-				Set<IFile> phpFilesSet = new HashSet<IFile>();
+				Set<IFile> phpFilesSet = new HashSet<>();
 				MoveUtils.getAllPHPFiles(new IResource[] { container }, phpFilesSet);
 				for (IFile file : phpFilesSet) {
 					ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(file);
@@ -368,6 +369,7 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor imple
 	 * checkFinalConditions(org.eclipse.core.runtime.IProgressMonitor,
 	 * org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext)
 	 */
+	@Override
 	public RefactoringStatus checkFinalConditions(IProgressMonitor pm, CheckConditionsContext context)
 			throws OperationCanceledException {
 		RefactoringStatus status = new RefactoringStatus();
@@ -435,22 +437,27 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor imple
 		return resource.getName();
 	}
 
+	@Override
 	public void setUpdateRefernces(boolean update) {
 		isUpdateReferences = update;
 	}
 
+	@Override
 	public boolean canEnableTextUpdating() {
 		return false;
 	}
 
+	@Override
 	public String getCurrentElementQualifier() {
 		return resource.getName();
 	}
 
+	@Override
 	public boolean getUpdateTextualMatches() {
 		return isUpdateTextualMatches;
 	}
 
+	@Override
 	public void setUpdateTextualMatches(boolean update) {
 		this.isUpdateTextualMatches = update;
 	}
@@ -467,6 +474,7 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor imple
 	 * org.eclipse.php.refactoring.core.rename.IReferenceUpdating#getAttribute(
 	 * java.lang.String)
 	 */
+	@Override
 	public String getAttribute(String attribute) {
 		return attributes.get(attribute);
 	}
@@ -478,6 +486,7 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor imple
 	 * org.eclipse.php.refactoring.core.rename.IReferenceUpdating#setAttribute(
 	 * java.lang.String, java.lang.String)
 	 */
+	@Override
 	public void setAttribute(String attribute, String value) {
 		attributes.put(attribute, value);
 	}

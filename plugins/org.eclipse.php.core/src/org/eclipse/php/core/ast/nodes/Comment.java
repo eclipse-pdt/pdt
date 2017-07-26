@@ -50,7 +50,7 @@ public class Comment extends ASTNode {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> list = new ArrayList<StructuralPropertyDescriptor>(1);
+		List<StructuralPropertyDescriptor> list = new ArrayList<>(1);
 		list.add(COMMENT_TYPE_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(list);
 	}
@@ -65,6 +65,7 @@ public class Comment extends ASTNode {
 		super(ast);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -73,12 +74,15 @@ public class Comment extends ASTNode {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 	}
 
@@ -95,12 +99,14 @@ public class Comment extends ASTNode {
 		}
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<Comment"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" commentType='").append(getCommentType(commentType)).append("'/>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.COMMENT;
 	}
@@ -112,6 +118,7 @@ public class Comment extends ASTNode {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
@@ -131,12 +138,13 @@ public class Comment extends ASTNode {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
+	@Override
 	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
 		if (property == COMMENT_TYPE_PROPERTY) {
 			if (get) {
 				return getCommentType();
 			} else {
-				setCommentType((Integer) value);
+				setCommentType(value);
 				return 0;
 			}
 		}

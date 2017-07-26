@@ -41,6 +41,7 @@ public class RenameLocalVariable extends AbstractRename {
 		this.searchTextual = searchTextual;
 	}
 
+	@Override
 	public boolean visit(FunctionDeclaration function) {
 		boolean result = super.visit(function);
 		// Searching for matching text at the program level.
@@ -73,6 +74,7 @@ public class RenameLocalVariable extends AbstractRename {
 	 * org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.
 	 * core.ast.nodes.Variable)
 	 */
+	@Override
 	public boolean visit(Variable variable) {
 		if (isGlobalVariable(variable, true)) {
 			addChange((Identifier) variable.getName());
@@ -96,11 +98,13 @@ public class RenameLocalVariable extends AbstractRename {
 		return false;
 	}
 
+	@Override
 	public boolean visit(IfStatement ifStatement) {
 		beforeIfStatement = isGlobalScope;
 		return true;
 	}
 
+	@Override
 	public void endVisit(IfStatement ifStatement) {
 		boolean afterIfStatement = isGlobalScope; // then at the end of the if
 		// statement
@@ -112,6 +116,7 @@ public class RenameLocalVariable extends AbstractRename {
 		}
 	}
 
+	@Override
 	public boolean visit(GlobalStatement globalStatement) {
 		final List<Variable> variables = globalStatement.variables();
 		for (Variable variable : variables) {
@@ -123,6 +128,7 @@ public class RenameLocalVariable extends AbstractRename {
 		return true;
 	}
 
+	@Override
 	public String getRenameDescription() {
 		return RenameLocalVariable.RENAME_LOCAL_VARIABLE;
 	}

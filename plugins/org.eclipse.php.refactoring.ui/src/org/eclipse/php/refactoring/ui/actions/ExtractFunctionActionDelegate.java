@@ -31,6 +31,7 @@ public class ExtractFunctionActionDelegate implements IEditorActionDelegate, IWo
 	private IEditorPart targetEditor;
 	private Shell shell;
 
+	@Override
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		if (targetEditor == null)
 			return;
@@ -42,6 +43,7 @@ public class ExtractFunctionActionDelegate implements IEditorActionDelegate, IWo
 
 	}
 
+	@Override
 	public void run(IAction action) {
 		if (targetEditor == null) {
 			targetEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
@@ -79,14 +81,17 @@ public class ExtractFunctionActionDelegate implements IEditorActionDelegate, IWo
 		}
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 
 	}
 
+	@Override
 	public void dispose() {
 
 	}
 
+	@Override
 	public void init(IWorkbenchWindow window) {
 
 	}

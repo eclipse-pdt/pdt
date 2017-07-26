@@ -27,24 +27,29 @@ public class CommentsProperty extends ASTAttribute {
 		fRoot= root;
 	}
 
+	@Override
 	public Object getParent() {
 		return fRoot;
 	}
 
+	@Override
 	public Object[] getChildren() {
-		List commentList= fRoot.comments();
+		List<?> commentList= fRoot.comments();
 		return (commentList == null ? EMPTY : commentList.toArray());
 	}
 
+	@Override
 	public String getLabel() {
-		List commentList= fRoot.comments();
+		List<?> commentList= fRoot.comments();
 		return "> comments (" +  (commentList == null ? 0 : commentList.size()) + ")";  //$NON-NLS-1$//$NON-NLS-2$
 	}
 
+	@Override
 	public Image getImage() {
 		return null;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -54,6 +59,7 @@ public class CommentsProperty extends ASTAttribute {
 		return true;
 	}
 	
+	@Override
 	public int hashCode() {
 		return 17;
 	}

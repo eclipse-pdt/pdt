@@ -49,6 +49,7 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		ICompletionContext context = getContext();
 		if (!(context instanceof MethodNameContext)) {
@@ -90,7 +91,7 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 		PHPVersion phpVersion = concreteContext.getPHPVersion();
 
 		// Add magic methods:
-		Set<String> functions = new TreeSet<String>();
+		Set<String> functions = new TreeSet<>();
 		functions.addAll(Arrays.asList(PHPMagicMethods.getMethods(phpVersion)));
 
 		// Add constructors:

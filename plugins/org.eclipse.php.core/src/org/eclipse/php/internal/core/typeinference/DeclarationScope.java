@@ -28,9 +28,9 @@ import org.eclipse.php.core.compiler.ast.nodes.*;
  */
 public class DeclarationScope {
 
-	private Map<String, LinkedList<Declaration>> decls = new HashMap<String, LinkedList<Declaration>>();
+	private Map<String, LinkedList<Declaration>> decls = new HashMap<>();
 	private IContext context;
-	private Stack<Statement> innerBlocks = new Stack<Statement>();
+	private Stack<Statement> innerBlocks = new Stack<>();
 
 	public DeclarationScope(IContext context) {
 		this.context = context;
@@ -84,7 +84,7 @@ public class DeclarationScope {
 	 * @param varName
 	 */
 	public Declaration[] getDeclarations(String varName) {
-		List<Declaration> result = new LinkedList<Declaration>();
+		List<Declaration> result = new LinkedList<>();
 		LinkedList<Declaration> varDecls = decls.get(varName);
 		if (varDecls != null) {
 			for (Declaration decl : varDecls) {
@@ -93,7 +93,7 @@ public class DeclarationScope {
 				}
 			}
 		}
-		return (Declaration[]) result.toArray(new Declaration[result.size()]);
+		return result.toArray(new Declaration[result.size()]);
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class DeclarationScope {
 	public void addDeclaration(String varName, ASTNode declNode) {
 		LinkedList<Declaration> varDecls = decls.get(varName);
 		if (varDecls == null) {
-			varDecls = new LinkedList<Declaration>();
+			varDecls = new LinkedList<>();
 			decls.put(varName, varDecls);
 		}
 
@@ -203,6 +203,7 @@ public class DeclarationScope {
 		return null;
 	}
 
+	@Override
 	public String toString() {
 		StringBuilder buf = new StringBuilder("Variable Declarations (") //$NON-NLS-1$
 				.append(context).append("): \n\n"); //$NON-NLS-1$

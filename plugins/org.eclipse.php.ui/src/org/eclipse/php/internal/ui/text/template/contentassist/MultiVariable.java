@@ -31,7 +31,7 @@ import org.eclipse.jface.text.templates.TemplateVariableType;
 public class MultiVariable extends TemplateVariable {
 	private static final Object DEFAULT_KEY = new Object();
 
-	private final Map fValueMap = new HashMap(); // <Object, Object[]>
+	private final Map<Object, Object[]> fValueMap = new HashMap<>(); // <Object, Object[]>
 	/** The master key defining the active set. */
 	private Object fKey;
 	/** The currently active object. */
@@ -134,10 +134,10 @@ public class MultiVariable extends TemplateVariable {
 	 *         <code>null</code> if the set is not defined.
 	 */
 	public Object[] getChoices(Object key) {
-		return (Object[]) fValueMap.get(key);
+		return fValueMap.get(key);
 	}
 
 	public Object[][] getAllChoices() {
-		return (Object[][]) fValueMap.values().toArray(new Object[fValueMap.size()][]);
+		return fValueMap.values().toArray(new Object[fValueMap.size()][]);
 	}
 }

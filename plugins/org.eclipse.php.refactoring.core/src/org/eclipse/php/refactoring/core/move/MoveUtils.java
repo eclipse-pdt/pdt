@@ -289,7 +289,7 @@ public class MoveUtils {
 			IProject srcProject, IContainer destination) {
 		RefactoringStatus status = new RefactoringStatus();
 		// // collecting included files from source network
-		BucketMap<IFile, IFile> errors = new BucketMap<IFile, IFile>();
+		BucketMap<IFile, IFile> errors = new BucketMap<>();
 		for (IFile file : files) {
 			Collection<Node> allIncludedNodes = getReferencedFiles(file);
 			if (allIncludedNodes == null) {
@@ -317,7 +317,7 @@ public class MoveUtils {
 		}
 		//
 		// collecting including files from source network
-		errors = new BucketMap<IFile, IFile>();
+		errors = new BucketMap<>();
 
 		for (IFile file : files) {
 			Collection<Node> allIncludingNodes = getReferencingFiles(file);

@@ -59,6 +59,7 @@ public class ReadyNotification extends DebugMessageNotificationImpl implements I
 		return lineNumber;
 	}
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setFileName(CommunicationUtilities.readString(in));
 		setLineNumber(in.readInt());
@@ -66,10 +67,12 @@ public class ReadyNotification extends DebugMessageNotificationImpl implements I
 						// now.
 	}
 
+	@Override
 	public int getType() {
 		return 2003;
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		CommunicationUtilities.writeString(out, getFileName());

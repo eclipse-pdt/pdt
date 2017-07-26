@@ -283,7 +283,7 @@ public class QuickAssistLightBulbUpdater {
 			// ConcurrentModificationExceptions
 			Iterator<Annotation> iter = model.getAnnotationIterator();
 			while (iter.hasNext()) {
-				Annotation annot = (Annotation) iter.next();
+				Annotation annot = iter.next();
 				if (PHPCorrectionProcessor.isQuickFixableType(annot)) {
 					// may throw an IndexOutOfBoundsException upon concurrent
 					// annotation model changes

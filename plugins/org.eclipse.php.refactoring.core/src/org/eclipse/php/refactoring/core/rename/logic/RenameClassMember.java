@@ -118,6 +118,7 @@ public class RenameClassMember extends AbstractRename {
 	/**
 	 * context + Rename foo on: ... public foo() { }; ...
 	 */
+	@Override
 	public boolean visit(MethodDeclaration methodDeclaration) {
 		if (isChangeMethod()) {
 			try {
@@ -201,7 +202,7 @@ public class RenameClassMember extends AbstractRename {
 			for (int j = 0; j < variableNames.size(); j++) {
 				// safe cast to identifier
 				assert variableNames.get(j) instanceof Identifier;
-				final Identifier variable = (Identifier) variableNames.get(j);
+				final Identifier variable = variableNames.get(j);
 				handleIdentifier(variable);
 			}
 		}
@@ -243,7 +244,7 @@ public class RenameClassMember extends AbstractRename {
 							final Identifier variable = (Identifier) variableNames[j].getName();
 							handleIdentifier(variable);
 						}
-					} else if (traitInSuperEqual(declClass, (Identifier) variableNames[j].getName())) {
+					} else if (traitInSuperEqual(declClass, variableNames[j].getName())) {
 						final Identifier variable = (Identifier) variableNames[j].getName();
 						handleIdentifier(variable);
 					}
@@ -261,6 +262,7 @@ public class RenameClassMember extends AbstractRename {
 	/**
 	 * Rename foo() on: $a->foo();
 	 */
+	@Override
 	public boolean visit(MethodInvocation methodInvocation) {
 		if (isChangeMethod() && methodInvocation.getDispatcher() != null) {
 			ITypeBinding declClass = methodInvocation.getDispatcher().resolveTypeBinding();
@@ -283,7 +285,7 @@ public class RenameClassMember extends AbstractRename {
 	}
 
 	private void handleDispatch(Dispatch dispatch) {
-		VariableBase variable = (VariableBase) dispatch.getMember();
+		VariableBase variable = dispatch.getMember();
 		Identifier identifier = null;
 		if (variable instanceof Variable) {
 			identifier = getIdentifer((Variable) variable);
@@ -328,6 +330,7 @@ public class RenameClassMember extends AbstractRename {
 	/**
 	 * Rename var on: $a->var;
 	 */
+	@Override
 	public boolean visit(FieldAccess fieldAccess) {
 		if (isChangeField()) {
 			ITypeBinding declClass = fieldAccess.getDispatcher().resolveTypeBinding();
@@ -349,6 +352,7 @@ public class RenameClassMember extends AbstractRename {
 		return super.visit(fieldAccess);
 	}
 
+	@Override
 	public boolean visit(StaticConstantAccess classConstantAccess) {
 		handlStaticDispatch(classConstantAccess);
 		return super.visit(classConstantAccess);
@@ -357,6 +361,7 @@ public class RenameClassMember extends AbstractRename {
 	/**
 	 * Rename foo() on: MyClass::foo();
 	 */
+	@Override
 	public boolean visit(StaticMethodInvocation methodInvocation) {
 		if (isChangeMethod()) {
 			handlStaticDispatch(methodInvocation);
@@ -408,6 +413,7 @@ public class RenameClassMember extends AbstractRename {
 	/**
 	 * Rename var on: MyClass::var;
 	 */
+	@Override
 	public boolean visit(StaticFieldAccess fieldAccess) {
 		if (isChangeField()) {
 			handlStaticDispatch(fieldAccess);
@@ -415,6 +421,7 @@ public class RenameClassMember extends AbstractRename {
 		return super.visit(fieldAccess);
 	}
 
+	@Override
 	public boolean visit(TraitAlias node) {
 		if (type != null) {
 			Expression expression = node.getTraitMethod();
@@ -518,6 +525,7 @@ public class RenameClassMember extends AbstractRename {
 		return null;
 	}
 
+	@Override
 	public String getRenameDescription() {
 		return RenameClassMember.RENAME_CLASS_MEMBER;
 	}

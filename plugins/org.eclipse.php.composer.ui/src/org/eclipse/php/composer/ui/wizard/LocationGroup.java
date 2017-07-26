@@ -23,13 +23,7 @@ import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
-import org.eclipse.dltk.internal.ui.wizards.dialogfields.ComboDialogField;
-import org.eclipse.dltk.internal.ui.wizards.dialogfields.DialogField;
-import org.eclipse.dltk.internal.ui.wizards.dialogfields.IDialogFieldListener;
-import org.eclipse.dltk.internal.ui.wizards.dialogfields.IStringButtonAdapter;
-import org.eclipse.dltk.internal.ui.wizards.dialogfields.LayoutUtil;
-import org.eclipse.dltk.internal.ui.wizards.dialogfields.SelectionButtonDialogField;
-import org.eclipse.dltk.internal.ui.wizards.dialogfields.StringButtonDialogField;
+import org.eclipse.dltk.internal.ui.wizards.dialogfields.*;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.environment.IEnvironmentUI;
 import org.eclipse.php.internal.server.core.Server;
@@ -49,7 +43,6 @@ import org.eclipse.swt.widgets.Shell;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
-@SuppressWarnings("restriction")
 public class LocationGroup extends Observable implements Observer, IStringButtonAdapter, IDialogFieldListener {
 
 	protected SelectionButtonDialogField fWorkspaceRadio;

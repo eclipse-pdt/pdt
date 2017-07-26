@@ -510,14 +510,14 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 	}
 
 	private ModelInfo getModelInfoFor(IEditorInput element) {
-		ModelInfo result = (ModelInfo) fModelInfoMap.get(element);
+		ModelInfo result = fModelInfoMap.get(element);
 		return result;
 	}
 
 	private ModelInfo getModelInfoFor(IStructuredModel structuredModel) {
 		ModelInfo result = null;
 		if (structuredModel != null) {
-			ModelInfo[] modelInfos = (ModelInfo[]) fModelInfoMap.values().toArray(new ModelInfo[0]);
+			ModelInfo[] modelInfos = fModelInfoMap.values().toArray(new ModelInfo[0]);
 			for (int i = 0; i < modelInfos.length; i++) {
 				ModelInfo info = modelInfos[i];
 				if (structuredModel.equals(info.fStructuredModel)) {

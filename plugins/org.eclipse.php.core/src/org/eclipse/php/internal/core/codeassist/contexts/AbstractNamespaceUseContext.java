@@ -102,6 +102,7 @@ public class AbstractNamespaceUseContext extends UseStatementContext {
 		return isGlobal;
 	}
 
+	@Override
 	public String getPrefix() throws BadLocationException {
 		if (hasWhitespaceBeforeCursor()) {
 			return ""; //$NON-NLS-1$
@@ -115,6 +116,7 @@ public class AbstractNamespaceUseContext extends UseStatementContext {
 				: statementText.subSequence(prefixStart, prefixEnd).toString();
 	}
 
+	@Override
 	public int getPrefixEnd() throws BadLocationException {
 		ITextRegion phpToken = getPHPToken();
 		if (phpToken.getType() == PHPRegionTypes.PHP_NS_SEPARATOR

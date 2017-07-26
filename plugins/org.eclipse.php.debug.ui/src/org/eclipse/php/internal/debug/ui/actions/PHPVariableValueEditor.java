@@ -18,7 +18,6 @@ import org.eclipse.php.internal.debug.core.zend.model.PHPValue;
 /**
  * A variable value editor that prompts the user to set a primitive's value.
  */
-@SuppressWarnings("restriction")
 public class PHPVariableValueEditor extends AbstractVariableValueEditor {
 
 	/*

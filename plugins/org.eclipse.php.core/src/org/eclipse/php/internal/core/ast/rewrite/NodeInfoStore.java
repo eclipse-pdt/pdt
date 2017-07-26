@@ -25,8 +25,8 @@ import org.eclipse.php.internal.core.ast.rewrite.RewriteEventStore.CopySourceInf
 public final class NodeInfoStore {
 	private AST ast;
 
-	private Map placeholderNodes;
-	private Set collapsedNodes;
+	private Map<ASTNode, PlaceholderData> placeholderNodes;
+	private Set<Block> collapsedNodes;
 
 	public NodeInfoStore(AST ast) {
 		super();
@@ -163,7 +163,7 @@ public final class NodeInfoStore {
 	public Block createCollapsePlaceholder() {
 		Block placeHolder = this.ast.newBlock();
 		if (this.collapsedNodes == null) {
-			this.collapsedNodes = new HashSet();
+			this.collapsedNodes = new HashSet<>();
 		}
 		this.collapsedNodes.add(placeHolder);
 		return placeHolder;
@@ -185,7 +185,7 @@ public final class NodeInfoStore {
 
 	private void setPlaceholderData(ASTNode node, PlaceholderData data) {
 		if (this.placeholderNodes == null) {
-			this.placeholderNodes = new IdentityHashMap();
+			this.placeholderNodes = new IdentityHashMap<>();
 		}
 		this.placeholderNodes.put(node, data);
 	}
@@ -197,6 +197,7 @@ public final class NodeInfoStore {
 	protected static final class CopyPlaceholderData extends PlaceholderData {
 		public CopySourceInfo copySource;
 
+		@Override
 		public String toString() {
 			return "[placeholder " + this.copySource + "]"; //$NON-NLS-1$//$NON-NLS-2$
 		}
@@ -205,6 +206,7 @@ public final class NodeInfoStore {
 	protected static final class StringPlaceholderData extends PlaceholderData {
 		public String code;
 
+		@Override
 		public String toString() {
 			return "[placeholder string: " + this.code + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 		}

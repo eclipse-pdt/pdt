@@ -51,7 +51,8 @@ public class PHPExeWizard extends FragmentedWizard implements INewWizard {
 		WizardFragment fragment = new WizardFragment() {
 			WizardFragment[] children;
 
-			@SuppressWarnings("unchecked")
+			@Override
+			@SuppressWarnings({ "unchecked", "rawtypes" })
 			protected void createChildFragments(List list) {
 				if (children != null) {
 					loadChildren(children, list);
@@ -75,8 +76,7 @@ public class PHPExeWizard extends FragmentedWizard implements INewWizard {
 		return fragment;
 	}
 
-	@SuppressWarnings("unchecked")
-	private void loadChildren(WizardFragment[] children, List list) {
+	private void loadChildren(WizardFragment[] children, List<WizardFragment> list) {
 		for (WizardFragment element : children) {
 			list.add(element);
 		}
@@ -88,6 +88,7 @@ public class PHPExeWizard extends FragmentedWizard implements INewWizard {
 	 * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
 	 * org.eclipse.jface.viewers.IStructuredSelection)
 	 */
+	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		// Do nothing
 	}

@@ -38,6 +38,7 @@ public class InstanceOfExpression extends Expression {
 		this.className = type;
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -47,6 +48,7 @@ public class InstanceOfExpression extends Expression {
 		visitor.endvisit(this);
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.INSTANCE_OF_EXPRESSION;
 	}
@@ -62,9 +64,11 @@ public class InstanceOfExpression extends Expression {
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
+	@Override
 	public final void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}

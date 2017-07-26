@@ -36,7 +36,7 @@ public class TraitPrecedence extends Expression {
 	}
 
 	private FullyQualifiedTraitMethodReference methodReference;
-	private ASTNode.NodeList<NamespaceName> trList = new ASTNode.NodeList<NamespaceName>(TRAIT_REFERENCE_LIST);;
+	private ASTNode.NodeList<NamespaceName> trList = new ASTNode.NodeList<>(TRAIT_REFERENCE_LIST);;
 
 	public static final ChildPropertyDescriptor METHOD_REFERENCE = new ChildPropertyDescriptor(TraitPrecedence.class,
 			"methodReference", FullyQualifiedTraitMethodReference.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
@@ -51,7 +51,7 @@ public class TraitPrecedence extends Expression {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(1);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(1);
 		propertyList.add(METHOD_REFERENCE);
 		propertyList.add(TRAIT_REFERENCE_LIST);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
@@ -82,6 +82,7 @@ public class TraitPrecedence extends Expression {
 		}
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -90,6 +91,7 @@ public class TraitPrecedence extends Expression {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		methodReference.accept(visitor);
 		if (trList != null) {
@@ -100,6 +102,7 @@ public class TraitPrecedence extends Expression {
 
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		methodReference.traverseTopDown(visitor);
@@ -110,6 +113,7 @@ public class TraitPrecedence extends Expression {
 		}
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		methodReference.traverseBottomUp(visitor);
 		if (trList != null) {
@@ -120,6 +124,7 @@ public class TraitPrecedence extends Expression {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<TraitPrecedence"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -137,6 +142,7 @@ public class TraitPrecedence extends Expression {
 		buffer.append(tab).append("</TraitPrecedence>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.FUNCTION_NAME;
 	}
@@ -144,6 +150,7 @@ public class TraitPrecedence extends Expression {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
@@ -163,6 +170,7 @@ public class TraitPrecedence extends Expression {
 		return PROPERTY_DESCRIPTORS;
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == METHOD_REFERENCE) {
 			if (get) {
@@ -177,7 +185,8 @@ public class TraitPrecedence extends Expression {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
-	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+	@Override
+	final List<? extends ASTNode> internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == TRAIT_REFERENCE_LIST) {
 			return getTrList();
 		}

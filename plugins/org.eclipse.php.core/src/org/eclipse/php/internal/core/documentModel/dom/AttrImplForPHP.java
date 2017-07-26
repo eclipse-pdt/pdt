@@ -23,14 +23,17 @@ import org.w3c.dom.Document;
  */
 public class AttrImplForPHP extends AttrImpl {
 
+	@Override
 	protected boolean isNestedLanguageOpening(String regionType) {
 		return regionType == PHPRegionContext.PHP_OPEN;
 	}
 
+	@Override
 	protected void setOwnerDocument(Document ownerDocument) {
 		super.setOwnerDocument(ownerDocument);
 	}
 
+	@Override
 	protected void setName(String name) {
 		super.setName(name);
 	}

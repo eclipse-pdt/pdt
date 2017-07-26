@@ -44,6 +44,7 @@ public class CodeDataMatch {
 		return result;
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (o == null)
 			return false;

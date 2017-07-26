@@ -61,7 +61,7 @@ public class WorkingSetShowActionGroup extends ActionGroup implements IWorkingSe
 	@Override
 	public void cleanViewMenu(IMenuManager menuManager) {
 		for (Iterator<IContributionItem> iter = fContributions.iterator(); iter.hasNext();) {
-			menuManager.remove((IContributionItem) iter.next());
+			menuManager.remove(iter.next());
 		}
 		fContributions.clear();
 	}

@@ -55,10 +55,12 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 	public ServerDebugHandler() {
 	}
 
+	@Override
 	public IRemoteDebugger getRemoteDebugger() {
 		return fRemoteDebugger;
 	}
 
+	@Override
 	public void sessionStarted(String remoteFile, String uri, String query, String options) {
 		super.sessionStarted(remoteFile, uri, query, options);
 
@@ -179,6 +181,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		fCodeCoverage = query.indexOf(DefaultDebugParametersInitializer.CODE_COVERAGE) != -1;
 	}
 
+	@Override
 	public void connectionEstablished() {
 		super.connectionEstablished();
 		StartLock startLock = fDebugTarget.getStartLock();
@@ -198,6 +201,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		}
 	}
 
+	@Override
 	public void ready(String fileName, int lineNumber) {
 		super.ready(fileName, lineNumber);
 
@@ -240,12 +244,14 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 
 	}
 
+	@Override
 	public void sessionEnded() {
 		Logger.debugMSG("ServerDebugHandler: Starting sessionEnded()"); //$NON-NLS-1$
 		super.sessionEnded();
 
 	}
 
+	@Override
 	public void connectionClosed() {
 		Logger.debugMSG("ServerDebugHandler: Starting connectionClosed()"); //$NON-NLS-1$
 		super.connectionClosed();
@@ -258,6 +264,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		// }
 	}
 
+	@Override
 	public void handleScriptEnded() {
 		try {
 			if (fCodeCoverage) {
@@ -278,6 +285,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		}
 	}
 
+	@Override
 	public void multipleBindOccured() {
 		super.multipleBindOccured();
 		Logger.log(Logger.WARNING, "ServerDebugHandler: Multiple Bind Occured"); //$NON-NLS-1$
@@ -288,6 +296,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		fDebugTarget.terminated();
 	}
 
+	@Override
 	public void parsingErrorOccured(DebugError debugError) {
 		super.parsingErrorOccured(debugError);
 
@@ -313,22 +322,26 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 	 * @see org.eclipse.php.internal.debug.core.model.SimpleDebugHandler#
 	 * wrongDebugServer ()
 	 */
+	@Override
 	public void wrongDebugServer() {
 		super.wrongDebugServer();
 		fDebugTarget.fireError(PHPDebugCoreMessages.ServerDebugHandler_0, null);
 		fRemoteDebugger.finish();
 	}
 
+	@Override
 	public void newOutput(String output) {
 		super.newOutput(output);
 		fDebugTarget.getOutputBuffer().append(output);
 	}
 
+	@Override
 	public void newHeaderOutput(String output) {
 		super.newHeaderOutput(output);
 		fDebugTarget.getOutputBuffer().appendHeader(output);
 	}
 
+	@Override
 	public void setDebugTarget(PHPDebugTarget debugTarget) {
 		this.fDebugTarget = debugTarget;
 		fDebugConnection = fDebugTarget.getDebugConnection();
@@ -336,6 +349,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		fDebugConnection.getCommunicationAdministrator().connectionEstablished();
 	}
 
+	@Override
 	public PHPDebugTarget getDebugTarget() {
 		return fDebugTarget;
 	}

@@ -52,12 +52,13 @@ import org.eclipse.php.internal.core.typeinference.goals.ClassVariableDeclaratio
  */
 public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator {
 
-	private List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
+	private List<IEvaluatedType> evaluated = new LinkedList<>();
 
 	public ClassVariableDeclarationEvaluator(IGoal goal) {
 		super(goal);
 	}
 
+	@Override
 	public IGoal[] init() {
 		ClassVariableDeclarationGoal typedGoal = (ClassVariableDeclarationGoal) goal;
 		IType[] types = typedGoal.getTypes();
@@ -78,7 +79,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 
 		String variableName = PHPEvaluationUtils.removeArrayBrackets(typedGoal.getVariableName());
 
-		final List<IGoal> subGoals = new LinkedList<IGoal>();
+		final List<IGoal> subGoals = new LinkedList<>();
 		for (final IType type : types) {
 			try {
 				ITypeHierarchy hierarchy = null;
@@ -86,14 +87,14 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 					hierarchy = cache.getSuperTypeHierarchy(type, null);
 				}
 				IField[] fields = PHPModelUtils.getTypeHierarchyField(type, hierarchy, variableName, true, null);
-				Map<IType, IType> fieldDeclaringTypeSet = new HashMap<IType, IType>();
+				Map<IType, IType> fieldDeclaringTypeSet = new HashMap<>();
 				for (IField field : fields) {
 					IType declaringType = field.getDeclaringType();
 					if (declaringType != null) {
 						fieldDeclaringTypeSet.put(declaringType, type);
 
 						if (field instanceof SourceRefElement) {
-							ISourceReference sourceRefElement = (ISourceReference) field;
+							ISourceReference sourceRefElement = field;
 							ISourceRange sourceRange = sourceRefElement.getSourceRange();
 							ISourceModule sourceModule = declaringType.getSourceModule();
 							ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
@@ -165,10 +166,12 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 		}
 	}
 
+	@Override
 	public Object produceResult() {
 		return PHPTypeInferenceUtils.combineTypes(evaluated);
 	}
 
+	@Override
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		if (state != GoalState.RECURSIVE && result != null) {
 			evaluated.add((IEvaluatedType) result);
@@ -192,7 +195,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 		private int length;
 		private String variableName;
 		private ISourceModule sourceModule;
-		private Map<ASTNode, IContext> staticDeclarations = new HashMap<ASTNode, IContext>();
+		private Map<ASTNode, IContext> staticDeclarations = new HashMap<>();
 
 		public ClassDeclarationSearcher(ISourceModule sourceModule, ISourceRange typeDeclarationRange, int offset,
 				int length, String variableName) {
@@ -222,6 +225,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 			return staticDeclarations;
 		}
 
+		@Override
 		public IContext getContext() {
 			if (context instanceof IModelCacheContext
 					&& ClassVariableDeclarationEvaluator.this.goal.getContext() instanceof IModelCacheContext) {
@@ -231,6 +235,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 			return context;
 		}
 
+		@Override
 		public boolean visit(Statement e) throws Exception {
 			if (typeDeclarationRange.getOffset() < e.sourceStart()
 					&& (typeDeclarationRange.getOffset() + typeDeclarationRange.getLength()) > e.sourceEnd()) {
@@ -253,6 +258,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 			return visitGeneral(e);
 		}
 
+		@Override
 		public boolean visit(Expression e) throws Exception {
 			if (typeDeclarationRange.getOffset() < e.sourceStart()
 					&& (typeDeclarationRange.getOffset() + typeDeclarationRange.getLength()) > e.sourceEnd()) {
@@ -293,6 +299,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 			return visitGeneral(e);
 		}
 
+		@Override
 		public boolean visitGeneral(ASTNode e) throws Exception {
 			return e.sourceStart() <= offset || variableName != null;
 		}

@@ -82,7 +82,7 @@ public class PHPManualSiteDescriptor {
 	}
 
 	private static PHPManualSiteDescriptor[] createDescriptors(IConfigurationElement[] elements) {
-		List result = new ArrayList(elements.length);
+		List<PHPManualSiteDescriptor> result = new ArrayList<>(elements.length);
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
 			if (SITE_TAG.equals(element.getName())) {
@@ -90,7 +90,7 @@ public class PHPManualSiteDescriptor {
 				result.add(desc);
 			}
 		}
-		return (PHPManualSiteDescriptor[]) result.toArray(new PHPManualSiteDescriptor[result.size()]);
+		return result.toArray(new PHPManualSiteDescriptor[result.size()]);
 	}
 
 	private static void initializeFromPreferences(PHPManualSiteDescriptor[] manualDescs) {

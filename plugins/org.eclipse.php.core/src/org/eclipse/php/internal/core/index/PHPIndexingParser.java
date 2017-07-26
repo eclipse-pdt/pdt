@@ -20,6 +20,7 @@ import org.eclipse.php.internal.core.Logger;
 
 public class PHPIndexingParser implements IIndexingParser {
 
+	@Override
 	public void parseSourceModule(ISourceModule module, IIndexingRequestor requestor) {
 
 		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(module);

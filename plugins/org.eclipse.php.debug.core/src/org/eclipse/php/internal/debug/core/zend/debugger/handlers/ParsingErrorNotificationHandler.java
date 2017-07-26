@@ -25,6 +25,7 @@ public class ParsingErrorNotificationHandler implements IDebugMessageHandler {
 
 	private static final Pattern EVALD_CODE_PATTERN = Pattern.compile("(.*)\\((\\d+)\\) : eval\\(\\)'d code"); //$NON-NLS-1$
 
+	@Override
 	public void handle(IDebugMessage message, PHPDebugTarget debugTarget) {
 		ParsingErrorNotification parseError = (ParsingErrorNotification) message;
 

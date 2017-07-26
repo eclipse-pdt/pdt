@@ -190,7 +190,7 @@ public final class ImportRewrite {
 		ISourceModule typeRoot = astRoot.getSourceModule();
 		Map<NamespaceDeclaration, List<String>> existingImport = null;
 		if (restoreExistingImports) {
-			existingImport = new HashMap<NamespaceDeclaration, List<String>>();
+			existingImport = new HashMap<>();
 			Iterator<Entry<NamespaceDeclaration, List<UseStatement>>> ite = astRoot.getUseStatements().entrySet()
 					.iterator();
 			while (ite.hasNext()) {
@@ -212,7 +212,7 @@ public final class ImportRewrite {
 				existingImport.put(entry.getKey(), imports);
 			}
 		}
-		return new ImportRewrite((ISourceModule) typeRoot, astRoot, existingImport);
+		return new ImportRewrite(typeRoot, astRoot, existingImport);
 	}
 
 	private ImportRewrite(ISourceModule cu, Program astRoot, Map<NamespaceDeclaration, List<String>> existingImports) {
@@ -229,7 +229,7 @@ public final class ImportRewrite {
 				this.restoreExistingImports.put(null, !existingImports.get(null).isEmpty());
 			}
 		} else {
-			this.existingImports = new HashMap<NamespaceDeclaration, List<String>>();
+			this.existingImports = new HashMap<>();
 			if (namespaces.size() > 0) {
 				for (NamespaceDeclaration namespace : namespaces) {
 					this.restoreExistingImports.put(namespace, false);
@@ -243,6 +243,7 @@ public final class ImportRewrite {
 		this.filterImplicitImports = true;
 
 		this.defaultContext = new ImportRewriteContext() {
+			@Override
 			public int findInContext(NamespaceDeclaration namespace, String qualifier, String name, int kind) {
 				return findInImports(namespace, qualifier, name, kind);
 			}
@@ -477,7 +478,7 @@ public final class ImportRewrite {
 		}
 
 		if (this.addedImports == null) {
-			this.addedImports = new HashMap<NamespaceDeclaration, List<String>>();
+			this.addedImports = new HashMap<>();
 		}
 		if (this.addedImports.get(namespace) == null) {
 			this.addedImports.put(namespace, new ArrayList<>());
@@ -493,7 +494,7 @@ public final class ImportRewrite {
 				}
 			}
 			if (this.removedImports == null) {
-				this.removedImports = new HashMap<NamespaceDeclaration, List<String>>();
+				this.removedImports = new HashMap<>();
 			}
 			if (this.removedImports.get(namespace) == null) {
 				this.removedImports.put(namespace, new ArrayList<>());
@@ -710,7 +711,7 @@ public final class ImportRewrite {
 		if (imports == null) {
 			return CharOperation.NO_STRINGS;
 		}
-		ArrayList<String> res = new ArrayList<String>();
+		ArrayList<String> res = new ArrayList<>();
 		for (List<String> strings : imports.values()) {
 			for (int i = 0; i < strings.size(); i++) {
 				String curr = strings.get(i);

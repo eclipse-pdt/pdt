@@ -39,7 +39,7 @@ public class Quote extends VariableBase {
 	public static final int QT_HEREDOC = 2;
 	public static final int QT_NOWDOC = 3;
 
-	private final ASTNode.NodeList<Expression> expressions = new ASTNode.NodeList<Expression>(EXPRESSIONS_PROPERTY);
+	private final ASTNode.NodeList<Expression> expressions = new ASTNode.NodeList<>(EXPRESSIONS_PROPERTY);
 	private int quoteType;
 
 	/**
@@ -57,7 +57,7 @@ public class Quote extends VariableBase {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(2);
 		properyList.add(EXPRESSIONS_PROPERTY);
 		properyList.add(QUOTE_TYPE_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
@@ -88,6 +88,7 @@ public class Quote extends VariableBase {
 		}
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -96,12 +97,14 @@ public class Quote extends VariableBase {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		for (ASTNode node : this.expressions) {
 			node.accept(visitor);
 		}
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		for (ASTNode node : this.expressions) {
@@ -109,6 +112,7 @@ public class Quote extends VariableBase {
 		}
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		for (ASTNode node : this.expressions) {
 			node.traverseBottomUp(visitor);
@@ -116,6 +120,7 @@ public class Quote extends VariableBase {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<Quote"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -127,6 +132,7 @@ public class Quote extends VariableBase {
 		buffer.append(tab).append("</Quote>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.QUOTE;
 	}
@@ -138,7 +144,8 @@ public class Quote extends VariableBase {
 		return this.expressions;
 	}
 
-	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+	@Override
+	final List<? extends ASTNode> internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == EXPRESSIONS_PROPERTY) {
 			return expressions();
 		}
@@ -182,12 +189,13 @@ public class Quote extends VariableBase {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
+	@Override
 	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
 		if (property == QUOTE_TYPE_PROPERTY) {
 			if (get) {
 				return getQuoteType();
 			} else {
-				setQuoteType((Integer) value);
+				setQuoteType(value);
 				return 0;
 			}
 		}
@@ -198,6 +206,7 @@ public class Quote extends VariableBase {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
@@ -206,7 +215,7 @@ public class Quote extends VariableBase {
 	@Override
 	ASTNode clone0(AST target) {
 		final int type = getQuoteType();
-		final List expressions = ASTNode.copySubtrees(target, expressions());
+		final List<Expression> expressions = ASTNode.copySubtrees(target, expressions());
 		final Quote result = new Quote(this.getStart(), this.getEnd(), target, expressions, type);
 		return result;
 	}

@@ -33,6 +33,7 @@ public class Scripts extends AbstractJsonObject<Script> implements Iterable<Scri
 	}
 
 	private transient PropertyChangeListener listener = new PropertyChangeListener() {
+		@Override
 		public void propertyChange(PropertyChangeEvent evt) {
 			firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
 		}
@@ -45,6 +46,7 @@ public class Scripts extends AbstractJsonObject<Script> implements Iterable<Scri
 		fromJson(json);
 	}
 
+	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected void doParse(Object obj) {
 		clear();
@@ -69,7 +71,7 @@ public class Scripts extends AbstractJsonObject<Script> implements Iterable<Scri
 
 	@Override
 	protected Object buildJson() {
-		LinkedHashMap<String, Object> out = new LinkedHashMap<String, Object>();
+		LinkedHashMap<String, Object> out = new LinkedHashMap<>();
 		for (Script script : this) {
 			Object value = ""; //$NON-NLS-1$
 
@@ -116,8 +118,9 @@ public class Scripts extends AbstractJsonObject<Script> implements Iterable<Scri
 		return properties.values();
 	}
 
+	@Override
 	public Iterator<Script> iterator() {
-		return (Iterator<Script>) properties.values().iterator();
+		return properties.values().iterator();
 	}
 
 	public Script getFirst() {
@@ -128,10 +131,12 @@ public class Scripts extends AbstractJsonObject<Script> implements Iterable<Scri
 		return null;
 	}
 
+	@Override
 	public int size() {
 		return properties.keySet().size();
 	}
 
+	@Override
 	public boolean has(String script) {
 		return properties.containsKey(script);
 	}

@@ -63,7 +63,7 @@ public class PHPManualFactory {
 					if (defaultConfig != null) {
 						manual = createManual(defaultConfig);
 					} else {
-						manual = createManual((PHPManualConfig) configs.get(0));
+						manual = createManual(configs.get(0));
 					}
 				} else if (descs.length > 0) {
 					manual = createManual(descs[0]);

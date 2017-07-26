@@ -313,14 +313,17 @@ public class PHPDocAwareDeclarationTests {
 			return visitGeneral(d);
 		}
 
+		@Override
 		public boolean visit(TypeDeclaration s) throws Exception {
 			return visit((Declaration) s);
 		}
 
+		@Override
 		public boolean visit(MethodDeclaration s) throws Exception {
 			return visit((Declaration) s);
 		}
 
+		@Override
 		public boolean visit(Statement s) throws Exception {
 			if (s instanceof Declaration) {
 				return visit((Declaration) s);

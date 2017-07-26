@@ -29,6 +29,7 @@ public class WorkbenchOptionsPreferencePage extends PreferencePage implements IW
 	public WorkbenchOptionsPreferencePage() {
 	}
 
+	@Override
 	protected Control createContents(Composite parent) {
 		Composite comp = new Composite(parent, SWT.NONE);
 		comp.setLayout(new GridLayout());
@@ -45,21 +46,26 @@ public class WorkbenchOptionsPreferencePage extends PreferencePage implements IW
 		return comp;
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 	}
 
+	@Override
 	protected void performApply() {
 		workbenchOptionsBlock.performApply(false);
 	}
 
+	@Override
 	public boolean performOk() {
 		return workbenchOptionsBlock.performOK(false);
 	}
 
+	@Override
 	public boolean performCancel() {
 		return workbenchOptionsBlock.performCancel();
 	}
 
+	@Override
 	public void performDefaults() {
 		workbenchOptionsBlock.performDefaults();
 	}

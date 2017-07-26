@@ -29,6 +29,7 @@ public class OrganizeIncludesWizard extends RefactoringWizard {
 	 * 
 	 * @see org.eclipse.ltk.ui.refactoring.RefactoringWizard#addUserInputPages()
 	 */
+	@Override
 	protected void addUserInputPages() {
 		// addPage(new OrganizeIncludesWizardInitializationPage());
 	}

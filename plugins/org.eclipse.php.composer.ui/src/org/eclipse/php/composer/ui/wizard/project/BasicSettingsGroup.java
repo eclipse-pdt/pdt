@@ -27,7 +27,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
-@SuppressWarnings("restriction")
 public class BasicSettingsGroup extends Observable implements IDialogFieldListener {
 
 	protected StringDialogField vendorField;

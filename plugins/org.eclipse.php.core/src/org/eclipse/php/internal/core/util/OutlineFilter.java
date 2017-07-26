@@ -27,7 +27,7 @@ public class OutlineFilter {
 	}
 
 	public static IModelElement[] filter(IModelElement[] children) {
-		List<IModelElement> v = new ArrayList<IModelElement>();
+		List<IModelElement> v = new ArrayList<>();
 		for (int i = 0; i < children.length; i++) {
 			if (!matches(children[i])) {
 				v.add(children[i]);
@@ -41,7 +41,8 @@ public class OutlineFilter {
 		if (!(parent instanceof ISourceModule)) {
 			return children;
 		}
-		Set<IModelElement> result = new TreeSet<IModelElement>(new Comparator<IModelElement>() {
+		Set<IModelElement> result = new TreeSet<>(new Comparator<IModelElement>() {
+			@Override
 			public int compare(IModelElement o1, IModelElement o2) {
 				// filter duplications of variables
 				if (o1 instanceof IField && o2 instanceof IField

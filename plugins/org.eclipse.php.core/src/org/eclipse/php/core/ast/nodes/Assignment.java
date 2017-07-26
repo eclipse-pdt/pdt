@@ -78,7 +78,7 @@ public class Assignment extends Expression implements IOperationNode {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(3);
 		properyList.add(LEFT_HAND_SIDE_PROPERTY);
 		properyList.add(OPERATOR_PROPERTY);
 		properyList.add(RIGHT_HAND_SIDE_PROPERTY);
@@ -133,23 +133,27 @@ public class Assignment extends Expression implements IOperationNode {
 		}
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		leftHandSide.accept(visitor);
 		rightHandSide.accept(visitor);
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		leftHandSide.traverseTopDown(visitor);
 		rightHandSide.traverseTopDown(visitor);
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		leftHandSide.traverseBottomUp(visitor);
 		rightHandSide.traverseBottomUp(visitor);
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<Assignment"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -161,6 +165,7 @@ public class Assignment extends Expression implements IOperationNode {
 		buffer.append(tab).append("</Assignment>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -190,6 +195,7 @@ public class Assignment extends Expression implements IOperationNode {
 	 * org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString
 	 * ()
 	 */
+	@Override
 	public String getOperationString() {
 		return getOperator(this.getOperator());
 	}
@@ -201,6 +207,7 @@ public class Assignment extends Expression implements IOperationNode {
 	 * org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString
 	 * (int)
 	 */
+	@Override
 	public String getOperationString(int op) {
 		return getOperator(op);
 	}
@@ -291,6 +298,7 @@ public class Assignment extends Expression implements IOperationNode {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
@@ -310,12 +318,13 @@ public class Assignment extends Expression implements IOperationNode {
 		return PROPERTY_DESCRIPTORS;
 	}
 
+	@Override
 	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
 		if (property == OPERATOR_PROPERTY) {
 			if (get) {
 				return getOperator();
 			} else {
-				setOperator((Integer) value);
+				setOperator(value);
 				return 0;
 			}
 		}
@@ -323,6 +332,7 @@ public class Assignment extends Expression implements IOperationNode {
 		return super.internalGetSetIntProperty(property, get, value);
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == LEFT_HAND_SIDE_PROPERTY) {
 			if (get) {

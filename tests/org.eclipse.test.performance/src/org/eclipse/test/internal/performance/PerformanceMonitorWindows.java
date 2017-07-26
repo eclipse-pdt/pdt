@@ -13,6 +13,8 @@ package org.eclipse.test.internal.performance;
 import java.util.Map;
 
 import org.eclipse.test.internal.performance.PerformanceMonitor;
+import org.eclipse.test.internal.performance.data.Dim;
+import org.eclipse.test.internal.performance.data.Scalar;
 
 /**
  * The PerformanceMonitor for Windows.
@@ -22,7 +24,8 @@ class PerformanceMonitorWindows extends PerformanceMonitor {
 	
 	private boolean fgNativeGetPerformanceInfoNotAvailable;
 
-    protected void collectOperatingSystemCounters(Map scalars) {
+    @Override
+	protected void collectOperatingSystemCounters(Map<Dim, Scalar> scalars) {
 		synchronized(this) {
 			if (org.eclipse.perfmsr.core.PerformanceMonitor.isLoaded()) {
 				long[] counters= new long[14];
@@ -59,7 +62,8 @@ class PerformanceMonitorWindows extends PerformanceMonitor {
 	 * in Win2000. If it is not available then this function throws an UnsupportedOperationException.
 	 * @param scalars
 	 */
-	protected void collectGlobalPerformanceInfo(Map scalars) {
+	@Override
+	protected void collectGlobalPerformanceInfo(Map<Dim, Scalar> scalars) {
 		synchronized(this) {
 			if (!fgNativeGetPerformanceInfoNotAvailable && org.eclipse.perfmsr.core.PerformanceMonitor.isLoaded()) {
 		    	long[] counters= new long[13];

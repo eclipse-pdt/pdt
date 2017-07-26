@@ -26,10 +26,12 @@ public class SysPhpPrjPhar extends PrjPharEnvironment {
 		php = executable;
 	}
 
+	@Override
 	public boolean isAvailable() {
 		return php != null;
 	}
 
+	@Override
 	public CommandLine getCommand() {
 		CommandLine cmd = new CommandLine(php.trim());
 

@@ -48,7 +48,7 @@ public class BindingUtility {
 
 	private ISourceModule sourceModule;
 	private ASTNode rootNode;
-	private Map<SourceRange, IEvaluatedType> evaluatedTypesCache = new HashMap<SourceRange, IEvaluatedType>();
+	private Map<SourceRange, IEvaluatedType> evaluatedTypesCache = new HashMap<>();
 	private int timeLimit = TIME_LIMIT;
 	private IModelAccessCache modelAccessCache;
 	private IPHPTypeInferencer cachedInferencer = null;
@@ -389,6 +389,7 @@ public class BindingUtility {
 			this.sourceRange = sourceRange;
 		}
 
+		@Override
 		public IContext getContext() {
 			if (context instanceof IModelCacheContext) {
 				((IModelCacheContext) context).setCache(modelAccessCache);
@@ -405,6 +406,7 @@ public class BindingUtility {
 			return node;
 		}
 
+		@Override
 		public boolean visitGeneral(ASTNode node) throws Exception {
 			if (node.sourceStart() > (sourceRange.getOffset() + sourceRange.getLength())) {
 				return false;
@@ -440,14 +442,15 @@ public class BindingUtility {
 		// FileContext fileContext = new FileContext(sourceModule,
 		// sourceModuleDeclaration);
 
-		final List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
-		final List<Expression> returnExpressions = new LinkedList<Expression>();
-		final List<Expression> yieldExpressions = new LinkedList<Expression>();
+		final List<IEvaluatedType> evaluated = new LinkedList<>();
+		final List<Expression> returnExpressions = new LinkedList<>();
+		final List<Expression> yieldExpressions = new LinkedList<>();
 
 		if (functionDeclaration != null) {
 			final MethodDeclaration topDeclaration = functionDeclaration;
 
 			ASTVisitor visitor = new ASTVisitor() {
+				@Override
 				public boolean visitGeneral(ASTNode node) throws Exception {
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=464921
 					// do not evaluate content of inner lambda functions

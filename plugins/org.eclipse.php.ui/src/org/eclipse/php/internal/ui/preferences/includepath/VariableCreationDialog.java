@@ -45,9 +45,9 @@ public class VariableCreationDialog extends StatusDialog {
 
 	private IPVariableElement fElement;
 
-	private List fExistingNames;
+	private List<?> fExistingNames;
 
-	public VariableCreationDialog(Shell parent, IPVariableElement element, List existingNames) {
+	public VariableCreationDialog(Shell parent, IPVariableElement element, List<?> existingNames) {
 		super(parent);
 		if (element == null) {
 			setTitle(PHPUIMessages.VariableCreationDialog_titlenew);

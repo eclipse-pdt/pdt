@@ -44,18 +44,18 @@ public class PHPBasePreferencePage extends PreferencePage implements IWorkbenchP
 	private static final String DOUBLE_CLICK_EXPANDS = org.eclipse.dltk.ui.PreferenceConstants.DOUBLE_CLICK_EXPANDS;
 	private static final String DOUBLE_CLICK_GOES_INTO = org.eclipse.dltk.ui.PreferenceConstants.DOUBLE_CLICK_GOES_INTO;
 
-	private ArrayList fCheckBoxes;
-	private ArrayList fRadioButtons;
-	private ArrayList fTextControls;
+	private ArrayList<?> fCheckBoxes;
+	private ArrayList<Button> fRadioButtons;
+	private ArrayList<?> fTextControls;
 
 	public PHPBasePreferencePage() {
 		super();
 		setPreferenceStore(DLTKUIPlugin.getDefault().getPreferenceStore());
 		setDescription(PHPUIMessages.PHPBasePreferencePage_description);
 
-		fRadioButtons = new ArrayList();
-		fCheckBoxes = new ArrayList();
-		fTextControls = new ArrayList();
+		fRadioButtons = new ArrayList<>();
+		fCheckBoxes = new ArrayList<>();
+		fTextControls = new ArrayList<>();
 	}
 
 	/*
@@ -115,7 +115,7 @@ public class PHPBasePreferencePage extends PreferencePage implements IWorkbenchP
 			button.setSelection(store.getDefaultBoolean(key));
 		}
 		for (int i = 0; i < fRadioButtons.size(); i++) {
-			Button button = (Button) fRadioButtons.get(i);
+			Button button = fRadioButtons.get(i);
 			String[] info = (String[]) button.getData();
 			button.setSelection(info[1].equals(store.getDefaultString(info[0])));
 		}
@@ -139,7 +139,7 @@ public class PHPBasePreferencePage extends PreferencePage implements IWorkbenchP
 			store.setValue(key, button.getSelection());
 		}
 		for (int i = 0; i < fRadioButtons.size(); i++) {
-			Button button = (Button) fRadioButtons.get(i);
+			Button button = fRadioButtons.get(i);
 			if (button.getSelection()) {
 				String[] info = (String[]) button.getData();
 				store.setValue(info[0], info[1]);

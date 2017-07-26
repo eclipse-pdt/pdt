@@ -30,6 +30,7 @@ public class ServersPreferencesInitializer extends AbstractPreferenceInitializer
 	 * @seeorg.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#
 	 * initializeDefaultPreferences()
 	 */
+	@Override
 	public void initializeDefaultPreferences() {
 		IEclipsePreferences node = DefaultScope.INSTANCE.getNode(Activator.getDefault().getBundle().getSymbolicName());
 		node.put(ServersManager.DEFAULT_SERVER_PREFERENCES_KEY, ServersManager.getDefaultServer(null).getName());

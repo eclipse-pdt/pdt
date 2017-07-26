@@ -389,7 +389,7 @@ public class BindingTests {
 
 		final ExpressionStatement statement = (ExpressionStatement) program.statements().get(2);
 		final StaticConstantAccess constantAccess = (StaticConstantAccess) statement.getExpression();
-		IVariableBinding fieldBinding = (IVariableBinding) constantAccess.resolveFieldBinding();
+		IVariableBinding fieldBinding = constantAccess.resolveFieldBinding();
 
 		assertNotNull(fieldBinding);
 		assertTrue(fieldBinding.isField());

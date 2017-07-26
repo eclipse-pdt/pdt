@@ -95,7 +95,7 @@ public class PHPSimpleTypes {
 
 	static {
 
-		SIMPLE_TYPES = new HashMap<String, TypeInfo>();
+		SIMPLE_TYPES = new HashMap<>();
 		SIMPLE_TYPES.put("array", new TypeInfo(ARRAY, PHPVersion.PHP5)); //$NON-NLS-1$
 		SIMPLE_TYPES.put("bool", new TypeInfo(BOOLEAN, PHPVersion.PHP7_0)); //$NON-NLS-1$
 		SIMPLE_TYPES.put("boolean", new TypeInfo(BOOLEAN, null)); //$NON-NLS-1$

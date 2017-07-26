@@ -94,6 +94,7 @@ public class GetStackVariableValueRequest extends DebugMessageRequestImpl implem
 		return layerDepth;
 	}
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		setLayerDepth(in.readInt());
@@ -107,10 +108,12 @@ public class GetStackVariableValueRequest extends DebugMessageRequestImpl implem
 		setPath(path);
 	}
 
+	@Override
 	public int getType() {
 		return 35;
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());

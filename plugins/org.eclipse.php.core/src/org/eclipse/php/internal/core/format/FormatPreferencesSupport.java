@@ -65,6 +65,7 @@ public class FormatPreferencesSupport implements IFormatterCommonPreferences {
 		return instance;
 	}
 
+	@Override
 	public int getIndentationWrappedLineSize(IDocument document) {
 		if (!verifyValidity(document)) {
 			String indentSize = preferencesSupport
@@ -77,6 +78,7 @@ public class FormatPreferencesSupport implements IFormatterCommonPreferences {
 		return fIndentationWrappedLineSize;
 	}
 
+	@Override
 	public int getIndentationArrayInitSize(IDocument document) {
 		if (!verifyValidity(document)) {
 			String indentSize = preferencesSupport
@@ -89,6 +91,7 @@ public class FormatPreferencesSupport implements IFormatterCommonPreferences {
 		return fIndentationArrayInitSize;
 	}
 
+	@Override
 	public int getIndentationSize(IDocument document) {
 		if (!verifyValidity(document)) {
 			String indentSize = preferencesSupport
@@ -101,6 +104,7 @@ public class FormatPreferencesSupport implements IFormatterCommonPreferences {
 		return indentationSize;
 	}
 
+	@Override
 	public int getTabSize(IDocument document) {
 		if (!verifyValidity(document)) {
 			String tabSizeStr = preferencesSupport.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_TAB_SIZE);
@@ -112,6 +116,7 @@ public class FormatPreferencesSupport implements IFormatterCommonPreferences {
 		return tabSize;
 	}
 
+	@Override
 	public char getIndentationChar(IDocument document) {
 		if (!verifyValidity(document)) {
 			String useTab = preferencesSupport.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_USE_TABS);
@@ -123,6 +128,7 @@ public class FormatPreferencesSupport implements IFormatterCommonPreferences {
 		return indentationChar;
 	}
 
+	@Override
 	public boolean useTab(IDocument document) {
 		if (!verifyValidity(document)) {
 			String useTab = preferencesSupport.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_USE_TABS);
@@ -233,10 +239,12 @@ public class FormatPreferencesSupport implements IFormatterCommonPreferences {
 			this.project = project;
 		}
 
+		@Override
 		public void preferencesEventOccured(PreferencesPropagatorEvent event) {
 			preferencesChanged = true;
 		}
 
+		@Override
 		public IProject getProject() {
 			return project;
 		}

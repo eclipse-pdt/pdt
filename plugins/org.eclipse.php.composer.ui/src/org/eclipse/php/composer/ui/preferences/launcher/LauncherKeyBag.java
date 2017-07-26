@@ -12,7 +12,6 @@ package org.eclipse.php.composer.ui.preferences.launcher;
 
 import org.eclipse.php.internal.ui.preferences.util.Key;
 
-@SuppressWarnings("restriction")
 public interface LauncherKeyBag {
 
 	public Key[] getAllKeys();

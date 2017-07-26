@@ -22,14 +22,14 @@ public class PdttFileExt extends PdttFile {
 
 	public List<FileInfo> getTestFiles() {
 		if (testFiles == null) {
-			testFiles = new ArrayList<FileInfo>();
+			testFiles = new ArrayList<>();
 		}
 		return testFiles;
 	}
 
 	public List<FileInfo> getExpectedFiles() {
 		if (expectedFiles == null) {
-			expectedFiles = new ArrayList<FileInfo>();
+			expectedFiles = new ArrayList<>();
 		}
 		return expectedFiles;
 	}

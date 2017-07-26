@@ -23,6 +23,7 @@ public class PHPTraitType extends PHPClassType {
 		super(namespace, typeName);
 	}
 
+	@Override
 	public int hashCode() {
 		final int prime = 33;
 		int result = 1;

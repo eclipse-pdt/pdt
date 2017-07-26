@@ -34,15 +34,18 @@ public class UnknownMessageResponse extends DebugMessageResponseImpl implements 
 		fOrigMessageType = origMessageType;
 	}
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		setOriginalMessageType(in.readInt());
 	}
 
+	@Override
 	public int getType() {
 		return 1000;
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());

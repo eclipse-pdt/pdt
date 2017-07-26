@@ -86,10 +86,11 @@ public final class PHPDebugUtil {
 			return;
 		}
 
-		final SyncObject<DebugException> e = new SyncObject<DebugException>();
+		final SyncObject<DebugException> e = new SyncObject<>();
 
 		// Run synchronously to pass exception if any
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					final URL urlToOpen = new URL(launchURL);
@@ -133,7 +134,7 @@ public final class PHPDebugUtil {
 	 * @return set of unique port numbers for given debugger type
 	 */
 	public static Set<Integer> getDebugPorts(String debuggerId) {
-		Set<Integer> ports = new HashSet<Integer>();
+		Set<Integer> ports = new HashSet<>();
 		if (debuggerId.equals(ZendDebuggerConfiguration.ID)) {
 			// Get default port from preferences first
 			Integer defaultPort = PHPDebugPlugin.getDebugPort(debuggerId);
@@ -173,7 +174,7 @@ public final class PHPDebugUtil {
 	 * @return all registered Zend Debugger client hosts/IPs.
 	 */
 	public static String getZendAllHosts() {
-		Set<String> merged = new LinkedHashSet<String>();
+		Set<String> merged = new LinkedHashSet<>();
 		// Check default list from preferences first
 		String defaultHosts = PHPDebugPlugin.getDebugHosts();
 		for (String host : getZendHostsArray(defaultHosts)) {

@@ -29,6 +29,7 @@ public class CompilerAstLexer extends org.eclipse.php.internal.core.ast.scanner.
 		super(in);
 	}
 
+	@Override
 	protected void handleVarComment() {
 		String content = yytext();
 		int start = getTokenStartPosition();
@@ -39,6 +40,7 @@ public class CompilerAstLexer extends org.eclipse.php.internal.core.ast.scanner.
 		}
 	}
 
+	@Override
 	protected void addComment(int type) {
 		int leftPosition = getTokenStartPosition();
 		Comment comment = new Comment(commentStartPosition, leftPosition + getTokenLength(), type);
@@ -48,11 +50,13 @@ public class CompilerAstLexer extends org.eclipse.php.internal.core.ast.scanner.
 	protected void addVarComment() {
 	}
 
+	@Override
 	protected IDocumentorLexer getDocumentorLexer(java.io.Reader reader) {
 		IDocumentorLexer lexer = new DocumentorLexer(reader);
 		return lexer;
 	}
 
+	@Override
 	protected boolean parsePHPDoc() {
 		boolean result = super.parsePHPDoc();
 		if (result) {
@@ -71,6 +75,7 @@ public class CompilerAstLexer extends org.eclipse.php.internal.core.ast.scanner.
 		}
 	}
 
+	@Override
 	protected Symbol createFullSymbol(int symbolNumber) {
 		Symbol symbol = super.createFullSymbol(symbolNumber);
 

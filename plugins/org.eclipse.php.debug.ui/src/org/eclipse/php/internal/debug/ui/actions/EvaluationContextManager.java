@@ -58,7 +58,7 @@ public class EvaluationContextManager implements IWindowListener, IDebugContextL
 	// PHPDebugUIPlugin.ID
 	// + ".supportsInstanceRetrieval";
 
-	private Map fContextsByPage = null;
+	private Map<IWorkbenchPage, IStackFrame> fContextsByPage = null;
 
 	private IWorkbenchWindow fActiveWindow;
 
@@ -68,6 +68,7 @@ public class EvaluationContextManager implements IWindowListener, IDebugContextL
 
 	public static void startup() {
 		Runnable r = new Runnable() {
+			@Override
 			public void run() {
 				if (fgManager == null) {
 					fgManager = new EvaluationContextManager();
@@ -90,6 +91,7 @@ public class EvaluationContextManager implements IWindowListener, IDebugContextL
 	 * @see org.eclipse.ui.IWindowListener#windowActivated(org.eclipse.ui.
 	 * IWorkbenchWindow)
 	 */
+	@Override
 	public void windowActivated(IWorkbenchWindow window) {
 		fActiveWindow = window;
 	}
@@ -100,6 +102,7 @@ public class EvaluationContextManager implements IWindowListener, IDebugContextL
 	 * @see org.eclipse.ui.IWindowListener#windowClosed(org.eclipse.ui.
 	 * IWorkbenchWindow )
 	 */
+	@Override
 	public void windowClosed(IWorkbenchWindow window) {
 	}
 
@@ -109,6 +112,7 @@ public class EvaluationContextManager implements IWindowListener, IDebugContextL
 	 * @see org.eclipse.ui.IWindowListener#windowDeactivated(org.eclipse.ui.
 	 * IWorkbenchWindow)
 	 */
+	@Override
 	public void windowDeactivated(IWorkbenchWindow window) {
 	}
 
@@ -118,6 +122,7 @@ public class EvaluationContextManager implements IWindowListener, IDebugContextL
 	 * @see org.eclipse.ui.IWindowListener#windowOpened(org.eclipse.ui.
 	 * IWorkbenchWindow )
 	 */
+	@Override
 	public void windowOpened(IWorkbenchWindow window) {
 	}
 
@@ -130,7 +135,7 @@ public class EvaluationContextManager implements IWindowListener, IDebugContextL
 	 */
 	private void setContext(IWorkbenchPage page, IStackFrame frame, boolean instOf) {
 		if (fContextsByPage == null) {
-			fContextsByPage = new HashMap();
+			fContextsByPage = new HashMap<>();
 		}
 		fContextsByPage.put(page, frame);
 		System.setProperty(DEBUGGER_ACTIVE, "true"); //$NON-NLS-1$
@@ -198,7 +203,7 @@ public class EvaluationContextManager implements IWindowListener, IDebugContextL
 	private static IStackFrame getContext(IWorkbenchPage page) {
 		if (fgManager != null) {
 			if (fgManager.fContextsByPage != null) {
-				return (IStackFrame) fgManager.fContextsByPage.get(page);
+				return fgManager.fContextsByPage.get(page);
 			}
 		}
 		return null;
@@ -223,14 +228,14 @@ public class EvaluationContextManager implements IWindowListener, IDebugContextL
 	 * @return IJavaStackFrame
 	 */
 	public static IStackFrame getEvaluationContext(IWorkbenchWindow window) {
-		List alreadyVisited = new ArrayList();
+		List<IWorkbenchWindow> alreadyVisited = new ArrayList<>();
 		if (window == null) {
 			window = fgManager.fActiveWindow;
 		}
 		return getEvaluationContext(window, alreadyVisited);
 	}
 
-	private static IStackFrame getEvaluationContext(IWorkbenchWindow window, List alreadyVisited) {
+	private static IStackFrame getEvaluationContext(IWorkbenchWindow window, List<IWorkbenchWindow> alreadyVisited) {
 		IWorkbenchPage activePage = window.getActivePage();
 		IStackFrame frame = null;
 		if (activePage != null) {
@@ -263,6 +268,7 @@ public class EvaluationContextManager implements IWindowListener, IDebugContextL
 		return frame;
 	}
 
+	@Override
 	public void debugContextChanged(DebugContextEvent event) {
 		if ((event.getFlags() & DebugContextEvent.ACTIVATED) > 0) {
 			IWorkbenchPart part = event.getDebugContextProvider().getPart();
@@ -274,7 +280,7 @@ public class EvaluationContextManager implements IWindowListener, IDebugContextL
 					if (ss.size() == 1) {
 						Object element = ss.getFirstElement();
 						if (element instanceof IAdaptable) {
-							IStackFrame frame = (IStackFrame) ((IAdaptable) element).getAdapter(IStackFrame.class);
+							IStackFrame frame = ((IAdaptable) element).getAdapter(IStackFrame.class);
 							boolean instOf = element instanceof IStackFrame || element instanceof IThread;
 							if (frame != null) {
 								// do not consider scrapbook frames

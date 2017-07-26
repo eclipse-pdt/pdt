@@ -31,11 +31,12 @@ public class IncludePathManager {
 	private static IncludePathManager instance = new IncludePathManager();
 
 	private boolean modifyingIncludePath;
-	private final Set<IIncludepathListener> listeners = new HashSet<IIncludepathListener>(4);
+	private final Set<IIncludepathListener> listeners = new HashSet<>(4);
 
 	private IncludePathManager() {
 		DLTKCore.addElementChangedListener(new IElementChangedListener() {
 
+			@Override
 			public void elementChanged(ElementChangedEvent event) {
 				processChildren(event.getDelta());
 			}
@@ -51,7 +52,7 @@ public class IncludePathManager {
 						IScriptProject scriptProject = element.getScriptProject();
 						IProject project = scriptProject.getProject();
 						IncludePath[] includePathEntries = getIncludePaths(project);
-						List<IncludePath> newEntries = new LinkedList<IncludePath>(Arrays.asList(includePathEntries));
+						List<IncludePath> newEntries = new LinkedList<>(Arrays.asList(includePathEntries));
 
 						IBuildpathEntry[] rawBuildpath = scriptProject.getRawBuildpath();
 
@@ -60,7 +61,7 @@ public class IncludePathManager {
 						boolean changed = false;
 
 						// Calculate added entries:
-						Set<IPath> addedModels = new HashSet<IPath>();
+						Set<IPath> addedModels = new HashSet<>();
 						getAddedModels(delta, addedModels);
 						for (IBuildpathEntry entry : rawBuildpath) {
 							boolean added = false;
@@ -78,7 +79,7 @@ public class IncludePathManager {
 						}
 
 						// Calculate removed entries:
-						List<IncludePath> entriesToRemove = new LinkedList<IncludePath>();
+						List<IncludePath> entriesToRemove = new LinkedList<>();
 						for (IncludePath includePath : includePathEntries) {
 							boolean removed = true;
 							for (IBuildpathEntry entry : rawBuildpath) {
@@ -145,7 +146,7 @@ public class IncludePathManager {
 	 * @return ordered include path
 	 */
 	public IncludePath[] getIncludePaths(IProject project) {
-		List<IncludePath> includePathEntries = new LinkedList<IncludePath>();
+		List<IncludePath> includePathEntries = new LinkedList<>();
 		IBuildpathEntry[] buildpath = null;
 		try {
 			buildpath = DLTKCore.create(project).getRawBuildpath();
@@ -231,6 +232,7 @@ public class IncludePathManager {
 		}
 		modifyingIncludePath = true;
 		WorkspaceJob job = new WorkspaceJob("Modifying Include Path") { //$NON-NLS-1$
+			@Override
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				CorePreferencesSupport.getInstance().setProjectSpecificPreferencesValue(PREF_KEY, buf.toString(),
 						project);
@@ -263,7 +265,7 @@ public class IncludePathManager {
 	public void removeEntryFromIncludePath(IProject project, IBuildpathEntry buildpathEntry) throws ModelException {
 
 		IncludePath[] includePathEntries = getIncludePaths(project);
-		List<IncludePath> newIncludePathEntries = new ArrayList<IncludePath>();
+		List<IncludePath> newIncludePathEntries = new ArrayList<>();
 
 		// go over the entries and compare the path.
 		// if it is the same as the given entry, it won't be added to the list.
@@ -304,7 +306,7 @@ public class IncludePathManager {
 	 */
 	public void addEntriesToIncludePath(IProject project, List<IBuildpathEntry> entries) {
 
-		List<IncludePath> includePathEntries = new ArrayList<IncludePath>();
+		List<IncludePath> includePathEntries = new ArrayList<>();
 		for (IBuildpathEntry buildpathEntry : entries) {
 			if (buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
 				IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(buildpathEntry.getPath());
@@ -328,7 +330,7 @@ public class IncludePathManager {
 	 */
 	public void appendEntriesToIncludePath(IProject project, List<IBuildpathEntry> entries) {
 
-		List<IncludePath> includePathEntries = new ArrayList<IncludePath>();
+		List<IncludePath> includePathEntries = new ArrayList<>();
 		for (IBuildpathEntry buildpathEntry : entries) {
 			if (buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
 				IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(buildpathEntry.getPath());

@@ -40,21 +40,24 @@ public class GlobalNamespace extends SourceType {
 		super((ModelElement) project, NAME);
 	}
 
+	@Override
 	public IField[] getFields() throws ModelException {
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(getParent(), IDLTKSearchScope.SOURCES);
 		return PHPModelAccess.getDefault().findFileFields(PHPCoreConstants.GLOBAL_NAMESPACE, null, MatchRule.PREFIX, 0,
 				0, scope, null);
 	}
 
+	@Override
 	public IMethod[] getMethods() throws ModelException {
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(getParent(), IDLTKSearchScope.SOURCES);
 		return PHPModelAccess.getDefault().findFunctions(PHPCoreConstants.GLOBAL_NAMESPACE, null, MatchRule.PREFIX, 0,
 				0, scope, null);
 	}
 
+	@Override
 	public IType[] getTypes() throws ModelException {
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(getParent(), IDLTKSearchScope.SOURCES);
-		List<IType> types = new ArrayList<IType>();
+		List<IType> types = new ArrayList<>();
 		types.addAll(Arrays.asList(PHPModelAccess.getDefault().findTypes(PHPCoreConstants.GLOBAL_NAMESPACE, null,
 				MatchRule.PREFIX, 0, 0, scope, null)));
 
@@ -63,18 +66,21 @@ public class GlobalNamespace extends SourceType {
 		return types.toArray(new IType[types.size()]);
 	}
 
+	@Override
 	public IModelElement[] getChildren(IProgressMonitor monitor) throws ModelException {
-		List<IModelElement> children = new LinkedList<IModelElement>();
+		List<IModelElement> children = new LinkedList<>();
 		children.addAll(Arrays.asList(getFields()));
 		children.addAll(Arrays.asList(getMethods()));
 		children.addAll(Arrays.asList(getTypes()));
 		return children.toArray(new IModelElement[children.size()]);
 	}
 
+	@Override
 	public int getFlags() throws ModelException {
 		return Modifiers.AccNameSpace;
 	}
 
+	@Override
 	public boolean exists() {
 		return true;
 	}

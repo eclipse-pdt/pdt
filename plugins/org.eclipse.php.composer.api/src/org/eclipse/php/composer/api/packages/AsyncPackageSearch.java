@@ -26,9 +26,9 @@ import org.apache.commons.logging.LogFactory;
 public class AsyncPackageSearch extends AsyncDownloadClient {
 
 	private int pageLimit = 3;
-	protected List<PackageSearchListenerInterface> listeners = new ArrayList<PackageSearchListenerInterface>();
-	private Map<String, Integer> counters = new HashMap<String, Integer>();
-	private Map<String, Boolean> aborts = new HashMap<String, Boolean>();
+	protected List<PackageSearchListenerInterface> listeners = new ArrayList<>();
+	private Map<String, Integer> counters = new HashMap<>();
+	private Map<String, Boolean> aborts = new HashMap<>();
 	private Log log = LogFactory.getLog(AsyncPackageSearch.class);
 
 	public AsyncPackageSearch() {
@@ -53,6 +53,7 @@ public class AsyncPackageSearch extends AsyncDownloadClient {
 				return null;
 			}
 
+			@Override
 			public void dataReceived(InputStream content, String url) {
 				try {
 					// parse query from url
@@ -84,6 +85,7 @@ public class AsyncPackageSearch extends AsyncDownloadClient {
 				}
 			}
 
+			@Override
 			public void aborted(String url) {
 				aborts.put(getQuery(url), true);
 				for (PackageSearchListenerInterface listener : listeners) {

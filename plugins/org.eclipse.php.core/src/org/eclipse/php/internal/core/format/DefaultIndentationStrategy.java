@@ -104,6 +104,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		return null;
 	}
 
+	@Override
 	public void placeMatchingBlanks(final IStructuredDocument document, final StringBuilder result,
 			final int lineNumber, final int forOffset) throws BadLocationException {
 		placeMatchingBlanksForStructuredDocument(document, result, lineNumber, forOffset, getCommandText());

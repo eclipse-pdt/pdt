@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class NamespacePHPDocVarStartContext extends NamespaceAbstractPHPDocTagStartContext {
 
-	public static List<String> TAGS = new ArrayList<String>();
+	public static List<String> TAGS = new ArrayList<>();
 
 	static {
 		TAGS.add("throws"); //$NON-NLS-1$

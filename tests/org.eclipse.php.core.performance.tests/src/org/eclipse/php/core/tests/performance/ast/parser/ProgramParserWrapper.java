@@ -52,7 +52,7 @@ public class ProgramParserWrapper extends AbstractPDTTTest {
 		super("");
 	}
 
-	public Test suite(final Map map) {
+	public Test suite(final Map<?, ?> map) {
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject(map.get(ProjectSuite.PROJECT).toString());
 		perfMonitor = PHPCorePerformanceTests.getPerformanceMonitor();
 		TestSuite suite = new TestSuite("Auto Program Parser Tests");
@@ -66,11 +66,13 @@ public class ProgramParserWrapper extends AbstractPDTTTest {
 					final PdttFile pdttFile = new PdttFile(PHPCorePerformanceTests.getDefault().getBundle(), fileName);
 					ProgramParser test = new ProgramParser(phpVersion.getAlias() + " - /" + fileName) {
 
+						@Override
 						protected void setUp() throws Exception {
 							TestUtils.setProjectPHPVersion(project, phpVersion);
 							pdttFile.applyPreferences();
 						}
 
+						@Override
 						protected void tearDown() throws Exception {
 							if (testFile != null) {
 								testFile.delete(true, null);
@@ -78,6 +80,7 @@ public class ProgramParserWrapper extends AbstractPDTTTest {
 							}
 						}
 
+						@Override
 						protected void runTest() throws Throwable {
 							executeParser(pdttFile.getFile(), fileName);
 						}
@@ -91,6 +94,7 @@ public class ProgramParserWrapper extends AbstractPDTTTest {
 						// file
 						// parsing
 						// failure
+						@Override
 						protected void runTest() throws Throwable {
 							throw e;
 						}
@@ -120,6 +124,7 @@ public class ProgramParserWrapper extends AbstractPDTTTest {
 
 		TestUtils.waitForIndexer();
 		perfMonitor.execute("PerformanceTests.testProgramParser" + "_" + fileName, new Operation() {
+			@Override
 			public void run() throws Exception {
 				Util.createProgramFromSource(testFile);
 			}

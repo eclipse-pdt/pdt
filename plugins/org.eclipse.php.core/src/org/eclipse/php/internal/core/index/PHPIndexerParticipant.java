@@ -27,6 +27,7 @@ public class PHPIndexerParticipant implements IIndexerParticipant {
 	private PHPElementResolver elementResolver;
 	private PHPIndexingParser parser;
 
+	@Override
 	public IElementResolver getElementResolver() {
 		if (elementResolver == null) {
 			elementResolver = new PHPElementResolver();
@@ -34,6 +35,7 @@ public class PHPIndexerParticipant implements IIndexerParticipant {
 		return elementResolver;
 	}
 
+	@Override
 	public IIndexingParser getIndexingParser() {
 		if (parser == null) {
 			parser = new PHPIndexingParser();

@@ -39,9 +39,10 @@ public class ListenerTest extends ComposertTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		pkg = createDummyPackage();
-		listenerCounter = new HashMap<String, Integer>();
+		listenerCounter = new HashMap<>();
 		changes = 0;
 		pkg.addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				property = e.getPropertyName();
 				oldValue = e.getOldValue();
@@ -167,7 +168,7 @@ public class ListenerTest extends ComposertTestCase {
 			return 0;
 		}
 		
-		return (int)listenerCounter.get(key);
+		return listenerCounter.get(key);
 	}
 	
 	@Test

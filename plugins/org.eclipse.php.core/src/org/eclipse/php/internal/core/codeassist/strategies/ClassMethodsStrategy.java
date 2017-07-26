@@ -44,6 +44,7 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		ICompletionContext context = getContext();
 		if (!(context instanceof ClassMemberContext)) {
@@ -66,7 +67,7 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 		}
 
 		PHPVersion phpVersion = concreteContext.getPHPVersion();
-		Set<String> magicMethods = new HashSet<String>();
+		Set<String> magicMethods = new HashSet<>();
 		magicMethods.addAll(Arrays.asList(PHPMagicMethods.getMethods(phpVersion)));
 
 		boolean exactName = requestor.isContextInformationMode();
@@ -75,7 +76,7 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 				&& concreteContext.getDocument().getChar(concreteContext.getOffset() - 1) == '(') {
 			exactName = true;
 		}
-		List<IMethod> result = new LinkedList<IMethod>();
+		List<IMethod> result = new LinkedList<>();
 		for (IType type : concreteContext.getLhsTypes()) {
 			try {
 				ITypeHierarchy hierarchy = getCompanion().getSuperTypeHierarchy(type, null);
@@ -89,7 +90,7 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 
 					if (concreteContext.isInUseTraitStatement()) {
 						// result.add(method);
-						reporter.reportMethod((IMethod) method, "", //$NON-NLS-1$
+						reporter.reportMethod(method, "", //$NON-NLS-1$
 								replaceRange, ProposalExtraInfo.METHOD_ONLY);
 					} else if ((!PHPModelUtils.isConstructor(method)
 							|| inConstructor && isSuperConstructor(method, type, concreteContext))
@@ -106,7 +107,7 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 			}
 		}
 		for (IMethod method : result) {
-			reporter.reportMethod((IMethod) method, suffix, replaceRange);
+			reporter.reportMethod(method, suffix, replaceRange);
 		}
 	}
 
@@ -156,6 +157,7 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 	// return null;
 	// }
 
+	@Override
 	protected boolean showNonStaticMembers(ClassMemberContext context) {
 		return super.showNonStaticMembers(context) || context.getTriggerType() == Trigger.CLASS;
 	}

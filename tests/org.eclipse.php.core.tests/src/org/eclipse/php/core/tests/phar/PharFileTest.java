@@ -64,7 +64,7 @@ public class PharFileTest {
 
 	@Parameters(name = "{1} - {2} - {3} - {4}")
 	public static Iterable<Object[]> data() throws Exception {
-		List<Object[]> list = new LinkedList<Object[]>();
+		List<Object[]> list = new LinkedList<>();
 		for (String testsDirectory : TESTS) {
 			File folder = getResourceFolder(testsDirectory).toFile();
 			for (final File pharFolder : folder.listFiles()) {

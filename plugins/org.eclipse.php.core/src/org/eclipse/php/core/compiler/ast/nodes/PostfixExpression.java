@@ -44,6 +44,7 @@ public class PostfixExpression extends Expression {
 		this.operator = operator;
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -52,6 +53,7 @@ public class PostfixExpression extends Expression {
 		visitor.endvisit(this);
 	}
 
+	@Override
 	public String getOperator() {
 		switch (getOperatorType()) {
 		case OP_DEC:
@@ -63,6 +65,7 @@ public class PostfixExpression extends Expression {
 		}
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.POSTFIX_EXPRESSION;
 	}
@@ -78,9 +81,11 @@ public class PostfixExpression extends Expression {
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
+	@Override
 	public final void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}

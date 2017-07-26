@@ -65,6 +65,7 @@ public class FileContentRequestCurrentHandler extends AbstractFileContentRequest
 	 * org.eclipse.php.debug.core.debugger.messages.IDebugMessage,
 	 * org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget)
 	 */
+	@Override
 	public void handle(IDebugMessage request, PHPDebugTarget debugTarget) {
 		this.debugTarget = debugTarget;
 		contentRequest = (FileContentRequest) request;
@@ -79,6 +80,7 @@ public class FileContentRequestCurrentHandler extends AbstractFileContentRequest
 	 * @see org.eclipse.php.debug.core.debugger.handlers.IDebugRequestHandler#
 	 * getResponseMessage()
 	 */
+	@Override
 	public IDebugResponseMessage getResponseMessage() {
 		FileContentResponse response = new FileContentResponse();
 		response.setID(reqID);

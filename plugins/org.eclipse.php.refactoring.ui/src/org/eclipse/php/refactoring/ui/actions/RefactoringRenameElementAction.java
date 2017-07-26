@@ -67,6 +67,7 @@ public class RefactoringRenameElementAction extends RenamePHPElementAction {
 		super(editor);
 	}
 
+	@Override
 	public void selectionChanged(IStructuredSelection selection) {
 		setEnabled(true);
 
@@ -107,6 +108,7 @@ public class RefactoringRenameElementAction extends RenamePHPElementAction {
 		}
 	}
 
+	@Override
 	public void selectionChanged(ITextSelection selection) {
 		setEnabled(true);
 	}
@@ -124,6 +126,7 @@ public class RefactoringRenameElementAction extends RenamePHPElementAction {
 		return action;
 	}
 
+	@Override
 	public void run(IStructuredSelection selection) {
 
 		if (!isEnabled()) {
@@ -233,6 +236,7 @@ public class RefactoringRenameElementAction extends RenamePHPElementAction {
 		return dirtyEditors.size() == 0;
 	}
 
+	@Override
 	public void run(ITextSelection selection) {
 		// Do nothing super.run(selection)
 	}

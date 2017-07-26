@@ -42,7 +42,7 @@ public class DefaultPHPFoldingPreferenceBlock implements IPHPFoldingPreferenceBl
 	private IPreferenceStore fStore;
 	private OverlayPreferenceStore fOverlayStore;
 	private OverlayKey[] fKeys;
-	private Map fCheckBoxes = new HashMap();
+	private Map<Button, String> fCheckBoxes = new HashMap<>();
 	private SelectionListener fCheckBoxListener = new SelectionListener() {
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
@@ -51,7 +51,7 @@ public class DefaultPHPFoldingPreferenceBlock implements IPHPFoldingPreferenceBl
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			Button button = (Button) e.widget;
-			fOverlayStore.setValue((String) fCheckBoxes.get(button), button.getSelection());
+			fOverlayStore.setValue(fCheckBoxes.get(button), button.getSelection());
 		}
 	};
 
@@ -62,7 +62,7 @@ public class DefaultPHPFoldingPreferenceBlock implements IPHPFoldingPreferenceBl
 	}
 
 	private OverlayKey[] createKeys() {
-		ArrayList overlayKeys = new ArrayList();
+		ArrayList<OverlayKey> overlayKeys = new ArrayList<>();
 
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN,
 				PreferenceConstants.EDITOR_FOLDING_PHPDOC));
@@ -76,7 +76,7 @@ public class DefaultPHPFoldingPreferenceBlock implements IPHPFoldingPreferenceBl
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN,
 				PreferenceConstants.EDITOR_FOLDING_HEADER_COMMENTS));
 
-		return (OverlayKey[]) overlayKeys.toArray(new OverlayKey[overlayKeys.size()]);
+		return overlayKeys.toArray(new OverlayKey[overlayKeys.size()]);
 	}
 
 	/**
@@ -130,10 +130,10 @@ public class DefaultPHPFoldingPreferenceBlock implements IPHPFoldingPreferenceBl
 	}
 
 	private void initializeFields() {
-		Iterator it = fCheckBoxes.keySet().iterator();
+		Iterator<Button> it = fCheckBoxes.keySet().iterator();
 		while (it.hasNext()) {
-			Button b = (Button) it.next();
-			String key = (String) fCheckBoxes.get(b);
+			Button b = it.next();
+			String key = fCheckBoxes.get(b);
 			b.setSelection(fOverlayStore.getBoolean(key));
 		}
 	}

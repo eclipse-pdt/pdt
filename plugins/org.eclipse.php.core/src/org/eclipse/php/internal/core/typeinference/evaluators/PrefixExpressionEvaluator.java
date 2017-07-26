@@ -26,6 +26,7 @@ public class PrefixExpressionEvaluator extends GoalEvaluator {
 		super(goal);
 	}
 
+	@Override
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
 		PrefixExpression prefixExpression = (PrefixExpression) typedGoal.getExpression();
@@ -36,11 +37,13 @@ public class PrefixExpressionEvaluator extends GoalEvaluator {
 		return new IGoal[] { new ExpressionTypeGoal(goal.getContext(), prefixExpression.getVariable()) };
 	}
 
+	@Override
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		this.result = (IEvaluatedType) result;
 		return IGoal.NO_GOALS;
 	}
 
+	@Override
 	public Object produceResult() {
 		return result;
 	}

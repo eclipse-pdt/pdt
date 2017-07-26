@@ -33,6 +33,7 @@ public class NamespaceInstanceOfStrategy extends NamespaceTypesStrategy {
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 
 		ICompletionContext context = getContext();
@@ -53,6 +54,7 @@ public class NamespaceInstanceOfStrategy extends NamespaceTypesStrategy {
 		}
 	}
 
+	@Override
 	public String getSuffix(AbstractCompletionContext abstractContext) {
 		String nextWord = null;
 		try {

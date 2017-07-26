@@ -64,6 +64,7 @@ public class CRCableOutputStream extends OutputStream implements CRCable {
 		innerOutputStream.flush();
 	}
 
+	@Override
 	public long getCrc() {
 		return crcValue;
 	}

@@ -59,7 +59,7 @@ class ActionFilterContributorsRegistry {
 	 *         <code>null</code>
 	 */
 	public IActionFilterContributor getContributor(String id) {
-		final IConfigurationElement element = (IConfigurationElement) contributorElements.get(id);
+		final IConfigurationElement element = contributorElements.get(id);
 		if (element != null) {
 			final IActionFilterContributor contributor[] = new IActionFilterContributor[1];
 			SafeRunner.run(new SafeRunnable(PHPUIMessages.ActionFilterContributorsRegistry_0 + EXTENSION_POINT) {

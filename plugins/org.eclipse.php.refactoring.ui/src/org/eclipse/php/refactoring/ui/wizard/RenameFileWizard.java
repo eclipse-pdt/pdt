@@ -35,6 +35,7 @@ public class RenameFileWizard extends RenameRefactoringWizard {
 				PHPRefactoringUIMessages.getString("RenameGlobalVariableWizard_inputPageDescription"), null, null); //$NON-NLS-1$
 	}
 
+	@Override
 	protected RenameInputWizardPage createInputPage(String message, String initialSetting) {
 		return new RenameInputWizardPage(message, null, true, initialSetting) {
 
@@ -42,13 +43,14 @@ public class RenameFileWizard extends RenameRefactoringWizard {
 			private Button fUpdateReferences;
 			private Button fUPdateClassName;
 
+			@Override
 			protected RefactoringStatus validateTextField(String text) {
 				return validateNewName(text);
 			}
 
 			@Override
 			protected void addAdditionalOptions(Composite composite, RowLayouter layouter) {
-				final IReferenceUpdating refactoring = (IReferenceUpdating) getRefactoring()
+				final IReferenceUpdating refactoring = getRefactoring()
 						.getAdapter(IReferenceUpdating.class);
 				String title = PHPRefactoringUIMessages.getString("RenameFileWizard.1"); //$NON-NLS-1$
 				boolean defaultValue = getBooleanSetting(UPDATE_REFERENCES, refactoring.getUpdateReferences());
@@ -58,6 +60,7 @@ public class RenameFileWizard extends RenameRefactoringWizard {
 				refactoring.setUpdateRefernces(true);
 				getRefactoringWizard().setForcePreviewReview(true);
 				fUpdateReferences.addSelectionListener(new SelectionAdapter() {
+					@Override
 					public void widgetSelected(SelectionEvent e) {
 						refactoring.setUpdateRefernces(fUpdateReferences.getSelection());
 						updateForcePreview();
@@ -76,6 +79,7 @@ public class RenameFileWizard extends RenameRefactoringWizard {
 							Boolean.toString((fUPdateClassName.getSelection())));
 					getRefactoringWizard().setForcePreviewReview(true);
 					fUPdateClassName.addSelectionListener(new SelectionAdapter() {
+						@Override
 						public void widgetSelected(SelectionEvent e) {
 							refactoring.setAttribute(RenameFileProcessor.UPDATECLASSNAME,
 									Boolean.toString(fUPdateClassName.getSelection()));
@@ -85,17 +89,19 @@ public class RenameFileWizard extends RenameRefactoringWizard {
 				}
 			}
 
+			@Override
 			protected void updateForcePreview() {
 				super.updateForcePreview();
 				boolean forcePreview = false;
 				Refactoring refactoring = getRefactoring();
-				IReferenceUpdating refUpdate = (IReferenceUpdating) refactoring.getAdapter(IReferenceUpdating.class);
+				IReferenceUpdating refUpdate = refactoring.getAdapter(IReferenceUpdating.class);
 				if (refUpdate != null) {
 					forcePreview = refUpdate.getUpdateReferences();
 				}
 				getRefactoringWizard().setForcePreviewReview(forcePreview);
 			}
 
+			@Override
 			public void dispose() {
 				if (saveSettings()) {
 					saveBooleanSetting(UPDATE_REFERENCES, fUpdateReferences);

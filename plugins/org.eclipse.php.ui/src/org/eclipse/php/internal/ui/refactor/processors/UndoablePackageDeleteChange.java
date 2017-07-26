@@ -24,9 +24,9 @@ import org.eclipse.ui.ide.undo.ResourceDescription;
 
 public class UndoablePackageDeleteChange extends DynamicValidationStateChange {
 
-	private final List/* <IResource> */ fPackageDeletes;
+	private final List/* <IResource> */<?> fPackageDeletes;
 
-	public UndoablePackageDeleteChange(String name, List/* <IResource> */ packageDeletes) {
+	public UndoablePackageDeleteChange(String name, List/* <IResource> */<?> packageDeletes) {
 		super(name);
 		fPackageDeletes = packageDeletes;
 	}

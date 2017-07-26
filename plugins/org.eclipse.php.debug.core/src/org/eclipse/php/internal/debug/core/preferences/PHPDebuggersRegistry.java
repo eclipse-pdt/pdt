@@ -22,7 +22,6 @@ import org.eclipse.php.debug.daemon.communication.ICommunicationDaemon;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
-import org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.debugger.NoneDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.php.internal.debug.daemon.communication.DaemonsRegistry;
@@ -53,8 +52,8 @@ public class PHPDebuggersRegistry {
 
 	private static PHPDebuggersRegistry instance;
 
-	private HashMap<String, String> debuggers = new HashMap<String, String>();
-	private HashMap<String, AbstractDebuggerConfiguration> configurations = new HashMap<String, AbstractDebuggerConfiguration>();
+	private HashMap<String, String> debuggers = new HashMap<>();
+	private HashMap<String, AbstractDebuggerConfiguration> configurations = new HashMap<>();
 	private AbstractDebuggerConfiguration noneDebuggerConfiguration = new NoneDebuggerConfiguration();
 
 	private PHPDebuggersRegistry() {
@@ -157,7 +156,7 @@ public class PHPDebuggersRegistry {
 		// We use the following HashMap in order to accumulate non PDT debugger
 		// configurations.
 		// that are extension to point: org.eclipse.php.debug.core.phpDebuggers
-		HashMap<String, AbstractDebuggerConfiguration> nonPDTConfigurations = new HashMap<String, AbstractDebuggerConfiguration>();
+		HashMap<String, AbstractDebuggerConfiguration> nonPDTConfigurations = new HashMap<>();
 		for (final IConfigurationElement element : elements) {
 
 			if (DEBUGGER_TAG.equals(element.getName())) {
@@ -165,10 +164,12 @@ public class PHPDebuggersRegistry {
 				final String id = element.getAttribute(ID_ATTRIBUTE);
 				boolean isPDT = element.getNamespaceIdentifier().startsWith("org.eclipse.php"); //$NON-NLS-1$
 				boolean filter = WorkbenchActivityHelper.filterItem(new IPluginContribution() {
+					@Override
 					public String getLocalId() {
 						return id;
 					}
 
+					@Override
 					public String getPluginId() {
 						return element.getNamespaceIdentifier();
 					}

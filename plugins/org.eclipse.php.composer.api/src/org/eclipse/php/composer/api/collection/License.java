@@ -25,6 +25,7 @@ public class License extends AbstractJsonArray<String> {
 	public License() {
 	}
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	protected void doParse(Object obj) {
 		clear();
@@ -41,7 +42,7 @@ public class License extends AbstractJsonArray<String> {
 	@Override
 	protected Object buildJson() {
 		if (size() == 1) {
-			return (String) get(0);
+			return get(0);
 		}
 
 		return super.buildJson();
@@ -53,6 +54,7 @@ public class License extends AbstractJsonArray<String> {
 	 * @param license
 	 * @return this
 	 */
+	@Override
 	public void add(String license) {
 		if (!has(license)) {
 			super.add(license);

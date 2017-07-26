@@ -46,11 +46,13 @@ public class WorkbenchOptionsBlock extends AbstractPHPPreferencePageBlock {
 	private RadioGroupFieldEditor fSwitchPerspField;
 	private RadioGroupFieldEditor fAllowMultipleLnchField;
 
+	@Override
 	public void setCompositeAddon(Composite parent) {
 		Composite composite = addPageContents(parent);
 		addWorkspacePreferenceSubsection(composite);
 	}
 
+	@Override
 	public void initializeValues(PreferencePage propertyPage) {
 		this.propertyPage = propertyPage;
 
@@ -67,19 +69,23 @@ public class WorkbenchOptionsBlock extends AbstractPHPPreferencePageBlock {
 		fSwitchPerspField.load();
 	}
 
+	@Override
 	public boolean performOK(boolean isProjectSpecific) {
 		savePreferences();
 		return true;
 	}
 
+	@Override
 	public void performApply(boolean isProjectSpecific) {
 		performOK(isProjectSpecific);
 	}
 
+	@Override
 	public boolean performCancel() {
 		return true;
 	}
 
+	@Override
 	public void performDefaults() {
 		IEclipsePreferences prefs = PHPDebugPlugin.getDefaultPreferences();
 		fOpenInBrowser.setSelection(prefs.getBoolean(PHPDebugCorePreferenceNames.OPEN_IN_BROWSER, true));

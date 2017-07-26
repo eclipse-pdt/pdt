@@ -71,11 +71,12 @@ public class ZendDebuggerExeSettings extends AbstractDebuggerSettings {
 	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerSettings
 	 * #createAttributes()
 	 */
+	@Override
 	protected Map<String, String> createAttributes() {
 		ZendDebuggerConfiguration debuggerConf = (ZendDebuggerConfiguration) PHPDebuggersRegistry
 				.getDebuggerConfiguration(getDebuggerId());
 		// Set up initial attributes
-		Map<String, String> attributes = new HashMap<String, String>();
+		Map<String, String> attributes = new HashMap<>();
 		String clientPort = debuggerConf.getAttribute(ZEND_DEBUG_PORT);
 		attributes.put(PROP_CLIENT_PORT, clientPort != null ? clientPort : DEFAULT_CLIENT_PORT);
 		return attributes;

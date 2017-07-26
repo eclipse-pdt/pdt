@@ -32,6 +32,7 @@ public class CatchClauseEvaluator extends GoalEvaluator {
 		super(goal);
 	}
 
+	@Override
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
 		CatchClause catchClause = (CatchClause) typedGoal.getExpression();
@@ -45,10 +46,12 @@ public class CatchClauseEvaluator extends GoalEvaluator {
 		return IGoal.NO_GOALS;
 	}
 
+	@Override
 	public Object produceResult() {
 		return PHPTypeInferenceUtils.combineTypes(result);
 	}
 
+	@Override
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		return IGoal.NO_GOALS;
 	}

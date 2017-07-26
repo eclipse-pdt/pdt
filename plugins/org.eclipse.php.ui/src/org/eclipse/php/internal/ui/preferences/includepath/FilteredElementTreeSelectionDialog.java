@@ -49,7 +49,7 @@ public class FilteredElementTreeSelectionDialog extends ElementTreeSelectionDial
 			super.setPattern(patternString);
 			fMatchers = null;
 			if (patternString != null && patternString.length() > 0) {
-				ArrayList res = new ArrayList();
+				ArrayList<StringMatcher> res = new ArrayList<>();
 				StringTokenizer tok = new StringTokenizer(patternString, ",;"); //$NON-NLS-1$
 				fMatchers = new StringMatcher[tok.countTokens()];
 				for (int i = 0; i < fMatchers.length; i++) {
@@ -59,7 +59,7 @@ public class FilteredElementTreeSelectionDialog extends ElementTreeSelectionDial
 					}
 				}
 				if (!res.isEmpty()) {
-					fMatchers = (StringMatcher[]) res.toArray(new StringMatcher[res.size()]);
+					fMatchers = res.toArray(new StringMatcher[res.size()]);
 				}
 			}
 		}

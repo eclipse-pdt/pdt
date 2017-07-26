@@ -226,7 +226,7 @@ class OverrideIndicatorManager implements IPHPScriptReconcilingListener {
 					fAnnotationModel.addAnnotation(mapEntry.getKey(), mapEntry.getValue());
 				}
 			}
-			fOverrideAnnotations = (Annotation[]) annotationMap.keySet()
+			fOverrideAnnotations = annotationMap.keySet()
 					.toArray(new Annotation[annotationMap.keySet().size()]);
 		}
 	}

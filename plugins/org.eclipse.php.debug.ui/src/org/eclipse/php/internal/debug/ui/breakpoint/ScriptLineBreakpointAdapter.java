@@ -61,6 +61,7 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 	 * canToggleLineBreakpoints(org.eclipse.ui.IWorkbenchPart,
 	 * org.eclipse.jface.viewers.ISelection)
 	 */
+	@Override
 	public boolean canToggleLineBreakpoints(IWorkbenchPart part, ISelection selection) {
 		PHPStructuredEditor textEditor = getEditor(part);
 
@@ -78,6 +79,7 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 	 * canToggleMethodBreakpoints(org.eclipse.ui.IWorkbenchPart,
 	 * org.eclipse.jface.viewers.ISelection)
 	 */
+	@Override
 	public boolean canToggleMethodBreakpoints(IWorkbenchPart part, ISelection selection) {
 		return false;
 	}
@@ -89,6 +91,7 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 	 * canToggleWatchpoints (org.eclipse.ui.IWorkbenchPart,
 	 * org.eclipse.jface.viewers.ISelection)
 	 */
+	@Override
 	public boolean canToggleWatchpoints(IWorkbenchPart part, ISelection selection) {
 		return false;
 	}
@@ -100,8 +103,9 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 	 * toggleLineBreakpoints (org.eclipse.ui.IWorkbenchPart,
 	 * org.eclipse.jface.viewers.ISelection)
 	 */
+	@Override
 	public void toggleLineBreakpoints(IWorkbenchPart part, ISelection selection) throws CoreException {
-		ITextEditor editor = (ITextEditor) part.getAdapter(ITextEditor.class);
+		ITextEditor editor = part.getAdapter(ITextEditor.class);
 		if (selection instanceof ITextSelection) {
 			ITextSelection textSelection = (ITextSelection) selection;
 			IDocument document = editor.getDocumentProvider().getDocument(editor.getEditorInput());
@@ -204,13 +208,13 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 				contentType, getFileExtension(input));
 
 		int pos = -1;
-		ISourceEditingTextTools tools = (ISourceEditingTextTools) editor.getAdapter(ISourceEditingTextTools.class);
+		ISourceEditingTextTools tools = editor.getAdapter(ISourceEditingTextTools.class);
 		if (tools != null) {
 			pos = tools.getCaretOffset();
 		}
 
 		final int n = providers.length;
-		List errors = new ArrayList(0);
+		List<IStatus> errors = new ArrayList<>(0);
 		for (int i = 0; i < n; i++) {
 			try {
 				if (Debug.debugBreakpoints)
@@ -230,10 +234,10 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 		if (errors.size() > 0) {
 			Shell shell = editor.getSite().getShell();
 			if (errors.size() > 1) {
-				status = new MultiStatus(SSEUIPlugin.ID, IStatus.OK, (IStatus[]) errors.toArray(new IStatus[0]),
+				status = new MultiStatus(SSEUIPlugin.ID, IStatus.OK, errors.toArray(new IStatus[0]),
 						SSEUIMessages.ManageBreakpoints_error_adding_message1, null);
 			} else {
-				status = (IStatus) errors.get(0);
+				status = errors.get(0);
 			}
 			if ((status.getSeverity() > IStatus.INFO) || (Platform.inDebugMode() && !status.isOK())) {
 				Platform.getLog(SSEUIPlugin.getDefault().getBundle()).log(status);
@@ -254,14 +258,14 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 
 	protected IBreakpoint[] getBreakpoints(IMarker[] markers) {
 		IBreakpointManager manager = DebugPlugin.getDefault().getBreakpointManager();
-		List breakpoints = new ArrayList(markers.length);
+		List<IBreakpoint> breakpoints = new ArrayList<>(markers.length);
 		for (int i = 0; i < markers.length; i++) {
 			IBreakpoint breakpoint = manager.getBreakpoint(markers[i]);
 			if (breakpoint != null) {
 				breakpoints.add(breakpoint);
 			}
 		}
-		return (IBreakpoint[]) breakpoints.toArray(new IBreakpoint[0]);
+		return breakpoints.toArray(new IBreakpoint[0]);
 	}
 
 	/**
@@ -280,7 +284,7 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 	 * @return an array of markers which include the ruler's line of activity
 	 */
 	protected IMarker[] getMarkers(ITextEditor editor) {
-		List markers = new ArrayList();
+		List<IMarker> markers = new ArrayList<>();
 
 		IResource resource = getResource(editor.getEditorInput());
 		IDocument document = getDocument(editor);
@@ -301,7 +305,7 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 			}
 		}
 
-		return (IMarker[]) markers.toArray(new IMarker[0]);
+		return markers.toArray(new IMarker[0]);
 	}
 
 	/**
@@ -321,7 +325,7 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 
 	private IBreakpoint[] getBreakpoints(IResource resource, IDocument document, AbstractMarkerAnnotationModel model,
 			int lineNumber) {
-		List markers = new ArrayList();
+		List<IMarker> markers = new ArrayList<>();
 		if (document != null && resource != null && model != null && resource.exists()) {
 			try {
 				IMarker[] allMarkers = resource.findMarkers(IBreakpoint.LINE_BREAKPOINT_MARKER, true,
@@ -343,14 +347,14 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 			}
 		}
 		IBreakpointManager manager = DebugPlugin.getDefault().getBreakpointManager();
-		List breakpoints = new ArrayList(markers.size());
+		List<IBreakpoint> breakpoints = new ArrayList<>(markers.size());
 		for (int i = 0; i < markers.size(); i++) {
-			IBreakpoint breakpoint = manager.getBreakpoint((IMarker) markers.get(i));
+			IBreakpoint breakpoint = manager.getBreakpoint(markers.get(i));
 			if (breakpoint != null) {
 				breakpoints.add(breakpoint);
 			}
 		}
-		return (IBreakpoint[]) breakpoints.toArray(new IBreakpoint[0]);
+		return breakpoints.toArray(new IBreakpoint[0]);
 	}
 
 	/**
@@ -376,6 +380,7 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 	 * toggleMethodBreakpoints (org.eclipse.ui.IWorkbenchPart,
 	 * org.eclipse.jface.viewers.ISelection)
 	 */
+	@Override
 	public void toggleMethodBreakpoints(IWorkbenchPart part, ISelection selection) throws CoreException {
 		// don't support
 	}
@@ -387,6 +392,7 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 	 * org.eclipse.debug.ui.actions.IToggleBreakpointsTarget#toggleWatchpoints
 	 * (org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
 	 */
+	@Override
 	public void toggleWatchpoints(IWorkbenchPart part, ISelection selection) throws CoreException {
 		// don't support
 	}
@@ -404,9 +410,9 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 		if (input instanceof IFileEditorInput)
 			resource = ((IFileEditorInput) input).getFile();
 		if (resource == null)
-			resource = (IResource) input.getAdapter(IFile.class);
+			resource = input.getAdapter(IFile.class);
 		if (resource == null)
-			resource = (IResource) input.getAdapter(IResource.class);
+			resource = input.getAdapter(IResource.class);
 
 		IEditorPart editorPart = null;
 		if (resource == null) {
@@ -426,7 +432,7 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 									textEditor = (ITextEditor) editorPart;
 								}
 								if (textEditor == null) {
-									textEditor = (ITextEditor) editorPart.getAdapter(ITextEditor.class);
+									textEditor = editorPart.getAdapter(ITextEditor.class);
 								}
 								if (textEditor != null) {
 									IDocument textDocument = textEditor.getDocumentProvider().getDocument(input);

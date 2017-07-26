@@ -72,6 +72,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 	 * org.eclipse.debug.ui.ILaunchShortcut#launch(org.eclipse.jface.viewers
 	 * .ISelection, java.lang.String)
 	 */
+	@Override
 	public void launch(ISelection selection, String mode) {
 		if (selection instanceof IStructuredSelection) {
 			searchAndLaunch(((IStructuredSelection) selection).toArray(), mode, getPHPExeLaunchConfigType());
@@ -86,9 +87,10 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 	 * org.eclipse.debug.ui.ILaunchShortcut#launch(org.eclipse.ui.IEditorPart,
 	 * java.lang.String)
 	 */
+	@Override
 	public void launch(IEditorPart editor, String mode) {
 		IEditorInput input = editor.getEditorInput();
-		IFile file = (IFile) input.getAdapter(IFile.class);
+		IFile file = input.getAdapter(IFile.class);
 		if (file == null) {
 			IPath path = null;
 			try {
@@ -157,7 +159,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 						res = ((IMethod) elem).getUnderlyingResource();
 					}
 					if (res instanceof IFile) {
-						obj = (IFile) res;
+						obj = res;
 					}
 				}
 				if (obj instanceof IFile) {
@@ -218,6 +220,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 			} catch (CoreException ce) {
 				final IStatus stat = ce.getStatus();
 				Display.getDefault().asyncExec(new Runnable() {
+					@Override
 					public void run() {
 						ErrorDialog.openError(PHPDebugUIPlugin.getActiveWorkbenchShell(),
 								PHPDebugUIMessages.launch_failure_msg_title,
@@ -369,10 +372,12 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 		return DebugPlugin.getDefault().getLaunchManager().generateUniqueLaunchConfigurationNameFrom(configurationName);
 	}
 
+	@Override
 	public ILaunchConfiguration[] getLaunchConfigurations(ISelection selection) {
 		return null;
 	}
 
+	@Override
 	public ILaunchConfiguration[] getLaunchConfigurations(IEditorPart editorpart) {
 		return null;
 	}
@@ -384,6 +389,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 	 * org.eclipse.debug.ui.ILaunchShortcut2#getLaunchableResource(org.eclipse
 	 * .ui.IEditorPart)
 	 */
+	@Override
 	public IResource getLaunchableResource(IEditorPart editorpart) {
 		return getLaunchableResource(editorpart.getEditorInput());
 	}
@@ -395,6 +401,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 	 * org.eclipse.debug.ui.ILaunchShortcut2#getLaunchableResource(org.eclipse
 	 * .jface.viewers.ISelection)
 	 */
+	@Override
 	public IResource getLaunchableResource(ISelection selection) {
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection ss = (IStructuredSelection) selection;
@@ -417,7 +424,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 	 * @return containing resource or <code>null</code>
 	 */
 	private IResource getLaunchableResource(IAdaptable adaptable) {
-		IModelElement je = (IModelElement) adaptable.getAdapter(IModelElement.class);
+		IModelElement je = adaptable.getAdapter(IModelElement.class);
 		if (je != null) {
 			return je.getResource();
 		}

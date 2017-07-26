@@ -26,6 +26,7 @@ public class FullyQualifiedTraitMethodReference extends Expression {
 		this.functionName = functionName;
 	}
 
+	@Override
 	public void traverse(ASTVisitor pVisitor) throws Exception {
 		if (pVisitor.visit(this)) {
 			if (className != null) {

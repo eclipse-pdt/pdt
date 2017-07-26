@@ -17,14 +17,17 @@ public abstract class DebugMessageImpl implements IDebugMessage {
 
 	private String fEncoding;
 
+	@Override
 	public String getTransferEncoding() {
 		return fEncoding;
 	}
 
+	@Override
 	public void setTransferEncoding(String encoding) {
 		fEncoding = encoding;
 	}
 
+	@Override
 	public String toString() {
 		return new StringBuilder(this.getClass().getName().replaceFirst(".*\\.", "")).append(" [ID=").append(getType()) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				.append(']')

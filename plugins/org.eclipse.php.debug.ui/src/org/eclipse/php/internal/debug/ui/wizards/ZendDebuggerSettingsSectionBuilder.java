@@ -19,7 +19,6 @@ import org.eclipse.swt.widgets.Composite;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class ZendDebuggerSettingsSectionBuilder implements IDebuggerSettingsSectionBuilder {
 
 	@Override

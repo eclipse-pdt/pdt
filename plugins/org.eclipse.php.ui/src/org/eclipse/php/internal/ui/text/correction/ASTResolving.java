@@ -174,7 +174,7 @@ public class ASTResolving {
 
 	private static ITypeBinding guessVariableType(List<SingleFieldDeclaration> fragments) {
 		for (Iterator<SingleFieldDeclaration> iter = fragments.iterator(); iter.hasNext();) {
-			SingleFieldDeclaration frag = (SingleFieldDeclaration) iter.next();
+			SingleFieldDeclaration frag = iter.next();
 			if (frag.getName() != null) {
 				return frag.getName().resolveTypeBinding();
 			}

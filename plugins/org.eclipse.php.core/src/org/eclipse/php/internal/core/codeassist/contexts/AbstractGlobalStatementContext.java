@@ -27,6 +27,7 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
  */
 public abstract class AbstractGlobalStatementContext extends StatementContext {
 
+	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
@@ -56,6 +57,7 @@ public abstract class AbstractGlobalStatementContext extends StatementContext {
 		return reference.getNameRange() != null && offset < reference.getNameRange().getOffset();
 	}
 
+	@Override
 	public boolean isExclusive() {
 		return true;
 	}
