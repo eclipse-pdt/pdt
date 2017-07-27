@@ -440,8 +440,8 @@ public final class ListRewrite {
 	 * 
 	 * @return a list of all original nodes in the list
 	 */
-	public List getOriginalList() {
-		List list = (List) getEvent().getOriginalValue();
+	public List<?> getOriginalList() {
+		List<?> list = (List<?>) getEvent().getOriginalValue();
 		return Collections.unmodifiableList(list);
 	}
 
@@ -452,8 +452,8 @@ public final class ListRewrite {
 	 * @return a list of all nodes in the list taking into account all the
 	 *         described changes
 	 */
-	public List getRewrittenList() {
-		List list = (List) getEvent().getNewValue();
+	public List<?> getRewrittenList() {
+		List<?> list = (List<?>) getEvent().getNewValue();
 		return Collections.unmodifiableList(list);
 	}
 

@@ -30,16 +30,20 @@ public interface IRemoteDebugger extends Debugger, CommunicationClient, Communic
 
 	public byte[] getFileContent(String fileName);
 
+	@Override
 	public boolean go(GoResponseHandler responseHandler);
 
+	@Override
 	public boolean isActive();
 
 	public void closeConnection();
 
 	public void closeDebugSession();
 
+	@Override
 	public boolean stepOver(StepOverResponseHandler responseHandler);
 
+	@Override
 	public boolean stepInto(StepIntoResponseHandler responseHandler);
 
 	public IDebugResponseMessage sendCustomRequest(IDebugRequestMessage request);

@@ -39,14 +39,17 @@ public class OutputNotification extends DebugMessageNotificationImpl implements 
 		this.output = outputText;
 	}
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setOutput(CommunicationUtilities.readEncodedString(in, getTransferEncoding()));
 	}
 
+	@Override
 	public int getType() {
 		return 2004;
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		CommunicationUtilities.writeEncodedString(out, getOutput(), getTransferEncoding());

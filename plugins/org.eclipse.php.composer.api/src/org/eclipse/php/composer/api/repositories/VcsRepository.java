@@ -26,6 +26,7 @@ public class VcsRepository extends Repository implements Cloneable {
 	 * 
 	 * @see java.lang.Object#clone()
 	 */
+	@Override
 	public VcsRepository clone() {
 		VcsRepository clone = new VcsRepository();
 		cloneProperties(clone);

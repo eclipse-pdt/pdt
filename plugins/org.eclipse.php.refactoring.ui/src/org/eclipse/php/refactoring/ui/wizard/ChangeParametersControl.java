@@ -49,6 +49,7 @@ public class ChangeParametersControl extends Composite {
 		public static final Mode CHANGE_METHOD_SIGNATURE = new Mode("CHANGE_METHOD_SIGNATURE"); //$NON-NLS-1$
 		public static final Mode INTRODUCE_PARAMETER = new Mode("INTRODUCE_PARAMETER"); //$NON-NLS-1$
 
+		@Override
 		public String toString() {
 			return fName;
 		}
@@ -67,24 +68,27 @@ public class ChangeParametersControl extends Composite {
 	}
 
 	private static class ParameterInfoContentProvider implements IStructuredContentProvider {
+		@Override
 		public Object[] getElements(Object inputElement) {
-			return removeMarkedAsDeleted((List) inputElement);
+			return removeMarkedAsDeleted((List<?>) inputElement);
 		}
 
-		private ParameterInfo[] removeMarkedAsDeleted(List paramInfos) {
-			List result = new ArrayList(paramInfos.size());
-			for (Iterator iter = paramInfos.iterator(); iter.hasNext();) {
+		private ParameterInfo[] removeMarkedAsDeleted(List<?> paramInfos) {
+			List<ParameterInfo> result = new ArrayList<>(paramInfos.size());
+			for (Iterator<?> iter = paramInfos.iterator(); iter.hasNext();) {
 				ParameterInfo info = (ParameterInfo) iter.next();
 				if (!info.isDeleted())
 					result.add(info);
 			}
-			return (ParameterInfo[]) result.toArray(new ParameterInfo[result.size()]);
+			return result.toArray(new ParameterInfo[result.size()]);
 		}
 
+		@Override
 		public void dispose() {
 			// do nothing
 		}
 
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			// do nothing
 		}
@@ -92,10 +96,12 @@ public class ChangeParametersControl extends Composite {
 
 	private static class ParameterInfoLabelProvider extends LabelProvider
 			implements ITableLabelProvider, ITableFontProvider {
+		@Override
 		public Image getColumnImage(Object element, int columnIndex) {
 			return null;
 		}
 
+		@Override
 		public String getColumnText(Object element, int columnIndex) {
 			ParameterInfo info = (ParameterInfo) element;
 			switch (columnIndex) {
@@ -112,6 +118,7 @@ public class ChangeParametersControl extends Composite {
 			}
 		}
 
+		@Override
 		public Font getFont(Object element, int columnIndex) {
 			ParameterInfo info = (ParameterInfo) element;
 			if (info.isAdded())
@@ -122,6 +129,7 @@ public class ChangeParametersControl extends Composite {
 	}
 
 	private class ParametersCellModifier implements ICellModifier {
+		@Override
 		public boolean canModify(Object element, String property) {
 			Assert.isTrue(element instanceof ParameterInfo);
 			if (property.equals(PROPERTIES[NEWNAME_PROP]))
@@ -132,6 +140,7 @@ public class ChangeParametersControl extends Composite {
 			return false;
 		}
 
+		@Override
 		public Object getValue(Object element, String property) {
 			Assert.isTrue(element instanceof ParameterInfo);
 			if (property.equals(PROPERTIES[NEWNAME_PROP]))
@@ -142,6 +151,7 @@ public class ChangeParametersControl extends Composite {
 			return null;
 		}
 
+		@Override
 		public void modify(Object element, String property, Object value) {
 			if (element instanceof TableItem)
 				element = ((TableItem) element).getData();
@@ -175,7 +185,7 @@ public class ChangeParametersControl extends Composite {
 
 	private final Mode fMode;
 	private final IParameterListChangeListener fListener;
-	private List fParameterInfos;
+	private List<ParameterInfo> fParameterInfos;
 	private final StubTypeContext fTypeContext;
 	private final String[] fParamNameProposals;
 	private ContentAssistHandler fNameContentAssistHandler;
@@ -235,7 +245,7 @@ public class ChangeParametersControl extends Composite {
 		createButtonComposite(this);
 	}
 
-	public void setInput(List parameterInfos) {
+	public void setInput(List<ParameterInfo> parameterInfos) {
 		Assert.isNotNull(parameterInfos);
 		fParameterInfos = parameterInfos;
 		fTableViewer.setInput(fParameterInfos);
@@ -288,12 +298,14 @@ public class ChangeParametersControl extends Composite {
 		fTableViewer.setContentProvider(new ParameterInfoContentProvider());
 		fTableViewer.setLabelProvider(new ParameterInfoLabelProvider());
 		fTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				updateButtonsEnabledState();
 			}
 		});
 
 		table.addTraverseListener(new TraverseListener() {
+			@Override
 			public void keyTraversed(TraverseEvent e) {
 				if (e.detail == SWT.TRAVERSE_RETURN && e.stateMask == SWT.NONE) {
 					editColumnOrNextPossible(0);
@@ -302,6 +314,7 @@ public class ChangeParametersControl extends Composite {
 			}
 		});
 		table.addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.keyCode == SWT.F2 && e.stateMask == SWT.NONE) {
 					editColumnOrNextPossible(0);
@@ -366,8 +379,8 @@ public class ChangeParametersControl extends Composite {
 		if (!(selection instanceof IStructuredSelection))
 			return new ParameterInfo[0];
 
-		List selected = ((IStructuredSelection) selection).toList();
-		return (ParameterInfo[]) selected.toArray(new ParameterInfo[selected.size()]);
+		List<?> selected = ((IStructuredSelection) selection).toList();
+		return selected.toArray(new ParameterInfo[selected.size()]);
 	}
 
 	// ---- Button bar
@@ -435,6 +448,7 @@ public class ChangeParametersControl extends Composite {
 		button.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		SWTUtil.setButtonDimensionHint(button);
 		button.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
 					ParameterInfo[] selected = getSelectedElements();
@@ -459,10 +473,11 @@ public class ChangeParametersControl extends Composite {
 		button.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		SWTUtil.setButtonDimensionHint(button);
 		button.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				String[] excludedParamNames = new String[fParameterInfos.size()];
 				for (int i = 0; i < fParameterInfos.size(); i++) {
-					ParameterInfo info = (ParameterInfo) fParameterInfos.get(i);
+					ParameterInfo info = fParameterInfos.get(i);
 					excludedParamNames[i] = info.getNewDisplayName();
 				}
 				// IScriptProject javaProject =
@@ -475,7 +490,7 @@ public class ChangeParametersControl extends Composite {
 				ParameterInfo newInfo = ParameterInfo.createInfoForAddedParameter("Object", newParamName, "null"); //$NON-NLS-1$ //$NON-NLS-2$
 				int insertIndex = fParameterInfos.size();
 				for (int i = fParameterInfos.size() - 1; i >= 0; i--) {
-					ParameterInfo info = (ParameterInfo) fParameterInfos.get(i);
+					ParameterInfo info = fParameterInfos.get(i);
 					if (info.isNewVarargs()) {
 						insertIndex = i;
 						break;
@@ -499,6 +514,7 @@ public class ChangeParametersControl extends Composite {
 		button.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		SWTUtil.setButtonDimensionHint(button);
 		button.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				int index = getTable().getSelectionIndices()[0];
 				ParameterInfo[] selected = getSelectedElements();
@@ -533,6 +549,7 @@ public class ChangeParametersControl extends Composite {
 		button.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		SWTUtil.setButtonDimensionHint(button);
 		button.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				ISelection savedSelection = fTableViewer.getSelection();
 				if (savedSelection == null)
@@ -585,6 +602,7 @@ public class ChangeParametersControl extends Composite {
 			final TableTextCellEditor editor = editors[i];
 			// support tabbing between columns while editing:
 			editor.getText().addTraverseListener(new TraverseListener() {
+				@Override
 				public void keyTraversed(TraverseEvent e) {
 					switch (e.detail) {
 					case SWT.TRAVERSE_TAB_NEXT:
@@ -606,6 +624,7 @@ public class ChangeParametersControl extends Composite {
 		}
 
 		editors[NEWNAME_PROP].setActivationListener(new TableTextCellEditor.IActivationListener() {
+			@Override
 			public void activate() {
 				ParameterInfo[] selected = getSelectedElements();
 				if (selected.length == 1 && fNameContentAssistHandler != null) {
@@ -657,15 +676,15 @@ public class ChangeParametersControl extends Composite {
 		Collections.reverse(fParameterInfos);
 	}
 
-	private static void moveUp(List elements, List move) {
-		List res = new ArrayList(elements.size());
-		List deleted = new ArrayList();
-		Object floating = null;
-		for (Iterator iter = elements.iterator(); iter.hasNext();) {
-			Object curr = iter.next();
+	private static void moveUp(List<ParameterInfo> elements, List<ParameterInfo> move) {
+		List<ParameterInfo> res = new ArrayList<>(elements.size());
+		List<ParameterInfo> deleted = new ArrayList<>();
+		ParameterInfo floating = null;
+		for (Iterator<ParameterInfo> iter = elements.iterator(); iter.hasNext();) {
+			ParameterInfo curr = iter.next();
 			if (move.contains(curr)) {
 				res.add(curr);
-			} else if (((ParameterInfo) curr).isDeleted()) {
+			} else if (curr.isDeleted()) {
 				deleted.add(curr);
 			} else {
 				if (floating != null)
@@ -678,7 +697,7 @@ public class ChangeParametersControl extends Composite {
 		}
 		res.addAll(deleted);
 		elements.clear();
-		for (Iterator iter = res.iterator(); iter.hasNext();) {
+		for (Iterator<ParameterInfo> iter = res.iterator(); iter.hasNext();) {
 			elements.add(iter.next());
 		}
 	}
@@ -702,8 +721,8 @@ public class ChangeParametersControl extends Composite {
 		if (fParameterInfos == null) // during initialization
 			return 0;
 		int result = 0;
-		for (Iterator iter = fParameterInfos.iterator(); iter.hasNext();) {
-			ParameterInfo info = (ParameterInfo) iter.next();
+		for (Iterator<ParameterInfo> iter = fParameterInfos.iterator(); iter.hasNext();) {
+			ParameterInfo info = iter.next();
 			if (!info.isDeleted())
 				result++;
 		}

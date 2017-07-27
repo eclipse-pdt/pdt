@@ -71,7 +71,7 @@ public class ASTNodes {
 				|| type == ASTNode.CAST_EXPRESSION || type == ASTNode.INSTANCE_OF_EXPRESSION;
 	}
 
-	public static ASTNode getParent(ASTNode node, Class parentClass) {
+	public static ASTNode getParent(ASTNode node, Class<?> parentClass) {
 		do {
 			node = node.getParent();
 		} while (node != null && !parentClass.isInstance(node));
@@ -150,6 +150,7 @@ public class ASTNodes {
 			return;
 		}
 		root.accept(new ApplyAll() {
+			@Override
 			protected boolean apply(ASTNode node) {
 				node.setFlags(node.getFlags() | flags);
 				return true;

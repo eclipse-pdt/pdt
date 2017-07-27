@@ -41,6 +41,7 @@ public class PHPRunToLineBreakpoint extends PHPLineBreakpoint {
 	 */
 	public PHPRunToLineBreakpoint(final IFile resource, final int lineNumber) throws DebugException {
 		IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
+			@Override
 			public void run(IProgressMonitor monitor) throws CoreException {
 				// associate with workspace root to avoid drawing in editor
 				// ruler
@@ -58,6 +59,7 @@ public class PHPRunToLineBreakpoint extends PHPLineBreakpoint {
 		run(getMarkerRule(resource), runnable);
 	}
 
+	@Override
 	protected void createRuntimeBreakpoint(IMarker marker) throws CoreException {
 		IFile file = getSourceFile();
 		IPath path = file.getFullPath();

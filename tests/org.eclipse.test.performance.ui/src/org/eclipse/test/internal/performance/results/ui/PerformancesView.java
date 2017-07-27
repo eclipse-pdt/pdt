@@ -88,6 +88,7 @@ public abstract class PerformancesView extends ViewPart implements ISelectionCha
 	// Viewer filters
 	static final ViewerFilter[] NO_FILTER = new ViewerFilter[0];
 	final static ViewerFilter FILTER_BASELINE_BUILDS = new ViewerFilter() {
+		@Override
 		public boolean select(Viewer v, Object parentElement, Object element) {
 			if (element instanceof BuildResultsElement) {
 				BuildResultsElement buildElement = (BuildResultsElement) element;
@@ -97,6 +98,7 @@ public abstract class PerformancesView extends ViewPart implements ISelectionCha
 		}
 	};
 	public final static ViewerFilter FILTER_NIGHTLY_BUILDS = new ViewerFilter() {
+		@Override
 		public boolean select(Viewer v, Object parentElement, Object element) {
 			if (element instanceof BuildResultsElement) {
 				BuildResultsElement buildElement = (BuildResultsElement) element;
@@ -106,6 +108,7 @@ public abstract class PerformancesView extends ViewPart implements ISelectionCha
 		}
 	};
 	final static ViewerFilter FILTER_OLD_BUILDS = new ViewerFilter() {
+		@Override
 		public boolean select(Viewer v, Object parentElement, Object element) {
 			if (element instanceof BuildResultsElement) {
 				BuildResultsElement buildElement = (BuildResultsElement) element;
@@ -114,7 +117,7 @@ public abstract class PerformancesView extends ViewPart implements ISelectionCha
 	        return true;
         }
 	};
-	Set viewFilters = new HashSet();
+	Set<ViewerFilter> viewFilters = new HashSet<>();
 
 	// SWT resources
 	Shell shell;
@@ -238,6 +241,7 @@ void contributeToActionBars() {
  * (non-Javadoc)
  * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
  */
+@Override
 public void createPartControl(Composite parent) {
 	// Cache the shell and display.
 	this.shell = parent.getShell ();
@@ -331,6 +335,8 @@ void finalizeViewerCreation() {
 /* (non-Javadoc)
  * Method declared on IAdaptable
  */
+@SuppressWarnings({ "rawtypes", "unchecked" })
+@Override
 public Object getAdapter(Class adapter) {
     if (adapter.equals(IPropertySheetPage.class)) {
         return getPropertySheet();
@@ -360,6 +366,7 @@ void hookContextMenu() {
 	MenuManager menuMgr = new MenuManager("#PopupMenu");
 	menuMgr.setRemoveAllWhenShown(true);
 	menuMgr.addMenuListener(new IMenuListener() {
+		@Override
 		public void menuAboutToShow(IMenuManager manager) {
 			fillContextMenu(manager);
 		}
@@ -373,6 +380,7 @@ void hookContextMenu() {
  * (non-Javadoc)
  * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
  */
+@Override
 public void init(IViewSite site, IMemento memento) throws PartInitException {
 	super.init(site, memento);
 	this.viewState = memento;
@@ -404,6 +412,7 @@ void makeActions() {
 
 	// Change data dir action
 	this.changeDataDir = new Action("&Read...") {
+		@Override
 		public void run() {
 			changeDataDir();
 		}
@@ -413,6 +422,7 @@ void makeActions() {
 
 	// Filter baselines action
 	this.filterBaselineBuilds = new Action("&Baselines", IAction.AS_CHECK_BOX) {
+		@Override
 		public void run() {
 			if (isChecked()) {
 				PerformancesView.this.viewFilters.add(FILTER_BASELINE_BUILDS);
@@ -426,6 +436,7 @@ void makeActions() {
 
 	// Filter baselines action
 	this.filterNightlyBuilds = new Action("&Nightly", IAction.AS_CHECK_BOX) {
+		@Override
 		public void run() {
 			filterNightlyBuilds(isChecked(), true/*update preference*/);
 		}
@@ -434,6 +445,7 @@ void makeActions() {
 
 	// Filter non-important builds action
 	this.filterOldBuilds = new Action("&Old Builds", IAction.AS_CHECK_BOX) {
+		@Override
 		public void run() {
 			filterOldBuilds(isChecked(), true/*update preference*/);
 		}
@@ -445,6 +457,7 @@ void makeActions() {
 /* (non-Javadoc)
  * @see org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener#preferenceChange(org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent)
  */
+@Override
 public void preferenceChange(PreferenceChangeEvent event) {
 	String propertyName = event.getKey();
 //	String newValue = (String) event.getNewValue();
@@ -483,6 +496,7 @@ void readLocalFiles() {
 
 	// Create runnable to read local files
 	IRunnableWithProgress runnable = new IRunnableWithProgress() {
+		@Override
 		public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 			try {
 				monitor.beginTask("Read local files", 1000);
@@ -552,6 +566,7 @@ void restoreState() {
 	}
 }
 
+@Override
 public void saveState(IMemento memento) {
 	super.saveState(memento);
 	memento.putBoolean(IPerformancesConstants.PRE_FILTER_BASELINE_BUILDS, this.filterBaselineBuilds.isChecked());
@@ -566,6 +581,7 @@ public void saveState(IMemento memento) {
  * (non-Javadoc)
  * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
  */
+@Override
 public void selectionChanged(SelectionChangedEvent event) {
 	if (this.propertyPage != null) {
 		this.propertyPage.selectionChanged(this, event.getSelection());
@@ -575,6 +591,7 @@ public void selectionChanged(SelectionChangedEvent event) {
 /**
  * Passing the focus request to the viewer's control.
  */
+@Override
 public void setFocus() {
 	this.viewer.getControl().setFocus();
 }

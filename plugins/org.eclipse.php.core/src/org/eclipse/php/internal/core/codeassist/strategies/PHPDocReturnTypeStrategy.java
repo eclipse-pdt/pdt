@@ -62,6 +62,7 @@ public class PHPDocReturnTypeStrategy extends GlobalTypesStrategy {
 		super(context, trueFlag, falseFlag);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		ICompletionContext context = getContext();
 		if (!(context instanceof PHPDocTagContext)) {

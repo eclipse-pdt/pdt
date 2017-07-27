@@ -50,7 +50,7 @@ public class LinkedProposalModelPresenter {
 		LinkedModeModel model = new LinkedModeModel();
 		boolean added = false;
 
-		Iterator iterator = linkedProposalModel.getPositionGroupIterator();
+		Iterator<?> iterator = linkedProposalModel.getPositionGroupIterator();
 		while (iterator.hasNext()) {
 			LinkedProposalPositionGroup curr = (LinkedProposalPositionGroup) iterator.next();
 

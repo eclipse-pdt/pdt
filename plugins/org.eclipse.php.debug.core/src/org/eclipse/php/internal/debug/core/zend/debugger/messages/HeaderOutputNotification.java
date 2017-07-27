@@ -38,14 +38,17 @@ public class HeaderOutputNotification extends DebugMessageNotificationImpl imple
 		this.output = outputText;
 	}
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setOutput(CommunicationUtilities.readString(in));
 	}
 
+	@Override
 	public int getType() {
 		return 2008;
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		CommunicationUtilities.writeString(out, getOutput());

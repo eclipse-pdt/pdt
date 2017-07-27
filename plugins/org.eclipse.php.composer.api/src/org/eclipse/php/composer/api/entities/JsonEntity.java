@@ -32,13 +32,13 @@ import org.eclipse.php.composer.api.json.ParseException;
 
 public abstract class JsonEntity extends Entity {
 
-	private transient Set<String> listening = new HashSet<String>();
+	private transient Set<String> listening = new HashSet<>();
 	@SuppressWarnings("rawtypes")
-	private transient Map<Class, Map<String, Field>> fieldNameCache = new HashMap<Class, Map<String, Field>>();
+	private transient Map<Class, Map<String, Field>> fieldNameCache = new HashMap<>();
 
 	private transient Log log = LogFactory.getLog(JsonEntity.class);
 
-	protected transient LinkedList<String> sortOrder = new LinkedList<String>();
+	protected transient LinkedList<String> sortOrder = new LinkedList<>();
 
 	public JsonEntity() {
 		listen();
@@ -65,6 +65,7 @@ public abstract class JsonEntity extends Entity {
 
 					if (obj != null) {
 						obj.addPropertyChangeListener(new PropertyChangeListener() {
+							@Override
 							public void propertyChange(PropertyChangeEvent e) {
 								firePropertyChange(prop + "." + e.getPropertyName(), e.getOldValue(), e.getNewValue()); //$NON-NLS-1$
 
@@ -93,7 +94,7 @@ public abstract class JsonEntity extends Entity {
 
 	@SuppressWarnings("rawtypes")
 	protected ArrayList<Field> getFields(Class entity) {
-		ArrayList<Field> fields = new ArrayList<Field>();
+		ArrayList<Field> fields = new ArrayList<>();
 		Class superClass = entity;
 
 		while (superClass != null) {
@@ -120,7 +121,7 @@ public abstract class JsonEntity extends Entity {
 
 	@SuppressWarnings("rawtypes")
 	protected List<String> getFieldNames(Class entity) {
-		ArrayList<String> names = new ArrayList<String>();
+		ArrayList<String> names = new ArrayList<>();
 
 		for (Field field : getFields(entity)) {
 			names.add(getFieldName(field));
@@ -134,7 +135,7 @@ public abstract class JsonEntity extends Entity {
 
 		// create cache
 		if (!fieldNameCache.containsKey(entity)) {
-			Map<String, Field> mapping = new HashMap<String, Field>();
+			Map<String, Field> mapping = new HashMap<>();
 
 			for (Field field : getFields(entity)) {
 				mapping.put(getFieldName(field), field);

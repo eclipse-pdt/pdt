@@ -70,6 +70,7 @@ public class Assignment extends Expression {
 		this.value = value;
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -79,6 +80,7 @@ public class Assignment extends Expression {
 		visitor.endvisit(this);
 	}
 
+	@Override
 	public String getOperator() {
 		switch (getOperatorType()) {
 		case OP_EQUAL:
@@ -114,6 +116,7 @@ public class Assignment extends Expression {
 		}
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.ASSIGNMENT;
 	}
@@ -133,9 +136,11 @@ public class Assignment extends Expression {
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
+	@Override
 	public final void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}

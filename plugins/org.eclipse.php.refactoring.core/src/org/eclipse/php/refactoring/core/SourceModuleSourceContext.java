@@ -26,18 +26,22 @@ public class SourceModuleSourceContext extends ScriptStatusContext {
 			fSourceRange = new SourceRange(0, 0);
 	}
 
+	@Override
 	public boolean isBinary() {
 		return false;
 	}
 
+	@Override
 	public ISourceModule getSourceModule() {
 		return fCUnit;
 	}
 
+	@Override
 	public ISourceRange getSourceRange() {
 		return fSourceRange;
 	}
 
+	@Override
 	public String toString() {
 		return getSourceRange() + " in " + super.toString(); //$NON-NLS-1$
 	}

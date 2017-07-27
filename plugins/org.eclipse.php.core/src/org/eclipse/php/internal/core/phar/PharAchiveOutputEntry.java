@@ -23,50 +23,62 @@ public class PharAchiveOutputEntry implements IAchiveOutputEntry {
 		name = destinationPath;
 	}
 
+	@Override
 	public long getCompressedSize() {
 		return csize;
 	}
 
+	@Override
 	public long getCrc() {
 		return crc;
 	}
 
+	@Override
 	public int getMethod() {
 		return method;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
 
+	@Override
 	public long getSize() {
 		return size;
 	}
 
+	@Override
 	public long getTime() {
 		return time;
 	}
 
+	@Override
 	public boolean isDirectory() {
 		return name.endsWith("/"); //$NON-NLS-1$
 	}
 
+	@Override
 	public void setCompressedSize(long csize) {
 		this.csize = csize;
 	}
 
+	@Override
 	public void setCrc(long crc) {
 		this.crc = crc;
 	}
 
+	@Override
 	public void setMethod(int method) {
 		this.method = method;
 	}
 
+	@Override
 	public void setSize(long size) {
 		this.size = size;
 	}
 
+	@Override
 	public void setTime(long time) {
 		this.time = time;
 	}

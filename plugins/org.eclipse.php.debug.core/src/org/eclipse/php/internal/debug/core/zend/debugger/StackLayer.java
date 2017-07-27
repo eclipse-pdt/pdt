@@ -47,7 +47,7 @@ public class StackLayer {
 	 * Creates new StackLayer
 	 */
 	public StackLayer(String transferEncoding) {
-		unresolvedVariables = new HashMap<String, byte[]>();
+		unresolvedVariables = new HashMap<>();
 		expressionValueDeserializer = new ExpressionsValueDeserializer(transferEncoding);
 	}
 
@@ -154,6 +154,7 @@ public class StackLayer {
 		return variables;
 	}
 
+	@Override
 	public String toString() {
 		StringBuilder buffer = new StringBuilder(20);
 		buffer.append(toStringCalledFunctionLine());
@@ -192,10 +193,12 @@ public class StackLayer {
 			this.stackDepth = stackDepth;
 		}
 
+		@Override
 		public int getStackDepth() {
 			return stackDepth;
 		}
 
+		@Override
 		public Expression createChildExpression(String endName, String endRepresentation, Facet... facets) {
 			return new DefaultStackVariable(this, endName, stackDepth, endRepresentation, facets);
 		}

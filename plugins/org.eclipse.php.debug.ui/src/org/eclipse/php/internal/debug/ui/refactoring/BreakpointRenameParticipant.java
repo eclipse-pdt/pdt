@@ -50,6 +50,7 @@ public abstract class BreakpointRenameParticipant extends RenameParticipant {
 	 * org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#
 	 * initialize(java.lang.Object)
 	 */
+	@Override
 	protected boolean initialize(Object element) {
 		if (element instanceof IModelElement && accepts((IModelElement) element)) {
 			fElement = (IModelElement) element;
@@ -83,6 +84,7 @@ public abstract class BreakpointRenameParticipant extends RenameParticipant {
 	 * org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#
 	 * getName()
 	 */
+	@Override
 	public String getName() {
 		return RefactoringMessages.BreakpointRenameParticipant_0;
 	}
@@ -95,6 +97,7 @@ public abstract class BreakpointRenameParticipant extends RenameParticipant {
 	 * checkConditions(org.eclipse.core.runtime.IProgressMonitor,
 	 * org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext)
 	 */
+	@Override
 	public RefactoringStatus checkConditions(IProgressMonitor pm, CheckConditionsContext context)
 			throws OperationCanceledException {
 		return new RefactoringStatus();
@@ -107,16 +110,17 @@ public abstract class BreakpointRenameParticipant extends RenameParticipant {
 	 * org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#
 	 * createChange(org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
-		List changes = new ArrayList();
+		List<Change> changes = new ArrayList<>();
 		IResource resource = getBreakpointContainer();
 		IMarker[] markers = resource.findMarkers(IBreakpoint.BREAKPOINT_MARKER, true, IResource.DEPTH_INFINITE);
 		gatherChanges(markers, changes, getArguments().getNewName());
 		if (changes.size() > 1) {
 			return new CompositeChange(RefactoringMessages.BreakpointRenameParticipant_1,
-					(Change[]) changes.toArray(new Change[changes.size()]));
+					changes.toArray(new Change[changes.size()]));
 		} else if (changes.size() == 1) {
-			return (Change) changes.get(0);
+			return changes.get(0);
 		}
 		return null;
 	}
@@ -134,7 +138,7 @@ public abstract class BreakpointRenameParticipant extends RenameParticipant {
 	 * @throws CoreException
 	 * @throws OperationCanceledException
 	 */
-	protected void gatherChanges(IMarker[] markers, List changes, String destPackageName)
+	protected void gatherChanges(IMarker[] markers, List<Change> changes, String destPackageName)
 			throws CoreException, OperationCanceledException {
 		for (int i = 0; i < markers.length; i++) {
 			IMarker marker = markers[i];

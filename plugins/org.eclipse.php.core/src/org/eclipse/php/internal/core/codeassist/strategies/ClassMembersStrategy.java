@@ -525,11 +525,12 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	 *            to up)
 	 */
 	protected <T extends IMember> Collection<T> removeOverriddenElements(Collection<T> members) {
-		List<T> result = new LinkedList<T>();
-		List<T> newMembers = new ArrayList<T>();
+		List<T> result = new LinkedList<>();
+		List<T> newMembers = new ArrayList<>();
 		newMembers.addAll(members);
 		Collections.sort(newMembers, new Comparator<T>() {
 
+			@Override
 			public int compare(T o1, T o2) {
 				try {
 					int flag1 = getFlag(o1.getFlags());
@@ -553,7 +554,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 				return Modifiers.AccPrivate;
 			}
 		});
-		Set<String> processed = new HashSet<String>();
+		Set<String> processed = new HashSet<>();
 		for (IMember member : newMembers) {
 			if (processed.add(member.getElementName())) {
 				result.add((T) member);

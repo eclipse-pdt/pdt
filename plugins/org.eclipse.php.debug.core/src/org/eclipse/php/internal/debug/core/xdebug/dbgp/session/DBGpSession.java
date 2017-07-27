@@ -336,7 +336,7 @@ public class DBGpSession {
 	private DataInputStream DBGpReader;
 	private boolean sessionActive = false;
 	private DBGpTarget debugTarget;
-	private Hashtable<Integer, Object> savedResponses = new Hashtable<Integer, Object>();
+	private Hashtable<Integer, Object> savedResponses = new Hashtable<>();
 	private String ideKey;
 	private String sessionId;
 	private String initialScript;
@@ -623,6 +623,7 @@ public class DBGpSession {
 		return DBGpSocket.getInetAddress().getHostName();
 	}
 
+	@Override
 	public String toString() {
 		StringBuilder strBuf = new StringBuilder(getIdeKey());
 		if (getSessionId() != null) {
@@ -642,7 +643,7 @@ public class DBGpSession {
 		}
 		Set<Integer> keys = savedResponses.keySet();
 		for (Iterator<Integer> iterator = keys.iterator(); iterator.hasNext();) {
-			Integer idObj = (Integer) iterator.next();
+			Integer idObj = iterator.next();
 			postAndSignalCaller(idObj, parsedResponse);
 		}
 	}

@@ -15,6 +15,7 @@ import org.eclipse.test.performance.PerformanceMeter;
 
 public class OSPerformanceMeterFactory extends PerformanceMeterFactory {
 
+	@Override
 	protected PerformanceMeter doCreatePerformanceMeter(String scenario) {
 		return new OSPerformanceMeter(scenario);
 	}

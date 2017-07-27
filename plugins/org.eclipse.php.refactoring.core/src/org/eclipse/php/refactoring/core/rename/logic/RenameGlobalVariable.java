@@ -50,20 +50,24 @@ public class RenameGlobalVariable extends AbstractRename {
 	/**
 	 * class declaration
 	 */
+	@Override
 	public boolean visit(ClassDeclaration classDeclaration) {
 		setNonGlobalScope();
 		return true;
 	}
 
+	@Override
 	public void endVisit(ClassDeclaration classDeclaration) {
 		setGlobalScope();
 	}
 
+	@Override
 	public boolean visit(TraitDeclaration traitDeclaration) {
 		setNonGlobalScope();
 		return true;
 	}
 
+	@Override
 	public void endVisit(TraitDeclaration traitDeclaration) {
 		setGlobalScope();
 	}
@@ -71,30 +75,36 @@ public class RenameGlobalVariable extends AbstractRename {
 	/**
 	 * change the name of the function
 	 */
+	@Override
 	public boolean visit(FunctionDeclaration functionDeclaration) {
 		setNonGlobalScope();
 		return true;
 
 	}
 
+	@Override
 	public void endVisit(FunctionDeclaration functionDeclaration) {
 		setGlobalScope();
 	}
 
+	@Override
 	public boolean visit(InterfaceDeclaration interfaceDeclaration) {
 		setNonGlobalScope();
 		return true;
 	}
 
+	@Override
 	public void endVisit(InterfaceDeclaration interfaceDeclaration) {
 		setGlobalScope();
 	}
 
+	@Override
 	public boolean visit(FieldsDeclaration fieldDeclaration) {
 		setNonGlobalScope();
 		return true;
 	}
 
+	@Override
 	public void endVisit(FieldsDeclaration fieldsDeclaration) {
 		setGlobalScope();
 	}
@@ -102,6 +112,7 @@ public class RenameGlobalVariable extends AbstractRename {
 	/**
 	 * Rename $a on global references: $a = 5;
 	 */
+	@Override
 	public boolean visit(Variable variable) {
 		if ((variable.isDollared() || ASTNodes.isQuotedDollaredCurlied(variable))
 				&& variable.getName() instanceof Identifier) {
@@ -117,6 +128,7 @@ public class RenameGlobalVariable extends AbstractRename {
 	 * Rename $a on global references (on function/methods) : ...global $a;$a =
 	 * 5;...
 	 */
+	@Override
 	public boolean visit(GlobalStatement globalStatement) {
 		final List<Variable> variables = globalStatement.variables();
 		for (final Variable variable : variables) {
@@ -134,6 +146,7 @@ public class RenameGlobalVariable extends AbstractRename {
 	/**
 	 * Rename $GLOBALS['variableName'] occurrences
 	 */
+	@Override
 	public boolean visit(ArrayAccess arrayAccess) {
 		// check the case of $GLOBALS['var']
 		final Expression variableName = arrayAccess.getName();
@@ -167,6 +180,7 @@ public class RenameGlobalVariable extends AbstractRename {
 				|| stringValue.length() > 2 && stringValue.substring(1, stringValue.length() - 1).equals(oldName));
 	}
 
+	@Override
 	public String getRenameDescription() {
 		return RenameGlobalVariable.RENAME_GLOBAL_VARIABLE;
 	}

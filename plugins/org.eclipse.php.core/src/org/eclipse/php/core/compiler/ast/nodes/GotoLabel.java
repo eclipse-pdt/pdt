@@ -31,6 +31,7 @@ public class GotoLabel extends Statement {
 		this.label = label;
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		visitor.visit(this);
 		visitor.endvisit(this);
@@ -40,6 +41,7 @@ public class GotoLabel extends Statement {
 		return label;
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.GOTO_LABEL;
 	}
@@ -47,9 +49,11 @@ public class GotoLabel extends Statement {
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
+	@Override
 	public final void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}

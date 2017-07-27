@@ -78,7 +78,7 @@ public class ClassDeclaration extends TypeDeclaration {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(5);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(5);
 		propertyList.add(NAME_PROPERTY);
 		propertyList.add(INTERFACES_PROPERTY);
 		propertyList.add(BODY_PROPERTY);
@@ -107,6 +107,7 @@ public class ClassDeclaration extends TypeDeclaration {
 				interfaces == null ? null : interfaces.toArray(new Identifier[interfaces.size()]), body);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -115,6 +116,7 @@ public class ClassDeclaration extends TypeDeclaration {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		getName().accept(visitor);
 		if (superClass != null) {
@@ -127,6 +129,7 @@ public class ClassDeclaration extends TypeDeclaration {
 		getBody().accept(visitor);
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		getName().traverseTopDown(visitor);
@@ -140,6 +143,7 @@ public class ClassDeclaration extends TypeDeclaration {
 		getBody().traverseTopDown(visitor);
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		getName().traverseBottomUp(visitor);
 		if (superClass != null) {
@@ -166,6 +170,7 @@ public class ClassDeclaration extends TypeDeclaration {
 		}
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<ClassDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -194,6 +199,7 @@ public class ClassDeclaration extends TypeDeclaration {
 		buffer.append(tab).append("</ClassDeclaration>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.CLASS_DECLARATION;
 	}
@@ -249,6 +255,7 @@ public class ClassDeclaration extends TypeDeclaration {
 		postReplaceChild(oldChild, id, SUPER_CLASS_PROPERTY);
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == SUPER_CLASS_PROPERTY) {
 			if (get) {
@@ -262,6 +269,7 @@ public class ClassDeclaration extends TypeDeclaration {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
+	@Override
 	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int child) {
 		if (property == MODIFIER_PROPERTY) {
 			if (get) {
@@ -278,6 +286,7 @@ public class ClassDeclaration extends TypeDeclaration {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

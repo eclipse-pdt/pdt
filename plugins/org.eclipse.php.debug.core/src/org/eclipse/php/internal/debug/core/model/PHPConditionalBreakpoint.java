@@ -50,14 +50,15 @@ public class PHPConditionalBreakpoint extends PHPLineBreakpoint {
 	 *             if unable to create the breakpoint
 	 */
 	public PHPConditionalBreakpoint(final IResource resource, final int lineNumber, final int charStart,
-			final int charEnd, final Map attributes) throws CoreException {
+			final int charEnd, final Map<String, Comparable<?>> attributes) throws CoreException {
 		IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
+			@Override
 			public void run(IProgressMonitor monitor) throws CoreException {
 				IMarker marker = resource.createMarker(MARKER_ID);
 				attributes.put(IBreakpoint.ENABLED, Boolean.TRUE);
 				attributes.put(IBreakpoint.ID, getModelIdentifier());
 				attributes.put(IMarker.MESSAGE, MessageFormat.format(PHPDebugCoreMessages.LineBreakPointMessage_1,
-						new String[] { resource.getName(), Integer.toString(lineNumber) }));
+						resource.getName(), Integer.toString(lineNumber)));
 				attributes.put(IPHPDebugConstants.ConditionEnabled, Boolean.FALSE);
 				attributes.put(IPHPDebugConstants.Condition, ""); //$NON-NLS-1$
 				attributes.put(IBreakpoint.PERSISTED, Boolean.FALSE);
@@ -76,6 +77,7 @@ public class PHPConditionalBreakpoint extends PHPLineBreakpoint {
 		resource.getWorkspace().run(runnable, null, IWorkspace.AVOID_UPDATE, null);
 	}
 
+	@Override
 	public void setMarker(IMarker marker) throws CoreException {
 		super.setMarker(marker);
 		fCondition = (String) marker.getAttribute(IPHPDebugConstants.Condition);

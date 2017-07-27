@@ -36,6 +36,7 @@ public class IncludeOccurrencesFinder extends AbstractOccurrencesFinder {
 	 *            the selected node
 	 * @return returns a message if there is a problem
 	 */
+	@Override
 	public String initialize(Program root, ASTNode node) {
 		fASTRoot = root;
 
@@ -72,6 +73,7 @@ public class IncludeOccurrencesFinder extends AbstractOccurrencesFinder {
 		return (parent != null && parent.getType() == ASTNode.INCLUDE) ? (Include) parent : null;
 	}
 
+	@Override
 	protected void findOccurrences() {
 		if (source == null) {
 			return;
@@ -90,30 +92,37 @@ public class IncludeOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * getOccurrenceReadWriteType
 	 * (org.eclipse.php.internal.core.ast.nodes.ASTNode)
 	 */
+	@Override
 	protected int getOccurrenceType(ASTNode node) {
 		return IOccurrencesFinder.K_OCCURRENCE;
 	}
 
+	@Override
 	public String getElementName() {
 		return binding.getName();
 	}
 
+	@Override
 	public String getID() {
 		return ID;
 	}
 
+	@Override
 	public String getJobLabel() {
 		return "RncludeFinder_job_label"; //$NON-NLS-1$
 	}
 
+	@Override
 	public int getSearchKind() {
 		return IOccurrencesFinder.K_EXIT_POINT_OCCURRENCE;
 	}
 
+	@Override
 	public String getUnformattedPluralLabel() {
 		return "IncludeFinder_label_plural"; //$NON-NLS-1$
 	}
 
+	@Override
 	public String getUnformattedSingularLabel() {
 		return "IncludeFinder_label_singular"; //$NON-NLS-1$
 	}

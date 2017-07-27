@@ -35,10 +35,12 @@ public class StaticConstantAccess extends StaticDispatch {
 		this.constant = constant;
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.STATIC_CONSTANT_ACCESS;
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		final boolean visit = visitor.visit(this);
 		if (visit) {

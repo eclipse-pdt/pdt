@@ -19,7 +19,7 @@ import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.swt.custom.StyleRange;
 
-public class PresentationCollector extends AbstractCollection {
+public class PresentationCollector extends AbstractCollection<StyleRange> {
 	private final TextPresentation fPresentation;
 	private int lastOffset;
 
@@ -41,8 +41,7 @@ public class PresentationCollector extends AbstractCollection {
 	 * @see java.util.Collection#add(java.lang.Object)
 	 */
 	@Override
-	public boolean add(Object o) {
-		StyleRange range = (StyleRange) o;
+	public boolean add(StyleRange range) {
 		if (lastOffset > range.start) {
 			IllegalArgumentException e = new IllegalArgumentException(
 					"Overlapping start in StyleRange " + range.start + ":" + range.length); //$NON-NLS-1$ //$NON-NLS-2$
@@ -67,7 +66,7 @@ public class PresentationCollector extends AbstractCollection {
 	 * @see java.util.AbstractCollection#iterator()
 	 */
 	@Override
-	public Iterator iterator() {
+	public Iterator<StyleRange> iterator() {
 		return fPresentation.getNonDefaultStyleRangeIterator();
 	}
 

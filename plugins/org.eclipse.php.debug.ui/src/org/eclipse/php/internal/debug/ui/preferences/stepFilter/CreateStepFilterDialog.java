@@ -63,12 +63,14 @@ public class CreateStepFilterDialog extends StatusDialog {
 		return createStepFilterDialog.filter;
 	}
 
+	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		okButton = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 		okButton.setEnabled(false);
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
 	}
 
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite container = (Composite) super.createDialogArea(parent);
 
@@ -103,6 +105,7 @@ public class CreateStepFilterDialog extends StatusDialog {
 		text.setFont(container.getFont());
 
 		text.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				validateChange();
 				if (!filterValid) {
@@ -174,6 +177,7 @@ public class CreateStepFilterDialog extends StatusDialog {
 	 * 
 	 * @see org.eclipse.jface.window.Window#close()
 	 */
+	@Override
 	public boolean close() {
 		if (!okClicked) {
 			filterValid = false;
@@ -182,6 +186,7 @@ public class CreateStepFilterDialog extends StatusDialog {
 		return super.close();
 	}
 
+	@Override
 	protected void okPressed() {
 		okClicked = true;
 		super.okPressed();

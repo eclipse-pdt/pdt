@@ -26,7 +26,7 @@ import org.eclipse.php.core.codeassist.ICompletionStrategy;
  */
 public class LocalMethodElementsCompositeStrategy extends AbstractCompletionStrategy {
 
-	private final Collection<ICompletionStrategy> strategies = new ArrayList<ICompletionStrategy>();
+	private final Collection<ICompletionStrategy> strategies = new ArrayList<>();
 
 	public LocalMethodElementsCompositeStrategy(ICompletionContext context) {
 		super(context);
@@ -45,6 +45,7 @@ public class LocalMethodElementsCompositeStrategy extends AbstractCompletionStra
 		}
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws Exception {
 		for (ICompletionStrategy strategy : strategies) {
 			strategy.apply(reporter);

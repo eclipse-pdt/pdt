@@ -18,9 +18,10 @@ public class CompositeProjectChangeObserver extends HashSet<IProjectClosedObserv
 
 	private static final long serialVersionUID = 1L;
 
+	@Override
 	public void closed() {
 		for (Iterator<IProjectClosedObserver> iter = iterator(); iter.hasNext();) {
-			IProjectClosedObserver projectChangeObserver = (IProjectClosedObserver) iter.next();
+			IProjectClosedObserver projectChangeObserver = iter.next();
 			projectChangeObserver.closed();
 		}
 	}

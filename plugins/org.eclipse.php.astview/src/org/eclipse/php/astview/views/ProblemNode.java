@@ -33,10 +33,12 @@ public class ProblemNode extends ASTAttribute {
 		fProblem= problem;
 	}
 	
+	@Override
 	public Object getParent() {
 		return fParent;
 	}
 
+	@Override
 	public Object[] getChildren() {
 		String[] arguments= fProblem.getArguments();
 		ArrayList<GeneralAttribute> children= new ArrayList<GeneralAttribute>();
@@ -58,6 +60,7 @@ public class ProblemNode extends ASTAttribute {
 		return children.toArray();
 	}
 
+	@Override
 	public String getLabel() {
 		StringBuffer buf= new StringBuffer();
 		int offset= fProblem.getSourceStart();
@@ -196,6 +199,7 @@ public class ProblemNode extends ASTAttribute {
 		return buf.toString();
 	}
 	
+	@Override
 	public Image getImage() {
 		return null;
 	}
@@ -214,6 +218,7 @@ public class ProblemNode extends ASTAttribute {
 		return fProblem.getSourceEnd() + 1 - fProblem.getSourceStart();
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -242,6 +247,7 @@ public class ProblemNode extends ASTAttribute {
 	/*
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode() {
 		return (fParent != null ? fParent.hashCode() : 0) + (fProblem != null ? fProblem.hashCode() : 0);
 	}

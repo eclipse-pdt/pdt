@@ -26,17 +26,20 @@ public class CloneEvaluator extends GoalEvaluator {
 		super(goal);
 	}
 
+	@Override
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
 		CloneExpression cloneExpression = (CloneExpression) typedGoal.getExpression();
 		return new IGoal[] { new ExpressionTypeGoal(typedGoal.getContext(), cloneExpression.getExpr()) };
 	}
 
+	@Override
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		this.result = (IEvaluatedType) result;
 		return IGoal.NO_GOALS;
 	}
 
+	@Override
 	public Object produceResult() {
 		return result;
 	}

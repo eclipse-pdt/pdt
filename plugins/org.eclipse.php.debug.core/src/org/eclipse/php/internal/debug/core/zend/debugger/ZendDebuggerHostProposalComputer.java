@@ -114,6 +114,7 @@ public class ZendDebuggerHostProposalComputer {
 		if (privateAddresses.isEmpty())
 			return null;
 		Collections.sort(privateAddresses, new Comparator<Inet4Address>() {
+			@Override
 			public int compare(Inet4Address a1, Inet4Address a2) {
 				if (NetworkUtil.isSamePrivateClass(a1, serverHostAddress)
 						&& !NetworkUtil.isSamePrivateClass(a2, serverHostAddress))

@@ -60,8 +60,8 @@ public class CreateMultipleSourceFoldersDialog extends TrayDialog {
 		public Object[] getChildren(Object element) {
 			List<Object> result = new ArrayList<>();
 			// all keys with value element
-			Set keys = fNonExistingFolders.keySet();
-			for (Iterator iter = keys.iterator(); iter.hasNext();) {
+			Set<IFolder> keys = fNonExistingFolders.keySet();
+			for (Iterator<IFolder> iter = keys.iterator(); iter.hasNext();) {
 				Object key = iter.next();
 				if (fNonExistingFolders.get(key).equals(element)) {
 					result.add(key);
@@ -80,20 +80,20 @@ public class CreateMultipleSourceFoldersDialog extends TrayDialog {
 
 	private final IScriptProject fScriptProject;
 	private final BPListElement[] fExistingElements;
-	private final HashSet fRemovedElements;
-	private final HashSet fModifiedElements;
-	private final HashSet fInsertedElements;
-	private final Hashtable fNonExistingFolders;
+	private final HashSet<?> fRemovedElements;
+	private final HashSet<BPListElement> fModifiedElements;
+	private final HashSet<BPListElement> fInsertedElements;
+	private final Hashtable<IFolder, IContainer> fNonExistingFolders;
 
 	public CreateMultipleSourceFoldersDialog(final IScriptProject scriptProject, final BPListElement[] existingElements,
 			Shell shell) {
 		super(shell);
 		fScriptProject = scriptProject;
 		fExistingElements = existingElements;
-		fRemovedElements = new HashSet();
-		fModifiedElements = new HashSet();
-		fInsertedElements = new HashSet();
-		fNonExistingFolders = new Hashtable();
+		fRemovedElements = new HashSet<>();
+		fModifiedElements = new HashSet<>();
+		fInsertedElements = new HashSet<>();
+		fNonExistingFolders = new Hashtable<>();
 
 		for (int i = 0; i < existingElements.length; i++) {
 			BPListElement cur = existingElements[i];
@@ -105,11 +105,11 @@ public class CreateMultipleSourceFoldersDialog extends TrayDialog {
 
 	@Override
 	public int open() {
-		Class[] acceptedClasses = new Class[] { IProject.class, IFolder.class };
-		List existingContainers = getExistingContainers(fExistingElements);
+		Class<?>[] acceptedClasses = new Class<?>[] { IProject.class, IFolder.class };
+		List<IResource> existingContainers = getExistingContainers(fExistingElements);
 
 		IProject[] allProjects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-		ArrayList rejectedElements = new ArrayList(allProjects.length);
+		ArrayList<IProject> rejectedElements = new ArrayList<>(allProjects.length);
 		IProject currProject = fScriptProject.getProject();
 		for (int i = 0; i < allProjects.length; i++) {
 			if (!allProjects[i].equals(currProject)) {
@@ -180,8 +180,8 @@ public class CreateMultipleSourceFoldersDialog extends TrayDialog {
 
 			if (fExistingElements.length == 1) {
 			} else {
-				ArrayList added = new ArrayList(fInsertedElements);
-				HashSet updatedEclusionPatterns = new HashSet();
+				ArrayList<BPListElement> added = new ArrayList<>(fInsertedElements);
+				HashSet<BPListElement> updatedEclusionPatterns = new HashSet<>();
 				addExlusionPatterns(added, updatedEclusionPatterns);
 				fModifiedElements.addAll(updatedEclusionPatterns);
 			}
@@ -191,22 +191,21 @@ public class CreateMultipleSourceFoldersDialog extends TrayDialog {
 		}
 	}
 
-	public List getInsertedElements() {
-		return new ArrayList(fInsertedElements);
+	public List<BPListElement> getInsertedElements() {
+		return new ArrayList<>(fInsertedElements);
 	}
 
-	public List getRemovedElements() {
-		return new ArrayList(fRemovedElements);
+	public List<?> getRemovedElements() {
+		return new ArrayList<Object>(fRemovedElements);
 	}
 
-	public List getModifiedElements() {
-		return new ArrayList(fModifiedElements);
+	public List<BPListElement> getModifiedElements() {
+		return new ArrayList<>(fModifiedElements);
 	}
 
-	private void addExlusionPatterns(List newEntries, Set modifiedEntries) {
-		BuildPathBasePage.fixNestingConflicts(
-				(BPListElement[]) newEntries.toArray(new BPListElement[newEntries.size()]), fExistingElements,
-				modifiedEntries);
+	private void addExlusionPatterns(List<BPListElement> newEntries, Set<BPListElement> modifiedEntries) {
+		BuildPathBasePage.fixNestingConflicts(newEntries.toArray(new BPListElement[newEntries.size()]),
+				fExistingElements, modifiedEntries);
 		if (!modifiedEntries.isEmpty()) {
 			String title = NewWizardMessages.SourceContainerWorkbookPage_exclusion_added_title;
 			String message = NewWizardMessages.SourceContainerWorkbookPage_exclusion_added_message;
@@ -222,17 +221,17 @@ public class CreateMultipleSourceFoldersDialog extends TrayDialog {
 		return wizard;
 	}
 
-	private List getExistingContainers(BPListElement[] existingElements) {
-		List res = new ArrayList();
+	private List<IResource> getExistingContainers(BPListElement[] existingElements) {
+		List<IResource> res = new ArrayList<>();
 		for (int i = 0; i < existingElements.length; i++) {
 			IResource resource = existingElements[i].getResource();
 			if (resource instanceof IContainer) {
 				res.add(resource);
 			}
 		}
-		Set keys = fNonExistingFolders.keySet();
-		for (Iterator iter = keys.iterator(); iter.hasNext();) {
-			IFolder folder = (IFolder) iter.next();
+		Set<IFolder> keys = fNonExistingFolders.keySet();
+		for (Iterator<IFolder> iter = keys.iterator(); iter.hasNext();) {
+			IFolder folder = iter.next();
 			res.add(folder);
 		}
 		return res;

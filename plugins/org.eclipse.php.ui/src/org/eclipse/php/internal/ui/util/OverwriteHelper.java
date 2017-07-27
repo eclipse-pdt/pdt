@@ -105,58 +105,58 @@ class OverwriteHelper {
 	}
 
 	private void confirmProjectFragmentOverwritting(IConfirmQuery overwriteQuery) {
-		List toNotOverwrite = new ArrayList(1);
+		List<IProjectFragment> toNotOverwrite = new ArrayList<>(1);
 		for (int i = 0; i < fRoots.length; i++) {
 			IProjectFragment root = fRoots[i];
 			if (canOverwrite(root) && !skip(root.getElementName(), overwriteQuery))
 				toNotOverwrite.add(root);
 		}
-		IProjectFragment[] roots = (IProjectFragment[]) toNotOverwrite
+		IProjectFragment[] roots = toNotOverwrite
 				.toArray(new IProjectFragment[toNotOverwrite.size()]);
 		fRoots = ArrayTypeConverter.toProjectFragmentArray(ReorgUtils.setMinus(fRoots, roots));
 	}
 
 	private void confirmCuOverwritting(IConfirmQuery overwriteQuery) {
-		List cusToNotOverwrite = new ArrayList(1);
+		List<ISourceModule> cusToNotOverwrite = new ArrayList<>(1);
 		for (int i = 0; i < fCus.length; i++) {
 			ISourceModule cu = fCus[i];
 			if (canOverwrite(cu) && !overwrite(cu, overwriteQuery))
 				cusToNotOverwrite.add(cu);
 		}
-		ISourceModule[] cus = (ISourceModule[]) cusToNotOverwrite.toArray(new ISourceModule[cusToNotOverwrite.size()]);
+		ISourceModule[] cus = cusToNotOverwrite.toArray(new ISourceModule[cusToNotOverwrite.size()]);
 		fCus = ArrayTypeConverter.toCuArray(ReorgUtils.setMinus(fCus, cus));
 	}
 
 	private void confirmFolderOverwritting(IConfirmQuery overwriteQuery) {
-		List foldersToNotOverwrite = new ArrayList(1);
+		List<IFolder> foldersToNotOverwrite = new ArrayList<>(1);
 		for (int i = 0; i < fFolders.length; i++) {
 			IFolder folder = fFolders[i];
 			if (canOverwrite(folder) && !skip(folder.getName(), overwriteQuery))
 				foldersToNotOverwrite.add(folder);
 		}
-		IFolder[] folders = (IFolder[]) foldersToNotOverwrite.toArray(new IFolder[foldersToNotOverwrite.size()]);
+		IFolder[] folders = foldersToNotOverwrite.toArray(new IFolder[foldersToNotOverwrite.size()]);
 		fFolders = ArrayTypeConverter.toFolderArray(ReorgUtils.setMinus(fFolders, folders));
 	}
 
 	private void confirmFileOverwritting(IConfirmQuery overwriteQuery) {
-		List filesToNotOverwrite = new ArrayList(1);
+		List<IFile> filesToNotOverwrite = new ArrayList<>(1);
 		for (int i = 0; i < fFiles.length; i++) {
 			IFile file = fFiles[i];
 			if (canOverwrite(file) && !overwrite(file, overwriteQuery))
 				filesToNotOverwrite.add(file);
 		}
-		IFile[] files = (IFile[]) filesToNotOverwrite.toArray(new IFile[filesToNotOverwrite.size()]);
+		IFile[] files = filesToNotOverwrite.toArray(new IFile[filesToNotOverwrite.size()]);
 		fFiles = ArrayTypeConverter.toFileArray(ReorgUtils.setMinus(fFiles, files));
 	}
 
 	private void confirmPackageOverwritting(IConfirmQuery overwriteQuery) {
-		List toNotOverwrite = new ArrayList(1);
+		List<IScriptFolder> toNotOverwrite = new ArrayList<>(1);
 		for (int i = 0; i < fScriptFolders.length; i++) {
 			IScriptFolder pack = fScriptFolders[i];
 			if (canOverwrite(pack) && !overwrite(pack, overwriteQuery))
 				toNotOverwrite.add(pack);
 		}
-		IScriptFolder[] packages = (IScriptFolder[]) toNotOverwrite.toArray(new IScriptFolder[toNotOverwrite.size()]);
+		IScriptFolder[] packages = toNotOverwrite.toArray(new IScriptFolder[toNotOverwrite.size()]);
 		fScriptFolders = ArrayTypeConverter.toPackageArray(ReorgUtils.setMinus(fScriptFolders, packages));
 	}
 

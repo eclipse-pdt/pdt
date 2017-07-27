@@ -31,12 +31,12 @@ public class AliasMethod extends SourceMethod {
 
 	@Override
 	public ISourceRange getSourceRange() throws ModelException {
-		return ((IMethod) method).getSourceRange();
+		return method.getSourceRange();
 	}
 
 	@Override
 	public int getFlags() throws ModelException {
-		return ((IMethod) method).getFlags();
+		return method.getFlags();
 	}
 
 	public String getAlias() {

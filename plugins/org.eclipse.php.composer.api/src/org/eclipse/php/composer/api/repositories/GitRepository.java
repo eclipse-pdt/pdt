@@ -22,6 +22,7 @@ public class GitRepository extends VcsRepository implements Cloneable {
 	 * 
 	 * @see java.lang.Object#clone()
 	 */
+	@Override
 	public GitRepository clone() {
 		GitRepository clone = new GitRepository();
 		cloneProperties(clone);

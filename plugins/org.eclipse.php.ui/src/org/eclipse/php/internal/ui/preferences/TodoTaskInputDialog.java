@@ -41,12 +41,12 @@ public class TodoTaskInputDialog extends StatusDialog {
 	private StringDialogField fNameDialogField;
 	private ComboDialogField fPriorityDialogField;
 
-	private List fExistingNames;
+	private List<String> fExistingNames;
 
-	public TodoTaskInputDialog(Shell parent, TodoTask task, List existingEntries) {
+	public TodoTaskInputDialog(Shell parent, TodoTask task, List<?> existingEntries) {
 		super(parent);
 
-		fExistingNames = new ArrayList(existingEntries.size());
+		fExistingNames = new ArrayList<>(existingEntries.size());
 		for (int i = 0; i < existingEntries.size(); i++) {
 			TodoTask curr = (TodoTask) existingEntries.get(i);
 			if (!curr.equals(task)) {

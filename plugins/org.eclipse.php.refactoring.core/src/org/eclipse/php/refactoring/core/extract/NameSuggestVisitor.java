@@ -26,7 +26,7 @@ import org.eclipse.php.core.ast.visitor.AbstractVisitor;
  * 
  */
 public class NameSuggestVisitor extends AbstractVisitor {
-	private LinkedList<String> suggestions = new LinkedList<String>();
+	private LinkedList<String> suggestions = new LinkedList<>();
 
 	public List<String> getSuggestions() {
 		return suggestions;
@@ -36,6 +36,7 @@ public class NameSuggestVisitor extends AbstractVisitor {
 		this.suggestions = suggestions;
 	}
 
+	@Override
 	public boolean visit(Identifier identifier) {
 		// add to the top of the list since we want the suggestions to be in
 		// reversed order
@@ -46,12 +47,14 @@ public class NameSuggestVisitor extends AbstractVisitor {
 		return false;
 	}
 
+	@Override
 	public boolean visit(FunctionInvocation functionInvocation) {
 		functionInvocation.getFunctionName().accept(this);
 		// we want to skip the parameters
 		return false;
 	}
 
+	@Override
 	public boolean visit(Scalar scalar) {
 		String value = ""; //$NON-NLS-1$
 		switch (scalar.getScalarType()) {

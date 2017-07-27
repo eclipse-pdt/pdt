@@ -26,7 +26,7 @@ public interface AstLexer extends Scanner {
 
 	public void resetCommentList();
 
-	public List getCommentList();
+	public List<?> getCommentList();
 
 	public void setUseAspTagsAsPHP(boolean useAspTagsAsPhp);
 

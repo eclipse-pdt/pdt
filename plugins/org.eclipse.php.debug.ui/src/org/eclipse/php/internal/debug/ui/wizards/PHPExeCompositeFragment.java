@@ -86,6 +86,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 		return new File(fPHPIni.getText());
 	}
 
+	@Override
 	protected void createContents(Composite parent) {
 		PixelConverter pixelConverter = new PixelConverter(parent);
 
@@ -99,6 +100,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 		fPHPexeName.setLabelText(PHPDebugUIMessages.addPHPexeDialog_phpName);
 
 		fPHPExePath = new StringButtonDialogField(new IStringButtonAdapter() {
+			@Override
 			public void changeControlPressed(DialogField field) {
 				FileDialog dialog = new FileDialog(getShell());
 				dialog.setFilterPath(fPHPExePath.getText());
@@ -113,6 +115,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 		fPHPExePath.setButtonLabel(PHPDebugUIMessages.addPHPexeDialog_browse1);
 
 		fPHPIni = new StringButtonDialogField(new IStringButtonAdapter() {
+			@Override
 			public void changeControlPressed(DialogField field) {
 				FileDialog dialog = new FileDialog(getShell());
 				dialog.setFilterPath(fPHPIni.getText());
@@ -180,12 +183,14 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 
 	protected void createFieldListeners() {
 		fPHPexeName.setDialogFieldListener(new IDialogFieldListener() {
+			@Override
 			public void dialogFieldChanged(DialogField field) {
 				updateItem();
 			}
 		});
 
 		fPHPExePath.setDialogFieldListener(new IDialogFieldListener() {
+			@Override
 			public void dialogFieldChanged(DialogField field) {
 				String newPath = fPHPExePath.getText();
 				if (newPath != null && newPath.trim().length() > 0) {
@@ -216,26 +221,31 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 		});
 
 		fPHPIni.setDialogFieldListener(new IDialogFieldListener() {
+			@Override
 			public void dialogFieldChanged(DialogField field) {
 				updateItem();
 			}
 		});
 
 		fLoadDefaultPHPIni.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				updateItem();
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				updateItem();
 			}
 		});
 
 		fSapiTypes.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				updateItem();
 			}
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				updateItem();
 			}
@@ -272,10 +282,12 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 		updateItem();
 	}
 
+	@Override
 	public void setExistingItems(PHPexeItem[] existingItems) {
 		this.existingItems = existingItems;
 	}
 
+	@Override
 	public void setData(Object data) {
 		if (data != null && !(data instanceof PHPexeItem)) {
 			throw new IllegalArgumentException(PHPDebugUIMessages.PHPExeCompositeFragment_3);
@@ -285,6 +297,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 		fPHPExePath.getChangeControl(null).setFocus();
 	}
 
+	@Override
 	public void validate() {
 		PHPexeItem phpExeItem = getPHPExeItem();
 		// Let's reset previous state
@@ -354,6 +367,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 		controlHandler.update();
 	}
 
+	@Override
 	public boolean performOk() {
 		return true;
 	}

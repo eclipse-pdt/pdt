@@ -35,6 +35,7 @@ public class GlobalKeywordsStrategy extends KeywordsStrategy {
 		super(context);
 	}
 
+	@Override
 	protected boolean filterKeyword(KeywordData keyword) {
 		return (keyword.context & PHPKeywords.GLOBAL) == 0;
 	}

@@ -40,10 +40,11 @@ public class ScriptExecutor {
 
 	private int timeout = 60000;
 
-	private Set<ExecutionResponseListener> listeners = new HashSet<ExecutionResponseListener>();
+	private Set<ExecutionResponseListener> listeners = new HashSet<>();
 
 	private DefaultExecuteResultHandler handler = new DefaultExecuteResultHandler() {
 
+		@Override
 		public void onProcessComplete(int exitValue) {
 			super.onProcessComplete(exitValue);
 			for (ExecutionResponseListener handler : listeners) {
@@ -51,6 +52,7 @@ public class ScriptExecutor {
 			}
 		}
 
+		@Override
 		public void onProcessFailed(ExecuteException e) {
 			String response = errBuilder.toString();
 			String stdOutResponse = outBuilder.toString();

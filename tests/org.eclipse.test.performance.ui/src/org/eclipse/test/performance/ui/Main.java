@@ -33,6 +33,7 @@ public class Main implements IApplication {
  * </ul>
  * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext)
  */
+@Override
 public Object start(IApplicationContext context) throws Exception {
 	DB_Results.DB_CONNECTION = true; // force DB connection while running the application
 	GenerateResults generation = new GenerateResults();
@@ -44,6 +45,7 @@ public Object start(IApplicationContext context) throws Exception {
 /* (non-Javadoc)
  * @see org.eclipse.equinox.app.IApplication#stop()
  */
+@Override
 public void stop() {
 	// Do nothing
 }

@@ -76,8 +76,8 @@ public class AddSourceFolderWizard extends BuildPathWizard {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List getInsertedElements() {
-		List result = super.getInsertedElements();
+	public List<BPListElement> getInsertedElements() {
+		List<BPListElement> result = super.getInsertedElements();
 		if (getEntryToEdit().getOrginalPath() == null)
 			result.add(getEntryToEdit());
 
@@ -88,7 +88,7 @@ public class AddSourceFolderWizard extends BuildPathWizard {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List getRemovedElements() {
+	public List<?> getRemovedElements() {
 		return fAddFolderPage.getRemovedElements();
 	}
 
@@ -96,7 +96,7 @@ public class AddSourceFolderWizard extends BuildPathWizard {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List getModifiedElements() {
+	public List<?> getModifiedElements() {
 		return fAddFolderPage.getModifiedElements();
 	}
 

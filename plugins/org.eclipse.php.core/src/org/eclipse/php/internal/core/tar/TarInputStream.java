@@ -321,6 +321,7 @@ public class TarInputStream extends FilterInputStream {
 	 * 
 	 * @see java.io.FilterInputStream#read(byte[], int, int)
 	 */
+	@Override
 	public int read(byte[] b, int off, int len) throws IOException {
 		if (nextEOF == 0) {
 			return -1;
@@ -340,6 +341,7 @@ public class TarInputStream extends FilterInputStream {
 	 * 
 	 * @see java.io.FilterInputStream#read()
 	 */
+	@Override
 	public int read() throws IOException {
 		byte[] data = new byte[1];
 		int size = read(data, 0, 1);

@@ -25,6 +25,7 @@ import org.eclipse.php.composer.api.collection.JsonArray;
 @Deprecated
 public class Scripts extends JsonObject {
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	protected void doParse(Object obj) {
 		if (obj instanceof LinkedHashMap) {
@@ -45,7 +46,7 @@ public class Scripts extends JsonObject {
 
 	@Override
 	protected List<String> getOwnProperties() {
-		List<String> list = new ArrayList<String>(Arrays.asList(getEvents()));
+		List<String> list = new ArrayList<>(Arrays.asList(getEvents()));
 		list.addAll(super.getOwnProperties());
 		return list;
 	}

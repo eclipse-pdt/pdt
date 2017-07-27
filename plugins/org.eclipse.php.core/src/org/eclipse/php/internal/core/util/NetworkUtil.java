@@ -104,7 +104,7 @@ public class NetworkUtil {
 	 * @return all available network addresses
 	 */
 	public static List<Inet4Address> getAllAddresses() {
-		final List<Inet4Address> descriptors = new ArrayList<Inet4Address>();
+		final List<Inet4Address> descriptors = new ArrayList<>();
 		Inet4Address publicAddress = getPublicAddress();
 		if (publicAddress != null)
 			descriptors.add(getPublicAddress());
@@ -151,7 +151,7 @@ public class NetworkUtil {
 	 * @return LAN private addresses
 	 */
 	public static List<Inet4Address> getPrivateAddresses() {
-		List<Inet4Address> descriptors = new ArrayList<Inet4Address>();
+		List<Inet4Address> descriptors = new ArrayList<>();
 		try {
 			// Add localhost first
 			Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();

@@ -57,7 +57,7 @@ public class UnaryOperation extends Expression implements IOperationNode {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(2);
 		propertyList.add(EXPRESSION_PROPERTY);
 		propertyList.add(OPERATOR_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
@@ -77,6 +77,7 @@ public class UnaryOperation extends Expression implements IOperationNode {
 		super(ast);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -85,20 +86,24 @@ public class UnaryOperation extends Expression implements IOperationNode {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		expression.accept(visitor);
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		expression.traverseTopDown(visitor);
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		expression.traverseBottomUp(visitor);
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<UnaryOperation"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -122,6 +127,7 @@ public class UnaryOperation extends Expression implements IOperationNode {
 		}
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.UNARY_OPERATION;
 	}
@@ -158,6 +164,7 @@ public class UnaryOperation extends Expression implements IOperationNode {
 		postReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == EXPRESSION_PROPERTY) {
 			if (get) {
@@ -188,6 +195,7 @@ public class UnaryOperation extends Expression implements IOperationNode {
 	 * org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString
 	 * ()
 	 */
+	@Override
 	public String getOperationString() {
 		return getOperator(this.getOperator());
 	}
@@ -199,6 +207,7 @@ public class UnaryOperation extends Expression implements IOperationNode {
 	 * org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString
 	 * (int)
 	 */
+	@Override
 	public String getOperationString(int op) {
 		return getOperator(op);
 	}
@@ -229,12 +238,13 @@ public class UnaryOperation extends Expression implements IOperationNode {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
+	@Override
 	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
 		if (property == OPERATOR_PROPERTY) {
 			if (get) {
 				return getOperator();
 			} else {
-				setOperator((Integer) value);
+				setOperator(value);
 				return 0;
 			}
 		}
@@ -245,6 +255,7 @@ public class UnaryOperation extends Expression implements IOperationNode {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

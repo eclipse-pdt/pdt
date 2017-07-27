@@ -25,6 +25,7 @@ public abstract class DBGpElement extends DebugElement {
 	 * 
 	 * @see org.eclipse.debug.core.model.IDebugElement#getModelIdentifier()
 	 */
+	@Override
 	public String getModelIdentifier() {
 		return IDBGpModelConstants.DBGP_MODEL_ID;
 	}

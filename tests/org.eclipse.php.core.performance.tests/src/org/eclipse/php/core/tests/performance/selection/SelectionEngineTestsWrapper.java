@@ -60,7 +60,7 @@ public class SelectionEngineTestsWrapper extends AbstractPDTTTest {
 		super("");
 	}
 
-	public Test suite(final Map map) {
+	public Test suite(final Map<?, ?> map) {
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject(map.get(ProjectSuite.PROJECT).toString());
 		perfMonitor = PHPCorePerformanceTests.getPerformanceMonitor();
 		TestSuite suite = new TestSuite("Auto Selection Engine Tests");
@@ -75,9 +75,11 @@ public class SelectionEngineTestsWrapper extends AbstractPDTTTest {
 							PHPCorePerformanceTests.getDefault().getBundle(), fileName);
 					SelectionEngineTests test = new SelectionEngineTests(fileName) {
 
+						@Override
 						protected void setUp() throws Exception {
 						}
 
+						@Override
 						protected void tearDown() throws Exception {
 							if (testFile != null) {
 								testFile.delete(true, null);
@@ -85,9 +87,11 @@ public class SelectionEngineTestsWrapper extends AbstractPDTTTest {
 							}
 						}
 
+						@Override
 						protected void runTest() throws Throwable {
 							perfMonitor.execute("PerformanceTests.testSelectionEngine" + "_" + fileName,
 									new Operation() {
+										@Override
 										public void run() throws Exception {
 											IModelElement[] elements = getSelection(pdttFile.getFile());
 										}
@@ -105,6 +109,7 @@ public class SelectionEngineTestsWrapper extends AbstractPDTTTest {
 						// file
 						// parsing
 						// failure
+						@Override
 						protected void runTest() throws Throwable {
 							throw e;
 						}

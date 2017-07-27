@@ -156,6 +156,7 @@ public interface ITypeBinding extends IBinding {
 	 * @return the bit-wise or of <code>Modifiers</code> constants
 	 * @see Modifiers
 	 */
+	@Override
 	public int getModifiers();
 
 	/**
@@ -250,6 +251,7 @@ public interface ITypeBinding extends IBinding {
 	 *         the empty string if it has none
 	 * @see #getQualifiedName()
 	 */
+	@Override
 	public String getName();
 
 	/**

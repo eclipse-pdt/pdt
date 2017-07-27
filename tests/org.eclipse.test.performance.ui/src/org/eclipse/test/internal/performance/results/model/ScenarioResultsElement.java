@@ -14,6 +14,7 @@ import java.util.Vector;
 
 import org.eclipse.test.internal.performance.results.db.*;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
+import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 
 public class ScenarioResultsElement extends ResultsElement {
@@ -31,9 +32,9 @@ public class ScenarioResultsElement extends ResultsElement {
 	private static final TextPropertyDescriptor SCENARIO_FILE_NAME_DESCRIPTOR = new TextPropertyDescriptor(P_ID_SCENARIO_FILE_NAME, P_STR_SCENARIO_FILE_NAME);
 	private static final TextPropertyDescriptor SCENARIO_SHORT_NAME_DESCRIPTOR = new TextPropertyDescriptor(P_ID_SCENARIO_SHORT_NAME, P_STR_SCENARIO_SHORT_NAME);
 
-    private static Vector DESCRIPTORS;
-    static Vector initDescriptors(int status) {
-        DESCRIPTORS = new Vector();
+    private static Vector<PropertyDescriptor> DESCRIPTORS;
+    static Vector<PropertyDescriptor> initDescriptors(int status) {
+        DESCRIPTORS = new Vector<>();
 		// Status category
 		DESCRIPTORS.add(getInfosDescriptor(status));
 		DESCRIPTORS.add(getWarningsDescriptor(status));
@@ -51,7 +52,7 @@ public class ScenarioResultsElement extends ResultsElement {
 		COMMENT_DESCRIPTOR.setCategory("Survey");
         return DESCRIPTORS;
 	}
-    static Vector getDescriptors() {
+    static Vector<PropertyDescriptor> getDescriptors() {
     	return DESCRIPTORS;
 	}
 
@@ -59,10 +60,12 @@ ScenarioResultsElement(AbstractResults results, ResultsElement parent) {
     super(results, parent);
 }
 
+@Override
 ResultsElement createChild(AbstractResults testResults) {
 	return new ConfigResultsElement(testResults, this);
 }
 
+@Override
 public String getLabel(Object o) {
 	return ((ScenarioResults) this.results).getShortName();
 }
@@ -70,8 +73,9 @@ public String getLabel(Object o) {
 /* (non-Javadoc)
  * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyDescriptors()
  */
+@Override
 public IPropertyDescriptor[] getPropertyDescriptors() {
-	Vector descriptors = getDescriptors();
+	Vector<PropertyDescriptor> descriptors = getDescriptors();
 	if (descriptors == null) {
 		descriptors = initDescriptors(getStatus());
 	}
@@ -80,7 +84,7 @@ public IPropertyDescriptor[] getPropertyDescriptors() {
 	descriptorsArray[0] = getInfosDescriptor(getStatus());
 	descriptorsArray[1] = getWarningsDescriptor(getStatus());
 	for (int i=2; i<size; i++) {
-		descriptorsArray[i] = (IPropertyDescriptor) descriptors.get(i);
+		descriptorsArray[i] = descriptors.get(i);
 	}
 	return descriptorsArray;
 }
@@ -88,6 +92,7 @@ public IPropertyDescriptor[] getPropertyDescriptors() {
 /* (non-Javadoc)
  * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyValue(java.lang.Object)
  */
+@Override
 public Object getPropertyValue(Object propKey) {
 	ScenarioResults scenarioResults = (ScenarioResults) this.results;
     if (propKey.equals(P_ID_SCENARIO_LABEL))
@@ -99,6 +104,7 @@ public Object getPropertyValue(Object propKey) {
     return super.getPropertyValue(propKey);
 }
 
+@Override
 void initStatus() {
 	if (onlyFingerprints()) {
 		if (hasSummary()) {

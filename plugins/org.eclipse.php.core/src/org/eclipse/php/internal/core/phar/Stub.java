@@ -23,6 +23,7 @@ public class Stub implements IStub {
 		this.jarPackage = jarPackage;
 	}
 
+	@Override
 	public void write(OutputStream os) throws CoreException, IOException {
 		if (jarPackage.isStubGenerated()) {
 			os.write(PharConstants.PHP_START);

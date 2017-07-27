@@ -28,9 +28,9 @@ public class PharLeveledStructureProvider implements ILeveledImportStructureProv
 
 	private PharEntry root = new PharEntry();
 
-	private Map children;
+	private Map<PharEntry, List<PharEntry>> children;
 
-	private Map directoryEntryCache = new HashMap();
+	private Map<IPath, PharEntry> directoryEntryCache = new HashMap<>();
 
 	private int stripLevel;
 
@@ -58,7 +58,7 @@ public class PharLeveledStructureProvider implements ILeveledImportStructureProv
 	 *         existed)
 	 */
 	protected PharEntry createContainer(IPath pathname) {
-		PharEntry existingEntry = (PharEntry) directoryEntryCache.get(pathname);
+		PharEntry existingEntry = directoryEntryCache.get(pathname);
 		if (existingEntry != null) {
 			return existingEntry;
 		}
@@ -73,10 +73,10 @@ public class PharLeveledStructureProvider implements ILeveledImportStructureProv
 		newEntry.setName(pathname.toString());
 		// newEntry.setFileType(TarEntry.DIRECTORY);
 		directoryEntryCache.put(pathname, newEntry);
-		List childList = new ArrayList();
+		List<PharEntry> childList = new ArrayList<>();
 		children.put(newEntry, childList);
 
-		List parentChildList = (List) children.get(parent);
+		List<PharEntry> parentChildList = children.get(parent);
 		parentChildList.add(newEntry);
 		return newEntry;
 	}
@@ -90,10 +90,10 @@ public class PharLeveledStructureProvider implements ILeveledImportStructureProv
 		if (pathname.segmentCount() == 1) {
 			parent = root;
 		} else {
-			parent = (PharEntry) directoryEntryCache.get(pathname.removeLastSegments(1));
+			parent = directoryEntryCache.get(pathname.removeLastSegments(1));
 		}
 
-		List childList = (List) children.get(parent);
+		List<PharEntry> childList = children.get(parent);
 		childList.add(entry);
 	}
 
@@ -101,12 +101,12 @@ public class PharLeveledStructureProvider implements ILeveledImportStructureProv
 	 * (non-Javadoc) Method declared on IImportStructureProvider
 	 */
 	@Override
-	public List getChildren(Object element) {
+	public List<?> getChildren(Object element) {
 		if (children == null) {
 			initialize();
 		}
 
-		return ((List) children.get(element));
+		return (children.get(element));
 	}
 
 	/*
@@ -197,12 +197,12 @@ public class PharLeveledStructureProvider implements ILeveledImportStructureProv
 	 * specified source file.
 	 */
 	protected void initialize() {
-		children = new HashMap(1000);
+		children = new HashMap<>(1000);
 
-		children.put(root, new ArrayList());
+		children.put(root, new ArrayList<>());
 		Iterator<PharEntry> entries = tarFile.getPharEntryMap().values().iterator();
 		while (entries.hasNext()) {
-			PharEntry entry = (PharEntry) entries.next();
+			PharEntry entry = entries.next();
 			IPath path = new Path(entry.getName()).addTrailingSeparator();
 
 			if (entry.isDirectory()) {

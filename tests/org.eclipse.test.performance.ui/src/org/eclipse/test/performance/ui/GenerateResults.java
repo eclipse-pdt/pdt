@@ -118,7 +118,7 @@ String scenarioPattern;
  *
  * @see #baselinePrefix
  */
-List currentBuildPrefixes;
+List<String> currentBuildPrefixes;
 
 /**
  * A list of prefixes of builds to highlight in displayed data graphs.
@@ -127,7 +127,7 @@ List currentBuildPrefixes;
  * Example:
  * 	<pre>-higlight 3_2</pre>
  */
-List pointsOfInterest;
+List<String> pointsOfInterest;
 
 /**
  * Tells whether only fingerprints has to be generated.
@@ -253,7 +253,7 @@ private void parse(String[] args) {
 			}
 			buffer.append("	").append(arg).append(" = ");
 			String[] ids = idPrefixList.split(",");
-			this.currentBuildPrefixes = new ArrayList();
+			this.currentBuildPrefixes = new ArrayList<>();
 			for (int j = 0; j < ids.length; j++) {
 				this.currentBuildPrefixes.add(ids[j]);
 				buffer.append(ids[j]);
@@ -269,7 +269,7 @@ private void parse(String[] args) {
 			}
 			buffer.append("	").append(arg).append(" = ");
 			String[] ids = args[i + 1].split(",");
-			this.pointsOfInterest = new ArrayList();
+			this.pointsOfInterest = new ArrayList<>();
 			for (int j = 0; j < ids.length; j++) {
 				this.pointsOfInterest.add(ids[j]);
 				buffer.append(ids[j]);
@@ -523,6 +523,7 @@ private void printComponent(/*PerformanceResults performanceResults, */String co
 		final FingerPrint fingerprint = new FingerPrint(component, stream, this.outputDir);
 		display.syncExec(
 			new Runnable() {
+				@Override
 				public void run(){
 					try {
 						fingerprint.print(GenerateResults.this.performanceResults);
@@ -542,6 +543,7 @@ private void printComponent(/*PerformanceResults performanceResults, */String co
 		final ScenarioStatusTable sst = new ScenarioStatusTable(component, stream);
 		display.syncExec(
 			new Runnable() {
+				@Override
 				public void run(){
 					try {
 						sst.print(GenerateResults.this.performanceResults);
@@ -618,7 +620,7 @@ private void printSummary(/*PerformanceResults performanceResults*/) {
 		int configsLength = configs.length;
 		for (int i=0; i<componentsLength; i++) {
 			String componentName = components[i];
-			List scenarioNames = this.performanceResults.getComponentScenarios(componentName);
+			List<?> scenarioNames = this.performanceResults.getComponentScenarios(componentName);
 			int size = scenarioNames.size();
 			for (int s=0; s<size; s++) {
 				String scenarioName = ((ScenarioResults) scenarioNames.get(s)).getName();
@@ -712,7 +714,7 @@ private void printSummaryScenarioLine(int i, String config, ScenarioResults scen
 	String url = config + "/" + scenarioResults.getFileName()+".html";
 	double[] stats = null;
 	if (i==0) { // baseline results
-		List baselinePrefixes = new ArrayList();
+		List<String> baselinePrefixes = new ArrayList<>();
 		if (this.baselinePrefix == null) {
 			baselinePrefixes.add(DB_Results.getDbBaselinePrefix());
 		} else {
@@ -1003,7 +1005,7 @@ private void setDefaults(String buildName, String baseline) {
 
 	// Init current build prefixes if not set
 	if (this.currentBuildPrefixes == null) {
-		this.currentBuildPrefixes = new ArrayList();
+		this.currentBuildPrefixes = new ArrayList<>();
 		if (buildName.charAt(0) == 'M') {
 			this.currentBuildPrefixes.add("M");
 		} else {

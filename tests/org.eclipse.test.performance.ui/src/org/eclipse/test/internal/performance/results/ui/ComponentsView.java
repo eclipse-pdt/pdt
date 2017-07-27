@@ -78,6 +78,7 @@ public class ComponentsView extends PerformancesView {
 
 	// Viewer filters
 	final static ViewerFilter FILTER_ADVANCED_SCENARIOS = new ViewerFilter() {
+		@Override
 		public boolean select(Viewer v, Object parentElement, Object element) {
 			if (element instanceof ScenarioResultsElement) {
 				ScenarioResultsElement scenarioElement = (ScenarioResultsElement) element;
@@ -92,7 +93,7 @@ public class ComponentsView extends PerformancesView {
 	ComponentResultsView componentResultsView = null;
 
 	// Internal
-	Set expandedComponents = new HashSet();
+	Set<ResultsElement> expandedComponents = new HashSet<>();
 
 	// Actions
 	Action filterAdvancedScenarios;
@@ -111,6 +112,7 @@ public ComponentsView() {
  * (non-Javadoc)
  * @see org.eclipse.test.internal.performance.results.ui.PerformancesView#createPartControl(org.eclipse.swt.widgets.Composite)
  */
+@Override
 public void createPartControl(Composite parent) {
 	super.createPartControl(parent);
 
@@ -119,6 +121,7 @@ public void createPartControl(Composite parent) {
 
 	// Set the content provider: first level is components list
 	WorkbenchContentProvider contentProvider = new WorkbenchContentProvider() {
+		@Override
 		public Object[] getElements(Object o) {
 			return ComponentsView.this.getElements();
 		}
@@ -128,6 +131,7 @@ public void createPartControl(Composite parent) {
 	// Set the label provider
 	WorkbenchLabelProvider labelProvider = new WorkbenchLabelProvider() {
 
+		@Override
 		protected String decorateText(String input, Object element) {
 			String text = super.decorateText(input, element);
 			if (element instanceof BuildResultsElement) {
@@ -140,6 +144,7 @@ public void createPartControl(Composite parent) {
 		}
 
 		// When all scenarios are displayed, then set fingerprints one in bold.
+		@Override
 		public Font getFont(Object element) {
 			Font font = super.getFont(element);
 			if (element instanceof ScenarioResultsElement) {
@@ -169,6 +174,7 @@ public void createPartControl(Composite parent) {
 
 		// Sort children using specific comparison (see the implementation
 		// of the #compareTo(Object) in the ResultsElement hierarchy
+		@Override
 		public int compare(Viewer view, Object e1, Object e2) {
 			// Config and Build results are sorted in reverse order
 			if (e1 instanceof BuildResultsElement) {
@@ -186,6 +192,7 @@ public void createPartControl(Composite parent) {
 
 	// Add results view as listener to viewer selection changes
 	Display.getDefault().asyncExec(new Runnable() {
+		@Override
 		public void run() {
 			ISelectionChangedListener listener = getResultsView();
 			if (listener != null) {
@@ -203,6 +210,7 @@ public void createPartControl(Composite parent) {
  * (non-Javadoc)
  * @see org.eclipse.ui.part.WorkbenchPart#dispose()
  */
+@Override
 public void dispose() {
 	if (this.boldFont != null) {
 		this.boldFont.dispose();
@@ -215,6 +223,7 @@ public void dispose() {
  * (non-Javadoc)
  * @see org.eclipse.test.internal.performance.results.ui.PerformancesView#fillLocalPullDown(org.eclipse.jface.action.IMenuManager)
  */
+@Override
 void fillFiltersDropDown(IMenuManager manager) {
 	super.fillFiltersDropDown(manager);
 	manager.add(this.filterOldBuilds);
@@ -226,6 +235,7 @@ void fillFiltersDropDown(IMenuManager manager) {
  * (non-Javadoc)
  * @see org.eclipse.test.internal.performance.results.ui.PerformancesView#fillLocalToolBar(org.eclipse.jface.action.IToolBarManager)
  */
+@Override
 void fillLocalToolBar(IToolBarManager manager) {
 	super.fillLocalToolBar(manager);
 }
@@ -282,6 +292,7 @@ ComponentResultsView getResultsView() {
 /*
  * Return the builds view.
  */
+@Override
 PerformancesView getSiblingView() {
 	if (this.buildsView == null) {
 		this.buildsView = (PerformancesView) getWorkbenchView("org.eclipse.test.internal.performance.results.ui.BuildsView");
@@ -293,12 +304,14 @@ PerformancesView getSiblingView() {
  * (non-Javadoc)
  * @see org.eclipse.test.internal.performance.results.ui.PerformancesView#makeActions()
  */
+@Override
 void makeActions() {
 
 	super.makeActions();
 
 	// Filter non-fingerprints action
 	this.filterAdvancedScenarios = new Action("Advanced &Scenarios", IAction.AS_CHECK_BOX) {
+		@Override
 		public void run() {
 			filterAdvancedScenarios(isChecked(), true/*update preference*/);
         }
@@ -314,6 +327,7 @@ void makeActions() {
 /* (non-Javadoc)
  * @see org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener#preferenceChange(org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent)
  */
+@Override
 public void preferenceChange(PreferenceChangeEvent event) {
 	String propertyName = event.getKey();
 	Object newValue = event.getNewValue();
@@ -340,6 +354,7 @@ public void preferenceChange(PreferenceChangeEvent event) {
 	}
 }
 
+@Override
 void restoreState() {
 	super.restoreState();
 
@@ -365,7 +380,7 @@ public void select(ComponentResultsElement componentResults, String configName, 
 	// Collapse previous expanded components except the requested one
 	// TODO (frederic) also collapse expanded components children elements
 	this.expandedComponents.remove(componentResults);
-	Iterator iterator = this.expandedComponents.iterator();
+	Iterator<ResultsElement> iterator = this.expandedComponents.iterator();
 	while (iterator.hasNext()) {
 		this.viewer.collapseToLevel(iterator.next(), AbstractTreeViewer.ALL_LEVELS);
 	}
@@ -389,6 +404,7 @@ public void select(ComponentResultsElement componentResults, String configName, 
  * (non-Javadoc)
  * @see org.eclipse.test.internal.performance.results.ui.PerformancesView#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
  */
+@Override
 public void selectionChanged(SelectionChangedEvent event) {
 	super.selectionChanged(event);
 	ResultsElement eventResultsElement = (ResultsElement) ((StructuredSelection)event.getSelection()).getFirstElement();

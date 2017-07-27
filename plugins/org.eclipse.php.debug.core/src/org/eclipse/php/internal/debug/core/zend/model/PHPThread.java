@@ -45,6 +45,7 @@ public class PHPThread extends PHPDebugElement implements IThread {
 		super(target);
 	}
 
+	@Override
 	public IStackFrame[] getStackFrames() throws DebugException {
 		if (isSuspended()) {
 			return ((PHPDebugTarget) getDebugTarget()).getStackFrames();
@@ -58,6 +59,7 @@ public class PHPThread extends PHPDebugElement implements IThread {
 	 * 
 	 * @see org.eclipse.debug.core.model.IThread#hasStackFrames()
 	 */
+	@Override
 	public boolean hasStackFrames() throws DebugException {
 		return isSuspended();
 	}
@@ -67,6 +69,7 @@ public class PHPThread extends PHPDebugElement implements IThread {
 	 * 
 	 * @see org.eclipse.debug.core.model.IThread#getPriority()
 	 */
+	@Override
 	public int getPriority() throws DebugException {
 		return 0;
 	}
@@ -76,6 +79,7 @@ public class PHPThread extends PHPDebugElement implements IThread {
 	 * 
 	 * @see org.eclipse.debug.core.model.IThread#getTopStackFrame()
 	 */
+	@Override
 	public IStackFrame getTopStackFrame() throws DebugException {
 		IStackFrame[] frames = getStackFrames();
 		if (frames.length > 0) {
@@ -89,6 +93,7 @@ public class PHPThread extends PHPDebugElement implements IThread {
 	 * 
 	 * @see org.eclipse.debug.core.model.IThread#getName()
 	 */
+	@Override
 	public String getName() throws DebugException {
 		return "PHPthread"; //$NON-NLS-1$
 	}
@@ -98,6 +103,7 @@ public class PHPThread extends PHPDebugElement implements IThread {
 	 * 
 	 * @see org.eclipse.debug.core.model.IThread#getBreakpoints()
 	 */
+	@Override
 	public IBreakpoint[] getBreakpoints() {
 		if (fBreakpoints == null) {
 			return new IBreakpoint[0];
@@ -122,6 +128,7 @@ public class PHPThread extends PHPDebugElement implements IThread {
 	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#canResume()
 	 */
+	@Override
 	public boolean canResume() {
 		return isSuspended();
 	}
@@ -131,6 +138,7 @@ public class PHPThread extends PHPDebugElement implements IThread {
 	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#canSuspend()
 	 */
+	@Override
 	public boolean canSuspend() {
 		return !isSuspended();
 	}
@@ -140,6 +148,7 @@ public class PHPThread extends PHPDebugElement implements IThread {
 	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#isSuspended()
 	 */
+	@Override
 	public boolean isSuspended() {
 		return getDebugTarget().isSuspended();
 	}
@@ -149,6 +158,7 @@ public class PHPThread extends PHPDebugElement implements IThread {
 	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#resume()
 	 */
+	@Override
 	public void resume() throws DebugException {
 		setStepping(false);
 		getDebugTarget().resume();
@@ -159,6 +169,7 @@ public class PHPThread extends PHPDebugElement implements IThread {
 	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#suspend()
 	 */
+	@Override
 	public void suspend() throws DebugException {
 		setStepping(false);
 		getDebugTarget().suspend();
@@ -169,6 +180,7 @@ public class PHPThread extends PHPDebugElement implements IThread {
 	 * 
 	 * @see org.eclipse.debug.core.model.IStep#canStepInto()
 	 */
+	@Override
 	public boolean canStepInto() {
 		return isSuspended();
 	}
@@ -178,6 +190,7 @@ public class PHPThread extends PHPDebugElement implements IThread {
 	 * 
 	 * @see org.eclipse.debug.core.model.IStep#canStepOver()
 	 */
+	@Override
 	public boolean canStepOver() {
 		return isSuspended();
 	}
@@ -187,6 +200,7 @@ public class PHPThread extends PHPDebugElement implements IThread {
 	 * 
 	 * @see org.eclipse.debug.core.model.IStep#canStepReturn()
 	 */
+	@Override
 	public boolean canStepReturn() {
 		return isSuspended();
 	}
@@ -196,6 +210,7 @@ public class PHPThread extends PHPDebugElement implements IThread {
 	 * 
 	 * @see org.eclipse.debug.core.model.IStep#isStepping()
 	 */
+	@Override
 	public boolean isStepping() {
 		return fStepping;
 	}
@@ -205,6 +220,7 @@ public class PHPThread extends PHPDebugElement implements IThread {
 	 * 
 	 * @see org.eclipse.debug.core.model.IStep#stepInto()
 	 */
+	@Override
 	public void stepInto() throws DebugException {
 		setStepping(true);
 		((PHPDebugTarget) getDebugTarget()).stepInto();
@@ -215,6 +231,7 @@ public class PHPThread extends PHPDebugElement implements IThread {
 	 * 
 	 * @see org.eclipse.debug.core.model.IStep#stepOver()
 	 */
+	@Override
 	public void stepOver() throws DebugException {
 		setStepping(true);
 		((PHPDebugTarget) getDebugTarget()).stepOver();
@@ -225,6 +242,7 @@ public class PHPThread extends PHPDebugElement implements IThread {
 	 * 
 	 * @see org.eclipse.debug.core.model.IStep#stepReturn()
 	 */
+	@Override
 	public void stepReturn() throws DebugException {
 		setStepping(true);
 		((PHPDebugTarget) getDebugTarget()).stepReturn();
@@ -235,6 +253,7 @@ public class PHPThread extends PHPDebugElement implements IThread {
 	 * 
 	 * @see org.eclipse.debug.core.model.ITerminate#canTerminate()
 	 */
+	@Override
 	public boolean canTerminate() {
 		return !isTerminated();
 	}
@@ -244,6 +263,7 @@ public class PHPThread extends PHPDebugElement implements IThread {
 	 * 
 	 * @see org.eclipse.debug.core.model.ITerminate#isTerminated()
 	 */
+	@Override
 	public boolean isTerminated() {
 		return getDebugTarget().isTerminated();
 	}
@@ -253,6 +273,7 @@ public class PHPThread extends PHPDebugElement implements IThread {
 	 * 
 	 * @see org.eclipse.debug.core.model.ITerminate#terminate()
 	 */
+	@Override
 	public void terminate() throws DebugException {
 		getDebugTarget().terminate();
 	}

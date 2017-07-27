@@ -88,7 +88,7 @@ public class ExpressionsUtil {
 	private static final int PROP_MOD_PROTECTED = 1 << 9;
 	private static final int PROP_MOD_PRIVATE = 1 << 10;
 
-	private static final Map<Expression, String> staticMemberClassNames = new WeakHashMap<Expression, String>();
+	private static final Map<Expression, String> staticMemberClassNames = new WeakHashMap<>();
 
 	private static Map<ExpressionsManager, ExpressionsUtil> fInstance = new WeakHashMap<>();
 

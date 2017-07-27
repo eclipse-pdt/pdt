@@ -40,16 +40,19 @@ public class AddBreakpointResponse extends DebugMessageResponseImpl implements I
 		return breakPointID;
 	}
 
+	@Override
 	public int getType() {
 		return 1021;
 	}
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		setStatus(in.readInt());
 		setBreakpointID(in.readInt());
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());

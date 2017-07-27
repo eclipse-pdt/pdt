@@ -25,7 +25,7 @@ import org.eclipse.php.core.codeassist.ICompletionStrategy;
  */
 public class GlobalElementsCompositeStrategy extends AbstractCompletionStrategy {
 
-	private final Collection<ICompletionStrategy> strategies = new ArrayList<ICompletionStrategy>();
+	private final Collection<ICompletionStrategy> strategies = new ArrayList<>();
 
 	public GlobalElementsCompositeStrategy(ICompletionContext context, boolean includeKeywords) {
 		super(context);
@@ -39,6 +39,7 @@ public class GlobalElementsCompositeStrategy extends AbstractCompletionStrategy 
 		}
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws Exception {
 		for (ICompletionStrategy strategy : strategies) {
 			strategy.apply(reporter);

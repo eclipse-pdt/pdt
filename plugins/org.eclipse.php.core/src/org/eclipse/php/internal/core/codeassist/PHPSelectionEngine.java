@@ -85,6 +85,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	private static final IType[] EMPTY = {};
 	private PHPVersion phpVersion;
 
+	@Override
 	public IModelElement[] select(IModuleSource sourceUnit, int offset, int end) {
 		if (!PHPCorePlugin.toolkitInitialized) {
 			return EMPTY;
@@ -104,7 +105,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			if (elements != null) {
 				Collection<IModelElement> filtered = PHPModelUtils.filterElements(sourceModule, Arrays.asList(elements),
 						null, null);
-				return (IModelElement[]) filtered.toArray(new IModelElement[filtered.size()]);
+				return filtered.toArray(new IModelElement[filtered.size()]);
 			}
 		} catch (ModelException e) {
 			if (!e.isDoesNotExist()) {
@@ -193,9 +194,9 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								: statement.subSequence(startPosition, endPosition).toString();
 						elementName = PHPModelUtils.extractElementName(elementName);
 						if (elementName != null && elementName.length() > 0) {
-							List<IModelElement> result = new LinkedList<IModelElement>();
+							List<IModelElement> result = new LinkedList<>();
 							for (Iterator<IModelElement> iterator = filtered.iterator(); iterator.hasNext();) {
-								IModelElement modelElement = (IModelElement) iterator.next();
+								IModelElement modelElement = iterator.next();
 								if (modelElement instanceof AliasField) {
 									AliasField aliasField = (AliasField) modelElement;
 									if (aliasField.getAlias().equals(elementName)) {
@@ -214,7 +215,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 									result.add(modelElement);
 								}
 							}
-							return (IModelElement[]) result.toArray(new IModelElement[result.size()]);
+							return result.toArray(new IModelElement[result.size()]);
 						}
 					}
 				}
@@ -303,7 +304,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				if (dispatcherType != null) {
 					IType[] elements = PHPTypeInferenceUtils.getModelElements(dispatcherType,
 							(ISourceModuleContext) context, offset);
-					List<IModelElement> fields = new LinkedList<IModelElement>();
+					List<IModelElement> fields = new LinkedList<>();
 					if (elements != null) {
 						for (IModelElement element : elements) {
 							IType type = (IType) element;
@@ -334,7 +335,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				if (dispatcherType != null) {
 					IModelElement[] elements = PHPTypeInferenceUtils.getModelElements(dispatcherType,
 							(ISourceModuleContext) context, offset);
-					List<IModelElement> fields = new LinkedList<IModelElement>();
+					List<IModelElement> fields = new LinkedList<>();
 					if (elements != null) {
 						for (IModelElement element : elements) {
 							if (element instanceof IType) {
@@ -430,7 +431,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						if (dispatcherType != null) {
 							IModelElement[] elements = PHPTypeInferenceUtils.getModelElements(dispatcherType,
 									(ISourceModuleContext) context, offset);
-							List<IModelElement> fields = new LinkedList<IModelElement>();
+							List<IModelElement> fields = new LinkedList<>();
 							if (elements != null) {
 								for (IModelElement element : elements) {
 									if (element instanceof IType) {
@@ -467,7 +468,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				node = ASTUtils.findMinimalNode(parsedUnit, offset, node.end() + 1);
 				if (node instanceof TraitUseStatement) {
 					TraitUseStatement statement = (TraitUseStatement) node;
-					List<IModelElement> methods = new LinkedList<IModelElement>();
+					List<IModelElement> methods = new LinkedList<>();
 					for (TypeReference typeReference : statement.getTraitList()) {
 						IType[] types = PHPModelUtils.getTypes(typeReference.getName(), sourceModule, offset, cache,
 								null, false);
@@ -568,7 +569,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 									} else {
 										if (isMethodOrFunction && !isVariable) {
 											// class method
-											List<IMethod> methods = new LinkedList<IMethod>();
+											List<IMethod> methods = new LinkedList<>();
 											for (IType type : types) {
 												methods.addAll(Arrays
 														.asList(PHPModelUtils.getTypeMethod(type, parts[1], true)));
@@ -576,7 +577,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 											return methods.toArray(new IMethod[methods.size()]);
 										} else {
 											// class field or class constant
-											List<IField> fields = new LinkedList<IField>();
+											List<IField> fields = new LinkedList<>();
 											for (IType type : types) {
 												fields.addAll(Arrays
 														.asList(PHPModelUtils.getTypeField(type, parts[1], true)));
@@ -620,13 +621,13 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		if (types == null) {
 			return EMPTY;
 		} else {
-			Set<? super IType> result = new HashSet<IType>();
+			Set<? super IType> result = new HashSet<>();
 			for (IType type : types) {
 				if (PHPFlags.isClass(type.getFlags()) || PHPFlags.isInterface(type.getFlags())) {
 					result.add(type);
 				}
 			}
-			return (IType[]) result.toArray(new IType[result.size()]);
+			return result.toArray(new IType[result.size()]);
 		}
 	}
 
@@ -820,7 +821,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			// Is it function or method:
 			if (OPEN_BRACE.equals(nextWord) || PHPPartitionTypes.isPHPDocState(tRegion.getType())) {
 				if (types != null && types.length > 0) {
-					List<IMethod> methods = new LinkedList<IMethod>();
+					List<IMethod> methods = new LinkedList<>();
 					for (IType t : types) {
 						methods.addAll(Arrays.asList(PHPModelUtils.getTypeHierarchyMethod(t,
 								cache.getSuperTypeHierarchy(t, null), elementName, true, null)));
@@ -832,7 +833,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			if ((INSTEADOF.equals(nextWord) || AS.equals(nextWord))
 					&& (!PAAMAYIM_NEKUDOTAIM.equals(trigger) && !OBJECT_OPERATOR.equals(trigger))) {
 				if (types != null && types.length > 0) {
-					List<IMethod> methods = new LinkedList<IMethod>();
+					List<IMethod> methods = new LinkedList<>();
 					for (IType t : types) {
 						methods.addAll(Arrays.asList(PHPModelUtils.getTypeHierarchyMethod(t,
 								cache.getSuperTypeHierarchy(t, null), elementName, true, null)));
@@ -844,7 +845,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				// Check whether this is a class constant:
 				if (startPosition > 0) {
 					if (PAAMAYIM_NEKUDOTAIM.equals(trigger) && elementName.charAt(0) != '$') {
-						List<IModelElement> fields = new LinkedList<IModelElement>();
+						List<IModelElement> fields = new LinkedList<>();
 						for (IType t : types) {
 							IField[] typeFields = PHPModelUtils.getTypeField(t, elementName, true);
 							for (IField currentField : typeFields) {
@@ -859,7 +860,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				// Set<IModelElement> fields = new
 				// TreeSet<IModelElement>(
 				// new SourceFieldComparator());
-				final List<IField> fields = new ArrayList<IField>();
+				final List<IField> fields = new ArrayList<>();
 				for (IType t : types) {
 					fields.addAll(Arrays.asList(
 							getTypeHierarchyField(t, cache.getSuperTypeHierarchy(t, null), elementName, true, null)));
@@ -900,7 +901,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				if ((receiverType instanceof PHPClassType) && ((PHPClassType) receiverType).isGlobal()) {
 					elements = PHPModelAccess.getDefault().findTypes(receiverType.getTypeName(), MatchRule.EXACT, 0, 0,
 							scope, null);
-					LinkedList<IModelElement> result = new LinkedList<IModelElement>();
+					LinkedList<IModelElement> result = new LinkedList<>();
 					for (IModelElement element : elements) {
 						IModelElement parent = element.getParent();
 						while (parent.getParent() instanceof IType) {
@@ -921,7 +922,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					return EMPTY;
 				}
 
-				List<IModelElement> methods = new LinkedList<IModelElement>();
+				List<IModelElement> methods = new LinkedList<>();
 				for (IModelElement element : elements) {
 					if (element instanceof IType) {
 						IType type = (IType) element;
@@ -970,7 +971,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			String fullName = useParts.get(fieldName).getNamespace().getFullyQualifiedName();
 			IField[] elements = PHPModelAccess.getDefault().findFields(fullName, MatchRule.EXACT, 0, 0, scope, null);
 			if (elements != null) {
-				List<IField> result = new ArrayList<IField>();
+				List<IField> result = new ArrayList<>();
 				for (IField field : elements) {
 					result.add(new AliasField((ModelElement) field, field.getFullyQualifiedName(), fieldName));
 				}
@@ -985,10 +986,10 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		if (prefix == null) {
 			throw new NullPointerException();
 		}
-		final List<IField> fields = new ArrayList<IField>();
+		final List<IField> fields = new ArrayList<>();
 		fields.addAll(Arrays.asList(PHPModelUtils.getTypeField(type, prefix, exactName)));
 		if (type.getSuperClasses() != null && type.getSuperClasses().length > 0) {
-			Set<IModelElement> fieldSet = new TreeSet<IModelElement>(new SourceFieldComparator());
+			Set<IModelElement> fieldSet = new TreeSet<>(new SourceFieldComparator());
 			fieldSet.addAll(Arrays
 					.asList(PHPModelUtils.getSuperTypeHierarchyField(type, hierarchy, prefix, exactName, monitor)));
 			IField[] temp = fieldSet.toArray(new IField[fieldSet.size()]);
@@ -1034,7 +1035,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	}
 
 	private static IType[] extractInterfaces(IType[] types) {
-		List<IType> result = new ArrayList<IType>(types.length);
+		List<IType> result = new ArrayList<>(types.length);
 		for (IType type : types) {
 			try {
 				if (PHPFlags.isInterface(type.getFlags())) {
@@ -1044,11 +1045,11 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				PHPCorePlugin.log(e);
 			}
 		}
-		return (IType[]) result.toArray(new IType[result.size()]);
+		return result.toArray(new IType[result.size()]);
 	}
 
 	private static IType[] extractClasses(IType[] types) {
-		List<IType> result = new ArrayList<IType>(types.length);
+		List<IType> result = new ArrayList<>(types.length);
 		for (IType type : types) {
 			try {
 				if (PHPFlags.isClass(type.getFlags())) {
@@ -1058,11 +1059,11 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				PHPCorePlugin.log(e);
 			}
 		}
-		return (IType[]) result.toArray(new IType[result.size()]);
+		return result.toArray(new IType[result.size()]);
 	}
 
 	private static IModelElement[] getConstructorsIfAny(IType[] types) throws ModelException {
-		List<IModelElement> result = new LinkedList<IModelElement>();
+		List<IModelElement> result = new LinkedList<>();
 		for (IType type : types) {
 			boolean hasConstructor = false;
 			for (IMethod method : type.getMethods()) {
@@ -1076,7 +1077,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				result.add(type);
 			}
 		}
-		return (IModelElement[]) result.toArray(new IModelElement[result.size()]);
+		return result.toArray(new IModelElement[result.size()]);
 	}
 
 	/**
@@ -1108,6 +1109,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	}
 
 	private static class SourceFieldComparator implements Comparator<IModelElement> {
+		@Override
 		public int compare(IModelElement o1, IModelElement o2) {
 			try {
 				SourceRefElement e1 = (SourceRefElement) o1;

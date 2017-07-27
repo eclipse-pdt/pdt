@@ -34,10 +34,11 @@ public class PHPExeLaunchConfigurationTabGroup extends AbstractLaunchConfigurati
 	 * org.eclipse.debug.ui.ILaunchConfigurationTabGroup#createTabs(org.eclipse
 	 * .debug.ui.ILaunchConfigurationDialog, java.lang.String)
 	 */
+	@Override
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
 		AbstractLaunchConfigurationTab[] tabs = LaunchConfigurationsTabsRegistry
 				.getLaunchTabs(CONFIGURATION_TAB_GROUP_ID, mode);
-		ArrayList<ILaunchConfigurationTab> list = new ArrayList<ILaunchConfigurationTab>();
+		ArrayList<ILaunchConfigurationTab> list = new ArrayList<>();
 		if (tabs != null) {
 			for (int i = 0; i < tabs.length; i++) {
 				list.add(tabs[i]);

@@ -32,6 +32,7 @@ public class CatchTypeStrategy extends GlobalTypesStrategy {
 		super(context);
 	}
 
+	@Override
 	public ISourceRange getReplacementRange(ICompletionContext context) throws BadLocationException {
 		if (!isInsertMode()) {
 			return getReplacementRangeWithSpaceAtPrefixEnd(context);
@@ -39,10 +40,12 @@ public class CatchTypeStrategy extends GlobalTypesStrategy {
 		return super.getReplacementRange(context);
 	}
 
+	@Override
 	public String getSuffix(AbstractCompletionContext abstractContext) {
 		return isInsertMode() && abstractContext.hasSpaceAtPosition(abstractContext.getOffset()) ? "" : " "; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
+	@Override
 	protected int getExtraInfo() {
 		return ProposalExtraInfo.TYPE_ONLY;
 	}

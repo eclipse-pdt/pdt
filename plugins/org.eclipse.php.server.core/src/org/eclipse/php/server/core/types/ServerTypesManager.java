@@ -75,7 +75,7 @@ public class ServerTypesManager {
 		IConfigurationElement[] elements = Platform.getExtensionRegistry()
 				.getConfigurationElementsFor("org.eclipse.php.server.core.serverType"); //$NON-NLS-1$
 		IServerType genericType = null;
-		List<IServerType> result = new ArrayList<IServerType>();
+		List<IServerType> result = new ArrayList<>();
 		for (IConfigurationElement element : elements) {
 			IServerType type = null;
 			if ("type".equals(element.getName())) { //$NON-NLS-1$
@@ -89,7 +89,7 @@ public class ServerTypesManager {
 				}
 			}
 		}
-		types = new LinkedHashMap<String, IServerType>();
+		types = new LinkedHashMap<>();
 		for (IServerType type : result) {
 			types.put(type.getId(), type);
 		}

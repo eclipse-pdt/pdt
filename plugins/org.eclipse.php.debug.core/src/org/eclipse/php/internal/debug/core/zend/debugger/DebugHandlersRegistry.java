@@ -30,10 +30,10 @@ public class DebugHandlersRegistry {
 	private static final String REMOTE_DEBUGGER_ATTRIBUTE = "debugger"; //$NON-NLS-1$
 
 	/** Debug handlers stored by ID */
-	private Dictionary actions = new Hashtable();
+	private Dictionary<String, DebugHandlerFactory> actions = new Hashtable<>();
 
 	/** Remote debuggers stored by debug handlers ID */
-	private Dictionary debuggers = new Hashtable();
+	private Dictionary<String, String> debuggers = new Hashtable<>();
 
 	/** Instance of this registry */
 	private static DebugHandlersRegistry instance = null;
@@ -65,7 +65,7 @@ public class DebugHandlersRegistry {
 		return instance;
 	}
 
-	private Dictionary getHandlers() {
+	private Dictionary<String, DebugHandlerFactory> getHandlers() {
 		return actions;
 	}
 
@@ -75,7 +75,7 @@ public class DebugHandlersRegistry {
 	 * @return handler Debug handler
 	 */
 	public static IDebugHandler getHandler(String id) throws Exception {
-		return ((DebugHandlerFactory) getInstance().getHandlers().get(id)).createHandler();
+		return getInstance().getHandlers().get(id).createHandler();
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class DebugHandlersRegistry {
 	 * @return remote debugger ID.
 	 */
 	public static String getRemoteDebuggerID(String debugHandlerID) {
-		return (String) getInstance().debuggers.get(debugHandlerID);
+		return getInstance().debuggers.get(debugHandlerID);
 	}
 
 	/**
@@ -104,6 +104,7 @@ public class DebugHandlersRegistry {
 		public IDebugHandler createHandler() {
 			Platform.run(new SafeRunnable(
 					"Error creation extension for extension-point org.eclipse.php.internal.debug.core.phpDebugHandlers") { //$NON-NLS-1$
+				@Override
 				public void run() throws Exception {
 					handler = (IDebugHandler) element.createExecutableExtension(CLASS_ATTRIBUTE);
 				}

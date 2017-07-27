@@ -28,10 +28,10 @@ public class PathMapper implements IXMLPreferencesStorable {
 	private Map<VirtualPath, MappingSource> localToMappingSource;
 
 	public PathMapper() {
-		remoteToLocalMap = new HashMap<VirtualPath, VirtualPath>();
-		localToRemoteMap = new HashMap<VirtualPath, VirtualPath>();
-		localToPathEntryType = new HashMap<VirtualPath, Type>();
-		localToMappingSource = new HashMap<VirtualPath, MappingSource>();
+		remoteToLocalMap = new HashMap<>();
+		localToRemoteMap = new HashMap<>();
+		localToPathEntryType = new HashMap<>();
+		localToMappingSource = new HashMap<>();
 	}
 
 	public synchronized void addEntry(String remoteFile, PathEntry entry, MappingSource source) {
@@ -140,7 +140,7 @@ public class PathMapper implements IXMLPreferencesStorable {
 	protected VirtualPath getPath(Map<VirtualPath, VirtualPath> map, VirtualPath path) {
 		path = path.clone();
 		VirtualPath mapPath = null;
-		List<String> strippedSegments = new LinkedList<String>();
+		List<String> strippedSegments = new LinkedList<>();
 
 		while (path.getSegmentsCount() > 0) {
 			mapPath = map.get(path);
@@ -183,7 +183,7 @@ public class PathMapper implements IXMLPreferencesStorable {
 	 * Returns contents of this path mapper
 	 */
 	public synchronized Mapping[] getMapping() {
-		List<Mapping> l = new ArrayList<Mapping>(localToRemoteMap.size());
+		List<Mapping> l = new ArrayList<>(localToRemoteMap.size());
 		Iterator<VirtualPath> i = localToRemoteMap.keySet().iterator();
 		while (i.hasNext()) {
 			VirtualPath localPath = i.next();
@@ -245,6 +245,7 @@ public class PathMapper implements IXMLPreferencesStorable {
 				this.name = name;
 			}
 
+			@Override
 			public String toString() {
 				return name;
 			}
@@ -265,6 +266,7 @@ public class PathMapper implements IXMLPreferencesStorable {
 			this.source = source;
 		}
 
+		@Override
 		public Mapping clone() {
 			return new Mapping(localPath, remotePath, type, source);
 		}
@@ -306,6 +308,7 @@ public class PathMapper implements IXMLPreferencesStorable {
 			return result;
 		}
 
+		@Override
 		public String toString() {
 			StringBuilder buf = new StringBuilder("Mapping { "); //$NON-NLS-1$
 			buf.append(localPath).append(", ").append(remotePath).append(", ") //$NON-NLS-1$ //$NON-NLS-2$
@@ -315,6 +318,7 @@ public class PathMapper implements IXMLPreferencesStorable {
 		}
 	}
 
+	@Override
 	public synchronized void restoreFromMap(Map<String, Object> map) {
 		if (map == null) {
 			return;
@@ -348,12 +352,13 @@ public class PathMapper implements IXMLPreferencesStorable {
 		}
 	}
 
+	@Override
 	public synchronized Map<String, Object> storeToMap() {
-		Map<String, Object> entries = new HashMap<String, Object>();
+		Map<String, Object> entries = new HashMap<>();
 		Iterator<VirtualPath> i = localToRemoteMap.keySet().iterator();
 		int c = 1;
 		while (i.hasNext()) {
-			Map<String, Object> entry = new HashMap<String, Object>();
+			Map<String, Object> entry = new HashMap<>();
 			VirtualPath local = i.next();
 			VirtualPath remote = localToRemoteMap.get(local);
 			Type type = localToPathEntryType.get(local);

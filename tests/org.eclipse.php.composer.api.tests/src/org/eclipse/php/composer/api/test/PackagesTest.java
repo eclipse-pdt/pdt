@@ -33,6 +33,7 @@ public class PackagesTest extends TestCase {
 	private int asyncCounter;
 	private int asyncAborts;
 
+	@Override
 	public void setUp() {
 		counter = new CountDownLatch(1);
 		asyncResult = null;
@@ -46,11 +47,13 @@ public class PackagesTest extends TestCase {
 		try {
 			AsyncDownloader downloader = new AsyncDownloader(ComposerConstants.PHAR_URL);
 			downloader.addDownloadListener(new DownloadListenerAdapater() {
+				@Override
 				public void dataReceived(InputStream content, String url) {
 					asyncResult = content;
 					counter.countDown();
 				}
 
+				@Override
 				public void errorOccured(Exception e) {
 					e.printStackTrace();
 				}
@@ -83,11 +86,13 @@ public class PackagesTest extends TestCase {
 		try {
 			AsyncPharDownloader downloader = new AsyncPharDownloader();
 			downloader.addDownloadListener(new DownloadListenerAdapater() {
+				@Override
 				public void dataReceived(InputStream content, String url) {
 					asyncResult = content;
 					counter.countDown();
 				}
 
+				@Override
 				public void errorOccured(Exception e) {
 					e.printStackTrace();
 				}
@@ -120,14 +125,17 @@ public class PackagesTest extends TestCase {
 		try {
 			AsyncPackagistDownloader downloader = new AsyncPackagistDownloader();
 			downloader.addPackageListener(new PackageListenerInterface() {
+				@Override
 				public void packageLoaded(RepositoryPackage repositoryPackage) {
 					asyncResult = repositoryPackage;
 					counter.countDown();
 				}
 
+				@Override
 				public void aborted(String url) {
 				}
 
+				@Override
 				public void errorOccured(Exception e) {
 					e.printStackTrace();
 					fail();
@@ -198,6 +206,7 @@ public class PackagesTest extends TestCase {
 		try {
 			AsyncPackageSearch downloader = new AsyncPackagistSearch();
 			downloader.addPackageSearchListener(new PackageSearchListenerInterface() {
+				@Override
 				public void packagesFound(List<MinimalPackage> packages, String query, SearchResult result) {
 					asyncResult = packages;
 					asyncQuery = query;
@@ -206,9 +215,11 @@ public class PackagesTest extends TestCase {
 					counter.countDown();
 				}
 
+				@Override
 				public void aborted(String url) {
 				}
 
+				@Override
 				public void errorOccured(Exception e) {
 				}
 			});
@@ -231,6 +242,7 @@ public class PackagesTest extends TestCase {
 			final int pages = 3;
 			AsyncPackageSearch downloader = new AsyncPackagistSearch();
 			downloader.addPackageSearchListener(new PackageSearchListenerInterface() {
+				@Override
 				public void packagesFound(List<MinimalPackage> packages, String query, SearchResult result) {
 					asyncResult = packages;
 					asyncQuery = query;
@@ -241,9 +253,11 @@ public class PackagesTest extends TestCase {
 					// }
 				}
 
+				@Override
 				public void aborted(String url) {
 				}
 
+				@Override
 				public void errorOccured(Exception e) {
 				}
 			});
@@ -268,6 +282,7 @@ public class PackagesTest extends TestCase {
 			final int pages = 1;
 			AsyncPackageSearch downloader = new AsyncPackagistSearch();
 			downloader.addPackageSearchListener(new PackageSearchListenerInterface() {
+				@Override
 				public void packagesFound(List<MinimalPackage> packages, String query, SearchResult result) {
 					asyncResult = packages;
 					asyncQuery = query;
@@ -278,11 +293,13 @@ public class PackagesTest extends TestCase {
 					}
 				}
 
+				@Override
 				public void aborted(String url) {
 					// System.out.println("testAsyncSearchAbortNDownload aborted
 					// on: " + url);
 				}
 
+				@Override
 				public void errorOccured(Exception e) {
 					e.printStackTrace();
 				}
@@ -310,6 +327,7 @@ public class PackagesTest extends TestCase {
 		try {
 			AsyncPackageSearch downloader = new AsyncPackagistSearch();
 			downloader.addPackageSearchListener(new PackageSearchListenerInterface() {
+				@Override
 				public void packagesFound(List<MinimalPackage> packages, String query, SearchResult result) {
 					asyncResult = packages;
 					asyncQuery = query;
@@ -320,6 +338,7 @@ public class PackagesTest extends TestCase {
 					}
 				}
 
+				@Override
 				public void aborted(String url) {
 					asyncAborts++;
 
@@ -328,6 +347,7 @@ public class PackagesTest extends TestCase {
 					}
 				}
 
+				@Override
 				public void errorOccured(Exception e) {
 				}
 			});

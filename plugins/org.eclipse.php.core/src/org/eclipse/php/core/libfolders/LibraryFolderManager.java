@@ -420,7 +420,7 @@ public class LibraryFolderManager {
 	 *             project
 	 */
 	public IFolder[] getAllSubfolders(IFolder[] folders) throws CoreException {
-		Collection<IFolder> allSubfolders = new HashSet<IFolder>();
+		Collection<IFolder> allSubfolders = new HashSet<>();
 
 		for (IFolder folder : folders) {
 			allSubfolders.addAll(Arrays.asList(getAllSubfolders(folder)));
@@ -447,9 +447,9 @@ public class LibraryFolderManager {
 	 *             if the folder does not exist or is in a closed project
 	 */
 	public IFolder[] getAllSubfolders(IFolder folder) throws CoreException {
-		List<IFolder> result = new ArrayList<IFolder>();
+		List<IFolder> result = new ArrayList<>();
 
-		collectAllSubfolders((IFolder) folder, result);
+		collectAllSubfolders(folder, result);
 
 		return result.toArray(new IFolder[result.size()]);
 	}
@@ -542,7 +542,7 @@ public class LibraryFolderManager {
 	 *         array
 	 */
 	private IFolder[] removeNonExisting(IFolder[] folders) {
-		Collection<IFolder> existing = new HashSet<IFolder>();
+		Collection<IFolder> existing = new HashSet<>();
 
 		for (IFolder folder : folders) {
 			if (folder.exists()) {

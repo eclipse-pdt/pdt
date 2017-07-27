@@ -144,6 +144,7 @@ public class PerformanceTestPlugin extends Plugin {
 	    return fgOldDB;
 	}
 
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		DB.shutdown();
 		super.stop(context);
@@ -212,7 +213,7 @@ public class PerformanceTestPlugin extends Plugin {
 		String resultsDimension = System.getProperty(ECLIPSE_PERF_RESULTS_DIMENSIONS);
 		if (resultsDimension == null)  return DEFAULT_RESULTS_DIMENSIONS;
 		StringTokenizer tokenizer = new StringTokenizer(resultsDimension, ","); //$NON-NLS-1$
-		List list = new ArrayList();
+		List<Dimension> list = new ArrayList<>();
 		while (tokenizer.hasMoreTokens()) {
 			String token = tokenizer.nextToken().trim();
 			Dimension dimension = getDimension(token);
@@ -245,8 +246,8 @@ public class PerformanceTestPlugin extends Plugin {
 	 *
 	 * @return The list of the dimension names
 	 */
-	public static List getDimensions() {
-		List dimensions = new ArrayList();
+	public static List<String> getDimensions() {
+		List<String> dimensions = new ArrayList<>();
 		for (int i = 0; i < SUPPORTED_DIMENSIONS.length; i++) {
 	        dimensions.add(SUPPORTED_DIMENSIONS[i].getName());
         }
@@ -293,7 +294,7 @@ public class PerformanceTestPlugin extends Plugin {
 	public static String[][] getConfigDescriptors() {
 		String descriptors = System.getProperty(ECLIPSE_PERF_CONFIGS_DESCRIPTOR, DEFAULT_CONFIG_DESCRIPTORS);
 		StringTokenizer tokenizer = new StringTokenizer(descriptors, ",;"); //$NON-NLS-1$
-		List list = new ArrayList();
+		List<String[]> list = new ArrayList<>();
 		while (tokenizer.hasMoreTokens()) {
 			String[] config = new String[2];
 			config[0] = tokenizer.nextToken().trim(); // config name

@@ -23,7 +23,7 @@ import junit.framework.Assert;
 public class Sample {
 	String fScenarioID;
 	long fStartTime;
-	Map fProperties;
+	Map<?, ?> fProperties;
 	DataPoint[] fDataPoints;
 	
 	boolean fIsSummary;
@@ -34,7 +34,7 @@ public class Sample {
 	String fComment;
 	
 	
-	public Sample(String scenarioID, long starttime, Map properties, DataPoint[] dataPoints) {
+	public Sample(String scenarioID, long starttime, Map<?, ?> properties, DataPoint[] dataPoints) {
 		Assert.assertTrue("scenarioID is null", scenarioID != null); //$NON-NLS-1$
 		fScenarioID= scenarioID;
 		fStartTime= starttime;
@@ -75,8 +75,8 @@ public class Sample {
 	public String[] getPropertyKeys() {
 	    if (fProperties == null)
 	        return new String[0];
-	    Set set= fProperties.keySet();
-	    return (String[]) set.toArray(new String[set.size()]);
+	    Set<?> set= fProperties.keySet();
+	    return set.toArray(new String[set.size()]);
 	}
 	
 	public DataPoint[] getDataPoints() {
@@ -85,6 +85,7 @@ public class Sample {
 		return dataPoints;
 	}
 	
+	@Override
 	public String toString() {
 	    return "MeteringSession [scenarioID= " + fScenarioID + ", #datapoints: " + fDataPoints.length + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}

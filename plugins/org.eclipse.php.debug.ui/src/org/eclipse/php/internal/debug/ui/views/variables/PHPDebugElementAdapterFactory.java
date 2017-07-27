@@ -29,7 +29,6 @@ import org.eclipse.php.internal.debug.ui.model.PHPModelProxyFactory;
  * 
  * @author shalom
  */
-@SuppressWarnings("restriction")
 public class PHPDebugElementAdapterFactory extends DebugElementAdapterFactory {
 
 	private static IElementEditor fElementEditor = new PHPVariableColumnEditor();
@@ -40,6 +39,7 @@ public class PHPDebugElementAdapterFactory extends DebugElementAdapterFactory {
 	/**
 	 * Override the default one to provide the PHP specific adapters.
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public <T> T getAdapter(Object adaptableObject, Class<T> adapterType) {
 		if (adapterType.equals(IElementEditor.class)) {

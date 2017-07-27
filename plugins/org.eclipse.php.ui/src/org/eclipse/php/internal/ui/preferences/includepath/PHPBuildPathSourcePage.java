@@ -27,10 +27,10 @@ import org.eclipse.ui.internal.IChangeListener;
 
 public class PHPBuildPathSourcePage extends PHPSourceContainerWorkbookPage {
 
-	private List<BPListElement> fRemovedElements = new ArrayList<BPListElement>();
+	private List<BPListElement> fRemovedElements = new ArrayList<>();
 	private boolean removeFromIncludePath = false;
 
-	private List<IChangeListener> removedElementListeners = new ArrayList<IChangeListener>(1);
+	private List<IChangeListener> removedElementListeners = new ArrayList<>(1);
 
 	public List<BPListElement> getRemovedElements() {
 		return fRemovedElements;
@@ -40,7 +40,7 @@ public class PHPBuildPathSourcePage extends PHPSourceContainerWorkbookPage {
 		return removeFromIncludePath;
 	}
 
-	public PHPBuildPathSourcePage(ListDialogField buildpathList) {
+	public PHPBuildPathSourcePage(ListDialogField<BPListElement> buildpathList) {
 		super(buildpathList);
 	}
 
@@ -50,7 +50,7 @@ public class PHPBuildPathSourcePage extends PHPSourceContainerWorkbookPage {
 		// clear the list of all removed elements after window closed.
 		fRemovedElements.clear();
 
-		List selElements = fFoldersList.getSelectedElements();
+		List<BPListElement> selElements = fFoldersList.getSelectedElements();
 		for (int i = selElements.size() - 1; i >= 0; i--) {
 			Object elem = selElements.get(i);
 			if (elem instanceof BPListElementAttribute) {
@@ -68,8 +68,8 @@ public class PHPBuildPathSourcePage extends PHPSourceContainerWorkbookPage {
 			fFoldersList.refresh();
 			fBuildpathList.dialogFieldChanged(); // validate
 		} else {
-			for (Iterator iter = selElements.iterator(); iter.hasNext();) {
-				BPListElement element = (BPListElement) iter.next();
+			for (Iterator<BPListElement> iter = selElements.iterator(); iter.hasNext();) {
+				BPListElement element = iter.next();
 				if (element.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
 
 					// for each removed source entry, check if it is part of the
@@ -81,9 +81,9 @@ public class PHPBuildPathSourcePage extends PHPSourceContainerWorkbookPage {
 						// add to removed elements list
 						fRemovedElements.add(element);
 					}
-					List list = BuildpathModifier.removeFilters(element.getPath(), fCurrJProject,
+					List<?> list = BuildpathModifier.removeFilters(element.getPath(), fCurrJProject,
 							fFoldersList.getElements());
-					for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+					for (Iterator<?> iterator = list.iterator(); iterator.hasNext();) {
 						BPListElement modified = (BPListElement) iterator.next();
 						fFoldersList.refresh(modified);
 						fFoldersList.expandElement(modified, 3);

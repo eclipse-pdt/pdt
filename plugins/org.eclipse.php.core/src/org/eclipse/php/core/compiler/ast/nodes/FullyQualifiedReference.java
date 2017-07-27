@@ -40,6 +40,7 @@ public class FullyQualifiedReference extends TypeReference {
 		this.elementType = type;
 	}
 
+	@Override
 	public void traverse(ASTVisitor pVisitor) throws Exception {
 		if (pVisitor.visit(this)) {
 			if (namespace != null) {

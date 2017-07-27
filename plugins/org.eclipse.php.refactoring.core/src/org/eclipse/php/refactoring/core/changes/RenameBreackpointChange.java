@@ -115,6 +115,7 @@ public class RenameBreackpointChange extends Change {
 				final Map<String, Object> oldAttributesMap = fBreakpointAttributes.get(breakpoint);
 
 				IWorkspaceRunnable wr = new IWorkspaceRunnable() {
+					@Override
 					public void run(IProgressMonitor monitor) throws CoreException {
 						IMarker newMarker = newMarkerResource
 								.createMarker("org.eclipse.php.debug.core.PHPConditionalBreakpointMarker"); //$NON-NLS-1$
@@ -122,7 +123,7 @@ public class RenameBreackpointChange extends Change {
 						// the old
 						// attributes to the new marker.
 
-						final Map<String, Object> newAttributesMap = new HashMap<String, Object>();
+						final Map<String, Object> newAttributesMap = new HashMap<>();
 
 						String oldMessge = (String) oldAttributesMap.get(IMarker.MESSAGE);
 						if (oldMessge != null) {

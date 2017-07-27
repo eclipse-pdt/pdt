@@ -37,6 +37,7 @@ public abstract class CatchContext extends StatementContext {
 
 	private int catchStart;
 
+	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;

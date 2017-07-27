@@ -22,16 +22,20 @@ import org.eclipse.php.core.ast.nodes.*;
 
 public class ASTViewContentProvider implements ITreeContentProvider {
 
+	@Override
 	public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 	}
 	
+	@Override
 	public void dispose() {
 	}
 	
+	@Override
 	public Object[] getElements(Object parent) {
 		return getChildren(parent);
 	}
 	
+	@Override
 	public Object getParent(Object child) {
 		if (child instanceof ASTNode) {
 			ASTNode node= (ASTNode) child;
@@ -47,6 +51,7 @@ public class ASTViewContentProvider implements ITreeContentProvider {
 		return null;
 	}
 
+	@Override
 	public Object[] getChildren(Object parent) {
 		if (parent instanceof ASTAttribute) {
 			return ((ASTAttribute) parent).getChildren();
@@ -57,7 +62,7 @@ public class ASTViewContentProvider implements ITreeContentProvider {
 	}
 	
 	private Object[] getNodeChildren(ASTNode node) {
-		ArrayList res= new ArrayList();
+		ArrayList<Object> res= new ArrayList<Object>();
 		
 		
 		if (node instanceof Expression) {
@@ -152,7 +157,7 @@ public class ASTViewContentProvider implements ITreeContentProvider {
  		
 		
 		// adds  children nodes of the current ast node 
-		List list= node.structuralPropertiesForType();
+		List<?> list= node.structuralPropertiesForType();
 		for (int i= 0; i < list.size(); i++) {
 			StructuralPropertyDescriptor curr= (StructuralPropertyDescriptor) list.get(i);
 			res.add(new NodeProperty(node, curr));
@@ -180,6 +185,7 @@ public class ASTViewContentProvider implements ITreeContentProvider {
 		return new Binding(parent, label, binding, true);
 	}
 	
+	@Override
 	public boolean hasChildren(Object parent) {
 		return getChildren(parent).length > 0;
 	}

@@ -33,7 +33,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-@SuppressWarnings("restriction")
 public class BuildpathPackage {
 
 	private static final String CURRENT_VERSION = "1"; //$NON-NLS-1$
@@ -54,7 +53,7 @@ public class BuildpathPackage {
 
 		XMLWriter xmlWriter = new XMLWriter(writer, null, true);
 
-		HashMap<String, String> library = new HashMap<String, String>();
+		HashMap<String, String> library = new HashMap<>();
 		library.put(TAG_VERSION, String.valueOf(CURRENT_VERSION));
 		library.put(TAG_SYSTEMLIBRARY, String.valueOf(isSystemLibrary));
 		xmlWriter.printTag(TAG_USERLIBRARY, library, true, true, false);
@@ -62,7 +61,7 @@ public class BuildpathPackage {
 		for (int i = 0, length = entries.length; i < length; ++i) {
 			BuildpathEntry cpEntry = (BuildpathEntry) entries[i];
 
-			HashMap<String, String> archive = new HashMap<String, String>();
+			HashMap<String, String> archive = new HashMap<>();
 			archive.put(TAG_PATH, cpEntry.getPath().toString());
 
 			// boolean hasExtraAttributes = cpEntry.extraAttributes != null
@@ -132,7 +131,7 @@ public class BuildpathPackage {
 		NodeList list = cpElement.getChildNodes();
 		int length = list.getLength();
 
-		List<IBuildpathEntry> res = new ArrayList<IBuildpathEntry>(length);
+		List<IBuildpathEntry> res = new ArrayList<>(length);
 		for (int i = 0; i < length; ++i) {
 			Node node = list.item(i);
 
@@ -161,7 +160,7 @@ public class BuildpathPackage {
 			}
 		}
 
-		IBuildpathEntry[] entries = (IBuildpathEntry[]) res.toArray(new IBuildpathEntry[res.size()]);
+		IBuildpathEntry[] entries = res.toArray(new IBuildpathEntry[res.size()]);
 
 		return new BuildpathPackage(entries, isSystem);
 	}

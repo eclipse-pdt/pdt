@@ -19,15 +19,17 @@ import java.util.List;
 
 public abstract class AbstractJsonArray<V> extends JsonEntity implements JsonCollection, Iterable<V> {
 
-	protected List<V> values = new LinkedList<V>();
+	protected List<V> values = new LinkedList<>();
 
 	private transient PropertyChangeListener propListener = new PropertyChangeListener() {
+		@Override
 		public void propertyChange(PropertyChangeEvent e) {
 			int index = values.indexOf(e.getSource());
 			firePropertyChange("#" + index + "." + e.getPropertyName(), e.getOldValue(), e.getNewValue()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	};
 
+	@Override
 	@SuppressWarnings("unchecked")
 	protected void doParse(Object obj) {
 		clear();
@@ -40,7 +42,7 @@ public abstract class AbstractJsonArray<V> extends JsonEntity implements JsonCol
 
 	@Override
 	protected Object buildJson() {
-		LinkedList<Object> out = new LinkedList<Object>();
+		LinkedList<Object> out = new LinkedList<>();
 		for (V val : values) {
 			if (val == null) {
 				continue;
@@ -55,6 +57,7 @@ public abstract class AbstractJsonArray<V> extends JsonEntity implements JsonCol
 	 * 
 	 * @see org.eclipse.php.composer.api.entities.JsonCollection#size()
 	 */
+	@Override
 	public int size() {
 		return values.size();
 	}
@@ -64,6 +67,7 @@ public abstract class AbstractJsonArray<V> extends JsonEntity implements JsonCol
 	 * 
 	 * @see org.eclipse.php.composer.api.entities.JsonCollection#clear()
 	 */
+	@Override
 	public void clear() {
 		while (values.size() > 0) {
 			remove(get(0));
@@ -222,6 +226,7 @@ public abstract class AbstractJsonArray<V> extends JsonEntity implements JsonCol
 	 * 
 	 * @see java.lang.Iterable#iterator()
 	 */
+	@Override
 	public Iterator<V> iterator() {
 		return values.iterator();
 	}

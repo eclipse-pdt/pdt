@@ -50,6 +50,7 @@ public class ArrayVariableReference extends VariableReference {
 		this.arrayType = arrayType;
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -79,6 +80,7 @@ public class ArrayVariableReference extends VariableReference {
 		return arrayType;
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.ARRAY_ACCESS;
 	}
@@ -86,9 +88,11 @@ public class ArrayVariableReference extends VariableReference {
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
+	@Override
 	public final void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}

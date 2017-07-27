@@ -17,7 +17,6 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.internal.ui.scriptview.BuildPathContainer;
 import org.eclipse.php.composer.core.model.ModelAccess;
 
-@SuppressWarnings("restriction")
 public class ComposerBuildpathContainer extends BuildPathContainer {
 	private IScriptProject iScriptProject;
 

@@ -39,7 +39,7 @@ public class PHPFacets {
 				final IProjectFacet phpFacet = ProjectFacetsManager.getProjectFacet(PHPFacetsConstants.PHP_COMPONENT);
 				final IFacetedProject faceted = ProjectFacetsManager.create(project);
 				if (!facetedVersion.equals(faceted.getInstalledVersion(phpFacet))) {
-					final Set<IFacetedProject.Action> actions = new HashSet<IFacetedProject.Action>();
+					final Set<IFacetedProject.Action> actions = new HashSet<>();
 					actions.add(new IFacetedProject.Action(IFacetedProject.Action.Type.VERSION_CHANGE, facetedVersion,
 							null));
 					faceted.modify(actions, new NullProgressMonitor());
@@ -165,7 +165,7 @@ public class PHPFacets {
 		// set the fixed facets (they will not be removable by the user)
 		// the php.component facet will be set to the correct version
 		// programmatically
-		final Set<IProjectFacet> fixedFacets = new HashSet<IProjectFacet>();
+		final Set<IProjectFacet> fixedFacets = new HashSet<>();
 		IProjectFacet coreFacet = ProjectFacetsManager.getProjectFacet(PHPFacetsConstants.PHP_CORE_COMPONENT);
 		fixedFacets.add(coreFacet);
 		IProjectFacet phpFacet = ProjectFacetsManager.getProjectFacet(PHPFacetsConstants.PHP_COMPONENT);

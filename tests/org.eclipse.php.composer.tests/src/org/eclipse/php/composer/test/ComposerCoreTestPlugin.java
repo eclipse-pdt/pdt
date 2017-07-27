@@ -40,6 +40,7 @@ public class ComposerCoreTestPlugin extends Plugin {
 	public ComposerCoreTestPlugin() {
 	}
 
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
@@ -47,6 +48,7 @@ public class ComposerCoreTestPlugin extends Plugin {
 		PHPCorePlugin.toolkitInitialized = true;
 	}
 
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);

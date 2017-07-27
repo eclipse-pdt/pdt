@@ -54,13 +54,13 @@ public class LineGraph {
 
 
     String fTitle;
-    List fItems;
+    List<GraphItem> fItems;
     Dim fDimension;
 
 
     public LineGraph(String title, Dim dim) {
         this.fTitle= title;
-        this.fItems= new ArrayList();
+        this.fItems= new ArrayList<>();
         this.fDimension= dim;
     }
 
@@ -91,7 +91,7 @@ public class LineGraph {
         int bottom= bounds.height - titleHeight - PADDING;
         int left= PADDING + labelWidth;
 
-        GraphItem lastItem= (GraphItem) this.fItems.get(this.fItems.size()-1);
+        GraphItem lastItem= this.fItems.get(this.fItems.size()-1);
         int right= bounds.width - lastItem.getSize(g).x - PADDING/2;
 
         // draw the title
@@ -121,7 +121,7 @@ public class LineGraph {
         int xposition= left;
 
         for (int i= 0; i < n; i++) {
-            GraphItem thisItem= (GraphItem) this.fItems.get(i);
+            GraphItem thisItem= this.fItems.get(i);
 
             int yposition= (int) (bottom - (((thisItem.value-min) * (bottom-top)) / graduations));
 
@@ -169,7 +169,7 @@ public class LineGraph {
     public double getMaxItem() {
         double maxItem= 0;
         for (int i= 0; i < this.fItems.size(); i++) {
-            GraphItem graphItem= (GraphItem) this.fItems.get(i);
+            GraphItem graphItem= this.fItems.get(i);
             if (graphItem.value > maxItem)
                 maxItem= graphItem.value;
         }
@@ -181,7 +181,7 @@ public class LineGraph {
     public double getMinItem() {
         double minItem= getMaxItem();
         for (int i= 0; i < this.fItems.size(); i++) {
-            GraphItem graphItem= (GraphItem) this.fItems.get(i);
+            GraphItem graphItem= this.fItems.get(i);
             if (graphItem.value < minItem)
                 minItem= graphItem.value;
         }

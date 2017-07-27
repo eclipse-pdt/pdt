@@ -12,6 +12,9 @@ package org.eclipse.test.internal.performance;
 
 import java.util.Map;
 
+import org.eclipse.test.internal.performance.data.Dim;
+import org.eclipse.test.internal.performance.data.Scalar;
+
 /**
  * The Mac OS X version of the performance monitor.
  * (Uses default implementation for now).
@@ -55,7 +58,8 @@ class PerformanceMonitorMac extends PerformanceMonitor {
 	 * Write out operating system counters for Mac OS X.
 	 * @param scalars where to collect the data
 	 */
-	protected void collectOperatingSystemCounters(Map scalars) {
+	@Override
+	protected void collectOperatingSystemCounters(Map<Dim, Scalar> scalars) {
 		synchronized(this) {
 		    if (isLoaded()) {
 				int[] counters= new int[18];

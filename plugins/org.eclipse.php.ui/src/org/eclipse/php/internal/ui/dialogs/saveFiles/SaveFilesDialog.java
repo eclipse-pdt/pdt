@@ -42,7 +42,7 @@ public class SaveFilesDialog extends ListSelectionDialog {
 	boolean promptAutoSave;
 	SaveFilesResult result;
 
-	public SaveFilesDialog(Shell parent, List dirtyEditors, SaveFilesResult result, boolean promptAutoSave) {
+	public SaveFilesDialog(Shell parent, List<?> dirtyEditors, SaveFilesResult result, boolean promptAutoSave) {
 		super(parent, dirtyEditors, ArrayContentProvider.getInstance(), new LabelProvider() {
 			@Override
 			public Image getImage(Object element) {

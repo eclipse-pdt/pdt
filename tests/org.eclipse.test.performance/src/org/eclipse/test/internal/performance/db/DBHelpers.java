@@ -173,7 +173,7 @@ public class DBHelpers {
         PreparedStatement deleteSamples= fConnection.prepareStatement("delete from SAMPLE where SAMPLE.ID = ?"); //$NON-NLS-1$
         PreparedStatement deleteScenario= fConnection.prepareStatement("delete from SCENARIO where SCENARIO.ID = ?"); //$NON-NLS-1$
         
-        ResultSet samples= null, datapoints= null, configs= null;
+        ResultSet samples= null, datapoints= null;
         iterSamples.setInt(1, variation_id);
         samples= iterSamples.executeQuery();
         while (samples.next()) {
@@ -241,7 +241,6 @@ public class DBHelpers {
             deleteVariation.close();
         }
 
-        if (configs != null) configs.close();
         if (samples != null) samples.close();
         if (datapoints != null) datapoints.close();
         

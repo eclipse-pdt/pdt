@@ -68,6 +68,7 @@ public class ASTViewLabelProvider extends LabelProvider implements IColorProvide
 		fireLabelProviderChanged(new LabelProviderChangedEvent(this));
 	}
 
+	@Override
 	public String getText(Object obj) {
 		StringBuffer buf= new StringBuffer();
 		if (obj instanceof ASTNode) {
@@ -94,6 +95,7 @@ public class ASTViewLabelProvider extends LabelProvider implements IColorProvide
 	}
 	
 	
+	@Override
 	public Image getImage(Object obj) {
 		if (obj instanceof ASTNode) {
 			return null;
@@ -109,6 +111,7 @@ public class ASTViewLabelProvider extends LabelProvider implements IColorProvide
 //		return PlatformUI.getWorkbench().getSharedImages().getImage(imageKey);
 	}
 
+	@Override
 	public Color getForeground(Object element) {
 		if ((element instanceof Error))
 			return fRed;
@@ -143,6 +146,7 @@ public class ASTViewLabelProvider extends LabelProvider implements IColorProvide
 		return fDarkRed; // all extra properties
 	}
 
+	@Override
 	public Color getBackground(Object element) {
 		if (isNotProperlyNested(element)) {
 			return fLightRed;
@@ -194,6 +198,7 @@ public class ASTViewLabelProvider extends LabelProvider implements IColorProvide
 		return false;
 	}
 
+	@Override
 	public Font getFont(Object element) {
 		if (element instanceof ASTNode) {
 			ASTNode node= (ASTNode) element;
@@ -205,6 +210,7 @@ public class ASTViewLabelProvider extends LabelProvider implements IColorProvide
 		return null;
 	}
 	
+	@Override
 	public void dispose() {
 		super.dispose();
 		fLightBlue.dispose();

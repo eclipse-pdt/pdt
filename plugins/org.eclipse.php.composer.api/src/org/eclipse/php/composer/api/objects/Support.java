@@ -138,6 +138,7 @@ public class Support extends JsonObject implements Cloneable {
 	 * 
 	 * @see java.lang.Object#clone()
 	 */
+	@Override
 	public Support clone() {
 		Support clone = new Support();
 		cloneProperties(clone);

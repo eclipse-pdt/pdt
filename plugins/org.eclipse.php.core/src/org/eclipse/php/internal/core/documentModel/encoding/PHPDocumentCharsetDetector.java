@@ -16,6 +16,7 @@ import org.eclipse.wst.sse.core.internal.document.IDocumentCharsetDetector;
 
 public class PHPDocumentCharsetDetector extends PHPResourceEncodingDetector implements IDocumentCharsetDetector {
 
+	@Override
 	public void set(IDocument document) {
 		// @GINO: Do nothing for now
 	}

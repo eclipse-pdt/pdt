@@ -43,12 +43,12 @@ public class PHPInterpreterExecutionConfigurationBlock {
 	/**
 	 * PHPVersion -> Default interpreter
 	 */
-	private Map<PHPVersion, PHPexeItem> versionToDefaultItem = new HashMap<PHPVersion, PHPexeItem>();
+	private Map<PHPVersion, PHPexeItem> versionToDefaultItem = new HashMap<>();
 
 	/**
 	 * PHPVersion -> Default interpreter
 	 */
-	private Map<PHPVersion, PHPexeItem[]> versionToCompatibleItems = new HashMap<PHPVersion, PHPexeItem[]>();
+	private Map<PHPVersion, PHPexeItem[]> versionToCompatibleItems = new HashMap<>();
 	PHPexes phpExes;
 	PHPexeItem[] allItems;
 	/**
@@ -61,6 +61,7 @@ public class PHPInterpreterExecutionConfigurationBlock {
 		/**
 		 * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
 		 */
+		@Override
 		public Image getImage(Object element) {
 			return DLTKPluginImages.getDescriptor(DLTKPluginImages.IMG_OBJS_LIBRARY).createImage();
 		}
@@ -68,6 +69,7 @@ public class PHPInterpreterExecutionConfigurationBlock {
 		/**
 		 * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
 		 */
+		@Override
 		public String getText(Object element) {
 			return ((PHPVersion) element).getAlias();
 		}
@@ -81,6 +83,7 @@ public class PHPInterpreterExecutionConfigurationBlock {
 		/**
 		 * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
 		 */
+		@Override
 		public Image getImage(Object element) {
 			return PHPDebugUIImages.get(PHPDebugUIImages.IMG_OBJ_PHP_EXE);
 		}
@@ -88,6 +91,7 @@ public class PHPInterpreterExecutionConfigurationBlock {
 		/**
 		 * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
 		 */
+		@Override
 		public String getText(Object element) {
 			if (element instanceof PHPexeItem) {
 				final PHPexeItem phpExe = (PHPexeItem) element;
@@ -173,6 +177,7 @@ public class PHPInterpreterExecutionConfigurationBlock {
 		fJREsViewer.setInput(new PHPexeItem[0]);
 
 		fProfilesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				PHPVersion version = (PHPVersion) ((IStructuredSelection) event.getSelection()).getFirstElement();
 				PHPexeItem jre = versionToDefaultItem.get(version);
@@ -187,6 +192,7 @@ public class PHPInterpreterExecutionConfigurationBlock {
 		});
 
 		fJREsViewer.addCheckStateListener(new ICheckStateListener() {
+			@Override
 			public void checkStateChanged(CheckStateChangedEvent event) {
 				if (event.getChecked()) {
 					Object element = event.getElement();

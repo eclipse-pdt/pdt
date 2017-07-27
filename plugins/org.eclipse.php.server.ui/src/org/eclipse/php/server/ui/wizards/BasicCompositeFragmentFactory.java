@@ -31,6 +31,7 @@ public class BasicCompositeFragmentFactory implements ICompositeFragmentFactory 
 	 * @see org.eclipse.php.internal.server.apache.ui.wizard.
 	 * ICompositeFragmentFactory #createWizardFragment()
 	 */
+	@Override
 	public WizardFragment createWizardFragment() {
 		return new ServerWizardFragment();
 	}
@@ -43,6 +44,7 @@ public class BasicCompositeFragmentFactory implements ICompositeFragmentFactory 
 	 * #createComposite(org.eclipse.swt.widgets.Composite,
 	 * org.eclipse.php.internal.server.apache.ui.IControlHandler)
 	 */
+	@Override
 	public CompositeFragment createComposite(Composite parent, IControlHandler controlHandler) {
 		return new ServerCompositeFragment(parent, controlHandler, true);
 	}

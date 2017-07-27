@@ -44,7 +44,7 @@ public class LinkedNodeFinder {
 	 * @return Return
 	 */
 	public static Identifier[] findByBinding(ASTNode root, IBinding binding) {
-		List<Identifier> res = new ArrayList<Identifier>();
+		List<Identifier> res = new ArrayList<>();
 		BindingFinder nodeFinder = new BindingFinder(binding, res);
 		root.accept(nodeFinder);
 		return res.toArray(new Identifier[res.size()]);

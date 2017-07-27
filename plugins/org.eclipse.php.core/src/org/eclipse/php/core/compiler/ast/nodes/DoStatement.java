@@ -21,6 +21,7 @@ public class DoStatement extends WhileStatement {
 		super(start, end, condition, action);
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -30,6 +31,7 @@ public class DoStatement extends WhileStatement {
 		visitor.endvisit(this);
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.DO_STATEMENT;
 	}

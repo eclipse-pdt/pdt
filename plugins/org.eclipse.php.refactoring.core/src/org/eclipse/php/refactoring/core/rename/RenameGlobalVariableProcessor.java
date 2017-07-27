@@ -76,6 +76,7 @@ public class RenameGlobalVariableProcessor extends AbstractRenameProcessor<IFile
 	/**
 	 * Derive the change
 	 */
+	@Override
 	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		CompositeChange rootChange = new CompositeChange(
 				PHPRefactoringCoreMessages.getString("RenameGlobalVariableProcessor.4")); //$NON-NLS-1$
@@ -122,7 +123,7 @@ public class RenameGlobalVariableProcessor extends AbstractRenameProcessor<IFile
 
 	@Override
 	protected void collectReferences(Program program, IProgressMonitor pm) {
-		final ArrayList<IResource> list = new ArrayList<IResource>();
+		final ArrayList<IResource> list = new ArrayList<>();
 
 		IScriptProject project = this.identifier.getProgramRoot().getSourceModule().getScriptProject();
 
@@ -162,38 +163,47 @@ public class RenameGlobalVariableProcessor extends AbstractRenameProcessor<IFile
 		}
 	}
 
+	@Override
 	public Object[] getElements() {
 		return new Object[] { identifier };
 	}
 
+	@Override
 	public String getIdentifier() {
 		return ID_RENAME_GLOBAL_VARIABLE;
 	}
 
+	@Override
 	public String getProcessorName() {
 		return RENAME_GLOBAL_VARIABLE_PROCESSOR_NAME;
 	}
 
+	@Override
 	public Object getNewElement() {
 		return getNewElementName();
 	}
 
+	@Override
 	public String getCurrentElementName() {
 		return getIdentifierName();
 	}
 
+	@Override
 	public boolean canEnableTextUpdating() {
 		return true;
 	}
 
+	@Override
 	public String getCurrentElementQualifier() {
 		return getIdentifierName();
 	}
 
+	@Override
 	public boolean getUpdateTextualMatches() {
 		return isUpdateTextualMatches;
 	}
 
+	@Override
 	public void setUpdateTextualMatches(boolean update) {
 		isUpdateTextualMatches = update;
 	}
@@ -221,6 +231,7 @@ public class RenameGlobalVariableProcessor extends AbstractRenameProcessor<IFile
 
 	}
 
+	@Override
 	public RefactoringStatus getRefactoringStatus(IFile key, Program program) {
 		if (PHPElementConciliator.globalVariableAlreadyExists(program, getNewElementName())) {
 			final String message = MessageFormat.format(RenameGlobalVariableProcessor.GLOBAL_VARIABLE_IS_USED,

@@ -30,12 +30,12 @@ public class AliasType extends SourceType {
 
 	@Override
 	public ISourceRange getSourceRange() throws ModelException {
-		return ((IType) type).getSourceRange();
+		return type.getSourceRange();
 	}
 
 	@Override
 	public int getFlags() throws ModelException {
-		return ((IType) type).getFlags();
+		return type.getFlags();
 	}
 
 	public String getAlias() {

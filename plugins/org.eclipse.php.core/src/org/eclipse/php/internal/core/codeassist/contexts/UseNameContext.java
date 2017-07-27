@@ -33,6 +33,7 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
  */
 public class UseNameContext extends UseStatementContext {
 
+	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
@@ -56,6 +57,7 @@ public class UseNameContext extends UseStatementContext {
 		return false;
 	}
 
+	@Override
 	public String getPrefix() throws BadLocationException {
 		String prefix = super.getPrefix();
 		if (prefix.length() > 0 && prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {

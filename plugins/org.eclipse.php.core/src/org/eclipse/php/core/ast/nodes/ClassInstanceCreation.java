@@ -34,7 +34,7 @@ import org.eclipse.php.core.ast.visitor.Visitor;
 public class ClassInstanceCreation extends VariableBase {
 
 	private ClassName className;
-	private ASTNode.NodeList<Expression> ctorParams = new ASTNode.NodeList<Expression>(CTOR_PARAMS_PROPERTY);
+	private ASTNode.NodeList<Expression> ctorParams = new ASTNode.NodeList<>(CTOR_PARAMS_PROPERTY);
 	private AnonymousClassDeclaration anonymousClassDeclaration;
 	/**
 	 * The structural property of this node type.
@@ -56,7 +56,7 @@ public class ClassInstanceCreation extends VariableBase {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(3);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(3);
 		propertyList.add(CLASSNAME_PROPERTY);
 		propertyList.add(CTOR_PARAMS_PROPERTY);
 		propertyList.add(ANONYMOUS_CLASS_PROPERTY);
@@ -67,6 +67,7 @@ public class ClassInstanceCreation extends VariableBase {
 		super(ast);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -96,6 +97,7 @@ public class ClassInstanceCreation extends VariableBase {
 		this.ctorParams.addAll(ctorParams);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		if (className != null) {
 			className.accept(visitor);
@@ -108,6 +110,7 @@ public class ClassInstanceCreation extends VariableBase {
 		}
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		if (className != null) {
@@ -121,6 +124,7 @@ public class ClassInstanceCreation extends VariableBase {
 		}
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		if (className != null) {
 			className.traverseBottomUp(visitor);
@@ -134,6 +138,7 @@ public class ClassInstanceCreation extends VariableBase {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<ClassInstanceCreation"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -155,6 +160,7 @@ public class ClassInstanceCreation extends VariableBase {
 		buffer.append(tab).append("</ClassInstanceCreation>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.CLASS_INSTANCE_CREATION;
 	}
@@ -205,6 +211,7 @@ public class ClassInstanceCreation extends VariableBase {
 		postReplaceChild(oldChild, anonymousClassDeclaration, ANONYMOUS_CLASS_PROPERTY);
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == CLASSNAME_PROPERTY) {
 			if (get) {
@@ -226,7 +233,8 @@ public class ClassInstanceCreation extends VariableBase {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
-	public List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+	@Override
+	public List<? extends ASTNode> internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == CTOR_PARAMS_PROPERTY) {
 			return ctorParams();
 		}
@@ -245,6 +253,7 @@ public class ClassInstanceCreation extends VariableBase {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

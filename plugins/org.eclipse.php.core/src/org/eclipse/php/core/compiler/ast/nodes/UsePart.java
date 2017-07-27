@@ -40,6 +40,7 @@ public class UsePart extends ASTNode {
 		this.statementType = statementType;
 	}
 
+	@Override
 	public String toString() {
 		StringBuilder buf = new StringBuilder("[USE: ") //$NON-NLS-1$
 				.append(getNamespace().getFullyQualifiedName());
@@ -50,6 +51,7 @@ public class UsePart extends ASTNode {
 		return buf.toString();
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		if (visitor.visit(this)) {
 			getNamespace().traverse(visitor);

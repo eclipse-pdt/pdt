@@ -39,7 +39,7 @@ public class FormatterLinuxAutoEditTests extends FormatterTests {
 	protected static final char OFFSET_CHAR = '|';
 
 	@Parameters
-	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<>();
 
 	static {
 		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/formatter-autoedit/php5" });

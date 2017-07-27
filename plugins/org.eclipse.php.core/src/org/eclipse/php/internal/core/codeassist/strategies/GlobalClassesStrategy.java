@@ -30,6 +30,7 @@ public class GlobalClassesStrategy extends GlobalTypesStrategy {
 		super(context, trueFlag, falseFlag);
 	}
 
+	@Override
 	public String getSuffix(AbstractCompletionContext abstractContext) {
 		return ""; //$NON-NLS-1$
 	}

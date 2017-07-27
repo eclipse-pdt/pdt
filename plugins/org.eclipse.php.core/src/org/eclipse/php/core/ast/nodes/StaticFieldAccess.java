@@ -52,7 +52,7 @@ public class StaticFieldAccess extends StaticDispatch {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(3);
 		properyList.add(FIELD_PROPERTY);
 		properyList.add(CLASS_NAME_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
@@ -71,6 +71,7 @@ public class StaticFieldAccess extends StaticDispatch {
 		super(ast);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -79,23 +80,27 @@ public class StaticFieldAccess extends StaticDispatch {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		getClassName().accept(visitor);
 		field.accept(visitor);
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		getClassName().traverseTopDown(visitor);
 		field.traverseTopDown(visitor);
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		getClassName().traverseBottomUp(visitor);
 		field.traverseBottomUp(visitor);
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<StaticFieldAccess"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -107,6 +112,7 @@ public class StaticFieldAccess extends StaticDispatch {
 		buffer.append("\n").append(tab).append("</StaticFieldAccess>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.STATIC_FIELD_ACCESS;
 	}
@@ -143,6 +149,7 @@ public class StaticFieldAccess extends StaticDispatch {
 		postReplaceChild(oldChild, variable, FIELD_PROPERTY);
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == FIELD_PROPERTY) {
 			if (get) {
@@ -156,6 +163,7 @@ public class StaticFieldAccess extends StaticDispatch {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
+	@Override
 	public ASTNode getMember() {
 		return getField();
 	}
@@ -163,6 +171,7 @@ public class StaticFieldAccess extends StaticDispatch {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

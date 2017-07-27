@@ -26,6 +26,7 @@ public class DOMDocumentForPHP extends DocumentStyleImpl {
 		super(that);
 	}
 
+	@Override
 	public Node cloneNode(boolean deep) {
 		DOMDocumentForPHP cloned = new DOMDocumentForPHP(this);
 		if (deep)
@@ -40,6 +41,7 @@ public class DOMDocumentForPHP extends DocumentStyleImpl {
 	 * @param tagName
 	 *            java.lang.String
 	 */
+	@Override
 	public Element createElement(String tagName) throws DOMException {
 		checkTagNameValidity(tagName);
 
@@ -56,6 +58,7 @@ public class DOMDocumentForPHP extends DocumentStyleImpl {
 	 * @param name
 	 *            java.lang.String
 	 */
+	@Override
 	public Attr createAttribute(String name) throws DOMException {
 		AttrImplForPHP attr = new AttrImplForPHP();
 		attr.setOwnerDocument(this);
@@ -70,6 +73,7 @@ public class DOMDocumentForPHP extends DocumentStyleImpl {
 	 * @param data
 	 *            java.lang.String
 	 */
+	@Override
 	public Text createTextNode(String data) {
 		TextImplForPHP text = new TextImplForPHP();
 		text.setOwnerDocument(this);
@@ -77,6 +81,7 @@ public class DOMDocumentForPHP extends DocumentStyleImpl {
 		return text;
 	}
 
+	@Override
 	public void setModel(IDOMModel model) {
 		super.setModel(model);
 	}

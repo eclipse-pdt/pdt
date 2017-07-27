@@ -55,12 +55,12 @@ public class VariableDeclarationSearcher extends ContextFinder {
 	/**
 	 * Scope variable declarations map
 	 */
-	private Map<IContext, DeclarationScope> scopes = new HashMap<IContext, DeclarationScope>();
+	private Map<IContext, DeclarationScope> scopes = new HashMap<>();
 
 	/**
 	 * Stack of processed AST nodes
 	 */
-	protected Stack<ASTNode> nodesStack = new Stack<ASTNode>();
+	protected Stack<ASTNode> nodesStack = new Stack<>();
 
 	public VariableDeclarationSearcher(ISourceModule sourceModule) {
 		super(sourceModule);
@@ -74,6 +74,7 @@ public class VariableDeclarationSearcher extends ContextFinder {
 	protected void postProcess(ModuleDeclaration node) {
 	}
 
+	@Override
 	public final boolean visit(ModuleDeclaration node) throws Exception {
 		if (!isInteresting(node)) {
 			visitGeneral(node);
@@ -85,6 +86,7 @@ public class VariableDeclarationSearcher extends ContextFinder {
 		return super.visit(node);
 	}
 
+	@Override
 	public final boolean endvisit(ModuleDeclaration node) throws Exception {
 		return super.endvisit(node);
 	}
@@ -97,6 +99,7 @@ public class VariableDeclarationSearcher extends ContextFinder {
 	protected void postProcess(TypeDeclaration node) {
 	}
 
+	@Override
 	public final boolean visit(TypeDeclaration node) throws Exception {
 		if (!isInteresting(node)) {
 			visitGeneral(node);
@@ -108,6 +111,7 @@ public class VariableDeclarationSearcher extends ContextFinder {
 		return super.visit(node);
 	}
 
+	@Override
 	public final boolean endvisit(TypeDeclaration node) throws Exception {
 		return super.endvisit(node);
 	}
@@ -120,6 +124,7 @@ public class VariableDeclarationSearcher extends ContextFinder {
 	protected void postProcess(MethodDeclaration node) {
 	}
 
+	@Override
 	public final boolean visit(MethodDeclaration node) throws Exception {
 		if (!isInteresting(node)) {
 			visitGeneral(node);
@@ -131,6 +136,7 @@ public class VariableDeclarationSearcher extends ContextFinder {
 		return super.visit(node);
 	}
 
+	@Override
 	public final boolean endvisit(MethodDeclaration node) throws Exception {
 		return super.endvisit(node);
 	}
@@ -143,6 +149,7 @@ public class VariableDeclarationSearcher extends ContextFinder {
 	protected void postProcess(Expression node) {
 	}
 
+	@Override
 	public final boolean visit(Expression node) throws Exception {
 		if (!isInteresting(node)) {
 			visitGeneral(node);
@@ -184,6 +191,7 @@ public class VariableDeclarationSearcher extends ContextFinder {
 		}
 	}
 
+	@Override
 	public boolean endvisit(Expression node) throws Exception {
 		return super.endvisit(node);
 	}
@@ -196,6 +204,7 @@ public class VariableDeclarationSearcher extends ContextFinder {
 	protected void postProcess(Statement node) {
 	}
 
+	@Override
 	public final boolean visit(Statement node) throws Exception {
 		if (!isInteresting(node)) {
 			visitGeneral(node);
@@ -261,6 +270,7 @@ public class VariableDeclarationSearcher extends ContextFinder {
 		return super.visit(node);
 	}
 
+	@Override
 	public final boolean endvisit(Statement node) throws Exception {
 		if (isConditional(node)) {
 			getScope().exitInnerBlock();
@@ -276,12 +286,14 @@ public class VariableDeclarationSearcher extends ContextFinder {
 	protected void postProcessGeneral(ASTNode node) {
 	}
 
+	@Override
 	public final boolean visitGeneral(ASTNode node) throws Exception {
 		nodesStack.push(node);
 		postProcessGeneral(node);
 		return super.visitGeneral(node);
 	}
 
+	@Override
 	public final void endvisitGeneral(ASTNode node) throws Exception {
 		nodesStack.pop();
 		super.endvisitGeneral(node);
@@ -344,7 +356,7 @@ public class VariableDeclarationSearcher extends ContextFinder {
 	 */
 	public DeclarationScope[] getScopes() {
 		Collection<DeclarationScope> values = scopes.values();
-		return (DeclarationScope[]) values.toArray(new DeclarationScope[values.size()]);
+		return values.toArray(new DeclarationScope[values.size()]);
 	}
 
 	/**

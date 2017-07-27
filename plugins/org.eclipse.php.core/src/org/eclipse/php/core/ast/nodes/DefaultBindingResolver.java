@@ -51,8 +51,8 @@ public class DefaultBindingResolver extends BindingResolver {
 		Map<Integer, org.eclipse.dltk.ast.ASTNode> compilerNodeToASTNode;
 
 		BindingTables() {
-			this.compilerNodeToASTNode = new HashMap<Integer, org.eclipse.dltk.ast.ASTNode>();
-			this.bindingKeysToBindings = new HashMap<String, IBinding>();
+			this.compilerNodeToASTNode = new HashMap<>();
+			this.bindingKeysToBindings = new HashMap<>();
 		}
 
 	}
@@ -135,6 +135,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	 *            the given type
 	 * @return the new type binding
 	 */
+	@Override
 	ITypeBinding getTypeBinding(IType type) {
 		if (type != null) {
 			return internalGetTypeBinding(PHPClassType.fromIType(type), type);
@@ -166,6 +167,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	 * @return the new variable binding, or null in case the given field is
 	 *         null.
 	 */
+	@Override
 	IVariableBinding getVariableBinding(IField field) {
 		if (field != null) {
 			// Cache?
@@ -182,6 +184,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	 *            An {@link IMethod}
 	 * @return the new method binding
 	 */
+	@Override
 	public IMethodBinding getMethodBinding(IMethod method) {
 		if (method != null) {
 			// Cache?
@@ -190,8 +193,9 @@ public class DefaultBindingResolver extends BindingResolver {
 		return null;
 	}
 
+	@Override
 	public ITypeBinding[] getMethodReturnTypeBinding(IMethod method) {
-		List<ITypeBinding> result = new LinkedList<ITypeBinding>();
+		List<ITypeBinding> result = new LinkedList<>();
 		try {
 			int flags = method.getFlags();
 			if (!PHPFlags.isAbstract(flags)) {
@@ -221,13 +225,14 @@ public class DefaultBindingResolver extends BindingResolver {
 				e.printStackTrace();
 			}
 		}
-		return (ITypeBinding[]) result.toArray(new ITypeBinding[result.size()]);
+		return result.toArray(new ITypeBinding[result.size()]);
 	}
 
 	/**
 	 * Returns the {@link IEvaluatedType} according to the offset and the
 	 * length.
 	 */
+	@Override
 	protected IEvaluatedType getEvaluatedType(int offset, int length) {
 		try {
 			return bindingUtil.getType(offset, length);
@@ -249,6 +254,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	 * @see #getModelElements(int, int, boolean)
 	 * @see BindingUtility#getModelElement(int, int)
 	 */
+	@Override
 	public IModelElement[] getModelElements(int offset, int length) {
 		return getModelElements(offset, length, true);
 	}
@@ -267,6 +273,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	 * @see #getModelElements(int, int)
 	 * @see BindingUtility#getModelElement(int, int, boolean)
 	 */
+	@Override
 	public IModelElement[] getModelElements(int offset, int length, boolean filter) {
 		try {
 			return bindingUtil.getModelElement(offset, length, filter, getModelAccessCache());
@@ -285,6 +292,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	 * org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveName(org
 	 * .eclipse.php.internal.core.ast.nodes.Identifier)
 	 */
+	@Override
 	IBinding resolveName(Identifier name) {
 		// workaround for bug 253193's "ctrl+T not functional on methods"
 		FunctionName functionName = getFunctionName(name);
@@ -327,6 +335,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	 * @return the binding for the given method declaration, or
 	 *         <code>null</code> if no binding is available
 	 */
+	@Override
 	IMethodBinding resolveMethod(MethodDeclaration method) {
 		if (method == null || method.getFunction() == null) {
 			throw new IllegalArgumentException("Can not resolve null expression"); //$NON-NLS-1$
@@ -353,6 +362,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	 * @return the resolved type of the given expression, null if can't
 	 *         evaluate.
 	 */
+	@Override
 	ITypeBinding resolveExpressionType(Expression expression) {
 		if (expression == null) {
 			throw new IllegalArgumentException("Can not resolve null expression"); //$NON-NLS-1$
@@ -373,6 +383,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	 * 
 	 * @see BindingResolver#resolveInclude(Include)
 	 */
+	@Override
 	IBinding resolveInclude(Include includeDeclaration) {
 		return new IncludeBinding(sourceModule, includeDeclaration);
 	}
@@ -425,11 +436,11 @@ public class DefaultBindingResolver extends BindingResolver {
 
 		if (modelElements != null && modelElements.length > 0) {
 			if (modelElements[0].getElementType() == IModelElement.TYPE) {
-				List<IType> types = new ArrayList<IType>(modelElements.length);
+				List<IType> types = new ArrayList<>(modelElements.length);
 				for (IModelElement elem : modelElements) {
 					types.add((IType) elem);
 				}
-				return getTypeBinding((IType[]) types.toArray(new IType[types.size()]));
+				return getTypeBinding(types.toArray(new IType[types.size()]));
 			}
 		}
 		return super.getTypeBinding(fieldDeclaration);
@@ -705,11 +716,11 @@ public class DefaultBindingResolver extends BindingResolver {
 
 		if (modelElements != null && modelElements.length > 0) {
 			if (modelElements[0].getElementType() == IModelElement.TYPE) {
-				List<IType> types = new ArrayList<IType>(modelElements.length);
+				List<IType> types = new ArrayList<>(modelElements.length);
 				for (IModelElement elem : modelElements) {
 					types.add((IType) elem);
 				}
-				return getTypeBinding((IType[]) types.toArray(new IType[types.size()]));
+				return getTypeBinding(types.toArray(new IType[types.size()]));
 			}
 		}
 		return super.resolveType(type);
@@ -790,7 +801,7 @@ public class DefaultBindingResolver extends BindingResolver {
 		// we don't want to descend into function/class/interface scope
 		private static boolean isProgramScope = false;
 
-		private final Set<String> variablesSet = new HashSet<String>();
+		private final Set<String> variablesSet = new HashSet<>();
 		private Variable variable;
 
 		public LocalVariableIndex(Variable variable) {
@@ -815,10 +826,10 @@ public class DefaultBindingResolver extends BindingResolver {
 				return internalPerform(((MethodDeclaration) node).getFunction(), variable);
 			case ASTNode.FUNCTION_DECLARATION:
 				isProgramScope = false;
-				return internalPerform((FunctionDeclaration) node, variable);
+				return internalPerform(node, variable);
 			case ASTNode.PROGRAM:
 				isProgramScope = true;
-				return internalPerform((Program) node, variable);
+				return internalPerform(node, variable);
 			default:
 				Assert.isTrue(false);
 			}
@@ -835,6 +846,7 @@ public class DefaultBindingResolver extends BindingResolver {
 		 * Insert to the variables Name set each variable that is first
 		 * encountered in the flow
 		 */
+		@Override
 		public boolean visit(Variable variable) {
 			Expression name = variable.getName();
 			if ((variable.isDollared() || ASTNodes.isQuotedDollaredCurlied(variable)) && name instanceof Identifier) {
@@ -853,14 +865,17 @@ public class DefaultBindingResolver extends BindingResolver {
 
 		}
 
+		@Override
 		public boolean visit(FunctionDeclaration function) {
 			return !isProgramScope;
 		}
 
+		@Override
 		public boolean visit(ClassDeclaration classDeclaration) {
 			return !isProgramScope;
 		}
 
+		@Override
 		public boolean visit(InterfaceDeclaration interfaceDeclaration) {
 			return !isProgramScope;
 		}
@@ -870,6 +885,7 @@ public class DefaultBindingResolver extends BindingResolver {
 		}
 	}
 
+	@Override
 	public IModelAccessCache getModelAccessCache() {
 		return modelAccessCache;
 	}

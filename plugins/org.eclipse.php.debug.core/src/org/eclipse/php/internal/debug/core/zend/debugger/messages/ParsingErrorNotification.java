@@ -65,6 +65,7 @@ public class ParsingErrorNotification extends DebugMessageNotificationImpl imple
 		this.lineNumber = lineNumber;
 	}
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setErrorLevel(in.readInt());
 		setFileName(CommunicationUtilities.readString(in));
@@ -72,10 +73,12 @@ public class ParsingErrorNotification extends DebugMessageNotificationImpl imple
 		setErrorText(CommunicationUtilities.readString(in));
 	}
 
+	@Override
 	public int getType() {
 		return 2006;
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getErrorLevel());

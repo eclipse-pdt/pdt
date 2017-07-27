@@ -75,7 +75,7 @@ public class TypeInferenceTestsWrapper extends AbstractPDTTTest {
 		typeInferenceEngine = null;
 	}
 
-	public Test suite(final Map map) {
+	public Test suite(final Map<?, ?> map) {
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject(map.get(ProjectSuite.PROJECT).toString());
 		perfMonitor = PHPCorePerformanceTests.getPerformanceMonitor();
 
@@ -92,13 +92,16 @@ public class TypeInferenceTestsWrapper extends AbstractPDTTTest {
 
 					suite.addTest(new TypeInferenceTests(phpVersion.getAlias() + " - /" + fileName) {
 
+						@Override
 						protected void setUp() throws Exception {
 							TestUtils.setProjectPHPVersion(project, phpVersion);
 						}
 
+						@Override
 						protected void tearDown() throws Exception {
 						}
 
+						@Override
 						protected void runTest() throws Throwable {
 							String criteriaFunction = new File(fileName).getName().replaceAll("\\.pdtt", "");
 							String code = pdttFile.getFile();
@@ -114,6 +117,7 @@ public class TypeInferenceTestsWrapper extends AbstractPDTTTest {
 															// file
 															// parsing
 															// failure
+						@Override
 						protected void runTest() throws Throwable {
 							throw e;
 						}
@@ -124,10 +128,12 @@ public class TypeInferenceTestsWrapper extends AbstractPDTTTest {
 
 		// Create a setup wrapper
 		TestSetup setup = new TestSetup(suite) {
+			@Override
 			protected void setUp() throws Exception {
 				setUpSuite();
 			}
 
+			@Override
 			protected void tearDown() throws Exception {
 				tearDownSuite();
 			}
@@ -151,11 +157,12 @@ public class TypeInferenceTestsWrapper extends AbstractPDTTTest {
 			this.criteriaFunction = criteriaFunction;
 		}
 
+		@Override
 		public boolean visit(Expression node) throws Exception {
 			if (node instanceof CallExpression) {
 				CallExpression callExpression = (CallExpression) node;
 				if (criteriaFunction.equals(callExpression.getName())) {
-					result = (ASTNode) callExpression.getArgs().getChilds().get(0);
+					result = callExpression.getArgs().getChilds().get(0);
 					context = contextStack.peek();
 					return false;
 				}
@@ -167,6 +174,7 @@ public class TypeInferenceTestsWrapper extends AbstractPDTTTest {
 			return result;
 		}
 
+		@Override
 		public IContext getContext() {
 			return context;
 		}
@@ -197,6 +205,7 @@ public class TypeInferenceTestsWrapper extends AbstractPDTTTest {
 
 			final ExpressionTypeGoal goal = new ExpressionTypeGoal(searcher.getContext(), searcher.getResult());
 			perfMonitor.execute("PerformanceTests.testCodeAssist" + "_" + fileName, new Operation() {
+				@Override
 				public void run() throws Exception {
 					if ("phpdocGoals".equals(pruner)) {
 						typeInferenceEngine.evaluateTypeHeavy(goal, ENGINE_TIMEOUT);

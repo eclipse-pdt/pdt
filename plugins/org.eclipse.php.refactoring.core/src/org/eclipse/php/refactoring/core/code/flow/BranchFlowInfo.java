@@ -19,7 +19,7 @@ class BranchFlowInfo extends FlowInfo {
 
 	public BranchFlowInfo(Identifier label, FlowContext context) {
 		super(NO_RETURN);
-		fBranches = new HashSet(2);
+		fBranches = new HashSet<>(2);
 		fBranches.add(makeString(label));
 	}
 }

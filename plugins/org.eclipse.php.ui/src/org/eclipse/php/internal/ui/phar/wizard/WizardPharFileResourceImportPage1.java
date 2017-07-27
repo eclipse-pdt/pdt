@@ -421,6 +421,7 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 	/**
 	 * Import the resources with extensions as specified by the user
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
 	protected boolean importResources(List fileSystemObjects) {
 		// TODO FOR PHAR
@@ -560,7 +561,7 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 			return false;
 		}
 
-		List resourcesToExport = selectionGroup.getAllWhiteCheckedItems();
+		List<?> resourcesToExport = selectionGroup.getAllWhiteCheckedItems();
 		if (resourcesToExport.size() == 0) {
 			setErrorMessage(PharImportMessages.FileImport_noneSelected);
 			return false;

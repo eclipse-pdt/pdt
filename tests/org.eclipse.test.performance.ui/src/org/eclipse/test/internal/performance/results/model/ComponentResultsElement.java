@@ -39,9 +39,9 @@ public class ComponentResultsElement extends ResultsElement {
 	private static final PropertyDescriptor CURRENT_BUILD_DESCRIPTOR = new PropertyDescriptor(P_ID_CURRENT_BUILD, P_STR_CURRENT_BUILD);
 	private static final PropertyDescriptor BASELINE_BUILD_DESCRIPTOR = new PropertyDescriptor(P_ID_BASELINE_BUILD, P_STR_BASELINE_BUILD);
 
-    private static Vector DESCRIPTORS;
-    static Vector initDescriptors(int status) {
-        DESCRIPTORS = new Vector();
+    private static Vector<PropertyDescriptor> DESCRIPTORS;
+    static Vector<PropertyDescriptor> initDescriptors(int status) {
+        DESCRIPTORS = new Vector<>();
 		// Status category
 		DESCRIPTORS.add(getInfosDescriptor(status));
 		DESCRIPTORS.add(getWarningsDescriptor(status));
@@ -59,7 +59,7 @@ public class ComponentResultsElement extends ResultsElement {
 		COMMENT_DESCRIPTOR.setCategory("Survey");
         return DESCRIPTORS;
 	}
-    static Vector getDescriptors() {
+    static Vector<PropertyDescriptor> getDescriptors() {
     	return DESCRIPTORS;
 	}
 
@@ -76,6 +76,7 @@ public ComponentResultsElement(AbstractResults results, ResultsElement parent) {
  *
  * @see org.eclipse.test.internal.performance.results.model.ResultsElement#createChild(org.eclipse.test.internal.performance.results.db.AbstractResults)
  */
+@Override
 ResultsElement createChild(AbstractResults testResults) {
 //	if (onlyFingerprints()) {
 //		ScenarioResults scenarioResults = (ScenarioResults) testResults;
@@ -93,16 +94,17 @@ ResultsElement createChild(AbstractResults testResults) {
  * @param fingerprints Set whether only fingerprints scenario should be taken into account
  * @return A list of lines. Each line represent a build and is a list of either strings or values.
  */
-public List getConfigNumbers(String configName, boolean fingerprints) {
+public List<?> getConfigNumbers(String configName, boolean fingerprints) {
 	if (this.results == null) return null;
-	return ((ComponentResults)this.results).getConfigNumbers(configName, fingerprints, new ArrayList());
+	return ((ComponentResults)this.results).getConfigNumbers(configName, fingerprints, new ArrayList<>());
 }
 
 /* (non-Javadoc)
  * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyDescriptors()
  */
+@Override
 public IPropertyDescriptor[] getPropertyDescriptors() {
-	Vector descriptors = getDescriptors();
+	Vector<PropertyDescriptor> descriptors = getDescriptors();
 	if (descriptors == null) {
 		descriptors = initDescriptors(getStatus());
 	}
@@ -111,7 +113,7 @@ public IPropertyDescriptor[] getPropertyDescriptors() {
 	descriptorsArray[0] = getInfosDescriptor(getStatus());
 	descriptorsArray[1] = getWarningsDescriptor(getStatus());
 	for (int i=2; i<size; i++) {
-		descriptorsArray[i] = (IPropertyDescriptor) descriptors.get(i);
+		descriptorsArray[i] = descriptors.get(i);
 	}
 	return descriptorsArray;
 }
@@ -119,6 +121,7 @@ public IPropertyDescriptor[] getPropertyDescriptors() {
 /* (non-Javadoc)
  * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyValue(java.lang.Object)
  */
+@Override
 public Object getPropertyValue(Object propKey) {
 	if (propKey.equals(P_ID_NAME)) {
 		return getName();
@@ -147,13 +150,13 @@ public Object getPropertyValue(Object propKey) {
  * @param fingerprint Tell whether only fingerprint scenarios are expected or not.
  * @return A list of {@link ScenarioResults}.
  */
-public List getScenarios(boolean fingerprint) {
+public List<AbstractResults> getScenarios(boolean fingerprint) {
 	if (!fingerprint) {
 		return Arrays.asList(this.results.getChildren());
 	}
-	List scenarios = new ArrayList();
+	List<AbstractResults> scenarios = new ArrayList<>();
 	if (this.results != null) {
-		Iterator iterator = this.results.getResults();
+		Iterator<?> iterator = this.results.getResults();
 		while (iterator.hasNext()) {
 			ScenarioResults scenarioResults = (ScenarioResults) iterator.next();
 			if (scenarioResults.hasSummary()) {
@@ -170,8 +173,8 @@ public List getScenarios(boolean fingerprint) {
  * @param fingerprint Tell whether only fingerprint scenarios are expected or not.
  * @return A list of {@link String}.
  */
-public List getScenariosLabels(boolean fingerprint) {
-	List labels = new ArrayList();
+public List<String> getScenariosLabels(boolean fingerprint) {
+	List<String> labels = new ArrayList<>();
 	if (this.results != null) {
 		AbstractResults[] scenarios = this.results.getChildren();
 		int length = scenarios.length;
@@ -189,6 +192,7 @@ public List getScenariosLabels(boolean fingerprint) {
  * (non-Javadoc)
  * @see org.eclipse.test.internal.performance.results.model.ResultsElement#initStatus()
  */
+@Override
 void initStatus() {
 	if (this.results == null) {
 		this.status = UNREAD;

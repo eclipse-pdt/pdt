@@ -46,12 +46,12 @@ public class Program extends ASTNode {
 	/**
 	 * Statements array of php program
 	 */
-	private final ASTNode.NodeList<Statement> statements = new ASTNode.NodeList<Statement>(STATEMENTS_PROPERTY);
+	private final ASTNode.NodeList<Statement> statements = new ASTNode.NodeList<>(STATEMENTS_PROPERTY);
 
 	/**
 	 * Comments array of the php program
 	 */
-	private final ASTNode.NodeList<Comment> comments = new ASTNode.NodeList<Comment>(COMMENTS_PROPERTY);
+	private final ASTNode.NodeList<Comment> comments = new ASTNode.NodeList<>(COMMENTS_PROPERTY);
 
 	private Map<NamespaceDeclaration, List<UseStatement>> fUseStatements;
 
@@ -72,7 +72,7 @@ public class Program extends ASTNode {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(1);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(1);
 		properyList.add(STATEMENTS_PROPERTY);
 		properyList.add(COMMENTS_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
@@ -173,6 +173,7 @@ public class Program extends ASTNode {
 		return sourceModule;
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -181,6 +182,7 @@ public class Program extends ASTNode {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		for (ASTNode node : this.statements) {
 			node.accept(visitor);
@@ -190,6 +192,7 @@ public class Program extends ASTNode {
 		}
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		for (ASTNode node : this.statements) {
@@ -200,6 +203,7 @@ public class Program extends ASTNode {
 		}
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		for (ASTNode node : this.statements) {
 			node.traverseBottomUp(visitor);
@@ -213,6 +217,7 @@ public class Program extends ASTNode {
 	/**
 	 * create program node in XML format.
 	 */
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append("<Program"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -229,6 +234,7 @@ public class Program extends ASTNode {
 		buffer.append(TAB).append("</Comments>\n").append("</Program>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.PROGRAM;
 	}
@@ -249,6 +255,7 @@ public class Program extends ASTNode {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
@@ -619,10 +626,11 @@ public class Program extends ASTNode {
 	 * @see #recordModifications()
 	 * @since 3.0
 	 */
-	public TextEdit rewrite(IDocument document, Map options) {
+	public TextEdit rewrite(IDocument document, Map<String, String> options) {
 		return getAST().rewrite(document, options);
 	}
 
+	@Override
 	ASTNode clone0(AST target) {
 		final List<Statement> statements = ASTNode.copySubtrees(target, statements());
 		final List<Comment> comments = ASTNode.copySubtrees(target, comments());
@@ -637,7 +645,8 @@ public class Program extends ASTNode {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
-	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+	@Override
+	final List<? extends ASTNode> internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == STATEMENTS_PROPERTY) {
 			return statements();
 		}
@@ -755,7 +764,7 @@ public class Program extends ASTNode {
 
 	private class UseStatementFinder extends ApplyAll {
 
-		private List<UseStatement> useStatements = new ArrayList<UseStatement>();
+		private List<UseStatement> useStatements = new ArrayList<>();
 
 		@Override
 		protected boolean apply(ASTNode node) {

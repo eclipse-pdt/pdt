@@ -44,7 +44,7 @@ public class RenameFileProcessor extends AbstraceRenameResourceProcessor impleme
 	public static final String RENAME_FILE_PROCESSOR_NAME = PHPRefactoringCoreMessages
 			.getString("RenameResourceProcessor.0"); //$NON-NLS-1$
 
-	private Map<String, String> attributes = new HashMap<String, String>();
+	private Map<String, String> attributes = new HashMap<>();
 	/**
 	 * holds wether or not we want to change also the inlined text
 	 */
@@ -207,6 +207,7 @@ public class RenameFileProcessor extends AbstraceRenameResourceProcessor impleme
 	 * @see org.eclipse.php.refactoring.core.rename.AbstractRenameProcessor#
 	 * checkInitialConditions(org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public RefactoringStatus checkInitialConditions(IProgressMonitor pm)
 			throws OperationCanceledException, CoreException {
 		RefactoringStatus status = new RefactoringStatus();
@@ -249,6 +250,7 @@ public class RenameFileProcessor extends AbstraceRenameResourceProcessor impleme
 	 * checkFinalConditions(org.eclipse.core.runtime.IProgressMonitor,
 	 * org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext)
 	 */
+	@Override
 	public RefactoringStatus checkFinalConditions(IProgressMonitor pm, CheckConditionsContext context)
 			throws OperationCanceledException {
 		RefactoringStatus status = new RefactoringStatus();
@@ -312,22 +314,27 @@ public class RenameFileProcessor extends AbstraceRenameResourceProcessor impleme
 		return resource.getName();
 	}
 
+	@Override
 	public void setUpdateRefernces(boolean update) {
 		isUpdateReferences = update;
 	}
 
+	@Override
 	public boolean canEnableTextUpdating() {
 		return true;
 	}
 
+	@Override
 	public String getCurrentElementQualifier() {
 		return resource.getName();
 	}
 
+	@Override
 	public boolean getUpdateTextualMatches() {
 		return isUpdateTextualMatches;
 	}
 
+	@Override
 	public void setUpdateTextualMatches(boolean update) {
 		this.isUpdateTextualMatches = update;
 	}
@@ -344,6 +351,7 @@ public class RenameFileProcessor extends AbstraceRenameResourceProcessor impleme
 	 * org.eclipse.php.refactoring.core.rename.IReferenceUpdating#getAttribute(
 	 * java.lang.String)
 	 */
+	@Override
 	public String getAttribute(String attribute) {
 		return attributes.get(attribute);
 	}
@@ -365,6 +373,7 @@ public class RenameFileProcessor extends AbstraceRenameResourceProcessor impleme
 	 * org.eclipse.php.refactoring.core.rename.IReferenceUpdating#setAttribute(
 	 * java.lang.String, java.lang.String)
 	 */
+	@Override
 	public void setAttribute(String attribute, String value) {
 		attributes.put(attribute, value);
 	}

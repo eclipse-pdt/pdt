@@ -38,9 +38,10 @@ public class DeleteBreakpointChange extends BreakpointChange {
 	 * 
 	 * @see org.eclipse.ltk.core.refactoring.Change#getName()
 	 */
+	@Override
 	public String getName() {
 		return MessageFormat.format(RefactoringMessages.DeleteBreakpointChange_0,
-				new String[] { getBreakpointLabel(getOriginalBreakpoint()) });
+				getBreakpointLabel(getOriginalBreakpoint()));
 	}
 
 	/*
@@ -50,6 +51,7 @@ public class DeleteBreakpointChange extends BreakpointChange {
 	 * org.eclipse.ltk.core.refactoring.Change#perform(org.eclipse.core.runtime
 	 * .IProgressMonitor)
 	 */
+	@Override
 	public Change perform(IProgressMonitor pm) throws CoreException {
 		getOriginalBreakpoint().delete();
 		return new NullChange();

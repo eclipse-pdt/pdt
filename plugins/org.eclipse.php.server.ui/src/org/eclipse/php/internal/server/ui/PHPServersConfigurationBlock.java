@@ -57,7 +57,7 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 	private static final int IDX_DEFAULT = 3;
 
 	private IStatus fServersStatus;
-	private ListDialogField fServersList;
+	private ListDialogField<Server> fServersList;
 	private PreferencePage fMainPreferencePage;
 
 	public PHPServersConfigurationBlock(PreferencePage mainPreferencePage, OverlayPreferenceStore store) {
@@ -66,6 +66,8 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 		fMainPreferencePage = mainPreferencePage;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
 	public Control createControl(Composite parent) {
 
 		ServerAdapter adapter = new ServerAdapter();
@@ -73,7 +75,9 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 				PHPServerUIMessages.getString("PHPServersConfigurationBlock.edit"), //$NON-NLS-1$
 				PHPServerUIMessages.getString("PHPServersConfigurationBlock.remove"), //$NON-NLS-1$
 				PHPServerUIMessages.getString("PHPServersConfigurationBlock.setDefault") }; //$NON-NLS-1$
-		fServersList = new ListDialogField(adapter, buttons, new PHPServersLabelProvider(), new TableSorter()) {
+		fServersList = new ListDialogField<Server>((IListAdapter) adapter, buttons, new PHPServersLabelProvider(),
+				new TableSorter()) {
+			@Override
 			protected boolean managedButtonPressed(int index) {
 				if (index == getRemoveButtonIndex()) {
 					handleRemoveServer();
@@ -145,6 +149,7 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 				ServersManager.addServer(newServer);
 				ServersManager.save();
 				Display.getDefault().asyncExec(new Runnable() {
+					@Override
 					public void run() {
 						fServersList.refresh();
 					}
@@ -154,9 +159,9 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 			handleEditServerButtonSelected();
 			fServersList.refresh();
 		} else if (index == IDX_DEFAULT) {
-			List selectedElements = fServersList.getSelectedElements();
+			List<Server> selectedElements = fServersList.getSelectedElements();
 			if (selectedElements.size() > 0) {
-				Server server = (Server) selectedElements.get(0);
+				Server server = selectedElements.get(0);
 				ServersManager.setDefaultServer(null, server);
 				ServersManager.save();
 				fServersList.refresh();
@@ -179,7 +184,7 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 	}
 
 	protected void handleEditServerButtonSelected() {
-		Server server = (Server) fServersList.getSelectedElements().get(0);
+		Server server = fServersList.getSelectedElements().get(0);
 		NullProgressMonitor monitor = new NullProgressMonitor();
 		if (ServerEditWizardRunner.runWizard(server) == Window.CANCEL) {
 			monitor.setCanceled(true);
@@ -189,10 +194,11 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 	}
 
 	protected void handleRemoveServer() {
-		Server server = (Server) fServersList.getSelectedElements().get(0);
+		Server server = fServersList.getSelectedElements().get(0);
 		ServersManager.removeServer(server.getName());
 		ServersManager.save();
 		Display.getDefault().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				fServersList.refresh();
 			}
@@ -204,29 +210,33 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 		StatusUtil.applyToStatusLine(fMainPreferencePage, fServersStatus);
 	}
 
+	@Override
 	public void initialize() {
-		List servers = new ArrayList();
+		List<Server> servers = new ArrayList<>();
 		populateServerList(servers);
 		fServersList.setElements(servers);
 	}
 
+	@Override
 	public void dispose() {
 		// nothing to dispose
 	}
 
+	@Override
 	public void performDefaults() {
 		// Do nothing - We do not have the defaults button on this page.
 	}
 
+	@Override
 	public void performOk() {
 		// Do nothing
 	}
 
-	protected void populateServerList(List serverList) {
+	protected void populateServerList(List<Server> serverList) {
 		Server[] servers = ServersManager.getServers();
 
 		if (serverList == null)
-			serverList = new ArrayList();
+			serverList = new ArrayList<>();
 
 		if (servers != null) {
 			int size = servers.length;
@@ -243,25 +253,32 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 		return ServersManager.getDefaultServer(null) == element;
 	}
 
-	private class ServerAdapter implements IListAdapter, IDialogFieldListener {
+	private class ServerAdapter implements IListAdapter<Object>, IDialogFieldListener {
 
-		private boolean hasActiveSelection(List selectedElements) {
+		private boolean hasActiveSelection(List<?> selectedElements) {
 			return selectedElements.size() == 1;
 		}
 
+		@Override
 		public void dialogFieldChanged(DialogField field) {
 		}
 
+		@SuppressWarnings("rawtypes")
+		@Override
 		public void customButtonPressed(ListDialogField field, int index) {
 			sideButtonPressed(index);
 		}
 
+		@SuppressWarnings("rawtypes")
+		@Override
 		public void doubleClicked(ListDialogField field) {
 			sideButtonPressed(IDX_EDIT);
 		}
 
+		@SuppressWarnings("rawtypes")
+		@Override
 		public void selectionChanged(ListDialogField field) {
-			List selectedElements = field.getSelectedElements();
+			List<?> selectedElements = field.getSelectedElements();
 			field.enableButton(IDX_EDIT, hasActiveSelection(selectedElements));
 			// Do not allow the removal of the last element
 			field.enableButton(IDX_REMOVE, hasActiveSelection(selectedElements));
@@ -276,6 +293,7 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 
 	private class PHPServersLabelProvider extends LabelProvider implements ITableLabelProvider, IFontProvider {
 
+		@Override
 		public Font getFont(Object element) {
 			if (isDefault((Server) element)) {
 				return JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT);
@@ -283,6 +301,7 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 			return null;
 		}
 
+		@Override
 		public Image getColumnImage(Object element, int columnIndex) {
 			if (columnIndex == 0) {
 				if (element instanceof Server) {
@@ -296,6 +315,7 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 			return null;
 		}
 
+		@Override
 		public String getColumnText(Object element, int columnIndex) {
 			Server server = null;
 			if (element instanceof Server) {

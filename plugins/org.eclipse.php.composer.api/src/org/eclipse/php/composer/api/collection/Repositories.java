@@ -29,6 +29,7 @@ public class Repositories extends AbstractJsonArray<Repository> {
 	public Repositories() {
 	}
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	protected void doParse(Object obj) {
 		clear();

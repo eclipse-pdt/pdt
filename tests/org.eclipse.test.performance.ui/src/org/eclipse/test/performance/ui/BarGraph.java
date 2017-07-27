@@ -55,11 +55,11 @@ public class BarGraph {
 	}
 
 	private String fTitle;
-	private List fItems;
+	private List<BarItem> fItems;
 
 	BarGraph(String title) {
 		this.fTitle= title;
-		this.fItems= new ArrayList();
+		this.fItems= new ArrayList<>();
 	}
 
 	public void addItem(String name, double[] stats, String url, String slow, boolean significant) {
@@ -79,7 +79,7 @@ public class BarGraph {
 
 		NumberFormat nf= NumberFormat.getInstance();
 
-		BarItem[] bars= (BarItem[]) this.fItems.toArray(new BarItem[this.fItems.size()]);
+		BarItem[] bars= this.fItems.toArray(new BarItem[this.fItems.size()]);
 
 		// draw white background
 		Color bg= display.getSystemColor(SWT.COLOR_WHITE);

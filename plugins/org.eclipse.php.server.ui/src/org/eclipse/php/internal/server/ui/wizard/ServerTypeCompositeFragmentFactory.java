@@ -21,7 +21,6 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * Composite fragment factory for server types.
  */
-@SuppressWarnings("restriction")
 public class ServerTypeCompositeFragmentFactory implements ICompositeFragmentFactory {
 
 	/*
@@ -30,6 +29,7 @@ public class ServerTypeCompositeFragmentFactory implements ICompositeFragmentFac
 	 * @see org.eclipse.php.internal.server.apache.ui.wizard.
 	 * ICompositeFragmentFactory #createWizardFragment()
 	 */
+	@Override
 	public WizardFragment createWizardFragment() {
 		return new ServerTypeWizardFragment();
 	}
@@ -42,6 +42,7 @@ public class ServerTypeCompositeFragmentFactory implements ICompositeFragmentFac
 	 * #createComposite(org.eclipse.swt.widgets.Composite,
 	 * org.eclipse.php.internal.server.apache.ui.IControlHandler)
 	 */
+	@Override
 	public CompositeFragment createComposite(Composite parent, IControlHandler controlHandler) {
 		return new ServerTypeCompositeFragment(parent, controlHandler, true);
 	}

@@ -78,6 +78,7 @@ class DeclarationSearcher extends ASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(Expression s) throws Exception {
 		if (!interesting(s)) {
 			return false;
@@ -85,6 +86,7 @@ class DeclarationSearcher extends ASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(Statement s) throws Exception {
 		if (!interesting(s)) {
 			return false;
@@ -95,6 +97,7 @@ class DeclarationSearcher extends ASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(MethodDeclaration s) throws Exception {
 		if (!interesting(s)) {
 			return false;
@@ -105,6 +108,7 @@ class DeclarationSearcher extends ASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(ModuleDeclaration s) throws Exception {
 		if (!interesting(s)) {
 			return false;
@@ -112,6 +116,7 @@ class DeclarationSearcher extends ASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(TypeDeclaration s) throws Exception {
 		if (!interesting(s)) {
 			return false;
@@ -122,6 +127,7 @@ class DeclarationSearcher extends ASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visitGeneral(ASTNode s) throws Exception {
 		if (!interesting(s)) {
 			return false;

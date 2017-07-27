@@ -102,6 +102,7 @@ public class PHPLaunchUtilities {
 		}
 		// Get the page through a UI thread! Otherwise, it wont work...
 		Display.getDefault().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 				if (page != null) {
@@ -180,6 +181,7 @@ public class PHPLaunchUtilities {
 			// the situation.
 			final Display disp = Display.getDefault();
 			disp.syncExec(new Runnable() {
+				@Override
 				public void run() {
 					MessageDialog.openInformation(disp.getActiveShell(),
 							PHPDebugCoreMessages.PHPLaunchUtilities_phpLaunchTitle,
@@ -192,6 +194,7 @@ public class PHPLaunchUtilities {
 		final DialogResultHolder resultHolder = new DialogResultHolder();
 		final Display disp = Display.getDefault();
 		disp.syncExec(new Runnable() {
+			@Override
 			public void run() {
 				// Display a dialog to notify the existence of a previous active
 				// launch.
@@ -221,6 +224,7 @@ public class PHPLaunchUtilities {
 	public static void switchToPHPPerspective() {
 		Display display = PlatformUI.getWorkbench().getDisplay();
 		display.asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				String perspectiveID = PHPUiPlugin.PERSPECTIVE_ID;
 				IWorkbench workbench = PlatformUI.getWorkbench();
@@ -329,6 +333,7 @@ public class PHPLaunchUtilities {
 		if ((fHasContiniousLaunch || newIsDebugAllPages || newIsStartDebugFrom) && launches.length > 1) {
 			final DialogResultHolder resultHolder = new DialogResultHolder();
 			Display.getDefault().syncExec(new Runnable() {
+				@Override
 				public void run() {
 					// TODO - Advanced message dialog with 'don't show this
 					// again' check.
@@ -452,6 +457,7 @@ public class PHPLaunchUtilities {
 			return;
 		}
 		Display.getDefault().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				progressDialog = new DebuggerDelayProgressMonitorDialog();
 				if (progressDialog.open() == Window.CANCEL) {
@@ -471,6 +477,7 @@ public class PHPLaunchUtilities {
 	public static void hideWaitForDebuggerMessage() {
 		if (progressDialog != null) {
 			Display.getDefault().syncExec(new Runnable() {
+				@Override
 				public void run() {
 					if (progressDialog != null) {
 						progressDialog.close();
@@ -515,6 +522,7 @@ public class PHPLaunchUtilities {
 	 */
 	public static void showDebuggerErrorMessage(final String title, final String errorMessage) {
 		Display.getDefault().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				MessageDialog.openError(Display.getDefault().getActiveShell(), title, errorMessage);
 			}
@@ -553,6 +561,7 @@ public class PHPLaunchUtilities {
 			setCancelable(true);
 		}
 
+		@Override
 		protected void createCancelButton(Composite parent) {
 			cancel = createButton(parent, IDialogConstants.CANCEL_ID, PHPDebugCoreMessages.PHPLaunchUtilities_terminate,
 					true);
@@ -570,6 +579,7 @@ public class PHPLaunchUtilities {
 		 * org.eclipse.jface.dialogs.ProgressMonitorDialog#createDialogArea(
 		 * org.eclipse.swt.widgets.Composite)
 		 */
+		@Override
 		protected Control createDialogArea(Composite parent) {
 			Control c = super.createDialogArea(parent);
 			getProgressMonitor().beginTask(PHPDebugCoreMessages.PHPLaunchUtilities_waitingForDebugger,
@@ -590,6 +600,7 @@ public class PHPLaunchUtilities {
 	public static void openLaunchConfigurationDialog(final ILaunchConfiguration configuration, final String mode) {
 		// Run it on the UI thread
 		Display.getDefault().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				ILaunchConfiguration conf = configuration;
 				try {
@@ -636,7 +647,6 @@ public class PHPLaunchUtilities {
 	 * @throws CoreException
 	 *             rethrown exception
 	 */
-	@SuppressWarnings("unchecked")
 	public static String[] getEnvironment(ILaunchConfiguration configuration, String[] additionalEnv)
 			throws CoreException {
 
@@ -675,7 +685,7 @@ public class PHPLaunchUtilities {
 	 * form of 'key=value'.
 	 */
 	public static Map<String, String> asAttributesMap(String[] attributesArray) {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		if (attributesArray == null) {
 			return map;
 		}
@@ -716,7 +726,7 @@ public class PHPLaunchUtilities {
 	 */
 	public static Map<String, String> getPHPCGILaunchEnvironment(String fileName, String query, String phpConfigDir,
 			String phpExeDir, String[] scriptArguments) {
-		Map<String, String> env = new HashMap<String, String>();
+		Map<String, String> env = new HashMap<>();
 		env.put("REQUEST_METHOD", "GET"); //$NON-NLS-1$ //$NON-NLS-2$
 		env.put("SCRIPT_FILENAME", fileName); //$NON-NLS-1$
 		env.put("SCRIPT_NAME", fileName); //$NON-NLS-1$
@@ -796,7 +806,7 @@ public class PHPLaunchUtilities {
 
 	public static Map<String, String> getPHP54BuildinServerLaunchEnvironment(String fileName, String query,
 			String phpConfigDir, String phpExeDir, String[] scriptArguments) {
-		Map<String, String> env = new HashMap<String, String>();
+		Map<String, String> env = new HashMap<>();
 		env.put("REQUEST_METHOD", "GET"); //$NON-NLS-1$ //$NON-NLS-2$
 		// env.put("SCRIPT_FILENAME", fileName);
 		// env.put("SCRIPT_NAME", fileName);
@@ -976,7 +986,7 @@ public class PHPLaunchUtilities {
 				break;
 			}
 		}
-		List<String> cmdLineList = new LinkedList<String>();
+		List<String> cmdLineList = new LinkedList<>();
 		if (builtIn) {
 			cmdLineList.addAll(Arrays.asList(new String[] { phpExe, "-n", "-c", //$NON-NLS-1$ //$NON-NLS-2$
 					phpConfigDir, "-d", "asp_tags=" + aspTags, "-d", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -1012,7 +1022,7 @@ public class PHPLaunchUtilities {
 			server = server.substring(8);
 		}
 
-		List<String> cmdLineList = new LinkedList<String>();
+		List<String> cmdLineList = new LinkedList<>();
 		if (routerFile == null) {
 			cmdLineList.addAll(Arrays.asList(new String[] { phpExe, "-S", //$NON-NLS-1$
 					server, "-t", root, useDefaultPHPIni ? "" : "-n", "-c", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
@@ -1139,10 +1149,10 @@ public class PHPLaunchUtilities {
 		Enumeration<String> e = parameters.keys();
 
 		while (e.hasMoreElements()) {
-			String key = (String) e.nextElement();
+			String key = e.nextElement();
 			buf.append(key).append('=');
 			try {
-				buf.append(URLEncoder.encode((String) parameters.get(key), "UTF-8")); //$NON-NLS-1$
+				buf.append(URLEncoder.encode(parameters.get(key), "UTF-8")); //$NON-NLS-1$
 			} catch (UnsupportedEncodingException exc) {
 			}
 			if (e.hasMoreElements()) {

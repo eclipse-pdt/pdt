@@ -26,6 +26,7 @@ public class CodeCoverageAdapterFactory implements IAdapterFactory {
 	 * org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object,
 	 * java.lang.Class)
 	 */
+	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Object getAdapter(final Object adaptableObject, final Class adapterType) {
 		if (adaptableObject.getClass() == adapterType)
@@ -45,6 +46,7 @@ public class CodeCoverageAdapterFactory implements IAdapterFactory {
 	 * 
 	 * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
 	 */
+	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Class[] getAdapterList() {
 		return new Class[] { ISourceModule.class };

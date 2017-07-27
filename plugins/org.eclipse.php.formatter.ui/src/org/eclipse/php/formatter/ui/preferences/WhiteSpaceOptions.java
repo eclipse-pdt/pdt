@@ -41,7 +41,7 @@ public final class WhiteSpaceOptions {
 			fParent = parent;
 			fWorkingValues = workingValues;
 			fName = message;
-			fChildren = new ArrayList<Node>();
+			fChildren = new ArrayList<>();
 			if (fParent != null)
 				fParent.add(this);
 		}
@@ -91,7 +91,7 @@ public final class WhiteSpaceOptions {
 
 		@Override
 		public List<String> getSnippets() {
-			final ArrayList<String> snippets = new ArrayList<String>(fChildren.size());
+			final ArrayList<String> snippets = new ArrayList<>(fChildren.size());
 			for (Iterator<Node> iter = fChildren.iterator(); iter.hasNext();) {
 				final List<String> childSnippets = iter.next().getSnippets();
 				for (final Iterator<String> chIter = childSnippets.iterator(); chIter.hasNext();) {
@@ -122,7 +122,7 @@ public final class WhiteSpaceOptions {
 				String snippet) {
 			super(parent, workingValues, messageKey);
 			fKey = key;
-			fSnippets = new ArrayList<String>(1);
+			fSnippets = new ArrayList<>(1);
 			fSnippets.add(snippet);
 		}
 
@@ -206,7 +206,7 @@ public final class WhiteSpaceOptions {
 	 * @return returns roots (type <code>Node</code>)
 	 */
 	public static List<Node> createTreeBySyntaxElem(Map<String, Object> workingValues) {
-		final ArrayList<Node> roots = new ArrayList<Node>();
+		final ArrayList<Node> roots = new ArrayList<>();
 
 		InnerNode element;
 
@@ -317,7 +317,7 @@ public final class WhiteSpaceOptions {
 	 */
 	public static List<Node> createAltTree(Map<String, Object> workingValues) {
 
-		final ArrayList<Node> roots = new ArrayList<Node>();
+		final ArrayList<Node> roots = new ArrayList<>();
 
 		InnerNode parent;
 
@@ -441,7 +441,7 @@ public final class WhiteSpaceOptions {
 		createArrayCreationTree(workingValues, arrays);
 		createArrayElementAccessTree(workingValues, arrays);
 
-		final ArrayList<Node> roots = new ArrayList<Node>();
+		final ArrayList<Node> roots = new ArrayList<>();
 		roots.add(declarations);
 		roots.add(statements);
 		roots.add(expressions);

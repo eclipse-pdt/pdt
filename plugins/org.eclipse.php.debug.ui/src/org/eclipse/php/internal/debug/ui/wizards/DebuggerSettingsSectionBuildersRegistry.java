@@ -74,7 +74,7 @@ public class DebuggerSettingsSectionBuildersRegistry {
 	 * Reads the extension point
 	 */
 	protected Map<String, IDebuggerSettingsSectionBuilder> readFromExtensionPoint() {
-		final Map<String, IDebuggerSettingsSectionBuilder> factories = new HashMap<String, IDebuggerSettingsSectionBuilder>();
+		final Map<String, IDebuggerSettingsSectionBuilder> factories = new HashMap<>();
 		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry()
 				.getConfigurationElementsFor(EXTENSION_POINT_ID);
 		for (final IConfigurationElement element : configurationElements) {

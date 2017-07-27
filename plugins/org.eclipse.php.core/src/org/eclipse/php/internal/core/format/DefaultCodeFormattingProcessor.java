@@ -34,13 +34,14 @@ public class DefaultCodeFormattingProcessor extends AbstractVisitor implements I
 		this.options = options;
 	}
 
+	@Override
 	public @NonNull String createIndentationString(int indentationUnits) {
 		if (indentationUnits > 0) {
 			String useTabs = options.get(PHPCoreConstants.FORMATTER_USE_TABS);
 			if (useTabs != null) {
 				String indentation = "\t"; //$NON-NLS-1$
 				if ("false".equalsIgnoreCase(useTabs)) { //$NON-NLS-1$
-					String sizeValue = (String) options.get(PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
+					String sizeValue = options.get(PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
 					if (sizeValue != null) {
 						StringBuilder sb = new StringBuilder();
 						int size = Integer.parseInt(sizeValue);
@@ -61,6 +62,7 @@ public class DefaultCodeFormattingProcessor extends AbstractVisitor implements I
 		return ""; //$NON-NLS-1$
 	}
 
+	@Override
 	public @NonNull MultiTextEdit getTextEdits() {
 		return new MultiTextEdit();
 	}

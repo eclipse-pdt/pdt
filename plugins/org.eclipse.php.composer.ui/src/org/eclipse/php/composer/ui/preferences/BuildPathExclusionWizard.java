@@ -15,7 +15,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.BPListElement;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.EditFilterWizard;
 
-@SuppressWarnings("restriction")
 public class BuildPathExclusionWizard extends EditFilterWizard {
 
 	public BuildPathExclusionWizard(BPListElement[] existingEntries, BPListElement newEntry) {

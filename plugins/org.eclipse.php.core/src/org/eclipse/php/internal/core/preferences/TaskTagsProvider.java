@@ -178,7 +178,7 @@ public class TaskTagsProvider {
 
 	// Uninstall propagator listeners for the given project.
 	private void uninstallPropagatorListeners(IProject project) {
-		IPreferencesPropagatorListener[] listeners = (IPreferencesPropagatorListener[]) projectToPropagatorListeners
+		IPreferencesPropagatorListener[] listeners = projectToPropagatorListeners
 				.get(project);
 		if (listeners != null) {
 			preferencesPropagator.removePropagatorListener(listeners[0], PHPCoreConstants.TASK_TAGS);
@@ -196,8 +196,8 @@ public class TaskTagsProvider {
 			return;
 		}
 		preferencesSupport = new PreferencesSupport(PHPCorePlugin.ID);
-		projectToTaskTagListener = new HashMap<IProject, ITaskTagsListener>();
-		projectToPropagatorListeners = new HashMap<IProject, IPreferencesPropagatorListener[]>();
+		projectToTaskTagListener = new HashMap<>();
+		projectToPropagatorListeners = new HashMap<>();
 		preferencesPropagator = PreferencePropagatorFactory.getPreferencePropagator(NODES_QUALIFIER);
 		isInstalled = true;
 	}
@@ -261,7 +261,7 @@ public class TaskTagsProvider {
 	private static TaskTag[] getTagsAndPropertiesFrom(String tagString, String priorityString) {
 		String[] tags = StringUtils.unpack(tagString);
 		String[] priorities = StringUtils.unpack(priorityString);
-		List<Integer> list = new ArrayList<Integer>();
+		List<Integer> list = new ArrayList<>();
 
 		for (String element : priorities) {
 			Integer number = null;
@@ -297,6 +297,7 @@ public class TaskTagsProvider {
 			this.project = project;
 		}
 
+		@Override
 		public @NonNull IProject getProject() {
 			return project;
 		}
@@ -309,6 +310,7 @@ public class TaskTagsProvider {
 			super(project);
 		}
 
+		@Override
 		public void preferencesEventOccured(PreferencesPropagatorEvent event) {
 			String tags = preferencesSupport.getProjectSpecificPreferencesValue(PHPCoreConstants.TASK_TAGS, null,
 					getProject());
@@ -341,6 +343,7 @@ public class TaskTagsProvider {
 			super(project);
 		}
 
+		@Override
 		public void preferencesEventOccured(PreferencesPropagatorEvent event) {
 			String tags = preferencesSupport.getProjectSpecificPreferencesValue(PHPCoreConstants.TASK_TAGS, null,
 					getProject());
@@ -373,6 +376,7 @@ public class TaskTagsProvider {
 			super(project);
 		}
 
+		@Override
 		public void preferencesEventOccured(PreferencesPropagatorEvent event) {
 			String tags = preferencesSupport.getProjectSpecificPreferencesValue(PHPCoreConstants.TASK_TAGS, null,
 					getProject());

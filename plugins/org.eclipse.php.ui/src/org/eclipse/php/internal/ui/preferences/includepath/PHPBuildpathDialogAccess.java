@@ -56,14 +56,14 @@ public class PHPBuildpathDialogAccess {
 			throw new IllegalArgumentException();
 		}
 
-		Class[] acceptedClasses = new Class[] { IFile.class };
+		Class<?>[] acceptedClasses = new Class<?>[] { IFile.class };
 		TypedElementSelectionValidator validator = new TypedElementSelectionValidator(acceptedClasses, true);
-		ArrayList usedPhars = new ArrayList(usedEntries.length);
+		ArrayList<IFile> usedPhars = new ArrayList<>(usedEntries.length);
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		for (int i = 0; i < usedEntries.length; i++) {
 			IResource resource = root.findMember(usedEntries[i]);
 			if (resource instanceof IFile) {
-				usedPhars.add(resource);
+				usedPhars.add((IFile) resource);
 			}
 		}
 		IResource focus = initialSelection != null ? root.findMember(initialSelection) : null;
@@ -112,17 +112,17 @@ public class PHPBuildpathDialogAccess {
 			throw new IllegalArgumentException();
 		}
 
-		Class[] acceptedClasses = new Class[] { IFile.class };
+		Class<?>[] acceptedClasses = new Class<?>[] { IFile.class };
 		TypedElementSelectionValidator validator = new TypedElementSelectionValidator(acceptedClasses, false);
 
-		ArrayList usedJars = new ArrayList(usedEntries.length);
+		ArrayList<IFile> usedJars = new ArrayList<>(usedEntries.length);
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		for (int i = 0; i < usedEntries.length; i++) {
 			IPath curr = usedEntries[i];
 			if (!curr.equals(initialEntry)) {
 				IResource resource = root.findMember(usedEntries[i]);
 				if (resource instanceof IFile) {
-					usedJars.add(resource);
+					usedJars.add((IFile) resource);
 				}
 			}
 		}

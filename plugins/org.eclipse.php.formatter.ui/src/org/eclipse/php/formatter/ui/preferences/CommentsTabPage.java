@@ -257,10 +257,10 @@ public class CommentsTabPage extends ModifyDialogTabPage {
 		lineWidth = createNumberPref(widthGroup, numColumns, FormatterMessages.CommentsTabPage_line_width, 0, 9999);
 		lineWidth.setValue(codeFormatterPreferences.comment_line_length);
 
-		ArrayList<CheckboxPreference> lineFirstColumnMasters = new ArrayList<CheckboxPreference>();
+		ArrayList<CheckboxPreference> lineFirstColumnMasters = new ArrayList<>();
 		lineFirstColumnMasters.add(singleLineComments);
 
-		ArrayList<Object> lineFirstColumnSlaves = new ArrayList<Object>();
+		ArrayList<Object> lineFirstColumnSlaves = new ArrayList<>();
 		lineFirstColumnSlaves.add(singleLineCommentsOnFirstColumn);
 
 		new Controller(lineFirstColumnMasters, lineFirstColumnSlaves) {
@@ -270,11 +270,11 @@ public class CommentsTabPage extends ModifyDialogTabPage {
 			}
 		}.update(null, null);
 
-		ArrayList<CheckboxPreference> javaDocMaster = new ArrayList<CheckboxPreference>();
+		ArrayList<CheckboxPreference> javaDocMaster = new ArrayList<>();
 		javaDocMaster.add(javadoc);
 		javaDocMaster.add(header);
 
-		ArrayList<Object> javaDocSlaves = new ArrayList<Object>();
+		ArrayList<Object> javaDocSlaves = new ArrayList<>();
 		javaDocSlaves.add(settingsGroup);
 		// javaDocSlaves.add(html);
 		// javaDocSlaves.add(code);
@@ -286,12 +286,12 @@ public class CommentsTabPage extends ModifyDialogTabPage {
 
 		new OrController(javaDocMaster, javaDocSlaves);
 
-		ArrayList<CheckboxPreference> indentMasters = new ArrayList<CheckboxPreference>();
+		ArrayList<CheckboxPreference> indentMasters = new ArrayList<>();
 		indentMasters.add(javadoc);
 		indentMasters.add(header);
 		indentMasters.add(indentJavadoc);
 
-		ArrayList<Object> indentSlaves = new ArrayList<Object>();
+		ArrayList<Object> indentSlaves = new ArrayList<>();
 		indentSlaves.add(indentDesc);
 
 		new Controller(indentMasters, indentSlaves) {
@@ -301,24 +301,24 @@ public class CommentsTabPage extends ModifyDialogTabPage {
 			}
 		}.update(null, null);
 
-		ArrayList<CheckboxPreference> blockMasters = new ArrayList<CheckboxPreference>();
+		ArrayList<CheckboxPreference> blockMasters = new ArrayList<>();
 		blockMasters.add(blockComment);
 		blockMasters.add(header);
 
-		ArrayList<Object> blockSlaves = new ArrayList<Object>();
+		ArrayList<Object> blockSlaves = new ArrayList<>();
 		blockSlaves.add(blockSettingsGroup);
 		blockSlaves.add(nlBoundariesBlock);
 		blockSlaves.add(blankLinesBlock);
 
 		new OrController(blockMasters, blockSlaves);
 
-		ArrayList<CheckboxPreference> lineWidthMasters = new ArrayList<CheckboxPreference>();
+		ArrayList<CheckboxPreference> lineWidthMasters = new ArrayList<>();
 		lineWidthMasters.add(javadoc);
 		lineWidthMasters.add(blockComment);
 		lineWidthMasters.add(singleLineComments);
 		lineWidthMasters.add(header);
 
-		ArrayList<Object> lineWidthSlaves = new ArrayList<Object>();
+		ArrayList<Object> lineWidthSlaves = new ArrayList<>();
 		lineWidthSlaves.add(widthGroup);
 		lineWidthSlaves.add(lineWidth);
 

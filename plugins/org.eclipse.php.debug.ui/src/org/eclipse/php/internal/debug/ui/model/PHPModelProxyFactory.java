@@ -23,7 +23,6 @@ import org.eclipse.php.internal.debug.core.zend.model.PHPMultiDebugTarget;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class PHPModelProxyFactory implements IModelProxyFactory {
 
 	/*

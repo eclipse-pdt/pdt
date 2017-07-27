@@ -141,6 +141,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 		init();
 	}
 
+	@Override
 	public int read() throws IOException {
 		if (this.in != null) {
 			return read0();
@@ -149,6 +150,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 		}
 	}
 
+	@Override
 	public int read(final byte[] dest, final int offs, final int len) throws IOException {
 		if (offs < 0) {
 			throw new IndexOutOfBoundsException("offs(" + offs + ") < 0."); //$NON-NLS-1$ //$NON-NLS-2$
@@ -298,6 +300,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 		}
 	}
 
+	@Override
 	public void close() throws IOException {
 		InputStream inShadow = this.in;
 		if (inShadow != null) {

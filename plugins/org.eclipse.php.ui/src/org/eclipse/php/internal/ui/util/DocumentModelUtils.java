@@ -52,7 +52,7 @@ public class DocumentModelUtils {
 	public static void reparseAndReconcileDocument(@NonNull PHPStructuredTextViewer textViewer) {
 		IDocument document = textViewer.getDocument();
 		if (document instanceof IStructuredDocument) {
-			reparseDocument((IStructuredDocument) document);
+			reparseDocument(document);
 			textViewer.reconcile();
 		}
 	}
@@ -70,7 +70,7 @@ public class DocumentModelUtils {
 			@Nullable IProject project) {
 		IDocument document = textViewer.getDocument();
 		if (document instanceof IStructuredDocument) {
-			reparseDocument((IStructuredDocument) document, project);
+			reparseDocument(document, project);
 			textViewer.reconcile();
 		}
 	}
@@ -88,7 +88,7 @@ public class DocumentModelUtils {
 
 		IStructuredDocumentRegion[] sdRegions = structuredDocument.getStructuredDocumentRegions();
 		for (IStructuredDocumentRegion element : sdRegions) {
-			Iterator regionsIt = element.getRegions().iterator();
+			Iterator<?> regionsIt = element.getRegions().iterator();
 			reparseRegion(document, regionsIt, element.getStartOffset(), null, false);
 		}
 	}
@@ -111,7 +111,7 @@ public class DocumentModelUtils {
 
 		IStructuredDocumentRegion[] sdRegions = structuredDocument.getStructuredDocumentRegions();
 		for (IStructuredDocumentRegion element : sdRegions) {
-			Iterator regionsIt = element.getRegions().iterator();
+			Iterator<?> regionsIt = element.getRegions().iterator();
 			reparseRegion(document, regionsIt, element.getStartOffset(), project, true);
 		}
 	}

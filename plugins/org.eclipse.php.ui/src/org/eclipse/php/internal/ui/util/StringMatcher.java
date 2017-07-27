@@ -269,7 +269,7 @@ public class StringMatcher {
 			}
 		}
 
-		Vector temp = new Vector();
+		Vector<String> temp = new Vector<>();
 
 		int pos = 0;
 		StringBuilder buf = new StringBuilder();

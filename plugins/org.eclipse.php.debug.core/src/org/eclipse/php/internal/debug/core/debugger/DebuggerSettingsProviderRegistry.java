@@ -93,7 +93,7 @@ public class DebuggerSettingsProviderRegistry {
 	 * Reads the extension point
 	 */
 	protected Map<String, IDebuggerSettingsProvider> readFromExtensionPoint() {
-		final List<Entry> entries = new ArrayList<Entry>();
+		final List<Entry> entries = new ArrayList<>();
 		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry()
 				.getConfigurationElementsFor(EXTENSION_POINT_ID);
 		for (final IConfigurationElement element : configurationElements) {
@@ -119,8 +119,8 @@ public class DebuggerSettingsProviderRegistry {
 	}
 
 	private Map<String, IDebuggerSettingsProvider> fetchProviders(List<Entry> entries) {
-		Map<String, IDebuggerSettingsProvider> providers = new HashMap<String, IDebuggerSettingsProvider>();
-		List<Entry> highestLevelEntries = new ArrayList<Entry>();
+		Map<String, IDebuggerSettingsProvider> providers = new HashMap<>();
+		List<Entry> highestLevelEntries = new ArrayList<>();
 		for (Entry entry : entries) {
 			boolean isHighestLevel = true;
 			for (Entry e : entries) {

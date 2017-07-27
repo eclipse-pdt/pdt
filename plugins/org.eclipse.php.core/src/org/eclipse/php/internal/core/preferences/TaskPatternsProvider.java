@@ -32,8 +32,8 @@ public class TaskPatternsProvider {
 
 	private TaskPatternsProvider() {
 		provider = TaskTagsProvider.getInstance();
-		projectsPatterns = new HashMap<IProject, Pattern[]>();
-		projectToListener = new HashMap<IProject, ITaskTagsListener>();
+		projectsPatterns = new HashMap<>();
+		projectToListener = new HashMap<>();
 	}
 
 	public static @NonNull TaskPatternsProvider getInstance() {
@@ -42,7 +42,7 @@ public class TaskPatternsProvider {
 
 	public synchronized @NonNull Pattern[] getPatternsForProject(IProject project) {
 		registerProject(project);
-		Pattern[] patterns = (Pattern[]) projectsPatterns.get(project);
+		Pattern[] patterns = projectsPatterns.get(project);
 		if (patterns != null) {
 			return patterns;
 		}
@@ -142,13 +142,16 @@ public class TaskPatternsProvider {
 	 */
 	private static class TaskTagsListener implements ITaskTagsListener {
 
+		@Override
 		public void taskTagsChanged(TaskTagsEvent event) {
 			instance.taskTagsChanged(event.getProject(), event.getTaskTags(), event.isCaseSensitive());
 		}
 
+		@Override
 		public void taskPrioritiesChanged(TaskTagsEvent event) {
 		}
 
+		@Override
 		public void taskCaseChanged(TaskTagsEvent event) {
 			instance.taskTagsChanged(event.getProject(), event.getTaskTags(), event.isCaseSensitive());
 		}

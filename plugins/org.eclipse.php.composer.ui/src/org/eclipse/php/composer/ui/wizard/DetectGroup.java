@@ -38,7 +38,6 @@ import org.eclipse.swt.widgets.Link;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
-@SuppressWarnings("restriction")
 public class DetectGroup extends Observable implements Observer, SelectionListener {
 
 	private final Link fHintText;

@@ -444,7 +444,7 @@ public class CodeDataSearchEngine {
 		} catch (BadLocationException e) {
 			RefactoringPlugin.logException(e);
 		}
-		Set<String> elements = new HashSet<String>();
+		Set<String> elements = new HashSet<>();
 		if (documentContents == null)
 			return elements;
 		monitor.beginTask(PHPRefactoringCoreMessages.getString("CodeDataSearchEngine.16"), 2); //$NON-NLS-1$

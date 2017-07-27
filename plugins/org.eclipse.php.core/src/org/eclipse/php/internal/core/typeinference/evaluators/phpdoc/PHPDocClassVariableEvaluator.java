@@ -36,7 +36,7 @@ import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocClassVaria
  */
 public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 
-	private List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
+	private List<IEvaluatedType> evaluated = new LinkedList<>();
 
 	public PHPDocClassVariableEvaluator(IGoal goal) {
 		super(goal);

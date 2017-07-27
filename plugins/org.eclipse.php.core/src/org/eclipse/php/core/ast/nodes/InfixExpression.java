@@ -106,7 +106,7 @@ public class InfixExpression extends Expression {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(3);
 		properyList.add(LEFT_OPERAND_PROPERTY);
 		properyList.add(OPERATOR_PROPERTY);
 		properyList.add(RIGHT_OPERAND_PROPERTY);
@@ -188,6 +188,7 @@ public class InfixExpression extends Expression {
 		}
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -196,23 +197,27 @@ public class InfixExpression extends Expression {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		left.accept(visitor);
 		right.accept(visitor);
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		left.traverseTopDown(visitor);
 		right.traverseTopDown(visitor);
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		left.traverseBottomUp(visitor);
 		right.traverseBottomUp(visitor);
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<InfixExpression"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -224,6 +229,7 @@ public class InfixExpression extends Expression {
 		buffer.append("\n").append(tab).append("</InfixExpression>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.INFIX_EXPRESSION;
 	}
@@ -321,6 +327,7 @@ public class InfixExpression extends Expression {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
@@ -340,6 +347,7 @@ public class InfixExpression extends Expression {
 		return PROPERTY_DESCRIPTORS;
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == LEFT_OPERAND_PROPERTY) {
 			if (get) {
@@ -362,6 +370,7 @@ public class InfixExpression extends Expression {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
+	@Override
 	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
 		if (property == OPERATOR_PROPERTY) {
 			if (get) {

@@ -178,7 +178,7 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 					candidates.add(enclosingMethod);
 				}
 			}
-			run((IModelElement[]) candidates.toArray(new IModelElement[candidates.size()]));
+			run(candidates.toArray(new IModelElement[candidates.size()]));
 		} catch (InvocationTargetException e) {
 			ExceptionHandler.handle(e, getShell(), getErrorDialogTitle(), ""); //$NON-NLS-1$
 		} catch (InterruptedException e) {
@@ -234,7 +234,7 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 			List<IModelElement> result = new ArrayList<>(1);
 			IStatus status = compileCandidates(result, element);
 			if (status.isOK()) {
-				run((IModelElement[]) result.toArray(new IModelElement[result.size()]));
+				run(result.toArray(new IModelElement[result.size()]));
 			} else {
 				openErrorDialog(status);
 			}

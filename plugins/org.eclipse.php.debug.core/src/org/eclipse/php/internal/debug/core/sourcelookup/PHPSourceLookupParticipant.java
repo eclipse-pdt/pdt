@@ -65,7 +65,7 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 	private Map<String, RemoteFileStorage> remoteStorageCache;
 
 	public PHPSourceLookupParticipant() {
-		remoteStorageCache = new HashMap<String, RemoteFileStorage>();
+		remoteStorageCache = new HashMap<>();
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 	private final class LinkSubjectFileFinder {
 
 		public Object find(final String sourceLocation, Object element) {
-			final LinkedList<IResource> matches = new LinkedList<IResource>();
+			final LinkedList<IResource> matches = new LinkedList<>();
 			final String sourceFileName = (new Path(sourceLocation)).lastSegment();
 			IProject project = null;
 			if (element instanceof IStackFrame) {
@@ -136,6 +136,7 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 			this.archiveFile = archiveFile;
 		}
 
+		@Override
 		public InputStream getContents() throws CoreException {
 			try {
 				return this.archiveFile.getInputStream(entry);
@@ -147,6 +148,7 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 		/**
 		 * @see IStorage#getFullPath
 		 */
+		@Override
 		public IPath getFullPath() {
 			return new Path(this.fileName);
 		}
@@ -154,6 +156,7 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 		/**
 		 * @see IStorage#getName
 		 */
+		@Override
 		public String getName() {
 			return this.entry.getName();
 		}
@@ -161,6 +164,7 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 		/**
 		 * @see IStorage#isReadOnly()
 		 */
+		@Override
 		public boolean isReadOnly() {
 			return true;
 		}
@@ -168,6 +172,7 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 		/**
 		 * @see IStorage#isReadOnly()
 		 */
+		@Override
 		public String toString() {
 			return "ExternalEntryFile[" + this.fileName + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -196,6 +201,7 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 	 * org.eclipse.debug.internal.core.sourcelookup.ISourceLookupParticipant
 	 * #getSourceName(java.lang.Object)
 	 */
+	@Override
 	public String getSourceName(Object object) throws CoreException {
 		if (object instanceof PHPStackFrame) {
 			return ((PHPStackFrame) object).getSourceName();
@@ -218,6 +224,7 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 	 * @see org.eclipse.debug.core.sourcelookup.AbstractSourceLookupParticipant#
 	 * findSourceElements(java.lang.Object)
 	 */
+	@Override
 	public Object[] findSourceElements(Object object) throws CoreException {
 		try {
 			// Check if the source should be retrieved from the server.
@@ -240,7 +247,7 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 		} catch (CoreException ce) {
 		}
 
-		List<Object> results = new ArrayList<Object>();
+		List<Object> results = new ArrayList<>();
 		CoreException single = null;
 		MultiStatus multiStatus = null;
 		String name = getSourceName(object);
@@ -369,7 +376,7 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 					PHPDebugTarget debugTarget = (PHPDebugTarget) stackFrame.getDebugTarget();
 
 					String fileName = stackFrame.getAbsoluteFileName();
-					RemoteFileStorage fileStorage = (RemoteFileStorage) remoteStorageCache.get(fileName);
+					RemoteFileStorage fileStorage = remoteStorageCache.get(fileName);
 
 					if (fileStorage == null) {
 
@@ -402,11 +409,13 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 			return null;
 		}
 		RemoteDebugger.requestRemoteFile(new IRemoteFileContentRequestor() {
+			@Override
 			public void fileContentReceived(byte[] content, String serverAddress, String originalURL, String fileName,
 					int lineNumber) {
 				syncObject.set(new RemoteFileStorage(content, fileName, originalURL));
 			}
 
+			@Override
 			public void requestCompleted(Exception e) {
 				waitForContentLatch.countDown();
 			}

@@ -34,6 +34,7 @@ public class GlobalMethodStatementContext extends AbstractGlobalStatementContext
 	private IMethod enclosingMethod;
 	private IType enclosingType;
 
+	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;

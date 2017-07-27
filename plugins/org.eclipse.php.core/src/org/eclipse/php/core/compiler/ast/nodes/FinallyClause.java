@@ -38,6 +38,7 @@ public class FinallyClause extends Statement {
 		this.statement = statement;
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		if (visitor.visit(this)) {
 			statement.traverse(visitor);
@@ -45,6 +46,7 @@ public class FinallyClause extends Statement {
 		visitor.endvisit(this);
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.FINALLY_CLAUSE;
 	}
@@ -56,9 +58,11 @@ public class FinallyClause extends Statement {
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
+	@Override
 	public final void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}

@@ -56,10 +56,12 @@ public class WellKnownTypesProperty extends ASTAttribute {
 		fRoot= root;
 	}
 
+	@Override
 	public Object getParent() {
 		return fRoot;
 	}
 
+	@Override
 	public Object[] getChildren() {
 		AST ast= fRoot.getAST();
 		
@@ -71,14 +73,17 @@ public class WellKnownTypesProperty extends ASTAttribute {
 		return res;
 	}
 
+	@Override
 	public String getLabel() {
 		return "> RESOLVE_WELL_KNOWN_TYPES";  //$NON-NLS-1$
 	}
 
+	@Override
 	public Image getImage() {
 		return null;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -88,6 +93,7 @@ public class WellKnownTypesProperty extends ASTAttribute {
 		return true;
 	}
 	
+	@Override
 	public int hashCode() {
 		return 57;
 	}

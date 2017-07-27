@@ -96,7 +96,7 @@ public class LibraryFolderActionGroup extends CommonActionProvider {
 		IStructuredSelection selection = (IStructuredSelection) sel;
 		Iterator<?> iterator = selection.iterator();
 
-		Collection<IFolder> selected = new HashSet<IFolder>();
+		Collection<IFolder> selected = new HashSet<>();
 
 		// collect all folders from the current selection
 		while (iterator.hasNext()) {

@@ -79,7 +79,7 @@ public class ConfigTab {
 	private Font boldFont;
 	private Font italicFont;
 	private Font boldItalicFont;
-	Map toolTips;
+	Map<Point, ToolTip> toolTips;
 
 	// Information
 	String configBox, configName;
@@ -90,7 +90,7 @@ public class ConfigTab {
 	// Cells management
 	Point tableOrigin, tableSize;
 	int columnsCount, rowsCount;
-	List firstLine;
+	List<?> firstLine;
 
 	// Eclipse preferences
 	private IEclipsePreferences preferences;
@@ -150,7 +150,7 @@ Composite createTabFolderPage (ComponentResultsElement componentResultsElement, 
 	}
 
 	// Add lines to the table
-	this.toolTips = new HashMap();
+	this.toolTips = new HashMap<>();
 	fillTableLines(fingerprints);
 
 	// Updated columns
@@ -170,13 +170,16 @@ Composite createTabFolderPage (ComponentResultsElement componentResultsElement, 
 	// when a click is done in the table cell.
 	final ComponentsView componentsView = (ComponentsView) PerformancesView.getWorkbenchView("org.eclipse.test.internal.performance.results.ui.ComponentsView");
 	MouseListener mouseListener = new MouseListener() {
+		@Override
 		public void mouseUp(MouseEvent e) {
 		}
+		@Override
 		public void mouseDown(MouseEvent e) {
 			Point cellPosition = currentCellPosition(e.x, e.y);
 			Table tabTable = ConfigTab.this.table;
 			componentsView.select(ConfigTab.this.results, ConfigTab.this.configName, (String) ConfigTab.this.firstLine.get(cellPosition.x), tabTable.getItem(cellPosition.y).getText());
 		}
+		@Override
 		public void mouseDoubleClick(MouseEvent e) {
 		}
 	};
@@ -185,6 +188,7 @@ Composite createTabFolderPage (ComponentResultsElement componentResultsElement, 
 	// Listen to mouse track events to display the table cell corresponding tooltip.
 	MouseTrackListener mouseTrackListener = new MouseTrackListener() {
 		ToolTip currentTooltip;
+		@Override
 		public void mouseHover(MouseEvent e) {
 			if (this.currentTooltip != null) {
 				this.currentTooltip.setVisible(false);
@@ -192,7 +196,7 @@ Composite createTabFolderPage (ComponentResultsElement componentResultsElement, 
 			}
 			Point cellPosition = currentCellPosition(e.x, e.y);
 			if (cellPosition != null) {
-				ToolTip tooltip = (ToolTip) ConfigTab.this.toolTips.get(cellPosition);
+				ToolTip tooltip = ConfigTab.this.toolTips.get(cellPosition);
 				if (tooltip != null) {
 					Point location = ConfigTab.this.table.toDisplay(new Point(e.x, e.y));
 					tooltip.setLocation(location);
@@ -201,8 +205,10 @@ Composite createTabFolderPage (ComponentResultsElement componentResultsElement, 
 				}
 			}
 		}
+		@Override
 		public void mouseEnter(MouseEvent e) {
 		}
+		@Override
 		public void mouseExit(MouseEvent e) {
 		}
 	};
@@ -301,9 +307,9 @@ public void dispose() {
  */
 private void disposeTable() {
 	if (this.toolTips != null) {
-		Iterator cells = this.toolTips.keySet().iterator();
+		Iterator<Point> cells = this.toolTips.keySet().iterator();
 		while (cells.hasNext()) {
-			ToolTip toolTip = (ToolTip) this.toolTips.get(cells.next());
+			ToolTip toolTip = this.toolTips.get(cells.next());
 			toolTip.dispose();
 		}
 	}
@@ -324,19 +330,19 @@ private void fillTableLines(boolean fingerprints) {
 
 	// Get model information
 	if (this.results == null) return;
-	List differences = this.results.getConfigNumbers(this.configName, fingerprints);
+	List<?> differences = this.results.getConfigNumbers(this.configName, fingerprints);
 	if (differences == null) return;
 
 	// Store first information line which are the scenarios full names
-	Iterator lines = differences.iterator();
-	this.firstLine = (List) lines.next();
+	Iterator<?> lines = differences.iterator();
+	this.firstLine = (List<?>) lines.next();
 
 	// Read each information line (one line per build results)
 	Object[] scenarios = this.results.getChildren(null);
 	double[] deviations = new double[scenarios.length];
 	int row = 0;
 	while (lines.hasNext()) {
-		List line = (List) lines.next();
+		List<?> line = (List<?>) lines.next();
 		int size = line.size();
 
 		// The first column is the build name
@@ -546,7 +552,7 @@ private String[] getLayoutDataFieldNames(boolean fingerprints) {
 	if (this.results == null) {
 		return new String[0];
 	}
-	List labels = this.results.getScenariosLabels(fingerprints);
+	List<String> labels = this.results.getScenariosLabels(fingerprints);
 	labels.add(0, "Build");
 	String[] names = new String[labels.size()];
 	labels.toArray(names);

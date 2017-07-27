@@ -27,12 +27,12 @@ public class PHPMagicMethods {
 			"__invoke", }; //$NON-NLS-1$
 
 	public static String[] getMethods(PHPVersion phpVersion) {
-		List<String> methods = new LinkedList<String>();
+		List<String> methods = new LinkedList<>();
 		methods.addAll(Arrays.asList(MAGIC_METHODS));
 		methods.addAll(Arrays.asList(MAGIC_METHODS_PHP5));
 		if (phpVersion.isGreaterThan(PHPVersion.PHP5)) {
 			methods.addAll(Arrays.asList(MAGIC_METHODS_PHP5_3));
 		}
-		return (String[]) methods.toArray(new String[methods.size()]);
+		return methods.toArray(new String[methods.size()]);
 	}
 }

@@ -46,7 +46,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
-	private ListDialogField fBuildPathList;
+	private ListDialogField<BPListElement> fBuildPathList;
 	private IScriptProject fCurrJProject;
 	private TreeListDialogField fLibrariesList;
 	private Control fSWTControl;
@@ -68,7 +68,7 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 
 	private boolean fSupportZips = false;
 
-	public PHPLibrariesWorkbookPage(boolean supportZips, ListDialogField classPathList,
+	public PHPLibrariesWorkbookPage(boolean supportZips, ListDialogField<BPListElement> classPathList,
 			IWorkbenchPreferenceContainer pageContainer) {
 		fBuildPathList = classPathList;
 		fPageContainer = pageContainer;
@@ -141,8 +141,8 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 	}
 
 	private void updateLibrariesList() {
-		List cpelements = fBuildPathList.getElements();
-		List libelements = new ArrayList(cpelements.size());
+		List<?> cpelements = fBuildPathList.getElements();
+		List<BPListElement> libelements = new ArrayList<>(cpelements.size());
 		int nElements = cpelements.size();
 		for (int i = 0; i < nElements; i++) {
 			BPListElement cpe = (BPListElement) cpelements.get(i);
@@ -272,8 +272,8 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 		if (libentries != null) {
 			int nElementsChosen = libentries.length;
 			// remove duplicates
-			List cplist = fLibrariesList.getElements();
-			List elementsToAdd = new ArrayList(nElementsChosen);
+			List<?> cplist = fLibrariesList.getElements();
+			List<BPListElement> elementsToAdd = new ArrayList<>(nElementsChosen);
 			for (int i = 0; i < nElementsChosen; i++) {
 				BPListElement curr = libentries[i];
 				if (!cplist.contains(curr) && !elementsToAdd.contains(curr)) {
@@ -295,14 +295,14 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 		if (existing == null) {
 			IPath[] selected = PHPBuildpathDialogAccess.chooseVariableEntries(getShell(), environment);
 			if (selected != null) {
-				ArrayList res = new ArrayList();
+				ArrayList<BPListElement> res = new ArrayList<>();
 				for (int i = 0; i < selected.length; i++) {
 					IPath path = EnvironmentPathUtils
 							.getFullPath(environment, DLTKCore.getBuildpathVariable(selected[i].segment(0).toString()))
 							.append(selected[i].removeFirstSegments(1));
 					res.add(new BPListElement(fCurrJProject, IBuildpathEntry.BPE_LIBRARY, path, null, true));
 				}
-				return (BPListElement[]) res.toArray(new BPListElement[res.size()]);
+				return res.toArray(new BPListElement[res.size()]);
 			}
 		}
 		return null;
@@ -314,11 +314,11 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 		fLibrariesList.postSetSelection(new StructuredSelection(element));
 	}
 
-	private void askForAddingExclusionPatternsDialog(List newEntries) {
-		HashSet modified = new HashSet();
-		List existing = fBuildPathList.getElements();
-		fixNestingConflicts((BPListElement[]) newEntries.toArray(new BPListElement[newEntries.size()]),
-				(BPListElement[]) existing.toArray(new BPListElement[existing.size()]), modified);
+	private void askForAddingExclusionPatternsDialog(List<?> newEntries) {
+		HashSet<BPListElement> modified = new HashSet<>();
+		List<?> existing = fBuildPathList.getElements();
+		fixNestingConflicts(newEntries.toArray(new BPListElement[newEntries.size()]),
+				existing.toArray(new BPListElement[existing.size()]), modified);
 		if (!modified.isEmpty()) {
 			String title = NewWizardMessages.LibrariesWorkbookPage_exclusion_added_title;
 			String message = NewWizardMessages.LibrariesWorkbookPage_exclusion_added_message;
@@ -327,7 +327,7 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 	}
 
 	protected void libaryPageDoubleClicked(TreeListDialogField field) {
-		List selection = fLibrariesList.getSelectedElements();
+		List<?> selection = fLibrariesList.getSelectedElements();
 		if (canEdit(selection)) {
 			editEntry();
 		}
@@ -336,7 +336,7 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 	protected void libaryPageKeyPressed(TreeListDialogField field, KeyEvent event) {
 		if (field == fLibrariesList) {
 			if (event.character == SWT.DEL && event.stateMask == 0) {
-				List selection = field.getSelectedElements();
+				List<?> selection = field.getSelectedElements();
 				if (canRemove(selection)) {
 					removeEntry();
 				}
@@ -348,7 +348,7 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 	}
 
 	private IProjectFragment getSelectedProjectFragment() {
-		final List elements = fLibrariesList.getSelectedElements();
+		final List<?> elements = fLibrariesList.getSelectedElements();
 		if (elements.size() == 1) {
 			final Object object = elements.get(0);
 			if (object instanceof BPListElement) {
@@ -376,8 +376,8 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 	}
 
 	private void removeEntry() {
-		List selElements = fLibrariesList.getSelectedElements();
-		HashMap containerEntriesToUpdate = new HashMap();
+		List<?> selElements = fLibrariesList.getSelectedElements();
+		HashMap<BPListElement, HashSet<String>> containerEntriesToUpdate = new HashMap<>();
 		for (int i = selElements.size() - 1; i >= 0; i--) {
 			Object elem = selElements.get(i);
 			if (elem instanceof BPListElementAttribute) {
@@ -397,9 +397,9 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 					// right
 					// away
 					BPListElement containerEntry = attrib.getParent();
-					HashSet changedAttributes = (HashSet) containerEntriesToUpdate.get(containerEntry);
+					HashSet<String> changedAttributes = containerEntriesToUpdate.get(containerEntry);
 					if (changedAttributes == null) {
-						changedAttributes = new HashSet();
+						changedAttributes = new HashSet<>();
 						containerEntriesToUpdate.put(containerEntry, changedAttributes);
 					}
 					changedAttributes.add(key); // collect the changed
@@ -414,7 +414,7 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 			fLibrariesList.removeElements(selElements);
 
 			// also remove library entry from build path
-			for (Iterator iterator = selElements.iterator(); iterator.hasNext();) {
+			for (Iterator<?> iterator = selElements.iterator(); iterator.hasNext();) {
 				BPListElement entry = (BPListElement) iterator.next();
 				try {
 					BuildPathUtils.removeEntryFromBuildPath(fCurrJProject, entry.getBuildpathEntry());
@@ -424,18 +424,18 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 			}
 		}
 
-		for (Iterator iter = containerEntriesToUpdate.entrySet().iterator(); iter.hasNext();) {
-			Map.Entry entry = (Entry) iter.next();
+		for (Iterator<?> iter = containerEntriesToUpdate.entrySet().iterator(); iter.hasNext();) {
+			Map.Entry<?, ?> entry = (Entry<?, ?>) iter.next();
 			BPListElement curr = (BPListElement) entry.getKey();
-			HashSet attribs = (HashSet) entry.getValue();
-			String[] changedAttributes = (String[]) attribs.toArray(new String[attribs.size()]);
+			HashSet<?> attribs = (HashSet<?>) entry.getValue();
+			String[] changedAttributes = attribs.toArray(new String[attribs.size()]);
 			IBuildpathEntry changedEntry = curr.getBuildpathEntry();
 			updateContainerEntry(changedEntry, changedAttributes, fCurrJProject,
 					((BPListElement) curr.getParentContainer()).getPath());
 		}
 	}
 
-	private boolean canRemove(List selElements) {
+	private boolean canRemove(List<?> selElements) {
 		if (selElements.size() == 0) {
 			return false;
 		}
@@ -468,7 +468,7 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 	 * Method editEntry.
 	 */
 	private void editEntry() {
-		List selElements = fLibrariesList.getSelectedElements();
+		List<?> selElements = fLibrariesList.getSelectedElements();
 		if (selElements.size() != 1) {
 			return;
 		}
@@ -586,7 +586,7 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 	}
 
 	private void updateEnabledState() {
-		List selElements = fLibrariesList.getSelectedElements();
+		List<?> selElements = fLibrariesList.getSelectedElements();
 		fLibrariesList.enableButton(IDX_EDIT + IDX_ADD, canEdit(selElements));
 		fLibrariesList.enableButton(IDX_REMOVE + IDX_ADD, canRemove(selElements));
 		boolean noAttributes = containsOnlyTopLevelEntries(selElements);
@@ -600,7 +600,7 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 		fLibrariesList.enableButton(IDX_ADDLIB + IDX_ADD, noAttributes);
 	}
 
-	private boolean canEdit(List selElements) {
+	private boolean canEdit(List<?> selElements) {
 		if (selElements.size() != 1) {
 			return false;
 		}
@@ -627,14 +627,15 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void updateBuildpathList() {
-		List projelements = fLibrariesList.getElements();
-		List cpelements = fBuildPathList.getElements();
+		List<BPListElement> projelements = fLibrariesList.getElements();
+		List<BPListElement> cpelements = fBuildPathList.getElements();
 		int nEntries = cpelements.size();
 		// backwards, as entries will be deleted
 		int lastRemovePos = nEntries;
 		for (int i = nEntries - 1; i >= 0; i--) {
-			BPListElement cpe = (BPListElement) cpelements.get(i);
+			BPListElement cpe = cpelements.get(i);
 			int kind = cpe.getEntryKind();
 			if (isEntryKind(kind)) {
 				if (!projelements.remove(cpe)) {
@@ -672,12 +673,12 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 			if (selected != null) {
 				// IWorkspaceRoot root =
 				// fCurrJProject.getProject().getWorkspace().getRoot();
-				ArrayList res = new ArrayList();
+				ArrayList<BPListElement> res = new ArrayList<>();
 				for (int i = 0; i < selected.length; i++) {
 					// IPath curr = selected[i];
 					res.add(new BPListElement(fCurrJProject, IBuildpathEntry.BPE_LIBRARY, selected[i], null, true));
 				}
-				return (BPListElement[]) res.toArray(new BPListElement[res.size()]);
+				return res.toArray(new BPListElement[res.size()]);
 			}
 		} else {
 			// disabled
@@ -691,7 +692,7 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 					getUsedContainers(existing));
 			if (selected != null) {
 				IWorkspaceRoot root = fCurrJProject.getProject().getWorkspace().getRoot();
-				ArrayList res = new ArrayList();
+				ArrayList<BPListElement> res = new ArrayList<>();
 				for (int i = 0; i < selected.length; i++) {
 					IPath curr = selected[i];
 					IResource resource = root.findMember(curr);
@@ -699,7 +700,7 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 						res.add(newBPLibraryElement(resource, false));
 					}
 				}
-				return (BPListElement[]) res.toArray(new BPListElement[res.size()]);
+				return res.toArray(new BPListElement[res.size()]);
 			}
 		} else {
 			// disabled
@@ -713,7 +714,7 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 			IPath[] selected = PHPBuildpathDialogAccess.chooseArchiveEntries(getShell(), fCurrJProject.getPath(),
 					getUsedArchiveFiles(existing));
 			if (selected != null) {
-				ArrayList res = new ArrayList();
+				ArrayList<BPListElement> res = new ArrayList<>();
 				for (int i = 0; i < selected.length; i++) {
 					IPath curr = selected[i];
 					IResource resource = root.findMember(curr);
@@ -721,7 +722,7 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 						res.add(newBPLibraryElement(resource, false));
 					}
 				}
-				return (BPListElement[]) res.toArray(new BPListElement[res.size()]);
+				return res.toArray(new BPListElement[res.size()]);
 			}
 		} else {
 			IPath configured = PHPBuildpathDialogAccess.configureArchiveEntry(getShell(), existing.getPath(),
@@ -737,8 +738,8 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 	}
 
 	private IPath[] getUsedContainers(BPListElement existing) {
-		ArrayList res = new ArrayList();
-		List cplist = fLibrariesList.getElements();
+		ArrayList<IPath> res = new ArrayList<>();
+		List<?> cplist = fLibrariesList.getElements();
 		for (int i = 0; i < cplist.size(); i++) {
 			BPListElement elem = (BPListElement) cplist.get(i);
 			if (elem.getEntryKind() == IBuildpathEntry.BPE_LIBRARY && (elem != existing)) {
@@ -748,12 +749,12 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 				}
 			}
 		}
-		return (IPath[]) res.toArray(new IPath[res.size()]);
+		return res.toArray(new IPath[res.size()]);
 	}
 
 	private IPath[] getUsedArchiveFiles(BPListElement existing) {
-		List res = new ArrayList();
-		List cplist = fLibrariesList.getElements();
+		List<IPath> res = new ArrayList<>();
+		List<?> cplist = fLibrariesList.getElements();
 		for (int i = 0; i < cplist.size(); i++) {
 			BPListElement elem = (BPListElement) cplist.get(i);
 			if (elem.getEntryKind() == IBuildpathEntry.BPE_LIBRARY && (elem != existing)) {
@@ -763,7 +764,7 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 				}
 			}
 		}
-		return (IPath[]) res.toArray(new IPath[res.size()]);
+		return res.toArray(new IPath[res.size()]);
 	}
 
 	private BPListElement newBPLibraryElement(IResource res, boolean external) {
@@ -774,11 +775,11 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 		if (existing == null) {
 			IPath[] selected = PHPBuildpathDialogAccess.chooseExternalArchiveEntries(getShell(), environment);
 			if (selected != null) {
-				ArrayList res = new ArrayList();
+				ArrayList<BPListElement> res = new ArrayList<>();
 				for (int i = 0; i < selected.length; i++) {
 					res.add(new BPListElement(fCurrJProject, IBuildpathEntry.BPE_LIBRARY, selected[i], null, true));
 				}
-				return (BPListElement[]) res.toArray(new BPListElement[res.size()]);
+				return res.toArray(new BPListElement[res.size()]);
 			}
 		} else {
 			IPath configured = PHPBuildpathDialogAccess.configureExternalArchiveEntry(getShell(), existing.getPath());
@@ -831,13 +832,14 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 	 * @see BuildPathBasePage#getSelection
 	 */
 	@Override
-	public List getSelection() {
+	public List<?> getSelection() {
 		return fLibrariesList.getSelectedElements();
 	}
 
 	/*
 	 * @see BuildPathBasePage#setSelection
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void setSelection(List selElements, boolean expand) {
 		fLibrariesList.selectElements(new StructuredSelection(selElements));

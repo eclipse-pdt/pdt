@@ -22,7 +22,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
-@SuppressWarnings("restriction")
 public class AutoloadGroup extends Observable implements IDialogFieldListener {
 
 	private Shell shell;

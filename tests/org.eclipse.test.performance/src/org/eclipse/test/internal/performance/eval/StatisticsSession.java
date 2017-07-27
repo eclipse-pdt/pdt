@@ -36,7 +36,7 @@ public class StatisticsSession {
 	}
 	
 	private final DataPoint[] fDataPoints;
-	private final Map fStatistics= new HashMap();
+	private final Map<Dim, Statistics> fStatistics= new HashMap<>();
 
 	public StatisticsSession(DataPoint[] datapoints) {
 	    fDataPoints= datapoints;
@@ -86,7 +86,7 @@ public class StatisticsSession {
 	}
 	
 	private Statistics getStats(Dim dimension) {
-		Statistics stats= (Statistics) fStatistics.get(dimension);
+		Statistics stats= fStatistics.get(dimension);
 		if (stats == null) {
 			stats= computeStats(dimension);
 			fStatistics.put(dimension, stats);
@@ -98,7 +98,7 @@ public class StatisticsSession {
 	    		
 	    Statistics stats;
 		
-		Set steps= new HashSet();
+		Set<Integer> steps= new HashSet<>();
 		for (int j= 0; j < fDataPoints.length; j++) {
 		    DataPoint dp= fDataPoints[j];
 		    steps.add(new Integer(dp.getStep()));
@@ -164,7 +164,7 @@ public class StatisticsSession {
         return stats;
     }
 
-    private Statistics computeStatsFromMeasurements(Dim dimension, Set steps) {
+    private Statistics computeStatsFromMeasurements(Dim dimension, Set<Integer> steps) {
         Statistics stats= new Statistics();
         long mags[];
         switch (steps.size()) {

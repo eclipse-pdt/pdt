@@ -46,6 +46,7 @@ public class SubversionRepository extends VcsRepository implements Cloneable {
 	 * 
 	 * @see java.lang.Object#clone()
 	 */
+	@Override
 	public SubversionRepository clone() {
 		SubversionRepository clone = new SubversionRepository();
 		cloneProperties(clone);

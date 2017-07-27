@@ -45,6 +45,8 @@ public final class MultiStateCompilationUnitChange extends MultiStateTextFileCha
 	/*
 	 * @see org.eclipse.ltk.core.refactoring.Change#getAdapter(java.lang.Class)
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
 	public final Object getAdapter(final Class adapter) {
 
 		if (ISourceModule.class.equals(adapter))
@@ -65,10 +67,10 @@ public final class MultiStateCompilationUnitChange extends MultiStateTextFileCha
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getName() {
 		return NLS.bind("{0} - {1}", //$NON-NLS-1$
-				new String[] {
-						BasicElementLabels.getFileName(fUnit),
+				new String[] { BasicElementLabels.getFileName(fUnit),
 						BasicElementLabels.getPathLabel(fUnit.getParent().getPath(), false) });
 	}
 

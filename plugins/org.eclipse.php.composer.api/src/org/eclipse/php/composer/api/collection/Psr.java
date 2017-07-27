@@ -29,6 +29,7 @@ import org.eclipse.php.composer.api.objects.Namespace;
 public class Psr extends AbstractJsonObject<Namespace> implements Iterable<Namespace> {
 
 	private transient PropertyChangeListener listener = new PropertyChangeListener() {
+		@Override
 		public void propertyChange(PropertyChangeEvent evt) {
 			firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
 		}
@@ -41,6 +42,7 @@ public class Psr extends AbstractJsonObject<Namespace> implements Iterable<Names
 		fromJson(json);
 	}
 
+	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected void doParse(Object obj) {
 		clear();
@@ -65,7 +67,7 @@ public class Psr extends AbstractJsonObject<Namespace> implements Iterable<Names
 
 	@Override
 	protected Object buildJson() {
-		LinkedHashMap<String, Object> out = new LinkedHashMap<String, Object>();
+		LinkedHashMap<String, Object> out = new LinkedHashMap<>();
 		for (Namespace nmspc : this) {
 			Object value = ""; //$NON-NLS-1$
 
@@ -112,8 +114,9 @@ public class Psr extends AbstractJsonObject<Namespace> implements Iterable<Names
 		return properties.values();
 	}
 
+	@Override
 	public Iterator<Namespace> iterator() {
-		return (Iterator<Namespace>) properties.values().iterator();
+		return properties.values().iterator();
 	}
 
 	public Namespace getFirst() {
@@ -124,10 +127,12 @@ public class Psr extends AbstractJsonObject<Namespace> implements Iterable<Names
 		return null;
 	}
 
+	@Override
 	public int size() {
 		return properties.keySet().size();
 	}
 
+	@Override
 	public boolean has(String namespace) {
 		return properties.containsKey(namespace);
 	}

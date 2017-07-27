@@ -62,6 +62,7 @@ public class TaskTagBuildParticipantFactory extends AbstractBuildParticipantType
 
 	protected String natureId = null;
 
+	@Override
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
 			throws CoreException {
 		natureId = config.getAttribute("nature"); //$NON-NLS-1$
@@ -89,7 +90,7 @@ public class TaskTagBuildParticipantFactory extends AbstractBuildParticipantType
 		}
 
 		private ArrayList<Matcher> createMatcherList(Pattern[] todos, String content) {
-			ArrayList<Matcher> list = new ArrayList<Matcher>(todos.length);
+			ArrayList<Matcher> list = new ArrayList<>(todos.length);
 			for (int i = 0; i < todos.length; i++) {
 				list.add(i, todos[i].matcher(content));
 			}
@@ -100,7 +101,7 @@ public class TaskTagBuildParticipantFactory extends AbstractBuildParticipantType
 			Matcher minimal = null;
 			int size = matchers.size();
 			for (int i = 0; i < size;) {
-				Matcher tmp = (Matcher) matchers.get(i);
+				Matcher tmp = matchers.get(i);
 				if (tmp.find(startPosition)) {
 					if (minimal == null || tmp.start() < minimal.start()) {
 						minimal = tmp;
@@ -259,7 +260,7 @@ public class TaskTagBuildParticipantFactory extends AbstractBuildParticipantType
 
 					IDocument document = new Document(new String(context.getContents()));
 					for (Comment comment : ((PHPModuleDeclaration) moduleDeclaration).getCommentList()) {
-						List<Scalar> foundTaskTags = new ArrayList<Scalar>();
+						List<Scalar> foundTaskTags = new ArrayList<>();
 						String commentContent = document.get(comment.start(), comment.end() - comment.start());
 						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=517510
 						if (comment.getCommentType() == Comment.TYPE_MULTILINE

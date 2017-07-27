@@ -29,12 +29,12 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 public class PHPTokenContainer implements Cloneable {
 
 	// holds PHP tokens
-	protected final LinkedList<ContextRegion> phpTokens = new LinkedList<ContextRegion>(); // of
+	protected final LinkedList<ContextRegion> phpTokens = new LinkedList<>(); // of
 	// ITextRegion
 
 	// holds the location and state, where the lexical analyzer state was
 	// changed
-	protected final LinkedList<LexerStateChange> lexerStateChanges = new LinkedList<LexerStateChange>(); // of
+	protected final LinkedList<LexerStateChange> lexerStateChanges = new LinkedList<>(); // of
 	// LexerStateChanged
 
 	// holds the iterator for the php tokens linked list
@@ -108,7 +108,7 @@ public class PHPTokenContainer implements Cloneable {
 		if (length < 0) {
 			throw new BadLocationException("length " + length + " cannot be < 0"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		List<ITextRegion> result = new ArrayList<ITextRegion>(); // list of
+		List<ITextRegion> result = new ArrayList<>(); // list of
 		// ITextRegion
 
 		ITextRegion token = phpTokens.isEmpty() ? null : getToken(offset);
@@ -281,8 +281,8 @@ public class PHPTokenContainer implements Cloneable {
 	/**
 	 * @return the whole tokens as an array
 	 */
-	public synchronized ITextRegion[] getPHPTokens() {
-		return phpTokens.toArray(new ITextRegion[phpTokens.size()]);
+	public synchronized ContextRegion[] getPHPTokens() {
+		return phpTokens.toArray(new ContextRegion[phpTokens.size()]);
 	}
 
 	/**
@@ -310,7 +310,7 @@ public class PHPTokenContainer implements Cloneable {
 		assert (phpTokens.size() == 0 || getLastToken().getEnd() == start) && tokensIterator == null;
 
 		if (phpTokens.size() > 0) {
-			ContextRegion lastContextRegion = (ContextRegion) phpTokens.get(phpTokens.size() - 1);
+			ContextRegion lastContextRegion = phpTokens.get(phpTokens.size() - 1);
 			if (deprecatedKeywordAfter(lastContextRegion.getType())) {
 				if (isKeyword(yylex)) {
 					yylex = PHPRegionTypes.PHP_LABEL;
@@ -411,18 +411,21 @@ public class PHPTokenContainer implements Cloneable {
 			return firstRegion.getStart();
 		}
 
+		@Override
 		public int hashCode() {
 			return 31 + ((state == null) ? 0 : state.hashCode());
 		}
 
+		@Override
 		public boolean equals(final Object obj) {
 			assert state != null && obj.getClass() == LexerState.class;
 
 			if (this.state == obj)
 				return true;
-			return state.equals((LexerState) obj);
+			return state.equals(obj);
 		}
 
+		@Override
 		public final String toString() {
 			return "[" + getOffset() + "] - " + this.state.getTopState(); //$NON-NLS-1$ //$NON-NLS-2$
 		}

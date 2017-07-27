@@ -21,7 +21,7 @@ public abstract class CodeCompletionRequestor extends CompletionRequestor implem
 	Comparator<CompletionProposal> sorter;
 
 	public CodeCompletionRequestor() {
-		proposals = new ArrayList<CompletionProposal>();
+		proposals = new ArrayList<>();
 		sorter = getSorter();
 		setIgnored(CompletionProposal.KEYWORD, true);
 	}
@@ -29,6 +29,7 @@ public abstract class CodeCompletionRequestor extends CompletionRequestor implem
 	protected Comparator<CompletionProposal> getSorter() {
 		return new Comparator<CompletionProposal>() {
 
+			@Override
 			public int compare(CompletionProposal o1, CompletionProposal o2) {
 				return o1.getName().compareTo(o2.getName());
 			}
@@ -48,10 +49,10 @@ public abstract class CodeCompletionRequestor extends CompletionRequestor implem
 
 	public String[] getVariables() {
 		Collections.sort(proposals, sorter);
-		Set<String> nameSet = new HashSet<String>();
-		List<String> nameList = new ArrayList<String>();
+		Set<String> nameSet = new HashSet<>();
+		List<String> nameList = new ArrayList<>();
 		for (Iterator<CompletionProposal> iterator = proposals.iterator(); iterator.hasNext();) {
-			CompletionProposal proposal = (CompletionProposal) iterator.next();
+			CompletionProposal proposal = iterator.next();
 			if (!nameSet.contains(proposal.getName())) {
 				nameSet.add(proposal.getName());
 				nameList.add(proposal.getName());

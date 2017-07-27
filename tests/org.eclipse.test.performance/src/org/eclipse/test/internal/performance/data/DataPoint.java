@@ -20,9 +20,9 @@ import java.util.Set;
  */
 public class DataPoint {
 	private int fStep;
-	private Map fScalars;
+	private Map<Dim, Scalar> fScalars;
 	
-	public DataPoint(int step, Map values) {
+	public DataPoint(int step, Map<Dim, Scalar> values) {
 		fStep= step;
 		fScalars= values;
 	}
@@ -32,11 +32,11 @@ public class DataPoint {
 	}
 	
 	public Dim[] getDimensions() {
-	    Set set= fScalars.keySet();
-	    return (Dim[]) set.toArray(new Dim[set.size()]);
+	    Set<?> set= fScalars.keySet();
+	    return set.toArray(new Dim[set.size()]);
 	}
 	
-    public Collection getDimensions2() {
+    public Collection<Dim> getDimensions2() {
 	    return fScalars.keySet();
     }
 
@@ -45,13 +45,14 @@ public class DataPoint {
 	}
 	
 	public Scalar[] getScalars() {
-		return (Scalar[]) fScalars.values().toArray(new Scalar[fScalars.size()]);
+		return fScalars.values().toArray(new Scalar[fScalars.size()]);
 	}
 	
 	public Scalar getScalar(Dim dimension) {
-		return (Scalar) fScalars.get(dimension);
+		return fScalars.get(dimension);
 	}
 	
+	@Override
 	public String toString() {
 		return "DataPoint [step= " + fStep + ", #dimensions: " + fScalars.size() + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}

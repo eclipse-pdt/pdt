@@ -23,6 +23,7 @@ public abstract class LineInformation {
 
 	public static LineInformation create(final IDocument doc) {
 		return new LineInformation() {
+			@Override
 			public int getLineOfOffset(int offset) {
 				try {
 					return doc.getLineOfOffset(offset);
@@ -31,6 +32,7 @@ public abstract class LineInformation {
 				}
 			}
 
+			@Override
 			public int getLineOffset(int line) {
 				try {
 					return doc.getLineOffset(line);
@@ -43,10 +45,12 @@ public abstract class LineInformation {
 
 	public static LineInformation create(final Program astRoot) {
 		return new LineInformation() {
+			@Override
 			public int getLineOfOffset(int offset) {
 				return astRoot.getLineNumber(offset) - 1;
 			}
 
+			@Override
 			public int getLineOffset(int line) {
 				return astRoot.getPosition(line + 1, 0) - 1;
 			}

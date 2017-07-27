@@ -21,6 +21,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 
 public class PHPModelLoader extends HTMLModelLoader {
 
+	@Override
 	public IDocumentLoader getDocumentLoader() {
 		if (documentLoaderInstance == null) {
 			documentLoaderInstance = new PHPDocumentLoader();
@@ -28,17 +29,20 @@ public class PHPModelLoader extends HTMLModelLoader {
 		return documentLoaderInstance;
 	}
 
+	@Override
 	public IModelLoader newInstance() {
 		return new PHPModelLoader();
 	}
 
-	public List getAdapterFactories() {
+	@Override
+	public List<?> getAdapterFactories() {
 
 		// @GINO: Might want to add new adapter factories here
 		return super.getAdapterFactories();
 	}
 
 	// Creating the PHPModel
+	@Override
 	public IStructuredModel newModel() {
 		return new DOMModelForPHP();
 	}

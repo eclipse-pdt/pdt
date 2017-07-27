@@ -40,6 +40,7 @@ SQL_Results(Connection con) throws SQLException {
 	    // TODO Auto-generated constructor stub
     }
 
+@Override
 protected void dispose() throws SQLException {
 	super.dispose();
 	if (this.queryBuildScenarios != null)

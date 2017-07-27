@@ -43,7 +43,7 @@ public class UseStatement extends Statement {
 	// 'const' keyword
 	public static final int T_CONST = 2;
 
-	private final ASTNode.NodeList<UseStatementPart> parts = new ASTNode.NodeList<UseStatementPart>(PARTS_PROPERTY);
+	private final ASTNode.NodeList<UseStatementPart> parts = new ASTNode.NodeList<>(PARTS_PROPERTY);
 	private int statementType;
 	private NamespaceName namespace;
 
@@ -65,7 +65,7 @@ public class UseStatement extends Statement {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(3);
 		properyList.add(PARTS_PROPERTY);
 		properyList.add(STATEMENT_TYPE_PROPERTY);
 		properyList.add(NAMESPACE_PROPERTY);
@@ -120,6 +120,7 @@ public class UseStatement extends Statement {
 		this(start, end, ast, parts, T_NONE);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -128,6 +129,7 @@ public class UseStatement extends Statement {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		if (getNamespace() != null) {
 			getNamespace().accept(visitor);
@@ -137,6 +139,7 @@ public class UseStatement extends Statement {
 		}
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		if (getNamespace() != null) {
@@ -147,6 +150,7 @@ public class UseStatement extends Statement {
 		}
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		if (getNamespace() != null) {
 			getNamespace().traverseBottomUp(visitor);
@@ -157,6 +161,7 @@ public class UseStatement extends Statement {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<UseStatement"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -176,6 +181,7 @@ public class UseStatement extends Statement {
 		buffer.append(tab).append("</UseStatement>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.USE_STATEMENT;
 	}
@@ -210,7 +216,8 @@ public class UseStatement extends Statement {
 		postReplaceChild(oldChild, namespace, NAMESPACE_PROPERTY);
 	}
 
-	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+	@Override
+	final List<? extends ASTNode> internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == PARTS_PROPERTY) {
 			return parts();
 		}
@@ -218,6 +225,7 @@ public class UseStatement extends Statement {
 		return super.internalGetChildListProperty(property);
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == NAMESPACE_PROPERTY) {
 			if (get) {
@@ -247,6 +255,7 @@ public class UseStatement extends Statement {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

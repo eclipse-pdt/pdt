@@ -34,6 +34,7 @@ public class FieldAccess extends Dispatch {
 		this.field = field;
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -43,6 +44,7 @@ public class FieldAccess extends Dispatch {
 		visitor.endvisit(this);
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.FIELD_ACCESS;
 	}

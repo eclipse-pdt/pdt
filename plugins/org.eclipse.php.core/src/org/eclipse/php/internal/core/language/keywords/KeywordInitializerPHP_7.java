@@ -21,10 +21,12 @@ import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
  */
 public class KeywordInitializerPHP_7 extends KeywordInitializerPHP_5_6 {
 
+	@Override
 	public void initialize(Collection<KeywordData> list) {
 		super.initialize(list);
 	}
 
+	@Override
 	public void initializeSpecific(Collection<KeywordData> list) {
 	}
 }

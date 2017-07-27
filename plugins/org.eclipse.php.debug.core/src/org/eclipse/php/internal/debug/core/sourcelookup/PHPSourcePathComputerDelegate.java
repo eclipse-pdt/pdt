@@ -28,6 +28,7 @@ import org.eclipse.php.internal.debug.core.sourcelookup.containers.WorkspaceRoot
  */
 public class PHPSourcePathComputerDelegate implements ISourcePathComputerDelegate {
 
+	@Override
 	public ISourceContainer[] computeSourceContainers(ILaunchConfiguration configuration, IProgressMonitor monitor)
 			throws CoreException {
 		ISourceContainer sourceContainer;

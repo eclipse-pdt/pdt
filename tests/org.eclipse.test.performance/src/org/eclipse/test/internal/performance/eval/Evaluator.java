@@ -31,6 +31,7 @@ public class Evaluator extends EmptyEvaluator {
 	private AssertChecker[] fCheckers;
 
 
+	@Override
 	public void setAssertCheckers(AssertChecker[] asserts) {
 		fCheckers= asserts;
 	}
@@ -38,6 +39,7 @@ public class Evaluator extends EmptyEvaluator {
 	/*
 	 * @see org.eclipse.test.internal.performance.eval.IEvaluator#evaluate(org.eclipse.jdt.ui.tests.performance.PerformanceMeter)
 	 */
+	@Override
 	public void evaluate(PerformanceMeter performanceMeter) throws RuntimeException {
 	    
 		if (fCheckers == null)
@@ -57,7 +59,7 @@ public class Evaluator extends EmptyEvaluator {
 	    String scenarioName= session.getScenarioID();
 		
 		// determine all dimensions we need
-		HashSet allDimensions= new HashSet();
+		HashSet<Dim> allDimensions= new HashSet<>();
 		for (int i= 0; i < fCheckers.length; i++) {
 			AssertChecker chk= fCheckers[i];
 			Dim[] dims= chk.getDimensions();

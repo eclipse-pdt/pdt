@@ -78,10 +78,10 @@ public class PHPexes {
 	private static PHPexes instance;
 
 	// Hold a mapping from the debugger ID to a map of installed
-	private HashMap<String, HashMap<String, PHPexeItem>> items = new HashMap<String, HashMap<String, PHPexeItem>>();
+	private HashMap<String, HashMap<String, PHPexeItem>> items = new HashMap<>();
 	// Hold a mapping to each php version default PHPExeItem.
-	private HashMap<PHPVersion, PHPexeItem> defaultItemsForPHPVersion = new HashMap<PHPVersion, PHPexeItem>();
-	private final LinkedList<IPHPExesListener> listeners = new LinkedList<IPHPExesListener>();
+	private HashMap<PHPVersion, PHPexeItem> defaultItemsForPHPVersion = new HashMap<>();
+	private final LinkedList<IPHPExesListener> listeners = new LinkedList<>();
 
 	/**
 	 * Returns a single instance of this PHPexes class.
@@ -141,7 +141,7 @@ public class PHPexes {
 		String debuggerId = item.getDebuggerID();
 		HashMap<String, PHPexeItem> map = items.get(debuggerId);
 		if (map == null) {
-			map = new HashMap<String, PHPexeItem>();
+			map = new HashMap<>();
 			items.put(debuggerId, map);
 		}
 		map.put(item.getName(), item);
@@ -183,7 +183,7 @@ public class PHPexes {
 		debuggerID = original.getDebuggerID();
 		exes = items.get(debuggerID);
 		if (exes == null) {
-			exes = new HashMap<String, PHPexeItem>();
+			exes = new HashMap<>();
 			items.put(debuggerID, exes);
 		}
 		exes.put(original.getName(), original);
@@ -234,7 +234,7 @@ public class PHPexes {
 	 */
 	public PHPexeItem[] getEditableItems() {
 		Set<String> installedDebuggers = PHPDebuggersRegistry.getDebuggersIds();
-		ArrayList<PHPexeItem> list = new ArrayList<PHPexeItem>();
+		ArrayList<PHPexeItem> list = new ArrayList<>();
 		for (String debuggerId : installedDebuggers) {
 			HashMap<String, PHPexeItem> installedExes = items.get(debuggerId);
 			if (installedExes != null) {
@@ -309,7 +309,7 @@ public class PHPexes {
 	}
 
 	public List<PHPexeItem> getPHP54Items() {
-		List<PHPexeItem> result = new ArrayList<PHPexeItem>();
+		List<PHPexeItem> result = new ArrayList<>();
 		for (Iterator<String> iterator = items.keySet().iterator(); iterator.hasNext();) {
 			String debuggerId = iterator.next();
 			HashMap<String, PHPexeItem> map = items.get(debuggerId);
@@ -384,7 +384,7 @@ public class PHPexes {
 	 * @return An array of all the installed debuggers.
 	 */
 	public PHPexeItem[] getAllItems() {
-		ArrayList<PHPexeItem> allItems = new ArrayList<PHPexeItem>();
+		ArrayList<PHPexeItem> allItems = new ArrayList<>();
 		Set<String> debuggers = items.keySet();
 		for (String debugger : debuggers) {
 			HashMap<String, PHPexeItem> debuggerItems = items.get(debugger);
@@ -405,7 +405,7 @@ public class PHPexes {
 	 * @return An array of all the installed CLI debuggers.
 	 */
 	public PHPexeItem[] getCLIItems() {
-		ArrayList<PHPexeItem> cliItems = new ArrayList<PHPexeItem>();
+		ArrayList<PHPexeItem> cliItems = new ArrayList<>();
 		PHPexeItem[] allItems = getAllItems();
 		for (PHPexeItem item : allItems) {
 			if (item.getSapiType() != null && PHPexeItem.SAPI_CLI.equals(item.getSapiType())) {
@@ -417,7 +417,7 @@ public class PHPexes {
 
 	// Load executables from the preferences.
 	private void load() {
-		items = new HashMap<String, HashMap<String, PHPexeItem>>();
+		items = new HashMap<>();
 
 		// Load the user-defined executable items
 
@@ -517,10 +517,12 @@ public class PHPexes {
 			}
 			if (item.getExecutable() != null) {
 				boolean filterItem = WorkbenchActivityHelper.filterItem(new IPluginContribution() {
+					@Override
 					public String getLocalId() {
 						return item.getDebuggerID();
 					}
 
+					@Override
 					public String getPluginId() {
 						return PHPDebugPlugin.ID;
 					}
@@ -570,10 +572,12 @@ public class PHPexes {
 					final String finalDebuggerID = debuggerID;
 					// Filter the executable if needed.
 					boolean filterItem = WorkbenchActivityHelper.filterItem(new IPluginContribution() {
+						@Override
 						public String getLocalId() {
 							return finalDebuggerID;
 						}
 
+						@Override
 						public String getPluginId() {
 							return PHPDebugPlugin.ID;
 						}
@@ -768,7 +772,7 @@ public class PHPexes {
 	public PHPexeItem[] getCompatibleItems(PHPexeItem[] allItems, PHPVersion version) {
 		String versionNumber = version.getAlias().substring(3);
 		PHPexeItem[] result;
-		List<PHPexeItem> list = new ArrayList<PHPexeItem>();
+		List<PHPexeItem> list = new ArrayList<>();
 		for (int i = 0; i < allItems.length; i++) {
 			// TODO check the condition right or not
 			if (allItems[i].getVersion() != null && allItems[i].getVersion().compareTo(versionNumber) >= 0) {

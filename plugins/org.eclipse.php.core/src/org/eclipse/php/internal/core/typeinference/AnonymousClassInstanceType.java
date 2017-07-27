@@ -33,9 +33,10 @@ public class AnonymousClassInstanceType implements IClassType {
 		return this.clazz;
 	}
 
+	@Override
 	public String getTypeName() {
 		if (clazz != null) {
-			return "anonymous class instance"; //$NON-NLS-1$ //$NON-NLS-2$
+			return "anonymous class instance"; //$NON-NLS-1$ 
 		}
 		return "class instance: !!unknown!!"; //$NON-NLS-1$
 	}
@@ -57,11 +58,13 @@ public class AnonymousClassInstanceType implements IClassType {
 		return null;
 	}
 
+	@Override
 	public boolean subtypeOf(IEvaluatedType type) {
 		// TODO detect by superclass/interface list
 		return false;
 	}
 
+	@Override
 	public int hashCode() {
 		final int prime = 45;
 		int result = 1;
@@ -70,6 +73,7 @@ public class AnonymousClassInstanceType implements IClassType {
 		return result;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

@@ -96,6 +96,7 @@ public class ZendDebuggerConfigurationDialog extends AbstractDebuggerConfigurati
 		this.fNetworkMonitor = new NetworkMonitor();
 	}
 
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		initializeDialogUnits(parent);
 		parent = (Composite) super.createDialogArea(parent);
@@ -281,14 +282,15 @@ public class ZendDebuggerConfigurationDialog extends AbstractDebuggerConfigurati
 	}
 
 	private String getClientIPs(String userHosts) {
-		final List<Inet4Address> detectedIPs = new ArrayList<Inet4Address>();
+		final List<Inet4Address> detectedIPs = new ArrayList<>();
 		BusyIndicator.showWhile(PlatformUI.getWorkbench().getDisplay(), new Runnable() {
+			@Override
 			public void run() {
 				detectedIPs.addAll(fNetworkMonitor.getAllAddresses());
 			}
 		});
 		String[] userHostsArray = PHPDebugUtil.getZendHostsArray(userHosts);
-		List<Inet4Address> userIPs = new ArrayList<Inet4Address>();
+		List<Inet4Address> userIPs = new ArrayList<>();
 		for (String userHost : userHostsArray) {
 			Inet4Address address = NetworkUtil.getByName(userHost, 2000);
 			if (address != null)
@@ -311,10 +313,11 @@ public class ZendDebuggerConfigurationDialog extends AbstractDebuggerConfigurati
 
 	private void reloadIPs() {
 		BusyIndicator.showWhile(PlatformUI.getWorkbench().getDisplay(), new Runnable() {
+			@Override
 			public void run() {
 				// Reset network monitor to have the latest results
 				fNetworkMonitor = new NetworkMonitor();
-				List<Inet4Address> addresses = new ArrayList<Inet4Address>();
+				List<Inet4Address> addresses = new ArrayList<>();
 				addresses.addAll(fNetworkMonitor.getPrivateAddresses());
 				addresses.add(NetworkUtil.LOCALHOST);
 				StringBuffer addressesString = new StringBuffer();
@@ -335,6 +338,7 @@ public class ZendDebuggerConfigurationDialog extends AbstractDebuggerConfigurati
 		}
 	}
 
+	@Override
 	protected void okPressed() {
 		IEclipsePreferences prefs = InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID);
 		prefs.putBoolean(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO, fRunWithDebugInfo.getSelection());
@@ -413,6 +417,7 @@ public class ZendDebuggerConfigurationDialog extends AbstractDebuggerConfigurati
 		// Check warnings
 		String[] clientHosts = PHPDebugUtil.getZendHostsArray(fClientIP.getText());
 		fNetworkMonitor.validate(clientHosts, new IHostsValidationListener[] { new IHostsValidationListener() {
+			@Override
 			public void validated(List<String> invalidAddresses) {
 				if (!invalidAddresses.isEmpty()) {
 					StringBuilder addresses = new StringBuilder();
@@ -432,6 +437,7 @@ public class ZendDebuggerConfigurationDialog extends AbstractDebuggerConfigurati
 					}
 					final String warningMessage = message;
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+						@Override
 						public void run() {
 							if (!getShell().isDisposed() && getButton(IDialogConstants.OK_ID).isEnabled())
 								setMessage(warningMessage, IMessageProvider.WARNING);

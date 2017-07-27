@@ -52,7 +52,6 @@ import org.eclipse.ui.dialogs.SelectionDialog;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class AddPHPExceptionBreakpointDialog extends SelectionDialog {
 
 	private class LabelProvider extends StyledCellLabelProvider {
@@ -164,6 +163,7 @@ public class AddPHPExceptionBreakpointDialog extends SelectionDialog {
 	 * 
 	 * @see org.eclipse.jface.dialogs.Dialog#getInitialSize()
 	 */
+	@Override
 	protected Point getInitialSize() {
 		Point result = super.getInitialSize();
 		if (fSize != null) {
@@ -182,6 +182,7 @@ public class AddPHPExceptionBreakpointDialog extends SelectionDialog {
 	 * @see org.eclipse.jface.dialogs.Dialog#getInitialLocation(org.eclipse.swt.
 	 * graphics.Point)
 	 */
+	@Override
 	protected Point getInitialLocation(Point initialSize) {
 		Point result = super.getInitialLocation(initialSize);
 		if (fLocation != null) {
@@ -223,6 +224,7 @@ public class AddPHPExceptionBreakpointDialog extends SelectionDialog {
 			}
 		});
 		fExceptionFilter.addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.keyCode == SWT.ARROW_DOWN) {
 					fExceptionViewer.getTable().setFocus();
@@ -268,7 +270,7 @@ public class AddPHPExceptionBreakpointDialog extends SelectionDialog {
 	}
 
 	private void computeResult() {
-		List<Object> results = new ArrayList<Object>();
+		List<Object> results = new ArrayList<>();
 		IStructuredSelection selection = fExceptionViewer.getStructuredSelection();
 		for (Object element : selection.toArray()) {
 			results.add(element);
@@ -317,7 +319,7 @@ public class AddPHPExceptionBreakpointDialog extends SelectionDialog {
 	private void filterExceptionTypes(String text) {
 		String patternBase = text.replaceAll("\\*", ".*").replaceAll("\\?", ".").concat(".*"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		Pattern pattern = Pattern.compile(patternBase, Pattern.CASE_INSENSITIVE);
-		List<IType> filtered = new LinkedList<IType>();
+		List<IType> filtered = new LinkedList<>();
 		for (IType type : fExceptionTypesCache) {
 			if (pattern.matcher(type.getElementName()).matches()) {
 				filtered.add(type);
@@ -331,7 +333,8 @@ public class AddPHPExceptionBreakpointDialog extends SelectionDialog {
 
 	private void fetchExceptionTypes() {
 		if (fExceptionTypesCache == null) {
-			fExceptionTypesCache = new TreeSet<IType>(new Comparator<IType>() {
+			fExceptionTypesCache = new TreeSet<>(new Comparator<IType>() {
+				@Override
 				public int compare(IType o1, IType o2) {
 					if (o1 instanceof ErrorType && !(o2 instanceof ErrorType))
 						return -1;

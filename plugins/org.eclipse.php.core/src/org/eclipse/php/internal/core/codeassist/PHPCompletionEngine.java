@@ -40,12 +40,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 	private int relevanceClass;
 	private int relevanceVar;
 	private int relevanceConst;
-	private Map<? super Object, Object> processedElements = new HashMap<Object, Object>();
-	private Set<? super Object> processedPaths = new HashSet<Object>();
-	private Set<IField> processedFields = new TreeSet<IField>(new Comparator<IField>() {
+	private Map<? super Object, Object> processedElements = new HashMap<>();
+	private Set<? super Object> processedPaths = new HashSet<>();
+	private Set<IField> processedFields = new TreeSet<>(new Comparator<IField>() {
+		@Override
 		public int compare(IField f1, IField f2) {
 			// filter duplications of variables
-			if (PHPModelUtils.isSameField((IField) f1, (IField) f2)) {
+			if (PHPModelUtils.isSameField(f1, f2)) {
 				return 0;
 			}
 			return f1.getElementName().compareTo(f2.getElementName());
@@ -54,6 +55,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 
 	IModuleSource module;
 
+	@Override
 	public void complete(IModuleSource module, int position, int i) {
 		complete(module, position, i, false);
 	}
@@ -213,6 +215,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 		reportKeyword(keyword, suffix, replaceRange, 0);
 	}
 
+	@Override
 	public void reportKeyword(String keyword, String suffix, ISourceRange replaceRange, int subRelevance) {
 		if (processedElements.containsKey(keyword)) {
 			return;
@@ -242,6 +245,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 		reportMethod(method, suffix, replaceRange, extraInfo, 0);
 	}
 
+	@Override
 	public void reportMethod(IMethod method, String suffix, ISourceRange replaceRange, Object extraInfo,
 			int subRelevance) {
 		if (processedElements.containsKey(method)
@@ -406,18 +410,22 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 		}
 	}
 
+	@Override
 	protected int getEndOfEmptyToken() {
 		return 0;
 	}
 
+	@Override
 	protected String processMethodName(IMethod method, String token) {
 		return method.getElementName();
 	}
 
+	@Override
 	protected String processTypeName(IType type, String token) {
 		return type.getElementName();
 	}
 
+	@Override
 	public IModuleSource getModule() {
 		return module;
 	}

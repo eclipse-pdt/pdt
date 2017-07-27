@@ -47,7 +47,6 @@ import org.eclipse.ui.progress.UIJob;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public abstract class AbstractDebugWebLaunchSettingsSection implements IDebuggerLaunchSettingsSection {
 
 	protected static class Digester {
@@ -316,12 +315,14 @@ public abstract class AbstractDebugWebLaunchSettingsSection implements IDebugger
 		testResultLabel = new CLabel(testConnectionComposite, SWT.NONE);
 		testResultLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		testButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				// Run a test for the connection
 				testTunnelConnection();
 			}
 		});
 		testResultLabel.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mouseUp(MouseEvent e) {
 				Object messageData = testResultLabel.getData("info"); //$NON-NLS-1$
 				if (messageData != null) {
@@ -331,6 +332,7 @@ public abstract class AbstractDebugWebLaunchSettingsSection implements IDebugger
 			}
 		});
 		debugThroughTunnel.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent se) {
 				Button b = (Button) se.getSource();
 				boolean selection = b.getSelection();
@@ -372,6 +374,7 @@ public abstract class AbstractDebugWebLaunchSettingsSection implements IDebugger
 		testResultLabel.setCursor(Display.getDefault().getSystemCursor(SWT.CURSOR_WAIT));
 		testResultLabel.setData("info", null); //$NON-NLS-1$
 		Job connectionTest = new UIJob(Messages.AbstractDebugWebLaunchSettingsSection_SSH_tunnel_test) {
+			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				try {
 					String remoteHost = PHPLaunchUtilities.getDebugHost(getConfiguration());

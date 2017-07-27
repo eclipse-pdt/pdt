@@ -46,6 +46,7 @@ public abstract class Repository extends MinimalPackage implements Cloneable {
 	 * 
 	 * @see java.lang.Object#clone()
 	 */
+	@Override
 	public Repository clone() {
 		Repository clone = RepositoryFactory.create(getType());
 		cloneProperties(clone);

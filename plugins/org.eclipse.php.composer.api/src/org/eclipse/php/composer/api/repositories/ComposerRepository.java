@@ -38,7 +38,7 @@ public class ComposerRepository extends Repository implements Cloneable {
 	@Override
 	protected List<String> getOwnProperties() {
 		String[] props = new String[] { "options" }; //$NON-NLS-1$
-		List<String> list = new ArrayList<String>(Arrays.asList(props));
+		List<String> list = new ArrayList<>(Arrays.asList(props));
 		list.addAll(super.getOwnProperties());
 		return list;
 	}
@@ -64,6 +64,7 @@ public class ComposerRepository extends Repository implements Cloneable {
 	 * 
 	 * @see java.lang.Object#clone()
 	 */
+	@Override
 	public ComposerRepository clone() {
 		ComposerRepository clone = new ComposerRepository();
 		cloneProperties(clone);

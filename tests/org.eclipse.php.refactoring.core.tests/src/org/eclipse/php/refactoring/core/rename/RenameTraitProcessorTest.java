@@ -31,6 +31,7 @@ public class RenameTraitProcessorTest extends AbstractPDTTListRefactoringTest {
 	@PDTTList.Parameters
 	public static String[] dirs = { "/resources/rename/renameTrait/" }; //$NON-NLS-1$
 
+	@Override
 	@PDTTList.BeforeList
 	public void setUpListSuite() throws Exception {
 		super.setUpListSuite();
