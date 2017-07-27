@@ -53,10 +53,12 @@ public class FakeType extends SourceType {
 		hasSpecialOffsets = true;
 	}
 
+	@Override
 	public String[] getSuperClasses() throws ModelException {
 		return superClassNames;
 	}
 
+	@Override
 	public ISourceRange getNameRange() throws ModelException {
 		if (hasSpecialOffsets)
 			return new SourceRange(nameOffset, nameLength);
@@ -65,6 +67,7 @@ public class FakeType extends SourceType {
 		return new SourceRange(0, 0);
 	}
 
+	@Override
 	public ISourceRange getSourceRange() throws ModelException {
 		if (hasSpecialOffsets)
 			return new SourceRange(offset, length);
@@ -73,10 +76,12 @@ public class FakeType extends SourceType {
 		return new SourceRange(0, 0);
 	}
 
+	@Override
 	public IScriptProject getScriptProject() {
 		return parent.getScriptProject();
 	}
 
+	@Override
 	public int getFlags() {
 		return flags;
 	}

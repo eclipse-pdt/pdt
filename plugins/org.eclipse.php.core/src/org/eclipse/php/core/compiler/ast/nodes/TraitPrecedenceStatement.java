@@ -21,6 +21,7 @@ public class TraitPrecedenceStatement extends TraitStatement {
 		this.precedence = precedence;
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		if (visitor.visit(this)) {
 			if (precedence != null) {

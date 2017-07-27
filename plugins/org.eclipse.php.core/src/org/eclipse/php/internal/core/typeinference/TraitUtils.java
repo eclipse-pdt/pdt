@@ -96,7 +96,7 @@ public class TraitUtils {
 					useTrait.getTraitAliases().add(ta);
 					List<TraitAliasObject> traitAliases = useTrait.getAliasMap().get(ta.traitMethodName);
 					if (traitAliases == null) {
-						traitAliases = new ArrayList<TraitAliasObject>();
+						traitAliases = new ArrayList<>();
 						useTrait.getAliasMap().put(ta.traitMethodName, traitAliases);
 					}
 					traitAliases.add(ta);
@@ -115,7 +115,7 @@ public class TraitUtils {
 					useTrait.getTraitAliases().add(ta);
 					List<TraitAliasObject> traitAliases = useTrait.getAliasMap().get(ta.traitMethodName);
 					if (traitAliases == null) {
-						traitAliases = new ArrayList<TraitAliasObject>();
+						traitAliases = new ArrayList<>();
 						useTrait.getAliasMap().put(ta.traitMethodName, traitAliases);
 					}
 					traitAliases.add(ta);
@@ -141,8 +141,8 @@ public class TraitUtils {
 
 	public static IField[] getTraitFields(IType type, Set<String> nameSet) {
 		UseTrait useTrait = parse(type);
-		List<IField> fieldList = new ArrayList<IField>();
-		Set<String> traitNameSet = new HashSet<String>();
+		List<IField> fieldList = new ArrayList<>();
+		Set<String> traitNameSet = new HashSet<>();
 		for (String trait : useTrait.getTraits()) {
 			IType[] traitTypes = PHPModelAccess.getDefault().findTraits(trait, MatchRule.EXACT, 0, 0,
 					createSearchScope(type), null);
@@ -183,7 +183,7 @@ public class TraitUtils {
 	}
 
 	private static List<IField> getFieldWrapper(UseTrait useTrait, IField field, IType type) {
-		List<IField> result = new ArrayList<IField>();
+		List<IField> result = new ArrayList<>();
 		String fieldName = field.getElementName();
 		if (fieldName.startsWith("$")) { //$NON-NLS-1$
 			fieldName = fieldName.substring(1);
@@ -228,8 +228,8 @@ public class TraitUtils {
 
 	public static IMethod[] getTraitMethods(IType type, Set<String> nameSet) {
 		UseTrait useTrait = parse(type);
-		List<IMethod> fieldList = new ArrayList<IMethod>();
-		Set<String> traitNameSet = new HashSet<String>();
+		List<IMethod> fieldList = new ArrayList<>();
+		Set<String> traitNameSet = new HashSet<>();
 		for (String trait : useTrait.getTraits()) {
 			IType[] traitTypes = PHPModelAccess.getDefault().findTraits(trait, MatchRule.EXACT, 0, 0,
 					createSearchScope(type), null);
@@ -269,7 +269,7 @@ public class TraitUtils {
 
 	private static List<IMethod> getMethodWrapper(UseTrait useTrait, IMethod method, IType type) {
 
-		List<IMethod> result = new ArrayList<IMethod>();
+		List<IMethod> result = new ArrayList<>();
 		String methodName = method.getElementName();
 		TraitPrecedenceObject tpo = useTrait.getPrecedenceMap().get(methodName);
 		boolean shouldAddSelf = true;
@@ -367,6 +367,7 @@ public class TraitUtils {
 
 		}
 
+		@Override
 		public int getFlags() throws ModelException {
 			if (flags != -1) {
 				return flags;
@@ -374,10 +375,12 @@ public class TraitUtils {
 			return member.getFlags();
 		}
 
+		@Override
 		public ISourceRange getNameRange() throws ModelException {
 			return member.getNameRange();
 		}
 
+		@Override
 		public ISourceRange getSourceRange() throws ModelException {
 			return member.getSourceRange();
 		}
@@ -390,14 +393,17 @@ public class TraitUtils {
 			return member.getElementName();
 		}
 
+		@Override
 		public String getRealName() {
 			return member.getElementName();
 		}
 
+		@Override
 		public IType getHostType() {
 			return type;
 		}
 
+		@Override
 		public boolean useAlias() {
 			return name != null && !name.equals(member.getElementName());
 		}
@@ -433,6 +439,7 @@ public class TraitUtils {
 
 		}
 
+		@Override
 		public int getFlags() throws ModelException {
 			if (flags != -1) {
 				return flags;
@@ -440,10 +447,12 @@ public class TraitUtils {
 			return member.getFlags();
 		}
 
+		@Override
 		public ISourceRange getNameRange() throws ModelException {
 			return member.getNameRange();
 		}
 
+		@Override
 		public ISourceRange getSourceRange() throws ModelException {
 			return member.getSourceRange();
 		}
@@ -456,14 +465,17 @@ public class TraitUtils {
 			return member.getElementName();
 		}
 
+		@Override
 		public String getRealName() {
 			return member.getElementName();
 		}
 
+		@Override
 		public IType getHostType() {
 			return type;
 		}
 
+		@Override
 		public IParameter[] getParameters() throws ModelException {
 			return member.getParameters();
 		}
@@ -473,10 +485,12 @@ public class TraitUtils {
 			return member.getParameterNames();
 		}
 
+		@Override
 		public boolean isConstructor() throws ModelException {
 			return false;
 		}
 
+		@Override
 		public boolean useAlias() {
 			return name != null && !name.equals(member.getElementName());
 		}

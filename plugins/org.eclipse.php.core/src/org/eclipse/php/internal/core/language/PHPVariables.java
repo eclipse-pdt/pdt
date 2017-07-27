@@ -27,12 +27,12 @@ public class PHPVariables {
 
 	public static int SUPER_GLOBAL = 2 << 1;
 
-	private static Map<PHPVersion, PHPVariables> instances = new HashMap<PHPVersion, PHPVariables>();
+	private static Map<PHPVersion, PHPVariables> instances = new HashMap<>();
 
-	private Map<Integer, String[]> variables = new HashMap<Integer, String[]>();
+	private Map<Integer, String[]> variables = new HashMap<>();
 
 	private PHPVariables(IPHPVariablesInitializer initializer) {
-		LinkedList<String> tmp = new LinkedList<String>();
+		LinkedList<String> tmp = new LinkedList<>();
 		initializer.initializeGlobals(tmp);
 		variables.put(GLOBAL, tmp.toArray(new String[tmp.size()]));
 
@@ -50,7 +50,7 @@ public class PHPVariables {
 	}
 
 	public String[] getByType(int type) {
-		List<String> result = new LinkedList<String>();
+		List<String> result = new LinkedList<>();
 		for (Entry<Integer, String[]> item : variables.entrySet()) {
 			if (item.getKey() == type) {
 				return item.getValue().clone();

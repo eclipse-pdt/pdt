@@ -50,6 +50,7 @@ public class PHPLineBreakpoint extends LineBreakpoint {
 	public PHPLineBreakpoint(final IResource resource, final int lineNumber) throws CoreException {
 
 		IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
+			@Override
 			public void run(IProgressMonitor monitor) throws CoreException {
 				IMarker marker = resource.createMarker(MARKER_ID);
 				marker.setAttribute(IBreakpoint.ENABLED, Boolean.TRUE);
@@ -78,6 +79,7 @@ public class PHPLineBreakpoint extends LineBreakpoint {
 	 * 
 	 * @see org.eclipse.debug.core.model.IBreakpoint#getModelIdentifier()
 	 */
+	@Override
 	public String getModelIdentifier() {
 		return IPHPDebugConstants.ID_PHP_DEBUG_CORE;
 	}
@@ -99,11 +101,13 @@ public class PHPLineBreakpoint extends LineBreakpoint {
 		return fBreakpoint;
 	}
 
+	@Override
 	public void setMarker(IMarker marker) throws CoreException {
 		super.setMarker(marker);
 		createRuntimeBreakpoint(marker);
 	}
 
+	@Override
 	public void setEnabled(boolean enabled) throws CoreException {
 		super.setEnabled(enabled);
 	}

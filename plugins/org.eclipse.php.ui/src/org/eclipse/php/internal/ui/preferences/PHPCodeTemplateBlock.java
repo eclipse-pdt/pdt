@@ -72,7 +72,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 
 		@Override
 		public void selectionChanged(TreeListDialogField field) {
-			List selected = field.getSelectedElements();
+			List<?> selected = field.getSelectedElements();
 			field.enableButton(IDX_EDIT, canEdit(selected));
 			field.enableButton(IDX_EXPORT, !selected.isEmpty());
 
@@ -81,7 +81,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 
 		@Override
 		public void doubleClicked(TreeListDialogField field) {
-			List selected = field.getSelectedElements();
+			List<?> selected = field.getSelectedElements();
 			if (canEdit(selected)) {
 				doButtonPressed(IDX_EDIT, selected);
 			}
@@ -444,7 +444,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 	}
 
 	protected TemplatePersistenceData[] getTemplateOfCategory(boolean isComment) {
-		ArrayList res = new ArrayList();
+		ArrayList<TemplatePersistenceData> res = new ArrayList<>();
 		TemplatePersistenceData[] templates = fTemplateStore.getTemplateData();
 		for (int i = 0; i < templates.length; i++) {
 			TemplatePersistenceData curr = templates[i];
@@ -452,14 +452,14 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 				res.add(curr);
 			}
 		}
-		return (TemplatePersistenceData[]) res.toArray(new TemplatePersistenceData[res.size()]);
+		return res.toArray(new TemplatePersistenceData[res.size()]);
 	}
 
-	protected static boolean canEdit(List selected) {
+	protected static boolean canEdit(List<?> selected) {
 		return selected.size() == 1 && (selected.get(0) instanceof TemplatePersistenceData);
 	}
 
-	protected void updateSourceViewerInput(List selection) {
+	protected void updateSourceViewerInput(List<?> selection) {
 		if (fPatternViewer == null || fPatternViewer.getTextWidget().isDisposed()) {
 			return;
 		}
@@ -475,7 +475,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		}
 	}
 
-	protected void doButtonPressed(int buttonIndex, List selected) {
+	protected void doButtonPressed(int buttonIndex, List<?> selected) {
 		if (buttonIndex == IDX_EDIT) {
 			edit((TemplatePersistenceData) selected.get(0));
 		} else if (buttonIndex == IDX_EXPORT) {
@@ -552,8 +552,8 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		export(fTemplateStore.getTemplateData());
 	}
 
-	private void export(List selected) {
-		Set datas = new HashSet();
+	private void export(List<?> selected) {
+		Set<Object> datas = new HashSet<>();
 		for (int i = 0; i < selected.size(); i++) {
 			Object curr = selected.get(i);
 			if (curr instanceof TemplatePersistenceData) {
@@ -563,7 +563,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 				datas.addAll(Arrays.asList(cat));
 			}
 		}
-		export((TemplatePersistenceData[]) datas.toArray(new TemplatePersistenceData[datas.size()]));
+		export(datas.toArray(new TemplatePersistenceData[datas.size()]));
 	}
 
 	private void export(TemplatePersistenceData[] templates) {

@@ -21,7 +21,6 @@ import org.eclipse.ui.part.ViewPart;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public abstract class AbstractDebugOutputView extends ViewPart {
 
 	protected interface IUpdater {
@@ -35,7 +34,7 @@ public abstract class AbstractDebugOutputView extends ViewPart {
 
 	}
 
-	private final Map<IPHPDebugTarget, IUpdater> fUpdaters = new WeakHashMap<IPHPDebugTarget, IUpdater>();
+	private final Map<IPHPDebugTarget, IUpdater> fUpdaters = new WeakHashMap<>();
 	protected final DebugViewHelper fDebugViewHelper;
 
 	/**

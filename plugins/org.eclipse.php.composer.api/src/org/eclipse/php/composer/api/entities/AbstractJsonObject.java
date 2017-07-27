@@ -25,10 +25,11 @@ import org.eclipse.php.composer.api.objects.JsonObject;
 
 public abstract class AbstractJsonObject<V> extends JsonEntity implements JsonCollection {
 
-	private transient Map<String, PropertyChangeListener> listeners = new HashMap<String, PropertyChangeListener>();
-	protected transient Map<String, V> properties = new LinkedHashMap<String, V>();
+	private transient Map<String, PropertyChangeListener> listeners = new HashMap<>();
+	protected transient Map<String, V> properties = new LinkedHashMap<>();
 	private transient Log log = LogFactory.getLog(HttpClient.class);
 
+	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected void doParse(Object obj) {
 		clear();
@@ -76,11 +77,11 @@ public abstract class AbstractJsonObject<V> extends JsonEntity implements JsonCo
 
 	@Override
 	protected Object buildJson() {
-		LinkedList<String> propsOrder = new LinkedList<String>(sortOrder);
+		LinkedList<String> propsOrder = new LinkedList<>(sortOrder);
 
 		// First: create an index to search for field names and add them to the
 		// props order
-		HashMap<String, Field> namedFields = new HashMap<String, Field>();
+		HashMap<String, Field> namedFields = new HashMap<>();
 		for (Field field : getFields(this.getClass())) {
 			field.setAccessible(true);
 			String fieldName = getFieldName(field);
@@ -94,7 +95,7 @@ public abstract class AbstractJsonObject<V> extends JsonEntity implements JsonCo
 		}
 
 		// Second: find property contents (either field or property key)
-		LinkedHashMap<String, Object> out = new LinkedHashMap<String, Object>();
+		LinkedHashMap<String, Object> out = new LinkedHashMap<>();
 		for (String entry : propsOrder) {
 			if (out.containsKey(entry)) {
 				continue;
@@ -129,7 +130,7 @@ public abstract class AbstractJsonObject<V> extends JsonEntity implements JsonCo
 	}
 
 	protected List<String> getOwnProperties() {
-		return new ArrayList<String>();
+		return new ArrayList<>();
 	}
 
 	/*
@@ -137,6 +138,7 @@ public abstract class AbstractJsonObject<V> extends JsonEntity implements JsonCo
 	 * 
 	 * @see org.eclipse.php.composer.api.entities.JsonCollection#size()
 	 */
+	@Override
 	public int size() {
 		return properties.size();
 	}
@@ -146,6 +148,7 @@ public abstract class AbstractJsonObject<V> extends JsonEntity implements JsonCo
 	 * 
 	 * @see org.eclipse.php.composer.api.entities.JsonCollection#clear()
 	 */
+	@Override
 	public void clear() {
 		// clear properties
 		List<String> ownProps = getOwnProperties();
@@ -238,7 +241,7 @@ public abstract class AbstractJsonObject<V> extends JsonEntity implements JsonCo
 		JsonEntity entity = null;
 		// install listener to be aware of changes
 		if (value instanceof JsonValue) {
-			entity = getEntity((JsonValue) value);
+			entity = getEntity(value);
 		} else if (value instanceof JsonEntity) {
 			entity = (JsonEntity) value;
 		}
@@ -252,7 +255,7 @@ public abstract class AbstractJsonObject<V> extends JsonEntity implements JsonCo
 		appendSortOrder(property);
 
 		if (notify) {
-			firePropertyChange(property, oldValue, (V) value);
+			firePropertyChange(property, oldValue, value);
 		}
 	}
 
@@ -272,6 +275,7 @@ public abstract class AbstractJsonObject<V> extends JsonEntity implements JsonCo
 	private void installListener(final String property, JsonEntity entity) {
 		if (entity != null) {
 			listeners.put(property, new PropertyChangeListener() {
+				@Override
 				public void propertyChange(PropertyChangeEvent evt) {
 					firePropertyChange(property + "." + evt.getPropertyName(), evt.getOldValue(), evt.getNewValue()); //$NON-NLS-1$
 				}

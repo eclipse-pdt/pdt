@@ -34,6 +34,7 @@ public class CodeCoveragePreferencePage extends AbstractConfigurationBlockPrefer
 	 * #createConfigurationBlock(org.eclipse
 	 * .wst.sse.ui.internal.preferences.OverlayPreferenceStore)
 	 */
+	@Override
 	protected IPreferenceConfigurationBlock createConfigurationBlock(OverlayPreferenceStore overlayPreferenceStore) {
 		return new CodeCoverageConfigurationBlock(this);
 	}
@@ -44,6 +45,7 @@ public class CodeCoveragePreferencePage extends AbstractConfigurationBlockPrefer
 	 * @seeorg.eclipse.php.internal.ui.preferences.ui.
 	 * AbstractConfigurationBlockPreferencePage#getHelpId()
 	 */
+	@Override
 	protected String getHelpId() {
 		return IPHPHelpContextIds.CODE_COVERAGE_PREFERENCES;
 	}
@@ -54,6 +56,7 @@ public class CodeCoveragePreferencePage extends AbstractConfigurationBlockPrefer
 	 * @seeorg.eclipse.php.internal.ui.preferences.ui.
 	 * AbstractConfigurationBlockPreferencePage#setDescription()
 	 */
+	@Override
 	protected void setDescription() {
 		setDescription(PHPDebugUIMessages.CodeCoveragePreferencePage_0);
 	}
@@ -64,6 +67,7 @@ public class CodeCoveragePreferencePage extends AbstractConfigurationBlockPrefer
 	 * @seeorg.eclipse.php.internal.ui.preferences.ui.
 	 * AbstractConfigurationBlockPreferencePage#setPreferenceStore()
 	 */
+	@Override
 	protected void setPreferenceStore() {
 		setPreferenceStore(PHPDebugUIPlugin.getDefault().getPreferenceStore());
 	}

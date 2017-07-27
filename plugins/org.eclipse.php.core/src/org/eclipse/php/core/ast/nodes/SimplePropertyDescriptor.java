@@ -28,7 +28,7 @@ public final class SimplePropertyDescriptor extends StructuralPropertyDescriptor
 	 * Value type. For example, for a node type like SingleVariableDeclaration,
 	 * the modifiers property is int.class
 	 */
-	private final Class valueType;
+	private final Class<?> valueType;
 
 	/**
 	 * Indicates whether a value is mandatory. A property value is allowed to be
@@ -51,7 +51,7 @@ public final class SimplePropertyDescriptor extends StructuralPropertyDescriptor
 	 *            <code>true</code> if the property is mandatory, and
 	 *            <code>false</code> if it is may be <code>null</code>
 	 */
-	SimplePropertyDescriptor(Class nodeClass, String propertyId, Class valueType, boolean mandatory) {
+	SimplePropertyDescriptor(Class<?> nodeClass, String propertyId, Class<?> valueType, boolean mandatory) {
 		super(nodeClass, propertyId);
 		if (valueType == null || ASTNode.class.isAssignableFrom(valueType)) {
 			throw new IllegalArgumentException();
@@ -69,7 +69,7 @@ public final class SimplePropertyDescriptor extends StructuralPropertyDescriptor
 	 * 
 	 * @return the value type of the property
 	 */
-	public Class getValueType() {
+	public Class<?> getValueType() {
 		return this.valueType;
 	}
 

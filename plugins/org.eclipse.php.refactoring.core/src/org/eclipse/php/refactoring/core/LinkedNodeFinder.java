@@ -83,7 +83,7 @@ public class LinkedNodeFinder {
 	 */
 	public static OccurrenceLocation[] findByNode(Program root, ASTNode[] nodes) {
 
-		List<OccurrenceLocation> locationList = new ArrayList<OccurrenceLocation>();
+		List<OccurrenceLocation> locationList = new ArrayList<>();
 		for (ASTNode selectedNode : nodes) {
 			OccurrenceLocation[] locations = findByNode(root, selectedNode);
 			if (locations != null) {
@@ -97,7 +97,7 @@ public class LinkedNodeFinder {
 
 	public static Identifier[] findByBinding(ASTNode root,
 			IVariableBinding binding) {
-		ArrayList<Identifier> res = new ArrayList<Identifier>();
+		ArrayList<Identifier> res = new ArrayList<>();
 		BindingFinder nodeFinder = new BindingFinder(binding, res);
 		root.accept(nodeFinder);
 		return res.toArray(new Identifier[res.size()]);
@@ -113,6 +113,7 @@ public class LinkedNodeFinder {
 			fResult = result;
 		}
 
+		@Override
 		public boolean visit(Identifier node) {
 			IBinding binding = node.resolveBinding();
 			if (binding == null) {

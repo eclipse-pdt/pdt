@@ -17,7 +17,6 @@ import java.util.TreeMap;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 
-@SuppressWarnings("restriction")
 public class LaunchUtil {
 
 	public static String getPHPExecutable() throws ExecutableNotFoundException {
@@ -42,7 +41,7 @@ public class LaunchUtil {
 		}
 
 		// sort the PHP CLI executable by version
-		SortedMap<String, PHPexeItem> map = new TreeMap<String, PHPexeItem>();
+		SortedMap<String, PHPexeItem> map = new TreeMap<>();
 		for (PHPexeItem item : cliItems) {
 			map.put(item.getVersion(), item);
 		}

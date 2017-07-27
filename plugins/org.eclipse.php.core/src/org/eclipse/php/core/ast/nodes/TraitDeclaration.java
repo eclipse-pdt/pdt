@@ -30,6 +30,7 @@ public class TraitDeclaration extends ClassDeclaration {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		if (!(other instanceof TraitDeclaration)) {
 			return false;
@@ -48,10 +49,11 @@ public class TraitDeclaration extends ClassDeclaration {
 		return result;
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<TraitDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		buffer.append("'>\n"); //$NON-NLS-1$ 
 		buffer.append(tab).append(TAB).append("<TraitName>\n"); //$NON-NLS-1$
 		getName().toString(buffer, TAB + TAB + tab);
 		buffer.append("\n"); //$NON-NLS-1$
@@ -62,10 +64,12 @@ public class TraitDeclaration extends ClassDeclaration {
 		buffer.append(tab).append("</TraitDeclaration>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.CLASS_DECLARATION;
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {

@@ -65,7 +65,7 @@ public class BracketInserterTests {
 	private PHPStructuredEditor fEditor;
 
 	@Parameters
-	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<>();
 	public static final String DEFAULT_CURSOR = "|";
 
 	static {

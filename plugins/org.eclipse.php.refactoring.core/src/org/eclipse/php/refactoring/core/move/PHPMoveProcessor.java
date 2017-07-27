@@ -69,7 +69,7 @@ public class PHPMoveProcessor extends MoveProcessor {
 	}
 
 	public static IResource[] getResources(IStructuredSelection sel) {
-		List<Object> resources = new ArrayList<Object>(sel.size());
+		List<Object> resources = new ArrayList<>(sel.size());
 		for (Iterator<?> e = sel.iterator(); e.hasNext();) {
 			Object next = e.next();
 			if (next instanceof IResource) {
@@ -85,7 +85,7 @@ public class PHPMoveProcessor extends MoveProcessor {
 			} else if (next != null) {
 				IAdapterManager adapterManager = Platform.getAdapterManager();
 
-				ResourceMapping mapping = (ResourceMapping) adapterManager
+				ResourceMapping mapping = adapterManager
 						.getAdapter(next, ResourceMapping.class);
 
 				if (mapping != null) {
@@ -112,7 +112,7 @@ public class PHPMoveProcessor extends MoveProcessor {
 				}// if
 			}
 		}
-		return (IResource[]) resources.toArray(new IResource[resources.size()]);
+		return resources.toArray(new IResource[resources.size()]);
 	}
 
 	/*
@@ -121,6 +121,7 @@ public class PHPMoveProcessor extends MoveProcessor {
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#
 	 * checkInitialConditions(org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public RefactoringStatus checkInitialConditions(IProgressMonitor pm)
 			throws OperationCanceledException {
 		return fDelegate.checkInitialConditions();
@@ -133,6 +134,7 @@ public class PHPMoveProcessor extends MoveProcessor {
 	 * checkFinalConditions(org.eclipse.core.runtime.IProgressMonitor,
 	 * org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext)
 	 */
+	@Override
 	public RefactoringStatus checkFinalConditions(IProgressMonitor pm,
 			CheckConditionsContext context) throws OperationCanceledException {
 		return fDelegate.checkFinalConditions();
@@ -144,6 +146,7 @@ public class PHPMoveProcessor extends MoveProcessor {
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#
 	 * createChange(org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public Change createChange(IProgressMonitor pm) throws CoreException,
 			OperationCanceledException {
 
@@ -157,6 +160,7 @@ public class PHPMoveProcessor extends MoveProcessor {
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#
 	 * getElements()
 	 */
+	@Override
 	public Object[] getElements() {
 		return new Object[] { fSourceResources };
 	}
@@ -167,6 +171,7 @@ public class PHPMoveProcessor extends MoveProcessor {
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#
 	 * getIdentifier()
 	 */
+	@Override
 	public String getIdentifier() {
 		return getClass().getName();
 	}
@@ -177,6 +182,7 @@ public class PHPMoveProcessor extends MoveProcessor {
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#
 	 * getProcessorName()
 	 */
+	@Override
 	public String getProcessorName() {
 		return PHPRefactoringCoreMessages.getString("PHPMoveProcessor.0"); //$NON-NLS-1$
 	}
@@ -187,6 +193,7 @@ public class PHPMoveProcessor extends MoveProcessor {
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#
 	 * isApplicable()
 	 */
+	@Override
 	public boolean isApplicable() {
 		return true;
 	}
@@ -198,6 +205,7 @@ public class PHPMoveProcessor extends MoveProcessor {
 	 * loadParticipants(org.eclipse.ltk.core.refactoring.RefactoringStatus,
 	 * org.eclipse.ltk.core.refactoring.participants.SharableParticipants)
 	 */
+	@Override
 	public RefactoringParticipant[] loadParticipants(RefactoringStatus status,
 			SharableParticipants sharedParticipants) {
 
@@ -206,7 +214,7 @@ public class PHPMoveProcessor extends MoveProcessor {
 					.computeAffectedNatures(fSourceResources);
 			MoveArguments arguments = new MoveArguments(fResourceDestination,
 					getUpdateReferences());
-			List<IResource> resourceList = new ArrayList<IResource>();
+			List<IResource> resourceList = new ArrayList<>();
 			for (IResource fResource : fSourceResources) {
 				resourceList.add(fResource);
 			}

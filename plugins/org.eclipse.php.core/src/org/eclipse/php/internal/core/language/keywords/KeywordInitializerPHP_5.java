@@ -20,6 +20,7 @@ import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
  */
 public class KeywordInitializerPHP_5 extends KeywordInitializerPHP_4 {
 
+	@Override
 	public void initialize(Collection<KeywordData> list) {
 		super.initialize(list);
 
@@ -45,6 +46,7 @@ public class KeywordInitializerPHP_5 extends KeywordInitializerPHP_4 {
 		list.add(new KeywordData("try", OPEN_BLOCK_SUFFIX, 2)); //$NON-NLS-1$
 	}
 
+	@Override
 	public void initializeSpecific(Collection<KeywordData> list) {
 	}
 }

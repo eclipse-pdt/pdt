@@ -35,6 +35,7 @@ public class Versions extends AbstractIterableJsonObject<ComposerPackage> {
 	public Versions() {
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	protected void doParse(Object obj) {
 		clear();
@@ -52,7 +53,7 @@ public class Versions extends AbstractIterableJsonObject<ComposerPackage> {
 	 * @return
 	 */
 	public String getDefaultVersion() {
-		Set<String> sortedVersions = new TreeSet<String>(properties.keySet()).descendingSet();
+		Set<String> sortedVersions = new TreeSet<>(properties.keySet()).descendingSet();
 
 		for (String stability : ComposerConstants.STABILITIES) {
 			for (String version : sortedVersions) {
@@ -78,7 +79,7 @@ public class Versions extends AbstractIterableJsonObject<ComposerPackage> {
 
 	private void compileDetailedVersions() {
 		if (detailedVersions == null) {
-			detailedVersions = new HashMap<String, Version>();
+			detailedVersions = new HashMap<>();
 
 			for (String version : toArray()) {
 				compileDetailedVersion(version);
@@ -119,7 +120,7 @@ public class Versions extends AbstractIterableJsonObject<ComposerPackage> {
 	public List<Version> getDetailedVersions() {
 		prepareDetailedVersions();
 
-		List<Version> all = new ArrayList<Version>();
+		List<Version> all = new ArrayList<>();
 		all.addAll(detailedVersions.values());
 
 		return all;
@@ -194,6 +195,7 @@ public class Versions extends AbstractIterableJsonObject<ComposerPackage> {
 		Collections.sort(sortOrder);
 	}
 
+	@Override
 	public void remove(String version) {
 		if (detailedVersions != null) {
 			Version v = getDetailedVersion(version);

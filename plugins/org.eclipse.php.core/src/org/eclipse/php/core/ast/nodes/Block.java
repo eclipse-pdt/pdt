@@ -30,7 +30,7 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  */
 public class Block extends Statement {
 
-	private final ASTNode.NodeList<Statement> statements = new ASTNode.NodeList<Statement>(STATEMENTS_PROPERTY);
+	private final ASTNode.NodeList<Statement> statements = new ASTNode.NodeList<>(STATEMENTS_PROPERTY);
 	private boolean isCurly;
 
 	private static enum BodyStartSymbol {
@@ -55,7 +55,7 @@ public class Block extends Statement {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(2);
 		properyList.add(STATEMENTS_PROPERTY);
 		properyList.add(IS_CURLY_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
@@ -81,6 +81,7 @@ public class Block extends Statement {
 		super(ast);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -89,12 +90,14 @@ public class Block extends Statement {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		for (ASTNode statement : statements) {
 			statement.accept(visitor);
 		}
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		for (ASTNode statement : statements) {
@@ -102,6 +105,7 @@ public class Block extends Statement {
 		}
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		for (ASTNode statement : statements) {
 			statement.traverseBottomUp(visitor);
@@ -109,6 +113,7 @@ public class Block extends Statement {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<Block"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -120,6 +125,7 @@ public class Block extends Statement {
 		buffer.append(tab).append("</Block>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.BLOCK;
 	}
@@ -141,6 +147,7 @@ public class Block extends Statement {
 	 *             <code>clearBodyStartSymbol</code> should be use instead of
 	 *             this method.
 	 */
+	@Deprecated
 	public void setIsCurly(boolean isCurly) {
 		preValueChange(IS_CURLY_PROPERTY);
 		this.isCurly = isCurly;
@@ -184,6 +191,7 @@ public class Block extends Statement {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
@@ -192,6 +200,7 @@ public class Block extends Statement {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
+	@Override
 	ASTNode clone0(AST target) {
 		final List<Statement> statements = ASTNode.copySubtrees(target, statements());
 		return new Block(this.getStart(), this.getEnd(), target, statements, this.isCurly());
@@ -205,7 +214,8 @@ public class Block extends Statement {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
-	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+	@Override
+	final List<? extends ASTNode> internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == STATEMENTS_PROPERTY) {
 			return statements();
 		}
@@ -216,6 +226,7 @@ public class Block extends Statement {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
+	@Override
 	final boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean value) {
 		if (property == IS_CURLY_PROPERTY) {
 			if (get) {

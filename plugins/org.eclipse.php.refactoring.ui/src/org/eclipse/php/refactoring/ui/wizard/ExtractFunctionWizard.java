@@ -38,6 +38,7 @@ public class ExtractFunctionWizard extends RefactoringWizard {
 		}
 	}
 
+	@Override
 	protected void addUserInputPages() {
 		addPage(new ExtractFunctionInputPage());
 	}

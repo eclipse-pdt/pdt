@@ -36,6 +36,7 @@ public class Namespace extends JsonObject {
 		super();
 		listen();
 		paths.addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				firePropertyChange(getNamespace() + "." + evt.getPropertyName(), evt.getOldValue(), evt.getNewValue()); //$NON-NLS-1$
 			}
@@ -62,7 +63,7 @@ public class Namespace extends JsonObject {
 	@Override
 	protected List<String> getOwnProperties() {
 		String[] props = new String[] { "paths" }; //$NON-NLS-1$
-		List<String> list = new ArrayList<String>(Arrays.asList(props));
+		List<String> list = new ArrayList<>(Arrays.asList(props));
 		list.addAll(super.getOwnProperties());
 		return list;
 	}
@@ -98,6 +99,7 @@ public class Namespace extends JsonObject {
 	/**
 	 * Clears the paths from this namespace
 	 */
+	@Override
 	public void clear() {
 		paths.clear();
 	}
@@ -126,6 +128,7 @@ public class Namespace extends JsonObject {
 	/**
 	 * Removes a path from the namespace
 	 */
+	@Override
 	public void remove(String path) {
 		paths.remove(path);
 	}
@@ -139,6 +142,7 @@ public class Namespace extends JsonObject {
 	 * 
 	 * @see org.eclipse.php.composer.api.entities.AbstractJsonObject#size()
 	 */
+	@Override
 	public int size() {
 		return paths.size();
 	}
@@ -148,6 +152,7 @@ public class Namespace extends JsonObject {
 	 * 
 	 * @see java.lang.Object#clone()
 	 */
+	@Override
 	public Namespace clone() {
 		Namespace clone = new Namespace();
 		cloneProperties(clone);

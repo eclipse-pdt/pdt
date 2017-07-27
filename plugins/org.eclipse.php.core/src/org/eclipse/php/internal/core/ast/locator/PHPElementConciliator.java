@@ -100,7 +100,7 @@ public class PHPElementConciliator {
 		// check if it is an identifier
 		final int type = locateNode.getType();
 		if (locateNode instanceof Identifier && ((Identifier) locateNode).getParent() instanceof Variable) {
-			parent = (Variable) ((Identifier) locateNode).getParent();
+			parent = ((Identifier) locateNode).getParent();
 			parent = parent.getParent();
 		} else if (type == ASTNode.SINGLE_FIELD_DECLARATION || type == ASTNode.FIELD_DECLARATION
 				|| type == ASTNode.METHOD_DECLARATION) {
@@ -431,6 +431,7 @@ public class PHPElementConciliator {
 				class GlobalSeacher extends ApplyAll {
 					public int offset = end;
 
+					@Override
 					public boolean apply(ASTNode node) {
 						if (offset != end) {
 							return false;
@@ -547,7 +548,7 @@ public class PHPElementConciliator {
 		Identifier targetIdentifier = null;
 		boolean isNamespaceName = false;
 		if (locateNode.getType() == ASTNode.FUNCTION_DECLARATION) {
-			parent = ((FunctionDeclaration) locateNode);
+			parent = (locateNode);
 			targetIdentifier = ((FunctionDeclaration) locateNode).getFunctionName();
 		} else if (locateNode instanceof Identifier && !"define".equals(((Identifier) locateNode).getName())) { //$NON-NLS-1$
 			targetIdentifier = (Identifier) locateNode;
@@ -698,6 +699,7 @@ public class PHPElementConciliator {
 			this.name = name;
 		}
 
+		@Override
 		public boolean apply(ASTNode node) {
 			// stops when found - that's the reason to use ApplyAll
 			if (exists)
@@ -760,6 +762,7 @@ public class PHPElementConciliator {
 			this.name = name;
 		}
 
+		@Override
 		public boolean apply(ASTNode node) {
 			// stops when found - that's the reason to use ApplyAll
 			if (exists)
@@ -795,6 +798,7 @@ public class PHPElementConciliator {
 			this.name = name;
 		}
 
+		@Override
 		public boolean apply(ASTNode node) {
 			// stops when found - that's the reason to use ApplyAll
 			if (exists)
@@ -832,6 +836,7 @@ public class PHPElementConciliator {
 			this.type = type;
 		}
 
+		@Override
 		public boolean apply(ASTNode node) {
 			// stops when found - that's the reason to use ApplyAll
 			if (exists)
@@ -864,6 +869,7 @@ public class PHPElementConciliator {
 			this.name = name;
 		}
 
+		@Override
 		public boolean apply(ASTNode node) {
 			// stops when found - that's the reason to use ApplyAll
 			if (exists)
@@ -900,6 +906,7 @@ public class PHPElementConciliator {
 			this.name = name;
 		}
 
+		@Override
 		public boolean apply(ASTNode node) {
 
 			// stops when found - that's the reason to use ApplyAll

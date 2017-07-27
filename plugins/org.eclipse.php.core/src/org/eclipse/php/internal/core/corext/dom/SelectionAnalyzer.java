@@ -87,6 +87,7 @@ public class SelectionAnalyzer extends ApplyAll {
 	// --- node management
 	// ---------------------------------------------------------
 
+	@Override
 	protected boolean apply(ASTNode node) {
 		// The selection lies behind the node.
 		if (fSelection.liesOutside(node)) {
@@ -116,7 +117,7 @@ public class SelectionAnalyzer extends ApplyAll {
 	}
 
 	protected void handleFirstSelectedNode(ASTNode node) {
-		fSelectedNodes = new ArrayList<ASTNode>(5);
+		fSelectedNodes = new ArrayList<>(5);
 		fSelectedNodes.add(node);
 	}
 

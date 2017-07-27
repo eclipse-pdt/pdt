@@ -65,6 +65,7 @@ public final class TemplateInformationControlCreator
 				HTML2TextReader reader = new HTML2TextReader(new StringReader(content), presentation);
 				try {
 					super.setInformation(reader.getString());
+					reader.close();
 				} catch (IOException e) {
 				}
 			}

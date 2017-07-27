@@ -28,7 +28,7 @@ class ASTMatchingFragmentFinder extends ApplyAll {
 	}
 
 	private ASTFragment fFragmentToMatch;
-	private Set<IASTFragment> fMatches = new HashSet<IASTFragment>();
+	private Set<IASTFragment> fMatches = new HashSet<>();
 
 	private ASTMatchingFragmentFinder(ASTFragment toMatch) {
 		fFragmentToMatch = toMatch;
@@ -41,7 +41,7 @@ class ASTMatchingFragmentFinder extends ApplyAll {
 	}
 
 	private IASTFragment[] getMatches() {
-		return (IASTFragment[]) fMatches.toArray(new IASTFragment[fMatches.size()]);
+		return fMatches.toArray(new IASTFragment[fMatches.size()]);
 	}
 
 	@Override

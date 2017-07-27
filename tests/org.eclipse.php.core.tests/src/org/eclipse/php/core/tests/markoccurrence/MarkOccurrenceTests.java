@@ -59,7 +59,7 @@ public class MarkOccurrenceTests {
 	protected static final char OFFSET_CHAR = '|';
 
 	@Parameters
-	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<>();
 
 	static {
 		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/markoccurrence/php5" });
@@ -128,7 +128,7 @@ public class MarkOccurrenceTests {
 		if (offset == -1) {
 			throw new IllegalArgumentException("Offset character is not set");
 		}
-		List<Integer> starts = new ArrayList<Integer>();
+		List<Integer> starts = new ArrayList<>();
 		int startIndex = -1;
 		while ((startIndex = data.indexOf('%', startIndex + 1)) >= 0) {
 			starts.add(startIndex);
@@ -136,7 +136,7 @@ public class MarkOccurrenceTests {
 		if (starts.size() % 2 != 0) {
 			throw new IllegalArgumentException("% must be paired");
 		}
-		List<Integer> newStarts = new ArrayList<Integer>();
+		List<Integer> newStarts = new ArrayList<>();
 		for (int i = 0; i < starts.size(); i++) {
 			int oldstart = starts.get(i) - i;
 			if (starts.get(i) > offset) {
@@ -217,7 +217,7 @@ public class MarkOccurrenceTests {
 		} else {
 			version = ProjectOptions.getDefaultPHPVersion();
 		}
-		ASTParser newParser = ASTParser.newParser(version, (ISourceModule) source);
+		ASTParser newParser = ASTParser.newParser(version, source);
 		return newParser.createAST(null);
 	}
 
@@ -262,13 +262,14 @@ public class MarkOccurrenceTests {
 		if (proposals == null) {
 			return new OccurrenceLocation[0];
 		}
-		List<OccurrenceLocation> result = new ArrayList<OccurrenceLocation>();
+		List<OccurrenceLocation> result = new ArrayList<>();
 
 		for (int i = 0; i < proposals.length; i++) {
 			result.add(proposals[i]);
 		}
 		Collections.sort(result, new Comparator<OccurrenceLocation>() {
 
+			@Override
 			public int compare(OccurrenceLocation o1, OccurrenceLocation o2) {
 
 				return o1.getOffset() - o2.getOffset();

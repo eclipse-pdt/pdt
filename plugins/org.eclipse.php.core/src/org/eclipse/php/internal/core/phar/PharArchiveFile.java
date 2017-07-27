@@ -30,7 +30,7 @@ public class PharArchiveFile implements IArchive {
 	 * Cache of phar files, so we don't create phar files representation every
 	 * call
 	 */
-	private static final Map<String, WeakReference<PharFile>> pharFiles = new HashMap<String, WeakReference<PharFile>>();
+	private static final Map<String, WeakReference<PharFile>> pharFiles = new HashMap<>();
 
 	public PharArchiveFile(String fileName) throws IOException, PharException {
 		this(new File(fileName));
@@ -40,7 +40,7 @@ public class PharArchiveFile implements IArchive {
 		this.file = file;
 		String key = getFileKey(file);
 		if (!pharFiles.containsKey(key)) {
-			pharFiles.put(key, new WeakReference<PharFile>(new PharFile(file)));
+			pharFiles.put(key, new WeakReference<>(new PharFile(file)));
 		}
 		final WeakReference<PharFile> weakReference = pharFiles.get(key);
 		pharFile = weakReference.get();
@@ -51,7 +51,7 @@ public class PharArchiveFile implements IArchive {
 	private void makeSureInit(File file) throws IOException, PharException {
 		if (pharFile == null) {
 			String key = getFileKey(file);
-			pharFiles.put(key, new WeakReference<PharFile>(new PharFile(file)));
+			pharFiles.put(key, new WeakReference<>(new PharFile(file)));
 			final WeakReference<PharFile> weakReference = pharFiles.get(key);
 			pharFile = weakReference.get();
 		}
@@ -62,11 +62,13 @@ public class PharArchiveFile implements IArchive {
 		return key;
 	}
 
+	@Override
 	public void close() throws IOException {
 		if (pharFile != null)
 			pharFile.close();
 	}
 
+	@Override
 	public Enumeration<? extends IArchiveEntry> getArchiveEntries() {
 		init();
 		List<PharEntry> pharEntryList = pharFile.getPharEntryList();
@@ -74,10 +76,12 @@ public class PharArchiveFile implements IArchive {
 
 		return new Enumeration<IArchiveEntry>() {
 
+			@Override
 			public boolean hasMoreElements() {
 				return it.hasNext();
 			}
 
+			@Override
 			public IArchiveEntry nextElement() {
 				return new PharArchiveEntry(it.next());
 			}
@@ -85,11 +89,13 @@ public class PharArchiveFile implements IArchive {
 		};
 	}
 
+	@Override
 	public IArchiveEntry getArchiveEntry(String name) {
 		init();
 		return new PharArchiveEntry(pharFile.getEntry(name));
 	}
 
+	@Override
 	public InputStream getInputStream(IArchiveEntry entry) throws IOException {
 		init();
 		if (entry instanceof PharArchiveEntry) {
@@ -107,6 +113,7 @@ public class PharArchiveFile implements IArchive {
 		}
 	}
 
+	@Override
 	public String getName() {
 		return pharFile.getName();
 	}

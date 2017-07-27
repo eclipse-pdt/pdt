@@ -32,7 +32,7 @@ import org.eclipse.php.core.ast.visitor.Visitor;
 public class TryStatement extends Statement {
 
 	private Block tryStatement;
-	private ASTNode.NodeList<CatchClause> catchClauses = new ASTNode.NodeList<CatchClause>(CATCH_CLAUSES_PROPERTY);
+	private ASTNode.NodeList<CatchClause> catchClauses = new ASTNode.NodeList<>(CATCH_CLAUSES_PROPERTY);
 	private FinallyClause finallyClause;
 
 	/**
@@ -56,7 +56,7 @@ public class TryStatement extends Statement {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(3);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(3);
 		propertyList.add(BODY_PROPERTY);
 		propertyList.add(CATCH_CLAUSES_PROPERTY);
 		propertyList.add(FINALLY_CLAUSE_PROPERTY);
@@ -102,6 +102,7 @@ public class TryStatement extends Statement {
 		super(ast);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -110,6 +111,7 @@ public class TryStatement extends Statement {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		tryStatement.accept(visitor);
 		for (ASTNode catchClause : this.catchClauses) {
@@ -120,6 +122,7 @@ public class TryStatement extends Statement {
 		}
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		tryStatement.traverseTopDown(visitor);
@@ -131,6 +134,7 @@ public class TryStatement extends Statement {
 		}
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		tryStatement.traverseBottomUp(visitor);
 		for (ASTNode catchClause : this.catchClauses) {
@@ -142,6 +146,7 @@ public class TryStatement extends Statement {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<TryStatement"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -159,6 +164,7 @@ public class TryStatement extends Statement {
 		buffer.append(tab).append("</TryStatement>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.TRY_STATEMENT;
 	}
@@ -237,6 +243,7 @@ public class TryStatement extends Statement {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
@@ -258,6 +265,7 @@ public class TryStatement extends Statement {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == BODY_PROPERTY) {
 			if (get) {
@@ -281,7 +289,8 @@ public class TryStatement extends Statement {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
-	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+	@Override
+	final List<? extends ASTNode> internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == CATCH_CLAUSES_PROPERTY) {
 			return catchClauses();
 		}

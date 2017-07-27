@@ -39,6 +39,7 @@ public class PHPLineTracker implements IConsoleLineTrackerExtension {
 	/**
 	 * @see org.eclipse.debug.ui.console.IConsoleLineTracker#init(org.eclipse.debug.ui.console.IConsole)
 	 */
+	@Override
 	public void init(IConsole console) {
 		fConsole = console;
 		fPHPHyperLink = ((PHPProcess) fConsole.getProcess()).getPHPHyperLink();
@@ -47,6 +48,7 @@ public class PHPLineTracker implements IConsoleLineTrackerExtension {
 	/**
 	 * @see org.eclipse.debug.ui.console.IConsoleLineTracker#lineAppended(org.eclipse.jface.text.IRegion)
 	 */
+	@Override
 	public void lineAppended(IRegion line) {
 		String message = ""; //$NON-NLS-1$
 		try {
@@ -69,6 +71,7 @@ public class PHPLineTracker implements IConsoleLineTrackerExtension {
 	/**
 	 * @see org.eclipse.debug.ui.console.IConsoleLineTracker#dispose()
 	 */
+	@Override
 	public void dispose() {
 		fConsole = null;
 		if (fPHPHyperLink != null) {
@@ -83,6 +86,7 @@ public class PHPLineTracker implements IConsoleLineTrackerExtension {
 	 * @see
 	 * org.eclipse.debug.ui.console.IConsoleLineTrackerExtension#consoleClosed()
 	 */
+	@Override
 	public void consoleClosed() {
 		if (fPHPHyperLink != null) {
 			fPHPHyperLink.dispose();

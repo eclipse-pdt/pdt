@@ -56,16 +56,19 @@ public class PHPRefactoringChangeNode extends TextEditChangeNode {
 			fphpElement = element;
 		}
 
+		@Override
 		public String getText() {
 			return ASTNodeLabels.getElementLabel(fphpElement,
 					ASTNodeLabels.M_PARAMETER_TYPES | ASTNodeLabels.M_PARAMETER_NAMES);
 		}
 
+		@Override
 		public ImageDescriptor getImageDescriptor() {
 			return fgImageProvider.getPHPImageDescriptor(fphpElement,
 					ASTNodeImageProvider.OVERLAY_ICONS | ASTNodeImageProvider.SMALL_ICONS);
 		}
 
+		@Override
 		public IRegion getTextRange() throws CoreException {
 			return new Region(fphpElement.getStart(), fphpElement.getLength());
 		}
@@ -75,10 +78,9 @@ public class PHPRefactoringChangeNode extends TextEditChangeNode {
 		super(change);
 	}
 
-	private static class OffsetComparator implements Comparator {
-		public int compare(Object o1, Object o2) {
-			TextEditBasedChangeGroup c1 = (TextEditBasedChangeGroup) o1;
-			TextEditBasedChangeGroup c2 = (TextEditBasedChangeGroup) o2;
+	private static class OffsetComparator implements Comparator<TextEditBasedChangeGroup> {
+		@Override
+		public int compare(TextEditBasedChangeGroup c1, TextEditBasedChangeGroup c2) {
 			int p1 = getOffset(c1);
 			int p2 = getOffset(c2);
 			if (p1 < p2)
@@ -94,12 +96,13 @@ public class PHPRefactoringChangeNode extends TextEditChangeNode {
 		}
 	}
 
+	@Override
 	protected ChildNode[] createChildNodes() {
 		final TextEditBasedChange change = getTextEditBasedChange();
-		Program program = (Program) change.getAdapter(Program.class);
+		Program program = change.getAdapter(Program.class);
 		if (program != null) {
-			List children = new ArrayList(5);
-			Map map = new HashMap(20);
+			List<ChildNode> children = new ArrayList<>(5);
+			Map<ASTNode, PHPLanguageNode> map = new HashMap<>(20);
 			TextEditBasedChangeGroup[] changes = getSortedChangeGroups(change);
 			for (int i = 0; i < changes.length; i++) {
 				final TextEditBasedChangeGroup tec = changes[i];
@@ -110,7 +113,7 @@ public class PHPRefactoringChangeNode extends TextEditChangeNode {
 					RefactoringUIPlugin.log(e);
 				}
 			}
-			return (ChildNode[]) children.toArray(new ChildNode[children.size()]);
+			return children.toArray(new ChildNode[children.size()]);
 		} else {
 			return EMPTY_CHILDREN;
 		}
@@ -123,8 +126,8 @@ public class PHPRefactoringChangeNode extends TextEditChangeNode {
 	 * @param tec
 	 * @param element
 	 */
-	private void addNode(Program program, List children, Map map, final TextEditBasedChangeGroup tec,
-			final ASTNode element) {
+	private void addNode(Program program, List<ChildNode> children, Map<ASTNode, PHPLanguageNode> map,
+			final TextEditBasedChangeGroup tec, final ASTNode element) {
 		if (element.getType() == ASTNode.PROGRAM) {
 			children.add(createTextEditGroupNode(this, tec));
 		} else {
@@ -135,14 +138,14 @@ public class PHPRefactoringChangeNode extends TextEditChangeNode {
 
 	private TextEditBasedChangeGroup[] getSortedChangeGroups(TextEditBasedChange change) {
 		TextEditBasedChangeGroup[] edits = change.getChangeGroups();
-		List result = new ArrayList(edits.length);
+		List<TextEditBasedChangeGroup> result = new ArrayList<>(edits.length);
 		for (int i = 0; i < edits.length; i++) {
 			if (!edits[i].getTextEditGroup().isEmpty())
 				result.add(edits[i]);
 		}
-		Comparator comparator = new OffsetComparator();
+		Comparator<TextEditBasedChangeGroup> comparator = new OffsetComparator();
 		Collections.sort(result, comparator);
-		return (TextEditBasedChangeGroup[]) result.toArray(new TextEditBasedChangeGroup[result.size()]);
+		return result.toArray(new TextEditBasedChangeGroup[result.size()]);
 	}
 
 	private ASTNode getModifiedPHPElement(TextEditBasedChangeGroup edit, Program program) throws Exception {
@@ -157,8 +160,9 @@ public class PHPRefactoringChangeNode extends TextEditChangeNode {
 		return getParentContext(result);
 	}
 
-	private PHPLanguageNode getChangeElement(Map map, ASTNode element, List children, TextEditChangeNode cunitChange) {
-		PHPLanguageNode result = (PHPLanguageNode) map.get(element);
+	private PHPLanguageNode getChangeElement(Map<ASTNode, PHPLanguageNode> map, ASTNode element,
+			List<ChildNode> children, TextEditChangeNode cunitChange) {
+		PHPLanguageNode result = map.get(element);
 		if (result != null)
 			return result;
 

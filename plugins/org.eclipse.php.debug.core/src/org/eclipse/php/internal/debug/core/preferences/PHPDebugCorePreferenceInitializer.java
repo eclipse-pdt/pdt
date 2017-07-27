@@ -45,6 +45,7 @@ public class PHPDebugCorePreferenceInitializer extends AbstractPreferenceInitial
 		}
 	}
 
+	@Override
 	public void initializeDefaultPreferences() {
 		IEclipsePreferences node = PHPDebugPlugin.getDefaultPreferences();
 
@@ -74,7 +75,7 @@ public class PHPDebugCorePreferenceInitializer extends AbstractPreferenceInitial
 		node.putBoolean(PHPDebugCorePreferenceNames.ZEND_DEBUG_ENCRYPTED_SSL_DATA, false);
 		node.put(IPHPDebugConstants.DEBUGGING_PAGES, IPHPDebugConstants.DEBUGGING_ALL_PAGES);
 
-		List<Inet4Address> clientHosts = new ArrayList<Inet4Address>();
+		List<Inet4Address> clientHosts = new ArrayList<>();
 		clientHosts.add(LOCALHOST);
 		try {
 			Enumeration<NetworkInterface> ii = NetworkInterface.getNetworkInterfaces();
@@ -187,8 +188,8 @@ public class PHPDebugCorePreferenceInitializer extends AbstractPreferenceInitial
 	}
 
 	private int getAddress(byte[] bytesAddress) {
-		return ((((int) bytesAddress[0]) & 0xFF) << 24) | ((((int) bytesAddress[1]) & 0xFF) << 16)
-				| ((((int) bytesAddress[2]) & 0xFF) << 8) | ((((int) bytesAddress[3]) & 0xFF) << 0);
+		return (((bytesAddress[0]) & 0xFF) << 24) | (((bytesAddress[1]) & 0xFF) << 16)
+				| (((bytesAddress[2]) & 0xFF) << 8) | (((bytesAddress[3]) & 0xFF) << 0);
 	}
 
 }

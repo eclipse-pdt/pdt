@@ -75,6 +75,7 @@ public class RenameLocalVariableProcessor extends
 	/**
 	 * Derive the change
 	 */
+	@Override
 	public Change createChange(IProgressMonitor pm) throws CoreException,
 			OperationCanceledException {
 		try {
@@ -119,42 +120,52 @@ public class RenameLocalVariableProcessor extends
 		return node.getType() == ASTNode.PROGRAM ? (Program) node : null;
 	}
 
+	@Override
 	public Object[] getElements() {
 		return new Object[] { identifier };
 	}
 
+	@Override
 	public String getIdentifier() {
 		return ID_RENAME_FUNCTION;
 	}
 
+	@Override
 	public String getProcessorName() {
 		return RENAME_FUNCTION_PROCESSOR_NAME;
 	}
 
+	@Override
 	public Object getNewElement() {
 		return getNewElementName();
 	}
 
+	@Override
 	public String getCurrentElementName() {
 		return ((Identifier) identifier.getName()).getName();
 	}
 
+	@Override
 	public boolean canEnableTextUpdating() {
 		return true;
 	}
 
+	@Override
 	public String getCurrentElementQualifier() {
 		return ((Identifier) identifier.getName()).getName();
 	}
 
+	@Override
 	public boolean getUpdateTextualMatches() {
 		return isUpdateTextualMatches;
 	}
 
+	@Override
 	public void setUpdateTextualMatches(boolean update) {
 		isUpdateTextualMatches = update;
 	}
 
+	@Override
 	public RefactoringStatus getRefactoringStatus(IFile key, Program program) {
 		if (PHPElementConciliator.localVariableAlreadyExists(
 				this.functionDeclaration, getNewElementName())) {

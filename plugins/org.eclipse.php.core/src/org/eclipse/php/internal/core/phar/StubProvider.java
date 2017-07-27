@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.CoreException;
 
 public class StubProvider implements IStubProvider {
 
+	@Override
 	public IStub create(PharPackage jarPackage) throws CoreException {
 		Assert.isNotNull(jarPackage);
 		Stub manifest = new Stub(jarPackage);

@@ -73,7 +73,7 @@ public class RenameTraitProcessor extends AbstractRenameProcessor<IFile>
 	private IType[] types;
 
 	public RenameTraitProcessor(IFile operatedFile, ASTNode locateNode) {
-		super(operatedFile); //$NON-NLS-1$
+		super(operatedFile); 
 		this.identifier = locateNode;
 		IModelElement[] elements = null;
 		try {
@@ -89,7 +89,7 @@ public class RenameTraitProcessor extends AbstractRenameProcessor<IFile>
 		if (elements == null) {
 			return new IType[0];
 		}
-		List<IType> types = new ArrayList<IType>();
+		List<IType> types = new ArrayList<>();
 		for (int i = 0; i < elements.length; i++) {
 			try {
 				if ((elements[i] instanceof IType)
@@ -105,6 +105,7 @@ public class RenameTraitProcessor extends AbstractRenameProcessor<IFile>
 	/**
 	 * Derive the change
 	 */
+	@Override
 	public Change createChange(IProgressMonitor pm) throws CoreException,
 			OperationCanceledException {
 
@@ -153,18 +154,22 @@ public class RenameTraitProcessor extends AbstractRenameProcessor<IFile>
 		}
 	}
 
+	@Override
 	public Object[] getElements() {
 		return new Object[] { identifier };
 	}
 
+	@Override
 	public String getIdentifier() {
 		return ID_RENAME_CLASS;
 	}
 
+	@Override
 	public String getProcessorName() {
 		return RENAME_CLASS_PROCESSOR_NAME;
 	}
 
+	@Override
 	public Object getNewElement() {
 		return getNewElementName();
 	}
@@ -185,6 +190,7 @@ public class RenameTraitProcessor extends AbstractRenameProcessor<IFile>
 		return identifier.getStart();
 	}
 
+	@Override
 	public String getCurrentElementName() {
 		if (identifier instanceof Identifier) {
 			return ((Identifier) identifier).getName();
@@ -203,7 +209,7 @@ public class RenameTraitProcessor extends AbstractRenameProcessor<IFile>
 
 	@Override
 	protected void collectReferences(Program program, IProgressMonitor pm) {
-		final HashSet<IResource> list = new HashSet<IResource>();
+		final HashSet<IResource> list = new HashSet<>();
 
 		IScriptProject project = this.identifier.getProgramRoot()
 				.getSourceModule().getScriptProject();
@@ -248,22 +254,27 @@ public class RenameTraitProcessor extends AbstractRenameProcessor<IFile>
 		}
 	}
 
+	@Override
 	public boolean canEnableTextUpdating() {
 		return true;
 	}
 
+	@Override
 	public String getCurrentElementQualifier() {
 		return getCurrentElementName();
 	}
 
+	@Override
 	public boolean getUpdateTextualMatches() {
 		return isUpdateTextualMatches;
 	}
 
+	@Override
 	public void setUpdateTextualMatches(boolean update) {
 		isUpdateTextualMatches = update;
 	}
 
+	@Override
 	public RefactoringStatus getRefactoringStatus(IFile key, Program program) {
 		if (PHPElementConciliator.classNameAlreadyExists(program,
 				getNewElementName())) {
@@ -283,7 +294,7 @@ public class RenameTraitProcessor extends AbstractRenameProcessor<IFile>
 				.computeAffectedNatures(resource);
 		RenameArguments fRenameArguments = new RenameArguments(
 				getNewElementName(), false);
-		LinkedList<RefactoringParticipant> participants = new LinkedList<RefactoringParticipant>(
+		LinkedList<RefactoringParticipant> participants = new LinkedList<>(
 				Arrays.asList(ParticipantManager.loadRenameParticipants(status,
 						this, identifier, fRenameArguments, null,
 						affectedNatures, sharedParticipants)));

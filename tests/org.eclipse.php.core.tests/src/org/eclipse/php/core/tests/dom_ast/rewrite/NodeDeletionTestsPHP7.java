@@ -16,6 +16,7 @@ import org.eclipse.php.core.PHPVersion;
 
 public class NodeDeletionTestsPHP7 extends NodeDeletionTests {
 
+	@Override
 	protected PHPVersion getPHPVersion() {
 		return PHPVersion.PHP7_0;
 	}

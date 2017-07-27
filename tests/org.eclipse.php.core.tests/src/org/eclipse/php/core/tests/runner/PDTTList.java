@@ -75,7 +75,7 @@ public class PDTTList extends AbstractPDTTRunner {
 	 * Parent runner for PHPVersionRunner and DirRunner
 	 */
 	private abstract class ParentRunner extends Suite {
-		protected final List<Runner> runners = new LinkedList<Runner>();
+		protected final List<Runner> runners = new LinkedList<>();
 		protected Object testInstance;
 		protected String[] fFileList = new String[0];
 
@@ -150,7 +150,7 @@ public class PDTTList extends AbstractPDTTRunner {
 			Bundle bundle = getBundle();
 			if (entryPaths != null) {
 				while (entryPaths.hasMoreElements()) {
-					final String path = (String) entryPaths.nextElement();
+					final String path = entryPaths.nextElement();
 					if (!path.endsWith("/")) {
 						continue;
 					}
@@ -215,6 +215,7 @@ public class PDTTList extends AbstractPDTTRunner {
 			return statement;
 		}
 
+		@Override
 		protected void collectInitializationErrors(java.util.List<Throwable> errors) {
 			super.collectInitializationErrors(errors);
 			validatePublicVoidWithNoArguments(BeforeList.class, errors);
@@ -272,7 +273,7 @@ public class PDTTList extends AbstractPDTTRunner {
 
 		@Override
 		public void evaluate() throws Throwable {
-			List<Throwable> errors = new LinkedList<Throwable>();
+			List<Throwable> errors = new LinkedList<>();
 			try {
 				fBefore.evaluate();
 			} catch (Throwable e) {

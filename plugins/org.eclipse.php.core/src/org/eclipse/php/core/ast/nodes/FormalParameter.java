@@ -57,13 +57,13 @@ public class FormalParameter extends ASTNode {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS_PHP5;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(4);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(4);
 		properyList.add(PARAMETER_TYPE_PROPERTY);
 		properyList.add(PARAMETER_NAME_PROPERTY);
 		properyList.add(DEFAULT_VALUE_PROPERTY);
 		properyList.add(IS_VARIADIC_PROPERTY);
 		PROPERTY_DESCRIPTORS_PHP5 = Collections.unmodifiableList(properyList);
-		properyList = new ArrayList<StructuralPropertyDescriptor>(4);
+		properyList = new ArrayList<>(4);
 		properyList.add(PARAMETER_TYPE_PROPERTY);
 		properyList.add(PARAMETER_NAME_PROPERTY);
 		properyList.add(DEFAULT_VALUE_PROPERTY);
@@ -104,27 +104,28 @@ public class FormalParameter extends ASTNode {
 
 	public FormalParameter(int start, int end, AST ast, Expression type, final Variable parameterName,
 			Expression defaultValue) {
-		this(start, end, ast, type, (Expression) parameterName, defaultValue, false);
+		this(start, end, ast, type, parameterName, defaultValue, false);
 	}
 
 	public FormalParameter(int start, int end, AST ast, Expression type, final Reference parameterName,
 			Expression defaultValue) {
-		this(start, end, ast, type, (Expression) parameterName, defaultValue, false);
+		this(start, end, ast, type, parameterName, defaultValue, false);
 	}
 
 	public FormalParameter(int start, int end, AST ast, Expression type, final Variable parameterName) {
-		this(start, end, ast, type, (Expression) parameterName, null, false);
+		this(start, end, ast, type, parameterName, null, false);
 	}
 
 	public FormalParameter(int start, int end, AST ast, Expression type, final Variable parameterName,
 			boolean isMandatory) {
-		this(start, end, ast, type, (Expression) parameterName, null, isMandatory);
+		this(start, end, ast, type, parameterName, null, isMandatory);
 	}
 
 	public FormalParameter(int start, int end, AST ast, Expression type, final Reference parameterName) {
-		this(start, end, ast, type, (Expression) parameterName, null, false);
+		this(start, end, ast, type, parameterName, null, false);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -133,6 +134,7 @@ public class FormalParameter extends ASTNode {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		if (parameterType != null) {
 			parameterType.accept(visitor);
@@ -143,6 +145,7 @@ public class FormalParameter extends ASTNode {
 		}
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		if (parameterType != null) {
@@ -154,6 +157,7 @@ public class FormalParameter extends ASTNode {
 		}
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		if (parameterType != null) {
 			parameterType.traverseBottomUp(visitor);
@@ -165,6 +169,7 @@ public class FormalParameter extends ASTNode {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<FormalParameter"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -192,6 +197,7 @@ public class FormalParameter extends ASTNode {
 		buffer.append(tab).append("</FormalParameter>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.FORMAL_PARAMETER;
 	}
@@ -320,6 +326,7 @@ public class FormalParameter extends ASTNode {
 		postReplaceChild(oldChild, id, PARAMETER_TYPE_PROPERTY);
 	}
 
+	@Override
 	final boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean value) {
 		if (property == IS_MANDATORY_PROPERTY) {
 			if (get) {
@@ -340,6 +347,7 @@ public class FormalParameter extends ASTNode {
 		return super.internalGetSetBooleanProperty(property, get, value);
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == PARAMETER_NAME_PROPERTY) {
 			if (get) {
@@ -390,6 +398,7 @@ public class FormalParameter extends ASTNode {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

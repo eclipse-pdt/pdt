@@ -37,6 +37,7 @@ public class CodeCoverageConfigurationBlock implements IPreferenceConfigurationB
 		fPreferencePage = preferencePage;
 	}
 
+	@Override
 	public Control createControl(Composite parent) {
 		ScrolledCompositeImpl scrolledCompositeImpl = new ScrolledCompositeImpl(parent, SWT.V_SCROLL | SWT.H_SCROLL);
 		Composite composite = new Composite(scrolledCompositeImpl, SWT.NONE);
@@ -69,15 +70,19 @@ public class CodeCoverageConfigurationBlock implements IPreferenceConfigurationB
 		return scrolledCompositeImpl;
 	}
 
+	@Override
 	public void dispose() {
 	}
 
+	@Override
 	public void initialize() {
 	}
 
+	@Override
 	public void performDefaults() {
 	}
 
+	@Override
 	public void performOk() {
 	}
 }

@@ -26,9 +26,9 @@ import org.eclipse.swt.widgets.Control;
 
 public class PHPBuildpathOrderingWorkbookPage extends BuildPathBasePage {
 
-	private ListDialogField fBuildpathList;
+	private ListDialogField<?> fBuildpathList;
 
-	public PHPBuildpathOrderingWorkbookPage(ListDialogField buildpathList) {
+	public PHPBuildpathOrderingWorkbookPage(ListDialogField<?> buildpathList) {
 		fBuildpathList = buildpathList;
 	}
 
@@ -52,13 +52,14 @@ public class PHPBuildpathOrderingWorkbookPage extends BuildPathBasePage {
 	 * @see BuildPathBasePage#getSelection
 	 */
 	@Override
-	public List getSelection() {
+	public List<?> getSelection() {
 		return fBuildpathList.getSelectedElements();
 	}
 
 	/*
 	 * @see BuildPathBasePage#setSelection
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void setSelection(List selElements, boolean expand) {
 		fBuildpathList.selectElements(new StructuredSelection(selElements));

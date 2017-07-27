@@ -56,6 +56,7 @@ public class VersionedPackage extends MinimalPackage {
 	 * 
 	 * @see java.lang.Object#clone()
 	 */
+	@Override
 	public VersionedPackage clone() {
 		VersionedPackage clone = new VersionedPackage();
 		cloneProperties(clone);

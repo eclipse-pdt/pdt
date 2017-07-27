@@ -25,6 +25,7 @@ public class FileContentExtendedRequest extends FileContentRequest {
 	 * @see org.eclipse.php.internal.debug.core.zend.debugger.messages.
 	 * FileContentRequest#getType()
 	 */
+	@Override
 	public int getType() {
 		return 10002;
 	}
@@ -35,6 +36,7 @@ public class FileContentExtendedRequest extends FileContentRequest {
 	 * @see org.eclipse.php.internal.debug.core.zend.debugger.messages.
 	 * FileContentRequest#serialize(java.io.DataOutputStream)
 	 */
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		super.serialize(out);
 		out.writeInt(getSize());
@@ -47,6 +49,7 @@ public class FileContentExtendedRequest extends FileContentRequest {
 	 * @see org.eclipse.php.internal.debug.core.zend.debugger.messages.
 	 * FileContentRequest#deserialize(java.io.DataInputStream)
 	 */
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		super.deserialize(in);
 		setSize(in.readInt());

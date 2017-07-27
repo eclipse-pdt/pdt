@@ -37,10 +37,12 @@ public class ReflectionCallExpression extends Expression implements Dereferencab
 		this.args = args;
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.REFLECTION_CALL_EXPRESSION;
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		boolean visit = visitor.visit(this);
 		if (visit) {
@@ -74,9 +76,11 @@ public class ReflectionCallExpression extends Expression implements Dereferencab
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
+	@Override
 	public final void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}

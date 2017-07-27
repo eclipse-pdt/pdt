@@ -70,7 +70,7 @@ public class BuildPathTest extends ComposerModelTests {
 		IComposerProject composerProject = ComposerPlugin.getDefault().getComposerProject(scriptProject.getProject());
 		BuildPathParser parser = new BuildPathParser(composerProject);
 		List<String> paths = parser.getPaths();
-		List<String> expected = new ArrayList<String>(Arrays.asList("mordor/composer", "mordor/gossi/ldap/src",
+		List<String> expected = new ArrayList<>(Arrays.asList("mordor/composer", "mordor/gossi/ldap/src",
 				"mordor/phing/phing/classes/phing", "mordor/propel/propel1/generator/lib",
 				"mordor/propel/propel1/runtime/lib", "mordor/symfony/console", "nother", "src", "test"));
 		assertArrayEquals(paths.toArray(), expected.toArray());

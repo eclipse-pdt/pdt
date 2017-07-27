@@ -28,7 +28,6 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * @author michael
  */
-@SuppressWarnings("restriction")
 public class PathMapperCompositeFragment extends CompositeFragment {
 
 	private PathMappingComposite pathMapperComposite;
@@ -54,6 +53,7 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 	/**
 	 * Create the page
 	 */
+	@Override
 	protected void createContents(Composite parent) {
 		pathMapperComposite = new PathMappingComposite(parent, SWT.NONE);
 		GridData data = new GridData(GridData.FILL_BOTH);
@@ -76,12 +76,14 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 		}
 	}
 
+	@Override
 	public void validate() {
 		setMessage(getDescription(), IMessageProvider.NONE);
 		setComplete(true);
 		controlHandler.update();
 	}
 
+	@Override
 	public boolean performOk() {
 		Server server = getServer();
 		if (server != null) {
@@ -98,6 +100,7 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 	 * @throws IllegalArgumentException
 	 *             if the given object is not a {@link Server}
 	 */
+	@Override
 	public void setData(Object server) {
 		if (!(server instanceof Server)) {
 			throw new IllegalArgumentException("The given object is not a Server"); //$NON-NLS-1$

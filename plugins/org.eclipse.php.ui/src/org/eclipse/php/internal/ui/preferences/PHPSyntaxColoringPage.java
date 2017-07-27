@@ -198,7 +198,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 
 		IStructuredDocumentRegion documentRegion = fDocument.getFirstStructuredDocumentRegion();
 		while (documentRegion != null) {
-			final Collection<StyleRange> holdResults = new ArrayList<StyleRange>();
+			final Collection<StyleRange> holdResults = new ArrayList<>();
 			fStyleProvider.prepareTextRegions(documentRegion, 0, documentRegion.getEnd(), holdResults);
 
 			for (Iterator<StyleRange> iter = holdResults.iterator(); iter.hasNext();) {
@@ -209,7 +209,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 
 			for (Iterator<String> iterator = SemanticHighlightingManager.getInstance().getSemanticHighlightings()
 					.keySet().iterator(); iterator.hasNext();) {
-				String type = (String) iterator.next();
+				String type = iterator.next();
 
 				HighlightingStyle highlightingStyle = highlightingStyleMap.get(type);
 				if (highlightingStyle.isEnabled()) {
@@ -732,7 +732,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 	 * Set up all the style preference keys in the overlay store
 	 */
 	private OverlayKey[] createOverlayStoreKeys() {
-		List<OverlayKey> overlayKeys = new ArrayList<OverlayKey>();
+		List<OverlayKey> overlayKeys = new ArrayList<>();
 
 		Iterator<String> i = getStylePreferenceKeys().iterator();
 		while (i.hasNext()) {
@@ -978,14 +978,14 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 	}
 
 	protected void initHighlightingPositions() {
-		highlightingPositionMap = new HashMap<String, Position[]>();
+		highlightingPositionMap = new HashMap<>();
 		IPath stateLocation = PHPUiPlugin.getDefault().getStateLocation();
 		IPath path = stateLocation.append("/_" + "PHPSyntax"); //$NON-NLS-1$ //$NON-NLS-2$
 		IFileStore fileStore = EFS.getLocalFileSystem().getStore(path);
 
 		NonExistingPHPFileEditorInput input = new NonExistingPHPFileEditorInput(fileStore, "PHPSyntax"); //$NON-NLS-1$
 
-		File realFile = ((NonExistingPHPFileEditorInput) input).getPath(input).toFile();
+		File realFile = input.getPath(input).toFile();
 
 		try {
 			FileOutputStream fos = new FileOutputStream(realFile);
@@ -998,7 +998,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 				parser.setSource(fDocument.get().toCharArray());
 
 				final Program program = parser.createAST(null);
-				List<AbstractSemanticHighlighting> highlightings = new ArrayList<AbstractSemanticHighlighting>();
+				List<AbstractSemanticHighlighting> highlightings = new ArrayList<>();
 
 				highlightings.add(new StaticFieldHighlighting() {
 					@Override
@@ -1228,7 +1228,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 				Collections.sort(highlightings);
 
 				for (Iterator<AbstractSemanticHighlighting> iterator = highlightings.iterator(); iterator.hasNext();) {
-					AbstractSemanticHighlighting abstractSemanticHighlighting = (AbstractSemanticHighlighting) iterator
+					AbstractSemanticHighlighting abstractSemanticHighlighting = iterator
 							.next();
 					Position[] positions = abstractSemanticHighlighting.consumes(program);
 
@@ -1255,7 +1255,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 
 	private Collection<String> getStylePreferenceKeys() {
 		if (fStylePreferenceKeys == null) {
-			List<String> styles = new ArrayList<String>();
+			List<String> styles = new ArrayList<>();
 			styles.add(PreferenceConstants.EDITOR_NORMAL_COLOR);
 			styles.add(PreferenceConstants.EDITOR_BOUNDARYMARKER_COLOR);
 			styles.add(PreferenceConstants.EDITOR_KEYWORD_COLOR);
@@ -1358,8 +1358,8 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 	public void init(IWorkbench workbench) {
 		setDescription(SSEUIMessages.SyntaxColoring_Description);
 
-		fStyleToDescriptionMap = new HashMap<String, String>();
-		fContextToStyleMap = new HashMap<String, String>();
+		fStyleToDescriptionMap = new HashMap<>();
+		fContextToStyleMap = new HashMap<>();
 
 		initStyleToDescriptionMap();
 		initRegionContextToStyleMap();
@@ -1457,10 +1457,10 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 	}
 
 	private void initHighlightingStyles() {
-		highlightingStyleMap = new HashMap<String, PHPSyntaxColoringPage.HighlightingStyle>();
+		highlightingStyleMap = new HashMap<>();
 		for (Iterator<String> iterator = SemanticHighlightingManager.getInstance().getSemanticHighlightings().keySet()
 				.iterator(); iterator.hasNext();) {
-			String type = (String) iterator.next();
+			String type = iterator.next();
 			ISemanticHighlighting highlighting = SemanticHighlightingManager.getInstance().getSemanticHighlightings()
 					.get(type);
 			highlightingStyleMap.put(type, createHighlightingStyle(highlighting));
@@ -1614,7 +1614,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 		String property = event.getProperty();
 		if (property == null)
 			return;
-		for (Iterator iterator = SemanticHighlightingManager.getInstance().getSemanticHighlightings().keySet()
+		for (Iterator<?> iterator = SemanticHighlightingManager.getInstance().getSemanticHighlightings().keySet()
 				.iterator(); iterator.hasNext();) {
 			String type = (String) iterator.next();
 			ISemanticHighlighting highlighting = SemanticHighlightingManager.getInstance().getSemanticHighlightings()

@@ -50,10 +50,12 @@ public class ReflectionArrayVariableReference extends ReflectionVariableReferenc
 		return arrayType;
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.REFLECTION_ARRAY_ACCESS;
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		final boolean visit = visitor.visit(this);
 		if (visit) {

@@ -70,6 +70,7 @@ public class PHPCodeRefactorPreferencePage extends PreferencePage implements IWo
 		return result;
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
 	}
 

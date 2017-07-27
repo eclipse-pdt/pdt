@@ -101,7 +101,7 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 
 	private OverlayPreferenceStore.OverlayKey[] createOverlayStoreKeys() {
 
-		ArrayList<OverlayPreferenceStore.OverlayKey> overlayKeys = new ArrayList<OverlayPreferenceStore.OverlayKey>();
+		ArrayList<OverlayPreferenceStore.OverlayKey> overlayKeys = new ArrayList<>();
 
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING,
 				PreferenceConstants.EDITOR_CLOSE_STRINGS));
@@ -315,7 +315,7 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 		((GridData) control.getLayoutData()).horizontalIndent += INDENT;
 	}
 
-	private final Map<Button, String> fCheckBoxes = new HashMap<Button, String>();
+	private final Map<Button, String> fCheckBoxes = new HashMap<>();
 	private final SelectionListener fCheckBoxListener = new SelectionListener() {
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
@@ -328,10 +328,10 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 		}
 	};
 
-	private final ArrayList<SelectionListener> fMasterSlaveListeners = new ArrayList<SelectionListener>();
+	private final ArrayList<SelectionListener> fMasterSlaveListeners = new ArrayList<>();
 	protected static final int INDENT = 20;
 
-	private final Map<Text, String> fTextFields = new HashMap<Text, String>();
+	private final Map<Text, String> fTextFields = new HashMap<>();
 
 	public void refreshValues() {
 		char indentChar = FormatterUtils.getFormatterCommonPreferences().getIndentationChar(null);

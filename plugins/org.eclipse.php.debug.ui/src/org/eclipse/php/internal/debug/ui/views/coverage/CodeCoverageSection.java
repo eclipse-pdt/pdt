@@ -56,6 +56,7 @@ public class CodeCoverageSection implements Listener {
 	 * org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.
 	 * Event)
 	 */
+	@Override
 	public void handleEvent(final Event event) {
 		final Point p = new Point(event.x, event.y);
 	

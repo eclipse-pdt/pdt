@@ -62,6 +62,7 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 		 * org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse
 		 * .core.runtime.IProgressMonitor)
 		 */
+		@Override
 		public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 			DebugServerTestController.getInstance().addListener(DefaultDebugServerConnectionTest.this);
 			monitor.beginTask(PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_testingConnectivity"), //$NON-NLS-1$
@@ -258,7 +259,7 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 	protected String fURL;
 	protected Boolean fIsFinished = false;
 	protected ProgressMonitorDialog fProgressDialog = null;
-	protected List<String> fTimeoutServerList = new ArrayList<String>();
+	protected List<String> fTimeoutServerList = new ArrayList<>();
 	protected ClientTest fClientTest;
 	protected CountDownLatch fClientTestLatch;
 	protected String fCurrentHost;
@@ -270,6 +271,7 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 	 * org.eclipse.php.debug.ui.IDebugServerConnectionTest#testConnection(org
 	 * .eclipse.php.internal.server.core.Server, org.eclipse.swt.widgets.Shell)
 	 */
+	@Override
 	public void testConnection(Server server, Shell shell) {
 		fServer = server;
 		fShell = shell;
@@ -296,6 +298,7 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 	 * #testEventReceived(org.eclipse.php.internal.debug.
 	 * core.zend.testConnection.DebugServerTestEvent)
 	 */
+	@Override
 	public void testEventReceived(final DebugServerTestEvent e) {
 		fIsFinished = true;
 		// Release the latch as we have event
@@ -380,7 +383,7 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 		if (!customHosts.isEmpty())
 			hosts = customHosts;
 		StringTokenizer tokenizer = new StringTokenizer(hosts, ", "); //$NON-NLS-1$
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		while (tokenizer.hasMoreTokens()) {
 			list.add(tokenizer.nextToken());
 		}
@@ -402,6 +405,7 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 
 	protected void showCustomErrorDialog(final String message) {
 		fShell.getDisplay().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				DefaultServerTestMessageDialog dialog = new DefaultServerTestMessageDialog(fShell,
 						PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_testDebugServer"), null, // accept //$NON-NLS-1$
@@ -428,6 +432,7 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 			stringBuilder.append(addresses.toString());
 		}
 		fShell.getDisplay().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				MessageDialog.openInformation(fShell,
 						PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_testDebugServer"), //$NON-NLS-1$

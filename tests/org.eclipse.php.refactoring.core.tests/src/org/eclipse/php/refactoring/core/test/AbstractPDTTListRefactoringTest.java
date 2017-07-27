@@ -30,7 +30,7 @@ public abstract class AbstractPDTTListRefactoringTest extends AbstractRefactorin
 
 	protected String[] fileNames = null;
 	protected final TestProject project;
-	protected Map<String, PdttFileExt> filesMap = new LinkedHashMap<String, PdttFileExt>();
+	protected Map<String, PdttFileExt> filesMap = new LinkedHashMap<>();
 
 	public AbstractPDTTListRefactoringTest(String[] fileNames) {
 		project = createProject();

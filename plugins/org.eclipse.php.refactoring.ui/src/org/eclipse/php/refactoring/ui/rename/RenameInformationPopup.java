@@ -32,7 +32,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.*;
-import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Region;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
@@ -60,6 +63,7 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 			viewer.addTextListener(this);
 			viewer.addViewportListener(this);
 			fPopup.addDisposeListener(new DisposeListener() {
+				@Override
 				public void widgetDisposed(DisposeEvent e) {
 					fEditor.getSite().getWorkbenchWindow().getPartService()
 							.removePartListener(PopupVisibilityManager.this);
@@ -84,6 +88,7 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 			});
 		}
 
+		@Override
 		public void partActivated(IWorkbenchPartReference partRef) {
 			IWorkbenchPart fPart = fEditor.getEditorSite().getPart();
 			if (partRef.getPart(false) == fPart) {
@@ -91,12 +96,15 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 			}
 		}
 
+		@Override
 		public void partBroughtToTop(IWorkbenchPartReference partRef) {
 		}
 
+		@Override
 		public void partClosed(IWorkbenchPartReference partRef) {
 		}
 
+		@Override
 		public void partDeactivated(IWorkbenchPartReference partRef) {
 			IWorkbenchPart fPart = fEditor.getEditorSite().getPart();
 			if (fPopup != null && !fPopup.isDisposed() && partRef.getPart(false) == fPart) {
@@ -104,52 +112,65 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 			}
 		}
 
+		@Override
 		public void partHidden(IWorkbenchPartReference partRef) {
 		}
 
+		@Override
 		public void partInputChanged(IWorkbenchPartReference partRef) {
 		}
 
+		@Override
 		public void partOpened(IWorkbenchPartReference partRef) {
 		}
 
+		@Override
 		public void partVisible(IWorkbenchPartReference partRef) {
 		}
 
+		@Override
 		public void controlMoved(ControlEvent e) {
 			updatePopupLocation(true);
 			updateVisibility(); // only for hiding outside editor area
 		}
 
+		@Override
 		public void controlResized(ControlEvent e) {
 			updatePopupLocation(true);
 			updateVisibility(); // only for hiding outside editor area
 		}
 
+		@Override
 		public void mouseDoubleClick(MouseEvent e) {
 		}
 
+		@Override
 		public void mouseDown(MouseEvent e) {
 		}
 
+		@Override
 		public void mouseUp(MouseEvent e) {
 			updatePopupLocation(false);
 			updateVisibility();
 		}
 
+		@Override
 		public void keyPressed(KeyEvent e) {
 			updatePopupLocation(false);
 			updateVisibility();
 		}
 
+		@Override
 		public void keyReleased(KeyEvent e) {
 		}
 
+		@Override
 		public void textChanged(TextEvent event) {
 			updatePopupLocation(false);
 			updateVisibility(); // only for hiding outside editor area
 		}
 
+		@Override
 		public void viewportChanged(int verticalOffset) {
 			updatePopupLocation(true);
 			updateVisibility(); // only for hiding outside editor area
@@ -257,6 +278,7 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 		// Leave linked mode when popup loses focus
 		// (except when focus goes back to workbench window or menu is open):
 		fPopup.addShellListener(new ShellAdapter() {
+			@Override
 			public void shellDeactivated(ShellEvent e) {
 				if (fIsMenuUp)
 					return;
@@ -265,6 +287,7 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 				display.asyncExec(new Runnable() {
 					// post to UI thread since editor shell only gets activated
 					// after popup has lost focus
+					@Override
 					public void run() {
 						Shell activeShell = display.getActiveShell();
 						if (activeShell != editorShell) {
@@ -277,6 +300,7 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 
 		if (!MAC) { // carbon and cocoa draws its own border...
 			fPopup.addPaintListener(new PaintListener() {
+				@Override
 				public void paintControl(PaintEvent pe) {
 					pe.gc.drawPolygon(getPolygon(true));
 				}
@@ -290,6 +314,7 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 		// fPopup.moveBelow(workbenchShell.getShells()[0]);
 
 		UIJob delayJob = new UIJob(display, Messages.RenameInformationPopup_1) {
+			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				fDelayJobFinished = true;
 				if (fPopup != null && !fPopup.isDisposed()) {
@@ -453,6 +478,7 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 	private void addMoveSupport(final Shell popupShell, final Control movedControl) {
 		movedControl.addMouseListener(new MouseAdapter() {
 
+			@Override
 			public void mouseDown(final MouseEvent downEvent) {
 				if (downEvent.button != 1) {
 					return;
@@ -495,6 +521,7 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 					 * org.eclipse.swt.events.ControlAdapter#controlMoved(org
 					 * .eclipse.swt.events.ControlEvent)
 					 */
+					@Override
 					public void controlMoved(ControlEvent moveEvent) {
 						Rectangle[] currentRects = tracker.getRectangles();
 						final Rectangle mouseMoveCurrent = currentRects[0];
@@ -622,17 +649,20 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 	private ToolBar addViewMenu(final Composite parent) {
 		fToolBar = new ToolBar(parent, SWT.FLAT);
 		final ToolItem menuButton = new ToolItem(fToolBar, SWT.PUSH, 0);
-		fMenuImage = RefactoringUIPlugin.getDefault()
+		RefactoringUIPlugin.getDefault();
+		fMenuImage = RefactoringUIPlugin
 				.imageDescriptorFromPlugin(RefactoringUIPlugin.PLUGIN_ID, "icons/full/elcl16/view_menu.png") //$NON-NLS-1$
 				.createImage();
 		menuButton.setImage(fMenuImage);
 		menuButton.setToolTipText(Messages.RenameInformationPopup_3);
 		fToolBar.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mouseDown(MouseEvent e) {
 				showMenu(fToolBar);
 			}
 		});
 		menuButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				showMenu(fToolBar);
 			}
@@ -657,14 +687,17 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 		fMenuManager.setRemoveAllWhenShown(true);
 
 		fMenuManager.addMenuListener(new IMenuListener2() {
+			@Override
 			public void menuAboutToHide(IMenuManager manager) {
 				fIsMenuUp = false;
 			}
 
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				boolean canRefactor = !fRenameLinkedMode.isOriginalName();
 
 				IAction refactorAction = new Action(Messages.RenameInformationPopup_4) {
+					@Override
 					public void run() {
 						activateEditor();
 						fRenameLinkedMode.doRename(false);
@@ -675,6 +708,7 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 				manager.add(refactorAction);
 
 				IAction previewAction = new Action(Messages.RenameInformationPopup_5) {
+					@Override
 					public void run() {
 						activateEditor();
 						fRenameLinkedMode.doRename(true);
@@ -685,6 +719,7 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 				manager.add(previewAction);
 
 				IAction openDialogAction = new Action(Messages.RenameInformationPopup_6 + '\t' + fOpenDialogBinding) {
+					@Override
 					public void run() {
 						activateEditor();
 						fRenameLinkedMode.startFullDialog();
@@ -703,6 +738,7 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 				manager.add(subMenuManager);
 
 				IAction prefsAction = new Action(Messages.RenameInformationPopup_13) {
+					@Override
 					public void run() {
 						fRenameLinkedMode.cancel();
 						String linkedModePrefPageID = PHPCodeRefactorPreferencePage.ID; // $NON-NLS-1$
@@ -718,6 +754,7 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 
 	private void addMoveMenuItem(IMenuManager manager, final int snapPosition, String text) {
 		IAction action = new Action(text, IAction.AS_RADIO_BUTTON) {
+			@Override
 			public void run() {
 				fSnapPosition = snapPosition;
 				getDialogSettings().put(SNAP_POSITION_KEY, fSnapPosition);
@@ -739,7 +776,7 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 	 * @return the keybinding for Refactor &gt; Rename
 	 */
 	private static String getOpenDialogBinding() {
-		IBindingService bindingService = (IBindingService) PlatformUI.getWorkbench().getAdapter(IBindingService.class);
+		IBindingService bindingService = PlatformUI.getWorkbench().getAdapter(IBindingService.class);
 		if (bindingService == null)
 			return ""; //$NON-NLS-1$
 		String binding = bindingService.getBestActiveBindingFormattedFor("org.eclipse.php.ui.edit.text.rename.element"); //$NON-NLS-1$
@@ -771,10 +808,12 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 		fEditor.getSite().getShell().setActive();
 	}
 
+	@Override
 	public boolean requestWidgetToken(IWidgetTokenOwner owner) {
 		return false;
 	}
 
+	@Override
 	public boolean requestWidgetToken(IWidgetTokenOwner owner, int priority) {
 		if (priority > WIDGET_PRIORITY) {
 			if (fPopup != null && !fPopup.isDisposed()) {
@@ -785,6 +824,7 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 		return false;
 	}
 
+	@Override
 	public boolean setFocus(IWidgetTokenOwner owner) {
 		if (fToolBar != null && !fToolBar.isDisposed())
 			showMenu(fToolBar);

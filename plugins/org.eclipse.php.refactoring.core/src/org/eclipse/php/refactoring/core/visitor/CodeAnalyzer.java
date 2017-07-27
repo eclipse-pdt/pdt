@@ -34,6 +34,7 @@ public class CodeAnalyzer extends StatementAnalyzer {
 		this.sourceModule = sourceModule;
 	}
 
+	@Override
 	protected final void checkSelectedNodes() {
 		super.checkSelectedNodes();
 		RefactoringStatus status = getStatus();

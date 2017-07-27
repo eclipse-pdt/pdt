@@ -405,7 +405,7 @@ public class ASTNodeLabels {
 		if (obj instanceof ASTNode) {
 			return getElementLabel(obj, flags);
 		} else if (obj instanceof IAdaptable) {
-			IWorkbenchAdapter wbadapter = (IWorkbenchAdapter) ((IAdaptable) obj).getAdapter(IWorkbenchAdapter.class);
+			IWorkbenchAdapter wbadapter = ((IAdaptable) obj).getAdapter(IWorkbenchAdapter.class);
 			if (wbadapter != null) {
 				return wbadapter.getLabel(obj);
 			}
@@ -417,7 +417,7 @@ public class ASTNodeLabels {
 		if (obj instanceof ASTNode) {
 			return getElementTooltipText(obj);
 		} else if (obj instanceof IAdaptable) {
-			IWorkbenchAdapter wbadapter = (IWorkbenchAdapter) ((IAdaptable) obj).getAdapter(IWorkbenchAdapter.class);
+			IWorkbenchAdapter wbadapter = ((IAdaptable) obj).getAdapter(IWorkbenchAdapter.class);
 			if (wbadapter != null) {
 				return wbadapter.getLabel(obj);
 			}

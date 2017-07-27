@@ -28,7 +28,7 @@ public final class ChildListPropertyDescriptor extends StructuralPropertyDescrip
 	 * ASTNode.
 	 * </p>
 	 */
-	final Class elementType;
+	final Class<?> elementType;
 
 	/**
 	 * Indicates whether a cycle is possible.
@@ -54,7 +54,7 @@ public final class ChildListPropertyDescriptor extends StructuralPropertyDescrip
 	 *            <code>true</code> if this property is at risk of cycles, and
 	 *            <code>false</code> if there is no worry about cycles
 	 */
-	ChildListPropertyDescriptor(Class nodeClass, String propertyId, Class elementType, boolean cycleRisk) {
+	ChildListPropertyDescriptor(Class<?> nodeClass, String propertyId, Class<?> elementType, boolean cycleRisk) {
 		super(nodeClass, propertyId);
 		if (elementType == null) {
 			throw new IllegalArgumentException();
@@ -72,7 +72,7 @@ public final class ChildListPropertyDescriptor extends StructuralPropertyDescrip
 	 * 
 	 * @return the element type of the property
 	 */
-	public final Class getElementType() {
+	public final Class<?> getElementType() {
 		return this.elementType;
 	}
 

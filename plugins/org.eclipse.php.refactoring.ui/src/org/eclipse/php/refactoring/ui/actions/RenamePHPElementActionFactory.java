@@ -21,6 +21,7 @@ import org.eclipse.ui.IActionDelegate;
  */
 public class RenamePHPElementActionFactory implements IRenamePHPElementActionFactory {
 
+	@Override
 	public IActionDelegate createRenameAction() {
 		return new RenamePHPElementActionDelegate();
 	}

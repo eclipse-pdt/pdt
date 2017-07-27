@@ -56,7 +56,7 @@ public class TypeInferenceTests {
 	protected static final int ENGINE_TIMEOUT = 100000;
 
 	@Parameters
-	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<>();
 
 	static {
 
@@ -132,11 +132,12 @@ public class TypeInferenceTests {
 			this.criteriaFunction = criteriaFunction;
 		}
 
+		@Override
 		public boolean visit(Expression node) throws Exception {
 			if (node instanceof CallExpression) {
 				CallExpression callExpression = (CallExpression) node;
 				if (criteriaFunction.equals(callExpression.getName())) {
-					result = (ASTNode) callExpression.getArgs().getChilds().get(0);
+					result = callExpression.getArgs().getChilds().get(0);
 					context = contextStack.peek();
 					return false;
 				}
@@ -148,6 +149,7 @@ public class TypeInferenceTests {
 			return result;
 		}
 
+		@Override
 		public IContext getContext() {
 			return context;
 		}

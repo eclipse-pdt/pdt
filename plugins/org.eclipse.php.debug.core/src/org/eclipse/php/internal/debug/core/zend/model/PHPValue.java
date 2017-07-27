@@ -157,6 +157,7 @@ public class PHPValue extends PHPDebugElement implements IValue, IPHPDataType {
 	 * 
 	 * @see org.eclipse.debug.core.model.IValue#isAllocated()
 	 */
+	@Override
 	public boolean isAllocated() throws DebugException {
 		return true;
 	}
@@ -166,6 +167,7 @@ public class PHPValue extends PHPDebugElement implements IValue, IPHPDataType {
 	 * 
 	 * @see org.eclipse.debug.core.model.IValue#getReferenceTypeName()
 	 */
+	@Override
 	public String getReferenceTypeName() throws DebugException {
 		return getDataType().getText().toUpperCase();
 	}
@@ -175,6 +177,7 @@ public class PHPValue extends PHPDebugElement implements IValue, IPHPDataType {
 	 * 
 	 * @see org.eclipse.debug.core.model.IValue#hasVariables()
 	 */
+	@Override
 	public synchronized boolean hasVariables() throws DebugException {
 		switch (fExpressionValue.getDataType()) {
 		case PHP_ARRAY:
@@ -197,6 +200,7 @@ public class PHPValue extends PHPDebugElement implements IValue, IPHPDataType {
 	 * 
 	 * @see org.eclipse.debug.core.model.IValue#getValueString()
 	 */
+	@Override
 	public synchronized String getValueString() throws DebugException {
 		return fExpressionValue.getValueAsString();
 	}
@@ -211,6 +215,7 @@ public class PHPValue extends PHPDebugElement implements IValue, IPHPDataType {
 	 * 
 	 * @see org.eclipse.debug.core.model.IValue#getVariables()
 	 */
+	@Override
 	public synchronized IVariable[] getVariables() throws DebugException {
 		return fVariablesContainer.getVariables();
 	}

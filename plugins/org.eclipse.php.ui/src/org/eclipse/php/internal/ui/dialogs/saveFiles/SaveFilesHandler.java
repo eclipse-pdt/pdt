@@ -43,7 +43,7 @@ public class SaveFilesHandler {
 			result.setAccepted(true);
 			result.setSaved(dirtyEditors);
 		}
-		List editorsToSave = result.getSaved();
+		List<IEditorPart> editorsToSave = result.getSaved();
 		if (editorsToSave.size() > 0) {
 			Display.getDefault().syncExec(new SaveFilesRunnable(editorsToSave, monitor));
 		}
@@ -121,13 +121,14 @@ public class SaveFilesHandler {
 			this.promptAutoSave = promptAutoSave;
 		}
 
+		@SuppressWarnings({ "unchecked", "rawtypes" })
 		@Override
 		public void run() {
 			SaveFilesDialog sfDialog = new SaveFilesDialog(Display.getCurrent().getActiveShell(), dirtyEditors, result,
 					promptAutoSave);
 			if (sfDialog.open() == Window.OK) {
 				result.setAccepted(true);
-				result.setSaved(Arrays.asList(sfDialog.getResult()));
+				result.setSaved((List) Arrays.asList(sfDialog.getResult()));
 			}
 		}
 
@@ -136,7 +137,7 @@ public class SaveFilesHandler {
 	public static class SaveFilesResult {
 		boolean autoSave;
 		boolean accepted;
-		List<?> saved = new ArrayList<>();
+		List<IEditorPart> saved = new ArrayList<>();
 
 		public boolean isAutoSave() {
 			return autoSave;
@@ -146,7 +147,7 @@ public class SaveFilesHandler {
 			this.autoSave = autoSave;
 		}
 
-		public void setSaved(List<?> saved) {
+		public void setSaved(List<IEditorPart> saved) {
 			this.saved = saved;
 		}
 
@@ -158,20 +159,20 @@ public class SaveFilesHandler {
 			return accepted;
 		}
 
-		public List<?> getSaved() {
+		public List<IEditorPart> getSaved() {
 			return saved;
 		}
 
 		public SaveFilesResult() {
 		}
 
-		public SaveFilesResult(List<?> saved, boolean accepted) {
+		public SaveFilesResult(List<IEditorPart> saved, boolean accepted) {
 			this();
 			setSaved(saved);
 			setAccepted(accepted);
 		}
 
-		public SaveFilesResult(List saved, boolean accepted, boolean autoSave) {
+		public SaveFilesResult(List<IEditorPart> saved, boolean accepted, boolean autoSave) {
 			this(saved, accepted);
 			setAutoSave(autoSave);
 			setAccepted(accepted);

@@ -21,15 +21,18 @@ public class PHPSourceElementParser extends AbstractSourceElementParser {
 
 	private IModuleSource fSourceModule;
 
+	@Override
 	public void parseSourceModule(IModuleSource module) {
 		fSourceModule = module;
 		super.parseSourceModule(module);
 	}
 
+	@Override
 	protected SourceElementRequestVisitor createVisitor() {
 		return new PHPSourceElementRequestor(getRequestor(), fSourceModule);
 	}
 
+	@Override
 	protected String getNatureId() {
 		return PHPNature.ID;
 	}

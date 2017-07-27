@@ -59,16 +59,16 @@ public class DebugViewHelper {
 		IDebugElement element = null;
 		IAdaptable adaptable = DebugUITools.getDebugContext();
 		if (adaptable != null) {
-			element = (IDebugElement) adaptable.getAdapter(IDebugElement.class);
+			element = adaptable.getAdapter(IDebugElement.class);
 		}
 		if (element == null) {
 			if (adaptable instanceof PHPProcess) {
-				element = (IDebugElement) ((PHPProcess) adaptable).getDebugTarget();
+				element = ((PHPProcess) adaptable).getDebugTarget();
 			} else if (adaptable instanceof ILaunch) {
 				IDebugTarget[] targets = ((ILaunch) (adaptable)).getDebugTargets();
 				for (int i = 0; i < targets.length; i++) {
 					if (targets[i] instanceof IPHPDebugTarget) {
-						element = (IDebugElement) targets[i];
+						element = targets[i];
 					}
 				}
 			}

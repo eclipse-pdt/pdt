@@ -31,6 +31,7 @@ public class FileContentRequest extends DebugMessageRequestImpl implements IDebu
 	 * 
 	 * @see org.eclipse.php.debug.core.debugger.messages.IDebugMessage#getType()
 	 */
+	@Override
 	public int getType() {
 		return 10001;
 	}
@@ -42,6 +43,7 @@ public class FileContentRequest extends DebugMessageRequestImpl implements IDebu
 	 * org.eclipse.php.debug.core.debugger.messages.IDebugMessage#serialize(java
 	 * .io.DataOutputStream)
 	 */
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());
@@ -55,6 +57,7 @@ public class FileContentRequest extends DebugMessageRequestImpl implements IDebu
 	 * org.eclipse.php.debug.core.debugger.messages.IDebugMessage#deserialize(
 	 * java.io.DataInputStream)
 	 */
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		setFileName(CommunicationUtilities.readString(in));

@@ -40,7 +40,7 @@ public class GetUseStatementsByTests {
 	public static TestWatcher watcher = new TestSuiteWatcher();
 
 	@Parameters
-	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<>();
 
 	static {
 		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/astutils/get_use_statements/php53" });

@@ -35,7 +35,7 @@ class InternalASTRewrite extends NodeEventHandler {
 
 	protected final RewriteEventStore eventStore;
 	protected final NodeInfoStore nodeStore;
-	protected final Hashtable clonedNodes;
+	protected final Hashtable<ASTNode, Object> clonedNodes;
 
 	int cloneDepth = 0;
 	private AstLexer lexer;
@@ -50,7 +50,7 @@ class InternalASTRewrite extends NodeEventHandler {
 		this.root = root;
 		this.eventStore = new RewriteEventStore();
 		this.nodeStore = new NodeInfoStore(root.getAST());
-		this.clonedNodes = new Hashtable();
+		this.clonedNodes = new Hashtable<>();
 		this.lexer = root.getAST().lexer;
 	}
 
@@ -67,7 +67,7 @@ class InternalASTRewrite extends NodeEventHandler {
 	 *             if the rewrite fails
 	 * @return Returns the edit describing the text changes.
 	 */
-	public TextEdit rewriteAST(IDocument document, Map options) {
+	public TextEdit rewriteAST(IDocument document, Map<String, String> options) {
 		TextEdit result = new MultiTextEdit();
 
 		final Program rootNode = getRootNode();
@@ -81,6 +81,7 @@ class InternalASTRewrite extends NodeEventHandler {
 				 * form. This means that one cannot trust that the root of the
 				 * given node is the compilation unit.
 				 */
+				@Override
 				public SourceRange computeSourceRange(ASTNode node) {
 					int extendedStartPosition = rootNode.getExtendedStartPosition(node);
 					int extendedLength = rootNode.getExtendedLength(node);
@@ -122,6 +123,7 @@ class InternalASTRewrite extends NodeEventHandler {
 		return this.root;
 	}
 
+	@Override
 	public String toString() {
 		StringBuilder buf = new StringBuilder();
 		buf.append("Events:\n"); //$NON-NLS-1$
@@ -129,16 +131,19 @@ class InternalASTRewrite extends NodeEventHandler {
 		return buf.toString();
 	}
 
+	@Override
 	void preValueChangeEvent(ASTNode node, SimplePropertyDescriptor property) {
 		// force event creation
 		this.getNodeEvent(node, property);
 	}
 
+	@Override
 	void postValueChangeEvent(ASTNode node, SimplePropertyDescriptor property) {
 		NodeRewriteEvent event = this.getNodeEvent(node, property);
 		event.setNewValue(node.getStructuralProperty(property));
 	}
 
+	@Override
 	void preAddChildEvent(ASTNode node, ASTNode child, StructuralPropertyDescriptor property) {
 		if (property.isChildProperty()) {
 			NodeRewriteEvent event = this.getNodeEvent(node, property);
@@ -152,11 +157,12 @@ class InternalASTRewrite extends NodeEventHandler {
 		}
 	}
 
+	@Override
 	void postAddChildEvent(ASTNode node, ASTNode child, StructuralPropertyDescriptor property) {
 		if (property.isChildListProperty()) {
 
 			ListRewriteEvent event = this.getListEvent(node, property);
-			List list = (List) node.getStructuralProperty(property);
+			List<?> list = (List<?>) node.getStructuralProperty(property);
 			int i = list.indexOf(child);
 			int s = list.size();
 			int index;
@@ -173,6 +179,7 @@ class InternalASTRewrite extends NodeEventHandler {
 		}
 	}
 
+	@Override
 	void preRemoveChildEvent(ASTNode node, ASTNode child, StructuralPropertyDescriptor property) {
 		if (property.isChildProperty()) {
 			NodeRewriteEvent event = getNodeEvent(node, property);
@@ -189,6 +196,7 @@ class InternalASTRewrite extends NodeEventHandler {
 		}
 	}
 
+	@Override
 	void preReplaceChildEvent(ASTNode node, ASTNode child, ASTNode newChild, StructuralPropertyDescriptor property) {
 		if (property.isChildProperty()) {
 			NodeRewriteEvent event = getNodeEvent(node, property);
@@ -207,10 +215,12 @@ class InternalASTRewrite extends NodeEventHandler {
 		}
 	}
 
+	@Override
 	void preCloneNodeEvent(ASTNode node) {
 		this.cloneDepth++;
 	}
 
+	@Override
 	void postCloneNodeEvent(ASTNode node, ASTNode clone) {
 		if (node.ast == root.ast && clone.ast == root.ast) {
 			if ((node.getFlags() & ASTNode.ORIGINAL) != 0) {

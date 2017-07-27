@@ -31,6 +31,7 @@ public class GetCodeCoverageResponse extends DebugMessageResponseImpl implements
 
 	static protected boolean isDebugMode = System.getProperty("loggingDebug") != null; //$NON-NLS-1$
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		int numFiles = in.readInt();
@@ -82,10 +83,12 @@ public class GetCodeCoverageResponse extends DebugMessageResponseImpl implements
 		}
 	}
 
+	@Override
 	public int getType() {
 		return 11014;
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());

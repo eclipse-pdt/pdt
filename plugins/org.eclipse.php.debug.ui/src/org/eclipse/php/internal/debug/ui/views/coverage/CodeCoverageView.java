@@ -43,6 +43,7 @@ public class CodeCoverageView extends ViewPart {
 	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.
 	 * widgets.Composite)
 	 */
+	@Override
 	public void createPartControl(Composite parent) {
 		fSourceViewer = new CodeCoverageTextViewer(parent, SWT.NONE);
 		fActionGroup = new CodeCoverageViewActionGroup(this);
@@ -55,6 +56,7 @@ public class CodeCoverageView extends ViewPart {
 	 * 
 	 * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
 	 */
+	@Override
 	public void setFocus() {
 	}
 
@@ -106,9 +108,11 @@ public class CodeCoverageView extends ViewPart {
 				}
 			} else {
 				RemoteDebugger.requestRemoteFile(new IRemoteFileContentRequestor() {
+					@Override
 					public void fileContentReceived(final byte[] content, String serverAddress, String originalURL,
 							String fileName, int lineNumber) {
 						Display.getDefault().asyncExec(new Runnable() {
+							@Override
 							public void run() {
 								if (fSourceViewer != null && !fSourceViewer.isDisposed()) {
 									fSourceViewer.setText(new String(content));
@@ -117,6 +121,7 @@ public class CodeCoverageView extends ViewPart {
 						});
 					}
 
+					@Override
 					public void requestCompleted(Exception e) {
 					}
 				}, fileName, 1, codeCoverageData.getURL());

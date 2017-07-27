@@ -36,6 +36,7 @@ public class Binding extends ASTAttribute {
 		fIsRelevant= isRelevant;
 	}
 	
+	@Override
 	public Object getParent() {
 		return fParent;
 	}
@@ -58,10 +59,11 @@ public class Binding extends ASTAttribute {
 		return (typeKinds & kind) != 0;
 	}
 	
+	@Override
 	public Object[] getChildren() {
 		
 		if (fBinding != null) {
-			ArrayList res= new ArrayList();
+			ArrayList<ASTAttribute> res= new ArrayList<ASTAttribute>();
 			res.add(new BindingProperty(this, "NAME", fBinding.getName(), true)); //$NON-NLS-1$
 			res.add(new BindingProperty(this, "KEY", fBinding.getKey(), true)); //$NON-NLS-1$
 			//FIXME: res.add(new BindingProperty(this, "IS RECOVERED", fBinding.isRecovered(), true)); //$NON-NLS-1$
@@ -111,7 +113,7 @@ public class Binding extends ASTAttribute {
 					if (typeBinding.isClass()) kinds.append(" isClass"); //$NON-NLS-1$
 					if (typeBinding.isInterface()) kinds.append(" isInterface"); //$NON-NLS-1$
 					//FIXME: if (typeBinding.isEnum()) kinds.append(" isEnum"); //$NON-NLS-1$
-					res.add(new BindingProperty(this, kinds, true)); //$NON-NLS-1$
+					res.add(new BindingProperty(this, kinds, true)); 
 					
 					res.add(new Binding(this, "ELEMENT TYPE", typeBinding.getElementType(), isType(typeKind, ARRAY_TYPE))); //$NON-NLS-1$
 					res.add(new Binding(this, "COMPONENT TYPE", typeBinding.getComponentType(), isType(typeKind, ARRAY_TYPE))); //$NON-NLS-1$
@@ -268,6 +270,7 @@ public class Binding extends ASTAttribute {
 		return UNKNOWN_TYPE;
 	}
 
+	@Override
 	public String getLabel() {
 		StringBuffer buf= new StringBuffer(fLabel);
 		buf.append(": "); //$NON-NLS-1$
@@ -320,14 +323,17 @@ public class Binding extends ASTAttribute {
 
 	}
 
+	@Override
 	public Image getImage() {
 		return null;
 	}
 
+	@Override
 	public String toString() {
 		return getLabel();
 	}
 	
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -353,6 +359,7 @@ public class Binding extends ASTAttribute {
 		return true;
 	}
 	
+	@Override
 	public int hashCode() {
 		int result= fParent != null ? fParent.hashCode() : 0;
 		result+= (fBinding != null && fBinding.getKey() != null ? fBinding.getKey().hashCode() : 0);

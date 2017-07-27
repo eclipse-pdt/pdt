@@ -33,6 +33,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
+import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore.OverlayKey;
 
 public class PHPEditorHoverConfigurationBlock implements IPreferenceConfigurationBlock {
 
@@ -131,7 +132,7 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 
 	private StatusInfo fStatus;
 
-	private Map<Button, String> fCheckBoxes = new HashMap<Button, String>();
+	private Map<Button, String> fCheckBoxes = new HashMap<>();
 	private SelectionListener fCheckBoxListener = new SelectionListener() {
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
@@ -156,7 +157,7 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 
 	private OverlayPreferenceStore.OverlayKey[] createOverlayStoreKeys() {
 
-		ArrayList overlayKeys = new ArrayList();
+		ArrayList<OverlayKey> overlayKeys = new ArrayList<>();
 
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN,
 				PreferenceConstants.EDITOR_ANNOTATION_ROLL_OVER));
@@ -427,7 +428,7 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 
 		StringTokenizer tokenizer = new StringTokenizer(compiledTextHoverModifiers,
 				PHPEditorTextHoverDescriptor.VALUE_SEPARATOR);
-		HashMap idToModifier = new HashMap(tokenizer.countTokens() / 2);
+		HashMap<String, String> idToModifier = new HashMap<>(tokenizer.countTokens() / 2);
 
 		while (tokenizer.hasMoreTokens()) {
 			String id = tokenizer.nextToken();
@@ -439,7 +440,7 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 				.getString(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS);
 
 		tokenizer = new StringTokenizer(compiledTextHoverModifierMasks, PHPEditorTextHoverDescriptor.VALUE_SEPARATOR);
-		HashMap idToModifierMask = new HashMap(tokenizer.countTokens() / 2);
+		HashMap<String, String> idToModifierMask = new HashMap<>(tokenizer.countTokens() / 2);
 
 		while (tokenizer.hasMoreTokens()) {
 			String id = tokenizer.nextToken();
@@ -448,7 +449,7 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 		}
 
 		for (int i = 0; i < fHoverConfigs.length; i++) {
-			String modifierString = (String) idToModifier.get(getContributedHovers()[i].getId());
+			String modifierString = idToModifier.get(getContributedHovers()[i].getId());
 			boolean enabled = true;
 			if (modifierString == null)
 				modifierString = PHPEditorTextHoverDescriptor.DISABLED_TAG;
@@ -468,7 +469,7 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 			if (fHoverConfigs[i].fStateMask == -1) {
 				try {
 					fHoverConfigs[i].fStateMask = Integer
-							.parseInt((String) idToModifierMask.get(getContributedHovers()[i].getId()));
+							.parseInt(idToModifierMask.get(getContributedHovers()[i].getId()));
 				} catch (NumberFormatException ex) {
 					fHoverConfigs[i].fStateMask = -1;
 				}
@@ -524,7 +525,7 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 			fStatus = new StatusInfo();
 
 		int i = 0;
-		HashMap stateMasks = new HashMap(fHoverConfigs.length);
+		HashMap<Integer, String> stateMasks = new HashMap<>(fHoverConfigs.length);
 		while (fStatus.isOK() && i < fHoverConfigs.length) {
 			if (fHoverConfigs[i].fIsEnabled) {
 				String label = getContributedHovers()[i].getLabel();
@@ -536,7 +537,7 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 				else if (stateMasks.containsKey(stateMask))
 					fStatus = new StatusInfo(IStatus.ERROR,
 							NLS.bind(PHPUIMessages.PHPEditorHoverConfigurationBlock_duplicateModifier,
-									new String[] { label, (String) stateMasks.get(stateMask) }));
+									new String[] { label, stateMasks.get(stateMask) }));
 				else
 					stateMasks.put(stateMask, label);
 			}

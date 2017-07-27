@@ -40,7 +40,7 @@ public class TraitUseStatementVisitorTests {
 	public static TestWatcher watcher = new TestSuiteWatcher();
 
 	@Parameters
-	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<>();
 
 	static {
 		TESTS.put(PHPVersion.PHP5_4, new String[] { "/workspace/astutils/trait_use_statement_visitor/php54" });

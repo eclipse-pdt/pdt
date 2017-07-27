@@ -32,8 +32,8 @@ import org.eclipse.ui.views.navigator.ResourceSorter;
 public class TreeAndListGroup implements ISelectionChangedListener {
 	private Object root;
 	private Object currentTreeSelection;
-	private List selectionChangedListeners = new ArrayList();
-	private List doubleClickListeners = new ArrayList();
+	private List<ISelectionChangedListener> selectionChangedListeners = new ArrayList<>();
+	private List<IDoubleClickListener> doubleClickListeners = new ArrayList<>();
 
 	private ITreeContentProvider treeContentProvider;
 	private IStructuredContentProvider listContentProvider;
@@ -118,9 +118,9 @@ public class TreeAndListGroup implements ISelectionChangedListener {
 	 * viewer
 	 */
 	protected void notifySelectionListeners(SelectionChangedEvent event) {
-		Iterator iter = selectionChangedListeners.iterator();
+		Iterator<ISelectionChangedListener> iter = selectionChangedListeners.iterator();
 		while (iter.hasNext()) {
-			((ISelectionChangedListener) iter.next()).selectionChanged(event);
+			iter.next().selectionChanged(event);
 		}
 	}
 
@@ -129,9 +129,9 @@ public class TreeAndListGroup implements ISelectionChangedListener {
 	 * in the list viewer
 	 */
 	protected void notifyDoubleClickListeners(DoubleClickEvent event) {
-		Iterator iter = doubleClickListeners.iterator();
+		Iterator<IDoubleClickListener> iter = doubleClickListeners.iterator();
 		while (iter.hasNext()) {
-			((IDoubleClickListener) iter.next()).doubleClick(event);
+			iter.next().doubleClick(event);
 		}
 	}
 
@@ -183,11 +183,13 @@ public class TreeAndListGroup implements ISelectionChangedListener {
 		listViewer.setLabelProvider(listLabelProvider);
 		listViewer.setSorter(new ResourceSorter(ResourceSorter.NAME));
 		listViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				notifySelectionListeners(event);
 			}
 		});
 		listViewer.addDoubleClickListener(new IDoubleClickListener() {
+			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				if (!event.getSelection().isEmpty()) {
 					notifyDoubleClickListeners(event);
@@ -257,6 +259,7 @@ public class TreeAndListGroup implements ISelectionChangedListener {
 	 * org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(
 	 * org.eclipse.jface.viewers.SelectionChangedEvent)
 	 */
+	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
 		IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 		Object selectedElement = selection.getFirstElement();

@@ -23,7 +23,6 @@ import org.eclipse.php.internal.server.core.manager.ServersManager;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public enum DBGpProxyHandlersManager {
 
 	/**
@@ -31,7 +30,7 @@ public enum DBGpProxyHandlersManager {
 	 */
 	INSTANCE;
 
-	private final Map<String, DBGpProxyHandler> handlers = new HashMap<String, DBGpProxyHandler>();
+	private final Map<String, DBGpProxyHandler> handlers = new HashMap<>();
 
 	/**
 	 * Starts up this manager.

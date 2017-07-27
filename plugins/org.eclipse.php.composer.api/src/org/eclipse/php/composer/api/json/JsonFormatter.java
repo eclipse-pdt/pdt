@@ -14,8 +14,6 @@ package org.eclipse.php.composer.api.json;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
 import com.google.gson.Gson;
 
 public class JsonFormatter {
@@ -68,7 +66,7 @@ public class JsonFormatter {
 				write("{}", 0); //$NON-NLS-1$
 			} else {
 				writeln("{", 0); //$NON-NLS-1$
-				final Iterator<String> keys = ((Set<String>) obj.keySet()).iterator();
+				final Iterator<String> keys = obj.keySet().iterator();
 				while (keys.hasNext()) {
 					final String key = keys.next();
 					write("\"" + escape(key) + "\" : ", indent + 1); //$NON-NLS-1$ //$NON-NLS-2$

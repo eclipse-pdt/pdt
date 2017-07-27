@@ -66,6 +66,7 @@ public class GZIPOutputStreamForPhar extends DeflaterOutputStream implements CRC
 	 * @exception IOException
 	 *                If an I/O error has occurred.
 	 */
+	@Override
 	public synchronized void write(byte[] buf, int off, int len) throws IOException {
 		super.write(buf, off, len);
 		crc.update(buf, off, len);
@@ -79,6 +80,7 @@ public class GZIPOutputStreamForPhar extends DeflaterOutputStream implements CRC
 	 * @exception IOException
 	 *                if an I/O error has occurred
 	 */
+	@Override
 	public void finish() throws IOException {
 		if (!def.finished()) {
 			def.finish();
@@ -97,6 +99,7 @@ public class GZIPOutputStreamForPhar extends DeflaterOutputStream implements CRC
 	 * @exception IOException
 	 *                if an I/O error has occurred
 	 */
+	@Override
 	public void close() throws IOException {
 		if (!closed) {
 			finish();
@@ -106,6 +109,7 @@ public class GZIPOutputStreamForPhar extends DeflaterOutputStream implements CRC
 		}
 	}
 
+	@Override
 	public long getCrc() {
 		return crc.getValue();
 	}

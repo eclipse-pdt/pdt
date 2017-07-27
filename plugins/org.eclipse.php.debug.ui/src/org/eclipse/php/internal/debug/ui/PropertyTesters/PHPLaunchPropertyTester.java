@@ -58,6 +58,7 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 	 *         <code>true<code> if the property is equal to the expected value; 
 	 *  otherwise <code>false</code> is returned
 	 */
+	@Override
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
 		if (receiver instanceof List<?>) {
 			List<?> list = (List<?>) receiver;
@@ -83,11 +84,11 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 	}
 
 	private IResource getResource(IAdaptable obj) {
-		IModelElement modelElement = (IModelElement) ((IAdaptable) obj).getAdapter(IModelElement.class);
+		IModelElement modelElement = obj.getAdapter(IModelElement.class);
 		if (modelElement != null) {
 			return modelElement.getResource();
 		} else {
-			return (IResource) ((IAdaptable) obj).getAdapter(IResource.class);
+			return obj.getAdapter(IResource.class);
 		}
 	}
 
@@ -107,7 +108,7 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 			if (server == null || ServersManager.isNoneServer(server)) {
 				return false;
 			}
-			return PHPToolkitUtil.isPHPProject((IProject) resource) && args.length > 0 && "webPage".equals(args[0]); //$NON-NLS-1$
+			return PHPToolkitUtil.isPHPProject(resource) && args.length > 0 && "webPage".equals(args[0]); //$NON-NLS-1$
 
 		} catch (CoreException e) {
 			PHPDebugUIPlugin.log(e);

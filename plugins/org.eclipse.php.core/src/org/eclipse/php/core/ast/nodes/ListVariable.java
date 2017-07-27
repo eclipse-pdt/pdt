@@ -30,7 +30,7 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  */
 public class ListVariable extends VariableBase {
 
-	private final ASTNode.NodeList<Expression> variables = new ASTNode.NodeList<Expression>(VARIABLES_PROPERTY);
+	private final ASTNode.NodeList<Expression> variables = new ASTNode.NodeList<>(VARIABLES_PROPERTY);
 
 	/**
 	 * The structural property of this node type.
@@ -45,7 +45,7 @@ public class ListVariable extends VariableBase {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(2);
 		properyList.add(VARIABLES_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
@@ -63,6 +63,7 @@ public class ListVariable extends VariableBase {
 		this.variables.addAll(variables);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -71,12 +72,14 @@ public class ListVariable extends VariableBase {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		for (ASTNode node : this.variables) {
 			node.accept(visitor);
 		}
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		for (ASTNode node : this.variables) {
@@ -84,6 +87,7 @@ public class ListVariable extends VariableBase {
 		}
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		for (ASTNode node : this.variables) {
 			node.traverseBottomUp(visitor);
@@ -91,6 +95,7 @@ public class ListVariable extends VariableBase {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<List"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -102,6 +107,7 @@ public class ListVariable extends VariableBase {
 		buffer.append(tab).append("</List>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.LIST_VARIABLE;
 	}
@@ -116,12 +122,14 @@ public class ListVariable extends VariableBase {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
 	}
 
-	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+	@Override
+	final List<? extends ASTNode> internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == VARIABLES_PROPERTY) {
 			return variables();
 		}

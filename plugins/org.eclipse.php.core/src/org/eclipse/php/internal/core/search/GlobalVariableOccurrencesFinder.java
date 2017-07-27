@@ -34,6 +34,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	 *            {@link Scalar} instance)
 	 * @return returns a message if there is a problem
 	 */
+	@Override
 	public String initialize(Program root, ASTNode node) {
 		fASTRoot = root;
 		isGlobalScope = true;
@@ -60,6 +61,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#
 	 * findOccurrences ()
 	 */
+	@Override
 	protected void findOccurrences() {
 		fDescription = Messages.format(BASE_DESCRIPTION, '$' + globalName);
 		fASTRoot.accept(this);
@@ -68,20 +70,24 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	/**
 	 * class declaration
 	 */
+	@Override
 	public boolean visit(ClassDeclaration classDeclaration) {
 		setGlobalScope(false);
 		return true;
 	}
 
+	@Override
 	public void endVisit(ClassDeclaration classDeclaration) {
 		setGlobalScope(true);
 	}
 
+	@Override
 	public boolean visit(TraitDeclaration traitDeclaration) {
 		setGlobalScope(false);
 		return true;
 	}
 
+	@Override
 	public void endVisit(TraitDeclaration traitDeclaration) {
 		setGlobalScope(true);
 	}
@@ -89,30 +95,36 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	/**
 	 * change the name of the function
 	 */
+	@Override
 	public boolean visit(FunctionDeclaration functionDeclaration) {
 		setGlobalScope(false);
 		return true;
 
 	}
 
+	@Override
 	public void endVisit(FunctionDeclaration functionDeclaration) {
 		setGlobalScope(true);
 	}
 
+	@Override
 	public boolean visit(InterfaceDeclaration interfaceDeclaration) {
 		setGlobalScope(false);
 		return true;
 	}
 
+	@Override
 	public void endVisit(InterfaceDeclaration interfaceDeclaration) {
 		setGlobalScope(true);
 	}
 
+	@Override
 	public boolean visit(FieldsDeclaration fieldDeclaration) {
 		setGlobalScope(false);
 		return true;
 	}
 
+	@Override
 	public void endVisit(FieldsDeclaration fieldsDeclaration) {
 		setGlobalScope(true);
 	}
@@ -120,6 +132,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	/**
 	 * Visit $a on global references: $a = 5;
 	 */
+	@Override
 	public boolean visit(Variable variable) {
 		if ((!variable.isDollared() && !ASTNodes.isQuotedDollaredCurlied(variable))
 				|| variable.getName().getType() != ASTNode.IDENTIFIER) {
@@ -147,6 +160,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * Make sure we mark the occurrences when selecting a scalar inside a
 	 * GLOBALS array access.
 	 */
+	@Override
 	public boolean visit(Scalar scalar) {
 		String stringValue = scalar.getStringValue();
 		if (stringValue.length() > 2 && isQuated(stringValue)) {
@@ -176,6 +190,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * Visit $a on global references (on function/methods) : ...global $a;$a =
 	 * 5;...
 	 */
+	@Override
 	public boolean visit(GlobalStatement globalStatement) {
 		final List<Variable> variables = globalStatement.variables();
 		for (final Variable variable : variables) {
@@ -193,6 +208,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	/**
 	 * Visit $GLOBALS['variableName'] occurrences
 	 */
+	@Override
 	public boolean visit(ArrayAccess arrayAccess) {
 		// check the case of $GLOBALS['var']
 		final Expression variableName = arrayAccess.getName();
@@ -241,6 +257,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * getOccurrenceReadWriteType
 	 * (org.eclipse.php.internal.core.ast.nodes.ASTNode)
 	 */
+	@Override
 	protected int getOccurrenceType(ASTNode node) {
 		if (node.getType() == ASTNode.VARIABLE) {
 			Variable variable = (Variable) node;
@@ -269,6 +286,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * @see
 	 * org.eclipse.php.internal.ui.search.IOccurrencesFinder#getElementName()
 	 */
+	@Override
 	public String getElementName() {
 		return globalName;
 	}
@@ -278,6 +296,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * 
 	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getID()
 	 */
+	@Override
 	public String getID() {
 		return ID;
 	}

@@ -21,7 +21,7 @@ public class BlockingQueue {
 
 	static Object emptyObject = new Object();
 
-	private ArrayList content;
+	private ArrayList<Object> content;
 	private boolean releaseFlag = false;
 
 	public BlockingQueue() {
@@ -29,7 +29,7 @@ public class BlockingQueue {
 	}
 
 	public BlockingQueue(int size) {
-		content = new ArrayList(size);
+		content = new ArrayList<>(size);
 	}
 
 	/**

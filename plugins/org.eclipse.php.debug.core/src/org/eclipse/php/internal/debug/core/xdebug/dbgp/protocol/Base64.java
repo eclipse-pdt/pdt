@@ -314,7 +314,7 @@ public class Base64 {
 		int decodepos = 0;
 		for (int i = 0; i < input.length; i++) {
 			// Get byte value and mask of any sign bit if byte > 0x7F
-			int byteVal = (int) input[i] & 0xFF;
+			int byteVal = input[i] & 0xFF;
 			if (base64ToValTable[byteVal] == -1) {
 				continue;
 			} else {

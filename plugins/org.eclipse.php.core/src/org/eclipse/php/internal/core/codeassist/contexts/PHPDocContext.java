@@ -32,6 +32,7 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
  */
 public abstract class PHPDocContext extends AbstractCompletionContext {
 
+	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
@@ -43,6 +44,7 @@ public abstract class PHPDocContext extends AbstractCompletionContext {
 		return getPartitionType() == PHPPartitionTypes.PHP_DOC;
 	}
 
+	@Override
 	public int getPrefixEnd() throws BadLocationException {
 		int prefixEnd = getOffset();
 		// NB: getChar(prefixEnd) returns ' ' if offset is at end of document

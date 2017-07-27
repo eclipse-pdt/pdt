@@ -75,6 +75,7 @@ public class RenameBuildAndIcludePathChange extends Change {
 		return new RefactoringStatus();
 	}
 
+	@Override
 	public Change perform(IProgressMonitor pm) throws CoreException {
 		performChanges(pm);
 		return new RenameBuildAndIcludePathChange(fDest, fSource, fNewName,

@@ -19,13 +19,16 @@ import org.eclipse.php.debug.core.debugger.messages.IDebugNotificationMessage;
 
 public class DebugSessionClosedNotification extends DebugMessageNotificationImpl implements IDebugNotificationMessage {
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 	}
 
+	@Override
 	public int getType() {
 		return 3;
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 	}

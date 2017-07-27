@@ -22,7 +22,8 @@ import org.eclipse.ui.texteditor.ITextEditor;
 
 public class PHPEditorAdapterFactory implements IAdapterFactory {
 
-	@SuppressWarnings("unchecked")
+	@Override
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		ITextEditor editorPart = (ITextEditor) adaptableObject;
 
@@ -32,7 +33,7 @@ public class PHPEditorAdapterFactory implements IAdapterFactory {
 			IModelElement modelElement = ((PHPStructuredEditor) editorPart).getModelElement();
 			isPHPFile = modelElement != null && PHPToolkitUtil.isPHPElement(modelElement);
 		} else {
-			IResource resource = (IResource) editorPart.getEditorInput().getAdapter(IResource.class);
+			IResource resource = editorPart.getEditorInput().getAdapter(IResource.class);
 			if (resource instanceof IFile) {
 				isPHPFile = PHPToolkitUtil.isPHPFile((IFile) resource);
 			}
@@ -44,8 +45,8 @@ public class PHPEditorAdapterFactory implements IAdapterFactory {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
-	public Class[] getAdapterList() {
-		return new Class[] { IRunToLineTarget.class };
+	@Override
+	public Class<?>[] getAdapterList() {
+		return new Class<?>[] { IRunToLineTarget.class };
 	}
 }

@@ -164,7 +164,7 @@ public class ASTRewrite {
 	 *             document passed does not correspond to the AST that is
 	 *             rewritten.
 	 */
-	public TextEdit rewriteAST(IDocument document, Map options) throws IllegalArgumentException {
+	public TextEdit rewriteAST(IDocument document, Map<String, String> options) throws IllegalArgumentException {
 		if (document == null) {
 			throw new IllegalArgumentException();
 		}
@@ -245,7 +245,7 @@ public class ASTRewrite {
 	}
 
 	private TextEdit internalRewriteAST(IDocument document, char[] content, LineInformation lineInfo, String lineDelim,
-			List commentNodes, Map options, ASTNode rootNode) {
+			List<Comment> commentNodes, Map<String, String> options, ASTNode rootNode) {
 		TextEdit result = new MultiTextEdit();
 		// validateASTNotModified(rootNode);
 
@@ -265,7 +265,7 @@ public class ASTRewrite {
 		int start = -1;
 		int end = -1;
 
-		for (Iterator iter = getRewriteEventStore().getChangeRootIterator(); iter.hasNext();) {
+		for (Iterator<?> iter = getRewriteEventStore().getChangeRootIterator(); iter.hasNext();) {
 			ASTNode curr = (ASTNode) iter.next();
 			if (!RewriteEventStore.isNewNode(curr)) {
 				int currStart = curr.getStart();
@@ -682,6 +682,7 @@ public class ASTRewrite {
 	 * 
 	 * @return a debug string
 	 */
+	@Override
 	public String toString() {
 		StringBuilder buf = new StringBuilder();
 		buf.append("Events:\n"); //$NON-NLS-1$

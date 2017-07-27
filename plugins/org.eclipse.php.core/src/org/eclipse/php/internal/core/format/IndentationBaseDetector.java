@@ -242,7 +242,7 @@ public class IndentationBaseDetector {
 					}
 
 					if (tokens != null && tokens.length > 0) {
-						Set<String> tokenTypeSet = new HashSet<String>();
+						Set<String> tokenTypeSet = new HashSet<>();
 						for (int i = 0; i < tokens.length; i++) {
 							tokenTypeSet.add(tokens[i].getType());
 						}

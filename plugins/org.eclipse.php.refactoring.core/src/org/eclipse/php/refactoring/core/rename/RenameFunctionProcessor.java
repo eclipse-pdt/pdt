@@ -67,13 +67,14 @@ public class RenameFunctionProcessor extends AbstractRenameProcessor<IFile>
 	private boolean isUpdateTextualMatches;
 
 	public RenameFunctionProcessor(IFile operatedFile, ASTNode locateNode) {
-		super(operatedFile); //$NON-NLS-1$
+		super(operatedFile); 
 		this.identifier = locateNode;
 	}
 
 	/**
 	 * Derive the change
 	 */
+	@Override
 	public Change createChange(IProgressMonitor pm) throws CoreException,
 			OperationCanceledException {
 		CompositeChange rootChange = new CompositeChange(
@@ -123,7 +124,7 @@ public class RenameFunctionProcessor extends AbstractRenameProcessor<IFile>
 
 	@Override
 	protected void collectReferences(Program program, IProgressMonitor pm) {
-		final ArrayList<IResource> list = new ArrayList<IResource>();
+		final ArrayList<IResource> list = new ArrayList<>();
 
 		IScriptProject project = this.identifier.getProgramRoot()
 				.getSourceModule().getScriptProject();
@@ -182,22 +183,27 @@ public class RenameFunctionProcessor extends AbstractRenameProcessor<IFile>
 				|| node instanceof FunctionName;
 	}
 
+	@Override
 	public Object[] getElements() {
 		return new Object[] { identifier };
 	}
 
+	@Override
 	public String getIdentifier() {
 		return ID_RENAME_FUNCTION;
 	}
 
+	@Override
 	public String getProcessorName() {
 		return RENAME_FUNCTION_PROCESSOR_NAME;
 	}
 
+	@Override
 	public Object getNewElement() {
 		return getNewElementName();
 	}
 
+	@Override
 	public String getCurrentElementName() {
 		if (identifier instanceof Identifier) {
 			return ((Identifier) identifier).getName();
@@ -210,22 +216,27 @@ public class RenameFunctionProcessor extends AbstractRenameProcessor<IFile>
 		return identifier.toString();
 	}
 
+	@Override
 	public boolean canEnableTextUpdating() {
 		return true;
 	}
 
+	@Override
 	public String getCurrentElementQualifier() {
 		return getCurrentElementName();
 	}
 
+	@Override
 	public boolean getUpdateTextualMatches() {
 		return isUpdateTextualMatches;
 	}
 
+	@Override
 	public void setUpdateTextualMatches(boolean update) {
 		isUpdateTextualMatches = update;
 	}
 
+	@Override
 	public RefactoringStatus getRefactoringStatus(IFile key, Program program) {
 		if (PHPElementConciliator.functionAlreadyExists(program,
 				getNewElementName())) {

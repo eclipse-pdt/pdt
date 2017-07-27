@@ -119,20 +119,20 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	// append chars to buffer through insertSpace or appendToBuffer
 	private StringBuilder replaceBuffer = new StringBuilder();
-	private List<Symbol> tokens = new ArrayList<Symbol>();
+	private List<Symbol> tokens = new ArrayList<>();
 
 	/**
 	 * list of <ReplaceEdit>
 	 */
-	private List<ReplaceEdit> changes = new LinkedList<ReplaceEdit>();
+	private List<ReplaceEdit> changes = new LinkedList<>();
 	private int stInScriptin = -1;
 	private int stWhile = -1;
 	private int stElse = -1;
 	private int stElseIf = -1;
 
-	private Stack<Integer> chainStack = new Stack<Integer>();
+	private Stack<Integer> chainStack = new Stack<>();
 	private Integer peek;
-	private Set<IfStatement> processedIfStatements = new HashSet<IfStatement>();
+	private Set<IfStatement> processedIfStatements = new HashSet<>();
 	private boolean newLineOfComment;
 	private List<String> commentWords;
 	/** disabling */
@@ -149,8 +149,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	private boolean recordCommentIndentVariables = false;
 	// for block comment,multiline comment at the end of break statement of case
 	// statement
-	private List<Integer> indentationLevelList = new ArrayList<Integer>();
-	Stack<CommentIndentationObject> commentIndentationStack = new Stack<CodeFormatterVisitor.CommentIndentationObject>();
+	private List<Integer> indentationLevelList = new ArrayList<>();
+	Stack<CommentIndentationObject> commentIndentationStack = new Stack<>();
 
 	private boolean ignoreEmptyLineSetting = false;
 
@@ -247,7 +247,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			Logger.logException(e);
 		}
 		List<ReplaceEdit> allChanges = Collections.unmodifiableList(changes);
-		List<ReplaceEdit> result = new ArrayList<ReplaceEdit>();
+		List<ReplaceEdit> result = new ArrayList<>();
 		for (ReplaceEdit edit : allChanges) {
 			if (isInSingleLine(edit, regions)) {
 				continue;
@@ -518,7 +518,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return isIndentationAdded;
 	}
 
-	@SuppressWarnings("unchecked")
 	private void handleChars(int offset, int end) {
 		try {
 			// check if the changed region is in the formatting requested region
@@ -540,7 +539,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private void handleChars1(int offset, int end, boolean isIndented, int indentGap) {
 		try {
 			// check if the changed region is in the formatting requested region
@@ -866,8 +864,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	// TODO: Do correct comment placement
 	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=440209
 	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=440820
-	private void handleComments(int offset, int end, List<org.eclipse.php.core.compiler.ast.nodes.Comment> commentList,
-			boolean isIndented, int indentGap) throws Exception {
+	private void handleComments(int offset, int end, List<?> commentList, boolean isIndented, int indentGap)
+			throws Exception {
 		boolean oldIgnoreEmptyLineSetting = ignoreEmptyLineSetting;
 		ignoreEmptyLineSetting = false;
 
@@ -879,9 +877,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		boolean previousCommentIsSingleLine = false;
 		resetCommentIndentVariables();
 
-		comments: for (Iterator<org.eclipse.php.core.compiler.ast.nodes.Comment> iter = commentList.iterator(); iter
-				.hasNext();) {
-			org.eclipse.php.core.compiler.ast.nodes.Comment comment = iter.next();
+		comments: for (Iterator<?> iter = commentList.iterator(); iter.hasNext();) {
+			org.eclipse.php.core.compiler.ast.nodes.Comment comment = (org.eclipse.php.core.compiler.ast.nodes.Comment) iter
+					.next();
 			int commentStartLine = document.getLineOfOffset(comment.sourceStart() + offset);
 			int position = replaceBuffer.lastIndexOf(lineSeparator);
 			boolean startAtFirstColumn = (document.getLineOffset(commentStartLine) == comment.sourceStart() + offset);
@@ -1120,7 +1118,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 								isFirst = false;
 								initCommentWords();
 								formatPHPDocText(commentWords, null, false, false);
-								commentWords = new ArrayList<String>();
+								commentWords = new ArrayList<>();
 								lastLineIsBlank = false;
 							}
 						} else if (!this.preferences.comment_clear_blank_lines_in_javadoc_comment) {
@@ -1135,7 +1133,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 							initCommentWords();
 							formatPHPDocText(commentWords, null, false, false);
 							insertNewLineForPHPDoc();
-							commentWords = new ArrayList<String>();
+							commentWords = new ArrayList<>();
 							lastLineIsBlank = true;
 						}
 					}
@@ -1235,7 +1233,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					resetEnableStatus(
 							document.get(comment.sourceStart() + offset, comment.sourceEnd() - comment.sourceStart()));
 					for (; iter.hasNext();) {
-						org.eclipse.php.core.compiler.ast.nodes.Comment nextComment = iter.next();
+						org.eclipse.php.core.compiler.ast.nodes.Comment nextComment = (org.eclipse.php.core.compiler.ast.nodes.Comment) iter
+								.next();
 						resetEnableStatus(document.get(nextComment.sourceStart() + offset,
 								nextComment.sourceEnd() - nextComment.sourceStart()));
 					}
@@ -1661,7 +1660,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		initCommentWords();
 		insertNewLineForPHPDoc();
 		formatPHPDocText(commentWords, phpDocTag, insertTag, hasDesc);
-		commentWords = new ArrayList<String>();
+		commentWords = new ArrayList<>();
 
 	}
 
@@ -2894,7 +2893,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			insertSpace();
 		}
 
-		Expression[] arrayOfParameters = (Expression[]) ctorParams.toArray(new Expression[ctorParams.size()]);
+		Expression[] arrayOfParameters = ctorParams.toArray(new Expression[ctorParams.size()]);
 		int indentationGap = calculateIndentGap(
 				this.preferences.line_wrap_arguments_in_allocation_expression_indent_policy,
 				this.preferences.line_wrap_wrapped_lines_indentation);
@@ -4997,7 +4996,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		}
 		appendToBuffer(OPEN_PARN);
 		List<FormalParameter> formalParameters = lambdaFunctionDeclaration.formalParameters();
-		ASTNode[] params = (FormalParameter[]) formalParameters.toArray(new FormalParameter[formalParameters.size()]);
+		ASTNode[] params = formalParameters.toArray(new FormalParameter[formalParameters.size()]);
 		int lastPosition = lambdaFunctionDeclaration.getStart() + 8;
 		if (params.length > 0) {
 			if (this.preferences.insert_space_after_opening_paren_in_function_declaration) {
@@ -5034,7 +5033,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			if (this.preferences.insert_space_before_opening_paren_in_function_declaration) {
 				insertSpace();
 			}
-			ASTNode[] vars = (Expression[]) variables.toArray(new Expression[variables.size()]);
+			ASTNode[] vars = variables.toArray(new Expression[variables.size()]);
 
 			lastPosition = handleCommaList(vars, lastPosition,
 					this.preferences.insert_space_before_comma_in_function_declaration,

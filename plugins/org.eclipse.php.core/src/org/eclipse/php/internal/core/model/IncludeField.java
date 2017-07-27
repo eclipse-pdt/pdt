@@ -50,6 +50,7 @@ public class IncludeField extends SourceField {
 		return filePath;
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (super.equals(o)) {
 			IncludeField other = (IncludeField) o;

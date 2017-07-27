@@ -95,7 +95,7 @@ public class TypeInStringStrategy extends AbstractCompletionStrategy {
 			return PHPModelAccess.getDefault().findTypes(prefix, MatchRule.EXACT, trueFlag, falseFlag, scope, null);
 		}
 
-		List<IType> result = new LinkedList<IType>();
+		List<IType> result = new LinkedList<>();
 		if (prefix.contains(NamespaceReference.NAMESPACE_DELIMITER)) {
 			if ((Modifiers.AccNameSpace & falseFlag) == 0) {
 				result.addAll(CodeAssistUtils.removeDuplicatedElements(PHPModelAccess.getDefault().findNamespaces(null,

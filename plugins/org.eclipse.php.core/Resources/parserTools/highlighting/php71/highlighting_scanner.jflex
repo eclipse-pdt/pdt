@@ -54,6 +54,7 @@ import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag.TagKind;
 	}
 
 	// NB: this method resets the lexer only partially
+	@Override
 	protected void reset(java.io.Reader reader, char[] buffer, int[] parameters) {
 		this.zzReader = reader;
 		this.zzBuffer = buffer;
@@ -67,54 +68,66 @@ import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag.TagKind;
 		initialize(parameters[6]);
 	}
 
+	@Override
 	public int getInScriptingState() {
 		return ST_PHP_IN_SCRIPTING;
 	}
 
 	private static final int[] heredocStates = new int[] { ST_PHP_HEREDOC, ST_PHP_NOWDOC, ST_PHP_START_HEREDOC, ST_PHP_START_NOWDOC, ST_PHP_END_HEREDOC, ST_PHP_END_NOWDOC };
 
+	@Override
 	public int[] getHeredocStates() {
 		return heredocStates;
 	}
 
 	private static final int[] phpQuotesStates = new int[] { ST_PHP_DOUBLE_QUOTES, ST_PHP_SINGLE_QUOTE, ST_PHP_BACKQUOTE, ST_PHP_HEREDOC, ST_PHP_NOWDOC, ST_PHP_START_HEREDOC, ST_PHP_START_NOWDOC, ST_PHP_END_HEREDOC, ST_PHP_END_NOWDOC };
 
+	@Override
 	public int[] getPHPQuotesStates() {
 		return phpQuotesStates;
 	}
 
+	@Override
 	public int[] getParameters() {
 		return new int[]{zzMarkedPos, _zzPushbackPos, zzCurrentPos, zzStartRead, zzEndRead, yyline, zzLexicalState};
 	}
 
+	@Override
 	protected int getZZLexicalState() {
 		return zzLexicalState;
 	}
 
+	@Override
 	protected int getZZMarkedPos() {
 		return zzMarkedPos;
 	}
 
+	@Override
 	protected int getZZEndRead() {
 		return zzEndRead;
 	}
 
+	@Override
 	public char[] getZZBuffer() {
 		return zzBuffer;
 	}
 
+	@Override
 	protected int getZZStartRead() {
 		return this.zzStartRead;
 	}
 
+	@Override
 	protected int getZZPushBackPosition() {
 		return this._zzPushbackPos;
 	}
 
+	@Override
 	protected void pushBack(int i) {
 		yypushback(i);
 	}
 
+	@Override
 	public int getScriptingState() {
 		return ST_PHP_IN_SCRIPTING;
 	}
@@ -122,6 +135,7 @@ import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag.TagKind;
 	// A pool of states. To avoid creation of a new state on each createMemento.
 	private static final Map<LexerState, LexerState> lexerStates = new HashMap<>();
 
+	@Override
 	protected Map<LexerState, LexerState> getLexerStates() {
 		return lexerStates;
 	}

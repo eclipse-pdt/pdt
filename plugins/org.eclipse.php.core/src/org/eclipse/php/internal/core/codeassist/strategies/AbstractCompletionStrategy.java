@@ -51,6 +51,7 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 		this.elementFilter = elementFilter;
 	}
 
+	@Override
 	public void init(CompletionCompanion companion) {
 		this.companion = companion;
 	}
@@ -182,13 +183,13 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 	 *            String prefix
 	 */
 	protected IModelElement[] filterByCase(IModelElement[] elements, String prefix) {
-		List<IModelElement> result = new ArrayList<IModelElement>(elements.length);
+		List<IModelElement> result = new ArrayList<>(elements.length);
 		for (IModelElement element : elements) {
 			if (element.getElementName().startsWith(prefix)) {
 				result.add(element);
 			}
 		}
-		return (IModelElement[]) result.toArray(new IModelElement[result.size()]);
+		return result.toArray(new IModelElement[result.size()]);
 	}
 
 	/**

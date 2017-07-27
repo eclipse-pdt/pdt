@@ -33,7 +33,7 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  */
 public class NamespaceName extends Identifier {
 
-	protected ASTNode.NodeList<Identifier> segments = new ASTNode.NodeList<Identifier>(ELEMENTS_PROPERTY);
+	protected ASTNode.NodeList<Identifier> segments = new ASTNode.NodeList<>(ELEMENTS_PROPERTY);
 
 	/**
 	 * Whether the namespace name has '\' prefix, which means it relates to the
@@ -64,7 +64,7 @@ public class NamespaceName extends Identifier {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(5);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(5);
 		properyList.add(NAME_PROPERTY);
 		properyList.add(ELEMENTS_PROPERTY);
 		properyList.add(GLOBAL_PROPERTY);
@@ -126,12 +126,14 @@ public class NamespaceName extends Identifier {
 		return buf.toString();
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		for (ASTNode node : this.segments) {
 			node.accept(visitor);
 		}
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		for (ASTNode node : this.segments) {
@@ -139,6 +141,7 @@ public class NamespaceName extends Identifier {
 		}
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		for (ASTNode node : this.segments) {
 			node.traverseBottomUp(visitor);
@@ -146,6 +149,7 @@ public class NamespaceName extends Identifier {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<NamespaceName"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -162,6 +166,7 @@ public class NamespaceName extends Identifier {
 		buffer.append(tab).append("</NamespaceName>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -170,6 +175,7 @@ public class NamespaceName extends Identifier {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.NAMESPACE_NAME;
 	}
@@ -219,6 +225,7 @@ public class NamespaceName extends Identifier {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
@@ -227,6 +234,7 @@ public class NamespaceName extends Identifier {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
+	@Override
 	protected ASTNode clone0(AST target) {
 		final List<Identifier> segments = ASTNode.copySubtrees(target, segments());
 		final boolean global = isGlobal();
@@ -239,6 +247,7 @@ public class NamespaceName extends Identifier {
 		return PROPERTY_DESCRIPTORS;
 	}
 
+	@Override
 	boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean value) {
 		if (property == GLOBAL_PROPERTY) {
 			if (get) {
@@ -262,7 +271,8 @@ public class NamespaceName extends Identifier {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
-	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+	@Override
+	final List<? extends ASTNode> internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == ELEMENTS_PROPERTY) {
 			return segments();
 		}

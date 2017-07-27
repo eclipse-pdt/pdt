@@ -84,7 +84,7 @@ public class OverrideMethodDialog extends PHPSourceActionDialog {
 			if (parentElement instanceof ITypeBinding) {
 				ArrayList<IMethodBinding> result = new ArrayList<>(fMethods.length);
 				for (IMethodBinding method : fMethods) {
-					if (method.getDeclaringClass().equals((IBinding) parentElement)) {
+					if (method.getDeclaringClass().equals(parentElement)) {
 						result.add(method);
 					}
 				}

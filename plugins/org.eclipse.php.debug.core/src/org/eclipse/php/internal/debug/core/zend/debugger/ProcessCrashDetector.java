@@ -70,6 +70,7 @@ public class ProcessCrashDetector implements Runnable, IConsoleListener {
 	 * 
 	 * @see java.lang.Runnable#run()
 	 */
+	@Override
 	public void run() {
 		try {
 			boolean streamerReqd = false;
@@ -119,6 +120,7 @@ public class ProcessCrashDetector implements Runnable, IConsoleListener {
 			this.isError = isError;
 		}
 
+		@Override
 		public void run() {
 			try {
 				InputStreamReader isr = new InputStreamReader(is);
@@ -134,6 +136,7 @@ public class ProcessCrashDetector implements Runnable, IConsoleListener {
 							os = console.newOutputStream();
 							if (isError) {
 								Display.getDefault().syncExec(new Runnable() {
+									@Override
 									public void run() {
 										os.setColor(DebugUIPlugin
 												.getPreferenceColor(IDebugPreferenceConstants.CONSOLE_SYS_ERR_COLOR));
@@ -162,6 +165,7 @@ public class ProcessCrashDetector implements Runnable, IConsoleListener {
 		}
 	}
 
+	@Override
 	public void consolesAdded(IConsole[] consoles) {
 		for (IConsole console : consoles) {
 			if (console instanceof ProcessConsole) {
@@ -170,6 +174,7 @@ public class ProcessCrashDetector implements Runnable, IConsoleListener {
 		}
 	}
 
+	@Override
 	public void consolesRemoved(IConsole[] consoles) {
 	}
 }

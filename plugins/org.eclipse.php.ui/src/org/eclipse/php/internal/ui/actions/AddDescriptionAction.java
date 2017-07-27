@@ -205,7 +205,7 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 
 		docBlock = indentPattern(comment, indentString, lineDelim);
 
-		String docBlockText = insertDocBlock((IStructuredDocument) document, startPosition, docBlock);
+		String docBlockText = insertDocBlock(document, startPosition, docBlock);
 
 		return docBlockText;
 	}
@@ -381,7 +381,7 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 				region = sdRegion.getRegionAtCharacterOffset(region.getEnd() + sdRegion.getStartOffset());
 				if (region != null) {
 					phpScriptRegion = null;
-					textRegion = (ITextRegion) region;
+					textRegion = region;
 					docBlock = createPHPScopeFileDocBlock(data.getScriptProject());
 					break;
 				}

@@ -20,7 +20,6 @@ import org.eclipse.ui.dialogs.SelectionStatusDialog;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 
-@SuppressWarnings("restriction")
 public class ResourceDialog {
 
 	private static void configure(SelectionStatusDialog dialog, String title, String message) {

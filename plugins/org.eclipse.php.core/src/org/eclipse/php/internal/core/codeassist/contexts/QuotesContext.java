@@ -23,6 +23,7 @@ import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes
 public class QuotesContext extends AbstractCompletionContext {
 	private IncludeStatementContext includeStatementContext = new IncludeStatementContext();
 
+	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;

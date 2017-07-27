@@ -39,6 +39,7 @@ public class NamespaceClassInstantiationStrategy extends NamespaceTypesStrategy 
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 
 		ICompletionContext context = getContext();
@@ -85,6 +86,7 @@ public class NamespaceClassInstantiationStrategy extends NamespaceTypesStrategy 
 				if (ctor != null) {
 					if (!PHPFlags.isPrivate(ctor.getFlags()) || type.equals(enclosingClass)) {
 						FakeMethod ctorMethod = new FakeMethod((ModelElement) type, type.getElementName()) {
+							@Override
 							public boolean isConstructor() throws ModelException {
 								return true;
 							}
@@ -108,6 +110,7 @@ public class NamespaceClassInstantiationStrategy extends NamespaceTypesStrategy 
 		}
 	}
 
+	@Override
 	public String getSuffix(AbstractCompletionContext abstractContext) {
 		String nextWord = null;
 		try {

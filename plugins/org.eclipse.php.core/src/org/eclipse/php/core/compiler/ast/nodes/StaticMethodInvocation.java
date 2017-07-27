@@ -51,6 +51,7 @@ public class StaticMethodInvocation extends PHPCallExpression {
 		super(start, end, receiver, name, args);
 	}
 
+	@Override
 	public void traverse(ASTVisitor pVisitor) throws Exception {
 		if (functionName == null) {
 			super.traverse(pVisitor);
@@ -76,6 +77,7 @@ public class StaticMethodInvocation extends PHPCallExpression {
 		return super.getName();
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.STATIC_METHOD_INVOCATION;
 	}

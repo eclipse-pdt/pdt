@@ -137,7 +137,7 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 	private Object getInput(IEditorPart editor) {
 
 		final IEditorInput editorInput = editor.getEditorInput();
-		final IFile file = (IFile) editorInput.getAdapter(IFile.class);
+		final IFile file = editorInput.getAdapter(IFile.class);
 		if (file != null) {
 			final IProject project = file.getProject();
 			return DLTKCore.create(project);

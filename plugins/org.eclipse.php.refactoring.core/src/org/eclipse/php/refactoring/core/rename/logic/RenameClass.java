@@ -45,6 +45,7 @@ public class RenameClass extends AbstractRename {
 		this.types = types;
 	}
 
+	@Override
 	public boolean visit(StaticConstantAccess staticDispatch) {
 		Expression className = staticDispatch.getClassName();
 		Identifier identifier = null;
@@ -61,6 +62,7 @@ public class RenameClass extends AbstractRename {
 		return false;
 	}
 
+	@Override
 	public boolean visit(UseStatement useStatement) {
 		List<UseStatementPart> parts = useStatement.parts();
 		for (UseStatementPart useStatementPart : parts) {
@@ -73,16 +75,19 @@ public class RenameClass extends AbstractRename {
 		return false;
 	}
 
+	@Override
 	public boolean visit(StaticFieldAccess staticDispatch) {
 		checkIdentifier((Identifier) staticDispatch.getClassName());
 		return false;
 	}
 
+	@Override
 	public boolean visit(StaticMethodInvocation staticDispatch) {
 		checkIdentifier((Identifier) staticDispatch.getClassName());
 		return false;
 	}
 
+	@Override
 	public boolean visit(ClassName className) {
 		if (className.getName() instanceof Identifier) {
 			Identifier identifier = (Identifier) className.getName();
@@ -99,6 +104,7 @@ public class RenameClass extends AbstractRename {
 		return false;
 	}
 
+	@Override
 	public boolean visit(ClassDeclaration classDeclaration) {
 		ITypeBinding originalType = null;
 
@@ -124,6 +130,7 @@ public class RenameClass extends AbstractRename {
 		return true;
 	}
 
+	@Override
 	public boolean visit(InterfaceDeclaration interfaceDeclaration) {
 		if (originalDeclaration == null || originalDeclaration.getStart() == interfaceDeclaration.getStart()) {
 			checkIdentifier(interfaceDeclaration.getName());
@@ -133,6 +140,7 @@ public class RenameClass extends AbstractRename {
 		return true;
 	}
 
+	@Override
 	public boolean visit(CatchClause catchStatement) {
 		for (Expression className : catchStatement.getClassNames()) {
 			checkIdentifier((Identifier) className);
@@ -140,6 +148,7 @@ public class RenameClass extends AbstractRename {
 		return true;
 	}
 
+	@Override
 	public boolean visit(FormalParameter formalParameter) {
 		checkIdentifier((Identifier) formalParameter.getParameterType());
 		return true;
@@ -148,6 +157,7 @@ public class RenameClass extends AbstractRename {
 	/**
 	 * check for constructor name (as PHP4 uses)
 	 */
+	@Override
 	public boolean visit(MethodDeclaration methodDeclaration) {
 		final ASTNode parent = methodDeclaration.getParent();
 		if (parent.getType() == ASTNode.BLOCK && parent.getParent().getType() == ASTNode.CLASS_DECLARATION) {
@@ -160,6 +170,7 @@ public class RenameClass extends AbstractRename {
 		return true;
 	}
 
+	@Override
 	public boolean visit(FunctionDeclaration function) {
 		boolean result = super.visit(function);
 		if (this.searchTextual) {
@@ -175,7 +186,7 @@ public class RenameClass extends AbstractRename {
 			}
 			PHPDocTag[] tags = doc.getTags();
 			for (PHPDocTag tag : tags) {
-				List<TypeReference> matchRefs = new ArrayList<TypeReference>();
+				List<TypeReference> matchRefs = new ArrayList<>();
 				for (TypeReference ref : tag.getTypeReferences()) {
 					if (ref.getName().equals(oldName)) {
 						IType[] elements = ModelUtils.getTypes(oldName, sm, doc.sourceStart(), currentNamespace);
@@ -267,6 +278,7 @@ public class RenameClass extends AbstractRename {
 		return identifier != null && identifier.getName() != null && identifier.getName().equals(oldName);
 	}
 
+	@Override
 	public String getRenameDescription() {
 		return RenameClass.RENAME_CLASS;
 	}

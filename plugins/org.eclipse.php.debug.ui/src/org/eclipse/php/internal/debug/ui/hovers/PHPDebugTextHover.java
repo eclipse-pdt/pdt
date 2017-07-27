@@ -44,11 +44,13 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements 
 	public PHPDebugTextHover() {
 	}
 
+	@Override
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 		Object hoverInfo = getHoverInfo2(textViewer, hoverRegion);
 		return hoverInfo == null ? null : hoverInfo.toString();
 	}
 
+	@Override
 	public IHoverMessageDecorator getMessageDecorator() {
 		return null;
 	}
@@ -68,6 +70,7 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements 
 		return null;
 	}
 
+	@Override
 	public IInformationControlCreator getHoverControlCreator() {
 		return new ExpressionInformationControlCreator();
 	}
@@ -245,6 +248,7 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements 
 		node.accept(new AbstractVisitor() {
 			private boolean isFirstVariable = true;
 
+			@Override
 			public boolean visit(Identifier identifier) {
 				if (identifier.getParent() instanceof Identifier) {
 					String typeName = resolveTypeName((Identifier) identifier.getParent());

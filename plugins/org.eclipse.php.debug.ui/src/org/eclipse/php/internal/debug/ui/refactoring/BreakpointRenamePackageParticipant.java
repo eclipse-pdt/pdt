@@ -26,6 +26,7 @@ public class BreakpointRenamePackageParticipant extends BreakpointRenameParticip
 	 * @see org.eclipse.jdt.internal.debug.core.refactoring.
 	 * BreakpointRenameParticipant #accepts(org.eclipse.jdt.core.IModelElement)
 	 */
+	@Override
 	protected boolean accepts(IModelElement element) {
 		return element instanceof IProjectFragment;
 	}

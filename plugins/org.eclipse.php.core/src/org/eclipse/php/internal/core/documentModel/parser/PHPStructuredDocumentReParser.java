@@ -38,6 +38,7 @@ public class PHPStructuredDocumentReParser extends XMLStructuredDocumentReParser
 	 * org.eclipse.wst.xml.core.internal.parser.XMLStructuredDocumentReParser
 	 * #newInstance()
 	 */
+	@Override
 	public IStructuredTextReParser newInstance() {
 		return new PHPStructuredDocumentReParser();
 	}
@@ -45,6 +46,7 @@ public class PHPStructuredDocumentReParser extends XMLStructuredDocumentReParser
 	/**
 	 * Adding the support to php comments
 	 */
+	@Override
 	protected StructuredDocumentEvent checkForComments() {
 		StructuredDocumentEvent result = checkForCriticalKey("/*"); //$NON-NLS-1$
 		if (result == null) {
@@ -57,6 +59,7 @@ public class PHPStructuredDocumentReParser extends XMLStructuredDocumentReParser
 	 * This function was added in order to support asp tags in PHP (bug fix
 	 * #150363)
 	 */
+	@Override
 	protected StructuredDocumentEvent checkForCrossStructuredDocumentRegionSyntax() {
 		StructuredDocumentEvent result = super.checkForCrossStructuredDocumentRegionSyntax();
 		if (result == null) {
@@ -71,6 +74,7 @@ public class PHPStructuredDocumentReParser extends XMLStructuredDocumentReParser
 	/**
 	 * Change PHP Script Regions nodes...
 	 */
+	@Override
 	protected StructuredDocumentEvent regionCheck(IStructuredDocumentRegion oldNode,
 			IStructuredDocumentRegion newNode) {
 		final StructuredDocumentEvent event = super.regionCheck(oldNode, newNode);
@@ -89,6 +93,7 @@ public class PHPStructuredDocumentReParser extends XMLStructuredDocumentReParser
 	 * This implementation updates the php tokens model after updating WST
 	 * editor model
 	 */
+	@Override
 	public StructuredDocumentEvent reparse() {
 		// NB: ValBuilderJob calls reparse() on all PHP files but
 		// uses model returned by
@@ -100,6 +105,7 @@ public class PHPStructuredDocumentReParser extends XMLStructuredDocumentReParser
 		return documentEvent;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public StructuredDocumentEvent _checkBlockNodeList(List blockTagList) {
 		// There are no blocktags that should be checked within PHP script

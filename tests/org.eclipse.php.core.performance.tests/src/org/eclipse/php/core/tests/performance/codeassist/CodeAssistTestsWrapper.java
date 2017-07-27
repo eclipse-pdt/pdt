@@ -63,7 +63,7 @@ public class CodeAssistTestsWrapper extends AbstractPDTTTest {
 		super("");
 	}
 
-	public Test suite(final Map map) {
+	public Test suite(final Map<?, ?> map) {
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject(map.get(ProjectSuite.PROJECT).toString());
 		perfMonitor = PHPCorePerformanceTests.getPerformanceMonitor();
 		TestSuite suite = new TestSuite("Auto Code Assist Tests");
@@ -78,9 +78,11 @@ public class CodeAssistTestsWrapper extends AbstractPDTTTest {
 							PHPCorePerformanceTests.getDefault().getBundle(), fileName);
 					CodeAssistTests test = new CodeAssistTests(fileName) {
 
+						@Override
 						protected void setUp() throws Exception {
 						}
 
+						@Override
 						protected void tearDown() throws Exception {
 							if (testFile != null) {
 								testFile.delete(true, null);
@@ -88,8 +90,10 @@ public class CodeAssistTestsWrapper extends AbstractPDTTTest {
 							}
 						}
 
+						@Override
 						protected void runTest() throws Throwable {
 							perfMonitor.execute("PerformanceTests.testCodeAssist" + "_" + fileName, new Operation() {
+								@Override
 								public void run() throws Exception {
 									CompletionProposal[] proposals = getProposals(pdttFile.getFile());
 								}
@@ -105,6 +109,7 @@ public class CodeAssistTestsWrapper extends AbstractPDTTTest {
 						// file
 						// parsing
 						// failure
+						@Override
 						protected void runTest() throws Throwable {
 							throw e;
 						}
@@ -159,11 +164,12 @@ public class CodeAssistTestsWrapper extends AbstractPDTTTest {
 	public static CompletionProposal[] getProposals(ISourceModule sourceModule, int offset) throws ModelException {
 		final List<CompletionProposal> proposals = new LinkedList<CompletionProposal>();
 		sourceModule.codeComplete(offset, new CompletionRequestor() {
+			@Override
 			public void accept(CompletionProposal proposal) {
 				proposals.add(proposal);
 			}
 		});
-		return (CompletionProposal[]) proposals.toArray(new CompletionProposal[proposals.size()]);
+		return proposals.toArray(new CompletionProposal[proposals.size()]);
 	}
 
 	public class CodeAssistTests extends AbstractPDTTTest {

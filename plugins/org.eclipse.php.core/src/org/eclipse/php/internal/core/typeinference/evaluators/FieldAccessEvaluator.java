@@ -143,10 +143,12 @@ public class FieldAccessEvaluator extends GoalEvaluator {
 		return null;
 	}
 
+	@Override
 	public Object produceResult() {
 		return result;
 	}
 
+	@Override
 	public IGoal[] init() {
 		IGoal[] goals = produceNextSubgoal(null, null, null);
 		if (goals != null) {
@@ -155,6 +157,7 @@ public class FieldAccessEvaluator extends GoalEvaluator {
 		return IGoal.NO_GOALS;
 	}
 
+	@Override
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		IGoal[] goals = produceNextSubgoal(subgoal, (IEvaluatedType) result, state);
 		if (goals != null) {

@@ -23,24 +23,24 @@ import org.eclipse.test.internal.performance.results.utils.Util;
  *
  * Each results gives access to specific children depending on model.
  */
-public abstract class AbstractResults implements Comparable {
+public abstract class AbstractResults implements Comparable<Object> {
 
 	AbstractResults parent;
 	int id = -1;
 	String name;
-	List children;
+	List<Comparable<Object>> children;
 	private static boolean NEW_LINE = true;
 	PrintStream printStream = null;
 
 AbstractResults(AbstractResults parent, String name) {
 	this.parent = parent;
-	this.children = new ArrayList();
+	this.children = new ArrayList<>();
 	this.name = name;
 }
 
 AbstractResults(AbstractResults parent, int id) {
 	this.parent = parent;
-	this.children = new ArrayList();
+	this.children = new ArrayList<>();
 	this.id = id;
 }
 
@@ -48,7 +48,7 @@ AbstractResults(AbstractResults parent, int id) {
  * Add a child to current results, using specific sort
  * order if specified.
  */
-void addChild(Comparable child, boolean sort) {
+void addChild(Comparable<Object> child, boolean sort) {
 	if (sort) {
 		int size = this.children.size();
 		for (int i=0; i<size; i++) {
@@ -67,6 +67,7 @@ void addChild(Comparable child, boolean sort) {
  *
  * @see java.lang.Comparable#compareTo(java.lang.Object)
  */
+@Override
 public int compareTo(Object obj) {
 	if (obj instanceof AbstractResults) {
 		AbstractResults res = (AbstractResults) obj;
@@ -84,6 +85,7 @@ public int compareTo(Object obj) {
  * 	<code>false</code> otherwise
  * @see java.lang.Comparable#compareTo(java.lang.Object)
  */
+@Override
 public boolean equals(Object obj) {
 	if (obj instanceof AbstractResults) {
 		return this.name.equals(((AbstractResults)obj).getName());
@@ -148,7 +150,7 @@ String getPath() {
  *
  * @return An iterator on the children list
  */
-public Iterator getResults() {
+public Iterator<Comparable<Object>> getResults() {
 	return this.children.iterator();
 }
 
@@ -174,6 +176,7 @@ AbstractResults getResults(int searchedId) {
 	return null;
 }
 
+@Override
 public int hashCode() {
 	return this.name.hashCode();
 }
@@ -238,6 +241,7 @@ public int size() {
 	return this.children == null ? 0 : this.children.size();
 }
 
+@Override
 public String toString() {
 	return getPath();
 }

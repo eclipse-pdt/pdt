@@ -128,7 +128,7 @@ public class PHPCommentTemplateCompletionProcessor extends ScriptTemplateComplet
 			}
 		}
 
-		return (ICompletionProposal[]) matches.toArray(new ICompletionProposal[matches.size()]);
+		return matches.toArray(new ICompletionProposal[matches.size()]);
 	}
 
 	@Override

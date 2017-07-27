@@ -247,7 +247,7 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 					messages.add(message);
 				}
 			} else {
-				messages.add(((ITemporaryAnnotation) temporaryAnnotations.get(i)).toString());
+				messages.add(temporaryAnnotations.get(i).toString());
 			}
 		}
 		if (messages.size() > 1)
@@ -291,7 +291,7 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 		if (model == null) {
 			return messages;
 		}
-		Map messagesAtPosition = new HashMap();
+		Map<Position, Object> messagesAtPosition = new HashMap<>();
 		Iterator<Annotation> e = model.getAnnotationIterator();
 		while (e.hasNext()) {
 			Annotation a = e.next();
@@ -304,7 +304,7 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 					AnnotationBag bag = (AnnotationBag) a;
 					Iterator<Annotation> iterator = bag.iterator();
 					while (iterator.hasNext()) {
-						Annotation annotation = (Annotation) iterator.next();
+						Annotation annotation = iterator.next();
 						addText(model, annotation, messages, messagesAtPosition);
 					}
 				} else {
@@ -316,7 +316,7 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 		return messages;
 	}
 
-	private void addText(IAnnotationModel model, Annotation annotation, List<String> messages, Map messagesAtPosition) {
+	private void addText(IAnnotationModel model, Annotation annotation, List<String> messages, Map<Position, Object> messagesAtPosition) {
 		Position position = model.getPosition(annotation);
 		if (position != null && includeAnnotation(annotation, position, messagesAtPosition)) {
 			String text = getText(annotation);
@@ -350,7 +350,7 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 
 		List<ITemporaryAnnotation> annotations = new ArrayList<>();
 
-		Iterator e = model.getAnnotationIterator();
+		Iterator<?> e = model.getAnnotationIterator();
 		while (e.hasNext()) {
 			Object o = e.next();
 			if (o instanceof ITemporaryAnnotation) {
@@ -371,7 +371,7 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 	/**
 	 * Copy from DefaultAnnotationHover
 	 */
-	private boolean includeAnnotation(Annotation annotation, Position position, Map messagesAtPosition) {
+	private boolean includeAnnotation(Annotation annotation, Position position, Map<Position, Object> messagesAtPosition) {
 		if (!isIncluded(annotation)) {
 			return false;
 		}
@@ -383,7 +383,7 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 	/**
 	 * Copy from DefaultAnnotationHover
 	 */
-	private boolean isDuplicateAnnotation(Map messagesAtPosition, Position position, String message) {
+	private boolean isDuplicateAnnotation(Map<Position, Object> messagesAtPosition, Position position, String message) {
 		if (messagesAtPosition.containsKey(position)) {
 			Object value = messagesAtPosition.get(position);
 			if (message.equals(value)) {
@@ -391,7 +391,7 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 			}
 
 			if (value instanceof List) {
-				List messages = (List) value;
+				List<String> messages = (List<String>) value;
 				if (messages.contains(message)) {
 					return true;
 				}

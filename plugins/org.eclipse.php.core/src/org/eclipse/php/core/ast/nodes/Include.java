@@ -54,7 +54,7 @@ public class Include extends Expression {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(2);
 		propertyList.add(EXPRESSION_PROPERTY);
 		propertyList.add(INCLUDE_TYPE_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
@@ -89,6 +89,7 @@ public class Include extends Expression {
 		}
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -97,20 +98,24 @@ public class Include extends Expression {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		expression.accept(visitor);
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		expression.traverseTopDown(visitor);
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		expression.traverseBottomUp(visitor);
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<Include"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -119,6 +124,7 @@ public class Include extends Expression {
 		buffer.append("\n").append(tab).append("</Include>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.INCLUDE;
 	}
@@ -155,6 +161,7 @@ public class Include extends Expression {
 		postReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == EXPRESSION_PROPERTY) {
 			if (get) {
@@ -201,12 +208,13 @@ public class Include extends Expression {
 		postValueChange(INCLUDE_TYPE_PROPERTY);
 	}
 
+	@Override
 	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
 		if (property == INCLUDE_TYPE_PROPERTY) {
 			if (get) {
 				return getIncludeType();
 			} else {
-				setIncludetype((Integer) value);
+				setIncludetype(value);
 				return 0;
 			}
 		}
@@ -217,6 +225,7 @@ public class Include extends Expression {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

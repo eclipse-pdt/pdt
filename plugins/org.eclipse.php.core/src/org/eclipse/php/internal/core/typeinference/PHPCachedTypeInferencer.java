@@ -32,7 +32,7 @@ import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodRetu
  */
 public class PHPCachedTypeInferencer implements IPHPTypeInferencer {
 	final private GoalEngine engine;
-	final private Map<IGoal, Result> cache = new ConcurrentHashMap<IGoal, Result>();
+	final private Map<IGoal, Result> cache = new ConcurrentHashMap<>();
 	final private IEvaluationStatisticsRequestor stat;
 
 	private class Result {
@@ -173,6 +173,7 @@ public class PHPCachedTypeInferencer implements IPHPTypeInferencer {
 			super(timeLimit);
 		}
 
+		@Override
 		public boolean prune(IGoal goal, EvaluatorStatistics stat) {
 			// here are heavy goals pruned
 			if (goal instanceof MethodElementReturnTypeGoal || goal instanceof ClassVariableDeclarationGoal) {
@@ -191,6 +192,7 @@ public class PHPCachedTypeInferencer implements IPHPTypeInferencer {
 			super(timeLimit);
 		}
 
+		@Override
 		public boolean prune(IGoal goal, EvaluatorStatistics stat) {
 			// here are PHPDoc (liteweight) goals pruned
 			if (goal instanceof PHPDocMethodReturnTypeGoal || goal instanceof PHPDocClassVariableGoal) {

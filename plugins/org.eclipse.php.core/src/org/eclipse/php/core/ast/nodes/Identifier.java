@@ -51,7 +51,7 @@ public class Identifier extends VariableBase {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> list = new ArrayList<StructuralPropertyDescriptor>(2);
+		List<StructuralPropertyDescriptor> list = new ArrayList<>(2);
 		list.add(NAME_PROPERTY);
 		list.add(NULLABLE_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(list);
@@ -72,6 +72,7 @@ public class Identifier extends VariableBase {
 		super(ast);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -80,15 +81,19 @@ public class Identifier extends VariableBase {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<Identifier"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -96,7 +101,7 @@ public class Identifier extends VariableBase {
 		if (isNullable()) {
 			buffer.append("' nullable='").append(nullable); //$NON-NLS-1$
 		}
-		buffer.append("'/>"); //$NON-NLS-1$ //$NON-NLS-2$
+		buffer.append("'/>"); //$NON-NLS-1$ 
 	}
 
 	/**
@@ -106,6 +111,7 @@ public class Identifier extends VariableBase {
 	 * Note: The equality is checked by == since we {@link String#intern()} the
 	 * name field.
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -117,6 +123,7 @@ public class Identifier extends VariableBase {
 		return this.name == other.name && this.nullable == other.nullable;
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.IDENTIFIER;
 	}
@@ -132,6 +139,7 @@ public class Identifier extends VariableBase {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
@@ -152,6 +160,7 @@ public class Identifier extends VariableBase {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
+	@Override
 	final Object internalGetSetObjectProperty(SimplePropertyDescriptor property, boolean get, Object value) {
 		if (property == NAME_PROPERTY) {
 			if (get) {
@@ -171,7 +180,7 @@ public class Identifier extends VariableBase {
 			if (get) {
 				return isNullable();
 			} else {
-				setNullable((boolean) value);
+				setNullable(value);
 				return false;
 			}
 		}

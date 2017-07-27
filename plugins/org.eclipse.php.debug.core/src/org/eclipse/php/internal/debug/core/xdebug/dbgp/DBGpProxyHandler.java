@@ -335,6 +335,7 @@ public class DBGpProxyHandler {
 
 	private void displayErrorMessage(final String message) {
 		Display.getDefault().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				MessageDialog.openError(Display.getDefault().getActiveShell(),
 						PHPDebugCoreMessages.XDebug_DBGpProxyHandler_3, message);

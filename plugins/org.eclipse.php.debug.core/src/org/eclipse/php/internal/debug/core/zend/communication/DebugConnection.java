@@ -90,6 +90,7 @@ public class DebugConnection {
 		 * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.
 		 * IProgressMonitor)
 		 */
+		@Override
 		public IStatus run(IProgressMonitor monitor) {
 			// 'while(true)' is OK here since we have blocking queue
 			while (true) {
@@ -235,6 +236,7 @@ public class DebugConnection {
 		 * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.
 		 * IProgressMonitor)
 		 */
+		@Override
 		public IStatus run(IProgressMonitor monitor) {
 			// 'while(true)' is OK here since we use blocking read
 			while (true) {
@@ -355,6 +357,7 @@ public class DebugConnection {
 					errorMessage, null);
 			DebugPlugin.log(status);
 			Display.getDefault().asyncExec(new Runnable() {
+				@Override
 				public void run() {
 					MessageDialog.openError(Display.getDefault().getActiveShell(), "Debugger Error", errorMessage); //$NON-NLS-1$
 				}
@@ -439,13 +442,16 @@ public class DebugConnection {
 	// Phantom message used to notify that connection was closed
 	private final IDebugMessage CONNECTION_CLOSED = new DebugMessageImpl() {
 
+		@Override
 		public void deserialize(DataInputStream in) throws IOException {
 		}
 
+		@Override
 		public int getType() {
 			return 0;
 		}
 
+		@Override
 		public void serialize(DataOutputStream out) throws IOException {
 		}
 
@@ -1190,8 +1196,8 @@ public class DebugConnection {
 	private void connect() {
 		requestsTable = new IntHashtable();
 		responseTable = new IntHashtable();
-		responseHandlers = new Hashtable<Integer, ResponseHandler>();
-		messageHandlers = new HashMap<Integer, IDebugMessageHandler>();
+		responseHandlers = new Hashtable<>();
+		messageHandlers = new HashMap<>();
 		try {
 			socket.setTcpNoDelay(true);
 			this.connectionIn = new DataInputStream(socket.getInputStream());

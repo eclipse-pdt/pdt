@@ -24,7 +24,7 @@ import org.eclipse.php.core.compiler.ast.nodes.GlobalStatement;
  * 
  */
 public class ArrayDeclaration extends Declaration {
-	private LinkedList<Declaration> decls = new LinkedList<Declaration>();
+	private LinkedList<Declaration> decls = new LinkedList<>();
 
 	public ArrayDeclaration(boolean global, ASTNode declNode) {
 		super(global, declNode);
@@ -51,6 +51,7 @@ public class ArrayDeclaration extends Declaration {
 		return decls;
 	}
 
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
@@ -58,6 +59,7 @@ public class ArrayDeclaration extends Declaration {
 		return result;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

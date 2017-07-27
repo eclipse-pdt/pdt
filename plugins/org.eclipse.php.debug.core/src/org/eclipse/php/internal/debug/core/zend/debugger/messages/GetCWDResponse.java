@@ -44,16 +44,19 @@ public class GetCWDResponse extends DebugMessageResponseImpl implements IDebugRe
 		return cwd;
 	}
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		setStatus(in.readInt());
 		setCWD(CommunicationUtilities.readString(in));
 	}
 
+	@Override
 	public int getType() {
 		return 1036;
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());

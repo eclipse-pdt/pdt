@@ -26,6 +26,7 @@ public class InstallJob extends ComposerJob {
 		super(project, Messages.InstallJob_Name);
 	}
 
+	@Override
 	protected void launch(ScriptLauncher launcher) throws ExecuteException, IOException, InterruptedException {
 		List<String> params = new ArrayList<>();
 		params.add("--no-dev"); //$NON-NLS-1$

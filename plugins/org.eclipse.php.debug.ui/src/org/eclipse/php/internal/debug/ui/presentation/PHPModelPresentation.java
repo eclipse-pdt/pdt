@@ -51,8 +51,8 @@ import org.eclipse.php.internal.debug.core.model.IVariableFacet;
 import org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet;
 import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
-import org.eclipse.php.internal.debug.core.zend.communication.RemoteFileStorage;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue;
+import org.eclipse.php.internal.debug.core.zend.communication.RemoteFileStorage;
 import org.eclipse.php.internal.debug.core.zend.model.PHPMultiDebugTarget;
 import org.eclipse.php.internal.debug.core.zend.model.PHPStackFrame;
 import org.eclipse.php.internal.debug.core.zend.model.PHPValue;
@@ -81,11 +81,10 @@ import com.ibm.icu.text.MessageFormat;
 /**
  * Renders PHP debug elements
  */
-@SuppressWarnings("restriction")
 public class PHPModelPresentation extends LabelProvider implements IDebugModelPresentation, IDebugEditorPresentation {
 
 	private ImageDescriptorRegistry fDebugImageRegistry;
-	private Map<IThread, Annotation> fExceptionAnnotations = new HashMap<IThread, Annotation>();
+	private Map<IThread, Annotation> fExceptionAnnotations = new HashMap<>();
 
 	/*
 	 * (non-Javadoc)
@@ -94,6 +93,7 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 	 * org.eclipse.debug.ui.IDebugModelPresentation#computeDetail(org.eclipse
 	 * .debug.core.model.IValue, org.eclipse.debug.ui.IValueDetailListener)
 	 */
+	@Override
 	public void computeDetail(IValue value, IValueDetailListener listener) {
 		String detail = ""; //$NON-NLS-1$
 		try {
@@ -114,6 +114,7 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 	 * 
 	 * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
 	 */
+	@Override
 	public Image getImage(Object element) {
 		if (element instanceof PHPConditionalBreakpoint) {
 			return getLineBreakpointImage((PHPConditionalBreakpoint) element);
@@ -130,6 +131,7 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 	 * 
 	 * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
 	 */
+	@Override
 	public String getText(Object element) {
 		if (element instanceof IDebugTarget) {
 			return getTargetText((IDebugTarget) element);
@@ -146,6 +148,7 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 
 	}
 
+	@Override
 	public String getEditorId(IEditorInput input, Object inputObject) {
 		if (inputObject instanceof RemoteFileStorage) {
 			return PHPUiConstants.PHP_EDITOR_ID;
@@ -167,6 +170,7 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 	 * @see
 	 * org.eclipse.debug.ui.ISourcePresentation#getEditorInput(java.lang.Object)
 	 */
+	@Override
 	public IEditorInput getEditorInput(Object element) {
 		if (element instanceof RemoteFileStorage) {
 			return new RemoteFileStorageEditorInput((RemoteFileStorage) element);
@@ -203,6 +207,7 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 	 * @see org.eclipse.debug.ui.IDebugModelPresentation#setAttribute(java.lang.
 	 * String , java.lang.Object)
 	 */
+	@Override
 	public void setAttribute(String attribute, Object value) {
 	}
 
@@ -259,7 +264,7 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 		if (variable instanceof IVariableFacet) {
 			facetOwner = (IVariableFacet) variable;
 		} else {
-			facetOwner = (IVariableFacet) variable.getAdapter(IVariableFacet.class);
+			facetOwner = variable.getAdapter(IVariableFacet.class);
 		}
 		if (facetOwner == null)
 			return null;
@@ -453,7 +458,7 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 
 	protected String getThreadText(IThread thread) {
 		StringBuilder buf = new StringBuilder();
-		IDebugTarget target = (IDebugTarget) thread.getDebugTarget();
+		IDebugTarget target = thread.getDebugTarget();
 		try {
 			String targetName = target.getName();
 			targetName = resolveUntitledEditorName(targetName);

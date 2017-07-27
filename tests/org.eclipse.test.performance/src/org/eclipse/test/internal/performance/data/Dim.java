@@ -96,6 +96,7 @@ public class Dim implements Dimension {
 		return DimensionMessages.getString(this.fId);
 	}
 
+	@Override
 	public String toString() {
 		return "Dimension [name=" + getName() + ", " + this.fUnit + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}

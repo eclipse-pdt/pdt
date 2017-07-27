@@ -46,6 +46,7 @@ public class Scalar extends StringLiteral implements Dereferencable {
 		this.scalarType = type;
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		if (visitor.visit(this)) {
 			visitor.endvisit(this);
@@ -69,6 +70,7 @@ public class Scalar extends StringLiteral implements Dereferencable {
 		}
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.SCALAR;
 	}
@@ -80,9 +82,11 @@ public class Scalar extends StringLiteral implements Dereferencable {
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
+	@Override
 	public final void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}

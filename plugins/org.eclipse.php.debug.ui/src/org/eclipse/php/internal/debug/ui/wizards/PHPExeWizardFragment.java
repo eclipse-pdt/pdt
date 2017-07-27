@@ -28,15 +28,18 @@ public class PHPExeWizardFragment extends CompositeWizardFragment implements IPH
 	private PHPexeItem phpExeItem;
 	private PHPexeItem[] existingItems;
 
+	@Override
 	public Composite getComposite() {
 		return compositeFragment;
 	}
 
+	@Override
 	public Composite createComposite(Composite parent, IWizardHandle handle) {
 		compositeFragment = new PHPExeCompositeFragment(parent, new WizardControlWrapper(handle), false);
 		return compositeFragment;
 	}
 
+	@Override
 	public void enter() {
 		if (compositeFragment != null) {
 			try {
@@ -54,6 +57,7 @@ public class PHPExeWizardFragment extends CompositeWizardFragment implements IPH
 		}
 	}
 
+	@Override
 	public boolean isComplete() {
 		if (compositeFragment == null) {
 			return super.isComplete();
@@ -61,6 +65,7 @@ public class PHPExeWizardFragment extends CompositeWizardFragment implements IPH
 		return super.isComplete() && compositeFragment.isComplete();
 	}
 
+	@Override
 	public void exit() {
 		if (compositeFragment != null) {
 			WizardModel model = getWizardModel();
@@ -68,6 +73,7 @@ public class PHPExeWizardFragment extends CompositeWizardFragment implements IPH
 		}
 	}
 
+	@Override
 	public boolean performFinish(IProgressMonitor monitor) throws CoreException {
 		super.performFinish(monitor);
 		if (compositeFragment != null) {
@@ -76,6 +82,7 @@ public class PHPExeWizardFragment extends CompositeWizardFragment implements IPH
 		return false;
 	}
 
+	@Override
 	public void performCancel(IProgressMonitor monitor) throws CoreException {
 		super.performCancel(monitor);
 		// Clear any added server
@@ -85,6 +92,7 @@ public class PHPExeWizardFragment extends CompositeWizardFragment implements IPH
 		}
 	}
 
+	@Override
 	public void setExistingItems(PHPexeItem[] existingItems) {
 		this.existingItems = existingItems;
 	}

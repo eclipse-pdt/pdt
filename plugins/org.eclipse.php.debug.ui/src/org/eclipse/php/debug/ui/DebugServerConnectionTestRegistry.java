@@ -26,7 +26,6 @@ import org.eclipse.php.internal.debug.ui.Logger;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class DebugServerConnectionTestRegistry {
 
 	private static final String EXTENSION_ID = "org.eclipse.php.debug.ui.debugServerConnectionTest"; //$NON-NLS-1$
@@ -46,7 +45,7 @@ public class DebugServerConnectionTestRegistry {
 	 * @return server connection tests
 	 */
 	public static IDebugServerConnectionTest[] getTests(final String debuggerId) {
-		Map<String, IDebugServerConnectionTest> filtersMap = new HashMap<String, IDebugServerConnectionTest>();
+		Map<String, IDebugServerConnectionTest> filtersMap = new HashMap<>();
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(EXTENSION_ID);
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];

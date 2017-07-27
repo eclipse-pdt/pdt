@@ -82,6 +82,7 @@ public class RenameGlobalConstant extends AbstractRename {
 	/**
 	 * Search for the constant
 	 */
+	@Override
 	public boolean visit(Scalar scalar) {
 		String stringValue = scalar.getStringValue();
 		if (stringValue.length() == 0) {
@@ -102,6 +103,7 @@ public class RenameGlobalConstant extends AbstractRename {
 		return false;
 	}
 
+	@Override
 	public String getRenameDescription() {
 		return RenameGlobalConstant.RENAME_CONSTANT;
 	}

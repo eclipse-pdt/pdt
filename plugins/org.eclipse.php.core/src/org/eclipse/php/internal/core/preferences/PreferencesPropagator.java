@@ -61,6 +61,7 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 	 * @param preferencesKey
 	 *            The preferences key that will screen the relevant changes.
 	 */
+	@Override
 	public void addPropagatorListener(IPreferencesPropagatorListener listener, String preferencesKey) {
 		addNodeListener(listener.getProject(), getProjectScope(listener.getProject()));
 		if (isProjectSpecific(listener.getProject(), preferencesKey)) {
@@ -81,6 +82,7 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 	 *            The preferences key that is the screening key for the
 	 *            IPreferencesPropagatorListener.
 	 */
+	@Override
 	public void removePropagatorListener(IPreferencesPropagatorListener listener, String preferencesKey) {
 		if (isProjectSpecific(listener.getProject(), preferencesKey)) {
 			removeFromProjectPropagator(listener, preferencesKey);
@@ -99,6 +101,7 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 	 * @param preferencesKey
 	 *            The preferences key that will screen the relevant changes.
 	 */
+	@Override
 	public void setPropagatorListeners(List<IPreferencesPropagatorListener> listeners, String preferencesKey) {
 		super.setPropagatorListeners(listeners, preferencesKey);
 	}
@@ -106,14 +109,15 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 	/**
 	 * Install the preferences propagator.
 	 */
+	@Override
 	protected synchronized void install() {
 		if (isInstalled) {
 			return;
 		}
-		projectToPropagator = new HashMap<IProject, ProjectPreferencesPropagator>();
-		projectToScope = new HashMap<IProject, ProjectScope>();
-		projectToNodeListener = new HashMap<IProject, INodeChangeListener>();
-		preferenceChangeListeners = new HashMap<IPreferenceChangeListener, IEclipsePreferences>();
+		projectToPropagator = new HashMap<>();
+		projectToScope = new HashMap<>();
+		projectToNodeListener = new HashMap<>();
+		preferenceChangeListeners = new HashMap<>();
 		propertyChangeListener = new WorkspacePropertyChangeListener();
 		InstanceScope.INSTANCE.getNode(nodeQualifier).addPreferenceChangeListener(propertyChangeListener);
 		super.install();
@@ -122,6 +126,7 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 	/**
 	 * Uninstall the preferences propagator.
 	 */
+	@Override
 	protected synchronized void uninstall() {
 		if (!isInstalled) {
 			return;
@@ -272,6 +277,7 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 		 * prefernces, thus, we should divert all the listeners for the project
 		 * to the ProjectPreferencesPropagator.
 		 */
+		@Override
 		public void added(NodeChangeEvent event) {
 			IEclipsePreferences pNode = null;
 			if (event.getChild() instanceof IEclipsePreferences) {
@@ -291,6 +297,7 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 		 * 
 		 * @see org.eclipse.core.runtime.preferences.IEclipsePreferences$INodeChangeListener#removed(org.eclipse.core.runtime.preferences.IEclipsePreferences.NodeChangeEvent)
 		 */
+		@Override
 		public void removed(NodeChangeEvent event) {
 
 			Object childNode = event.getChild();
@@ -320,6 +327,7 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 			this.project = project;
 		}
 
+		@Override
 		public void preferenceChange(PreferenceChangeEvent event) {
 			String key = event.getKey();
 			String newValue = (String) event.getNewValue();

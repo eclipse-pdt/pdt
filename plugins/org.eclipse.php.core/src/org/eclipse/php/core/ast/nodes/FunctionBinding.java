@@ -52,6 +52,7 @@ public class FunctionBinding implements IFunctionBinding {
 	 * @see org.eclipse.php.internal.core.ast.nodes.IFunctionBinding#
 	 * getExceptionTypes ()
 	 */
+	@Override
 	public ITypeBinding[] getExceptionTypes() {
 		// Get an array of PHPDocFields
 		// ArrayList<ITypeBinding> exceptions = new ArrayList<ITypeBinding>();
@@ -69,6 +70,7 @@ public class FunctionBinding implements IFunctionBinding {
 	 * 
 	 * @see org.eclipse.php.internal.core.ast.nodes.IFunctionBinding#getName()
 	 */
+	@Override
 	public String getName() {
 		return modelElement.getElementName();
 	}
@@ -79,6 +81,7 @@ public class FunctionBinding implements IFunctionBinding {
 	 * @see org.eclipse.php.internal.core.ast.nodes.IFunctionBinding#
 	 * getParameterTypes ()
 	 */
+	@Override
 	public ITypeBinding[] getParameterTypes() {
 		// TODO - Create the parameters types according to the defined types in
 		// the function declaration
@@ -92,6 +95,7 @@ public class FunctionBinding implements IFunctionBinding {
 	 * @see
 	 * org.eclipse.php.internal.core.ast.nodes.IFunctionBinding#getReturnType()
 	 */
+	@Override
 	public ITypeBinding[] getReturnType() {
 		return resolver.getMethodReturnTypeBinding(modelElement);
 	}
@@ -101,6 +105,7 @@ public class FunctionBinding implements IFunctionBinding {
 	 * 
 	 * @see org.eclipse.php.internal.core.ast.nodes.IFunctionBinding#isVarargs()
 	 */
+	@Override
 	public boolean isVarargs() {
 		// TODO
 		return false;
@@ -111,6 +116,7 @@ public class FunctionBinding implements IFunctionBinding {
 	 * 
 	 * @see org.eclipse.php.internal.core.ast.nodes.IBinding#getKey()
 	 */
+	@Override
 	public String getKey() {
 		return modelElement.getHandleIdentifier();
 	}
@@ -120,6 +126,7 @@ public class FunctionBinding implements IFunctionBinding {
 	 * 
 	 * @see org.eclipse.php.internal.core.ast.nodes.IBinding#getKind()
 	 */
+	@Override
 	public int getKind() {
 		return IBinding.METHOD;
 	}
@@ -129,6 +136,7 @@ public class FunctionBinding implements IFunctionBinding {
 	 * 
 	 * @see org.eclipse.php.internal.core.ast.nodes.IBinding#getModifiers()
 	 */
+	@Override
 	public int getModifiers() {
 		try {
 			return modelElement.getFlags() & VALID_MODIFIERS;
@@ -145,6 +153,7 @@ public class FunctionBinding implements IFunctionBinding {
 	 * 
 	 * @see org.eclipse.php.internal.core.ast.nodes.IBinding#getPHPElement()
 	 */
+	@Override
 	public IModelElement getPHPElement() {
 		return modelElement;
 	}
@@ -154,6 +163,7 @@ public class FunctionBinding implements IFunctionBinding {
 	 * 
 	 * @see org.eclipse.php.internal.core.ast.nodes.IBinding#isDeprecated()
 	 */
+	@Override
 	public boolean isDeprecated() {
 		return false;
 	}

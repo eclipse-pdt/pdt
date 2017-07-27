@@ -24,7 +24,7 @@ public class PackageSearch extends DownloadClient {
 	}
 
 	public List<MinimalPackage> search(String query) throws Exception {
-		List<MinimalPackage> packages = new LinkedList<MinimalPackage>();
+		List<MinimalPackage> packages = new LinkedList<>();
 		SearchResult result = loadPackages(createUrl(query));
 
 		if (result != null && result.results != null) {

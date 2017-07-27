@@ -56,8 +56,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 
 	private TokenScanner tokenScanner; // shared scanner
 
-	private final Map sourceCopyInfoToEdit;
-	private final Stack sourceCopyEndNodes;
+	private final Map<CopySourceInfo, TextEdit> sourceCopyInfoToEdit;
+	private final Stack<ASTNode> sourceCopyEndNodes;
 
 	private final char[] content;
 	private final IDocument document;
@@ -97,7 +97,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 *            the source range computer to use
 	 */
 	public ASTRewriteAnalyzer(AstLexer scanner, IDocument document, LineInformation lineInfo, String lineDelim,
-			TextEdit rootEdit, RewriteEventStore eventStore, NodeInfoStore nodeInfos, List comments, Map options,
+			TextEdit rootEdit, RewriteEventStore eventStore, NodeInfoStore nodeInfos, List<?> comments, Map<String, String> options,
 			TargetSourceRangeComputer extendedSourceRangeComputer) {
 		this.scanner = scanner;
 		this.eventStore = eventStore;
@@ -107,8 +107,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		this.nodeInfos = nodeInfos;
 		this.tokenScanner = null;
 		this.currentEdit = rootEdit;
-		this.sourceCopyInfoToEdit = new IdentityHashMap();
-		this.sourceCopyEndNodes = new Stack();
+		this.sourceCopyInfoToEdit = new IdentityHashMap<>();
+		this.sourceCopyEndNodes = new Stack<>();
 
 		this.formatter = new ASTRewriteFormatter(document, nodeInfos, eventStore, options, lineDelim,
 				scanner.getPHPVersion(), true);
@@ -159,7 +159,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	}
 
 	final TextEdit getCopySourceEdit(CopySourceInfo info) {
-		TextEdit edit = (TextEdit) this.sourceCopyInfoToEdit.get(info);
+		TextEdit edit = this.sourceCopyInfoToEdit.get(info);
 		if (edit == null) {
 			SourceRange range = getExtendedRange(info.getNode());
 			int start = range.getStartPosition();
@@ -325,14 +325,14 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		if (property.isChildProperty() && node != null) {
 			return doVisit((ASTNode) node);
 		} else if (property.isChildListProperty()) {
-			return doVisitList((List) node, offset);
+			return doVisitList((List<?>) node, offset);
 		}
 		return offset;
 	}
 
-	private int doVisitList(List list, int offset) {
+	private int doVisitList(List<?> list, int offset) {
 		int endPos = offset;
-		for (Iterator iter = list.iterator(); iter.hasNext();) {
+		for (Iterator<?> iter = list.iterator(); iter.hasNext();) {
 			ASTNode curr = ((ASTNode) iter.next());
 			endPos = doVisit(curr);
 		}
@@ -348,18 +348,18 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		if (property.isChildProperty() && node != null) {
 			voidVisit((ASTNode) node);
 		} else if (property.isChildListProperty()) {
-			voidVisitList((List) node);
+			voidVisitList((List<?>) node);
 		}
 	}
 
-	private void voidVisitList(List list) {
-		for (Iterator iter = list.iterator(); iter.hasNext();) {
+	private void voidVisitList(List<?> list) {
+		for (Iterator<?> iter = list.iterator(); iter.hasNext();) {
 			doVisit(((ASTNode) iter.next()));
 		}
 	}
 
 	private final boolean doVisitUnchangedChildren(ASTNode parent) {
-		List properties = parent.structuralPropertiesForType();
+		List<?> properties = parent.structuralPropertiesForType();
 		for (int i = 0; i < properties.size(); i++) {
 			voidVisit(parent, (StructuralPropertyDescriptor) properties.get(i));
 		}
@@ -858,10 +858,12 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			this.separatorLines = separator;
 		}
 
+		@Override
 		protected int getInitialIndent() {
 			return this.initialIndent;
 		}
 
+		@Override
 		protected String getSeparatorString(int nodeIndex) {
 			int newLines = this.separatorLines == -1 ? getNewLines(nodeIndex) : this.separatorLines;
 
@@ -1145,7 +1147,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 
 	final void doTextInsert(int insertOffset, ASTNode node, int initialIndentLevel, boolean removeLeadingIndent,
 			TextEditGroup editGroup) {
-		ArrayList markers = new ArrayList();
+		ArrayList<NodeMarker> markers = new ArrayList<>();
 		String formatted = this.formatter.getFormattedResult(node, initialIndentLevel, markers);
 
 		int currPos = 0;
@@ -1155,7 +1157,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			}
 		}
 		for (int i = 0; i < markers.size(); i++) { // markers.size can change!
-			NodeMarker curr = (NodeMarker) markers.get(i);
+			NodeMarker curr = markers.get(i);
 
 			int offset = curr.offset;
 			if (offset != currPos) {
@@ -1176,7 +1178,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 				if (curr.length != 0) {
 					int end = offset + curr.length;
 					int k = i + 1;
-					while (k < markers.size() && ((NodeMarker) markers.get(k)).offset < end) {
+					while (k < markers.size() && markers.get(k).offset < end) {
 						k++;
 					}
 					curr.offset = end;
@@ -1356,6 +1358,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#postVisit(ASTNode)
 	 */
+	@Override
 	public void postVisit(ASTNode node) {
 		TextEditGroup editGroup = this.eventStore.getTrackedNodeData(node);
 		if (editGroup != null) {
@@ -1370,6 +1373,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#preVisit(ASTNode)
 	 */
+	@Override
 	public void preVisit(ASTNode node) {
 		// copies, then range marker
 
@@ -1388,7 +1392,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		}
 	}
 
-	final void doCopySourcePreVisit(CopySourceInfo[] infos, Stack nodeEndStack) {
+	final void doCopySourcePreVisit(CopySourceInfo[] infos, Stack<ASTNode> nodeEndStack) {
 		if (infos != null) {
 			for (int i = 0; i < infos.length; i++) {
 				CopySourceInfo curr = infos[i];
@@ -1400,13 +1404,14 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		}
 	}
 
-	final void doCopySourcePostVisit(ASTNode node, Stack nodeEndStack) {
+	final void doCopySourcePostVisit(ASTNode node, Stack<ASTNode> nodeEndStack) {
 		while (!nodeEndStack.isEmpty() && nodeEndStack.peek() == node) {
 			nodeEndStack.pop();
 			this.currentEdit = this.currentEdit.getParent();
 		}
 	}
 
+	@Override
 	public boolean visit(Program node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -1476,6 +1481,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(MethodDeclaration)
 	 */
+	@Override
 	public boolean visit(MethodDeclaration node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -1490,6 +1496,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(Block)
 	 */
+	@Override
 	public boolean visit(Block node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -1667,6 +1674,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(ReturnStatement)
 	 */
+	@Override
 	public boolean visit(ReturnStatement node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -1684,6 +1692,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		return false;
 	}
 
+	@Override
 	public boolean visit(YieldExpression node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -1716,6 +1725,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(ArrayAccess)
 	 */
+	@Override
 	public boolean visit(ArrayAccess node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -1763,6 +1773,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(ArrayCreation)
 	 */
+	@Override
 	public boolean visit(ArrayCreation node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -1797,6 +1808,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(Assignment)
 	 */
+	@Override
 	public boolean visit(Assignment node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -1813,6 +1825,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(BreakStatement)
 	 */
+	@Override
 	public boolean visit(BreakStatement node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -1836,6 +1849,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(CastExpression)
 	 */
+	@Override
 	public boolean visit(CastExpression cast) {
 		if (isChanged(cast, CastExpression.CASTING_TYPE_PROPERTY)) {
 			try {
@@ -1865,10 +1879,12 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(CatchClause)
 	 */
+	@Override
 	public boolean visit(CatchClause node) { // catch (Exception) Block
 		return rewriteRequiredNodeVisit(node, CatchClause.CLASS_NAMES_PROPERTY, CatchClause.BODY_PROPERTY);
 	}
 
+	@Override
 	public boolean visit(FinallyClause node) { // catch (Exception) Block
 		return rewriteRequiredNodeVisit(node, FinallyClause.BODY_PROPERTY);
 	}
@@ -1878,6 +1894,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(ClassInstanceCreation)
 	 */
+	@Override
 	public boolean visit(ClassInstanceCreation node) {
 		rewriteRequiredNodeVisit(node, ClassInstanceCreation.CLASSNAME_PROPERTY);
 		if (isChanged(node, ClassInstanceCreation.CTOR_PARAMS_PROPERTY)) {
@@ -1897,6 +1914,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(ConditionalExpression)
 	 */
+	@Override
 	public boolean visit(ConditionalExpression node) { // expression ?
 		// thenExpression :
 		// elseExpression
@@ -1909,6 +1927,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(ContinueStatement)
 	 */
+	@Override
 	public boolean visit(ContinueStatement node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -1932,6 +1951,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(DoStatement)
 	 */
+	@Override
 	public boolean visit(DoStatement node) { // do statement while expression
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -1965,6 +1985,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(EmptyStatement)
 	 */
+	@Override
 	public boolean visit(EmptyStatement node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -1978,6 +1999,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(ExpressionStatement)
 	 */
+	@Override
 	public boolean visit(ExpressionStatement node) { // expression
 		return rewriteRequiredNodeVisit(node, ExpressionStatement.EXPRESSION_PROPERTY);
 	}
@@ -1987,6 +2009,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(FieldAccess)
 	 */
+	@Override
 	public boolean visit(FieldAccess node) { // expression.name
 		return rewriteRequiredNodeVisit(node, FieldAccess.DISPATCHER_PROPERTY, FieldAccess.FIELD_PROPERTY);
 	}
@@ -1996,6 +2019,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(FieldDeclaration)
 	 */
+	@Override
 	public boolean visit(FieldsDeclaration node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -2012,6 +2036,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org. eclipse
 	 * .php.internal.core.ast.nodes.SingleFieldDeclaration)
 	 */
+	@Override
 	public boolean visit(SingleFieldDeclaration singleFieldDeclaration) {
 		if (!hasChildrenChanges(singleFieldDeclaration)) {
 			return doVisitUnchangedChildren(singleFieldDeclaration);
@@ -2066,6 +2091,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(ForStatement)
 	 */
+	@Override
 	public boolean visit(ForStatement node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -2117,6 +2143,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(IfStatement)
 	 */
+	@Override
 	public boolean visit(IfStatement node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -2180,6 +2207,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(InfixExpression)
 	 */
+	@Override
 	public boolean visit(InfixExpression node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -2263,6 +2291,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(MethodInvocation)
 	 */
+	@Override
 	public boolean visit(MethodInvocation node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -2279,6 +2308,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(PostfixExpression)
 	 */
+	@Override
 	public boolean visit(PostfixExpression node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -2294,6 +2324,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(PrefixExpression)
 	 */
+	@Override
 	public boolean visit(PrefixExpression node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -2309,6 +2340,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(SwitchCase)
 	 */
+	@Override
 	public boolean visit(SwitchCase node) {
 		// dont allow switching from case to default or back. New statements
 		// should be created.
@@ -2332,6 +2364,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			super(initialIndent, 0);
 		}
 
+		@Override
 		protected int getNodeIndent(int nodeIndex) {
 			int indent = getInitialIndent();
 			ASTNode node = (ASTNode) this.list[nodeIndex].getOriginalValue();
@@ -2350,6 +2383,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(SwitchStatement)
 	 */
+	@Override
 	public boolean visit(SwitchStatement node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -2381,6 +2415,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(ThrowStatement)
 	 */
+	@Override
 	public boolean visit(ThrowStatement node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -2403,6 +2438,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(TryStatement)
 	 */
+	@Override
 	public boolean visit(TryStatement node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -2427,6 +2463,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(WhileStatement)
 	 */
+	@Override
 	public boolean visit(WhileStatement node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -2461,6 +2498,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org. eclipse
 	 * .php.internal.core.ast.nodes.ArrayElement)
 	 */
+	@Override
 	public boolean visit(ArrayElement arrayElement) {
 		// Since the key property is optional, we need to treat it separately.
 		rewriteArrayElementKey(arrayElement);
@@ -2549,6 +2587,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org. eclipse
 	 * .php.internal.core.ast.nodes.BackTickExpression)
 	 */
+	@Override
 	public boolean visit(BackTickExpression backTickExpression) {
 		if (!hasChildrenChanges(backTickExpression)) {
 			return doVisitUnchangedChildren(backTickExpression);
@@ -2730,6 +2769,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org. eclipse
 	 * .php.internal.core.ast.nodes.ClassName)
 	 */
+	@Override
 	public boolean visit(ClassName className) {
 		return rewriteRequiredNodeVisit(className, ClassName.NAME_PROPERTY);
 	}
@@ -2740,6 +2780,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org. eclipse
 	 * .php.internal.core.ast.nodes.CloneExpression)
 	 */
+	@Override
 	public boolean visit(CloneExpression cloneExpression) {
 		return rewriteRequiredNodeVisit(cloneExpression, CloneExpression.EXPRESSION_PROPERTY);
 	}
@@ -2779,6 +2820,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org. eclipse
 	 * .php.internal.core.ast.nodes.EchoStatement)
 	 */
+	@Override
 	public boolean visit(EchoStatement echoStatement) {
 		if (!hasChildrenChanges(echoStatement)) {
 			return doVisitUnchangedChildren(echoStatement);
@@ -2813,6 +2855,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org. eclipse
 	 * .php.internal.core.ast.nodes.FormalParameter)
 	 */
+	@Override
 	public boolean visit(FormalParameter formalParameter) {
 		rewriteFormalParameterVariadic(formalParameter);
 
@@ -2923,6 +2966,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org. eclipse
 	 * .php.internal.core.ast.nodes.FunctionDeclaration)
 	 */
+	@Override
 	public boolean visit(FunctionDeclaration functionDeclaration) {
 		if (!hasChildrenChanges(functionDeclaration)) {
 			return doVisitUnchangedChildren(functionDeclaration);
@@ -3036,6 +3080,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org. eclipse
 	 * .php.internal.core.ast.nodes.FunctionInvocation)
 	 */
+	@Override
 	public boolean visit(FunctionInvocation functionInvocation) {
 		if (!hasChildrenChanges(functionInvocation)) {
 			return doVisitUnchangedChildren(functionInvocation);
@@ -3062,6 +3107,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org. eclipse
 	 * .php.internal.core.ast.nodes.FunctionName)
 	 */
+	@Override
 	public boolean visit(FunctionName functionName) {
 		return rewriteRequiredNodeVisit(functionName, FunctionName.NAME_PROPERTY);
 	}
@@ -3072,6 +3118,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org. eclipse
 	 * .php.internal.core.ast.nodes.GlobalStatement)
 	 */
+	@Override
 	public boolean visit(GlobalStatement globalStatement) {
 		if (!hasChildrenChanges(globalStatement)) {
 			return doVisitUnchangedChildren(globalStatement);
@@ -3086,6 +3133,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org. eclipse
 	 * .php.internal.core.ast.nodes.Identifier)
 	 */
+	@Override
 	public boolean visit(Identifier node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -3102,6 +3150,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org. eclipse
 	 * .php.internal.core.ast.nodes.IgnoreError)
 	 */
+	@Override
 	public boolean visit(IgnoreError ignoreError) {
 		return rewriteRequiredNodeVisit(ignoreError, IgnoreError.EXPRESSION_PROPERTY);
 	}
@@ -3112,6 +3161,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org. eclipse
 	 * .php.internal.core.ast.nodes.Include)
 	 */
+	@Override
 	public boolean visit(Include include) {
 		if (!hasChildrenChanges(include)) {
 			return doVisitUnchangedChildren(include);
@@ -3176,6 +3226,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org. eclipse
 	 * .php.internal.core.ast.nodes.InstanceOfExpression)
 	 */
+	@Override
 	public boolean visit(InstanceOfExpression instanceOfExpression) {
 		return rewriteRequiredNodeVisit(instanceOfExpression, InstanceOfExpression.CLASSNAME_PROPERTY,
 				InstanceOfExpression.EXPRESSION_PROPERTY);
@@ -3211,6 +3262,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org. eclipse
 	 * .php.internal.core.ast.nodes.ListVariable)
 	 */
+	@Override
 	public boolean visit(ListVariable listVariable) {
 		if (!hasChildrenChanges(listVariable)) {
 			return doVisitUnchangedChildren(listVariable);
@@ -3225,6 +3277,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org. eclipse
 	 * .php.internal.core.ast.nodes.ParenthesisExpression)
 	 */
+	@Override
 	public boolean visit(ParenthesisExpression parenthesisExpression) {
 		return rewriteRequiredNodeVisit(parenthesisExpression, ParenthesisExpression.EXPRESSION_PROPERTY);
 	}
@@ -3235,6 +3288,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org. eclipse
 	 * .php.internal.core.ast.nodes.Quote)
 	 */
+	@Override
 	public boolean visit(Quote quote) {
 		// Rewrite the quoate's type
 		rewriteQuoteType(quote);
@@ -3272,8 +3326,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 				""); //$NON-NLS-1$
 		// In case that the original expressions list was empty, we should add a
 		// new line
-		List originalValue = (List) getOriginalValue(quote, Quote.EXPRESSIONS_PROPERTY);
-		List newValue = (List) getNewValue(quote, Quote.EXPRESSIONS_PROPERTY);
+		List<?> originalValue = (List<?>) getOriginalValue(quote, Quote.EXPRESSIONS_PROPERTY);
+		List<?> newValue = (List<?>) getNewValue(quote, Quote.EXPRESSIONS_PROPERTY);
 		if ((originalValue == null || originalValue.size() == 0) && newValue != null && newValue.size() > 0) {
 			doTextInsert(expressionStart, "\n", //$NON-NLS-1$
 					getEditGroup(quote, Quote.EXPRESSIONS_PROPERTY));
@@ -3344,6 +3398,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org. eclipse
 	 * .php.internal.core.ast.nodes.Reference)
 	 */
+	@Override
 	public boolean visit(Reference reference) {
 		return rewriteRequiredNodeVisit(reference, Reference.EXPRESSION_PROPERTY);
 	}
@@ -3354,6 +3409,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org. eclipse
 	 * .php.internal.core.ast.nodes.ReflectionVariable)
 	 */
+	@Override
 	public boolean visit(ReflectionVariable reflectionVariable) {
 		if (isChanged(reflectionVariable, ReflectionVariable.DOLLARED_PROPERTY)) {
 			rewriteVariableDollar(reflectionVariable);
@@ -3367,6 +3423,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org. eclipse
 	 * .php.internal.core.ast.nodes.Scalar)
 	 */
+	@Override
 	public boolean visit(Scalar scalar) {
 		// For now, we ignore the Scalar.TYPE_PROPERTY changes and we only deal
 		// with the value property of the scalar.
@@ -3398,6 +3455,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org. eclipse
 	 * .php.internal.core.ast.nodes.StaticConstantAccess)
 	 */
+	@Override
 	public boolean visit(StaticConstantAccess classConstantAccess) {
 		return rewriteRequiredNodeVisit(classConstantAccess, StaticConstantAccess.CLASS_NAME_PROPERTY,
 				StaticConstantAccess.CONSTANT_PROPERTY);
@@ -3409,6 +3467,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org. eclipse
 	 * .php.internal.core.ast.nodes.StaticFieldAccess)
 	 */
+	@Override
 	public boolean visit(StaticFieldAccess staticFieldAccess) {
 		return rewriteRequiredNodeVisit(staticFieldAccess, StaticFieldAccess.CLASS_NAME_PROPERTY,
 				StaticFieldAccess.FIELD_PROPERTY);
@@ -3420,6 +3479,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org. eclipse
 	 * .php.internal.core.ast.nodes.StaticMethodInvocation)
 	 */
+	@Override
 	public boolean visit(StaticMethodInvocation staticMethodInvocation) {
 		return rewriteRequiredNodeVisit(staticMethodInvocation, StaticMethodInvocation.CLASS_NAME_PROPERTY,
 				StaticMethodInvocation.METHOD_PROPERTY);
@@ -3431,6 +3491,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org. eclipse
 	 * .php.internal.core.ast.nodes.StaticStatement)
 	 */
+	@Override
 	public boolean visit(StaticStatement staticStatement) {
 		if (!hasChildrenChanges(staticStatement)) {
 			return doVisitUnchangedChildren(staticStatement);
@@ -3445,6 +3506,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org. eclipse
 	 * .php.internal.core.ast.nodes.UnaryOperation)
 	 */
+	@Override
 	public boolean visit(UnaryOperation unaryOperation) {
 		rewriteOperation(unaryOperation, UnaryOperation.OPERATOR_PROPERTY, unaryOperation.getStart());
 		return rewriteRequiredNodeVisit(unaryOperation, UnaryOperation.EXPRESSION_PROPERTY);
@@ -3456,6 +3518,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org. eclipse
 	 * .php.internal.core.ast.nodes.Variable)
 	 */
+	@Override
 	public boolean visit(Variable variable) {
 		if (isChanged(variable, Variable.DOLLARED_PROPERTY)) {
 			rewriteVariableDollar(variable);
@@ -3463,14 +3526,17 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		return rewriteRequiredNodeVisit(variable, Variable.NAME_PROPERTY);
 	}
 
+	@Override
 	public boolean visit(GotoLabel gotoLabel) {
 		return rewriteRequiredNodeVisit(gotoLabel, GotoLabel.NAME_PROPERTY);
 	}
 
+	@Override
 	public boolean visit(GotoStatement gotoStatement) {
 		return rewriteRequiredNodeVisit(gotoStatement, GotoStatement.LABEL_PROPERTY);
 	}
 
+	@Override
 	public boolean visit(LambdaFunctionDeclaration lambdaFunctionDeclaration) {
 		if (!hasChildrenChanges(lambdaFunctionDeclaration)) {
 			return doVisitUnchangedChildren(lambdaFunctionDeclaration);
@@ -3572,11 +3638,13 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		return false;
 	}
 
+	@Override
 	public boolean visit(NamespaceDeclaration namespaceDeclaration) {
 		return rewriteRequiredNodeVisit(namespaceDeclaration, NamespaceDeclaration.NAME_PROPERTY,
 				NamespaceDeclaration.BODY_PROPERTY);
 	}
 
+	@Override
 	public boolean visit(NamespaceName namespaceName) {
 
 		// Make the necessary changes to add or remove the '\' and 'namespace'
@@ -3622,6 +3690,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		return false;
 	}
 
+	@Override
 	public boolean visit(UseStatement useStatement) {
 		rewriteUseStatementType(useStatement);
 		rewriteNodeList(useStatement, UseStatement.PARTS_PROPERTY, useStatement.getStart(), "", ", "); //$NON-NLS-1$ //$NON-NLS-2$
@@ -3653,6 +3722,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		}
 	}
 
+	@Override
 	public boolean visit(UseStatementPart useStatementPart) {
 		return rewriteRequiredNodeVisit(useStatementPart, UseStatementPart.NAME_PROPERTY,
 				UseStatementPart.ALIAS_PROPERTY);
@@ -3689,6 +3759,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 
 	// php5.4 starts
 
+	@Override
 	public boolean visit(FullyQualifiedTraitMethodReference node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -3698,6 +3769,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		return false;
 	}
 
+	@Override
 	public boolean visit(TraitAlias node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -3708,6 +3780,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		return false;
 	}
 
+	@Override
 	public boolean visit(TraitAliasStatement node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -3716,6 +3789,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		return false;
 	}
 
+	@Override
 	public boolean visit(TraitDeclaration node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -3730,6 +3804,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		return false;
 	}
 
+	@Override
 	public boolean visit(TraitPrecedence node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -3739,6 +3814,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		return false;
 	}
 
+	@Override
 	public boolean visit(TraitPrecedenceStatement node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
@@ -3747,6 +3823,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		return false;
 	}
 
+	@Override
 	public boolean visit(TraitUseStatement node) {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);

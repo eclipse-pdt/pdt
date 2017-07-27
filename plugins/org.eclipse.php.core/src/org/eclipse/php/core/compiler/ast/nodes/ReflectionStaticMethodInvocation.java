@@ -21,6 +21,7 @@ public class ReflectionStaticMethodInvocation extends ReflectionCallExpression {
 		super(start, end, receiver, name, args);
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.REFLECTION_STATIC_METHOD_INVOCATION;
 	}

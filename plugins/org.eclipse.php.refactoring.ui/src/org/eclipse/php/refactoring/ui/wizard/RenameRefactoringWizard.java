@@ -44,6 +44,7 @@ public class RenameRefactoringWizard extends RefactoringWizard {
 	 * 
 	 * @see RefactoringWizard#addUserInputPages
 	 */
+	@Override
 	protected void addUserInputPages() {
 		String initialSetting = getNameUpdating().getCurrentElementName();
 		RenameInputWizardPage inputPage = createInputPage(fInputPageDescription, initialSetting);
@@ -52,11 +53,12 @@ public class RenameRefactoringWizard extends RefactoringWizard {
 	}
 
 	protected INameUpdating getNameUpdating() {
-		return (INameUpdating) getRefactoring().getAdapter(INameUpdating.class);
+		return getRefactoring().getAdapter(INameUpdating.class);
 	}
 
 	protected RenameInputWizardPage createInputPage(String message, String initialSetting) {
 		return new RenameInputWizardPage(message, fPageContextHelpId, true, initialSetting) {
+			@Override
 			protected RefactoringStatus validateTextField(String text) {
 				return validateNewName(text);
 			}

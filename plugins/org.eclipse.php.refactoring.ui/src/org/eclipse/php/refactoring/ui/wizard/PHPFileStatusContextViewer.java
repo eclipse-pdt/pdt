@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Composite;
 
 public class PHPFileStatusContextViewer extends FileStatusContextViewer {
 
+	@Override
 	public void createControl(Composite parent) {
 		super.createControl(parent);
 		getSourceViewer().getControl().setFont(JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont")); //$NON-NLS-1$

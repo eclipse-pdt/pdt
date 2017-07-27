@@ -113,25 +113,25 @@ public class PHPNavigatorDropAdapter extends NavigatorDropAdapter {
 	 * @return the resource selection from the LocalSelectionTransfer
 	 */
 	private IResource[] getSelectedResources() {
-		ArrayList selectedResources = new ArrayList();
+		ArrayList<Object> selectedResources = new ArrayList<>();
 
 		ISelection selection = LocalSelectionTransfer.getTransfer().getSelection();
 		if (selection instanceof IStructuredSelection) {
 			IStructuredSelection ssel = (IStructuredSelection) selection;
-			for (Iterator i = ssel.iterator(); i.hasNext();) {
+			for (Iterator<?> i = ssel.iterator(); i.hasNext();) {
 				Object o = i.next();
 				if (o instanceof IResource) {
 					selectedResources.add(o);
 				} else if (o instanceof IAdaptable) {
 					IAdaptable a = (IAdaptable) o;
-					IResource r = (IResource) a.getAdapter(IResource.class);
+					IResource r = a.getAdapter(IResource.class);
 					if (r != null) {
 						selectedResources.add(r);
 					}
 				}
 			}
 		}
-		return (IResource[]) selectedResources.toArray(new IResource[selectedResources.size()]);
+		return selectedResources.toArray(new IResource[selectedResources.size()]);
 	}
 
 	/**

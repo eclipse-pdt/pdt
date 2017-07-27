@@ -64,7 +64,7 @@ public class BroadcastConnection {
 				outputStream = socket.getOutputStream();
 				BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 				PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream));
-				List<String> requestLines = new ArrayList<String>();
+				List<String> requestLines = new ArrayList<>();
 				String currentLine;
 				while (true) {
 					currentLine = reader.readLine();
@@ -118,7 +118,7 @@ public class BroadcastConnection {
 	 */
 	protected static class JSONDescriptor {
 
-		protected Map<String, String> properties = new HashMap<String, String>();
+		protected Map<String, String> properties = new HashMap<>();
 
 		public JSONDescriptor() {
 		};

@@ -34,10 +34,12 @@ public class ReflectionVariableReference extends Expression {
 		this.expression = name;
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.REFLECTION_VARIABLE;
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		boolean visit = visitor.visit(this);
 		if (visit) {
@@ -53,9 +55,11 @@ public class ReflectionVariableReference extends Expression {
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
+	@Override
 	public final void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}

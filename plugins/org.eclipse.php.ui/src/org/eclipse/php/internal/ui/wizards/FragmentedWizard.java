@@ -40,7 +40,7 @@ public class FragmentedWizard implements IWizard {
 
 	private List<IWizardPage> pages;
 	private boolean addingPages;
-	private Map<WizardFragment, FragmentedWizardPage> fragmentData = new HashMap<WizardFragment, FragmentedWizardPage>();
+	private Map<WizardFragment, FragmentedWizardPage> fragmentData = new HashMap<>();
 	protected WizardModel wizardModel;
 
 	private IWizardContainer container = null;
@@ -125,7 +125,7 @@ public class FragmentedWizard implements IWizard {
 				try {
 					Iterator<WizardFragment> iterator = list.iterator();
 					while (iterator.hasNext())
-						executeTask((WizardFragment) iterator.next(), CANCEL, monitor);
+						executeTask(iterator.next(), CANCEL, monitor);
 				} catch (CoreException ce) {
 					throw new InvocationTargetException(ce);
 				}
@@ -203,7 +203,7 @@ public class FragmentedWizard implements IWizard {
 				// enter & exit the remaining pages
 				int index = list.indexOf(cFragment);
 				while (index > 0 && index < list.size() - 1) {
-					final WizardFragment fragment = (WizardFragment) list.get(++index);
+					final WizardFragment fragment = list.get(++index);
 					try {
 						Display.getDefault().syncExec(new Runnable() {
 							@Override
@@ -256,7 +256,7 @@ public class FragmentedWizard implements IWizard {
 					Iterator<WizardFragment> iterator = list.iterator();
 					while (iterator.hasNext())
 						try {
-							WizardFragment fragment = (WizardFragment) iterator.next();
+							WizardFragment fragment = iterator.next();
 							if (!executeTask(fragment, FINISH, monitor)) {
 								FragmentedWizardPage page = getFragmentData(fragment);
 								String message = MessageFormat.format(PHPUIMessages.FragmentedWizard_2,
@@ -335,7 +335,7 @@ public class FragmentedWizard implements IWizard {
 			oldIndex--;
 
 		while (oldIndex != newIndex) {
-			WizardFragment fragment = (WizardFragment) list.get(oldIndex);
+			WizardFragment fragment = list.get(oldIndex);
 			fragment.enter();
 			fragment.exit();
 			if (oldIndex < newIndex)
@@ -349,13 +349,13 @@ public class FragmentedWizard implements IWizard {
 	}
 
 	private List<WizardFragment> getAllWizardFragments() {
-		List<WizardFragment> list = new ArrayList<WizardFragment>();
+		List<WizardFragment> list = new ArrayList<>();
 		list.add(rootFragment);
 		addSubWizardFragments(rootFragment, list);
 
 		Iterator<WizardFragment> iterator = list.iterator();
 		while (iterator.hasNext()) {
-			WizardFragment fragment = (WizardFragment) iterator.next();
+			WizardFragment fragment = iterator.next();
 			if (!wizardModel.equals(fragment.getWizardModel())) {
 				fragment.setWizardModel(wizardModel);
 			}
@@ -384,10 +384,10 @@ public class FragmentedWizard implements IWizard {
 
 		try {
 			addingPages = true;
-			pages = new ArrayList<IWizardPage>();
+			pages = new ArrayList<>();
 			Iterator<WizardFragment> iterator = getAllWizardFragments().iterator();
 			while (iterator.hasNext()) {
-				WizardFragment fragment = (WizardFragment) iterator.next();
+				WizardFragment fragment = iterator.next();
 				FragmentedWizardPage page = getFragmentData(fragment);
 				if (fragment.hasComposite()) {
 					if (page == null) {
@@ -412,7 +412,7 @@ public class FragmentedWizard implements IWizard {
 
 	private FragmentedWizardPage getFragmentData(WizardFragment fragment) {
 		try {
-			FragmentedWizardPage page = (FragmentedWizardPage) fragmentData.get(fragment);
+			FragmentedWizardPage page = fragmentData.get(fragment);
 			if (page != null)
 				return page;
 		} catch (Exception e) {
@@ -435,7 +435,7 @@ public class FragmentedWizard implements IWizard {
 	public boolean canFinish() {
 		// Default implementation is to check if all pages are complete.
 		for (int i = 0; i < pages.size(); i++) {
-			if (!((IWizardPage) pages.get(i)).isPageComplete())
+			if (!pages.get(i).isPageComplete())
 				return false;
 		}
 		return true;
@@ -452,7 +452,7 @@ public class FragmentedWizard implements IWizard {
 		this.pageContainerHook = pageContainer;
 		// the default behavior is to create all the pages controls
 		for (int i = 0; i < pages.size(); i++) {
-			IWizardPage page = (IWizardPage) pages.get(i);
+			IWizardPage page = pages.get(i);
 			page.createControl(pageContainer);
 			page.getControl().setVisible(false);
 		}
@@ -467,7 +467,7 @@ public class FragmentedWizard implements IWizard {
 	public void dispose() {
 		// notify pages
 		for (int i = 0; i < pages.size(); i++) {
-			((IWizardPage) pages.get(i)).dispose();
+			pages.get(i).dispose();
 		}
 
 		// dispose of image
@@ -521,7 +521,7 @@ public class FragmentedWizard implements IWizard {
 			// last page or page not found
 			return null;
 
-		return (IWizardPage) pages.get(index + 1);
+		return pages.get(index + 1);
 	}
 
 	/*
@@ -532,7 +532,7 @@ public class FragmentedWizard implements IWizard {
 	@Override
 	public IWizardPage getPage(String name) {
 		for (int i = 0; i < pages.size(); i++) {
-			IWizardPage page = (IWizardPage) pages.get(i);
+			IWizardPage page = pages.get(i);
 			String pageName = page.getName();
 			if (pageName.equals(name))
 				return page;
@@ -557,7 +557,7 @@ public class FragmentedWizard implements IWizard {
 	 */
 	@Override
 	public IWizardPage[] getPages() {
-		return (IWizardPage[]) pages.toArray(new IWizardPage[pages.size()]);
+		return pages.toArray(new IWizardPage[pages.size()]);
 	}
 
 	/*
@@ -573,7 +573,7 @@ public class FragmentedWizard implements IWizard {
 		if (index == 0 || index == -1)
 			// first page or page not found
 			return null;
-		return (IWizardPage) pages.get(index - 1);
+		return pages.get(index - 1);
 	}
 
 	/*
@@ -586,7 +586,7 @@ public class FragmentedWizard implements IWizard {
 		if (pages.size() == 0)
 			return null;
 
-		return (IWizardPage) pages.get(0);
+		return pages.get(0);
 	}
 
 	/*

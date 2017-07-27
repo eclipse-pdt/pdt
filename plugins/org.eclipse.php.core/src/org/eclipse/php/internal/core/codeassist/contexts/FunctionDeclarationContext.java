@@ -33,6 +33,7 @@ public abstract class FunctionDeclarationContext extends DeclarationContext {
 
 	private int functionEnd;
 
+	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;

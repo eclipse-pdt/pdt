@@ -35,8 +35,8 @@ public class PHPExceptionBreakpoint extends Breakpoint implements IPHPExceptionB
 
 	private String name;
 	private Type type;
-	private Map<IDebugTarget, Integer> lines = new WeakHashMap<IDebugTarget, Integer>();
-	private Map<IDebugTarget, Integer> ids = new WeakHashMap<IDebugTarget, Integer>();
+	private Map<IDebugTarget, Integer> lines = new WeakHashMap<>();
+	private Map<IDebugTarget, Integer> ids = new WeakHashMap<>();
 
 	/**
 	 * Creates new "general" PHP exception breakpoint which internal data will
@@ -90,6 +90,7 @@ public class PHPExceptionBreakpoint extends Breakpoint implements IPHPExceptionB
 	 * @see org.eclipse.php.internal.debug.core.model.IPHPExceptionBreakpoint#
 	 * getExceptionName()
 	 */
+	@Override
 	public String getExceptionName() {
 		return name;
 	}
@@ -101,6 +102,7 @@ public class PHPExceptionBreakpoint extends Breakpoint implements IPHPExceptionB
 	 * org.eclipse.php.internal.debug.core.model.IPHPExceptionBreakpoint#getLine
 	 * (org.eclipse.debug.core.model.IDebugTarget)
 	 */
+	@Override
 	public int getLine(IDebugTarget target) {
 		Integer number = lines.get(target);
 		return number != null ? number : -1;
@@ -113,6 +115,7 @@ public class PHPExceptionBreakpoint extends Breakpoint implements IPHPExceptionB
 	 * org.eclipse.php.internal.debug.core.model.IPHPExceptionBreakpoint#getId(
 	 * org.eclipse.debug.core.model.IDebugTarget)
 	 */
+	@Override
 	public int getId(IDebugTarget target) {
 		Integer id = ids.get(target);
 		return id != null ? id : -1;
@@ -125,6 +128,7 @@ public class PHPExceptionBreakpoint extends Breakpoint implements IPHPExceptionB
 	 * org.eclipse.php.internal.debug.core.model.IPHPExceptionBreakpoint#getType
 	 * ()
 	 */
+	@Override
 	public Type getType() {
 		return type;
 	}
@@ -149,6 +153,7 @@ public class PHPExceptionBreakpoint extends Breakpoint implements IPHPExceptionB
 	 * org.eclipse.php.internal.debug.core.model.IPHPExceptionBreakpoint#setLine
 	 * (org.eclipse.debug.core.model.IDebugTarget, int)
 	 */
+	@Override
 	public void setLine(IDebugTarget target, int line) {
 		lines.put(target, line);
 	}
@@ -160,6 +165,7 @@ public class PHPExceptionBreakpoint extends Breakpoint implements IPHPExceptionB
 	 * org.eclipse.php.internal.debug.core.model.IPHPExceptionBreakpoint#setId(
 	 * org.eclipse.debug.core.model.IDebugTarget, int)
 	 */
+	@Override
 	public void setId(IDebugTarget target, int id) {
 		ids.put(target, id);
 	}

@@ -25,7 +25,7 @@ public class GetUseStatementsASTVisitor extends AbstractUseStatementASTVisitor {
 	/**
 	 * The result list of all found {@link UseStatement}s.
 	 */
-	private List<UseStatement> result = new LinkedList<UseStatement>();
+	private List<UseStatement> result = new LinkedList<>();
 
 	/**
 	 * Constructor of the visitor.
@@ -47,7 +47,7 @@ public class GetUseStatementsASTVisitor extends AbstractUseStatementASTVisitor {
 	 * @return an array of {@link UseStatement} nodes.
 	 */
 	public UseStatement[] getResult() {
-		return (UseStatement[]) result.toArray(new UseStatement[result.size()]);
+		return result.toArray(new UseStatement[result.size()]);
 	}
 
 	/**

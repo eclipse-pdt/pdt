@@ -852,7 +852,7 @@ public class AST {
 	 * 
 	 * @since 3.0
 	 */
-	private static final Class[] AST_CLASS = new Class[] { AST.class };
+	private static final Class<?>[] AST_CLASS = new Class<?>[] { AST.class };
 
 	/**
 	 * new Object[] {this}
@@ -883,13 +883,13 @@ public class AST {
 	 *                concrete node type class
 	 * @since 3.0
 	 */
-	public ASTNode createInstance(Class nodeClass) {
+	public ASTNode createInstance(Class<?> nodeClass) {
 		if (nodeClass == null) {
 			throw new IllegalArgumentException();
 		}
 		try {
 			// invoke constructor with signature Foo(AST)
-			Constructor c = nodeClass.getDeclaredConstructor(AST_CLASS);
+			Constructor<?> c = nodeClass.getDeclaredConstructor(AST_CLASS);
 			Object result = c.newInstance(this.THIS_AST);
 			return (ASTNode) result;
 		} catch (NoSuchMethodException e) {
@@ -929,7 +929,7 @@ public class AST {
 	 */
 	public ASTNode createInstance(int nodeType) {
 		// nodeClassForType throws IllegalArgumentException if nodeType is bogus
-		Class nodeClass = ASTNode.nodeClassForType(nodeType);
+		Class<?> nodeClass = ASTNode.nodeClassForType(nodeType);
 		return createInstance(nodeClass);
 	}
 
@@ -991,7 +991,7 @@ public class AST {
 	 * @see Program#rewrite(IDocument, Map)
 	 * @since 3.0
 	 */
-	TextEdit rewrite(IDocument document, Map options) {
+	TextEdit rewrite(IDocument document, Map<String, String> options) {
 		if (document == null) {
 			throw new IllegalArgumentException();
 		}

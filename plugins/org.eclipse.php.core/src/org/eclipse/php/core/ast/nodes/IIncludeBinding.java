@@ -27,6 +27,7 @@ public interface IIncludeBinding extends IBinding {
 	 * @return the name of the include represented by this binding, or an empty
 	 *         string for an unnamed include
 	 */
+	@Override
 	public String getName();
 
 	/**

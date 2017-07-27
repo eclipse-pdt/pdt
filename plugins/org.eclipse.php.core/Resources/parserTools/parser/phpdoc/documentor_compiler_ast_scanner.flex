@@ -58,17 +58,18 @@ import org.eclipse.php.core.compiler.ast.nodes.Scalar;
 	private int numOfLines;
 	private List<Scalar> textList;
 
+	@Override
 	public PHPDocBlock parse() {
 		oldString = null;
 		shortDesc = "";
 		longDesc = "";
-		tagList = new ArrayList<PHPDocTag>();
+		tagList = new ArrayList<>();
 		currTagKind = null;
 		tagPosition = 0;
 		matchedTag = "";
 		sBuffer = new StringBuilder();
 		numOfLines = 1;
-		textList = new ArrayList<Scalar>();
+		textList = new ArrayList<>();
 
 		useOldString = true;
 		int start = zzStartRead - _zzPushbackPos;
@@ -147,9 +148,9 @@ import org.eclipse.php.core.compiler.ast.nodes.Scalar;
 	}
 
 	private List<Scalar> getTexts(int start, int end, boolean remove) {
-		List<Scalar> result = new ArrayList<Scalar>();
-		for (Iterator iterator = textList.iterator(); iterator.hasNext();) {
-			Scalar scalar = (Scalar) iterator.next();
+		List<Scalar> result = new ArrayList<>();
+		for (Iterator<Scalar> iterator = textList.iterator(); iterator.hasNext();) {
+			Scalar scalar = iterator.next();
 			if (scalar.sourceStart() >= start && scalar.sourceEnd() <= end) {
 				result.add(scalar);
 				if (remove) {
@@ -258,6 +259,7 @@ import org.eclipse.php.core.compiler.ast.nodes.Scalar;
 	 * @param buffer
 	 * @param parameters
 	 */
+	@Override
 	public void reset(java.io.Reader reader, char[] buffer, int[] parameters) {
 		// (re)set all properties like in yyreset(java.io.Reader reader)
 
@@ -285,12 +287,14 @@ import org.eclipse.php.core.compiler.ast.nodes.Scalar;
 		this.zzLexicalState = YYINITIAL;
 	}
 
+	@Override
 	public int[] getParameters() {
 		return new int[] { zzMarkedPos, _zzPushbackPos, zzCurrentPos,
 			zzStartRead, zzEndRead, yyline, zzAtBOL ? 1 : 0,
 			zzAtEOF ? 1 : 0, zzEOFDone ? 1 : 0, zzFinalHighSurrogate };
 	}
 
+	@Override
 	public char[] getBuffer() {
 		return zzBuffer;
 	}

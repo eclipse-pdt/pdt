@@ -57,7 +57,7 @@ public class NewPHPsComboBlock {
 	/*
 	 * PHP executable being displayed
 	 */
-	private final List<PHPexeItem> phpExecutables = new ArrayList<PHPexeItem>();
+	private final List<PHPexeItem> phpExecutables = new ArrayList<>();
 
 	public static final String PROPERTY_PHP = "PROPERTY_PHP"; //$NON-NLS-1$
 
@@ -77,7 +77,7 @@ public class NewPHPsComboBlock {
 	/**
 	 * PHP change listeners
 	 */
-	private ListenerList fListeners = new ListenerList();
+	private ListenerList<IPropertyChangeListener> fListeners = new ListenerList<>();
 
 	/**
 	 * Default PHP descriptor or <code>null</code> if none.
@@ -122,7 +122,7 @@ public class NewPHPsComboBlock {
 	/**
 	 * List of execution environments
 	 */
-	private List fEnvironments = new ArrayList();
+	private List<PHPVersion> fEnvironments = new ArrayList<>();
 
 	private IStatus fStatus = OK_STATUS;
 
@@ -133,7 +133,7 @@ public class NewPHPsComboBlock {
 	/*
 	 * Selection listeners (checked PHP changes)
 	 */
-	private final ListenerList fSelectionListeners = new ListenerList();
+	private final ListenerList<?> fSelectionListeners = new ListenerList<>();
 
 	/**
 	 * Creates a PHPs combo block.
@@ -144,6 +144,7 @@ public class NewPHPsComboBlock {
 	 */
 	public NewPHPsComboBlock() {
 		fDefaultDescriptor = new PHPexeDescriptor() {
+			@Override
 			public String getDescription() {
 				final PHPexeItem def = PHPDebugPlugin.getPHPexeItem(project);
 				return getDisplayName(def, true);
@@ -192,6 +193,7 @@ public class NewPHPsComboBlock {
 	private void createEEControls(Composite comp) {
 		fEnvironmentsButton = SWTFactory.createRadioButton(comp, PHPDebugUIMessages.PHPexesComboBlock_4);
 		fEnvironmentsButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (fEnvironmentsButton.getSelection()) {
 					fExecutablesCombo.setEnabled(false);
@@ -211,6 +213,7 @@ public class NewPHPsComboBlock {
 
 		fEnvironmentsCombo = SWTFactory.createCombo(comp, SWT.DROP_DOWN | SWT.READ_ONLY, 1, null);
 		fEnvironmentsCombo.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				// TODO
 				setPath(PHPRuntime.newPHPContainerPath(getEnvironment()));
@@ -220,6 +223,7 @@ public class NewPHPsComboBlock {
 
 		fManageEnvironmentsButton = SWTFactory.createPushButton(comp, PHPDebugUIMessages.PHPexesComboBlock_14, null);
 		fManageEnvironmentsButton.addListener(SWT.Selection, new Listener() {
+			@Override
 			public void handleEvent(Event event) {
 				showPrefPage(PHPInterpreterExecutionPreferencePage.PREF_ID);
 			}
@@ -235,6 +239,7 @@ public class NewPHPsComboBlock {
 		}
 		fSpecificButton = SWTFactory.createRadioButton(comp, text, 1);
 		fSpecificButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (fSpecificButton.getSelection()) {
 					fExecutablesCombo.setEnabled(true);
@@ -254,6 +259,7 @@ public class NewPHPsComboBlock {
 		fExecutablesCombo = SWTFactory.createCombo(comp, SWT.DROP_DOWN | SWT.READ_ONLY, 1, null);
 		ControlAccessibleListener.addListener(fExecutablesCombo, fSpecificButton.getText());
 		fExecutablesCombo.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				setStatus(OK_STATUS);
 				firePropertyChange();
@@ -262,6 +268,7 @@ public class NewPHPsComboBlock {
 
 		fManageButton = SWTFactory.createPushButton(comp, PHPDebugUIMessages.PHPexesComboBlock_2, null);
 		fManageButton.addListener(SWT.Selection, new Listener() {
+			@Override
 			public void handleEvent(Event event) {
 				showPrefPage(PHPsPreferencePage.ID);
 			}
@@ -273,6 +280,7 @@ public class NewPHPsComboBlock {
 		if (fDefaultDescriptor != null) {
 			fDefaultButton = SWTFactory.createRadioButton(comp, fDefaultDescriptor.getDescription(), 3);
 			fDefaultButton.addSelectionListener(new SelectionAdapter() {
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (fDefaultButton.getSelection()) {
 						setUseDefaultPHP();
@@ -313,7 +321,7 @@ public class NewPHPsComboBlock {
 		firePropertyChange();
 	}
 
-	private void restoreCombo(List elements, Object element, Combo combo) {
+	private void restoreCombo(List<?> elements, Object element, Combo combo) {
 		int index = -1;
 		if (element != null) {
 			index = elements.indexOf(element);
@@ -435,7 +443,7 @@ public class NewPHPsComboBlock {
 	private PHPVersion getEnvironment() {
 		int index = fEnvironmentsCombo.getSelectionIndex();
 		if (index >= 0) {
-			return (PHPVersion) fEnvironments.get(index);
+			return fEnvironments.get(index);
 		}
 		return null;
 	}
@@ -596,7 +604,7 @@ public class NewPHPsComboBlock {
 		if (fEnvironmentsButton.getSelection()) {
 			int index = fEnvironmentsCombo.getSelectionIndex();
 			if (index >= 0) {
-				PHPVersion env = (PHPVersion) fEnvironments.get(index);
+				PHPVersion env = fEnvironments.get(index);
 				return PHPRuntime.newPHPContainerPath(env);
 			}
 			return null;
@@ -631,8 +639,7 @@ public class NewPHPsComboBlock {
 				PHPexeItem[] items = PHPexes.getInstance().getCompatibleItems(PHPexes.getInstance().getAllItems(),
 						version);
 				if (items.length == 0) {
-					setError(MessageFormat.format(PHPDebugUIMessages.PHPexesComboBlock_7,
-							new String[] { version.getAlias() }));
+					setError(MessageFormat.format(PHPDebugUIMessages.PHPexesComboBlock_7, version.getAlias()));
 				}
 			} else {
 				PHPexeItem install = PHPRuntime.getPHPexeItem(containerPath);
@@ -712,7 +719,7 @@ public class NewPHPsComboBlock {
 	 */
 	protected void fillWithWorkspacePHPexes() {
 		// fill with PHPexes
-		final List<PHPexeItem> standins = new ArrayList<PHPexeItem>();
+		final List<PHPexeItem> standins = new ArrayList<>();
 		PHPexeItem[] phpItems = exes.getAllItems();
 		if (phpItems != null) {
 			for (int i = 0; i < phpItems.length; i++) {
@@ -734,6 +741,7 @@ public class NewPHPsComboBlock {
 		phpExecutables.addAll(phps);
 		// sort by name
 		Collections.sort(phpExecutables, new Comparator<PHPexeItem>() {
+			@Override
 			public int compare(final PHPexeItem o1, final PHPexeItem o2) {
 				if (null != o1 && null != o2) {
 					String o1Name = o1.getName();
@@ -744,6 +752,7 @@ public class NewPHPsComboBlock {
 				return 0;
 			}
 
+			@Override
 			public boolean equals(final Object obj) {
 				return obj == this;
 			}
@@ -809,7 +818,7 @@ public class NewPHPsComboBlock {
 	 * @return PHPexes currently being displayed in this block
 	 */
 	public PHPexeItem[] getPHPexes() {
-		return (PHPexeItem[]) phpExecutables.toArray(new PHPexeItem[phpExecutables.size()]);
+		return phpExecutables.toArray(new PHPexeItem[phpExecutables.size()]);
 	}
 
 	/**

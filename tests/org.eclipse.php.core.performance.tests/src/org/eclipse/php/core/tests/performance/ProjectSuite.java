@@ -45,7 +45,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 public class ProjectSuite extends AbstractModelTests {
-	protected Map map;
+	protected Map<?, ?> map;
 	protected PerformanceMonitor perfMonitor;
 
 	public static final String PHP_VERSION = "phpVersion";
@@ -64,11 +64,11 @@ public class ProjectSuite extends AbstractModelTests {
 		super(PHPCorePerformanceTests.PLUGIN_ID, "");
 	}
 
-	private String getProjectNameWithVersion(Map map) {
+	private String getProjectNameWithVersion(Map<?, ?> map) {
 		return map.get(PROJECT).toString() + "_" + ((PHPVersion) map.get(PHP_VERSION)).getAlias();
 	}
 
-	public Test suite(final Map map) {
+	public Test suite(final Map<?, ?> map) {
 		this.map = map;
 
 		TestSuite suite = new TestSuite(getProjectNameWithVersion(map) + " Performance Tests");
@@ -77,6 +77,7 @@ public class ProjectSuite extends AbstractModelTests {
 
 		// Create a setup wrapper
 		TestSetup setup = new TestSetup(suite) {
+			@Override
 			protected void setUp() throws Exception {
 				deleteProject(map.get(PROJECT).toString());
 				IProject project = getProject(map.get(PROJECT).toString());
@@ -109,6 +110,7 @@ public class ProjectSuite extends AbstractModelTests {
 				perfMonitor = PHPCorePerformanceTests.getPerformanceMonitor();
 			}
 
+			@Override
 			protected void tearDown() throws Exception {
 				deleteProject(map.get(PROJECT).toString());
 			}
@@ -157,10 +159,12 @@ public class ProjectSuite extends AbstractModelTests {
 			super(getProjectNameWithVersion(map) + "_BuildProjectTest");
 		}
 
+		@Override
 		public void runTest() throws Throwable {
 			final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(map.get(PROJECT).toString());
 
 			perfMonitor.execute(getProjectNameWithVersion(map) + ".testBuildProject", new Operation() {
+				@Override
 				public void run() throws Exception {
 					project.refreshLocal(IResource.DEPTH_INFINITE, null);
 					TestUtils.waitForIndexer();
@@ -174,6 +178,7 @@ public class ProjectSuite extends AbstractModelTests {
 			super(getProjectNameWithVersion(map) + "_SearchAllTypesTest");
 		}
 
+		@Override
 		public void runTest() throws Throwable {
 			final PHPModelAccess modelAccess = PHPModelAccess.getDefault();
 			IProject project = getProject(map.get(PROJECT).toString());
@@ -182,6 +187,7 @@ public class ProjectSuite extends AbstractModelTests {
 			final IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 			modelAccess.findTypes("", MatchRule.PREFIX, 0, 0, scope, null);
 			perfMonitor.execute(getProjectNameWithVersion(map) + ".testSearchAllTypes", new Operation() {
+				@Override
 				public void run() throws Exception {
 					modelAccess.findTypes("", MatchRule.PREFIX, 0, 0, scope, null);
 				}
@@ -194,6 +200,7 @@ public class ProjectSuite extends AbstractModelTests {
 			super(getProjectNameWithVersion(map) + "_SearchAllFunctionsTest");
 		}
 
+		@Override
 		public void runTest() throws Throwable {
 			final PHPModelAccess modelAccess = PHPModelAccess.getDefault();
 			IProject project = getProject(map.get(PROJECT).toString());
@@ -202,6 +209,7 @@ public class ProjectSuite extends AbstractModelTests {
 			final IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 			modelAccess.findMethods("", MatchRule.PREFIX, Modifiers.AccGlobal, 0, scope, null);
 			perfMonitor.execute(getProjectNameWithVersion(map) + ".testSearchAllFunctions", new Operation() {
+				@Override
 				public void run() throws Exception {
 					modelAccess.findMethods("", MatchRule.PREFIX, Modifiers.AccGlobal, 0, scope, null);
 				}
@@ -214,6 +222,7 @@ public class ProjectSuite extends AbstractModelTests {
 			super(getProjectNameWithVersion(map) + "_SearchGlobalVariablesTest");
 		}
 
+		@Override
 		public void runTest() throws Throwable {
 			final PHPModelAccess modelAccess = PHPModelAccess.getDefault();
 			IProject project = getProject(map.get(PROJECT).toString());
@@ -222,6 +231,7 @@ public class ProjectSuite extends AbstractModelTests {
 			final IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 			modelAccess.findFields("", MatchRule.PREFIX, Modifiers.AccGlobal, 0, scope, null);
 			perfMonitor.execute(getProjectNameWithVersion(map) + ".testSearchGlobalVariables", new Operation() {
+				@Override
 				public void run() throws Exception {
 					modelAccess.findFields("", MatchRule.PREFIX, Modifiers.AccGlobal, 0, scope, null);
 				}
@@ -234,6 +244,7 @@ public class ProjectSuite extends AbstractModelTests {
 			super(getProjectNameWithVersion(map) + "_SearchIncludeStatementsTest");
 		}
 
+		@Override
 		public void runTest() throws Throwable {
 			final PHPModelAccess modelAccess = PHPModelAccess.getDefault();
 			IProject project = getProject(map.get(PROJECT).toString());
@@ -242,6 +253,7 @@ public class ProjectSuite extends AbstractModelTests {
 			final IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 			modelAccess.findIncludes("", MatchRule.PREFIX, scope, null);
 			perfMonitor.execute(getProjectNameWithVersion(map) + ".testSearchIncludeStatements", new Operation() {
+				@Override
 				public void run() throws Exception {
 					modelAccess.findIncludes("", MatchRule.PREFIX, scope, null);
 				}
@@ -254,6 +266,7 @@ public class ProjectSuite extends AbstractModelTests {
 			super(getProjectNameWithVersion(map) + "_SuperTypeHierarchyTest");
 		}
 
+		@Override
 		public void runTest() throws Throwable {
 			IProject project = getProject(map.get(PROJECT).toString());
 
@@ -266,6 +279,7 @@ public class ProjectSuite extends AbstractModelTests {
 			Assert.assertEquals(exceptionType.length, 1);
 
 			perfMonitor.execute(getProjectNameWithVersion(map) + ".testSuperTypeHierarchy", new Operation() {
+				@Override
 				public void run() throws Exception {
 					exceptionType[0].newSupertypeHierarchy(null);
 				}
@@ -278,6 +292,7 @@ public class ProjectSuite extends AbstractModelTests {
 			super(getProjectNameWithVersion(map) + "_TypeHierarchyTest");
 		}
 
+		@Override
 		public void runTest() throws Throwable {
 			IProject project = getProject(map.get(PROJECT).toString());
 
@@ -290,6 +305,7 @@ public class ProjectSuite extends AbstractModelTests {
 			Assert.assertEquals(exceptionType.length, 1);
 
 			perfMonitor.execute(getProjectNameWithVersion(map) + ".testTypeHierarchy", new Operation() {
+				@Override
 				public void run() throws Exception {
 					exceptionType[0].newTypeHierarchy(null);
 				}

@@ -28,7 +28,7 @@ import org.eclipse.php.internal.core.codeassist.contexts.InstanceOfContext;
  */
 public class NamespaceElementsCompositeStrategy extends AbstractCompletionStrategy {
 
-	private final Collection<ICompletionStrategy> strategies = new ArrayList<ICompletionStrategy>();
+	private final Collection<ICompletionStrategy> strategies = new ArrayList<>();
 
 	public NamespaceElementsCompositeStrategy(ICompletionContext context, ICompletionContext[] allContexts,
 			boolean isGlobalNamespace) {
@@ -78,6 +78,7 @@ public class NamespaceElementsCompositeStrategy extends AbstractCompletionStrate
 		}
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws Exception {
 		for (ICompletionStrategy strategy : strategies) {
 			strategy.apply(reporter);

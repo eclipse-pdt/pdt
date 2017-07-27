@@ -222,7 +222,7 @@ public class PHPEditorTextHoverDescriptor {
 		}
 
 		for (int i = 0; i < hovers.length; i++) {
-			String modifierString = (String) idToModifier.get(hovers[i].getId());
+			String modifierString = idToModifier.get(hovers[i].getId());
 			boolean enabled = true;
 			if (modifierString == null)
 				modifierString = DISABLED_TAG;
@@ -241,7 +241,7 @@ public class PHPEditorTextHoverDescriptor {
 			if (hovers[i].fStateMask == -1) {
 				// Fallback: use stored modifier masks
 				try {
-					hovers[i].fStateMask = Integer.parseInt((String) idToModifierMask.get(hovers[i].getId()));
+					hovers[i].fStateMask = Integer.parseInt(idToModifierMask.get(hovers[i].getId()));
 				} catch (NumberFormatException ex) {
 					hovers[i].fStateMask = -1;
 				}

@@ -256,7 +256,7 @@ public class ASTRewriteTests {
 		List<StaticMethodInvocation> staticInvocations = getAllOfType(program, StaticMethodInvocation.class);
 		assertTrue("Unexpected list size.", staticInvocations.size() == 1);
 		staticInvocations.get(0).setClassName(ast.newIdentifier("B"));
-		ArrayList<Expression> parameters = new ArrayList<Expression>();
+		ArrayList<Expression> parameters = new ArrayList<>();
 		parameters.add(ast.newScalar("b", Scalar.TYPE_STRING));
 		parameters.add(ast.newVariable("c"));
 		staticInvocations.get(0)
@@ -369,7 +369,7 @@ public class ASTRewriteTests {
 
 		List<ListVariable> listVariables = getAllOfType(program, ListVariable.class);
 		assertTrue("Unexpected list size.", listVariables.size() == 2);
-		ArrayList<VariableBase> variables = new ArrayList<VariableBase>();
+		ArrayList<VariableBase> variables = new ArrayList<>();
 		variables.add(ast.newVariable("foo"));
 		variables.add(ast.newVariable("bar"));
 		listVariables.get(1).variables().add(ast.newListVariable(variables));
@@ -927,7 +927,7 @@ public class ASTRewriteTests {
 		initialize(str);
 
 		Identifier name = ast.newIdentifier("foo");
-		List<FormalParameter> formalParameters = new ArrayList<FormalParameter>();
+		List<FormalParameter> formalParameters = new ArrayList<>();
 		formalParameters
 				.add(ast.newFormalParameter(ast.newIdentifier("int"), ast.newVariable("a"), ast.newScalar("5"), false));
 		formalParameters.add(ast.newFormalParameter(null, ast.newVariable("b"), ast.newScalar("'boobo'"), false));
@@ -1444,7 +1444,7 @@ public class ASTRewriteTests {
 		String str = "<?php ?>";
 		initialize(str);
 
-		List<Expression> expressions = new ArrayList<Expression>(2);
+		List<Expression> expressions = new ArrayList<>(2);
 		expressions.add(ast.newScalar("\"hello\""));
 		expressions.add(ast.newVariable("b"));
 		program.statements().add(0, ast.newEchoStatement(expressions));
@@ -1503,7 +1503,7 @@ public class ASTRewriteTests {
 
 		List<Block> blocks = getAllOfType(program, Block.class);
 		assertTrue("Unexpected list size.", blocks.size() == 1);
-		List<Statement> actions = new ArrayList<Statement>(3);
+		List<Statement> actions = new ArrayList<>(3);
 		actions.add(ast.newEchoStatement(ast.newScalar("'a new case'")));
 		actions.add(
 				ast.newExpressionStatement(ast.newFunctionInvocation(ast.newFunctionName(ast.newScalar("foo")), null)));
@@ -1706,7 +1706,7 @@ public class ASTRewriteTests {
 		statements.get(0).setCondition(
 				ast.newInfixExpression(ast.newVariable("a"), InfixExpression.OP_IS_NOT_EQUAL, ast.newVariable("b")));
 
-		List<Statement> newStatements = new ArrayList<Statement>(2);
+		List<Statement> newStatements = new ArrayList<>(2);
 		newStatements.add(ast.newEchoStatement(ast.newScalar("'Hello!!'")));
 		newStatements.add(ast.newEchoStatement(ast.newScalar("'Goodbye!!'")));
 		statements.get(0).setBody(ast.newBlock(newStatements));
@@ -1719,7 +1719,7 @@ public class ASTRewriteTests {
 		String str = "<?php ?>";
 		initialize(str);
 
-		List<Statement> trueStatement = new ArrayList<Statement>(1);
+		List<Statement> trueStatement = new ArrayList<>(1);
 		trueStatement.add(ast.newEchoStatement(ast.newScalar("'Boobo'")));
 		Block block = ast.newBlock(trueStatement);
 		block.setIsCurly(true);
@@ -1733,7 +1733,7 @@ public class ASTRewriteTests {
 		String str = "<?php ?>";
 		initialize(str);
 
-		List<Statement> trueStatement = new ArrayList<Statement>(1);
+		List<Statement> trueStatement = new ArrayList<>(1);
 		trueStatement.add(ast.newEchoStatement(ast.newScalar("'Boobo'")));
 		Block block = ast.newBlock(trueStatement);
 		block.setIsCurly(false);
@@ -2007,8 +2007,9 @@ public class ASTRewriteTests {
 	}
 
 	public <T extends ASTNode> List<T> getAllOfType(Program program, final String className) {
-		final List<T> list = new ArrayList<T>();
+		final List<T> list = new ArrayList<>();
 		program.accept(new ApplyAll() {
+			@Override
 			@SuppressWarnings("unchecked")
 			protected boolean apply(ASTNode node) {
 				if (node.getClass().getName().equals(className)) {
@@ -2021,8 +2022,9 @@ public class ASTRewriteTests {
 	}
 
 	public <T extends ASTNode> List<T> getAllOfType(Program program, final Class<T> nodeClass) {
-		final List<T> list = new ArrayList<T>();
+		final List<T> list = new ArrayList<>();
 		program.accept(new ApplyAll() {
+			@Override
 			@SuppressWarnings("unchecked")
 			protected boolean apply(ASTNode node) {
 				if (node.getClass() == nodeClass) {

@@ -22,7 +22,6 @@ import org.eclipse.php.core.compiler.ast.nodes.InfixExpression;
 import org.eclipse.php.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.core.compiler.ast.visitor.PHPASTVisitor;
 
-@SuppressWarnings("restriction")
 public class AutoloadVisitor extends PHPASTVisitor {
 	protected ISourceModule source;
 	private NamespaceVisitor visitor;

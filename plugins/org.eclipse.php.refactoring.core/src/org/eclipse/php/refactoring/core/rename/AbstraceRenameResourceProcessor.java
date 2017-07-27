@@ -27,8 +27,8 @@ import org.eclipse.ltk.core.refactoring.participants.SharableParticipants;
 import org.eclipse.ltk.internal.core.refactoring.resource.ResourceProcessors;
 import org.eclipse.php.internal.core.util.collections.BucketMap;
 
-public abstract class AbstraceRenameResourceProcessor extends
-		AbstractRenameProcessor<IResource> implements IReferenceUpdating {
+public abstract class AbstraceRenameResourceProcessor extends AbstractRenameProcessor<IResource>
+		implements IReferenceUpdating {
 
 	BucketMap<IResource, IBreakpoint> fBreakpoints;
 	HashMap<IBreakpoint, Map<String, Object>> fBreakpointAttributes;
@@ -43,38 +43,31 @@ public abstract class AbstraceRenameResourceProcessor extends
 		super(file);
 	}
 
-	@SuppressWarnings("unchecked")
 	protected void collectBrakePoint() throws CoreException {
-		fBreakpoints = new BucketMap<IResource, IBreakpoint>(6);
-		fBreakpointAttributes = new HashMap<IBreakpoint, Map<String, Object>>(6);
-		final IBreakpointManager breakpointManager = DebugPlugin.getDefault()
-				.getBreakpointManager();
-		IMarker[] markers = resource.findMarkers(
-				IBreakpoint.LINE_BREAKPOINT_MARKER, true,
-				IResource.DEPTH_INFINITE);
+		fBreakpoints = new BucketMap<>(6);
+		fBreakpointAttributes = new HashMap<>(6);
+		final IBreakpointManager breakpointManager = DebugPlugin.getDefault().getBreakpointManager();
+		IMarker[] markers = resource.findMarkers(IBreakpoint.LINE_BREAKPOINT_MARKER, true, IResource.DEPTH_INFINITE);
 		for (IMarker marker : markers) {
 			IResource markerResource = marker.getResource();
 			IBreakpoint breakpoint = breakpointManager.getBreakpoint(marker);
 			if (breakpoint != null) {
 				fBreakpoints.add(markerResource, breakpoint);
-				fBreakpointAttributes.put(breakpoint, breakpoint.getMarker()
-						.getAttributes());
+				fBreakpointAttributes.put(breakpoint, breakpoint.getMarker().getAttributes());
 			}
 		}
 	}
 
 	@Override
-	public RefactoringParticipant[] loadParticipants(RefactoringStatus status,
-			SharableParticipants sharedParticipants) throws CoreException {
-		String[] affectedNatures = ResourceProcessors
-				.computeAffectedNatures(resource);
-		fRenameArguments = new RenameArguments(getNewElementName(),
-				getUpdateReferences());
-		return ParticipantManager.loadRenameParticipants(status, this,
-				resource, fRenameArguments, null, affectedNatures,
-				sharedParticipants);
+	public RefactoringParticipant[] loadParticipants(RefactoringStatus status, SharableParticipants sharedParticipants)
+			throws CoreException {
+		String[] affectedNatures = ResourceProcessors.computeAffectedNatures(resource);
+		fRenameArguments = new RenameArguments(getNewElementName(), getUpdateReferences());
+		return ParticipantManager.loadRenameParticipants(status, this, resource, fRenameArguments, null,
+				affectedNatures, sharedParticipants);
 	}
 
+	@Override
 	public boolean getUpdateReferences() {
 		return isUpdateReferences;
 	}

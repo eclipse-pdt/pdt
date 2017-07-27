@@ -32,39 +32,46 @@ public class VariableNameProcessor implements IContentAssistProcessor, ISubjectC
 
 	}
 
+	@Override
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int offset) {
 		Assert.isTrue(false, "ITextViewer not supported"); //$NON-NLS-1$
 		return null;
 	}
 
+	@Override
 	public IContextInformation[] computeContextInformation(ITextViewer viewer, int offset) {
 		Assert.isTrue(false, "ITextViewer not supported"); //$NON-NLS-1$
 		return null;
 	}
 
+	@Override
 	public char[] getCompletionProposalAutoActivationCharacters() {
 		return null;
 	}
 
+	@Override
 	public char[] getContextInformationAutoActivationCharacters() {
 		return null;
 	}
 
+	@Override
 	public IContextInformationValidator getContextInformationValidator() {
 		return null;
 	}
 
+	@Override
 	public String getErrorMessage() {
 		return fErrorMessage;
 	}
 
+	@Override
 	public ICompletionProposal[] computeCompletionProposals(IContentAssistSubjectControl contentAssistSubject,
 			int documentOffset) {
 		if (fVariableNameProposals.length == 0)
 			return null;
 		String input = contentAssistSubject.getDocument().get();
 
-		ArrayList<ICompletionProposal> proposals = new ArrayList<ICompletionProposal>();
+		ArrayList<ICompletionProposal> proposals = new ArrayList<>();
 		String prefix = input.substring(0, documentOffset);
 		for (int i = 0; i < fVariableNameProposals.length; i++) {
 			String tempName = fVariableNameProposals[i];
@@ -74,9 +81,10 @@ public class VariableNameProcessor implements IContentAssistProcessor, ISubjectC
 			proposals.add(proposal);
 		}
 		fErrorMessage = proposals.size() > 0 ? null : "No completions available"; //$NON-NLS-1$
-		return (ICompletionProposal[]) proposals.toArray(new ICompletionProposal[proposals.size()]);
+		return proposals.toArray(new ICompletionProposal[proposals.size()]);
 	}
 
+	@Override
 	public IContextInformation[] computeContextInformation(IContentAssistSubjectControl contentAssistSubjectControl,
 			int documentOffset) {
 		Assert.isTrue(false, "ITextViewer not supported"); //$NON-NLS-1$

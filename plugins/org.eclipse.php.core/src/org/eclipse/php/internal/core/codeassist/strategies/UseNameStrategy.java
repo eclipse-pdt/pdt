@@ -51,6 +51,7 @@ public class UseNameStrategy extends GlobalTypesStrategy {
 		}
 	}
 
+	@Override
 	public ISourceRange getReplacementRange(ICompletionContext context) throws BadLocationException {
 		if (!isInsertMode()) {
 			return getReplacementRangeWithSpaceAtPrefixEnd(context);
@@ -58,6 +59,7 @@ public class UseNameStrategy extends GlobalTypesStrategy {
 		return super.getReplacementRange(context);
 	}
 
+	@Override
 	public String getSuffix(AbstractCompletionContext abstractContext) {
 		return isInsertMode() && abstractContext.hasSpaceAtPosition(abstractContext.getOffset()) ? "" : " "; //$NON-NLS-1$ //$NON-NLS-2$
 	}

@@ -51,6 +51,7 @@ public class PHPMatchLocator extends MatchLocator {
 			this.nodeSet = nodeSet;
 		}
 
+		@Override
 		public boolean visit(Expression expression) {
 			if (expression instanceof CallExpression) {
 				try {
@@ -67,6 +68,7 @@ public class PHPMatchLocator extends MatchLocator {
 			return true;
 		}
 
+		@Override
 		public boolean visit(TypeDeclaration typeDeclaration) {
 			if (typeDeclaration instanceof NamespaceDeclaration
 					&& ((NamespaceDeclaration) typeDeclaration).isGlobal()) {
@@ -90,6 +92,7 @@ public class PHPMatchLocator extends MatchLocator {
 			}
 		}
 
+		@Override
 		public boolean visit(MethodDeclaration method) {
 			try {
 				Integer level = (Integer) nodeSet.matchingNodes.removeKey(method);
@@ -101,6 +104,7 @@ public class PHPMatchLocator extends MatchLocator {
 		}
 	}
 
+	@Override
 	protected void reportMatching(ModuleDeclaration module, MethodDeclaration method, IModelElement parent,
 			int accuracy, MatchingNodeSet nodeSet) throws CoreException {
 		if (parent == null) {
@@ -161,6 +165,7 @@ public class PHPMatchLocator extends MatchLocator {
 		}
 	}
 
+	@Override
 	protected void reportMatching(TypeDeclaration type, MethodDeclaration method, IModelElement parent, int accuracy,
 			boolean typeInHierarchy, MatchingNodeSet nodeSet) throws CoreException {
 		IModelElement enclosingElement = createHandle(method, parent);
@@ -214,6 +219,7 @@ public class PHPMatchLocator extends MatchLocator {
 		}
 	}
 
+	@Override
 	protected void reportMatching(TypeDeclaration type, IModelElement parent, int accuracy, MatchingNodeSet nodeSet,
 			int occurrenceCount) throws CoreException {
 		if (parent != null && parent.getElementType() == IModelElement.METHOD) {

@@ -58,10 +58,12 @@ parser code {:
 		return variable;
 	}
 
+	@Override
 	protected String getTokenName(int token) {
 		return PHPTokenNames.getName(token);
 	}
 
+	@Override
 	protected void report_expected_token_ids()
 	{
 		// XXX : really verbose, disable it completely for now

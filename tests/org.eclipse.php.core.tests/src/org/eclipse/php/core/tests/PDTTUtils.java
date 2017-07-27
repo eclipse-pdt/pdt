@@ -37,11 +37,11 @@ public class PDTTUtils {
 	}
 
 	public static String[] getFiles(String testsDirectory, Bundle bundle, String ext) {
-		List<String> files = new LinkedList<String>();
+		List<String> files = new LinkedList<>();
 		Enumeration<String> entryPaths = bundle.getEntryPaths(testsDirectory);
 		if (entryPaths != null) {
 			while (entryPaths.hasMoreElements()) {
-				final String path = (String) entryPaths.nextElement();
+				final String path = entryPaths.nextElement();
 				URL entry = bundle.getEntry(path);
 				// check whether the file is readable:
 				try {
@@ -58,7 +58,7 @@ public class PDTTUtils {
 			}
 		}
 		Collections.sort(files);
-		return (String[]) files.toArray(new String[files.size()]);
+		return files.toArray(new String[files.size()]);
 	}
 
 	public static void assertContents(String expected, String actual) {

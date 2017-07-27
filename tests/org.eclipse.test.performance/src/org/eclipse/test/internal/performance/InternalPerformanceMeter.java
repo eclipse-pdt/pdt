@@ -36,8 +36,9 @@ import org.eclipse.test.performance.PerformanceMeter;
 public abstract class InternalPerformanceMeter extends PerformanceMeter {
 
     
-	private static class DimensionComparator implements Comparator {
+	private static class DimensionComparator implements Comparator<Object> {
 
+		@Override
 		public int compare(Object o1, Object o2) {
 			return ((Dim) o1).getId() - ((Dim) o2).getId();
 		}
@@ -65,6 +66,7 @@ public abstract class InternalPerformanceMeter extends PerformanceMeter {
 	    fScenarioId= scenarioId;
     }
 
+	@Override
 	public void dispose() {
 	    fScenarioId= null;
 	}
@@ -82,6 +84,7 @@ public abstract class InternalPerformanceMeter extends PerformanceMeter {
 	/*
 	 * @see org.eclipse.test.performance.PerformanceMeter#commit()
 	 */
+	@Override
 	public void commit() {
 		Sample sample= getSample();
 		if (sample != null) {
@@ -108,7 +111,7 @@ public abstract class InternalPerformanceMeter extends PerformanceMeter {
 			Dim[] dimensions= dataPoints[0].getDimensions();
 			Arrays.sort(dimensions, new DimensionComparator());
 			if (dimensions.length > 0) {
-				List badDimensions= new ArrayList();
+				List<Dim> badDimensions= new ArrayList<>();
 				long n= s.getCount(dimensions[0]);
 				MessageFormat format= new MessageFormat("({0,number,percent} in [{1}, {2}])"); //$NON-NLS-1$
 
@@ -156,8 +159,8 @@ public abstract class InternalPerformanceMeter extends PerformanceMeter {
 				
 				if (!badDimensions.isEmpty()) {
 					ps.print("  Dimensions with unusable statistical properties: "); //$NON-NLS-1$
-					for (Iterator iter= badDimensions.iterator(); iter.hasNext();) {
-						Dim dimension= (Dim) iter.next();
+					for (Iterator<Dim> iter= badDimensions.iterator(); iter.hasNext();) {
+						Dim dimension= iter.next();
 						ps.print(dimension.getName());
 						if (iter.hasNext())
 							ps.print(", "); //$NON-NLS-1$

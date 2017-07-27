@@ -60,6 +60,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	private IPHPScriptRegion phpScriptRegion;
 	private String partitionType;
 
+	@Override
 	public void init(CompletionCompanion companion) {
 		this.companion = companion;
 	}
@@ -68,6 +69,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		return companion;
 	}
 
+	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (sourceModule == null) {
 			throw new IllegalArgumentException();
@@ -112,6 +114,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		return false;
 	}
 
+	@Override
 	public boolean isExclusive() {
 		return false;
 	}
@@ -678,7 +681,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	public int getUseTraitStatementContext(int offset, IStructuredDocumentRegion sdRegion) {
-		List<String> types = new ArrayList<String>();
+		List<String> types = new ArrayList<>();
 		if (sdRegion == null) {
 			sdRegion = structuredDocumentRegion;
 		}
@@ -850,7 +853,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 								.getPHPToken(startTokenRegion.getStart() - statementText1.length());
 						if (startTokenRegion.getType() == PHPRegionTypes.PHP_USE) {
 							String[] types = statementText1.toString().trim().substring(3).trim().split(","); //$NON-NLS-1$
-							useTypes = new ArrayList<String>();
+							useTypes = new ArrayList<>();
 							for (String type : types) {
 								useTypes.add(type.trim());
 							}

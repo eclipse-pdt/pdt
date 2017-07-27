@@ -37,6 +37,7 @@ public class ReferenceTree implements IFileHierarchyInfo {
 		return root;
 	}
 
+	@Override
 	public String toString() {
 		return root.toString();
 	}
@@ -67,7 +68,7 @@ public class ReferenceTree implements IFileHierarchyInfo {
 
 		public void addChild(Node child) {
 			if (children == null) {
-				children = new LinkedHashSet<Node>();
+				children = new LinkedHashSet<>();
 			}
 			children.add(child);
 		}
@@ -119,6 +120,7 @@ public class ReferenceTree implements IFileHierarchyInfo {
 			}
 		}
 
+		@Override
 		public String toString() {
 			StringBuilder buf = new StringBuilder();
 			toString(buf, 0);
@@ -127,6 +129,7 @@ public class ReferenceTree implements IFileHierarchyInfo {
 
 	}
 
+	@Override
 	public boolean exists(ISourceModule file) {
 		return find(file);
 	}

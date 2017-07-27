@@ -29,7 +29,7 @@ public class CompositeFilter extends SimpleFilter {
 	@Override
 	public Object[] filter(Object[] elements) {
 		for (Iterator<IFilter> iter = filters.iterator(); iter.hasNext();) {
-			IFilter filter = (IFilter) iter.next();
+			IFilter filter = iter.next();
 			elements = filter.filter(elements);
 		}
 

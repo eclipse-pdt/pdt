@@ -153,9 +153,10 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 	private static final int IDX_DEFAULT = 4;
 
 	private IStatus fTaskTagsStatus;
-	private ListDialogField fTodoTasksList;
+	private ListDialogField<TodoTask> fTodoTasksList;
 	private SelectionButtonDialogField fCaseSensitiveCheckBox;
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public TodoTaskConfigurationBlock(IStatusChangeListener context, IProject project,
 			IWorkbenchPreferenceContainer container) {
 		super(context, project, getKeys(), container);
@@ -165,7 +166,7 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 				PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_edit_button,
 				PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_remove_button, null,
 				PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_setdefault_button, };
-		fTodoTasksList = new ListDialogField(adapter, buttons, new TodoTaskLabelProvider());
+		fTodoTasksList = new ListDialogField<TodoTask>((IListAdapter) adapter, buttons, new TodoTaskLabelProvider());
 		fTodoTasksList.setDialogFieldListener(adapter);
 		fTodoTasksList.setRemoveButtonIndex(IDX_REMOVE);
 
@@ -200,7 +201,7 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 	}
 
 	private void setToDefaultTask(TodoTask task) {
-		List elements = fTodoTasksList.getElements();
+		List<TodoTask> elements = fTodoTasksList.getElements();
 		elements.remove(task);
 		elements.add(0, task);
 		fTodoTasksList.setElements(elements);
@@ -211,30 +212,30 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 		return new Key[] { PREF_TASK_TAGS, PREF_TASK_PRIORITIES, PREF_TASK_CASE_SENSITIVE };
 	}
 
-	public class TaskTagAdapter implements IListAdapter, IDialogFieldListener {
+	public class TaskTagAdapter implements IListAdapter<Object>, IDialogFieldListener {
 
-		private boolean canEdit(List selectedElements) {
+		private boolean canEdit(List<?> selectedElements) {
 			return selectedElements.size() == 1;
 		}
 
-		private boolean canSetToDefault(List selectedElements) {
+		private boolean canSetToDefault(List<?> selectedElements) {
 			return selectedElements.size() == 1 && !isDefaultTask((TodoTask) selectedElements.get(0));
 		}
 
 		@Override
-		public void customButtonPressed(ListDialogField field, int index) {
+		public void customButtonPressed(ListDialogField<Object> field, int index) {
 			doTodoButtonPressed(index);
 		}
 
 		@Override
-		public void selectionChanged(ListDialogField field) {
-			List selectedElements = field.getSelectedElements();
+		public void selectionChanged(ListDialogField<Object> field) {
+			List<?> selectedElements = field.getSelectedElements();
 			field.enableButton(IDX_EDIT, canEdit(selectedElements));
 			field.enableButton(IDX_DEFAULT, canSetToDefault(selectedElements));
 		}
 
 		@Override
-		public void doubleClicked(ListDialogField field) {
+		public void doubleClicked(ListDialogField<Object> field) {
 			if (canEdit(field.getSelectedElements())) {
 				doTodoButtonPressed(IDX_EDIT);
 			}
@@ -311,13 +312,13 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 		if (field == fTodoTasksList) {
 			StringBuilder tags = new StringBuilder();
 			StringBuilder prios = new StringBuilder();
-			List list = fTodoTasksList.getElements();
+			List<TodoTask> list = fTodoTasksList.getElements();
 			for (int i = 0; i < list.size(); i++) {
 				if (i > 0) {
 					tags.append(',');
 					prios.append(',');
 				}
-				TodoTask elem = (TodoTask) list.get(i);
+				TodoTask elem = list.get(i);
 				tags.append(elem.name);
 				prios.append(elem.priority);
 			}
@@ -364,7 +365,7 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 		String currPrios = getValue(PREF_TASK_PRIORITIES);
 		String[] tags = getTokens(currTags, ","); //$NON-NLS-1$
 		String[] prios = getTokens(currPrios, ","); //$NON-NLS-1$
-		ArrayList elements = new ArrayList(tags.length);
+		ArrayList<TodoTask> elements = new ArrayList<>(tags.length);
 		for (int i = 0; i < tags.length; i++) {
 			TodoTask task = new TodoTask();
 			task.name = tags[i].trim();
@@ -380,7 +381,7 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 	private void doTodoButtonPressed(int index) {
 		TodoTask edited = null;
 		if (index != IDX_ADD) {
-			edited = (TodoTask) fTodoTasksList.getSelectedElements().get(0);
+			edited = fTodoTasksList.getSelectedElements().get(0);
 		}
 		if (index == IDX_ADD || index == IDX_EDIT) {
 			TodoTaskInputDialog dialog = new TodoTaskInputDialog(getShell(), edited, fTodoTasksList.getElements());

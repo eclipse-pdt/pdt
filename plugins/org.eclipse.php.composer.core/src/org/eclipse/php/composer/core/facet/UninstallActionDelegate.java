@@ -46,7 +46,7 @@ public class UninstallActionDelegate implements IDelegate {
 		if (index != -1) {
 			progress.subTask(Messages.UninstallActionDelegate_TaskName);
 			final IProjectDescription description = project.getDescription();
-			final List<ICommand> commands = new ArrayList<ICommand>();
+			final List<ICommand> commands = new ArrayList<>();
 			commands.addAll(Arrays.asList(description.getBuildSpec()));
 			commands.remove(index);
 

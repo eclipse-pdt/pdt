@@ -174,7 +174,7 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 	}
 
 	private List<Entry> prepareVersionEntryList() {
-		ArrayList<Entry> entryList = new ArrayList<Entry>();
+		ArrayList<Entry> entryList = new ArrayList<>();
 		initPHPVersionNames();
 		for (PHPVersion version : PHPVersion.supportedVersions()) {
 			if (minimumVersion != null && version.isLessThan(minimumVersion)) {
@@ -194,7 +194,7 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 		if (phpVersionNames == null) {
 			IConfigurationElement[] configurationElementsFor = Platform.getExtensionRegistry()
 					.getConfigurationElementsFor(PHPUiConstants.PHP_VERSION_INFO_EXTPOINT_ID);
-			phpVersionNames = new HashMap<String, String>();
+			phpVersionNames = new HashMap<>();
 			for (IConfigurationElement verInfo : configurationElementsFor) {
 				StringBuilder sb = new StringBuilder(verInfo.getAttribute(PHPUiConstants.PHP_VERSION_INFO_ATTR_NAME));
 				IConfigurationElement[] list = verInfo.getChildren(PHPUiConstants.PHP_VERSION_INFO_FEATURE_NAME);

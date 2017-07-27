@@ -77,7 +77,7 @@ public class CommandsTests {
 	protected PHPStructuredEditor fEditor;
 
 	@Parameters
-	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<>();
 
 	static {
 		TESTS.put(PHPVersion.PHP7_0, new String[] { "/workspace/commands/php53" });
@@ -204,7 +204,7 @@ public class CommandsTests {
 		}
 		viewer.setSelectedRange(offset, length);
 		IServiceLocator serviceLocator = PlatformUI.getWorkbench();
-		IHandlerService handlerService = (IHandlerService) serviceLocator.getService(IHandlerService.class);
+		IHandlerService handlerService = serviceLocator.getService(IHandlerService.class);
 
 		if (commandId == null) {
 			fail("command_id configuration entry is not added.");

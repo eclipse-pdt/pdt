@@ -34,6 +34,7 @@ public class StaticFieldAccess extends StaticDispatch {
 		this.field = field;
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -43,6 +44,7 @@ public class StaticFieldAccess extends StaticDispatch {
 		visitor.endvisit(this);
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.STATIC_FIELD_ACCESS;
 	}

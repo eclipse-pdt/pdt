@@ -87,7 +87,7 @@ public class InstalledPackage extends ComposerPackage {
 	}
 
 	public static List<InstalledPackage> deserialize(InputStream input) throws IOException {
-		List<InstalledPackage> pkgs = new ArrayList<InstalledPackage>();
+		List<InstalledPackage> pkgs = new ArrayList<>();
 		return pkgs;
 	}
 

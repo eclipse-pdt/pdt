@@ -34,7 +34,7 @@ public abstract class AbstractPDTTRunner extends Suite {
 	}
 
 	protected static final List<Runner> EMPTY_RUNNERS = Collections.<Runner> emptyList();
-	protected final List<Runner> runners = new LinkedList<Runner>();
+	protected final List<Runner> runners = new LinkedList<>();
 
 	protected int counter = 0;
 
@@ -48,7 +48,7 @@ public abstract class AbstractPDTTRunner extends Suite {
 	}
 
 	protected String[] buildFileList(String[] dirs) throws Throwable {
-		List<String> list = new LinkedList<String>();
+		List<String> list = new LinkedList<>();
 		Bundle context = getBundle();
 		for (String dir : dirs) {
 			for (String fileName : PDTTUtils.getPDTTFiles(dir, context)) {

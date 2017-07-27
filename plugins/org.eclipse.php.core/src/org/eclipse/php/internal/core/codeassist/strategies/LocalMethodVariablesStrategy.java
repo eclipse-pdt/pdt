@@ -43,6 +43,7 @@ public class LocalMethodVariablesStrategy extends GlobalElementStrategy {
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException, ModelException {
 		ICompletionContext context = getContext();
 		if (!(context instanceof GlobalMethodStatementContext)) {

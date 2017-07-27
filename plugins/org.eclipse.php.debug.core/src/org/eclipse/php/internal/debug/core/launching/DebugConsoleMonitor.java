@@ -19,12 +19,13 @@ import org.eclipse.debug.core.model.IFlushableStreamMonitor;
 
 public class DebugConsoleMonitor implements IFlushableStreamMonitor {
 	private StringBuilder fContents = new StringBuilder();
-	private Vector fListeners = new Vector(1);
+	private Vector<IStreamListener> fListeners = new Vector<>(1);
 	private boolean fBuffered = true;
 
 	/**
 	 * @see org.eclipse.debug.core.model.IStreamMonitor#addListener(org.eclipse.debug.core.IStreamListener)
 	 */
+	@Override
 	public void addListener(IStreamListener listener) {
 		fListeners.add(listener);
 	}
@@ -32,6 +33,7 @@ public class DebugConsoleMonitor implements IFlushableStreamMonitor {
 	/**
 	 * @see org.eclipse.debug.core.model.IStreamMonitor#getContents()
 	 */
+	@Override
 	public String getContents() {
 		return fContents.toString();
 	}
@@ -39,6 +41,7 @@ public class DebugConsoleMonitor implements IFlushableStreamMonitor {
 	/**
 	 * @see org.eclipse.debug.core.model.IStreamMonitor#removeListener(org.eclipse.debug.core.IStreamListener)
 	 */
+	@Override
 	public void removeListener(IStreamListener listener) {
 		fListeners.remove(listener);
 	}
@@ -52,9 +55,9 @@ public class DebugConsoleMonitor implements IFlushableStreamMonitor {
 		if (isBuffered()) {
 			fContents.append(message);
 		}
-		Enumeration enumObject = fListeners.elements();
+		Enumeration<IStreamListener> enumObject = fListeners.elements();
 		while (enumObject.hasMoreElements()) {
-			IStreamListener listener = ((IStreamListener) enumObject.nextElement());
+			IStreamListener listener = (enumObject.nextElement());
 			listener.streamAppended(message, this);
 		}
 	}
@@ -62,6 +65,7 @@ public class DebugConsoleMonitor implements IFlushableStreamMonitor {
 	/**
 	 * @see org.eclipse.debug.core.model.IFlushableStreamMonitor#flushContents()
 	 */
+	@Override
 	public void flushContents() {
 		fContents.setLength(0);
 	}
@@ -69,6 +73,7 @@ public class DebugConsoleMonitor implements IFlushableStreamMonitor {
 	/**
 	 * @see org.eclipse.debug.core.model.IFlushableStreamMonitor#isBuffered()
 	 */
+	@Override
 	public boolean isBuffered() {
 		return fBuffered;
 	}
@@ -76,6 +81,7 @@ public class DebugConsoleMonitor implements IFlushableStreamMonitor {
 	/**
 	 * @see org.eclipse.debug.core.model.IFlushableStreamMonitor#setBuffered(boolean)
 	 */
+	@Override
 	public void setBuffered(boolean buffer) {
 		fBuffered = buffer;
 	}

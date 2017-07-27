@@ -66,33 +66,33 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	 * This should replace the need for fInClass, fInMethod and fCurrentMethod
 	 * since in php the type declarations can be nested.
 	 */
-	protected Stack<ASTNode> declarations = new Stack<ASTNode>();
+	protected Stack<ASTNode> declarations = new Stack<>();
 	private PHPSourceElementRequestorExtension[] extensions;
 
 	/**
 	 * Deferred elements that where declared in method/function but should
 	 * belong to the global scope.
 	 */
-	protected List<ASTNode> deferredDeclarations = new LinkedList<ASTNode>();
+	protected List<ASTNode> deferredDeclarations = new LinkedList<>();
 
 	/**
 	 * Deferred elements that where declared in method/function but should
 	 * belong to current namespace scope
 	 */
-	protected List<ASTNode> deferredNamespacedDeclarations = new LinkedList<ASTNode>();
+	protected List<ASTNode> deferredNamespacedDeclarations = new LinkedList<>();
 
-	protected Stack<ISourceElementRequestor.ElementInfo> fInfoStack = new Stack<IElementRequestor.ElementInfo>();
+	protected Stack<ISourceElementRequestor.ElementInfo> fInfoStack = new Stack<>();
 
-	protected Map<ISourceElementRequestor.ElementInfo, List<Assignment>> fDeferredVariables = new HashMap<IElementRequestor.ElementInfo, List<Assignment>>();
+	protected Map<ISourceElementRequestor.ElementInfo, List<Assignment>> fDeferredVariables = new HashMap<>();
 
 	/**
 	 * This stack contains a set per method, where each set contains all global
 	 * variables names delcared through 'global' keyword inside this method.
 	 */
-	protected Stack<Set<String>> methodGlobalVars = new Stack<Set<String>>();
+	protected Stack<Set<String>> methodGlobalVars = new Stack<>();
 
 	protected NamespaceDeclaration fLastNamespace;
-	protected Map<String, UsePart> fLastUseParts = new HashMap<String, UsePart>();
+	protected Map<String, UsePart> fLastUseParts = new HashMap<>();
 	protected ClassInstanceCreation fLastInstanceCreation = null;
 
 	public PHPSourceElementRequestor(ISourceElementRequestor requestor, IModuleSource sourceModule) {
@@ -101,7 +101,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		// Load PHP source element requester extensions
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(PHPCorePlugin.ID,
 				"phpSourceElementRequestors"); //$NON-NLS-1$
-		List<PHPSourceElementRequestorExtension> requestors = new ArrayList<PHPSourceElementRequestorExtension>(
+		List<PHPSourceElementRequestorExtension> requestors = new ArrayList<>(
 				elements.length);
 		for (IConfigurationElement element : elements) {
 			try {
@@ -121,6 +121,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return fRequestor;
 	}
 
+	@Override
 	public MethodDeclaration getCurrentMethod() {
 		ASTNode currDecleration = declarations.peek();
 		if (currDecleration instanceof MethodDeclaration) {
@@ -167,6 +168,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(MethodDeclaration method) throws Exception {
 		methodGlobalVars.pop();
 		declarations.pop();
@@ -177,6 +179,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return super.endvisit(method);
 	}
 
+	@Override
 	public boolean endvisit(TypeDeclaration type) throws Exception {
 		if (type instanceof NamespaceDeclaration) {
 			NamespaceDeclaration namespaceDecl = (NamespaceDeclaration) type;
@@ -300,7 +303,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			visitor.visit(anonymousClassDeclaration);
 		}
 
-		List<String> superClasses = new ArrayList<String>();
+		List<String> superClasses = new ArrayList<>();
 		String name = null;
 		if (anonymousClassDeclaration.getSuperClass() != null) {
 			name = String.format(ANONYMOUS_CLASS_TEMPLATE, anonymousClassDeclaration.getSuperClass().getName());
@@ -353,6 +356,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(MethodDeclaration method) throws Exception {
 
 		methodGlobalVars.add(new HashSet<String>());
@@ -466,6 +470,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return true;
 	}
 
+	@Override
 	protected void modifyMethodInfo(MethodDeclaration methodDeclaration, ISourceElementRequestor.MethodInfo mi) {
 		ASTNode parentDeclaration = null;
 
@@ -565,6 +570,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 	}
 
+	@Override
 	public boolean visit(TypeDeclaration type) throws Exception {
 		if (type instanceof NamespaceDeclaration) {
 			NamespaceDeclaration namespaceDecl = (NamespaceDeclaration) type;
@@ -594,13 +600,14 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return super.visit(type);
 	}
 
+	@Override
 	protected String[] processSuperClasses(TypeDeclaration type) {
 		ASTListNode superClasses = type.getSuperClasses();
 		if (superClasses == null) {
 			return new String[] {};
 		}
 		List<ASTNode> superClassNames = superClasses.getChilds();
-		List<String> result = new ArrayList<String>(superClassNames.size());
+		List<String> result = new ArrayList<>(superClassNames.size());
 		Iterator<ASTNode> iterator = superClassNames.iterator();
 		while (iterator.hasNext()) {
 			String name = processNameNode(iterator.next());
@@ -608,7 +615,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				result.add(name);
 			}
 		}
-		return (String[]) result.toArray(new String[result.size()]);
+		return result.toArray(new String[result.size()]);
 	}
 
 	private String processNameNode(ASTNode nameNode) {
@@ -654,6 +661,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return null;
 	}
 
+	@Override
 	protected void modifyClassInfo(TypeDeclaration typeDeclaration, TypeInfo ti) {
 		// check whether this is a namespace
 		if (typeDeclaration instanceof NamespaceDeclaration) {
@@ -910,7 +918,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				return false;
 			}
 
-			visit((FieldDeclaration) constantDecl);
+			visit(constantDecl);
 
 		} else {
 			int argsCount = 0;
@@ -1068,7 +1076,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 
 	public boolean visit(ListVariable listVariable) throws Exception {
-		final Collection<? extends Expression> variables = ((ListVariable) listVariable).getVariables();
+		final Collection<? extends Expression> variables = listVariable.getVariables();
 		for (Expression expression : variables) {
 
 			VariableReference varReference = null;
@@ -1118,6 +1126,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(Statement node) throws Exception {
 		for (PHPSourceElementRequestorExtension visitor : extensions) {
 			visitor.visit(node);
@@ -1146,6 +1155,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(Statement node) throws Exception {
 		for (PHPSourceElementRequestorExtension visitor : extensions) {
 			visitor.endvisit(node);
@@ -1168,6 +1178,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(Expression node) throws Exception {
 		for (PHPSourceElementRequestorExtension visitor : extensions) {
 			visitor.visit(node);
@@ -1199,6 +1210,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(Expression node) throws Exception {
 		for (PHPSourceElementRequestorExtension visitor : extensions) {
 			visitor.endvisit(node);
@@ -1221,6 +1233,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(ModuleDeclaration declaration) throws Exception {
 		for (PHPSourceElementRequestorExtension visitor : extensions) {
 			visitor.endvisit(declaration);

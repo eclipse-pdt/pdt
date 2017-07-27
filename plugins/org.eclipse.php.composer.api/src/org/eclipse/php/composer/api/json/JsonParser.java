@@ -50,13 +50,13 @@ public class JsonParser {
 		} else if (entity.isJsonNull()) {
 			return null;
 		} else if (entity.isJsonArray()) {
-			LinkedList<Object> arr = new LinkedList<Object>();
+			LinkedList<Object> arr = new LinkedList<>();
 			for (JsonElement el : entity.getAsJsonArray()) {
 				arr.add(buildTree(el));
 			}
 			return arr;
 		} else if (entity.isJsonObject()) {
-			LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 			for (Entry<String, JsonElement> el : entity.getAsJsonObject().entrySet()) {
 				map.put(el.getKey(), buildTree(el.getValue()));
 			}

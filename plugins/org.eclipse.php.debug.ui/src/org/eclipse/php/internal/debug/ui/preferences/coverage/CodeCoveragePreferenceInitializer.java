@@ -23,6 +23,7 @@ public class CodeCoveragePreferenceInitializer extends AbstractPreferenceInitial
 	 * @seeorg.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#
 	 * initializeDefaultPreferences()
 	 */
+	@Override
 	public void initializeDefaultPreferences() {
 		CodeCoveragePreferenceKeys.initializeDefaultValues();
 	}

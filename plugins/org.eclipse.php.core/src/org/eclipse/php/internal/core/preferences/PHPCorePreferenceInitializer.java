@@ -19,6 +19,7 @@ public class PHPCorePreferenceInitializer extends AbstractPreferenceInitializer 
 	 * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#
 	 *      initializeDefaultPreferences()
 	 */
+	@Override
 	public void initializeDefaultPreferences() {
 		CorePreferenceConstants.initializeDefaultValues();
 	}

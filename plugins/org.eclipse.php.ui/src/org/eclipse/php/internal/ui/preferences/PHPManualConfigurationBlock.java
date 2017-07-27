@@ -43,6 +43,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
+import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore.OverlayKey;
 
 public class PHPManualConfigurationBlock implements IPreferenceConfigurationBlock {
 
@@ -137,7 +138,7 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 	private PreferencePage fMainPreferencePage;
 	private OverlayPreferenceStore fStore;
 
-	private Map<Button, String> fCheckBoxes = new HashMap<Button, String>();
+	private Map<Button, String> fCheckBoxes = new HashMap<>();
 	private SelectionListener fCheckBoxListener = new SelectionListener() {
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
@@ -173,7 +174,7 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 	}
 
 	private OverlayPreferenceStore.OverlayKey[] createOverlayStoreKeys() {
-		ArrayList overlayKeys = new ArrayList();
+		ArrayList<OverlayKey> overlayKeys = new ArrayList<>();
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING,
 				PreferenceConstants.PHP_MANUAL_SITE));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING,
@@ -193,7 +194,7 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 		String buttons[] = new String[] { PHPUIMessages.PHPManualConfigurationBlock_new,
 				PHPUIMessages.PHPManualConfigurationBlock_edit, PHPUIMessages.PHPManualConfigurationBlock_remove, null,
 				PHPUIMessages.PHPManualConfigurationBlock_default };
-		fPHPManualButtonsList = new ListDialogField<PHPManualConfig>(adapter, buttons, new PHPManualLabelProvider());
+		fPHPManualButtonsList = new ListDialogField<>(adapter, buttons, new PHPManualLabelProvider());
 		fPHPManualButtonsList.setDialogFieldListener(adapter);
 		fPHPManualButtonsList.setRemoveButtonIndex(IDX_REMOVE);
 
@@ -298,7 +299,7 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 
 	@Override
 	public void initialize() {
-		List<PHPManualConfig> configs = new ArrayList<PHPManualConfig>();
+		List<PHPManualConfig> configs = new ArrayList<>();
 
 		initFromExtensions(configs);
 		initFromPreferences(fStore, configs);

@@ -57,6 +57,7 @@ public class RemoteFileStorage extends PlatformObject implements IEncodedStorage
 	 * 
 	 * @see org.eclipse.core.resources.IStorage#getContents()
 	 */
+	@Override
 	public InputStream getContents() throws CoreException {
 		return new ByteArrayInputStream(content);
 	}
@@ -66,6 +67,7 @@ public class RemoteFileStorage extends PlatformObject implements IEncodedStorage
 	 * 
 	 * @see org.eclipse.core.resources.IStorage#getFullPath()
 	 */
+	@Override
 	public IPath getFullPath() {
 		return Path.fromPortableString(fileName);
 	}
@@ -75,6 +77,7 @@ public class RemoteFileStorage extends PlatformObject implements IEncodedStorage
 	 * 
 	 * @see org.eclipse.core.resources.IStorage#getName()
 	 */
+	@Override
 	public String getName() {
 		if (VirtualPath.isAbsolute(fileName)) {
 			return new VirtualPath(fileName).getLastSegment();
@@ -87,6 +90,7 @@ public class RemoteFileStorage extends PlatformObject implements IEncodedStorage
 	 * 
 	 * @see org.eclipse.core.resources.IStorage#isReadOnly()
 	 */
+	@Override
 	public boolean isReadOnly() {
 		return true;
 	}
@@ -96,6 +100,7 @@ public class RemoteFileStorage extends PlatformObject implements IEncodedStorage
 	 * 
 	 * @see org.eclipse.core.resources.IEncodedStorage#getCharset()
 	 */
+	@Override
 	public String getCharset() throws CoreException {
 		return null;
 	}
@@ -105,6 +110,7 @@ public class RemoteFileStorage extends PlatformObject implements IEncodedStorage
 	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode() {
 		return this.fileName.hashCode();
 	}
@@ -114,6 +120,7 @@ public class RemoteFileStorage extends PlatformObject implements IEncodedStorage
 	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof RemoteFileStorage) {
 			return ((RemoteFileStorage) obj).fileName.equals(this.fileName);

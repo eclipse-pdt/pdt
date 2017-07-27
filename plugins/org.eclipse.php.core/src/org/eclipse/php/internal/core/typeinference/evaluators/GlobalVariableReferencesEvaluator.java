@@ -46,12 +46,13 @@ import org.eclipse.php.internal.core.typeinference.goals.GlobalVariableReference
  */
 public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 
-	private List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
+	private List<IEvaluatedType> evaluated = new LinkedList<>();
 
 	public GlobalVariableReferencesEvaluator(IGoal goal) {
 		super(goal);
 	}
 
+	@Override
 	public IGoal[] init() {
 		GlobalVariableReferencesGoal typedGoal = (GlobalVariableReferencesGoal) goal;
 
@@ -75,13 +76,14 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 				Modifiers.AccGlobal, Modifiers.AccConstant, scope, null);
 
 		// if no element found, return empty array.
-		if (elements == null) {
-			return new IGoal[] {};
+		if (elements.length == 0) {
+			return IGoal.NO_GOALS;
 		}
 
-		Map<ISourceModule, SortedSet<ISourceRange>> offsets = new HashMap<ISourceModule, SortedSet<ISourceRange>>();
+		Map<ISourceModule, SortedSet<ISourceRange>> offsets = new HashMap<>();
 
 		Comparator<ISourceRange> sourceRangeComparator = new Comparator<ISourceRange>() {
+			@Override
 			public int compare(ISourceRange o1, ISourceRange o2) {
 				return o1.getOffset() - o2.getOffset();
 			}
@@ -92,7 +94,7 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 				SourceField sourceField = (SourceField) element;
 				ISourceModule sourceModule = sourceField.getSourceModule();
 				if (!offsets.containsKey(sourceModule)) {
-					offsets.put(sourceModule, new TreeSet<ISourceRange>(sourceRangeComparator));
+					offsets.put(sourceModule, new TreeSet<>(sourceRangeComparator));
 				}
 				try {
 					offsets.get(sourceModule).add(sourceField.getSourceRange());
@@ -104,7 +106,7 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 			}
 		}
 
-		List<IGoal> subGoals = new LinkedList<IGoal>();
+		List<IGoal> subGoals = new LinkedList<>();
 		for (Entry<ISourceModule, SortedSet<ISourceRange>> entry : offsets.entrySet()) {
 			ISourceModule sourceModule = entry.getKey();
 			if (exploreOtherFiles
@@ -144,10 +146,12 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 		return subGoals.toArray(new IGoal[subGoals.size()]);
 	}
 
+	@Override
 	public Object produceResult() {
 		return PHPTypeInferenceUtils.combineTypes(evaluated);
 	}
 
+	@Override
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		if (state != GoalState.RECURSIVE && result != null) {
 			evaluated.add((IEvaluatedType) result);
@@ -181,6 +185,7 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 			}
 		}
 
+		@Override
 		protected void postProcess(Expression node) {
 			if (node instanceof Assignment) {
 				Expression variable = ((Assignment) node).getVariable();
@@ -193,6 +198,7 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 			}
 		}
 
+		@Override
 		protected boolean isInteresting(ASTNode node) {
 			return !stopProcessing && node.sourceStart() <= currentStart && node.sourceEnd() >= currentEnd;
 		}

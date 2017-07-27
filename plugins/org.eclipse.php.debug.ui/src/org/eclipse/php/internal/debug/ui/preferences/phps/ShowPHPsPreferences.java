@@ -31,6 +31,7 @@ public class ShowPHPsPreferences implements IMarkerResolution {
 	/**
 	 * @see org.eclipse.ui.IMarkerResolution#run(org.eclipse.core.resources.IMarker)
 	 */
+	@Override
 	public void run(IMarker marker) {
 		IPreferencePage page = new PHPsPreferencePage();
 		showPreferencePage(PHPsPreferencePage.ID, page);
@@ -39,6 +40,7 @@ public class ShowPHPsPreferences implements IMarkerResolution {
 	/**
 	 * @see org.eclipse.ui.IMarkerResolution#getLabel()
 	 */
+	@Override
 	public String getLabel() {
 		return PHPDebugUIMessages.ShowPHPsPreferencePageTitle;
 	}
@@ -51,6 +53,7 @@ public class ShowPHPsPreferences implements IMarkerResolution {
 		final PreferenceDialog dialog = new PreferenceDialog(PHPDebugUIPlugin.getActiveWorkbenchShell(), manager);
 		final boolean[] result = new boolean[] { false };
 		BusyIndicator.showWhile(PHPDebugUIPlugin.getStandardDisplay(), new Runnable() {
+			@Override
 			public void run() {
 				dialog.create();
 				dialog.setMessage(targetNode.getLabelText());

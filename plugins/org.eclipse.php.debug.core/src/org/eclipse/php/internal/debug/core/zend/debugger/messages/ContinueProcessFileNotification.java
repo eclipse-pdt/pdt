@@ -26,13 +26,16 @@ import org.eclipse.php.debug.core.debugger.messages.IDebugNotificationMessage;
  */
 public class ContinueProcessFileNotification extends DebugMessageNotificationImpl implements IDebugNotificationMessage {
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 	}
 
+	@Override
 	public int getType() {
 		return 2010;
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 	}

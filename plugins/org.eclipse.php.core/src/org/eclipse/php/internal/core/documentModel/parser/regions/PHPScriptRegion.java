@@ -27,6 +27,7 @@ import org.eclipse.php.internal.core.documentModel.parser.AbstractPHPLexer;
 import org.eclipse.php.internal.core.documentModel.parser.PHPLexerFactory;
 import org.eclipse.php.internal.core.documentModel.parser.Scanner.LexerState;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
 import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
 import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -63,6 +64,7 @@ public class PHPScriptRegion extends ForeignRegion implements IPHPScriptRegion {
 	private int updatedTokensStart = -1;
 	private int updatedTokensEnd = -1;
 
+	@Override
 	public int getUpdatedTokensStart() {
 		if (updatedTokensStart == -1) {
 			return 0;
@@ -70,6 +72,7 @@ public class PHPScriptRegion extends ForeignRegion implements IPHPScriptRegion {
 		return updatedTokensStart;
 	}
 
+	@Override
 	public int getUpdatedTokensLength() {
 		return updatedTokensEnd - updatedTokensStart;
 	}
@@ -102,6 +105,7 @@ public class PHPScriptRegion extends ForeignRegion implements IPHPScriptRegion {
 	/**
 	 * @see IPHPScriptRegion#getPHPTokenType(int)
 	 */
+	@Override
 	public final @NonNull String getPHPTokenType(int relativeOffset) throws BadLocationException {
 		final ITextRegion tokenForOffset = getPHPToken(relativeOffset);
 		return tokenForOffset.getType();
@@ -110,6 +114,7 @@ public class PHPScriptRegion extends ForeignRegion implements IPHPScriptRegion {
 	/**
 	 * @see IPHPScriptRegion#getPHPToken(int)
 	 */
+	@Override
 	public final @NonNull ITextRegion getPHPToken(int relativeOffset) throws BadLocationException {
 		return tokensContainer.getToken(relativeOffset);
 	}
@@ -117,6 +122,7 @@ public class PHPScriptRegion extends ForeignRegion implements IPHPScriptRegion {
 	/**
 	 * @see IPHPScriptRegion#getPHPTokens(int, int)
 	 */
+	@Override
 	public final @NonNull ITextRegion[] getPHPTokens(int relativeOffset, int length) throws BadLocationException {
 		return tokensContainer.getTokens(relativeOffset, length);
 	}
@@ -125,6 +131,7 @@ public class PHPScriptRegion extends ForeignRegion implements IPHPScriptRegion {
 	 * @throws BadLocationException
 	 * @see IPHPScriptRegion#getUpdatedPhpTokens(int, int)
 	 */
+	@Override
 	public @NonNull ITextRegion[] getUpdatedPHPTokens() throws BadLocationException {
 		if (updatedTokensStart == -1) {
 			return EMPTY_REGION;
@@ -135,6 +142,7 @@ public class PHPScriptRegion extends ForeignRegion implements IPHPScriptRegion {
 	/**
 	 * @see IPHPScriptRegion#getPartition(int)
 	 */
+	@Override
 	public @NonNull String getPartition(int relativeOffset) throws BadLocationException {
 		return tokensContainer.getPartitionType(relativeOffset);
 	}
@@ -168,6 +176,7 @@ public class PHPScriptRegion extends ForeignRegion implements IPHPScriptRegion {
 	/**
 	 * @see IPHPScriptRegion#isPHPQuotesState(int)
 	 */
+	@Override
 	public boolean isPHPQuotesState(int relativeOffset) throws BadLocationException {
 		String type = getPHPTokenType(relativeOffset);
 		// First, check if current type is a known "quoted" type.
@@ -196,6 +205,7 @@ public class PHPScriptRegion extends ForeignRegion implements IPHPScriptRegion {
 	/**
 	 * @see IPHPScriptRegion#isFullReparsed()
 	 */
+	@Override
 	public boolean isFullReparsed() {
 		return isFullReparsed;
 	}
@@ -203,6 +213,7 @@ public class PHPScriptRegion extends ForeignRegion implements IPHPScriptRegion {
 	/**
 	 * @see IPHPScriptRegion#setFullReparsed(boolean)
 	 */
+	@Override
 	public void setFullReparsed(boolean isFullReparse) {
 		isFullReparsed = isFullReparse;
 	}
@@ -341,10 +352,11 @@ public class PHPScriptRegion extends ForeignRegion implements IPHPScriptRegion {
 				}
 
 				// 1. replace the regions
-				final ListIterator oldIterator = tokensContainer.removeTokensSubList(tokenStart, tokenEnd);
+				final ListIterator<ContextRegion> oldIterator = tokensContainer.removeTokensSubList(tokenStart,
+						tokenEnd);
 
-				ITextRegion[] newTokens = newContainer.getPHPTokens(); // now,
-																		// add
+				ContextRegion[] newTokens = newContainer.getPHPTokens(); // now,
+																			// add
 				// the new
 				// ones
 				for (int i = 0; i < newTokens.length; i++) {
@@ -353,7 +365,7 @@ public class PHPScriptRegion extends ForeignRegion implements IPHPScriptRegion {
 
 				// 2. adjust next regions start location
 				while (oldIterator.hasNext()) {
-					final ITextRegion adjust = (ITextRegion) oldIterator.next();
+					final ITextRegion adjust = oldIterator.next();
 					adjust.adjustStart(size);
 				}
 
@@ -375,6 +387,7 @@ public class PHPScriptRegion extends ForeignRegion implements IPHPScriptRegion {
 	/**
 	 * @see IPHPScriptRegion#completeReparse(IDocument, int, int)
 	 */
+	@Override
 	public synchronized void completeReparse(IDocument doc, int start, int length) {
 		completeReparse(doc, start, length, project);
 	}
@@ -382,6 +395,7 @@ public class PHPScriptRegion extends ForeignRegion implements IPHPScriptRegion {
 	/**
 	 * @see IPHPScriptRegion#completeReparse(IDocument, int, int, IProject)
 	 */
+	@Override
 	public synchronized void completeReparse(IDocument doc, int start, int length, @Nullable IProject project) {
 		this.project = project;
 		currentPhpVersion = ProjectOptions.getPHPVersion(this.project);
