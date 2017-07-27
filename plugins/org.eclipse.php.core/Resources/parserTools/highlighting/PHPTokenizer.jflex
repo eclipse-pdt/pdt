@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPScriptRegion;
@@ -34,6 +35,7 @@ import org.eclipse.wst.xml.core.internal.parser.IntStack;
 import org.eclipse.wst.xml.core.internal.parser.regions.XMLParserRegionFactory;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
+@SuppressWarnings("unused")
 
 %%
 
@@ -452,6 +454,7 @@ private final String doScanEndPHP(String searchContext, int exitState, int immed
  * @param stream
  * @return a new lexer for the given project with the given stream initialized with current parameters
  */
+@NonNull
 private AbstractPHPLexer getPHPLexer() {
 	final AbstractPHPLexer lexer = PHPLexerFactory.createLexer(zzReader, phpVersion);
 	int[] currentParameters = getParameters();

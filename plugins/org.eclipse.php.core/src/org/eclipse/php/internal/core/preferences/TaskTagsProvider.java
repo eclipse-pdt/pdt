@@ -54,6 +54,7 @@ public class TaskTagsProvider {
 	 * 
 	 * @return A TaskTagsProvider instance
 	 */
+	@SuppressWarnings("null")
 	public @NonNull static TaskTagsProvider getInstance() {
 		if (instance == null) {
 			instance = new TaskTagsProvider();
@@ -165,7 +166,7 @@ public class TaskTagsProvider {
 	}
 
 	// Install propagator listeners for the given project.
-	private void installPropagatorListeners(IProject project) {
+	private void installPropagatorListeners(@NonNull IProject project) {
 		IPreferencesPropagatorListener[] listeners = new IPreferencesPropagatorListener[] {
 				new InnerTaskTagsListener(project), new InnerTaskPrioritiesListener(project),
 				new InnerTaskCaseListener(project) };
@@ -178,8 +179,7 @@ public class TaskTagsProvider {
 
 	// Uninstall propagator listeners for the given project.
 	private void uninstallPropagatorListeners(IProject project) {
-		IPreferencesPropagatorListener[] listeners = projectToPropagatorListeners
-				.get(project);
+		IPreferencesPropagatorListener[] listeners = projectToPropagatorListeners.get(project);
 		if (listeners != null) {
 			preferencesPropagator.removePropagatorListener(listeners[0], PHPCoreConstants.TASK_TAGS);
 			preferencesPropagator.removePropagatorListener(listeners[1], PHPCoreConstants.TASK_PRIORITIES);
@@ -258,6 +258,7 @@ public class TaskTagsProvider {
 	 * 
 	 * @param priorities
 	 */
+	@NonNull
 	private static TaskTag[] getTagsAndPropertiesFrom(String tagString, String priorityString) {
 		String[] tags = StringUtils.unpack(tagString);
 		String[] priorities = StringUtils.unpack(priorityString);
@@ -291,6 +292,7 @@ public class TaskTagsProvider {
 
 	private abstract class AbstractTasksListener implements IPreferencesPropagatorListener {
 
+		@NonNull
 		private IProject project;
 
 		public AbstractTasksListener(@NonNull IProject project) {

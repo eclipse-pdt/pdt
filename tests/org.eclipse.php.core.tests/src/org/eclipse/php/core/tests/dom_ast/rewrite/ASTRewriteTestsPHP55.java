@@ -67,7 +67,6 @@ public class ASTRewriteTestsPHP55 extends ASTRewriteTestsPHP54 {
 		assertTrue("Unexpected list size.", yieldStatements.size() == 1);
 		yieldStatements.get(0).setExpression(ast.newVariable("a"));
 		rewrite();
-		String string = document.get();
 		checkResult("<?php yield $a; ?>");
 	}
 

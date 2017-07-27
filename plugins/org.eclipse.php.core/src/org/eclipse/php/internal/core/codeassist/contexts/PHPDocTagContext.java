@@ -16,6 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
@@ -85,7 +86,7 @@ public abstract class PHPDocTagContext extends PHPDocContext {
 	}
 
 	@Override
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+	public boolean isValid(@NonNull ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}

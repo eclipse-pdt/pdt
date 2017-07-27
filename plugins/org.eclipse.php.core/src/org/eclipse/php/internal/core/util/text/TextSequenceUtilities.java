@@ -75,8 +75,10 @@ public final class TextSequenceUtilities {
 	// //////////////////////////////////////////////////////////////////////////////////////////////
 	private static abstract class AbstractTextSequence implements TextSequence {
 
+		@NonNull
 		IStructuredDocumentRegion source;
 
+		@NonNull
 		Segment segment;
 
 		int segmentOriginalStart;

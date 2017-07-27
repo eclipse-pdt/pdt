@@ -19,11 +19,14 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.php.core.ast.nodes.IDocumentorLexer;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag.TagKind;
 import org.eclipse.php.core.compiler.ast.nodes.Scalar;
+
+@SuppressWarnings("unused")
 
 %%
 
@@ -147,6 +150,7 @@ import org.eclipse.php.core.compiler.ast.nodes.Scalar;
 		tagList.add(basicPHPDocTag);
 	}
 
+	@NonNull
 	private List<Scalar> getTexts(int start, int end, boolean remove) {
 		List<Scalar> result = new ArrayList<>();
 		for (Iterator<Scalar> iterator = textList.iterator(); iterator.hasNext();) {

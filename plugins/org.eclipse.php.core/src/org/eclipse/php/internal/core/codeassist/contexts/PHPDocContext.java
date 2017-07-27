@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.contexts;
 
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
@@ -33,7 +34,7 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
 public abstract class PHPDocContext extends AbstractCompletionContext {
 
 	@Override
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+	public boolean isValid(@NonNull ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
@@ -55,11 +56,13 @@ public abstract class PHPDocContext extends AbstractCompletionContext {
 	}
 
 	@Override
+	@NonNull
 	public TextSequence getStatementText() {
 		return PHPTextSequenceUtilities.getStatement(getOffset(), getStructuredDocumentRegion(), false);
 	}
 
 	@Override
+	@NonNull
 	public TextSequence getStatementText(int offset) {
 		return PHPTextSequenceUtilities.getStatement(offset, getStructuredDocumentRegion(), false);
 	}

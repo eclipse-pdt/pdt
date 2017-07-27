@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.core.*;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.compiler.PHPFlags;
@@ -65,7 +66,7 @@ public abstract class ClassMemberContext extends StatementContext {
 	private int elementStart;
 
 	@Override
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+	public boolean isValid(@NonNull ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}

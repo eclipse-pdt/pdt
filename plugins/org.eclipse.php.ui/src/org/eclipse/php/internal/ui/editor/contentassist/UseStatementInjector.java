@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
@@ -255,7 +256,8 @@ public class UseStatementInjector {
 		return addUseStatement(modelElement, document, textViewer, offset);
 	}
 
-	private int addUseStatement(IModelElement modelElement, IDocument document, ITextViewer textViewer, int offset) {
+	private int addUseStatement(@NonNull IModelElement modelElement, IDocument document, ITextViewer textViewer,
+			int offset) {
 		// add use statement if needed:
 		IType namespace = PHPModelUtils.getCurrentNamespace(modelElement);
 		if (namespace == null) {

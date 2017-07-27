@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
@@ -49,7 +50,7 @@ public abstract class TypeDeclarationContext extends DeclarationContext {
 	protected Matcher extendsMatcher;
 
 	@Override
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+	public boolean isValid(@NonNull ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}

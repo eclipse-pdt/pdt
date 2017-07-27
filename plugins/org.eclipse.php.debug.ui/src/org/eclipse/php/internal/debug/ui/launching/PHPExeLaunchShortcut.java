@@ -276,10 +276,14 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 				int numConfigs = configs.length;
 				for (int i = 0; i < numConfigs; i++) {
 					String fileName = configs[i].getAttribute(IPHPDebugConstants.ATTR_FILE, (String) null);
-					String exeName = configs[i].getAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION,
-							(String) null);
-					String iniPath = configs[i].getAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, (String) null);
-					PHPexeItem item = PHPexes.getInstance().getItemForFile(exeName, iniPath);
+					// String exeName =
+					// configs[i].getAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION,
+					// (String) null);
+					// String iniPath =
+					// configs[i].getAttribute(IPHPDebugConstants.ATTR_INI_LOCATION,
+					// (String) null);
+					// PHPexeItem item =
+					// PHPexes.getInstance().getItemForFile(exeName, iniPath);
 
 					if (phpPathString
 							.equals(fileName)/* && defaultEXE.equals(item) */) {

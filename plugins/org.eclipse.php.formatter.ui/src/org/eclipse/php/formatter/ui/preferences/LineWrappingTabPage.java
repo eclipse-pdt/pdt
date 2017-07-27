@@ -188,9 +188,8 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 		}
 
 		private void evaluateElements(Iterator<Category> iterator) {
-			Category category;
 			while (iterator.hasNext()) {
-				category = iterator.next();
+				Category category = iterator.next();
 				if (category.children.size() == 0) {
 					if (!fElements.contains(category)) {
 						fElements.add(category);

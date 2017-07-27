@@ -28,6 +28,7 @@ import org.eclipse.wst.sse.core.internal.provisional.tasks.TaskTag;
  */
 public class TaskTagsEvent extends EventObject {
 
+	@NonNull
 	private TaskTag[] tags;
 	private IProject project;
 	private boolean isCaseSensitive;

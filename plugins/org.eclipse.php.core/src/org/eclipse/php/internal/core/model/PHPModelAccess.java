@@ -33,6 +33,7 @@ public class PHPModelAccess extends ModelAccess {
 	@NonNull
 	public static final IField[] NULL_FIELDS = new IField[0];
 
+	@NonNull
 	private static final PHPModelAccess instance = new PHPModelAccess();
 
 	@NonNull
@@ -111,6 +112,7 @@ public class PHPModelAccess extends ModelAccess {
 				falseFlags, scope, result, monitor);
 	}
 
+	@SuppressWarnings("null")
 	@NonNull
 	public IMethod[] findFunctions(String name, MatchRule matchRule, int trueFlags, int falseFlags,
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
@@ -122,6 +124,7 @@ public class PHPModelAccess extends ModelAccess {
 		return result.toArray(new IMethod[result.size()]);
 	}
 
+	@SuppressWarnings("null")
 	@NonNull
 	public IMethod[] findFunctions(String qualifier, String name, MatchRule matchRule, int trueFlags, int falseFlags,
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
@@ -134,6 +137,7 @@ public class PHPModelAccess extends ModelAccess {
 		return result.toArray(new IMethod[result.size()]);
 	}
 
+	@SuppressWarnings("null")
 	@NonNull
 	public IField[] findFileFields(String name, MatchRule matchRule, int trueFlags, int falseFlags,
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
@@ -145,6 +149,7 @@ public class PHPModelAccess extends ModelAccess {
 		return result.toArray(new IField[result.size()]);
 	}
 
+	@SuppressWarnings("null")
 	@NonNull
 	public IField[] findFileFields(String qualifier, String name, MatchRule matchRule, int trueFlags, int falseFlags,
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
@@ -181,6 +186,7 @@ public class PHPModelAccess extends ModelAccess {
 		return result;
 	}
 
+	@SuppressWarnings("null")
 	@NonNull
 	public IType[] findNamespaces(String qualifier, String name, MatchRule matchRule, int trueFlags, int falseFlags,
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
@@ -214,6 +220,7 @@ public class PHPModelAccess extends ModelAccess {
 		return result;
 	}
 
+	@SuppressWarnings("null")
 	@NonNull
 	public IField[] findIncludes(String name, MatchRule matchRule, IDLTKSearchScope scope, IProgressMonitor monitor) {
 		List<IField> result = new LinkedList<>();

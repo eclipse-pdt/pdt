@@ -80,6 +80,7 @@ public class DocumentModelUtils {
 	 * 
 	 * @param document
 	 */
+	@SuppressWarnings("null")
 	public static void reparseDocument(@Nullable IDocument document) {
 		if (!(document instanceof IStructuredDocument)) {
 			return;
@@ -101,6 +102,7 @@ public class DocumentModelUtils {
 	 * @param document
 	 * @param project
 	 */
+	@SuppressWarnings("null")
 	public static void reparseDocument(@Nullable IDocument document, @Nullable IProject project) {
 		if (!(document instanceof IStructuredDocument)) {
 			return;
@@ -132,6 +134,7 @@ public class DocumentModelUtils {
 	 *            use the new project value (even if null) when setNewProject is
 	 *            set to true
 	 */
+	@SuppressWarnings("null")
 	private static void reparseRegion(@NonNull IDocument document, @NonNull Iterator<?> regionsIt, int offset,
 			@Nullable IProject project, boolean setNewProject) {
 		while (regionsIt.hasNext()) {

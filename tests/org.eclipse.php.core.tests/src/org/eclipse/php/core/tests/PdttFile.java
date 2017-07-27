@@ -246,7 +246,8 @@ public class PdttFile {
 	}
 
 	/**
-	 * Internal method for parsing a .pdtt test file
+	 * Internal method for parsing a .pdtt test file. Note that inputStream must
+	 * be closed by the caller.
 	 * 
 	 * @param inputStream
 	 * @param charsetName
@@ -255,6 +256,7 @@ public class PdttFile {
 	 * @throws Exception
 	 */
 	protected void parse(InputStream inputStream, String charsetName) throws Exception {
+		@SuppressWarnings("resource")
 		BufferedReader bReader = charsetName != null
 				? new BufferedReader(new InputStreamReader(inputStream, charsetName))
 				: new BufferedReader(new InputStreamReader(inputStream));

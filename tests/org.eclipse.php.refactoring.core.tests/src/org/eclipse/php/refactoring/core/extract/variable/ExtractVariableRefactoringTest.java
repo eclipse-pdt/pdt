@@ -59,7 +59,7 @@ public class ExtractVariableRefactoringTest extends AbstractPDTTListRefactoringT
 
 		int length = Integer.valueOf(testFile.getConfig().get("length"));
 
-		String visibility = testFile.getConfig().get("visibility");
+		// String visibility = testFile.getConfig().get("visibility");
 
 		ExtractVariableRefactoring processor = new ExtractVariableRefactoring(DLTKCore.createSourceModuleFrom(file),
 				structuredDocument, start, length);

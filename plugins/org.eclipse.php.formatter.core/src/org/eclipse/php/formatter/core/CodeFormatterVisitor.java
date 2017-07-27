@@ -5095,6 +5095,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	 * @see org.eclipse.php.internal.core.format.ICodeFormattingProcessor#
 	 * createIndentationString(int)
 	 */
+	@SuppressWarnings("null")
 	@Override
 	public @NonNull String createIndentationString(int indentationUnits) {
 		if (indentationUnits < 0) {

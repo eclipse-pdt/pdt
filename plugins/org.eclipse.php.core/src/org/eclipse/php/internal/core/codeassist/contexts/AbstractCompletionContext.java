@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.core.*;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -70,11 +71,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	@Override
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
-		if (sourceModule == null) {
-			throw new IllegalArgumentException();
-		}
-
+	public boolean isValid(@NonNull ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		this.requestor = requestor;
 		this.sourceModule = sourceModule;
 		this.offset = offset;
@@ -355,10 +352,12 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 * @return statement text
 	 * @see #isValid(ISourceModule, int, CompletionRequestor)
 	 */
+	@NonNull
 	public TextSequence getStatementText() {
 		return PHPTextSequenceUtilities.getStatement(offset, structuredDocumentRegion, true);
 	}
 
+	@NonNull
 	public TextSequence getStatementText(int offset) {
 		return PHPTextSequenceUtilities.getStatement(offset, structuredDocumentRegion, true);
 	}
@@ -929,6 +928,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		return null;
 	}
 
+	@NonNull
 	protected IStructuredDocumentRegion getStructuredDocumentRegion() {
 		return structuredDocumentRegion;
 	}

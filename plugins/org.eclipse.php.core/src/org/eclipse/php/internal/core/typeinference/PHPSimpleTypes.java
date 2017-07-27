@@ -58,11 +58,17 @@ public class PHPSimpleTypes {
 
 	private static final Map<String, TypeInfo> SIMPLE_TYPES;
 
+	@NonNull
 	public static final IEvaluatedType NUMBER = new SimpleType(SimpleType.TYPE_NUMBER);
+	@NonNull
 	public static final IEvaluatedType BOOLEAN = new SimpleType(SimpleType.TYPE_BOOLEAN);
+	@NonNull
 	public static final IEvaluatedType STRING = new SimpleType(SimpleType.TYPE_STRING);
+	@NonNull
 	public static final IEvaluatedType OBJECT = new PHPClassType("object"); //$NON-NLS-1$
+	@NonNull
 	public static final IEvaluatedType RESOURCE = new PHPClassType("resource"); //$NON-NLS-1$
+	@NonNull
 	public static final IEvaluatedType ARRAY = new MultiTypeType() {
 		@Override
 		public final void addType(IEvaluatedType type) {
@@ -80,18 +86,23 @@ public class PHPSimpleTypes {
 			return "array"; // $NON-NLS-1$
 		}
 	};
+	@NonNull
 	public static final IEvaluatedType VOID = new SimpleType(SimpleType.TYPE_NONE);
+	@NonNull
 	public static final IEvaluatedType NULL = new SimpleType(SimpleType.TYPE_NULL);
+	@NonNull
 	public static final IEvaluatedType MIXED = new PHPClassType("mixed"); //$NON-NLS-1$
 
 	/**
 	 * @since 4.0
 	 */
+	@NonNull
 	public static final IEvaluatedType CALLABLE = new PHPClassType("callable"); //$NON-NLS-1$
 
 	/**
 	 * @since 5.1
 	 */
+	@NonNull
 	public static final IEvaluatedType ITERABLE = new PHPClassType("callable"); //$NON-NLS-1$
 
 	static {

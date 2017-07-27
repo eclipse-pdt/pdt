@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.contexts;
 
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
@@ -50,7 +51,7 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 	private boolean isFunctionParameterContext = false;
 
 	@Override
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+	public boolean isValid(@NonNull ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		PHPVersion phpVersion = ProjectOptions.getPHPVersion(sourceModule);
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;

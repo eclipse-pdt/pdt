@@ -120,9 +120,10 @@ public class PHPCorrectionProcessor
 	public static boolean hasCorrections(Annotation annotation) {
 		if (annotation instanceof IScriptAnnotation) {
 			IScriptAnnotation javaAnnotation = (IScriptAnnotation) annotation;
-			if (javaAnnotation.getSourceModule() != null && javaAnnotation.getId() != null) {
-				return hasCorrections(javaAnnotation.getSourceModule(), javaAnnotation.getId(),
-						javaAnnotation.getMarkerType());
+			ISourceModule sourceModule = javaAnnotation.getSourceModule();
+			IProblemIdentifier id = javaAnnotation.getId();
+			if (sourceModule != null && id != null) {
+				return hasCorrections(sourceModule, id, javaAnnotation.getMarkerType());
 			}
 
 		}
@@ -213,8 +214,7 @@ public class PHPCorrectionProcessor
 			}
 
 			private String getQuickAssistBinding() {
-				final IBindingService bindingSvc = PlatformUI.getWorkbench()
-						.getAdapter(IBindingService.class);
+				final IBindingService bindingSvc = PlatformUI.getWorkbench().getAdapter(IBindingService.class);
 				return bindingSvc.getBestActiveBindingFormattedFor(ITextEditorActionDefinitionIds.QUICK_ASSIST);
 			}
 		});
@@ -290,8 +290,7 @@ public class PHPCorrectionProcessor
 		}
 		MultiStatus resStatus = null;
 
-		IProblemLocation[] problemLocations = problems
-				.toArray(new IProblemLocation[problems.size()]);
+		IProblemLocation[] problemLocations = problems.toArray(new IProblemLocation[problems.size()]);
 		if (addQuickFixes) {
 			IStatus status = collectCorrections(context, problemLocations, proposals);
 			if (!status.isOK()) {

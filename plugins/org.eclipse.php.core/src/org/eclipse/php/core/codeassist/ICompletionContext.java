@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.core.codeassist;
 
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 
@@ -38,7 +39,7 @@ public interface ICompletionContext {
 	 * @return <code>true</code> if this context is valid for the current
 	 *         position, otherwise <code>false</code>
 	 */
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor);
+	public boolean isValid(@NonNull ISourceModule sourceModule, int offset, CompletionRequestor requestor);
 
 	/**
 	 * Whether this context may be applied only if it's the only context that

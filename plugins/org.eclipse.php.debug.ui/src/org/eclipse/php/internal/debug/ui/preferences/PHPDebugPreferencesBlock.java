@@ -557,7 +557,6 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 			debugUINode.put(PHPDebugCorePreferenceNames.OUTPUT_ENCODING, fOutputEncodingSettings.getText());
 
 			ServersManager.setDefaultServer(project, fDefaultServer.getText());
-			Server server = ServersManager.getServer(fDefaultServer.getText());
 			setBasePathValue(project, fDefaultBasePath.getText());
 		} else {
 			if (project == null) {

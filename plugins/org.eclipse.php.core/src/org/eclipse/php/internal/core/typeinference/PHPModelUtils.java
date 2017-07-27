@@ -146,6 +146,7 @@ public class PHPModelUtils {
 	 *            names to concat
 	 * @return concatenated names
 	 */
+	@SuppressWarnings("null")
 	@NonNull
 	public static String concatFullyQualifiedNames(String... fqns) {
 		StringBuilder builder = new StringBuilder();
@@ -741,6 +742,7 @@ public class PHPModelUtils {
 	 * @return a list of relevant IField elements
 	 * @throws ModelException
 	 */
+	@SuppressWarnings("null")
 	@NonNull
 	public static IField[] getFields(String fieldName, ISourceModule sourceModule, int offset, IModelAccessCache cache,
 			IProgressMonitor monitor) throws ModelException {
@@ -868,6 +870,7 @@ public class PHPModelUtils {
 		return getGlobalFunctions(sourceModule, functionName, cache, monitor);
 	};
 
+	@SuppressWarnings("null")
 	@NonNull
 	private static IMethod[] getGlobalFunctions(ISourceModule sourceModule, String functionName,
 			IModelAccessCache cache, IProgressMonitor monitor) throws ModelException {
@@ -914,6 +917,7 @@ public class PHPModelUtils {
 	 * @param monitor
 	 *            Progress monitor
 	 */
+	@SuppressWarnings("null")
 	@NonNull
 	public static IModelElement[] getMethodFields(final IMethod method, final String prefix, final boolean exactName,
 			IProgressMonitor monitor) {
@@ -1023,6 +1027,7 @@ public class PHPModelUtils {
 	 * @param monitor
 	 *            Progress monitor
 	 */
+	@SuppressWarnings("null")
 	@NonNull
 	public static IField[] getFileFields(final ISourceModule sourceModule, final String prefix, final boolean exactName,
 			IProgressMonitor monitor) {
@@ -1086,6 +1091,7 @@ public class PHPModelUtils {
 	 *         none
 	 * @throws ModelException
 	 */
+	@SuppressWarnings("null")
 	@NonNull
 	public static IField[] getNamespaceField(String namespace, String prefix, boolean exactName,
 			ISourceModule sourceModule, IModelAccessCache cache, IProgressMonitor monitor) throws ModelException {
@@ -1139,6 +1145,7 @@ public class PHPModelUtils {
 	 *            Progress monitor
 	 * @throws ModelException
 	 */
+	@SuppressWarnings("null")
 	@NonNull
 	public static IMethod[] getNamespaceFunction(String namespace, String prefix, boolean exactName,
 			ISourceModule sourceModule, IModelAccessCache cache, IProgressMonitor monitor) throws ModelException {
@@ -1192,6 +1199,7 @@ public class PHPModelUtils {
 	 *         (global namespace)
 	 * @throws ModelException
 	 */
+	@SuppressWarnings("null")
 	@NonNull
 	public static IType[] getNamespaceOf(String elementName, ISourceModule sourceModule, int offset,
 			IModelAccessCache cache, IProgressMonitor monitor) throws ModelException {
@@ -1251,6 +1259,7 @@ public class PHPModelUtils {
 	 *         none
 	 * @throws ModelException
 	 */
+	@SuppressWarnings("null")
 	@NonNull
 	public static IType[] getNamespaceType(String namespace, String prefix, boolean exactName,
 			ISourceModule sourceModule, IModelAccessCache cache, IProgressMonitor monitor, boolean isType)
@@ -1267,6 +1276,7 @@ public class PHPModelUtils {
 		return result.toArray(new IType[result.size()]);
 	}
 
+	@SuppressWarnings("null")
 	@NonNull
 	private static IType[] getNamespaces(ISourceModule sourceModule, String namespaceName, IModelAccessCache cache,
 			IProgressMonitor monitor) throws ModelException {
@@ -1338,6 +1348,7 @@ public class PHPModelUtils {
 	 * 
 	 * @throws ModelException
 	 */
+	@SuppressWarnings("null")
 	@NonNull
 	public static IType[] getSuperClasses(IType type, ITypeHierarchy hierarchy) throws ModelException {
 		if (hierarchy == null) {
@@ -1439,6 +1450,7 @@ public class PHPModelUtils {
 	 *            Whether the name is exact name or prefix
 	 * @throws ModelException
 	 */
+	@SuppressWarnings("null")
 	@NonNull
 	public static IField[] getTypeField(IType type, String prefix, boolean exactName) throws ModelException {
 
@@ -1490,6 +1502,7 @@ public class PHPModelUtils {
 	 *            Progress monitor
 	 * @throws CoreException
 	 */
+	@SuppressWarnings("null")
 	@NonNull
 	public static IField[] getTypeHierarchyField(IType type, ITypeHierarchy hierarchy, String prefix, boolean exactName,
 			IProgressMonitor monitor) throws CoreException {
@@ -1536,6 +1549,7 @@ public class PHPModelUtils {
 	 *            Progress monitor
 	 * @throws CoreException
 	 */
+	@SuppressWarnings("null")
 	@NonNull
 	public static PHPDocBlock[] getTypeHierarchyFieldDoc(IType type, String name, boolean exactName,
 			IProgressMonitor monitor) throws CoreException {
@@ -1568,6 +1582,7 @@ public class PHPModelUtils {
 	 *            Progress monitor
 	 * @throws CoreException
 	 */
+	@SuppressWarnings("null")
 	@NonNull
 	public static IMethod[] getTypeHierarchyMethod(IType type, ITypeHierarchy hierarchy, String prefix,
 			boolean exactName, IProgressMonitor monitor) throws CoreException {
@@ -1599,6 +1614,7 @@ public class PHPModelUtils {
 	 *            Progress monitor
 	 * @throws CoreException
 	 */
+	@SuppressWarnings("null")
 	@NonNull
 	public static IMethod[] getFirstTypeHierarchyMethod(IType type, ITypeHierarchy hierarchy, String prefix,
 			boolean exactName, IProgressMonitor monitor) throws CoreException {
@@ -1660,6 +1676,7 @@ public class PHPModelUtils {
 	 *            Progress monitor
 	 * @throws CoreException
 	 */
+	@SuppressWarnings("null")
 	@NonNull
 	public static PHPDocBlock[] getTypeHierarchyMethodDoc(IType type, ITypeHierarchy hierarchy, String prefix,
 			boolean exactName, IProgressMonitor monitor) throws CoreException {
@@ -1688,6 +1705,7 @@ public class PHPModelUtils {
 	 *            Whether the name is exact name or prefix
 	 * @throws ModelException
 	 */
+	@SuppressWarnings("null")
 	@NonNull
 	public static IMethod[] getTypeMethod(IType type, String prefix, boolean exactName) throws ModelException {
 
@@ -1767,6 +1785,7 @@ public class PHPModelUtils {
 		return getTypes(typeName, sourceModule, offset, cache, monitor, isType, false);
 	}
 
+	@SuppressWarnings("null")
 	@NonNull
 	public static IType[] getTypes(String typeName, ISourceModule sourceModule, int offset, IModelAccessCache cache,
 			IProgressMonitor monitor, boolean isType, boolean isGlobal) throws ModelException {
@@ -1864,6 +1883,7 @@ public class PHPModelUtils {
 	 *            Whether the name is exact or it is prefix
 	 * @throws ModelException
 	 */
+	@SuppressWarnings("null")
 	@NonNull
 	public static IField[] getTypesField(IType[] types, String prefix, boolean exactName) throws ModelException {
 		List<IField> result = new LinkedList<>();
@@ -1884,6 +1904,7 @@ public class PHPModelUtils {
 	 *            Whether the name is exact or it is prefix
 	 * @throws ModelException
 	 */
+	@SuppressWarnings("null")
 	@NonNull
 	public static IMethod[] getTypesMethod(IType[] types, String prefix, boolean exactName) throws ModelException {
 		List<IMethod> result = new LinkedList<>();
@@ -1905,6 +1926,7 @@ public class PHPModelUtils {
 	 * @param isType
 	 * @throws ModelException
 	 */
+	@SuppressWarnings("null")
 	@NonNull
 	public static IType[] getTypeType(IType type, String prefix, boolean exactName, boolean isType)
 			throws ModelException {
@@ -1958,6 +1980,7 @@ public class PHPModelUtils {
 	 * @return unimplemented methods
 	 * @throws ModelException
 	 */
+	@SuppressWarnings("null")
 	@NonNull
 	public static IMethod[] getUnimplementedMethods(IType type, IModelAccessCache cache, IProgressMonitor monitor)
 			throws ModelException {
@@ -2218,6 +2241,7 @@ public class PHPModelUtils {
 		return currChar;
 	}
 
+	@SuppressWarnings("null")
 	public static String getFullName(IType declaringType) {
 		try {
 			if (PHPFlags.isNamespace(declaringType.getFlags())) {
@@ -2265,6 +2289,7 @@ public class PHPModelUtils {
 		return elementName != null ? elementName : ""; //$NON-NLS-1$
 	}
 
+	@SuppressWarnings("null")
 	@NonNull
 	public static String getFullName(NamespaceName namespaceName) {
 
@@ -2337,6 +2362,7 @@ public class PHPModelUtils {
 	 *            String
 	 * @return
 	 */
+	@SuppressWarnings("null")
 	@NonNull
 	public static String stripQuotes(String name) {
 		int len = name.length();

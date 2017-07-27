@@ -137,8 +137,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 	}
 
 	public void updateFolding(List<IInteractionElement> elements) {
-		IFoldingStructureProviderExtension updater = editor
-				.getAdapter(IFoldingStructureProviderExtension.class);
+		IFoldingStructureProviderExtension updater = editor.getAdapter(IFoldingStructureProviderExtension.class);
 		for (IInteractionElement element : elements) {
 			if (updater == null || !enabled) {
 				return;
@@ -192,6 +191,8 @@ public class ActiveFoldingListener extends AbstractContextListener {
 			break;
 		case INTEREST_CHANGED:
 			updateFolding(event.getElements());
+			break;
+		default:
 			break;
 		}
 	}

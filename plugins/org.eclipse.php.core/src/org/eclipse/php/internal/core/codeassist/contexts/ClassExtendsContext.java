@@ -11,12 +11,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.contexts;
 
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 
 /**
  * This context represents the state when staying after 'extends' keyword in a
@@ -33,7 +34,7 @@ import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 public class ClassExtendsContext extends ClassDeclarationContext {
 
 	@Override
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+	public boolean isValid(@NonNull ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}

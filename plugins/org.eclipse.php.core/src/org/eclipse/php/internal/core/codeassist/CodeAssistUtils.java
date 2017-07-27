@@ -16,6 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.core.*;
@@ -310,13 +311,13 @@ public class CodeAssistUtils {
 	 * @param offset
 	 * @return
 	 */
-	public static IType[] getTypesFor(ISourceModule sourceModule, TextSequence statementText, int endPosition,
+	public static IType[] getTypesFor(ISourceModule sourceModule, @NonNull TextSequence statementText, int endPosition,
 			int offset) {
 		return getTypesFor(sourceModule, statementText, endPosition, offset, null);
 	}
 
-	protected static IType[] getTypesFor(ISourceModule sourceModule, TextSequence statementText, int endPosition,
-			int offset, String triggerText) {
+	protected static IType[] getTypesFor(ISourceModule sourceModule, @NonNull TextSequence statementText,
+			int endPosition, int offset, String triggerText) {
 		endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, endPosition); // read
 																								// whitespace
 
@@ -386,7 +387,7 @@ public class CodeAssistUtils {
 		return result.toArray(new IType[result.size()]);
 	}
 
-	public static IType[] getTraitsFor(ISourceModule sourceModule, TextSequence statementText, int endPosition,
+	public static IType[] getTraitsFor(ISourceModule sourceModule, @NonNull TextSequence statementText, int endPosition,
 			int offset) {
 		PHPVersion phpVersion = ProjectOptions.getPHPVersion(sourceModule.getScriptProject().getProject());
 		if (phpVersion.isLessThan(PHPVersion.PHP5_4)) {
@@ -547,7 +548,7 @@ public class CodeAssistUtils {
 	/**
 	 * Getting an instance and finding its type.
 	 */
-	private static IType[] innerGetClassName(ISourceModule sourceModule, TextSequence statementText,
+	private static IType[] innerGetClassName(ISourceModule sourceModule, @NonNull TextSequence statementText,
 			int propertyEndPosition, boolean isClassTriger, int offset) {
 
 		PHPVersion phpVersion = ProjectOptions.getPHPVersion(sourceModule.getScriptProject().getProject());

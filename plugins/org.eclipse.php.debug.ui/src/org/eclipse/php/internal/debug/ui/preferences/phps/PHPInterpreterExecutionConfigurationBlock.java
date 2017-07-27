@@ -212,7 +212,7 @@ public class PHPInterpreterExecutionConfigurationBlock {
 	}
 
 	private PHPexeItem[] getCompatibleItems(PHPexeItem[] allItems, PHPVersion version) {
-		String versionNumber = version.getAlias().substring(3);
+		// String versionNumber = version.getAlias().substring(3);
 		PHPexeItem[] result = versionToCompatibleItems.get(version);
 		if (result == null) {
 			result = phpExes.getCompatibleItems(allItems, version);

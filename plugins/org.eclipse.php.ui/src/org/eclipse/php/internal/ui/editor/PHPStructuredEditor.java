@@ -1375,8 +1375,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 			public void preferencesEventOccured(PreferencesPropagatorEvent event) {
 				// get the structured document and go over its regions
 				// in case of PhpScriptRegion reparse the region text
-				if (getTextViewer() instanceof PHPStructuredTextViewer) {
-					DocumentModelUtils.reparseAndReconcileDocument((PHPStructuredTextViewer) getTextViewer());
+				StructuredTextViewer textViewer = getTextViewer();
+				if (textViewer instanceof PHPStructuredTextViewer) {
+					DocumentModelUtils.reparseAndReconcileDocument((PHPStructuredTextViewer) textViewer);
 				} else {
 					IDocumentProvider documentProvider = getDocumentProvider();
 					IDocument doc = documentProvider != null ? documentProvider.getDocument(getEditorInput()) : null;

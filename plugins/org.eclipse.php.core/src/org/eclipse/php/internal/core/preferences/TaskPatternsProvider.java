@@ -21,6 +21,7 @@ import org.eclipse.wst.sse.core.internal.provisional.tasks.TaskTag;
 
 public class TaskPatternsProvider {
 
+	@NonNull
 	private static final TaskPatternsProvider instance = new TaskPatternsProvider();
 	private boolean isInitialized = false;
 
@@ -40,6 +41,7 @@ public class TaskPatternsProvider {
 		return instance;
 	}
 
+	@SuppressWarnings("null")
 	public synchronized @NonNull Pattern[] getPatternsForProject(IProject project) {
 		registerProject(project);
 		Pattern[] patterns = projectsPatterns.get(project);
@@ -68,6 +70,7 @@ public class TaskPatternsProvider {
 		}
 	}
 
+	@SuppressWarnings("null")
 	public synchronized @NonNull Pattern[] getPatternsForWorkspace() {
 		initPatternsDB();
 		return workspacePatterns;

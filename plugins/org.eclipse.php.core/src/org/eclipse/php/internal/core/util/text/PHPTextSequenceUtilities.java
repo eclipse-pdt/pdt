@@ -28,8 +28,8 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.documentModel.parser.AbstractPHPLexer;
-import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.PHPLexerFactory;
+import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
@@ -687,6 +687,7 @@ public class PHPTextSequenceUtilities {
 	 * @param textSequence
 	 * @return
 	 */
+	@SuppressWarnings("null")
 	public static @NonNull String[] getArgNames(@Nullable PHPVersion phpVersion, @Nullable CharSequence textSequence) {
 		List<String> args = new ArrayList<>();
 		if (textSequence != null && textSequence.length() > 2) {
@@ -746,6 +747,7 @@ public class PHPTextSequenceUtilities {
 		return args.toArray(new String[args.size()]);
 	}
 
+	@SuppressWarnings("null")
 	public static @Nullable String suggestObjectOperator(@NonNull CharSequence statement) {
 		String insert = null;
 		statement = statement.toString().trim();

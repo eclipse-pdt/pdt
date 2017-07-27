@@ -58,6 +58,8 @@ public class PdttFileExt extends PdttFile {
 		case EXPECT:
 			onExpectState(line);
 			return;
+		default:
+			break;
 		}
 		super.onState(state, line);
 	}

@@ -34,6 +34,7 @@ public class DefaultCodeFormattingProcessor extends AbstractVisitor implements I
 		this.options = options;
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	public @NonNull String createIndentationString(int indentationUnits) {
 		if (indentationUnits > 0) {

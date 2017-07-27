@@ -139,10 +139,13 @@ public class BuildpathPackage {
 				Element element = (Element) node;
 				if (element.getNodeName().equals(TAG_ARCHIVE)) {
 					String path = element.getAttribute(TAG_PATH);
-					NodeList children = element.getElementsByTagName("*"); //$NON-NLS-1$
-					boolean[] foundChildren = new boolean[children.getLength()];
-					NodeList attributeList = BuildpathEntry.getChildAttributes(BuildpathEntry.TAG_ATTRIBUTES, children,
-							foundChildren);
+					// NodeList children = element.getElementsByTagName("*");
+					// //$NON-NLS-1$
+					// boolean[] foundChildren = new
+					// boolean[children.getLength()];
+					// NodeList attributeList =
+					// BuildpathEntry.getChildAttributes(BuildpathEntry.TAG_ATTRIBUTES,
+					// children, foundChildren);
 
 					/*
 					 * IBuildpathAttribute[] extraAttributes = BuildpathEntry

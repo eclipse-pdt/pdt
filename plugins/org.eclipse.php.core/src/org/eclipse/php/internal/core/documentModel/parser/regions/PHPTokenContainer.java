@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.documentModel.parser.regions;
 
 import java.util.*;
 
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.documentModel.parser.AbstractPHPLexer;
@@ -65,6 +66,8 @@ public class PHPTokenContainer implements Cloneable {
 	 * @throws BadLocationException
 	 *             - if the offset is out of bound
 	 */
+	@SuppressWarnings("null")
+	@NonNull
 	public synchronized ITextRegion getToken(int offset) throws BadLocationException {
 		assert tokensIterator != null;
 		if (phpTokens.isEmpty()) {
@@ -104,6 +107,8 @@ public class PHPTokenContainer implements Cloneable {
 		return result;
 	}
 
+	@SuppressWarnings("null")
+	@NonNull
 	public synchronized ITextRegion[] getTokens(final int offset, final int length) throws BadLocationException {
 		if (length < 0) {
 			throw new BadLocationException("length " + length + " cannot be < 0"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -155,6 +160,8 @@ public class PHPTokenContainer implements Cloneable {
 	 * @return the partition type of the given offset (will never be null)
 	 * @throws BadLocationException
 	 */
+	@SuppressWarnings("null")
+	@NonNull
 	public synchronized String getPartitionType(int offset) throws BadLocationException {
 		ITextRegion token = getToken(offset);
 		assert token != null;

@@ -46,6 +46,7 @@ import org.eclipse.wst.xml.core.internal.Logger;
 public class PHPScriptRegion extends ForeignRegion implements IPHPScriptRegion {
 
 	private static final String PHP_SCRIPT = "PHP Script"; //$NON-NLS-1$
+	@NonNull
 	private static final ITextRegion[] EMPTY_REGION = new ITextRegion[0];
 	private PHPTokenContainer tokensContainer = new PHPTokenContainer();
 	private IProject project;
@@ -105,6 +106,7 @@ public class PHPScriptRegion extends ForeignRegion implements IPHPScriptRegion {
 	/**
 	 * @see IPHPScriptRegion#getPHPTokenType(int)
 	 */
+	@SuppressWarnings("null")
 	@Override
 	public final @NonNull String getPHPTokenType(int relativeOffset) throws BadLocationException {
 		final ITextRegion tokenForOffset = getPHPToken(relativeOffset);

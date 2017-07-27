@@ -11,8 +11,6 @@
 package org.eclipse.php.composer.ui.editor;
 
 import org.eclipse.jface.action.IStatusLineManager;
-import org.eclipse.jface.text.ITextSelection;
-import org.eclipse.jface.text.TextSelection;
 import org.eclipse.php.composer.ui.parts.FormEntry;
 import org.eclipse.php.composer.ui.parts.IFormEntryListener;
 import org.eclipse.ui.IActionBars;
@@ -29,7 +27,7 @@ public class FormEntryAdapter implements IFormEntryListener {
 	}
 
 	public void focusGained(FormEntry entry) {
-		ITextSelection selection = new TextSelection(1, 1);
+		// ITextSelection selection = new TextSelection(1, 1);
 	}
 
 	/*
@@ -100,7 +98,7 @@ public class FormEntryAdapter implements IFormEntryListener {
 	}
 
 	public void selectionChanged(FormEntry entry) {
-		ITextSelection selection = new TextSelection(1, 1);
+		// ITextSelection selection = new TextSelection(1, 1);
 	}
 
 	public void focusLost(FormEntry entry) {

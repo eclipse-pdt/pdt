@@ -69,22 +69,22 @@ public class PHPDocTag extends ASTNode {
 		EXCEPTION("exception"), //$NON-NLS-1$
 		MAGIC("magic"); //$NON-NLS-1$
 
+		@NonNull
 		String name;
+		@NonNull
 		String value;
 
 		private static final class Mapping {
 			private static final Map<Integer, TagKind> mapIds = new HashMap<>();
-			private static final Map<String, TagKind> mapNames = new TreeMap<>(
-					String.CASE_INSENSITIVE_ORDER);
-			private static final Map<String, TagKind> mapValues = new TreeMap<>(
-					String.CASE_INSENSITIVE_ORDER);
+			private static final Map<String, TagKind> mapNames = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+			private static final Map<String, TagKind> mapValues = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 		}
 
-		private TagKind(String name) {
+		private TagKind(@NonNull String name) {
 			this(name, '@' + name);
 		}
 
-		private TagKind(String name, String value) {
+		private TagKind(@NonNull String name, @NonNull String value) {
 			this.name = name;
 			this.value = value;
 			Mapping.mapIds.put(getId(), this);
@@ -140,9 +140,13 @@ public class PHPDocTag extends ASTNode {
 
 	private static final String ELLIPSIS_DOLLAR = FormalParameterEvaluator.ELLIPSIS + "$"; //$NON-NLS-1$
 
+	@NonNull
 	private final TagKind tagKind;
+	@NonNull
 	private final String matchedTag;
+	@NonNull
 	private String value;
+	@NonNull
 	private List<Scalar> texts;
 	private VariableReference variableReference;
 	private TypeReference singleTypeReference;
@@ -151,7 +155,8 @@ public class PHPDocTag extends ASTNode {
 	private List<String> descTexts;
 	private String trimmedDescText;
 
-	public PHPDocTag(int start, int end, TagKind tag, String matchedTag, String value, List<Scalar> texts) {
+	public PHPDocTag(int start, int end, @NonNull TagKind tag, @NonNull String matchedTag, @NonNull String value,
+			@NonNull List<Scalar> texts) {
 		super(start, end);
 		if (!(0 <= start && start <= end) || tag == null || matchedTag == null || value == null || texts == null) {
 			throw new IllegalArgumentException();
@@ -174,6 +179,7 @@ public class PHPDocTag extends ASTNode {
 	/**
 	 * Never null.
 	 */
+	@SuppressWarnings("null")
 	@NonNull
 	public List<String> getDescTexts() {
 		return descTexts;
@@ -182,6 +188,7 @@ public class PHPDocTag extends ASTNode {
 	/**
 	 * Never null.
 	 */
+	@SuppressWarnings("null")
 	@NonNull
 	public String getTrimmedDescText() {
 		return trimmedDescText;
@@ -432,6 +439,7 @@ public class PHPDocTag extends ASTNode {
 	 * 
 	 * @return all type references, empty list otherwise
 	 */
+	@SuppressWarnings("null")
 	@NonNull
 	public List<TypeReference> getTypeReferences() {
 		return typeReferences;
@@ -442,6 +450,7 @@ public class PHPDocTag extends ASTNode {
 	 * 
 	 * @return all references, empty list otherwise
 	 */
+	@SuppressWarnings("null")
 	@NonNull
 	public List<SimpleReference> getAllReferencesWithOrigOrder() {
 		return allReferencesWithOrigOrder;
