@@ -18,10 +18,12 @@ import org.eclipse.dltk.core.ISourceModule;
 
 public class PHPFileHierarchyResolver implements IFileHierarchyResolver {
 
+	@Override
 	public IFileHierarchyInfo resolveDown(ISourceModule file, IProgressMonitor monitor) {
 		return FileNetworkUtility.buildReferencingFilesTree(file, monitor);
 	}
 
+	@Override
 	public IFileHierarchyInfo resolveUp(ISourceModule file, IProgressMonitor monitor) {
 		return FileNetworkUtility.buildReferencedFilesTree(file, monitor);
 	}

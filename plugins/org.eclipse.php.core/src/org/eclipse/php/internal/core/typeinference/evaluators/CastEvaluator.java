@@ -28,6 +28,7 @@ public class CastEvaluator extends GoalEvaluator {
 		super(goal);
 	}
 
+	@Override
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
 		CastExpression castExpression = (CastExpression) typedGoal.getExpression();
@@ -57,6 +58,7 @@ public class CastEvaluator extends GoalEvaluator {
 		return IGoal.NO_GOALS;
 	}
 
+	@Override
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		if (result instanceof PHPClassType) {
 			this.result = (PHPClassType) result;
@@ -66,6 +68,7 @@ public class CastEvaluator extends GoalEvaluator {
 		return IGoal.NO_GOALS;
 	}
 
+	@Override
 	public Object produceResult() {
 		return result;
 	}

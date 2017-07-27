@@ -42,7 +42,7 @@ public class PHPTypeInferenceUtils {
 	}
 
 	private static Collection<IEvaluatedType> resolveAmbiguousTypes(Collection<IEvaluatedType> evaluatedTypes) {
-		List<IEvaluatedType> resolved = new LinkedList<IEvaluatedType>();
+		List<IEvaluatedType> resolved = new LinkedList<>();
 		for (IEvaluatedType type : evaluatedTypes) {
 			if (type instanceof AmbiguousType) {
 				AmbiguousType ambType = (AmbiguousType) type;
@@ -55,7 +55,7 @@ public class PHPTypeInferenceUtils {
 	}
 
 	public static IEvaluatedType combineTypes(Collection<IEvaluatedType> evaluatedTypes) {
-		Set<IEvaluatedType> types = new LinkedHashSet<IEvaluatedType>(resolveAmbiguousTypes(evaluatedTypes));
+		Set<IEvaluatedType> types = new LinkedHashSet<>(resolveAmbiguousTypes(evaluatedTypes));
 		if (types.contains(null)) {
 			types.remove(null);
 			types.add(PHPSimpleTypes.NULL);
@@ -171,7 +171,7 @@ public class PHPTypeInferenceUtils {
 		if (evaluatedType instanceof PHPClassType) {
 			IScriptProject scriptProject = sourceModule.getScriptProject();
 			if (!ScriptProject.hasScriptNature(scriptProject.getProject())) {
-				List<IType> result = new LinkedList<IType>();
+				List<IType> result = new LinkedList<>();
 				try {
 					IType[] types = sourceModule.getTypes();
 					for (IType t : types) {
@@ -210,7 +210,7 @@ public class PHPTypeInferenceUtils {
 				}
 			}
 		} else if (evaluatedType instanceof AmbiguousType) {
-			List<IType> tmpList = new LinkedList<IType>();
+			List<IType> tmpList = new LinkedList<>();
 			IEvaluatedType[] possibleTypes = ((AmbiguousType) evaluatedType).getPossibleTypes();
 			for (IEvaluatedType possibleType : possibleTypes) {
 				IType[] tmpArray = internalGetModelElements(possibleType, context, offset, cache);
@@ -222,7 +222,7 @@ public class PHPTypeInferenceUtils {
 			return tmpList.toArray(new IType[tmpList.size()]);
 		} else if (evaluatedType instanceof MultiTypeType) {
 			MultiTypeType multiTypeType = (MultiTypeType) evaluatedType;
-			List<IType> result = new ArrayList<IType>();
+			List<IType> result = new ArrayList<>();
 			for (IEvaluatedType tmpType : multiTypeType.getTypes()) {
 				IType[] tmpTypes = internalGetModelElements(tmpType, context, offset, cache);
 				if (tmpTypes != null) {

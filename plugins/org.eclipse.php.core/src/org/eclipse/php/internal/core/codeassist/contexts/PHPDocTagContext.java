@@ -53,7 +53,7 @@ public abstract class PHPDocTagContext extends PHPDocContext {
 	}
 
 	private ArrayList<Matcher> createMatcherList(String content) {
-		ArrayList<Matcher> list = new ArrayList<Matcher>(todos.length);
+		ArrayList<Matcher> list = new ArrayList<>(todos.length);
 		for (int i = 0; i < todos.length; i++) {
 			list.add(i, todos[i].matcher(content));
 		}
@@ -64,7 +64,7 @@ public abstract class PHPDocTagContext extends PHPDocContext {
 		Matcher minimal = null;
 		int size = matchers.size();
 		for (int i = 0; i < size;) {
-			Matcher tmp = (Matcher) matchers.get(i);
+			Matcher tmp = matchers.get(i);
 			if (tmp.find(startPosition)) {
 				if (minimal == null || tmp.start() < minimal.start()) {
 					minimal = tmp;
@@ -84,6 +84,7 @@ public abstract class PHPDocTagContext extends PHPDocContext {
 		return matcher != null;
 	}
 
+	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
@@ -112,6 +113,7 @@ public abstract class PHPDocTagContext extends PHPDocContext {
 		return found;
 	}
 
+	@Override
 	public String getPrefix() throws BadLocationException {
 		String prefix = super.getPrefix();
 		if (prefix.length() > 0 && prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {

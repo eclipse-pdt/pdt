@@ -35,7 +35,7 @@ public class DebugMessagesRegistry {
 	private IntHashtable messagesHash = new IntHashtable(50);
 
 	/** Messages types stored by message ID */
-	private Dictionary<String, Integer> messagesTypes = new Hashtable<String, Integer>();
+	private Dictionary<String, Integer> messagesTypes = new Hashtable<>();
 
 	/** Message handlers stored by message type */
 	private IntHashtable handlers = new IntHashtable();
@@ -49,7 +49,7 @@ public class DebugMessagesRegistry {
 		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPDebugPlugin.getID(),
 				EXTENSION_POINT_NAME);
 
-		Map<String, IConfigurationElement> configElementsMap = new HashMap<String, IConfigurationElement>();
+		Map<String, IConfigurationElement> configElementsMap = new HashMap<>();
 		for (final IConfigurationElement element : elements) {
 			if (MESSAGE_TAG.equals(element.getName())) {
 				String messageId = element.getAttribute(ID_ATTRIBUTE);
@@ -72,6 +72,7 @@ public class DebugMessagesRegistry {
 
 			SafeRunnable.run(new SafeRunnable(
 					"Error creation extension for extension-point org.eclipse.php.internal.debug.core.phpDebugMessages") { //$NON-NLS-1$
+				@Override
 				public void run() throws Exception {
 					messages[0] = (IDebugMessage) element.createExecutableExtension(CLASS_ATTRIBUTE);
 				}
@@ -158,6 +159,7 @@ public class DebugMessagesRegistry {
 			final IDebugMessageHandler[] handler = new IDebugMessageHandler[1];
 			SafeRunnable.run(new SafeRunnable(
 					"Error creation handler for extension-point org.eclipse.php.internal.debug.core.phpDebugMessages") { //$NON-NLS-1$
+				@Override
 				public void run() throws Exception {
 					handler[0] = (IDebugMessageHandler) element.createExecutableExtension(HANDLER_ATTRIBUTE);
 				}

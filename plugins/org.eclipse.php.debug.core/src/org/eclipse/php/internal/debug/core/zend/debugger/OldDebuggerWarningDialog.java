@@ -32,6 +32,7 @@ public class OldDebuggerWarningDialog extends Dialog {
 		super(parentShell);
 	}
 
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite composite = (Composite) super.createDialogArea(parent);
 
@@ -44,6 +45,7 @@ public class OldDebuggerWarningDialog extends Dialog {
 		link.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		link.setText(Messages.OldDebuggerWarningDialog_4);
 		link.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent event) {
 				try {
 					IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
@@ -57,6 +59,7 @@ public class OldDebuggerWarningDialog extends Dialog {
 		link.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		link.setText(Messages.OldDebuggerWarningDialog_6);
 		link.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent event) {
 				try {
 					IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
@@ -70,6 +73,7 @@ public class OldDebuggerWarningDialog extends Dialog {
 		final Button button = new Button(composite, SWT.CHECK);
 		button.setText(Messages.OldDebuggerWarningDialog_9);
 		button.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID).putBoolean("DontShowOlderDebuggerWarning", //$NON-NLS-1$
 						button.getSelection());
@@ -79,6 +83,7 @@ public class OldDebuggerWarningDialog extends Dialog {
 		return composite;
 	}
 
+	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 	}

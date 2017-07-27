@@ -26,6 +26,7 @@ public class XDebugVariableValueEditor extends AbstractVariableValueEditor {
 	 * org.eclipse.php.internal.debug.ui.actions.AbstractVariableValueEditor#
 	 * getValueString(org.eclipse.debug.core.model.IVariable)
 	 */
+	@Override
 	protected String getValueString(IVariable variable) throws DebugException {
 		return variable.getValue().getValueString();
 	}

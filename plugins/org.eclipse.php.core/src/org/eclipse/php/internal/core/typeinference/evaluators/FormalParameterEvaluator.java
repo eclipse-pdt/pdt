@@ -41,6 +41,7 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 		super(goal);
 	}
 
+	@Override
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
 		FormalParameter parameter = (FormalParameter) typedGoal.getExpression();
@@ -150,10 +151,12 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 		return IGoal.NO_GOALS;
 	}
 
+	@Override
 	public Object produceResult() {
 		return result;
 	}
 
+	@Override
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		return IGoal.NO_GOALS;
 	}

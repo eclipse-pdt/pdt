@@ -36,7 +36,7 @@ public class PreferencesSupport {
 	 */
 	public PreferencesSupport(String nodeQualifier) {
 		this.nodeQualifier = nodeQualifier;
-		projectToScope = new HashMap<IProject, ProjectScope>();
+		projectToScope = new HashMap<>();
 	}
 
 	/**

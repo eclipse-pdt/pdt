@@ -40,6 +40,7 @@ public class AddFilesRequest extends DebugMessageRequestImpl implements IDebugRe
 		return counter;
 	}
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		int pathSize = in.readInt();
@@ -52,10 +53,12 @@ public class AddFilesRequest extends DebugMessageRequestImpl implements IDebugRe
 		}
 	}
 
+	@Override
 	public int getType() {
 		return 38;
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());

@@ -43,6 +43,7 @@ public class OrganizeIncludesProcessor extends RefactoringProcessor {
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#checkFinalConditions(org.eclipse.core.runtime.IProgressMonitor,
 	 *      org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext)
 	 */
+	@Override
 	public RefactoringStatus checkFinalConditions(IProgressMonitor pm,
 			CheckConditionsContext context) throws OperationCanceledException {
 		RefactoringStatus status = new RefactoringStatus();
@@ -54,6 +55,7 @@ public class OrganizeIncludesProcessor extends RefactoringProcessor {
 	 * 
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#checkInitialConditions(org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public RefactoringStatus checkInitialConditions(IProgressMonitor pm)
 			throws OperationCanceledException {
 		RefactoringStatus status = new RefactoringStatus();
@@ -68,6 +70,7 @@ public class OrganizeIncludesProcessor extends RefactoringProcessor {
 	 * 
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#createChange(org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public Change createChange(IProgressMonitor monitor)
 			throws OperationCanceledException {
 		CompositeChange rootChange = new CompositeChange(
@@ -104,6 +107,7 @@ public class OrganizeIncludesProcessor extends RefactoringProcessor {
 	 * 
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#getElements()
 	 */
+	@Override
 	public Object[] getElements() {
 		return files.toArray();
 	}
@@ -113,6 +117,7 @@ public class OrganizeIncludesProcessor extends RefactoringProcessor {
 	 * 
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#getIdentifier()
 	 */
+	@Override
 	public String getIdentifier() {
 		return getClass().getName();
 	}
@@ -122,6 +127,7 @@ public class OrganizeIncludesProcessor extends RefactoringProcessor {
 	 * 
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#getProcessorName()
 	 */
+	@Override
 	public String getProcessorName() {
 		return "Organize Includes Processor"; //$NON-NLS-1$
 	}
@@ -131,6 +137,7 @@ public class OrganizeIncludesProcessor extends RefactoringProcessor {
 	 * 
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#isApplicable()
 	 */
+	@Override
 	public boolean isApplicable() {
 		return true;
 	}
@@ -141,6 +148,7 @@ public class OrganizeIncludesProcessor extends RefactoringProcessor {
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#loadParticipants(org.eclipse.ltk.core.refactoring.RefactoringStatus,
 	 *      org.eclipse.ltk.core.refactoring.participants.SharableParticipants)
 	 */
+	@Override
 	public RefactoringParticipant[] loadParticipants(RefactoringStatus status,
 			SharableParticipants sharedParticipants) {
 		// No participants

@@ -45,15 +45,18 @@ public class CancelBreakpointRequest extends DebugMessageRequestImpl implements 
 		return this.breakpointId;
 	}
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		setBreakpointID(in.readInt());
 	}
 
+	@Override
 	public int getType() {
 		return 22;
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());

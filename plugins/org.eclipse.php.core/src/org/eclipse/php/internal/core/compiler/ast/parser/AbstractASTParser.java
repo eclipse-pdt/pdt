@@ -56,7 +56,7 @@ abstract public class AbstractASTParser extends lr_parser {
 	public boolean metBracketedNSDecl;
 
 	/** Top declarations stack */
-	public Stack<Statement> declarations = new Stack<Statement>();
+	public Stack<Statement> declarations = new Stack<>();
 
 	public AbstractASTParser() {
 		super();
@@ -143,6 +143,7 @@ abstract public class AbstractASTParser extends lr_parser {
 		return program;
 	}
 
+	@Override
 	public void report_error(String message, Object info) {
 		if (info instanceof Symbol) {
 			if (((Symbol) info).left != -1) {
@@ -154,6 +155,7 @@ abstract public class AbstractASTParser extends lr_parser {
 		}
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public void unrecovered_syntax_error(Symbol cur_token) throws java.lang.Exception {
 		// in case
@@ -163,7 +165,7 @@ abstract public class AbstractASTParser extends lr_parser {
 		PHPModuleDeclaration program = getModuleDeclaration();
 		List<ASTNode> statements = program.getStatements();
 		if (value instanceof List) {
-			statements.addAll((List) value);
+			statements.addAll((List<ASTNode>) value);
 		}
 
 		if (!declarations.isEmpty()) {
@@ -197,6 +199,7 @@ abstract public class AbstractASTParser extends lr_parser {
 		super.unrecovered_syntax_error(cur_token);
 	}
 
+	@Override
 	public void syntax_error(Symbol cur_token) {
 		super.syntax_error(cur_token);
 
@@ -251,6 +254,7 @@ abstract public class AbstractASTParser extends lr_parser {
 
 	protected abstract String getTokenName(int token);
 
+	@Override
 	public void report_fatal_error(String message, Object info) throws java.lang.Exception {
 		/*
 		 * stop parsing (not really necessary since we throw an exception, but)

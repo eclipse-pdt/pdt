@@ -60,6 +60,7 @@ public class YieldExpression extends Expression {
 		this.operator = operator;
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -73,6 +74,7 @@ public class YieldExpression extends Expression {
 		visitor.endvisit(this);
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.YIELD_STATEMENT;
 	}
@@ -92,9 +94,11 @@ public class YieldExpression extends Expression {
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
+	@Override
 	public final void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}

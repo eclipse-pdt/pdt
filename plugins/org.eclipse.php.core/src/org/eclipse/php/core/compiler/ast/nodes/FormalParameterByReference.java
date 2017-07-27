@@ -36,6 +36,7 @@ public class FormalParameterByReference extends FormalParameter {
 		super(start, end, type, parameterName);
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.FORMAL_PARAMETER_BYREF;
 	}

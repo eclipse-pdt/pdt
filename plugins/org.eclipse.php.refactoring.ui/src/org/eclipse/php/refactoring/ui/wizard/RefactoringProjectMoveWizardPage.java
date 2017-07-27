@@ -55,6 +55,7 @@ public class RefactoringProjectMoveWizardPage extends UserInputWizardPage {
 	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
 	 * widgets .Composite)
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
 		Composite result = new Composite(parent, SWT.NONE);
@@ -88,6 +89,7 @@ public class RefactoringProjectMoveWizardPage extends UserInputWizardPage {
 			 * org.eclipse.ui.internal.ide.dialogs.ProjectContentsLocationArea
 			 * .IErrorMessageReporter#reportError(java.lang.String)
 			 */
+			@Override
 			public void reportError(String errorMessage, boolean notError) {
 				if (errorMessage != null) {
 					if (notError) {
@@ -127,7 +129,7 @@ public class RefactoringProjectMoveWizardPage extends UserInputWizardPage {
 	}
 
 	private PHPProjectMoveProcessor getPHPMoveProcessor() {
-		return (PHPProjectMoveProcessor) getRefactoring().getAdapter(PHPProjectMoveProcessor.class);
+		return getRefactoring().getAdapter(PHPProjectMoveProcessor.class);
 	}
 
 	private void addUpdateReferenceComponent(Composite result) {
@@ -142,6 +144,7 @@ public class RefactoringProjectMoveWizardPage extends UserInputWizardPage {
 		// getRefactoringWizard().setForcePreviewReview(true);
 
 		fReferenceCheckbox.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				processor.setUpdateReferences(((Button) e.widget).getSelection());
 				getRefactoringWizard().setForcePreviewReview(processor.getUpdateReferences());

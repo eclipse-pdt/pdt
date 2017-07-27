@@ -41,7 +41,7 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  */
 public class PHPMethodDeclaration extends MethodDeclaration implements IPHPDocAwareDeclaration {
 
-	private static final List<FormalParameter> EMPTY_PARAMETERS = new LinkedList<FormalParameter>();
+	private static final List<FormalParameter> EMPTY_PARAMETERS = new LinkedList<>();
 	private final boolean isReference;
 	private PHPDocBlock phpDoc;
 	private ReturnType returnType;
@@ -72,6 +72,7 @@ public class PHPMethodDeclaration extends MethodDeclaration implements IPHPDocAw
 		setReturnType(returnType);
 	}
 
+	@Override
 	public PHPDocBlock getPHPDoc() {
 		return phpDoc;
 	}
@@ -104,9 +105,11 @@ public class PHPMethodDeclaration extends MethodDeclaration implements IPHPDocAw
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
+	@Override
 	public final void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}

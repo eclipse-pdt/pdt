@@ -61,7 +61,7 @@ public class Scalar extends VariableBase {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(3);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(3);
 		propertyList.add(VALUE_PROPERTY);
 		propertyList.add(TYPE_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
@@ -82,6 +82,7 @@ public class Scalar extends VariableBase {
 		super(ast);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -90,15 +91,19 @@ public class Scalar extends VariableBase {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<Scalar"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -128,6 +133,7 @@ public class Scalar extends VariableBase {
 		}
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.SCALAR;
 	}
@@ -165,12 +171,13 @@ public class Scalar extends VariableBase {
 		postValueChange(TYPE_PROPERTY);
 	}
 
+	@Override
 	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
 		if (property == TYPE_PROPERTY) {
 			if (get) {
 				return getScalarType();
 			} else {
-				setScalarType((Integer) value);
+				setScalarType(value);
 				return 0;
 			}
 		}
@@ -206,6 +213,7 @@ public class Scalar extends VariableBase {
 		postValueChange(VALUE_PROPERTY);
 	}
 
+	@Override
 	final Object internalGetSetObjectProperty(SimplePropertyDescriptor property, boolean get, Object value) {
 		if (property == VALUE_PROPERTY) {
 			if (get) {
@@ -222,6 +230,7 @@ public class Scalar extends VariableBase {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
@@ -238,6 +247,7 @@ public class Scalar extends VariableBase {
 		return PROPERTY_DESCRIPTORS;
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);

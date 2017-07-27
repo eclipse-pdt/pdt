@@ -39,7 +39,7 @@ public class DomParserTests {
 	public static TestWatcher watcher = new TestSuiteWatcher();
 
 	@Parameters
-	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<>();
 
 	static {
 		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/dom_parser/php5" });

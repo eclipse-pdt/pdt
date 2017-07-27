@@ -49,6 +49,7 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 	private boolean isDirectSelf;
 	private boolean isFunctionParameterContext = false;
 
+	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		PHPVersion phpVersion = ProjectOptions.getPHPVersion(sourceModule);
 		if (!super.isValid(sourceModule, offset, requestor)) {

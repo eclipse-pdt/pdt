@@ -50,8 +50,8 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
  */
 class NewWizardNewPage implements ISelectionChangedListener {
 
-	private static final List<String> PROJECT_WIZARD_ID = new ArrayList<String>();
-	private static final Set<String> PROJECT_WIZARD_ID_SET = new HashSet<String>();
+	private static final List<String> PROJECT_WIZARD_ID = new ArrayList<>();
+	private static final Set<String> PROJECT_WIZARD_ID_SET = new HashSet<>();
 
 	static {
 
@@ -97,7 +97,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 	private WizardPatternFilter filteredTreeFilter;
 
 	// Keep track of the wizards we have previously selected
-	private Hashtable selectedWizards = new Hashtable();
+	private Hashtable<IWizardDescriptor, WorkbenchWizardNode> selectedWizards = new Hashtable<>();
 
 	private IDialogSettings settings;
 
@@ -109,7 +109,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 
 	private CLabel descImageCanvas;
 
-	private Map imageTable = new HashMap();
+	private Map<ImageDescriptor, Image> imageTable = new HashMap<>();
 
 	private IWizardDescriptor selectedElement;
 
@@ -181,7 +181,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 	 * Remove all primary wizards that are not in the wizard collection
 	 */
 	private void trimPrimaryWizards() {
-		ArrayList newPrimaryWizards = new ArrayList(primaryWizards.length);
+		ArrayList<IWizardDescriptor> newPrimaryWizards = new ArrayList<>(primaryWizards.length);
 
 		if (wizardCategories == null) {
 			return;// No categories so nothing to trim
@@ -193,7 +193,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 			}
 		}
 
-		primaryWizards = (WorkbenchWizardElement[]) newPrimaryWizards
+		primaryWizards = newPrimaryWizards
 				.toArray(new WorkbenchWizardElement[newPrimaryWizards.size()]);
 	}
 
@@ -326,7 +326,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 		treeViewer.setLabelProvider(new WorkbenchLabelProvider());
 		treeViewer.addSelectionChangedListener(this);
 
-		List inputArray = new ArrayList<>();
+		List<Object> inputArray = new ArrayList<>();
 
 		for (int i = 0; i < primaryWizards.length; i++) {
 			inputArray.add(primaryWizards[i]);
@@ -357,7 +357,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 				}
 			}
 			NewWizardCollectionComparator comparator = NewWizardCollectionComparator.INSTANCE;
-			Set set = new HashSet();
+			Set<Object> set = new HashSet<>();
 			set.addAll(inputArray);
 			comparator.setPrimaryWizards(set);
 			treeViewer.setComparator(comparator);
@@ -496,7 +496,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 							// 'show all' state but not the 'no show all' state
 							// (because they didnt exist).
 							Object[] newExpanded = filteredTree.getViewer().getExpandedElements();
-							List deltaList = new ArrayList(Arrays.asList(delta));
+							List<Object> deltaList = new ArrayList<>(Arrays.asList(delta));
 							deltaList.removeAll(Arrays.asList(newExpanded));
 						}
 					} finally {
@@ -535,8 +535,8 @@ class NewWizardNewPage implements ISelectionChangedListener {
 			 */
 			@Override
 			public void widgetDisposed(DisposeEvent e) {
-				for (Iterator i = imageTable.values().iterator(); i.hasNext();) {
-					((Image) i.next()).dispose();
+				for (Iterator<Image> i = imageTable.values().iterator(); i.hasNext();) {
+					i.next().dispose();
 				}
 				imageTable.clear();
 			}
@@ -554,7 +554,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 			return;
 		}
 
-		List categoriesToExpand = new ArrayList(expandedCategoryPaths.length);
+		List<IWizardCategory> categoriesToExpand = new ArrayList<>(expandedCategoryPaths.length);
 
 		if (wizardCategories != null) {
 			for (int i = 0; i < expandedCategoryPaths.length; i++) {
@@ -681,14 +681,14 @@ class NewWizardNewPage implements ISelectionChangedListener {
 	 */
 	protected void storeExpandedCategories() {
 		Object[] expandedElements = filteredTree.getViewer().getExpandedElements();
-		List expandedElementPaths = new ArrayList(expandedElements.length);
+		List<String> expandedElementPaths = new ArrayList<>(expandedElements.length);
 		for (int i = 0; i < expandedElements.length; ++i) {
 			if (expandedElements[i] instanceof IWizardCategory) {
 				expandedElementPaths.add(((IWizardCategory) expandedElements[i]).getPath().toString());
 			}
 		}
 		settings.put(STORE_EXPANDED_CATEGORIES_ID,
-				(String[]) expandedElementPaths.toArray(new String[expandedElementPaths.size()]));
+				expandedElementPaths.toArray(new String[expandedElementPaths.size()]));
 	}
 
 	/**
@@ -733,7 +733,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 				GridData data = (GridData) descImageCanvas.getLayoutData();
 				data.widthHint = SWT.DEFAULT;
 				data.heightHint = SWT.DEFAULT;
-				Image image = (Image) imageTable.get(descriptor);
+				Image image = imageTable.get(descriptor);
 				if (image == null) {
 					image = descriptor.createImage(false);
 					imageTable.put(descriptor, image);
@@ -782,7 +782,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 		selectedElement = selectedObject;
 		WorkbenchWizardNode selectedNode;
 		if (selectedWizards.containsKey(selectedObject)) {
-			selectedNode = (WorkbenchWizardNode) selectedWizards.get(selectedObject);
+			selectedNode = selectedWizards.get(selectedObject);
 		} else {
 			selectedNode = new WorkbenchWizardNode(page, selectedObject) {
 				@Override
@@ -800,8 +800,8 @@ class NewWizardNewPage implements ISelectionChangedListener {
 		updateDescription(selectedObject);
 	}
 
-	private List<IWizardDescriptor> sortWizard(List wizards) {
-		ArrayList<IWizardDescriptor> result = new ArrayList<IWizardDescriptor>();
+	private List<Object> sortWizard(List<?> wizards) {
+		ArrayList<Object> result = new ArrayList<>();
 		for (String id : PROJECT_WIZARD_ID) {
 			for (int i = 0; i < wizards.size(); i++) {
 				if (wizards.get(i) instanceof IWizardDescriptor) {

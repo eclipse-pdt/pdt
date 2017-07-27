@@ -33,6 +33,7 @@ public class BestMatchPathComparator implements Comparator<PathEntry> {
 		this.segments = path.getSegments();
 	}
 
+	@Override
 	public int compare(PathEntry e1, PathEntry e2) {
 		String[] s1 = e1.getAbstractPath().getSegments();
 		String[] s2 = e2.getAbstractPath().getSegments();

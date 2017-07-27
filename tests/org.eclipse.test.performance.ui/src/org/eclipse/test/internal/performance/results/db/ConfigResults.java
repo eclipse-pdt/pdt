@@ -134,8 +134,8 @@ public BuildResults getBuildResults(String buildName) {
  * @return The list of the builds which names match the given pattern.
  * 	The list is ordered by build results date.
  */
-public List getBuilds(String buildPattern) {
-	List builds = new ArrayList();
+public List<BuildResults> getBuilds(String buildPattern) {
+	List<BuildResults> builds = new ArrayList<>();
 	int size = size();
 	for (int i=0; i<size; i++) {
 		BuildResults buildResults = (BuildResults) this.children.get(i);
@@ -152,8 +152,8 @@ public List getBuilds(String buildPattern) {
  * @param prefixes List of expected prefixes
  * @return A list of builds which names start with one of the given patterns.
  */
-public List getBuildsMatchingPrefixes(List prefixes) {
-	List builds = new ArrayList();
+public List<AbstractResults> getBuildsMatchingPrefixes(List<?> prefixes) {
+	List<AbstractResults> builds = new ArrayList<>();
 	int size = size();
 	int length = prefixes.size();
 	for (int i=0; i<size; i++) {
@@ -295,7 +295,7 @@ public double[] getStatistics() {
  * 	- 2:	standard deviation of these values
  * 	- 3:	coefficient of variation of these values
  */
-public double[] getStatistics(List prefixes) {
+public double[] getStatistics(List<?> prefixes) {
 	return getStatistics(prefixes, DB_Results.getDefaultDimension().getId());
 }
 
@@ -312,7 +312,7 @@ public double[] getStatistics(List prefixes) {
  * 	- 2:	standard deviation of these values
  * 	- 3:	coefficient of variation of these values
  */
-public double[] getStatistics(List prefixes, int dim_id) {
+public double[] getStatistics(List<?> prefixes, int dim_id) {
 	int size = size();
 	int length = prefixes == null ? 0 : prefixes.size();
 	int count = 0;
@@ -471,8 +471,8 @@ public boolean isValid() {
  * @param n Number of last nightly builds to return
  * @return Last n nightly build names preceding current.
  */
-public List lastNightlyBuildNames(int n) {
-	List labels = new ArrayList();
+public List<String> lastNightlyBuildNames(int n) {
+	List<String> labels = new ArrayList<>();
 	for (int i=size()-2; i>=0; i--) {
 		BuildResults buildResults = (BuildResults) this.children.get(i);
 		if (isBuildConcerned(buildResults)) {

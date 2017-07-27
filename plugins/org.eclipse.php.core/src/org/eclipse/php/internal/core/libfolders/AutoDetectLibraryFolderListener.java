@@ -79,7 +79,7 @@ public class AutoDetectLibraryFolderListener implements IResourceChangeListener 
 	}
 
 	private IProject[] filterSuspended(IProject[] projects) {
-		List<IProject> filtered = new ArrayList<IProject>();
+		List<IProject> filtered = new ArrayList<>();
 		for (int i = 0; i < projects.length; i++) {
 			if (!suspendedProjects.contains(projects[i])) {
 				filtered.add(projects[i]);

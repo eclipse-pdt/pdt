@@ -123,6 +123,7 @@ public class NodeFinder extends ApplyAll {
 		fEnd = offset + length;
 	}
 
+	@Override
 	protected boolean apply(ASTNode node) {
 		int nodeStart = node.getStart();
 		int nodeEnd = nodeStart + node.getLength();

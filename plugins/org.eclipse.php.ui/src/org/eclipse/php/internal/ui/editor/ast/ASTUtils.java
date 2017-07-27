@@ -65,7 +65,7 @@ public class ASTUtils {
 						System.err.println(
 								getThreadName() + " - " + DEBUG_PREFIX + "creating AST for: " + input.getElementName()); //$NON-NLS-1$ //$NON-NLS-2$
 					}
-					root[0] = (Program) parser.createAST(progressMonitor);
+					root[0] = parser.createAST(progressMonitor);
 
 					// mark as unmodifiable
 					ASTNodes.setFlagsToAST(root[0], ASTNode.PROTECT);

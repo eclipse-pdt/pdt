@@ -62,8 +62,7 @@ public final class TemplateInformationControlCreator
 			@Override
 			public void setInformation(String content) {
 				TextPresentation presentation = new TextPresentation();
-				HTML2TextReader reader = new HTML2TextReader(new StringReader(content), presentation);
-				try {
+				try (HTML2TextReader reader = new HTML2TextReader(new StringReader(content), presentation)) {
 					super.setInformation(reader.getString());
 				} catch (IOException e) {
 				}

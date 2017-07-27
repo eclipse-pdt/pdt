@@ -91,6 +91,7 @@ public class PHPClassType extends ClassType implements IClassType {
 	 * 
 	 * @return type name
 	 */
+	@Override
 	public String getTypeName() {
 		return typeName;
 	}
@@ -109,10 +110,12 @@ public class PHPClassType extends ClassType implements IClassType {
 		return global;
 	}
 
+	@Override
 	public boolean subtypeOf(IEvaluatedType type) {
 		return false;
 	}
 
+	@Override
 	public String getModelKey() {
 		return typeName;
 	}
@@ -197,6 +200,7 @@ public class PHPClassType extends ClassType implements IClassType {
 		return new PHPClassType(typeName);
 	}
 
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -205,6 +209,7 @@ public class PHPClassType extends ClassType implements IClassType {
 		return result;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

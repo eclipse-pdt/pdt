@@ -26,6 +26,7 @@ public class BreakpointRenameScriptFolderParticipant extends BreakpointRenamePar
 	 * @see org.eclipse.jdt.internal.debug.core.refactoring.
 	 * BreakpointRenameParticipant #accepts(org.eclipse.jdt.core.IModelElement)
 	 */
+	@Override
 	protected boolean accepts(IModelElement element) {
 		return element instanceof ISourceModule;
 	}

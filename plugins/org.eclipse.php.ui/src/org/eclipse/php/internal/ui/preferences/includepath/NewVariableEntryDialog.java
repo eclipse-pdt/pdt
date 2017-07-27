@@ -46,10 +46,11 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
 
 public class NewVariableEntryDialog extends StatusDialog {
 
-	private class VariablesAdapter implements IDialogFieldListener, IListAdapter {
+	private class VariablesAdapter implements IDialogFieldListener, IListAdapter<Object> {
 
 		// -------- IListAdapter --------
 
+		@SuppressWarnings("rawtypes")
 		@Override
 		public void customButtonPressed(ListDialogField field, int index) {
 			switch (index) {
@@ -59,11 +60,13 @@ public class NewVariableEntryDialog extends StatusDialog {
 			}
 		}
 
+		@SuppressWarnings("rawtypes")
 		@Override
 		public void selectionChanged(ListDialogField field) {
 			doSelectionChanged();
 		}
 
+		@SuppressWarnings("rawtypes")
 		@Override
 		public void doubleClicked(ListDialogField field) {
 			doDoubleClick();
@@ -83,7 +86,7 @@ public class NewVariableEntryDialog extends StatusDialog {
 
 	private final int IDX_EXTEND = 0;
 
-	private ListDialogField fVariablesList;
+	private ListDialogField<BPVariableElement> fVariablesList;
 	private boolean fCanExtend;
 	private boolean fIsValidSelection;
 
@@ -94,6 +97,7 @@ public class NewVariableEntryDialog extends StatusDialog {
 	private CLabel fWarning;
 	IEnvironment environment;
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public NewVariableEntryDialog(Shell parent, IEnvironment environment) {
 		super(parent);
 		setTitle(NewWizardMessages.NewVariableEntryDialog_title);
@@ -106,7 +110,7 @@ public class NewVariableEntryDialog extends StatusDialog {
 
 		BPVariableElementLabelProvider labelProvider = new BPVariableElementLabelProvider(false);
 
-		fVariablesList = new ListDialogField(adapter, buttonLabels, labelProvider);
+		fVariablesList = new ListDialogField<BPVariableElement>((IListAdapter) adapter, buttonLabels, labelProvider);
 		fVariablesList.setDialogFieldListener(adapter);
 		fVariablesList.setLabelText(NewWizardMessages.NewVariableEntryDialog_vars_label);
 
@@ -150,7 +154,7 @@ public class NewVariableEntryDialog extends StatusDialog {
 
 	private void initializeElements() {
 		String[] entries = DLTKCore.getBuildpathVariableNames();
-		ArrayList elements = new ArrayList(entries.length);
+		ArrayList<BPVariableElement> elements = new ArrayList<>(entries.length);
 		for (int i = 0; i < entries.length; i++) {
 			String name = entries[i];
 			IPath entryPath = DLTKCore.getBuildpathVariable(name);
@@ -251,13 +255,13 @@ public class NewVariableEntryDialog extends StatusDialog {
 		boolean canExtend = false;
 		StatusInfo status = new StatusInfo();
 
-		List selected = fVariablesList.getSelectedElements();
+		List<BPVariableElement> selected = fVariablesList.getSelectedElements();
 		int nSelected = selected.size();
 
 		if (nSelected > 0) {
 			fResultPaths = new Path[nSelected];
 			for (int i = 0; i < nSelected; i++) {
-				BPVariableElement curr = (BPVariableElement) selected.get(i);
+				BPVariableElement curr = selected.get(i);
 				fResultPaths[i] = new Path(curr.getName());
 				File file = curr.getPath().toFile();
 				if (!file.exists()) {
@@ -336,9 +340,9 @@ public class NewVariableEntryDialog extends StatusDialog {
 	}
 
 	protected final void extendButtonPressed() {
-		List selected = fVariablesList.getSelectedElements();
+		List<BPVariableElement> selected = fVariablesList.getSelectedElements();
 		if (selected.size() == 1) {
-			IPath[] extendedPaths = chooseExtensions((BPVariableElement) selected.get(0));
+			IPath[] extendedPaths = chooseExtensions(selected.get(0));
 			if (extendedPaths != null && extendedPaths.length > 0) {
 				fResultPaths = extendedPaths;
 				super.buttonPressed(IDialogConstants.OK_ID);
@@ -348,17 +352,17 @@ public class NewVariableEntryDialog extends StatusDialog {
 
 	protected final void configButtonPressed() {
 		String id = BuildpathVariablesPreferencePage.ID;
-		Map options = new HashMap();
-		List selected = fVariablesList.getSelectedElements();
+		Map<String, String> options = new HashMap<>();
+		List<BPVariableElement> selected = fVariablesList.getSelectedElements();
 		if (!selected.isEmpty()) {
-			String varName = ((BPVariableElement) selected.get(0)).getName();
+			String varName = selected.get(0).getName();
 			options.put(BuildpathVariablesPreferencePage.DATA_SELECT_VARIABLE, varName);
 		}
 		PreferencesUtil.createPreferenceDialogOn(getShell(), id, new String[] { id }, options).open();
 
-		List oldElements = fVariablesList.getElements();
+		List<BPVariableElement> oldElements = fVariablesList.getElements();
 		initializeElements();
-		List newElements = fVariablesList.getElements();
+		List<BPVariableElement> newElements = fVariablesList.getElements();
 		newElements.removeAll(oldElements);
 		if (!newElements.isEmpty()) {
 			fVariablesList.selectElements(new StructuredSelection(newElements));

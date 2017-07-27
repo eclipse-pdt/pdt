@@ -27,6 +27,7 @@ public class MethodElementReturnTypeGoal extends AbstractMethodReturnTypeGoal {
 		super(context, types, methodName, argNames, offset);
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof MethodElementReturnTypeGoal)) {
 			return false;

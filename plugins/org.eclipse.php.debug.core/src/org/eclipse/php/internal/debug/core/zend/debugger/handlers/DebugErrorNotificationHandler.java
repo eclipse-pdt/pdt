@@ -20,6 +20,7 @@ import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 
 public class DebugErrorNotificationHandler implements IDebugMessageHandler {
 
+	@Override
 	public void handle(IDebugMessage message, PHPDebugTarget debugTarget) {
 		DebuggerErrorNotification parseError = (DebuggerErrorNotification) message;
 		IDebugHandler debugHandler = debugTarget.getRemoteDebugger().getDebugHandler();

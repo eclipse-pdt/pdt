@@ -114,8 +114,8 @@ public class PHPTemplateContext extends ScriptTemplateContext {
 			for (int i = 0; i < dollarVariable.getOffsets().length; i++) {
 				dollarOffsetSet.add(dollarVariable.getOffsets()[i]);
 			}
-			for (Iterator iterator = nonDollarVariables.iterator(); iterator.hasNext();) {
-				TemplateVariable templateVariable = (TemplateVariable) iterator.next();
+			for (Iterator<TemplateVariable> iterator = nonDollarVariables.iterator(); iterator.hasNext();) {
+				TemplateVariable templateVariable = iterator.next();
 				if (templateVariable.getOffsets().length > 0 && isbehind(templateVariable, dollarOffsetSet)) {
 					int[] offsets = new int[templateVariable.getOffsets().length];
 					for (int i = 0; i < templateVariable.getOffsets().length; i++) {

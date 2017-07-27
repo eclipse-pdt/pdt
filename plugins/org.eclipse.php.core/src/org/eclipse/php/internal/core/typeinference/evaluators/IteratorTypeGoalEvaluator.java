@@ -49,19 +49,22 @@ public class IteratorTypeGoalEvaluator extends GoalEvaluator {
 		super(goal);
 	}
 
+	@Override
 	public IGoal[] init() {
 		IteratorTypeGoal typedGoal = (IteratorTypeGoal) goal;
 		return new IGoal[] { new ExpressionTypeGoal(goal.getContext(), typedGoal.getExpression()) };
 	}
 
+	@Override
 	public Object produceResult() {
 		return result;
 	}
 
+	@Override
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		IModelAccessCache cache = null;
 		if (goal.getContext() instanceof IModelCacheContext) {
-			cache = (IModelAccessCache) ((IModelCacheContext) goal.getContext()).getCache();
+			cache = ((IModelCacheContext) goal.getContext()).getCache();
 		}
 		String variableName = null;
 		IteratorTypeGoal iteratorTypeGoal = (IteratorTypeGoal) goal;
@@ -78,7 +81,7 @@ public class IteratorTypeGoalEvaluator extends GoalEvaluator {
 				if (subgoal instanceof ExpressionTypeGoal) {
 					ISourceModule sourceModule = ((ISourceModuleContext) subgoal.getContext()).getSourceModule();
 					PHPClassType classType = (PHPClassType) result;
-					List<IGoal> subGoals = new LinkedList<IGoal>();
+					List<IGoal> subGoals = new LinkedList<>();
 					try {
 						// XXX: offset is 0 here but it should still work,
 						// because classType already contains the namespace part

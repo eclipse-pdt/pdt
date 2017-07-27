@@ -34,6 +34,7 @@ public class ExtractVariableActionDelegate implements IEditorActionDelegate, IWo
 	private IEditorPart targetEditor;
 	private Shell shell;
 
+	@Override
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		if (targetEditor == null)
 			return;
@@ -45,6 +46,7 @@ public class ExtractVariableActionDelegate implements IEditorActionDelegate, IWo
 
 	}
 
+	@Override
 	public void run(IAction action) {
 		if (targetEditor == null) {
 			targetEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
@@ -65,7 +67,7 @@ public class ExtractVariableActionDelegate implements IEditorActionDelegate, IWo
 			model = StructuredModelManager.getModelManager().getExistingModelForEdit(file);
 			IStructuredDocument structuredDocument = model.getStructuredDocument();
 
-			IModelElement source = ((PHPStructuredEditor) phpEditor).getModelElement();
+			IModelElement source = phpEditor.getModelElement();
 
 			if (!(source instanceof ISourceModule)) {
 				MessageDialog.openError(this.shell, "Error", "Unexpected Error"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -96,6 +98,7 @@ public class ExtractVariableActionDelegate implements IEditorActionDelegate, IWo
 		}
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 
 	}
@@ -104,10 +107,12 @@ public class ExtractVariableActionDelegate implements IEditorActionDelegate, IWo
 		return 0;
 	}
 
+	@Override
 	public void dispose() {
 
 	}
 
+	@Override
 	public void init(IWorkbenchWindow window) {
 
 	}

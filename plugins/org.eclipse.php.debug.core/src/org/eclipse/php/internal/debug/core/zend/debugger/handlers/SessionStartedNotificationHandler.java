@@ -19,6 +19,7 @@ import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 
 public class SessionStartedNotificationHandler implements IDebugMessageHandler {
 
+	@Override
 	public void handle(IDebugMessage message, PHPDebugTarget debugTarget) {
 		DebugSessionStartedNotification notification = (DebugSessionStartedNotification) message;
 		IDebugHandler debugHandler = debugTarget.getRemoteDebugger().getDebugHandler();

@@ -70,7 +70,7 @@ public class PHPsSearchResultDialog extends MessageDialog {
 
 	private List<PHPexeItem> results;
 	private CheckboxTableViewer resultTableViewer;
-	private ArrayList<PHPexeItem> phpExecs = new ArrayList<PHPexeItem>();
+	private ArrayList<PHPexeItem> phpExecs = new ArrayList<>();
 
 	protected PHPsSearchResultDialog(List<PHPexeItem> results, String message) {
 		super(PlatformUI.getWorkbench().getDisplay().getActiveShell(),

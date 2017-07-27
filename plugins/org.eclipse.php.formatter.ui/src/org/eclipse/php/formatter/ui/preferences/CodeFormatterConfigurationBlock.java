@@ -397,7 +397,7 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 		}
 
 		if (profiles == null)
-			profiles = new ArrayList<Profile>();
+			profiles = new ArrayList<>();
 
 		PreferencesAccess access = PreferencesAccess.getWorkingCopyPreferences(fManager);
 

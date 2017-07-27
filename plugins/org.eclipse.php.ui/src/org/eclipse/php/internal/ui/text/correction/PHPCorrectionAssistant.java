@@ -180,7 +180,7 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 		} catch (BadLocationException e) {
 			PHPUiPlugin.log(e);
 		}
-		fCurrentAnnotations = (Annotation[]) resultingAnnotations.toArray(new Annotation[resultingAnnotations.size()]);
+		fCurrentAnnotations = resultingAnnotations.toArray(new Annotation[resultingAnnotations.size()]);
 
 		return super.showPossibleQuickAssists();
 	}
@@ -219,7 +219,7 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 			List<Position> allPositions = new ArrayList<>();
 			int bestOffset = Integer.MAX_VALUE;
 			while (iter.hasNext()) {
-				Annotation annot = (Annotation) iter.next();
+				Annotation annot = iter.next();
 				if (PHPCorrectionProcessor.isQuickFixableType(annot)) {
 					Position pos = model.getPosition(annot);
 					if (pos != null && isInside(pos.offset, rangeStart, rangeEnd)) { // inside
@@ -235,7 +235,7 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 				return invocationLocation;
 			}
 			for (int i = 0; i < allPositions.size(); i++) {
-				Position pos = (Position) allPositions.get(i);
+				Position pos = allPositions.get(i);
 				if (isInside(bestOffset, pos.offset, pos.offset + pos.length)) {
 					resultingAnnotations.add(allAnnotations.get(i));
 				}
@@ -243,7 +243,7 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 			return bestOffset;
 		} else {
 			while (iter.hasNext()) {
-				Annotation annot = (Annotation) iter.next();
+				Annotation annot = iter.next();
 				if (PHPCorrectionProcessor.isQuickFixableType(annot)) {
 					Position pos = model.getPosition(annot);
 					if (pos != null && isInside(invocationLocation, pos.offset, pos.offset + pos.length)) {

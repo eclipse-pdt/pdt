@@ -40,10 +40,12 @@ public class PHPNamespaceType implements IClassType {
 	 * 
 	 * @return namespace name
 	 */
+	@Override
 	public String getTypeName() {
 		return namespace;
 	}
 
+	@Override
 	public boolean subtypeOf(IEvaluatedType type) {
 		return false;
 	}
@@ -69,6 +71,7 @@ public class PHPNamespaceType implements IClassType {
 		return null;
 	}
 
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -76,6 +79,7 @@ public class PHPNamespaceType implements IClassType {
 		return result;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

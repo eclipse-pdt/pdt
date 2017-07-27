@@ -102,7 +102,7 @@ public class CodeAssistTests {
 	}
 
 	@Parameters
-	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<>();
 	public static final String DEFAULT_CURSOR = "|";
 
 	static {
@@ -194,7 +194,7 @@ public class CodeAssistTests {
 		String fileName = Paths.get(pdttFile.getFileName()).getFileName().toString();
 		fileName = fileName.substring(0, fileName.indexOf('.'));
 		testFile = TestUtils.createFile(project, fileName + ".php", data);
-		this.otherFiles = new ArrayList<IFile>(otherFiles.length);
+		this.otherFiles = new ArrayList<>(otherFiles.length);
 		int i = 0;
 		for (String otherFileContent : otherFiles) {
 			IFile tmp = TestUtils.createFile(project, String.format("test%s.php", i), otherFileContent);
@@ -209,8 +209,9 @@ public class CodeAssistTests {
 		IStructuredDocument document = (IStructuredDocument) new PHPDocumentLoader().createNewStructuredDocument();
 		String content = new String(sourceModule.getSourceAsCharArray());
 		document.set(content);
-		final List<CompletionProposal> proposals = new LinkedList<CompletionProposal>();
+		final List<CompletionProposal> proposals = new LinkedList<>();
 		sourceModule.codeComplete(offset, new TestCompletionRequestor(document, offset) {
+			@Override
 			public void accept(CompletionProposal proposal) {
 				proposals.add(proposal);
 			}

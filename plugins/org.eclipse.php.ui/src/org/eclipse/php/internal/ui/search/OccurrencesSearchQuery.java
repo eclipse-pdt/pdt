@@ -67,9 +67,9 @@ public class OccurrencesSearchQuery implements ISearchQuery {
 		try {
 			OccurrenceLocation[] occurrences = fFinder.getOccurrences();
 			if (occurrences != null) {
-				HashMap lineMap = new HashMap();
+				HashMap<Integer, DLTKElementLine> lineMap = new HashMap<>();
 				Program astRoot = fFinder.getASTRoot();
-				ArrayList resultingMatches = new ArrayList();
+				ArrayList<OccurrenceMatch> resultingMatches = new ArrayList<>();
 
 				for (int i = 0; i < occurrences.length; i++) {
 					OccurrenceLocation loc = occurrences[i];
@@ -87,7 +87,7 @@ public class OccurrencesSearchQuery implements ISearchQuery {
 				}
 
 				if (!resultingMatches.isEmpty()) {
-					fResult.addMatches((Match[]) resultingMatches.toArray(new Match[resultingMatches.size()]));
+					fResult.addMatches(resultingMatches.toArray(new Match[resultingMatches.size()]));
 				}
 			}
 
@@ -99,14 +99,14 @@ public class OccurrencesSearchQuery implements ISearchQuery {
 		return Status.OK_STATUS;
 	}
 
-	private DLTKElementLine getLineElement(Program astRoot, OccurrenceLocation location, HashMap lineToGroup) {
+	private DLTKElementLine getLineElement(Program astRoot, OccurrenceLocation location, HashMap<Integer, DLTKElementLine> lineToGroup) {
 		int lineNumber = astRoot.getLineNumber(location.getOffset());
 		if (lineNumber <= 0) {
 			return null;
 		}
 		DLTKElementLine lineElement = null;
 		Integer key = Integer.valueOf(lineNumber);
-		lineElement = (DLTKElementLine) lineToGroup.get(key);
+		lineElement = lineToGroup.get(key);
 		if (lineElement == null) {
 			int lineStartOffset = astRoot.getPosition(lineNumber, 0);
 			if (lineStartOffset >= 0) {

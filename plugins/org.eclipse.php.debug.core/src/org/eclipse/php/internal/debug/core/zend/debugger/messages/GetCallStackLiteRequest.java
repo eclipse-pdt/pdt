@@ -26,16 +26,20 @@ import org.eclipse.php.debug.core.debugger.messages.IDebugRequestMessage;
  * @author guy
  * @deprecated
  */
+@Deprecated
 public class GetCallStackLiteRequest extends DebugMessageRequestImpl implements IDebugRequestMessage {
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 	}
 
+	@Override
 	public int getType() {
 		return 37;
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());

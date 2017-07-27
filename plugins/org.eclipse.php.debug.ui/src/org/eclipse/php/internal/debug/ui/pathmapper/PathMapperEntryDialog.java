@@ -88,6 +88,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 		return fEditData;
 	}
 
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		parent = (Composite) super.createDialogArea(parent);
 
@@ -101,6 +102,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 
 		fRemotePathText = new Text(mainComp, SWT.BORDER);
 		fRemotePathText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				ignorePathText.setText(fRemotePathText.getText());
 				validate();
@@ -131,6 +133,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 		fWorkspacePathBtn.setLayoutData(layoutData);
 		fWorkspacePathBtn.setText(Messages.PathMapperEntryDialog_3);
 		fWorkspacePathBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				boolean enabled = fWorkspacePathBtn.getSelection();
 				fWorkspacePathText.setEnabled(enabled);
@@ -146,6 +149,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		fWorkspacePathText.setLayoutData(layoutData);
 		fWorkspacePathText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				fWorkspacePathText.setData(Type.WORKSPACE);
 				validate();
@@ -156,6 +160,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 		setButtonLayoutData(fWorkspacePathBrowseBtn);
 		fWorkspacePathBrowseBtn.setText(Messages.PathMapperEntryDialog_4);
 		fWorkspacePathBrowseBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				WorkspaceBrowseDialog dialog = new WorkspaceBrowseDialog(getShell());
 				if (dialog.open() == Window.OK) {
@@ -196,6 +201,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 		fExternalPathBtn.setLayoutData(layoutData);
 		fExternalPathBtn.setText(Messages.PathMapperEntryDialog_5);
 		fExternalPathBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				boolean enabled = fExternalPathBtn.getSelection();
 				fExternalPathText.setEnabled(enabled);
@@ -211,6 +217,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		fExternalPathText.setLayoutData(layoutData);
 		fExternalPathText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				validate();
 			}
@@ -220,6 +227,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 		setButtonLayoutData(fExternalPathBrowseBtn);
 		fExternalPathBrowseBtn.setText(Messages.PathMapperEntryDialog_4);
 		fExternalPathBrowseBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				DirectoryDialog dialog = new DirectoryDialog(getShell());
 				dialog.setMessage("Select local folder");
@@ -236,6 +244,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 		layoutData.horizontalSpan = 2;
 		ignoreMappingBtn.setLayoutData(layoutData);
 		ignoreMappingBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				boolean enabled = ignoreMappingBtn.getSelection();
 				fWorkspacePathText.setEnabled(!enabled);
@@ -443,6 +452,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 			return selectedElement;
 		}
 
+		@Override
 		protected Control createDialogArea(Composite parent) {
 			parent = (Composite) super.createDialogArea(parent);
 			parent.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -459,6 +469,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 			fViewer.setLabelProvider(new LabelProvider());
 
 			fViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+				@Override
 				public void selectionChanged(SelectionChangedEvent event) {
 					validate();
 				}
@@ -490,10 +501,12 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 				this.file = file;
 			}
 
+			@Override
 			public int hashCode() {
 				return file.hashCode() + 13 * includePathEntry.hashCode();
 			}
 
+			@Override
 			public boolean equals(Object obj) {
 				if (!(obj instanceof IPFile)) {
 					return false;
@@ -505,10 +518,11 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 
 		class ContentProvider implements ITreeContentProvider {
 
+			@Override
 			public Object[] getChildren(Object parentElement) {
 				try {
 					if (parentElement instanceof IContainer) {
-						List<Object> r = new LinkedList<Object>();
+						List<Object> r = new LinkedList<>();
 						// Add all members:
 						IContainer container = (IContainer) parentElement;
 						IResource[] members = container.members();
@@ -561,11 +575,12 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 						File file = ipFile.file;
 						if (file.isDirectory()) {
 							File dirs[] = file.listFiles(new FileFilter() {
+								@Override
 								public boolean accept(File pathname) {
 									return pathname.isDirectory();
 								}
 							});
-							List<Object> r = new ArrayList<Object>(dirs.length);
+							List<Object> r = new ArrayList<>(dirs.length);
 							for (File dir : dirs) {
 								r.add(new IPFile(ipFile.includePathEntry, dir));
 							}
@@ -577,6 +592,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 				return new Object[0];
 			}
 
+			@Override
 			public Object getParent(Object element) {
 				if (element instanceof IResource) {
 					return ((IResource) element).getParent();
@@ -588,23 +604,28 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 				return null;
 			}
 
+			@Override
 			public boolean hasChildren(Object element) {
 				return getChildren(element).length > 0;
 			}
 
+			@Override
 			public Object[] getElements(Object inputElement) {
 				return getChildren(inputElement);
 			}
 
+			@Override
 			public void dispose() {
 			}
 
+			@Override
 			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			}
 		}
 
 		class LabelProvider extends ScriptUILabelProvider {
 
+			@Override
 			public Image getImage(Object element) {
 				if (element instanceof IBuildpathEntry) {
 					IBuildpathEntry includePathEntry = (IBuildpathEntry) element;
@@ -620,6 +641,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 				return super.getImage(element);
 			}
 
+			@Override
 			public String getText(Object element) {
 				if (element instanceof IBuildpathEntry) {
 					IBuildpathEntry includePathEntry = (IBuildpathEntry) element;

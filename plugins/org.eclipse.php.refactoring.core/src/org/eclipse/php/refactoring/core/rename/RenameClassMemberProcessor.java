@@ -47,9 +47,7 @@ import org.eclipse.php.refactoring.core.utils.RefactoringUtility;
  * 
  * @author Roy, 2007
  */
-@SuppressWarnings("restriction")
-public class RenameClassMemberProcessor extends AbstractRenameProcessor<IFile>
-		implements ITextUpdating {
+public class RenameClassMemberProcessor extends AbstractRenameProcessor<IFile> implements ITextUpdating {
 
 	private static final String RENAME_IS_PROCESSING = PHPRefactoringCoreMessages
 			.getString("RenameClassPropertyProcessor.2"); //$NON-NLS-1$
@@ -92,15 +90,13 @@ public class RenameClassMemberProcessor extends AbstractRenameProcessor<IFile>
 	/**
 	 * Derive the change
 	 */
-	public Change createChange(IProgressMonitor pm) throws CoreException,
-			OperationCanceledException {
+	@Override
+	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		CompositeChange rootChange = new CompositeChange(
-				PHPRefactoringCoreMessages
-						.getString("RenameClassPropertyProcessor.7")); //$NON-NLS-1$
+				PHPRefactoringCoreMessages.getString("RenameClassPropertyProcessor.7")); //$NON-NLS-1$
 		rootChange.markAsSynthetic();
 		try {
-			pm.beginTask(RenameClassMemberProcessor.RENAME_IS_PROCESSING,
-					participantFiles.size());
+			pm.beginTask(RenameClassMemberProcessor.RENAME_IS_PROCESSING, participantFiles.size());
 			pm.setTaskName(RenameClassMemberProcessor.CREATING_MODIFICATIONS_LABEL);
 
 			if (pm.isCanceled())
@@ -113,10 +109,8 @@ public class RenameClassMemberProcessor extends AbstractRenameProcessor<IFile>
 			for (Entry<IFile, Program> entry : participantFiles.entrySet()) {
 				final IFile file = entry.getKey();
 				final Program program = entry.getValue();
-				final RenameClassMember rename = new RenameClassMember(file,
-						getCurrentElementName(), newElementName,
-						getUpdateTextualMatches(), typeBinding, getParent(
-								identifier).getType(), identifier);
+				final RenameClassMember rename = new RenameClassMember(file, getCurrentElementName(), newElementName,
+						getUpdateTextualMatches(), typeBinding, getParent(identifier).getType(), identifier);
 
 				// aggregate the changes identifiers
 				try {
@@ -146,22 +140,27 @@ public class RenameClassMemberProcessor extends AbstractRenameProcessor<IFile>
 		}
 	}
 
+	@Override
 	public Object[] getElements() {
 		return new Object[] { identifier };
 	}
 
+	@Override
 	public String getIdentifier() {
 		return RenameClassMemberProcessor.ID_RENAME_CLASS_MEMBER;
 	}
 
+	@Override
 	public String getProcessorName() {
 		return RenameClassMemberProcessor.RENAME_CLASS_MEMBER_PROCESSOR_NAME;
 	}
 
+	@Override
 	public Object getNewElement() {
 		return getNewElementName();
 	}
 
+	@Override
 	public String getCurrentElementName() {
 		if (identifier instanceof Variable) {
 			Identifier id = (Identifier) ((Variable) identifier).getName();
@@ -172,15 +171,13 @@ public class RenameClassMemberProcessor extends AbstractRenameProcessor<IFile>
 		}
 
 		if (identifier instanceof FunctionDeclaration) {
-			Expression name = ((FunctionDeclaration) identifier)
-					.getFunctionName();
+			Expression name = ((FunctionDeclaration) identifier).getFunctionName();
 
 			return ((Identifier) name).getName();
 		}
 
 		if (identifier instanceof MethodDeclaration) {
-			Expression name = ((MethodDeclaration) identifier).getFunction()
-					.getFunctionName();
+			Expression name = ((MethodDeclaration) identifier).getFunction().getFunctionName();
 
 			return ((Identifier) name).getName();
 		}
@@ -188,18 +185,22 @@ public class RenameClassMemberProcessor extends AbstractRenameProcessor<IFile>
 		return identifier.toString();
 	}
 
+	@Override
 	public boolean canEnableTextUpdating() {
 		return true;
 	}
 
+	@Override
 	public String getCurrentElementQualifier() {
 		return identifier.toString();
 	}
 
+	@Override
 	public boolean getUpdateTextualMatches() {
 		return isUpdateTextualMatches;
 	}
 
+	@Override
 	public void setUpdateTextualMatches(boolean update) {
 		isUpdateTextualMatches = update;
 	}
@@ -212,8 +213,7 @@ public class RenameClassMemberProcessor extends AbstractRenameProcessor<IFile>
 				return reference.getClassName().resolveTypeBinding();
 			} else if (identifier.getParent().getType() == ASTNode.TRAIT_ALIAS) {
 				TraitAlias traitAlias = (TraitAlias) identifier.getParent();
-				List<NamespaceName> nameList = ((TraitUseStatement) traitAlias
-						.getParent().getParent()).getTraitList();
+				List<NamespaceName> nameList = ((TraitUseStatement) traitAlias.getParent().getParent()).getTraitList();
 				String memberName = null;
 				if (identifier == traitAlias.getFunctionName()) {
 					Expression expression = traitAlias.getTraitMethod();
@@ -227,18 +227,13 @@ public class RenameClassMemberProcessor extends AbstractRenameProcessor<IFile>
 					memberName = ((Identifier) identifier).getName();
 				}
 				for (NamespaceName namespaceName : nameList) {
-					ITypeBinding typeBinding = namespaceName
-							.resolveTypeBinding();
-					if (typeBinding != null && typeBinding.isTrait()
-							&& typeBinding.getPHPElement() != null) {
+					ITypeBinding typeBinding = namespaceName.resolveTypeBinding();
+					if (typeBinding != null && typeBinding.isTrait() && typeBinding.getPHPElement() != null) {
 						try {
-							IModelElement[] members = ((IType) typeBinding
-									.getPHPElement()).getChildren();
+							IModelElement[] members = ((IType) typeBinding.getPHPElement()).getChildren();
 							for (IModelElement modelElement : members) {
-								if (modelElement.getElementName().equals(
-										memberName)
-										|| modelElement.getElementName()
-												.equals("$" + memberName)) { //$NON-NLS-1$
+								if (modelElement.getElementName().equals(memberName)
+										|| modelElement.getElementName().equals("$" + memberName)) { //$NON-NLS-1$
 									return typeBinding;
 								}
 							}
@@ -347,20 +342,18 @@ public class RenameClassMemberProcessor extends AbstractRenameProcessor<IFile>
 
 	@Override
 	protected void collectReferences(Program program, IProgressMonitor pm) {
-		final ArrayList<IResource> list = new ArrayList<IResource>();
+		final ArrayList<IResource> list = new ArrayList<>();
 
 		if (identifier instanceof Identifier) {
 			if (identifier.getParent().getType() == ASTNode.FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE) {
-				list.add(this.identifier.getProgramRoot().getSourceModule()
-						.getResource());
+				list.add(this.identifier.getProgramRoot().getSourceModule().getResource());
 			} else if (identifier.getParent().getType() == ASTNode.TRAIT_ALIAS) {
-				list.add(this.identifier.getProgramRoot().getSourceModule()
-						.getResource());
+				list.add(this.identifier.getProgramRoot().getSourceModule().getResource());
 			}
 		}
 		try {
-			IModelElement[] elements = this.identifier.getProgramRoot()
-					.getSourceModule().codeSelect(identifier.getStart(), 0);
+			IModelElement[] elements = this.identifier.getProgramRoot().getSourceModule()
+					.codeSelect(identifier.getStart(), 0);
 			for (IModelElement modelElement : elements) {
 				if (modelElement instanceof ITraitMember) {
 					ITraitMember tm = (ITraitMember) modelElement;
@@ -369,32 +362,25 @@ public class RenameClassMemberProcessor extends AbstractRenameProcessor<IFile>
 			}
 		} catch (ModelException e1) {
 		}
-		IScriptProject project = this.identifier.getProgramRoot()
-				.getSourceModule().getScriptProject();
+		IScriptProject project = this.identifier.getProgramRoot().getSourceModule().getScriptProject();
 
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(project,
-				getSearchFlags(false));
+		IDLTKSearchScope scope = SearchEngine.createSearchScope(project, getSearchFlags(false));
 
 		ASTNode node = getParent(identifier);
 
 		SearchPattern pattern = null;
 		if (node instanceof Variable || node instanceof FieldsDeclaration) {
-			pattern = SearchPattern.createPattern(
-					"$" + getCurrentElementName(), IDLTKSearchConstants.FIELD, //$NON-NLS-1$
-					IDLTKSearchConstants.ALL_OCCURRENCES,
-					SearchPattern.R_ERASURE_MATCH,
+			pattern = SearchPattern.createPattern("$" + getCurrentElementName(), IDLTKSearchConstants.FIELD, //$NON-NLS-1$
+					IDLTKSearchConstants.ALL_OCCURRENCES, SearchPattern.R_ERASURE_MATCH,
 					PHPLanguageToolkit.getDefault());
 			SearchEngine engine = new SearchEngine();
 			try {
-				engine.search(pattern, new SearchParticipant[] { SearchEngine
-						.getDefaultSearchParticipant() }, scope,
+				engine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope,
 						new SearchRequestor() {
 							@Override
-							public void acceptSearchMatch(SearchMatch match)
-									throws CoreException {
+							public void acceptSearchMatch(SearchMatch match) throws CoreException {
 
-								IModelElement element = (IModelElement) match
-										.getElement();
+								IModelElement element = (IModelElement) match.getElement();
 								list.add(element.getResource());
 
 							}
@@ -403,24 +389,18 @@ public class RenameClassMemberProcessor extends AbstractRenameProcessor<IFile>
 			}
 		}
 
-		if (node instanceof ConstantDeclaration
-				|| node instanceof StaticConstantAccess) {
-			pattern = SearchPattern.createPattern(getCurrentElementName(),
-					IDLTKSearchConstants.FIELD,
-					IDLTKSearchConstants.ALL_OCCURRENCES,
-					SearchPattern.R_ERASURE_MATCH,
+		if (node instanceof ConstantDeclaration || node instanceof StaticConstantAccess) {
+			pattern = SearchPattern.createPattern(getCurrentElementName(), IDLTKSearchConstants.FIELD,
+					IDLTKSearchConstants.ALL_OCCURRENCES, SearchPattern.R_ERASURE_MATCH,
 					PHPLanguageToolkit.getDefault());
 			SearchEngine engine = new SearchEngine();
 			try {
-				engine.search(pattern, new SearchParticipant[] { SearchEngine
-						.getDefaultSearchParticipant() }, scope,
+				engine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope,
 						new SearchRequestor() {
 							@Override
-							public void acceptSearchMatch(SearchMatch match)
-									throws CoreException {
+							public void acceptSearchMatch(SearchMatch match) throws CoreException {
 
-								IModelElement element = (IModelElement) match
-										.getElement();
+								IModelElement element = (IModelElement) match.getElement();
 								list.add(element.getResource());
 							}
 						}, new NullProgressMonitor());
@@ -428,26 +408,18 @@ public class RenameClassMemberProcessor extends AbstractRenameProcessor<IFile>
 			}
 		}
 
-		int matchMode = SearchPattern.R_EXACT_MATCH
-				| SearchPattern.R_ERASURE_MATCH;
+		int matchMode = SearchPattern.R_EXACT_MATCH | SearchPattern.R_ERASURE_MATCH;
 
-		if (node instanceof FunctionDeclaration
-				|| node instanceof MethodDeclaration
-				|| node instanceof FunctionName) {
-			pattern = SearchPattern.createPattern(getCurrentElementName(),
-					IDLTKSearchConstants.METHOD,
-					IDLTKSearchConstants.ALL_OCCURRENCES, matchMode,
-					PHPLanguageToolkit.getDefault());
+		if (node instanceof FunctionDeclaration || node instanceof MethodDeclaration || node instanceof FunctionName) {
+			pattern = SearchPattern.createPattern(getCurrentElementName(), IDLTKSearchConstants.METHOD,
+					IDLTKSearchConstants.ALL_OCCURRENCES, matchMode, PHPLanguageToolkit.getDefault());
 			SearchEngine engine = new SearchEngine();
 			try {
-				engine.search(pattern, new SearchParticipant[] { SearchEngine
-						.getDefaultSearchParticipant() }, scope,
+				engine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope,
 						new SearchRequestor() {
 							@Override
-							public void acceptSearchMatch(SearchMatch match)
-									throws CoreException {
-								IModelElement element = (IModelElement) match
-										.getElement();
+							public void acceptSearchMatch(SearchMatch match) throws CoreException {
+								IModelElement element = (IModelElement) match.getElement();
 								list.add(element.getResource());
 							}
 						}, new NullProgressMonitor());
@@ -459,8 +431,7 @@ public class RenameClassMemberProcessor extends AbstractRenameProcessor<IFile>
 			IResource file = it.next();
 			if (file instanceof IFile) {
 				try {
-					participantFiles.put((IFile) file,
-							RefactoringUtility.getProgramForFile((IFile) file));
+					participantFiles.put((IFile) file, RefactoringUtility.getProgramForFile((IFile) file));
 				} catch (Exception e) {
 				}
 			}
@@ -475,14 +446,14 @@ public class RenameClassMemberProcessor extends AbstractRenameProcessor<IFile>
 			node = identifier;
 		}
 
-		if (node instanceof Variable
-				&& node.getParent() instanceof FunctionName) {
+		if (node instanceof Variable && node.getParent() instanceof FunctionName) {
 			return node.getParent();
 		}
 		return node;
 
 	}
 
+	@Override
 	public RefactoringStatus getRefactoringStatus(IFile key, Program program) {
 
 		int type = PHPElementConciliator.concile(identifier);
@@ -490,13 +461,11 @@ public class RenameClassMemberProcessor extends AbstractRenameProcessor<IFile>
 		identifier.getParent();
 		if (type == PHPElementConciliator.CONCILIATOR_CLASS_MEMBER) {
 			final TypeDeclaration host = RefactoringUtility.getType(identifier);
-			if (host != null
-					&& PHPElementConciliator.classMemeberAlreadyExists(host,
-							getNewElementName(), identifier.getParent()
-									.getType())) {
-				final String message = MessageFormat
-						.format("A same class member with name {0} already exist in the same class scope", //$NON-NLS-1$
-								new Object[] { getNewElementName() });
+			if (host != null && PHPElementConciliator.classMemeberAlreadyExists(host, getNewElementName(),
+					identifier.getParent().getType())) {
+				final String message = MessageFormat.format(
+						"A same class member with name {0} already exist in the same class scope", //$NON-NLS-1$
+						new Object[] { getNewElementName() });
 				return RefactoringStatus.createWarningStatus(message);
 			}
 		}
@@ -505,21 +474,18 @@ public class RenameClassMemberProcessor extends AbstractRenameProcessor<IFile>
 	}
 
 	@Override
-	public RefactoringParticipant[] loadParticipants(RefactoringStatus status,
-			SharableParticipants sharedParticipants) throws CoreException {
-		String[] affectedNatures = ResourceProcessors
-				.computeAffectedNatures(resource);
-		RenameArguments fRenameArguments = new RenameArguments(
-				getNewElementName(), false);
-		return ParticipantManager.loadRenameParticipants(status, this,
-				identifier, fRenameArguments, null, affectedNatures,
-				sharedParticipants);
+	public RefactoringParticipant[] loadParticipants(RefactoringStatus status, SharableParticipants sharedParticipants)
+			throws CoreException {
+		String[] affectedNatures = ResourceProcessors.computeAffectedNatures(resource);
+		RenameArguments fRenameArguments = new RenameArguments(getNewElementName(), false);
+		return ParticipantManager.loadRenameParticipants(status, this, identifier, fRenameArguments, null,
+				affectedNatures, sharedParticipants);
 	}
 
 	class RenameClassMemberParticipant extends RenameParticipant {
 
-		public RefactoringStatus checkConditions(IProgressMonitor pm,
-				CheckConditionsContext context)
+		@Override
+		public RefactoringStatus checkConditions(IProgressMonitor pm, CheckConditionsContext context)
 				throws OperationCanceledException {
 			try {
 				return getProcessor().checkFinalConditions(pm, context);
@@ -528,23 +494,23 @@ public class RenameClassMemberProcessor extends AbstractRenameProcessor<IFile>
 			}
 		}
 
-		public Change createChange(IProgressMonitor pm) throws CoreException,
-				OperationCanceledException {
+		@Override
+		public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 			return getProcessor().createChange(pm);
 		}
 
+		@Override
 		public String getName() {
 			return getProcessorName();
 		}
 
+		@Override
 		@SuppressWarnings("unchecked")
 		protected boolean initialize(Object element) {
 			try {
 				final RenameClassMemberArguments arguments = (RenameClassMemberArguments) getArguments();
-				((AbstractRenameProcessor<IFile>) getProcessor())
-						.setNewElementName(arguments.getNewName());
-				getProcessor()
-						.checkInitialConditions(new NullProgressMonitor());
+				((AbstractRenameProcessor<IFile>) getProcessor()).setNewElementName(arguments.getNewName());
+				getProcessor().checkInitialConditions(new NullProgressMonitor());
 			} catch (Exception e) {
 				return false;
 			}
@@ -553,10 +519,8 @@ public class RenameClassMemberProcessor extends AbstractRenameProcessor<IFile>
 
 	}
 
-	private class RenameClassMemberArguments extends
-			org.eclipse.ltk.core.refactoring.participants.RenameArguments {
-		public RenameClassMemberArguments(String newName,
-				boolean updateReferences) {
+	private class RenameClassMemberArguments extends org.eclipse.ltk.core.refactoring.participants.RenameArguments {
+		public RenameClassMemberArguments(String newName, boolean updateReferences) {
 			super(newName, updateReferences);
 		}
 	}

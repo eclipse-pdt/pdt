@@ -264,6 +264,7 @@ public abstract class AbstractProjectSuite extends TestSuite {
 	protected IProject createProject(final String projectName) throws CoreException {
 		final IProject project = getProject(projectName);
 		IWorkspaceRunnable create = new IWorkspaceRunnable() {
+			@Override
 			public void run(IProgressMonitor monitor) throws CoreException {
 				project.create(null);
 				project.open(null);
@@ -292,6 +293,7 @@ public abstract class AbstractProjectSuite extends TestSuite {
 			final String[] sourceFolders, final String[] projects) throws CoreException {
 		final IScriptProject[] result = new IScriptProject[1];
 		IWorkspaceRunnable create = new IWorkspaceRunnable() {
+			@Override
 			public void run(IProgressMonitor monitor) throws CoreException {
 				// create project
 				createProject(projectName);

@@ -36,7 +36,7 @@ public class FullyQualifiedTraitMethodReference extends Expression {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(1);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(1);
 		propertyList.add(CLASS_NAME);
 		propertyList.add(FUNCTION_NAME);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
@@ -79,6 +79,7 @@ public class FullyQualifiedTraitMethodReference extends Expression {
 		postReplaceChild(oldChild, functionName, FUNCTION_NAME);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -87,24 +88,28 @@ public class FullyQualifiedTraitMethodReference extends Expression {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		className.accept(visitor);
 		functionName.accept(visitor);
 
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		className.traverseTopDown(visitor);
 		functionName.traverseTopDown(visitor);
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		className.traverseBottomUp(visitor);
 		functionName.traverseBottomUp(visitor);
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<FunctionName"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -116,6 +121,7 @@ public class FullyQualifiedTraitMethodReference extends Expression {
 		buffer.append(tab).append("</FunctionName>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE;
 	}
@@ -123,6 +129,7 @@ public class FullyQualifiedTraitMethodReference extends Expression {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
@@ -155,6 +162,7 @@ public class FullyQualifiedTraitMethodReference extends Expression {
 	// return super.internalGetSetObjectProperty(property, get, value);
 	// }
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == CLASS_NAME) {
 			if (get) {

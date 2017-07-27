@@ -91,15 +91,17 @@ public class PHPSessionLaunchMapper implements ILaunchesListener {
 				: "false"); //$NON-NLS-1$
 	}
 
+	@Override
 	public void launchesAdded(ILaunch[] launches) {
 		updateSystemProperty(launches);
 	}
 
+	@Override
 	public void launchesChanged(ILaunch[] launches) {
 		updateSystemProperty(launches);
 	}
 
-	@SuppressWarnings("unchecked")
+	@Override
 	public void launchesRemoved(ILaunch[] launches) {
 		// Remove any launch mapping if the launch was removed and we are still
 		// mapping it.

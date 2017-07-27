@@ -88,14 +88,17 @@ public final class TextSequenceUtilities {
 			this.segmentOriginalStart = segmentOriginalStart;
 		}
 
+		@Override
 		public @NonNull IStructuredDocumentRegion getSource() {
 			return source;
 		}
 
+		@Override
 		public char charAt(int index) {
 			return segment.array[getSegmentOffset(index)];
 		}
 
+		@Override
 		public CharSequence subSequence(int start, int end) {
 			return subTextSequence(start, end);
 		}
@@ -119,6 +122,7 @@ public final class TextSequenceUtilities {
 			this.length = length;
 		}
 
+		@Override
 		public int getOriginalOffset(int index) {
 			return segmentOriginalStart + offset + index;
 		}
@@ -128,14 +132,17 @@ public final class TextSequenceUtilities {
 			return segment.offset + offset + index;
 		}
 
+		@Override
 		public int length() {
 			return length;
 		}
 
+		@Override
 		public @NonNull TextSequence subTextSequence(int start, int end) {
 			return new SimpleTextSequence(source, segment, offset + start, end - start, segmentOriginalStart);
 		}
 
+		@Override
 		public @NonNull TextSequence cutTextSequence(int start, int end) {
 			if (start == 0) {
 				return subTextSequence(end, length);
@@ -169,6 +176,7 @@ public final class TextSequenceUtilities {
 			this.indexes = indexes;
 		}
 
+		@Override
 		public int length() {
 			if (length == -1) {
 				int rv = 0;
@@ -180,6 +188,7 @@ public final class TextSequenceUtilities {
 			return length;
 		}
 
+		@Override
 		public int getOriginalOffset(int index) {
 			int rv = segmentOriginalStart;
 			for (int i = 0; i < indexes.length; i += 2) {
@@ -205,6 +214,7 @@ public final class TextSequenceUtilities {
 			return rv;
 		}
 
+		@Override
 		public @NonNull TextSequence subTextSequence(int start, int end) {
 			if (start == 0 && end == length()) {
 				return this;
@@ -252,6 +262,7 @@ public final class TextSequenceUtilities {
 			return new CompositeTextSequence(source, segment, newIndexes, segmentOriginalStart);
 		}
 
+		@Override
 		public @NonNull TextSequence cutTextSequence(int start, int end) {
 			int startPart = 0;
 			int endPart = 0;

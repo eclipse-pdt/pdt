@@ -35,7 +35,7 @@ public class TypeBinding implements ITypeBinding {
 	private ITypeBinding[] interfaces;
 	private IVariableBinding[] fields;
 	private IMethodBinding[] methods;
-	private Map<IType, ITypeHierarchy> hierarchy = new HashMap<IType, ITypeHierarchy>();
+	private Map<IType, ITypeHierarchy> hierarchy = new HashMap<>();
 
 	/**
 	 * Constructs a new TypeBinding.
@@ -93,6 +93,7 @@ public class TypeBinding implements ITypeBinding {
 	 *             than 255</li>
 	 *             </ul>
 	 */
+	@Override
 	public ITypeBinding createArrayType(int dimension) {
 		// TODO Auto-generated method stub
 		return null;
@@ -109,6 +110,7 @@ public class TypeBinding implements ITypeBinding {
 	 * @return the binary name of this type, or <code>null</code> if the binary
 	 *         name is unknown
 	 */
+	@Override
 	public String getBinaryName() {
 		if (isUnknown() || isAmbiguous()) {
 			return null;
@@ -127,6 +129,7 @@ public class TypeBinding implements ITypeBinding {
 	 * @return the component type binding, or <code>null</code> if this is not
 	 *         an array type
 	 */
+	@Override
 	public ITypeBinding getComponentType() {
 		if (!isArray()) {
 			return null;
@@ -162,6 +165,7 @@ public class TypeBinding implements ITypeBinding {
 	 * @return the list of bindings for the field members of this type, or the
 	 *         empty list if this type does not have field members
 	 */
+	@Override
 	public IVariableBinding[] getDeclaredFields() {
 		if (isUnknown()) {
 			return new IVariableBinding[0];
@@ -169,7 +173,7 @@ public class TypeBinding implements ITypeBinding {
 
 		if (fields == null) {
 			if (isClass()) {
-				List<IVariableBinding> variableBindings = new ArrayList<IVariableBinding>();
+				List<IVariableBinding> variableBindings = new ArrayList<>();
 
 				for (IModelElement element : this.elements) {
 					IType type = (IType) element;
@@ -216,6 +220,7 @@ public class TypeBinding implements ITypeBinding {
 	 *         empty list if this type does not declare any methods or
 	 *         constructors
 	 */
+	@Override
 	public IMethodBinding[] getDeclaredMethods() {
 		if (isUnknown()) {
 			return new IMethodBinding[0];
@@ -223,7 +228,7 @@ public class TypeBinding implements ITypeBinding {
 
 		if (methods == null) {
 			if (isClass() || isTrait()) {
-				List<IMethodBinding> methodBindings = new ArrayList<IMethodBinding>();
+				List<IMethodBinding> methodBindings = new ArrayList<>();
 				for (IModelElement element : this.elements) {
 					IType type = (IType) element;
 					try {
@@ -261,6 +266,7 @@ public class TypeBinding implements ITypeBinding {
 	 * @return the bit-wise or of <code>Modifiers</code> constants
 	 * @see Modifiers
 	 */
+	@Override
 	public int getModifiers() {
 		if (isClass()) {
 			// element.
@@ -275,6 +281,7 @@ public class TypeBinding implements ITypeBinding {
 	 * @return the number of dimension of this array type binding, or
 	 *         <code>0</code> if this is not an array type
 	 */
+	@Override
 	public int getDimensions() {
 		// TODO Auto-generated method stub
 		return 0;
@@ -288,6 +295,7 @@ public class TypeBinding implements ITypeBinding {
 	 * @return the element type binding, or <code>null</code> if this is not an
 	 *         array type
 	 */
+	@Override
 	public ITypeBinding getElementType() {
 		// TODO Auto-generated method stub
 		if (null == this.elements || this.elements.length != 1) {
@@ -326,6 +334,7 @@ public class TypeBinding implements ITypeBinding {
 	 *         class or enum, or interfaces extended by this interface, or
 	 *         otherwise the empty list
 	 */
+	@Override
 	public ITypeBinding[] getInterfaces() {
 		if (isUnknown()) {
 			return new ITypeBinding[0];
@@ -333,7 +342,7 @@ public class TypeBinding implements ITypeBinding {
 
 		if (this.interfaces == null) {
 			IType[] types = getSuperTypes();
-			List<ITypeBinding> interfaces = new LinkedList<ITypeBinding>();
+			List<ITypeBinding> interfaces = new LinkedList<>();
 			for (IType type : types) {
 				try {
 					if (PHPFlags.isInterface(type.getFlags())) {
@@ -345,7 +354,7 @@ public class TypeBinding implements ITypeBinding {
 					}
 				}
 			}
-			this.interfaces = (ITypeBinding[]) interfaces.toArray(new ITypeBinding[interfaces.size()]);
+			this.interfaces = interfaces.toArray(new ITypeBinding[interfaces.size()]);
 		}
 		return this.interfaces;
 	}
@@ -391,6 +400,7 @@ public class TypeBinding implements ITypeBinding {
 	 *         the empty string if it has none
 	 * @see #getQualifiedName()
 	 */
+	@Override
 	public String getName() {
 		return isUnknown() ? null : this.type.getTypeName();
 	}
@@ -400,6 +410,7 @@ public class TypeBinding implements ITypeBinding {
 	 * 
 	 * @return the type
 	 */
+	@Override
 	public IEvaluatedType getEvaluatedType() {
 		return type;
 	}
@@ -407,7 +418,7 @@ public class TypeBinding implements ITypeBinding {
 	protected IType[] getSuperTypes() {
 		if (superTypes == null) {
 			if (elements != null && elements.length > 0) {
-				Set<String> superTypeNames = new HashSet<String>();
+				Set<String> superTypeNames = new HashSet<>();
 				for (IModelElement element : elements) {
 					IType type = (IType) element;
 					try {
@@ -425,7 +436,7 @@ public class TypeBinding implements ITypeBinding {
 						}
 					}
 				}
-				List<IType> typeList = new ArrayList<IType>();
+				List<IType> typeList = new ArrayList<>();
 				List<IModelElement> elementList = Arrays.asList(elements);
 				for (String superTypeName : superTypeNames) {
 					try {
@@ -486,13 +497,14 @@ public class TypeBinding implements ITypeBinding {
 	 *         <code>null</code> if none
 	 * @see AST#resolveWellKnownType(String)
 	 */
+	@Override
 	public ITypeBinding getSuperclass() {
 		if (isUnknown()) {
 			return null;
 		}
 		if (superClass == null) {
 			IType[] types = getSuperTypes();
-			List<IType> superClasses = new LinkedList<IType>();
+			List<IType> superClasses = new LinkedList<>();
 			for (IType type : types) {
 				try {
 					if (!PHPFlags.isInterface(type.getFlags())) {
@@ -531,6 +543,7 @@ public class TypeBinding implements ITypeBinding {
 	 * 
 	 * @return the type binding
 	 */
+	@Override
 	public ITypeBinding getTypeDeclaration() {
 		if (elements.length > 0)
 			return resolver.getTypeBinding((IType) elements[0]);
@@ -545,6 +558,7 @@ public class TypeBinding implements ITypeBinding {
 	 * @see #getElementType()
 	 * @see #getDimensions()
 	 */
+	@Override
 	public boolean isArray() {
 		return type instanceof MultiTypeType;
 	}
@@ -556,6 +570,7 @@ public class TypeBinding implements ITypeBinding {
 	 * @return <code>true</code> if this object represents a class or a
 	 *         recovered binding, and <code>false</code> otherwise
 	 */
+	@Override
 	public boolean isClass() {
 		if (isUnknown()) {
 			return false;
@@ -570,6 +585,7 @@ public class TypeBinding implements ITypeBinding {
 	 * @return <code>true</code> if this object represents a trait or a
 	 *         recovered binding, and <code>false</code> otherwise
 	 */
+	@Override
 	public boolean isTrait() {
 		if (isUnknown()) {
 			return false;
@@ -586,6 +602,7 @@ public class TypeBinding implements ITypeBinding {
 	 * @return <code>true</code> if this object represents an interface, and
 	 *         <code>false</code> otherwise
 	 */
+	@Override
 	public boolean isInterface() {
 		if (isUnknown()) {
 			return false;
@@ -614,6 +631,7 @@ public class TypeBinding implements ITypeBinding {
 	 * @return <code>true</code> if this type binding is for the null type, and
 	 *         <code>false</code> otherwise
 	 */
+	@Override
 	public boolean isNullType() {
 		if (type instanceof SimpleType) {
 			return ((SimpleType) type).getType() == SimpleType.TYPE_NULL;
@@ -633,6 +651,7 @@ public class TypeBinding implements ITypeBinding {
 	 * @return <code>true</code> if this type binding is for a primitive type,
 	 *         and <code>false</code> otherwise
 	 */
+	@Override
 	public boolean isPrimitive() {
 		return type instanceof SimpleType && !isNullType();
 	}
@@ -648,6 +667,7 @@ public class TypeBinding implements ITypeBinding {
 	 *         NOTE: if one of the resolved types are not compatible with this
 	 *         type <code>false</code> is returned
 	 */
+	@Override
 	public boolean isSubTypeCompatible(ITypeBinding otherType) {
 
 		if (otherType == null || elements == null || elements.length == 0) {
@@ -746,6 +766,7 @@ public class TypeBinding implements ITypeBinding {
 	 * 
 	 * @return the key for this binding
 	 */
+	@Override
 	public String getKey() {
 		if (isUnknown() || isAmbiguous()) {
 			return null;
@@ -765,6 +786,7 @@ public class TypeBinding implements ITypeBinding {
 	 * 
 	 * @return one of the kind constants
 	 */
+	@Override
 	public int getKind() {
 		return IBinding.TYPE;
 	}
@@ -799,6 +821,7 @@ public class TypeBinding implements ITypeBinding {
 	 *         <code>null</code> if none
 	 * @since 3.1
 	 */
+	@Override
 	public IModelElement getPHPElement() {
 		if (isUnknown() || isAmbiguous()) {
 			return null;
@@ -818,6 +841,7 @@ public class TypeBinding implements ITypeBinding {
 	 *         <code>false</code> otherwise (Currently, returns false all the
 	 *         time).
 	 */
+	@Override
 	public boolean isDeprecated() {
 		return false;
 	}
@@ -834,6 +858,7 @@ public class TypeBinding implements ITypeBinding {
 	 *            {@inheritDoc}
 	 * @return {@inheritDoc}
 	 */
+	@Override
 	public boolean equals(Object other) {
 		if (other == this) {
 			// identical binding - equal (key or no key)
@@ -882,6 +907,7 @@ public class TypeBinding implements ITypeBinding {
 	 * 
 	 * @see ITypeBinding#isAmbiguous()
 	 */
+	@Override
 	public boolean isAmbiguous() {
 		return !isUnknown() && (elements.length != 1);
 	}
@@ -891,12 +917,14 @@ public class TypeBinding implements ITypeBinding {
 	 * 
 	 * @see ITypeBinding#isUnknown()
 	 */
+	@Override
 	public boolean isUnknown() {
 		return this.elements == null && !(isPrimitive() || isNullType() || isArray());
 	}
 
+	@Override
 	public List<IType> getTraitList(boolean isMethod, String classMemberName, boolean includeSuper) {
-		List<IType> result = new LinkedList<IType>();
+		List<IType> result = new LinkedList<>();
 		if (this.elements == null || elements.length == 0) {
 			return result;
 		}
@@ -960,6 +988,7 @@ public class TypeBinding implements ITypeBinding {
 		return null;
 	}
 
+	@Override
 	public IModelElement[] getPHPElements() {
 		return elements;
 	}

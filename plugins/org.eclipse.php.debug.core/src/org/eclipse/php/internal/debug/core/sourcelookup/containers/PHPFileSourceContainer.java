@@ -28,14 +28,17 @@ public class PHPFileSourceContainer extends AbstractSourceContainer {
 		fStorage = new LocalFileStorage(fFile);
 	}
 
+	@Override
 	public Object[] findSourceElements(String name) throws CoreException {
 		return new Object[] { fStorage };
 	}
 
+	@Override
 	public String getName() {
 		return fFile.getName();
 	}
 
+	@Override
 	public ISourceContainerType getType() {
 		return null;
 	}

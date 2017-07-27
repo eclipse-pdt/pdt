@@ -38,7 +38,7 @@ public class ComposerBuildpathContainerInitializer extends BuildpathContainerIni
 
 	public static final String CONTAINER = ComposerPlugin.ID + ".CONTAINER"; //$NON-NLS-1$
 
-	private Map<IProject, IPreferencesPropagatorListener> project2PhpVerListener = new HashMap<IProject, IPreferencesPropagatorListener>();
+	private Map<IProject, IPreferencesPropagatorListener> project2PhpVerListener = new HashMap<>();
 
 	@Override
 	public void initialize(IPath containerPath, IScriptProject scriptProject) throws CoreException {
@@ -63,6 +63,7 @@ public class ComposerBuildpathContainerInitializer extends BuildpathContainerIni
 			return;
 		}
 		IPreferencesPropagatorListener versionChangeListener = new IPreferencesPropagatorListener() {
+			@Override
 			public void preferencesEventOccured(PreferencesPropagatorEvent event) {
 				try {
 					// Re-initialize when PHP version changes
@@ -72,6 +73,7 @@ public class ComposerBuildpathContainerInitializer extends BuildpathContainerIni
 				}
 			}
 
+			@Override
 			public IProject getProject() {
 				return project;
 			}
@@ -81,6 +83,7 @@ public class ComposerBuildpathContainerInitializer extends BuildpathContainerIni
 		PHPVersionChangedHandler.getInstance().addPHPVersionChangedListener(versionChangeListener);
 
 		ProjectRemovedObserversAttacher.getInstance().addProjectClosedObserver(project, new IProjectClosedObserver() {
+			@Override
 			public void closed() {
 				PHPVersionChangedHandler.getInstance()
 						.removePHPVersionChangedListener(project2PhpVerListener.get(project));
@@ -102,6 +105,7 @@ public class ComposerBuildpathContainerInitializer extends BuildpathContainerIni
 		return null;
 	}
 
+	@Override
 	public void requestBuildpathContainerUpdate(IPath containerPath, IScriptProject project,
 			IBuildpathContainer containerSuggestion) {
 

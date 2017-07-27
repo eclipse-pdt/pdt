@@ -36,7 +36,7 @@ public class SpellcheckDelegateAdapterFactory implements IAdapterFactory {
 	/**
 	 * This list of classes this factory adapts to.
 	 */
-	private static final Class[] ADAPTER_LIST = new Class[] { ISpellcheckDelegate.class };
+	private static final Class<?>[] ADAPTER_LIST = new Class<?>[] { ISpellcheckDelegate.class };
 
 	/**
 	 * The <code>ISpellcheckDelegate</code> this factory adapts to
@@ -106,6 +106,7 @@ public class SpellcheckDelegateAdapterFactory implements IAdapterFactory {
 	 * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object,
 	 *      java.lang.Class)
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		ISpellcheckDelegate decision = null;
@@ -123,7 +124,7 @@ public class SpellcheckDelegateAdapterFactory implements IAdapterFactory {
 	 * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
 	 */
 	@Override
-	public Class[] getAdapterList() {
+	public Class<?>[] getAdapterList() {
 		return ADAPTER_LIST;
 	}
 

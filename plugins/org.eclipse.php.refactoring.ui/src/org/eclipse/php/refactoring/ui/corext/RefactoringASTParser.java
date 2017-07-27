@@ -54,7 +54,7 @@ public class RefactoringASTParser {
 		// if (owner != null)
 		// fParser.setWorkingCopyOwner(owner);
 		// fParser.setCompilerOptions(getCompilerOptions(typeRoot));
-		Program result = (Program) fParser.createAST(pm);
+		Program result = fParser.createAST(pm);
 		return result;
 	}
 
@@ -80,7 +80,7 @@ public class RefactoringASTParser {
 		// fParser.setUnitName(originalCu.getElementName());
 		// fParser.setProject(originalCu.getScriptProject());
 		// fParser.setCompilerOptions(getCompilerOptions(originalCu));
-		Program newCUNode = (Program) fParser.createAST(pm);
+		Program newCUNode = fParser.createAST(pm);
 		return newCUNode;
 	}
 
@@ -167,8 +167,8 @@ public class RefactoringASTParser {
 		IScriptProject project = element.getScriptProject();
 		Map<String, String> options = project.getOptions(true);
 		for (Iterator<String> iter = options.keySet().iterator(); iter.hasNext();) {
-			String key = (String) iter.next();
-			String value = (String) options.get(key);
+			String key = iter.next();
+			String value = options.get(key);
 			if (DLTKCore.ERROR.equals(value) || DLTKCore.WARNING.equals(value)) {
 				// System.out.println("Ignoring - " + key);
 				options.put(key, DLTKCore.IGNORE);

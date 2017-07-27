@@ -54,7 +54,7 @@ public class IfStatement extends Statement {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> list = new ArrayList<StructuralPropertyDescriptor>(3);
+		List<StructuralPropertyDescriptor> list = new ArrayList<>(3);
 		list.add(CONDITION_PROPERTY);
 		list.add(TRUE_STATEMENT_PROPERTY);
 		list.add(FALSE_STATEMENT_PROPERTY);
@@ -79,6 +79,7 @@ public class IfStatement extends Statement {
 		super(ast);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -87,6 +88,7 @@ public class IfStatement extends Statement {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		condition.accept(visitor);
 		trueStatement.accept(visitor);
@@ -95,6 +97,7 @@ public class IfStatement extends Statement {
 		}
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		condition.traverseTopDown(visitor);
@@ -104,6 +107,7 @@ public class IfStatement extends Statement {
 		}
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		condition.traverseBottomUp(visitor);
 		trueStatement.traverseBottomUp(visitor);
@@ -113,6 +117,7 @@ public class IfStatement extends Statement {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<IfStatement"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -134,6 +139,7 @@ public class IfStatement extends Statement {
 		buffer.append(tab).append("</IfStatement>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.IF_STATEMENT;
 	}
@@ -263,6 +269,7 @@ public class IfStatement extends Statement {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
@@ -287,6 +294,7 @@ public class IfStatement extends Statement {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == CONDITION_PROPERTY) {
 			if (get) {

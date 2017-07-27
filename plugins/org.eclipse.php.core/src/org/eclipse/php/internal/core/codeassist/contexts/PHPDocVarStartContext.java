@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class PHPDocVarStartContext extends AbstractPHPDocTagStartContext {
 
-	public static List<String> TAGS = new ArrayList<String>();
+	public static List<String> TAGS = new ArrayList<>();
 
 	static {
 		TAGS.add("return"); //$NON-NLS-1$

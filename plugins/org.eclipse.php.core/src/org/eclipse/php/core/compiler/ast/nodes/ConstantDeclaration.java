@@ -53,10 +53,12 @@ public class ConstantDeclaration extends Declaration implements IPHPDocAwareDecl
 		setName(constant.getName());
 	}
 
+	@Override
 	public PHPDocBlock getPHPDoc() {
 		return phpDoc;
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -66,6 +68,7 @@ public class ConstantDeclaration extends Declaration implements IPHPDocAwareDecl
 		visitor.endvisit(this);
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.CLASS_CONSTANT_DECLARATION;
 	}
@@ -81,9 +84,11 @@ public class ConstantDeclaration extends Declaration implements IPHPDocAwareDecl
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
+	@Override
 	public final void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}

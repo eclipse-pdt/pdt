@@ -30,7 +30,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	private String className;
 	private TypeDeclaration originalDeclarationNode;
 	private Identifier nameNode;
-	private Map<Identifier, String> nodeToFullName = new HashMap<Identifier, String>();
+	private Map<Identifier, String> nodeToFullName = new HashMap<>();
 
 	/**
 	 * @param root
@@ -39,6 +39,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	 *            the selected node (must be an {@link Identifier} instance)
 	 * @return returns a message if there is a problem
 	 */
+	@Override
 	public String initialize(Program root, ASTNode node) {
 		fASTRoot = root;
 		if (node instanceof Identifier) {
@@ -63,6 +64,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#
 	 * findOccurrences ()
 	 */
+	@Override
 	protected void findOccurrences() {
 		fDescription = Messages.format(BASE_DESCRIPTION, className);
 		fASTRoot.accept(this);
@@ -78,6 +80,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 		}
 	}
 
+	@Override
 	public boolean visit(StaticConstantAccess staticDispatch) {
 		Expression className = staticDispatch.getClassName();
 		if (className instanceof Identifier) {
@@ -86,6 +89,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 		return false;
 	}
 
+	@Override
 	public boolean visit(StaticFieldAccess staticDispatch) {
 		Expression className = staticDispatch.getClassName();
 		if (className instanceof Identifier) {
@@ -94,6 +98,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 		return false;
 	}
 
+	@Override
 	public boolean visit(StaticMethodInvocation staticDispatch) {
 		Expression className = staticDispatch.getClassName();
 		if (className instanceof Identifier) {
@@ -102,6 +107,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 		return true;
 	}
 
+	@Override
 	public boolean visit(ClassName className) {
 		if (className.getName() instanceof Identifier) {
 			Identifier identifier = (Identifier) className.getName();
@@ -110,6 +116,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 		return false;
 	}
 
+	@Override
 	public boolean visit(ClassDeclaration classDeclaration) {
 		if (originalDeclarationNode == null || originalDeclarationNode == classDeclaration) {
 			dealIdentifier(classDeclaration.getName());
@@ -118,6 +125,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 		return true;
 	}
 
+	@Override
 	public boolean visit(TraitDeclaration traitDeclaration) {
 		if (originalDeclarationNode == null || originalDeclarationNode == traitDeclaration) {
 			dealIdentifier(traitDeclaration.getName());
@@ -126,6 +134,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 		return true;
 	}
 
+	@Override
 	public boolean visit(InterfaceDeclaration interfaceDeclaration) {
 		if (originalDeclarationNode == null || originalDeclarationNode == interfaceDeclaration) {
 			dealIdentifier(interfaceDeclaration.getName());
@@ -135,6 +144,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 		return true;
 	}
 
+	@Override
 	public boolean visit(CatchClause catchStatement) {
 		List<Expression> classNames = catchStatement.getClassNames();
 		for (Expression className : classNames) {
@@ -145,6 +155,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 		return true;
 	}
 
+	@Override
 	public boolean visit(FormalParameter formalParameter) {
 		Expression className = formalParameter.getParameterType();
 		if (className instanceof Identifier) {
@@ -156,6 +167,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	/**
 	 * check for constructor name (as PHP4 uses)
 	 */
+	@Override
 	public boolean visit(MethodDeclaration methodDeclaration) {
 		final ASTNode parent = methodDeclaration.getParent();
 		if (parent.getType() == ASTNode.BLOCK && parent.getParent().getType() == ASTNode.CLASS_DECLARATION) {
@@ -178,6 +190,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 		return true;
 	}
 
+	@Override
 	public boolean visit(UseStatementPart part) {
 		NamespaceName namespace = part.getName();
 		if (namespace != null) {
@@ -241,6 +254,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * getOccurrenceReadWriteType
 	 * (org.eclipse.php.internal.core.ast.nodes.ASTNode)
 	 */
+	@Override
 	protected int getOccurrenceType(ASTNode node) {
 		// Default return is F_READ_OCCURRENCE, although the implementation of
 		// the Scalar visit might also use F_WRITE_OCCURRENCE
@@ -253,6 +267,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * @see
 	 * org.eclipse.php.internal.ui.search.IOccurrencesFinder#getElementName()
 	 */
+	@Override
 	public String getElementName() {
 		return className;
 	}
@@ -262,6 +277,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * 
 	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getID()
 	 */
+	@Override
 	public String getID() {
 		return ID;
 	}

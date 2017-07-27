@@ -262,7 +262,7 @@ public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 		}
 
 		private DBGpUnreachableValue fValue;
-		protected final Set<Facet> fFacets = new HashSet<Facet>();
+		protected final Set<Facet> fFacets = new HashSet<>();
 
 		/**
 		 * Creates new DBGp uninitialized variable.

@@ -29,6 +29,7 @@ public class FakeConstructor extends FakeMethod {
 		this.isEnclosingClass = isEnclosingClass;
 	}
 
+	@Override
 	public boolean isConstructor() throws ModelException {
 		return true;
 	}

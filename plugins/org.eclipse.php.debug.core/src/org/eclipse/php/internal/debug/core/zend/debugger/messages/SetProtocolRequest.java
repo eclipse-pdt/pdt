@@ -36,6 +36,7 @@ public class SetProtocolRequest extends DebugMessageRequestImpl implements IDebu
 	 * @seeorg.eclipse.php.internal.debug.core.debugger.messages.IDebugMessage#
 	 * deserialize(java.io.DataInputStream)
 	 */
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		setProtocolID(in.readInt());
@@ -47,6 +48,7 @@ public class SetProtocolRequest extends DebugMessageRequestImpl implements IDebu
 	 * @see org.eclipse.php.internal.debug.core.debugger.messages.IDebugMessage#
 	 * getType ()
 	 */
+	@Override
 	public int getType() {
 		return 10000;
 	}
@@ -57,6 +59,7 @@ public class SetProtocolRequest extends DebugMessageRequestImpl implements IDebu
 	 * @see org.eclipse.php.internal.debug.core.debugger.messages.IDebugMessage#
 	 * serialize (java.io.DataOutputStream)
 	 */
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());

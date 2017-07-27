@@ -47,6 +47,7 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws Exception {
 		ICompletionContext context = getContext();
 		if (!(context instanceof IncludeStatementContext)) {
@@ -268,7 +269,7 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 		if (container instanceof IProject) {
 			IScriptProject project = DLTKCore.create((IProject) container);
 			IProjectFragment[] fragments = project.getProjectFragments();
-			List<IContainer> containers = new ArrayList<IContainer>();
+			List<IContainer> containers = new ArrayList<>();
 			for (IProjectFragment fragment : fragments) {
 				if (fragment.getResource() instanceof IFolder || fragment.getResource() instanceof IProject) {
 					containers.add((IContainer) fragment.getResource());

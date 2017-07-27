@@ -34,14 +34,17 @@ public class PHPModelHandler extends AbstractModelHandler {
 		setAssociatedContentTypeId(ContentTypeIdForPHP.ContentTypeID_PHP);
 	}
 
+	@Override
 	public IModelLoader getModelLoader() {
 		return new PHPModelLoader();
 	}
 
+	@Override
 	public IDocumentCharsetDetector getEncodingDetector() {
 		return new PHPDocumentCharsetDetector();
 	}
 
+	@Override
 	public IDocumentLoader getDocumentLoader() {
 		return new PHPDocumentLoader();
 	}

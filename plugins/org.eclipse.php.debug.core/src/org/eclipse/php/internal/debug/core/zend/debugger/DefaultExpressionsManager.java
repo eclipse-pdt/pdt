@@ -28,8 +28,8 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 	private static final byte[] ILLEGAL_VAR = { 'N' };
 
 	private Debugger debugger;
-	private Map<String, Object> hashResultDepthOne = new HashMap<String, Object>();
-	private Map<String, byte[]> hashResultDepthZero = new HashMap<String, byte[]>();
+	private Map<String, Object> hashResultDepthOne = new HashMap<>();
+	private Map<String, byte[]> hashResultDepthZero = new HashMap<>();
 	private ExpressionsValueDeserializer expressionValueDeserializer;
 	private ExpressionsUtil fExpressionsUtil;
 
@@ -42,6 +42,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 		fExpressionsUtil = ExpressionsUtil.getInstance(this);
 	}
 
+	@Override
 	public byte[] getExpressionValue(Expression expression, int depth) {
 		if (!debugger.isActive()) {
 			return ILLEGAL_VAR;
@@ -53,6 +54,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 		return getVariableValue(name, depth);
 	}
 
+	@Override
 	public boolean assignValue(Expression expression, String value, int depth) {
 		String[] name = minimizeArray(expression.getName());
 		String[] path = new String[name.length - 1];
@@ -71,6 +73,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 		return status;
 	}
 
+	@Override
 	public Expression[] getCurrentVariables(int depth) {
 		Expression contextExpression = CurrentContextExpression.build(debugger);
 		byte[] value = getExpressionValue(contextExpression, depth);
@@ -80,7 +83,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 			return EMPTY_VARIABLE_ARRAY;
 		}
 		boolean hasThis = false;
-		List<Expression> currentVariables = new ArrayList<Expression>();
+		List<Expression> currentVariables = new ArrayList<>();
 		for (int i = 0; i < variables.length - 1; i++) {
 			String s = variables[i].getFullName();
 			// Skip $GLOBALS variable (since PHP 5.0.0)
@@ -107,10 +110,12 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 		return variables;
 	}
 
+	@Override
 	public Expression buildExpression(String name) {
 		return new DefaultExpression(name);
 	}
 
+	@Override
 	public void update(Expression expression, int depth) {
 		if (expression.getValue().getDataType() == PHP_VIRTUAL_CLASS)
 			return;
@@ -120,7 +125,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 		if (expressionValue.getDataType() == PHP_OBJECT && CurrentContextExpression.supportsStaticContext(debugger)) {
 			Expression[] expressionStaticNodes = fExpressionsUtil
 					.fetchStaticMembers((String) expressionValue.getValue());
-			List<Expression> allNodes = new ArrayList<Expression>();
+			List<Expression> allNodes = new ArrayList<>();
 			allNodes.addAll(Arrays.asList(expressionStaticNodes));
 			allNodes.addAll(Arrays.asList(expressionValue.getChildren()));
 			expressionValue = new ExpressionValue(PHP_OBJECT, expressionValue.getValue(),
@@ -139,7 +144,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 			return (byte[]) hashResultDepthOne.get(key);
 		}
 		if (depth == 0 && hashResultDepthZero.containsKey(key)) {
-			return (byte[]) hashResultDepthZero.get(key);
+			return hashResultDepthZero.get(key);
 		}
 		String[] path = new String[name.length - 1];
 		System.arraycopy(name, 1, path, 0, name.length - 1);

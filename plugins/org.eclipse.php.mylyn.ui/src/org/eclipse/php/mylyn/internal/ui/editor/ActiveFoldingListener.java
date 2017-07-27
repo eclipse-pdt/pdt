@@ -49,6 +49,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 	private boolean enabled = false;
 
 	private final IPropertyChangeListener PREFERENCE_LISTENER = new IPropertyChangeListener() {
+		@Override
 		public void propertyChange(PropertyChangeEvent event) {
 			if (event.getProperty().equals(DLTKUiBridgePlugin.AUTO_FOLDING_ENABLED)) {
 				if (event.getNewValue().equals(Boolean.TRUE.toString())) {
@@ -89,8 +90,8 @@ public class ActiveFoldingListener extends AbstractContextListener {
 			return;
 		} else {
 			try {
-				List<IModelElement> toExpand = new ArrayList<IModelElement>();
-				List<IModelElement> toCollapse = new ArrayList<IModelElement>();
+				List<IModelElement> toExpand = new ArrayList<>();
+				List<IModelElement> toCollapse = new ArrayList<>();
 
 				IModelElement element = DLTKUIPlugin.getEditorInputModelElement(editor.getEditorInput());
 				if (element instanceof ISourceModule) {
@@ -106,7 +107,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 						}
 					}
 				}
-				IFoldingStructureProviderExtension updater = (IFoldingStructureProviderExtension) editor
+				IFoldingStructureProviderExtension updater = editor
 						.getAdapter(IFoldingStructureProviderExtension.class);
 				if (updater != null) {
 					updater.collapseComments();
@@ -121,7 +122,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 	}
 
 	private static List<IModelElement> getAllChildren(IParent parentElement) {
-		List<IModelElement> allChildren = new ArrayList<IModelElement>();
+		List<IModelElement> allChildren = new ArrayList<>();
 		try {
 			for (IModelElement child : parentElement.getChildren()) {
 				allChildren.add(child);
@@ -136,7 +137,7 @@ public class ActiveFoldingListener extends AbstractContextListener {
 	}
 
 	public void updateFolding(List<IInteractionElement> elements) {
-		IFoldingStructureProviderExtension updater = (IFoldingStructureProviderExtension) editor
+		IFoldingStructureProviderExtension updater = editor
 				.getAdapter(IFoldingStructureProviderExtension.class);
 		for (IInteractionElement element : elements) {
 			if (updater == null || !enabled) {

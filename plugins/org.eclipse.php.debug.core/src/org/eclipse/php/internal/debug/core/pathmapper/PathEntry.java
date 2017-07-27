@@ -32,6 +32,7 @@ public class PathEntry {
 			this.name = name;
 		}
 
+		@Override
 		public String toString() {
 			return name;
 		}
@@ -126,6 +127,7 @@ public class PathEntry {
 		return getPath();
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof PathEntry)) {
 			return false;
@@ -134,10 +136,12 @@ public class PathEntry {
 		return other.abstractPath.equals(abstractPath) && other.type == type;
 	}
 
+	@Override
 	public int hashCode() {
 		return abstractPath.hashCode() + 13 * type.ordinal();
 	}
 
+	@Override
 	public String toString() {
 		StringBuilder buf = new StringBuilder("Path Entry: "); //$NON-NLS-1$
 		buf.append(abstractPath).append(" (").append(type).append(")"); //$NON-NLS-1$ //$NON-NLS-2$

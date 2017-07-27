@@ -31,6 +31,7 @@ public class PHPResourceEncodingDetector implements IResourceCharsetDetector {
 	private static final String UTF_8 = "UTF-8"; //$NON-NLS-1$
 	private static final String UTF_8_JAVA = "UTF8"; //$NON-NLS-1$
 
+	@Override
 	public String getEncoding() throws IOException {
 		return UTF_8;
 	}
@@ -44,20 +45,24 @@ public class PHPResourceEncodingDetector implements IResourceCharsetDetector {
 		return null;
 	}
 
+	@Override
 	public String getSpecDefaultEncoding() {
 		return UTF_8;
 	}
 
+	@Override
 	public void set(InputStream inputStream) {
 		// @GINO: Do nothing for now
 
 	}
 
+	@Override
 	public void set(Reader reader) {
 		// @GINO: Do nothing for now
 
 	}
 
+	@Override
 	public void set(IStorage iStorage) throws CoreException {
 		// @GINO: Do nothing for now
 

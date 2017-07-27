@@ -186,11 +186,11 @@ public class LinkedProposalPositionGroup {
 	}
 
 	public PositionInformation[] getPositions() {
-		return (PositionInformation[]) fPositions.toArray(new PositionInformation[fPositions.size()]);
+		return fPositions.toArray(new PositionInformation[fPositions.size()]);
 	}
 
 	public Proposal[] getProposals() {
-		return (Proposal[]) fProposals.toArray(new Proposal[fProposals.size()]);
+		return fProposals.toArray(new Proposal[fProposals.size()]);
 	}
 
 }

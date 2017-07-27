@@ -19,6 +19,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 
 public class UseConstNameContext extends UseStatementContext {
 
+	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;

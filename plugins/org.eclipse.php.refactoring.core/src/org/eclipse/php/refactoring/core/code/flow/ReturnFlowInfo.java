@@ -32,7 +32,7 @@ class ReturnFlowInfo extends FlowInfo {
 
 		// TODO need to check the type of the return value -
 		// .resolveTypeBinding() == node.getAST().resolveWellKnownType("void")
-		if (expression == null || expression.isNullExpression()) //$NON-NLS-1$
+		if (expression == null || expression.isNullExpression()) 
 			return VOID_RETURN;
 		return VALUE_RETURN;
 	}

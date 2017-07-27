@@ -36,6 +36,7 @@ public class RenameIncludeFolder extends AbstractRename {
 		this.folderPath = folderPath;
 	}
 
+	@Override
 	public boolean visit(Include include) {
 		if (updateReference) {
 			Expression exp = include.getExpression();
@@ -100,6 +101,7 @@ public class RenameIncludeFolder extends AbstractRename {
 	 * 
 	 * @param scalar
 	 */
+	@Override
 	protected void addChange(int start, String description) {
 		final TextEditGroup textEditGroup = new TextEditGroup(description);
 

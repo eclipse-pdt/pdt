@@ -36,6 +36,7 @@ public class DBGpBoolValue extends AbstractDBGpValue {
 	 * org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#verifyValue(java.lang
 	 * .String)
 	 */
+	@Override
 	protected boolean verifyValue(String expression) {
 		for (String allowed : fAllowedValues) {
 			if (expression.equals(allowed)) {

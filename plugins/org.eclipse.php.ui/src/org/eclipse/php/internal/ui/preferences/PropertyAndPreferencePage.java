@@ -64,7 +64,7 @@ public abstract class PropertyAndPreferencePage extends PreferencePage
 	private Composite fParentComposite;
 
 	private IProject fProject; // project or null
-	private Map fData; // page data
+	private Map<?, ?> fData; // page data
 
 	public static final String DATA_NO_LINK = "PropertyAndPreferencePage.nolink"; //$NON-NLS-1$
 
@@ -195,13 +195,13 @@ public abstract class PropertyAndPreferencePage extends PreferencePage
 	}
 
 	final void doLinkActivated(Link link) {
-		Map data = new HashMap();
+		Map<String, Boolean> data = new HashMap<>();
 		data.put(DATA_NO_LINK, Boolean.TRUE);
 
 		if (isProjectPreferencePage()) {
 			openWorkspacePreferences(data);
 		} else {
-			HashSet projectsWithSpecifics = new HashSet();
+			HashSet<IProject> projectsWithSpecifics = new HashSet<>();
 			try {
 				IWorkspace workspace = PHPUiPlugin.getWorkspace();
 				IProject[] projects = workspace.getRoot().getProjects();
@@ -349,7 +349,7 @@ public abstract class PropertyAndPreferencePage extends PreferencePage
 	@Override
 	public void applyData(Object data) {
 		if (data instanceof Map) {
-			fData = (Map) data;
+			fData = (Map<?, ?>) data;
 		}
 		if (fChangeWorkspaceSettings != null) {
 			if (!offerLink()) {
@@ -359,7 +359,7 @@ public abstract class PropertyAndPreferencePage extends PreferencePage
 		}
 	}
 
-	protected Map getData() {
+	protected Map<?, ?> getData() {
 		return fData;
 	}
 

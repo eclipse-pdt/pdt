@@ -34,11 +34,13 @@ public class ForeachStatementEvaluator extends GoalEvaluator {
 		super(goal);
 	}
 
+	@Override
 	public IGoal[] init() {
 		ForeachStatementGoal typedGoal = (ForeachStatementGoal) goal;
 		return new IGoal[] { new IteratorTypeGoal(goal.getContext(), typedGoal.getExpression()) };
 	}
 
+	@Override
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		if (result instanceof MultiTypeType) {
 			List<IEvaluatedType> types = ((MultiTypeType) result).getTypes();
@@ -49,6 +51,7 @@ public class ForeachStatementEvaluator extends GoalEvaluator {
 		return IGoal.NO_GOALS;
 	}
 
+	@Override
 	public Object produceResult() {
 		return result;
 	}

@@ -112,6 +112,7 @@ public class StatementAnalyzer extends SelectionAnalyzer {
 	/*
 	 * (non-Javadoc) Method declared in ASTVisitor
 	 */
+	@Override
 	public void endVisit(Program program) {
 		if (!hasSelectedNodes()) {
 			super.endVisit(program);
@@ -132,6 +133,7 @@ public class StatementAnalyzer extends SelectionAnalyzer {
 	/*
 	 * (non-Javadoc) Method declared in ASTVisitor
 	 */
+	@Override
 	public void endVisit(DoStatement doStatement) {
 		ASTNode[] selectedNodes = getSelectedNodes();
 		if (doAfterValidation(doStatement, selectedNodes)) {
@@ -146,6 +148,7 @@ public class StatementAnalyzer extends SelectionAnalyzer {
 	/*
 	 * (non-Javadoc) Method declared in ASTVisitor
 	 */
+	@Override
 	public void endVisit(ForStatement node) {
 		ASTNode[] selectedNodes = getSelectedNodes();
 		if (doAfterValidation(node, selectedNodes)) {
@@ -165,10 +168,11 @@ public class StatementAnalyzer extends SelectionAnalyzer {
 	/*
 	 * (non-Javadoc) Method declared in ASTVisitor
 	 */
+	@Override
 	public void endVisit(SwitchStatement node) {
 		ASTNode[] selectedNodes = getSelectedNodes();
 		if (doAfterValidation(node, selectedNodes)) {
-			List cases = getSwitchCases(node);
+			List<Object> cases = getSwitchCases(node);
 			for (int i = 0; i < selectedNodes.length; i++) {
 				ASTNode topNode = selectedNodes[i];
 				if (cases.contains(topNode)) {
@@ -184,14 +188,15 @@ public class StatementAnalyzer extends SelectionAnalyzer {
 	/*
 	 * (non-Javadoc) Method declared in ASTVisitor
 	 */
+	@Override
 	public void endVisit(TryStatement node) {
 		ASTNode firstSelectedNode = getFirstSelectedNode();
 		if (getSelection().getEndVisitSelectionMode(node) == Selection.AFTER) {
 			if (firstSelectedNode == node.getBody()) {
 				invalidSelection("Selection must either cover whole try statement or parts of try or catch block."); //$NON-NLS-1$
 			} else {
-				List catchClauses = node.catchClauses();
-				for (Iterator iterator = catchClauses.iterator(); iterator.hasNext();) {
+				List<?> catchClauses = node.catchClauses();
+				for (Iterator<?> iterator = catchClauses.iterator(); iterator.hasNext();) {
 					CatchClause element = (CatchClause) iterator.next();
 					if (element == firstSelectedNode || element.getBody() == firstSelectedNode) {
 						invalidSelection(
@@ -215,6 +220,7 @@ public class StatementAnalyzer extends SelectionAnalyzer {
 	/*
 	 * (non-Javadoc) Method declared in ASTVisitor
 	 */
+	@Override
 	public void endVisit(WhileStatement node) {
 		ASTNode[] selectedNodes = getSelectedNodes();
 		if (doAfterValidation(node, selectedNodes)) {
@@ -240,9 +246,9 @@ public class StatementAnalyzer extends SelectionAnalyzer {
 		reset();
 	}
 
-	private static List getSwitchCases(SwitchStatement node) {
-		List result = new ArrayList();
-		for (Iterator iter = node.getBody().statements().iterator(); iter.hasNext();) {
+	private static List<Object> getSwitchCases(SwitchStatement node) {
+		List<Object> result = new ArrayList<>();
+		for (Iterator<?> iter = node.getBody().statements().iterator(); iter.hasNext();) {
 			Object element = iter.next();
 			if (element instanceof SwitchCase)
 				result.add(element);
@@ -258,7 +264,7 @@ public class StatementAnalyzer extends SelectionAnalyzer {
 		return false;
 	}
 
-	protected static boolean contains(ASTNode[] nodes, List list) {
+	protected static boolean contains(ASTNode[] nodes, List<?> list) {
 		for (int i = 0; i < nodes.length; i++) {
 			if (list.contains(nodes[i]))
 				return true;

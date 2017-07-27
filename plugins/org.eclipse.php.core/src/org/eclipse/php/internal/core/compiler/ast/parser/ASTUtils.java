@@ -81,7 +81,7 @@ public class ASTUtils {
 		}
 
 		if (foundMatch) {
-			List<TypeReference> typeReferences = new LinkedList<TypeReference>();
+			List<TypeReference> typeReferences = new LinkedList<>();
 
 			if (types != null) {
 				int pipeIdx = types.indexOf(Constants.TYPE_SEPARATOR_CHAR);
@@ -154,6 +154,7 @@ public class ASTUtils {
 				return result;
 			}
 
+			@Override
 			public boolean visitGeneral(ASTNode s) throws Exception {
 				int realStart = s.sourceStart();
 				int realEnd = s.sourceEnd();
@@ -210,6 +211,7 @@ public class ASTUtils {
 				return result;
 			}
 
+			@Override
 			public boolean visitGeneral(ASTNode s) throws Exception {
 				if (s.sourceStart() < 0 || s.sourceEnd() < 0) {
 					return true;
@@ -243,11 +245,12 @@ public class ASTUtils {
 	 */
 	public static ASTNode[] restoreWayToNode(ModuleDeclaration module, final ASTNode node) {
 
-		final Stack<ASTNode> stack = new Stack<ASTNode>();
+		final Stack<ASTNode> stack = new Stack<>();
 
 		ASTVisitor visitor = new ASTVisitor() {
 			boolean found = false;
 
+			@Override
 			public boolean visitGeneral(ASTNode n) throws Exception {
 				if (found) {
 					return super.visitGeneral(n);
@@ -259,6 +262,7 @@ public class ASTUtils {
 				return super.visitGeneral(n);
 			}
 
+			@Override
 			public void endvisitGeneral(ASTNode n) throws Exception {
 				super.endvisitGeneral(n);
 				if (found) {
@@ -273,7 +277,7 @@ public class ASTUtils {
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
-		return (ASTNode[]) stack.toArray(new ASTNode[stack.size()]);
+		return stack.toArray(new ASTNode[stack.size()]);
 	}
 
 	/**
@@ -292,10 +296,12 @@ public class ASTUtils {
 		ContextFinder visitor = new ContextFinder(sourceModule) {
 			private IContext context;
 
+			@Override
 			public IContext getContext() {
 				return context;
 			}
 
+			@Override
 			public boolean visitGeneral(ASTNode node) throws Exception {
 				if (node == target) {
 					context = contextStack.peek();
@@ -330,10 +336,12 @@ public class ASTUtils {
 		ContextFinder visitor = new ContextFinder(sourceModule) {
 			private IContext context;
 
+			@Override
 			public IContext getContext() {
 				return context;
 			}
 
+			@Override
 			public boolean visitGeneral(ASTNode node) throws Exception {
 				if (!(node instanceof ASTError) && node.sourceStart() <= offset && node.sourceEnd() >= offset) {
 					if (!contextStack.isEmpty()) {
@@ -383,6 +391,7 @@ public class ASTUtils {
 		ASTVisitor visitor = new ASTVisitor() {
 			boolean found = false;
 
+			@Override
 			public boolean visit(MethodDeclaration m) {
 				if (!found && m.sourceStart() > offset) {
 					decl[0] = m;
@@ -392,6 +401,7 @@ public class ASTUtils {
 				return !found;
 			}
 
+			@Override
 			public boolean visit(TypeDeclaration t) {
 				if (!found && t.sourceStart() > offset) {
 					decl[0] = t;
@@ -413,6 +423,7 @@ public class ASTUtils {
 				return super.visit(s);
 			}
 
+			@Override
 			public boolean visitGeneral(ASTNode n) {
 				if (!found && n.sourceStart() > offset) {
 					found = true;
@@ -444,7 +455,7 @@ public class ASTUtils {
 		if ("define".equalsIgnoreCase(name)) { //$NON-NLS-1$
 			CallArgumentsList args = callExpression.getArgs();
 			if (args != null && args.getChilds() != null && !args.getChilds().isEmpty()) {
-				ASTNode argument = (ASTNode) args.getChilds().get(0);
+				ASTNode argument = args.getChilds().get(0);
 				if (argument instanceof Scalar) {
 					String constant = ASTUtils.stripQuotes(((Scalar) argument).getValue());
 					FieldDeclaration fieldDeclaration = new FieldDeclaration(constant, argument.sourceStart(),

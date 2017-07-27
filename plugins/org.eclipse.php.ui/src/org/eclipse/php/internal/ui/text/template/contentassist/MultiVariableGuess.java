@@ -216,15 +216,15 @@ public class MultiVariableGuess {
 		}
 	}
 
-	private final Map fDependencies = new HashMap();
-	private final Map fBackwardDeps = new HashMap();
-	private final Map fPositions = new HashMap();
+	private final Map<MultiVariable, Set<MultiVariable>> fDependencies = new HashMap<>();
+	private final Map<MultiVariable, MultiVariable> fBackwardDeps = new HashMap<>();
+	private final Map<MultiVariable, VariablePosition> fPositions = new HashMap<>();
 
 	public MultiVariableGuess() {
 	}
 
 	public ICompletionProposal[] getProposals(final MultiVariable variable, int offset, int length) {
-		MultiVariable master = (MultiVariable) fBackwardDeps.get(variable);
+		MultiVariable master = fBackwardDeps.get(variable);
 		Object[] choices;
 		if (master == null)
 			choices = variable.getChoices();
@@ -266,10 +266,10 @@ public class MultiVariableGuess {
 	private void updateSlaves(MultiVariable variable, IDocument document, Object oldChoice) {
 		Object choice = variable.getCurrentChoice();
 		if (!oldChoice.equals(choice)) {
-			Set slaves = (Set) fDependencies.get(variable);
-			for (Iterator it = slaves.iterator(); it.hasNext();) {
+			Set<?> slaves = fDependencies.get(variable);
+			for (Iterator<?> it = slaves.iterator(); it.hasNext();) {
 				MultiVariable slave = (MultiVariable) it.next();
-				VariablePosition pos = (VariablePosition) fPositions.get(slave);
+				VariablePosition pos = fPositions.get(slave);
 
 				Object slavesOldChoice = slave.getCurrentChoice();
 				slave.setKey(choice); // resets the current choice
@@ -308,9 +308,9 @@ public class MultiVariableGuess {
 				throw new IllegalArgumentException("cycle detected"); //$NON-NLS-1$
 		}
 
-		Set slaves = (Set) fDependencies.get(master);
+		Set<MultiVariable> slaves = fDependencies.get(master);
 		if (slaves == null) {
-			slaves = new HashSet();
+			slaves = new HashSet<>();
 			fDependencies.put(master, slaves);
 		}
 		fBackwardDeps.put(slave, master);

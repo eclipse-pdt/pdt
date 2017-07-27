@@ -77,6 +77,7 @@ parser code {:
 	 * @param message an error message.
 	 * @param info    an extra object reserved for use by specialized subclasses.
 	 */
+	@Override
 	public void report_error(String message, Object info)
 	{
 		if (DLTKCore.DEBUG) {
@@ -84,6 +85,7 @@ parser code {:
 		}
 	}
 
+	@Override
 	protected void report_expected_token_ids()
 	{
 		// XXX : really verbose, disable it completely for now
@@ -92,6 +94,7 @@ parser code {:
 		// }
 	}
 
+	@Override
 	public void report_fatal_error(
 	String message,
 	Object info)

@@ -19,7 +19,6 @@ import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class ZendDebuggerExeLaunchSettingsSection extends AbstractDebugExeLaunchSettingsSection {
 
 	/*

@@ -60,6 +60,7 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 
 		ICompletionContext context = getContext();
@@ -89,7 +90,7 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 					Modifiers.AccConstant, scope, null);
 		}
 
-		List<IField> result = new LinkedList<IField>();
+		List<IField> result = new LinkedList<>();
 		if (fields != null) {
 			result.addAll(Arrays.asList(fields));
 		}
@@ -121,7 +122,7 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 
 	private IDLTKSearchScope createSearchScopeWithReferencedFiles(ISourceModule sourceModule) {
 		ReferenceTree tree = FileNetworkUtility.buildReferencedFilesTree(sourceModule, null);
-		Set<ISourceModule> list = new HashSet<ISourceModule>();
+		Set<ISourceModule> list = new HashSet<>();
 		list.add(sourceModule);
 		if (tree != null && tree.getRoot() != null) {
 			Collection<Node> allIncludedNodes = tree.getRoot().getChildren();

@@ -48,7 +48,7 @@ public class InstanceOfExpression extends Expression {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(2);
 		propertyList.add(CLASSNAME_PROPERTY);
 		propertyList.add(EXPRESSION_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
@@ -68,6 +68,7 @@ public class InstanceOfExpression extends Expression {
 		super(ast);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -76,23 +77,27 @@ public class InstanceOfExpression extends Expression {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		expression.accept(visitor);
 		className.accept(visitor);
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		expression.traverseTopDown(visitor);
 		className.traverseTopDown(visitor);
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		expression.traverseBottomUp(visitor);
 		className.traverseBottomUp(visitor);
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<InstanceofExpression"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -103,6 +108,7 @@ public class InstanceOfExpression extends Expression {
 		buffer.append("\n").append(tab).append("</InstanceofExpression>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.INSTANCE_OF_EXPRESSION;
 	}
@@ -134,6 +140,7 @@ public class InstanceOfExpression extends Expression {
 		postReplaceChild(oldChild, classname, CLASSNAME_PROPERTY);
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == CLASSNAME_PROPERTY) {
 			if (get) {
@@ -190,6 +197,7 @@ public class InstanceOfExpression extends Expression {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

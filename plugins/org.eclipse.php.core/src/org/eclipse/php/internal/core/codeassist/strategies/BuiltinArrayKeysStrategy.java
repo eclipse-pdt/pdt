@@ -58,6 +58,7 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		ICompletionContext context = getContext();
 		if (!(context instanceof ArrayKeyContext)) {
@@ -96,7 +97,7 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 			IDLTKSearchScope scope = createSearchScope();
 			IField[] elements = PHPModelAccess.getDefault().findFields("$" + prefix, matchRule, Modifiers.AccGlobal, //$NON-NLS-1$
 					Modifiers.AccConstant, scope, null);
-			List<IField> list = new ArrayList<IField>();
+			List<IField> list = new ArrayList<>();
 
 			if (!prefix.startsWith("$")) { //$NON-NLS-1$
 				elements = PHPModelAccess.getDefault().findFields("$" + prefix, //$NON-NLS-1$

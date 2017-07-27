@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.swt.graphics.FontMetrics;
@@ -112,7 +113,7 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 	// org.eclipse.jst.jsp.ui.internal.projection
 
 	ProjectionModelNodeAdapterFactoryHTML fAdapterFactory;
-	private Map fTagAnnotations = new HashMap();
+	private Map<Annotation, Position> fTagAnnotations = new HashMap<>();
 
 	public ProjectionModelNodeAdapterHTML(ProjectionModelNodeAdapterFactoryHTML factory) {
 		fAdapterFactory = factory;
@@ -165,7 +166,7 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 		TagProjectionAnnotation anno = null;
 
 		if ((node != null) && (!fTagAnnotations.isEmpty())) {
-			Iterator it = fTagAnnotations.keySet().iterator();
+			Iterator<Annotation> it = fTagAnnotations.keySet().iterator();
 			while (it.hasNext() && anno == null) {
 				TagProjectionAnnotation a = (TagProjectionAnnotation) it.next();
 				Node n = a.getNode();
@@ -217,8 +218,8 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 	void updateAdapter(Node node, ProjectionViewer viewer) {
 		long start = System.currentTimeMillis();
 
-		Map additions = new HashMap();
-		Map projectionAnnotations = new HashMap();
+		Map<Annotation, Position> additions = new HashMap<>();
+		Map<Annotation, Position> projectionAnnotations = new HashMap<>();
 
 		// go through immediate child nodes and figure out projection
 		// model annotations
@@ -251,11 +252,11 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 			// projectionAnnotations
 			ProjectionAnnotation[] oldList = null;
 			if (!fTagAnnotations.isEmpty()) {
-				oldList = (ProjectionAnnotation[]) fTagAnnotations.keySet().toArray(new ProjectionAnnotation[0]);
+				oldList = fTagAnnotations.keySet().toArray(new ProjectionAnnotation[0]);
 			}
 			ProjectionAnnotation[] modifyList = null;
 			if (!projectionAnnotations.isEmpty()) {
-				modifyList = (ProjectionAnnotation[]) projectionAnnotations.keySet()
+				modifyList = projectionAnnotations.keySet()
 						.toArray(new ProjectionAnnotation[0]);
 			}
 

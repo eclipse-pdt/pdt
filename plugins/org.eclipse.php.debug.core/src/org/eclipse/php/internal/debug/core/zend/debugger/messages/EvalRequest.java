@@ -44,15 +44,18 @@ public class EvalRequest extends DebugMessageRequestImpl implements IDebugReques
 		return command;
 	}
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		setCommand(CommunicationUtilities.readEncodedString(in, getTransferEncoding()));
 	}
 
+	@Override
 	public int getType() {
 		return 31;
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());

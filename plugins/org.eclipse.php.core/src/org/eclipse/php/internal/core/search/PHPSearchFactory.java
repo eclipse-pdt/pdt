@@ -20,10 +20,12 @@ public class PHPSearchFactory extends AbstractSearchFactory {
 
 	private PHPSearchPatternProcessor phpSearchPatternProcessor = new PHPSearchPatternProcessor();
 
+	@Override
 	public IMatchLocatorParser createMatchParser(MatchLocator locator) {
 		return new PHPMatchLocatorParser(locator);
 	}
 
+	@Override
 	public ISearchPatternProcessor createSearchPatternProcessor() {
 		return phpSearchPatternProcessor;
 	}

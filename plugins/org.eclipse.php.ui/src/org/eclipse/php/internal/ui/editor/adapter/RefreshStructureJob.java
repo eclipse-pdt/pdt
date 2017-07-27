@@ -72,7 +72,7 @@ class RefreshStructureJob extends Job {
 				 * If we already have a request which contains the new request,
 				 * discard the new request
 				 */
-				Node node2 = (Node) fRequests.get(i);
+				Node node2 = fRequests.get(i);
 				if (contains(node2, node))
 					return;
 				/*

@@ -593,7 +593,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		@Override
 		public void changeControlPressed(DialogField field) {
 			IEnvironment environment = getEnvironment();
-			IEnvironmentUI environmentUI = (IEnvironmentUI) environment.getAdapter(IEnvironmentUI.class);
+			IEnvironmentUI environmentUI = environment.getAdapter(IEnvironmentUI.class);
 			if (environmentUI != null) {
 				String selectedDirectory = environmentUI.selectFolder(page.getShell());
 

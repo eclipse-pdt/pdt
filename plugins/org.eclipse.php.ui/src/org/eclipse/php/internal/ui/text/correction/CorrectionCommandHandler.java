@@ -123,7 +123,7 @@ public class CorrectionCommandHandler extends AbstractHandler {
 	 * 
 	 */
 	public static String getShortcut(String commandId) {
-		final IBindingService keys = (IBindingService) PlatformUI.getWorkbench().getService(IBindingService.class);
+		final IBindingService keys = PlatformUI.getWorkbench().getService(IBindingService.class);
 
 		if (commandId != null && keys != null) {
 			TriggerSequence trigger = keys.getBestActiveBindingFor(commandId);

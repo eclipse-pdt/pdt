@@ -34,9 +34,9 @@ public class BuildResultsProperties {
     static final String P_STR_NOT_STABLE = "not stable"; //$NON-NLS-1$
     static final String P_STR_NOT_RELIABLE = "not reliable"; //$NON-NLS-1$
     static final String P_STR_BIG_DELTA = "delta error"; //$NON-NLS-1$
-    private static Vector descriptors;
+    private static Vector<TextPropertyDescriptor> descriptors;
     static {
-        descriptors = new Vector();
+        descriptors = new Vector<>();
         descriptors.addElement(new TextPropertyDescriptor(P_ID_SMALL_VALUE, P_STR_SMALL_VALUE));
         descriptors.addElement(new TextPropertyDescriptor(P_ID_NO_BASELINE, P_STR_NO_BASELINE));
         descriptors.addElement(new TextPropertyDescriptor(P_ID_SINGLE_RUN, P_STR_SINGLE_RUN));
@@ -46,7 +46,7 @@ public class BuildResultsProperties {
         descriptors.addElement(new TextPropertyDescriptor(P_ID_NOT_RELIABLE, P_STR_NOT_RELIABLE));
         descriptors.addElement(new TextPropertyDescriptor(P_ID_BIG_DELTA, P_STR_BIG_DELTA));
     }
-    static Vector getDescriptors() {
+    static Vector<TextPropertyDescriptor> getDescriptors() {
         return descriptors;
 	}
 
@@ -67,7 +67,7 @@ public Object getEditableValue() {
  * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyDescriptors()
  */
 public IPropertyDescriptor[] getPropertyDescriptors() {
-    return (IPropertyDescriptor[]) getDescriptors().toArray(
+    return getDescriptors().toArray(
             new IPropertyDescriptor[getDescriptors().size()]);
 }
 

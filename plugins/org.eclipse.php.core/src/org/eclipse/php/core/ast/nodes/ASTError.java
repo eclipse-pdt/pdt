@@ -37,7 +37,7 @@ public class ASTError extends Statement {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> list = new ArrayList<StructuralPropertyDescriptor>(0);
+		List<StructuralPropertyDescriptor> list = new ArrayList<>(0);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(list);
 	}
 
@@ -49,21 +49,26 @@ public class ASTError extends Statement {
 		super(ast);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<AstError"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append("/>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -72,6 +77,7 @@ public class ASTError extends Statement {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.AST_ERROR;
 	}
@@ -79,6 +85,7 @@ public class ASTError extends Statement {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

@@ -57,7 +57,6 @@ import org.eclipse.ui.PlatformUI;
  * PHP executable launch tab is a launch configuration tab for the PHP Script
  * launching.
  */
-@SuppressWarnings("restriction")
 public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	static private class ControlAccessibleListener extends AccessibleAdapter {
 		private String controlName;
@@ -66,6 +65,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			controlName = name;
 		}
 
+		@Override
 		public void getName(final AccessibleEvent e) {
 			e.result = controlName;
 		}
@@ -73,11 +73,13 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	}
 
 	protected class WidgetListener extends SelectionAdapter implements ModifyListener {
+		@Override
 		public void modifyText(final ModifyEvent e) {
 			updateLaunchConfigurationDialog();
 			phpsComboBlock.setProject(getFileProject(fileTextField.getText()));
 		}
 
+		@Override
 		public void widgetSelected(final SelectionEvent e) {
 			setDirty(true);
 			final Object source = e.getSource();
@@ -91,6 +93,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	// Selection changed listener (checked PHP exe)
 	protected final IPropertyChangeListener fPropertyChangeListener = new IPropertyChangeListener() {
 
+		@Override
 		public void propertyChange(PropertyChangeEvent event) {
 			handleSelectedPHPexeChanged();
 		}
@@ -111,6 +114,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		phpsComboBlock = new NewPHPsComboBlock();
 	}
 
+	@Override
 	public void createControl(final Composite parent) {
 		ScrolledCompositeImpl scrolledCompositeImpl = new ScrolledCompositeImpl(parent, SWT.V_SCROLL | SWT.H_SCROLL);
 		final Composite mainComposite = new Composite(scrolledCompositeImpl, SWT.NONE);
@@ -150,6 +154,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 * 
 	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#getName()
 	 */
+	@Override
 	public String getName() {
 		return PHPDebugUIMessages.PHPExecutableLaunchTab_2;
 	}
@@ -161,6 +166,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 * org.eclipse.debug.ui.ILaunchConfigurationTab#initializeFrom(org.eclipse
 	 * .debug.core.ILaunchConfiguration)
 	 */
+	@Override
 	public void initializeFrom(final ILaunchConfiguration configuration) {
 		if (enableFileSelection)
 			updateArgument(configuration);
@@ -181,6 +187,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 * org.eclipse.debug.ui.ILaunchConfigurationTab#isValid(org.eclipse.debug
 	 * .core.ILaunchConfiguration)
 	 */
+	@Override
 	public boolean isValid(final ILaunchConfiguration launchConfig) {
 		setErrorMessage(null);
 		setWarningMessage(null);
@@ -246,6 +253,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 * org.eclipse.debug.ui.ILaunchConfigurationTab#performApply(org.eclipse
 	 * .debug.core.ILaunchConfigurationWorkingCopy)
 	 */
+	@Override
 	public void performApply(final ILaunchConfigurationWorkingCopy configuration) {
 		if (phpsComboBlock.isDefaultPHP()) {
 			configuration.setAttribute(PHPRuntime.PHP_CONTAINER, (String) null);
@@ -288,6 +296,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 * org.eclipse.debug.ui.ILaunchConfigurationTab#setDefaults(org.eclipse.
 	 * debug.core.ILaunchConfigurationWorkingCopy)
 	 */
+	@Override
 	public void setDefaults(final ILaunchConfigurationWorkingCopy configuration) {
 		try {
 			String executableLocation = configuration.getAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, ""); //$NON-NLS-1$
@@ -419,6 +428,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		prgmArgumentsText = new Text(group, SWT.MULTI | SWT.WRAP | SWT.BORDER | SWT.V_SCROLL);
 		prgmArgumentsText.setLayoutData(new GridData(GridData.FILL_BOTH));
 		prgmArgumentsText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent evt) {
 				updateLaunchConfigurationDialog();
 			}
@@ -429,6 +439,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 				null);
 		pgrmArgVariableButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
 		pgrmArgVariableButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				StringVariableSelectionDialog dialog = new StringVariableSelectionDialog(getShell());
 				dialog.open();

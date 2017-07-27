@@ -47,7 +47,8 @@ public ScenarioResults(int id, String name, String shortName) {
  */
 void completeResults(String lastBuildName) {
 	String[] builds = DB_Results.getBuilds();
-	class BuildDateComparator implements Comparator {
+	class BuildDateComparator implements Comparator<Object> {
+		@Override
 		public int compare(Object o1, Object o2) {
 	        String s1 = (String) o1;
 	        String s2 = (String) o2;
@@ -97,12 +98,12 @@ public String getBaselineBuildName() {
 	return buffer.toString();
 }
 
-Set getAllBuildNames() {
-	Set buildNames = new HashSet();
+Set<String> getAllBuildNames() {
+	Set<String> buildNames = new HashSet<>();
 	int size = size();
 	for (int i=0; i<size; i++) {
 		ConfigResults configResults = (ConfigResults) this.children.get(i);
-		List builds = configResults.getBuilds(null);
+		List<?> builds = configResults.getBuilds(null);
 		int length = builds.size();
 		for (int j=0; j<length; j++) {
 			buildNames.add(((BuildResults)builds.get(j)).getName());
@@ -218,6 +219,7 @@ public boolean hasSummary() {
 /* (non-Javadoc)
  * @see org.eclipse.test.internal.performance.results.AbstractResults#hashCode()
  */
+@Override
 public int hashCode() {
 	return this.id;
 }
@@ -262,7 +264,7 @@ public boolean knowsBuild(String buildName) {
 	String[] buildNames = buildName == null
 		? DB_Results.getBuilds()
 		: new String[] { buildName };
-	Set scenarioBuilds = getAllBuildNames();
+	Set<String> scenarioBuilds = getAllBuildNames();
 	int length = buildNames.length;
 	for (int i=0; i<length; i++) {
 		if (!scenarioBuilds.contains(buildNames[i])) {

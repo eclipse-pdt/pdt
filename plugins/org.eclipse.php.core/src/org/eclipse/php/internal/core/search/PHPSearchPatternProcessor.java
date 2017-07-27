@@ -20,6 +20,7 @@ public class PHPSearchPatternProcessor extends SearchPatternProcessor {
 	private static final String OBJ_CALL_DELIMITER = "->"; //$NON-NLS-1$
 	private static final String STATIC_CALL_DELIMITER = "::"; //$NON-NLS-1$
 
+	@Override
 	public char[] extractDeclaringTypeQualification(String pattern) {
 		int pos = pattern.indexOf(OBJ_CALL_DELIMITER);
 		int pos2 = pattern.indexOf(STATIC_CALL_DELIMITER);
@@ -31,6 +32,7 @@ public class PHPSearchPatternProcessor extends SearchPatternProcessor {
 		return null;
 	}
 
+	@Override
 	public char[] extractDeclaringTypeSimpleName(String pattern) {
 		int pos = pattern.indexOf(OBJ_CALL_DELIMITER);
 		int pos2 = pattern.indexOf(STATIC_CALL_DELIMITER);
@@ -42,6 +44,7 @@ public class PHPSearchPatternProcessor extends SearchPatternProcessor {
 		return null;
 	}
 
+	@Override
 	public char[] extractSelector(String pattern) {
 		int pos = pattern.indexOf(OBJ_CALL_DELIMITER);
 		int pos2 = pattern.indexOf(STATIC_CALL_DELIMITER);
@@ -85,10 +88,12 @@ public class PHPSearchPatternProcessor extends SearchPatternProcessor {
 		return null;
 	}
 
+	@Override
 	public String getDelimiterReplacementString() {
 		return TYPE_DELIMITER;
 	}
 
+	@Override
 	public ITypePattern parseType(String patternString) {
 		return new TypePatten(extractPHPTypeQualification(patternString), extractPHPTypeChars(patternString));
 

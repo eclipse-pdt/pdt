@@ -79,13 +79,13 @@ public class ASTMatcher {
 	 *         <code>ASTNode.subtreeMatch</code>
 	 * @see ASTNode#subtreeMatch(ASTMatcher matcher, Object other)
 	 */
-	public final boolean safeSubtreeListMatch(Collection list1, Collection list2) {
+	public final boolean safeSubtreeListMatch(Collection<?> list1, Collection<?> list2) {
 		int size1 = list1.size();
 		int size2 = list2.size();
 		if (size1 != size2) {
 			return false;
 		}
-		for (Iterator it1 = list1.iterator(), it2 = list2.iterator(); it1.hasNext();) {
+		for (Iterator<?> it1 = list1.iterator(), it2 = list2.iterator(); it1.hasNext();) {
 			ASTNode n1 = (ASTNode) it1.next();
 			ASTNode n2 = (ASTNode) it2.next();
 			if (n1 == null && n2 == null) {
@@ -709,7 +709,7 @@ public class ASTMatcher {
 		Program o = (Program) other;
 
 		return (safeSubtreeListMatch(node.statements(), o.statements())
-				&& safeSubtreeListMatch(((Map) node.comments()).values(), ((Map) o.comments()).values()));
+				&& safeSubtreeListMatch(((Map<?, ?>) node.comments()).values(), ((Map<?, ?>) o.comments()).values()));
 	}
 
 	public boolean match(Quote node, Object other) {

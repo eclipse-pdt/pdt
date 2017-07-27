@@ -93,7 +93,7 @@ public class ChangeCorrectionProposal extends AbstractCorrectionProposal {
 					LinkedModeModel.closeAllModels(document);
 				}
 				if (activeEditor != null) {
-					rewriteTarget = (IRewriteTarget) activeEditor.getAdapter(IRewriteTarget.class);
+					rewriteTarget = activeEditor.getAdapter(IRewriteTarget.class);
 					if (rewriteTarget != null) {
 						rewriteTarget.beginCompoundChange();
 					}

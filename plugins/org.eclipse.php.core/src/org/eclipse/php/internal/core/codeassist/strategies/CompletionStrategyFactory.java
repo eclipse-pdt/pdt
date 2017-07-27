@@ -49,7 +49,7 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			// creating multiple instances of factories
 			// in worst case
 
-			List<ICompletionStrategyFactory> factories = new LinkedList<ICompletionStrategyFactory>();
+			List<ICompletionStrategyFactory> factories = new LinkedList<>();
 			IConfigurationElement[] elements = Platform.getExtensionRegistry()
 					.getConfigurationElementsFor("org.eclipse.php.core.completionStrategyFactories"); //$NON-NLS-1$
 			for (IConfigurationElement element : elements) {
@@ -67,11 +67,12 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		return instances;
 	}
 
+	@Override
 	public ICompletionStrategy[] create(ICompletionContext[] contexts) {
 		// don't allow creation of strategies of the same class:
-		Set<Class<? super ICompletionStrategy>> processed = new HashSet<Class<? super ICompletionStrategy>>();
+		Set<Class<? super ICompletionStrategy>> processed = new HashSet<>();
 
-		List<ICompletionStrategy> result = new LinkedList<ICompletionStrategy>();
+		List<ICompletionStrategy> result = new LinkedList<>();
 
 		for (ICompletionContext context : contexts) {
 			ICompletionStrategy[] strategies = createStrategies(context, contexts);
@@ -82,7 +83,7 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 				}
 			}
 		}
-		return (ICompletionStrategy[]) result.toArray(new ICompletionStrategy[result.size()]);
+		return result.toArray(new ICompletionStrategy[result.size()]);
 	}
 
 	protected ICompletionStrategy[] createStrategies(ICompletionContext context, ICompletionContext[] allContexts) {

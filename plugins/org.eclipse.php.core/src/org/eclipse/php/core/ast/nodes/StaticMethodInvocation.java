@@ -53,7 +53,7 @@ public class StaticMethodInvocation extends StaticDispatch {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(2);
 		propertyList.add(METHOD_PROPERTY);
 		propertyList.add(CLASS_NAME_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
@@ -72,6 +72,7 @@ public class StaticMethodInvocation extends StaticDispatch {
 		super(ast);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -80,23 +81,27 @@ public class StaticMethodInvocation extends StaticDispatch {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		getClassName().accept(visitor);
 		method.accept(visitor);
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		getClassName().traverseTopDown(visitor);
 		method.traverseTopDown(visitor);
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		getClassName().traverseBottomUp(visitor);
 		method.traverseBottomUp(visitor);
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<StaticMethodInvocation"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -109,6 +114,7 @@ public class StaticMethodInvocation extends StaticDispatch {
 		buffer.append(tab).append("</StaticMethodInvocation>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.STATIC_METHOD_INVOCATION;
 	}
@@ -126,6 +132,7 @@ public class StaticMethodInvocation extends StaticDispatch {
 	 * @see #getMethod()
 	 */
 
+	@Override
 	public ASTNode getMember() {
 		return getMethod();
 	}
@@ -153,6 +160,7 @@ public class StaticMethodInvocation extends StaticDispatch {
 		postReplaceChild(oldChild, method, METHOD_PROPERTY);
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == METHOD_PROPERTY) {
 			if (get) {
@@ -169,6 +177,7 @@ public class StaticMethodInvocation extends StaticDispatch {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

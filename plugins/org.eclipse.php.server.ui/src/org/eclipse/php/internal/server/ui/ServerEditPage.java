@@ -24,8 +24,8 @@ import org.eclipse.php.internal.ui.wizards.IControlHandler;
 import org.eclipse.php.server.core.types.IServerType;
 import org.eclipse.php.server.core.types.ServerTypesManager;
 import org.eclipse.php.server.ui.types.IServerTypeDescriptor;
-import org.eclipse.php.server.ui.types.ServerTypesDescriptorRegistry;
 import org.eclipse.php.server.ui.types.IServerTypeDescriptor.ImageType;
+import org.eclipse.php.server.ui.types.ServerTypesDescriptorRegistry;
 import org.eclipse.php.ui.wizards.ICompositeFragmentFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -38,7 +38,6 @@ import org.eclipse.swt.widgets.TabItem;
 /**
  * Wizard page for editing PHP server settings.
  */
-@SuppressWarnings("restriction")
 public class ServerEditPage extends WizardPage implements IControlHandler {
 
 	protected static final String FRAGMENT_GROUP_ID = "org.eclipse.php.server.ui.serverWizardAndComposite"; //$NON-NLS-1$
@@ -56,7 +55,7 @@ public class ServerEditPage extends WizardPage implements IControlHandler {
 	private ArrayList<CompositeFragment> runtimeComposites;
 	private TabFolder tabs;
 	private String tabID;
-	private List<IPostFinish> postFinish = new ArrayList<IPostFinish>();
+	private List<IPostFinish> postFinish = new ArrayList<>();
 
 	/**
 	 * Instantiate a new server edit wizard page.
@@ -67,7 +66,7 @@ public class ServerEditPage extends WizardPage implements IControlHandler {
 	public ServerEditPage(Server server) {
 		super(PHPServerUIMessages.getString("ServerEditPage.Title")); //$NON-NLS-1$
 		this.server = server;
-		this.runtimeComposites = new ArrayList<CompositeFragment>();
+		this.runtimeComposites = new ArrayList<>();
 	}
 
 	/**
@@ -89,6 +88,7 @@ public class ServerEditPage extends WizardPage implements IControlHandler {
 	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
 	 * widgets .Composite)
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		// Create a tabbed container that will hold all the fragments
 		tabs = new TabFolder(parent, SWT.NONE);
@@ -113,6 +113,7 @@ public class ServerEditPage extends WizardPage implements IControlHandler {
 
 		tabs.addSelectionListener(new SelectionAdapter() {
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				TabItem item = (TabItem) e.item;
 				CompositeFragment fragment = (CompositeFragment) item.getControl();
@@ -167,6 +168,7 @@ public class ServerEditPage extends WizardPage implements IControlHandler {
 	 * org.eclipse.php.internal.server.apache.ui.IControlHandler#setDescription
 	 * (java.lang.String)
 	 */
+	@Override
 	public void setDescription(String desc) {
 		super.setMessage(desc);
 	}
@@ -176,6 +178,7 @@ public class ServerEditPage extends WizardPage implements IControlHandler {
 	 * 
 	 * @see org.eclipse.php.internal.ui.wizards.IControlHandler#update()
 	 */
+	@Override
 	public void update() {
 		for (CompositeFragment composite : runtimeComposites) {
 			if (!composite.isComplete()) {
@@ -192,6 +195,7 @@ public class ServerEditPage extends WizardPage implements IControlHandler {
 	 * @see org.eclipse.php.internal.ui.wizards.IControlHandler#run(boolean,
 	 * boolean, org.eclipse.jface.operation.IRunnableWithProgress)
 	 */
+	@Override
 	public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable)
 			throws InvocationTargetException, InterruptedException {
 		getContainer().run(fork, cancelable, runnable);

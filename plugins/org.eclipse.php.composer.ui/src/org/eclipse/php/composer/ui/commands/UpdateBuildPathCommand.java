@@ -37,7 +37,7 @@ public class UpdateBuildPathCommand extends AbstractHandler {
 
 			if (item instanceof IAdaptable) {
 				IAdaptable adaptable = (IAdaptable) item;
-				IProject project = ((IResource) adaptable.getAdapter(IResource.class)).getProject();
+				IProject project = adaptable.getAdapter(IResource.class).getProject();
 				IComposerProject composerProject = ComposerPlugin.getDefault().getComposerProject(project);
 
 				final BuildPathManager bpManager = new BuildPathManager(composerProject);

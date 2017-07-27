@@ -48,7 +48,7 @@ public class SingleFieldDeclaration extends ASTNode {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(2);
 		propertyList.add(NAME_PROPERTY);
 		propertyList.add(VALUE_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
@@ -71,6 +71,7 @@ public class SingleFieldDeclaration extends ASTNode {
 		}
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -79,6 +80,7 @@ public class SingleFieldDeclaration extends ASTNode {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		name.accept(visitor);
 		if (value != null) {
@@ -86,6 +88,7 @@ public class SingleFieldDeclaration extends ASTNode {
 		}
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		name.accept(visitor);
@@ -94,6 +97,7 @@ public class SingleFieldDeclaration extends ASTNode {
 		}
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		name.accept(visitor);
 		if (value != null) {
@@ -102,6 +106,7 @@ public class SingleFieldDeclaration extends ASTNode {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<SingleFieldDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -118,6 +123,7 @@ public class SingleFieldDeclaration extends ASTNode {
 		buffer.append(tab).append("</SingleFieldDeclaration>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.SINGLE_FIELD_DECLARATION;
 	}
@@ -179,6 +185,7 @@ public class SingleFieldDeclaration extends ASTNode {
 		postReplaceChild(oldChild, value, VALUE_PROPERTY);
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == NAME_PROPERTY) {
 			if (get) {
@@ -203,6 +210,7 @@ public class SingleFieldDeclaration extends ASTNode {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

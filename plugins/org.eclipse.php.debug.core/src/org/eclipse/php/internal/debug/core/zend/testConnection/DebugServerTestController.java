@@ -23,7 +23,7 @@ import java.util.List;
 public class DebugServerTestController {
 
 	private static DebugServerTestController instance = null;
-	private List<IDebugServerTestListener> listeners = new ArrayList<IDebugServerTestListener>(1);
+	private List<IDebugServerTestListener> listeners = new ArrayList<>(1);
 
 	private DebugServerTestController() {
 	}

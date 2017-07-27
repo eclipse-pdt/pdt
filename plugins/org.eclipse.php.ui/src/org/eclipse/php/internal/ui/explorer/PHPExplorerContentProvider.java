@@ -170,7 +170,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 							returnChlidren.add(resource2);
 						}
 					}
-					return (Object[]) returnChlidren.toArray(new Object[returnChlidren.size()]);
+					return returnChlidren.toArray(new Object[returnChlidren.size()]);
 				}
 
 				for (ITreeContentProvider provider : TreeContentProviderRegistry.getInstance().getTreeProviders()) {

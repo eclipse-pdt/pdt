@@ -25,7 +25,7 @@ import org.eclipse.jface.text.templates.TemplateProposal;
  * </p>
  * 
  */
-public class CompletionProposalComparator implements Comparator {
+public class CompletionProposalComparator implements Comparator<Object> {
 
 	private boolean fOrderAlphabetically;
 

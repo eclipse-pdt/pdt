@@ -37,12 +37,14 @@ public class ClassKeywordsStrategy extends KeywordsStrategy {
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		ICompletionContext context = getContext();
 		statementText = ((AbstractCompletionContext) context).getStatementText();
 		super.apply(reporter);
 	}
 
+	@Override
 	protected boolean filterKeyword(KeywordData keyword) {
 		if (keyword.name.equals("array") //$NON-NLS-1$
 				&& statementText.toString().indexOf("=") > 0) { //$NON-NLS-1$

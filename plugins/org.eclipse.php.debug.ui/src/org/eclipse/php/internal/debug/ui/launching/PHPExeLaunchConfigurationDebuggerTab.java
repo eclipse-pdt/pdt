@@ -30,7 +30,6 @@ import org.eclipse.ui.PlatformUI;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class PHPExeLaunchConfigurationDebuggerTab extends AbstractPHPLaunchConfigurationDebuggerTab {
 
 	/*

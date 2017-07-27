@@ -28,6 +28,7 @@ public class NamespaceDocTypesCompositeStrategy extends AbstractCompletionStrate
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		ICompletionContext context = getContext();
 		if (!(context instanceof NamespacePHPDocVarStartContext)) {
@@ -37,6 +38,7 @@ public class NamespaceDocTypesCompositeStrategy extends AbstractCompletionStrate
 		if (concreteContext.isGlobal()) {
 			GlobalTypesStrategy strategy = new GlobalTypesStrategy(context) {
 
+				@Override
 				protected int getExtraInfo() {
 					return ProposalExtraInfo.TYPE_ONLY;
 				}

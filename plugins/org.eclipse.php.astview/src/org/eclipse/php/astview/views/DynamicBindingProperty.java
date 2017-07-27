@@ -29,10 +29,12 @@ public abstract class DynamicBindingProperty extends ExceptionAttribute {
 		fParent= parent;
 	}
 
+	@Override
 	public Object getParent() {
 		return fParent;
 	}
 
+	@Override
 	public Object[] getChildren() {
 		return EMPTY;
 	}
@@ -83,10 +85,12 @@ public abstract class DynamicBindingProperty extends ExceptionAttribute {
 	 */
 	protected abstract String getName();
 
+	@Override
 	public String getLabel() {
 		return fLabel;
 	}
 
+	@Override
 	public Image getImage() {
 		return null;
 	}

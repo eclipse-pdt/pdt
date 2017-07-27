@@ -67,18 +67,21 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 			initTableState(false);
 		}
 
+		@Override
 		public Object[] getElements(Object inputElement) {
 			return getAllFiltersFromTable();
 		}
 
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		}
 
+		@Override
 		public void dispose() {
 		}
 	}
 
-	private ArrayList<IDebugStepFilterPrefListener> debugStepFilterPrefListeners = new ArrayList<IDebugStepFilterPrefListener>();
+	private ArrayList<IDebugStepFilterPrefListener> debugStepFilterPrefListeners = new ArrayList<>();
 
 	// widgets
 	private CheckboxTableViewer fTableViewer;
@@ -107,6 +110,7 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 	 * org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse
 	 * .swt.widgets.Composite)
 	 */
+	@Override
 	protected Control createContents(Composite parent) {
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.STEP_FILTERING_PREFERENCES); // $NON-NLS-1$
 		// The main composite
@@ -121,6 +125,7 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 	 * @see
 	 * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
+	@Override
 	public void init(IWorkbench workbench) {
 	}
 
@@ -145,10 +150,12 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 				PHPDebugUIMessages.PHPDebugStepFilterPreferencePage_useStepFilters, null,
 				DebugUITools.isUseStepFilters(), 2);
 		fUseStepFiltersButton.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				setPageEnablement(fUseStepFiltersButton.getSelection());
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
@@ -163,11 +170,13 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 		fTableViewer.setInput(getAllPersistedFilters(false));
 		fTableViewer.getTable().setLayoutData(new GridData(GridData.FILL_BOTH));
 		fTableViewer.addCheckStateListener(new ICheckStateListener() {
+			@Override
 			public void checkStateChanged(CheckStateChangedEvent event) {
 				((DebugStepFilter) event.getElement()).setEnabled(event.getChecked());
 			}
 		});
 		fTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				ISelection selection = event.getSelection();
 				if (selection.isEmpty()) {
@@ -183,6 +192,7 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 			}
 		});
 		fTableViewer.getControl().addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent event) {
 				handleFilterViewerKeyPress(event);
 			}
@@ -245,6 +255,7 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 		fAddFilterButton = SWTFactory.createPushButton(buttonContainer,
 				PHPDebugUIMessages.PHPDebugStepFilterPreferencePage_addFilter, null);
 		fAddFilterButton.addListener(SWT.Selection, new Listener() {
+			@Override
 			public void handleEvent(Event e) {
 				addFilter();
 			}
@@ -253,6 +264,7 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 		fAddResourceButton = SWTFactory.createPushButton(buttonContainer,
 				PHPDebugUIMessages.PHPDebugStepFilterPreferencePage_addResource, null);
 		fAddResourceButton.addListener(SWT.Selection, new Listener() {
+			@Override
 			public void handleEvent(Event e) {
 				addResource();
 			}
@@ -261,6 +273,7 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 		fRemoveFilterButton = SWTFactory.createPushButton(buttonContainer,
 				PHPDebugUIMessages.PHPDebugStepFilterPreferencePage_remove, null);
 		fRemoveFilterButton.addListener(SWT.Selection, new Listener() {
+			@Override
 			public void handleEvent(Event e) {
 				removeFilters();
 			}
@@ -278,6 +291,7 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 		fSelectAllButton = SWTFactory.createPushButton(buttonContainer,
 				PHPDebugUIMessages.PHPDebugStepFilterPreferencePage_selectAll, null);
 		fSelectAllButton.addListener(SWT.Selection, new Listener() {
+			@Override
 			public void handleEvent(Event e) {
 				fTableViewer.setAllChecked(true);
 			}
@@ -286,6 +300,7 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 		fDeselectAllButton = SWTFactory.createPushButton(buttonContainer,
 				PHPDebugUIMessages.PHPDebugStepFilterPreferencePage_deselectAll, null);
 		fDeselectAllButton.addListener(SWT.Selection, new Listener() {
+			@Override
 			public void handleEvent(Event e) {
 				fTableViewer.setAllChecked(false);
 			}
@@ -374,9 +389,10 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 	 * 
 	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
 	 */
+	@Override
 	public boolean performOk() {
 		IPreferenceStore store = getPreferenceStore();
-		ArrayList<String> filtersPersistenceList = new ArrayList<String>();
+		ArrayList<String> filtersPersistenceList = new ArrayList<>();
 		DebugStepFilter[] filters = getAllFiltersFromTable();
 		for (int i = 0; i < filters.length; i++) {
 			filtersPersistenceList.add(filters[i].getType() + DebugStepFilter.FILTER_TOKENS_DELIM
@@ -384,7 +400,7 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 					+ DebugStepFilter.FILTER_TOKENS_DELIM + filters[i].getPath());
 		}
 		String pref = serializeList(
-				(String[]) filtersPersistenceList.toArray(new String[filtersPersistenceList.size()]));
+				filtersPersistenceList.toArray(new String[filtersPersistenceList.size()]));
 		store.setValue(IPHPDebugConstants.PREF_STEP_FILTERS_LIST, pref);
 		DebugPlugin.setUseStepFilters(fUseStepFiltersButton.getSelection());
 
@@ -407,6 +423,7 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 	 * 
 	 * @see org.eclipse.jface.preference.PreferencePage#performDefaults()
 	 */
+	@Override
 	protected void performDefaults() {
 		boolean stepenabled = DefaultScope.INSTANCE.getNode(DebugPlugin.getUniqueIdentifier())
 				.getBoolean(StepFilterManager.PREF_USE_STEP_FILTERS, false);
@@ -462,7 +479,7 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 	 * @since 3.2
 	 */
 	protected DebugStepFilter[] getAllPersistedFilters(boolean defaults) {
-		ArrayList<DebugStepFilter> filtersToAdd = new ArrayList<DebugStepFilter>();
+		ArrayList<DebugStepFilter> filtersToAdd = new ArrayList<>();
 
 		IPreferenceStore store = getPreferenceStore();
 		String[] parsedFilters = parseList(store.getString(IPHPDebugConstants.PREF_STEP_FILTERS_LIST));
@@ -492,13 +509,13 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 
 	// Parses the comma separated string into an array of strings
 	private String[] parseList(String listString) {
-		ArrayList<String> list = new ArrayList<String>();
+		ArrayList<String> list = new ArrayList<>();
 		StringTokenizer tokenizer = new StringTokenizer(listString, DebugStepFilter.FILTERS_PREF_LIST_DELIM);
 		while (tokenizer.hasMoreTokens()) {
 			String token = tokenizer.nextToken();
 			list.add(token);
 		}
-		return (String[]) list.toArray(new String[list.size()]);
+		return list.toArray(new String[list.size()]);
 	}
 
 	// Serializes the array of strings into one comma
@@ -525,6 +542,7 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 			this.existingFilters = existingFilters;
 		}
 
+		@Override
 		public String isValid(Object selection) {
 			if (selection != null) {
 				Path selectedPath = (Path) selection;

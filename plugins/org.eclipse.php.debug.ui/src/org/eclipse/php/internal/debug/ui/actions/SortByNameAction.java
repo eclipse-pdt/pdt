@@ -52,6 +52,7 @@ public class SortByNameAction extends AbstractDebugActionDelegate {
 			}
 
 			BusyIndicator.showWhile(viewer.getControl().getDisplay(), new Runnable() {
+				@Override
 				public void run() {
 					viewer.refresh();
 				}

@@ -31,17 +31,19 @@ public class SourceModifier implements ISourceModifier {
 		this.indentWidth = indentWidth;
 	}
 
+	@Override
 	public ISourceModifier copy() {
 		// We are state less
 		return this;
 	}
 
+	@Override
 	public ReplaceEdit[] getModifications(String source) {
-		List result = new ArrayList();
+		List<ReplaceEdit> result = new ArrayList<>();
 		int destIndentLevel = IndentManipulation.measureIndentUnits(this.destinationIndent, this.tabWidth,
 				this.indentWidth);
 		if (destIndentLevel == this.sourceIndentLevel) {
-			return (ReplaceEdit[]) result.toArray(new ReplaceEdit[result.size()]);
+			return result.toArray(new ReplaceEdit[result.size()]);
 		}
 		return IndentManipulation.getChangeIndentEdits(source, this.sourceIndentLevel, this.tabWidth, this.indentWidth,
 				this.destinationIndent);

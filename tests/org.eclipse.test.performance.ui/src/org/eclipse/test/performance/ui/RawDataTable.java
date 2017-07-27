@@ -27,7 +27,7 @@ import org.eclipse.test.internal.performance.results.db.DB_Results;
 public class RawDataTable {
 
 	private ConfigResults configResults;
-	private List buildPrefixes;
+	private List<String> buildPrefixes;
 	private PrintStream stream;
 	private Dim[] dimensions = DB_Results.getResultsDimensions();
 	private boolean debug = false;
@@ -37,13 +37,13 @@ private RawDataTable(ConfigResults results, PrintStream ps) {
 	this.stream = ps;
 }
 
-public RawDataTable(ConfigResults results, List prefixes, PrintStream ps) {
+public RawDataTable(ConfigResults results, List<String> prefixes, PrintStream ps) {
 	this(results, ps);
 	this.buildPrefixes = prefixes;
 }
 public RawDataTable(ConfigResults results, String baselinePrefix, PrintStream ps) {
 	this(results, ps);
-	this.buildPrefixes = new ArrayList();
+	this.buildPrefixes = new ArrayList<>();
 	this.buildPrefixes.add(baselinePrefix);
 }
 
@@ -79,7 +79,7 @@ private void printDetails() {
 	printColumnHeaders();
 	this.stream.print("</tr>\n");
 
-	List builds = this.configResults.getBuildsMatchingPrefixes(this.buildPrefixes);
+	List<?> builds = this.configResults.getBuildsMatchingPrefixes(this.buildPrefixes);
 	Collections.reverse(builds);
 	int size = builds.size();
 	for (int i=0; i<size; i++) {

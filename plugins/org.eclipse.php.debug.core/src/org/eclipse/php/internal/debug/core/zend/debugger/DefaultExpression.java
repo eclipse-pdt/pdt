@@ -21,7 +21,7 @@ public class DefaultExpression implements Expression {
 	private String[] name;
 	private String fullName;
 	private ExpressionValue expressionValue;
-	private Set<Facet> facets = new HashSet<Facet>();
+	private Set<Facet> facets = new HashSet<>();
 
 	/**
 	 * Creates new default expression.

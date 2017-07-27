@@ -19,6 +19,7 @@ import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 
 public class HeaderOutputNotificationHandler implements IDebugMessageHandler {
 
+	@Override
 	public void handle(IDebugMessage message, PHPDebugTarget debugTarget) {
 		IDebugHandler debugHandler = debugTarget.getRemoteDebugger().getDebugHandler();
 		debugHandler.newHeaderOutput(((HeaderOutputNotification) message).getOutput());

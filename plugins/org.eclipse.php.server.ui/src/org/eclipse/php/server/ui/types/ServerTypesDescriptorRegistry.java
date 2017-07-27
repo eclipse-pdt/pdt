@@ -61,7 +61,7 @@ public class ServerTypesDescriptorRegistry {
 	}
 
 	private Map<String, IServerTypeDescriptor> readFromExtensionPoint() {
-		final Map<String, IServerTypeDescriptor> descriptors = new HashMap<String, IServerTypeDescriptor>();
+		final Map<String, IServerTypeDescriptor> descriptors = new HashMap<>();
 		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry()
 				.getConfigurationElementsFor(EXTENSION_POINT_ID);
 		for (final IConfigurationElement element : configurationElements) {

@@ -62,7 +62,7 @@ public class InterfaceDeclaration extends TypeDeclaration {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(3);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(3);
 		propertyList.add(NAME_PROPERTY);
 		propertyList.add(INTERFACES_PROPERTY);
 		propertyList.add(BODY_PROPERTY);
@@ -78,6 +78,7 @@ public class InterfaceDeclaration extends TypeDeclaration {
 		super(ast);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -86,6 +87,7 @@ public class InterfaceDeclaration extends TypeDeclaration {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		getName().accept(visitor);
 		final List<Identifier> interfaes = interfaces();
@@ -96,6 +98,7 @@ public class InterfaceDeclaration extends TypeDeclaration {
 		getBody().accept(visitor);
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		getName().traverseTopDown(visitor);
@@ -107,6 +110,7 @@ public class InterfaceDeclaration extends TypeDeclaration {
 		getBody().traverseTopDown(visitor);
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		getName().traverseBottomUp(visitor);
 		final List<Identifier> interfaes = interfaces();
@@ -118,6 +122,7 @@ public class InterfaceDeclaration extends TypeDeclaration {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<InterfaceDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -139,6 +144,7 @@ public class InterfaceDeclaration extends TypeDeclaration {
 		buffer.append(tab).append("</InterfaceDeclaration>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.INTERFACE_DECLARATION;
 	}
@@ -146,6 +152,7 @@ public class InterfaceDeclaration extends TypeDeclaration {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

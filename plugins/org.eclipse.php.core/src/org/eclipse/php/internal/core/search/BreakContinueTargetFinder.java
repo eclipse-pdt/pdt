@@ -33,6 +33,7 @@ public class BreakContinueTargetFinder extends AbstractOccurrencesFinder {
 	 *            the selected node
 	 * @return returns a message if there is a problem
 	 */
+	@Override
 	public String initialize(Program root, ASTNode node) {
 		fASTRoot = root;
 		nestingLevel = 0;
@@ -108,6 +109,7 @@ public class BreakContinueTargetFinder extends AbstractOccurrencesFinder {
 	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#
 	 * findOccurrences ()
 	 */
+	@Override
 	protected void findOccurrences() {
 		if (nestingLevel == 0) {
 			// do nothing
@@ -190,6 +192,7 @@ public class BreakContinueTargetFinder extends AbstractOccurrencesFinder {
 	 * getOccurrenceReadWriteType
 	 * (org.eclipse.php.internal.core.ast.nodes.ASTNode)
 	 */
+	@Override
 	protected int getOccurrenceType(ASTNode node) {
 		return IOccurrencesFinder.K_EXIT_POINT_OCCURRENCE;
 	}
@@ -200,30 +203,37 @@ public class BreakContinueTargetFinder extends AbstractOccurrencesFinder {
 	// return super.visit(node);
 	// }
 
+	@Override
 	public Program getASTRoot() {
 		return fASTRoot;
 	}
 
+	@Override
 	public String getElementName() {
 		return null;
 	}
 
+	@Override
 	public String getID() {
 		return ID;
 	}
 
+	@Override
 	public String getJobLabel() {
 		return "BreakContinueTargetFinder_job_label"; //$NON-NLS-1$
 	}
 
+	@Override
 	public int getSearchKind() {
 		return IOccurrencesFinder.K_BREAK_TARGET_OCCURRENCE;
 	}
 
+	@Override
 	public String getUnformattedPluralLabel() {
 		return "BreakContinueTargetFinder_label_plural"; //$NON-NLS-1$
 	}
 
+	@Override
 	public String getUnformattedSingularLabel() {
 		return "BreakContinueTargetFinder_label_singular"; //$NON-NLS-1$
 	}

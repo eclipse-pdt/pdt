@@ -61,7 +61,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	/*
 	 * list of registered ILaunchDelegateListeners
 	 */
-	private List<ILaunchDelegateListener> preLaunchListeners = new ArrayList<ILaunchDelegateListener>();
+	private List<ILaunchDelegateListener> preLaunchListeners = new ArrayList<>();
 
 	/*
 	 * notify all registered ILaunchDelegateListener listeners launch is about
@@ -95,12 +95,14 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 				final Object o = e.createExecutableExtension("class"); //$NON-NLS-1$
 				if (o instanceof ILaunchDelegateListener) {
 					ISafeRunnable runnable = new ISafeRunnable() {
+						@Override
 						public void run() throws Exception {
 							ILaunchDelegateListener listener = (ILaunchDelegateListener) o;
 							Assert.isNotNull(listener);
 							preLaunchListeners.add(listener);
 						}
 
+						@Override
 						public void handleException(Throwable exception) {
 							Logger.logException(exception);
 						}
@@ -116,6 +118,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	/**
 	 * Override the extended getLaunch to create a PHPLaunch.
 	 */
+	@Override
 	public ILaunch getLaunch(ILaunchConfiguration configuration, String mode) throws CoreException {
 		return new PHPLaunch(configuration, mode, null);
 	}
@@ -129,6 +132,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	 * org.eclipse.debug.core.ILaunch,
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
 			throws CoreException {
 		// Notify all listeners of a preLaunch event.
@@ -225,6 +229,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	 * (org.eclipse.debug.core.ILaunchConfiguration, java.lang.String,
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public boolean preLaunchCheck(final ILaunchConfiguration configuration, final String mode, IProgressMonitor monitor)
 			throws CoreException {
 		// Check if the server exists
@@ -232,6 +237,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 		Server server = ServersManager.getServer(serverName);
 		if (server == null) {
 			Display.getDefault().asyncExec(new Runnable() {
+				@Override
 				public void run() {
 					MessageDialog.openWarning(Display.getDefault().getActiveShell(),
 							PHPDebugCoreMessages.PHPLaunchUtilities_phpLaunchTitle,
@@ -312,6 +318,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	 */
 	protected void displayErrorMessage(final String title, final String message) {
 		Display.getDefault().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				MessageDialog.openError(Display.getDefault().getActiveShell(), title, message);
 			}
@@ -384,6 +391,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 			setSystem(true);
 		}
 
+		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			initiateDebug(launch);
 			Logger.debugMSG("Terminating debug session: calling PHPDebugTarget.terminate()"); //$NON-NLS-1$
@@ -405,95 +413,121 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 			this.launch = launch;
 		}
 
+		@Override
 		public String getName() throws DebugException {
 			return "Session Terminated"; //$NON-NLS-1$
 		}
 
+		@Override
 		public IProcess getProcess() {
 			return null;
 		}
 
+		@Override
 		public IThread[] getThreads() throws DebugException {
 			return EMPTY_THREADS;
 		}
 
+		@Override
 		public boolean hasThreads() throws DebugException {
 			return false;
 		}
 
+		@Override
 		public boolean supportsBreakpoint(IBreakpoint breakpoint) {
 			return false;
 		}
 
+		@Override
 		public IDebugTarget getDebugTarget() {
 			return this;
 		}
 
+		@Override
 		public ILaunch getLaunch() {
 			return launch;
 		}
 
+		@Override
 		public String getModelIdentifier() {
 			return ""; //$NON-NLS-1$
 		}
 
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		@Override
 		public Object getAdapter(Class adapter) {
 			return null;
 		}
 
+		@Override
 		public boolean canTerminate() {
 			return false;
 		}
 
+		@Override
 		public boolean isTerminated() {
 			return true;
 		}
 
+		@Override
 		public void terminate() throws DebugException {
 		}
 
+		@Override
 		public boolean canResume() {
 			return false;
 		}
 
+		@Override
 		public boolean canSuspend() {
 			return false;
 		}
 
+		@Override
 		public boolean isSuspended() {
 			return false;
 		}
 
+		@Override
 		public void resume() throws DebugException {
 		}
 
+		@Override
 		public void suspend() throws DebugException {
 		}
 
+		@Override
 		public void breakpointAdded(IBreakpoint breakpoint) {
 		}
 
+		@Override
 		public void breakpointChanged(IBreakpoint breakpoint, IMarkerDelta delta) {
 		}
 
+		@Override
 		public void breakpointRemoved(IBreakpoint breakpoint, IMarkerDelta delta) {
 		}
 
+		@Override
 		public boolean canDisconnect() {
 			return false;
 		}
 
+		@Override
 		public void disconnect() throws DebugException {
 		}
 
+		@Override
 		public boolean isDisconnected() {
 			return false;
 		}
 
+		@Override
 		public IMemoryBlock getMemoryBlock(long startAddress, long length) throws DebugException {
 			return null;
 		}
 
+		@Override
 		public boolean supportsStorageRetrieval() {
 			return false;
 		}

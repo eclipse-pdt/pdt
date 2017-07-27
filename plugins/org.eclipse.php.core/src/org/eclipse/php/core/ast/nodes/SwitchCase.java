@@ -33,7 +33,7 @@ import org.eclipse.php.core.ast.visitor.Visitor;
 public class SwitchCase extends Statement {
 
 	private Expression value;
-	private ASTNode.NodeList<Statement> actions = new ASTNode.NodeList<Statement>(ACTIONS_PROPERTY);
+	private ASTNode.NodeList<Statement> actions = new ASTNode.NodeList<>(ACTIONS_PROPERTY);
 	private boolean isDefault;
 
 	/**
@@ -53,7 +53,7 @@ public class SwitchCase extends Statement {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(1);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(1);
 		propertyList.add(VALUE_PROPERTY);
 		propertyList.add(ACTIONS_PROPERTY);
 		propertyList.add(IS_DEFAULT_PROPERTY);
@@ -78,6 +78,7 @@ public class SwitchCase extends Statement {
 		super(ast);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -86,6 +87,7 @@ public class SwitchCase extends Statement {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		if (value != null) {
 			value.accept(visitor);
@@ -95,6 +97,7 @@ public class SwitchCase extends Statement {
 		}
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		if (value != null) {
@@ -105,6 +108,7 @@ public class SwitchCase extends Statement {
 		}
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		if (value != null) {
 			value.traverseBottomUp(visitor);
@@ -115,6 +119,7 @@ public class SwitchCase extends Statement {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<SwitchCase"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -132,6 +137,7 @@ public class SwitchCase extends Statement {
 		buffer.append(tab).append("</SwitchCase>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.SWITCH_CASE;
 	}
@@ -202,11 +208,13 @@ public class SwitchCase extends Statement {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
 	}
 
+	@Override
 	final boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean value) {
 		if (property == IS_DEFAULT_PROPERTY) {
 			if (get) {
@@ -220,6 +228,7 @@ public class SwitchCase extends Statement {
 		return super.internalGetSetBooleanProperty(property, get, value);
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == VALUE_PROPERTY) {
 			if (get) {
@@ -241,7 +250,7 @@ public class SwitchCase extends Statement {
 	 * ChildListPropertyDescriptor)
 	 */
 	@Override
-	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+	final List<? extends ASTNode> internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == ACTIONS_PROPERTY) {
 			return actions();
 		}

@@ -67,7 +67,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	}
 
 	protected Map<String, String> createInitialParameters(ASTNode s) throws Exception {
-		Map<String, String> parameters = new LinkedHashMap<String, String>();
+		Map<String, String> parameters = new LinkedHashMap<>();
 
 		// Print offset information:
 		parameters.put("start", Integer.toString(s.sourceStart())); //$NON-NLS-1$
@@ -103,361 +103,433 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return parameters;
 	}
 
+	@Override
 	public boolean endvisit(ArrayCreation s) throws Exception {
 		xmlWriter.endTag("ArrayCreation"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(ArrayElement s) throws Exception {
 		xmlWriter.endTag("ArrayElement"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(ArrayVariableReference s) throws Exception {
 		xmlWriter.endTag("ArrayVariableReference"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(Assignment s) throws Exception {
 		xmlWriter.endTag("Assignment"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(ASTError s) throws Exception {
 		xmlWriter.endTag("ASTError"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(BackTickExpression s) throws Exception {
 		xmlWriter.endTag("BackTickExpression"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(BreakStatement s) throws Exception {
 		xmlWriter.endTag("BreakStatement"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(CastExpression s) throws Exception {
 		xmlWriter.endTag("CastExpression"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(CatchClause s) throws Exception {
 		xmlWriter.endTag("CatchClause"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(FinallyClause s) throws Exception {
 		xmlWriter.endTag("FinallyClause"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(ConstantDeclaration s) throws Exception {
 		xmlWriter.endTag("ConstantDeclaration"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(ClassDeclaration s) throws Exception {
 		xmlWriter.endTag("ClassDeclaration"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(ClassInstanceCreation s) throws Exception {
 		xmlWriter.endTag("ClassInstanceCreation"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(CloneExpression s) throws Exception {
 		xmlWriter.endTag("CloneExpression"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(Comment s) throws Exception {
 		xmlWriter.endTag("Comment"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(ConditionalExpression s) throws Exception {
 		xmlWriter.endTag("ConditionalExpression"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(ConstantReference s) throws Exception {
 		xmlWriter.endTag("ConstantReference"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(ContinueStatement s) throws Exception {
 		xmlWriter.endTag("ContinueStatement"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(DeclareStatement s) throws Exception {
 		xmlWriter.endTag("DeclareStatement"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(Dispatch s) throws Exception {
 		xmlWriter.endTag("Dispatch"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(DoStatement s) throws Exception {
 		xmlWriter.endTag("DoStatement"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(EchoStatement s) throws Exception {
 		xmlWriter.endTag("EchoStatement"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(EmptyStatement s) throws Exception {
 		xmlWriter.endTag("EmptyStatement"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(ExpressionStatement s) throws Exception {
 		xmlWriter.endTag("ExpressionStatement"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(FieldAccess s) throws Exception {
 		xmlWriter.endTag("FieldAccess"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(ForEachStatement s) throws Exception {
 		xmlWriter.endTag("ForEachStatement"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(FormalParameter s) throws Exception {
 		xmlWriter.endTag("FormalParameter"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(FormalParameterByReference s) throws Exception {
 		xmlWriter.endTag("FormalParameterByReference"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(ForStatement s) throws Exception {
 		xmlWriter.endTag("ForStatement"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(GlobalStatement s) throws Exception {
 		xmlWriter.endTag("GlobalStatement"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(IfStatement s) throws Exception {
 		xmlWriter.endTag("IfStatement"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(IgnoreError s) throws Exception {
 		xmlWriter.endTag("IgnoreError"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(Include s) throws Exception {
 		xmlWriter.endTag("Include"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(InfixExpression s) throws Exception {
 		xmlWriter.endTag("InfixExpression"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(InstanceOfExpression s) throws Exception {
 		xmlWriter.endTag("InstanceOfExpression"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(InterfaceDeclaration s) throws Exception {
 		xmlWriter.endTag("InterfaceDeclaration"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(ListVariable s) throws Exception {
 		xmlWriter.endTag("ListVariable"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(PHPCallArgumentsList s) throws Exception {
 		xmlWriter.endTag("PHPCallArgumentsList"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(PHPCallExpression s) throws Exception {
 		xmlWriter.endTag("PHPCallExpression"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(PHPDocBlock s) throws Exception {
 		xmlWriter.endTag("PHPDocBlock"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(PHPDocTag s) throws Exception {
 		xmlWriter.endTag("PHPDocTag"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(PHPFieldDeclaration s) throws Exception {
 		xmlWriter.endTag("PHPFieldDeclaration"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(PHPMethodDeclaration s) throws Exception {
 		xmlWriter.endTag("PHPMethodDeclaration"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(PostfixExpression s) throws Exception {
 		xmlWriter.endTag("PostfixExpression"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(PrefixExpression s) throws Exception {
 		xmlWriter.endTag("PrefixExpression"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(Quote s) throws Exception {
 		xmlWriter.endTag("Quote"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(ReferenceExpression s) throws Exception {
 		xmlWriter.endTag("ReferenceExpression"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(ReflectionArrayVariableReference s) throws Exception {
 		xmlWriter.endTag("ReflectionArrayVariableReference"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(ReflectionCallExpression s) throws Exception {
 		xmlWriter.endTag("ReflectionCallExpression"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(ReflectionStaticMethodInvocation s) throws Exception {
 		xmlWriter.endTag("ReflectionStaticMethodInvocation"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(ReflectionVariableReference s) throws Exception {
 		xmlWriter.endTag("ReflectionVariableReference"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(ReturnStatement s) throws Exception {
 		xmlWriter.endTag("ReturnStatement"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(ReturnType s) throws Exception {
 		xmlWriter.endTag("ReturnType"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(YieldExpression s) throws Exception {
 		xmlWriter.endTag("YieldExpression"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(Scalar s) throws Exception {
 		xmlWriter.endTag("Scalar"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(SimpleReference s) throws Exception {
 		xmlWriter.endTag("SimpleReference"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(StaticConstantAccess s) throws Exception {
 		xmlWriter.endTag("StaticConstantAccess"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(StaticDispatch s) throws Exception {
 		xmlWriter.endTag("StaticDispatch"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(StaticFieldAccess s) throws Exception {
 		xmlWriter.endTag("StaticFieldAccess"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(StaticMethodInvocation s) throws Exception {
 		xmlWriter.endTag("StaticMethodInvocation"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(StaticStatement s) throws Exception {
 		xmlWriter.endTag("StaticStatement"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(SwitchCase s) throws Exception {
 		xmlWriter.endTag("SwitchCase"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(SwitchStatement s) throws Exception {
 		xmlWriter.endTag("SwitchStatement"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(ThrowStatement s) throws Exception {
 		xmlWriter.endTag("ThrowStatement"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(TryStatement s) throws Exception {
 		xmlWriter.endTag("TryStatement"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(TypeReference s) throws Exception {
 		xmlWriter.endTag("TypeReference"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(FullyQualifiedReference s) throws Exception {
 		xmlWriter.endTag("FullyQualifiedReference"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(NamespaceReference s) throws Exception {
 		xmlWriter.endTag("NamespaceReference"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(UnaryOperation s) throws Exception {
 		xmlWriter.endTag("UnaryOperation"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(VariableReference s) throws Exception {
 		xmlWriter.endTag("VariableReference"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(WhileStatement s) throws Exception {
 		xmlWriter.endTag("WhileStatement"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(ModuleDeclaration s) throws Exception {
 		List<ASTError> errors = ((PHPModuleDeclaration) s).getErrors();
 		if (!errors.isEmpty()) {
@@ -471,43 +543,51 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(NamespaceDeclaration s) throws Exception {
 		xmlWriter.endTag("NamespaceDeclaration"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(GotoLabel s) throws Exception {
 		xmlWriter.endTag("GotoLabel"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(GotoStatement s) throws Exception {
 		xmlWriter.endTag("GotoStatement"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(LambdaFunctionDeclaration s) throws Exception {
 		xmlWriter.endTag("LambdaFunctionDeclaration"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(AnonymousClassDeclaration s) throws Exception {
 		xmlWriter.endTag("AnonymousClassDeclaration"); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(ArrayCreation s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ArrayCreation", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(ArrayElement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ArrayElement", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(ArrayVariableReference s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("type", //$NON-NLS-1$
@@ -517,6 +597,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(Assignment s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("operator", s.getOperator()); //$NON-NLS-1$
@@ -524,24 +605,28 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(ASTError s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ASTError", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(BackTickExpression s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("BackTickExpression", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(BreakStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("BreakStatement", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(CastExpression s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("type", CastExpression.getCastType(s.getCastType())); //$NON-NLS-1$
@@ -549,24 +634,28 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(CatchClause s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("CatchClause", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(FinallyClause s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("FinallyClause", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(ConstantDeclaration s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ConstantDeclaration", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(ClassDeclaration s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("name", s.getName()); //$NON-NLS-1$
@@ -574,18 +663,21 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(ClassInstanceCreation s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ClassInstanceCreation", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(CloneExpression s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("CloneExpression", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(Comment s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("type", Comment.getCommentType(s.getCommentType())); //$NON-NLS-1$
@@ -593,6 +685,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(ConditionalExpression s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("operatorType", String.valueOf(s.getOperatorType())); //$NON-NLS-1$
@@ -628,6 +721,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return false;
 	}
 
+	@Override
 	public boolean visit(ConstantReference s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("name", s.getName()); //$NON-NLS-1$
@@ -635,60 +729,70 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(ContinueStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ContinueStatement", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(DeclareStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("DeclareStatement", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(Dispatch s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("Dispatch", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(DoStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("DoStatement", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(EchoStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("EchoStatement", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(EmptyStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("EmptyStatement", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(ExpressionStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ExpressionStatement", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(FieldAccess s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("FieldAccess", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(ForEachStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ForEachStatement", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(FormalParameter s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("isMandatory", Boolean.toString(s.isMandatory())); //$NON-NLS-1$
@@ -699,12 +803,14 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(FormalParameterByReference s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("FormalParameterByReference", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(ForStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ForStatement", parameters); //$NON-NLS-1$
@@ -732,12 +838,14 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return false;
 	}
 
+	@Override
 	public boolean visit(GlobalStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("GlobalStatement", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(IfStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("IfStatement", parameters); //$NON-NLS-1$
@@ -760,12 +868,14 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return false;
 	}
 
+	@Override
 	public boolean visit(IgnoreError s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("IgnoreError", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(Include s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("type", s.getType()); //$NON-NLS-1$
@@ -773,6 +883,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(InfixExpression s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("operator", s.getOperator()); //$NON-NLS-1$
@@ -780,12 +891,14 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(InstanceOfExpression s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("InstanceOfExpression", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(InterfaceDeclaration s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("name", s.getName()); //$NON-NLS-1$
@@ -793,24 +906,28 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(ListVariable s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ListVariable", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(PHPCallArgumentsList s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("PHPCallArgumentsList", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(PHPCallExpression s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("PHPCallExpression", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(PHPDocBlock s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("shortDescription", s.getShortDescription()); //$NON-NLS-1$
@@ -818,6 +935,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(PHPDocTag s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("tagKind", s.getTagKind().getName()); //$NON-NLS-1$
@@ -826,12 +944,14 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(PHPFieldDeclaration s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("PHPFieldDeclaration", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(PHPMethodDeclaration s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("name", s.getName()); //$NON-NLS-1$
@@ -839,6 +959,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(PostfixExpression s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("operator", s.getOperator()); //$NON-NLS-1$
@@ -846,6 +967,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(PrefixExpression s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("operator", s.getOperator()); //$NON-NLS-1$
@@ -853,6 +975,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(Quote s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("type", Quote.getType(s.getQuoteType())); //$NON-NLS-1$
@@ -860,47 +983,55 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(ReferenceExpression s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ReferenceExpression", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(ReflectionArrayVariableReference s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ReflectionArrayVariableReference", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(ReflectionCallExpression s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ReflectionCallExpression", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(ReflectionStaticMethodInvocation s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ReflectionStaticMethodInvocation", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(ReflectionVariableReference s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ReflectionVariableReference", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(ReturnStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ReturnStatement", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(ReturnType s) throws Exception {
 		xmlWriter.startTag("ReturnType", null); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(YieldExpression s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		if (s.getOperatorType() != YieldExpression.OP_NONE) {
@@ -910,6 +1041,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(Scalar s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("type", s.getType()); //$NON-NLS-1$
@@ -918,6 +1050,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(SimpleReference s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("name", s.getName()); //$NON-NLS-1$
@@ -925,60 +1058,70 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(StaticConstantAccess s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("StaticConstantAccess", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(StaticDispatch s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("StaticDispatch", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(StaticFieldAccess s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("StaticFieldAccess", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(StaticMethodInvocation s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("StaticMethodInvocation", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(StaticStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("StaticStatement", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(SwitchCase s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("SwitchCase", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(SwitchStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("SwitchStatement", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(ThrowStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ThrowStatement", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(TryStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("TryStatement", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(TypeReference s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("name", s.getName()); //$NON-NLS-1$
@@ -986,6 +1129,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(FullyQualifiedReference s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("name", s.getFullyQualifiedName()); //$NON-NLS-1$
@@ -996,6 +1140,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(NamespaceReference s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("name", s.getName()); //$NON-NLS-1$
@@ -1005,6 +1150,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(UnaryOperation s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("operator", s.getOperator()); //$NON-NLS-1$
@@ -1012,6 +1158,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(VariableReference s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("name", s.getName()); //$NON-NLS-1$
@@ -1019,18 +1166,21 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(WhileStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("WhileStatement", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(ModuleDeclaration s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ModuleDeclaration", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(NamespaceDeclaration s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("name", s.getName()); //$NON-NLS-1$
@@ -1038,6 +1188,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(UseStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		if (s.getStatementType() != UseStatement.T_NONE) {
@@ -1060,6 +1211,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return false;
 	}
 
+	@Override
 	public boolean visit(UsePart s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		if (s.getStatementType() != UseStatement.T_NONE) {
@@ -1074,6 +1226,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return false;
 	}
 
+	@Override
 	public boolean visit(GotoLabel s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("label", s.getLabel()); //$NON-NLS-1$
@@ -1081,6 +1234,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(GotoStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("label", s.getLabel()); //$NON-NLS-1$
@@ -1088,6 +1242,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(LambdaFunctionDeclaration s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("isReference", Boolean.toString(s.isReference())); //$NON-NLS-1$
@@ -1122,6 +1277,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return false;
 	}
 
+	@Override
 	public boolean visit(AnonymousClassDeclaration s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("AnonymousClassDeclaration", parameters); //$NON-NLS-1$
@@ -1144,8 +1300,9 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	}
 
 	// php5.4 starts
-	Map<String, String> EMPTY_MAP = new HashMap<String, String>();
+	Map<String, String> EMPTY_MAP = new HashMap<>();
 
+	@Override
 	public boolean visit(FullyQualifiedTraitMethodReference s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("functionName", s.getFunctionName()); //$NON-NLS-1$
@@ -1157,6 +1314,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return false;
 	}
 
+	@Override
 	public boolean visit(TraitAlias s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		if (s.getMethodName() != null) {
@@ -1167,30 +1325,35 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(TraitAliasStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("TraitAliasStatement", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(TraitPrecedence s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("TraitPrecedence", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(TraitPrecedenceStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("TraitPrecedenceStatement", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(TraitUseStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("TraitUseStatement", parameters); //$NON-NLS-1$
 		return true;
 	}
 
+	@Override
 	public boolean visit(TraitDeclaration s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("name", s.getName()); //$NON-NLS-1$
@@ -1198,36 +1361,43 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(FullyQualifiedTraitMethodReference s) throws Exception {
 		xmlWriter.endTag("FullyQualifiedTraitMethodReference"); //$NON-NLS-1$
 		return false;
 	}
 
+	@Override
 	public boolean endvisit(TraitAlias s) throws Exception {
 		xmlWriter.endTag("TraitAlias"); //$NON-NLS-1$
 		return false;
 	}
 
+	@Override
 	public boolean endvisit(TraitAliasStatement s) throws Exception {
 		xmlWriter.endTag("TraitAliasStatement"); //$NON-NLS-1$
 		return false;
 	}
 
+	@Override
 	public boolean endvisit(TraitPrecedence s) throws Exception {
 		xmlWriter.endTag("TraitPrecedence"); //$NON-NLS-1$
 		return false;
 	}
 
+	@Override
 	public boolean endvisit(TraitPrecedenceStatement s) throws Exception {
 		xmlWriter.endTag("TraitPrecedenceStatement"); //$NON-NLS-1$
 		return false;
 	}
 
+	@Override
 	public boolean endvisit(TraitUseStatement s) throws Exception {
 		xmlWriter.endTag("TraitUseStatement"); //$NON-NLS-1$
 		return false;
 	}
 
+	@Override
 	public boolean endvisit(TraitDeclaration s) throws Exception {
 		xmlWriter.endTag("TraitDeclaration"); //$NON-NLS-1$
 		return false;

@@ -23,7 +23,6 @@ import org.eclipse.php.composer.core.facet.FacetManager;
 import org.eclipse.php.composer.core.log.Logger;
 import org.eclipse.php.composer.core.model.PackagePath;
 
-@SuppressWarnings("restriction")
 public class PackageTreeContentProvider extends ScriptExplorerContentProvider {
 	public PackageTreeContentProvider() {
 		super(true);

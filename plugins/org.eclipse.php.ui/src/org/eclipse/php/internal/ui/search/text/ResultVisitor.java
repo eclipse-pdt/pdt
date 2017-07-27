@@ -77,7 +77,7 @@ public class ResultVisitor extends TextSearchRequestor {
 	/**
 	 * @return a list of {@link FileMatch}
 	 */
-	public List getResult() {
+	public List<Match> getResult() {
 		return fResult;
 	}
 

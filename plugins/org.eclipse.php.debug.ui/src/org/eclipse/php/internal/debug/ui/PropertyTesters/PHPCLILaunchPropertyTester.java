@@ -48,6 +48,7 @@ public class PHPCLILaunchPropertyTester extends PropertyTester {
 	 *         <code>true<code> if the property is equal to the expected value; 
 	 *  otherwise <code>false</code> is returned
 	 */
+	@Override
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
 		if (receiver instanceof List<?>) {
 			List<?> list = (List<?>) receiver;
@@ -70,11 +71,11 @@ public class PHPCLILaunchPropertyTester extends PropertyTester {
 	}
 
 	private IResource getResource(IAdaptable obj) {
-		IModelElement modelElement = (IModelElement) ((IAdaptable) obj).getAdapter(IModelElement.class);
+		IModelElement modelElement = obj.getAdapter(IModelElement.class);
 		if (modelElement != null) {
 			return modelElement.getResource();
 		} else {
-			return (IResource) ((IAdaptable) obj).getAdapter(IResource.class);
+			return obj.getAdapter(IResource.class);
 		}
 	}
 

@@ -57,6 +57,7 @@ public class XDebugDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#
 	 *      openConfigurationDialog(org.eclipse.swt.widgets.Shell)
 	 */
+	@Override
 	public void openConfigurationDialog(final Shell parentShell) {
 		new XDebugConfigurationDialog(this, parentShell).open();
 	}
@@ -65,6 +66,7 @@ public class XDebugDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	 * @see org.eclipse.php.internal.debug.core.debugger.
 	 *      AbstractDebuggerConfiguration #getPort()
 	 */
+	@Override
 	public int getPort() {
 		return XDebugPreferenceMgr.getPort();
 	}
@@ -73,6 +75,7 @@ public class XDebugDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	 * @see org.eclipse.php.internal.debug.core.debugger.
 	 *      AbstractDebuggerConfiguration #setPort(int)
 	 */
+	@Override
 	public void setPort(int port) {
 		XDebugPreferenceMgr.setPort(preferences, port);
 	}
@@ -81,6 +84,7 @@ public class XDebugDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#
 	 *      getScriptLaunchDelegateClass()
 	 */
+	@Override
 	public String getScriptLaunchDelegateClass() {
 		return XDebugExeLaunchConfigurationDelegate.class.getName();
 	}
@@ -89,6 +93,7 @@ public class XDebugDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#
 	 *      getWebLaunchDelegateClass()
 	 */
+	@Override
 	public String getWebLaunchDelegateClass() {
 		return XDebugWebLaunchConfigurationDelegate.class.getName();
 	}
@@ -97,6 +102,7 @@ public class XDebugDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	 * @see org.eclipse.php.internal.debug.core.debugger.
 	 *      AbstractDebuggerConfiguration #applyDefaults()
 	 */
+	@Override
 	public void applyDefaults() {
 		XDebugPreferenceMgr.applyDefaults(preferences);
 		save();
@@ -106,6 +112,7 @@ public class XDebugDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	 * @see org.eclipse.php.internal.debug.core.debugger.
 	 *      AbstractDebuggerConfiguration #validate()
 	 */
+	@Override
 	public IStatus validate(PHPexeItem item) {
 		File executable = item.getExecutable();
 		PHPexes.changePermissions(executable);

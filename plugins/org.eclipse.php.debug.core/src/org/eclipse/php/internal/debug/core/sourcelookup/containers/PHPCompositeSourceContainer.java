@@ -41,8 +41,9 @@ public class PHPCompositeSourceContainer extends CompositeSourceContainer {
 		this.project = project;
 	}
 
+	@Override
 	protected ISourceContainer[] createSourceContainers() throws CoreException {
-		ArrayList<ISourceContainer> containers = new ArrayList<ISourceContainer>();
+		ArrayList<ISourceContainer> containers = new ArrayList<>();
 
 		ISourceContainer projectContainer = new ProjectSourceContainer(project, false);
 		containers.add(projectContainer);
@@ -76,6 +77,7 @@ public class PHPCompositeSourceContainer extends CompositeSourceContainer {
 		return scontainers;
 	}
 
+	@Override
 	public Object[] findSourceElements(String name) throws CoreException {
 		// Might be a workspace relative location
 		IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(name);
@@ -94,10 +96,12 @@ public class PHPCompositeSourceContainer extends CompositeSourceContainer {
 		return objs;
 	}
 
+	@Override
 	public String getName() {
 		return null;
 	}
 
+	@Override
 	public ISourceContainerType getType() {
 		return null;
 	}

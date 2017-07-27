@@ -81,7 +81,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 					buffer.append('&');
 				}
 			}
-			Map<String, String> parameters = new Hashtable<String, String>();
+			Map<String, String> parameters = new Hashtable<>();
 			parameters.put(DefaultDebugParametersInitializer.START_DEBUG, "1"); //$NON-NLS-1$
 			parameters.put(DefaultDebugParametersInitializer.SEND_SESS_END, "1"); //$NON-NLS-1$
 			parameters.put(DefaultDebugParametersInitializer.DEBUG_NO_CACHE, Long.toString(System.currentTimeMillis()));
@@ -233,44 +233,53 @@ public class RemoteDebugger implements IRemoteDebugger {
 		this.debugHandler = debugHandler;
 		connection.setCommunicationAdministrator(this);
 		connection.setCommunicationClient(this);
-		resolvedFiles = new HashMap<String, String>();
-		resolvedIncludePaths = new HashMap<String, List<IPath>>();
+		resolvedFiles = new HashMap<>();
+		resolvedIncludePaths = new HashMap<>();
 	}
 
+	@Override
 	public IDebugHandler getDebugHandler() {
 		return debugHandler;
 	}
 
+	@Override
 	public DebugConnection getConnection() {
 		return connection;
 	}
 
+	@Override
 	public void closeConnection() {
 		connection.disconnect();
 	}
 
+	@Override
 	public void connectionEstablished() {
 		debugHandler.connectionEstablished();
 	}
 
+	@Override
 	public void connectionClosed() {
 		debugHandler.connectionClosed();
 	}
 
+	@Override
 	public void closeDebugSession() {
 		if (connection.isConnected()) {
 			connection.sendNotification(new DebugSessionClosedNotification());
 		}
 	}
 
+	@Override
 	public void handleMultipleBindings() {
 		debugHandler.multipleBindOccured();
 	}
 
+	@Override
 	public void handlePeerResponseTimeout() {
 		debugHandler.connectionTimedout();
 	}
 
+	@Override
 	public boolean canDo(int feature) {
 		switch (feature) {
 		case START_PROCESS_FILE_NOTIFICATION:
@@ -339,6 +348,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * @param fileName
 	 * @return byte array of the file content
 	 */
+	@Override
 	public byte[] getFileContent(String fileName) {
 		try {
 			FileContentRequest request = new FileContentRequest();
@@ -572,6 +582,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 *            request that will be sent to the debugger
 	 * @return message response recieved from the debugger
 	 */
+	@Override
 	public IDebugResponseMessage sendCustomRequest(IDebugRequestMessage request) {
 		IDebugResponseMessage response = null;
 		if (this.isActive()) {
@@ -611,6 +622,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * Asynchronic addBreakpoint Returns true if succeeded sending the request,
 	 * false otherwise.
 	 */
+	@Override
 	public boolean addBreakpoint(Breakpoint bp, BreakpointAddedResponseHandler responseHandler) {
 		if (!this.isActive()) {
 			return false;
@@ -632,6 +644,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	/**
 	 * Synchronic addBreakpoint Returns true if succeeded adding the Breakpoint.
 	 */
+	@Override
 	public void addBreakpoint(Breakpoint breakpoint) {
 		if (!this.isActive()) {
 			return;
@@ -656,6 +669,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * Asynchronic removeBreakpoint Returns true if succeeded sending the
 	 * request, false otherwise.
 	 */
+	@Override
 	public boolean removeBreakpoint(int id, BreakpointRemovedResponseHandler responseHandler) {
 		if (!this.isActive()) {
 			return false;
@@ -670,6 +684,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * Synchronic removeBreakpoint Returns true if succeeded removing the
 	 * Breakpoint.
 	 */
+	@Override
 	public boolean removeBreakpoint(int id) {
 		if (!this.isActive()) {
 			return false;
@@ -689,6 +704,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * Asynchronic removeBreakpoint Returns true if succeeded sending the
 	 * request, false otherwise.
 	 */
+	@Override
 	public boolean removeBreakpoint(Breakpoint breakpoint, BreakpointRemovedResponseHandler responseHandler) {
 		return removeBreakpoint(breakpoint.getID(), responseHandler);
 	}
@@ -697,6 +713,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * Synchronic removeBreakpoint Returns true if succeeded removing the
 	 * Breakpoint.
 	 */
+	@Override
 	public boolean removeBreakpoint(Breakpoint breakpoint) {
 		return removeBreakpoint(breakpoint.getID());
 	}
@@ -705,6 +722,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * Asynchronic removeAllBreakpoints Returns true if succeeded sending the
 	 * request, false otherwise.
 	 */
+	@Override
 	public boolean removeAllBreakpoints(AllBreakpointRemovedResponseHandler responseHandler) {
 		if (!this.isActive()) {
 			return false;
@@ -718,6 +736,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * Synchronic removeAllBreakpoints Returns true if succeeded removing all
 	 * the Breakpoint.
 	 */
+	@Override
 	public boolean removeAllBreakpoints() {
 		if (!this.isActive()) {
 			return false;
@@ -736,6 +755,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * Asynchronic stepInto Returns true if succeeded sending the request, false
 	 * otherwise.
 	 */
+	@Override
 	public boolean stepInto(StepIntoResponseHandler responseHandler) {
 		if (!this.isActive()) {
 			return false;
@@ -748,6 +768,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	/**
 	 * Synchronic stepInto Returns true if succeeded stepInto.
 	 */
+	@Override
 	public boolean stepInto() {
 		if (!this.isActive()) {
 			return false;
@@ -766,6 +787,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * Asynchronic stepOver Returns true if succeeded sending the request, false
 	 * otherwise.
 	 */
+	@Override
 	public boolean stepOver(StepOverResponseHandler responseHandler) {
 		if (!this.isActive()) {
 			return false;
@@ -783,6 +805,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	/**
 	 * Synchronic stepOver Returns true if succeeded stepOver.
 	 */
+	@Override
 	public boolean stepOver() {
 		if (!this.isActive()) {
 			return false;
@@ -801,6 +824,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * Asynchronic stepOut Returns true if succeeded sending the request, false
 	 * otherwise.
 	 */
+	@Override
 	public boolean stepOut(StepOutResponseHandler responseHandler) {
 		if (!this.isActive()) {
 			return false;
@@ -818,6 +842,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	/**
 	 * Synchronic stepOut Returns true if succeeded stepOut.
 	 */
+	@Override
 	public boolean stepOut() {
 		if (!this.isActive()) {
 			return false;
@@ -836,6 +861,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * Asynchronic go Returns true if succeeded sending the request, false
 	 * otherwise.
 	 */
+	@Override
 	public boolean go(GoResponseHandler responseHandler) {
 		if (!this.isActive()) {
 			return false;
@@ -853,6 +879,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	/**
 	 * Synchronic go Returns true if succeeded go.
 	 */
+	@Override
 	public boolean go() {
 		if (!this.isActive()) {
 			return false;
@@ -871,6 +898,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * Asynchronic start Returns true if succeeded sending the request, false
 	 * otherwise.
 	 */
+	@Override
 	public boolean start(StartResponseHandler responseHandler) {
 		if (!this.isActive()) {
 			return false;
@@ -899,6 +927,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	/**
 	 * Synchronic start Returns true if succeeded start.
 	 */
+	@Override
 	public boolean start() {
 		if (!this.isActive()) {
 			return false;
@@ -922,6 +951,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * Asynchronous addFiles Returns true if succeeded sending the request,
 	 * false otherwise.
 	 */
+	@Override
 	public boolean addFiles(String[] paths, AddFilesResponseHandler responseHandler) {
 		if (!this.isActive()) {
 			return false;
@@ -940,6 +970,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	/**
 	 * Synchronous addFiles Returns true if succeeded adding the Breakpoint.
 	 */
+	@Override
 	public boolean addFiles(String[] paths) {
 		if (!this.isActive()) {
 			return false;
@@ -1042,6 +1073,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 				null);
 		if (!dontShowWarning) {
 			Display.getDefault().asyncExec(new Runnable() {
+				@Override
 				public void run() {
 					OldDebuggerWarningDialog dialog = new OldDebuggerWarningDialog(
 							Display.getDefault().getActiveShell());
@@ -1053,6 +1085,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 	public static void warnNonI5Debugger() {
 		Display.getDefault().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				MessageDialog.openError(Display.getDefault().getActiveShell(),
 						PHPDebugCoreMessages.RemoteDebugger_LicenseError,
@@ -1076,6 +1109,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		final String fileName2 = fileName;
 		// Send the request to the server:
 		Job requestFileJob = new Job(PHPDebugCoreMessages.RemoteDebugger_RequestFileFromServer) {
+			@Override
 			public IStatus run(IProgressMonitor monitor) {
 				try {
 					URL requestURL = new URL(urlBuf.toString());
@@ -1101,6 +1135,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		requestFileJob.schedule();
 	}
 
+	@Override
 	public boolean setProtocol(int protocolID) {
 		SetProtocolRequest request = new SetProtocolRequest();
 		request.setProtocolID(protocolID);
@@ -1115,6 +1150,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		return false;
 	}
 
+	@Override
 	public int getCurrentProtocolID() {
 		return currentProtocolId;
 	}
@@ -1123,6 +1159,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * Asynchronic pause Returns true if succeeded sending the request, false
 	 * otherwise.
 	 */
+	@Override
 	public boolean pause(PauseResponseHandler responseHandler) {
 		if (!this.isActive()) {
 			return false;
@@ -1140,6 +1177,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	/**
 	 * Synchronic pause Returns true if succeeded pause.
 	 */
+	@Override
 	public boolean pause() {
 		if (!this.isActive()) {
 			return false;
@@ -1158,6 +1196,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * Asynchronic pause Returns true if succeeded sending the request, false
 	 * otherwise.
 	 */
+	@Override
 	public boolean eval(String commandString, EvalResponseHandler responseHandler) {
 		if (!this.isActive()) {
 			return false;
@@ -1173,6 +1212,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		return false;
 	}
 
+	@Override
 	public boolean assignValue(String var, String value, int depth, String[] path,
 			AssignValueResponseHandler responseHandler) {
 		if (!this.isActive()) {
@@ -1204,6 +1244,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	/**
 	 * aSynchronic assigned value
 	 */
+	@Override
 	public boolean assignValue(String var, String value, int depth, String[] path) {
 		if (!this.isActive()) {
 			return false;
@@ -1226,6 +1267,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	/**
 	 * Synchronic pause Returns true if succeeded pause.
 	 */
+	@Override
 	public String eval(String commandString) {
 		if (!this.isActive()) {
 			return null;
@@ -1252,6 +1294,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	/**
 	 * Finish the debugger running.
 	 */
+	@Override
 	public void finish() {
 		connection.disconnect();
 	}
@@ -1259,10 +1302,12 @@ public class RemoteDebugger implements IRemoteDebugger {
 	/**
 	 * Checks if there is a connection.
 	 */
+	@Override
 	public boolean isActive() {
 		return connection != null && connection.isConnected();
 	}
 
+	@Override
 	public boolean getVariableValue(String var, int depth, String[] path,
 			VariableValueResponseHandler responseHandler) {
 		if (!this.isActive()) {
@@ -1284,6 +1329,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	/**
 	 * Synchronic getVariableValue Returns the variable var.
 	 */
+	@Override
 	public byte[] getVariableValue(String var, int depth, String[] path) throws IllegalArgumentException {
 		if (!this.isActive()) {
 			return null;
@@ -1304,6 +1350,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		return response.getVarResult();
 	}
 
+	@Override
 	public boolean getCallStack(GetCallStackResponseHandler responseHandler) {
 		if (!this.isActive()) {
 			return false;
@@ -1322,6 +1369,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * Synchronic getCallStack Returns the Stack layer with no variables
 	 * information.
 	 */
+	@Override
 	public PHPstack getCallStack() {
 		if (!this.isActive()) {
 			return null;
@@ -1390,6 +1438,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 	}
 
+	@Override
 	public boolean getStackVariableValue(int stackDepth, String value, int depth, String[] path,
 			GetStackVariableValueResponseHandler responseHandler) {
 		if (!this.isActive()) {
@@ -1412,6 +1461,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	/**
 	 * Synchronic getStackVariableValue Returns the variable value.
 	 */
+	@Override
 	public byte[] getStackVariableValue(int stackDepth, String value, int depth, String[] path) {
 		if (!this.isActive()) {
 			return null;
@@ -1502,12 +1552,12 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 	public List<IPath> getIncludePaths(IProject project) throws ModelException {
 		if (project == null)
-			return new ArrayList<IPath>();
+			return new ArrayList<>();
 		List<IPath> includePaths = resolvedIncludePaths.get(project.getName());
 		if (includePaths != null) {
 			return includePaths;
 		} else {
-			includePaths = new ArrayList<IPath>();
+			includePaths = new ArrayList<>();
 		}
 		IncludePath[] paths = IncludePathManager.getInstance().getIncludePaths(project);
 		for (IncludePath includePath : paths) {
@@ -1579,6 +1629,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 			this.responseHandler = responseHandler;
 		}
 
+		@Override
 		public void handleResponse(Object request, Object response) {
 			boolean success = response != null && ((IDebugResponseMessage) response).getStatus() == 0;
 

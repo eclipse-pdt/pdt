@@ -55,7 +55,7 @@ public class ProjectBackwardCompatibilityUtil {
 	private static final String PREF_QUALIFIER = PHPCorePlugin.ID + ".projectOptions"; //$NON-NLS-1$
 
 	private IBuildpathEntry[] buildpathEntries = {};
-	private List<String> notImportedIncludePathVariableNames = new ArrayList<String>();
+	private List<String> notImportedIncludePathVariableNames = new ArrayList<>();
 
 	public List<String> getNotImportedIncludePathVariableNames() {
 		return notImportedIncludePathVariableNames;
@@ -93,7 +93,7 @@ public class ProjectBackwardCompatibilityUtil {
 			}
 
 			// convert each node in the xml into a build path entry
-			final List<IBuildpathEntry> paths = new ArrayList<IBuildpathEntry>();
+			final List<IBuildpathEntry> paths = new ArrayList<>();
 			NodeList list = cpElement.getElementsByTagName(TAG_INCLUDEPATHENTRY);
 			for (int i = 0; i < list.getLength(); ++i) {
 				final Node node = list.item(i);
@@ -208,7 +208,7 @@ public class ProjectBackwardCompatibilityUtil {
 			return instance;
 		}
 
-		HashMap<String, Path> variables = new HashMap<String, Path>();
+		HashMap<String, Path> variables = new HashMap<>();
 
 		private IncludePathVariableManager() {
 			startUp();
@@ -229,7 +229,7 @@ public class ProjectBackwardCompatibilityUtil {
 		}
 
 		public String[] getIncludePathVariableNames() {
-			ArrayList<String> list = new ArrayList<String>();
+			ArrayList<String> list = new ArrayList<>();
 			list.addAll(variables.keySet());
 			return list.toArray(new String[list.size()]);
 

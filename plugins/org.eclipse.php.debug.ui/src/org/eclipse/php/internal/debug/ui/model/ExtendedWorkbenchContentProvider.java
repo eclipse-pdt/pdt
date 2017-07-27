@@ -77,6 +77,7 @@ public class ExtendedWorkbenchContentProvider extends BaseWorkbenchContentProvid
 	 * org.eclipse.ui.model.BaseWorkbenchContentProvider#getChildren(java.lang
 	 * .Object)
 	 */
+	@Override
 	public Object[] getChildren(Object element) {
 		Object[] children = super.getChildren(element);
 		if (isProvidingExternals && element instanceof IWorkspaceRoot) {

@@ -24,12 +24,15 @@ import org.eclipse.php.refactoring.core.changes.ProgramDocumentChange;
  */
 public class RefactoringAdapterFactory implements IAdapterFactory {
 
-	private static final Class[] ADAPTER_LIST = new Class[] { TextEditChangeNode.class };
+	private static final Class<?>[] ADAPTER_LIST = new Class<?>[] { TextEditChangeNode.class };
 
-	public Class[] getAdapterList() {
+	@Override
+	public Class<?>[] getAdapterList() {
 		return ADAPTER_LIST;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
 	public Object getAdapter(Object object, Class key) {
 		if (!TextEditChangeNode.class.equals(key))
 			return null;

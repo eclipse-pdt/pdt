@@ -36,6 +36,7 @@ public class PHPDocumentLoader extends HTMLDocumentLoader {
 	private static final boolean DEBUG = false;
 	private CodedReaderCreator fCodedReaderCreator;
 
+	@Override
 	protected IEncodedDocument newEncodedDocument() {
 		IEncodedDocument doc = super.newEncodedDocument();
 		assert doc instanceof BasicStructuredDocument;
@@ -45,6 +46,7 @@ public class PHPDocumentLoader extends HTMLDocumentLoader {
 		return doc;
 	}
 
+	@Override
 	public RegionParser getParser() {
 		PHPSourceParser parser = new PHPSourceParser();
 		// for the "static HTML" case, we need to initialize
@@ -54,14 +56,17 @@ public class PHPDocumentLoader extends HTMLDocumentLoader {
 		return parser;
 	}
 
+	@Override
 	public IDocumentLoader newInstance() {
 		return new PHPDocumentLoader();
 	}
 
+	@Override
 	public IDocumentPartitioner getDefaultDocumentPartitioner() {
 		return new PHPStructuredTextPartitioner();
 	}
 
+	@Override
 	protected CodedReaderCreator getCodedReaderCreator() {
 		if (fCodedReaderCreator == null) {
 			fCodedReaderCreator = new PHPCodedReaderCreator();
@@ -83,17 +88,20 @@ public class PHPDocumentLoader extends HTMLDocumentLoader {
 
 		private static final String CHARSET_UTF_16LE = "UTF-16LE"; //$NON-NLS-1$
 
+		@Override
 		public void set(IFile iFile) throws CoreException, IOException {
 			super.set(iFile);
 			fIFile = iFile;
 		}
 
+		@Override
 		public void set(String filename, InputStream inputStream) {
 			super.set(filename, inputStream);
 			fFilename = filename;
 			fInputStream = inputStream;
 		}
 
+		@Override
 		protected EncodingMemento createMemento(IContentDescription contentDescription) {
 			EncodingMemento result;
 			String appropriateDefault = contentDescription.getContentType().getDefaultCharset();
@@ -221,6 +229,7 @@ public class PHPDocumentLoader extends HTMLDocumentLoader {
 			return resettableStream;
 		}
 
+		@Override
 		public void setEncodingRule(EncodingRule encodingRule) {
 			super.setEncodingRule(encodingRule);
 			fEncodingRule = encodingRule;

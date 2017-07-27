@@ -39,6 +39,7 @@ public class BreakpointMarkerUpdater implements IMarkerUpdater {
 	 * 
 	 * @see org.eclipse.ui.texteditor.IMarkerUpdater#getAttribute()
 	 */
+	@Override
 	public String[] getAttribute() {
 		return new String[] { IMarker.LINE_NUMBER, IMarker.MESSAGE };
 	}
@@ -48,6 +49,7 @@ public class BreakpointMarkerUpdater implements IMarkerUpdater {
 	 * 
 	 * @see org.eclipse.ui.texteditor.IMarkerUpdater#getMarkerType()
 	 */
+	@Override
 	public String getMarkerType() {
 		return PHPLineBreakpoint.MARKER_ID;
 	}
@@ -56,6 +58,7 @@ public class BreakpointMarkerUpdater implements IMarkerUpdater {
 	 * @return true - the breakpoint marker updated false - the breakpoint
 	 *         marker will deleted
 	 */
+	@Override
 	public boolean updateMarker(IMarker marker, IDocument document, Position position) {
 		if (position.isDeleted()) {
 			return false;

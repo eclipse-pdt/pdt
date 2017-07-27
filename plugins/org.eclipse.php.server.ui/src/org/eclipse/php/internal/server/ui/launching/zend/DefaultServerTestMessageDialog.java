@@ -59,6 +59,7 @@ public class DefaultServerTestMessageDialog extends MessageDialog {
 		link.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		link.setText(Messages.DefaultServerTestMessageDialog_0);
 		link.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent event) {
 				PlatformUI.getWorkbench().getHelpSystem().displayHelp(IPHPHelpContextIds.SETTING_UP_REMOTE_DEBUGGING);
 			}
@@ -80,6 +81,7 @@ public class DefaultServerTestMessageDialog extends MessageDialog {
 	 */
 	private void addAccessibleListeners(Label label, final Image image) {
 		label.getAccessible().addAccessibleListener(new AccessibleAdapter() {
+			@Override
 			public void getName(AccessibleEvent event) {
 				final String accessibleMessage = getAccessibleMessageFor(image);
 				if (accessibleMessage == null) {

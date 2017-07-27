@@ -45,7 +45,7 @@ public abstract class AbstractPreferencesPropagator {
 	public void addPropagatorListener(IPreferencesPropagatorListener listener, String preferencesKey) {
 		List<IPreferencesPropagatorListener> list = listenersMap.get(preferencesKey);
 		if (list == null) {
-			list = new ArrayList<IPreferencesPropagatorListener>(5);
+			list = new ArrayList<>(5);
 			listenersMap.put(preferencesKey, list);
 		}
 		if (!list.contains(listener)) {
@@ -105,7 +105,7 @@ public abstract class AbstractPreferencesPropagator {
 		if (isInstalled) {
 			return;
 		}
-		listenersMap = new HashMap<String, List<IPreferencesPropagatorListener>>();
+		listenersMap = new HashMap<>();
 		isInstalled = true;
 	}
 

@@ -54,6 +54,7 @@ public class PHPLaunch extends Launch {
 	 * 
 	 * @see org.eclipse.debug.core.Launch#canTerminate()
 	 */
+	@Override
 	public boolean canTerminate() {
 		return !isTerminated();
 	}
@@ -63,6 +64,7 @@ public class PHPLaunch extends Launch {
 	 * 
 	 * @see org.eclipse.debug.core.Launch#isTerminated()
 	 */
+	@Override
 	public boolean isTerminated() {
 		if (pretendsRunning) {
 			return false;
@@ -72,7 +74,7 @@ public class PHPLaunch extends Launch {
 			return true;
 		}
 
-		Iterator processes = getProcesses0().iterator();
+		Iterator<?> processes = getProcesses0().iterator();
 		while (processes.hasNext()) {
 			IProcess process = (IProcess) processes.next();
 			if (!process.isTerminated()) {
@@ -80,7 +82,7 @@ public class PHPLaunch extends Launch {
 			}
 		}
 
-		Iterator targets = getDebugTargets0().iterator();
+		Iterator<?> targets = getDebugTargets0().iterator();
 		while (targets.hasNext()) {
 			IDebugTarget target = (IDebugTarget) targets.next();
 			if (!(target.isTerminated() || target.isDisconnected())) {
@@ -91,10 +93,11 @@ public class PHPLaunch extends Launch {
 		return true;
 	}
 
+	@Override
 	public Object[] getChildren() {
 		// screen any dead targets in case we have at least one live target.
-		List targets = getDebugTargets0();
-		List toRemove = new ArrayList(targets.size());
+		List<?> targets = getDebugTargets0();
+		List<IDebugTarget> toRemove = new ArrayList<>(targets.size());
 		if (targets.size() > 1) {
 			IDebugTarget[] targetsArr = new IDebugTarget[targets.size()];
 			targets.toArray(targetsArr);

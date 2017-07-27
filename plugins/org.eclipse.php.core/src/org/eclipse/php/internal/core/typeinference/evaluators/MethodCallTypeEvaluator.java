@@ -128,10 +128,12 @@ public class MethodCallTypeEvaluator extends GoalEvaluator {
 		return argNames;
 	}
 
+	@Override
 	public Object produceResult() {
 		return result;
 	}
 
+	@Override
 	public IGoal[] init() {
 		IGoal goal = produceNextSubgoal(null, null, null);
 		if (goal != null) {
@@ -140,6 +142,7 @@ public class MethodCallTypeEvaluator extends GoalEvaluator {
 		return IGoal.NO_GOALS;
 	}
 
+	@Override
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		IGoal goal = produceNextSubgoal(subgoal, (IEvaluatedType) result, state);
 		if (goal != null) {

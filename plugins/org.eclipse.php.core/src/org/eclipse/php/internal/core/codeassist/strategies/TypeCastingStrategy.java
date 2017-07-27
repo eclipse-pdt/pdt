@@ -28,6 +28,7 @@ public class TypeCastingStrategy extends AbstractCompletionStrategy {
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		ICompletionContext context = getContext();
 		ISourceRange range = getReplacementRange(context);

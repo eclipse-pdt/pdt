@@ -58,7 +58,7 @@ public class UseStatementPart extends ASTNode {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(3);
 		properyList.add(NAME_PROPERTY);
 		properyList.add(ALIAS_PROPERTY);
 		properyList.add(STATEMENT_TYPE_PROPERTY);
@@ -86,6 +86,7 @@ public class UseStatementPart extends ASTNode {
 		setStatementType(statementType);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		name.accept(visitor);
 		if (alias != null) {
@@ -93,6 +94,7 @@ public class UseStatementPart extends ASTNode {
 		}
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		name.traverseTopDown(visitor);
@@ -101,6 +103,7 @@ public class UseStatementPart extends ASTNode {
 		}
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		name.traverseBottomUp(visitor);
 		if (alias != null) {
@@ -109,6 +112,7 @@ public class UseStatementPart extends ASTNode {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<UseStatementPart"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -132,6 +136,7 @@ public class UseStatementPart extends ASTNode {
 		buffer.append(tab).append("</UseStatementPart>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -140,6 +145,7 @@ public class UseStatementPart extends ASTNode {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.USE_STATEMENT_PART;
 	}
@@ -218,6 +224,7 @@ public class UseStatementPart extends ASTNode {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
@@ -237,6 +244,7 @@ public class UseStatementPart extends ASTNode {
 		return PROPERTY_DESCRIPTORS;
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == NAME_PROPERTY) {
 			if (get) {

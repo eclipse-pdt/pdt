@@ -44,7 +44,6 @@ import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.eclipse.php.internal.server.core.tunneling.SSHTunnel;
 import org.eclipse.swt.widgets.Display;
 
-@SuppressWarnings("restriction")
 public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
 
 	private static final String LAUNCH_LISTENERS_EXTENSION_ID = "org.eclipse.php.debug.core.phpLaunchDelegateListener"; //$NON-NLS-1$
@@ -52,7 +51,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 	/*
 	 * list of registered ILaunchDelegateListeners
 	 */
-	private List<ILaunchDelegateListener> preLaunchListeners = new ArrayList<ILaunchDelegateListener>();
+	private List<ILaunchDelegateListener> preLaunchListeners = new ArrayList<>();
 
 	public XDebugWebLaunchConfigurationDelegate() {
 		registerLaunchListeners();
@@ -79,6 +78,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 	 * org.eclipse.debug.core.ILaunch,
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
 			throws CoreException {
 		// Notify all listeners of a pre-launch event.
@@ -263,6 +263,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 	 */
 	protected void displayErrorMessage(final String message) {
 		Display.getDefault().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				MessageDialog.openError(Display.getDefault().getActiveShell(),
 						PHPDebugCoreMessages.XDebugMessage_debugError, message);
@@ -292,12 +293,14 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 				final Object o = e.createExecutableExtension("class"); //$NON-NLS-1$
 				if (o instanceof ILaunchDelegateListener) {
 					ISafeRunnable runnable = new ISafeRunnable() {
+						@Override
 						public void run() throws Exception {
 							ILaunchDelegateListener listener = (ILaunchDelegateListener) o;
 							Assert.isNotNull(listener);
 							preLaunchListeners.add(listener);
 						}
 
+						@Override
 						public void handleException(Throwable exception) {
 							Logger.logException(exception);
 						}

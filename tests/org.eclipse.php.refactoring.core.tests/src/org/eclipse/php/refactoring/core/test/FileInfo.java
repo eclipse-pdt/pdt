@@ -16,7 +16,7 @@ import java.util.Map;
 public class FileInfo {
 	private String name;
 	private StringBuffer contents = new StringBuffer();
-	private Map<String, String> config = new HashMap<String, String>();
+	private Map<String, String> config = new HashMap<>();
 
 	public FileInfo(String fileName) {
 		setName(fileName);

@@ -30,7 +30,7 @@ public class ResolveBlackList implements ILaunchesListener {
 	private static ResolveBlackList instance = new ResolveBlackList();
 
 	private ResolveBlackList() {
-		blackListMap = new HashMap<ILaunch, Map<VirtualPath, Type>>();
+		blackListMap = new HashMap<>();
 
 		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(this);
 	}
@@ -77,12 +77,15 @@ public class ResolveBlackList implements ILaunchesListener {
 		return false;
 	}
 
+	@Override
 	public void launchesAdded(ILaunch[] launches) {
 	}
 
+	@Override
 	public void launchesChanged(ILaunch[] launches) {
 	}
 
+	@Override
 	public void launchesRemoved(ILaunch[] launches) {
 		for (ILaunch l : launches) {
 			blackListMap.remove(l);

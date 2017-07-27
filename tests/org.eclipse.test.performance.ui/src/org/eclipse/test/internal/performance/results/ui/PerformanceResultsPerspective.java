@@ -25,6 +25,7 @@ public class PerformanceResultsPerspective implements IPerspectiveFactory {
  * (non-Javadoc)
  * @see org.eclipse.ui.IPerspectiveFactory#createInitialLayout(org.eclipse.ui.IPageLayout)
  */
+@Override
 public void createInitialLayout(IPageLayout layout) {
 	this.factory = layout;
 	addViews();

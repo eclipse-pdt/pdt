@@ -63,6 +63,7 @@ public class TarFileExporter extends AbstractFileExporter {
 	 * 
 	 * @exception java.io.IOException
 	 */
+	@Override
 	public void finished() throws IOException {
 		// super.finished();
 		outputStream.close();
@@ -95,6 +96,7 @@ public class TarFileExporter extends AbstractFileExporter {
 	 * @exception java.io.IOException
 	 * @exception org.eclipse.core.runtime.CoreException
 	 */
+	@Override
 	public void write(IFile resource, String destinationPath) throws IOException, CoreException {
 
 		TarEntry newEntry = new TarEntry(destinationPath);
@@ -119,6 +121,7 @@ public class TarFileExporter extends AbstractFileExporter {
 		write(newEntry, resource.getContents(false));
 	}
 
+	@Override
 	public void writeStub(IStub stub) throws IOException, CoreException {
 		ByteArrayInputStream stubInput = PharUtil.getStubInputStream(stub);
 		TarEntry newEntry = new TarEntry(PharConstants.STUB_PATH);
@@ -144,6 +147,7 @@ public class TarFileExporter extends AbstractFileExporter {
 		outputStream.closeEntry();
 	}
 
+	@Override
 	public void write(IFolder resource, String destinationPath) throws IOException, CoreException {
 		TarEntry newEntry = new TarEntry(destinationPath);
 		if (resource.getLocalTimeStamp() != IResource.NULL_STAMP) {
@@ -167,6 +171,7 @@ public class TarFileExporter extends AbstractFileExporter {
 		outputStream.closeEntry();
 	}
 
+	@Override
 	public void doWriteSignature() throws IOException {
 		byte[] signature = fileContentStream.getSignature();
 

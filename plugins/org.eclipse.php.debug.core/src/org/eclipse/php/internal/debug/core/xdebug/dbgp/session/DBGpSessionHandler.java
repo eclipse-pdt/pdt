@@ -22,7 +22,7 @@ public class DBGpSessionHandler {
 	private static DBGpSessionHandler globalSessionHandler;
 	private static Object sessionHandlerCreator = new Object();
 
-	private ListenerList listeners = new ListenerList();
+	private ListenerList<IDBGpSessionListener> listeners = new ListenerList<>();
 
 	private int sessionCount = 0;
 	private Object sessionCountMonitor = new Object();

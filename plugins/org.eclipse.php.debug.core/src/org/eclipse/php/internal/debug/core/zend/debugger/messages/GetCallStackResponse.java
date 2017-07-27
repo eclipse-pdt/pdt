@@ -46,6 +46,7 @@ public class GetCallStackResponse extends DebugMessageResponseImpl implements ID
 		return stack;
 	}
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		PHPstack stack = new PHPstack();
@@ -64,10 +65,12 @@ public class GetCallStackResponse extends DebugMessageResponseImpl implements ID
 		setPHPstack(stack);
 	}
 
+	@Override
 	public int getType() {
 		return 1034;
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());

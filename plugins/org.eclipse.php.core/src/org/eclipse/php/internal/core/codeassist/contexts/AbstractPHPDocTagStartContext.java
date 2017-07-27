@@ -28,6 +28,7 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
  */
 public abstract class AbstractPHPDocTagStartContext extends PHPDocTagContext {
 
+	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
@@ -39,7 +40,7 @@ public abstract class AbstractPHPDocTagStartContext extends PHPDocTagContext {
 		TextSequence statementText = getStatementText();
 		String statementTextString = statementText.toString();
 		StringTokenizer st = new StringTokenizer(statementTextString);
-		Stack<String> stack = new Stack<String>();
+		Stack<String> stack = new Stack<>();
 		while (st.hasMoreElements()) {
 			stack.add((String) st.nextElement());
 		}

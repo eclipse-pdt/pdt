@@ -92,7 +92,7 @@ public class StubUtility {
 		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 		org.eclipse.dltk.ast.declarations.MethodDeclaration methodDeclaration = PHPModelUtils
 				.getNodeByMethod(moduleDeclaration, method);
-		List<org.eclipse.php.core.compiler.ast.nodes.FormalParameter> arguments = (List<org.eclipse.php.core.compiler.ast.nodes.FormalParameter>) methodDeclaration
+		List<org.eclipse.php.core.compiler.ast.nodes.FormalParameter> arguments = methodDeclaration
 				.getArguments();
 
 		boolean supportNullable = ProjectOptions.getPHPVersion(unit).isGreaterThan(PHPVersion.PHP7_0);
@@ -159,7 +159,7 @@ public class StubUtility {
 	}
 
 	private static Map<String, ImportDeclaration> getImportContainer(IMethod method) throws ModelException {
-		Map<String, ImportDeclaration> importContainers = new HashMap<String, ImportDeclaration>();
+		Map<String, ImportDeclaration> importContainers = new HashMap<>();
 		ImportContainersFinder finder = new ImportContainersFinder(importContainers);
 		method.getSourceModule().accept(finder);
 		return importContainers;

@@ -63,7 +63,7 @@ public class VersionUtils {
 	}
 
 	private static List<String> splitVersionToList(String version) {
-		ArrayList<String> strings = new ArrayList<String>();
+		ArrayList<String> strings = new ArrayList<>();
 		StringTokenizer st = new StringTokenizer(version, seperator);
 		while (st.hasMoreTokens()) {
 			strings.add(st.nextToken());
@@ -86,26 +86,26 @@ public class VersionUtils {
 	}
 
 	private static boolean equal(List<String> version1, List<String> version2, int parts) {
-		List<List<String>> lists = new ArrayList<List<String>>();
+		List<List<String>> lists = new ArrayList<>();
 		lists.add(version1);
 		lists.add(version2);
 		alignVersionLists(lists, parts);
 		for (int i = 0; i < version1.size(); i++) {
-			if (0 != compare((String) version1.get(i), (String) version2.get(i)))
+			if (0 != compare(version1.get(i), version2.get(i)))
 				return false;
 		}
 		return true;
 	}
 
 	private static boolean greater(List<String> version1, List<String> version2, int parts) {
-		List<List<String>> lists = new ArrayList<List<String>>();
+		List<List<String>> lists = new ArrayList<>();
 		lists.add(version1);
 		lists.add(version2);
 		alignVersionLists(lists, parts);
 		for (int i = 0; i < version1.size(); i++) {
-			if (compare((String) version1.get(i), (String) version2.get(i)) > 0)
+			if (compare(version1.get(i), version2.get(i)) > 0)
 				return true;
-			if (compare((String) version1.get(i), (String) version2.get(i)) < 0)
+			if (compare(version1.get(i), version2.get(i)) < 0)
 				return false;
 		}
 		return false;

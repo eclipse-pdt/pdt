@@ -31,7 +31,9 @@ import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.php.internal.ui.editor.contentassist.CompletionProposalComparator;
-import org.eclipse.php.internal.ui.text.correction.*;
+import org.eclipse.php.internal.ui.text.correction.AssistContext;
+import org.eclipse.php.internal.ui.text.correction.PHPCorrectionProcessor;
+import org.eclipse.php.internal.ui.text.correction.ProblemLocation;
 import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
@@ -64,7 +66,6 @@ public class ProblemHover extends AbstractAnnotationHover implements IPHPTextHov
 			return NO_PROPOSALS;
 		}
 
-		@SuppressWarnings("unchecked")
 		private ICompletionProposal[] getScriptAnnotationFixes(IScriptAnnotation scriptAnnotation) {
 			ProblemLocation location = new ProblemLocation(position.getOffset(), position.getLength(),
 					scriptAnnotation);

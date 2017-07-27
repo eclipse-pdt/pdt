@@ -15,7 +15,6 @@ import org.eclipse.php.composer.core.model.PackagePath;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
 
-@SuppressWarnings("restriction")
 public class PackageTreeLabelProvider extends LabelProvider {
 
 	@Override

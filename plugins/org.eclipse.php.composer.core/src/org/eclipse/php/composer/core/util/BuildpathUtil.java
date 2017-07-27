@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.*;
 import org.eclipse.php.internal.core.buildpath.BuildPathUtils;
 
-@SuppressWarnings("restriction")
 public class BuildpathUtil {
 
 	public static void setupVendorBuildpath(IScriptProject scriptProject, IProgressMonitor progress)
@@ -48,7 +47,7 @@ public class BuildpathUtil {
 		IPath[] exclude = new IPath[0];
 		IBuildpathEntry vendorEntry = DLTKCore.newBuiltinEntry(composerPath, new IAccessRule[0], attributes, include,
 				exclude, false, false);
-		List<IBuildpathEntry> vendorEntries = new ArrayList<IBuildpathEntry>();
+		List<IBuildpathEntry> vendorEntries = new ArrayList<>();
 		vendorEntries.add(vendorEntry);
 
 		return vendorEntries;

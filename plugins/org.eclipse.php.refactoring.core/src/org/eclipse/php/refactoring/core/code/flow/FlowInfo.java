@@ -41,23 +41,17 @@ public abstract class FlowInfo {
 	// branch[y]).
 	private static final int[][] ACCESS_MODE_CONDITIONAL_TABLE = {
 			/* UNUSED READ READ_POTENTIAL WRTIE WRITE_POTENTIAL UNKNOWN */
-			/* UNUSED */{ UNUSED, READ_POTENTIAL, READ_POTENTIAL,
-					WRITE_POTENTIAL, WRITE_POTENTIAL, UNKNOWN },
-			/* READ */{ READ_POTENTIAL, READ, READ_POTENTIAL, UNKNOWN, UNKNOWN,
-					UNKNOWN },
-			/* READ_POTENTIAL */{ READ_POTENTIAL, READ_POTENTIAL,
-					READ_POTENTIAL, UNKNOWN, UNKNOWN, UNKNOWN },
-			/* WRITE */{ WRITE_POTENTIAL, UNKNOWN, UNKNOWN, WRITE,
-					WRITE_POTENTIAL, UNKNOWN },
-			/* WRITE_POTENTIAL */{ WRITE_POTENTIAL, UNKNOWN, UNKNOWN,
-					WRITE_POTENTIAL, WRITE_POTENTIAL, UNKNOWN },
+			/* UNUSED */{ UNUSED, READ_POTENTIAL, READ_POTENTIAL, WRITE_POTENTIAL, WRITE_POTENTIAL, UNKNOWN },
+			/* READ */{ READ_POTENTIAL, READ, READ_POTENTIAL, UNKNOWN, UNKNOWN, UNKNOWN },
+			/* READ_POTENTIAL */{ READ_POTENTIAL, READ_POTENTIAL, READ_POTENTIAL, UNKNOWN, UNKNOWN, UNKNOWN },
+			/* WRITE */{ WRITE_POTENTIAL, UNKNOWN, UNKNOWN, WRITE, WRITE_POTENTIAL, UNKNOWN },
+			/* WRITE_POTENTIAL */{ WRITE_POTENTIAL, UNKNOWN, UNKNOWN, WRITE_POTENTIAL, WRITE_POTENTIAL, UNKNOWN },
 			/* UNKNOWN */{ UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN } };
 
 	// Table to change access mode if there is an open branch statement
 	private static final int[] ACCESS_MODE_OPEN_BRANCH_TABLE = {
-	/* UNUSED READ READ_POTENTIAL WRTIE WRITE_POTENTIAL UNKNOWN */
-	UNUSED, READ_POTENTIAL, READ_POTENTIAL, WRITE_POTENTIAL, WRITE_POTENTIAL,
-			UNKNOWN };
+			/* UNUSED READ READ_POTENTIAL WRTIE WRITE_POTENTIAL UNKNOWN */
+			UNUSED, READ_POTENTIAL, READ_POTENTIAL, WRITE_POTENTIAL, WRITE_POTENTIAL, UNKNOWN };
 
 	// Table to merge return modes for condition statements (y: fReturnKind, x:
 	// other.fReturnKind)
@@ -66,21 +60,18 @@ public abstract class FlowInfo {
 			 * NOT_POSSIBLE UNDEFINED NO_RETURN PARTIAL_RETURN VOID_RETURN
 			 * VALUE_RETURN THROW
 			 */
-			/* NOT_POSSIBLE */{ NOT_POSSIBLE, NOT_POSSIBLE, NOT_POSSIBLE,
-					NOT_POSSIBLE, NOT_POSSIBLE, NOT_POSSIBLE, NOT_POSSIBLE },
-			/* UNDEFINED */{ NOT_POSSIBLE, UNDEFINED, NO_RETURN,
-					PARTIAL_RETURN, VOID_RETURN, VALUE_RETURN, THROW },
-			/* NO_RETURN */{ NOT_POSSIBLE, NO_RETURN, NO_RETURN,
-					PARTIAL_RETURN, PARTIAL_RETURN, PARTIAL_RETURN, NO_RETURN },
-			/* PARTIAL_RETURN */{ NOT_POSSIBLE, PARTIAL_RETURN, PARTIAL_RETURN,
-					PARTIAL_RETURN, PARTIAL_RETURN, PARTIAL_RETURN,
-					PARTIAL_RETURN },
-			/* VOID_RETURN */{ NOT_POSSIBLE, VOID_RETURN, PARTIAL_RETURN,
-					PARTIAL_RETURN, VOID_RETURN, NOT_POSSIBLE, VOID_RETURN },
-			/* VALUE_RETURN */{ NOT_POSSIBLE, VALUE_RETURN, PARTIAL_RETURN,
-					PARTIAL_RETURN, NOT_POSSIBLE, VALUE_RETURN, VALUE_RETURN },
-			/* THROW */{ NOT_POSSIBLE, THROW, NO_RETURN, PARTIAL_RETURN,
-					VOID_RETURN, VALUE_RETURN, THROW } };
+			/* NOT_POSSIBLE */{ NOT_POSSIBLE, NOT_POSSIBLE, NOT_POSSIBLE, NOT_POSSIBLE, NOT_POSSIBLE, NOT_POSSIBLE,
+					NOT_POSSIBLE },
+			/* UNDEFINED */{ NOT_POSSIBLE, UNDEFINED, NO_RETURN, PARTIAL_RETURN, VOID_RETURN, VALUE_RETURN, THROW },
+			/* NO_RETURN */{ NOT_POSSIBLE, NO_RETURN, NO_RETURN, PARTIAL_RETURN, PARTIAL_RETURN, PARTIAL_RETURN,
+					NO_RETURN },
+			/* PARTIAL_RETURN */{ NOT_POSSIBLE, PARTIAL_RETURN, PARTIAL_RETURN, PARTIAL_RETURN, PARTIAL_RETURN,
+					PARTIAL_RETURN, PARTIAL_RETURN },
+			/* VOID_RETURN */{ NOT_POSSIBLE, VOID_RETURN, PARTIAL_RETURN, PARTIAL_RETURN, VOID_RETURN, NOT_POSSIBLE,
+					VOID_RETURN },
+			/* VALUE_RETURN */{ NOT_POSSIBLE, VALUE_RETURN, PARTIAL_RETURN, PARTIAL_RETURN, NOT_POSSIBLE, VALUE_RETURN,
+					VALUE_RETURN },
+			/* THROW */{ NOT_POSSIBLE, THROW, NO_RETURN, PARTIAL_RETURN, VOID_RETURN, VALUE_RETURN, THROW } };
 
 	// Table to merge return modes for sequential statements (y: fReturnKind, x:
 	// other.fReturnKind)
@@ -89,29 +80,26 @@ public abstract class FlowInfo {
 			 * NOT_POSSIBLE UNDEFINED NO_RETURN PARTIAL_RETURN VOID_RETURN
 			 * VALUE_RETURN THROW
 			 */
-			/* NOT_POSSIBLE */{ NOT_POSSIBLE, NOT_POSSIBLE, NOT_POSSIBLE,
-					NOT_POSSIBLE, NOT_POSSIBLE, NOT_POSSIBLE, NOT_POSSIBLE },
-			/* UNDEFINED */{ NOT_POSSIBLE, UNDEFINED, NO_RETURN,
-					PARTIAL_RETURN, VOID_RETURN, VALUE_RETURN, THROW },
-			/* NO_RETURN */{ NOT_POSSIBLE, NO_RETURN, NO_RETURN,
-					PARTIAL_RETURN, VOID_RETURN, VALUE_RETURN, THROW },
-			/* PARTIAL_RETURN */{ NOT_POSSIBLE, PARTIAL_RETURN, PARTIAL_RETURN,
-					PARTIAL_RETURN, VOID_RETURN, VALUE_RETURN, THROW },
-			/* VOID_RETURN */{ NOT_POSSIBLE, VOID_RETURN, VOID_RETURN,
-					PARTIAL_RETURN, VOID_RETURN, NOT_POSSIBLE, NOT_POSSIBLE },
-			/* VALUE_RETURN */{ NOT_POSSIBLE, VALUE_RETURN, VALUE_RETURN,
-					PARTIAL_RETURN, NOT_POSSIBLE, VALUE_RETURN, NOT_POSSIBLE },
-			/* THROW */{ NOT_POSSIBLE, THROW, THROW, PARTIAL_RETURN,
-					VOID_RETURN, VALUE_RETURN, THROW } };
+			/* NOT_POSSIBLE */{ NOT_POSSIBLE, NOT_POSSIBLE, NOT_POSSIBLE, NOT_POSSIBLE, NOT_POSSIBLE, NOT_POSSIBLE,
+					NOT_POSSIBLE },
+			/* UNDEFINED */{ NOT_POSSIBLE, UNDEFINED, NO_RETURN, PARTIAL_RETURN, VOID_RETURN, VALUE_RETURN, THROW },
+			/* NO_RETURN */{ NOT_POSSIBLE, NO_RETURN, NO_RETURN, PARTIAL_RETURN, VOID_RETURN, VALUE_RETURN, THROW },
+			/* PARTIAL_RETURN */{ NOT_POSSIBLE, PARTIAL_RETURN, PARTIAL_RETURN, PARTIAL_RETURN, VOID_RETURN,
+					VALUE_RETURN, THROW },
+			/* VOID_RETURN */{ NOT_POSSIBLE, VOID_RETURN, VOID_RETURN, PARTIAL_RETURN, VOID_RETURN, NOT_POSSIBLE,
+					NOT_POSSIBLE },
+			/* VALUE_RETURN */{ NOT_POSSIBLE, VALUE_RETURN, VALUE_RETURN, PARTIAL_RETURN, NOT_POSSIBLE, VALUE_RETURN,
+					NOT_POSSIBLE },
+			/* THROW */{ NOT_POSSIBLE, THROW, THROW, PARTIAL_RETURN, VOID_RETURN, VALUE_RETURN, THROW } };
 
 	protected static final String UNLABELED = "@unlabeled"; //$NON-NLS-1$
 	protected static final IVariableBinding[] EMPTY_ARRAY = new IVariableBinding[0];
 
 	protected int fReturnKind;
 	protected int[] fAccessModes;
-	protected Set fBranches;
-	protected Set fExceptions;
-	protected Set fTypeVariables;
+	protected Set<String> fBranches;
+	protected Set<ITypeBinding> fExceptions;
+	protected Set<ITypeBinding> fTypeVariables;
 
 	protected FlowInfo() {
 		this(UNDEFINED);
@@ -193,7 +181,7 @@ public abstract class FlowInfo {
 		return fBranches != null && !fBranches.isEmpty();
 	}
 
-	protected Set getBranches() {
+	protected Set<String> getBranches() {
 		return fBranches;
 	}
 
@@ -218,8 +206,7 @@ public abstract class FlowInfo {
 	public ITypeBinding[] getExceptions() {
 		if (fExceptions == null)
 			return new ITypeBinding[0];
-		return (ITypeBinding[]) fExceptions
-				.toArray(new ITypeBinding[fExceptions.size()]);
+		return fExceptions.toArray(new ITypeBinding[fExceptions.size()]);
 	}
 
 	protected boolean hasUncaughtException() {
@@ -228,7 +215,7 @@ public abstract class FlowInfo {
 
 	protected void addException(ITypeBinding type) {
 		if (fExceptions == null)
-			fExceptions = new HashSet(2);
+			fExceptions = new HashSet<>(2);
 		fExceptions.add(type);
 	}
 
@@ -236,12 +223,11 @@ public abstract class FlowInfo {
 		if (fExceptions == null)
 			return;
 
-		List catchClauses = node.catchClauses();
+		List<?> catchClauses = node.catchClauses();
 		if (catchClauses.isEmpty())
 			return;
 		// Make sure we have a copy since we are modifing the fExceptions list
-		ITypeBinding[] exceptions = (ITypeBinding[]) fExceptions
-				.toArray(new ITypeBinding[fExceptions.size()]);
+		ITypeBinding[] exceptions = fExceptions.toArray(new ITypeBinding[fExceptions.size()]);
 		for (int i = 0; i < exceptions.length; i++) {
 			handleException(catchClauses, exceptions[i]);
 		}
@@ -249,7 +235,7 @@ public abstract class FlowInfo {
 			fExceptions = null;
 	}
 
-	private void handleException(List catchClauses, ITypeBinding type) {
+	private void handleException(List<?> catchClauses, ITypeBinding type) {
 		// TODO - implement with the new model
 		// for (Iterator iter= catchClauses.iterator(); iter.hasNext();) {
 		// Identifier binding= ((CatchClause)iter.next()).getClassName();
@@ -271,31 +257,27 @@ public abstract class FlowInfo {
 	public ITypeBinding[] getTypeVariables() {
 		if (fTypeVariables == null)
 			return new ITypeBinding[0];
-		return (ITypeBinding[]) fTypeVariables
-				.toArray(new ITypeBinding[fTypeVariables.size()]);
+		return fTypeVariables.toArray(new ITypeBinding[fTypeVariables.size()]);
 	}
 
 	protected void addTypeVariable(ITypeBinding typeParameter) {
 		if (fTypeVariables == null)
-			fTypeVariables = new HashSet();
+			fTypeVariables = new HashSet<>();
 		fTypeVariables.add(typeParameter);
 	}
 
-	private void mergeTypeVariablesSequential(FlowInfo otherInfo,
-			FlowContext context) {
+	private void mergeTypeVariablesSequential(FlowInfo otherInfo, FlowContext context) {
 		fTypeVariables = mergeSets(fTypeVariables, otherInfo.fTypeVariables);
 	}
 
-	private void mergeTypeVariablesConditional(FlowInfo otherInfo,
-			FlowContext context) {
+	private void mergeTypeVariablesConditional(FlowInfo otherInfo, FlowContext context) {
 		fTypeVariables = mergeSets(fTypeVariables, otherInfo.fTypeVariables);
 	}
 
 	// ---- Execution flow
 	// -------------------------------------------------------------------
 
-	private void mergeExecutionFlowSequential(FlowInfo otherInfo,
-			FlowContext context) {
+	private void mergeExecutionFlowSequential(FlowInfo otherInfo, FlowContext context) {
 		int other = otherInfo.fReturnKind;
 		if (branches() && other == VALUE_RETURN)
 			other = PARTIAL_RETURN;
@@ -304,8 +286,7 @@ public abstract class FlowInfo {
 		mergeExceptions(otherInfo, context);
 	}
 
-	private void mergeExecutionFlowConditional(FlowInfo otherInfo,
-			FlowContext context) {
+	private void mergeExecutionFlowConditional(FlowInfo otherInfo, FlowContext context) {
 		fReturnKind = RETURN_KIND_CONDITIONAL_TABLE[fReturnKind][otherInfo.fReturnKind];
 		mergeBranches(otherInfo, context);
 		mergeExceptions(otherInfo, context);
@@ -319,12 +300,12 @@ public abstract class FlowInfo {
 		fExceptions = mergeSets(fExceptions, otherInfo.fExceptions);
 	}
 
-	private static Set mergeSets(Set thisSet, Set otherSet) {
+	private static <T> Set<T> mergeSets(Set<T> thisSet, Set<T> otherSet) {
 		if (otherSet != null) {
 			if (thisSet == null) {
 				thisSet = otherSet;
 			} else {
-				Iterator iter = otherSet.iterator();
+				Iterator<T> iter = otherSet.iterator();
 				while (iter.hasNext()) {
 					thisSet.add(iter.next());
 				}
@@ -349,7 +330,7 @@ public abstract class FlowInfo {
 	 * @return an array of local variable bindings conforming to the given type.
 	 */
 	public IVariableBinding[] get(FlowContext context, int mode) {
-		List result = new ArrayList();
+		List<IVariableBinding> result = new ArrayList<>();
 		int[] locals = getAccessModes();
 		if (locals == null)
 			return EMPTY_ARRAY;
@@ -358,8 +339,7 @@ public abstract class FlowInfo {
 			if ((accessMode & mode) != 0)
 				result.add(context.getLocalFromIndex(i));
 		}
-		return (IVariableBinding[]) result.toArray(new IVariableBinding[result
-				.size()]);
+		return result.toArray(new IVariableBinding[result.size()]);
 	}
 
 	/**
@@ -369,8 +349,7 @@ public abstract class FlowInfo {
 	 * @return <code>true</code> if the binding has the given access mode.
 	 *         <code>False</code> otherwise
 	 */
-	public boolean hasAccessMode(FlowContext context, IVariableBinding local,
-			int mode) {
+	public boolean hasAccessMode(FlowContext context, IVariableBinding local, int mode) {
 		boolean unusedMode = (mode & UNUSED) != 0;
 		if (fAccessModes == null && unusedMode)
 			return true;
@@ -409,8 +388,7 @@ public abstract class FlowInfo {
 		fAccessModes[binding.getVariableId() - context.getStartingIndex()] = UNUSED;
 	}
 
-	protected void mergeAccessModeSequential(FlowInfo otherInfo,
-			FlowContext context) {
+	protected void mergeAccessModeSequential(FlowInfo otherInfo, FlowContext context) {
 		if (!context.considerAccessMode())
 			return;
 
@@ -463,8 +441,7 @@ public abstract class FlowInfo {
 			int otherMode = others[i];
 			if (accessMode == UNUSED) {
 				fAccessModes[i] = otherMode;
-			} else if (accessMode == WRITE_POTENTIAL
-					&& (otherMode == READ || otherMode == READ_POTENTIAL)) {
+			} else if (accessMode == WRITE_POTENTIAL && (otherMode == READ || otherMode == READ_POTENTIAL)) {
 				// Read always supersedes a potential write even if the read is
 				// potential as well
 				// (we have to consider the potential read as an argument then).
@@ -488,8 +465,7 @@ public abstract class FlowInfo {
 		}
 	}
 
-	protected void mergeAccessModeConditional(FlowInfo otherInfo,
-			FlowContext context) {
+	protected void mergeAccessModeConditional(FlowInfo otherInfo, FlowContext context) {
 		if (!context.considerAccessMode())
 			return;
 

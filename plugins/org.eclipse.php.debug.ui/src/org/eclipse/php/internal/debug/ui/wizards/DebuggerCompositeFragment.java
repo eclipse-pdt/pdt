@@ -45,7 +45,6 @@ import org.eclipse.ui.PlatformUI;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class DebuggerCompositeFragment extends CompositeFragment {
 
 	public static final String ID = "org.eclipse.php.debug.ui.fragments.debuggerCompositeFragment"; //$NON-NLS-1$
@@ -144,7 +143,7 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 	private ValuesCache modifiedValuesCache;
 	private IDebuggerSettingsSection debuggerSettingsSection;
 	private IDebuggerSettingsWorkingCopy debuggerSettingsWC;
-	private Map<String, IDebuggerSettingsWorkingCopy> settingsWCBuffer = new HashMap<String, IDebuggerSettingsWorkingCopy>();
+	private Map<String, IDebuggerSettingsWorkingCopy> settingsWCBuffer = new HashMap<>();
 	private String detectedDebuggerId = null;
 	private boolean detectDebugger;
 	private Composite debuggerSettingsComposite;
@@ -235,6 +234,7 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 	 * @throws IllegalArgumentException
 	 *             if the given object is not a {@link Server}
 	 */
+	@Override
 	public void setData(Object debuggerOwner) throws IllegalArgumentException {
 		if (debuggerOwner != null && !(debuggerOwner instanceof IUniqueIdentityElement)) {
 			throw new IllegalArgumentException("The given object is not a PHP Server or Executable"); //$NON-NLS-1$
@@ -316,8 +316,9 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		controlHandler.setDescription(getDescription());
 	}
 
+	@Override
 	protected void createContents(Composite parent) {
-		debuggersIds = new LinkedList<String>(PHPDebuggersRegistry.getDebuggersIds());
+		debuggersIds = new LinkedList<>(PHPDebuggersRegistry.getDebuggersIds());
 		mainComposite = parent;
 		Composite debuggerChoice = new Composite(parent, SWT.NONE);
 		GridLayout dcLayout = new GridLayout();
@@ -331,6 +332,7 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		GridData dcData = new GridData(SWT.LEFT, SWT.FILL, false, false);
 		debuggerCombo.setLayoutData(dcData);
 		debuggerCombo.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				if (getDebuggerOwner() != null) {
 					modifiedValuesCache.debuggerId = debuggersIds.get(debuggerCombo.getSelectionIndex());

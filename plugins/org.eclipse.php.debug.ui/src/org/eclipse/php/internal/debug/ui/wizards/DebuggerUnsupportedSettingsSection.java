@@ -29,7 +29,6 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class DebuggerUnsupportedSettingsSection implements IDebuggerSettingsSection {
 
 	private static final String DEBUGGERS_PAGE_ID = "org.eclipse.php.debug.ui.installedDebuggersPage"; //$NON-NLS-1$

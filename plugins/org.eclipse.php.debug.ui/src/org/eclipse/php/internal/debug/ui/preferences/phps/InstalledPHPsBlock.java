@@ -78,13 +78,16 @@ public class InstalledPHPsBlock {
 	 */
 	class PHPsContentProvider implements IStructuredContentProvider {
 
+		@Override
 		public void dispose() {
 		}
 
+		@Override
 		public Object[] getElements(final Object input) {
 			return fPHPexes.toArray();
 		}
 
+		@Override
 		public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
 		}
 
@@ -98,6 +101,7 @@ public class InstalledPHPsBlock {
 		/**
 		 * @see ITableLabelProvider#getColumnImage(Object, int)
 		 */
+		@Override
 		public Image getColumnImage(final Object element, final int columnIndex) {
 			switch (columnIndex) {
 			case 0:
@@ -109,6 +113,7 @@ public class InstalledPHPsBlock {
 		/**
 		 * @see ITableLabelProvider#getColumnText(Object, int)
 		 */
+		@Override
 		public String getColumnText(final Object element, final int columnIndex) {
 			if (element instanceof PHPexeItem) {
 				final PHPexeItem phpExe = (PHPexeItem) element;
@@ -141,6 +146,7 @@ public class InstalledPHPsBlock {
 			return element.toString();
 		}
 
+		@Override
 		public Font getFont(Object element) {
 			if (isDefault(element)) {
 				return JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT);
@@ -175,7 +181,7 @@ public class InstalledPHPsBlock {
 	/**
 	 * VMs being displayed
 	 */
-	private final List<PHPexeItem> fPHPexes = new ArrayList<PHPexeItem>();
+	private final List<PHPexeItem> fPHPexes = new ArrayList<>();
 
 	private Button fRemoveButton;
 	private Button fSearchButton;
@@ -226,18 +232,21 @@ public class InstalledPHPsBlock {
 		fPHPExeList.setLabelProvider(new PHPExeLabelProvider());
 		fPHPExeList.setContentProvider(new PHPsContentProvider());
 		fPHPExeList.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(final SelectionChangedEvent evt) {
 				enableButtons();
 			}
 		});
 
 		fPHPExeList.addDoubleClickListener(new IDoubleClickListener() {
+			@Override
 			public void doubleClick(final DoubleClickEvent e) {
 				if (!fPHPExeList.getSelection().isEmpty())
 					editPHPexe();
 			}
 		});
 		table.addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyPressed(final KeyEvent event) {
 				if (fRemoveButton != null && !fRemoveButton.isDisposed() && !fRemoveButton.isEnabled()) {
 					return;
@@ -250,6 +259,7 @@ public class InstalledPHPsBlock {
 		final TableColumn column1 = new TableColumn(table, SWT.NULL);
 		column1.setText(PHPDebugUIMessages.InstalledPHPsBlock_0);
 		column1.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(final SelectionEvent e) {
 				sortByName();
 			}
@@ -258,6 +268,7 @@ public class InstalledPHPsBlock {
 		final TableColumn column2 = new TableColumn(table, SWT.NULL);
 		column2.setText(PHPDebugUIMessages.InstalledPHPsBlock_17);
 		column2.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(final SelectionEvent e) {
 				sortByDebugger();
 			}
@@ -266,6 +277,7 @@ public class InstalledPHPsBlock {
 		final TableColumn column3 = new TableColumn(table, SWT.NULL);
 		column3.setText(PHPDebugUIMessages.InstalledPHPsBlock_18);
 		column3.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(final SelectionEvent e) {
 				sortByVersion();
 			}
@@ -274,6 +286,7 @@ public class InstalledPHPsBlock {
 		final TableColumn column4 = new TableColumn(table, SWT.NULL);
 		column4.setText(PHPDebugUIMessages.InstalledPHPsBlock_1);
 		column4.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(final SelectionEvent e) {
 				sortByLocation();
 			}
@@ -302,6 +315,7 @@ public class InstalledPHPsBlock {
 
 		fAddButton = createPushButton(buttons, PHPDebugUIMessages.InstalledPHPsBlock_3);
 		fAddButton.addListener(SWT.Selection, new Listener() {
+			@Override
 			public void handleEvent(final Event evt) {
 				addPHPexe();
 			}
@@ -309,6 +323,7 @@ public class InstalledPHPsBlock {
 
 		fEditButton = createPushButton(buttons, PHPDebugUIMessages.InstalledPHPsBlock_4);
 		fEditButton.addListener(SWT.Selection, new Listener() {
+			@Override
 			public void handleEvent(final Event evt) {
 				editPHPexe();
 			}
@@ -316,6 +331,7 @@ public class InstalledPHPsBlock {
 
 		fRemoveButton = createPushButton(buttons, PHPDebugUIMessages.InstalledPHPsBlock_5);
 		fRemoveButton.addListener(SWT.Selection, new Listener() {
+			@Override
 			public void handleEvent(final Event evt) {
 				removePHPexes();
 			}
@@ -323,6 +339,7 @@ public class InstalledPHPsBlock {
 
 		fSetDefaultButton = createPushButton(buttons, PHPDebugUIMessages.InstalledPHPsBlock_setDefault);
 		fSetDefaultButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				PHPexeItem defaultItem = (PHPexeItem) ((IStructuredSelection) fPHPExeList.getSelection())
 						.getFirstElement();
@@ -343,6 +360,7 @@ public class InstalledPHPsBlock {
 
 		fSearchButton = createPushButton(buttons, PHPDebugUIMessages.InstalledPHPsBlock_6);
 		fSearchButton.addListener(SWT.Selection, new Listener() {
+			@Override
 			public void handleEvent(final Event evt) {
 				search();
 			}
@@ -425,9 +443,10 @@ public class InstalledPHPsBlock {
 		if (path == null)
 			return;
 		final File rootDir = new File(path);
-		final List<File> locations = new ArrayList<File>();
-		final List<PHPexeItem> found = new ArrayList<PHPexeItem>();
+		final List<File> locations = new ArrayList<>();
+		final List<PHPexeItem> found = new ArrayList<>();
 		final IRunnableWithProgress r = new IRunnableWithProgress() {
+			@Override
 			public void run(IProgressMonitor monitor) {
 				monitor.beginTask(PHPDebugUIMessages.InstalledPHPsBlock_11, IProgressMonitor.UNKNOWN);
 				search(rootDir, locations, monitor);
@@ -483,6 +502,7 @@ public class InstalledPHPsBlock {
 		try {
 			final ProgressMonitorDialog progress = new ProgressMonitorDialog(
 					PlatformUI.getWorkbench().getDisplay().getActiveShell()) {
+				@Override
 				protected void configureShell(Shell shell) {
 					super.configureShell(shell);
 					shell.setText(PHPDebugUIMessages.InstalledPHPsBlock_PHP_executables_search);
@@ -548,7 +568,7 @@ public class InstalledPHPsBlock {
 		final String[] names = directory.list();
 		if (names == null)
 			return;
-		final List<File> subDirs = new ArrayList<File>();
+		final List<File> subDirs = new ArrayList<>();
 		for (String element : names) {
 			if (monitor.isCanceled())
 				return;
@@ -585,6 +605,7 @@ public class InstalledPHPsBlock {
 		}
 		fPHPExeList.setInput(fPHPexes);
 		Display.getDefault().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				fPHPExeList.refresh();
 			}
@@ -741,7 +762,7 @@ public class InstalledPHPsBlock {
 	 * @return A PHP executable file.
 	 */
 	private static List<File> findPHPExecutable(File phpLocation) {
-		List<File> found = new ArrayList<File>(0);
+		List<File> found = new ArrayList<>(0);
 		for (String element : PHP_CANDIDATE_BIN) {
 			File phpExecFile = new File(phpLocation, element);
 			if (phpExecFile.exists() && !phpExecFile.isDirectory()) {

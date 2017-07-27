@@ -29,7 +29,7 @@ public class TraitNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	private String className;
 	private TraitDeclaration originalDeclarationNode;
 	private Identifier nameNode;
-	private Map<Identifier, String> nodeToFullName = new HashMap<Identifier, String>();
+	private Map<Identifier, String> nodeToFullName = new HashMap<>();
 
 	/**
 	 * @param root
@@ -38,6 +38,7 @@ public class TraitNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	 *            the selected node (must be an {@link Identifier} instance)
 	 * @return returns a message if there is a problem
 	 */
+	@Override
 	public String initialize(Program root, ASTNode node) {
 		fASTRoot = root;
 		if (node instanceof Identifier) {
@@ -62,6 +63,7 @@ public class TraitNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#
 	 * findOccurrences ()
 	 */
+	@Override
 	protected void findOccurrences() {
 		fDescription = Messages.format(BASE_DESCRIPTION, className);
 		fASTRoot.accept(this);
@@ -77,6 +79,7 @@ public class TraitNameOccurrencesFinder extends AbstractOccurrencesFinder {
 		}
 	}
 
+	@Override
 	public boolean visit(StaticConstantAccess staticDispatch) {
 		Expression className = staticDispatch.getClassName();
 		if (className instanceof Identifier) {
@@ -85,6 +88,7 @@ public class TraitNameOccurrencesFinder extends AbstractOccurrencesFinder {
 		return false;
 	}
 
+	@Override
 	public boolean visit(StaticFieldAccess staticDispatch) {
 		Expression className = staticDispatch.getClassName();
 		if (className instanceof Identifier) {
@@ -93,6 +97,7 @@ public class TraitNameOccurrencesFinder extends AbstractOccurrencesFinder {
 		return false;
 	}
 
+	@Override
 	public boolean visit(StaticMethodInvocation staticDispatch) {
 		Expression className = staticDispatch.getClassName();
 		if (className instanceof Identifier) {
@@ -101,6 +106,7 @@ public class TraitNameOccurrencesFinder extends AbstractOccurrencesFinder {
 		return true;
 	}
 
+	@Override
 	public boolean visit(ClassName className) {
 		if (className.getName() instanceof Identifier) {
 			Identifier identifier = (Identifier) className.getName();
@@ -109,6 +115,7 @@ public class TraitNameOccurrencesFinder extends AbstractOccurrencesFinder {
 		return false;
 	}
 
+	@Override
 	public boolean visit(TraitDeclaration traitDeclaration) {
 		if (originalDeclarationNode == null || originalDeclarationNode == traitDeclaration) {
 			dealIdentifier(traitDeclaration.getName());
@@ -116,6 +123,7 @@ public class TraitNameOccurrencesFinder extends AbstractOccurrencesFinder {
 		return true;
 	}
 
+	@Override
 	public boolean visit(TraitUseStatement part) {
 		for (NamespaceName namespace : part.getTraitList()) {
 			if (namespace instanceof Identifier) {
@@ -125,6 +133,7 @@ public class TraitNameOccurrencesFinder extends AbstractOccurrencesFinder {
 		return true;
 	}
 
+	@Override
 	public boolean visit(TraitPrecedenceStatement tps) {
 		if (tps.getPrecedence().getMethodReference().getClassName() instanceof Identifier) {
 			dealIdentifier(tps.getPrecedence().getMethodReference().getClassName());
@@ -137,6 +146,7 @@ public class TraitNameOccurrencesFinder extends AbstractOccurrencesFinder {
 		return false;
 	}
 
+	@Override
 	public boolean visit(TraitAliasStatement tas) {
 		int type = tas.getAlias().getTraitMethod().getType();
 		if (type == ASTNode.FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE) {
@@ -186,6 +196,7 @@ public class TraitNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * getOccurrenceReadWriteType
 	 * (org.eclipse.php.internal.core.ast.nodes.ASTNode)
 	 */
+	@Override
 	protected int getOccurrenceType(ASTNode node) {
 		// Default return is F_READ_OCCURRENCE, although the implementation of
 		// the Scalar visit might also use F_WRITE_OCCURRENCE
@@ -198,6 +209,7 @@ public class TraitNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * @see
 	 * org.eclipse.php.internal.ui.search.IOccurrencesFinder#getElementName()
 	 */
+	@Override
 	public String getElementName() {
 		return className;
 	}
@@ -207,6 +219,7 @@ public class TraitNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * 
 	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getID()
 	 */
+	@Override
 	public String getID() {
 		return ID;
 	}

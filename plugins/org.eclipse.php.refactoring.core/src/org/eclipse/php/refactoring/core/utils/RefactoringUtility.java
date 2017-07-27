@@ -60,14 +60,14 @@ public class RefactoringUtility {
 	 * @return For a given expression return a list of suggested variable names
 	 */
 	public static String[] getVariableNameSuggestions(Expression assignedExpression) {
-		List<String> res = new ArrayList<String>();
+		List<String> res = new ArrayList<>();
 
 		NameSuggestVisitor visitor = new NameSuggestVisitor();
 		assignedExpression.accept(visitor);
 
 		res = visitor.getSuggestions();
 
-		return (String[]) res.toArray(new String[res.size()]);
+		return res.toArray(new String[res.size()]);
 	}
 
 	public static RefactoringStatus checkNewElementName(String newName) {
@@ -142,7 +142,7 @@ public class RefactoringUtility {
 			return ((IModelElement) element).getResource();
 		}
 		if (element instanceof IAdaptable) {
-			return (IResource) ((IAdaptable) element).getAdapter(IResource.class);
+			return ((IAdaptable) element).getAdapter(IResource.class);
 		}
 		return null;
 	}
@@ -195,7 +195,7 @@ public class RefactoringUtility {
 	private static IPath[] updatePathPatternes(IPath[] updatingPaths, IPath entryPath, IPath filePath, String newName) {
 		IPath[] paths = updatingPaths;
 		IPath relativePath = filePath.makeRelativeTo(entryPath);
-		ArrayList<IPath> excludeList = new ArrayList<IPath>();
+		ArrayList<IPath> excludeList = new ArrayList<>();
 		for (IPath path : paths) {
 			if (!relativePath.isEmpty() && relativePath.isPrefixOf(path)) {
 				int mattchedPath = path.matchingFirstSegments(relativePath);

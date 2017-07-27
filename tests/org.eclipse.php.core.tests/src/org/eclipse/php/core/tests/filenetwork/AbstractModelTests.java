@@ -74,6 +74,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	class DeltaListener implements IElementChangedListener {
 		IModelElementDelta[] deltas;
 
+		@Override
 		public void elementChanged(ElementChangedEvent ev) {
 			IModelElementDelta[] copy = new IModelElementDelta[deltas.length + 1];
 			System.arraycopy(deltas, 0, copy, 0, deltas.length);
@@ -81,6 +82,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 			deltas = copy;
 		}
 
+		@Override
 		public String toString() {
 			StringBuffer buffer = new StringBuffer();
 			for (int i = 0, length = this.deltas.length; i < length; i++) {
@@ -119,6 +121,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 
 		protected void sortDeltas(IModelElementDelta[] elementDeltas) {
 			Comparer comparer = new Comparer() {
+				@Override
 				public int compare(Object a, Object b) {
 					IModelElementDelta deltaA = (IModelElementDelta) a;
 					IModelElementDelta deltaB = (IModelElementDelta) b;
@@ -297,6 +300,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 				units[i].discardWorkingCopy();
 	}
 
+	@Override
 	public void setUpSuite() throws Exception {
 		super.setUpSuite();
 	}
@@ -343,6 +347,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	protected IProject createProject(final String projectName) throws CoreException {
 		final IProject project = getProject(projectName);
 		IWorkspaceRunnable create = new IWorkspaceRunnable() {
+			@Override
 			public void run(IProgressMonitor monitor) throws CoreException {
 				project.create(null);
 				project.open(null);
@@ -374,6 +379,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 			final String[] sourceFolders, final String[] projects, final String[] containers) throws CoreException {
 		final IScriptProject[] result = new IScriptProject[1];
 		IWorkspaceRunnable create = new IWorkspaceRunnable() {
+			@Override
 			public void run(IProgressMonitor monitor) throws CoreException {
 				// create project
 				createProject(projectName);
@@ -500,6 +506,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	protected IFolder createFolder(IPath path) throws CoreException {
 		final IFolder folder = getWorkspaceRoot().getFolder(path);
 		getWorkspace().run(new IWorkspaceRunnable() {
+			@Override
 			public void run(IProgressMonitor monitor) throws CoreException {
 				IContainer parent = folder.getParent();
 				if (parent instanceof IFolder && !parent.exists()) {
@@ -529,6 +536,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	 */
 	protected void deleteProjects(final String... projectNames) throws CoreException {
 		ResourcesPlugin.getWorkspace().run(new IWorkspaceRunnable() {
+			@Override
 			public void run(IProgressMonitor monitor) throws CoreException {
 				if (projectNames != null) {
 					for (int i = 0, max = projectNames.length; i < max; i++) {
@@ -565,6 +573,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 
 	protected void sortElements(IModelElement[] elements) {
 		Comparer comparer = new Comparer() {
+			@Override
 			public int compare(Object a, Object b) {
 				ModelElement elementA = (ModelElement) a;
 				ModelElement elementB = (ModelElement) b;
@@ -624,6 +633,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 
 	protected void sortResources(Object[] resources) {
 		Util.Comparer comparer = new Util.Comparer() {
+			@Override
 			public int compare(Object a, Object b) {
 				IResource resourceA = (IResource) a;
 				IResource resourceB = (IResource) b;
@@ -692,6 +702,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 
 	protected void sortMarkers(IMarker[] markers) {
 		org.eclipse.dltk.internal.core.util.Util.Comparer comparer = new org.eclipse.dltk.internal.core.util.Util.Comparer() {
+			@Override
 			public int compare(Object a, Object b) {
 				IMarker markerA = (IMarker) a;
 				IMarker markerB = (IMarker) b;
@@ -839,15 +850,19 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	public ISourceModule getWorkingCopy(String path, String source, WorkingCopyOwner owner, boolean computeProblems)
 			throws ModelException {
 		IProblemRequestor problemRequestor = computeProblems ? new IProblemRequestor() {
+			@Override
 			public void acceptProblem(IProblem problem) {
 			}
 
+			@Override
 			public void beginReporting() {
 			}
 
+			@Override
 			public void endReporting() {
 			}
 
+			@Override
 			public boolean isActive() {
 				return true;
 			}

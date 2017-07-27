@@ -26,30 +26,35 @@ public class PHPToggleBreakpointsTargetFactory implements IToggleBreakpointsTarg
 	public PHPToggleBreakpointsTargetFactory() {
 	}
 
+	@Override
 	public IToggleBreakpointsTarget createToggleTarget(String targetID) {
 		return new ScriptLineBreakpointAdapter();
 	}
 
+	@Override
 	public String getDefaultToggleTarget(IWorkbenchPart part, ISelection selection) {
 		return ID;
 	}
 
+	@Override
 	public String getToggleTargetDescription(String targetID) {
 		return Messages.PHPToggleBreakpointsTargetFactory_1;
 	}
 
+	@Override
 	public String getToggleTargetName(String targetID) {
 		return Messages.PHPToggleBreakpointsTargetFactory_2;
 	}
 
-	public Set getToggleTargets(IWorkbenchPart part, ISelection selection) {
+	@Override
+	public Set<String> getToggleTargets(IWorkbenchPart part, ISelection selection) {
 
 		if (getEditor(part) != null) {
-			Set targets = new HashSet();
+			Set<String> targets = new HashSet<>();
 			targets.add(ID);
 			return targets;
 		}
-		return Collections.EMPTY_SET;
+		return Collections.emptySet();
 	}
 
 	private PHPStructuredEditor getEditor(IWorkbenchPart part) {

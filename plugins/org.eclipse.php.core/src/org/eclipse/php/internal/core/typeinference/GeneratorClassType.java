@@ -14,7 +14,7 @@ import java.util.List;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 
 public class GeneratorClassType extends PHPClassType {
-	private List<IEvaluatedType> fTypes = new ArrayList<IEvaluatedType>();
+	private List<IEvaluatedType> fTypes = new ArrayList<>();
 
 	public int size() {
 		if (this.fTypes != null) {
@@ -46,6 +46,7 @@ public class GeneratorClassType extends PHPClassType {
 		return false;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -62,6 +63,7 @@ public class GeneratorClassType extends PHPClassType {
 		return true;
 	}
 
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;

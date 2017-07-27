@@ -26,7 +26,6 @@ import org.eclipse.swt.widgets.Composite;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class DebuggerWizardFragment extends CompositeWizardFragment {
 
 	private DebuggerCompositeFragment compositeFragment;
@@ -40,6 +39,7 @@ public class DebuggerWizardFragment extends CompositeWizardFragment {
 	 * org.eclipse.php.internal.ui.wizards.CompositeWizardFragment#getComposite
 	 * ()
 	 */
+	@Override
 	public Composite getComposite() {
 		return compositeFragment;
 	}
@@ -52,6 +52,7 @@ public class DebuggerWizardFragment extends CompositeWizardFragment {
 	 * .eclipse.swt.widgets.Composite,
 	 * org.eclipse.php.internal.ui.wizards.IWizardHandle)
 	 */
+	@Override
 	public Composite createComposite(Composite parent, IWizardHandle handle) {
 		compositeFragment = new DebuggerCompositeFragment(parent, new WizardControlWrapper(handle), false);
 		return compositeFragment;
@@ -62,6 +63,7 @@ public class DebuggerWizardFragment extends CompositeWizardFragment {
 	 * 
 	 * @see org.eclipse.php.internal.ui.wizards.WizardFragment#enter()
 	 */
+	@Override
 	public void enter() {
 		if (compositeFragment != null) {
 			try {
@@ -88,6 +90,7 @@ public class DebuggerWizardFragment extends CompositeWizardFragment {
 	 * 
 	 * @see org.eclipse.php.internal.ui.wizards.WizardFragment#isComplete()
 	 */
+	@Override
 	public boolean isComplete() {
 		if (compositeFragment == null) {
 			return super.isComplete();

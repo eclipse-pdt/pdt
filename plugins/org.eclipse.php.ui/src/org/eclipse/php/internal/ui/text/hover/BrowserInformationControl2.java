@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * @deprecated
  */
+@Deprecated
 public class BrowserInformationControl2 extends BrowserInformationControl
 		implements IInformationControlExtension4, IInformationControlExtension5 {
 	public BrowserInformationControl2(Shell parent, int shellStyle, int style, String statusFieldText) {

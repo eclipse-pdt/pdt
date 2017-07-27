@@ -31,6 +31,7 @@ public class Scalar {
 		return fMagnitude;
 	}
 	
+	@Override
 	public String toString() {
 		if (fDimension == null)
 			return "Scalar [dimension= " + fDimension + ", magnitude= " + fMagnitude + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

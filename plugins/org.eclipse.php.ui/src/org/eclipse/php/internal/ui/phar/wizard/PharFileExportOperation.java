@@ -139,7 +139,7 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 	 * @return int
 	 */
 	private int countSelectedElements() {
-		Set enclosingJavaProjects = new HashSet(10);
+		Set<IScriptProject> enclosingJavaProjects = new HashSet<>(10);
 		int count = 0;
 
 		int n = fJarPackage.getElements().length;

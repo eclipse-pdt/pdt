@@ -101,12 +101,14 @@ public class FileSelectionDialog extends MessageDialog {
 	/*
 	 * (non-Javadoc) Method declared in Window.
 	 */
+	@Override
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
 		// PlatformUI.getWorkbench().getHelpSystem().setHelp(shell,
 		// IExternalToolsHelpContextIds.FILE_SELECTION_DIALOG);
 	}
 
+	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		super.createButtonsForButtonBar(parent);
 		initializeDialog();
@@ -115,6 +117,7 @@ public class FileSelectionDialog extends MessageDialog {
 	/*
 	 * (non-Javadoc) Method declared on Dialog.
 	 */
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		// page group
 		Composite composite = (Composite) super.createDialogArea(parent);
@@ -131,9 +134,11 @@ public class FileSelectionDialog extends MessageDialog {
 				SIZING_SELECTION_WIDGET_WIDTH, SIZING_SELECTION_WIDGET_HEIGHT, allowMultiselection);
 
 		composite.addControlListener(new ControlListener() {
+			@Override
 			public void controlMoved(ControlEvent e) {
 			}
 
+			@Override
 			public void controlResized(ControlEvent e) {
 				// Also try and reset the size of the columns as appropriate
 				TableColumn[] columns = selectionGroup.getListTable().getColumns();
@@ -152,26 +157,27 @@ public class FileSelectionDialog extends MessageDialog {
 	 */
 	private ITreeContentProvider getResourceProvider(final int resourceType) {
 		return new WorkbenchContentProvider() {
+			@Override
 			public Object[] getChildren(Object o) {
 				if (o instanceof IContainer) {
 					IResource[] members = null;
 					try {
 						members = ((IContainer) o).members();
-						List accessibleMembers = new ArrayList(members.length);
+						List<IResource> accessibleMembers = new ArrayList<>(members.length);
 						for (int i = 0; i < members.length; i++) {
 							IResource resource = members[i];
 							if (resource.isAccessible()) {
 								accessibleMembers.add(resource);
 							}
 						}
-						members = (IResource[]) accessibleMembers.toArray(new IResource[accessibleMembers.size()]);
+						members = accessibleMembers.toArray(new IResource[accessibleMembers.size()]);
 					} catch (CoreException e) {
 						// just return an empty set of children
 						return new Object[0];
 					}
 
 					// filter out the desired resource types
-					ArrayList results = new ArrayList();
+					ArrayList<IResource> results = new ArrayList<>();
 					for (int i = 0; i < members.length; i++) {
 						// And the test bits with the resource types to see if
 						// they are what we want
@@ -196,11 +202,13 @@ public class FileSelectionDialog extends MessageDialog {
 	 */
 	private void initializeDialog() {
 		selectionGroup.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				getButton(IDialogConstants.OK_ID).setEnabled(!selectionGroup.getListTableSelection().isEmpty());
 			}
 		});
 		selectionGroup.addDoubleClickListener(new IDoubleClickListener() {
+			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				buttonPressed(IDialogConstants.OK_ID);
 			}
@@ -216,6 +224,7 @@ public class FileSelectionDialog extends MessageDialog {
 		return result;
 	}
 
+	@Override
 	protected void buttonPressed(int buttonId) {
 		if (buttonId == IDialogConstants.OK_ID) {
 			result = selectionGroup.getListTableSelection();

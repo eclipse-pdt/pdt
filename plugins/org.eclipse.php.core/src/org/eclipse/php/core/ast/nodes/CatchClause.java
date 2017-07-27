@@ -31,7 +31,7 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  */
 public class CatchClause extends Statement {
 
-	private final ASTNode.NodeList<Expression> classNames = new ASTNode.NodeList<Expression>(CLASS_NAMES_PROPERTY);
+	private final ASTNode.NodeList<Expression> classNames = new ASTNode.NodeList<>(CLASS_NAMES_PROPERTY);
 	private Variable variable;
 	private Block body;
 
@@ -53,7 +53,7 @@ public class CatchClause extends Statement {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(3);
 		properyList.add(CLASS_NAMES_PROPERTY);
 		properyList.add(VARIABLE_PROPERTY);
 		properyList.add(BODY_PROPERTY);
@@ -103,6 +103,7 @@ public class CatchClause extends Statement {
 		super(ast);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -111,6 +112,7 @@ public class CatchClause extends Statement {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		for (Expression className : classNames) {
 			className.accept(visitor);
@@ -119,6 +121,7 @@ public class CatchClause extends Statement {
 		body.accept(visitor);
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		for (Expression className : classNames) {
@@ -128,6 +131,7 @@ public class CatchClause extends Statement {
 		body.traverseTopDown(visitor);
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		for (Expression className : classNames) {
 			className.traverseBottomUp(visitor);
@@ -137,6 +141,7 @@ public class CatchClause extends Statement {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<CatchClause"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -154,6 +159,7 @@ public class CatchClause extends Statement {
 		buffer.append(tab).append("</CatchClause>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.CATCH_CLAUSE;
 	}
@@ -258,6 +264,7 @@ public class CatchClause extends Statement {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
@@ -279,7 +286,7 @@ public class CatchClause extends Statement {
 	}
 
 	@Override
-	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+	final List<? extends ASTNode> internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == CLASS_NAMES_PROPERTY) {
 			return getClassNames();
 		}

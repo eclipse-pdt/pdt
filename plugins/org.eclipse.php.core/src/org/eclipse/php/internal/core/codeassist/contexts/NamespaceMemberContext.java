@@ -42,6 +42,7 @@ public class NamespaceMemberContext extends StatementContext {
 	private int elementStart;
 	private boolean isGlobal;
 
+	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
@@ -125,6 +126,7 @@ public class NamespaceMemberContext extends StatementContext {
 		return isGlobal;
 	}
 
+	@Override
 	public String getPrefix() throws BadLocationException {
 		if (hasWhitespaceBeforeCursor()) {
 			return ""; //$NON-NLS-1$
@@ -138,6 +140,7 @@ public class NamespaceMemberContext extends StatementContext {
 				: statementText.subSequence(prefixStart, prefixEnd).toString();
 	}
 
+	@Override
 	public int getPrefixEnd() throws BadLocationException {
 		ITextRegion phpToken = getPHPToken();
 		if (phpToken.getType() == PHPRegionTypes.PHP_NS_SEPARATOR

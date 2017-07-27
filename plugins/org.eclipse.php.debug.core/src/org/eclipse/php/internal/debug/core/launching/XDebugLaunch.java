@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.launching;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.Launch;
 import org.eclipse.debug.core.model.ISourceLocator;

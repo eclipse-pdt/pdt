@@ -37,7 +37,7 @@ public class InLineHtml extends Statement {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(0);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(0);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
@@ -49,6 +49,7 @@ public class InLineHtml extends Statement {
 		super(ast);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -57,24 +58,29 @@ public class InLineHtml extends Statement {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		// no children
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<InLineHtml"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append("/>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.IN_LINE_HTML;
 	}
@@ -82,6 +88,7 @@ public class InLineHtml extends Statement {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

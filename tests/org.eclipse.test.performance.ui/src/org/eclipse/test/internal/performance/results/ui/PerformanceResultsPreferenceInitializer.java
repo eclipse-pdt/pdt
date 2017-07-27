@@ -13,7 +13,6 @@ package org.eclipse.test.internal.performance.results.ui;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.test.internal.performance.PerformanceTestPlugin;
 import org.eclipse.test.internal.performance.data.Dim;
 import org.eclipse.test.internal.performance.results.utils.IPerformancesConstants;
@@ -29,6 +28,7 @@ public class PerformanceResultsPreferenceInitializer extends AbstractPreferenceI
  *
  * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
  */
+@Override
 public void initializeDefaultPreferences() {
 	IEclipsePreferences defaultPreferences = DefaultScope.INSTANCE.getNode(PLUGIN_ID);
 

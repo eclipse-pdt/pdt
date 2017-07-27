@@ -30,7 +30,7 @@ public class PHPCalleeProcessor implements ICalleeProcessor {
 	private IMethod method;
 	private IDLTKSearchScope scope;
 
-	private Map<Object, Object> fSearchResults = new HashMap<Object, Object>();
+	private Map<Object, Object> fSearchResults = new HashMap<>();
 
 	private class RequestorAdaptor extends SourceElementRequestorAdaptor {
 		@Override
@@ -58,7 +58,7 @@ public class PHPCalleeProcessor implements ICalleeProcessor {
 	}
 
 	@Override
-	public Map doOperation() {
+	public Map<Object, Object> doOperation() {
 		try {
 			if (method.getSource() != null) {
 				RequestorAdaptor requestor = new RequestorAdaptor();
@@ -70,14 +70,12 @@ public class PHPCalleeProcessor implements ICalleeProcessor {
 			return fSearchResults;
 		} catch (ModelException e) {
 			Logger.logException(e);
-		} catch (CoreException e) {
-			Logger.logException(e);
 		}
 		return fSearchResults;
 	}
 
 	public IMethod[] findMethods(final String methodName, int argCount, int sourcePosition) {
-		final List<IMethod> methods = new ArrayList<IMethod>();
+		final List<IMethod> methods = new ArrayList<>();
 		ISourceModule module = this.method.getSourceModule();
 		try {
 			IModelElement[] elements = module.codeSelect(sourcePosition, methodName.length());

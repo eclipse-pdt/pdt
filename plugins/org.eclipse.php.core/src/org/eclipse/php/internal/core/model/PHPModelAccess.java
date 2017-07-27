@@ -114,7 +114,7 @@ public class PHPModelAccess extends ModelAccess {
 	@NonNull
 	public IMethod[] findFunctions(String name, MatchRule matchRule, int trueFlags, int falseFlags,
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
-		List<IMethod> result = new LinkedList<IMethod>();
+		List<IMethod> result = new LinkedList<>();
 		if (!findFileElements(IModelElement.METHOD, name, matchRule, trueFlags, falseFlags, scope, result, monitor)) {
 			return PHPModelAccess.NULL_METHODS;
 		}
@@ -125,7 +125,7 @@ public class PHPModelAccess extends ModelAccess {
 	@NonNull
 	public IMethod[] findFunctions(String qualifier, String name, MatchRule matchRule, int trueFlags, int falseFlags,
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
-		List<IMethod> result = new LinkedList<IMethod>();
+		List<IMethod> result = new LinkedList<>();
 		if (!findFileElements(IModelElement.METHOD, qualifier, name, matchRule, trueFlags, falseFlags, scope, result,
 				monitor)) {
 			return PHPModelAccess.NULL_METHODS;
@@ -137,7 +137,7 @@ public class PHPModelAccess extends ModelAccess {
 	@NonNull
 	public IField[] findFileFields(String name, MatchRule matchRule, int trueFlags, int falseFlags,
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
-		List<IField> result = new LinkedList<IField>();
+		List<IField> result = new LinkedList<>();
 		if (!findFileElements(IModelElement.FIELD, name, matchRule, trueFlags, falseFlags, scope, result, monitor)) {
 			return PHPModelAccess.NULL_FIELDS;
 		}
@@ -148,7 +148,7 @@ public class PHPModelAccess extends ModelAccess {
 	@NonNull
 	public IField[] findFileFields(String qualifier, String name, MatchRule matchRule, int trueFlags, int falseFlags,
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
-		List<IField> result = new LinkedList<IField>();
+		List<IField> result = new LinkedList<>();
 		if (!findFileElements(IModelElement.FIELD, qualifier, name, matchRule, trueFlags, falseFlags, scope, result,
 				monitor)) {
 			return PHPModelAccess.NULL_FIELDS;
@@ -184,7 +184,7 @@ public class PHPModelAccess extends ModelAccess {
 	@NonNull
 	public IType[] findNamespaces(String qualifier, String name, MatchRule matchRule, int trueFlags, int falseFlags,
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
-		List<IType> result = new LinkedList<IType>();
+		List<IType> result = new LinkedList<>();
 		if (!findElements(IModelElement.PACKAGE_DECLARATION, qualifier, name, matchRule, trueFlags, falseFlags, scope,
 				result, monitor)) {
 			return NULL_TYPES;
@@ -216,11 +216,11 @@ public class PHPModelAccess extends ModelAccess {
 
 	@NonNull
 	public IField[] findIncludes(String name, MatchRule matchRule, IDLTKSearchScope scope, IProgressMonitor monitor) {
-		List<IField> result = new LinkedList<IField>();
+		List<IField> result = new LinkedList<>();
 		if (!findElements(IModelElement.IMPORT_DECLARATION, name, matchRule, 0, 0, scope, result, monitor)) {
 			return PHPModelAccess.NULL_FIELDS;
 		}
-		return (IField[]) result.toArray(new IField[result.size()]);
+		return result.toArray(new IField[result.size()]);
 	}
 
 }

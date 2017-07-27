@@ -94,7 +94,6 @@ public class SSHTunnel {
 	 * 
 	 * @return An IStatus that holds the creation result.
 	 */
-	@SuppressWarnings("unchecked")
 	public IStatus connect() {
 		IStatus status = Status.OK_STATUS;
 		if (isConnected()) {
@@ -117,8 +116,8 @@ public class SSHTunnel {
 				if (!password.equals(actualPassword)) {
 					newPassword = actualPassword;
 				}
-				Class sessionClass = session.getClass();
-				Class[] parameterTypes = new Class[] { int.class, String.class, int.class };
+				Class<? extends Session> sessionClass = session.getClass();
+				Class<?>[] parameterTypes = new Class<?>[] { int.class, String.class, int.class };
 				try {
 					// session.setPortForwardingR(rport, host, lport)
 					Object[] values = new Object[] { Integer.valueOf(remotePort), localHost,
@@ -254,6 +253,7 @@ public class SSHTunnel {
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode() {
 		return remoteHost.hashCode() * localHost.hashCode() * userName.hashCode() * (localPort + 1) * (remotePort + 1);
 	}
@@ -264,6 +264,7 @@ public class SSHTunnel {
 	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object o) {
 		if (o instanceof SSHTunnel) {
 			SSHTunnel other = (SSHTunnel) o;

@@ -22,7 +22,7 @@ import java.util.List;
 public abstract class AbstractDownloader {
 	protected String url;
 
-	protected List<DownloadListenerInterface> listeners = new ArrayList<DownloadListenerInterface>();
+	protected List<DownloadListenerInterface> listeners = new ArrayList<>();
 
 	// private DownloadListenerInterface downloadListener;
 	//

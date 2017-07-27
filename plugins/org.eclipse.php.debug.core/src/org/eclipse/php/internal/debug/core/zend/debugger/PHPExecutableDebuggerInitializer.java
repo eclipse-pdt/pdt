@@ -143,6 +143,7 @@ public class PHPExecutableDebuggerInitializer {
 		} catch (final Exception e) {
 			final Display display = Display.getDefault();
 			display.asyncExec(new Runnable() {
+				@Override
 				public void run() {
 					String message = e.getLocalizedMessage();
 					if (message != null) {
@@ -173,6 +174,7 @@ public class PHPExecutableDebuggerInitializer {
 			this.launch = launch;
 		}
 
+		@Override
 		public void run() {
 			super.run();
 
@@ -195,6 +197,7 @@ public class PHPExecutableDebuggerInitializer {
 				}
 				final String message = msg;
 				Display.getDefault().asyncExec(new Runnable() {
+					@Override
 					public void run() {
 						MessageDialog.openWarning(Display.getDefault().getActiveShell(),
 								PHPDebugCoreMessages.Debugger_Launch_Error, message);

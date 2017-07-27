@@ -10,8 +10,11 @@
 package org.eclipse.php.internal.ui.refactor.processors;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.Assert;
@@ -40,8 +43,9 @@ class DeleteChangeCreator {
 		// private
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	static Change createDeleteChange(TextChangeManager manager, IResource[] resources, IModelElement[] modelElements,
-			String changeName, List packageDeletes) throws CoreException {
+			String changeName, List<IResource> packageDeletes) throws CoreException {
 		// final DynamicValidationStateChange result= new
 		// DynamicValidationStateChange(changeName) {
 		// public Change perform(IProgressMonitor pm) throws CoreException {
@@ -69,7 +73,7 @@ class DeleteChangeCreator {
 		if (grouped.size() != 0) {
 			Assert.isNotNull(manager);
 			for (Entry entry : (Set<Entry>) grouped.entrySet()) {
-				Change change = createDeleteChange((ISourceModule) entry.getKey(), (List) entry.getValue(), manager);
+				Change change = createDeleteChange((ISourceModule) entry.getKey(), (List<?>) entry.getValue(), manager);
 				if (change != null) {
 					result.add(change);
 				}
@@ -95,7 +99,7 @@ class DeleteChangeCreator {
 	/*
 	 * List<IModelElement> modelElements
 	 */
-	private static Change createDeleteChange(ISourceModule cu, List modelElements, TextChangeManager manager)
+	private static Change createDeleteChange(ISourceModule cu, List<?> modelElements, TextChangeManager manager)
 			throws CoreException {
 		// SourceModule cuNode= RefactoringASTParser.parseWithASTProvider(cu,
 		// false, null);
@@ -111,7 +115,7 @@ class DeleteChangeCreator {
 
 			manager.manage(cu, textFileChange);
 
-			IModelElement[] elements = (IModelElement[]) modelElements.toArray(new IModelElement[modelElements.size()]);
+			IModelElement[] elements = modelElements.toArray(new IModelElement[modelElements.size()]);
 
 			for (int cnt = 0, max = elements.length; cnt < max; cnt++) {
 				ISourceRange sourceRange = null;
@@ -215,8 +219,8 @@ class DeleteChangeCreator {
 	// }
 
 	// List<IModelElement>
-	private static List getElementsSmallerThanCu(IModelElement[] modelElements) {
-		List result = new ArrayList();
+	private static List<IModelElement> getElementsSmallerThanCu(IModelElement[] modelElements) {
+		List<IModelElement> result = new ArrayList<>();
 		for (int i = 0; i < modelElements.length; i++) {
 			IModelElement element = modelElements[i];
 			if (ReorgUtils.isInsideSourceModule(element))

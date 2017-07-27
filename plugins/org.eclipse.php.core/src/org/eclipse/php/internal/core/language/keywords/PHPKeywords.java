@@ -78,10 +78,12 @@ public class PHPKeywords {
 			this(name, suffix, suffixOffset, context, false);
 		}
 
+		@Override
 		public int hashCode() {
 			return name.hashCode();
 		}
 
+		@Override
 		public boolean equals(Object obj) {
 			if (this == obj) {
 				return true;
@@ -103,6 +105,7 @@ public class PHPKeywords {
 			return true;
 		}
 
+		@Override
 		public int compareTo(KeywordData o) {
 			return this.ignoreCase ? this.name.compareToIgnoreCase(o.name) : this.name.compareTo(o.name);
 		}

@@ -116,6 +116,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#getCharEnd()
 	 */
+	@Override
 	public int getCharEnd() throws DebugException {
 		// Don't support expression level stepping, only line level stepping
 		return -1;
@@ -126,6 +127,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#getCharStart()
 	 */
+	@Override
 	public int getCharStart() throws DebugException {
 		return -1;
 	}
@@ -135,6 +137,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#getLineNumber()
 	 */
+	@Override
 	public int getLineNumber() throws DebugException {
 		DBGpLogger.debug(this.hashCode() + "::DBGpStackFrame=" + lineNo); //$NON-NLS-1$
 		return lineNo;
@@ -145,6 +148,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#getName()
 	 */
+	@Override
 	public String getName() throws DebugException {
 		return name;
 	}
@@ -154,6 +158,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#hasRegisterGroups()
 	 */
+	@Override
 	public boolean hasRegisterGroups() throws DebugException {
 		return false;
 	}
@@ -163,6 +168,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#getRegisterGroups()
 	 */
+	@Override
 	public IRegisterGroup[] getRegisterGroups() throws DebugException {
 		return new IRegisterGroup[0];
 	}
@@ -172,6 +178,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#getThread()
 	 */
+	@Override
 	public IThread getThread() {
 		return owningThread;
 	}
@@ -181,6 +188,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#getVariables()
 	 */
+	@Override
 	public synchronized IVariable[] getVariables() throws DebugException {
 		DBGpLogger.debug("getting variables for stackframe on line: " + lineNo); //$NON-NLS-1$
 		return variablesContainer.getVariables();
@@ -191,6 +199,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#hasVariables()
 	 */
+	@Override
 	public boolean hasVariables() throws DebugException {
 		return (getVariables() != null && getVariables().length > 0);
 	}
@@ -200,6 +209,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * 
 	 * @see org.eclipse.debug.core.model.IStep#canStepInto()
 	 */
+	@Override
 	public boolean canStepInto() {
 		return owningThread.canStepInto();
 	}
@@ -209,6 +219,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * 
 	 * @see org.eclipse.debug.core.model.IStep#canStepOver()
 	 */
+	@Override
 	public boolean canStepOver() {
 		return owningThread.canStepOver();
 	}
@@ -218,6 +229,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * 
 	 * @see org.eclipse.debug.core.model.IStep#canStepReturn()
 	 */
+	@Override
 	public boolean canStepReturn() {
 		return owningThread.canStepReturn();
 	}
@@ -227,6 +239,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * 
 	 * @see org.eclipse.debug.core.model.IStep#isStepping()
 	 */
+	@Override
 	public boolean isStepping() {
 		return owningThread.isStepping();
 	}
@@ -236,6 +249,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * 
 	 * @see org.eclipse.debug.core.model.IStep#stepInto()
 	 */
+	@Override
 	public void stepInto() throws DebugException {
 		owningThread.stepInto();
 	}
@@ -245,6 +259,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * 
 	 * @see org.eclipse.debug.core.model.IStep#stepOver()
 	 */
+	@Override
 	public void stepOver() throws DebugException {
 		owningThread.stepOver();
 	}
@@ -254,6 +269,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * 
 	 * @see org.eclipse.debug.core.model.IStep#stepReturn()
 	 */
+	@Override
 	public void stepReturn() throws DebugException {
 		owningThread.stepReturn();
 	}
@@ -263,6 +279,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#canResume()
 	 */
+	@Override
 	public boolean canResume() {
 		return owningThread.canResume();
 	}
@@ -272,6 +289,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#canSuspend()
 	 */
+	@Override
 	public boolean canSuspend() {
 		return owningThread.canSuspend();
 	}
@@ -281,6 +299,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#isSuspended()
 	 */
+	@Override
 	public boolean isSuspended() {
 		return owningThread.isSuspended();
 	}
@@ -290,6 +309,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#resume()
 	 */
+	@Override
 	public void resume() throws DebugException {
 		owningThread.resume();
 	}
@@ -299,6 +319,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#suspend()
 	 */
+	@Override
 	public void suspend() throws DebugException {
 		owningThread.suspend();
 	}
@@ -308,6 +329,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * 
 	 * @see org.eclipse.debug.core.model.ITerminate#canTerminate()
 	 */
+	@Override
 	public boolean canTerminate() {
 		return owningThread.canTerminate();
 	}
@@ -317,6 +339,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * 
 	 * @see org.eclipse.debug.core.model.ITerminate#isTerminated()
 	 */
+	@Override
 	public boolean isTerminated() {
 		return owningThread.isTerminated();
 	}
@@ -326,6 +349,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * 
 	 * @see org.eclipse.debug.core.model.ITerminate#terminate()
 	 */
+	@Override
 	public void terminate() throws DebugException {
 		owningThread.terminate();
 	}
@@ -344,6 +368,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof DBGpStackFrame) {
 			DBGpStackFrame sf = (DBGpStackFrame) obj;
@@ -385,6 +410,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode() {
 		return getQualifiedFile().hashCode() + stackLevel.hashCode() + owningThread.hashCode();
 	}

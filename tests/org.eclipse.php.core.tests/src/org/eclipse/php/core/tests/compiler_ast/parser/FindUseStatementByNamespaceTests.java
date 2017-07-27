@@ -40,7 +40,7 @@ public class FindUseStatementByNamespaceTests {
 	public static TestWatcher watcher = new TestSuiteWatcher();
 
 	@Parameters
-	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<>();
 
 	static {
 		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/astutils/find_use_statement_by_namespace/php53" }); //$NON-NLS-1$

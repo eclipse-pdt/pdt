@@ -105,6 +105,7 @@ public final class PHPHeuristicScanner implements Symbols {
 		 * org.eclipse.jdt.internal.ui.text.JavaHeuristicScanner.StopCondition
 		 * #stop(char)
 		 */
+		@Override
 		public boolean stop(char ch, int position, boolean forward) {
 			return !Character.isWhitespace(ch);
 		}
@@ -121,6 +122,7 @@ public final class PHPHeuristicScanner implements Symbols {
 		 * org.eclipse.jdt.internal.ui.text.JavaHeuristicScanner.StopCondition
 		 * #stop(char)
 		 */
+		@Override
 		public boolean stop(char ch, int position, boolean forward) {
 			return super.stop(ch, position, true) && isDefaultPartition(position);
 		}
@@ -130,6 +132,7 @@ public final class PHPHeuristicScanner implements Symbols {
 		 * org.eclipse.jdt.internal.ui.text.JavaHeuristicScanner.StopCondition
 		 * #nextPosition(int, boolean)
 		 */
+		@Override
 		public int nextPosition(int position, boolean forward) {
 			ITypedRegion partition = getPartition(position);
 			if (fPartition.equals(partition.getType()))
@@ -158,6 +161,7 @@ public final class PHPHeuristicScanner implements Symbols {
 		 * org.eclipse.jdt.internal.ui.text.JavaHeuristicScanner.StopCondition
 		 * #stop(char)
 		 */
+		@Override
 		public boolean stop(char ch, int position, boolean forward) {
 			return !Character.isJavaIdentifierPart(ch);
 		}
@@ -174,6 +178,7 @@ public final class PHPHeuristicScanner implements Symbols {
 		 * org.eclipse.jdt.internal.ui.text.JavaHeuristicScanner.StopCondition
 		 * #stop(char)
 		 */
+		@Override
 		public boolean stop(char ch, int position, boolean forward) {
 			return super.stop(ch, position, true) || !isDefaultPartition(position);
 		}
@@ -183,6 +188,7 @@ public final class PHPHeuristicScanner implements Symbols {
 		 * org.eclipse.jdt.internal.ui.text.JavaHeuristicScanner.StopCondition
 		 * #nextPosition(int, boolean)
 		 */
+		@Override
 		public int nextPosition(int position, boolean forward) {
 			ITypedRegion partition = getPartition(position);
 			if (fPartition.equals(partition.getType()))
@@ -236,6 +242,7 @@ public final class PHPHeuristicScanner implements Symbols {
 		 * org.eclipse.jdt.internal.ui.text.JavaHeuristicScanner.StopCondition
 		 * #stop(char, int)
 		 */
+		@Override
 		public boolean stop(char ch, int position, boolean forward) {
 			return Arrays.binarySearch(fChars, ch) >= 0 && isDefaultPartition(position);
 		}
@@ -245,6 +252,7 @@ public final class PHPHeuristicScanner implements Symbols {
 		 * org.eclipse.jdt.internal.ui.text.JavaHeuristicScanner.StopCondition
 		 * #nextPosition(int, boolean)
 		 */
+		@Override
 		public int nextPosition(int position, boolean forward) {
 			// only match char in the same string
 			if (fTextRegion != null && !fTextRegion.equals(getTextRegion(position))) {

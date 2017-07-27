@@ -90,6 +90,7 @@ public class PHPNature extends ScriptNature {
 	 * 
 	 * @see IProjectNature#deconfigure
 	 */
+	@Override
 	public void deconfigure() throws CoreException {
 		removeFromBuildSpec(DLTKCore.BUILDER_ID);
 		removeFromBuildSpec(VALIDATION_BUILDER_ID);
@@ -109,6 +110,7 @@ public class PHPNature extends ScriptNature {
 	 * @exception org.eclipse.core.runtime.CoreException
 	 *                The exception description.
 	 */
+	@Override
 	protected void removeFromBuildSpec(String builderID) throws org.eclipse.core.runtime.CoreException {
 		IProjectDescription description = getProject().getDescription();
 		ICommand[] commands = description.getBuildSpec();
@@ -143,6 +145,7 @@ public class PHPNature extends ScriptNature {
 	 * @exception CoreException
 	 *                if this method fails.
 	 */
+	@Override
 	public void configure() throws org.eclipse.core.runtime.CoreException {
 		super.configure();
 

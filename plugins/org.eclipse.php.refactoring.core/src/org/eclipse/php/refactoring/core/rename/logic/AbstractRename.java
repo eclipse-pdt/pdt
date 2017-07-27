@@ -35,7 +35,6 @@ import org.eclipse.text.edits.TextEditGroup;
  * 
  * @author Roy, 2007
  */
-@SuppressWarnings("restriction")
 public abstract class AbstractRename extends AbstractVisitor {
 
 	/**
@@ -46,7 +45,7 @@ public abstract class AbstractRename extends AbstractVisitor {
 	/**
 	 * {@link TextEditGroup}
 	 */
-	protected final List<TextEditGroup> groups = new LinkedList<TextEditGroup>();
+	protected final List<TextEditGroup> groups = new LinkedList<>();
 
 	/**
 	 * The file we are working on
@@ -172,6 +171,7 @@ public abstract class AbstractRename extends AbstractVisitor {
 	/**
 	 *
 	 */
+	@Override
 	public boolean visit(Program program) {
 		final List<Statement> statements = program.statements();
 		for (Statement element : statements) {
@@ -197,7 +197,7 @@ public abstract class AbstractRename extends AbstractVisitor {
 		 * an iterator of @link Comment
 		 */
 		final Iterator<Comment> commentIterator = program.comments().iterator();
-		Comment currentComment = (Comment) (commentIterator.hasNext() ? commentIterator.next() : null);
+		Comment currentComment = commentIterator.hasNext() ? commentIterator.next() : null;
 
 		while (currentComment != null && currentMatch != null) {
 
@@ -210,7 +210,7 @@ public abstract class AbstractRename extends AbstractVisitor {
 			}
 
 			while (isCommentBefore(currentMatch, currentComment)) {
-				currentComment = (Comment) (commentIterator.hasNext() ? commentIterator.next() : null);
+				currentComment = commentIterator.hasNext() ? commentIterator.next() : null;
 			}
 
 			while (isMatchBefore(currentMatch, currentComment)) {
@@ -250,6 +250,7 @@ public abstract class AbstractRename extends AbstractVisitor {
 				&& currentComment.getEnd() > currentMatch.getOffset() + 1;
 	}
 
+	@Override
 	public boolean visit(Scalar scalar) {
 		if (searchTextual) {
 			final String stringValue = scalar.getStringValue();

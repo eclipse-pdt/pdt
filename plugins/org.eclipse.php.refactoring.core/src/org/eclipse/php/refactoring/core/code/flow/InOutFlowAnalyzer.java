@@ -33,11 +33,13 @@ public class InOutFlowAnalyzer extends FlowAnalyzer {
 		return result;
 	}
 
+	@Override
 	protected boolean traverseNode(ASTNode node) {
 		// we are only traversing the selected nodes.
 		return true;
 	}
 
+	@Override
 	protected boolean createReturnFlowInfo(ReturnStatement node) {
 		// we are only traversing selected nodes.
 		return true;
@@ -83,6 +85,7 @@ public class InOutFlowAnalyzer extends FlowAnalyzer {
 	// }
 	// }
 
+	@Override
 	public void endVisit(Variable variable) {
 		super.endVisit(variable);
 		// FlowInfo info= accessFlowInfo(variable);
