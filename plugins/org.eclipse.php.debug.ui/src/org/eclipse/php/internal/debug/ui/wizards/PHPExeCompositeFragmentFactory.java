@@ -19,10 +19,12 @@ import org.eclipse.swt.widgets.Composite;
 
 public class PHPExeCompositeFragmentFactory implements ICompositeFragmentFactory {
 
+	@Override
 	public CompositeFragment createComposite(Composite parent, IControlHandler controlHandler) {
 		return new PHPExeCompositeFragment(parent, controlHandler, true);
 	}
 
+	@Override
 	public WizardFragment createWizardFragment() {
 		return new PHPExeWizardFragment();
 	}

@@ -56,6 +56,7 @@ public class XDebugLaunchListener implements ILaunchesListener {
 	 * org.eclipse.debug.core.ILaunchesListener#launchesAdded(org.eclipse.debug
 	 * .core.ILaunch[])
 	 */
+	@Override
 	public void launchesAdded(ILaunch[] launches) {
 		updateStatus(launches, true);
 	}
@@ -67,10 +68,12 @@ public class XDebugLaunchListener implements ILaunchesListener {
 	 * org.eclipse.debug.core.ILaunchesListener#launchesChanged(org.eclipse.
 	 * debug.core.ILaunch[])
 	 */
+	@Override
 	public void launchesChanged(ILaunch[] launches) {
 		updateStatus(launches, true);
 	}
 
+	@Override
 	public void launchesRemoved(ILaunch[] launches) {
 		updateStatus(launches, false);
 	}

@@ -49,7 +49,7 @@ public class ArrayElement extends Expression {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(3);
 		properyList.add(KEY_PROPERTY);
 		properyList.add(VALUE_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
@@ -75,6 +75,7 @@ public class ArrayElement extends Expression {
 		this(start, end, ast, null, value);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		if (key != null) {
 			key.accept(visitor);
@@ -82,6 +83,7 @@ public class ArrayElement extends Expression {
 		value.accept(visitor);
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		if (key != null) {
@@ -90,6 +92,7 @@ public class ArrayElement extends Expression {
 		value.traverseTopDown(visitor);
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		if (key != null) {
 			key.traverseBottomUp(visitor);
@@ -98,6 +101,7 @@ public class ArrayElement extends Expression {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<ArrayElement"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -114,6 +118,7 @@ public class ArrayElement extends Expression {
 		buffer.append(tab).append("</ArrayElement>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -122,6 +127,7 @@ public class ArrayElement extends Expression {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.ARRAY_ELEMENT;
 	}
@@ -190,6 +196,7 @@ public class ArrayElement extends Expression {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
@@ -208,6 +215,7 @@ public class ArrayElement extends Expression {
 		return PROPERTY_DESCRIPTORS;
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == KEY_PROPERTY) {
 			if (get) {

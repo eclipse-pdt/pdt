@@ -46,6 +46,7 @@ public class MethodBinding extends FunctionBinding implements IMethodBinding {
 	 * org.eclipse.php.internal.core.ast.nodes.IMethodBinding#getDeclaringClass
 	 * ()
 	 */
+	@Override
 	public ITypeBinding getDeclaringClass() {
 		if (declaringClassTypeBinding == null) {
 			IType parent = modelElement.getDeclaringType();
@@ -62,6 +63,7 @@ public class MethodBinding extends FunctionBinding implements IMethodBinding {
 	 * @see
 	 * org.eclipse.php.internal.core.ast.nodes.IMethodBinding#isConstructor()
 	 */
+	@Override
 	public boolean isConstructor() {
 		try {
 			return modelElement.isConstructor();
@@ -81,6 +83,7 @@ public class MethodBinding extends FunctionBinding implements IMethodBinding {
 	 * @return <code>true</code> if this method overrides the given method, and
 	 *         <code>false</code> otherwise
 	 */
+	@Override
 	public boolean overrides(IMethodBinding method) {
 		/*
 		 * // TODO - Implement as the JDT implementation ? LookupEnvironment
@@ -129,6 +132,7 @@ public class MethodBinding extends FunctionBinding implements IMethodBinding {
 	 * @see
 	 * org.eclipse.php.internal.core.ast.nodes.IFunctionBinding#getReturnType()
 	 */
+	@Override
 	public ITypeBinding[] getReturnType() {
 		return resolver.getMethodReturnTypeBinding(modelElement);
 	}

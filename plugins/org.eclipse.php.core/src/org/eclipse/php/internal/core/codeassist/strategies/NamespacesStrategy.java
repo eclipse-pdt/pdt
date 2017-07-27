@@ -37,6 +37,7 @@ public class NamespacesStrategy extends GlobalTypesStrategy {
 		return ""; //$NON-NLS-1$
 	}
 
+	@Override
 	protected IType[] getTypes(AbstractCompletionContext context) throws BadLocationException {
 
 		String prefix = context.getPrefix();

@@ -409,6 +409,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		return detectors.toArray(new IHyperlinkDetector[detectors.size()]);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected Map<String, IAdaptable> getHyperlinkDetectorTargets(ISourceViewer sourceViewer) {
 		Map<String, IAdaptable> targets = super.getHyperlinkDetectorTargets(sourceViewer);
@@ -515,7 +516,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 		vector.add(EMPTY); // $NON-NLS-1$
 
-		return (String[]) vector.toArray(new String[vector.size()]);
+		return vector.toArray(new String[vector.size()]);
 	}
 
 	/**

@@ -52,8 +52,8 @@ public abstract class AbstractMethodReturnTypeEvaluator extends AbstractPHPGoalE
 			cache = ((IModelCacheContext) context).getCache();
 		}
 
-		List<IMethod> methods = new LinkedList<IMethod>();
-		List<IType> methodTypes = new LinkedList<IType>();
+		List<IMethod> methods = new LinkedList<>();
+		List<IType> methodTypes = new LinkedList<>();
 		if (types == null) {
 			try {
 				methods.addAll(Arrays.asList(

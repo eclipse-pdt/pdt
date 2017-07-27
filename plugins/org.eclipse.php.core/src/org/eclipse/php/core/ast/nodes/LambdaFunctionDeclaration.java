@@ -34,9 +34,9 @@ public class LambdaFunctionDeclaration extends Expression {
 	private boolean isReference;
 	private boolean isStatic;
 	private int staticStart;
-	private final ASTNode.NodeList<FormalParameter> formalParameters = new ASTNode.NodeList<FormalParameter>(
+	private final ASTNode.NodeList<FormalParameter> formalParameters = new ASTNode.NodeList<>(
 			FORMAL_PARAMETERS_PROPERTY);
-	private final ASTNode.NodeList<Expression> lexicalVariables = new ASTNode.NodeList<Expression>(
+	private final ASTNode.NodeList<Expression> lexicalVariables = new ASTNode.NodeList<>(
 			LEXICAL_VARIABLES_PROPERTY);
 	private Block body;
 	private ReturnType returnType;
@@ -70,7 +70,7 @@ public class LambdaFunctionDeclaration extends Expression {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(4);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(4);
 		propertyList.add(IS_REFERENCE_PROPERTY);
 		propertyList.add(IS_STATIC);
 		propertyList.add(FORMAL_PARAMETERS_PROPERTY);
@@ -126,6 +126,7 @@ public class LambdaFunctionDeclaration extends Expression {
 		super(ast);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -134,6 +135,7 @@ public class LambdaFunctionDeclaration extends Expression {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		for (ASTNode node : this.formalParameters) {
 			node.accept(visitor);
@@ -149,6 +151,7 @@ public class LambdaFunctionDeclaration extends Expression {
 		}
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		for (ASTNode node : this.formalParameters) {
@@ -165,6 +168,7 @@ public class LambdaFunctionDeclaration extends Expression {
 		}
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		for (ASTNode node : this.formalParameters) {
 			node.traverseBottomUp(visitor);
@@ -181,12 +185,13 @@ public class LambdaFunctionDeclaration extends Expression {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<LambdaFunctionDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" isReference='").append(isReference); //$NON-NLS-1$ //$NON-NLS-2$
+		buffer.append(" isReference='").append(isReference); //$NON-NLS-1$ 
 		if (isStatic) {
-			buffer.append(" isStatic='").append(isStatic); //$NON-NLS-1$ //$NON-NLS-2$
+			buffer.append(" isStatic='").append(isStatic); //$NON-NLS-1$ 
 		}
 		buffer.append("'>\n"); //$NON-NLS-1$
 		buffer.append(TAB).append(tab).append("<FormalParameters>\n"); //$NON-NLS-1$
@@ -219,6 +224,7 @@ public class LambdaFunctionDeclaration extends Expression {
 		buffer.append(tab).append("</LambdaFunctionDeclaration>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.LAMBDA_FUNCTION_DECLARATION;
 	}
@@ -344,6 +350,7 @@ public class LambdaFunctionDeclaration extends Expression {
 	/*
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
+	@Override
 	final boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean value) {
 		if (property == IS_REFERENCE_PROPERTY) {
 			if (get) {
@@ -364,6 +371,7 @@ public class LambdaFunctionDeclaration extends Expression {
 		return super.internalGetSetBooleanProperty(property, get, value);
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == BODY_PROPERTY) {
 			if (get) {
@@ -385,7 +393,8 @@ public class LambdaFunctionDeclaration extends Expression {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
-	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+	@Override
+	final List<? extends ASTNode> internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == FORMAL_PARAMETERS_PROPERTY) {
 			return formalParameters();
 		}
@@ -399,6 +408,7 @@ public class LambdaFunctionDeclaration extends Expression {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

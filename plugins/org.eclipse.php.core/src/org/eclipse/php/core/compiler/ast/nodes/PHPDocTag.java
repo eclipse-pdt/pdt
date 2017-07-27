@@ -73,10 +73,10 @@ public class PHPDocTag extends ASTNode {
 		String value;
 
 		private static final class Mapping {
-			private static final Map<Integer, TagKind> mapIds = new HashMap<Integer, TagKind>();
-			private static final Map<String, TagKind> mapNames = new TreeMap<String, TagKind>(
+			private static final Map<Integer, TagKind> mapIds = new HashMap<>();
+			private static final Map<String, TagKind> mapNames = new TreeMap<>(
 					String.CASE_INSENSITIVE_ORDER);
-			private static final Map<String, TagKind> mapValues = new TreeMap<String, TagKind>(
+			private static final Map<String, TagKind> mapValues = new TreeMap<>(
 					String.CASE_INSENSITIVE_ORDER);
 		}
 
@@ -201,7 +201,7 @@ public class PHPDocTag extends ASTNode {
 	}
 
 	private List<String> getDescTexts(int wordsToSkip) {
-		List<String> result = new ArrayList<String>();
+		List<String> result = new ArrayList<>();
 		for (int i = 0; i < texts.size(); i++) {
 			String text = texts.get(i).getValue();
 			if (wordsToSkip <= 0) {
@@ -227,7 +227,7 @@ public class PHPDocTag extends ASTNode {
 
 	@NonNull
 	public static List<String> removeEmptyString(List<String> commentWords) {
-		List<String> result = new ArrayList<String>();
+		List<String> result = new ArrayList<>();
 		for (int i = 0; i < commentWords.size(); i++) {
 			String word = commentWords.get(i);
 			if (word.trim().length() != 0) {
@@ -285,9 +285,9 @@ public class PHPDocTag extends ASTNode {
 		// (re)set references
 		variableReference = null;
 		singleTypeReference = null;
-		typeReferences = new ArrayList<TypeReference>();
-		allReferencesWithOrigOrder = new ArrayList<SimpleReference>();
-		descTexts = new ArrayList<String>();
+		typeReferences = new ArrayList<>();
+		allReferencesWithOrigOrder = new ArrayList<>();
+		descTexts = new ArrayList<>();
 
 		int valueStart = start + matchedTag.length();
 		// For all unsupported tags
@@ -376,6 +376,7 @@ public class PHPDocTag extends ASTNode {
 		trimmedDescText = getTrimmedDescText(wordsToSkip);
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		boolean visit = visitor.visit(this);
 		if (visit) {

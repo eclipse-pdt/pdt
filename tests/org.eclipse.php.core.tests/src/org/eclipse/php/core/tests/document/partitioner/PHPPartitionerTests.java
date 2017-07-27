@@ -174,7 +174,7 @@ public class PHPPartitionerTests {
 	public void partitionInHTML() throws Exception {
 		ArrayList<String> matches = getPartitionType(phpLookUp, "phpPartitionerTestHTML.php");
 		for (int i = 0; i < matches.size(); i++) {
-			assertSame(PHPPartitionTypes.PHP_DEFAULT, (String) matches.get(i));
+			assertSame(PHPPartitionTypes.PHP_DEFAULT, matches.get(i));
 		}
 	}
 
@@ -188,7 +188,7 @@ public class PHPPartitionerTests {
 
 		ArrayList<String> matches = getPartitionType(phpLookUp, "phpPartitionerTestPhp.php");
 		for (int i = 0; i < matches.size(); i++) {
-			assertSame(PHPPartitionTypes.PHP_DEFAULT, (String) matches.get(i));
+			assertSame(PHPPartitionTypes.PHP_DEFAULT, matches.get(i));
 		}
 	}
 
@@ -202,7 +202,7 @@ public class PHPPartitionerTests {
 
 		ArrayList<String> matches = getPartitionType(phpLookUp, "phpPartitionerTestPhpAsHTMLAttributeKey.php");
 		for (int i = 0; i < matches.size(); i++) {
-			assertSame(PHPPartitionTypes.PHP_DEFAULT, (String) matches.get(i));
+			assertSame(PHPPartitionTypes.PHP_DEFAULT, matches.get(i));
 		}
 	}
 
@@ -216,7 +216,7 @@ public class PHPPartitionerTests {
 
 		ArrayList<String> matches = getPartitionType(phpLookUp, "phpPartitionerTestPhpAsHTMLAttributeValue.php");
 		for (int i = 0; i < matches.size(); i++) {
-			assertSame(PHPPartitionTypes.PHP_DEFAULT, (String) matches.get(i));
+			assertSame(PHPPartitionTypes.PHP_DEFAULT, matches.get(i));
 		}
 	}
 
@@ -237,7 +237,7 @@ public class PHPPartitionerTests {
 		// offset from beginning of stream
 		int offset = 0;
 
-		ArrayList<String> results = new ArrayList<String>();
+		ArrayList<String> results = new ArrayList<>();
 
 		// init files
 		IFile inFile = project.getFile(testDataFile);

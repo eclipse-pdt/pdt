@@ -52,7 +52,7 @@ public class FieldAccess extends Dispatch {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(2);
 		propertyList.add(FIELD_PROPERTY);
 		propertyList.add(DISPATCHER_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
@@ -71,6 +71,7 @@ public class FieldAccess extends Dispatch {
 		super(ast);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -79,23 +80,27 @@ public class FieldAccess extends Dispatch {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		getDispatcher().accept(visitor);
 		field.accept(visitor);
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		getDispatcher().accept(visitor);
 		field.traverseTopDown(visitor);
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		getDispatcher().traverseBottomUp(visitor);
 		field.traverseBottomUp(visitor);
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<FieldAccess"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -109,6 +114,7 @@ public class FieldAccess extends Dispatch {
 		buffer.append(tab).append("</FieldAccess>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.FIELD_ACCESS;
 	}
@@ -125,6 +131,7 @@ public class FieldAccess extends Dispatch {
 	/**
 	 * see {@link #getField()}
 	 */
+	@Override
 	public VariableBase getMember() {
 		return getField();
 	}
@@ -152,6 +159,7 @@ public class FieldAccess extends Dispatch {
 		postReplaceChild(oldChild, variable, FIELD_PROPERTY);
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == FIELD_PROPERTY) {
 			if (get) {
@@ -168,6 +176,7 @@ public class FieldAccess extends Dispatch {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

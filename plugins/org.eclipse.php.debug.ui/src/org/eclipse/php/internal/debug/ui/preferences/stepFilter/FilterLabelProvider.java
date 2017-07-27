@@ -30,6 +30,7 @@ public class FilterLabelProvider extends LabelProvider implements ITableLabelPro
 	/**
 	 * @see ITableLabelProvider#getColumnText(Object, int)
 	 */
+	@Override
 	public String getColumnText(Object object, int column) {
 		String text = ""; //$NON-NLS-1$
 		if (column == 0) {
@@ -46,6 +47,7 @@ public class FilterLabelProvider extends LabelProvider implements ITableLabelPro
 	/**
 	 * @see ILabelProvider#getText(Object)
 	 */
+	@Override
 	public String getText(Object element) {
 		String text = ""; //$NON-NLS-1$
 		DebugStepFilter filter = (DebugStepFilter) element;
@@ -59,6 +61,7 @@ public class FilterLabelProvider extends LabelProvider implements ITableLabelPro
 	/**
 	 * @see ITableLabelProvider#getColumnImage(Object, int)
 	 */
+	@Override
 	public Image getColumnImage(Object object, int column) {
 		DebugStepFilter filter = (DebugStepFilter) object;
 		switch (filter.getType()) {

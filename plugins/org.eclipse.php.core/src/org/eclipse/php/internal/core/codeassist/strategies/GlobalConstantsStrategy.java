@@ -56,6 +56,7 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		ICompletionContext context = getContext();
 
@@ -197,7 +198,7 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 	}
 
 	private IModelElement[] filterClassConstants(IModelElement[] elements) {
-		List<IModelElement> result = new ArrayList<IModelElement>(elements.length);
+		List<IModelElement> result = new ArrayList<>(elements.length);
 		for (IModelElement element : elements) {
 			try {
 				if ((((IField) element).getFlags() & PHPCoreConstants.AccClassField) == 0) {
@@ -207,7 +208,7 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 				PHPCorePlugin.log(e);
 			}
 		}
-		return (IModelElement[]) result.toArray(new IModelElement[result.size()]);
+		return result.toArray(new IModelElement[result.size()]);
 	}
 
 	protected int getExtraInfo() {

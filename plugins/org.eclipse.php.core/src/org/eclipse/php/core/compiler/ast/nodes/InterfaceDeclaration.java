@@ -62,18 +62,22 @@ public class InterfaceDeclaration extends TypeDeclaration implements IPHPDocAwar
 		setModifier(Modifiers.AccInterface);
 	}
 
+	@Override
 	public PHPDocBlock getPHPDoc() {
 		return phpDoc;
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.INTERFACE_DECLARATION;
 	}
 
+	@Override
 	public boolean isRecovered() {
 		return isRecovered;
 	}
 
+	@Override
 	public void setRecovered(boolean isRecovered) {
 		this.isRecovered = isRecovered;
 	}
@@ -81,9 +85,11 @@ public class InterfaceDeclaration extends TypeDeclaration implements IPHPDocAwar
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
+	@Override
 	public final void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}

@@ -224,7 +224,6 @@ public class ExtractVariableRefactoring extends Refactoring {
 	 * @param recalculate
 	 * @return
 	 */
-	@SuppressWarnings("restriction")
 	private IASTFragment[] retainOnlyReplacableMatches(boolean recalculate) {
 
 		// if (validMatchingFragments != null && !recalculate)
@@ -236,7 +235,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 
 		matchingFragmentsStatus.merge(checkSemanticProblems(allMatches));
 
-		List<IASTFragment> result = new ArrayList<IASTFragment>(allMatches.length);
+		List<IASTFragment> result = new ArrayList<>(allMatches.length);
 		for (int i = 0; i < allMatches.length; i++) {
 
 			Expression associatedExpression = getExpressionFromFragment(allMatches[i]).getAssociatedExpression();
@@ -331,7 +330,6 @@ public class ExtractVariableRefactoring extends Refactoring {
 		return status;
 	}
 
-	@SuppressWarnings("restriction")
 	private RefactoringStatus canExtract(Expression expression) {
 
 		if (expression.getType() == ASTNode.SCALAR) {
@@ -725,7 +723,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 		IASTFragment[] fragmentsToReplace = retainOnlyReplacableMatches(true);
 
 		ASTRewrite rewrite = fRewriter;
-		HashSet seen = new HashSet();
+		HashSet<IASTFragment> seen = new HashSet<>();
 		for (int i = 0; i < fragmentsToReplace.length; i++) {
 			IASTFragment fragment = fragmentsToReplace[i];
 			if (!seen.add(fragment))
@@ -936,7 +934,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 
 	private static ASTNode[] getParents(ASTNode node) {
 		ASTNode current = node;
-		List<ASTNode> parents = new ArrayList<ASTNode>();
+		List<ASTNode> parents = new ArrayList<>();
 		do {
 			parents.add(current.getParent());
 			current = current.getParent();
@@ -1097,6 +1095,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 						.getSubFragmentsMatching(getSelectedExpression());
 				Comparator<IASTFragment> comparator = new Comparator<IASTFragment>() {
 
+					@Override
 					public int compare(IASTFragment o1, IASTFragment o2) {
 						return o1.getStartPosition() - o2.getStartPosition();
 					}
@@ -1129,7 +1128,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 		} else {
 			// check if the user given variable name already exists in the
 			// global scope
-			if (PHPElementConciliator.globalVariableAlreadyExists((Program) astRoot, name)) {
+			if (PHPElementConciliator.globalVariableAlreadyExists(astRoot, name)) {
 				status.addWarning(
 						NLS.bind(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.27"), name)); //$NON-NLS-1$
 			}

@@ -188,9 +188,9 @@ class ProjectionViewerInformation {
 					}
 				}
 				if (changes.getAdditions() != null) {
-					Iterator iterator = changes.getAdditions().entrySet().iterator();
+					Iterator<?> iterator = changes.getAdditions().entrySet().iterator();
 					while (iterator.hasNext()) {
-						Entry entry = (Entry) iterator.next();
+						Entry<?, ?> entry = (Entry<?, ?>) iterator.next();
 						Annotation key = (Annotation) entry.getKey();
 						Position pos = (Position) entry.getValue();
 						if (deletions.contains(key)) {

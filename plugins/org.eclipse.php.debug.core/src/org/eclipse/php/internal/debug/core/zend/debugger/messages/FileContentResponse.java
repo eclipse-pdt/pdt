@@ -35,6 +35,7 @@ public class FileContentResponse extends DebugMessageResponseImpl implements IDe
 	 * 
 	 * @see org.eclipse.php.debug.core.debugger.messages.IDebugMessage#getType()
 	 */
+	@Override
 	public int getType() {
 		return 11001;
 	}
@@ -46,6 +47,7 @@ public class FileContentResponse extends DebugMessageResponseImpl implements IDe
 	 * org.eclipse.php.debug.core.debugger.messages.IDebugMessage#serialize(java
 	 * .io.DataOutputStream)
 	 */
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());
@@ -68,6 +70,7 @@ public class FileContentResponse extends DebugMessageResponseImpl implements IDe
 	 * org.eclipse.php.debug.core.debugger.messages.IDebugMessage#deserialize(
 	 * java.io.DataInputStream)
 	 */
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		setStatus(in.readInt());

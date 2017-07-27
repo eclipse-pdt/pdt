@@ -43,6 +43,7 @@ public class OpenedAndChangedProjectsFinder implements IResourceDeltaVisitor {
 		fDelta = delta;
 	}
 
+	@Override
 	public boolean visit(IResourceDelta delta) throws CoreException {
 		IResource resource = delta.getResource();
 		if (resource == null)
@@ -67,7 +68,7 @@ public class OpenedAndChangedProjectsFinder implements IResourceDeltaVisitor {
 	 */
 	public IProject[] getFoundProjects() {
 		if (fFoundProjects == null) {
-			fFoundProjects = new HashSet<IProject>();
+			fFoundProjects = new HashSet<>();
 			try {
 				fDelta.accept(this);
 			} catch (CoreException e) {

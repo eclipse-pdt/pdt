@@ -30,7 +30,7 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  */
 public class BackTickExpression extends Expression {
 
-	private ASTNode.NodeList<Expression> expressions = new ASTNode.NodeList<Expression>(EXPRESSIONS_PROPERTY);
+	private ASTNode.NodeList<Expression> expressions = new ASTNode.NodeList<>(EXPRESSIONS_PROPERTY);
 
 	/**
 	 * The "expressions" structural property of this node type.
@@ -45,7 +45,7 @@ public class BackTickExpression extends Expression {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(2);
 		properyList.add(EXPRESSIONS_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
@@ -70,12 +70,14 @@ public class BackTickExpression extends Expression {
 				expressions == null ? null : (Expression[]) expressions.toArray(new Expression[expressions.size()]));
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		for (ASTNode node : this.expressions) {
 			node.accept(visitor);
 		}
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		for (ASTNode node : this.expressions) {
@@ -83,6 +85,7 @@ public class BackTickExpression extends Expression {
 		}
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		for (ASTNode node : this.expressions) {
 			node.traverseBottomUp(visitor);
@@ -90,6 +93,7 @@ public class BackTickExpression extends Expression {
 		accept(visitor);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -98,6 +102,7 @@ public class BackTickExpression extends Expression {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<BackTickExpression"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -109,6 +114,7 @@ public class BackTickExpression extends Expression {
 		buffer.append(tab).append("</BackTickExpression>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.BACK_TICK_EXPRESSION;
 	}
@@ -122,7 +128,8 @@ public class BackTickExpression extends Expression {
 		return this.expressions;
 	}
 
-	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+	@Override
+	final List<? extends ASTNode> internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == EXPRESSIONS_PROPERTY) {
 			return expressions();
 		}
@@ -133,6 +140,7 @@ public class BackTickExpression extends Expression {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

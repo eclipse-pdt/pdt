@@ -28,15 +28,18 @@ public class PathMapperWizardFragment extends CompositeWizardFragment {
 	private PathMapperCompositeFragment compositeFragment;
 	private Server server;
 
+	@Override
 	public Composite getComposite() {
 		return compositeFragment;
 	}
 
+	@Override
 	public Composite createComposite(Composite parent, IWizardHandle handle) {
 		compositeFragment = new PathMapperCompositeFragment(parent, new WizardControlWrapper(handle), false);
 		return compositeFragment;
 	}
 
+	@Override
 	public void enter() {
 		if (compositeFragment != null) {
 			try {
@@ -52,6 +55,7 @@ public class PathMapperWizardFragment extends CompositeWizardFragment {
 		}
 	}
 
+	@Override
 	public boolean isComplete() {
 		if (compositeFragment == null) {
 			return super.isComplete();
@@ -59,6 +63,7 @@ public class PathMapperWizardFragment extends CompositeWizardFragment {
 		return super.isComplete() && compositeFragment.isComplete();
 	}
 
+	@Override
 	public void exit() {
 		try {
 			if (compositeFragment != null) {

@@ -24,9 +24,9 @@ import org.eclipse.ui.ide.undo.ResourceDescription;
 
 public class UndoablePackageDeleteChange extends DynamicValidationStateChange {
 
-	private final List/* <IResource> */ fPackageDeletes;
+	private final List<IResource> fPackageDeletes;
 
-	public UndoablePackageDeleteChange(String name, List/* <IResource> */ packageDeletes) {
+	public UndoablePackageDeleteChange(String name, List<IResource> packageDeletes) {
 		super(name);
 		fPackageDeletes = packageDeletes;
 	}
@@ -37,7 +37,7 @@ public class UndoablePackageDeleteChange extends DynamicValidationStateChange {
 		pm.beginTask("", count * 3); //$NON-NLS-1$
 		ResourceDescription[] packageDeleteDescriptions = new ResourceDescription[fPackageDeletes.size()];
 		for (int i = 0; i < fPackageDeletes.size(); i++) {
-			IResource resource = (IResource) fPackageDeletes.get(i);
+			IResource resource = fPackageDeletes.get(i);
 			packageDeleteDescriptions[i] = ResourceDescription.fromResource(resource);
 			pm.worked(1);
 		}
@@ -46,7 +46,7 @@ public class UndoablePackageDeleteChange extends DynamicValidationStateChange {
 				new SubProgressMonitor(pm, count));
 
 		for (int i = 0; i < fPackageDeletes.size(); i++) {
-			IResource resource = (IResource) fPackageDeletes.get(i);
+			IResource resource = fPackageDeletes.get(i);
 			ResourceDescription resourceDescription = packageDeleteDescriptions[i];
 			resourceDescription.recordStateFromHistory(resource, new SubProgressMonitor(pm, 1));
 			result.add(new UndoDeleteResourceChange(resourceDescription));

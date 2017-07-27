@@ -102,8 +102,8 @@ public enum PHPSymbolicLinksCache {
 		@Override
 		public void resourceChanged(IResourceChangeEvent event) {
 			IResourceDelta delta = event.getDelta();
-			final List<IResource> added = new ArrayList<IResource>();
-			final List<IResource> removed = new ArrayList<IResource>();
+			final List<IResource> added = new ArrayList<>();
+			final List<IResource> removed = new ArrayList<>();
 			try {
 				delta.accept(new IResourceDeltaVisitor() {
 					@Override
@@ -135,7 +135,7 @@ public enum PHPSymbolicLinksCache {
 
 	}
 
-	private final Set<IResource> cache = new HashSet<IResource>();
+	private final Set<IResource> cache = new HashSet<>();
 
 	void startup() {
 		// Perform initialization in a separate job.

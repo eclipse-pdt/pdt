@@ -45,7 +45,6 @@ import org.eclipse.swt.widgets.Label;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public abstract class AbstractPHPLaunchConfigurationDebuggerTab extends AbstractPHPLaunchConfigurationTab {
 
 	/**
@@ -53,11 +52,13 @@ public abstract class AbstractPHPLaunchConfigurationDebuggerTab extends Abstract
 	 * state of corresponding launch configuration.
 	 */
 	public final class WidgetListener extends SelectionAdapter implements ModifyListener {
+		@Override
 		public void modifyText(ModifyEvent e) {
 			setDirty(true);
 			updateLaunchConfigurationDialog();
 		}
 
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			setDirty(true);
 			updateLaunchConfigurationDialog();
@@ -121,13 +122,14 @@ public abstract class AbstractPHPLaunchConfigurationDebuggerTab extends Abstract
 	private Button configureDebugger;
 	private Composite mainComposite;
 	private Composite settingsComposite;
-	private Map<String, IDebuggerLaunchSettingsSection> currentSection = new HashMap<String, IDebuggerLaunchSettingsSection>();
+	private Map<String, IDebuggerLaunchSettingsSection> currentSection = new HashMap<>();
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#getName()
 	 */
+	@Override
 	public String getName() {
 		return Messages.AbstractPHPLaunchConfigurationDebuggerTab_Debugger_tab_name;
 	}
@@ -149,6 +151,7 @@ public abstract class AbstractPHPLaunchConfigurationDebuggerTab extends Abstract
 	 * org.eclipse.debug.ui.ILaunchConfigurationTab#createControl(org.eclipse
 	 * .swt.widgets.Composite)
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		// Create main composite
 		mainComposite = new Composite(parent, SWT.NONE);
@@ -296,6 +299,7 @@ public abstract class AbstractPHPLaunchConfigurationDebuggerTab extends Abstract
 		configureDebugger = createPushButton(debuggerChoiceComposite,
 				Messages.AbstractPHPLaunchConfigurationDebuggerTab_Configure, null);
 		configureDebugger.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				handleConfigureDebugger();
 			}
@@ -304,6 +308,7 @@ public abstract class AbstractPHPLaunchConfigurationDebuggerTab extends Abstract
 		validateDebuggerBtn = createPushButton(debuggerChoiceComposite,
 				Messages.AbstractPHPLaunchConfigurationDebuggerTab_Test, null);
 		validateDebuggerBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent event) {
 				performDebugTest();
 			}
@@ -361,16 +366,17 @@ public abstract class AbstractPHPLaunchConfigurationDebuggerTab extends Abstract
 		try {
 			// Update debugger type in original configuration
 			if (getOriginalConfiguration().contentsEqual(getConfiguration())) {
-				// Only debugger might have been changed, update original configuration
+				// Only debugger might have been changed, update original
+				// configuration
 				ILaunchConfigurationWorkingCopy wc = getOriginalConfiguration().getWorkingCopy();
 				wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerId);
 				wc.doSave();
 			}
-		// Update in working copy
-		if (getConfiguration() instanceof ILaunchConfigurationWorkingCopy) {
-			((ILaunchConfigurationWorkingCopy) getConfiguration())
-					.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerId);
-		}
+			// Update in working copy
+			if (getConfiguration() instanceof ILaunchConfigurationWorkingCopy) {
+				((ILaunchConfigurationWorkingCopy) getConfiguration())
+						.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerId);
+			}
 		} catch (CoreException e) {
 			Logger.logException(e);
 		}

@@ -22,6 +22,7 @@ public class MercurialRepository extends VcsRepository implements Cloneable {
 	 * 
 	 * @see java.lang.Object#clone()
 	 */
+	@Override
 	public MercurialRepository clone() {
 		MercurialRepository clone = new MercurialRepository();
 		cloneProperties(clone);

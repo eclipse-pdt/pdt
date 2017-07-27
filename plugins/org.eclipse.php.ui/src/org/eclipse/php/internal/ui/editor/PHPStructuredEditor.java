@@ -1522,8 +1522,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 		}
 		if (fFormatterProfileListener != null) {
 			// workaround for bug 409116
-			PreferencesPropagator propagator = PreferencePropagatorFactory.getInstance()
-					.getPreferencePropagator(FORMATTER_PLUGIN_ID);
+			PreferencesPropagator propagator = PreferencePropagatorFactory.getPreferencePropagator(FORMATTER_PLUGIN_ID);
 			propagator.removePropagatorListener(fFormatterProfileListener,
 					"org.eclipse.php.formatter.core.formatter.tabulation.size"); //$NON-NLS-1$
 			propagator.removePropagatorListener(fFormatterProfileListener, "formatterProfile"); //$NON-NLS-1$
@@ -2565,8 +2564,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 			// This is the existing workspace file
 			final IFileEditorInput fileInput = (IFileEditorInput) input;
 			resource = fileInput.getFile();
-			if (getRefactorableFileEditorInput() != null
-					&& ((RefactorableFileEditorInput) getRefactorableFileEditorInput()).isRefactor()) {
+			if (getRefactorableFileEditorInput() != null && getRefactorableFileEditorInput().isRefactor()) {
 				getRefactorableFileEditorInput().setRefactor(false);
 				if (getDocumentProvider() != null) {
 					getDocumentProvider().disconnect(getRefactorableFileEditorInput());
@@ -2580,7 +2578,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 		}
 
 		if (resource != null) {
-			if (PHPToolkitUtil.isPHPFile((IFile) resource)) {
+			if (PHPToolkitUtil.isPHPFile(resource)) {
 
 				PHPSourceParser.editFile.set(resource);
 
@@ -2654,6 +2652,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 
 	OutlineSelectionChangedListener fPHPOutlinePageListener;
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Object getAdapter(Class required) {
 
@@ -3057,8 +3056,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 			};
 
 			// workaround for bug 409116
-			PreferencesPropagator propagator = PreferencePropagatorFactory.getInstance()
-					.getPreferencePropagator(FORMATTER_PLUGIN_ID);
+			PreferencesPropagator propagator = PreferencePropagatorFactory.getPreferencePropagator(FORMATTER_PLUGIN_ID);
 			propagator.addPropagatorListener(fFormatterProfileListener,
 					"org.eclipse.php.formatter.core.formatter.tabulation.size"); //$NON-NLS-1$
 			propagator.addPropagatorListener(fFormatterProfileListener, "formatterProfile"); //$NON-NLS-1$
@@ -3121,7 +3119,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 	/**
 	 * IScriptReconcilingListener methods - reconcile listeners
 	 */
-	private ListenerList fReconcilingListeners = new ListenerList(ListenerList.IDENTITY);
+	private ListenerList<IPHPScriptReconcilingListener> fReconcilingListeners = new ListenerList<>(
+			ListenerList.IDENTITY);
 
 	public void addReconcileListener(IPHPScriptReconcilingListener reconcileListener) {
 		synchronized (fReconcilingListeners) {
@@ -3768,7 +3767,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 	 */
 	@Override
 	protected void initializeDragAndDrop(ISourceViewer viewer) {
-		IDragAndDropService dndService = (IDragAndDropService) getSite().getService(IDragAndDropService.class);
+		IDragAndDropService dndService = getSite().getService(IDragAndDropService.class);
 		if (dndService == null)
 			return;
 
@@ -3804,7 +3803,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 		if (viewer == null || fIsTextDragAndDropInstalled)
 			return;
 
-		final IDragAndDropService dndService = (IDragAndDropService) getSite().getService(IDragAndDropService.class);
+		final IDragAndDropService dndService = getSite().getService(IDragAndDropService.class);
 		if (dndService == null)
 			return;
 
@@ -4007,7 +4006,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 		if (viewer == null || !fIsTextDragAndDropInstalled)
 			return;
 
-		final IDragAndDropService dndService = (IDragAndDropService) getSite().getService(IDragAndDropService.class);
+		final IDragAndDropService dndService = getSite().getService(IDragAndDropService.class);
 		if (dndService == null)
 			return;
 

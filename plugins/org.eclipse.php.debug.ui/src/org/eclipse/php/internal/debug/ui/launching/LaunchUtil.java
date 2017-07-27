@@ -27,7 +27,7 @@ public class LaunchUtil {
 	}
 
 	public static String[] getFileExtensions() {
-		ArrayList extensions = new ArrayList();
+		ArrayList<String> extensions = new ArrayList<>();
 		IContentTypeManager typeManager = Platform.getContentTypeManager();
 
 		IContentType type = typeManager.getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
@@ -47,6 +47,6 @@ public class LaunchUtil {
 		if (extensions.isEmpty())
 			return null;
 
-		return (String[]) extensions.toArray(new String[extensions.size()]);
+		return extensions.toArray(new String[extensions.size()]);
 	}
 }

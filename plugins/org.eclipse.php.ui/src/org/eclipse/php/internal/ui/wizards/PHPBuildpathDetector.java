@@ -28,6 +28,7 @@ public class PHPBuildpathDetector extends BuildpathDetector {
 		super(project, toolkit);
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	protected void addInterpreterContainer(ArrayList cpEntries) {
 		// do nothing, we don't want to add any interpreter container (we use

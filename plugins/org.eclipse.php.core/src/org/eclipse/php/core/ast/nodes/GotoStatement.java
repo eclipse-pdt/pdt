@@ -45,7 +45,7 @@ public class GotoStatement extends Statement {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(1);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(1);
 		propertyList.add(LABEL_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
@@ -63,6 +63,7 @@ public class GotoStatement extends Statement {
 		super(ast);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -71,20 +72,24 @@ public class GotoStatement extends Statement {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		label.accept(visitor);
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		label.traverseTopDown(visitor);
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		label.traverseBottomUp(visitor);
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<GotoStatement"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -93,6 +98,7 @@ public class GotoStatement extends Statement {
 		buffer.append("\n").append(tab).append("</GotoStatement>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.GOTO_STATEMENT;
 	}
@@ -129,6 +135,7 @@ public class GotoStatement extends Statement {
 		postReplaceChild(oldChild, label, LABEL_PROPERTY);
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == LABEL_PROPERTY) {
 			if (get) {
@@ -145,6 +152,7 @@ public class GotoStatement extends Statement {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

@@ -149,14 +149,17 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 	private static final class GrayedCheckedModelContentProvider implements IStructuredContentProvider {
 		private GrayedCheckedModelElement[] fElements;
 
+		@Override
 		public Object[] getElements(Object element) {
 			return fElements;
 		}
 
+		@Override
 		public void dispose() {
 			// do nothing
 		}
 
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			if (newInput instanceof GrayedCheckedModel) {
 				fElements = ((GrayedCheckedModel) newInput).getElements();
@@ -422,6 +425,7 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 
 			final CheckboxTableViewer result = CheckboxTableViewer.newCheckList(parent, SWT.BORDER | SWT.MULTI);
 			result.addCheckStateListener(new ICheckStateListener() {
+				@Override
 				public void checkStateChanged(CheckStateChangedEvent event) {
 					GrayedCheckedModelElement element = (GrayedCheckedModelElement) event.getElement();
 					result.setGrayed(element, false);

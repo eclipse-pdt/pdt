@@ -53,7 +53,8 @@ public class DBTests extends TestCase {
     private static final String DBPASSWD= "testPassword"; //$NON-NLS-1$
     
     
-    protected void setUp() throws Exception {
+    @Override
+	protected void setUp() throws Exception {
         super.setUp();
         
         // generate a unique DB name
@@ -64,7 +65,8 @@ public class DBTests extends TestCase {
         System.setProperty("eclipse.perf.assertAgainst", BUILD+"=base"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-    protected void tearDown() throws Exception {
+    @Override
+	protected void tearDown() throws Exception {
         super.tearDown();
     }
     
@@ -197,7 +199,7 @@ public class DBTests extends TestCase {
 		assertEquals(1000, s2.getMagnitude());
 
 		//
-		Set dims= new HashSet();
+		Set<Dim> dims= new HashSet<>();
 		dims.add(InternalDimensions.WORKING_SET);
 		points= DB.queryDataPoints(v, SCENARIO_NAME_1, dims);
 		assertEquals(1, points.length);
@@ -208,7 +210,7 @@ public class DBTests extends TestCase {
 		assertEquals(1000, s.getMagnitude());
 		
 		//
-		List buildNames= new ArrayList();
+		List<String> buildNames= new ArrayList<>();
 		Variations v2= new Variations();
 		v2.put(CONFIG, "%"); //$NON-NLS-1$
 		v2.put(BUILD, "b%"); //$NON-NLS-1$

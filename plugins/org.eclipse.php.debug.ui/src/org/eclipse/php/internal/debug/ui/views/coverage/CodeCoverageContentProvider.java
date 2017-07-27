@@ -53,7 +53,7 @@ public class CodeCoverageContentProvider implements ITreeContentProvider {
 		if (filters == null) {
 			IConfigurationElement[] elements = Platform.getExtensionRegistry()
 					.getConfigurationElementsFor("org.eclipse.php.debug.ui.phpCodeCoverageFilter"); //$NON-NLS-1$
-			List<ICodeCoverageFilter> filtersList = new LinkedList<ICodeCoverageFilter>();
+			List<ICodeCoverageFilter> filtersList = new LinkedList<>();
 			for (IConfigurationElement element : elements) {
 				if (element.getName().equals("filter")) { //$NON-NLS-1$
 					try {
@@ -63,7 +63,7 @@ public class CodeCoverageContentProvider implements ITreeContentProvider {
 					}
 				}
 			}
-			filters = (ICodeCoverageFilter[]) filtersList.toArray(new ICodeCoverageFilter[filtersList.size()]);
+			filters = filtersList.toArray(new ICodeCoverageFilter[filtersList.size()]);
 		}
 	}
 
@@ -74,6 +74,7 @@ public class CodeCoverageContentProvider implements ITreeContentProvider {
 	 * org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.
 	 * Object)
 	 */
+	@Override
 	public Object[] getChildren(final Object element) {
 		if (cachedChildren.containsKey(element)) {
 			return cachedChildren.get(element);
@@ -85,7 +86,7 @@ public class CodeCoverageContentProvider implements ITreeContentProvider {
 			return EMPTY;
 		}
 		final Object[] children = provider.getChildren(element);
-		final List<Object> filteredChildrenList = new ArrayList<Object>(children.length);
+		final List<Object> filteredChildrenList = new ArrayList<>(children.length);
 		for (int i = 0; i < children.length; ++i) {
 			final Object child = children[i];
 			if (child instanceof IFile || child instanceof ISourceModule) {
@@ -108,15 +109,16 @@ public class CodeCoverageContentProvider implements ITreeContentProvider {
 	 * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java
 	 * .lang.Object)
 	 */
+	@Override
 	public Object[] getElements(final Object inputElement) {
 		if (coveredFilesMap.isEmpty()) {
 			return new Object[] {};
 		}
-		cachedChildren = new HashMap<Object, Object[]>(0);
-		cachedCoverage = new HashMap<Object, CodeCoverageResult>(0);
-		remoteFiles = new HashSet<VirtualPath>();
+		cachedChildren = new HashMap<>(0);
+		cachedCoverage = new HashMap<>(0);
+		remoteFiles = new HashSet<>();
 		// Filter out non-relevant elements:
-		HashMap<VirtualPath, Object> filteredDataMap = new HashMap<VirtualPath, Object>();
+		HashMap<VirtualPath, Object> filteredDataMap = new HashMap<>();
 		for (VirtualPath path : fileDataMap.keySet()) {
 			boolean isFiltered = false;
 			for (ICodeCoverageFilter filter : filters) {
@@ -149,6 +151,7 @@ public class CodeCoverageContentProvider implements ITreeContentProvider {
 	 * org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object
 	 * )
 	 */
+	@Override
 	public Object getParent(final Object element) {
 		return provider.getParent(element);
 	}
@@ -160,6 +163,7 @@ public class CodeCoverageContentProvider implements ITreeContentProvider {
 	 * org.eclipse.php.ui.StandardPHPElementContentProvider#hasChildrenInternal
 	 * (java.lang.Object)
 	 */
+	@Override
 	public boolean hasChildren(final Object element) {
 		boolean hasChildren = provider.hasChildren(element);
 		if (!hasChildren) {
@@ -186,6 +190,7 @@ public class CodeCoverageContentProvider implements ITreeContentProvider {
 	 * org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface
 	 * .viewers.Viewer, java.lang.Object, java.lang.Object)
 	 */
+	@Override
 	public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
 		provider.inputChanged(viewer, oldInput, newInput);
 	}
@@ -195,6 +200,7 @@ public class CodeCoverageContentProvider implements ITreeContentProvider {
 	 * 
 	 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
 	 */
+	@Override
 	public void dispose() {
 		provider.dispose();
 	}
@@ -271,11 +277,11 @@ public class CodeCoverageContentProvider implements ITreeContentProvider {
 
 	public void setCoveredFiles(final CodeCoverageData[] coveredFiles) {
 		if (coveredFiles == null) {
-			coveredFilesMap = new HashMap<VirtualPath, CodeCoverageData>(0);
+			coveredFilesMap = new HashMap<>(0);
 			return;
 		}
-		coveredFilesMap = new HashMap<VirtualPath, CodeCoverageData>(coveredFiles.length);
-		fileDataMap = new HashMap<VirtualPath, Object>(coveredFiles.length);
+		coveredFilesMap = new HashMap<>(coveredFiles.length);
+		fileDataMap = new HashMap<>(coveredFiles.length);
 		for (CodeCoverageData element : coveredFiles) {
 			final ISourceModule fileData = (ISourceModule) element.getAdapter(ISourceModule.class);
 			if (fileData != null) {

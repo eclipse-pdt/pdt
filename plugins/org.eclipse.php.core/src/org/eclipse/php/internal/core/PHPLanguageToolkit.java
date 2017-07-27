@@ -42,14 +42,17 @@ public class PHPLanguageToolkit extends AbstractLanguageToolkit implements IDLTK
 		return PHP_CONTENT_TYPE.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
 	}
 
+	@Override
 	public String getLanguageName() {
 		return "PHP"; //$NON-NLS-1$
 	}
 
+	@Override
 	public String getNatureId() {
 		return PHPNature.ID;
 	}
 
+	@Override
 	public String getLanguageContentType() {
 		return ContentTypeIdForPHP.ContentTypeID_PHP;
 	}
@@ -59,6 +62,7 @@ public class PHPLanguageToolkit extends AbstractLanguageToolkit implements IDLTK
 	}
 
 	// add by zhaozw
+	@Override
 	public boolean languageSupportZIPBuildpath() {
 		return true;
 	}
@@ -68,6 +72,7 @@ public class PHPLanguageToolkit extends AbstractLanguageToolkit implements IDLTK
 		return PHPToolkitUtil.getArchive(localFile);
 	}
 
+	@Override
 	public boolean isArchiveFileName(String name) {
 		return PHPToolkitUtil.isPharFileName(name);
 	}

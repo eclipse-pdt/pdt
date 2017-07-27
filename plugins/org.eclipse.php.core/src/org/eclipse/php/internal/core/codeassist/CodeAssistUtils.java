@@ -142,8 +142,8 @@ public class CodeAssistUtils {
 	}
 
 	private static IType[] getTypes(int position, IContext context, IEvaluatedType evaluatedType) {
-		List<IType> tmpList = new LinkedList<IType>();
-		List<IEvaluatedType> possibleTypes = new LinkedList<IEvaluatedType>();
+		List<IType> tmpList = new LinkedList<>();
+		List<IEvaluatedType> possibleTypes = new LinkedList<>();
 		if (evaluatedType instanceof MultiTypeType) {
 			possibleTypes = ((MultiTypeType) evaluatedType).getTypes();
 		} else if (evaluatedType instanceof AmbiguousType) {
@@ -373,7 +373,7 @@ public class CodeAssistUtils {
 		String functionName = propertyName.substring(0, bracketIndex).trim();
 
 		String[] argNames = PHPTextSequenceUtilities.getArgNames(version, propertyName.substring(bracketIndex));
-		Set<IType> result = new LinkedHashSet<IType>();
+		Set<IType> result = new LinkedHashSet<>();
 		IType[] returnTypes = null;
 		if (arrayReference) {
 			returnTypes = getFunctionArrayReturnType(types, functionName, USE_PHPDOC, sourceModule, offset, argNames);
@@ -495,7 +495,7 @@ public class CodeAssistUtils {
 				if (evaluatedType instanceof MultiTypeType) {
 					possibleTypes = ((MultiTypeType) evaluatedType).getTypes();
 				} else if (evaluatedType instanceof AmbiguousType) {
-					possibleTypes = new ArrayList<IEvaluatedType>();
+					possibleTypes = new ArrayList<>();
 					for (IEvaluatedType pType : ((AmbiguousType) evaluatedType).getPossibleTypes()) {
 						if (pType instanceof MultiTypeType) {
 							possibleTypes.addAll(((MultiTypeType) pType).getTypes());
@@ -503,7 +503,7 @@ public class CodeAssistUtils {
 					}
 				}
 				if (possibleTypes != null && possibleTypes.size() > 0) {
-					List<IType> tmpList = new LinkedList<IType>();
+					List<IType> tmpList = new LinkedList<>();
 					for (IEvaluatedType possibleType : possibleTypes) {
 						IType[] tmpArray = PHPTypeInferenceUtils.getModelElements(possibleType,
 								(ISourceModuleContext) context, offset, (IModelAccessCache) null);
@@ -528,7 +528,7 @@ public class CodeAssistUtils {
 		evaluatedType = typeInferencer.evaluateType(methodGoal);
 
 		if (evaluatedType instanceof MultiTypeType) {
-			List<IType> tmpList = new LinkedList<IType>();
+			List<IType> tmpList = new LinkedList<>();
 			List<IEvaluatedType> possibleTypes = ((MultiTypeType) evaluatedType).getTypes();
 			for (IEvaluatedType possibleType : possibleTypes) {
 				IType[] tmpArray = PHPTypeInferenceUtils.getModelElements(possibleType, (ISourceModuleContext) context,
@@ -651,7 +651,7 @@ public class CodeAssistUtils {
 						functionNameEnd);
 			}
 			// if its a non class function
-			Set<IType> returnTypes = new LinkedHashSet<IType>();
+			Set<IType> returnTypes = new LinkedHashSet<>();
 			if (functionNameStart == functionNameEnd && statementText.charAt(functionNameStart) == '('
 					&& propertyEndPosition - 1 > functionNameStart + 1 && phpVersion.isGreaterThan(PHPVersion.PHP5_3)) {
 				TextSequence newClassStatementText = statementText.subTextSequence(functionNameStart + 1,
@@ -774,8 +774,8 @@ public class CodeAssistUtils {
 	 * @return list of elements without duplicates
 	 */
 	public static <T extends IModelElement> List<T> removeDuplicatedElements(T[] elements) {
-		List<T> result = new ArrayList<T>();
-		Set<String> names = new HashSet<String>();
+		List<T> result = new ArrayList<>();
+		Set<String> names = new HashSet<>();
 		for (T element : elements) {
 			if (!names.contains(element.getElementName())) {
 				result.add(element);

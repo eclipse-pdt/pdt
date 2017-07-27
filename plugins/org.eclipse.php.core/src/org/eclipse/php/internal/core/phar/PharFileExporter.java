@@ -26,9 +26,10 @@ public class PharFileExporter extends AbstractFileExporter {
 	public PharFileExporter(PharPackage pharPackage) throws IOException {
 		super(pharPackage);
 		outputStream = new PharBufferedOutputStream(fileContentStream, pharPackage);
-		exportedField = new HashSet<File>();
+		exportedField = new HashSet<>();
 	}
 
+	@Override
 	public void finished() throws IOException {
 		outputStream.close();
 	}
@@ -43,6 +44,7 @@ public class PharFileExporter extends AbstractFileExporter {
 	 * @exception java.io.IOException
 	 * @exception org.eclipse.core.runtime.CoreException
 	 */
+	@Override
 	public void write(IFile resource, String destinationPath) throws IOException, CoreException {
 
 		write(resource.getLocation().toFile(), destinationPath);
@@ -86,15 +88,18 @@ public class PharFileExporter extends AbstractFileExporter {
 		outputStream.closeEntry();
 	}
 
+	@Override
 	public void writeStub(IStub stub) throws IOException, CoreException {
 		outputStream.writeStub(stub);
 	}
 
+	@Override
 	public void write(IFolder resource, String destinationPath) throws IOException, CoreException {
 
 		write(resource.getLocation().toFile(), destinationPath);
 	}
 
+	@Override
 	public void writeSignature() throws IOException {
 		outputStream.writeSignature();
 	}

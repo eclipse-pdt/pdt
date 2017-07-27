@@ -728,6 +728,7 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		return visitGeneral(s);
 	}
 
+	@Override
 	public boolean endvisit(ASTNode s) throws Exception {
 		Class<? extends ASTNode> nodeClass = s.getClass();
 		if (nodeClass.equals(ArrayCreation.class)) {
@@ -987,10 +988,12 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(Expression s) throws Exception {
 		return endvisit((ASTNode) s);
 	}
 
+	@Override
 	public boolean endvisit(MethodDeclaration s) throws Exception {
 		if (s instanceof PHPMethodDeclaration) {
 			return endvisit((PHPMethodDeclaration) s);
@@ -998,10 +1001,12 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean endvisit(Statement s) throws Exception {
 		return endvisit((ASTNode) s);
 	}
 
+	@Override
 	public boolean endvisit(TypeDeclaration s) throws Exception {
 		if (s instanceof TraitDeclaration) {
 			return endvisit((TraitDeclaration) s);
@@ -1018,6 +1023,7 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(ASTNode s) throws Exception {
 		Class<? extends ASTNode> nodeClass = s.getClass();
 		if (nodeClass.equals(ArrayCreation.class)) {
@@ -1344,10 +1350,12 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 
 	// php5.4 ends
 
+	@Override
 	public boolean visit(Expression s) throws Exception {
 		return visit((ASTNode) s);
 	}
 
+	@Override
 	public boolean visit(MethodDeclaration s) throws Exception {
 		if (s instanceof PHPMethodDeclaration) {
 			return visit((PHPMethodDeclaration) s);
@@ -1355,10 +1363,12 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		return true;
 	}
 
+	@Override
 	public boolean visit(Statement s) throws Exception {
 		return visit((ASTNode) s);
 	}
 
+	@Override
 	public boolean visit(TypeDeclaration s) throws Exception {
 		if (s instanceof TraitDeclaration) {
 			return visit((TraitDeclaration) s);

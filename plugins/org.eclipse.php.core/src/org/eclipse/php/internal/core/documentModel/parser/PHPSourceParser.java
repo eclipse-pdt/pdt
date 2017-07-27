@@ -28,12 +28,12 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 public class PHPSourceParser extends XMLSourceParser {
 
-	public static ThreadLocal<IResource> editFile = new ThreadLocal<IResource>();
+	public static ThreadLocal<IResource> editFile = new ThreadLocal<>();
 	private IProject project = null;
 
 	public PHPSourceParser() {
 		super();
-		IResource resource = (IResource) editFile.get();
+		IResource resource = editFile.get();
 		if (resource instanceof IProject) {
 			project = (IProject) resource;
 		} else if (resource instanceof IFile) {
@@ -44,6 +44,7 @@ public class PHPSourceParser extends XMLSourceParser {
 	/*
 	 * Change the Tokenizer used by the XMLSourceParser to make it PHP aware
 	 */
+	@Override
 	public BlockTokenizer getTokenizer() {
 		if (fTokenizer == null) {
 			PHPTokenizer phpTokenizer = new PHPTokenizer();
@@ -53,6 +54,7 @@ public class PHPSourceParser extends XMLSourceParser {
 		return fTokenizer;
 	}
 
+	@Override
 	public RegionParser newInstance() {
 		PHPSourceParser newInstance = new PHPSourceParser();
 		PHPTokenizer tokenizer = (PHPTokenizer) getTokenizer().newInstance();
@@ -67,6 +69,7 @@ public class PHPSourceParser extends XMLSourceParser {
 
 	private IStructuredDocumentRegion currentNode = null;
 
+	@Override
 	protected IStructuredDocumentRegion parseNodes() {
 		// regions are initially reported as complete offsets within the
 		// scanned input
@@ -271,6 +274,7 @@ public class PHPSourceParser extends XMLSourceParser {
 		return headNode;
 	}
 
+	@Override
 	public void reset(Reader reader, int position) {
 		super.reset(reader, position);
 	}

@@ -32,7 +32,6 @@ import org.eclipse.php.internal.server.core.Server;
  * 
  * @author Shalom Gibly
  */
-@SuppressWarnings("restriction")
 public class PHPRemoteLaunchConfigurationDelegate implements ILaunchConfigurationDelegate2 {
 
 	private ILaunch launch;
@@ -46,6 +45,7 @@ public class PHPRemoteLaunchConfigurationDelegate implements ILaunchConfiguratio
 	 * org.eclipse.debug.core.ILaunch,
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
 			throws CoreException {
 		boolean runWithDebug = configuration.getAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
@@ -90,6 +90,7 @@ public class PHPRemoteLaunchConfigurationDelegate implements ILaunchConfiguratio
 	 * (org.eclipse.debug.core.ILaunchConfiguration, java.lang.String,
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public boolean buildForLaunch(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor)
 			throws CoreException {
 		return false;
@@ -102,6 +103,7 @@ public class PHPRemoteLaunchConfigurationDelegate implements ILaunchConfiguratio
 	 * finalLaunchCheck (org.eclipse.debug.core.ILaunchConfiguration,
 	 * java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public boolean finalLaunchCheck(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor)
 			throws CoreException {
 		return true;
@@ -114,6 +116,7 @@ public class PHPRemoteLaunchConfigurationDelegate implements ILaunchConfiguratio
 	 * org.eclipse.debug.core.model.ILaunchConfigurationDelegate2#getLaunch(
 	 * org.eclipse.debug.core.ILaunchConfiguration, java.lang.String)
 	 */
+	@Override
 	public ILaunch getLaunch(ILaunchConfiguration configuration, String mode) throws CoreException {
 		return new PHPLaunch(configuration, mode, null);
 	}
@@ -126,6 +129,7 @@ public class PHPRemoteLaunchConfigurationDelegate implements ILaunchConfiguratio
 	 * (org.eclipse.debug.core.ILaunchConfiguration, java.lang.String,
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public boolean preLaunchCheck(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor)
 			throws CoreException {
 		return true;
@@ -175,96 +179,121 @@ public class PHPRemoteLaunchConfigurationDelegate implements ILaunchConfiguratio
 			this.launch = launch;
 		}
 
+		@Override
 		public String getName() throws DebugException {
 			return "Session Terminated"; //$NON-NLS-1$
 		}
 
+		@Override
 		public IProcess getProcess() {
 			return null;
 		}
 
+		@Override
 		public IThread[] getThreads() throws DebugException {
 			return null;
 		}
 
+		@Override
 		public boolean hasThreads() throws DebugException {
 			return false;
 		}
 
+		@Override
 		public boolean supportsBreakpoint(IBreakpoint breakpoint) {
 			return false;
 		}
 
+		@Override
 		public IDebugTarget getDebugTarget() {
 			return this;
 		}
 
+		@Override
 		public ILaunch getLaunch() {
 			return launch;
 		}
 
+		@Override
 		public String getModelIdentifier() {
 			return ""; //$NON-NLS-1$
 		}
 
+		@Override
 		@SuppressWarnings({ "unchecked", "rawtypes" })
 		public Object getAdapter(Class adapter) {
 			return null;
 		}
 
+		@Override
 		public boolean canTerminate() {
 			return true;
 		}
 
+		@Override
 		public boolean isTerminated() {
 			return true;
 		}
 
+		@Override
 		public void terminate() throws DebugException {
 		}
 
+		@Override
 		public boolean canResume() {
 			return false;
 		}
 
+		@Override
 		public boolean canSuspend() {
 			return false;
 		}
 
+		@Override
 		public boolean isSuspended() {
 			return false;
 		}
 
+		@Override
 		public void resume() throws DebugException {
 		}
 
+		@Override
 		public void suspend() throws DebugException {
 		}
 
+		@Override
 		public void breakpointAdded(IBreakpoint breakpoint) {
 		}
 
+		@Override
 		public void breakpointChanged(IBreakpoint breakpoint, IMarkerDelta delta) {
 		}
 
+		@Override
 		public void breakpointRemoved(IBreakpoint breakpoint, IMarkerDelta delta) {
 		}
 
+		@Override
 		public boolean canDisconnect() {
 			return false;
 		}
 
+		@Override
 		public void disconnect() throws DebugException {
 		}
 
+		@Override
 		public boolean isDisconnected() {
 			return false;
 		}
 
+		@Override
 		public IMemoryBlock getMemoryBlock(long startAddress, long length) throws DebugException {
 			return null;
 		}
 
+		@Override
 		public boolean supportsStorageRetrieval() {
 			return false;
 		}

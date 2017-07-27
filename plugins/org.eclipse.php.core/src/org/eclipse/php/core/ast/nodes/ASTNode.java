@@ -229,7 +229,7 @@ public abstract class ASTNode implements Visitable {
 	/**
 	 * An unmodifiable empty map (used to implement <code>properties()</code>).
 	 */
-	private static final Map UNMODIFIABLE_EMPTY_MAP = Collections.unmodifiableMap(new HashMap(1));
+	private static final Map<String, Object> UNMODIFIABLE_EMPTY_MAP = Collections.unmodifiableMap(new HashMap<>(1));
 
 	/**
 	 * Primary field used in representing node properties efficiently. If
@@ -244,7 +244,7 @@ public abstract class ASTNode implements Visitable {
 	private Object property1 = null;
 
 	/**
-	 * Auxillary field used in representing node properties efficiently.
+	 * Auxiliary field used in representing node properties efficiently.
 	 * 
 	 * @see #property1
 	 */
@@ -283,6 +283,7 @@ public abstract class ASTNode implements Visitable {
 	 * @exception IllegalArgumentException
 	 *                if the visitor is null
 	 */
+	@Override
 	public final void accept(Visitor visitor) {
 		if (visitor == null) {
 			throw new IllegalArgumentException();
@@ -712,6 +713,7 @@ public abstract class ASTNode implements Visitable {
 		throw new IllegalArgumentException();
 	}
 
+	@Override
 	public String toString() {
 		final StringBuffer buffer = new StringBuffer();
 		toString(buffer, ""); //$NON-NLS-1$
@@ -849,7 +851,7 @@ public abstract class ASTNode implements Visitable {
 			return;
 		}
 		if (p.isChildListProperty()) {
-			List l = (List) getParent().getStructuralProperty(this.location);
+			List<?> l = (List<?>) getParent().getStructuralProperty(this.location);
 			l.remove(this);
 		}
 	}
@@ -1081,7 +1083,7 @@ public abstract class ASTNode implements Visitable {
 			}
 		}
 		// otherwise node has table of properties
-		Map m = (Map) this.property1;
+		Map<?, ?> m = (Map<?, ?>) this.property1;
 		return m.get(propertyName);
 	}
 
@@ -1119,7 +1121,7 @@ public abstract class ASTNode implements Visitable {
 				// we already know this
 				return;
 			}
-			// node gets its fist property
+			// node gets its first property
 			this.property1 = propertyName;
 			this.property2 = data;
 			return;
@@ -1143,8 +1145,8 @@ public abstract class ASTNode implements Visitable {
 			}
 			// node already has one property - getting its second
 			// convert to more flexible representation
-			HashMap m = new HashMap(2);
-			m.put(this.property1, this.property2);
+			HashMap<String, Object> m = new HashMap<>(2);
+			m.put((String) this.property1, this.property2);
 			m.put(propertyName, data);
 			this.property1 = m;
 			this.property2 = null;
@@ -1152,13 +1154,13 @@ public abstract class ASTNode implements Visitable {
 		}
 
 		// node has two or more properties
-		HashMap m = (HashMap) this.property1;
+		HashMap<String, Object> m = (HashMap<String, Object>) this.property1;
 		if (data == null) {
 			m.remove(propertyName);
 			// check for just one property left
 			if (m.size() == 1) {
 				// convert to more efficient representation
-				Map.Entry[] entries = (Map.Entry[]) m.entrySet().toArray(new Map.Entry[1]);
+				Map.Entry<String, Object>[] entries = m.entrySet().toArray(new Map.Entry[1]);
 				this.property1 = entries[0].getKey();
 				this.property2 = entries[0].getValue();
 			}
@@ -1177,22 +1179,22 @@ public abstract class ASTNode implements Visitable {
 	 * @return the table of property values keyed by property name (key type:
 	 *         <code>String</code>; value type: <code>Object</code>)
 	 */
-	public final Map properties() {
+	public final Map<String, Object> properties() {
 		if (this.property1 == null) {
 			// node has no properties at all
 			return UNMODIFIABLE_EMPTY_MAP;
 		}
 		if (this.property1 instanceof String) {
 			// node has a single property
-			return Collections.singletonMap(this.property1, this.property2);
+			return Collections.singletonMap((String) this.property1, this.property2);
 		}
 
 		// node has two or more properties
 		if (this.property2 == null) {
-			this.property2 = Collections.unmodifiableMap((Map) this.property1);
+			this.property2 = Collections.unmodifiableMap((Map<String, Object>) this.property1);
 		}
 		// property2 is unmodifiable wrapper for map in property1
-		return (Map) this.property2;
+		return (Map<String, Object>) this.property2;
 	}
 
 	/**
@@ -1306,9 +1308,9 @@ public abstract class ASTNode implements Visitable {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends ASTNode> List<T> copySubtrees(AST target, List<? extends T> nodes) {
-		List<T> result = new ArrayList<T>(nodes.size());
+		List<T> result = new ArrayList<>(nodes.size());
 		for (Iterator<? extends ASTNode> it = nodes.iterator(); it.hasNext();) {
-			ASTNode oldNode = (ASTNode) it.next();
+			ASTNode oldNode = it.next();
 			ASTNode newNode = oldNode.clone(target);
 			result.add((T) newNode);
 		}
@@ -1388,7 +1390,7 @@ public abstract class ASTNode implements Visitable {
 	 *                <li>a cycle in would be created</li>
 	 *                </ul>
 	 */
-	static void checkNewChild(ASTNode node, ASTNode newChild, boolean cycleCheck, Class nodeType) {
+	static void checkNewChild(ASTNode node, ASTNode newChild, boolean cycleCheck, Class<?> nodeType) {
 		if (newChild.ast != node.ast) {
 			// new child is from a different AST
 			throw new IllegalArgumentException();
@@ -1401,7 +1403,7 @@ public abstract class ASTNode implements Visitable {
 			// inserting new child would create a cycle
 			throw new IllegalArgumentException();
 		}
-		Class childClass = newChild.getClass();
+		Class<?> childClass = newChild.getClass();
 		if (nodeType != null && !nodeType.isAssignableFrom(childClass)) {
 			// new child is not of the right type
 			throw new ClassCastException();
@@ -1519,7 +1521,7 @@ public abstract class ASTNode implements Visitable {
 	 * @exception RuntimeException
 	 *                if the given node does not have the given property
 	 */
-	List<StructuralPropertyDescriptor> internalGetChildListProperty(ChildListPropertyDescriptor property) {
+	List<? extends ASTNode> internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		throw new RuntimeException("Node does not have this property"); //$NON-NLS-1$
 	}
 
@@ -1541,7 +1543,7 @@ public abstract class ASTNode implements Visitable {
 		 * accessor method.
 		 * </p>
 		 */
-		ArrayList<T> store = new ArrayList<T>(0);
+		ArrayList<T> store = new ArrayList<>(0);
 
 		/**
 		 * The property descriptor for this list.
@@ -1563,6 +1565,7 @@ public abstract class ASTNode implements Visitable {
 			/*
 			 * (non-Javadoc) Method declared on <code>Iterator</code>.
 			 */
+			@Override
 			public boolean hasNext() {
 				return this.position < NodeList.this.store.size();
 			}
@@ -1570,6 +1573,7 @@ public abstract class ASTNode implements Visitable {
 			/*
 			 * (non-Javadoc) Method declared on <code>Iterator</code>.
 			 */
+			@Override
 			public T next() {
 				T result = NodeList.this.store.get(this.position);
 				this.position++;
@@ -1579,6 +1583,7 @@ public abstract class ASTNode implements Visitable {
 			/*
 			 * (non-Javadoc) Method declared on <code>Iterator</code>.
 			 */
+			@Override
 			public void remove() {
 				throw new UnsupportedOperationException();
 			}
@@ -1612,7 +1617,7 @@ public abstract class ASTNode implements Visitable {
 		 * multiple visits going on at the same time.
 		 * </p>
 		 */
-		private List<? super Cursor> cursors = null;
+		private List<Cursor> cursors = null;
 
 		/**
 		 * Creates a new empty list of nodes owned by this node. This node will
@@ -1632,6 +1637,7 @@ public abstract class ASTNode implements Visitable {
 		 * 
 		 * @see java.util.AbstractCollection#size()
 		 */
+		@Override
 		public int size() {
 			return this.store.size();
 		}
@@ -1641,6 +1647,7 @@ public abstract class ASTNode implements Visitable {
 		 * 
 		 * @see AbstractList#get(int)
 		 */
+		@Override
 		public T get(int index) {
 			return this.store.get(index);
 		}
@@ -1650,6 +1657,7 @@ public abstract class ASTNode implements Visitable {
 		 * 
 		 * @see List#set(int, java.lang.Object)
 		 */
+		@Override
 		public T set(int index, T element) {
 			if (element == null) {
 				throw new IllegalArgumentException();
@@ -1659,8 +1667,8 @@ public abstract class ASTNode implements Visitable {
 				throw new IllegalArgumentException("AST node cannot be modified"); //$NON-NLS-1$
 			}
 			// delink old child from parent, and link new child to parent
-			ASTNode newChild = (ASTNode) element;
-			ASTNode oldChild = (ASTNode) this.store.get(index);
+			ASTNode newChild = element;
+			ASTNode oldChild = this.store.get(index);
 			if (oldChild == newChild) {
 				return (T) oldChild;
 			}
@@ -1685,6 +1693,7 @@ public abstract class ASTNode implements Visitable {
 		 * 
 		 * @see List#add(int, java.lang.Object)
 		 */
+		@Override
 		public void add(int index, T element) {
 			if (element == null) {
 				throw new IllegalArgumentException();
@@ -1694,7 +1703,7 @@ public abstract class ASTNode implements Visitable {
 				throw new IllegalArgumentException("AST node cannot be modified"); //$NON-NLS-1$
 			}
 			// link new child to parent
-			ASTNode newChild = (ASTNode) element;
+			ASTNode newChild = element;
 			ASTNode.checkNewChild(ASTNode.this, newChild, this.propertyDescriptor.cycleRisk,
 					this.propertyDescriptor.elementType);
 			ASTNode.this.ast.preAddChildEvent(ASTNode.this, newChild, this.propertyDescriptor);
@@ -1711,13 +1720,14 @@ public abstract class ASTNode implements Visitable {
 		 * 
 		 * @see List#remove(int)
 		 */
+		@Override
 		public T remove(int index) {
 			if ((ASTNode.this.flags & PROTECT) != 0) {
 				// this node is protected => cannot gain or lose children
 				throw new IllegalArgumentException("AST node cannot be modified"); //$NON-NLS-1$
 			}
 			// delink old child from parent
-			ASTNode oldChild = (ASTNode) this.store.get(index);
+			ASTNode oldChild = this.store.get(index);
 			if ((oldChild.flags & PROTECT) != 0) {
 				// old child is protected => cannot be unparented
 				throw new IllegalArgumentException("AST node cannot be modified"); //$NON-NLS-1$
@@ -1748,7 +1758,7 @@ public abstract class ASTNode implements Visitable {
 				// serialize cursor management on this NodeList
 				if (this.cursors == null) {
 					// convert null to empty list
-					this.cursors = new ArrayList(1);
+					this.cursors = new ArrayList<>(1);
 				}
 				Cursor result = new Cursor();
 				this.cursors.add(result);
@@ -1795,8 +1805,8 @@ public abstract class ASTNode implements Visitable {
 				// there are no cursors to worry about
 				return;
 			}
-			for (Iterator it = this.cursors.iterator(); it.hasNext();) {
-				Cursor c = (Cursor) it.next();
+			for (Iterator<Cursor> it = this.cursors.iterator(); it.hasNext();) {
+				Cursor c = it.next();
 				c.update(index, delta);
 			}
 		}

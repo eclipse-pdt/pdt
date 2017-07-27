@@ -18,7 +18,6 @@ import org.eclipse.php.internal.debug.core.model.IPHPExceptionBreakpoint;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class PHPExceptionBreakpointAnnotation extends Annotation {
 
 	private static final String ANNOTATION_TYPE = "org.eclipse.php.debug.ui.phpExceptionBreakpointAnnotation"; //$NON-NLS-1$

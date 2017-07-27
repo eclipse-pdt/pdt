@@ -32,7 +32,6 @@ import org.eclipse.ui.dialogs.SelectionDialog;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class AddPHPExceptionBreakpointHandler extends AbstractHandler {
 
 	/*

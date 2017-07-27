@@ -43,12 +43,13 @@ public class LineBreakpointTypeChange extends LineBreakpointChange {
 	 * 
 	 * @see org.eclipse.ltk.core.refactoring.Change#getName()
 	 */
+	@Override
 	public String getName() {
 		String msg = MessageFormat.format("", //$NON-NLS-1$
-				new String[] { getBreakpointLabel(getOriginalBreakpoint()) });
+				getBreakpointLabel(getOriginalBreakpoint()));
 		if (!"".equals(destResource.getName())) { //$NON-NLS-1$
 			msg = MessageFormat.format(RefactoringMessages.LineBreakpointTypeChange_0,
-					new String[] { getBreakpointLabel(getOriginalBreakpoint()), destResource.getName() });
+					getBreakpointLabel(getOriginalBreakpoint()), destResource.getName());
 		}
 		return msg;
 	}
@@ -60,8 +61,9 @@ public class LineBreakpointTypeChange extends LineBreakpointChange {
 	 * org.eclipse.ltk.core.refactoring.Change#perform(org.eclipse.core.runtime
 	 * .IProgressMonitor)
 	 */
+	@Override
 	public Change perform(IProgressMonitor pm) throws CoreException {
-		Map map = new HashMap();
+		Map<String, Comparable<?>> map = new HashMap<>();
 		// addJavaBreakpointAttributes(map, fDestType);
 		PHPLineBreakpoint breakpoint = new PHPConditionalBreakpoint(destResource, getLineNumber(), -1, -1, map);
 		apply(breakpoint);

@@ -29,7 +29,7 @@ import org.eclipse.php.internal.core.filenetwork.ReferenceTree.Node;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.model.IncludeField;
 import org.eclipse.php.internal.core.model.PHPModelAccess;
-import org.eclipse.php.internal.core.util.*;
+import org.eclipse.php.internal.core.util.PHPSearchEngine;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.IncludedFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.IncludedPharFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.ResourceResult;
@@ -86,7 +86,7 @@ public class FileNetworkUtility {
 	 */
 	public static ReferenceTree buildReferencingFilesTree(ISourceModule file, IProgressMonitor monitor) {
 
-		HashSet<ISourceModule> processedFiles = new HashSet<ISourceModule>();
+		HashSet<ISourceModule> processedFiles = new HashSet<>();
 		processedFiles.add(file);
 
 		Node root = new Node(file);
@@ -103,7 +103,7 @@ public class FileNetworkUtility {
 		if (file instanceof ExternalSourceModule) {
 			try {
 				IProjectFragment fileFragment = ((ExternalSourceModule) file).getProjectFragment();
-				List<IModelElement> scopeElements = new LinkedList<IModelElement>();
+				List<IModelElement> scopeElements = new LinkedList<>();
 				scopeElements.add(fileFragment);
 
 				IScriptProject[] scriptProjects = ModelManager.getModelManager().getModel().getScriptProjects();
@@ -123,15 +123,14 @@ public class FileNetworkUtility {
 
 		IScriptProject scriptProject = file.getScriptProject();
 		IProject[] referencingProjects = scriptProject.getProject().getReferencingProjects();
-		ArrayList<IScriptProject> scopeProjects = new ArrayList<IScriptProject>();
+		ArrayList<IScriptProject> scopeProjects = new ArrayList<>();
 		scopeProjects.add(scriptProject);
 		for (IProject referencingProject : referencingProjects) {
 			if (referencingProject.isAccessible()) {
 				scopeProjects.add(DLTKCore.create(referencingProject));
 			}
 		}
-		return SearchEngine.createSearchScope(
-				(IScriptProject[]) scopeProjects.toArray(new IScriptProject[scopeProjects.size()]),
+		return SearchEngine.createSearchScope(scopeProjects.toArray(new IScriptProject[scopeProjects.size()]),
 				IDLTKSearchScope.SOURCES, PHPLanguageToolkit.getDefault());
 	}
 
@@ -221,7 +220,7 @@ public class FileNetworkUtility {
 	public static ReferenceTree buildReferencedFilesTree(ISourceModule file, Map<ISourceModule, Node> cachedTrees,
 			IProgressMonitor monitor) {
 
-		HashSet<ISourceModule> processedFiles = new HashSet<ISourceModule>();
+		HashSet<ISourceModule> processedFiles = new HashSet<>();
 		processedFiles.add(file);
 
 		Node root;
@@ -243,11 +242,11 @@ public class FileNetworkUtility {
 		IField[] includes = PHPModelAccess.getDefault().findIncludes(null, MatchRule.PREFIX,
 				SearchEngine.createSearchScope(sourceModule), monitor);
 
-		if (includes == null) {
+		if (includes.length == 0) {
 			return;
 		}
 
-		List<Node> nodesToBuild = new LinkedList<Node>();
+		List<Node> nodesToBuild = new LinkedList<>();
 		for (IField include : includes) {
 			String filePath = ((IncludeField) include).getFilePath();
 			ISourceModule testFile = findSourceModule(sourceModule, filePath);

@@ -64,7 +64,7 @@ public class MarkOccurrenceTestsWrapper extends AbstractPDTTTest {
 		super("");
 	}
 
-	public Test suite(final Map map) {
+	public Test suite(final Map<?, ?> map) {
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject(map.get(ProjectSuite.PROJECT).toString());
 		perfMonitor = PHPCorePerformanceTests.getPerformanceMonitor();
 		TestSuite suite = new TestSuite("Auto Mark Occurrence Tests");
@@ -81,11 +81,13 @@ public class MarkOccurrenceTestsWrapper extends AbstractPDTTTest {
 					final PdttFile pdttFile = new PdttFile(PHPCorePerformanceTests.getDefault().getBundle(), fileName);
 					MarkOccurrenceTests test = new MarkOccurrenceTests(phpVersion.getAlias() + " - /" + fileName) {
 
+						@Override
 						protected void setUp() throws Exception {
 							TestUtils.setProjectPHPVersion(project, phpVersion);
 							pdttFile.applyPreferences();
 						}
 
+						@Override
 						protected void tearDown() throws Exception {
 							if (testFile != null) {
 								testFile.delete(true, null);
@@ -93,6 +95,7 @@ public class MarkOccurrenceTestsWrapper extends AbstractPDTTTest {
 							}
 						}
 
+						@Override
 						protected void runTest() throws Throwable {
 							runMarkOccurrence(pdttFile.getFile(), fileName);
 						}
@@ -106,6 +109,7 @@ public class MarkOccurrenceTestsWrapper extends AbstractPDTTTest {
 						// file
 						// parsing
 						// failure
+						@Override
 						protected void runTest() throws Throwable {
 							throw e;
 						}
@@ -170,6 +174,7 @@ public class MarkOccurrenceTestsWrapper extends AbstractPDTTTest {
 				if (finder != null) {
 					if (finder.initialize(astRoot, selectedNode) == null) {
 						perfMonitor.execute("PerformanceTests.testMarkOccurrence" + "_" + fileName, new Operation() {
+							@Override
 							public void run() throws Exception {
 								finder.getOccurrences();
 							}

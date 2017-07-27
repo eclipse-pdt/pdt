@@ -37,6 +37,7 @@ public class PHPCallExpression extends CallExpression implements Dereferencable 
 		this.receiver = receiver;
 	}
 
+	@Override
 	public void traverse(ASTVisitor pVisitor) throws Exception {
 		if (pVisitor.visit(this)) {
 			if (receiver != null) {
@@ -50,6 +51,7 @@ public class PHPCallExpression extends CallExpression implements Dereferencable 
 		}
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.METHOD_INVOCATION;
 	}
@@ -57,9 +59,11 @@ public class PHPCallExpression extends CallExpression implements Dereferencable 
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
+	@Override
 	public final void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}

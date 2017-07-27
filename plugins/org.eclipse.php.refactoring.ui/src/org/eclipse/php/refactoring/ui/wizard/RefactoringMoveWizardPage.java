@@ -54,6 +54,7 @@ public class RefactoringMoveWizardPage extends UserInputWizardPage {
 	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
 	 * widgets .Composite)
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
 		Composite result = new Composite(parent, SWT.NONE);
@@ -77,6 +78,7 @@ public class RefactoringMoveWizardPage extends UserInputWizardPage {
 			fViewer.setSelection(new StructuredSelection(target), true);
 		}
 		fViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				viewerSelectionChanged(event);
 			}
@@ -110,6 +112,7 @@ public class RefactoringMoveWizardPage extends UserInputWizardPage {
 		treeViewer.setComparator(new WorkbenchViewerComparator());
 		treeViewer.setInput(ResourcesPlugin.getWorkspace());
 		treeViewer.addFilter(new ViewerFilter() {
+			@Override
 			public boolean select(Viewer viewer, Object parentElement, Object element) {
 				if (element instanceof IProject) {
 					IProject project = (IProject) element;
@@ -185,7 +188,7 @@ public class RefactoringMoveWizardPage extends UserInputWizardPage {
 	}
 
 	private PHPMoveProcessor getPHPMoveProcessor() {
-		return (PHPMoveProcessor) getRefactoring().getAdapter(PHPMoveProcessor.class);
+		return getRefactoring().getAdapter(PHPMoveProcessor.class);
 	}
 
 	private void addUpdateReferenceComponent(Composite result) {
@@ -200,6 +203,7 @@ public class RefactoringMoveWizardPage extends UserInputWizardPage {
 		getRefactoringWizard().setForcePreviewReview(true);
 
 		fReferenceCheckbox.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				processor.setUpdateReferences(((Button) e.widget).getSelection());
 				getRefactoringWizard().setForcePreviewReview(processor.getUpdateReferences());

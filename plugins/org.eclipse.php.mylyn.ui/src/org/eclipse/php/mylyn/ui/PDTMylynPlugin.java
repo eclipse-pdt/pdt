@@ -47,6 +47,7 @@ public class PDTMylynPlugin extends Plugin {
 	 * @see
 	 * org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
@@ -58,6 +59,7 @@ public class PDTMylynPlugin extends Plugin {
 	 * @see
 	 * org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		lazystop();
@@ -121,6 +123,7 @@ public class PDTMylynPlugin extends Plugin {
 
 	public static class PDTUIBridgeStartup implements IContextUiStartup {
 
+		@Override
 		public void lazyStartup() {
 			PDTMylynPlugin.getDefault().lazyStart();
 		}

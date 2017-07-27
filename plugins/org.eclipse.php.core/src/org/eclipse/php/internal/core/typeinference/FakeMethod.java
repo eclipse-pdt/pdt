@@ -65,22 +65,26 @@ public class FakeMethod extends SourceMethod {
 		hasSpecialOffsets = true;
 	}
 
+	@Override
 	public ISourceRange getNameRange() throws ModelException {
 		if (hasSpecialOffsets)
 			return new SourceRange(nameOffset, nameLength);
 		return super.getNameRange();
 	}
 
+	@Override
 	public ISourceRange getSourceRange() throws ModelException {
 		if (hasSpecialOffsets)
 			return new SourceRange(offset, length);
 		return super.getSourceRange();
 	}
 
+	@Override
 	public IScriptProject getScriptProject() {
 		return parent.getScriptProject();
 	}
 
+	@Override
 	public int getFlags() {
 		return flags;
 	}
@@ -93,6 +97,7 @@ public class FakeMethod extends SourceMethod {
 		this.parameters = parameters;
 	}
 
+	@Override
 	public IParameter[] getParameters() throws ModelException {
 		return parameters;
 	}
@@ -106,6 +111,7 @@ public class FakeMethod extends SourceMethod {
 		this.isConstructor = isConstructor;
 	}
 
+	@Override
 	public boolean isConstructor() throws ModelException {
 		return isConstructor;
 	}
@@ -119,6 +125,7 @@ public class FakeMethod extends SourceMethod {
 		return this.name.equals(fm.name) && getRealParent(this.parent).equals(getRealParent(fm.parent));
 	}
 
+	@Override
 	public int hashCode() {
 		return Util.combineHashCodes(this.name.hashCode(), getRealParent(this.parent).hashCode());
 	}

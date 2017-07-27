@@ -54,6 +54,7 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		ICompletionContext context = getContext();
 		if (!(context instanceof ClassMemberContext)) {
@@ -66,7 +67,7 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 		String prefix = concreteContext.getPrefix();
 		ISourceRange replaceRange = getReplacementRange(concreteContext);
 
-		List<IField> result = new LinkedList<IField>();
+		List<IField> result = new LinkedList<>();
 
 		for (IType type : concreteContext.getLhsTypes()) {
 			try {
@@ -76,7 +77,7 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 				if (concreteContext instanceof ClassStaticMemberContext
 						&& concreteContext.getTriggerType() == Trigger.CLASS
 						&& ((ClassStaticMemberContext) concreteContext).isParent()) {
-					List<IField> superTypes = new ArrayList<IField>();
+					List<IField> superTypes = new ArrayList<>();
 					for (IType currType : hierarchy.getAllSupertypes(type)) {
 						superTypes.addAll(Arrays.asList(
 								PHPModelUtils.getTypeField(currType, prefix, requestor.isContextInformationMode())));
@@ -130,6 +131,7 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 				|| PHPRegionTypes.PHP_STATIC.equals(type);
 	}
 
+	@Override
 	protected boolean showNonStaticMembers(ClassMemberContext context) {
 		return super.showNonStaticMembers(context) && !isParentCall(context);
 	}

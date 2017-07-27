@@ -58,6 +58,7 @@ public class MethodContext implements IContext, INamespaceContext, IArgumentsCon
 		}
 	}
 
+	@Override
 	public IEvaluatedType getArgumentType(String name) {
 		for (int i = 0; i < argNames.length; i++) {
 			String argName = argNames[i];
@@ -76,6 +77,7 @@ public class MethodContext implements IContext, INamespaceContext, IArgumentsCon
 	 * Returns {@link IEvaluatedType} for the declaring type or
 	 * <code>null</code> if this is a function context
 	 */
+	@Override
 	public IEvaluatedType getInstanceType() {
 		return instanceType;
 	}
@@ -84,6 +86,7 @@ public class MethodContext implements IContext, INamespaceContext, IArgumentsCon
 	 * Returns namespace where the method was declared or <code>null</code> if
 	 * this is a global scope method/function
 	 */
+	@Override
 	public String getNamespace() {
 		return namespaceName;
 	}
@@ -91,6 +94,7 @@ public class MethodContext implements IContext, INamespaceContext, IArgumentsCon
 	/**
 	 * Returns root AST node of the file where the method is declared
 	 */
+	@Override
 	public ModuleDeclaration getRootNode() {
 		return rootNode;
 	}
@@ -98,6 +102,7 @@ public class MethodContext implements IContext, INamespaceContext, IArgumentsCon
 	/**
 	 * Returns the file {@link ISourceModule} where the method is declared
 	 */
+	@Override
 	public ISourceModule getSourceModule() {
 		return sourceModule;
 	}
@@ -109,6 +114,7 @@ public class MethodContext implements IContext, INamespaceContext, IArgumentsCon
 		return methodNode;
 	}
 
+	@Override
 	public String getLangNature() {
 		if (sourceModule != null) {
 			IDLTKLanguageToolkit languageToolkit = DLTKLanguageManager.getLanguageToolkit(sourceModule);
@@ -119,14 +125,17 @@ public class MethodContext implements IContext, INamespaceContext, IArgumentsCon
 		return null;
 	}
 
+	@Override
 	public IModelAccessCache getCache() {
 		return cache;
 	}
 
+	@Override
 	public void setCache(IModelAccessCache cache) {
 		this.cache = cache;
 	}
 
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -137,6 +146,7 @@ public class MethodContext implements IContext, INamespaceContext, IArgumentsCon
 		return result;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

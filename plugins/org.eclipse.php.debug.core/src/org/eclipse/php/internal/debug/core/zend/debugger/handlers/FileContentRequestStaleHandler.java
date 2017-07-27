@@ -55,7 +55,6 @@ import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
  * Handle a server request for the delivery of the file content. This class is
  * used if debugger protocol is &lt; 2006040902
  */
-@SuppressWarnings("restriction")
 public class FileContentRequestStaleHandler extends AbstractFileContentRequestHandler {
 
 	private int reqID;
@@ -77,6 +76,7 @@ public class FileContentRequestStaleHandler extends AbstractFileContentRequestHa
 	 * org.eclipse.php.debug.core.debugger.messages.IDebugMessage,
 	 * org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget)
 	 */
+	@Override
 	public void handle(IDebugMessage request, PHPDebugTarget debugTarget) {
 		this.debugTarget = debugTarget;
 		RemoteDebugger remoteDebugger = (RemoteDebugger) debugTarget.getRemoteDebugger();
@@ -229,6 +229,7 @@ public class FileContentRequestStaleHandler extends AbstractFileContentRequestHa
 		}
 	}
 
+	@Override
 	public IDebugResponseMessage getResponseMessage() {
 		FileContentResponse response = new FileContentResponse();
 		response.setID(reqID);

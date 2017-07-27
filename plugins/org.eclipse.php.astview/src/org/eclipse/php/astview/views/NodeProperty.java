@@ -27,20 +27,23 @@ public class NodeProperty extends ASTAttribute {
 		fProperty= property;
 	}
 	
+	@Override
 	public Object getParent() {
 		return fParent;
 	}
 	
+	@Override
 	public Object[] getChildren() {
 		Object child= getNode();
 		if (child instanceof List) {
-			return ((List) child).toArray();
+			return ((List<?>) child).toArray();
 		} else if (child instanceof ASTNode) {
 			return new Object[] { child };
 		}
 		return EMPTY;
 	}
 
+	@Override
 	public String getLabel() {
 		StringBuffer buf= new StringBuffer();
 		buf.append(getPropertyName());
@@ -56,7 +59,7 @@ public class NodeProperty extends ASTAttribute {
 				buf.append("null"); //$NON-NLS-1$
 			}
 		} else if (fProperty.isChildListProperty()) {
-			List node= (List) getNode();
+			List<?> node= (List<?>) getNode();
 			buf.append(" (").append(node.size()).append(')'); //$NON-NLS-1$
 		} else { // child property
 			if (getNode() == null) {
@@ -66,6 +69,7 @@ public class NodeProperty extends ASTAttribute {
 		return buf.toString();
 	}
 
+	@Override
 	public Image getImage() {
 		return null;
 	}
@@ -90,6 +94,7 @@ public class NodeProperty extends ASTAttribute {
 		return buf.toString();
 	}
 	
+	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
 			return true;
@@ -101,10 +106,12 @@ public class NodeProperty extends ASTAttribute {
 		return  fParent.equals(castedObj.fParent) && (fProperty == castedObj.fProperty);
 	}
 
+	@Override
 	public int hashCode() {
 		return fParent.hashCode() * 31 + fProperty.hashCode();
 	}
 	
+	@Override
 	public String toString() {
 		return getLabel();
 

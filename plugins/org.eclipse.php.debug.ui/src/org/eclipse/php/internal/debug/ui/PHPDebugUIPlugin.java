@@ -56,7 +56,6 @@ import org.osgi.framework.BundleContext;
 /**
  * The main plugin class to be used in the desktop.
  */
-@SuppressWarnings("restriction")
 public class PHPDebugUIPlugin extends AbstractUIPlugin {
 
 	// The shared instance.
@@ -82,7 +81,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 	/**
 	 * This method is called upon plug-in activation
 	 */
-	@SuppressWarnings("unchecked")
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		showViewListener = new ShowViewListener();
@@ -106,7 +105,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 		// class, we insert the
 		// factory before any other factory.
 		AdapterManager manager = (AdapterManager) Platform.getAdapterManager();
-		List<IAdapterFactory> list = (List<IAdapterFactory>) manager.getFactories().get(IVariable.class.getName());
+		List<IAdapterFactory> list = manager.getFactories().get(IVariable.class.getName());
 		PHPDebugElementAdapterFactory propertiesFactory = new PHPDebugElementAdapterFactory();
 		manager.registerAdapters(propertiesFactory, IVariable.class);
 		manager.registerAdapters(propertiesFactory, IWatchExpression.class);
@@ -129,6 +128,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 	/**
 	 * This method is called when the plug-in is stopped
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		if (showViewListener != null) {
@@ -280,11 +280,12 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 	 */
 	private void cleanSecuredStorage() {
 		Job cleanStorageJob = new Job(PHPDebugUIMessages.PHPDebugUIPlugin_2) {
+			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
 					// First, collect all the tunnel definitions in the launch
 					// configurations.
-					HashMap<String, List<String>> hostToUsers = new HashMap<String, List<String>>();
+					HashMap<String, List<String>> hostToUsers = new HashMap<>();
 					ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
 					ILaunchConfigurationType configurationType = launchManager
 							.getLaunchConfigurationType(IPHPDebugConstants.PHPServerLaunchType);
@@ -349,7 +350,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 				String debugHost = PHPLaunchUtilities.getDebugHost(configuration);
 				List<String> users = hostToUsers.get(debugHost);
 				if (users == null) {
-					users = new ArrayList<String>(3);
+					users = new ArrayList<>(3);
 					hostToUsers.put(debugHost, users);
 				}
 				users.add(userName);
@@ -358,6 +359,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 	}
 
 	private static class ShowViewListener implements IDebugEventSetListener {
+		@Override
 		public void handleDebugEvents(DebugEvent[] events) {
 			if (events != null) {
 				int size = events.length;
@@ -370,6 +372,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 							continue;
 						if (PHPDebugPlugin.getOpenDebugViewsOption()) {
 							Job job = new org.eclipse.ui.progress.UIJob(PHPDebugUIMessages.PHPDebugUIPlugin_0) {
+								@Override
 								public IStatus runInUIThread(IProgressMonitor monitor) {
 									showView(DebugBrowserView.ID_PHPBrowserOutput);
 									showView(DebugOutputView.ID_PHPDebugOutput);
@@ -388,6 +391,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 						final Object data = events[i].getData();
 						if (data instanceof IStatus) {
 							Job job = new org.eclipse.ui.progress.UIJob(PHPDebugUIMessages.PHPDebugUIPlugin_0) {
+								@Override
 								public IStatus runInUIThread(IProgressMonitor monitor) {
 									IStatus status = (IStatus) data;
 									Shell shell = getActiveWorkbenchShell();
@@ -413,6 +417,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 		/**
 		 * Handle only the termination events.
 		 */
+		@Override
 		public void launchesTerminated(ILaunch[] launches) {
 			boolean isPHPLaunch = false;
 			for (ILaunch launch : launches) {
@@ -427,6 +432,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 			// In case we have an active debug launches, we can terminate the
 			// event handling because there is no need to switch perspective.
 			Display.getDefault().asyncExec(new Runnable() {
+				@Override
 				public void run() {
 					if (!PHPLaunchUtilities.hasPHPDebugLaunch()) {
 						PHPLaunchUtilities.switchToPHPPerspective();
@@ -435,12 +441,15 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 			});
 		}
 
+		@Override
 		public void launchesAdded(ILaunch[] launches) {
 		}
 
+		@Override
 		public void launchesChanged(ILaunch[] launches) {
 		}
 
+		@Override
 		public void launchesRemoved(ILaunch[] launches) {
 		}
 	}
@@ -451,16 +460,19 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 	 */
 	private static class FirstSelectionDebugLaunchListener implements ILaunchesListener2 {
 
+		@Override
 		public void launchesTerminated(ILaunch[] launches) {
 		}
 
 		/**
 		 * handle only add new launch event
 		 */
+		@Override
 		public void launchesAdded(ILaunch[] launches) {
 			if (launches != null && launches.length > 0) {
 				final ILaunch[] currentLaunches = launches;
 				Display.getDefault().asyncExec(new Runnable() {
+					@Override
 					public void run() {
 						// get the LaunchView
 						IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
@@ -503,9 +515,11 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 			}
 		}
 
+		@Override
 		public void launchesChanged(ILaunch[] launches) {
 		}
 
+		@Override
 		public void launchesRemoved(ILaunch[] launches) {
 		}
 	}

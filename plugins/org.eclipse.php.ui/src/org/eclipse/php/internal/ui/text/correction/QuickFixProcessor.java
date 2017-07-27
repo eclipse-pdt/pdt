@@ -42,7 +42,7 @@ public class QuickFixProcessor implements IQuickFixProcessor {
 				process(context, curr, resultingCollections);
 			}
 		}
-		return (IScriptCompletionProposal[]) resultingCollections
+		return resultingCollections
 				.toArray(new IScriptCompletionProposal[resultingCollections.size()]);
 	}
 

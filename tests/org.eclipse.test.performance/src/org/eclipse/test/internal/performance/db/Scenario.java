@@ -41,9 +41,9 @@ public class Scenario {
         
         private Variations fVariations;
         private String fSeriesKey;
-        private Set fQueryDimensions;
+        private Set<Dim> fQueryDimensions;
         private String fScenarioPattern;
-        private Map fMessages;
+        private Map<String, Map<String, String>> fMessages;
         
       
         SharedState(Variations variations, String scenarioPattern, String seriesKey, Dim[] dimensions) {
@@ -51,7 +51,7 @@ public class Scenario {
             fScenarioPattern= scenarioPattern;
             fSeriesKey= seriesKey;
             if (dimensions != null && dimensions.length > 0) {
-                fQueryDimensions= new HashSet();
+                fQueryDimensions= new HashSet<>();
                 for (int i= 0; i < dimensions.length; i++)
                     fQueryDimensions.add(dimensions[i]);
             }
@@ -59,19 +59,19 @@ public class Scenario {
         
         String[] getFailures(String[] names, String scenarioId) {
             if (fMessages == null) {
-	            fMessages= new HashMap();
+	            fMessages= new HashMap<>();
 	            Variations v= (Variations) fVariations.clone();
 	            for (int i= 0; i < names.length; i++) {
 	                v.put(fSeriesKey, names[i]);
-	                Map map= DB.queryFailure(fScenarioPattern, v);
+	                Map<String, String> map= DB.queryFailure(fScenarioPattern, v);
 	                fMessages.put(names[i], map);
 	            }
             }
             String[] result= new String[names.length];
             for (int i= 0; i < names.length; i++) {
-                Map messages= (Map) fMessages.get(names[i]);
+                Map<String, String> messages= fMessages.get(names[i]);
                 if (messages != null)
-                    result[i]= (String) messages.get(scenarioId);
+                    result[i]= messages.get(scenarioId);
             }
             return result;
         }
@@ -81,7 +81,7 @@ public class Scenario {
     private String fScenarioName;
     private String[] fSeriesNames;
     private StatisticsSession[] fSessions;
-    private Map fSeries= new HashMap();
+    private Map<Dim, TimeSeries> fSeries= new HashMap<>();
     private Dim[] fDimensions;
    
     /** 
@@ -91,7 +91,8 @@ public class Scenario {
      * @param dimensions
      * @deprecated
      */
-    public Scenario(String scenario, Variations variations, String seriesKey, Dim[] dimensions) {
+    @Deprecated
+	public Scenario(String scenario, Variations variations, String seriesKey, Dim[] dimensions) {
         Assert.assertFalse(scenario.indexOf('%') >= 0);
         fScenarioName= scenario;
         fSharedState= new SharedState(variations, scenario, seriesKey, dimensions);
@@ -132,7 +133,7 @@ public class Scenario {
 
     public TimeSeries getTimeSeries(Dim dim) {
         loadSessions();
-        TimeSeries ts= (TimeSeries) fSeries.get(dim);
+        TimeSeries ts= fSeries.get(dim);
         if (ts == null) {
             double[] ds= new double[fSessions.length];
             double[] sd= new double[fSessions.length];
@@ -198,9 +199,9 @@ public class Scenario {
         long start;
         Variations v= (Variations) fSharedState.fVariations.clone();
         if (DEBUG) start= System.currentTimeMillis();
-        ArrayList sessions= new ArrayList();
-        ArrayList names2= new ArrayList();
-        Set dims= new HashSet();
+        ArrayList<StatisticsSession> sessions= new ArrayList<>();
+        ArrayList<String> names2= new ArrayList<>();
+        Set<Dim> dims= new HashSet<>();
         for (int t= 0; t < fSeriesNames.length; t++) {
             v.put(fSharedState.fSeriesKey, fSeriesNames[t]);
             DataPoint[] dps= DB.queryDataPoints(v, fScenarioName, fSharedState.fQueryDimensions);
@@ -213,13 +214,14 @@ public class Scenario {
         }
         if (DEBUG) System.err.println("data: " + (System.currentTimeMillis()-start)); //$NON-NLS-1$
 
-        fSessions= (StatisticsSession[]) sessions.toArray(new StatisticsSession[sessions.size()]);
-        fSeriesNames= (String[]) names2.toArray(new String[sessions.size()]);
+        fSessions= sessions.toArray(new StatisticsSession[sessions.size()]);
+        fSeriesNames= names2.toArray(new String[sessions.size()]);
         
-        fDimensions= (Dim[]) dims.toArray(new Dim[dims.size()]);
+        fDimensions= dims.toArray(new Dim[dims.size()]);
         Arrays.sort(fDimensions,
-        new Comparator() {
-            	public int compare(Object o1, Object o2) {
+        new Comparator<Object>() {
+            	@Override
+				public int compare(Object o1, Object o2) {
             	    Dim d1= (Dim)o1;
             	    Dim d2= (Dim)o2;
             	    return d1.getName().compareTo(d2.getName());

@@ -42,6 +42,7 @@ public class NamespaceTypesStrategy extends NamespaceMembersStrategy {
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		ICompletionContext context = getContext();
 		if (!(context instanceof NamespaceMemberContext)) {
@@ -61,7 +62,7 @@ public class NamespaceTypesStrategy extends NamespaceMembersStrategy {
 	public IType[] getTypes(NamespaceMemberContext context) throws BadLocationException {
 		String prefix = context.getPrefix();
 
-		List<IType> result = new LinkedList<IType>();
+		List<IType> result = new LinkedList<>();
 		for (IType ns : context.getNamespaces()) {
 			try {
 				for (IType type : ns.getTypes()) {
@@ -73,7 +74,7 @@ public class NamespaceTypesStrategy extends NamespaceMembersStrategy {
 				PHPCorePlugin.log(e);
 			}
 		}
-		return (IType[]) result.toArray(new IType[result.size()]);
+		return result.toArray(new IType[result.size()]);
 	}
 
 	public String getSuffix(AbstractCompletionContext abstractContext) {

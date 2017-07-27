@@ -59,6 +59,7 @@ public class CodeCoverageActionGroup extends ActionGroup implements IMenuListene
 	 * 
 	 * @see org.eclipse.ui.actions.ActionGroup#dispose()
 	 */
+	@Override
 	public void dispose() {
 		super.dispose();
 	}
@@ -92,6 +93,7 @@ public class CodeCoverageActionGroup extends ActionGroup implements IMenuListene
 	 * org.eclipse.ui.actions.ActionGroup#fillContextMenu(org.eclipse.jface.
 	 * action.IMenuManager)
 	 */
+	@Override
 	public void fillContextMenu(final IMenuManager menu) {
 		final ISelection selection = viewer.getSelection();
 		if (selection != null && selection instanceof IStructuredSelection) {
@@ -111,6 +113,7 @@ public class CodeCoverageActionGroup extends ActionGroup implements IMenuListene
 	 * org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface
 	 * .action.IMenuManager)
 	 */
+	@Override
 	public void menuAboutToShow(final IMenuManager manager) {
 		fillContextMenu(manager);
 	}

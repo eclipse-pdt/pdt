@@ -29,7 +29,6 @@ import org.eclipse.php.internal.server.ui.ServerEditWizardRunner;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class PHPWebPageLaunchConfigurationDebuggerTab extends AbstractPHPLaunchConfigurationDebuggerTab {
 
 	/*

@@ -26,17 +26,20 @@ public class PostfixExpressionEvaluator extends GoalEvaluator {
 		super(goal);
 	}
 
+	@Override
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
 		PostfixExpression postfixExpression = (PostfixExpression) typedGoal.getExpression();
 		return new IGoal[] { new ExpressionTypeGoal(goal.getContext(), postfixExpression.getVariable()) };
 	}
 
+	@Override
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		this.result = (IEvaluatedType) result;
 		return IGoal.NO_GOALS;
 	}
 
+	@Override
 	public Object produceResult() {
 		return result;
 	}

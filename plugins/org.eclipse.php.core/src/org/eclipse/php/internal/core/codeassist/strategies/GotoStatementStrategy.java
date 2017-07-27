@@ -43,6 +43,7 @@ public class GotoStatementStrategy extends GlobalElementStrategy {
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		ICompletionContext context = getContext();
 
@@ -74,7 +75,7 @@ public class GotoStatementStrategy extends GlobalElementStrategy {
 
 	private class GotoStatementVisitor extends PHPASTVisitor {
 
-		private List<String> getoLabels = new ArrayList<String>();
+		private List<String> getoLabels = new ArrayList<>();
 		private ASTNode node;
 		private String prefix;
 
@@ -83,6 +84,7 @@ public class GotoStatementStrategy extends GlobalElementStrategy {
 			this.prefix = prefix;
 		}
 
+		@Override
 		public boolean visit(GotoLabel s) throws Exception {
 			if (StringUtils.startsWithIgnoreCase(s.getLabel(), prefix)) {
 				getoLabels.add(s.getLabel());
@@ -90,6 +92,7 @@ public class GotoStatementStrategy extends GlobalElementStrategy {
 			return false;
 		}
 
+		@Override
 		public boolean visit(TypeDeclaration s) throws Exception {
 			if (node != s) {
 				return false;
@@ -97,6 +100,7 @@ public class GotoStatementStrategy extends GlobalElementStrategy {
 			return true;
 		}
 
+		@Override
 		public boolean visit(MethodDeclaration s) throws Exception {
 			if (node != s) {
 				return false;

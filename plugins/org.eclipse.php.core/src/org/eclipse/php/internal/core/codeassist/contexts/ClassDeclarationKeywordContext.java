@@ -30,6 +30,7 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
  */
 public class ClassDeclarationKeywordContext extends ClassDeclarationContext {
 
+	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;

@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Display;
 public class ColorManager extends DLTKColorManager {
 
 	protected Map<String, RGB> fKeyTable = new HashMap<>(10);
-	protected Map<Display, Map> fDisplayTable = new HashMap<>(2);
+	protected Map<Display, Map<RGB, Color>> fDisplayTable = new HashMap<>(2);
 
 	/**
 	 * Flag which tells if the colors are automatically disposed when the
@@ -60,11 +60,11 @@ public class ColorManager extends DLTKColorManager {
 
 	@Override
 	public void dispose(Display display) {
-		Map colorTable = fDisplayTable.get(display);
+		Map<RGB, Color> colorTable = fDisplayTable.get(display);
 		if (colorTable != null) {
-			Iterator e = colorTable.values().iterator();
+			Iterator<Color> e = colorTable.values().iterator();
 			while (e.hasNext()) {
-				Color color = (Color) e.next();
+				Color color = e.next();
 				if (color != null && !color.isDisposed())
 					color.dispose();
 			}
@@ -83,7 +83,7 @@ public class ColorManager extends DLTKColorManager {
 		final Display display = Display.getCurrent();
 		Map<RGB, Color> colorTable = fDisplayTable.get(display);
 		if (colorTable == null) {
-			colorTable = new HashMap<RGB, Color>(10);
+			colorTable = new HashMap<>(10);
 			fDisplayTable.put(display, colorTable);
 			if (fAutoDisposeOnDisplayDispose) {
 				display.disposeExec(() -> dispose(display));

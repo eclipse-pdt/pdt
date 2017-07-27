@@ -82,7 +82,7 @@ public class ComposerPackage extends DistributedPackage {
 	@Override
 	protected List<String> getOwnProperties() {
 		String[] props = new String[] { "keywords", "bin" }; //$NON-NLS-1$ //$NON-NLS-2$
-		List<String> list = new ArrayList<String>(Arrays.asList(props));
+		List<String> list = new ArrayList<>(Arrays.asList(props));
 		list.addAll(super.getOwnProperties());
 		return list;
 	}
@@ -255,6 +255,7 @@ public class ComposerPackage extends DistributedPackage {
 		return getAsArray("bin"); //$NON-NLS-1$
 	}
 
+	@Override
 	public String toString() {
 		return getName();
 	}

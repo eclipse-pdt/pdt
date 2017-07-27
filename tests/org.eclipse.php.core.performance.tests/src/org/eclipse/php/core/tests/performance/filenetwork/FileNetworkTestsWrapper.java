@@ -54,7 +54,7 @@ public class FileNetworkTestsWrapper extends AbstractPDTTTest {
 	protected static final String PROJECT = "filenetwork";
 	protected IScriptProject SCRIPT_PROJECT;
 
-	public Test suite(final Map map) {
+	public Test suite(final Map<?, ?> map) {
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject(map.get(ProjectSuite.PROJECT).toString());
 		perfMonitor = PHPCorePerformanceTests.getPerformanceMonitor();
 		TestSuite suite = new TestSuite("Auto File Network Tests");
@@ -80,6 +80,7 @@ public class FileNetworkTestsWrapper extends AbstractPDTTTest {
 					try {
 						FileNetworkReferencedFilesTests test = new FileNetworkReferencedFilesTests(fileName) {
 
+							@Override
 							protected void runTest() throws Throwable {
 								testReferencedFiles(fileName);
 							}
@@ -93,6 +94,7 @@ public class FileNetworkTestsWrapper extends AbstractPDTTTest {
 							// file
 							// parsing
 							// failure
+							@Override
 							protected void runTest() throws Throwable {
 								throw e;
 							}
@@ -107,6 +109,7 @@ public class FileNetworkTestsWrapper extends AbstractPDTTTest {
 					try {
 						FileNetworkReferencingFilesTests test = new FileNetworkReferencingFilesTests(fileName) {
 
+							@Override
 							protected void runTest() throws Throwable {
 								testReferencingFiles(fileName);
 							}
@@ -120,6 +123,7 @@ public class FileNetworkTestsWrapper extends AbstractPDTTTest {
 							// file
 							// parsing
 							// failure
+							@Override
 							protected void runTest() throws Throwable {
 								throw e;
 							}
@@ -139,6 +143,7 @@ public class FileNetworkTestsWrapper extends AbstractPDTTTest {
 		IFile file = project.getFile(fileName);
 		final ISourceModule sourceModule = (ISourceModule) DLTKCore.create(file);
 		perfMonitor.execute("PerformanceTests.testReferencingfiles" + "_" + fileName, new Operation() {
+			@Override
 			public void run() throws Exception {
 				ReferenceTree tree = FileNetworkUtility.buildReferencingFilesTree(sourceModule, null);
 				System.out.println(tree.toString());
@@ -150,6 +155,7 @@ public class FileNetworkTestsWrapper extends AbstractPDTTTest {
 		IFile file = project.getFile(fileName);
 		final ISourceModule sourceModule = (ISourceModule) DLTKCore.create(file);
 		perfMonitor.execute("PerformanceTests.testReferencedfiles" + "_" + fileName, new Operation() {
+			@Override
 			public void run() throws Exception {
 				ReferenceTree tree = FileNetworkUtility.buildReferencedFilesTree(sourceModule, null);
 				System.out.println(tree.toString());

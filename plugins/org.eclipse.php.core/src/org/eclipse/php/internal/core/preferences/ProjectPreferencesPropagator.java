@@ -52,6 +52,7 @@ public class ProjectPreferencesPropagator extends AbstractPreferencesPropagator 
 	/**
 	 * Install the preferences propagator.
 	 */
+	@Override
 	protected synchronized void install() {
 		if (isInstalled) {
 			return;
@@ -65,6 +66,7 @@ public class ProjectPreferencesPropagator extends AbstractPreferencesPropagator 
 	/**
 	 * Uninstall the preferences propagator.
 	 */
+	@Override
 	protected synchronized void uninstall() {
 		if (!isInstalled) {
 			return;
@@ -151,6 +153,7 @@ public class ProjectPreferencesPropagator extends AbstractPreferencesPropagator 
 	 */
 	private class InnerPreferenceChangeListener implements IPreferenceChangeListener {
 
+		@Override
 		public void preferenceChange(PreferenceChangeEvent event) {
 			notifyPropagatorEvent(event);
 		}

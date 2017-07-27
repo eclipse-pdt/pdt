@@ -52,7 +52,7 @@ public class StaticConstantAccess extends StaticDispatch {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(2);
 		properyList.add(CLASS_NAME_PROPERTY);
 		properyList.add(CONSTANT_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
@@ -75,6 +75,7 @@ public class StaticConstantAccess extends StaticDispatch {
 		this(start, end, ast, null, name);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -83,23 +84,27 @@ public class StaticConstantAccess extends StaticDispatch {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		getClassName().accept(visitor);
 		constant.accept(visitor);
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		getClassName().traverseTopDown(visitor);
 		constant.traverseTopDown(visitor);
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		getClassName().traverseTopDown(visitor);
 		constant.traverseTopDown(visitor);
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<StaticConstantAccess"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -113,6 +118,7 @@ public class StaticConstantAccess extends StaticDispatch {
 		buffer.append(tab).append("</StaticConstantAccess>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.STATIC_CONSTANT_ACCESS;
 	}
@@ -150,6 +156,7 @@ public class StaticConstantAccess extends StaticDispatch {
 		postReplaceChild(oldChild, name, CONSTANT_PROPERTY);
 	}
 
+	@Override
 	ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == CONSTANT_PROPERTY) {
 			if (get) {
@@ -163,6 +170,7 @@ public class StaticConstantAccess extends StaticDispatch {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
+	@Override
 	public ASTNode getMember() {
 		return getConstant();
 	}
@@ -170,6 +178,7 @@ public class StaticConstantAccess extends StaticDispatch {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);

@@ -58,6 +58,7 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 	 * org.eclipse.debug.ui.console.IConsoleColorProvider#connect(org.eclipse
 	 * .debug.core.model.IProcess, org.eclipse.debug.ui.console.IConsole)
 	 */
+	@Override
 	public void connect(IProcess process, IConsole console) {
 		fConsole = console;
 
@@ -97,7 +98,7 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 
 	private static IPHPConsoleEventListener[] getConsoleEventListeners() {
 		if (fConsoleEventListeners == null) {
-			Map<String, IPHPConsoleEventListener> listeners = new HashMap<String, IPHPConsoleEventListener>();
+			Map<String, IPHPConsoleEventListener> listeners = new HashMap<>();
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
 			IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPDebugUIPlugin.getID(),
 					"phpConsoleListeners"); //$NON-NLS-1$
@@ -133,6 +134,7 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 	 * 
 	 * @see org.eclipse.debug.ui.console.IConsoleColorProvider#disconnect()
 	 */
+	@Override
 	public void disconnect() {
 		fConsole = null;
 		fProcess = null;
@@ -143,6 +145,7 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 	 * 
 	 * @see org.eclipse.debug.ui.console.IConsoleColorProvider#isReadOnly()
 	 */
+	@Override
 	public boolean isReadOnly() {
 		return true/* fProcess == null || fProcess.isTerminated() */;
 	}
@@ -154,6 +157,7 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 	 * org.eclipse.debug.ui.console.IConsoleColorProvider#getColor(java.lang
 	 * .String)
 	 */
+	@Override
 	public Color getColor(String streamIdentifer) {
 		if (PHP_DEBUG_STREAM.equals(streamIdentifer)) {
 			// TODO: fix to use own preferences.
@@ -169,6 +173,7 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 	 * @return the process this color provider is providing color for, or
 	 *         <code>null</code> if none
 	 */
+	@Override
 	protected IProcess getProcess() {
 		return fProcess;
 	}
@@ -180,6 +185,7 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 	 * @return IConsole the console this color provider is connected to, or
 	 *         <code>null</code> if none
 	 */
+	@Override
 	protected IConsole getConsole() {
 		return fConsole;
 	}

@@ -20,7 +20,7 @@ import org.eclipse.php.internal.ui.corext.fix.LinkedProposalPositionGroup.Positi
 
 public class LinkedProposalModel {
 
-	private Map/* <String, PositionGroup> */ fPositionGroups;
+	private Map<String, LinkedProposalPositionGroup> fPositionGroups;
 	private LinkedProposalPositionGroup.PositionInformation fEndPosition;
 
 	public void addPositionGroup(LinkedProposalPositionGroup positionGroup) {
@@ -35,8 +35,7 @@ public class LinkedProposalModel {
 	}
 
 	public LinkedProposalPositionGroup getPositionGroup(String groupId, boolean createIfNotExisting) {
-		LinkedProposalPositionGroup group = fPositionGroups != null
-				? (LinkedProposalPositionGroup) fPositionGroups.get(groupId) : null;
+		LinkedProposalPositionGroup group = fPositionGroups != null ? fPositionGroups.get(groupId) : null;
 		if (createIfNotExisting && group == null) {
 			group = new LinkedProposalPositionGroup(groupId);
 			addPositionGroup(group);
@@ -44,16 +43,16 @@ public class LinkedProposalModel {
 		return group;
 	}
 
-	public Iterator getPositionGroupIterator() {
+	public Iterator<LinkedProposalPositionGroup> getPositionGroupIterator() {
 		if (fPositionGroups == null) {
-			return new Iterator() {
+			return new Iterator<LinkedProposalPositionGroup>() {
 				@Override
 				public boolean hasNext() {
 					return false;
 				}
 
 				@Override
-				public Object next() {
+				public LinkedProposalPositionGroup next() {
 					return null;
 				}
 

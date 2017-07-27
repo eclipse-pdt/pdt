@@ -18,8 +18,7 @@ public class ProgramDocumentChange extends DocumentChange {
 
 	private final Program program;
 
-	public ProgramDocumentChange(String name, IDocument document,
-			Program program) {
+	public ProgramDocumentChange(String name, IDocument document, Program program) {
 		super(name, document);
 		this.program = program;
 	}
@@ -33,6 +32,8 @@ public class ProgramDocumentChange extends DocumentChange {
 	 * 
 	 * @see org.eclipse.ltk.core.refactoring.Change#getAdapter(java.lang.Class)
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
 	public Object getAdapter(Class adapter) {
 		if (adapter == Program.class) {
 			return program;

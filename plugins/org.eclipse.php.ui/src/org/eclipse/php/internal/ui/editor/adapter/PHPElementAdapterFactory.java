@@ -40,6 +40,7 @@ public class PHPElementAdapterFactory implements IAdapterFactory {
 	public PHPElementAdapterFactory() {
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		if (adaptableObject instanceof IImplForPHP) {
@@ -63,7 +64,7 @@ public class PHPElementAdapterFactory implements IAdapterFactory {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Class[] getAdapterList() {
 		Class[] classArray = new Class[adapterType2Object.size()];
 		adapterType2Object.entrySet().toArray(classArray);

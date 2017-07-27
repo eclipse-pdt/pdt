@@ -30,8 +30,8 @@ public class PharFile {
 	private boolean hasBzipcompression = false;
 	private String alias;
 	private String metadata;
-	private List<PharEntry> pharEntryList = new ArrayList<PharEntry>();
-	private Map<String, PharEntry> pharEntryMap = new HashMap<String, PharEntry>();
+	private List<PharEntry> pharEntryList = new ArrayList<>();
+	private Map<String, PharEntry> pharEntryMap = new HashMap<>();
 	private List<Integer> bytesAfterStub;
 	private BufferedInputStream bis;
 	private PharEntry stubEntry;
@@ -238,7 +238,7 @@ public class PharFile {
 		byte[] buffer = new byte[4];
 		for (int i = 0; i < buffer.length; i++) {
 			if (i < bytesAfterStub.size()) {
-				buffer[i] = ((Integer) bytesAfterStub.get(i)).byteValue();
+				buffer[i] = bytesAfterStub.get(i).byteValue();
 			} else {
 				buffer[i] = (byte) read(bis);
 				check(buffer[i]);
@@ -291,7 +291,7 @@ public class PharFile {
 		int n = -1;
 		// this is record for whether read a byte from the stream or not
 		int currentByte = -1;
-		bytesAfterStub = new ArrayList<Integer>();
+		bytesAfterStub = new ArrayList<>();
 		// if currentByte is equal to char '_',we will not read the next byte
 		while (!stubHasBeenFound && (currentByte == PharConstants.Underline || (n = read(bis)) != -1)) {
 			if (n == PharConstants.Underline) {

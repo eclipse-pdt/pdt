@@ -43,7 +43,7 @@ public ScenarioStatusTable(String  name, PrintStream stream) {
 public void print(PerformanceResults performanceResults) {
 
 	String baselineName = performanceResults.getBaselineName();
-	List scenarios = performanceResults.getComponentScenarios(this.component);
+	List<?> scenarios = performanceResults.getComponentScenarios(this.component);
 	int size = scenarios.size();
 
 	// Print titles
@@ -86,7 +86,7 @@ public void print(PerformanceResults performanceResults) {
 	this.stream.print("</table>\n");
 }
 
-private int computeSize(List scenarios) {
+private int computeSize(List<?> scenarios) {
 	int size = scenarios.size();
 	int n = 0;
 	for (int i=0; i<size; i++) {

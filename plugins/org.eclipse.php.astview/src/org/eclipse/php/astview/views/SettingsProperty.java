@@ -23,10 +23,12 @@ public class SettingsProperty extends ASTAttribute {
 		fRoot= root;
 	}
 
+	@Override
 	public Object getParent() {
 		return fRoot;
 	}
 
+	@Override
 	public Object[] getChildren() {
 		AST ast= fRoot.getAST();
 		Object[] res= {
@@ -36,14 +38,17 @@ public class SettingsProperty extends ASTAttribute {
 		return res;
 	}
 
+	@Override
 	public String getLabel() {
 		return "> AST settings";  //$NON-NLS-1$
 	}
 
+	@Override
 	public Image getImage() {
 		return null;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -53,6 +58,7 @@ public class SettingsProperty extends ASTAttribute {
 		return true;
 	}
 	
+	@Override
 	public int hashCode() {
 		return 19;
 	}

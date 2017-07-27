@@ -75,7 +75,7 @@ public class ConditionalExpression extends Expression {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> list = new ArrayList<StructuralPropertyDescriptor>(3);
+		List<StructuralPropertyDescriptor> list = new ArrayList<>(3);
 		list.add(CONDITION_PROPERTY);
 		list.add(IF_TRUE_PROPERTY);
 		list.add(IF_FALSE_PROPERTY);
@@ -118,6 +118,7 @@ public class ConditionalExpression extends Expression {
 		operatorType = OP_COALESCE;
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -126,6 +127,7 @@ public class ConditionalExpression extends Expression {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		condition.accept(visitor);
 		if (ifTrue != null) {
@@ -136,6 +138,7 @@ public class ConditionalExpression extends Expression {
 		}
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		condition.traverseTopDown(visitor);
@@ -147,6 +150,7 @@ public class ConditionalExpression extends Expression {
 		}
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		condition.traverseBottomUp(visitor);
 		if (ifTrue != null) {
@@ -158,6 +162,7 @@ public class ConditionalExpression extends Expression {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<ConditionalExpression"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -188,6 +193,7 @@ public class ConditionalExpression extends Expression {
 		buffer.append(tab).append("</ConditionalExpression>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.CONDITIONAL_EXPRESSION;
 	}
@@ -305,11 +311,13 @@ public class ConditionalExpression extends Expression {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == CONDITION_PROPERTY) {
 			if (get) {
@@ -339,6 +347,7 @@ public class ConditionalExpression extends Expression {
 		return super.internalGetSetChildProperty(property, get, child);
 	}
 
+	@Override
 	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
 		if (property == OPERATOR_TYPE_PROPERTY) {
 			if (get) {

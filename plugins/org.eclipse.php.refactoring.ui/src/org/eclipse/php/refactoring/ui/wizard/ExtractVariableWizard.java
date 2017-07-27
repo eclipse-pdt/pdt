@@ -43,6 +43,7 @@ public class ExtractVariableWizard extends RefactoringWizard {
 	 * 
 	 * @see RefactoringWizard#addUserInputPages
 	 */
+	@Override
 	protected void addUserInputPages() {
 		addPage(new ExtractTempInputPage(getExtractVariableRefactoring().guessTempNames()));
 	}
@@ -70,6 +71,7 @@ public class ExtractVariableWizard extends RefactoringWizard {
 			fInitialValid = tempNameProposals.length > 0;
 		}
 
+		@Override
 		public void createControl(Composite parent) {
 			loadSettings();
 			Composite result = new Composite(parent, SWT.NONE);
@@ -157,23 +159,28 @@ public class ExtractVariableWizard extends RefactoringWizard {
 
 		private IContentProposalProvider getContentProposalProvider() {
 			return new IContentProposalProvider() {
+				@Override
 				public IContentProposal[] getProposals(String contents, int position) {
 					IContentProposal[] proposals = new IContentProposal[fTempNameProposals.length];
 					for (int i = 0; i < fTempNameProposals.length; i++) {
 						final String user = fTempNameProposals[i];
 						proposals[i] = new IContentProposal() {
+							@Override
 							public String getContent() {
 								return user;
 							}
 
+							@Override
 							public String getLabel() {
 								return user;
 							}
 
+							@Override
 							public String getDescription() {
 								return null;
 							}
 
+							@Override
 							public int getCursorPosition() {
 								return user.length();
 							}
@@ -200,6 +207,7 @@ public class ExtractVariableWizard extends RefactoringWizard {
 			final Button checkBox = createCheckbox(result, title, defaultValue, layouter);
 			getExtractVariableRefactoring().setReplaceAllOccurrences(checkBox.getSelection());
 			checkBox.addSelectionListener(new SelectionAdapter() {
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					fSettings.put(REPLACE_ALL, checkBox.getSelection());
 					getExtractVariableRefactoring().setReplaceAllOccurrences(checkBox.getSelection());
@@ -207,11 +215,13 @@ public class ExtractVariableWizard extends RefactoringWizard {
 			});
 		}
 
+		@Override
 		protected void textModified(String text) {
 			getExtractVariableRefactoring().setNewVariableName(text);
 			super.textModified(text);
 		}
 
+		@Override
 		protected RefactoringStatus validateTextField(String text) {
 			return getExtractVariableRefactoring().checkNewVariableName(text);
 		}
@@ -232,6 +242,7 @@ public class ExtractVariableWizard extends RefactoringWizard {
 		 * @seeorg.eclipse.jdt.internal.ui.refactoring.TextInputWizardPage#
 		 * isInitialInputValid()
 		 */
+		@Override
 		protected boolean isInitialInputValid() {
 			return fInitialValid;
 		}

@@ -73,7 +73,7 @@ public class LocalFileSearchFilterRegistry {
 	 * Reads the extension point
 	 */
 	private Map<String, ILocalFileSearchFilter> readFromExtensionPoint() {
-		final Map<String, ILocalFileSearchFilter> entries = new HashMap<String, ILocalFileSearchFilter>();
+		final Map<String, ILocalFileSearchFilter> entries = new HashMap<>();
 		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry()
 				.getConfigurationElementsFor(EXTENSION_POINT_ID);
 		for (final IConfigurationElement element : configurationElements) {

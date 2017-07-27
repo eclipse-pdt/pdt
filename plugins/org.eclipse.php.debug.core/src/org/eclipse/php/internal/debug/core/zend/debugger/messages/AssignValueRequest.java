@@ -86,6 +86,7 @@ public class AssignValueRequest extends DebugMessageRequestImpl implements IDebu
 		return path;
 	}
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		setVar(CommunicationUtilities.readEncodedString(in, getTransferEncoding()));
@@ -101,10 +102,12 @@ public class AssignValueRequest extends DebugMessageRequestImpl implements IDebu
 		}
 	}
 
+	@Override
 	public int getType() {
 		return 33;
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());

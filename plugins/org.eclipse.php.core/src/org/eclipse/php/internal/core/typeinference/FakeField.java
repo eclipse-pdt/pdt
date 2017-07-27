@@ -47,18 +47,22 @@ public class FakeField extends SourceField {
 		this.modifiers = modifiers;
 	}
 
+	@Override
 	public ISourceRange getNameRange() throws ModelException {
 		return new SourceRange(offset, length);
 	}
 
+	@Override
 	public ISourceRange getSourceRange() throws ModelException {
 		return new SourceRange(offset, length);
 	}
 
+	@Override
 	public int getFlags() {
 		return modifiers;
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (super.equals(o) && o instanceof FakeField) {
 			FakeField other = (FakeField) o;

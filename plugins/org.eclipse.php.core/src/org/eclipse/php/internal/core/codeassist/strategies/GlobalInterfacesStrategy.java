@@ -26,6 +26,7 @@ public class GlobalInterfacesStrategy extends GlobalTypesStrategy {
 		super(context, Modifiers.AccInterface, 0);
 	}
 
+	@Override
 	public String getSuffix(AbstractCompletionContext abstractContext) {
 		return ""; //$NON-NLS-1$
 	}

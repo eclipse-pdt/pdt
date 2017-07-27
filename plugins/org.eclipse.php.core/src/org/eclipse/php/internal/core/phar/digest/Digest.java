@@ -23,7 +23,7 @@ public class Digest {
 	// public static final Digest SHA256 = new Digest("SHA256","0004");
 	// public static final Digest SHA512 = new Digest("SHA512 ","0008");
 	public static final NullMessageDigest NULL_DIGEST = new NullMessageDigest("NULL"); //$NON-NLS-1$
-	public static final Map<String, Digest> DIGEST_MAP = new HashMap<String, Digest>();
+	public static final Map<String, Digest> DIGEST_MAP = new HashMap<>();
 
 	static {
 		DIGEST_MAP.put(MD5.name, MD5);

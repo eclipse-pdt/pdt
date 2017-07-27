@@ -55,6 +55,7 @@ public class PHPBreakpointImageDescriptor extends CompositeImageDescriptor {
 	/**
 	 * @see Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object object) {
 		if (!(object instanceof PHPBreakpointImageDescriptor)) {
 			return false;
@@ -67,10 +68,12 @@ public class PHPBreakpointImageDescriptor extends CompositeImageDescriptor {
 	/**
 	 * @see Object#hashCode()
 	 */
+	@Override
 	public int hashCode() {
 		return getBaseImage().hashCode() | getFlags();
 	}
 
+	@Override
 	protected void drawCompositeImage(int width, int height) {
 		ImageData bg = getBaseImage().getImageData();
 		if (bg == null) {
@@ -101,6 +104,7 @@ public class PHPBreakpointImageDescriptor extends CompositeImageDescriptor {
 		return PHPDebugUIImages.getImageDescriptor(imageDescriptorKey).getImageData();
 	}
 
+	@Override
 	protected Point getSize() {
 		if (fSize == null) {
 			ImageData data = getBaseImage().getImageData();

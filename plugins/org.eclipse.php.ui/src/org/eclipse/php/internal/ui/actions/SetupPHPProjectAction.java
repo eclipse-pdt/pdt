@@ -54,7 +54,7 @@ public class SetupPHPProjectAction implements IObjectActionDelegate, IActionDele
 	private void install(final IProject project) {
 		IProgressService service = null;
 		if (fPart != null) {
-			service = (IProgressService) fPart.getSite().getService(IProgressService.class);
+			service = fPart.getSite().getService(IProgressService.class);
 		}
 		if (service == null) {
 			doInstall(project, null);

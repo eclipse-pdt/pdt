@@ -31,6 +31,7 @@ public class PHPVariableCellModifier extends DefaultVariableCellModifier impleme
 	 * Overrides the default cell modifier to support PHPVariables. (The method
 	 * returns the PHPValue.getValue() instead of getValueString()).
 	 */
+	@Override
 	public Object getValue(Object element, String property) {
 		if (VariableColumnPresentation.COLUMN_VARIABLE_VALUE.equals(property)) {
 			if (element instanceof PHPVariable) {

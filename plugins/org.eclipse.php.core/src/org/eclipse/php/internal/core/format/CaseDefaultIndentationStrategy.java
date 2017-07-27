@@ -36,6 +36,7 @@ public class CaseDefaultIndentationStrategy implements IIndentationStrategy {
 		this.indentationObject = indentationObject;
 	}
 
+	@Override
 	public void placeMatchingBlanks(IStructuredDocument document, StringBuilder result, int lineNumber, int offset)
 			throws BadLocationException {
 

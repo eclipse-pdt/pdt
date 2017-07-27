@@ -59,7 +59,6 @@ import org.eclipse.ui.PlatformUI;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class ZendDebuggerServerSettingsSection implements IDebuggerSettingsSection {
 
 	private IDebuggerSettingsWorkingCopy settingsWorkingCopy;
@@ -109,23 +108,24 @@ public class ZendDebuggerServerSettingsSection implements IDebuggerSettingsSecti
 	 * @see org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSection#
 	 * validate ()
 	 */
+	@Override
 	public void validate() {
 		// Reset state
 		compositeFragment.setMessage(compositeFragment.getDescription(), IMessageProvider.NONE);
 		// Check errors
-		String clientIp = (String) settingsWorkingCopy.getAttribute(PROP_CLIENT_IP);
+		String clientIp = settingsWorkingCopy.getAttribute(PROP_CLIENT_IP);
 		if (clientIp == null || clientIp.isEmpty()) {
 			compositeFragment.setMessage(Messages.ZendDebuggerServerSettingsSection_Client_IP_is_missing,
 					IMessageProvider.ERROR);
 			return;
 		}
-		String clientPort = (String) settingsWorkingCopy.getAttribute(PROP_CLIENT_PORT);
+		String clientPort = settingsWorkingCopy.getAttribute(PROP_CLIENT_PORT);
 		if (clientPort == null || clientPort.isEmpty()) {
 			compositeFragment.setMessage(Messages.ZendDebuggerServerSettingsSection_Client_port_is_missing,
 					IMessageProvider.ERROR);
 			return;
 		}
-		String responseTime = (String) settingsWorkingCopy.getAttribute(PROP_RESPONSE_TIMEOUT);
+		String responseTime = settingsWorkingCopy.getAttribute(PROP_RESPONSE_TIMEOUT);
 		Integer responseTimeout = null;
 		try {
 			responseTimeout = Integer.valueOf(responseTime);
@@ -147,6 +147,7 @@ public class ZendDebuggerServerSettingsSection implements IDebuggerSettingsSecti
 		// Check invalid addresses
 		if (!skipNetworkMonitor) {
 			networkMonitor.validate(clientHosts, new IHostsValidationListener[] { new IHostsValidationListener() {
+				@Override
 				public void validated(List<String> invalidAddresses) {
 					if (!invalidAddresses.isEmpty()) {
 						StringBuilder addresses = new StringBuilder();
@@ -166,6 +167,7 @@ public class ZendDebuggerServerSettingsSection implements IDebuggerSettingsSecti
 						}
 						final String warningMessage = message;
 						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+							@Override
 							public void run() {
 								if (!compositeFragment.isDisposed() && compositeFragment.isVisible()
 										&& compositeFragment.isComplete())
@@ -175,6 +177,7 @@ public class ZendDebuggerServerSettingsSection implements IDebuggerSettingsSecti
 					} else {
 						skipNetworkMonitor = true;
 						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+							@Override
 							public void run() {
 								if (!compositeFragment.isDisposed() && compositeFragment.isVisible())
 									validate();
@@ -288,6 +291,7 @@ public class ZendDebuggerServerSettingsSection implements IDebuggerSettingsSecti
 		clientIpText.setLayoutData(citLayoutData);
 		clientIpText.setText(settingsWorkingCopy.getAttribute(PROP_CLIENT_IP));
 		clientIpText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				String clientIp = clientIpText.getText();
 				settingsWorkingCopy.setAttribute(PROP_CLIENT_IP, clientIp);
@@ -301,10 +305,12 @@ public class ZendDebuggerServerSettingsSection implements IDebuggerSettingsSecti
 		Button configureIPs = SWTFactory.createPushButton(connectionGroup,
 				Messages.ZendDebuggerServerSettingsSection_Configure_button, null);
 		configureIPs.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				widgetDefaultSelected(e);
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				String clientIPs = getClientIPs(clientIpText.getText());
 				if (!clientIPs.isEmpty()) {
@@ -322,6 +328,7 @@ public class ZendDebuggerServerSettingsSection implements IDebuggerSettingsSecti
 		clientPortText.setLayoutData(cptLayoutData);
 		clientPortText.setText(settingsWorkingCopy.getAttribute(PROP_CLIENT_PORT));
 		clientPortText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				String port = clientPortText.getText();
 				settingsWorkingCopy.setAttribute(PROP_CLIENT_PORT, port);
@@ -337,6 +344,7 @@ public class ZendDebuggerServerSettingsSection implements IDebuggerSettingsSecti
 		responseTimeoutText.setLayoutData(rttLayoutData);
 		responseTimeoutText.setText(settingsWorkingCopy.getAttribute(PROP_RESPONSE_TIMEOUT));
 		responseTimeoutText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				String responseTimeout = responseTimeoutText.getText();
 				settingsWorkingCopy.setAttribute(PROP_RESPONSE_TIMEOUT, responseTimeout);
@@ -352,6 +360,7 @@ public class ZendDebuggerServerSettingsSection implements IDebuggerSettingsSecti
 			return null;
 		final StringBuilder bestMatches = new StringBuilder();
 		BusyIndicator.showWhile(PlatformUI.getWorkbench().getDisplay(), new Runnable() {
+			@Override
 			public void run() {
 				String proposals = (new ZendDebuggerHostProposalComputer()).computeProposals(server);
 				if (proposals != null)
@@ -362,8 +371,9 @@ public class ZendDebuggerServerSettingsSection implements IDebuggerSettingsSecti
 	}
 
 	private String getClientIPs(String userHosts) {
-		final List<Inet4Address> detectedIPs = new ArrayList<Inet4Address>();
+		final List<Inet4Address> detectedIPs = new ArrayList<>();
 		BusyIndicator.showWhile(PlatformUI.getWorkbench().getDisplay(), new Runnable() {
+			@Override
 			public void run() {
 				// Reset network monitor to have latest results
 				networkMonitor = new NetworkMonitor();
@@ -371,7 +381,7 @@ public class ZendDebuggerServerSettingsSection implements IDebuggerSettingsSecti
 			}
 		});
 		String[] userHostsArray = PHPDebugUtil.getZendHostsArray(userHosts);
-		List<Inet4Address> userIPs = new ArrayList<Inet4Address>();
+		List<Inet4Address> userIPs = new ArrayList<>();
 		for (String userHost : userHostsArray) {
 			Inet4Address address = NetworkUtil.getByName(userHost, 2000);
 			if (address != null)

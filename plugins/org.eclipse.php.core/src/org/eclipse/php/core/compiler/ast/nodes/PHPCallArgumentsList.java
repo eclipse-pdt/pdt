@@ -31,13 +31,15 @@ public class PHPCallArgumentsList extends CallArgumentsList {
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
+	@Override
 	public final void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		if (visitor.visit(this)) {
 			if (getChilds() != null) {
-				for (Iterator iter = getChilds().iterator(); iter.hasNext();) {
+				for (Iterator<?> iter = getChilds().iterator(); iter.hasNext();) {
 					ASTNode s = (ASTNode) iter.next();
 					s.traverse(visitor);
 				}
@@ -46,6 +48,7 @@ public class PHPCallArgumentsList extends CallArgumentsList {
 		}
 	}
 
+	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}

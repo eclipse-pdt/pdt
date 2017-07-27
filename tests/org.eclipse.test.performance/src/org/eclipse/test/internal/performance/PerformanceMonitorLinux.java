@@ -17,6 +17,9 @@ import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.eclipse.test.internal.performance.data.Dim;
+import org.eclipse.test.internal.performance.data.Scalar;
+
 class PerformanceMonitorLinux extends PerformanceMonitor {
 
 	private static long PAGESIZE= 4096;
@@ -28,7 +31,8 @@ class PerformanceMonitorLinux extends PerformanceMonitor {
 	 * Write out operating system counters for Linux.
 	 * @param scalars
 	 */
-	protected void collectOperatingSystemCounters(Map scalars) {
+	@Override
+	protected void collectOperatingSystemCounters(Map<Dim, Scalar> scalars) {
 		synchronized(this) {
 		    /**
 		     * The status values for a Linux process, that is the values that come from /proc/self/stat.
@@ -109,7 +113,8 @@ class PerformanceMonitorLinux extends PerformanceMonitor {
 	 * Write out the global machine counters for Linux.
 	 * @param scalars
 	 */
-	protected void collectGlobalPerformanceInfo(Map scalars) {
+	@Override
+	protected void collectGlobalPerformanceInfo(Map<Dim, Scalar> scalars) {
 		synchronized(this) {
 		    /**
 		     * The meminfo values for a Linux machine, that is the values that come from /proc/meminfo.

@@ -25,9 +25,11 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
  */
 public class OpenRemoteFileContentRequestor implements IRemoteFileContentRequestor {
 
+	@Override
 	public void fileContentReceived(final byte[] content, final String serverAddress, final String originalURL,
 			final String fileName, final int lineNumber) {
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				openInEditor(content, originalURL, fileName, lineNumber);
 			}
@@ -62,6 +64,7 @@ public class OpenRemoteFileContentRequestor implements IRemoteFileContentRequest
 		}
 	}
 
+	@Override
 	public void requestCompleted(Exception e) {
 		// Nothing to do here...
 	}

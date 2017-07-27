@@ -34,11 +34,12 @@ public class NamespaceExceptionClassInstantiationStrategy extends NamespaceClass
 		super(context);
 	}
 
+	@Override
 	public IType[] getTypes(NamespaceMemberContext context) throws BadLocationException {
 		IType exceptionType = getExceptionType();
 		if (exceptionType == null)
 			return super.getTypes(context);
-		List<IType> result = new LinkedList<IType>();
+		List<IType> result = new LinkedList<>();
 		ITypeHierarchy typeHierarchy;
 		ISourceModule sourceModule = context.getSourceModule();
 		IScriptProject scriptProject = sourceModule.getScriptProject();
@@ -50,7 +51,7 @@ public class NamespaceExceptionClassInstantiationStrategy extends NamespaceClass
 			}
 
 			IType[] classes = typeHierarchy.getAllSubtypes(exceptionType);
-			Set<IType> set = new HashSet<IType>();
+			Set<IType> set = new HashSet<>();
 			set.add(exceptionType);
 			set.addAll(Arrays.asList(classes));
 			// String prefix = context.getPrefix();
@@ -70,7 +71,7 @@ public class NamespaceExceptionClassInstantiationStrategy extends NamespaceClass
 			return super.getTypes(context);
 		}
 
-		return (IType[]) result.toArray(new IType[result.size()]);
+		return result.toArray(new IType[result.size()]);
 	}
 
 	protected IType getExceptionType() {

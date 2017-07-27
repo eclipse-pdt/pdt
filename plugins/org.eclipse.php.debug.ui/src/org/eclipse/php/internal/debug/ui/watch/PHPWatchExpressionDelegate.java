@@ -39,6 +39,7 @@ public class PHPWatchExpressionDelegate implements IWatchExpressionDelegate {
 	 * @see org.eclipse.debug.core.model.IWatchExpressionDelegate#getValue(java.lang.String,
 	 *      org.eclipse.debug.core.model.IDebugElement)
 	 */
+	@Override
 	public void evaluateExpression(String expression, IDebugElement context, IWatchExpressionListener listener) {
 		fExpressionText = expression;
 		fListener = listener;
@@ -77,6 +78,7 @@ public class PHPWatchExpressionDelegate implements IWatchExpressionDelegate {
 			setSystem(true);
 		}
 
+		@Override
 		public IStatus run(IProgressMonitor monitor) {
 
 			try {
@@ -112,28 +114,34 @@ public class PHPWatchExpressionDelegate implements IWatchExpressionDelegate {
 	}
 
 	private class PHPWatchExpressionResult implements IWatchExpressionResult, IWatchExpressionResultExtension {
+		@Override
 		public IValue getValue() {
 			Expression value = getExpression(debugTarget, fExpressionText);
 			IValue iValue = new PHPValue(debugTarget, value);
 			return iValue;
 		}
 
+		@Override
 		public boolean hasErrors() {
 			return false;
 		}
 
+		@Override
 		public String[] getErrorMessages() {
 			return null;
 		}
 
+		@Override
 		public String getExpressionText() {
 			return fExpressionText;
 		}
 
+		@Override
 		public DebugException getException() {
 			return null;
 		}
 
+		@Override
 		public IDebugTarget getDebugTarget() {
 			return debugTarget;
 		}

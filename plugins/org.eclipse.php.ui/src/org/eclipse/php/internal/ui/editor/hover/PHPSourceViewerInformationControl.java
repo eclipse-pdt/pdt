@@ -91,7 +91,7 @@ public class PHPSourceViewerInformationControl
 	 */
 	private int fMaxHeight = SWT.DEFAULT;
 
-	private Dictionary fContextStyleMap = null;
+	private Dictionary<?, ?> fContextStyleMap = null;
 	private IStructuredDocumentRegion fNodes = null;
 	private RegionParser fParser = null;
 	private LineStyleProviderForPHP styleProvider;
@@ -108,14 +108,14 @@ public class PHPSourceViewerInformationControl
 	 * @param newContextStyleMap
 	 *            java.util.Dictionary
 	 */
-	public void setContextStyleMap(Dictionary newContextStyleMap) {
+	public void setContextStyleMap(Dictionary<?, ?> newContextStyleMap) {
 		fContextStyleMap = newContextStyleMap;
 	}
 
 	/**
 	 * @return java.util.Dictionary
 	 */
-	public Dictionary getContextStyleMap() {
+	public Dictionary<?, ?> getContextStyleMap() {
 		return fContextStyleMap;
 	}
 
@@ -137,11 +137,11 @@ public class PHPSourceViewerInformationControl
 		}
 		IStructuredDocumentRegion node = fNodes;
 		final LineStyleProviderForPHP styler = new LineStyleProviderForPHP();
-		final Collection holdResults = new ArrayList();
+		final Collection<StyleRange> holdResults = new ArrayList<>();
 		styler.prepareTextRegions(node, 0, fNodes.getEnd(), holdResults);
 
-		for (Iterator iter = holdResults.iterator(); iter.hasNext();) {
-			StyleRange element = (StyleRange) iter.next();
+		for (Iterator<StyleRange> iter = holdResults.iterator(); iter.hasNext();) {
+			StyleRange element = iter.next();
 			fText.setStyleRange(element);
 		}
 	}
@@ -151,7 +151,7 @@ public class PHPSourceViewerInformationControl
 		setParser(mmanager.createStructuredDocumentFor(ContentTypeIdForPHP.ContentTypeID_PHP).getParser());
 
 		styleProvider = new LineStyleProviderForPHP();
-		Dictionary contextStyleMap = new Hashtable(styleProvider.getColorTypesMap());
+		Dictionary<?, ?> contextStyleMap = new Hashtable<Object, Object>(styleProvider.getColorTypesMap());
 
 		setContextStyleMap(contextStyleMap);
 	}
@@ -389,7 +389,7 @@ public class PHPSourceViewerInformationControl
 															// tag
 
 		// Update starting location of PHP token regions:
-		Iterator i = phpRegionsList.iterator();
+		Iterator<?> i = phpRegionsList.iterator();
 		while (i.hasNext()) {
 			ITextRegion tokenRegion = (ITextRegion) i.next();
 			tokenRegion.adjustStart(-2);

@@ -262,6 +262,7 @@ public interface IBinding {
 	 *            {@inheritDoc}
 	 * @return {@inheritDoc}
 	 */
+	@Override
 	public boolean equals(Object obj);
 
 	/**
@@ -288,5 +289,6 @@ public interface IBinding {
 	 *
 	 * @return a debug string
 	 */
+	@Override
 	public String toString();
 }

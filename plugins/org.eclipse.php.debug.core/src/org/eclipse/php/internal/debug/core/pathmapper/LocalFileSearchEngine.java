@@ -41,7 +41,6 @@ import org.eclipse.php.internal.server.core.manager.ServersManager;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class LocalFileSearchEngine {
 
 	private class PHPFilenameFilter implements FileFilter, IContentTypeChangeListener {
@@ -67,10 +66,12 @@ public class LocalFileSearchEngine {
 			phpFilePattern = Pattern.compile(buf.toString(), Pattern.CASE_INSENSITIVE);
 		}
 
+		@Override
 		public void contentTypeChanged(ContentTypeChangeEvent event) {
 			buildPHPFilePattern();
 		}
 
+		@Override
 		public boolean accept(File pathname) {
 			if (pathname.isDirectory() || phpFilePattern.matcher(pathname.getName()).matches()) {
 				return true;
@@ -114,16 +115,17 @@ public class LocalFileSearchEngine {
 		final PathMapper pathMapper = serverUniqueId != null
 				? PathMapperRegistry.getByServer(ServersManager.findServer(serverUniqueId)) : new PathMapper();
 		final VirtualPath abstractPath = new VirtualPath(remoteFilePath);
-		final SyncObject<LocalFileSearchResult> searchResult = new SyncObject<LocalFileSearchResult>();
+		final SyncObject<LocalFileSearchResult> searchResult = new SyncObject<>();
 		Job findJob = new Job(Messages.LocalFileSearchEngine_Searching_for_local_file) {
+			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				// First, look into the path mapper:
-				LinkedList<PathEntry> results = new LinkedList<PathEntry>();
+				LinkedList<PathEntry> results = new LinkedList<>();
 				IncludePath[] includePaths;
 				IBuildpathEntry[] buildPaths = null;
 				// Search in the whole workspace:
-				Set<IncludePath> s = new LinkedHashSet<IncludePath>();
-				Set<IBuildpathEntry> b = new LinkedHashSet<IBuildpathEntry>();
+				Set<IncludePath> s = new LinkedHashSet<>();
+				Set<IBuildpathEntry> b = new LinkedHashSet<>();
 				IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 				for (IProject project : projects) {
 					if (project.isOpen() && project.isAccessible()) {
@@ -276,8 +278,10 @@ public class LocalFileSearchEngine {
 			return;
 		}
 		WorkspaceJob findJob = new WorkspaceJob("") { //$NON-NLS-1$
+			@Override
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				resource.accept(new IResourceVisitor() {
+					@Override
 					public boolean visit(IResource resource) throws CoreException {
 						if (!resource.isAccessible()) {
 							return false;

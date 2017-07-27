@@ -26,7 +26,7 @@ public final class ChildPropertyDescriptor extends StructuralPropertyDescriptor 
 	 * Child type. For example, for a node type like CompilationUnit, the
 	 * "package" property is PackageDeclaration.class
 	 */
-	private final Class childClass;
+	private final Class<?> childClass;
 
 	/**
 	 * Indicates whether the child is mandatory. A child property is allowed to
@@ -58,7 +58,7 @@ public final class ChildPropertyDescriptor extends StructuralPropertyDescriptor 
 	 *            <code>true</code> if this property is at risk of cycles, and
 	 *            <code>false</code> if there is no worry about cycles
 	 */
-	ChildPropertyDescriptor(Class nodeClass, String propertyId, Class childType, boolean mandatory, boolean cycleRisk) {
+	ChildPropertyDescriptor(Class<?> nodeClass, String propertyId, Class<?> childType, boolean mandatory, boolean cycleRisk) {
 		super(nodeClass, propertyId);
 		if (childType == null || !ASTNode.class.isAssignableFrom(childType)) {
 			throw new IllegalArgumentException();
@@ -77,7 +77,7 @@ public final class ChildPropertyDescriptor extends StructuralPropertyDescriptor 
 	 * 
 	 * @return the child type of the property
 	 */
-	public final Class getChildType() {
+	public final Class<?> getChildType() {
 		return this.childClass;
 	}
 

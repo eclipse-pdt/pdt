@@ -36,6 +36,7 @@ public class LocalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	 *            the selected node (must be an {@link Identifier} instance)
 	 * @return returns a message if there is a problem
 	 */
+	@Override
 	public String initialize(Program root, ASTNode node) {
 		fASTRoot = root;
 		if (isIdendifier(node)) {
@@ -68,6 +69,7 @@ public class LocalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#
 	 * findOccurrences ()
 	 */
+	@Override
 	protected void findOccurrences() {
 		fDescription = Messages.format(CoreMessages.getString("LocalVariableOccurrencesFinder.1"), //$NON-NLS-1$
 				fIdentifier.getName());
@@ -80,6 +82,7 @@ public class LocalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.
 	 * eclipse .php.internal.core.ast.nodes.Variable)
 	 */
+	@Override
 	public boolean visit(Variable variable) {
 		Expression name = variable.getName();
 		if (name.getType() == ASTNode.IDENTIFIER
@@ -108,6 +111,7 @@ public class LocalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * getOccurrenceReadWriteType
 	 * (org.eclipse.php.internal.core.ast.nodes.ASTNode)
 	 */
+	@Override
 	protected int getOccurrenceType(ASTNode node) {
 		Variable variable = (Variable) node;
 		ASTNode parent = variable.getParent();
@@ -152,6 +156,7 @@ public class LocalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * @see
 	 * org.eclipse.php.internal.ui.search.IOccurrencesFinder#getElementName()
 	 */
+	@Override
 	public String getElementName() {
 		return fIdentifier.getName();
 	}
@@ -161,6 +166,7 @@ public class LocalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * 
 	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getID()
 	 */
+	@Override
 	public String getID() {
 		return ID;
 	}

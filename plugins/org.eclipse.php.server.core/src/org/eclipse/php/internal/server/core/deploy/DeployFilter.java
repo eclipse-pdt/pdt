@@ -24,7 +24,7 @@ public class DeployFilter {
 	private static final String[] BASIC_FILTERS = new String[] { ".settings", //$NON-NLS-1$
 			".project", ".cache", ".svn", "CVS" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	private static DeployFilter instance;
-	private Map filters;
+	private Map<String, String> filters;
 
 	private static DeployFilter getInstance() {
 		if (instance == null) {
@@ -34,7 +34,7 @@ public class DeployFilter {
 	}
 
 	private DeployFilter() {
-		filters = new HashMap();
+		filters = new HashMap<>();
 		for (int i = 0; i < BASIC_FILTERS.length; i++) {
 			filters.put(BASIC_FILTERS[i], BASIC_FILTERS[i]);
 		}
@@ -47,9 +47,9 @@ public class DeployFilter {
 	 * @return A Map that contains string keys and values of the resources that
 	 *         should be ignored in the deploy process.
 	 */
-	public static Map getFilterMap() {
+	public static Map<String, String> getFilterMap() {
 		DeployFilter filter = getInstance();
-		Map map = new HashMap(filter.filters);
+		Map<String, String> map = new HashMap<>(filter.filters);
 		return map;
 	}
 

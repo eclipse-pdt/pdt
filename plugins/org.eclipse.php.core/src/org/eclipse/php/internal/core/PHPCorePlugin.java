@@ -67,6 +67,7 @@ public class PHPCorePlugin extends Plugin {
 	/**
 	 * This method is called upon plug-in activation
 	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 
@@ -79,6 +80,7 @@ public class PHPCorePlugin extends Plugin {
 	 */
 	void initializeAfterStart() {
 		Job job = new Job("") { //$NON-NLS-1$
+			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 
 				// start the include path manager
@@ -130,6 +132,7 @@ public class PHPCorePlugin extends Plugin {
 		 * org.eclipse.core.resources.IResourceChangeListener#resourceChanged
 		 * (org.eclipse.core.resources.IResourceChangeEvent)
 		 */
+		@Override
 		public void resourceChanged(IResourceChangeEvent event) {
 			IResourceDelta delta = event.getDelta();
 			IResourceDelta[] affectedChildren = delta.getAffectedChildren();
@@ -151,6 +154,7 @@ public class PHPCorePlugin extends Plugin {
 	 */
 	private class ReindexOperationListener implements IResourceChangeListener {
 
+		@Override
 		public void resourceChanged(IResourceChangeEvent event) {
 			if (event.getBuildKind() == IncrementalProjectBuilder.CLEAN_BUILD) {
 				Object source = event.getSource();
@@ -278,7 +282,7 @@ public class PHPCorePlugin extends Plugin {
 		// merge the project build path with the old include path
 		IBuildpathEntry[] existingPath = scriptProject.getRawBuildpath();
 
-		ArrayList<IBuildpathEntry> newPath = new ArrayList<IBuildpathEntry>();
+		ArrayList<IBuildpathEntry> newPath = new ArrayList<>();
 		if (existingPath != null) {
 			newPath.addAll(Arrays.asList(existingPath));
 		}
@@ -302,6 +306,7 @@ public class PHPCorePlugin extends Plugin {
 	/**
 	 * This method is called when the plug-in is stopped
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 
 		Object[] listeners = shutdownListeners.getListeners();

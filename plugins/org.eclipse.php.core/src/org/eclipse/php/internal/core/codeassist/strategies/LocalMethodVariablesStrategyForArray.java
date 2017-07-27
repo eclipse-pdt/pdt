@@ -31,6 +31,7 @@ public class LocalMethodVariablesStrategyForArray extends AbstractCompletionStra
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws Exception {
 		ICompletionContext context = getContext();
 		if (!(context instanceof ArrayKeyContext)) {

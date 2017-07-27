@@ -106,14 +106,14 @@ public abstract class IncludepathRenameParticipant extends RenameParticipant {
 	 */
 	@Override
 	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
-		List changes = new ArrayList();
+		List<Change> changes = new ArrayList<>();
 		IResource resource = getBreakpointContainer();
 		gatherChanges(resource, changes, getArguments().getNewName());
 		if (changes.size() > 1) {
-			return new CompositeChange("", (Change[]) changes //$NON-NLS-1$
+			return new CompositeChange("", changes //$NON-NLS-1$
 					.toArray(new Change[changes.size()]));
 		} else if (changes.size() == 1) {
-			return (Change) changes.get(0);
+			return changes.get(0);
 		}
 		return null;
 	}
@@ -131,7 +131,7 @@ public abstract class IncludepathRenameParticipant extends RenameParticipant {
 	 * @throws CoreException
 	 * @throws OperationCanceledException
 	 */
-	protected abstract void gatherChanges(IResource resource, List changes, String destName)
+	protected abstract void gatherChanges(IResource resource, List<Change> changes, String destName)
 			throws CoreException, OperationCanceledException;
 
 	/**

@@ -124,18 +124,22 @@ public class RefactoringMoveAction extends AbstractMoveDelegator {
 				PHPRefactoringUIMessages.getString("RefactoringMoveAction.2")); //$NON-NLS-1$
 	}
 
+	@Override
 	public void dispose() {
 
 	}
 
+	@Override
 	public void init(IWorkbenchWindow window) {
 		fShellProvider = window;
 	}
 
+	@Override
 	public void run(IAction action) {
 		run(selectedResources);
 	}
 
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		if (selection instanceof IStructuredSelection) {
 			if (selection instanceof ITextSelection) {
@@ -148,6 +152,7 @@ public class RefactoringMoveAction extends AbstractMoveDelegator {
 		}
 	}
 
+	@Override
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		if (targetEditor == null) {
 			return;
@@ -159,6 +164,7 @@ public class RefactoringMoveAction extends AbstractMoveDelegator {
 		}
 	}
 
+	@Override
 	public void setTarget(IContainer target) {
 		this.target = target;
 	}

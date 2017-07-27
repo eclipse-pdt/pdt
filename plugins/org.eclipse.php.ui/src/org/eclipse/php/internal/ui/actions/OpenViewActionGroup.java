@@ -190,7 +190,7 @@ public class OpenViewActionGroup extends ActionGroup {
 	private String getShowInMenuLabel() {
 		String keyBinding = null;
 
-		IBindingService bindingService = (IBindingService) PlatformUI.getWorkbench().getAdapter(IBindingService.class);
+		IBindingService bindingService = PlatformUI.getWorkbench().getAdapter(IBindingService.class);
 		if (bindingService != null)
 			keyBinding = bindingService.getBestActiveBindingFormattedFor("org.eclipse.ui.navigate.showInQuickMenu"); //$NON-NLS-1$
 

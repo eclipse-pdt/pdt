@@ -1235,7 +1235,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		while (iter.hasNext()) {
 
 			interfacesStatus = new StatusInfo();
-			IType interfaceObj = (IType) iter.next();
+			IType interfaceObj = iter.next();
 
 			String interfaceName = interfaceObj.getElementName();
 

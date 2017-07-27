@@ -106,7 +106,7 @@ public class AutoDetectLibraryFolderJob extends WorkspaceJob {
 	 * @return an array of folder names
 	 */
 	private String[] getCommonLibraryFolderNames(IProject project) {
-		Collection<String> result = new HashSet<String>();
+		Collection<String> result = new HashSet<>();
 
 		IConfigurationElement[] elements = Platform.getExtensionRegistry()
 				.getConfigurationElementsFor(EXTENSION_POINT_ID);
@@ -146,7 +146,7 @@ public class AutoDetectLibraryFolderJob extends WorkspaceJob {
 	 * @return an array of folders
 	 */
 	private IFolder[] getFoldersFromNames(IProject project, String[] folderNames) {
-		Collection<IFolder> result = new HashSet<IFolder>();
+		Collection<IFolder> result = new HashSet<>();
 
 		for (String name : folderNames) {
 			IFolder folder = project.getFolder(name);

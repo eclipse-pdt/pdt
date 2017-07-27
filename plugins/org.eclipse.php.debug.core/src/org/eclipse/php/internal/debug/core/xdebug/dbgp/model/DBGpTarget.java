@@ -227,7 +227,7 @@ public class DBGpTarget extends DBGpElement
 	private IVariable[] superGlobalVars;
 
 	// used to cache dbgp commands to program while it is running
-	private Vector<DBGpBreakpointCmd> DBGpCmdQueue = new Vector<DBGpBreakpointCmd>();
+	private Vector<DBGpBreakpointCmd> DBGpCmdQueue = new Vector<>();
 
 	// dbgp session support
 	private volatile DBGpSession session;
@@ -321,6 +321,7 @@ public class DBGpTarget extends DBGpElement
 	 * 
 	 * @param launchMonitor
 	 */
+	@Override
 	public void waitForInitialSession(DBGpBreakpointFacade facade, DBGpPreferences sessionPrefs,
 			IProgressMonitor launchMonitor) {
 		configureInitialState(facade, sessionPrefs);
@@ -349,6 +350,7 @@ public class DBGpTarget extends DBGpElement
 		sessionReceived(null);
 	}
 
+	@Override
 	public void configureInitialState(DBGpBreakpointFacade facade, DBGpPreferences sessionPrefs) {
 		bpFacade = facade;
 		sessionPreferences = sessionPrefs;
@@ -541,6 +543,7 @@ public class DBGpTarget extends DBGpElement
 	 * 
 	 * @see org.eclipse.debug.core.model.IDebugTarget#getProcess()
 	 */
+	@Override
 	public IProcess getProcess() {
 		return process;
 	}
@@ -559,6 +562,7 @@ public class DBGpTarget extends DBGpElement
 	 * 
 	 * @see org.eclipse.debug.core.model.IDebugTarget#getThreads()
 	 */
+	@Override
 	public IThread[] getThreads() throws DebugException {
 		if (isTerminated() || hasState(STATE_STARTED_SESSION_WAIT))
 			return new IThread[0];
@@ -570,6 +574,7 @@ public class DBGpTarget extends DBGpElement
 	 * 
 	 * @see org.eclipse.debug.core.model.IDebugTarget#hasThreads()
 	 */
+	@Override
 	public boolean hasThreads() throws DebugException {
 		return getThreads().length > 0;
 	}
@@ -579,6 +584,7 @@ public class DBGpTarget extends DBGpElement
 	 * 
 	 * @see org.eclipse.debug.core.model.IDebugTarget#getName()
 	 */
+	@Override
 	public String getName() throws DebugException {
 		if (name == null) {
 			if (isWebLaunch() || multiSessionManaged) {
@@ -605,6 +611,7 @@ public class DBGpTarget extends DBGpElement
 	 * 
 	 * @see org.eclipse.debug.core.model.IDebugElement#getDebugTarget()
 	 */
+	@Override
 	public IDebugTarget getDebugTarget() {
 		return this;
 	}
@@ -614,6 +621,7 @@ public class DBGpTarget extends DBGpElement
 	 * 
 	 * @see org.eclipse.debug.core.model.IDebugElement#getLaunch()
 	 */
+	@Override
 	public ILaunch getLaunch() {
 		return launch;
 	}
@@ -623,6 +631,7 @@ public class DBGpTarget extends DBGpElement
 	 * 
 	 * @see org.eclipse.debug.core.model.ITerminate#canTerminate()
 	 */
+	@Override
 	public boolean canTerminate() {
 		return !hasState(STATE_TERMINATED, STATE_CREATE, STATE_DISCONNECTED);
 	}
@@ -633,6 +642,7 @@ public class DBGpTarget extends DBGpElement
 	 * @see org.eclipse.debug.core.model.ITerminate#isTerminated()
 	 */
 
+	@Override
 	public boolean isTerminated() {
 		return hasState(STATE_TERMINATED);
 	}
@@ -655,6 +665,7 @@ public class DBGpTarget extends DBGpElement
 	 * 
 	 * @see org.eclipse.debug.core.model.ITerminate#terminate()
 	 */
+	@Override
 	public void terminate() throws DebugException {
 		if (isTerminating()) {
 			// just in case we had some problem sending the stop command, allow
@@ -765,6 +776,7 @@ public class DBGpTarget extends DBGpElement
 			DebugPlugin.log(status);
 			if (!Display.getDefault().isDisposed()) {
 				Display.getDefault().asyncExec(new Runnable() {
+					@Override
 					public void run() {
 						MessageDialog.openError(Display.getDefault().getActiveShell(),
 								PHPDebugCoreMessages.XDebugMessage_debugError, errorMessage);
@@ -848,6 +860,7 @@ public class DBGpTarget extends DBGpElement
 	 * @see org.eclipse.debug.core.model.IMemoryBlockRetrieval#
 	 * supportsStorageRetrieval ()
 	 */
+	@Override
 	public boolean supportsStorageRetrieval() {
 		return false;
 	}
@@ -859,6 +872,7 @@ public class DBGpTarget extends DBGpElement
 	 * org.eclipse.debug.core.model.IMemoryBlockRetrieval#getMemoryBlock(long,
 	 * long)
 	 */
+	@Override
 	public IMemoryBlock getMemoryBlock(long startAddress, long length) throws DebugException {
 		return null;
 	}
@@ -868,6 +882,7 @@ public class DBGpTarget extends DBGpElement
 	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#canResume()
 	 */
+	@Override
 	public boolean canResume() {
 		return !isTerminated() && isSuspended();
 	}
@@ -877,6 +892,7 @@ public class DBGpTarget extends DBGpElement
 	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#canSuspend()
 	 */
+	@Override
 	public boolean canSuspend() {
 		return asyncSupported;
 	}
@@ -886,6 +902,7 @@ public class DBGpTarget extends DBGpElement
 	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#isSuspended()
 	 */
+	@Override
 	public boolean isSuspended() {
 		return hasState(STATE_STARTED_SUSPENDED);
 	}
@@ -895,6 +912,7 @@ public class DBGpTarget extends DBGpElement
 	 * 
 	 * @see org.eclipse.debug.core.model.IStep#canStepInto()
 	 */
+	@Override
 	public boolean canStepInto() {
 		return !isStepping() && isSuspended();
 	}
@@ -904,6 +922,7 @@ public class DBGpTarget extends DBGpElement
 	 * 
 	 * @see org.eclipse.debug.core.model.IStep#canStepOver()
 	 */
+	@Override
 	public boolean canStepOver() {
 		return !isStepping() && isSuspended();
 	}
@@ -913,6 +932,7 @@ public class DBGpTarget extends DBGpElement
 	 * 
 	 * @see org.eclipse.debug.core.model.IStep#canStepReturn()
 	 */
+	@Override
 	public boolean canStepReturn() {
 		// can only step return if there is a method above it, ie there is
 		// at least one stack frame above the current stack frame.
@@ -931,6 +951,7 @@ public class DBGpTarget extends DBGpElement
 	 * 
 	 * @see org.eclipse.debug.core.model.IStep#isStepping()
 	 */
+	@Override
 	public boolean isStepping() {
 		return stepping;
 	}
@@ -940,6 +961,7 @@ public class DBGpTarget extends DBGpElement
 	 * 
 	 * @see org.eclipse.debug.core.model.IStep#stepInto()
 	 */
+	@Override
 	public void stepInto() throws DebugException {
 		synchronized (commandMutex) {
 			if (!canStepInto())
@@ -955,6 +977,7 @@ public class DBGpTarget extends DBGpElement
 	 * 
 	 * @see org.eclipse.debug.core.model.IStep#stepOver()
 	 */
+	@Override
 	public void stepOver() throws DebugException {
 		synchronized (commandMutex) {
 			if (!canStepOver())
@@ -971,6 +994,7 @@ public class DBGpTarget extends DBGpElement
 	 * 
 	 * @see org.eclipse.debug.core.model.IStep#stepReturn()
 	 */
+	@Override
 	public void stepReturn() throws DebugException {
 		synchronized (commandMutex) {
 			if (!canStepReturn())
@@ -986,6 +1010,7 @@ public class DBGpTarget extends DBGpElement
 	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#resume()
 	 */
+	@Override
 	public void resume() throws DebugException {
 		synchronized (commandMutex) {
 			if (!canResume())
@@ -1008,6 +1033,7 @@ public class DBGpTarget extends DBGpElement
 	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#suspend()
 	 */
+	@Override
 	public void suspend() throws DebugException {
 		synchronized (sessionMutex) {
 			if (session != null && session.isActive()) {
@@ -1021,6 +1047,7 @@ public class DBGpTarget extends DBGpElement
 	 * 
 	 * @see org.eclipse.debug.core.model.IDisconnect#canDisconnect()
 	 */
+	@Override
 	public boolean canDisconnect() {
 		return hasState(STATE_STARTED_RUNNING, STATE_STARTED_SUSPENDED);
 	}
@@ -1030,6 +1057,7 @@ public class DBGpTarget extends DBGpElement
 	 * 
 	 * @see org.eclipse.debug.core.model.IDisconnect#disconnect()
 	 */
+	@Override
 	public void disconnect() throws DebugException {
 		if (isTerminating()) {
 			return;
@@ -1150,6 +1178,7 @@ public class DBGpTarget extends DBGpElement
 	 * 
 	 * @see org.eclipse.debug.core.model.IDisconnect#isDisconnected()
 	 */
+	@Override
 	public boolean isDisconnected() {
 		return hasState(STATE_DISCONNECTED, STATE_TERMINATED);
 	}
@@ -1420,7 +1449,7 @@ public class DBGpTarget extends DBGpElement
 		// If you cannot get a property, then a single variable is created with
 		// no information as their is a child node, if there are no variables
 		// this method creates a 0 size array which is good.
-		List<DBGpVariable> variables = new ArrayList<DBGpVariable>();
+		List<DBGpVariable> variables = new ArrayList<>();
 		if (DBGpUtils.isGoodDBGpResponse(this, resp) && resp.getErrorCode() == DBGpResponse.ERROR_OK) {
 			Node parent = resp.getParentNode();
 			NodeList properties = parent.getChildNodes();
@@ -1797,6 +1826,7 @@ public class DBGpTarget extends DBGpElement
 	 * org.eclipse.debug.core.model.IDebugTarget#supportsBreakpoint(org.eclipse
 	 * .debug.core.model.IBreakpoint)
 	 */
+	@Override
 	public boolean supportsBreakpoint(IBreakpoint breakpoint) {
 		if (breakpoint.getModelIdentifier().equals(IPHPDebugConstants.ID_PHP_DEBUG_CORE)) {
 			if (breakpoint instanceof IPHPExceptionBreakpoint)
@@ -1814,6 +1844,7 @@ public class DBGpTarget extends DBGpElement
 	 * org.eclipse.debug.core.IBreakpointListener#breakpointAdded(org.eclipse
 	 * .debug.core.model.IBreakpoint)
 	 */
+	@Override
 	public void breakpointAdded(IBreakpoint breakpoint) {
 		// attempt to add a breakpoint under the following conditions
 		// 1. breakpoint manager enabled
@@ -1938,6 +1969,7 @@ public class DBGpTarget extends DBGpElement
 	 * org.eclipse.debug.core.IBreakpointListener#breakpointRemoved(org.eclipse
 	 * .debug.core.model.IBreakpoint, org.eclipse.core.resources.IMarkerDelta)
 	 */
+	@Override
 	public void breakpointRemoved(IBreakpoint breakpoint, IMarkerDelta delta) {
 		if (supportsBreakpoint(breakpoint)) {
 			DBGpBreakpoint bp = bpFacade.createDBGpBreakpoint(breakpoint);
@@ -1992,6 +2024,7 @@ public class DBGpTarget extends DBGpElement
 	 * org.eclipse.debug.core.IBreakpointListener#breakpointChanged(org.eclipse
 	 * .debug.core.model.IBreakpoint, org.eclipse.core.resources.IMarkerDelta)
 	 */
+	@Override
 	public void breakpointChanged(IBreakpoint breakpoint, IMarkerDelta delta) {
 		IBreakpointManager bmgr = DebugPlugin.getDefault().getBreakpointManager();
 		if (!bmgr.isEnabled()) {
@@ -2101,6 +2134,7 @@ public class DBGpTarget extends DBGpElement
 	 * @seeorg.eclipse.debug.core.IBreakpointManagerListener#
 	 * breakpointManagerEnablementChanged(boolean)
 	 */
+	@Override
 	public void breakpointManagerEnablementChanged(boolean enabled) {
 		IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager()
 				.getBreakpoints(bpFacade.getBreakpointModelID());
@@ -2142,7 +2176,7 @@ public class DBGpTarget extends DBGpElement
 			if (DBGpCmdQueue.size() > 0) {
 
 				for (int i = DBGpCmdQueue.size() - 1; i >= 0 && !foundAdd; i--) {
-					DBGpBreakpointCmd entry = (DBGpBreakpointCmd) DBGpCmdQueue.get(i);
+					DBGpBreakpointCmd entry = DBGpCmdQueue.get(i);
 					if (entry.getCmd().equals(DBGpCommand.breakPointSet)) {
 						if (bpCmd.getBp().getFileName().equals(entry.getBp().getFileName())
 								&& bpCmd.getBp().getLineNumber() == entry.getBp().getLineNumber()) {
@@ -2183,7 +2217,7 @@ public class DBGpTarget extends DBGpElement
 		}
 
 		for (int i = 0; i < DBGpCmdQueue.size(); i++) {
-			DBGpBreakpointCmd bpCmd = (DBGpBreakpointCmd) DBGpCmdQueue.get(i);
+			DBGpBreakpointCmd bpCmd = DBGpCmdQueue.get(i);
 			if (bpCmd.getCmd().equals(DBGpCommand.breakPointSet)) {
 				sendBreakpointAddCmd(bpCmd.getBp());
 			} else if (bpCmd.getCmd().equals(DBGpCommand.breakPointRemove)) {
@@ -2199,6 +2233,7 @@ public class DBGpTarget extends DBGpElement
 	 * @see org.eclipse.php.xdebug.core.dbgp.session.DBGpSessionListener#
 	 * SessionCreated (org.eclipse.php.xdebug.core.session.DBGpSession)
 	 */
+	@Override
 	public boolean SessionCreated(DBGpSession session) {
 		// need to determine if the session is one we want, but only if we
 		// are looking for a session, this session may be for us but if
@@ -2253,6 +2288,7 @@ public class DBGpTarget extends DBGpElement
 	 * 
 	 * @return
 	 */
+	@Override
 	public boolean isWebLaunch() {
 		return webLaunch;
 	}
@@ -2322,6 +2358,7 @@ public class DBGpTarget extends DBGpElement
 		return DBGpPreferences.DBGP_SHOW_GLOBALS_DEFAULT;
 	}
 
+	@Override
 	public void setPathMapper(PathMapper pathMapper) {
 		this.pathMapper = pathMapper;
 	}
@@ -2351,6 +2388,7 @@ public class DBGpTarget extends DBGpElement
 		this.session = session;
 	}
 
+	@Override
 	public DebugOutput getOutputBuffer() {
 		return this.debugOutput;
 	}
@@ -2365,6 +2403,7 @@ public class DBGpTarget extends DBGpElement
 		return result;
 	}
 
+	@Override
 	public boolean isWaiting() {
 		return hasState(STATE_STARTED_SESSION_WAIT);
 	}

@@ -42,15 +42,18 @@ public class AddBreakpointRequest extends DebugMessageRequestImpl implements IDe
 		return breakPoint;
 	}
 
+	@Override
 	public int getType() {
 		return 21;
 	}
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		setBreakpoint(CommunicationUtilities.readBreakpoint(in));
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());

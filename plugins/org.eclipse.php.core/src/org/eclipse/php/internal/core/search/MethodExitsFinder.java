@@ -35,6 +35,7 @@ public class MethodExitsFinder extends AbstractOccurrencesFinder {
 	 *            the selected node
 	 * @return returns a message if there is a problem
 	 */
+	@Override
 	public String initialize(Program root, ASTNode node) {
 		fASTRoot = root;
 		fExitPointNode = node;
@@ -54,6 +55,7 @@ public class MethodExitsFinder extends AbstractOccurrencesFinder {
 				&& (node.getType() == ASTNode.RETURN_STATEMENT || node.getType() == ASTNode.THROW_STATEMENT);
 	}
 
+	@Override
 	protected void findOccurrences() {
 		fDescription = Messages.format(EXIT_POINT_OF, fFunctionDeclaration.getFunctionName().getName());
 		fFunctionDeclaration.accept(this);
@@ -87,49 +89,60 @@ public class MethodExitsFinder extends AbstractOccurrencesFinder {
 	 * getOccurrenceReadWriteType
 	 * (org.eclipse.php.internal.core.ast.nodes.ASTNode)
 	 */
+	@Override
 	protected int getOccurrenceType(ASTNode node) {
 		return IOccurrencesFinder.K_EXIT_POINT_OCCURRENCE;
 	}
 
+	@Override
 	public boolean visit(ReturnStatement node) {
 		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), getOccurrenceType(null), fDescription));
 		return super.visit(node);
 	}
 
+	@Override
 	public boolean visit(YieldExpression node) {
 		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), getOccurrenceType(null), fDescription));
 		return super.visit(node);
 	}
 
+	@Override
 	public boolean visit(ThrowStatement node) {
 		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), getOccurrenceType(null), fDescription));
 		return true;
 	}
 
+	@Override
 	public Program getASTRoot() {
 		return fASTRoot;
 	}
 
+	@Override
 	public String getElementName() {
 		return fFunctionDeclaration.getFunctionName().getName();
 	}
 
+	@Override
 	public String getID() {
 		return ID;
 	}
 
+	@Override
 	public String getJobLabel() {
 		return "MethodExitsFinder_job_label"; //$NON-NLS-1$
 	}
 
+	@Override
 	public int getSearchKind() {
 		return IOccurrencesFinder.K_EXIT_POINT_OCCURRENCE;
 	}
 
+	@Override
 	public String getUnformattedPluralLabel() {
 		return "MethodExitsFinder_label_plural"; //$NON-NLS-1$
 	}
 
+	@Override
 	public String getUnformattedSingularLabel() {
 		return "MethodExitsFinder_label_singular"; //$NON-NLS-1$
 	}

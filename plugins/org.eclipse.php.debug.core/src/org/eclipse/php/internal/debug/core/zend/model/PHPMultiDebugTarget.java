@@ -38,7 +38,7 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements IPHPDebugTar
 	private IProcess fProcess;
 	private boolean fTerminated = false;
 	protected DebugOutput fDebugOutput = new DebugOutput();
-	protected CopyOnWriteArrayList<IPHPDebugTarget> fDebugTargets = new CopyOnWriteArrayList<IPHPDebugTarget>();
+	protected CopyOnWriteArrayList<IPHPDebugTarget> fDebugTargets = new CopyOnWriteArrayList<>();
 
 	/**
 	 * Creates new multiple debug targets wrapper.
@@ -64,6 +64,7 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements IPHPDebugTar
 	 * 
 	 * @see org.eclipse.debug.core.model.DebugElement#getDebugTarget()
 	 */
+	@Override
 	public IDebugTarget getDebugTarget() {
 		return this;
 	}
@@ -97,7 +98,7 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements IPHPDebugTar
 	@Override
 	public IThread[] getThreads() throws DebugException {
 		// Collect threads from all sub-targets
-		List<IThread> threads = new ArrayList<IThread>();
+		List<IThread> threads = new ArrayList<>();
 		for (IPHPDebugTarget target : fDebugTargets)
 			if (target.hasThreads())
 				for (IThread thread : target.getThreads())

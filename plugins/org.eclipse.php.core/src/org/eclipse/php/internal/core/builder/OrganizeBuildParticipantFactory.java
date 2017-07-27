@@ -59,6 +59,7 @@ public class OrganizeBuildParticipantFactory extends AbstractBuildParticipantTyp
 
 	private String natureId = null;
 
+	@Override
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
 			throws CoreException {
 		natureId = config.getAttribute("nature"); //$NON-NLS-1$
@@ -116,12 +117,14 @@ public class OrganizeBuildParticipantFactory extends AbstractBuildParticipantTyp
 			this.doc = new Document(new String(context.getContents()));
 		}
 
+		@Override
 		public boolean visit(NamespaceDeclaration n) throws Exception {
 			currentNamespace = n;
 
 			return super.visit(n);
 		}
 
+		@Override
 		public boolean visit(UseStatement s) throws Exception {
 			if (this.statements.length == 0) {
 				return super.visit(s);

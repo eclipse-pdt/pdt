@@ -84,6 +84,7 @@ public class ResourceSorter extends ViewerSorter {
 	/*
 	 * (non-Javadoc) Method declared on ViewerSorter.
 	 */
+	@Override
 	public int compare(Viewer viewer, Object o1, Object o2) {
 		// have to deal with non-resources in navigator
 		// if one or both objects are not resources, returned a comparison

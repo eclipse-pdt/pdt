@@ -36,6 +36,7 @@ public class PHPTypeInferencer extends DefaultTypeInferencer implements IPHPType
 	 * @param goal
 	 * @return evaluated type
 	 */
+	@Override
 	public IEvaluatedType evaluateTypePHPDoc(AbstractTypeGoal goal, int timeout) {
 		return super.evaluateType(goal, new HeavyGoalsPruner(timeout));
 	}
@@ -46,10 +47,12 @@ public class PHPTypeInferencer extends DefaultTypeInferencer implements IPHPType
 	 * @param goal
 	 * @return evaluated type
 	 */
+	@Override
 	public IEvaluatedType evaluateTypePHPDoc(AbstractTypeGoal goal) {
 		return evaluateTypePHPDoc(goal, 3000);
 	}
 
+	@Override
 	public IEvaluatedType evaluateTypeHeavy(AbstractTypeGoal goal, int timeout) {
 		return super.evaluateType(goal, new PHPDocGoalsPruner(timeout));
 	}
@@ -63,6 +66,7 @@ public class PHPTypeInferencer extends DefaultTypeInferencer implements IPHPType
 			super(timeLimit);
 		}
 
+		@Override
 		public boolean prune(IGoal goal, EvaluatorStatistics stat) {
 			// here are heavy goals pruned
 			if (goal instanceof MethodElementReturnTypeGoal || goal instanceof ClassVariableDeclarationGoal) {
@@ -81,6 +85,7 @@ public class PHPTypeInferencer extends DefaultTypeInferencer implements IPHPType
 			super(timeLimit);
 		}
 
+		@Override
 		public boolean prune(IGoal goal, EvaluatorStatistics stat) {
 			// here are PHPDoc (liteweight) goals pruned
 			if (goal instanceof PHPDocMethodReturnTypeGoal || goal instanceof PHPDocClassVariableGoal) {

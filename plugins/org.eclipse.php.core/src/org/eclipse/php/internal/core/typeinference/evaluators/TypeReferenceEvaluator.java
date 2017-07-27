@@ -81,6 +81,7 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 		return "parent".equals(name); //$NON-NLS-1$
 	}
 
+	@Override
 	public IGoal[] init() {
 		final IContext context = goal.getContext();
 		String elementName = typeReference.getName();
@@ -103,12 +104,13 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 				final MethodDeclaration methodDecl = methodContext.getMethodNode();
 
 				// Look for parent class types:
-				final List<IEvaluatedType> types = new LinkedList<IEvaluatedType>();
+				final List<IEvaluatedType> types = new LinkedList<>();
 				try {
 					rootNode.traverse(new ASTVisitor() {
 						private TypeDeclaration currentType;
 						private boolean found;
 
+						@Override
 						public boolean visit(MethodDeclaration s) throws Exception {
 							if (s == methodDecl && currentType instanceof ClassDeclaration) {
 								ClassDeclaration classDecl = (ClassDeclaration) currentType;
@@ -116,7 +118,7 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 								ASTListNode superClasses = classDecl.getSuperClasses();
 								List<ASTNode> childs = superClasses.getChilds();
 								for (Iterator<ASTNode> iterator = childs.iterator(); iterator.hasNext();) {
-									ASTNode node = (ASTNode) iterator.next();
+									ASTNode node = iterator.next();
 									NamespaceReference namespace = null;
 									SimpleReference reference = null;
 									if (node instanceof SimpleReference) {
@@ -190,16 +192,19 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 							return !found;
 						}
 
+						@Override
 						public boolean visit(TypeDeclaration s) throws Exception {
 							this.currentType = s;
 							return !found;
 						}
 
+						@Override
 						public boolean endvisit(TypeDeclaration s) throws Exception {
 							this.currentType = null;
 							return super.endvisit(s);
 						}
 
+						@Override
 						public boolean visit(ASTNode n) throws Exception {
 							return !found;
 						}
@@ -291,10 +296,12 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 		return IGoal.NO_GOALS;
 	}
 
+	@Override
 	public Object produceResult() {
 		return result;
 	}
 
+	@Override
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		if (this.result instanceof PHPNamespaceConstantType) {
 			if (state == GoalState.PRUNED || result == null || result == UnknownType.INSTANCE) {

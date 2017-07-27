@@ -13,6 +13,7 @@ package org.eclipse.php.internal.ui.folding.html;
 
 import java.util.Map;
 
+import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.w3c.dom.Node;
 
@@ -27,10 +28,10 @@ class ProjectionAnnotationModelChanges {
 	// org.eclipse.jst.jsp.ui.internal.projection
 	private Node fNode;
 	private Annotation[] fDeletions;
-	private Map fAdditions;
+	private Map<Annotation, Position> fAdditions;
 	private Annotation[] fModifications;
 
-	public ProjectionAnnotationModelChanges(Node node, Annotation[] deletions, Map additions,
+	public ProjectionAnnotationModelChanges(Node node, Annotation[] deletions, Map<Annotation, Position> additions,
 			Annotation[] modifications) {
 		fNode = node;
 		fDeletions = deletions;
@@ -38,7 +39,7 @@ class ProjectionAnnotationModelChanges {
 		fModifications = modifications;
 	}
 
-	public Map getAdditions() {
+	public Map<? extends Annotation, ? extends Position> getAdditions() {
 		return fAdditions;
 	}
 

@@ -60,6 +60,7 @@ public class Include extends Reference {
 		}
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -68,6 +69,7 @@ public class Include extends Reference {
 		visitor.endvisit(this);
 	}
 
+	@Override
 	public int getKind() {
 		return ASTNodeKinds.INCLUDE;
 	}
@@ -80,6 +82,7 @@ public class Include extends Reference {
 		return includeType;
 	}
 
+	@Override
 	public String getStringRepresentation() {
 		return getType();
 	}
@@ -87,9 +90,11 @@ public class Include extends Reference {
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
+	@Override
 	public final void printNode(CorePrinter output) {
 	}
 
+	@Override
 	public String toString() {
 		return ASTPrintVisitor.toXMLString(this);
 	}

@@ -33,7 +33,7 @@ class PerformanceMonitor {
 		return fgPerformanceMonitor;
     }
 
-    protected void collectOperatingSystemCounters(Map scalars) {
+    protected void collectOperatingSystemCounters(Map<Dim, Scalar> scalars) {
         if (PerformanceTestPlugin.isOldDB()) {
             addScalar(scalars, InternalDimensions.SYSTEM_TIME, System.currentTimeMillis());
         } else {
@@ -43,11 +43,11 @@ class PerformanceMonitor {
         }
     }
 
-	protected void collectGlobalPerformanceInfo(Map scalars) {
+	protected void collectGlobalPerformanceInfo(Map<Dim, Scalar> scalars) {
 		// no default implementation
 	}
 	
-    void addScalar(Map scalars, Dim dimension, long value) {
+    void addScalar(Map<Dim, Scalar> scalars, Dim dimension, long value) {
         scalars.put(dimension, new Scalar(dimension, value));
     }
 }

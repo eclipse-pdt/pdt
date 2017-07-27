@@ -57,11 +57,13 @@ public class ParameterEditDialog extends StatusDialog {
 		fContext = context;
 	}
 
+	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText(RefactoringMessages.ParameterEditDialog_title);
 	}
 
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite result = (Composite) super.createDialogArea(parent);
 		GridLayout layout = (GridLayout) result.getLayout();
@@ -89,6 +91,7 @@ public class ParameterEditDialog extends StatusDialog {
 		fName.setLayoutData(gd);
 		fName.setText(newName);
 		fName.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				validate((Text) e.widget);
 			}
@@ -103,6 +106,7 @@ public class ParameterEditDialog extends StatusDialog {
 			fDefaultValue.setLayoutData(gd);
 			fDefaultValue.setText(fParameter.getDefaultValue());
 			fDefaultValue.addModifyListener(new ModifyListener() {
+				@Override
 				public void modifyText(ModifyEvent e) {
 					validate((Text) e.widget);
 				}
@@ -113,6 +117,7 @@ public class ParameterEditDialog extends StatusDialog {
 		return result;
 	}
 
+	@Override
 	protected void okPressed() {
 		if (fType != null) {
 			fParameter.setNewTypeName(fType.getText());

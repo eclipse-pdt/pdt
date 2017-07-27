@@ -32,7 +32,6 @@ import org.osgi.framework.Bundle;
 /**
  * Common implementation for server type descriptor.
  */
-@SuppressWarnings("restriction")
 public class ServerTypeDescriptor implements IServerTypeDescriptor {
 
 	private class Fragment {
@@ -120,7 +119,7 @@ public class ServerTypeDescriptor implements IServerTypeDescriptor {
 	public ICompositeFragmentFactory[] getWizardFragmentFactories() {
 		Map<String, ICompositeFragmentFactory> factories = WizardFragmentsFactoryRegistry
 				.getFragmentsFactories(FRAGMENT_GROUP_ID);
-		List<ICompositeFragmentFactory> result = new ArrayList<ICompositeFragmentFactory>();
+		List<ICompositeFragmentFactory> result = new ArrayList<>();
 		for (Fragment fragment : wizardFragments) {
 			ICompositeFragmentFactory factory = factories.get(fragment.getId());
 			if (factory != null) {
@@ -140,7 +139,7 @@ public class ServerTypeDescriptor implements IServerTypeDescriptor {
 	public ICompositeFragmentFactory[] getEditorFragmentFactories() {
 		Map<String, ICompositeFragmentFactory> factories = WizardFragmentsFactoryRegistry
 				.getFragmentsFactories(FRAGMENT_GROUP_ID);
-		List<ICompositeFragmentFactory> result = new ArrayList<ICompositeFragmentFactory>();
+		List<ICompositeFragmentFactory> result = new ArrayList<>();
 		for (Fragment fragment : editorFragments) {
 			ICompositeFragmentFactory factory = factories.get(fragment.getId());
 			if (factory != null) {
@@ -154,8 +153,8 @@ public class ServerTypeDescriptor implements IServerTypeDescriptor {
 		this.element = element;
 		this.id = element.getAttribute("id"); //$NON-NLS-1$
 		this.serverTypeId = element.getAttribute("serverTypeId"); //$NON-NLS-1$
-		this.wizardFragments = new ArrayList<Fragment>();
-		this.editorFragments = new ArrayList<Fragment>();
+		this.wizardFragments = new ArrayList<>();
+		this.editorFragments = new ArrayList<>();
 		for (IConfigurationElement child : element.getChildren()) {
 			if (child.getName().equals("wizard")) { //$NON-NLS-1$
 				for (IConfigurationElement wizardFragment : child.getChildren()) {

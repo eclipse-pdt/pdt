@@ -84,7 +84,7 @@ public class ContextManager {
 	}
 
 	private IStackFrame[] applyDebugFilters(IStackFrame[] previousFrames) {
-		ArrayList<IStackFrame> tempStackFrames = new ArrayList<IStackFrame>();
+		ArrayList<IStackFrame> tempStackFrames = new ArrayList<>();
 		for (int i = 0; i < previousFrames.length; i++) {
 			if (i == previousFrames.length - 1) {
 				String stackFrameName = ((PHPStackFrame) previousFrames[i]).getAbsoluteFileName();

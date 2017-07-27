@@ -21,6 +21,7 @@ public abstract class DebugMessageResponseImpl extends DebugMessageImpl implemen
 	/**
 	 * Set the response id.
 	 */
+	@Override
 	public void setID(int id) {
 		this.id = id;
 	}
@@ -28,6 +29,7 @@ public abstract class DebugMessageResponseImpl extends DebugMessageImpl implemen
 	/**
 	 * Return the response id.
 	 */
+	@Override
 	public int getID() {
 		return this.id;
 	}
@@ -35,6 +37,7 @@ public abstract class DebugMessageResponseImpl extends DebugMessageImpl implemen
 	/**
 	 * Set the response status.
 	 */
+	@Override
 	public void setStatus(int status) {
 		this.status = status;
 	}
@@ -42,6 +45,7 @@ public abstract class DebugMessageResponseImpl extends DebugMessageImpl implemen
 	/**
 	 * Return the response status.
 	 */
+	@Override
 	public int getStatus() {
 		return this.status;
 	}

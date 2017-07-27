@@ -116,6 +116,7 @@ public class DBGpLineBreakpoint implements DBGpBreakpoint {
 	 * 
 	 * @see org.eclipse.php.xdebug.core.dbgp.DBGpBreakpoint#getBreakpoint()
 	 */
+	@Override
 	public IBreakpoint getBreakpoint() {
 		return bp;
 	}
@@ -127,6 +128,7 @@ public class DBGpLineBreakpoint implements DBGpBreakpoint {
 	 * org.eclipse.php.xdebug.core.dbgp.DBGpBreakpoint#setBreakpoint(org.eclipse
 	 * .debug.core.model.IBreakpoint)
 	 */
+	@Override
 	public void setBreakpoint(IBreakpoint breakpoint) {
 		bp = (PHPLineBreakpoint) breakpoint;
 	}
@@ -136,6 +138,7 @@ public class DBGpLineBreakpoint implements DBGpBreakpoint {
 	 * 
 	 * @see org.eclipse.php.xdebug.core.dbgp.DBGpBreakpoint#getID()
 	 */
+	@Override
 	public int getID() {
 		return bp.getRuntimeBreakpoint().getID();
 	}
@@ -145,6 +148,7 @@ public class DBGpLineBreakpoint implements DBGpBreakpoint {
 	 * 
 	 * @see org.eclipse.php.xdebug.core.dbgp.DBGpBreakpoint#setID(int)
 	 */
+	@Override
 	public void setID(int id) {
 		bp.getRuntimeBreakpoint().setID(id);
 	}
@@ -154,6 +158,7 @@ public class DBGpLineBreakpoint implements DBGpBreakpoint {
 	 * 
 	 * @see org.eclipse.php.xdebug.core.dbgp.DBGpBreakpoint#isConditionChanged()
 	 */
+	@Override
 	public boolean hasConditionChanged() {
 		return bp.isConditionChanged();
 	}
@@ -164,6 +169,7 @@ public class DBGpLineBreakpoint implements DBGpBreakpoint {
 	 * @see org.eclipse.php.xdebug.core.dbgp.DBGpBreakpoint#setConditionChanged(
 	 * boolean )
 	 */
+	@Override
 	public void resetConditionChanged() {
 		bp.setConditionChanged(false);
 	}
@@ -173,6 +179,7 @@ public class DBGpLineBreakpoint implements DBGpBreakpoint {
 	 * 
 	 * @see org.eclipse.php.xdebug.core.dbgp.DBGpBreakpoint#getIFile()
 	 */
+	@Override
 	public IFile getIFile() {
 		return workspaceFile;
 	}
@@ -182,6 +189,7 @@ public class DBGpLineBreakpoint implements DBGpBreakpoint {
 	 * 
 	 * @see org.eclipse.php.xdebug.core.IDEBreakpoint#getFileName()
 	 */
+	@Override
 	public String getFileName() {
 		return bp.getRuntimeBreakpoint().getFileName();
 	}
@@ -191,6 +199,7 @@ public class DBGpLineBreakpoint implements DBGpBreakpoint {
 	 * 
 	 * @see org.eclipse.php.xdebug.core.IDEBreakpoint#getLineNumber()
 	 */
+	@Override
 	public int getLineNumber() {
 		return bp.getRuntimeBreakpoint().getLineNumber();
 	}
@@ -200,14 +209,17 @@ public class DBGpLineBreakpoint implements DBGpBreakpoint {
 	 * 
 	 * @see org.eclipse.php.xdebug.core.IDEBreakpoint#getExpression()
 	 */
+	@Override
 	public String getExpression() {
 		return bp.getRuntimeBreakpoint().getExpression();
 	}
 
+	@Override
 	public boolean isConditional() {
 		return (bp instanceof PHPConditionalBreakpoint);
 	}
 
+	@Override
 	public boolean isConditionEnabled() {
 		if (isConditional()) {
 			return ((PHPConditionalBreakpoint) bp).isConditionEnabled();

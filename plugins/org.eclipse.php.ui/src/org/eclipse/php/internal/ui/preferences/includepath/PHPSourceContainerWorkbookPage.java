@@ -48,7 +48,7 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 	public class OpenBuildPathWizardAction extends AbstractOpenWizardAction implements IPropertyChangeListener {
 
 		private final BuildPathWizard fWizard;
-		private final List fSelectedElements;
+		private final List<?> fSelectedElements;
 
 		public OpenBuildPathWizardAction(BuildPathWizard wizard) {
 			fWizard = wizard;
@@ -79,7 +79,7 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 		}
 
 		protected void finishWizard() {
-			List insertedElements = fWizard.getInsertedElements();
+			List<?> insertedElements = fWizard.getInsertedElements();
 			refresh(insertedElements, fWizard.getRemovedElements(), fWizard.getModifiedElements());
 
 			if (insertedElements.isEmpty()) {
@@ -90,9 +90,8 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 	}
 
 	protected static AddSourceFolderWizard newSourceFolderWizard(BPListElement element,
-			List/* <BPListElement> */ existingElements, boolean newFolder) {
-		BPListElement[] existing = (BPListElement[]) existingElements
-				.toArray(new BPListElement[existingElements.size()]);
+			List<BPListElement> existingElements, boolean newFolder) {
+		BPListElement[] existing = existingElements.toArray(new BPListElement[existingElements.size()]);
 		AddSourceFolderWizard wizard = new AddSourceFolderWizard(existing, element, false, newFolder, newFolder,
 				newFolder ? BPListElement.isProjectSourceFolder(existing, element.getScriptProject()) : false,
 				newFolder);
@@ -101,9 +100,8 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 	}
 
 	private static AddSourceFolderWizard newLinkedSourceFolderWizard(BPListElement element,
-			List/* <BPListElement> */ existingElements, boolean newFolder) {
-		BPListElement[] existing = (BPListElement[]) existingElements
-				.toArray(new BPListElement[existingElements.size()]);
+			List<BPListElement> existingElements, boolean newFolder) {
+		BPListElement[] existing = existingElements.toArray(new BPListElement[existingElements.size()]);
 		AddSourceFolderWizard wizard = new AddSourceFolderWizard(existing, element, true, newFolder, newFolder,
 				newFolder ? BPListElement.isProjectSourceFolder(existing, element.getScriptProject()) : false,
 				newFolder);
@@ -111,16 +109,14 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 		return wizard;
 	}
 
-	private static EditFilterWizard newEditFilterWizard(BPListElement element,
-			List/* <BPListElement> */ existingElements) {
-		BPListElement[] existing = (BPListElement[]) existingElements
-				.toArray(new BPListElement[existingElements.size()]);
+	private static EditFilterWizard newEditFilterWizard(BPListElement element, List<BPListElement> existingElements) {
+		BPListElement[] existing = existingElements.toArray(new BPListElement[existingElements.size()]);
 		EditFilterWizard result = new EditFilterWizard(existing, element);
 		result.setDoFlushChange(false);
 		return result;
 	}
 
-	protected ListDialogField fBuildpathList;
+	protected ListDialogField<BPListElement> fBuildpathList;
 	protected IScriptProject fCurrJProject;
 
 	private Control fSWTControl;
@@ -131,7 +127,7 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 	private final int IDX_EDIT = 3;
 	private final int IDX_REMOVE = 4;
 
-	protected List<IChangeListener> addedElementListeners = new ArrayList<IChangeListener>(1);
+	protected List<IChangeListener> addedElementListeners = new ArrayList<>(1);
 
 	protected int getIDX_ADD() {
 		return IDX_ADD;
@@ -149,7 +145,7 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 		return IDX_REMOVE;
 	}
 
-	public PHPSourceContainerWorkbookPage(ListDialogField buildpathList) {
+	public PHPSourceContainerWorkbookPage(ListDialogField<BPListElement> buildpathList) {
 		fBuildpathList = buildpathList;
 		fSWTControl = null;
 	}
@@ -195,9 +191,9 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 	}
 
 	protected void updateFoldersList() {
-		ArrayList folders = new ArrayList();
+		ArrayList<BPListElement> folders = new ArrayList<>();
 
-		List cpelements = fBuildpathList.getElements();
+		List<?> cpelements = fBuildpathList.getElements();
 		for (int i = 0; i < cpelements.size(); i++) {
 			BPListElement cpe = (BPListElement) cpelements.get(i);
 			if (cpe.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
@@ -207,7 +203,7 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 		fFoldersList.setElements(folders);
 
 		for (int i = 0; i < folders.size(); i++) {
-			BPListElement cpe = (BPListElement) folders.get(i);
+			BPListElement cpe = folders.get(i);
 			IPath[] ePatterns = (IPath[]) cpe.getAttribute(BPListElement.EXCLUSION);
 			IPath[] iPatterns = (IPath[]) cpe.getAttribute(BPListElement.INCLUSION);
 			if (ePatterns.length > 0 || iPatterns.length > 0) {
@@ -233,7 +229,7 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 		fSWTControl = composite;
 
 		// expand
-		List elements = fFoldersList.getElements();
+		List<?> elements = fFoldersList.getElements();
 		for (int i = 0; i < elements.size(); i++) {
 			BPListElement elem = (BPListElement) elements.get(i);
 			IPath[] exclusionPatterns = (IPath[]) elem.getAttribute(BPListElement.EXCLUSION);
@@ -309,7 +305,7 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 	protected void sourcePageKeyPressed(TreeListDialogField field, KeyEvent event) {
 		if (field == fFoldersList) {
 			if (event.character == SWT.DEL && event.stateMask == 0) {
-				List selection = field.getSelectedElements();
+				List<?> selection = field.getSelectedElements();
 				if (canRemove(selection)) {
 					removeEntry();
 				}
@@ -319,7 +315,7 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 
 	protected void sourcePageDoubleClicked(TreeListDialogField field) {
 		if (field == fFoldersList) {
-			List selection = field.getSelectedElements();
+			List<?> selection = field.getSelectedElements();
 			if (canEdit(selection)) {
 				editEntry();
 			}
@@ -331,9 +327,8 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 			if (index == getIDX_ADD()) {
 				IProject project = fCurrJProject.getProject();
 				if (project.exists() && hasFolders(project)) {
-					List existingElements = fFoldersList.getElements();
-					BPListElement[] existing = (BPListElement[]) existingElements
-							.toArray(new BPListElement[existingElements.size()]);
+					List<?> existingElements = fFoldersList.getElements();
+					BPListElement[] existing = existingElements.toArray(new BPListElement[existingElements.size()]);
 					CreateMultipleSourceFoldersDialog dialog = new CreateMultipleSourceFoldersDialog(fCurrJProject,
 							existing, getShell());
 					if (dialog.open() == Window.OK) {
@@ -373,7 +368,7 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 			// ignore
 		}
 
-		List elements = fFoldersList.getElements();
+		List<?> elements = fFoldersList.getElements();
 		if (elements.size() > 1)
 			return true;
 
@@ -388,7 +383,7 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 	}
 
 	private void editEntry() {
-		List selElements = fFoldersList.getSelectedElements();
+		List<?> selElements = fFoldersList.getSelectedElements();
 		if (selElements.size() != 1) {
 			return;
 		}
@@ -435,7 +430,7 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 	}
 
 	protected void sourcePageSelectionChanged(DialogField field) {
-		List selected = fFoldersList.getSelectedElements();
+		List<?> selected = fFoldersList.getSelectedElements();
 		fFoldersList.enableButton(getIDX_EDIT(), canEdit(selected));
 		fFoldersList.enableButton(getIDX_REMOVE(), canRemove(selected));
 		boolean noAttributes = containsOnlyTopLevelEntries(selected);
@@ -443,7 +438,7 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 	}
 
 	protected void removeEntry() {
-		List selElements = fFoldersList.getSelectedElements();
+		List<?> selElements = fFoldersList.getSelectedElements();
 		for (int i = selElements.size() - 1; i >= 0; i--) {
 			Object elem = selElements.get(i);
 			if (elem instanceof BPListElementAttribute) {
@@ -461,12 +456,12 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 			fFoldersList.refresh();
 			fBuildpathList.dialogFieldChanged(); // validate
 		} else {
-			for (Iterator iter = selElements.iterator(); iter.hasNext();) {
+			for (Iterator<?> iter = selElements.iterator(); iter.hasNext();) {
 				BPListElement element = (BPListElement) iter.next();
 				if (element.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
-					List list = BuildpathModifier.removeFilters(element.getPath(), fCurrJProject,
+					List<?> list = BuildpathModifier.removeFilters(element.getPath(), fCurrJProject,
 							fFoldersList.getElements());
-					for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+					for (Iterator<?> iterator = list.iterator(); iterator.hasNext();) {
 						BPListElement modified = (BPListElement) iterator.next();
 						fFoldersList.refresh(modified);
 						fFoldersList.expandElement(modified, 3);
@@ -477,7 +472,7 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 		}
 	}
 
-	protected boolean canRemove(List selElements) {
+	protected boolean canRemove(List<?> selElements) {
 		if (selElements.size() == 0) {
 			return false;
 		}
@@ -507,7 +502,7 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 		return true;
 	}
 
-	private boolean canEdit(List selElements) {
+	private boolean canEdit(List<?> selElements) {
 		if (selElements.size() != 1) {
 			return false;
 		}
@@ -536,16 +531,17 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void updateBuildpathList() {
-		List srcelements = fFoldersList.getElements();
+		List<BPListElement> srcelements = fFoldersList.getElements();
 
-		List cpelements = fBuildpathList.getElements();
+		List<BPListElement> cpelements = fBuildpathList.getElements();
 		int nEntries = cpelements.size();
 		// backwards, as entries will be deleted
 		int lastRemovePos = nEntries;
 		int afterLastSourcePos = 0;
 		for (int i = nEntries - 1; i >= 0; i--) {
-			BPListElement cpe = (BPListElement) cpelements.get(i);
+			BPListElement cpe = cpelements.get(i);
 			int kind = cpe.getEntryKind();
 			if (isEntryKind(kind)) {
 				if (!srcelements.remove(cpe)) {
@@ -571,13 +567,14 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 	 * @see BuildPathBasePage#getSelection
 	 */
 	@Override
-	public List getSelection() {
+	public List<?> getSelection() {
 		return fFoldersList.getSelectedElements();
 	}
 
 	/*
 	 * @see BuildPathBasePage#setSelection
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void setSelection(List selElements, boolean expand) {
 		fFoldersList.selectElements(new StructuredSelection(selElements));
@@ -593,16 +590,16 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 		return kind == IBuildpathEntry.BPE_SOURCE;
 	}
 
-	protected void refresh(List insertedElements, List removedElements, List modifiedElements) {
+	protected void refresh(List<?> insertedElements, List<?> removedElements, List<?> modifiedElements) {
 		fFoldersList.addElements(insertedElements);
-		for (Iterator iter = insertedElements.iterator(); iter.hasNext();) {
+		for (Iterator<?> iter = insertedElements.iterator(); iter.hasNext();) {
 			BPListElement element = (BPListElement) iter.next();
 			fFoldersList.expandElement(element, 3);
 		}
 
 		fFoldersList.removeElements(removedElements);
 
-		for (Iterator iter = modifiedElements.iterator(); iter.hasNext();) {
+		for (Iterator<?> iter = modifiedElements.iterator(); iter.hasNext();) {
 			BPListElement element = (BPListElement) iter.next();
 			fFoldersList.refresh(element);
 			fFoldersList.expandElement(element, 3);

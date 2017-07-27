@@ -56,6 +56,7 @@ public class DaemonPlugin extends Plugin {
 	/**
 	 * This method is called upon plug-in activation
 	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		initializeAfterStart(context);
@@ -72,6 +73,7 @@ public class DaemonPlugin extends Plugin {
 			return;
 		}
 		Job job = new Job("") { //$NON-NLS-1$
+			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				startDaemons(null);
 				return Status.OK_STATUS;
@@ -157,6 +159,7 @@ public class DaemonPlugin extends Plugin {
 	/**
 	 * This method is called when the plug-in is stopped
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		plugin = null;

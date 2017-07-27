@@ -101,6 +101,7 @@ public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
 	 * org.eclipse.ui.dialogs.ElementTreeSelectionDialog#createDialogArea(org
 	 * .eclipse.swt.widgets.Composite)
 	 */
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		if (!fAllowExternalFiles) {
 			return super.createDialogArea(parent);
@@ -128,6 +129,7 @@ public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
 
 		// Add a listener
 		fExternalFilesBt.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				updateView(fExternalFilesBt.getSelection());
 			}
@@ -148,6 +150,7 @@ public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
 	 * 
 	 * @see org.eclipse.ui.dialogs.SelectionStatusDialog#okPressed()
 	 */
+	@Override
 	protected void okPressed() {
 		// Save the external files visibility state into the preferences.
 		if (fExternalFilesBt != null) {

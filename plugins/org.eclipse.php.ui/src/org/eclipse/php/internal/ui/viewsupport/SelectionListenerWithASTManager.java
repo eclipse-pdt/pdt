@@ -54,7 +54,7 @@ public class SelectionListenerWithASTManager {
 		private ISelectionListener fPostSelectionListener;
 		private ISelectionChangedListener fSelectionListener;
 		private Job fCurrentJob;
-		private ListenerList fAstListeners;
+		private ListenerList<ISelectionListenerWithAST> fAstListeners;
 		/**
 		 * Lock to avoid having more than one calculateAndInform job in
 		 * parallel. Only jobs may synchronize on this as otherwise deadlocks
@@ -65,7 +65,7 @@ public class SelectionListenerWithASTManager {
 		public PartListenerGroup(ITextEditor editorPart) {
 			fPart = editorPart;
 			fCurrentJob = null;
-			fAstListeners = new ListenerList(ListenerList.IDENTITY);
+			fAstListeners = new ListenerList<>(ListenerList.IDENTITY);
 
 			fSelectionListener = new ISelectionChangedListener() {
 				@Override

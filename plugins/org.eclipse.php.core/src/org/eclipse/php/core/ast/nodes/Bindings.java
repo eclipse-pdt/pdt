@@ -237,11 +237,11 @@ public class Bindings {
 	 */
 	public static IMethodBinding[] findAbstractMethodsInHierarchy(ITypeBinding type) {
 
-		List<IMethodBinding> methodsToOVerride = new ArrayList<IMethodBinding>();
-		Set<String> overridenMethodsNames = new HashSet<String>();
+		List<IMethodBinding> methodsToOVerride = new ArrayList<>();
+		Set<String> overridenMethodsNames = new HashSet<>();
 		collectAbstractMethodsInHierarchy(type, methodsToOVerride, overridenMethodsNames);
 
-		return (IMethodBinding[]) methodsToOVerride.toArray(new IMethodBinding[methodsToOVerride.size()]);
+		return methodsToOVerride.toArray(new IMethodBinding[methodsToOVerride.size()]);
 	}
 
 	private static void collectAbstractMethodsInHierarchy(ITypeBinding curr, List<IMethodBinding> methodsToOverride,
@@ -426,13 +426,13 @@ public class Bindings {
 	 * @return all super types (excluding <code>type</code>)
 	 */
 	public static ITypeBinding[] getAllSuperTypes(ITypeBinding type) {
-		Set result = new HashSet();
+		Set<ITypeBinding> result = new HashSet<>();
 		collectSuperTypes(type, result);
 		result.remove(type);
-		return (ITypeBinding[]) result.toArray(new ITypeBinding[result.size()]);
+		return result.toArray(new ITypeBinding[result.size()]);
 	}
 
-	private static void collectSuperTypes(ITypeBinding curr, Set collection) {
+	private static void collectSuperTypes(ITypeBinding curr, Set<ITypeBinding> collection) {
 		if (collection.add(curr)) {
 			ITypeBinding[] interfaces = curr.getInterfaces();
 			for (int i = 0; i < interfaces.length; i++) {

@@ -30,11 +30,13 @@ public class ServerWizardFragment extends CompositeWizardFragment {
 	 * 
 	 * @see org.eclipse.wst.server.ui.task.WizardFragment#createComposite()
 	 */
+	@Override
 	public Composite createComposite(Composite parent, IWizardHandle wizard) {
 		comp = new ServerCompositeFragment(parent, new WizardControlWrapper(wizard), false);
 		return comp;
 	}
 
+	@Override
 	public Composite getComposite() {
 		return comp;
 	}
@@ -44,6 +46,7 @@ public class ServerWizardFragment extends CompositeWizardFragment {
 	 * 
 	 * @see org.eclipse.wst.server.ui.wizard.WizardFragment#enter()
 	 */
+	@Override
 	public void enter() {
 		if (comp != null) {
 			try {
@@ -65,6 +68,7 @@ public class ServerWizardFragment extends CompositeWizardFragment {
 	 * 
 	 * @see org.eclipse.wst.server.ui.wizard.WizardFragment#isComplete()
 	 */
+	@Override
 	public boolean isComplete() {
 		if (comp == null) {
 			return false;
@@ -77,6 +81,7 @@ public class ServerWizardFragment extends CompositeWizardFragment {
 	 * 
 	 * @see org.eclipse.wst.server.ui.wizard.WizardFragment#exit()
 	 */
+	@Override
 	public void exit() {
 		if (comp != null) {
 			comp.performApply();
@@ -92,6 +97,7 @@ public class ServerWizardFragment extends CompositeWizardFragment {
 	 * org.eclipse.php.internal.server.ui.wizard.WizardFragment#performFinish
 	 * (org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public boolean performFinish(IProgressMonitor monitor) throws CoreException {
 		boolean result = super.performFinish(monitor);
 		if (comp != null) {
@@ -107,6 +113,7 @@ public class ServerWizardFragment extends CompositeWizardFragment {
 	 * org.eclipse.php.internal.server.ui.wizard.WizardFragment#performCancel
 	 * (org.eclipse.core.runtime.IProgressMonitor)
 	 */
+	@Override
 	public void performCancel(IProgressMonitor monitor) throws CoreException {
 		super.performCancel(monitor);
 		// Clear any added server

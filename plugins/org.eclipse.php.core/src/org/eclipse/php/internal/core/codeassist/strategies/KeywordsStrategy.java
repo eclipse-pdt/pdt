@@ -40,6 +40,7 @@ public abstract class KeywordsStrategy extends GlobalElementStrategy {
 		super(context);
 	}
 
+	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 
 		ICompletionContext context = getContext();
@@ -65,6 +66,7 @@ public abstract class KeywordsStrategy extends GlobalElementStrategy {
 		}
 	}
 
+	@Override
 	public ISourceRange getReplacementRange(ICompletionContext context) throws BadLocationException {
 		if (!isInsertMode()) {
 			return getReplacementRangeWithSpaceAtPrefixEnd(context);

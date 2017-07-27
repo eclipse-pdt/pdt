@@ -33,11 +33,12 @@ public class ExceptionClassInstantiationStrategy extends AbstractClassInstantiat
 		super(context);
 	}
 
+	@Override
 	protected IType[] getTypes(AbstractCompletionContext context) throws BadLocationException {
 		IType exceptionType = getExceptionType();
 		if (exceptionType == null)
 			return super.getTypes(context);
-		List<IType> result = new LinkedList<IType>();
+		List<IType> result = new LinkedList<>();
 		ITypeHierarchy typeHierarchy;
 		ISourceModule sourceModule = context.getSourceModule();
 		IScriptProject scriptProject = sourceModule.getScriptProject();
@@ -49,7 +50,7 @@ public class ExceptionClassInstantiationStrategy extends AbstractClassInstantiat
 			}
 
 			IType[] classes = typeHierarchy.getAllSubtypes(exceptionType);
-			Set<IType> set = new HashSet<IType>();
+			Set<IType> set = new HashSet<>();
 			set.add(exceptionType);
 			set.addAll(Arrays.asList(classes));
 			String prefix = context.getPrefix();
@@ -69,7 +70,7 @@ public class ExceptionClassInstantiationStrategy extends AbstractClassInstantiat
 			return super.getTypes(context);
 		}
 
-		return (IType[]) result.toArray(new IType[result.size()]);
+		return result.toArray(new IType[result.size()]);
 	}
 
 	protected IType getExceptionType() {

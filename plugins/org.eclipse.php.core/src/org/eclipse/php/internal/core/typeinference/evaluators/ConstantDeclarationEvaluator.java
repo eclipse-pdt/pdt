@@ -45,12 +45,13 @@ import org.eclipse.php.internal.core.typeinference.goals.ConstantDeclarationGoal
 
 public class ConstantDeclarationEvaluator extends GoalEvaluator {
 
-	private List<IEvaluatedType> evaluatedTypes = new LinkedList<IEvaluatedType>();
+	private List<IEvaluatedType> evaluatedTypes = new LinkedList<>();
 
 	public ConstantDeclarationEvaluator(IGoal goal) {
 		super(goal);
 	}
 
+	@Override
 	public IGoal[] init() {
 		ConstantDeclarationGoal typedGoal = (ConstantDeclarationGoal) goal;
 		String constantName = typedGoal.getConstantName();
@@ -67,7 +68,7 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 		if (scope == null) {
 			scope = SearchEngine.createWorkspaceScope(PHPLanguageToolkit.getDefault());
 		}
-		Set<IModelElement> elements = new HashSet<IModelElement>();
+		Set<IModelElement> elements = new HashSet<>();
 		if (typedGoal.getContext() instanceof NamespaceContext) {
 			String fullName = PHPModelUtils.concatFullyQualifiedNames(typeName, constantName);
 			if (fullName.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
@@ -99,9 +100,10 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 			}
 		}
 
-		Map<ISourceModule, SortedSet<ISourceRange>> offsets = new HashMap<ISourceModule, SortedSet<ISourceRange>>();
+		Map<ISourceModule, SortedSet<ISourceRange>> offsets = new HashMap<>();
 
 		Comparator<ISourceRange> sourceRangeComparator = new Comparator<ISourceRange>() {
+			@Override
 			public int compare(ISourceRange o1, ISourceRange o2) {
 				return o1.getOffset() - o2.getOffset();
 			}
@@ -112,7 +114,7 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 				IField field = (IField) element;
 				ISourceModule sourceModule = field.getSourceModule();
 				if (!offsets.containsKey(sourceModule)) {
-					offsets.put(sourceModule, new TreeSet<ISourceRange>(sourceRangeComparator));
+					offsets.put(sourceModule, new TreeSet<>(sourceRangeComparator));
 				}
 				try {
 					offsets.get(sourceModule).add(field.getSourceRange());
@@ -122,7 +124,7 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 			}
 		}
 
-		List<IGoal> subGoals = new LinkedList<IGoal>();
+		List<IGoal> subGoals = new LinkedList<>();
 		for (Entry<ISourceModule, SortedSet<ISourceRange>> entry : offsets.entrySet()) {
 			final ISourceModule sourceModule = entry.getKey();
 			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
@@ -144,10 +146,12 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 		return subGoals.toArray(new IGoal[subGoals.size()]);
 	}
 
+	@Override
 	public Object produceResult() {
 		return PHPTypeInferenceUtils.combineTypes(evaluatedTypes);
 	}
 
+	@Override
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		if (state != GoalState.RECURSIVE && result != null) {
 			evaluatedTypes.add((IEvaluatedType) result);
@@ -162,7 +166,7 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 		private int currentStart;
 		private int currentEnd;
 		private boolean stopProcessing;
-		private List<Scalar> declarations = new LinkedList<Scalar>();
+		private List<Scalar> declarations = new LinkedList<>();
 
 		public ConstantDeclarationSearcher(SortedSet<ISourceRange> offsets, String constantName) {
 			this.constantName = constantName;
@@ -221,6 +225,7 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 			return visitGeneral(node);
 		}
 
+		@Override
 		public boolean visit(Expression node) throws Exception {
 			if (!interesting(node)) {
 				return false;
@@ -231,6 +236,7 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 			return visitGeneral(node);
 		}
 
+		@Override
 		public boolean endvisit(Statement s) throws Exception {
 			if (s instanceof ConstantDeclaration) {
 				return visit((ConstantDeclaration) s);
@@ -238,6 +244,7 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 			return visitGeneral(s);
 		}
 
+		@Override
 		public boolean visitGeneral(ASTNode node) throws Exception {
 			return interesting(node);
 		}

@@ -132,6 +132,7 @@ public class StateStack implements Cloneable {
 		return stack[index];
 	}
 
+	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder(50);
 		for (int i = 0; i <= lastIn; i++) {

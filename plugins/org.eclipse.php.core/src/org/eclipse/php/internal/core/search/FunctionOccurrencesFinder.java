@@ -28,7 +28,7 @@ public class FunctionOccurrencesFinder extends AbstractOccurrencesFinder {
 	private String functionName;
 	private ASTNode erroneousNode;
 	private Identifier nameNode;
-	private Map<Identifier, String> nodeToFullName = new HashMap<Identifier, String>();
+	private Map<Identifier, String> nodeToFullName = new HashMap<>();
 
 	// private String nameSpace;
 
@@ -39,6 +39,7 @@ public class FunctionOccurrencesFinder extends AbstractOccurrencesFinder {
 	 *            the selected node (must be an {@link Identifier} instance)
 	 * @return returns a message if there is a problem
 	 */
+	@Override
 	public String initialize(Program root, ASTNode node) {
 		fASTRoot = root;
 		fProblems = getProblems(root);
@@ -48,7 +49,7 @@ public class FunctionOccurrencesFinder extends AbstractOccurrencesFinder {
 			if (nameNode.getParent() instanceof NamespaceName) {
 				nameNode = (NamespaceName) nameNode.getParent();
 			}
-			functionName = ((Identifier) nameNode).getName();
+			functionName = nameNode.getName();
 			// functionName = getFullName(root, identifier);
 			if (hasProblems(node.getStart(), node.getEnd())) {
 				erroneousNode = node;
@@ -65,6 +66,7 @@ public class FunctionOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#
 	 * findOccurrences ()
 	 */
+	@Override
 	protected void findOccurrences() {
 		fDescription = Messages.format(BASE_DESCRIPTION, functionName + BRACKETS);
 		if (erroneousNode != null) {
@@ -89,6 +91,7 @@ public class FunctionOccurrencesFinder extends AbstractOccurrencesFinder {
 	/**
 	 * Visit the function declaration
 	 */
+	@Override
 	public boolean visit(FunctionDeclaration functionDeclaration) {
 		// Handle nesting functions that might be nested inside a method
 		// declaration
@@ -112,6 +115,7 @@ public class FunctionOccurrencesFinder extends AbstractOccurrencesFinder {
 	/**
 	 * skip static call invocation, and add to changes list the global calls
 	 */
+	@Override
 	public boolean visit(FunctionInvocation functionInvocation) {
 		final Expression functionName = functionInvocation.getFunctionName().getName();
 		final int invocationParent = functionInvocation.getParent().getType();
@@ -137,6 +141,7 @@ public class FunctionOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * getOccurrenceReadWriteType
 	 * (org.eclipse.php.internal.core.ast.nodes.ASTNode)
 	 */
+	@Override
 	protected int getOccurrenceType(ASTNode node) {
 		return IOccurrencesFinder.F_READ_OCCURRENCE;
 	}
@@ -147,6 +152,7 @@ public class FunctionOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * @see
 	 * org.eclipse.php.internal.ui.search.IOccurrencesFinder#getElementName()
 	 */
+	@Override
 	public String getElementName() {
 		return functionName;
 	}
@@ -156,6 +162,7 @@ public class FunctionOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * 
 	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getID()
 	 */
+	@Override
 	public String getID() {
 		return ID;
 	}

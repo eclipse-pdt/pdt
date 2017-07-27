@@ -47,6 +47,7 @@ public class ExpressionValue implements IPHPDataType {
 		this.childrenCount = childrenCount;
 	}
 
+	@Override
 	public DataType getDataType() {
 		return type;
 	}
@@ -77,11 +78,12 @@ public class ExpressionValue implements IPHPDataType {
 
 	public static Expression[] sort(Expression[] children) {
 		if (PHPProjectPreferences.isSortByName()) {
-			List<Expression> list = new ArrayList<Expression>();
+			List<Expression> list = new ArrayList<>();
 			for (Expression expression : children) {
 				list.add(expression);
 			}
 			Collections.sort(list, new Comparator<Expression>() {
+				@Override
 				public int compare(Expression o1, Expression o2) {
 					String o1name = o1.getLastName();
 					int o1idx = o1name.lastIndexOf(':');

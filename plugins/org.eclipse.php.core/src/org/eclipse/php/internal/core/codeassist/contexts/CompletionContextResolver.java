@@ -51,7 +51,7 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 			// creating multiple instances of resolvers
 			// in worst case
 
-			List<ICompletionContextResolver> resolvers = new LinkedList<ICompletionContextResolver>();
+			List<ICompletionContextResolver> resolvers = new LinkedList<>();
 			IConfigurationElement[] elements = Platform.getExtensionRegistry()
 					.getConfigurationElementsFor("org.eclipse.php.core.completionContextResolvers"); //$NON-NLS-1$
 			for (IConfigurationElement element : elements) {
@@ -64,12 +64,13 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 				}
 			}
 			resolvers.add(new CompletionContextResolver()); // add default
-			instances = (ICompletionContextResolver[]) resolvers
+			instances = resolvers
 					.toArray(new ICompletionContextResolver[resolvers.size()]);
 		}
 		return instances;
 	}
 
+	@Override
 	public ICompletionContext[] createContexts() {
 		return new ICompletionContext[] { new PHPDocTagStartContext(), new PHPDocThrowsStartContext(),
 				new PHPDocParamTagContext(), new PHPDocReturnTagContext(), new PHPDocMagicTagsContext(),
@@ -88,9 +89,10 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 				new NamespacePHPDocVarStartContext(), new QuotesContext() };
 	}
 
+	@Override
 	public ICompletionContext[] resolve(ISourceModule sourceModule, int offset, CompletionRequestor requestor,
 			CompletionCompanion companion) {
-		List<ICompletionContext> result = new LinkedList<ICompletionContext>();
+		List<ICompletionContext> result = new LinkedList<>();
 		ICompletionContext[] contexts;
 		if (requestor instanceof CompletionRequestorExtension) {
 			contexts = ((CompletionRequestorExtension) requestor).createContexts();
@@ -112,7 +114,7 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 
 		// remove exclusive contexts:
 		if (result.size() > 1) {
-			List<ICompletionContext> filteredResult = new LinkedList<ICompletionContext>();
+			List<ICompletionContext> filteredResult = new LinkedList<>();
 			for (ICompletionContext context : result) {
 				if (!context.isExclusive()) {
 					filteredResult.add(context);

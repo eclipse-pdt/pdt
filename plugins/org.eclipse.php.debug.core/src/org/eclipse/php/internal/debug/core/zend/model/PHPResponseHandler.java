@@ -22,6 +22,7 @@ public class PHPResponseHandler {
 	public class StartResponseHandler
 			implements org.eclipse.php.internal.debug.core.zend.debugger.Debugger.StartResponseHandler {
 
+		@Override
 		public void started(boolean success) {
 			if (!success)
 				Logger.log(Logger.ERROR, "PHPResponseHandler: StartResponseHandler failed"); //$NON-NLS-1$
@@ -32,6 +33,7 @@ public class PHPResponseHandler {
 	public class BreakpointAddedResponseHandler
 			implements org.eclipse.php.internal.debug.core.zend.debugger.Debugger.BreakpointAddedResponseHandler {
 
+		@Override
 		public void breakpointAdded(String fileName, int lineNumber, int id, boolean success) {
 			String info = "Filename: " + fileName + " lineNumber " + lineNumber //$NON-NLS-1$ //$NON-NLS-2$
 					+ " id: " + id; //$NON-NLS-1$
@@ -63,6 +65,7 @@ public class PHPResponseHandler {
 	public class BreakpointRemovedResponseHandler
 			implements org.eclipse.php.internal.debug.core.zend.debugger.Debugger.BreakpointRemovedResponseHandler {
 
+		@Override
 		public void breakpointRemoved(int id, boolean success) {
 			/**
 			 * Commented, because breakpoint may be removed twice: once it's
@@ -80,6 +83,7 @@ public class PHPResponseHandler {
 	public class StepIntoResponseHandler
 			implements org.eclipse.php.internal.debug.core.zend.debugger.Debugger.StepIntoResponseHandler {
 
+		@Override
 		public void stepInto(boolean success) {
 			if (!success)
 				Logger.log(Logger.ERROR, "PHPResponseHandler: StepIntoResponseHandler failed"); //$NON-NLS-1$
@@ -91,6 +95,7 @@ public class PHPResponseHandler {
 	public class StepOverResponseHandler
 			implements org.eclipse.php.internal.debug.core.zend.debugger.Debugger.StepOverResponseHandler {
 
+		@Override
 		public void stepOver(boolean success) {
 			if (!success)
 				Logger.log(Logger.ERROR, "PHPResponseHandler: StepOverResponseHandler failed"); //$NON-NLS-1$
@@ -102,6 +107,7 @@ public class PHPResponseHandler {
 	public class StepOutResponseHandler
 			implements org.eclipse.php.internal.debug.core.zend.debugger.Debugger.StepOutResponseHandler {
 
+		@Override
 		public void stepOut(boolean success) {
 			if (!success)
 				Logger.log(Logger.ERROR, "PHPResponseHandler: StepOutResponseHandler failed"); //$NON-NLS-1$
@@ -113,6 +119,7 @@ public class PHPResponseHandler {
 	public class GoResponseHandler
 			implements org.eclipse.php.internal.debug.core.zend.debugger.Debugger.GoResponseHandler {
 
+		@Override
 		public void go(boolean success) {
 			if (!success)
 				Logger.log(Logger.ERROR, "PHPResponseHandler: GoResponseHandler failed"); //$NON-NLS-1$
@@ -124,6 +131,7 @@ public class PHPResponseHandler {
 	public class PauseResponseHandler
 			implements org.eclipse.php.internal.debug.core.zend.debugger.Debugger.PauseResponseHandler {
 
+		@Override
 		public void pause(boolean success) {
 			if (!success)
 				Logger.log(Logger.ERROR, "PHPResponseHandler: PauseResponseHandler failed"); //$NON-NLS-1$
@@ -135,6 +143,7 @@ public class PHPResponseHandler {
 	public class AddFilesResponseHandler
 			implements org.eclipse.php.internal.debug.core.zend.debugger.Debugger.AddFilesResponseHandler {
 
+		@Override
 		public void addFiles(boolean success) {
 			if (!success)
 				Logger.log(Logger.ERROR, "PHPResponseHandler: AddFilesResponseHandler failed"); //$NON-NLS-1$

@@ -32,6 +32,7 @@ class ElementDialogOpener implements Runnable {
 	// return result;
 	// }
 	//
+	@Override
 	public void run() {
 		//		OpenPhpElementDialog dialog = new OpenPhpElementDialog(Display.getDefault().getActiveShell(), MessageFormat.format(PHPRefactoringCoreMessages.getString("ElementDialogOpener.Choose"), new String[] { file.getFullPath().toString() })); //$NON-NLS-1$
 		// dialog.setInitialElements(initialElements);

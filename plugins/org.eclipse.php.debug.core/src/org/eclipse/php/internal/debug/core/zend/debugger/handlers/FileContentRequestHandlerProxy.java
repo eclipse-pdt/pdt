@@ -35,6 +35,7 @@ public class FileContentRequestHandlerProxy implements IDebugRequestHandler {
 	 * org.eclipse.php.debug.core.debugger.messages.IDebugMessage,
 	 * org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget)
 	 */
+	@Override
 	public void handle(IDebugMessage message, PHPDebugTarget debugTarget) {
 		this.debugTarget = debugTarget;
 		getHandler().handle(message, debugTarget);
@@ -46,6 +47,7 @@ public class FileContentRequestHandlerProxy implements IDebugRequestHandler {
 	 * @see org.eclipse.php.debug.core.debugger.handlers.IDebugRequestHandler#
 	 * getResponseMessage()
 	 */
+	@Override
 	public IDebugResponseMessage getResponseMessage() {
 		return getHandler().getResponseMessage();
 	}

@@ -22,7 +22,7 @@ public class PHPHyperLink {
 
 	public void addLink(IHyperlink link, String message, int length) {
 		if (fLinks == null) {
-			fLinks = new Vector<HyperlinkEntry>();
+			fLinks = new Vector<>();
 		}
 		HyperlinkEntry hLink = new HyperlinkEntry(link, message, length);
 		fLinks.add(hLink);

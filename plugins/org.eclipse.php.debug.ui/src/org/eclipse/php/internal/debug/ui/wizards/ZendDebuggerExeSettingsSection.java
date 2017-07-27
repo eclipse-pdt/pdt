@@ -39,7 +39,6 @@ import org.eclipse.swt.widgets.Text;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class ZendDebuggerExeSettingsSection implements IDebuggerSettingsSection {
 
 	protected IDebuggerSettingsWorkingCopy settingsWorkingCopy;
@@ -105,7 +104,7 @@ public class ZendDebuggerExeSettingsSection implements IDebuggerSettingsSection 
 			compositeFragment.setMessage(debuggerStatus.getMessage(), IMessageProvider.ERROR);
 			return;
 		}
-		String clientPort = (String) settingsWorkingCopy.getAttribute(PROP_CLIENT_PORT);
+		String clientPort = settingsWorkingCopy.getAttribute(PROP_CLIENT_PORT);
 		if (clientPort == null || clientPort.isEmpty()) {
 			compositeFragment.setMessage(Messages.ZendDebuggerExeSettingsSection_Client_port_is_missing,
 					IMessageProvider.ERROR);
@@ -167,6 +166,7 @@ public class ZendDebuggerExeSettingsSection implements IDebuggerSettingsSection 
 		clientPortText.setLayoutData(cptLayoutData);
 		clientPortText.setText(settingsWorkingCopy.getAttribute(PROP_CLIENT_PORT));
 		clientPortText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				String port = clientPortText.getText();
 				settingsWorkingCopy.setAttribute(PROP_CLIENT_PORT, port);

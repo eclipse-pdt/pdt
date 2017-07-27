@@ -40,7 +40,7 @@ import org.osgi.service.prefs.BackingStoreException;
 public class ModelAccess implements NamespaceResolverInterface {
 	private PackageManager packageManager = null;
 	private static ModelAccess instance = null;
-	private Map<String, Psr> psr0Map = new HashMap<String, Psr>();
+	private Map<String, Psr> psr0Map = new HashMap<>();
 
 	private ModelAccess() {
 		try {
@@ -84,7 +84,7 @@ public class ModelAccess implements NamespaceResolverInterface {
 					continue;
 				}
 				String path = (String) object;
-				if (root.toString().startsWith((String) path)) {
+				if (root.toString().startsWith(path)) {
 					String replacement = path;
 					if (!replacement.endsWith("/")) { //$NON-NLS-1$
 						replacement += "/"; //$NON-NLS-1$

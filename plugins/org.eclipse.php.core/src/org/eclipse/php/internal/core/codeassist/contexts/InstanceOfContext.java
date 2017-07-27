@@ -30,6 +30,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
  */
 public class InstanceOfContext extends StatementContext {
 
+	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
@@ -47,6 +48,7 @@ public class InstanceOfContext extends StatementContext {
 		return false;
 	}
 
+	@Override
 	public String getPrefix() throws BadLocationException {
 		String prefix = super.getPrefix();
 		if (prefix.length() > 0 && prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {

@@ -188,19 +188,19 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 
 				// configure the buildpath entries, including the default
 				// InterpreterEnvironment library.
-				List cpEntries = new ArrayList();
+				List<IBuildpathEntry> cpEntries = new ArrayList<>();
 				cpEntries.add(DLTKCore.newSourceEntry(projectPath.append(srcPath)));
 
-				buildpathEntries = (IBuildpathEntry[]) cpEntries.toArray(new IBuildpathEntry[cpEntries.size()]);
+				buildpathEntries = cpEntries.toArray(new IBuildpathEntry[cpEntries.size()]);
 				includepathEntries = new IncludePath[] {
 						new IncludePath(getProject().getFolder(srcPath), getProject()) };
 			} else {
 				// flat project layout
 				IPath projectPath = getProject().getFullPath();
-				List cpEntries = new ArrayList();
+				List<IBuildpathEntry> cpEntries = new ArrayList<>();
 				cpEntries.add(DLTKCore.newSourceEntry(projectPath));
 
-				buildpathEntries = (IBuildpathEntry[]) cpEntries.toArray(new IBuildpathEntry[cpEntries.size()]);
+				buildpathEntries = cpEntries.toArray(new IBuildpathEntry[cpEntries.size()]);
 				includepathEntries = setProjectBaseIncludepath();
 
 				monitor.worked(20);

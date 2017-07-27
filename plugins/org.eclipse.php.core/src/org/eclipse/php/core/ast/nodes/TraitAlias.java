@@ -59,7 +59,7 @@ public class TraitAlias extends Expression {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(1);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<>(1);
 		propertyList.add(TRAIT_METHOD);
 		propertyList.add(MODIFIER);
 		propertyList.add(FUNCTION_NAME);
@@ -109,6 +109,7 @@ public class TraitAlias extends Expression {
 		postReplaceChild(oldChild, functionName, FUNCTION_NAME);
 	}
 
+	@Override
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -117,6 +118,7 @@ public class TraitAlias extends Expression {
 		visitor.endVisit(this);
 	}
 
+	@Override
 	public void childrenAccept(Visitor visitor) {
 		traitMethod.accept(visitor);
 		if (functionName != null) {
@@ -125,6 +127,7 @@ public class TraitAlias extends Expression {
 
 	}
 
+	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		traitMethod.traverseTopDown(visitor);
@@ -133,6 +136,7 @@ public class TraitAlias extends Expression {
 		}
 	}
 
+	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		traitMethod.traverseBottomUp(visitor);
 		if (functionName != null) {
@@ -141,6 +145,7 @@ public class TraitAlias extends Expression {
 		accept(visitor);
 	}
 
+	@Override
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<TraitAlias"); //$NON-NLS-1$
 		appendInterval(buffer);
@@ -153,6 +158,7 @@ public class TraitAlias extends Expression {
 		buffer.append(tab).append("</TraitAlias>"); //$NON-NLS-1$
 	}
 
+	@Override
 	public int getType() {
 		return ASTNode.TRAIT_ALIAS;
 	}
@@ -160,6 +166,7 @@ public class TraitAlias extends Expression {
 	/*
 	 * Method declared on ASTNode.
 	 */
+	@Override
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
@@ -207,6 +214,7 @@ public class TraitAlias extends Expression {
 		return super.internalGetSetIntProperty(property, get, value);
 	}
 
+	@Override
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == TRAIT_METHOD) {
 			if (get) {

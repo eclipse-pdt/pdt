@@ -27,6 +27,7 @@ import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 
 public class ReadyNotificationHandler implements IDebugMessageHandler {
 
+	@Override
 	public void handle(IDebugMessage message, PHPDebugTarget debugTarget) {
 		ReadyNotification readyNotification = (ReadyNotification) message;
 

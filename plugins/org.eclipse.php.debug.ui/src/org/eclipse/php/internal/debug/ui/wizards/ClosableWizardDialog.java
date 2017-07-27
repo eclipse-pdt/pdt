@@ -29,6 +29,7 @@ public class ClosableWizardDialog extends WizardDialog {
 	/**
 	 * The Finish button has been pressed.
 	 */
+	@Override
 	public void finishPressed() {
 		super.finishPressed();
 	}

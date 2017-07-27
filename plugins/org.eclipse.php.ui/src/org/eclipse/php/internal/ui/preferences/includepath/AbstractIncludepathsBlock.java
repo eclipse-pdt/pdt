@@ -113,7 +113,7 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 				NewWizardMessages.BuildPathsBlock_buildpath_down_button, /* 2 */null,
 				NewWizardMessages.BuildPathsBlock_buildpath_checkall_button,
 				NewWizardMessages.BuildPathsBlock_buildpath_uncheckall_button };
-		fBuildPathList = new ListDialogField(null, buttonLabels, new PHPIPListLabelProvider());
+		fBuildPathList = new ListDialogField<>(null, buttonLabels, new PHPIPListLabelProvider());
 		// fBuildPathList.setDialogFieldListener(adapter);
 		fBuildPathList.setLabelText(NewWizardMessages.BuildPathsBlock_buildpath_label);
 		fBuildPathList.setUpButtonIndex(0);
@@ -249,7 +249,7 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 		}
 		List<BPListElement> exportedEntries = new ArrayList<>();
 		for (int i = 0; i < newBuildpath.size(); i++) {
-			BPListElement curr = (BPListElement) newBuildpath.get(i);
+			BPListElement curr = newBuildpath.get(i);
 			if (curr.isExported() || curr.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
 				exportedEntries.add(curr);
 			}
@@ -691,7 +691,7 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 
 	// ---------- util method ------------
 	private IContainer chooseContainer() {
-		Class[] acceptedClasses = new Class[] { IProject.class, IFolder.class };
+		Class<?>[] acceptedClasses = new Class<?>[] { IProject.class, IFolder.class };
 		ISelectionStatusValidator validator = new TypedElementSelectionValidator(acceptedClasses, false);
 		IProject[] allProjects = fWorkspaceRoot.getProjects();
 		List<IProject> rejectedElements = new ArrayList<>(allProjects.length);
@@ -726,7 +726,7 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 			TabItem tabItem = (TabItem) widget;
 			BuildPathBasePage newPage = (BuildPathBasePage) tabItem.getData();
 			if (fCurrPage != null) {
-				List selection = fCurrPage.getSelection();
+				List<?> selection = fCurrPage.getSelection();
 				if (!selection.isEmpty()) {
 					newPage.setSelection(selection, false);
 				}

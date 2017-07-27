@@ -26,7 +26,7 @@ public class PreferencePropagatorFactory {
 
 	private static PreferencePropagatorFactory instance = new PreferencePropagatorFactory();
 	// map of <String (Node Qualifier), ProjectPreferencePropagator>
-	private final Map<String, PreferencesPropagator> propagatorsMap = new HashMap<String, PreferencesPropagator>();
+	private final Map<String, PreferencesPropagator> propagatorsMap = new HashMap<>();
 
 	private PreferencePropagatorFactory() {
 	};
@@ -51,7 +51,7 @@ public class PreferencePropagatorFactory {
 	public static PreferencesPropagator getPreferencePropagator(String nodeQualifier) {
 		PreferencePropagatorFactory factory = getInstance();
 		if (factory.propagatorsMap.containsKey(nodeQualifier)) {
-			return (PreferencesPropagator) factory.propagatorsMap.get(nodeQualifier);
+			return factory.propagatorsMap.get(nodeQualifier);
 		} else {
 			PreferencesPropagator propagator = new PreferencesPropagator(nodeQualifier);
 			factory.propagatorsMap.put(nodeQualifier, propagator);

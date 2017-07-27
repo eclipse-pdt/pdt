@@ -34,7 +34,7 @@ import org.eclipse.jface.text.BadLocationException;
  */
 public class PHPDocMagicTagsContext extends PHPDocTagContext {
 
-	public static final Set<String> TAGS = new HashSet<String>();
+	public static final Set<String> TAGS = new HashSet<>();
 
 	static {
 		TAGS.add("property"); //$NON-NLS-1$
@@ -43,6 +43,7 @@ public class PHPDocMagicTagsContext extends PHPDocTagContext {
 		TAGS.add("method"); //$NON-NLS-1$
 	}
 
+	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;

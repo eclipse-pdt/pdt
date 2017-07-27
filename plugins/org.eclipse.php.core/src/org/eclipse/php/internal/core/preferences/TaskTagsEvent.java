@@ -83,6 +83,7 @@ public class TaskTagsEvent extends EventObject {
 		return isCaseSensitive;
 	}
 
+	@Override
 	public String toString() {
 		StringBuilder buffer = new StringBuilder();
 		buffer.append("[TaskTagsEvent: project = ");//$NON-NLS-1$

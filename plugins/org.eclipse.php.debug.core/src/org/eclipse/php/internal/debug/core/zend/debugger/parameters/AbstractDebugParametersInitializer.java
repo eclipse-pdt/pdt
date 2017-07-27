@@ -39,6 +39,7 @@ public abstract class AbstractDebugParametersInitializer implements IDebugParame
 	 * @seeorg.eclipse.php.internal.debug.core.debugger.parameters.
 	 * IDebugParametersInitializer#getDebugHandler()
 	 */
+	@Override
 	public String getDebugHandler() {
 		return id;
 	}
@@ -49,6 +50,7 @@ public abstract class AbstractDebugParametersInitializer implements IDebugParame
 	 * @seeorg.eclipse.php.internal.debug.core.debugger.parameters.
 	 * IDebugParametersInitializer#setDebugHandler(java.lang.String)
 	 */
+	@Override
 	public void setDebugHandler(String id) {
 		this.id = id;
 	}

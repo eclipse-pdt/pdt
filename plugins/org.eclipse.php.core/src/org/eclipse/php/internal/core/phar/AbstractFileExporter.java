@@ -24,6 +24,7 @@ public abstract class AbstractFileExporter implements IFileExporter {
 				new FileOutputStream(pharPackage.getAbsolutePharLocation().toString()), pharPackage);
 	}
 
+	@Override
 	public void writeSignature() throws IOException {
 		if (pharPackage.isUseSignature()) {
 			doWriteSignature();

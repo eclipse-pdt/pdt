@@ -78,7 +78,7 @@ public class DBGpMultiSessionTarget extends DBGpElement
 	// debug config settings
 	private boolean stopAtStart;
 
-	private ArrayList<DBGpTarget> debugTargets = new ArrayList<DBGpTarget>();
+	private ArrayList<DBGpTarget> debugTargets = new ArrayList<>();
 
 	private PathMapper pathMapper;
 
@@ -134,14 +134,17 @@ public class DBGpMultiSessionTarget extends DBGpElement
 	 * 
 	 * @see org.eclipse.debug.core.model.IDebugElement#getDebugTarget()
 	 */
+	@Override
 	public IDebugTarget getDebugTarget() {
 		return this;
 	}
 
+	@Override
 	public ILaunch getLaunch() {
 		return launch;
 	}
 
+	@Override
 	public String getName() throws DebugException {
 		// Multisession Manager
 		return PHPDebugCoreMessages.XDebug_DBGpMultiSessionTarget_0;
@@ -152,6 +155,7 @@ public class DBGpMultiSessionTarget extends DBGpElement
 	 * 
 	 * @see org.eclipse.debug.core.model.IDebugTarget#getProcess()
 	 */
+	@Override
 	public IProcess getProcess() {
 		return process;
 	}
@@ -165,9 +169,10 @@ public class DBGpMultiSessionTarget extends DBGpElement
 		process = proc;
 	}
 
+	@Override
 	public IThread[] getThreads() throws DebugException {
 		// Collect threads from all sub-targets
-		List<IThread> threads = new ArrayList<IThread>();
+		List<IThread> threads = new ArrayList<>();
 		for (IPHPDebugTarget target : debugTargets)
 			if (target.hasThreads())
 				for (IThread thread : target.getThreads())
@@ -175,6 +180,7 @@ public class DBGpMultiSessionTarget extends DBGpElement
 		return threads.toArray(new IThread[threads.size()]);
 	}
 
+	@Override
 	public boolean hasThreads() throws DebugException {
 		// Check if any sub-target has at least one thread
 		for (IPHPDebugTarget target : debugTargets)
@@ -183,6 +189,7 @@ public class DBGpMultiSessionTarget extends DBGpElement
 		return false;
 	}
 
+	@Override
 	public boolean supportsBreakpoint(IBreakpoint breakpoint) {
 		synchronized (debugTargets) {
 			if (debugTargets.size() > 0) {
@@ -193,6 +200,7 @@ public class DBGpMultiSessionTarget extends DBGpElement
 		return false;
 	}
 
+	@Override
 	public boolean isSuspended() {
 		boolean isSuspended = false;
 		synchronized (debugTargets) {
@@ -204,10 +212,12 @@ public class DBGpMultiSessionTarget extends DBGpElement
 		return isSuspended;
 	}
 
+	@Override
 	public boolean isTerminated() {
 		return targetState == STATE_TERMINATED;
 	}
 
+	@Override
 	public void terminate() throws DebugException {
 		if (targetState == STATE_TERMINATING) {
 			// we attempt a sledge hammer termination.
@@ -245,23 +255,28 @@ public class DBGpMultiSessionTarget extends DBGpElement
 		}
 	}
 
+	@Override
 	public boolean canDisconnect() {
 		boolean canDisconnect = false;
 		return canDisconnect;
 	}
 
+	@Override
 	public void disconnect() throws DebugException {
 	}
 
+	@Override
 	public boolean isDisconnected() {
 		return false;
 	}
 
+	@Override
 	public boolean canTerminate() {
 		boolean canTerminate = (targetState == STATE_STARTED || targetState == STATE_INIT_SESSION_WAIT);
 		return canTerminate;
 	}
 
+	@Override
 	public boolean canResume() {
 		boolean canResume = false;
 		synchronized (debugTargets) {
@@ -273,6 +288,7 @@ public class DBGpMultiSessionTarget extends DBGpElement
 		return canResume;
 	}
 
+	@Override
 	public boolean canSuspend() {
 		boolean canSuspend = false;
 		synchronized (debugTargets) {
@@ -284,6 +300,7 @@ public class DBGpMultiSessionTarget extends DBGpElement
 		return canSuspend;
 	}
 
+	@Override
 	public void resume() throws DebugException {
 		synchronized (debugTargets) {
 			for (int i = 0; i < debugTargets.size(); i++) {
@@ -295,6 +312,7 @@ public class DBGpMultiSessionTarget extends DBGpElement
 		}
 	}
 
+	@Override
 	public void suspend() throws DebugException {
 		synchronized (debugTargets) {
 			for (int i = 0; i < debugTargets.size(); i++) {
@@ -306,10 +324,12 @@ public class DBGpMultiSessionTarget extends DBGpElement
 		}
 	}
 
+	@Override
 	public IMemoryBlock getMemoryBlock(long startAddress, long length) throws DebugException {
 		return null;
 	}
 
+	@Override
 	public boolean supportsStorageRetrieval() {
 		return false;
 	}
@@ -324,6 +344,7 @@ public class DBGpMultiSessionTarget extends DBGpElement
 		return terminating;
 	}
 
+	@Override
 	public void waitForInitialSession(DBGpBreakpointFacade facade, DBGpPreferences sessionPrefs,
 			IProgressMonitor launchMonitor) {
 		configureInitialState(facade, sessionPrefs);
@@ -349,11 +370,13 @@ public class DBGpMultiSessionTarget extends DBGpElement
 		owningTarget.sessionReceived(facade, sessionPrefs);
 	}
 
+	@Override
 	public void configureInitialState(DBGpBreakpointFacade facade, DBGpPreferences sessionPrefs) {
 		bpFacade = facade;
 		sessionPreferences = sessionPrefs;
 	}
 
+	@Override
 	public boolean SessionCreated(DBGpSession session) {
 		boolean accepted = false;
 		synchronized (debugTargets) {
@@ -397,21 +420,25 @@ public class DBGpMultiSessionTarget extends DBGpElement
 		}
 	}
 
+	@Override
 	public void breakpointAdded(IBreakpoint breakpoint) {
 		// Do nothing
 
 	}
 
+	@Override
 	public void breakpointChanged(IBreakpoint breakpoint, IMarkerDelta delta) {
 		// do nothing
 
 	}
 
+	@Override
 	public void breakpointRemoved(IBreakpoint breakpoint, IMarkerDelta delta) {
 		// do nothing
 
 	}
 
+	@Override
 	public void handleDebugEvents(DebugEvent[] events) {
 		synchronized (debugTargets) {
 			for (int i = 0; i < events.length; i++) {
@@ -467,6 +494,7 @@ public class DBGpMultiSessionTarget extends DBGpElement
 		}
 	}
 
+	@Override
 	public void setPathMapper(PathMapper mapper) {
 		pathMapper = mapper;
 	}
@@ -476,14 +504,17 @@ public class DBGpMultiSessionTarget extends DBGpElement
 	 * 
 	 * @return
 	 */
+	@Override
 	public boolean isWebLaunch() {
 		return webLaunch;
 	}
 
+	@Override
 	public DebugOutput getOutputBuffer() {
 		return debugOutput;
 	}
 
+	@Override
 	public boolean isWaiting() {
 		boolean isWaiting = (targetState == STATE_INIT_SESSION_WAIT);
 		synchronized (debugTargets) {

@@ -758,7 +758,7 @@ public class Util {
 				PHP_LIKE_EXTENSIONS = new char[][] { "php".toCharArray() }; //$NON-NLS-1$
 			else {
 				IContentType javaContentType = Platform.getContentTypeManager().getContentType(PHPNature.ID);
-				Set<String> fileExtensions = new HashSet<String>();
+				Set<String> fileExtensions = new HashSet<>();
 				// content types derived from java content type should be
 				// included
 				// (https://bugs.eclipse.org/bugs/show_bug.cgi?id=121715)
@@ -785,7 +785,7 @@ public class Util {
 				int index = 1;
 				Iterator<String> iterator = fileExtensions.iterator();
 				while (iterator.hasNext()) {
-					String fileExtension = (String) iterator.next();
+					String fileExtension = iterator.next();
 					if ("php".equals(fileExtension)) //$NON-NLS-1$
 						continue;
 					extensions[index++] = fileExtension.toCharArray();
@@ -1919,6 +1919,7 @@ public class Util {
 		IModelElement[] copy = new IModelElement[len];
 		System.arraycopy(elements, 0, copy, 0, len);
 		sort(copy, new Comparer() {
+			@Override
 			public int compare(Object a, Object b) {
 				return ((ModelElement) a).toStringWithAncestors().compareTo(((ModelElement) b).toStringWithAncestors());
 			}

@@ -24,7 +24,6 @@ import org.eclipse.php.internal.server.core.manager.ServersManager;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class ZendDebuggerSettingsUtil {
 
 	private ZendDebuggerSettingsUtil() {

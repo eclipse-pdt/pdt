@@ -59,6 +59,7 @@ public class PHPVariable extends PHPDebugElement implements IVariable, IPHPDataT
 	 * 
 	 * @see org.eclipse.debug.core.model.IVariable#getValue()
 	 */
+	@Override
 	public IValue getValue() throws DebugException {
 		return fValue;
 	}
@@ -68,6 +69,7 @@ public class PHPVariable extends PHPDebugElement implements IVariable, IPHPDataT
 	 * 
 	 * @see org.eclipse.debug.core.model.IVariable#getName()
 	 */
+	@Override
 	public String getName() throws DebugException {
 		if (fName == null) {
 			String endName = fExpression.getLastName();
@@ -88,6 +90,7 @@ public class PHPVariable extends PHPDebugElement implements IVariable, IPHPDataT
 	 * 
 	 * @see org.eclipse.debug.core.model.IVariable#getReferenceTypeName()
 	 */
+	@Override
 	public String getReferenceTypeName() throws DebugException {
 		return fValue.getReferenceTypeName();
 	}
@@ -97,6 +100,7 @@ public class PHPVariable extends PHPDebugElement implements IVariable, IPHPDataT
 	 * 
 	 * @see org.eclipse.debug.core.model.IVariable#hasValueChanged()
 	 */
+	@Override
 	public boolean hasValueChanged() throws DebugException {
 		return fHasChanged;
 	}
@@ -108,6 +112,7 @@ public class PHPVariable extends PHPDebugElement implements IVariable, IPHPDataT
 	 * org.eclipse.debug.core.model.IValueModification#setValue(java.lang.String
 	 * )
 	 */
+	@Override
 	public void setValue(String expression) throws DebugException {
 		PHPDebugTarget debugTarget = (PHPDebugTarget) getDebugTarget();
 		ExpressionsManager expressionManager = debugTarget.getExpressionManager();
@@ -132,6 +137,7 @@ public class PHPVariable extends PHPDebugElement implements IVariable, IPHPDataT
 	 * org.eclipse.debug.core.model.IValueModification#setValue(org.eclipse.
 	 * debug.core.model.IValue)
 	 */
+	@Override
 	public void setValue(IValue value) throws DebugException {
 	}
 
@@ -142,6 +148,7 @@ public class PHPVariable extends PHPDebugElement implements IVariable, IPHPDataT
 	 * org.eclipse.debug.core.model.IValueModification#supportsValueModification
 	 * ()
 	 */
+	@Override
 	public boolean supportsValueModification() {
 		// Not supported yet
 		if (fExpression.hasFacet(MOD_STATIC) || fExpression.hasFacet(VIRTUAL_CLASS))
@@ -156,6 +163,7 @@ public class PHPVariable extends PHPDebugElement implements IVariable, IPHPDataT
 	 * org.eclipse.debug.core.model.IValueModification#verifyValue(java.lang
 	 * .String)
 	 */
+	@Override
 	public boolean verifyValue(String value) throws DebugException {
 		switch (fExpression.getValue().getDataType()) {
 		case PHP_BOOL: {
@@ -186,10 +194,12 @@ public class PHPVariable extends PHPDebugElement implements IVariable, IPHPDataT
 	 * org.eclipse.debug.core.model.IValueModification#verifyValue(org.eclipse
 	 * .debug.core.model.IValue)
 	 */
+	@Override
 	public boolean verifyValue(IValue value) throws DebugException {
 		return true;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		if (adapter == IWatchExpressionFactoryAdapter.class) {

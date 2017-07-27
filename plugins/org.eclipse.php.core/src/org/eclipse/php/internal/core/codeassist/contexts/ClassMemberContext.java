@@ -64,6 +64,7 @@ public abstract class ClassMemberContext extends StatementContext {
 	private IType[] types;
 	private int elementStart;
 
+	@Override
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
@@ -96,7 +97,7 @@ public abstract class ClassMemberContext extends StatementContext {
 		}
 
 		// to support anonymous classes fields/methods CA
-		List<IType> tmpTypes = new ArrayList<IType>();
+		List<IType> tmpTypes = new ArrayList<>();
 		try {
 			IModelElement enclosingElement = getEnclosingElement();
 			while (enclosingElement instanceof IMethod) {
@@ -147,6 +148,7 @@ public abstract class ClassMemberContext extends StatementContext {
 		return triggerType;
 	}
 
+	@Override
 	public int getPrefixEnd() throws BadLocationException {
 		ITextRegion phpToken = getPHPToken();
 		if (phpToken.getType() == PHPRegionTypes.PHP_OBJECT_OPERATOR

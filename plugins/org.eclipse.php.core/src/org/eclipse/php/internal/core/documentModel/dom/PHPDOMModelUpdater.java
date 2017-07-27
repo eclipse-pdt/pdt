@@ -20,6 +20,7 @@ public class PHPDOMModelUpdater extends XMLModelUpdater {
 		super(model);
 	}
 
+	@Override
 	protected boolean isNestedTagClose(String regionType) {
 		return regionType == PHPRegionContext.PHP_CLOSE;
 	}

@@ -21,7 +21,6 @@ import org.eclipse.ui.texteditor.IAnnotationImageProvider;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class PHPExceptionBreakpointAnnotationImageProvider implements IAnnotationImageProvider {
 
 	/*

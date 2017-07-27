@@ -41,7 +41,7 @@ public class ScriptLauncher {
 	private Environment environment;
 	private IProject project;
 	private ScriptExecutor executor;
-	private Set<ExecutionResponseListener> listeners = new HashSet<ExecutionResponseListener>();
+	private Set<ExecutionResponseListener> listeners = new HashSet<>();
 	private Integer timeout = null;
 
 	public ScriptLauncher(Environment environment, IProject project) throws ScriptNotFoundException {
@@ -84,7 +84,7 @@ public class ScriptLauncher {
 			executor.addResponseListener(listener);
 		}
 
-		Map<String, String> env = new HashMap<String, String>(System.getenv());
+		Map<String, String> env = new HashMap<>(System.getenv());
 		PHPLaunchUtilities.appendExecutableToPathEnv(env, new File(cmd.getExecutable()).getParentFile());
 		PHPLaunchUtilities.appendLibrarySearchPathEnv(env, new File(cmd.getExecutable()).getParentFile());
 

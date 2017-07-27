@@ -47,10 +47,11 @@ public class CodeAssistPdttFile extends PdttFile {
 		return expectedProposals;
 	}
 
+	@Override
 	protected void parse(InputStream stream, String charsetName) throws Exception {
 		super.parse(stream, null);
 
-		List<ExpectedProposal> expectedProposals = new LinkedList<ExpectedProposal>();
+		List<ExpectedProposal> expectedProposals = new LinkedList<>();
 		String[] lines = getExpected().split("\n");
 		for (String line : lines) {
 			int i = line.indexOf('(');
@@ -77,7 +78,7 @@ public class CodeAssistPdttFile extends PdttFile {
 			}
 			expectedProposals.add(proposal);
 		}
-		this.expectedProposals = (ExpectedProposal[]) expectedProposals
+		this.expectedProposals = expectedProposals
 				.toArray(new ExpectedProposal[expectedProposals.size()]);
 	}
 }

@@ -25,7 +25,7 @@ import java.util.List;
  * @author Shalom Gibly
  */
 public class SSHTunnelFactory {
-	private static HashMap<SSHTunnel, SSHTunnel> tunnels = new HashMap<SSHTunnel, SSHTunnel>();
+	private static HashMap<SSHTunnel, SSHTunnel> tunnels = new HashMap<>();
 
 	/**
 	 * Returns a {@link SSHTunnel} for port-forwarding between a remote host to

@@ -19,7 +19,6 @@ import java.io.File;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.DLTKCore;
@@ -124,7 +123,7 @@ public class IncludePathManagerTests {
 
 		assertTrue(includePath.length == 1);
 		assertFalse(includePath[0].isBuildpath());
-		assertEquals(((IResource) includePath[0].getEntry()), folder);
+		assertEquals((includePath[0].getEntry()), folder);
 	}
 
 	private void setIncludePath(IncludePathManager manager, IncludePath[] includePath) {
@@ -140,10 +139,12 @@ public class IncludePathManagerTests {
 
 		private boolean refreshed;
 
+		@Override
 		public void refresh(IProject project) {
 			this.refreshed = true;
 		}
 
+		@Override
 		public void run() {
 			while (!refreshed) {
 				try {

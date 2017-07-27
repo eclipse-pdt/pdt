@@ -23,7 +23,6 @@ import org.eclipse.php.internal.debug.core.launching.PHPLaunch;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class PHPLaunchProxy extends LaunchProxy {
 
 	private PHPLaunch fLaunch;

@@ -39,6 +39,7 @@ public class CodeCoverageViewActionGroup extends ActionGroup {
 	 * @see org.eclipse.ui.actions.ActionGroup#fillActionBars(org.eclipse.ui.
 	 * IActionBars )
 	 */
+	@Override
 	public void fillActionBars(IActionBars actionBars) {
 		super.fillActionBars(actionBars);
 		IToolBarManager toolbarManager = actionBars.getToolBarManager();
@@ -55,6 +56,7 @@ public class CodeCoverageViewActionGroup extends ActionGroup {
 			setImageDescriptor(PHPDebugUIImages.getImageDescriptor(PHPDebugUIImages.IMG_EVIEW_EVENT_NEXT));
 		}
 
+		@Override
 		public void run() {
 			fView.getViewer().goToNextLine();
 		}
@@ -68,6 +70,7 @@ public class CodeCoverageViewActionGroup extends ActionGroup {
 			setImageDescriptor(PHPDebugUIImages.getImageDescriptor(PHPDebugUIImages.IMG_EVIEW_EVENT_PREV));
 		}
 
+		@Override
 		public void run() {
 			fView.getViewer().goToPreviousLine();
 		}

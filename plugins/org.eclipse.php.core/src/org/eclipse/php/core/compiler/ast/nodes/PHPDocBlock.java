@@ -37,6 +37,7 @@ public class PHPDocBlock extends Comment {
 		this.texts = texts;
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		boolean visit = visitor.visit(this);
 		if (visit) {
@@ -68,7 +69,7 @@ public class PHPDocBlock extends Comment {
 	}
 
 	public PHPDocTag[] getTags(TagKind kind) {
-		List<PHPDocTag> res = new LinkedList<PHPDocTag>();
+		List<PHPDocTag> res = new LinkedList<>();
 		if (tags != null) {
 			for (PHPDocTag tag : tags) {
 				if (tag.getTagKind() == kind) {

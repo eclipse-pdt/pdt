@@ -326,7 +326,7 @@ public class PHPLibraryPreferencePage extends UserLibraryPreferencePage {
 
 		UserLibraryAdapter adapter = new UserLibraryAdapter();
 
-		handlers = new ArrayList<IPHPLibraryButtonHandler>();
+		handlers = new ArrayList<>();
 		// NEW
 		handlers.add(new NewButtonHandler());
 		// EDIT
@@ -374,7 +374,7 @@ public class PHPLibraryPreferencePage extends UserLibraryPreferencePage {
 		fLibraryList.setLabelText(PreferencesMessages.UserLibraryPreferencePage_libraries_label);
 
 		String[] names = DLTKCore.getUserLibraryNames(getLanguageToolkit());
-		ArrayList elements = new ArrayList();
+		ArrayList<BPUserLibraryElement> elements = new ArrayList<>();
 
 		for (int i = 0; i < names.length; i++) {
 			UserLibrary lib = ModelManager.getUserLibraryManager().getUserLibrary(names[i], getLanguageToolkit());
@@ -441,7 +441,7 @@ public class PHPLibraryPreferencePage extends UserLibraryPreferencePage {
 		}
 	}
 
-	private BPUserLibraryElement getSingleSelectedLibrary(List selected) {
+	private BPUserLibraryElement getSingleSelectedLibrary(List<?> selected) {
 		if (selected.size() == 1 && selected.get(0) instanceof BPUserLibraryElement) {
 			return (BPUserLibraryElement) selected.get(0);
 		}
@@ -470,7 +470,7 @@ public class PHPLibraryPreferencePage extends UserLibraryPreferencePage {
 		}
 	}
 
-	private void doEdit(List selected) {
+	private void doEdit(List<?> selected) {
 		if (selected.size() == 1) {
 			Object curr = selected.get(0);
 			if (curr instanceof BPListElementAttribute) {
@@ -535,7 +535,7 @@ public class PHPLibraryPreferencePage extends UserLibraryPreferencePage {
 		}
 	}
 
-	private void doRemove(List selected) {
+	private void doRemove(List<?> selected) {
 		Object selectionAfter = null;
 		for (int i = 0; i < selected.size(); i++) {
 			Object curr = selected.get(i);
@@ -582,31 +582,32 @@ public class PHPLibraryPreferencePage extends UserLibraryPreferencePage {
 		}
 	}
 
-	private void doAdd(List list) {
+	private void doAdd(List<?> list) {
 		if (canAdd(list)) {
 			BPUserLibraryElement element = getSingleSelectedLibrary(list);
 			editArchiveElement(null, element);
 		}
 	}
 
-	private void doAddExternal(List list) {
+	private void doAddExternal(List<?> list) {
 		if (canAdd(list)) {
 			BPUserLibraryElement element = getSingleSelectedLibrary(list);
 			editExternalElement(null, element);
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void doLoad() {
-		List existing = fLibraryList.getElements();
+		List<Object> existing = fLibraryList.getElements();
 		LoadSaveDialog dialog = new LoadSaveDialog(getShell(), false, existing, fDialogSettings);
 		if (dialog.open() == Window.OK) {
-			HashMap map = new HashMap(existing.size());
+			HashMap<String, Object> map = new HashMap<>(existing.size());
 			for (int k = 0; k < existing.size(); k++) {
 				BPUserLibraryElement elem = (BPUserLibraryElement) existing.get(k);
 				map.put(elem.getName(), elem);
 			}
 
-			List list = dialog.getLoadedLibraries();
+			List<?> list = dialog.getLoadedLibraries();
 			for (int i = 0; i < list.size(); i++) {
 				BPUserLibraryElement elem = (BPUserLibraryElement) list.get(i);
 				BPUserLibraryElement found = (BPUserLibraryElement) map.get(elem.getName());
@@ -629,12 +630,13 @@ public class PHPLibraryPreferencePage extends UserLibraryPreferencePage {
 
 	@Override
 	protected void doDoubleClicked(TreeListDialogField field) {
-		List selected = field.getSelectedElements();
+		List<?> selected = field.getSelectedElements();
 		if (canEdit(selected)) {
 			doEdit(field.getSelectedElements());
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	protected boolean canAdd(List list) {
 		if (getSingleSelectedLibrary(list) == null) {
@@ -650,7 +652,7 @@ public class PHPLibraryPreferencePage extends UserLibraryPreferencePage {
 		return true;
 	}
 
-	private boolean canEdit(List list) {
+	private boolean canEdit(List<?> list) {
 		if (list.size() != 1)
 			return false;
 
@@ -688,7 +690,7 @@ public class PHPLibraryPreferencePage extends UserLibraryPreferencePage {
 		return true;
 	}
 
-	private boolean canRemove(List list) {
+	private boolean canRemove(List<?> list) {
 		if (list.size() == 0) {
 			return false;
 		}
@@ -747,7 +749,7 @@ public class PHPLibraryPreferencePage extends UserLibraryPreferencePage {
 		return Boolean.parseBoolean(value);
 	}
 
-	private BPUserLibraryElement getCommonParent(List list) {
+	private BPUserLibraryElement getCommonParent(List<?> list) {
 		BPUserLibraryElement parent = null;
 		for (int i = 0, len = list.size(); i < len; i++) {
 			Object curr = list.get(i);
@@ -769,7 +771,7 @@ public class PHPLibraryPreferencePage extends UserLibraryPreferencePage {
 		return parent;
 	}
 
-	private void doMoveUp(List list) {
+	private void doMoveUp(List<BPListElement> list) {
 		BPUserLibraryElement parent = getCommonParent(list);
 		if (parent != null) {
 			parent.moveUp(list);
@@ -778,7 +780,7 @@ public class PHPLibraryPreferencePage extends UserLibraryPreferencePage {
 		}
 	}
 
-	private void doMoveDown(List list) {
+	private void doMoveDown(List<BPListElement> list) {
 		BPUserLibraryElement parent = getCommonParent(list);
 		if (parent != null) {
 			parent.moveDown(list);
@@ -787,7 +789,7 @@ public class PHPLibraryPreferencePage extends UserLibraryPreferencePage {
 		}
 	}
 
-	private boolean canMoveUp(List list) {
+	private boolean canMoveUp(List<?> list) {
 		BPUserLibraryElement parent = getCommonParent(list);
 		if (parent != null) {
 			BPListElement[] children = parent.getChildren();
@@ -800,7 +802,7 @@ public class PHPLibraryPreferencePage extends UserLibraryPreferencePage {
 		return false;
 	}
 
-	private boolean canMoveDown(List list) {
+	private boolean canMoveDown(List<?> list) {
 		BPUserLibraryElement parent = getCommonParent(list);
 		if (parent != null) {
 			BPListElement[] children = parent.getChildren();
@@ -908,7 +910,7 @@ public class PHPLibraryPreferencePage extends UserLibraryPreferencePage {
 	private List<IPHPLibraryButtonHandler> getHandlers() {
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(PHPUiPlugin.ID,
 				BTN_HANDLERS_EXTENSION_POINT);
-		List<IPHPLibraryButtonHandler> result = new ArrayList<IPHPLibraryButtonHandler>();
+		List<IPHPLibraryButtonHandler> result = new ArrayList<>();
 		for (IConfigurationElement element : elements) {
 			if ("handler".equals(element.getName())) { //$NON-NLS-1$
 				try {

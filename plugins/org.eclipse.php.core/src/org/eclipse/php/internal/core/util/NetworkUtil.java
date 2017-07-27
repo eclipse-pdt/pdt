@@ -104,7 +104,7 @@ public class NetworkUtil {
 	 * @return all available network addresses
 	 */
 	public static List<Inet4Address> getAllAddresses() {
-		final List<Inet4Address> descriptors = new ArrayList<Inet4Address>();
+		final List<Inet4Address> descriptors = new ArrayList<>();
 		Inet4Address publicAddress = getPublicAddress();
 		if (publicAddress != null)
 			descriptors.add(getPublicAddress());
@@ -151,7 +151,7 @@ public class NetworkUtil {
 	 * @return LAN private addresses
 	 */
 	public static List<Inet4Address> getPrivateAddresses() {
-		List<Inet4Address> descriptors = new ArrayList<Inet4Address>();
+		List<Inet4Address> descriptors = new ArrayList<>();
 		try {
 			// Add localhost first
 			Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
@@ -313,8 +313,8 @@ public class NetworkUtil {
 	}
 
 	private static int getAddress(byte[] bytesAddress) {
-		return ((((int) bytesAddress[0]) & 0xFF) << 24) | ((((int) bytesAddress[1]) & 0xFF) << 16)
-				| ((((int) bytesAddress[2]) & 0xFF) << 8) | ((((int) bytesAddress[3]) & 0xFF) << 0);
+		return (((bytesAddress[0]) & 0xFF) << 24) | (((bytesAddress[1]) & 0xFF) << 16)
+				| (((bytesAddress[2]) & 0xFF) << 8) | (((bytesAddress[3]) & 0xFF) << 0);
 	}
 
 }

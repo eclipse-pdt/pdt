@@ -36,7 +36,7 @@ public class MarkOccurrencesConfigurationBlock implements IPreferenceConfigurati
 
 	private OverlayPreferenceStore fStore;
 
-	private Map<Button, String> fCheckBoxes = new HashMap<Button, String>();
+	private Map<Button, String> fCheckBoxes = new HashMap<>();
 	private SelectionListener fCheckBoxListener = new SelectionAdapter() {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
@@ -51,7 +51,7 @@ public class MarkOccurrencesConfigurationBlock implements IPreferenceConfigurati
 	 * @see #createDependency(Button, String, Control)
 	 * @since 3.0
 	 */
-	private ArrayList<SelectionListener> fMasterSlaveListeners = new ArrayList<SelectionListener>();
+	private ArrayList<SelectionListener> fMasterSlaveListeners = new ArrayList<>();
 
 	private StatusInfo fStatus;
 

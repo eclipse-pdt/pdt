@@ -28,6 +28,7 @@ public class TraitPrecedence extends Expression {
 		this.trList = trList;
 	}
 
+	@Override
 	public void traverse(ASTVisitor visitor) throws Exception {
 		if (visitor.visit(this)) {
 			if (methodReference != null) {

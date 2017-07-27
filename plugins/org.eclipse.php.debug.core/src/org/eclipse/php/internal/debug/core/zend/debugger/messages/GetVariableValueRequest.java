@@ -79,6 +79,7 @@ public class GetVariableValueRequest extends DebugMessageRequestImpl implements 
 		return path;
 	}
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		setVar(CommunicationUtilities.readEncodedString(in, getTransferEncoding()));
@@ -93,10 +94,12 @@ public class GetVariableValueRequest extends DebugMessageRequestImpl implements 
 		}
 	}
 
+	@Override
 	public int getType() {
 		return 32;
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());

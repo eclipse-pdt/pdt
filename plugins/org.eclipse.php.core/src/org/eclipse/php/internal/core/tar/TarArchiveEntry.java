@@ -27,14 +27,17 @@ public class TarArchiveEntry implements IArchiveEntry {
 		this.tarEntry = tarEntry;
 	}
 
+	@Override
 	public String getName() {
 		return tarEntry.getName();
 	}
 
+	@Override
 	public boolean isDirectory() {
 		return tarEntry.getFileType() == TarEntry.DIRECTORY;
 	}
 
+	@Override
 	public long getSize() {
 		// TODO Auto-generated method stub
 		return tarEntry.getSize();

@@ -60,6 +60,7 @@ public class BroadcastDaemon extends AbstractDebuggerCommunicationDaemon {
 	 * @see org.eclipse.php.internal.debug.core.communication.
 	 * DebuggerCommunicationDaemon #handleMultipleBindingError()
 	 */
+	@Override
 	public void handleMultipleBindingError() {
 		final int port = getReceiverPort();
 		Logger.log(Logger.ERROR, "Could not open a broadcast port on: " + port //$NON-NLS-1$
@@ -69,6 +70,7 @@ public class BroadcastDaemon extends AbstractDebuggerCommunicationDaemon {
 	/**
 	 * Returns the broadcast port, as defined in the preferences.
 	 */
+	@Override
 	public int getReceiverPort() {
 		return InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID)
 				.getInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_BROADCAST_PORT, 20080);
@@ -80,6 +82,7 @@ public class BroadcastDaemon extends AbstractDebuggerCommunicationDaemon {
 	 * @see org.eclipse.php.internal.debug.core.communication.
 	 * DebuggerCommunicationDaemon #isEnabled()
 	 */
+	@Override
 	public boolean isEnabled() {
 		return true;
 	}
@@ -91,6 +94,7 @@ public class BroadcastDaemon extends AbstractDebuggerCommunicationDaemon {
 	 * @see org.eclipse.php.internal.debug.core.zend.communication.
 	 * DebuggerCommunicationDaemon#isDebuggerDaemon()
 	 */
+	@Override
 	public boolean isDebuggerDaemon() {
 		return false;
 	}
@@ -112,6 +116,7 @@ public class BroadcastDaemon extends AbstractDebuggerCommunicationDaemon {
 	 * @see org.eclipse.php.internal.debug.core.zend.communication.
 	 * DebuggerCommunicationDaemon#startConnection(java.net.Socket)
 	 */
+	@Override
 	protected void startConnection(Socket socket) {
 		new BroadcastConnection(socket);
 	}

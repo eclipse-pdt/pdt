@@ -139,6 +139,7 @@ private Composite createComposite(Composite parent, int numColumns, int hSpan) {
 /**
  * (non-Javadoc) Method declared on PreferencePage
  */
+@Override
 protected Control createContents(Composite parent) {
 
 	// Eclipse version choice
@@ -353,6 +354,7 @@ private Text createTextField(Composite parent) {
  * the our plugin. This is important because we want to store our preferences
  * separately from the workbench.
  */
+@Override
 protected IPreferenceStore doGetPreferenceStore() {
 	return UiPlugin.getDefault().getPreferenceStore();
 }
@@ -396,6 +398,7 @@ private String getDirectoryPath(String location) {
 /*
  * (non-Javadoc) Method declared on IWorkbenchPreferencePage
  */
+@Override
 public void init(IWorkbench workbench) {
 	// do nothing
 }
@@ -405,10 +408,10 @@ public void init(IWorkbench workbench) {
  */
 void initDimensionsLists() {
 	// Dimensions lists
-	java.util.List dimensions = PerformanceTestPlugin.getDimensions();
-	Iterator names = dimensions.iterator();
+	java.util.List<String> dimensions = PerformanceTestPlugin.getDimensions();
+	Iterator<String> names = dimensions.iterator();
 	while (names.hasNext()) {
-		String name = (String) names.next();
+		String name = names.next();
 		this.defaultDimensionCombo.add(name);
 		this.resultsDimensionsList.add(name);
 	}
@@ -550,6 +553,7 @@ private void initializeValues() {
 /**
  * (non-Javadoc) Method declared on ModifyListener
  */
+@Override
 public void modifyText(ModifyEvent event) {
 
 	// Add default dimension to results if necessary
@@ -692,6 +696,7 @@ void openMilestoneErrorMessage(String milestone) {
 /*
  * (non-Javadoc) Method declared on PreferencePage
  */
+@Override
 protected void performDefaults() {
 	super.performDefaults();
 	initializeDefaults();
@@ -700,6 +705,7 @@ protected void performDefaults() {
 /*
  * (non-Javadoc) Method declared on PreferencePage
  */
+@Override
 public boolean performOk() {
 	storeValues();
 	try {
@@ -808,12 +814,14 @@ private void storeValues() {
 /**
  * (non-Javadoc) Method declared on SelectionListener
  */
+@Override
 public void widgetDefaultSelected(SelectionEvent event) {
 }
 
 /**
  * (non-Javadoc) Method declared on SelectionListener
  */
+@Override
 public void widgetSelected(SelectionEvent event) {
 
 	// As for directory when 'Local' button is pushed
