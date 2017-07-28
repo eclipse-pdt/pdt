@@ -102,7 +102,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 public class ASTView extends ViewPart implements IShowInSource {
 
 	private class ASTViewSelectionProvider implements ISelectionProvider {
-		ListenerList<ISelectionChangedListener> fListeners = new ListenerList<ISelectionChangedListener>(ListenerList.IDENTITY);
+		ListenerList<ISelectionChangedListener> fListeners = new ListenerList<>(ListenerList.IDENTITY);
 
 		@Override
 		public void addSelectionChangedListener(ISelectionChangedListener listener) {
@@ -112,7 +112,7 @@ public class ASTView extends ViewPart implements IShowInSource {
 		@Override
 		public ISelection getSelection() {
 			IStructuredSelection selection = (IStructuredSelection) fViewer.getSelection();
-			ArrayList<Object> externalSelection = new ArrayList<Object>();
+			ArrayList<Object> externalSelection = new ArrayList<>();
 			for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
 				Object unwrapped = ASTView.unwrapAttribute(iter.next());
 				if (unwrapped != null)
@@ -494,7 +494,7 @@ public class ASTView extends ViewPart implements IShowInSource {
 		fViewer.setInput(root);
 		fViewer.getTree().setEnabled(root != null);
 		fSash.setMaximizedControl(fViewer.getTree());
-		fTrayRoots = new ArrayList<Object>();
+		fTrayRoots = new ArrayList<>();
 		setASTUptoDate(root != null);
 		fClearAction.setEnabled(root != null);
 		fFindDeclaringNodeAction.setEnabled(root != null);

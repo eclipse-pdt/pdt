@@ -126,6 +126,7 @@ public abstract class PsrSection extends TreeSection implements PropertyChangeLi
 		psrViewer.getTree().setEnabled(enabled);
 	}
 
+	@Override
 	public void refresh() {
 		psrViewer.refresh();
 	}
@@ -137,6 +138,7 @@ public abstract class PsrSection extends TreeSection implements PropertyChangeLi
 		}
 	}
 
+	@Override
 	protected void selectionChanged(IStructuredSelection sel) {
 		updateButtons();
 		updateMenu();
@@ -265,7 +267,7 @@ public abstract class PsrSection extends TreeSection implements PropertyChangeLi
 			if (data instanceof IResource[]) {
 				IResource[] resources = (IResource[]) data;
 
-				List<IFolder> folders = new ArrayList<IFolder>();
+				List<IFolder> folders = new ArrayList<>();
 
 				for (IResource resource : resources) {
 					if (resource instanceof IFolder) {

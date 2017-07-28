@@ -26,6 +26,7 @@ public class WeblinkFormEntry extends FormEntry {
 		super(parent, toolkit, labelText, null, true);
 
 		addFormEntryListener(new FormEntryAdapter() {
+			@Override
 			public void textValueChanged(FormEntry entry) {
 				try {
 					Hyperlink link = (Hyperlink) entry.getLabel();
@@ -36,6 +37,7 @@ public class WeblinkFormEntry extends FormEntry {
 				}
 			}
 
+			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				if (e.getHref() != null && e.getHref().toString() != null) {
 					Program.launch(e.getHref().toString());

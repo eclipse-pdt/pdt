@@ -44,7 +44,7 @@ public class ImportSessionWizardFirstPage extends WizardPage {
 	public ImportSessionWizardFirstPage() {
 		super(PHPProfileUIMessages.getString("ImportSessionWizardPage1.0")); //$NON-NLS-1$
 		setTitle(PHPProfileUIMessages.getString("ImportSessionWizardPage1.1")); //$NON-NLS-1$
-		setDescription(PHPProfileUIMessages.getString("ImportSessionWizardPage1.7"));
+		setDescription(PHPProfileUIMessages.getString("ImportSessionWizardPage1.7")); //$NON-NLS-1$
 		setPageComplete(false);
 	}
 

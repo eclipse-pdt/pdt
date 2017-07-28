@@ -41,7 +41,7 @@ public class ProblemNode extends ASTAttribute {
 	@Override
 	public Object[] getChildren() {
 		String[] arguments= fProblem.getArguments();
-		ArrayList<GeneralAttribute> children= new ArrayList<GeneralAttribute>();
+		ArrayList<GeneralAttribute> children= new ArrayList<>();
 		
 		children.add(new GeneralAttribute(this, "CONSTANT NAME", getConstantName()));
 		children.add(new GeneralAttribute(this, "ID", getErrorLabel()));

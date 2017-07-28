@@ -32,6 +32,7 @@ public class ToggleDevAction extends Action {
 		DLTKPluginImages.setLocalImageDescriptors(this, "th_showqualified.png"); //$NON-NLS-1$
 	}
 
+	@Override
 	public void run() {
 		showDev = !showDev;
 		graphPage.applyFilter(showDev);

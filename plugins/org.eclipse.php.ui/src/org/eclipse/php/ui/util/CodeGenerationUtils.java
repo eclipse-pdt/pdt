@@ -209,11 +209,11 @@ public class CodeGenerationUtils {
 	 * @return getter name string.
 	 */
 	public static String getGetterName(IField field) {
-		String prefix = "get"; // $NON-NLS-1$
+		String prefix = "get"; //$NON-NLS-1$
 		try {
 			IEvaluatedType type = PHPSimpleTypes.fromString(field.getType());
 			if (type != null && type.equals(PHPSimpleTypes.BOOLEAN)) {
-				prefix = "is"; // $NON-NLS-1$
+				prefix = "is"; //$NON-NLS-1$
 			}
 		} catch (ModelException e) {
 			// skip
@@ -423,7 +423,7 @@ public class CodeGenerationUtils {
 
 		boolean isStatic = Flags.isStatic(flags);
 		boolean isFinal = Flags.isFinal(flags);
-		fieldName = isStatic ? parentType.getElementName() + "::" + fieldName : "$this->" + removeDollarSign(fieldName); //$NON-NLS-1$
+		fieldName = isStatic ? parentType.getElementName() + "::" + fieldName : "$this->" + removeDollarSign(fieldName); //$NON-NLS-1$ //$NON-NLS-2$
 
 		int modifiers = 0;
 		if (isStatic) {
@@ -889,7 +889,7 @@ public class CodeGenerationUtils {
 				ASTNode todoNode = rewrite.createStringPlaceholder(placeHolder, ASTNode.EMPTY_STATEMENT);
 				body.statements().add((Statement) todoNode);
 				if (addReturnStatement(methodDecl)) {
-					Identifier parentIdentifier = ast.newIdentifier("parent");
+					Identifier parentIdentifier = ast.newIdentifier("parent"); //$NON-NLS-1$
 					FunctionName functionName = ast.newFunctionName(ast.newIdentifier(binding.getName()));
 					FunctionInvocation functionInvocation = ast.newFunctionInvocation(functionName, null);
 					Expression expression = ast.newStaticMethodInvocation(parentIdentifier, functionInvocation);

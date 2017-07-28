@@ -52,7 +52,7 @@ public class ExportSessionWizardFirstPage extends WizardPage {
 	public ExportSessionWizardFirstPage(ProfilerDB session) {
 		super(PHPProfileUIMessages.getString("ExportSessionWizardPage1.0")); //$NON-NLS-1$
 		setTitle(PHPProfileUIMessages.getString("ExportSessionWizardPage1.1")); //$NON-NLS-1$
-		setDescription(PHPProfileUIMessages.getString("ExportSessionWizardPage1.12"));
+		setDescription(PHPProfileUIMessages.getString("ExportSessionWizardPage1.12")); //$NON-NLS-1$
 		setPageComplete(false);
 		fInitSession = session;
 	}

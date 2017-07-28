@@ -82,7 +82,7 @@ public class RefactorableFileEditorInput
 	 */
 	@Override
 	public String toString() {
-		return innerEditorInput.toString(); // $NON-NLS-1$
+		return innerEditorInput.toString();
 	}
 
 	public void setFile(IFile file) {

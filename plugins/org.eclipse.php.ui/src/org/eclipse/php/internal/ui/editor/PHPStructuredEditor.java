@@ -2273,17 +2273,17 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 		setAction(GotoMatchingBracketAction.GOTO_MATCHING_BRACKET, action);
 
 		action = new OpenFunctionsManualAction(resourceBundle, this);
-		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_PHP_MANUAL); // $NON-NLS-1$
+		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_PHP_MANUAL);
 		setAction(ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION, action);
 		markAsCursorDependentAction(ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION, true);
 
 		action = new OpenDeclarationAction(resourceBundle, this);
-		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_DECLARATION); // $NON-NLS-1$
+		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_DECLARATION);
 		setAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION, action);
 		markAsCursorDependentAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION, true);
 
 		action = new OpenTypeHierarchyAction(this);
-		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY); // $NON-NLS-1$
+		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);
 		setAction(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY, action);
 		markAsCursorDependentAction(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY, true);
 		// add selection changed listener for updating enabled status
@@ -2293,7 +2293,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 		}
 
 		action = new OpenCallHierarchyAction(this);
-		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY); // $NON-NLS-1$
+		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY);
 		setAction(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY, action);
 		markAsCursorDependentAction(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY, true);
 		// add selection changed listener for updating enabled status
@@ -2321,7 +2321,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 
 		resAction = new TextOperationAction(DLTKEditorMessages.getBundleForConstructedKeys(), "ShowOutline.", this, //$NON-NLS-1$
 				PHPStructuredTextViewer.SHOW_OUTLINE, true);
-		resAction.setActionDefinitionId(IScriptEditorActionDefinitionIds.SHOW_OUTLINE); // $NON-NLS-1$
+		resAction.setActionDefinitionId(IScriptEditorActionDefinitionIds.SHOW_OUTLINE);
 		setAction(IScriptEditorActionDefinitionIds.SHOW_OUTLINE, resAction);
 
 		// workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=305786
@@ -2553,7 +2553,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 		fEditorSelectionChangedListener.install(getSelectionProvider());
 		PlatformUI.getWorkbench().addWindowListener(fActivationListener);
 
-		setHelpContextId(IPHPHelpContextIds.EDITOR_PREFERENCES);// $NON-NLS-1$
+		setHelpContextId(IPHPHelpContextIds.EDITOR_PREFERENCES);
 	}
 
 	@Override

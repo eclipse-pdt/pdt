@@ -35,7 +35,7 @@ Require-Bundle: org.eclipse.ui.forms,
  org.eclipse.tm.terminal.view.ui,
  org.eclipse.tm.terminal.connector.process,
  org.eclipse.tm.terminal.control
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: 
  org.eclipse.php.composer.ui,

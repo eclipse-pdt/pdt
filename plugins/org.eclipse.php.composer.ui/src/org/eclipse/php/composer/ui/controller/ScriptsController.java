@@ -35,6 +35,7 @@ public class ScriptsController extends StyledCellLabelProvider implements ITreeC
 		this.viewer = viewer;
 	}
 
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		scripts = (Scripts) newInput;
 	}
@@ -52,6 +53,7 @@ public class ScriptsController extends StyledCellLabelProvider implements ITreeC
 		return element == null ? "" : element.toString(); //$NON-NLS-1$
 	}
 
+	@Override
 	public void update(ViewerCell cell) {
 		Object obj = cell.getElement();
 		String text = getText(obj);
@@ -81,7 +83,7 @@ public class ScriptsController extends StyledCellLabelProvider implements ITreeC
 	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof Scripts) {
 			Scripts scripts = (Scripts) parentElement;
-			List<Script> children = new ArrayList<Script>();
+			List<Script> children = new ArrayList<>();
 
 			for (String event : Scripts.getEvents()) {
 				if (scripts.has(event)) {

@@ -94,7 +94,7 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 					result = instanceType;
 				}
 			}
-		} else if (isParent()) { // $NON-NLS-1$
+		} else if (isParent()) {
 			if (context instanceof MethodContext) {
 				final MethodContext methodContext = (MethodContext) context;
 				ModuleDeclaration rootNode = methodContext.getRootNode();

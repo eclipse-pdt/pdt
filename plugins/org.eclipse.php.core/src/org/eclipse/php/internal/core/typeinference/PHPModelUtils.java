@@ -71,7 +71,7 @@ public class PHPModelUtils {
 	 */
 	public final static String COMMA_STRING = ", "; //$NON-NLS-1$
 	public static final String ENCLOSING_TYPE_SEPARATOR = new String(
-			new char[] { NamespaceReference.NAMESPACE_SEPARATOR }); // $NON-NLS-1$
+			new char[] { NamespaceReference.NAMESPACE_SEPARATOR });
 
 	private static final IType[] EMPTY_TYPES = new IType[0];
 

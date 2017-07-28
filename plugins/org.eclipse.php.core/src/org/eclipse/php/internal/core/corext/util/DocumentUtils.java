@@ -87,9 +87,9 @@ public class DocumentUtils {
 	 */
 	public static boolean containsUseStatement(UsePart part, String contents, List<Position> excludePositions) {
 		String className = null != part.getAlias() ? part.getAlias().toString()
-				: (part.getNamespace() != null ? part.getNamespace().toString() : "");
+				: (part.getNamespace() != null ? part.getNamespace().toString() : ""); //$NON-NLS-1$
 
-		Pattern p = Pattern.compile("(?i)\\b(" + Pattern.quote(className) + ")\\b");
+		Pattern p = Pattern.compile("(?i)\\b(" + Pattern.quote(className) + ")\\b"); //$NON-NLS-1$ //$NON-NLS-2$
 		Matcher m = p.matcher(contents);
 		int restartPos = 0;
 		while (m.find()) {
@@ -179,7 +179,7 @@ public class DocumentUtils {
 			int length = statement.sourceEnd() - statement.sourceStart();
 
 			try {
-				doc.replace(statement.sourceStart() - removedLength, length, "");
+				doc.replace(statement.sourceStart() - removedLength, length, ""); //$NON-NLS-1$
 			} catch (BadLocationException e) {
 			}
 
@@ -222,11 +222,11 @@ public class DocumentUtils {
 	}
 
 	public static String createStringFromUseStatement(UseStatement statement) {
-		return createStringFromUseStatement(statement, "");
+		return createStringFromUseStatement(statement, ""); //$NON-NLS-1$
 	}
 
 	public static String createStringFromUseStatement(UseStatement statement, boolean addIndentedUsePrefixAndNewline) {
-		return createStringFromUseStatement(statement, "", addIndentedUsePrefixAndNewline);
+		return createStringFromUseStatement(statement, "", addIndentedUsePrefixAndNewline); //$NON-NLS-1$
 	}
 
 	public static String createStringFromUseStatement(UseStatement statement, String indent) {
@@ -238,18 +238,18 @@ public class DocumentUtils {
 	 */
 	public static String createStringFromUseStatement(UseStatement statement, String indent,
 			boolean addIndentedUsePrefixAndNewline) {
-		String use = "";
+		String use = ""; //$NON-NLS-1$
 		if (addIndentedUsePrefixAndNewline) {
-			use = indent + "use ";
+			use = indent + "use "; //$NON-NLS-1$
 
 			switch (statement.getStatementType()) {
 			case UseStatement.T_NONE:
 				break;
 			case UseStatement.T_FUNCTION:
-				use += "function ";
+				use += "function "; //$NON-NLS-1$
 				break;
 			case UseStatement.T_CONST:
-				use += "const ";
+				use += "const "; //$NON-NLS-1$
 				break;
 			}
 		}
@@ -257,17 +257,17 @@ public class DocumentUtils {
 		boolean first = true;
 		for (UsePart part : statement.getParts()) {
 			if (!first) {
-				use += ", ";
+				use += ", "; //$NON-NLS-1$
 			}
 			use += part.getNamespace().getFullyQualifiedName();
 			if (part.getAlias() != null) {
-				use += " as " + part.getAlias().getName();
+				use += " as " + part.getAlias().getName(); //$NON-NLS-1$
 			}
 			first = false;
 		}
 
 		if (addIndentedUsePrefixAndNewline) {
-			return use + ";\n";
+			return use + ";\n"; //$NON-NLS-1$
 		}
 		return use;
 	}
@@ -327,8 +327,8 @@ public class DocumentUtils {
 
 				String partA = createStringFromUseStatement(a, false).toLowerCase();
 				String partB = createStringFromUseStatement(b, false).toLowerCase();
-				String[] partsA = partA.split("\\\\");
-				String[] partsB = partB.split("\\\\");
+				String[] partsA = partA.split("\\\\"); //$NON-NLS-1$
+				String[] partsB = partB.split("\\\\"); //$NON-NLS-1$
 
 				int checkLength = Math.min(partsA.length, partsB.length);
 				for (int i = 0; i < checkLength; i++) {
@@ -372,7 +372,7 @@ public class DocumentUtils {
 				}
 			}
 
-			String indent = "";
+			String indent = ""; //$NON-NLS-1$
 			try {
 				int lineOffset = doc.getLineOffset(doc.getLineOfOffset(statements[start].sourceStart()));
 

@@ -116,8 +116,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 	public PHPIndexingVisitor(IIndexingRequestor requestor, ISourceModule module) {
 		this.requestor = requestor;
 
-		List<PHPIndexingVisitorExtension> extensions = new ArrayList<>(
-				extensionElements.length);
+		List<PHPIndexingVisitorExtension> extensions = new ArrayList<>(extensionElements.length);
 		for (IConfigurationElement element : extensionElements) {
 			try {
 				PHPIndexingVisitorExtension ext = (PHPIndexingVisitorExtension) element
@@ -498,7 +497,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 			modifiers = markAsDeprecated(modifiers, type);
 			StringBuilder metadata = new StringBuilder();
 			metadata.append(fCurrentQualifier != null ? fCurrentQualifierCounts.get(fCurrentQualifier) : 1);
-			metadata.append(QUALIFIER_SEPERATOR); // $NON-NLS-1$
+			metadata.append(QUALIFIER_SEPERATOR);
 			modifyDeclaration(type,
 					new DeclarationInfo(IModelElement.PACKAGE_DECLARATION, modifiers, type.sourceStart(),
 							type.sourceEnd() - type.sourceStart(), type.getNameStart(),
@@ -667,7 +666,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 
 						StringBuilder metadata = new StringBuilder();
 						metadata.append(fCurrentQualifier != null ? fCurrentQualifierCounts.get(fCurrentQualifier) : 1);
-						metadata.append(QUALIFIER_SEPERATOR); // $NON-NLS-1$
+						metadata.append(QUALIFIER_SEPERATOR);
 
 						modifyDeclaration(null,
 								new DeclarationInfo(IModelElement.METHOD, methodModifiers, offset, length, offset,

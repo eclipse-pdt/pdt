@@ -121,9 +121,9 @@ public class TaskPatternsProvider {
 			// "@"[a-zA-Z-]+ since tagString can start with a @ or any
 			// other character.
 			if (caseSensitive) {
-				patterns[i] = Pattern.compile("(?<![a-zA-Z-])" + Pattern.quote(tagString) + "(?![a-zA-Z-])");
+				patterns[i] = Pattern.compile("(?<![a-zA-Z-])" + Pattern.quote(tagString) + "(?![a-zA-Z-])"); //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
-				patterns[i] = Pattern.compile("(?<![a-zA-Z-])" + Pattern.quote(tagString) + "(?![a-zA-Z-])",
+				patterns[i] = Pattern.compile("(?<![a-zA-Z-])" + Pattern.quote(tagString) + "(?![a-zA-Z-])", //$NON-NLS-1$ //$NON-NLS-2$
 						Pattern.CASE_INSENSITIVE);
 			}
 		}

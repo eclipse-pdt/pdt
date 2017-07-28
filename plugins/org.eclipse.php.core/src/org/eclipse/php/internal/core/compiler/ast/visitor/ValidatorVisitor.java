@@ -386,7 +386,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 				}
 				StringBuilder methodName = new StringBuilder(method.getParent().getElementName()).append("::"); //$NON-NLS-1$
 				PHPModelUtils.getMethodLabel(method, methodName);
-				String message = Messages.getString("AbstractMethodMustBeImplemented",
+				String message = Messages.getString("AbstractMethodMustBeImplemented", //$NON-NLS-1$
 						new String[] { type.getElementName(), methodName.toString() });
 				reportProblem(nodeStart, nodeEnd, message, PHPProblemIdentifier.AbstractMethodMustBeImplemented,
 						ProblemSeverities.Error);

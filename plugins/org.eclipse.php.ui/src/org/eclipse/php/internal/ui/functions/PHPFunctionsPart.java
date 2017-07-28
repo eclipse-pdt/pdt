@@ -199,7 +199,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 						IBuildpathContainer languageContainer = DLTKCore.getBuildpathContainer(
 								new Path(LanguageModelInitializer.CONTAINER_PATH), scriptProject);
 						if (languageContainer == null) {
-							Logger.log(Logger.ERROR, "project \"" + scriptProject.getProject().getName()
+							Logger.log(Logger.ERROR, "project \"" + scriptProject.getProject().getName() //$NON-NLS-1$
 									+ "\" has php nature but has no language container"); //$NON-NLS-1$ 
 							return Status.CANCEL_STATUS;
 						}

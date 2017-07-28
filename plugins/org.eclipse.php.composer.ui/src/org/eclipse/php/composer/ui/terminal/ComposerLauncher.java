@@ -57,11 +57,11 @@ public class ComposerLauncher extends ScriptLauncher {
 		cmd.addArgument(argument);
 		cmd.addArguments(params);
 
-		Map<String, String> env = new HashMap<String, String>(System.getenv());
+		Map<String, String> env = new HashMap<>(System.getenv());
 		PHPLaunchUtilities.appendExecutableToPathEnv(env, new File(cmd.getExecutable()).getParentFile());
 		PHPLaunchUtilities.appendLibrarySearchPathEnv(env, new File(cmd.getExecutable()).getParentFile());
 
-		Map<String, Object> properties = new HashMap<String, Object>();
+		Map<String, Object> properties = new HashMap<>();
 		List<String> envs = new ArrayList<>(env.size());
 		for (String key : env.keySet()) {
 			envs.add(key + '=' + env.get(key));
@@ -84,10 +84,10 @@ public class ComposerLauncher extends ScriptLauncher {
 		// workaround for colored output on Windows
 		if (Platform.OS_WIN32.equals(Platform.getOS())) {
 			StringBuilder builder = new StringBuilder();
-			builder.append("@echo off").append(WINDOWS_END_OF_LINE); // $NON-NLS-1$
+			builder.append("@echo off").append(WINDOWS_END_OF_LINE); //$NON-NLS-1$
 
 			// 65001 - UTF-8
-			builder.append("chcp 65001").append(WINDOWS_END_OF_LINE); // $NON-NLS-1$
+			builder.append("chcp 65001").append(WINDOWS_END_OF_LINE); //$NON-NLS-1$
 
 			builder.append("cls").append(WINDOWS_END_OF_LINE); //$NON-NLS-1$
 			builder.append(escapePath(cmd.getExecutable())).append(' ');
@@ -95,7 +95,7 @@ public class ComposerLauncher extends ScriptLauncher {
 				builder.append(arg).append(' ');
 			}
 
-			File file = File.createTempFile("composer_windows_", ".bat"); // $NON-NLS-1$ //$NON-NLS-2$
+			File file = File.createTempFile("composer_windows_", ".bat"); //$NON-NLS-1$//$NON-NLS-2$
 			file.deleteOnExit();
 			try (BufferedWriter writer = new BufferedWriter(new FileWriter(file));) {
 				writer.write(builder.toString());

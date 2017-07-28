@@ -230,7 +230,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				DirectoryDialog dialog = new DirectoryDialog(getShell());
-				dialog.setMessage("Select local folder");
+				dialog.setMessage("Select local folder"); //$NON-NLS-1$
 				String path = dialog.open();
 				if (path != null) {
 					fExternalPathText.setText(path);

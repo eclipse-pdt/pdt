@@ -55,7 +55,7 @@ public class RepositoriesSection extends TableSection implements PropertyChangeL
 	class RepositoriesController extends LabelProvider implements IController {
 
 		private Repositories repositories;
-		private Map<String, Image> images = new HashMap<String, Image>();
+		private Map<String, Image> images = new HashMap<>();
 		private Map<String, ImageDescriptor> descriptors = new HashMap<String, ImageDescriptor>() {
 			private static final long serialVersionUID = -2019489473873127982L;
 
@@ -70,10 +70,12 @@ public class RepositoriesSection extends TableSection implements PropertyChangeL
 			}
 		};
 
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			repositories = (Repositories) newInput;
 		}
 
+		@Override
 		public Object[] getElements(Object inputElement) {
 			return repositories.toArray();
 		}
@@ -166,6 +168,7 @@ public class RepositoriesSection extends TableSection implements PropertyChangeL
 		updateMenu();
 	}
 
+	@Override
 	protected boolean createCount() {
 		return true;
 	}
@@ -195,6 +198,7 @@ public class RepositoriesSection extends TableSection implements PropertyChangeL
 		repositoryViewer.getTable().setEnabled(enabled);
 	}
 
+	@Override
 	public void refresh() {
 		repositoryViewer.refresh();
 		super.refresh();
@@ -207,6 +211,7 @@ public class RepositoriesSection extends TableSection implements PropertyChangeL
 		}
 	}
 
+	@Override
 	protected void selectionChanged(IStructuredSelection sel) {
 		updateButtons();
 		updateMenu();
@@ -214,18 +219,21 @@ public class RepositoriesSection extends TableSection implements PropertyChangeL
 
 	private void makeActions() {
 		addAction = new Action(Messages.RepositoriesSection_AddActionTitle) {
+			@Override
 			public void run() {
 				handleAdd();
 			}
 		};
 
 		editAction = new Action(Messages.RepositoriesSection_EditActionTitle) {
+			@Override
 			public void run() {
 				handleEdit();
 			}
 		};
 
 		removeAction = new Action(Messages.RepositoriesSection_RemoveActionTitle) {
+			@Override
 			public void run() {
 				handleRemove();
 			}
@@ -261,7 +269,7 @@ public class RepositoriesSection extends TableSection implements PropertyChangeL
 		StructuredSelection selection = ((StructuredSelection) repositoryViewer.getSelection());
 		Iterator<Object> it = selection.iterator();
 		String[] names = new String[selection.size()];
-		List<Repository> repos = new ArrayList<Repository>();
+		List<Repository> repos = new ArrayList<>();
 
 		for (int i = 0; it.hasNext(); i++) {
 			Repository repo = (Repository) it.next();

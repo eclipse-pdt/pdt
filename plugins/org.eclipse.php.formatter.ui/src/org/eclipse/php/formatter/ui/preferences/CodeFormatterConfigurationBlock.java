@@ -237,7 +237,7 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 			dialog.setText(FormatterMessages.CodingStyleConfigurationBlock_save_profile_dialog_title);
 			dialog.setFilterExtensions(new String[] { "*.xml" }); //$NON-NLS-1$
 			// set default file name to profile name
-			dialog.setFileName(selected.getName() + ".xml");
+			dialog.setFileName(selected.getName() + ".xml"); //$NON-NLS-1$
 
 			final String lastPath = FormatterUIPlugin.getDefault().getDialogSettings().get(DIALOGSTORE_LASTSAVEPATH);
 			if (lastPath != null) {

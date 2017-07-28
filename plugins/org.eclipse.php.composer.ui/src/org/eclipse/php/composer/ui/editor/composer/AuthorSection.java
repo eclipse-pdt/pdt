@@ -57,14 +57,17 @@ public class AuthorSection extends TableSection implements PropertyChangeListene
 		private Persons authors;
 		private Image authorImage = ComposerUIPluginImages.PERSON.createImage();
 
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			authors = (Persons) newInput;
 		}
 
+		@Override
 		public Object[] getElements(Object inputElement) {
 			return authors.toArray();
 		}
 
+		@Override
 		public void update(ViewerCell cell) {
 			Object obj = cell.getElement();
 
@@ -124,6 +127,7 @@ public class AuthorSection extends TableSection implements PropertyChangeListene
 		updateMenu();
 	}
 
+	@Override
 	protected boolean createCount() {
 		return true;
 	}
@@ -153,6 +157,7 @@ public class AuthorSection extends TableSection implements PropertyChangeListene
 		authorViewer.getTable().setEnabled(enabled);
 	}
 
+	@Override
 	public void refresh() {
 		authorViewer.refresh();
 		super.refresh();
@@ -165,6 +170,7 @@ public class AuthorSection extends TableSection implements PropertyChangeListene
 		}
 	}
 
+	@Override
 	protected void selectionChanged(IStructuredSelection sel) {
 		updateButtons();
 		updateMenu();
@@ -172,18 +178,21 @@ public class AuthorSection extends TableSection implements PropertyChangeListene
 
 	private void makeActions() {
 		addAction = new Action(Messages.AuthorSection_AddActionTitle) {
+			@Override
 			public void run() {
 				handleAdd();
 			}
 		};
 
 		editAction = new Action(Messages.AuthorSection_EditActionTitle) {
+			@Override
 			public void run() {
 				handleEdit();
 			}
 		};
 
 		removeAction = new Action(Messages.AuthorSection_RemoveActionTitle) {
+			@Override
 			public void run() {
 				handleRemove();
 			}
@@ -221,7 +230,7 @@ public class AuthorSection extends TableSection implements PropertyChangeListene
 		StructuredSelection selection = ((StructuredSelection) authorViewer.getSelection());
 		Iterator<Object> it = selection.iterator();
 		String[] names = new String[selection.size()];
-		List<Person> persons = new ArrayList<Person>();
+		List<Person> persons = new ArrayList<>();
 
 		for (int i = 0; it.hasNext(); i++) {
 			Person person = (Person) it.next();

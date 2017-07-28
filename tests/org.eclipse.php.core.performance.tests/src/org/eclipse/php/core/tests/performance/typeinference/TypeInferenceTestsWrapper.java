@@ -49,7 +49,7 @@ import junit.framework.TestSuite;
 public class TypeInferenceTestsWrapper extends AbstractPDTTTest {
 
 	protected static final int ENGINE_TIMEOUT = 100000;
-	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<>();
 	static {
 		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/project/typeinference/php5" });
 		TESTS.put(PHPVersion.PHP5_3,

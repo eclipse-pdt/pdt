@@ -31,13 +31,13 @@ import org.junit.Test;
 public class ReverseNamespaceResolverTest extends ComposerModelTests {
 
 	public ReverseNamespaceResolverTest() {
-		super("Reverse Namespace Resolver tests");
+		super("Reverse Namespace Resolver tests"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void testNamespaceResolver() throws CoreException, IOException {
 
-		IScriptProject scriptProject = ensureScriptProject("testproject2");
+		IScriptProject scriptProject = ensureScriptProject("testproject2"); //$NON-NLS-1$
 
 		assertNotNull(scriptProject);
 
@@ -56,13 +56,13 @@ public class ReverseNamespaceResolverTest extends ComposerModelTests {
 		ComposerCoreTestPlugin.waitForIndexer();
 		ComposerCoreTestPlugin.waitForAutoBuild();
 
-		IFile file = scriptProject.getProject().getFile("composer.json");
+		IFile file = scriptProject.getProject().getFile("composer.json"); //$NON-NLS-1$
 		assertNotNull(file);
 
 		assertTrue(scriptProject.getProject().hasNature(PHPNature.ID));
 		assertTrue(FacetManager.hasComposerFacet(scriptProject.getProject()));
 
-		String namespace = "Foobar\\Sub";
+		String namespace = "Foobar\\Sub"; //$NON-NLS-1$
 
 		IPath resolvedPath = ModelAccess.getInstance().reverseResolve(scriptProject.getProject(), namespace);
 		assertNotNull(resolvedPath);

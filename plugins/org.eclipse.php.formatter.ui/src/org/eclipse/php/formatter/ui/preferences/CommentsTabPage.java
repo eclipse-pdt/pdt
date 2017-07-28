@@ -83,33 +83,33 @@ public class CommentsTabPage extends ModifyDialogTabPage {
 
 	private boolean isInitialized = false;
 	private final String LINE_SEPARATOR = System.getProperty(Platform.PREF_LINE_SEPARATOR);
-	private final String PREVIEW = "<?php" + LINE_SEPARATOR + "\t/**       " + LINE_SEPARATOR
-			+ " * This is the header comment." + LINE_SEPARATOR + "\t * \ttest" + LINE_SEPARATOR + " */"
-			+ LINE_SEPARATOR + "\t/**" + LINE_SEPARATOR + " * This is the comment for the example interface."
-			+ LINE_SEPARATOR + " */" + LINE_SEPARATOR + " interface Example {" + LINE_SEPARATOR
-			+ "// This is a long comment    with\twhitespace     that should be split in multiple line comments in case the line comment formatting is enabled"
-			+ LINE_SEPARATOR + "function foo3();" + LINE_SEPARATOR + " " + LINE_SEPARATOR + "//\tfunction commented() {"
-			+ LINE_SEPARATOR + "//\t\t\techo(\"indented\");" + LINE_SEPARATOR + "//\t}" + LINE_SEPARATOR + ""
-			+ LINE_SEPARATOR + "\t//\tfunction indentedCommented() {" + LINE_SEPARATOR + "\t//\t\t\techo(\"indented\");"
-			+ LINE_SEPARATOR + "\t//\t}" + LINE_SEPARATOR + "" + LINE_SEPARATOR
-			+ "/* block comment          on first column*/" + LINE_SEPARATOR + " function bar();" + LINE_SEPARATOR
-			+ "\t/*" + LINE_SEPARATOR + "\t*" + LINE_SEPARATOR + "\t* These possibilities include:" + LINE_SEPARATOR
-			+ "\t* <ul><li>Formatting of header comments.</li><li>Formatting of Javadoc tags</li></ul>" + LINE_SEPARATOR
-			+ "\t*/" + LINE_SEPARATOR
-			+ " function bar2(); // This is a long comment that should be split in multiple line comments in case the line comment formatting is enabled"
-			+ LINE_SEPARATOR + " /**" + LINE_SEPARATOR
-			+ " * The following is some sample code which illustrates source formatting within javadoc comments:"
+	private final String PREVIEW = "<?php" + LINE_SEPARATOR + "\t/**       " + LINE_SEPARATOR //$NON-NLS-1$ //$NON-NLS-2$
+			+ " * This is the header comment." + LINE_SEPARATOR + "\t * \ttest" + LINE_SEPARATOR + " */" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			+ LINE_SEPARATOR + "\t/**" + LINE_SEPARATOR + " * This is the comment for the example interface." //$NON-NLS-1$ //$NON-NLS-2$
+			+ LINE_SEPARATOR + " */" + LINE_SEPARATOR + " interface Example {" + LINE_SEPARATOR //$NON-NLS-1$ //$NON-NLS-2$
+			+ "// This is a long comment    with\twhitespace     that should be split in multiple line comments in case the line comment formatting is enabled" //$NON-NLS-1$
+			+ LINE_SEPARATOR + "function foo3();" + LINE_SEPARATOR + " " + LINE_SEPARATOR + "//\tfunction commented() {" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			+ LINE_SEPARATOR + "//\t\t\techo(\"indented\");" + LINE_SEPARATOR + "//\t}" + LINE_SEPARATOR + "" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			+ LINE_SEPARATOR + "\t//\tfunction indentedCommented() {" + LINE_SEPARATOR + "\t//\t\t\techo(\"indented\");" //$NON-NLS-1$ //$NON-NLS-2$
+			+ LINE_SEPARATOR + "\t//\t}" + LINE_SEPARATOR + "" + LINE_SEPARATOR //$NON-NLS-1$ //$NON-NLS-2$
+			+ "/* block comment          on first column*/" + LINE_SEPARATOR + " function bar();" + LINE_SEPARATOR //$NON-NLS-1$ //$NON-NLS-2$
+			+ "\t/*" + LINE_SEPARATOR + "\t*" + LINE_SEPARATOR + "\t* These possibilities include:" + LINE_SEPARATOR //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			+ "\t* <ul><li>Formatting of header comments.</li><li>Formatting of Javadoc tags</li></ul>" + LINE_SEPARATOR //$NON-NLS-1$
+			+ "\t*/" + LINE_SEPARATOR //$NON-NLS-1$
+			+ " function bar2(); // This is a long comment that should be split in multiple line comments in case the line comment formatting is enabled" //$NON-NLS-1$
+			+ LINE_SEPARATOR + " /**" + LINE_SEPARATOR //$NON-NLS-1$
+			+ " * The following is some sample code which illustrates source formatting within javadoc comments:" //$NON-NLS-1$
 			+ LINE_SEPARATOR
-			+ " * Descriptions of parameters and return values are best appended at end of the javadoc comment."
+			+ " * Descriptions of parameters and return values are best appended at end of the javadoc comment." //$NON-NLS-1$
 			+ LINE_SEPARATOR
-			+ " * @param $a int The first parameter. For an optimum result, this should be an odd number"
-			+ LINE_SEPARATOR + " * between 0 and 100." + LINE_SEPARATOR + " * @param $b int The second parameter."
-			+ LINE_SEPARATOR + " * @return int The result of the foo operation, usually within 0 and 1000."
-			+ LINE_SEPARATOR + " */" + " function foo(int $a, int $b);" + LINE_SEPARATOR + "}" + LINE_SEPARATOR
-			+ "// This is a long comment    with\twhitespace     that should be split in multiple line comments in case the line comment formatting is enabled"
-			+ LINE_SEPARATOR + "class Test {" + LINE_SEPARATOR + "\t\tfunction trailingCommented() {" + LINE_SEPARATOR
-			+ "\t\t\t\techo(\"indented\");\t\t// comment" + LINE_SEPARATOR + "\t\t\t\techo(\"indent\");\t\t// comment"
-			+ LINE_SEPARATOR + "\t\t}" + LINE_SEPARATOR + "}";
+			+ " * @param $a int The first parameter. For an optimum result, this should be an odd number" //$NON-NLS-1$
+			+ LINE_SEPARATOR + " * between 0 and 100." + LINE_SEPARATOR + " * @param $b int The second parameter." //$NON-NLS-1$ //$NON-NLS-2$
+			+ LINE_SEPARATOR + " * @return int The result of the foo operation, usually within 0 and 1000." //$NON-NLS-1$
+			+ LINE_SEPARATOR + " */" + " function foo(int $a, int $b);" + LINE_SEPARATOR + "}" + LINE_SEPARATOR //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			+ "// This is a long comment    with\twhitespace     that should be split in multiple line comments in case the line comment formatting is enabled" //$NON-NLS-1$
+			+ LINE_SEPARATOR + "class Test {" + LINE_SEPARATOR + "\t\tfunction trailingCommented() {" + LINE_SEPARATOR //$NON-NLS-1$ //$NON-NLS-2$
+			+ "\t\t\t\techo(\"indented\");\t\t// comment" + LINE_SEPARATOR + "\t\t\t\techo(\"indent\");\t\t// comment" //$NON-NLS-1$ //$NON-NLS-2$
+			+ LINE_SEPARATOR + "\t\t}" + LINE_SEPARATOR + "}"; //$NON-NLS-1$ //$NON-NLS-2$
 
 	private CodeFormatterPreview fPreview;
 

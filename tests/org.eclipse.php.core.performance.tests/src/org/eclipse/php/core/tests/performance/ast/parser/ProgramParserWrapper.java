@@ -35,7 +35,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 public class ProgramParserWrapper extends AbstractPDTTTest {
-	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<>();
 	static {
 		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/project/programparser/php5" });
 		TESTS.put(PHPVersion.PHP5_3,

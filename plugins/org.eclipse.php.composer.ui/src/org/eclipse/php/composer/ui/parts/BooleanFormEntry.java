@@ -35,7 +35,7 @@ public class BooleanFormEntry {
 	private Button checkbox;
 	private boolean ignoreNotify = false;
 
-	private ArrayList<IBooleanFormEntryListener> listeners = new ArrayList<IBooleanFormEntryListener>();
+	private ArrayList<IBooleanFormEntryListener> listeners = new ArrayList<>();
 
 	public BooleanFormEntry(Composite parent, FormToolkit toolkit, String labelText) {
 		this(parent, toolkit, labelText, SWT.FLAT);
@@ -109,6 +109,7 @@ public class BooleanFormEntry {
 
 	private void addListener() {
 		checkbox.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (ignoreNotify)
 					return;
@@ -118,6 +119,7 @@ public class BooleanFormEntry {
 				}
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});

@@ -72,7 +72,7 @@ public class ExtractFunctionActionDelegate implements IEditorActionDelegate, IWo
 			final ExtractFunctionRefactoring refactoring = new ExtractFunctionRefactoring(
 					DLTKCore.createSourceModuleFrom(file), structuredDocument, startOffset, length);
 			new RefactoringStarter().activate(refactoring, new ExtractFunctionWizard(refactoring), shell,
-					RefactoringMessages.ExtractMethodAction_dialog_title, false); // $NON-NLS-1$
+					RefactoringMessages.ExtractMethodAction_dialog_title, false);
 		} finally {
 			if (model != null) {
 				model.releaseFromEdit();

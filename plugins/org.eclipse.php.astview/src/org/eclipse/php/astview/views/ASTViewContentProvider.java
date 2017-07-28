@@ -62,7 +62,7 @@ public class ASTViewContentProvider implements ITreeContentProvider {
 	}
 	
 	private Object[] getNodeChildren(ASTNode node) {
-		ArrayList<Object> res= new ArrayList<Object>();
+		ArrayList<Object> res= new ArrayList<>();
 		
 		
 		if (node instanceof Expression) {

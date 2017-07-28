@@ -37,7 +37,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 public class PhpElementConciliatorTestWrapper extends AbstractPDTTTest {
-	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<>();
 	static {
 		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/project/locator/php5" });
 		TESTS.put(PHPVersion.PHP5_3,

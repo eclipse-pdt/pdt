@@ -35,7 +35,7 @@ public class CodeCoveragePreferenceKeys {
 				buf.append(","); //$NON-NLS-1$
 			}
 		}
-		store.setDefault(CODE_COVERAGE_COLUMNS, buf.toString()); // $NON-NLS-1$
+		store.setDefault(CODE_COVERAGE_COLUMNS, buf.toString());
 	}
 
 	private CodeCoveragePreferenceKeys() {
@@ -65,5 +65,5 @@ public class CodeCoveragePreferenceKeys {
 		}
 		getPreferenceStore().setValue(CODE_COVERAGE_COLUMNS, widthsBuffer.toString());
 	}
-	
+
 }

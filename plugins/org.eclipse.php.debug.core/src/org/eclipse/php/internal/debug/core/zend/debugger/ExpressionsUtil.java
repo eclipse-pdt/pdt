@@ -166,7 +166,7 @@ public class ExpressionsUtil {
 	private boolean invokeMethod(String object, String method, StringBuffer result) {
 		Expression e = new DefaultExpression(MessageFormat.format(CHECK_CLASS_METHOD_EXISTS, object, method));
 		fExpressionsManager.update(e, 1);
-		if (e.getValue().getValue() != null && e.getValue().getValue().equals("1")) {
+		if (e.getValue().getValue() != null && e.getValue().getValue().equals("1")) { //$NON-NLS-1$
 			String expression = object + "->" + method + "()"; //$NON-NLS-1$ //$NON-NLS-2$
 			e = new DefaultExpression(expression);
 			fExpressionsManager.getExpressionValue(e, 1);

@@ -40,7 +40,7 @@ import junit.framework.TestSuite;
 public class SelectionEngineTestsWrapper extends AbstractPDTTTest {
 
 	protected static final char SELECTION_CHAR = '|';
-	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<>();
 	static {
 		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/project/selection/php5" });
 		TESTS.put(PHPVersion.PHP5_3,

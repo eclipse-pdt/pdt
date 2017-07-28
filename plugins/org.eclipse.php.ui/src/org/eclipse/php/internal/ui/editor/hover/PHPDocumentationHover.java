@@ -437,7 +437,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 				// hide, rather than dispose
 
 				// open external links in real browser:
-				OpenBrowserUtil.open(url, display); // $NON-NLS-1$
+				OpenBrowserUtil.open(url, display);
 
 				return true;
 			}

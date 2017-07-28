@@ -41,6 +41,9 @@ import org.eclipse.dltk.core.builder.IBuildParticipant;
 import org.eclipse.dltk.core.builder.IBuildState;
 import org.eclipse.dltk.internal.core.builder.SourceModuleBuildContext;
 import org.eclipse.jface.text.Position;
+import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.ast.nodes.Program;
+import org.eclipse.php.core.compiler.ast.nodes.PHPModuleDeclaration;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.TestUtils;
@@ -51,9 +54,6 @@ import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.core.ast.nodes.Program;
-import org.eclipse.php.core.compiler.ast.nodes.PHPModuleDeclaration;
 import org.eclipse.php.internal.core.builder.TaskTagBuildParticipantFactory;
 import org.eclipse.php.internal.core.preferences.TaskPatternsProvider;
 import org.eclipse.php.internal.core.project.PHPNature;
@@ -81,7 +81,6 @@ import org.junit.rules.TestWatcher;
 import org.junit.runner.RunWith;
 import org.osgi.framework.Bundle;
 
-@SuppressWarnings("restriction")
 @RunWith(PDTTList.class)
 public class SemanticHighlightingTests {
 

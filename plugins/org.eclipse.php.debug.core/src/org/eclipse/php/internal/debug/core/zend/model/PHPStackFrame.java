@@ -88,7 +88,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 		}
 	}
 
-	private static final Pattern LAMBDA_FUNC_PATTERN = Pattern.compile("(.*)\\((\\d+)\\) : runtime-created function"); // $NON-NLS-0$
+	private static final Pattern LAMBDA_FUNC_PATTERN = Pattern.compile("(.*)\\((\\d+)\\) : runtime-created function"); //$NON-NLS-1$
 
 	private PHPThread fThread;
 	private String fFunctionName;

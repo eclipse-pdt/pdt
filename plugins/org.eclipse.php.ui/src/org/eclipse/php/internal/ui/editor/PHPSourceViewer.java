@@ -151,7 +151,7 @@ public class PHPSourceViewer extends Composite implements IPropertyChangeListene
 		fText.setBackground(fDefaultBackground);
 		fText.setForeground(fDefaultForeground);
 		fText.setFont(JFaceResources.getTextFont());
-		setAccessible(fText, SSEUIMessages.Sample_text__UI_); // $NON-NLS-1$ =
+		setAccessible(fText, SSEUIMessages.Sample_text__UI_); // =
 																// "&Sample
 																// text:"
 	}

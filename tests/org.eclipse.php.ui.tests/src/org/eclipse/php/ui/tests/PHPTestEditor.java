@@ -21,7 +21,6 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  * 
  * @author Bartlomiej Laczkowski
  */
-@SuppressWarnings("restriction")
 public class PHPTestEditor extends PHPStructuredEditor {
 
 	public static final String ID = "org.eclipse.php.test.editor";

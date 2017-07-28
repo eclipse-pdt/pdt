@@ -24,12 +24,12 @@ import org.eclipse.swt.widgets.Label;
 public class ControlStatementsTabPage extends ModifyDialogTabPage {
 	private boolean isInitialized = false;
 
-	private final String PREVIEW = "<?php\n"
+	private final String PREVIEW = "<?php\n" //$NON-NLS-1$
 			+ createPreviewHeader(FormatterMessages.ControlStatementsTabPage_preview_header)
-			+ "class Example { function bar() {	do {} while ( true );"
-			+ "try {} catch ( Exception $e ) {	} finally {}} function foo2() {if (true) {return;}"
+			+ "class Example { function bar() {	do {} while ( true );" //$NON-NLS-1$
+			+ "try {} catch ( Exception $e ) {	} finally {}} function foo2() {if (true) {return;}" //$NON-NLS-1$
 			+ "if (true) {return;} elseif (false) {return;} else { return;}}" //$NON-NLS-1$
-			+ "function foo($s) {	if (true) return;	if (true)	return; else if (false) return; else return;}}?>";
+			+ "function foo($s) {	if (true) return;	if (true)	return; else if (false) return; else return;}}?>"; //$NON-NLS-1$
 
 	private CodeFormatterPreview fPreview;
 

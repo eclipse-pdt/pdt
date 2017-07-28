@@ -33,6 +33,7 @@ public class TerminalConsole extends AbstractConsole {
 		this.done = done;
 	}
 
+	@Override
 	public IPageBookViewPage createPage(IConsoleView view) {
 		view.setFocus();
 		this.terminalConsolePage = new TerminalConsolePage(this, done);

@@ -29,7 +29,7 @@ import org.osgi.framework.BundleContext;
 public class ComposerCoreTestPlugin extends Plugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.eclipse.php.composer.tests";
+	public static final String PLUGIN_ID = "org.eclipse.php.composer.tests"; //$NON-NLS-1$
 
 	// The shared instance
 	private static ComposerCoreTestPlugin plugin;
@@ -65,10 +65,10 @@ public class ComposerCoreTestPlugin extends Plugin {
 
 	private static String getDiffError(String expected, String actual, int expectedDiff, int actualDiff) {
 		StringBuilder errorBuf = new StringBuilder();
-		errorBuf.append("\nEXPECTED:\n--------------\n");
-		errorBuf.append(expected.substring(0, expectedDiff)).append("*****").append(expected.substring(expectedDiff));
-		errorBuf.append("\n\nACTUAL:\n--------------\n");
-		errorBuf.append(actual.substring(0, actualDiff)).append("*****").append(actual.substring(actualDiff));
+		errorBuf.append("\nEXPECTED:\n--------------\n"); //$NON-NLS-1$
+		errorBuf.append(expected.substring(0, expectedDiff)).append("*****").append(expected.substring(expectedDiff)); //$NON-NLS-1$
+		errorBuf.append("\n\nACTUAL:\n--------------\n"); //$NON-NLS-1$
+		errorBuf.append(actual.substring(0, actualDiff)).append("*****").append(actual.substring(actualDiff)); //$NON-NLS-1$
 		return errorBuf.toString();
 	}
 
@@ -81,8 +81,8 @@ public class ComposerCoreTestPlugin extends Plugin {
 	 *         equal to the actual.
 	 */
 	public static String compareContents(String expected, String actual) {
-		actual = actual.replaceAll("[\r\n]+", "\n").trim();
-		expected = expected.replaceAll("[\r\n]+", "\n").trim();
+		actual = actual.replaceAll("[\r\n]+", "\n").trim(); //$NON-NLS-1$ //$NON-NLS-2$
+		expected = expected.replaceAll("[\r\n]+", "\n").trim(); //$NON-NLS-1$ //$NON-NLS-2$
 
 		int expectedDiff = StringUtils.indexOfDifference(actual, expected);
 		if (expectedDiff >= 0) {

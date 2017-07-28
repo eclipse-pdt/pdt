@@ -57,17 +57,19 @@ class TerminalConsolePage extends Page {
 	private ITerminalViewControl tViewCtrl;
 
 	private MenuManager contextMenuManager;
-	private final List<AbstractTerminalAction> contextMenuActions = new ArrayList<AbstractTerminalAction>();
+	private final List<AbstractTerminalAction> contextMenuActions = new ArrayList<>();
 
-	private Action stopAction = new Action("Stop",
+	private Action stopAction = new Action("Stop", //$NON-NLS-1$
 			PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ELCL_STOP)) {
+		@Override
 		public void run() {
 			terminalConsole.getTerminalConnector().disconnect();
 		};
 	};
 
-	private Action removeInactiveAction = new Action("Close All Inactive Consoles",
+	private Action removeInactiveAction = new Action("Close All Inactive Consoles", //$NON-NLS-1$
 			PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ELCL_REMOVEALL)) {
+		@Override
 		public void run() {
 			IConsoleManager consoleManager = ConsolePlugin.getDefault().getConsoleManager();
 			Set<IConsole> toRemove = new HashSet<>();

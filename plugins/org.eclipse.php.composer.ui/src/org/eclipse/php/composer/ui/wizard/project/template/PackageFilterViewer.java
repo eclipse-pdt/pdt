@@ -52,7 +52,7 @@ public class PackageFilterViewer extends FilteredViewer implements PackageFilter
 	private Button showProjectsCheckbox;
 	private PackagistContentProvider contentProvider;
 	private PackageFilterItem currentSelection = null;
-	private List<PackageFilterChangedListener> listeners = new ArrayList<PackageFilterChangedListener>();
+	private List<PackageFilterChangedListener> listeners = new ArrayList<>();
 	private Label searchResultCount;
 
 	private String lastQuery;
@@ -98,10 +98,12 @@ public class PackageFilterViewer extends FilteredViewer implements PackageFilter
 		showProjectsCheckbox.setText(Messages.PackageFilterViewer_ProjectsOnlyLabel);
 		showProjectsCheckbox.addSelectionListener(new SelectionListener() {
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 				widgetSelected(e);
 			}
 
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				doFind(getFilterText());
 			}
@@ -142,7 +144,7 @@ public class PackageFilterViewer extends FilteredViewer implements PackageFilter
 				@Override
 				public void packagesFound(List<MinimalPackage> packages, final String query, final SearchResult result) {
 					if (packages != null) {
-						final List<PackageFilterItem> items = new ArrayList<PackageFilterItem>();
+						final List<PackageFilterItem> items = new ArrayList<>();
 						for (MinimalPackage pkg : packages) {
 							items.add(new PackageFilterItem(pkg));
 						}
@@ -184,17 +186,20 @@ public class PackageFilterViewer extends FilteredViewer implements PackageFilter
 
 		private List<PackageFilterItem> packages;
 
+		@Override
 		public void dispose() {
 			packages = null;
 		}
 
+		@Override
 		public Object[] getChildren(Object parentElement) {
 			return null;
 		}
 
+		@Override
 		public Object[] getElements(Object inputElement) {
 			if (packages != null) {
-				List<Object> elements = new ArrayList<Object>();
+				List<Object> elements = new ArrayList<>();
 				elements.addAll(packages);
 				return elements.toArray(new Object[elements.size()]);
 			}
@@ -202,6 +207,7 @@ public class PackageFilterViewer extends FilteredViewer implements PackageFilter
 			return EMTPY;
 		}
 
+		@Override
 		public Object getParent(Object element) {
 			if (element instanceof PackageFilterItem) {
 				return packages;
@@ -210,6 +216,7 @@ public class PackageFilterViewer extends FilteredViewer implements PackageFilter
 			return null;
 		}
 
+		@Override
 		public boolean hasChildren(Object element) {
 			if (element instanceof PackageFilterItem) {
 				return false;
@@ -229,9 +236,10 @@ public class PackageFilterViewer extends FilteredViewer implements PackageFilter
 		}
 
 		public void clear() {
-			packages = new ArrayList<PackageFilterItem>();
+			packages = new ArrayList<>();
 		}
 
+		@Override
 		@SuppressWarnings("unchecked")
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			packages = (List<PackageFilterItem>) newInput;

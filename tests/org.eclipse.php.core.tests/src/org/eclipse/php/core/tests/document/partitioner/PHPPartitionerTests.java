@@ -232,7 +232,6 @@ public class PHPPartitionerTests {
 	 *         type
 	 * @throws Exception
 	 */
-	@SuppressWarnings("restriction")
 	private ArrayList<String> getPartitionType(String[] markers, String testDataFile) throws Exception {
 		// offset from beginning of stream
 		int offset = 0;

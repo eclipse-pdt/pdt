@@ -601,7 +601,7 @@ public class CodeAssistUtils {
 					String quotedVarName = testedVar.substring(testedVar.indexOf('[') + 1, testedVar.indexOf(']'))
 							.trim();
 					// 'myVar' => $myVar
-					className = DOLLAR + quotedVarName.substring(1, quotedVarName.length() - 1); // $NON-NLS-1$
+					className = DOLLAR + quotedVarName.substring(1, quotedVarName.length() - 1);
 					// check for $array[0] scenario
 				} else if (testedVar.endsWith("}")) { //$NON-NLS-1$
 					className = testedVar;
@@ -647,7 +647,7 @@ public class CodeAssistUtils {
 			String functionName = functionNameStart < 0 ? "" //$NON-NLS-1$
 					: statementText.subSequence(functionNameStart, functionNameEnd).toString().trim();
 			if (isKeyword(functionName)) {
-				functionName = "";
+				functionName = ""; //$NON-NLS-1$
 				functionNameStart = functionNameEnd = PHPTextSequenceUtilities.readForwardSpaces(statementText,
 						functionNameEnd);
 			}

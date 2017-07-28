@@ -463,7 +463,7 @@ public class PHPexes {
 		String uniqueIdsString = Platform.getPreferencesService().getString(PHPDebugPlugin.ID,
 				PHPDebugCorePreferenceNames.INSTALLED_PHP_UNIQUE_IDS, null, null);
 		if (uniqueIdsString == null) {
-			uniqueIdsString = "";
+			uniqueIdsString = ""; //$NON-NLS-1$
 		}
 		final String[] phpExecutablesUniqueIds = uniqueIdsString.length() > 0 ? uniqueIdsString.split(SEPARATOR)
 				: new String[0];

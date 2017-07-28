@@ -43,7 +43,7 @@ public class FileUtils {
 
 			while ((line = input.readLine()) != null) {
 				contents.append(line);
-				contents.append(newLine); // $NON-NLS-1$
+				contents.append(newLine);
 			}
 
 		} catch (CoreException e) {

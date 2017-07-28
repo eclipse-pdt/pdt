@@ -206,7 +206,7 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 							break;
 						}
 						if (f > 0) {
-							sb.append(", ");
+							sb.append(", "); //$NON-NLS-1$
 							length += 2;
 						}
 						String feature = list[f].getAttribute(PHPUiConstants.PHP_VERSION_INFO_ATTR_NAME);

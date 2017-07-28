@@ -138,7 +138,7 @@ public class XDebugTextHover extends PHPDebugTextHover {
 				}
 			} else if (node.getParent() instanceof SingleFieldDeclaration) {
 				IField field = (IField) sourceModule.getElementAt(node.getStart());
-				String typeName = "";
+				String typeName = ""; //$NON-NLS-1$
 				boolean isAnonymous = false;
 				if (field.getParent() instanceof IType) {
 					IType type = (IType) field.getParent();
@@ -242,7 +242,7 @@ public class XDebugTextHover extends PHPDebugTextHover {
 		DBGpTarget debugTarget = (DBGpTarget) context.getDebugTarget();
 		Node resp = debugTarget.eval(expression);
 		if (resp == null) {
-			return null; // $NON-NLS-1$
+			return null;
 		}
 		return new DBGpEvalVariable(debugTarget, expression, resp);
 	}
@@ -257,7 +257,7 @@ public class XDebugTextHover extends PHPDebugTextHover {
 			resp = debugTarget.getProperty(variable, stackLevel, 0);
 		}
 		if (resp == null) {
-			return null; // $NON-NLS-1$
+			return null;
 		}
 		DBGpVariable var = new DBGpStackVariable(debugTarget, resp, Integer.valueOf(stackLevel));
 		setContextFacets(var);

@@ -46,7 +46,6 @@ import org.eclipse.swt.widgets.Display;
 
 import com.ibm.icu.text.MessageFormat;
 
-@SuppressWarnings("restriction")
 public class PHPUnitZDLauncher extends PHPUnitBasicLauncher {
 
 	class CrashDetector extends ProcessCrashDetector {

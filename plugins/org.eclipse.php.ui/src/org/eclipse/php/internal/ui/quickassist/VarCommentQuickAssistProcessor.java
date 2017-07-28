@@ -122,7 +122,7 @@ public class VarCommentQuickAssistProcessor implements IQuickAssistProcessor {
 			String selectionLineText = document.get(selectionLineOffset, selectionLineLength);
 
 			Matcher nonSpaceMatch = noneSpacePattern.matcher(selectionLineText);
-			StringBuilder varTypeHint = new StringBuilder(); // $NON-NLS-1$
+			StringBuilder varTypeHint = new StringBuilder();
 			if (nonSpaceMatch.find()) {
 				varTypeHint.append(selectionLineText.substring(0, nonSpaceMatch.start()));
 			}

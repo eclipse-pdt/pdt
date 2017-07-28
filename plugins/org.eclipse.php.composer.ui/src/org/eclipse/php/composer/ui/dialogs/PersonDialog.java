@@ -70,6 +70,7 @@ public class PersonDialog extends Dialog {
 			name.setText(person.getName());
 		}
 		name.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				person.setName(name.getText());
 			}
@@ -85,6 +86,7 @@ public class PersonDialog extends Dialog {
 			email.setText(person.getEmail());
 		}
 		email.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				person.setEmail(email.getText());
 			}
@@ -100,6 +102,7 @@ public class PersonDialog extends Dialog {
 			homepage.setText(person.getHomepage());
 		}
 		homepage.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				person.setHomepage(homepage.getText());
 			}
@@ -115,6 +118,7 @@ public class PersonDialog extends Dialog {
 			role.setText(person.getRole());
 		}
 		role.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				person.setRole(role.getText());
 			}

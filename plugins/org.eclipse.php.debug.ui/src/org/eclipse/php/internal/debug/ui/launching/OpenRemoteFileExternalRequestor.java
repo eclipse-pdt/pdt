@@ -89,7 +89,7 @@ public class OpenRemoteFileExternalRequestor implements IRemoteFileContentReques
 		// Check for a server address to find a perfect match.
 		Server serverMatch = null;
 		try {
-			String serverURL = "http://" + serverAddress;
+			String serverURL = "http://" + serverAddress; //$NON-NLS-1$
 			// Try perfect match first
 			serverMatch = ServersManager.findByURL(serverURL);
 			if (serverMatch != null) {

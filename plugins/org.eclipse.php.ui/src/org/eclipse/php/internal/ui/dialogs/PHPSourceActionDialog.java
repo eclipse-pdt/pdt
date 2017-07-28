@@ -265,7 +265,7 @@ public class PHPSourceActionDialog extends CheckedTreeSelectionDialog {
 		}
 
 		Group group = new Group(parent, SWT.NONE);
-		group.setText(Messages.GettersSettersAction_33); // $NON-NLS-1$
+		group.setText(Messages.GettersSettersAction_33);
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		group.setLayoutData(gd);
 		GridLayout layout = new GridLayout();

@@ -57,11 +57,12 @@ public class ComposerImportWizard extends Wizard implements IImportWizard {
 		}
 
 		setWindowTitle(DataTransferMessages.DataTransfer_importTitle);
-		setDefaultPageImageDescriptor(ComposerUIPluginImages.IMPORT_PROJECT);// $NON-NLS-1$
+		setDefaultPageImageDescriptor(ComposerUIPluginImages.IMPORT_PROJECT);
 		setNeedsProgressMonitor(true);
 
 	}
 
+	@Override
 	public void addPages() {
 		super.addPages();
 		mainPage = new WizardResourceImportPage(workbench, selection, getFileImportMask());

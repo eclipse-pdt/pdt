@@ -109,7 +109,7 @@ public class DefaultPHPServerConfiguration extends PHPServerConfiguration {
 			// save server.xml
 			byte[] data = serverFactory.getContents();
 			InputStream in = new ByteArrayInputStream(data);
-			IFile file = folder.getFile(SERVER_XML_FILENAME); // $NON-NLS-1$
+			IFile file = folder.getFile(SERVER_XML_FILENAME);
 			if (file.exists()) {
 				if (isServerDirty)
 					file.setContents(in, true, true, ProgressUtil.getSubMonitorFor(monitor, 200));
@@ -124,7 +124,7 @@ public class DefaultPHPServerConfiguration extends PHPServerConfiguration {
 				fPhpIniFile = ""; //$NON-NLS-1$
 			}
 			in = new ByteArrayInputStream(fPhpIniFile.getBytes());
-			file = folder.getFile(PHP_INI_FILENAME); // $NON-NLS-1$
+			file = folder.getFile(PHP_INI_FILENAME);
 			if (file.exists())
 				monitor.worked(200);
 			else

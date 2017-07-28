@@ -47,7 +47,7 @@ public class MarkOccurrenceTestsWrapper extends AbstractPDTTTest {
 
 	// public static String PROJECT;
 	protected static final char OFFSET_CHAR = '|';
-	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<>();
 	static {
 		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/project/markoccurrence/php5" });
 		TESTS.put(PHPVersion.PHP5_3,
@@ -136,7 +136,7 @@ public class MarkOccurrenceTestsWrapper extends AbstractPDTTTest {
 		if (offset == -1) {
 			throw new IllegalArgumentException("Offset character is not set");
 		}
-		List<Integer> starts = new ArrayList<Integer>();
+		List<Integer> starts = new ArrayList<>();
 		int startIndex = -1;
 		while ((startIndex = data.indexOf('%', startIndex + 1)) >= 0) {
 			starts.add(startIndex);
@@ -144,7 +144,7 @@ public class MarkOccurrenceTestsWrapper extends AbstractPDTTTest {
 		if (starts.size() % 2 != 0) {
 			throw new IllegalArgumentException("% must be paired");
 		}
-		List<Integer> newStarts = new ArrayList<Integer>();
+		List<Integer> newStarts = new ArrayList<>();
 		for (int i = 0; i < starts.size(); i++) {
 			int oldstart = starts.get(i) - i;
 			if (oldstart > offset) {

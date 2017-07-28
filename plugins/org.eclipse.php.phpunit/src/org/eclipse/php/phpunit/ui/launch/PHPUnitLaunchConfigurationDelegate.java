@@ -174,8 +174,7 @@ public class PHPUnitLaunchConfigurationDelegate extends PHPExecutableLaunchDeleg
 		String container = config.getAttribute(ATTRIBUTE_CONTAINER, ""); //$NON-NLS-1$
 		String file = config.getAttribute(ATTRIBUTE_FILE, ""); //$NON-NLS-1$
 		String projectName = config.getAttribute(ATTRIBUTE_PROJECT, ""); //$NON-NLS-1$
-		boolean runContainer = config.getAttribute(ATTRIBUTE_RUN_CONTAINER, // $NON-NLS-1$
-				true);
+		boolean runContainer = config.getAttribute(ATTRIBUTE_RUN_CONTAINER, true);
 
 		IPath resourcePath = null;
 		if (containerType.equals(PROJECT_CONTAINER)) {

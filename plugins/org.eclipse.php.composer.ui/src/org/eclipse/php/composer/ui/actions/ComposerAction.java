@@ -31,7 +31,7 @@ abstract public class ComposerAction extends Action {
 		this.project = project;
 		this.site = site;
 		id = commandId;
-		command = ((ICommandService) site.getService(ICommandService.class)).getCommand(id);
+		command = site.getService(ICommandService.class).getCommand(id);
 	}
 
 	@Override

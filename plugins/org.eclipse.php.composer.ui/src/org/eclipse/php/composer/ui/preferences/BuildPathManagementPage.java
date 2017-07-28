@@ -78,7 +78,7 @@ public class BuildPathManagementPage extends WizardPropertyPage {
 	protected void applyChanges() {
 
 		List<BPListElement> elements = wizard.getModifiedElements();
-		BPListElement element = (BPListElement) elements.get(0);
+		BPListElement element = elements.get(0);
 		IBuildpathEntry buildpathEntry = element.getBuildpathEntry();
 
 		if (buildpathEntry instanceof BuildpathEntry) {

@@ -152,7 +152,7 @@ public class PHPDebugPlugin extends Plugin {
 		public static void setExtDirInPHPIniFile() {
 
 			final IExtensionRegistry registry = Platform.getExtensionRegistry();
-			final IConfigurationElement[] elements = registry.getConfigurationElementsFor("org.eclipse.php.debug.core",
+			final IConfigurationElement[] elements = registry.getConfigurationElementsFor("org.eclipse.php.debug.core", //$NON-NLS-1$
 					EXTENSION_POINT_NAME);
 			Matcher matcher = null;
 			Pattern pattern = null;
@@ -171,40 +171,40 @@ public class PHPDebugPlugin extends Plugin {
 						File phpIniDir = phpIni.getParentFile();
 						String fileName = phpIni.getAbsolutePath();
 						String iniContent = readFile(fileName);
-						String correctDir = phpIniDir.getAbsolutePath().concat(File.separator).replaceAll("\\\\",
-								"\\\\\\\\");
-						pattern = Pattern.compile("(extension_dir=.*)(ext[^\\s]*)");
+						String correctDir = phpIniDir.getAbsolutePath().concat(File.separator).replaceAll("\\\\", //$NON-NLS-1$
+								"\\\\\\\\"); //$NON-NLS-1$
+						pattern = Pattern.compile("(extension_dir=.*)(ext[^\\s]*)"); //$NON-NLS-1$
 						matcher = pattern.matcher(iniContent);
 						if (matcher.find()) {
-							Path iniPath = new Path(matcher.group(1).replaceAll("extension_dir=", ""));
+							Path iniPath = new Path(matcher.group(1).replaceAll("extension_dir=", "")); //$NON-NLS-1$ //$NON-NLS-2$
 							Path currentPath = new Path(correctDir);
 							if (!currentPath.isPrefixOf(iniPath)) {
-								iniContent = iniContent.replaceAll(matcher.group(0).replaceAll("\\\\", "\\\\\\\\"),
-										"extension_dir=\"" + correctDir
-												+ matcher.group(2).replace("\"", "").replaceAll("\\\\", "\\\\\\\\")
-												+ "\"");
-								pattern = Pattern.compile("(zend_extension=.*)(ext[^\\s]ZendDebugger[^\\s]*)");
+								iniContent = iniContent.replaceAll(matcher.group(0).replaceAll("\\\\", "\\\\\\\\"), //$NON-NLS-1$ //$NON-NLS-2$
+										"extension_dir=\"" + correctDir //$NON-NLS-1$
+												+ matcher.group(2).replace("\"", "").replaceAll("\\\\", "\\\\\\\\") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+												+ "\""); //$NON-NLS-1$
+								pattern = Pattern.compile("(zend_extension=.*)(ext[^\\s]ZendDebugger[^\\s]*)"); //$NON-NLS-1$
 								matcher = pattern.matcher(iniContent);
 								if (matcher.find()) {
-									iniContent = iniContent.replaceAll(matcher.group(0).replaceAll("\\\\", "\\\\\\\\"),
-											"zend_extension=\"" + correctDir
-													+ matcher.group(2).replace("\"", "").replaceAll("\\\\", "\\\\\\\\")
-													+ "\"");
+									iniContent = iniContent.replaceAll(matcher.group(0).replaceAll("\\\\", "\\\\\\\\"), //$NON-NLS-1$ //$NON-NLS-2$
+											"zend_extension=\"" + correctDir //$NON-NLS-1$
+													+ matcher.group(2).replace("\"", "").replaceAll("\\\\", "\\\\\\\\") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+													+ "\""); //$NON-NLS-1$
 								}
-								pattern = Pattern.compile("(zend_extension=.*)(ext[^\\s]xdebug[^\\s]*)");
+								pattern = Pattern.compile("(zend_extension=.*)(ext[^\\s]xdebug[^\\s]*)"); //$NON-NLS-1$
 								matcher = pattern.matcher(iniContent);
 								if (matcher.find()) {
-									iniContent = iniContent.replaceAll(matcher.group(0).replaceAll("\\\\", "\\\\\\\\"),
-											"zend_extension=\"" + correctDir
-													+ matcher.group(2).replace("\"", "").replaceAll("\\\\", "\\\\\\\\")
-													+ "\"");
+									iniContent = iniContent.replaceAll(matcher.group(0).replaceAll("\\\\", "\\\\\\\\"), //$NON-NLS-1$ //$NON-NLS-2$
+											"zend_extension=\"" + correctDir //$NON-NLS-1$
+													+ matcher.group(2).replace("\"", "").replaceAll("\\\\", "\\\\\\\\") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+													+ "\""); //$NON-NLS-1$
 								}
-								pattern = Pattern.compile("(openssl.cafile=.*)(ca-bundle.crt[^\\s]*)");
+								pattern = Pattern.compile("(openssl.cafile=.*)(ca-bundle.crt[^\\s]*)"); //$NON-NLS-1$
 								matcher = pattern.matcher(iniContent);
 								if (matcher.find()) {
-									iniContent = iniContent.replaceAll(matcher.group(0).replaceAll("\\\\", "\\\\\\\\"),
-											"openssl.cafile=\"" + correctDir + matcher.group(2).replace("\"", "")
-													+ "\"");
+									iniContent = iniContent.replaceAll(matcher.group(0).replaceAll("\\\\", "\\\\\\\\"), //$NON-NLS-1$ //$NON-NLS-2$
+											"openssl.cafile=\"" + correctDir + matcher.group(2).replace("\"", "") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+													+ "\""); //$NON-NLS-1$
 								}
 								BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
 								writer.write(iniContent);
@@ -241,7 +241,7 @@ public class PHPDebugPlugin extends Plugin {
 			try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
 				String line = null;
 				StringBuilder stringBuilder = new StringBuilder();
-				String ls = System.getProperty("line.separator");
+				String ls = System.getProperty("line.separator"); //$NON-NLS-1$
 
 				while ((line = reader.readLine()) != null) {
 					stringBuilder.append(line);
