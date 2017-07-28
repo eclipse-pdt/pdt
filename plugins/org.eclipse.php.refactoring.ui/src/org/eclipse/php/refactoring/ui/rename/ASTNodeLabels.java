@@ -259,7 +259,7 @@ public class ASTNodeLabels {
 
 			for (int i = 0; i < nParams; i++) {
 				if (i > 0) {
-					buf.append(COMMA_STRING); // $NON-NLS-1$
+					buf.append(COMMA_STRING);
 					buf.append(" "); //$NON-NLS-1$
 				}
 				if (parameters != null) {
@@ -393,7 +393,7 @@ public class ASTNodeLabels {
 		List<FormalParameter> parameters = function.formalParameters();
 		for (int i = 0; i < parameters.size(); i++) {
 			if (i > 0) {
-				buf.append(COMMA_STRING); // $NON-NLS-1$
+				buf.append(COMMA_STRING);
 			}
 			buf.append(parameters.get(i).getParameterType().toString());
 			buf.append(" $" + parameters.get(i).getParameterNameIdentifier().getName()); //$NON-NLS-1$

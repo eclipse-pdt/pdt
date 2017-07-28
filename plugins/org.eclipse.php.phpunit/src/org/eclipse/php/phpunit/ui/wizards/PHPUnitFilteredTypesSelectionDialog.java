@@ -736,14 +736,14 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 			if (stype.getParent().getElementType() == IModelElement.TYPE) {
 				result.append(ScriptElementLabels.CONCAT_STRING);
 				IType parent = (IType) stype.getParent();
-				result.append(parent.getTypeQualifiedName(PHPModelUtils.ENCLOSING_TYPE_SEPARATOR)); // $NON-NLS-1$
+				result.append(parent.getTypeQualifiedName(PHPModelUtils.ENCLOSING_TYPE_SEPARATOR));
 			}
 			return result.toString();
 		}
 
 		public String getQualificationText(TypeNameMatch type) {
 			StringBuilder result = new StringBuilder();
-			result.append(type.getType().getTypeQualifiedName(PHPModelUtils.ENCLOSING_TYPE_SEPARATOR)); // $NON-NLS-1$
+			result.append(type.getType().getTypeQualifiedName(PHPModelUtils.ENCLOSING_TYPE_SEPARATOR));
 			result.append(ScriptElementLabels.CONCAT_STRING);
 			IPath path = type.getType().getSourceModule().getPath();
 			IPath fullPath = EnvironmentPathUtils.getLocalPath(path);

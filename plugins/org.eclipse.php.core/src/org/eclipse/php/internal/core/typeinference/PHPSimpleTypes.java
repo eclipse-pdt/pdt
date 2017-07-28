@@ -83,7 +83,7 @@ public class PHPSimpleTypes {
 
 		@Override
 		public final String getTypeName() {
-			return "array"; // $NON-NLS-1$
+			return "array"; //$NON-NLS-1$
 		}
 	};
 	@NonNull

@@ -162,7 +162,7 @@ public class PHPEvaluationUtils {
 		}
 
 		String substring = split[1];
-		int parenIndex = split[1].indexOf('('); // $NON-NLS-1$
+		int parenIndex = split[1].indexOf('(');
 		if (parenIndex != -1) {
 			substring = substring.substring(0, parenIndex);
 		}

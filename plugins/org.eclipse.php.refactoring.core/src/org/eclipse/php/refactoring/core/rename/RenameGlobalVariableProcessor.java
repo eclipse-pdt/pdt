@@ -68,7 +68,7 @@ public class RenameGlobalVariableProcessor extends AbstractRenameProcessor<IFile
 	private boolean isUpdateTextualMatches;
 
 	public RenameGlobalVariableProcessor(IFile operatedFile, ASTNode locateNode) {
-		super(operatedFile); // $NON-NLS-1$
+		super(operatedFile);
 
 		this.identifier = locateNode;
 	}

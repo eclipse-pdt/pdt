@@ -32,13 +32,13 @@ import org.junit.Test;
 public class NamespaceResolverTest extends ComposerModelTests {
 
 	public NamespaceResolverTest() {
-		super("Namespace Resolver tests");
+		super("Namespace Resolver tests"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void testNamespaceResolver() throws CoreException, IOException {
 
-		IScriptProject scriptProject = ensureScriptProject("namespace-resolver");
+		IScriptProject scriptProject = ensureScriptProject("namespace-resolver"); //$NON-NLS-1$
 
 		assertNotNull(scriptProject);
 
@@ -65,12 +65,12 @@ public class NamespaceResolverTest extends ComposerModelTests {
 		assertTrue(scriptProject.getProject().hasNature(PHPNature.ID));
 		assertTrue(FacetManager.hasComposerFacet(scriptProject.getProject()));
 
-		assertEquals("Foo\\Bar", project.getNamespace(new Path("src/Foo/Bar")));
-		assertEquals("Foo\\Bar\\Baz", project.getNamespace(new Path("src/Foo/Bar/Baz")));
-		assertEquals("Hello\\World", project.getNamespace(new Path("src/HelloWorld")));
-		assertEquals("", project.getNamespace(new Path("src/Null/")));
-		assertEquals("Wurst", project.getNamespace(new Path("src/Null/Wurst")));
-		assertEquals("Blut\\Wurst", project.getNamespace(new Path("src/Null/Blut/Wurst")));
+		assertEquals("Foo\\Bar", project.getNamespace(new Path("src/Foo/Bar"))); //$NON-NLS-1$ //$NON-NLS-2$
+		assertEquals("Foo\\Bar\\Baz", project.getNamespace(new Path("src/Foo/Bar/Baz"))); //$NON-NLS-1$ //$NON-NLS-2$
+		assertEquals("Hello\\World", project.getNamespace(new Path("src/HelloWorld"))); //$NON-NLS-1$ //$NON-NLS-2$
+		assertEquals("", project.getNamespace(new Path("src/Null/"))); //$NON-NLS-1$ //$NON-NLS-2$
+		assertEquals("Wurst", project.getNamespace(new Path("src/Null/Wurst"))); //$NON-NLS-1$ //$NON-NLS-2$
+		assertEquals("Blut\\Wurst", project.getNamespace(new Path("src/Null/Blut/Wurst"))); //$NON-NLS-1$ //$NON-NLS-2$
 
 		// IResource resource = scriptProject.getProject().getFolder(new
 		// Path("src/Foobar/Sub"));

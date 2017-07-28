@@ -1634,7 +1634,7 @@ public class DBGpTarget extends DBGpElement
 		Node response = null;
 		synchronized (sessionMutex) {
 			if (session != null && session.isActive()) {
-				DBGpResponse resp = session.sendSyncCmd(DBGpCommand.eval, "-p " + String.valueOf(page) + args);
+				DBGpResponse resp = session.sendSyncCmd(DBGpCommand.eval, "-p " + String.valueOf(page) + args); //$NON-NLS-1$
 				if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
 					response = resp.getParentNode().getFirstChild();
 				}

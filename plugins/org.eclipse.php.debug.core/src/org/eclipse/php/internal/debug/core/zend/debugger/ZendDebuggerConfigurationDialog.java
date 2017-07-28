@@ -322,7 +322,7 @@ public class ZendDebuggerConfigurationDialog extends AbstractDebuggerConfigurati
 				addresses.add(NetworkUtil.LOCALHOST);
 				StringBuffer addressesString = new StringBuffer();
 				for (Inet4Address address : addresses) {
-					addressesString.append((addressesString.length() != 0 ? ", " : "") + address.getHostAddress());
+					addressesString.append((addressesString.length() != 0 ? ", " : "") + address.getHostAddress()); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				fClientIP.setText(addressesString.toString());
 			}

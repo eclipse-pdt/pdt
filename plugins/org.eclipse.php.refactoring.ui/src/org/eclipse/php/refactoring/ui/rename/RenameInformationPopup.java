@@ -182,7 +182,7 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=219326 : Shell with custom
 	 * region and SWT.NO_TRIM still has border
 	 */
-	private static boolean MAC = Util.isMac();// $NON-NLS-1$
+	private static boolean MAC = Util.isMac();
 
 	private static final int WIDGET_PRIORITY = 15;
 
@@ -740,7 +740,7 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 					@Override
 					public void run() {
 						fRenameLinkedMode.cancel();
-						String linkedModePrefPageID = PHPCodeRefactorPreferencePage.ID; // $NON-NLS-1$
+						String linkedModePrefPageID = PHPCodeRefactorPreferencePage.ID;
 						PreferencesUtil.createPreferenceDialogOn(fEditor.getSite().getShell(), linkedModePrefPageID,
 								null, null).open();
 					}

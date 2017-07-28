@@ -47,7 +47,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-@SuppressWarnings("restriction")
 public class TestSuiteWizardPage extends PHPUnitWizardPage {
 
 	protected static class PHPTypeListLabelProvider extends LabelProvider implements ILabelDecorator {
@@ -79,7 +78,7 @@ public class TestSuiteWizardPage extends PHPUnitWizardPage {
 
 				StringBuilder result = new StringBuilder(elementName);
 				result.append(" - "); //$NON-NLS-1$
-				result.append(fileName); // $NON-NLS-1$
+				result.append(fileName);
 				return result.toString();
 			}
 			return ""; //$NON-NLS-1$
@@ -162,7 +161,7 @@ public class TestSuiteWizardPage extends PHPUnitWizardPage {
 		findSuiteBaseClasses(scriptProject);
 
 		if (PHP_UNIT_SUITE_BASE_CLASS_CACHE != null && PHP_UNIT_SUITE_BASE_CLASS_CACHE.length > 0) {
-			ElementSelectionDialog dialog = new ElementSelectionDialog(shell, PHP_UNIT_SUITE_BASE_CLASS_CACHE); // $NON-NLS-1$
+			ElementSelectionDialog dialog = new ElementSelectionDialog(shell, PHP_UNIT_SUITE_BASE_CLASS_CACHE);
 			dialog.setTitle(PHPUnitMessages.PHPUnitWizardPage_10);
 			dialog.setMessage(PHPUnitMessages.PHPUnitWizardPage_11);
 			if (dialog.open() == Window.OK) {
@@ -343,7 +342,7 @@ public class TestSuiteWizardPage extends PHPUnitWizardPage {
 		if (PHP_UNIT_CASE_AND_SUITE_NON_ABSTRAXT_CLASS_CACHE != null
 				&& PHP_UNIT_CASE_AND_SUITE_NON_ABSTRAXT_CLASS_CACHE.length > 0) {
 			ElementSelectionDialog dialog = new ElementSelectionDialog(getShell(),
-					PHP_UNIT_CASE_AND_SUITE_NON_ABSTRAXT_CLASS_CACHE); // $NON-NLS-1$
+					PHP_UNIT_CASE_AND_SUITE_NON_ABSTRAXT_CLASS_CACHE);
 			dialog.setTitle(PHPUnitMessages.PHPUnitWizardPage_10);
 			dialog.setMessage(PHPUnitMessages.PHPUnitWizardPage_11);
 			dialog.setMultipleSelection(true);

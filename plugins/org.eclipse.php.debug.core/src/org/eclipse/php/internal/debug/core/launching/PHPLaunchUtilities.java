@@ -1156,7 +1156,7 @@ public class PHPLaunchUtilities {
 			} catch (UnsupportedEncodingException exc) {
 			}
 			if (e.hasMoreElements()) {
-				buf.append('&'); // $NON-NLS-1$
+				buf.append('&');
 			}
 		}
 		return buf.toString();

@@ -77,7 +77,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 			if (url.indexOf("?") == -1) { //$NON-NLS-1$
 				buffer.append('?');
 			} else {
-				if (!url.endsWith("&")) {
+				if (!url.endsWith("&")) { //$NON-NLS-1$
 					buffer.append('&');
 				}
 			}
@@ -102,7 +102,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 				String key = it.next();
 				buffer.append(key).append('=');
 				try {
-					buffer.append(URLEncoder.encode(parameters.get(key), "UTF-8"));
+					buffer.append(URLEncoder.encode(parameters.get(key), "UTF-8")); //$NON-NLS-1$
 				} catch (UnsupportedEncodingException e) {
 				}
 				if (it.hasNext()) {

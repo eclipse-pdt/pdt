@@ -66,7 +66,7 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 		// parameters
 		nameBuffer.append('(');
 		appendStyledParameterList(nameBuffer, methodProposal);
-		nameBuffer.append(')'); // $NON-NLS-1$
+		nameBuffer.append(')');
 
 		appendMethodType(nameBuffer, methodProposal);
 
@@ -317,7 +317,7 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 						buffer.append(PHPElementLabels.REFERENCE_STRING);
 					}
 					if (isVariadic && i + 1 == parameterNames.length) {
-						buffer.append(ScriptElementLabels.ELLIPSIS_STRING); // $NON-NLS-1$
+						buffer.append(ScriptElementLabels.ELLIPSIS_STRING);
 					}
 					buffer.append(parameterNames[i]);
 				}
@@ -420,7 +420,7 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 
 		if (modelElement instanceof IType) {
 			IType type = (IType) modelElement;
-			buffer.append(type.getTypeQualifiedName(ENCLOSING_TYPE_SEPARATOR), StyledString.QUALIFIER_STYLER); // $NON-NLS-1$
+			buffer.append(type.getTypeQualifiedName(ENCLOSING_TYPE_SEPARATOR), StyledString.QUALIFIER_STYLER);
 		} else {
 			buffer.append(modelElement.getElementName(), StyledString.QUALIFIER_STYLER);
 		}

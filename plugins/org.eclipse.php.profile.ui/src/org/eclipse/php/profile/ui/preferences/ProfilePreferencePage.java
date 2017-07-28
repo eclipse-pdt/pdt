@@ -46,7 +46,7 @@ public class ProfilePreferencePage extends PreferencePage implements IWorkbenchP
 
 	@Override
 	public String getTitle() {
-		return PHPProfileUIMessages.getString("ProfilePreferencePage_0");
+		return PHPProfileUIMessages.getString("ProfilePreferencePage_0"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -57,13 +57,13 @@ public class ProfilePreferencePage extends PreferencePage implements IWorkbenchP
 
 	@Override
 	protected Control createContents(Composite parent) {
-		SWTFactory.createWrapLabel(parent, "General PHP Profiling Settings.", 2, 300);
+		SWTFactory.createWrapLabel(parent, "General PHP Profiling Settings.", 2, 300); //$NON-NLS-1$
 		SWTFactory.createVerticalSpacer(parent, 1);
 		fSwitchPerspectiveRadioGroup = new RadioGroupFieldEditor(
 				PreferenceKeys.OPEN_PROFILE_PERSPECTIVE_ON_SESSION_DATA,
-				"Open associated perspective on receiving session data", 3,
-				new String[][] { { "Al&ways", MessageDialogWithToggle.ALWAYS },
-						{ "Ne&ver", MessageDialogWithToggle.NEVER }, { "Pr&ompt", MessageDialogWithToggle.PROMPT } },
+				"Open associated perspective on receiving session data", 3, //$NON-NLS-1$
+				new String[][] { { "Al&ways", MessageDialogWithToggle.ALWAYS }, //$NON-NLS-1$
+						{ "Ne&ver", MessageDialogWithToggle.NEVER }, { "Pr&ompt", MessageDialogWithToggle.PROMPT } }, //$NON-NLS-1$ //$NON-NLS-2$
 				SWTFactory.createComposite(parent, 1, 2, GridData.FILL_BOTH), true);
 		fSwitchPerspectiveRadioGroup.setPreferenceName(PreferenceKeys.OPEN_PROFILE_PERSPECTIVE_ON_SESSION_DATA);
 		fSwitchPerspectiveRadioGroup.setPreferenceStore(getPreferenceStore());

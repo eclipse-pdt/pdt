@@ -33,7 +33,7 @@ public class AssignToLocalCompletionProposal extends ASTRewriteCorrectionProposa
 
 	public AssignToLocalCompletionProposal(ISourceModule cu, ASTNode context) {
 		super(Messages.AssignToLocalCompletionProposal_name, cu, null, 0,
-				PHPPluginImages.DESC_FIELD_DEFAULT.createImage()); // $NON-NLS-N$
+				PHPPluginImages.DESC_FIELD_DEFAULT.createImage());
 		this.context = context;
 		setCommandId(COMMAND_ID);
 	}

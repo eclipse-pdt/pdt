@@ -49,7 +49,7 @@ public class BuildpathPackage {
 	public static String serialize(IBuildpathEntry[] entries, boolean isSystemLibrary) throws IOException {
 
 		ByteArrayOutputStream s = new ByteArrayOutputStream();
-		OutputStreamWriter writer = new OutputStreamWriter(s, StandardCharsets.UTF_8); // $NON-NLS-1$
+		OutputStreamWriter writer = new OutputStreamWriter(s, StandardCharsets.UTF_8);
 
 		XMLWriter xmlWriter = new XMLWriter(writer, null, true);
 

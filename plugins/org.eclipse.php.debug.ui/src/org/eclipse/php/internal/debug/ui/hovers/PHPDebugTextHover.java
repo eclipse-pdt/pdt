@@ -145,7 +145,7 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements 
 					}
 				} else if (!(scalar.getParent() instanceof Include) && scalar.getScalarType() == Scalar.TYPE_STRING) {
 					if (!(scalar.getStringValue().startsWith("\"") && scalar.getStringValue().endsWith("\""))) { //$NON-NLS-1$ //$NON-NLS-2$
-						if (!scalar.getStringValue().trim().equals("")) {
+						if (!scalar.getStringValue().trim().equals("")) { //$NON-NLS-1$
 							Expression constant = expressionsUtil.fetchConstant(scalar.getStringValue());
 							variable = new PHPVariable(getDebugTarget(), constant);
 						}
@@ -193,7 +193,7 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements 
 				}
 			} else if (node.getParent() instanceof SingleFieldDeclaration) {
 				IField field = (IField) sourceModule.getElementAt(node.getStart());
-				String typeName = "";
+				String typeName = ""; //$NON-NLS-1$
 				boolean isAnonymous = false;
 				if (field.getParent() instanceof IType) {
 					IType type = (IType) field.getParent();

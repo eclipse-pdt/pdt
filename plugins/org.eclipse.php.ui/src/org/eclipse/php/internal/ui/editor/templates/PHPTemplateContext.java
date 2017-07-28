@@ -56,7 +56,7 @@ public class PHPTemplateContext extends ScriptTemplateContext {
 			int length = prefs.getIndentationSize(getDocument());
 			StringBuilder sb = new StringBuilder();
 			for (int i = 0; i < length; i++) {
-				sb.append(prefs.getIndentationChar(getDocument())); // $NON-NLS-1$
+				sb.append(prefs.getIndentationChar(getDocument()));
 			}
 			String newPattern = TextUtils.replace(template.getPattern(), TAB, sb.toString());
 			template = new Template(template.getName(), template.getDescription(), template.getContextTypeId(),

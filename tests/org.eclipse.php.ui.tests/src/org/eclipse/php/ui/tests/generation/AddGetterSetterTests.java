@@ -51,7 +51,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.osgi.framework.Bundle;
 
-@SuppressWarnings("restriction")
 @RunWith(PDTTList.class)
 public class AddGetterSetterTests {
 

@@ -18,7 +18,7 @@ import org.eclipse.php.formatter.core.CodeFormatterVisitor;
  */
 public final class PHPDefaultFormatterPreferences implements ICodeFormatterPreferencesInitializer {
 
-	public static final String ID = "org.eclipse.php.formatter.ui.default";
+	public static final String ID = "org.eclipse.php.formatter.ui.default"; //$NON-NLS-1$
 
 	@Override
 	public CodeFormatterPreferences initValues() {

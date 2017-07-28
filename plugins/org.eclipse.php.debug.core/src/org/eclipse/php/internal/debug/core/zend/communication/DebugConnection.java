@@ -741,7 +741,7 @@ public class DebugConnection {
 		// "/projectName/index.php?debug_params..."
 		// TODO needs a better way to detect project name
 		String scriptName = uri.substring(0, uri.indexOf('?'));
-		String projectName = scriptName.split("/", 3)[1];
+		String projectName = scriptName.split("/", 3)[1]; //$NON-NLS-1$
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 
 		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
@@ -882,7 +882,7 @@ public class DebugConnection {
 				if (content == null) {
 					content = new byte[0];
 				}
-				String serverAddress = extractParameterFromQuery(notification.getOptions(), "server_address");
+				String serverAddress = extractParameterFromQuery(notification.getOptions(), "server_address"); //$NON-NLS-1$
 				String originalURL = notification.getUri();
 				IRemoteFileContentRequestor requestor = RemoteFileContentRequestorsRegistry.getInstance()
 						.removeRequestor(fileName, lineNumber);
@@ -962,10 +962,10 @@ public class DebugConnection {
 		 */
 		if (!isProfile) {
 			DebugUITools.setLaunchPerspective(lcType, "debug", //$NON-NLS-1$
-					"org.eclipse.debug.ui.DebugPerspective"); // $NON-NLS-1$
+					"org.eclipse.debug.ui.DebugPerspective"); //$NON-NLS-1$
 		} else {
 			DebugUITools.setLaunchPerspective(lcType, "profile", //$NON-NLS-1$
-					"org.eclipse.php.profile.ui.perspective"); // $NON-NLS-1$
+					"org.eclipse.php.profile.ui.perspective"); //$NON-NLS-1$
 		}
 		ILaunchConfigurationWorkingCopy wc = lcType.newInstance(null,
 				(isProfile) ? SERVER_PROFILE_NAME : SERVER_DEBUG_NAME);

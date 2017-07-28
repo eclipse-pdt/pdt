@@ -58,7 +58,7 @@ class RefreshStructureJob extends Job {
 	List<StructuredViewer> fViewers = new ArrayList<>(3);
 
 	public RefreshStructureJob() {
-		super(XMLUIMessages.refreshoutline_0); // $NON-NLS-1$
+		super(XMLUIMessages.refreshoutline_0);
 		setPriority(Job.LONG);
 		setSystem(true);
 		fRequests = new ArrayList<>(2);

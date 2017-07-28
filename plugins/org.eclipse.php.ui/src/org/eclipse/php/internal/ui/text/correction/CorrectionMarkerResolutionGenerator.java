@@ -128,7 +128,7 @@ public class CorrectionMarkerResolutionGenerator implements IMarkerResolutionGen
 	}
 
 	private static boolean internalHasResolutions(IMarker marker) {
-		String id = marker.getAttribute(IModelMarker.ID, "");
+		String id = marker.getAttribute(IModelMarker.ID, ""); //$NON-NLS-1$
 		IProblemIdentifier problemId = DefaultProblemIdentifier.decode(id);
 		ISourceModule cu = getSourceModule(marker);
 		return cu != null && problemId != null
@@ -201,7 +201,7 @@ public class CorrectionMarkerResolutionGenerator implements IMarkerResolutionGen
 
 	private static IProblemLocation createFromMarker(IMarker marker, ISourceModule cu) {
 		try {
-			String id = marker.getAttribute(IModelMarker.ID, "");
+			String id = marker.getAttribute(IModelMarker.ID, ""); //$NON-NLS-1$
 			IProblemIdentifier problemId = DefaultProblemIdentifier.decode(id);
 			int start = marker.getAttribute(IMarker.CHAR_START, -1);
 			int end = marker.getAttribute(IMarker.CHAR_END, -1);

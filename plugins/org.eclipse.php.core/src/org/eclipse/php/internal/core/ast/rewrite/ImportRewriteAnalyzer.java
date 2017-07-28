@@ -726,7 +726,7 @@ public final class ImportRewriteAnalyzer {
 			buf.append("const "); //$NON-NLS-1$
 		}
 		buf.append(importName);
-		buf.append(';'); // $NON-NLS-1$
+		buf.append(';');
 		buf.append(lineDelim);
 
 		this.importsCreated.get(namespace).add(importName);

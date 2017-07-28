@@ -294,7 +294,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 						int addJavaScriptSupport = OptionalMessageDialog.open("PROMPT_ADD_JAVASCRIPT_SUPPORT", //$NON-NLS-1$
 								activeWorkbenchShell, PHPUIMessages.PHPStructuredTextViewer_0, null,
 								PHPUIMessages.PHPStructuredTextViewer_1, OptionalMessageDialog.QUESTION,
-								new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL }, 0); // $NON-NLS-1$
+								new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL }, 0);
 
 						// run the JSDT action for adding the JS nature
 						if (addJavaScriptSupport == 0 && project != null) {

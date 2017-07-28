@@ -20,18 +20,18 @@ public class ValidationTest extends TestCase {
 	@Test
 	public void testNamespaceValidation() {
 
-		assertTrue(ValidationUtils.validateNamespace("Foo"));
-		assertTrue(ValidationUtils.validateNamespace("Foo\\Bar"));
-		assertTrue(ValidationUtils.validateNamespace("Foo\\"));
-		assertTrue(ValidationUtils.validateNamespace("\\Foo\\Bar"));
-		assertTrue(ValidationUtils.validateNamespace("foo\\baR_aha"));
-		assertTrue(ValidationUtils.validateNamespace("Foo_Bar\\Something"));
-		assertTrue(ValidationUtils.validateNamespace("Fo2Bar"));
+		assertTrue(ValidationUtils.validateNamespace("Foo")); //$NON-NLS-1$
+		assertTrue(ValidationUtils.validateNamespace("Foo\\Bar")); //$NON-NLS-1$
+		assertTrue(ValidationUtils.validateNamespace("Foo\\")); //$NON-NLS-1$
+		assertTrue(ValidationUtils.validateNamespace("\\Foo\\Bar")); //$NON-NLS-1$
+		assertTrue(ValidationUtils.validateNamespace("foo\\baR_aha")); //$NON-NLS-1$
+		assertTrue(ValidationUtils.validateNamespace("Foo_Bar\\Something")); //$NON-NLS-1$
+		assertTrue(ValidationUtils.validateNamespace("Fo2Bar")); //$NON-NLS-1$
 
-		assertFalse(ValidationUtils.validateNamespace("Fo baro"));
-		assertFalse(ValidationUtils.validateNamespace("Fo.Bar"));
-		assertFalse(ValidationUtils.validateNamespace("Fo  Bar"));
-		assertFalse(ValidationUtils.validateNamespace("Fo--Bar\\Aha"));
+		assertFalse(ValidationUtils.validateNamespace("Fo baro")); //$NON-NLS-1$
+		assertFalse(ValidationUtils.validateNamespace("Fo.Bar")); //$NON-NLS-1$
+		assertFalse(ValidationUtils.validateNamespace("Fo  Bar")); //$NON-NLS-1$
+		assertFalse(ValidationUtils.validateNamespace("Fo--Bar\\Aha")); //$NON-NLS-1$
 
 	}
 }

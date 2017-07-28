@@ -34,7 +34,7 @@ import org.eclipse.php.core.libfolders.LibraryFolderManager;
 
 public class ParserBuildParticipantFactory extends AbstractBuildParticipantType implements IExecutableExtension {
 
-	protected static final String IN_LIBRARY_FOLDER = "IN_LIBRARY_FOLDER";
+	protected static final String IN_LIBRARY_FOLDER = "IN_LIBRARY_FOLDER"; //$NON-NLS-1$
 
 	@Override
 	public IBuildParticipant createBuildParticipant(IScriptProject project) throws CoreException {

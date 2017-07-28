@@ -35,8 +35,8 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 	 * Represents a line wrapping category. All members are final.
 	 */
 	private static final class Category {
-		private static final String LINE_WRAP_POLICY_KEY = "_line_wrap_policy";
-		private static final String INDENT_POLICY_KEY = "_indent_policy";
+		private static final String LINE_WRAP_POLICY_KEY = "_line_wrap_policy"; //$NON-NLS-1$
+		private static final String INDENT_POLICY_KEY = "_indent_policy"; //$NON-NLS-1$
 
 		public final String key;
 		public final String name;
@@ -73,7 +73,7 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 		}
 
 		public String getForceSplitKey() {
-			return key + "_force_split";
+			return key + "_force_split"; //$NON-NLS-1$
 		}
 	}
 
@@ -207,7 +207,7 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 				Category category = iterator.next();
 				previewText = previewText + category.previewText + "\n\n"; //$NON-NLS-1$
 			}
-			return previewText + "?>";
+			return previewText + "?>"; //$NON-NLS-1$
 		}
 
 		private void refreshControls(Category category) {

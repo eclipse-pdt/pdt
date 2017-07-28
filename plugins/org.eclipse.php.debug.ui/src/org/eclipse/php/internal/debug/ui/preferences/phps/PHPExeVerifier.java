@@ -172,7 +172,7 @@ public class PHPExeVerifier extends Job {
 				}
 			} catch (IOException e) {
 				valid = false;
-				Logger.logException("Failed to verify PHP executable: ", e);
+				Logger.logException("Failed to verify PHP executable: ", e); //$NON-NLS-1$
 			}
 			if (!valid) {
 				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {

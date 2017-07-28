@@ -100,7 +100,7 @@ public class UseAsSourceFolderAction extends Action {
 			// show the confirmation dialog
 			String title = Messages.LibraryFolderAction_Dialog_title;
 			String message = NLS.bind(Messages.LibraryFolderAction_Dialog_description,
-					StringUtils.join(getSortedPaths(folders), ",\n\t"));
+					StringUtils.join(getSortedPaths(folders), ",\n\t")); //$NON-NLS-1$
 
 			if (!MessageDialog.openConfirm(fSite.getShell(), title, message))
 				// the user clicked the Cancel button - abort the action
