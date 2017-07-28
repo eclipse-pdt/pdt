@@ -713,7 +713,7 @@ public class PHPDocumentationContentAccess {
 			if (member instanceof IMethod && tagKind == TagKind.METHOD) {
 				// http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.method.pkg.html
 				String docTagValue = docTag.getValue().trim();
-				int index = docTagValue.indexOf('('); // $NON-NLS-1$
+				int index = docTagValue.indexOf('(');
 				if (index != -1) {
 					String[] split = WHITESPACE_SEPERATOR.split(docTagValue.substring(0, index).trim());
 					if (split.length == 1) {

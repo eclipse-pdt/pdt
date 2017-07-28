@@ -49,7 +49,7 @@ public class UseAsLibraryFolderAction extends Action {
 	 */
 	public UseAsLibraryFolderAction(IFolder[] folders) {
 		if (folders.length == 0)
-			throw new IllegalArgumentException("empty folders array");
+			throw new IllegalArgumentException("empty folders array"); //$NON-NLS-1$
 
 		fFolders = folders;
 

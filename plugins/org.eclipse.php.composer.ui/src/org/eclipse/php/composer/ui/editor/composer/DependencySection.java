@@ -109,6 +109,7 @@ public class DependencySection extends TableSection implements PropertyChangeLis
 		}
 	}
 
+	@Override
 	protected boolean createCount() {
 		return true;
 	}
@@ -139,6 +140,7 @@ public class DependencySection extends TableSection implements PropertyChangeLis
 		dependencyViewer.getTable().setEnabled(enabled);
 	}
 
+	@Override
 	public void refresh() {
 		dependencyViewer.refresh();
 		super.refresh();
@@ -149,6 +151,7 @@ public class DependencySection extends TableSection implements PropertyChangeLis
 		refresh();
 	}
 
+	@Override
 	protected void selectionChanged(IStructuredSelection sel) {
 		updateButtons();
 		updateMenu();
@@ -199,7 +202,7 @@ public class DependencySection extends TableSection implements PropertyChangeLis
 		StructuredSelection selection = ((StructuredSelection) dependencyViewer.getSelection());
 		Iterator<Object> it = selection.iterator();
 		String[] names = new String[selection.size()];
-		List<VersionedPackage> deps = new ArrayList<VersionedPackage>();
+		List<VersionedPackage> deps = new ArrayList<>();
 
 		for (int i = 0; it.hasNext(); i++) {
 			VersionedPackage dep = (VersionedPackage) it.next();
@@ -226,7 +229,7 @@ public class DependencySection extends TableSection implements PropertyChangeLis
 		StructuredSelection selection = ((StructuredSelection) dependencyViewer.getSelection());
 		Iterator<Object> it = selection.iterator();
 		String[] names = new String[selection.size()];
-		List<VersionedPackage> deps = new ArrayList<VersionedPackage>();
+		List<VersionedPackage> deps = new ArrayList<>();
 
 		for (int i = 0; it.hasNext(); i++) {
 			VersionedPackage dep = (VersionedPackage) it.next();
@@ -256,6 +259,7 @@ public class DependencySection extends TableSection implements PropertyChangeLis
 		}
 	}
 
+	@Override
 	protected void createClient(Section section, FormToolkit toolkit) {
 	}
 }

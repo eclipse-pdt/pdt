@@ -60,7 +60,6 @@ import org.junit.rules.TestWatcher;
 import org.junit.runner.RunWith;
 import org.osgi.framework.Bundle;
 
-@SuppressWarnings("restriction")
 @RunWith(PDTTList.class)
 public class ContentAssistTests {
 

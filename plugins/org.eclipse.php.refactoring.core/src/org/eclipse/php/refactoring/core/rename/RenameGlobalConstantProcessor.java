@@ -55,7 +55,7 @@ public class RenameGlobalConstantProcessor extends AbstractRenameProcessor<IFile
 	private boolean isUpdateTextualMatches;
 
 	public RenameGlobalConstantProcessor(IFile operatedFile, ASTNode locateNode) {
-		super(operatedFile); // $NON-NLS-1$
+		super(operatedFile);
 
 		this.scalar = getScalar(locateNode);
 

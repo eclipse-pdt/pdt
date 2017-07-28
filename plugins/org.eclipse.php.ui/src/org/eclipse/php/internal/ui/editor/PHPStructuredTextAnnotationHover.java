@@ -219,7 +219,7 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 
 		StringBuilder buffer = new StringBuilder();
 		printer.addPageProlog(buffer);
-		printer.addParagraph(buffer, SSEUIMessages.Multiple_errors); // $NON-NLS-1$
+		printer.addParagraph(buffer, SSEUIMessages.Multiple_errors);
 
 		printer.startBulletList(buffer);
 		Iterator<String> e = messages.iterator();
@@ -316,7 +316,8 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 		return messages;
 	}
 
-	private void addText(IAnnotationModel model, Annotation annotation, List<String> messages, Map<Position, Object> messagesAtPosition) {
+	private void addText(IAnnotationModel model, Annotation annotation, List<String> messages,
+			Map<Position, Object> messagesAtPosition) {
 		Position position = model.getPosition(annotation);
 		if (position != null && includeAnnotation(annotation, position, messagesAtPosition)) {
 			String text = getText(annotation);
@@ -371,7 +372,8 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 	/**
 	 * Copy from DefaultAnnotationHover
 	 */
-	private boolean includeAnnotation(Annotation annotation, Position position, Map<Position, Object> messagesAtPosition) {
+	private boolean includeAnnotation(Annotation annotation, Position position,
+			Map<Position, Object> messagesAtPosition) {
 		if (!isIncluded(annotation)) {
 			return false;
 		}

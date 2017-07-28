@@ -43,6 +43,7 @@ public class ComposerJobFailureDialog extends ErrorDialog {
 		return main;
 	}
 
+	@Override
 	protected Control createMessageArea(Composite composite) {
 		// create composite
 		// create image

@@ -26,6 +26,7 @@ public class FormEntryAdapter implements IFormEntryListener {
 	public FormEntryAdapter() {
 	}
 
+	@Override
 	public void focusGained(FormEntry entry) {
 		// ITextSelection selection = new TextSelection(1, 1);
 	}
@@ -37,6 +38,7 @@ public class FormEntryAdapter implements IFormEntryListener {
 	 * org.eclipse.pde.internal.ui.newparts.IFormEntryListener#textDirty(org.
 	 * eclipse.pde.internal.ui.newparts.FormEntry)
 	 */
+	@Override
 	public void textDirty(FormEntry entry) {
 	}
 
@@ -47,6 +49,7 @@ public class FormEntryAdapter implements IFormEntryListener {
 	 * org.eclipse.pde.internal.ui.newparts.IFormEntryListener#textValueChanged(
 	 * org.eclipse.pde.internal.ui.newparts.FormEntry)
 	 */
+	@Override
 	public void textValueChanged(FormEntry entry) {
 	}
 
@@ -56,6 +59,7 @@ public class FormEntryAdapter implements IFormEntryListener {
 	 * @see org.eclipse.pde.internal.ui.newparts.IFormEntryListener#
 	 * browseButtonSelected(org.eclipse.pde.internal.ui.newparts.FormEntry)
 	 */
+	@Override
 	public void browseButtonSelected(FormEntry entry) {
 	}
 
@@ -66,6 +70,7 @@ public class FormEntryAdapter implements IFormEntryListener {
 	 * org.eclipse.ui.forms.events.HyperlinkListener#linkEntered(org.eclipse.ui.
 	 * forms.events.HyperlinkEvent)
 	 */
+	@Override
 	public void linkEntered(HyperlinkEvent e) {
 		if (actionBars == null)
 			return;
@@ -80,6 +85,7 @@ public class FormEntryAdapter implements IFormEntryListener {
 	 * org.eclipse.ui.forms.events.HyperlinkListener#linkExited(org.eclipse.ui.
 	 * forms.events.HyperlinkEvent)
 	 */
+	@Override
 	public void linkExited(HyperlinkEvent e) {
 		if (actionBars == null)
 			return;
@@ -94,13 +100,16 @@ public class FormEntryAdapter implements IFormEntryListener {
 	 * org.eclipse.ui.forms.events.HyperlinkListener#linkActivated(org.eclipse.
 	 * ui.forms.events.HyperlinkEvent)
 	 */
+	@Override
 	public void linkActivated(HyperlinkEvent e) {
 	}
 
+	@Override
 	public void selectionChanged(FormEntry entry) {
 		// ITextSelection selection = new TextSelection(1, 1);
 	}
 
+	@Override
 	public void focusLost(FormEntry entry) {
 	}
 }

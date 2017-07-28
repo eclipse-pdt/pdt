@@ -77,6 +77,7 @@ public class PsrDialog extends Dialog {
 		namespaceControl.setLayoutData(gd_eventControl);
 
 		namespaceControl.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				namespace.setNamespace(namespaceControl.getText());
 			}
@@ -116,8 +117,9 @@ public class PsrDialog extends Dialog {
 		btnEdit.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 		btnEdit.setText(Messages.PsrDialog_EditButton);
 		btnEdit.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
-				List<IFolder> folders = new ArrayList<IFolder>();
+				List<IFolder> folders = new ArrayList<>();
 				for (Object path : namespace.getPaths()) {
 					IResource resource = project.findMember((String) path);
 					if (resource != null && resource instanceof IFolder) {
@@ -166,6 +168,7 @@ public class PsrDialog extends Dialog {
 		});
 
 		namespace.addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				// "namespace" can be modified afterwards by
 				// PsrSection#handleEdit()

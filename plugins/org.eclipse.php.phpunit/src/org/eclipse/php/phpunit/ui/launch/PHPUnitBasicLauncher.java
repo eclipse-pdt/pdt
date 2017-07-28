@@ -34,7 +34,6 @@ import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.core.zend.debugger.ProcessCrashDetector;
 import org.eclipse.swt.widgets.Display;
 
-@SuppressWarnings("restriction")
 public class PHPUnitBasicLauncher {
 
 	protected ILaunchConfiguration configuration;

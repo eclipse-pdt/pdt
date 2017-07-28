@@ -149,8 +149,8 @@ public class ModifyDialog extends StatusDialog {
 		addTabPage(fTabFolder, FormatterMessages.ModifyDialog_tabpage_line_wrapping_title,
 				new LineWrappingTabPage(this, codeFormatterPreferences));
 
-		addTabPage(fTabFolder, "Comments", new CommentsTabPage(this, codeFormatterPreferences));
-		addTabPage(fTabFolder, "Off/On tags", new OffOnTagsTabPage(this, codeFormatterPreferences));
+		addTabPage(fTabFolder, "Comments", new CommentsTabPage(this, codeFormatterPreferences)); //$NON-NLS-1$
+		addTabPage(fTabFolder, "Off/On tags", new OffOnTagsTabPage(this, codeFormatterPreferences)); //$NON-NLS-1$
 		// addTabPage(fTabFolder,
 		// FormatterMessages.ModifyDialog_tabpage_comments_title, new
 		// CommentsTabPage(this, fWorkingValues));

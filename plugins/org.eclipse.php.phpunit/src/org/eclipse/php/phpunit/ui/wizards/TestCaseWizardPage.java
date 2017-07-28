@@ -171,7 +171,7 @@ public class TestCaseWizardPage extends PHPUnitWizardPage {
 		findTestCases(scriptProject);
 
 		if (PHP_UNIT_CASE_BASE_CLASS_CACHE != null && PHP_UNIT_CASE_BASE_CLASS_CACHE.length > 0) {
-			SelectionDialog dialog = new ElementSelectionDialog(shell, PHP_UNIT_CASE_BASE_CLASS_CACHE); // $NON-NLS-1$
+			SelectionDialog dialog = new ElementSelectionDialog(shell, PHP_UNIT_CASE_BASE_CLASS_CACHE);
 			dialog.setTitle(PHPUnitMessages.PHPUnitWizardPage_10);
 			dialog.setMessage(PHPUnitMessages.PHPUnitWizardPage_11);
 			if (dialog.open() == Window.OK) {

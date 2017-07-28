@@ -143,7 +143,7 @@ public class LocationGroup extends Observable implements Observer, IStringButton
 		if (docRoots.size() > 0) {
 			fLocalServerRadio = new SelectionButtonDialogField(SWT.RADIO);
 			fLocalServerRadio.setDialogFieldListener(this);
-			fLocalServerRadio.setLabelText(PHPUIMessages.PHPProjectWizardFirstPage_localServerLabel); // $NON-NLS-1$
+			fLocalServerRadio.setLabelText(PHPUIMessages.PHPProjectWizardFirstPage_localServerLabel);
 			fLocalServerRadio.setSelection(false);
 			fLocalServerRadio.doFillIntoGrid(group, numColumns);
 			fSeverLocationList = new ComboDialogField(SWT.READ_ONLY);
@@ -215,7 +215,7 @@ public class LocationGroup extends Observable implements Observer, IStringButton
 	protected String[] getDocItems(String[] docRootArray) {
 		String[] items = new String[docRootArray.length];
 		for (int i = 0; i < docRootArray.length; i++) {
-			items[i] = docRootArray[i] + File.separator + fNameGroup.getName(); // $NON-NLS-1$
+			items[i] = docRootArray[i] + File.separator + fNameGroup.getName();
 		}
 		return items;
 	}

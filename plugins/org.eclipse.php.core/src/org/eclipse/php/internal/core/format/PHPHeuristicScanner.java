@@ -1051,7 +1051,7 @@ public final class PHPHeuristicScanner implements Symbols {
 
 			return null;
 		} catch (BadLocationException e) {
-			return null; // $NON-NLS-1$
+			return null;
 		}
 
 	}

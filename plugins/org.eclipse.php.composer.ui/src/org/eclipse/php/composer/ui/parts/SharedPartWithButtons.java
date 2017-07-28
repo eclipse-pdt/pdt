@@ -28,10 +28,12 @@ public abstract class SharedPartWithButtons extends SharedPart {
 	protected Composite fButtonContainer;
 
 	private class SelectionHandler implements SelectionListener {
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			buttonSelected(e);
 		}
 
+		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 			buttonSelected(e);
 		}
@@ -73,6 +75,7 @@ public abstract class SharedPartWithButtons extends SharedPart {
 	/*
 	 * @see SharedPart#createControl(Composite, FormWidgetFactory)
 	 */
+	@Override
 	public void createControl(Composite parent, int style, int span, FormToolkit toolkit) {
 		createMainLabel(parent, span, toolkit);
 		createMainControl(parent, style, span - 1, toolkit);
@@ -127,6 +130,7 @@ public abstract class SharedPartWithButtons extends SharedPart {
 		return button;
 	}
 
+	@Override
 	protected void updateEnabledState() {
 		for (int i = 0; i < fButtons.length; i++) {
 			fButtons[i].setEnabled(isEnabled());

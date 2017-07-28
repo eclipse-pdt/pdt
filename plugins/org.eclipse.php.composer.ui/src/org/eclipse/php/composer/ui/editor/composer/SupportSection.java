@@ -78,11 +78,13 @@ public class SupportSection extends ComposerSection {
 		emailEntry.setValue(support.getEmail(), true);
 
 		emailEntry.addFormEntryListener(new FormEntryAdapter() {
+			@Override
 			public void textValueChanged(FormEntry entry) {
 				support.setEmail(entry.getValue());
 			}
 		});
 		support.addPropertyChangeListener("email", new PropertyChangeListener() { //$NON-NLS-1$
+			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				emailEntry.setValue(support.getEmail(), true);
 			}
@@ -94,11 +96,13 @@ public class SupportSection extends ComposerSection {
 		issuesEntry.setValue(support.getIssues());
 
 		issuesEntry.addFormEntryListener(new FormEntryAdapter() {
+			@Override
 			public void textValueChanged(FormEntry entry) {
 				support.setIssues(entry.getValue());
 			}
 		});
 		support.addPropertyChangeListener("issues", new PropertyChangeListener() { //$NON-NLS-1$
+			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				issuesEntry.setValue(support.getIssues(), true);
 			}
@@ -110,11 +114,13 @@ public class SupportSection extends ComposerSection {
 		forumEntry.setValue(support.getForum());
 
 		forumEntry.addFormEntryListener(new FormEntryAdapter() {
+			@Override
 			public void textValueChanged(FormEntry entry) {
 				support.setForum(entry.getValue());
 			}
 		});
 		support.addPropertyChangeListener("forum", new PropertyChangeListener() { //$NON-NLS-1$
+			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				forumEntry.setValue(support.getForum(), true);
 			}
@@ -126,11 +132,13 @@ public class SupportSection extends ComposerSection {
 		wikiEntry.setValue(support.getWiki());
 
 		wikiEntry.addFormEntryListener(new FormEntryAdapter() {
+			@Override
 			public void textValueChanged(FormEntry entry) {
 				support.setWiki(entry.getValue());
 			}
 		});
 		support.addPropertyChangeListener("wiki", new PropertyChangeListener() { //$NON-NLS-1$
+			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				wikiEntry.setValue(support.getWiki(), true);
 			}
@@ -142,11 +150,13 @@ public class SupportSection extends ComposerSection {
 		ircEntry.setValue(support.getIrc());
 
 		ircEntry.addFormEntryListener(new FormEntryAdapter() {
+			@Override
 			public void textValueChanged(FormEntry entry) {
 				support.setIrc(entry.getValue());
 			}
 		});
 		support.addPropertyChangeListener("irc", new PropertyChangeListener() { //$NON-NLS-1$
+			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				ircEntry.setValue(support.getIrc(), true);
 			}
@@ -158,11 +168,13 @@ public class SupportSection extends ComposerSection {
 		sourceEntry.setValue(support.getSource());
 
 		sourceEntry.addFormEntryListener(new FormEntryAdapter() {
+			@Override
 			public void textValueChanged(FormEntry entry) {
 				support.setSource(entry.getValue());
 			}
 		});
 		support.addPropertyChangeListener("source", new PropertyChangeListener() { //$NON-NLS-1$
+			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				sourceEntry.setValue(support.getSource(), true);
 			}

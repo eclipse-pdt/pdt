@@ -38,21 +38,25 @@ public abstract class TableSection extends StructuredViewerSection {
 			TableSection.this.entryModified(entry, value);
 		}
 
+		@Override
 		public void selectionChanged(IStructuredSelection selection) {
 			getManagedForm().fireSelectionChanged(TableSection.this, selection);
 			TableSection.this.selectionChanged(selection);
 		}
 
+		@Override
 		public void handleDoubleClick(IStructuredSelection selection) {
 			TableSection.this.handleDoubleClick(selection);
 		}
 
+		@Override
 		public void buttonSelected(Button button, int index) {
 			TableSection.this.buttonSelected(index);
 			if (handleDefaultButton)
 				button.getShell().setDefaultButton(null);
 		}
 
+		@Override
 		protected void createButtons(Composite parent, FormToolkit toolkit) {
 			super.createButtons(parent, toolkit);
 			enableButtons();
@@ -64,6 +68,7 @@ public abstract class TableSection extends StructuredViewerSection {
 				count.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 				count.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 				getTablePart().getTableViewer().getTable().addPaintListener(new PaintListener() {
+					@Override
 					public void paintControl(PaintEvent e) {
 						updateLabel();
 					}
@@ -97,6 +102,7 @@ public abstract class TableSection extends StructuredViewerSection {
 		super(formPage, parent, style, titleBar, buttonLabels);
 	}
 
+	@Override
 	protected StructuredViewerPart createViewerPart(String[] buttonLabels) {
 		return new PartAdapter(buttonLabels);
 	}

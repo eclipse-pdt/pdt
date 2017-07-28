@@ -196,10 +196,10 @@ class OverrideIndicatorManager implements IPHPScriptReconcilingListener {
 						String text;
 						if (isImplements)
 							text = Messages.format(PHPUIMessages.OverrideIndicatorManager_implements,
-									qualifiedMethodName);// $NON-NLS-1$
+									qualifiedMethodName);
 						else
 							text = Messages.format(PHPUIMessages.OverrideIndicatorManager_overrides,
-									qualifiedMethodName);// $NON-NLS-1$
+									qualifiedMethodName);
 
 						Identifier name = node.getFunction().getFunctionName();
 						Position position = new Position(name.getStart(), name.getLength());
@@ -226,8 +226,7 @@ class OverrideIndicatorManager implements IPHPScriptReconcilingListener {
 					fAnnotationModel.addAnnotation(mapEntry.getKey(), mapEntry.getValue());
 				}
 			}
-			fOverrideAnnotations = annotationMap.keySet()
-					.toArray(new Annotation[annotationMap.keySet().size()]);
+			fOverrideAnnotations = annotationMap.keySet().toArray(new Annotation[annotationMap.keySet().size()]);
 		}
 	}
 

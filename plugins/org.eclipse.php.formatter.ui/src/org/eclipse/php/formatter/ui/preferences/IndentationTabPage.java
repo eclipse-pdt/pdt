@@ -21,23 +21,23 @@ import org.eclipse.swt.widgets.Group;
 public class IndentationTabPage extends ModifyDialogTabPage {
 
 	private final String PREVIEW = "<?php\n" + createPreviewHeader(FormatterMessages.IndentationTabPage_preview_header) //$NON-NLS-1$
-			+ "class Example {" +
-			"  var $theInt= 1;" +
-			"  function foo($a, $b) {" +
-			"    switch($a) {" +
-			"    case 0: " +
-			"      $Other->doFoo();" +
-			"      break;" +
-			"    default:" +
-			"      $Other->doBaz();" +
-			"    }" +
-			"  }" +
-			"  function bar($v) {" +
-			"    for ($i= 0; $i < 10; $i++) {" +
-			"      $v->add($i);" +
-			"    }" +
-			"  }" +
-			"} \n?>";
+			+ "class Example {" + //$NON-NLS-1$
+			"  var $theInt= 1;" + //$NON-NLS-1$
+			"  function foo($a, $b) {" + //$NON-NLS-1$
+			"    switch($a) {" + //$NON-NLS-1$
+			"    case 0: " + //$NON-NLS-1$
+			"      $Other->doFoo();" + //$NON-NLS-1$
+			"      break;" + //$NON-NLS-1$
+			"    default:" + //$NON-NLS-1$
+			"      $Other->doBaz();" + //$NON-NLS-1$
+			"    }" + //$NON-NLS-1$
+			"  }" + //$NON-NLS-1$
+			"  function bar($v) {" + //$NON-NLS-1$
+			"    for ($i= 0; $i < 10; $i++) {" + //$NON-NLS-1$
+			"      $v->add($i);" + //$NON-NLS-1$
+			"    }" + //$NON-NLS-1$
+			"  }" + //$NON-NLS-1$
+			"} \n?>"; //$NON-NLS-1$
 
 	private CodeFormatterPreview fPreview;
 

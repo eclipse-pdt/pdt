@@ -50,8 +50,8 @@ import org.eclipse.ui.texteditor.link.EditorLinkedModeUI;
 public final class ParameterGuessingProposal extends PHPOverrideCompletionProposal
 		implements IPHPCompletionProposalExtension {
 	private static final char[] NO_TRIGGERS = new char[0];
-	protected static final char LPAREN = '('; // $NON-NLS-1$
-	protected static final char RPAREN = ')'; // $NON-NLS-1$
+	protected static final char LPAREN = '(';
+	protected static final char RPAREN = ')';
 	protected static final String COMMA = ", "; //$NON-NLS-1$
 	private CompletionProposal fProposal;
 	private IMethod method;

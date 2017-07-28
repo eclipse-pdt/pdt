@@ -32,7 +32,7 @@ import org.eclipse.php.composer.api.collection.Dependencies;
 
 public class DependencySearch extends PackageSearch {
 
-	protected List<DependencySelectionFinishedListener> dependencyListeners = new ArrayList<DependencySelectionFinishedListener>();
+	protected List<DependencySelectionFinishedListener> dependencyListeners = new ArrayList<>();
 	private boolean collapsing = false;
 
 	public DependencySearch(Composite parent, ComposerPackage composerPackage, FormToolkit toolkit, String buttonText) {
@@ -68,6 +68,7 @@ public class DependencySearch extends PackageSearch {
 		if (addButton != null) {
 			addButton.removeSelectionListener(addButtonListener);
 			addButton.addSelectionListener(new SelectionAdapter() {
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					notifyDependencySelectionFinishedListener();
 				}
@@ -99,6 +100,7 @@ public class DependencySearch extends PackageSearch {
 	protected DependencySearchPart createPackagePart(Composite parent, String name) {
 		DependencySearchPart dsp = new DependencySearchPart(parent, composerPackage, toolkit, name);
 		dsp.addToggleListener(new HyperlinkAdapter() {
+			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				if (!collapsing) {
 					Twistie toggle = (Twistie) e.getSource();
@@ -108,6 +110,7 @@ public class DependencySearch extends PackageSearch {
 			}
 		});
 		dsp.getVersionControl().addFocusListener(new FocusAdapter() {
+			@Override
 			public void focusGained(FocusEvent e) {
 				Text version = (Text) e.getSource();
 				DependencySearchPart dsp = (DependencySearchPart) version.getData();
@@ -116,6 +119,7 @@ public class DependencySearch extends PackageSearch {
 		});
 
 		dsp.getVersionControl().addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				boolean canFinish = true;
 				for (PackageSearchPart psp : packageControls.values()) {

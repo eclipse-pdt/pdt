@@ -49,7 +49,7 @@ public class CodeCoverageConfigurationBlock implements IPreferenceConfigurationB
 		scrolledCompositeImpl.setLayout(layout);
 		scrolledCompositeImpl.setFont(parent.getFont());
 		PreferenceLinkArea colorsFontsLink = new PreferenceLinkArea(composite, SWT.NONE,
-				"org.eclipse.ui.preferencePages.ColorsAndFonts", PHPDebugUIMessages.CodeCoverageConfigurationBlock_1,
+				"org.eclipse.ui.preferencePages.ColorsAndFonts", PHPDebugUIMessages.CodeCoverageConfigurationBlock_1, //$NON-NLS-1$
 				(IWorkbenchPreferenceContainer) fPreferencePage.getContainer(), null);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
 		colorsFontsLink.getControl().setLayoutData(data);

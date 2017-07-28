@@ -66,7 +66,7 @@ public abstract class SelectionHandler extends AbstractHandler {
 				try {
 					return ((ISourceModule) modelElement).getElementAt(textSelection.getOffset());
 				} catch (ModelException e) {
-					throw new ExecutionException(Messages.SelectionHandler_0, e); // $NON-NLS-1
+					throw new ExecutionException(Messages.SelectionHandler_0, e);
 				}
 			}
 		}

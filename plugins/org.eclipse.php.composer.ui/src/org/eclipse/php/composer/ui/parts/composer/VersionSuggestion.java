@@ -47,7 +47,7 @@ public class VersionSuggestion {
 	private Button recentMinor;
 	private Button recentMajor;
 	private Button noConstraint;
-	private Map<String, Button> constraintButtons = new HashMap<String, Button>();
+	private Map<String, Button> constraintButtons = new HashMap<>();
 
 	private boolean uiFinished = false;
 	private boolean dataArrived = false;
@@ -80,6 +80,7 @@ public class VersionSuggestion {
 		// load package with versions
 		AsyncPackageDownloader downloader = new AsyncPackagistDownloader();
 		downloader.addPackageListener(new PackageListenerInterface() {
+			@Override
 			public void packageLoaded(final RepositoryPackage repositoryPackage) {
 				dataArrived = true;
 				pkg = repositoryPackage;
@@ -95,10 +96,12 @@ public class VersionSuggestion {
 				}
 			}
 
+			@Override
 			public void errorOccured(Exception e) {
 				e.printStackTrace();
 			}
 
+			@Override
 			public void aborted(String url) {
 			}
 		});
@@ -127,6 +130,7 @@ public class VersionSuggestion {
 		recentMajor.setAlignment(SWT.CENTER);
 		recentMajor.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		recentMajor.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				lastUpdate = RECENT;
 				version.setVersion("~" + recentMajor.getData()); //$NON-NLS-1$
@@ -138,6 +142,7 @@ public class VersionSuggestion {
 		recentMinor.setAlignment(SWT.CENTER);
 		recentMinor.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		recentMinor.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				lastUpdate = RECENT;
 				version.setVersion("~" + recentMajor.getData() + "." + recentMinor.getData()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -161,6 +166,7 @@ public class VersionSuggestion {
 		gd.heightHint = 65;
 		versions.getTable().setLayoutData(gd);
 		versions.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				Object elem = ((IStructuredSelection) event.getSelection()).getFirstElement();
 				if (elem instanceof Version) {
@@ -195,6 +201,7 @@ public class VersionSuggestion {
 		noConstraint.setBackground(right.getBackground());
 		noConstraint.setSelection(true);
 		noConstraint.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (prepareCustomVersion()) {
 					customVersion.setConstraint(""); //$NON-NLS-1$
@@ -208,6 +215,7 @@ public class VersionSuggestion {
 			c.setText(constraint);
 			c.setBackground(right.getBackground());
 			c.addSelectionListener(new SelectionAdapter() {
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (prepareCustomVersion()) {
 						customVersion.setConstraint(((Button) e.getSource()).getText());
@@ -227,9 +235,10 @@ public class VersionSuggestion {
 		stabilityLbl.setLayoutData(gd);
 
 		stabilityOverride = factory.createCombo(right, SWT.READ_ONLY | SWT.FLAT);
-		stabilityOverride.setItems((String[]) ArrayUtils.addAll(new String[] { "" }, ComposerConstants.STABILITIES)); //$NON-NLS-1$
+		stabilityOverride.setItems(ArrayUtils.addAll(new String[] { "" }, ComposerConstants.STABILITIES)); //$NON-NLS-1$
 		stabilityOverride.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		stabilityOverride.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (prepareCustomVersion()) {
 					customVersion
@@ -244,6 +253,7 @@ public class VersionSuggestion {
 
 		// add listener to update target when version changes
 		version.addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				updateTarget();
 			}
@@ -253,6 +263,7 @@ public class VersionSuggestion {
 
 	private void updateUI() {
 		Display.getDefault().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				if (uiFinished) {
 					recentMajor.setText(Messages.VersionSuggestion_MajorLabel + (dataArrived && majorVersion != null
@@ -328,14 +339,17 @@ public class VersionSuggestion {
 
 		private Versions versions;
 
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			versions = (Versions) newInput;
 		}
 
+		@Override
 		public Object[] getElements(Object inputElement) {
 			return versions.getDetailedVersions().toArray();
 		}
 
+		@Override
 		public void update(ViewerCell cell) {
 			Object obj = cell.getElement();
 
@@ -355,6 +369,7 @@ public class VersionSuggestion {
 	}
 
 	private class VersionSorter extends ViewerComparator {
+		@Override
 		public int compare(Viewer viewer, Object e1, Object e2) {
 			if (e1 instanceof Version && e2 instanceof Version) {
 				return ((Version) e1).compareTo((Version) e2) * -1;

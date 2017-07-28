@@ -43,6 +43,7 @@ public class OverviewPage extends ComposerFormPage {
 	private SupportSection supportSection;
 
 	protected IHyperlinkListener linkListener = new HyperlinkAdapter() {
+		@Override
 		public void linkActivated(HyperlinkEvent event) {
 			String[] chunks = event.getHref().toString().split(":"); //$NON-NLS-1$
 			String type = chunks[0];
@@ -159,6 +160,7 @@ public class OverviewPage extends ComposerFormPage {
 		composer.setText(Messages.OverviewPage_ComposerInfoSectionBody, true, false);
 		composer.setImage("url", ComposerUIPluginImages.BROWSER.createImage()); //$NON-NLS-1$
 		composer.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				Program.launch(e.getHref().toString());
 			}

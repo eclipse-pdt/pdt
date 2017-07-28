@@ -133,8 +133,9 @@ public abstract class LauncherConfigurationBlock extends OptionsConfigurationBlo
 		prefLink.setLayoutData(gridData);
 
 		prefLink.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
-				IWorkbenchPreferenceContainer container = (IWorkbenchPreferenceContainer) getPreferenceContainer();
+				IWorkbenchPreferenceContainer container = getPreferenceContainer();
 				container.openPage(PHPsPreferencePage.ID, null);
 			};
 		});
@@ -143,6 +144,7 @@ public abstract class LauncherConfigurationBlock extends OptionsConfigurationBlo
 		helpLink.setLayoutData(gridData);
 		helpLink.setText(Messages.LauncherConfigurationBlock_HelpLink);
 		helpLink.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
 					PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser()
@@ -242,7 +244,7 @@ public abstract class LauncherConfigurationBlock extends OptionsConfigurationBlo
 
 		phpExes = PHPexes.getInstance();
 		String current = getValue(phpExecutable);
-		List<String> items = new ArrayList<String>();
+		List<String> items = new ArrayList<>();
 
 		int i = 0;
 		int select = -1;
@@ -291,6 +293,7 @@ public abstract class LauncherConfigurationBlock extends OptionsConfigurationBlo
 					}
 
 					ExecutionResponseAdapter adapter = new ExecutionResponseAdapter() {
+						@Override
 						public void executionFailed(final String response, Exception exception) {
 							getShell().getDisplay().asyncExec(new Runnable() {
 								@Override
@@ -306,6 +309,7 @@ public abstract class LauncherConfigurationBlock extends OptionsConfigurationBlo
 							});
 						};
 
+						@Override
 						public void executionFinished(final String response, int exitValue) {
 							getShell().getDisplay().asyncExec(new Runnable() {
 								@Override

@@ -34,7 +34,7 @@ public class ZFPerformanceTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite(PROJECT + " Performance Tests");
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 		map.put(ProjectSuite.PROJECT, PROJECT);
 		map.put(ProjectSuite.URL, URL);
 		map.put(ProjectSuite.TYPE, TYPE);
@@ -48,7 +48,7 @@ public class ZFPerformanceTests {
 		Test test = new ProjectSuite().suite(map);
 		suite.addTest(test);
 
-		map = new HashMap<String, Object>();
+		map = new HashMap<>();
 		map.put(ProjectSuite.PROJECT, PROJECT);
 		map.put(ProjectSuite.URL, URL);
 		map.put(ProjectSuite.TYPE, TYPE);

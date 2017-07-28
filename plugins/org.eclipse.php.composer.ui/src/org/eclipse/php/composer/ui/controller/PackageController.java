@@ -23,10 +23,10 @@ public class PackageController extends StyledCellLabelProvider
 		implements IStructuredContentProvider, ICheckStateProvider, ICheckStateListener {
 
 	private List<MinimalPackage> packages;
-	private List<String> checked = new ArrayList<String>();
+	private List<String> checked = new ArrayList<>();
 	protected static Image pkgImage = ComposerUIPluginImages.PACKAGE.createImage();
 	protected static Image phpImage = ComposerUIPluginImages.PHP.createImage();
-	protected List<IPackageCheckStateChangedListener> pkgListeners = new ArrayList<IPackageCheckStateChangedListener>();
+	protected List<IPackageCheckStateChangedListener> pkgListeners = new ArrayList<>();
 
 	public void addPackageCheckStateChangedListener(IPackageCheckStateChangedListener listener) {
 		if (!pkgListeners.contains(listener)) {
@@ -38,6 +38,7 @@ public class PackageController extends StyledCellLabelProvider
 		pkgListeners.remove(listener);
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		if (newInput == null) {
@@ -47,6 +48,7 @@ public class PackageController extends StyledCellLabelProvider
 		}
 	}
 
+	@Override
 	public Object[] getElements(Object inputElement) {
 		if (packages != null) {
 			return packages.toArray();
@@ -120,6 +122,7 @@ public class PackageController extends StyledCellLabelProvider
 		return name;
 	}
 
+	@Override
 	public void update(ViewerCell cell) {
 		Object obj = cell.getElement();
 

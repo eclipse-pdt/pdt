@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
@@ -145,6 +144,7 @@ public class ComposerFormEditor extends SharedHeaderFormEditor {
 
 		composerPackage = new ComposerPackage();
 		composerPackage.addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				Logger.debug("Property change: " + e.getPropertyName() + ", oldValue: " + e.getOldValue() //$NON-NLS-1$ //$NON-NLS-2$
 						+ ", newValue: " + e.getNewValue()); //$NON-NLS-1$
@@ -171,7 +171,7 @@ public class ComposerFormEditor extends SharedHeaderFormEditor {
 		FormToolkit toolkit = headerForm.getToolkit();
 		toolkit.decorateFormHeading(header.getForm());
 
-		toolbarManager = (ToolBarManager) header.getToolBarManager();
+		toolbarManager = header.getToolBarManager();
 	}
 
 	@Override
@@ -337,6 +337,7 @@ public class ComposerFormEditor extends SharedHeaderFormEditor {
 		return selfUpdateAction;
 	}
 
+	@Override
 	public void doSave(IProgressMonitor monitor) {
 		try {
 			saving = true;
@@ -409,9 +410,11 @@ public class ComposerFormEditor extends SharedHeaderFormEditor {
 		return false;
 	}
 
+	@Override
 	public void doSaveAs() {
 	}
 
+	@Override
 	public boolean isSaveAsAllowed() {
 		return false;
 	}
@@ -509,6 +512,7 @@ public class ComposerFormEditor extends SharedHeaderFormEditor {
 		}
 	}
 
+	@Override
 	public boolean isDirty() {
 		return this.dirty;
 	}
@@ -539,6 +543,7 @@ public class ComposerFormEditor extends SharedHeaderFormEditor {
 		if (event.getType() == IResourceChangeEvent.PRE_CLOSE || event.getType() == IResourceChangeEvent.PRE_DELETE) {
 			if (jsonFile.getProject().equals(event.getResource())) {
 				Display.getDefault().asyncExec(new Runnable() {
+					@Override
 					public void run() {
 						close(false);
 					}
@@ -551,6 +556,7 @@ public class ComposerFormEditor extends SharedHeaderFormEditor {
 		class RemovedResourceDeltaVisitor implements IResourceDeltaVisitor {
 			boolean removed = false;
 
+			@Override
 			public boolean visit(IResourceDelta delta) throws CoreException {
 				if (delta.getResource() != null && delta.getResource().equals(jsonFile)
 						&& (delta.getKind() & (IResourceDelta.REMOVED)) != 0) {
@@ -567,6 +573,7 @@ public class ComposerFormEditor extends SharedHeaderFormEditor {
 			event.getDelta().accept(visitor);
 			if (visitor.removed) {
 				Display.getDefault().asyncExec(new Runnable() {
+					@Override
 					public void run() {
 						close(true);
 					}

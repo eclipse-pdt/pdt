@@ -54,6 +54,7 @@ public abstract class StructuredViewerSection extends ComposerSection {
 		viewerPart.createControl(parent, style, span, toolkit);
 		MenuManager popupMenuManager = new MenuManager();
 		IMenuListener listener = new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager mng) {
 				fillContextMenu(mng);
 			}
@@ -105,6 +106,7 @@ public abstract class StructuredViewerSection extends ComposerSection {
 		return false;
 	}
 
+	@Override
 	public void setFocus() {
 		viewerPart.getControl().setFocus();
 	}

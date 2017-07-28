@@ -68,13 +68,13 @@ public class ExpressionsValueDeserializer {
 
 	private ExpressionValue buildIntType(VariableReader reader) {
 		String value = reader.readToken();
-		String valueAsString = value; // $NON-NLS-1$
+		String valueAsString = value;
 		return new ExpressionValue(PHP_INT, value, valueAsString, null);
 	}
 
 	private ExpressionValue buildFloatType(VariableReader reader) {
 		String value = reader.readToken();
-		String valueAsString = value; // $NON-NLS-1$
+		String valueAsString = value;
 		return new ExpressionValue(PHP_FLOAT, value, valueAsString, null);
 	}
 

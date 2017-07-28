@@ -76,7 +76,7 @@ public class RenameIncludeAndClassName extends RenameClass {
 
 	private void addChange(Scalar scalar, String description) {
 		String stringValue = scalar.getStringValue();
-		int index = stringValue.lastIndexOf(oldName); // $NON-NLS-1$
+		int index = stringValue.lastIndexOf(oldName);
 
 		addChange(scalar.getStart() + index, description);
 	}

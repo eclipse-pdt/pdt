@@ -42,7 +42,7 @@ import junit.framework.TestSuite;
 public class CodeAssistTestsWrapper extends AbstractPDTTTest {
 
 	protected static final char OFFSET_CHAR = '|';
-	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<>();
 	static {
 		TESTS.put(PHPVersion.PHP5,
 				new String[] { "/workspace/project/codeassist/php5/exclusive", "/workspace/project/codeassist/php5" });
@@ -162,7 +162,7 @@ public class CodeAssistTestsWrapper extends AbstractPDTTTest {
 	}
 
 	public static CompletionProposal[] getProposals(ISourceModule sourceModule, int offset) throws ModelException {
-		final List<CompletionProposal> proposals = new LinkedList<CompletionProposal>();
+		final List<CompletionProposal> proposals = new LinkedList<>();
 		sourceModule.codeComplete(offset, new CompletionRequestor() {
 			@Override
 			public void accept(CompletionProposal proposal) {

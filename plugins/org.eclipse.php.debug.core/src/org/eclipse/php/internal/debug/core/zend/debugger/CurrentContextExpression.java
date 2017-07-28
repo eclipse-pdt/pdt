@@ -22,12 +22,12 @@ import org.eclipse.php.internal.debug.core.model.VariablesUtil;
  */
 public class CurrentContextExpression extends DefaultExpression {
 
-	private final static String GET_EXTENDED_CONTEXT = "eval('if (isset($this)) { " + // $NON-NLS-1$
-			"return array_merge(array(\\'this\\' => $this), get_defined_vars(), array(get_called_class())); } " + // $NON-NLS-1$
-			"else { return array_merge(get_defined_vars(), array(false)); }; ');";// $NON-NLS-1$
+	private final static String GET_EXTENDED_CONTEXT = "eval('if (isset($this)) { " + //$NON-NLS-1$
+			"return array_merge(array(\\'this\\' => $this), get_defined_vars(), array(get_called_class())); } " + //$NON-NLS-1$
+			"else { return array_merge(get_defined_vars(), array(false)); }; ');";//$NON-NLS-1$
 
-	private final static String GET_CONTEXT = "eval('if (isset($this)) {$this;}; " // $NON-NLS-1$
-			+ "return array_merge(get_defined_vars(), array(false));')"; // $NON-NLS-1$
+	private final static String GET_CONTEXT = "eval('if (isset($this)) {$this;}; " //$NON-NLS-1$
+			+ "return array_merge(get_defined_vars(), array(false));')"; //$NON-NLS-1$
 
 	/**
 	 * Creates new current context expression.
@@ -70,7 +70,7 @@ public class CurrentContextExpression extends DefaultExpression {
 	 *         <code>false</code> otherwise
 	 */
 	public static boolean supportsStaticContext(Debugger debugger) {
-		if (VersionUtils.greater(debugger.getPHPVersion(), "5.3", 2)) { // $NON-NLS-1$
+		if (VersionUtils.greater(debugger.getPHPVersion(), "5.3", 2)) { //$NON-NLS-1$
 			return true;
 		}
 		return false;

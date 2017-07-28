@@ -206,14 +206,14 @@ public class UseStatementInjector {
 									if (new Region(0, 0).equals(edits.getRegion())) {
 										String lineDelim = TextUtilities.getDefaultLineDelimiter(document);
 										MultiTextEdit newEdits = new MultiTextEdit();
-										newEdits.addChild(new InsertEdit(0, "<?php"));
+										newEdits.addChild(new InsertEdit(0, "<?php")); //$NON-NLS-1$
 										newEdits.addChild(new InsertEdit(0, lineDelim));
 										for (TextEdit edit : edits.getChildren()) {
 											// we have to copy the text edit to
 											// reset its parent
 											newEdits.addChild(edit.copy());
 										}
-										newEdits.addChild(new InsertEdit(0, "?>"));
+										newEdits.addChild(new InsertEdit(0, "?>")); //$NON-NLS-1$
 										newEdits.addChild(new InsertEdit(0, lineDelim));
 										edits = newEdits;
 									} else if (index == 0 && edits.getChildrenSize() == 2) {
@@ -361,13 +361,13 @@ public class UseStatementInjector {
 					// String lineDelim =
 					// TextUtilities.getDefaultLineDelimiter(document);
 					MultiTextEdit newEdits = new MultiTextEdit();
-					newEdits.addChild(new InsertEdit(0, "<?php"));
+					newEdits.addChild(new InsertEdit(0, "<?php")); //$NON-NLS-1$
 					newEdits.addChild(new InsertEdit(0, lineDelim));
 					for (TextEdit edit : edits.getChildren()) {
 						// we have to copy the text edit to reset its parent
 						newEdits.addChild(edit.copy());
 					}
-					newEdits.addChild(new InsertEdit(0, "?>"));
+					newEdits.addChild(new InsertEdit(0, "?>")); //$NON-NLS-1$
 					newEdits.addChild(new InsertEdit(0, lineDelim));
 					edits = newEdits;
 				} else if (index == 0 && edits.getChildrenSize() == 2) {

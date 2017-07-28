@@ -117,7 +117,7 @@ public class PHPFileCreationWizardPage extends WizardNewFileCreationPage {
 			setErrorMessage(PHPUIMessages.PHPFileCreationWizardPage_15);
 			return false;
 		}
-		if (!fileName.isEmpty() && containerFolder.getFile(new Path(fileName)).exists()) { // $NON-NLS-1$
+		if (!fileName.isEmpty() && containerFolder.getFile(new Path(fileName)).exists()) {
 			setErrorMessage(PHPUIMessages.PHPFileCreationWizardPage_14);
 			return false;
 		}

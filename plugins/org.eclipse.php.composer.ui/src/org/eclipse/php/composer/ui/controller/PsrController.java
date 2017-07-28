@@ -44,6 +44,7 @@ public class PsrController extends StyledCellLabelProvider implements ITreeConte
 		psr0 = (Psr) newInput;
 	}
 
+	@Override
 	public void update(ViewerCell cell) {
 		Object obj = cell.getElement();
 		String text = getText(obj);

@@ -88,6 +88,7 @@ public class ScriptsSection extends TreeSection implements PropertyChangeListene
 		updateMenu();
 	}
 
+	@Override
 	protected boolean createCount() {
 		return true;
 	}
@@ -118,6 +119,7 @@ public class ScriptsSection extends TreeSection implements PropertyChangeListene
 		scriptsViewer.getTree().setEnabled(enabled);
 	}
 
+	@Override
 	public void refresh() {
 		scriptsViewer.refresh();
 		super.refresh();
@@ -130,6 +132,7 @@ public class ScriptsSection extends TreeSection implements PropertyChangeListene
 		}
 	}
 
+	@Override
 	protected void selectionChanged(IStructuredSelection sel) {
 		updateButtons();
 		updateMenu();

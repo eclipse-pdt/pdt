@@ -14,5 +14,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 
 public interface IController extends IStructuredContentProvider, ILabelProvider {
-
+	@Override
+	default void dispose() {
+	}
 }

@@ -57,7 +57,7 @@ public class CodeAssistPdttFile extends PdttFile {
 			throws Exception {
 		super.parse(stream, null);
 
-		List<ExpectedProposal> expectedProposals = new LinkedList<ExpectedProposal>();
+		List<ExpectedProposal> expectedProposals = new LinkedList<>();
 		String[] lines = getExpected().split("\n");
 		for (String line : lines) {
 			int i = line.indexOf('(');

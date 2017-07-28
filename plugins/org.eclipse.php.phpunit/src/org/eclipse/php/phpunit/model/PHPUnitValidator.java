@@ -179,7 +179,7 @@ public class PHPUnitValidator {
 			if (project == null)
 				return null;
 			final String elementName = ((String) element).trim();
-			if (elementName.length() == 0) { // $NON-NLS-1$
+			if (elementName.length() == 0) {
 				if (status != null) {
 					status.setWarning(PHPUnitMessages.PHPUnitValidator_No_Element);
 				}

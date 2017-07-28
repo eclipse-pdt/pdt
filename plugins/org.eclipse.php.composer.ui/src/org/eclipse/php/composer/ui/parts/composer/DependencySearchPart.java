@@ -33,6 +33,7 @@ public class DependencySearchPart extends PackageSearchPart {
 		super(parent, composerPackage, toolkit, name);
 	}
 
+	@Override
 	protected void create(Composite parent, WidgetFactory factory) {
 		createBody(parent, factory);
 		WidgetHelper.trimComposite(body, 0, 0, 0, 0, 0, 0);

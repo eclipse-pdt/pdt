@@ -97,6 +97,7 @@ public class DependenciesPage extends ComposerFormPage {
 
 		requireSection.setEnabled(enabled);
 		requireSection.getSection().addExpansionListener(new ExpansionAdapter() {
+			@Override
 			public void expansionStateChanging(ExpansionEvent e) {
 				activeSection = e.getState() ? requireSection : requireDevSection;
 				requireDevSection.getSection().setExpanded(!e.getState());
@@ -107,6 +108,7 @@ public class DependenciesPage extends ComposerFormPage {
 
 		requireDevSection.setEnabled(enabled);
 		requireDevSection.getSection().addExpansionListener(new ExpansionAdapter() {
+			@Override
 			public void expansionStateChanging(ExpansionEvent e) {
 				activeSection = e.getState() ? requireDevSection : requireSection;
 				requireSection.getSection().setExpanded(!e.getState());
@@ -123,6 +125,7 @@ public class DependenciesPage extends ComposerFormPage {
 		searchSection = new DependencySearchSection(this, right);
 		searchSection.setEnabled(enabled);
 		searchSection.addDependencySelectionFinishedListener(new DependencySelectionFinishedListener() {
+			@Override
 			public void dependenciesSelected(Dependencies dependencies) {
 				Dependencies deps = activeSection == requireSection ? composerPackage.getRequire()
 						: composerPackage.getRequireDev();

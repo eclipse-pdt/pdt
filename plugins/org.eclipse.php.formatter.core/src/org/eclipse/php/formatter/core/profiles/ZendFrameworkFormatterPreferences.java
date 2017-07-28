@@ -18,7 +18,7 @@ import org.eclipse.php.formatter.core.CodeFormatterVisitor;
  */
 final public class ZendFrameworkFormatterPreferences implements ICodeFormatterPreferencesInitializer {
 
-	public static final String ID = "org.eclipse.php.formatter.ui.preferences.ZendFrameworkFormatterPreferences";
+	public static final String ID = "org.eclipse.php.formatter.ui.preferences.ZendFrameworkFormatterPreferences"; //$NON-NLS-1$
 
 	public ZendFrameworkFormatterPreferences() {
 	}

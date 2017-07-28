@@ -14,12 +14,12 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.GlobalMethodStatementContext;
 import org.eclipse.php.internal.core.language.PHPVariables;
@@ -69,7 +69,7 @@ public class LocalMethodVariablesStrategy extends GlobalElementStrategy {
 		if (!PHPFlags.isStatic(enclosingMethod.getFlags())) {
 			IType declaringType = enclosingMethod.getDeclaringType();
 			if (declaringType != null) {
-				if (THIS.startsWith(prefix)) { // $NON-NLS-1$
+				if (THIS.startsWith(prefix)) {
 					reporter.reportField(new FakeField((ModelElement) declaringType, THIS, 0, 0), suffix, replaceRange,
 							false, ICompletionReporter.RELEVANCE_ADJUST); // NON-NLS-1
 																			// //$NON-NLS-2$
@@ -80,7 +80,7 @@ public class LocalMethodVariablesStrategy extends GlobalElementStrategy {
 					IMethod method = (IMethod) enclosingMethod.getParent().getAncestor(IModelElement.METHOD);
 					if (method != null) {
 						declaringType = method.getDeclaringType();
-						if (declaringType != null && THIS.startsWith(prefix)) { // $NON-NLS-1$
+						if (declaringType != null && THIS.startsWith(prefix)) {
 							reporter.reportField(new FakeField((ModelElement) declaringType, THIS, 0, 0), suffix,
 									replaceRange, false, ICompletionReporter.RELEVANCE_ADJUST); // NON-NLS-1
 																								// //$NON-NLS-2$

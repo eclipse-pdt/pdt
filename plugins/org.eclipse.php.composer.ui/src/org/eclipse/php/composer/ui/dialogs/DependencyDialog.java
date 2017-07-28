@@ -85,6 +85,7 @@ public class DependencyDialog extends Dialog {
 			version.setText(dependency.getVersion());
 		}
 		version.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				dependency.setVersion(version.getText());
 			}

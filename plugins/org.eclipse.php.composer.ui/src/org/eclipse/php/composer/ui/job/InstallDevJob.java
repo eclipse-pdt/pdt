@@ -27,6 +27,7 @@ public class InstallDevJob extends ComposerJob {
 		super(project, Messages.InstallDevJob_Name);
 	}
 
+	@Override
 	protected void launch(ScriptLauncher launcher) throws ExecuteException, IOException, InterruptedException {
 		List<String> params = new ArrayList<>();
 		// workaround for incorrect progress displaying on Windows

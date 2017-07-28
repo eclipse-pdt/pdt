@@ -37,7 +37,7 @@ public class TreeCopyAction extends Action {
 		public TreeObject(TreeItem element, boolean selected) {
 			fTreeItem= element;
 			fSelected= selected;
-			fChildren= new ArrayList<TreeObject>();
+			fChildren= new ArrayList<>();
 		}
 		public void setSelected() {
 			fSelected= true;
@@ -119,8 +119,8 @@ public class TreeCopyAction extends Action {
 	}
 
 	private void copyTree(TreeItem[] selection, Clipboard clipboard) {
-		HashMap<TreeItem, TreeObject> elementToTreeObj= new HashMap<TreeItem, TreeObject>();
-		List<TreeObject> roots= new ArrayList<TreeObject>();
+		HashMap<TreeItem, TreeObject> elementToTreeObj= new HashMap<>();
+		List<TreeObject> roots= new ArrayList<>();
 		int indent= Integer.MIN_VALUE;
 		
 		for (int i= 0; i < selection.length; i++) {

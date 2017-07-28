@@ -112,7 +112,7 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 	 */
 	@Override
 	protected Control createContents(Composite parent) {
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.STEP_FILTERING_PREFERENCES); // $NON-NLS-1$
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.STEP_FILTERING_PREFERENCES);
 		// The main composite
 		Composite composite = SWTFactory.createComposite(parent, parent.getFont(), 1, 1, GridData.FILL_BOTH, 0, 0);
 		createStepFilterPreferences(composite);
@@ -399,8 +399,7 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 					+ filters[i].isEnabled() + DebugStepFilter.FILTER_TOKENS_DELIM + filters[i].isReadOnly()
 					+ DebugStepFilter.FILTER_TOKENS_DELIM + filters[i].getPath());
 		}
-		String pref = serializeList(
-				filtersPersistenceList.toArray(new String[filtersPersistenceList.size()]));
+		String pref = serializeList(filtersPersistenceList.toArray(new String[filtersPersistenceList.size()]));
 		store.setValue(IPHPDebugConstants.PREF_STEP_FILTERS_LIST, pref);
 		DebugPlugin.setUseStepFilters(fUseStepFiltersButton.getSelection());
 

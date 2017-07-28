@@ -159,8 +159,8 @@ public class SaveAsDialog extends TitleAreaDialog {
 			}
 		};
 
-		resourceGroup = new ResourceAndContainerGroup(composite, listener, PHPUIMessages.SaveAsDialog_File_Name, "",
-				false); // $NON-NLS-2$
+		resourceGroup = new ResourceAndContainerGroup(composite, listener, PHPUIMessages.SaveAsDialog_File_Name, "", //$NON-NLS-1$
+				false);
 		resourceGroup.setAllowExistingResources(true);
 
 		return parentComposite;

@@ -73,6 +73,7 @@ public class ConfigSection extends ComposerSection {
 		}
 
 		processTimeoutEntry.addFormEntryListener(new FormEntryAdapter() {
+			@Override
 			public void textValueChanged(FormEntry entry) {
 				if (entry.getValue().isEmpty()) {
 					composerPackage.getConfig().remove("process-timeout"); //$NON-NLS-1$
@@ -82,6 +83,7 @@ public class ConfigSection extends ComposerSection {
 			}
 		});
 		composerPackage.getConfig().addPropertyChangeListener("process-timeout", new PropertyChangeListener() { //$NON-NLS-1$
+			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				Integer processTimeout = composerPackage.getConfig().getProcessTimeout();
 				if (processTimeout == null) {
@@ -101,6 +103,7 @@ public class ConfigSection extends ComposerSection {
 		}
 
 		vendorDirEntry.addFormEntryListener(new FormEntryAdapter() {
+			@Override
 			public void textValueChanged(FormEntry entry) {
 				if (entry.getValue().isEmpty()) {
 					composerPackage.getConfig().remove("vendor-dir"); //$NON-NLS-1$
@@ -111,6 +114,7 @@ public class ConfigSection extends ComposerSection {
 			}
 		});
 		composerPackage.getConfig().addPropertyChangeListener("vendor-dir", new PropertyChangeListener() { //$NON-NLS-1$
+			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				String vendorDir = composerPackage.getConfig().getVendorDir();
 				if (vendorDir != null) {
@@ -130,6 +134,7 @@ public class ConfigSection extends ComposerSection {
 		}
 
 		binDirEntry.addFormEntryListener(new FormEntryAdapter() {
+			@Override
 			public void textValueChanged(FormEntry entry) {
 				if (entry.getValue().isEmpty()) {
 					composerPackage.getConfig().remove("bin-dir"); //$NON-NLS-1$
@@ -139,6 +144,7 @@ public class ConfigSection extends ComposerSection {
 			}
 		});
 		composerPackage.getConfig().addPropertyChangeListener("bin-dir", new PropertyChangeListener() { //$NON-NLS-1$
+			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				String binDir = composerPackage.getConfig().getBinDir();
 				if (binDir == null) {
@@ -155,6 +161,7 @@ public class ConfigSection extends ComposerSection {
 		notifyOnInstallEntry.setValue(composerPackage.getConfig().getNotifyOnInstall());
 
 		notifyOnInstallEntry.addBooleanFormEntryListener(new IBooleanFormEntryListener() {
+			@Override
 			public void selectionChanged(BooleanFormEntry entry) {
 				if (entry.getValue()) {
 					composerPackage.getConfig().remove("notify-on-install"); //$NON-NLS-1$
@@ -164,6 +171,7 @@ public class ConfigSection extends ComposerSection {
 			}
 		});
 		composerPackage.getConfig().addPropertyChangeListener("notify-on-install", new PropertyChangeListener() { //$NON-NLS-1$
+			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				notifyOnInstallEntry.setValue(composerPackage.getConfig().getNotifyOnInstall(), true);
 			}

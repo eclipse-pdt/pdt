@@ -57,7 +57,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.osgi.framework.Bundle;
 
-@SuppressWarnings("restriction")
 @RunWith(PDTTList.class)
 public class UnimplementMethodsTests {
 
@@ -87,7 +86,7 @@ public class UnimplementMethodsTests {
 		project = TestUtils.createProject("UnimplementMethods_" + this.phpVersion);
 		TestUtils.setProjectPHPVersion(project, phpVersion);
 
-		IEclipsePreferences node = DefaultScope.INSTANCE.getNode("org.eclipse.php.formatter.core"); // $NON-NLS-1$
+		IEclipsePreferences node = DefaultScope.INSTANCE.getNode("org.eclipse.php.formatter.core"); //$NON-NLS-1$
 		node.put(CodeFormatterConstants.FORMATTER_PROFILE, PHPDefaultFormatterPreferences.ID);
 	}
 

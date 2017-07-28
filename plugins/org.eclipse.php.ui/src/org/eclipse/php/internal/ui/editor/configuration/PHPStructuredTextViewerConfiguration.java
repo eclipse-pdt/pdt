@@ -514,7 +514,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 			vector.add(prefix.toString());
 		}
 
-		vector.add(EMPTY); // $NON-NLS-1$
+		vector.add(EMPTY);
 
 		return vector.toArray(new String[vector.size()]);
 	}

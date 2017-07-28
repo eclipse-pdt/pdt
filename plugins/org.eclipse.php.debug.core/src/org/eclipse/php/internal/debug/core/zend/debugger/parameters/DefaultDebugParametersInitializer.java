@@ -151,7 +151,7 @@ public class DefaultDebugParametersInitializer extends AbstractDebugParametersIn
 		String codeCoverageFlag = launch.getAttribute(IPHPDebugConstants.DEBUGGING_COLLECT_CODE_COVERAGE);
 		if (codeCoverageFlag != null) {
 			if (Integer.parseInt(codeCoverageFlag) > 0)
-				parameters.put(CODE_COVERAGE, codeCoverageFlag); // $NON-NLS-1$
+				parameters.put(CODE_COVERAGE, codeCoverageFlag);
 		}
 		// Set the use_ssl for any local or remote debug configuration
 		boolean useSSL = InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID)

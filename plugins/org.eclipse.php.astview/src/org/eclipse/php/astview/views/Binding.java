@@ -63,7 +63,7 @@ public class Binding extends ASTAttribute {
 	public Object[] getChildren() {
 		
 		if (fBinding != null) {
-			ArrayList<ASTAttribute> res= new ArrayList<ASTAttribute>();
+			ArrayList<ASTAttribute> res= new ArrayList<>();
 			res.add(new BindingProperty(this, "NAME", fBinding.getName(), true)); //$NON-NLS-1$
 			res.add(new BindingProperty(this, "KEY", fBinding.getKey(), true)); //$NON-NLS-1$
 			//FIXME: res.add(new BindingProperty(this, "IS RECOVERED", fBinding.isRecovered(), true)); //$NON-NLS-1$
