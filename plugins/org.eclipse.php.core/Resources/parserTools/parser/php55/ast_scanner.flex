@@ -24,7 +24,7 @@ import org.eclipse.php.internal.core.util.collections.StateStack;
 import java_cup.sym;
 import java_cup.runtime.Symbol;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "nls"})
 
 %%
 

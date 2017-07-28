@@ -1035,7 +1035,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	public boolean visit(YieldExpression s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		if (s.getOperatorType() != YieldExpression.OP_NONE) {
-			parameters.put("operator", String.valueOf(s.getOperatorType()));
+			parameters.put("operator", String.valueOf(s.getOperatorType())); //$NON-NLS-1$
 		}
 		xmlWriter.startTag("YieldExpression", parameters); //$NON-NLS-1$
 		return true;
@@ -1192,7 +1192,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	public boolean visit(UseStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		if (s.getStatementType() != UseStatement.T_NONE) {
-			parameters.put("statementType", String.valueOf(s.getStatementType()));
+			parameters.put("statementType", String.valueOf(s.getStatementType())); //$NON-NLS-1$
 		}
 		xmlWriter.startTag("UseStatement", parameters); //$NON-NLS-1$
 
@@ -1215,7 +1215,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	public boolean visit(UsePart s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		if (s.getStatementType() != UseStatement.T_NONE) {
-			parameters.put("statementType", String.valueOf(s.getStatementType()));
+			parameters.put("statementType", String.valueOf(s.getStatementType())); //$NON-NLS-1$
 		}
 		xmlWriter.startTag("UsePart", parameters); //$NON-NLS-1$
 		s.getNamespace().traverse(this);

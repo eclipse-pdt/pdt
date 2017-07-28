@@ -240,7 +240,7 @@ public final class PHPExeUtil {
 						getINIFile(exec).getAbsolutePath(), "-i"); //$NON-NLS-1$
 		} catch (IOException e) {
 			Logger.logException(e);
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 

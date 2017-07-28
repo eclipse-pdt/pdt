@@ -174,14 +174,14 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		}
 
 		private void setPreviewText() {
-			String previewText = ""; // $NON-NLS-1$
+			String previewText = ""; // $NON-NLS-1$ //$NON-NLS-1$
 			if (fLastSelected != null) {
 				previewText = "<?php\n"; //$NON-NLS-1$
 				List<String> snippets = fLastSelected.getSnippets();
 				for (int i = 0; i < snippets.size(); i++) {
 					previewText += snippets.get(i);
 				}
-				previewText += "\n?>";
+				previewText += "\n?>"; //$NON-NLS-1$
 			}
 			fPreview.setPreviewText(previewText);
 		}
@@ -727,11 +727,11 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_IF);
 
 		codeFormatterPreferences.insert_space_before_opening_paren_in_declare = getBooleanValue(preferences,
-				"codeFormatterPreferences.insert_space_before_opening_paren_in_declare");
+				"codeFormatterPreferences.insert_space_before_opening_paren_in_declare"); //$NON-NLS-1$
 		codeFormatterPreferences.insert_space_after_opening_paren_in_declare = getBooleanValue(preferences,
-				"codeFormatterPreferences.insert_space_after_opening_paren_in_declare");
+				"codeFormatterPreferences.insert_space_after_opening_paren_in_declare"); //$NON-NLS-1$
 		codeFormatterPreferences.insert_space_before_closing_paren_in_declare = getBooleanValue(preferences,
-				"codeFormatterPreferences.insert_space_before_closing_paren_in_declare");
+				"codeFormatterPreferences.insert_space_before_closing_paren_in_declare"); //$NON-NLS-1$
 
 		codeFormatterPreferences.insert_space_before_comma_in_static = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_STATIC);

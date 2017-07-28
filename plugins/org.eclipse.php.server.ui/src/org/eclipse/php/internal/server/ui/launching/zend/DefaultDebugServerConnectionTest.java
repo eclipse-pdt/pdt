@@ -122,7 +122,7 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 			} catch (FileNotFoundException fnfe) {
 				// dummy.php was not found
 				String dummyFile = Platform.getPreferencesService().getString(PHPDebugPlugin.ID,
-						PHPDebugCorePreferenceNames.ZEND_DEBUG_DUMMY_FILE, "", null);
+						PHPDebugCorePreferenceNames.ZEND_DEBUG_DUMMY_FILE, "", null); //$NON-NLS-1$
 				showCustomErrorDialog(NLS.bind(
 						PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_theURLCouldNotBeFound"), fURL, //$NON-NLS-1$
 						dummyFile));

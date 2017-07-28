@@ -32,7 +32,7 @@ import org.eclipse.php.refactoring.core.RefactoringPlugin;
 
 public class MoveUtils {
 
-	private static final String phpunitFramework = "PHPUnit/Framework";
+	private static final String phpunitFramework = "PHPUnit/Framework"; //$NON-NLS-1$
 
 	private MoveUtils() {
 	}

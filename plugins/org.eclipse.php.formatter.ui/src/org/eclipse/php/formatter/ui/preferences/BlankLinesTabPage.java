@@ -23,7 +23,7 @@ public class BlankLinesTabPage extends ModifyDialogTabPage {
 			+ "use test2;\n" //$NON-NLS-1$
 			+ "use test3;\n" //$NON-NLS-1$
 			+ createPreviewHeader(FormatterMessages.BlankLinesTabPage_preview_header) + "class Example {" + //$NON-NLS-1$
-			"  const CONST2 = 3;" + "  var $theInt= 1;" + //$NON-NLS-1$
+			"  const CONST2 = 3;" + "  var $theInt= 1;" + //$NON-NLS-1$ //$NON-NLS-2$
 			"  public function foo($a, $b) {" + //$NON-NLS-1$
 			"    switch($a) {" + //$NON-NLS-1$
 			"    case 0: " + //$NON-NLS-1$
@@ -38,7 +38,7 @@ public class BlankLinesTabPage extends ModifyDialogTabPage {
 			"      $v->add($i);" + //$NON-NLS-1$
 			"    }" + //$NON-NLS-1$
 			"  }" + //$NON-NLS-1$
-			"} namespace test1;\n" + "interface MyInterface {}\n?>"; //$NON-NLS-1$
+			"} namespace test1;\n" + "interface MyInterface {}\n?>"; //$NON-NLS-1$ //$NON-NLS-2$
 
 	private boolean isInitialized = false;
 

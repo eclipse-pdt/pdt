@@ -36,7 +36,7 @@ public class PHPProfilePerspectiveSwitcher implements IProfileSessionListener {
 	private abstract class SwitchJob extends Job {
 
 		public SwitchJob() {
-			super("Profile Perspective Switch Job");
+			super("Profile Perspective Switch Job"); //$NON-NLS-1$
 			setSystem(true);
 			setPriority(Job.INTERACTIVE);
 			setRule(AsynchronousSchedulingRuleFactory.getDefault().newSerialPerObjectRule(this));
@@ -66,7 +66,7 @@ public class PHPProfilePerspectiveSwitcher implements IProfileSessionListener {
 						throwable = t;
 					} finally {
 						if (result == null) {
-							result = new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, IStatus.ERROR, "Error", throwable);
+							result = new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, IStatus.ERROR, "Error", throwable); //$NON-NLS-1$
 						}
 						done(result);
 					}
@@ -143,8 +143,8 @@ public class PHPProfilePerspectiveSwitcher implements IProfileSessionListener {
 			}
 		}
 		MessageDialogWithToggle dialog = MessageDialogWithToggle.openYesNoQuestion(shell,
-				PHPProfileUIMessages.getString("ProfilePerspectiveHandler_0"),
-				PHPProfileUIMessages.getString("ProfilePerspectiveHandler_1"), null, false,
+				PHPProfileUIMessages.getString("ProfilePerspectiveHandler_0"), //$NON-NLS-1$
+				PHPProfileUIMessages.getString("ProfilePerspectiveHandler_1"), null, false, //$NON-NLS-1$
 				ProfilerUiPlugin.getDefault().getPreferenceStore(),
 				PreferenceKeys.OPEN_PROFILE_PERSPECTIVE_ON_SESSION_DATA);
 		return (dialog.getReturnCode() == IDialogConstants.YES_ID);

@@ -138,7 +138,7 @@ public class XDebugTextHover extends PHPDebugTextHover {
 				}
 			} else if (node.getParent() instanceof SingleFieldDeclaration) {
 				IField field = (IField) sourceModule.getElementAt(node.getStart());
-				String typeName = "";
+				String typeName = ""; //$NON-NLS-1$
 				boolean isAnonymous = false;
 				if (field.getParent() instanceof IType) {
 					IType type = (IType) field.getParent();

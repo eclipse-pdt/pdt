@@ -318,7 +318,7 @@ public class XDebugConfigurationDialog extends AbstractDebuggerConfigurationDial
 		boolean useProxyState = service.getBoolean(PHPDebugPlugin.ID, XDebugPreferenceMgr.XDEBUG_PREF_USEPROXY, false,
 				null);
 		useProxy.setSelection(useProxyState);
-		String ideKey = service.getString(PHPDebugPlugin.ID, XDebugPreferenceMgr.XDEBUG_PREF_IDEKEY, "", null);
+		String ideKey = service.getString(PHPDebugPlugin.ID, XDebugPreferenceMgr.XDEBUG_PREF_IDEKEY, "", null); //$NON-NLS-1$
 		if (ideKey == null || ideKey.length() == 0) {
 			ideKey = ""; //$NON-NLS-1$
 		}

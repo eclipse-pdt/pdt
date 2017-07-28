@@ -232,8 +232,8 @@ public final class PHPDebugUtil {
 	}
 
 	public static boolean isSystem5() {
-		String system = System.getProperty("os.name").toLowerCase();
-		return ("os400".equals(system) || "aix".equals(system));
+		String system = System.getProperty("os.name").toLowerCase(); //$NON-NLS-1$
+		return ("os400".equals(system) || "aix".equals(system)); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 }

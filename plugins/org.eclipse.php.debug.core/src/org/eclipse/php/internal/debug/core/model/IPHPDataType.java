@@ -65,7 +65,7 @@ public interface IPHPDataType {
 					return PHP_UNINITIALIZED;
 			}
 			// Log the info if something like this will ever happen...
-			Logger.log(Logger.WARNING, "Unknown PHP data type: " + type);
+			Logger.log(Logger.WARNING, "Unknown PHP data type: " + type); //$NON-NLS-1$
 			return UNKNOWN;
 		}
 

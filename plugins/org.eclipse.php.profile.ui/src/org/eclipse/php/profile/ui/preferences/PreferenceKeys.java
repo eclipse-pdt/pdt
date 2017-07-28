@@ -19,7 +19,7 @@ import org.eclipse.php.profile.ui.ProfilerUiPlugin;
  */
 public class PreferenceKeys {
 
-	public static final String OPEN_PROFILE_PERSPECTIVE_ON_SESSION_DATA = "org.eclipse.php.profile.ui.openProfilePerspectiveOnSessionData";
+	public static final String OPEN_PROFILE_PERSPECTIVE_ON_SESSION_DATA = "org.eclipse.php.profile.ui.openProfilePerspectiveOnSessionData"; //$NON-NLS-1$
 
 	public static final String EXECUTION_FLOW_SORT_ORDER = "executionFlowSortOrder"; //$NON-NLS-1$
 	public static final String EXECUTION_VIEW_SHOW_AS_PERCENTAGE = "executionViewShowAsPercentage"; //$NON-NLS-1$

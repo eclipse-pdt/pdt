@@ -372,7 +372,7 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 					}
 					if (docBlock == null) {
 						// XXX : should we insert newlines?
-						docBlock = createDefaultComment("");
+						docBlock = createDefaultComment(""); //$NON-NLS-1$
 					}
 					break;
 				}

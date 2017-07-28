@@ -37,12 +37,12 @@ import org.junit.Test;
 public class BuildPathTest extends ComposerModelTests {
 
 	public BuildPathTest() {
-		super("BuildPath tests");
+		super("BuildPath tests"); //$NON-NLS-1$
 	}
 
 	@Test
 	public void testBuildpathParser() throws CoreException, IOException, InterruptedException {
-		IScriptProject scriptProject = ensureScriptProject("buildpath");
+		IScriptProject scriptProject = ensureScriptProject("buildpath"); //$NON-NLS-1$
 
 		assertNotNull(scriptProject);
 
@@ -61,7 +61,7 @@ public class BuildPathTest extends ComposerModelTests {
 		ComposerCoreTestPlugin.waitForIndexer();
 		ComposerCoreTestPlugin.waitForAutoBuild();
 
-		IFile file = scriptProject.getProject().getFile("composer.json");
+		IFile file = scriptProject.getProject().getFile("composer.json"); //$NON-NLS-1$
 		assertNotNull(file);
 
 		assertTrue(scriptProject.getProject().hasNature(PHPNature.ID));
@@ -70,9 +70,9 @@ public class BuildPathTest extends ComposerModelTests {
 		IComposerProject composerProject = ComposerPlugin.getDefault().getComposerProject(scriptProject.getProject());
 		BuildPathParser parser = new BuildPathParser(composerProject);
 		List<String> paths = parser.getPaths();
-		List<String> expected = new ArrayList<>(Arrays.asList("mordor/composer", "mordor/gossi/ldap/src",
-				"mordor/phing/phing/classes/phing", "mordor/propel/propel1/generator/lib",
-				"mordor/propel/propel1/runtime/lib", "mordor/symfony/console", "nother", "src", "test"));
+		List<String> expected = new ArrayList<>(Arrays.asList("mordor/composer", "mordor/gossi/ldap/src", //$NON-NLS-1$ //$NON-NLS-2$
+				"mordor/phing/phing/classes/phing", "mordor/propel/propel1/generator/lib", //$NON-NLS-1$ //$NON-NLS-2$
+				"mordor/propel/propel1/runtime/lib", "mordor/symfony/console", "nother", "src", "test")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		assertArrayEquals(paths.toArray(), expected.toArray());
 
 		// let indexing threads shutdown to avoid SWT thread access errors

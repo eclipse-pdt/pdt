@@ -25,7 +25,7 @@ public class IndentationExtensionRegistry {
 	private static IndentationExtensionRegistry instance;
 
 	private SortedMap<Integer, IIndentationStrategyExtension1> extensions = new TreeMap<>();
-	private static final String EXTENSION_ID = "org.eclipse.php.core.indentationStrategy";
+	private static final String EXTENSION_ID = "org.eclipse.php.core.indentationStrategy"; //$NON-NLS-1$
 
 	private IndentationExtensionRegistry() {
 
@@ -36,8 +36,8 @@ public class IndentationExtensionRegistry {
 
 			try {
 				IIndentationStrategyExtension1 extension = (IIndentationStrategyExtension1) element
-						.createExecutableExtension("class");
-				Integer priority = Integer.parseInt(element.getAttribute("priority"));
+						.createExecutableExtension("class"); //$NON-NLS-1$
+				Integer priority = Integer.parseInt(element.getAttribute("priority")); //$NON-NLS-1$
 				extensions.put(priority, extension);
 			} catch (CoreException e) {
 				PHPCorePlugin.log(e);

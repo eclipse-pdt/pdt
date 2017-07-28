@@ -163,7 +163,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 
 		Label versionLabel = new Label(settingsComposite, SWT.LEFT | SWT.WRAP);
 		versionLabel.setFont(settingsComposite.getFont());
-		versionLabel.setText("Version: ");
+		versionLabel.setText("Version: "); //$NON-NLS-1$
 		data = new GridData();
 		data.horizontalSpan = 1;
 		versionLabel.setLayoutData(data);
@@ -174,7 +174,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 		data.widthHint = 100;
 		data.grabExcessHorizontalSpace = true;
 		fVersionLabel.setLayoutData(data);
-		fVersionLabel.setText("");
+		fVersionLabel.setText(""); //$NON-NLS-1$
 
 		init();
 		createFieldListeners();

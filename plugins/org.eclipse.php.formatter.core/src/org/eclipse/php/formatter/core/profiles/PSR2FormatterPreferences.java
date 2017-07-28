@@ -18,7 +18,7 @@ import org.eclipse.php.formatter.core.CodeFormatterVisitor;
  */
 final public class PSR2FormatterPreferences implements ICodeFormatterPreferencesInitializer {
 
-	public static final String ID = "org.eclipse.php.formatter.ui.psr2";
+	public static final String ID = "org.eclipse.php.formatter.ui.psr2"; //$NON-NLS-1$
 
 	public PSR2FormatterPreferences() {
 	}

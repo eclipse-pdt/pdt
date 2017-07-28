@@ -383,7 +383,7 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 						RemoteDebugger remoteDebugger = (RemoteDebugger) debugTarget.getRemoteDebugger();
 						String decodedFileName;
 						try {
-							decodedFileName = URLDecoder.decode(fileName, "UTF-8");
+							decodedFileName = URLDecoder.decode(fileName, "UTF-8"); //$NON-NLS-1$
 						} catch (UnsupportedEncodingException e) {
 							decodedFileName = fileName;
 						}
