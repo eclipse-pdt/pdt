@@ -41,8 +41,10 @@ public class ImportSessionWizard extends Wizard implements IImportWizard {
 	public ImportSessionWizard() {
 	}
 
+	@Override
 	public boolean performFinish() {
 		Job importJob = new Job(PHPProfileUIMessages.getString("ImportSessionWizard.0")) { //$NON-NLS-1$
+			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
 					ProfilerDB[] profilerDBs = ProfilerDataSerializationUtil
@@ -54,6 +56,7 @@ public class ImportSessionWizard extends Wizard implements IImportWizard {
 					} else {
 						final Display display = Display.getDefault();
 						display.asyncExec(new Runnable() {
+							@Override
 							public void run() {
 								MessageDialog.openError(display.getActiveShell(),
 										PHPProfileUIMessages.getString("ImportSessionWizard.1"), //$NON-NLS-1$
@@ -65,6 +68,7 @@ public class ImportSessionWizard extends Wizard implements IImportWizard {
 				} catch (final IOException e) {
 					final Display display = Display.getDefault();
 					display.asyncExec(new Runnable() {
+						@Override
 						public void run() {
 							MessageDialog.openError(display.getActiveShell(),
 									PHPProfileUIMessages.getString("ImportSessionWizard.3"), //$NON-NLS-1$
@@ -80,10 +84,12 @@ public class ImportSessionWizard extends Wizard implements IImportWizard {
 		return true;
 	}
 
+	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		setWindowTitle(PHPProfileUIMessages.getString("ImportSessionWizard.5")); //$NON-NLS-1$
 	}
 
+	@Override
 	public void addPages() {
 		page1 = new ImportSessionWizardFirstPage();
 		addPage(page1);

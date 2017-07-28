@@ -51,8 +51,8 @@ public class PHPRuntimeLocator extends RuntimeLocatorDelegate {
 	@Override
 	public void searchForRuntimes(IPath path, IRuntimeSearchListener listener, IProgressMonitor monitor) {
 
-		final List<File> locations = new ArrayList<File>();
-		final List<PHPexeItem> found = new ArrayList<PHPexeItem>();
+		final List<File> locations = new ArrayList<>();
+		final List<PHPexeItem> found = new ArrayList<>();
 
 		searchForRuntimes2(path.toFile(), locations, monitor);
 
@@ -119,7 +119,7 @@ public class PHPRuntimeLocator extends RuntimeLocatorDelegate {
 		final String[] names = directory.list();
 		if (names == null)
 			return;
-		final List<File> subDirs = new ArrayList<File>();
+		final List<File> subDirs = new ArrayList<>();
 		for (String element : names) {
 			if (monitor.isCanceled())
 				return;
@@ -152,7 +152,7 @@ public class PHPRuntimeLocator extends RuntimeLocatorDelegate {
 	 * @return A PHP executable file.
 	 */
 	private static List<File> findPHPExecutable(File phpLocation) {
-		List<File> found = new ArrayList<File>(0);
+		List<File> found = new ArrayList<>(0);
 		for (String element : PHP_CANDIDATE_BIN) {
 			File phpExecFile = new File(phpLocation, element);
 			if (phpExecFile.exists() && !phpExecFile.isDirectory()) {

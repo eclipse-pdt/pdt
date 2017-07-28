@@ -63,7 +63,7 @@ public class ServerWizard extends FragmentedWizard implements INewWizard {
 		WizardFragment fragment = new WizardFragment() {
 			private WizardFragment[] children;
 
-			@SuppressWarnings("rawtypes")
+			@SuppressWarnings({ "rawtypes", "unchecked" })
 			@Override
 			protected void createChildFragments(List list) {
 				if (children != null) {

@@ -56,7 +56,7 @@ public class DefaultPHPServerConfiguration extends PHPServerConfiguration {
 
 	@Override
 	public List<ServerPort> getServerPorts() {
-		List<ServerPort> ports = new ArrayList<ServerPort>();
+		List<ServerPort> ports = new ArrayList<>();
 		try {
 			int size = server.getPortCount();
 			for (int i = 0; i < size; i++) {
@@ -92,7 +92,7 @@ public class DefaultPHPServerConfiguration extends PHPServerConfiguration {
 	public ServerPort getMainPort() {
 		Iterator<ServerPort> iterator = getServerPorts().iterator();
 		while (iterator.hasNext()) {
-			ServerPort port = (ServerPort) iterator.next();
+			ServerPort port = iterator.next();
 			// Return only an HTTP port from the selected Service
 			if (port.getProtocol().toLowerCase().equals("http") && port.getId().indexOf('/') < 0) //$NON-NLS-1$
 				return port;

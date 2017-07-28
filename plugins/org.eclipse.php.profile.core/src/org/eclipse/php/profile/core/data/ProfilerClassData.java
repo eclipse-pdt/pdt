@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class ProfilerClassData {
 
-	private List<ProfilerFunctionData> fMethods = new ArrayList<ProfilerFunctionData>();
+	private List<ProfilerFunctionData> fMethods = new ArrayList<>();
 	private String fName;
 	private double totalOwnTime = 0f;
 
@@ -88,6 +88,7 @@ public class ProfilerClassData {
 		return totalOwnTime * 1000;
 	}
 
+	@Override
 	public String toString() {
 		return fName;
 	}

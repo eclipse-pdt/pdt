@@ -20,6 +20,7 @@ import org.eclipse.php.profile.core.engine.ProfilerDB;
 class ProfileSessionsContentProvider implements IStructuredContentProvider {
 	private final Object[] EMPTY_SET = {};
 
+	@Override
 	public Object[] getElements(Object inputElement) {
 		if (inputElement instanceof ProfilerDB[]) {
 			return (ProfilerDB[]) inputElement;
@@ -27,9 +28,11 @@ class ProfileSessionsContentProvider implements IStructuredContentProvider {
 		return EMPTY_SET;
 	}
 
+	@Override
 	public void dispose() {
 	}
 
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 	}
 }

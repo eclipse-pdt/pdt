@@ -84,14 +84,16 @@ public class ExecutionStatisticsFilterCondition extends ViewerFilter implements 
 		fValue = value;
 	}
 
+	@Override
 	public Map<String, Object> storeToMap() {
-		HashMap<String, Object> map = new HashMap<String, Object>(3);
+		HashMap<String, Object> map = new HashMap<>(3);
 		map.put("attribute", fAttribute); //$NON-NLS-1$
 		map.put("operator", fOperator); //$NON-NLS-1$
 		map.put("value", fValue); //$NON-NLS-1$
 		return map;
 	}
 
+	@Override
 	public void restoreFromMap(Map<String, Object> map) {
 		fAttribute = (String) map.get("attribute"); //$NON-NLS-1$
 		fOperator = (String) map.get("operator"); //$NON-NLS-1$
@@ -124,6 +126,7 @@ public class ExecutionStatisticsFilterCondition extends ViewerFilter implements 
 		return false;
 	}
 
+	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
 		TreeElement treeElement = (TreeElement) element;
 		Object data = treeElement.getData();

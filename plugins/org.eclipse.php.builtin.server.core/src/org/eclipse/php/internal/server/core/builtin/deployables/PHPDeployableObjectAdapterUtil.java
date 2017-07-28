@@ -27,7 +27,7 @@ public class PHPDeployableObjectAdapterUtil {
 		if (obj instanceof IResource)
 			resource = (IResource) obj;
 		else if (obj instanceof IAdaptable)
-			resource = (IResource) ((IAdaptable) obj).getAdapter(IResource.class);
+			resource = ((IAdaptable) obj).getAdapter(IResource.class);
 
 		if (resource == null)
 			return null;

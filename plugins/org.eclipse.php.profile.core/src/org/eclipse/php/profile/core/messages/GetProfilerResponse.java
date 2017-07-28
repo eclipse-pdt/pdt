@@ -44,10 +44,12 @@ public class GetProfilerResponse extends DebugMessageResponseImpl implements
 		this.profilerGlobalData = profilerGlobalData;
 	}
 
+	@Override
 	public int getType() {
 		return 11011;
 	}
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		ProfilerGlobalData profilerGlobalData = new ProfilerGlobalData();
@@ -75,6 +77,7 @@ public class GetProfilerResponse extends DebugMessageResponseImpl implements
 		setProfilerData(profilerGlobalData);
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());

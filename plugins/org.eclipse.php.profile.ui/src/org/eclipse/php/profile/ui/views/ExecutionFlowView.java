@@ -59,6 +59,7 @@ public class ExecutionFlowView extends AbstractProfilerFunctionsView
 	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.
 	 * widgets.Composite)
 	 */
+	@Override
 	public void createPartControl(Composite parent) {
 		fTree = new Tree(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
 		fTree.setLinesVisible(true);
@@ -98,6 +99,7 @@ public class ExecutionFlowView extends AbstractProfilerFunctionsView
 	 * 
 	 * @see org.eclipse.ui.part.WorkbenchPart#dispose()
 	 */
+	@Override
 	public void dispose() {
 		if (fViewer != null) {
 			fViewer.removeDoubleClickListener(this);
@@ -106,6 +108,7 @@ public class ExecutionFlowView extends AbstractProfilerFunctionsView
 		super.dispose();
 	}
 
+	@Override
 	public void setFocus() {
 	}
 
@@ -114,6 +117,7 @@ public class ExecutionFlowView extends AbstractProfilerFunctionsView
 	 * 
 	 * @see org.eclipse.php.profile.ui.views.AbstractProfilerView#getInput()
 	 */
+	@Override
 	public ProfilerDB getInput() {
 		return fProfilerDB;
 	}
@@ -124,6 +128,7 @@ public class ExecutionFlowView extends AbstractProfilerFunctionsView
 	 * @see org.eclipse.php.profile.ui.views.AbstractProfilerView#setInput(org.
 	 * eclipse. php.profile.core.profiler.ProfilerDB)
 	 */
+	@Override
 	public void setInput(ProfilerDB profilerDB) {
 		if (fViewer == null || fViewer.getContentProvider() == null) {
 			return;
@@ -136,7 +141,7 @@ public class ExecutionFlowView extends AbstractProfilerFunctionsView
 
 					ExecutionFlowTreeElement current = null;
 					ExecutionFlowTreeElement root = new ExecutionFlowTreeElement();
-					ArrayList<ExecutionFlowTreeElement> elements = new ArrayList<ExecutionFlowTreeElement>();
+					ArrayList<ExecutionFlowTreeElement> elements = new ArrayList<>();
 					for (int i = 0; i < layers.length; ++i) {
 						if (layers[i].getType() == ProfilerCallTraceLayer.ENTER) { // enter
 							// function
@@ -151,7 +156,7 @@ public class ExecutionFlowView extends AbstractProfilerFunctionsView
 							elements.add(element);
 						} else { // exit function
 							if (current != null) {
-								ProfilerCallTraceLayer currentLayer = (ProfilerCallTraceLayer) current.getLayer();
+								ProfilerCallTraceLayer currentLayer = current.getLayer();
 								currentLayer.setDuration(layers[i].getTimestampSeconds(),
 										layers[i].getTimestampMicroseconds());
 								current.setDuration(currentLayer.getDurationInMilli());
@@ -168,7 +173,7 @@ public class ExecutionFlowView extends AbstractProfilerFunctionsView
 
 						double totalDuration = profilerDB.getGlobalData().getGlobalTimeInMilli();
 						for (int i = 0; i < elements.size(); ++i) {
-							ExecutionFlowTreeElement element = (ExecutionFlowTreeElement) elements.get(i);
+							ExecutionFlowTreeElement element = elements.get(i);
 							element.setTimePercentage(element.getDuration() / totalDuration * 100);
 						}
 
@@ -189,6 +194,7 @@ public class ExecutionFlowView extends AbstractProfilerFunctionsView
 		}
 	}
 
+	@Override
 	public void doubleClick(DoubleClickEvent event) {
 		fActionSet.viewFunctionCallInEditor(event.getSelection());
 	}
@@ -200,6 +206,7 @@ public class ExecutionFlowView extends AbstractProfilerFunctionsView
 	 * org.eclipse.php.profile.ui.views.AbstractProfilerFunctionsView#getViewer(
 	 * )
 	 */
+	@Override
 	public TreeViewer getViewer() {
 		return fViewer;
 	}
@@ -243,6 +250,7 @@ public class ExecutionFlowView extends AbstractProfilerFunctionsView
 	 * org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface
 	 * .action.IMenuManager)
 	 */
+	@Override
 	public void menuAboutToShow(IMenuManager manager) {
 		fActionSet.fillContextMenu(manager);
 	}
@@ -253,6 +261,7 @@ public class ExecutionFlowView extends AbstractProfilerFunctionsView
 	 * @seeorg.eclipse.php.profile.core.profiler.IProfileSessionListener#
 	 * currentSessionChanged(org.eclipse.php.profile.core.profiler.ProfilerDB)
 	 */
+	@Override
 	public void currentSessionChanged(final ProfilerDB current) {
 		getSite().getShell().getDisplay().asyncExec(new Runnable() {
 			/*
@@ -260,6 +269,7 @@ public class ExecutionFlowView extends AbstractProfilerFunctionsView
 			 * 
 			 * @see java.lang.Runnable#run()
 			 */
+			@Override
 			public void run() {
 				setInput(current);
 			}
@@ -272,6 +282,7 @@ public class ExecutionFlowView extends AbstractProfilerFunctionsView
 	 * @seeorg.eclipse.php.profile.core.profiler.IProfileSessionListener#
 	 * profileSessionAdded(org.eclipse.php.profile.core.profiler.ProfilerDB)
 	 */
+	@Override
 	public void profileSessionAdded(ProfilerDB db) {
 	}
 
@@ -281,6 +292,7 @@ public class ExecutionFlowView extends AbstractProfilerFunctionsView
 	 * @seeorg.eclipse.php.profile.core.profiler.IProfileSessionListener#
 	 * profileSessionRemoved(org.eclipse.php.profile.core.profiler.ProfilerDB)
 	 */
+	@Override
 	public void profileSessionRemoved(ProfilerDB db) {
 	}
 }

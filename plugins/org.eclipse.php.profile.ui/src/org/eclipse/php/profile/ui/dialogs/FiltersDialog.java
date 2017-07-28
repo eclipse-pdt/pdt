@@ -45,7 +45,7 @@ public class FiltersDialog extends StatusDialog {
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 		setTitle(PHPProfileUIMessages.getString("FiltersDialog_0")); //$NON-NLS-1$
 
-		fFilters = new ArrayList<ExecutionStatisticsFilter>();
+		fFilters = new ArrayList<>();
 	}
 
 	private void addButtonsGroup(Composite parent) {
@@ -57,6 +57,7 @@ public class FiltersDialog extends StatusDialog {
 		fNewButton = new Button(buttonGroup, SWT.NONE);
 		fNewButton.setText(PHPProfileUIMessages.getString("FiltersDialog_1")); //$NON-NLS-1$
 		fNewButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				doEditFilter(null);
 			}
@@ -65,6 +66,7 @@ public class FiltersDialog extends StatusDialog {
 		fEditButton = new Button(buttonGroup, SWT.NONE);
 		fEditButton.setText(PHPProfileUIMessages.getString("FiltersDialog_2")); //$NON-NLS-1$
 		fEditButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				IStructuredSelection selection = (IStructuredSelection) fViewer.getSelection();
 				doEditFilter((ExecutionStatisticsFilter) selection.getFirstElement());
@@ -74,9 +76,10 @@ public class FiltersDialog extends StatusDialog {
 		fRemoveButton = new Button(buttonGroup, SWT.NONE);
 		fRemoveButton.setText(PHPProfileUIMessages.getString("FiltersDialog_3")); //$NON-NLS-1$
 		fRemoveButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				IStructuredSelection selection = (IStructuredSelection) fViewer.getSelection();
-				fFilters.remove((ExecutionStatisticsFilter) selection.getFirstElement());
+				fFilters.remove(selection.getFirstElement());
 				fViewer.refresh();
 			}
 		});
@@ -100,7 +103,7 @@ public class FiltersDialog extends StatusDialog {
 	}
 
 	public ExecutionStatisticsFilter[] getFilters() {
-		return (ExecutionStatisticsFilter[]) fFilters.toArray(new ExecutionStatisticsFilter[fFilters.size()]);
+		return fFilters.toArray(new ExecutionStatisticsFilter[fFilters.size()]);
 	}
 
 	/*
@@ -108,9 +111,10 @@ public class FiltersDialog extends StatusDialog {
 	 * 
 	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
 	 */
+	@Override
 	protected void okPressed() {
 		ExecutionStatisticsFiltersRegistry.saveFilters(
-				(ExecutionStatisticsFilter[]) fFilters.toArray(new ExecutionStatisticsFilter[fFilters.size()]));
+				fFilters.toArray(new ExecutionStatisticsFilter[fFilters.size()]));
 		super.okPressed();
 	}
 
@@ -121,6 +125,7 @@ public class FiltersDialog extends StatusDialog {
 	 * org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets
 	 * .Composite)
 	 */
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		parent = (Composite) super.createDialogArea(parent);
 
@@ -154,6 +159,7 @@ public class FiltersDialog extends StatusDialog {
 			 * selectionChanged
 			 * (org.eclipse.jface.viewers.SelectionChangedEvent)
 			 */
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				updateNewEditRemoveButtonsStates();
 			}
@@ -174,11 +180,12 @@ public class FiltersDialog extends StatusDialog {
 		 * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(
 		 * java.lang.Object)
 		 */
+		@Override
 		public Object[] getElements(Object inputElement) {
 			if (inputElement instanceof List) {
 				@SuppressWarnings("unchecked")
 				List<Object> list = (List<Object>) inputElement;
-				return (Object[]) list.toArray(new Object[list.size()]);
+				return list.toArray(new Object[list.size()]);
 			}
 			return new Object[0];
 		}
@@ -188,6 +195,7 @@ public class FiltersDialog extends StatusDialog {
 		 * 
 		 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
 		 */
+		@Override
 		public void dispose() {
 		}
 
@@ -198,6 +206,7 @@ public class FiltersDialog extends StatusDialog {
 		 * org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse
 		 * .jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 		 */
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		}
 	}
@@ -216,6 +225,7 @@ public class FiltersDialog extends StatusDialog {
 		 * @see
 		 * org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
 		 */
+		@Override
 		public Image getImage(Object element) {
 			return fFilterImage;
 		}
@@ -226,6 +236,7 @@ public class FiltersDialog extends StatusDialog {
 		 * @see
 		 * org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
 		 */
+		@Override
 		public String getText(Object element) {
 			if (element instanceof ExecutionStatisticsFilter) {
 				return ((ExecutionStatisticsFilter) element).getName();

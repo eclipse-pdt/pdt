@@ -314,6 +314,7 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 		return addition;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	protected void setResult(List newResult) {
 
@@ -563,7 +564,7 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 	}
 
 	@Override
-	protected Comparator getItemsComparator() {
+	protected Comparator<?> getItemsComparator() {
 		return fTypeItemsComparator;
 	}
 
@@ -1153,7 +1154,7 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 						return fVMNames[i];
 					}
 				}
-				String lib = (String) fLib2Name.get(name);
+				String lib = fLib2Name.get(name);
 				if (lib != null)
 					return lib;
 			}

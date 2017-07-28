@@ -262,7 +262,7 @@ public abstract class PHPServerConfiguration implements IPHPServerConfiguration,
 		List<WebModule> modules = getWebModules();
 		int size = modules.size();
 		for (int i = 0; i < size; i++) {
-			WebModule webModule = (WebModule) modules.get(i);
+			WebModule webModule = modules.get(i);
 			if (memento.equals(webModule.getMemento())) {
 				return webModule;
 			}
@@ -281,7 +281,7 @@ public abstract class PHPServerConfiguration implements IPHPServerConfiguration,
 			Iterator<PropertyChangeListener> iterator = propertyListeners.iterator();
 			while (iterator.hasNext()) {
 				try {
-					PropertyChangeListener listener = (PropertyChangeListener) iterator.next();
+					PropertyChangeListener listener = iterator.next();
 					listener.propertyChange(event);
 				} catch (Exception e) {
 					Trace.trace(Trace.SEVERE, "Error firing property change event", e); //$NON-NLS-1$
@@ -300,7 +300,7 @@ public abstract class PHPServerConfiguration implements IPHPServerConfiguration,
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		if (propertyListeners == null)
-			propertyListeners = new ArrayList<PropertyChangeListener>();
+			propertyListeners = new ArrayList<>();
 		propertyListeners.add(listener);
 	}
 

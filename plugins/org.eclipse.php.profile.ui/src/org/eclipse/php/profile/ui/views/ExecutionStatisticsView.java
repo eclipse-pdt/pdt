@@ -103,6 +103,7 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 				 * org.eclipse.swt.events.SelectionAdapter#widgetSelected(org
 				 * .eclipse.swt.events.SelectionEvent)
 				 */
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					fSorter.setColumn(field);
 
@@ -117,6 +118,7 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 					}
 
 					BusyIndicator.showWhile(fTree.getDisplay(), new Runnable() {
+						@Override
 						public void run() {
 							fTreeViewer.getControl().setRedraw(false);
 							fTreeViewer.refresh();
@@ -157,6 +159,7 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.
 	 * widgets.Composite)
 	 */
+	@Override
 	public void createPartControl(Composite parent) {
 		createTable(parent);
 		ProfileSessionsManager.addProfileSessionListener(this);
@@ -169,6 +172,7 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 	 * 
 	 * @see org.eclipse.ui.part.WorkbenchPart#dispose()
 	 */
+	@Override
 	public void dispose() {
 		if (fTreeViewer != null) {
 			fTreeViewer.removeDoubleClickListener(this);
@@ -177,6 +181,7 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 		super.dispose();
 	}
 
+	@Override
 	public void setFocus() {
 		// TODO Auto-generated method stub
 	}
@@ -186,6 +191,7 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 	 * 
 	 * @see org.eclipse.php.profile.ui.views.AbstractProfilerView#getInput()
 	 */
+	@Override
 	public ProfilerDB getInput() {
 		return fProfilerDB;
 	}
@@ -196,6 +202,7 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 	 * @see org.eclipse.php.profile.ui.views.AbstractProfilerView#setInput(org.
 	 * eclipse. php.profile.core.profiler.ProfilerDB)
 	 */
+	@Override
 	public void setInput(ProfilerDB profilerDB) {
 		if (fTreeViewer == null || fTreeViewer.getContentProvider() == null) {
 			return;
@@ -236,6 +243,7 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 			}
 
 			BusyIndicator.showWhile(fTreeViewer.getControl().getDisplay(), new Runnable() {
+				@Override
 				public void run() {
 					fTreeViewer.getControl().setRedraw(false);
 					fTreeViewer.refresh();
@@ -255,6 +263,7 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 	 * org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org.eclipse
 	 * .jface.viewers.DoubleClickEvent)
 	 */
+	@Override
 	public void doubleClick(DoubleClickEvent event) {
 		ISelection selection = event.getSelection();
 		if (selection != null && selection instanceof IStructuredSelection) {
@@ -294,6 +303,7 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 	 * org.eclipse.php.profile.ui.views.AbstractProfilerFunctionsView#getViewer(
 	 * )
 	 */
+	@Override
 	public TreeViewer getViewer() {
 		return fTreeViewer;
 	}
@@ -305,6 +315,7 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 	 * org.eclipse.jface.viewers.ITreeViewerListener#treeCollapsed(org.eclipse
 	 * .jface.viewers.TreeExpansionEvent)
 	 */
+	@Override
 	public void treeCollapsed(TreeExpansionEvent event) {
 		SimpleHTMLPresentableTreeElement element = (SimpleHTMLPresentableTreeElement) event.getElement();
 		element.setExpanded(false);
@@ -317,6 +328,7 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 	 * org.eclipse.jface.viewers.ITreeViewerListener#treeExpanded(org.eclipse
 	 * .jface.viewers.TreeExpansionEvent)
 	 */
+	@Override
 	public void treeExpanded(TreeExpansionEvent event) {
 		SimpleHTMLPresentableTreeElement element = (SimpleHTMLPresentableTreeElement) event.getElement();
 		element.setExpanded(true);
@@ -337,6 +349,7 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 	 * org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface
 	 * .action.IMenuManager)
 	 */
+	@Override
 	public void menuAboutToShow(IMenuManager manager) {
 		fActionSet.fillContextMenu(manager);
 	}
@@ -347,6 +360,7 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 	 * @seeorg.eclipse.php.profile.core.profiler.IProfileSessionListener#
 	 * currentSessionChanged(org.eclipse.php.profile.core.profiler.ProfilerDB)
 	 */
+	@Override
 	public void currentSessionChanged(final ProfilerDB current) {
 		getSite().getShell().getDisplay().asyncExec(new Runnable() {
 			/*
@@ -354,6 +368,7 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 			 * 
 			 * @see java.lang.Runnable#run()
 			 */
+			@Override
 			public void run() {
 				setInput(current);
 			}
@@ -366,6 +381,7 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 	 * @seeorg.eclipse.php.profile.core.profiler.IProfileSessionListener#
 	 * profileSessionAdded(org.eclipse.php.profile.core.profiler.ProfilerDB)
 	 */
+	@Override
 	public void profileSessionAdded(ProfilerDB db) {
 	}
 
@@ -375,6 +391,7 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 	 * @seeorg.eclipse.php.profile.core.profiler.IProfileSessionListener#
 	 * profileSessionRemoved(org.eclipse.php.profile.core.profiler.ProfilerDB)
 	 */
+	@Override
 	public void profileSessionRemoved(ProfilerDB db) {
 	}
 }

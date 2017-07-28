@@ -25,6 +25,7 @@ public class PHPProfilePerspectiveFactory implements IPerspectiveFactory {
 	public static final String ID_PROFILE_MONITOR_VIEW = "org.eclipse.php.profile.ui.profilingMonitorView"; //$NON-NLS-1$
 	public static final String ID_DEBUGGING_VIEW = "org.eclipse.php.profile.ui.debuggingView"; //$NON-NLS-1$
 
+	@Override
 	public void createInitialLayout(IPageLayout layout) {
 
 		String editorArea = layout.getEditorArea();

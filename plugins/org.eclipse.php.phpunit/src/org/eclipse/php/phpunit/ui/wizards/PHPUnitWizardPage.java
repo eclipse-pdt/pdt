@@ -409,7 +409,7 @@ public abstract class PHPUnitWizardPage extends WizardPage {
 						flags = selectedType.getFlags();
 						if (!PHPFlags.isInterface(flags) && !PHPFlags.isAbstract(flags) && fSearchEngine != null
 								&& !fSearchEngine.isCase(selectedType)) {
-							modelElement = (IType) selectedType;
+							modelElement = selectedType;
 						}
 					} catch (ModelException e) {
 						PHPUnitPlugin.log(e);

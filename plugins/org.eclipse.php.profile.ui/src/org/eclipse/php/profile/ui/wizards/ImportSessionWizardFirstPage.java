@@ -31,6 +31,7 @@ import org.eclipse.ui.PlatformUI;
 public class ImportSessionWizardFirstPage extends WizardPage {
 
 	private Listener fieldModifyListener = new Listener() {
+		@Override
 		public void handleEvent(Event e) {
 			boolean valid = validatePage();
 			setPageComplete(valid);
@@ -51,6 +52,7 @@ public class ImportSessionWizardFirstPage extends WizardPage {
 		return fSourceFile;
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
 
@@ -75,6 +77,7 @@ public class ImportSessionWizardFirstPage extends WizardPage {
 		fSourceBtn = new Button(composite, SWT.NONE);
 		fSourceBtn.setText(PHPProfileUIMessages.getString("ImportSessionWizardPage1.3")); //$NON-NLS-1$
 		fSourceBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				FileDialog dialog = new FileDialog(fSourceBtn.getShell(), SWT.OPEN);
 				dialog.setFilterExtensions(new String[] { "*.xml", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$

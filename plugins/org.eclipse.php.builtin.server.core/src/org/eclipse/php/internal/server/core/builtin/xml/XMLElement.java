@@ -84,8 +84,8 @@ public class XMLElement {
 		return null;
 	}
 
-	public Map getAttributes() {
-		Map<String, String> attributes = new LinkedHashMap<String, String>();
+	public Map<String, String> getAttributes() {
+		Map<String, String> attributes = new LinkedHashMap<>();
 		NamedNodeMap attrs = xmlElement.getAttributes();
 		if (null != attrs) {
 			for (int i = 0; i < attrs.getLength(); i++) {

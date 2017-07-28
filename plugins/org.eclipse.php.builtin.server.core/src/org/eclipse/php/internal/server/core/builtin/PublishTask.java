@@ -28,7 +28,7 @@ public class PublishTask extends PublishTaskDelegate {
 
 		PHPServerBehaviour phpServer = (PHPServerBehaviour) server.loadAdapter(PHPServerBehaviour.class, null);
 
-		List<PublishOperation> tasks = new ArrayList<PublishOperation>();
+		List<PublishOperation> tasks = new ArrayList<>();
 		int size = modules.size();
 		for (int i = 0; i < size; i++) {
 			IModule[] module = (IModule[]) modules.get(i);

@@ -45,7 +45,6 @@ import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.wst.server.core.IPublishListener;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServer;
@@ -159,7 +158,7 @@ public class DocumentRootEditorSection extends ServerEditorSection {
 		layout.horizontalSpacing = 15;
 		composite.setLayout(layout);
 		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
-		IWorkbenchHelpSystem whs = PlatformUI.getWorkbench().getHelpSystem();
+		// IWorkbenchHelpSystem whs = PlatformUI.getWorkbench().getHelpSystem();
 		// whs.setHelp(composite, ContextIds.SERVER_EDITOR);
 		// whs.setHelp(section, ContextIds.SERVER_EDITOR);
 		toolkit.paintBordersFor(composite);

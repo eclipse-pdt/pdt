@@ -43,12 +43,12 @@ public class ExecutionStatisticsFiltersRegistry {
 		 */
 		@SuppressWarnings("unchecked")
 		public static Map<String, Object>[] read(IPreferenceStore store, String prefsKey) {
-			List<Map<String, Object>> maps = new ArrayList<Map<String, Object>>();
+			List<Map<String, Object>> maps = new ArrayList<>();
 			StringTokenizer st = new StringTokenizer(store.getString(prefsKey), String.valueOf(DELIMITER));
 			while (st.hasMoreTokens()) {
 				maps.add(read(st.nextToken(), false));
 			}
-			return (Map<String, Object>[]) maps.toArray(new Map[maps.size()]);
+			return maps.toArray(new Map[maps.size()]);
 		}
 
 	}
@@ -139,9 +139,9 @@ public class ExecutionStatisticsFiltersRegistry {
 
 	public static ExecutionStatisticsFilter[] getFilters() {
 		if (fFilters == null) {
-			List<ExecutionStatisticsFilter> filters = new ArrayList<ExecutionStatisticsFilter>();
+			List<ExecutionStatisticsFilter> filters = new ArrayList<>();
 			getFilters(filters);
-			fFilters = (ExecutionStatisticsFilter[]) filters.toArray(new ExecutionStatisticsFilter[filters.size()]);
+			fFilters = filters.toArray(new ExecutionStatisticsFilter[filters.size()]);
 		}
 		return fFilters;
 	}
@@ -223,7 +223,7 @@ public class ExecutionStatisticsFiltersRegistry {
 
 						} else if (ADVANCED_FILTER_TAG.equals(children[j].getName())) {
 							IConfigurationElement[] conditionElements = children[j].getChildren(CONDITION_TAG);
-							List<ExecutionStatisticsFilterCondition> conditions = new ArrayList<ExecutionStatisticsFilterCondition>(
+							List<ExecutionStatisticsFilterCondition> conditions = new ArrayList<>(
 									conditionElements.length);
 							for (int c = 0; c < conditionElements.length; ++c) {
 								conditions.add(new ExecutionStatisticsFilterCondition(
@@ -231,7 +231,7 @@ public class ExecutionStatisticsFiltersRegistry {
 										conditionElements[c].getAttribute(OPERATOR_ATTRIBUTE),
 										conditionElements[c].getAttribute(VALUE_ATTRIBUTE)));
 							}
-							filter.setFilterConditions((ExecutionStatisticsFilterCondition[]) conditions
+							filter.setFilterConditions(conditions
 									.toArray(new ExecutionStatisticsFilterCondition[conditions.size()]));
 						}
 					}

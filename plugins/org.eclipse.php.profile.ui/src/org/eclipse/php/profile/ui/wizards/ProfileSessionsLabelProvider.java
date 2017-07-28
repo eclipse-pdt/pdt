@@ -28,6 +28,7 @@ class ProfileSessionsLabelProvider extends LabelProvider {
 				get(ProfilerUIImages.IMG_OBJ_PROCESS);
 	}
 
+	@Override
 	public Image getImage(Object element) {
 		if (element instanceof ProfilerDB) {
 			return fProcessImage;
@@ -35,6 +36,7 @@ class ProfileSessionsLabelProvider extends LabelProvider {
 		return null;
 	}
 
+	@Override
 	public String getText(Object element) {
 		if (element instanceof ProfilerDB) {
 			ProfilerDB db = (ProfilerDB) element;

@@ -39,6 +39,7 @@ class OpenCodeCoverageViewAction extends Action {
 	 * 
 	 * @see org.eclipse.jface.action.Action#run()
 	 */
+	@Override
 	public void run() {
 		ISelection selection = fView.getViewer().getSelection();
 		if (selection != null && selection instanceof IStructuredSelection) {

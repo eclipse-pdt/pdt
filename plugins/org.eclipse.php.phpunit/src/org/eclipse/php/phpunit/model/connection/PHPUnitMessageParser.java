@@ -144,14 +144,15 @@ public class PHPUnitMessageParser {
 		viewer.registerTestAdded();
 	}
 
-	private void parseTestEnd(final Map message, final TestViewer viewer, final String event, final Map mTest) {
+	private void parseTestEnd(final Map<?, ?> message, final TestViewer viewer, final String event,
+			final Map<?, ?> mTest) {
 		final PHPUnitTestCase testCase = currentTestCase;
 		testCase.updateStatus(event);
-		final Map exception = (Map) message.get(ELEMENT_EXCEPTION);
+		final Map<?, ?> exception = (Map<?, ?>) message.get(ELEMENT_EXCEPTION);
 		if (exception != null) {
 			mapException(testCase, exception);
 		}
-		final Map warnings = (Map) message.get(ELEMENT_WARNINGS);
+		final Map<?, ?> warnings = (Map<?, ?>) message.get(ELEMENT_WARNINGS);
 		if (warnings != null) {
 			mapWarnings(testCase, warnings);
 		}
@@ -178,7 +179,7 @@ public class PHPUnitMessageParser {
 	 * @param testCase
 	 * @param exception
 	 */
-	public void mapException(final PHPUnitTestCase testCase, final Map exception) {
+	public void mapException(final PHPUnitTestCase testCase, final Map<?, ?> exception) {
 		testCase.setException(new PHPUnitTestException(exception, testCase, remoteDebugger));
 		mapTest(testCase.getException());
 	}

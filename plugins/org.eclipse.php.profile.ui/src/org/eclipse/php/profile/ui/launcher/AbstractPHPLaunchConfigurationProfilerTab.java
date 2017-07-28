@@ -53,11 +53,13 @@ public abstract class AbstractPHPLaunchConfigurationProfilerTab
 	 */
 	public final class WidgetListener extends SelectionAdapter
 			implements ModifyListener {
+		@Override
 		public void modifyText(ModifyEvent e) {
 			setDirty(true);
 			updateLaunchConfigurationDialog();
 		}
 
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			setDirty(true);
 			updateLaunchConfigurationDialog();
@@ -126,13 +128,14 @@ public abstract class AbstractPHPLaunchConfigurationProfilerTab
 	private Button configureProfiler;
 	private Composite mainComposite;
 	private Composite settingsComposite;
-	private Map<String, IProfilerLaunchSettingsSection> currentSection = new HashMap<String, IProfilerLaunchSettingsSection>();
+	private Map<String, IProfilerLaunchSettingsSection> currentSection = new HashMap<>();
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#getName()
 	 */
+	@Override
 	public String getName() {
 		return Messages.AbstractPHPLaunchConfigurationProfilerTab_Profiler_group_name;
 	}
@@ -154,6 +157,7 @@ public abstract class AbstractPHPLaunchConfigurationProfilerTab
 	 * org.eclipse.debug.ui.ILaunchConfigurationTab#createControl(org.eclipse
 	 * .swt.widgets.Composite)
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		// Create main composite
 		mainComposite = new Composite(parent, SWT.NONE);
@@ -297,6 +301,7 @@ public abstract class AbstractPHPLaunchConfigurationProfilerTab
 				Messages.AbstractPHPLaunchConfigurationProfilerTab_Configure,
 				null);
 		configureProfiler.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				handleConfigureProfiler();
 			}
@@ -305,6 +310,7 @@ public abstract class AbstractPHPLaunchConfigurationProfilerTab
 		validateProfilerBtn = createPushButton(profilerChoiceComposite,
 				Messages.AbstractPHPLaunchConfigurationProfilerTab_Test, null);
 		validateProfilerBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent event) {
 				performProfileTest();
 			}

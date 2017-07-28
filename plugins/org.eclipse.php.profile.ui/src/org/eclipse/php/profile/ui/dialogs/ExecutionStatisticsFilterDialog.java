@@ -202,6 +202,7 @@ public class ExecutionStatisticsFilterDialog extends StatusDialog {
 			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.
 			 * eclipse .swt.events.SelectionEvent)
 			 */
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				showInformationMatchingSelected();
 			}
@@ -229,6 +230,7 @@ public class ExecutionStatisticsFilterDialog extends StatusDialog {
 			 * org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.
 			 * swt.events.ModifyEvent)
 			 */
+			@Override
 			public void modifyText(ModifyEvent e) {
 				ExecutionStatisticsFilterDialog.this.validateFieldFilter();
 			}
@@ -288,6 +290,7 @@ public class ExecutionStatisticsFilterDialog extends StatusDialog {
 			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.
 			 * eclipse .swt.events.SelectionEvent)
 			 */
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				updateAddDeleteButtonsStatus();
 				ExecutionStatisticsFilterDialog.this.validateCondition();
@@ -322,6 +325,7 @@ public class ExecutionStatisticsFilterDialog extends StatusDialog {
 			 * org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.
 			 * swt.events.ModifyEvent)
 			 */
+			@Override
 			public void modifyText(ModifyEvent e) {
 				ExecutionStatisticsFilterDialog.this.validateCondition();
 			}
@@ -366,6 +370,7 @@ public class ExecutionStatisticsFilterDialog extends StatusDialog {
 			 * selectionChanged
 			 * (org.eclipse.jface.viewers.SelectionChangedEvent)
 			 */
+			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection sSelection = (IStructuredSelection) fCondTableViewer.getSelection();
 				ExecutionStatisticsFilterCondition cond = (ExecutionStatisticsFilterCondition) sSelection
@@ -388,6 +393,7 @@ public class ExecutionStatisticsFilterDialog extends StatusDialog {
 		fAddButton = new Button(buttonsBar, SWT.NONE);
 		fAddButton.setText(PHPProfileUIMessages.getString("ExecutionStatisticsFilterDialog.39")); //$NON-NLS-1$
 		fAddButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				ExecutionStatisticsFilterCondition cond = new ExecutionStatisticsFilterCondition();
 				cond.setAttribute(fCondAttribute.getText());
@@ -400,6 +406,7 @@ public class ExecutionStatisticsFilterDialog extends StatusDialog {
 		fDeleteButton = new Button(buttonsBar, SWT.NONE);
 		fDeleteButton.setText(PHPProfileUIMessages.getString("ExecutionStatisticsFilterDialog.40")); //$NON-NLS-1$
 		fDeleteButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				IStructuredSelection sSelection = (IStructuredSelection) fCondTableViewer.getSelection();
 				ExecutionStatisticsFilterCondition cond = (ExecutionStatisticsFilterCondition) sSelection
@@ -424,7 +431,7 @@ public class ExecutionStatisticsFilterDialog extends StatusDialog {
 		}
 		if (fFilter == null) {
 			for (int i = 0; i < fExistingFilters.size(); ++i) {
-				if (((ExecutionStatisticsFilter) fExistingFilters.get(i)).getName().equals(filterName)) {
+				if (fExistingFilters.get(i).getName().equals(filterName)) {
 					status = new StatusInfo(IStatus.ERROR,
 							PHPProfileUIMessages.getString("ExecutionStatisticsFilterDialog.44")); //$NON-NLS-1$
 					break;
@@ -488,6 +495,7 @@ public class ExecutionStatisticsFilterDialog extends StatusDialog {
 	 * org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets
 	 * .Composite)
 	 */
+	@Override
 	protected Control createDialogArea(Composite parent) {
 		parent = (Composite) super.createDialogArea(parent);
 
@@ -514,6 +522,7 @@ public class ExecutionStatisticsFilterDialog extends StatusDialog {
 			 * org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.
 			 * swt.events.ModifyEvent)
 			 */
+			@Override
 			public void modifyText(ModifyEvent e) {
 				ExecutionStatisticsFilterDialog.this.validateFilterName();
 			}
@@ -597,6 +606,7 @@ public class ExecutionStatisticsFilterDialog extends StatusDialog {
 	 * 
 	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
 	 */
+	@Override
 	protected void okPressed() {
 
 		if (fFilter == null) {
@@ -648,6 +658,7 @@ public class ExecutionStatisticsFilterDialog extends StatusDialog {
 		 * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(
 		 * java.lang.Object)
 		 */
+		@Override
 		public Object[] getElements(Object inputElement) {
 			if (inputElement instanceof ExecutionStatisticsFilter
 					&& ((ExecutionStatisticsFilter) inputElement).getFilterConditions() != null) {
@@ -661,6 +672,7 @@ public class ExecutionStatisticsFilterDialog extends StatusDialog {
 		 * 
 		 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
 		 */
+		@Override
 		public void dispose() {
 		}
 
@@ -671,6 +683,7 @@ public class ExecutionStatisticsFilterDialog extends StatusDialog {
 		 * org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse
 		 * .jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 		 */
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		}
 	}
@@ -683,6 +696,7 @@ public class ExecutionStatisticsFilterDialog extends StatusDialog {
 		 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java
 		 * .lang.Object, int)
 		 */
+		@Override
 		public Image getColumnImage(Object element, int columnIndex) {
 			return null;
 		}
@@ -694,6 +708,7 @@ public class ExecutionStatisticsFilterDialog extends StatusDialog {
 		 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.
 		 * lang.Object, int)
 		 */
+		@Override
 		public String getColumnText(Object element, int columnIndex) {
 			if (element instanceof ExecutionStatisticsFilterCondition) {
 				ExecutionStatisticsFilterCondition cond = (ExecutionStatisticsFilterCondition) element;

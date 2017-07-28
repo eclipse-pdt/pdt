@@ -84,6 +84,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.
 	 * widgets.Composite)
 	 */
+	@Override
 	public void createPartControl(Composite parent) {
 		createForm(parent);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
@@ -151,6 +152,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 				 * org.eclipse.swt.events.SelectionAdapter#widgetSelected(org
 				 * .eclipse.swt.events.SelectionEvent)
 				 */
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					InvokeFunctionSorter sorter = (InvokeFunctionSorter) fMethodInvokesViewer.getSorter();
 					sorter.setColumn(field);
@@ -221,6 +223,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 				 * org.eclipse.swt.events.SelectionAdapter#widgetSelected(org
 				 * .eclipse.swt.events.SelectionEvent)
 				 */
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					InvokeFunctionSorter sorter = (InvokeFunctionSorter) fInvokedByViewer.getSorter();
 					sorter.setColumn(field);
@@ -292,6 +295,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 				 * org.eclipse.swt.events.SelectionAdapter#widgetSelected(org
 				 * .eclipse.swt.events.SelectionEvent)
 				 */
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					SelectedMethodSorter sorter = (SelectedMethodSorter) fSelectedMethodViewer.getSorter();
 					sorter.setColumn(field);
@@ -323,6 +327,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 	 * 
 	 * @see org.eclipse.ui.IWorkbenchPart#setFocus()
 	 */
+	@Override
 	public void setFocus() {
 		// TODO Auto-generated method stub
 	}
@@ -356,6 +361,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		 * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(
 		 * java.lang.Object)
 		 */
+		@Override
 		public Object[] getElements(Object inputElement) {
 			if (inputElement instanceof ProfilerFunctionData) {
 				return new Object[] { inputElement };
@@ -368,6 +374,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		 * 
 		 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
 		 */
+		@Override
 		public void dispose() {
 		}
 
@@ -378,6 +385,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		 * org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse
 		 * .jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 		 */
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		}
 	}
@@ -399,6 +407,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java
 		 * .lang.Object, int)
 		 */
+		@Override
 		public Image getColumnImage(Object element, int columnIndex) {
 			if (element instanceof ProfilerFunctionData) {
 				switch (columnIndex) {
@@ -418,6 +427,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.
 		 * lang.Object, int)
 		 */
+		@Override
 		public String getColumnText(Object element, int columnIndex) {
 			if (element instanceof ProfilerFunctionData) {
 				ProfilerFunctionData funcData = (ProfilerFunctionData) element;
@@ -448,6 +458,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		 * org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse
 		 * .jface.viewers.ILabelProviderListener)
 		 */
+		@Override
 		public void addListener(ILabelProviderListener listener) {
 		}
 
@@ -456,6 +467,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		 * 
 		 * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
 		 */
+		@Override
 		public void dispose() {
 		}
 
@@ -466,6 +478,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		 * org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java
 		 * .lang.Object, java.lang.String)
 		 */
+		@Override
 		public boolean isLabelProperty(Object element, String property) {
 			return false;
 		}
@@ -476,6 +489,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		 * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.
 		 * eclipse .jface.viewers.ILabelProviderListener)
 		 */
+		@Override
 		public void removeListener(ILabelProviderListener listener) {
 		}
 	}
@@ -488,6 +502,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		 * org.eclipse.php.profile.ui.views.AbstractTableSorter#compare(org.
 		 * eclipse .jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 		 */
+		@Override
 		public int compare(Viewer viewer, Object e1, Object e2) {
 			if (e1 instanceof ProfilerFunctionData && e2 instanceof ProfilerFunctionData) {
 				ProfilerFunctionData f1 = (ProfilerFunctionData) e1;
@@ -543,6 +558,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		 * org.eclipse.php.profile.ui.views.AbstractTableSorter#compare(org.
 		 * eclipse .jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 		 */
+		@Override
 		public int compare(Viewer viewer, Object e1, Object e2) {
 			if (e1 instanceof InvokeFunctionTableElement && e2 instanceof InvokeFunctionTableElement) {
 				InvokeFunctionTableElement i1 = (InvokeFunctionTableElement) e1;
@@ -589,6 +605,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java
 		 * .lang.Object, int)
 		 */
+		@Override
 		public Image getColumnImage(Object element, int columnIndex) {
 			if (element instanceof InvokeFunctionTableElement) {
 				switch (columnIndex) {
@@ -608,6 +625,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.
 		 * lang.Object, int)
 		 */
+		@Override
 		public String getColumnText(Object element, int columnIndex) {
 			if (element instanceof InvokeFunctionTableElement) {
 				InvokeFunctionTableElement invokeFunctionElement = (InvokeFunctionTableElement) element;
@@ -641,6 +659,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		 * org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse
 		 * .jface.viewers.ILabelProviderListener)
 		 */
+		@Override
 		public void addListener(ILabelProviderListener listener) {
 		}
 
@@ -649,6 +668,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		 * 
 		 * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
 		 */
+		@Override
 		public void dispose() {
 			// TODO Auto-generated method stub
 
@@ -661,6 +681,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		 * org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java
 		 * .lang.Object, java.lang.String)
 		 */
+		@Override
 		public boolean isLabelProperty(Object element, String property) {
 			// TODO Auto-generated method stub
 			return false;
@@ -672,6 +693,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		 * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.
 		 * eclipse .jface.viewers.ILabelProviderListener)
 		 */
+		@Override
 		public void removeListener(ILabelProviderListener listener) {
 			// TODO Auto-generated method stub
 
@@ -685,6 +707,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		 * 
 		 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
 		 */
+		@Override
 		public void dispose() {
 		}
 
@@ -695,6 +718,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		 * org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse
 		 * .jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 		 */
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		}
 
@@ -705,11 +729,12 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		 * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(
 		 * java.lang.Object)
 		 */
+		@Override
 		public Object[] getElements(Object inputElement) {
 			if (inputElement instanceof ProfilerFunctionData) {
 				ProfilerFunctionData function = (ProfilerFunctionData) inputElement;
 				IntHashtable invokers = new IntHashtable();
-				Vector<Integer> callerIDs = new Vector<Integer>(); // queue of
+				Vector<Integer> callerIDs = new Vector<>(); // queue of
 																	// callers
 
 				ProfilerCallTrace callTrace = fProfilerDB.getCallTrace();
@@ -727,7 +752,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 																									// function
 																									// is
 																									// called
-							int id = ((Integer) callerIDs.lastElement()).intValue(); // get
+							int id = callerIDs.lastElement().intValue(); // get
 																						// last
 																						// caller
 							if (invokers.containsKey(id)) {
@@ -762,6 +787,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		 * 
 		 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
 		 */
+		@Override
 		public void dispose() {
 		}
 
@@ -772,6 +798,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		 * org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse
 		 * .jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 		 */
+		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		}
 
@@ -782,11 +809,12 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		 * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(
 		 * java.lang.Object)
 		 */
+		@Override
 		public Object[] getElements(Object inputElement) {
 			if (inputElement instanceof ProfilerFunctionData) {
 				ProfilerFunctionData function = (ProfilerFunctionData) inputElement;
 				IntHashtable invokees = new IntHashtable();
-				Vector<Integer> callerIDs = new Vector<Integer>(); // queue of
+				Vector<Integer> callerIDs = new Vector<>(); // queue of
 																	// callers
 
 				ProfilerCallTrace callTrace = fProfilerDB.getCallTrace();
@@ -801,7 +829,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 							continue;
 						}
 						if (callerIDs.size() > 0) {
-							if (((Integer) callerIDs.lastElement()).intValue() == function.getID()) { // this
+							if (callerIDs.lastElement().intValue() == function.getID()) { // this
 																										// function
 																										// calls
 																										// somebody

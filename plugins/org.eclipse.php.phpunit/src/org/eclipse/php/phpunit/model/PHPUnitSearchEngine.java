@@ -45,7 +45,7 @@ public class PHPUnitSearchEngine {
 	// //$NON-NLS-1$
 	// public static final String RETURN_UNKNOWN = "unknown"; //$NON-NLS-1$
 
-	private Map<IType, Set<IType>> typeHierarchyCache = new HashMap<IType, Set<IType>>();
+	private Map<IType, Set<IType>> typeHierarchyCache = new HashMap<>();
 	private IScriptProject project;
 
 	public PHPUnitSearchEngine(IScriptProject project) {
@@ -217,14 +217,15 @@ public class PHPUnitSearchEngine {
 				|| !findPHPUnitClassesBySupertype(element, getTestSuite(), false, true, monitor).isEmpty();
 	}
 
-	private void collectElements(final Object parent, final IProgressMonitor pm, final Set result, final int flags) {
+	private void collectElements(final Object parent, final IProgressMonitor pm, final Set<IType> result,
+			final int flags) {
 		collectElementsRecursive(parent, pm, result, flags);
 	}
 
-	private boolean collectElementsRecursive(final Object parent, final IProgressMonitor pm, final Set result,
+	private boolean collectElementsRecursive(final Object parent, final IProgressMonitor pm, final Set<IType> result,
 			final int flags) {
 		if (parent instanceof Collection)
-			return collectFromObject(((Collection) parent).toArray(), pm, result, flags);
+			return collectFromObject(((Collection<?>) parent).toArray(), pm, result, flags);
 		if (parent instanceof Object[])
 			return collectFromObject((Object[]) parent, pm, result, flags);
 		if (parent instanceof IModelElement)
@@ -244,7 +245,7 @@ public class PHPUnitSearchEngine {
 		return false;
 	}
 
-	private boolean collectFromModelElement(IModelElement parent, IProgressMonitor pm, Set result, int flags) {
+	private boolean collectFromModelElement(IModelElement parent, IProgressMonitor pm, Set<IType> result, int flags) {
 		boolean isFirts = false;
 		if ((flags & PHPUnitSearchEngine.FIND_OPTION_FIRST_ONLY) > 0) {
 			isFirts = true;
@@ -268,17 +269,18 @@ public class PHPUnitSearchEngine {
 
 	}
 
-	private boolean collectFromContainer(final IContainer container, final IProgressMonitor pm, final Set result,
+	private boolean collectFromContainer(final IContainer container, final IProgressMonitor pm, final Set<IType> result,
 			final int flags) {
 		final ITreeContentProvider provider = new PHP5ElementContentProvider();
 		return collectElementsRecursive(provider.getChildren(container), pm, result, flags);
 	}
 
-	private boolean collectFromFile(final IFile file, final IProgressMonitor pm, final Set result, final int flags) {
+	private boolean collectFromFile(final IFile file, final IProgressMonitor pm, final Set<IType> result,
+			final int flags) {
 		return collectElementsRecursive(DLTKCore.create(file), pm, result, flags);
 	}
 
-	private boolean collectFromObject(final Object[] items, final IProgressMonitor pm, final Set result,
+	private boolean collectFromObject(final Object[] items, final IProgressMonitor pm, final Set<IType> result,
 			final int flags) {
 		if (items == null || items.length == 0) {
 			return false;
@@ -296,7 +298,7 @@ public class PHPUnitSearchEngine {
 		return r;
 	}
 
-	private boolean collectFromProject(final IProject project, final IProgressMonitor pm, final Set result,
+	private boolean collectFromProject(final IProject project, final IProgressMonitor pm, final Set<IType> result,
 			final int flags) {
 		return collectElementsRecursive(DLTKCore.create(project), pm, result, flags);
 	}

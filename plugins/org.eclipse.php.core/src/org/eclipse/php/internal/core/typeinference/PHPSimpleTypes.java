@@ -154,6 +154,7 @@ public class PHPSimpleTypes {
 	 * @deprecated
 	 * @see PHPSimpleTypes#fromString(String)
 	 */
+	@Deprecated
 	@Nullable
 	public static IEvaluatedType fromStringCS(@Nullable String type) {
 		if (type == null) {
@@ -176,6 +177,7 @@ public class PHPSimpleTypes {
 	 * @deprecated
 	 * @see PHPSimpleTypes#isSimpleType(String)
 	 */
+	@Deprecated
 	public static boolean isSimpleTypeCS(@Nullable String type) {
 		if (type == null) {
 			return false;

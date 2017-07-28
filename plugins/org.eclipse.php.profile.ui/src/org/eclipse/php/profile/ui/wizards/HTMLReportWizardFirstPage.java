@@ -37,6 +37,7 @@ public class HTMLReportWizardFirstPage extends WizardPage {
 
 	private ProfilerDB fSession;
 	private Listener fieldModifyListener = new Listener() {
+		@Override
 		public void handleEvent(Event e) {
 			boolean valid = validatePage();
 			setPageComplete(valid);
@@ -154,6 +155,7 @@ public class HTMLReportWizardFirstPage extends WizardPage {
 			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.
 			 * eclipse .swt.events.SelectionEvent)
 			 */
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				FileDialog dialog = new FileDialog(getShell(), SWT.SAVE);
 				dialog.setText(PHPProfileUIMessages.getString("HTMLReportWizardPage1.10")); //$NON-NLS-1$
@@ -176,6 +178,7 @@ public class HTMLReportWizardFirstPage extends WizardPage {
 		});
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
 

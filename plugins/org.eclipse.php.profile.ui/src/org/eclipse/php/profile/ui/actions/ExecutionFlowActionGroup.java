@@ -61,6 +61,7 @@ public class ExecutionFlowActionGroup extends ActionGroup {
 		fOpenFunctionInvocationStatisticsAction = new OpenFunctionInvocationStatisticsAction(fView);
 	}
 
+	@Override
 	public void fillActionBars(IActionBars actionBars) {
 		super.fillActionBars(actionBars);
 
@@ -79,6 +80,7 @@ public class ExecutionFlowActionGroup extends ActionGroup {
 	 * org.eclipse.ui.actions.ActionGroup#fillContextMenu(org.eclipse.jface.
 	 * action.IMenuManager)
 	 */
+	@Override
 	public void fillContextMenu(IMenuManager menu) {
 		menu.add(fViewFunctionCallAction);
 		menu.add(fViewFunctionDeclarationAction);
@@ -158,6 +160,7 @@ public class ExecutionFlowActionGroup extends ActionGroup {
 			setImageDescriptor(ProfilerUIImages.getImageDescriptor(ProfilerUIImages.IMG_ELCL_COLLAPSE_ALL));
 		}
 
+		@Override
 		public void run() {
 			fView.getViewer().getControl().setRedraw(false);
 			fView.getViewer().collapseAll();
@@ -174,6 +177,7 @@ public class ExecutionFlowActionGroup extends ActionGroup {
 			setImageDescriptor(ProfilerUIImages.getImageDescriptor(ProfilerUIImages.IMG_ELCL_EXPAND_ALL));
 		}
 
+		@Override
 		public void run() {
 			fView.getViewer().getControl().setRedraw(false);
 			fView.getViewer().expandAll();
@@ -197,10 +201,12 @@ public class ExecutionFlowActionGroup extends ActionGroup {
 					.setSorter(new ExecutionFlowSorter(fStore.getInt(PreferenceKeys.EXECUTION_FLOW_SORT_ORDER)));
 		}
 
+		@Override
 		public void run() {
 			final TreeViewer viewer = fView.getViewer();
 			((ExecutionFlowSorter) viewer.getSorter()).setMode(fStore.getInt(PreferenceKeys.EXECUTION_FLOW_SORT_ORDER));
 			BusyIndicator.showWhile(viewer.getControl().getDisplay(), new Runnable() {
+				@Override
 				public void run() {
 					viewer.getControl().setRedraw(false);
 					viewer.refresh();
@@ -214,6 +220,7 @@ public class ExecutionFlowActionGroup extends ActionGroup {
 		 * 
 		 * @see org.eclipse.jface.action.IMenuCreator#dispose()
 		 */
+		@Override
 		public void dispose() {
 			if (fMenu != null) {
 				fMenu.dispose();
@@ -227,6 +234,7 @@ public class ExecutionFlowActionGroup extends ActionGroup {
 		 * org.eclipse.jface.action.IMenuCreator#getMenu(org.eclipse.swt.widgets
 		 * .Control)
 		 */
+		@Override
 		public Menu getMenu(Control parent) {
 			if (fMenu != null) {
 				fMenu.dispose();
@@ -250,6 +258,7 @@ public class ExecutionFlowActionGroup extends ActionGroup {
 		 * org.eclipse.jface.action.IMenuCreator#getMenu(org.eclipse.swt.widgets
 		 * .Menu)
 		 */
+		@Override
 		public Menu getMenu(Menu parent) {
 			// TODO Auto-generated method stub
 			return null;
@@ -272,6 +281,7 @@ public class ExecutionFlowActionGroup extends ActionGroup {
 			 * 
 			 * @see org.eclipse.jface.action.Action#run()
 			 */
+			@Override
 			public void run() {
 				fStore.setValue(PreferenceKeys.EXECUTION_FLOW_SORT_ORDER, fMode);
 				SortAction.this.run();
@@ -292,6 +302,7 @@ public class ExecutionFlowActionGroup extends ActionGroup {
 		 * 
 		 * @see org.eclipse.jface.action.Action#run()
 		 */
+		@Override
 		public void run() {
 			viewFunctionCallInEditor(fView.getViewer().getSelection());
 		}
@@ -310,6 +321,7 @@ public class ExecutionFlowActionGroup extends ActionGroup {
 		 * 
 		 * @see org.eclipse.jface.action.Action#run()
 		 */
+		@Override
 		public void run() {
 			viewFunctionDeclarationInEditor(fView.getViewer().getSelection());
 		}

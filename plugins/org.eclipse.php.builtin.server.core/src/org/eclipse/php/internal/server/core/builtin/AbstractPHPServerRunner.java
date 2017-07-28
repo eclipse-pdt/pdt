@@ -180,7 +180,7 @@ public abstract class AbstractPHPServerRunner implements IPHPServerRunner {
 	 * @return default process attribute map for Java processes
 	 */
 	protected Map<String, String> getDefaultProcessMap() {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		map.put(IProcess.ATTR_PROCESS_TYPE, "php"); //$NON-NLS-1$
 		return map;
 	}

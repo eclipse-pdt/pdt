@@ -104,6 +104,7 @@ public class ProfilingMonitorActionGroup extends ActionGroup {
 	 * @see org.eclipse.ui.actions.ActionGroup#fillActionBars(org.eclipse.ui.
 	 * IActionBars )
 	 */
+	@Override
 	public void fillActionBars(IActionBars actionBars) {
 		super.fillActionBars(actionBars);
 
@@ -123,6 +124,7 @@ public class ProfilingMonitorActionGroup extends ActionGroup {
 	 * org.eclipse.ui.actions.ActionGroup#fillContextMenu(org.eclipse.jface.
 	 * action.IMenuManager)
 	 */
+	@Override
 	public void fillContextMenu(IMenuManager menu) {
 		ISelection selection = fTreeViewer.getSelection();
 		if (selection != null && selection instanceof IStructuredSelection) {
@@ -174,6 +176,7 @@ public class ProfilingMonitorActionGroup extends ActionGroup {
 			setDisabledImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE_DISABLED));
 		}
 
+		@Override
 		public void run() {
 			if (MessageDialog.openConfirm(fTreeViewer.getTree().getShell(),
 					PHPProfileUIMessages.getString("ProfilingMonitorActionGroup.25"), //$NON-NLS-1$
@@ -199,6 +202,7 @@ public class ProfilingMonitorActionGroup extends ActionGroup {
 			setImageDescriptor(ProfilerUIImages.getImageDescriptor(ProfilerUIImages.IMG_ETOOL_IMPORT_WIZ));
 		}
 
+		@Override
 		public void run() {
 			ImportSessionWizard wizard = new ImportSessionWizard();
 			wizard.init(PlatformUI.getWorkbench(), null);
@@ -216,6 +220,7 @@ public class ProfilingMonitorActionGroup extends ActionGroup {
 			setImageDescriptor(ProfilerUIImages.getImageDescriptor(ProfilerUIImages.IMG_ETOOL_EXPORT_WIZ));
 		}
 
+		@Override
 		public void run() {
 			ExportSessionWizard wizard = new ExportSessionWizard();
 			wizard.init(PlatformUI.getWorkbench(), null);
@@ -236,6 +241,7 @@ public class ProfilingMonitorActionGroup extends ActionGroup {
 			setDescription(PHPProfileUIMessages.getString("ProfilingMonitorActionGroup.8")); //$NON-NLS-1$
 		}
 
+		@Override
 		public void run() {
 			ISelection selection = fTreeViewer.getSelection();
 			if (selection != null && selection instanceof IStructuredSelection) {
@@ -265,6 +271,7 @@ public class ProfilingMonitorActionGroup extends ActionGroup {
 			setImageDescriptor(ProfilerUIImages.getImageDescriptor(ProfilerUIImages.IMG_OBJ_REPORT));
 		}
 
+		@Override
 		public void run() {
 			HTMLReportWizard wizard = new HTMLReportWizard();
 			wizard.init(PlatformUI.getWorkbench(), null);
@@ -306,10 +313,12 @@ public class ProfilingMonitorActionGroup extends ActionGroup {
 					.setSorter(new ProfilingMonitorSorter(fStore.getInt(PreferenceKeys.PROFILING_MONITOR_SORT_ORDER)));
 		}
 
+		@Override
 		public void run() {
 			((ProfilingMonitorSorter) fTreeViewer.getSorter())
 					.setMode(fStore.getInt(PreferenceKeys.PROFILING_MONITOR_SORT_ORDER));
 			BusyIndicator.showWhile(fTreeViewer.getControl().getDisplay(), new Runnable() {
+				@Override
 				public void run() {
 					fTreeViewer.refresh();
 				}
@@ -321,6 +330,7 @@ public class ProfilingMonitorActionGroup extends ActionGroup {
 		 * 
 		 * @see org.eclipse.jface.action.IMenuCreator#dispose()
 		 */
+		@Override
 		public void dispose() {
 			if (fMenu != null) {
 				fMenu.dispose();
@@ -334,6 +344,7 @@ public class ProfilingMonitorActionGroup extends ActionGroup {
 		 * org.eclipse.jface.action.IMenuCreator#getMenu(org.eclipse.swt.widgets
 		 * .Control)
 		 */
+		@Override
 		public Menu getMenu(Control parent) {
 			if (fMenu != null) {
 				fMenu.dispose();
@@ -357,6 +368,7 @@ public class ProfilingMonitorActionGroup extends ActionGroup {
 		 * org.eclipse.jface.action.IMenuCreator#getMenu(org.eclipse.swt.widgets
 		 * .Menu)
 		 */
+		@Override
 		public Menu getMenu(Menu parent) {
 			// TODO Auto-generated method stub
 			return null;
@@ -379,6 +391,7 @@ public class ProfilingMonitorActionGroup extends ActionGroup {
 			 * 
 			 * @see org.eclipse.jface.action.Action#run()
 			 */
+			@Override
 			public void run() {
 				fStore.setValue(PreferenceKeys.PROFILING_MONITOR_SORT_ORDER, fMode);
 				SortAction.this.run();

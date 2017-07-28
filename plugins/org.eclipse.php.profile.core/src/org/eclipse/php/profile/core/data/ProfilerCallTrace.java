@@ -22,7 +22,7 @@ public class ProfilerCallTrace {
 	private int fLayersCount;
 
 	public ProfilerCallTrace() {
-		fLayers = new ArrayList<ProfilerCallTraceLayer>();
+		fLayers = new ArrayList<>();
 	}
 
 	public ProfilerCallTrace(List<ProfilerCallTraceLayer> layers) {

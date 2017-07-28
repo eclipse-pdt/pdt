@@ -41,10 +41,12 @@ public class GetProfilerCallTraceResponse extends DebugMessageResponseImpl
 		this.callTrace = callTrace;
 	}
 
+	@Override
 	public int getType() {
 		return 11013;
 	}
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		ProfilerCallTrace callTrace = new ProfilerCallTrace();
@@ -56,6 +58,7 @@ public class GetProfilerCallTraceResponse extends DebugMessageResponseImpl
 		setCallTrace(callTrace);
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());

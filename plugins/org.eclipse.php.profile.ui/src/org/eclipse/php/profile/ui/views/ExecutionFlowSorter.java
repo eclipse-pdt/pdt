@@ -41,6 +41,7 @@ public class ExecutionFlowSorter extends ViewerSorter {
 	 * org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers
 	 * .Viewer, java.lang.Object, java.lang.Object)
 	 */
+	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
 		ExecutionFlowTreeElement c1 = (ExecutionFlowTreeElement) e1;
 		ExecutionFlowTreeElement c2 = (ExecutionFlowTreeElement) e2;

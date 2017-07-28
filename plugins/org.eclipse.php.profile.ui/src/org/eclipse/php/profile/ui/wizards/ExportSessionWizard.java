@@ -40,16 +40,19 @@ public class ExportSessionWizard extends AbstractSessionWizard implements IExpor
 	public ExportSessionWizard() {
 	}
 
+	@Override
 	public boolean performFinish() {
 		final ProfilerDB[] sessions = page1.getSessions();
 		final String fileName = page1.getTargetFile();
 
 		Job saveJob = new Job(PHPProfileUIMessages.getString("ExportSessionWizard.0")) { //$NON-NLS-1$
+			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
 					ProfilerDataSerializationUtil.serialize(sessions, new FileOutputStream(fileName));
 				} catch (IOException e) {
 					Display.getDefault().asyncExec(new Runnable() {
+						@Override
 						public void run() {
 							MessageDialog.openError(Display.getDefault().getActiveShell(),
 									PHPProfileUIMessages.getString("ExportSessionWizard.2"), //$NON-NLS-1$
@@ -67,11 +70,13 @@ public class ExportSessionWizard extends AbstractSessionWizard implements IExpor
 		return true;
 	}
 
+	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		setWindowTitle(PHPProfileUIMessages.getString("ExportSessionWizard.1")); //$NON-NLS-1$
 		initSessionFromSelection(workbench);
 	}
 
+	@Override
 	public void addPages() {
 		page1 = new ExportSessionWizardFirstPage(getSession());
 		addPage(page1);

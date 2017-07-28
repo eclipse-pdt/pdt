@@ -40,6 +40,7 @@ public class ProfilingMonitorView extends ViewPart
 	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.
 	 * widgets.Composite)
 	 */
+	@Override
 	public void createPartControl(Composite parent) {
 		fViewer = new TreeViewer(parent);
 		fViewer.setContentProvider(new ProfilingMonitorContentProvider());
@@ -68,6 +69,7 @@ public class ProfilingMonitorView extends ViewPart
 	 * org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org.eclipse
 	 * .jface.viewers.DoubleClickEvent)
 	 */
+	@Override
 	public void doubleClick(DoubleClickEvent event) {
 		fActionSet.handlerDoubleClick(event);
 	}
@@ -79,6 +81,7 @@ public class ProfilingMonitorView extends ViewPart
 	 * org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(
 	 * org.eclipse.jface.viewers.SelectionChangedEvent)
 	 */
+	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
 		fActionSet.updateSelectionDependentActions(event.getSelection());
 	}
@@ -88,6 +91,7 @@ public class ProfilingMonitorView extends ViewPart
 	 * 
 	 * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
 	 */
+	@Override
 	public void setFocus() {
 	}
 
@@ -108,6 +112,7 @@ public class ProfilingMonitorView extends ViewPart
 	 * 
 	 * @see org.eclipse.ui.part.WorkbenchPart#dispose()
 	 */
+	@Override
 	public void dispose() {
 		if (fViewer != null) {
 			fViewer.removeDoubleClickListener(this);
@@ -123,8 +128,10 @@ public class ProfilingMonitorView extends ViewPart
 	 * @seeorg.eclipse.php.profile.core.profiler.IProfileSessionListener#
 	 * profileSessionAdded(org.eclipse.php.profile.core.profiler.ProfilerDB)
 	 */
+	@Override
 	public void profileSessionAdded(ProfilerDB db) {
 		getSite().getShell().getDisplay().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				update();
 			}
@@ -137,8 +144,10 @@ public class ProfilingMonitorView extends ViewPart
 	 * @seeorg.eclipse.php.profile.core.profiler.IProfileSessionListener#
 	 * profileSessionRemoved(org.eclipse.php.profile.core.profiler.ProfilerDB)
 	 */
+	@Override
 	public void profileSessionRemoved(ProfilerDB db) {
 		getSite().getShell().getDisplay().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				update();
 			}
@@ -151,6 +160,7 @@ public class ProfilingMonitorView extends ViewPart
 	 * @seeorg.eclipse.php.profile.core.profiler.IProfileSessionListener#
 	 * currentSessionChanged(org.eclipse.php.profile.core.profiler.ProfilerDB)
 	 */
+	@Override
 	public void currentSessionChanged(ProfilerDB current) {
 	}
 
@@ -169,6 +179,7 @@ public class ProfilingMonitorView extends ViewPart
 	 * org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface
 	 * .action.IMenuManager)
 	 */
+	@Override
 	public void menuAboutToShow(IMenuManager manager) {
 		fActionSet.fillContextMenu(manager);
 	}

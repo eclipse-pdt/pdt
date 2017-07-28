@@ -22,7 +22,7 @@ public class PHPUnitLaunchConfigurationGroup extends AbstractLaunchConfiguration
 
 	@Override
 	public void createTabs(final ILaunchConfigurationDialog dialog, final String mode) {
-		final List<AbstractLaunchConfigurationTab> tabs = new ArrayList<AbstractLaunchConfigurationTab>();
+		final List<AbstractLaunchConfigurationTab> tabs = new ArrayList<>();
 		tabs.add(new PHPUnitLaunchConfigurationTab());
 		final PHPExecutableLaunchTab phpTab = new PHPExecutableLaunchTab();
 		phpTab.setEnableFileSelection(false);

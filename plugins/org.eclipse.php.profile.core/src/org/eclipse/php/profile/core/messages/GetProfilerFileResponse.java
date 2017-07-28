@@ -41,6 +41,7 @@ public class GetProfilerFileResponse extends DebugMessageResponseImpl implements
 		this.profilerFileData = profilerFileData;
 	}
 
+	@Override
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		ProfilerFileData fileData = new ProfilerFileData();
@@ -63,10 +64,12 @@ public class GetProfilerFileResponse extends DebugMessageResponseImpl implements
 		setProfilerFileData(fileData);
 	}
 
+	@Override
 	public int getType() {
 		return 11012;
 	}
 
+	@Override
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());

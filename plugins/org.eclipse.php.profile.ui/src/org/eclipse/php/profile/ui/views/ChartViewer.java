@@ -57,6 +57,7 @@ public class ChartViewer extends Composite implements PaintListener {
 	 * org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events
 	 * .PaintEvent)
 	 */
+	@Override
 	public final void paintControl(PaintEvent e) {
 		if (fChartModel == null) {
 			return;

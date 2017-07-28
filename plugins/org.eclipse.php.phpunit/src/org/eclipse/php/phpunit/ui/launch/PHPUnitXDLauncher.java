@@ -133,7 +133,7 @@ public class PHPUnitXDLauncher extends PHPUnitBasicLauncher {
 
 		// add process type to process attributes, basically the name of the exe
 		// that was launched
-		final Map<String, String> processAttributes = new HashMap<String, String>();
+		final Map<String, String> processAttributes = new HashMap<>();
 		String programName = phpExe.lastSegment();
 		final String extension = phpExe.getFileExtension();
 		if (extension != null) {

@@ -46,6 +46,7 @@ public class SimpleHTMLPresentableTreeElement extends TreeElement implements
 	 * 
 	 * @see org.eclipse.php.profile.ui.views.TreeElement#setData(java.lang.Object)
 	 */
+	@Override
 	public void setData(Object data) {
 		super.setData(data);
 		init();
@@ -68,14 +69,17 @@ public class SimpleHTMLPresentableTreeElement extends TreeElement implements
 		}
 	}
 
+	@Override
 	public String getImageURL() {
 		return fImageURL;
 	}
 
+	@Override
 	public String getTableLinkClass() {
 		return fTableLinkClass;
 	}
 
+	@Override
 	public String getTableRowClass() {
 		return fTableRowClass;
 	}

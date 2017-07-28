@@ -21,6 +21,7 @@ import org.eclipse.php.internal.debug.core.zend.debugger.parameters.DefaultDebug
 public class ProfileParametersInitializer extends
 		DefaultDebugParametersInitializer {
 
+	@Override
 	public Hashtable<String, String> getDebugParameters(ILaunch launch) {
 		// Fill standard parameters
 		Hashtable<String, String> parameters = super.getDebugParameters(launch);

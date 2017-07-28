@@ -129,7 +129,7 @@ public class Factory {
 			// add package name
 			if (packageName != null)
 				s = packageName + "." + s; //$NON-NLS-1$
-			Class class1 = Class.forName(s);
+			Class<?> class1 = Class.forName(s);
 
 			XMLElement xmlElement = (XMLElement) class1.newInstance();
 			xmlElement.setElement(element);

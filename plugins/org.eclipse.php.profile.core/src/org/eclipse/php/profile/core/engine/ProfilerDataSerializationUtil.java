@@ -97,7 +97,7 @@ public class ProfilerDataSerializationUtil {
 
 			xml.startTag("profilerDB", null); //$NON-NLS-1$
 			for (int i = 0; i < profilerDBs.length; ++i) {
-				HashMap<String, String> parameters = new HashMap<String, String>();
+				HashMap<String, String> parameters = new HashMap<>();
 				parameters
 						.put(
 								"date", Long.toString(profilerDBs[i].getProfileDate().getTime())); //$NON-NLS-1$
@@ -134,7 +134,7 @@ public class ProfilerDataSerializationUtil {
 		if (callTrace == null) {
 			return;
 		}
-		HashMap<String, String> parameters = new HashMap<String, String>();
+		HashMap<String, String> parameters = new HashMap<>();
 		parameters.put("layers", Integer.toString(callTrace.getLayersCount())); //$NON-NLS-1$
 		fXML.startTag("callTrace", parameters); //$NON-NLS-1$
 		ProfilerCallTraceLayer[] layers = callTrace.getLayers();
@@ -148,7 +148,7 @@ public class ProfilerDataSerializationUtil {
 		if (layer == null) {
 			return;
 		}
-		HashMap<String, String> parameters = new HashMap<String, String>();
+		HashMap<String, String> parameters = new HashMap<>();
 		parameters.put("type", Integer.toString(layer.getType())); //$NON-NLS-1$
 		parameters.put("line", Integer.toString(layer.getLineNumber())); //$NON-NLS-1$
 		parameters.put("id", Integer.toString(layer.getCalledID())); //$NON-NLS-1$
@@ -169,7 +169,7 @@ public class ProfilerDataSerializationUtil {
 		if (data == null) {
 			return;
 		}
-		HashMap<String, String> parameters = new HashMap<String, String>();
+		HashMap<String, String> parameters = new HashMap<>();
 		parameters.put("uri", data.getURI()); //$NON-NLS-1$
 		parameters.put("originalURL", data.getOriginalURL()); //$NON-NLS-1$
 		parameters.put("query", data.getQuery()); //$NON-NLS-1$
@@ -192,7 +192,7 @@ public class ProfilerDataSerializationUtil {
 		if (data == null) {
 			return;
 		}
-		HashMap<String, String> parameters = new HashMap<String, String>();
+		HashMap<String, String> parameters = new HashMap<>();
 		parameters.put("name", data.getName()); //$NON-NLS-1$
 		parameters.put("local", data.getLocalName()); //$NON-NLS-1$
 		parameters.put("functions", Integer.toString(data.getFunctionsCount())); //$NON-NLS-1$
@@ -213,7 +213,7 @@ public class ProfilerDataSerializationUtil {
 		if (data == null) {
 			return;
 		}
-		HashMap<String, String> parameters = new HashMap<String, String>();
+		HashMap<String, String> parameters = new HashMap<>();
 		parameters.put("file", data.getAbsoluteFileName()); //$NON-NLS-1$
 		parameters.put("localFile", data.getLocalFileName()); //$NON-NLS-1$
 		parameters.put("name", data.toString()); //$NON-NLS-1$
@@ -234,7 +234,7 @@ public class ProfilerDataSerializationUtil {
 		if (data == null) {
 			return;
 		}
-		HashMap<String, String> parameters = new HashMap<String, String>();
+		HashMap<String, String> parameters = new HashMap<>();
 		parameters.put("file", data.getFileName()); //$NON-NLS-1$
 		parameters.put("localFile", data.getLocalFileName()); //$NON-NLS-1$
 		parameters.put("linesNum", Integer.toString(data.getLinesNum())); //$NON-NLS-1$
@@ -258,7 +258,7 @@ public class ProfilerDataSerializationUtil {
 			DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
 			Document doc = docBuilder.parse(in);
 
-			ArrayList<ProfilerDB> profilerDBs = new ArrayList<ProfilerDB>();
+			ArrayList<ProfilerDB> profilerDBs = new ArrayList<>();
 			NodeList l = doc.getElementsByTagName("profileSession"); //$NON-NLS-1$
 			for (int i = 0; l.item(i) != null; ++i) {
 				if (l.item(i).getNodeType() == Node.ELEMENT_NODE) {
@@ -287,7 +287,7 @@ public class ProfilerDataSerializationUtil {
 		e = (Element) rootElement.getElementsByTagName("callTrace").item(0); //$NON-NLS-1$
 		ProfilerCallTrace callTrace = deserializeCallTrace(e);
 
-		ArrayList<ProfilerFileData> fileData = new ArrayList<ProfilerFileData>();
+		ArrayList<ProfilerFileData> fileData = new ArrayList<>();
 		NodeList l = rootElement.getElementsByTagName("fileData"); //$NON-NLS-1$
 		for (int i = 0; l.item(i) != null; ++i) {
 			fileData.add(deserializeFileData((Element) l.item(i), globalData));
@@ -305,7 +305,7 @@ public class ProfilerDataSerializationUtil {
 		double totalOwnTime = Double.parseDouble(rootElement
 				.getAttribute("time")); //$NON-NLS-1$
 
-		ArrayList<ProfilerFunctionData> functionData = new ArrayList<ProfilerFunctionData>();
+		ArrayList<ProfilerFunctionData> functionData = new ArrayList<>();
 		NodeList l = rootElement.getElementsByTagName("functionData"); //$NON-NLS-1$
 		for (int i = 0; l.item(i) != null; ++i) {
 			functionData.add(deserializeFunctionData((Element) l.item(i)));
@@ -348,7 +348,7 @@ public class ProfilerDataSerializationUtil {
 	private ProfilerCallTrace deserializeCallTrace(Element rootElement) {
 		int layersNum = Integer.parseInt(rootElement.getAttribute("layers")); //$NON-NLS-1$
 		NodeList l = rootElement.getElementsByTagName("callTraceLayer"); //$NON-NLS-1$
-		ArrayList<ProfilerCallTraceLayer> layers = new ArrayList<ProfilerCallTraceLayer>();
+		ArrayList<ProfilerCallTraceLayer> layers = new ArrayList<>();
 		for (int i = 0; l.item(i) != null; ++i) {
 			layers.add(deserializeCallTraceLayer((Element) l.item(i)));
 		}
@@ -387,7 +387,7 @@ public class ProfilerDataSerializationUtil {
 		int dataSize = Integer.parseInt(rootElement.getAttribute("dataSize")); //$NON-NLS-1$
 		int filesNumber = Integer.parseInt(rootElement.getAttribute("files")); //$NON-NLS-1$
 
-		ArrayList<String> files = new ArrayList<String>();
+		ArrayList<String> files = new ArrayList<>();
 		NodeList l = rootElement.getElementsByTagName("file"); //$NON-NLS-1$
 		for (int i = 0; l.item(i) != null; ++i) {
 			files.add(l.item(i).getFirstChild().getNodeValue());

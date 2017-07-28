@@ -41,6 +41,7 @@ public class ZProfiler extends ServerDebugHandler implements IProfiler, IDebugHa
 	 * @see com.zend.php.debug.core.debugger.AdvancedDebugHandler#
 	 * createRemoteDebugger ()
 	 */
+	@Override
 	protected IRemoteDebugger createRemoteDebugger() {
 		return new ZRemoteProfiler(this, fDebugConnection);
 	}
@@ -54,6 +55,7 @@ public class ZProfiler extends ServerDebugHandler implements IProfiler, IDebugHa
 	 * 
 	 * @see com.zend.php.profile.core.profiler.IProfiler#getProfilerGlobalData()
 	 */
+	@Override
 	public ProfilerGlobalData getProfilerGlobalData() {
 		ZRemoteProfiler remoteProfiler = (ZRemoteProfiler) getRemoteDebugger();
 		return remoteProfiler.getProfilerGlobalData();
@@ -65,6 +67,7 @@ public class ZProfiler extends ServerDebugHandler implements IProfiler, IDebugHa
 	 * @see
 	 * com.zend.php.profile.core.profiler.IProfiler#getProfilerFileData(int)
 	 */
+	@Override
 	public ProfilerFileData getProfilerFileData(int fileNumber) {
 		ZRemoteProfiler remoteProfiler = (ZRemoteProfiler) getRemoteDebugger();
 		return remoteProfiler.getProfilerFileData(fileNumber);
@@ -75,6 +78,7 @@ public class ZProfiler extends ServerDebugHandler implements IProfiler, IDebugHa
 	 * 
 	 * @see com.zend.php.profile.core.profiler.IProfiler#getProfilerCallTrace()
 	 */
+	@Override
 	public ProfilerCallTrace getProfilerCallTrace() {
 		ZRemoteProfiler remoteProfiler = (ZRemoteProfiler) getRemoteDebugger();
 		return remoteProfiler.getProfilerCallTrace();
@@ -85,6 +89,7 @@ public class ZProfiler extends ServerDebugHandler implements IProfiler, IDebugHa
 	 * 
 	 * @see com.zend.php.profile.core.profiler.IProfiler#getProfilerData()
 	 */
+	@Override
 	public ProfilerData getProfilerData() {
 		ZRemoteProfiler remoteProfiler = (ZRemoteProfiler) getRemoteDebugger();
 		return remoteProfiler.getProfilerData();
@@ -96,6 +101,7 @@ public class ZProfiler extends ServerDebugHandler implements IProfiler, IDebugHa
 	 * @see org.eclipse.php.internal.debug.core.debugger.IDebugHandler#
 	 * handleScriptEnded ()
 	 */
+	@Override
 	public void handleScriptEnded() {
 		try {
 			if (fParsingErrorOccurred) {
@@ -149,6 +155,7 @@ public class ZProfiler extends ServerDebugHandler implements IProfiler, IDebugHa
 	 * org.eclipse.php.internal.debug.core.debugger.IDebugHandler#sessionStarted
 	 * (java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
+	@Override
 	public void sessionStarted(String fileName, String uri, String query, String options) {
 		super.sessionStarted(fileName, uri, query, options);
 		fParsingErrorOccurred = false;
@@ -161,6 +168,7 @@ public class ZProfiler extends ServerDebugHandler implements IProfiler, IDebugHa
 	 * parsingErrorOccured
 	 * (org.eclipse.php.internal.debug.core.debugger.DebugError)
 	 */
+	@Override
 	public void parsingErrorOccured(DebugError debugError) {
 		if (DebugError.isError(debugError)) {
 			fParsingErrorOccurred = true;

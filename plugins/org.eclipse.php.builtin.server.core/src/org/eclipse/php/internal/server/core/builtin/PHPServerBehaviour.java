@@ -242,7 +242,7 @@ public class PHPServerBehaviour extends ServerBehaviourDelegate implements IPHPS
 
 		// check that ports are free
 		Iterator<ServerPort> iterator = configuration.getServerPorts().iterator();
-		List<ServerPort> usedPorts = new ArrayList<ServerPort>();
+		List<ServerPort> usedPorts = new ArrayList<>();
 		while (iterator.hasNext()) {
 			ServerPort sp = iterator.next();
 			if (sp.getPort() < 0)
@@ -265,7 +265,7 @@ public class PHPServerBehaviour extends ServerBehaviourDelegate implements IPHPS
 				if (!first)
 					portStr += ", "; //$NON-NLS-1$
 				first = false;
-				ServerPort sp = (ServerPort) iterator.next();
+				ServerPort sp = iterator.next();
 				portStr += "" + sp.getPort(); //$NON-NLS-1$
 			}
 			throw new CoreException(new Status(IStatus.ERROR, PHPServerPlugin.PLUGIN_ID, 0,
@@ -498,7 +498,7 @@ public class PHPServerBehaviour extends ServerBehaviourDelegate implements IPHPS
 	 */
 	private void publishDir(int deltaKind, Properties p, IModule module[], PublishHelper helper,
 			IProgressMonitor monitor) throws CoreException {
-		List<IStatus> status = new ArrayList<IStatus>();
+		List<IStatus> status = new ArrayList<>();
 		// Remove if requested or if previously published and are now serving
 		// without publishing
 		if (deltaKind == REMOVED) {

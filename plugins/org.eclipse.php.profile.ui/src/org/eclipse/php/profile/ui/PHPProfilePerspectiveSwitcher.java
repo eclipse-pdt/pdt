@@ -87,6 +87,7 @@ public class PHPProfilePerspectiveSwitcher implements IProfileSessionListener {
 			return;
 		}
 		SwitchJob switchJob = new SwitchJob() {
+			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				if (window != null) {

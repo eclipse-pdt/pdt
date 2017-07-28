@@ -116,7 +116,7 @@ public class TestViewer {
 		}
 
 		synchronized (this) {
-			for (final Iterator iter = fAutoExpand.iterator(); iter.hasNext();) {
+			for (final Iterator<Object> iter = fAutoExpand.iterator(); iter.hasNext();) {
 				final PHPUnitTestGroup suite = (PHPUnitTestGroup) iter.next();
 				fTreeViewer.setExpandedState(suite, true);
 			}

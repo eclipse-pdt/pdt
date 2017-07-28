@@ -83,8 +83,9 @@ public class ExecutionStatisticsFilter extends ViewerFilter implements IXMLPrefe
 		fFilterConditions = filterConditions;
 	}
 
+	@Override
 	public Map<String, Object> storeToMap() {
-		Map<String, Object> map = new HashMap<String, Object>(4);
+		Map<String, Object> map = new HashMap<>(4);
 		map.put("name", fName); //$NON-NLS-1$
 		if (fFilterString != null) {
 			map.put("filterString", fFilterString.storeToMap()); //$NON-NLS-1$
@@ -98,11 +99,12 @@ public class ExecutionStatisticsFilter extends ViewerFilter implements IXMLPrefe
 			}
 		}
 
-		Map<String, Object> filter = new HashMap<String, Object>(1);
+		Map<String, Object> filter = new HashMap<>(1);
 		filter.put("filter", map); //$NON-NLS-1$
 		return filter;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public void restoreFromMap(Map<String, Object> map) {
 		Map<?, ?> filter = (Map<?, ?>) map.get("filter"); //$NON-NLS-1$
@@ -118,19 +120,20 @@ public class ExecutionStatisticsFilter extends ViewerFilter implements IXMLPrefe
 				fFieldFilter = new ExecutionStatisticsFieldFilter();
 				fFieldFilter.restoreFromMap((Map<String, Object>) obj);
 			}
-			List<ExecutionStatisticsFilterCondition> conditions = new ArrayList<ExecutionStatisticsFilterCondition>();
+			List<ExecutionStatisticsFilterCondition> conditions = new ArrayList<>();
 			for (int i = 0; (obj = filter.get("condition" + i)) != null; ++i) { //$NON-NLS-1$
 				ExecutionStatisticsFilterCondition cond = new ExecutionStatisticsFilterCondition();
 				cond.restoreFromMap((Map<String, Object>) obj);
 				conditions.add(cond);
 			}
 			if (conditions.size() > 0) {
-				fFilterConditions = (ExecutionStatisticsFilterCondition[]) conditions
+				fFilterConditions = conditions
 						.toArray(new ExecutionStatisticsFilterCondition[conditions.size()]);
 			}
 		}
 	}
 
+	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
 		boolean select = true;
 		if (fFilterString != null) {
@@ -144,6 +147,7 @@ public class ExecutionStatisticsFilter extends ViewerFilter implements IXMLPrefe
 		return select;
 	}
 
+	@Override
 	public Object[] filter(Viewer viewer, Object parent, Object[] elements) {
 		Object[] filteredElements = super.filter(viewer, parent, elements);
 		if (fFieldFilter != null) {

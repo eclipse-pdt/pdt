@@ -20,6 +20,7 @@ public class ProfilingMonitorContentProvider implements ITreeContentProvider {
 
 	private static final Object[] EMPTY_SET = new Object[0];
 
+	@Override
 	public Object[] getChildren(Object parentElement) {
 		if (parentElement instanceof ProfilingMonitorElement[]) {
 			return (Object[]) parentElement;
@@ -30,6 +31,7 @@ public class ProfilingMonitorContentProvider implements ITreeContentProvider {
 		return EMPTY_SET;
 	}
 
+	@Override
 	public Object getParent(Object element) {
 		if (element instanceof ProfilingMonitorViewElement) {
 			return ((ProfilingMonitorViewElement) element).getParent();
@@ -37,6 +39,7 @@ public class ProfilingMonitorContentProvider implements ITreeContentProvider {
 		return null;
 	}
 
+	@Override
 	public boolean hasChildren(Object element) {
 		if (element instanceof ProfilingMonitorElement
 				|| element instanceof ProfilingMonitorElement[]) {
@@ -45,13 +48,16 @@ public class ProfilingMonitorContentProvider implements ITreeContentProvider {
 		return false;
 	}
 
+	@Override
 	public Object[] getElements(Object inputElement) {
 		return getChildren(inputElement);
 	}
 
+	@Override
 	public void dispose() {
 	}
 
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 	}
 }

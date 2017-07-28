@@ -29,6 +29,7 @@ public abstract class AbstractTableSorter extends ViewerSorter {
 	 * org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers
 	 * .Viewer, java.lang.Object, java.lang.Object)
 	 */
+	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
 		if (fOrder == ProfilerUIConstants.SORT_ASCENDING) {
 			return super.compare(viewer, e1, e2);

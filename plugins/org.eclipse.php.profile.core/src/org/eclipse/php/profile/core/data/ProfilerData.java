@@ -102,7 +102,7 @@ public class ProfilerData {
 	}
 
 	private void init() {
-		filesData = new ArrayList<ProfilerFileData>();
+		filesData = new ArrayList<>();
 	}
 
 }

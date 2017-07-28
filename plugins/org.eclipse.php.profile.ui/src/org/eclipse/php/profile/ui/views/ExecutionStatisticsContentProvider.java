@@ -39,11 +39,12 @@ public class ExecutionStatisticsContentProvider implements ITreeContentProvider 
 	 * org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.
 	 * Object)
 	 */
+	@Override
 	public Object[] getChildren(Object parentElement) {
 		TreeElement parent = (TreeElement) parentElement;
 		if (parent.getParent() == null) {
 			if (fStore.getInt(PreferenceKeys.EXECUTION_VIEW_GROUP_BY) != ProfilerUIConstants.GROUP_BY_FILE) {
-				List<Object> children = new ArrayList<Object>();
+				List<Object> children = new ArrayList<>();
 				Object[] files = parent.getChildren();
 				for (int i = 0; i < files.length; ++i) {
 					Object[] classes = ((TreeElement) files[i]).getChildren();
@@ -77,6 +78,7 @@ public class ExecutionStatisticsContentProvider implements ITreeContentProvider 
 	 * org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object
 	 * )
 	 */
+	@Override
 	public Object getParent(Object element) {
 		return ((TreeElement) element).getParent();
 	}
@@ -88,6 +90,7 @@ public class ExecutionStatisticsContentProvider implements ITreeContentProvider 
 	 * org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.
 	 * Object)
 	 */
+	@Override
 	public boolean hasChildren(Object element) {
 		return ((TreeElement) element).hasChildren();
 	}
@@ -99,6 +102,7 @@ public class ExecutionStatisticsContentProvider implements ITreeContentProvider 
 	 * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java
 	 * .lang.Object)
 	 */
+	@Override
 	public Object[] getElements(Object inputElement) {
 		return getChildren(inputElement);
 	}
@@ -108,6 +112,7 @@ public class ExecutionStatisticsContentProvider implements ITreeContentProvider 
 	 * 
 	 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
 	 */
+	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
 
@@ -120,6 +125,7 @@ public class ExecutionStatisticsContentProvider implements ITreeContentProvider 
 	 * org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface
 	 * .viewers.Viewer, java.lang.Object, java.lang.Object)
 	 */
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		// TODO Auto-generated method stub
 

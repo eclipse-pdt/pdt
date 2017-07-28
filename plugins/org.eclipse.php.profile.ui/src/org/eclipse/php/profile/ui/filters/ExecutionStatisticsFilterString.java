@@ -69,20 +69,23 @@ public class ExecutionStatisticsFilterString extends ViewerFilter implements IXM
 		fIsCaseSensitive = isCaseSensitive;
 	}
 
+	@Override
 	public Map<String, Object> storeToMap() {
-		Map<String, Object> map = new HashMap<String, Object>(3);
+		Map<String, Object> map = new HashMap<>(3);
 		map.put("string", fString); //$NON-NLS-1$
 		map.put("case-sensitive", new Boolean(fIsCaseSensitive)); //$NON-NLS-1$
 		map.put("filter-by", fFilterBy); //$NON-NLS-1$
 		return map;
 	}
 
+	@Override
 	public void restoreFromMap(Map<String, Object> map) {
 		fString = (String) map.get("string"); //$NON-NLS-1$
 		fIsCaseSensitive = Boolean.getBoolean((String) map.get("case-sensitive")); //$NON-NLS-1$
 		fFilterBy = (String) map.get("filter-by"); //$NON-NLS-1$
 	}
 
+	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
 		Object data = ((TreeElement) element).getData();
 		if (FILTER_BY_FILE_NAME.equals(fFilterBy) && data instanceof ProfilerFileData) {

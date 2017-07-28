@@ -234,7 +234,7 @@ public class TestSuiteWizardPage extends PHPUnitWizardPage {
 					pm.done();
 				});
 				if (!elementsList.isEmpty()) {
-					PHP_UNIT_CASE_AND_SUITE_NON_ABSTRAXT_CLASS_CACHE = (IType[]) elementsList
+					PHP_UNIT_CASE_AND_SUITE_NON_ABSTRAXT_CLASS_CACHE = elementsList
 							.toArray(new IType[elementsList.size()]);
 				}
 			}
@@ -371,8 +371,7 @@ public class TestSuiteWizardPage extends PHPUnitWizardPage {
 		final StatusInfo status = new StatusInfo();
 		if (fElementsToTestList != null) {
 			List<IType> addedElementsToTest = fElementsToTestList.getElements();
-			final IType[] addedElementsToTestArray = (IType[]) addedElementsToTest
-					.toArray(new IType[addedElementsToTest.size()]);
+			final IType[] addedElementsToTestArray = addedElementsToTest.toArray(new IType[addedElementsToTest.size()]);
 
 			if (PHP_UNIT_CASE_AND_SUITE_NON_ABSTRAXT_CLASS_CACHE == null) {
 
@@ -412,7 +411,7 @@ public class TestSuiteWizardPage extends PHPUnitWizardPage {
 		final List<IContainer> containers = new ArrayList<>(1);
 		IContainer container = null;
 		Object next;
-		for (final Iterator i = selection.iterator(); i.hasNext();) {
+		for (final Iterator<?> i = selection.iterator(); i.hasNext();) {
 			next = i.next();
 			if ((container = getInitialContainer(new StructuredSelection(next))) != null)
 				containers.add(container);
@@ -439,7 +438,7 @@ public class TestSuiteWizardPage extends PHPUnitWizardPage {
 			// now find the common root:
 			for (final Iterator<IContainer> i = containers.iterator(); i.hasNext();) {
 				// the most rooted folder has highest priority:
-				IContainer iContainer = (IContainer) i.next();
+				IContainer iContainer = i.next();
 				if (iContainer.getProject() != container.getProject())
 					continue;
 				// get higher to the level of the most rooted folder:
@@ -452,7 +451,7 @@ public class TestSuiteWizardPage extends PHPUnitWizardPage {
 			}
 			setContainer(container);
 		} else if (!containers.isEmpty()) {
-			setContainer((IContainer) containers.get(0));
+			setContainer(containers.get(0));
 		}
 
 		return null;

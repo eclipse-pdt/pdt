@@ -44,7 +44,7 @@ public class PHPUnitTestGroup extends PHPUnitTest {
 
 	public void addChild(final PHPUnitTest test, boolean finished) {
 		if (children == null) {
-			children = new LinkedHashSet<PHPUnitTest>();
+			children = new LinkedHashSet<>();
 		}
 		children.add(test);
 		if (test instanceof PHPUnitTestCase && finished) {

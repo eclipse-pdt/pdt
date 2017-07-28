@@ -144,7 +144,7 @@ public class OpenFileDialog {
 		return dialog.openMany();
 	}
 
-	private String[] open(boolean allowMultiple, final Class[] visibleTypes, final Class selectable) {
+	private String[] open(boolean allowMultiple, final Class<?>[] visibleTypes, final Class<?> selectable) {
 
 		ViewerFilter filter = new ViewerFilter() {
 

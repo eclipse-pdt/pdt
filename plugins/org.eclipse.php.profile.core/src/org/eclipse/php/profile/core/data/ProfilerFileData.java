@@ -26,8 +26,8 @@ public class ProfilerFileData {
 	private String fLocalName;
 	private int fFunctionsCount;
 	private double fTotalOwnTime = 0f;
-	private List<ProfilerFunctionData> fFunctions = new ArrayList<ProfilerFunctionData>();
-	private Map<String, ProfilerClassData> fClasses = new HashMap<String, ProfilerClassData>();
+	private List<ProfilerFunctionData> fFunctions = new ArrayList<>();
+	private Map<String, ProfilerClassData> fClasses = new HashMap<>();
 	private CodeCoverageData fCodeCoverageData;
 
 	public ProfilerFileData() {
@@ -45,7 +45,7 @@ public class ProfilerFileData {
 		fTotalOwnTime = totalOwnTime;
 		fFunctions = functions;
 		for (int i = 0; i < functions.size(); ++i) {
-			addClass((ProfilerFunctionData) functions.get(i));
+			addClass(functions.get(i));
 		}
 	}
 
@@ -137,6 +137,7 @@ public class ProfilerFileData {
 		return fTotalOwnTime * 1000;
 	}
 
+	@Override
 	public String toString() {
 		return this.fName;
 	}
@@ -156,7 +157,7 @@ public class ProfilerFileData {
 		String className = function.getClassName();
 		if (className != null) {
 			if (fClasses.containsKey(className)) {
-				ProfilerClassData classData = (ProfilerClassData) fClasses
+				ProfilerClassData classData = fClasses
 						.get(className);
 				classData.addMethod(function);
 			} else {

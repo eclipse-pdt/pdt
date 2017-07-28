@@ -184,8 +184,8 @@ public class XMLUtil {
 	 * @param name
 	 *            java.lang.String
 	 */
-	public static Iterator getNodeIterator(Element element, String name) {
-		List<Node> list = new ArrayList<Node>();
+	public static Iterator<Node> getNodeIterator(Element element, String name) {
+		List<Node> list = new ArrayList<>();
 		NodeList nodeList = element.getElementsByTagName(name);
 
 		int length = nodeList.getLength();

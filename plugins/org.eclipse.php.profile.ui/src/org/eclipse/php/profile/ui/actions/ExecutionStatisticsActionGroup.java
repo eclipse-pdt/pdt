@@ -67,6 +67,7 @@ public class ExecutionStatisticsActionGroup extends ActionGroup {
 		fFilterAction = new FilterAction();
 	}
 
+	@Override
 	public void fillActionBars(IActionBars actionBars) {
 		super.fillActionBars(actionBars);
 
@@ -93,6 +94,7 @@ public class ExecutionStatisticsActionGroup extends ActionGroup {
 	 * org.eclipse.ui.actions.ActionGroup#fillContextMenu(org.eclipse.jface.
 	 * action.IMenuManager)
 	 */
+	@Override
 	public void fillContextMenu(IMenuManager menu) {
 		ISelection selection = fView.getViewer().getSelection();
 		if (selection != null && selection instanceof IStructuredSelection) {
@@ -124,12 +126,14 @@ public class ExecutionStatisticsActionGroup extends ActionGroup {
 			setChecked(fStore.getBoolean(PreferenceKeys.EXECUTION_VIEW_SHOW_AS_PERCENTAGE));
 		}
 
+		@Override
 		public void run() {
 			final TreeViewer viewer = fView.getViewer();
 			final boolean on = isChecked();
 			fStore.setValue(PreferenceKeys.EXECUTION_VIEW_SHOW_AS_PERCENTAGE, on);
 
 			BusyIndicator.showWhile(viewer.getControl().getDisplay(), new Runnable() {
+				@Override
 				public void run() {
 					viewer.getControl().setRedraw(false);
 					viewer.refresh();
@@ -147,8 +151,10 @@ public class ExecutionStatisticsActionGroup extends ActionGroup {
 			setImageDescriptor(ProfilerUIImages.getImageDescriptor(ProfilerUIImages.IMG_ELCL_COLLAPSE_ALL));
 		}
 
+		@Override
 		public void run() {
 			BusyIndicator.showWhile(fView.getViewer().getControl().getDisplay(), new Runnable() {
+				@Override
 				public void run() {
 					fView.getViewer().getControl().setRedraw(false);
 					fView.getViewer().collapseAll();
@@ -168,8 +174,10 @@ public class ExecutionStatisticsActionGroup extends ActionGroup {
 			setImageDescriptor(ProfilerUIImages.getImageDescriptor(ProfilerUIImages.IMG_ELCL_EXPAND_ALL));
 		}
 
+		@Override
 		public void run() {
 			BusyIndicator.showWhile(fView.getViewer().getControl().getDisplay(), new Runnable() {
+				@Override
 				public void run() {
 					fView.getViewer().getControl().setRedraw(false);
 					fView.getViewer().expandAll();
@@ -189,10 +197,12 @@ public class ExecutionStatisticsActionGroup extends ActionGroup {
 			setImageDescriptor(ProfilerUIImages.getImageDescriptor(ProfilerUIImages.IMG_ELCL_GROUP_BY_FILE));
 		}
 
+		@Override
 		public void run() {
 			if (isChecked()) {
 				fStore.setValue(PreferenceKeys.EXECUTION_VIEW_GROUP_BY, ProfilerUIConstants.GROUP_BY_FILE);
 				BusyIndicator.showWhile(fView.getViewer().getControl().getDisplay(), new Runnable() {
+					@Override
 					public void run() {
 						fView.getViewer().getControl().setRedraw(false);
 						fView.getViewer().refresh();
@@ -213,10 +223,12 @@ public class ExecutionStatisticsActionGroup extends ActionGroup {
 			setImageDescriptor(ProfilerUIImages.getImageDescriptor(ProfilerUIImages.IMG_ELCL_GROUP_BY_FUNCTION));
 		}
 
+		@Override
 		public void run() {
 			if (isChecked()) {
 				fStore.setValue(PreferenceKeys.EXECUTION_VIEW_GROUP_BY, ProfilerUIConstants.GROUP_BY_FUNCTION);
 				BusyIndicator.showWhile(fView.getViewer().getControl().getDisplay(), new Runnable() {
+					@Override
 					public void run() {
 						fView.getViewer().getControl().setRedraw(false);
 						fView.getViewer().refresh();
@@ -237,10 +249,12 @@ public class ExecutionStatisticsActionGroup extends ActionGroup {
 			setImageDescriptor(ProfilerUIImages.getImageDescriptor(ProfilerUIImages.IMG_ELCL_GROUP_BY_CLASS));
 		}
 
+		@Override
 		public void run() {
 			if (isChecked()) {
 				fStore.setValue(PreferenceKeys.EXECUTION_VIEW_GROUP_BY, ProfilerUIConstants.GROUP_BY_CLASS);
 				BusyIndicator.showWhile(fView.getViewer().getControl().getDisplay(), new Runnable() {
+					@Override
 					public void run() {
 						fView.getViewer().getControl().setRedraw(false);
 						fView.getViewer().refresh();
@@ -276,6 +290,7 @@ public class ExecutionStatisticsActionGroup extends ActionGroup {
 		 * 
 		 * @see org.eclipse.jface.action.Action#run()
 		 */
+		@Override
 		public void run() {
 			editFilters();
 		}
@@ -285,6 +300,7 @@ public class ExecutionStatisticsActionGroup extends ActionGroup {
 		 * 
 		 * @see org.eclipse.jface.action.IMenuCreator#dispose()
 		 */
+		@Override
 		public void dispose() {
 			if (fMenu != null) {
 				fMenu.dispose();
@@ -314,6 +330,7 @@ public class ExecutionStatisticsActionGroup extends ActionGroup {
 		 * org.eclipse.jface.action.IMenuCreator#getMenu(org.eclipse.swt.widgets
 		 * .Control)
 		 */
+		@Override
 		public Menu getMenu(Control parent) {
 			if (fMenu != null) {
 				fMenu.dispose();
@@ -344,6 +361,7 @@ public class ExecutionStatisticsActionGroup extends ActionGroup {
 		 * org.eclipse.jface.action.IMenuCreator#getMenu(org.eclipse.swt.widgets
 		 * .Menu)
 		 */
+		@Override
 		public Menu getMenu(Menu parent) {
 			// TODO Auto-generated method stub
 			return null;
@@ -362,6 +380,7 @@ public class ExecutionStatisticsActionGroup extends ActionGroup {
 			 * 
 			 * @see org.eclipse.jface.action.Action#run()
 			 */
+			@Override
 			public void run() {
 				FilterAction.this.editFilters();
 			}
@@ -375,7 +394,7 @@ public class ExecutionStatisticsActionGroup extends ActionGroup {
 			}
 
 			public ApplyFilterAction(ExecutionStatisticsFilter filter, String filterName) {
-				super("  " + filterName, AS_RADIO_BUTTON); //$NON-NLS-1$ //$NON-NLS-2$
+				super("  " + filterName, AS_RADIO_BUTTON); //$NON-NLS-1$ 
 				setDescription(PHPProfileUIMessages.getString("ExecutionStatisticsActionGroup.5")); //$NON-NLS-1$
 				setToolTipText(filterName);
 				fFilter = filter;
@@ -385,6 +404,7 @@ public class ExecutionStatisticsActionGroup extends ActionGroup {
 				}
 			}
 
+			@Override
 			public void run() {
 				FilterAction.this.removeOldFilters();
 

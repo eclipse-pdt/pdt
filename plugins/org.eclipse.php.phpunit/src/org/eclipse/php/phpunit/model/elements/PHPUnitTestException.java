@@ -39,7 +39,7 @@ public class PHPUnitTestException extends PHPUnitTestEvent {
 
 	public static void addAbnormalException(PHPUnitTestCase testCase) {
 		// if(ABNORMAL_EXCEPTION == null) {
-		Map<String, String> exception = new HashMap<String, String>();
+		Map<String, String> exception = new HashMap<>();
 		exception.put(PHPUnitMessageParser.PROPERTY_CLASS, PHPUnitMessages.PHPUnitTestException_0);
 		exception.put(PHPUnitMessageParser.PROPERTY_MESSAGE, PHPUnitMessages.PHPUnitTestException_1);
 		PHPUnitTestException abnormalException = new PHPUnitTestException(exception, null, null);

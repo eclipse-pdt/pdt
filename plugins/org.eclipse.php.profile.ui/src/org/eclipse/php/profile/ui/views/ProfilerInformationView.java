@@ -65,6 +65,7 @@ public class ProfilerInformationView extends AbstractProfilerView implements IPr
 	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.
 	 * widgets.Composite)
 	 */
+	@Override
 	public void createPartControl(Composite parent) {
 		createForm(parent);
 		ProfileSessionsManager.addProfileSessionListener(this);
@@ -77,6 +78,7 @@ public class ProfilerInformationView extends AbstractProfilerView implements IPr
 	 * 
 	 * @see org.eclipse.ui.part.WorkbenchPart#dispose()
 	 */
+	@Override
 	public void dispose() {
 		ProfileSessionsManager.removeProfileSessionListener(this);
 		super.dispose();
@@ -254,8 +256,10 @@ public class ProfilerInformationView extends AbstractProfilerView implements IPr
 			if (labels.length > 0) {
 				final Display display = getSite().getShell().getDisplay();
 				display.asyncExec(new Runnable() {
+					@Override
 					public void run() {
 						BusyIndicator.showWhile(getSite().getShell().getDisplay(), new Runnable() {
+							@Override
 							public void run() {
 								Chart chart = ChartUtil.createPieChart(labels, values);
 								chart.getBlock()
@@ -343,6 +347,7 @@ public class ProfilerInformationView extends AbstractProfilerView implements IPr
 	 * 
 	 * @see org.eclipse.php.profile.ui.views.AbstractProfilerView#getInput()
 	 */
+	@Override
 	public ProfilerDB getInput() {
 		return fProfilerDB;
 	}
@@ -353,6 +358,7 @@ public class ProfilerInformationView extends AbstractProfilerView implements IPr
 	 * @see org.eclipse.php.profile.ui.views.AbstractProfilerView#setInput(org.
 	 * eclipse. php.profile.core.profiler.ProfilerDB)
 	 */
+	@Override
 	public void setInput(ProfilerDB profilerDB) {
 		if (fProfilerDB != profilerDB) {
 			setGeneralInfoLabelText(profilerDB);
@@ -367,6 +373,7 @@ public class ProfilerInformationView extends AbstractProfilerView implements IPr
 	 * 
 	 * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
 	 */
+	@Override
 	public void setFocus() {
 	}
 
@@ -398,6 +405,7 @@ public class ProfilerInformationView extends AbstractProfilerView implements IPr
 			this.time = time;
 		}
 
+		@Override
 		public int compareTo(Object o) {
 			double newTime = ((FileTime) o).getTime();
 			if (time - newTime <= 0) {
@@ -416,6 +424,7 @@ public class ProfilerInformationView extends AbstractProfilerView implements IPr
 	 * @seeorg.eclipse.php.profile.core.profiler.IProfileSessionListener#
 	 * currentSessionChanged(org.eclipse.php.profile.core.profiler.ProfilerDB)
 	 */
+	@Override
 	public void currentSessionChanged(final ProfilerDB current) {
 		getSite().getShell().getDisplay().asyncExec(new Runnable() {
 			/*
@@ -423,6 +432,7 @@ public class ProfilerInformationView extends AbstractProfilerView implements IPr
 			 * 
 			 * @see java.lang.Runnable#run()
 			 */
+			@Override
 			public void run() {
 				setInput(current);
 			}
@@ -435,6 +445,7 @@ public class ProfilerInformationView extends AbstractProfilerView implements IPr
 	 * @seeorg.eclipse.php.profile.core.profiler.IProfileSessionListener#
 	 * profileSessionAdded(org.eclipse.php.profile.core.profiler.ProfilerDB)
 	 */
+	@Override
 	public void profileSessionAdded(ProfilerDB db) {
 	}
 
@@ -444,6 +455,7 @@ public class ProfilerInformationView extends AbstractProfilerView implements IPr
 	 * @seeorg.eclipse.php.profile.core.profiler.IProfileSessionListener#
 	 * profileSessionRemoved(org.eclipse.php.profile.core.profiler.ProfilerDB)
 	 */
+	@Override
 	public void profileSessionRemoved(ProfilerDB db) {
 	}
 }

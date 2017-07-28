@@ -41,6 +41,7 @@ public class ProfilerDBManager implements ProfilerDB {
 	 *            of the function as recieved from the debugger
 	 * @return data of the function
 	 */
+	@Override
 	public ProfilerFunctionData getFunctionData(int id) {
 		return profilerDB.getFunctionData(id);
 	}
@@ -53,6 +54,7 @@ public class ProfilerDBManager implements ProfilerDB {
 	 *            recieved from the server
 	 * @return the filedata
 	 */
+	@Override
 	public ProfilerFileData getFileData(int fileNumber) {
 		return profilerDB.getFileData(fileNumber);
 	}
@@ -64,6 +66,7 @@ public class ProfilerDBManager implements ProfilerDB {
 	 *            - the file name to be requested
 	 * @return the filedata
 	 */
+	@Override
 	public ProfilerFileData getFileData(String fileName) {
 		return profilerDB.getFileData(fileName);
 	}
@@ -73,10 +76,12 @@ public class ProfilerDBManager implements ProfilerDB {
 	 * 
 	 * @return the files
 	 */
+	@Override
 	public ProfilerFileData[] getFiles() {
 		return profilerDB.getFiles();
 	}
 
+	@Override
 	public List<ProfilerFileData> getFilesList() {
 		return profilerDB.getFilesList();
 	}
@@ -86,6 +91,7 @@ public class ProfilerDBManager implements ProfilerDB {
 	 * 
 	 * @return the callTrace
 	 */
+	@Override
 	public ProfilerCallTrace getCallTrace() {
 		return profilerDB.getCallTrace();
 	}
@@ -93,6 +99,7 @@ public class ProfilerDBManager implements ProfilerDB {
 	/**
 	 * get the global data of the profiler
 	 */
+	@Override
 	public ProfilerGlobalData getGlobalData() {
 		return profilerDB.getGlobalData();
 	}
@@ -100,14 +107,17 @@ public class ProfilerDBManager implements ProfilerDB {
 	/**
 	 * cleal all information from database
 	 */
+	@Override
 	public void clearAll() {
 		profilerDB.clearAll();
 	}
 
+	@Override
 	public void setProfilerData(ProfilerData data) {
 		profilerDB.setProfilerData(data);
 	}
 
+	@Override
 	public ProfilerData getProfilerData() {
 		return profilerDB.getProfilerData();
 	}
@@ -115,6 +125,7 @@ public class ProfilerDBManager implements ProfilerDB {
 	/**
 	 * Returns the date of profiling
 	 */
+	@Override
 	public Date getProfileDate() {
 		return profilerDB.getProfileDate();
 	}

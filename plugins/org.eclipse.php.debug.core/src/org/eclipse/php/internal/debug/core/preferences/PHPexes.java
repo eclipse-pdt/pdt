@@ -162,7 +162,6 @@ public class PHPexes {
 		// Remove binding from debuggers ID map
 		String debuggerID = original.getDebuggerID();
 		HashMap<String, PHPexeItem> exes = items.get(debuggerID);
-		PHPexeItem removedItem = null;
 		if (exes != null) {
 			exes.remove(original.getName());
 		}

@@ -89,7 +89,7 @@ public class PublishOperation2 extends PublishOperation {
 	 */
 	@Override
 	public void execute(IProgressMonitor monitor, IAdaptable info) throws CoreException {
-		List<IStatus> status = new ArrayList<IStatus>();
+		List<IStatus> status = new ArrayList<>();
 		// If parent web module
 		if (module.length == 1) {
 			publishDir(module[0], status, monitor);

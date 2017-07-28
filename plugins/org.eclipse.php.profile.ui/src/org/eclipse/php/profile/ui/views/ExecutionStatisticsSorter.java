@@ -27,6 +27,7 @@ public class ExecutionStatisticsSorter extends AbstractTableSorter {
 	 * org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers
 	 * .Viewer, java.lang.Object, java.lang.Object)
 	 */
+	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
 		TreeElement i1 = (TreeElement) e1;
 		TreeElement i2 = (TreeElement) e2;

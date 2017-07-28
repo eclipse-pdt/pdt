@@ -288,7 +288,7 @@ public class PHPUnitLaunchConfigurationDelegate extends PHPExecutableLaunchDeleg
 		envVariables = wconfig.getAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, new HashMap<String, String>());
 
 		if (envVariables == null) {
-			envVariables = new HashMap<String, String>();
+			envVariables = new HashMap<>();
 		}
 
 		if (envVariables.get(ENV_PORT) == null) {

@@ -27,7 +27,7 @@ public class DefaultProfilerDB implements ProfilerDB {
 																// funtion_id
 																// and
 																// functionData
-	private Map<String, ProfilerFileData> fFilesHash = new Hashtable<String, ProfilerFileData>(); // hashtable
+	private Map<String, ProfilerFileData> fFilesHash = new Hashtable<>(); // hashtable
 																									// of
 																									// file
 																									// name
@@ -102,6 +102,7 @@ public class DefaultProfilerDB implements ProfilerDB {
 	 *            of the function as recieved from the debugger
 	 * @return data of the function
 	 */
+	@Override
 	public ProfilerFunctionData getFunctionData(int id) {
 		return (ProfilerFunctionData) fFunctionsHash.get(id);
 	}
@@ -113,9 +114,10 @@ public class DefaultProfilerDB implements ProfilerDB {
 	 *            - the file name to be requested
 	 * @return the filedata
 	 */
+	@Override
 	public ProfilerFileData getFileData(String fileName) {
 		if (fFilesHash.get(fileName) != null) {
-			return (ProfilerFileData) fFilesHash.get(fileName);
+			return fFilesHash.get(fileName);
 		}
 		return null;
 	}
@@ -127,6 +129,7 @@ public class DefaultProfilerDB implements ProfilerDB {
 	 *            - the file number to be requested
 	 * @return the filedata
 	 */
+	@Override
 	public ProfilerFileData getFileData(int fileNumber) {
 		ProfilerFileData[] filesList = getProfilerData().getFiles();
 		if (filesList != null && filesList.length > fileNumber) {
@@ -140,10 +143,12 @@ public class DefaultProfilerDB implements ProfilerDB {
 	 * 
 	 * @return the files
 	 */
+	@Override
 	public ProfilerFileData[] getFiles() {
 		return fProfilerData.getFiles();
 	}
 
+	@Override
 	public List<ProfilerFileData> getFilesList() {
 		return fProfilerData.getFilesList();
 	}
@@ -153,6 +158,7 @@ public class DefaultProfilerDB implements ProfilerDB {
 	 * 
 	 * @return the callTrace
 	 */
+	@Override
 	public ProfilerCallTrace getCallTrace() {
 		return getProfilerData().getCallTrace();
 	}
@@ -160,6 +166,7 @@ public class DefaultProfilerDB implements ProfilerDB {
 	/**
 	 * Gets the global data of the profiler
 	 */
+	@Override
 	public ProfilerGlobalData getGlobalData() {
 		return getProfilerData().getGlobalData();
 	}
@@ -167,6 +174,7 @@ public class DefaultProfilerDB implements ProfilerDB {
 	/**
 	 * cleal all information from database and reset profiler
 	 */
+	@Override
 	public void clearAll() {
 		fFunctionsHash.clear();
 		fFilesHash.clear();
@@ -177,6 +185,7 @@ public class DefaultProfilerDB implements ProfilerDB {
 	 * get the current profiler used. create a new one if it doesn't exist
 	 * 
 	 */
+	@Override
 	public ProfilerData getProfilerData() {
 		if (fProfilerData == null) {
 			fProfilerData = new ProfilerData();
@@ -184,6 +193,7 @@ public class DefaultProfilerDB implements ProfilerDB {
 		return fProfilerData;
 	}
 
+	@Override
 	public void setProfilerData(ProfilerData profiler) {
 		this.fProfilerData = profiler;
 	}
@@ -191,6 +201,7 @@ public class DefaultProfilerDB implements ProfilerDB {
 	/**
 	 * Returns profile date
 	 */
+	@Override
 	public Date getProfileDate() {
 		return fProfileDate;
 	}

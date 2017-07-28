@@ -29,7 +29,7 @@ public class PHPUnitElementManager {
 
 	private PHPUnitTestGroup root;
 
-	private Map testMap;
+	private Map<Integer, PHPUnitElement> testMap;
 
 	private PHPUnitElementManager() {
 		initialize();
@@ -40,7 +40,7 @@ public class PHPUnitElementManager {
 	}
 
 	public PHPUnitElement findTest(final int testId) {
-		return (PHPUnitElement) testMap.get(testId);
+		return testMap.get(testId);
 	}
 
 	public PHPUnitTestGroup getRoot() {

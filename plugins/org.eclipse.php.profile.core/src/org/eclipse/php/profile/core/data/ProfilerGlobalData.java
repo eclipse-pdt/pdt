@@ -36,7 +36,7 @@ public class ProfilerGlobalData {
 	private static final int CONVERTION = 1000000;
 
 	public ProfilerGlobalData() {
-		fFileNames = new ArrayList<String>();
+		fFileNames = new ArrayList<>();
 	}
 
 	public ProfilerGlobalData(String uri, String originalURL, String query,
@@ -174,7 +174,7 @@ public class ProfilerGlobalData {
 	 * Sets the file names
 	 */
 	public void setFileNames(String[] names) {
-		fFileNames = new ArrayList<String>(Arrays.asList(names));
+		fFileNames = new ArrayList<>(Arrays.asList(names));
 	}
 
 	/**
@@ -222,7 +222,7 @@ public class ProfilerGlobalData {
 
 	public void removeFileName(String fileName) {
 		for (int i = 0; i < fFileNames.size(); i++) {
-			String file = (String) fFileNames.get(i);
+			String file = fFileNames.get(i);
 			if (file.endsWith(fileName)) {
 				fFileNames.remove(i);
 				fFileCount--;

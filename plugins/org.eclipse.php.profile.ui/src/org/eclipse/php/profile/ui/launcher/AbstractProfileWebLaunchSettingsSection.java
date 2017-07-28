@@ -320,12 +320,14 @@ public abstract class AbstractProfileWebLaunchSettingsSection
 		testResultLabel = new CLabel(testConnectionComposite, SWT.NONE);
 		testResultLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		testButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				// Run a test for the connection
 				testTunnelConnection();
 			}
 		});
 		testResultLabel.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mouseUp(MouseEvent e) {
 				Object messageData = testResultLabel.getData("info"); //$NON-NLS-1$
 				if (messageData != null) {
@@ -338,6 +340,7 @@ public abstract class AbstractProfileWebLaunchSettingsSection
 			}
 		});
 		profileThroughTunnel.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent se) {
 				Button b = (Button) se.getSource();
 				boolean selection = b.getSelection();
@@ -385,6 +388,7 @@ public abstract class AbstractProfileWebLaunchSettingsSection
 		testResultLabel.setData("info", null); //$NON-NLS-1$
 		Job connectionTest = new UIJob(
 				Messages.AbstractProfileWebLaunchSettingsSection_SSH_tunnel_test) {
+			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				try {
 					String remoteHost = PHPLaunchUtilities

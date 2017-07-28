@@ -77,24 +77,28 @@ public class ExecutionStatisticsFieldFilter extends ViewerFilter implements IXML
 		fField = field;
 	}
 
+	@Override
 	public Map<String, Object> storeToMap() {
-		Map<String, Object> map = new HashMap<String, Object>(3);
+		Map<String, Object> map = new HashMap<>(3);
 		map.put("descriptor", fDescriptor); //$NON-NLS-1$
 		map.put("number", fNumber); //$NON-NLS-1$
 		map.put("field", fField); //$NON-NLS-1$
 		return map;
 	}
 
+	@Override
 	public void restoreFromMap(Map<String, Object> map) {
 		fDescriptor = (String) map.get("descriptor"); //$NON-NLS-1$
 		fNumber = Integer.parseInt((String) map.get("number")); //$NON-NLS-1$
 		fField = (String) map.get("field"); //$NON-NLS-1$
 	}
 
+	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
 		return true;
 	}
 
+	@Override
 	public Object[] filter(Viewer viewer, Object parent, Object[] elements) {
 		if (FIELD_AVERAGE_OWN_TIME.equals(fField)) {
 			fSorter.setColumn(0);
@@ -118,7 +122,7 @@ public class ExecutionStatisticsFieldFilter extends ViewerFilter implements IXML
 										// model.
 		fSorter.sort(viewer, elements);
 
-		ArrayList<Object> resultElements = new ArrayList<Object>(elements.length);
+		ArrayList<Object> resultElements = new ArrayList<>(elements.length);
 		int countElements = 0;
 		for (int i = 0; i < elements.length && countElements < fNumber; ++i) {
 			resultElements.add(elements[i]);

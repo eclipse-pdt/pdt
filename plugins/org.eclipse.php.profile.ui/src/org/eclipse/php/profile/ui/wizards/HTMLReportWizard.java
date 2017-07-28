@@ -52,14 +52,16 @@ public class HTMLReportWizard extends AbstractSessionWizard implements IExportWi
 		}
 	}
 
+	@Override
 	public boolean performFinish() {
 		WorkbenchJob reportJob = new WorkbenchJob(PHPProfileUIMessages.getString("HTMLReportWizard.0")) { //$NON-NLS-1$
+			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				try {
 					String targetFile = page1.getTargetFile();
 					ProfilerDB session = page1.getSession();
 
-					List<String> viewIds = new ArrayList<String>();
+					List<String> viewIds = new ArrayList<>();
 					if (page1.isExportCommonInfo()) {
 						openView(ProfilerUIConstants.PROFILER_INFO_VIEW, session);
 						viewIds.add(ProfilerUIConstants.PROFILER_INFO_VIEW);
@@ -74,7 +76,7 @@ public class HTMLReportWizard extends AbstractSessionWizard implements IExportWi
 					}
 
 					PrintWriter out = new PrintWriter(new FileWriter(targetFile));
-					HTMLReporter.generateReport(session, (String[]) viewIds.toArray(new String[viewIds.size()]), out);
+					HTMLReporter.generateReport(session, viewIds.toArray(new String[viewIds.size()]), out);
 					HTMLReporter.saveImages(new File(targetFile).getParent());
 					out.close();
 
@@ -91,11 +93,13 @@ public class HTMLReportWizard extends AbstractSessionWizard implements IExportWi
 		return true;
 	}
 
+	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		setWindowTitle(PHPProfileUIMessages.getString("HTMLReportWizard.1")); //$NON-NLS-1$
 		initSessionFromSelection(workbench);
 	}
 
+	@Override
 	public void addPages() {
 		page1 = new HTMLReportWizardFirstPage(getSession());
 		addPage(page1);

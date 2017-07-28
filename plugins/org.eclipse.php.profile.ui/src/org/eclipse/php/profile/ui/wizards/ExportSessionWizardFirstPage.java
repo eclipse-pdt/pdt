@@ -36,6 +36,7 @@ import org.eclipse.ui.PlatformUI;
 public class ExportSessionWizardFirstPage extends WizardPage {
 
 	private Listener fieldModifyListener = new Listener() {
+		@Override
 		public void handleEvent(Event e) {
 			boolean valid = validatePage();
 			setPageComplete(valid);
@@ -114,6 +115,7 @@ public class ExportSessionWizardFirstPage extends WizardPage {
 			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.
 			 * eclipse .swt.events.SelectionEvent)
 			 */
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				FileDialog dialog = new FileDialog(getShell(), SWT.SAVE);
 				dialog.setText(PHPProfileUIMessages.getString("ExportSessionWizardPage1.6")); //$NON-NLS-1$
@@ -136,6 +138,7 @@ public class ExportSessionWizardFirstPage extends WizardPage {
 		});
 	}
 
+	@Override
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
 

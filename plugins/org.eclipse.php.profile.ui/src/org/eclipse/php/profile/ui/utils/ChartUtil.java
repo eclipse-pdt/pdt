@@ -67,7 +67,7 @@ public class ChartUtil {
 		NumberDataSet seriesValues = NumberDataSetImpl.create(values);
 
 		// Base Series
-		Series categorySeries = (Series) SeriesImpl.create();
+		Series categorySeries = SeriesImpl.create();
 		categorySeries.setDataSet(categoryValues);
 
 		SeriesDefinition categorySeriesDefinition = SeriesDefinitionImpl.create();

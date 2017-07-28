@@ -63,7 +63,7 @@ public class PHPProjectModule extends ProjectModule {
 	private IModuleResource[] internalGetModuleResources(IPath path, IContainer container) throws CoreException {
 		IResource[] resources = null;
 		if (container instanceof IProject) {
-			List<IResource> list = new ArrayList<IResource>();
+			List<IResource> list = new ArrayList<>();
 			IProjectFragment[] projectFragments = fScriptProject.getAllProjectFragments();
 			for (IProjectFragment fragment : projectFragments) {
 				if (!fragment.isExternal()) {
@@ -76,7 +76,7 @@ public class PHPProjectModule extends ProjectModule {
 		}
 		if (resources != null) {
 			int size = resources.length;
-			List<IModuleResource> list = new ArrayList<IModuleResource>(size);
+			List<IModuleResource> list = new ArrayList<>(size);
 			for (int i = 0; i < size; i++) {
 				IResource resource = resources[i];
 				if (resource != null && resource.exists()) {

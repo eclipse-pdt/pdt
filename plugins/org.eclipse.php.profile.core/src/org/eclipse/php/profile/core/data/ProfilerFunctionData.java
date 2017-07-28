@@ -288,6 +288,7 @@ public class ProfilerFunctionData {
 		return getOwnTime() * 1000;
 	}
 
+	@Override
 	public String toString() {
 		if (fClassName != null) {
 			return fClassName + "::" + fFunctionName; //$NON-NLS-1$

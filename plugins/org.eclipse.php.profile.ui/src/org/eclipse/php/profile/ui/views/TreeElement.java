@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class TreeElement {
 
-	private List<TreeElement> fChildren = new ArrayList<TreeElement>();
+	private List<TreeElement> fChildren = new ArrayList<>();
 	private TreeElement fParent;
 	private Object fData;
 	private boolean fExpanded = false;

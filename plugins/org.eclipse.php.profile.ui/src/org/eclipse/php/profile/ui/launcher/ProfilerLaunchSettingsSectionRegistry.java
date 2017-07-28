@@ -103,7 +103,7 @@ public class ProfilerLaunchSettingsSectionRegistry {
 	}
 
 	private List<Entry> readFromExtensionPoint() {
-		final List<Entry> entries = new ArrayList<Entry>();
+		final List<Entry> entries = new ArrayList<>();
 		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry()
 				.getConfigurationElementsFor(EXTENSION_POINT_ID);
 		for (final IConfigurationElement element : configurationElements) {
@@ -131,7 +131,7 @@ public class ProfilerLaunchSettingsSectionRegistry {
 	}
 
 	private List<Entry> filterEntries(List<Entry> entries) {
-		List<Entry> topHierarchyEntries = new ArrayList<Entry>();
+		List<Entry> topHierarchyEntries = new ArrayList<>();
 		for (Entry entryToCheck : entries) {
 			boolean isTopHierarchy = true;
 			for (Entry entry : entries) {

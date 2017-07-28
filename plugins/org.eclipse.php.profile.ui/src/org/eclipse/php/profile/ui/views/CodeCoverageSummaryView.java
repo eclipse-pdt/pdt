@@ -54,6 +54,7 @@ public class CodeCoverageSummaryView extends AbstractProfilerView implements IPr
 
 	public void showCodeCoverage(final CodeCoverageData[] coveredFiles) {
 		Display.getCurrent().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				fCodeCoverageSection.showCodeCoverage(coveredFiles);
 			}
@@ -83,7 +84,7 @@ public class CodeCoverageSummaryView extends AbstractProfilerView implements IPr
 	@Override
 	public void setInput(ProfilerDB profilerDB) {
 		if (profilerDB != null) {
-			List<CodeCoverageData> codeCoverageDatas = new ArrayList<CodeCoverageData>();
+			List<CodeCoverageData> codeCoverageDatas = new ArrayList<>();
 			ProfilerFileData[] files = profilerDB.getFiles();
 			for (int i = 0; i < files.length; i++) {
 				CodeCoverageData codeCoverageData = files[i].getCodeCoverageData();
@@ -98,17 +99,21 @@ public class CodeCoverageSummaryView extends AbstractProfilerView implements IPr
 		this.input = profilerDB;
 	}
 
+	@Override
 	public void currentSessionChanged(final ProfilerDB current) {
 		getSite().getShell().getDisplay().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				setInput(current);
 			}
 		});
 	}
 
+	@Override
 	public void profileSessionAdded(ProfilerDB db) {
 	}
 
+	@Override
 	public void profileSessionRemoved(ProfilerDB db) {
 	}
 }

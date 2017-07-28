@@ -28,8 +28,9 @@ public class ProfilePHPWebServerTabGroup
 	 * org.eclipse.debug.ui.ILaunchConfigurationTabGroup#createTabs(org.eclipse.
 	 * debug.ui.ILaunchConfigurationDialog, java.lang.String)
 	 */
+	@Override
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
-		ArrayList<ILaunchConfigurationTab> tabs = new ArrayList<ILaunchConfigurationTab>(
+		ArrayList<ILaunchConfigurationTab> tabs = new ArrayList<>(
 				10);
 		tabs.add(new PHPWebPageLaunchConfigurationTab());
 		tabs.add(new PHPWebPageLaunchConfigurationProfilerTab());

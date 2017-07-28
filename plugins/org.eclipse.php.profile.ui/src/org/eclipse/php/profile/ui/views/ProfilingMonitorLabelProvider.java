@@ -34,6 +34,7 @@ public class ProfilingMonitorLabelProvider extends LabelProvider {
 	 * 
 	 * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
 	 */
+	@Override
 	public Image getImage(Object element) {
 		if (element instanceof ProfilingMonitorElement) {
 			return fProcessImage;
@@ -49,6 +50,7 @@ public class ProfilingMonitorLabelProvider extends LabelProvider {
 	 * 
 	 * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
 	 */
+	@Override
 	public String getText(Object element) {
 		if (element instanceof ProfilingMonitorElement) {
 			ProfilerDB db = ((ProfilingMonitorElement) element).getProfilerDB();

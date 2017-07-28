@@ -114,7 +114,7 @@ public class PHPServerUIPlugin extends AbstractUIPlugin {
 	public static ImageDescriptor getImageDescriptor(String key) {
 		try {
 			getDefault().getImageRegistry();
-			return (ImageDescriptor) getDefault().imageDescriptors.get(key);
+			return getDefault().imageDescriptors.get(key);
 		} catch (Exception e) {
 			return null;
 		}

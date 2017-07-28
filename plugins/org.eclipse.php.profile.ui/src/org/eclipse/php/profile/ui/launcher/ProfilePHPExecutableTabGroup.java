@@ -29,8 +29,9 @@ public class ProfilePHPExecutableTabGroup
 	 * org.eclipse.debug.ui.ILaunchConfigurationTabGroup#createTabs(org.eclipse.
 	 * debug.ui.ILaunchConfigurationDialog, java.lang.String)
 	 */
+	@Override
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
-		List<AbstractLaunchConfigurationTab> tabs = new ArrayList<AbstractLaunchConfigurationTab>();
+		List<AbstractLaunchConfigurationTab> tabs = new ArrayList<>();
 		tabs.add(new PHPExecutableLaunchTab());
 		tabs.add(new PHPExeLaunchConfigurationProfilerTab());
 		tabs.add(new CommonTab());

@@ -48,6 +48,7 @@ public class ExecutionStatisticsLabelProvider implements ITableLabelProvider {
 		fStore = ProfilerUiPlugin.getDefault().getPreferenceStore();
 	}
 
+	@Override
 	public Image getColumnImage(Object element, int columnIndex) {
 		TreeElement item = (TreeElement) element;
 		if (columnIndex == 0) {
@@ -70,6 +71,7 @@ public class ExecutionStatisticsLabelProvider implements ITableLabelProvider {
 				Double.toString(val));
 	}
 
+	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		TreeElement item = (TreeElement) element;
 		Object data = item.getData();
@@ -126,19 +128,23 @@ public class ExecutionStatisticsLabelProvider implements ITableLabelProvider {
 		return null;
 	}
 
+	@Override
 	public void addListener(ILabelProviderListener listener) {
 		// TODO Auto-generated method stub
 	}
 
+	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
 	}
 
+	@Override
 	public boolean isLabelProperty(Object element, String property) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	@Override
 	public void removeListener(ILabelProviderListener listener) {
 		// TODO Auto-generated method stub
 	}

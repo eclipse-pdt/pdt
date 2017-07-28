@@ -18,8 +18,8 @@ import java.util.List;
  */
 public class ProfileSessionsManager {
 
-	private static List<ProfilerDB> fProfileDBs = new ArrayList<ProfilerDB>();
-	private static List<IProfileSessionListener> fProfileSessionListeners = new ArrayList<IProfileSessionListener>();
+	private static List<ProfilerDB> fProfileDBs = new ArrayList<>();
+	private static List<IProfileSessionListener> fProfileSessionListeners = new ArrayList<>();
 	private static ProfilerDB fCurrent;
 
 	/**
@@ -30,13 +30,13 @@ public class ProfileSessionsManager {
 	 */
 	public static void addSession(ProfilerDB db) {
 		for (int i = 0; i < fProfileDBs.size(); ++i) {
-			if (((ProfilerDB) fProfileDBs.get(i)).getProfileDate().equals(db.getProfileDate())) {
+			if (fProfileDBs.get(i).getProfileDate().equals(db.getProfileDate())) {
 				return;
 			}
 		}
 		fProfileDBs.add(db);
 		for (int i = 0; i < fProfileSessionListeners.size(); ++i) {
-			((IProfileSessionListener) fProfileSessionListeners.get(i)).profileSessionAdded(db);
+			fProfileSessionListeners.get(i).profileSessionAdded(db);
 		}
 		setCurrent(db);
 	}
@@ -51,11 +51,11 @@ public class ProfileSessionsManager {
 		if (fProfileDBs.contains(db)) {
 			fProfileDBs.remove(db);
 			for (int i = 0; i < fProfileSessionListeners.size(); ++i) {
-				((IProfileSessionListener) fProfileSessionListeners.get(i)).profileSessionRemoved(db);
+				fProfileSessionListeners.get(i).profileSessionRemoved(db);
 			}
 			if (db == fCurrent) {
 				if (fProfileDBs.size() > 0) {
-					setCurrent((ProfilerDB) fProfileDBs.get(fProfileDBs.size() - 1));
+					setCurrent(fProfileDBs.get(fProfileDBs.size() - 1));
 				} else {
 					setCurrent(null);
 				}
@@ -69,7 +69,7 @@ public class ProfileSessionsManager {
 	 * @return ProfilerDB[] profile sessions
 	 */
 	public static ProfilerDB[] getSessions() {
-		return (ProfilerDB[]) fProfileDBs.toArray(new ProfilerDB[fProfileDBs.size()]);
+		return fProfileDBs.toArray(new ProfilerDB[fProfileDBs.size()]);
 	}
 
 	/**
@@ -115,7 +115,7 @@ public class ProfileSessionsManager {
 		if (fCurrent != profileDB) {
 			fCurrent = profileDB;
 			for (int i = 0; i < fProfileSessionListeners.size(); ++i) {
-				((IProfileSessionListener) fProfileSessionListeners.get(i)).currentSessionChanged(fCurrent);
+				fProfileSessionListeners.get(i).currentSessionChanged(fCurrent);
 			}
 		}
 	}
