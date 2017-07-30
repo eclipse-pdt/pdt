@@ -669,10 +669,11 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 			if (typResource != null) {
 				IPath relativePath = typResource.getFullPath().makeRelativeTo(typResource.getProject().getFullPath());
 				fTestFileLabel.setText(relativePath.toPortableString());
+				validatePHPProject(typResource.getProject());
 			} else {
 				fTestFileLabel.setText(StringUtils.EMPTY);
+				validatePHPProject(null);
 			}
-			validatePHPProject(typResource.getProject());
 		}
 	}
 

@@ -96,6 +96,9 @@ public class TestSuiteWizardPage extends PHPUnitWizardPage {
 				if (element instanceof IType) {
 					type = ((IType) element);
 				}
+				if (type == null) {
+					return null;
+				}
 				try {
 
 					int flags = type.getFlags();

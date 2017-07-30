@@ -155,8 +155,8 @@ public class PHPUnitBasicLauncher {
 				throw new CoreException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), 0, null, null));
 			}
 			subMonitor.done();
+			process.setAttribute(IProcess.ATTR_CMDLINE, fileName);
 		}
-		process.setAttribute(IProcess.ATTR_CMDLINE, fileName);
 		if (CommonTab.isLaunchInBackground(configuration)) {
 			// Refresh resources after process finishes
 			/*
@@ -167,7 +167,7 @@ public class PHPUnitBasicLauncher {
 			 */
 		} else {
 			// Wait for process to exit
-			while (!process.isTerminated()) {
+			while (process != null && !process.isTerminated()) {
 				try {
 					if (monitor.isCanceled()) {
 						process.terminate();
