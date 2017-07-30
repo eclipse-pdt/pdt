@@ -229,9 +229,7 @@ public class MarkOccurrenceTests {
 		// String[] lines = pdttFile.getExpected().split("\n");
 		proposals = olderLocations(proposals);
 		boolean proposalsEqual = true;
-		if (proposals == null && starts.size() == 0) {
-			// proposalsEqual = true;
-		} else if (proposals != null && proposals.length == starts.size() / 2) {
+		if (proposals.length == starts.size() / 2) {
 			for (int i = 0; i < proposals.length; i++) {
 				if (!(proposals[i].getOffset() == starts.get(i * 2)
 						&& (proposals[i].getOffset() + proposals[i].getLength()) == starts.get(i * 2 + 1))) {

@@ -346,7 +346,7 @@ public class XMLElement {
 			return nodeValuesAreEqual(element, otherElement);
 		}
 
-		if (attrs.getLength() == otherAttrs.getLength()) {
+		if (attrs != null && otherAttrs != null && attrs.getLength() == otherAttrs.getLength()) {
 			if (attrs.getLength() == 0)
 				// Return comparison of element values if there are no
 				// attributes

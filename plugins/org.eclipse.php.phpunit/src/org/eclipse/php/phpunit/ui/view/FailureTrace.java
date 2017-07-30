@@ -98,7 +98,7 @@ public class FailureTrace implements IMenuListener {
 					methodName);
 		}
 
-		if (action.isEnabled()) {
+		if (action != null && action.isEnabled()) {
 			action.run();
 		}
 	}
