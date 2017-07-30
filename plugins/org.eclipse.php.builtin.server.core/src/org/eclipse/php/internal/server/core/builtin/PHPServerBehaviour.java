@@ -374,7 +374,9 @@ public class PHPServerBehaviour extends ServerBehaviourDelegate implements IPHPS
 			// ignore
 		} finally {
 			try {
-				fin.close();
+				if (fin != null) {
+					fin.close();
+				}
 			} catch (Exception ex) {
 				// ignore
 			}
@@ -392,7 +394,9 @@ public class PHPServerBehaviour extends ServerBehaviourDelegate implements IPHPS
 			// ignore
 		} finally {
 			try {
-				fout.close();
+				if (fout != null) {
+					fout.close();
+				}
 			} catch (Exception ex) {
 				// ignore
 			}

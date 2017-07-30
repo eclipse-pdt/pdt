@@ -642,9 +642,11 @@ private void printSummary(/*PerformanceResults performanceResults*/) {
 	} catch (Exception e) {
 		e.printStackTrace();
 	} finally {
-		stream.print("</table></body></html>\n");
-		stream.flush();
-		stream.close();
+		if (stream != null) {
+			stream.print("</table></body></html>\n");
+			stream.flush();
+			stream.close();
+		}
 	}
 	if (this.printStream != null) this.printStream.println("done in "+(System.currentTimeMillis()-start)+"ms");
 }

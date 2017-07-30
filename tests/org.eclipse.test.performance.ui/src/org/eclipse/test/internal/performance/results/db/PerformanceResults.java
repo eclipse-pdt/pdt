@@ -612,7 +612,9 @@ void readLocalFile(File dir) {
 		println("	!!! "+dataFile+" should be deleted as it contained invalid data !!!"); //$NON-NLS-1$ //$NON-NLS-2$
 	} finally {
 		try {
-	        stream.close();
+			if (stream != null) {
+	        		stream.close();
+			}
         } catch (IOException e) {
 	        // nothing else to do!
         }

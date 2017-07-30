@@ -143,7 +143,7 @@ public List<Object> getConfigNumbers(String configName, boolean fingerprints, Li
 				if (!fingerprints || scenarioResults.hasSummary()) {
 					ConfigResults configResults = scenarioResults.getConfigResults(configName);
 					BuildResults buildResults = configResults == null ? null : configResults.getBuildResults(buildName);
-					if (buildResults == null) {
+					if (buildResults == null || configResults == null) {
 						// no result for this scenario in this build
 						line.add(NO_BUILD_RESULTS);
 					} else {
@@ -320,7 +320,9 @@ String readLocalFile(File dir, List<?> scenarios) throws FileNotFoundException {
 		println("	!!! "+dataFile+" should be deleted as it contained invalid data !!!"); //$NON-NLS-1$ //$NON-NLS-2$
 	} finally {
 		try {
-	        stream.close();
+			if (stream != null) {
+				stream.close();
+			}
         } catch (IOException e) {
 	        // nothing else to do!
         }
