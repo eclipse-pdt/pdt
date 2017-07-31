@@ -1006,6 +1006,7 @@ private void internalQueryAllVariations(String configPattern) {
 	}
 }
 
+@SuppressWarnings("null")
 private Map<String, List<ScenarioResults>> internalQueryBuildScenarios(String scenarioPattern, String buildName) {
 	if (this.fSQL == null) return null;
 	long start = System.currentTimeMillis();

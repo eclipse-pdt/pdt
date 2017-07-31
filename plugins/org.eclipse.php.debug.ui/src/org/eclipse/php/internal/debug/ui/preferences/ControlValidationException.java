@@ -13,4 +13,5 @@ package org.eclipse.php.internal.debug.ui.preferences;
 
 public class ControlValidationException extends Exception {
 
+	private static final long serialVersionUID = 1L;
 }

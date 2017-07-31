@@ -27,6 +27,7 @@ abstract public class TestCaseTemplate extends TestTemplate {
 	private static final String MASTER_ELEMENT_CONSTRUCTOR = "MasterElementConstructor"; //$NON-NLS-1$
 	private static final String MASTER_ELEMENT_DEFINITION = "MasterElementDefinition"; //$NON-NLS-1$
 
+	@SuppressWarnings("null")
 	public void setMasterElement(final IModelElement masterElement, final String masterElementName,
 			final IProject project) {
 		final boolean empty = masterElement != null;

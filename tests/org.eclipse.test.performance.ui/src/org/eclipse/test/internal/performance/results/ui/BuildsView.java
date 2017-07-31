@@ -547,6 +547,7 @@ public void resetView() {
  * (non-Javadoc)
  * @see org.eclipse.test.internal.performance.results.ui.PerformancesView#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
  */
+@SuppressWarnings("null")
 @Override
 public void selectionChanged(SelectionChangedEvent event) {
 	super.selectionChanged(event);

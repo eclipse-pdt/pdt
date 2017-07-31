@@ -497,6 +497,7 @@ public void setFocus() {
  * 	- org.eclipse.jdt.core -> "JDT/Core"
  * 	- org.eclipse.pde.api.tools -> "PDE/API Tools"
  */
+@SuppressWarnings("null")
 protected void setPartName() {
 	String componentName = this.componentResultsElement.getName();
 	String partName;
