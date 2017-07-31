@@ -588,6 +588,7 @@ public class DB {
         return null;
     }
     
+    @SuppressWarnings("null")
     private String[] internalQuerySeriesValues(Variations v, String scenarioName, String seriesKey) {
         
         boolean isCloned= false;

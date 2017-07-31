@@ -405,6 +405,7 @@ public class TestSuiteWizardPage extends PHPUnitWizardPage {
 		return elements.toArray(new IType[elements.size()]);
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	public Object init(final IStructuredSelection selection) {
 		super.init(selection);

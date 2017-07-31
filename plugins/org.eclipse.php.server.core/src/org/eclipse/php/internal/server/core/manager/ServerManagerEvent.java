@@ -23,6 +23,8 @@ import org.eclipse.php.internal.server.core.Server;
  */
 public class ServerManagerEvent extends EventObject {
 
+	private static final long serialVersionUID = 1L;
+
 	/** Server added event type */
 	public static final int MANAGER_EVENT_ADDED = 0;
 	/** Server removed event type */

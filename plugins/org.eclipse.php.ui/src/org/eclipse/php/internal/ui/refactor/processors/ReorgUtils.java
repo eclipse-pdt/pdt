@@ -54,6 +54,7 @@ public class ReorgUtils {
 		return (ISourceModule) modelElement.getAncestor(IModelElement.SOURCE_MODULE);
 	}
 
+	@Deprecated
 	public static boolean isDeletedFromEditor(IModelElement elem) {
 		if (!isInsideSourceModule(elem))
 			return false;
