@@ -54,6 +54,7 @@ public class XMLElement {
 		NodeList nodelist = xmlElement.getElementsByTagName(s);
 		int i = nodelist == null ? 0 : nodelist.getLength();
 		for (int j = 0; j < i; j++) {
+			@SuppressWarnings("null")
 			Node node = nodelist.item(j);
 			String s1 = node.getNodeName().trim();
 			if (s1.equals(s))
@@ -67,6 +68,7 @@ public class XMLElement {
 		NodeList nodelist = xmlElement.getElementsByTagName(s);
 		int j = nodelist == null ? 0 : nodelist.getLength();
 		for (int k = 0; k < j; k++) {
+			@SuppressWarnings("null")
 			Node node = nodelist.item(k);
 			String s1 = node.getNodeName().trim();
 			if (s1.equals(s) && k == i)
@@ -122,6 +124,7 @@ public class XMLElement {
 		NodeList nodelist = xmlElement.getElementsByTagName(s);
 		int i = nodelist == null ? 0 : nodelist.getLength();
 		for (int j = 0; j < i; j++) {
+			@SuppressWarnings("null")
 			Node node = nodelist.item(j);
 			String s1 = node.getNodeName().trim();
 			if (s1.equals(s))
@@ -156,6 +159,7 @@ public class XMLElement {
 		NodeList nodelist = xmlElement.getElementsByTagName(s);
 		int j = nodelist == null ? 0 : nodelist.getLength();
 		for (int k = 0; k < j; k++) {
+			@SuppressWarnings("null")
 			Node node = nodelist.item(k);
 			String s1 = node.getNodeName().trim();
 			if (s1.equals(s) && k == i) {
@@ -216,6 +220,7 @@ public class XMLElement {
 		return i;
 	}
 
+	@SuppressWarnings("null")
 	public void updateElementValue(String s) {
 		try {
 			xmlElement.setNodeValue(s);
@@ -248,6 +253,7 @@ public class XMLElement {
 		NodeList nodelist = xmlElement.getChildNodes();
 		int len = nodelist == null ? 0 : nodelist.getLength();
 		for (int i = 0; i < len; i++) {
+			@SuppressWarnings("null")
 			Node node = nodelist.item(i);
 			destination.importNode(node, true);
 		}

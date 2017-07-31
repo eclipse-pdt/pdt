@@ -136,6 +136,7 @@ private void printColumnsTitle(int size, PerformanceResults performanceResults) 
 /*
  * Print the scenario statistics value for the given configuration.
  */
+@SuppressWarnings("null")
 private void printConfigStats(ScenarioResults scenarioResults, String config) {
 	ConfigResults configResults = scenarioResults.getConfigResults(config);
 	if (configResults == null || !configResults.isValid()) {

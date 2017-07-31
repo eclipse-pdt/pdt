@@ -173,10 +173,11 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements 
 				Identifier identifier = null;
 				if (staticAccess.getClassName() instanceof Identifier) {
 					identifier = (Identifier) staticAccess.getClassName();
+					variable = fetchStaticMember(identifier, nodeName);
 				} else if (staticAccess.getClassName() instanceof VariableBase) {
 					identifier = (Identifier) var.getName();
+					variable = fetchStaticMember(identifier, nodeName);
 				}
-				variable = fetchStaticMember(identifier, nodeName);
 			} else if (node.getParent() instanceof ConstantDeclaration) {
 				String nodeName = ((Identifier) node).getName();
 				IField field = (IField) sourceModule.getElementAt(node.getStart());

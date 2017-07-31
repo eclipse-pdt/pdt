@@ -201,14 +201,16 @@ public class ServerCompositeFragment extends CompositeFragment {
 						IMessageProvider.ERROR);
 			}
 		}
-		try {
-			URL url = new URL(urlStr);
-			if (url.getPath() != null && url.getPath().length() != 0) {
+		if (urlStr != null) {
+			try {
+				URL url = new URL(urlStr);
+				if (url.getPath() != null && url.getPath().length() != 0) {
+					urlStr = null;
+				}
+			} catch (MalformedURLException e1) {
+				// in case of Malformed URL - reset
 				urlStr = null;
 			}
-		} catch (MalformedURLException e1) {
-			// in case of Malformed URL - reset
-			urlStr = null;
 		}
 		if (urlStr == null || urlStr.equals("")) { //$NON-NLS-1$
 			setMessage(PHPServerUIMessages.getString("ServerCompositeFragment.enterValidURL"), IMessageProvider.ERROR); //$NON-NLS-1$

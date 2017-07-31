@@ -129,14 +129,10 @@ public class FormatterTests {
 			// apply configuration to the formatter configuration
 			// manager
 			String abcolutXmlFilePath = null;
-			try {
-				URL url = FileLocator.find(getContext(), new Path(xmlFile), null);
-				URL resolved = FileLocator.resolve(url);
-				IPath path = Path.fromOSString(resolved.getFile());
-				abcolutXmlFilePath = path.toString();
-			} catch (Exception e) {
-				Logger.logException(e);
-			}
+			URL url = FileLocator.find(getContext(), new Path(xmlFile), null);
+			URL resolved = FileLocator.resolve(url);
+			IPath path = Path.fromOSString(resolved.getFile());
+			abcolutXmlFilePath = path.toString();
 			final File file = new File(abcolutXmlFilePath);
 			assertTrue("Formatter Configuration Not Found " + file.toString(), file.exists());
 			List<Profile> profiles = null;

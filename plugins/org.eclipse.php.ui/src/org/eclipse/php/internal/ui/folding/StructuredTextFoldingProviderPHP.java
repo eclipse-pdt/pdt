@@ -446,11 +446,9 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 				if (shouldIgnoreDelta(e.getDelta().getElement(), delta))
 					return;
 
-				fUpdatingCount++;
 				try {
 					update(createContext(false));
 				} finally {
-					fUpdatingCount--;
 				}
 			}
 		}
@@ -798,7 +796,6 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	/** Comment filter, matches comments. */
 	private final Filter fCommentFilter = new CommentFilter();
 
-	private volatile int fUpdatingCount = 0;
 	private PHPStructuredTextViewer viewer;
 	private IDocument fDocument;
 	/**
@@ -1026,11 +1023,9 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 			}
 		}
 
-		fUpdatingCount++;
 		try {
 			update(createInitialContext());
 		} finally {
-			fUpdatingCount--;
 		}
 
 	}
