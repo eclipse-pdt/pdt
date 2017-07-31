@@ -237,6 +237,7 @@ public class XMLUtil {
 		StringBuffer stringbuffer = new StringBuffer();
 		int i = s == null ? 0 : s.length();
 		for (int j = 0; j < i; j++) {
+			@SuppressWarnings("null")
 			char c = s.charAt(j);
 			switch (c) {
 			case 60: /* '<' */

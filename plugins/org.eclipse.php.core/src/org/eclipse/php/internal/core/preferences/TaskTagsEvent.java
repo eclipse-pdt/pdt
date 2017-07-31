@@ -28,6 +28,8 @@ import org.eclipse.wst.sse.core.internal.provisional.tasks.TaskTag;
  */
 public class TaskTagsEvent extends EventObject {
 
+	private static final long serialVersionUID = 1L;
+
 	@NonNull
 	private TaskTag[] tags;
 	private IProject project;

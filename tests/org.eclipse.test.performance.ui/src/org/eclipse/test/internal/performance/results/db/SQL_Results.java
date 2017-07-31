@@ -242,6 +242,7 @@ ResultSet queryScenarioDataPoints(String config, int scenarioID) throws SQLExcep
  * @return Set of the query result
  * @throws SQLException
  */
+@SuppressWarnings("null")
 ResultSet queryScenarioSummaries(int scenarioID, String config, String[] builds) throws SQLException {
 	int length = builds==null ? 0 : builds.length;
 	String buildPattern;

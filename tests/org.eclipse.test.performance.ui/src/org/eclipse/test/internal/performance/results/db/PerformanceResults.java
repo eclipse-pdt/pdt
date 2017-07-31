@@ -791,6 +791,7 @@ private void setDefaults() {
  * @param monitor The progress monitor
  * @return All known builds
  */
+@SuppressWarnings("null")
 public String[] updateBuilds(String[] builds, boolean force, File dataDir, IProgressMonitor monitor) {
 
 	// Print title
