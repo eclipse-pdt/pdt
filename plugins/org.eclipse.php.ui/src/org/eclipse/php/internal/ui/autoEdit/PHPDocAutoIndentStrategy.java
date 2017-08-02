@@ -308,8 +308,11 @@ public class PHPDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 				comment = createDefaultComment(lineDelimiter);
 			}
 		} catch (CoreException e) {
-			comment = createDefaultComment(lineDelimiter);
 			Logger.logException(e);
+		}
+
+		if (comment == null) {
+			comment = createDefaultComment(lineDelimiter);
 		}
 
 		return indentPattern(comment, indentation, lineDelimiter);
@@ -389,7 +392,7 @@ public class PHPDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	}
 
 	private String createTypeTags(IDocument document, DocumentCommand command, String indentation, String lineDelimiter,
-			IType type) throws CoreException, BadLocationException {
+			IType type) throws CoreException {
 		String comment = createTypeComment(type, lineDelimiter);
 		if (comment != null) {
 			comment = comment.trim();
@@ -399,7 +402,7 @@ public class PHPDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	}
 
 	private String creatFieldTags(IDocument document, DocumentCommand command, String indentation, String lineDelimiter,
-			IField field) throws CoreException, BadLocationException {
+			IField field) throws CoreException {
 		String comment = createFieldComment(field, lineDelimiter);
 		if (comment != null) {
 			comment = comment.trim();
@@ -409,7 +412,7 @@ public class PHPDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	}
 
 	private String createMethodTags(IDocument document, DocumentCommand command, String indentation,
-			String lineDelimiter, IMethod method) throws CoreException, BadLocationException {
+			String lineDelimiter, IMethod method) throws CoreException {
 		// IMethod inheritedMethod = getInheritedMethod(method);
 		String comment = createMethodComment(method, lineDelimiter);// CodeGeneration.getMethodComment(method,
 																	// inheritedMethod,
