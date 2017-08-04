@@ -305,7 +305,7 @@ public class ASTNodeLabels {
 		if (getFlag(flags, M_POST_QUALIFIED)) {
 			buf.append(CONCAT_STRING);
 			ASTNode container = method.getParent().getParent();
-			assert container.getType() == ASTNode.CLASS_DECLARATION
+			assert container == null || container.getType() == ASTNode.CLASS_DECLARATION
 					|| container.getType() == ASTNode.INTERFACE_DECLARATION;
 			TypeDeclaration declaration = (TypeDeclaration) container;
 			if (declaration != null) {
@@ -338,7 +338,7 @@ public class ASTNodeLabels {
 		if (getFlag(flags, F_POST_QUALIFIED)) {
 			buf.append(CONCAT_STRING);
 			ASTNode container = field.getParent().getParent();
-			assert container.getType() == ASTNode.CLASS_DECLARATION
+			assert container == null || container.getType() == ASTNode.CLASS_DECLARATION
 					|| container.getType() == ASTNode.INTERFACE_DECLARATION;
 			TypeDeclaration declaration = (TypeDeclaration) container;
 			if (declaration != null) {

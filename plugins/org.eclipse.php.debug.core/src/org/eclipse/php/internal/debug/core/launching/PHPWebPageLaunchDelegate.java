@@ -359,11 +359,9 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 			// this issue and terminate the launch.
 			IDebugTarget dummyDebugTarget = new DummyDebugTarget(launch);
 			event = new DebugEvent(dummyDebugTarget, DebugEvent.TERMINATE);
-			if (launch != null) {
-				launch.addDebugTarget(dummyDebugTarget);
-				IDebugEventSetListener launchListener = (IDebugEventSetListener) launch;
-				launchListener.handleDebugEvents(new DebugEvent[] { event });
-			}
+			launch.addDebugTarget(dummyDebugTarget);
+			IDebugEventSetListener launchListener = (IDebugEventSetListener) launch;
+			launchListener.handleDebugEvents(new DebugEvent[] { event });
 		}
 		event = new DebugEvent(this, DebugEvent.TERMINATE);
 		fireEvent(event);

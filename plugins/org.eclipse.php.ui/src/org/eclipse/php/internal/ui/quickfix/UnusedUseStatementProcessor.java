@@ -67,9 +67,10 @@ public class UnusedUseStatementProcessor implements IQuickFixProcessor {
 		@Override
 		protected ASTRewrite getRewrite() throws CoreException {
 			ASTNode coveringNode = context.getCoveringNode();
-			ASTRewrite rewrite = ASTRewrite.create(coveringNode.getAST());
-			TextEditGroup editGroup = new TextEditGroup(Messages.UnusedUseStatementProcessor_RemoveImport);
+			ASTRewrite rewrite = null;
 			if (coveringNode != null) {
+				TextEditGroup editGroup = new TextEditGroup(Messages.UnusedUseStatementProcessor_RemoveImport);
+				rewrite = ASTRewrite.create(coveringNode.getAST());
 				if (coveringNode instanceof Identifier) {
 					coveringNode = coveringNode.getParent();
 				}

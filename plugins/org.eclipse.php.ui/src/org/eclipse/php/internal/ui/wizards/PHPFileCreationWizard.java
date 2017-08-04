@@ -177,9 +177,9 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 		public void createFile(Wizard wizard, final IFile file, IProgressMonitor monitor, String contents,
 				final int offset, final String editorID) throws CoreException {
 			// create a sample file
-			IContainer container = file.getParent();
 			if (file != null) {
 				if (!file.isLinked()) {
+					IContainer container = file.getParent();
 					// adopt project's/workspace's line delimiter (separator)
 					String lineSeparator = Platform.getPreferencesService().getString(Platform.PI_RUNTIME,
 							Platform.PREF_LINE_SEPARATOR, null,

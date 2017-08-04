@@ -101,7 +101,7 @@ public class UnresolvedElementsSubProcessor {
 		}
 
 		ASTRewriteCorrectionProposal proposal;
-		if (importRewrite != null && simpleName.equals(node.getName())) {
+		if (simpleName.equals(node.getName())) {
 			String[] arg = { simpleName, packName };
 			String label = Messages.format(CorrectionMessages.UnresolvedElementsSubProcessor_importtype_description,
 					arg);
@@ -119,9 +119,7 @@ public class UnresolvedElementsSubProcessor {
 			Image image = DLTKPluginImages.get(DLTKPluginImages.IMG_CORRECTION_CHANGE);
 			proposal = new ASTRewriteCorrectionProposal(label, cu, rewrite, relevance, image);
 		}
-		if (importRewrite != null) {
-			proposal.setImportRewrite(importRewrite);
-		}
+		proposal.setImportRewrite(importRewrite);
 
 		return proposal;
 	}
