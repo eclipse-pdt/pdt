@@ -859,7 +859,9 @@ namespace_body:body
 	useStatement.setEnd(endright);
 	useStatement.setStatementType(useType);
 	int elementType = getElementTypeByUseType(useType);
-	useStatement.getNamespace().setElementType(elementType);
+	for (UsePart usePart : useStatement.getParts()) {
+		usePart.getNamespace().setElementType(elementType);
+	}
 	parser.declarations.push(useStatement);
 :}
 

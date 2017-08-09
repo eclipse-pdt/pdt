@@ -34,6 +34,7 @@ import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.AbstractSourceModule;
+import org.eclipse.dltk.internal.core.ImportDeclaration;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRefElement;
 import org.eclipse.dltk.ti.IContext;
@@ -359,6 +360,15 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		}
 		// Class/Interface/Trait/Constant/Function reference:
 		else if (node instanceof TypeReference) {
+			// "use function" (see also TypeReferenceEvaluator.init()):
+			if (node instanceof FullyQualifiedReference
+					&& ((FullyQualifiedReference) node).getElementType() == FullyQualifiedReference.T_FUNCTION) {
+				IModelElement element = sourceModule.getElementAt(offset);
+				if (element instanceof ImportDeclaration) {
+					String fullyQualifiedName = ((ImportDeclaration) element).getElementName();
+					return PHPModelUtils.getFunctions(fullyQualifiedName, sourceModule, offset, cache, null);
+				}
+			}
 			TypeReference typeReference = (TypeReference) node;
 			IEvaluatedType evaluatedType = PHPTypeInferenceUtils.resolveExpression(sourceModule, node);
 			if (evaluatedType == null) {

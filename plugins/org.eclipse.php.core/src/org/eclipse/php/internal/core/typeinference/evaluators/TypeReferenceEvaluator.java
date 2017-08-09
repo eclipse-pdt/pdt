@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016 IBM Corporation and others.
+ * Copyright (c) 2009, 2016, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -246,9 +246,13 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 			int offset = typeReference.sourceStart();
 			try {
 				// for use statement, extract namespace and class name directly
-				if (sourceModule.getElementAt(offset) instanceof ImportDeclaration) {
+				IModelElement element = sourceModule.getElementAt(offset);
+				if (element instanceof ImportDeclaration) {
+					fullyQualifiedName = ((ImportDeclaration) element).getElementName();
 					String namespace = PHPModelUtils.extractNameSpaceName(fullyQualifiedName);
 					elementName = PHPModelUtils.extractElementName(fullyQualifiedName);
+					// NB: ImportDeclaration has no useful type, we have to look
+					// at the type of "typeReference"
 					if (elementType == FullyQualifiedReference.T_CONSTANT) {
 						if (namespace != null) {
 							result = new PHPNamespaceConstantType(namespace, elementName);
@@ -257,11 +261,16 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 						}
 						return new IGoal[] { new ConstantDeclarationGoal(goal.getContext(), elementName, namespace) };
 					}
-					if (namespace != null) {
-						result = new PHPClassType(namespace, elementName);
-					} else {
-						result = new PHPClassType(elementName);
+					if (elementType == FullyQualifiedReference.T_TYPE) {
+						if (namespace != null) {
+							result = new PHPClassType(namespace, elementName);
+						} else {
+							result = new PHPClassType(elementName);
+						}
 					}
+					// NB: elementType == FullyQualifiedReference.T_FUNCTION is
+					// not handled here (see also
+					// PHPSelectionEngine.internalASTResolve())
 					return IGoal.NO_GOALS;
 				}
 			} catch (ModelException e) {
