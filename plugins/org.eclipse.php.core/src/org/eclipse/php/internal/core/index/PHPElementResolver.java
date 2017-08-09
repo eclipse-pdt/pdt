@@ -18,7 +18,6 @@ import java.util.StringTokenizer;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.core.SourceRange;
 import org.eclipse.dltk.core.index2.IElementResolver;
 import org.eclipse.dltk.internal.core.*;
 import org.eclipse.php.core.compiler.IPHPModifiers;
@@ -139,8 +138,8 @@ public class PHPElementResolver implements IElementResolver {
 	 * 
 	 * @param doc
 	 *            String representation of encoded PHPDoc info
-	 * @return map of encoded information, or <code>null</code> in case PHPDoc
-	 *         info is <code>null</code>
+	 * @return map of encoded information, or <code>null</code> in case PHPDoc info
+	 *         is <code>null</code>
 	 */
 	protected static Map<String, String> decodeDocInfo(String doc) {
 		if (doc == null) {
@@ -348,19 +347,23 @@ public class PHPElementResolver implements IElementResolver {
 
 		private int flags;
 		private ISourceRange sourceRange;
-		private ISourceRange nameRange;
+		// private ISourceRange nameRange;
 		private String[] superClassNames;
-		private String doc;
+		// private String doc;
+		private INamespace namespace;
 
 		public IndexType(ModelElement parent, String name, int flags, int offset, int length, int nameOffset,
 				int nameLength, String[] superClassNames, String doc, int occurrenceCount) {
 			super(parent, name);
 			this.flags = flags;
 			this.sourceRange = new SourceRange(offset, length);
-			this.nameRange = new SourceRange(nameOffset, nameLength);
+			// this.nameRange = new SourceRange(nameOffset, nameLength);
 			this.superClassNames = superClassNames;
-			this.doc = doc;
+			// this.doc = doc;
 			this.occurrenceCount = occurrenceCount;
+			if (parent.getElementType() == IModelElement.TYPE) {
+				this.namespace = new SourceNamespace(parent.getElementName().split("\\\\")); //$NON-NLS-1$
+			}
 		}
 
 		@Override
@@ -395,7 +398,7 @@ public class PHPElementResolver implements IElementResolver {
 
 		@Override
 		public INamespace getNamespace() throws ModelException {
-			return null;
+			return namespace;
 		}
 
 	}

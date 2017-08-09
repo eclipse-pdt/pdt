@@ -193,6 +193,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				}
 			}
 			fLastNamespace = null; // there are no nested namespaces
+			fRequestor.exitNamespace();
 			if (namespaceDecl.isGlobal()) {
 				return true;
 			}
@@ -576,6 +577,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			NamespaceDeclaration namespaceDecl = (NamespaceDeclaration) type;
 			fLastNamespace = namespaceDecl;
 			fLastUseParts.clear();
+			fRequestor.enterNamespace(namespaceDecl.getName().split("\\\\"));
 			if (namespaceDecl.isGlobal()) {
 				return true;
 			}
