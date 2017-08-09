@@ -9,7 +9,13 @@
    <feature url="features/org.eclipse.php.composer_5.1.0.qualifier.jar" id="org.eclipse.php.composer" version="5.1.0.qualifier">
       <category name="org.eclipse.php.category"/>
    </feature>
+   <feature url="features/org.eclipse.php.phpunit.feature_5.1.0.qualifier.jar" id="org.eclipse.php.phpunit.feature" version="5.1.0.qualifier">
+      <category name="org.eclipse.php.category"/>
+   </feature>
    <feature url="features/org.eclipse.php.profiler_5.1.0.qualifier.jar" id="org.eclipse.php.profiler" version="5.1.0.qualifier">
+      <category name="org.eclipse.php.category"/>
+   </feature>
+   <feature url="features/org.eclipse.php.rdt.sync_5.1.0.qualifier.jar" id="org.eclipse.php.rdt.sync" version="5.1.0.qualifier">
       <category name="org.eclipse.php.category"/>
    </feature>
    <feature url="features/org.eclipse.php.test_5.1.0.qualifier.jar" id="org.eclipse.php.test" version="5.1.0.qualifier">
@@ -20,9 +26,6 @@
    </feature>
    <feature url="features/org.eclipse.php.sdk_5.1.0.qualifier.jar" id="org.eclipse.php.sdk" version="5.1.0.qualifier">
       <category name="org.eclipse.php.sdk.category"/>
-   </feature>
-   <feature url="features/org.eclipse.php.phpunit.feature_5.1.0.qualifier.jar" id="org.eclipse.php.phpunit.feature" version="5.1.0.qualifier">
-      <category name="org.eclipse.php.category"/>
    </feature>
    <category-def name="org.eclipse.php.category" label="PHP Development Tools"/>
    <category-def name="org.eclipse.php.sdk.category" label="PHP Development Tools (SDK)"/>
