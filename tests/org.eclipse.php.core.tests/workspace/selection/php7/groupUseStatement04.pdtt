@@ -1,0 +1,32 @@
+--TEST--
+Bug 519914 - Group Use declarations not recognized
+--FILE--
+<?php
+namespace Foo\Bar\X1
+{
+
+    class MyClass
+    {
+    }
+
+    function myFunction()
+    {
+    }
+
+    const MyConst = 10;
+}
+namespace Foo\Bar\X2
+{
+
+    use function Foo\Bar\X1\ {
+        |myFunction| as myAlias1
+    };
+    use const Foo\Bar\X1\ {
+        MyConst as myAlias2
+    };
+    use Foo\Bar\X1\ {
+        MyClass as myAlias3
+    };
+}
+--EXPECT--
+method(myFunction)

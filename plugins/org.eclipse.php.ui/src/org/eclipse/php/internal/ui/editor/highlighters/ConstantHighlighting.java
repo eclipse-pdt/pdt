@@ -80,7 +80,7 @@ public class ConstantHighlighting extends AbstractSemanticHighlighting {
 		public boolean visit(NamespaceName namespace) {
 			ASTNode parent = namespace.getParent();
 			if (!(parent instanceof NamespaceDeclaration) && !(parent instanceof StaticDispatch)
-					&& !(parent instanceof FunctionName)) {
+					&& !(parent instanceof FunctionName) && !(parent instanceof UseStatement)) {
 				List<Identifier> segs = namespace.segments();
 				if (segs.size() > 0) {
 					Identifier c = segs.get(segs.size() - 1);
