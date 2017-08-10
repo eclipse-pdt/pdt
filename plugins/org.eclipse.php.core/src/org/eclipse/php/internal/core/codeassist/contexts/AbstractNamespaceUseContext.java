@@ -63,6 +63,13 @@ public class AbstractNamespaceUseContext extends UseStatementContext {
 		if (!nsName.contains(NamespaceReference.NAMESPACE_DELIMITER)) {
 			return false;
 		}
+		// http://php.net/manual/en/language.namespaces.importing.php
+		// "Note that for namespaced names (fully qualified
+		// namespace names containing namespace separator, such as
+		// Foo\Bar as opposed to global names that do not, such as
+		// FooBar), the leading backslash is unnecessary and not
+		// recommended, as import names must be fully qualified, and
+		// are not processed relative to the current namespace."
 		if (!nsName.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
 			nsName = NamespaceReference.NAMESPACE_DELIMITER + nsName;
 		}

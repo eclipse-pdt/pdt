@@ -249,8 +249,18 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 				IModelElement element = sourceModule.getElementAt(offset);
 				if (element instanceof ImportDeclaration) {
 					fullyQualifiedName = ((ImportDeclaration) element).getElementName();
-					String namespace = PHPModelUtils.extractNameSpaceName(fullyQualifiedName);
 					elementName = PHPModelUtils.extractElementName(fullyQualifiedName);
+					String namespace = PHPModelUtils.extractNameSpaceName(fullyQualifiedName);
+					// http://php.net/manual/en/language.namespaces.importing.php
+					// "Note that for namespaced names (fully qualified
+					// namespace names containing namespace separator, such as
+					// Foo\Bar as opposed to global names that do not, such as
+					// FooBar), the leading backslash is unnecessary and not
+					// recommended, as import names must be fully qualified, and
+					// are not processed relative to the current namespace."
+					if (namespace != null && !namespace.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
+						namespace = NamespaceReference.NAMESPACE_DELIMITER + namespace;
+					}
 					// NB: ImportDeclaration has no useful type, we have to look
 					// at the type of "typeReference"
 					if (elementType == FullyQualifiedReference.T_CONSTANT) {
