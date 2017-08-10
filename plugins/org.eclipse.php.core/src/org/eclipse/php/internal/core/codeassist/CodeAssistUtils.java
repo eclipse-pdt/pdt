@@ -15,6 +15,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
@@ -255,7 +256,7 @@ public class CodeAssistUtils {
 
 			modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, (ISourceModuleContext) context,
 					offset);
-			if (modelElements != null && modelElements.length > 0) {
+			if (ArrayUtils.isNotEmpty(modelElements)) {
 				return modelElements;
 			}
 		}
@@ -276,8 +277,8 @@ public class CodeAssistUtils {
 	}
 
 	/**
-	 * The "self" function needs to be added only if we are in a class method
-	 * and it is not an abstract class or an interface
+	 * The "self" function needs to be added only if we are in a class method and it
+	 * is not an abstract class or an interface
 	 * 
 	 * @param fileData
 	 * @param offset
@@ -508,7 +509,7 @@ public class CodeAssistUtils {
 					for (IEvaluatedType possibleType : possibleTypes) {
 						IType[] tmpArray = PHPTypeInferenceUtils.getModelElements(possibleType,
 								(ISourceModuleContext) context, offset, (IModelAccessCache) null);
-						if (tmpArray != null && tmpArray.length > 0) {
+						if (ArrayUtils.isNotEmpty(tmpArray)) {
 							tmpList.addAll(Arrays.asList(tmpArray));
 						}
 					}
@@ -710,7 +711,7 @@ public class CodeAssistUtils {
 				} else {
 					IType[] types = getFunctionReturnType(null, functionName, USE_PHPDOC, sourceModule, offset,
 							argNames);
-					if (types != null && types.length > 0) {
+					if (ArrayUtils.isNotEmpty(types)) {
 						returnTypes.addAll(Arrays.asList(types));
 					} else {
 						IType namespace = PHPModelUtils.getCurrentNamespace(sourceModule, offset);

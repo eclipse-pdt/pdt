@@ -13,6 +13,7 @@ package org.eclipse.php.core.ast.nodes;
 
 import java.util.*;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.ast.Modifiers;
@@ -47,7 +48,7 @@ public class TypeBinding implements ITypeBinding {
 	public TypeBinding(BindingResolver resolver, IEvaluatedType type, IModelElement[] elements) {
 		this.resolver = resolver;
 		this.type = type;
-		if (elements != null && elements.length > 0) {
+		if (ArrayUtils.isNotEmpty(elements)) {
 			final int length = elements.length;
 			this.elements = new IModelElement[length];
 			System.arraycopy(elements, 0, this.elements, 0, length);
@@ -78,8 +79,8 @@ public class TypeBinding implements ITypeBinding {
 	 * 
 	 * <p>
 	 * If the receiver is an array binding, then the resulting dimension is the
-	 * given dimension plus the dimension of the receiver. Otherwise the
-	 * resulting dimension is the given dimension.
+	 * given dimension plus the dimension of the receiver. Otherwise the resulting
+	 * dimension is the given dimension.
 	 * </p>
 	 * 
 	 * @param dimension
@@ -89,8 +90,8 @@ public class TypeBinding implements ITypeBinding {
 	 *             :
 	 *             <ul>
 	 *             <li>if the receiver represents the void type</li>
-	 *             <li>if the resulting dimensions is lower than one or greater
-	 *             than 255</li>
+	 *             <li>if the resulting dimensions is lower than one or greater than
+	 *             255</li>
 	 *             </ul>
 	 */
 	@Override
@@ -100,15 +101,15 @@ public class TypeBinding implements ITypeBinding {
 	}
 
 	/**
-	 * Returns the binary name of this type binding. The binary name of a class
-	 * is defined in the Java Language Specification 3rd edition, section 13.1.
+	 * Returns the binary name of this type binding. The binary name of a class is
+	 * defined in the Java Language Specification 3rd edition, section 13.1.
 	 * <p>
-	 * Note that in some cases, the binary name may be unavailable. This may
-	 * happen, for example, for a local type declared in unreachable code.
+	 * Note that in some cases, the binary name may be unavailable. This may happen,
+	 * for example, for a local type declared in unreachable code.
 	 * </p>
 	 * 
-	 * @return the binary name of this type, or <code>null</code> if the binary
-	 *         name is unknown
+	 * @return the binary name of this type, or <code>null</code> if the binary name
+	 *         is unknown
 	 */
 	@Override
 	public String getBinaryName() {
@@ -119,15 +120,15 @@ public class TypeBinding implements ITypeBinding {
 	}
 
 	/**
-	 * Returns the binding representing the component type of this array type,
-	 * or <code>null</code> if this is not an array type binding. The component
-	 * type of an array might be an array type.
+	 * Returns the binding representing the component type of this array type, or
+	 * <code>null</code> if this is not an array type binding. The component type of
+	 * an array might be an array type.
 	 * <p>
 	 * This is subject to change before 3.2 release.
 	 * </p>
 	 * 
-	 * @return the component type binding, or <code>null</code> if this is not
-	 *         an array type
+	 * @return the component type binding, or <code>null</code> if this is not an
+	 *         array type
 	 */
 	@Override
 	public ITypeBinding getComponentType() {
@@ -143,27 +144,26 @@ public class TypeBinding implements ITypeBinding {
 	}
 
 	/**
-	 * Returns a list of bindings representing all the fields declared as
-	 * members of this class or interface type.
+	 * Returns a list of bindings representing all the fields declared as members of
+	 * this class or interface type.
 	 * 
 	 * <p>
 	 * These include public, protected, default (package-private) access, and
-	 * private fields declared by the class, but excludes inherited fields.
-	 * Fields from binary types that reference unresolvable types may not be
-	 * included.
+	 * private fields declared by the class, but excludes inherited fields. Fields
+	 * from binary types that reference unresolvable types may not be included.
 	 * </p>
 	 * 
 	 * <p>
-	 * Returns an empty list if the class or interface declares no fields, and
-	 * for other kinds of type bindings that do not directly have members.
+	 * Returns an empty list if the class or interface declares no fields, and for
+	 * other kinds of type bindings that do not directly have members.
 	 * </p>
 	 * 
 	 * <p>
 	 * The resulting bindings are in no particular order.
 	 * </p>
 	 * 
-	 * @return the list of bindings for the field members of this type, or the
-	 *         empty list if this type does not have field members
+	 * @return the list of bindings for the field members of this type, or the empty
+	 *         list if this type does not have field members
 	 */
 	@Override
 	public IVariableBinding[] getDeclaredFields() {
@@ -205,20 +205,18 @@ public class TypeBinding implements ITypeBinding {
 	 * <p>
 	 * These include public, protected, default (package-private) access, and
 	 * private methods Synthetic methods and constructors may or may not be
-	 * included. Returns an empty list if the class or interface type declares
-	 * no methods or constructors, if the annotation type declares no members,
-	 * or if this type binding represents some other kind of type binding.
-	 * Methods from binary types that reference unresolvable types may not be
-	 * included.
+	 * included. Returns an empty list if the class or interface type declares no
+	 * methods or constructors, if the annotation type declares no members, or if
+	 * this type binding represents some other kind of type binding. Methods from
+	 * binary types that reference unresolvable types may not be included.
 	 * </p>
 	 * <p>
 	 * The resulting bindings are in no particular order.
 	 * </p>
 	 * 
-	 * @return the list of method bindings for the methods and constructors
-	 *         declared by this class, interface, or annotation type, or the
-	 *         empty list if this type does not declare any methods or
-	 *         constructors
+	 * @return the list of method bindings for the methods and constructors declared
+	 *         by this class, interface, or annotation type, or the empty list if
+	 *         this type does not declare any methods or constructors
 	 */
 	@Override
 	public IMethodBinding[] getDeclaredMethods() {
@@ -256,12 +254,11 @@ public class TypeBinding implements ITypeBinding {
 
 	/**
 	 * Returns the declared modifiers for this class or interface binding as
-	 * specified in the original source declaration of the class or interface.
-	 * The result may not correspond to the modifiers in the compiled binary,
-	 * since the compiler may change them (in particular, for inner class
-	 * emulation). The <code>getModifiers</code> method should be used if the
-	 * compiled modifiers are needed. Returns -1 if this type does not represent
-	 * a class or interface.
+	 * specified in the original source declaration of the class or interface. The
+	 * result may not correspond to the modifiers in the compiled binary, since the
+	 * compiler may change them (in particular, for inner class emulation). The
+	 * <code>getModifiers</code> method should be used if the compiled modifiers are
+	 * needed. Returns -1 if this type does not represent a class or interface.
 	 * 
 	 * @return the bit-wise or of <code>Modifiers</code> constants
 	 * @see Modifiers
@@ -275,11 +272,11 @@ public class TypeBinding implements ITypeBinding {
 	}
 
 	/**
-	 * Returns the dimensionality of this array type, or <code>0</code> if this
-	 * is not an array type binding.
+	 * Returns the dimensionality of this array type, or <code>0</code> if this is
+	 * not an array type binding.
 	 * 
-	 * @return the number of dimension of this array type binding, or
-	 *         <code>0</code> if this is not an array type
+	 * @return the number of dimension of this array type binding, or <code>0</code>
+	 *         if this is not an array type
 	 */
 	@Override
 	public int getDimensions() {
@@ -289,8 +286,8 @@ public class TypeBinding implements ITypeBinding {
 
 	/**
 	 * Returns the binding representing the element type of this array type, or
-	 * <code>null</code> if this is not an array type binding. The element type
-	 * of an array is never itself an array type.
+	 * <code>null</code> if this is not an array type binding. The element type of
+	 * an array is never itself an array type.
 	 * 
 	 * @return the element type binding, or <code>null</code> if this is not an
 	 *         array type
@@ -305,34 +302,32 @@ public class TypeBinding implements ITypeBinding {
 	}
 
 	/**
-	 * Returns a list of type bindings representing the direct superinterfaces
-	 * of the class, interface, or enum type represented by this type binding.
+	 * Returns a list of type bindings representing the direct superinterfaces of
+	 * the class, interface, or enum type represented by this type binding.
 	 * <p>
-	 * If this type binding represents a class or enum type, the return value is
-	 * an array containing type bindings representing all interfaces directly
-	 * implemented by this class. The number and order of the interface objects
-	 * in the array corresponds to the number and order of the interface names
-	 * in the <code>implements</code> clause of the original declaration of this
-	 * type.
+	 * If this type binding represents a class or enum type, the return value is an
+	 * array containing type bindings representing all interfaces directly
+	 * implemented by this class. The number and order of the interface objects in
+	 * the array corresponds to the number and order of the interface names in the
+	 * <code>implements</code> clause of the original declaration of this type.
 	 * </p>
 	 * <p>
 	 * If this type binding represents an interface, the array contains type
-	 * bindings representing all interfaces directly extended by this interface.
-	 * The number and order of the interface objects in the array corresponds to
-	 * the number and order of the interface names in the <code>extends</code>
-	 * clause of the original declaration of this interface.
+	 * bindings representing all interfaces directly extended by this interface. The
+	 * number and order of the interface objects in the array corresponds to the
+	 * number and order of the interface names in the <code>extends</code> clause of
+	 * the original declaration of this interface.
 	 * </p>
 	 * <p>
-	 * If the class or enum implements no interfaces, or the interface extends
-	 * no interfaces, or if this type binding represents an array type, a
-	 * primitive type, the null type, a type variable, an annotation type, a
-	 * wildcard type, or a capture binding, this method returns an array of
-	 * length 0.
+	 * If the class or enum implements no interfaces, or the interface extends no
+	 * interfaces, or if this type binding represents an array type, a primitive
+	 * type, the null type, a type variable, an annotation type, a wildcard type, or
+	 * a capture binding, this method returns an array of length 0.
 	 * </p>
 	 * 
-	 * @return the list of type bindings for the interfaces extended by this
-	 *         class or enum, or interfaces extended by this interface, or
-	 *         otherwise the empty list
+	 * @return the list of type bindings for the interfaces extended by this class
+	 *         or enum, or interfaces extended by this interface, or otherwise the
+	 *         empty list
 	 */
 	@Override
 	public ITypeBinding[] getInterfaces() {
@@ -360,44 +355,44 @@ public class TypeBinding implements ITypeBinding {
 	}
 
 	/**
-	 * Returns the unqualified name of the type represented by this binding if
-	 * it has one.
+	 * Returns the unqualified name of the type represented by this binding if it
+	 * has one.
 	 * <ul>
 	 * <li>For top-level types, member types, and local types, the name is the
 	 * simple name of the type. Example: <code>"String"</code> or
-	 * <code>"Collection"</code>. Note that the type parameters of a generic
-	 * type are not included.</li>
+	 * <code>"Collection"</code>. Note that the type parameters of a generic type
+	 * are not included.</li>
 	 * <li>For primitive types, the name is the keyword for the primitive type.
 	 * Example: <code>"int"</code>.</li>
 	 * <li>For the null type, the name is the string "null".</li>
-	 * <li>For anonymous classes, which do not have a name, this method returns
-	 * an empty string.</li>
-	 * <li>For array types, the name is the unqualified name of the component
-	 * type (as computed by this method) followed by "[]". Example:
+	 * <li>For anonymous classes, which do not have a name, this method returns an
+	 * empty string.</li>
+	 * <li>For array types, the name is the unqualified name of the component type
+	 * (as computed by this method) followed by "[]". Example:
 	 * <code>"String[]"</code>. Note that the component type is never an an
 	 * anonymous class.</li>
-	 * <li>For type variables, the name is just the simple name of the type
-	 * variable (type bounds are not included). Example: <code>"X"</code>.</li>
-	 * <li>For type bindings that correspond to particular instances of a
-	 * generic type arising from a parameterized type reference, the name is the
-	 * unqualified name of the erasure type (as computed by this method)
-	 * followed by the names (again, as computed by this method) of the type
-	 * arguments surrounded by "&lt;&gt;" and separated by ",". Example:
+	 * <li>For type variables, the name is just the simple name of the type variable
+	 * (type bounds are not included). Example: <code>"X"</code>.</li>
+	 * <li>For type bindings that correspond to particular instances of a generic
+	 * type arising from a parameterized type reference, the name is the unqualified
+	 * name of the erasure type (as computed by this method) followed by the names
+	 * (again, as computed by this method) of the type arguments surrounded by
+	 * "&lt;&gt;" and separated by ",". Example:
 	 * <code>"Collection&lt;String&gt;"</code>.</li>
-	 * <li>For type bindings that correspond to particular instances of a
-	 * generic type arising from a raw type reference, the name is the
-	 * unqualified name of the erasure type (as computed by this method).
-	 * Example: <code>"Collection"</code>.</li>
-	 * <li>For wildcard types, the name is "?" optionally followed by a single
-	 * space followed by the keyword "extends" or "super" followed a single
-	 * space followed by the name of the bound (as computed by this method) when
-	 * present. Example: <code>"? extends InputStream"</code>.</li>
+	 * <li>For type bindings that correspond to particular instances of a generic
+	 * type arising from a raw type reference, the name is the unqualified name of
+	 * the erasure type (as computed by this method). Example:
+	 * <code>"Collection"</code>.</li>
+	 * <li>For wildcard types, the name is "?" optionally followed by a single space
+	 * followed by the keyword "extends" or "super" followed a single space followed
+	 * by the name of the bound (as computed by this method) when present. Example:
+	 * <code>"? extends InputStream"</code>.</li>
 	 * <li>Capture types do not have a name. For these types, and array types
 	 * thereof, this method returns an empty string.</li>
 	 * </ul>
 	 * 
-	 * @return the unqualified name of the type represented by this binding, or
-	 *         the empty string if it has none
+	 * @return the unqualified name of the type represented by this binding, or the
+	 *         empty string if it has none
 	 * @see #getQualifiedName()
 	 */
 	@Override
@@ -417,7 +412,7 @@ public class TypeBinding implements ITypeBinding {
 
 	protected IType[] getSuperTypes() {
 		if (superTypes == null) {
-			if (elements != null && elements.length > 0) {
+			if (ArrayUtils.isNotEmpty(elements)) {
 				Set<String> superTypeNames = new HashSet<>();
 				for (IModelElement element : elements) {
 					IType type = (IType) element;
@@ -473,8 +468,8 @@ public class TypeBinding implements ITypeBinding {
 	}
 
 	/**
-	 * Returns the type binding for the superclass of the type represented by
-	 * this class binding.
+	 * Returns the type binding for the superclass of the type represented by this
+	 * class binding.
 	 * <p>
 	 * If this type binding represents any class other than the class
 	 * <code>java.lang.Object</code>, then the type binding for the direct
@@ -482,9 +477,9 @@ public class TypeBinding implements ITypeBinding {
 	 * class <code>java.lang.Object</code>, then <code>null</code> is returned.
 	 * <p>
 	 * Loops that ascend the class hierarchy need a suitable termination test.
-	 * Rather than test the superclass for <code>null</code>, it is more
-	 * transparent to check whether the class is <code>Object</code>, by
-	 * comparing whether the class binding is identical to
+	 * Rather than test the superclass for <code>null</code>, it is more transparent
+	 * to check whether the class is <code>Object</code>, by comparing whether the
+	 * class binding is identical to
 	 * <code>ast.resolveWellKnownType("java.lang.Object")</code>.
 	 * </p>
 	 * <p>
@@ -525,17 +520,17 @@ public class TypeBinding implements ITypeBinding {
 	 * Returns the binding for the type declaration corresponding to this type
 	 * binding.
 	 * <p>
-	 * For parameterized types ({@link #isParameterizedType()}) and most raw
-	 * types ({@link #isRawType()}), this method returns the binding for the
-	 * corresponding generic type.
+	 * For parameterized types ({@link #isParameterizedType()}) and most raw types
+	 * ({@link #isRawType()}), this method returns the binding for the corresponding
+	 * generic type.
 	 * </p>
 	 * <p>
 	 * For raw member types ({@link #isRawType()}, {@link #isMember()}) of a raw
 	 * declaring class, the type declaration is a generic or a non-generic type.
 	 * </p>
 	 * <p>
-	 * A different non-generic binding will be returned when one of the
-	 * declaring types/methods was parameterized.
+	 * A different non-generic binding will be returned when one of the declaring
+	 * types/methods was parameterized.
 	 * </p>
 	 * <p>
 	 * For other type bindings, this returns the same binding.
@@ -567,8 +562,8 @@ public class TypeBinding implements ITypeBinding {
 	 * Returns whether this type binding represents a class type or a recovered
 	 * binding.
 	 * 
-	 * @return <code>true</code> if this object represents a class or a
-	 *         recovered binding, and <code>false</code> otherwise
+	 * @return <code>true</code> if this object represents a class or a recovered
+	 *         binding, and <code>false</code> otherwise
 	 */
 	@Override
 	public boolean isClass() {
@@ -582,8 +577,8 @@ public class TypeBinding implements ITypeBinding {
 	 * Returns whether this type binding represents a class trait or a recovered
 	 * binding.
 	 * 
-	 * @return <code>true</code> if this object represents a trait or a
-	 *         recovered binding, and <code>false</code> otherwise
+	 * @return <code>true</code> if this object represents a trait or a recovered
+	 *         binding, and <code>false</code> otherwise
 	 */
 	@Override
 	public boolean isTrait() {
@@ -643,13 +638,13 @@ public class TypeBinding implements ITypeBinding {
 	 * Returns whether this type binding represents a primitive type.
 	 * <p>
 	 * There are nine predefined type bindings to represent the eight primitive
-	 * types and <code>void</code>. These have the same names as the primitive
-	 * types that they represent, namely boolean, byte, char, short, int, long,
-	 * float, and double, and void.
+	 * types and <code>void</code>. These have the same names as the primitive types
+	 * that they represent, namely boolean, byte, char, short, int, long, float, and
+	 * double, and void.
 	 * </p>
 	 * 
-	 * @return <code>true</code> if this type binding is for a primitive type,
-	 *         and <code>false</code> otherwise
+	 * @return <code>true</code> if this type binding is for a primitive type, and
+	 *         <code>false</code> otherwise
 	 */
 	@Override
 	public boolean isPrimitive() {
@@ -661,16 +656,16 @@ public class TypeBinding implements ITypeBinding {
 	 * 
 	 * @param type
 	 *            the type to check compatibility against
-	 * @return <code>true</code> if this type is subtype compatible with the
-	 *         given type, and <code>false</code> otherwise
+	 * @return <code>true</code> if this type is subtype compatible with the given
+	 *         type, and <code>false</code> otherwise
 	 * 
-	 *         NOTE: if one of the resolved types are not compatible with this
-	 *         type <code>false</code> is returned
+	 *         NOTE: if one of the resolved types are not compatible with this type
+	 *         <code>false</code> is returned
 	 */
 	@Override
 	public boolean isSubTypeCompatible(ITypeBinding otherType) {
 
-		if (otherType == null || elements == null || elements.length == 0) {
+		if (otherType == null || ArrayUtils.isEmpty(elements)) {
 			return false;
 		}
 
@@ -678,7 +673,7 @@ public class TypeBinding implements ITypeBinding {
 		for (IModelElement element : elements) {
 			IType type = (IType) element;
 			try {
-				if (type.getSuperClasses() == null || type.getSuperClasses().length == 0) {
+				if (ArrayUtils.isEmpty(type.getSuperClasses())) {
 					return false;
 				}
 
@@ -708,59 +703,56 @@ public class TypeBinding implements ITypeBinding {
 	/**
 	 * Returns the key for this binding.
 	 * <p>
-	 * Within a connected cluster of bindings (for example, all bindings
-	 * reachable from a given AST), each binding will have a distinct keys. The
-	 * keys are generated in a manner that is predictable and as stable as
-	 * possible. This last property makes these keys useful for comparing
-	 * bindings between disconnected clusters of bindings (for example, the
-	 * bindings between the "before" and "after" ASTs of the same compilation
-	 * unit).
+	 * Within a connected cluster of bindings (for example, all bindings reachable
+	 * from a given AST), each binding will have a distinct keys. The keys are
+	 * generated in a manner that is predictable and as stable as possible. This
+	 * last property makes these keys useful for comparing bindings between
+	 * disconnected clusters of bindings (for example, the bindings between the
+	 * "before" and "after" ASTs of the same compilation unit).
 	 * </p>
 	 * <p>
-	 * The exact details of how the keys are generated is unspecified. However,
-	 * it is a function of the following information:
+	 * The exact details of how the keys are generated is unspecified. However, it
+	 * is a function of the following information:
 	 * <ul>
-	 * <li>packages - the name of the package (for an unnamed package, some
-	 * internal id)</li>
+	 * <li>packages - the name of the package (for an unnamed package, some internal
+	 * id)</li>
 	 * <li>classes or interfaces - the VM name of the type and the key of its
 	 * package</li>
-	 * <li>array types - the key of the component type and number of dimensions
-	 * </li>
+	 * <li>array types - the key of the component type and number of dimensions</li>
 	 * <li>primitive types - the name of the primitive type</li>
 	 * <li>fields - the name of the field and the key of its declaring type</li>
-	 * <li>methods - the name of the method, the key of its declaring type, and
-	 * the keys of the parameter types</li>
+	 * <li>methods - the name of the method, the key of its declaring type, and the
+	 * keys of the parameter types</li>
 	 * <li>constructors - the key of its declaring class, and the keys of the
 	 * parameter types</li>
 	 * <li>local variables - the name of the local variable, the index of the
 	 * declaring block relative to its parent, the key of its method</li>
 	 * <li>local types - the name of the type, the index of the declaring block
 	 * relative to its parent, the key of its method</li>
-	 * <li>anonymous types - the occurrence count of the anonymous type relative
-	 * to its declaring type, the key of its declaring type</li>
+	 * <li>anonymous types - the occurrence count of the anonymous type relative to
+	 * its declaring type, the key of its declaring type</li>
 	 * <li>enum types - treated like classes</li>
 	 * <li>annotation types - treated like interfaces</li>
-	 * <li>type variables - the name of the type variable and the key of the
-	 * generic type or generic method that declares that type variable</li>
+	 * <li>type variables - the name of the type variable and the key of the generic
+	 * type or generic method that declares that type variable</li>
 	 * <li>wildcard types - the key of the optional wildcard type bound</li>
 	 * <li>capture type bindings - the key of the wildcard captured</li>
-	 * <li>generic type instances - the key of the generic type and the keys of
+	 * <li>generic type instances - the key of the generic type and the keys of the
+	 * type arguments used to instantiate it, and whether the instance is explicit
+	 * (a parameterized type reference) or implicit (a raw type reference)</li>
+	 * <li>generic method instances - the key of the generic method and the keys of
 	 * the type arguments used to instantiate it, and whether the instance is
-	 * explicit (a parameterized type reference) or implicit (a raw type
-	 * reference)</li>
-	 * <li>generic method instances - the key of the generic method and the keys
-	 * of the type arguments used to instantiate it, and whether the instance is
 	 * explicit (a parameterized method reference) or implicit (a raw method
 	 * reference)</li>
-	 * <li>members of generic type instances - the key of the generic type
-	 * instance and the key of the corresponding member in the generic type</li>
+	 * <li>members of generic type instances - the key of the generic type instance
+	 * and the key of the corresponding member in the generic type</li>
 	 * <li>annotations - the key of the annotated element and the key of the
 	 * annotation type</li>
 	 * </ul>
 	 * </p>
 	 * <p>
-	 * Note that the key for member value pair bindings is not yet implemented.
-	 * This returns <code>null</code> for this kind of bindings.<br>
+	 * Note that the key for member value pair bindings is not yet implemented. This
+	 * returns <code>null</code> for this kind of bindings.<br>
 	 * Recovered bindings have a unique key.
 	 * </p>
 	 * 
@@ -779,9 +771,9 @@ public class TypeBinding implements ITypeBinding {
 	 * <code>TYPE</code>, <code>VARIABLE</code>, <code>METHOD</code>, or
 	 * <code>MEMBER_VALUE_PAIR</code>.
 	 * <p>
-	 * Note that additional kinds might be added in the future, so clients
-	 * should not assume this list is exhaustive and should program defensively,
-	 * e.g. by having a reasonable default in a switch statement.
+	 * Note that additional kinds might be added in the future, so clients should
+	 * not assume this list is exhaustive and should program defensively, e.g. by
+	 * having a reasonable default in a switch statement.
 	 * </p>
 	 * 
 	 * @return one of the kind constants
@@ -795,10 +787,10 @@ public class TypeBinding implements ITypeBinding {
 	 * Returns the PHP element that corresponds to this binding. Returns
 	 * <code>null</code> if this binding has no corresponding PHP element.
 	 * <p>
-	 * For array types, this method returns the PHP element that corresponds to
-	 * the array's element type. For raw and parameterized types, this method
-	 * returns the PHP element of the erasure. For annotations, this method
-	 * returns the PHP element of the annotation (i.e. an {@link IAnnotation}).
+	 * For array types, this method returns the PHP element that corresponds to the
+	 * array's element type. For raw and parameterized types, this method returns
+	 * the PHP element of the erasure. For annotations, this method returns the PHP
+	 * element of the annotation (i.e. an {@link IAnnotation}).
 	 * </p>
 	 * <p>
 	 * Here are the cases where a <code>null</code> should be expected:
@@ -830,16 +822,15 @@ public class TypeBinding implements ITypeBinding {
 	}
 
 	/**
-	 * Return whether this binding is for something that is deprecated. A
-	 * deprecated class, interface, field, method, or constructor is one that is
-	 * marked with the 'deprecated' tag in its PHPdoc comment.
+	 * Return whether this binding is for something that is deprecated. A deprecated
+	 * class, interface, field, method, or constructor is one that is marked with
+	 * the 'deprecated' tag in its PHPdoc comment.
 	 * 
-	 * Note: Currently we return false for all type bindings since we do not
-	 * check for the PHPDoc deprecated annotation.
+	 * Note: Currently we return false for all type bindings since we do not check
+	 * for the PHPDoc deprecated annotation.
 	 * 
 	 * @return <code>true</code> if this binding is deprecated, and
-	 *         <code>false</code> otherwise (Currently, returns false all the
-	 *         time).
+	 *         <code>false</code> otherwise (Currently, returns false all the time).
 	 */
 	@Override
 	public boolean isDeprecated() {
@@ -847,12 +838,12 @@ public class TypeBinding implements ITypeBinding {
 	}
 
 	/**
-	 * There is no special definition of equality for bindings; equality is
-	 * simply object identity. Within the context of a single cluster of
-	 * bindings, each binding is represented by a distinct object. However,
-	 * between different clusters of bindings, the binding objects may or may
-	 * not be different; in these cases, the client should compare bindings
-	 * using {@link #isEqualTo(IBinding)}, which checks their keys.
+	 * There is no special definition of equality for bindings; equality is simply
+	 * object identity. Within the context of a single cluster of bindings, each
+	 * binding is represented by a distinct object. However, between different
+	 * clusters of bindings, the binding objects may or may not be different; in
+	 * these cases, the client should compare bindings using
+	 * {@link #isEqualTo(IBinding)}, which checks their keys.
 	 * 
 	 * @param other
 	 *            {@inheritDoc}
@@ -925,7 +916,7 @@ public class TypeBinding implements ITypeBinding {
 	@Override
 	public List<IType> getTraitList(boolean isMethod, String classMemberName, boolean includeSuper) {
 		List<IType> result = new LinkedList<>();
-		if (this.elements == null || elements.length == 0) {
+		if (ArrayUtils.isEmpty(elements)) {
 			return result;
 		}
 		for (IModelElement type : elements) {
@@ -939,8 +930,7 @@ public class TypeBinding implements ITypeBinding {
 			for (IModelElement element : elements) {
 				IType type = (IType) element;
 				try {
-					if (type.getSuperClasses() == null || type.getSuperClasses().length == 0
-							|| PHPFlags.isTrait(type.getFlags())) {
+					if (ArrayUtils.isEmpty(type.getSuperClasses()) || PHPFlags.isTrait(type.getFlags())) {
 						return result;
 					}
 

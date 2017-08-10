@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.php.core.compiler.PHPFlags;
@@ -64,10 +65,9 @@ public class FakeConstructor extends FakeMethod {
 	 * 
 	 * @param type
 	 * @param isEnclosingClass
-	 * @return IMethod[] constructors[0] is the type's constructor
-	 *         constructors[1] is an available FakeConstructor for
-	 *         constructors[0] both constructors[0] and constructors[1] could be
-	 *         null
+	 * @return IMethod[] constructors[0] is the type's constructor constructors[1]
+	 *         is an available FakeConstructor for constructors[0] both
+	 *         constructors[0] and constructors[1] could be null
 	 */
 	public static IMethod[] getConstructors(IType type, boolean isEnclosingClass) {
 		IMethod[] constructors = new IMethod[2];
@@ -78,7 +78,7 @@ public class FakeConstructor extends FakeMethod {
 			if (constructors[0] == null) {
 				ITypeHierarchy newSupertypeHierarchy = type.newSupertypeHierarchy(null);
 				IType[] allSuperclasses = newSupertypeHierarchy.getAllSuperclasses(type);
-				if (allSuperclasses != null && allSuperclasses.length > 0) {
+				if (ArrayUtils.isNotEmpty(allSuperclasses)) {
 					for (IType superClass : allSuperclasses) {
 						if (constructors[0] == null) {
 							constructors = getConstructorsOfType(superClass, isEnclosingClass);
@@ -100,9 +100,9 @@ public class FakeConstructor extends FakeMethod {
 	private static IMethod[] getConstructorsOfType(IType type, boolean isEnclosingClass) throws ModelException {
 		IMethod[] constructors = new IMethod[2];
 		IMethod[] methods = type.getMethods();
-		if (methods != null && methods.length > 0) {
+		if (ArrayUtils.isNotEmpty(methods)) {
 			for (IMethod method : methods) {
-				if (method.isConstructor() && method.getParameters() != null && method.getParameters().length > 0) {
+				if (method.isConstructor() && ArrayUtils.isNotEmpty(method.getParameters())) {
 					constructors[0] = method;
 					if (isEnclosingClass || !PHPFlags.isPrivate(constructors[0].getFlags())) {
 						constructors[1] = FakeConstructor.createFakeConstructor(constructors[0], type,

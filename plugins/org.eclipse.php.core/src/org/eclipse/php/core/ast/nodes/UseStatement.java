@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.match.ASTMatcher;
 import org.eclipse.php.core.ast.visitor.Visitor;
@@ -106,7 +107,7 @@ public class UseStatement extends Statement {
 	public UseStatement(int start, int end, AST ast, UseStatementPart[] parts, int statementType) {
 		super(start, end, ast);
 
-		if (parts == null || parts.length == 0) {
+		if (ArrayUtils.isEmpty(parts)) {
 			throw new IllegalArgumentException();
 		}
 

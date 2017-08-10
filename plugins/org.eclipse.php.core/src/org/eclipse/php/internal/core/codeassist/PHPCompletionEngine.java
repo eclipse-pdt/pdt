@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.codeassist;
 
 import java.util.*;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.codeassist.ScriptCompletionEngine;
 import org.eclipse.dltk.compiler.env.IModuleSource;
@@ -96,11 +97,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			for (ICompletionContextResolver resolver : contextResolvers) {
 				ICompletionContext[] contexts = resolver.resolve(sourceModule, position, requestor, companion);
 
-				if (contexts != null && contexts.length > 0) {
+				if (ArrayUtils.isNotEmpty(contexts)) {
 					for (ICompletionStrategyFactory factory : strategyFactories) {
 						ICompletionStrategy[] strategies = factory.create(contexts);
 
-						if (strategies != null && strategies.length > 0) {
+						if (ArrayUtils.isNotEmpty(strategies)) {
 							for (ICompletionStrategy strategy : strategies) {
 								strategy.init(companion);
 								try {
@@ -269,7 +270,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			} catch (ModelException e) {
 				PHPCorePlugin.log(e);
 			}
-			if (params != null && params.length > 0) {
+			if (ArrayUtils.isNotEmpty(params)) {
 				proposal.setParameterNames(params);
 			}
 
@@ -338,7 +339,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 					for (IMethod method : type.getMethods()) {
 						if (method.isConstructor()) {
 							String[] params = method.getParameterNames();
-							if (params != null && params.length > 0) {
+							if (ArrayUtils.isNotEmpty(params)) {
 								proposal.setParameterNames(params);
 							}
 							break;
