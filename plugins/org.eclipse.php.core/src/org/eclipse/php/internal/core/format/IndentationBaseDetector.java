@@ -214,7 +214,8 @@ public class IndentationBaseDetector {
 					PHPHeuristicScanner.RBRACE);
 
 			bound = openBracePeer != -1 || openParenPeer != -1
-					? Math.max(statementStart, Math.max(openParenPeer, openBracePeer)) : statementStart;
+					? Math.max(statementStart, Math.max(openParenPeer, openBracePeer))
+					: statementStart;
 			int openBracketPeer = scanner.findOpeningPeer(checkedOffset - 1, bound, PHPHeuristicScanner.LBRACKET,
 					PHPHeuristicScanner.RBRACKET);
 

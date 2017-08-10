@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.codeassist;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -820,7 +821,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 			// Is it function or method:
 			if (OPEN_BRACE.equals(nextWord) || PHPPartitionTypes.isPHPDocState(tRegion.getType())) {
-				if (types != null && types.length > 0) {
+				if (ArrayUtils.isNotEmpty(types)) {
 					List<IMethod> methods = new LinkedList<>();
 					for (IType t : types) {
 						methods.addAll(Arrays.asList(PHPModelUtils.getTypeHierarchyMethod(t,
@@ -832,7 +833,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			}
 			if ((INSTEADOF.equals(nextWord) || AS.equals(nextWord))
 					&& (!PAAMAYIM_NEKUDOTAIM.equals(trigger) && !OBJECT_OPERATOR.equals(trigger))) {
-				if (types != null && types.length > 0) {
+				if (ArrayUtils.isNotEmpty(types)) {
 					List<IMethod> methods = new LinkedList<>();
 					for (IType t : types) {
 						methods.addAll(Arrays.asList(PHPModelUtils.getTypeHierarchyMethod(t,
@@ -841,7 +842,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					return methods.toArray(new IMethod[methods.size()]);
 				}
 			}
-			if (types != null && types.length > 0) {
+			if (ArrayUtils.isNotEmpty(types)) {
 				// Check whether this is a class constant:
 				if (startPosition > 0) {
 					if (PAAMAYIM_NEKUDOTAIM.equals(trigger) && elementName.charAt(0) != '$') {
@@ -871,13 +872,13 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			// This can be only global constant, if we've reached
 			// here:
 			IField[] fields = PHPModelUtils.getFields(elementName, sourceModule, offset, cache, null);
-			if (fields != null && fields.length > 0) {
+			if (ArrayUtils.isNotEmpty(fields)) {
 				return fields;
 			}
 
 			ModuleDeclaration parsedUnit = SourceParserUtil.getModuleDeclaration(sourceModule, null);
 			fields = findFieldAliases(elementName, sourceModule, parsedUnit, containerType, offset);
-			if (fields != null && fields.length > 0) {
+			if (ArrayUtils.isNotEmpty(fields)) {
 				return fields;
 			}
 
@@ -941,7 +942,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		} else {
 			SimpleReference callName = callExpression.getCallName();
 			String methodName = callName instanceof FullyQualifiedReference
-					? ((FullyQualifiedReference) callName).getFullyQualifiedName() : callName.getName();
+					? ((FullyQualifiedReference) callName).getFullyQualifiedName()
+					: callName.getName();
 			IMember[] members = PHPModelUtils.getFunctions(methodName, sourceModule, offset, cache, null);
 			if (members.length == 0) {
 				final IType currentNamespace = PHPModelUtils.getCurrentNamespace(sourceModule,
@@ -988,7 +990,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		}
 		final List<IField> fields = new ArrayList<>();
 		fields.addAll(Arrays.asList(PHPModelUtils.getTypeField(type, prefix, exactName)));
-		if (type.getSuperClasses() != null && type.getSuperClasses().length > 0) {
+		if (ArrayUtils.isNotEmpty(type.getSuperClasses())) {
 			Set<IModelElement> fieldSet = new TreeSet<>(new SourceFieldComparator());
 			fieldSet.addAll(Arrays
 					.asList(PHPModelUtils.getSuperTypeHierarchyField(type, hierarchy, prefix, exactName, monitor)));
@@ -1081,8 +1083,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	}
 
 	/**
-	 * Return workspace or method fields depending on current position: whether
-	 * we are inside method or in global scope.
+	 * Return workspace or method fields depending on current position: whether we
+	 * are inside method or in global scope.
 	 * 
 	 * @param sourceModule
 	 * @param offset

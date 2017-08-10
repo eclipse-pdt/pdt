@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.contexts;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.CompletionRequestor;
@@ -80,7 +82,7 @@ public class ClassObjMemberContext extends ClassMemberContext {
 			}
 
 			IType[] types = getLhsTypes();
-			if (types != null && types.length > 0) {
+			if (ArrayUtils.isNotEmpty(types)) {
 				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 				if (moduleDeclaration != null) {
 					IContext context = ASTUtils.findContext(sourceModule, moduleDeclaration, offset);
@@ -89,7 +91,7 @@ public class ClassObjMemberContext extends ClassMemberContext {
 						if (instanceType instanceof PHPClassType) {
 							PHPClassType classType = (PHPClassType) instanceType;
 							String namespace = classType.getNamespace();
-							if (namespace != null && namespace.length() > 0) {
+							if (StringUtils.isNotEmpty(namespace)) {
 								String typeName = classType.getTypeName();
 								int i = typeName.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
 								if (i != -1) {
