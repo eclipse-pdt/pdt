@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.ast.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.dltk.compiler.CharOperation;
 import org.eclipse.dltk.compiler.util.ScannerHelper;
 
@@ -161,32 +162,32 @@ public final class Signature {
 	public static final char C_BOOLEAN = 'Z';
 
 	/**
-	 * Character constant indicating the primitive type byte in a signature.
-	 * Value is <code>'B'</code>.
+	 * Character constant indicating the primitive type byte in a signature. Value
+	 * is <code>'B'</code>.
 	 */
 	public static final char C_BYTE = 'B';
 
 	/**
-	 * Character constant indicating the primitive type char in a signature.
-	 * Value is <code>'C'</code>.
+	 * Character constant indicating the primitive type char in a signature. Value
+	 * is <code>'C'</code>.
 	 */
 	public static final char C_CHAR = 'C';
 
 	/**
-	 * Character constant indicating the primitive type double in a signature.
-	 * Value is <code>'D'</code>.
+	 * Character constant indicating the primitive type double in a signature. Value
+	 * is <code>'D'</code>.
 	 */
 	public static final char C_DOUBLE = 'D';
 
 	/**
-	 * Character constant indicating the primitive type float in a signature.
-	 * Value is <code>'F'</code>.
+	 * Character constant indicating the primitive type float in a signature. Value
+	 * is <code>'F'</code>.
 	 */
 	public static final char C_FLOAT = 'F';
 
 	/**
-	 * Character constant indicating the primitive type int in a signature.
-	 * Value is <code>'I'</code>.
+	 * Character constant indicating the primitive type int in a signature. Value is
+	 * <code>'I'</code>.
 	 */
 	public static final char C_INT = 'I';
 
@@ -205,14 +206,14 @@ public final class Signature {
 	public static final char C_COLON = ':';
 
 	/**
-	 * Character constant indicating the primitive type long in a signature.
-	 * Value is <code>'J'</code>.
+	 * Character constant indicating the primitive type long in a signature. Value
+	 * is <code>'J'</code>.
 	 */
 	public static final char C_LONG = 'J';
 
 	/**
-	 * Character constant indicating the primitive type short in a signature.
-	 * Value is <code>'S'</code>.
+	 * Character constant indicating the primitive type short in a signature. Value
+	 * is <code>'S'</code>.
 	 */
 	public static final char C_SHORT = 'S';
 
@@ -247,16 +248,16 @@ public final class Signature {
 	public static final char C_EXCEPTION_START = '^';
 
 	/**
-	 * Character constant indicating a bound wildcard type argument in a
-	 * signature with extends clause. Value is <code>'+'</code>.
+	 * Character constant indicating a bound wildcard type argument in a signature
+	 * with extends clause. Value is <code>'+'</code>.
 	 * 
 	 * @since 3.1
 	 */
 	public static final char C_EXTENDS = '+';
 
 	/**
-	 * Character constant indicating a bound wildcard type argument in a
-	 * signature with super clause. Value is <code>'-'</code>.
+	 * Character constant indicating a bound wildcard type argument in a signature
+	 * with super clause. Value is <code>'-'</code>.
 	 * 
 	 * @since 3.1
 	 */
@@ -293,8 +294,8 @@ public final class Signature {
 	public static final char C_UNRESOLVED = 'Q';
 
 	/**
-	 * Character constant indicating the end of a named type in a signature.
-	 * Value is <code>';'</code>.
+	 * Character constant indicating the end of a named type in a signature. Value
+	 * is <code>';'</code>.
 	 */
 	public static final char C_NAME_END = ';';
 
@@ -311,24 +312,24 @@ public final class Signature {
 	public static final char C_PARAM_END = ')';
 
 	/**
-	 * Character constant indicating the start of a formal type parameter (or
-	 * type argument) list in a signature. Value is <code>'&lt;'</code>.
+	 * Character constant indicating the start of a formal type parameter (or type
+	 * argument) list in a signature. Value is <code>'&lt;'</code>.
 	 * 
 	 * @since 3.0
 	 */
 	public static final char C_GENERIC_START = '<';
 
 	/**
-	 * Character constant indicating the end of a generic type list in a
-	 * signature. Value is <code>'&gt;'</code>.
+	 * Character constant indicating the end of a generic type list in a signature.
+	 * Value is <code>'&gt;'</code>.
 	 * 
 	 * @since 3.0
 	 */
 	public static final char C_GENERIC_END = '>';
 
 	/**
-	 * Character constant indicating a capture of a wildcard type in a
-	 * signature. Value is <code>'!'</code>.
+	 * Character constant indicating a capture of a wildcard type in a signature.
+	 * Value is <code>'!'</code>.
 	 * 
 	 * @since 3.1
 	 */
@@ -477,8 +478,8 @@ public final class Signature {
 	}
 
 	/**
-	 * Creates a new type signature with the given amount of array nesting added
-	 * to the given type signature.
+	 * Creates a new type signature with the given amount of array nesting added to
+	 * the given type signature.
 	 *
 	 * @param typeSignature
 	 *            the type signature
@@ -501,8 +502,8 @@ public final class Signature {
 	}
 
 	/**
-	 * Creates a new type signature with the given amount of array nesting added
-	 * to the given type signature.
+	 * Creates a new type signature with the given amount of array nesting added to
+	 * the given type signature.
 	 *
 	 * @param typeSignature
 	 *            the type signature
@@ -551,8 +552,7 @@ public final class Signature {
 	/**
 	 * Creates a method signature from the given parameter and return type
 	 * signatures. The encoded method signature is dot-based. This method is
-	 * equivalent to
-	 * <code>createMethodSignature(parameterTypes, returnType)</code>.
+	 * equivalent to <code>createMethodSignature(parameterTypes, returnType)</code>.
 	 *
 	 * @param parameterTypes
 	 *            the list of parameter type signatures
@@ -632,21 +632,20 @@ public final class Signature {
 	}
 
 	/**
-	 * Creates a new type signature from the given type name encoded as a
-	 * character array. The type name may contain primitive types, array types
-	 * or parameterized types. This method is equivalent to
-	 * <code>createTypeSignature(new String(typeName),isResolved)</code>,
-	 * although more efficient for callers with character arrays rather than
-	 * strings. If the type name is qualified, then it is expected to be
-	 * dot-based.
+	 * Creates a new type signature from the given type name encoded as a character
+	 * array. The type name may contain primitive types, array types or
+	 * parameterized types. This method is equivalent to
+	 * <code>createTypeSignature(new String(typeName),isResolved)</code>, although
+	 * more efficient for callers with character arrays rather than strings. If the
+	 * type name is qualified, then it is expected to be dot-based.
 	 *
 	 * @param typeName
 	 *            the possibly qualified type name
 	 * @param isResolved
-	 *            <code>true</code> if the type name is to be considered
-	 *            resolved (for example, a type name from a binary class file),
-	 *            and <code>false</code> if the type name is to be considered
-	 *            unresolved (for example, a type name found in source code)
+	 *            <code>true</code> if the type name is to be considered resolved
+	 *            (for example, a type name from a binary class file), and
+	 *            <code>false</code> if the type name is to be considered unresolved
+	 *            (for example, a type name found in source code)
 	 * @return the encoded type signature
 	 * @see #createTypeSignature(java.lang.String,boolean)
 	 */
@@ -655,21 +654,20 @@ public final class Signature {
 	}
 
 	/**
-	 * Creates a new type signature from the given type name encoded as a
-	 * character array. The type name may contain primitive types or array types
-	 * or parameterized types. This method is equivalent to
+	 * Creates a new type signature from the given type name encoded as a character
+	 * array. The type name may contain primitive types or array types or
+	 * parameterized types. This method is equivalent to
 	 * <code>createTypeSignature(new String(typeName),isResolved).toCharArray()</code>
 	 * , although more efficient for callers with character arrays rather than
-	 * strings. If the type name is qualified, then it is expected to be
-	 * dot-based.
+	 * strings. If the type name is qualified, then it is expected to be dot-based.
 	 *
 	 * @param typeName
 	 *            the possibly qualified type name
 	 * @param isResolved
-	 *            <code>true</code> if the type name is to be considered
-	 *            resolved (for example, a type name from a binary class file),
-	 *            and <code>false</code> if the type name is to be considered
-	 *            unresolved (for example, a type name found in source code)
+	 *            <code>true</code> if the type name is to be considered resolved
+	 *            (for example, a type name from a binary class file), and
+	 *            <code>false</code> if the type name is to be considered unresolved
+	 *            (for example, a type name found in source code)
 	 * @return the encoded type signature
 	 * @see #createTypeSignature(java.lang.String,boolean)
 	 * 
@@ -939,10 +937,10 @@ public final class Signature {
 	}
 
 	/**
-	 * Creates a new type signature from the given type name. If the type name
-	 * is qualified, then it is expected to be dot-based. The type name may
-	 * contain primitive types or array types. However, parameterized types are
-	 * not supported.
+	 * Creates a new type signature from the given type name. If the type name is
+	 * qualified, then it is expected to be dot-based. The type name may contain
+	 * primitive types or array types. However, parameterized types are not
+	 * supported.
 	 * <p>
 	 * For example:
 	 * 
@@ -960,10 +958,10 @@ public final class Signature {
 	 * @param typeName
 	 *            the possibly qualified type name
 	 * @param isResolved
-	 *            <code>true</code> if the type name is to be considered
-	 *            resolved (for example, a type name from a binary class file),
-	 *            and <code>false</code> if the type name is to be considered
-	 *            unresolved (for example, a type name found in source code)
+	 *            <code>true</code> if the type name is to be considered resolved
+	 *            (for example, a type name from a binary class file), and
+	 *            <code>false</code> if the type name is to be considered unresolved
+	 *            (for example, a type name found in source code)
 	 * @return the encoded type signature
 	 */
 	public static String createTypeSignature(String typeName, boolean isResolved) {
@@ -971,8 +969,7 @@ public final class Signature {
 	}
 
 	/**
-	 * Returns the array count (array nesting depth) of the given type
-	 * signature.
+	 * Returns the array count (array nesting depth) of the given type signature.
 	 *
 	 * @param typeSignature
 	 *            the type signature
@@ -998,8 +995,7 @@ public final class Signature {
 	}
 
 	/**
-	 * Returns the array count (array nesting depth) of the given type
-	 * signature.
+	 * Returns the array count (array nesting depth) of the given type signature.
 	 *
 	 * @param typeSignature
 	 *            the type signature
@@ -1106,8 +1102,8 @@ public final class Signature {
 	 *            the type signature string
 	 * @return the kind of type signature; one of the kind constants:
 	 *         {@link #ARRAY_TYPE_SIGNATURE}, {@link #CLASS_TYPE_SIGNATURE},
-	 *         {@link #BASE_TYPE_SIGNATURE}, or {@link #TYPE_VARIABLE_SIGNATURE}
-	 *         , or (since 3.1) {@link #WILDCARD_TYPE_SIGNATURE} or
+	 *         {@link #BASE_TYPE_SIGNATURE}, or {@link #TYPE_VARIABLE_SIGNATURE} ,
+	 *         or (since 3.1) {@link #WILDCARD_TYPE_SIGNATURE} or
 	 *         {@link #CAPTURE_TYPE_SIGNATURE}
 	 * @exception IllegalArgumentException
 	 *                if this is not a type signature
@@ -1173,8 +1169,8 @@ public final class Signature {
 	 *            the type signature string
 	 * @return the kind of type signature; one of the kind constants:
 	 *         {@link #ARRAY_TYPE_SIGNATURE}, {@link #CLASS_TYPE_SIGNATURE},
-	 *         {@link #BASE_TYPE_SIGNATURE}, or {@link #TYPE_VARIABLE_SIGNATURE}
-	 *         , or (since 3.1) {@link #WILDCARD_TYPE_SIGNATURE} or
+	 *         {@link #BASE_TYPE_SIGNATURE}, or {@link #TYPE_VARIABLE_SIGNATURE} ,
+	 *         or (since 3.1) {@link #WILDCARD_TYPE_SIGNATURE} or
 	 *         {@link #CAPTURE_TYPE_SIGNATURE}
 	 * @exception IllegalArgumentException
 	 *                if this is not a type signature
@@ -1247,8 +1243,8 @@ public final class Signature {
 	}
 
 	/**
-	 * Extracts the parameter type signatures from the given method signature.
-	 * The method signature is expected to be dot-based.
+	 * Extracts the parameter type signatures from the given method signature. The
+	 * method signature is expected to be dot-based.
 	 *
 	 * @param methodSignature
 	 *            the method signature
@@ -1290,8 +1286,8 @@ public final class Signature {
 	}
 
 	/**
-	 * Extracts the parameter type signatures from the given method signature.
-	 * The method signature is expected to be dot-based.
+	 * Extracts the parameter type signatures from the given method signature. The
+	 * method signature is expected to be dot-based.
 	 *
 	 * @param methodSignature
 	 *            the method signature
@@ -1305,8 +1301,8 @@ public final class Signature {
 	}
 
 	/**
-	 * Extracts the thrown exception type signatures from the given method
-	 * signature if any The method signature is expected to be dot-based.
+	 * Extracts the thrown exception type signatures from the given method signature
+	 * if any The method signature is expected to be dot-based.
 	 *
 	 * @param methodSignature
 	 *            the method signature
@@ -1322,8 +1318,8 @@ public final class Signature {
 	}
 
 	/**
-	 * Extracts the thrown exception type signatures from the given method
-	 * signature if any The method signature is expected to be dot-based.
+	 * Extracts the thrown exception type signatures from the given method signature
+	 * if any The method signature is expected to be dot-based.
 	 *
 	 * @param methodSignature
 	 *            the method signature
@@ -1368,9 +1364,8 @@ public final class Signature {
 	}
 
 	/**
-	 * Extracts the type argument signatures from the given type signature.
-	 * Returns an empty array if the type signature is not a parameterized type
-	 * signature.
+	 * Extracts the type argument signatures from the given type signature. Returns
+	 * an empty array if the type signature is not a parameterized type signature.
 	 *
 	 * @param parameterizedTypeSignature
 	 *            the parameterized type signature
@@ -1419,9 +1414,8 @@ public final class Signature {
 	}
 
 	/**
-	 * Extracts the type argument signatures from the given type signature.
-	 * Returns an empty array if the type signature is not a parameterized type
-	 * signature.
+	 * Extracts the type argument signatures from the given type signature. Returns
+	 * an empty array if the type signature is not a parameterized type signature.
 	 *
 	 * @param parameterizedTypeSignature
 	 *            the parameterized type signature
@@ -1637,9 +1631,9 @@ public final class Signature {
 	}
 
 	/**
-	 * Extracts the class and interface bounds from the given formal type
-	 * parameter signature. The class bound, if present, is listed before the
-	 * interface bounds. The signature is expected to be dot-based.
+	 * Extracts the class and interface bounds from the given formal type parameter
+	 * signature. The class bound, if present, is listed before the interface
+	 * bounds. The signature is expected to be dot-based.
 	 *
 	 * @param formalTypeParameterSignature
 	 *            the formal type parameter signature
@@ -1685,9 +1679,9 @@ public final class Signature {
 	}
 
 	/**
-	 * Extracts the class and interface bounds from the given formal type
-	 * parameter signature. The class bound, if present, is listed before the
-	 * interface bounds. The signature is expected to be dot-based.
+	 * Extracts the class and interface bounds from the given formal type parameter
+	 * signature. The class bound, if present, is listed before the interface
+	 * bounds. The signature is expected to be dot-based.
 	 *
 	 * @param formalTypeParameterSignature
 	 *            the formal type parameter signature
@@ -1719,8 +1713,8 @@ public final class Signature {
 	 *
 	 * @param name
 	 *            the name
-	 * @return the qualifier prefix, or the empty char array if the name
-	 *         contains no dots
+	 * @return the qualifier prefix, or the empty char array if the name contains no
+	 *         dots
 	 * @exception NullPointerException
 	 *                if name is null
 	 * @since 2.0
@@ -1803,8 +1797,8 @@ public final class Signature {
 	}
 
 	/**
-	 * Returns package fragment of a type signature. The package fragment
-	 * separator must be '.' and the type fragment separator must be '$'.
+	 * Returns package fragment of a type signature. The package fragment separator
+	 * must be '.' and the type fragment separator must be '$'.
 	 * <p>
 	 * For example:
 	 * 
@@ -1853,8 +1847,8 @@ public final class Signature {
 	}
 
 	/**
-	 * Returns package fragment of a type signature. The package fragment
-	 * separator must be '.' and the type fragment separator must be '$'.
+	 * Returns package fragment of a type signature. The package fragment separator
+	 * must be '.' and the type fragment separator must be '$'.
 	 * <p>
 	 * For example:
 	 * 
@@ -1947,8 +1941,8 @@ public final class Signature {
 	}
 
 	/**
-	 * Returns the last segment of the given dot-separated qualified name.
-	 * Returns the given name if it is not qualified.
+	 * Returns the last segment of the given dot-separated qualified name. Returns
+	 * the given name if it is not qualified.
 	 * <p>
 	 * For example:
 	 * 
@@ -2013,8 +2007,8 @@ public final class Signature {
 	}
 
 	/**
-	 * Returns the last segment of the given dot-separated qualified name.
-	 * Returns the given name if it is not qualified.
+	 * Returns the last segment of the given dot-separated qualified name. Returns
+	 * the given name if it is not qualified.
 	 * <p>
 	 * For example:
 	 * 
@@ -2178,9 +2172,9 @@ public final class Signature {
 	}
 
 	/**
-	 * Returns all segments of the given dot-separated qualified name. Returns
-	 * an array with only the given name if it is not qualified. Returns an
-	 * empty array if the name is empty.
+	 * Returns all segments of the given dot-separated qualified name. Returns an
+	 * array with only the given name if it is not qualified. Returns an empty array
+	 * if the name is empty.
 	 * <p>
 	 * For example:
 	 * 
@@ -2201,7 +2195,7 @@ public final class Signature {
 	 * @since 2.0
 	 */
 	public static char[][] getSimpleNames(char[] name) {
-		if (name == null || name.length == 0)
+		if (ArrayUtils.isEmpty(name))
 			return CharOperation.NO_CHAR_CHAR;
 
 		int length = name.length;
@@ -2231,9 +2225,9 @@ public final class Signature {
 	}
 
 	/**
-	 * Returns all segments of the given dot-separated qualified name. Returns
-	 * an array with only the given name if it is not qualified. Returns an
-	 * empty array if the name is empty.
+	 * Returns all segments of the given dot-separated qualified name. Returns an
+	 * array with only the given name if it is not qualified. Returns an empty array
+	 * if the name is empty.
 	 * <p>
 	 * For example:
 	 * 
@@ -2258,9 +2252,9 @@ public final class Signature {
 	}
 
 	/**
-	 * Removes any capture information from the given type or method signature
-	 * and returns the resulting signature. Returns the type or method signature
-	 * itself if no capture information is present.
+	 * Removes any capture information from the given type or method signature and
+	 * returns the resulting signature. Returns the type or method signature itself
+	 * if no capture information is present.
 	 * <p>
 	 * For example (using equivalent string-based method):
 	 * 
@@ -2274,8 +2268,8 @@ public final class Signature {
 	 *
 	 * @param methodOrTypeSignature
 	 *            the signature which may have been captured
-	 * @return a new signature without capture information or the signature
-	 *         itself if no specific capture information is present
+	 * @return a new signature without capture information or the signature itself
+	 *         if no specific capture information is present
 	 * @exception NullPointerException
 	 *                if <code>methodOrTypeSignature</code> is null
 	 *
@@ -2286,9 +2280,9 @@ public final class Signature {
 	}
 
 	/**
-	 * Removes any capture information from the given type or method signature
-	 * and returns the resulting signature. Returns the type or method signature
-	 * itself if no capture information is present.
+	 * Removes any capture information from the given type or method signature and
+	 * returns the resulting signature. Returns the type or method signature itself
+	 * if no capture information is present.
 	 * <p>
 	 * For example:
 	 * 
@@ -2302,8 +2296,8 @@ public final class Signature {
 	 *
 	 * @param methodOrTypeSignature
 	 *            the signature which may have been captured
-	 * @return a new signature without capture information or the signature
-	 *         itself if no specific capture information is present
+	 * @return a new signature without capture information or the signature itself
+	 *         if no specific capture information is present
 	 * @exception NullPointerException
 	 *                if <code>methodOrTypeSignature</code> is null
 	 *
@@ -2318,8 +2312,8 @@ public final class Signature {
 	}
 
 	/**
-	 * Converts the given method signature to a readable form. The method
-	 * signature is expected to be dot-based.
+	 * Converts the given method signature to a readable form. The method signature
+	 * is expected to be dot-based.
 	 * <p>
 	 * For example:
 	 * 
@@ -2336,10 +2330,9 @@ public final class Signature {
 	 *            the name of the method to insert in the result, or
 	 *            <code>null</code> if no method name is to be included
 	 * @param parameterNames
-	 *            the parameter names to insert in the result, or
-	 *            <code>null</code> if no parameter names are to be included; if
-	 *            supplied, the number of parameter names must match that of the
-	 *            method signature
+	 *            the parameter names to insert in the result, or <code>null</code>
+	 *            if no parameter names are to be included; if supplied, the number
+	 *            of parameter names must match that of the method signature
 	 * @param fullyQualifyTypeNames
 	 *            <code>true</code> if type names should be fully qualified, and
 	 *            <code>false</code> to use only simple names
@@ -2356,8 +2349,8 @@ public final class Signature {
 	}
 
 	/**
-	 * Converts the given method signature to a readable form. The method
-	 * signature is expected to be dot-based.
+	 * Converts the given method signature to a readable form. The method signature
+	 * is expected to be dot-based.
 	 * <p>
 	 * For example:
 	 * 
@@ -2374,18 +2367,17 @@ public final class Signature {
 	 *            the name of the method to insert in the result, or
 	 *            <code>null</code> if no method name is to be included
 	 * @param parameterNames
-	 *            the parameter names to insert in the result, or
-	 *            <code>null</code> if no parameter names are to be included; if
-	 *            supplied, the number of parameter names must match that of the
-	 *            method signature
+	 *            the parameter names to insert in the result, or <code>null</code>
+	 *            if no parameter names are to be included; if supplied, the number
+	 *            of parameter names must match that of the method signature
 	 * @param fullyQualifyTypeNames
 	 *            <code>true</code> if type names should be fully qualified, and
 	 *            <code>false</code> to use only simple names
 	 * @param includeReturnType
 	 *            <code>true</code> if the return type is to be included
 	 * @param isVargArgs
-	 *            <code>true</code> if the last argument should be displayed as
-	 *            a variable argument, <code>false</code> otherwise.
+	 *            <code>true</code> if the last argument should be displayed as a
+	 *            variable argument, <code>false</code> otherwise.
 	 * @return the char array representation of the method signature
 	 * 
 	 * @since 3.1
@@ -2451,11 +2443,11 @@ public final class Signature {
 	 * </pre>
 	 * </p>
 	 * <p>
-	 * Note: This method assumes that a type signature containing a
-	 * <code>'$'</code> is an inner type signature. While this is correct in
-	 * most cases, someone could define a non-inner type name containing a
-	 * <code>'$'</code>. Handling this correctly in all cases would have
-	 * required resolving the signature, which generally not feasible.
+	 * Note: This method assumes that a type signature containing a <code>'$'</code>
+	 * is an inner type signature. While this is correct in most cases, someone
+	 * could define a non-inner type name containing a <code>'$'</code>. Handling
+	 * this correctly in all cases would have required resolving the signature,
+	 * which generally not feasible.
 	 * </p>
 	 *
 	 * @param signature
@@ -2480,9 +2472,8 @@ public final class Signature {
 	}
 
 	/**
-	 * Scans the given string for a type signature starting at the given index
-	 * and appends it to the given buffer, and returns the index of the last
-	 * character.
+	 * Scans the given string for a type signature starting at the given index and
+	 * appends it to the given buffer, and returns the index of the last character.
 	 * 
 	 * @param string
 	 *            the signature string
@@ -2504,9 +2495,8 @@ public final class Signature {
 	}
 
 	/**
-	 * Scans the given string for a type signature starting at the given index
-	 * and appends it to the given buffer, and returns the index of the last
-	 * character.
+	 * Scans the given string for a type signature starting at the given index and
+	 * appends it to the given buffer, and returns the index of the last character.
 	 * 
 	 * @param string
 	 *            the signature string
@@ -2611,8 +2601,8 @@ public final class Signature {
 
 	/**
 	 * Scans the given string for an array type signature starting at the given
-	 * index and appends it to the given buffer, and returns the index of the
-	 * last character.
+	 * index and appends it to the given buffer, and returns the index of the last
+	 * character.
 	 * 
 	 * @param string
 	 *            the signature string
@@ -2633,8 +2623,8 @@ public final class Signature {
 
 	/**
 	 * Scans the given string for an array type signature starting at the given
-	 * index and appends it to the given buffer, and returns the index of the
-	 * last character.
+	 * index and appends it to the given buffer, and returns the index of the last
+	 * character.
 	 * 
 	 * @param string
 	 *            the signature string
@@ -2664,8 +2654,8 @@ public final class Signature {
 
 	/**
 	 * Scans the given string for an array type signature starting at the given
-	 * index and appends it to the given buffer, and returns the index of the
-	 * last character.
+	 * index and appends it to the given buffer, and returns the index of the last
+	 * character.
 	 * 
 	 * @param string
 	 *            the signature string
@@ -2719,9 +2709,9 @@ public final class Signature {
 	}
 
 	/**
-	 * Scans the given string for a class type signature starting at the given
-	 * index and appends it to the given buffer, and returns the index of the
-	 * last character.
+	 * Scans the given string for a class type signature starting at the given index
+	 * and appends it to the given buffer, and returns the index of the last
+	 * character.
 	 * 
 	 * @param string
 	 *            the signature string
@@ -2796,10 +2786,9 @@ public final class Signature {
 					// once we hit "$" there are no more package prefixes
 					removePackageQualifiers = false;
 					/**
-					 * Convert '$' in resolved type signatures into '.'. NOTE:
-					 * This assumes that the type signature is an inner type
-					 * signature. This is true in most cases, but someone can
-					 * define a non-inner type name containing a '$'.
+					 * Convert '$' in resolved type signatures into '.'. NOTE: This assumes that the
+					 * type signature is an inner type signature. This is true in most cases, but
+					 * someone can define a non-inner type name containing a '$'.
 					 */
 					buffer.append('.');
 				}
@@ -2820,9 +2809,9 @@ public final class Signature {
 	}
 
 	/**
-	 * Scans the given string for a list of type arguments signature starting at
-	 * the given index and appends it to the given buffer, and returns the index
-	 * of the last character.
+	 * Scans the given string for a list of type arguments signature starting at the
+	 * given index and appends it to the given buffer, and returns the index of the
+	 * last character.
 	 * 
 	 * @param string
 	 *            the signature string
@@ -2870,9 +2859,9 @@ public final class Signature {
 	}
 
 	/**
-	 * Scans the given string for a type argument signature starting at the
-	 * given index and appends it to the given buffer, and returns the index of
-	 * the last character.
+	 * Scans the given string for a type argument signature starting at the given
+	 * index and appends it to the given buffer, and returns the index of the last
+	 * character.
 	 * 
 	 * @param string
 	 *            the signature string
@@ -2999,11 +2988,11 @@ public final class Signature {
 	 * </pre>
 	 * </p>
 	 * <p>
-	 * Note: This method assumes that a type signature containing a
-	 * <code>'$'</code> is an inner type signature. While this is correct in
-	 * most cases, someone could define a non-inner type name containing a
-	 * <code>'$'</code>. Handling this correctly in all cases would have
-	 * required resolving the signature, which generally not feasible.
+	 * Note: This method assumes that a type signature containing a <code>'$'</code>
+	 * is an inner type signature. While this is correct in most cases, someone
+	 * could define a non-inner type name containing a <code>'$'</code>. Handling
+	 * this correctly in all cases would have required resolving the signature,
+	 * which generally not feasible.
 	 * </p>
 	 *
 	 * @param signature
@@ -3026,10 +3015,9 @@ public final class Signature {
 	 *            the name of the method to insert in the result, or
 	 *            <code>null</code> if no method name is to be included
 	 * @param parameterNames
-	 *            the parameter names to insert in the result, or
-	 *            <code>null</code> if no parameter names are to be included; if
-	 *            supplied, the number of parameter names must match that of the
-	 *            method signature
+	 *            the parameter names to insert in the result, or <code>null</code>
+	 *            if no parameter names are to be included; if supplied, the number
+	 *            of parameter names must match that of the method signature
 	 * @param fullyQualifyTypeNames
 	 *            <code>true</code> if type names should be fully qualified, and
 	 *            <code>false</code> to use only simple names
@@ -3053,18 +3041,17 @@ public final class Signature {
 	 *            the name of the method to insert in the result, or
 	 *            <code>null</code> if no method name is to be included
 	 * @param parameterNames
-	 *            the parameter names to insert in the result, or
-	 *            <code>null</code> if no parameter names are to be included; if
-	 *            supplied, the number of parameter names must match that of the
-	 *            method signature
+	 *            the parameter names to insert in the result, or <code>null</code>
+	 *            if no parameter names are to be included; if supplied, the number
+	 *            of parameter names must match that of the method signature
 	 * @param fullyQualifyTypeNames
 	 *            <code>true</code> if type names should be fully qualified, and
 	 *            <code>false</code> to use only simple names
 	 * @param includeReturnType
 	 *            <code>true</code> if the return type is to be included
 	 * @param isVarArgs
-	 *            <code>true</code> if the last argument should be displayed as
-	 *            a variable argument, <code>false</code> otherwise
+	 *            <code>true</code> if the last argument should be displayed as a
+	 *            variable argument, <code>false</code> otherwise
 	 * @see #toCharArray(char[], char[], char[][], boolean, boolean)
 	 * @return the string representation of the method signature
 	 *

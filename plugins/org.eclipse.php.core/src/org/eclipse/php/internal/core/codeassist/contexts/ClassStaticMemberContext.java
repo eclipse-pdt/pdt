@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.contexts;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.CompletionRequestor;
@@ -94,7 +95,7 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 
 		if (!isParent || !isSelf) {
 			IType[] types = getLhsTypes();
-			if (types != null && types.length > 0) {
+			if (ArrayUtils.isNotEmpty(types)) {
 				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 				if (moduleDeclaration != null) {
 					IContext context = ASTUtils.findContext(sourceModule, moduleDeclaration, offset);
@@ -147,8 +148,7 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 	}
 
 	/**
-	 * Returns whether the left hand side expression has the type of parent
-	 * class
+	 * Returns whether the left hand side expression has the type of parent class
 	 */
 	public boolean isParent() {
 		return isParent;

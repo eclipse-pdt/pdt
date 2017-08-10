@@ -15,6 +15,7 @@ import static org.apache.commons.lang3.StringUtils.startsWithIgnoreCase;
 
 import java.util.*;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
@@ -192,8 +193,8 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * Extracts the namespace name from the specified element name and resolves
-	 * it using USE statements that present in the file.
+	 * Extracts the namespace name from the specified element name and resolves it
+	 * using USE statements that present in the file.
 	 * 
 	 * @param elementName
 	 *            The name of the element, like: \A\B or A\B\C.
@@ -374,9 +375,9 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * Determine whether given elements represent the same type, name and
-	 * namespace, but declared in different files (determine whether file
-	 * network filtering can be used)
+	 * Determine whether given elements represent the same type, name and namespace,
+	 * but declared in different files (determine whether file network filtering can
+	 * be used)
 	 * 
 	 * @param elements
 	 *            Model elements list
@@ -435,8 +436,7 @@ public class PHPModelUtils {
 	 *            The file where current namespace is requested
 	 * @param offset
 	 *            The offset where current namespace is requested
-	 * @return method element, or <code>null</code> if the scope not a method
-	 *         scope
+	 * @return method element, or <code>null</code> if the scope not a method scope
 	 */
 	@Nullable
 	public static IMethod getCurrentMethod(ISourceModule sourceModule, int offset) {
@@ -462,8 +462,8 @@ public class PHPModelUtils {
 	 * 
 	 * @param element
 	 *            Model element
-	 * @return namespace element, or <code>null</code> if the scope is global
-	 *         under the specified cursor position
+	 * @return namespace element, or <code>null</code> if the scope is global under
+	 *         the specified cursor position
 	 */
 	@Nullable
 	public static IType getCurrentNamespace(IModelElement element) {
@@ -488,8 +488,8 @@ public class PHPModelUtils {
 	 *            The file where current namespace is requested
 	 * @param sourceModule
 	 *            The offset where current namespace is requested
-	 * @return namespace element, or <code>null</code> if the scope is global
-	 *         under the specified cursor position
+	 * @return namespace element, or <code>null</code> if the scope is global under
+	 *         the specified cursor position
 	 */
 	@Nullable
 	public static IType getCurrentNamespace(ISourceModule sourceModule, int offset) {
@@ -553,7 +553,7 @@ public class PHPModelUtils {
 			IType result = getCurrentNamespace(sourceModule, offset);
 			if (result == null) {
 				IType[] types = sourceModule.getTypes();
-				if (types != null && types.length > 0 && PHPFlags.isNamespace(types[0].getFlags())) {
+				if (ArrayUtils.isNotEmpty(types) && PHPFlags.isNamespace(types[0].getFlags())) {
 					for (int i = 0; i < types.length; i++) {
 						if (types[i].getSourceRange().getOffset() <= offset
 								&& PHPFlags.isNamespace(types[i].getFlags())) {
@@ -703,9 +703,9 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * This method returns field corresponding to its name and the file where it
-	 * was referenced. The field name may contain also the namespace part, like:
-	 * A\B\C or \A\B\C
+	 * This method returns field corresponding to its name and the file where it was
+	 * referenced. The field name may contain also the namespace part, like: A\B\C
+	 * or \A\B\C
 	 * 
 	 * @param fieldName
 	 *            Tye fully qualified field name
@@ -725,9 +725,9 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * This method returns field corresponding to its name and the file where it
-	 * was referenced. The field name may contain also the namespace part, like:
-	 * A\B\C or \A\B\C
+	 * This method returns field corresponding to its name and the file where it was
+	 * referenced. The field name may contain also the namespace part, like: A\B\C
+	 * or \A\B\C
 	 * 
 	 * @param fieldName
 	 *            Tye fully qualified field name
@@ -795,9 +795,9 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * This method returns function corresponding to its name and the file where
-	 * it was referenced. The function name may contain also the namespace part,
-	 * like: A\B\foo() or \A\B\foo()
+	 * This method returns function corresponding to its name and the file where it
+	 * was referenced. The function name may contain also the namespace part, like:
+	 * A\B\foo() or \A\B\foo()
 	 * 
 	 * @param functionName
 	 *            The fully qualified function name
@@ -817,9 +817,9 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * This method returns function corresponding to its name and the file where
-	 * it was referenced. The function name may contain also the namespace part,
-	 * like: A\B\foo() or \A\B\foo()
+	 * This method returns function corresponding to its name and the file where it
+	 * was referenced. The function name may contain also the namespace part, like:
+	 * A\B\foo() or \A\B\foo()
 	 * 
 	 * @param functionName
 	 *            The fully qualified function name
@@ -905,8 +905,8 @@ public class PHPModelUtils {
 
 	/**
 	 * This method searches for all fields that where declared in the specified
-	 * method (including global variables that where introduced to this method
-	 * using 'global' keyword)
+	 * method (including global variables that where introduced to this method using
+	 * 'global' keyword)
 	 * 
 	 * @param method
 	 *            Method to look at
@@ -1062,8 +1062,7 @@ public class PHPModelUtils {
 	 *            Source module where the field is referenced
 	 * @param monitor
 	 *            Progress monitor
-	 * @return field declared in the specified namespace, or null if there is
-	 *         none
+	 * @return field declared in the specified namespace, or null if there is none
 	 * @throws ModelException
 	 */
 	@NonNull
@@ -1087,8 +1086,7 @@ public class PHPModelUtils {
 	 *            Model access cache if available
 	 * @param monitor
 	 *            Progress monitor
-	 * @return field declared in the specified namespace, or null if there is
-	 *         none
+	 * @return field declared in the specified namespace, or null if there is none
 	 * @throws ModelException
 	 */
 	@SuppressWarnings("null")
@@ -1165,8 +1163,7 @@ public class PHPModelUtils {
 	 * Guess the namespace where the specified element is declared.
 	 * 
 	 * @param elementName
-	 *            The name of the element, like: \A\B, A\B, namespace\B, \B,
-	 *            etc...
+	 *            The name of the element, like: \A\B, A\B, namespace\B, \B, etc...
 	 * @param sourceModule
 	 *            Source module where the element is referenced
 	 * @param offset
@@ -1186,8 +1183,7 @@ public class PHPModelUtils {
 	 * Guess the namespace where the specified element is declared.
 	 * 
 	 * @param elementName
-	 *            The name of the element, like: \A\B, A\B, namespace\B, \B,
-	 *            etc...
+	 *            The name of the element, like: \A\B, A\B, namespace\B, \B, etc...
 	 * @param sourceModule
 	 *            Source module where the element is referenced
 	 * @param offset
@@ -1229,8 +1225,7 @@ public class PHPModelUtils {
 	 *            Source module where the type is referenced
 	 * @param monitor
 	 *            Progress monitor
-	 * @return type declared in the specified namespace, or null if there is
-	 *         none
+	 * @return type declared in the specified namespace, or null if there is none
 	 * @throws ModelException
 	 */
 	@NonNull
@@ -1255,8 +1250,7 @@ public class PHPModelUtils {
 	 * @param monitor
 	 *            Progress monitor
 	 * @param isType
-	 * @return type declared in the specified namespace, or null if there is
-	 *         none
+	 * @return type declared in the specified namespace, or null if there is none
 	 * @throws ModelException
 	 */
 	@SuppressWarnings("null")
@@ -1511,7 +1505,7 @@ public class PHPModelUtils {
 		}
 		final List<IField> fields = new LinkedList<>();
 		fields.addAll(Arrays.asList(getTypeField(type, prefix, exactName)));
-		if (type.getSuperClasses() != null && type.getSuperClasses().length > 0) {
+		if (ArrayUtils.isNotEmpty(type.getSuperClasses())) {
 			fields.addAll(Arrays.asList(getSuperTypeHierarchyField(type, hierarchy, prefix, exactName, monitor)));
 		}
 		return fields.toArray(new IField[fields.size()]);
@@ -1592,15 +1586,15 @@ public class PHPModelUtils {
 		}
 		final List<IMethod> methods = new LinkedList<>();
 		methods.addAll(Arrays.asList(getTypeMethod(type, prefix, exactName)));
-		if (type.getSuperClasses() != null && type.getSuperClasses().length > 0) {
+		if (ArrayUtils.isNotEmpty(type.getSuperClasses())) {
 			methods.addAll(Arrays.asList(getSuperTypeHierarchyMethod(type, hierarchy, prefix, exactName, monitor)));
 		}
 		return methods.toArray(new IMethod[methods.size()]);
 	}
 
 	/**
-	 * Finds the first method by name in the class hierarchy (including the
-	 * class itself)
+	 * Finds the first method by name in the class hierarchy (including the class
+	 * itself)
 	 * 
 	 * @param type
 	 *            Class element
@@ -1624,11 +1618,11 @@ public class PHPModelUtils {
 		}
 		final List<IMethod> methods = new LinkedList<>();
 		methods.addAll(Arrays.asList(getTypeMethod(type, prefix, exactName)));
-		if (type.getSuperClasses() != null && type.getSuperClasses().length > 0 && methods.size() == 0) {
+		if (ArrayUtils.isNotEmpty(type.getSuperClasses()) && methods.size() == 0) {
 			IType[] allSuperclasses = getSuperClasses(type, hierarchy);
 			for (IType superClass : allSuperclasses) {
 				IMethod[] method = getTypeMethod(superClass, prefix, exactName);
-				if (method != null && method.length > 0) {
+				if (ArrayUtils.isNotEmpty(method)) {
 					methods.addAll(Arrays.asList(method));
 					break;
 				}
@@ -1734,9 +1728,9 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * This method returns type corresponding to its name and the file where it
-	 * was referenced. The type name may contain also the namespace part, like:
-	 * A\B\C or \A\B\C
+	 * This method returns type corresponding to its name and the file where it was
+	 * referenced. The type name may contain also the namespace part, like: A\B\C or
+	 * \A\B\C
 	 * 
 	 * @param typeName
 	 *            Tye fully qualified type name
@@ -1756,9 +1750,9 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * This method returns type corresponding to its name and the file where it
-	 * was referenced. The type name may contain also the namespace part, like:
-	 * A\B\C or \A\B\C
+	 * This method returns type corresponding to its name and the file where it was
+	 * referenced. The type name may contain also the namespace part, like: A\B\C or
+	 * \A\B\C
 	 * 
 	 * @param typeName
 	 *            Tye fully qualified type name
@@ -2209,9 +2203,9 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * this function searches the sequence from the right closing bracket ")"
-	 * and finding the position of the left "(" the offset has to be the offset
-	 * of the "("
+	 * this function searches the sequence from the right closing bracket ")" and
+	 * finding the position of the left "(" the offset has to be the offset of the
+	 * "("
 	 */
 	public static int getFunctionNameEndOffset(TextSequence statementText, int offset) {
 		if (statementText.charAt(offset) != ')') {
@@ -2355,8 +2349,8 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * Strips single or double quotes from the start and from the end of the
-	 * given string
+	 * Strips single or double quotes from the start and from the end of the given
+	 * string
 	 * 
 	 * @param name
 	 *            String

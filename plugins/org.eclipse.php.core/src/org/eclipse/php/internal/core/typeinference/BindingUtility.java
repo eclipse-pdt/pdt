@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
@@ -70,8 +71,7 @@ public class BindingUtility {
 	 * @param sourceModule
 	 *            Source module of the file.
 	 * @param rootNode
-	 *            AST tree of the the file represented by the given source
-	 *            module.
+	 *            AST tree of the the file represented by the given source module.
 	 */
 	public BindingUtility(ISourceModule sourceModule, ASTNode rootNode) {
 		this.sourceModule = sourceModule;
@@ -94,8 +94,8 @@ public class BindingUtility {
 	}
 
 	/**
-	 * This method returns evaluated type for the given AST expression node.
-	 * Returns cached type from previous evaluations (if exists).
+	 * This method returns evaluated type for the given AST expression node. Returns
+	 * cached type from previous evaluations (if exists).
 	 * 
 	 * @param node
 	 *            AST node that needs to be evaluated.
@@ -140,9 +140,8 @@ public class BindingUtility {
 	}
 
 	/**
-	 * This method returns evaluated type for the expression under the given
-	 * offset and length. Returns cached type from previous evaluations (if
-	 * exists).
+	 * This method returns evaluated type for the expression under the given offset
+	 * and length. Returns cached type from previous evaluations (if exists).
 	 * 
 	 * @param startOffset
 	 *            Starting offset of the expression.
@@ -191,9 +190,8 @@ public class BindingUtility {
 	}
 
 	/**
-	 * This method returns model elements for the given AST expression node.
-	 * This method uses cached evaluated type from previous evaluations (if
-	 * exists).
+	 * This method returns model elements for the given AST expression node. This
+	 * method uses cached evaluated type from previous evaluations (if exists).
 	 * 
 	 * @param node
 	 *            AST node that needs to be evaluated.
@@ -213,8 +211,8 @@ public class BindingUtility {
 	}
 
 	/**
-	 * This method returns model elements for the given model element. This
-	 * method uses cached evaluated type from previous evaluations (if exists).
+	 * This method returns model elements for the given model element. This method
+	 * uses cached evaluated type from previous evaluations (if exists).
 	 * 
 	 * @param element
 	 *            Source Reference Model element.
@@ -238,10 +236,9 @@ public class BindingUtility {
 	}
 
 	/**
-	 * This method returns model elements for the expression under the given
-	 * offset and length, and will filter the results using the file-network.
-	 * This method uses cached evaluated type from previous evaluations (if
-	 * exists).
+	 * This method returns model elements for the expression under the given offset
+	 * and length, and will filter the results using the file-network. This method
+	 * uses cached evaluated type from previous evaluations (if exists).
 	 * 
 	 * @param startOffset
 	 *            Starting offset of the expression.
@@ -259,10 +256,9 @@ public class BindingUtility {
 	}
 
 	/**
-	 * This method returns model elements for the expression under the given
-	 * offset and length, and will filter the results using the file-network.
-	 * This method uses cached evaluated type from previous evaluations (if
-	 * exists).
+	 * This method returns model elements for the expression under the given offset
+	 * and length, and will filter the results using the file-network. This method
+	 * uses cached evaluated type from previous evaluations (if exists).
 	 * 
 	 * @param startOffset
 	 *            Starting offset of the expression.
@@ -282,9 +278,9 @@ public class BindingUtility {
 	}
 
 	/**
-	 * This method returns model elements for the expression under the given
-	 * offset and length. This method uses cached evaluated type from previous
-	 * evaluations (if exists).
+	 * This method returns model elements for the expression under the given offset
+	 * and length. This method uses cached evaluated type from previous evaluations
+	 * (if exists).
 	 * 
 	 * @param startOffset
 	 *            Starting offset of the expression.
@@ -303,9 +299,9 @@ public class BindingUtility {
 	}
 
 	/**
-	 * This method returns model elements for the expression under the given
-	 * offset and length. This method uses cached evaluated type from previous
-	 * evaluations (if exists).
+	 * This method returns model elements for the expression under the given offset
+	 * and length. This method uses cached evaluated type from previous evaluations
+	 * (if exists).
 	 * 
 	 * @param startOffset
 	 *            Starting offset of the expression.
@@ -347,8 +343,7 @@ public class BindingUtility {
 	 * 
 	 * @param start
 	 * @param length
-	 * @return the IModelElement instance which represents a IField node, or
-	 *         null.
+	 * @return the IModelElement instance which represents a IField node, or null.
 	 * @throws Exception
 	 */
 	public IModelElement getFieldByPosition(int start, int length) throws Exception {
@@ -367,7 +362,7 @@ public class BindingUtility {
 			rootNode.traverse(varDecSearcher);
 
 			Declaration[] decls = varDecSearcher.getDeclarations();
-			if (decls != null && decls.length > 0) {
+			if (ArrayUtils.isNotEmpty(decls)) {
 				return this.sourceModule.getElementAt(decls[0].getNode().sourceStart());
 			}
 		}
