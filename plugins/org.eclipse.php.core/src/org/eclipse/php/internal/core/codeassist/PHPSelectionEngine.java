@@ -366,6 +366,17 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				IModelElement element = sourceModule.getElementAt(offset);
 				if (element instanceof ImportDeclaration) {
 					String fullyQualifiedName = ((ImportDeclaration) element).getElementName();
+					String namespace = PHPModelUtils.extractNameSpaceName(fullyQualifiedName);
+					// http://php.net/manual/en/language.namespaces.importing.php
+					// "Note that for namespaced names (fully qualified
+					// namespace names containing namespace separator, such as
+					// Foo\Bar as opposed to global names that do not, such as
+					// FooBar), the leading backslash is unnecessary and not
+					// recommended, as import names must be fully qualified, and
+					// are not processed relative to the current namespace."
+					if (namespace != null && !fullyQualifiedName.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
+						fullyQualifiedName = NamespaceReference.NAMESPACE_DELIMITER + fullyQualifiedName;
+					}
 					return PHPModelUtils.getFunctions(fullyQualifiedName, sourceModule, offset, cache, null);
 				}
 			}
