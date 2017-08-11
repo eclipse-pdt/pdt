@@ -152,6 +152,9 @@ public class NewPHPClassPage extends NewPHPTypePage {
 				IScriptProject model = DLTKCore.create(currentProject);
 				String superClassName = ((Text) e.getSource()).getText().trim();
 				if (model != null) {
+					if (superClassData != null && !superClassName.equalsIgnoreCase(superClassData.getElementName())) {
+						superClassData = null;
+					}
 					validateSuperClass(superClassName);
 				}
 			}
@@ -209,6 +212,7 @@ public class NewPHPClassPage extends NewPHPTypePage {
 		IScriptProject model = getProject();
 		// check that superclass exists in model
 		String superclassName = getSuperclassName();
+		superClassData = null;
 		if (superclassName.length() > 0) {
 			validateSuperClass(superclassName);
 		}
@@ -232,10 +236,14 @@ public class NewPHPClassPage extends NewPHPTypePage {
 			return;
 		}
 
-		superClassData = null;
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(getProject());
-		IType[] types = PHPModelAccess.getDefault().findTypes(superclassName, MatchRule.EXACT, 0, 0, scope,
-				new NullProgressMonitor());
+		IType[] types;
+		if (superClassData == null) {
+			IDLTKSearchScope scope = SearchEngine.createSearchScope(getProject());
+			types = PHPModelAccess.getDefault().findTypes(superclassName, MatchRule.EXACT, 0, 0, scope,
+					new NullProgressMonitor());
+		} else {
+			types = new IType[] { superClassData };
+		}
 
 		String error = null;
 		for (IType type : types) {
