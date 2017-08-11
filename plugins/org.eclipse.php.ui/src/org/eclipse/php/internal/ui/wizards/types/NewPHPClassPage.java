@@ -59,6 +59,7 @@ public class NewPHPClassPage extends NewPHPTypePage {
 
 	public static final int VALIDATE_SUPER_CLASS = 5;
 	protected StatusInfo superClassStatus;
+	private String previousSourceFolder;
 
 	public NewPHPClassPage() {
 		super(Messages.NewPHPClassPage_3);
@@ -96,6 +97,7 @@ public class NewPHPClassPage extends NewPHPTypePage {
 		if (superClassData != null) {
 			superClassName.setText(superClassData.getElementName());
 		}
+		previousSourceFolder = getSourceText();
 	}
 
 	@Override
@@ -152,6 +154,9 @@ public class NewPHPClassPage extends NewPHPTypePage {
 				IScriptProject model = DLTKCore.create(currentProject);
 				String superClassName = ((Text) e.getSource()).getText().trim();
 				if (model != null) {
+					if (superClassData != null && !superClassName.equalsIgnoreCase(superClassData.getElementName())) {
+						superClassData = null;
+					}
 					validateSuperClass(superClassName);
 				}
 			}
@@ -202,17 +207,23 @@ public class NewPHPClassPage extends NewPHPTypePage {
 		if (projPath.segmentCount() != 1) {
 			return;
 		}
-		String projectPath = projPath.segment(1);
+		String projectPath = projPath.segment(0);
 		if (projectPath == null || projectPath.length() == 0) {
 			return;
 		}
-		IScriptProject model = getProject();
-		// check that superclass exists in model
-		String superclassName = getSuperclassName();
-		if (superclassName.length() > 0) {
-			validateSuperClass(superclassName);
+
+		// NB: previousSourceFolder can be null because this method
+		// can be called before initValues()
+		if (!sourcePath.equals(previousSourceFolder)) {
+			// check that superclass exists in model
+			String superclassName = getSuperclassName();
+			superClassData = null;
+			if (superclassName.length() > 0) {
+				validateSuperClass(superclassName);
+			}
 		}
 
+		IScriptProject model = getProject();
 		// check that interfaces exist in model
 		if (getInterfaces().size() > 0) {
 			validateInterfaces(model);
@@ -220,6 +231,7 @@ public class NewPHPClassPage extends NewPHPTypePage {
 		if (getTraits().size() > 0) {
 			validateTraits(model);
 		}
+		previousSourceFolder = sourcePath;
 	}
 
 	private void validateSuperClass(final String superclassName) {
@@ -232,10 +244,14 @@ public class NewPHPClassPage extends NewPHPTypePage {
 			return;
 		}
 
-		superClassData = null;
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(getProject());
-		IType[] types = PHPModelAccess.getDefault().findTypes(superclassName, MatchRule.EXACT, 0, 0, scope,
-				new NullProgressMonitor());
+		IType[] types;
+		if (superClassData == null) {
+			IDLTKSearchScope scope = SearchEngine.createSearchScope(getProject());
+			types = PHPModelAccess.getDefault().findTypes(superclassName, MatchRule.EXACT, 0, 0, scope,
+					new NullProgressMonitor());
+		} else {
+			types = new IType[] { superClassData };
+		}
 
 		String error = null;
 		for (IType type : types) {
