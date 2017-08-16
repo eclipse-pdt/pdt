@@ -1286,6 +1286,13 @@
            </visibleWhen>
         </command>
      </menuContribution>
+     <menuContribution
+           locationURI="popup:org.eclipse.ui.popup.any?before=additions">
+        <separator
+              name="buildGroup"
+              visible="true">
+        </separator>
+     </menuContribution>
 	</extension>
 
 
