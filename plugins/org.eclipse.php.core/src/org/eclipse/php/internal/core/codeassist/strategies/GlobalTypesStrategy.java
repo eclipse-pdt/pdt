@@ -76,7 +76,8 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		if (StringUtils.isBlank(abstractContext.getPrefixWithoutProcessing())) {
 			return;
 		}
-		boolean isUseContext = context instanceof UseNameContext && !((UseNameContext) context).isUseTrait();
+		boolean isUseContext = context instanceof UseNameContext
+				&& ((UseNameContext) context).getType() != UseNameContext.TYPES.TRAIT;
 		ISourceRange replacementRange = getReplacementRange(abstractContext);
 
 		IType[] types = getTypes(abstractContext);
@@ -84,10 +85,9 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		String suffix = "";//$NON-NLS-1$
 		String nsSuffix = getNSSuffix(abstractContext);
 		int extraInfo = getExtraInfo();
-		if ((abstractContext.getOffset() - abstractContext.getPrefix().length() - 1 >= 0) && (abstractContext
-				.getDocument().getChar(abstractContext.getOffset() - abstractContext.getPrefix().length() - 1) == '\''
-				|| abstractContext.getDocument()
-						.getChar(abstractContext.getOffset() - abstractContext.getPrefix().length() - 1) == '\"')) {
+		if ((abstractContext.getReplacementStart() - 1 >= 0)
+				&& (abstractContext.getDocument().getChar(abstractContext.getReplacementStart() - 1) == '\''
+						|| abstractContext.getDocument().getChar(abstractContext.getReplacementStart() - 1) == '\"')) {
 			extraInfo = extraInfo | ProposalExtraInfo.NO_INSERT_USE;
 		}
 		if ("namespace".equals(abstractContext.getPreviousWord(1)) //$NON-NLS-1$

@@ -109,6 +109,19 @@ public class AbstractNamespaceUseContext extends UseStatementContext {
 		return isGlobal;
 	}
 
+	@SuppressWarnings("null")
+	public String getRealPrefixBeforeCursor() {
+		if (hasWhitespaceBeforeCursor()) {
+			return ""; //$NON-NLS-1$
+		}
+		int statementLength = longestStatementTextBeforeCursor.length();
+		int prefixEnd = PHPTextSequenceUtilities.readBackwardSpaces(longestStatementTextBeforeCursor, statementLength); // read
+		// whitespace
+		int prefixStart = PHPTextSequenceUtilities.readIdentifierStartIndex(longestStatementTextBeforeCursor, prefixEnd, true);
+		return prefixStart < 0 ? "" //$NON-NLS-1$
+				: longestStatementTextBeforeCursor.subSequence(prefixStart, prefixEnd).toString();
+	}
+
 	@Override
 	public String getPrefix() throws BadLocationException {
 		if (hasWhitespaceBeforeCursor()) {
@@ -124,7 +137,7 @@ public class AbstractNamespaceUseContext extends UseStatementContext {
 	}
 
 	@Override
-	public int getPrefixEnd() throws BadLocationException {
+	public int getReplacementEnd() throws BadLocationException {
 		ITextRegion phpToken = getPHPToken();
 		if (phpToken.getType() == PHPRegionTypes.PHP_NS_SEPARATOR
 				// Check that there's no other (whitespace) characters
@@ -138,7 +151,7 @@ public class AbstractNamespaceUseContext extends UseStatementContext {
 				return getRegionCollection().getStartOffset() + phpScriptRegion.getStart() + nextRegion.getTextEnd();
 			}
 		}
-		return super.getPrefixEnd();
+		return super.getReplacementEnd();
 	}
 
 }

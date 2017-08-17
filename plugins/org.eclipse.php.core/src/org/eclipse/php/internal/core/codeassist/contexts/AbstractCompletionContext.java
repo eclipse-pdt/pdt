@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016 IBM Corporation and others.
+ * Copyright (c) 2009, 2016, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -92,12 +92,6 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 
 							partitionType = determinePartitionType(regionCollection, phpScriptRegion, offset);
 							if (partitionType != null) {
-
-								String prefix = getPrefix();
-								if (prefix.length() > 0 && (!Character.isJavaIdentifierStart(prefix.charAt(0))
-										&& prefix.charAt(0) != '\\')) {
-									return false;
-								}
 								return true;
 							}
 						}
@@ -300,6 +294,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 * @return source module
 	 * @see #isValid(ISourceModule, int, CompletionRequestor)
 	 */
+	@NonNull
 	public ISourceModule getSourceModule() {
 		return sourceModule;
 	}
@@ -354,11 +349,6 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 */
 	@NonNull
 	public TextSequence getStatementText() {
-		return PHPTextSequenceUtilities.getStatement(offset, structuredDocumentRegion, true);
-	}
-
-	@NonNull
-	public TextSequence getStatementText(int offset) {
 		return PHPTextSequenceUtilities.getStatement(offset, structuredDocumentRegion, true);
 	}
 
@@ -571,12 +561,22 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	/**
+	 * Returns the start of the word on which code assist was invoked
+	 * 
+	 * @return
+	 * @throws BadLocationException
+	 */
+	public int getReplacementStart() throws BadLocationException {
+		return offset - getPrefix().length();
+	}
+
+	/**
 	 * Returns the end of the word on which code assist was invoked
 	 * 
 	 * @return
 	 * @throws BadLocationException
 	 */
-	public int getPrefixEnd() throws BadLocationException {
+	public int getReplacementEnd() throws BadLocationException {
 		ITextRegion phpToken = getPHPToken();
 		int endOffset = regionCollection.getStartOffset() + phpScriptRegion.getStart() + phpToken.getTextEnd();
 		if (PHPPartitionTypes.isPHPQuotesState(phpToken.getType())) {
@@ -847,7 +847,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 						// Calculate starting position of the statement (it
 						// should go right after this startTokenRegion):
 						// startOffset += startTokenRegion.getEnd();
-						TextSequence statementText1 = getStatementText(startOffset + startTokenRegion.getStart() - 1);
+						TextSequence statementText1 = PHPTextSequenceUtilities.getStatement(
+								startOffset + startTokenRegion.getStart() - 1, structuredDocumentRegion, true);
 						startTokenRegion = phpScriptRegion
 								.getPHPToken(startTokenRegion.getStart() - statementText1.length());
 						if (startTokenRegion.getType() == PHPRegionTypes.PHP_USE) {

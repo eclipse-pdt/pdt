@@ -150,7 +150,7 @@ public abstract class ClassMemberContext extends StatementContext {
 	}
 
 	@Override
-	public int getPrefixEnd() throws BadLocationException {
+	public int getReplacementEnd() throws BadLocationException {
 		ITextRegion phpToken = getPHPToken();
 		if (phpToken.getType() == PHPRegionTypes.PHP_OBJECT_OPERATOR
 				|| phpToken.getType() == PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM) {
@@ -168,6 +168,6 @@ public abstract class ClassMemberContext extends StatementContext {
 				return getRegionCollection().getStartOffset() + phpScriptRegion.getStart() + addOffset;
 			}
 		}
-		return super.getPrefixEnd();
+		return super.getReplacementEnd();
 	}
 }
