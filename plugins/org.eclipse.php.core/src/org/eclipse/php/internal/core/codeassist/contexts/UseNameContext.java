@@ -41,7 +41,7 @@ public class UseNameContext extends UseStatementContext {
 		}
 
 		try {
-			if (useTrait) {
+			if (getType() == TYPES.TRAIT) {
 				TextSequence statementText = getStatementText();
 				if (statementText.toString().indexOf('{') < 0 && statementText.toString().indexOf('}') < 0) {
 					return true;
