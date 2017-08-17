@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -64,8 +64,7 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 				}
 			}
 			resolvers.add(new CompletionContextResolver()); // add default
-			instances = resolvers
-					.toArray(new ICompletionContextResolver[resolvers.size()]);
+			instances = resolvers.toArray(new ICompletionContextResolver[resolvers.size()]);
 		}
 		return instances;
 	}
@@ -82,8 +81,8 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 				new GlobalStatementContext(), new GlobalMethodStatementContext(), new InstanceOfContext(),
 				new InterfaceExtendsContext(), new InterfaceDeclarationKeywordContext(), new UseAliasContext(),
 				new UseNameContext(), new UseConstNameContext(), new UseFunctionNameContext(),
-				new NamespaceMemberContext(), new NamespaceNameContext(), new GotoStatementContext(),
-				new NamespaceUseNameContext(), new NamespaceUseFunctionNameContext(),
+				new NamespaceMemberContext(), new NamespaceNameContext(), new GroupedNamespaceNameContext(),
+				new GotoStatementContext(), new NamespaceUseNameContext(), new NamespaceUseFunctionNameContext(),
 				new NamespaceUseConstNameContext(), new NamespaceDeclContext(), new IncludeStatementContext(),
 				new ExceptionClassInstantiationContext(), new TypeCastingContext(),
 				new NamespacePHPDocVarStartContext(), new QuotesContext() };
