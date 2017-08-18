@@ -41,7 +41,7 @@ public class UseNameContext extends UseStatementContext {
 		}
 
 		try {
-			if (useTrait) {
+			if (getType() == TYPES.TRAIT) {
 				TextSequence statementText = getStatementText();
 				if (statementText.toString().indexOf('{') < 0 && statementText.toString().indexOf('}') < 0) {
 					return true;
@@ -56,6 +56,15 @@ public class UseNameContext extends UseStatementContext {
 			PHPCorePlugin.log(e);
 		}
 		return false;
+	}
+
+	@Override
+	public String getGroupPrefixBeforeOpeningCurly() {
+		String prefix = super.getGroupPrefixBeforeOpeningCurly();
+		if (prefix.length() > 0 && prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+			return prefix.substring(1);
+		}
+		return prefix;
 	}
 
 	@Override

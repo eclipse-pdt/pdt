@@ -191,7 +191,7 @@ public abstract class NamespaceAbstractPHPDocTagStartContext extends NamespacePH
 	}
 
 	@Override
-	public int getPrefixEnd() throws BadLocationException {
+	public int getReplacementEnd() throws BadLocationException {
 		ITextRegion phpToken = getPHPToken();
 		if (phpToken.getType() == PHPRegionTypes.PHP_NS_SEPARATOR
 				// Check that there's no other (whitespace) characters
@@ -205,7 +205,7 @@ public abstract class NamespaceAbstractPHPDocTagStartContext extends NamespacePH
 				return getRegionCollection().getStartOffset() + phpScriptRegion.getStart() + nextRegion.getTextEnd();
 			}
 		}
-		return super.getPrefixEnd();
+		return super.getReplacementEnd();
 	}
 
 }

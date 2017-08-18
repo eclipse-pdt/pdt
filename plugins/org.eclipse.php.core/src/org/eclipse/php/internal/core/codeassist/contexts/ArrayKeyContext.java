@@ -108,8 +108,8 @@ public class ArrayKeyContext extends AbstractCompletionContext {
 	}
 
 	@Override
-	public int getPrefixEnd() throws BadLocationException {
-		int prefixEnd = super.getPrefixEnd();
+	public int getReplacementEnd() throws BadLocationException {
+		int prefixEnd = super.getReplacementEnd();
 		if (hasQuotes) {
 			--prefixEnd;
 		}
