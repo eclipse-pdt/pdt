@@ -1,0 +1,53 @@
+--TEST--
+Test CA for grouped use statements
+--FILE--
+<?php
+namespace MyUseConst04\Space;
+class MyClass
+{
+}
+
+const CONST1 = 0;
+
+function foo1() {
+}
+
+namespace MyUseConst04\Space\A;
+class MyClass2
+{
+}
+
+const CONST1 = 0;
+
+function foo1() {
+}
+
+namespace MyUseConst04\Space2\A;
+class MyClass2
+{
+}
+
+const CONST1 = 0;
+
+function foo1() {
+}
+
+namespace MyUseConst04\Space\AB;
+class MyClass3
+{
+}
+
+const CONST1 = 0;
+
+function foo1() {
+}
+
+use MyUseConst04\Space\ { MyClass as A, AB\MyClass3 as B };
+use MyUseConst04\ { Space\A\MyClass2 as C, \Space2\A\MyClass2 as D, \Space\AB\MyClass3 as E };
+use const MyUseConst04\ { Space2\A\CONST1 as F, \| as G };
+use function MyUseConst04\ { Space2\A\foo1 as H, \Space\A\foo1 as I };
+--EXPECT--
+type(MyUseConst04\Space)
+type(MyUseConst04\Space\A)
+type(MyUseConst04\Space2\A)
+type(MyUseConst04\Space\AB)
