@@ -15,6 +15,7 @@ package org.eclipse.php.internal.core.codeassist;
 import java.util.*;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.codeassist.ScriptCompletionEngine;
 import org.eclipse.dltk.compiler.env.IModuleSource;
@@ -322,6 +323,12 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 
 	@Override
 	public void reportType(IType type, String suffix, ISourceRange replaceRange, Object extraInfo, int subRelevance) {
+		reportType(type, "", suffix, replaceRange, extraInfo, 0); //$NON-NLS-1$
+	}
+
+	@Override
+	public void reportType(IType type, String prefix, String suffix, ISourceRange replaceRange, Object extraInfo,
+			int subRelevance) {
 		if (processedElements.containsKey(type) && processedElements.get(type).getClass() == type.getClass()) {
 			return;
 		}
@@ -357,6 +364,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			proposal.setName(elementName);
 
 			int relevance = relevanceClass + subRelevance;
+			if (StringUtils.isNotEmpty(prefix) && StringUtils.isNotEmpty(completionName)
+					&& StringUtils.startsWithIgnoreCase(completionName, prefix)) {
+				completionName = completionName.substring(prefix.length());
+			}
 			proposal.setCompletion(completionName + suffix);
 
 			try {
