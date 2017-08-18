@@ -33,6 +33,7 @@ import org.eclipse.php.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.*;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
+import org.eclipse.php.internal.core.codeassist.contexts.GroupedNamespaceNameContext;
 import org.eclipse.php.internal.core.codeassist.contexts.NamespaceMemberContext;
 import org.eclipse.php.internal.core.codeassist.contexts.UseNameContext;
 import org.eclipse.php.internal.core.model.PHPModelAccess;
@@ -76,23 +77,28 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		if (StringUtils.isBlank(abstractContext.getPrefixWithoutProcessing())) {
 			return;
 		}
-		boolean isUseContext = context instanceof UseNameContext && !((UseNameContext) context).isUseTrait();
+		boolean isUseContext = context instanceof UseNameContext
+				&& ((UseNameContext) context).getType() != UseNameContext.TYPES.TRAIT;
 		ISourceRange replacementRange = getReplacementRange(abstractContext);
 
 		IType[] types = getTypes(abstractContext);
 		// now we compute type suffix in PHPCompletionProposalCollector
-		String suffix = "";//$NON-NLS-1$
+		String suffix = ""; //$NON-NLS-1$
 		String nsSuffix = getNSSuffix(abstractContext);
 		int extraInfo = getExtraInfo();
-		if ((abstractContext.getOffset() - abstractContext.getPrefix().length() - 1 >= 0) && (abstractContext
-				.getDocument().getChar(abstractContext.getOffset() - abstractContext.getPrefix().length() - 1) == '\''
-				|| abstractContext.getDocument()
-						.getChar(abstractContext.getOffset() - abstractContext.getPrefix().length() - 1) == '\"')) {
+		int beforeReplacementStart = abstractContext.getReplacementStart() - 1;
+		if (beforeReplacementStart >= 0 && (abstractContext.getDocument().getChar(beforeReplacementStart) == '\''
+				|| abstractContext.getDocument().getChar(beforeReplacementStart) == '\"')) {
 			extraInfo = extraInfo | ProposalExtraInfo.NO_INSERT_USE;
 		}
 		if ("namespace".equals(abstractContext.getPreviousWord(1)) //$NON-NLS-1$
 				|| isUseContext) {
 			extraInfo = extraInfo | ProposalExtraInfo.NO_INSERT_USE;
+		}
+		String nsPrefix = null;
+		if (context instanceof GroupedNamespaceNameContext
+				&& ((GroupedNamespaceNameContext) context).isCursorInsideGroupStatement()) {
+			nsPrefix = ((GroupedNamespaceNameContext) context).getGroupPrefixBeforeOpeningCurly();
 		}
 
 		for (IType type : types) {
@@ -102,6 +108,8 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 				if (!isNamespace && isUseContext) {
 					reporter.reportType(type, isNamespace ? nsSuffix : suffix, replacementRange,
 							extraInfo | ProposalExtraInfo.CLASS_IN_NAMESPACE);
+				} else if (nsPrefix != null && isNamespace) {
+					reporter.reportType(type, nsPrefix, nsSuffix, replacementRange, extraInfo, 0);
 				} else {
 					reporter.reportType(type, isNamespace ? nsSuffix : suffix, replacementRange, extraInfo);
 				}

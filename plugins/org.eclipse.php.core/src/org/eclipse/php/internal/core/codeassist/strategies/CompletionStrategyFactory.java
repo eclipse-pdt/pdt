@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016 IBM Corporation and others.
+ * Copyright (c) 2009, 2016, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -218,7 +218,8 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new NamespaceElementsCompositeStrategy(context, allContexts,
 					((NamespaceMemberContext) context).isGlobal()) };
 		}
-		if (contextClass == NamespaceNameContext.class || contextClass == NamespaceDeclContext.class) {
+		if (contextClass == NamespaceNameContext.class || contextClass == NamespaceDeclContext.class
+				|| contextClass == GroupedNamespaceNameContext.class) {
 			return new ICompletionStrategy[] { new NamespacesStrategy(context) };
 		}
 		if (contextClass == QuotesContext.class) {
@@ -232,7 +233,7 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		}
 		if (contextClass == UseNameContext.class) {
 			UseNameContext useNameContext = (UseNameContext) context;
-			if (useNameContext.isUseTrait()) {
+			if (useNameContext.getType() == UseNameContext.TYPES.TRAIT) {
 				return new ICompletionStrategy[] { new UseTraitNameStrategy(context) };
 			} else {
 				return new ICompletionStrategy[] { new UseNameStrategy(context) };
@@ -247,7 +248,7 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		}
 		if (contextClass == NamespaceUseNameContext.class) {
 			NamespaceUseNameContext useNameContext = (NamespaceUseNameContext) context;
-			if (useNameContext.isUseTrait()) {
+			if (useNameContext.getType() == NamespaceUseNameContext.TYPES.TRAIT) {
 				return new ICompletionStrategy[] { new NamespaceUseTraitNameStrategy(context) };
 			} else {
 				return new ICompletionStrategy[] { new NamespaceUseNameStrategy(context) };

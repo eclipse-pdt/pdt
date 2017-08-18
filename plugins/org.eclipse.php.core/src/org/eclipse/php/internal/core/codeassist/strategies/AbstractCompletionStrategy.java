@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015, 2016 IBM Corporation and others.
+ * Copyright (c) 2009, 2015, 2016, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -74,14 +74,13 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) context;
 
-		int length = completionContext.getPrefix().length();
+		int offset = completionContext.getOffset();
+		int start = completionContext.getReplacementStart();
+		int prefixEnd = completionContext.getReplacementEnd();
 
-		int start = completionContext.getOffset() - length;
-		int prefixEnd = completionContext.getPrefixEnd();
+		assert start <= offset;
 
-		if (start + length < prefixEnd) {
-			length = prefixEnd - start;
-		}
+		int length = Math.max(offset, prefixEnd) - start;
 
 		if (completionContext.hasSpaceAtPosition(start + length)) {
 			return new SourceRange(start, length + 1);
@@ -94,14 +93,13 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) context;
 
-		int length = completionContext.getPrefix().length();
+		int offset = completionContext.getOffset();
+		int start = completionContext.getReplacementStart();
+		int prefixEnd = completionContext.getReplacementEnd();
 
-		int start = completionContext.getOffset() - length;
-		int prefixEnd = completionContext.getPrefixEnd();
+		assert start <= offset;
 
-		if (start + length < prefixEnd) {
-			length = prefixEnd - start;
-		}
+		int length = Math.max(offset, prefixEnd) - start;
 
 		return new SourceRange(start, length);
 	}
@@ -122,13 +120,13 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) context;
 
-		int length = completionContext.getPrefix().length();
-		int start = completionContext.getOffset() - length;
-		int prefixEnd = completionContext.getPrefixEnd();
+		int offset = completionContext.getOffset();
+		int start = completionContext.getReplacementStart();
+		int prefixEnd = completionContext.getReplacementEnd();
 
-		if (start + length < prefixEnd) {
-			length = prefixEnd - start;
-		}
+		assert start <= offset;
+
+		int length = Math.max(offset, prefixEnd) - start;
 
 		IDocument document = completionContext.getDocument();
 

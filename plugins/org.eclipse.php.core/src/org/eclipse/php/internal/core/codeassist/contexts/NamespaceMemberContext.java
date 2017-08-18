@@ -54,11 +54,9 @@ public class NamespaceMemberContext extends StatementContext {
 
 		TextSequence statementText = getStatementText();
 		// disable this context for use statement
-		if (statementText.length() >= 4) {
-			if ("use".equals(statementText.subSequence(0, 3).toString()) //$NON-NLS-1$
-					&& Character.isWhitespace(statementText.subSequence(3, 4).charAt(0))) {
-				return false;
-			}
+		if (new UseStatementContext() {
+		}.isValid(sourceModule, offset, requestor)) {
+			return false;
 		}
 
 		int totalLength = statementText.length();
@@ -142,7 +140,7 @@ public class NamespaceMemberContext extends StatementContext {
 	}
 
 	@Override
-	public int getPrefixEnd() throws BadLocationException {
+	public int getReplacementEnd() throws BadLocationException {
 		ITextRegion phpToken = getPHPToken();
 		if (phpToken.getType() == PHPRegionTypes.PHP_NS_SEPARATOR
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=458794
@@ -158,7 +156,7 @@ public class NamespaceMemberContext extends StatementContext {
 				return getRegionCollection().getStartOffset() + phpScriptRegion.getStart() + nextRegion.getTextEnd();
 			}
 		}
-		return super.getPrefixEnd();
+		return super.getReplacementEnd();
 	}
 
 }
