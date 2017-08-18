@@ -1,0 +1,50 @@
+--TEST--
+Bug 521134 - content assist doesn't work with grouped use statements
+--FILE--
+<?php
+namespace MyUseClass06\Space;
+class MyClass
+{
+}
+
+const CONST1 = 0;
+
+function foo1() {
+}
+
+namespace MyUseClass06\Space\A;
+class MyClass2
+{
+}
+
+const CONST1 = 0;
+
+function foo1() {
+}
+
+namespace MyUseClass06\Space2\A;
+class MyClass2
+{
+}
+
+const CONST1 = 0;
+
+function foo1() {
+}
+
+namespace MyUseClass06\Space\AB;
+class MyClass3
+{
+}
+
+const CONST1 = 0;
+
+function foo1() {
+}
+
+use MyUseClass06\Space\ { MyClass as A, AB\MyClass3 as B };
+use MyUseClass06\ { Space\A\MyClass2 as C, \Space2\A\| as D, \Space\AB\MyClass3 as E };
+use const MyUseClass06\ { Space2\A\CONST1 as F, \Space\AB\CONST1 as G };
+use function MyUseClass06\ { Space2\A\foo1 as H, \Space\A\foo1 as I };
+--EXPECT--
+type(MyClass2)

@@ -75,6 +75,9 @@ public interface ICompletionReporter {
 
 	public void reportType(IType type, String suffix, ISourceRange replaceRange, Object extraInfo, int subRelevance);
 
+	public void reportType(IType type, String prefix, String suffix, ISourceRange replaceRange, Object extraInfo,
+			int subRelevance);
+
 	/**
 	 * Reports method or function
 	 * 
