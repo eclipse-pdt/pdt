@@ -49,7 +49,7 @@ public abstract class NamespacePHPDocContext extends AbstractCompletionContext {
 	}
 
 	@Override
-	public int getPrefixEnd() throws BadLocationException {
+	public int getReplacementEnd() throws BadLocationException {
 		int prefixEnd = getOffset();
 		// NB: getChar(prefixEnd) returns ' ' if offset is at end of document
 		while (!Character.isWhitespace(getChar(prefixEnd)) && getChar(prefixEnd) != Constants.TYPE_SEPARATOR_CHAR) {
@@ -72,11 +72,4 @@ public abstract class NamespacePHPDocContext extends AbstractCompletionContext {
 	public TextSequence getStatementText() {
 		return PHPTextSequenceUtilities.getStatement(getOffset(), getStructuredDocumentRegion(), false);
 	}
-
-	@Override
-	@NonNull
-	public TextSequence getStatementText(int offset) {
-		return PHPTextSequenceUtilities.getStatement(offset, getStructuredDocumentRegion(), false);
-	}
-
 }

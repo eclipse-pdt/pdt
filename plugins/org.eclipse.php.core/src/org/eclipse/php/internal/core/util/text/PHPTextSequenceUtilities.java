@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015, 2016 IBM Corporation and others.
+ * Copyright (c) 2009, 2015, 2016, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,6 +33,7 @@ import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
@@ -61,8 +62,8 @@ public class PHPTextSequenceUtilities {
 
 	/**
 	 * This function returns statement text depending on the current offset. It
-	 * searches backwards (starting from offset - 1) until it finds ';', '{' or
-	 * '}'.
+	 * searches backwards (starting from offset - 1) until it finds delimiter
+	 * ';', '{' or '}'.
 	 * 
 	 * @param offset
 	 *            The absolute offset in the document
@@ -76,6 +77,37 @@ public class PHPTextSequenceUtilities {
 	 */
 	public static @NonNull TextSequence getStatement(int offset, @NonNull IStructuredDocumentRegion sdRegion,
 			boolean removeComments) {
+		return getStatement(offset, sdRegion, removeComments, null);
+	}
+
+	/**
+	 * This function returns statement text depending on the current offset. It
+	 * searches backwards (starting from offset - 1) until it finds delimiter
+	 * ';', '{' or '}'.
+	 * 
+	 * @param offset
+	 *            The absolute offset in the document
+	 * @param sdRegion
+	 *            Structured document region of the offset
+	 * @param removeComments
+	 *            Flag determining whether to remove comments in the resulted
+	 *            text sequence
+	 * @param foundDelimiter
+	 *            If foundDelimiter is not null and foundDelimiter length is
+	 *            greater than 0 then foundDelimiter[0] will contain the
+	 *            delimiter region found while searching backwards (or null if
+	 *            no delimiter was found, typically when the backward search
+	 *            reached the beginning of sdRegion). Note that the
+	 *            foundDelimiter[0] offset will be <b>relative to the beginning
+	 *            of the document</b>.
+	 * 
+	 * @return text sequence of the statement, cannot be null
+	 */
+	public static @NonNull TextSequence getStatement(int offset, @NonNull IStructuredDocumentRegion sdRegion,
+			boolean removeComments, ContextRegion[] foundDelimiter) {
+		if (foundDelimiter != null && foundDelimiter.length != 0) {
+			foundDelimiter[0] = null;
+		}
 		int documentOffset = offset;
 		if (documentOffset == sdRegion.getEndOffset()) {
 			documentOffset -= 1;
@@ -127,6 +159,10 @@ public class PHPTextSequenceUtilities {
 					if (type == PHPRegionTypes.PHP_CURLY_CLOSE || type == PHPRegionTypes.PHP_CURLY_OPEN
 							|| type == PHPRegionTypes.PHP_SEMICOLON
 					/* || startTokenRegion.getType() == PHPRegionTypes.PHP_IF */) {
+						if (foundDelimiter != null && foundDelimiter.length != 0) {
+							foundDelimiter[0] = new ContextRegion(type, startOffset + startTokenRegion.getStart(),
+									startTokenRegion.getTextLength(), startTokenRegion.getLength());
+						}
 						// Calculate starting position of the statement (it
 						// should go right after this startTokenRegion):
 						startOffset += startTokenRegion.getEnd();
