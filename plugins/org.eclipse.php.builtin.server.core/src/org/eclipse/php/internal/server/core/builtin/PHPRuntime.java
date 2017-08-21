@@ -35,7 +35,7 @@ public class PHPRuntime extends RuntimeDelegate implements IPHPRuntimeWorkingCop
 			return new Status(IStatus.WARNING, PHPServerPlugin.PLUGIN_ID, 0, Messages.warningCantReadDirectory, null);
 		PHPexeItem installedItem = getExecutableInstall();
 
-		if (!installedItem.getSapiType().equals("CLI")) { //$NON-NLS-1$
+		if (installedItem == null || !"CLI".equals(installedItem.getSapiType())) { //$NON-NLS-1$
 			return new Status(IStatus.ERROR, PHPServerPlugin.PLUGIN_ID, 0,
 					"Only the CLI SAPI provides a built-in web server", null); //$NON-NLS-1$
 		}
