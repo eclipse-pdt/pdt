@@ -74,9 +74,9 @@ public class PHPWebPageLaunchConfigurationProfilerTab
 	 */
 	@Override
 	protected String getNoProfilerMessage() {
-		return MessageFormat.format(
-				Messages.PHPWebPageLaunchConfigurationProfilerTab_No_profiler_is_attached,
-				getServer().getName());
+		Server server = getServer();
+		return MessageFormat.format(Messages.PHPWebPageLaunchConfigurationProfilerTab_No_profiler_is_attached,
+				server != null ? server.getName() : ""); //$NON-NLS-1$
 	}
 
 	/*
