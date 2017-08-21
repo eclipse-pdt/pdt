@@ -11,6 +11,7 @@
 package org.eclipse.php.refactoring.core.rename.logic;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
@@ -30,8 +31,8 @@ public class RenameTrait extends AbstractRename {
 	private ASTNode originalDeclaration;
 	private IType[] types;
 
-	public RenameTrait(IFile file, ASTNode originalNode, String oldName, String newName, boolean searchTextual,
-			IType[] types) {
+	public RenameTrait(IFile file, @Nullable ASTNode originalNode, String oldName, String newName,
+			boolean searchTextual, @Nullable IType[] types) {
 		super(file, oldName, newName, searchTextual);
 		if (originalNode != null) {
 			originalDeclaration = RefactoringUtility.getTypeOrClassInstance(originalNode);
@@ -151,22 +152,21 @@ public class RenameTrait extends AbstractRename {
 			if (types == null || types.length == 0) {
 				addChange(identifier);
 				return;
-			} else {
-				try {
-					IModelElement[] elements = identifier.getProgramRoot().getSourceModule()
-							.codeSelect(identifier.getStart(), 0);
-					for (int i = 0; i < elements.length; i++) {
-						for (int j = 0; j < types.length; j++) {
-							if (elements[i] instanceof IType) {
-								if (elements[i].equals(types[j])) {
-									addChange(identifier);
-									return;
-								}
+			}
+			try {
+				IModelElement[] elements = identifier.getProgramRoot().getSourceModule()
+						.codeSelect(identifier.getStart(), 0);
+				for (int i = 0; i < elements.length; i++) {
+					for (int j = 0; j < types.length; j++) {
+						if (elements[i] instanceof IType) {
+							if (elements[i].equals(types[j])) {
+								addChange(identifier);
+								return;
 							}
 						}
 					}
-				} catch (ModelException e) {
 				}
+			} catch (ModelException e) {
 			}
 		}
 	}
