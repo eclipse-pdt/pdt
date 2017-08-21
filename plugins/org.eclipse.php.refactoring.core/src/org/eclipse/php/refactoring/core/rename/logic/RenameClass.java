@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.core.*;
 import org.eclipse.php.core.ast.nodes.*;
@@ -36,8 +37,8 @@ public class RenameClass extends AbstractRename {
 	private ASTNode originalDeclaration;
 	private IType[] types;
 
-	public RenameClass(IFile file, ASTNode originalNode, String oldName, String newName, boolean searchTextual,
-			IType[] types) {
+	public RenameClass(IFile file, @Nullable ASTNode originalNode, String oldName, String newName,
+			boolean searchTextual, @Nullable IType[] types) {
 		super(file, oldName, newName, searchTextual);
 		if (originalNode != null) {
 			originalDeclaration = RefactoringUtility.getTypeOrClassInstance(originalNode);
@@ -189,11 +190,16 @@ public class RenameClass extends AbstractRename {
 				List<TypeReference> matchRefs = new ArrayList<>();
 				for (TypeReference ref : tag.getTypeReferences()) {
 					if (ref.getName().equals(oldName)) {
+						if (types == null || types.length == 0) {
+							matchRefs.add(ref);
+							continue;
+						}
 						IType[] elements = ModelUtils.getTypes(oldName, sm, doc.sourceStart(), currentNamespace);
-						for (int i = 0; i < elements.length; i++) {
+						loop: for (int i = 0; i < elements.length; i++) {
 							for (int j = 0; j < types.length; j++) {
 								if (elements[i].equals(types[j])) {
 									matchRefs.add(ref);
+									break loop;
 								}
 							}
 						}
@@ -248,28 +254,27 @@ public class RenameClass extends AbstractRename {
 			if (types == null || types.length == 0) {
 				addChange(identifier);
 				return;
-			} else {
-				try {
-					IModelElement[] elements = identifier.getProgramRoot().getSourceModule()
-							.codeSelect(identifier.getStart(), 0);
-					for (int i = 0; i < elements.length; i++) {
-						for (int j = 0; j < types.length; j++) {
-							if (elements[i] instanceof IType) {
-								if (elements[i].equals(types[j])) {
-									addChange(identifier);
-									return;
-								}
-							} else if (elements[i] instanceof IMethod) {
-								if (((IMethod) elements[i]).getDeclaringType().equals(types[j])) {
-									addChange(identifier);
-									return;
-								}
+			}
+			try {
+				IModelElement[] elements = identifier.getProgramRoot().getSourceModule()
+						.codeSelect(identifier.getStart(), 0);
+				for (int i = 0; i < elements.length; i++) {
+					for (int j = 0; j < types.length; j++) {
+						if (elements[i] instanceof IType) {
+							if (elements[i].equals(types[j])) {
+								addChange(identifier);
+								return;
 							}
-
+						} else if (elements[i] instanceof IMethod) {
+							if (((IMethod) elements[i]).getDeclaringType().equals(types[j])) {
+								addChange(identifier);
+								return;
+							}
 						}
+
 					}
-				} catch (ModelException e) {
 				}
+			} catch (ModelException e) {
 			}
 		}
 	}
