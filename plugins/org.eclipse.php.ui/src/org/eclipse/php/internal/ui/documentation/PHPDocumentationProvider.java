@@ -258,6 +258,9 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 	}
 
 	private static boolean isFinal(IField field) {
+		if (!field.exists()) {
+			return false;
+		}
 		try {
 			return PHPFlags.isFinal(field.getFlags());
 		} catch (ModelException e) {
