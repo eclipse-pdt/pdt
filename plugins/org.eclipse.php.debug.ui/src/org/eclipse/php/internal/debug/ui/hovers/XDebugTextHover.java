@@ -84,7 +84,8 @@ public class XDebugTextHover extends PHPDebugTextHover {
 						}
 					}
 				}
-			} else if (node.getParent() instanceof Variable && node.getParent().getParent() instanceof FieldAccess) {
+			} else if (node.getParent() instanceof Variable && node.getParent().getParent() instanceof FieldAccess
+					&& node instanceof Identifier /* avoid $obj->{$myVar} */) {
 				String nodeName = ((Identifier) node).getName();
 				String expression = computeExpression(((FieldAccess) node.getParent().getParent()).getDispatcher());
 				DBGpVariable var = getVariable(expression);
@@ -107,7 +108,8 @@ public class XDebugTextHover extends PHPDebugTextHover {
 						}
 					}
 				}
-			} else if (node.getParent() instanceof StaticFieldAccess) {
+			} else if (node.getParent() instanceof StaticFieldAccess && node instanceof Variable && ((Variable) node)
+					.getName() instanceof Identifier /* avoid A::$$myVar */) {
 				Variable var = (Variable) node;
 				String nodeName = ((Identifier) var.getName()).getName();
 				StaticFieldAccess staticAccess = (StaticFieldAccess) node.getParent();
