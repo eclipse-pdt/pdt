@@ -73,9 +73,10 @@ public class PHPWebPageLaunchConfigurationDebuggerTab extends AbstractPHPLaunchC
 	 */
 	@Override
 	protected String getNoDebuggerMessage() {
+		Server server = getServer();
 		return MessageFormat.format(
 				Messages.PHPWebPageLaunchConfigurationDebuggerTab_No_debugger_is_attached_to_server_configuration,
-				getServer().getName());
+				server != null ? server.getName() : ""); //$NON-NLS-1$
 	}
 
 	/*
