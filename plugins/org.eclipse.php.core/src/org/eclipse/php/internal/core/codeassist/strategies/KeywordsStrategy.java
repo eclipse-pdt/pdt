@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 
 import java.util.Collection;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.jface.text.BadLocationException;
@@ -20,7 +21,6 @@ import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
-import org.eclipse.php.internal.core.language.keywords.IPHPKeywordsInitializer;
 import org.eclipse.php.internal.core.language.keywords.PHPKeywords;
 import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
 
@@ -30,7 +30,7 @@ import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
  * 
  * @author michael
  */
-public abstract class KeywordsStrategy extends GlobalElementStrategy {
+public abstract class KeywordsStrategy extends ElementsStrategy {
 
 	public KeywordsStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
@@ -48,22 +48,40 @@ public abstract class KeywordsStrategy extends GlobalElementStrategy {
 		ISourceModule sourceModule = concreteContext.getSourceModule();
 		String prefix = concreteContext.getPrefix();
 		ISourceRange replaceRange = getReplacementRange(concreteContext);
-		boolean whithoutSpace = isInsertMode() && concreteContext.hasSpaceAtPosition(concreteContext.getOffset());
-		boolean withoutSemicolon = concreteContext.getNextWord().trim()
-				.equals(IPHPKeywordsInitializer.SEMICOLON_SUFFIX);
 		Collection<KeywordData> keywordsList = PHPKeywords.getInstance(sourceModule.getScriptProject().getProject())
 				.findByPrefix(prefix);
 		for (KeywordData keyword : keywordsList) {
 			if (!filterKeyword(keyword)) {
-				String suffix = keyword.suffix;
-				if (whithoutSpace && suffix.endsWith(IPHPKeywordsInitializer.WHITESPACE_SUFFIX)) {
-					suffix = suffix.substring(0, suffix.length() - 1);
-				} else if (withoutSemicolon && suffix.endsWith(IPHPKeywordsInitializer.SEMICOLON_SUFFIX)) {
-					suffix = suffix.substring(0, suffix.length() - 1);
-				}
+				String suffix = getSuffix(keyword, replaceRange);
 				reporter.reportKeyword(keyword.name, suffix, replaceRange);
 			}
 		}
+	}
+
+	private String getSuffix(KeywordData keyword, ISourceRange replaceRange) {
+		String suffix = keyword.suffix;
+		if (StringUtils.isEmpty(suffix)) {
+			return suffix;
+		}
+
+		AbstractCompletionContext context = (AbstractCompletionContext) getContext();
+		int offset;
+		if (isInsertMode()) {
+			offset = context.getOffset();
+		} else {
+			offset = replaceRange.getOffset() + replaceRange.getLength();
+		}
+		try {
+			String realSuffix = context.getDocument().get(offset, suffix.length());
+			if (suffix.equals(realSuffix)) {
+				// return empty suffix if exists in target document
+				return StringUtils.EMPTY;
+			}
+		} catch (BadLocationException e) {
+			return suffix;
+		}
+
+		return suffix;
 	}
 
 	@Override

@@ -1,0 +1,16 @@
+--TEST--
+Test group use statements
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=false
+--FILE--
+<?php
+namespace T\U;
+class ABC{}
+
+use T\U\{ A| };
+--EXPECT--
+<?php
+namespace T\U;
+class ABC{}
+
+use T\U\{ ABC };

@@ -12,34 +12,20 @@
 package org.eclipse.php.internal.core.codeassist.strategies;
 
 import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
-import org.eclipse.php.core.codeassist.ICompletionReporter;
-import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
-import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 
 /**
- * This strategy results like {@link GlobalClassesStrategy}, but filters final
+ * This strategy results like {@link ClassesStrategy}, but filters final
  * classes.
  * 
  * @author michael
  * 
  */
-public class NonFinalClassesStrategy extends GlobalClassesStrategy {
+public class NonFinalClassesStrategy extends ClassesStrategy {
 
 	public NonFinalClassesStrategy(ICompletionContext context) {
 		super(context, 0, Modifiers.AccInterface | Modifiers.AccNameSpace | Modifiers.AccFinal);
-	}
-
-	@Override
-	public void apply(ICompletionReporter reporter) throws BadLocationException {
-		// let NamespaceNonFinalClassesStrategy to deal with namespace prefix
-		AbstractCompletionContext completionContext = (AbstractCompletionContext) getContext();
-		if (completionContext.getPrefix().indexOf(NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
-			return;
-		}
-		super.apply(reporter);
 	}
 
 	@Override

@@ -22,7 +22,7 @@ import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionConte
  * 
  * @author michael
  */
-public class CatchTypeStrategy extends GlobalTypesStrategy {
+public class CatchTypeStrategy extends TypesStrategy {
 
 	public CatchTypeStrategy(ICompletionContext context, int trueFlag, int falseFlag) {
 		super(context, trueFlag, falseFlag);

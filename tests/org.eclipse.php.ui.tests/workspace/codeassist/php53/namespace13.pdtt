@@ -1,0 +1,17 @@
+--TEST--
+Bug test namespace in class instantation
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
+--FILE--
+<?php
+namespace ABC;
+
+new \ABC\F|
+--FILE0--
+<?php
+namespace ABC\FOO;
+--EXPECT--
+<?php
+namespace ABC;
+
+new \ABC\FOO\

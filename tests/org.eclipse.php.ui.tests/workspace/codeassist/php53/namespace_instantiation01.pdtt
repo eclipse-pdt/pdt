@@ -1,0 +1,22 @@
+--TEST--
+Test namespace completion in new statement
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
+--FILE--
+<?php
+namespace TX\U\B\C
+{
+}
+namespace Boo
+{
+    new \TX|
+}
+--EXPECT--
+<?php
+namespace TX\U\B\C
+{
+}
+namespace Boo
+{
+    new \TX\U\B\C\
+}

@@ -12,11 +12,12 @@
 package org.eclipse.php.internal.core.codeassist.strategies;
 
 import org.eclipse.dltk.ast.Modifiers;
+import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 
 /**
@@ -38,18 +39,15 @@ public class ClassInstantiationStrategy extends AbstractClassInstantiationStrate
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) getContext();
 		String suffix = getSuffix(completionContext);
 		addAlias(reporter, suffix);
-		// let NamespaceClassInstantiationStrategy to deal with namespace prefix
-		if (completionContext.getPrefix().indexOf(NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
-			return;
-		}
 		super.apply(reporter);
 		addSelf(completionContext, reporter);
 
 		// for anonymous class (PHP 7)
 		if (completionContext.getPHPVersion().isGreaterThan(PHPVersion.PHP5_6)) {
 			String prefix = completionContext.getPrefixWithoutProcessing();
+			ISourceRange replaceRange = getReplacementRangeForMember(completionContext);
 			if (CLASS_KEYWORD.startsWith(prefix) && prefix.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) == -1) {
-				reporter.reportKeyword(CLASS_KEYWORD, "", getReplacementRange(completionContext)); //$NON-NLS-1$
+				reporter.reportKeyword(CLASS_KEYWORD, "", replaceRange); // $NON-NLS-1$
 			}
 		}
 	}

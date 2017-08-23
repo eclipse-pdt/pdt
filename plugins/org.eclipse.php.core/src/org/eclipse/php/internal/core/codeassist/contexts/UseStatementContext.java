@@ -39,6 +39,10 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
  */
 public abstract class UseStatementContext extends StatementContext {
 
+	public static final String FUNCTION_KEYWORD = "function"; //$NON-NLS-1$
+	public static final String CONST_KEYWORD = "const"; //$NON-NLS-1$
+	public static final String USE_KEYWORD = "use"; //$NON-NLS-1$
+
 	protected TYPES type;
 	protected TextSequence rebuiltUseStatementText;
 	protected TextSequence longestStatementTextBeforeCursor;
@@ -49,9 +53,14 @@ public abstract class UseStatementContext extends StatementContext {
 		NONE, TRAIT, USE, GROUP
 	}
 
+	@Override
+	public boolean isAbsolute() {
+		return getType() != TYPES.TRAIT;
+	}
+
 	private boolean hasUsePrefix(TextSequence statementText) {
 		if (statementText.length() >= 4) {
-			if ("use".equalsIgnoreCase( //$NON-NLS-1$
+			if (USE_KEYWORD.equalsIgnoreCase( // $NON-NLS-1$
 					statementText.subSequence(0, 3).toString())
 					&& Character.isWhitespace(statementText.subSequence(3, 4).charAt(0))) {
 				return true;
@@ -130,8 +139,8 @@ public abstract class UseStatementContext extends StatementContext {
 	}
 
 	/**
-	 * @return true when type is TYPES.GROUP and cursor position is after '{',
-	 *         false otherwise
+	 * @return true when type is TYPES.GROUP and cursor position is after '{', false
+	 *         otherwise
 	 */
 	public boolean isCursorInsideGroupStatement() {
 		return isCursorInsideGroupStatement;
@@ -149,10 +158,9 @@ public abstract class UseStatementContext extends StatementContext {
 	}
 
 	/**
-	 * Prefix part of a "grouped use statement", in the statement part before
-	 * '{'. Returned value has no special meaning for other use statement types.
-	 * For example, with "use X\Y\ { A, B, \C\D| };" this method would return
-	 * "X\Y\".
+	 * Prefix part of a "grouped use statement", in the statement part before '{'.
+	 * Returned value has no special meaning for other use statement types. For
+	 * example, with "use X\Y\ { A, B, \C\D| };" this method would return "X\Y\".
 	 * 
 	 * @return
 	 */
@@ -166,10 +174,10 @@ public abstract class UseStatementContext extends StatementContext {
 	}
 
 	/**
-	 * When isCursorInsideGroupStatement() is true, only the prefix part after
-	 * '{' is returned (leading '\' excluded), otherwise same content as
-	 * getPrefix() is returned. For example, with "use X\Y\ { A, B, \C\D| };"
-	 * this method would return "C\D".
+	 * When isCursorInsideGroupStatement() is true, only the prefix part after '{'
+	 * is returned (leading '\' excluded), otherwise same content as getPrefix() is
+	 * returned. For example, with "use X\Y\ { A, B, \C\D| };" this method would
+	 * return "C\D".
 	 * 
 	 * @return
 	 */
