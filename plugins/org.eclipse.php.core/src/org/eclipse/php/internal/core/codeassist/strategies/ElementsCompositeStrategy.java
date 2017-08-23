@@ -23,17 +23,17 @@ import org.eclipse.php.core.codeassist.ICompletionStrategy;
  * 
  * @author michael
  */
-public class GlobalElementsCompositeStrategy extends AbstractCompletionStrategy {
+public class ElementsCompositeStrategy extends AbstractCompletionStrategy {
 
 	private final Collection<ICompletionStrategy> strategies = new ArrayList<>();
 
-	public GlobalElementsCompositeStrategy(ICompletionContext context, boolean includeKeywords) {
+	public ElementsCompositeStrategy(ICompletionContext context, boolean includeKeywords) {
 		super(context);
 
-		strategies.add(new GlobalTypesStrategy(context));
-		strategies.add(new GlobalFunctionsStrategy(context));
-		strategies.add(new GlobalVariablesStrategy(context));
-		strategies.add(new GlobalConstantsStrategy(context));
+		strategies.add(new TypesStrategy(context));
+		strategies.add(new FunctionsStrategy(context));
+		strategies.add(new VariablesStrategy(context));
+		strategies.add(new ConstantsStrategy(context));
 		if (includeKeywords) {
 			strategies.add(new GlobalKeywordsStrategy(context));
 		}

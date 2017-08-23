@@ -2418,4 +2418,35 @@ public class PHPModelUtils {
 		}
 	}
 
+	/**
+	 * @since 5.1
+	 */
+	public static String getFullName(IModelElement member) {
+		switch (member.getElementType()) {
+		case IMember.TYPE:
+			return getFullName((IType) member);
+		case IMember.FIELD:
+			return getFullName((IField) member);
+		case IMember.METHOD:
+			return getFullName((IMethod) member);
+		default:
+			return member.getElementName();
+		}
+
+	}
+
+	/**
+	 * @since 5.1
+	 */
+	public static String getFullName(IField field) {
+		return field.getFullyQualifiedName("\\"); //$NON-NLS-1$
+	}
+
+	/**
+	 * @since 5.1
+	 */
+	public static String getFullName(IMethod method) {
+		return method.getFullyQualifiedName("\\"); //$NON-NLS-1$
+	}
+
 }

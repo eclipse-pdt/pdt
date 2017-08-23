@@ -30,10 +30,10 @@ public class LocalMethodElementsCompositeStrategy extends AbstractCompletionStra
 
 	public LocalMethodElementsCompositeStrategy(ICompletionContext context) {
 		super(context);
-		strategies.add(new GlobalTypesStrategy(context));
-		strategies.add(new GlobalFunctionsStrategy(context));
+		strategies.add(new TypesStrategy(context));
+		strategies.add(new FunctionsStrategy(context));
 		strategies.add(new LocalMethodVariablesStrategy(context));
-		strategies.add(new GlobalConstantsStrategy(context));
+		strategies.add(new ConstantsStrategy(context));
 		strategies.add(new MethodKeywordStrategy(context));
 	}
 

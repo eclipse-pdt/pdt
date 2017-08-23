@@ -1,0 +1,22 @@
+--TEST--
+Test group use statements
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
+--FILE--
+<?php
+
+use Foo\ { Boo\T| };
+
+--FILE0--
+<?php
+
+namespace Foo\Boo;
+
+class Test {
+    
+}
+
+--EXPECT--
+<?php
+
+use Foo\ { Boo\Test };

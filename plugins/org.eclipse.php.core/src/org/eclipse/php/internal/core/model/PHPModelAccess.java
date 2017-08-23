@@ -230,4 +230,30 @@ public class PHPModelAccess extends ModelAccess {
 		return result.toArray(new IField[result.size()]);
 	}
 
+	/**
+	 * @since 5.1
+	 */
+	@NonNull
+	public IType[] findTraitOrTypes(String name, MatchRule matchRule, int trueFlags, int falseFlags,
+			IDLTKSearchScope scope, IProgressMonitor monitor) {
+		IType[] result = super.findTypes(name, matchRule, trueFlags, falseFlags, scope, monitor);
+		if (result == null) {
+			result = PHPModelAccess.NULL_TYPES;
+		}
+		return result;
+	}
+
+	/**
+	 * @since 5.1
+	 */
+	@NonNull
+	public IType[] findTraitOrTypes(String qualifier, String name, MatchRule matchRule, int trueFlags, int falseFlags,
+			IDLTKSearchScope scope, IProgressMonitor monitor) {
+		IType[] result = super.findTypes(qualifier, name, matchRule, trueFlags, falseFlags, scope, monitor);
+		if (result == null) {
+			result = PHPModelAccess.NULL_TYPES;
+		}
+		return result;
+	}
+
 }

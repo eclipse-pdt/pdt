@@ -31,7 +31,7 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
  * 
  * @author michael
  */
-public class LocalMethodVariablesStrategy extends GlobalElementStrategy {
+public class LocalMethodVariablesStrategy extends ElementsStrategy {
 
 	private static final String THIS = "$this"; //$NON-NLS-1$
 
