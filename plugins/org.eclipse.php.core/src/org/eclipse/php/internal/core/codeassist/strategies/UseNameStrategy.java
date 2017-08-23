@@ -15,14 +15,11 @@ import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
-import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
+import org.eclipse.php.internal.core.codeassist.contexts.UseStatementContext;
 
-public class UseNameStrategy extends GlobalTypesStrategy {
-
-	private static final String FUNCTION_KEYWORD = "function"; //$NON-NLS-1$
-	private static final String CONST_KEYWORD = "const"; //$NON-NLS-1$
+public class UseNameStrategy extends TypesStrategy {
 
 	public UseNameStrategy(ICompletionContext context, int trueFlag, int falseFlag) {
 		super(context, trueFlag, falseFlag);
@@ -34,13 +31,9 @@ public class UseNameStrategy extends GlobalTypesStrategy {
 
 	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
-		AbstractCompletionContext completionContext = (AbstractCompletionContext) getContext();
-		if (completionContext.getPrefix().indexOf(NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
-			return;
-		}
 
-		reportKeyword(FUNCTION_KEYWORD, reporter);
-		reportKeyword(CONST_KEYWORD, reporter);
+		reportKeyword(UseStatementContext.CONST_KEYWORD, reporter);
+		reportKeyword(UseStatementContext.FUNCTION_KEYWORD, reporter);
 		super.apply(reporter);
 	}
 
@@ -70,6 +63,6 @@ public class UseNameStrategy extends GlobalTypesStrategy {
 
 	@Override
 	protected int getExtraInfo() {
-		return ProposalExtraInfo.TYPE_ONLY;
+		return ProposalExtraInfo.TYPE_ONLY | ProposalExtraInfo.NO_INSERT_USE | ProposalExtraInfo.FULL_NAME;
 	}
 }

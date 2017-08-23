@@ -23,12 +23,12 @@ import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
@@ -43,20 +43,20 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
  * 
  * @author michael
  */
-public class GlobalVariablesStrategy extends GlobalElementStrategy {
+public class VariablesStrategy extends ElementsStrategy {
 
 	private boolean showPhpVariables = true;
 
-	public GlobalVariablesStrategy(ICompletionContext context, IElementFilter elementFilter) {
+	public VariablesStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
-	public GlobalVariablesStrategy(ICompletionContext context, boolean showPhpVariables) {
+	public VariablesStrategy(ICompletionContext context, boolean showPhpVariables) {
 		super(context);
 		this.showPhpVariables = showPhpVariables;
 	}
 
-	public GlobalVariablesStrategy(ICompletionContext context) {
+	public VariablesStrategy(ICompletionContext context) {
 		super(context);
 	}
 

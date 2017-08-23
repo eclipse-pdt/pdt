@@ -33,9 +33,6 @@ import org.eclipse.php.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.*;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
-import org.eclipse.php.internal.core.codeassist.contexts.GroupedNamespaceNameContext;
-import org.eclipse.php.internal.core.codeassist.contexts.NamespaceMemberContext;
-import org.eclipse.php.internal.core.codeassist.contexts.UseNameContext;
 import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.typeinference.FakeMethod;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
@@ -45,20 +42,20 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
  * 
  * @author michael
  */
-public class GlobalTypesStrategy extends GlobalElementStrategy {
+public class TypesStrategy extends ElementsStrategy {
 
 	protected final int trueFlag;
 	protected final int falseFlag;
 	protected static final IType[] EMPTY = {};
 	private boolean aliasAdded = false;
 
-	public GlobalTypesStrategy(ICompletionContext context, int trueFlag, int falseFlag) {
+	public TypesStrategy(ICompletionContext context, int trueFlag, int falseFlag) {
 		super(context, null);
 		this.trueFlag = trueFlag;
 		this.falseFlag = falseFlag;
 	}
 
-	public GlobalTypesStrategy(ICompletionContext context) {
+	public TypesStrategy(ICompletionContext context) {
 		this(context, 0, 0);
 	}
 
@@ -77,42 +74,38 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		if (StringUtils.isBlank(abstractContext.getPrefixWithoutProcessing())) {
 			return;
 		}
-		boolean isUseContext = context instanceof UseNameContext
-				&& ((UseNameContext) context).getType() != UseNameContext.TYPES.TRAIT;
+
 		ISourceRange replacementRange = getReplacementRange(abstractContext);
+		ISourceRange memberReplacementRange = getReplacementRangeForMember(abstractContext);
 
 		IType[] types = getTypes(abstractContext);
 		// now we compute type suffix in PHPCompletionProposalCollector
 		String suffix = ""; //$NON-NLS-1$
 		String nsSuffix = getNSSuffix(abstractContext);
 		int extraInfo = getExtraInfo();
-		int beforeReplacementStart = abstractContext.getReplacementStart() - 1;
-		if (beforeReplacementStart >= 0 && (abstractContext.getDocument().getChar(beforeReplacementStart) == '\''
-				|| abstractContext.getDocument().getChar(beforeReplacementStart) == '\"')) {
-			extraInfo = extraInfo | ProposalExtraInfo.NO_INSERT_USE;
-		}
-		if ("namespace".equals(abstractContext.getPreviousWord(1)) //$NON-NLS-1$
-				|| isUseContext) {
-			extraInfo = extraInfo | ProposalExtraInfo.NO_INSERT_USE;
-		}
-		String nsPrefix = null;
-		if (context instanceof GroupedNamespaceNameContext
-				&& ((GroupedNamespaceNameContext) context).isCursorInsideGroupStatement()) {
-			nsPrefix = ((GroupedNamespaceNameContext) context).getGroupPrefixBeforeOpeningCurly();
+		if (abstractContext.isAbsoluteName()) {
+			extraInfo |= ProposalExtraInfo.FULL_NAME;
+			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
+			extraInfo |= ProposalExtraInfo.ABSOLUTE;
 		}
 
+		if (abstractContext.isAbsolute()) {
+			extraInfo |= ProposalExtraInfo.FULL_NAME;
+			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
+		}
+
+		String namespace = abstractContext.getCurrentNamespace();
 		for (IType type : types) {
 			try {
 				int flags = type.getFlags();
 				boolean isNamespace = PHPFlags.isNamespace(flags);
-				if (!isNamespace && isUseContext) {
+				int relevance = getRelevance(namespace, type);
+				if (isNamespace || abstractContext.isAbsoluteName() || abstractContext.isAbsolute()) {
 					reporter.reportType(type, isNamespace ? nsSuffix : suffix, replacementRange,
-							extraInfo | ProposalExtraInfo.CLASS_IN_NAMESPACE);
-				} else if (nsPrefix != null && isNamespace) {
-					reporter.reportType(type, nsPrefix, nsSuffix, replacementRange,
-							extraInfo | ProposalExtraInfo.NO_INSERT_USE, 0);
+							extraInfo | ProposalExtraInfo.CLASS_IN_NAMESPACE, relevance);
 				} else {
-					reporter.reportType(type, isNamespace ? nsSuffix : suffix, replacementRange, extraInfo);
+					reporter.reportType(type, isNamespace ? nsSuffix : suffix,
+							isNamespace ? replacementRange : memberReplacementRange, extraInfo, relevance);
 				}
 			} catch (ModelException e) {
 				PHPCorePlugin.log(e);
@@ -247,42 +240,56 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 
 		IDLTKSearchScope scope = createSearchScope();
 		if (context.getCompletionRequestor().isContextInformationMode()) {
-			return PHPModelAccess.getDefault().findTypes(prefix, MatchRule.EXACT, trueFlag, falseFlag, scope, null);
+			return PHPModelAccess.getDefault().findTypes(context.getQualifier(true), context.getMemberName(),
+					MatchRule.EXACT, trueFlag, falseFlag, scope, null);
 		}
 
-		List<IType> result = new LinkedList<>();
-		if (prefix.length() > 1 && prefix.toUpperCase().equals(prefix)) {
+		List<IType> result = new LinkedList<IType>();
+		String memberName = context.getMemberName();
+		String namespaceName = context.getQualifier(false);
+
+		StringBuilder sb = new StringBuilder();
+		String altNamespacePrefix = null;
+		if (namespaceName != null) {
+			sb.append(namespaceName).append(NamespaceReference.NAMESPACE_SEPARATOR);
+		} else if (!context.isAbsoluteName() && context.getCurrentNamespace() != null && useCurrentNamespace) {
+			altNamespacePrefix = new StringBuilder().append(context.getCurrentNamespace())
+					.append(NamespaceReference.NAMESPACE_SEPARATOR).append(memberName).toString();
+		}
+		String namespacePrefix = sb.append(memberName).toString();
+		if (memberName.length() > 1 && memberName.toUpperCase().equals(memberName)) {
 			// Search by camel-case
-			IType[] types = PHPModelAccess.getDefault().findTypes(prefix, MatchRule.CAMEL_CASE, trueFlag, falseFlag,
-					scope, null);
 
-			IType[] namespaces = PHPModelAccess.getDefault().findNamespaces(null, prefix, MatchRule.CAMEL_CASE,
-					trueFlag, falseFlag, scope, null);
+			IType[] types = PHPModelAccess.getDefault().findTypes(context.getQualifier(true), memberName,
+					MatchRule.CAMEL_CASE, trueFlag, falseFlag, scope, null);
 
 			result.addAll(Arrays.asList(types));
-			result.addAll(CodeAssistUtils.removeDuplicatedElements(namespaces));
-		}
-		IType[] types = PHPModelAccess.getDefault().findTypes(null, prefix, MatchRule.PREFIX, trueFlag, falseFlag,
-				scope, null);
-		IType[] namespaces = PHPModelAccess.getDefault().findNamespaces(null, prefix, MatchRule.PREFIX, trueFlag,
-				falseFlag, scope, null);
-
-		if (context instanceof NamespaceMemberContext) {
-			for (IType type : types) {
-				if (PHPModelUtils.getFullName(type).startsWith(prefix)) {
-					result.add(type);
+			if ((falseFlag & PHPFlags.AccNameSpace) == 0 || context.isAbsoluteName() || namespaceName != null) {
+				if (namespacePrefix.length() > 0) {
+					IType[] namespaces = PHPModelAccess.getDefault().findNamespaces(null, namespacePrefix.toString(),
+							MatchRule.CAMEL_CASE, trueFlag, 0, scope, null);
+					result.addAll(CodeAssistUtils.removeDuplicatedElements(namespaces));
 				}
 			}
-			for (IType type : namespaces) {
-				if (PHPModelUtils.getFullName(type).startsWith(prefix)) {
-					result.add(type);
-				}
-			}
-		} else {
-			result.addAll(Arrays.asList(types));
-			result.addAll(CodeAssistUtils.removeDuplicatedElements(namespaces));
 		}
+		IType[] types = PHPModelAccess.getDefault().findTraitOrTypes(context.getQualifier(true), memberName,
+				MatchRule.PREFIX, trueFlag, falseFlag, scope, null);
 
+		result.addAll(Arrays.asList(types));
+		if ((falseFlag & PHPFlags.AccNameSpace) == 0 || context.isAbsoluteName() || namespaceName != null
+				|| altNamespacePrefix != null) {
+			if (namespacePrefix.length() > 0) {
+				IType[] namespaces = PHPModelAccess.getDefault().findNamespaces(null, namespacePrefix, MatchRule.PREFIX,
+						trueFlag, 0, scope, null);
+				result.addAll(CodeAssistUtils.removeDuplicatedElements(namespaces));
+			}
+			if (altNamespacePrefix != null) {
+				IType[] namespaces = PHPModelAccess.getDefault().findNamespaces(null, altNamespacePrefix,
+						MatchRule.PREFIX, trueFlag, 0, scope, null);
+				result.addAll(CodeAssistUtils.removeDuplicatedElements(namespaces));
+			}
+
+		}
 		return result.toArray(new IType[result.size()]);
 	}
 

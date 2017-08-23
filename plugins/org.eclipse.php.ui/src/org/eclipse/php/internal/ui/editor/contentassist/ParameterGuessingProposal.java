@@ -398,7 +398,14 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 		} else {
 			replacementString = super.getReplacementString();
 		}
-		return isPrefix(prefix, replacementString);
+		boolean result = isPrefix(prefix, replacementString);
+
+		if (!result && prefix.length() > 0 && prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+			prefix = prefix.substring(1);
+			result = isPrefix(prefix, replacementString);
+		}
+
+		return result;
 	}
 
 	private void initAlias() {
