@@ -11,17 +11,28 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.php.core.codeassist.ICompletionContext;
-import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
+import org.eclipse.php.core.compiler.IPHPModifiers;
+import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 
-public class NamespaceNonFinalClassesStrategy extends NamespaceTypesStrategy {
+/**
+ * This strategy completes global classes
+ * 
+ * @author michael
+ */
+public class ClassesStrategy extends TypesStrategy {
 
-	public NamespaceNonFinalClassesStrategy(ICompletionContext context) {
-		super(context);
+	public ClassesStrategy(ICompletionContext context) {
+		super(context, 0, Modifiers.AccInterface | Modifiers.AccNameSpace | IPHPModifiers.AccTrait);
+	}
+
+	public ClassesStrategy(ICompletionContext context, int trueFlag, int falseFlag) {
+		super(context, trueFlag, falseFlag);
 	}
 
 	@Override
-	protected int getExtraInfo() {
-		return ProposalExtraInfo.TYPE_ONLY;
+	public String getSuffix(AbstractCompletionContext abstractContext) {
+		return ""; //$NON-NLS-1$
 	}
 }

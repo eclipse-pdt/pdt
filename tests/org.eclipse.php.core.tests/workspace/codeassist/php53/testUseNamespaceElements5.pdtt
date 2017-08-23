@@ -17,12 +17,6 @@ namespace test{
 }
 ?>
 --EXPECT--
-type(MyTestClass1)
-type(MyTestClass2)
-type(MyTestClass3)
-type(MyTestClass4)
-type(MyTestClass5)
-type(MyTestClass6)
 type(MyTestNS1)
 type(MyTestNS1\NS11)
 type(MyTestNS1\NS12)

@@ -83,7 +83,7 @@ public abstract class ContextFinder extends ASTVisitor {
 	@Override
 	public boolean visit(TypeDeclaration node) throws Exception {
 		if (node instanceof NamespaceDeclaration) {
-			FileContext fileContext = (FileContext) contextStack.peek();
+			ISourceModuleContext fileContext = (ISourceModuleContext) contextStack.peek();
 			PHPNamespaceType instanceType;
 			if (((NamespaceDeclaration) node).isGlobal()) {
 				instanceType = new PHPNamespaceType(null);

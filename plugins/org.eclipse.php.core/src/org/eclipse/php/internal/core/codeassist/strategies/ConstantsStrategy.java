@@ -37,7 +37,6 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.AliasField;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
-import org.eclipse.php.internal.core.codeassist.contexts.UseConstNameContext;
 import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
@@ -46,13 +45,13 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
  * 
  * @author michael
  */
-public class GlobalConstantsStrategy extends GlobalElementStrategy {
+public class ConstantsStrategy extends ElementsStrategy {
 
-	public GlobalConstantsStrategy(ICompletionContext context, IElementFilter elementFilter) {
+	public ConstantsStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
-	public GlobalConstantsStrategy(ICompletionContext context) {
+	public ConstantsStrategy(ICompletionContext context) {
 		super(context);
 	}
 
@@ -71,12 +70,7 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 			return;
 		}
 
-		boolean isUseConstContext = context instanceof UseConstNameContext;
 		int extraInfo = getExtraInfo();
-		if (isUseConstContext) {
-			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
-			extraInfo |= ProposalExtraInfo.FULL_NAME;
-		}
 
 		MatchRule matchRule = MatchRule.PREFIX;
 		if (requestor.isContextInformationMode()) {
@@ -108,8 +102,20 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 			scope = getSearchScope(abstractContext);
 		}
 
-		enclosingTypeConstants = PHPModelAccess.getDefault().findFields(prefix, matchRule, Modifiers.AccConstant, 0,
-				scope, null);
+		String memberName = abstractContext.getMemberName();
+		String namespaceName = abstractContext.getQualifier(true);
+		if (abstractContext.isAbsoluteName()) {
+			extraInfo |= ProposalExtraInfo.FULL_NAME;
+			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
+			extraInfo |= ProposalExtraInfo.ABSOLUTE;
+		}
+
+		if (abstractContext.isAbsolute()) {
+			extraInfo |= ProposalExtraInfo.FULL_NAME;
+			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
+		}
+		enclosingTypeConstants = PHPModelAccess.getDefault().findFileFields(namespaceName, memberName, matchRule,
+				Modifiers.AccConstant, 0, scope, null);
 
 		if (isCaseSensitive()) {
 			enclosingTypeConstants = filterByCase(enclosingTypeConstants, prefix);
@@ -117,7 +123,9 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 		// workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=310383
 		enclosingTypeConstants = filterClassConstants(enclosingTypeConstants);
 		// workaround end
-		ISourceRange replaceRange = getReplacementRange(abstractContext);
+		ISourceRange replaceRange = abstractContext.isAbsoluteName() || abstractContext.isAbsolute()
+				? getReplacementRange(abstractContext)
+				: getReplacementRangeForMember(abstractContext);
 		for (IModelElement constant : enclosingTypeConstants) {
 			IField field = (IField) constant;
 			reporter.reportField(field, "", replaceRange, false, 0, extraInfo); //$NON-NLS-1$
@@ -149,7 +157,7 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 
 	protected void reportAlias(ICompletionReporter reporter, AbstractCompletionContext abstractContext,
 			IModuleSource module, final Map<String, UsePart> result) throws BadLocationException {
-		ISourceRange replacementRange = getReplacementRange(abstractContext);
+		ISourceRange replacementRange = getReplacementRangeForMember(abstractContext);
 		IDLTKSearchScope scope = createSearchScope();
 		for (Entry<String, UsePart> entry : result.entrySet()) {
 			String name = entry.getKey();

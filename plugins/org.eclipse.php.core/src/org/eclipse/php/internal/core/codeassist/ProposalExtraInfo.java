@@ -24,6 +24,10 @@ public final class ProposalExtraInfo {
 	public static final int CLASS_IN_NAMESPACE = 1 << 7;
 	public static final int ADD_QUOTES = 1 << 8;
 	public static final int NO_INSERT_USE = 1 << 9;
+	/**
+	 * @since 5.1
+	 */
+	public static final int ABSOLUTE = 1 << 10;
 
 	public static boolean isTypeOnly(int flags) {
 		return (flags & TYPE_ONLY) != 0;
@@ -113,6 +117,24 @@ public final class ProposalExtraInfo {
 		}
 	}
 
+	/**
+	 * @since 5.1
+	 */
+	public static boolean isAbsolute(Object flags) {
+		if (flags instanceof Integer) {
+			return contain(((Integer) flags).intValue(), ABSOLUTE);
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * @since 5.1
+	 */
+	public static boolean isAbsolute(int flags) {
+		return contain(flags, ABSOLUTE);
+	}	
+	
 	public static boolean contain(int flags, int flag) {
 		return (flags & flag) != 0;
 	}

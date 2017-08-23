@@ -22,7 +22,7 @@ import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionConte
  * 
  * @author michael
  */
-public class FunctionParameterTypeStrategy extends GlobalTypesStrategy {
+public class FunctionParameterTypeStrategy extends TypesStrategy {
 
 	public FunctionParameterTypeStrategy(ICompletionContext context) {
 		super(context);

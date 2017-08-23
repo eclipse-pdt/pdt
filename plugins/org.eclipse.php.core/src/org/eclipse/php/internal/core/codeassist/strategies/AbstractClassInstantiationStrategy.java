@@ -10,6 +10,9 @@ import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
+import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
@@ -22,7 +25,7 @@ import org.eclipse.php.internal.core.typeinference.FakeConstructor;
  * @author vadim.p
  * 
  */
-public abstract class AbstractClassInstantiationStrategy extends GlobalTypesStrategy {
+public abstract class AbstractClassInstantiationStrategy extends TypesStrategy {
 
 	private IType enclosingClass;
 
@@ -57,11 +60,19 @@ public abstract class AbstractClassInstantiationStrategy extends GlobalTypesStra
 			PHPCorePlugin.log(e);
 		}
 
-		ISourceRange replaceRange = getReplacementRange(context);
+		ISourceRange replaceRange = getReplacementRangeForMember(concreteContext);
 		String suffix = getSuffix(concreteContext);
 
 		IType[] types = getTypes(concreteContext);
 		for (IType type : types) {
+			try {
+				if (PHPFlags.isNamespace(type.getFlags())) {
+					reporter.reportType(type, NamespaceReference.NAMESPACE_DELIMITER, replaceRange);
+					continue;
+				}
+			} catch (ModelException e) {
+				Logger.logException(e);
+			}
 			if (!concreteContext.getCompletionRequestor().isContextInformationMode()) {
 				// here we use fake method,and do the real work in class
 				// ParameterGuessingProposal
