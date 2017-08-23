@@ -22,6 +22,7 @@
  	<extension-point id="phpFormatterCommonPreferences" name="PHP Code Formatter Common Preferences" schema="schema/phpFormatterCommonPreferences.exsd"/>
 	<extension-point id="indentationStrategy" name="Indentation Strategy Extension" schema="schema/indentationStrategy.exsd"/>
  	<extension-point id="libraryFolderNameProviders" name="Library Folder Name Providers" schema="schema/libraryFolderNameProviders.exsd"/>
+  <extension-point id="validatorExtension" name="PHP Validator Extension" schema="schema/validatorExtension.exsd"/>
 
 	<!-- PHP Model Handler -->
 	<extension

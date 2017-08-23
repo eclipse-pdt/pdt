@@ -14,6 +14,9 @@ import java.text.MessageFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
@@ -26,6 +29,8 @@ import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.compiler.ast.nodes.*;
+import org.eclipse.php.core.compiler.ast.validator.IValidatorExtension;
+import org.eclipse.php.core.compiler.ast.validator.IValidatorVisitor;
 import org.eclipse.php.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -37,7 +42,9 @@ import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.evaluators.PHPEvaluationUtils;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 
-public class ValidatorVisitor extends PHPASTVisitor {
+public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor {
+	private static final String EXTENSION_POINT = PHPCorePlugin.ID + ".validatorExtension"; //$NON-NLS-1$
+	private static final String ATTR_CLASS = "class"; //$NON-NLS-1$
 
 	private static final String PAAMAYIM_NEKUDOTAIM = "::"; //$NON-NLS-1$
 	private static final List<String> TYPE_SKIP = new ArrayList<>();
@@ -60,12 +67,30 @@ public class ValidatorVisitor extends PHPASTVisitor {
 	private ISourceModule sourceModule;
 	private PHPVersion version;
 	private IBuildContext context;
+	private IValidatorExtension[] extensions;
 
 	@SuppressWarnings("null")
 	public ValidatorVisitor(IBuildContext context) {
 		this.context = context;
 		this.sourceModule = context.getSourceModule();
 		this.version = ProjectOptions.getPHPVersion(sourceModule);
+
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(EXTENSION_POINT);
+		List<IValidatorExtension> list = new ArrayList<>(elements.length);
+		for (IConfigurationElement el : elements) {
+			try {
+				Object ext = el.createExecutableExtension(ATTR_CLASS);
+				if (ext != null && ext instanceof IValidatorExtension) {
+					IValidatorExtension tmp = (IValidatorExtension) ext;
+					if (tmp.isSupported(context)) {
+						tmp.setBuildContext(context);
+						list.add(tmp);
+					}
+				}
+			} catch (CoreException e) {
+			}
+		}
+		extensions = list.toArray(new IValidatorExtension[0]);
 	}
 
 	@Override
@@ -80,7 +105,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 	public boolean visit(NamespaceDeclaration s) throws Exception {
 		hasNamespace = true;
 		currentNamespace = s;
-		return true;
+		return super.visit(s);
 	}
 
 	@Override
@@ -93,7 +118,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 	public boolean visit(PHPMethodDeclaration s) throws Exception {
 		if (s.getPHPDoc() != null)
 			s.getPHPDoc().traverse(this);
-		return visitGeneral(s);
+		return super.visit(s);
 	}
 
 	@Override
@@ -112,7 +137,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 		if (node.getArgs() != null) {
 			node.getArgs().traverse(this);
 		}
-		return false;
+		return visitGeneral(node);
 	}
 
 	@Override
@@ -190,7 +215,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 			for (TypeReference itf : interfaces)
 				checkSuperclass(itf, true, s.getName());
 		}
-		return true;
+		return visitGeneral(s);
 	}
 
 	@Override
@@ -217,7 +242,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 		for (ASTNode node : s.getSuperClasses().getChilds()) {
 			checkSuperclass((TypeReference) node, true, s.getName());
 		}
-		return true;
+		return visitGeneral(s);
 	}
 
 	@Override
@@ -282,7 +307,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 				}
 			}
 		}
-		return true;
+		return visitGeneral(s);
 	}
 
 	/**
@@ -486,7 +511,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 		reportProblem(s, message, id, severity);
 	}
 
-	private void reportProblem(ASTNode s, String message, IProblemIdentifier id, ProblemSeverity severity) {
+	public void reportProblem(ASTNode s, String message, IProblemIdentifier id, ProblemSeverity severity) {
 		int start = 0, end = 0;
 		if (s != null) {
 			start = s.sourceStart();
@@ -502,7 +527,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 		reportProblem(s, message, id, new String[] { stringArguments }, severity);
 	}
 
-	private void reportProblem(int start, int end, String message, IProblemIdentifier id, ProblemSeverity severity) {
+	public void reportProblem(int start, int end, String message, IProblemIdentifier id, ProblemSeverity severity) {
 		ISourceLineTracker tracker = context.getLineTracker();
 		int line = tracker.getLineNumberOfOffset(start);
 		IProblem problem = new DefaultProblem(context.getFile().getName(), message, id, null, severity, start, end,
@@ -544,7 +569,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 		return new IType[0];
 	}
 
-	private class UsePartInfo {
+	private class UsePartInfo implements IUsePartInfo {
 		private UsePart usePart;
 		private String realName;
 		private int refCount;
@@ -601,6 +626,10 @@ public class ValidatorVisitor extends PHPASTVisitor {
 			return tri;
 		}
 
+		public boolean isAlias() {
+			return isAlias;
+		}
+
 		@Override
 		public String toString() {
 			String str = "use " + fullyQualifiedName; //$NON-NLS-1$
@@ -611,7 +640,7 @@ public class ValidatorVisitor extends PHPASTVisitor {
 		}
 	}
 
-	private class TypeReferenceInfo {
+	private class TypeReferenceInfo implements ITypeReferenceInfo {
 
 		private TypeReference typeReference;
 		private boolean isGlobal = false;
@@ -705,4 +734,23 @@ public class ValidatorVisitor extends PHPASTVisitor {
 		}
 	}
 
+	@Override
+	public boolean visitGeneral(ASTNode node) throws Exception {
+		for (IValidatorExtension extension : extensions) {
+			extension.visit(node);
+		}
+		return true;
+	}
+
+	@Override
+	public void endvisitGeneral(ASTNode node) throws Exception {
+		for (IValidatorExtension extension : extensions) {
+			extension.endvisit(node);
+		}
+	}
+
+	@Override
+	public UsePartInfo getUsePartInfo(String name) {
+		return usePartInfo.get(name);
+	}
 }
