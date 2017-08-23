@@ -33,7 +33,7 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 /**
  * This strategy completes labels for goto statement
  */
-public class GotoStatementStrategy extends GlobalElementStrategy {
+public class GotoStatementStrategy extends ElementsStrategy {
 
 	public GotoStatementStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);

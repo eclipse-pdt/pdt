@@ -27,7 +27,7 @@ public class ExceptionClassStrategy extends ExceptionClassInstantiationStrategy 
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		ICompletionContext context = getContext();
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
-		ISourceRange replacementRange = getReplacementRange(abstractContext);
+		ISourceRange replacementRange = getReplacementRangeForMember(abstractContext);
 
 		IType[] types = getTypes(abstractContext);
 

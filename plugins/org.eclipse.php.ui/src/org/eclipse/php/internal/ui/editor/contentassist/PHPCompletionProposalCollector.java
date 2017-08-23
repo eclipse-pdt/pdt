@@ -247,13 +247,18 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 				IType type = (IType) typeProposal.getModelElement();
 
 				if (ProposalExtraInfo.isClassInNamespace(typeProposal.getExtraInfo())) {
-					return PHPModelUtils.getFullName(type);
-					// String result = PHPModelUtils.getFullName(type);
-					// if (ProposalExtraInfo.isAddQuote(typeProposal
-					// .getExtraInfo())) {
-					// result = "'" + result + "'";
-					// }
-					// return result;
+					StringBuilder result = new StringBuilder(PHPModelUtils.getFullName(type));
+					if (ProposalExtraInfo.isAbsolute(getExtraInfo())) {
+						result.insert(0, NamespaceReference.NAMESPACE_SEPARATOR);
+					}
+					try {
+						if (PHPFlags.isNamespace(type.getFlags())) {
+							result.append(NamespaceReference.NAMESPACE_SEPARATOR);
+						}
+					} catch (ModelException e) {
+						PHPUiPlugin.log(e);
+					}
+					return result.toString();
 				}
 
 				String prefix = ""; //$NON-NLS-1$

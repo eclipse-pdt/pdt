@@ -114,15 +114,6 @@ public abstract class PHPDocTagContext extends PHPDocContext {
 		return found;
 	}
 
-	@Override
-	public String getPrefix() throws BadLocationException {
-		String prefix = super.getPrefix();
-		if (prefix.length() > 0 && prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
-			return prefix.substring(1);
-		}
-		return prefix;
-	}
-
 	/**
 	 * Returns whether the prefix starts with a '\' or not.
 	 * 

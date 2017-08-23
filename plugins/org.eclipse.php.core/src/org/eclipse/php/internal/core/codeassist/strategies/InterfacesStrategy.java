@@ -11,22 +11,23 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.php.core.codeassist.ICompletionContext;
-import org.eclipse.php.core.codeassist.IElementFilter;
+import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 
 /**
- * This strategy completes global elements: classes, functions, variables,
- * etc...
+ * This strategy completes global classes
  * 
  * @author michael
  */
-public abstract class GlobalElementStrategy extends AbstractCompletionStrategy {
+public class InterfacesStrategy extends TypesStrategy {
 
-	public GlobalElementStrategy(ICompletionContext context, IElementFilter elementFilter) {
-		super(context, elementFilter);
+	public InterfacesStrategy(ICompletionContext context) {
+		super(context, Modifiers.AccInterface, 0);
 	}
 
-	public GlobalElementStrategy(ICompletionContext context) {
-		super(context);
+	@Override
+	public String getSuffix(AbstractCompletionContext abstractContext) {
+		return ""; //$NON-NLS-1$
 	}
 }

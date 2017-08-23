@@ -30,7 +30,6 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.AliasMethod;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
-import org.eclipse.php.internal.core.codeassist.contexts.UseFunctionNameContext;
 import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
@@ -39,9 +38,9 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
  * 
  * @author michael
  */
-public class GlobalFunctionsStrategy extends GlobalElementStrategy {
+public class FunctionsStrategy extends ElementsStrategy {
 
-	public GlobalFunctionsStrategy(ICompletionContext context) {
+	public FunctionsStrategy(ICompletionContext context) {
 		super(context);
 	}
 
@@ -58,11 +57,16 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 			return;
 		}
 
-		boolean isUseFunctionContext = context instanceof UseFunctionNameContext;
 		int extraInfo = getExtraInfo();
-		if (isUseFunctionContext) {
-			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
+		if (abstractContext.isAbsoluteName()) {
 			extraInfo |= ProposalExtraInfo.FULL_NAME;
+			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
+			extraInfo |= ProposalExtraInfo.ABSOLUTE;
+		}
+
+		if (abstractContext.isAbsolute()) {
+			extraInfo |= ProposalExtraInfo.FULL_NAME;
+			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
 		}
 
 		MatchRule matchRule = MatchRule.PREFIX;
@@ -70,13 +74,18 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 			matchRule = MatchRule.EXACT;
 		}
 		IDLTKSearchScope scope = createSearchScope();
-		IMethod[] functions = PHPModelAccess.getDefault().findFunctions(prefix, matchRule, 0, 0, scope, null);
+		IMethod[] functions;
+		String memberName = abstractContext.getMemberName();
+		String namespaceName = abstractContext.getQualifier(true);
+		functions = PHPModelAccess.getDefault().findFunctions(namespaceName, memberName, matchRule, 0, 0, scope, null);
 
-		ISourceRange replacementRange = getReplacementRange(abstractContext);
+		ISourceRange replacementRange = abstractContext.isAbsoluteName() || abstractContext.isAbsolute()
+				? getReplacementRange(abstractContext)
+				: getReplacementRangeForMember(abstractContext);
 		String suffix = getSuffix(abstractContext);
-
+		String namespace = abstractContext.getCurrentNamespace();
 		for (IMethod method : functions) {
-			reporter.reportMethod(method, suffix, replacementRange, extraInfo);
+			reporter.reportMethod(method, suffix, replacementRange, extraInfo, getRelevance(namespace, method));
 		}
 
 		addAlias(reporter, suffix);

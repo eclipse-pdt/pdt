@@ -82,10 +82,6 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 
 		int length = Math.max(offset, prefixEnd) - start;
 
-		if (completionContext.hasSpaceAtPosition(start + length)) {
-			return new SourceRange(start, length + 1);
-		}
-
 		return new SourceRange(start, length);
 	}
 
