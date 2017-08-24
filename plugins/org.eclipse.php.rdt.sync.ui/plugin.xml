@@ -26,5 +26,6 @@
                 %syncProject.desc
             </description>
       </wizard>
+      <primaryWizard id="org.eclipse.php.rdt.sync.ui.newSyncProjectWizard" />
    </extension>
 </plugin>
