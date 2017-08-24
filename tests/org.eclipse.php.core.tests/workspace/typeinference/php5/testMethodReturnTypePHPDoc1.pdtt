@@ -10,7 +10,7 @@ class C {
 
 
 	/**
-	* @return array[array[A,B]]
+	* @return array[array[A]]|array[array[B]]
 	*/
 	function function_name($param) {
 	}
@@ -24,4 +24,4 @@ foreach($result as $r) {
 }
 ?>
 --EXPECT--
-Ambigous <A, B>
+Ambigous <multitype:multitype:A  , multitype:multitype:B  >
