@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.typeinference.goals;
 import java.util.Arrays;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
@@ -72,6 +73,7 @@ public abstract class AbstractMethodReturnTypeGoal extends AbstractTypeGoal {
 		return offset;
 	}
 
+	@Nullable
 	public IType[] getTypes() {
 		if (types == null) {
 			if (evaluatedType != null) {
