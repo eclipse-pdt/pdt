@@ -16,6 +16,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.dltk.annotations.NonNull;
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.core.*;
@@ -51,7 +53,7 @@ public class PHPEvaluationUtils {
 	private static final IEvaluatedType[] EMPTY_LIST = new IEvaluatedType[0];
 
 	// XXX: handle nested array[] types?
-	public static String extractArrayType(String typeName) {
+	public static String extractArrayType(@NonNull String typeName) {
 		Matcher m = ARRAY_TYPE_PATTERN.matcher(typeName);
 		if (m.find()) {
 			int beginIndex = typeName.indexOf('[') + 1;
@@ -63,7 +65,7 @@ public class PHPEvaluationUtils {
 		return removeArrayBrackets(typeName);
 	}
 
-	public static boolean isArrayType(String typeName) {
+	public static boolean isArrayType(@Nullable String typeName) {
 		if (typeName == null || typeName.isEmpty()) {
 			return false;
 		}
@@ -74,20 +76,24 @@ public class PHPEvaluationUtils {
 		return false;
 	}
 
-	public static IEvaluatedType extractArrayType(String typeName, IType currentNamespace, int offset) {
+	@SuppressWarnings("null")
+	public static IEvaluatedType extractArrayType(@Nullable String typeName, @NonNull IModelElement space, int offset,
+			@Nullable IType[] selfTypes) {
 		if (typeName == null || typeName.isEmpty()) {
 			return null;
 		}
 		Matcher m = ARRAY_TYPE_PATTERN.matcher(typeName);
 		if (m.find()) {
-			return getArrayType(m.group(), currentNamespace, offset);
+			return getArrayType(m.group(), space, offset, selfTypes);
 		} else if (typeName.endsWith(BRACKETS) && typeName.length() > 2) {
-			return getArrayType(typeName.substring(0, typeName.length() - 2), currentNamespace, offset);
+			return getArrayType(typeName.substring(0, typeName.length() - 2), space, offset, selfTypes);
 		}
 		return null;
 	}
 
-	public static MultiTypeType getArrayType(String type, IType currentNamespace, int offset) {
+	@SuppressWarnings("null")
+	public static MultiTypeType getArrayType(@NonNull String type, @NonNull IModelElement space, int offset,
+			@Nullable IType[] selfTypes) {
 		int beginIndex = type.indexOf('[') + 1;
 		int endIndex = type.lastIndexOf(']');
 		if (endIndex != -1) {
@@ -96,39 +102,14 @@ public class PHPEvaluationUtils {
 		MultiTypeType arrayType = new MultiTypeType();
 		Matcher m = ARRAY_TYPE_PATTERN.matcher(type);
 		if (m.find()) {
-			arrayType.addType(getArrayType(m.group(), currentNamespace, offset));
+			arrayType.addType(getArrayType(m.group(), space, offset, selfTypes));
 			type = m.replaceAll(""); //$NON-NLS-1$
 		} else if (type.endsWith(BRACKETS) && type.length() > 2) {
-			arrayType.addType(getArrayType(type.substring(0, type.length() - 2), currentNamespace, offset));
+			arrayType.addType(getArrayType(type.substring(0, type.length() - 2), space, offset, selfTypes));
 			type = type.replaceAll(Pattern.quote(BRACKETS), ""); //$NON-NLS-1$
 		}
-		String[] typeNames = type.split(","); //$NON-NLS-1$
-		for (String name : typeNames) {
-			if (!"".equals(name)) { //$NON-NLS-1$
-				int nsSeparatorIndex = name.indexOf(NamespaceReference.NAMESPACE_SEPARATOR);
-				if (currentNamespace != null && (nsSeparatorIndex < 0 || nsSeparatorIndex > 0)) {
-					// check if the first part is an alias, then get the full
-					// name
-					// NB: do as in method
-					// PDTModelUtils#collectParameterTypes(IMethod method)
-					ModuleDeclaration moduleDeclaration = SourceParserUtil
-							.getModuleDeclaration(currentNamespace.getSourceModule());
-					String prefix = name;
-					if (nsSeparatorIndex > 0) {
-						prefix = name.substring(0, nsSeparatorIndex);
-					}
-					final Map<String, UsePart> result = PHPModelUtils.getAliasToNSMap(prefix, moduleDeclaration, offset,
-							currentNamespace, true);
-					if (result.containsKey(prefix)) {
-						String fullName = result.get(prefix).getNamespace().getFullyQualifiedName();
-						name = name.replace(prefix, fullName);
-						if (name.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
-							name = NamespaceReference.NAMESPACE_SEPARATOR + name;
-						}
-					}
-				}
-				arrayType.addType(getEvaluatedType(name, currentNamespace));
-			}
+		if (!"".equals(type)) { //$NON-NLS-1$
+			arrayType.addType(evaluateSinglePHPDocType(type, space, offset, selfTypes));
 		}
 		return arrayType;
 	}
@@ -142,7 +123,7 @@ public class PHPEvaluationUtils {
 	 * @param docTag
 	 * @return the types of the given variable
 	 */
-	public static Collection<String> getTypeBinding(String name, PHPDocTag docTag) {
+	public static Collection<String> getTypeBinding(@NonNull String name, @NonNull PHPDocTag docTag) {
 		String[] split = MagicMemberUtil.WHITESPACE_SEPERATOR.split(docTag.getValue().trim());
 		if (split.length < 2) {
 			return Collections.emptyList();
@@ -180,7 +161,8 @@ public class PHPEvaluationUtils {
 	 * @param currentNamespace
 	 * @return evaluated type
 	 */
-	public static IEvaluatedType getEvaluatedType(String typeName, IType currentNamespace) {
+	@NonNull
+	public static IEvaluatedType getEvaluatedType(@NonNull String typeName, @Nullable IType currentNamespace) {
 		if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0 && currentNamespace != null) {
 			typeName = NamespaceReference.NAMESPACE_SEPARATOR + currentNamespace.getElementName()
 					+ NamespaceReference.NAMESPACE_SEPARATOR + typeName;
@@ -192,7 +174,7 @@ public class PHPEvaluationUtils {
 		}
 	}
 
-	public static String removeArrayBrackets(String variableName) {
+	public static String removeArrayBrackets(@NonNull String variableName) {
 		return variableName.replaceAll(BRACKETS_REGEX, ""); //$NON-NLS-1$
 	}
 
@@ -212,7 +194,6 @@ public class PHPEvaluationUtils {
 
 			return !found;
 		}
-
 	}
 
 	/**
@@ -220,81 +201,23 @@ public class PHPEvaluationUtils {
 	 * @param space
 	 *            namespace (IType) or file (ISourceModule)
 	 * @param offset
-	 * @param types
+	 * @param selfTypes
 	 * @return
 	 */
-	public static IEvaluatedType[] evaluatePHPDocType(String[] typeNames, IModelElement space, int offset,
-			IType[] types) {
-		ISourceModule sourceModule = space.getAncestor(ISourceModule.class);
-		IType currentNamespace = space instanceof IType ? (IType) space : null;
+	@SuppressWarnings("null")
+	public static IEvaluatedType[] evaluatePHPDocType(@NonNull String[] typeNames, @NonNull IModelElement space,
+			int offset, @Nullable IType[] selfTypes) {
 		List<IEvaluatedType> res = new LinkedList<>();
 		for (String typeName : typeNames) {
-			List<IEvaluatedType> evaluated = new LinkedList<>();
 			if (StringUtils.isBlank(typeName)) {
 				continue;
 			}
-			IEvaluatedType evaluatedType = extractArrayType(typeName, currentNamespace, offset);
+			IEvaluatedType evaluatedType = extractArrayType(typeName, space, offset, selfTypes);
 			if (evaluatedType != null) {
-				evaluated.add(evaluatedType);
+				res.add(evaluatedType);
 			} else {
-				if (PHPSimpleTypes.isSimpleType(typeName)) {
-					ClassFinder classFinder = new ClassFinder(typeName);
-					try {
-						space.accept(classFinder);
-					} catch (ModelException e) {
-						Logger.logException(e);
-					}
-					if (classFinder.found) {
-						evaluated.add(getEvaluatedType(typeName, currentNamespace));
-					} else {
-						evaluated.add(PHPSimpleTypes.fromString(typeName));
-					}
-				} else if ((typeName.equals(SELF_RETURN_TYPE) || typeName.equals(THIS_RETURN_TYPE)
-						|| typeName.equals(STATIC_RETURN_TYPE)) && types != null) {
-					for (IType t : types) {
-						IEvaluatedType type = getEvaluatedType(PHPModelUtils.getFullName(t), null);
-						if (type != null) {
-							evaluated.add(type);
-						}
-					}
-				} else if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) == 0) {
-					evaluated.add(new PHPClassType(typeName));
-				} else {
-					if (currentNamespace != null) {
-						ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
-						if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0) {
-							String prefix = typeName.substring(0,
-									typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR));
-							final Map<String, UsePart> result = PHPModelUtils.getAliasToNSMap(prefix, moduleDeclaration,
-									offset, currentNamespace, true);
-							if (result.containsKey(prefix)) {
-								String fullName = result.get(prefix).getNamespace().getFullyQualifiedName();
-								typeName = typeName.replace(prefix, fullName);
-								if (typeName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
-									typeName = NamespaceReference.NAMESPACE_SEPARATOR + typeName;
-								}
-							}
-						} else if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) < 0) {
-
-							String prefix = typeName;
-							final Map<String, UsePart> result = PHPModelUtils.getAliasToNSMap(prefix, moduleDeclaration,
-									offset, currentNamespace, true);
-							if (result.containsKey(prefix)) {
-								String fullName = result.get(prefix).getNamespace().getFullyQualifiedName();
-								typeName = fullName;
-								if (typeName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
-									typeName = NamespaceReference.NAMESPACE_SEPARATOR + typeName;
-								}
-							}
-						}
-					}
-					IEvaluatedType type = getEvaluatedType(typeName, currentNamespace);
-					if (type != null) {
-						evaluated.add(type);
-					}
-				}
+				res.add(evaluateSinglePHPDocType(typeName, space, offset, selfTypes));
 			}
-			res.addAll(evaluated);
 		}
 		if (res.isEmpty()) {
 			return EMPTY_LIST;
@@ -303,8 +226,67 @@ public class PHPEvaluationUtils {
 		return res.toArray(new IEvaluatedType[res.size()]);
 	}
 
-	public static IEvaluatedType[] evaluatePHPDocType(List<TypeReference> typeNames, IModelElement space, int offset,
-			IType[] types) {
+	@SuppressWarnings("null")
+	private static IEvaluatedType evaluateSinglePHPDocType(@NonNull String typeName, @NonNull IModelElement space,
+			int offset, @Nullable IType[] selfTypes) {
+		IType currentNamespace = space instanceof IType ? (IType) space : null;
+		ISourceModule sourceModule = space.getAncestor(ISourceModule.class);
+
+		if (PHPSimpleTypes.isSimpleType(typeName)) {
+			ClassFinder classFinder = new ClassFinder(typeName);
+			try {
+				space.accept(classFinder);
+			} catch (ModelException e) {
+				Logger.logException(e);
+			}
+			if (classFinder.found) {
+				return getEvaluatedType(typeName, currentNamespace);
+			} else {
+				return PHPSimpleTypes.fromString(typeName);
+			}
+		} else if ((typeName.equals(SELF_RETURN_TYPE) || typeName.equals(THIS_RETURN_TYPE)
+				|| typeName.equals(STATIC_RETURN_TYPE)) && selfTypes != null) {
+			for (IType t : selfTypes) {
+				IEvaluatedType type = getEvaluatedType(PHPModelUtils.getFullName(t), null);
+				if (type != null) {
+					return type;
+				}
+			}
+		} else if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) == 0) {
+			return new PHPClassType(typeName);
+		}
+		if (currentNamespace != null) {
+			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+			if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0) {
+				String prefix = typeName.substring(0, typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR));
+				final Map<String, UsePart> result = PHPModelUtils.getAliasToNSMap(prefix, moduleDeclaration, offset,
+						currentNamespace, true);
+				if (result.containsKey(prefix)) {
+					String fullName = result.get(prefix).getNamespace().getFullyQualifiedName();
+					typeName = typeName.replace(prefix, fullName);
+					if (typeName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+						typeName = NamespaceReference.NAMESPACE_SEPARATOR + typeName;
+					}
+				}
+			} else if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) < 0) {
+
+				String prefix = typeName;
+				final Map<String, UsePart> result = PHPModelUtils.getAliasToNSMap(prefix, moduleDeclaration, offset,
+						currentNamespace, true);
+				if (result.containsKey(prefix)) {
+					String fullName = result.get(prefix).getNamespace().getFullyQualifiedName();
+					typeName = fullName;
+					if (typeName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+						typeName = NamespaceReference.NAMESPACE_SEPARATOR + typeName;
+					}
+				}
+			}
+		}
+		return getEvaluatedType(typeName, currentNamespace);
+	}
+
+	public static IEvaluatedType[] evaluatePHPDocType(@Nullable List<TypeReference> typeNames,
+			@NonNull IModelElement space, int offset, @Nullable IType[] selfTypes) {
 		if (typeNames == null || typeNames.isEmpty()) {
 			return EMPTY_LIST;
 		}
@@ -312,7 +294,7 @@ public class PHPEvaluationUtils {
 		for (int i = 0; i < typeNames.size(); i++) {
 			tmp[i] = typeNames.get(i).getName();
 		}
-		return evaluatePHPDocType(tmp, space, offset, types);
+		return evaluatePHPDocType(tmp, space, offset, selfTypes);
 	}
 
 }
