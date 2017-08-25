@@ -95,8 +95,8 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 		String[] typeNames = StringUtils.split(fieldType, Constants.TYPE_SEPARATOR_CHAR);
 		IType currentNamespace = PHPModelUtils.getCurrentNamespace(typeField);
 		IModelElement space = currentNamespace != null ? currentNamespace : typeField.getSourceModule();
-		evaluated.addAll(Arrays.asList(
-				PHPEvaluationUtils.evaluatePHPDocType(typeNames, space, typeField.getSourceRange().getOffset(), null)));
+		evaluated.addAll(Arrays.asList(PHPEvaluationUtils.evaluatePHPDocType(typeNames, space,
+				typeField.getSourceRange().getOffset(), null, null)));
 	}
 
 	@Override

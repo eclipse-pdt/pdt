@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,10 +37,10 @@ public class MethodContext implements IContext, INamespaceContext, IArgumentsCon
 	private final MethodDeclaration methodNode;
 	private final String[] argNames;
 	private final IEvaluatedType[] argTypes;
+	private IEvaluatedType declarationType;
 	private IEvaluatedType instanceType;
 	private String namespaceName;
 	private IModelAccessCache cache;
-	private IType type;
 
 	public MethodContext(IContext parent, ISourceModule sourceModule, ModuleDeclaration rootNode,
 			MethodDeclaration methodNode, String[] argNames, IEvaluatedType[] argTypes) {
@@ -51,7 +51,7 @@ public class MethodContext implements IContext, INamespaceContext, IArgumentsCon
 		this.argTypes = argTypes;
 
 		if (parent instanceof IInstanceContext) {
-			instanceType = ((IInstanceContext) parent).getInstanceType();
+			declarationType = instanceType = ((IInstanceContext) parent).getInstanceType();
 		}
 		if (parent instanceof INamespaceContext) {
 			namespaceName = ((INamespaceContext) parent).getNamespace();
@@ -74,12 +74,21 @@ public class MethodContext implements IContext, INamespaceContext, IArgumentsCon
 	}
 
 	/**
-	 * Returns {@link IEvaluatedType} for the declaring type or
-	 * <code>null</code> if this is a function context
+	 * Returns {@link IEvaluatedType} for the instance type or <code>null</code>
+	 * if this is a function context
 	 */
 	@Override
 	public IEvaluatedType getInstanceType() {
 		return instanceType;
+	}
+
+	/**
+	 * Returns {@link IEvaluatedType} for the declaring type or
+	 * <code>null</code> if this is a function context
+	 */
+	@Override
+	public IEvaluatedType getDeclarationType() {
+		return declarationType;
 	}
 
 	/**
@@ -140,6 +149,7 @@ public class MethodContext implements IContext, INamespaceContext, IArgumentsCon
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((instanceType == null) ? 0 : instanceType.hashCode());
+		result = prime * result + ((declarationType == null) ? 0 : declarationType.hashCode());
 		result = prime * result + ((methodNode == null) ? 0 : methodNode.hashCode());
 		result = prime * result + ((namespaceName == null) ? 0 : namespaceName.hashCode());
 		result = prime * result + ((sourceModule == null) ? 0 : sourceModule.hashCode());
@@ -160,6 +170,11 @@ public class MethodContext implements IContext, INamespaceContext, IArgumentsCon
 				return false;
 		} else if (!instanceType.equals(other.instanceType))
 			return false;
+		if (declarationType == null) {
+			if (other.declarationType != null)
+				return false;
+		} else if (!declarationType.equals(other.declarationType))
+			return false;
 		if (methodNode == null) {
 			if (other.methodNode != null)
 				return false;
@@ -179,7 +194,6 @@ public class MethodContext implements IContext, INamespaceContext, IArgumentsCon
 	}
 
 	public void setCurrentType(IType type) {
-		this.type = type;
 		if (type != null) {
 			if (type.getParent() instanceof IType) {
 				IType ns = (IType) type.getParent();
@@ -187,11 +201,6 @@ public class MethodContext implements IContext, INamespaceContext, IArgumentsCon
 			} else {
 				instanceType = new PHPThisClassType(type.getElementName(), type);
 			}
-
 		}
-	}
-
-	public IType getType() {
-		return type;
 	}
 }

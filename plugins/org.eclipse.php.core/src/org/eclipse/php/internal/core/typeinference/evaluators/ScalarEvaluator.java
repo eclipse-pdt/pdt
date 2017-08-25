@@ -41,7 +41,7 @@ public class ScalarEvaluator extends FixedAnswerEvaluator {
 				simpleType = PHPSimpleTypes.NULL;
 				break;
 			}
-			// checking specific case for "return $this;" statement
+			// checking specific case for "return this;" statement
 			if ("this".equalsIgnoreCase(scalar.getValue())) { //$NON-NLS-1$
 				IContext context = goal.getContext();
 				if (context instanceof MethodContext) {

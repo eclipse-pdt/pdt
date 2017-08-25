@@ -63,13 +63,22 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 		}
 	}
 
-	private boolean isSelfOrStatic() {
+	private boolean isSelf() {
 		String name = typeReference.getName();
 		if (phpVersion != null && PHPVersion.PHP5_4.isLessThan(phpVersion)) {
 			name = name.toLowerCase();
 		}
 
-		return "self".equals(name) || "static".equals(name); //$NON-NLS-1$ //$NON-NLS-2$
+		return "self".equals(name); //$NON-NLS-1$
+	}
+
+	private boolean isStatic() {
+		String name = typeReference.getName();
+		if (phpVersion != null && PHPVersion.PHP5_4.isLessThan(phpVersion)) {
+			name = name.toLowerCase();
+		}
+
+		return "static".equals(name); //$NON-NLS-1$
 	}
 
 	private boolean isParent() {
@@ -86,10 +95,21 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 		final IContext context = goal.getContext();
 		String elementName = typeReference.getName();
 
-		if (isSelfOrStatic()) {
+		if (isStatic()) {
 			if (context instanceof MethodContext) {
 				MethodContext methodContext = (MethodContext) context;
 				IEvaluatedType instanceType = methodContext.getInstanceType();
+				if (instanceType instanceof PHPClassType) {
+					result = instanceType;
+				}
+			}
+		} else if (isSelf()) {
+			if (context instanceof MethodContext) {
+				MethodContext methodContext = (MethodContext) context;
+				// See also InstanceCreationEvaluator.
+				IEvaluatedType instanceType = methodContext.getDeclarationType() != null
+						&& !(methodContext.getDeclarationType() instanceof PHPTraitType)
+								? methodContext.getDeclarationType() : methodContext.getInstanceType();
 				if (instanceType instanceof PHPClassType) {
 					result = instanceType;
 				}

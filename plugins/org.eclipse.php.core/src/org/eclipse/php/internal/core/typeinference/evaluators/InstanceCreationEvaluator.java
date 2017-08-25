@@ -48,7 +48,13 @@ public class InstanceCreationEvaluator extends GoalEvaluator {
 		if ((className instanceof TypeReference)) {
 			if (isSelf((TypeReference) className) && (goal.getContext() instanceof MethodContext)) {
 				MethodContext methodContext = (MethodContext) goal.getContext();
-				result = methodContext.getInstanceType();
+				// See also TypeReferenceEvaluator.
+				if (methodContext.getDeclarationType() != null
+						&& !(methodContext.getDeclarationType() instanceof PHPTraitType)) {
+					result = methodContext.getDeclarationType();
+				} else {
+					result = methodContext.getInstanceType();
+				}
 				return IGoal.NO_GOALS;
 			} else {
 				return new IGoal[] { new ExpressionTypeGoal(goal.getContext(), className) };
