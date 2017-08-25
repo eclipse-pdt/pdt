@@ -1,0 +1,44 @@
+--TEST--
+Bug 519290 - @return static[] doesn't work
+--FILE--
+<?php
+class A18
+{
+    public $tabOChildren;
+
+    /**
+     *
+     * @return static
+     */
+    public static function make()
+    {
+        return new A18();
+    }
+
+    /**
+     *
+     * @return static[]
+     */
+    public function getTabOChildren()
+    {
+        return $this->tabOChildren;
+    }
+}
+
+class B18 extends A18
+{
+    public function willAppearOnBAutocompleteNotA()
+    {
+    }
+}
+
+$oB = B18::make();
+$tabOB = $oB->getTabOChildren();
+$oB2 = $tabOB[0];
+$oB2->|
+?>
+--EXPECT--
+field($tabOChildren)
+method(willAppearOnBAutocompleteNotA)
+method(make)
+method(getTabOChildren)
