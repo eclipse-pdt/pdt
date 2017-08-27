@@ -33,4 +33,4 @@ class Property extends Member {
 $property = new Property;
 testMethodReturnTypePHPDocForSelf($property->setStatic(true));
 --EXPECT--
-Property
+Member

@@ -86,7 +86,7 @@ public class PHPDocMethodReturnTypeEvaluator extends AbstractMethodReturnTypeEva
 				IModelElement space = currentNamespace != null ? currentNamespace : method.getSourceModule();
 				try {
 					evaluated.addAll(Arrays.asList(PHPEvaluationUtils.evaluatePHPDocType(typeNames, space,
-							method.getSourceRange().getOffset(), goal.getTypes())));
+							method.getSourceRange().getOffset(), goal.getTypes(), method.getDeclaringType())));
 				} catch (ModelException e) {
 					Logger.logException(e);
 				}
