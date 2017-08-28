@@ -72,7 +72,7 @@ public class OpenFileDialog {
 		dialog = new ElementTreeSelectionDialog(shell, lp, cp);
 
 		IResource initialElement = null;
-		if (initialPath != null && !initialPath.isEmpty()) {
+		if (root != null && initialPath != null && !initialPath.isEmpty()) {
 			initialElement = root.findMember(new Path(initialPath));
 			if (initialElement == null || !initialElement.exists()) {
 				initialElement = null;
