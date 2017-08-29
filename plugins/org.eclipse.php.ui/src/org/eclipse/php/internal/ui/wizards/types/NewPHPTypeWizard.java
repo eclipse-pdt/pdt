@@ -225,7 +225,7 @@ public abstract class NewPHPTypeWizard extends Wizard implements INewWizard {
 	protected int findPHPBlockOffset() {
 		int injectOffset = -1;
 		IPHPScriptRegion scriptRegion = null;
-		ITextRegion[] subRegions = getStructuredDocumentsRegionis();
+		ITextRegion[] subRegions = getStructuredDocumentsRegions();
 		for (ITextRegion currentRegion : subRegions) {
 			if (currentRegion != null && currentRegion instanceof IPHPScriptRegion) {
 				scriptRegion = (IPHPScriptRegion) currentRegion;
@@ -238,7 +238,7 @@ public abstract class NewPHPTypeWizard extends Wizard implements INewWizard {
 		return injectOffset;
 	}
 
-	protected ITextRegion[] getStructuredDocumentsRegionis() {
+	protected ITextRegion[] getStructuredDocumentsRegions() {
 		IResource resource = existingPHPFile.getResource();
 		IStructuredModel existingModelForRead = null;
 		try {
@@ -248,16 +248,20 @@ public abstract class NewPHPTypeWizard extends Wizard implements INewWizard {
 				existingModelForRead = ModelManagerImpl.getInstance().createUnManagedStructuredModelFor(file);
 			}
 
+			IStructuredDocument structuredDocument = existingModelForRead.getStructuredDocument();
+			IStructuredDocumentRegion[] subRegions = structuredDocument.getStructuredDocumentRegions();
+
+			for (IStructuredDocumentRegion currentRegion : subRegions) {
+				if (currentRegion instanceof XMLStructuredDocumentRegion) {
+					return currentRegion.getRegions().toArray();
+				}
+			}
 		} catch (IOException | CoreException e) {
 			PHPUiPlugin.log(e);
 			return new ITextRegion[0];
-		}
-		IStructuredDocument structuredDocument = existingModelForRead.getStructuredDocument();
-		IStructuredDocumentRegion[] subRegions = structuredDocument.getStructuredDocumentRegions();
-
-		for (IStructuredDocumentRegion currentRegion : subRegions) {
-			if (currentRegion instanceof XMLStructuredDocumentRegion) {
-				return currentRegion.getRegions().toArray();
+		} finally {
+			if (existingModelForRead != null) {
+				existingModelForRead.releaseFromRead();
 			}
 		}
 

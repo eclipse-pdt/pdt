@@ -31,7 +31,7 @@ public interface IPHPCompletionRequestor {
 	public IDocument getDocument();
 
 	/**
-	 * Returns <code>true</code> if code assist was invoked excplicitly by user,
+	 * Returns <code>true</code> if code assist was invoked explicitly by user,
 	 * otherwise <code>false</code>
 	 * 
 	 * @return whether code assist invoked explicitly
