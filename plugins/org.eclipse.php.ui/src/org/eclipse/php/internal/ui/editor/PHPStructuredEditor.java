@@ -327,6 +327,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 	private PHPEditorErrorTickUpdater fPHPEditorErrorTickUpdater;
 	/** The bracket inserter. */
 	private final BracketInserter fBracketInserter = new BracketInserter();
+	private final Object fReconcilerLock = new Object();
 
 	/**
 	 * Internal implementation class for a change listener.
@@ -4096,5 +4097,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPHPScr
 	 */
 	final public VerifyKeyListener getfBracketInserter() {
 		return fBracketInserter;
+	}
+
+	public Object getReconcilerLock() {
+		return fReconcilerLock;
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 IBM Corporation and others.
+ * Copyright (c) 2009, 2015, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,10 +13,7 @@ package org.eclipse.php.internal.ui.editor.configuration;
 
 import java.util.*;
 
-import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.dltk.internal.ui.typehierarchy.HierarchyInformationControl;
 import org.eclipse.dltk.ui.actions.IScriptEditorActionDefinitionIds;
@@ -33,6 +30,7 @@ import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.*;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.quickassist.IQuickAssistAssistant;
+import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.php.internal.core.PHPCoreConstants;
@@ -53,9 +51,7 @@ import org.eclipse.php.internal.ui.editor.contentassist.PHPContentAssistant;
 import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPHP;
 import org.eclipse.php.internal.ui.editor.hover.BestMatchHover;
 import org.eclipse.php.internal.ui.editor.hover.PHPTextHoverProxy;
-import org.eclipse.php.internal.ui.text.PHPElementProvider;
-import org.eclipse.php.internal.ui.text.PHPInformationHierarchyProvider;
-import org.eclipse.php.internal.ui.text.PHPOutlineInformationControl;
+import org.eclipse.php.internal.ui.text.*;
 import org.eclipse.php.internal.ui.text.correction.PHPCorrectionAssistant;
 import org.eclipse.php.internal.ui.text.hover.PHPEditorTextHoverDescriptor;
 import org.eclipse.php.internal.ui.util.ElementCreationProxy;
@@ -96,6 +92,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 	private LineStyleProvider fLineStyleProvider;
 	private StructuredContentAssistant fContentAssistant;
+	private IReconciler fReconciler;
 	private IQuickAssistAssistant fQuickAssistant;
 	private PHPCompletionProcessor phpCompletionProcessor;
 	Map<String, IContentAssistProcessor[]> processorMap = new HashMap<>();
@@ -244,6 +241,21 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 			processors = new IContentAssistProcessor[0];
 		}
 		return processors;
+	}
+
+	public IReconciler getPHPReconciler(ITextEditor editor, ISourceViewer sourceViewer) {
+		if (fReconciler == null && editor != null && editor.isEditable()) {
+			PHPCompositeReconcilingStrategy strategy = new PHPCompositeReconcilingStrategy(editor,
+					getConfiguredDocumentPartitioning(sourceViewer));
+			PHPReconciler reconciler = new PHPReconciler(editor, strategy, false);
+			reconciler.setIsAllowedToModifyDocument(false);
+			reconciler.setIsIncrementalReconciler(false);
+			reconciler.setProgressMonitor(new NullProgressMonitor());
+			reconciler.setDelay(500);
+
+			fReconciler = reconciler;
+		}
+		return fReconciler;
 	}
 
 	public IContentAssistant getPHPContentAssistant(ISourceViewer sourceViewer) {
