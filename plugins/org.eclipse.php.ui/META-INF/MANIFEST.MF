@@ -71,7 +71,6 @@ Export-Package: org.eclipse.php.internal.ui;x-friends:="org.eclipse.php.formatte
  org.eclipse.php.internal.ui.editor.hyperlink;x-internal:=true,
  org.eclipse.php.internal.ui.editor.input;x-internal:=true,
  org.eclipse.php.internal.ui.editor.templates;x-internal:=true,
- org.eclipse.php.internal.ui.editor.validation;x-internal:=true,
  org.eclipse.php.internal.ui.explorer;x-internal:=true,
  org.eclipse.php.internal.ui.filters;x-internal:=true,
  org.eclipse.php.internal.ui.folding;x-internal:=true,
