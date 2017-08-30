@@ -25,4 +25,3 @@ class Sample {
 
 }
 --EXPECT--
-[line=12, start=123, end=132] The import bar\model cannot be resolved

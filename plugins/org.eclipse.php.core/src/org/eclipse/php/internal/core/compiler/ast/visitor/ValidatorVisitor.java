@@ -26,6 +26,9 @@ import org.eclipse.dltk.compiler.problem.*;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.dltk.core.builder.ISourceLineTracker;
+import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.compiler.ast.nodes.*;
@@ -37,6 +40,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.PHPSelectionEngine;
 import org.eclipse.php.internal.core.compiler.ast.parser.Messages;
 import org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier;
+import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.evaluators.PHPEvaluationUtils;
@@ -319,10 +323,10 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	}
 
 	/**
-	 * Generic checks to only visit PHPDoc type references whose names are valid
-	 * php identifier names. See also
-	 * {@link PHPSelectionEngine#lookForMatchingElements()} for more complete
-	 * and precise PHPDoc type references handling.
+	 * Generic checks to only visit PHPDoc type references whose names are valid php
+	 * identifier names. See also
+	 * {@link PHPSelectionEngine#lookForMatchingElements()} for more complete and
+	 * precise PHPDoc type references handling.
 	 */
 	@SuppressWarnings("null")
 	private void visitPHPDocType(TypeReference typeReference, ProblemSeverity severity) throws Exception {
@@ -486,14 +490,27 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 			}
 			switch (elementType) {
 			case FullyQualifiedReference.T_TYPE:
-				IModelElement[] types = PHPModelUtils.getTypes(name, sourceModule, type.start(), null);
-				if (types.length == 0) {
-					types = PHPModelUtils.getTraits(name, sourceModule, type.start(), null, null);
+				IModelElement[] elements = PHPModelUtils.getTypes(name, sourceModule, type.start(), null);
+				if (elements.length == 0) {
+					elements = PHPModelUtils.getTraits(name, sourceModule, type.start(), null, null);
 				}
-				if (types.length == 0 && info.isUseStatement()) {
-					types = sourceModule.codeSelect(type.start(), type.end() - type.start());
+				if (elements.length == 0 && info.isUseStatement()) {
+					elements = sourceModule.codeSelect(type.start(), type.end() - type.start());
+					if (elements.length == 0) {
+						IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
+						IType[] namespaces = PHPModelAccess.getDefault().findNamespaces(null, info.getTypeName(),
+								MatchRule.PREFIX, 0, 0, scope, null);
+						for (IType namespace : namespaces) {
+							char character = namespace.getElementName().charAt(info.getTypeName().length());
+							if (character == NamespaceReference.NAMESPACE_SEPARATOR) {
+								isFound = true;
+								break;
+							}
+						}
+					}
 				}
-				if (types.length > 0) {
+
+				if (elements.length > 0) {
 					isFound = true;
 				}
 				break;
