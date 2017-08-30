@@ -1,0 +1,19 @@
+--TEST--
+Bug 517368 - Use statement doesn't take care Annotation / Alias
+--FILE--
+<?php
+namespace grup\model\translatable;
+
+class Foo {
+}
+
+namespace popo;
+
+use grup\model;
+use grup\mode;
+use grup\model2;
+
+new model\translatable\Foo();
+--EXPECT--
+[line=10, start=94, end=103] The import grup\mode cannot be resolved
+[line=11, start=109, end=120] The import grup\model2 cannot be resolved
