@@ -106,7 +106,8 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	public boolean visit(NamespaceDeclaration s) throws Exception {
 		hasNamespace = true;
 		currentNamespace = s;
-		return super.visit(s);
+		visitGeneral(s);
+		return true;
 	}
 
 	@Override
@@ -120,7 +121,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	public boolean visit(PHPMethodDeclaration s) throws Exception {
 		if (s.getPHPDoc() != null)
 			s.getPHPDoc().traverse(this);
-		return super.visit(s);
+		return visitGeneral(s);
 	}
 
 	@Override
@@ -139,7 +140,8 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		if (node.getArgs() != null) {
 			node.getArgs().traverse(this);
 		}
-		return visitGeneral(node);
+		visitGeneral(node);
+		return false;
 	}
 
 	@Override
@@ -163,6 +165,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 			skip = PHPSimpleTypes.isHintable(node.getName(), version);
 		}
 		if (skip || TYPE_SKIP.contains(node.getName().toLowerCase())) {
+			visitGeneral(node);
 			return true;
 		}
 		TypeReferenceInfo tri = new TypeReferenceInfo(node, false);
@@ -182,6 +185,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		if (!isFound) {
 			reportProblem(node, Messages.UndefinedType, PHPProblemIdentifier.UndefinedType, node.getName(), severity);
 		}
+		visitGeneral(node);
 		return false;
 	}
 
@@ -240,7 +244,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	@Override
 	public boolean visit(InterfaceDeclaration s) throws Exception {
 		if (s.getSuperClasses() == null)
-			return true;
+			return visitGeneral(s);
 		for (ASTNode node : s.getSuperClasses().getChilds()) {
 			checkSuperclass((TypeReference) node, true, s.getName());
 		}
@@ -266,6 +270,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 					|| elementType == FullyQualifiedReference.T_FUNCTION) {
 				// TODO implement later, skip check for function and constant
 				// for now
+				visitGeneral(part);
 				return false;
 			}
 		}
@@ -292,6 +297,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 					new String[] { name }, ProblemSeverities.Warning);
 		}
 		usePartInfo.put(lcName, info);
+		visitGeneral(part);
 		return false;
 	}
 
@@ -370,6 +376,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 				visitPHPDocType(typeReference, ProblemSeverities.Warning);
 			}
 		}
+		visitGeneral(phpDocTag);
 		return false;
 	}
 
