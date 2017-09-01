@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,8 +24,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 public class MainAutoEditStrategy implements IAutoEditStrategy {
 
 	private static IAutoEditStrategy indentLineAutoEditStrategy = new IndentLineAutoEditStrategy();
-	private static IAutoEditStrategy curlyOpenAutoEditStrategy = new CurlyOpenAutoEditStrategy();
-	private static IAutoEditStrategy curlyCloseAutoEditStrategy = new CurlyCloseAutoEditStrategy();
 	private static IAppliedAutoEditStrategy caseDefaultAutoEditStrategy = new CaseDefaultAutoEditStrategy();
 	private static IAutoEditStrategy docBlockAutoEditStrategy = new PHPDocAutoIndentStrategy();
 	private static IAutoEditStrategy autoIndentStrategy = new PHPAutoIndentStrategy();
@@ -68,8 +66,6 @@ public class MainAutoEditStrategy implements IAutoEditStrategy {
 				// "case"/"default" was found and indented, we stop here
 				return;
 			}
-			curlyOpenAutoEditStrategy.customizeDocumentCommand(document, command);
-			curlyCloseAutoEditStrategy.customizeDocumentCommand(document, command);
 			indentLineAutoEditStrategy.customizeDocumentCommand(document, command);
 			autoIndentStrategy.customizeDocumentCommand(document, command);
 		}
