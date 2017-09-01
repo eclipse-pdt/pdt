@@ -205,7 +205,11 @@ public class FormatterAutoEditTests {
 		IAutoEditStrategy indentLineAutoEditStrategy = new MainAutoEditStrategy();
 		if (pdttFile.getOther() != null && !pdttFile.getOther().isEmpty()) {
 			cmd.text = pdttFile.getOther().substring(0, pdttFile.getOther().length() - 1);
-			if (cmd.text != null && cmd.text.trim().length() == 1) {
+			if (cmd.text != null
+					// only one non-whitespace character
+					&& cmd.text.trim().length() == 1
+					// and no line separator
+					&& cmd.text.indexOf('\r') == -1 && cmd.text.indexOf('\n') == -1) {
 				// support single (non-blank) character
 				// insertion
 				cmd.text = cmd.text.trim();
