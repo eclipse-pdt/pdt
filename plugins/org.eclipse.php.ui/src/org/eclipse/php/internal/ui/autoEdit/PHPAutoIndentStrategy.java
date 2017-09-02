@@ -32,18 +32,24 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 	}
 
 	@Override
-	public void customizeDocumentCommand(IDocument d, DocumentCommand c) {
-		// when user typing c.text.length()==1 except enter key,
-		// if user type enter key, we may add some indentation spaces/tabs for
-		// it, so we use c.text.trim().length() > 0 to filter it
-		if (c.text != null && c.text.length() > 1 && c.text.trim().length() > 1
-				&& getPreferenceStore().getBoolean(PreferenceConstants.EDITOR_SMART_PASTE)) {
+	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
+		if (command.text == null) {
+			return;
+		}
+		String text = command.text.trim();
+		// this class will always take care of single curly brackets,
+		// we should not directly use CurlyOpenAutoEditStrategy or
+		// CurlyCloseAutoEditStrategy
+		if (text.equals("{") //$NON-NLS-1$
+				|| text.equals("}") //$NON-NLS-1$
+				// if user types enter key, we may add some indentation
+				// spaces/tabs for it, so we use text.length() > 1 to filter it
+				|| (text.length() > 1 && getPreferenceStore().getBoolean(PreferenceConstants.EDITOR_SMART_PASTE))) {
 			try {
-				smartPaste(d, c);
+				smartPaste(document, command);
 			} catch (Exception e) {
 				PHPUiPlugin.log(e);
 			}
-
 		}
 	}
 
