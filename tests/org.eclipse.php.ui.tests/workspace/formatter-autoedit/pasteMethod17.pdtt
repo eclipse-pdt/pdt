@@ -1,0 +1,23 @@
+--TEST--
+Bug 513109 - handle some more autoedit scenarios
+Use PHPAutoIndentStrategy to handle curly brackets
+--FILE--
+<?php
+function foo($a) {
+    if ($a) {
+        if ($a) {
+|
+    }
+}
+--OTHER--
+    }
+
+--EXPECT--
+<?php
+function foo($a) {
+    if ($a) {
+        if ($a) {
+        }
+        
+    }
+}
