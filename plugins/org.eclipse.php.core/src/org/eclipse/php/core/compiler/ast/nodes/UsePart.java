@@ -27,14 +27,25 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 public class UsePart extends ASTNode {
 
 	private FullyQualifiedReference namespace;
+	private FullyQualifiedReference groupNamespace;
 	private SimpleReference alias;
 	private int statementType;
 
 	public UsePart(FullyQualifiedReference namespace, SimpleReference alias) {
-		this(namespace, alias, UseStatement.T_NONE);
+		this(null, namespace, alias, UseStatement.T_NONE);
+	}
+
+	public UsePart(FullyQualifiedReference groupNamespace, FullyQualifiedReference namespace, SimpleReference alias) {
+		this(groupNamespace, namespace, alias, UseStatement.T_NONE);
 	}
 
 	public UsePart(FullyQualifiedReference namespace, SimpleReference alias, int statementType) {
+		this(null, namespace, alias, statementType);
+	}
+
+	public UsePart(FullyQualifiedReference groupNamespace, FullyQualifiedReference namespace, SimpleReference alias,
+			int statementType) {
+		this.setGroupNamespace(groupNamespace);
 		this.setNamespace(namespace);
 		this.setAlias(alias);
 		this.statementType = statementType;
@@ -68,6 +79,14 @@ public class UsePart extends ASTNode {
 
 	public SimpleReference getAlias() {
 		return alias;
+	}
+
+	public void setGroupNamespace(FullyQualifiedReference groupNamespace) {
+		this.groupNamespace = groupNamespace;
+	}
+
+	public FullyQualifiedReference getGroupNamespace() {
+		return groupNamespace;
 	}
 
 	public void setNamespace(FullyQualifiedReference namespace) {
