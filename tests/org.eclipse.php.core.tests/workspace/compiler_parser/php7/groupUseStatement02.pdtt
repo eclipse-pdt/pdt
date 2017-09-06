@@ -18,7 +18,7 @@ use const Test\Boo\ {
 			</FullyQualifiedReference>
 		</Namespace>
 		<Parts>
-			<UsePart start="0" end="0">
+			<UsePart start="0" end="0" statementType="1">
 				<FullyQualifiedReference start="33" end="37" name="FooX">
 				</FullyQualifiedReference>
 			</UsePart>
@@ -32,7 +32,7 @@ use const Test\Boo\ {
 			</FullyQualifiedReference>
 		</Namespace>
 		<Parts>
-			<UsePart start="0" end="0">
+			<UsePart start="0" end="0" statementType="2">
 				<FullyQualifiedReference start="65" end="69" name="FooX">
 				</FullyQualifiedReference>
 			</UsePart>

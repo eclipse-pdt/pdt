@@ -51,7 +51,7 @@ namespace Foo\Bar\X2
 				</FullyQualifiedReference>
 			</Namespace>
 			<Parts>
-				<UsePart start="0" end="0">
+				<UsePart start="0" end="0" statementType="1">
 					<FullyQualifiedReference start="189" end="199" name="myFunction">
 					</FullyQualifiedReference>
 					<SimpleReference start="203" end="211" name="myAlias1">
@@ -67,7 +67,7 @@ namespace Foo\Bar\X2
 				</FullyQualifiedReference>
 			</Namespace>
 			<Parts>
-				<UsePart start="0" end="0">
+				<UsePart start="0" end="0" statementType="2">
 					<FullyQualifiedReference start="255" end="262" name="MyConst">
 					</FullyQualifiedReference>
 					<SimpleReference start="266" end="274" name="myAlias2">

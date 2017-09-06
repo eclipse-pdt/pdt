@@ -10,4 +10,4 @@ use Test\Boo\ {
 	function FooX as MyAlias
 };
 --EXPECT--
-[line=5, start=40, end=49] The import Exception is never used
+[line=5, start=40, end=49] The import Test\Boo\Exception cannot be resolved

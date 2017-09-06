@@ -7,7 +7,7 @@ Test use function syntax
 <ModuleDeclaration start="0" end="43">
 	<UseStatement start="6" end="39" statementType="1">
 		<Parts>
-			<UsePart start="0" end="0">
+			<UsePart start="0" end="0" statementType="1">
 				<FullyQualifiedReference start="19" end="26" name="Foo\Bar">
 					<NamespaceReference start="19" end="22" name="Foo" global="false" local="false">
 					</NamespaceReference>
