@@ -323,10 +323,10 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	}
 
 	/**
-	 * Generic checks to only visit PHPDoc type references whose names are valid php
-	 * identifier names. See also
-	 * {@link PHPSelectionEngine#lookForMatchingElements()} for more complete and
-	 * precise PHPDoc type references handling.
+	 * Generic checks to only visit PHPDoc type references whose names are valid
+	 * php identifier names. See also
+	 * {@link PHPSelectionEngine#lookForMatchingElements()} for more complete
+	 * and precise PHPDoc type references handling.
 	 */
 	@SuppressWarnings("null")
 	private void visitPHPDocType(TypeReference typeReference, ProblemSeverity severity) throws Exception {
@@ -617,7 +617,13 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 
 		public UsePartInfo(UsePart usePart) {
 			this.usePart = usePart;
-			tri = new TypeReferenceInfo(usePart.getNamespace(), true);
+
+			if (usePart.getGroupNamespace() == null) {
+				tri = new TypeReferenceInfo(usePart.getNamespace(), true);
+			} else {
+				tri = new TypeReferenceInfo(createFakeUsePartNamespace(usePart), true);
+			}
+
 			if (usePart.getAlias() != null) {
 				realName = usePart.getAlias().getName();
 				isAlias = true;
@@ -633,6 +639,62 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 					&& fullyQualifiedName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
 				fullyQualifiedName = NamespaceReference.NAMESPACE_SEPARATOR + fullyQualifiedName;
 			}
+		}
+
+		/**
+		 * Used to build full namespace part from a group use statement. For
+		 * example, this method will return <code>"A\B\C"</code> for the
+		 * statement <code>"use A\B\ { \C\D };"</code>
+		 * 
+		 * @param usePart
+		 * @return full namespace name
+		 */
+		private String getFakeUsePartNamespaceName(UsePart usePart) {
+			assert usePart.getGroupNamespace() != null;
+
+			String prefix = usePart.getGroupNamespace().getFullyQualifiedName();
+			String name = usePart.getNamespace().getNamespace() != null
+					? usePart.getNamespace().getNamespace().getName() : ""; //$NON-NLS-1$
+			StringBuilder buf = new StringBuilder(prefix);
+			if (name.length() > 0 && name.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+				buf.append(NamespaceReference.NAMESPACE_SEPARATOR);
+			}
+			buf.append(name);
+
+			return buf.toString();
+		}
+
+		/**
+		 * Used to create a fake FullyQualifiedReference object for the type
+		 * (split in 2 parts) of a group use statement. For example, this method
+		 * will return an object for type <code>"A\B\C"</code> from statement
+		 * <code>"use A\B\ { \C\D };"</code>
+		 * 
+		 * @param usePart
+		 * @return fake type
+		 */
+		private FullyQualifiedReference createFakeUsePartNamespace(UsePart usePart) {
+			assert usePart.getGroupNamespace() != null;
+
+			FullyQualifiedReference usePartNamespace = usePart.getNamespace();
+			// can be null:
+			NamespaceReference usePartNamespaceNamespace = usePartNamespace.getNamespace();
+			FullyQualifiedReference groupNamespace = usePart.getGroupNamespace();
+			// can be null:
+			NamespaceReference groupNamespaceNamespace = groupNamespace.getNamespace();
+
+			return new FullyQualifiedReference(usePartNamespace.sourceStart(), usePartNamespace.sourceEnd(),
+					usePartNamespace.getName(),
+					new NamespaceReference(
+							usePartNamespaceNamespace != null ? usePartNamespaceNamespace.sourceStart()
+									: usePartNamespace.sourceStart(),
+							usePartNamespaceNamespace != null ? usePartNamespaceNamespace.sourceEnd() :
+							/* empty fake namespace */
+									usePartNamespace.sourceStart(),
+							getFakeUsePartNamespaceName(usePart),
+							groupNamespaceNamespace != null ? groupNamespaceNamespace.isGlobal() : false,
+							groupNamespaceNamespace != null ? groupNamespaceNamespace.isLocal() : false),
+					usePartNamespace.getElementType());
 		}
 
 		public UsePart getUsePart() {

@@ -848,6 +848,9 @@ namespace_body:body
 {:
 	useStatement.setStart(startleft);
 	useStatement.setEnd(endright);
+	for (UsePart usePart : useStatement.getParts()) {
+		usePart.setGroupNamespace(useStatement.getNamespace());
+	}
 	parser.declarations.push(useStatement);
 :}
 
@@ -858,7 +861,9 @@ namespace_body:body
 	useStatement.setStatementType(useType);
 	int elementType = getElementTypeByUseType(useType);
 	for (UsePart usePart : useStatement.getParts()) {
+		usePart.setStatementType(useType);
 		usePart.getNamespace().setElementType(elementType);
+		usePart.setGroupNamespace(useStatement.getNamespace());
 	}
 	parser.declarations.push(useStatement);
 :}
@@ -872,6 +877,7 @@ namespace_body:body
 {:
 	int elementType = getElementTypeByUseType(useType);
 	for (Object usePart : useDeclList) {
+		((UsePart) usePart).setStatementType(useType);
 		((UsePart) usePart).getNamespace().setElementType(elementType);
 	}
 	parser.declarations.push(new UseStatement(startleft, endright, useDeclList, useType));

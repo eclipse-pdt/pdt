@@ -563,6 +563,7 @@ namespace_body:body
 | T_USE:start T_FUNCTION use_declarations:useDeclList T_SEMICOLON:end
 {:
 	for (Object usePart : useDeclList) {
+		((UsePart) usePart).setStatementType(UseStatement.T_FUNCTION);
 		((UsePart) usePart).getNamespace().setElementType(FullyQualifiedReference.T_FUNCTION);
 	}
 	parser.declarations.push(new UseStatement(startleft, endright, useDeclList, UseStatement.T_FUNCTION));
@@ -571,6 +572,7 @@ namespace_body:body
 | T_USE:start T_CONST use_declarations:useDeclList T_SEMICOLON:end
 {:
 	for (Object usePart : useDeclList) {
+		((UsePart) usePart).setStatementType(UseStatement.T_CONST);
 		((UsePart) usePart).getNamespace().setElementType(FullyQualifiedReference.T_CONSTANT);
 	}
 	parser.declarations.push(new UseStatement(startleft, endright, useDeclList, UseStatement.T_CONST));
