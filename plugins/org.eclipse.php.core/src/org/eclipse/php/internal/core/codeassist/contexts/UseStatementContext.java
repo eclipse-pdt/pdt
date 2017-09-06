@@ -95,28 +95,30 @@ public abstract class UseStatementContext extends StatementContext {
 				String s1 = statementTextBeforeOpeningCurly.toString();
 				int endS1 = PHPTextSequenceUtilities.readBackwardSpaces(s1, s1.length());
 				// 2. look for multiple statement parts separated by ',' in
-				// "A, B, \C\D" and remove leading spaces and leading '\' in
-				// the last statement part, to only keep "C\D"
+				// "A, B, \C\D" and remove leading '\' in the last statement
+				// part, to only keep "C\D"
 				String s2 = statementText.toString();
-				int idxS2 = s2.lastIndexOf(',') /* may be -1 */ + 1;
-				idxS2 = PHPTextSequenceUtilities.readForwardSpaces(s2, idxS2);
+				int idxS2 = PHPTextSequenceUtilities.readNamespaceStartIndex(s2, s2.length(), false);
 				if (idxS2 < s2.length() && s2.charAt(idxS2) == NamespaceReference.NAMESPACE_SEPARATOR) {
 					idxS2++;
 				}
 				// 3. merge statementTextBeforeCurly and statementText by
 				// cutting useless characters, to store statement "use X\Y\C\D"
 				// in rebuiltUseStatementText
+				// !!! We must not forget to take removed comments in account
+				// when calculating new statement offsets and lengths !!!
 				int start1 = statementTextBeforeOpeningCurly.getOriginalOffset(0);
-				int start2 = statementText.getOriginalOffset(0);
 				TextSequence res = TextSequenceUtilities.createTextSequence(statementTextBeforeOpeningCurly.getSource(),
-						start1, (start2 - start1) + statementText.length());
-				res = res.cutTextSequence(endS1, (start2 - start1) + idxS2);
+						start1, offset - start1);
+				res = res.cutTextSequence(endS1, offset - (s2.length() - idxS2) - start1);
 				// 4. store "X\Y\" in biggestCommonStatementText and "C\D" in
 				// longestStatementTextBeforeCursor
+				// !!! We must not forget to take removed comments in account
+				// when calculating new statement offsets and lengths !!!
 				biggestCommonStatementText = TextSequenceUtilities
 						.createTextSequence(statementTextBeforeOpeningCurly.getSource(), start1, endS1);
 				longestStatementTextBeforeCursor = TextSequenceUtilities.createTextSequence(statementText.getSource(),
-						start2 + idxS2, statementText.length() - idxS2);
+						offset - (s2.length() - idxS2), s2.length() - idxS2);
 				rebuiltUseStatementText = res;
 				type = TYPES.GROUP;
 				isCursorInsideGroupStatement = true;
