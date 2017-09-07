@@ -63,7 +63,7 @@ public abstract class UseStatementContext extends StatementContext {
 	private boolean buildUseStatement(int offset, @NonNull IStructuredDocumentRegion sdRegion,
 			boolean isClassStatementContext) {
 		ContextRegion[] foundDelimiter = new ContextRegion[1];
-		TextSequence statementText = PHPTextSequenceUtilities.getStatement(offset, sdRegion, true, null,
+		TextSequence statementText = PHPTextSequenceUtilities.getStatement(offset, sdRegion, true, null, 0,
 				foundDelimiter);
 		biggestCommonStatementText = longestStatementTextBeforeCursor = rebuiltUseStatementText = statementText;
 		type = TYPES.NONE;
@@ -95,8 +95,8 @@ public abstract class UseStatementContext extends StatementContext {
 				String s1 = statementTextBeforeOpeningCurly.toString();
 				int endS1 = PHPTextSequenceUtilities.readBackwardSpaces(s1, s1.length());
 				// 2. look for multiple statement parts separated by ',' in
-				// "A, B, \C\D" and remove leading '\' in
-				// the last statement part, to only keep "C\D"
+				// "A, B, \C\D" and remove leading '\' in the last statement
+				// part, to only keep "C\D"
 				String s2 = statementText.toString();
 				int endS2 = PHPTextSequenceUtilities.readBackwardSpaces(s2, s2.length());
 				int idxS2 = PHPTextSequenceUtilities.readNamespaceStartIndex(s2, endS2, false);
@@ -104,10 +104,10 @@ public abstract class UseStatementContext extends StatementContext {
 					idxS2++;
 				}
 				// 3. merge statementTextBeforeCurly and statementText by
-				// cutting useless characters, to store statement "use X\Y\C\D"
+				// cutting unwanted characters, to store statement "use X\Y\C\D"
 				// in rebuiltUseStatementText
 				TextSequence fullStatementText = PHPTextSequenceUtilities.getStatement(offset, sdRegion, true,
-						new String[] { PHPRegionTypes.PHP_CURLY_OPEN }, null);
+						new String[] { PHPRegionTypes.PHP_CURLY_OPEN }, 1, null);
 				fullStatementText = fullStatementText.cutTextSequence(endS1,
 						// NB: fullStatementText.length() can be greater than
 						// statementTextBeforeOpeningCurly.length() +

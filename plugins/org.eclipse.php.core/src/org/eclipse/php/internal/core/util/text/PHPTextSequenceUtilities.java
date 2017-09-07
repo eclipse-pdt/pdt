@@ -78,7 +78,7 @@ public class PHPTextSequenceUtilities {
 	 */
 	public static @NonNull TextSequence getStatement(int offset, @NonNull IStructuredDocumentRegion sdRegion,
 			boolean removeComments) {
-		return getStatement(offset, sdRegion, removeComments, null, null);
+		return getStatement(offset, sdRegion, removeComments, null, 0, null);
 	}
 
 	/**
@@ -98,6 +98,9 @@ public class PHPTextSequenceUtilities {
 	 *            (ignoreDelimiters can be null). Supported delimiter types are
 	 *            PHPRegionTypes.PHP_CURLY_OPEN, PHPRegionTypes.PHP_CURLY_CLOSE
 	 *            and PHPRegionTypes.PHP_SEMICOLON
+	 * @param limit
+	 *            Controls how many times a delimiter (from ignoreDelimiters)
+	 *            should be ignored. 0 or less means no limit.
 	 * @param foundDelimiter
 	 *            If foundDelimiter is not null and foundDelimiter length is
 	 *            greater than 0 then foundDelimiter[0] will contain the
@@ -110,7 +113,8 @@ public class PHPTextSequenceUtilities {
 	 * @return text sequence of the statement, cannot be null
 	 */
 	public static @NonNull TextSequence getStatement(int offset, @NonNull IStructuredDocumentRegion sdRegion,
-			boolean removeComments, @Nullable String[] ignoreDelimiters, @Nullable ContextRegion[] foundDelimiter) {
+			boolean removeComments, @Nullable String[] ignoreDelimiters, int limit,
+			@Nullable ContextRegion[] foundDelimiter) {
 		if (foundDelimiter != null && foundDelimiter.length != 0) {
 			foundDelimiter[0] = null;
 		}
@@ -149,6 +153,7 @@ public class PHPTextSequenceUtilities {
 				}
 
 				List<IRegion> comments = new ArrayList<>();
+				int nbIgnoredDelimiters = 0;
 				while (true) {
 					// If statement start is at the beginning of the PHP script
 					// region:
@@ -165,7 +170,8 @@ public class PHPTextSequenceUtilities {
 					if ((type == PHPRegionTypes.PHP_CURLY_CLOSE || type == PHPRegionTypes.PHP_CURLY_OPEN
 							|| type == PHPRegionTypes.PHP_SEMICOLON
 					/* || startTokenRegion.getType() == PHPRegionTypes.PHP_IF */)
-							&& !ArrayUtils.contains(ignoreDelimiters, type)) {
+							&& !(ArrayUtils.contains(ignoreDelimiters, type)
+									&& (limit <= 0 || nbIgnoredDelimiters++ < limit))) {
 						if (foundDelimiter != null && foundDelimiter.length != 0) {
 							foundDelimiter[0] = new ContextRegion(type, startOffset + startTokenRegion.getStart(),
 									startTokenRegion.getTextLength(), startTokenRegion.getLength());
