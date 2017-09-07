@@ -185,6 +185,7 @@ public class CreateProjectJob extends ComposerJob {
 			super(new Path("/"), null); //$NON-NLS-1$
 		}
 
+		@Override
 		public IPath getFullPath() {
 			return new Path("/dummy/composer.phar"); //$NON-NLS-1$
 		}

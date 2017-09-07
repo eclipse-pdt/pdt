@@ -164,6 +164,7 @@ public class PackagistItem extends AbstractDiscoveryItem<PackageFilterItem> {
 	protected void initializeListeners() {
 
 		downloadButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				boolean selected = downloadButton.getSelection();
 				filterItem.setChecked(selected);

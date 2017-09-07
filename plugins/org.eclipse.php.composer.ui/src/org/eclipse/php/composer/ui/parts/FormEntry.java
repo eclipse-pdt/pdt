@@ -106,6 +106,7 @@ public class FormEntry {
 		if (browseText != null) {
 			browse = toolkit.createButton(parent, browseText, SWT.PUSH);
 			browse.addSelectionListener(new SelectionAdapter() {
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					for (IFormEntryListener listener : listeners) {
 						listener.browseButtonSelected(FormEntry.this);
@@ -219,6 +220,7 @@ public class FormEntry {
 
 	private void addListeners() {
 		text.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				if (!ignoreModify) {
 					for (IFormEntryListener listener : listeners) {
@@ -228,6 +230,7 @@ public class FormEntry {
 			}
 		});
 		text.addFocusListener(new FocusAdapter() {
+			@Override
 			public void focusGained(FocusEvent e) {
 				text.selectAll();
 
@@ -236,6 +239,7 @@ public class FormEntry {
 				}
 			}
 
+			@Override
 			public void focusLost(FocusEvent e) {
 				for (IFormEntryListener listener : listeners) {
 					listener.focusLost(FormEntry.this);

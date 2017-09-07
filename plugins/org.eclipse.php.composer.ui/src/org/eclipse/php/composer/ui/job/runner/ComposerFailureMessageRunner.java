@@ -27,6 +27,7 @@ public class ComposerFailureMessageRunner implements Runnable {
 		this.monitor = monitor;
 	}
 
+	@Override
 	public void run() {
 
 		if (monitor != null) {

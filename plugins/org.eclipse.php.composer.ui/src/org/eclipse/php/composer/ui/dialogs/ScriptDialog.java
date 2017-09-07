@@ -94,6 +94,7 @@ public class ScriptDialog extends Dialog {
 		handlerControl.setEnabled(handlerEnabled);
 		handlerControl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		handlerControl.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				handlerValue.setValue(handlerControl.getText());
 			}

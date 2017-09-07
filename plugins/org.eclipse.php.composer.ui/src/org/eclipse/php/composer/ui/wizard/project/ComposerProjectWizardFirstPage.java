@@ -53,6 +53,7 @@ public class ComposerProjectWizardFirstPage extends AbstractWizardFirstPage {
 		}
 	}
 
+	@Override
 	protected AbstractValidator getValidator() {
 		return new Validator(this);
 	}

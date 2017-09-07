@@ -537,6 +537,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		reportProblem(s, message, id, severity);
 	}
 
+	@Override
 	public void reportProblem(ASTNode s, String message, IProblemIdentifier id, ProblemSeverity severity) {
 
 		for (IValidatorExtension extension : extensions) {
@@ -559,6 +560,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		reportProblem(s, message, id, new String[] { stringArguments }, severity);
 	}
 
+	@Override
 	public void reportProblem(int start, int end, String message, IProblemIdentifier id, ProblemSeverity severity) {
 		for (IValidatorExtension extension : extensions) {
 			if (extension.skipProblem(start, end, message, id)) {
@@ -699,34 +701,42 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 					usePartNamespace.getElementType());
 		}
 
+		@Override
 		public UsePart getUsePart() {
 			return usePart;
 		}
 
+		@Override
 		public int getRefCount() {
 			return refCount;
 		}
 
+		@Override
 		public void increaseRefCount() {
 			refCount++;
 		}
 
+		@Override
 		public String getRealName() {
 			return realName;
 		}
 
+		@Override
 		public String getFullyQualifiedName() {
 			return fullyQualifiedName;
 		}
 
+		@Override
 		public String getNamespaceName() {
 			return tri.getNamespaceName();
 		}
 
+		@Override
 		public TypeReferenceInfo getTypeReferenceInfo() {
 			return tri;
 		}
 
+		@Override
 		public boolean isAlias() {
 			return isAlias;
 		}
@@ -810,14 +820,17 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 			}
 		}
 
+		@Override
 		public boolean isGlobal() {
 			return isGlobal;
 		}
 
+		@Override
 		public String getTypeName() {
 			return typeName;
 		}
 
+		@Override
 		public String getFullyQualifiedName() {
 			return fullyQualifiedName;
 		}
@@ -826,10 +839,12 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 			return namespaceName;
 		}
 
+		@Override
 		public TypeReference getTypeReference() {
 			return typeReference;
 		}
 
+		@Override
 		public boolean isUseStatement() {
 			return isUseStatement;
 		}

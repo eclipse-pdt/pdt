@@ -38,6 +38,7 @@ public class UpdateDevJob extends ComposerJob {
 		return packages;
 	}
 
+	@Override
 	protected void launch(ScriptLauncher launcher) throws ExecuteException, IOException, InterruptedException {
 		List<String> params = new ArrayList<>();
 		if (packages != null) {

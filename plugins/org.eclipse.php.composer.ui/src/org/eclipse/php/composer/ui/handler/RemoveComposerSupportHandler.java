@@ -32,7 +32,7 @@ public class RemoveComposerSupportHandler extends AbstractHandler {
 
 			if (item instanceof IAdaptable) {
 				IAdaptable adaptable = (IAdaptable) item;
-				IProject project = ((IResource) adaptable.getAdapter(IResource.class)).getProject();
+				IProject project = adaptable.getAdapter(IResource.class).getProject();
 
 				FacetManager.uninstallFacets(project, null);
 			}

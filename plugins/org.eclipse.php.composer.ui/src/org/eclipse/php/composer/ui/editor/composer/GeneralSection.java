@@ -83,11 +83,13 @@ public class GeneralSection extends ComposerSection {
 		nameEntry.setValue(composerPackage.getName(), true);
 
 		nameEntry.addFormEntryListener(new FormEntryAdapter() {
+			@Override
 			public void textValueChanged(FormEntry entry) {
 				composerPackage.set("name", entry.getValue()); //$NON-NLS-1$
 			}
 		});
 		composerPackage.addPropertyChangeListener("name", new PropertyChangeListener() { //$NON-NLS-1$
+			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				nameEntry.setValue(composerPackage.getName(), true);
 			}
@@ -99,11 +101,13 @@ public class GeneralSection extends ComposerSection {
 		descriptionEntry.setValue(composerPackage.getDescription(), true);
 
 		descriptionEntry.addFormEntryListener(new FormEntryAdapter() {
+			@Override
 			public void textValueChanged(FormEntry entry) {
 				composerPackage.set("description", entry.getValue()); //$NON-NLS-1$
 			}
 		});
 		composerPackage.addPropertyChangeListener("description", new PropertyChangeListener() { //$NON-NLS-1$
+			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				descriptionEntry.setValue(composerPackage.getDescription(), true);
 			}
@@ -127,11 +131,13 @@ public class GeneralSection extends ComposerSection {
 		new AutoCompleteField(typeEntry.getText(), new TextContentAdapter(), ComposerConstants.TYPES);
 
 		typeEntry.addFormEntryListener(new FormEntryAdapter() {
+			@Override
 			public void textValueChanged(FormEntry entry) {
 				composerPackage.set("type", entry.getValue()); //$NON-NLS-1$
 			}
 		});
 		composerPackage.addPropertyChangeListener("type", new PropertyChangeListener() { //$NON-NLS-1$
+			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				typeEntry.setValue(composerPackage.getType(), true);
 			}
@@ -147,15 +153,18 @@ public class GeneralSection extends ComposerSection {
 		keywordsEntry.addFormEntryListener(new FormEntryAdapter() {
 			String2KeywordsConverter converter;
 
+			@Override
 			public void focusGained(FormEntry entry) {
 				converter = new String2KeywordsConverter(composerPackage);
 			}
 
+			@Override
 			public void focusLost(FormEntry entry) {
 				converter.convert(entry.getValue());
 			}
 		});
 		composerPackage.addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				if (e.getPropertyName().startsWith("keywords")) { //$NON-NLS-1$
 					keywordsEntry.setValue(converter.convert(composerPackage.getKeywords()), true);
@@ -169,11 +178,13 @@ public class GeneralSection extends ComposerSection {
 		homepageEntry.setValue(composerPackage.getHomepage());
 
 		homepageEntry.addFormEntryListener(new FormEntryAdapter() {
+			@Override
 			public void textValueChanged(FormEntry entry) {
 				composerPackage.set("homepage", entry.getValue()); //$NON-NLS-1$
 			}
 		});
 		composerPackage.addPropertyChangeListener("homepage", new PropertyChangeListener() { //$NON-NLS-1$
+			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				homepageEntry.setValue(composerPackage.getHomepage(), true);
 			}
@@ -201,15 +212,18 @@ public class GeneralSection extends ComposerSection {
 		licenseEntry.addFormEntryListener(new FormEntryAdapter() {
 			String2LicenseConverter converter;
 
+			@Override
 			public void focusGained(FormEntry entry) {
 				converter = new String2LicenseConverter(composerPackage);
 			}
 
+			@Override
 			public void focusLost(FormEntry entry) {
 				converter.convert(entry.getValue());
 			}
 		});
 		composerPackage.addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				if (e.getPropertyName().startsWith("license")) { //$NON-NLS-1$
 					licenseEntry.setValue(converter.convert(composerPackage.getLicense()), true);
@@ -225,11 +239,13 @@ public class GeneralSection extends ComposerSection {
 		minimumStabilityEntry.setValue(composerPackage.getMinimumStability(), true);
 
 		minimumStabilityEntry.addComboFormEntryListener(new ComboFormEntryAdapter() {
+			@Override
 			public void selectionChanged(ComboFormEntry entry) {
 				composerPackage.set("minimum-stability", entry.getValue()); //$NON-NLS-1$
 			}
 		});
 		composerPackage.addPropertyChangeListener("minimum-stability", new PropertyChangeListener() { //$NON-NLS-1$
+			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				minimumStabilityEntry.setValue(composerPackage.getMinimumStability(), true);
 			}

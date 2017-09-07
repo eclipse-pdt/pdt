@@ -79,6 +79,7 @@ public class DetectGroup extends Observable implements Observer, SelectionListen
 		return workspace.validateName(name, IResource.PROJECT).isOK() && workspace.getRoot().findMember(name) == null;
 	}
 
+	@Override
 	public void update(Observable o, Object arg) {
 		if (o instanceof LocationGroup) {
 			boolean oldDetectState = fDetect;
@@ -123,6 +124,7 @@ public class DetectGroup extends Observable implements Observer, SelectionListen
 	 * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse
 	 * .swt.events.SelectionEvent)
 	 */
+	@Override
 	public void widgetSelected(SelectionEvent e) {
 		widgetDefaultSelected(e);
 	}
@@ -133,6 +135,7 @@ public class DetectGroup extends Observable implements Observer, SelectionListen
 	 * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org
 	 * .eclipse.swt.events.SelectionEvent)
 	 */
+	@Override
 	public void widgetDefaultSelected(SelectionEvent e) {
 		if (DLTKCore.DEBUG) {
 			System.err.println("DetectGroup show compilancePreferencePage..."); //$NON-NLS-1$
