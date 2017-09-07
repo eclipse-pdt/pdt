@@ -63,6 +63,7 @@ public class PackageSearch implements PackageSearchListenerInterface, IPackageCh
 
 	protected boolean clearing = false;
 	protected SelectionAdapter addButtonListener = new SelectionAdapter() {
+		@Override
 		public void widgetSelected(SelectionEvent e) {
 			notifyPackageSelectionFinishedListener();
 		}
@@ -124,6 +125,7 @@ public class PackageSearch implements PackageSearchListenerInterface, IPackageCh
 		searchField.setEditable(enabled);
 		searchField.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		searchField.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				searchTextChanged();
 			}
@@ -217,6 +219,7 @@ public class PackageSearch implements PackageSearchListenerInterface, IPackageCh
 		Logger.debug("Found Packages for: " + query + " => " + packages.size()); //$NON-NLS-1$ //$NON-NLS-2$
 
 		Display.getDefault().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				if (currentQuery.isEmpty()) {
 					return;
@@ -256,6 +259,7 @@ public class PackageSearch implements PackageSearchListenerInterface, IPackageCh
 		if (queryThread == null || !queryThread.isAlive() || queryThread.isInterrupted()) {
 			startQuery();
 			queryThread = new Thread(new Runnable() {
+				@Override
 				public void run() {
 					try {
 						Thread.sleep(QUERY_DELAY_MS);
@@ -282,6 +286,7 @@ public class PackageSearch implements PackageSearchListenerInterface, IPackageCh
 			resetThread.interrupt();
 		}
 		resetThread = new Thread(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					Thread.sleep(RESET_QUERY_DELAY_MS);
@@ -337,6 +342,7 @@ public class PackageSearch implements PackageSearchListenerInterface, IPackageCh
 
 	private PackageSearchPart connectPackagePart(final PackageSearchPart psp) {
 		psp.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				searchController.setChecked(psp.getName(), psp.isChecked());
 				searchResults.refresh();

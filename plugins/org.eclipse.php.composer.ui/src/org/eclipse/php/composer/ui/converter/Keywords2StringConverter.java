@@ -27,7 +27,7 @@ public class Keywords2StringConverter extends Converter {
 			return ""; //$NON-NLS-1$
 		}
 		JsonArray keywords = (JsonArray) fromObject;
-		return StringUtils.join((String[]) keywords.toArray(new String[] {}), ", "); //$NON-NLS-1$
+		return StringUtils.join(keywords.toArray(new String[] {}), ", "); //$NON-NLS-1$
 	}
 
 }

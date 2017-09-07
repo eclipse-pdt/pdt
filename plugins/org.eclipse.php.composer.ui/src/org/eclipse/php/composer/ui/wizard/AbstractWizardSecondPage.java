@@ -100,6 +100,7 @@ public abstract class AbstractWizardSecondPage extends CapabilityConfigurationPa
 		firstPage.getDetect();
 
 		final IRunnableWithProgress op = new IRunnableWithProgress() {
+			@Override
 			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 				try {
 					if (fIsAutobuild == null) {
@@ -306,6 +307,7 @@ public abstract class AbstractWizardSecondPage extends CapabilityConfigurationPa
 		}
 	}
 
+	@Override
 	public void configureScriptProject(IProgressMonitor monitor) throws CoreException, InterruptedException {
 		if (monitor == null) {
 			monitor = new NullProgressMonitor();
@@ -360,6 +362,7 @@ public abstract class AbstractWizardSecondPage extends CapabilityConfigurationPa
 		}.schedule();
 	}
 
+	@Override
 	abstract public void update(Observable o, Object arg);
 
 	abstract protected String getPageTitle();

@@ -25,6 +25,7 @@ public class ComposerBuildpathContainer extends BuildPathContainer {
 		this.iScriptProject = parent;
 	}
 
+	@Override
 	public String getLabel() {
 		return Messages.ComposerBuildpathContainer_Label;
 	}

@@ -53,6 +53,7 @@ public class SaveActionsPreferencePage extends PropertyAndPreferencePage {
 		return ComposerUIPlugin.getDefault().getCorePreferenceStore();
 	}
 
+	@Override
 	protected void enableProjectSpecificSettings(boolean useProjectSpecificSettings) {
 		if (configurationBlock != null) {
 			configurationBlock.useProjectSpecificSettings(useProjectSpecificSettings);
@@ -102,6 +103,7 @@ public class SaveActionsPreferencePage extends PropertyAndPreferencePage {
 		return PROP_ID;
 	}
 
+	@Override
 	public void dispose() {
 		if (configurationBlock != null) {
 			configurationBlock.dispose();

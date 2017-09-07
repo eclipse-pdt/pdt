@@ -90,12 +90,14 @@ public class SearchControl extends ControlContribution {
 		clearToolItem.setImage(ComposerUIPluginImages.CLEAR.createImage());
 		clearToolItem.setDisabledImage(ComposerUIPluginImages.CLEAR_DISABLED.createImage());
 		clearToolItem.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				searchText.setText(""); //$NON-NLS-1$
 			}
 		});
 
 		searchText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				clearToolItem.setEnabled(searchText.getText().length() > 0);
 				for (ModifyListener listener : modifyListeners) {

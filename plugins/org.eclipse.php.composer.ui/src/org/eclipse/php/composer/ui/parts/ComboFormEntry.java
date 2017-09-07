@@ -103,6 +103,7 @@ public class ComboFormEntry {
 
 	private void addListener() {
 		combo.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				if (ignoreNotify)
 					return;
@@ -114,6 +115,7 @@ public class ComboFormEntry {
 		});
 
 		combo.addSelectionListener(new SelectionListener() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (ignoreNotify)
 					return;
@@ -123,6 +125,7 @@ public class ComboFormEntry {
 				}
 			}
 
+			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});

@@ -47,6 +47,7 @@ public abstract class AbstractComposerWizard extends NewElementWizard implements
 		this.config = config;
 	}
 
+	@Override
 	public void addPages() {
 		super.addPages();
 

@@ -95,7 +95,7 @@ public abstract class UseStatementContext extends StatementContext {
 				String s1 = statementTextBeforeOpeningCurly.toString();
 				int endS1 = PHPTextSequenceUtilities.readBackwardSpaces(s1, s1.length());
 				// 2. look for multiple statement parts separated by ',' in
-				// "A, B, \C\D" and remove leading '\' in
+				// "A, B, \C\D" and remove leading spaces and leading '\' in
 				// the last statement part, to only keep "C\D"
 				String s2 = statementText.toString();
 				int endS2 = PHPTextSequenceUtilities.readBackwardSpaces(s2, s2.length());

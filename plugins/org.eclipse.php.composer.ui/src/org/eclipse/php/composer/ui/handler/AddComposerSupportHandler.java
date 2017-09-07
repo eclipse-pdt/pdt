@@ -41,7 +41,7 @@ public class AddComposerSupportHandler extends AbstractHandler {
 
 			if (item instanceof IAdaptable) {
 				IAdaptable adaptable = (IAdaptable) item;
-				IProject project = ((IResource) adaptable.getAdapter(IResource.class)).getProject();
+				IProject project = adaptable.getAdapter(IResource.class).getProject();
 
 				FacetManager.installFacets(project, ProjectOptions.getDefaultPHPVersion(), null);
 

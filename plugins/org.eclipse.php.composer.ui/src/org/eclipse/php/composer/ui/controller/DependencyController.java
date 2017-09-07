@@ -21,14 +21,17 @@ public class DependencyController extends PackageController {
 
 	private Dependencies deps;
 
+	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		deps = (Dependencies) newInput;
 	}
 
+	@Override
 	public Object[] getElements(Object inputElement) {
 		return deps.toArray();
 	}
 
+	@Override
 	public void updateText(MinimalPackage pkg, StyledString styledString) {
 		if (pkg instanceof VersionedPackage) {
 			VersionedPackage vpkg = (VersionedPackage) pkg;

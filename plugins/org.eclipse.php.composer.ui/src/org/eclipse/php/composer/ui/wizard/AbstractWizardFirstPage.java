@@ -136,8 +136,10 @@ abstract public class AbstractWizardFirstPage extends WizardPage implements IPHP
 
 	abstract protected AbstractValidator getValidator();
 
+	@Override
 	abstract public void update(Observable o, Object arg);
 
+	@Override
 	abstract public void initPage();
 
 	abstract protected void setHelpContext(Control container);

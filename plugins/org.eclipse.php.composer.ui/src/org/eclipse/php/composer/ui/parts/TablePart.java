@@ -31,6 +31,7 @@ public class TablePart extends StructuredViewerPart {
 	 * @see StructuredViewerPart#createStructuredViewer(Composite,
 	 * FormWidgetFactory)
 	 */
+	@Override
 	protected StructuredViewer createStructuredViewer(Composite parent, int style, FormToolkit toolkit) {
 		style |= SWT.H_SCROLL | SWT.V_SCROLL;
 		if (toolkit == null)
@@ -39,11 +40,13 @@ public class TablePart extends StructuredViewerPart {
 			style |= toolkit.getBorderStyle();
 		TableViewer tableViewer = new TableViewer(parent, style);
 		tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
 			public void selectionChanged(SelectionChangedEvent e) {
 				TablePart.this.selectionChanged((IStructuredSelection) e.getSelection());
 			}
 		});
 		tableViewer.addDoubleClickListener(new IDoubleClickListener() {
+			@Override
 			public void doubleClick(DoubleClickEvent e) {
 				TablePart.this.handleDoubleClick((IStructuredSelection) e.getSelection());
 			}
@@ -58,6 +61,7 @@ public class TablePart extends StructuredViewerPart {
 	/*
 	 * @see SharedPartWithButtons#buttonSelected(int)
 	 */
+	@Override
 	protected void buttonSelected(Button button, int index) {
 	}
 

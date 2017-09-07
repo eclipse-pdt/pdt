@@ -47,6 +47,7 @@ public class ConsoleResponseHandler extends ExecutionResponseAdapter {
 		out.println(message);
 	}
 
+	@Override
 	public void executionFailed(String response, Exception e) {
 		Logger.log(Logger.ERROR, response);
 		Logger.logException(e);

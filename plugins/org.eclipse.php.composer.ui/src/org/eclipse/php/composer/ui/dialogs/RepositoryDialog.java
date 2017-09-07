@@ -87,7 +87,7 @@ public class RepositoryDialog extends Dialog {
 		GridData gd_type = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
 		gd_type.widthHint = ComposerUIPluginConstants.DIALOG_CONTROL_WIDTH;
 		typeControl.setLayoutData(gd_type);
-		typeControl.setItems((String[]) repos.values().toArray(new String[] {}));
+		typeControl.setItems(repos.values().toArray(new String[] {}));
 		if (repository != null) {
 			String type = repository.getType();
 			if (repos.containsKey(type)) {
@@ -96,6 +96,7 @@ public class RepositoryDialog extends Dialog {
 			typeControl.setEnabled(false);
 		}
 		typeControl.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				type = typeControl.getSelectionValue();
 			}
@@ -108,6 +109,7 @@ public class RepositoryDialog extends Dialog {
 		final Text urlControl = new Text(container, SWT.BORDER);
 		urlControl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		urlControl.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				if (repository != null) {
 					repository.setUrl(urlControl.getText());
@@ -130,6 +132,7 @@ public class RepositoryDialog extends Dialog {
 		final Text nameControl = new Text(container, SWT.BORDER);
 		nameControl.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		nameControl.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				if (repository != null) {
 					repository.setName(nameControl.getText());
