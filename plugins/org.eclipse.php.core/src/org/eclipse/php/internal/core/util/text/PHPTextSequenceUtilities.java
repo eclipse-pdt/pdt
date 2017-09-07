@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.core.ISourceRange;
@@ -77,7 +78,7 @@ public class PHPTextSequenceUtilities {
 	 */
 	public static @NonNull TextSequence getStatement(int offset, @NonNull IStructuredDocumentRegion sdRegion,
 			boolean removeComments) {
-		return getStatement(offset, sdRegion, removeComments, null);
+		return getStatement(offset, sdRegion, removeComments, null, null);
 	}
 
 	/**
@@ -92,6 +93,11 @@ public class PHPTextSequenceUtilities {
 	 * @param removeComments
 	 *            Flag determining whether to remove comments in the resulted
 	 *            text sequence
+	 * @param ignoreDelimiters
+	 *            Delimiter types that will be ignored while searching backwards
+	 *            (ignoreDelimiters can be null). Supported delimiter types are
+	 *            PHPRegionTypes.PHP_CURLY_OPEN, PHPRegionTypes.PHP_CURLY_CLOSE
+	 *            and PHPRegionTypes.PHP_SEMICOLON
 	 * @param foundDelimiter
 	 *            If foundDelimiter is not null and foundDelimiter length is
 	 *            greater than 0 then foundDelimiter[0] will contain the
@@ -104,7 +110,7 @@ public class PHPTextSequenceUtilities {
 	 * @return text sequence of the statement, cannot be null
 	 */
 	public static @NonNull TextSequence getStatement(int offset, @NonNull IStructuredDocumentRegion sdRegion,
-			boolean removeComments, ContextRegion[] foundDelimiter) {
+			boolean removeComments, @Nullable String[] ignoreDelimiters, @Nullable ContextRegion[] foundDelimiter) {
 		if (foundDelimiter != null && foundDelimiter.length != 0) {
 			foundDelimiter[0] = null;
 		}
@@ -156,9 +162,10 @@ public class PHPTextSequenceUtilities {
 								startTokenRegion.getLength()));
 					}
 
-					if (type == PHPRegionTypes.PHP_CURLY_CLOSE || type == PHPRegionTypes.PHP_CURLY_OPEN
+					if ((type == PHPRegionTypes.PHP_CURLY_CLOSE || type == PHPRegionTypes.PHP_CURLY_OPEN
 							|| type == PHPRegionTypes.PHP_SEMICOLON
-					/* || startTokenRegion.getType() == PHPRegionTypes.PHP_IF */) {
+					/* || startTokenRegion.getType() == PHPRegionTypes.PHP_IF */)
+							&& !ArrayUtils.contains(ignoreDelimiters, type)) {
 						if (foundDelimiter != null && foundDelimiter.length != 0) {
 							foundDelimiter[0] = new ContextRegion(type, startOffset + startTokenRegion.getStart(),
 									startTokenRegion.getTextLength(), startTokenRegion.getLength());

@@ -19,7 +19,6 @@ import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
-import org.eclipse.php.internal.core.util.text.TextSequenceUtilities;
 import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 
@@ -64,7 +63,8 @@ public abstract class UseStatementContext extends StatementContext {
 	private boolean buildUseStatement(int offset, @NonNull IStructuredDocumentRegion sdRegion,
 			boolean isClassStatementContext) {
 		ContextRegion[] foundDelimiter = new ContextRegion[1];
-		TextSequence statementText = PHPTextSequenceUtilities.getStatement(offset, sdRegion, true, foundDelimiter);
+		TextSequence statementText = PHPTextSequenceUtilities.getStatement(offset, sdRegion, true, null,
+				foundDelimiter);
 		biggestCommonStatementText = longestStatementTextBeforeCursor = rebuiltUseStatementText = statementText;
 		type = TYPES.NONE;
 		isCursorInsideGroupStatement = false;
@@ -89,35 +89,36 @@ public abstract class UseStatementContext extends StatementContext {
 			// When found, at this point statementText will contain "A, B, \C\D"
 			// and statementTextBeforeCurly will contain "use X\Y\ ".
 			TextSequence statementTextBeforeOpeningCurly = PHPTextSequenceUtilities
-					.getStatement(foundDelimiter[0].getStart(), sdRegion, true, foundDelimiter);
+					.getStatement(foundDelimiter[0].getStart(), sdRegion, true);
 			if (hasUsePrefix(statementTextBeforeOpeningCurly)) {
 				// 1. remove spaces at the end of "use X\Y\ "
 				String s1 = statementTextBeforeOpeningCurly.toString();
 				int endS1 = PHPTextSequenceUtilities.readBackwardSpaces(s1, s1.length());
 				// 2. look for multiple statement parts separated by ',' in
-				// "A, B, \C\D" and remove leading spaces and leading '\' in
+				// "A, B, \C\D" and remove leading '\' in
 				// the last statement part, to only keep "C\D"
 				String s2 = statementText.toString();
-				int idxS2 = s2.lastIndexOf(',') /* may be -1 */ + 1;
-				idxS2 = PHPTextSequenceUtilities.readForwardSpaces(s2, idxS2);
+				int endS2 = PHPTextSequenceUtilities.readBackwardSpaces(s2, s2.length());
+				int idxS2 = PHPTextSequenceUtilities.readNamespaceStartIndex(s2, endS2, false);
 				if (idxS2 < s2.length() && s2.charAt(idxS2) == NamespaceReference.NAMESPACE_SEPARATOR) {
 					idxS2++;
 				}
 				// 3. merge statementTextBeforeCurly and statementText by
 				// cutting useless characters, to store statement "use X\Y\C\D"
 				// in rebuiltUseStatementText
-				int start1 = statementTextBeforeOpeningCurly.getOriginalOffset(0);
-				int start2 = statementText.getOriginalOffset(0);
-				TextSequence res = TextSequenceUtilities.createTextSequence(statementTextBeforeOpeningCurly.getSource(),
-						start1, (start2 - start1) + statementText.length());
-				res = res.cutTextSequence(endS1, (start2 - start1) + idxS2);
+				TextSequence fullStatementText = PHPTextSequenceUtilities.getStatement(offset, sdRegion, true,
+						new String[] { PHPRegionTypes.PHP_CURLY_OPEN }, null);
+				fullStatementText = fullStatementText.cutTextSequence(endS1,
+						// NB: fullStatementText.length() can be greater than
+						// statementTextBeforeOpeningCurly.length() +
+						// statementText.length()
+						fullStatementText.length() - (statementText.length() - idxS2));
 				// 4. store "X\Y\" in biggestCommonStatementText and "C\D" in
 				// longestStatementTextBeforeCursor
-				biggestCommonStatementText = TextSequenceUtilities
-						.createTextSequence(statementTextBeforeOpeningCurly.getSource(), start1, endS1);
-				longestStatementTextBeforeCursor = TextSequenceUtilities.createTextSequence(statementText.getSource(),
-						start2 + idxS2, statementText.length() - idxS2);
-				rebuiltUseStatementText = res;
+				biggestCommonStatementText = statementTextBeforeOpeningCurly.cutTextSequence(endS1,
+						statementTextBeforeOpeningCurly.length());
+				longestStatementTextBeforeCursor = statementText.cutTextSequence(0, idxS2);
+				rebuiltUseStatementText = fullStatementText;
 				type = TYPES.GROUP;
 				isCursorInsideGroupStatement = true;
 
