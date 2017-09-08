@@ -395,9 +395,6 @@ public class PHPTextSequenceUtilities {
 	public static int readNamespaceStartIndex(@NonNull CharSequence textSequence, int startPosition,
 			boolean includeDollar) {
 		boolean onBackslash = false;
-		boolean onWhitespace = false;
-		int oldStartPosition = startPosition;
-		startPosition = readBackwardSpaces(textSequence, startPosition);
 		while (startPosition > 0) {
 			char ch = textSequence.charAt(startPosition - 1);
 			if (!Character.isLetterOrDigit(ch) && ch != '_') {
@@ -406,29 +403,16 @@ public class PHPTextSequenceUtilities {
 						break;
 					}
 					onBackslash = true;
-					onWhitespace = false;
-				} else if (Character.isWhitespace(ch)) {
-					onWhitespace = true;
-					onBackslash = false;
 				} else {
 					break;
 				}
 			} else {
-				if (onWhitespace) {
-					break;
-				}
 				onBackslash = false;
-				onWhitespace = false;
 			}
 			startPosition--;
 		}
 		if (includeDollar && startPosition > 0 && textSequence.charAt(startPosition - 1) == '$') {
 			startPosition--;
-		}
-		startPosition = startPosition >= 0 ? readForwardSpaces(textSequence, startPosition) : startPosition;
-		// FIXME bug 291970 i do not know if this is right or not
-		if (startPosition > oldStartPosition) {
-			startPosition = oldStartPosition;
 		}
 		return startPosition;
 	}
@@ -436,7 +420,6 @@ public class PHPTextSequenceUtilities {
 	public static int readNamespaceEndIndex(@NonNull CharSequence textSequence, int startPosition,
 			boolean includeDollar) {
 		boolean onBackslash = false;
-		boolean onWhitespace = false;
 
 		int length = textSequence.length();
 		if (includeDollar && startPosition < length && textSequence.charAt(startPosition) == '$') {
@@ -450,23 +433,15 @@ public class PHPTextSequenceUtilities {
 						break;
 					}
 					onBackslash = true;
-					onWhitespace = false;
-				} else if (Character.isWhitespace(ch)) {
-					onWhitespace = true;
-					onBackslash = false;
 				} else {
 					break;
 				}
 			} else {
-				if (onWhitespace) {
-					break;
-				}
 				onBackslash = false;
-				onWhitespace = false;
 			}
 			startPosition++;
 		}
-		return startPosition >= 0 ? readBackwardSpaces(textSequence, startPosition) : startPosition;
+		return startPosition;
 	}
 
 	/**

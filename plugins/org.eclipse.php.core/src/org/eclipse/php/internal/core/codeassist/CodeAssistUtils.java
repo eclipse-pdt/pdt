@@ -277,8 +277,8 @@ public class CodeAssistUtils {
 	}
 
 	/**
-	 * The "self" function needs to be added only if we are in a class method and it
-	 * is not an abstract class or an interface
+	 * The "self" function needs to be added only if we are in a class method
+	 * and it is not an abstract class or an interface
 	 * 
 	 * @param fileData
 	 * @param offset
@@ -554,6 +554,8 @@ public class CodeAssistUtils {
 
 		PHPVersion phpVersion = ProjectOptions.getPHPVersion(sourceModule.getScriptProject().getProject());
 
+		propertyEndPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, propertyEndPosition); // read
+		// whitespace
 		int classNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText,
 				propertyEndPosition, true);
 		String className = classNameStart < 0 ? "" //$NON-NLS-1$
@@ -609,6 +611,8 @@ public class CodeAssistUtils {
 				} else if (testedVar.endsWith("]")) { //$NON-NLS-1$
 					if (statementText.toString().lastIndexOf('[') > 0) {
 						int end = statementText.toString().lastIndexOf('[');
+						end = PHPTextSequenceUtilities.readBackwardSpaces(statementText, end); // read
+						// whitespace
 						int classNameStart1 = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion,
 								statementText, end, true);
 						className = classNameStart1 < 0 ? "" //$NON-NLS-1$
@@ -642,6 +646,8 @@ public class CodeAssistUtils {
 		// if its function call calc the return type.
 		if (propertyEndPosition > 0 && statementText.charAt(propertyEndPosition - 1) == ')') {
 			int functionNameEnd = PHPModelUtils.getFunctionNameEndOffset(statementText, propertyEndPosition - 1);
+			functionNameEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, functionNameEnd); // read
+			// whitespace
 			int functionNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText,
 					functionNameEnd, false);
 
