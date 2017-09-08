@@ -2184,6 +2184,8 @@ public class PHPModelUtils {
 			if (newClassName.startsWith("new") && newClassName.endsWith(")")) { //$NON-NLS-1$ //$NON-NLS-2$
 				int newClassNameEnd = getFunctionNameEndOffset(newClassStatementText,
 						newClassStatementText.length() - 1);
+				newClassNameEnd = PHPTextSequenceUtilities.readBackwardSpaces(newClassStatementText, newClassNameEnd); // read
+				// whitespace
 				int newClassNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion,
 						newClassStatementText, newClassNameEnd, false);
 				if (newClassNameStart > 3 && newClassNameStart < newClassNameEnd) {// should
