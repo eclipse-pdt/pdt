@@ -59,13 +59,16 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see org.eclipse.debug.core.model.LaunchConfigurationDelegate#
-		 * preLaunchCheck (org.eclipse.debug.core.ILaunchConfiguration,
-		 * java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
+		 * @see org.eclipse.debug.core.model.LaunchConfigurationDelegate# preLaunchCheck
+		 * (org.eclipse.debug.core.ILaunchConfiguration, java.lang.String,
+		 * org.eclipse.core.runtime.IProgressMonitor)
 		 */
 		@Override
 		public boolean preLaunchCheck(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor)
 				throws CoreException {
+			if (!super.preLaunchCheck(configuration, mode, monitor)) {
+				return false;
+			}
 			PHPexeItem phpExeItem = PHPLaunchUtilities.getPHPExe(configuration);
 			if (phpExeItem == null) {
 				displayError(MessageFormat.format(
@@ -103,11 +106,9 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.debug.core.model.ILaunchConfigurationDelegate#launch(
+		 * @see org.eclipse.debug.core.model.ILaunchConfigurationDelegate#launch(
 		 * org.eclipse.debug.core.ILaunchConfiguration, java.lang.String,
-		 * org.eclipse.debug.core.ILaunch,
-		 * org.eclipse.core.runtime.IProgressMonitor)
+		 * org.eclipse.debug.core.ILaunch, org.eclipse.core.runtime.IProgressMonitor)
 		 */
 		@Override
 		public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
@@ -143,9 +144,8 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 			}
 			IProgressMonitor subMonitor = new SubProgressMonitor(monitor, 10);
 			/*
-			 * Locate the php.ini by using the attribute. If the attribute was
-			 * null, try to locate an php.ini that exists next to the
-			 * executable.
+			 * Locate the php.ini by using the attribute. If the attribute was null, try to
+			 * locate an php.ini that exists next to the executable.
 			 */
 			File phpIni = (phpIniPath != null && new File(phpIniPath).exists()) ? new File(phpIniPath)
 					: PHPINIUtil.findPHPIni(phpExeString);
@@ -299,9 +299,9 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see org.eclipse.debug.core.model.LaunchConfigurationDelegate#
-		 * preLaunchCheck (org.eclipse.debug.core.ILaunchConfiguration,
-		 * java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
+		 * @see org.eclipse.debug.core.model.LaunchConfigurationDelegate# preLaunchCheck
+		 * (org.eclipse.debug.core.ILaunchConfiguration, java.lang.String,
+		 * org.eclipse.core.runtime.IProgressMonitor)
 		 */
 		@Override
 		public boolean preLaunchCheck(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor)
@@ -336,11 +336,9 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.debug.core.model.ILaunchConfigurationDelegate#launch(
+		 * @see org.eclipse.debug.core.model.ILaunchConfigurationDelegate#launch(
 		 * org.eclipse.debug.core.ILaunchConfiguration, java.lang.String,
-		 * org.eclipse.debug.core.ILaunch,
-		 * org.eclipse.core.runtime.IProgressMonitor)
+		 * org.eclipse.debug.core.ILaunch, org.eclipse.core.runtime.IProgressMonitor)
 		 */
 		@Override
 		public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
@@ -511,8 +509,7 @@ public class NoneDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#save
+	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#save
 	 * ()
 	 */
 	@Override
