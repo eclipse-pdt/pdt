@@ -120,6 +120,9 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements 
 			if (root == null) {
 				ASTParser parser = ASTParser.newParser(sourceModule);
 				root = parser.createAST(null);
+				if (root == null) {
+					return null;
+				}
 			}
 			ASTNode node = NodeFinder.perform(root, hoverRegion.getOffset(), hoverRegion.getLength());
 			if (node == null) {
