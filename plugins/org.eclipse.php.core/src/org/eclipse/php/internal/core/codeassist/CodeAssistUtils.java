@@ -529,18 +529,8 @@ public class CodeAssistUtils {
 				offset);
 		evaluatedType = typeInferencer.evaluateType(methodGoal);
 
-		if (evaluatedType instanceof MultiTypeType) {
-			List<IType> tmpList = new LinkedList<>();
-			List<IEvaluatedType> possibleTypes = ((MultiTypeType) evaluatedType).getTypes();
-			for (IEvaluatedType possibleType : possibleTypes) {
-				IType[] tmpArray = PHPTypeInferenceUtils.getModelElements(possibleType, (ISourceModuleContext) context,
-						offset, (IModelAccessCache) null);
-				if (tmpArray != null) {
-					tmpList.addAll(Arrays.asList(tmpArray));
-				}
-			}
-			// the elements are filtered already
-			return tmpList.toArray(new IType[tmpList.size()]);
+		if (evaluatedType instanceof MultiTypeType || evaluatedType instanceof AmbiguousType) {
+			return getTypes(offset, context, evaluatedType);
 		}
 
 		return EMPTY_TYPES;

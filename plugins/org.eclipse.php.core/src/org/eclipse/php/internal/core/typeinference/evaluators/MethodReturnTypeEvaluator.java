@@ -19,6 +19,7 @@ import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.IContext;
@@ -30,10 +31,7 @@ import org.eclipse.php.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.core.compiler.ast.nodes.ReturnStatement;
 import org.eclipse.php.core.compiler.ast.nodes.YieldExpression;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
-import org.eclipse.php.internal.core.typeinference.GeneratorClassType;
-import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
-import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
-import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.*;
 import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
@@ -85,9 +83,15 @@ public class MethodReturnTypeEvaluator extends AbstractMethodReturnTypeEvaluator
 				final MethodDeclaration topDeclaration = decl;
 				if (topDeclaration instanceof PHPMethodDeclaration) {
 					PHPMethodDeclaration methodDeclaration = (PHPMethodDeclaration) topDeclaration;
-					if (methodDeclaration.getReturnType() != null) {
-						subGoals.add(new ExpressionTypeGoal(innerContext, methodDeclaration.getReturnType()));
-						continue;
+					TypeReference returnType = methodDeclaration.getReturnType();
+					if (returnType != null) {
+						subGoals.add(new ExpressionTypeGoal(innerContext, returnType));
+						if (!PHPSimpleTypes.ARRAY.equals(PHPClassType.fromSimpleReference(returnType))) {
+							// https://bugs.eclipse.org/bugs/show_bug.cgi?id=525480
+							// we only need below ASTVisitor when typehint is
+							// "array"
+							continue;
+						}
 					}
 				}
 				ASTVisitor visitor = new ASTVisitor() {
