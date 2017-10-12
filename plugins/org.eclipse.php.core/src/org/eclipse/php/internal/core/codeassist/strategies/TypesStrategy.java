@@ -256,7 +256,7 @@ public class TypesStrategy extends ElementsStrategy {
 					MatchRule.EXACT, trueFlag, falseFlag, scope, null);
 		}
 
-		List<IType> result = new LinkedList<IType>();
+		List<IType> result = new LinkedList<>();
 		String memberName = context.getMemberName();
 		String namespaceName = context.getQualifier(false);
 
