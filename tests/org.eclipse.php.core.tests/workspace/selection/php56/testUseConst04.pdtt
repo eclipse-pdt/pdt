@@ -1,0 +1,27 @@
+--TEST--
+Bug 525370 - Cannot jump to constant declaration using self or parent
+--FILE--
+<?php
+namespace useConst06a;
+
+class Foo
+{
+}
+
+namespace useConst06b;
+
+class Foo
+{
+    const TEST = 1;
+}
+
+class Bar extends Foo
+{
+    const TEST2 = self::TEST;
+    const TEST3 = parent::TEST;
+    const TEST5 = Foo::|TEST|;
+    const TEST6 = Bar::TEST;
+}
+?>
+--EXPECT--
+field(TEST)
