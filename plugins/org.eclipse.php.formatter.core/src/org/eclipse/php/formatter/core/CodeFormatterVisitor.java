@@ -945,8 +945,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 							lineWidth += (preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3;
 						}
 					}
-					needIndentNewLine = true;
 				}
+				needIndentNewLine = true;
 
 				if (!previousCommentIsSingleLine) {
 					resetCommentIndentVariables();
@@ -1296,8 +1296,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 							lineWidth += (preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3;
 						}
 					}
-					needIndentNewLine = true;
 				}
+				needIndentNewLine = true;
+
 				resetCommentIndentVariables();
 				if (startLine != commentStartLine && blockEnd) {
 					recordCommentIndentVariables = true;

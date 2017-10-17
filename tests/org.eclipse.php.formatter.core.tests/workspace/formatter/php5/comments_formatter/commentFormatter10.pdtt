@@ -15,7 +15,7 @@ $b () // comment2
 function foo ()
 {
     $a-> // comment1
-$b()
+    $b()
         -> // comment2
     /* comment3 */
     $c()
