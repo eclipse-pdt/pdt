@@ -50,6 +50,7 @@ import org.eclipse.ui.dialogs.WizardDataTransferPage;
  */
 public class WizardResourceImportPage extends WizardDataTransferPage {
 
+	protected String sourceFromDialog;
 	protected String source;
 	protected String target;
 	protected String projectName;
@@ -118,7 +119,7 @@ public class WizardResourceImportPage extends WizardDataTransferPage {
 			public void changeControlPressed(DialogField field) {
 				DirectoryDialog dialog = new DirectoryDialog(getShell(), SWT.OPEN);
 				dialog.setMessage(Messages.WizardResourceImportPage_BrowseDialogMessage);
-				source = dialog.open();
+				sourceFromDialog = dialog.open();
 				try {
 					handleSourcePathChange();
 				} catch (Exception e) {
@@ -187,7 +188,8 @@ public class WizardResourceImportPage extends WizardDataTransferPage {
 
 	protected void handleSourcePathChange() throws IOException, ParseException {
 
-		if (source != null) {
+		if (sourceFromDialog != null) {
+			source = sourceFromDialog;
 			sourcePath.setText(source);
 			json = new Path(source).append(ComposerConstants.COMPOSER_JSON);
 
@@ -241,7 +243,7 @@ public class WizardResourceImportPage extends WizardDataTransferPage {
 
 		projectNameField.getTextControl(null).setEnabled(true);
 
-		if (json == null || json.toFile().exists() == false) {
+		if (source == null || json == null || json.toFile().exists() == false) {
 			setErrorMessage(Messages.WizardResourceImportPage_NoComposerJsonError);
 			return false;
 		}
