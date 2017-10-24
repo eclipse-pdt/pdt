@@ -273,4 +273,14 @@ public class PHPTypeInferenceUtils {
 
 		return false;
 	}
+
+	/**
+	 * Check if object is a Simpletype and a "generic" type container
+	 * 
+	 * @param object
+	 * @return
+	 */
+	public static boolean isGenericSimple(Object object) {
+		return object == PHPSimpleTypes.OBJECT || object == PHPSimpleTypes.MIXED || object == PHPSimpleTypes.ARRAY;
+	}
 }
