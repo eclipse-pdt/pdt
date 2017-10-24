@@ -1,0 +1,36 @@
+--TEST--
+Bug 525480 - array typehint overrides specialized PHP Doc Object[]
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+namespace returnType07;
+
+class Bar {
+    private $name = '';
+    public function getName() : string
+    {
+        return $this->name;
+    }
+}
+
+class Foo {
+    /**
+     *
+     * @var Bar[]
+     */
+    private $bars = [];
+    
+    public function getBars() : array
+    {
+        return $this->bars;
+    }
+}
+
+
+$foo = new Foo();
+
+$bars = $foo->getBars();
+$bars[0]->|
+--EXPECT--
+method(getName)
