@@ -25,7 +25,6 @@ import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.core.compiler.ast.nodes.FieldAccess;
 import org.eclipse.php.core.compiler.ast.nodes.StaticFieldAccess;
-import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.typeinference.context.TypeContext;
@@ -115,9 +114,9 @@ public class FieldAccessEvaluator extends GoalEvaluator {
 			if (goalState != GoalState.PRUNED && previousResult != null && previousResult != UnknownType.INSTANCE) {
 				result = previousResult;
 				previousResult = null;
-				// BUG 507522, stop read if found not simple element
-				if (!PHPTypeInferenceUtils.isSimple(result)
-						|| (result != PHPSimpleTypes.OBJECT && result != PHPSimpleTypes.MIXED)) {
+				// BUGS 507522 & 525480, stop when it's not a "generic"
+				// simple element
+				if (!PHPTypeInferenceUtils.isGenericSimple(result)) {
 					return null;
 				}
 			}

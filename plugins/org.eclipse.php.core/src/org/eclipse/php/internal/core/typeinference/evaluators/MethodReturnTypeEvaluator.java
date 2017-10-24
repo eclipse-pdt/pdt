@@ -86,10 +86,10 @@ public class MethodReturnTypeEvaluator extends AbstractMethodReturnTypeEvaluator
 					TypeReference returnType = methodDeclaration.getReturnType();
 					if (returnType != null) {
 						subGoals.add(new ExpressionTypeGoal(innerContext, returnType));
-						if (!PHPSimpleTypes.ARRAY.equals(PHPClassType.fromSimpleReference(returnType))) {
-							// https://bugs.eclipse.org/bugs/show_bug.cgi?id=525480
-							// we only need below ASTVisitor when typehint is
-							// "array"
+						IEvaluatedType returnEvaluatedType = PHPClassType.fromSimpleReference(returnType);
+						// BUG 525480, we don't stop and use an ASTVisitor
+						// when typehint is a "generic" simple element
+						if (!PHPTypeInferenceUtils.isGenericSimple(returnEvaluatedType)) {
 							continue;
 						}
 					}
