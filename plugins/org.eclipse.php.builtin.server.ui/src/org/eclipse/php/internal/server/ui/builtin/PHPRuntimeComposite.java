@@ -39,8 +39,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
-import org.eclipse.wst.server.core.internal.IInstallableRuntime;
-import org.eclipse.wst.server.core.internal.ServerPlugin;
 import org.eclipse.wst.server.ui.internal.SWTUtil;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 
@@ -59,11 +57,8 @@ public class PHPRuntimeComposite extends Composite {
 	protected List<PHPexeItem> installedExecutables;
 	protected String[] executableNames;
 	protected Combo combo;
-	protected IInstallableRuntime ir;
 	protected Job installRuntimeJob;
 	protected IJobChangeListener jobListener;
-	protected Label installLabel;
-	protected Button install;
 
 	protected PHPRuntimeComposite(Composite parent, IWizardHandle wizard) {
 		super(parent, SWT.NONE);
@@ -83,18 +78,6 @@ public class PHPRuntimeComposite extends Composite {
 		} else {
 			runtimeWC = newRuntime;
 			runtime = (IPHPRuntimeWorkingCopy) newRuntime.loadAdapter(IPHPRuntimeWorkingCopy.class, null);
-		}
-
-		if (runtimeWC == null) {
-			ir = null;
-			install.setEnabled(false);
-			installLabel.setText(""); //$NON-NLS-1$
-		} else {
-			ir = ServerPlugin.findInstallableRuntime(runtimeWC.getRuntimeType().getId());
-			if (ir != null) {
-				install.setEnabled(true);
-				installLabel.setText(ir.getName());
-			}
 		}
 
 		init();
@@ -177,11 +160,19 @@ public class PHPRuntimeComposite extends Composite {
 
 	private void updateRuntime() {
 		int sel = combo.getSelectionIndex();
-		PHPexeItem item = installedExecutables.get(sel);
-		runtime.setExecutableInstall(item);
-		runtimeWC.setLocation(new Path(item.getExecutable().getParent()));
+		if (sel != -1) {
+			PHPexeItem item = installedExecutables.get(sel);
+			runtime.setExecutableInstall(item);
+			runtimeWC.setLocation(new Path(item.getExecutable().getParent()));
+		} else {
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=526165
+			// happens when all installed PHP executable definitions are removed
+			// after clicking on button "Installed PHPs..."
+			runtime.setExecutableInstall(null);
+			runtimeWC.setLocation(null);
+		}
 	}
-	
+
 	protected void updateExecutables() {
 		// get all installed CLI executables
 		installedExecutables = new ArrayList<>();
