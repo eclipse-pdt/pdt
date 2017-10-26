@@ -580,7 +580,7 @@ public class CodeGenerationUtils {
 		PHPStructuredEditor textEditor = null;
 		if (editorPart instanceof PHPStructuredEditor) {
 			textEditor = (PHPStructuredEditor) editorPart;
-		} else {
+		} else if (editorPart != null) {
 			Object o = editorPart.getAdapter(ITextEditor.class);
 			if (o != null) {
 				textEditor = (PHPStructuredEditor) o;

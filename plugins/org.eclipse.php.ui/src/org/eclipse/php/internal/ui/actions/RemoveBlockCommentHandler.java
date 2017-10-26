@@ -50,7 +50,7 @@ public class RemoveBlockCommentHandler extends CommentHandler implements IHandle
 		ITextEditor textEditor = null;
 		if (editor instanceof ITextEditor)
 			textEditor = (ITextEditor) editor;
-		else {
+		else if (editor != null) {
 			Object o = editor.getAdapter(ITextEditor.class);
 			if (o != null)
 				textEditor = (ITextEditor) o;
@@ -118,16 +118,16 @@ public class RemoveBlockCommentHandler extends CommentHandler implements IHandle
 					ITextRegion textRegion = regionAtCharacterOffset.getRegionAtCharacterOffset(selectionOffset);
 
 					Stack<TextLocation> phpCommentLocationStack = new Stack<>(); // stack
-																								// of
-																								// ITextRegion
-																								// including
-																								// only
-																								// Comments'
-																								// Start
-																								// and
-																								// End
-																								// tokens
-																								// locations
+																					// of
+																					// ITextRegion
+																					// including
+																					// only
+																					// Comments'
+																					// Start
+																					// and
+																					// End
+																					// tokens
+																					// locations
 
 					try {
 						int textRegionOffset = textRegion.getStart();

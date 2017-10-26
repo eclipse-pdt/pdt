@@ -47,7 +47,7 @@ public class AddObjectOperator extends AbstractHandler implements IHandler {
 		ITextEditor textEditor = null;
 		if (editor instanceof ITextEditor) {
 			textEditor = (ITextEditor) editor;
-		} else {
+		} else if (editor != null) {
 			Object o = editor.getAdapter(ITextEditor.class);
 			if (o != null) {
 				textEditor = (ITextEditor) o;
