@@ -50,7 +50,7 @@ public abstract class SelectionHandler extends AbstractHandler {
 		if (editorPart instanceof PHPStructuredEditor) {
 			textEditor = (PHPStructuredEditor) editorPart;
 			modelElement = textEditor.getModelElement();
-		} else {
+		} else if (editorPart != null) {
 			Object o = editorPart.getAdapter(ITextEditor.class);
 			if (o != null) {
 				textEditor = (PHPStructuredEditor) o;
