@@ -12,10 +12,13 @@
 package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.annotations.NonNull;
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
@@ -43,14 +46,17 @@ public abstract class UseStatementContext extends StatementContext {
 	public static final String CONST_KEYWORD = "const"; //$NON-NLS-1$
 	public static final String USE_KEYWORD = "use"; //$NON-NLS-1$
 
-	protected TYPES type;
-	protected TextSequence rebuiltUseStatementText;
-	protected TextSequence longestStatementTextBeforeCursor;
-	protected TextSequence biggestCommonStatementText;
-	protected boolean isCursorInsideGroupStatement;
+	private TYPES type;
+	private TextSequence rebuiltUseStatementText;
+	private TextSequence longestPrefixTextBeforeCursor;
+	private TextSequence biggestCommonStatementText;
+	private boolean isCursorInsideGroupStatement;
+
+	protected boolean isUseFunctionStatement;
+	protected boolean isUseConstStatement;
 
 	public enum TYPES {
-		NONE, TRAIT, USE, GROUP
+		NONE, TRAIT, USE, USE_GROUP
 	}
 
 	@Override
@@ -60,8 +66,7 @@ public abstract class UseStatementContext extends StatementContext {
 
 	private boolean hasUsePrefix(TextSequence statementText) {
 		if (statementText.length() >= 4) {
-			if (USE_KEYWORD.equalsIgnoreCase( // $NON-NLS-1$
-					statementText.subSequence(0, 3).toString())
+			if (USE_KEYWORD.equalsIgnoreCase(statementText.subSequence(0, 3).toString())
 					&& Character.isWhitespace(statementText.subSequence(3, 4).charAt(0))) {
 				return true;
 			}
@@ -69,21 +74,39 @@ public abstract class UseStatementContext extends StatementContext {
 		return false;
 	}
 
+	private void initUseFunctionOrUseConstStatement(TextSequence statementText) {
+		try {
+			String previousWord = getPreviousWord(statementText);
+			if (CONST_KEYWORD.equalsIgnoreCase(previousWord)) {
+				isUseConstStatement = true;
+			} else if (FUNCTION_KEYWORD.equalsIgnoreCase(previousWord)) {
+				isUseFunctionStatement = true;
+			}
+		} catch (BadLocationException e) {
+			PHPCorePlugin.log(e);
+		}
+	}
+
 	private boolean buildUseStatement(int offset, @NonNull IStructuredDocumentRegion sdRegion,
 			boolean isClassStatementContext) {
 		ContextRegion[] foundDelimiter = new ContextRegion[1];
 		TextSequence statementText = PHPTextSequenceUtilities.getStatement(offset, sdRegion, true, null, 0,
 				foundDelimiter);
-		biggestCommonStatementText = longestStatementTextBeforeCursor = rebuiltUseStatementText = statementText;
+		biggestCommonStatementText = longestPrefixTextBeforeCursor = rebuiltUseStatementText = statementText;
 		type = TYPES.NONE;
-		isCursorInsideGroupStatement = false;
+		isCursorInsideGroupStatement = isUseFunctionStatement = isUseConstStatement = false;
 
 		boolean hasUsePrefix = hasUsePrefix(statementText);
 		if (hasUsePrefix) {
-			if (isClassStatementContext && getPHPVersion().isLessThan(PHPVersion.PHP5_4)) {
-				return false;
+			if (isClassStatementContext) {
+				if (getPHPVersion().isLessThan(PHPVersion.PHP5_4)) {
+					return false;
+				}
+				type = TYPES.TRAIT;
+			} else {
+				type = TYPES.USE;
+				initUseFunctionOrUseConstStatement(statementText);
 			}
-			type = isClassStatementContext ? TYPES.TRAIT : TYPES.USE;
 			return true;
 		}
 		if (isClassStatementContext) {
@@ -106,9 +129,15 @@ public abstract class UseStatementContext extends StatementContext {
 				// 2. look for multiple statement parts separated by ',' in
 				// "A, B, \C\D" and remove leading '\' in the last statement
 				// part, to only keep "C\D"
+				initUseFunctionOrUseConstStatement(statementText);
 				String s2 = statementText.toString();
-				int endS2 = PHPTextSequenceUtilities.readBackwardSpaces(s2, s2.length());
-				int idxS2 = PHPTextSequenceUtilities.readNamespaceStartIndex(s2, endS2, false);
+				int idxS2, endS2;
+				if (isUseFunctionStatement || isUseConstStatement) {
+					endS2 = s2.length();
+				} else {
+					endS2 = PHPTextSequenceUtilities.readBackwardSpaces(s2, s2.length());
+				}
+				idxS2 = PHPTextSequenceUtilities.readNamespaceStartIndex(s2, endS2, false);
 				if (idxS2 < s2.length() && s2.charAt(idxS2) == NamespaceReference.NAMESPACE_SEPARATOR) {
 					idxS2++;
 				}
@@ -126,9 +155,9 @@ public abstract class UseStatementContext extends StatementContext {
 				// longestStatementTextBeforeCursor
 				biggestCommonStatementText = statementTextBeforeOpeningCurly.cutTextSequence(endS1,
 						statementTextBeforeOpeningCurly.length());
-				longestStatementTextBeforeCursor = statementText.cutTextSequence(0, idxS2);
+				longestPrefixTextBeforeCursor = statementText.cutTextSequence(0, idxS2);
 				rebuiltUseStatementText = fullStatementText;
-				type = TYPES.GROUP;
+				type = TYPES.USE_GROUP;
 				isCursorInsideGroupStatement = true;
 
 				return true;
@@ -136,14 +165,6 @@ public abstract class UseStatementContext extends StatementContext {
 		}
 
 		return false;
-	}
-
-	/**
-	 * @return true when type is TYPES.GROUP and cursor position is after '{', false
-	 *         otherwise
-	 */
-	public boolean isCursorInsideGroupStatement() {
-		return isCursorInsideGroupStatement;
 	}
 
 	public TYPES getType() {
@@ -158,14 +179,18 @@ public abstract class UseStatementContext extends StatementContext {
 	}
 
 	/**
-	 * Prefix part of a "grouped use statement", in the statement part before '{'.
-	 * Returned value has no special meaning for other use statement types. For
-	 * example, with "use X\Y\ { A, B, \C\D| };" this method would return "X\Y\".
+	 * Prefix part of a "grouped use statement", in the statement part before
+	 * '{'. Returned value is null for other statement types. For example, with
+	 * "use X\Y\ { A, B, \C\D| };" this method would return "X\Y\".
 	 * 
 	 * @return
 	 */
 	@SuppressWarnings("null")
+	@Nullable
 	public String getGroupPrefixBeforeOpeningCurly() {
+		if (!isCursorInsideGroupStatement) {
+			return null;
+		}
 		int statementLength = biggestCommonStatementText.length();
 		int prefixEnd = PHPTextSequenceUtilities.readBackwardSpaces(biggestCommonStatementText, statementLength); // read
 		// whitespace
@@ -174,24 +199,25 @@ public abstract class UseStatementContext extends StatementContext {
 	}
 
 	/**
-	 * When isCursorInsideGroupStatement() is true, only the prefix part after '{'
-	 * is returned (leading '\' excluded), otherwise same content as getPrefix() is
-	 * returned. For example, with "use X\Y\ { A, B, \C\D| };" this method would
-	 * return "C\D".
+	 * When isCursorInsideGroupStatement() is true, only the prefix part after
+	 * '{' is returned (leading '\' excluded), otherwise same content as
+	 * getPrefix() is returned. For example, with "use X\Y\ { A, B, \C\D| };"
+	 * this method would return "C\D".
 	 * 
 	 * @return
 	 */
 	@SuppressWarnings("null")
+	@NonNull
 	public String getLongestPrefixBeforeCursor() {
 		if (hasWhitespaceBeforeCursor()) {
 			return ""; //$NON-NLS-1$
 		}
-		int statementLength = longestStatementTextBeforeCursor.length();
-		int prefixEnd = PHPTextSequenceUtilities.readBackwardSpaces(longestStatementTextBeforeCursor, statementLength); // read
+		int statementLength = longestPrefixTextBeforeCursor.length();
+		int prefixEnd = PHPTextSequenceUtilities.readBackwardSpaces(longestPrefixTextBeforeCursor, statementLength); // read
 		// whitespace
 		int prefixStart = PHPTextSequenceUtilities.readIdentifierStartIndex(getPHPVersion(),
-				longestStatementTextBeforeCursor, prefixEnd, true);
-		return prefixStart < 0 ? "" : longestStatementTextBeforeCursor.subSequence(prefixStart, prefixEnd).toString(); //$NON-NLS-1$
+				longestPrefixTextBeforeCursor, prefixEnd, true);
+		return prefixStart < 0 ? "" : longestPrefixTextBeforeCursor.subSequence(prefixStart, prefixEnd).toString(); //$NON-NLS-1$
 	}
 
 	@Override

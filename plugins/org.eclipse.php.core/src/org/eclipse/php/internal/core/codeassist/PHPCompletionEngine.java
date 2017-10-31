@@ -122,23 +122,20 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 	}
 
 	@Override
-	public void reportField(IField field, String suffix, ISourceRange replaceRange, boolean removeDollar) {
-		reportField(field, suffix, replaceRange, removeDollar, 0);
+	public void reportField(IField field, String suffix, ISourceRange replaceRange, boolean removeDollar,
+			int subRelevance, Object extraInfo) {
+		reportField(field, "", suffix, replaceRange, removeDollar, subRelevance, extraInfo); //$NON-NLS-1$
 	}
 
 	@Override
-	public void reportField(IField field, String suffix, ISourceRange replaceRange, boolean removeDollar,
-			int subRelevance) {
-		reportField(field, suffix, replaceRange, removeDollar, subRelevance, null);
-	}
-
-	@Override
-	public void reportField(IField field, String suffix, ISourceRange replaceRange, boolean removeDollar,
+	public void reportField(IField field, String prefix, String suffix, ISourceRange replaceRange, boolean removeDollar,
 			int subRelevance, Object extraInfo) {
 		if (processedFields.contains(field)) {
 			return;
 		}
 		processedFields.add(field);
+
+		assert !(removeDollar && StringUtils.isNotEmpty(prefix));
 
 		int flags = 0;
 		try {
@@ -156,11 +153,15 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			CompletionProposal proposal = createProposal(CompletionProposal.FIELD_REF, actualCompletionPosition);
 			proposal.setName(field.getElementName());
 
-			String completion = field.getElementName() + suffix;
-			if (removeDollar && completion.startsWith("$")) { //$NON-NLS-1$
-				completion = completion.substring(1);
+			String elementFullName = PHPModelUtils.getFullName(field);
+			String completionName = field.getElementName();
+			if (StringUtils.isNotEmpty(prefix) && StringUtils.isNotEmpty(elementFullName)
+					&& StringUtils.startsWithIgnoreCase(elementFullName, prefix)) {
+				completionName = elementFullName.substring(prefix.length());
+			} else if (removeDollar && completionName.startsWith("$")) { //$NON-NLS-1$
+				completionName = completionName.substring(1);
 			}
-			proposal.setCompletion(completion);
+			proposal.setCompletion(completionName + suffix);
 			proposal.setExtraInfo(extraInfo);
 			proposal.setModelElement(field);
 			proposal.setFlags(flags);
@@ -248,7 +249,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 	}
 
 	@Override
-	public void reportMethod(IMethod method, String suffix, ISourceRange replaceRange, Object extraInfo,
+	public void reportMethod(IMethod method, String prefix, String suffix, ISourceRange replaceRange, Object extraInfo,
 			int subRelevance) {
 		if (processedElements.containsKey(method)
 				&& ((IMethod) processedElements.get(method)).getParent().getClass() == method.getParent().getClass()) {
@@ -276,13 +277,18 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			}
 
 			String elementName = method.getElementName();
-			String completionName = elementName;
 
 			proposal.setModelElement(method);
 			proposal.setName(elementName);
 
 			int relevance = relevanceMethod + subRelevance;
-			proposal.setCompletion((completionName + suffix));
+			String elementFullName = PHPModelUtils.getFullName(method);
+			String completionName = elementName;
+			if (StringUtils.isNotEmpty(prefix) && StringUtils.isNotEmpty(elementFullName)
+					&& StringUtils.startsWithIgnoreCase(elementFullName, prefix)) {
+				completionName = elementFullName.substring(prefix.length()) + suffix;
+			}
+			proposal.setCompletion(completionName + suffix);
 
 			try {
 				proposal.setIsConstructor(elementName.equals("__construct") //$NON-NLS-1$
@@ -304,6 +310,12 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			}
 		}
 
+	}
+
+	@Override
+	public void reportMethod(IMethod method, String suffix, ISourceRange replaceRange, Object extraInfo,
+			int subRelevance) {
+		reportMethod(method, "", suffix, replaceRange, extraInfo, subRelevance); //$NON-NLS-1$
 	}
 
 	@Override
@@ -411,7 +423,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 		}
 
 		proposal.setName(relative.toString());
-		proposal.setCompletion((relative.toString() + suffix));
+		proposal.setCompletion(relative.toString() + suffix);
 		proposal.setRelevance(relevanceKeyword);
 		proposal.setReplaceRange(replaceRange.getOffset(), replaceRange.getOffset() + replaceRange.getLength());
 		proposal.setModelElement(model);

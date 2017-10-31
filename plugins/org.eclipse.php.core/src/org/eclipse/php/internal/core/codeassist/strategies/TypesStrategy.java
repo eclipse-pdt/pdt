@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -79,6 +79,11 @@ public class TypesStrategy extends ElementsStrategy {
 		ISourceRange replacementRange = getReplacementRange(abstractContext);
 		ISourceRange memberReplacementRange = getReplacementRangeForMember(abstractContext);
 
+		String nsUsePrefix = null;
+		if (context instanceof UseStatementContext) {
+			nsUsePrefix = ((UseStatementContext) context).getGroupPrefixBeforeOpeningCurly();
+		}
+
 		IType[] types = getTypes(abstractContext);
 		// now we compute type suffix in PHPCompletionProposalCollector
 		String suffix = ""; //$NON-NLS-1$
@@ -95,9 +100,8 @@ public class TypesStrategy extends ElementsStrategy {
 			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
 		}
 
-		String nsPrefix = null;
-		if (context instanceof UseStatementContext && ((UseStatementContext) context).isCursorInsideGroupStatement()) {
-			nsPrefix = ((UseStatementContext) context).getGroupPrefixBeforeOpeningCurly();
+		if (nsUsePrefix != null) {
+			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
 		}
 
 		String namespace = abstractContext.getCurrentNamespace();
@@ -106,10 +110,9 @@ public class TypesStrategy extends ElementsStrategy {
 				int flags = type.getFlags();
 				boolean isNamespace = PHPFlags.isNamespace(flags);
 				int relevance = getRelevance(namespace, type);
-				if (nsPrefix != null) {
-					reporter.reportType(type, nsPrefix, isNamespace ? nsSuffix : suffix,
-							isNamespace ? replacementRange : memberReplacementRange,
-							extraInfo | ProposalExtraInfo.NO_INSERT_USE, relevance);
+				if (nsUsePrefix != null) {
+					reporter.reportType(type, nsUsePrefix, isNamespace ? nsSuffix : suffix,
+							isNamespace ? replacementRange : memberReplacementRange, extraInfo, relevance);
 				} else {
 					if (isNamespace || abstractContext.isAbsoluteName() || abstractContext.isAbsolute()) {
 						reporter.reportType(type, isNamespace ? nsSuffix : suffix, "", replacementRange,
