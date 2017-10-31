@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,8 +14,6 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
 /**
@@ -38,23 +36,14 @@ public class UseNameContext extends UseStatementContext {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-
-		try {
-			if (getType() == TYPES.TRAIT) {
-				TextSequence statementText = getStatementText();
-				if (statementText.toString().indexOf('{') < 0 && statementText.toString().indexOf('}') < 0) {
-					return true;
-				}
-			} else {
-				String previousWord = getPreviousWord();
-				if (USE_KEYWORD.equalsIgnoreCase(previousWord)) {
-					return true;
-				}
+		if (getType() == TYPES.TRAIT) {
+			TextSequence statementText = getStatementText();
+			if (statementText.toString().indexOf('{') < 0 && statementText.toString().indexOf('}') < 0) {
+				return true;
 			}
-		} catch (BadLocationException e) {
-			PHPCorePlugin.log(e);
+		} else if (getType() == TYPES.USE || getType() == TYPES.USE_GROUP) {
+			return !(isUseFunctionStatement || isUseConstStatement);
 		}
 		return false;
 	}
-
 }
