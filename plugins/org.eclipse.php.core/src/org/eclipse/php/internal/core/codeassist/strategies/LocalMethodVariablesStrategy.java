@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import org.eclipse.php.core.codeassist.ICompletionReporter;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.GlobalMethodStatementContext;
 import org.eclipse.php.internal.core.language.PHPVariables;
@@ -71,8 +72,7 @@ public class LocalMethodVariablesStrategy extends ElementsStrategy {
 			if (declaringType != null) {
 				if (THIS.startsWith(prefix)) {
 					reporter.reportField(new FakeField((ModelElement) declaringType, THIS, 0, 0), suffix, replaceRange,
-							false, ICompletionReporter.RELEVANCE_ADJUST); // NON-NLS-1
-																			// //$NON-NLS-2$
+							false, ICompletionReporter.RELEVANCE_ADJUST, ProposalExtraInfo.FULL_NAME);
 				}
 			} else {
 				if (enclosingMethod.getParent() instanceof IField
@@ -82,8 +82,8 @@ public class LocalMethodVariablesStrategy extends ElementsStrategy {
 						declaringType = method.getDeclaringType();
 						if (declaringType != null && THIS.startsWith(prefix)) {
 							reporter.reportField(new FakeField((ModelElement) declaringType, THIS, 0, 0), suffix,
-									replaceRange, false, ICompletionReporter.RELEVANCE_ADJUST); // NON-NLS-1
-																								// //$NON-NLS-2$
+									replaceRange, false, ICompletionReporter.RELEVANCE_ADJUST,
+									ProposalExtraInfo.FULL_NAME);
 						}
 					}
 				}
@@ -93,7 +93,7 @@ public class LocalMethodVariablesStrategy extends ElementsStrategy {
 		for (IModelElement element : PHPModelUtils.getMethodFields(enclosingMethod, prefix,
 				requestor.isContextInformationMode(), null)) {
 			reporter.reportField((IField) element, "", replaceRange, false, //$NON-NLS-1$
-					ICompletionReporter.RELEVANCE_ADJUST);
+					ICompletionReporter.RELEVANCE_ADJUST, ProposalExtraInfo.FULL_NAME);
 		}
 
 		PHPVersion phpVersion = concreteContext.getPHPVersion();
@@ -102,7 +102,7 @@ public class LocalMethodVariablesStrategy extends ElementsStrategy {
 				if (!requestor.isContextInformationMode() || variable.length() == prefix.length()) {
 					reporter.reportField(
 							new FakeField((ModelElement) concreteContext.getSourceModule(), variable, 0, 0), "", //$NON-NLS-1$
-							replaceRange, false, -ICompletionReporter.RELEVANCE_ADJUST); // NON-NLS-1
+							replaceRange, false, -ICompletionReporter.RELEVANCE_ADJUST, ProposalExtraInfo.FULL_NAME);
 				}
 			}
 		}

@@ -47,6 +47,8 @@ use MyUseFunction07\ { Space\A\MyClass2 as C, \Space2\A\MyClass2 as D, \Space\AB
 use const MyUseFunction07\ { Space2\A\CONST1 as F, \Space\AB\CONST1 as G };
 use function MyUseFunction07\ { \| as H, \Space\A\foo1 as I };
 --EXPECT--
+keyword(const)
+keyword(function)
 type(MyUseFunction07\Space)
 type(MyUseFunction07\Space\A)
 type(MyUseFunction07\Space2\A)
