@@ -41,7 +41,15 @@ public class UseNameStrategy extends TypesStrategy {
 
 	private void reportKeyword(String keyword, ICompletionReporter reporter) throws BadLocationException {
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) getContext();
-		if (completionContext.getPrefix() == null || keyword.startsWith(completionContext.getPrefix())) {
+		if (completionContext instanceof UseStatementContext) {
+			UseStatementContext context = (UseStatementContext) completionContext;
+			if (context.getGroupPrefixBeforeOpeningCurly() != null
+					&& keyword.startsWith(context.getPrefixBeforeCursor())) {
+				reporter.reportKeyword(keyword, getSuffix(context), getReplacementRange(context));
+				return;
+			}
+		}
+		if (keyword.startsWith(completionContext.getPrefix())) {
 			reporter.reportKeyword(keyword, getSuffix(completionContext), getReplacementRange(completionContext));
 		}
 	}
@@ -60,11 +68,11 @@ public class UseNameStrategy extends TypesStrategy {
 		ISourceRange basicRange = getReplacementRange(context);
 		int move = (context.isAbsoluteName() ? 1 : 0);
 		String namespacePrefix = context.getNamespaceName();
-		if (useStatementContext.isCursorInsideGroupStatement()) {
+		if (useStatementContext.getGroupPrefixBeforeOpeningCurly() != null) {
 			int index = context.getNamesPrefix().lastIndexOf('\\');
 			if (index != -1) {
 				namespacePrefix = context.getNamesPrefix().substring(index + 1);
-				namespacePrefix = useStatementContext.getLongestPrefixBeforeCursor()
+				namespacePrefix = useStatementContext.getPrefixBeforeCursorWithoutNS()
 						.substring(namespacePrefix.length());
 			}
 		}
