@@ -29,6 +29,7 @@ import org.eclipse.php.core.codeassist.ICompletionReporter;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
@@ -103,7 +104,7 @@ public class VariablesStrategy extends ElementsStrategy {
 
 		ISourceRange replaceRange = getReplacementRange(context);
 		for (IModelElement var : fields) {
-			reporter.reportField((IField) var, "", replaceRange, false); //$NON-NLS-1$
+			reporter.reportField((IField) var, "", replaceRange, false, 0, ProposalExtraInfo.FULL_NAME); //$NON-NLS-1$
 		}
 
 		if (showPhpVariables) {
@@ -113,7 +114,7 @@ public class VariablesStrategy extends ElementsStrategy {
 					if (!requestor.isContextInformationMode() || variable.length() == prefix.length()) {
 						reporter.reportField(
 								new FakeField((ModelElement) abstractContext.getSourceModule(), variable, 0, 0), "", //$NON-NLS-1$
-								replaceRange, false); // NON-NLS-1
+								replaceRange, false, 0, ProposalExtraInfo.FULL_NAME);
 					}
 				}
 			}

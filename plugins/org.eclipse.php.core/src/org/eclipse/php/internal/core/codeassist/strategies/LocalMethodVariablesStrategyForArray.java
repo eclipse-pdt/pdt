@@ -17,6 +17,7 @@ import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.ArrayKeyContext;
 import org.eclipse.php.internal.core.typeinference.FakeField;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
@@ -58,15 +59,15 @@ public class LocalMethodVariablesStrategyForArray extends AbstractCompletionStra
 				IType declaringType = enclosingMethod.getDeclaringType();
 				if (declaringType != null) {
 					if ("$this".startsWith(prefix)) { //$NON-NLS-1$
-						reporter.reportField(new FakeField((ModelElement) declaringType, "$this", 0, 0), "", //$NON-NLS-1$//$NON-NLS-2$
-								replaceRange, false); // NON-NLS-1
+						reporter.reportField(new FakeField((ModelElement) declaringType, "$this", 0, 0), "", //$NON-NLS-1$ //$NON-NLS-2$
+								replaceRange, false, 0, ProposalExtraInfo.FULL_NAME);
 					}
 				}
 			}
 
 			for (IModelElement element : PHPModelUtils.getMethodFields(enclosingMethod, prefix,
 					requestor.isContextInformationMode(), null)) {
-				reporter.reportField((IField) element, "", replaceRange, false); //$NON-NLS-1$
+				reporter.reportField((IField) element, "", replaceRange, false, 0, ProposalExtraInfo.FULL_NAME); //$NON-NLS-1$
 			}
 
 		} catch (ModelException e) {

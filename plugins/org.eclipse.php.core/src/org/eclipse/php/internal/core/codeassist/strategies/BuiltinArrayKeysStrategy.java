@@ -21,11 +21,11 @@ import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.ArrayKeyContext;
 import org.eclipse.php.internal.core.language.PHPVariables;
@@ -71,24 +71,24 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 
 		String prefix = arrayContext.getPrefix();
 
-		int extraObject = ProposalExtraInfo.DEFAULT;
+		int extraObject = ProposalExtraInfo.DEFAULT | ProposalExtraInfo.FULL_NAME;
 		if (!arrayContext.hasQuotes()) {
 			extraObject |= ProposalExtraInfo.ADD_QUOTES;
 		}
 		// report server variables:
 		if (arrayVarName.equals("$_SERVER") //$NON-NLS-1$
-				|| arrayVarName.equals("$HTTP_SERVER_VARS")) { // NON-NLS-1 //$NON-NLS-1$
+				|| arrayVarName.equals("$HTTP_SERVER_VARS")) { //$NON-NLS-1$
 			// //NON-NLS-2
 			reportVariables(reporter, arrayContext, SERVER_VARS, prefix, extraObject);
 		}
 		// report session variables:
 		else if (arrayVarName.equals("$_SESSION") //$NON-NLS-1$
-				|| arrayVarName.equals("$HTTP_SESSION_VARS")) { // NON-NLS-1 //$NON-NLS-1$
+				|| arrayVarName.equals("$HTTP_SESSION_VARS")) { //$NON-NLS-1$
 			// //NON-NLS-2
 			reportVariables(reporter, arrayContext, SESSION_VARS, prefix, extraObject);
 		}
 		// report global variables in special globals array:
-		else if (arrayVarName.equals("$GLOBALS")) { // NON-NLS-1 //$NON-NLS-1$
+		else if (arrayVarName.equals("$GLOBALS")) { //$NON-NLS-1$
 
 			MatchRule matchRule = MatchRule.PREFIX;
 			if (requestor.isContextInformationMode()) {
@@ -114,7 +114,7 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 					FakeField fakeField = new FakeField((ModelElement) field.getParent(),
 							field.getElementName().substring(1), sourceRange.getOffset(), sourceRange.getLength());
 					reporter.reportField(fakeField, "", replaceRange, true, 0, //$NON-NLS-1$
-							extraObject); // NON-NLS-1
+							extraObject);
 				} catch (ModelException e) {
 					PHPCorePlugin.log(e);
 				}
@@ -141,7 +141,7 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 			if (variable.startsWith(prefix)) {
 				if (!requestor.isContextInformationMode() || variable.length() == prefix.length()) {
 					reporter.reportField(new FakeField((ModelElement) context.getSourceModule(), variable, 0, 0), "", //$NON-NLS-1$
-							replaceRange, false, 0, extraObject); // NON-NLS-1
+							replaceRange, false, 0, extraObject);
 				}
 			}
 		}
