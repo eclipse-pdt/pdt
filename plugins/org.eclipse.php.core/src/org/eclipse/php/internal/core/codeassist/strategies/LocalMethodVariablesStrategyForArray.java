@@ -58,8 +58,8 @@ public class LocalMethodVariablesStrategyForArray extends AbstractCompletionStra
 				IType declaringType = enclosingMethod.getDeclaringType();
 				if (declaringType != null) {
 					if ("$this".startsWith(prefix)) { //$NON-NLS-1$
-						reporter.reportField(new FakeField((ModelElement) declaringType, "$this", 0, 0), "", //$NON-NLS-1$//$NON-NLS-2$
-								replaceRange, false); // NON-NLS-1
+						reporter.reportField(new FakeField((ModelElement) declaringType, "$this", 0, 0), "", //$NON-NLS-1$ //$NON-NLS-2$
+								replaceRange, false);
 					}
 				}
 			}
