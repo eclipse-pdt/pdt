@@ -47,7 +47,7 @@ public class ClassInstantiationStrategy extends AbstractClassInstantiationStrate
 			String prefix = completionContext.getPrefixWithoutProcessing();
 			ISourceRange replaceRange = getReplacementRangeForMember(completionContext);
 			if (CLASS_KEYWORD.startsWith(prefix) && prefix.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) == -1) {
-				reporter.reportKeyword(CLASS_KEYWORD, "", replaceRange); // $NON-NLS-1$
+				reporter.reportKeyword(CLASS_KEYWORD, "", replaceRange); //$NON-NLS-1$
 			}
 		}
 	}
