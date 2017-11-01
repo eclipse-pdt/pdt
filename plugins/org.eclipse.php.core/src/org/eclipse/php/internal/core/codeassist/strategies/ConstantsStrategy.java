@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,6 +37,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.AliasField;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
+import org.eclipse.php.internal.core.codeassist.contexts.UseStatementContext;
 import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
@@ -94,7 +95,13 @@ public class ConstantsStrategy extends ElementsStrategy {
 		IDLTKSearchScope scope = null;
 		IModelElement[] enclosingTypeConstants = null;
 
-		if (enclosingType != null && isStartOfStatement(prefix, abstractContext, abstractContext.getOffset())) {
+		String nsUsePrefix = null;
+		if (context instanceof UseStatementContext) {
+			nsUsePrefix = ((UseStatementContext) context).getGroupPrefixBeforeOpeningCurly();
+		}
+
+		if (enclosingType != null && nsUsePrefix != null
+				&& isStartOfStatement(prefix, abstractContext, abstractContext.getOffset())) {
 			// See the case of testClassStatement1.pdtt and
 			// testClassStatement2.pdtt
 			scope = SearchEngine.createSearchScope(enclosingType);
@@ -114,6 +121,13 @@ public class ConstantsStrategy extends ElementsStrategy {
 			extraInfo |= ProposalExtraInfo.FULL_NAME;
 			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
 		}
+
+		if (nsUsePrefix != null) {
+			// do not use ProposalExtraInfo.FULL_NAME
+			extraInfo &= ~ProposalExtraInfo.FULL_NAME;
+			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
+		}
+
 		enclosingTypeConstants = PHPModelAccess.getDefault().findFileFields(namespaceName, memberName, matchRule,
 				Modifiers.AccConstant, 0, scope, null);
 
@@ -124,11 +138,15 @@ public class ConstantsStrategy extends ElementsStrategy {
 		enclosingTypeConstants = filterClassConstants(enclosingTypeConstants);
 		// workaround end
 		ISourceRange replaceRange = abstractContext.isAbsoluteName() || abstractContext.isAbsolute()
-				? getReplacementRange(abstractContext)
-				: getReplacementRangeForMember(abstractContext);
+				? getReplacementRange(abstractContext) : getReplacementRangeForMember(abstractContext);
 		for (IModelElement constant : enclosingTypeConstants) {
 			IField field = (IField) constant;
-			reporter.reportField(field, "", replaceRange, false, 0, extraInfo); //$NON-NLS-1$
+			if (nsUsePrefix != null) {
+				reporter.reportField(field, nsUsePrefix, "", replaceRange, false, 0, //$NON-NLS-1$
+						extraInfo);
+			} else {
+				reporter.reportField(field, "", replaceRange, false, 0, extraInfo); //$NON-NLS-1$
+			}
 		}
 		addAlias(reporter);
 	}

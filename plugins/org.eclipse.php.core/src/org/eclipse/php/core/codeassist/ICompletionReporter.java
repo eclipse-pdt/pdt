@@ -88,7 +88,9 @@ public interface ICompletionReporter {
 	 * @param replaceRange
 	 *            The range in the document to be replaced with the completion
 	 *            proposal text
+	 * @deprecated
 	 */
+	@Deprecated
 	public void reportMethod(IMethod method, String suffix, ISourceRange replaceRange);
 
 	/**
@@ -109,6 +111,9 @@ public interface ICompletionReporter {
 	public void reportMethod(IMethod method, String suffix, ISourceRange replaceRange, Object extraInfo,
 			int subRelevance);
 
+	public void reportMethod(IMethod method, String prefix, String suffix, ISourceRange replaceRange, Object extraInfo,
+			int subRelevance);
+
 	/**
 	 * Reports field: variable, constant
 	 * 
@@ -121,11 +126,17 @@ public interface ICompletionReporter {
 	 *            proposal text
 	 * @param removeDollar
 	 *            Remove dollar from the variable in completion
+	 * @param subRelevance
+	 * @param extraInfo
+	 *            extraInfo for CompletionProposal
 	 */
-	public void reportField(IField field, String suffix, ISourceRange replaceRange, boolean removeDollar);
-
 	public void reportField(IField field, String suffix, ISourceRange replaceRange, boolean removeDollar,
-			int subRelevance);
+			int subRelevance, Object extraInfo);
+
+	public void reportField(IField field, String prefix, String suffix, ISourceRange replaceRange, boolean removeDollar,
+			int subRelevance, Object extraInfo);
+
+	public void reportField(IField field, String suffix, ISourceRange replaceRange, boolean removeDollar);
 
 	/**
 	 * Reports PHP keyword
@@ -147,7 +158,4 @@ public interface ICompletionReporter {
 	 * @return
 	 */
 	public IModuleSource getModule();
-
-	public void reportField(IField field, String suffix, ISourceRange replaceRange, boolean removeDollar,
-			int subRelevance, Object extraInfo);
 }

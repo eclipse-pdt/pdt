@@ -20,12 +20,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.MethodNameContext;
 import org.eclipse.php.internal.core.language.PHPMagicMethods;
@@ -81,7 +82,7 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 				}
 				int flags = superMethod.getFlags();
 				if (!PHPFlags.isFinal(flags) && !PHPFlags.isPrivate(flags) && !PHPFlags.isStatic(flags)) {
-					reporter.reportMethod(superMethod, CONSTRUCTOR_SUFFIX, replaceRange);
+					reporter.reportMethod(superMethod, CONSTRUCTOR_SUFFIX, replaceRange, ProposalExtraInfo.FULL_NAME);
 				}
 			}
 		} catch (CoreException e) {
@@ -106,7 +107,7 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 					if (function.equals("__construct")) { //$NON-NLS-1$
 						fakeMethod.setConstructor(true);
 					}
-					reporter.reportMethod(fakeMethod, suffix, replaceRange);
+					reporter.reportMethod(fakeMethod, suffix, replaceRange, ProposalExtraInfo.FULL_NAME);
 				}
 			}
 		}
