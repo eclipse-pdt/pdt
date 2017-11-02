@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -79,6 +79,11 @@ public class TypesStrategy extends ElementsStrategy {
 		ISourceRange replacementRange = getReplacementRange(abstractContext);
 		ISourceRange memberReplacementRange = getReplacementRangeForMember(abstractContext);
 
+		String nsUseGroupPrefix = null;
+		if (context instanceof UseStatementContext) {
+			nsUseGroupPrefix = ((UseStatementContext) context).getGroupPrefixBeforeOpeningCurly();
+		}
+
 		IType[] types = getTypes(abstractContext);
 		// now we compute type suffix in PHPCompletionProposalCollector
 		String suffix = ""; //$NON-NLS-1$
@@ -87,7 +92,7 @@ public class TypesStrategy extends ElementsStrategy {
 		if (abstractContext.isAbsoluteName()) {
 			extraInfo |= ProposalExtraInfo.FULL_NAME;
 			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
-			extraInfo |= ProposalExtraInfo.ABSOLUTE;
+			extraInfo |= ProposalExtraInfo.ABSOLUTE_NAME;
 		}
 
 		if (abstractContext.isAbsolute()) {
@@ -95,9 +100,8 @@ public class TypesStrategy extends ElementsStrategy {
 			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
 		}
 
-		String nsPrefix = null;
-		if (context instanceof UseStatementContext && ((UseStatementContext) context).isCursorInsideGroupStatement()) {
-			nsPrefix = ((UseStatementContext) context).getGroupPrefixBeforeOpeningCurly();
+		if (nsUseGroupPrefix != null) {
+			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
 		}
 
 		String namespace = abstractContext.getCurrentNamespace();
@@ -106,13 +110,12 @@ public class TypesStrategy extends ElementsStrategy {
 				int flags = type.getFlags();
 				boolean isNamespace = PHPFlags.isNamespace(flags);
 				int relevance = getRelevance(namespace, type);
-				if (nsPrefix != null) {
-					reporter.reportType(type, nsPrefix, isNamespace ? nsSuffix : suffix,
-							isNamespace ? replacementRange : memberReplacementRange,
-							extraInfo | ProposalExtraInfo.NO_INSERT_USE, relevance);
+				if (nsUseGroupPrefix != null) {
+					reporter.reportType(type, nsUseGroupPrefix, isNamespace ? nsSuffix : suffix,
+							isNamespace ? replacementRange : memberReplacementRange, extraInfo, relevance);
 				} else {
 					if (isNamespace || abstractContext.isAbsoluteName() || abstractContext.isAbsolute()) {
-						reporter.reportType(type, isNamespace ? nsSuffix : suffix, "", replacementRange,
+						reporter.reportType(type, isNamespace ? nsSuffix : suffix, replacementRange,
 								extraInfo | ProposalExtraInfo.CLASS_IN_NAMESPACE, relevance);
 					} else {
 						reporter.reportType(type, isNamespace ? nsSuffix : suffix,
@@ -346,14 +349,14 @@ public class TypesStrategy extends ElementsStrategy {
 								}
 							};
 							ctorMethod.setParameters(ctor.getParameters());
-							reporter.reportMethod(ctorMethod, suffix, replaceRange);
+							reporter.reportMethod(ctorMethod, suffix, replaceRange, ProposalExtraInfo.FULL_NAME);
 						} else {
 							ISourceRange sourceRange = selfClassData.getSourceRange();
 							reporter.reportMethod(
 									new FakeMethod((ModelElement) selfClassData, "self", sourceRange.getOffset(), //$NON-NLS-1$
 											sourceRange.getLength(), sourceRange.getOffset(), sourceRange.getLength()),
 									"()", //$NON-NLS-1$
-									replaceRange);
+									replaceRange, ProposalExtraInfo.FULL_NAME);
 						}
 					} catch (ModelException e) {
 						PHPCorePlugin.log(e);

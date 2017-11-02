@@ -20,6 +20,7 @@ public final class ProposalExtraInfo {
 	// the stub is a type of class/method/field,which does not exist yet
 	public static final int STUB = 1 << 4;
 	public static final int METHOD_ONLY = 1 << 5;
+	// NB : NO_INSERT_NAMESPACE has priority over FULL_NAME
 	public static final int NO_INSERT_NAMESPACE = 1 << 6;
 	public static final int CLASS_IN_NAMESPACE = 1 << 7;
 	public static final int ADD_QUOTES = 1 << 8;
@@ -27,7 +28,7 @@ public final class ProposalExtraInfo {
 	/**
 	 * @since 5.1
 	 */
-	public static final int ABSOLUTE = 1 << 10;
+	public static final int ABSOLUTE_NAME = 1 << 10;
 
 	public static boolean isTypeOnly(int flags) {
 		return (flags & TYPE_ONLY) != 0;
@@ -120,9 +121,9 @@ public final class ProposalExtraInfo {
 	/**
 	 * @since 5.1
 	 */
-	public static boolean isAbsolute(Object flags) {
+	public static boolean isAbsoluteName(Object flags) {
 		if (flags instanceof Integer) {
-			return contain(((Integer) flags).intValue(), ABSOLUTE);
+			return contain(((Integer) flags).intValue(), ABSOLUTE_NAME);
 		} else {
 			return false;
 		}
@@ -131,10 +132,10 @@ public final class ProposalExtraInfo {
 	/**
 	 * @since 5.1
 	 */
-	public static boolean isAbsolute(int flags) {
-		return contain(flags, ABSOLUTE);
-	}	
-	
+	public static boolean isAbsoluteName(int flags) {
+		return contain(flags, ABSOLUTE_NAME);
+	}
+
 	public static boolean contain(int flags, int flag) {
 		return (flags & flag) != 0;
 	}

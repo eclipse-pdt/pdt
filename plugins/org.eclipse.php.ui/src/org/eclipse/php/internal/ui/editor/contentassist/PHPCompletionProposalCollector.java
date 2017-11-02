@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -179,13 +179,26 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 			Image image = getImage(
 					((PHPCompletionProposalLabelProvider) getLabelProvider()).createMethodImageDescriptor(proposal));
 			scriptProposal = new PHPCompletionProposal(completion, replaceStart, length, image, displayString, 0) {
+				private boolean fReplacementStringComputed = false;
+
 				@Override
 				public String getReplacementString() {
+					if (!fReplacementStringComputed) {
+						String replacementString = computeReplacementString();
+						setReplacementString(replacementString);
+						fReplacementStringComputed = true;
+					}
+					return super.getReplacementString();
+				}
+
+				private String computeReplacementString() {
 					IMethod method = (IMethod) proposal.getModelElement();
 					if (ProposalExtraInfo.isNoInsert(proposal.getExtraInfo())) {
 						return method.getElementName();
 					}
-					setReplacementString(method.getFullyQualifiedName("\\")); //$NON-NLS-1$
+					if (ProposalExtraInfo.isFullName(proposal.getExtraInfo())) {
+						return PHPModelUtils.getFullName(method);
+					}
 					return super.getReplacementString();
 				}
 
@@ -238,17 +251,17 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 						replacementString = "'" + replacementString + "'"; //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					setReplacementString(replacementString);
+					fReplacementStringComputed = true;
 				}
 				return super.getReplacementString();
 			}
 
 			private String computeReplacementString() {
-				fReplacementStringComputed = true;
 				IType type = (IType) typeProposal.getModelElement();
 
 				if (ProposalExtraInfo.isClassInNamespace(typeProposal.getExtraInfo())) {
 					StringBuilder result = new StringBuilder(PHPModelUtils.getFullName(type));
-					if (ProposalExtraInfo.isAbsolute(getExtraInfo())) {
+					if (ProposalExtraInfo.isAbsoluteName(getExtraInfo())) {
 						result.insert(0, NamespaceReference.NAMESPACE_SEPARATOR);
 					}
 					try {
@@ -340,8 +353,8 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 						replacementString = "'" + replacementString + "'"; //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					setReplacementString(replacementString);
+					fReplacementStringComputed = true;
 				}
-				fReplacementStringComputed = true;
 				return super.getReplacementString();
 			}
 
@@ -351,8 +364,11 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 					AliasField aliasField = (AliasField) field;
 					return aliasField.getAlias();
 				}
+				if (ProposalExtraInfo.isNoInsert(proposal.getExtraInfo())) {
+					return field.getElementName();
+				}
 				if (ProposalExtraInfo.isFullName(proposal.getExtraInfo())) {
-					return field.getFullyQualifiedName("\\"); //$NON-NLS-1$
+					return PHPModelUtils.getFullName(field);
 				}
 				return super.getReplacementString();
 			}
