@@ -20,6 +20,7 @@ public final class ProposalExtraInfo {
 	// the stub is a type of class/method/field,which does not exist yet
 	public static final int STUB = 1 << 4;
 	public static final int METHOD_ONLY = 1 << 5;
+	// NB : NO_INSERT_NAMESPACE has priority over FULL_NAME
 	public static final int NO_INSERT_NAMESPACE = 1 << 6;
 	public static final int CLASS_IN_NAMESPACE = 1 << 7;
 	public static final int ADD_QUOTES = 1 << 8;
@@ -133,8 +134,8 @@ public final class ProposalExtraInfo {
 	 */
 	public static boolean isAbsolute(int flags) {
 		return contain(flags, ABSOLUTE);
-	}	
-	
+	}
+
 	public static boolean contain(int flags, int flag) {
 		return (flags & flag) != 0;
 	}
