@@ -1,13 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016 IBM Corporation and others.
+ * Copyright (c) 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors:
- *     IBM Corporation - initial API and implementation
- *     Zend Technologies
+ *     Thierry Blind - initial API and implementation
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
@@ -16,43 +15,19 @@ import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
-import org.eclipse.php.core.codeassist.ICompletionReporter;
+import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.UseStatementContext;
 
-public class UseNameStrategy extends TypesStrategy {
+public class UseConstStrategy extends ConstantsStrategy {
 
-	public UseNameStrategy(ICompletionContext context, int trueFlag, int falseFlag) {
-		super(context, trueFlag, falseFlag);
+	public UseConstStrategy(ICompletionContext context, IElementFilter elementFilter) {
+		super(context, elementFilter);
 	}
 
-	public UseNameStrategy(ICompletionContext context) {
+	public UseConstStrategy(ICompletionContext context) {
 		super(context);
-	}
-
-	@Override
-	public void apply(ICompletionReporter reporter) throws BadLocationException {
-
-		reportKeyword(UseStatementContext.CONST_KEYWORD, reporter);
-		reportKeyword(UseStatementContext.FUNCTION_KEYWORD, reporter);
-		super.apply(reporter);
-	}
-
-	private void reportKeyword(String keyword, ICompletionReporter reporter) throws BadLocationException {
-		AbstractCompletionContext completionContext = (AbstractCompletionContext) getContext();
-		if (completionContext instanceof UseStatementContext) {
-			UseStatementContext context = (UseStatementContext) completionContext;
-			if (context.getGroupPrefixBeforeOpeningCurly() != null) {
-				if (keyword.startsWith(context.getPrefixBeforeCursor())) {
-					reporter.reportKeyword(keyword, getSuffix(context), getReplacementRange(context));
-				}
-				return;
-			}
-		}
-		if (keyword.startsWith(completionContext.getPrefix())) {
-			reporter.reportKeyword(keyword, getSuffix(completionContext), getReplacementRange(completionContext));
-		}
 	}
 
 	@Override
@@ -84,12 +59,7 @@ public class UseNameStrategy extends TypesStrategy {
 	}
 
 	@Override
-	public String getSuffix(AbstractCompletionContext abstractContext) {
-		return isInsertMode() && abstractContext.hasSpaceAtPosition(abstractContext.getOffset()) ? "" : " "; //$NON-NLS-1$ //$NON-NLS-2$
-	}
-
-	@Override
 	protected int getExtraInfo() {
-		return ProposalExtraInfo.TYPE_ONLY | ProposalExtraInfo.NO_INSERT_USE | ProposalExtraInfo.FULL_NAME;
+		return ProposalExtraInfo.NO_INSERT_USE | ProposalExtraInfo.FULL_NAME;
 	}
 }
