@@ -17,11 +17,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.*;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext;
@@ -91,12 +91,13 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 					if (concreteContext.isInUseTraitStatement()) {
 						// result.add(method);
 						reporter.reportMethod(method, "", //$NON-NLS-1$
-								replaceRange, ProposalExtraInfo.METHOD_ONLY);
+								replaceRange, ProposalExtraInfo.METHOD_ONLY | ProposalExtraInfo.FULL_NAME);
 					} else if ((!PHPModelUtils.isConstructor(method)
 							|| inConstructor && isSuperConstructor(method, type, concreteContext))
 							&& !isFiltered(method, type, concreteContext)) {
 						if (magicMethods.contains(method.getElementName())) {
-							reporter.reportMethod(method, suffix, replaceRange, ProposalExtraInfo.MAGIC_METHOD);
+							reporter.reportMethod(method, suffix, replaceRange,
+									ProposalExtraInfo.MAGIC_METHOD | ProposalExtraInfo.FULL_NAME);
 						} else {
 							result.add(method);
 						}
@@ -107,7 +108,7 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 			}
 		}
 		for (IMethod method : result) {
-			reporter.reportMethod(method, suffix, replaceRange);
+			reporter.reportMethod(method, suffix, replaceRange, ProposalExtraInfo.FULL_NAME);
 		}
 	}
 

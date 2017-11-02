@@ -113,7 +113,7 @@ public class VariablesStrategy extends ElementsStrategy {
 					if (!requestor.isContextInformationMode() || variable.length() == prefix.length()) {
 						reporter.reportField(
 								new FakeField((ModelElement) abstractContext.getSourceModule(), variable, 0, 0), "", //$NON-NLS-1$
-								replaceRange, false); // NON-NLS-1
+								replaceRange, false);
 					}
 				}
 			}
