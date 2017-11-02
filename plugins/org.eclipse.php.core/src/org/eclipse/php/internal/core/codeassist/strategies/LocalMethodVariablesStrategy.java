@@ -71,8 +71,7 @@ public class LocalMethodVariablesStrategy extends ElementsStrategy {
 			if (declaringType != null) {
 				if (THIS.startsWith(prefix)) {
 					reporter.reportField(new FakeField((ModelElement) declaringType, THIS, 0, 0), suffix, replaceRange,
-							false, ICompletionReporter.RELEVANCE_ADJUST); // NON-NLS-1
-																			// //$NON-NLS-2$
+							false, ICompletionReporter.RELEVANCE_ADJUST, null);
 				}
 			} else {
 				if (enclosingMethod.getParent() instanceof IField
@@ -82,8 +81,7 @@ public class LocalMethodVariablesStrategy extends ElementsStrategy {
 						declaringType = method.getDeclaringType();
 						if (declaringType != null && THIS.startsWith(prefix)) {
 							reporter.reportField(new FakeField((ModelElement) declaringType, THIS, 0, 0), suffix,
-									replaceRange, false, ICompletionReporter.RELEVANCE_ADJUST); // NON-NLS-1
-																								// //$NON-NLS-2$
+									replaceRange, false, ICompletionReporter.RELEVANCE_ADJUST, null);
 						}
 					}
 				}
@@ -93,7 +91,7 @@ public class LocalMethodVariablesStrategy extends ElementsStrategy {
 		for (IModelElement element : PHPModelUtils.getMethodFields(enclosingMethod, prefix,
 				requestor.isContextInformationMode(), null)) {
 			reporter.reportField((IField) element, "", replaceRange, false, //$NON-NLS-1$
-					ICompletionReporter.RELEVANCE_ADJUST);
+					ICompletionReporter.RELEVANCE_ADJUST, null);
 		}
 
 		PHPVersion phpVersion = concreteContext.getPHPVersion();
@@ -102,7 +100,7 @@ public class LocalMethodVariablesStrategy extends ElementsStrategy {
 				if (!requestor.isContextInformationMode() || variable.length() == prefix.length()) {
 					reporter.reportField(
 							new FakeField((ModelElement) concreteContext.getSourceModule(), variable, 0, 0), "", //$NON-NLS-1$
-							replaceRange, false, -ICompletionReporter.RELEVANCE_ADJUST); // NON-NLS-1
+							replaceRange, false, -ICompletionReporter.RELEVANCE_ADJUST, null);
 				}
 			}
 		}
