@@ -44,7 +44,7 @@ public class GlobalKeywordsStrategy extends KeywordsStrategy {
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		ICompletionContext context = getContext();
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
-		if (StringUtils.isBlank(abstractContext.getPrefixWithoutProcessing())) {
+		if (StringUtils.isBlank(abstractContext.getPrefix())) {
 			return;
 		}
 		super.apply(reporter);
