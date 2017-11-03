@@ -72,14 +72,14 @@ public class PHPCompletionProposal extends ScriptCompletionProposal implements I
 
 		if (!result && ProposalExtraInfo.isClassInNamespace(getExtraInfo()) && (getModelElement() instanceof IType)) {
 			IType type = (IType) getModelElement();
-			if (ProposalExtraInfo.isAbsolute(getExtraInfo())) {
+			if (ProposalExtraInfo.isAbsoluteName(getExtraInfo())) {
 				result = isPrefix(prefix.substring(1), PHPModelUtils.getFullName(type));
 			} else {
 				result = isPrefix(prefix, PHPModelUtils.getFullName(type));
 			}
 		}
 		if (!result && ProposalExtraInfo.isFullName(getExtraInfo()) && getModelElement() != null) {
-			if (ProposalExtraInfo.isAbsolute(getExtraInfo())) {
+			if (ProposalExtraInfo.isAbsoluteName(getExtraInfo())) {
 				result = isPrefix(prefix.substring(1), PHPModelUtils.getFullName(getModelElement()));
 			} else {
 				result = isPrefix(prefix, PHPModelUtils.getFullName(getModelElement()));

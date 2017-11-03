@@ -429,7 +429,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		int wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementLength); // read
 																									// whitespace
 		int wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
-		if (wordStart < 0 || wordEnd < 0 || wordStart > wordEnd) {
+		if (wordStart < 0 || wordEnd < 0) {
 			return ""; //$NON-NLS-1$
 		}
 		String previousWord = statementText.subSequence(wordStart, wordEnd).toString();
@@ -441,7 +441,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, wordStart - 1); // read
 																								// whitespace
 		wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
-		if (wordStart < 0 || wordEnd < 0 || wordStart > wordEnd) {
+		if (wordStart < 0 || wordEnd < 0) {
 			return ""; //$NON-NLS-1$
 		}
 		previousWord = statementText.subSequence(wordStart, wordEnd).toString();
@@ -469,7 +469,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 			wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
 
 		}
-		if (wordStart < 0 || wordEnd < 0 || wordStart > wordEnd) {
+		if (wordStart < 0 || wordEnd < 0) {
 			return ""; //$NON-NLS-1$
 		}
 		String previousWord = statementText.subSequence(wordStart, wordEnd).toString();
@@ -481,7 +481,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, wordStart - 1); // read
 																								// whitespace
 		wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
-		if (wordStart < 0 || wordEnd < 0 || wordStart > wordEnd) {
+		if (wordStart < 0 || wordEnd < 0) {
 			return ""; //$NON-NLS-1$
 		}
 		previousWord = statementText.subSequence(wordStart, wordEnd).toString();
@@ -509,7 +509,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 			wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
 
 		}
-		if (wordStart < 0 || wordEnd < 0 || wordStart > wordEnd) {
+		if (wordStart < 0 || wordEnd < 0) {
 			return wordStart;
 		}
 
@@ -520,7 +520,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, wordStart - 1); // read
 																								// whitespace
 		wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
-		// if (wordStart < 0 || wordEnd < 0 || wordStart > wordEnd) {
+		// if (wordStart < 0 || wordEnd < 0) {
 		// return wordStart;
 		// }
 

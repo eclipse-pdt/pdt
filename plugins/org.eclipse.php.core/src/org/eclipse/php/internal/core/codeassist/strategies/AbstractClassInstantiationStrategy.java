@@ -71,7 +71,7 @@ public abstract class AbstractClassInstantiationStrategy extends TypesStrategy {
 					ISourceRange nsReplaceRange = getReplacementRange(concreteContext);
 					int extraInfo = getExtraInfo();
 					if (concreteContext.isAbsoluteName()) {
-						extraInfo |= ProposalExtraInfo.ABSOLUTE;
+						extraInfo |= ProposalExtraInfo.ABSOLUTE_NAME;
 					}
 					reporter.reportType(type, NamespaceReference.NAMESPACE_DELIMITER, nsReplaceRange,
 							extraInfo | ProposalExtraInfo.CLASS_IN_NAMESPACE);
@@ -84,14 +84,14 @@ public abstract class AbstractClassInstantiationStrategy extends TypesStrategy {
 				// here we use fake method,and do the real work in class
 				// ParameterGuessingProposal
 				IMethod ctorMethod = FakeConstructor.createFakeConstructor(null, type, type.equals(enclosingClass));
-				reporter.reportMethod(ctorMethod, suffix, replaceRange);
+				reporter.reportMethod(ctorMethod, suffix, replaceRange, ProposalExtraInfo.FULL_NAME);
 			} else {
 				// if this is context information mode,we use this,
 				// because the number of types' length is very small
 				IMethod[] ctors = FakeConstructor.getConstructors(type, type.equals(enclosingClass));
 				if (ctors != null && ctors.length == 2) {
 					if (ctors[1] != null) {
-						reporter.reportMethod(ctors[1], suffix, replaceRange);
+						reporter.reportMethod(ctors[1], suffix, replaceRange, ProposalExtraInfo.FULL_NAME);
 					} else if (ctors[0] == null) {
 						reporter.reportType(type, suffix, replaceRange);
 					}
@@ -107,7 +107,7 @@ public abstract class AbstractClassInstantiationStrategy extends TypesStrategy {
 			ISourceRange replacementRange, IType type, String fullyQualifiedName, String alias, String suffix) {
 		IType aliasType = new AliasType((ModelElement) type, fullyQualifiedName, alias);
 		IMethod ctorMethod = FakeConstructor.createFakeConstructor(null, aliasType, type.equals(enclosingClass));
-		reporter.reportMethod(ctorMethod, "", replacementRange); //$NON-NLS-1$
+		reporter.reportMethod(ctorMethod, "", replacementRange, ProposalExtraInfo.FULL_NAME); //$NON-NLS-1$
 	}
 
 	@Override
