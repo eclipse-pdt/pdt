@@ -24,7 +24,10 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
-import org.eclipse.php.internal.core.codeassist.*;
+import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
+import org.eclipse.php.internal.core.codeassist.CompletionFlag;
+import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
+import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.model.PHPModelAccess;
 
@@ -62,7 +65,7 @@ public class TypeInStringStrategy extends AbstractCompletionStrategy {
 				return;
 			}
 		}
-		if (StringUtils.isBlank(abstractContext.getPrefixWithoutProcessing())) {
+		if (StringUtils.isBlank(abstractContext.getPrefix())) {
 			return;
 		}
 		ISourceRange replacementRange = getReplacementRange(abstractContext);

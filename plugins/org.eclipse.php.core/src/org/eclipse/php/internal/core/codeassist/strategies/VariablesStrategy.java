@@ -113,7 +113,7 @@ public class VariablesStrategy extends ElementsStrategy {
 					if (!requestor.isContextInformationMode() || variable.length() == prefix.length()) {
 						reporter.reportField(
 								new FakeField((ModelElement) abstractContext.getSourceModule(), variable, 0, 0), "", //$NON-NLS-1$
-								replaceRange, false); // NON-NLS-1
+								replaceRange, false);
 					}
 				}
 			}
@@ -153,9 +153,13 @@ public class VariablesStrategy extends ElementsStrategy {
 	protected IDLTKSearchScope createSearchScope() {
 		ICompletionContext context = getContext();
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
-		if (StringUtils.isBlank(abstractContext.getPrefixWithoutProcessing())) {
-			ISourceModule sourceModule = ((AbstractCompletionContext) context).getSourceModule();
-			return SearchEngine.createSearchScope(sourceModule);
+		try {
+			if (StringUtils.isBlank(abstractContext.getPrefix())) {
+				ISourceModule sourceModule = ((AbstractCompletionContext) context).getSourceModule();
+				return SearchEngine.createSearchScope(sourceModule);
+			}
+		} catch (BadLocationException e) {
+			PHPCorePlugin.log(e);
 		}
 		return super.createSearchScope();
 	}

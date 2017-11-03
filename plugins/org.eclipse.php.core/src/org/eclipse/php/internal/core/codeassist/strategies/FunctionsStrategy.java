@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,6 +30,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.AliasMethod;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
+import org.eclipse.php.internal.core.codeassist.contexts.UseStatementContext;
 import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
@@ -57,15 +58,23 @@ public class FunctionsStrategy extends ElementsStrategy {
 			return;
 		}
 
+		String nsUseGroupPrefix = null;
+		if (context instanceof UseStatementContext) {
+			nsUseGroupPrefix = ((UseStatementContext) context).getGroupPrefixBeforeOpeningCurly();
+		}
+
 		int extraInfo = getExtraInfo();
 		if (abstractContext.isAbsoluteName()) {
-			extraInfo |= ProposalExtraInfo.FULL_NAME;
 			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
-			extraInfo |= ProposalExtraInfo.ABSOLUTE;
+			extraInfo |= ProposalExtraInfo.ABSOLUTE_NAME;
 		}
 
 		if (abstractContext.isAbsolute()) {
-			extraInfo |= ProposalExtraInfo.FULL_NAME;
+			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
+		}
+
+		if (nsUseGroupPrefix != null) {
+			extraInfo |= ProposalExtraInfo.NO_INSERT_NAMESPACE;
 			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
 		}
 
@@ -79,13 +88,19 @@ public class FunctionsStrategy extends ElementsStrategy {
 		String namespaceName = abstractContext.getQualifier(true);
 		functions = PHPModelAccess.getDefault().findFunctions(namespaceName, memberName, matchRule, 0, 0, scope, null);
 
-		ISourceRange replacementRange = abstractContext.isAbsoluteName() || abstractContext.isAbsolute()
-				? getReplacementRange(abstractContext)
-				: getReplacementRangeForMember(abstractContext);
+		ISourceRange replacementRange = getReplacementRange(abstractContext);
+		ISourceRange memberReplacementRange = getReplacementRangeForMember(abstractContext);
+		boolean isAbsoluteMethod = abstractContext.isAbsoluteName() || abstractContext.isAbsolute();
 		String suffix = getSuffix(abstractContext);
 		String namespace = abstractContext.getCurrentNamespace();
 		for (IMethod method : functions) {
-			reporter.reportMethod(method, suffix, replacementRange, extraInfo, getRelevance(namespace, method));
+			if (nsUseGroupPrefix != null) {
+				reporter.reportMethod(method, nsUseGroupPrefix, suffix, memberReplacementRange, extraInfo,
+						getRelevance(namespace, method));
+			} else {
+				reporter.reportMethod(method, suffix, isAbsoluteMethod ? replacementRange : memberReplacementRange,
+						extraInfo, getRelevance(namespace, method));
+			}
 		}
 
 		addAlias(reporter, suffix);
@@ -97,7 +112,7 @@ public class FunctionsStrategy extends ElementsStrategy {
 		if (abstractContext.getCompletionRequestor().isContextInformationMode()) {
 			return;
 		}
-		String prefix = abstractContext.getPrefixWithoutProcessing();
+		String prefix = abstractContext.getPrefix();
 		if (prefix.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) != -1) {
 			return;
 		}
@@ -158,7 +173,7 @@ public class FunctionsStrategy extends ElementsStrategy {
 	}
 
 	protected int getExtraInfo() {
-		return ProposalExtraInfo.DEFAULT;
+		return ProposalExtraInfo.DEFAULT | ProposalExtraInfo.FULL_NAME;
 	}
 
 }

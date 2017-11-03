@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,6 +37,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.AliasField;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
+import org.eclipse.php.internal.core.codeassist.contexts.UseStatementContext;
 import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
@@ -61,7 +62,7 @@ public class ConstantsStrategy extends ElementsStrategy {
 
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
 		CompletionRequestor requestor = abstractContext.getCompletionRequestor();
-		if (StringUtils.isBlank(abstractContext.getPrefixWithoutProcessing())) {
+		if (StringUtils.isBlank(abstractContext.getPrefix())) {
 			return;
 		}
 
@@ -70,7 +71,10 @@ public class ConstantsStrategy extends ElementsStrategy {
 			return;
 		}
 
-		int extraInfo = getExtraInfo();
+		String nsUseGroupPrefix = null;
+		if (context instanceof UseStatementContext) {
+			nsUseGroupPrefix = ((UseStatementContext) context).getGroupPrefixBeforeOpeningCurly();
+		}
 
 		MatchRule matchRule = MatchRule.PREFIX;
 		if (requestor.isContextInformationMode()) {
@@ -94,7 +98,8 @@ public class ConstantsStrategy extends ElementsStrategy {
 		IDLTKSearchScope scope = null;
 		IModelElement[] enclosingTypeConstants = null;
 
-		if (enclosingType != null && isStartOfStatement(prefix, abstractContext, abstractContext.getOffset())) {
+		if (enclosingType != null && nsUseGroupPrefix != null
+				&& isStartOfStatement(prefix, abstractContext, abstractContext.getOffset())) {
 			// See the case of testClassStatement1.pdtt and
 			// testClassStatement2.pdtt
 			scope = SearchEngine.createSearchScope(enclosingType);
@@ -104,16 +109,23 @@ public class ConstantsStrategy extends ElementsStrategy {
 
 		String memberName = abstractContext.getMemberName();
 		String namespaceName = abstractContext.getQualifier(true);
+		int extraInfo = getExtraInfo();
 		if (abstractContext.isAbsoluteName()) {
 			extraInfo |= ProposalExtraInfo.FULL_NAME;
 			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
-			extraInfo |= ProposalExtraInfo.ABSOLUTE;
+			extraInfo |= ProposalExtraInfo.ABSOLUTE_NAME;
 		}
 
 		if (abstractContext.isAbsolute()) {
 			extraInfo |= ProposalExtraInfo.FULL_NAME;
 			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
 		}
+
+		if (nsUseGroupPrefix != null) {
+			extraInfo |= ProposalExtraInfo.NO_INSERT_NAMESPACE;
+			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
+		}
+
 		enclosingTypeConstants = PHPModelAccess.getDefault().findFileFields(namespaceName, memberName, matchRule,
 				Modifiers.AccConstant, 0, scope, null);
 
@@ -123,12 +135,18 @@ public class ConstantsStrategy extends ElementsStrategy {
 		// workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=310383
 		enclosingTypeConstants = filterClassConstants(enclosingTypeConstants);
 		// workaround end
-		ISourceRange replaceRange = abstractContext.isAbsoluteName() || abstractContext.isAbsolute()
-				? getReplacementRange(abstractContext)
-				: getReplacementRangeForMember(abstractContext);
+		ISourceRange replacementRange = getReplacementRange(abstractContext);
+		ISourceRange memberReplacementRange = getReplacementRangeForMember(abstractContext);
+		boolean isAbsoluteField = abstractContext.isAbsoluteName() || abstractContext.isAbsolute();
 		for (IModelElement constant : enclosingTypeConstants) {
 			IField field = (IField) constant;
-			reporter.reportField(field, "", replaceRange, false, 0, extraInfo); //$NON-NLS-1$
+			if (nsUseGroupPrefix != null) {
+				reporter.reportField(field, nsUseGroupPrefix, "", memberReplacementRange, 0, //$NON-NLS-1$
+						extraInfo);
+			} else {
+				reporter.reportField(field, "", isAbsoluteField ? replacementRange : memberReplacementRange, false, 0,
+						extraInfo); // $NON-NLS-1$
+			}
 		}
 		addAlias(reporter);
 	}
@@ -139,7 +157,7 @@ public class ConstantsStrategy extends ElementsStrategy {
 		if (abstractContext.getCompletionRequestor().isContextInformationMode()) {
 			return;
 		}
-		String prefix = abstractContext.getPrefixWithoutProcessing();
+		String prefix = abstractContext.getPrefix();
 		if (prefix.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) != -1) {
 			return;
 		}
