@@ -129,8 +129,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 * Determines the structured document region of the place in PHP code where
 	 * completion was requested
 	 * 
-	 * @return structured document region or <code>null</code> in case it could not
-	 *         be determined
+	 * @return structured document region or <code>null</code> in case it could
+	 *         not be determined
 	 */
 	protected IStructuredDocumentRegion determineStructuredDocumentRegion(IStructuredDocument document, int offset) {
 
@@ -150,8 +150,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 * Determines the relevant region collection of the place in PHP code where
 	 * completion was requested
 	 * 
-	 * @return text region collection or <code>null</code> in case it could not be
-	 *         determined
+	 * @return text region collection or <code>null</code> in case it could not
+	 *         be determined
 	 */
 	protected ITextRegionCollection determineRegionCollection(IStructuredDocument document,
 			IStructuredDocumentRegion sdRegion, int offset) {
@@ -183,7 +183,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	/**
-	 * Determines the PHP script region of PHP code where completion was requested
+	 * Determines the PHP script region of PHP code where completion was
+	 * requested
 	 * 
 	 * @return php script region or <code>null</code> in case it could not be
 	 *         determined
@@ -243,8 +244,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	/**
-	 * Determines the document associated with the editor where code assist has been
-	 * invoked.
+	 * Determines the document associated with the editor where code assist has
+	 * been invoked.
 	 * 
 	 * @param module
 	 *            Source module ({@link ISourceModule})
@@ -314,7 +315,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	/**
-	 * Returns document associated with the editor where code assist was requested
+	 * Returns document associated with the editor where code assist was
+	 * requested
 	 * 
 	 * @return document
 	 * @see #isValid(ISourceModule, int, CompletionRequestor)
@@ -366,8 +368,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	/**
-	 * Returns whether there are whitespace characters before the cursor where code
-	 * assist was being invoked
+	 * Returns whether there are whitespace characters before the cursor where
+	 * code assist was being invoked
 	 * 
 	 * @return <code>true</code> if there are whitespace characters before the
 	 *         cursor
@@ -385,10 +387,12 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 * Returns whether there is a space character at offset position or not.<br>
 	 * <b>IMPORTANT</b>: note that while {@link #getNextChar()} and
 	 * {@link #getChar(int offset)} will return a space when cursor is at end of
-	 * document, this method will return false when cursor is at end of document.
+	 * document, this method will return false when cursor is at end of
+	 * document.
 	 * 
-	 * @return <code>true</code> if there is a space character at offset position,
-	 *         false otherwise or false when cursor is at end of document
+	 * @return <code>true</code> if there is a space character at offset
+	 *         position, false otherwise or false when cursor is at end of
+	 *         document
 	 */
 	public boolean hasSpaceAtPosition(int offset) {
 		try {
@@ -429,7 +433,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		int wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementLength); // read
 																									// whitespace
 		int wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
-		if (wordStart < 0 || wordEnd < 0 || wordStart > wordEnd) {
+		if (wordStart < 0 || wordEnd < 0) {
 			return ""; //$NON-NLS-1$
 		}
 		String previousWord = statementText.subSequence(wordStart, wordEnd).toString();
@@ -441,7 +445,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, wordStart - 1); // read
 																								// whitespace
 		wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
-		if (wordStart < 0 || wordEnd < 0 || wordStart > wordEnd) {
+		if (wordStart < 0 || wordEnd < 0) {
 			return ""; //$NON-NLS-1$
 		}
 		previousWord = statementText.subSequence(wordStart, wordEnd).toString();
@@ -469,7 +473,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 			wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
 
 		}
-		if (wordStart < 0 || wordEnd < 0 || wordStart > wordEnd) {
+		if (wordStart < 0 || wordEnd < 0) {
 			return ""; //$NON-NLS-1$
 		}
 		String previousWord = statementText.subSequence(wordStart, wordEnd).toString();
@@ -481,7 +485,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, wordStart - 1); // read
 																								// whitespace
 		wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
-		if (wordStart < 0 || wordEnd < 0 || wordStart > wordEnd) {
+		if (wordStart < 0 || wordEnd < 0) {
 			return ""; //$NON-NLS-1$
 		}
 		previousWord = statementText.subSequence(wordStart, wordEnd).toString();
@@ -509,7 +513,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 			wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
 
 		}
-		if (wordStart < 0 || wordEnd < 0 || wordStart > wordEnd) {
+		if (wordStart < 0 || wordEnd < 0) {
 			return wordStart;
 		}
 
@@ -520,7 +524,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, wordStart - 1); // read
 																								// whitespace
 		wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
-		// if (wordStart < 0 || wordEnd < 0 || wordStart > wordEnd) {
+		// if (wordStart < 0 || wordEnd < 0) {
 		// return wordStart;
 		// }
 
@@ -556,10 +560,6 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 * @throws BadLocationException
 	 */
 	public String getPrefix() throws BadLocationException {
-		return getPrefixWithoutProcessing();
-	}
-
-	public String getPrefixWithoutProcessing() {
 		if (hasWhitespaceBeforeCursor()) {
 			return ""; //$NON-NLS-1$
 		}
@@ -662,8 +662,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	/**
-	 * Returns next character after the cursor position (or ' ' if cursor position
-	 * is at end of document)
+	 * Returns next character after the cursor position (or ' ' if cursor
+	 * position is at end of document)
 	 * 
 	 * @throws BadLocationException
 	 */
