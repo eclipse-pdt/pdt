@@ -195,6 +195,16 @@ public class ComposerProject implements IComposerProject {
 		if (namespace == null) {
 			namespace = getPsrNamespace(path, autoload.getPsr0());
 		}
+		if (namespace == null) {
+			autoload = getComposerPackage().getAutoloadDev();
+
+			// look for psr4 first
+			namespace = getPsrNamespace(path, autoload.getPsr4());
+
+			if (namespace == null) {
+				namespace = getPsrNamespace(path, autoload.getPsr0());
+			}
+		}
 
 		return namespace;
 	}

@@ -13,17 +13,17 @@ package org.eclipse.php.composer.ui.editor.composer;
 
 import org.eclipse.php.composer.api.objects.Autoload;
 
-public class AutoloadPage extends AbstractAutoloadPage {
+public class AutoloadDevPage extends AbstractAutoloadPage {
 
-	public AutoloadPage(ComposerFormEditor editor, String id, String title) {
+	public AutoloadDevPage(ComposerFormEditor editor, String id, String title) {
 		super(editor, id, title);
 	}
 
-	public final static String ID = "org.eclipse.php.composer.ui.editor.composer.AutoloadPage"; //$NON-NLS-1$
+	public final static String ID = "org.eclipse.php.composer.ui.editor.composer.AutoloadDevPage"; //$NON-NLS-1$
 
 	@Override
 	protected Autoload getAutoload() {
-		return getComposerEditor().getComposerPackge().getAutoload();
+		return getComposerEditor().getComposerPackge().getAutoloadDev();
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class AutoloadPage extends AbstractAutoloadPage {
 		super.setActive(active);
 
 		if (active) {
-			editor.getHeaderForm().getForm().setText(Messages.AutoloadPage_Title);
+			editor.getHeaderForm().getForm().setText(Messages.AutoloadDevPage_Title);
 		}
 	}
 

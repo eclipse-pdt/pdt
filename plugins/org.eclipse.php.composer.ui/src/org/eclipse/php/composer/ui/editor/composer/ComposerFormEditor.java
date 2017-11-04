@@ -77,6 +77,7 @@ public class ComposerFormEditor extends SharedHeaderFormEditor {
 	protected DependenciesPage dependenciesPage;
 	protected ConfigurationPage configurationPage;
 	protected AutoloadPage autoloadPage;
+	protected AutoloadDevPage autoloadDevPage;
 	protected StructuredTextEditor jsonEditor;
 	protected DependencyGraphPage graphPage;
 
@@ -183,6 +184,7 @@ public class ComposerFormEditor extends SharedHeaderFormEditor {
 		configurationPage = new ConfigurationPage(this, ConfigurationPage.ID,
 				Messages.ComposerFormEditor_ConfigurationPageName);
 		autoloadPage = new AutoloadPage(this, AutoloadPage.ID, Messages.ComposerFormEditor_AutoloadPageName);
+		autoloadDevPage = new AutoloadDevPage(this, AutoloadPage.ID, Messages.ComposerFormEditor_AutoloadDevPageName);
 		graphPage = new DependencyGraphPage(this, DependencyGraphPage.ID,
 				Messages.ComposerFormEditor_DependencyGraphPageName);
 
@@ -221,6 +223,7 @@ public class ComposerFormEditor extends SharedHeaderFormEditor {
 			addPage(overviewPage);
 			addPage(dependenciesPage);
 			addPage(autoloadPage);
+			addPage(autoloadDevPage);
 			addPage(configurationPage);
 			addPage(graphPage);
 			jsonEditorIndex = addPage(jsonEditor, getEditorInput());

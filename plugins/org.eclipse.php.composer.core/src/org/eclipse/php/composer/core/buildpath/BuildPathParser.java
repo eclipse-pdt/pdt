@@ -101,8 +101,11 @@ public class BuildPathParser {
 			prefix += "/"; //$NON-NLS-1$
 		}
 
-		Autoload a = pkg.getAutoload();
+		parseAutoload(pkg.getAutoload(), paths, prefix, type);
+		parseAutoload(pkg.getAutoloadDev(), paths, prefix, type);
+	}
 
+	private void parseAutoload(Autoload a, TreeSet<BuildPathInfo> paths, String prefix, int type) {
 		// psr-0
 		for (Namespace namespace : a.getPsr0()) {
 			for (Object path : namespace.getPaths()) {

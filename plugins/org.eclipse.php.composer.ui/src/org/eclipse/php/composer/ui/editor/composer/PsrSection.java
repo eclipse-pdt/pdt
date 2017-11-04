@@ -25,10 +25,10 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.composer.api.collection.Psr;
+import org.eclipse.php.composer.api.objects.Autoload;
 import org.eclipse.php.composer.api.objects.Namespace;
 import org.eclipse.php.composer.ui.controller.PsrController;
 import org.eclipse.php.composer.ui.dialogs.PsrDialog;
-import org.eclipse.php.composer.ui.editor.ComposerFormPage;
 import org.eclipse.php.composer.ui.editor.FormLayoutFactory;
 import org.eclipse.php.composer.ui.editor.TreeSection;
 import org.eclipse.php.composer.ui.parts.TreePart;
@@ -56,7 +56,7 @@ public abstract class PsrSection extends TreeSection implements PropertyChangeLi
 
 	protected Psr psr = null;
 
-	public PsrSection(ComposerFormPage page, Composite parent) {
+	public PsrSection(AbstractAutoloadPage page, Composite parent) {
 		super(page, parent, Section.DESCRIPTION, new String[] { Messages.PsrSection_AddButton,
 				Messages.PsrSection_EditButton, Messages.PsrSection_RemoveButton });
 
@@ -67,6 +67,10 @@ public abstract class PsrSection extends TreeSection implements PropertyChangeLi
 	abstract protected Psr getPsr();
 
 	abstract protected String getPsrName();
+
+	protected Autoload getAutoload() {
+		return ((AbstractAutoloadPage) getPage()).getAutoload();
+	}
 
 	@Override
 	protected void createClient(Section section, FormToolkit toolkit) {

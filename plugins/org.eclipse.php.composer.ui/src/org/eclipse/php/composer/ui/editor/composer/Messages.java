@@ -28,7 +28,9 @@ public class Messages extends NLS {
 	public static String AuthorSection_Title;
 	public static String AuthorSection_YesButton;
 	public static String AutoloadPage_Title;
+	public static String AutoloadDevPage_Title;
 	public static String ComposerFormEditor_AutoloadPageName;
+	public static String ComposerFormEditor_AutoloadDevPageName;
 	public static String ComposerFormEditor_ConfigurationPageName;
 	public static String ComposerFormEditor_DependenciesPageName;
 	public static String ComposerFormEditor_DependencyGraphPageName;

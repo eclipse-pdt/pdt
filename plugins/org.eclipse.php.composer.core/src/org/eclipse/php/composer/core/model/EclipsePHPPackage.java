@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.php.composer.api.ComposerPackage;
 import org.eclipse.php.composer.api.objects.Autoload;
-import org.eclipse.php.composer.core.log.Logger;
 
 public class EclipsePHPPackage implements NamespaceResolverInterface, InstallableItem {
 	private final ComposerPackage phpPackage;
@@ -33,21 +32,24 @@ public class EclipsePHPPackage implements NamespaceResolverInterface, Installabl
 
 	@Override
 	public IPath resolve(IResource resource) {
-		Autoload autoload = phpPackage.getAutoload();
-
-		if (autoload == null || autoload.getPsr0() == null || autoload.getPsr0().getFirst() == null) {
-			Logger.debug("Unable to resolve namespace without autoload information " + phpPackage.getName()); //$NON-NLS-1$
-			return null;
+		IPath ns = resolve(resource, phpPackage.getAutoload());
+		if (ns == null) {
+			ns = resolve(resource, phpPackage.getAutoloadDev());
 		}
 
+		return ns;
+	}
+
+	protected IPath resolve(IResource resource, Autoload autoload) {
+		if (autoload == null || autoload.getPsr0() == null || autoload.getPsr0().getFirst() == null) {
+			return null;
+		}
 		String targetDir = phpPackage.getTargetDir();
 		IPath ns = null;
 		IPath path = resource.getFullPath();
 		IPath composerPath = getPath();
-
 		IPath psr0Path = composerPath.append(autoload.getPsr0().getFirst().getNamespace());
 		int segments = psr0Path.segmentCount();
-
 		if (path.matchingFirstSegments(psr0Path) == segments) {
 
 			if (targetDir != null && targetDir.length() > 0) {
@@ -58,7 +60,6 @@ public class EclipsePHPPackage implements NamespaceResolverInterface, Installabl
 			}
 
 		}
-
 		return ns;
 	}
 

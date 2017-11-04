@@ -12,18 +12,17 @@
 package org.eclipse.php.composer.ui.editor.composer;
 
 import org.eclipse.php.composer.api.collection.Psr;
-import org.eclipse.php.composer.ui.editor.ComposerFormPage;
 import org.eclipse.swt.widgets.Composite;
 
 public class Psr4Section extends PsrSection {
 
-	public Psr4Section(ComposerFormPage page, Composite parent) {
+	public Psr4Section(AbstractAutoloadPage page, Composite parent) {
 		super(page, parent);
 	}
 
 	@Override
 	protected Psr getPsr() {
-		return composerPackage.getAutoload().getPsr4();
+		return getAutoload().getPsr4();
 	}
 
 	@Override

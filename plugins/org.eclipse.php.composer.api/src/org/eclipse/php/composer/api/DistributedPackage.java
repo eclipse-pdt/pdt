@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.composer.api;
 
+import org.eclipse.php.composer.api.annotation.Name;
 import org.eclipse.php.composer.api.objects.Autoload;
 import org.eclipse.php.composer.api.objects.Distribution;
 import org.eclipse.php.composer.api.objects.Source;
@@ -18,6 +19,10 @@ import org.eclipse.php.composer.api.objects.Source;
 public abstract class DistributedPackage extends VersionedPackage {
 
 	protected Autoload autoload = new Autoload();
+
+	@Name("autoload-dev")
+	protected Autoload autoloadDev = new Autoload();
+
 	protected Distribution dist = new Distribution();
 	protected Source source = new Source();
 
@@ -47,6 +52,13 @@ public abstract class DistributedPackage extends VersionedPackage {
 	 */
 	public Autoload getAutoload() {
 		return autoload;
+	}
+
+	/**
+	 * @return
+	 */
+	public Autoload getAutoloadDev() {
+		return autoloadDev;
 	}
 
 	/**

@@ -10,5 +10,15 @@
         },
         "classmap": ["src/", "lib/", "Something.php"],
         "files": ["src/MyLibrary/functions.php"]
+    },
+    "autoload-dev": {
+        "psr-0": { 
+        	"gossi": "src/gossi",
+        	"Monolog": ["src/", "lib/"],
+        	"UniqueGlobalClass": "",
+        	"": "etc/"
+        },
+        "classmap": ["src/", "lib/", "Something.php"],
+        "files": ["src/MyLibrary/functions.php"]
     }
 }

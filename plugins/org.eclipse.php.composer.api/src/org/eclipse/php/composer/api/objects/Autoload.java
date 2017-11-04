@@ -18,6 +18,7 @@ import org.eclipse.php.composer.api.collection.Psr;
  * Represents the autoload entity of a composer package.
  * 
  * @see http://getcomposer.org/doc/04-schema.md#autoload
+ * @see http://getcomposer.org/doc/04-schema.md#autoload-dev
  * @author Robert Gruendler <r.gruendler@gmail.com>
  * @author Thomas Gossmann <gos.si>
  */
