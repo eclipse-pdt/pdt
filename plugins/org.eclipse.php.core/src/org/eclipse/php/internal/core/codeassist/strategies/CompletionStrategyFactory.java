@@ -227,10 +227,10 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 
 		}
 		if (contextClass == UseConstNameContext.class) {
-			return new ICompletionStrategy[] { new ConstantsStrategy(context), new NamespacesStrategy(context) };
+			return new ICompletionStrategy[] { new UseConstStrategy(context), new NamespacesStrategy(context) };
 		}
 		if (contextClass == UseFunctionNameContext.class) {
-			return new ICompletionStrategy[] { new FunctionsStrategy(context), new NamespacesStrategy(context) };
+			return new ICompletionStrategy[] { new UseFunctionStrategy(context), new NamespacesStrategy(context) };
 		}
 
 		if (contextClass == IncludeStatementContext.class) {

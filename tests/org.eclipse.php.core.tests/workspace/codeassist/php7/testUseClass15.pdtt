@@ -1,5 +1,5 @@
 --TEST--
-Bug 521134 - content assist doesn't work with grouped use statements
+No bug - better CA for mixed use group statements
 --FILE--
 <?php
 namespace MyUseClass01\Space;
@@ -42,13 +42,8 @@ const CONST1 = 0;
 function foo1() {
 }
 
-use MyUseClass01\Space\ { MyClass as A, AB\MyClass3 as B };
-use MyUseClass01\ { | as C, \Space2\A\MyClass2 as D, \Space\AB\MyClass3 as E };
-use const MyUseClass01\ { Space2\A\CONST1 as F, \Space\AB\CONST1 as G };
-use function MyUseClass01\ { Space2\A\foo1 as H, \Space\A\foo1 as I };
+use MyUseClass01\ { \Space2\A\MyClass2 as D, const Space\A\CONST1 as E, const | as C };
 --EXPECT--
-keyword(const)
-keyword(function)
 type(MyUseClass01\Space)
 type(MyUseClass01\Space\A)
 type(MyUseClass01\Space2\A)
