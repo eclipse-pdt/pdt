@@ -44,10 +44,10 @@ public class ClassInstantiationStrategy extends AbstractClassInstantiationStrate
 
 		// for anonymous class (PHP 7)
 		if (completionContext.getPHPVersion().isGreaterThan(PHPVersion.PHP5_6)) {
-			String prefix = completionContext.getPrefixWithoutProcessing();
+			String prefix = completionContext.getPrefix();
 			ISourceRange replaceRange = getReplacementRangeForMember(completionContext);
 			if (CLASS_KEYWORD.startsWith(prefix) && prefix.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) == -1) {
-				reporter.reportKeyword(CLASS_KEYWORD, "", replaceRange); // $NON-NLS-1$
+				reporter.reportKeyword(CLASS_KEYWORD, "", replaceRange); //$NON-NLS-1$
 			}
 		}
 	}
