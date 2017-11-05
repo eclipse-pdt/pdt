@@ -38,7 +38,7 @@ class Aliased_Talker {
 --EXPECT--
 <Program start='0' length='508'>
 	<Statements>
-		<TraitDeclaration start='7' length='125''>
+		<TraitDeclaration start='7' length='125'>
 			<TraitName>
 				<Identifier start='13' length='1' name='A'/>
 			</TraitName>
@@ -77,7 +77,7 @@ class Aliased_Talker {
 				</MethodDeclaration>
 			</Block>
 		</TraitDeclaration>
-		<TraitDeclaration start='134' length='125''>
+		<TraitDeclaration start='134' length='125'>
 			<TraitName>
 				<Identifier start='140' length='1' name='B'/>
 			</TraitName>

@@ -23,7 +23,7 @@ class MyHelloWorld {
 --EXPECT--
 <Program start='0' length='349'>
 	<Statements>
-		<TraitDeclaration start='7' length='140''>
+		<TraitDeclaration start='7' length='140'>
 			<TraitName>
 				<Identifier start='13' length='5' name='Hello'/>
 			</TraitName>

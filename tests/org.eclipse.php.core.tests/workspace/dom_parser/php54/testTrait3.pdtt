@@ -24,7 +24,7 @@ class MyHelloWorld {
 --EXPECT--
 <Program start='0' length='279'>
 	<Statements>
-		<TraitDeclaration start='7' length='77''>
+		<TraitDeclaration start='7' length='77'>
 			<TraitName>
 				<Identifier start='13' length='5' name='Hello'/>
 			</TraitName>
@@ -47,7 +47,7 @@ class MyHelloWorld {
 				</MethodDeclaration>
 			</Block>
 		</TraitDeclaration>
-		<TraitDeclaration start='86' length='77''>
+		<TraitDeclaration start='86' length='77'>
 			<TraitName>
 				<Identifier start='92' length='5' name='World'/>
 			</TraitName>

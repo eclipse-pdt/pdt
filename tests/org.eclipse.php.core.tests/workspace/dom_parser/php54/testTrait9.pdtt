@@ -16,7 +16,7 @@ $example->x;
 --EXPECT--
 <Program start='0' length='156'>
 	<Statements>
-		<TraitDeclaration start='7' length='44''>
+		<TraitDeclaration start='7' length='44'>
 			<TraitName>
 				<Identifier start='13' length='15' name='PropertiesTrait'/>
 			</TraitName>

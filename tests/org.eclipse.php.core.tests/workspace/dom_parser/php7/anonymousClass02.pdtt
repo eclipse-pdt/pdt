@@ -20,7 +20,7 @@ $anonClass = new class {
 						</ClassName>
 						<ConstructorParameters>
 						</ConstructorParameters>
-						<AnonymousClassDeclaration start='28' length='17''>
+						<AnonymousClassDeclaration start='28' length='17'>
 							<SuperClass>
 							<SuperClass>
 							<Interfaces>

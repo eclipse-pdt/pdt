@@ -52,7 +52,7 @@ $o->sayHello();
 				</MethodDeclaration>
 			</Block>
 		</ClassDeclaration>
-		<TraitDeclaration start='85' length='108''>
+		<TraitDeclaration start='85' length='108'>
 			<TraitName>
 				<Identifier start='91' length='8' name='SayWorld'/>
 			</TraitName>

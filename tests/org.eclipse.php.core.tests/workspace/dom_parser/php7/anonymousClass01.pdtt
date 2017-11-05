@@ -21,7 +21,7 @@ new class($var) extends SuperClass01 implements Interface01, Interface02 {
 						<Identifier start='17' length='3' name='var'/>
 					</Variable>
 				</ConstructorParameters>
-				<AnonymousClassDeclaration start='22' length='141''>
+				<AnonymousClassDeclaration start='22' length='141'>
 					<SuperClass>
 						<NamespaceName start='30' length='12' global='false' current='false'>
 							<Identifier start='30' length='12' name='SuperClass01'/>

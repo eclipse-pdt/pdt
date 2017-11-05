@@ -13,7 +13,7 @@ class ezcReflectionMethod extends ReflectionMethod {
 --EXPECT--
 <Program start='0' length='202'>
 	<Statements>
-		<TraitDeclaration start='7' length='104''>
+		<TraitDeclaration start='7' length='104'>
 			<TraitName>
 				<Identifier start='13' length='23' name='ezcReflectionReturnInfo'/>
 			</TraitName>

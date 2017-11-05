@@ -135,7 +135,7 @@ public class AnonymousClassDeclaration extends Expression {
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<AnonymousClassDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append("'>\n"); //$NON-NLS-1$
+		buffer.append(">\n"); //$NON-NLS-1$
 
 		buffer.append(TAB).append(tab).append("<SuperClass>\n"); //$NON-NLS-1$
 		if (superClass != null) {

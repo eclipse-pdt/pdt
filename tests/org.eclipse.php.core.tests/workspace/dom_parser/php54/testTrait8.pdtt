@@ -17,7 +17,7 @@ Example::doSomething();
 --EXPECT--
 <Program start='0' length='183'>
 	<Statements>
-		<TraitDeclaration start='7' length='106''>
+		<TraitDeclaration start='7' length='106'>
 			<TraitName>
 				<Identifier start='13' length='13' name='StaticExample'/>
 			</TraitName>

@@ -21,7 +21,7 @@ class C2 {
 --EXPECT--
 <Program start='0' length='188'>
 	<Statements>
-		<TraitDeclaration start='7' length='116''>
+		<TraitDeclaration start='7' length='116'>
 			<TraitName>
 				<Identifier start='13' length='7' name='Counter'/>
 			</TraitName>
