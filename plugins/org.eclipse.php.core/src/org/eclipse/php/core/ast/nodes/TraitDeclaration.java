@@ -53,7 +53,7 @@ public class TraitDeclaration extends ClassDeclaration {
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<TraitDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append("'>\n"); //$NON-NLS-1$ 
+		buffer.append(">\n"); //$NON-NLS-1$
 		buffer.append(tab).append(TAB).append("<TraitName>\n"); //$NON-NLS-1$
 		getName().toString(buffer, TAB + TAB + tab);
 		buffer.append("\n"); //$NON-NLS-1$
