@@ -1132,7 +1132,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 				if (searchEnd < 1) {
 					return search;
 				} else {
-					return searchEnd + NamespaceReference.NAMESPACE_SEPARATOR + name.substring(searchEnd + 1);
+					return search + NamespaceReference.NAMESPACE_SEPARATOR + name.substring(searchEnd + 1);
 				}
 			}
 			AliasResolver aliasResolver = new AliasResolver(validRange, search);

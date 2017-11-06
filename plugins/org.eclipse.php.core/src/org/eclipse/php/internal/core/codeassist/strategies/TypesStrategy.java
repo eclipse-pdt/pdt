@@ -116,7 +116,7 @@ public class TypesStrategy extends ElementsStrategy {
 				} else {
 					if (isNamespace || abstractContext.isAbsoluteName() || abstractContext.isAbsolute()) {
 						reporter.reportType(type, isNamespace ? nsSuffix : suffix, replacementRange,
-								extraInfo | ProposalExtraInfo.CLASS_IN_NAMESPACE, relevance);
+								extraInfo | ProposalExtraInfo.MEMBER_IN_NAMESPACE, relevance);
 					} else {
 						reporter.reportType(type, isNamespace ? nsSuffix : suffix,
 								isNamespace ? replacementRange : memberReplacementRange, extraInfo, relevance);

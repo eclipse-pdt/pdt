@@ -63,14 +63,16 @@ public class ConstantsStrategy extends ElementsStrategy {
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
 		CompletionRequestor requestor = abstractContext.getCompletionRequestor();
 
-		String prefix = abstractContext.getPrefix();
-		if (StringUtils.isBlank(prefix) || prefix.startsWith("$")) { //$NON-NLS-1$
-			return;
-		}
-
 		String nsUseGroupPrefix = null;
+		boolean isUseConstStatement = false;
 		if (context instanceof UseStatementContext) {
 			nsUseGroupPrefix = ((UseStatementContext) context).getGroupPrefixBeforeOpeningCurly();
+			isUseConstStatement = ((UseStatementContext) context).isUseConstStatement();
+		}
+
+		String prefix = abstractContext.getPrefix();
+		if ((!isUseConstStatement && StringUtils.isBlank(prefix)) || prefix.startsWith("$")) { //$NON-NLS-1$
+			return;
 		}
 
 		MatchRule matchRule = MatchRule.PREFIX;
@@ -135,14 +137,17 @@ public class ConstantsStrategy extends ElementsStrategy {
 		ISourceRange replacementRange = getReplacementRange(abstractContext);
 		ISourceRange memberReplacementRange = getReplacementRangeForMember(abstractContext);
 		boolean isAbsoluteField = abstractContext.isAbsoluteName() || abstractContext.isAbsolute();
+		String namespace = abstractContext.getCurrentNamespace();
 		for (IModelElement constant : enclosingTypeConstants) {
 			IField field = (IField) constant;
 			if (nsUseGroupPrefix != null) {
-				reporter.reportField(field, nsUseGroupPrefix, "", memberReplacementRange, 0, //$NON-NLS-1$
+				reporter.reportField(field, nsUseGroupPrefix, "", memberReplacementRange, //$NON-NLS-1$
+						getRelevance(namespace, (IMember) constant),
 						extraInfo);
 			} else {
-				reporter.reportField(field, "", isAbsoluteField ? replacementRange : memberReplacementRange, false, 0,
-						extraInfo); // $NON-NLS-1$
+				reporter.reportField(field, "", isAbsoluteField ? replacementRange : memberReplacementRange, false,
+						getRelevance(namespace, (IMember) constant),
+						isAbsoluteField ? extraInfo | ProposalExtraInfo.MEMBER_IN_NAMESPACE : extraInfo); // $NON-NLS-1$
 			}
 		}
 		addAlias(reporter);
