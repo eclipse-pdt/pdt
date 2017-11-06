@@ -26,7 +26,14 @@ public final class ProposalExtraInfo {
 	public static final int METHOD_ONLY = 1 << 5;
 	// NB: NO_INSERT_NAMESPACE has priority over FULL_NAME
 	public static final int NO_INSERT_NAMESPACE = 1 << 6;
+	/**
+	 * Use MEMBER_IN_NAMESPACE
+	 * 
+	 * @deprecated
+	 */
+	@Deprecated
 	public static final int CLASS_IN_NAMESPACE = 1 << 7;
+	public static final int MEMBER_IN_NAMESPACE = CLASS_IN_NAMESPACE;
 	public static final int ADD_QUOTES = 1 << 8;
 	public static final int NO_INSERT_USE = 1 << 9;
 	/**
@@ -94,13 +101,37 @@ public final class ProposalExtraInfo {
 		}
 	}
 
+	/**
+	 * Use isMemberInNamespace(int flags)
+	 * 
+	 * @deprecated
+	 */
+	@Deprecated
 	public static boolean isClassInNamespace(int flags) {
 		return (flags & CLASS_IN_NAMESPACE) != 0;
 	}
 
+	/**
+	 * Use isMemberInNamespace(Object flags)
+	 * 
+	 * @deprecated
+	 */
+	@Deprecated
 	public static boolean isClassInNamespace(Object flags) {
 		if (flags instanceof Integer) {
 			return isClassInNamespace(((Integer) flags).intValue());
+		} else {
+			return false;
+		}
+	}
+
+	public static boolean isMemberInNamespace(int flags) {
+		return (flags & MEMBER_IN_NAMESPACE) != 0;
+	}
+
+	public static boolean isMemberInNamespace(Object flags) {
+		if (flags instanceof Integer) {
+			return isMemberInNamespace(((Integer) flags).intValue());
 		} else {
 			return false;
 		}

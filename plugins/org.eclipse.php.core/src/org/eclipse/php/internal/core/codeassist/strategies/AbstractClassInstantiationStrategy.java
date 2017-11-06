@@ -74,7 +74,7 @@ public abstract class AbstractClassInstantiationStrategy extends TypesStrategy {
 						extraInfo |= ProposalExtraInfo.ABSOLUTE_NAME;
 					}
 					reporter.reportType(type, NamespaceReference.NAMESPACE_DELIMITER, nsReplaceRange,
-							extraInfo | ProposalExtraInfo.CLASS_IN_NAMESPACE);
+							extraInfo | ProposalExtraInfo.MEMBER_IN_NAMESPACE);
 					continue;
 				}
 			} catch (ModelException e) {

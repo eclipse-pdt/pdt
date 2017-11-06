@@ -70,7 +70,7 @@ public class PHPCompletionProposal extends ScriptCompletionProposal implements I
 			result = isPrefix(prefix.substring(1), word);
 		}
 
-		if (!result && ProposalExtraInfo.isClassInNamespace(getExtraInfo()) && (getModelElement() instanceof IType)) {
+		if (!result && ProposalExtraInfo.isMemberInNamespace(getExtraInfo()) && (getModelElement() instanceof IType)) {
 			IType type = (IType) getModelElement();
 			if (ProposalExtraInfo.isAbsoluteName(getExtraInfo())) {
 				result = isPrefix(prefix.substring(1), PHPModelUtils.getFullName(type));
