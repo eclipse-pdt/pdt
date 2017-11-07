@@ -47,12 +47,12 @@ public class PreferenceConstants {
 	public static final String APPEARANCE_ENABLE_VISIBILITY_SORT_ORDER = "enableVisibilityOrder"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that defines how member elements are ordered by
-	 * visibility in the PHP views using the <code>PHPElementSorter</code>.
+	 * A named preference that defines how member elements are ordered by visibility
+	 * in the PHP views using the <code>PHPElementSorter</code>.
 	 * <p>
-	 * Value is of type <code>String</code>: A comma separated list of the
-	 * following entries. Each entry must be in the list, no duplication. List
-	 * order defines the sort order.
+	 * Value is of type <code>String</code>: A comma separated list of the following
+	 * entries. Each entry must be in the list, no duplication. List order defines
+	 * the sort order.
 	 * <ul>
 	 * <li><b>B</b>: Public</li>
 	 * <li><b>V</b>: Private</li>
@@ -66,12 +66,12 @@ public class PreferenceConstants {
 	public static final String APPEARANCE_VISIBILITY_SORT_ORDER = "org.eclipse.php.ui.visibility.order"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that defines how member elements are ordered by the
-	 * PHP views using the <code>PHPElementSorter</code>.
+	 * A named preference that defines how member elements are ordered by the PHP
+	 * views using the <code>PHPElementSorter</code>.
 	 * <p>
-	 * Value is of type <code>String</code>: A comma separated list of the
-	 * following entries. Each entry must be in the list, no duplication. List
-	 * order defines the sort order.
+	 * Value is of type <code>String</code>: A comma separated list of the following
+	 * entries. Each entry must be in the list, no duplication. List order defines
+	 * the sort order.
 	 * <ul>
 	 * <li><b>T</b>: Types</li>
 	 * <li><b>M</b>: Methods</li>
@@ -82,28 +82,26 @@ public class PreferenceConstants {
 	public static final String APPEARANCE_MEMBER_SORT_ORDER = "outlinesortoption"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls return type rendering of methods in the
-	 * UI.
+	 * A named preference that controls return type rendering of methods in the UI.
 	 * <p>
-	 * Value is of type <code>Boolean</code>: if <code>true</code> return types
-	 * are rendered
+	 * Value is of type <code>Boolean</code>: if <code>true</code> return types are
+	 * rendered
 	 * </p>
 	 */
 	public static final String APPEARANCE_METHOD_RETURNTYPE = "methodreturntype"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls type parameter rendering of methods in
-	 * the UI.
+	 * A named preference that controls type parameter rendering of methods in the
+	 * UI.
 	 * <p>
-	 * Value is of type <code>Boolean</code>: if <code>true</code> return types
-	 * are rendered
+	 * Value is of type <code>Boolean</code>: if <code>true</code> return types are
+	 * rendered
 	 * </p>
 	 */
 	public static final String APPEARANCE_METHOD_TYPEPARAMETERS = "methodtypeparametesr"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls whether annotation roll over is used or
-	 * not.
+	 * A named preference that controls whether annotation roll over is used or not.
 	 * <p>
 	 * Value is of type <code>Boolean</code>. If <code>true<code> the annotation
 	 * ruler column uses a roll over to display multiple annotations
@@ -121,8 +119,8 @@ public class PreferenceConstants {
 	public static final String EDITOR_BOUNDARYMARKER_COLOR = "editorColorBoundarymaker"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that holds the default color for the PHP boundary
-	 * makers (open/close tags)
+	 * A named preference that holds the default color for the PHP boundary makers
+	 * (open/close tags)
 	 * <p>
 	 * Value is of type <code>String</code>.
 	 * </p>
@@ -175,8 +173,8 @@ public class PreferenceConstants {
 	public final static String EDITOR_ADD_PHPDOC_TAGS = "autoAddPhpDocTags"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls whether the 'close php close tag'
-	 * feature is enabled.
+	 * A named preference that controls whether the 'close php close tag' feature is
+	 * enabled.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
@@ -184,8 +182,8 @@ public class PreferenceConstants {
 	public final static String EDITOR_ADD_PHPCLOSE_TAGS = "autoAddPhpCloseTags"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls whether the 'Add "php" after PHP start
-	 * tag (<?)' feature is enabled.
+	 * A named preference that controls whether the 'Add "php" after PHP start tag
+	 * (<?)' feature is enabled.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
@@ -241,8 +239,8 @@ public class PreferenceConstants {
 	public static final String EDITOR_PHPDOC_COMMENT_DEFAULT_COLOR = ColorHelper.getColorString(63, 85, 191);
 
 	/**
-	 * A named preference that controls if correction indicators are shown in
-	 * the UI.
+	 * A named preference that controls if correction indicators are shown in the
+	 * UI.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
@@ -349,8 +347,8 @@ public class PreferenceConstants {
 	public static final String EDITOR_STRING_DEFAULT_COLOR = ColorHelper.getColorString(0, 0, 192);
 
 	/**
-	 * A named preference that controls whether the outline view selection
-	 * should stay in sync with with the element at the current cursor position.
+	 * A named preference that controls whether the outline view selection should
+	 * stay in sync with with the element at the current cursor position.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
@@ -449,8 +447,8 @@ public class PreferenceConstants {
 	public static final String EDITOR_STICKY_OCCURRENCES = "stickyOccurrences"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls whether type occurrences are marked.
-	 * Only valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
+	 * A named preference that controls whether type occurrences are marked. Only
+	 * valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
@@ -460,8 +458,8 @@ public class PreferenceConstants {
 	public static final String EDITOR_MARK_TYPE_OCCURRENCES = "markTypeOccurrences"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls whether method occurrences are marked.
-	 * Only valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
+	 * A named preference that controls whether method occurrences are marked. Only
+	 * valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
@@ -482,8 +480,8 @@ public class PreferenceConstants {
 	public static final String EDITOR_MARK_FUNCTION_OCCURRENCES = "markFunctionOccurrences"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls whether constant (static final)
-	 * occurrences are marked. Only valid if {@link #EDITOR_MARK_OCCURRENCES} is
+	 * A named preference that controls whether constant (static final) occurrences
+	 * are marked. Only valid if {@link #EDITOR_MARK_OCCURRENCES} is
 	 * <code>true</code>.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
@@ -495,8 +493,7 @@ public class PreferenceConstants {
 
 	/**
 	 * A named preference that controls whether local variable occurrences are
-	 * marked. Only valid if {@link #EDITOR_MARK_OCCURRENCES} is
-	 * <code>true</code>.
+	 * marked. Only valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
@@ -507,8 +504,7 @@ public class PreferenceConstants {
 
 	/**
 	 * A named preference that controls whether global variable occurrences are
-	 * marked. Only valid if {@link #EDITOR_MARK_OCCURRENCES} is
-	 * <code>true</code>.
+	 * marked. Only valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
@@ -518,9 +514,8 @@ public class PreferenceConstants {
 	public static final String EDITOR_MARK_GLOBAL_VARIABLE_OCCURRENCES = "markGlobalVariableOccurrences"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls whether exception occurrences are
-	 * marked. Only valid if {@link #EDITOR_MARK_OCCURRENCES} is
-	 * <code>true</code>.
+	 * A named preference that controls whether exception occurrences are marked.
+	 * Only valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
@@ -530,8 +525,8 @@ public class PreferenceConstants {
 	public static final String EDITOR_MARK_EXCEPTION_OCCURRENCES = "markExceptionOccurrences"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls whether method exit points are marked.
-	 * Only valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
+	 * A named preference that controls whether method exit points are marked. Only
+	 * valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
@@ -541,9 +536,9 @@ public class PreferenceConstants {
 	public static final String EDITOR_MARK_METHOD_EXIT_POINTS = "markMethodExitPoints"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls whether targets for of
-	 * <code>break</code> and <code>continue</code> statements are marked. Only
-	 * valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
+	 * A named preference that controls whether targets for of <code>break</code>
+	 * and <code>continue</code> statements are marked. Only valid if
+	 * {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
@@ -553,8 +548,8 @@ public class PreferenceConstants {
 	public static final String EDITOR_MARK_BREAK_CONTINUE_TARGETS = "markBreakContinueTargets"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls whether method exit points are marked.
-	 * Only valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
+	 * A named preference that controls whether method exit points are marked. Only
+	 * valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
@@ -573,8 +568,8 @@ public class PreferenceConstants {
 	/**
 	 * A named preference suffix that controls a semantic highlighting's color.
 	 * <p>
-	 * Value is of type <code>String</code>. A RGB color value encoded as a
-	 * string using class <code>PreferenceConverter</code>
+	 * Value is of type <code>String</code>. A RGB color value encoded as a string
+	 * using class <code>PreferenceConverter</code>
 	 * </p>
 	 * 
 	 * @see org.eclipse.jface.resource.StringConverter
@@ -586,8 +581,8 @@ public class PreferenceConstants {
 	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_BGCOLOR_SUFFIX = ".bgcolor"; //$NON-NLS-1$
 
 	/**
-	 * A named preference suffix that controls if semantic highlighting has the
-	 * text attribute bold.
+	 * A named preference suffix that controls if semantic highlighting has the text
+	 * attribute bold.
 	 * <p>
 	 * Value is of type <code>Boolean</code>: <code>true</code> if bold.
 	 * </p>
@@ -597,8 +592,8 @@ public class PreferenceConstants {
 	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_BOLD_SUFFIX = ".bold"; //$NON-NLS-1$
 
 	/**
-	 * A named preference suffix that controls if semantic highlighting has the
-	 * text attribute italic.
+	 * A named preference suffix that controls if semantic highlighting has the text
+	 * attribute italic.
 	 * <p>
 	 * Value is of type <code>Boolean</code>: <code>true</code> if italic.
 	 * </p>
@@ -608,11 +603,10 @@ public class PreferenceConstants {
 	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_ITALIC_SUFFIX = ".italic"; //$NON-NLS-1$
 
 	/**
-	 * A named preference suffix that controls if semantic highlighting has the
-	 * text attribute strikethrough.
+	 * A named preference suffix that controls if semantic highlighting has the text
+	 * attribute strikethrough.
 	 * <p>
-	 * Value is of type <code>Boolean</code>: <code>true</code> if
-	 * strikethrough.
+	 * Value is of type <code>Boolean</code>: <code>true</code> if strikethrough.
 	 * </p>
 	 * 
 	 * @since 3.1
@@ -620,8 +614,8 @@ public class PreferenceConstants {
 	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_STRIKETHROUGH_SUFFIX = ".strikethrough"; //$NON-NLS-1$
 
 	/**
-	 * A named preference suffix that controls if semantic highlighting has the
-	 * text attribute underline.
+	 * A named preference suffix that controls if semantic highlighting has the text
+	 * attribute underline.
 	 * <p>
 	 * Value is of type <code>Boolean</code>: <code>true</code> if underline.
 	 * </p>
@@ -631,8 +625,7 @@ public class PreferenceConstants {
 	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_UNDERLINE_SUFFIX = ".underline"; //$NON-NLS-1$
 
 	/**
-	 * A named preference suffix that controls if semantic highlighting is
-	 * enabled.
+	 * A named preference suffix that controls if semantic highlighting is enabled.
 	 * <p>
 	 * Value is of type <code>Boolean</code>: <code>true</code> if enabled.
 	 * </p>
@@ -671,8 +664,7 @@ public class PreferenceConstants {
 	public final static String FORMATTER_COMMENT_LINELENGTH = "commentLineLength"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls which profile is used by the code
-	 * formatter.
+	 * A named preference that controls which profile is used by the code formatter.
 	 * <p>
 	 * Value is of type <code>String</code>.
 	 * </p>
@@ -708,8 +700,8 @@ public class PreferenceConstants {
 	public static final String LINK_EXPLORER_TO_EDITOR = "explorerLinktoeditor"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls whether the explorer's selection is
-	 * linked to the active editor.
+	 * A named preference that controls whether the explorer's selection is linked
+	 * to the active editor.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
@@ -717,8 +709,8 @@ public class PreferenceConstants {
 	public static final String LINK_FOLDERS_TO_EDITOR = "foldersLinktoeditor"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls whether all dirty editors are
-	 * automatically saved before a refactoring is executed.
+	 * A named preference that controls whether all dirty editors are automatically
+	 * saved before a refactoring is executed.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
@@ -726,8 +718,8 @@ public class PreferenceConstants {
 	public static final String REFACTOR_SAVE_ALL_EDITORS = "RefactoringSavealleditors"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that specifies whether children of a PHP file are
-	 * shown in the php explorer.
+	 * A named preference that specifies whether children of a PHP file are shown in
+	 * the php explorer.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
@@ -735,8 +727,8 @@ public class PreferenceConstants {
 	public static final String SHOW_CU_CHILDREN = "explorerCuchildren"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that specifies whether children of a php file are
-	 * shown in the explorer.
+	 * A named preference that specifies whether children of a php file are shown in
+	 * the explorer.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
@@ -819,8 +811,8 @@ public class PreferenceConstants {
 	public static final String EDITOR_TEXT_HOVER_MODIFIERS = PHPUiPlugin.ID + "hoverModifiers"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that defines the key for the hover modifier state
-	 * masks. The value is only used if the value of
+	 * A named preference that defines the key for the hover modifier state masks.
+	 * The value is only used if the value of
 	 * <code>EDITOR_TEXT_HOVER_MODIFIERS</code> cannot be resolved to valid SWT
 	 * modifier bits.
 	 * 
@@ -854,11 +846,10 @@ public class PreferenceConstants {
 	public static final String SEARCH_USE_REDUCED_MENU = "Search.usereducemenu"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that holds the background color used for parameter
-	 * hints.
+	 * A named preference that holds the background color used for parameter hints.
 	 * <p>
-	 * Value is of type <code>String</code>. A RGB color value encoded as a
-	 * string using class <code>PreferenceConverter</code>
+	 * Value is of type <code>String</code>. A RGB color value encoded as a string
+	 * using class <code>PreferenceConverter</code>
 	 * </p>
 	 * 
 	 * @see org.eclipse.jface.resource.StringConverter
@@ -867,11 +858,11 @@ public class PreferenceConstants {
 	public final static String CODEASSIST_PARAMETERS_BACKGROUND = "contentAssistParametersBackground"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that holds the foreground color used in the code
-	 * assist selection dialog.
+	 * A named preference that holds the foreground color used in the code assist
+	 * selection dialog.
 	 * <p>
-	 * Value is of type <code>String</code>. A RGB color value encoded as a
-	 * string using class <code>PreferenceConverter</code>
+	 * Value is of type <code>String</code>. A RGB color value encoded as a string
+	 * using class <code>PreferenceConverter</code>
 	 * </p>
 	 * 
 	 * @see org.eclipse.jface.resource.StringConverter
@@ -880,11 +871,11 @@ public class PreferenceConstants {
 	public final static String CODEASSIST_PARAMETERS_FOREGROUND = "contentAssistParametersForeground"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that holds the background color used in the code
-	 * assist selection dialog.
+	 * A named preference that holds the background color used in the code assist
+	 * selection dialog.
 	 * <p>
-	 * Value is of type <code>String</code>. A RGB color value encoded as a
-	 * string using class <code>PreferenceConverter</code>
+	 * Value is of type <code>String</code>. A RGB color value encoded as a string
+	 * using class <code>PreferenceConverter</code>
 	 * </p>
 	 * 
 	 * @see org.eclipse.jface.resource.StringConverter
@@ -893,11 +884,11 @@ public class PreferenceConstants {
 	public final static String CODEASSIST_PROPOSALS_BACKGROUND = "contentAssistProposalsBackground"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that holds the foreground color used in the code
-	 * assist selection dialog.
+	 * A named preference that holds the foreground color used in the code assist
+	 * selection dialog.
 	 * <p>
-	 * Value is of type <code>String</code>. A RGB color value encoded as a
-	 * string using class <code>PreferenceConverter</code>
+	 * Value is of type <code>String</code>. A RGB color value encoded as a string
+	 * using class <code>PreferenceConverter</code>
 	 * </p>
 	 * 
 	 * @see org.eclipse.jface.resource.StringConverter
@@ -906,11 +897,11 @@ public class PreferenceConstants {
 	public final static String CODEASSIST_PROPOSALS_FOREGROUND = "contentAssistProposalsForeground"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that holds the background color used in the code
-	 * assist selection dialog to mark replaced code.
+	 * A named preference that holds the background color used in the code assist
+	 * selection dialog to mark replaced code.
 	 * <p>
-	 * Value is of type <code>String</code>. A RGB color value encoded as a
-	 * string using class <code>PreferenceConverter</code>
+	 * Value is of type <code>String</code>. A RGB color value encoded as a string
+	 * using class <code>PreferenceConverter</code>
 	 * </p>
 	 * 
 	 * @see org.eclipse.jface.resource.StringConverter
@@ -919,11 +910,11 @@ public class PreferenceConstants {
 	public final static String CODEASSIST_REPLACEMENT_BACKGROUND = "contentAssistCompletionReplacementBackground"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that holds the foreground color used in the code
-	 * assist selection dialog to mark replaced code.
+	 * A named preference that holds the foreground color used in the code assist
+	 * selection dialog to mark replaced code.
 	 * <p>
-	 * Value is of type <code>String</code>. A RGB color value encoded as a
-	 * string using class <code>PreferenceConverter</code>
+	 * Value is of type <code>String</code>. A RGB color value encoded as a string
+	 * using class <code>PreferenceConverter</code>
 	 * </p>
 	 * 
 	 * @see org.eclipse.jface.resource.StringConverter
@@ -935,17 +926,17 @@ public class PreferenceConstants {
 	 * A named preference that controls whether new projects are generated using
 	 * source and output folder.
 	 * <p>
-	 * Value is of type <code>Boolean</code>. if <code>true</code> new projects
-	 * are created with a source and output folder. If <code>false</code> source
-	 * and output folder equals to the project.
+	 * Value is of type <code>Boolean</code>. if <code>true</code> new projects are
+	 * created with a source and output folder. If <code>false</code> source and
+	 * output folder equals to the project.
 	 * </p>
 	 */
 	public static final String SRCBIN_FOLDERS_IN_NEWPROJ = "org.eclipse.php.ui.wizards.srcBinFoldersInNewProjects"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that specifies the source folder name used when
-	 * creating a new Java project. Value is inactive if
-	 * <code>SRCBIN_FOLDERS_IN_NEWPROJ</code> is set to <code>false</code>.
+	 * A named preference that specifies the source folder name used when creating a
+	 * new Java project. Value is inactive if <code>SRCBIN_FOLDERS_IN_NEWPROJ</code>
+	 * is set to <code>false</code>.
 	 * <p>
 	 * Value is of type <code>String</code>.
 	 * </p>
@@ -959,8 +950,8 @@ public class PreferenceConstants {
 	/**
 	 * A named preference that controls if quick assist light bulbs are shown.
 	 * <p>
-	 * Value is of type <code>Boolean</code>: if <code>true</code> light bulbs
-	 * are shown for quick assists.
+	 * Value is of type <code>Boolean</code>: if <code>true</code> light bulbs are
+	 * shown for quick assists.
 	 * </p>
 	 * 
 	 * @since 3.0
@@ -970,9 +961,9 @@ public class PreferenceConstants {
 	public static final String JavaScriptSupportEnable = "org.eclipse.php.ui.wizards.JSsupport"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that specifies the output folder name used when
-	 * creating a new Java project. Value is inactive if
-	 * <code>SRCBIN_FOLDERS_IN_NEWPROJ</code> is set to <code>false</code>.
+	 * A named preference that specifies the output folder name used when creating a
+	 * new Java project. Value is inactive if <code>SRCBIN_FOLDERS_IN_NEWPROJ</code>
+	 * is set to <code>false</code>.
 	 * <p>
 	 * Value is of type <code>String</code>.
 	 * </p>
@@ -995,8 +986,7 @@ public class PreferenceConstants {
 	public static final String PREF_OUTLINEMODE = "ChangeOutlineModeAction.selectedMode"; //$NON-NLS-1$
 
 	/**
-	 * This setting controls whether to group elements by namespaces in PHP
-	 * Explorer
+	 * This setting controls whether to group elements by namespaces in PHP Explorer
 	 */
 	public static final String EXPLORER_GROUP_BY_NAMESPACES = "PHPExplorerPart.groupByNamespaces"; //$NON-NLS-1$
 
@@ -1010,6 +1000,19 @@ public class PreferenceConstants {
 	 * @since 2.1
 	 */
 	public final static String EDITOR_SMART_PASTE = "smartPaste"; //$NON-NLS-1$
+
+	/**
+	 * @since 5.3
+	 */
+	public final static String PROBLEM_CONFIGURATION_EXTENSION_POINT = "org.eclipse.php.ui.problemConfiguration"; //$NON-NLS-1$
+
+	public final static String PROBLEM_CONFIGURATION_CATEGORY = "category"; //$NON-NLS-1$
+	public final static String PROBLEM_CONFIGURATION_PROBLEM = "problem"; //$NON-NLS-1$
+	public final static String PROBLEM_CONFIGURATION_IDENTIFIER = "identifier"; //$NON-NLS-1$
+	public final static String PROBLEM_CONFIGURATION_NAME = "name"; //$NON-NLS-1$
+	public final static String PROBLEM_CONFIGURATION_CLASS = "class"; //$NON-NLS-1$
+	public final static String PROBLEM_CONFIGURATION_ID = "id"; //$NON-NLS-1$
+	public final static String PROBLEM_CONFIGURATION_PRIORITY = "priority"; //$NON-NLS-1$
 
 	public static IPreferenceStore getPreferenceStore() {
 		return PHPUiPlugin.getDefault().getPreferenceStore();
