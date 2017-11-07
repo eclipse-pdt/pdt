@@ -31,6 +31,7 @@
 	<extension-point id="phpProjectWizard" name="%extension-point.name.13" schema="schema/phpNewProjectWizard.exsd" />
  <extension-point id="libraryButtonHandlers" name="Library Button Handlers" schema="schema/libraryButtonHandlers.exsd"/>
  <extension-point id="phpVersionInfo" name="Information About PHP" schema="schema/phpVersionInfo.exsd"/>
+ <extension-point id="problemConfiguration" name="%problemConfiguration.name" schema="schema/problemConfiguration.exsd"/>
 	
 	
 	<!--PHP formatter processor registration, for PHP Content:-->
@@ -579,6 +580,17 @@
 			</enabledWhen>
 			<filter name="nature" value="org.eclipse.php.core.PHPNature" />
 		</page>
+		<page
+            class="org.eclipse.php.internal.ui.preferences.PHPProblemsPreferencePage"
+            id="org.eclipse.php.ui.propertyPages.PHPProblemsPropertyPage"
+            name="%ProblemsPage.name"
+            category="org.eclipse.php.ui.propertyPages.ValidationPreferencePage">
+            <enabledWhen>
+				<adapt type="org.eclipse.core.resources.IProject">
+				</adapt>
+			</enabledWhen>
+			<filter name="nature" value="org.eclipse.php.core.PHPNature" />
+      </page>
   <page
         category="org.eclipse.php.ui.propertyPages.PHPBasePreferencePage"
         class="org.eclipse.php.internal.ui.preferences.PHPBasePreferenceEmptyPage"
@@ -1812,6 +1824,12 @@
           class="org.eclipse.php.internal.ui.preferences.PHPBasePreferenceEmptyPage"
           id="org.eclipse.php.ui.preferences.PHPSourcePathsPreferencePage"
           name="%SourcePathsPage.name">
+    </page>
+    <page
+          category="org.eclipse.php.ui.preferences.ValidationPreferencePage"
+          class="org.eclipse.php.internal.ui.preferences.PHPProblemsPreferencePage"
+          id="org.eclipse.php.ui.preferences.PHPProblemsPreferencePage"
+          name="%ProblemsPage.name">
     </page>
 	</extension>
 
@@ -3096,5 +3114,37 @@
              <feature name="group use statements trailing comma"></feature>
              <feature name="trailing comma in function and method calls"></feature>
        </phpVersion>
+   </extension>
+   <extension
+         point="org.eclipse.php.ui.problemConfiguration">
+      <category
+            id="org.eclipse.php.ui.problem.defaultCategory"
+            name="PHP Semantic Analysis"
+            priority="-10000">
+      </category>
+      <problem
+            category="org.eclipse.php.ui.problem.defaultCategory"
+            class="org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier">
+         <identifier
+               id="ImportNotFound"
+               name="Import not found">
+         </identifier>
+         <identifier
+               id="UnnecessaryImport"
+               name="Unnecessary import">
+         </identifier>
+         <identifier
+               id="UnusedImport"
+               name="Unused import">
+         </identifier>
+         <identifier
+               id="CannotInstantiateType"
+               name="Cannot instantiate type">
+         </identifier>
+         <identifier
+               id="UndefinedType"
+               name="Undefined type">
+         </identifier>
+      </problem>
    </extension>
 </plugin>

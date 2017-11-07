@@ -225,4 +225,16 @@ public interface PHPCoreConstants {
 
 	public static final String ANONYMOUS = "__anonymous"; //$NON-NLS-1$
 
+	public static final String SLASH = "/"; //$NON-NLS-1$
+
+	/**
+	 * @since 5.2
+	 */
+	public static final String VALIDATOR_PREFERENCES_NODE_ID = "pdt_validator"; //$NON-NLS-1$
+
+	/**
+	 * @since 5.2
+	 */
+	public static final String SEVERITY = "severity"; //$NON-NLS-1$
+
 }

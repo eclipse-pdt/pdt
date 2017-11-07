@@ -1010,6 +1010,14 @@ public final class PHPUIMessages extends NLS {
 	public static String PHPUiPlugin_4;
 	public static String PHPUiPlugin_5;
 
+	public static String PHPProblemsConfigurationBlock_needsbuild_title;
+	public static String PHPProblemsConfigurationBlock_needsfullbuild_message;
+	public static String PHPProblemsConfigurationBlock_needsprojectbuild_message;
+	public static String PHPProblemsConfigurationBlock_error;
+	public static String PHPProblemsConfigurationBlock_warning;
+	public static String PHPProblemsConfigurationBlock_info;
+	public static String PHPProblemsConfigurationBlock_ignore;
+
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, PHPUIMessages.class);
 	}
