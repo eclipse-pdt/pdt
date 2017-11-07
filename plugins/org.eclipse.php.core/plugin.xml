@@ -460,5 +460,10 @@
             class="org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifierFactory"
             namespace="org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier">
       </problemIdentifierFactory>
+      <problemFactory
+             class="org.eclipse.php.internal.core.validation.ProblemFactory"
+             nature="org.eclipse.php.core.PHPNature"
+             priority="0">
+       </problemFactory>
    </extension>
 </plugin>
