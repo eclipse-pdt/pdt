@@ -19,9 +19,13 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.4.0",
  org.eclipse.wst.common.project.facet.core,
  org.eclipse.ltk.core.refactoring,
  org.apache.commons.lang3,
- org.eclipse.dltk.annotations;resolution:=optional
+ org.eclipse.dltk.annotations;resolution:=optional,
+ org.eclipse.e4.core.di,
+ org.eclipse.e4.core.di.extensions,
+ org.eclipse.e4.core.contexts
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.php.core,
+ org.eclipse.php.core.validation,
  org.eclipse.php.core.ast.match,
  org.eclipse.php.core.ast.nodes,
  org.eclipse.php.core.ast.visitor,

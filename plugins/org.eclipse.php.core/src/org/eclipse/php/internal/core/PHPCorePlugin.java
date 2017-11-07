@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
 
+import javax.inject.Inject;
+
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
@@ -28,13 +30,18 @@ import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.dltk.internal.core.search.ProjectIndexerManager;
+import org.eclipse.e4.core.contexts.ContextInjectionFactory;
+import org.eclipse.e4.core.contexts.EclipseContextFactory;
+import org.eclipse.e4.core.di.InjectorFactory;
 import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.core.libfolders.LibraryFolderManager;
+import org.eclipse.php.core.validation.IProblemPreferences;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.util.ProjectBackwardCompatibilityUtil;
+import org.eclipse.php.internal.core.validation.ProblemPreferences;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.prefs.BackingStoreException;
 
@@ -56,6 +63,9 @@ public class PHPCorePlugin extends Plugin {
 	private ProjectConversionListener projectConvertListener = new ProjectConversionListener();
 	private ReindexOperationListener reindexOperationListener = new ReindexOperationListener();
 
+	@Inject
+	private IProblemPreferences problemPreferences;
+
 	/**
 	 * The constructor.
 	 */
@@ -70,7 +80,7 @@ public class PHPCorePlugin extends Plugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-
+		InjectorFactory.getDefault().addBinding(IProblemPreferences.class).implementedBy(ProblemPreferences.class);
 		initializeAfterStart();
 	}
 
@@ -475,5 +485,13 @@ public class PHPCorePlugin extends Plugin {
 			}
 			toolkitInitialized = true;
 		}
+	}
+
+	public IProblemPreferences getProblemPreferences() {
+		if (problemPreferences == null) {
+			ContextInjectionFactory.inject(this,
+					EclipseContextFactory.getServiceContext(getBundle().getBundleContext()));
+		}
+		return problemPreferences;
 	}
 }
