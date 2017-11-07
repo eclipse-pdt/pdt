@@ -30,6 +30,7 @@ import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.dltk.internal.core.search.ProjectIndexerManager;
 import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.core.libfolders.LibraryFolderManager;
+import org.eclipse.php.core.validation.IProblemPreferences;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.model.PHPModelAccess;
@@ -70,7 +71,6 @@ public class PHPCorePlugin extends Plugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-
 		initializeAfterStart();
 	}
 
@@ -123,13 +123,12 @@ public class PHPCorePlugin extends Plugin {
 	private class ProjectConversionListener implements IResourceChangeListener {
 
 		/*
-		 * Gathers all the projects that changed in the workspace and sends them
-		 * to the conversion method
+		 * Gathers all the projects that changed in the workspace and sends them to the
+		 * conversion method
 		 * 
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.core.resources.IResourceChangeListener#resourceChanged
+		 * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged
 		 * (org.eclipse.core.resources.IResourceChangeEvent)
 		 */
 		@Override
@@ -232,8 +231,8 @@ public class PHPCorePlugin extends Plugin {
 	}
 
 	/**
-	 * Gathers all the projects in the workspace and sends them to the
-	 * conversion method
+	 * Gathers all the projects in the workspace and sends them to the conversion
+	 * method
 	 */
 	private void convertProjects(IProgressMonitor monitor) throws CoreException, ModelException {
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
@@ -356,8 +355,8 @@ public class PHPCorePlugin extends Plugin {
 
 	/**
 	 * Helper method for returning one option value only. Equivalent to
-	 * <code>(String)PhpCore.getOptions().get(optionName)</code> Note that it
-	 * may answer <code>null</code> if this option does not exist.
+	 * <code>(String)PhpCore.getOptions().get(optionName)</code> Note that it may
+	 * answer <code>null</code> if this option does not exist.
 	 * <p>
 	 * For a complete description of the configurable options, see
 	 * <code>getDefaultOptions</code>.
@@ -375,9 +374,9 @@ public class PHPCorePlugin extends Plugin {
 	}
 
 	/**
-	 * Returns the table of the current options. Initially, all options have
-	 * their default values, and this method returns a table that includes all
-	 * known options.
+	 * Returns the table of the current options. Initially, all options have their
+	 * default values, and this method returns a table that includes all known
+	 * options.
 	 * <p>
 	 * For a complete description of the configurable options, see
 	 * <code>getDefaultOptions</code>.
@@ -396,20 +395,19 @@ public class PHPCorePlugin extends Plugin {
 	}
 
 	/**
-	 * Initializes DLTKCore internal structures to allow subsequent operations
-	 * (such as the ones that need a resolved classpath) to run full speed. A
-	 * client may choose to call this method in a background thread early after
-	 * the workspace has started so that the initialization is transparent to
-	 * the user.
+	 * Initializes DLTKCore internal structures to allow subsequent operations (such
+	 * as the ones that need a resolved classpath) to run full speed. A client may
+	 * choose to call this method in a background thread early after the workspace
+	 * has started so that the initialization is transparent to the user.
 	 * <p>
 	 * However calling this method is optional. Services will lazily perform
 	 * initialization when invoked. This is only a way to reduce initialization
-	 * overhead on user actions, if it can be performed before at some
-	 * appropriate moment.
+	 * overhead on user actions, if it can be performed before at some appropriate
+	 * moment.
 	 * </p>
 	 * <p>
-	 * This initialization runs accross all Java projects in the workspace. Thus
-	 * the workspace root scheduling rule is used during this operation.
+	 * This initialization runs accross all Java projects in the workspace. Thus the
+	 * workspace root scheduling rule is used during this operation.
 	 * </p>
 	 * <p>
 	 * This method may return before the initialization is complete. The
@@ -420,8 +418,8 @@ public class PHPCorePlugin extends Plugin {
 	 * </p>
 	 * 
 	 * @param monitor
-	 *            a progress monitor, or <code>null</code> if progress reporting
-	 *            and cancellation are not desired
+	 *            a progress monitor, or <code>null</code> if progress reporting and
+	 *            cancellation are not desired
 	 * @exception CoreException
 	 *                if the initialization fails, the status of the exception
 	 *                indicates the reason of the failure
@@ -475,5 +473,10 @@ public class PHPCorePlugin extends Plugin {
 			}
 			toolkitInitialized = true;
 		}
+	}
+
+	public IProblemPreferences getProblemPreferences() {
+		return getBundle().getBundleContext()
+				.getService(getBundle().getBundleContext().getServiceReference(IProblemPreferences.class));
 	}
 }

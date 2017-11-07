@@ -22,6 +22,7 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.4.0",
  org.eclipse.dltk.annotations;resolution:=optional
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.php.core,
+ org.eclipse.php.core.validation,
  org.eclipse.php.core.ast.match,
  org.eclipse.php.core.ast.nodes,
  org.eclipse.php.core.ast.visitor,
@@ -1013,3 +1014,4 @@ Export-Package: org.eclipse.php.core,
 Bundle-Vendor: Eclipse PDT
 Bundle-ClassPath: .
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Service-Component: OSGI-INF/problemPreferences.xml
