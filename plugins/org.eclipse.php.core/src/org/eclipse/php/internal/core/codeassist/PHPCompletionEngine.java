@@ -51,7 +51,22 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			if (PHPModelUtils.isSameField(f1, f2)) {
 				return 0;
 			}
-			return f1.getElementName().compareTo(f2.getElementName());
+			int res = f1.getElementName().compareTo(f2.getElementName());
+			if (res != 0) {
+				return res;
+			}
+			IType ns1 = PHPModelUtils.getCurrentNamespace(f1);
+			IType ns2 = PHPModelUtils.getCurrentNamespace(f2);
+			if (ns1 == ns2) {
+				return 0;
+			}
+			if (ns1 == null) {
+				return -1;
+			}
+			if (ns2 == null) {
+				return 1;
+			}
+			return ns1.getElementName().compareTo(ns2.getElementName());
 		}
 	});
 

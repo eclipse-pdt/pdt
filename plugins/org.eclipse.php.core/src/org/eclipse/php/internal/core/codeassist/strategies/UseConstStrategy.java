@@ -10,12 +10,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
+import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.UseStatementContext;
@@ -41,21 +41,13 @@ public class UseConstStrategy extends ConstantsStrategy {
 	@Override
 	public ISourceRange getReplacementRangeForMember(AbstractCompletionContext context) throws BadLocationException {
 		UseStatementContext useStatementContext = (UseStatementContext) context;
-		ISourceRange basicRange = getReplacementRange(context);
-		int move = (context.isAbsoluteName() ? 1 : 0);
-		String namespacePrefix = context.getNamespaceName();
 		if (useStatementContext.getGroupPrefixBeforeOpeningCurly() != null) {
-			String namesPrefix = context.getNamesPrefix();
-			int index = namesPrefix.lastIndexOf('\\');
-			if (index != -1) {
-				namespacePrefix = namesPrefix.substring(index + 1);
-				namespacePrefix = useStatementContext.getPrefixBeforeCursor().substring(namespacePrefix.length());
-			}
+			int idx = useStatementContext.getPrefixBeforeCursor().lastIndexOf(NamespaceReference.NAMESPACE_DELIMITER);
+			int move = (idx != -1) ? idx + 1 : 0;
+			ISourceRange basicRange = getReplacementRange(context);
+			return new SourceRange(basicRange.getOffset() + move, basicRange.getLength() - move);
 		}
-		if (!StringUtils.isEmpty(namespacePrefix)) {
-			move += namespacePrefix.length();
-		}
-		return new SourceRange(basicRange.getOffset() + move, basicRange.getLength() - move);
+		return super.getReplacementRangeForMember(useStatementContext);
 	}
 
 	@Override
