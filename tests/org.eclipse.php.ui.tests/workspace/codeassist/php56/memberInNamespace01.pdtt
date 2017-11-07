@@ -1,0 +1,21 @@
+--TEST--
+No bug - better CA for constants and functions inside namespaces
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
+--FILE--
+<?php
+\Foo\Boo\M|;
+
+--FILE0--
+<?php
+namespace Foo\Boo;
+
+class MyClass {}
+
+const CONST1 = 0;
+
+function foooo1() {}
+
+--EXPECT--
+<?php
+\Foo\Boo\MyClass;

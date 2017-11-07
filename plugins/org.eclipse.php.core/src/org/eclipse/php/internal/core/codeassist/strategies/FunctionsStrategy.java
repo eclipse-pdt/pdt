@@ -99,7 +99,8 @@ public class FunctionsStrategy extends ElementsStrategy {
 						getRelevance(namespace, method));
 			} else {
 				reporter.reportMethod(method, suffix, isAbsoluteMethod ? replacementRange : memberReplacementRange,
-						extraInfo, getRelevance(namespace, method));
+						isAbsoluteMethod ? extraInfo | ProposalExtraInfo.MEMBER_IN_NAMESPACE : extraInfo,
+						getRelevance(namespace, method));
 			}
 		}
 

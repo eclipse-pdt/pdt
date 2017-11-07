@@ -48,7 +48,7 @@ public class TypeInStringStrategy extends AbstractCompletionStrategy {
 
 	protected int getExtraInfo() {
 		return ProposalExtraInfo.DEFAULT | ProposalExtraInfo.NO_INSERT_USE | ProposalExtraInfo.FULL_NAME
-				| ProposalExtraInfo.TYPE_ONLY | ProposalExtraInfo.CLASS_IN_NAMESPACE;
+				| ProposalExtraInfo.TYPE_ONLY | ProposalExtraInfo.MEMBER_IN_NAMESPACE;
 	}
 
 	@Override

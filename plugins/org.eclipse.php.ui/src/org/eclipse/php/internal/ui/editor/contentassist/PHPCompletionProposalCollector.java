@@ -193,6 +193,22 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 
 				private String computeReplacementString() {
 					IMethod method = (IMethod) proposal.getModelElement();
+
+					if (ProposalExtraInfo.isMemberInNamespace(proposal.getExtraInfo())) {
+						StringBuilder result = new StringBuilder(PHPModelUtils.getFullName(method));
+						if (ProposalExtraInfo.isAbsoluteName(getExtraInfo())) {
+							result.insert(0, NamespaceReference.NAMESPACE_SEPARATOR);
+						}
+						try {
+							if (PHPFlags.isNamespace(method.getFlags())) {
+								result.append(NamespaceReference.NAMESPACE_SEPARATOR);
+							}
+						} catch (ModelException e) {
+							PHPUiPlugin.log(e);
+						}
+						return result.toString();
+					}
+
 					if (ProposalExtraInfo.isNoInsert(proposal.getExtraInfo())) {
 						return method.getElementName();
 					}
@@ -259,7 +275,7 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 			private String computeReplacementString() {
 				IType type = (IType) typeProposal.getModelElement();
 
-				if (ProposalExtraInfo.isClassInNamespace(typeProposal.getExtraInfo())) {
+				if (ProposalExtraInfo.isMemberInNamespace(typeProposal.getExtraInfo())) {
 					StringBuilder result = new StringBuilder(PHPModelUtils.getFullName(type));
 					if (ProposalExtraInfo.isAbsoluteName(getExtraInfo())) {
 						result.insert(0, NamespaceReference.NAMESPACE_SEPARATOR);
@@ -360,6 +376,22 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 
 			private String computeReplacementString() {
 				IField field = (IField) proposal.getModelElement();
+
+				if (ProposalExtraInfo.isMemberInNamespace(proposal.getExtraInfo())) {
+					StringBuilder result = new StringBuilder(PHPModelUtils.getFullName(field));
+					if (ProposalExtraInfo.isAbsoluteName(getExtraInfo())) {
+						result.insert(0, NamespaceReference.NAMESPACE_SEPARATOR);
+					}
+					try {
+						if (PHPFlags.isNamespace(field.getFlags())) {
+							result.append(NamespaceReference.NAMESPACE_SEPARATOR);
+						}
+					} catch (ModelException e) {
+						PHPUiPlugin.log(e);
+					}
+					return result.toString();
+				}
+
 				if (field instanceof AliasField) {
 					AliasField aliasField = (AliasField) field;
 					return aliasField.getAlias();
