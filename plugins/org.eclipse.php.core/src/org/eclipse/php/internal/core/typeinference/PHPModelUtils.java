@@ -165,6 +165,23 @@ public class PHPModelUtils {
 	}
 
 	/**
+	 * Concatenes FQN from UseStatement and one of its UsePart. Supports normal
+	 * use statements and grouped use statements.
+	 * 
+	 * @param declaration
+	 * @param part
+	 * @return
+	 * @see ASTUtils.createFakeGroupUseType(usePart)
+	 */
+	public static String concatFullyQualifiedNames(UseStatement declaration, UsePart part) {
+		if (declaration.getNamespace() == null) {
+			return part.getNamespace().getFullyQualifiedName();
+		}
+		return PHPModelUtils.concatFullyQualifiedNames(declaration.getNamespace().getFullyQualifiedName(),
+				part.getNamespace().getFullyQualifiedName());
+	}
+
+	/**
 	 * if the elementName is a class alias for a namespace class, we get its
 	 * original name from its alias
 	 * 
