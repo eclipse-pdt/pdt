@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Zend Technologies and others.
+ * Copyright (c) 2013, 2017 Zend Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,6 @@ package org.eclipse.php.internal.core.compiler.ast.parser;
 
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.php.core.compiler.ast.nodes.FullyQualifiedReference;
-import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
@@ -83,17 +82,13 @@ public class FindUseStatementByNamespaceASTVisitor extends AbstractUseStatementA
 	 */
 	@Override
 	protected boolean visit(UsePart usePart) {
-		String ns = usePart.getNamespace().getFullyQualifiedName();
-
-		boolean isGroupStatement = currentUseStatement != null && currentUseStatement.getNamespace() != null;
-		if (isGroupStatement) {
-			String curentFQN = currentUseStatement.getNamespace().getFullyQualifiedName();
-			ns = PHPModelUtils.concatFullyQualifiedNames(curentFQN, ns);
-		}
+		String ns = PHPModelUtils.concatFullyQualifiedNames(currentUseStatement, usePart);
 
 		if (namespace.equalsIgnoreCase(ns)) {
+			boolean isGroupStatement = currentUseStatement != null && currentUseStatement.getNamespace() != null
+					&& usePart.getGroupNamespace() != null;
 			if (isGroupStatement) {
-				FullyQualifiedReference fqn = createCombinedFQN(usePart);
+				FullyQualifiedReference fqn = ASTUtils.createFakeGroupUseType(usePart);
 
 				result = new UsePart(fqn, usePart.getAlias(),
 						Math.max(currentUseStatement.getStatementType(), usePart.getStatementType()));
@@ -105,21 +100,4 @@ public class FindUseStatementByNamespaceASTVisitor extends AbstractUseStatementA
 
 		return true;
 	}
-
-	/**
-	 * Creates fake FQN hat combines use statement namespace and use part
-	 * namespace.
-	 * 
-	 * @param usePart
-	 * @return
-	 */
-	private FullyQualifiedReference createCombinedFQN(UsePart usePart) {
-		String firstNamespace = currentUseStatement.getNamespace().getFullyQualifiedName();
-		String name = PHPModelUtils.extractElementName(usePart.getNamespace().getFullyQualifiedName());
-		String secondNamespace = PHPModelUtils.extractNameSpaceName(usePart.getNamespace().getFullyQualifiedName());
-
-		String fqn = PHPModelUtils.concatFullyQualifiedNames(firstNamespace, secondNamespace);
-		return new FullyQualifiedReference(0, 0, name, new NamespaceReference(0, 0, fqn));
-	}
-
 }
