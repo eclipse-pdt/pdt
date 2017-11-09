@@ -101,8 +101,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		// Load PHP source element requester extensions
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(PHPCorePlugin.ID,
 				"phpSourceElementRequestors"); //$NON-NLS-1$
-		List<PHPSourceElementRequestorExtension> requestors = new ArrayList<>(
-				elements.length);
+		List<PHPSourceElementRequestorExtension> requestors = new ArrayList<>(elements.length);
 		for (IConfigurationElement element : elements) {
 			try {
 				PHPSourceElementRequestorExtension extension = (PHPSourceElementRequestorExtension) element
@@ -1057,12 +1056,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				containerName = fLastNamespace.getName();
 			}
 			info.containerName = containerName;
-			if (declaration.getNamespace() == null) {
-				info.name = part.getNamespace().getFullyQualifiedName();
-			} else {
-				info.name = PHPModelUtils.concatFullyQualifiedNames(declaration.getNamespace().getFullyQualifiedName(),
-						part.getNamespace().getFullyQualifiedName());
-			}
+			info.name = PHPModelUtils.concatFullyQualifiedNames(declaration, part);
 			if (part.getAlias() != null) {
 				info.alias = part.getAlias().getName();
 			}

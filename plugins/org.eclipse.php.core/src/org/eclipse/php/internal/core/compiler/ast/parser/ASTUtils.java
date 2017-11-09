@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 IBM Corporation and others.
+ * Copyright (c) 2009, 2015, 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,6 +35,7 @@ import org.eclipse.dltk.ti.IContext;
 import org.eclipse.php.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.Constants;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
 import org.eclipse.php.internal.core.typeinference.context.FileContext;
 
@@ -521,6 +522,50 @@ public class ASTUtils {
 		}
 
 		return visitor.getResult();
+	}
+
+	/**
+	 * Used to create a fake FullyQualifiedReference object that combines use
+	 * statement namespace and use part namespace of a group use statement. For
+	 * example, this method will return an object for type
+	 * <code>"A\B\C\D\E"</code> from statement
+	 * <code>"use A\B\ { \C\D\E };"</code>. Note that this type will have its
+	 * source start and end range limited to the source start and end range of
+	 * <code>"\C\D\E"</code>.
+	 * 
+	 * @param usePart
+	 * @return fake type, null if usePart is not part of a group use statement
+	 *         (i.e. when usePart.getGroupNamespace() is null)
+	 * @see PHPModelUtils.concatFullyQualifiedNames(currentUseStatement,
+	 *      usePart)
+	 */
+	@Nullable
+	public static FullyQualifiedReference createFakeGroupUseType(UsePart usePart) {
+		FullyQualifiedReference groupNamespace = usePart.getGroupNamespace();
+		if (groupNamespace == null) {
+			return null;
+		}
+		FullyQualifiedReference usePartNamespace = usePart.getNamespace();
+		// can be null:
+		NamespaceReference usePartNamespaceNamespace = usePartNamespace.getNamespace();
+		// can be null:
+		NamespaceReference groupNamespaceNamespace = groupNamespace.getNamespace();
+
+		String usePartNamespaceFQN = usePartNamespace.getFullyQualifiedName();
+		String fakeName = PHPModelUtils.extractElementName(usePartNamespaceFQN);
+		String fakeNamespaceName = PHPModelUtils.concatFullyQualifiedNames(groupNamespace.getFullyQualifiedName(),
+				PHPModelUtils.extractNameSpaceName(usePartNamespaceFQN));
+
+		return new FullyQualifiedReference(usePartNamespace.sourceStart(), usePartNamespace.sourceEnd(), fakeName,
+				new NamespaceReference(
+						usePartNamespaceNamespace != null ? usePartNamespaceNamespace.sourceStart()
+								: usePartNamespace.sourceStart(),
+						usePartNamespaceNamespace != null ? usePartNamespaceNamespace.sourceEnd() :
+						/* empty fake namespace */
+								usePartNamespace.sourceStart(),
+						fakeNamespaceName, groupNamespaceNamespace != null ? groupNamespaceNamespace.isGlobal() : false,
+						groupNamespaceNamespace != null ? groupNamespaceNamespace.isLocal() : false),
+				usePartNamespace.getElementType());
 	}
 
 	/**
