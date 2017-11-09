@@ -55,7 +55,7 @@ public class OrganizeUseStatmentsSaveParticipant implements IPostSaveListener {
 	 */
 	public static final String EDITOR_SAVE_PARTICIPANT_PREFIX = "editor_save_participant_"; //$NON-NLS-1$
 
-	private boolean organzieOnSaveEnabled = false;
+	private boolean organizeOnSaveEnabled = false;
 
 	/*
 	 * Gets the preferences set for this editor in the Save Actions section
@@ -64,7 +64,7 @@ public class OrganizeUseStatmentsSaveParticipant implements IPostSaveListener {
 		PreferencesSupport prefSupport = new PreferencesSupport(PHPUiPlugin.ID);
 		String formatOnSavePref = prefSupport.getPreferencesValue(PreferenceConstants.ORGANIZE_ON_SAVE, null, project);
 
-		organzieOnSaveEnabled = Boolean.parseBoolean(formatOnSavePref);
+		organizeOnSaveEnabled = Boolean.parseBoolean(formatOnSavePref);
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class OrganizeUseStatmentsSaveParticipant implements IPostSaveListener {
 		IScriptProject project = compilationUnit.getScriptProject();
 		updateSaveActionsState(project != null ? project.getProject() : null);
 
-		if (!organzieOnSaveEnabled) {
+		if (!organizeOnSaveEnabled) {
 			return;
 		}
 
