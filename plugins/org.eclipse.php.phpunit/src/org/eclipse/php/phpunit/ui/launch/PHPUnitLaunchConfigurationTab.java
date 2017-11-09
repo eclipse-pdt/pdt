@@ -893,7 +893,7 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 			}
 
 			try {
-				if (PHPToolkitUtil.isPHPProject(project)) {
+				if (!PHPToolkitUtil.isPHPProject(project)) {
 					setErrorMessage(PHPUnitMessages.PHPUnitLaunchConfigurationTab_Project_Not_PHP);
 					testElementFinder.cleareCaches();
 					return;
