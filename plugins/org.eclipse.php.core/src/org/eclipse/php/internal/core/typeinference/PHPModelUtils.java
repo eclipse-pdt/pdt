@@ -48,6 +48,7 @@ import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.Identifier;
 import org.eclipse.php.core.ast.nodes.NamespaceName;
+import org.eclipse.php.core.ast.nodes.UseStatementPart;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.compiler.ast.nodes.*;
 import org.eclipse.php.core.compiler.ast.visitor.PHPASTVisitor;
@@ -179,6 +180,49 @@ public class PHPModelUtils {
 		}
 		return PHPModelUtils.concatFullyQualifiedNames(declaration.getNamespace().getFullyQualifiedName(),
 				part.getNamespace().getFullyQualifiedName());
+	}
+
+	/**
+	 * Concatenes FQN from UseStatement and one of its UsePart. Supports normal
+	 * use statements and grouped use statements.
+	 * 
+	 * @param declaration
+	 * @param part
+	 * @return
+	 * @see ASTUtils.createFakeGroupUseType(usePart)
+	 */
+	public static String concatFullyQualifiedNames(UseStatementPart part) {
+		org.eclipse.php.core.ast.nodes.UseStatement declaration = (org.eclipse.php.core.ast.nodes.UseStatement) part
+				.getParent();
+		return concatFullyQualifiedNames(declaration, part);
+	}
+
+	public static String concatFullyQualifiedNames(org.eclipse.php.core.ast.nodes.UseStatement declaration,
+			UseStatementPart part) {
+		if (declaration.getNamespace() == null) {
+			return part.getName().getName();
+		}
+		return PHPModelUtils.concatFullyQualifiedNames(declaration.getNamespace().getName(),
+				getNamespaceName(part.getName()));
+	}
+
+	public static String getNamespaceName(NamespaceName... namespaces) {
+		StringBuilder builder = new StringBuilder();
+		int idx = 0;
+		for (NamespaceName namespace : namespaces) {
+			if (namespace != null) {
+				List<Identifier> segments = namespace.segments();
+				for (Identifier segment : segments) {
+					if (idx == 0) {
+						builder.append(segment.getName());
+					} else {
+						builder.append(NamespaceReference.NAMESPACE_DELIMITER).append(segment.getName());
+					}
+					idx++;
+				}
+			}
+		}
+		return builder.toString();
 	}
 
 	/**

@@ -17,8 +17,8 @@ import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.ast.nodes.*;
-import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.text.correction.CorrectionMessages;
 import org.eclipse.php.ui.text.correction.IInvocationContext;
@@ -83,13 +83,14 @@ public class RemoveUnusedUseStatementProposal extends CUCorrectionProposal {
 			}
 			String currentNamespace = null;
 			if (current instanceof NamespaceName) {
-				currentNamespace = getNamespaceName((NamespaceName) current);
+				currentNamespace = PHPModelUtils.getNamespaceName((NamespaceName) current);
 			} else {
 				currentNamespace = ((Identifier) current).getName();
 			}
 			for (UseStatementPart part : parts) {
 				int index = parts.indexOf(part);
-				String namespace = getNamespaceName(part.getName());
+				String namespace = PHPModelUtils.getNamespaceName(((UseStatement) part.getParent()).getNamespace(),
+						part.getName());
 				if (currentNamespace.equals(namespace)) {
 					int start = part.getStart();
 					int length = 0;
@@ -109,19 +110,6 @@ public class RemoveUnusedUseStatementProposal extends CUCorrectionProposal {
 		} catch (BadLocationException e) {
 			PHPUiPlugin.log(e);
 		}
-	}
-
-	private static String getNamespaceName(NamespaceName namespace) {
-		StringBuilder namespaces = new StringBuilder(""); //$NON-NLS-1$
-		List<Identifier> segments = namespace.segments();
-		for (Identifier segment : segments) {
-			if (segments.indexOf(segment) == 0) {
-				namespaces.append(segment.getName());
-			} else {
-				namespaces.append(NamespaceReference.NAMESPACE_DELIMITER).append(segment.getName());
-			}
-		}
-		return namespaces.toString();
 	}
 
 }

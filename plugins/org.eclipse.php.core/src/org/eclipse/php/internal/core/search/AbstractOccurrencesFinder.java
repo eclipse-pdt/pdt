@@ -25,6 +25,7 @@ import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.corext.dom.NodeFinder;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
  * A base class for all the occurrence finders.
@@ -269,12 +270,12 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 			if (index >= 0) {
 				String namespace = fullName.substring(0, index);
 				if (lastUseParts.containsKey(namespace)) {
-					fullName = new StringBuilder(lastUseParts.get(namespace).getName().getName())
+					fullName = new StringBuilder(PHPModelUtils.concatFullyQualifiedNames(lastUseParts.get(namespace)))
 							.append(NamespaceReference.NAMESPACE_SEPARATOR).append(fullName.substring(index + 1))
 							.toString();
 				}
 			} else if (lastUseParts.containsKey(fullName)) {
-				fullName = new StringBuilder(lastUseParts.get(fullName).getName().getName()).toString();
+				fullName = PHPModelUtils.concatFullyQualifiedNames(lastUseParts.get(fullName));
 			} else {
 				if (currentNamespace != null && currentNamespace.getName() != null) {
 					fullName = new StringBuilder(currentNamespace.getName().getName())
