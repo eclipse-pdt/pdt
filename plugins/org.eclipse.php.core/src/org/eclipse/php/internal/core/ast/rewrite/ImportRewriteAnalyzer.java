@@ -194,7 +194,7 @@ public final class ImportRewriteAnalyzer {
 		if (decl.parts().get(0).getAlias() != null) {
 			return decl.parts().get(0).getAlias().getName();
 		}
-		return decl.parts().get(0).getName().getName();
+		return PHPModelUtils.concatFullyQualifiedNames(decl, decl.parts().get(0));
 	}
 
 	private void addExistingFunctionAndConstantImports(Program root, NamespaceDeclaration namespace) {
