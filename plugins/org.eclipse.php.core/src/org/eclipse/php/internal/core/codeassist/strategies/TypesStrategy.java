@@ -172,7 +172,7 @@ public class TypesStrategy extends ElementsStrategy {
 		ISourceRange replacementRange = getReplacementRange(abstractContext);
 		IDLTKSearchScope scope = createSearchScope();
 		for (Entry<String, UsePart> entry : result.entrySet()) {
-			String fullName = entry.getValue().getNamespace().getFullyQualifiedName();
+			String fullName = PHPModelUtils.createFullyQualifiedName(entry.getValue());
 			IType[] elements = PHPModelAccess.getDefault().findTypes(null,
 					fullName + NamespaceReference.NAMESPACE_SEPARATOR, MatchRule.PREFIX, 0, 0, scope, null);
 			for (int i = 0; i < elements.length; i++) {
@@ -191,7 +191,7 @@ public class TypesStrategy extends ElementsStrategy {
 		for (Entry<String, UsePart> entry : result.entrySet()) {
 			if (entry.getValue().getAlias() != null) {
 				String name = entry.getKey();
-				String fullName = entry.getValue().getNamespace().getFullyQualifiedName();
+				String fullName = PHPModelUtils.createFullyQualifiedName(entry.getValue());
 				if (fullName.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
 					fullName = fullName.substring(1);
 				}

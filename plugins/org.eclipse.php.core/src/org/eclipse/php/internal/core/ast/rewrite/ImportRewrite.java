@@ -22,6 +22,7 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.TextEdit;
 
@@ -204,7 +205,7 @@ public final class ImportRewrite {
 							buf.append(part.getAlias().getName());
 						} else {
 							buf.append(NORMAL_PREFIX);
-							buf.append(part.getName().getName());
+							buf.append(PHPModelUtils.createFullyQualifiedName(part));
 						}
 						imports.add(buf.toString());
 					}

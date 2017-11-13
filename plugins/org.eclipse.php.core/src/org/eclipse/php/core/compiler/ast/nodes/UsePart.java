@@ -14,6 +14,7 @@ package org.eclipse.php.core.compiler.ast.nodes;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.references.SimpleReference;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
  * Represent a 'use' part statement. e.g.
@@ -54,7 +55,7 @@ public class UsePart extends ASTNode {
 	@Override
 	public String toString() {
 		StringBuilder buf = new StringBuilder("[USE: ") //$NON-NLS-1$
-				.append(getNamespace().getFullyQualifiedName());
+				.append(PHPModelUtils.createFullyQualifiedName(this));
 		if (getAlias() != null) {
 			buf.append(" AS ").append(getAlias().getName()); //$NON-NLS-1$
 		}

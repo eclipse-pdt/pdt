@@ -275,7 +275,7 @@ public class PHPEvaluationUtils {
 					final Map<String, UsePart> result = PHPModelUtils.getAliasToNSMap(prefix, moduleDeclaration, offset,
 							currentNamespace, true);
 					if (result.containsKey(prefix)) {
-						String fullName = result.get(prefix).getNamespace().getFullyQualifiedName();
+						String fullName = PHPModelUtils.createFullyQualifiedName(result.get(prefix));
 						typeName = typeName.replace(prefix, fullName);
 						if (typeName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
 							typeName = NamespaceReference.NAMESPACE_SEPARATOR + typeName;
@@ -287,7 +287,7 @@ public class PHPEvaluationUtils {
 					final Map<String, UsePart> result = PHPModelUtils.getAliasToNSMap(prefix, moduleDeclaration, offset,
 							currentNamespace, true);
 					if (result.containsKey(prefix)) {
-						String fullName = result.get(prefix).getNamespace().getFullyQualifiedName();
+						String fullName = PHPModelUtils.createFullyQualifiedName(result.get(prefix));
 						typeName = fullName;
 						if (typeName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
 							typeName = NamespaceReference.NAMESPACE_SEPARATOR + typeName;

@@ -88,7 +88,8 @@ public class FullyQualifiedReference extends TypeReference {
 
 		String name = namespace.getName();
 		StringBuilder buf = new StringBuilder(name);
-		if (name.length() == 0 || name.charAt(name.length() - 1) != NamespaceReference.NAMESPACE_SEPARATOR) {
+		if (!namespace.isLocal()
+				&& (name.length() == 0 || name.charAt(name.length() - 1) != NamespaceReference.NAMESPACE_SEPARATOR)) {
 			buf.append(NamespaceReference.NAMESPACE_SEPARATOR);
 		}
 		buf.append(getName());
