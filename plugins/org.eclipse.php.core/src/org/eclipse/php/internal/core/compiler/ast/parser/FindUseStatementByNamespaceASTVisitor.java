@@ -82,7 +82,7 @@ public class FindUseStatementByNamespaceASTVisitor extends AbstractUseStatementA
 	 */
 	@Override
 	protected boolean visit(UsePart usePart) {
-		String ns = PHPModelUtils.concatFullyQualifiedNames(currentUseStatement, usePart);
+		String ns = PHPModelUtils.createFullyQualifiedName(currentUseStatement, usePart);
 
 		if (namespace.equalsIgnoreCase(ns)) {
 			boolean isGroupStatement = currentUseStatement != null && currentUseStatement.getNamespace() != null

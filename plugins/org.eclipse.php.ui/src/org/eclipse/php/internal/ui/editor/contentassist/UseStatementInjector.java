@@ -228,7 +228,7 @@ public class UseStatementInjector {
 									offset += edits.getLength();
 									proposal.setReplacementOffset(replacementOffset);
 								} else if (!useAlias && (usePart == null
-										|| !usePartName.equals(usePart.getNamespace().getFullyQualifiedName()))) {
+										|| !usePartName.equals(PHPModelUtils.createFullyQualifiedName(usePart)))) {
 									// if the type name already exists, use
 									// fully
 									// qualified name to replace
@@ -397,7 +397,7 @@ public class UseStatementInjector {
 				offset += edits.getLength();
 				proposal.setReplacementOffset(replacementOffset);
 			} else if (!useAlias
-					&& (usePart == null || !usePartName.equals(usePart.getNamespace().getFullyQualifiedName()))) {
+					&& (usePart == null || !usePartName.equals(PHPModelUtils.createFullyQualifiedName(usePart)))) {
 				String namespacePrefix = NamespaceReference.NAMESPACE_SEPARATOR + namespaceName
 						+ NamespaceReference.NAMESPACE_SEPARATOR;
 				String replacementString = proposal.getReplacementString();
