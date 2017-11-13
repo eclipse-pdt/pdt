@@ -715,7 +715,7 @@ public class CodeAssistUtils {
 						Map<String, UsePart> useParts = PHPModelUtils.getAliasToNSMap(functionName, moduleDeclaration,
 								offset, namespace, true);
 						if (useParts.containsKey(functionName)) {
-							String name = useParts.get(functionName).getNamespace().getFullyQualifiedName();
+							String name = PHPModelUtils.createFullyQualifiedName(useParts.get(functionName));
 							name = NamespaceReference.NAMESPACE_SEPARATOR + name;
 							types = getFunctionReturnType(null, name, USE_PHPDOC, sourceModule, offset, argNames);
 							if (types != null) {

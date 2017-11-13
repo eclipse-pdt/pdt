@@ -304,7 +304,7 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 						final Map<String, UsePart> result = PHPModelUtils.getAliasToNSMap(prefix, moduleDeclaration,
 								reference.sourceStart(), currentNamespace, true);
 						if (result.containsKey(prefix)) {
-							String fullName = result.get(prefix).getNamespace().getFullyQualifiedName();
+							String fullName = PHPModelUtils.createFullyQualifiedName(result.get(prefix));
 							typeName = typeName.replace(prefix, fullName);
 						}
 					} else if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) < 0) {
@@ -313,7 +313,7 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 						final Map<String, UsePart> result = PHPModelUtils.getAliasToNSMap(prefix, moduleDeclaration,
 								reference.sourceStart(), currentNamespace, true);
 						if (result.containsKey(prefix)) {
-							String fullName = result.get(prefix).getNamespace().getFullyQualifiedName();
+							String fullName = PHPModelUtils.createFullyQualifiedName(result.get(prefix));
 							typeName = fullName;
 						}
 					}

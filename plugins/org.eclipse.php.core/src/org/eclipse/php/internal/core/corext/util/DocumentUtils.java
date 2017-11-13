@@ -25,6 +25,7 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.php.core.compiler.ast.nodes.*;
 import org.eclipse.php.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
  * @author Yannick de Lange <yannickl88@gmail.com>
@@ -259,7 +260,7 @@ public class DocumentUtils {
 			if (!first) {
 				use += ", "; //$NON-NLS-1$
 			}
-			use += part.getNamespace().getFullyQualifiedName();
+			use += PHPModelUtils.createFullyQualifiedName(part);
 			if (part.getAlias() != null) {
 				use += " as " + part.getAlias().getName(); //$NON-NLS-1$
 			}

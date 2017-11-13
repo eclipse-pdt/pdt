@@ -635,7 +635,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				if (name.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
 					name = name.substring(1);
 				} else if (fLastUseParts.containsKey(namespace)) {
-					name = new StringBuilder(fLastUseParts.get(namespace).getNamespace().getFullyQualifiedName())
+					name = new StringBuilder(PHPModelUtils.createFullyQualifiedName(fLastUseParts.get(namespace)))
 							.append(subnamespace).append(NamespaceReference.NAMESPACE_SEPARATOR)
 							.append(fullyQualifiedName.getName()).toString();
 				} else if (fLastNamespace != null) {
@@ -643,7 +643,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 							.append(name).toString();
 				}
 			} else if (fLastUseParts.containsKey(name)) {
-				name = fLastUseParts.get(name).getNamespace().getFullyQualifiedName();
+				name = PHPModelUtils.createFullyQualifiedName(fLastUseParts.get(name));
 				if (name.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
 					name = name.substring(1);
 				}
@@ -1056,7 +1056,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				containerName = fLastNamespace.getName();
 			}
 			info.containerName = containerName;
-			info.name = PHPModelUtils.concatFullyQualifiedNames(declaration, part);
+			info.name = PHPModelUtils.createFullyQualifiedName(declaration, part);
 			if (part.getAlias() != null) {
 				info.alias = part.getAlias().getName();
 			}

@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.php.core.ast.nodes.*;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
  * Class names occurrences finder.
@@ -192,10 +193,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 
 	@Override
 	public boolean visit(UseStatementPart part) {
-		NamespaceName namespace = part.getName();
-		if (namespace != null) {
-			dealIdentifier(namespace);
-		}
+		dealUseStatementPart(part);
 		return false;
 	}
 
@@ -215,6 +213,14 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 				dealIdentifier(identifier);
 			}
 		}
+	}
+
+	/**
+	 * @param part
+	 */
+	private void dealUseStatementPart(UseStatementPart part) {
+		String fullName = getFullName(PHPModelUtils.createFullyQualifiedName(part), fLastUseParts, fCurrentNamespace);
+		nodeToFullName.put(part.getName(), fullName);
 	}
 
 	/**
