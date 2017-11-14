@@ -24,6 +24,7 @@ import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.typeinference.evaluators.PHPTraitType;
+import org.eclipse.php.internal.core.typeinference.evaluators.TypeReferenceEvaluator;
 
 /**
  * This evaluated type represents PHP class or interface
@@ -131,32 +132,48 @@ public class PHPClassType extends ClassType implements IClassType {
 	 * @param offset
 	 *            Offset in file here the type was referenced
 	 * @return evaluated type
+	 * @see TypeReferenceEvaluator#init()
 	 */
 	public static PHPClassType fromTypeName(String typeName, ISourceModule sourceModule, int offset) {
 		String namespace = PHPModelUtils.extractNamespaceName(typeName, sourceModule, offset);
+		String elementName = PHPModelUtils.extractElementName(typeName);
+		if (namespace != null) {
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=515844
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=527153
+			elementName = PHPModelUtils.getRealName(typeName, sourceModule, offset, elementName);
+		}
 		final ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 		if (PHPModelUtils.isInUseTraitStatement(moduleDeclaration, offset)) {
 
 			if (namespace != null) {
-				return new PHPTraitType(namespace, PHPModelUtils.extractElementName(typeName));
+				return new PHPTraitType(namespace, elementName);
 			}
-			return new PHPTraitType(typeName);
+			return new PHPTraitType(elementName);
 		} else {
 
 			if (namespace != null) {
-				return new PHPClassType(namespace, PHPModelUtils.extractElementName(typeName));
+				return new PHPClassType(namespace, elementName);
 			}
-			return new PHPClassType(typeName);
+			return new PHPClassType(elementName);
 		}
 	}
 
+	/**
+	 * @see TypeReferenceEvaluator#init()
+	 */
 	public static PHPClassType fromTraitName(String typeName, ISourceModule sourceModule, int offset) {
 		String namespace = PHPModelUtils.extractNamespaceName(typeName, sourceModule, offset);
+		String elementName = PHPModelUtils.extractElementName(typeName);
+		if (namespace != null) {
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=515844
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=527153
+			elementName = PHPModelUtils.getRealName(typeName, sourceModule, offset, elementName);
+		}
 
 		if (namespace != null) {
-			return new PHPTraitType(namespace, PHPModelUtils.extractElementName(typeName));
+			return new PHPTraitType(namespace, elementName);
 		}
-		return new PHPTraitType(typeName);
+		return new PHPTraitType(elementName);
 	}
 
 	/**
