@@ -204,8 +204,8 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 					// FooBar), the leading backslash is unnecessary and not
 					// recommended, as import names must be fully qualified, and
 					// are not processed relative to the current namespace."
-					if (namespace != null && namespace.length() != 0
-							&& !namespace.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
+					if (namespace != null && namespace.length() > 0
+							&& namespace.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
 						namespace = NamespaceReference.NAMESPACE_DELIMITER + namespace;
 					}
 					// NB: ImportDeclaration has no useful type, we have to look
