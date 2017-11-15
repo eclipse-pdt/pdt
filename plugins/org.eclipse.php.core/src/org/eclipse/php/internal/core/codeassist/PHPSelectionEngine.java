@@ -375,7 +375,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					// FooBar), the leading backslash is unnecessary and not
 					// recommended, as import names must be fully qualified, and
 					// are not processed relative to the current namespace."
-					if (namespace != null && !fullyQualifiedName.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
+					if (namespace != null && fullyQualifiedName.length() > 0
+							&& fullyQualifiedName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
 						fullyQualifiedName = NamespaceReference.NAMESPACE_DELIMITER + fullyQualifiedName;
 					}
 					return PHPModelUtils.getFunctions(fullyQualifiedName, sourceModule, offset, cache, null);
@@ -963,8 +964,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		} else {
 			SimpleReference callName = callExpression.getCallName();
 			String methodName = callName instanceof FullyQualifiedReference
-					? ((FullyQualifiedReference) callName).getFullyQualifiedName()
-					: callName.getName();
+					? ((FullyQualifiedReference) callName).getFullyQualifiedName() : callName.getName();
 			IMember[] members = PHPModelUtils.getFunctions(methodName, sourceModule, offset, cache, null);
 			if (members.length == 0) {
 				final IType currentNamespace = PHPModelUtils.getCurrentNamespace(sourceModule,
@@ -974,7 +974,9 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						currentNamespace, true);
 				if (useParts.containsKey(methodName)) {
 					String fullName = useParts.get(methodName).getNamespace().getFullyQualifiedName();
-					fullName = NamespaceReference.NAMESPACE_SEPARATOR + fullName;
+					if (fullName.length() > 0 && fullName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+						fullName = NamespaceReference.NAMESPACE_SEPARATOR + fullName;
+					}
 					members = PHPModelUtils.getFunctions(fullName, sourceModule, offset, null, null);
 				}
 			}
@@ -1104,8 +1106,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	}
 
 	/**
-	 * Return workspace or method fields depending on current position: whether we
-	 * are inside method or in global scope.
+	 * Return workspace or method fields depending on current position: whether
+	 * we are inside method or in global scope.
 	 * 
 	 * @param sourceModule
 	 * @param offset

@@ -716,7 +716,9 @@ public class CodeAssistUtils {
 								offset, namespace, true);
 						if (useParts.containsKey(functionName)) {
 							String name = useParts.get(functionName).getNamespace().getFullyQualifiedName();
-							name = NamespaceReference.NAMESPACE_SEPARATOR + name;
+							if (name.length() > 0 && name.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+								name = NamespaceReference.NAMESPACE_SEPARATOR + name;
+							}
 							types = getFunctionReturnType(null, name, USE_PHPDOC, sourceModule, offset, argNames);
 							if (types != null) {
 								returnTypes.addAll(Arrays.asList(types));
