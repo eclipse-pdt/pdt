@@ -40,6 +40,7 @@ import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegi
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.format.PHPHeuristicScanner;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -1201,7 +1202,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 				String name = part.getAlias() != null ? part.getAlias().getName() : part.getNamespace().getName();
 				if (name.equalsIgnoreCase(search)) {
 					stop = true;
-					found = part.getNamespace().getFullyQualifiedName();
+					found = PHPModelUtils.createFullyQualifiedName(part);
 					break;
 				}
 			}

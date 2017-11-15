@@ -37,6 +37,7 @@ import org.eclipse.php.internal.core.ast.rewrite.ImportRewrite;
 import org.eclipse.php.internal.core.ast.rewrite.ImportRewrite.ImportRewriteContext;
 import org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier;
 import org.eclipse.php.internal.core.search.PHPSearchTypeNameMatch;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.corext.util.Messages;
@@ -85,7 +86,7 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 			Collection<UseStatement> unresolvableImports = determineUnresolvableImports(cu, namespace);
 			for (UseStatement importDeclaration : unresolvableImports) {
 				for (UseStatementPart part : importDeclaration.parts()) {
-					String qualifiedName = part.getName().getName();
+					String qualifiedName = PHPModelUtils.createFullyQualifiedName(part);
 
 					String simpleName = qualifiedName
 							.substring(qualifiedName.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR) + 1);
@@ -629,7 +630,7 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 		for (int i = 0; i < imports.size(); i++) {
 			UseStatement curr = imports.get(i);
 			for (UseStatementPart part : curr.parts()) {
-				String importName = part.getName().getName();
+				String importName = PHPModelUtils.createFullyQualifiedName(part);
 				if (part.getAlias() != null) {
 					importName += " as " + part.getAlias().getName(); //$NON-NLS-1$
 				}

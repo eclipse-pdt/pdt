@@ -576,7 +576,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 					if (name.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
 						name = name.substring(1);
 					} else if (fLastUseParts.containsKey(namespace)) {
-						name = new StringBuilder(fLastUseParts.get(namespace).getNamespace().getFullyQualifiedName())
+						name = new StringBuilder(PHPModelUtils.createFullyQualifiedName(fLastUseParts.get(namespace)))
 								.append(subnamespace).append(NamespaceReference.NAMESPACE_SEPARATOR)
 								.append(fullyQualifiedName.getName()).toString();
 					} else if (fCurrentNamespace != null) {
@@ -584,7 +584,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 								.append(NamespaceReference.NAMESPACE_SEPARATOR).append(name).toString();
 					}
 				} else if (fLastUseParts.containsKey(name)) {
-					name = fLastUseParts.get(name).getNamespace().getFullyQualifiedName();
+					name = PHPModelUtils.createFullyQualifiedName(fLastUseParts.get(name));
 					if (name.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
 						name = name.substring(1);
 					}
