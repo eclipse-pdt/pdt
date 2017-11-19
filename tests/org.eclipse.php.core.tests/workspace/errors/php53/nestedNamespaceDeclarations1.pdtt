@@ -1,0 +1,17 @@
+--TEST--
+Bug 455759 - [parser] Nested namespaces are allowed
+--FILE--
+<?php
+namespace X {
+
+	namespace Y {
+
+		namespace Z {
+
+		}
+	}
+}
+?>
+--EXPECT--
+[line=4, start=22, end=60] Namespace declarations cannot be nested
+[line=6, start=39, end=57] Namespace declarations cannot be nested

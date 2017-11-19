@@ -73,6 +73,10 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	private PHPVersion version;
 	private IBuildContext context;
 	private IValidatorExtension[] extensions;
+	/**
+	 * Used to hold visited namespaces in depth
+	 */
+	private Stack<NamespaceDeclaration> fNamespaceDeclarations = new Stack<>();
 
 	@SuppressWarnings("null")
 	public ValidatorVisitor(IBuildContext context) {
@@ -111,6 +115,11 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	public boolean visit(NamespaceDeclaration s) throws Exception {
 		hasNamespace = true;
 		currentNamespace = s;
+		fNamespaceDeclarations.push(s);
+		if (fNamespaceDeclarations.size() > 1) {
+			reportProblem(s, Messages.NestedNamespaceDeclarations, PHPProblemIdentifier.NestedNamespaceDeclarations,
+					ProblemSeverities.Error);
+		}
 		visitGeneral(s);
 		return true;
 	}
@@ -119,6 +128,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	public boolean endvisit(NamespaceDeclaration s) throws Exception {
 		boolean res = super.endvisit(s);
 		checkUnusedImport();
+		fNamespaceDeclarations.pop();
 		return res;
 	}
 
