@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.core.compiler.ast.nodes;
 
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.references.TypeReference;
 
@@ -55,6 +56,7 @@ public class FullyQualifiedReference extends TypeReference {
 	 * 
 	 * @return
 	 */
+	@Nullable
 	public NamespaceReference getNamespace() {
 		return namespace;
 	}

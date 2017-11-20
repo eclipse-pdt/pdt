@@ -50,6 +50,7 @@ import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.Identifier;
 import org.eclipse.php.core.ast.nodes.NamespaceName;
+import org.eclipse.php.core.ast.nodes.UseStatementPart;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.compiler.ast.nodes.*;
 import org.eclipse.php.core.compiler.ast.visitor.PHPASTVisitor;
@@ -146,6 +147,7 @@ public class PHPModelUtils {
 
 	/**
 	 * Concatenate FQN parameters into one string e.g. 'A\B' + 'C\D' = 'A\B\C\D'
+	 * (<b>without leading and trailing '\'</b>).
 	 * 
 	 * @param fqns
 	 *            names to concat
@@ -169,20 +171,97 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * Concatenes FQN from UseStatement and one of its UsePart. Supports normal use
-	 * statements and grouped use statements.
+	 * Concatenes FQN from UseStatement and one of its UsePart. Supports normal
+	 * use statements and grouped use statements. <b>Returned FQN can have (or
+	 * not) leading '\'.</b>
 	 * 
 	 * @param declaration
 	 * @param part
 	 * @return
 	 * @see ASTUtils.createFakeGroupUseType(usePart)
 	 */
-	public static String concatFullyQualifiedNames(UseStatement declaration, UsePart part) {
+	public static String createFullyQualifiedName(UseStatement declaration, UsePart part) {
 		if (declaration.getNamespace() == null) {
 			return part.getNamespace().getFullyQualifiedName();
 		}
 		return PHPModelUtils.concatFullyQualifiedNames(declaration.getNamespace().getFullyQualifiedName(),
 				part.getNamespace().getFullyQualifiedName());
+	}
+
+	/**
+	 * Concatenes FQN from UseStatement and one of its UsePart. Supports normal
+	 * use statements and grouped use statements. <b>Returned FQN can have (or
+	 * not) leading '\'.</b>
+	 * 
+	 * @param part
+	 * @return
+	 * @see ASTUtils.createFakeGroupUseType(usePart)
+	 */
+	public static String createFullyQualifiedName(UsePart part) {
+		if (part.getGroupNamespace() == null) {
+			return part.getNamespace().getFullyQualifiedName();
+		}
+		return PHPModelUtils.concatFullyQualifiedNames(part.getGroupNamespace().getFullyQualifiedName(),
+				part.getNamespace().getFullyQualifiedName());
+	}
+
+	/**
+	 * Concatenes FQN from UseStatement and one of its UseStatementPart.
+	 * Supports normal use statements and grouped use statements. <b>Returned
+	 * FQN can have (or not) leading '\'.</b>
+	 * 
+	 * @param declaration
+	 * @param part
+	 * @return
+	 * @see ASTUtils.createFakeGroupUseType(usePart)
+	 */
+	public static String createFullyQualifiedName(org.eclipse.php.core.ast.nodes.UseStatement declaration,
+			UseStatementPart part) {
+		if (declaration.getNamespace() == null) {
+			return part.getName().getName();
+		}
+		return PHPModelUtils.concatFullyQualifiedNames(declaration.getNamespace().getName(), part.getName().getName());
+	}
+
+	/**
+	 * Concatenes FQN from UseStatement and one of its UseStatementPart.
+	 * Supports normal use statements and grouped use statements. <b>Returned
+	 * FQN can have (or not) leading '\'.</b>
+	 * 
+	 * @param part
+	 * @return
+	 * @see ASTUtils.createFakeGroupUseType(usePart)
+	 */
+	public static String createFullyQualifiedName(UseStatementPart part) {
+		org.eclipse.php.core.ast.nodes.UseStatement declaration = (org.eclipse.php.core.ast.nodes.UseStatement) part
+				.getParent();
+		return createFullyQualifiedName(declaration, part);
+	}
+
+	/**
+	 * Concatenes multiple NamespaceNames into a single one and returns it as a
+	 * string (<b>without leading and trailing '\'</b>).
+	 * 
+	 * @param namespaces
+	 * @return
+	 */
+	public static String getNamespaceName(NamespaceName... namespaces) {
+		StringBuilder builder = new StringBuilder();
+		int idx = 0;
+		for (NamespaceName namespace : namespaces) {
+			if (namespace != null) {
+				List<Identifier> segments = namespace.segments();
+				for (Identifier segment : segments) {
+					if (idx == 0) {
+						builder.append(segment.getName());
+					} else {
+						builder.append(NamespaceReference.NAMESPACE_DELIMITER).append(segment.getName());
+					}
+					idx++;
+				}
+			}
+		}
+		return builder.toString();
 	}
 
 	/**
@@ -202,7 +281,7 @@ public class PHPModelUtils {
 		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 		UsePart usePart = ASTUtils.findUseStatementByAlias(moduleDeclaration, elementName, offset);
 		if (usePart != null) {
-			elementName = usePart.getNamespace().getFullyQualifiedName();
+			elementName = PHPModelUtils.createFullyQualifiedName(usePart);
 			int nsIndex = elementName.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
 			if (nsIndex != -1) {
 				defaultClassName = elementName.substring(nsIndex + 1);
@@ -214,8 +293,8 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * Extracts the namespace name from the specified element name and resolves it
-	 * using USE statements that present in the file.
+	 * Extracts the namespace name from the specified element name and resolves
+	 * it using USE statements that present in the file.
 	 * 
 	 * @param elementName
 	 *            The name of the element, like: \A\B or A\B\C.
@@ -238,7 +317,7 @@ public class PHPModelUtils {
 		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 		UsePart usePart = ASTUtils.findUseStatementByAlias(moduleDeclaration, elementName, offset);
 		if (usePart != null) {
-			elementName = usePart.getNamespace().getFullyQualifiedName();
+			elementName = PHPModelUtils.createFullyQualifiedName(usePart);
 			if (elementName != null && elementName.length() > 0
 					&& elementName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
 				elementName = NamespaceReference.NAMESPACE_SEPARATOR + elementName;
@@ -272,14 +351,14 @@ public class PHPModelUtils {
 				if (namespace.indexOf('\\') == -1) {
 					usePart = ASTUtils.findUseStatementByAlias(moduleDeclaration, namespace, offset);
 					if (usePart != null) {
-						return usePart.getNamespace().getFullyQualifiedName();
+						return PHPModelUtils.createFullyQualifiedName(usePart);
 					}
 				} else {
 					nsIndex = namespace.indexOf(NamespaceReference.NAMESPACE_SEPARATOR);
 					String alias = namespace.substring(0, nsIndex);
 					usePart = ASTUtils.findUseStatementByAlias(moduleDeclaration, alias, offset);
 					if (usePart != null) {
-						return usePart.getNamespace().getFullyQualifiedName() + NamespaceReference.NAMESPACE_SEPARATOR
+						return PHPModelUtils.createFullyQualifiedName(usePart) + NamespaceReference.NAMESPACE_SEPARATOR
 								+ namespace.substring(nsIndex + 1);
 					}
 				}
@@ -396,9 +475,9 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * Determine whether given elements represent the same type, name and namespace,
-	 * but declared in different files (determine whether file network filtering can
-	 * be used)
+	 * Determine whether given elements represent the same type, name and
+	 * namespace, but declared in different files (determine whether file
+	 * network filtering can be used)
 	 * 
 	 * @param elements
 	 *            Model elements list
@@ -457,7 +536,8 @@ public class PHPModelUtils {
 	 *            The file where current namespace is requested
 	 * @param offset
 	 *            The offset where current namespace is requested
-	 * @return method element, or <code>null</code> if the scope not a method scope
+	 * @return method element, or <code>null</code> if the scope not a method
+	 *         scope
 	 */
 	@Nullable
 	public static IMethod getCurrentMethod(ISourceModule sourceModule, int offset) {
@@ -483,8 +563,8 @@ public class PHPModelUtils {
 	 * 
 	 * @param element
 	 *            Model element
-	 * @return namespace element, or <code>null</code> if the scope is global under
-	 *         the specified cursor position
+	 * @return namespace element, or <code>null</code> if the scope is global
+	 *         under the specified cursor position
 	 */
 	@Nullable
 	public static IType getCurrentNamespace(IModelElement element) {
@@ -509,8 +589,8 @@ public class PHPModelUtils {
 	 *            The file where current namespace is requested
 	 * @param sourceModule
 	 *            The offset where current namespace is requested
-	 * @return namespace element, or <code>null</code> if the scope is global under
-	 *         the specified cursor position
+	 * @return namespace element, or <code>null</code> if the scope is global
+	 *         under the specified cursor position
 	 */
 	@Nullable
 	public static IType getCurrentNamespace(ISourceModule sourceModule, int offset) {
@@ -724,9 +804,9 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * This method returns field corresponding to its name and the file where it was
-	 * referenced. The field name may contain also the namespace part, like: A\B\C
-	 * or \A\B\C
+	 * This method returns field corresponding to its name and the file where it
+	 * was referenced. The field name may contain also the namespace part, like:
+	 * A\B\C or \A\B\C
 	 * 
 	 * @param fieldName
 	 *            Tye fully qualified field name
@@ -746,9 +826,9 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * This method returns field corresponding to its name and the file where it was
-	 * referenced. The field name may contain also the namespace part, like: A\B\C
-	 * or \A\B\C
+	 * This method returns field corresponding to its name and the file where it
+	 * was referenced. The field name may contain also the namespace part, like:
+	 * A\B\C or \A\B\C
 	 * 
 	 * @param fieldName
 	 *            Tye fully qualified field name
@@ -816,9 +896,9 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * This method returns function corresponding to its name and the file where it
-	 * was referenced. The function name may contain also the namespace part, like:
-	 * A\B\foo() or \A\B\foo()
+	 * This method returns function corresponding to its name and the file where
+	 * it was referenced. The function name may contain also the namespace part,
+	 * like: A\B\foo() or \A\B\foo()
 	 * 
 	 * @param functionName
 	 *            The fully qualified function name
@@ -838,9 +918,9 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * This method returns function corresponding to its name and the file where it
-	 * was referenced. The function name may contain also the namespace part, like:
-	 * A\B\foo() or \A\B\foo()
+	 * This method returns function corresponding to its name and the file where
+	 * it was referenced. The function name may contain also the namespace part,
+	 * like: A\B\foo() or \A\B\foo()
 	 * 
 	 * @param functionName
 	 *            The fully qualified function name
@@ -984,8 +1064,8 @@ public class PHPModelUtils {
 
 	/**
 	 * This method searches for all fields that where declared in the specified
-	 * method (including global variables that where introduced to this method using
-	 * 'global' keyword)
+	 * method (including global variables that where introduced to this method
+	 * using 'global' keyword)
 	 * 
 	 * @param method
 	 *            Method to look at
@@ -1141,7 +1221,8 @@ public class PHPModelUtils {
 	 *            Source module where the field is referenced
 	 * @param monitor
 	 *            Progress monitor
-	 * @return field declared in the specified namespace, or null if there is none
+	 * @return field declared in the specified namespace, or null if there is
+	 *         none
 	 * @throws ModelException
 	 */
 	@NonNull
@@ -1165,7 +1246,8 @@ public class PHPModelUtils {
 	 *            Model access cache if available
 	 * @param monitor
 	 *            Progress monitor
-	 * @return field declared in the specified namespace, or null if there is none
+	 * @return field declared in the specified namespace, or null if there is
+	 *         none
 	 * @throws ModelException
 	 */
 	@SuppressWarnings("null")
@@ -1242,7 +1324,8 @@ public class PHPModelUtils {
 	 * Guess the namespace where the specified element is declared.
 	 * 
 	 * @param elementName
-	 *            The name of the element, like: \A\B, A\B, namespace\B, \B, etc...
+	 *            The name of the element, like: \A\B, A\B, namespace\B, \B,
+	 *            etc...
 	 * @param sourceModule
 	 *            Source module where the element is referenced
 	 * @param offset
@@ -1262,7 +1345,8 @@ public class PHPModelUtils {
 	 * Guess the namespace where the specified element is declared.
 	 * 
 	 * @param elementName
-	 *            The name of the element, like: \A\B, A\B, namespace\B, \B, etc...
+	 *            The name of the element, like: \A\B, A\B, namespace\B, \B,
+	 *            etc...
 	 * @param sourceModule
 	 *            Source module where the element is referenced
 	 * @param offset
@@ -1304,7 +1388,8 @@ public class PHPModelUtils {
 	 *            Source module where the type is referenced
 	 * @param monitor
 	 *            Progress monitor
-	 * @return type declared in the specified namespace, or null if there is none
+	 * @return type declared in the specified namespace, or null if there is
+	 *         none
 	 * @throws ModelException
 	 */
 	@NonNull
@@ -1329,7 +1414,8 @@ public class PHPModelUtils {
 	 * @param monitor
 	 *            Progress monitor
 	 * @param isType
-	 * @return type declared in the specified namespace, or null if there is none
+	 * @return type declared in the specified namespace, or null if there is
+	 *         none
 	 * @throws ModelException
 	 */
 	@SuppressWarnings("null")
@@ -1672,8 +1758,8 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * Finds the first method by name in the class hierarchy (including the class
-	 * itself)
+	 * Finds the first method by name in the class hierarchy (including the
+	 * class itself)
 	 * 
 	 * @param type
 	 *            Class element
@@ -1807,9 +1893,9 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * This method returns type corresponding to its name and the file where it was
-	 * referenced. The type name may contain also the namespace part, like: A\B\C or
-	 * \A\B\C
+	 * This method returns type corresponding to its name and the file where it
+	 * was referenced. The type name may contain also the namespace part, like:
+	 * A\B\C or \A\B\C
 	 * 
 	 * @param typeName
 	 *            Tye fully qualified type name
@@ -1829,9 +1915,9 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * This method returns type corresponding to its name and the file where it was
-	 * referenced. The type name may contain also the namespace part, like: A\B\C or
-	 * \A\B\C
+	 * This method returns type corresponding to its name and the file where it
+	 * was referenced. The type name may contain also the namespace part, like:
+	 * A\B\C or \A\B\C
 	 * 
 	 * @param typeName
 	 *            Tye fully qualified type name
@@ -2224,7 +2310,7 @@ public class PHPModelUtils {
 									result.put(name, usePart);
 								}
 							} else {
-								String name = usePart.getNamespace().getFullyQualifiedName();
+								String name = PHPModelUtils.createFullyQualifiedName(usePart);
 								int index = name.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
 								if (index >= 0) {
 									name = name.substring(index + 1);
@@ -2284,9 +2370,9 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * this function searches the sequence from the right closing bracket ")" and
-	 * finding the position of the left "(" the offset has to be the offset of the
-	 * "("
+	 * this function searches the sequence from the right closing bracket ")"
+	 * and finding the position of the left "(" the offset has to be the offset
+	 * of the "("
 	 */
 	public static int getFunctionNameEndOffset(TextSequence statementText, int offset) {
 		if (statementText.charAt(offset) != ')') {
@@ -2430,8 +2516,8 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * Strips single or double quotes from the start and from the end of the given
-	 * string
+	 * Strips single or double quotes from the start and from the end of the
+	 * given string
 	 * 
 	 * @param name
 	 *            String
