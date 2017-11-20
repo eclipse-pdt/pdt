@@ -179,18 +179,18 @@ public final class ImportRewriteAnalyzer {
 	}
 
 	private static String getQualifier(String decl) {
-		String namesapceName = PHPModelUtils.extractNameSpaceName(decl);
-		if (namesapceName == null) {
+		String namespaceName = PHPModelUtils.extractNameSpaceName(decl);
+		if (namespaceName == null) {
 			return "global namespace"; //$NON-NLS-1$
 		}
-		return namesapceName;
+		return namespaceName;
 	}
 
 	private static String getFullName(UseStatement decl) {
 		if (decl.parts().get(0).getAlias() != null) {
 			return decl.parts().get(0).getAlias().getName();
 		}
-		return decl.parts().get(0).getName().getName();
+		return PHPModelUtils.createFullyQualifiedName(decl, decl.parts().get(0));
 	}
 
 	private void addExistingImports(Program root, NamespaceDeclaration namespace) {

@@ -973,7 +973,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				Map<String, UsePart> useParts = PHPModelUtils.getAliasToNSMap(methodName, parsedUnit, offset,
 						currentNamespace, true);
 				if (useParts.containsKey(methodName)) {
-					String fullName = useParts.get(methodName).getNamespace().getFullyQualifiedName();
+					String fullName = PHPModelUtils.createFullyQualifiedName(useParts.get(methodName));
 					if (fullName.length() > 0 && fullName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
 						fullName = NamespaceReference.NAMESPACE_SEPARATOR + fullName;
 					}
@@ -993,7 +993,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		Map<String, UsePart> useParts = PHPModelUtils.getAliasToNSMap(fieldName, parsedUnit, offset, currentNamespace,
 				true);
 		if (useParts.containsKey(fieldName)) {
-			String fullName = useParts.get(fieldName).getNamespace().getFullyQualifiedName();
+			String fullName = PHPModelUtils.createFullyQualifiedName(useParts.get(fieldName));
 			IField[] elements = PHPModelAccess.getDefault().findFields(fullName, MatchRule.EXACT, 0, 0, scope, null);
 			if (elements != null) {
 				List<IField> result = new ArrayList<>();

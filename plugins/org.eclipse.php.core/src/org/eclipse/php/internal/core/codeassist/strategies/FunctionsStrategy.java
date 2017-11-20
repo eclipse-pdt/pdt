@@ -135,7 +135,7 @@ public class FunctionsStrategy extends ElementsStrategy {
 		IDLTKSearchScope scope = createSearchScope();
 		for (Entry<String, UsePart> entry : result.entrySet()) {
 			String name = entry.getKey();
-			String fullName = entry.getValue().getNamespace().getFullyQualifiedName();
+			String fullName = PHPModelUtils.createFullyQualifiedName(entry.getValue());
 			if (fullName.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
 				fullName = fullName.substring(1);
 			}
