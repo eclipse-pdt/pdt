@@ -39,6 +39,7 @@ import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier;
 import org.eclipse.php.internal.core.corext.util.DocumentUtils;
 import org.eclipse.php.internal.core.search.Messages;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
  * @author Yannick de Lange <yannickl88@gmail.com>
@@ -149,7 +150,7 @@ public class OrganizeBuildParticipantFactory extends AbstractBuildParticipantTyp
 				int lineNumber = context.getLineTracker().getLineNumberOfOffset(sourceStart);
 
 				DefaultProblem problem = new DefaultProblem(context.getFile().getName(),
-						Messages.format(UNUSED_MESSAGE, part.getNamespace().getFullyQualifiedName()),
+						Messages.format(UNUSED_MESSAGE, PHPModelUtils.createFullyQualifiedName(part)),
 						PHPProblemIdentifier.USE_STATEMENTS, new String[0], ProblemSeverities.Warning, sourceStart,
 						sourceEnd, lineNumber, -1);
 

@@ -15,7 +15,6 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.evaluation.types.IClassType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.core.compiler.PHPFlags;
-import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 
 /**
  * This evaluated type represents PHP namespace
@@ -28,10 +27,6 @@ public class PHPNamespaceType implements IClassType {
 	 * Constructs evaluated type for PHP namespace.
 	 */
 	public PHPNamespaceType(String typeName) {
-		if (typeName != null && typeName.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
-			// make the namespace fully qualified:
-			typeName = new StringBuilder().append(NamespaceReference.NAMESPACE_DELIMITER).append(typeName).toString();
-		}
 		this.namespace = typeName;
 	}
 
