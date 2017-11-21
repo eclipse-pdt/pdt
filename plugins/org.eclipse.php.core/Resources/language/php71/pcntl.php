@@ -1,6 +1,6 @@
 <?php
 
-// Start of pcntl v.7.0.0-dev
+// Start of pcntl v.7.1.1-1
 
 /**
  * Forks the currently running process
@@ -158,6 +158,7 @@ function pcntl_wait (&$status, $options = null) {}
  * <p>
  * voidhandler
  * intsigno
+ * mixedsigninfo
  * signo
  * The signal being handled.
  * @param bool $restart_syscalls [optional] <p>
@@ -167,6 +168,16 @@ function pcntl_wait (&$status, $options = null) {}
  * @return bool true on success or false on failure
  */
 function pcntl_signal ($signo, $handler, $restart_syscalls = null) {}
+
+/**
+ * Get the current handler for specified signal
+ * @link http://www.php.net/manual/en/function.pcntl-signal-get-handler.php
+ * @param int $signo <p>
+ * The signal number.
+ * </p>
+ * @return int|string This function may return an integer value that refers to SIG_DFL or SIG_IGN. If you set a custom handler a string value containing the function name is returned.
+ */
+function pcntl_signal_get_handler ($signo) {}
 
 /**
  * Calls signal handlers for pending signals
@@ -270,7 +281,7 @@ function pcntl_alarm ($seconds) {}
 function pcntl_get_last_error () {}
 
 /**
- * &Alias; <function>pcntl_strerror</function>
+ * &Alias; <function>pcntl_get_last_error</function>
  * @link http://www.php.net/manual/en/function.pcntl-errno.php
  */
 function pcntl_errno () {}
@@ -412,6 +423,13 @@ function pcntl_sigtimedwait (array $set, array &$siginfo = null, $seconds = null
  */
 function pcntl_wifcontinued ($status) {}
 
+/**
+ * Enable/disable asynchronous signal handling or return the old setting
+ * @link http://www.php.net/manual/en/function.pcntl-async-signals.php
+ * @param $on
+ */
+function pcntl_async_signals ($on) {}
+
 define ('WNOHANG', 1);
 define ('WUNTRACED', 2);
 define ('WCONTINUED', 8);
@@ -456,51 +474,276 @@ define ('SIGBABY', 31);
 define ('PRIO_PGRP', 1);
 define ('PRIO_USER', 2);
 define ('PRIO_PROCESS', 0);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('SIG_BLOCK', 0);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('SIG_UNBLOCK', 1);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('SIG_SETMASK', 2);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('SI_USER', 0);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('SI_KERNEL', 128);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('SI_QUEUE', -1);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('SI_TIMER', -2);
 define ('SI_MESGQ', -3);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('SI_ASYNCIO', -4);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('SI_SIGIO', -5);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('SI_TKILL', -6);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('CLD_EXITED', 1);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('CLD_KILLED', 2);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('CLD_DUMPED', 3);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('CLD_TRAPPED', 4);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('CLD_STOPPED', 5);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('CLD_CONTINUED', 6);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('TRAP_BRKPT', 1);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('TRAP_TRACE', 2);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('POLL_IN', 1);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('POLL_OUT', 2);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('POLL_MSG', 3);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('POLL_ERR', 4);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('POLL_PRI', 5);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('POLL_HUP', 6);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('ILL_ILLOPC', 1);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('ILL_ILLOPN', 2);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('ILL_ILLADR', 3);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('ILL_ILLTRP', 4);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('ILL_PRVOPC', 5);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('ILL_PRVREG', 6);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('ILL_COPROC', 7);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('ILL_BADSTK', 8);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('FPE_INTDIV', 1);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('FPE_INTOVF', 2);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('FPE_FLTDIV', 3);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('FPE_FLTOVF', 4);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('FPE_FLTUND', 7);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('FPE_FLTRES', 6);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('FPE_FLTINV', 7);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('FPE_FLTSUB', 8);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('SEGV_MAPERR', 1);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('SEGV_ACCERR', 2);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('BUS_ADRALN', 1);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('BUS_ADRERR', 2);
+
+/**
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/pcntl.constants.php
+ */
 define ('BUS_OBJERR', 3);
 define ('PCNTL_EINTR', 4);
 define ('PCNTL_ECHILD', 10);
@@ -524,4 +767,4 @@ define ('PCNTL_ENOEXEC', 8);
 define ('PCNTL_ENOTDIR', 20);
 define ('PCNTL_ETXTBSY', 26);
 
-// End of pcntl v.7.0.0-dev
+// End of pcntl v.7.1.1-1

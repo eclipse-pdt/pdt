@@ -1,6 +1,6 @@
 <?php
 
-// Start of SPL v.7.2.0-dev
+// Start of SPL v.7.1.1-1
 
 class LogicException extends Exception implements Throwable {
 	protected $message;
@@ -473,7 +473,7 @@ class UnexpectedValueException extends RuntimeException implements Throwable {
 interface RecursiveIterator extends Iterator, Traversable {
 
 	/**
-	 * Returns if an iterator can be created fot the current entry.
+	 * Returns if an iterator can be created for the current entry
 	 * @link http://www.php.net/manual/en/recursiveiterator.haschildren.php
 	 * @return bool true if the current entry can be iterated over, otherwise returns false.
 	 */
@@ -2649,21 +2649,23 @@ class ArrayIterator implements Iterator, Traversable, ArrayAccess, SeekableItera
 	public function ksort () {}
 
 	/**
-	 * User defined sort
+	 * Sort with a user-defined comparison function and maintain index association
 	 * @link http://www.php.net/manual/en/arrayiterator.uasort.php
-	 * @param string $cmp_function <p>
-	 * The compare function used for the sort.
+	 * @param callable $cmp_function <p>
+	 * &return.callbacksort;
 	 * </p>
+	 * &callback.cmp;
 	 * @return void 
 	 */
 	public function uasort ($cmp_function) {}
 
 	/**
-	 * User defined sort
+	 * Sort by keys using a user-defined comparison function
 	 * @link http://www.php.net/manual/en/arrayiterator.uksort.php
-	 * @param string $cmp_function <p>
-	 * The compare function used for the sort.
+	 * @param callable $cmp_function <p>
+	 * &return.callbacksort;
 	 * </p>
+	 * &callback.cmp;
 	 * @return void 
 	 */
 	public function uksort ($cmp_function) {}
@@ -2878,21 +2880,23 @@ class RecursiveArrayIterator extends ArrayIterator implements Countable, Seriali
 	public function ksort () {}
 
 	/**
-	 * User defined sort
+	 * Sort with a user-defined comparison function and maintain index association
 	 * @link http://www.php.net/manual/en/arrayiterator.uasort.php
-	 * @param string $cmp_function <p>
-	 * The compare function used for the sort.
+	 * @param callable $cmp_function <p>
+	 * &return.callbacksort;
 	 * </p>
+	 * &callback.cmp;
 	 * @return void 
 	 */
 	public function uasort ($cmp_function) {}
 
 	/**
-	 * User defined sort
+	 * Sort by keys using a user-defined comparison function
 	 * @link http://www.php.net/manual/en/arrayiterator.uksort.php
-	 * @param string $cmp_function <p>
-	 * The compare function used for the sort.
+	 * @param callable $cmp_function <p>
+	 * &return.callbacksort;
 	 * </p>
+	 * &callback.cmp;
 	 * @return void 
 	 */
 	public function uksort ($cmp_function) {}
@@ -4754,7 +4758,7 @@ class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversabl
 	 * the end of string is reached, whichever comes
 	 * first.
 	 * </p>
-	 * @return int the number of bytes written, or &null; on error.
+	 * @return int the number of bytes written, or 0 on error.
 	 */
 	public function fwrite ($str, $length = null) {}
 
@@ -5325,7 +5329,7 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	 * the end of string is reached, whichever comes
 	 * first.
 	 * </p>
-	 * @return int the number of bytes written, or &null; on error.
+	 * @return int the number of bytes written, or 0 on error.
 	 */
 	public function fwrite ($str, $length = null) {}
 
@@ -6802,7 +6806,7 @@ class SplFixedArray implements Iterator, Traversable, ArrayAccess, Countable {
 	 * @param int $size <p>
 	 * The new array size. This should be a value between 0 and PHP_INT_MAX.
 	 * </p>
-	 * @return int 
+	 * @return bool true on success or false on failure
 	 */
 	public function setSize ($size) {}
 
@@ -7320,7 +7324,7 @@ function spl_autoload_unregister ($autoload_function) {}
 function spl_autoload_functions () {}
 
 /**
- * Try all registered __autoload() function to load the requested class
+ * Try all registered __autoload() functions to load the requested class
  * @link http://www.php.net/manual/en/function.spl-autoload-call.php
  * @param string $class_name <p>
  * The class name being searched.
@@ -7436,4 +7440,4 @@ function iterator_count ($iterator) {}
  */
 function iterator_apply ($iterator, $function, array $args = null) {}
 
-// End of SPL v.7.2.0-dev
+// End of SPL v.7.1.1-1

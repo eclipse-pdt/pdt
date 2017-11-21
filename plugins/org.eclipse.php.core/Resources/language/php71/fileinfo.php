@@ -18,7 +18,7 @@ class finfo  {
 	public function set_flags ($options) {}
 
 	/**
-	 * &Alias; <function>finfo_file</function>
+	 * &Alias; <link linkend="function.finfo-file">finfo_file()</link>
 	 * @link http://www.php.net/manual/en/finfo.file.php
 	 * @param $filename
 	 * @param $options [optional]
@@ -27,7 +27,7 @@ class finfo  {
 	public function file ($filename, $options = null, $context = null) {}
 
 	/**
-	 * &Alias; <function>finfo_buffer</function>
+	 * &Alias; <link linkend="function.finfo-buffer">finfo_buffer()</link>
 	 * @link http://www.php.net/manual/en/finfo.buffer.php
 	 * @param $string
 	 * @param $options [optional]
@@ -81,7 +81,7 @@ function finfo_file ($finfo, $filename, $options = null, $context = null) {}
 function finfo_buffer ($finfo, $string, $options = null, $context = null) {}
 
 /**
- * Detect MIME Content-type for a file (deprecated)
+ * Detect MIME Content-type for a file
  * @link http://www.php.net/manual/en/function.mime-content-type.php
  * @param string $filename <p>
  * Path to the tested file.

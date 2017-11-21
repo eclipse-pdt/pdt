@@ -1,6 +1,6 @@
 <?php
 
-// Start of soap v.7.2.0-dev
+// Start of soap v.7.1.1-1
 
 class SoapClient  {
 
@@ -95,7 +95,7 @@ class SoapClient  {
 	 * Returns list of available SOAP functions
 	 * @link http://www.php.net/manual/en/soapclient.getfunctions.php
 	 * @return array The array of SOAP function prototypes, detailing the return type,
-	 * the function name and type-hinted paramaters.
+	 * the function name and type-hinted parameters.
 	 */
 	public function __getFunctions () {}
 
@@ -510,4 +510,4 @@ define ('SOAP_SSL_METHOD_SSLv3', 2);
  */
 define ('SOAP_SSL_METHOD_SSLv23', 3);
 
-// End of soap v.7.2.0-dev
+// End of soap v.7.1.1-1

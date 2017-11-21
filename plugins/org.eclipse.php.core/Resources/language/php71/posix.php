@@ -1,6 +1,6 @@
 <?php
 
-// Start of posix v.7.2.0-dev
+// Start of posix v.7.1.1-1
 
 /**
  * Send a signal to a process
@@ -866,4 +866,4 @@ define ('POSIX_RLIMIT_STACK', 3);
  */
 define ('POSIX_RLIMIT_INFINITY', -1);
 
-// End of posix v.7.2.0-dev
+// End of posix v.7.1.1-1

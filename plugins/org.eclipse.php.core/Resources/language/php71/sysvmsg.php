@@ -1,6 +1,6 @@
 <?php
 
-// Start of sysvmsg v.7.0.0-dev
+// Start of sysvmsg v.7.1.1-1
 
 /**
  * Create or attach to a message queue
@@ -262,4 +262,4 @@ define ('MSG_ENOMSG', 42);
 define ('MSG_NOERROR', 2);
 define ('MSG_EXCEPT', 4);
 
-// End of sysvmsg v.7.0.0-dev
+// End of sysvmsg v.7.1.1-1

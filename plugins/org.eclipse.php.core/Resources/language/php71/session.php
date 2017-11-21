@@ -1,6 +1,6 @@
 <?php
 
-// Start of session v.7.2.0-dev
+// Start of session v.7.1.1-1
 
 interface SessionHandlerInterface  {
 
@@ -344,9 +344,11 @@ function session_gc () {}
  * @param callable $destroy 
  * @param callable $gc 
  * @param callable $create_sid [optional] 
+ * @param callable $validate_sid [optional] 
+ * @param callable $update_timestamp [optional] 
  * @return bool true on success or false on failure
  */
-function session_set_save_handler ($open, $close, $read, $write, $destroy, $gc, $create_sid = null) {}
+function session_set_save_handler ($open, $close, $read, $write, $destroy, $gc, $create_sid = null, $validate_sid = null, $update_timestamp = null) {}
 
 /**
  * Get and/or set the current cache limiter
@@ -364,21 +366,40 @@ function session_set_save_handler ($open, $close, $read, $write, $destroy, $gc, 
  * <tr valign="top">
  * <td>public</td>
  * <td>
+ * <pre>
+ * Expires: (sometime in the future, according session.cache_expire)
+ * Cache-Control: public, max-age=(sometime in the future, according to session.cache_expire)
+ * Last-Modified: (the timestamp of when the session was last saved)
+ * </pre>
  * </td>
  * </tr>
  * <tr valign="top">
  * <td>private_no_expire</td>
  * <td>
+ * <pre>
+ * Cache-Control: private, max-age=(session.cache_expire in the future), pre-check=(session.cache_expire in the future)
+ * Last-Modified: (the timestamp of when the session was last saved)
+ * </pre>
  * </td>
  * </tr>
  * <tr valign="top">
  * <td>private</td>
  * <td>
+ * <pre>
+ * Expires: Thu, 19 Nov 1981 08:52:00 GMT
+ * Cache-Control: private, max-age=(session.cache_expire in the future), pre-check=(session.cache_expire in the future)
+ * Last-Modified: (the timestamp of when the session was last saved)
+ * </pre>
  * </td>
  * </tr>
  * <tr valign="top">
  * <td>nocache</td>
  * <td>
+ * <pre>
+ * Expires: Thu, 19 Nov 1981 08:52:00 GMT
+ * Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+ * Pragma: no-cache
+ * </pre>
  * </td>
  * </tr>
  * </table>
@@ -512,4 +533,4 @@ define ('PHP_SESSION_NONE', 1);
  */
 define ('PHP_SESSION_ACTIVE', 2);
 
-// End of session v.7.2.0-dev
+// End of session v.7.1.1-1

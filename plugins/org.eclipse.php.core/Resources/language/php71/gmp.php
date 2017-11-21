@@ -1,6 +1,6 @@
 <?php
 
-// Start of gmp v.7.0.0-dev
+// Start of gmp v.7.1.1-1
 
 class GMP  {
 }
@@ -85,11 +85,11 @@ function gmp_strval (GMP $gmpnumber, $base = null) {}
  * Add numbers
  * @link http://www.php.net/manual/en/function.gmp-add.php
  * @param GMP $a <p>
- * A number that will be added.
+ * The first summand (augent).
  * </p>
  * Either a GMP number resource in PHP 5.5 and earlier, a GMP object in PHP 5.6 and later, or a numeric string provided that it is possible to convert the latter to a number.</p>
  * @param GMP $b <p>
- * A number that will be added.
+ * The second summand (addend).
  * </p>
  * Either a GMP number resource in PHP 5.5 and earlier, a GMP object in PHP 5.6 and later, or a numeric string provided that it is possible to convert the latter to a number.</p>
  * @return GMP A GMP number representing the sum of the arguments.
@@ -625,11 +625,16 @@ function gmp_nextprime ($a) {}
 define ('GMP_ROUND_ZERO', 0);
 define ('GMP_ROUND_PLUSINF', 1);
 define ('GMP_ROUND_MINUSINF', 2);
-define ('GMP_VERSION', "6.0.0");
+
+/**
+ * The GMP library version
+ * @link http://www.php.net/manual/en/gmp.constants.php
+ */
+define ('GMP_VERSION', "6.1.0");
 define ('GMP_MSW_FIRST', 1);
 define ('GMP_LSW_FIRST', 2);
 define ('GMP_LITTLE_ENDIAN', 4);
 define ('GMP_BIG_ENDIAN', 8);
 define ('GMP_NATIVE_ENDIAN', 16);
 
-// End of gmp v.7.0.0-dev
+// End of gmp v.7.1.1-1

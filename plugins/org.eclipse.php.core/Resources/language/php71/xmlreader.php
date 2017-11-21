@@ -1,6 +1,6 @@
 <?php
 
-// Start of xmlreader v.7.2.0-dev
+// Start of xmlreader v.7.1.1-1
 
 class XMLReader  {
 	const NONE = 0;
@@ -287,4 +287,4 @@ class XMLReader  {
 	public function expand (DOMNode $basenode = null) {}
 
 }
-// End of xmlreader v.7.2.0-dev
+// End of xmlreader v.7.1.1-1

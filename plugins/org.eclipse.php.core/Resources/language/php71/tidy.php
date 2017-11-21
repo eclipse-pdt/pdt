@@ -1,6 +1,6 @@
 <?php
 
-// Start of tidy v.7.2.0-dev
+// Start of tidy v.7.1.1-1
 
 class tidy  {
 
@@ -661,4 +661,4 @@ define ('TIDY_NODETYPE_PHP', 12);
  */
 define ('TIDY_NODETYPE_XMLDECL', 13);
 
-// End of tidy v.7.2.0-dev
+// End of tidy v.7.1.1-1

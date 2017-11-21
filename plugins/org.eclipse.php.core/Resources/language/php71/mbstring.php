@@ -1,6 +1,6 @@
 <?php
 
-// Start of mbstring v.7.2.0-dev
+// Start of mbstring v.7.1.1-1
 
 /**
  * Perform case folding on a string
@@ -163,7 +163,7 @@ function mb_detect_order ($encoding_list = null) {}
 /**
  * Set/Get substitution character
  * @link http://www.php.net/manual/en/function.mb-substitute-character.php
- * @param mixed $substrchar [optional] <p>
+ * @param mixed $substchar [optional] <p>
  * Specify the Unicode value as an integer, 
  * or as one of the following strings:
  * "none": no output
@@ -172,7 +172,7 @@ function mb_detect_order ($encoding_list = null) {}
  * If substchar is not set, it returns the current
  * setting.
  */
-function mb_substitute_character ($substrchar = null) {}
+function mb_substitute_character ($substchar = null) {}
 
 /**
  * Parse GET/POST/COOKIE data and set global variable
@@ -241,6 +241,7 @@ function mb_strlen ($str, $encoding = null) {}
  * </p>
  * @param int $offset [optional] <p>
  * The search offset. If it is not specified, 0 is used.
+ * A negative offset counts from the end of the string.
  * </p>
  * @param string $encoding [optional] &mbstring.encoding.parameter;
  * @return int the numeric position of
@@ -283,7 +284,8 @@ function mb_strrpos ($haystack, $needle, $offset = null, $encoding = null) {}
  * </p>
  * @param int $offset [optional] <p>
  * The position in haystack
- * to start searching
+ * to start searching.
+ * A negative offset counts from the end of the string.
  * </p>
  * @param string $encoding [optional] <p>
  * Character encoding name to use.
@@ -453,7 +455,7 @@ function mb_substr_count ($haystack, $needle, $encoding = null) {}
  * @param int $start <p>
  * If start is non-negative, the returned string
  * will start at the start'th position in
- * string, counting from zero. For instance,
+ * str, counting from zero. For instance,
  * in the string 'abcdef', the character at
  * position 0 is 'a', the
  * character at position 2 is
@@ -462,7 +464,7 @@ function mb_substr_count ($haystack, $needle, $encoding = null) {}
  * <p>
  * If start is negative, the returned string
  * will start at the start'th character
- * from the end of string.
+ * from the end of str.
  * </p>
  * @param int $length [optional] <p>
  * Maximum number of characters to use from str. If
@@ -486,7 +488,7 @@ function mb_substr ($str, $start, $length = null, $encoding = null) {}
  * @param int $start <p>
  * If start is non-negative, the returned string
  * will start at the start'th byte position in
- * string, counting from zero. For instance,
+ * str, counting from zero. For instance,
  * in the string 'abcdef', the byte at
  * position 0 is 'a', the
  * byte at position 2 is
@@ -495,7 +497,7 @@ function mb_substr ($str, $start, $length = null, $encoding = null) {}
  * <p>
  * If start is negative, the returned string
  * will start at the start'th byte
- * from the end of string.
+ * from the end of str.
  * </p>
  * @param int $length [optional] <p>
  * Length in bytes. If omitted or NULL
@@ -528,10 +530,11 @@ function mb_strwidth ($str, $encoding = null) {}
  * </p>
  * @param int $start <p>
  * The start position offset. Number of
- * characters from the beginning of string. (First character is 0)
+ * characters from the beginning of string (first character is 0),
+ * or if start is negative, number of characters from the end of the string.
  * </p>
  * @param int $width <p>
- * The width of the desired trim.
+ * The width of the desired trim. Negative widths count from the end of the string.
  * </p>
  * @param string $trimmarker [optional] <p>
  * A string that is added to the end of string 
@@ -929,24 +932,6 @@ function mb_get_info ($type = null) {}
 function mb_check_encoding ($var = null, $encoding = null) {}
 
 /**
- * @param $str
- * @param $encoding [optional]
- */
-function mb_ord ($str, $encoding = null) {}
-
-/**
- * @param $cp
- * @param $encoding [optional]
- */
-function mb_chr ($cp, $encoding = null) {}
-
-/**
- * @param $str
- * @param $encoding [optional]
- */
-function mb_scrub ($str, $encoding = null) {}
-
-/**
  * Set/Get character encoding for multibyte regex
  * @link http://www.php.net/manual/en/function.mb-regex-encoding.php
  * @param string $encoding [optional] &mbstring.encoding.parameter;
@@ -1308,7 +1293,7 @@ function mb_ereg_search_getpos () {}
  * Set start point of next regular expression match
  * @link http://www.php.net/manual/en/function.mb-ereg-search-setpos.php
  * @param int $position <p>
- * The position to set.
+ * The position to set. If it is negative, it counts from the end of the string.
  * </p>
  * @return bool 
  */
@@ -1403,4 +1388,4 @@ define ('MB_CASE_UPPER', 0);
 define ('MB_CASE_LOWER', 1);
 define ('MB_CASE_TITLE', 2);
 
-// End of mbstring v.7.2.0-dev
+// End of mbstring v.7.1.1-1

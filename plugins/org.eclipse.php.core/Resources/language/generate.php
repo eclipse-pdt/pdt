@@ -242,7 +242,7 @@ function parse_phpdoc_functions ($phpdocDir) {
 			}
 			if (preg_match ('@<refsect1\s+role=["\']returnvalues["\']>(.*?)</refsect1>@s', $xml, $match)) {
 				$returnvalues = $match[1];
-				if (preg_match ('@<para>\s*(Returns)?(.*)</para>?@s', $returnvalues, $match)) {
+				if (preg_match ('@<para>\s*(Returns)?(.*)</para>@s', $returnvalues, $match)) {
 					$functionsDoc[$refname]['returndoc'] = xml_to_phpdoc ($match[2]);
 				}
 			}
@@ -823,7 +823,7 @@ function print_doccomment ($ref, $tabs = 0) {
 			if ($parameters) {
 				foreach ($parameters as $parameter) {
 					print_tabs ($tabs);
-					print " * @param {$parameter['type']} {$parameter['name']}";
+					print " * @param {$parameter['type']} \${$parameter['name']}";
 					if (@$parameter['isoptional']) {
 						print " [optional]";
 					}
@@ -952,6 +952,21 @@ function strip_tags_special ($str) {
     $str = preg_replace ("/<(\/?)table>/", "###($1table)###", $str);
     $str = str_replace ("<row>", "###(tr valign=\"top\")###", $str);
     $str = str_replace ("</row>", "###(/tr)###", $str);
+
+    // Bug 522585 - Documentation of PHP function header() is misformatted
+    $str = str_replace ("<![CDATA[", "###(pre)###", $str);
+    $str = str_replace ("]]>", "###(/pre)###", $str);
+    preg_match_all ("@(<\?php.*?\?>)@si", $str, $matches);
+    if ($matches) {
+        foreach ($matches[1] as $v) {
+            $str = str_replace ($v, "###(code)###" . strtr (htmlspecialchars ($v), array(
+                "/" => "&#47;",
+                "*" => "&#42;",
+                "#" => "&#35;"
+            )) . "###(/code)###", $str);
+        }
+    }
+
     $str = preg_replace ("/<(\/?)entry>/", "###($1td)###", $str);
     $str = preg_replace ("/<(\/?)para>/", "###($1p)###", $str);
     // now strip the remaining tags

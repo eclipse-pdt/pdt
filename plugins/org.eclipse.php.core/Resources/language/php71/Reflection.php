@@ -1,6 +1,6 @@
 <?php
 
-// Start of Reflection v.7.2.0-dev
+// Start of Reflection v.7.1.1-1
 
 class ReflectionException extends Exception implements Throwable {
 	protected $message;
@@ -44,7 +44,7 @@ class Reflection  {
 	 * Gets modifier names
 	 * @link http://www.php.net/manual/en/reflection.getmodifiernames.php
 	 * @param int $modifiers <p>
-	 * The modifiers to get, which is from a numeric value.
+	 * Bitfield of the modifiers to get.
 	 * </p>
 	 * @return array An array of modifier names.
 	 */
@@ -1368,13 +1368,18 @@ class ReflectionClass implements Reflector {
 	 * to no filtering.
 	 * </p>
 	 * <p>
-	 * Any combination of ReflectionMethod::IS_STATIC,
+	 * Any bitwise disjunction of ReflectionMethod::IS_STATIC,
 	 * ReflectionMethod::IS_PUBLIC,
 	 * ReflectionMethod::IS_PROTECTED,
 	 * ReflectionMethod::IS_PRIVATE,
 	 * ReflectionMethod::IS_ABSTRACT,
-	 * ReflectionMethod::IS_FINAL.
+	 * ReflectionMethod::IS_FINAL,
+	 * so that all methods with any of the given
+	 * attributes will be returned.
 	 * </p>
+	 * Note that other bitwise operations, for instance ~
+	 * will not work as expected. In other words, it is not possible to
+	 * retrieve all non-static methods, for example.
 	 * @return array An array of ReflectionMethod objects
 	 * reflecting each method.
 	 */
@@ -1425,11 +1430,16 @@ class ReflectionClass implements Reflector {
 	/**
 	 * Gets constants
 	 * @link http://www.php.net/manual/en/reflectionclass.getconstants.php
-	 * @return array An array of constants.
-	 * Constant name in key, constant value in value.
+	 * @return array An array of constants, where the keys hold the name
+	 * and the values the value of the constants.
 	 */
 	public function getConstants () {}
 
+	/**
+	 * Gets class constants
+	 * @link http://www.php.net/manual/en/reflectionclass.getreflectionconstants.php
+	 * @return array An array of ReflectionClassConstant objects.
+	 */
 	public function getReflectionConstants () {}
 
 	/**
@@ -1443,7 +1453,12 @@ class ReflectionClass implements Reflector {
 	public function getConstant ($name) {}
 
 	/**
-	 * @param $name
+	 * Gets a <classname>ReflectionClassConstant</classname> for a class's constant
+	 * @link http://www.php.net/manual/en/reflectionclass.getreflectionconstant.php
+	 * @param string $name <p>
+	 * The class constant name.
+	 * </p>
+	 * @return ReflectionClassConstant A ReflectionClassConstant.
 	 */
 	public function getReflectionConstant ($name) {}
 
@@ -1518,7 +1533,7 @@ class ReflectionClass implements Reflector {
 	public function isFinal () {}
 
 	/**
-	 * Gets modifiers
+	 * Gets the class modifiers
 	 * @link http://www.php.net/manual/en/reflectionclass.getmodifiers.php
 	 * @return int bitmask of 
 	 * modifier constants.
@@ -1828,13 +1843,18 @@ class ReflectionObject extends ReflectionClass implements Reflector {
 	 * to no filtering.
 	 * </p>
 	 * <p>
-	 * Any combination of ReflectionMethod::IS_STATIC,
+	 * Any bitwise disjunction of ReflectionMethod::IS_STATIC,
 	 * ReflectionMethod::IS_PUBLIC,
 	 * ReflectionMethod::IS_PROTECTED,
 	 * ReflectionMethod::IS_PRIVATE,
 	 * ReflectionMethod::IS_ABSTRACT,
-	 * ReflectionMethod::IS_FINAL.
+	 * ReflectionMethod::IS_FINAL,
+	 * so that all methods with any of the given
+	 * attributes will be returned.
 	 * </p>
+	 * Note that other bitwise operations, for instance ~
+	 * will not work as expected. In other words, it is not possible to
+	 * retrieve all non-static methods, for example.
 	 * @return array An array of ReflectionMethod objects
 	 * reflecting each method.
 	 */
@@ -1885,11 +1905,16 @@ class ReflectionObject extends ReflectionClass implements Reflector {
 	/**
 	 * Gets constants
 	 * @link http://www.php.net/manual/en/reflectionclass.getconstants.php
-	 * @return array An array of constants.
-	 * Constant name in key, constant value in value.
+	 * @return array An array of constants, where the keys hold the name
+	 * and the values the value of the constants.
 	 */
 	public function getConstants () {}
 
+	/**
+	 * Gets class constants
+	 * @link http://www.php.net/manual/en/reflectionclass.getreflectionconstants.php
+	 * @return array An array of ReflectionClassConstant objects.
+	 */
 	public function getReflectionConstants () {}
 
 	/**
@@ -1903,7 +1928,12 @@ class ReflectionObject extends ReflectionClass implements Reflector {
 	public function getConstant ($name) {}
 
 	/**
-	 * @param $name
+	 * Gets a <classname>ReflectionClassConstant</classname> for a class's constant
+	 * @link http://www.php.net/manual/en/reflectionclass.getreflectionconstant.php
+	 * @param string $name <p>
+	 * The class constant name.
+	 * </p>
+	 * @return ReflectionClassConstant A ReflectionClassConstant.
 	 */
 	public function getReflectionConstant ($name) {}
 
@@ -1978,7 +2008,7 @@ class ReflectionObject extends ReflectionClass implements Reflector {
 	public function isFinal () {}
 
 	/**
-	 * Gets modifiers
+	 * Gets the class modifiers
 	 * @link http://www.php.net/manual/en/reflectionclass.getmodifiers.php
 	 * @return int bitmask of 
 	 * modifier constants.
@@ -2261,7 +2291,7 @@ class ReflectionProperty implements Reflector {
 	public function isDefault () {}
 
 	/**
-	 * Gets modifiers
+	 * Gets the property modifiers
 	 * @link http://www.php.net/manual/en/reflectionproperty.getmodifiers.php
 	 * @return int A numeric representation of the modifiers.
 	 */
@@ -2301,34 +2331,87 @@ class ReflectionClassConstant implements Reflector {
 	final private function __clone () {}
 
 	/**
-	 * @param $class
-	 * @param $name
-	 * @param $return [optional]
+	 * Export
+	 * @link http://www.php.net/manual/en/reflectionclassconstant.export.php
+	 * @param mixed $class <p>
+	 * The reflection to export.
+	 * </p>
+	 * @param string $name <p>
+	 * The class constant name.
+	 * </p>
+	 * @param bool $return [optional] <p>
+	 * &reflection.export.param.return;
+	 * </p>
+	 * @return string 
 	 */
 	public static function export ($class, $name, $return = null) {}
 
 	/**
+	 * Constructs a ReflectionClassConstant
+	 * @link http://www.php.net/manual/en/reflectionclassconstant.construct.php
 	 * @param $class
 	 * @param $name
 	 */
 	public function __construct ($class, $name) {}
 
+	/**
+	 * Returns the string representation of the ReflectionClassConstant object.
+	 * @link http://www.php.net/manual/en/reflectionclassconstant.tostring.php
+	 * @return string A string representation of this ReflectionClassConstant instance.
+	 */
 	public function __toString () {}
 
 	public function getName () {}
 
+	/**
+	 * Gets value
+	 * @link http://www.php.net/manual/en/reflectionclassconstant.getvalue.php
+	 * @return mixed The value of the class constant.
+	 */
 	public function getValue () {}
 
+	/**
+	 * Checks if class constant is public
+	 * @link http://www.php.net/manual/en/reflectionclassconstant.ispublic.php
+	 * @return bool true if the class constant is public, otherwise false
+	 */
 	public function isPublic () {}
 
+	/**
+	 * Checks if class constant is private
+	 * @link http://www.php.net/manual/en/reflectionclassconstant.isprivate.php
+	 * @return bool true if the class constant is private, otherwise false
+	 */
 	public function isPrivate () {}
 
+	/**
+	 * Checks if class constant is protected
+	 * @link http://www.php.net/manual/en/reflectionclassconstant.isprotected.php
+	 * @return bool true if the class constant is protected, otherwise false
+	 */
 	public function isProtected () {}
 
+	/**
+	 * Gets the class constant modifiers
+	 * @link http://www.php.net/manual/en/reflectionclassconstant.getmodifiers.php
+	 * @return int A numeric representation of the modifiers.
+	 * The actual meanings of these modifiers are described in the
+	 * predefined constants.
+	 */
 	public function getModifiers () {}
 
+	/**
+	 * Gets declaring class
+	 * @link http://www.php.net/manual/en/reflectionclassconstant.getdeclaringclass.php
+	 * @return ReflectionClass A ReflectionClass object.
+	 */
 	public function getDeclaringClass () {}
 
+	/**
+	 * Gets doc comments
+	 * @link http://www.php.net/manual/en/reflectionclassconstant.getdoccomment.php
+	 * @return string The doc comment if it exists, otherwise false
+	 */
 	public function getDocComment () {}
 
 }
@@ -2533,4 +2616,4 @@ class ReflectionZendExtension implements Reflector {
 	public function getCopyright () {}
 
 }
-// End of Reflection v.7.2.0-dev
+// End of Reflection v.7.1.1-1
