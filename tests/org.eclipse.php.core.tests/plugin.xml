@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.4"?><!--
+<?eclipse version="3.4"?>
+<!--
     Copyright (c) 2009 IBM Corporation and others.
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the Eclipse Public License v1.0
@@ -18,6 +19,14 @@
             class="org.eclipse.php.core.tests.TestBuildpathInitializer"
             id="org.eclipse.php.core.tests.LIBRARY.person">
       </buildpathContainerInitializer>
+   </extension>
+
+   <extension
+         point="org.eclipse.php.core.factoryMethodGoalEvaluatorFactories">
+      <factory
+            class="org.eclipse.php.core.tests.typeinference.evaluators.TestFactoryMethodGoalEvaluatorFactory"
+            priority="100">
+      </factory>
    </extension>
 
 </plugin>

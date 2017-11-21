@@ -1,0 +1,20 @@
+--TEST--
+Test Factory Method #02 - Factory method overriding PHPDoc
+--CONFIG--
+prune: factoryMethods
+--FILE--
+<?php
+namespace FactoryNamespace;
+class FactoryClass
+{
+	/**
+	 * @return FactoryClass
+	 */
+    function factoryMethod() { }
+}
+$factory = new FactoryClass();
+$b = $factory->factoryMethod('stdClass');
+testFactoryMethod02($b);
+?>
+--EXPECT--
+stdClass

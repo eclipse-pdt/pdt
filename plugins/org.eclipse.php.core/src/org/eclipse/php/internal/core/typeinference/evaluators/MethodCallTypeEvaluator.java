@@ -17,15 +17,30 @@ import java.util.List;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.expressions.CallArgumentsList;
 import org.eclipse.dltk.ast.expressions.CallExpression;
+import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.ast.references.ConstantReference;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.evaluation.types.UnknownType;
+import org.eclipse.dltk.internal.core.SourceType;
 import org.eclipse.dltk.ti.GoalState;
+import org.eclipse.dltk.ti.IContext;
+import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.core.compiler.ast.nodes.FullyQualifiedReference;
+import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.core.compiler.ast.nodes.Scalar;
+import org.eclipse.php.core.compiler.ast.nodes.StaticConstantAccess;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
+import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
+import org.eclipse.php.internal.core.typeinference.goals.FactoryMethodReturnTypeGoal;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
 
@@ -34,8 +49,9 @@ public class MethodCallTypeEvaluator extends GoalEvaluator {
 	private final static int STATE_INIT = 0;
 	private final static int STATE_WAITING_RECEIVER = 1;
 	private final static int STATE_GOT_RECEIVER = 2;
-	private final static int STATE_WAITING_METHOD_PHPDOC = 3;
-	private final static int STATE_WAITING_METHOD = 4;
+	private final static int STATE_WAITING_FACTORYMETHOD = 3;
+	private final static int STATE_WAITING_METHOD_PHPDOC = 4;
+	private final static int STATE_WAITING_METHOD = 5;
 
 	private int state = STATE_INIT;
 	private IEvaluatedType receiverType;
@@ -72,24 +88,38 @@ public class MethodCallTypeEvaluator extends GoalEvaluator {
 		}
 
 		// we've evaluated receiver, lets evaluate the method return type now
-		// (using PHP Doc first):
+
+		// Check the result of factory method/PHPDoc logic
+		if ((state == STATE_WAITING_FACTORYMETHOD || state == STATE_WAITING_METHOD_PHPDOC)
+				&& goalState != GoalState.PRUNED && previousResult != null && previousResult != UnknownType.INSTANCE) {
+			result = previousResult;
+			previousResult = null;
+			// BUGS 404031 & 525480, stop when it's not a "generic" simple element
+			if (!PHPTypeInferenceUtils.isGenericSimple(result)) {
+				return null;
+			}
+		}
+
+		// First logic: check factory methods
 		if (state == STATE_GOT_RECEIVER) {
+			state = STATE_WAITING_FACTORYMETHOD;
+			String[] stringArguments = this.getMethodStringArguments(expression, typedGoal.getContext());
+			if (stringArguments != null) {
+				return new FactoryMethodReturnTypeGoal(typedGoal.getContext(), receiverType, expression.getName(),
+						expression.sourceStart(), stringArguments);
+			}
+			// No string arguments: skip to PHPDoc logic
+		}
+
+		// Second logic: check PHPDoc
+		if (state == STATE_WAITING_FACTORYMETHOD) {
 			state = STATE_WAITING_METHOD_PHPDOC;
 			return new PHPDocMethodReturnTypeGoal(typedGoal.getContext(), receiverType, expression.getName(),
 					getFunctionCallArgs(expression), expression.sourceStart());
 		}
 
-		// PHPDoc logic is done, start evaluating 'return' statements here:
+		// Third method: start evaluating 'return' statements here:
 		if (state == STATE_WAITING_METHOD_PHPDOC) {
-			if (goalState != GoalState.PRUNED && previousResult != null && previousResult != UnknownType.INSTANCE) {
-				result = previousResult;
-				previousResult = null;
-				// BUGS 404031 & 525480, stop when it's not a "generic"
-				// simple element
-				if (!PHPTypeInferenceUtils.isGenericSimple(result)) {
-					return null;
-				}
-			}
 			state = STATE_WAITING_METHOD;
 			return new MethodElementReturnTypeGoal(typedGoal.getContext(), receiverType, expression.getName(),
 					getFunctionCallArgs(expression), expression.sourceStart());
@@ -125,6 +155,118 @@ public class MethodCallTypeEvaluator extends GoalEvaluator {
 			}
 		}
 		return argNames;
+	}
+
+	/**
+	 * Get the string arguments of a CallExpression
+	 * 
+	 * @param callExpression
+	 * @param context
+	 * @return Return NULL if no string argument has been found, an array of String
+	 *         and NULL values otherwise
+	 */
+	private String[] getMethodStringArguments(CallExpression callExpression, IContext context) {
+		CallArgumentsList argumentsContainer = callExpression.getArgs();
+		List<ASTNode> arguments = argumentsContainer == null ? null : argumentsContainer.getChilds();
+		int numArguments = arguments == null ? null : arguments.size();
+		if (numArguments == 0) {
+			return null;
+		}
+		String[] stringArguments = null;
+		for (int argumentIndex = 0; argumentIndex < numArguments; argumentIndex++) {
+			@SuppressWarnings("null")
+			ASTNode argument = arguments.get(argumentIndex);
+			String stringArgument = null;
+			if (argument instanceof Scalar) {
+				stringArgument = this.getMethodStringArgument((Scalar) argument, context);
+			} else if (argument instanceof StaticConstantAccess) {
+				stringArgument = this.getMethodStringArgument((StaticConstantAccess) argument, context);
+			}
+			if (stringArgument == null) {
+				continue;
+			}
+			if (stringArguments == null) {
+				stringArguments = new String[numArguments];
+			}
+			stringArguments[argumentIndex] = stringArgument;
+		}
+		return stringArguments;
+	}
+
+	/**
+	 * Extract the string contained in a Scalar argument.
+	 * 
+	 * @param argument
+	 *            The argument to be parsed
+	 * @param factoryMethodFlags
+	 * @return NULL if the argument can't be resolved to a non-empty string
+	 */
+	private String getMethodStringArgument(Scalar argument, IContext context) {
+		if (argument.getScalarType() != Scalar.TYPE_STRING) {
+			return null;
+		}
+		String value = argument.getValue();
+		if (value == null || value.length() == 0) {
+			return null;
+		}
+
+		return ASTUtils.stripQuotes(value);
+	}
+
+	/**
+	 * Extract the class name from an argument like "ClassName::class"
+	 * 
+	 * @param argument
+	 *            The argument to be parsed
+	 * @return NULL if the argument is not a ..::class call, a fully-qualified class
+	 *         name otherwise (without the leading '\')
+	 */
+	private String getMethodStringArgument(StaticConstantAccess argument, IContext context) {
+		ConstantReference constantReference = argument.getConstant();
+		if (constantReference == null) {
+			return null;
+		}
+		String constantName = constantReference.getName();
+		if (constantName == null || !"class".equalsIgnoreCase(constantName)) { //$NON-NLS-1$
+			return null;
+		}
+		Expression dispatcher = argument.getDispatcher();
+		if (!(dispatcher instanceof FullyQualifiedReference)) {
+			return null;
+		}
+		String localClassName = ((FullyQualifiedReference) dispatcher).getFullyQualifiedName();
+		if (localClassName == null || localClassName.length() == 0) {
+			return null;
+		}
+		if (!(context instanceof ISourceModuleContext)) {
+			return null;
+		}
+		ISourceModule sourceModule = ((ISourceModuleContext) context).getSourceModule();
+		IModelAccessCache cache = (context instanceof IModelCacheContext) ? ((IModelCacheContext) context).getCache()
+				: null;
+		IType[] types;
+		try {
+			types = PHPModelUtils.getTypes(/* typeName */ localClassName, /* sourceModule */sourceModule,
+					/* offset */argument.sourceStart(), /* cache */ cache, /* monitor */ null, /* isType */true,
+					/* isGlobal */ false);
+		} catch (ModelException x) {
+			types = null;
+		}
+		if (types == null || types.length != 1 || !(types[0] instanceof SourceType)) {
+			return null;
+		}
+		String fullyQualifiedName = ((SourceType) types[0])
+				.getTypeQualifiedName(NamespaceReference.NAMESPACE_DELIMITER);
+		if (fullyQualifiedName == null || fullyQualifiedName.length() == 0) {
+			return null;
+		}
+		if (fullyQualifiedName.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+			if (fullyQualifiedName.length() == 1) {
+				return null;
+			}
+			fullyQualifiedName = fullyQualifiedName.substring(1);
+		}
+		return fullyQualifiedName;
 	}
 
 	@Override

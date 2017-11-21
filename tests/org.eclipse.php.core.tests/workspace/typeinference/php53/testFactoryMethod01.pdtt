@@ -1,0 +1,17 @@
+--TEST--
+Test Factory Method #01 - Simple factory method
+--CONFIG--
+prune: factoryMethods
+--FILE--
+<?php
+namespace FactoryNamespace;
+class FactoryClass
+{
+    function factoryMethod() { }
+}
+$factory = new FactoryClass();
+$b = $factory->factoryMethod('stdClass');
+testFactoryMethod01($b);
+?>
+--EXPECT--
+stdClass
