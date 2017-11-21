@@ -1,6 +1,6 @@
 <?php
 
-// Start of date v.7.2.0-dev
+// Start of date v.7.1.1
 
 interface DateTimeInterface  {
 
@@ -61,7 +61,7 @@ class DateTime implements DateTimeInterface {
 	public static function __set_state () {}
 
 	/**
-	 * Returns new DateTime object formatted according to the specified format
+	 * Parses a time string according to a specified format
 	 * @link http://www.php.net/manual/en/datetime.createfromformat.php
 	 * @param $format
 	 * @param $time
@@ -130,8 +130,9 @@ class DateTime implements DateTimeInterface {
 	 * @param $hour
 	 * @param $minute
 	 * @param $second [optional]
+	 * @param $microseconds [optional]
 	 */
-	public function setTime ($hour, $minute, $second = null) {}
+	public function setTime ($hour, $minute, $second = null, $microseconds = null) {}
 
 	/**
 	 * Sets the date
@@ -193,7 +194,7 @@ class DateTimeImmutable implements DateTimeInterface {
 	public static function __set_state () {}
 
 	/**
-	 * Returns new DateTimeImmutable object formatted according to the specified format
+	 * Parses a time string according to a specified format
 	 * @link http://www.php.net/manual/en/datetimeimmutable.createfromformat.php
 	 * @param $format
 	 * @param $time
@@ -258,8 +259,9 @@ class DateTimeImmutable implements DateTimeInterface {
 	 * @param $hour
 	 * @param $minute
 	 * @param $second [optional]
+	 * @param $microseconds [optional]
 	 */
-	public function setTime ($hour, $minute, $second = null) {}
+	public function setTime ($hour, $minute, $second = null, $microseconds = null) {}
 
 	/**
 	 * Sets the date
@@ -520,7 +522,7 @@ function strtotime ($time, $now = null) {}
  * </tr>
  * <tr valign="top">
  * <td>W</td>
- * <td>ISO-8601 week number of year, weeks starting on Monday (added in PHP 4.1.0)</td>
+ * <td>ISO-8601 week number of year, weeks starting on Monday</td>
  * <td>Example: 42 (the 42nd week in the year)</td>
  * </tr>
  * <tr valign="top">
@@ -642,6 +644,14 @@ function strtotime ($time, $now = null) {}
  * created with microseconds.
  * </td>
  * <td>Example: 654321</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>v</td>
+ * <td>
+ * Milliseconds (added in PHP 7.0.0). Same note applies as for
+ * u.
+ * </td>
+ * <td>Example: 654</td>
  * </tr>
  * <tr valign="top">
  * Timezone</td>
@@ -1104,8 +1114,7 @@ function checkdate ($month, $day, $year) {}
  * </tr>
  * <tr valign="top">
  * <td>%k</td>
- * <td>Two digit representation of the hour in 24-hour format, with
- * a space preceding single digits</td>
+ * <td>Hour in 24-hour format, with a space preceding single digits</td>
  * <td> 0 through 23</td>
  * </tr>
  * <tr valign="top">
@@ -1509,8 +1518,9 @@ function date_diff ($object, $object2, $absolute = null) {}
  * @param $hour
  * @param $minute
  * @param $second [optional]
+ * @param $microseconds [optional]
  */
-function date_time_set ($object, $hour, $minute, $second = null) {}
+function date_time_set ($object, $hour, $minute, $second = null, $microseconds = null) {}
 
 /**
  * &Alias; <methodname>DateTime::setDate</methodname>
@@ -1814,4 +1824,4 @@ define ('SUNFUNCS_RET_STRING', 1);
  */
 define ('SUNFUNCS_RET_DOUBLE', 2);
 
-// End of date v.7.2.0-dev
+// End of date v.7.1.1

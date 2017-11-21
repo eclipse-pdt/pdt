@@ -1,6 +1,6 @@
 <?php
 
-// Start of SimpleXML v.7.0.0-dev
+// Start of SimpleXML v.7.1.1
 
 class SimpleXMLElement implements Traversable {
 
@@ -494,4 +494,4 @@ function simplexml_load_string ($data, $class_name = null, $options = null, $ns 
  */
 function simplexml_import_dom (DOMNode $node, $class_name = null) {}
 
-// End of SimpleXML v.7.0.0-dev
+// End of SimpleXML v.7.1.1

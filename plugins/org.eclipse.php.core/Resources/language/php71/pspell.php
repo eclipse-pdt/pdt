@@ -1,6 +1,6 @@
 <?php
 
-// Start of pspell v.7.0.0-dev
+// Start of pspell v.7.1.1
 
 /**
  * Load a new dictionary
@@ -298,4 +298,4 @@ define ('PSPELL_NORMAL', 2);
 define ('PSPELL_BAD_SPELLERS', 3);
 define ('PSPELL_RUN_TOGETHER', 8);
 
-// End of pspell v.7.0.0-dev
+// End of pspell v.7.1.1

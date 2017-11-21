@@ -1,6 +1,6 @@
 <?php
 
-// Start of sysvsem v.7.0.0-dev
+// Start of sysvsem v.7.1.1
 
 /**
  * Get a semaphore id
@@ -64,4 +64,4 @@ function sem_release ($sem_identifier) {}
  */
 function sem_remove ($sem_identifier) {}
 
-// End of sysvsem v.7.0.0-dev
+// End of sysvsem v.7.1.1
