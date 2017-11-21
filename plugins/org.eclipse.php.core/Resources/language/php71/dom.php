@@ -1892,7 +1892,10 @@ class DOMElement extends DOMNode  {
 	 * @param string $name <p>
 	 * The name of the attribute.
 	 * </p>
-	 * @return DOMAttr The attribute node.
+	 * @return DOMAttr The attribute node. Note that for XML namespace declarations
+	 * (xmlns and xmlns:* attributes) an 
+	 * instance of DOMNameSpaceNode is returned instead of a
+	 * DOMAttr.
 	 */
 	public function getAttributeNode ($name) {}
 
@@ -1981,7 +1984,10 @@ class DOMElement extends DOMNode  {
 	 * @param string $localName <p>
 	 * The local name.
 	 * </p>
-	 * @return DOMAttr The attribute node.
+	 * @return DOMAttr The attribute node. Note that for XML namespace declarations
+	 * (xmlns and xmlns:* attributes) an 
+	 * instance of DOMNameSpaceNode is returned instead of a
+	 * DOMAttr.
 	 */
 	public function getAttributeNodeNS ($namespaceURI, $localName) {}
 

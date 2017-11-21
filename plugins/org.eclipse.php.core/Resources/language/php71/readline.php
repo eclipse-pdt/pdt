@@ -1,6 +1,6 @@
 <?php
 
-// Start of readline v.7.2.0-dev
+// Start of readline v.7.1.11
 
 /**
  * Reads a line
@@ -51,14 +51,6 @@ function readline_add_history ($line) {}
 function readline_clear_history () {}
 
 /**
- * Lists the history
- * @link http://www.php.net/manual/en/function.readline-list-history.php
- * @return array an array of the entire command line history. The elements are
- * indexed by integers starting at zero.
- */
-function readline_list_history () {}
-
-/**
  * Reads the history
  * @link http://www.php.net/manual/en/function.readline-read-history.php
  * @param string $filename [optional] <p>
@@ -89,42 +81,6 @@ function readline_write_history ($filename = null) {}
  */
 function readline_completion_function ($function) {}
 
-/**
- * Initializes the readline callback interface and terminal, prints the prompt and returns immediately
- * @link http://www.php.net/manual/en/function.readline-callback-handler-install.php
- * @param string $prompt <p>
- * The prompt message.
- * </p>
- * @param callable $callback <p>
- * The callback function takes one parameter; the
- * user input returned.
- * </p>
- * @return bool true on success or false on failure
- */
-function readline_callback_handler_install ($prompt, $callback) {}
+define ('READLINE_LIB', "libedit");
 
-/**
- * Reads a character and informs the readline callback interface when a line is received
- * @link http://www.php.net/manual/en/function.readline-callback-read-char.php
- * @return void 
- */
-function readline_callback_read_char () {}
-
-/**
- * Removes a previously installed callback handler and restores terminal settings
- * @link http://www.php.net/manual/en/function.readline-callback-handler-remove.php
- * @return bool true if a previously installed callback handler was removed, or
- * false if one could not be found.
- */
-function readline_callback_handler_remove () {}
-
-/**
- * Redraws the display
- * @link http://www.php.net/manual/en/function.readline-redisplay.php
- * @return void 
- */
-function readline_redisplay () {}
-
-define ('READLINE_LIB', "readline");
-
-// End of readline v.7.2.0-dev
+// End of readline v.7.1.11

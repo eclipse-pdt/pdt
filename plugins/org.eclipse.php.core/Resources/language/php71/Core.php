@@ -1,6 +1,6 @@
 <?php
 
-// Start of Core v.7.2.0-dev
+// Start of Core v.7.1.11
 
 class stdClass  {
 }
@@ -90,14 +90,14 @@ interface ArrayAccess  {
  * __sleep() and
  * __wakeup(). The method serialize is
  * called whenever an instance needs to be serialized. This does not invoke __destruct()
- * or has any other side effect unless programmed inside the method. When the data is
+ * or have any other side effect unless programmed inside the method. When the data is
  * unserialized the class is known and the appropriate unserialize() method is called as
  * a constructor instead of calling __construct(). If you need to execute the standard
  * constructor you may do so in the method.</p>
  * <p>Note, that when an old instance of a class that implements this interface
  * now, which had been serialized before the class implemeted the interface, is
  * unserialized, __wakeup() is called
- * instead of the serialize method, what might be useful for migration
+ * instead of the serialize method, which might be useful for migration
  * purposes.</p>
  * @link http://www.php.net/manual/en/class.serializable.php
  */
@@ -366,6 +366,11 @@ class TypeError extends Error implements Throwable {
 
 }
 
+/**
+ * ArgumentCountError is thrown
+ * when too few arguments are passed to a user-defined function or method.
+ * @link http://www.php.net/manual/en/class.argumentcounterror.php
+ */
 class ArgumentCountError extends TypeError implements Throwable {
 	protected $message;
 	protected $code;
@@ -600,16 +605,6 @@ class ClosedGeneratorException extends Exception implements Throwable {
 
 }
 
-interface _ZendTestInterface  {
-	const DUMMY = 0;
-
-}
-
-class _ZendTestClass implements _ZendTestInterface {
-	const DUMMY = 0;
-
-}
-
 /**
  * Gets the version of the current Zend engine
  * @link http://www.php.net/manual/en/function.zend-version.php
@@ -812,6 +807,11 @@ function defined ($name) {}
  * @param object $object [optional] <p>
  * The tested object. This parameter may be omitted when inside a class.
  * </p>
+ * Explicitly passing &null; as the object is no
+ * longer allowed as of PHP 7.2.0.
+ * The parameter is still optional and calling get_class
+ * without a parameter from inside a class will work, but passing &null; now
+ * emits an E_WARNING notice.
  * @return string the name of the class of which object is an
  * instance. Returns false if object is not an 
  * object.
@@ -819,6 +819,10 @@ function defined ($name) {}
  * <p>
  * If object is omitted when inside a class, the
  * name of that class is returned.
+ * </p>
+ * <p>
+ * If the object is an instance of a class which exists 
+ * in a namespace, the qualified namespaced name of that class is returned.
  */
 function get_class ($object = null) {}
 
@@ -947,14 +951,6 @@ function function_exists ($function_name) {}
  * @return bool true on success or false on failure
  */
 function class_alias ($original, $alias, $autoload = null) {}
-
-function leak () {}
-
-/**
- * @param $variable
- * @param $leak_data [optional]
- */
-function leak_variable ($variable, $leak_data = null) {}
 
 /**
  * Returns an array with the names of included or required files
@@ -1195,13 +1191,16 @@ function get_declared_interfaces () {}
 /**
  * Returns an array of all defined functions
  * @link http://www.php.net/manual/en/function.get-defined-functions.php
+ * @param bool $exclude_disabled [optional] <p>
+ * Whether disabled functions should be excluded from the return value.
+ * </p>
  * @return array a multidimensional array containing a list of all defined
  * functions, both built-in (internal) and user-defined. The internal
  * functions will be accessible via $arr["internal"], and
  * the user defined ones using $arr["user"] (see example
  * below).
  */
-function get_defined_functions () {}
+function get_defined_functions ($exclude_disabled = null) {}
 
 /**
  * Returns an array of all defined variables
@@ -1235,7 +1234,7 @@ function create_function ($args, $code) {}
  * Unknown.
  * </p>
  * <p>
- * This function will return false and generate an error if 
+ * This function will return &null; and generate an error if 
  * handle is not a resource.
  */
 function get_resource_type ($handle) {}
@@ -1284,6 +1283,22 @@ function get_loaded_extensions ($zend_extensions = null) {}
  * CGI or CLI version of
  * PHP you can use the -m switch to
  * list all available extensions:
+ * <pre>
+ * $ php -m
+ * [PHP Modules]
+ * xml
+ * tokenizer
+ * standard
+ * sockets
+ * session
+ * posix
+ * pcre
+ * overload
+ * mysql
+ * mbstring
+ * ctype
+ * [Zend Modules]
+ * </pre>
  * </p>
  * @return bool true if the extension identified by name
  * is loaded, false otherwise.
@@ -1311,9 +1326,17 @@ function get_extension_funcs ($module_name) {}
  * Causing this function to return a multi-dimensional
  * array with categories in the keys of the first dimension and constants
  * and their values in the second dimension.
- * ]]>
+ * <pre>
+ * <code>&lt;?php
+ * define(&quot;MY_CONSTANT&quot;, 1);
+ * print_r(get_defined_constants(true));
+ * ?&gt;</code>
+ * </pre>
  * &example.outputs.similar;
+ * <pre>
  * Array
+ * (
+ * [Core] => Array
  * (
  * [E_ERROR] => 1
  * [E_WARNING] => 2
@@ -1344,7 +1367,7 @@ function get_extension_funcs ($module_name) {}
  * [MY_CONSTANT] => 1
  * )
  * )
- * ]]>
+ * </pre>
  * </p>
  * @return array an array of constant name => constant value array, optionally
  * groupped by extension name registering the constant.
@@ -1472,10 +1495,6 @@ function debug_backtrace ($options = null, $limit = null) {}
  * @return void 
  */
 function debug_print_backtrace ($options = null, $limit = null) {}
-
-function zend_test_func () {}
-
-function zend_test_func2 () {}
 
 /**
  * Reclaims memory used by the Zend Engine memory manager
@@ -1638,42 +1657,52 @@ define ('E_USER_DEPRECATED', 16384);
 define ('E_ALL', 32767);
 define ('DEBUG_BACKTRACE_PROVIDE_OBJECT', 1);
 define ('DEBUG_BACKTRACE_IGNORE_ARGS', 2);
-define ('true', true);
-define ('false', false);
-define ('ZEND_THREAD_SAFE', false);
-define ('ZEND_DEBUG_BUILD', true);
-define ('null', null);
-define ('PHP_VERSION', "7.2.0-dev");
+define ('TRUE', true);
+define ('FALSE', false);
+define ('ZEND_THREAD_SAFE', true);
+define ('ZEND_DEBUG_BUILD', false);
+define ('NULL', null);
+define ('PHP_VERSION', "7.1.11");
 define ('PHP_MAJOR_VERSION', 7);
-define ('PHP_MINOR_VERSION', 2);
-define ('PHP_RELEASE_VERSION', 0);
-define ('PHP_EXTRA_VERSION', "-dev");
-define ('PHP_VERSION_ID', 70200);
-define ('PHP_ZTS', 0);
-define ('PHP_DEBUG', 1);
-define ('PHP_OS', "Linux");
+define ('PHP_MINOR_VERSION', 1);
+define ('PHP_RELEASE_VERSION', 11);
+define ('PHP_EXTRA_VERSION', "");
+define ('PHP_VERSION_ID', 70111);
+define ('PHP_ZTS', 1);
+define ('PHP_DEBUG', 0);
+define ('PHP_OS', "WINNT");
 define ('PHP_SAPI', "cli");
-define ('DEFAULT_INCLUDE_PATH', ".:/home/wywrzal/.phpbrew/php/php-7.1.0/lib/php");
-define ('PEAR_INSTALL_DIR', "/home/wywrzal/.phpbrew/php/php-7.1.0/lib/php");
-define ('PEAR_EXTENSION_DIR', "/home/wywrzal/.phpbrew/php/php-7.1.0/lib/php/extensions/debug-non-zts-20160303");
-define ('PHP_EXTENSION_DIR', "/home/wywrzal/.phpbrew/php/php-7.1.0/lib/php/extensions/debug-non-zts-20160303");
-define ('PHP_PREFIX', "/home/wywrzal/.phpbrew/php/php-7.1.0");
-define ('PHP_BINDIR', "/home/wywrzal/.phpbrew/php/php-7.1.0/bin");
-define ('PHP_MANDIR', "/home/wywrzal/.phpbrew/php/php-7.1.0/php/man");
-define ('PHP_LIBDIR', "/home/wywrzal/.phpbrew/php/php-7.1.0/lib/php");
-define ('PHP_DATADIR', "/home/wywrzal/.phpbrew/php/php-7.1.0/share/php");
-define ('PHP_SYSCONFDIR', "/home/wywrzal/.phpbrew/php/php-7.1.0/etc");
-define ('PHP_LOCALSTATEDIR', "/home/wywrzal/.phpbrew/php/php-7.1.0/var");
-define ('PHP_CONFIG_FILE_PATH', "/home/wywrzal/.phpbrew/php/php-7.1.0/etc");
-define ('PHP_CONFIG_FILE_SCAN_DIR', "/home/wywrzal/.phpbrew/php/php-7.1.0/var/db");
-define ('PHP_SHLIB_SUFFIX', "so");
-define ('PHP_EOL', "\n");
-define ('PHP_MAXPATHLEN', 4096);
-define ('PHP_INT_MAX', 9223372036854775807);
-define ('PHP_INT_MIN', -9223372036854775808);
-define ('PHP_INT_SIZE', 8);
-define ('PHP_FD_SETSIZE', 1024);
-define ('PHP_BINARY', "/home/wywrzal/.phpbrew/php/php-7.1.0/bin/php");
+define ('DEFAULT_INCLUDE_PATH', ".;C:\php\pear");
+define ('PEAR_INSTALL_DIR', "C:\php\pear");
+define ('PEAR_EXTENSION_DIR', "C:\php\ext");
+define ('PHP_EXTENSION_DIR', "C:\php\ext");
+define ('PHP_PREFIX', "C:\php");
+define ('PHP_BINDIR', "C:\php");
+define ('PHP_LIBDIR', "C:\php");
+define ('PHP_DATADIR', "C:\php");
+define ('PHP_SYSCONFDIR', "C:\php");
+define ('PHP_LOCALSTATEDIR', "C:\php");
+define ('PHP_CONFIG_FILE_PATH', "C:\windows");
+define ('PHP_CONFIG_FILE_SCAN_DIR', "");
+define ('PHP_SHLIB_SUFFIX', "dll");
+define ('PHP_EOL', "\r\n");
+define ('PHP_MAXPATHLEN', 2048);
+define ('PHP_INT_MAX', 2147483647);
+define ('PHP_INT_MIN', -2147483648);
+define ('PHP_INT_SIZE', 4);
+define ('PHP_FD_SETSIZE', 256);
+define ('PHP_WINDOWS_VERSION_MAJOR', 6);
+define ('PHP_WINDOWS_VERSION_MINOR', 1);
+define ('PHP_WINDOWS_VERSION_BUILD', 7601);
+define ('PHP_WINDOWS_VERSION_PLATFORM', 2);
+define ('PHP_WINDOWS_VERSION_SP_MAJOR', 1);
+define ('PHP_WINDOWS_VERSION_SP_MINOR', 0);
+define ('PHP_WINDOWS_VERSION_SUITEMASK', 256);
+define ('PHP_WINDOWS_VERSION_PRODUCTTYPE', 1);
+define ('PHP_WINDOWS_NT_DOMAIN_CONTROLLER', 2);
+define ('PHP_WINDOWS_NT_SERVER', 3);
+define ('PHP_WINDOWS_NT_WORKSTATION', 1);
+define ('PHP_BINARY', "D:\xampp.7.1.11\php\php.exe");
 
 /**
  * <p>
@@ -1815,4 +1844,4 @@ define ('STDIN', "Resource id #1");
 define ('STDOUT', "Resource id #2");
 define ('STDERR', "Resource id #3");
 
-// End of Core v.7.2.0-dev
+// End of Core v.7.1.11

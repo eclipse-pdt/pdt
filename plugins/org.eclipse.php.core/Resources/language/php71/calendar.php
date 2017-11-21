@@ -1,6 +1,6 @@
 <?php
 
-// Start of calendar v.7.0.0-dev
+// Start of calendar v.7.1.11
 
 /**
  * Converts Julian Day Count to Gregorian date
@@ -77,10 +77,17 @@ function jdtojewish ($juliandaycount, $hebrew = null, $fl = null) {}
  * Converts a date in the Jewish Calendar to Julian Day Count
  * @link http://www.php.net/manual/en/function.jewishtojd.php
  * @param int $month <p>
- * The month as a number from 1 to 13
+ * The month as a number from 1 to 13,
+ * where 1 means Tishri,
+ * 13 means Elul, and
+ * 6 and 7 mean
+ * Adar in regular years, but Adar I
+ * and Adar II, respectively, in leap years.
  * </p>
  * @param int $day <p>
- * The day as a number from 1 to 30
+ * The day as a number from 1 to 30.
+ * If the month has only 29 days, the first day of the following month is
+ * assumed.
  * </p>
  * @param int $year <p>
  * The year as a number between 1 and 9999
@@ -204,7 +211,7 @@ function unixtojd ($timestamp = null) {}
  * @param int $jday <p>
  * A julian day number between 2440588 and 2465342.
  * </p>
- * @return int The unix timestamp for the start of the given julian day.
+ * @return int The unix timestamp for the start (midnight, not noon) of the given Julian day.
  */
 function jdtounix ($jday) {}
 
@@ -298,4 +305,4 @@ define ('CAL_JEWISH_ADD_ALAFIM_GERESH', 2);
 define ('CAL_JEWISH_ADD_ALAFIM', 4);
 define ('CAL_JEWISH_ADD_GERESHAYIM', 8);
 
-// End of calendar v.7.0.0-dev
+// End of calendar v.7.1.11

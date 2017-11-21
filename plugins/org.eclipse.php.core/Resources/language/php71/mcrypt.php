@@ -1,6 +1,6 @@
 <?php
 
-// Start of mcrypt v.7.2.0-dev
+// Start of mcrypt v.7.1.11
 
 /**
  * Gets the key size of the specified cipher
@@ -16,7 +16,7 @@ function mcrypt_get_key_size ($cipher) {}
  * Gets the block size of the specified cipher
  * @link http://www.php.net/manual/en/function.mcrypt-get-block-size.php
  * @param int $cipher One of the MCRYPT_ciphername constants, or the name of the algorithm as string.</p>
- * @return int Gets the block size, as an integer.
+ * @return int the algorithm block size in bytes or false on failure.
  * @deprecated 
  */
 function mcrypt_get_block_size ($cipher) {}
@@ -528,4 +528,4 @@ define ('MCRYPT_MODE_NOFB', "nofb");
 define ('MCRYPT_MODE_OFB', "ofb");
 define ('MCRYPT_MODE_STREAM', "stream");
 
-// End of mcrypt v.7.2.0-dev
+// End of mcrypt v.7.1.11

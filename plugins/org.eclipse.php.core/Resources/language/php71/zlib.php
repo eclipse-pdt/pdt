@@ -1,6 +1,6 @@
 <?php
 
-// Start of zlib v.7.2.0-dev
+// Start of zlib v.7.1.11
 
 /**
  * Output a gz-file
@@ -357,8 +357,12 @@ function gzdecode ($data, $length = null) {}
  * Compress data with the specified encoding
  * @link http://www.php.net/manual/en/function.zlib-encode.php
  * @param string $data <p>
+ * The data to compress.
  * </p>
  * @param string $encoding <p>
+ * The compression algorithm. Either ZLIB_ENCODING_RAW,
+ * ZLIB_ENCODING_DEFLATE or
+ * ZLIB_ENCODING_GZIP.
  * </p>
  * @param string $level [optional] <p>
  * </p>
@@ -373,7 +377,7 @@ function zlib_encode ($data, $encoding, $level = null) {}
  * </p>
  * @param string $max_decoded_len [optional] <p>
  * </p>
- * @return string 
+ * @return string the uncompressed data, or false on failure.
  */
 function zlib_decode ($data, $max_decoded_len = null) {}
 
@@ -567,4 +571,4 @@ define ('ZLIB_DEFAULT_STRATEGY', 0);
 define ('ZLIB_VERSION', "1.2.8");
 define ('ZLIB_VERNUM', 4736);
 
-// End of zlib v.7.2.0-dev
+// End of zlib v.7.1.11

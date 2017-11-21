@@ -1,6 +1,6 @@
 <?php
 
-// Start of pcre v.7.2.0-dev
+// Start of pcre v.7.1.11
 
 /**
  * Perform a regular expression match
@@ -21,12 +21,46 @@
  * @param int $flags [optional] <p>
  * flags can be the following flag:
  * PREG_OFFSET_CAPTURE
+ * <p>
  * If this flag is passed, for every occurring match the appendant string
  * offset will also be returned. Note that this changes the value of
  * matches into an array where every element is an
  * array consisting of the matched string at offset 0
  * and its string offset into subject at offset
  * 1.
+ * <pre>
+ * <code>&lt;?php
+ * preg_match('&#47;(foo)(bar)(baz)&#47;', 'foobarbaz', $matches, PREG_OFFSET_CAPTURE);
+ * print_r($matches);
+ * ?&gt;</code>
+ * </pre>
+ * The above example will output:</p>
+ * <pre>
+ * Array
+ * (
+ * [0] => Array
+ * (
+ * [0] => foobarbaz
+ * [1] => 0
+ * )
+ * [1] => Array
+ * (
+ * [0] => foo
+ * [1] => 0
+ * )
+ * [2] => Array
+ * (
+ * [0] => bar
+ * [1] => 3
+ * )
+ * [3] => Array
+ * (
+ * [0] => baz
+ * [1] => 6
+ * )
+ * )
+ * </pre>
+ * </p>
  * @param int $offset [optional] <p>
  * Normally, the search starts from the beginning of the subject string.
  * The optional parameter offset can be used to
@@ -39,22 +73,50 @@
  * because pattern can contain assertions such as
  * ^, $ or
  * (?&lt;=x). Compare:
- * ]]>
+ * <pre>
+ * <code>&lt;?php
+ * $subject = &quot;abcdef&quot;;
+ * $pattern = '&#47;^def&#47;';
+ * preg_match($pattern, $subject, $matches, PREG_OFFSET_CAPTURE, 3);
+ * print_r($matches);
+ * ?&gt;</code>
+ * </pre>
  * The above example will output:</p>
+ * <pre>
+ * Array
+ * (
+ * )
+ * </pre>
  * <p>
  * while this example
  * </p>
- * ]]>
+ * <pre>
+ * <code>&lt;?php
+ * $subject = &quot;abcdef&quot;;
+ * $pattern = '&#47;^def&#47;';
+ * preg_match($pattern, substr($subject,3), $matches, PREG_OFFSET_CAPTURE);
+ * print_r($matches);
+ * ?&gt;</code>
+ * </pre>
  * <p>
  * will produce
  * </p>
+ * <pre>
  * Array
+ * (
+ * [0] => Array
  * (
  * [0] => def
  * [1] => 0
  * )
  * )
- * ]]>
+ * </pre>
+ * <p>
+ * Alternatively, to avoid using substr(), use the
+ * \G assertion rather than the ^ anchor, or
+ * the A modifier instead, both of which work with
+ * the offset parameter.
+ * </p>
  * </p>
  * @return int preg_match returns 1 if the pattern
  * matches given subject, 0 if it does not, or false
@@ -96,11 +158,20 @@ function preg_match ($pattern, $subject, array &$matches = null, $flags = null, 
  * the first parenthesized subpattern, and so on.
  * </p>
  * <p>
- * ]]>
+ * <pre>
+ * <code>&lt;?php
+ * preg_match_all(&quot;|&lt;[^&gt;]+&gt;(.&#42;)&lt;&#47;[^&gt;]+&gt;|U&quot;,
+ * &quot;&lt;b&gt;example: &lt;&#47;b&gt;&lt;div align=left&gt;this is a test&lt;&#47;div&gt;&quot;,
+ * $out, PREG_PATTERN_ORDER);
+ * echo $out[0][0] . &quot;, &quot; . $out[0][1] . &quot;\n&quot;;
+ * echo $out[1][0] . &quot;, &quot; . $out[1][1] . &quot;\n&quot;;
+ * ?&gt;</code>
+ * </pre>
  * The above example will output:</p>
+ * <pre>
  * example: , this is a test
  * example: , this is a test
- * ]]>
+ * </pre>
  * <p>
  * So, $out[0] contains array of strings that matched full pattern,
  * and $out[1] contains array of strings enclosed by tags.
@@ -113,11 +184,25 @@ function preg_match ($pattern, $subject, array &$matches = null, $flags = null, 
  * <p>
  * If the pattern contains duplicate named subpatterns, only the rightmost
  * subpattern is stored in $matches[NAME].
- * ]]>
+ * <pre>
+ * <code>&lt;?php
+ * preg_match_all(
+ * '&#47;(?J)(?&lt;match&gt;foo)|(?&lt;match&gt;bar)&#47;',
+ * 'foo bar',
+ * $matches,
+ * PREG_PATTERN_ORDER
+ * );
+ * print_r($matches['match']);
+ * ?&gt;</code>
+ * </pre>
  * The above example will output:</p>
+ * <pre>
+ * Array
+ * (
+ * [0] => 
  * [1] => bar
  * )
- * ]]>
+ * </pre>
  * </p>
  * @param int $offset [optional] 
  * @return int the number of full pattern matches (which might be zero),
@@ -149,7 +234,7 @@ function preg_match_all ($pattern, $subject, array &$matches = null, $flags = nu
  * </p>
  * <p>
  * replacement may contain references of the form
- * \\n or (since PHP 4.0.4)
+ * \\n or
  * $n, with the latter form
  * being the preferred one. Every such reference will be replaced by the text
  * captured by the n'th parenthesized pattern.
@@ -242,7 +327,25 @@ function preg_replace ($pattern, $replacement, $subject, $limit = null, &$count 
  * <p>
  * preg_replace_callback and 
  * anonymous function
- * ]]>
+ * <pre>
+ * <code>&lt;?php
+ * &#47;&#42; a unix-style command line filter to convert uppercase
+ * &#42; letters at the beginning of paragraphs to lowercase &#42;&#47;
+ * $fp = fopen(&quot;php:&#47;&#47;stdin&quot;, &quot;r&quot;) or die(&quot;can't read stdin&quot;);
+ * while (!feof($fp)) {
+ * $line = fgets($fp);
+ * $line = preg_replace_callback(
+ * '|&lt;p&gt;\s&#42;\w|',
+ * function ($matches) {
+ * return strtolower($matches[0]);
+ * },
+ * $line
+ * );
+ * echo $line;
+ * }
+ * fclose($fp);
+ * ?&gt;</code>
+ * </pre>
  * </p>
  * @param mixed $subject <p>
  * The string or an array with strings to search and replace.
@@ -493,4 +596,4 @@ define ('PREG_JIT_STACKLIMIT_ERROR', 6);
  */
 define ('PCRE_VERSION', "8.38 2015-11-23");
 
-// End of pcre v.7.2.0-dev
+// End of pcre v.7.1.11

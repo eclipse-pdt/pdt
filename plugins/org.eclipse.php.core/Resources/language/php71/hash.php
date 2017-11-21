@@ -44,7 +44,7 @@ function hash_file ($algo, $filename, $raw_output = null) {}
  * Generate a keyed hash value using the HMAC method
  * @link http://www.php.net/manual/en/function.hash-hmac.php
  * @param string $algo <p>
- * Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..) See hash_algos for a list of supported algorithms.
+ * Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..) See hash_hmac_algos for a list of supported algorithms.
  * </p>
  * @param string $data <p>
  * Message to be hashed.
@@ -67,7 +67,7 @@ function hash_hmac ($algo, $data, $key, $raw_output = null) {}
  * Generate a keyed hash value using the HMAC method and the contents of a given file
  * @link http://www.php.net/manual/en/function.hash-hmac-file.php
  * @param string $algo <p>
- * Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..) See hash_algos for a list of supported algorithms.
+ * Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..) See hash_hmac_algos for a list of supported algorithms.
  * </p>
  * @param string $filename <p>
  * URL describing location of file to be hashed; Supports fopen wrappers.
@@ -211,6 +211,41 @@ function hash_pbkdf2 ($algo, $password, $salt, $iterations, $length = null, $raw
  * @return bool true when the two strings are equal, false otherwise.
  */
 function hash_equals ($known_string, $user_string) {}
+
+/**
+ * Generate a HKDF key derivation of a supplied key input
+ * @link http://www.php.net/manual/en/function.hash-hkdf.php
+ * @param string $algo <p>
+ * Name of selected hashing algorithm (i.e. "sha256", "sha512", "haval160,4", etc..)
+ * See hash_algos for a list of supported algorithms.
+ * <p>
+ * Non-cryptographic hash functions are not allowed.
+ * </p>
+ * </p>
+ * @param string $ikm <p>
+ * Input keying material (raw binary). Cannot be empty.
+ * </p>
+ * @param int $length [optional] <p>
+ * Desired output length in bytes.
+ * Cannot be greater than 255 times the chosen hash function size.
+ * </p>
+ * <p>
+ * If length is 0, the output length
+ * will default to the chosen hash function size.
+ * </p>
+ * @param string $info [optional] <p>
+ * Application/context-specific info string.
+ * </p>
+ * @param string $salt [optional] <p>
+ * Salt to use during derivation.
+ * </p>
+ * <p>
+ * While optional, adding random salt significantly improves the strength of HKDF.
+ * </p>
+ * @return string a string containing a raw binary representation of the derived key
+ * (also known as output keying material - OKM); or false on failure.
+ */
+function hash_hkdf ($algo, $ikm, $length = null, $info = null, $salt = null) {}
 
 /**
  * Generates a key

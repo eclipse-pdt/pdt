@@ -1,6 +1,6 @@
 <?php
 
-// Start of xmlwriter v.7.0.0-dev
+// Start of xmlwriter v.7.1.11
 
 class XMLWriter  {
 
@@ -727,4 +727,4 @@ function xmlwriter_output_memory ($xmlwriter, $flush = null) {}
  */
 function xmlwriter_flush ($xmlwriter, $empty = null) {}
 
-// End of xmlwriter v.7.0.0-dev
+// End of xmlwriter v.7.1.11

@@ -1,6 +1,6 @@
 <?php
 
-// Start of iconv v.7.2.0-dev
+// Start of iconv v.7.1.11
 
 /**
  * Convert string to requested character encoding
@@ -20,6 +20,13 @@
  * characters that cannot be represented in the target charset are silently
  * discarded. Otherwise, E_NOTICE is generated and the function
  * will return false.
+ * </p>
+ * <p>
+ * If and how //TRANSLIT works exactly depends on the
+ * system's iconv() implementation (cf. ICONV_IMPL).
+ * Some implementations are known to ignore //TRANSLIT,
+ * so the conversion is likely to fail for characters which are illegal for
+ * the out_charset.
  * </p>
  * @param string $str <p>
  * The string to be converted.
@@ -130,6 +137,8 @@ function iconv_strlen ($str, $charset = null) {}
  * <p>
  * If str is shorter than offset
  * characters long, false will be returned.
+ * If str is exactly offset
+ * characters long, an empty string will be returned.
  */
 function iconv_substr ($str, $offset, $length = null, $charset = null) {}
 
@@ -145,6 +154,7 @@ function iconv_substr ($str, $offset, $length = null, $charset = null) {}
  * @param int $offset [optional] <p>
  * The optional offset parameter specifies
  * the position from which the search should be performed.
+ * If the offset is negative, it is counted from the end of the string.
  * </p>
  * @param string $charset [optional] <p>
  * If charset parameter is omitted,
@@ -399,13 +409,13 @@ function iconv_mime_decode_headers ($encoded_headers, $mode = null, $charset = n
  * string
  * @link http://www.php.net/manual/en/iconv.constants.php
  */
-define ('ICONV_IMPL', "glibc");
+define ('ICONV_IMPL', "\"libiconv\"");
 
 /**
  * string
  * @link http://www.php.net/manual/en/iconv.constants.php
  */
-define ('ICONV_VERSION', 2.23);
+define ('ICONV_VERSION', 1.15);
 
 /**
  * integer
@@ -419,4 +429,4 @@ define ('ICONV_MIME_DECODE_STRICT', 1);
  */
 define ('ICONV_MIME_DECODE_CONTINUE_ON_ERROR', 2);
 
-// End of iconv v.7.2.0-dev
+// End of iconv v.7.1.11

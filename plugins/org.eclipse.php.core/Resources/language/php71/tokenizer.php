@@ -1,6 +1,6 @@
 <?php
 
-// Start of tokenizer v.7.2.0-dev
+// Start of tokenizer v.7.1.11
 
 /**
  * Split given source into PHP tokens
@@ -166,4 +166,4 @@ define ('T_ELLIPSIS', 391);
 define ('T_DOUBLE_COLON', 387);
 define ('TOKEN_PARSE', 1);
 
-// End of tokenizer v.7.2.0-dev
+// End of tokenizer v.7.1.11

@@ -1,6 +1,6 @@
 <?php
 
-// Start of bz2 v.7.2.0-dev
+// Start of bz2 v.7.1.11
 
 /**
  * Opens a bzip2 compressed file
@@ -152,4 +152,4 @@ function bzcompress ($source, $blocksize = null, $workfactor = null) {}
  */
 function bzdecompress ($source, $small = null) {}
 
-// End of bz2 v.7.2.0-dev
+// End of bz2 v.7.1.11

@@ -1,6 +1,6 @@
 <?php
 
-// Start of PDO v.7.2.0-dev
+// Start of PDO v.7.1.11
 
 class PDOException extends RuntimeException implements Throwable {
 	protected $message;
@@ -46,7 +46,7 @@ class PDO  {
 	const PARAM_STR = 2;
 	const PARAM_LOB = 3;
 	const PARAM_STMT = 4;
-	const PARAM_INPUT_OUTPUT = 2147483648;
+	const PARAM_INPUT_OUTPUT = -2147483648;
 	const PARAM_EVT_ALLOC = 0;
 	const PARAM_EVT_FREE = 1;
 	const PARAM_EVT_EXEC_PRE = 2;
@@ -124,6 +124,8 @@ class PDO  {
 	const MYSQL_ATTR_SSL_CIPHER = 1011;
 	const MYSQL_ATTR_SERVER_PUBLIC_KEY = 1012;
 	const MYSQL_ATTR_MULTI_STATEMENTS = 1013;
+	const MYSQL_ATTR_SSL_VERIFY_SERVER_CERT = 1014;
+	const SQLITE_DETERMINISTIC = 2048;
 
 
 	/**
@@ -219,9 +221,11 @@ class PDO  {
 	 * The following example incorrectly relies on the return value of
 	 * PDO::exec, wherein a statement that affected 0 rows
 	 * results in a call to die:
-	 * exec() or die(print_r($db->errorInfo(), true));
-	 * ?>
-	 * ]]>
+	 * <pre>
+	 * <code>&lt;?php
+	 * $db-&gt;exec() or die(print_r($db-&gt;errorInfo(), true)); &#47;&#47; incorrect
+	 * ?&gt;</code>
+	 * </pre>
 	 */
 	public function exec ($statement) {}
 
@@ -396,12 +400,12 @@ class PDOStatement implements Traversable {
 	 * All values are treated as PDO::PARAM_STR.
 	 * </p>
 	 * <p>
-	 * You cannot bind multiple values to a single parameter; for example,
-	 * you cannot bind two values to a single named parameter in an IN()
+	 * Multiple values cannot be bound to a single parameter; for example,
+	 * it is not allowed to bind two values to a single named parameter in an IN()
 	 * clause.
 	 * </p>
 	 * <p>
-	 * You cannot bind more values than specified; if more keys exist in 
+	 * Binding more values than specified is not possible; if more keys exist in 
 	 * input_parameters than in the SQL specified 
 	 * in the PDO::prepare, then the statement will 
 	 * fail and an error is emitted.
@@ -531,7 +535,7 @@ class PDOStatement implements Traversable {
 	 * fetches the first column.
 	 * </p>
 	 * @return mixed PDOStatement::fetchColumn returns a single column
-	 * in the next row of a result set.
+	 * from the next row of a result set or false if there are no more rows.
 	 * </p>
 	 * <p>
 	 * There is no way to return another column from the same row if you
@@ -770,4 +774,4 @@ final class PDORow  {
 
 function pdo_drivers () {}
 
-// End of PDO v.7.2.0-dev
+// End of PDO v.7.1.11

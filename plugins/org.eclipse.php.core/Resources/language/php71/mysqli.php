@@ -1,6 +1,6 @@
 <?php
 
-// Start of mysqli v.7.2.0-dev
+// Start of mysqli v.7.1.11
 
 final class mysqli_sql_exception extends RuntimeException implements Throwable {
 	protected $message;
@@ -280,7 +280,7 @@ class mysqli  {
 	 * If not provided or &null;, the MySQL server will attempt to authenticate
 	 * the user against those user records which have no password only. This
 	 * allows one username to be used with different permissions (depending
-	 * on if a password as provided or not).
+	 * on if a password is provided or not).
 	 * </p>
 	 * @param string $dbname [optional] <p>
 	 * If provided will specify the default database to be used when
@@ -421,10 +421,10 @@ class mysqli  {
 	 * has been run on for which the function could poll results.
 	 * </p>
 	 * @param int $sec <p>
-	 * Number of seconds to wait, must be non-negative.
+	 * Maximum number of seconds to wait, must be non-negative.
 	 * </p>
 	 * @param int $usec [optional] <p>
-	 * Number of microseconds to wait, must be non-negative.
+	 * Maximum number of microseconds to wait, must be non-negative.
 	 * </p>
 	 * @return int number of ready connections upon success, false otherwise.
 	 */
@@ -495,7 +495,7 @@ class mysqli  {
 	 * mysqli_poll is then used to get results from such
 	 * queries.
 	 * </p>
-	 * @return mysqli_result|boolean For successful SELECT, SHOW, DESCRIBE or
+	 * @return mixed false on failure. For successful SELECT, SHOW, DESCRIBE or
 	 * EXPLAIN queries mysqli_query will return
 	 * a mysqli_result object. For other successful queries mysqli_query will
 	 * return true.
@@ -1724,9 +1724,9 @@ function mysqli_more_results ($link) {}
 
 /**
  * @param $link
- * @param $query
+ * @param $query [optional]
  */
-function mysqli_multi_query ($link, $query) {}
+function mysqli_multi_query ($link, $query = null) {}
 
 /**
  * @param $link
@@ -1780,8 +1780,9 @@ function mysqli_report ($flags) {}
 /**
  * @param $link
  * @param $query
+ * @param $resultmode [optional]
  */
-function mysqli_query ($link, $query) {}
+function mysqli_query ($link, $query, $resultmode = null) {}
 
 /**
  * @param $link
@@ -1803,9 +1804,9 @@ function mysqli_real_escape_string ($link, $string_to_escape) {}
 
 /**
  * @param $link
- * @param $query
+ * @param $query [optional]
  */
-function mysqli_real_query ($link, $query) {}
+function mysqli_real_query ($link, $query = null) {}
 
 /**
  * @param $link
@@ -2042,8 +2043,9 @@ function mysqli_refresh ($link, $options) {}
  * @link http://www.php.net/manual/en/function.mysqli-escape-string.php
  * @param $link
  * @param $query
+ * @param $resultmode [optional]
  */
-function mysqli_escape_string ($link, $query) {}
+function mysqli_escape_string ($link, $query, $resultmode = null) {}
 
 function mysqli_set_opt () {}
 
@@ -2653,7 +2655,7 @@ define ('MYSQLI_REPORT_OFF', 0);
  * </p>
  * @link http://www.php.net/manual/en/mysqli.constants.php
  */
-define ('MYSQLI_DEBUG_TRACE_ENABLED', 1);
+define ('MYSQLI_DEBUG_TRACE_ENABLED', 0);
 
 /**
  * <p>
@@ -2799,4 +2801,4 @@ define ('MYSQLI_TRANS_COR_RELEASE', 4);
  */
 define ('MYSQLI_TRANS_COR_NO_RELEASE', 8);
 
-// End of mysqli v.7.2.0-dev
+// End of mysqli v.7.1.11
