@@ -1,6 +1,6 @@
 <?php
 
-// Start of recode v.7.0.0-dev
+// Start of recode v.7.1.1-1+deb.sury.org~xenial+1
 
 /**
  * Recode a string according to a recode request
@@ -42,4 +42,4 @@ function recode_file ($request, $input, $output) {}
  */
 function recode ($request, $str) {}
 
-// End of recode v.7.0.0-dev
+// End of recode v.7.1.1-1+deb.sury.org~xenial+1

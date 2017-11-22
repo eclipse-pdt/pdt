@@ -1,4 +1,4 @@
 <?php
 
-// Start of mysqlnd v.mysqlnd 5.0.12-dev - 20150407 - $Id: d8daadaf41e3cd81d7c6ae96c6091fd15b2c9382 $
-// End of mysqlnd v.mysqlnd 5.0.12-dev - 20150407 - $Id: d8daadaf41e3cd81d7c6ae96c6091fd15b2c9382 $
+// Start of mysqlnd v.mysqlnd 5.0.12-dev - 20150407 - $Id: b396954eeb2d1d9ed7902b8bae237b287f21ad9e $
+// End of mysqlnd v.mysqlnd 5.0.12-dev - 20150407 - $Id: b396954eeb2d1d9ed7902b8bae237b287f21ad9e $

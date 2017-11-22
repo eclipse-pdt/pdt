@@ -1,27 +1,27 @@
 <?php
 
-// Start of date v.7.2.0-dev
+// Start of date v.7.1.1-1+deb.sury.org~xenial+1
 
 interface DateTimeInterface  {
 
 	/**
 	 * @param $format
 	 */
-	abstract public function format ($format) {}
+	abstract public function format ($format);
 
-	abstract public function getTimezone () {}
+	abstract public function getTimezone ();
 
-	abstract public function getOffset () {}
+	abstract public function getOffset ();
 
-	abstract public function getTimestamp () {}
+	abstract public function getTimestamp ();
 
 	/**
 	 * @param $object
 	 * @param $absolute [optional]
 	 */
-	abstract public function diff ($object, $absolute = null) {}
+	abstract public function diff ($object, $absolute = null);
 
-	abstract public function __wakeup () {}
+	abstract public function __wakeup ();
 
 }
 
@@ -61,7 +61,7 @@ class DateTime implements DateTimeInterface {
 	public static function __set_state () {}
 
 	/**
-	 * Returns new DateTime object formatted according to the specified format
+	 * Parses a time string according to a specified format
 	 * @link http://www.php.net/manual/en/datetime.createfromformat.php
 	 * @param $format
 	 * @param $time
@@ -130,8 +130,9 @@ class DateTime implements DateTimeInterface {
 	 * @param $hour
 	 * @param $minute
 	 * @param $second [optional]
+	 * @param $microseconds [optional]
 	 */
-	public function setTime ($hour, $minute, $second = null) {}
+	public function setTime ($hour, $minute, $second = null, $microseconds = null) {}
 
 	/**
 	 * Sets the date
@@ -193,7 +194,7 @@ class DateTimeImmutable implements DateTimeInterface {
 	public static function __set_state () {}
 
 	/**
-	 * Returns new DateTimeImmutable object formatted according to the specified format
+	 * Parses a time string according to a specified format
 	 * @link http://www.php.net/manual/en/datetimeimmutable.createfromformat.php
 	 * @param $format
 	 * @param $time
@@ -258,8 +259,9 @@ class DateTimeImmutable implements DateTimeInterface {
 	 * @param $hour
 	 * @param $minute
 	 * @param $second [optional]
+	 * @param $microseconds [optional]
 	 */
-	public function setTime ($hour, $minute, $second = null) {}
+	public function setTime ($hour, $minute, $second = null, $microseconds = null) {}
 
 	/**
 	 * Sets the date
@@ -520,7 +522,7 @@ function strtotime ($time, $now = null) {}
  * </tr>
  * <tr valign="top">
  * <td>W</td>
- * <td>ISO-8601 week number of year, weeks starting on Monday (added in PHP 4.1.0)</td>
+ * <td>ISO-8601 week number of year, weeks starting on Monday</td>
  * <td>Example: 42 (the 42nd week in the year)</td>
  * </tr>
  * <tr valign="top">
@@ -642,6 +644,14 @@ function strtotime ($time, $now = null) {}
  * created with microseconds.
  * </td>
  * <td>Example: 654321</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>v</td>
+ * <td>
+ * Milliseconds (added in PHP 7.0.0). Same note applies as for
+ * u.
+ * </td>
+ * <td>Example: 654</td>
  * </tr>
  * <tr valign="top">
  * Timezone</td>
@@ -806,11 +816,11 @@ function date ($format, $timestamp = null) {}
  * </p>
  * @param int $timestamp [optional] 
  * @return int an integer.
- * </p>
  * <p>
  * As idate always returns an integer and
  * as they can't start with a "0", idate may return
  * fewer digits than you would expect. See the example below.
+ * </p>
  */
 function idate ($format, $timestamp = null) {}
 
@@ -1104,8 +1114,7 @@ function checkdate ($month, $day, $year) {}
  * </tr>
  * <tr valign="top">
  * <td>%k</td>
- * <td>Two digit representation of the hour in 24-hour format, with
- * a space preceding single digits</td>
+ * <td>Hour in 24-hour format, with a space preceding single digits</td>
  * <td> 0 through 23</td>
  * </tr>
  * <tr valign="top">
@@ -1301,7 +1310,6 @@ function localtime ($timestamp = null, $is_associative = null) {}
  * @return array an associative array of information related to
  * the timestamp. Elements from the returned 
  * associative array are as follows:
- * </p>
  * <p>
  * <table>
  * Key elements of the returned associative array
@@ -1372,6 +1380,7 @@ function localtime ($timestamp = null, $is_associative = null) {}
  * </td>
  * </tr>
  * </table>
+ * </p>
  */
 function getdate ($timestamp = null) {}
 
@@ -1509,8 +1518,9 @@ function date_diff ($object, $object2, $absolute = null) {}
  * @param $hour
  * @param $minute
  * @param $second [optional]
+ * @param $microseconds [optional]
  */
-function date_time_set ($object, $hour, $minute, $second = null) {}
+function date_time_set ($object, $hour, $minute, $second = null, $microseconds = null) {}
 
 /**
  * &Alias; <methodname>DateTime::setDate</methodname>
@@ -1814,4 +1824,4 @@ define ('SUNFUNCS_RET_STRING', 1);
  */
 define ('SUNFUNCS_RET_DOUBLE', 2);
 
-// End of date v.7.2.0-dev
+// End of date v.7.1.1-1+deb.sury.org~xenial+1

@@ -1,6 +1,6 @@
 <?php
 
-// Start of readline v.7.2.0-dev
+// Start of readline v.7.1.1-1+deb.sury.org~xenial+1
 
 /**
  * Reads a line
@@ -27,9 +27,9 @@ function readline ($prompt = null) {}
  * be indexed by the following values: done, end, erase_empty_line,
  * library_version, line_buffer, mark, pending_input, point, prompt,
  * readline_name, and terminal_name.
- * </p>
  * <p>
  * If called with one or two parameters, the old value is returned.
+ * </p>
  */
 function readline_info ($varname = null, $newvalue = null) {}
 
@@ -49,14 +49,6 @@ function readline_add_history ($line) {}
  * @return bool true on success or false on failure
  */
 function readline_clear_history () {}
-
-/**
- * Lists the history
- * @link http://www.php.net/manual/en/function.readline-list-history.php
- * @return array an array of the entire command line history. The elements are
- * indexed by integers starting at zero.
- */
-function readline_list_history () {}
 
 /**
  * Reads the history
@@ -125,6 +117,13 @@ function readline_callback_handler_remove () {}
  */
 function readline_redisplay () {}
 
-define ('READLINE_LIB', "readline");
+/**
+ * Inform readline that the cursor has moved to a new line
+ * @link http://www.php.net/manual/en/function.readline-on-new-line.php
+ * @return void 
+ */
+function readline_on_new_line () {}
 
-// End of readline v.7.2.0-dev
+define ('READLINE_LIB', "libedit");
+
+// End of readline v.7.1.1-1+deb.sury.org~xenial+1

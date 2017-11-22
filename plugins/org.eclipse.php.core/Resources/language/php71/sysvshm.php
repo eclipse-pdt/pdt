@@ -1,6 +1,6 @@
 <?php
 
-// Start of sysvshm v.7.0.0-dev
+// Start of sysvshm v.7.1.1-1+deb.sury.org~xenial+1
 
 /**
  * Creates or open a shared memory segment
@@ -102,4 +102,4 @@ function shm_get_var ($shm_identifier, $variable_key) {}
  */
 function shm_remove_var ($shm_identifier, $variable_key) {}
 
-// End of sysvshm v.7.0.0-dev
+// End of sysvshm v.7.1.1-1+deb.sury.org~xenial+1

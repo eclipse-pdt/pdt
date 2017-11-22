@@ -1,6 +1,6 @@
 <?php
 
-// Start of xsl v.7.2.0-dev
+// Start of xsl v.7.1.1-1+deb.sury.org~xenial+1
 
 class XSLTProcessor  {
 
@@ -225,4 +225,4 @@ define ('LIBEXSLT_VERSION', 817);
  */
 define ('LIBEXSLT_DOTTED_VERSION', "1.1.28");
 
-// End of xsl v.7.2.0-dev
+// End of xsl v.7.1.1-1+deb.sury.org~xenial+1

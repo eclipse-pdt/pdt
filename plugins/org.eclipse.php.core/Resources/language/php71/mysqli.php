@@ -1,6 +1,6 @@
 <?php
 
-// Start of mysqli v.7.2.0-dev
+// Start of mysqli v.7.1.1-1+deb.sury.org~xenial+1
 
 final class mysqli_sql_exception extends RuntimeException implements Throwable {
 	protected $message;
@@ -142,10 +142,10 @@ class mysqli  {
 	 * @link http://www.php.net/manual/en/mysqli.commit.php
 	 * @param mysqli $link 
 	 * @param int $flags [optional] <p>
-	 * A bitmask of MYSQLI_TRANS_COR_* constants.
+	 * A bitmask of MYSQLI_TRANS_COR_&#42; constants.
 	 * </p>
 	 * @param string $name [optional] <p>
-	 * If provided then COMMIT/*name*/ is executed.
+	 * If provided then COMMIT/&#42;name&#42;/ is executed.
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
@@ -185,7 +185,7 @@ class mysqli  {
 	 * @param mysqli $link 
 	 * @return object The function returns a character set object with the following properties:
 	 * charset
-	 * <p>Character set name</p>
+	 * <p>Character set name
 	 * collation
 	 * <p>Collation name</p>
 	 * dir
@@ -198,6 +198,7 @@ class mysqli  {
 	 * <p>Internal character set number</p>
 	 * state
 	 * <p>Character set status (?)</p>
+	 * </p>
 	 */
 	public function get_charset (mysqli $link) {}
 
@@ -280,7 +281,7 @@ class mysqli  {
 	 * If not provided or &null;, the MySQL server will attempt to authenticate
 	 * the user against those user records which have no password only. This
 	 * allows one username to be used with different permissions (depending
-	 * on if a password as provided or not).
+	 * on if a password is provided or not).
 	 * </p>
 	 * @param string $dbname [optional] <p>
 	 * If provided will specify the default database to be used when
@@ -421,10 +422,10 @@ class mysqli  {
 	 * has been run on for which the function could poll results.
 	 * </p>
 	 * @param int $sec <p>
-	 * Number of seconds to wait, must be non-negative.
+	 * Maximum number of seconds to wait, must be non-negative.
 	 * </p>
 	 * @param int $usec [optional] <p>
-	 * Number of microseconds to wait, must be non-negative.
+	 * Maximum number of microseconds to wait, must be non-negative.
 	 * </p>
 	 * @return int number of ready connections upon success, false otherwise.
 	 */
@@ -495,7 +496,7 @@ class mysqli  {
 	 * mysqli_poll is then used to get results from such
 	 * queries.
 	 * </p>
-	 * @return mysqli_result|boolean For successful SELECT, SHOW, DESCRIBE or
+	 * @return mixed false on failure. For successful SELECT, SHOW, DESCRIBE or
 	 * EXPLAIN queries mysqli_query will return
 	 * a mysqli_result object. For other successful queries mysqli_query will
 	 * return true.
@@ -643,10 +644,10 @@ class mysqli  {
 	 * @link http://www.php.net/manual/en/mysqli.rollback.php
 	 * @param mysqli $link 
 	 * @param int $flags [optional] <p>
-	 * A bitmask of MYSQLI_TRANS_COR_* constants.
+	 * A bitmask of MYSQLI_TRANS_COR_&#42; constants.
 	 * </p>
 	 * @param string $name [optional] <p>
-	 * If provided then ROLLBACK/*name*/ is executed.
+	 * If provided then ROLLBACK/&#42;name&#42;/ is executed.
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
@@ -756,7 +757,6 @@ class mysqli  {
 	 * </table>
 	 * </p>
 	 * @return mysqli_result a buffered result object or false if an error occurred.
-	 * </p>
 	 * <p>
 	 * mysqli_store_result returns false in case the query
 	 * didn't return a result set (if the query was, for example an INSERT
@@ -770,6 +770,7 @@ class mysqli  {
 	 * result set (memory for it cannot be allocated). If
 	 * mysqli_field_count returns a non-zero value, the
 	 * statement should have produced a non-empty result set.
+	 * </p>
 	 */
 	public function store_result (mysqli $link, $option = null) {}
 
@@ -793,7 +794,7 @@ class mysqli  {
 	 * @link http://www.php.net/manual/en/mysqli.refresh.php
 	 * @param resource $link 
 	 * @param int $options <p>
-	 * The options to refresh, using the MYSQLI_REFRESH_* constants as documented
+	 * The options to refresh, using the MYSQLI_REFRESH_&#42; constants as documented
 	 * within the MySQLi constants documentation.
 	 * </p>
 	 * <p>
@@ -863,7 +864,6 @@ class mysqli_result implements Traversable {
 	 * @param mysqli_result $result 
 	 * @return object an object which contains field definition information or false
 	 * if no field information is available.
-	 * </p>
 	 * <p>
 	 * <table>
 	 * Object properties
@@ -924,6 +924,7 @@ class mysqli_result implements Traversable {
 	 * <td>The number of decimals used (for integer fields)</td>
 	 * </tr>
 	 * </table>
+	 * </p>
 	 */
 	public function fetch_field (mysqli_result $result) {}
 
@@ -933,7 +934,6 @@ class mysqli_result implements Traversable {
 	 * @param mysqli_result $result 
 	 * @return array an array of objects which contains field definition information or
 	 * false if no field information is available.
-	 * </p>
 	 * <p>
 	 * <table>
 	 * Object properties
@@ -967,7 +967,7 @@ class mysqli_result implements Traversable {
 	 * The width of the field, in bytes, as specified in the table definition. Note that 
 	 * this number (bytes) might differ from your table definition value (characters), depending on
 	 * the character set you use. For example, the character set utf8 has 3 bytes per character, 
-	 * so varchar(10) will return a length of 30 for utf8 (10*3), but return 10 for latin1 (10*1).
+	 * so varchar(10) will return a length of 30 for utf8 (10&#42;3), but return 10 for latin1 (10&#42;1).
 	 * </td>
 	 * </tr>
 	 * <tr valign="top">
@@ -987,6 +987,7 @@ class mysqli_result implements Traversable {
 	 * <td>The number of decimals used (for integer fields)</td>
 	 * </tr>
 	 * </table>
+	 * </p>
 	 */
 	public function fetch_fields (mysqli_result $result) {}
 
@@ -1001,7 +1002,6 @@ class mysqli_result implements Traversable {
 	 * @return object an object which contains field definition information or false
 	 * if no field information for specified fieldnr is 
 	 * available.
-	 * </p>
 	 * <p>
 	 * <table>
 	 * Object attributes
@@ -1054,6 +1054,7 @@ class mysqli_result implements Traversable {
 	 * <td>The number of decimals used (for numeric fields)</td>
 	 * </tr>
 	 * </table>
+	 * </p>
 	 */
 	public function fetch_field_direct (mysqli_result $result, $fieldnr) {}
 
@@ -1101,12 +1102,12 @@ class mysqli_result implements Traversable {
 	 * @return array an associative array of strings representing the fetched row in the result
 	 * set, where each key in the array represents the name of one of the result
 	 * set's columns or &null; if there are no more rows in resultset.
-	 * </p>
 	 * <p>
 	 * If two or more columns of the result have the same field names, the last
 	 * column will take precedence. To access the other column(s) of the same
 	 * name, you either need to access the result with numeric indices by using
 	 * mysqli_fetch_row or add alias names.
+	 * </p>
 	 */
 	public function fetch_assoc (mysqli_result $result) {}
 
@@ -1642,12 +1643,12 @@ function mysqli_get_client_info ($link) {}
  * @link http://www.php.net/manual/en/mysqli.get-client-version.php
  * @param mysqli $link 
  * @return int A number that represents the MySQL client library version in format:
- * main_version*10000 + minor_version *100 + sub_version.
+ * main_version&#42;10000 + minor_version &#42;100 + sub_version.
  * For example, 4.1.0 is returned as 40100.
- * </p>
  * <p>
  * This is useful to quickly determine the version of the client library
  * to know if some capability exits.
+ * </p>
  */
 function mysqli_get_client_version (mysqli $link) {}
 
@@ -1660,7 +1661,6 @@ function mysqli_get_client_version (mysqli $link) {}
  * <p>
  * An integer indicating the total number of open links in
  * any state.
- * </p>
  * active_plinks
  * <p>
  * An integer representing the number of active persistent
@@ -1670,6 +1670,7 @@ function mysqli_get_client_version (mysqli $link) {}
  * <p>
  * An integer representing the number of inactive persistent
  * connections.
+ * </p>
  * </p>
  */
 function mysqli_get_links_stats () {}
@@ -2653,7 +2654,7 @@ define ('MYSQLI_REPORT_OFF', 0);
  * </p>
  * @link http://www.php.net/manual/en/mysqli.constants.php
  */
-define ('MYSQLI_DEBUG_TRACE_ENABLED', 1);
+define ('MYSQLI_DEBUG_TRACE_ENABLED', 0);
 
 /**
  * <p>
@@ -2799,4 +2800,4 @@ define ('MYSQLI_TRANS_COR_RELEASE', 4);
  */
 define ('MYSQLI_TRANS_COR_NO_RELEASE', 8);
 
-// End of mysqli v.7.2.0-dev
+// End of mysqli v.7.1.1-1+deb.sury.org~xenial+1

@@ -1,6 +1,6 @@
 <?php
 
-// Start of session v.7.2.0-dev
+// Start of session v.7.1.1-1+deb.sury.org~xenial+1
 
 interface SessionHandlerInterface  {
 
@@ -15,14 +15,14 @@ interface SessionHandlerInterface  {
 	 * </p>
 	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
-	abstract public function open ($save_path, $session_name) {}
+	abstract public function open ($save_path, $session_name);
 
 	/**
 	 * Close the session
 	 * @link http://www.php.net/manual/en/sessionhandlerinterface.close.php
 	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
-	abstract public function close () {}
+	abstract public function close ();
 
 	/**
 	 * Read session data
@@ -32,7 +32,7 @@ interface SessionHandlerInterface  {
 	 * </p>
 	 * @return string an encoded string of the read data. If nothing was read, it must return an empty string. Note this value is returned internally to PHP for processing.
 	 */
-	abstract public function read ($session_id) {}
+	abstract public function read ($session_id);
 
 	/**
 	 * Write session data
@@ -46,7 +46,7 @@ interface SessionHandlerInterface  {
 	 * </p>
 	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
-	abstract public function write ($session_id, $session_data) {}
+	abstract public function write ($session_id, $session_data);
 
 	/**
 	 * Destroy a session
@@ -56,7 +56,7 @@ interface SessionHandlerInterface  {
 	 * </p>
 	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
-	abstract public function destroy ($session_id) {}
+	abstract public function destroy ($session_id);
 
 	/**
 	 * Cleanup old sessions
@@ -66,13 +66,13 @@ interface SessionHandlerInterface  {
 	 * </p>
 	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
-	abstract public function gc ($maxlifetime) {}
+	abstract public function gc ($maxlifetime);
 
 }
 
 interface SessionIdInterface  {
 
-	abstract public function create_sid () {}
+	abstract public function create_sid ();
 
 }
 
@@ -81,13 +81,13 @@ interface SessionUpdateTimestampHandlerInterface  {
 	/**
 	 * @param $key
 	 */
-	abstract public function validateId ($key) {}
+	abstract public function validateId ($key);
 
 	/**
 	 * @param $key
 	 * @param $val
 	 */
-	abstract public function updateTimestamp ($key, $val) {}
+	abstract public function updateTimestamp ($key, $val);
 
 }
 
@@ -326,11 +326,11 @@ function session_unset () {}
  * @link http://www.php.net/manual/en/function.session-gc.php
  * @return int session_gc returns number of deleted session
  * data for success, false for failure.
- * </p>
  * <p>
  * Old save handlers do not return number of deleted session data, but 
  * only success/failure flag. If this is the case, number of deleted
  * session data became 1 regardless of actually deleted data.
+ * </p>
  */
 function session_gc () {}
 
@@ -344,9 +344,11 @@ function session_gc () {}
  * @param callable $destroy 
  * @param callable $gc 
  * @param callable $create_sid [optional] 
+ * @param callable $validate_sid [optional] 
+ * @param callable $update_timestamp [optional] 
  * @return bool true on success or false on failure
  */
-function session_set_save_handler ($open, $close, $read, $write, $destroy, $gc, $create_sid = null) {}
+function session_set_save_handler ($open, $close, $read, $write, $destroy, $gc, $create_sid = null, $validate_sid = null, $update_timestamp = null) {}
 
 /**
  * Get and/or set the current cache limiter
@@ -364,21 +366,40 @@ function session_set_save_handler ($open, $close, $read, $write, $destroy, $gc, 
  * <tr valign="top">
  * <td>public</td>
  * <td>
+ * <pre>
+ * Expires: (sometime in the future, according session.cache_expire)
+ * Cache-Control: public, max-age=(sometime in the future, according to session.cache_expire)
+ * Last-Modified: (the timestamp of when the session was last saved)
+ * </pre>
  * </td>
  * </tr>
  * <tr valign="top">
  * <td>private_no_expire</td>
  * <td>
+ * <pre>
+ * Cache-Control: private, max-age=(session.cache_expire in the future), pre-check=(session.cache_expire in the future)
+ * Last-Modified: (the timestamp of when the session was last saved)
+ * </pre>
  * </td>
  * </tr>
  * <tr valign="top">
  * <td>private</td>
  * <td>
+ * <pre>
+ * Expires: Thu, 19 Nov 1981 08:52:00 GMT
+ * Cache-Control: private, max-age=(session.cache_expire in the future), pre-check=(session.cache_expire in the future)
+ * Last-Modified: (the timestamp of when the session was last saved)
+ * </pre>
  * </td>
  * </tr>
  * <tr valign="top">
  * <td>nocache</td>
  * <td>
+ * <pre>
+ * Expires: Thu, 19 Nov 1981 08:52:00 GMT
+ * Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+ * Pragma: no-cache
+ * </pre>
  * </td>
  * </tr>
  * </table>
@@ -512,4 +533,4 @@ define ('PHP_SESSION_NONE', 1);
  */
 define ('PHP_SESSION_ACTIVE', 2);
 
-// End of session v.7.2.0-dev
+// End of session v.7.1.1-1+deb.sury.org~xenial+1

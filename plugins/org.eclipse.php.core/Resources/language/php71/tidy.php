@@ -1,6 +1,6 @@
 <?php
 
-// Start of tidy v.7.2.0-dev
+// Start of tidy v.7.1.1-1+deb.sury.org~xenial+1
 
 class tidy  {
 
@@ -164,9 +164,9 @@ class tidy  {
 	 * Get current Tidy configuration
 	 * @link http://www.php.net/manual/en/tidy.getconfig.php
 	 * @return array an array of configuration options.
-	 * </p>
 	 * <p>
 	 * For an explanation about each option, visit &url.tidy.conf;.
+	 * </p>
 	 */
 	public function getConfig () {}
 
@@ -182,10 +182,10 @@ class tidy  {
 	 * Get the Detected HTML version for the specified document
 	 * @link http://www.php.net/manual/en/tidy.gethtmlver.php
 	 * @return int the detected HTML version.
-	 * </p>
 	 * <p>
 	 * This function is not yet implemented in the Tidylib itself, so it always
 	 * return 0.
+	 * </p>
 	 */
 	public function getHtmlVer () {}
 
@@ -205,10 +205,10 @@ class tidy  {
 	 * @link http://www.php.net/manual/en/tidy.isxhtml.php
 	 * @return bool This function returns true if the specified tidy
 	 * object is a XHTML document, or false otherwise.
-	 * </p>
 	 * <p>
 	 * This function is not yet implemented in the Tidylib itself, so it always
 	 * return false.
+	 * </p>
 	 */
 	public function isXhtml () {}
 
@@ -218,10 +218,10 @@ class tidy  {
 	 * @return bool This function returns true if the specified tidy
 	 * object is a generic XML document (non HTML/XHTML),
 	 * or false otherwise.
-	 * </p>
 	 * <p>
 	 * This function is not yet implemented in the Tidylib itself, so it always
 	 * return false.
+	 * </p>
 	 */
 	public function isXml () {}
 
@@ -661,4 +661,4 @@ define ('TIDY_NODETYPE_PHP', 12);
  */
 define ('TIDY_NODETYPE_XMLDECL', 13);
 
-// End of tidy v.7.2.0-dev
+// End of tidy v.7.1.1-1+deb.sury.org~xenial+1

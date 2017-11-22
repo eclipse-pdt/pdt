@@ -1,6 +1,6 @@
 <?php
 
-// Start of xmlrpc v.7.2.0-dev
+// Start of xmlrpc v.7.1.1-1+deb.sury.org~xenial+1
 
 /**
  * Generates XML for a PHP value
@@ -149,4 +149,4 @@ function xmlrpc_server_add_introspection_data ($server, array $desc) {}
  */
 function xmlrpc_server_register_introspection_callback ($server, $function) {}
 
-// End of xmlrpc v.7.2.0-dev
+// End of xmlrpc v.7.1.1-1+deb.sury.org~xenial+1
