@@ -1,6 +1,6 @@
 <?php
 
-// Start of sysvmsg v.7.0.0-dev
+// Start of sysvmsg v.7.1.1
 
 /**
  * Create or attach to a message queue
@@ -49,12 +49,12 @@ function msg_get_queue ($key, $perms = null) {}
  * @param int $errorcode [optional] <p>
  * </p>
  * @return bool true on success or false on failure
- * </p>
  * <p>
  * Upon successful completion the message queue data structure is updated as
  * follows: msg_lspid is set to the process-ID of the
  * calling process, msg_qnum is incremented by 1 and
  * msg_stime is set to the current time.
+ * </p>
  */
 function msg_send ($queue, $msgtype, $message, $serialize = null, $blocking = null, &$errorcode = null) {}
 
@@ -107,6 +107,7 @@ function msg_send ($queue, $msgtype, $message, $serialize = null, $blocking = nu
  * or more of the following values (by adding or ORing them together).
  * <table>
  * Flag values for msg_receive
+ * <table>
  * <tr valign="top">
  * <td>MSG_IPC_NOWAIT</td>
  * <td>If there are no messages of the
@@ -131,18 +132,19 @@ function msg_send ($queue, $msgtype, $message, $serialize = null, $blocking = nu
  * </td>
  * </tr>
  * </table>
+ * </table>
  * </p>
  * @param int $errorcode [optional] <p>
  * If the function fails, the optional errorcode
  * will be set to the value of the system errno variable.
  * </p>
  * @return bool true on success or false on failure
- * </p>
  * <p>
  * Upon successful completion the message queue data structure is updated as
  * follows: msg_lrpid is set to the process-ID of the
  * calling process, msg_qnum is decremented by 1 and
  * msg_rtime is set to the current time.
+ * </p>
  */
 function msg_receive ($queue, $desiredmsgtype, &$msgtype, $maxsize, &$message, $unserialize = null, $flags = null, &$errorcode = null) {}
 
@@ -166,6 +168,7 @@ function msg_remove_queue ($queue) {}
  * meanings:
  * <table>
  * Array structure for msg_stat_queue
+ * <table>
  * <tr valign="top">
  * <td>msg_perm.uid</td>
  * <td>
@@ -229,6 +232,7 @@ function msg_remove_queue ($queue) {}
  * </td>
  * </tr>
  * </table>
+ * </table>
  */
 function msg_stat_queue ($queue) {}
 
@@ -262,4 +266,4 @@ define ('MSG_ENOMSG', 42);
 define ('MSG_NOERROR', 2);
 define ('MSG_EXCEPT', 4);
 
-// End of sysvmsg v.7.0.0-dev
+// End of sysvmsg v.7.1.1

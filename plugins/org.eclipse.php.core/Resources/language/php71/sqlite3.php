@@ -98,7 +98,7 @@ class SQLite3  {
 
 	/**
 	 * Returns the number of database rows that were changed (or inserted or
-   deleted) by the most recent SQL statement
+	 * deleted) by the most recent SQL statement
 	 * @link http://www.php.net/manual/en/sqlite3.changes.php
 	 * @return int an integer value corresponding to the number of
 	 * database rows changed (or inserted or deleted) by the most recent SQL
@@ -133,8 +133,7 @@ class SQLite3  {
 	 * @param string $query <p>
 	 * The SQL query to execute.
 	 * </p>
-	 * @return SQLite3Result an SQLite3Result object if the query returns results. Otherwise,
-	 * returns true if the query succeeded, false on failure.
+	 * @return SQLite3Result an SQLite3Result object, or false on failure.
 	 */
 	public function query ($query) {}
 
@@ -152,14 +151,14 @@ class SQLite3  {
 	 * </p>
 	 * @return mixed the value of the first column of results or an array of the entire
 	 * first row (if entire_row is true).
-	 * </p>
 	 * <p>
-	 * If the query is valid but no results are returned, then &null; will be
+	 * If the query is valid but no results are returned, then null will be
 	 * returned if entire_row is false, otherwise an
 	 * empty array is returned.
 	 * </p>
 	 * <p>
 	 * Invalid or failing queries will return false.
+	 * </p>
 	 */
 	public function querySingle ($query, $entire_row = null) {}
 
@@ -175,12 +174,18 @@ class SQLite3  {
 	 * </p>
 	 * @param int $argument_count [optional] <p>
 	 * The number of arguments that the SQL function takes. If
-	 * this parameter is negative, then the SQL function may take
+	 * this parameter is -1, then the SQL function may take
 	 * any number of arguments.
+	 * </p>
+	 * @param int $flags [optional] <p>
+	 * A bitwise conjunction of flags. Currently, only
+	 * SQLITE3_DETERMINISTIC is supported, which specifies
+	 * that the function always returns the same result given the same inputs
+	 * within a single SQL statement.
 	 * </p>
 	 * @return bool true upon successful creation of the function, false on failure.
 	 */
-	public function createFunction ($name, $callback, $argument_count = null) {}
+	public function createFunction ($name, $callback, $argument_count = null, $flags = null) {}
 
 	/**
 	 * Registers a PHP function for use as an SQL aggregate function
@@ -238,16 +243,22 @@ class SQLite3  {
 	 * @param string $dbname [optional] <p>
 	 * The symbolic name of the DB
 	 * </p>
+	 * @param int $flags [optional] <p>
+	 * Either SQLITE3_OPEN_READONLY or 
+	 * SQLITE3_OPEN_READWRITE to open the stream
+	 * for reading only, or for reading and writing, respectively.
+	 * </p>
 	 * @return resource a stream resource, or false on failure.
 	 */
-	public function openBlob ($table, $column, $rowid, $dbname = null) {}
+	public function openBlob ($table, $column, $rowid, $dbname = null, $flags = null) {}
 
 	/**
 	 * Enable throwing exceptions
 	 * @link http://www.php.net/manual/en/sqlite3.enableexceptions.php
-	 * @param $enableExceptions
+	 * @param bool $enableExceptions [optional] 
+	 * @return bool the old value; true if exceptions were enabled, false otherwise.
 	 */
-	public function enableExceptions ($enableExceptions) {}
+	public function enableExceptions ($enableExceptions = null) {}
 
 	/**
 	 * Instantiates an SQLite3 object and opens an SQLite 3 database
@@ -404,6 +415,14 @@ class SQLite3Result  {
 	 * </p>
 	 * @return array a result row as an associatively or numerically indexed array or
 	 * both. Alternately will return false if there are no more rows.
+	 * <p>
+	 * The types of the values of the returned array are mapped from SQLite3 types
+	 * as follows: integers are mapped to integer if they fit into the
+	 * range PHP_INT_MIN..PHP_INT_MAX, and
+	 * to string otherwise. Floats are mapped to float,
+	 * NULL values are mapped to null, and strings
+	 * and blobs are mapped to string.
+	 * </p>
 	 */
 	public function fetchArray ($mode = null) {}
 

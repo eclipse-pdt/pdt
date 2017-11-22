@@ -1,12 +1,12 @@
 <?php
 
-// Start of gettext v.7.2.0-dev
+// Start of gettext v.7.1.1
 
 /**
  * Sets the default domain
  * @link http://www.php.net/manual/en/function.textdomain.php
  * @param string $text_domain <p>
- * The new message domain, or &null; to get the current setting without
+ * The new message domain, or null to get the current setting without
  * changing it
  * </p>
  * @return string If successful, this function returns the current message
@@ -138,4 +138,4 @@ function dcngettext ($domain, $msgid1, $msgid2, $n, $category) {}
  */
 function bind_textdomain_codeset ($domain, $codeset) {}
 
-// End of gettext v.7.2.0-dev
+// End of gettext v.7.1.1

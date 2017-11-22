@@ -1,6 +1,6 @@
 <?php
 
-// Start of zip v.1.13.4
+// Start of zip v.1.13.5
 
 class ZipArchive  {
 	const CREATE = 1;
@@ -96,7 +96,6 @@ class ZipArchive  {
 	 * Returns true on success or the error code.
 	 * <p>
 	 * ZipArchive::ER_EXISTS
-	 * </p>
 	 * <p>
 	 * File already exists.
 	 * </p>
@@ -147,6 +146,7 @@ class ZipArchive  {
 	 * </p>
 	 * <p>
 	 * Seek error.
+	 * </p>
 	 * </p>
 	 * </p>
 	 */
@@ -222,20 +222,42 @@ class ZipArchive  {
 	/**
 	 * Add files from a directory by glob pattern
 	 * @link http://www.php.net/manual/en/ziparchive.addglob.php
-	 * @param $pattern
-	 * @param $flags [optional]
-	 * @param $options [optional]
+	 * @param string $pattern <p>
+	 * A glob pattern against which files will be matched.
+	 * </p>
+	 * @param int $flags [optional] <p>
+	 * A bit mask of glob() flags.
+	 * </p>
+	 * @param array $options [optional] <p>
+	 * An associative array of options. Available options are:
+	 * <p>
+	 * "add_path"
+	 * </p>
+	 * <p>
+	 * Prefix to prepend when translating to the local path of the file within
+	 * the archive. This is applied after any remove operations defined by the
+	 * "remove_path" or "remove_all_path"
+	 * options.
+	 * </p>
+	 * @return bool true on success or false on failure
 	 */
-	public function addGlob ($pattern, $flags = null, $options = null) {}
+	public function addGlob ($pattern, $flags = null, array $options = null) {}
 
 	/**
 	 * Add files from a directory by PCRE pattern
 	 * @link http://www.php.net/manual/en/ziparchive.addpattern.php
-	 * @param $pattern
-	 * @param $path [optional]
-	 * @param $options [optional]
+	 * @param string $pattern <p>
+	 * A PCRE pattern against which files will be matched.
+	 * </p>
+	 * @param string $path [optional] <p>
+	 * The directory that will be scanned. Defaults to the current working directory.
+	 * </p>
+	 * @param array $options [optional] <p>
+	 * An associative array of options accepted by ZipArchive::addGlob.
+	 * </p>
+	 * @return bool true on success or false on failure
 	 */
-	public function addPattern ($pattern, $path = null, $options = null) {}
+	public function addPattern ($pattern, $path = null, array $options = null) {}
 
 	/**
 	 * Renames an entry defined by its index
@@ -692,12 +714,12 @@ function zip_read ($zip) {}
  * in PHP is read only access.
  * </p>
  * @return bool true on success or false on failure
- * </p>
  * <p>
  * Unlike fopen and other similar functions,
  * the return value of zip_entry_open only
  * indicates the result of the operation and is not needed for
  * reading or closing the directory entry.
+ * </p>
  */
 function zip_entry_open ($zip, $zip_entry, $mode = null) {}
 
@@ -767,4 +789,4 @@ function zip_entry_compressedsize ($zip_entry) {}
  */
 function zip_entry_compressionmethod ($zip_entry) {}
 
-// End of zip v.1.13.4
+// End of zip v.1.13.5

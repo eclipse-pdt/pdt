@@ -1,6 +1,6 @@
 <?php
 
-// Start of ftp v.7.2.0-dev
+// Start of ftp v.7.1.1
 
 /**
  * Opens an FTP connection
@@ -22,6 +22,27 @@
  * @return resource a FTP stream on success or false on error.
  */
 function ftp_connect ($host, $port = null, $timeout = null) {}
+
+/**
+ * Opens a Secure SSL-FTP connection
+ * @link http://www.php.net/manual/en/function.ftp-ssl-connect.php
+ * @param string $host <p>
+ * The FTP server address. This parameter shouldn't have any trailing 
+ * slashes and shouldn't be prefixed with ftp://.
+ * </p>
+ * @param int $port [optional] <p>
+ * This parameter specifies an alternate port to connect to. If it is
+ * omitted or set to zero, then the default FTP port, 21, will be used.
+ * </p>
+ * @param int $timeout [optional] <p>
+ * This parameter specifies the timeout for all subsequent network operations.
+ * If omitted, the default value is 90 seconds. The timeout can be changed and
+ * queried at any time with ftp_set_option and
+ * ftp_get_option.
+ * </p>
+ * @return resource a SSL-FTP stream on success or false on error.
+ */
+function ftp_ssl_connect ($host, $port = null, $timeout = null) {}
 
 /**
  * Logs in to an FTP connection
@@ -195,11 +216,11 @@ function ftp_nlist ($ftp_stream, $directory) {}
  * </p>
  * @return mixed an array where each element corresponds to one line of text. Returns
  * false when passed directory is invalid.
- * </p>
  * <p>
  * The output is not parsed in any way. The system type identifier returned by
  * ftp_systype can be used to determine how the results 
  * should be interpreted.
+ * </p>
  */
 function ftp_rawlist ($ftp_stream, $directory, $recursive = null) {}
 
@@ -353,7 +374,8 @@ function ftp_mdtm ($ftp_stream, $remote_file) {}
  * @param string $newname <p>
  * The new name.
  * </p>
- * @return bool true on success or false on failure
+ * @return bool true on success or false on failure Upon failure (such as attempting to rename a non-existent
+ * file), an E_WARNING error will be emitted.
  */
 function ftp_rename ($ftp_stream, $oldname, $newname) {}
 
@@ -404,6 +426,7 @@ function ftp_close ($ftp_stream) {}
  * Currently, the following options are supported:
  * <table>
  * Supported runtime FTP options
+ * <table>
  * <tr valign="top">
  * <td>FTP_TIMEOUT_SEC</td>
  * <td>
@@ -421,6 +444,7 @@ function ftp_close ($ftp_stream) {}
  * This is enabled by default.
  * </td>
  * </tr>
+ * </table>
  * </table>
  * </p>
  * @param mixed $value <p>
@@ -444,6 +468,7 @@ function ftp_set_option ($ftp_stream, $option, $value) {}
  * Currently, the following options are supported:
  * <table>
  * Supported runtime FTP options
+ * <table>
  * <tr valign="top">
  * <td>FTP_TIMEOUT_SEC</td>
  * <td>
@@ -456,6 +481,7 @@ function ftp_set_option ($ftp_stream, $option, $value) {}
  * Returns true if this option is on, false otherwise. 
  * </td>
  * </tr>
+ * </table>
  * </table>
  * </p>
  * @return mixed the value on success or false if the given 
@@ -564,7 +590,7 @@ function ftp_nb_put ($ftp_stream, $remote_file, $local_file, $mode, $startpos = 
 function ftp_nb_fput ($ftp_stream, $remote_file, $handle, $mode, $startpos = null) {}
 
 /**
- * &Alias; <function>ftp_close</function>
+ * Alias: ftp_close
  * @link http://www.php.net/manual/en/function.ftp-quit.php
  * @param $ftp
  */
@@ -645,4 +671,4 @@ define ('FTP_FINISHED', 1);
  */
 define ('FTP_MOREDATA', 2);
 
-// End of ftp v.7.2.0-dev
+// End of ftp v.7.1.1
