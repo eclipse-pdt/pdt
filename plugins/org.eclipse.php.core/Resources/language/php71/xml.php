@@ -1,6 +1,6 @@
 <?php
 
-// Start of xml v.7.0.0-dev
+// Start of xml v.7.1.1
 
 /**
  * Create an XML parser
@@ -26,12 +26,9 @@ function xml_parser_create ($encoding = null) {}
  * Create an XML parser with namespace support
  * @link http://www.php.net/manual/en/function.xml-parser-create-ns.php
  * @param string $encoding [optional] <p>
- * The optional encoding specifies the character
- * encoding for the input/output in PHP 4. Starting from PHP 5, the input
- * encoding is automatically detected, so that the
+ * The input encoding is automatically detected, so that the
  * encoding parameter specifies only the output
- * encoding. In PHP 4, the default output encoding is the same as the
- * input charset. In PHP 5.0.0 and 5.0.1, the default output charset is
+ * encoding. In PHP 5.0.0 and 5.0.1, the default output charset is
  * ISO-8859-1, while in PHP 5.0.2 and upper is UTF-8. The supported
  * encodings are ISO-8859-1, UTF-8 and
  * US-ASCII.
@@ -321,7 +318,6 @@ function xml_set_end_namespace_decl_handler ($parser, $handler) {}
  * data sent in this parse.
  * </p>
  * @return int 1 on success or 0 on failure.
- * </p>
  * <p>
  * For unsuccessful parses, error information can be retrieved with
  * xml_get_error_code,
@@ -333,6 +329,7 @@ function xml_set_end_namespace_decl_handler ($parser, $handler) {}
  * <p>
  * Entity errors are reported at the end of the data thus only if
  * is_final is set and true.
+ * </p>
  */
 function xml_parse ($parser, $data, $is_final = null) {}
 
@@ -520,7 +517,7 @@ function utf8_encode ($data) {}
    to single-byte ISO-8859-1
  * @link http://www.php.net/manual/en/function.utf8-decode.php
  * @param string $data <p>
- * An UTF-8 encoded string.
+ * A UTF-8 encoded string.
  * </p>
  * @return string the ISO-8859-1 translation of data.
  */
@@ -552,6 +549,12 @@ define ('XML_OPTION_CASE_FOLDING', 1);
 define ('XML_OPTION_TARGET_ENCODING', 2);
 define ('XML_OPTION_SKIP_TAGSTART', 3);
 define ('XML_OPTION_SKIP_WHITE', 4);
+
+/**
+ * Holds the SAX implementation method.
+ * Can be libxml or expat.
+ * @link http://www.php.net/manual/en/xml.constants.php
+ */
 define ('XML_SAX_IMPL', "libxml");
 
-// End of xml v.7.0.0-dev
+// End of xml v.7.1.1

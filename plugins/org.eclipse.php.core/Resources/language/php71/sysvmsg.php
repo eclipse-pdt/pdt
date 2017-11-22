@@ -1,6 +1,6 @@
 <?php
 
-// Start of sysvmsg v.7.0.0-dev
+// Start of sysvmsg v.7.1.1
 
 /**
  * Create or attach to a message queue
@@ -49,12 +49,12 @@ function msg_get_queue ($key, $perms = null) {}
  * @param int $errorcode [optional] <p>
  * </p>
  * @return bool true on success or false on failure
- * </p>
  * <p>
  * Upon successful completion the message queue data structure is updated as
  * follows: msg_lspid is set to the process-ID of the
  * calling process, msg_qnum is incremented by 1 and
  * msg_stime is set to the current time.
+ * </p>
  */
 function msg_send ($queue, $msgtype, $message, $serialize = null, $blocking = null, &$errorcode = null) {}
 
@@ -137,12 +137,12 @@ function msg_send ($queue, $msgtype, $message, $serialize = null, $blocking = nu
  * will be set to the value of the system errno variable.
  * </p>
  * @return bool true on success or false on failure
- * </p>
  * <p>
  * Upon successful completion the message queue data structure is updated as
  * follows: msg_lrpid is set to the process-ID of the
  * calling process, msg_qnum is decremented by 1 and
  * msg_rtime is set to the current time.
+ * </p>
  */
 function msg_receive ($queue, $desiredmsgtype, &$msgtype, $maxsize, &$message, $unserialize = null, $flags = null, &$errorcode = null) {}
 
@@ -262,4 +262,4 @@ define ('MSG_ENOMSG', 42);
 define ('MSG_NOERROR', 2);
 define ('MSG_EXCEPT', 4);
 
-// End of sysvmsg v.7.0.0-dev
+// End of sysvmsg v.7.1.1

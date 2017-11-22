@@ -242,8 +242,14 @@ function parse_phpdoc_functions ($phpdocDir) {
 			}
 			if (preg_match ('@<refsect1\s+role=["\']returnvalues["\']>(.*?)</refsect1>@s', $xml, $match)) {
 				$returnvalues = $match[1];
-				if (preg_match ('@<para>\s*(Returns)?(.*)</para>?@s', $returnvalues, $match)) {
-					$functionsDoc[$refname]['returndoc'] = xml_to_phpdoc ($match[2]);
+				if (preg_match ('@<para>\s*(Returns)?(.*</para>)@s', $returnvalues, $match)) {
+					$returndoc = $match[2];
+					$pos = strpos ($returndoc, "</para>");
+					if ($pos !== false) {
+						// remove orphan "</para>" tag
+						$returndoc = substr ($returndoc, 0, $pos) . substr ($returndoc, $pos + 7 /* = strlen("</para>") */);
+					}
+					$functionsDoc[$refname]['returndoc'] = xml_to_phpdoc ($returndoc);
 				}
 			}
 
@@ -447,6 +453,7 @@ function print_class ($classRef, $tabs = 0) {
 	print_doccomment ($classRef, $tabs);
 	print_tabs ($tabs);
 	if ($classRef->isFinal()) print "final ";
+	if (!$classRef->isInterface() && $classRef->isAbstract()) print "abstract ";
 
 	print $classRef->isInterface() ? "interface " : "class ";
 	print clean_php_identifier($classRef->getName())." ";
@@ -567,7 +574,7 @@ function print_class ($classRef, $tabs = 0) {
 function print_property ($propertyRef, $tabs = 0) {
 	print_doccomment ($propertyRef, $tabs);
 	print_tabs ($tabs);
-	print_modifiers ($propertyRef);
+	print_modifiers ($propertyRef, array("abstract"));
 	print "\${$propertyRef->getName()};\n";
 }
 
@@ -596,7 +603,11 @@ function print_function ($functionRef, $tabs = 0) {
 	} else {
 		print_parameters_ref ($functionRef->getParameters());
 	}
-	print ") {}\n";
+	if ($functionRef instanceof ReflectionMethod && $functionRef->isAbstract()) {
+		print ");\n";
+	} else {
+		print ") {}\n";
+	}
 }
 
 
@@ -746,9 +757,11 @@ function print_class_constants ($constants, $tabs = 0) {
 /**
  * Prints modifiers of reflection object in format of PHP code
  * @param ref Reflection some reflection object
+ * @param excludeModifierKeywords array exclude modifier keywords
  */
-function print_modifiers ($ref) {
+function print_modifiers ($ref, $excludeModifierKeywords = array()) {
 	$modifiers = Reflection::getModifierNames ($ref->getModifiers());
+	$modifiers = array_diff ($modifiers, $excludeModifierKeywords);
 	if (count ($modifiers) > 0) {
 		print implode(' ', $modifiers);
 		print " ";
@@ -813,7 +826,7 @@ function print_doccomment ($ref, $tabs = 0) {
 			print "/**\n";
 			if ($desc) {
 				print_tabs ($tabs);
-				print " * {$desc}\n";
+				print " * " . newline_to_phpdoc(xml_to_phpdoc($desc), $tabs) . "\n";
 			}
 			if (@$functionsDoc[$funckey]['id']) {
 				print_tabs ($tabs);
@@ -823,7 +836,7 @@ function print_doccomment ($ref, $tabs = 0) {
 			if ($parameters) {
 				foreach ($parameters as $parameter) {
 					print_tabs ($tabs);
-					print " * @param {$parameter['type']} {$parameter['name']}";
+					print " * @param {$parameter['type']} \${$parameter['name']}";
 					if (@$parameter['isoptional']) {
 						print " [optional]";
 					}
@@ -874,9 +887,18 @@ function print_doccomment ($ref, $tabs = 0) {
 function xml_to_phpdoc ($str) {
 	$str = str_replace ("&return.success;", "Returns true on success or false on failure.", $str);
 	$str = str_replace ("&return.void;", "", $str);
-	$str = str_replace ("&true;", "true", $str);
-	$str = str_replace ("&false;", "false", $str);
-    $str = strip_tags_special ($str);
+	$str = str_replace("&Alias;", "Alias:", $str);
+	// rewrite all non-html entities like "&null;", "&true;", "&false;"
+	// as "null", "true", "false"
+	preg_match_all ("@&([a-zA-Z.]+);@s", $str, $matches);
+	if ($matches) {
+		foreach ($matches[1] as $v) {
+			if (html_entity_decode ("&" . $v . ";") === "&" . $v . ";") {
+				$str = str_replace ("&" . $v . ";", $v, $str);
+			}
+		}
+	}
+	$str = strip_tags_special ($str);
 	$str = preg_replace ("/  */", " ", $str);
 	$str = preg_replace ("/[\r\n][\t ]/", "\n", $str);
 	$str = trim ($str);
@@ -890,7 +912,7 @@ function xml_to_phpdoc ($str) {
  * @return string PHPDOC string
  */
 function newline_to_phpdoc ($str, $tabs = 0) {
-	$str = preg_replace ("@[\r\n]+@", "\n".str_repeat("\t", $tabs)." * ", $str);
+	$str = preg_replace ("@([\r\n]+\s*)+@", "\n".str_repeat("\t", $tabs)." * ", $str);
 	return $str;
 }
 
@@ -949,16 +971,39 @@ function finish_file_output($filename) {
  */
 function strip_tags_special ($str) {
     // first mask and translate the tags to preseve
-    $str = preg_replace ("/<(\/?)table>/", "###($1table)###", $str);
-    $str = str_replace ("<row>", "###(tr valign=\"top\")###", $str);
-    $str = str_replace ("</row>", "###(/tr)###", $str);
-    $str = preg_replace ("/<(\/?)entry>/", "###($1td)###", $str);
-    $str = preg_replace ("/<(\/?)para>/", "###($1p)###", $str);
+    $str = preg_replace("/<(\/?)(table|tgroup)(\s.*?)?>/", "###($1table)###", $str);
+    $str = preg_replace("/<row(\s.*?)?>/", "###(tr valign=\"top\")###", $str);
+    $str = str_replace("</row>", "###(/tr)###", $str);
+
+    // Bug 522585 - Documentation of PHP function header() is misformatted
+    $str = str_replace ("<![CDATA[", "###(pre)###", $str);
+    $str = str_replace ("]]>", "###(/pre)###", $str);
+    preg_match_all ("@(<\?php.*?\?>)@si", $str, $matches);
+    if ($matches) {
+        foreach ($matches[1] as $v) {
+            $str = str_replace ($v, "###(code)###" . strtr (htmlspecialchars ($v), array(
+                "/" => "&#47;",
+                "*" => "&#42;",
+                "#" => "&#35;"
+            )) . "###(/code)###", $str);
+        }
+    }
+
+    // handle gracefully inner tags <entry>, </entry>
+    // or inner tag with attributes like <entry align="center">
+    $str = preg_replace("/<(\/?)entry(\s.*?)?>/", "###($1td)###", $str);
+    // handle gracefully inner tags <para>, </para>
+    // or inner tag with attributes like <para xmlns="http://docbook.org/ns/docbook">
+    $str = preg_replace("/<(\/?)para(\s.*?)?>/", "###($1p)###", $str);
     // now strip the remaining tags
     $str = strip_tags ($str);
     // and restore the translated ones
     $str = str_replace ("###(", "<", $str);
     $str = str_replace (")###", ">", $str);
+    // convert some problematic php comment characters
+    $str = strtr ($str, array(
+        "*" => "&#42;"
+    ));
     return $str;
 }
 

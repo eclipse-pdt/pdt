@@ -1,6 +1,6 @@
 <?php
 
-// Start of zip v.1.13.4
+// Start of zip v.1.13.5
 
 class ZipArchive  {
 	const CREATE = 1;
@@ -96,7 +96,6 @@ class ZipArchive  {
 	 * Returns true on success or the error code.
 	 * <p>
 	 * ZipArchive::ER_EXISTS
-	 * </p>
 	 * <p>
 	 * File already exists.
 	 * </p>
@@ -147,6 +146,7 @@ class ZipArchive  {
 	 * </p>
 	 * <p>
 	 * Seek error.
+	 * </p>
 	 * </p>
 	 * </p>
 	 */
@@ -692,12 +692,12 @@ function zip_read ($zip) {}
  * in PHP is read only access.
  * </p>
  * @return bool true on success or false on failure
- * </p>
  * <p>
  * Unlike fopen and other similar functions,
  * the return value of zip_entry_open only
  * indicates the result of the operation and is not needed for
  * reading or closing the directory entry.
+ * </p>
  */
 function zip_entry_open ($zip, $zip_entry, $mode = null) {}
 
@@ -767,4 +767,4 @@ function zip_entry_compressedsize ($zip_entry) {}
  */
 function zip_entry_compressionmethod ($zip_entry) {}
 
-// End of zip v.1.13.4
+// End of zip v.1.13.5
