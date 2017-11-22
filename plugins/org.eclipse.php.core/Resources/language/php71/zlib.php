@@ -1,6 +1,6 @@
 <?php
 
-// Start of zlib v.7.2.0-dev
+// Start of zlib v.7.1.1
 
 /**
  * Output a gz-file
@@ -43,7 +43,7 @@ function gzrewind ($zp) {}
 function gzclose ($zp) {}
 
 /**
- * Test for <acronym>EOF</acronym> on a gz-file pointer
+ * Test for EOF on a gz-file pointer
  * @link http://www.php.net/manual/en/function.gzeof.php
  * @param resource $zp <p>
  * The gz-file pointer. It must be valid, and must point to a file
@@ -134,9 +134,9 @@ function gzread ($zp, $length) {}
  * @return resource a file pointer to the file opened, after that, everything you read
  * from this file descriptor will be transparently decompressed and what you 
  * write gets compressed.
- * </p>
  * <p>
  * If the open fails, the function returns false.
+ * </p>
  */
 function gzopen ($filename, $mode, $use_include_path = null) {}
 
@@ -215,7 +215,7 @@ function gztell ($zp) {}
 function gzwrite ($zp, $string, $length = null) {}
 
 /**
- * &Alias; <function>gzwrite</function>
+ * Alias: gzwrite
  * @link http://www.php.net/manual/en/function.gzputs.php
  * @param $fp
  * @param $str
@@ -251,7 +251,7 @@ function gzfile ($filename, $use_include_path = null) {}
  * If -1 is used, the default compression of the zlib library is used which is 6.
  * </p>
  * @param int $encoding [optional] <p>
- * One of ZLIB_ENCODING_* constants.
+ * One of ZLIB_ENCODING_&#42; constants.
  * </p>
  * @return string The compressed string or false if an error occurred.
  */
@@ -267,11 +267,11 @@ function gzcompress ($data, $level = null, $encoding = null) {}
  * The maximum length of data to decode.
  * </p>
  * @return string The original uncompressed data or false on error.
- * </p>
  * <p>
  * The function will return an error if the uncompressed data is more than
  * 32768 times the length of the compressed input data 
  * or more than the optional parameter length.
+ * </p>
  */
 function gzuncompress ($data, $length = null) {}
 
@@ -287,7 +287,7 @@ function gzuncompress ($data, $length = null) {}
  * be the default compression level of the zlib library.
  * </p>
  * @param int $encoding [optional] <p>
- * One of ZLIB_ENCODING_* constants.
+ * One of ZLIB_ENCODING_&#42; constants.
  * </p>
  * @return string The deflated string or false if an error occurred.
  */
@@ -303,11 +303,11 @@ function gzdeflate ($data, $level = null, $encoding = null) {}
  * The maximum length of data to decode.
  * </p>
  * @return string The original uncompressed data or false on error.
- * </p>
  * <p>
  * The function will return an error if the uncompressed data is more than
  * 32768 times the length of the compressed input data 
  * or more than the optional parameter length.
+ * </p>
  */
 function gzinflate ($data, $length = null) {}
 
@@ -357,8 +357,12 @@ function gzdecode ($data, $length = null) {}
  * Compress data with the specified encoding
  * @link http://www.php.net/manual/en/function.zlib-encode.php
  * @param string $data <p>
+ * The data to compress.
  * </p>
  * @param string $encoding <p>
+ * The compression algorithm. Either ZLIB_ENCODING_RAW,
+ * ZLIB_ENCODING_DEFLATE or
+ * ZLIB_ENCODING_GZIP.
  * </p>
  * @param string $level [optional] <p>
  * </p>
@@ -373,7 +377,7 @@ function zlib_encode ($data, $encoding, $level = null) {}
  * </p>
  * @param string $max_decoded_len [optional] <p>
  * </p>
- * @return string 
+ * @return string the uncompressed data, or false on failure.
  */
 function zlib_decode ($data, $max_decoded_len = null) {}
 
@@ -389,7 +393,7 @@ function zlib_get_coding_type () {}
  * Initialize an incremental deflate context
  * @link http://www.php.net/manual/en/function.deflate-init.php
  * @param int $encoding <p>
- * One of the ZLIB_ENCODING_* constants.
+ * One of the ZLIB_ENCODING_&#42; constants.
  * </p>
  * @param array $options [optional] <p>
  * An associative array which may contain the following elements:
@@ -430,7 +434,7 @@ function deflate_add ($context, $data, $flush_mode = null) {}
  * Initialize an incremental inflate context
  * @link http://www.php.net/manual/en/function.inflate-init.php
  * @param int $encoding <p>
- * One of the ZLIB_ENCODING_* constants.
+ * One of the ZLIB_ENCODING_&#42; constants.
  * </p>
  * @param array $options [optional] <p>
  * An associative array which may contain the following elements:
@@ -567,4 +571,4 @@ define ('ZLIB_DEFAULT_STRATEGY', 0);
 define ('ZLIB_VERSION', "1.2.8");
 define ('ZLIB_VERNUM', 4736);
 
-// End of zlib v.7.2.0-dev
+// End of zlib v.7.1.1

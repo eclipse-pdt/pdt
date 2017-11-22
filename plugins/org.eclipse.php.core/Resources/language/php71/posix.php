@@ -1,6 +1,6 @@
 <?php
 
-// Start of posix v.7.2.0-dev
+// Start of posix v.7.1.1
 
 /**
  * Send a signal to a process
@@ -174,11 +174,11 @@ function posix_getsid ($pid) {}
  * 17:01:36 MEST 1999)
  * machine - system architecture (e.g. i586)
  * domainname - DNS domainname (e.g. example.com)
- * </p>
  * <p>
  * domainname is a GNU extension and not part of POSIX.1, so this
  * field is only available on GNU systems or when using the GNU
  * libc.
+ * </p>
  */
 function posix_uname () {}
 
@@ -302,6 +302,7 @@ function posix_access ($file, $mode = null) {}
  * @return array The array elements returned are:
  * <table>
  * The group information array
+ * <table>
  * <tr valign="top">
  * <td>Element</td>
  * <td>Description</td>
@@ -338,6 +339,7 @@ function posix_access ($file, $mode = null) {}
  * </td>
  * </tr>
  * </table>
+ * </table>
  */
 function posix_getgrnam ($name) {}
 
@@ -350,6 +352,7 @@ function posix_getgrnam ($name) {}
  * @return array The array elements returned are:
  * <table>
  * The group information array
+ * <table>
  * <tr valign="top">
  * <td>Element</td>
  * <td>Description</td>
@@ -386,6 +389,7 @@ function posix_getgrnam ($name) {}
  * </td>
  * </tr>
  * </table>
+ * </table>
  */
 function posix_getgrgid ($gid) {}
 
@@ -399,6 +403,7 @@ function posix_getgrgid ($gid) {}
  * false is returned:
  * <table>
  * The user information array
+ * <table>
  * <tr valign="top">
  * <td>Element</td>
  * <td>Description</td>
@@ -462,6 +467,7 @@ function posix_getgrgid ($gid) {}
  * </td>
  * </tr>
  * </table>
+ * </table>
  */
 function posix_getpwnam ($username) {}
 
@@ -474,6 +480,7 @@ function posix_getpwnam ($username) {}
  * @return array an associative array with the following elements:
  * <table>
  * The user information array
+ * <table>
  * <tr valign="top">
  * <td>Element</td>
  * <td>Description</td>
@@ -537,6 +544,7 @@ function posix_getpwnam ($username) {}
  * </td>
  * </tr>
  * </table>
+ * </table>
  */
 function posix_getpwuid ($uid) {}
 
@@ -547,6 +555,7 @@ function posix_getpwuid ($uid) {}
  * limit that is defined. Each limit has a soft and a hard limit.
  * <table>
  * List of possible limits returned
+ * <table>
  * <tr valign="top">
  * <td>Limit name</td>
  * <td>Limit description</td>
@@ -621,6 +630,7 @@ function posix_getpwuid ($uid) {}
  * </td>
  * </tr>
  * </table>
+ * </table>
  */
 function posix_getrlimit () {}
 
@@ -653,7 +663,7 @@ function posix_setrlimit ($resource, $softlimit, $hardlimit) {}
 function posix_get_last_error () {}
 
 /**
- * &Alias; <function>posix_get_last_error</function>
+ * Alias: posix_get_last_error
  * @link http://www.php.net/manual/en/function.posix-errno.php
  */
 function posix_errno () {}
@@ -866,4 +876,4 @@ define ('POSIX_RLIMIT_STACK', 3);
  */
 define ('POSIX_RLIMIT_INFINITY', -1);
 
-// End of posix v.7.2.0-dev
+// End of posix v.7.1.1

@@ -1,6 +1,6 @@
 <?php
 
-// Start of sysvshm v.7.0.0-dev
+// Start of sysvshm v.7.1.1
 
 /**
  * Creates or open a shared memory segment
@@ -10,7 +10,7 @@
  * </p>
  * @param int $memsize [optional] <p>
  * The memory size. If not provided, default to the
- * sysvshm.init_mem in the &php.ini;, otherwise 10000
+ * sysvshm.init_mem in the php.ini, otherwise 10000
  * bytes.
  * </p>
  * @param int $perm [optional] <p>
@@ -102,4 +102,4 @@ function shm_get_var ($shm_identifier, $variable_key) {}
  */
 function shm_remove_var ($shm_identifier, $variable_key) {}
 
-// End of sysvshm v.7.0.0-dev
+// End of sysvshm v.7.1.1

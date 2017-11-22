@@ -1,6 +1,6 @@
 <?php
 
-// Start of pspell v.7.0.0-dev
+// Start of pspell v.7.1.1
 
 /**
  * Load a new dictionary
@@ -22,7 +22,7 @@
  * </p>
  * @param string $encoding [optional] <p>
  * The encoding parameter is the encoding that words are expected to
- * be in. Valid values are 'utf-8', 'iso8859-*', 'koi8-r',
+ * be in. Valid values are 'utf-8', 'iso8859-&#42;', 'koi8-r',
  * 'viscii', 'cp1252', 'machine unsigned 16', 'machine unsigned
  * 32'. This parameter is largely untested, so be careful when
  * using.
@@ -60,7 +60,7 @@ function pspell_new ($language, $spelling = null, $jargon = null, $encoding = nu
  * </p>
  * @param string $encoding [optional] <p>
  * The encoding that words are expected to be in. Valid values are
- * utf-8, iso8859-*, 
+ * utf-8, iso8859-&#42;, 
  * koi8-r, viscii, 
  * cp1252, machine unsigned 16, 
  * machine unsigned 32. 
@@ -189,7 +189,7 @@ function pspell_save_wordlist ($dictionary_link) {}
  * </p>
  * @param string $encoding [optional] <p>
  * The encoding parameter is the encoding that words are expected to
- * be in. Valid values are 'utf-8', 'iso8859-*', 'koi8-r',
+ * be in. Valid values are 'utf-8', 'iso8859-&#42;', 'koi8-r',
  * 'viscii', 'cp1252', 'machine unsigned 16', 'machine unsigned
  * 32'. This parameter is largely untested, so be careful when
  * using.
@@ -282,7 +282,7 @@ function pspell_config_repl ($dictionary_link, $file) {}
 
 /**
  * Determine whether to save a replacement pairs list
-  along with the wordlist
+ * along with the wordlist
  * @link http://www.php.net/manual/en/function.pspell-config-save-repl.php
  * @param int $dictionary_link <p>
  * </p>
@@ -298,4 +298,4 @@ define ('PSPELL_NORMAL', 2);
 define ('PSPELL_BAD_SPELLERS', 3);
 define ('PSPELL_RUN_TOGETHER', 8);
 
-// End of pspell v.7.0.0-dev
+// End of pspell v.7.1.1
