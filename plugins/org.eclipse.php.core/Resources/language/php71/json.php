@@ -10,7 +10,7 @@ interface JsonSerializable  {
 	 * @return mixed data which can be serialized by json_encode,
 	 * which is a value of any type other than a resource.
 	 */
-	abstract public function jsonSerialize () {}
+	abstract public function jsonSerialize ();
 
 }
 
@@ -24,7 +24,7 @@ interface JsonSerializable  {
  * <p>
  * All string data must be UTF-8 encoded.
  * </p>
- * &json.implementation.superset;
+ * json.implementation.superset
  * @param int $options [optional] <p>
  * Bitmask consisting of JSON_HEX_QUOT,
  * JSON_HEX_TAG,
@@ -56,7 +56,7 @@ function json_encode ($value, $options = null, $depth = null) {}
  * <p>
  * This function only works with UTF-8 encoded strings.
  * </p>
- * &json.implementation.superset;
+ * json.implementation.superset
  * @param bool $assoc [optional] <p>
  * When true, returned objects will be converted into
  * associative arrays.
@@ -65,14 +65,17 @@ function json_encode ($value, $options = null, $depth = null) {}
  * User specified recursion depth.
  * </p>
  * @param int $options [optional] <p>
- * Bitmask of JSON decode options. Currently only
- * JSON_BIGINT_AS_STRING
- * is supported (default is to cast large integers as floats)
+ * Bitmask of JSON decode options. Currently there are two supported
+ * options. The first is JSON_BIGINT_AS_STRING that
+ * allows casting big integers to string instead of floats which is the
+ * default. The second option is JSON_OBJECT_AS_ARRAY
+ * that has the same effect as setting assoc to
+ * true.
  * </p>
  * @return mixed the value encoded in json in appropriate
  * PHP type. Values true, false and
- * null are returned as true, false and &null;
- * respectively. &null; is returned if the json cannot
+ * null are returned as true, false and null
+ * respectively. null is returned if the json cannot
  * be decoded or if the encoded data is deeper than the recursion limit.
  */
 function json_decode ($json, $assoc = null, $depth = null, $options = null) {}
@@ -153,7 +156,8 @@ define ('JSON_UNESCAPED_SLASHES', 64);
 define ('JSON_PRETTY_PRINT', 128);
 
 /**
- * Encode multibyte Unicode characters literally (default is to escape as \uXXXX).
+ * Encode multibyte Unicode characters literally (default is to escape as
+ * \uXXXX).
  * Available since PHP 5.4.0.
  * @link http://www.php.net/manual/en/json.constants.php
  */
@@ -167,16 +171,33 @@ define ('JSON_UNESCAPED_UNICODE', 256);
 define ('JSON_PARTIAL_OUTPUT_ON_ERROR', 512);
 
 /**
- * Ensures that float values are always encoded as a float value.
+ * Ensures that float values are always encoded as a float
+ * value.
  * Available since PHP 5.6.6.
  * @link http://www.php.net/manual/en/json.constants.php
  */
 define ('JSON_PRESERVE_ZERO_FRACTION', 1024);
+
+/**
+ * The line terminators are kept unescaped when
+ * JSON_UNESCAPED_UNICODE is supplied. It uses the same
+ * behaviour as it was before PHP 7.1 without this constant.
+ * Available since PHP 7.1.0.
+ * @link http://www.php.net/manual/en/json.constants.php
+ */
 define ('JSON_UNESCAPED_LINE_TERMINATORS', 2048);
+
+/**
+ * Decodes JSON objects as PHP array. This option can be added automatically
+ * by calling json_decode with the second parameter
+ * equal to true.
+ * Available since PHP 5.4.0.
+ * @link http://www.php.net/manual/en/json.constants.php
+ */
 define ('JSON_OBJECT_AS_ARRAY', 1);
 
 /**
- * Encodes large integers as their original string value.
+ * Decodes large integers as their original string value.
  * Available since PHP 5.4.0.
  * @link http://www.php.net/manual/en/json.constants.php
  */
@@ -218,56 +239,59 @@ define ('JSON_ERROR_CTRL_CHAR', 3);
 define ('JSON_ERROR_SYNTAX', 4);
 
 /**
- * Malformed UTF-8 characters, possibly incorrectly encoded. This 
- * constant is available as of PHP 5.3.3.
+ * Malformed UTF-8 characters, possibly incorrectly encoded.
+ * Available since PHP 5.3.3.
  * @link http://www.php.net/manual/en/json.constants.php
  */
 define ('JSON_ERROR_UTF8', 5);
 
 /**
- * <p>
  * The object or array passed to json_encode include
  * recursive references and cannot be encoded.
  * If the JSON_PARTIAL_OUTPUT_ON_ERROR option was
- * given, &null; will be encoded in the place of the recursive reference.
- * </p>
- * <p>
- * This constant is available as of PHP 5.5.0.
- * </p>
+ * given, null will be encoded in the place of the recursive reference.
+ * Available since PHP 5.5.0.
  * @link http://www.php.net/manual/en/json.constants.php
  */
 define ('JSON_ERROR_RECURSION', 6);
 
 /**
- * <p>
  * The value passed to json_encode includes either
  * NAN
  * or INF.
  * If the JSON_PARTIAL_OUTPUT_ON_ERROR option was
  * given, 0 will be encoded in the place of these
  * special numbers.
- * </p>
- * <p>
- * This constant is available as of PHP 5.5.0.
- * </p>
+ * Available since PHP 5.5.0.
  * @link http://www.php.net/manual/en/json.constants.php
  */
 define ('JSON_ERROR_INF_OR_NAN', 7);
 
 /**
- * <p>
  * A value of an unsupported type was given to
  * json_encode, such as a resource.
  * If the JSON_PARTIAL_OUTPUT_ON_ERROR option was
- * given, &null; will be encoded in the place of the unsupported value.
- * </p>
- * <p>
- * This constant is available as of PHP 5.5.0.
- * </p>
+ * given, null will be encoded in the place of the unsupported value.
+ * Available since PHP 5.5.0.
  * @link http://www.php.net/manual/en/json.constants.php
  */
 define ('JSON_ERROR_UNSUPPORTED_TYPE', 8);
+
+/**
+ * A key starting with \u0000 character was in the string passed to
+ * json_decode when decoding a JSON object into a PHP
+ * object.
+ * Available since PHP 7.0.0.
+ * @link http://www.php.net/manual/en/json.constants.php
+ */
 define ('JSON_ERROR_INVALID_PROPERTY_NAME', 9);
+
+/**
+ * Single unpaired UTF-16 surrogate in unicode escape contained in the
+ * JSON string passed to json_encode.
+ * Available since PHP 7.0.0.
+ * @link http://www.php.net/manual/en/json.constants.php
+ */
 define ('JSON_ERROR_UTF16', 10);
 
 // End of json v.1.5.0

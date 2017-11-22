@@ -120,7 +120,7 @@ class DOMImplementation  {
 	 * The external subset system identifier.
 	 * </p>
 	 * @return DOMDocumentType A new DOMDocumentType node with its 
-	 * ownerDocument set to &null;.
+	 * ownerDocument set to null.
 	 */
 	public function createDocumentType ($qualifiedName = null, $publicId = null, $systemId = null) {}
 
@@ -134,7 +134,7 @@ class DOMImplementation  {
 	 * The qualified name of the document element to create.
 	 * </p>
 	 * @param DOMDocumentType $doctype [optional] <p>
-	 * The type of document to create or &null;.
+	 * The type of document to create or null.
 	 * </p>
 	 * @return DOMDocument A new DOMDocument object. If 
 	 * namespaceURI, qualifiedName, 
@@ -315,7 +315,7 @@ class DOMNode  {
 	/**
 	 * Get an XPath for a node
 	 * @link http://www.php.net/manual/en/domnode.getnodepath.php
-	 * @return string a string containing the XPath, or &null; in case of an error.
+	 * @return string a string containing the XPath, or null in case of an error.
 	 */
 	public function getNodePath () {}
 
@@ -556,7 +556,7 @@ class DOMDocumentFragment extends DOMNode  {
 	/**
 	 * Get an XPath for a node
 	 * @link http://www.php.net/manual/en/domnode.getnodepath.php
-	 * @return string a string containing the XPath, or &null; in case of an error.
+	 * @return string a string containing the XPath, or null in case of an error.
 	 */
 	public function getNodePath () {}
 
@@ -712,7 +712,7 @@ class DOMDocument extends DOMNode  {
 	 * Searches for all elements with given local tag name
 	 * @link http://www.php.net/manual/en/domdocument.getelementsbytagname.php
 	 * @param string $name <p>
-	 * The local name (without namespace) of the tag to match on. The special value *
+	 * The local name (without namespace) of the tag to match on. The special value &#42;
 	 * matches all tags. 
 	 * </p>
 	 * @return DOMNodeList A new DOMNodeList object containing all the matched 
@@ -772,11 +772,11 @@ class DOMDocument extends DOMNode  {
 	 * @link http://www.php.net/manual/en/domdocument.getelementsbytagnamens.php
 	 * @param string $namespaceURI <p>
 	 * The namespace URI of the elements to match on. 
-	 * The special value * matches all namespaces.
+	 * The special value &#42; matches all namespaces.
 	 * </p>
 	 * @param string $localName <p>
 	 * The local name of the elements to match on. 
-	 * The special value * matches all local names.
+	 * The special value &#42; matches all local names.
 	 * </p>
 	 * @return DOMNodeList A new DOMNodeList object containing all the matched 
 	 * elements.
@@ -789,7 +789,7 @@ class DOMDocument extends DOMNode  {
 	 * @param string $elementId <p>
 	 * The unique id value for an element.
 	 * </p>
-	 * @return DOMElement the DOMElement or &null; if the element is
+	 * @return DOMElement the DOMElement or null if the element is
 	 * not found.
 	 */
 	public function getElementById ($elementId) {}
@@ -1002,7 +1002,7 @@ class DOMDocument extends DOMNode  {
 	 * classes in the chapter introduction.
 	 * </p>
 	 * @param string $extendedclass <p>
-	 * Your extended class name. If &null; is provided, any previously 
+	 * Your extended class name. If null is provided, any previously 
 	 * registered class extending baseclass will
 	 * be removed.
 	 * </p>
@@ -1178,7 +1178,7 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Get an XPath for a node
 	 * @link http://www.php.net/manual/en/domnode.getnodepath.php
-	 * @return string a string containing the XPath, or &null; in case of an error.
+	 * @return string a string containing the XPath, or null in case of an error.
 	 */
 	public function getNodePath () {}
 
@@ -1243,7 +1243,7 @@ class DOMNodeList implements Traversable {
 	 * Index of the node into the collection.
 	 * </p>
 	 * @return DOMNode The node at the indexth position in the 
-	 * DOMNodeList, or &null; if that is not a valid
+	 * DOMNodeList, or null if that is not a valid
 	 * index.
 	 */
 	public function item ($index) {}
@@ -1259,7 +1259,7 @@ class DOMNamedNodeMap implements Traversable {
 	 * The nodeName of the node to retrieve.
 	 * </p>
 	 * @return DOMNode A node (of any type) with the specified nodeName, or 
-	 * &null; if no node is found.
+	 * null if no node is found.
 	 */
 	public function getNamedItem ($name) {}
 
@@ -1279,7 +1279,7 @@ class DOMNamedNodeMap implements Traversable {
 	 * @param int $index <p>
 	 * Index into this map.
 	 * </p>
-	 * @return DOMNode The node at the indexth position in the map, or &null;
+	 * @return DOMNode The node at the indexth position in the map, or null
 	 * if that is not a valid index (greater than or equal to the number of nodes 
 	 * in this map).
 	 */
@@ -1295,7 +1295,7 @@ class DOMNamedNodeMap implements Traversable {
 	 * The local name of the node to retrieve.
 	 * </p>
 	 * @return DOMNode A node (of any type) with the specified local name and namespace URI, or 
-	 * &null; if no node is found.
+	 * null if no node is found.
 	 */
 	public function getNamedItemNS ($namespaceURI, $localName) {}
 
@@ -1553,7 +1553,7 @@ class DOMCharacterData extends DOMNode  {
 	/**
 	 * Get an XPath for a node
 	 * @link http://www.php.net/manual/en/domnode.getnodepath.php
-	 * @return string a string containing the XPath, or &null; in case of an error.
+	 * @return string a string containing the XPath, or null in case of an error.
 	 */
 	public function getNodePath () {}
 
@@ -1619,7 +1619,7 @@ class DOMAttr extends DOMNode  {
 	public function isId () {}
 
 	/**
-	 * Creates a new <classname>DOMAttr</classname> object
+	 * Creates a new DOMAttr object
 	 * @link http://www.php.net/manual/en/domattr.construct.php
 	 * @param $name
 	 * @param $value [optional]
@@ -1794,7 +1794,7 @@ class DOMAttr extends DOMNode  {
 	/**
 	 * Get an XPath for a node
 	 * @link http://www.php.net/manual/en/domnode.getnodepath.php
-	 * @return string a string containing the XPath, or &null; in case of an error.
+	 * @return string a string containing the XPath, or null in case of an error.
 	 */
 	public function getNodePath () {}
 
@@ -1892,7 +1892,10 @@ class DOMElement extends DOMNode  {
 	 * @param string $name <p>
 	 * The name of the attribute.
 	 * </p>
-	 * @return DOMAttr The attribute node.
+	 * @return DOMAttr The attribute node. Note that for XML namespace declarations
+	 * (xmlns and xmlns:&#42; attributes) an 
+	 * instance of DOMNameSpaceNode is returned instead of a
+	 * DOMAttr.
 	 */
 	public function getAttributeNode ($name) {}
 
@@ -1902,7 +1905,7 @@ class DOMElement extends DOMNode  {
 	 * @param DOMAttr $attr <p>
 	 * The attribute node.
 	 * </p>
-	 * @return DOMAttr old node if the attribute has been replaced or &null;.
+	 * @return DOMAttr old node if the attribute has been replaced or null.
 	 */
 	public function setAttributeNode (DOMAttr $attr) {}
 
@@ -1920,7 +1923,7 @@ class DOMElement extends DOMNode  {
 	 * Gets elements by tagname
 	 * @link http://www.php.net/manual/en/domelement.getelementsbytagname.php
 	 * @param string $name <p>
-	 * The tag name. Use * to return all elements within 
+	 * The tag name. Use &#42; to return all elements within 
 	 * the element tree.
 	 * </p>
 	 * @return DOMNodeList This function returns a new instance of the class
@@ -1981,7 +1984,10 @@ class DOMElement extends DOMNode  {
 	 * @param string $localName <p>
 	 * The local name.
 	 * </p>
-	 * @return DOMAttr The attribute node.
+	 * @return DOMAttr The attribute node. Note that for XML namespace declarations
+	 * (xmlns and xmlns:&#42; attributes) an 
+	 * instance of DOMNameSpaceNode is returned instead of a
+	 * DOMAttr.
 	 */
 	public function getAttributeNodeNS ($namespaceURI, $localName) {}
 
@@ -2002,7 +2008,7 @@ class DOMElement extends DOMNode  {
 	 * The namespace URI.
 	 * </p>
 	 * @param string $localName <p>
-	 * The local name. Use * to return all elements within 
+	 * The local name. Use &#42; to return all elements within 
 	 * the element tree.
 	 * </p>
 	 * @return DOMNodeList This function returns a new instance of the class
@@ -2256,7 +2262,7 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Get an XPath for a node
 	 * @link http://www.php.net/manual/en/domnode.getnodepath.php
-	 * @return string a string containing the XPath, or &null; in case of an error.
+	 * @return string a string containing the XPath, or null in case of an error.
 	 */
 	public function getNodePath () {}
 
@@ -2341,7 +2347,7 @@ class DOMText extends DOMCharacterData  {
 	public function replaceWholeText ($content) {}
 
 	/**
-	 * Creates a new <classname>DOMText</classname> object
+	 * Creates a new DOMText object
 	 * @link http://www.php.net/manual/en/domtext.construct.php
 	 * @param $value [optional]
 	 */
@@ -2586,7 +2592,7 @@ class DOMText extends DOMCharacterData  {
 	/**
 	 * Get an XPath for a node
 	 * @link http://www.php.net/manual/en/domnode.getnodepath.php
-	 * @return string a string containing the XPath, or &null; in case of an error.
+	 * @return string a string containing the XPath, or null in case of an error.
 	 */
 	public function getNodePath () {}
 
@@ -2890,7 +2896,7 @@ class DOMComment extends DOMCharacterData  {
 	/**
 	 * Get an XPath for a node
 	 * @link http://www.php.net/manual/en/domnode.getnodepath.php
-	 * @return string a string containing the XPath, or &null; in case of an error.
+	 * @return string a string containing the XPath, or null in case of an error.
 	 */
 	public function getNodePath () {}
 
@@ -3265,7 +3271,7 @@ class DOMCdataSection extends DOMText  {
 	/**
 	 * Get an XPath for a node
 	 * @link http://www.php.net/manual/en/domnode.getnodepath.php
-	 * @return string a string containing the XPath, or &null; in case of an error.
+	 * @return string a string containing the XPath, or null in case of an error.
 	 */
 	public function getNodePath () {}
 
@@ -3491,7 +3497,7 @@ class DOMDocumentType extends DOMNode  {
 	/**
 	 * Get an XPath for a node
 	 * @link http://www.php.net/manual/en/domnode.getnodepath.php
-	 * @return string a string containing the XPath, or &null; in case of an error.
+	 * @return string a string containing the XPath, or null in case of an error.
 	 */
 	public function getNodePath () {}
 
@@ -3717,7 +3723,7 @@ class DOMNotation extends DOMNode  {
 	/**
 	 * Get an XPath for a node
 	 * @link http://www.php.net/manual/en/domnode.getnodepath.php
-	 * @return string a string containing the XPath, or &null; in case of an error.
+	 * @return string a string containing the XPath, or null in case of an error.
 	 */
 	public function getNodePath () {}
 
@@ -3943,7 +3949,7 @@ class DOMEntity extends DOMNode  {
 	/**
 	 * Get an XPath for a node
 	 * @link http://www.php.net/manual/en/domnode.getnodepath.php
-	 * @return string a string containing the XPath, or &null; in case of an error.
+	 * @return string a string containing the XPath, or null in case of an error.
 	 */
 	public function getNodePath () {}
 
@@ -4176,7 +4182,7 @@ class DOMEntityReference extends DOMNode  {
 	/**
 	 * Get an XPath for a node
 	 * @link http://www.php.net/manual/en/domnode.getnodepath.php
-	 * @return string a string containing the XPath, or &null; in case of an error.
+	 * @return string a string containing the XPath, or null in case of an error.
 	 */
 	public function getNodePath () {}
 
@@ -4235,7 +4241,7 @@ class DOMEntityReference extends DOMNode  {
 class DOMProcessingInstruction extends DOMNode  {
 
 	/**
-	 * Creates a new <classname>DOMProcessingInstruction</classname> object
+	 * Creates a new DOMProcessingInstruction object
 	 * @link http://www.php.net/manual/en/domprocessinginstruction.construct.php
 	 * @param $name
 	 * @param $value [optional]
@@ -4410,7 +4416,7 @@ class DOMProcessingInstruction extends DOMNode  {
 	/**
 	 * Get an XPath for a node
 	 * @link http://www.php.net/manual/en/domnode.getnodepath.php
-	 * @return string a string containing the XPath, or &null; in case of an error.
+	 * @return string a string containing the XPath, or null in case of an error.
 	 */
 	public function getNodePath () {}
 
@@ -4483,14 +4489,14 @@ class DOMStringExtend  {
 class DOMXPath  {
 
 	/**
-	 * Creates a new <classname>DOMXPath</classname> object
+	 * Creates a new DOMXPath object
 	 * @link http://www.php.net/manual/en/domxpath.construct.php
 	 * @param DOMDocument $doc
 	 */
 	public function __construct (DOMDocument $doc) {}
 
 	/**
-	 * Registers the namespace with the <classname>DOMXPath</classname> object
+	 * Registers the namespace with the DOMXPath object
 	 * @link http://www.php.net/manual/en/domxpath.registernamespace.php
 	 * @param string $prefix <p>
 	 * The prefix.
@@ -4521,11 +4527,11 @@ class DOMXPath  {
 	 * the given XPath expression. Any expression which
 	 * does not return nodes will return an empty
 	 * DOMNodeList.
-	 * </p>
 	 * <p>
 	 * If the expression is malformed or the
 	 * contextnode is invalid,
 	 * DOMXPath::query returns false.
+	 * </p>
 	 */
 	public function query ($expression, DOMNode $contextnode = null, $registerNodeNS = null) {}
 
@@ -4546,11 +4552,11 @@ class DOMXPath  {
 	 * </p>
 	 * @return mixed a typed result if possible or a DOMNodeList 
 	 * containing all nodes matching the given XPath expression. 
-	 * </p>
 	 * <p>
 	 * If the expression is malformed or the
 	 * contextnode is invalid,
 	 * DOMXPath::evaluate returns false.
+	 * </p>
 	 */
 	public function evaluate ($expression, DOMNode $contextnode = null, $registerNodeNS = null) {}
 
@@ -4571,8 +4577,8 @@ class DOMXPath  {
 }
 
 /**
- * Gets a <classname>DOMElement</classname> object from a
-   <classname>SimpleXMLElement</classname> object
+ * Gets a DOMElement object from a
+ * SimpleXMLElement object
  * @link http://www.php.net/manual/en/function.dom-import-simplexml.php
  * @param SimpleXMLElement $node <p>
  * The SimpleXMLElement node.

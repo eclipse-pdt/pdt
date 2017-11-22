@@ -1,6 +1,6 @@
 <?php
 
-// Start of xmlreader v.7.2.0-dev
+// Start of xmlreader v.7.1.1
 
 class XMLReader  {
 	const NONE = 0;
@@ -40,7 +40,7 @@ class XMLReader  {
 	 * @param string $name <p>
 	 * The name of the attribute.
 	 * </p>
-	 * @return string The value of the attribute, or &null; if no attribute with the given
+	 * @return string The value of the attribute, or null if no attribute with the given
 	 * name is found or not positioned on an element node.
 	 */
 	public function getAttribute ($name) {}
@@ -51,7 +51,7 @@ class XMLReader  {
 	 * @param int $index <p>
 	 * The position of the attribute.
 	 * </p>
-	 * @return string The value of the attribute, or an empty string (before PHP 5.6) or &null;
+	 * @return string The value of the attribute, or an empty string (before PHP 5.6) or null
 	 * (from PHP 5.6 onwards) if no attribute exists at
 	 * index or is not positioned on the element.
 	 */
@@ -66,7 +66,7 @@ class XMLReader  {
 	 * @param string $namespaceURI <p>
 	 * The namespace URI.
 	 * </p>
-	 * @return string The value of the attribute, or an empty string (before PHP 5.6) or &null;
+	 * @return string The value of the attribute, or an empty string (before PHP 5.6) or null
 	 * (from PHP 5.6 onwards) if no attribute with the given
 	 * localName and namespaceURI is
 	 * found or not positioned of element.
@@ -163,10 +163,10 @@ class XMLReader  {
 	 * URI pointing to the document.
 	 * </p>
 	 * @param string $encoding [optional] <p>
-	 * The document encoding or &null;.
+	 * The document encoding or null.
 	 * </p>
 	 * @param int $options [optional] <p>
-	 * A bitmask of the LIBXML_* 
+	 * A bitmask of the LIBXML_&#42; 
 	 * constants.
 	 * </p>
 	 * @return bool true on success or false on failure If called statically, returns an
@@ -265,10 +265,10 @@ class XMLReader  {
 	 * String containing the XML to be parsed.
 	 * </p>
 	 * @param string $encoding [optional] <p>
-	 * The document encoding or &null;.
+	 * The document encoding or null.
 	 * </p>
 	 * @param int $options [optional] <p>
-	 * A bitmask of the LIBXML_* 
+	 * A bitmask of the LIBXML_&#42; 
 	 * constants.
 	 * </p>
 	 * @return bool true on success or false on failure If called statically, returns an
@@ -287,4 +287,4 @@ class XMLReader  {
 	public function expand (DOMNode $basenode = null) {}
 
 }
-// End of xmlreader v.7.2.0-dev
+// End of xmlreader v.7.1.1

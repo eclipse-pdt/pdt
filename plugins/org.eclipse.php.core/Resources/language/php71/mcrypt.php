@@ -1,6 +1,6 @@
 <?php
 
-// Start of mcrypt v.7.2.0-dev
+// Start of mcrypt v.7.1.1
 
 /**
  * Gets the key size of the specified cipher
@@ -16,7 +16,7 @@ function mcrypt_get_key_size ($cipher) {}
  * Gets the block size of the specified cipher
  * @link http://www.php.net/manual/en/function.mcrypt-get-block-size.php
  * @param int $cipher One of the MCRYPT_ciphername constants, or the name of the algorithm as string.</p>
- * @return int Gets the block size, as an integer.
+ * @return int the algorithm block size in bytes or false on failure.
  * @deprecated 
  */
 function mcrypt_get_block_size ($cipher) {}
@@ -63,7 +63,7 @@ function mcrypt_create_iv ($size, $source = null) {}
  * @param string $lib_dir [optional] <p>
  * Specifies the directory where all algorithms are located. If not
  * specified, the value of the mcrypt.algorithms_dir
- * &php.ini; directive is used.
+ * php.ini directive is used.
  * </p>
  * @return array an array with all the supported algorithms.
  * @deprecated 
@@ -76,7 +76,7 @@ function mcrypt_list_algorithms ($lib_dir = null) {}
  * @param string $lib_dir [optional] <p>
  * Specifies the directory where all modes are located. If not
  * specified, the value of the mcrypt.modes_dir
- * &php.ini; directive is used.
+ * php.ini directive is used.
  * </p>
  * @return array an array with all the supported modes.
  * @deprecated 
@@ -110,7 +110,7 @@ function mcrypt_get_iv_size ($cipher, $mode) {}
  * </p>
  * @param string $data <p>
  * The data that will be encrypted with the given cipher
- * and mode. If the size of the data is not n * blocksize,
+ * and mode. If the size of the data is not n &#42; blocksize,
  * the data will be padded with '\0'.
  * </p>
  * <p>
@@ -134,7 +134,7 @@ function mcrypt_encrypt ($cipher, $key, $data, $mode, $iv = null) {}
  * </p>
  * @param string $data <p>
  * The data that will be decrypted with the given cipher
- * and mode. If the size of the data is not n * blocksize,
+ * and mode. If the size of the data is not n &#42; blocksize,
  * the data will be padded with '\0'.
  * </p>
  * @param string $mode One of the MCRYPT_MODE_modename constants, or one of the following strings: "ecb", "cbc", "cfb", "ofb", "nofb" or "stream".</p>
@@ -152,7 +152,7 @@ function mcrypt_decrypt ($cipher, $key, $data, $mode, $iv = null) {}
  * The algorithm_directory parameter is used to locate
  * the encryption module. When you supply a directory name, it is used. When
  * you set it to an empty string (""), the value set by the
- * mcrypt.algorithms_dir &php.ini; directive is used. When
+ * mcrypt.algorithms_dir php.ini directive is used. When
  * it is not set, the default directory that is used is the one that was compiled
  * into libmcrypt (usually /usr/local/lib/libmcrypt).
  * </p>
@@ -161,7 +161,7 @@ function mcrypt_decrypt ($cipher, $key, $data, $mode, $iv = null) {}
  * The mode_directory parameter is used to locate
  * the encryption module. When you supply a directory name, it is used. When
  * you set it to an empty string (""), the value set by the
- * mcrypt.modes_dir &php.ini; directive is used. When
+ * mcrypt.modes_dir php.ini directive is used. When
  * it is not set, the default directory that is used is the one that was compiled-in
  * into libmcrypt (usually /usr/local/lib/libmcrypt).
  * </p>
@@ -528,4 +528,4 @@ define ('MCRYPT_MODE_NOFB', "nofb");
 define ('MCRYPT_MODE_OFB', "ofb");
 define ('MCRYPT_MODE_STREAM', "stream");
 
-// End of mcrypt v.7.2.0-dev
+// End of mcrypt v.7.1.1

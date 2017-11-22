@@ -1,4 +1,4 @@
 <?php
 
-// Start of pdo_sqlite v.7.2.0-dev
-// End of pdo_sqlite v.7.2.0-dev
+// Start of pdo_sqlite v.7.1.1
+// End of pdo_sqlite v.7.1.1
