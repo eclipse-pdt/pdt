@@ -44,7 +44,7 @@ function hash_file ($algo, $filename, $raw_output = null) {}
  * Generate a keyed hash value using the HMAC method
  * @link http://www.php.net/manual/en/function.hash-hmac.php
  * @param string $algo <p>
- * Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..) See hash_algos for a list of supported algorithms.
+ * Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..) See hash_hmac_algos for a list of supported algorithms.
  * </p>
  * @param string $data <p>
  * Message to be hashed.
@@ -67,7 +67,7 @@ function hash_hmac ($algo, $data, $key, $raw_output = null) {}
  * Generate a keyed hash value using the HMAC method and the contents of a given file
  * @link http://www.php.net/manual/en/function.hash-hmac-file.php
  * @param string $algo <p>
- * Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..) See hash_algos for a list of supported algorithms.
+ * Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..) See hash_hmac_algos for a list of supported algorithms.
  * </p>
  * @param string $filename <p>
  * URL describing location of file to be hashed; Supports fopen wrappers.
