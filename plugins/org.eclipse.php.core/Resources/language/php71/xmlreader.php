@@ -1,6 +1,6 @@
 <?php
 
-// Start of xmlreader v.7.2.0-dev
+// Start of xmlreader v.7.1.1
 
 class XMLReader  {
 	const NONE = 0;
@@ -166,7 +166,7 @@ class XMLReader  {
 	 * The document encoding or &null;.
 	 * </p>
 	 * @param int $options [optional] <p>
-	 * A bitmask of the LIBXML_* 
+	 * A bitmask of the LIBXML_&#42; 
 	 * constants.
 	 * </p>
 	 * @return bool true on success or false on failure If called statically, returns an
@@ -268,7 +268,7 @@ class XMLReader  {
 	 * The document encoding or &null;.
 	 * </p>
 	 * @param int $options [optional] <p>
-	 * A bitmask of the LIBXML_* 
+	 * A bitmask of the LIBXML_&#42; 
 	 * constants.
 	 * </p>
 	 * @return bool true on success or false on failure If called statically, returns an
@@ -287,4 +287,4 @@ class XMLReader  {
 	public function expand (DOMNode $basenode = null) {}
 
 }
-// End of xmlreader v.7.2.0-dev
+// End of xmlreader v.7.1.1

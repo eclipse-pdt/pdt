@@ -1,6 +1,6 @@
 <?php
 
-// Start of sockets v.7.2.0-dev
+// Start of sockets v.7.1.1
 
 /**
  * Runs the select() system call on the given arrays of sockets with a specified timeout
@@ -37,13 +37,21 @@
  * the timeout expires before anything interesting happens. On error false
  * is returned. The error code can be retrieved with
  * socket_last_error.
- * </p>
  * <p>
  * Be sure to use the === operator when checking for an
  * error. Since the socket_select may return 0 the
  * comparison with == would evaluate to true:
  * Understanding socket_select's result
- * ]]>
+ * <pre>
+ * <code>&lt;?php
+ * $e = NULL;
+ * if (false === socket_select($r, $w, $e, 0)) {
+ * echo &quot;socket_select() failed, reason: &quot; .
+ * socket_strerror(socket_last_error()) . &quot;\n&quot;;
+ * }
+ * ?&gt;</code>
+ * </pre>
+ * </p>
  */
 function socket_select (array &$read, array &$write, array &$except, $tv_sec, $tv_usec = null) {}
 
@@ -334,12 +342,12 @@ function socket_close ($socket) {}
  * socket_last_error. This code may be passed to
  * socket_strerror to get a textual explanation of the
  * error.
- * </p>
  * <p>
  * It is perfectly valid for socket_write to
  * return zero which means no bytes have been written. Be sure to use the
  * === operator to check for false in case of an
  * error.
+ * </p>
  */
 function socket_write ($socket, $buffer, $length = null) {}
 
@@ -367,10 +375,10 @@ function socket_write ($socket, $buffer, $length = null) {}
  * socket_last_error. This code may be passed to
  * socket_strerror to get a textual representation of
  * the error.
- * </p>
  * <p>
  * socket_read returns a zero length string ("")
  * when there is no more data to read.
+ * </p>
  */
 function socket_read ($socket, $length, $type = null) {}
 
@@ -462,10 +470,10 @@ function socket_getpeername ($socket, &$address, &$port = null) {}
  * socket_last_error. This code may be passed to
  * socket_strerror to get a textual explanation of the
  * error.
- * </p>
  * <p>
  * If the socket is non-blocking then this function returns false with an
  * error Operation now in progress.
+ * </p>
  */
 function socket_connect ($socket, $address, $port = null) {}
 
@@ -503,11 +511,11 @@ function socket_strerror ($errno) {}
  * the port on which to listen for connections.
  * </p>
  * @return bool true on success or false on failure
- * </p>
  * <p>
  * The error code can be retrieved with socket_last_error.
  * This code may be passed to socket_strerror to get a
  * textual explanation of the error.
+ * </p>
  */
 function socket_bind ($socket, $address, $port = null) {}
 
@@ -1231,7 +1239,7 @@ function socket_export_stream ($socket) {}
  * </p>
  * @param int $flags <p>
  * </p>
- * @return int 
+ * @return int the number of bytes sent, or false on failure.
  */
 function socket_sendmsg ($socket, array $message, $flags) {}
 
@@ -1258,28 +1266,6 @@ function socket_recvmsg ($socket, $message, $flags = null) {}
  * @return int 
  */
 function socket_cmsg_space ($level, $type) {}
-
-/**
- * @param $host
- * @param $service [optional]
- * @param $hints [optional]
- */
-function socket_addrinfo_lookup ($host, $service = null, $hints = null) {}
-
-/**
- * @param $addr
- */
-function socket_addrinfo_connect ($addr) {}
-
-/**
- * @param $addr
- */
-function socket_addrinfo_bind ($addr) {}
-
-/**
- * @param $addr
- */
-function socket_addrinfo_explain ($addr) {}
 
 /**
  * &Alias; <function>socket_get_option</function>
@@ -1987,17 +1973,6 @@ define ('IPPROTO_IPV6', 41);
 define ('SOL_TCP', 6);
 define ('SOL_UDP', 17);
 define ('IPV6_UNICAST_HOPS', 16);
-define ('AI_PASSIVE', 1);
-define ('AI_CANONNAME', 2);
-define ('AI_NUMERICHOST', 4);
-define ('AI_V4MAPPED', 8);
-define ('AI_ALL', 16);
-define ('AI_ADDRCONFIG', 32);
-define ('AI_IDN', 64);
-define ('AI_CANONIDN', 128);
-define ('AI_IDN_ALLOW_UNASSIGNED', 256);
-define ('AI_IDN_USE_STD3_ASCII_RULES', 512);
-define ('AI_NUMERICSERV', 1024);
 define ('IPV6_RECVPKTINFO', 49);
 define ('IPV6_PKTINFO', 50);
 define ('IPV6_RECVHOPLIMIT', 51);
@@ -2008,4 +1983,4 @@ define ('SCM_RIGHTS', 1);
 define ('SCM_CREDENTIALS', 2);
 define ('SO_PASSCRED', 16);
 
-// End of sockets v.7.2.0-dev
+// End of sockets v.7.1.1

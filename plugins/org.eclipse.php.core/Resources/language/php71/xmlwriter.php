@@ -1,6 +1,6 @@
 <?php
 
-// Start of xmlwriter v.7.0.0-dev
+// Start of xmlwriter v.7.1.1
 
 class XMLWriter  {
 
@@ -11,10 +11,10 @@ class XMLWriter  {
 	 * The URI of the resource for the output.
 	 * </p>
 	 * @return bool Object oriented style: Returns true on success or false on failure
-	 * </p>
 	 * <p>
 	 * Procedural style: Returns a new xmlwriter resource for later use with the
 	 * xmlwriter functions on success, false on error.
+	 * </p>
 	 */
 	public function openUri ($uri) {}
 
@@ -22,10 +22,10 @@ class XMLWriter  {
 	 * Create new xmlwriter using memory for string output
 	 * @link http://www.php.net/manual/en/function.xmlwriter-open-memory.php
 	 * @return bool Object oriented style: Returns true on success or false on failure
-	 * </p>
 	 * <p>
 	 * Procedural style: Returns a new xmlwriter resource for later use with the
 	 * xmlwriter functions on success, false on error.
+	 * </p>
 	 */
 	public function openMemory () {}
 
@@ -727,4 +727,4 @@ function xmlwriter_output_memory ($xmlwriter, $flush = null) {}
  */
 function xmlwriter_flush ($xmlwriter, $empty = null) {}
 
-// End of xmlwriter v.7.0.0-dev
+// End of xmlwriter v.7.1.1
