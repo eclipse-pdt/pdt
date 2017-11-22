@@ -1,6 +1,6 @@
 <?php
 
-// Start of zip v.1.13.4
+// Start of zip v.1.13.5
 
 class ZipArchive  {
 	const CREATE = 1;
@@ -767,4 +767,4 @@ function zip_entry_compressedsize ($zip_entry) {}
  */
 function zip_entry_compressionmethod ($zip_entry) {}
 
-// End of zip v.1.13.4
+// End of zip v.1.13.5

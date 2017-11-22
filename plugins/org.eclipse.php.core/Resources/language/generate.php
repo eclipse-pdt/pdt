@@ -242,7 +242,7 @@ function parse_phpdoc_functions ($phpdocDir) {
 			}
 			if (preg_match ('@<refsect1\s+role=["\']returnvalues["\']>(.*?)</refsect1>@s', $xml, $match)) {
 				$returnvalues = $match[1];
-				if (preg_match ('@<para>\s*(Returns)?(.*)</para>?@s', $returnvalues, $match)) {
+				if (preg_match ('@<para>\s*(Returns)?(.*)</para>@s', $returnvalues, $match)) {
 					$functionsDoc[$refname]['returndoc'] = xml_to_phpdoc ($match[2]);
 				}
 			}
@@ -447,6 +447,7 @@ function print_class ($classRef, $tabs = 0) {
 	print_doccomment ($classRef, $tabs);
 	print_tabs ($tabs);
 	if ($classRef->isFinal()) print "final ";
+	if (!$classRef->isInterface() && $classRef->isAbstract()) print "abstract ";
 
 	print $classRef->isInterface() ? "interface " : "class ";
 	print clean_php_identifier($classRef->getName())." ";
@@ -567,7 +568,7 @@ function print_class ($classRef, $tabs = 0) {
 function print_property ($propertyRef, $tabs = 0) {
 	print_doccomment ($propertyRef, $tabs);
 	print_tabs ($tabs);
-	print_modifiers ($propertyRef);
+	print_modifiers ($propertyRef, array("abstract"));
 	print "\${$propertyRef->getName()};\n";
 }
 
@@ -596,7 +597,11 @@ function print_function ($functionRef, $tabs = 0) {
 	} else {
 		print_parameters_ref ($functionRef->getParameters());
 	}
-	print ") {}\n";
+	if ($functionRef instanceof ReflectionMethod && $functionRef->isAbstract()) {
+		print ");\n";
+	} else {
+		print ") {}\n";
+	}
 }
 
 
@@ -746,9 +751,11 @@ function print_class_constants ($constants, $tabs = 0) {
 /**
  * Prints modifiers of reflection object in format of PHP code
  * @param ref Reflection some reflection object
+ * @param excludeModifierKeywords array exclude modifier keywords
  */
-function print_modifiers ($ref) {
+function print_modifiers ($ref, $excludeModifierKeywords = array()) {
 	$modifiers = Reflection::getModifierNames ($ref->getModifiers());
+	$modifiers = array_diff ($modifiers, $excludeModifierKeywords);
 	if (count ($modifiers) > 0) {
 		print implode(' ', $modifiers);
 		print " ";
@@ -823,7 +830,7 @@ function print_doccomment ($ref, $tabs = 0) {
 			if ($parameters) {
 				foreach ($parameters as $parameter) {
 					print_tabs ($tabs);
-					print " * @param {$parameter['type']} {$parameter['name']}";
+					print " * @param {$parameter['type']} \${$parameter['name']}";
 					if (@$parameter['isoptional']) {
 						print " [optional]";
 					}
@@ -952,6 +959,21 @@ function strip_tags_special ($str) {
     $str = preg_replace ("/<(\/?)table>/", "###($1table)###", $str);
     $str = str_replace ("<row>", "###(tr valign=\"top\")###", $str);
     $str = str_replace ("</row>", "###(/tr)###", $str);
+
+    // Bug 522585 - Documentation of PHP function header() is misformatted
+    $str = str_replace ("<![CDATA[", "###(pre)###", $str);
+    $str = str_replace ("]]>", "###(/pre)###", $str);
+    preg_match_all ("@(<\?php.*?\?>)@si", $str, $matches);
+    if ($matches) {
+        foreach ($matches[1] as $v) {
+            $str = str_replace ($v, "###(code)###" . strtr (htmlspecialchars ($v), array(
+                "/" => "&#47;",
+                "*" => "&#42;",
+                "#" => "&#35;"
+            )) . "###(/code)###", $str);
+        }
+    }
+
     $str = preg_replace ("/<(\/?)entry>/", "###($1td)###", $str);
     $str = preg_replace ("/<(\/?)para>/", "###($1p)###", $str);
     // now strip the remaining tags
@@ -959,6 +981,10 @@ function strip_tags_special ($str) {
     // and restore the translated ones
     $str = str_replace ("###(", "<", $str);
     $str = str_replace (")###", ">", $str);
+    // convert some problematic php comment characters
+    $str = strtr ($str, array(
+        "*" => "&#42;"
+    ));
     return $str;
 }
 

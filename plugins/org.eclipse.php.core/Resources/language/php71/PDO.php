@@ -1,6 +1,6 @@
 <?php
 
-// Start of PDO v.7.2.0-dev
+// Start of PDO v.7.1.1
 
 class PDOException extends RuntimeException implements Throwable {
 	protected $message;
@@ -110,6 +110,12 @@ class PDO  {
 	const FETCH_ORI_REL = 5;
 	const CURSOR_FWDONLY = 0;
 	const CURSOR_SCROLL = 1;
+	const DBLIB_ATTR_CONNECTION_TIMEOUT = 1000;
+	const DBLIB_ATTR_QUERY_TIMEOUT = 1001;
+	const DBLIB_ATTR_STRINGIFY_UNIQUEIDENTIFIER = 1002;
+	const FB_ATTR_DATE_FORMAT = 1000;
+	const FB_ATTR_TIME_FORMAT = 1001;
+	const FB_ATTR_TIMESTAMP_FORMAT = 1002;
 	const MYSQL_ATTR_USE_BUFFERED_QUERY = 1000;
 	const MYSQL_ATTR_LOCAL_INFILE = 1001;
 	const MYSQL_ATTR_INIT_COMMAND = 1002;
@@ -124,6 +130,17 @@ class PDO  {
 	const MYSQL_ATTR_SSL_CIPHER = 1011;
 	const MYSQL_ATTR_SERVER_PUBLIC_KEY = 1012;
 	const MYSQL_ATTR_MULTI_STATEMENTS = 1013;
+	const ODBC_ATTR_USE_CURSOR_LIBRARY = 1000;
+	const ODBC_ATTR_ASSUME_UTF8 = 1001;
+	const ODBC_SQL_USE_IF_NEEDED = 0;
+	const ODBC_SQL_USE_DRIVER = 2;
+	const ODBC_SQL_USE_ODBC = 1;
+	const PGSQL_ATTR_DISABLE_PREPARES = 1000;
+	const PGSQL_TRANSACTION_IDLE = 0;
+	const PGSQL_TRANSACTION_ACTIVE = 1;
+	const PGSQL_TRANSACTION_INTRANS = 2;
+	const PGSQL_TRANSACTION_INERROR = 3;
+	const PGSQL_TRANSACTION_UNKNOWN = 4;
 
 
 	/**
@@ -219,9 +236,11 @@ class PDO  {
 	 * The following example incorrectly relies on the return value of
 	 * PDO::exec, wherein a statement that affected 0 rows
 	 * results in a call to die:
-	 * exec() or die(print_r($db->errorInfo(), true));
-	 * ?>
-	 * ]]>
+	 * <pre>
+	 * <code>&lt;?php
+	 * $db-&gt;exec() or die(print_r($db-&gt;errorInfo(), true)); &#47;&#47; incorrect
+	 * ?&gt;</code>
+	 * </pre>
 	 */
 	public function exec ($statement) {}
 
@@ -334,7 +353,7 @@ class PDO  {
 	 * Retrieve a database connection attribute
 	 * @link http://www.php.net/manual/en/pdo.getattribute.php
 	 * @param int $attribute <p>
-	 * One of the PDO::ATTR_* constants. The constants that
+	 * One of the PDO::ATTR_&#42; constants. The constants that
 	 * apply to database connections are as follows:
 	 * PDO::ATTR_AUTOCOMMIT
 	 * PDO::ATTR_CASE
@@ -396,12 +415,12 @@ class PDOStatement implements Traversable {
 	 * All values are treated as PDO::PARAM_STR.
 	 * </p>
 	 * <p>
-	 * You cannot bind multiple values to a single parameter; for example,
-	 * you cannot bind two values to a single named parameter in an IN()
+	 * Multiple values cannot be bound to a single parameter; for example,
+	 * it is not allowed to bind two values to a single named parameter in an IN()
 	 * clause.
 	 * </p>
 	 * <p>
-	 * You cannot bind more values than specified; if more keys exist in 
+	 * Binding more values than specified is not possible; if more keys exist in 
 	 * input_parameters than in the SQL specified 
 	 * in the PDO::prepare, then the statement will 
 	 * fail and an error is emitted.
@@ -415,7 +434,7 @@ class PDOStatement implements Traversable {
 	 * @link http://www.php.net/manual/en/pdostatement.fetch.php
 	 * @param int $fetch_style [optional] <p>
 	 * Controls how the next row will be returned to the caller. This value
-	 * must be one of the PDO::FETCH_* constants,
+	 * must be one of the PDO::FETCH_&#42; constants,
 	 * defaulting to value of PDO::ATTR_DEFAULT_FETCH_MODE
 	 * (which defaults to PDO::FETCH_BOTH).
 	 * <p>
@@ -425,7 +444,7 @@ class PDOStatement implements Traversable {
 	 * @param int $cursor_orientation [optional] <p>
 	 * For a PDOStatement object representing a scrollable cursor, this
 	 * value determines which row will be returned to the caller. This value
-	 * must be one of the PDO::FETCH_ORI_* constants,
+	 * must be one of the PDO::FETCH_ORI_&#42; constants,
 	 * defaulting to PDO::FETCH_ORI_NEXT. To request a
 	 * scrollable cursor for your PDOStatement object, you must set the
 	 * PDO::ATTR_CURSOR attribute to
@@ -452,7 +471,7 @@ class PDOStatement implements Traversable {
 	 * Name of the PHP variable to bind to the SQL statement parameter.
 	 * </p>
 	 * @param int $data_type [optional] <p>
-	 * Explicit data type for the parameter using the PDO::PARAM_*
+	 * Explicit data type for the parameter using the PDO::PARAM_&#42;
 	 * constants.
 	 * To return an INOUT parameter from a stored procedure, 
 	 * use the bitwise OR operator to set the PDO::PARAM_INPUT_OUTPUT bits
@@ -481,7 +500,7 @@ class PDOStatement implements Traversable {
 	 * Name of the PHP variable to which the column will be bound.
 	 * </p>
 	 * @param int $type [optional] <p>
-	 * Data type of the parameter, specified by the PDO::PARAM_*
+	 * Data type of the parameter, specified by the PDO::PARAM_&#42;
 	 * constants.
 	 * </p>
 	 * @param int $maxlen [optional] <p>
@@ -508,7 +527,7 @@ class PDOStatement implements Traversable {
 	 * The value to bind to the parameter.
 	 * </p>
 	 * @param int $data_type [optional] <p>
-	 * Explicit data type for the parameter using the PDO::PARAM_*
+	 * Explicit data type for the parameter using the PDO::PARAM_&#42;
 	 * constants.
 	 * </p>
 	 * @return bool true on success or false on failure
@@ -531,7 +550,7 @@ class PDOStatement implements Traversable {
 	 * fetches the first column.
 	 * </p>
 	 * @return mixed PDOStatement::fetchColumn returns a single column
-	 * in the next row of a result set.
+	 * from the next row of a result set or false if there are no more rows.
 	 * </p>
 	 * <p>
 	 * There is no way to return another column from the same row if you
@@ -718,7 +737,7 @@ class PDOStatement implements Traversable {
 	 * <tr valign="top">
 	 * <td>pdo_type</td>
 	 * <td>The type of this column as represented by the
-	 * PDO::PARAM_*
+	 * PDO::PARAM_&#42;
 	 * constants.</td>
 	 * </tr>
 	 * </table>
@@ -732,7 +751,7 @@ class PDOStatement implements Traversable {
 	 * Set the default fetch mode for this statement
 	 * @link http://www.php.net/manual/en/pdostatement.setfetchmode.php
 	 * @param int $mode <p>
-	 * The fetch mode must be one of the PDO::FETCH_* constants.
+	 * The fetch mode must be one of the PDO::FETCH_&#42; constants.
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
@@ -770,4 +789,4 @@ final class PDORow  {
 
 function pdo_drivers () {}
 
-// End of PDO v.7.2.0-dev
+// End of PDO v.7.1.1

@@ -1,6 +1,6 @@
 <?php
 
-// Start of mysqli v.7.2.0-dev
+// Start of mysqli v.7.1.1
 
 final class mysqli_sql_exception extends RuntimeException implements Throwable {
 	protected $message;
@@ -142,10 +142,10 @@ class mysqli  {
 	 * @link http://www.php.net/manual/en/mysqli.commit.php
 	 * @param mysqli $link 
 	 * @param int $flags [optional] <p>
-	 * A bitmask of MYSQLI_TRANS_COR_* constants.
+	 * A bitmask of MYSQLI_TRANS_COR_&#42; constants.
 	 * </p>
 	 * @param string $name [optional] <p>
-	 * If provided then COMMIT/*name*/ is executed.
+	 * If provided then COMMIT/&#42;name&#42;/ is executed.
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
@@ -280,7 +280,7 @@ class mysqli  {
 	 * If not provided or &null;, the MySQL server will attempt to authenticate
 	 * the user against those user records which have no password only. This
 	 * allows one username to be used with different permissions (depending
-	 * on if a password as provided or not).
+	 * on if a password is provided or not).
 	 * </p>
 	 * @param string $dbname [optional] <p>
 	 * If provided will specify the default database to be used when
@@ -421,10 +421,10 @@ class mysqli  {
 	 * has been run on for which the function could poll results.
 	 * </p>
 	 * @param int $sec <p>
-	 * Number of seconds to wait, must be non-negative.
+	 * Maximum number of seconds to wait, must be non-negative.
 	 * </p>
 	 * @param int $usec [optional] <p>
-	 * Number of microseconds to wait, must be non-negative.
+	 * Maximum number of microseconds to wait, must be non-negative.
 	 * </p>
 	 * @return int number of ready connections upon success, false otherwise.
 	 */
@@ -495,7 +495,7 @@ class mysqli  {
 	 * mysqli_poll is then used to get results from such
 	 * queries.
 	 * </p>
-	 * @return mysqli_result|boolean For successful SELECT, SHOW, DESCRIBE or
+	 * @return mixed false on failure. For successful SELECT, SHOW, DESCRIBE or
 	 * EXPLAIN queries mysqli_query will return
 	 * a mysqli_result object. For other successful queries mysqli_query will
 	 * return true.
@@ -643,10 +643,10 @@ class mysqli  {
 	 * @link http://www.php.net/manual/en/mysqli.rollback.php
 	 * @param mysqli $link 
 	 * @param int $flags [optional] <p>
-	 * A bitmask of MYSQLI_TRANS_COR_* constants.
+	 * A bitmask of MYSQLI_TRANS_COR_&#42; constants.
 	 * </p>
 	 * @param string $name [optional] <p>
-	 * If provided then ROLLBACK/*name*/ is executed.
+	 * If provided then ROLLBACK/&#42;name&#42;/ is executed.
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
@@ -793,7 +793,7 @@ class mysqli  {
 	 * @link http://www.php.net/manual/en/mysqli.refresh.php
 	 * @param resource $link 
 	 * @param int $options <p>
-	 * The options to refresh, using the MYSQLI_REFRESH_* constants as documented
+	 * The options to refresh, using the MYSQLI_REFRESH_&#42; constants as documented
 	 * within the MySQLi constants documentation.
 	 * </p>
 	 * <p>
@@ -967,7 +967,7 @@ class mysqli_result implements Traversable {
 	 * The width of the field, in bytes, as specified in the table definition. Note that 
 	 * this number (bytes) might differ from your table definition value (characters), depending on
 	 * the character set you use. For example, the character set utf8 has 3 bytes per character, 
-	 * so varchar(10) will return a length of 30 for utf8 (10*3), but return 10 for latin1 (10*1).
+	 * so varchar(10) will return a length of 30 for utf8 (10&#42;3), but return 10 for latin1 (10&#42;1).
 	 * </td>
 	 * </tr>
 	 * <tr valign="top">
@@ -1642,7 +1642,7 @@ function mysqli_get_client_info ($link) {}
  * @link http://www.php.net/manual/en/mysqli.get-client-version.php
  * @param mysqli $link 
  * @return int A number that represents the MySQL client library version in format:
- * main_version*10000 + minor_version *100 + sub_version.
+ * main_version&#42;10000 + minor_version &#42;100 + sub_version.
  * For example, 4.1.0 is returned as 40100.
  * </p>
  * <p>
@@ -2653,7 +2653,7 @@ define ('MYSQLI_REPORT_OFF', 0);
  * </p>
  * @link http://www.php.net/manual/en/mysqli.constants.php
  */
-define ('MYSQLI_DEBUG_TRACE_ENABLED', 1);
+define ('MYSQLI_DEBUG_TRACE_ENABLED', 0);
 
 /**
  * <p>
@@ -2799,4 +2799,4 @@ define ('MYSQLI_TRANS_COR_RELEASE', 4);
  */
 define ('MYSQLI_TRANS_COR_NO_RELEASE', 8);
 
-// End of mysqli v.7.2.0-dev
+// End of mysqli v.7.1.1
