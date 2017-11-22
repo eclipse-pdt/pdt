@@ -1,6 +1,6 @@
 <?php
 
-// Start of iconv v.7.2.0-dev
+// Start of iconv v.7.1.1
 
 /**
  * Convert string to requested character encoding
@@ -21,6 +21,13 @@
  * discarded. Otherwise, E_NOTICE is generated and the function
  * will return false.
  * </p>
+ * <p>
+ * If and how //TRANSLIT works exactly depends on the
+ * system's iconv() implementation (cf. ICONV_IMPL).
+ * Some implementations are known to ignore //TRANSLIT,
+ * so the conversion is likely to fail for characters which are illegal for
+ * the out_charset.
+ * </p>
  * @param string $str <p>
  * The string to be converted.
  * </p>
@@ -40,11 +47,11 @@ function iconv ($in_charset, $out_charset, $str) {}
  * </p>
  * @return mixed the current value of the internal configuration variable if
  * successful or false on failure.
- * </p>
  * <p>
  * If type is omitted or set to "all",
  * iconv_get_encoding returns an array that
  * stores all these variables.
+ * </p>
  */
 function iconv_get_encoding ($type = null) {}
 
@@ -126,10 +133,12 @@ function iconv_strlen ($str, $charset = null) {}
  * </p>
  * @return string the portion of str specified by the
  * offset and length parameters.
- * </p>
  * <p>
  * If str is shorter than offset
  * characters long, false will be returned.
+ * If str is exactly offset
+ * characters long, an empty string will be returned.
+ * </p>
  */
 function iconv_substr ($str, $offset, $length = null, $charset = null) {}
 
@@ -145,6 +154,7 @@ function iconv_substr ($str, $offset, $length = null, $charset = null) {}
  * @param int $offset [optional] <p>
  * The optional offset parameter specifies
  * the position from which the search should be performed.
+ * If the offset is negative, it is counted from the end of the string.
  * </p>
  * @param string $charset [optional] <p>
  * If charset parameter is omitted,
@@ -153,10 +163,10 @@ function iconv_substr ($str, $offset, $length = null, $charset = null) {}
  * </p>
  * @return int the numeric position of the first occurrence of
  * needle in haystack.
- * </p>
  * <p>
  * If needle is not found,
  * iconv_strpos will return false.
+ * </p>
  */
 function iconv_strpos ($haystack, $needle, $offset = null, $charset = null) {}
 
@@ -176,10 +186,10 @@ function iconv_strpos ($haystack, $needle, $offset = null, $charset = null) {}
  * </p>
  * @return int the numeric position of the last occurrence of
  * needle in haystack.
- * </p>
  * <p>
  * If needle is not found,
  * iconv_strrpos will return false.
+ * </p>
  */
 function iconv_strrpos ($haystack, $needle, $charset = null) {}
 
@@ -384,13 +394,13 @@ function iconv_mime_decode ($encoded_header, $mode = null, $charset = null) {}
  * MIME header fields specified by
  * encoded_headers on success, or false
  * if an error occurs during the decoding.
- * </p>
  * <p>
  * Each key of the return value represents an individual
  * field name and the corresponding element represents a field value.
  * If more than one field of the same name are present,
  * iconv_mime_decode_headers automatically incorporates
  * them into a numerically indexed array in the order of occurrence.
+ * </p>
  */
 function iconv_mime_decode_headers ($encoded_headers, $mode = null, $charset = null) {}
 
@@ -419,4 +429,4 @@ define ('ICONV_MIME_DECODE_STRICT', 1);
  */
 define ('ICONV_MIME_DECODE_CONTINUE_ON_ERROR', 2);
 
-// End of iconv v.7.2.0-dev
+// End of iconv v.7.1.1

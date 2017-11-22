@@ -712,7 +712,7 @@ class DOMDocument extends DOMNode  {
 	 * Searches for all elements with given local tag name
 	 * @link http://www.php.net/manual/en/domdocument.getelementsbytagname.php
 	 * @param string $name <p>
-	 * The local name (without namespace) of the tag to match on. The special value *
+	 * The local name (without namespace) of the tag to match on. The special value &#42;
 	 * matches all tags. 
 	 * </p>
 	 * @return DOMNodeList A new DOMNodeList object containing all the matched 
@@ -772,11 +772,11 @@ class DOMDocument extends DOMNode  {
 	 * @link http://www.php.net/manual/en/domdocument.getelementsbytagnamens.php
 	 * @param string $namespaceURI <p>
 	 * The namespace URI of the elements to match on. 
-	 * The special value * matches all namespaces.
+	 * The special value &#42; matches all namespaces.
 	 * </p>
 	 * @param string $localName <p>
 	 * The local name of the elements to match on. 
-	 * The special value * matches all local names.
+	 * The special value &#42; matches all local names.
 	 * </p>
 	 * @return DOMNodeList A new DOMNodeList object containing all the matched 
 	 * elements.
@@ -1892,7 +1892,10 @@ class DOMElement extends DOMNode  {
 	 * @param string $name <p>
 	 * The name of the attribute.
 	 * </p>
-	 * @return DOMAttr The attribute node.
+	 * @return DOMAttr The attribute node. Note that for XML namespace declarations
+	 * (xmlns and xmlns:&#42; attributes) an 
+	 * instance of DOMNameSpaceNode is returned instead of a
+	 * DOMAttr.
 	 */
 	public function getAttributeNode ($name) {}
 
@@ -1920,7 +1923,7 @@ class DOMElement extends DOMNode  {
 	 * Gets elements by tagname
 	 * @link http://www.php.net/manual/en/domelement.getelementsbytagname.php
 	 * @param string $name <p>
-	 * The tag name. Use * to return all elements within 
+	 * The tag name. Use &#42; to return all elements within 
 	 * the element tree.
 	 * </p>
 	 * @return DOMNodeList This function returns a new instance of the class
@@ -1981,7 +1984,10 @@ class DOMElement extends DOMNode  {
 	 * @param string $localName <p>
 	 * The local name.
 	 * </p>
-	 * @return DOMAttr The attribute node.
+	 * @return DOMAttr The attribute node. Note that for XML namespace declarations
+	 * (xmlns and xmlns:&#42; attributes) an 
+	 * instance of DOMNameSpaceNode is returned instead of a
+	 * DOMAttr.
 	 */
 	public function getAttributeNodeNS ($namespaceURI, $localName) {}
 
@@ -2002,7 +2008,7 @@ class DOMElement extends DOMNode  {
 	 * The namespace URI.
 	 * </p>
 	 * @param string $localName <p>
-	 * The local name. Use * to return all elements within 
+	 * The local name. Use &#42; to return all elements within 
 	 * the element tree.
 	 * </p>
 	 * @return DOMNodeList This function returns a new instance of the class
@@ -4521,11 +4527,11 @@ class DOMXPath  {
 	 * the given XPath expression. Any expression which
 	 * does not return nodes will return an empty
 	 * DOMNodeList.
-	 * </p>
 	 * <p>
 	 * If the expression is malformed or the
 	 * contextnode is invalid,
 	 * DOMXPath::query returns false.
+	 * </p>
 	 */
 	public function query ($expression, DOMNode $contextnode = null, $registerNodeNS = null) {}
 
@@ -4546,11 +4552,11 @@ class DOMXPath  {
 	 * </p>
 	 * @return mixed a typed result if possible or a DOMNodeList 
 	 * containing all nodes matching the given XPath expression. 
-	 * </p>
 	 * <p>
 	 * If the expression is malformed or the
 	 * contextnode is invalid,
 	 * DOMXPath::evaluate returns false.
+	 * </p>
 	 */
 	public function evaluate ($expression, DOMNode $contextnode = null, $registerNodeNS = null) {}
 

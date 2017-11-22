@@ -1,6 +1,6 @@
 <?php
 
-// Start of posix v.7.2.0-dev
+// Start of posix v.7.1.1
 
 /**
  * Send a signal to a process
@@ -174,11 +174,11 @@ function posix_getsid ($pid) {}
  * 17:01:36 MEST 1999)
  * machine - system architecture (e.g. i586)
  * domainname - DNS domainname (e.g. example.com)
- * </p>
  * <p>
  * domainname is a GNU extension and not part of POSIX.1, so this
  * field is only available on GNU systems or when using the GNU
  * libc.
+ * </p>
  */
 function posix_uname () {}
 
@@ -866,4 +866,4 @@ define ('POSIX_RLIMIT_STACK', 3);
  */
 define ('POSIX_RLIMIT_INFINITY', -1);
 
-// End of posix v.7.2.0-dev
+// End of posix v.7.1.1

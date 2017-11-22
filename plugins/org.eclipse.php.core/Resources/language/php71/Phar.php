@@ -502,9 +502,14 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Seek
 	 * @param string $privatekey [optional] <p>
 	 * The contents of an OpenSSL private key, as extracted from a certificate or
 	 * OpenSSL key file:
-	 * setSignatureAlgorithm(Phar::OPENSSL, $pkey);
-	 * ?>
-	 * ]]>
+	 * <pre>
+	 * <code>&lt;?php
+	 * $private = openssl_get_privatekey(file_get_contents('private.pem'));
+	 * $pkey = '';
+	 * openssl_pkey_export($private, $pkey);
+	 * $p-&gt;setSignatureAlgorithm(Phar::OPENSSL, $pkey);
+	 * ?&gt;</code>
+	 * </pre>
 	 * See phar introduction for instructions on
 	 * naming and placement of the public key file.
 	 * </p>
@@ -713,49 +718,52 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Seek
 	 * An array mapping additional file extensions to MIME type.
 	 * If the default mapping is sufficient, pass an empty array.
 	 * By default, these extensions are mapped to these MIME types:
-	 * Phar::PHPS, // pass to highlight_file()
-	 * 'c' => 'text/plain',
-	 * 'cc' => 'text/plain',
-	 * 'cpp' => 'text/plain',
-	 * 'c++' => 'text/plain',
-	 * 'dtd' => 'text/plain',
-	 * 'h' => 'text/plain',
-	 * 'log' => 'text/plain',
-	 * 'rng' => 'text/plain',
-	 * 'txt' => 'text/plain',
-	 * 'xsd' => 'text/plain',
-	 * 'php' => Phar::PHP, // parse as PHP
-	 * 'inc' => Phar::PHP, // parse as PHP
-	 * 'avi' => 'video/avi',
-	 * 'bmp' => 'image/bmp',
-	 * 'css' => 'text/css',
-	 * 'gif' => 'image/gif',
-	 * 'htm' => 'text/html',
-	 * 'html' => 'text/html',
-	 * 'htmls' => 'text/html',
-	 * 'ico' => 'image/x-ico',
-	 * 'jpe' => 'image/jpeg',
-	 * 'jpg' => 'image/jpeg',
-	 * 'jpeg' => 'image/jpeg',
-	 * 'js' => 'application/x-javascript',
-	 * 'midi' => 'audio/midi',
-	 * 'mid' => 'audio/midi',
-	 * 'mod' => 'audio/mod',
-	 * 'mov' => 'movie/quicktime',
-	 * 'mp3' => 'audio/mp3',
-	 * 'mpg' => 'video/mpeg',
-	 * 'mpeg' => 'video/mpeg',
-	 * 'pdf' => 'application/pdf',
-	 * 'png' => 'image/png',
-	 * 'swf' => 'application/shockwave-flash',
-	 * 'tif' => 'image/tiff',
-	 * 'tiff' => 'image/tiff',
-	 * 'wav' => 'audio/wav',
-	 * 'xbm' => 'image/xbm',
-	 * 'xml' => 'text/xml',
+	 * <pre>
+	 * <code>&lt;?php
+	 * $mimes = array(
+	 * 'phps' =&gt; Phar::PHPS, &#47;&#47; pass to highlight_file()
+	 * 'c' =&gt; 'text&#47;plain',
+	 * 'cc' =&gt; 'text&#47;plain',
+	 * 'cpp' =&gt; 'text&#47;plain',
+	 * 'c++' =&gt; 'text&#47;plain',
+	 * 'dtd' =&gt; 'text&#47;plain',
+	 * 'h' =&gt; 'text&#47;plain',
+	 * 'log' =&gt; 'text&#47;plain',
+	 * 'rng' =&gt; 'text&#47;plain',
+	 * 'txt' =&gt; 'text&#47;plain',
+	 * 'xsd' =&gt; 'text&#47;plain',
+	 * 'php' =&gt; Phar::PHP, &#47;&#47; parse as PHP
+	 * 'inc' =&gt; Phar::PHP, &#47;&#47; parse as PHP
+	 * 'avi' =&gt; 'video&#47;avi',
+	 * 'bmp' =&gt; 'image&#47;bmp',
+	 * 'css' =&gt; 'text&#47;css',
+	 * 'gif' =&gt; 'image&#47;gif',
+	 * 'htm' =&gt; 'text&#47;html',
+	 * 'html' =&gt; 'text&#47;html',
+	 * 'htmls' =&gt; 'text&#47;html',
+	 * 'ico' =&gt; 'image&#47;x-ico',
+	 * 'jpe' =&gt; 'image&#47;jpeg',
+	 * 'jpg' =&gt; 'image&#47;jpeg',
+	 * 'jpeg' =&gt; 'image&#47;jpeg',
+	 * 'js' =&gt; 'application&#47;x-javascript',
+	 * 'midi' =&gt; 'audio&#47;midi',
+	 * 'mid' =&gt; 'audio&#47;midi',
+	 * 'mod' =&gt; 'audio&#47;mod',
+	 * 'mov' =&gt; 'movie&#47;quicktime',
+	 * 'mp3' =&gt; 'audio&#47;mp3',
+	 * 'mpg' =&gt; 'video&#47;mpeg',
+	 * 'mpeg' =&gt; 'video&#47;mpeg',
+	 * 'pdf' =&gt; 'application&#47;pdf',
+	 * 'png' =&gt; 'image&#47;png',
+	 * 'swf' =&gt; 'application&#47;shockwave-flash',
+	 * 'tif' =&gt; 'image&#47;tiff',
+	 * 'tiff' =&gt; 'image&#47;tiff',
+	 * 'wav' =&gt; 'audio&#47;wav',
+	 * 'xbm' =&gt; 'image&#47;xbm',
+	 * 'xml' =&gt; 'text&#47;xml',
 	 * );
-	 * ?>
-	 * ]]>
+	 * ?&gt;</code>
+	 * </pre>
 	 * </p>
 	 * @param callable $rewrites [optional] <p>
 	 * The rewrites function is passed a string as its only parameter and must return a string or false.
@@ -1236,10 +1244,9 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	 * @link http://www.php.net/manual/en/phardata.decompress.php
 	 * @param string $extension [optional] <p>
 	 * For decompressing, the default file extension
-	 * is .phar.tar.
-	 * Use this parameter to specify another file extension. Be aware
-	 * that no non-executable archives cannot contain .phar
-	 * in their filename.
+	 * is .tar.
+	 * Use this parameter to specify another file extension. Be aware that only
+	 * executable archives can contain .phar in their filename.
 	 * </p>
 	 * @return object A PharData object is returned.
 	 */
