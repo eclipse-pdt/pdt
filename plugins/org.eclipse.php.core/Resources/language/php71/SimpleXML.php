@@ -1,6 +1,6 @@
 <?php
 
-// Start of SimpleXML v.7.0.0-dev
+// Start of SimpleXML v.7.1.1
 
 class SimpleXMLElement implements Traversable {
 
@@ -30,7 +30,7 @@ class SimpleXMLElement implements Traversable {
 	public function asXML ($filename = null) {}
 
 	/**
-	 * &Alias; <methodname>SimpleXMLElement::asXML</methodname>
+	 * Alias: SimpleXMLElement::asXML
 	 * @link http://www.php.net/manual/en/simplexmlelement.savexml.php
 	 * @param $filename [optional]
 	 */
@@ -74,10 +74,10 @@ class SimpleXMLElement implements Traversable {
 	 * </p>
 	 * @return SimpleXMLElement a SimpleXMLElement object that can be
 	 * iterated over to loop through the attributes on the tag.
-	 * </p>
 	 * <p>
-	 * Returns &null; if called on a SimpleXMLElement
+	 * Returns null if called on a SimpleXMLElement
 	 * object that already represents an attribute and not a tag.
+	 * </p>
 	 */
 	public function attributes ($ns = null, $is_prefix = null) {}
 
@@ -202,7 +202,7 @@ class SimpleXMLIterator extends SimpleXMLElement implements Traversable, Recursi
 	/**
 	 * Returns the current element
 	 * @link http://www.php.net/manual/en/simplexmliterator.current.php
-	 * @return mixed the current element as a SimpleXMLIterator object or &null; on failure.
+	 * @return mixed the current element as a SimpleXMLIterator object or null on failure.
 	 */
 	public function current () {}
 
@@ -261,7 +261,7 @@ class SimpleXMLIterator extends SimpleXMLElement implements Traversable, Recursi
 	public function asXML ($filename = null) {}
 
 	/**
-	 * &Alias; <methodname>SimpleXMLElement::asXML</methodname>
+	 * Alias: SimpleXMLElement::asXML
 	 * @link http://www.php.net/manual/en/simplexmlelement.savexml.php
 	 * @param $filename [optional]
 	 */
@@ -305,10 +305,10 @@ class SimpleXMLIterator extends SimpleXMLElement implements Traversable, Recursi
 	 * </p>
 	 * @return SimpleXMLElement a SimpleXMLElement object that can be
 	 * iterated over to loop through the attributes on the tag.
-	 * </p>
 	 * <p>
-	 * Returns &null; if called on a SimpleXMLElement
+	 * Returns null if called on a SimpleXMLElement
 	 * object that already represents an attribute and not a tag.
+	 * </p>
 	 */
 	public function attributes ($ns = null, $is_prefix = null) {}
 
@@ -479,7 +479,7 @@ function simplexml_load_file ($filename, $class_name = null, $options = null, $n
 function simplexml_load_string ($data, $class_name = null, $options = null, $ns = null, $is_prefix = null) {}
 
 /**
- * Get a <literal>SimpleXMLElement</literal> object from a DOM node.
+ * Get a SimpleXMLElement object from a DOM node.
  * @link http://www.php.net/manual/en/function.simplexml-import-dom.php
  * @param DOMNode $node <p>
  * A DOM Element node
@@ -494,4 +494,4 @@ function simplexml_load_string ($data, $class_name = null, $options = null, $ns 
  */
 function simplexml_import_dom (DOMNode $node, $class_name = null) {}
 
-// End of SimpleXML v.7.0.0-dev
+// End of SimpleXML v.7.1.1

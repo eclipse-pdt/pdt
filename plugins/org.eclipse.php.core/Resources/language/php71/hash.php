@@ -44,7 +44,7 @@ function hash_file ($algo, $filename, $raw_output = null) {}
  * Generate a keyed hash value using the HMAC method
  * @link http://www.php.net/manual/en/function.hash-hmac.php
  * @param string $algo <p>
- * Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..) See hash_algos for a list of supported algorithms.
+ * Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..) See hash_hmac_algos for a list of supported algorithms.
  * </p>
  * @param string $data <p>
  * Message to be hashed.
@@ -67,7 +67,7 @@ function hash_hmac ($algo, $data, $key, $raw_output = null) {}
  * Generate a keyed hash value using the HMAC method and the contents of a given file
  * @link http://www.php.net/manual/en/function.hash-hmac-file.php
  * @param string $algo <p>
- * Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..) See hash_algos for a list of supported algorithms.
+ * Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..) See hash_hmac_algos for a list of supported algorithms.
  * </p>
  * @param string $filename <p>
  * URL describing location of file to be hashed; Supports fopen wrappers.
@@ -190,12 +190,38 @@ function hash_algos () {}
 /**
  * Generate a PBKDF2 key derivation of a supplied password
  * @link http://www.php.net/manual/en/function.hash-pbkdf2.php
- * @param $algo
- * @param $password
- * @param $salt
- * @param $iterations
- * @param $length [optional]
- * @param $raw_output [optional]
+ * @param string $algo <p>
+ * Name of selected hashing algorithm (i.e. md5,
+ * sha256, haval160,4, etc..) See
+ * hash_algos for a list of supported algorithms.
+ * </p>
+ * @param string $password <p>
+ * The password to use for the derivation.
+ * </p>
+ * @param string $salt <p>
+ * The salt to use for the derivation. This value should be generated randomly.
+ * </p>
+ * @param int $iterations <p>
+ * The number of internal iterations to perform for the derivation.
+ * </p>
+ * @param int $length [optional] <p>
+ * The length of the output string. If raw_output
+ * is true this corresponds to the byte-length of the derived key, if
+ * raw_output is false this corresponds to twice the
+ * byte-length of the derived key (as every byte of the key is returned as
+ * two hexits).
+ * </p>
+ * <p>
+ * If 0 is passed, the entire output of the supplied
+ * algorithm is used.
+ * </p>
+ * @param bool $raw_output [optional] <p>
+ * When set to true, outputs raw binary data. false outputs lowercase
+ * hexits.
+ * </p>
+ * @return string a string containing the derived key as lowercase hexits unless
+ * raw_output is set to true in which case the raw
+ * binary representation of the derived key is returned.
  */
 function hash_pbkdf2 ($algo, $password, $salt, $iterations, $length = null, $raw_output = null) {}
 

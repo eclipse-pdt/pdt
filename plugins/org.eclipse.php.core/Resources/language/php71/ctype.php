@@ -1,6 +1,6 @@
 <?php
 
-// Start of ctype v.7.0.0-dev
+// Start of ctype v.7.1.1
 
 /**
  * Check for alphanumeric character(s)
@@ -84,7 +84,7 @@ function ctype_print ($text) {}
 
 /**
  * Check for any printable character which is not whitespace or an
-   alphanumeric character
+ * alphanumeric character
  * @link http://www.php.net/manual/en/function.ctype-punct.php
  * @param string $text <p>
  * The tested string.
@@ -130,4 +130,4 @@ function ctype_upper ($text) {}
  */
 function ctype_xdigit ($text) {}
 
-// End of ctype v.7.0.0-dev
+// End of ctype v.7.1.1
