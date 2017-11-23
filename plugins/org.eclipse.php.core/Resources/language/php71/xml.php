@@ -1,6 +1,6 @@
 <?php
 
-// Start of xml v.7.0.0-dev
+// Start of xml v.7.1.1
 
 /**
  * Create an XML parser
@@ -20,18 +20,15 @@
  * </p>
  * @return resource a resource handle for the new XML parser.
  */
-function xml_parser_create ($encoding = null) {}
+function xml_parser_create (string $encoding = null) {}
 
 /**
  * Create an XML parser with namespace support
  * @link http://www.php.net/manual/en/function.xml-parser-create-ns.php
  * @param string $encoding [optional] <p>
- * The optional encoding specifies the character
- * encoding for the input/output in PHP 4. Starting from PHP 5, the input
- * encoding is automatically detected, so that the
+ * The input encoding is automatically detected, so that the
  * encoding parameter specifies only the output
- * encoding. In PHP 4, the default output encoding is the same as the
- * input charset. In PHP 5.0.0 and 5.0.1, the default output charset is
+ * encoding. In PHP 5.0.0 and 5.0.1, the default output charset is
  * ISO-8859-1, while in PHP 5.0.2 and upper is UTF-8. The supported
  * encodings are ISO-8859-1, UTF-8 and
  * US-ASCII.
@@ -43,7 +40,7 @@ function xml_parser_create ($encoding = null) {}
  * </p>
  * @return resource a resource handle for the new XML parser.
  */
-function xml_parser_create_ns ($encoding = null, $separator = null) {}
+function xml_parser_create_ns (string $encoding = null, string $separator = null) {}
 
 /**
  * Use XML Parser within an object
@@ -85,7 +82,7 @@ function xml_set_object ($parser, &$object) {}
  * reference to the XML parser calling the handler.
  * @return bool true on success or false on failure
  */
-function xml_set_element_handler ($parser, $start_element_handler, $end_element_handler) {}
+function xml_set_element_handler ($parser, callable $start_element_handler, callable $end_element_handler) {}
 
 /**
  * Set up character data handler
@@ -109,7 +106,7 @@ function xml_set_element_handler ($parser, $start_element_handler, $end_element_
  * reference to the XML parser calling the handler.
  * @return bool true on success or false on failure
  */
-function xml_set_character_data_handler ($parser, $handler) {}
+function xml_set_character_data_handler ($parser, callable $handler) {}
 
 /**
  * Set up processing instruction (PI) handler
@@ -134,7 +131,7 @@ function xml_set_character_data_handler ($parser, $handler) {}
  * reference to the XML parser calling the handler.
  * @return bool true on success or false on failure
  */
-function xml_set_processing_instruction_handler ($parser, $handler) {}
+function xml_set_processing_instruction_handler ($parser, callable $handler) {}
 
 /**
  * Set up default handler
@@ -158,7 +155,7 @@ function xml_set_processing_instruction_handler ($parser, $handler) {}
  * reference to the XML parser calling the handler.
  * @return bool true on success or false on failure
  */
-function xml_set_default_handler ($parser, $handler) {}
+function xml_set_default_handler ($parser, callable $handler) {}
 
 /**
  * Set up unparsed entity declaration handler
@@ -187,7 +184,7 @@ function xml_set_default_handler ($parser, $handler) {}
  * handler.
  * @return bool true on success or false on failure
  */
-function xml_set_unparsed_entity_decl_handler ($parser, $handler) {}
+function xml_set_unparsed_entity_decl_handler ($parser, callable $handler) {}
 
 /**
  * Set up notation declaration handler
@@ -214,7 +211,7 @@ function xml_set_unparsed_entity_decl_handler ($parser, $handler) {}
  * reference to the XML parser calling the handler.
  * @return bool true on success or false on failure
  */
-function xml_set_notation_decl_handler ($parser, $handler) {}
+function xml_set_notation_decl_handler ($parser, callable $handler) {}
 
 /**
  * Set up external entity reference handler
@@ -245,7 +242,7 @@ function xml_set_notation_decl_handler ($parser, $handler) {}
  * reference to the XML parser calling the handler.
  * @return bool true on success or false on failure
  */
-function xml_set_external_entity_ref_handler ($parser, $handler) {}
+function xml_set_external_entity_ref_handler ($parser, callable $handler) {}
 
 /**
  * Set up start namespace declaration handler
@@ -274,7 +271,7 @@ function xml_set_external_entity_ref_handler ($parser, $handler) {}
  * reference to the XML parser calling the handler.
  * @return bool true on success or false on failure
  */
-function xml_set_start_namespace_decl_handler ($parser, $handler) {}
+function xml_set_start_namespace_decl_handler ($parser, callable $handler) {}
 
 /**
  * Set up end namespace declaration handler
@@ -302,7 +299,7 @@ function xml_set_start_namespace_decl_handler ($parser, $handler) {}
  * reference to the XML parser calling the handler.
  * @return bool true on success or false on failure
  */
-function xml_set_end_namespace_decl_handler ($parser, $handler) {}
+function xml_set_end_namespace_decl_handler ($parser, callable $handler) {}
 
 /**
  * Start parsing an XML document
@@ -321,7 +318,6 @@ function xml_set_end_namespace_decl_handler ($parser, $handler) {}
  * data sent in this parse.
  * </p>
  * @return int 1 on success or 0 on failure.
- * </p>
  * <p>
  * For unsuccessful parses, error information can be retrieved with
  * xml_get_error_code,
@@ -333,8 +329,9 @@ function xml_set_end_namespace_decl_handler ($parser, $handler) {}
  * <p>
  * Entity errors are reported at the end of the data thus only if
  * is_final is set and true.
+ * </p>
  */
-function xml_parse ($parser, $data, $is_final = null) {}
+function xml_parse ($parser, string $data, bool $is_final = null) {}
 
 /**
  * Parse XML data into an array structure
@@ -355,7 +352,7 @@ function xml_parse ($parser, $data, $is_final = null) {}
  * success. This is not the same as false and true, be careful with
  * operators such as ===.
  */
-function xml_parse_into_struct ($parser, $data, array &$values, array &$index = null) {}
+function xml_parse_into_struct ($parser, string $data, array &$values, array &$index = null) {}
 
 /**
  * Get XML parser error code
@@ -379,7 +376,7 @@ function xml_get_error_code ($parser) {}
  * @return string a string with a textual description of the error
  * code, or false if no description was found.
  */
-function xml_error_string ($code) {}
+function xml_error_string (int $code) {}
 
 /**
  * Get current line number for an XML parser
@@ -441,6 +438,7 @@ function xml_parser_free ($parser) {}
  * The following options are available:
  * <table>
  * XML parser options
+ * <table>
  * <tr valign="top">
  * <td>Option constant</td>
  * <td>Data type</td>
@@ -481,6 +479,7 @@ function xml_parser_free ($parser) {}
  * </td>
  * </tr>
  * </table>
+ * </table>
  * </p>
  * @param mixed $value <p>
  * The option's new value.
@@ -489,7 +488,7 @@ function xml_parser_free ($parser) {}
  * refer to a valid parser, or if the option could not be set. Else the
  * option is set and true is returned.
  */
-function xml_parser_set_option ($parser, $option, $value) {}
+function xml_parser_set_option ($parser, int $option, $value) {}
 
 /**
  * Get options from an XML parser
@@ -503,7 +502,7 @@ function xml_parser_set_option ($parser, $option, $value) {}
  * valid (generates also a E_WARNING).
  * Else the option's value is returned.
  */
-function xml_parser_get_option ($parser, $option) {}
+function xml_parser_get_option ($parser, int $option) {}
 
 /**
  * Encodes an ISO-8859-1 string to UTF-8
@@ -513,18 +512,18 @@ function xml_parser_get_option ($parser, $option) {}
  * </p>
  * @return string the UTF-8 translation of data.
  */
-function utf8_encode ($data) {}
+function utf8_encode (string $data) {}
 
 /**
  * Converts a string with ISO-8859-1 characters encoded with UTF-8
-   to single-byte ISO-8859-1
+ * to single-byte ISO-8859-1
  * @link http://www.php.net/manual/en/function.utf8-decode.php
  * @param string $data <p>
- * An UTF-8 encoded string.
+ * A UTF-8 encoded string.
  * </p>
  * @return string the ISO-8859-1 translation of data.
  */
-function utf8_decode ($data) {}
+function utf8_decode (string $data) {}
 
 define ('XML_ERROR_NONE', 0);
 define ('XML_ERROR_NO_MEMORY', 1);
@@ -552,6 +551,12 @@ define ('XML_OPTION_CASE_FOLDING', 1);
 define ('XML_OPTION_TARGET_ENCODING', 2);
 define ('XML_OPTION_SKIP_TAGSTART', 3);
 define ('XML_OPTION_SKIP_WHITE', 4);
+
+/**
+ * Holds the SAX implementation method.
+ * Can be libxml or expat.
+ * @link http://www.php.net/manual/en/xml.constants.php
+ */
 define ('XML_SAX_IMPL', "libxml");
 
-// End of xml v.7.0.0-dev
+// End of xml v.7.1.1

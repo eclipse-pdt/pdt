@@ -1,6 +1,6 @@
 <?php
 
-// Start of xmlreader v.7.2.0-dev
+// Start of xmlreader v.7.1.1
 
 class XMLReader  {
 	const NONE = 0;
@@ -40,10 +40,10 @@ class XMLReader  {
 	 * @param string $name <p>
 	 * The name of the attribute.
 	 * </p>
-	 * @return string The value of the attribute, or &null; if no attribute with the given
+	 * @return string The value of the attribute, or null if no attribute with the given
 	 * name is found or not positioned on an element node.
 	 */
-	public function getAttribute ($name) {}
+	public function getAttribute (string $name) {}
 
 	/**
 	 * Get the value of an attribute by index
@@ -51,11 +51,11 @@ class XMLReader  {
 	 * @param int $index <p>
 	 * The position of the attribute.
 	 * </p>
-	 * @return string The value of the attribute, or an empty string (before PHP 5.6) or &null;
+	 * @return string The value of the attribute, or an empty string (before PHP 5.6) or null
 	 * (from PHP 5.6 onwards) if no attribute exists at
 	 * index or is not positioned on the element.
 	 */
-	public function getAttributeNo ($index) {}
+	public function getAttributeNo (int $index) {}
 
 	/**
 	 * Get the value of an attribute by localname and URI
@@ -66,12 +66,12 @@ class XMLReader  {
 	 * @param string $namespaceURI <p>
 	 * The namespace URI.
 	 * </p>
-	 * @return string The value of the attribute, or an empty string (before PHP 5.6) or &null;
+	 * @return string The value of the attribute, or an empty string (before PHP 5.6) or null
 	 * (from PHP 5.6 onwards) if no attribute with the given
 	 * localName and namespaceURI is
 	 * found or not positioned of element.
 	 */
-	public function getAttributeNs ($localName, $namespaceURI) {}
+	public function getAttributeNs (string $localName, string $namespaceURI) {}
 
 	/**
 	 * Indicates if specified property has been set
@@ -82,7 +82,7 @@ class XMLReader  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function getParserProperty ($property) {}
+	public function getParserProperty (int $property) {}
 
 	/**
 	 * Indicates if the parsed document is valid
@@ -99,7 +99,7 @@ class XMLReader  {
 	 * </p>
 	 * @return string true on success or false on failure
 	 */
-	public function lookupNamespace ($prefix) {}
+	public function lookupNamespace (string $prefix) {}
 
 	/**
 	 * Move cursor to an attribute by index
@@ -109,7 +109,7 @@ class XMLReader  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function moveToAttributeNo ($index) {}
+	public function moveToAttributeNo (int $index) {}
 
 	/**
 	 * Move cursor to a named attribute
@@ -119,7 +119,7 @@ class XMLReader  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function moveToAttribute ($name) {}
+	public function moveToAttribute (string $name) {}
 
 	/**
 	 * Move cursor to a named attribute
@@ -132,7 +132,7 @@ class XMLReader  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function moveToAttributeNs ($localName, $namespaceURI) {}
+	public function moveToAttributeNs (string $localName, string $namespaceURI) {}
 
 	/**
 	 * Position cursor on the parent Element of current Attribute
@@ -163,16 +163,16 @@ class XMLReader  {
 	 * URI pointing to the document.
 	 * </p>
 	 * @param string $encoding [optional] <p>
-	 * The document encoding or &null;.
+	 * The document encoding or null.
 	 * </p>
 	 * @param int $options [optional] <p>
-	 * A bitmask of the LIBXML_* 
+	 * A bitmask of the LIBXML_&#42; 
 	 * constants.
 	 * </p>
 	 * @return bool true on success or false on failure If called statically, returns an
 	 * XMLReader or false on failure.
 	 */
-	public function open ($URI, $encoding = null, $options = null) {}
+	public function open (string $URI, string $encoding = null, int $options = null) {}
 
 	/**
 	 * Move to next node in document
@@ -189,7 +189,7 @@ class XMLReader  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function next ($localname = null) {}
+	public function next (string $localname = null) {}
 
 	/**
 	 * Retrieve XML from current node
@@ -221,7 +221,7 @@ class XMLReader  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function setSchema ($filename) {}
+	public function setSchema (string $filename) {}
 
 	/**
 	 * Set parser options
@@ -236,7 +236,7 @@ class XMLReader  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function setParserProperty ($property, $value) {}
+	public function setParserProperty (int $property, bool $value) {}
 
 	/**
 	 * Set the filename or URI for a RelaxNG Schema
@@ -246,7 +246,7 @@ class XMLReader  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function setRelaxNGSchema ($filename) {}
+	public function setRelaxNGSchema (string $filename) {}
 
 	/**
 	 * Set the data containing a RelaxNG Schema
@@ -256,7 +256,7 @@ class XMLReader  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function setRelaxNGSchemaSource ($source) {}
+	public function setRelaxNGSchemaSource (string $source) {}
 
 	/**
 	 * Set the data containing the XML to parse
@@ -265,16 +265,16 @@ class XMLReader  {
 	 * String containing the XML to be parsed.
 	 * </p>
 	 * @param string $encoding [optional] <p>
-	 * The document encoding or &null;.
+	 * The document encoding or null.
 	 * </p>
 	 * @param int $options [optional] <p>
-	 * A bitmask of the LIBXML_* 
+	 * A bitmask of the LIBXML_&#42; 
 	 * constants.
 	 * </p>
 	 * @return bool true on success or false on failure If called statically, returns an
 	 * XMLReader or false on failure.
 	 */
-	public function XML ($source, $encoding = null, $options = null) {}
+	public function XML (string $source, string $encoding = null, int $options = null) {}
 
 	/**
 	 * Returns a copy of the current node as a DOM object
@@ -287,4 +287,4 @@ class XMLReader  {
 	public function expand (DOMNode $basenode = null) {}
 
 }
-// End of xmlreader v.7.2.0-dev
+// End of xmlreader v.7.1.1

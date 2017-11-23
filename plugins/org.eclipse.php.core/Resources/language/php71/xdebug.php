@@ -1,6 +1,6 @@
 <?php
 
-// Start of xdebug v.2.2.5
+// Start of xdebug v.2.5.0
 
 function xdebug_get_stack_depth () {}
 
@@ -58,11 +58,19 @@ function xdebug_stop_error_collection () {}
 
 function xdebug_get_collected_errors () {}
 
+function xdebug_start_function_monitor () {}
+
+function xdebug_stop_function_monitor () {}
+
+function xdebug_get_monitored_functions () {}
+
 function xdebug_start_code_coverage () {}
 
 function xdebug_stop_code_coverage () {}
 
 function xdebug_get_code_coverage () {}
+
+function xdebug_code_coverage_started () {}
 
 function xdebug_get_function_count () {}
 
@@ -73,7 +81,10 @@ function xdebug_get_headers () {}
 define ('XDEBUG_TRACE_APPEND', 1);
 define ('XDEBUG_TRACE_COMPUTERIZED', 2);
 define ('XDEBUG_TRACE_HTML', 4);
+define ('XDEBUG_TRACE_NAKED_FILENAME', 8);
 define ('XDEBUG_CC_UNUSED', 1);
 define ('XDEBUG_CC_DEAD_CODE', 2);
+define ('XDEBUG_CC_BRANCH_CHECK', 4);
+define ('XDEBUG_STACK_NO_DESC', 1);
 
-// End of xdebug v.2.2.5
+// End of xdebug v.2.5.0

@@ -1,6 +1,6 @@
 <?php
 
-// Start of readline v.7.2.0-dev
+// Start of readline v.7.1.1
 
 /**
  * Reads a line
@@ -11,7 +11,7 @@
  * @return string a single string from the user. The line returned has the ending
  * newline removed.
  */
-function readline ($prompt = null) {}
+function readline (string $prompt = null) {}
 
 /**
  * Gets/sets various internal readline variables
@@ -27,11 +27,11 @@ function readline ($prompt = null) {}
  * be indexed by the following values: done, end, erase_empty_line,
  * library_version, line_buffer, mark, pending_input, point, prompt,
  * readline_name, and terminal_name.
- * </p>
  * <p>
  * If called with one or two parameters, the old value is returned.
+ * </p>
  */
-function readline_info ($varname = null, $newvalue = null) {}
+function readline_info (string $varname = null, string $newvalue = null) {}
 
 /**
  * Adds a line to the history
@@ -41,7 +41,7 @@ function readline_info ($varname = null, $newvalue = null) {}
  * </p>
  * @return bool true on success or false on failure
  */
-function readline_add_history ($line) {}
+function readline_add_history (string $line) {}
 
 /**
  * Clears the history
@@ -51,14 +51,6 @@ function readline_add_history ($line) {}
 function readline_clear_history () {}
 
 /**
- * Lists the history
- * @link http://www.php.net/manual/en/function.readline-list-history.php
- * @return array an array of the entire command line history. The elements are
- * indexed by integers starting at zero.
- */
-function readline_list_history () {}
-
-/**
  * Reads the history
  * @link http://www.php.net/manual/en/function.readline-read-history.php
  * @param string $filename [optional] <p>
@@ -66,7 +58,7 @@ function readline_list_history () {}
  * </p>
  * @return bool true on success or false on failure
  */
-function readline_read_history ($filename = null) {}
+function readline_read_history (string $filename = null) {}
 
 /**
  * Writes the history
@@ -76,7 +68,7 @@ function readline_read_history ($filename = null) {}
  * </p>
  * @return bool true on success or false on failure
  */
-function readline_write_history ($filename = null) {}
+function readline_write_history (string $filename = null) {}
 
 /**
  * Registers a completion function
@@ -87,7 +79,7 @@ function readline_write_history ($filename = null) {}
  * </p>
  * @return bool true on success or false on failure
  */
-function readline_completion_function ($function) {}
+function readline_completion_function (callable $function) {}
 
 /**
  * Initializes the readline callback interface and terminal, prints the prompt and returns immediately
@@ -101,7 +93,7 @@ function readline_completion_function ($function) {}
  * </p>
  * @return bool true on success or false on failure
  */
-function readline_callback_handler_install ($prompt, $callback) {}
+function readline_callback_handler_install (string $prompt, callable $callback) {}
 
 /**
  * Reads a character and informs the readline callback interface when a line is received
@@ -125,6 +117,13 @@ function readline_callback_handler_remove () {}
  */
 function readline_redisplay () {}
 
-define ('READLINE_LIB', "readline");
+/**
+ * Inform readline that the cursor has moved to a new line
+ * @link http://www.php.net/manual/en/function.readline-on-new-line.php
+ * @return void 
+ */
+function readline_on_new_line () {}
 
-// End of readline v.7.2.0-dev
+define ('READLINE_LIB', "libedit");
+
+// End of readline v.7.1.1

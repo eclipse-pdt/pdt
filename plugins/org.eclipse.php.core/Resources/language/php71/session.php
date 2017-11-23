@@ -1,6 +1,6 @@
 <?php
 
-// Start of session v.7.2.0-dev
+// Start of session v.7.1.1
 
 interface SessionHandlerInterface  {
 
@@ -15,14 +15,14 @@ interface SessionHandlerInterface  {
 	 * </p>
 	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
-	abstract public function open ($save_path, $session_name) {}
+	abstract public function open (string $save_path, string $session_name);
 
 	/**
 	 * Close the session
 	 * @link http://www.php.net/manual/en/sessionhandlerinterface.close.php
 	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
-	abstract public function close () {}
+	abstract public function close ();
 
 	/**
 	 * Read session data
@@ -32,7 +32,7 @@ interface SessionHandlerInterface  {
 	 * </p>
 	 * @return string an encoded string of the read data. If nothing was read, it must return an empty string. Note this value is returned internally to PHP for processing.
 	 */
-	abstract public function read ($session_id) {}
+	abstract public function read (string $session_id);
 
 	/**
 	 * Write session data
@@ -46,7 +46,7 @@ interface SessionHandlerInterface  {
 	 * </p>
 	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
-	abstract public function write ($session_id, $session_data) {}
+	abstract public function write (string $session_id, string $session_data);
 
 	/**
 	 * Destroy a session
@@ -56,7 +56,7 @@ interface SessionHandlerInterface  {
 	 * </p>
 	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
-	abstract public function destroy ($session_id) {}
+	abstract public function destroy (string $session_id);
 
 	/**
 	 * Cleanup old sessions
@@ -66,13 +66,13 @@ interface SessionHandlerInterface  {
 	 * </p>
 	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
-	abstract public function gc ($maxlifetime) {}
+	abstract public function gc (int $maxlifetime);
 
 }
 
 interface SessionIdInterface  {
 
-	abstract public function create_sid () {}
+	abstract public function create_sid ();
 
 }
 
@@ -81,13 +81,13 @@ interface SessionUpdateTimestampHandlerInterface  {
 	/**
 	 * @param $key
 	 */
-	abstract public function validateId ($key) {}
+	abstract public function validateId ($key);
 
 	/**
 	 * @param $key
 	 * @param $val
 	 */
-	abstract public function updateTimestamp ($key, $val) {}
+	abstract public function updateTimestamp ($key, $val);
 
 }
 
@@ -104,7 +104,7 @@ class SessionHandler implements SessionHandlerInterface, SessionIdInterface {
 	 * </p>
 	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
-	public function open ($save_path, $session_name) {}
+	public function open (string $save_path, string $session_name) {}
 
 	/**
 	 * Close the session
@@ -121,7 +121,7 @@ class SessionHandler implements SessionHandlerInterface, SessionIdInterface {
 	 * </p>
 	 * @return string an encoded string of the read data. If nothing was read, it must return an empty string. Note this value is returned internally to PHP for processing.
 	 */
-	public function read ($session_id) {}
+	public function read (string $session_id) {}
 
 	/**
 	 * Write session data
@@ -135,7 +135,7 @@ class SessionHandler implements SessionHandlerInterface, SessionIdInterface {
 	 * </p>
 	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
-	public function write ($session_id, $session_data) {}
+	public function write (string $session_id, string $session_data) {}
 
 	/**
 	 * Destroy a session
@@ -145,7 +145,7 @@ class SessionHandler implements SessionHandlerInterface, SessionIdInterface {
 	 * </p>
 	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
-	public function destroy ($session_id) {}
+	public function destroy (string $session_id) {}
 
 	/**
 	 * Cleanup old sessions
@@ -155,7 +155,7 @@ class SessionHandler implements SessionHandlerInterface, SessionIdInterface {
 	 * </p>
 	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
-	public function gc ($maxlifetime) {}
+	public function gc (int $maxlifetime) {}
 
 	/**
 	 * Return a new session ID
@@ -187,7 +187,7 @@ class SessionHandler implements SessionHandlerInterface, SessionIdInterface {
  * and function updates the session name, name of the old session
  * is returned.
  */
-function session_name ($name = null) {}
+function session_name (string $name = null) {}
 
 /**
  * Get and/or set the current session module
@@ -198,7 +198,7 @@ function session_name ($name = null) {}
  * </p>
  * @return string the name of the current session module.
  */
-function session_module_name ($module = null) {}
+function session_module_name (string $module = null) {}
 
 /**
  * Get and/or set the current session save path
@@ -217,7 +217,7 @@ function session_module_name ($module = null) {}
  * </p>
  * @return string the path of the current directory used for data storage.
  */
-function session_save_path ($path = null) {}
+function session_save_path (string $path = null) {}
 
 /**
  * Get and/or set the current session id
@@ -238,7 +238,7 @@ function session_save_path ($path = null) {}
  * session or the empty string ("") if there is no current
  * session (no current session id exists).
  */
-function session_id ($id = null) {}
+function session_id (string $id = null) {}
 
 /**
  * Create new session id
@@ -254,7 +254,7 @@ function session_id ($id = null) {}
  * session id for the current session. If it is used without active
  * session, it omits collision check.
  */
-function session_create_id ($prefix = null) {}
+function session_create_id (string $prefix = null) {}
 
 /**
  * Update the current session id with a newly generated one
@@ -267,7 +267,7 @@ function session_create_id ($prefix = null) {}
  * </p>
  * @return bool true on success or false on failure
  */
-function session_regenerate_id ($delete_old_session = null) {}
+function session_regenerate_id (bool $delete_old_session = null) {}
 
 /**
  * Decodes session data from a session encoded string
@@ -277,7 +277,7 @@ function session_regenerate_id ($delete_old_session = null) {}
  * </p>
  * @return bool true on success or false on failure
  */
-function session_decode ($data) {}
+function session_decode (string $data) {}
 
 /**
  * Encodes the current session data as a session encoded string
@@ -326,11 +326,11 @@ function session_unset () {}
  * @link http://www.php.net/manual/en/function.session-gc.php
  * @return int session_gc returns number of deleted session
  * data for success, false for failure.
- * </p>
  * <p>
  * Old save handlers do not return number of deleted session data, but 
  * only success/failure flag. If this is the case, number of deleted
  * session data became 1 regardless of actually deleted data.
+ * </p>
  */
 function session_gc () {}
 
@@ -344,9 +344,11 @@ function session_gc () {}
  * @param callable $destroy 
  * @param callable $gc 
  * @param callable $create_sid [optional] 
+ * @param callable $validate_sid [optional] 
+ * @param callable $update_timestamp [optional] 
  * @return bool true on success or false on failure
  */
-function session_set_save_handler ($open, $close, $read, $write, $destroy, $gc, $create_sid = null) {}
+function session_set_save_handler (callable $open, callable $close, callable $read, callable $write, callable $destroy, callable $gc, callable $create_sid = null, callable $validate_sid = null, callable $update_timestamp = null) {}
 
 /**
  * Get and/or set the current cache limiter
@@ -357,6 +359,7 @@ function session_set_save_handler ($open, $close, $read, $write, $destroy, $gc, 
  * </p>
  * <table>
  * Possible values
+ * <table>
  * <tr valign="top">
  * <td>Value</td>
  * <td>Headers sent</td>
@@ -364,27 +367,47 @@ function session_set_save_handler ($open, $close, $read, $write, $destroy, $gc, 
  * <tr valign="top">
  * <td>public</td>
  * <td>
+ * <pre>
+ * Expires: (sometime in the future, according session.cache_expire)
+ * Cache-Control: public, max-age=(sometime in the future, according to session.cache_expire)
+ * Last-Modified: (the timestamp of when the session was last saved)
+ * </pre>
  * </td>
  * </tr>
  * <tr valign="top">
  * <td>private_no_expire</td>
  * <td>
+ * <pre>
+ * Cache-Control: private, max-age=(session.cache_expire in the future), pre-check=(session.cache_expire in the future)
+ * Last-Modified: (the timestamp of when the session was last saved)
+ * </pre>
  * </td>
  * </tr>
  * <tr valign="top">
  * <td>private</td>
  * <td>
+ * <pre>
+ * Expires: Thu, 19 Nov 1981 08:52:00 GMT
+ * Cache-Control: private, max-age=(session.cache_expire in the future), pre-check=(session.cache_expire in the future)
+ * Last-Modified: (the timestamp of when the session was last saved)
+ * </pre>
  * </td>
  * </tr>
  * <tr valign="top">
  * <td>nocache</td>
  * <td>
+ * <pre>
+ * Expires: Thu, 19 Nov 1981 08:52:00 GMT
+ * Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+ * Pragma: no-cache
+ * </pre>
  * </td>
  * </tr>
  * </table>
+ * </table>
  * @return string the name of the current cache limiter.
  */
-function session_cache_limiter ($cache_limiter = null) {}
+function session_cache_limiter (string $cache_limiter = null) {}
 
 /**
  * Return current cache expire
@@ -401,7 +424,7 @@ function session_cache_limiter ($cache_limiter = null) {}
  * @return int the current setting of session.cache_expire.
  * The value returned should be read in minutes, defaults to 180.
  */
-function session_cache_expire ($new_cache_expire = null) {}
+function session_cache_expire (string $new_cache_expire = null) {}
 
 /**
  * Set the session cookie parameters
@@ -431,7 +454,7 @@ function session_cache_expire ($new_cache_expire = null) {}
  * </p>
  * @return void 
  */
-function session_set_cookie_params ($lifetime, $path = null, $domain = null, $secure = null, $httponly = null) {}
+function session_set_cookie_params (int $lifetime, string $path = null, string $domain = null, bool $secure = null, bool $httponly = null) {}
 
 /**
  * Get the session cookie parameters
@@ -475,6 +498,9 @@ function session_reset () {}
 /**
  * Returns the current session status
  * @link http://www.php.net/manual/en/function.session-status.php
+ * @return int PHP_SESSION_DISABLED if sessions are disabled.
+ * PHP_SESSION_NONE if sessions are enabled, but none exists.
+ * PHP_SESSION_ACTIVE if sessions are enabled, and one exists.
  */
 function session_status () {}
 
@@ -486,7 +512,7 @@ function session_status () {}
 function session_register_shutdown () {}
 
 /**
- * &Alias; <function>session_write_close</function>
+ * Alias: session_write_close
  * @link http://www.php.net/manual/en/function.session-commit.php
  */
 function session_commit () {}
@@ -512,4 +538,4 @@ define ('PHP_SESSION_NONE', 1);
  */
 define ('PHP_SESSION_ACTIVE', 2);
 
-// End of session v.7.2.0-dev
+// End of session v.7.1.1

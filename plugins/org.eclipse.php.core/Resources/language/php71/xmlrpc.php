@@ -1,6 +1,6 @@
 <?php
 
-// Start of xmlrpc v.7.2.0-dev
+// Start of xmlrpc v.7.1.1
 
 /**
  * Generates XML for a PHP value
@@ -22,7 +22,7 @@ function xmlrpc_encode ($value) {}
  * @return mixed either an array, or an integer, or a string, or a boolean according
  * to the response returned by the XMLRPC method.
  */
-function xmlrpc_decode ($xml, $encoding = null) {}
+function xmlrpc_decode (string $xml, string $encoding = null) {}
 
 /**
  * Decodes XML into native PHP types
@@ -32,7 +32,7 @@ function xmlrpc_decode ($xml, $encoding = null) {}
  * @param string $encoding [optional] 
  * @return mixed 
  */
-function xmlrpc_decode_request ($xml, &$method, $encoding = null) {}
+function xmlrpc_decode_request (string $xml, string &$method, string $encoding = null) {}
 
 /**
  * Generates XML for a method request
@@ -49,7 +49,7 @@ function xmlrpc_decode_request ($xml, &$method, $encoding = null) {}
  * <p>output_type: php, xml</p>
  * @return string a string containing the XML representation of the request.
  */
-function xmlrpc_encode_request ($method, $params, array $output_options = null) {}
+function xmlrpc_encode_request (string $method, $params, array $output_options = null) {}
 
 /**
  * Gets xmlrpc type for a PHP value
@@ -73,7 +73,7 @@ function xmlrpc_get_type ($value) {}
  * @return bool true on success or false on failure
  * If successful, value is converted to an object.
  */
-function xmlrpc_set_type (&$value, $type) {}
+function xmlrpc_set_type (string &$value, string $type) {}
 
 /**
  * Determines if an array value represents an XMLRPC fault
@@ -110,7 +110,7 @@ function xmlrpc_server_destroy ($server) {}
  * @param string $function 
  * @return bool 
  */
-function xmlrpc_server_register_method ($server, $method_name, $function) {}
+function xmlrpc_server_register_method ($server, string $method_name, string $function) {}
 
 /**
  * Parses XML requests and call methods
@@ -121,7 +121,7 @@ function xmlrpc_server_register_method ($server, $method_name, $function) {}
  * @param array $output_options [optional] 
  * @return string 
  */
-function xmlrpc_server_call_method ($server, $xml, $user_data, array $output_options = null) {}
+function xmlrpc_server_call_method ($server, string $xml, $user_data, array $output_options = null) {}
 
 /**
  * Decodes XML into a list of method descriptions
@@ -129,7 +129,7 @@ function xmlrpc_server_call_method ($server, $xml, $user_data, array $output_opt
  * @param string $xml 
  * @return array 
  */
-function xmlrpc_parse_method_descriptions ($xml) {}
+function xmlrpc_parse_method_descriptions (string $xml) {}
 
 /**
  * Adds introspection documentation
@@ -147,6 +147,6 @@ function xmlrpc_server_add_introspection_data ($server, array $desc) {}
  * @param string $function 
  * @return bool 
  */
-function xmlrpc_server_register_introspection_callback ($server, $function) {}
+function xmlrpc_server_register_introspection_callback ($server, string $function) {}
 
-// End of xmlrpc v.7.2.0-dev
+// End of xmlrpc v.7.1.1

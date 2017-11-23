@@ -1,6 +1,6 @@
 <?php
 
-// Start of tidy v.7.2.0-dev
+// Start of tidy v.7.1.1
 
 class tidy  {
 
@@ -9,12 +9,12 @@ class tidy  {
 	 * @link http://www.php.net/manual/en/tidy.getopt.php
 	 * @param string $option <p>
 	 * You will find a list with each configuration option and their types
-	 * at: &url.tidy.conf;.
+	 * at: url.tidy.conf.
 	 * </p>
 	 * @return mixed the value of the specified option.
 	 * The return type depends on the type of the specified one.
 	 */
-	public function getOpt ($option) {}
+	public function getOpt (string $option) {}
 
 	/**
 	 * Execute configured cleanup and repair operations on parsed markup
@@ -39,7 +39,7 @@ class tidy  {
 	 * </p>
 	 * <p>
 	 * For an explanation about each option, see
-	 * &url.tidy.conf;.
+	 * url.tidy.conf.
 	 * </p>
 	 * @param string $encoding [optional] <p>
 	 * The encoding parameter sets the encoding for
@@ -55,7 +55,7 @@ class tidy  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function parseFile ($filename, $config = null, $encoding = null, $use_include_path = null) {}
+	public function parseFile (string $filename, $config = null, string $encoding = null, bool $use_include_path = null) {}
 
 	/**
 	 * Parse a document stored in a string
@@ -70,7 +70,7 @@ class tidy  {
 	 * options themselves.
 	 * </p>
 	 * <p>
-	 * For an explanation about each option, visit &url.tidy.conf;.
+	 * For an explanation about each option, visit url.tidy.conf.
 	 * </p>
 	 * @param string $encoding [optional] <p>
 	 * The encoding parameter sets the encoding for
@@ -83,7 +83,7 @@ class tidy  {
 	 * </p>
 	 * @return bool a new tidy instance.
 	 */
-	public function parseString ($input, $config = null, $encoding = null) {}
+	public function parseString (string $input, $config = null, string $encoding = null) {}
 
 	/**
 	 * Repair a string using an optionally provided configuration file
@@ -98,7 +98,7 @@ class tidy  {
 	 * options themselves.
 	 * </p>
 	 * <p>
-	 * Check &url.tidy.conf; for
+	 * Check url.tidy.conf for
 	 * an explanation about each option.
 	 * </p>
 	 * @param string $encoding [optional] <p>
@@ -112,7 +112,7 @@ class tidy  {
 	 * </p>
 	 * @return string the repaired string.
 	 */
-	public function repairString ($data, $config = null, $encoding = null) {}
+	public function repairString (string $data, $config = null, string $encoding = null) {}
 
 	/**
 	 * Repair a file and return it as a string
@@ -144,7 +144,7 @@ class tidy  {
 	 * </p>
 	 * @return string the repaired contents as a string.
 	 */
-	public function repairFile ($filename, $config = null, $encoding = null, $use_include_path = null) {}
+	public function repairFile (string $filename, $config = null, string $encoding = null, bool $use_include_path = null) {}
 
 	/**
 	 * Run configured diagnostics on parsed and repaired markup
@@ -164,9 +164,9 @@ class tidy  {
 	 * Get current Tidy configuration
 	 * @link http://www.php.net/manual/en/tidy.getconfig.php
 	 * @return array an array of configuration options.
-	 * </p>
 	 * <p>
-	 * For an explanation about each option, visit &url.tidy.conf;.
+	 * For an explanation about each option, visit url.tidy.conf.
+	 * </p>
 	 */
 	public function getConfig () {}
 
@@ -182,10 +182,10 @@ class tidy  {
 	 * Get the Detected HTML version for the specified document
 	 * @link http://www.php.net/manual/en/tidy.gethtmlver.php
 	 * @return int the detected HTML version.
-	 * </p>
 	 * <p>
 	 * This function is not yet implemented in the Tidylib itself, so it always
 	 * return 0.
+	 * </p>
 	 */
 	public function getHtmlVer () {}
 
@@ -198,17 +198,17 @@ class tidy  {
 	 * @return string a string if the option exists and has documentation available, or
 	 * false otherwise.
 	 */
-	public function getOptDoc ($optname) {}
+	public function getOptDoc (string $optname) {}
 
 	/**
 	 * Indicates if the document is a XHTML document
 	 * @link http://www.php.net/manual/en/tidy.isxhtml.php
 	 * @return bool This function returns true if the specified tidy
 	 * object is a XHTML document, or false otherwise.
-	 * </p>
 	 * <p>
 	 * This function is not yet implemented in the Tidylib itself, so it always
 	 * return false.
+	 * </p>
 	 */
 	public function isXhtml () {}
 
@@ -218,36 +218,36 @@ class tidy  {
 	 * @return bool This function returns true if the specified tidy
 	 * object is a generic XML document (non HTML/XHTML),
 	 * or false otherwise.
-	 * </p>
 	 * <p>
 	 * This function is not yet implemented in the Tidylib itself, so it always
 	 * return false.
+	 * </p>
 	 */
 	public function isXml () {}
 
 	/**
-	 * Returns a <classname>tidyNode</classname> object representing the root of the tidy parse tree
+	 * Returns a tidyNode object representing the root of the tidy parse tree
 	 * @link http://www.php.net/manual/en/tidy.root.php
 	 * @return tidyNode the tidyNode object.
 	 */
 	public function root () {}
 
 	/**
-	 * Returns a <classname>tidyNode</classname> object starting from the &lt;head&gt; tag of the tidy parse tree
+	 * Returns a tidyNode object starting from the &lt;head&gt; tag of the tidy parse tree
 	 * @link http://www.php.net/manual/en/tidy.head.php
 	 * @return tidyNode the tidyNode object.
 	 */
 	public function head () {}
 
 	/**
-	 * Returns a <classname>tidyNode</classname> object starting from the &lt;html&gt; tag of the tidy parse tree
+	 * Returns a tidyNode object starting from the &lt;html&gt; tag of the tidy parse tree
 	 * @link http://www.php.net/manual/en/tidy.html.php
 	 * @return tidyNode the tidyNode object.
 	 */
 	public function html () {}
 
 	/**
-	 * Returns a <classname>tidyNode</classname> object starting from the &lt;body&gt; tag of the tidy parse tree
+	 * Returns a tidyNode object starting from the &lt;body&gt; tag of the tidy parse tree
 	 * @link http://www.php.net/manual/en/tidy.body.php
 	 * @return tidyNode a tidyNode object starting from the 
 	 * &lt;body&gt; tag of the tidy parse tree.
@@ -255,7 +255,7 @@ class tidy  {
 	public function body () {}
 
 	/**
-	 * Constructs a new <classname>tidy</classname> object
+	 * Constructs a new tidy object
 	 * @link http://www.php.net/manual/en/tidy.construct.php
 	 */
 	public function __construct () {}
@@ -323,7 +323,7 @@ final class tidyNode  {
 	/**
 	 * Returns the parent node of the current node
 	 * @link http://www.php.net/manual/en/tidynode.getparent.php
-	 * @return tidyNode a tidyNode if the node has a parent, or &null;
+	 * @return tidyNode a tidyNode if the node has a parent, or null
 	 * otherwise.
 	 */
 	public function getParent () {}
@@ -661,4 +661,4 @@ define ('TIDY_NODETYPE_PHP', 12);
  */
 define ('TIDY_NODETYPE_XMLDECL', 13);
 
-// End of tidy v.7.2.0-dev
+// End of tidy v.7.1.1

@@ -1,6 +1,6 @@
 <?php
 
-// Start of ctype v.7.0.0-dev
+// Start of ctype v.7.1.1
 
 /**
  * Check for alphanumeric character(s)
@@ -11,7 +11,7 @@
  * @return bool true if every character in text is either
  * a letter or a digit, false otherwise.
  */
-function ctype_alnum ($text) {}
+function ctype_alnum (string $text) {}
 
 /**
  * Check for alphabetic character(s)
@@ -22,7 +22,7 @@ function ctype_alnum ($text) {}
  * @return bool true if every character in text is 
  * a letter from the current locale, false otherwise.
  */
-function ctype_alpha ($text) {}
+function ctype_alpha (string $text) {}
 
 /**
  * Check for control character(s)
@@ -33,7 +33,7 @@ function ctype_alpha ($text) {}
  * @return bool true if every character in text is 
  * a control character from the current locale, false otherwise.
  */
-function ctype_cntrl ($text) {}
+function ctype_cntrl (string $text) {}
 
 /**
  * Check for numeric character(s)
@@ -44,7 +44,7 @@ function ctype_cntrl ($text) {}
  * @return bool true if every character in the string
  * text is a decimal digit, false otherwise.
  */
-function ctype_digit ($text) {}
+function ctype_digit (string $text) {}
 
 /**
  * Check for lowercase character(s)
@@ -55,7 +55,7 @@ function ctype_digit ($text) {}
  * @return bool true if every character in text is 
  * a lowercase letter in the current locale.
  */
-function ctype_lower ($text) {}
+function ctype_lower (string $text) {}
 
 /**
  * Check for any printable character(s) except space
@@ -67,7 +67,7 @@ function ctype_lower ($text) {}
  * printable and actually creates visible output (no white space), false
  * otherwise.
  */
-function ctype_graph ($text) {}
+function ctype_graph (string $text) {}
 
 /**
  * Check for printable character(s)
@@ -80,11 +80,11 @@ function ctype_graph ($text) {}
  * text contains control characters or characters 
  * that do not have any output or control function at all.
  */
-function ctype_print ($text) {}
+function ctype_print (string $text) {}
 
 /**
  * Check for any printable character which is not whitespace or an
-   alphanumeric character
+ * alphanumeric character
  * @link http://www.php.net/manual/en/function.ctype-punct.php
  * @param string $text <p>
  * The tested string.
@@ -92,7 +92,7 @@ function ctype_print ($text) {}
  * @return bool true if every character in text 
  * is printable, but neither letter, digit or blank, false otherwise.
  */
-function ctype_punct ($text) {}
+function ctype_punct (string $text) {}
 
 /**
  * Check for whitespace character(s)
@@ -105,7 +105,7 @@ function ctype_punct ($text) {}
  * blank character this also includes tab, vertical tab, line feed,
  * carriage return and form feed characters.
  */
-function ctype_space ($text) {}
+function ctype_space (string $text) {}
 
 /**
  * Check for uppercase character(s)
@@ -116,7 +116,7 @@ function ctype_space ($text) {}
  * @return bool true if every character in text is 
  * an uppercase letter in the current locale.
  */
-function ctype_upper ($text) {}
+function ctype_upper (string $text) {}
 
 /**
  * Check for character(s) representing a hexadecimal digit
@@ -128,6 +128,6 @@ function ctype_upper ($text) {}
  * a hexadecimal 'digit', that is a decimal digit or a character from 
  * [A-Fa-f] , false otherwise.
  */
-function ctype_xdigit ($text) {}
+function ctype_xdigit (string $text) {}
 
-// End of ctype v.7.0.0-dev
+// End of ctype v.7.1.1

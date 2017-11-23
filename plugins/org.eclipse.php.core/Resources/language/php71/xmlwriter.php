@@ -1,6 +1,6 @@
 <?php
 
-// Start of xmlwriter v.7.0.0-dev
+// Start of xmlwriter v.7.1.1
 
 class XMLWriter  {
 
@@ -11,21 +11,21 @@ class XMLWriter  {
 	 * The URI of the resource for the output.
 	 * </p>
 	 * @return bool Object oriented style: Returns true on success or false on failure
-	 * </p>
 	 * <p>
 	 * Procedural style: Returns a new xmlwriter resource for later use with the
 	 * xmlwriter functions on success, false on error.
+	 * </p>
 	 */
-	public function openUri ($uri) {}
+	public function openUri (string $uri) {}
 
 	/**
 	 * Create new xmlwriter using memory for string output
 	 * @link http://www.php.net/manual/en/function.xmlwriter-open-memory.php
 	 * @return bool Object oriented style: Returns true on success or false on failure
-	 * </p>
 	 * <p>
 	 * Procedural style: Returns a new xmlwriter resource for later use with the
 	 * xmlwriter functions on success, false on error.
+	 * </p>
 	 */
 	public function openMemory () {}
 
@@ -37,7 +37,7 @@ class XMLWriter  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function setIndent ($indent) {}
+	public function setIndent (bool $indent) {}
 
 	/**
 	 * Set string used for indenting
@@ -47,7 +47,7 @@ class XMLWriter  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function setIndentString ($indentString) {}
+	public function setIndentString (string $indentString) {}
 
 	/**
 	 * Create start comment
@@ -71,7 +71,7 @@ class XMLWriter  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function startAttribute ($name) {}
+	public function startAttribute (string $name) {}
 
 	/**
 	 * End attribute
@@ -91,7 +91,7 @@ class XMLWriter  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function writeAttribute ($name, $value) {}
+	public function writeAttribute (string $name, string $value) {}
 
 	/**
 	 * Create start namespaced attribute
@@ -107,7 +107,7 @@ class XMLWriter  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function startAttributeNs ($prefix, $name, $uri) {}
+	public function startAttributeNs (string $prefix, string $name, string $uri) {}
 
 	/**
 	 * Write full namespaced attribute
@@ -126,7 +126,7 @@ class XMLWriter  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function writeAttributeNs ($prefix, $name, $uri, $content) {}
+	public function writeAttributeNs (string $prefix, string $name, string $uri, string $content) {}
 
 	/**
 	 * Create start element tag
@@ -136,7 +136,7 @@ class XMLWriter  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function startElement ($name) {}
+	public function startElement (string $name) {}
 
 	/**
 	 * End current element
@@ -166,7 +166,7 @@ class XMLWriter  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function startElementNs ($prefix, $name, $uri) {}
+	public function startElementNs (string $prefix, string $name, string $uri) {}
 
 	/**
 	 * Write full element tag
@@ -179,7 +179,7 @@ class XMLWriter  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function writeElement ($name, $content = null) {}
+	public function writeElement (string $name, string $content = null) {}
 
 	/**
 	 * Write full namespaced element tag
@@ -198,7 +198,7 @@ class XMLWriter  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function writeElementNs ($prefix, $name, $uri, $content = null) {}
+	public function writeElementNs (string $prefix, string $name, string $uri, string $content = null) {}
 
 	/**
 	 * Create start PI tag
@@ -208,7 +208,7 @@ class XMLWriter  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function startPi ($target) {}
+	public function startPi (string $target) {}
 
 	/**
 	 * End current PI
@@ -228,7 +228,7 @@ class XMLWriter  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function writePi ($target, $content) {}
+	public function writePi (string $target, string $content) {}
 
 	/**
 	 * Create start CDATA tag
@@ -252,7 +252,7 @@ class XMLWriter  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function writeCdata ($content) {}
+	public function writeCdata (string $content) {}
 
 	/**
 	 * Write text
@@ -262,7 +262,7 @@ class XMLWriter  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function text ($content) {}
+	public function text (string $content) {}
 
 	/**
 	 * Write a raw XML text
@@ -272,7 +272,7 @@ class XMLWriter  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function writeRaw ($content) {}
+	public function writeRaw (string $content) {}
 
 	/**
 	 * Create document tag
@@ -288,7 +288,7 @@ class XMLWriter  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function startDocument ($version = null, $encoding = null, $standalone = null) {}
+	public function startDocument (string $version = null, string $encoding = null, string $standalone = null) {}
 
 	/**
 	 * End current document
@@ -305,7 +305,7 @@ class XMLWriter  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function writeComment ($content) {}
+	public function writeComment (string $content) {}
 
 	/**
 	 * Create start DTD tag
@@ -321,7 +321,7 @@ class XMLWriter  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function startDtd ($qualifiedName, $publicId = null, $systemId = null) {}
+	public function startDtd (string $qualifiedName, string $publicId = null, string $systemId = null) {}
 
 	/**
 	 * End current DTD
@@ -347,7 +347,7 @@ class XMLWriter  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function writeDtd ($name, $publicId = null, $systemId = null, $subset = null) {}
+	public function writeDtd (string $name, string $publicId = null, string $systemId = null, string $subset = null) {}
 
 	/**
 	 * Create start DTD element
@@ -357,7 +357,7 @@ class XMLWriter  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function startDtdElement ($qualifiedName) {}
+	public function startDtdElement (string $qualifiedName) {}
 
 	/**
 	 * End current DTD element
@@ -377,7 +377,7 @@ class XMLWriter  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function writeDtdElement ($name, $content) {}
+	public function writeDtdElement (string $name, string $content) {}
 
 	/**
 	 * Create start DTD AttList
@@ -387,7 +387,7 @@ class XMLWriter  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function startDtdAttlist ($name) {}
+	public function startDtdAttlist (string $name) {}
 
 	/**
 	 * End current DTD AttList
@@ -407,7 +407,7 @@ class XMLWriter  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function writeDtdAttlist ($name, $content) {}
+	public function writeDtdAttlist (string $name, string $content) {}
 
 	/**
 	 * Create start DTD Entity
@@ -419,7 +419,7 @@ class XMLWriter  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function startDtdEntity ($name, $isparam) {}
+	public function startDtdEntity (string $name, bool $isparam) {}
 
 	/**
 	 * End current DTD Entity
@@ -443,7 +443,7 @@ class XMLWriter  {
 	 * @param string $ndataid 
 	 * @return bool true on success or false on failure
 	 */
-	public function writeDtdEntity ($name, $content, $pe, $pubid, $sysid, $ndataid) {}
+	public function writeDtdEntity (string $name, string $content, bool $pe, string $pubid, string $sysid, string $ndataid) {}
 
 	/**
 	 * Returns current buffer
@@ -453,7 +453,7 @@ class XMLWriter  {
 	 * </p>
 	 * @return string the current buffer as a string.
 	 */
-	public function outputMemory ($flush = null) {}
+	public function outputMemory (bool $flush = null) {}
 
 	/**
 	 * Flush current buffer
@@ -465,7 +465,7 @@ class XMLWriter  {
 	 * Else, if using URI, this function will write the buffer and return the number of 
 	 * written bytes.
 	 */
-	public function flush ($empty = null) {}
+	public function flush (bool $empty = null) {}
 
 }
 
@@ -727,4 +727,4 @@ function xmlwriter_output_memory ($xmlwriter, $flush = null) {}
  */
 function xmlwriter_flush ($xmlwriter, $empty = null) {}
 
-// End of xmlwriter v.7.0.0-dev
+// End of xmlwriter v.7.1.1

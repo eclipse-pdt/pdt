@@ -1,6 +1,6 @@
 <?php
 
-// Start of calendar v.7.0.0-dev
+// Start of calendar v.7.1.1
 
 /**
  * Converts Julian Day Count to Gregorian date
@@ -10,7 +10,7 @@
  * </p>
  * @return string The gregorian date as a string in the form "month/day/year"
  */
-function jdtogregorian ($julianday) {}
+function jdtogregorian (int $julianday) {}
 
 /**
  * Converts a Gregorian date to Julian Day Count
@@ -26,7 +26,7 @@ function jdtogregorian ($julianday) {}
  * </p>
  * @return int The julian day for the given gregorian date as an integer.
  */
-function gregoriantojd ($month, $day, $year) {}
+function gregoriantojd (int $month, int $day, int $year) {}
 
 /**
  * Converts a Julian Day Count to a Julian Calendar Date
@@ -36,7 +36,7 @@ function gregoriantojd ($month, $day, $year) {}
  * </p>
  * @return string The julian date as a string in the form "month/day/year"
  */
-function jdtojulian ($julianday) {}
+function jdtojulian (int $julianday) {}
 
 /**
  * Converts a Julian Calendar date to Julian Day Count
@@ -52,7 +52,7 @@ function jdtojulian ($julianday) {}
  * </p>
  * @return int The julian day for the given julian date as an integer.
  */
-function juliantojd ($month, $day, $year) {}
+function juliantojd (int $month, int $day, int $year) {}
 
 /**
  * Converts a Julian day count to a Jewish calendar date
@@ -71,23 +71,30 @@ function juliantojd ($month, $day, $year) {}
  * </p>
  * @return string The jewish date as a string in the form "month/day/year"
  */
-function jdtojewish ($juliandaycount, $hebrew = null, $fl = null) {}
+function jdtojewish (int $juliandaycount, bool $hebrew = null, int $fl = null) {}
 
 /**
  * Converts a date in the Jewish Calendar to Julian Day Count
  * @link http://www.php.net/manual/en/function.jewishtojd.php
  * @param int $month <p>
- * The month as a number from 1 to 13
+ * The month as a number from 1 to 13,
+ * where 1 means Tishri,
+ * 13 means Elul, and
+ * 6 and 7 mean
+ * Adar in regular years, but Adar I
+ * and Adar II, respectively, in leap years.
  * </p>
  * @param int $day <p>
- * The day as a number from 1 to 30
+ * The day as a number from 1 to 30.
+ * If the month has only 29 days, the first day of the following month is
+ * assumed.
  * </p>
  * @param int $year <p>
  * The year as a number between 1 and 9999
  * </p>
  * @return int The julian day for the given jewish date as an integer.
  */
-function jewishtojd ($month, $day, $year) {}
+function jewishtojd (int $month, int $day, int $year) {}
 
 /**
  * Converts a Julian Day Count to the French Republican Calendar
@@ -95,7 +102,7 @@ function jewishtojd ($month, $day, $year) {}
  * @param int $juliandaycount 
  * @return string The french revolution date as a string in the form "month/day/year"
  */
-function jdtofrench ($juliandaycount) {}
+function jdtofrench (int $juliandaycount) {}
 
 /**
  * Converts a date from the French Republican Calendar to a Julian Day Count
@@ -111,7 +118,7 @@ function jdtofrench ($juliandaycount) {}
  * </p>
  * @return int The julian day for the given french revolution date as an integer.
  */
-function frenchtojd ($month, $day, $year) {}
+function frenchtojd (int $month, int $day, int $year) {}
 
 /**
  * Returns the day of the week
@@ -121,6 +128,7 @@ function frenchtojd ($month, $day, $year) {}
  * </p>
  * @param int $mode [optional] <table>
  * Calendar week modes
+ * <table>
  * <tr valign="top">
  * <td>Mode</td>
  * <td>Meaning</td>
@@ -146,9 +154,10 @@ function frenchtojd ($month, $day, $year) {}
  * </td>
  * </tr>
  * </table>
+ * </table>
  * @return mixed The gregorian weekday as either an integer or string.
  */
-function jddayofweek ($julianday, $mode = null) {}
+function jddayofweek (int $julianday, int $mode = null) {}
 
 /**
  * Returns a month name
@@ -157,7 +166,7 @@ function jddayofweek ($julianday, $mode = null) {}
  * @param int $mode 
  * @return string The month name for the given Julian Day and calendar.
  */
-function jdmonthname ($julianday, $mode) {}
+function jdmonthname (int $julianday, int $mode) {}
 
 /**
  * Get Unix timestamp for midnight on Easter of a given year
@@ -168,7 +177,7 @@ function jdmonthname ($julianday, $mode) {}
  * </p>
  * @return int The easter date as a unix timestamp.
  */
-function easter_date ($year = null) {}
+function easter_date (int $year = null) {}
 
 /**
  * Get number of days after March 21 on which Easter falls for a given year
@@ -186,7 +195,7 @@ function easter_date ($year = null) {}
  * @return int The number of days after March 21st that the Easter Sunday
  * is in the given year.
  */
-function easter_days ($year = null, $method = null) {}
+function easter_days (int $year = null, int $method = null) {}
 
 /**
  * Convert Unix timestamp to Julian Day
@@ -196,7 +205,7 @@ function easter_days ($year = null, $method = null) {}
  * </p>
  * @return int A julian day number as integer.
  */
-function unixtojd ($timestamp = null) {}
+function unixtojd (int $timestamp = null) {}
 
 /**
  * Convert Julian Day to Unix timestamp
@@ -204,9 +213,9 @@ function unixtojd ($timestamp = null) {}
  * @param int $jday <p>
  * A julian day number between 2440588 and 2465342.
  * </p>
- * @return int The unix timestamp for the start of the given julian day.
+ * @return int The unix timestamp for the start (midnight, not noon) of the given Julian day.
  */
-function jdtounix ($jday) {}
+function jdtounix (int $jday) {}
 
 /**
  * Converts from a supported calendar to Julian Day Count
@@ -232,7 +241,7 @@ function jdtounix ($jday) {}
  * </p>
  * @return int A Julian Day number.
  */
-function cal_to_jd ($calendar, $month, $day, $year) {}
+function cal_to_jd (int $calendar, int $month, int $day, int $year) {}
 
 /**
  * Converts from Julian Day Count to a supported calendar
@@ -247,7 +256,7 @@ function cal_to_jd ($calendar, $month, $day, $year) {}
  * day of week, abbreviated and full names of weekday and month and the
  * date in string form "month/day/year".
  */
-function cal_from_jd ($jd, $calendar) {}
+function cal_from_jd (int $jd, int $calendar) {}
 
 /**
  * Return the number of days in a month for a given year and calendar
@@ -263,7 +272,7 @@ function cal_from_jd ($jd, $calendar) {}
  * </p>
  * @return int The length in days of the selected month in the given calendar
  */
-function cal_days_in_month ($calendar, $month, $year) {}
+function cal_days_in_month (int $calendar, int $month, int $year) {}
 
 /**
  * Returns information about a particular calendar
@@ -274,7 +283,7 @@ function cal_days_in_month ($calendar, $month, $year) {}
  * </p>
  * @return array 
  */
-function cal_info ($calendar = null) {}
+function cal_info (int $calendar = null) {}
 
 define ('CAL_GREGORIAN', 0);
 define ('CAL_JULIAN', 1);
@@ -298,4 +307,4 @@ define ('CAL_JEWISH_ADD_ALAFIM_GERESH', 2);
 define ('CAL_JEWISH_ADD_ALAFIM', 4);
 define ('CAL_JEWISH_ADD_GERESHAYIM', 8);
 
-// End of calendar v.7.0.0-dev
+// End of calendar v.7.1.1

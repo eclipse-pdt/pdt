@@ -1,6 +1,6 @@
 <?php
 
-// Start of wddx v.7.0.0-dev
+// Start of wddx v.7.1.1
 
 /**
  * Serialize a single value into a WDDX packet
@@ -13,7 +13,7 @@
  * </p>
  * @return string the WDDX packet, or false on error.
  */
-function wddx_serialize_value ($var, $comment = null) {}
+function wddx_serialize_value ($var, string $comment = null) {}
 
 /**
  * Serialize variables into a WDDX packet
@@ -35,7 +35,7 @@ function wddx_serialize_vars ($var_name, $_ = null) {}
  * </p>
  * @return resource a packet ID for use in later functions, or false on error.
  */
-function wddx_packet_start ($comment = null) {}
+function wddx_packet_start (string $comment = null) {}
 
 /**
  * Ends a WDDX packet with the specified ID
@@ -71,6 +71,6 @@ function wddx_add_vars ($packet_id, $var_name, $_ = null) {}
  * @return mixed the deserialized value which can be a string, a number or an
  * array. Note that structures are deserialized into associative arrays.
  */
-function wddx_deserialize ($packet) {}
+function wddx_deserialize (string $packet) {}
 
-// End of wddx v.7.0.0-dev
+// End of wddx v.7.1.1
