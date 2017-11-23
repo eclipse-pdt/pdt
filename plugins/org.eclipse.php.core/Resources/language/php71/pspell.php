@@ -1,6 +1,6 @@
 <?php
 
-// Start of pspell v.7.0.0-dev
+// Start of pspell v.7.1.1
 
 /**
  * Load a new dictionary
@@ -22,7 +22,7 @@
  * </p>
  * @param string $encoding [optional] <p>
  * The encoding parameter is the encoding that words are expected to
- * be in. Valid values are 'utf-8', 'iso8859-*', 'koi8-r',
+ * be in. Valid values are 'utf-8', 'iso8859-&#42;', 'koi8-r',
  * 'viscii', 'cp1252', 'machine unsigned 16', 'machine unsigned
  * 32'. This parameter is largely untested, so be careful when
  * using.
@@ -34,7 +34,7 @@
  * suggestions)
  * @return int the dictionary link identifier on success or false on failure.
  */
-function pspell_new ($language, $spelling = null, $jargon = null, $encoding = null, $mode = null) {}
+function pspell_new (string $language, string $spelling = null, string $jargon = null, string $encoding = null, int $mode = null) {}
 
 /**
  * Load a new dictionary with personal wordlist
@@ -60,7 +60,7 @@ function pspell_new ($language, $spelling = null, $jargon = null, $encoding = nu
  * </p>
  * @param string $encoding [optional] <p>
  * The encoding that words are expected to be in. Valid values are
- * utf-8, iso8859-*, 
+ * utf-8, iso8859-&#42;, 
  * koi8-r, viscii, 
  * cp1252, machine unsigned 16, 
  * machine unsigned 32. 
@@ -71,7 +71,7 @@ function pspell_new ($language, $spelling = null, $jargon = null, $encoding = nu
  * suggestions)
  * @return int the dictionary link identifier for use in other pspell functions.
  */
-function pspell_new_personal ($personal, $language, $spelling = null, $jargon = null, $encoding = null, $mode = null) {}
+function pspell_new_personal (string $personal, string $language, string $spelling = null, string $jargon = null, string $encoding = null, int $mode = null) {}
 
 /**
  * Load a new dictionary with settings based on a given config
@@ -82,7 +82,7 @@ function pspell_new_personal ($personal, $language, $spelling = null, $jargon = 
  * </p>
  * @return int a dictionary link identifier on success.
  */
-function pspell_new_config ($config) {}
+function pspell_new_config (int $config) {}
 
 /**
  * Check a word
@@ -94,7 +94,7 @@ function pspell_new_config ($config) {}
  * </p>
  * @return bool true if the spelling is correct, false if not.
  */
-function pspell_check ($dictionary_link, $word) {}
+function pspell_check (int $dictionary_link, string $word) {}
 
 /**
  * Suggest spellings of a word
@@ -106,7 +106,7 @@ function pspell_check ($dictionary_link, $word) {}
  * </p>
  * @return array an array of possible spellings.
  */
-function pspell_suggest ($dictionary_link, $word) {}
+function pspell_suggest (int $dictionary_link, string $word) {}
 
 /**
  * Store a replacement pair for a word
@@ -123,7 +123,7 @@ function pspell_suggest ($dictionary_link, $word) {}
  * </p>
  * @return bool true on success or false on failure
  */
-function pspell_store_replacement ($dictionary_link, $misspelled, $correct) {}
+function pspell_store_replacement (int $dictionary_link, string $misspelled, string $correct) {}
 
 /**
  * Add the word to a personal wordlist
@@ -135,7 +135,7 @@ function pspell_store_replacement ($dictionary_link, $misspelled, $correct) {}
  * </p>
  * @return bool true on success or false on failure
  */
-function pspell_add_to_personal ($dictionary_link, $word) {}
+function pspell_add_to_personal (int $dictionary_link, string $word) {}
 
 /**
  * Add the word to the wordlist in the current session
@@ -147,7 +147,7 @@ function pspell_add_to_personal ($dictionary_link, $word) {}
  * </p>
  * @return bool true on success or false on failure
  */
-function pspell_add_to_session ($dictionary_link, $word) {}
+function pspell_add_to_session (int $dictionary_link, string $word) {}
 
 /**
  * Clear the current session
@@ -156,7 +156,7 @@ function pspell_add_to_session ($dictionary_link, $word) {}
  * </p>
  * @return bool true on success or false on failure
  */
-function pspell_clear_session ($dictionary_link) {}
+function pspell_clear_session (int $dictionary_link) {}
 
 /**
  * Save the personal wordlist to a file
@@ -167,7 +167,7 @@ function pspell_clear_session ($dictionary_link) {}
  * </p>
  * @return bool true on success or false on failure
  */
-function pspell_save_wordlist ($dictionary_link) {}
+function pspell_save_wordlist (int $dictionary_link) {}
 
 /**
  * Create a config used to open a dictionary
@@ -189,14 +189,14 @@ function pspell_save_wordlist ($dictionary_link) {}
  * </p>
  * @param string $encoding [optional] <p>
  * The encoding parameter is the encoding that words are expected to
- * be in. Valid values are 'utf-8', 'iso8859-*', 'koi8-r',
+ * be in. Valid values are 'utf-8', 'iso8859-&#42;', 'koi8-r',
  * 'viscii', 'cp1252', 'machine unsigned 16', 'machine unsigned
  * 32'. This parameter is largely untested, so be careful when
  * using.
  * </p>
  * @return int Retuns a pspell config identifier, or false on error.
  */
-function pspell_config_create ($language, $spelling = null, $jargon = null, $encoding = null) {}
+function pspell_config_create (string $language, string $spelling = null, string $jargon = null, string $encoding = null) {}
 
 /**
  * Consider run-together words as valid compounds
@@ -209,7 +209,7 @@ function pspell_config_create ($language, $spelling = null, $jargon = null, $enc
  * </p>
  * @return bool true on success or false on failure
  */
-function pspell_config_runtogether ($dictionary_link, $flag) {}
+function pspell_config_runtogether (int $dictionary_link, bool $flag) {}
 
 /**
  * Change the mode number of suggestions returned
@@ -223,7 +223,7 @@ function pspell_config_runtogether ($dictionary_link, $flag) {}
  * suggestions)
  * @return bool true on success or false on failure
  */
-function pspell_config_mode ($dictionary_link, $mode) {}
+function pspell_config_mode (int $dictionary_link, int $mode) {}
 
 /**
  * Ignore words less than N characters long
@@ -235,7 +235,7 @@ function pspell_config_mode ($dictionary_link, $mode) {}
  * </p>
  * @return bool true on success or false on failure
  */
-function pspell_config_ignore ($dictionary_link, $n) {}
+function pspell_config_ignore (int $dictionary_link, int $n) {}
 
 /**
  * Set a file that contains personal wordlist
@@ -248,7 +248,7 @@ function pspell_config_ignore ($dictionary_link, $n) {}
  * </p>
  * @return bool true on success or false on failure
  */
-function pspell_config_personal ($dictionary_link, $file) {}
+function pspell_config_personal (int $dictionary_link, string $file) {}
 
 /**
  * Location of the main word list
@@ -257,7 +257,7 @@ function pspell_config_personal ($dictionary_link, $file) {}
  * @param string $directory 
  * @return bool true on success or false on failure
  */
-function pspell_config_dict_dir ($conf, $directory) {}
+function pspell_config_dict_dir (int $conf, string $directory) {}
 
 /**
  * location of language data files
@@ -266,7 +266,7 @@ function pspell_config_dict_dir ($conf, $directory) {}
  * @param string $directory 
  * @return bool true on success or false on failure
  */
-function pspell_config_data_dir ($conf, $directory) {}
+function pspell_config_data_dir (int $conf, string $directory) {}
 
 /**
  * Set a file that contains replacement pairs
@@ -278,11 +278,11 @@ function pspell_config_data_dir ($conf, $directory) {}
  * </p>
  * @return bool true on success or false on failure
  */
-function pspell_config_repl ($dictionary_link, $file) {}
+function pspell_config_repl (int $dictionary_link, string $file) {}
 
 /**
  * Determine whether to save a replacement pairs list
-  along with the wordlist
+ * along with the wordlist
  * @link http://www.php.net/manual/en/function.pspell-config-save-repl.php
  * @param int $dictionary_link <p>
  * </p>
@@ -291,11 +291,11 @@ function pspell_config_repl ($dictionary_link, $file) {}
  * </p>
  * @return bool true on success or false on failure
  */
-function pspell_config_save_repl ($dictionary_link, $flag) {}
+function pspell_config_save_repl (int $dictionary_link, bool $flag) {}
 
 define ('PSPELL_FAST', 1);
 define ('PSPELL_NORMAL', 2);
 define ('PSPELL_BAD_SPELLERS', 3);
 define ('PSPELL_RUN_TOGETHER', 8);
 
-// End of pspell v.7.0.0-dev
+// End of pspell v.7.1.1

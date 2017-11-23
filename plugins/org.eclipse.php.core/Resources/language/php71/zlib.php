@@ -1,6 +1,6 @@
 <?php
 
-// Start of zlib v.7.2.0-dev
+// Start of zlib v.7.1.1
 
 /**
  * Output a gz-file
@@ -18,7 +18,7 @@
  * called as @readgzfile, an error message is
  * printed.
  */
-function readgzfile ($filename, $use_include_path = null) {}
+function readgzfile (string $filename, int $use_include_path = null) {}
 
 /**
  * Rewind the position of a gz-file pointer
@@ -43,7 +43,7 @@ function gzrewind ($zp) {}
 function gzclose ($zp) {}
 
 /**
- * Test for <acronym>EOF</acronym> on a gz-file pointer
+ * Test for EOF on a gz-file pointer
  * @link http://www.php.net/manual/en/function.gzeof.php
  * @param resource $zp <p>
  * The gz-file pointer. It must be valid, and must point to a file
@@ -77,7 +77,7 @@ function gzgetc ($zp) {}
  * </p>
  * @return string The uncompressed string, or false on error.
  */
-function gzgets ($zp, $length = null) {}
+function gzgets ($zp, int $length = null) {}
 
 /**
  * Get line from gz-file pointer and strip HTML tags
@@ -95,7 +95,7 @@ function gzgets ($zp, $length = null) {}
  * </p>
  * @return string The uncompressed and stripped string, or false on error.
  */
-function gzgetss ($zp, $length, $allowable_tags = null) {}
+function gzgetss ($zp, int $length, string $allowable_tags = null) {}
 
 /**
  * Binary-safe gz-file read
@@ -109,7 +109,7 @@ function gzgetss ($zp, $length, $allowable_tags = null) {}
  * </p>
  * @return string The data that have been read.
  */
-function gzread ($zp, $length) {}
+function gzread ($zp, int $length) {}
 
 /**
  * Open gz-file
@@ -134,11 +134,11 @@ function gzread ($zp, $length) {}
  * @return resource a file pointer to the file opened, after that, everything you read
  * from this file descriptor will be transparently decompressed and what you 
  * write gets compressed.
- * </p>
  * <p>
  * If the open fails, the function returns false.
+ * </p>
  */
-function gzopen ($filename, $mode, $use_include_path = null) {}
+function gzopen (string $filename, string $mode, int $use_include_path = null) {}
 
 /**
  * Output all remaining data on a gz-file pointer
@@ -174,7 +174,7 @@ function gzpassthru ($zp) {}
  * @return int Upon success, returns 0; otherwise, returns -1. Note that seeking
  * past EOF is not considered an error.
  */
-function gzseek ($zp, $offset, $whence = null) {}
+function gzseek ($zp, int $offset, int $whence = null) {}
 
 /**
  * Tell gz-file pointer read/write position
@@ -212,10 +212,10 @@ function gztell ($zp) {}
  * @return int the number of (uncompressed) bytes written to the given gz-file 
  * stream.
  */
-function gzwrite ($zp, $string, $length = null) {}
+function gzwrite ($zp, string $string, int $length = null) {}
 
 /**
- * &Alias; <function>gzwrite</function>
+ * Alias: gzwrite
  * @link http://www.php.net/manual/en/function.gzputs.php
  * @param $fp
  * @param $str
@@ -235,7 +235,7 @@ function gzputs ($fp, $str, $length = null) {}
  * </p>
  * @return array An array containing the file, one line per cell, empty lines included, and with newlines still attached.
  */
-function gzfile ($filename, $use_include_path = null) {}
+function gzfile (string $filename, int $use_include_path = null) {}
 
 /**
  * Compress a string
@@ -251,11 +251,11 @@ function gzfile ($filename, $use_include_path = null) {}
  * If -1 is used, the default compression of the zlib library is used which is 6.
  * </p>
  * @param int $encoding [optional] <p>
- * One of ZLIB_ENCODING_* constants.
+ * One of ZLIB_ENCODING_&#42; constants.
  * </p>
  * @return string The compressed string or false if an error occurred.
  */
-function gzcompress ($data, $level = null, $encoding = null) {}
+function gzcompress (string $data, int $level = null, int $encoding = null) {}
 
 /**
  * Uncompress a compressed string
@@ -267,13 +267,13 @@ function gzcompress ($data, $level = null, $encoding = null) {}
  * The maximum length of data to decode.
  * </p>
  * @return string The original uncompressed data or false on error.
- * </p>
  * <p>
  * The function will return an error if the uncompressed data is more than
  * 32768 times the length of the compressed input data 
  * or more than the optional parameter length.
+ * </p>
  */
-function gzuncompress ($data, $length = null) {}
+function gzuncompress (string $data, int $length = null) {}
 
 /**
  * Deflate a string
@@ -287,11 +287,11 @@ function gzuncompress ($data, $length = null) {}
  * be the default compression level of the zlib library.
  * </p>
  * @param int $encoding [optional] <p>
- * One of ZLIB_ENCODING_* constants.
+ * One of ZLIB_ENCODING_&#42; constants.
  * </p>
  * @return string The deflated string or false if an error occurred.
  */
-function gzdeflate ($data, $level = null, $encoding = null) {}
+function gzdeflate (string $data, int $level = null, int $encoding = null) {}
 
 /**
  * Inflate a deflated string
@@ -303,13 +303,13 @@ function gzdeflate ($data, $level = null, $encoding = null) {}
  * The maximum length of data to decode.
  * </p>
  * @return string The original uncompressed data or false on error.
- * </p>
  * <p>
  * The function will return an error if the uncompressed data is more than
  * 32768 times the length of the compressed input data 
  * or more than the optional parameter length.
+ * </p>
  */
-function gzinflate ($data, $length = null) {}
+function gzinflate (string $data, int $length = null) {}
 
 /**
  * Create a gzip compressed string
@@ -338,7 +338,7 @@ function gzinflate ($data, $length = null) {}
  * </p>
  * @return string The encoded string, or false if an error occurred.
  */
-function gzencode ($data, $level = null, $encoding_mode = null) {}
+function gzencode (string $data, int $level = null, int $encoding_mode = null) {}
 
 /**
  * Decodes a gzip compressed string
@@ -351,20 +351,24 @@ function gzencode ($data, $level = null, $encoding_mode = null) {}
  * </p>
  * @return string The decoded string, or false if an error occurred.
  */
-function gzdecode ($data, $length = null) {}
+function gzdecode (string $data, int $length = null) {}
 
 /**
  * Compress data with the specified encoding
  * @link http://www.php.net/manual/en/function.zlib-encode.php
  * @param string $data <p>
+ * The data to compress.
  * </p>
  * @param string $encoding <p>
+ * The compression algorithm. Either ZLIB_ENCODING_RAW,
+ * ZLIB_ENCODING_DEFLATE or
+ * ZLIB_ENCODING_GZIP.
  * </p>
  * @param string $level [optional] <p>
  * </p>
  * @return string 
  */
-function zlib_encode ($data, $encoding, $level = null) {}
+function zlib_encode (string $data, string $encoding, string $level = null) {}
 
 /**
  * Uncompress any raw/gzip/zlib encoded data
@@ -373,9 +377,9 @@ function zlib_encode ($data, $encoding, $level = null) {}
  * </p>
  * @param string $max_decoded_len [optional] <p>
  * </p>
- * @return string 
+ * @return string the uncompressed data, or false on failure.
  */
-function zlib_decode ($data, $max_decoded_len = null) {}
+function zlib_decode (string $data, string $max_decoded_len = null) {}
 
 /**
  * Returns the coding type used for output compression
@@ -389,7 +393,7 @@ function zlib_get_coding_type () {}
  * Initialize an incremental deflate context
  * @link http://www.php.net/manual/en/function.deflate-init.php
  * @param int $encoding <p>
- * One of the ZLIB_ENCODING_* constants.
+ * One of the ZLIB_ENCODING_&#42; constants.
  * </p>
  * @param array $options [optional] <p>
  * An associative array which may contain the following elements:
@@ -400,7 +404,7 @@ function zlib_get_coding_type () {}
  * @return resource a deflate context resource (zlib.deflate) on
  * success, or false on failure.
  */
-function deflate_init ($encoding, array $options = null) {}
+function deflate_init (int $encoding, array $options = null) {}
 
 /**
  * Incrementally deflate data
@@ -424,13 +428,13 @@ function deflate_init ($encoding, array $options = null) {}
  * </p>
  * @return string a chunk of compressed data, or false on failure.
  */
-function deflate_add ($context, $data, $flush_mode = null) {}
+function deflate_add ($context, string $data, int $flush_mode = null) {}
 
 /**
  * Initialize an incremental inflate context
  * @link http://www.php.net/manual/en/function.inflate-init.php
  * @param int $encoding <p>
- * One of the ZLIB_ENCODING_* constants.
+ * One of the ZLIB_ENCODING_&#42; constants.
  * </p>
  * @param array $options [optional] <p>
  * An associative array which may contain the following elements:
@@ -441,7 +445,7 @@ function deflate_add ($context, $data, $flush_mode = null) {}
  * @return resource an inflate context resource (zlib.inflate) on
  * success, or false on failure.
  */
-function inflate_init ($encoding, array $options = null) {}
+function inflate_init (int $encoding, array $options = null) {}
 
 /**
  * Incrementally inflate encoded data
@@ -465,7 +469,7 @@ function inflate_init ($encoding, array $options = null) {}
  * </p>
  * @return string a chunk of uncompressed data, or false on failure.
  */
-function inflate_add ($context, $encoded_data, $flush_mode = null) {}
+function inflate_add ($context, string $encoded_data, int $flush_mode = null) {}
 
 /**
  * ob_start callback function to gzip output buffer
@@ -476,7 +480,7 @@ function inflate_add ($context, $encoded_data, $flush_mode = null) {}
  * </p>
  * @return string 
  */
-function ob_gzhandler ($buffer, $mode) {}
+function ob_gzhandler (string $buffer, int $mode) {}
 
 define ('FORCE_GZIP', 31);
 define ('FORCE_DEFLATE', 15);
@@ -567,4 +571,4 @@ define ('ZLIB_DEFAULT_STRATEGY', 0);
 define ('ZLIB_VERSION', "1.2.8");
 define ('ZLIB_VERNUM', 4736);
 
-// End of zlib v.7.2.0-dev
+// End of zlib v.7.1.1

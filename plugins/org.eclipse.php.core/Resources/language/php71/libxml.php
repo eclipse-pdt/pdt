@@ -1,6 +1,6 @@
 <?php
 
-// Start of libxml v.7.2.0-dev
+// Start of libxml v.7.1.1
 
 class LibXMLError  {
 }
@@ -25,7 +25,7 @@ function libxml_set_streams_context ($streams_context) {}
  * @return bool This function returns the previous value of
  * use_errors.
  */
-function libxml_use_internal_errors ($use_errors = null) {}
+function libxml_use_internal_errors (bool $use_errors = null) {}
 
 /**
  * Retrieve last error from libxml
@@ -60,7 +60,7 @@ function libxml_get_errors () {}
  * </p>
  * @return bool the previous value.
  */
-function libxml_disable_entity_loader ($disable = null) {}
+function libxml_disable_entity_loader (bool $disable = null) {}
 
 /**
  * Changes the default external entity loader
@@ -69,24 +69,24 @@ function libxml_disable_entity_loader ($disable = null) {}
  * A callable that takes three arguments. Two strings, a public id
  * and system id, and a context (an array with four keys) as the third argument.
  * This callback should return a resource, a string from which a resource can be
- * opened, or &null;.
+ * opened, or null.
  * </p>
  * @return void 
  */
-function libxml_set_external_entity_loader ($resolver_function) {}
+function libxml_set_external_entity_loader (callable $resolver_function) {}
 
 
 /**
  * libxml version like 20605 or 20617
  * @link http://www.php.net/manual/en/libxml.constants.php
  */
-define ('LIBXML_VERSION', 20903);
+define ('LIBXML_VERSION', 20904);
 
 /**
  * libxml version like 2.6.5 or 2.6.17
  * @link http://www.php.net/manual/en/libxml.constants.php
  */
-define ('LIBXML_DOTTED_VERSION', "2.9.3");
+define ('LIBXML_DOTTED_VERSION', "2.9.4");
 define ('LIBXML_LOADED_VERSION', 20903);
 
 /**
@@ -268,4 +268,4 @@ define ('LIBXML_ERR_ERROR', 2);
  */
 define ('LIBXML_ERR_FATAL', 3);
 
-// End of libxml v.7.2.0-dev
+// End of libxml v.7.1.1

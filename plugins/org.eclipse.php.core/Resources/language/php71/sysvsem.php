@@ -1,6 +1,6 @@
 <?php
 
-// Start of sysvsem v.7.0.0-dev
+// Start of sysvsem v.7.1.1
 
 /**
  * Get a semaphore id
@@ -23,7 +23,7 @@
  * @return resource a positive semaphore identifier on success, or false on
  * error.
  */
-function sem_get ($key, $max_acquire = null, $perm = null, $auto_release = null) {}
+function sem_get (int $key, int $max_acquire = null, int $perm = null, int $auto_release = null) {}
 
 /**
  * Acquire a semaphore
@@ -40,7 +40,7 @@ function sem_get ($key, $max_acquire = null, $perm = null, $auto_release = null)
  * </p>
  * @return bool true on success or false on failure
  */
-function sem_acquire ($sem_identifier, $nowait = null) {}
+function sem_acquire ($sem_identifier, bool $nowait = null) {}
 
 /**
  * Release a semaphore
@@ -64,4 +64,4 @@ function sem_release ($sem_identifier) {}
  */
 function sem_remove ($sem_identifier) {}
 
-// End of sysvsem v.7.0.0-dev
+// End of sysvsem v.7.1.1

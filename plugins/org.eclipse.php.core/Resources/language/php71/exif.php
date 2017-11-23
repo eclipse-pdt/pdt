@@ -3,16 +3,18 @@
 // Start of exif v.1.4 $Id: 8bdc0c8f27c2c9dd1f7551f1f9fe3ab57a06a4b1 $
 
 /**
- * Reads the <acronym>EXIF</acronym> headers from <acronym>JPEG</acronym> or <acronym>TIFF</acronym>
+ * Reads the EXIF headers from an image file
  * @link http://www.php.net/manual/en/function.exif-read-data.php
- * @param string $filename <p>
- * The name of the image file being read. This cannot be an
- * URL.
+ * @param mixed $stream <p>
+ * The location of the image file. This can either be a path to the file
+ * (stream wrappers are also supported as usual)
+ * or a stream resource.
  * </p>
  * @param string $sections [optional] <p>
  * Is a comma separated list of sections that need to be present in file 
  * to produce a result array. If none of the requested 
  * sections could be found the return value is false.
+ * <table>
  * <tr valign="top">
  * <td>FILE</td>
  * <td>FileName, FileSize, FileDateTime, SectionsFound</td>
@@ -58,6 +60,7 @@
  * are digital camera related.
  * </td>
  * </tr>
+ * </table>
  * </p>
  * @param bool $arrays [optional] <p>
  * Specifies whether or not each section becomes an array. The 
@@ -75,10 +78,10 @@
  * those headers. If no data can be returned, 
  * exif_read_data will return false.
  */
-function exif_read_data ($filename, $sections = null, $arrays = null, $thumbnail = null) {}
+function exif_read_data ($stream, string $sections = null, bool $arrays = null, bool $thumbnail = null) {}
 
 /**
- * &Alias; <function>exif_read_data</function>
+ * Alias: exif_read_data
  * @link http://www.php.net/manual/en/function.read-exif-data.php
  * @param $filename
  * @param $sections_needed [optional]
@@ -96,14 +99,14 @@ function read_exif_data ($filename, $sections_needed = null, $sub_arrays = null,
  * @return string the header name, or false if index is
  * not a defined EXIF tag id.
  */
-function exif_tagname ($index) {}
+function exif_tagname (int $index) {}
 
 /**
- * Retrieve the embedded thumbnail of a TIFF or JPEG image
+ * Retrieve the embedded thumbnail of an image
  * @link http://www.php.net/manual/en/function.exif-thumbnail.php
- * @param string $filename <p>
- * The name of the image file being read. This image contains an
- * embedded thumbnail.
+ * @param mixed $stream <p>
+ * The location of the image file. This can either be a path to the file 
+ * or a stream resource.
  * </p>
  * @param int $width [optional] <p>
  * The return width of the returned thumbnail.
@@ -118,7 +121,7 @@ function exif_tagname ($index) {}
  * @return string the embedded thumbnail, or false if the image contains no 
  * thumbnail.
  */
-function exif_thumbnail ($filename, &$width = null, &$height = null, &$imagetype = null) {}
+function exif_thumbnail ($stream, int &$width = null, int &$height = null, int &$imagetype = null) {}
 
 /**
  * Determine the type of an image
@@ -128,14 +131,21 @@ function exif_thumbnail ($filename, &$width = null, &$height = null, &$imagetype
  * returned otherwise the return value is false. The return value is the
  * same value that getimagesize returns in index 2 but
  * exif_imagetype is much faster.
- * </p>
  * <p>
  * exif_imagetype will emit an E_NOTICE
  * and return false if it is unable to read enough bytes from the file to
  * determine the image type.
+ * </p>
  */
-function exif_imagetype ($filename) {}
+function exif_imagetype (string $filename) {}
 
+
+/**
+ * This constant have a value of 1 if the 
+ * mbstring is enabled, otherwise 
+ * the value is 0.
+ * @link http://www.php.net/manual/en/exif.constants.php
+ */
 define ('EXIF_USE_MBSTRING', 1);
 
 // End of exif v.1.4 $Id: 8bdc0c8f27c2c9dd1f7551f1f9fe3ab57a06a4b1 $

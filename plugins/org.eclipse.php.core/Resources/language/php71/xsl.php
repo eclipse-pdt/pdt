@@ -1,6 +1,6 @@
 <?php
 
-// Start of xsl v.7.2.0-dev
+// Start of xsl v.7.1.1
 
 class XSLTProcessor  {
 
@@ -36,7 +36,7 @@ class XSLTProcessor  {
 	 * </p>
 	 * @return int the number of bytes written or false if an error occurred.
 	 */
-	public function transformToUri (DOMDocument $doc, $uri) {}
+	public function transformToUri (DOMDocument $doc, string $uri) {}
 
 	/**
 	 * Transform to XML
@@ -63,7 +63,7 @@ class XSLTProcessor  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function setParameter ($namespace, $name, $value) {}
+	public function setParameter (string $namespace, string $name, string $value) {}
 
 	/**
 	 * Get value of a parameter
@@ -76,7 +76,7 @@ class XSLTProcessor  {
 	 * </p>
 	 * @return string The value of the parameter (as a string), or false if it's not set.
 	 */
-	public function getParameter ($namespaceURI, $localName) {}
+	public function getParameter (string $namespaceURI, string $localName) {}
 
 	/**
 	 * Remove parameter
@@ -89,7 +89,7 @@ class XSLTProcessor  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function removeParameter ($namespaceURI, $localName) {}
+	public function removeParameter (string $namespaceURI, string $localName) {}
 
 	/**
 	 * Determine if PHP has EXSLT support
@@ -121,7 +121,7 @@ class XSLTProcessor  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function setProfiling ($filename) {}
+	public function setProfiling (string $filename) {}
 
 	/**
 	 * Set security preferences
@@ -138,7 +138,7 @@ class XSLTProcessor  {
 	 * </p>
 	 * @return int the old security preferences.
 	 */
-	public function setSecurityPrefs ($securityPrefs) {}
+	public function setSecurityPrefs (int $securityPrefs) {}
 
 	/**
 	 * Get security preferences
@@ -225,4 +225,4 @@ define ('LIBEXSLT_VERSION', 817);
  */
 define ('LIBEXSLT_DOTTED_VERSION', "1.1.28");
 
-// End of xsl v.7.2.0-dev
+// End of xsl v.7.1.1

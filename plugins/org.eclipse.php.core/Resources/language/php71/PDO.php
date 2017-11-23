@@ -1,6 +1,6 @@
 <?php
 
-// Start of PDO v.7.2.0-dev
+// Start of PDO v.7.1.1
 
 class PDOException extends RuntimeException implements Throwable {
 	protected $message;
@@ -110,6 +110,12 @@ class PDO  {
 	const FETCH_ORI_REL = 5;
 	const CURSOR_FWDONLY = 0;
 	const CURSOR_SCROLL = 1;
+	const DBLIB_ATTR_CONNECTION_TIMEOUT = 1000;
+	const DBLIB_ATTR_QUERY_TIMEOUT = 1001;
+	const DBLIB_ATTR_STRINGIFY_UNIQUEIDENTIFIER = 1002;
+	const FB_ATTR_DATE_FORMAT = 1000;
+	const FB_ATTR_TIME_FORMAT = 1001;
+	const FB_ATTR_TIMESTAMP_FORMAT = 1002;
 	const MYSQL_ATTR_USE_BUFFERED_QUERY = 1000;
 	const MYSQL_ATTR_LOCAL_INFILE = 1001;
 	const MYSQL_ATTR_INIT_COMMAND = 1002;
@@ -124,6 +130,17 @@ class PDO  {
 	const MYSQL_ATTR_SSL_CIPHER = 1011;
 	const MYSQL_ATTR_SERVER_PUBLIC_KEY = 1012;
 	const MYSQL_ATTR_MULTI_STATEMENTS = 1013;
+	const ODBC_ATTR_USE_CURSOR_LIBRARY = 1000;
+	const ODBC_ATTR_ASSUME_UTF8 = 1001;
+	const ODBC_SQL_USE_IF_NEEDED = 0;
+	const ODBC_SQL_USE_DRIVER = 2;
+	const ODBC_SQL_USE_ODBC = 1;
+	const PGSQL_ATTR_DISABLE_PREPARES = 1000;
+	const PGSQL_TRANSACTION_IDLE = 0;
+	const PGSQL_TRANSACTION_ACTIVE = 1;
+	const PGSQL_TRANSACTION_INTRANS = 2;
+	const PGSQL_TRANSACTION_INERROR = 3;
+	const PGSQL_TRANSACTION_UNKNOWN = 4;
 
 
 	/**
@@ -157,12 +174,12 @@ class PDO  {
 	 * If the database server cannot successfully prepare the statement,
 	 * PDO::prepare returns false or emits
 	 * PDOException (depending on error handling).
-	 * </p>
 	 * <p>
 	 * Emulated prepared statements does not communicate with the database server
 	 * so PDO::prepare does not check the statement.
+	 * </p>
 	 */
-	public function prepare ($statement, array $driver_options = null) {}
+	public function prepare (string $statement, array $driver_options = null) {}
 
 	/**
 	 * Initiates a transaction
@@ -199,7 +216,7 @@ class PDO  {
 	 * @param mixed $value 
 	 * @return bool true on success or false on failure
 	 */
-	public function setAttribute ($attribute, $value) {}
+	public function setAttribute (int $attribute, $value) {}
 
 	/**
 	 * Execute an SQL statement and return the number of affected rows
@@ -213,17 +230,19 @@ class PDO  {
 	 * @return int PDO::exec returns the number of rows that were modified
 	 * or deleted by the SQL statement you issued. If no rows were affected, 
 	 * PDO::exec returns 0. 
-	 * </p>
-	 * &return.falseproblem;
+	 * return.falseproblem
 	 * <p>
 	 * The following example incorrectly relies on the return value of
 	 * PDO::exec, wherein a statement that affected 0 rows
 	 * results in a call to die:
-	 * exec() or die(print_r($db->errorInfo(), true));
-	 * ?>
-	 * ]]>
+	 * <pre>
+	 * <code>&lt;?php
+	 * $db-&gt;exec() or die(print_r($db-&gt;errorInfo(), true)); &#47;&#47; incorrect
+	 * ?&gt;</code>
+	 * </pre>
+	 * </p>
 	 */
-	public function exec ($statement) {}
+	public function exec (string $statement) {}
 
 	/**
 	 * Executes an SQL statement, returning a result set as a PDOStatement object
@@ -237,7 +256,7 @@ class PDO  {
 	 * @return PDOStatement PDO::query returns a PDOStatement object, or false
 	 * on failure.
 	 */
-	public function query ($statement) {}
+	public function query (string $statement) {}
 
 	/**
 	 * Returns the ID of the last inserted row or sequence value
@@ -249,7 +268,6 @@ class PDO  {
 	 * parameter, PDO::lastInsertId returns a
 	 * string representing the row ID of the last row that was inserted into
 	 * the database.
-	 * </p>
 	 * <p>
 	 * If a sequence name was specified for the name
 	 * parameter, PDO::lastInsertId returns a
@@ -260,8 +278,9 @@ class PDO  {
 	 * If the PDO driver does not support this capability,
 	 * PDO::lastInsertId triggers an
 	 * IM001 SQLSTATE.
+	 * </p>
 	 */
-	public function lastInsertId ($name = null) {}
+	public function lastInsertId (string $name = null) {}
 
 	/**
 	 * Fetch the SQLSTATE associated with the last operation on the database handle
@@ -275,7 +294,6 @@ class PDO  {
 	 * and errors that derive from the implementation of PDO (or perhaps ODBC,
 	 * if you're using the ODBC driver) itself. The subclass value '000' in any
 	 * class indicates that there is no subclass for that SQLSTATE.
-	 * </p>
 	 * <p>
 	 * PDO::errorCode only retrieves error codes for operations
 	 * performed directly on the database handle. If you create a PDOStatement
@@ -286,7 +304,8 @@ class PDO  {
 	 * code for an operation performed on a particular statement handle.
 	 * </p>
 	 * <p>
-	 * Returns &null; if no operation has been run on the database handle.
+	 * Returns null if no operation has been run on the database handle.
+	 * </p>
 	 */
 	public function errorCode () {}
 
@@ -296,6 +315,7 @@ class PDO  {
 	 * @return array PDO::errorInfo returns an array of error information
 	 * about the last operation performed by this database handle. The array
 	 * consists of the following fields:
+	 * <table>
 	 * <tr valign="top">
 	 * <td>Element</td>
 	 * <td>Information</td>
@@ -313,10 +333,10 @@ class PDO  {
 	 * <td>2</td>
 	 * <td>Driver-specific error message.</td>
 	 * </tr>
-	 * </p>
+	 * </table>
 	 * <p>
 	 * If the SQLSTATE error code is not set or there is no driver-specific
-	 * error, the elements following element 0 will be set to &null;.
+	 * error, the elements following element 0 will be set to null.
 	 * </p>
 	 * <p>
 	 * PDO::errorInfo only retrieves error information for
@@ -327,6 +347,7 @@ class PDO  {
 	 * from the statement handle. You must call
 	 * PDOStatement::errorInfo to return the error
 	 * information for an operation performed on a particular statement handle.
+	 * </p>
 	 */
 	public function errorInfo () {}
 
@@ -334,7 +355,7 @@ class PDO  {
 	 * Retrieve a database connection attribute
 	 * @link http://www.php.net/manual/en/pdo.getattribute.php
 	 * @param int $attribute <p>
-	 * One of the PDO::ATTR_* constants. The constants that
+	 * One of the PDO::ATTR_&#42; constants. The constants that
 	 * apply to database connections are as follows:
 	 * PDO::ATTR_AUTOCOMMIT
 	 * PDO::ATTR_CASE
@@ -352,7 +373,7 @@ class PDO  {
 	 * @return mixed A successful call returns the value of the requested PDO attribute.
 	 * An unsuccessful call returns null.
 	 */
-	public function getAttribute ($attribute) {}
+	public function getAttribute (int $attribute) {}
 
 	/**
 	 * Quotes a string for use in a query.
@@ -367,7 +388,7 @@ class PDO  {
 	 * SQL statement. Returns false if the driver does not support quoting in
 	 * this way.
 	 */
-	public function quote ($string, $parameter_type = null) {}
+	public function quote (string $string, int $parameter_type = null) {}
 
 	final public function __wakeup () {}
 
@@ -396,12 +417,12 @@ class PDOStatement implements Traversable {
 	 * All values are treated as PDO::PARAM_STR.
 	 * </p>
 	 * <p>
-	 * You cannot bind multiple values to a single parameter; for example,
-	 * you cannot bind two values to a single named parameter in an IN()
+	 * Multiple values cannot be bound to a single parameter; for example,
+	 * it is not allowed to bind two values to a single named parameter in an IN()
 	 * clause.
 	 * </p>
 	 * <p>
-	 * You cannot bind more values than specified; if more keys exist in 
+	 * Binding more values than specified is not possible; if more keys exist in 
 	 * input_parameters than in the SQL specified 
 	 * in the PDO::prepare, then the statement will 
 	 * fail and an error is emitted.
@@ -415,7 +436,7 @@ class PDOStatement implements Traversable {
 	 * @link http://www.php.net/manual/en/pdostatement.fetch.php
 	 * @param int $fetch_style [optional] <p>
 	 * Controls how the next row will be returned to the caller. This value
-	 * must be one of the PDO::FETCH_* constants,
+	 * must be one of the PDO::FETCH_&#42; constants,
 	 * defaulting to value of PDO::ATTR_DEFAULT_FETCH_MODE
 	 * (which defaults to PDO::FETCH_BOTH).
 	 * <p>
@@ -425,7 +446,7 @@ class PDOStatement implements Traversable {
 	 * @param int $cursor_orientation [optional] <p>
 	 * For a PDOStatement object representing a scrollable cursor, this
 	 * value determines which row will be returned to the caller. This value
-	 * must be one of the PDO::FETCH_ORI_* constants,
+	 * must be one of the PDO::FETCH_ORI_&#42; constants,
 	 * defaulting to PDO::FETCH_ORI_NEXT. To request a
 	 * scrollable cursor for your PDOStatement object, you must set the
 	 * PDO::ATTR_CURSOR attribute to
@@ -436,7 +457,7 @@ class PDOStatement implements Traversable {
 	 * @return mixed The return value of this function on success depends on the fetch type. In
 	 * all cases, false is returned on failure.
 	 */
-	public function fetch ($fetch_style = null, $cursor_orientation = null, $cursor_offset = null) {}
+	public function fetch (int $fetch_style = null, int $cursor_orientation = null, int $cursor_offset = null) {}
 
 	/**
 	 * Binds a parameter to the specified variable name
@@ -452,7 +473,7 @@ class PDOStatement implements Traversable {
 	 * Name of the PHP variable to bind to the SQL statement parameter.
 	 * </p>
 	 * @param int $data_type [optional] <p>
-	 * Explicit data type for the parameter using the PDO::PARAM_*
+	 * Explicit data type for the parameter using the PDO::PARAM_&#42;
 	 * constants.
 	 * To return an INOUT parameter from a stored procedure, 
 	 * use the bitwise OR operator to set the PDO::PARAM_INPUT_OUTPUT bits
@@ -467,7 +488,7 @@ class PDOStatement implements Traversable {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function bindParam ($parameter, &$variable, $data_type = null, $length = null, $driver_options = null) {}
+	public function bindParam ($parameter, &$variable, int $data_type = null, int $length = null, $driver_options = null) {}
 
 	/**
 	 * Bind a column to a PHP variable
@@ -481,7 +502,7 @@ class PDOStatement implements Traversable {
 	 * Name of the PHP variable to which the column will be bound.
 	 * </p>
 	 * @param int $type [optional] <p>
-	 * Data type of the parameter, specified by the PDO::PARAM_*
+	 * Data type of the parameter, specified by the PDO::PARAM_&#42;
 	 * constants.
 	 * </p>
 	 * @param int $maxlen [optional] <p>
@@ -492,7 +513,7 @@ class PDOStatement implements Traversable {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function bindColumn ($column, &$param, $type = null, $maxlen = null, $driverdata = null) {}
+	public function bindColumn ($column, &$param, int $type = null, int $maxlen = null, $driverdata = null) {}
 
 	/**
 	 * Binds a value to a parameter
@@ -508,12 +529,12 @@ class PDOStatement implements Traversable {
 	 * The value to bind to the parameter.
 	 * </p>
 	 * @param int $data_type [optional] <p>
-	 * Explicit data type for the parameter using the PDO::PARAM_*
+	 * Explicit data type for the parameter using the PDO::PARAM_&#42;
 	 * constants.
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function bindValue ($parameter, $value, $data_type = null) {}
+	public function bindValue ($parameter, $value, int $data_type = null) {}
 
 	/**
 	 * Returns the number of rows affected by the last SQL statement
@@ -531,13 +552,13 @@ class PDOStatement implements Traversable {
 	 * fetches the first column.
 	 * </p>
 	 * @return mixed PDOStatement::fetchColumn returns a single column
-	 * in the next row of a result set.
-	 * </p>
+	 * from the next row of a result set or false if there are no more rows.
 	 * <p>
 	 * There is no way to return another column from the same row if you
 	 * use PDOStatement::fetchColumn to retrieve data.
+	 * </p>
 	 */
-	public function fetchColumn ($column_number = null) {}
+	public function fetchColumn (int $column_number = null) {}
 
 	/**
 	 * Returns an array containing all of the result set rows
@@ -580,7 +601,6 @@ class PDOStatement implements Traversable {
 	 * row as either an array of column values or an object with properties
 	 * corresponding to each column name. An empty array is returned if there
 	 * are zero results to fetch, or false on failure.
-	 * </p>
 	 * <p>
 	 * Using this method to fetch large result sets will result in a heavy
 	 * demand on system and possibly network resources. Rather than retrieving
@@ -588,8 +608,9 @@ class PDOStatement implements Traversable {
 	 * server to manipulate the result sets. For example, use the WHERE and
 	 * ORDER BY clauses in SQL to restrict results before retrieving and
 	 * processing them with PHP.
+	 * </p>
 	 */
-	public function fetchAll ($fetch_style = null, $fetch_argument = null, array $ctor_args = null) {}
+	public function fetchAll (int $fetch_style = null, $fetch_argument = null, array $ctor_args = null) {}
 
 	/**
 	 * Fetches the next row and returns it as an object.
@@ -603,7 +624,7 @@ class PDOStatement implements Traversable {
 	 * @return mixed an instance of the required class with property names that
 	 * correspond to the column names or false on failure.
 	 */
-	public function fetchObject ($class_name = null, array $ctor_args = null) {}
+	public function fetchObject (string $class_name = null, array $ctor_args = null) {}
 
 	/**
 	 * Fetch the SQLSTATE associated with the last operation on the statement handle
@@ -620,6 +641,7 @@ class PDOStatement implements Traversable {
 	 * @return array PDOStatement::errorInfo returns an array of
 	 * error information about the last operation performed by this
 	 * statement handle. The array consists of the following fields:
+	 * <table>
 	 * <tr valign="top">
 	 * <td>Element</td>
 	 * <td>Information</td>
@@ -637,6 +659,7 @@ class PDOStatement implements Traversable {
 	 * <td>2</td>
 	 * <td>Driver specific error message.</td>
 	 * </tr>
+	 * </table>
 	 */
 	public function errorInfo () {}
 
@@ -647,7 +670,7 @@ class PDOStatement implements Traversable {
 	 * @param mixed $value 
 	 * @return bool true on success or false on failure
 	 */
-	public function setAttribute ($attribute, $value) {}
+	public function setAttribute (int $attribute, $value) {}
 
 	/**
 	 * Retrieve a statement attribute
@@ -655,7 +678,7 @@ class PDOStatement implements Traversable {
 	 * @param int $attribute 
 	 * @return mixed the attribute value.
 	 */
-	public function getAttribute ($attribute) {}
+	public function getAttribute (int $attribute) {}
 
 	/**
 	 * Returns the number of columns in the result set
@@ -674,9 +697,9 @@ class PDOStatement implements Traversable {
 	 * </p>
 	 * @return array an associative array containing the following values representing
 	 * the metadata for a single column:
-	 * </p>
 	 * <table>
 	 * Column metadata
+	 * <table>
 	 * <tr valign="top">
 	 * <td>Name</td>
 	 * <td>Value</td>
@@ -718,25 +741,27 @@ class PDOStatement implements Traversable {
 	 * <tr valign="top">
 	 * <td>pdo_type</td>
 	 * <td>The type of this column as represented by the
-	 * PDO::PARAM_*
+	 * PDO::PARAM_&#42;
 	 * constants.</td>
 	 * </tr>
+	 * </table>
 	 * </table>
 	 * <p>
 	 * Returns false if the requested column does not exist in the result set,
 	 * or if no result set exists.
+	 * </p>
 	 */
-	public function getColumnMeta ($column) {}
+	public function getColumnMeta (int $column) {}
 
 	/**
 	 * Set the default fetch mode for this statement
 	 * @link http://www.php.net/manual/en/pdostatement.setfetchmode.php
 	 * @param int $mode <p>
-	 * The fetch mode must be one of the PDO::FETCH_* constants.
+	 * The fetch mode must be one of the PDO::FETCH_&#42; constants.
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function setFetchMode ($mode) {}
+	public function setFetchMode (int $mode) {}
 
 	/**
 	 * Advances to the next rowset in a multi-rowset statement handle
@@ -770,4 +795,4 @@ final class PDORow  {
 
 function pdo_drivers () {}
 
-// End of PDO v.7.2.0-dev
+// End of PDO v.7.1.1

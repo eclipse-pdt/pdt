@@ -1,6 +1,6 @@
 <?php
 
-// Start of soap v.7.2.0-dev
+// Start of soap v.7.1.1
 
 class SoapClient  {
 
@@ -19,7 +19,7 @@ class SoapClient  {
 	 * @param string $arguments 
 	 * @return mixed 
 	 */
-	public function __call ($function_name, $arguments) {}
+	public function __call (string $function_name, string $arguments) {}
 
 	/**
 	 * Calls a SOAP function
@@ -56,12 +56,12 @@ class SoapClient  {
 	 * a simple value (e.g. an integer, a string, etc). If multiple values are
 	 * returned, __soapCall will return
 	 * an associative array of named output parameters.
-	 * </p>
 	 * <p>
 	 * On error, if the SoapClient object was constructed with the exceptions
 	 * option set to false, a SoapFault object will be returned.
+	 * </p>
 	 */
-	public function __soapCall ($function_name, array $arguments, array $options = null, $input_headers = null, array &$output_headers = null) {}
+	public function __soapCall (string $function_name, array $arguments, array $options = null, $input_headers = null, array &$output_headers = null) {}
 
 	/**
 	 * Returns last SOAP request
@@ -95,7 +95,7 @@ class SoapClient  {
 	 * Returns list of available SOAP functions
 	 * @link http://www.php.net/manual/en/soapclient.getfunctions.php
 	 * @return array The array of SOAP function prototypes, detailing the return type,
-	 * the function name and type-hinted paramaters.
+	 * the function name and type-hinted parameters.
 	 */
 	public function __getFunctions () {}
 
@@ -127,7 +127,7 @@ class SoapClient  {
 	 * </p>
 	 * @return string The XML SOAP response.
 	 */
-	public function __doRequest ($request, $location, $action, $version, $one_way = null) {}
+	public function __doRequest (string $request, string $location, string $action, int $version, int $one_way = null) {}
 
 	/**
 	 * The __setCookie purpose
@@ -140,7 +140,7 @@ class SoapClient  {
 	 * </p>
 	 * @return void 
 	 */
-	public function __setCookie ($name, $value = null) {}
+	public function __setCookie (string $name, string $value = null) {}
 
 	public function __getCookies () {}
 
@@ -152,7 +152,7 @@ class SoapClient  {
 	 * </p>
 	 * @return string The old endpoint URL.
 	 */
-	public function __setLocation ($new_location = null) {}
+	public function __setLocation (string $new_location = null) {}
 
 	/**
 	 * Sets SOAP headers for subsequent calls
@@ -160,7 +160,7 @@ class SoapClient  {
 	 * @param mixed $soapheaders [optional] <p>
 	 * The headers to be set. It could be SoapHeader
 	 * object or array of SoapHeader objects.
-	 * If not specified or set to &null;, the headers will be deleted.
+	 * If not specified or set to null, the headers will be deleted.
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
@@ -213,7 +213,7 @@ class SoapServer  {
 	 * </p>
 	 * @return void 
 	 */
-	public function setPersistence ($mode) {}
+	public function setPersistence (int $mode) {}
 
 	/**
 	 * Sets the class which handles SOAP requests
@@ -228,7 +228,7 @@ class SoapServer  {
 	 * @param mixed $_ [optional] 
 	 * @return void 
 	 */
-	public function setClass ($class_name, $args = null, $_ = null) {}
+	public function setClass (string $class_name, $args = null, $_ = null) {}
 
 	/**
 	 * Sets the object which will be used to handle SOAP requests
@@ -279,7 +279,7 @@ class SoapServer  {
 	 * </p>
 	 * @return void 
 	 */
-	public function handle ($soap_request = null) {}
+	public function handle (string $soap_request = null) {}
 
 	/**
 	 * Issue SoapServer fault indicating an error
@@ -301,7 +301,7 @@ class SoapServer  {
 	 * </p>
 	 * @return void 
 	 */
-	public function fault ($code, $string, $actor = null, $details = null, $name = null) {}
+	public function fault (string $code, string $string, string $actor = null, string $details = null, string $name = null) {}
 
 	/**
 	 * Add a SOAP header to the response
@@ -396,7 +396,7 @@ class SoapHeader  {
  * </p>
  * @return bool the original value.
  */
-function use_soap_error_handler ($handler = null) {}
+function use_soap_error_handler (bool $handler = null) {}
 
 /**
  * Checks if a SOAP call has failed
@@ -510,4 +510,4 @@ define ('SOAP_SSL_METHOD_SSLv3', 2);
  */
 define ('SOAP_SSL_METHOD_SSLv23', 3);
 
-// End of soap v.7.2.0-dev
+// End of soap v.7.1.1

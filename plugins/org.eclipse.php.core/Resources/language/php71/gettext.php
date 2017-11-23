@@ -1,18 +1,18 @@
 <?php
 
-// Start of gettext v.7.2.0-dev
+// Start of gettext v.7.1.1
 
 /**
  * Sets the default domain
  * @link http://www.php.net/manual/en/function.textdomain.php
  * @param string $text_domain <p>
- * The new message domain, or &null; to get the current setting without
+ * The new message domain, or null to get the current setting without
  * changing it
  * </p>
  * @return string If successful, this function returns the current message
  * domain, after possibly changing it.
  */
-function textdomain ($text_domain) {}
+function textdomain (string $text_domain) {}
 
 /**
  * Lookup a message in the current domain
@@ -23,7 +23,7 @@ function textdomain ($text_domain) {}
  * @return string a translated string if one is found in the 
  * translation table, or the submitted message if not found.
  */
-function gettext ($message) {}
+function gettext (string $message) {}
 
 /**
  * @param $msgid
@@ -41,7 +41,7 @@ function _ ($msgid) {}
  * </p>
  * @return string A string on success.
  */
-function dgettext ($domain, $message) {}
+function dgettext (string $domain, string $message) {}
 
 /**
  * Overrides the domain for a single lookup
@@ -57,7 +57,7 @@ function dgettext ($domain, $message) {}
  * </p>
  * @return string A string on success.
  */
-function dcgettext ($domain, $message, $category) {}
+function dcgettext (string $domain, string $message, int $category) {}
 
 /**
  * Sets the path for a domain
@@ -70,7 +70,7 @@ function dcgettext ($domain, $message, $category) {}
  * </p>
  * @return string The full pathname for the domain currently being set.
  */
-function bindtextdomain ($domain, $directory) {}
+function bindtextdomain (string $domain, string $directory) {}
 
 /**
  * Plural version of gettext
@@ -89,7 +89,7 @@ function bindtextdomain ($domain, $directory) {}
  * msgid1 and msgid2
  * for count n.
  */
-function ngettext ($msgid1, $msgid2, $n) {}
+function ngettext (string $msgid1, string $msgid2, int $n) {}
 
 /**
  * Plural version of dgettext
@@ -105,7 +105,7 @@ function ngettext ($msgid1, $msgid2, $n) {}
  * </p>
  * @return string A string on success.
  */
-function dngettext ($domain, $msgid1, $msgid2, $n) {}
+function dngettext (string $domain, string $msgid1, string $msgid2, int $n) {}
 
 /**
  * Plural version of dcgettext
@@ -123,7 +123,7 @@ function dngettext ($domain, $msgid1, $msgid2, $n) {}
  * </p>
  * @return string A string on success.
  */
-function dcngettext ($domain, $msgid1, $msgid2, $n, $category) {}
+function dcngettext (string $domain, string $msgid1, string $msgid2, int $n, int $category) {}
 
 /**
  * Specify the character encoding in which the messages from the DOMAIN message catalog will be returned
@@ -136,6 +136,6 @@ function dcngettext ($domain, $msgid1, $msgid2, $n, $category) {}
  * </p>
  * @return string A string on success.
  */
-function bind_textdomain_codeset ($domain, $codeset) {}
+function bind_textdomain_codeset (string $domain, string $codeset) {}
 
-// End of gettext v.7.2.0-dev
+// End of gettext v.7.1.1

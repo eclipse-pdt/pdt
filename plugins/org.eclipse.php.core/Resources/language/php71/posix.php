@@ -1,6 +1,6 @@
 <?php
 
-// Start of posix v.7.2.0-dev
+// Start of posix v.7.1.1
 
 /**
  * Send a signal to a process
@@ -13,7 +13,7 @@
  * </p>
  * @return bool true on success or false on failure
  */
-function posix_kill ($pid, $sig) {}
+function posix_kill (int $pid, int $sig) {}
 
 /**
  * Return the current process identifier
@@ -44,7 +44,7 @@ function posix_getuid () {}
  * </p>
  * @return bool true on success or false on failure
  */
-function posix_setuid ($uid) {}
+function posix_setuid (int $uid) {}
 
 /**
  * Return the effective user ID of the current process
@@ -61,7 +61,7 @@ function posix_geteuid () {}
  * </p>
  * @return bool true on success or false on failure
  */
-function posix_seteuid ($uid) {}
+function posix_seteuid (int $uid) {}
 
 /**
  * Return the real group ID of the current process
@@ -78,7 +78,7 @@ function posix_getgid () {}
  * </p>
  * @return bool true on success or false on failure
  */
-function posix_setgid ($gid) {}
+function posix_setgid (int $gid) {}
 
 /**
  * Return the effective group ID of the current process
@@ -95,7 +95,7 @@ function posix_getegid () {}
  * </p>
  * @return bool true on success or false on failure
  */
-function posix_setegid ($gid) {}
+function posix_setegid (int $gid) {}
 
 /**
  * Return the group set of the current process
@@ -137,7 +137,7 @@ function posix_setsid () {}
  * </p>
  * @return bool true on success or false on failure
  */
-function posix_setpgid ($pid, $pgid) {}
+function posix_setpgid (int $pid, int $pgid) {}
 
 /**
  * Get process group id for job control
@@ -147,7 +147,7 @@ function posix_setpgid ($pid, $pgid) {}
  * </p>
  * @return int the identifier, as an integer.
  */
-function posix_getpgid ($pid) {}
+function posix_getpgid (int $pid) {}
 
 /**
  * Get the current sid of the process
@@ -160,7 +160,7 @@ function posix_getpgid ($pid) {}
  * </p>
  * @return int the identifier, as an integer.
  */
-function posix_getsid ($pid) {}
+function posix_getsid (int $pid) {}
 
 /**
  * Get system name
@@ -174,11 +174,11 @@ function posix_getsid ($pid) {}
  * 17:01:36 MEST 1999)
  * machine - system architecture (e.g. i586)
  * domainname - DNS domainname (e.g. example.com)
- * </p>
  * <p>
  * domainname is a GNU extension and not part of POSIX.1, so this
  * field is only available on GNU systems or when using the GNU
  * libc.
+ * </p>
  */
 function posix_uname () {}
 
@@ -247,7 +247,7 @@ function posix_getcwd () {}
  * </p>
  * @return bool true on success or false on failure
  */
-function posix_mkfifo ($pathname, $mode) {}
+function posix_mkfifo (string $pathname, int $mode) {}
 
 /**
  * Create a special or ordinary file (POSIX.1)
@@ -271,7 +271,7 @@ function posix_mkfifo ($pathname, $mode) {}
  * </p>
  * @return bool true on success or false on failure
  */
-function posix_mknod ($pathname, $mode, $major = null, $minor = null) {}
+function posix_mknod (string $pathname, int $mode, int $major = null, int $minor = null) {}
 
 /**
  * Determine accessibility of a file
@@ -293,7 +293,7 @@ function posix_mknod ($pathname, $mode, $major = null, $minor = null) {}
  * </p>
  * @return bool true on success or false on failure
  */
-function posix_access ($file, $mode = null) {}
+function posix_access (string $file, int $mode = null) {}
 
 /**
  * Return info about a group by name
@@ -302,6 +302,7 @@ function posix_access ($file, $mode = null) {}
  * @return array The array elements returned are:
  * <table>
  * The group information array
+ * <table>
  * <tr valign="top">
  * <td>Element</td>
  * <td>Description</td>
@@ -338,8 +339,9 @@ function posix_access ($file, $mode = null) {}
  * </td>
  * </tr>
  * </table>
+ * </table>
  */
-function posix_getgrnam ($name) {}
+function posix_getgrnam (string $name) {}
 
 /**
  * Return info about a group by group id
@@ -350,6 +352,7 @@ function posix_getgrnam ($name) {}
  * @return array The array elements returned are:
  * <table>
  * The group information array
+ * <table>
  * <tr valign="top">
  * <td>Element</td>
  * <td>Description</td>
@@ -386,8 +389,9 @@ function posix_getgrnam ($name) {}
  * </td>
  * </tr>
  * </table>
+ * </table>
  */
-function posix_getgrgid ($gid) {}
+function posix_getgrgid (int $gid) {}
 
 /**
  * Return info about a user by username
@@ -399,6 +403,7 @@ function posix_getgrgid ($gid) {}
  * false is returned:
  * <table>
  * The user information array
+ * <table>
  * <tr valign="top">
  * <td>Element</td>
  * <td>Description</td>
@@ -462,8 +467,9 @@ function posix_getgrgid ($gid) {}
  * </td>
  * </tr>
  * </table>
+ * </table>
  */
-function posix_getpwnam ($username) {}
+function posix_getpwnam (string $username) {}
 
 /**
  * Return info about a user by user id
@@ -474,6 +480,7 @@ function posix_getpwnam ($username) {}
  * @return array an associative array with the following elements:
  * <table>
  * The user information array
+ * <table>
  * <tr valign="top">
  * <td>Element</td>
  * <td>Description</td>
@@ -537,8 +544,9 @@ function posix_getpwnam ($username) {}
  * </td>
  * </tr>
  * </table>
+ * </table>
  */
-function posix_getpwuid ($uid) {}
+function posix_getpwuid (int $uid) {}
 
 /**
  * Return info about system resource limits
@@ -547,6 +555,7 @@ function posix_getpwuid ($uid) {}
  * limit that is defined. Each limit has a soft and a hard limit.
  * <table>
  * List of possible limits returned
+ * <table>
  * <tr valign="top">
  * <td>Limit name</td>
  * <td>Limit description</td>
@@ -621,6 +630,7 @@ function posix_getpwuid ($uid) {}
  * </td>
  * </tr>
  * </table>
+ * </table>
  */
 function posix_getrlimit () {}
 
@@ -642,7 +652,7 @@ function posix_getrlimit () {}
  * </p>
  * @return bool true on success or false on failure
  */
-function posix_setrlimit ($resource, $softlimit, $hardlimit) {}
+function posix_setrlimit (int $resource, int $softlimit, int $hardlimit) {}
 
 /**
  * Retrieve the error number set by the last posix function that failed
@@ -653,7 +663,7 @@ function posix_setrlimit ($resource, $softlimit, $hardlimit) {}
 function posix_get_last_error () {}
 
 /**
- * &Alias; <function>posix_get_last_error</function>
+ * Alias: posix_get_last_error
  * @link http://www.php.net/manual/en/function.posix-errno.php
  */
 function posix_errno () {}
@@ -668,7 +678,7 @@ function posix_errno () {}
  * </p>
  * @return string the error message, as a string.
  */
-function posix_strerror ($errno) {}
+function posix_strerror (int $errno) {}
 
 /**
  * Calculate the group access list
@@ -681,7 +691,7 @@ function posix_strerror ($errno) {}
  * </p>
  * @return bool true on success or false on failure
  */
-function posix_initgroups ($name, $base_group_id) {}
+function posix_initgroups (string $name, int $base_group_id) {}
 
 
 /**
@@ -866,4 +876,4 @@ define ('POSIX_RLIMIT_STACK', 3);
  */
 define ('POSIX_RLIMIT_INFINITY', -1);
 
-// End of posix v.7.2.0-dev
+// End of posix v.7.1.1

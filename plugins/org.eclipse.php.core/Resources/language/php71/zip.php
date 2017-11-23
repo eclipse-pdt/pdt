@@ -1,6 +1,6 @@
 <?php
 
-// Start of zip v.1.13.4
+// Start of zip v.1.13.5
 
 class ZipArchive  {
 	const CREATE = 1;
@@ -96,7 +96,6 @@ class ZipArchive  {
 	 * Returns true on success or the error code.
 	 * <p>
 	 * ZipArchive::ER_EXISTS
-	 * </p>
 	 * <p>
 	 * File already exists.
 	 * </p>
@@ -149,8 +148,9 @@ class ZipArchive  {
 	 * Seek error.
 	 * </p>
 	 * </p>
+	 * </p>
 	 */
-	public function open ($filename, $flags = null) {}
+	public function open (string $filename, int $flags = null) {}
 
 	/**
 	 * Set the password for the active archive
@@ -160,7 +160,7 @@ class ZipArchive  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function setPassword ($password) {}
+	public function setPassword (string $password) {}
 
 	/**
 	 * Close the active archive (opened or newly created)
@@ -184,7 +184,7 @@ class ZipArchive  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function addEmptyDir ($dirname) {}
+	public function addEmptyDir (string $dirname) {}
 
 	/**
 	 * Add a file to a ZIP archive using its contents
@@ -198,7 +198,7 @@ class ZipArchive  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function addFromString ($localname, $contents) {}
+	public function addFromString (string $localname, string $contents) {}
 
 	/**
 	 * Adds a file to a ZIP archive from the given path
@@ -217,25 +217,47 @@ class ZipArchive  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function addFile ($filename, $localname = null, $start = null, $length = null) {}
+	public function addFile (string $filename, string $localname = null, int $start = null, int $length = null) {}
 
 	/**
 	 * Add files from a directory by glob pattern
 	 * @link http://www.php.net/manual/en/ziparchive.addglob.php
-	 * @param $pattern
-	 * @param $flags [optional]
-	 * @param $options [optional]
+	 * @param string $pattern <p>
+	 * A glob pattern against which files will be matched.
+	 * </p>
+	 * @param int $flags [optional] <p>
+	 * A bit mask of glob() flags.
+	 * </p>
+	 * @param array $options [optional] <p>
+	 * An associative array of options. Available options are:
+	 * <p>
+	 * "add_path"
+	 * </p>
+	 * <p>
+	 * Prefix to prepend when translating to the local path of the file within
+	 * the archive. This is applied after any remove operations defined by the
+	 * "remove_path" or "remove_all_path"
+	 * options.
+	 * </p>
+	 * @return bool true on success or false on failure
 	 */
-	public function addGlob ($pattern, $flags = null, $options = null) {}
+	public function addGlob (string $pattern, int $flags = null, array $options = null) {}
 
 	/**
 	 * Add files from a directory by PCRE pattern
 	 * @link http://www.php.net/manual/en/ziparchive.addpattern.php
-	 * @param $pattern
-	 * @param $path [optional]
-	 * @param $options [optional]
+	 * @param string $pattern <p>
+	 * A PCRE pattern against which files will be matched.
+	 * </p>
+	 * @param string $path [optional] <p>
+	 * The directory that will be scanned. Defaults to the current working directory.
+	 * </p>
+	 * @param array $options [optional] <p>
+	 * An associative array of options accepted by ZipArchive::addGlob.
+	 * </p>
+	 * @return bool true on success or false on failure
 	 */
-	public function addPattern ($pattern, $path = null, $options = null) {}
+	public function addPattern (string $pattern, string $path = null, array $options = null) {}
 
 	/**
 	 * Renames an entry defined by its index
@@ -248,7 +270,7 @@ class ZipArchive  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function renameIndex ($index, $newname) {}
+	public function renameIndex (int $index, string $newname) {}
 
 	/**
 	 * Renames an entry defined by its name
@@ -261,7 +283,7 @@ class ZipArchive  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function renameName ($name, $newname) {}
+	public function renameName (string $name, string $newname) {}
 
 	/**
 	 * Set the comment of a ZIP archive
@@ -271,7 +293,7 @@ class ZipArchive  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function setArchiveComment ($comment) {}
+	public function setArchiveComment (string $comment) {}
 
 	/**
 	 * Returns the Zip archive comment
@@ -282,7 +304,7 @@ class ZipArchive  {
 	 * </p>
 	 * @return string the Zip archive comment or false on failure.
 	 */
-	public function getArchiveComment ($flags = null) {}
+	public function getArchiveComment (int $flags = null) {}
 
 	/**
 	 * Set the comment of an entry defined by its index
@@ -295,7 +317,7 @@ class ZipArchive  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function setCommentIndex ($index, $comment) {}
+	public function setCommentIndex (int $index, string $comment) {}
 
 	/**
 	 * Set the comment of an entry defined by its name
@@ -308,7 +330,7 @@ class ZipArchive  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function setCommentName ($name, $comment) {}
+	public function setCommentName (string $name, string $comment) {}
 
 	/**
 	 * Returns the comment of an entry using the entry index
@@ -322,7 +344,7 @@ class ZipArchive  {
 	 * </p>
 	 * @return string the comment on success or false on failure.
 	 */
-	public function getCommentIndex ($index, $flags = null) {}
+	public function getCommentIndex (int $index, int $flags = null) {}
 
 	/**
 	 * Returns the comment of an entry using the entry name
@@ -336,7 +358,7 @@ class ZipArchive  {
 	 * </p>
 	 * @return string the comment on success or false on failure.
 	 */
-	public function getCommentName ($name, $flags = null) {}
+	public function getCommentName (string $name, int $flags = null) {}
 
 	/**
 	 * delete an entry in the archive using its index
@@ -346,7 +368,7 @@ class ZipArchive  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function deleteIndex ($index) {}
+	public function deleteIndex (int $index) {}
 
 	/**
 	 * delete an entry in the archive using its name
@@ -356,7 +378,7 @@ class ZipArchive  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function deleteName ($name) {}
+	public function deleteName (string $name) {}
 
 	/**
 	 * Get the details of an entry defined by its name.
@@ -374,7 +396,7 @@ class ZipArchive  {
 	 * </p>
 	 * @return array an array containing the entry details or false on failure.
 	 */
-	public function statName ($name, $flags = null) {}
+	public function statName (string $name, int $flags = null) {}
 
 	/**
 	 * Get the details of an entry defined by its index.
@@ -389,7 +411,7 @@ class ZipArchive  {
 	 * </p>
 	 * @return array an array containing the entry details or false on failure.
 	 */
-	public function statIndex ($index, $flags = null) {}
+	public function statIndex (int $index, int $flags = null) {}
 
 	/**
 	 * Returns the index of the entry in the archive
@@ -405,7 +427,7 @@ class ZipArchive  {
 	 * </p>
 	 * @return int the index of the entry on success or false on failure.
 	 */
-	public function locateName ($name, $flags = null) {}
+	public function locateName (string $name, int $flags = null) {}
 
 	/**
 	 * Returns the name of an entry using its index
@@ -419,7 +441,7 @@ class ZipArchive  {
 	 * </p>
 	 * @return string the name on success or false on failure.
 	 */
-	public function getNameIndex ($index, $flags = null) {}
+	public function getNameIndex (int $index, int $flags = null) {}
 
 	/**
 	 * Revert all global changes done in the archive.
@@ -443,7 +465,7 @@ class ZipArchive  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function unchangeIndex ($index) {}
+	public function unchangeIndex (int $index) {}
 
 	/**
 	 * Revert all changes done to an entry with the given name.
@@ -453,7 +475,7 @@ class ZipArchive  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function unchangeName ($name) {}
+	public function unchangeName (string $name) {}
 
 	/**
 	 * Extract the archive contents
@@ -467,7 +489,7 @@ class ZipArchive  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function extractTo ($destination, $entries = null) {}
+	public function extractTo (string $destination, $entries = null) {}
 
 	/**
 	 * Returns the entry contents using its name
@@ -487,7 +509,7 @@ class ZipArchive  {
 	 * </p>
 	 * @return string the contents of the entry on success or false on failure.
 	 */
-	public function getFromName ($name, $length = null, $flags = null) {}
+	public function getFromName (string $name, int $length = null, int $flags = null) {}
 
 	/**
 	 * Returns the entry contents using its index
@@ -507,7 +529,7 @@ class ZipArchive  {
 	 * </p>
 	 * @return string the contents of the entry on success or false on failure.
 	 */
-	public function getFromIndex ($index, $length = null, $flags = null) {}
+	public function getFromIndex (int $index, int $length = null, int $flags = null) {}
 
 	/**
 	 * Get a file handler to the entry defined by its name (read only).
@@ -517,7 +539,7 @@ class ZipArchive  {
 	 * </p>
 	 * @return resource a file pointer (resource) on success or false on failure.
 	 */
-	public function getStream ($name) {}
+	public function getStream (string $name) {}
 
 	/**
 	 * Set the external attributes of an entry defined by its name
@@ -536,7 +558,7 @@ class ZipArchive  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function setExternalAttributesName ($name, $opsys, $attr, $flags = null) {}
+	public function setExternalAttributesName (string $name, int $opsys, int $attr, int $flags = null) {}
 
 	/**
 	 * Set the external attributes of an entry defined by its index
@@ -555,7 +577,7 @@ class ZipArchive  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function setExternalAttributesIndex ($index, $opsys, $attr, $flags = null) {}
+	public function setExternalAttributesIndex (int $index, int $opsys, int $attr, int $flags = null) {}
 
 	/**
 	 * Retrieve the external attributes of an entry defined by its name
@@ -575,7 +597,7 @@ class ZipArchive  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function getExternalAttributesName ($name, &$opsys, &$attr, $flags = null) {}
+	public function getExternalAttributesName (string $name, int &$opsys, int &$attr, int $flags = null) {}
 
 	/**
 	 * Retrieve the external attributes of an entry defined by its index
@@ -595,7 +617,7 @@ class ZipArchive  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function getExternalAttributesIndex ($index, &$opsys, &$attr, $flags = null) {}
+	public function getExternalAttributesIndex (int $index, int &$opsys, int &$attr, int $flags = null) {}
 
 	/**
 	 * Set the compression method of an entry defined by its name
@@ -614,7 +636,7 @@ class ZipArchive  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function setCompressionName ($name, $comp_method, $comp_flags = null) {}
+	public function setCompressionName (string $name, int $comp_method, int $comp_flags = null) {}
 
 	/**
 	 * Set the compression method of an entry defined by its index
@@ -633,7 +655,7 @@ class ZipArchive  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function setCompressionIndex ($index, $comp_method, $comp_flags = null) {}
+	public function setCompressionIndex (int $index, int $comp_method, int $comp_flags = null) {}
 
 }
 
@@ -648,7 +670,7 @@ class ZipArchive  {
  * or returns the number of error if filename does not
  * exist or in case of other error.
  */
-function zip_open ($filename) {}
+function zip_open (string $filename) {}
 
 /**
  * Close a ZIP file archive
@@ -692,14 +714,14 @@ function zip_read ($zip) {}
  * in PHP is read only access.
  * </p>
  * @return bool true on success or false on failure
- * </p>
  * <p>
  * Unlike fopen and other similar functions,
  * the return value of zip_entry_open only
  * indicates the result of the operation and is not needed for
  * reading or closing the directory entry.
+ * </p>
  */
-function zip_entry_open ($zip, $zip_entry, $mode = null) {}
+function zip_entry_open ($zip, $zip_entry, string $mode = null) {}
 
 /**
  * Close a directory entry
@@ -725,7 +747,7 @@ function zip_entry_close ($zip_entry) {}
  * </p>
  * @return string the data read, empty string on end of a file, or false on error.
  */
-function zip_entry_read ($zip_entry, $length = null) {}
+function zip_entry_read ($zip_entry, int $length = null) {}
 
 /**
  * Retrieve the actual file size of a directory entry
@@ -767,4 +789,4 @@ function zip_entry_compressedsize ($zip_entry) {}
  */
 function zip_entry_compressionmethod ($zip_entry) {}
 
-// End of zip v.1.13.4
+// End of zip v.1.13.5
