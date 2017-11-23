@@ -19,7 +19,7 @@
  * unless raw_output is set to true in which case the raw
  * binary representation of the message digest is returned.
  */
-function hash ($algo, $data, $raw_output = null) {}
+function hash (string $algo, string $data, bool $raw_output = null) {}
 
 /**
  * Generate a hash value using the contents of a given file
@@ -38,13 +38,13 @@ function hash ($algo, $data, $raw_output = null) {}
  * unless raw_output is set to true in which case the raw
  * binary representation of the message digest is returned.
  */
-function hash_file ($algo, $filename, $raw_output = null) {}
+function hash_file (string $algo, string $filename, bool $raw_output = null) {}
 
 /**
  * Generate a keyed hash value using the HMAC method
  * @link http://www.php.net/manual/en/function.hash-hmac.php
  * @param string $algo <p>
- * Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..) See hash_algos for a list of supported algorithms.
+ * Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..) See hash_hmac_algos for a list of supported algorithms.
  * </p>
  * @param string $data <p>
  * Message to be hashed.
@@ -61,13 +61,13 @@ function hash_file ($algo, $filename, $raw_output = null) {}
  * binary representation of the message digest is returned.
  * Returns false when algo is unknown.
  */
-function hash_hmac ($algo, $data, $key, $raw_output = null) {}
+function hash_hmac (string $algo, string $data, string $key, bool $raw_output = null) {}
 
 /**
  * Generate a keyed hash value using the HMAC method and the contents of a given file
  * @link http://www.php.net/manual/en/function.hash-hmac-file.php
  * @param string $algo <p>
- * Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..) See hash_algos for a list of supported algorithms.
+ * Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..) See hash_hmac_algos for a list of supported algorithms.
  * </p>
  * @param string $filename <p>
  * URL describing location of file to be hashed; Supports fopen wrappers.
@@ -83,7 +83,7 @@ function hash_hmac ($algo, $data, $key, $raw_output = null) {}
  * unless raw_output is set to true in which case the raw
  * binary representation of the message digest is returned.
  */
-function hash_hmac_file ($algo, $filename, $key, $raw_output = null) {}
+function hash_hmac_file (string $algo, string $filename, string $key, bool $raw_output = null) {}
 
 /**
  * Initialize an incremental hashing context
@@ -105,7 +105,7 @@ function hash_hmac_file ($algo, $filename, $key, $raw_output = null) {}
  * hash_update_stream, hash_update_file,
  * and hash_final.
  */
-function hash_init ($algo, $options = null, $key = null) {}
+function hash_init (string $algo, int $options = null, string $key = null) {}
 
 /**
  * Pump data into an active hashing context
@@ -118,7 +118,7 @@ function hash_init ($algo, $options = null, $key = null) {}
  * </p>
  * @return bool true.
  */
-function hash_update ($context, $data) {}
+function hash_update ($context, string $data) {}
 
 /**
  * Pump data into an active hashing context from an open stream
@@ -135,7 +135,7 @@ function hash_update ($context, $data) {}
  * </p>
  * @return int Actual number of bytes added to the hashing context from handle.
  */
-function hash_update_stream ($context, $handle, $length = null) {}
+function hash_update_stream ($context, $handle, int $length = null) {}
 
 /**
  * Pump data into an active hashing context from a file
@@ -151,7 +151,7 @@ function hash_update_stream ($context, $handle, $length = null) {}
  * </p>
  * @return bool true on success or false on failure
  */
-function hash_update_file ($hcontext, $filename, $scontext = null) {}
+function hash_update_file ($hcontext, string $filename, $scontext = null) {}
 
 /**
  * Finalize an incremental hash and return resulting digest
@@ -167,7 +167,7 @@ function hash_update_file ($hcontext, $filename, $scontext = null) {}
  * unless raw_output is set to true in which case the raw
  * binary representation of the message digest is returned.
  */
-function hash_final ($context, $raw_output = null) {}
+function hash_final ($context, bool $raw_output = null) {}
 
 /**
  * Copy hashing context
@@ -190,14 +190,40 @@ function hash_algos () {}
 /**
  * Generate a PBKDF2 key derivation of a supplied password
  * @link http://www.php.net/manual/en/function.hash-pbkdf2.php
- * @param $algo
- * @param $password
- * @param $salt
- * @param $iterations
- * @param $length [optional]
- * @param $raw_output [optional]
+ * @param string $algo <p>
+ * Name of selected hashing algorithm (i.e. md5,
+ * sha256, haval160,4, etc..) See
+ * hash_algos for a list of supported algorithms.
+ * </p>
+ * @param string $password <p>
+ * The password to use for the derivation.
+ * </p>
+ * @param string $salt <p>
+ * The salt to use for the derivation. This value should be generated randomly.
+ * </p>
+ * @param int $iterations <p>
+ * The number of internal iterations to perform for the derivation.
+ * </p>
+ * @param int $length [optional] <p>
+ * The length of the output string. If raw_output
+ * is true this corresponds to the byte-length of the derived key, if
+ * raw_output is false this corresponds to twice the
+ * byte-length of the derived key (as every byte of the key is returned as
+ * two hexits).
+ * </p>
+ * <p>
+ * If 0 is passed, the entire output of the supplied
+ * algorithm is used.
+ * </p>
+ * @param bool $raw_output [optional] <p>
+ * When set to true, outputs raw binary data. false outputs lowercase
+ * hexits.
+ * </p>
+ * @return string a string containing the derived key as lowercase hexits unless
+ * raw_output is set to true in which case the raw
+ * binary representation of the derived key is returned.
  */
-function hash_pbkdf2 ($algo, $password, $salt, $iterations, $length = null, $raw_output = null) {}
+function hash_pbkdf2 (string $algo, string $password, string $salt, int $iterations, int $length = null, bool $raw_output = null) {}
 
 /**
  * Timing attack safe string comparison
@@ -210,7 +236,7 @@ function hash_pbkdf2 ($algo, $password, $salt, $iterations, $length = null, $raw
  * </p>
  * @return bool true when the two strings are equal, false otherwise.
  */
-function hash_equals ($known_string, $user_string) {}
+function hash_equals (string $known_string, string $user_string) {}
 
 /**
  * Generates a key
@@ -234,7 +260,7 @@ function hash_equals ($known_string, $user_string) {}
  * </p>
  * @return string the generated key as a string, or false on error.
  */
-function mhash_keygen_s2k ($hash, $password, $salt, $bytes) {}
+function mhash_keygen_s2k (int $hash, string $password, string $salt, int $bytes) {}
 
 /**
  * Gets the block size of the specified hash
@@ -245,7 +271,7 @@ function mhash_keygen_s2k ($hash, $password, $salt, $bytes) {}
  * @return int the size in bytes or false, if the hash
  * does not exist.
  */
-function mhash_get_block_size ($hash) {}
+function mhash_get_block_size (int $hash) {}
 
 /**
  * Gets the name of the specified hash
@@ -255,7 +281,7 @@ function mhash_get_block_size ($hash) {}
  * </p>
  * @return string the name of the hash or false, if the hash does not exist.
  */
-function mhash_get_hash_name ($hash) {}
+function mhash_get_hash_name (int $hash) {}
 
 /**
  * Gets the highest available hash ID
@@ -283,7 +309,7 @@ function mhash_count () {}
  * @return string the resulting hash (also called digest) or HMAC as a string, or
  * false on error.
  */
-function mhash ($hash, $data, $key = null) {}
+function mhash (int $hash, string $data, string $key = null) {}
 
 
 /**

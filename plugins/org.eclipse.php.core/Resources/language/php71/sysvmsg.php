@@ -1,6 +1,6 @@
 <?php
 
-// Start of sysvmsg v.7.0.0-dev
+// Start of sysvmsg v.7.1.1
 
 /**
  * Create or attach to a message queue
@@ -14,7 +14,7 @@
  * </p>
  * @return resource a resource handle that can be used to access the System V message queue.
  */
-function msg_get_queue ($key, $perms = null) {}
+function msg_get_queue (int $key, int $perms = null) {}
 
 /**
  * Send a message to a message queue
@@ -49,14 +49,14 @@ function msg_get_queue ($key, $perms = null) {}
  * @param int $errorcode [optional] <p>
  * </p>
  * @return bool true on success or false on failure
- * </p>
  * <p>
  * Upon successful completion the message queue data structure is updated as
  * follows: msg_lspid is set to the process-ID of the
  * calling process, msg_qnum is incremented by 1 and
  * msg_stime is set to the current time.
+ * </p>
  */
-function msg_send ($queue, $msgtype, $message, $serialize = null, $blocking = null, &$errorcode = null) {}
+function msg_send ($queue, int $msgtype, $message, bool $serialize = null, bool $blocking = null, int &$errorcode = null) {}
 
 /**
  * Receive a message from a message queue
@@ -107,6 +107,7 @@ function msg_send ($queue, $msgtype, $message, $serialize = null, $blocking = nu
  * or more of the following values (by adding or ORing them together).
  * <table>
  * Flag values for msg_receive
+ * <table>
  * <tr valign="top">
  * <td>MSG_IPC_NOWAIT</td>
  * <td>If there are no messages of the
@@ -131,20 +132,21 @@ function msg_send ($queue, $msgtype, $message, $serialize = null, $blocking = nu
  * </td>
  * </tr>
  * </table>
+ * </table>
  * </p>
  * @param int $errorcode [optional] <p>
  * If the function fails, the optional errorcode
  * will be set to the value of the system errno variable.
  * </p>
  * @return bool true on success or false on failure
- * </p>
  * <p>
  * Upon successful completion the message queue data structure is updated as
  * follows: msg_lrpid is set to the process-ID of the
  * calling process, msg_qnum is decremented by 1 and
  * msg_rtime is set to the current time.
+ * </p>
  */
-function msg_receive ($queue, $desiredmsgtype, &$msgtype, $maxsize, &$message, $unserialize = null, $flags = null, &$errorcode = null) {}
+function msg_receive ($queue, int $desiredmsgtype, int &$msgtype, int $maxsize, &$message, bool $unserialize = null, int $flags = null, int &$errorcode = null) {}
 
 /**
  * Destroy a message queue
@@ -166,6 +168,7 @@ function msg_remove_queue ($queue) {}
  * meanings:
  * <table>
  * Array structure for msg_stat_queue
+ * <table>
  * <tr valign="top">
  * <td>msg_perm.uid</td>
  * <td>
@@ -229,6 +232,7 @@ function msg_remove_queue ($queue) {}
  * </td>
  * </tr>
  * </table>
+ * </table>
  */
 function msg_stat_queue ($queue) {}
 
@@ -254,7 +258,7 @@ function msg_set_queue ($queue, array $data) {}
  * </p>
  * @return bool true on success or false on failure
  */
-function msg_queue_exists ($key) {}
+function msg_queue_exists (int $key) {}
 
 define ('MSG_IPC_NOWAIT', 1);
 define ('MSG_EAGAIN', 11);
@@ -262,4 +266,4 @@ define ('MSG_ENOMSG', 42);
 define ('MSG_NOERROR', 2);
 define ('MSG_EXCEPT', 4);
 
-// End of sysvmsg v.7.0.0-dev
+// End of sysvmsg v.7.1.1

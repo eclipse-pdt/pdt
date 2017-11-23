@@ -105,7 +105,7 @@ class DOMImplementation  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function hasFeature ($feature, $version) {}
+	public function hasFeature (string $feature, string $version) {}
 
 	/**
 	 * Creates an empty DOMDocumentType object
@@ -120,9 +120,9 @@ class DOMImplementation  {
 	 * The external subset system identifier.
 	 * </p>
 	 * @return DOMDocumentType A new DOMDocumentType node with its 
-	 * ownerDocument set to &null;.
+	 * ownerDocument set to null.
 	 */
-	public function createDocumentType ($qualifiedName = null, $publicId = null, $systemId = null) {}
+	public function createDocumentType (string $qualifiedName = null, string $publicId = null, string $systemId = null) {}
 
 	/**
 	 * Creates a DOMDocument object of the specified type with its document element
@@ -134,14 +134,14 @@ class DOMImplementation  {
 	 * The qualified name of the document element to create.
 	 * </p>
 	 * @param DOMDocumentType $doctype [optional] <p>
-	 * The type of document to create or &null;.
+	 * The type of document to create or null.
 	 * </p>
 	 * @return DOMDocument A new DOMDocument object. If 
 	 * namespaceURI, qualifiedName, 
 	 * and doctype are null, the returned 
 	 * DOMDocument is empty with no document element
 	 */
-	public function createDocument ($namespaceURI = null, $qualifiedName = null, DOMDocumentType $doctype = null) {}
+	public function createDocument (string $namespaceURI = null, string $qualifiedName = null, DOMDocumentType $doctype = null) {}
 
 }
 
@@ -212,7 +212,7 @@ class DOMNode  {
 	 * </p>
 	 * @return DOMNode The cloned node.
 	 */
-	public function cloneNode ($deep = null) {}
+	public function cloneNode (bool $deep = null) {}
 
 	/**
 	 * Normalizes the node
@@ -234,7 +234,7 @@ class DOMNode  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function isSupported ($feature, $version) {}
+	public function isSupported (string $feature, string $version) {}
 
 	/**
 	 * Checks if node has attributes
@@ -266,7 +266,7 @@ class DOMNode  {
 	 * </p>
 	 * @return string The prefix of the namespace.
 	 */
-	public function lookupPrefix ($namespaceURI) {}
+	public function lookupPrefix (string $namespaceURI) {}
 
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
@@ -277,7 +277,7 @@ class DOMNode  {
 	 * @return bool Return true if namespaceURI is the default
 	 * namespace, false otherwise.
 	 */
-	public function isDefaultNamespace ($namespaceURI) {}
+	public function isDefaultNamespace (string $namespaceURI) {}
 
 	/**
 	 * Gets the namespace URI of the node based on the prefix
@@ -287,7 +287,7 @@ class DOMNode  {
 	 * </p>
 	 * @return string The namespace URI of the node.
 	 */
-	public function lookupNamespaceUri ($prefix) {}
+	public function lookupNamespaceUri (string $prefix) {}
 
 	/**
 	 * @param DOMNode $arg
@@ -315,7 +315,7 @@ class DOMNode  {
 	/**
 	 * Get an XPath for a node
 	 * @link http://www.php.net/manual/en/domnode.getnodepath.php
-	 * @return string a string containing the XPath, or &null; in case of an error.
+	 * @return string a string containing the XPath, or null in case of an error.
 	 */
 	public function getNodePath () {}
 
@@ -344,7 +344,7 @@ class DOMNode  {
 	 * </p>
 	 * @return string canonicalized nodes as a string or false on failure
 	 */
-	public function C14N ($exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
+	public function C14N (bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
 	/**
 	 * Canonicalize nodes to a file
@@ -367,7 +367,7 @@ class DOMNode  {
 	 * </p>
 	 * @return int Number of bytes written or false on failure
 	 */
-	public function C14NFile ($uri, $exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
+	public function C14NFile (string $uri, bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
 }
 
@@ -386,7 +386,7 @@ class DOMDocumentFragment extends DOMNode  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function appendXML ($data) {}
+	public function appendXML (string $data) {}
 
 	/**
 	 * Adds a new child before a reference node
@@ -453,7 +453,7 @@ class DOMDocumentFragment extends DOMNode  {
 	 * </p>
 	 * @return DOMNode The cloned node.
 	 */
-	public function cloneNode ($deep = null) {}
+	public function cloneNode (bool $deep = null) {}
 
 	/**
 	 * Normalizes the node
@@ -475,7 +475,7 @@ class DOMDocumentFragment extends DOMNode  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function isSupported ($feature, $version) {}
+	public function isSupported (string $feature, string $version) {}
 
 	/**
 	 * Checks if node has attributes
@@ -507,7 +507,7 @@ class DOMDocumentFragment extends DOMNode  {
 	 * </p>
 	 * @return string The prefix of the namespace.
 	 */
-	public function lookupPrefix ($namespaceURI) {}
+	public function lookupPrefix (string $namespaceURI) {}
 
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
@@ -518,7 +518,7 @@ class DOMDocumentFragment extends DOMNode  {
 	 * @return bool Return true if namespaceURI is the default
 	 * namespace, false otherwise.
 	 */
-	public function isDefaultNamespace ($namespaceURI) {}
+	public function isDefaultNamespace (string $namespaceURI) {}
 
 	/**
 	 * Gets the namespace URI of the node based on the prefix
@@ -528,7 +528,7 @@ class DOMDocumentFragment extends DOMNode  {
 	 * </p>
 	 * @return string The namespace URI of the node.
 	 */
-	public function lookupNamespaceUri ($prefix) {}
+	public function lookupNamespaceUri (string $prefix) {}
 
 	/**
 	 * @param DOMNode $arg
@@ -556,7 +556,7 @@ class DOMDocumentFragment extends DOMNode  {
 	/**
 	 * Get an XPath for a node
 	 * @link http://www.php.net/manual/en/domnode.getnodepath.php
-	 * @return string a string containing the XPath, or &null; in case of an error.
+	 * @return string a string containing the XPath, or null in case of an error.
 	 */
 	public function getNodePath () {}
 
@@ -585,7 +585,7 @@ class DOMDocumentFragment extends DOMNode  {
 	 * </p>
 	 * @return string canonicalized nodes as a string or false on failure
 	 */
-	public function C14N ($exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
+	public function C14N (bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
 	/**
 	 * Canonicalize nodes to a file
@@ -608,7 +608,7 @@ class DOMDocumentFragment extends DOMNode  {
 	 * </p>
 	 * @return int Number of bytes written or false on failure
 	 */
-	public function C14NFile ($uri, $exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
+	public function C14NFile (string $uri, bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
 }
 
@@ -633,7 +633,7 @@ class DOMDocument extends DOMNode  {
 	 * @return DOMElement a new instance of class DOMElement or false
 	 * if an error occurred.
 	 */
-	public function createElement ($name, $value = null) {}
+	public function createElement (string $name, string $value = null) {}
 
 	/**
 	 * Create new document fragment
@@ -650,7 +650,7 @@ class DOMDocument extends DOMNode  {
 	 * </p>
 	 * @return DOMText The new DOMText or false if an error occurred.
 	 */
-	public function createTextNode ($content) {}
+	public function createTextNode (string $content) {}
 
 	/**
 	 * Create new comment node
@@ -660,7 +660,7 @@ class DOMDocument extends DOMNode  {
 	 * </p>
 	 * @return DOMComment The new DOMComment or false if an error occurred.
 	 */
-	public function createComment ($data) {}
+	public function createComment (string $data) {}
 
 	/**
 	 * Create new cdata node
@@ -670,7 +670,7 @@ class DOMDocument extends DOMNode  {
 	 * </p>
 	 * @return DOMCDATASection The new DOMCDATASection or false if an error occurred.
 	 */
-	public function createCDATASection ($data) {}
+	public function createCDATASection (string $data) {}
 
 	/**
 	 * Creates new PI node
@@ -683,7 +683,7 @@ class DOMDocument extends DOMNode  {
 	 * </p>
 	 * @return DOMProcessingInstruction The new DOMProcessingInstruction or false if an error occurred.
 	 */
-	public function createProcessingInstruction ($target, $data = null) {}
+	public function createProcessingInstruction (string $target, string $data = null) {}
 
 	/**
 	 * Create new attribute
@@ -693,7 +693,7 @@ class DOMDocument extends DOMNode  {
 	 * </p>
 	 * @return DOMAttr The new DOMAttr or false if an error occurred.
 	 */
-	public function createAttribute ($name) {}
+	public function createAttribute (string $name) {}
 
 	/**
 	 * Create new entity reference node
@@ -706,19 +706,19 @@ class DOMDocument extends DOMNode  {
 	 * @return DOMEntityReference The new DOMEntityReference or false if an error
 	 * occurred.
 	 */
-	public function createEntityReference ($name) {}
+	public function createEntityReference (string $name) {}
 
 	/**
 	 * Searches for all elements with given local tag name
 	 * @link http://www.php.net/manual/en/domdocument.getelementsbytagname.php
 	 * @param string $name <p>
-	 * The local name (without namespace) of the tag to match on. The special value *
+	 * The local name (without namespace) of the tag to match on. The special value &#42;
 	 * matches all tags. 
 	 * </p>
 	 * @return DOMNodeList A new DOMNodeList object containing all the matched 
 	 * elements.
 	 */
-	public function getElementsByTagName ($name) {}
+	public function getElementsByTagName (string $name) {}
 
 	/**
 	 * Import node into current document
@@ -735,7 +735,7 @@ class DOMDocument extends DOMNode  {
 	 * </p>
 	 * @return DOMNode The copied node or false, if it cannot be copied.
 	 */
-	public function importNode (DOMNode $importedNode, $deep = null) {}
+	public function importNode (DOMNode $importedNode, bool $deep = null) {}
 
 	/**
 	 * Create new element node with an associated namespace
@@ -752,7 +752,7 @@ class DOMDocument extends DOMNode  {
 	 * </p>
 	 * @return DOMElement The new DOMElement or false if an error occurred.
 	 */
-	public function createElementNS ($namespaceURI, $qualifiedName, $value = null) {}
+	public function createElementNS (string $namespaceURI, string $qualifiedName, string $value = null) {}
 
 	/**
 	 * Create new attribute node with an associated namespace
@@ -765,23 +765,23 @@ class DOMDocument extends DOMNode  {
 	 * </p>
 	 * @return DOMAttr The new DOMAttr or false if an error occurred.
 	 */
-	public function createAttributeNS ($namespaceURI, $qualifiedName) {}
+	public function createAttributeNS (string $namespaceURI, string $qualifiedName) {}
 
 	/**
 	 * Searches for all elements with given tag name in specified namespace
 	 * @link http://www.php.net/manual/en/domdocument.getelementsbytagnamens.php
 	 * @param string $namespaceURI <p>
 	 * The namespace URI of the elements to match on. 
-	 * The special value * matches all namespaces.
+	 * The special value &#42; matches all namespaces.
 	 * </p>
 	 * @param string $localName <p>
 	 * The local name of the elements to match on. 
-	 * The special value * matches all local names.
+	 * The special value &#42; matches all local names.
 	 * </p>
 	 * @return DOMNodeList A new DOMNodeList object containing all the matched 
 	 * elements.
 	 */
-	public function getElementsByTagNameNS ($namespaceURI, $localName) {}
+	public function getElementsByTagNameNS (string $namespaceURI, string $localName) {}
 
 	/**
 	 * Searches for an element with a certain id
@@ -789,10 +789,10 @@ class DOMDocument extends DOMNode  {
 	 * @param string $elementId <p>
 	 * The unique id value for an element.
 	 * </p>
-	 * @return DOMElement the DOMElement or &null; if the element is
+	 * @return DOMElement the DOMElement or null if the element is
 	 * not found.
 	 */
-	public function getElementById ($elementId) {}
+	public function getElementById (string $elementId) {}
 
 	/**
 	 * @param DOMNode $source
@@ -826,7 +826,7 @@ class DOMDocument extends DOMNode  {
 	 * @return mixed true on success or false on failure If called statically, returns a
 	 * DOMDocument or false on failure.
 	 */
-	public function load ($filename, $options = null) {}
+	public function load (string $filename, int $options = null) {}
 
 	/**
 	 * Dumps the internal XML tree back into a file
@@ -839,7 +839,7 @@ class DOMDocument extends DOMNode  {
 	 * </p>
 	 * @return int the number of bytes written or false if an error occurred.
 	 */
-	public function save ($filename, $options = null) {}
+	public function save (string $filename, int $options = null) {}
 
 	/**
 	 * Load XML from a string
@@ -854,7 +854,7 @@ class DOMDocument extends DOMNode  {
 	 * @return mixed true on success or false on failure If called statically, returns a
 	 * DOMDocument or false on failure.
 	 */
-	public function loadXML ($source, $options = null) {}
+	public function loadXML (string $source, int $options = null) {}
 
 	/**
 	 * Dumps the internal XML tree back into a string
@@ -868,7 +868,7 @@ class DOMDocument extends DOMNode  {
 	 * </p>
 	 * @return string the XML, or false if an error occurred.
 	 */
-	public function saveXML (DOMNode $node = null, $options = null) {}
+	public function saveXML (DOMNode $node = null, int $options = null) {}
 
 	/**
 	 * Creates a new DOMDocument object
@@ -896,7 +896,7 @@ class DOMDocument extends DOMNode  {
 	 * @return int the number of XIncludes in the document, -1 if some processing failed,
 	 * or false if there were no substitutions.
 	 */
-	public function xinclude ($options = null) {}
+	public function xinclude (int $options = null) {}
 
 	/**
 	 * Load HTML from a string
@@ -911,7 +911,7 @@ class DOMDocument extends DOMNode  {
 	 * @return bool true on success or false on failure If called statically, returns a
 	 * DOMDocument or false on failure.
 	 */
-	public function loadHTML ($source, $options = null) {}
+	public function loadHTML (string $source, int $options = null) {}
 
 	/**
 	 * Load HTML from a file
@@ -926,7 +926,7 @@ class DOMDocument extends DOMNode  {
 	 * @return bool true on success or false on failure If called statically, returns a
 	 * DOMDocument or false on failure.
 	 */
-	public function loadHTMLFile ($filename, $options = null) {}
+	public function loadHTMLFile (string $filename, int $options = null) {}
 
 	/**
 	 * Dumps the internal document into a string using HTML formatting
@@ -946,7 +946,7 @@ class DOMDocument extends DOMNode  {
 	 * </p>
 	 * @return int the number of bytes written or false if an error occurred.
 	 */
-	public function saveHTMLFile ($filename) {}
+	public function saveHTMLFile (string $filename) {}
 
 	/**
 	 * Validates a document based on a schema
@@ -959,7 +959,7 @@ class DOMDocument extends DOMNode  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function schemaValidate ($filename, $flags = null) {}
+	public function schemaValidate (string $filename, int $flags = null) {}
 
 	/**
 	 * Validates a document based on a schema
@@ -972,7 +972,7 @@ class DOMDocument extends DOMNode  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function schemaValidateSource ($source, $flags = null) {}
+	public function schemaValidateSource (string $source, int $flags = null) {}
 
 	/**
 	 * Performs relaxNG validation on the document
@@ -982,7 +982,7 @@ class DOMDocument extends DOMNode  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function relaxNGValidate ($filename) {}
+	public function relaxNGValidate (string $filename) {}
 
 	/**
 	 * Performs relaxNG validation on the document
@@ -992,7 +992,7 @@ class DOMDocument extends DOMNode  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function relaxNGValidateSource ($source) {}
+	public function relaxNGValidateSource (string $source) {}
 
 	/**
 	 * Register extended class used to create base node type
@@ -1002,13 +1002,13 @@ class DOMDocument extends DOMNode  {
 	 * classes in the chapter introduction.
 	 * </p>
 	 * @param string $extendedclass <p>
-	 * Your extended class name. If &null; is provided, any previously 
+	 * Your extended class name. If null is provided, any previously 
 	 * registered class extending baseclass will
 	 * be removed.
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function registerNodeClass ($baseclass, $extendedclass) {}
+	public function registerNodeClass (string $baseclass, string $extendedclass) {}
 
 	/**
 	 * Adds a new child before a reference node
@@ -1075,7 +1075,7 @@ class DOMDocument extends DOMNode  {
 	 * </p>
 	 * @return DOMNode The cloned node.
 	 */
-	public function cloneNode ($deep = null) {}
+	public function cloneNode (bool $deep = null) {}
 
 	/**
 	 * Normalizes the node
@@ -1097,7 +1097,7 @@ class DOMDocument extends DOMNode  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function isSupported ($feature, $version) {}
+	public function isSupported (string $feature, string $version) {}
 
 	/**
 	 * Checks if node has attributes
@@ -1129,7 +1129,7 @@ class DOMDocument extends DOMNode  {
 	 * </p>
 	 * @return string The prefix of the namespace.
 	 */
-	public function lookupPrefix ($namespaceURI) {}
+	public function lookupPrefix (string $namespaceURI) {}
 
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
@@ -1140,7 +1140,7 @@ class DOMDocument extends DOMNode  {
 	 * @return bool Return true if namespaceURI is the default
 	 * namespace, false otherwise.
 	 */
-	public function isDefaultNamespace ($namespaceURI) {}
+	public function isDefaultNamespace (string $namespaceURI) {}
 
 	/**
 	 * Gets the namespace URI of the node based on the prefix
@@ -1150,7 +1150,7 @@ class DOMDocument extends DOMNode  {
 	 * </p>
 	 * @return string The namespace URI of the node.
 	 */
-	public function lookupNamespaceUri ($prefix) {}
+	public function lookupNamespaceUri (string $prefix) {}
 
 	/**
 	 * @param DOMNode $arg
@@ -1178,7 +1178,7 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Get an XPath for a node
 	 * @link http://www.php.net/manual/en/domnode.getnodepath.php
-	 * @return string a string containing the XPath, or &null; in case of an error.
+	 * @return string a string containing the XPath, or null in case of an error.
 	 */
 	public function getNodePath () {}
 
@@ -1207,7 +1207,7 @@ class DOMDocument extends DOMNode  {
 	 * </p>
 	 * @return string canonicalized nodes as a string or false on failure
 	 */
-	public function C14N ($exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
+	public function C14N (bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
 	/**
 	 * Canonicalize nodes to a file
@@ -1230,7 +1230,7 @@ class DOMDocument extends DOMNode  {
 	 * </p>
 	 * @return int Number of bytes written or false on failure
 	 */
-	public function C14NFile ($uri, $exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
+	public function C14NFile (string $uri, bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
 }
 
@@ -1243,10 +1243,10 @@ class DOMNodeList implements Traversable {
 	 * Index of the node into the collection.
 	 * </p>
 	 * @return DOMNode The node at the indexth position in the 
-	 * DOMNodeList, or &null; if that is not a valid
+	 * DOMNodeList, or null if that is not a valid
 	 * index.
 	 */
-	public function item ($index) {}
+	public function item (int $index) {}
 
 }
 
@@ -1259,9 +1259,9 @@ class DOMNamedNodeMap implements Traversable {
 	 * The nodeName of the node to retrieve.
 	 * </p>
 	 * @return DOMNode A node (of any type) with the specified nodeName, or 
-	 * &null; if no node is found.
+	 * null if no node is found.
 	 */
-	public function getNamedItem ($name) {}
+	public function getNamedItem (string $name) {}
 
 	/**
 	 * @param DOMNode $arg
@@ -1279,11 +1279,11 @@ class DOMNamedNodeMap implements Traversable {
 	 * @param int $index <p>
 	 * Index into this map.
 	 * </p>
-	 * @return DOMNode The node at the indexth position in the map, or &null;
+	 * @return DOMNode The node at the indexth position in the map, or null
 	 * if that is not a valid index (greater than or equal to the number of nodes 
 	 * in this map).
 	 */
-	public function item ($index) {}
+	public function item (int $index) {}
 
 	/**
 	 * Retrieves a node specified by local name and namespace URI
@@ -1295,9 +1295,9 @@ class DOMNamedNodeMap implements Traversable {
 	 * The local name of the node to retrieve.
 	 * </p>
 	 * @return DOMNode A node (of any type) with the specified local name and namespace URI, or 
-	 * &null; if no node is found.
+	 * null if no node is found.
 	 */
-	public function getNamedItemNS ($namespaceURI, $localName) {}
+	public function getNamedItemNS (string $namespaceURI, string $localName) {}
 
 	/**
 	 * @param DOMNode $arg [optional]
@@ -1327,7 +1327,7 @@ class DOMCharacterData extends DOMNode  {
 	 * and count exceeds the length, then all 16-bit units 
 	 * to the end of the data are returned.
 	 */
-	public function substringData ($offset, $count) {}
+	public function substringData (int $offset, int $count) {}
 
 	/**
 	 * Append the string to the end of the character data of the node
@@ -1337,7 +1337,7 @@ class DOMCharacterData extends DOMNode  {
 	 * </p>
 	 * @return void 
 	 */
-	public function appendData ($data) {}
+	public function appendData (string $data) {}
 
 	/**
 	 * Insert a string at the specified 16-bit unit offset
@@ -1350,7 +1350,7 @@ class DOMCharacterData extends DOMNode  {
 	 * </p>
 	 * @return void 
 	 */
-	public function insertData ($offset, $data) {}
+	public function insertData (int $offset, string $data) {}
 
 	/**
 	 * Remove a range of characters from the node
@@ -1365,7 +1365,7 @@ class DOMCharacterData extends DOMNode  {
 	 * </p>
 	 * @return void 
 	 */
-	public function deleteData ($offset, $count) {}
+	public function deleteData (int $offset, int $count) {}
 
 	/**
 	 * Replace a substring within the DOMCharacterData node
@@ -1383,7 +1383,7 @@ class DOMCharacterData extends DOMNode  {
 	 * </p>
 	 * @return void 
 	 */
-	public function replaceData ($offset, $count, $data) {}
+	public function replaceData (int $offset, int $count, string $data) {}
 
 	/**
 	 * Adds a new child before a reference node
@@ -1450,7 +1450,7 @@ class DOMCharacterData extends DOMNode  {
 	 * </p>
 	 * @return DOMNode The cloned node.
 	 */
-	public function cloneNode ($deep = null) {}
+	public function cloneNode (bool $deep = null) {}
 
 	/**
 	 * Normalizes the node
@@ -1472,7 +1472,7 @@ class DOMCharacterData extends DOMNode  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function isSupported ($feature, $version) {}
+	public function isSupported (string $feature, string $version) {}
 
 	/**
 	 * Checks if node has attributes
@@ -1504,7 +1504,7 @@ class DOMCharacterData extends DOMNode  {
 	 * </p>
 	 * @return string The prefix of the namespace.
 	 */
-	public function lookupPrefix ($namespaceURI) {}
+	public function lookupPrefix (string $namespaceURI) {}
 
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
@@ -1515,7 +1515,7 @@ class DOMCharacterData extends DOMNode  {
 	 * @return bool Return true if namespaceURI is the default
 	 * namespace, false otherwise.
 	 */
-	public function isDefaultNamespace ($namespaceURI) {}
+	public function isDefaultNamespace (string $namespaceURI) {}
 
 	/**
 	 * Gets the namespace URI of the node based on the prefix
@@ -1525,7 +1525,7 @@ class DOMCharacterData extends DOMNode  {
 	 * </p>
 	 * @return string The namespace URI of the node.
 	 */
-	public function lookupNamespaceUri ($prefix) {}
+	public function lookupNamespaceUri (string $prefix) {}
 
 	/**
 	 * @param DOMNode $arg
@@ -1553,7 +1553,7 @@ class DOMCharacterData extends DOMNode  {
 	/**
 	 * Get an XPath for a node
 	 * @link http://www.php.net/manual/en/domnode.getnodepath.php
-	 * @return string a string containing the XPath, or &null; in case of an error.
+	 * @return string a string containing the XPath, or null in case of an error.
 	 */
 	public function getNodePath () {}
 
@@ -1582,7 +1582,7 @@ class DOMCharacterData extends DOMNode  {
 	 * </p>
 	 * @return string canonicalized nodes as a string or false on failure
 	 */
-	public function C14N ($exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
+	public function C14N (bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
 	/**
 	 * Canonicalize nodes to a file
@@ -1605,7 +1605,7 @@ class DOMCharacterData extends DOMNode  {
 	 * </p>
 	 * @return int Number of bytes written or false on failure
 	 */
-	public function C14NFile ($uri, $exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
+	public function C14NFile (string $uri, bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
 }
 
@@ -1619,7 +1619,7 @@ class DOMAttr extends DOMNode  {
 	public function isId () {}
 
 	/**
-	 * Creates a new <classname>DOMAttr</classname> object
+	 * Creates a new DOMAttr object
 	 * @link http://www.php.net/manual/en/domattr.construct.php
 	 * @param $name
 	 * @param $value [optional]
@@ -1691,7 +1691,7 @@ class DOMAttr extends DOMNode  {
 	 * </p>
 	 * @return DOMNode The cloned node.
 	 */
-	public function cloneNode ($deep = null) {}
+	public function cloneNode (bool $deep = null) {}
 
 	/**
 	 * Normalizes the node
@@ -1713,7 +1713,7 @@ class DOMAttr extends DOMNode  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function isSupported ($feature, $version) {}
+	public function isSupported (string $feature, string $version) {}
 
 	/**
 	 * Checks if node has attributes
@@ -1745,7 +1745,7 @@ class DOMAttr extends DOMNode  {
 	 * </p>
 	 * @return string The prefix of the namespace.
 	 */
-	public function lookupPrefix ($namespaceURI) {}
+	public function lookupPrefix (string $namespaceURI) {}
 
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
@@ -1756,7 +1756,7 @@ class DOMAttr extends DOMNode  {
 	 * @return bool Return true if namespaceURI is the default
 	 * namespace, false otherwise.
 	 */
-	public function isDefaultNamespace ($namespaceURI) {}
+	public function isDefaultNamespace (string $namespaceURI) {}
 
 	/**
 	 * Gets the namespace URI of the node based on the prefix
@@ -1766,7 +1766,7 @@ class DOMAttr extends DOMNode  {
 	 * </p>
 	 * @return string The namespace URI of the node.
 	 */
-	public function lookupNamespaceUri ($prefix) {}
+	public function lookupNamespaceUri (string $prefix) {}
 
 	/**
 	 * @param DOMNode $arg
@@ -1794,7 +1794,7 @@ class DOMAttr extends DOMNode  {
 	/**
 	 * Get an XPath for a node
 	 * @link http://www.php.net/manual/en/domnode.getnodepath.php
-	 * @return string a string containing the XPath, or &null; in case of an error.
+	 * @return string a string containing the XPath, or null in case of an error.
 	 */
 	public function getNodePath () {}
 
@@ -1823,7 +1823,7 @@ class DOMAttr extends DOMNode  {
 	 * </p>
 	 * @return string canonicalized nodes as a string or false on failure
 	 */
-	public function C14N ($exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
+	public function C14N (bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
 	/**
 	 * Canonicalize nodes to a file
@@ -1846,7 +1846,7 @@ class DOMAttr extends DOMNode  {
 	 * </p>
 	 * @return int Number of bytes written or false on failure
 	 */
-	public function C14NFile ($uri, $exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
+	public function C14NFile (string $uri, bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
 }
 
@@ -1861,7 +1861,7 @@ class DOMElement extends DOMNode  {
 	 * @return string The value of the attribute, or an empty string if no attribute with the
 	 * given name is found.
 	 */
-	public function getAttribute ($name) {}
+	public function getAttribute (string $name) {}
 
 	/**
 	 * Adds new attribute
@@ -1874,7 +1874,7 @@ class DOMElement extends DOMNode  {
 	 * </p>
 	 * @return DOMAttr The new DOMAttr or false if an error occurred.
 	 */
-	public function setAttribute ($name, $value) {}
+	public function setAttribute (string $name, string $value) {}
 
 	/**
 	 * Removes attribute
@@ -1884,7 +1884,7 @@ class DOMElement extends DOMNode  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function removeAttribute ($name) {}
+	public function removeAttribute (string $name) {}
 
 	/**
 	 * Returns attribute node
@@ -1892,9 +1892,12 @@ class DOMElement extends DOMNode  {
 	 * @param string $name <p>
 	 * The name of the attribute.
 	 * </p>
-	 * @return DOMAttr The attribute node.
+	 * @return DOMAttr The attribute node. Note that for XML namespace declarations
+	 * (xmlns and xmlns:&#42; attributes) an 
+	 * instance of DOMNameSpaceNode is returned instead of a
+	 * DOMAttr.
 	 */
-	public function getAttributeNode ($name) {}
+	public function getAttributeNode (string $name) {}
 
 	/**
 	 * Adds new attribute node to element
@@ -1902,7 +1905,7 @@ class DOMElement extends DOMNode  {
 	 * @param DOMAttr $attr <p>
 	 * The attribute node.
 	 * </p>
-	 * @return DOMAttr old node if the attribute has been replaced or &null;.
+	 * @return DOMAttr old node if the attribute has been replaced or null.
 	 */
 	public function setAttributeNode (DOMAttr $attr) {}
 
@@ -1920,13 +1923,13 @@ class DOMElement extends DOMNode  {
 	 * Gets elements by tagname
 	 * @link http://www.php.net/manual/en/domelement.getelementsbytagname.php
 	 * @param string $name <p>
-	 * The tag name. Use * to return all elements within 
+	 * The tag name. Use &#42; to return all elements within 
 	 * the element tree.
 	 * </p>
 	 * @return DOMNodeList This function returns a new instance of the class
 	 * DOMNodeList of all matched elements.
 	 */
-	public function getElementsByTagName ($name) {}
+	public function getElementsByTagName (string $name) {}
 
 	/**
 	 * Returns value of attribute
@@ -1941,7 +1944,7 @@ class DOMElement extends DOMNode  {
 	 * given localName and namespaceURI 
 	 * is found.
 	 */
-	public function getAttributeNS ($namespaceURI, $localName) {}
+	public function getAttributeNS (string $namespaceURI, string $localName) {}
 
 	/**
 	 * Adds new attribute
@@ -1957,7 +1960,7 @@ class DOMElement extends DOMNode  {
 	 * </p>
 	 * @return void 
 	 */
-	public function setAttributeNS ($namespaceURI, $qualifiedName, $value) {}
+	public function setAttributeNS (string $namespaceURI, string $qualifiedName, string $value) {}
 
 	/**
 	 * Removes attribute
@@ -1970,7 +1973,7 @@ class DOMElement extends DOMNode  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function removeAttributeNS ($namespaceURI, $localName) {}
+	public function removeAttributeNS (string $namespaceURI, string $localName) {}
 
 	/**
 	 * Returns attribute node
@@ -1981,9 +1984,12 @@ class DOMElement extends DOMNode  {
 	 * @param string $localName <p>
 	 * The local name.
 	 * </p>
-	 * @return DOMAttr The attribute node.
+	 * @return DOMAttr The attribute node. Note that for XML namespace declarations
+	 * (xmlns and xmlns:&#42; attributes) an 
+	 * instance of DOMNameSpaceNode is returned instead of a
+	 * DOMAttr.
 	 */
-	public function getAttributeNodeNS ($namespaceURI, $localName) {}
+	public function getAttributeNodeNS (string $namespaceURI, string $localName) {}
 
 	/**
 	 * Adds new attribute node to element
@@ -2002,14 +2008,14 @@ class DOMElement extends DOMNode  {
 	 * The namespace URI.
 	 * </p>
 	 * @param string $localName <p>
-	 * The local name. Use * to return all elements within 
+	 * The local name. Use &#42; to return all elements within 
 	 * the element tree.
 	 * </p>
 	 * @return DOMNodeList This function returns a new instance of the class
 	 * DOMNodeList of all matched elements in the order in
 	 * which they are encountered in a preorder traversal of this element tree.
 	 */
-	public function getElementsByTagNameNS ($namespaceURI, $localName) {}
+	public function getElementsByTagNameNS (string $namespaceURI, string $localName) {}
 
 	/**
 	 * Checks to see if attribute exists
@@ -2019,7 +2025,7 @@ class DOMElement extends DOMNode  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function hasAttribute ($name) {}
+	public function hasAttribute (string $name) {}
 
 	/**
 	 * Checks to see if attribute exists
@@ -2032,7 +2038,7 @@ class DOMElement extends DOMNode  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function hasAttributeNS ($namespaceURI, $localName) {}
+	public function hasAttributeNS (string $namespaceURI, string $localName) {}
 
 	/**
 	 * Declares the attribute specified by name to be of type ID
@@ -2046,7 +2052,7 @@ class DOMElement extends DOMNode  {
 	 * </p>
 	 * @return void 
 	 */
-	public function setIdAttribute ($name, $isId) {}
+	public function setIdAttribute (string $name, bool $isId) {}
 
 	/**
 	 * Declares the attribute specified by local name and namespace URI to be of type ID
@@ -2063,7 +2069,7 @@ class DOMElement extends DOMNode  {
 	 * </p>
 	 * @return void 
 	 */
-	public function setIdAttributeNS ($namespaceURI, $localName, $isId) {}
+	public function setIdAttributeNS (string $namespaceURI, string $localName, bool $isId) {}
 
 	/**
 	 * Declares the attribute specified by node to be of type ID
@@ -2077,7 +2083,7 @@ class DOMElement extends DOMNode  {
 	 * </p>
 	 * @return void 
 	 */
-	public function setIdAttributeNode (DOMAttr $attr, $isId) {}
+	public function setIdAttributeNode (DOMAttr $attr, bool $isId) {}
 
 	/**
 	 * Creates a new DOMElement object
@@ -2153,7 +2159,7 @@ class DOMElement extends DOMNode  {
 	 * </p>
 	 * @return DOMNode The cloned node.
 	 */
-	public function cloneNode ($deep = null) {}
+	public function cloneNode (bool $deep = null) {}
 
 	/**
 	 * Normalizes the node
@@ -2175,7 +2181,7 @@ class DOMElement extends DOMNode  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function isSupported ($feature, $version) {}
+	public function isSupported (string $feature, string $version) {}
 
 	/**
 	 * Checks if node has attributes
@@ -2207,7 +2213,7 @@ class DOMElement extends DOMNode  {
 	 * </p>
 	 * @return string The prefix of the namespace.
 	 */
-	public function lookupPrefix ($namespaceURI) {}
+	public function lookupPrefix (string $namespaceURI) {}
 
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
@@ -2218,7 +2224,7 @@ class DOMElement extends DOMNode  {
 	 * @return bool Return true if namespaceURI is the default
 	 * namespace, false otherwise.
 	 */
-	public function isDefaultNamespace ($namespaceURI) {}
+	public function isDefaultNamespace (string $namespaceURI) {}
 
 	/**
 	 * Gets the namespace URI of the node based on the prefix
@@ -2228,7 +2234,7 @@ class DOMElement extends DOMNode  {
 	 * </p>
 	 * @return string The namespace URI of the node.
 	 */
-	public function lookupNamespaceUri ($prefix) {}
+	public function lookupNamespaceUri (string $prefix) {}
 
 	/**
 	 * @param DOMNode $arg
@@ -2256,7 +2262,7 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Get an XPath for a node
 	 * @link http://www.php.net/manual/en/domnode.getnodepath.php
-	 * @return string a string containing the XPath, or &null; in case of an error.
+	 * @return string a string containing the XPath, or null in case of an error.
 	 */
 	public function getNodePath () {}
 
@@ -2285,7 +2291,7 @@ class DOMElement extends DOMNode  {
 	 * </p>
 	 * @return string canonicalized nodes as a string or false on failure
 	 */
-	public function C14N ($exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
+	public function C14N (bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
 	/**
 	 * Canonicalize nodes to a file
@@ -2308,7 +2314,7 @@ class DOMElement extends DOMNode  {
 	 * </p>
 	 * @return int Number of bytes written or false on failure
 	 */
-	public function C14NFile ($uri, $exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
+	public function C14NFile (string $uri, bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
 }
 
@@ -2323,7 +2329,7 @@ class DOMText extends DOMCharacterData  {
 	 * @return DOMText The new node of the same type, which contains all the content at and after the 
 	 * offset.
 	 */
-	public function splitText ($offset) {}
+	public function splitText (int $offset) {}
 
 	/**
 	 * Indicates whether this text node contains whitespace
@@ -2341,7 +2347,7 @@ class DOMText extends DOMCharacterData  {
 	public function replaceWholeText ($content) {}
 
 	/**
-	 * Creates a new <classname>DOMText</classname> object
+	 * Creates a new DOMText object
 	 * @link http://www.php.net/manual/en/domtext.construct.php
 	 * @param $value [optional]
 	 */
@@ -2360,7 +2366,7 @@ class DOMText extends DOMCharacterData  {
 	 * and count exceeds the length, then all 16-bit units 
 	 * to the end of the data are returned.
 	 */
-	public function substringData ($offset, $count) {}
+	public function substringData (int $offset, int $count) {}
 
 	/**
 	 * Append the string to the end of the character data of the node
@@ -2370,7 +2376,7 @@ class DOMText extends DOMCharacterData  {
 	 * </p>
 	 * @return void 
 	 */
-	public function appendData ($data) {}
+	public function appendData (string $data) {}
 
 	/**
 	 * Insert a string at the specified 16-bit unit offset
@@ -2383,7 +2389,7 @@ class DOMText extends DOMCharacterData  {
 	 * </p>
 	 * @return void 
 	 */
-	public function insertData ($offset, $data) {}
+	public function insertData (int $offset, string $data) {}
 
 	/**
 	 * Remove a range of characters from the node
@@ -2398,7 +2404,7 @@ class DOMText extends DOMCharacterData  {
 	 * </p>
 	 * @return void 
 	 */
-	public function deleteData ($offset, $count) {}
+	public function deleteData (int $offset, int $count) {}
 
 	/**
 	 * Replace a substring within the DOMCharacterData node
@@ -2416,7 +2422,7 @@ class DOMText extends DOMCharacterData  {
 	 * </p>
 	 * @return void 
 	 */
-	public function replaceData ($offset, $count, $data) {}
+	public function replaceData (int $offset, int $count, string $data) {}
 
 	/**
 	 * Adds a new child before a reference node
@@ -2483,7 +2489,7 @@ class DOMText extends DOMCharacterData  {
 	 * </p>
 	 * @return DOMNode The cloned node.
 	 */
-	public function cloneNode ($deep = null) {}
+	public function cloneNode (bool $deep = null) {}
 
 	/**
 	 * Normalizes the node
@@ -2505,7 +2511,7 @@ class DOMText extends DOMCharacterData  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function isSupported ($feature, $version) {}
+	public function isSupported (string $feature, string $version) {}
 
 	/**
 	 * Checks if node has attributes
@@ -2537,7 +2543,7 @@ class DOMText extends DOMCharacterData  {
 	 * </p>
 	 * @return string The prefix of the namespace.
 	 */
-	public function lookupPrefix ($namespaceURI) {}
+	public function lookupPrefix (string $namespaceURI) {}
 
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
@@ -2548,7 +2554,7 @@ class DOMText extends DOMCharacterData  {
 	 * @return bool Return true if namespaceURI is the default
 	 * namespace, false otherwise.
 	 */
-	public function isDefaultNamespace ($namespaceURI) {}
+	public function isDefaultNamespace (string $namespaceURI) {}
 
 	/**
 	 * Gets the namespace URI of the node based on the prefix
@@ -2558,7 +2564,7 @@ class DOMText extends DOMCharacterData  {
 	 * </p>
 	 * @return string The namespace URI of the node.
 	 */
-	public function lookupNamespaceUri ($prefix) {}
+	public function lookupNamespaceUri (string $prefix) {}
 
 	/**
 	 * @param DOMNode $arg
@@ -2586,7 +2592,7 @@ class DOMText extends DOMCharacterData  {
 	/**
 	 * Get an XPath for a node
 	 * @link http://www.php.net/manual/en/domnode.getnodepath.php
-	 * @return string a string containing the XPath, or &null; in case of an error.
+	 * @return string a string containing the XPath, or null in case of an error.
 	 */
 	public function getNodePath () {}
 
@@ -2615,7 +2621,7 @@ class DOMText extends DOMCharacterData  {
 	 * </p>
 	 * @return string canonicalized nodes as a string or false on failure
 	 */
-	public function C14N ($exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
+	public function C14N (bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
 	/**
 	 * Canonicalize nodes to a file
@@ -2638,7 +2644,7 @@ class DOMText extends DOMCharacterData  {
 	 * </p>
 	 * @return int Number of bytes written or false on failure
 	 */
-	public function C14NFile ($uri, $exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
+	public function C14NFile (string $uri, bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
 }
 
@@ -2664,7 +2670,7 @@ class DOMComment extends DOMCharacterData  {
 	 * and count exceeds the length, then all 16-bit units 
 	 * to the end of the data are returned.
 	 */
-	public function substringData ($offset, $count) {}
+	public function substringData (int $offset, int $count) {}
 
 	/**
 	 * Append the string to the end of the character data of the node
@@ -2674,7 +2680,7 @@ class DOMComment extends DOMCharacterData  {
 	 * </p>
 	 * @return void 
 	 */
-	public function appendData ($data) {}
+	public function appendData (string $data) {}
 
 	/**
 	 * Insert a string at the specified 16-bit unit offset
@@ -2687,7 +2693,7 @@ class DOMComment extends DOMCharacterData  {
 	 * </p>
 	 * @return void 
 	 */
-	public function insertData ($offset, $data) {}
+	public function insertData (int $offset, string $data) {}
 
 	/**
 	 * Remove a range of characters from the node
@@ -2702,7 +2708,7 @@ class DOMComment extends DOMCharacterData  {
 	 * </p>
 	 * @return void 
 	 */
-	public function deleteData ($offset, $count) {}
+	public function deleteData (int $offset, int $count) {}
 
 	/**
 	 * Replace a substring within the DOMCharacterData node
@@ -2720,7 +2726,7 @@ class DOMComment extends DOMCharacterData  {
 	 * </p>
 	 * @return void 
 	 */
-	public function replaceData ($offset, $count, $data) {}
+	public function replaceData (int $offset, int $count, string $data) {}
 
 	/**
 	 * Adds a new child before a reference node
@@ -2787,7 +2793,7 @@ class DOMComment extends DOMCharacterData  {
 	 * </p>
 	 * @return DOMNode The cloned node.
 	 */
-	public function cloneNode ($deep = null) {}
+	public function cloneNode (bool $deep = null) {}
 
 	/**
 	 * Normalizes the node
@@ -2809,7 +2815,7 @@ class DOMComment extends DOMCharacterData  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function isSupported ($feature, $version) {}
+	public function isSupported (string $feature, string $version) {}
 
 	/**
 	 * Checks if node has attributes
@@ -2841,7 +2847,7 @@ class DOMComment extends DOMCharacterData  {
 	 * </p>
 	 * @return string The prefix of the namespace.
 	 */
-	public function lookupPrefix ($namespaceURI) {}
+	public function lookupPrefix (string $namespaceURI) {}
 
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
@@ -2852,7 +2858,7 @@ class DOMComment extends DOMCharacterData  {
 	 * @return bool Return true if namespaceURI is the default
 	 * namespace, false otherwise.
 	 */
-	public function isDefaultNamespace ($namespaceURI) {}
+	public function isDefaultNamespace (string $namespaceURI) {}
 
 	/**
 	 * Gets the namespace URI of the node based on the prefix
@@ -2862,7 +2868,7 @@ class DOMComment extends DOMCharacterData  {
 	 * </p>
 	 * @return string The namespace URI of the node.
 	 */
-	public function lookupNamespaceUri ($prefix) {}
+	public function lookupNamespaceUri (string $prefix) {}
 
 	/**
 	 * @param DOMNode $arg
@@ -2890,7 +2896,7 @@ class DOMComment extends DOMCharacterData  {
 	/**
 	 * Get an XPath for a node
 	 * @link http://www.php.net/manual/en/domnode.getnodepath.php
-	 * @return string a string containing the XPath, or &null; in case of an error.
+	 * @return string a string containing the XPath, or null in case of an error.
 	 */
 	public function getNodePath () {}
 
@@ -2919,7 +2925,7 @@ class DOMComment extends DOMCharacterData  {
 	 * </p>
 	 * @return string canonicalized nodes as a string or false on failure
 	 */
-	public function C14N ($exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
+	public function C14N (bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
 	/**
 	 * Canonicalize nodes to a file
@@ -2942,7 +2948,7 @@ class DOMComment extends DOMCharacterData  {
 	 * </p>
 	 * @return int Number of bytes written or false on failure
 	 */
-	public function C14NFile ($uri, $exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
+	public function C14NFile (string $uri, bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
 }
 
@@ -3009,7 +3015,7 @@ class DOMCdataSection extends DOMText  {
 	 * @return DOMText The new node of the same type, which contains all the content at and after the 
 	 * offset.
 	 */
-	public function splitText ($offset) {}
+	public function splitText (int $offset) {}
 
 	/**
 	 * Indicates whether this text node contains whitespace
@@ -3039,7 +3045,7 @@ class DOMCdataSection extends DOMText  {
 	 * and count exceeds the length, then all 16-bit units 
 	 * to the end of the data are returned.
 	 */
-	public function substringData ($offset, $count) {}
+	public function substringData (int $offset, int $count) {}
 
 	/**
 	 * Append the string to the end of the character data of the node
@@ -3049,7 +3055,7 @@ class DOMCdataSection extends DOMText  {
 	 * </p>
 	 * @return void 
 	 */
-	public function appendData ($data) {}
+	public function appendData (string $data) {}
 
 	/**
 	 * Insert a string at the specified 16-bit unit offset
@@ -3062,7 +3068,7 @@ class DOMCdataSection extends DOMText  {
 	 * </p>
 	 * @return void 
 	 */
-	public function insertData ($offset, $data) {}
+	public function insertData (int $offset, string $data) {}
 
 	/**
 	 * Remove a range of characters from the node
@@ -3077,7 +3083,7 @@ class DOMCdataSection extends DOMText  {
 	 * </p>
 	 * @return void 
 	 */
-	public function deleteData ($offset, $count) {}
+	public function deleteData (int $offset, int $count) {}
 
 	/**
 	 * Replace a substring within the DOMCharacterData node
@@ -3095,7 +3101,7 @@ class DOMCdataSection extends DOMText  {
 	 * </p>
 	 * @return void 
 	 */
-	public function replaceData ($offset, $count, $data) {}
+	public function replaceData (int $offset, int $count, string $data) {}
 
 	/**
 	 * Adds a new child before a reference node
@@ -3162,7 +3168,7 @@ class DOMCdataSection extends DOMText  {
 	 * </p>
 	 * @return DOMNode The cloned node.
 	 */
-	public function cloneNode ($deep = null) {}
+	public function cloneNode (bool $deep = null) {}
 
 	/**
 	 * Normalizes the node
@@ -3184,7 +3190,7 @@ class DOMCdataSection extends DOMText  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function isSupported ($feature, $version) {}
+	public function isSupported (string $feature, string $version) {}
 
 	/**
 	 * Checks if node has attributes
@@ -3216,7 +3222,7 @@ class DOMCdataSection extends DOMText  {
 	 * </p>
 	 * @return string The prefix of the namespace.
 	 */
-	public function lookupPrefix ($namespaceURI) {}
+	public function lookupPrefix (string $namespaceURI) {}
 
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
@@ -3227,7 +3233,7 @@ class DOMCdataSection extends DOMText  {
 	 * @return bool Return true if namespaceURI is the default
 	 * namespace, false otherwise.
 	 */
-	public function isDefaultNamespace ($namespaceURI) {}
+	public function isDefaultNamespace (string $namespaceURI) {}
 
 	/**
 	 * Gets the namespace URI of the node based on the prefix
@@ -3237,7 +3243,7 @@ class DOMCdataSection extends DOMText  {
 	 * </p>
 	 * @return string The namespace URI of the node.
 	 */
-	public function lookupNamespaceUri ($prefix) {}
+	public function lookupNamespaceUri (string $prefix) {}
 
 	/**
 	 * @param DOMNode $arg
@@ -3265,7 +3271,7 @@ class DOMCdataSection extends DOMText  {
 	/**
 	 * Get an XPath for a node
 	 * @link http://www.php.net/manual/en/domnode.getnodepath.php
-	 * @return string a string containing the XPath, or &null; in case of an error.
+	 * @return string a string containing the XPath, or null in case of an error.
 	 */
 	public function getNodePath () {}
 
@@ -3294,7 +3300,7 @@ class DOMCdataSection extends DOMText  {
 	 * </p>
 	 * @return string canonicalized nodes as a string or false on failure
 	 */
-	public function C14N ($exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
+	public function C14N (bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
 	/**
 	 * Canonicalize nodes to a file
@@ -3317,7 +3323,7 @@ class DOMCdataSection extends DOMText  {
 	 * </p>
 	 * @return int Number of bytes written or false on failure
 	 */
-	public function C14NFile ($uri, $exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
+	public function C14NFile (string $uri, bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
 }
 
@@ -3388,7 +3394,7 @@ class DOMDocumentType extends DOMNode  {
 	 * </p>
 	 * @return DOMNode The cloned node.
 	 */
-	public function cloneNode ($deep = null) {}
+	public function cloneNode (bool $deep = null) {}
 
 	/**
 	 * Normalizes the node
@@ -3410,7 +3416,7 @@ class DOMDocumentType extends DOMNode  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function isSupported ($feature, $version) {}
+	public function isSupported (string $feature, string $version) {}
 
 	/**
 	 * Checks if node has attributes
@@ -3442,7 +3448,7 @@ class DOMDocumentType extends DOMNode  {
 	 * </p>
 	 * @return string The prefix of the namespace.
 	 */
-	public function lookupPrefix ($namespaceURI) {}
+	public function lookupPrefix (string $namespaceURI) {}
 
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
@@ -3453,7 +3459,7 @@ class DOMDocumentType extends DOMNode  {
 	 * @return bool Return true if namespaceURI is the default
 	 * namespace, false otherwise.
 	 */
-	public function isDefaultNamespace ($namespaceURI) {}
+	public function isDefaultNamespace (string $namespaceURI) {}
 
 	/**
 	 * Gets the namespace URI of the node based on the prefix
@@ -3463,7 +3469,7 @@ class DOMDocumentType extends DOMNode  {
 	 * </p>
 	 * @return string The namespace URI of the node.
 	 */
-	public function lookupNamespaceUri ($prefix) {}
+	public function lookupNamespaceUri (string $prefix) {}
 
 	/**
 	 * @param DOMNode $arg
@@ -3491,7 +3497,7 @@ class DOMDocumentType extends DOMNode  {
 	/**
 	 * Get an XPath for a node
 	 * @link http://www.php.net/manual/en/domnode.getnodepath.php
-	 * @return string a string containing the XPath, or &null; in case of an error.
+	 * @return string a string containing the XPath, or null in case of an error.
 	 */
 	public function getNodePath () {}
 
@@ -3520,7 +3526,7 @@ class DOMDocumentType extends DOMNode  {
 	 * </p>
 	 * @return string canonicalized nodes as a string or false on failure
 	 */
-	public function C14N ($exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
+	public function C14N (bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
 	/**
 	 * Canonicalize nodes to a file
@@ -3543,7 +3549,7 @@ class DOMDocumentType extends DOMNode  {
 	 * </p>
 	 * @return int Number of bytes written or false on failure
 	 */
-	public function C14NFile ($uri, $exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
+	public function C14NFile (string $uri, bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
 }
 
@@ -3614,7 +3620,7 @@ class DOMNotation extends DOMNode  {
 	 * </p>
 	 * @return DOMNode The cloned node.
 	 */
-	public function cloneNode ($deep = null) {}
+	public function cloneNode (bool $deep = null) {}
 
 	/**
 	 * Normalizes the node
@@ -3636,7 +3642,7 @@ class DOMNotation extends DOMNode  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function isSupported ($feature, $version) {}
+	public function isSupported (string $feature, string $version) {}
 
 	/**
 	 * Checks if node has attributes
@@ -3668,7 +3674,7 @@ class DOMNotation extends DOMNode  {
 	 * </p>
 	 * @return string The prefix of the namespace.
 	 */
-	public function lookupPrefix ($namespaceURI) {}
+	public function lookupPrefix (string $namespaceURI) {}
 
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
@@ -3679,7 +3685,7 @@ class DOMNotation extends DOMNode  {
 	 * @return bool Return true if namespaceURI is the default
 	 * namespace, false otherwise.
 	 */
-	public function isDefaultNamespace ($namespaceURI) {}
+	public function isDefaultNamespace (string $namespaceURI) {}
 
 	/**
 	 * Gets the namespace URI of the node based on the prefix
@@ -3689,7 +3695,7 @@ class DOMNotation extends DOMNode  {
 	 * </p>
 	 * @return string The namespace URI of the node.
 	 */
-	public function lookupNamespaceUri ($prefix) {}
+	public function lookupNamespaceUri (string $prefix) {}
 
 	/**
 	 * @param DOMNode $arg
@@ -3717,7 +3723,7 @@ class DOMNotation extends DOMNode  {
 	/**
 	 * Get an XPath for a node
 	 * @link http://www.php.net/manual/en/domnode.getnodepath.php
-	 * @return string a string containing the XPath, or &null; in case of an error.
+	 * @return string a string containing the XPath, or null in case of an error.
 	 */
 	public function getNodePath () {}
 
@@ -3746,7 +3752,7 @@ class DOMNotation extends DOMNode  {
 	 * </p>
 	 * @return string canonicalized nodes as a string or false on failure
 	 */
-	public function C14N ($exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
+	public function C14N (bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
 	/**
 	 * Canonicalize nodes to a file
@@ -3769,7 +3775,7 @@ class DOMNotation extends DOMNode  {
 	 * </p>
 	 * @return int Number of bytes written or false on failure
 	 */
-	public function C14NFile ($uri, $exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
+	public function C14NFile (string $uri, bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
 }
 
@@ -3840,7 +3846,7 @@ class DOMEntity extends DOMNode  {
 	 * </p>
 	 * @return DOMNode The cloned node.
 	 */
-	public function cloneNode ($deep = null) {}
+	public function cloneNode (bool $deep = null) {}
 
 	/**
 	 * Normalizes the node
@@ -3862,7 +3868,7 @@ class DOMEntity extends DOMNode  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function isSupported ($feature, $version) {}
+	public function isSupported (string $feature, string $version) {}
 
 	/**
 	 * Checks if node has attributes
@@ -3894,7 +3900,7 @@ class DOMEntity extends DOMNode  {
 	 * </p>
 	 * @return string The prefix of the namespace.
 	 */
-	public function lookupPrefix ($namespaceURI) {}
+	public function lookupPrefix (string $namespaceURI) {}
 
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
@@ -3905,7 +3911,7 @@ class DOMEntity extends DOMNode  {
 	 * @return bool Return true if namespaceURI is the default
 	 * namespace, false otherwise.
 	 */
-	public function isDefaultNamespace ($namespaceURI) {}
+	public function isDefaultNamespace (string $namespaceURI) {}
 
 	/**
 	 * Gets the namespace URI of the node based on the prefix
@@ -3915,7 +3921,7 @@ class DOMEntity extends DOMNode  {
 	 * </p>
 	 * @return string The namespace URI of the node.
 	 */
-	public function lookupNamespaceUri ($prefix) {}
+	public function lookupNamespaceUri (string $prefix) {}
 
 	/**
 	 * @param DOMNode $arg
@@ -3943,7 +3949,7 @@ class DOMEntity extends DOMNode  {
 	/**
 	 * Get an XPath for a node
 	 * @link http://www.php.net/manual/en/domnode.getnodepath.php
-	 * @return string a string containing the XPath, or &null; in case of an error.
+	 * @return string a string containing the XPath, or null in case of an error.
 	 */
 	public function getNodePath () {}
 
@@ -3972,7 +3978,7 @@ class DOMEntity extends DOMNode  {
 	 * </p>
 	 * @return string canonicalized nodes as a string or false on failure
 	 */
-	public function C14N ($exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
+	public function C14N (bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
 	/**
 	 * Canonicalize nodes to a file
@@ -3995,7 +4001,7 @@ class DOMEntity extends DOMNode  {
 	 * </p>
 	 * @return int Number of bytes written or false on failure
 	 */
-	public function C14NFile ($uri, $exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
+	public function C14NFile (string $uri, bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
 }
 
@@ -4073,7 +4079,7 @@ class DOMEntityReference extends DOMNode  {
 	 * </p>
 	 * @return DOMNode The cloned node.
 	 */
-	public function cloneNode ($deep = null) {}
+	public function cloneNode (bool $deep = null) {}
 
 	/**
 	 * Normalizes the node
@@ -4095,7 +4101,7 @@ class DOMEntityReference extends DOMNode  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function isSupported ($feature, $version) {}
+	public function isSupported (string $feature, string $version) {}
 
 	/**
 	 * Checks if node has attributes
@@ -4127,7 +4133,7 @@ class DOMEntityReference extends DOMNode  {
 	 * </p>
 	 * @return string The prefix of the namespace.
 	 */
-	public function lookupPrefix ($namespaceURI) {}
+	public function lookupPrefix (string $namespaceURI) {}
 
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
@@ -4138,7 +4144,7 @@ class DOMEntityReference extends DOMNode  {
 	 * @return bool Return true if namespaceURI is the default
 	 * namespace, false otherwise.
 	 */
-	public function isDefaultNamespace ($namespaceURI) {}
+	public function isDefaultNamespace (string $namespaceURI) {}
 
 	/**
 	 * Gets the namespace URI of the node based on the prefix
@@ -4148,7 +4154,7 @@ class DOMEntityReference extends DOMNode  {
 	 * </p>
 	 * @return string The namespace URI of the node.
 	 */
-	public function lookupNamespaceUri ($prefix) {}
+	public function lookupNamespaceUri (string $prefix) {}
 
 	/**
 	 * @param DOMNode $arg
@@ -4176,7 +4182,7 @@ class DOMEntityReference extends DOMNode  {
 	/**
 	 * Get an XPath for a node
 	 * @link http://www.php.net/manual/en/domnode.getnodepath.php
-	 * @return string a string containing the XPath, or &null; in case of an error.
+	 * @return string a string containing the XPath, or null in case of an error.
 	 */
 	public function getNodePath () {}
 
@@ -4205,7 +4211,7 @@ class DOMEntityReference extends DOMNode  {
 	 * </p>
 	 * @return string canonicalized nodes as a string or false on failure
 	 */
-	public function C14N ($exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
+	public function C14N (bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
 	/**
 	 * Canonicalize nodes to a file
@@ -4228,14 +4234,14 @@ class DOMEntityReference extends DOMNode  {
 	 * </p>
 	 * @return int Number of bytes written or false on failure
 	 */
-	public function C14NFile ($uri, $exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
+	public function C14NFile (string $uri, bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
 }
 
 class DOMProcessingInstruction extends DOMNode  {
 
 	/**
-	 * Creates a new <classname>DOMProcessingInstruction</classname> object
+	 * Creates a new DOMProcessingInstruction object
 	 * @link http://www.php.net/manual/en/domprocessinginstruction.construct.php
 	 * @param $name
 	 * @param $value [optional]
@@ -4307,7 +4313,7 @@ class DOMProcessingInstruction extends DOMNode  {
 	 * </p>
 	 * @return DOMNode The cloned node.
 	 */
-	public function cloneNode ($deep = null) {}
+	public function cloneNode (bool $deep = null) {}
 
 	/**
 	 * Normalizes the node
@@ -4329,7 +4335,7 @@ class DOMProcessingInstruction extends DOMNode  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function isSupported ($feature, $version) {}
+	public function isSupported (string $feature, string $version) {}
 
 	/**
 	 * Checks if node has attributes
@@ -4361,7 +4367,7 @@ class DOMProcessingInstruction extends DOMNode  {
 	 * </p>
 	 * @return string The prefix of the namespace.
 	 */
-	public function lookupPrefix ($namespaceURI) {}
+	public function lookupPrefix (string $namespaceURI) {}
 
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
@@ -4372,7 +4378,7 @@ class DOMProcessingInstruction extends DOMNode  {
 	 * @return bool Return true if namespaceURI is the default
 	 * namespace, false otherwise.
 	 */
-	public function isDefaultNamespace ($namespaceURI) {}
+	public function isDefaultNamespace (string $namespaceURI) {}
 
 	/**
 	 * Gets the namespace URI of the node based on the prefix
@@ -4382,7 +4388,7 @@ class DOMProcessingInstruction extends DOMNode  {
 	 * </p>
 	 * @return string The namespace URI of the node.
 	 */
-	public function lookupNamespaceUri ($prefix) {}
+	public function lookupNamespaceUri (string $prefix) {}
 
 	/**
 	 * @param DOMNode $arg
@@ -4410,7 +4416,7 @@ class DOMProcessingInstruction extends DOMNode  {
 	/**
 	 * Get an XPath for a node
 	 * @link http://www.php.net/manual/en/domnode.getnodepath.php
-	 * @return string a string containing the XPath, or &null; in case of an error.
+	 * @return string a string containing the XPath, or null in case of an error.
 	 */
 	public function getNodePath () {}
 
@@ -4439,7 +4445,7 @@ class DOMProcessingInstruction extends DOMNode  {
 	 * </p>
 	 * @return string canonicalized nodes as a string or false on failure
 	 */
-	public function C14N ($exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
+	public function C14N (bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
 	/**
 	 * Canonicalize nodes to a file
@@ -4462,7 +4468,7 @@ class DOMProcessingInstruction extends DOMNode  {
 	 * </p>
 	 * @return int Number of bytes written or false on failure
 	 */
-	public function C14NFile ($uri, $exclusive = null, $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
+	public function C14NFile (string $uri, bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
 
 }
 
@@ -4483,14 +4489,14 @@ class DOMStringExtend  {
 class DOMXPath  {
 
 	/**
-	 * Creates a new <classname>DOMXPath</classname> object
+	 * Creates a new DOMXPath object
 	 * @link http://www.php.net/manual/en/domxpath.construct.php
 	 * @param DOMDocument $doc
 	 */
 	public function __construct (DOMDocument $doc) {}
 
 	/**
-	 * Registers the namespace with the <classname>DOMXPath</classname> object
+	 * Registers the namespace with the DOMXPath object
 	 * @link http://www.php.net/manual/en/domxpath.registernamespace.php
 	 * @param string $prefix <p>
 	 * The prefix.
@@ -4500,7 +4506,7 @@ class DOMXPath  {
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
-	public function registerNamespace ($prefix, $namespaceURI) {}
+	public function registerNamespace (string $prefix, string $namespaceURI) {}
 
 	/**
 	 * Evaluates the given XPath expression
@@ -4521,13 +4527,13 @@ class DOMXPath  {
 	 * the given XPath expression. Any expression which
 	 * does not return nodes will return an empty
 	 * DOMNodeList.
-	 * </p>
 	 * <p>
 	 * If the expression is malformed or the
 	 * contextnode is invalid,
 	 * DOMXPath::query returns false.
+	 * </p>
 	 */
-	public function query ($expression, DOMNode $contextnode = null, $registerNodeNS = null) {}
+	public function query (string $expression, DOMNode $contextnode = null, bool $registerNodeNS = null) {}
 
 	/**
 	 * Evaluates the given XPath expression and returns a typed result if possible
@@ -4546,13 +4552,13 @@ class DOMXPath  {
 	 * </p>
 	 * @return mixed a typed result if possible or a DOMNodeList 
 	 * containing all nodes matching the given XPath expression. 
-	 * </p>
 	 * <p>
 	 * If the expression is malformed or the
 	 * contextnode is invalid,
 	 * DOMXPath::evaluate returns false.
+	 * </p>
 	 */
-	public function evaluate ($expression, DOMNode $contextnode = null, $registerNodeNS = null) {}
+	public function evaluate (string $expression, DOMNode $contextnode = null, bool $registerNodeNS = null) {}
 
 	/**
 	 * Register PHP functions as XPath functions
@@ -4571,8 +4577,8 @@ class DOMXPath  {
 }
 
 /**
- * Gets a <classname>DOMElement</classname> object from a
-   <classname>SimpleXMLElement</classname> object
+ * Gets a DOMElement object from a
+ * SimpleXMLElement object
  * @link http://www.php.net/manual/en/function.dom-import-simplexml.php
  * @param SimpleXMLElement $node <p>
  * The SimpleXMLElement node.

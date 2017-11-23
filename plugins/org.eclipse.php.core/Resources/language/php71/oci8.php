@@ -1145,7 +1145,7 @@ function ocigetbufferinglob ($lob_descriptor) {}
  * </p>
  * @return bool true if these objects are equal, false otherwise.
  */
-function oci_lob_is_equal (OCI-Lob $lob1, OCI-Lob $lob2) {}
+function oci_lob_is_equal (/*OCI-Lob*/ $lob1, /*OCI-Lob*/ $lob2) {}
 
 /**
  * @param $lob_descriptor
@@ -1179,7 +1179,7 @@ function oci_lob_append ($lob_descriptor_to, $lob_descriptor_from) {}
  * </p>
  * @return bool true on success or false on failure
  */
-function oci_lob_copy (OCI-Lob $lob_to, OCI-Lob $lob_from, $length = null) {}
+function oci_lob_copy (/*OCI-Lob*/ $lob_to, /*OCI-Lob*/ $lob_from, $length = null) {}
 
 /**
  * @param $lob_descriptor

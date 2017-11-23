@@ -1,6 +1,6 @@
 <?php
 
-// Start of filter v.7.2.0-dev
+// Start of filter v.7.1.1
 
 /**
  * Gets a specific external variable by name and optionally filters it
@@ -19,11 +19,11 @@
  * accepts options, flags can be provided in "flags" field of array.
  * </p>
  * @return mixed Value of the requested variable on success, false if the filter fails,
- * or &null; if the variable_name variable is not set.
+ * or null if the variable_name variable is not set.
  * If the flag FILTER_NULL_ON_FAILURE is used, it
- * returns false if the variable is not set and &null; if the filter fails.
+ * returns false if the variable is not set and null if the filter fails.
  */
-function filter_input ($type, $variable_name, $filter = null, $options = null) {}
+function filter_input (int $type, string $variable_name, int $filter = null, $options = null) {}
 
 /**
  * Filters a variable with a specified filter
@@ -41,25 +41,29 @@ function filter_input ($type, $variable_name, $filter = null, $options = null) {
  * the value after filtering/sanitizing it.
  * </p>
  * <p>
- * array(
- * 'default' => 3, // value to return if the filter fails
- * // other options here
- * 'min_range' => 0
+ * <pre>
+ * <code>&lt;?php
+ * &#47;&#47; for filters that accept options, use this format
+ * $options = array(
+ * 'options' =&gt; array(
+ * 'default' =&gt; 3, &#47;&#47; value to return if the filter fails
+ * &#47;&#47; other options here
+ * 'min_range' =&gt; 0
  * ),
- * 'flags' => FILTER_FLAG_ALLOW_OCTAL,
+ * 'flags' =&gt; FILTER_FLAG_ALLOW_OCTAL,
  * );
  * $var = filter_var('0755', FILTER_VALIDATE_INT, $options);
- * // for filter that only accept flags, you can pass them directly
+ * &#47;&#47; for filter that only accept flags, you can pass them directly
  * $var = filter_var('oops', FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
- * // for filter that only accept flags, you can also pass as an array
+ * &#47;&#47; for filter that only accept flags, you can also pass as an array
  * $var = filter_var('oops', FILTER_VALIDATE_BOOLEAN,
- * array('flags' => FILTER_NULL_ON_FAILURE));
- * // callback validate filter
+ * array('flags' =&gt; FILTER_NULL_ON_FAILURE));
+ * &#47;&#47; callback validate filter
  * function foo($value)
  * {
- * // Expected format: Surname, GivenNames
- * if (strpos($value, ", ") === false) return false;
- * list($surname, $givennames) = explode(", ", $value, 2);
+ * &#47;&#47; Expected format: Surname, GivenNames
+ * if (strpos($value, &quot;, &quot;) === false) return false;
+ * list($surname, $givennames) = explode(&quot;, &quot;, $value, 2);
  * $empty = (empty($surname) || empty($givennames));
  * $notstrings = (!is_string($surname) || !is_string($givennames));
  * if ($empty || $notstrings) {
@@ -68,13 +72,13 @@ function filter_input ($type, $variable_name, $filter = null, $options = null) {
  * return $value;
  * }
  * }
- * $var = filter_var('Doe, Jane Sue', FILTER_CALLBACK, array('options' => 'foo'));
- * ?>
- * ]]>
+ * $var = filter_var('Doe, Jane Sue', FILTER_CALLBACK, array('options' =&gt; 'foo'));
+ * ?&gt;</code>
+ * </pre>
  * </p>
  * @return mixed the filtered data, or false if the filter fails.
  */
-function filter_var ($variable, $filter = null, $options = null) {}
+function filter_var ($variable, int $filter = null, $options = null) {}
 
 /**
  * Gets external variables and optionally filters them
@@ -99,15 +103,15 @@ function filter_var ($variable, $filter = null, $options = null) {}
  * input array are filtered by this filter.
  * </p>
  * @param bool $add_empty [optional] <p>
- * Add missing keys as &null; to the return value.
+ * Add missing keys as null to the return value.
  * </p>
  * @return mixed An array containing the values of the requested variables on success, or false 
- * on failure. An array value will be false if the filter fails, or &null; if 
+ * on failure. An array value will be false if the filter fails, or null if 
  * the variable is not set. Or if the flag FILTER_NULL_ON_FAILURE
- * is used, it returns false if the variable is not set and &null; if the filter 
+ * is used, it returns false if the variable is not set and null if the filter 
  * fails.
  */
-function filter_input_array ($type, $definition = null, $add_empty = null) {}
+function filter_input_array (int $type, $definition = null, bool $add_empty = null) {}
 
 /**
  * Gets multiple variables and optionally filters them
@@ -131,13 +135,13 @@ function filter_input_array ($type, $definition = null, $add_empty = null) {}
  * input array are filtered by this filter.
  * </p>
  * @param bool $add_empty [optional] <p>
- * Add missing keys as &null; to the return value.
+ * Add missing keys as null to the return value.
  * </p>
  * @return mixed An array containing the values of the requested variables on success, or false 
- * on failure. An array value will be false if the filter fails, or &null; if 
+ * on failure. An array value will be false if the filter fails, or null if 
  * the variable is not set.
  */
-function filter_var_array (array $data, $definition = null, $add_empty = null) {}
+function filter_var_array (array $data, $definition = null, bool $add_empty = null) {}
 
 /**
  * Returns a list of all supported filters
@@ -161,7 +165,7 @@ function filter_list () {}
  * </p>
  * @return bool true on success or false on failure
  */
-function filter_has_var ($type, $variable_name) {}
+function filter_has_var (int $type, string $variable_name) {}
 
 /**
  * Returns the filter ID belonging to a named filter
@@ -171,7 +175,7 @@ function filter_has_var ($type, $variable_name) {}
  * </p>
  * @return int ID of a filter on success or false if filter doesn't exist.
  */
-function filter_id ($filtername) {}
+function filter_id (string $filtername) {}
 
 
 /**
@@ -484,6 +488,12 @@ define ('FILTER_FLAG_NO_RES_RANGE', 4194304);
  */
 define ('FILTER_FLAG_NO_PRIV_RANGE', 8388608);
 define ('FILTER_FLAG_HOSTNAME', 1048576);
+
+/**
+ * Accepts Unicode characters in the local part in "validate_email" filter.
+ * (Available as of PHP 7.1.0)
+ * @link http://www.php.net/manual/en/filter.constants.php
+ */
 define ('FILTER_FLAG_EMAIL_UNICODE', 1048576);
 
-// End of filter v.7.2.0-dev
+// End of filter v.7.1.1

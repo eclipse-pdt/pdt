@@ -1,6 +1,6 @@
 <?php
 
-// Start of recode v.7.0.0-dev
+// Start of recode v.7.1.1
 
 /**
  * Recode a string according to a recode request
@@ -14,7 +14,7 @@
  * @return string the recoded string or false, if unable to 
  * perform the recode request.
  */
-function recode_string ($request, $string) {}
+function recode_string (string $request, string $string) {}
 
 /**
  * Recode from file to file according to recode request
@@ -32,14 +32,14 @@ function recode_string ($request, $string) {}
  * </p>
  * @return bool false, if unable to comply, true otherwise.
  */
-function recode_file ($request, $input, $output) {}
+function recode_file (string $request, $input, $output) {}
 
 /**
- * &Alias; <function>recode_string</function>
+ * Alias: recode_string
  * @link http://www.php.net/manual/en/function.recode.php
  * @param $request
  * @param $str
  */
 function recode ($request, $str) {}
 
-// End of recode v.7.0.0-dev
+// End of recode v.7.1.1

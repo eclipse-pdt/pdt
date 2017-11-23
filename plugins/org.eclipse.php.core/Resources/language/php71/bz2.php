@@ -1,6 +1,6 @@
 <?php
 
-// Start of bz2 v.7.2.0-dev
+// Start of bz2 v.7.1.1
 
 /**
  * Opens a bzip2 compressed file
@@ -15,7 +15,7 @@
  * @return resource If the open fails, bzopen returns false, otherwise
  * it returns a pointer to the newly opened file.
  */
-function bzopen ($file, $mode) {}
+function bzopen ($file, string $mode) {}
 
 /**
  * Binary safe bzip2 file read
@@ -31,7 +31,7 @@ function bzopen ($file, $mode) {}
  * </p>
  * @return string the uncompressed data, or false on error.
  */
-function bzread ($bz, $length = null) {}
+function bzread ($bz, int $length = null) {}
 
 /**
  * Binary safe bzip2 file write
@@ -50,7 +50,7 @@ function bzread ($bz, $length = null) {}
  * </p>
  * @return int the number of bytes written, or false on error.
  */
-function bzwrite ($bz, $data, $length = null) {}
+function bzwrite ($bz, string $data, int $length = null) {}
 
 /**
  * Force a write of all buffered data
@@ -131,7 +131,7 @@ function bzerror ($bz) {}
  * </p>
  * @return mixed The compressed string, or an error number if an error occurred.
  */
-function bzcompress ($source, $blocksize = null, $workfactor = null) {}
+function bzcompress (string $source, int $blocksize = null, int $workfactor = null) {}
 
 /**
  * Decompresses bzip2 encoded data
@@ -150,6 +150,6 @@ function bzcompress ($source, $blocksize = null, $workfactor = null) {}
  * </p>
  * @return mixed The decompressed string, or an error number if an error occurred.
  */
-function bzdecompress ($source, $small = null) {}
+function bzdecompress (string $source, int $small = null) {}
 
-// End of bz2 v.7.2.0-dev
+// End of bz2 v.7.1.1

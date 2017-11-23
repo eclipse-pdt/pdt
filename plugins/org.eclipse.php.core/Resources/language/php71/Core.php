@@ -1,6 +1,6 @@
 <?php
 
-// Start of Core v.7.2.0-dev
+// Start of Core v.7.1.1
 
 class stdClass  {
 }
@@ -32,7 +32,7 @@ interface Traversable  {
  */
 interface IteratorAggregate extends Traversable {
 
-	abstract public function getIterator () {}
+	abstract public function getIterator ();
 
 }
 
@@ -43,15 +43,15 @@ interface IteratorAggregate extends Traversable {
  */
 interface Iterator extends Traversable {
 
-	abstract public function current () {}
+	abstract public function current ();
 
-	abstract public function next () {}
+	abstract public function next ();
 
-	abstract public function key () {}
+	abstract public function key ();
 
-	abstract public function valid () {}
+	abstract public function valid ();
 
-	abstract public function rewind () {}
+	abstract public function rewind ();
 
 }
 
@@ -64,23 +64,23 @@ interface ArrayAccess  {
 	/**
 	 * @param $offset
 	 */
-	abstract public function offsetExists ($offset) {}
+	abstract public function offsetExists ($offset);
 
 	/**
 	 * @param $offset
 	 */
-	abstract public function offsetGet ($offset) {}
+	abstract public function offsetGet ($offset);
 
 	/**
 	 * @param $offset
 	 * @param $value
 	 */
-	abstract public function offsetSet ($offset, $value) {}
+	abstract public function offsetSet ($offset, $value);
 
 	/**
 	 * @param $offset
 	 */
-	abstract public function offsetUnset ($offset) {}
+	abstract public function offsetUnset ($offset);
 
 }
 
@@ -90,31 +90,31 @@ interface ArrayAccess  {
  * __sleep() and
  * __wakeup(). The method serialize is
  * called whenever an instance needs to be serialized. This does not invoke __destruct()
- * or has any other side effect unless programmed inside the method. When the data is
+ * or have any other side effect unless programmed inside the method. When the data is
  * unserialized the class is known and the appropriate unserialize() method is called as
  * a constructor instead of calling __construct(). If you need to execute the standard
  * constructor you may do so in the method.</p>
  * <p>Note, that when an old instance of a class that implements this interface
  * now, which had been serialized before the class implemeted the interface, is
  * unserialized, __wakeup() is called
- * instead of the serialize method, what might be useful for migration
+ * instead of the serialize method, which might be useful for migration
  * purposes.</p>
  * @link http://www.php.net/manual/en/class.serializable.php
  */
 interface Serializable  {
 
-	abstract public function serialize () {}
+	abstract public function serialize ();
 
 	/**
 	 * @param $serialized
 	 */
-	abstract public function unserialize ($serialized) {}
+	abstract public function unserialize ($serialized);
 
 }
 
 /**
  * Throwable is the base interface for any object that
- * can be thrown via a &throw; statement in PHP 7, including
+ * can be thrown via a throw statement in PHP 7, including
  * Error and Exception.
  * <p>PHP classes cannot implement the Throwable
  * interface directly, and must instead extend
@@ -123,21 +123,21 @@ interface Serializable  {
  */
 interface Throwable  {
 
-	abstract public function getMessage () {}
+	abstract public function getMessage ();
 
-	abstract public function getCode () {}
+	abstract public function getCode ();
 
-	abstract public function getFile () {}
+	abstract public function getFile ();
 
-	abstract public function getLine () {}
+	abstract public function getLine ();
 
-	abstract public function getTrace () {}
+	abstract public function getTrace ();
 
-	abstract public function getPrevious () {}
+	abstract public function getPrevious ();
 
-	abstract public function getTraceAsString () {}
+	abstract public function getTraceAsString ();
 
-	abstract public function __toString () {}
+	abstract public function __toString ();
 
 }
 
@@ -366,6 +366,11 @@ class TypeError extends Error implements Throwable {
 
 }
 
+/**
+ * ArgumentCountError is thrown
+ * when too few arguments are passed to a user-defined function or method.
+ * @link http://www.php.net/manual/en/class.argumentcounterror.php
+ */
 class ArgumentCountError extends TypeError implements Throwable {
 	protected $message;
 	protected $code;
@@ -600,16 +605,6 @@ class ClosedGeneratorException extends Exception implements Throwable {
 
 }
 
-interface _ZendTestInterface  {
-	const DUMMY = 0;
-
-}
-
-class _ZendTestClass implements _ZendTestInterface {
-	const DUMMY = 0;
-
-}
-
 /**
  * Gets the version of the current Zend engine
  * @link http://www.php.net/manual/en/function.zend-version.php
@@ -634,7 +629,7 @@ function func_num_args () {}
  * </p>
  * @return mixed the specified argument, or false on error.
  */
-function func_get_arg ($arg_num) {}
+function func_get_arg (int $arg_num) {}
 
 /**
  * Returns an array comprising a function's argument list
@@ -653,7 +648,7 @@ function func_get_args () {}
  * @return int The length of the string on success, 
  * and 0 if the string is empty.
  */
-function strlen ($string) {}
+function strlen (string $string) {}
 
 /**
  * Binary safe string comparison
@@ -669,7 +664,7 @@ function strlen ($string) {}
  * is greater than str2, and 0 if they are
  * equal.
  */
-function strcmp ($str1, $str2) {}
+function strcmp (string $str1, string $str2) {}
 
 /**
  * Binary safe string comparison of the first n characters
@@ -688,7 +683,7 @@ function strcmp ($str1, $str2) {}
  * is greater than str2, and 0 if they are
  * equal.
  */
-function strncmp ($str1, $str2, $len) {}
+function strncmp (string $str1, string $str2, int $len) {}
 
 /**
  * Binary safe case-insensitive string comparison
@@ -704,7 +699,7 @@ function strncmp ($str1, $str2, $len) {}
  * is greater than str2, and 0 if they are
  * equal.
  */
-function strcasecmp ($str1, $str2) {}
+function strcasecmp (string $str1, string $str2) {}
 
 /**
  * Binary safe case-insensitive string comparison of the first n characters
@@ -722,7 +717,7 @@ function strcasecmp ($str1, $str2) {}
  * str2; &gt; 0 if str1 is
  * greater than str2, and 0 if they are equal.
  */
-function strncasecmp ($str1, $str2, $len) {}
+function strncasecmp (string $str1, string $str2, int $len) {}
 
 /**
  * Return the current key and value pair from an array and advance the array cursor
@@ -737,11 +732,11 @@ function strncasecmp ($str1, $str2, $len) {}
  * 0 and key contain the key name of
  * the array element, and 1 and value
  * contain the data.
- * </p>
  * <p>
  * If the internal pointer for the array points past the end of the
  * array contents, each returns
  * false.
+ * </p>
  */
 function each (array &$array) {}
 
@@ -764,7 +759,7 @@ function each (array &$array) {}
  * level or the current level if no level parameter is
  * given.
  */
-function error_reporting ($level = null) {}
+function error_reporting (int $level = null) {}
 
 /**
  * Defines a named constant
@@ -776,7 +771,7 @@ function error_reporting ($level = null) {}
  * The value of the constant. In PHP 5, value must
  * be a scalar value (integer,
  * float, string, boolean, or
- * &null;). In PHP 7, array values are also accepted.
+ * null). In PHP 7, array values are also accepted.
  * </p>
  * <p>
  * While it is possible to define resource constants, it is
@@ -793,7 +788,7 @@ function error_reporting ($level = null) {}
  * </p>
  * @return bool true on success or false on failure
  */
-function define ($name, $value, $case_insensitive = null) {}
+function define (string $name, $value, bool $case_insensitive = null) {}
 
 /**
  * Checks whether a given named constant exists
@@ -804,7 +799,7 @@ function define ($name, $value, $case_insensitive = null) {}
  * @return bool true if the named constant given by name
  * has been defined, false otherwise.
  */
-function defined ($name) {}
+function defined (string $name) {}
 
 /**
  * Returns the name of the class of an object
@@ -812,13 +807,22 @@ function defined ($name) {}
  * @param object $object [optional] <p>
  * The tested object. This parameter may be omitted when inside a class.
  * </p>
+ * Explicitly passing null as the object is no
+ * longer allowed as of PHP 7.2.0.
+ * The parameter is still optional and calling get_class
+ * without a parameter from inside a class will work, but passing null now
+ * emits an E_WARNING notice.
  * @return string the name of the class of which object is an
  * instance. Returns false if object is not an 
  * object.
- * </p>
  * <p>
  * If object is omitted when inside a class, the
  * name of that class is returned.
+ * </p>
+ * <p>
+ * If the object is an instance of a class which exists 
+ * in a namespace, the qualified namespaced name of that class is returned.
+ * </p>
  */
 function get_class ($object = null) {}
 
@@ -838,12 +842,12 @@ function get_called_class () {}
  * </p>
  * @return string the name of the parent class of the class of which
  * object is an instance or the name.
- * </p>
  * <p>
  * If the object does not have a parent or the class given does not exist false will be returned.
  * </p>
  * <p>
  * If called without parameter outside object, this function returns false.
+ * </p>
  */
 function get_parent_class ($object = null) {}
 
@@ -860,7 +864,7 @@ function get_parent_class ($object = null) {}
  * has been defined for the given object, false 
  * otherwise.
  */
-function method_exists ($object, $method_name) {}
+function method_exists ($object, string $method_name) {}
 
 /**
  * Checks if the object or class has a property
@@ -872,9 +876,9 @@ function method_exists ($object, $method_name) {}
  * The name of the property
  * </p>
  * @return bool true if the property exists, false if it doesn't exist or
- * &null; in case of an error.
+ * null in case of an error.
  */
-function property_exists ($class, $property) {}
+function property_exists ($class, string $property) {}
 
 /**
  * Checks if the class has been defined
@@ -883,12 +887,12 @@ function property_exists ($class, $property) {}
  * The class name. The name is matched in a case-insensitive manner.
  * </p>
  * @param bool $autoload [optional] <p>
- * Whether or not to call &link.autoload; by default.
+ * Whether or not to call link.autoload by default.
  * </p>
  * @return bool true if class_name is a defined class,
  * false otherwise.
  */
-function class_exists ($class_name, $autoload = null) {}
+function class_exists (string $class_name, bool $autoload = null) {}
 
 /**
  * Checks if the interface has been defined
@@ -897,12 +901,12 @@ function class_exists ($class_name, $autoload = null) {}
  * The interface name
  * </p>
  * @param bool $autoload [optional] <p>
- * Whether to call &link.autoload; or not by default.
+ * Whether to call link.autoload or not by default.
  * </p>
  * @return bool true if the interface given by 
  * interface_name has been defined, false otherwise.
  */
-function interface_exists ($interface_name, $autoload = null) {}
+function interface_exists (string $interface_name, bool $autoload = null) {}
 
 /**
  * Checks if the trait exists
@@ -913,9 +917,9 @@ function interface_exists ($interface_name, $autoload = null) {}
  * @param bool $autoload [optional] <p>
  * Whether to autoload if not already loaded.
  * </p>
- * @return bool true if trait exists, false if not, &null; in case of an error.
+ * @return bool true if trait exists, false if not, null in case of an error.
  */
-function trait_exists ($traitname, $autoload = null) {}
+function trait_exists (string $traitname, bool $autoload = null) {}
 
 /**
  * Return true if the given function has been defined
@@ -925,12 +929,12 @@ function trait_exists ($traitname, $autoload = null) {}
  * </p>
  * @return bool true if function_name exists and is a
  * function, false otherwise.
- * </p>
  * <p>
  * This function will return false for constructs, such as 
  * include_once and echo.
+ * </p>
  */
-function function_exists ($function_name) {}
+function function_exists (string $function_name) {}
 
 /**
  * Creates an alias for a class
@@ -946,21 +950,12 @@ function function_exists ($function_name) {}
  * </p>
  * @return bool true on success or false on failure
  */
-function class_alias ($original, $alias, $autoload = null) {}
-
-function leak () {}
-
-/**
- * @param $variable
- * @param $leak_data [optional]
- */
-function leak_variable ($variable, $leak_data = null) {}
+function class_alias (string $original, string $alias, bool $autoload = null) {}
 
 /**
  * Returns an array with the names of included or required files
  * @link http://www.php.net/manual/en/function.get-included-files.php
  * @return array an array of the names of all files.
- * </p>
  * <p>
  * The script originally called is considered an "included file," so it will
  * be listed together with the files referenced by 
@@ -969,11 +964,12 @@ function leak_variable ($variable, $leak_data = null) {}
  * <p>
  * Files that are included or required multiple times only show up once in
  * the returned array.
+ * </p>
  */
 function get_included_files () {}
 
 /**
- * &Alias; <function>get_included_files</function>
+ * Alias: get_included_files
  * @link http://www.php.net/manual/en/function.get-required-files.php
  */
 function get_required_files () {}
@@ -995,7 +991,7 @@ function get_required_files () {}
  * belongs to a class which is a subclass of
  * class_name, false otherwise.
  */
-function is_subclass_of ($object, $class_name, $allow_string = null) {}
+function is_subclass_of ($object, string $class_name, bool $allow_string = null) {}
 
 /**
  * Checks if the object is of this class or has this class as one of its parents
@@ -1013,7 +1009,7 @@ function is_subclass_of ($object, $class_name, $allow_string = null) {}
  * @return bool true if the object is of this class or has this class as one of
  * its parents, false otherwise.
  */
-function is_a ($object, $class_name, $allow_string = null) {}
+function is_a ($object, string $class_name, bool $allow_string = null) {}
 
 /**
  * Get the default properties of the class
@@ -1027,7 +1023,7 @@ function is_a ($object, $class_name, $allow_string = null) {}
  * varname => value.
  * In case of an error, it returns false.
  */
-function get_class_vars ($class_name) {}
+function get_class_vars (string $class_name) {}
 
 /**
  * Gets the properties of the given object
@@ -1037,7 +1033,7 @@ function get_class_vars ($class_name) {}
  * </p>
  * @return array an associative array of defined object accessible non-static properties 
  * for the specified object in scope. If a property has
- * not been assigned a value, it will be returned with a &null; value.
+ * not been assigned a value, it will be returned with a null value.
  */
 function get_object_vars ($object) {}
 
@@ -1048,7 +1044,7 @@ function get_object_vars ($object) {}
  * The class name or an object instance
  * </p>
  * @return array an array of method names defined for the class specified by
- * class_name. In case of an error, it returns &null;.
+ * class_name. In case of an error, it returns null.
  */
 function get_class_methods ($class_name) {}
 
@@ -1067,10 +1063,10 @@ function get_class_methods ($class_name) {}
  * @return bool This function returns false if wrong error_type is
  * specified, true otherwise.
  */
-function trigger_error ($error_msg, $error_type = null) {}
+function trigger_error (string $error_msg, int $error_type = null) {}
 
 /**
- * Alias of <function>trigger_error</function>
+ * Alias of trigger_error
  * @link http://www.php.net/manual/en/function.user-error.php
  * @param $message
  * @param $error_type [optional]
@@ -1082,7 +1078,7 @@ function user_error ($message, $error_type = null) {}
  * @link http://www.php.net/manual/en/function.set-error-handler.php
  * @param callable $error_handler <p>
  * A callback with the following signature.
- * &null; may be passed instead, to reset this handler to its default state.
+ * null may be passed instead, to reset this handler to its default state.
  * Instead of a function name, an array containing an object reference 
  * and a method name can also be supplied.
  * </p>
@@ -1104,12 +1100,12 @@ function user_error ($message, $error_type = null) {}
  * regardless to the setting of the error_reporting setting.
  * </p>
  * @return mixed a string containing the previously defined error handler (if any). If
- * the built-in error handler is used &null; is returned. &null; is also returned
+ * the built-in error handler is used null is returned. null is also returned
  * in case of an error such as an invalid callback. If the previous error handler
  * was a class method, this function will return an indexed array with the class
  * and the method name.
  */
-function set_error_handler ($error_handler, $error_types = null) {}
+function set_error_handler (callable $error_handler, int $error_types = null) {}
 
 /**
  * Restores the previous error handler function
@@ -1142,17 +1138,17 @@ function restore_error_handler () {}
  * Throwableex
  * </p>
  * <p>
- * &null; may be passed instead, to reset this handler to its default state.
+ * null may be passed instead, to reset this handler to its default state.
  * </p>
  * <p>
  * Note that providing an explicit Exception type
  * hint for the ex parameter in your callback will
  * cause issues with the changed exception hierarchy in PHP 7.
  * </p>
- * @return callable the name of the previously defined exception handler, or &null; on error. If
- * no previous handler was defined, &null; is also returned.
+ * @return callable the name of the previously defined exception handler, or null on error. If
+ * no previous handler was defined, null is also returned.
  */
-function set_exception_handler ($exception_handler) {}
+function set_exception_handler (callable $exception_handler) {}
 
 /**
  * Restores the previously defined exception handler function
@@ -1166,13 +1162,13 @@ function restore_exception_handler () {}
  * @link http://www.php.net/manual/en/function.get-declared-classes.php
  * @return array an array of the names of the declared classes in the current
  * script.
- * </p>
  * <p>
  * Note that depending on what extensions you have compiled or
  * loaded into PHP, additional classes could be present. This means that
  * you will not be able to define your own classes using these
  * names. There is a list of predefined classes in the Predefined Classes section of
  * the appendices.
+ * </p>
  */
 function get_declared_classes () {}
 
@@ -1180,7 +1176,7 @@ function get_declared_classes () {}
  * Returns an array of all declared traits
  * @link http://www.php.net/manual/en/function.get-declared-traits.php
  * @return array an array with names of all declared traits in values.
- * Returns &null; in case of a failure.
+ * Returns null in case of a failure.
  */
 function get_declared_traits () {}
 
@@ -1195,13 +1191,16 @@ function get_declared_interfaces () {}
 /**
  * Returns an array of all defined functions
  * @link http://www.php.net/manual/en/function.get-defined-functions.php
+ * @param bool $exclude_disabled [optional] <p>
+ * Whether disabled functions should be excluded from the return value.
+ * </p>
  * @return array a multidimensional array containing a list of all defined
  * functions, both built-in (internal) and user-defined. The internal
  * functions will be accessible via $arr["internal"], and
  * the user defined ones using $arr["user"] (see example
  * below).
  */
-function get_defined_functions () {}
+function get_defined_functions (bool $exclude_disabled = null) {}
 
 /**
  * Returns an array of all defined variables
@@ -1221,7 +1220,7 @@ function get_defined_vars () {}
  * </p>
  * @return string a unique function name as a string, or false on error.
  */
-function create_function ($args, $code) {}
+function create_function (string $args, string $code) {}
 
 /**
  * Returns the resource type
@@ -1233,10 +1232,10 @@ function create_function ($args, $code) {}
  * will return a string representing its type. If the type is not identified
  * by this function, the return value will be the string 
  * Unknown.
- * </p>
  * <p>
- * This function will return false and generate an error if 
+ * This function will return null and generate an error if 
  * handle is not a resource.
+ * </p>
  */
 function get_resource_type ($handle) {}
 
@@ -1259,7 +1258,7 @@ function get_resource_type ($handle) {}
  * @return array an array of currently active resources, indexed by
  * resource number.
  */
-function get_resources ($type = null) {}
+function get_resources (string $type = null) {}
 
 /**
  * Returns an array with the names of all modules compiled and loaded
@@ -1270,7 +1269,7 @@ function get_resources ($type = null) {}
  * </p>
  * @return array an indexed array of all the modules names.
  */
-function get_loaded_extensions ($zend_extensions = null) {}
+function get_loaded_extensions (bool $zend_extensions = null) {}
 
 /**
  * Find out whether an extension is loaded
@@ -1284,11 +1283,27 @@ function get_loaded_extensions ($zend_extensions = null) {}
  * CGI or CLI version of
  * PHP you can use the -m switch to
  * list all available extensions:
+ * <pre>
+ * $ php -m
+ * [PHP Modules]
+ * xml
+ * tokenizer
+ * standard
+ * sockets
+ * session
+ * posix
+ * pcre
+ * overload
+ * mysql
+ * mbstring
+ * ctype
+ * [Zend Modules]
+ * </pre>
  * </p>
  * @return bool true if the extension identified by name
  * is loaded, false otherwise.
  */
-function extension_loaded ($name) {}
+function extension_loaded (string $name) {}
 
 /**
  * Returns an array with the names of the functions of a module
@@ -1302,7 +1317,7 @@ function extension_loaded ($name) {}
  * @return array an array with all the functions, or false if 
  * module_name is not a valid extension.
  */
-function get_extension_funcs ($module_name) {}
+function get_extension_funcs (string $module_name) {}
 
 /**
  * Returns an associative array with the names of all the constants and their values
@@ -1311,9 +1326,17 @@ function get_extension_funcs ($module_name) {}
  * Causing this function to return a multi-dimensional
  * array with categories in the keys of the first dimension and constants
  * and their values in the second dimension.
- * ]]>
- * &example.outputs.similar;
+ * <pre>
+ * <code>&lt;?php
+ * define(&quot;MY_CONSTANT&quot;, 1);
+ * print_r(get_defined_constants(true));
+ * ?&gt;</code>
+ * </pre>
+ * example.outputs.similar
+ * <pre>
  * Array
+ * (
+ * [Core] => Array
  * (
  * [E_ERROR] => 1
  * [E_WARNING] => 2
@@ -1344,12 +1367,12 @@ function get_extension_funcs ($module_name) {}
  * [MY_CONSTANT] => 1
  * )
  * )
- * ]]>
+ * </pre>
  * </p>
  * @return array an array of constant name => constant value array, optionally
  * groupped by extension name registering the constant.
  */
-function get_defined_constants ($categorize = null) {}
+function get_defined_constants (bool $categorize = null) {}
 
 /**
  * Generates a backtrace
@@ -1358,6 +1381,7 @@ function get_defined_constants ($categorize = null) {}
  * As of 5.3.6, this parameter is a bitmask for the following options:
  * <table>
  * debug_backtrace options
+ * <table>
  * <tr valign="top">
  * <td>DEBUG_BACKTRACE_PROVIDE_OBJECT</td>
  * <td>
@@ -1372,6 +1396,7 @@ function get_defined_constants ($categorize = null) {}
  * </td>
  * </tr>
  * </table>
+ * </table>
  * Before 5.3.6, the only values recognized are true or false, which are the same as 
  * setting or not setting the DEBUG_BACKTRACE_PROVIDE_OBJECT option respectively.
  * </p>
@@ -1381,14 +1406,14 @@ function get_defined_constants ($categorize = null) {}
  * </p>
  * @return array an array of associative arrays. The possible returned elements
  * are as follows:
- * </p>
  * <p>
  * <table>
  * Possible returned elements from debug_backtrace
+ * <table>
  * <tr valign="top">
- * <td>&Name;</td>
- * <td>&Type;</td>
- * <td>&Description;</td>
+ * <td>Name</td>
+ * <td>Type</td>
+ * <td>Description</td>
  * </tr>
  * <tr valign="top">
  * <td>function</td>
@@ -1446,8 +1471,10 @@ function get_defined_constants ($categorize = null) {}
  * </td>
  * </tr>
  * </table>
+ * </table>
+ * </p>
  */
-function debug_backtrace ($options = null, $limit = null) {}
+function debug_backtrace (int $options = null, int $limit = null) {}
 
 /**
  * Prints a backtrace
@@ -1456,6 +1483,7 @@ function debug_backtrace ($options = null, $limit = null) {}
  * As of 5.3.6, this parameter is a bitmask for the following options:
  * <table>
  * debug_print_backtrace options
+ * <table>
  * <tr valign="top">
  * <td>DEBUG_BACKTRACE_IGNORE_ARGS</td>
  * <td>
@@ -1464,6 +1492,7 @@ function debug_backtrace ($options = null, $limit = null) {}
  * </td>
  * </tr>
  * </table>
+ * </table>
  * </p>
  * @param int $limit [optional] <p>
  * As of 5.4.0, this parameter can be used to limit the number of stack frames printed.
@@ -1471,11 +1500,7 @@ function debug_backtrace ($options = null, $limit = null) {}
  * </p>
  * @return void 
  */
-function debug_print_backtrace ($options = null, $limit = null) {}
-
-function zend_test_func () {}
-
-function zend_test_func2 () {}
+function debug_print_backtrace (int $options = null, int $limit = null) {}
 
 /**
  * Reclaims memory used by the Zend Engine memory manager
@@ -1638,34 +1663,34 @@ define ('E_USER_DEPRECATED', 16384);
 define ('E_ALL', 32767);
 define ('DEBUG_BACKTRACE_PROVIDE_OBJECT', 1);
 define ('DEBUG_BACKTRACE_IGNORE_ARGS', 2);
-define ('true', true);
-define ('false', false);
+define ('TRUE', true);
+define ('FALSE', false);
 define ('ZEND_THREAD_SAFE', false);
-define ('ZEND_DEBUG_BUILD', true);
-define ('null', null);
-define ('PHP_VERSION', "7.2.0-dev");
+define ('ZEND_DEBUG_BUILD', false);
+define ('NULL', null);
+define ('PHP_VERSION', "7.1.1");
 define ('PHP_MAJOR_VERSION', 7);
-define ('PHP_MINOR_VERSION', 2);
-define ('PHP_RELEASE_VERSION', 0);
-define ('PHP_EXTRA_VERSION', "-dev");
-define ('PHP_VERSION_ID', 70200);
+define ('PHP_MINOR_VERSION', 1);
+define ('PHP_RELEASE_VERSION', 1);
+define ('PHP_EXTRA_VERSION', "");
+define ('PHP_VERSION_ID', 70101);
 define ('PHP_ZTS', 0);
-define ('PHP_DEBUG', 1);
+define ('PHP_DEBUG', 0);
 define ('PHP_OS', "Linux");
 define ('PHP_SAPI', "cli");
-define ('DEFAULT_INCLUDE_PATH', ".:/home/wywrzal/.phpbrew/php/php-7.1.0/lib/php");
-define ('PEAR_INSTALL_DIR', "/home/wywrzal/.phpbrew/php/php-7.1.0/lib/php");
-define ('PEAR_EXTENSION_DIR', "/home/wywrzal/.phpbrew/php/php-7.1.0/lib/php/extensions/debug-non-zts-20160303");
-define ('PHP_EXTENSION_DIR', "/home/wywrzal/.phpbrew/php/php-7.1.0/lib/php/extensions/debug-non-zts-20160303");
-define ('PHP_PREFIX', "/home/wywrzal/.phpbrew/php/php-7.1.0");
-define ('PHP_BINDIR', "/home/wywrzal/.phpbrew/php/php-7.1.0/bin");
-define ('PHP_MANDIR', "/home/wywrzal/.phpbrew/php/php-7.1.0/php/man");
-define ('PHP_LIBDIR', "/home/wywrzal/.phpbrew/php/php-7.1.0/lib/php");
-define ('PHP_DATADIR', "/home/wywrzal/.phpbrew/php/php-7.1.0/share/php");
-define ('PHP_SYSCONFDIR', "/home/wywrzal/.phpbrew/php/php-7.1.0/etc");
-define ('PHP_LOCALSTATEDIR', "/home/wywrzal/.phpbrew/php/php-7.1.0/var");
-define ('PHP_CONFIG_FILE_PATH', "/home/wywrzal/.phpbrew/php/php-7.1.0/etc");
-define ('PHP_CONFIG_FILE_SCAN_DIR', "/home/wywrzal/.phpbrew/php/php-7.1.0/var/db");
+define ('DEFAULT_INCLUDE_PATH', ".:/usr/share/php");
+define ('PEAR_INSTALL_DIR', "/usr/share/php");
+define ('PEAR_EXTENSION_DIR', "/usr/lib/php/20160303");
+define ('PHP_EXTENSION_DIR', "/usr/lib/php/20160303");
+define ('PHP_PREFIX', "/usr");
+define ('PHP_BINDIR', "/usr/bin");
+define ('PHP_MANDIR', "/usr/share/man");
+define ('PHP_LIBDIR', "/usr/lib/php");
+define ('PHP_DATADIR', "/usr/share/php/7.1");
+define ('PHP_SYSCONFDIR', "/etc");
+define ('PHP_LOCALSTATEDIR', "/var");
+define ('PHP_CONFIG_FILE_PATH', "/etc/php/7.1/cli");
+define ('PHP_CONFIG_FILE_SCAN_DIR', "/etc/php/7.1/cli/conf.d");
 define ('PHP_SHLIB_SUFFIX', "so");
 define ('PHP_EOL', "\n");
 define ('PHP_MAXPATHLEN', 4096);
@@ -1673,7 +1698,7 @@ define ('PHP_INT_MAX', 9223372036854775807);
 define ('PHP_INT_MIN', -9223372036854775808);
 define ('PHP_INT_SIZE', 8);
 define ('PHP_FD_SETSIZE', 1024);
-define ('PHP_BINARY', "/home/wywrzal/.phpbrew/php/php-7.1.0/bin/php");
+define ('PHP_BINARY', "/usr/bin/php7.1");
 
 /**
  * <p>
@@ -1815,4 +1840,4 @@ define ('STDIN', "Resource id #1");
 define ('STDOUT', "Resource id #2");
 define ('STDERR', "Resource id #3");
 
-// End of Core v.7.2.0-dev
+// End of Core v.7.1.1

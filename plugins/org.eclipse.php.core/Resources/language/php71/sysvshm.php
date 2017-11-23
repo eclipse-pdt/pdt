@@ -1,6 +1,6 @@
 <?php
 
-// Start of sysvshm v.7.0.0-dev
+// Start of sysvshm v.7.1.1
 
 /**
  * Creates or open a shared memory segment
@@ -10,7 +10,7 @@
  * </p>
  * @param int $memsize [optional] <p>
  * The memory size. If not provided, default to the
- * sysvshm.init_mem in the &php.ini;, otherwise 10000
+ * sysvshm.init_mem in the php.ini, otherwise 10000
  * bytes.
  * </p>
  * @param int $perm [optional] <p>
@@ -18,7 +18,7 @@
  * </p>
  * @return resource a shared memory segment identifier.
  */
-function shm_attach ($key, $memsize = null, $perm = null) {}
+function shm_attach (int $key, int $memsize = null, int $perm = null) {}
 
 /**
  * Removes shared memory from Unix systems
@@ -60,7 +60,7 @@ function shm_detach ($shm_identifier) {}
  * </p>
  * @return bool true on success or false on failure
  */
-function shm_put_var ($shm_identifier, $variable_key, $variable) {}
+function shm_put_var ($shm_identifier, int $variable_key, $variable) {}
 
 /**
  * Check whether a specific entry exists
@@ -73,7 +73,7 @@ function shm_put_var ($shm_identifier, $variable_key, $variable) {}
  * </p>
  * @return bool true if the entry exists, otherwise false
  */
-function shm_has_var ($shm_identifier, $variable_key) {}
+function shm_has_var ($shm_identifier, int $variable_key) {}
 
 /**
  * Returns a variable from shared memory
@@ -86,7 +86,7 @@ function shm_has_var ($shm_identifier, $variable_key) {}
  * </p>
  * @return mixed the variable with the given key.
  */
-function shm_get_var ($shm_identifier, $variable_key) {}
+function shm_get_var ($shm_identifier, int $variable_key) {}
 
 /**
  * Removes a variable from shared memory
@@ -100,6 +100,6 @@ function shm_get_var ($shm_identifier, $variable_key) {}
  * </p>
  * @return bool true on success or false on failure
  */
-function shm_remove_var ($shm_identifier, $variable_key) {}
+function shm_remove_var ($shm_identifier, int $variable_key) {}
 
-// End of sysvshm v.7.0.0-dev
+// End of sysvshm v.7.1.1

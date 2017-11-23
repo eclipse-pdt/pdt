@@ -1,6 +1,6 @@
 <?php
 
-// Start of sockets v.7.2.0-dev
+// Start of sockets v.7.1.1
 
 /**
  * Runs the select() system call on the given arrays of sockets with a specified timeout
@@ -27,7 +27,7 @@
  * elapsed before socket_select return.
  * tv_sec may be zero , causing
  * socket_select to return immediately. This is useful
- * for polling. If tv_sec is &null; (no timeout),
+ * for polling. If tv_sec is null (no timeout),
  * socket_select can block indefinitely.
  * </p>
  * @param int $tv_usec [optional] <p>
@@ -37,15 +37,23 @@
  * the timeout expires before anything interesting happens. On error false
  * is returned. The error code can be retrieved with
  * socket_last_error.
- * </p>
  * <p>
  * Be sure to use the === operator when checking for an
  * error. Since the socket_select may return 0 the
  * comparison with == would evaluate to true:
  * Understanding socket_select's result
- * ]]>
+ * <pre>
+ * <code>&lt;?php
+ * $e = NULL;
+ * if (false === socket_select($r, $w, $e, 0)) {
+ * echo &quot;socket_select() failed, reason: &quot; .
+ * socket_strerror(socket_last_error()) . &quot;\n&quot;;
+ * }
+ * ?&gt;</code>
+ * </pre>
+ * </p>
  */
-function socket_select (array &$read, array &$write, array &$except, $tv_sec, $tv_usec = null) {}
+function socket_select (array &$read, array &$write, array &$except, int $tv_sec, int $tv_usec = null) {}
 
 /**
  * Create a socket (endpoint for communication)
@@ -56,6 +64,7 @@ function socket_select (array &$read, array &$write, array &$except, $tv_sec, $t
  * </p>
  * <table>
  * Available address/protocol families
+ * <table>
  * <tr valign="top">
  * <td>Domain</td>
  * <td>Description</td>
@@ -82,12 +91,14 @@ function socket_select (array &$read, array &$write, array &$except, $tv_sec, $t
  * </td>
  * </tr>
  * </table>
+ * </table>
  * @param int $type <p>
  * The type parameter selects the type of communication
  * to be used by the socket.
  * </p>
  * <table>
  * Available socket types
+ * <table>
  * <tr valign="top">
  * <td>Type</td>
  * <td>Description</td>
@@ -131,6 +142,7 @@ function socket_select (array &$read, array &$write, array &$except, $tv_sec, $t
  * </td>
  * </tr>
  * </table>
+ * </table>
  * @param int $protocol <p>
  * The protocol parameter sets the specific
  * protocol within the specified domain to be used
@@ -142,6 +154,7 @@ function socket_select (array &$read, array &$write, array &$except, $tv_sec, $t
  * </p>
  * <table>
  * Common protocols
+ * <table>
  * <tr valign="top">
  * <td>Name</td>
  * <td>Description</td>
@@ -177,13 +190,14 @@ function socket_select (array &$read, array &$write, array &$except, $tv_sec, $t
  * </td>
  * </tr>
  * </table>
+ * </table>
  * @return resource socket_create returns a socket resource on success,
  * or false on error. The actual error code can be retrieved by calling
  * socket_last_error. This error code may be passed to
  * socket_strerror to get a textual explanation of the
  * error.
  */
-function socket_create ($domain, $type, $protocol) {}
+function socket_create (int $domain, int $type, int $protocol) {}
 
 /**
  * Opens a socket on port to accept connections
@@ -204,7 +218,7 @@ function socket_create ($domain, $type, $protocol) {}
  * socket_strerror to get a textual explanation of the
  * error.
  */
-function socket_create_listen ($port, $backlog = null) {}
+function socket_create_listen (int $port, int $backlog = null) {}
 
 /**
  * Creates a pair of indistinguishable sockets and stores them in an array
@@ -237,7 +251,7 @@ function socket_create_listen ($port, $backlog = null) {}
  * </p>
  * @return bool true on success or false on failure
  */
-function socket_create_pair ($domain, $type, $protocol, array &$fd) {}
+function socket_create_pair (int $domain, int $type, int $protocol, array &$fd) {}
 
 /**
  * Accepts a connection on a socket
@@ -302,7 +316,7 @@ function socket_set_block ($socket) {}
  * socket_strerror to get a textual explanation of the
  * error.
  */
-function socket_listen ($socket, $backlog = null) {}
+function socket_listen ($socket, int $backlog = null) {}
 
 /**
  * Closes a socket resource
@@ -334,14 +348,14 @@ function socket_close ($socket) {}
  * socket_last_error. This code may be passed to
  * socket_strerror to get a textual explanation of the
  * error.
- * </p>
  * <p>
  * It is perfectly valid for socket_write to
  * return zero which means no bytes have been written. Be sure to use the
  * === operator to check for false in case of an
  * error.
+ * </p>
  */
-function socket_write ($socket, $buffer, $length = null) {}
+function socket_write ($socket, string $buffer, int $length = null) {}
 
 /**
  * Reads a maximum of length bytes from a socket
@@ -367,12 +381,12 @@ function socket_write ($socket, $buffer, $length = null) {}
  * socket_last_error. This code may be passed to
  * socket_strerror to get a textual representation of
  * the error.
- * </p>
  * <p>
  * socket_read returns a zero length string ("")
  * when there is no more data to read.
+ * </p>
  */
-function socket_read ($socket, $length, $type = null) {}
+function socket_read ($socket, int $length, int $type = null) {}
 
 /**
  * Queries the local side of the given socket which may either result in host/port or in a Unix filesystem path, dependent on its type
@@ -403,7 +417,7 @@ function socket_read ($socket, $length, $type = null) {}
  * AF_INET6, or AF_UNIX, in which
  * case the last socket error code is not updated.
  */
-function socket_getsockname ($socket, &$addr, &$port = null) {}
+function socket_getsockname ($socket, string &$addr, int &$port = null) {}
 
 /**
  * Queries the remote side of the given socket which may either result in host/port or in a Unix filesystem path, dependent on its type
@@ -436,7 +450,7 @@ function socket_getsockname ($socket, &$addr, &$port = null) {}
  * AF_INET6, or AF_UNIX, in which
  * case the last socket error code is not updated.
  */
-function socket_getpeername ($socket, &$address, &$port = null) {}
+function socket_getpeername ($socket, string &$address, int &$port = null) {}
 
 /**
  * Initiates a connection on a socket
@@ -462,12 +476,12 @@ function socket_getpeername ($socket, &$address, &$port = null) {}
  * socket_last_error. This code may be passed to
  * socket_strerror to get a textual explanation of the
  * error.
- * </p>
  * <p>
  * If the socket is non-blocking then this function returns false with an
  * error Operation now in progress.
+ * </p>
  */
-function socket_connect ($socket, $address, $port = null) {}
+function socket_connect ($socket, string $address, int $port = null) {}
 
 /**
  * Return a string describing a socket error
@@ -479,7 +493,7 @@ function socket_connect ($socket, $address, $port = null) {}
  * @return string the error message associated with the errno
  * parameter.
  */
-function socket_strerror ($errno) {}
+function socket_strerror (int $errno) {}
 
 /**
  * Binds a name to a socket
@@ -503,13 +517,13 @@ function socket_strerror ($errno) {}
  * the port on which to listen for connections.
  * </p>
  * @return bool true on success or false on failure
- * </p>
  * <p>
  * The error code can be retrieved with socket_last_error.
  * This code may be passed to socket_strerror to get a
  * textual explanation of the error.
+ * </p>
  */
-function socket_bind ($socket, $address, $port = null) {}
+function socket_bind ($socket, string $address, int $port = null) {}
 
 /**
  * Receives data from a connected socket
@@ -522,7 +536,7 @@ function socket_bind ($socket, $address, $port = null) {}
  * The data received will be fetched to the variable specified with
  * buf. If an error occurs, if the
  * connection is reset, or if no data is
- * available, buf will be set to &null;.
+ * available, buf will be set to null.
  * </p>
  * @param int $len <p>
  * Up to len bytes will be fetched from remote host.
@@ -534,6 +548,7 @@ function socket_bind ($socket, $address, $port = null) {}
  * </p>
  * <table>
  * Possible values for flags
+ * <table>
  * <tr valign="top">
  * <td>Flag</td>
  * <td>Description</td>
@@ -567,13 +582,14 @@ function socket_bind ($socket, $address, $port = null) {}
  * </td>
  * </tr>
  * </table>
+ * </table>
  * @return int socket_recv returns the number of bytes received,
  * or false if there was an error. The actual error code can be retrieved by 
  * calling socket_last_error. This error code may be
  * passed to socket_strerror to get a textual explanation
  * of the error.
  */
-function socket_recv ($socket, &$buf, $len, $flags) {}
+function socket_recv ($socket, string &$buf, int $len, int $flags) {}
 
 /**
  * Sends data to a connected socket
@@ -595,6 +611,7 @@ function socket_recv ($socket, &$buf, $len, $flags) {}
  * operator.
  * <table>
  * Possible values for flags
+ * <table>
  * <tr valign="top">
  * <td>MSG_OOB</td>
  * <td>
@@ -622,10 +639,11 @@ function socket_recv ($socket, &$buf, $len, $flags) {}
  * </td>
  * </tr>
  * </table>
+ * </table>
  * </p>
  * @return int socket_send returns the number of bytes sent, or false on error.
  */
-function socket_send ($socket, $buf, $len, $flags) {}
+function socket_send ($socket, string $buf, int $len, int $flags) {}
 
 /**
  * Receives data from a socket whether or not it is connection-oriented
@@ -648,6 +666,7 @@ function socket_send ($socket, $buf, $len, $flags) {}
  * </p>
  * <table>
  * Possible values for flags
+ * <table>
  * <tr valign="top">
  * <td>Flag</td>
  * <td>Description</td>
@@ -681,17 +700,18 @@ function socket_send ($socket, $buf, $len, $flags) {}
  * </td>
  * </tr>
  * </table>
+ * </table>
  * @param string $name <p>
  * If the socket is of the type AF_UNIX type,
  * name is the path to the file. Else, for
  * unconnected sockets, name is the IP address of,
- * the remote host, or &null; if the socket is connection-oriented.
+ * the remote host, or null if the socket is connection-oriented.
  * </p>
  * @param int $port [optional] <p>
  * This argument only applies to AF_INET and
  * AF_INET6 sockets, and specifies the remote port
  * from which the data is received. If the socket is connection-oriented,
- * port will be &null;.
+ * port will be null.
  * </p>
  * @return int socket_recvfrom returns the number of bytes received,
  * or false if there was an error. The actual error code can be retrieved by 
@@ -699,7 +719,7 @@ function socket_send ($socket, $buf, $len, $flags) {}
  * passed to socket_strerror to get a textual explanation
  * of the error.
  */
-function socket_recvfrom ($socket, &$buf, $len, $flags, &$name, &$port = null) {}
+function socket_recvfrom ($socket, string &$buf, int $len, int $flags, string &$name, int &$port = null) {}
 
 /**
  * Sends a message to a socket, whether it is connected or not
@@ -720,6 +740,7 @@ function socket_recvfrom ($socket, &$buf, $len, $flags, &$name, &$port = null) {
  * operator.
  * <table>
  * Possible values for flags
+ * <table>
  * <tr valign="top">
  * <td>MSG_OOB</td>
  * <td>
@@ -747,6 +768,7 @@ function socket_recvfrom ($socket, &$buf, $len, $flags, &$name, &$port = null) {
  * </td>
  * </tr>
  * </table>
+ * </table>
  * </p>
  * @param string $addr <p>
  * IP address of the remote host.
@@ -758,7 +780,7 @@ function socket_recvfrom ($socket, &$buf, $len, $flags, &$name, &$port = null) {
  * @return int socket_sendto returns the number of bytes sent to the
  * remote host, or false if an error occurred.
  */
-function socket_sendto ($socket, $buf, $len, $flags, $addr, $port = null) {}
+function socket_sendto ($socket, string $buf, int $len, int $flags, string $addr, int $port = null) {}
 
 /**
  * Gets socket options for the socket
@@ -778,6 +800,7 @@ function socket_sendto ($socket, $buf, $len, $flags, $addr, $port = null) {}
  * </p>
  * @param int $optname <table>
  * Available Socket Options
+ * <table>
  * <tr valign="top">
  * <td>Option</td>
  * <td>Description</td>
@@ -1122,9 +1145,10 @@ function socket_sendto ($socket, $buf, $len, $flags, $addr, $port = null) {}
  * </td>
  * </tr>
  * </table>
+ * </table>
  * @return mixed the value of the given option, or false on errors.
  */
-function socket_get_option ($socket, $level, $optname) {}
+function socket_get_option ($socket, int $level, int $optname) {}
 
 /**
  * Sets socket options for the socket
@@ -1151,7 +1175,7 @@ function socket_get_option ($socket, $level, $optname) {}
  * </p>
  * @return bool true on success or false on failure
  */
-function socket_set_option ($socket, $level, $optname, $optval) {}
+function socket_set_option ($socket, int $level, int $optname, $optval) {}
 
 /**
  * Shuts down a socket for receiving, sending, or both
@@ -1163,6 +1187,7 @@ function socket_set_option ($socket, $level, $optname, $optval) {}
  * The value of how can be one of the following:
  * <table>
  * possible values for how
+ * <table>
  * <tr valign="top">
  * <td>0</td>
  * <td>
@@ -1182,10 +1207,11 @@ function socket_set_option ($socket, $level, $optname, $optval) {}
  * </td>
  * </tr>
  * </table>
+ * </table>
  * </p>
  * @return bool true on success or false on failure
  */
-function socket_shutdown ($socket, $how = null) {}
+function socket_shutdown ($socket, int $how = null) {}
 
 /**
  * Returns the last error on the socket
@@ -1213,7 +1239,7 @@ function socket_clear_error ($socket = null) {}
  * @param resource $stream <p>
  * The stream resource to import.
  * </p>
- * @return resource false or &null; on failure.
+ * @return resource false or null on failure.
  */
 function socket_import_stream ($stream) {}
 
@@ -1231,9 +1257,9 @@ function socket_export_stream ($socket) {}
  * </p>
  * @param int $flags <p>
  * </p>
- * @return int 
+ * @return int the number of bytes sent, or false on failure.
  */
-function socket_sendmsg ($socket, array $message, $flags) {}
+function socket_sendmsg ($socket, array $message, int $flags) {}
 
 /**
  * Read a message
@@ -1246,7 +1272,7 @@ function socket_sendmsg ($socket, array $message, $flags) {}
  * </p>
  * @return int 
  */
-function socket_recvmsg ($socket, $message, $flags = null) {}
+function socket_recvmsg ($socket, string $message, int $flags = null) {}
 
 /**
  * Calculate message buffer size
@@ -1257,32 +1283,10 @@ function socket_recvmsg ($socket, $message, $flags = null) {}
  * </p>
  * @return int 
  */
-function socket_cmsg_space ($level, $type) {}
+function socket_cmsg_space (int $level, int $type) {}
 
 /**
- * @param $host
- * @param $service [optional]
- * @param $hints [optional]
- */
-function socket_addrinfo_lookup ($host, $service = null, $hints = null) {}
-
-/**
- * @param $addr
- */
-function socket_addrinfo_connect ($addr) {}
-
-/**
- * @param $addr
- */
-function socket_addrinfo_bind ($addr) {}
-
-/**
- * @param $addr
- */
-function socket_addrinfo_explain ($addr) {}
-
-/**
- * &Alias; <function>socket_get_option</function>
+ * Alias: socket_get_option
  * @link http://www.php.net/manual/en/function.socket-getopt.php
  * @param $socket
  * @param $level
@@ -1291,7 +1295,7 @@ function socket_addrinfo_explain ($addr) {}
 function socket_getopt ($socket, $level, $optname) {}
 
 /**
- * &Alias; <function>socket_set_option</function>
+ * Alias: socket_set_option
  * @link http://www.php.net/manual/en/function.socket-setopt.php
  * @param $socket
  * @param $level
@@ -1987,17 +1991,6 @@ define ('IPPROTO_IPV6', 41);
 define ('SOL_TCP', 6);
 define ('SOL_UDP', 17);
 define ('IPV6_UNICAST_HOPS', 16);
-define ('AI_PASSIVE', 1);
-define ('AI_CANONNAME', 2);
-define ('AI_NUMERICHOST', 4);
-define ('AI_V4MAPPED', 8);
-define ('AI_ALL', 16);
-define ('AI_ADDRCONFIG', 32);
-define ('AI_IDN', 64);
-define ('AI_CANONIDN', 128);
-define ('AI_IDN_ALLOW_UNASSIGNED', 256);
-define ('AI_IDN_USE_STD3_ASCII_RULES', 512);
-define ('AI_NUMERICSERV', 1024);
 define ('IPV6_RECVPKTINFO', 49);
 define ('IPV6_PKTINFO', 50);
 define ('IPV6_RECVHOPLIMIT', 51);
@@ -2008,4 +2001,4 @@ define ('SCM_RIGHTS', 1);
 define ('SCM_CREDENTIALS', 2);
 define ('SO_PASSCRED', 16);
 
-// End of sockets v.7.2.0-dev
+// End of sockets v.7.1.1
