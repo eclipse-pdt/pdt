@@ -5,16 +5,10 @@
 /**
  * Generate a hash value (message digest)
  * @link http://www.php.net/manual/en/function.hash.php
- * @param string $algo <p>
- * Name of selected hashing algorithm (e.g. "md5", "sha256", "haval160,4", etc..)
- * </p>
- * @param string $data <p>
- * Message to be hashed.
- * </p>
- * @param bool $raw_output [optional] <p>
- * When set to true, outputs raw binary data.
+ * @param string $algo Name of selected hashing algorithm (e.g. "md5", "sha256", "haval160,4", etc..)
+ * @param string $data Message to be hashed.
+ * @param bool $raw_output [optional] When set to true, outputs raw binary data.
  * false outputs lowercase hexits.
- * </p>
  * @return string a string containing the calculated message digest as lowercase hexits
  * unless raw_output is set to true in which case the raw
  * binary representation of the message digest is returned.
@@ -24,16 +18,10 @@ function hash (string $algo, string $data, bool $raw_output = null) {}
 /**
  * Generate a hash value using the contents of a given file
  * @link http://www.php.net/manual/en/function.hash-file.php
- * @param string $algo <p>
- * Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..)
- * </p>
- * @param string $filename <p>
- * URL describing location of file to be hashed; Supports fopen wrappers.
- * </p>
- * @param bool $raw_output [optional] <p>
- * When set to true, outputs raw binary data.
+ * @param string $algo Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..)
+ * @param string $filename URL describing location of file to be hashed; Supports fopen wrappers.
+ * @param bool $raw_output [optional] When set to true, outputs raw binary data.
  * false outputs lowercase hexits.
- * </p>
  * @return string a string containing the calculated message digest as lowercase hexits
  * unless raw_output is set to true in which case the raw
  * binary representation of the message digest is returned.
@@ -43,19 +31,11 @@ function hash_file (string $algo, string $filename, bool $raw_output = null) {}
 /**
  * Generate a keyed hash value using the HMAC method
  * @link http://www.php.net/manual/en/function.hash-hmac.php
- * @param string $algo <p>
- * Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..) See hash_hmac_algos for a list of supported algorithms.
- * </p>
- * @param string $data <p>
- * Message to be hashed.
- * </p>
- * @param string $key <p>
- * Shared secret key used for generating the HMAC variant of the message digest.
- * </p>
- * @param bool $raw_output [optional] <p>
- * When set to true, outputs raw binary data.
+ * @param string $algo Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..) See hash_hmac_algos for a list of supported algorithms.
+ * @param string $data Message to be hashed.
+ * @param string $key Shared secret key used for generating the HMAC variant of the message digest.
+ * @param bool $raw_output [optional] When set to true, outputs raw binary data.
  * false outputs lowercase hexits.
- * </p>
  * @return string a string containing the calculated message digest as lowercase hexits
  * unless raw_output is set to true in which case the raw
  * binary representation of the message digest is returned.
@@ -66,19 +46,11 @@ function hash_hmac (string $algo, string $data, string $key, bool $raw_output = 
 /**
  * Generate a keyed hash value using the HMAC method and the contents of a given file
  * @link http://www.php.net/manual/en/function.hash-hmac-file.php
- * @param string $algo <p>
- * Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..) See hash_hmac_algos for a list of supported algorithms.
- * </p>
- * @param string $filename <p>
- * URL describing location of file to be hashed; Supports fopen wrappers.
- * </p>
- * @param string $key <p>
- * Shared secret key used for generating the HMAC variant of the message digest.
- * </p>
- * @param bool $raw_output [optional] <p>
- * When set to true, outputs raw binary data.
+ * @param string $algo Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..) See hash_hmac_algos for a list of supported algorithms.
+ * @param string $filename URL describing location of file to be hashed; Supports fopen wrappers.
+ * @param string $key Shared secret key used for generating the HMAC variant of the message digest.
+ * @param bool $raw_output [optional] When set to true, outputs raw binary data.
  * false outputs lowercase hexits.
- * </p>
  * @return string a string containing the calculated message digest as lowercase hexits
  * unless raw_output is set to true in which case the raw
  * binary representation of the message digest is returned.
@@ -88,19 +60,13 @@ function hash_hmac_file (string $algo, string $filename, string $key, bool $raw_
 /**
  * Initialize an incremental hashing context
  * @link http://www.php.net/manual/en/function.hash-init.php
- * @param string $algo <p>
- * Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..). For a list of supported algorithms see hash_algos.
- * </p>
- * @param int $options [optional] <p>
- * Optional settings for hash generation, currently supports only one option:
+ * @param string $algo Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..). For a list of supported algorithms see hash_algos.
+ * @param int $options [optional] Optional settings for hash generation, currently supports only one option:
  * HASH_HMAC. When specified, the key
  * must be specified.
- * </p>
- * @param string $key [optional] <p>
- * When HASH_HMAC is specified for options,
+ * @param string $key [optional] When HASH_HMAC is specified for options,
  * a shared secret key to be used with the HMAC hashing method must be supplied in this
  * parameter.
- * </p>
  * @return resource a Hashing Context resource for use with hash_update,
  * hash_update_stream, hash_update_file,
  * and hash_final.
@@ -110,12 +76,8 @@ function hash_init (string $algo, int $options = null, string $key = null) {}
 /**
  * Pump data into an active hashing context
  * @link http://www.php.net/manual/en/function.hash-update.php
- * @param resource $context <p>
- * Hashing context returned by hash_init.
- * </p>
- * @param string $data <p>
- * Message to be included in the hash digest.
- * </p>
+ * @param resource $context Hashing context returned by hash_init.
+ * @param string $data Message to be included in the hash digest.
  * @return bool true.
  */
 function hash_update ($context, string $data) {}
@@ -123,16 +85,10 @@ function hash_update ($context, string $data) {}
 /**
  * Pump data into an active hashing context from an open stream
  * @link http://www.php.net/manual/en/function.hash-update-stream.php
- * @param resource $context <p>
- * Hashing context returned by hash_init.
- * </p>
- * @param resource $handle <p>
- * Open file handle as returned by any stream creation function.
- * </p>
- * @param int $length [optional] <p>
- * Maximum number of characters to copy from handle
+ * @param resource $context Hashing context returned by hash_init.
+ * @param resource $handle Open file handle as returned by any stream creation function.
+ * @param int $length [optional] Maximum number of characters to copy from handle
  * into the hashing context.
- * </p>
  * @return int Actual number of bytes added to the hashing context from handle.
  */
 function hash_update_stream ($context, $handle, int $length = null) {}
@@ -140,15 +96,9 @@ function hash_update_stream ($context, $handle, int $length = null) {}
 /**
  * Pump data into an active hashing context from a file
  * @link http://www.php.net/manual/en/function.hash-update-file.php
- * @param resource $hcontext <p>
- * Hashing context returned by hash_init.
- * </p>
- * @param string $filename <p>
- * URL describing location of file to be hashed; Supports fopen wrappers.
- * </p>
- * @param resource $scontext [optional] <p>
- * Stream context as returned by stream_context_create.
- * </p>
+ * @param resource $hcontext Hashing context returned by hash_init.
+ * @param string $filename URL describing location of file to be hashed; Supports fopen wrappers.
+ * @param resource $scontext [optional] Stream context as returned by stream_context_create.
  * @return bool true on success or false on failure
  */
 function hash_update_file ($hcontext, string $filename, $scontext = null) {}
@@ -156,13 +106,9 @@ function hash_update_file ($hcontext, string $filename, $scontext = null) {}
 /**
  * Finalize an incremental hash and return resulting digest
  * @link http://www.php.net/manual/en/function.hash-final.php
- * @param resource $context <p>
- * Hashing context returned by hash_init.
- * </p>
- * @param bool $raw_output [optional] <p>
- * When set to true, outputs raw binary data.
+ * @param resource $context Hashing context returned by hash_init.
+ * @param bool $raw_output [optional] When set to true, outputs raw binary data.
  * false outputs lowercase hexits.
- * </p>
  * @return string a string containing the calculated message digest as lowercase hexits
  * unless raw_output is set to true in which case the raw
  * binary representation of the message digest is returned.
@@ -172,9 +118,7 @@ function hash_final ($context, bool $raw_output = null) {}
 /**
  * Copy hashing context
  * @link http://www.php.net/manual/en/function.hash-copy.php
- * @param resource $context <p>
- * Hashing context returned by hash_init.
- * </p>
+ * @param resource $context Hashing context returned by hash_init.
  * @return resource a copy of Hashing Context resource.
  */
 function hash_copy ($context) {}
@@ -190,20 +134,12 @@ function hash_algos () {}
 /**
  * Generate a PBKDF2 key derivation of a supplied password
  * @link http://www.php.net/manual/en/function.hash-pbkdf2.php
- * @param string $algo <p>
- * Name of selected hashing algorithm (i.e. md5,
+ * @param string $algo Name of selected hashing algorithm (i.e. md5,
  * sha256, haval160,4, etc..) See
  * hash_algos for a list of supported algorithms.
- * </p>
- * @param string $password <p>
- * The password to use for the derivation.
- * </p>
- * @param string $salt <p>
- * The salt to use for the derivation. This value should be generated randomly.
- * </p>
- * @param int $iterations <p>
- * The number of internal iterations to perform for the derivation.
- * </p>
+ * @param string $password The password to use for the derivation.
+ * @param string $salt The salt to use for the derivation. This value should be generated randomly.
+ * @param int $iterations The number of internal iterations to perform for the derivation.
  * @param int $length [optional] <p>
  * The length of the output string. If raw_output
  * is true this corresponds to the byte-length of the derived key, if
@@ -215,10 +151,8 @@ function hash_algos () {}
  * If 0 is passed, the entire output of the supplied
  * algorithm is used.
  * </p>
- * @param bool $raw_output [optional] <p>
- * When set to true, outputs raw binary data. false outputs lowercase
+ * @param bool $raw_output [optional] When set to true, outputs raw binary data. false outputs lowercase
  * hexits.
- * </p>
  * @return string a string containing the derived key as lowercase hexits unless
  * raw_output is set to true in which case the raw
  * binary representation of the derived key is returned.
@@ -228,12 +162,8 @@ function hash_pbkdf2 (string $algo, string $password, string $salt, int $iterati
 /**
  * Timing attack safe string comparison
  * @link http://www.php.net/manual/en/function.hash-equals.php
- * @param string $known_string <p>
- * The string of known length to compare against
- * </p>
- * @param string $user_string <p>
- * The user-supplied string
- * </p>
+ * @param string $known_string The string of known length to compare against
+ * @param string $user_string The user-supplied string
  * @return bool true when the two strings are equal, false otherwise.
  */
 function hash_equals (string $known_string, string $user_string) {}
@@ -241,23 +171,15 @@ function hash_equals (string $known_string, string $user_string) {}
 /**
  * Generates a key
  * @link http://www.php.net/manual/en/function.mhash-keygen-s2k.php
- * @param int $hash <p>
- * The hash ID used to create the key.
+ * @param int $hash The hash ID used to create the key.
  * One of the MHASH_hashname constants.
- * </p>
- * @param string $password <p>
- * An user supplied password.
- * </p>
- * @param string $salt <p>
- * Must be different and random enough for every key you generate in
+ * @param string $password An user supplied password.
+ * @param string $salt Must be different and random enough for every key you generate in
  * order to create different keys. Because salt
  * must be known when you check the keys, it is a good idea to append
  * the key to it. Salt has a fixed length of 8 bytes and will be padded
  * with zeros if you supply less bytes.
- * </p>
- * @param int $bytes <p>
- * The key length, in bytes.
- * </p>
+ * @param int $bytes The key length, in bytes.
  * @return string the generated key as a string, or false on error.
  */
 function mhash_keygen_s2k (int $hash, string $password, string $salt, int $bytes) {}
@@ -265,9 +187,7 @@ function mhash_keygen_s2k (int $hash, string $password, string $salt, int $bytes
 /**
  * Gets the block size of the specified hash
  * @link http://www.php.net/manual/en/function.mhash-get-block-size.php
- * @param int $hash <p>
- * The hash ID. One of the MHASH_hashname constants.
- * </p>
+ * @param int $hash The hash ID. One of the MHASH_hashname constants.
  * @return int the size in bytes or false, if the hash
  * does not exist.
  */
@@ -276,9 +196,7 @@ function mhash_get_block_size (int $hash) {}
 /**
  * Gets the name of the specified hash
  * @link http://www.php.net/manual/en/function.mhash-get-hash-name.php
- * @param int $hash <p>
- * The hash ID. One of the MHASH_hashname constants.
- * </p>
+ * @param int $hash The hash ID. One of the MHASH_hashname constants.
  * @return string the name of the hash or false, if the hash does not exist.
  */
 function mhash_get_hash_name (int $hash) {}
@@ -294,18 +212,12 @@ function mhash_count () {}
 /**
  * Computes hash
  * @link http://www.php.net/manual/en/function.mhash.php
- * @param int $hash <p>
- * The hash ID. One of the MHASH_hashname constants.
- * </p>
- * @param string $data <p>
- * The user input, as a string.
- * </p>
- * @param string $key [optional] <p>
- * If specified, the function will return the resulting HMAC instead.
+ * @param int $hash The hash ID. One of the MHASH_hashname constants.
+ * @param string $data The user input, as a string.
+ * @param string $key [optional] If specified, the function will return the resulting HMAC instead.
  * HMAC is keyed hashing for message authentication, or simply a message
  * digest that depends on the specified key. Not all algorithms 
  * supported in mhash can be used in HMAC mode.
- * </p>
  * @return string the resulting hash (also called digest) or HMAC as a string, or
  * false on error.
  */

@@ -13,12 +13,8 @@ function xmlrpc_encode ($value) {}
 /**
  * Decodes XML into native PHP types
  * @link http://www.php.net/manual/en/function.xmlrpc-decode.php
- * @param string $xml <p>
- * XML response returned by XMLRPC method.
- * </p>
- * @param string $encoding [optional] <p>
- * Input encoding supported by iconv.
- * </p>
+ * @param string $xml XML response returned by XMLRPC method.
+ * @param string $encoding [optional] Input encoding supported by iconv.
  * @return mixed either an array, or an integer, or a string, or a boolean according
  * to the response returned by the XMLRPC method.
  */
@@ -37,16 +33,18 @@ function xmlrpc_decode_request (string $xml, string &$method, string $encoding =
 /**
  * Generates XML for a method request
  * @link http://www.php.net/manual/en/function.xmlrpc-encode-request.php
- * @param string $method <p>
- * Name of the method to call.
- * </p>
- * @param mixed $params <p>
- * Method parameters compatible with method signature.
- * </p>
+ * @param string $method Name of the method to call.
+ * @param mixed $params Method parameters compatible with method signature.
  * @param array $output_options [optional] <p>
  * Array specifying output options may contain (default values are
  * emphasised):
- * <p>output_type: php, xml</p>
+ * <br><p>output_type: php, xml</p>
+ * <br><p>verbosity: no_white_space, newlines_only, pretty</p>
+ * <br><p>escaping: cdata, non-ascii, non-print, markup
+ * (may be a string with one value or an array with multiple values)</p>
+ * <br><p>version: simple, xmlrpc, soap 1.1, auto</p>
+ * <br><p>encoding: iso-8859-1, other character set supported by iconv</p>
+ * </p>
  * @return string a string containing the XML representation of the request.
  */
 function xmlrpc_encode_request (string $method, $params, array $output_options = null) {}
@@ -54,9 +52,7 @@ function xmlrpc_encode_request (string $method, $params, array $output_options =
 /**
  * Gets xmlrpc type for a PHP value
  * @link http://www.php.net/manual/en/function.xmlrpc-get-type.php
- * @param mixed $value <p>
- * PHP value
- * </p>
+ * @param mixed $value PHP value
  * @return string the XML-RPC type.
  */
 function xmlrpc_get_type ($value) {}
@@ -64,12 +60,8 @@ function xmlrpc_get_type ($value) {}
 /**
  * Sets xmlrpc type, base64 or datetime, for a PHP string value
  * @link http://www.php.net/manual/en/function.xmlrpc-set-type.php
- * @param string $value <p>
- * Value to set the type
- * </p>
- * @param string $type <p>
- * 'base64' or 'datetime'
- * </p>
+ * @param string $value Value to set the type
+ * @param string $type 'base64' or 'datetime'
  * @return bool true on success or false on failure
  * If successful, value is converted to an object.
  */
@@ -78,9 +70,7 @@ function xmlrpc_set_type (string &$value, string $type) {}
 /**
  * Determines if an array value represents an XMLRPC fault
  * @link http://www.php.net/manual/en/function.xmlrpc-is-fault.php
- * @param array $arg <p>
- * Array returned by xmlrpc_decode.
- * </p>
+ * @param array $arg Array returned by xmlrpc_decode.
  * @return bool true if the argument means fault, false otherwise. Fault
  * description is available in $arg["faultString"], fault
  * code is in $arg["faultCode"].

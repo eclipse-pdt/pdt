@@ -7,10 +7,8 @@ class XSLTProcessor  {
 	/**
 	 * Import stylesheet
 	 * @link http://www.php.net/manual/en/xsltprocessor.importstylesheet.php
-	 * @param object $stylesheet <p>
-	 * The imported style sheet as a DOMDocument or
+	 * @param object $stylesheet The imported style sheet as a DOMDocument or
 	 * SimpleXMLElement object.
-	 * </p>
 	 * @return bool true on success or false on failure
 	 */
 	public function importStylesheet ($stylesheet) {}
@@ -18,9 +16,7 @@ class XSLTProcessor  {
 	/**
 	 * Transform to a DOMDocument
 	 * @link http://www.php.net/manual/en/xsltprocessor.transformtodoc.php
-	 * @param DOMNode $doc <p>
-	 * The node to be transformed.
-	 * </p>
+	 * @param DOMNode $doc The node to be transformed.
 	 * @return DOMDocument The resulting DOMDocument or false on error.
 	 */
 	public function transformToDoc (DOMNode $doc) {}
@@ -28,12 +24,8 @@ class XSLTProcessor  {
 	/**
 	 * Transform to URI
 	 * @link http://www.php.net/manual/en/xsltprocessor.transformtouri.php
-	 * @param DOMDocument $doc <p>
-	 * The document to transform.
-	 * </p>
-	 * @param string $uri <p>
-	 * The target URI for the transformation.
-	 * </p>
+	 * @param DOMDocument $doc The document to transform.
+	 * @param string $uri The target URI for the transformation.
 	 * @return int the number of bytes written or false if an error occurred.
 	 */
 	public function transformToUri (DOMDocument $doc, string $uri) {}
@@ -41,10 +33,8 @@ class XSLTProcessor  {
 	/**
 	 * Transform to XML
 	 * @link http://www.php.net/manual/en/xsltprocessor.transformtoxml.php
-	 * @param object $doc <p>
-	 * The DOMDocument or SimpleXMLElement object to
+	 * @param object $doc The DOMDocument or SimpleXMLElement object to
 	 * be transformed.
-	 * </p>
 	 * @return string The result of the transformation as a string or false on error.
 	 */
 	public function transformToXml ($doc) {}
@@ -52,15 +42,9 @@ class XSLTProcessor  {
 	/**
 	 * Set value for a parameter
 	 * @link http://www.php.net/manual/en/xsltprocessor.setparameter.php
-	 * @param string $namespace <p>
-	 * The namespace URI of the XSLT parameter.
-	 * </p>
-	 * @param string $name <p>
-	 * The local name of the XSLT parameter.
-	 * </p>
-	 * @param string $value <p>
-	 * The new value of the XSLT parameter.
-	 * </p>
+	 * @param string $namespace The namespace URI of the XSLT parameter.
+	 * @param string $name The local name of the XSLT parameter.
+	 * @param string $value The new value of the XSLT parameter.
 	 * @return bool true on success or false on failure
 	 */
 	public function setParameter (string $namespace, string $name, string $value) {}
@@ -68,12 +52,8 @@ class XSLTProcessor  {
 	/**
 	 * Get value of a parameter
 	 * @link http://www.php.net/manual/en/xsltprocessor.getparameter.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI of the XSLT parameter.
-	 * </p>
-	 * @param string $localName <p>
-	 * The local name of the XSLT parameter.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI of the XSLT parameter.
+	 * @param string $localName The local name of the XSLT parameter.
 	 * @return string The value of the parameter (as a string), or false if it's not set.
 	 */
 	public function getParameter (string $namespaceURI, string $localName) {}
@@ -81,12 +61,8 @@ class XSLTProcessor  {
 	/**
 	 * Remove parameter
 	 * @link http://www.php.net/manual/en/xsltprocessor.removeparameter.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI of the XSLT parameter.
-	 * </p>
-	 * @param string $localName <p>
-	 * The local name of the XSLT parameter.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI of the XSLT parameter.
+	 * @param string $localName The local name of the XSLT parameter.
 	 * @return bool true on success or false on failure
 	 */
 	public function removeParameter (string $namespaceURI, string $localName) {}
@@ -116,9 +92,7 @@ class XSLTProcessor  {
 	/**
 	 * Sets profiling output file
 	 * @link http://www.php.net/manual/en/xsltprocessor.setprofiling.php
-	 * @param string $filename <p>
-	 * Path to the file to dump profiling information.
-	 * </p>
+	 * @param string $filename Path to the file to dump profiling information.
 	 * @return bool true on success or false on failure
 	 */
 	public function setProfiling (string $filename) {}
@@ -126,8 +100,7 @@ class XSLTProcessor  {
 	/**
 	 * Set security preferences
 	 * @link http://www.php.net/manual/en/xsltprocessor.setsecurityprefs.php
-	 * @param int $securityPrefs <p>
-	 * The new security preferences. The following constants can be ORed:
+	 * @param int $securityPrefs The new security preferences. The following constants can be ORed:
 	 * XSL_SECPREF_READ_FILE,
 	 * XSL_SECPREF_WRITE_FILE,
 	 * XSL_SECPREF_CREATE_DIRECTORY,
@@ -135,7 +108,6 @@ class XSLTProcessor  {
 	 * XSL_SECPREF_WRITE_NETWORK. Alternatively,
 	 * XSL_SECPREF_NONE or
 	 * XSL_SECPREF_DEFAULT can be passed.
-	 * </p>
 	 * @return int the old security preferences.
 	 */
 	public function setSecurityPrefs (int $securityPrefs) {}
@@ -152,8 +124,23 @@ class XSLTProcessor  {
 	public function getSecurityPrefs () {}
 
 }
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/xsl.constants.php
+ */
 define ('XSL_CLONE_AUTO', 0);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/xsl.constants.php
+ */
 define ('XSL_CLONE_NEVER', -1);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/xsl.constants.php
+ */
 define ('XSL_CLONE_ALWAYS', 1);
 
 /**

@@ -8,10 +8,8 @@ class LibXMLError  {
 /**
  * Set the streams context for the next libxml document load or write
  * @link http://www.php.net/manual/en/function.libxml-set-streams-context.php
- * @param resource $streams_context <p>
- * The stream context resource (created with
+ * @param resource $streams_context The stream context resource (created with
  * stream_context_create)
- * </p>
  * @return void 
  */
 function libxml_set_streams_context ($streams_context) {}
@@ -19,9 +17,7 @@ function libxml_set_streams_context ($streams_context) {}
 /**
  * Disable libxml errors and allow user to fetch error information as needed
  * @link http://www.php.net/manual/en/function.libxml-use-internal-errors.php
- * @param bool $use_errors [optional] <p>
- * Enable (true) user error handling or disable (false) user error handling. Disabling will also clear any existing libxml errors.
- * </p>
+ * @param bool $use_errors [optional] Enable (true) user error handling or disable (false) user error handling. Disabling will also clear any existing libxml errors.
  * @return bool This function returns the previous value of
  * use_errors.
  */
@@ -53,11 +49,9 @@ function libxml_get_errors () {}
 /**
  * Disable the ability to load external entities
  * @link http://www.php.net/manual/en/function.libxml-disable-entity-loader.php
- * @param bool $disable [optional] <p>
- * Disable (true) or enable (false) libxml extensions (such as
+ * @param bool $disable [optional] Disable (true) or enable (false) libxml extensions (such as
  * , 
  * and ) to load external entities.
- * </p>
  * @return bool the previous value.
  */
 function libxml_disable_entity_loader (bool $disable = null) {}
@@ -65,12 +59,10 @@ function libxml_disable_entity_loader (bool $disable = null) {}
 /**
  * Changes the default external entity loader
  * @link http://www.php.net/manual/en/function.libxml-set-external-entity-loader.php
- * @param callable $resolver_function <p>
- * A callable that takes three arguments. Two strings, a public id
+ * @param callable $resolver_function A callable that takes three arguments. Two strings, a public id
  * and system id, and a context (an array with four keys) as the third argument.
  * This callback should return a resource, a string from which a resource can be
  * opened, or null.
- * </p>
  * @return void 
  */
 function libxml_set_external_entity_loader (callable $resolver_function) {}

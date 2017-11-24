@@ -5,11 +5,9 @@
 /**
  * Split given source into PHP tokens
  * @link http://www.php.net/manual/en/function.token-get-all.php
- * @param string $source <p>
- * The PHP source to parse.
- * </p>
- * @param int $flags [optional] <p>
- * Valid flags:
+ * @param string $source The PHP source to parse.
+ * @param int $flags [optional] Valid flags:
+ * <br>
  * TOKEN_PARSE - Recognises the ability to use
  * reserved words in specific contexts.
  * @return array An array of token identifiers. Each individual token identifier is either
@@ -23,9 +21,7 @@ function token_get_all (string $source, int $flags = null) {}
 /**
  * Get the symbolic name of a given PHP token
  * @link http://www.php.net/manual/en/function.token-name.php
- * @param int $token <p>
- * The token value.
- * </p>
+ * @param int $token The token value.
  * @return string The symbolic name of the given token.
  */
 function token_name (int $token) {}

@@ -5,19 +5,13 @@
 /**
  * Gets a specific external variable by name and optionally filters it
  * @link http://www.php.net/manual/en/function.filter-input.php
- * @param int $type <p>
- * One of INPUT_GET, INPUT_POST,
+ * @param int $type One of INPUT_GET, INPUT_POST,
  * INPUT_COOKIE, INPUT_SERVER, or
  * INPUT_ENV.
- * </p>
- * @param string $variable_name <p>
- * Name of a variable to get.
- * </p>
+ * @param string $variable_name Name of a variable to get.
  * @param int $filter [optional] 
- * @param mixed $options [optional] <p>
- * Associative array of options or bitwise disjunction of flags. If filter
+ * @param mixed $options [optional] Associative array of options or bitwise disjunction of flags. If filter
  * accepts options, flags can be provided in "flags" field of array.
- * </p>
  * @return mixed Value of the requested variable on success, false if the filter fails,
  * or null if the variable_name variable is not set.
  * If the flag FILTER_NULL_ON_FAILURE is used, it
@@ -28,10 +22,8 @@ function filter_input (int $type, string $variable_name, int $filter = null, $op
 /**
  * Filters a variable with a specified filter
  * @link http://www.php.net/manual/en/function.filter-var.php
- * @param mixed $variable <p>
- * Value to filter. Note that scalar values are converted to
+ * @param mixed $variable Value to filter. Note that scalar values are converted to
  * string internally before they are filtered.
- * </p>
  * @param int $filter [optional] 
  * @param mixed $options [optional] <p>
  * Associative array of options or bitwise disjunction of flags. If filter
@@ -83,11 +75,9 @@ function filter_var ($variable, int $filter = null, $options = null) {}
 /**
  * Gets external variables and optionally filters them
  * @link http://www.php.net/manual/en/function.filter-input-array.php
- * @param int $type <p>
- * One of INPUT_GET, INPUT_POST,
+ * @param int $type One of INPUT_GET, INPUT_POST,
  * INPUT_COOKIE, INPUT_SERVER, or
  * INPUT_ENV.
- * </p>
  * @param mixed $definition [optional] <p>
  * An array defining the arguments. A valid key is a string
  * containing a variable name and a valid value is either a filter type, or an array
@@ -102,9 +92,7 @@ function filter_var ($variable, int $filter = null, $options = null) {}
  * This parameter can be also an integer holding a filter constant. Then all values in the
  * input array are filtered by this filter.
  * </p>
- * @param bool $add_empty [optional] <p>
- * Add missing keys as null to the return value.
- * </p>
+ * @param bool $add_empty [optional] Add missing keys as null to the return value.
  * @return mixed An array containing the values of the requested variables on success, or false 
  * on failure. An array value will be false if the filter fails, or null if 
  * the variable is not set. Or if the flag FILTER_NULL_ON_FAILURE
@@ -116,9 +104,7 @@ function filter_input_array (int $type, $definition = null, bool $add_empty = nu
 /**
  * Gets multiple variables and optionally filters them
  * @link http://www.php.net/manual/en/function.filter-var-array.php
- * @param array $data <p>
- * An array with string keys containing the data to filter.
- * </p>
+ * @param array $data An array with string keys containing the data to filter.
  * @param mixed $definition [optional] <p>
  * An array defining the arguments. A valid key is a string
  * containing a variable name and a valid value is either a
@@ -134,9 +120,7 @@ function filter_input_array (int $type, $definition = null, bool $add_empty = nu
  * This parameter can be also an integer holding a filter constant. Then all values in the
  * input array are filtered by this filter.
  * </p>
- * @param bool $add_empty [optional] <p>
- * Add missing keys as null to the return value.
- * </p>
+ * @param bool $add_empty [optional] Add missing keys as null to the return value.
  * @return mixed An array containing the values of the requested variables on success, or false 
  * on failure. An array value will be false if the filter fails, or null if 
  * the variable is not set.
@@ -155,14 +139,10 @@ function filter_list () {}
 /**
  * Checks if variable of specified type exists
  * @link http://www.php.net/manual/en/function.filter-has-var.php
- * @param int $type <p>
- * One of INPUT_GET, INPUT_POST,
+ * @param int $type One of INPUT_GET, INPUT_POST,
  * INPUT_COOKIE, INPUT_SERVER, or
  * INPUT_ENV.
- * </p>
- * @param string $variable_name <p>
- * Name of a variable to check.
- * </p>
+ * @param string $variable_name Name of a variable to check.
  * @return bool true on success or false on failure
  */
 function filter_has_var (int $type, string $variable_name) {}
@@ -170,9 +150,7 @@ function filter_has_var (int $type, string $variable_name) {}
 /**
  * Returns the filter ID belonging to a named filter
  * @link http://www.php.net/manual/en/function.filter-id.php
- * @param string $filtername <p>
- * Name of a filter to get.
- * </p>
+ * @param string $filtername Name of a filter to get.
  * @return int ID of a filter on success or false if filter doesn't exist.
  */
 function filter_id (string $filtername) {}

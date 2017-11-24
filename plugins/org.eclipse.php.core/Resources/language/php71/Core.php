@@ -526,7 +526,7 @@ final class Closure  {
 	 * @param $newthis
 	 * @param $parameters [optional]
 	 */
-	public function call ($newthis, $parameters = null) {}
+	public function call ($newthis, ...$parameters = null) {}
 
 	/**
 	 * @param $callable
@@ -623,10 +623,8 @@ function func_num_args () {}
 /**
  * Return an item from the argument list
  * @link http://www.php.net/manual/en/function.func-get-arg.php
- * @param int $arg_num <p>
- * The argument offset. Function arguments are counted starting from
+ * @param int $arg_num The argument offset. Function arguments are counted starting from
  * zero.
- * </p>
  * @return mixed the specified argument, or false on error.
  */
 function func_get_arg (int $arg_num) {}
@@ -642,9 +640,7 @@ function func_get_args () {}
 /**
  * Get string length
  * @link http://www.php.net/manual/en/function.strlen.php
- * @param string $string <p>
- * The string being measured for length.
- * </p>
+ * @param string $string The string being measured for length.
  * @return int The length of the string on success, 
  * and 0 if the string is empty.
  */
@@ -653,12 +649,8 @@ function strlen (string $string) {}
 /**
  * Binary safe string comparison
  * @link http://www.php.net/manual/en/function.strcmp.php
- * @param string $str1 <p>
- * The first string.
- * </p>
- * @param string $str2 <p>
- * The second string.
- * </p>
+ * @param string $str1 The first string.
+ * @param string $str2 The second string.
  * @return int &lt; 0 if str1 is less than
  * str2; &gt; 0 if str1
  * is greater than str2, and 0 if they are
@@ -669,15 +661,9 @@ function strcmp (string $str1, string $str2) {}
 /**
  * Binary safe string comparison of the first n characters
  * @link http://www.php.net/manual/en/function.strncmp.php
- * @param string $str1 <p>
- * The first string.
- * </p>
- * @param string $str2 <p>
- * The second string.
- * </p>
- * @param int $len <p>
- * Number of characters to use in the comparison.
- * </p>
+ * @param string $str1 The first string.
+ * @param string $str2 The second string.
+ * @param int $len Number of characters to use in the comparison.
  * @return int &lt; 0 if str1 is less than
  * str2; &gt; 0 if str1
  * is greater than str2, and 0 if they are
@@ -688,12 +674,8 @@ function strncmp (string $str1, string $str2, int $len) {}
 /**
  * Binary safe case-insensitive string comparison
  * @link http://www.php.net/manual/en/function.strcasecmp.php
- * @param string $str1 <p>
- * The first string
- * </p>
- * @param string $str2 <p>
- * The second string
- * </p>
+ * @param string $str1 The first string
+ * @param string $str2 The second string
  * @return int &lt; 0 if str1 is less than
  * str2; &gt; 0 if str1
  * is greater than str2, and 0 if they are
@@ -704,15 +686,9 @@ function strcasecmp (string $str1, string $str2) {}
 /**
  * Binary safe case-insensitive string comparison of the first n characters
  * @link http://www.php.net/manual/en/function.strncasecmp.php
- * @param string $str1 <p>
- * The first string.
- * </p>
- * @param string $str2 <p>
- * The second string.
- * </p>
- * @param int $len <p>
- * The length of strings to be used in the comparison.
- * </p>
+ * @param string $str1 The first string.
+ * @param string $str2 The second string.
+ * @param int $len The length of strings to be used in the comparison.
  * @return int &lt; 0 if str1 is less than
  * str2; &gt; 0 if str1 is
  * greater than str2, and 0 if they are equal.
@@ -722,9 +698,7 @@ function strncasecmp (string $str1, string $str2, int $len) {}
 /**
  * Return the current key and value pair from an array and advance the array cursor
  * @link http://www.php.net/manual/en/function.each.php
- * @param array $array <p>
- * The input array.
- * </p>
+ * @param array $array The input array.
  * @return array the current key and value pair from the array
  * array. This pair is returned in a four-element
  * array, with the keys 0, 1,
@@ -764,9 +738,7 @@ function error_reporting (int $level = null) {}
 /**
  * Defines a named constant
  * @link http://www.php.net/manual/en/function.define.php
- * @param string $name <p>
- * The name of the constant.
- * </p>
+ * @param string $name The name of the constant.
  * @param mixed $value <p>
  * The value of the constant. In PHP 5, value must
  * be a scalar value (integer,
@@ -793,9 +765,7 @@ function define (string $name, $value, bool $case_insensitive = null) {}
 /**
  * Checks whether a given named constant exists
  * @link http://www.php.net/manual/en/function.defined.php
- * @param string $name <p>
- * The constant name.
- * </p>
+ * @param string $name The constant name.
  * @return bool true if the named constant given by name
  * has been defined, false otherwise.
  */
@@ -836,10 +806,8 @@ function get_called_class () {}
 /**
  * Retrieves the parent class name for object or class
  * @link http://www.php.net/manual/en/function.get-parent-class.php
- * @param mixed $object [optional] <p>
- * The tested object or class name. This parameter is optional if called
+ * @param mixed $object [optional] The tested object or class name. This parameter is optional if called
  * from the object's method.
- * </p>
  * @return string the name of the parent class of the class of which
  * object is an instance or the name.
  * <p>
@@ -854,12 +822,8 @@ function get_parent_class ($object = null) {}
 /**
  * Checks if the class method exists
  * @link http://www.php.net/manual/en/function.method-exists.php
- * @param mixed $object <p>
- * An object instance or a class name
- * </p>
- * @param string $method_name <p>
- * The method name
- * </p>
+ * @param mixed $object An object instance or a class name
+ * @param string $method_name The method name
  * @return bool true if the method given by method_name
  * has been defined for the given object, false 
  * otherwise.
@@ -869,12 +833,8 @@ function method_exists ($object, string $method_name) {}
 /**
  * Checks if the object or class has a property
  * @link http://www.php.net/manual/en/function.property-exists.php
- * @param mixed $class <p>
- * The class name or an object of the class to test for
- * </p>
- * @param string $property <p>
- * The name of the property
- * </p>
+ * @param mixed $class The class name or an object of the class to test for
+ * @param string $property The name of the property
  * @return bool true if the property exists, false if it doesn't exist or
  * null in case of an error.
  */
@@ -883,12 +843,8 @@ function property_exists ($class, string $property) {}
 /**
  * Checks if the class has been defined
  * @link http://www.php.net/manual/en/function.class-exists.php
- * @param string $class_name <p>
- * The class name. The name is matched in a case-insensitive manner.
- * </p>
- * @param bool $autoload [optional] <p>
- * Whether or not to call link.autoload by default.
- * </p>
+ * @param string $class_name The class name. The name is matched in a case-insensitive manner.
+ * @param bool $autoload [optional] Whether or not to call link.autoload by default.
  * @return bool true if class_name is a defined class,
  * false otherwise.
  */
@@ -897,12 +853,8 @@ function class_exists (string $class_name, bool $autoload = null) {}
 /**
  * Checks if the interface has been defined
  * @link http://www.php.net/manual/en/function.interface-exists.php
- * @param string $interface_name <p>
- * The interface name
- * </p>
- * @param bool $autoload [optional] <p>
- * Whether to call link.autoload or not by default.
- * </p>
+ * @param string $interface_name The interface name
+ * @param bool $autoload [optional] Whether to call link.autoload or not by default.
  * @return bool true if the interface given by 
  * interface_name has been defined, false otherwise.
  */
@@ -911,12 +863,8 @@ function interface_exists (string $interface_name, bool $autoload = null) {}
 /**
  * Checks if the trait exists
  * @link http://www.php.net/manual/en/function.trait-exists.php
- * @param string $traitname <p>
- * Name of the trait to check
- * </p>
- * @param bool $autoload [optional] <p>
- * Whether to autoload if not already loaded.
- * </p>
+ * @param string $traitname Name of the trait to check
+ * @param bool $autoload [optional] Whether to autoload if not already loaded.
  * @return bool true if trait exists, false if not, null in case of an error.
  */
 function trait_exists (string $traitname, bool $autoload = null) {}
@@ -924,9 +872,7 @@ function trait_exists (string $traitname, bool $autoload = null) {}
 /**
  * Return true if the given function has been defined
  * @link http://www.php.net/manual/en/function.function-exists.php
- * @param string $function_name <p>
- * The function name, as a string.
- * </p>
+ * @param string $function_name The function name, as a string.
  * @return bool true if function_name exists and is a
  * function, false otherwise.
  * <p>
@@ -939,15 +885,9 @@ function function_exists (string $function_name) {}
 /**
  * Creates an alias for a class
  * @link http://www.php.net/manual/en/function.class-alias.php
- * @param string $original <p>
- * The original class.
- * </p>
- * @param string $alias <p>
- * The alias name for the class.
- * </p>
- * @param bool $autoload [optional] <p>
- * Whether to autoload if the original class is not found.
- * </p>
+ * @param string $original The original class.
+ * @param string $alias The alias name for the class.
+ * @param bool $autoload [optional] Whether to autoload if the original class is not found.
  * @return bool true on success or false on failure
  */
 function class_alias (string $original, string $alias, bool $autoload = null) {}
@@ -977,16 +917,10 @@ function get_required_files () {}
 /**
  * Checks if the object has this class as one of its parents or implements it.
  * @link http://www.php.net/manual/en/function.is-subclass-of.php
- * @param mixed $object <p>
- * A class name or an object instance. No error is generated if the class does not exist.
- * </p>
- * @param string $class_name <p>
- * The class name
- * </p>
- * @param bool $allow_string [optional] <p>
- * If this parameter set to false, string class name as object
+ * @param mixed $object A class name or an object instance. No error is generated if the class does not exist.
+ * @param string $class_name The class name
+ * @param bool $allow_string [optional] If this parameter set to false, string class name as object
  * is not allowed. This also prevents from calling autoloader if the class doesn't exist.
- * </p>
  * @return bool This function returns true if the object object,
  * belongs to a class which is a subclass of
  * class_name, false otherwise.
@@ -996,16 +930,10 @@ function is_subclass_of ($object, string $class_name, bool $allow_string = null)
 /**
  * Checks if the object is of this class or has this class as one of its parents
  * @link http://www.php.net/manual/en/function.is-a.php
- * @param object $object <p>
- * The tested object
- * </p>
- * @param string $class_name <p>
- * The class name
- * </p>
- * @param bool $allow_string [optional] <p>
- * If this parameter set to false, string class name as object
+ * @param object $object The tested object
+ * @param string $class_name The class name
+ * @param bool $allow_string [optional] If this parameter set to false, string class name as object
  * is not allowed. This also prevents from calling autoloader if the class doesn't exist.
- * </p>
  * @return bool true if the object is of this class or has this class as one of
  * its parents, false otherwise.
  */
@@ -1014,9 +942,7 @@ function is_a ($object, string $class_name, bool $allow_string = null) {}
 /**
  * Get the default properties of the class
  * @link http://www.php.net/manual/en/function.get-class-vars.php
- * @param string $class_name <p>
- * The class name
- * </p>
+ * @param string $class_name The class name
  * @return array an associative array of declared properties visible from the
  * current scope, with their default value.
  * The resulting array elements are in the form of 
@@ -1028,9 +954,7 @@ function get_class_vars (string $class_name) {}
 /**
  * Gets the properties of the given object
  * @link http://www.php.net/manual/en/function.get-object-vars.php
- * @param object $object <p>
- * An object instance.
- * </p>
+ * @param object $object An object instance.
  * @return array an associative array of defined object accessible non-static properties 
  * for the specified object in scope. If a property has
  * not been assigned a value, it will be returned with a null value.
@@ -1040,9 +964,7 @@ function get_object_vars ($object) {}
 /**
  * Gets the class methods' names
  * @link http://www.php.net/manual/en/function.get-class-methods.php
- * @param mixed $class_name <p>
- * The class name or an object instance
- * </p>
+ * @param mixed $class_name The class name or an object instance
  * @return array an array of method names defined for the class specified by
  * class_name. In case of an error, it returns null.
  */
@@ -1051,15 +973,11 @@ function get_class_methods ($class_name) {}
 /**
  * Generates a user-level error/warning/notice message
  * @link http://www.php.net/manual/en/function.trigger-error.php
- * @param string $error_msg <p>
- * The designated error message for this error. It's limited to 1024 
+ * @param string $error_msg The designated error message for this error. It's limited to 1024 
  * bytes in length. Any additional characters beyond 1024 bytes will be 
  * truncated.
- * </p>
- * @param int $error_type [optional] <p>
- * The designated error type for this error. It only works with the E_USER
+ * @param int $error_type [optional] The designated error type for this error. It only works with the E_USER
  * family of constants, and will default to E_USER_NOTICE.
- * </p>
  * @return bool This function returns false if wrong error_type is
  * specified, true otherwise.
  */
@@ -1090,15 +1008,40 @@ function user_error ($message, $error_type = null) {}
  * interrline
  * arrayerrcontext
  * errno
+ * <br>
  * The first parameter, errno, contains the
  * level of the error raised, as an integer.
- * @param int $error_types [optional] <p>
- * Can be used to mask the triggering of the
+ * errstr
+ * <br>
+ * The second parameter, errstr, contains the
+ * error message, as a string.
+ * errfile
+ * <br>
+ * The third parameter is optional, errfile,
+ * which contains the filename that the error was raised in, as a string.
+ * errline
+ * <br>
+ * The fourth parameter is optional, errline,
+ * which contains the line number the error was raised at, as an integer.
+ * errcontext
+ * <br>
+ * The fifth parameter is optional, errcontext,
+ * which is an array that points to the active symbol table at the point
+ * the error occurred. In other words, errcontext
+ * will contain an array of every variable that existed in the scope the
+ * error was triggered in.
+ * User error handler must not modify error context.
+ * This parameter has been DEPRECATED as of PHP 7.2.0.
+ * Relying on it is highly discouraged.
+ * </p>
+ * <p>
+ * If the function returns false then the normal error handler continues.
+ * </p>
+ * @param int $error_types [optional] Can be used to mask the triggering of the
  * error_handler function just like the error_reporting ini setting 
  * controls which errors are shown. Without this mask set the
  * error_handler will be called for every error
  * regardless to the setting of the error_reporting setting.
- * </p>
  * @return mixed a string containing the previously defined error handler (if any). If
  * the built-in error handler is used null is returned. null is also returned
  * in case of an error such as an invalid callback. If the previous error handler
@@ -1191,9 +1134,7 @@ function get_declared_interfaces () {}
 /**
  * Returns an array of all defined functions
  * @link http://www.php.net/manual/en/function.get-defined-functions.php
- * @param bool $exclude_disabled [optional] <p>
- * Whether disabled functions should be excluded from the return value.
- * </p>
+ * @param bool $exclude_disabled [optional] Whether disabled functions should be excluded from the return value.
  * @return array a multidimensional array containing a list of all defined
  * functions, both built-in (internal) and user-defined. The internal
  * functions will be accessible via $arr["internal"], and
@@ -1212,12 +1153,8 @@ function get_defined_vars () {}
 /**
  * Create an anonymous (lambda-style) function
  * @link http://www.php.net/manual/en/function.create-function.php
- * @param string $args <p>
- * The function arguments.
- * </p>
- * @param string $code <p>
- * The function code.
- * </p>
+ * @param string $args The function arguments.
+ * @param string $code The function code.
  * @return string a unique function name as a string, or false on error.
  */
 function create_function (string $args, string $code) {}
@@ -1225,9 +1162,7 @@ function create_function (string $args, string $code) {}
 /**
  * Returns the resource type
  * @link http://www.php.net/manual/en/function.get-resource-type.php
- * @param resource $handle <p>
- * The evaluated resource handle.
- * </p>
+ * @param resource $handle The evaluated resource handle.
  * @return string If the given handle is a resource, this function
  * will return a string representing its type. If the type is not identified
  * by this function, the return value will be the string 
@@ -1263,10 +1198,8 @@ function get_resources (string $type = null) {}
 /**
  * Returns an array with the names of all modules compiled and loaded
  * @link http://www.php.net/manual/en/function.get-loaded-extensions.php
- * @param bool $zend_extensions [optional] <p>
- * Only return Zend extensions, if not then regular extensions, like 
+ * @param bool $zend_extensions [optional] Only return Zend extensions, if not then regular extensions, like 
  * mysqli are listed. Defaults to false (return regular extensions).
- * </p>
  * @return array an indexed array of all the modules names.
  */
 function get_loaded_extensions (bool $zend_extensions = null) {}
@@ -1322,8 +1255,7 @@ function get_extension_funcs (string $module_name) {}
 /**
  * Returns an associative array with the names of all the constants and their values
  * @link http://www.php.net/manual/en/function.get-defined-constants.php
- * @param bool $categorize [optional] <p>
- * Causing this function to return a multi-dimensional
+ * @param bool $categorize [optional] Causing this function to return a multi-dimensional
  * array with categories in the keys of the first dimension and constants
  * and their values in the second dimension.
  * <pre>
@@ -1368,7 +1300,6 @@ function get_extension_funcs (string $module_name) {}
  * )
  * )
  * </pre>
- * </p>
  * @return array an array of constant name => constant value array, optionally
  * groupped by extension name registering the constant.
  */
@@ -1377,8 +1308,7 @@ function get_defined_constants (bool $categorize = null) {}
 /**
  * Generates a backtrace
  * @link http://www.php.net/manual/en/function.debug-backtrace.php
- * @param int $options [optional] <p>
- * As of 5.3.6, this parameter is a bitmask for the following options:
+ * @param int $options [optional] As of 5.3.6, this parameter is a bitmask for the following options:
  * <table>
  * debug_backtrace options
  * <table>
@@ -1399,11 +1329,8 @@ function get_defined_constants (bool $categorize = null) {}
  * </table>
  * Before 5.3.6, the only values recognized are true or false, which are the same as 
  * setting or not setting the DEBUG_BACKTRACE_PROVIDE_OBJECT option respectively.
- * </p>
- * @param int $limit [optional] <p>
- * As of 5.4.0, this parameter can be used to limit the number of stack frames returned.
+ * @param int $limit [optional] As of 5.4.0, this parameter can be used to limit the number of stack frames returned.
  * By default (limit=0) it returns all stack frames.
- * </p>
  * @return array an array of associative arrays. The possible returned elements
  * are as follows:
  * <p>
@@ -1479,8 +1406,7 @@ function debug_backtrace (int $options = null, int $limit = null) {}
 /**
  * Prints a backtrace
  * @link http://www.php.net/manual/en/function.debug-print-backtrace.php
- * @param int $options [optional] <p>
- * As of 5.3.6, this parameter is a bitmask for the following options:
+ * @param int $options [optional] As of 5.3.6, this parameter is a bitmask for the following options:
  * <table>
  * debug_print_backtrace options
  * <table>
@@ -1493,11 +1419,8 @@ function debug_backtrace (int $options = null, int $limit = null) {}
  * </tr>
  * </table>
  * </table>
- * </p>
- * @param int $limit [optional] <p>
- * As of 5.4.0, this parameter can be used to limit the number of stack frames printed.
+ * @param int $limit [optional] As of 5.4.0, this parameter can be used to limit the number of stack frames printed.
  * By default (limit=0) it prints all stack frames.
- * </p>
  * @return void 
  */
 function debug_print_backtrace (int $options = null, int $limit = null) {}
@@ -1701,9 +1624,7 @@ define ('PHP_FD_SETSIZE', 1024);
 define ('PHP_BINARY', "/usr/bin/php7.1");
 
 /**
- * <p>
  * Indicates that output buffering has begun.
- * </p>
  * @link http://www.php.net/manual/en/outcontrol.constants.php
  */
 define ('PHP_OUTPUT_HANDLER_START', 1);
