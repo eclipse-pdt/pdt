@@ -652,13 +652,15 @@ function print_parameters ($parameters) {
 				$type = clean_php_type_hint ($type);
 			}
 			// http://php.net/manual/en/functions.arguments.php
-			if ($type && ((class_exists ($type) && clean_php_identifier ($type) === $type)
-				|| strtolower ($type) == "self"
-				|| (version_compare (phpversion(), "5.1.0") >= 0 && (strtolower ($type) == "array"))
-				|| (version_compare (phpversion(), "5.4.0") >= 0 && (strtolower ($type) == "callable"))
-				|| (version_compare (phpversion(), "7.0.0") >= 0 && (strtolower ($type) == "bool" || strtolower ($type) == "float" || strtolower ($type) == "int" || strtolower ($type) == "string"))
-			)) {
-				print "{$type} ";
+			if ($type) {
+				$lowerType = strtolower ($type);
+				if (class_exists ($type) && clean_php_identifier ($type) === $type) {
+					print "{$type} ";
+				} else if ((version_compare (phpversion(), "5.1.0") >= 0 && ($lowerType == "array"))
+					|| (version_compare (phpversion(), "5.4.0") >= 0 && ($lowerType == "callable"))
+					|| (version_compare (phpversion(), "7.0.0") >= 0 && ($lowerType == "bool" || $lowerType == "float" || $lowerType == "int" || $lowerType == "string"))) {
+					print "{$lowerType} ";
+				}
 			}
 			if (@$parameter['isreference']) {
 				print "&";
@@ -701,6 +703,9 @@ function print_parameters_ref ($paramsRef) {
 			if ($paramRef->isPassedByReference()) {
 				print "&";
 			}
+			if (version_compare(phpversion(), "5.6.0") >= 0 && $paramRef->isVariadic()) {
+				print "...";
+			}
 			print "\${$name}";
 			if ($paramRef->allowsNull()) {
 				print " = null";
@@ -740,7 +745,7 @@ function print_constant ($name, $value = null, $tabs = 0) {
 	$value = escape_const_value ($value);
 
 	$doc = @$constantsDoc[$name]['doc'];
-	if ($doc) {
+	if ($doc || @$constantsDoc[$name]['id']) {
 		print "\n";
 		print_tabs ($tabs);
 		print "/**\n";
@@ -945,7 +950,7 @@ function xml_to_phpdoc ($str) {
 		}
 	}
 	$str = strip_tags_special ($str);
-	$str = preg_replace ('/  */', " ", $str);
+	$str = preg_replace ('/  +/', " ", $str);
 	$str = preg_replace ('/[\r\n][\t ]/', "\n", $str);
 	$str = trim ($str);
 	return $str;
@@ -1017,7 +1022,7 @@ function finish_file_output($filename) {
  */
 function strip_tags_special ($str) {
 	// first mask and translate the tags to preseve
-	$str = preg_replace('@<(\/?)(table|tgroup)(?:\s(?:[^>]*?[^/>])?)?>@', '###($1table)###', $str);
+	$str = preg_replace('@<(/?)(table|tgroup)(?:\s(?:[^>]*?[^/>])?)?>@', '###($1table)###', $str);
 	$str = preg_replace('@<row(?:\s(?:[^>]*?[^/>])?)?>@', "###(tr valign=\"top\")###", $str);
 	$str = str_replace("</row>", "###(/tr)###", $str);
 
@@ -1037,10 +1042,10 @@ function strip_tags_special ($str) {
 
 	// handle gracefully inner tags <entry>, </entry>
 	// or inner tag with attributes like <entry align="center">
-	$str = preg_replace('@<(\/?)entry(?:\s(?:[^>]*?[^/>])?)?>@', '###($1td)###', $str);
+	$str = preg_replace('@<(/?)entry(?:\s(?:[^>]*?[^/>])?)?>@', '###($1td)###', $str);
 	// handle gracefully inner tags <para>, </para>
 	// or inner tag with attributes like <para xmlns="http://docbook.org/ns/docbook">
-	$str = preg_replace('@<(\/?)para(?:\s(?:[^>]*?[^/>])?)?>@', '###($1p)###', $str);
+	$str = preg_replace('@<(/?)para(?:\s(?:[^>]*?[^/>])?)?>@', '###($1p)###', $str);
 	// now strip the remaining tags
 	$str = strip_tags ($str);
 	// and restore the translated ones
@@ -1050,6 +1055,16 @@ function strip_tags_special ($str) {
 	$str = strtr ($str, array(
 		"*" => "&#42;"
 	));
+
+	// remove useless surrounding <p></p> tags...
+	preg_match('@^(?:\s*<p>)+(.*?)(?:</p>\s*)+$@s', $str, $matches);
+	if ($matches) {
+		// ...only if there are no remaining <p> or </p> tags
+		if (! preg_match('@</?p>@', $matches[1])) {
+			$str = $matches[1];
+		}
+	}
+
 	return $str;
 }
 
