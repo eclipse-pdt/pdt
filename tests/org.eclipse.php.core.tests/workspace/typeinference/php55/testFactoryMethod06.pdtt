@@ -1,0 +1,16 @@
+--TEST--
+Test Factory Method #06 - Simple factory method (using ::class and class alias)
+--FILE--
+<?php
+namespace FactoryNamespace;
+use namespaceName\className as classAlias;
+class FactoryClass
+{
+    function factoryMethod() { }
+}
+$factory = new FactoryClass();
+$b = $factory->factoryMethod(classAlias::class);
+testFactoryMethod06($b);
+?>
+--EXPECT--
+\namespaceName\className
