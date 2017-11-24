@@ -95,14 +95,10 @@ class DOMImplementation  {
 	/**
 	 * Test if the DOM implementation implements a specific feature
 	 * @link http://www.php.net/manual/en/domimplementation.hasfeature.php
-	 * @param string $feature <p>
-	 * The feature to test.
-	 * </p>
-	 * @param string $version <p>
-	 * The version number of the feature to test. In 
+	 * @param string $feature The feature to test.
+	 * @param string $version The version number of the feature to test. In 
 	 * level 2, this can be either 2.0 or
 	 * 1.0.
-	 * </p>
 	 * @return bool true on success or false on failure
 	 */
 	public function hasFeature (string $feature, string $version) {}
@@ -110,15 +106,9 @@ class DOMImplementation  {
 	/**
 	 * Creates an empty DOMDocumentType object
 	 * @link http://www.php.net/manual/en/domimplementation.createdocumenttype.php
-	 * @param string $qualifiedName [optional] <p>
-	 * The qualified name of the document type to create.
-	 * </p>
-	 * @param string $publicId [optional] <p>
-	 * The external subset public identifier.
-	 * </p>
-	 * @param string $systemId [optional] <p>
-	 * The external subset system identifier.
-	 * </p>
+	 * @param string $qualifiedName [optional] The qualified name of the document type to create.
+	 * @param string $publicId [optional] The external subset public identifier.
+	 * @param string $systemId [optional] The external subset system identifier.
 	 * @return DOMDocumentType A new DOMDocumentType node with its 
 	 * ownerDocument set to null.
 	 */
@@ -127,15 +117,9 @@ class DOMImplementation  {
 	/**
 	 * Creates a DOMDocument object of the specified type with its document element
 	 * @link http://www.php.net/manual/en/domimplementation.createdocument.php
-	 * @param string $namespaceURI [optional] <p>
-	 * The namespace URI of the document element to create.
-	 * </p>
-	 * @param string $qualifiedName [optional] <p>
-	 * The qualified name of the document element to create.
-	 * </p>
-	 * @param DOMDocumentType $doctype [optional] <p>
-	 * The type of document to create or null.
-	 * </p>
+	 * @param string $namespaceURI [optional] The namespace URI of the document element to create.
+	 * @param string $qualifiedName [optional] The qualified name of the document element to create.
+	 * @param DOMDocumentType $doctype [optional] The type of document to create or null.
 	 * @return DOMDocument A new DOMDocument object. If 
 	 * namespaceURI, qualifiedName, 
 	 * and doctype are null, the returned 
@@ -150,13 +134,9 @@ class DOMNode  {
 	/**
 	 * Adds a new child before a reference node
 	 * @link http://www.php.net/manual/en/domnode.insertbefore.php
-	 * @param DOMNode $newnode <p>
-	 * The new node.
-	 * </p>
-	 * @param DOMNode $refnode [optional] <p>
-	 * The reference node. If not supplied, newnode is
+	 * @param DOMNode $newnode The new node.
+	 * @param DOMNode $refnode [optional] The reference node. If not supplied, newnode is
 	 * appended to the children.
-	 * </p>
 	 * @return DOMNode The inserted node.
 	 */
 	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
@@ -164,14 +144,10 @@ class DOMNode  {
 	/**
 	 * Replaces a child
 	 * @link http://www.php.net/manual/en/domnode.replacechild.php
-	 * @param DOMNode $newnode <p>
-	 * The new node. It must be a member of the target document, i.e.
+	 * @param DOMNode $newnode The new node. It must be a member of the target document, i.e.
 	 * created by one of the DOMDocument->createXXX() methods or imported in
 	 * the document by .
-	 * </p>
-	 * @param DOMNode $oldnode <p>
-	 * The old node.
-	 * </p>
+	 * @param DOMNode $oldnode The old node.
 	 * @return DOMNode The old node or false if an error occur.
 	 */
 	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
@@ -179,9 +155,7 @@ class DOMNode  {
 	/**
 	 * Removes child from list of children
 	 * @link http://www.php.net/manual/en/domnode.removechild.php
-	 * @param DOMNode $oldnode <p>
-	 * The removed child.
-	 * </p>
+	 * @param DOMNode $oldnode The removed child.
 	 * @return DOMNode If the child could be removed the function returns the old child.
 	 */
 	public function removeChild (DOMNode $oldnode) {}
@@ -189,9 +163,7 @@ class DOMNode  {
 	/**
 	 * Adds new child at the end of the children
 	 * @link http://www.php.net/manual/en/domnode.appendchild.php
-	 * @param DOMNode $newnode <p>
-	 * The appended child.
-	 * </p>
+	 * @param DOMNode $newnode The appended child.
 	 * @return DOMNode The node added.
 	 */
 	public function appendChild (DOMNode $newnode) {}
@@ -206,10 +178,8 @@ class DOMNode  {
 	/**
 	 * Clones a node
 	 * @link http://www.php.net/manual/en/domnode.clonenode.php
-	 * @param bool $deep [optional] <p>
-	 * Indicates whether to copy all descendant nodes. This parameter is 
+	 * @param bool $deep [optional] Indicates whether to copy all descendant nodes. This parameter is 
 	 * defaulted to false.
-	 * </p>
 	 * @return DOMNode The cloned node.
 	 */
 	public function cloneNode (bool $deep = null) {}
@@ -224,14 +194,10 @@ class DOMNode  {
 	/**
 	 * Checks if feature is supported for specified version
 	 * @link http://www.php.net/manual/en/domnode.issupported.php
-	 * @param string $feature <p>
-	 * The feature to test. See the example of 
+	 * @param string $feature The feature to test. See the example of 
 	 * DOMImplementation::hasFeature for a
 	 * list of features.
-	 * </p>
-	 * @param string $version <p>
-	 * The version number of the feature to test.
-	 * </p>
+	 * @param string $version The version number of the feature to test.
 	 * @return bool true on success or false on failure
 	 */
 	public function isSupported (string $feature, string $version) {}
@@ -251,9 +217,7 @@ class DOMNode  {
 	/**
 	 * Indicates if two nodes are the same node
 	 * @link http://www.php.net/manual/en/domnode.issamenode.php
-	 * @param DOMNode $node <p>
-	 * The compared node.
-	 * </p>
+	 * @param DOMNode $node The compared node.
 	 * @return bool true on success or false on failure
 	 */
 	public function isSameNode (DOMNode $node) {}
@@ -261,9 +225,7 @@ class DOMNode  {
 	/**
 	 * Gets the namespace prefix of the node based on the namespace URI
 	 * @link http://www.php.net/manual/en/domnode.lookupprefix.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI.
 	 * @return string The prefix of the namespace.
 	 */
 	public function lookupPrefix (string $namespaceURI) {}
@@ -271,9 +233,7 @@ class DOMNode  {
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
 	 * @link http://www.php.net/manual/en/domnode.isdefaultnamespace.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI to look for.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI to look for.
 	 * @return bool Return true if namespaceURI is the default
 	 * namespace, false otherwise.
 	 */
@@ -282,9 +242,7 @@ class DOMNode  {
 	/**
 	 * Gets the namespace URI of the node based on the prefix
 	 * @link http://www.php.net/manual/en/domnode.lookupnamespaceuri.php
-	 * @param string $prefix <p>
-	 * The prefix of the namespace.
-	 * </p>
+	 * @param string $prefix The prefix of the namespace.
 	 * @return string The namespace URI of the node.
 	 */
 	public function lookupNamespaceUri (string $prefix) {}
@@ -329,19 +287,11 @@ class DOMNode  {
 	/**
 	 * Canonicalize nodes to a string
 	 * @link http://www.php.net/manual/en/domnode.c14n.php
-	 * @param bool $exclusive [optional] <p>
-	 * Enable exclusive parsing of only the nodes matched by the provided
+	 * @param bool $exclusive [optional] Enable exclusive parsing of only the nodes matched by the provided
 	 * xpath or namespace prefixes.
-	 * </p>
-	 * @param bool $with_comments [optional] <p>
-	 * Retain comments in output.
-	 * </p>
-	 * @param array $xpath [optional] <p>
-	 * An array of xpaths to filter the nodes by.
-	 * </p>
-	 * @param array $ns_prefixes [optional] <p>
-	 * An array of namespace prefixes to filter the nodes by.
-	 * </p>
+	 * @param bool $with_comments [optional] Retain comments in output.
+	 * @param array $xpath [optional] An array of xpaths to filter the nodes by.
+	 * @param array $ns_prefixes [optional] An array of namespace prefixes to filter the nodes by.
 	 * @return string canonicalized nodes as a string or false on failure
 	 */
 	public function C14N (bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
@@ -349,22 +299,12 @@ class DOMNode  {
 	/**
 	 * Canonicalize nodes to a file
 	 * @link http://www.php.net/manual/en/domnode.c14nfile.php
-	 * @param string $uri <p>
-	 * Path to write the output to.
-	 * </p>
-	 * @param bool $exclusive [optional] <p>
-	 * Enable exclusive parsing of only the nodes matched by the provided
+	 * @param string $uri Path to write the output to.
+	 * @param bool $exclusive [optional] Enable exclusive parsing of only the nodes matched by the provided
 	 * xpath or namespace prefixes.
-	 * </p>
-	 * @param bool $with_comments [optional] <p>
-	 * Retain comments in output.
-	 * </p>
-	 * @param array $xpath [optional] <p>
-	 * An array of xpaths to filter the nodes by.
-	 * </p>
-	 * @param array $ns_prefixes [optional] <p>
-	 * An array of namespace prefixes to filter the nodes by.
-	 * </p>
+	 * @param bool $with_comments [optional] Retain comments in output.
+	 * @param array $xpath [optional] An array of xpaths to filter the nodes by.
+	 * @param array $ns_prefixes [optional] An array of namespace prefixes to filter the nodes by.
 	 * @return int Number of bytes written or false on failure
 	 */
 	public function C14NFile (string $uri, bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
@@ -381,9 +321,7 @@ class DOMDocumentFragment extends DOMNode  {
 	/**
 	 * Append raw XML data
 	 * @link http://www.php.net/manual/en/domdocumentfragment.appendxml.php
-	 * @param string $data <p>
-	 * XML to append.
-	 * </p>
+	 * @param string $data XML to append.
 	 * @return bool true on success or false on failure
 	 */
 	public function appendXML (string $data) {}
@@ -391,13 +329,9 @@ class DOMDocumentFragment extends DOMNode  {
 	/**
 	 * Adds a new child before a reference node
 	 * @link http://www.php.net/manual/en/domnode.insertbefore.php
-	 * @param DOMNode $newnode <p>
-	 * The new node.
-	 * </p>
-	 * @param DOMNode $refnode [optional] <p>
-	 * The reference node. If not supplied, newnode is
+	 * @param DOMNode $newnode The new node.
+	 * @param DOMNode $refnode [optional] The reference node. If not supplied, newnode is
 	 * appended to the children.
-	 * </p>
 	 * @return DOMNode The inserted node.
 	 */
 	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
@@ -405,14 +339,10 @@ class DOMDocumentFragment extends DOMNode  {
 	/**
 	 * Replaces a child
 	 * @link http://www.php.net/manual/en/domnode.replacechild.php
-	 * @param DOMNode $newnode <p>
-	 * The new node. It must be a member of the target document, i.e.
+	 * @param DOMNode $newnode The new node. It must be a member of the target document, i.e.
 	 * created by one of the DOMDocument->createXXX() methods or imported in
 	 * the document by .
-	 * </p>
-	 * @param DOMNode $oldnode <p>
-	 * The old node.
-	 * </p>
+	 * @param DOMNode $oldnode The old node.
 	 * @return DOMNode The old node or false if an error occur.
 	 */
 	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
@@ -420,9 +350,7 @@ class DOMDocumentFragment extends DOMNode  {
 	/**
 	 * Removes child from list of children
 	 * @link http://www.php.net/manual/en/domnode.removechild.php
-	 * @param DOMNode $oldnode <p>
-	 * The removed child.
-	 * </p>
+	 * @param DOMNode $oldnode The removed child.
 	 * @return DOMNode If the child could be removed the function returns the old child.
 	 */
 	public function removeChild (DOMNode $oldnode) {}
@@ -430,9 +358,7 @@ class DOMDocumentFragment extends DOMNode  {
 	/**
 	 * Adds new child at the end of the children
 	 * @link http://www.php.net/manual/en/domnode.appendchild.php
-	 * @param DOMNode $newnode <p>
-	 * The appended child.
-	 * </p>
+	 * @param DOMNode $newnode The appended child.
 	 * @return DOMNode The node added.
 	 */
 	public function appendChild (DOMNode $newnode) {}
@@ -447,10 +373,8 @@ class DOMDocumentFragment extends DOMNode  {
 	/**
 	 * Clones a node
 	 * @link http://www.php.net/manual/en/domnode.clonenode.php
-	 * @param bool $deep [optional] <p>
-	 * Indicates whether to copy all descendant nodes. This parameter is 
+	 * @param bool $deep [optional] Indicates whether to copy all descendant nodes. This parameter is 
 	 * defaulted to false.
-	 * </p>
 	 * @return DOMNode The cloned node.
 	 */
 	public function cloneNode (bool $deep = null) {}
@@ -465,14 +389,10 @@ class DOMDocumentFragment extends DOMNode  {
 	/**
 	 * Checks if feature is supported for specified version
 	 * @link http://www.php.net/manual/en/domnode.issupported.php
-	 * @param string $feature <p>
-	 * The feature to test. See the example of 
+	 * @param string $feature The feature to test. See the example of 
 	 * DOMImplementation::hasFeature for a
 	 * list of features.
-	 * </p>
-	 * @param string $version <p>
-	 * The version number of the feature to test.
-	 * </p>
+	 * @param string $version The version number of the feature to test.
 	 * @return bool true on success or false on failure
 	 */
 	public function isSupported (string $feature, string $version) {}
@@ -492,9 +412,7 @@ class DOMDocumentFragment extends DOMNode  {
 	/**
 	 * Indicates if two nodes are the same node
 	 * @link http://www.php.net/manual/en/domnode.issamenode.php
-	 * @param DOMNode $node <p>
-	 * The compared node.
-	 * </p>
+	 * @param DOMNode $node The compared node.
 	 * @return bool true on success or false on failure
 	 */
 	public function isSameNode (DOMNode $node) {}
@@ -502,9 +420,7 @@ class DOMDocumentFragment extends DOMNode  {
 	/**
 	 * Gets the namespace prefix of the node based on the namespace URI
 	 * @link http://www.php.net/manual/en/domnode.lookupprefix.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI.
 	 * @return string The prefix of the namespace.
 	 */
 	public function lookupPrefix (string $namespaceURI) {}
@@ -512,9 +428,7 @@ class DOMDocumentFragment extends DOMNode  {
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
 	 * @link http://www.php.net/manual/en/domnode.isdefaultnamespace.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI to look for.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI to look for.
 	 * @return bool Return true if namespaceURI is the default
 	 * namespace, false otherwise.
 	 */
@@ -523,9 +437,7 @@ class DOMDocumentFragment extends DOMNode  {
 	/**
 	 * Gets the namespace URI of the node based on the prefix
 	 * @link http://www.php.net/manual/en/domnode.lookupnamespaceuri.php
-	 * @param string $prefix <p>
-	 * The prefix of the namespace.
-	 * </p>
+	 * @param string $prefix The prefix of the namespace.
 	 * @return string The namespace URI of the node.
 	 */
 	public function lookupNamespaceUri (string $prefix) {}
@@ -570,19 +482,11 @@ class DOMDocumentFragment extends DOMNode  {
 	/**
 	 * Canonicalize nodes to a string
 	 * @link http://www.php.net/manual/en/domnode.c14n.php
-	 * @param bool $exclusive [optional] <p>
-	 * Enable exclusive parsing of only the nodes matched by the provided
+	 * @param bool $exclusive [optional] Enable exclusive parsing of only the nodes matched by the provided
 	 * xpath or namespace prefixes.
-	 * </p>
-	 * @param bool $with_comments [optional] <p>
-	 * Retain comments in output.
-	 * </p>
-	 * @param array $xpath [optional] <p>
-	 * An array of xpaths to filter the nodes by.
-	 * </p>
-	 * @param array $ns_prefixes [optional] <p>
-	 * An array of namespace prefixes to filter the nodes by.
-	 * </p>
+	 * @param bool $with_comments [optional] Retain comments in output.
+	 * @param array $xpath [optional] An array of xpaths to filter the nodes by.
+	 * @param array $ns_prefixes [optional] An array of namespace prefixes to filter the nodes by.
 	 * @return string canonicalized nodes as a string or false on failure
 	 */
 	public function C14N (bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
@@ -590,22 +494,12 @@ class DOMDocumentFragment extends DOMNode  {
 	/**
 	 * Canonicalize nodes to a file
 	 * @link http://www.php.net/manual/en/domnode.c14nfile.php
-	 * @param string $uri <p>
-	 * Path to write the output to.
-	 * </p>
-	 * @param bool $exclusive [optional] <p>
-	 * Enable exclusive parsing of only the nodes matched by the provided
+	 * @param string $uri Path to write the output to.
+	 * @param bool $exclusive [optional] Enable exclusive parsing of only the nodes matched by the provided
 	 * xpath or namespace prefixes.
-	 * </p>
-	 * @param bool $with_comments [optional] <p>
-	 * Retain comments in output.
-	 * </p>
-	 * @param array $xpath [optional] <p>
-	 * An array of xpaths to filter the nodes by.
-	 * </p>
-	 * @param array $ns_prefixes [optional] <p>
-	 * An array of namespace prefixes to filter the nodes by.
-	 * </p>
+	 * @param bool $with_comments [optional] Retain comments in output.
+	 * @param array $xpath [optional] An array of xpaths to filter the nodes by.
+	 * @param array $ns_prefixes [optional] An array of namespace prefixes to filter the nodes by.
 	 * @return int Number of bytes written or false on failure
 	 */
 	public function C14NFile (string $uri, bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
@@ -617,9 +511,7 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Create new element node
 	 * @link http://www.php.net/manual/en/domdocument.createelement.php
-	 * @param string $name <p>
-	 * The tag name of the element.
-	 * </p>
+	 * @param string $name The tag name of the element.
 	 * @param string $value [optional] <p>
 	 * The value of the element. By default, an empty element will be created.
 	 * The value can also be set later with DOMElement::$nodeValue.
@@ -645,9 +537,7 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Create new text node
 	 * @link http://www.php.net/manual/en/domdocument.createtextnode.php
-	 * @param string $content <p>
-	 * The content of the text.
-	 * </p>
+	 * @param string $content The content of the text.
 	 * @return DOMText The new DOMText or false if an error occurred.
 	 */
 	public function createTextNode (string $content) {}
@@ -655,9 +545,7 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Create new comment node
 	 * @link http://www.php.net/manual/en/domdocument.createcomment.php
-	 * @param string $data <p>
-	 * The content of the comment.
-	 * </p>
+	 * @param string $data The content of the comment.
 	 * @return DOMComment The new DOMComment or false if an error occurred.
 	 */
 	public function createComment (string $data) {}
@@ -665,9 +553,7 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Create new cdata node
 	 * @link http://www.php.net/manual/en/domdocument.createcdatasection.php
-	 * @param string $data <p>
-	 * The content of the cdata.
-	 * </p>
+	 * @param string $data The content of the cdata.
 	 * @return DOMCDATASection The new DOMCDATASection or false if an error occurred.
 	 */
 	public function createCDATASection (string $data) {}
@@ -675,12 +561,8 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Creates new PI node
 	 * @link http://www.php.net/manual/en/domdocument.createprocessinginstruction.php
-	 * @param string $target <p>
-	 * The target of the processing instruction.
-	 * </p>
-	 * @param string $data [optional] <p>
-	 * The content of the processing instruction.
-	 * </p>
+	 * @param string $target The target of the processing instruction.
+	 * @param string $data [optional] The content of the processing instruction.
 	 * @return DOMProcessingInstruction The new DOMProcessingInstruction or false if an error occurred.
 	 */
 	public function createProcessingInstruction (string $target, string $data = null) {}
@@ -688,9 +570,7 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Create new attribute
 	 * @link http://www.php.net/manual/en/domdocument.createattribute.php
-	 * @param string $name <p>
-	 * The name of the attribute.
-	 * </p>
+	 * @param string $name The name of the attribute.
 	 * @return DOMAttr The new DOMAttr or false if an error occurred.
 	 */
 	public function createAttribute (string $name) {}
@@ -698,11 +578,9 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Create new entity reference node
 	 * @link http://www.php.net/manual/en/domdocument.createentityreference.php
-	 * @param string $name <p>
-	 * The content of the entity reference, e.g. the entity reference minus
+	 * @param string $name The content of the entity reference, e.g. the entity reference minus
 	 * the leading &amp; and the trailing
 	 * ; characters.
-	 * </p>
 	 * @return DOMEntityReference The new DOMEntityReference or false if an error
 	 * occurred.
 	 */
@@ -711,10 +589,8 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Searches for all elements with given local tag name
 	 * @link http://www.php.net/manual/en/domdocument.getelementsbytagname.php
-	 * @param string $name <p>
-	 * The local name (without namespace) of the tag to match on. The special value &#42;
-	 * matches all tags. 
-	 * </p>
+	 * @param string $name The local name (without namespace) of the tag to match on. The special value &#42;
+	 * matches all tags.
 	 * @return DOMNodeList A new DOMNodeList object containing all the matched 
 	 * elements.
 	 */
@@ -723,9 +599,7 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Import node into current document
 	 * @link http://www.php.net/manual/en/domdocument.importnode.php
-	 * @param DOMNode $importedNode <p>
-	 * The node to import.
-	 * </p>
+	 * @param DOMNode $importedNode The node to import.
 	 * @param bool $deep [optional] <p>
 	 * If set to true, this method will recursively import the subtree under
 	 * the importedNode.
@@ -740,16 +614,10 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Create new element node with an associated namespace
 	 * @link http://www.php.net/manual/en/domdocument.createelementns.php
-	 * @param string $namespaceURI <p>
-	 * The URI of the namespace.
-	 * </p>
-	 * @param string $qualifiedName <p>
-	 * The qualified name of the element, as prefix:tagname.
-	 * </p>
-	 * @param string $value [optional] <p>
-	 * The value of the element. By default, an empty element will be created.
+	 * @param string $namespaceURI The URI of the namespace.
+	 * @param string $qualifiedName The qualified name of the element, as prefix:tagname.
+	 * @param string $value [optional] The value of the element. By default, an empty element will be created.
 	 * You can also set the value later with DOMElement::$nodeValue.
-	 * </p>
 	 * @return DOMElement The new DOMElement or false if an error occurred.
 	 */
 	public function createElementNS (string $namespaceURI, string $qualifiedName, string $value = null) {}
@@ -757,12 +625,8 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Create new attribute node with an associated namespace
 	 * @link http://www.php.net/manual/en/domdocument.createattributens.php
-	 * @param string $namespaceURI <p>
-	 * The URI of the namespace.
-	 * </p>
-	 * @param string $qualifiedName <p>
-	 * The tag name and prefix of the attribute, as prefix:tagname.
-	 * </p>
+	 * @param string $namespaceURI The URI of the namespace.
+	 * @param string $qualifiedName The tag name and prefix of the attribute, as prefix:tagname.
 	 * @return DOMAttr The new DOMAttr or false if an error occurred.
 	 */
 	public function createAttributeNS (string $namespaceURI, string $qualifiedName) {}
@@ -770,14 +634,10 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Searches for all elements with given tag name in specified namespace
 	 * @link http://www.php.net/manual/en/domdocument.getelementsbytagnamens.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI of the elements to match on. 
+	 * @param string $namespaceURI The namespace URI of the elements to match on. 
 	 * The special value &#42; matches all namespaces.
-	 * </p>
-	 * @param string $localName <p>
-	 * The local name of the elements to match on. 
+	 * @param string $localName The local name of the elements to match on. 
 	 * The special value &#42; matches all local names.
-	 * </p>
 	 * @return DOMNodeList A new DOMNodeList object containing all the matched 
 	 * elements.
 	 */
@@ -786,9 +646,7 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Searches for an element with a certain id
 	 * @link http://www.php.net/manual/en/domdocument.getelementbyid.php
-	 * @param string $elementId <p>
-	 * The unique id value for an element.
-	 * </p>
+	 * @param string $elementId The unique id value for an element.
 	 * @return DOMElement the DOMElement or null if the element is
 	 * not found.
 	 */
@@ -816,13 +674,9 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Load XML from a file
 	 * @link http://www.php.net/manual/en/domdocument.load.php
-	 * @param string $filename <p>
-	 * The path to the XML document.
-	 * </p>
-	 * @param int $options [optional] <p>
-	 * Bitwise OR
+	 * @param string $filename The path to the XML document.
+	 * @param int $options [optional] Bitwise OR
 	 * of the libxml option constants.
-	 * </p>
 	 * @return mixed true on success or false on failure If called statically, returns a
 	 * DOMDocument or false on failure.
 	 */
@@ -831,12 +685,8 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Dumps the internal XML tree back into a file
 	 * @link http://www.php.net/manual/en/domdocument.save.php
-	 * @param string $filename <p>
-	 * The path to the saved XML document.
-	 * </p>
-	 * @param int $options [optional] <p>
-	 * Additional Options. Currently only LIBXML_NOEMPTYTAG is supported.
-	 * </p>
+	 * @param string $filename The path to the saved XML document.
+	 * @param int $options [optional] Additional Options. Currently only LIBXML_NOEMPTYTAG is supported.
 	 * @return int the number of bytes written or false if an error occurred.
 	 */
 	public function save (string $filename, int $options = null) {}
@@ -844,13 +694,9 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Load XML from a string
 	 * @link http://www.php.net/manual/en/domdocument.loadxml.php
-	 * @param string $source <p>
-	 * The string containing the XML.
-	 * </p>
-	 * @param int $options [optional] <p>
-	 * Bitwise OR
+	 * @param string $source The string containing the XML.
+	 * @param int $options [optional] Bitwise OR
 	 * of the libxml option constants.
-	 * </p>
 	 * @return mixed true on success or false on failure If called statically, returns a
 	 * DOMDocument or false on failure.
 	 */
@@ -859,13 +705,9 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Dumps the internal XML tree back into a string
 	 * @link http://www.php.net/manual/en/domdocument.savexml.php
-	 * @param DOMNode $node [optional] <p>
-	 * Use this parameter to output only a specific node without XML declaration
+	 * @param DOMNode $node [optional] Use this parameter to output only a specific node without XML declaration
 	 * rather than the entire document.
-	 * </p>
-	 * @param int $options [optional] <p>
-	 * Additional Options. Currently only LIBXML_NOEMPTYTAG is supported.
-	 * </p>
+	 * @param int $options [optional] Additional Options. Currently only LIBXML_NOEMPTYTAG is supported.
 	 * @return string the XML, or false if an error occurred.
 	 */
 	public function saveXML (DOMNode $node = null, int $options = null) {}
@@ -889,10 +731,8 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Substitutes XIncludes in a DOMDocument Object
 	 * @link http://www.php.net/manual/en/domdocument.xinclude.php
-	 * @param int $options [optional] <p>
-	 * libxml parameters. Available
+	 * @param int $options [optional] libxml parameters. Available
 	 * since PHP 5.1.0 and Libxml 2.6.7.
-	 * </p>
 	 * @return int the number of XIncludes in the document, -1 if some processing failed,
 	 * or false if there were no substitutions.
 	 */
@@ -901,13 +741,9 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Load HTML from a string
 	 * @link http://www.php.net/manual/en/domdocument.loadhtml.php
-	 * @param string $source <p>
-	 * The HTML string.
-	 * </p>
-	 * @param int $options [optional] <p>
-	 * Since PHP 5.4.0 and Libxml 2.6.0, you may also use the
+	 * @param string $source The HTML string.
+	 * @param int $options [optional] Since PHP 5.4.0 and Libxml 2.6.0, you may also use the
 	 * options parameter to specify additional Libxml parameters.
-	 * </p>
 	 * @return bool true on success or false on failure If called statically, returns a
 	 * DOMDocument or false on failure.
 	 */
@@ -916,13 +752,9 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Load HTML from a file
 	 * @link http://www.php.net/manual/en/domdocument.loadhtmlfile.php
-	 * @param string $filename <p>
-	 * The path to the HTML file.
-	 * </p>
-	 * @param int $options [optional] <p>
-	 * Since PHP 5.4.0 and Libxml 2.6.0, you may also use the
+	 * @param string $filename The path to the HTML file.
+	 * @param int $options [optional] Since PHP 5.4.0 and Libxml 2.6.0, you may also use the
 	 * options parameter to specify additional Libxml parameters.
-	 * </p>
 	 * @return bool true on success or false on failure If called statically, returns a
 	 * DOMDocument or false on failure.
 	 */
@@ -931,9 +763,7 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Dumps the internal document into a string using HTML formatting
 	 * @link http://www.php.net/manual/en/domdocument.savehtml.php
-	 * @param DOMNode $node [optional] <p>
-	 * Optional parameter to output a subset of the document.
-	 * </p>
+	 * @param DOMNode $node [optional] Optional parameter to output a subset of the document.
 	 * @return string the HTML, or false if an error occurred.
 	 */
 	public function saveHTML (DOMNode $node = null) {}
@@ -941,9 +771,7 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Dumps the internal document into a file using HTML formatting
 	 * @link http://www.php.net/manual/en/domdocument.savehtmlfile.php
-	 * @param string $filename <p>
-	 * The path to the saved HTML document.
-	 * </p>
+	 * @param string $filename The path to the saved HTML document.
 	 * @return int the number of bytes written or false if an error occurred.
 	 */
 	public function saveHTMLFile (string $filename) {}
@@ -951,12 +779,8 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Validates a document based on a schema
 	 * @link http://www.php.net/manual/en/domdocument.schemavalidate.php
-	 * @param string $filename <p>
-	 * The path to the schema.
-	 * </p>
-	 * @param int $flags [optional] <p>
-	 * A bitmask of Libxml schema validation flags. Currently the only supported value is LIBXML_SCHEMA_CREATE. Available since PHP 5.5.2 and Libxml 2.6.14.
-	 * </p>
+	 * @param string $filename The path to the schema.
+	 * @param int $flags [optional] A bitmask of Libxml schema validation flags. Currently the only supported value is LIBXML_SCHEMA_CREATE. Available since PHP 5.5.2 and Libxml 2.6.14.
 	 * @return bool true on success or false on failure
 	 */
 	public function schemaValidate (string $filename, int $flags = null) {}
@@ -964,12 +788,8 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Validates a document based on a schema
 	 * @link http://www.php.net/manual/en/domdocument.schemavalidatesource.php
-	 * @param string $source <p>
-	 * A string containing the schema.
-	 * </p>
-	 * @param int $flags [optional] <p>
-	 * A bitmask of Libxml schema validation flags. Currently the only supported value is LIBXML_SCHEMA_CREATE. Available since PHP 5.5.2 and Libxml 2.6.14.
-	 * </p>
+	 * @param string $source A string containing the schema.
+	 * @param int $flags [optional] A bitmask of Libxml schema validation flags. Currently the only supported value is LIBXML_SCHEMA_CREATE. Available since PHP 5.5.2 and Libxml 2.6.14.
 	 * @return bool true on success or false on failure
 	 */
 	public function schemaValidateSource (string $source, int $flags = null) {}
@@ -977,9 +797,7 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Performs relaxNG validation on the document
 	 * @link http://www.php.net/manual/en/domdocument.relaxngvalidate.php
-	 * @param string $filename <p>
-	 * The RNG file.
-	 * </p>
+	 * @param string $filename The RNG file.
 	 * @return bool true on success or false on failure
 	 */
 	public function relaxNGValidate (string $filename) {}
@@ -987,9 +805,7 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Performs relaxNG validation on the document
 	 * @link http://www.php.net/manual/en/domdocument.relaxngvalidatesource.php
-	 * @param string $source <p>
-	 * A string containing the RNG schema.
-	 * </p>
+	 * @param string $source A string containing the RNG schema.
 	 * @return bool true on success or false on failure
 	 */
 	public function relaxNGValidateSource (string $source) {}
@@ -997,15 +813,11 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Register extended class used to create base node type
 	 * @link http://www.php.net/manual/en/domdocument.registernodeclass.php
-	 * @param string $baseclass <p>
-	 * The DOM class that you want to extend. You can find a list of these 
+	 * @param string $baseclass The DOM class that you want to extend. You can find a list of these 
 	 * classes in the chapter introduction.
-	 * </p>
-	 * @param string $extendedclass <p>
-	 * Your extended class name. If null is provided, any previously 
+	 * @param string $extendedclass Your extended class name. If null is provided, any previously 
 	 * registered class extending baseclass will
 	 * be removed.
-	 * </p>
 	 * @return bool true on success or false on failure
 	 */
 	public function registerNodeClass (string $baseclass, string $extendedclass) {}
@@ -1013,13 +825,9 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Adds a new child before a reference node
 	 * @link http://www.php.net/manual/en/domnode.insertbefore.php
-	 * @param DOMNode $newnode <p>
-	 * The new node.
-	 * </p>
-	 * @param DOMNode $refnode [optional] <p>
-	 * The reference node. If not supplied, newnode is
+	 * @param DOMNode $newnode The new node.
+	 * @param DOMNode $refnode [optional] The reference node. If not supplied, newnode is
 	 * appended to the children.
-	 * </p>
 	 * @return DOMNode The inserted node.
 	 */
 	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
@@ -1027,14 +835,10 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Replaces a child
 	 * @link http://www.php.net/manual/en/domnode.replacechild.php
-	 * @param DOMNode $newnode <p>
-	 * The new node. It must be a member of the target document, i.e.
+	 * @param DOMNode $newnode The new node. It must be a member of the target document, i.e.
 	 * created by one of the DOMDocument->createXXX() methods or imported in
 	 * the document by .
-	 * </p>
-	 * @param DOMNode $oldnode <p>
-	 * The old node.
-	 * </p>
+	 * @param DOMNode $oldnode The old node.
 	 * @return DOMNode The old node or false if an error occur.
 	 */
 	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
@@ -1042,9 +846,7 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Removes child from list of children
 	 * @link http://www.php.net/manual/en/domnode.removechild.php
-	 * @param DOMNode $oldnode <p>
-	 * The removed child.
-	 * </p>
+	 * @param DOMNode $oldnode The removed child.
 	 * @return DOMNode If the child could be removed the function returns the old child.
 	 */
 	public function removeChild (DOMNode $oldnode) {}
@@ -1052,9 +854,7 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Adds new child at the end of the children
 	 * @link http://www.php.net/manual/en/domnode.appendchild.php
-	 * @param DOMNode $newnode <p>
-	 * The appended child.
-	 * </p>
+	 * @param DOMNode $newnode The appended child.
 	 * @return DOMNode The node added.
 	 */
 	public function appendChild (DOMNode $newnode) {}
@@ -1069,10 +869,8 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Clones a node
 	 * @link http://www.php.net/manual/en/domnode.clonenode.php
-	 * @param bool $deep [optional] <p>
-	 * Indicates whether to copy all descendant nodes. This parameter is 
+	 * @param bool $deep [optional] Indicates whether to copy all descendant nodes. This parameter is 
 	 * defaulted to false.
-	 * </p>
 	 * @return DOMNode The cloned node.
 	 */
 	public function cloneNode (bool $deep = null) {}
@@ -1087,14 +885,10 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Checks if feature is supported for specified version
 	 * @link http://www.php.net/manual/en/domnode.issupported.php
-	 * @param string $feature <p>
-	 * The feature to test. See the example of 
+	 * @param string $feature The feature to test. See the example of 
 	 * DOMImplementation::hasFeature for a
 	 * list of features.
-	 * </p>
-	 * @param string $version <p>
-	 * The version number of the feature to test.
-	 * </p>
+	 * @param string $version The version number of the feature to test.
 	 * @return bool true on success or false on failure
 	 */
 	public function isSupported (string $feature, string $version) {}
@@ -1114,9 +908,7 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Indicates if two nodes are the same node
 	 * @link http://www.php.net/manual/en/domnode.issamenode.php
-	 * @param DOMNode $node <p>
-	 * The compared node.
-	 * </p>
+	 * @param DOMNode $node The compared node.
 	 * @return bool true on success or false on failure
 	 */
 	public function isSameNode (DOMNode $node) {}
@@ -1124,9 +916,7 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Gets the namespace prefix of the node based on the namespace URI
 	 * @link http://www.php.net/manual/en/domnode.lookupprefix.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI.
 	 * @return string The prefix of the namespace.
 	 */
 	public function lookupPrefix (string $namespaceURI) {}
@@ -1134,9 +924,7 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
 	 * @link http://www.php.net/manual/en/domnode.isdefaultnamespace.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI to look for.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI to look for.
 	 * @return bool Return true if namespaceURI is the default
 	 * namespace, false otherwise.
 	 */
@@ -1145,9 +933,7 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Gets the namespace URI of the node based on the prefix
 	 * @link http://www.php.net/manual/en/domnode.lookupnamespaceuri.php
-	 * @param string $prefix <p>
-	 * The prefix of the namespace.
-	 * </p>
+	 * @param string $prefix The prefix of the namespace.
 	 * @return string The namespace URI of the node.
 	 */
 	public function lookupNamespaceUri (string $prefix) {}
@@ -1192,19 +978,11 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Canonicalize nodes to a string
 	 * @link http://www.php.net/manual/en/domnode.c14n.php
-	 * @param bool $exclusive [optional] <p>
-	 * Enable exclusive parsing of only the nodes matched by the provided
+	 * @param bool $exclusive [optional] Enable exclusive parsing of only the nodes matched by the provided
 	 * xpath or namespace prefixes.
-	 * </p>
-	 * @param bool $with_comments [optional] <p>
-	 * Retain comments in output.
-	 * </p>
-	 * @param array $xpath [optional] <p>
-	 * An array of xpaths to filter the nodes by.
-	 * </p>
-	 * @param array $ns_prefixes [optional] <p>
-	 * An array of namespace prefixes to filter the nodes by.
-	 * </p>
+	 * @param bool $with_comments [optional] Retain comments in output.
+	 * @param array $xpath [optional] An array of xpaths to filter the nodes by.
+	 * @param array $ns_prefixes [optional] An array of namespace prefixes to filter the nodes by.
 	 * @return string canonicalized nodes as a string or false on failure
 	 */
 	public function C14N (bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
@@ -1212,22 +990,12 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * Canonicalize nodes to a file
 	 * @link http://www.php.net/manual/en/domnode.c14nfile.php
-	 * @param string $uri <p>
-	 * Path to write the output to.
-	 * </p>
-	 * @param bool $exclusive [optional] <p>
-	 * Enable exclusive parsing of only the nodes matched by the provided
+	 * @param string $uri Path to write the output to.
+	 * @param bool $exclusive [optional] Enable exclusive parsing of only the nodes matched by the provided
 	 * xpath or namespace prefixes.
-	 * </p>
-	 * @param bool $with_comments [optional] <p>
-	 * Retain comments in output.
-	 * </p>
-	 * @param array $xpath [optional] <p>
-	 * An array of xpaths to filter the nodes by.
-	 * </p>
-	 * @param array $ns_prefixes [optional] <p>
-	 * An array of namespace prefixes to filter the nodes by.
-	 * </p>
+	 * @param bool $with_comments [optional] Retain comments in output.
+	 * @param array $xpath [optional] An array of xpaths to filter the nodes by.
+	 * @param array $ns_prefixes [optional] An array of namespace prefixes to filter the nodes by.
 	 * @return int Number of bytes written or false on failure
 	 */
 	public function C14NFile (string $uri, bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
@@ -1239,9 +1007,7 @@ class DOMNodeList implements Traversable {
 	/**
 	 * Retrieves a node specified by index
 	 * @link http://www.php.net/manual/en/domnodelist.item.php
-	 * @param int $index <p>
-	 * Index of the node into the collection.
-	 * </p>
+	 * @param int $index Index of the node into the collection.
 	 * @return DOMNode The node at the indexth position in the 
 	 * DOMNodeList, or null if that is not a valid
 	 * index.
@@ -1255,9 +1021,7 @@ class DOMNamedNodeMap implements Traversable {
 	/**
 	 * Retrieves a node specified by name
 	 * @link http://www.php.net/manual/en/domnamednodemap.getnameditem.php
-	 * @param string $name <p>
-	 * The nodeName of the node to retrieve.
-	 * </p>
+	 * @param string $name The nodeName of the node to retrieve.
 	 * @return DOMNode A node (of any type) with the specified nodeName, or 
 	 * null if no node is found.
 	 */
@@ -1276,9 +1040,7 @@ class DOMNamedNodeMap implements Traversable {
 	/**
 	 * Retrieves a node specified by index
 	 * @link http://www.php.net/manual/en/domnamednodemap.item.php
-	 * @param int $index <p>
-	 * Index into this map.
-	 * </p>
+	 * @param int $index Index into this map.
 	 * @return DOMNode The node at the indexth position in the map, or null
 	 * if that is not a valid index (greater than or equal to the number of nodes 
 	 * in this map).
@@ -1288,12 +1050,8 @@ class DOMNamedNodeMap implements Traversable {
 	/**
 	 * Retrieves a node specified by local name and namespace URI
 	 * @link http://www.php.net/manual/en/domnamednodemap.getnameditemns.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI of the node to retrieve.
-	 * </p>
-	 * @param string $localName <p>
-	 * The local name of the node to retrieve.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI of the node to retrieve.
+	 * @param string $localName The local name of the node to retrieve.
 	 * @return DOMNode A node (of any type) with the specified local name and namespace URI, or 
 	 * null if no node is found.
 	 */
@@ -1317,12 +1075,8 @@ class DOMCharacterData extends DOMNode  {
 	/**
 	 * Extracts a range of data from the node
 	 * @link http://www.php.net/manual/en/domcharacterdata.substringdata.php
-	 * @param int $offset <p>
-	 * Start offset of substring to extract.
-	 * </p>
-	 * @param int $count <p>
-	 * The number of characters to extract.
-	 * </p>
+	 * @param int $offset Start offset of substring to extract.
+	 * @param int $count The number of characters to extract.
 	 * @return string The specified substring. If the sum of offset 
 	 * and count exceeds the length, then all 16-bit units 
 	 * to the end of the data are returned.
@@ -1332,9 +1086,7 @@ class DOMCharacterData extends DOMNode  {
 	/**
 	 * Append the string to the end of the character data of the node
 	 * @link http://www.php.net/manual/en/domcharacterdata.appenddata.php
-	 * @param string $data <p>
-	 * The string to append.
-	 * </p>
+	 * @param string $data The string to append.
 	 * @return void 
 	 */
 	public function appendData (string $data) {}
@@ -1342,12 +1094,8 @@ class DOMCharacterData extends DOMNode  {
 	/**
 	 * Insert a string at the specified 16-bit unit offset
 	 * @link http://www.php.net/manual/en/domcharacterdata.insertdata.php
-	 * @param int $offset <p>
-	 * The character offset at which to insert.
-	 * </p>
-	 * @param string $data <p>
-	 * The string to insert.
-	 * </p>
+	 * @param int $offset The character offset at which to insert.
+	 * @param string $data The string to insert.
 	 * @return void 
 	 */
 	public function insertData (int $offset, string $data) {}
@@ -1355,14 +1103,10 @@ class DOMCharacterData extends DOMNode  {
 	/**
 	 * Remove a range of characters from the node
 	 * @link http://www.php.net/manual/en/domcharacterdata.deletedata.php
-	 * @param int $offset <p>
-	 * The offset from which to start removing.
-	 * </p>
-	 * @param int $count <p>
-	 * The number of characters to delete. If the sum of 
+	 * @param int $offset The offset from which to start removing.
+	 * @param int $count The number of characters to delete. If the sum of 
 	 * offset and count exceeds
 	 * the length, then all characters to the end of the data are deleted.
-	 * </p>
 	 * @return void 
 	 */
 	public function deleteData (int $offset, int $count) {}
@@ -1370,17 +1114,11 @@ class DOMCharacterData extends DOMNode  {
 	/**
 	 * Replace a substring within the DOMCharacterData node
 	 * @link http://www.php.net/manual/en/domcharacterdata.replacedata.php
-	 * @param int $offset <p>
-	 * The offset from which to start replacing.
-	 * </p>
-	 * @param int $count <p>
-	 * The number of characters to replace. If the sum of 
+	 * @param int $offset The offset from which to start replacing.
+	 * @param int $count The number of characters to replace. If the sum of 
 	 * offset and count exceeds
 	 * the length, then all characters to the end of the data are replaced.
-	 * </p>
-	 * @param string $data <p>
-	 * The string with which the range must be replaced.
-	 * </p>
+	 * @param string $data The string with which the range must be replaced.
 	 * @return void 
 	 */
 	public function replaceData (int $offset, int $count, string $data) {}
@@ -1388,13 +1126,9 @@ class DOMCharacterData extends DOMNode  {
 	/**
 	 * Adds a new child before a reference node
 	 * @link http://www.php.net/manual/en/domnode.insertbefore.php
-	 * @param DOMNode $newnode <p>
-	 * The new node.
-	 * </p>
-	 * @param DOMNode $refnode [optional] <p>
-	 * The reference node. If not supplied, newnode is
+	 * @param DOMNode $newnode The new node.
+	 * @param DOMNode $refnode [optional] The reference node. If not supplied, newnode is
 	 * appended to the children.
-	 * </p>
 	 * @return DOMNode The inserted node.
 	 */
 	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
@@ -1402,14 +1136,10 @@ class DOMCharacterData extends DOMNode  {
 	/**
 	 * Replaces a child
 	 * @link http://www.php.net/manual/en/domnode.replacechild.php
-	 * @param DOMNode $newnode <p>
-	 * The new node. It must be a member of the target document, i.e.
+	 * @param DOMNode $newnode The new node. It must be a member of the target document, i.e.
 	 * created by one of the DOMDocument->createXXX() methods or imported in
 	 * the document by .
-	 * </p>
-	 * @param DOMNode $oldnode <p>
-	 * The old node.
-	 * </p>
+	 * @param DOMNode $oldnode The old node.
 	 * @return DOMNode The old node or false if an error occur.
 	 */
 	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
@@ -1417,9 +1147,7 @@ class DOMCharacterData extends DOMNode  {
 	/**
 	 * Removes child from list of children
 	 * @link http://www.php.net/manual/en/domnode.removechild.php
-	 * @param DOMNode $oldnode <p>
-	 * The removed child.
-	 * </p>
+	 * @param DOMNode $oldnode The removed child.
 	 * @return DOMNode If the child could be removed the function returns the old child.
 	 */
 	public function removeChild (DOMNode $oldnode) {}
@@ -1427,9 +1155,7 @@ class DOMCharacterData extends DOMNode  {
 	/**
 	 * Adds new child at the end of the children
 	 * @link http://www.php.net/manual/en/domnode.appendchild.php
-	 * @param DOMNode $newnode <p>
-	 * The appended child.
-	 * </p>
+	 * @param DOMNode $newnode The appended child.
 	 * @return DOMNode The node added.
 	 */
 	public function appendChild (DOMNode $newnode) {}
@@ -1444,10 +1170,8 @@ class DOMCharacterData extends DOMNode  {
 	/**
 	 * Clones a node
 	 * @link http://www.php.net/manual/en/domnode.clonenode.php
-	 * @param bool $deep [optional] <p>
-	 * Indicates whether to copy all descendant nodes. This parameter is 
+	 * @param bool $deep [optional] Indicates whether to copy all descendant nodes. This parameter is 
 	 * defaulted to false.
-	 * </p>
 	 * @return DOMNode The cloned node.
 	 */
 	public function cloneNode (bool $deep = null) {}
@@ -1462,14 +1186,10 @@ class DOMCharacterData extends DOMNode  {
 	/**
 	 * Checks if feature is supported for specified version
 	 * @link http://www.php.net/manual/en/domnode.issupported.php
-	 * @param string $feature <p>
-	 * The feature to test. See the example of 
+	 * @param string $feature The feature to test. See the example of 
 	 * DOMImplementation::hasFeature for a
 	 * list of features.
-	 * </p>
-	 * @param string $version <p>
-	 * The version number of the feature to test.
-	 * </p>
+	 * @param string $version The version number of the feature to test.
 	 * @return bool true on success or false on failure
 	 */
 	public function isSupported (string $feature, string $version) {}
@@ -1489,9 +1209,7 @@ class DOMCharacterData extends DOMNode  {
 	/**
 	 * Indicates if two nodes are the same node
 	 * @link http://www.php.net/manual/en/domnode.issamenode.php
-	 * @param DOMNode $node <p>
-	 * The compared node.
-	 * </p>
+	 * @param DOMNode $node The compared node.
 	 * @return bool true on success or false on failure
 	 */
 	public function isSameNode (DOMNode $node) {}
@@ -1499,9 +1217,7 @@ class DOMCharacterData extends DOMNode  {
 	/**
 	 * Gets the namespace prefix of the node based on the namespace URI
 	 * @link http://www.php.net/manual/en/domnode.lookupprefix.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI.
 	 * @return string The prefix of the namespace.
 	 */
 	public function lookupPrefix (string $namespaceURI) {}
@@ -1509,9 +1225,7 @@ class DOMCharacterData extends DOMNode  {
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
 	 * @link http://www.php.net/manual/en/domnode.isdefaultnamespace.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI to look for.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI to look for.
 	 * @return bool Return true if namespaceURI is the default
 	 * namespace, false otherwise.
 	 */
@@ -1520,9 +1234,7 @@ class DOMCharacterData extends DOMNode  {
 	/**
 	 * Gets the namespace URI of the node based on the prefix
 	 * @link http://www.php.net/manual/en/domnode.lookupnamespaceuri.php
-	 * @param string $prefix <p>
-	 * The prefix of the namespace.
-	 * </p>
+	 * @param string $prefix The prefix of the namespace.
 	 * @return string The namespace URI of the node.
 	 */
 	public function lookupNamespaceUri (string $prefix) {}
@@ -1567,19 +1279,11 @@ class DOMCharacterData extends DOMNode  {
 	/**
 	 * Canonicalize nodes to a string
 	 * @link http://www.php.net/manual/en/domnode.c14n.php
-	 * @param bool $exclusive [optional] <p>
-	 * Enable exclusive parsing of only the nodes matched by the provided
+	 * @param bool $exclusive [optional] Enable exclusive parsing of only the nodes matched by the provided
 	 * xpath or namespace prefixes.
-	 * </p>
-	 * @param bool $with_comments [optional] <p>
-	 * Retain comments in output.
-	 * </p>
-	 * @param array $xpath [optional] <p>
-	 * An array of xpaths to filter the nodes by.
-	 * </p>
-	 * @param array $ns_prefixes [optional] <p>
-	 * An array of namespace prefixes to filter the nodes by.
-	 * </p>
+	 * @param bool $with_comments [optional] Retain comments in output.
+	 * @param array $xpath [optional] An array of xpaths to filter the nodes by.
+	 * @param array $ns_prefixes [optional] An array of namespace prefixes to filter the nodes by.
 	 * @return string canonicalized nodes as a string or false on failure
 	 */
 	public function C14N (bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
@@ -1587,22 +1291,12 @@ class DOMCharacterData extends DOMNode  {
 	/**
 	 * Canonicalize nodes to a file
 	 * @link http://www.php.net/manual/en/domnode.c14nfile.php
-	 * @param string $uri <p>
-	 * Path to write the output to.
-	 * </p>
-	 * @param bool $exclusive [optional] <p>
-	 * Enable exclusive parsing of only the nodes matched by the provided
+	 * @param string $uri Path to write the output to.
+	 * @param bool $exclusive [optional] Enable exclusive parsing of only the nodes matched by the provided
 	 * xpath or namespace prefixes.
-	 * </p>
-	 * @param bool $with_comments [optional] <p>
-	 * Retain comments in output.
-	 * </p>
-	 * @param array $xpath [optional] <p>
-	 * An array of xpaths to filter the nodes by.
-	 * </p>
-	 * @param array $ns_prefixes [optional] <p>
-	 * An array of namespace prefixes to filter the nodes by.
-	 * </p>
+	 * @param bool $with_comments [optional] Retain comments in output.
+	 * @param array $xpath [optional] An array of xpaths to filter the nodes by.
+	 * @param array $ns_prefixes [optional] An array of namespace prefixes to filter the nodes by.
 	 * @return int Number of bytes written or false on failure
 	 */
 	public function C14NFile (string $uri, bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
@@ -1629,13 +1323,9 @@ class DOMAttr extends DOMNode  {
 	/**
 	 * Adds a new child before a reference node
 	 * @link http://www.php.net/manual/en/domnode.insertbefore.php
-	 * @param DOMNode $newnode <p>
-	 * The new node.
-	 * </p>
-	 * @param DOMNode $refnode [optional] <p>
-	 * The reference node. If not supplied, newnode is
+	 * @param DOMNode $newnode The new node.
+	 * @param DOMNode $refnode [optional] The reference node. If not supplied, newnode is
 	 * appended to the children.
-	 * </p>
 	 * @return DOMNode The inserted node.
 	 */
 	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
@@ -1643,14 +1333,10 @@ class DOMAttr extends DOMNode  {
 	/**
 	 * Replaces a child
 	 * @link http://www.php.net/manual/en/domnode.replacechild.php
-	 * @param DOMNode $newnode <p>
-	 * The new node. It must be a member of the target document, i.e.
+	 * @param DOMNode $newnode The new node. It must be a member of the target document, i.e.
 	 * created by one of the DOMDocument->createXXX() methods or imported in
 	 * the document by .
-	 * </p>
-	 * @param DOMNode $oldnode <p>
-	 * The old node.
-	 * </p>
+	 * @param DOMNode $oldnode The old node.
 	 * @return DOMNode The old node or false if an error occur.
 	 */
 	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
@@ -1658,9 +1344,7 @@ class DOMAttr extends DOMNode  {
 	/**
 	 * Removes child from list of children
 	 * @link http://www.php.net/manual/en/domnode.removechild.php
-	 * @param DOMNode $oldnode <p>
-	 * The removed child.
-	 * </p>
+	 * @param DOMNode $oldnode The removed child.
 	 * @return DOMNode If the child could be removed the function returns the old child.
 	 */
 	public function removeChild (DOMNode $oldnode) {}
@@ -1668,9 +1352,7 @@ class DOMAttr extends DOMNode  {
 	/**
 	 * Adds new child at the end of the children
 	 * @link http://www.php.net/manual/en/domnode.appendchild.php
-	 * @param DOMNode $newnode <p>
-	 * The appended child.
-	 * </p>
+	 * @param DOMNode $newnode The appended child.
 	 * @return DOMNode The node added.
 	 */
 	public function appendChild (DOMNode $newnode) {}
@@ -1685,10 +1367,8 @@ class DOMAttr extends DOMNode  {
 	/**
 	 * Clones a node
 	 * @link http://www.php.net/manual/en/domnode.clonenode.php
-	 * @param bool $deep [optional] <p>
-	 * Indicates whether to copy all descendant nodes. This parameter is 
+	 * @param bool $deep [optional] Indicates whether to copy all descendant nodes. This parameter is 
 	 * defaulted to false.
-	 * </p>
 	 * @return DOMNode The cloned node.
 	 */
 	public function cloneNode (bool $deep = null) {}
@@ -1703,14 +1383,10 @@ class DOMAttr extends DOMNode  {
 	/**
 	 * Checks if feature is supported for specified version
 	 * @link http://www.php.net/manual/en/domnode.issupported.php
-	 * @param string $feature <p>
-	 * The feature to test. See the example of 
+	 * @param string $feature The feature to test. See the example of 
 	 * DOMImplementation::hasFeature for a
 	 * list of features.
-	 * </p>
-	 * @param string $version <p>
-	 * The version number of the feature to test.
-	 * </p>
+	 * @param string $version The version number of the feature to test.
 	 * @return bool true on success or false on failure
 	 */
 	public function isSupported (string $feature, string $version) {}
@@ -1730,9 +1406,7 @@ class DOMAttr extends DOMNode  {
 	/**
 	 * Indicates if two nodes are the same node
 	 * @link http://www.php.net/manual/en/domnode.issamenode.php
-	 * @param DOMNode $node <p>
-	 * The compared node.
-	 * </p>
+	 * @param DOMNode $node The compared node.
 	 * @return bool true on success or false on failure
 	 */
 	public function isSameNode (DOMNode $node) {}
@@ -1740,9 +1414,7 @@ class DOMAttr extends DOMNode  {
 	/**
 	 * Gets the namespace prefix of the node based on the namespace URI
 	 * @link http://www.php.net/manual/en/domnode.lookupprefix.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI.
 	 * @return string The prefix of the namespace.
 	 */
 	public function lookupPrefix (string $namespaceURI) {}
@@ -1750,9 +1422,7 @@ class DOMAttr extends DOMNode  {
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
 	 * @link http://www.php.net/manual/en/domnode.isdefaultnamespace.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI to look for.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI to look for.
 	 * @return bool Return true if namespaceURI is the default
 	 * namespace, false otherwise.
 	 */
@@ -1761,9 +1431,7 @@ class DOMAttr extends DOMNode  {
 	/**
 	 * Gets the namespace URI of the node based on the prefix
 	 * @link http://www.php.net/manual/en/domnode.lookupnamespaceuri.php
-	 * @param string $prefix <p>
-	 * The prefix of the namespace.
-	 * </p>
+	 * @param string $prefix The prefix of the namespace.
 	 * @return string The namespace URI of the node.
 	 */
 	public function lookupNamespaceUri (string $prefix) {}
@@ -1808,19 +1476,11 @@ class DOMAttr extends DOMNode  {
 	/**
 	 * Canonicalize nodes to a string
 	 * @link http://www.php.net/manual/en/domnode.c14n.php
-	 * @param bool $exclusive [optional] <p>
-	 * Enable exclusive parsing of only the nodes matched by the provided
+	 * @param bool $exclusive [optional] Enable exclusive parsing of only the nodes matched by the provided
 	 * xpath or namespace prefixes.
-	 * </p>
-	 * @param bool $with_comments [optional] <p>
-	 * Retain comments in output.
-	 * </p>
-	 * @param array $xpath [optional] <p>
-	 * An array of xpaths to filter the nodes by.
-	 * </p>
-	 * @param array $ns_prefixes [optional] <p>
-	 * An array of namespace prefixes to filter the nodes by.
-	 * </p>
+	 * @param bool $with_comments [optional] Retain comments in output.
+	 * @param array $xpath [optional] An array of xpaths to filter the nodes by.
+	 * @param array $ns_prefixes [optional] An array of namespace prefixes to filter the nodes by.
 	 * @return string canonicalized nodes as a string or false on failure
 	 */
 	public function C14N (bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
@@ -1828,22 +1488,12 @@ class DOMAttr extends DOMNode  {
 	/**
 	 * Canonicalize nodes to a file
 	 * @link http://www.php.net/manual/en/domnode.c14nfile.php
-	 * @param string $uri <p>
-	 * Path to write the output to.
-	 * </p>
-	 * @param bool $exclusive [optional] <p>
-	 * Enable exclusive parsing of only the nodes matched by the provided
+	 * @param string $uri Path to write the output to.
+	 * @param bool $exclusive [optional] Enable exclusive parsing of only the nodes matched by the provided
 	 * xpath or namespace prefixes.
-	 * </p>
-	 * @param bool $with_comments [optional] <p>
-	 * Retain comments in output.
-	 * </p>
-	 * @param array $xpath [optional] <p>
-	 * An array of xpaths to filter the nodes by.
-	 * </p>
-	 * @param array $ns_prefixes [optional] <p>
-	 * An array of namespace prefixes to filter the nodes by.
-	 * </p>
+	 * @param bool $with_comments [optional] Retain comments in output.
+	 * @param array $xpath [optional] An array of xpaths to filter the nodes by.
+	 * @param array $ns_prefixes [optional] An array of namespace prefixes to filter the nodes by.
 	 * @return int Number of bytes written or false on failure
 	 */
 	public function C14NFile (string $uri, bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
@@ -1855,9 +1505,7 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Returns value of attribute
 	 * @link http://www.php.net/manual/en/domelement.getattribute.php
-	 * @param string $name <p>
-	 * The name of the attribute.
-	 * </p>
+	 * @param string $name The name of the attribute.
 	 * @return string The value of the attribute, or an empty string if no attribute with the
 	 * given name is found.
 	 */
@@ -1866,12 +1514,8 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Adds new attribute
 	 * @link http://www.php.net/manual/en/domelement.setattribute.php
-	 * @param string $name <p>
-	 * The name of the attribute.
-	 * </p>
-	 * @param string $value <p>
-	 * The value of the attribute.
-	 * </p>
+	 * @param string $name The name of the attribute.
+	 * @param string $value The value of the attribute.
 	 * @return DOMAttr The new DOMAttr or false if an error occurred.
 	 */
 	public function setAttribute (string $name, string $value) {}
@@ -1879,9 +1523,7 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Removes attribute
 	 * @link http://www.php.net/manual/en/domelement.removeattribute.php
-	 * @param string $name <p>
-	 * The name of the attribute.
-	 * </p>
+	 * @param string $name The name of the attribute.
 	 * @return bool true on success or false on failure
 	 */
 	public function removeAttribute (string $name) {}
@@ -1889,9 +1531,7 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Returns attribute node
 	 * @link http://www.php.net/manual/en/domelement.getattributenode.php
-	 * @param string $name <p>
-	 * The name of the attribute.
-	 * </p>
+	 * @param string $name The name of the attribute.
 	 * @return DOMAttr The attribute node. Note that for XML namespace declarations
 	 * (xmlns and xmlns:&#42; attributes) an 
 	 * instance of DOMNameSpaceNode is returned instead of a
@@ -1902,9 +1542,7 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Adds new attribute node to element
 	 * @link http://www.php.net/manual/en/domelement.setattributenode.php
-	 * @param DOMAttr $attr <p>
-	 * The attribute node.
-	 * </p>
+	 * @param DOMAttr $attr The attribute node.
 	 * @return DOMAttr old node if the attribute has been replaced or null.
 	 */
 	public function setAttributeNode (DOMAttr $attr) {}
@@ -1912,9 +1550,7 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Removes attribute
 	 * @link http://www.php.net/manual/en/domelement.removeattributenode.php
-	 * @param DOMAttr $oldnode <p>
-	 * The attribute node.
-	 * </p>
+	 * @param DOMAttr $oldnode The attribute node.
 	 * @return bool true on success or false on failure
 	 */
 	public function removeAttributeNode (DOMAttr $oldnode) {}
@@ -1922,10 +1558,8 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Gets elements by tagname
 	 * @link http://www.php.net/manual/en/domelement.getelementsbytagname.php
-	 * @param string $name <p>
-	 * The tag name. Use &#42; to return all elements within 
+	 * @param string $name The tag name. Use &#42; to return all elements within 
 	 * the element tree.
-	 * </p>
 	 * @return DOMNodeList This function returns a new instance of the class
 	 * DOMNodeList of all matched elements.
 	 */
@@ -1934,12 +1568,8 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Returns value of attribute
 	 * @link http://www.php.net/manual/en/domelement.getattributens.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI.
-	 * </p>
-	 * @param string $localName <p>
-	 * The local name.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI.
+	 * @param string $localName The local name.
 	 * @return string The value of the attribute, or an empty string if no attribute with the
 	 * given localName and namespaceURI 
 	 * is found.
@@ -1949,15 +1579,9 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Adds new attribute
 	 * @link http://www.php.net/manual/en/domelement.setattributens.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI.
-	 * </p>
-	 * @param string $qualifiedName <p>
-	 * The qualified name of the attribute, as prefix:tagname.
-	 * </p>
-	 * @param string $value <p>
-	 * The value of the attribute.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI.
+	 * @param string $qualifiedName The qualified name of the attribute, as prefix:tagname.
+	 * @param string $value The value of the attribute.
 	 * @return void 
 	 */
 	public function setAttributeNS (string $namespaceURI, string $qualifiedName, string $value) {}
@@ -1965,12 +1589,8 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Removes attribute
 	 * @link http://www.php.net/manual/en/domelement.removeattributens.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI.
-	 * </p>
-	 * @param string $localName <p>
-	 * The local name.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI.
+	 * @param string $localName The local name.
 	 * @return bool true on success or false on failure
 	 */
 	public function removeAttributeNS (string $namespaceURI, string $localName) {}
@@ -1978,12 +1598,8 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Returns attribute node
 	 * @link http://www.php.net/manual/en/domelement.getattributenodens.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI.
-	 * </p>
-	 * @param string $localName <p>
-	 * The local name.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI.
+	 * @param string $localName The local name.
 	 * @return DOMAttr The attribute node. Note that for XML namespace declarations
 	 * (xmlns and xmlns:&#42; attributes) an 
 	 * instance of DOMNameSpaceNode is returned instead of a
@@ -1994,9 +1610,7 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Adds new attribute node to element
 	 * @link http://www.php.net/manual/en/domelement.setattributenodens.php
-	 * @param DOMAttr $attr <p>
-	 * The attribute node.
-	 * </p>
+	 * @param DOMAttr $attr The attribute node.
 	 * @return DOMAttr the old node if the attribute has been replaced.
 	 */
 	public function setAttributeNodeNS (DOMAttr $attr) {}
@@ -2004,13 +1618,9 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Get elements by namespaceURI and localName
 	 * @link http://www.php.net/manual/en/domelement.getelementsbytagnamens.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI.
-	 * </p>
-	 * @param string $localName <p>
-	 * The local name. Use &#42; to return all elements within 
+	 * @param string $namespaceURI The namespace URI.
+	 * @param string $localName The local name. Use &#42; to return all elements within 
 	 * the element tree.
-	 * </p>
 	 * @return DOMNodeList This function returns a new instance of the class
 	 * DOMNodeList of all matched elements in the order in
 	 * which they are encountered in a preorder traversal of this element tree.
@@ -2020,9 +1630,7 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Checks to see if attribute exists
 	 * @link http://www.php.net/manual/en/domelement.hasattribute.php
-	 * @param string $name <p>
-	 * The attribute name.
-	 * </p>
+	 * @param string $name The attribute name.
 	 * @return bool true on success or false on failure
 	 */
 	public function hasAttribute (string $name) {}
@@ -2030,12 +1638,8 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Checks to see if attribute exists
 	 * @link http://www.php.net/manual/en/domelement.hasattributens.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI.
-	 * </p>
-	 * @param string $localName <p>
-	 * The local name.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI.
+	 * @param string $localName The local name.
 	 * @return bool true on success or false on failure
 	 */
 	public function hasAttributeNS (string $namespaceURI, string $localName) {}
@@ -2043,13 +1647,9 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Declares the attribute specified by name to be of type ID
 	 * @link http://www.php.net/manual/en/domelement.setidattribute.php
-	 * @param string $name <p>
-	 * The name of the attribute.
-	 * </p>
-	 * @param bool $isId <p>
-	 * Set it to true if you want name to be of type
+	 * @param string $name The name of the attribute.
+	 * @param bool $isId Set it to true if you want name to be of type
 	 * ID, false otherwise.
-	 * </p>
 	 * @return void 
 	 */
 	public function setIdAttribute (string $name, bool $isId) {}
@@ -2057,16 +1657,10 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Declares the attribute specified by local name and namespace URI to be of type ID
 	 * @link http://www.php.net/manual/en/domelement.setidattributens.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI of the attribute.
-	 * </p>
-	 * @param string $localName <p>
-	 * The local name of the attribute, as prefix:tagname.
-	 * </p>
-	 * @param bool $isId <p>
-	 * Set it to true if you want name to be of type
+	 * @param string $namespaceURI The namespace URI of the attribute.
+	 * @param string $localName The local name of the attribute, as prefix:tagname.
+	 * @param bool $isId Set it to true if you want name to be of type
 	 * ID, false otherwise.
-	 * </p>
 	 * @return void 
 	 */
 	public function setIdAttributeNS (string $namespaceURI, string $localName, bool $isId) {}
@@ -2074,13 +1668,9 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Declares the attribute specified by node to be of type ID
 	 * @link http://www.php.net/manual/en/domelement.setidattributenode.php
-	 * @param DOMAttr $attr <p>
-	 * The attribute node.
-	 * </p>
-	 * @param bool $isId <p>
-	 * Set it to true if you want name to be of type
+	 * @param DOMAttr $attr The attribute node.
+	 * @param bool $isId Set it to true if you want name to be of type
 	 * ID, false otherwise.
-	 * </p>
 	 * @return void 
 	 */
 	public function setIdAttributeNode (DOMAttr $attr, bool $isId) {}
@@ -2097,13 +1687,9 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Adds a new child before a reference node
 	 * @link http://www.php.net/manual/en/domnode.insertbefore.php
-	 * @param DOMNode $newnode <p>
-	 * The new node.
-	 * </p>
-	 * @param DOMNode $refnode [optional] <p>
-	 * The reference node. If not supplied, newnode is
+	 * @param DOMNode $newnode The new node.
+	 * @param DOMNode $refnode [optional] The reference node. If not supplied, newnode is
 	 * appended to the children.
-	 * </p>
 	 * @return DOMNode The inserted node.
 	 */
 	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
@@ -2111,14 +1697,10 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Replaces a child
 	 * @link http://www.php.net/manual/en/domnode.replacechild.php
-	 * @param DOMNode $newnode <p>
-	 * The new node. It must be a member of the target document, i.e.
+	 * @param DOMNode $newnode The new node. It must be a member of the target document, i.e.
 	 * created by one of the DOMDocument->createXXX() methods or imported in
 	 * the document by .
-	 * </p>
-	 * @param DOMNode $oldnode <p>
-	 * The old node.
-	 * </p>
+	 * @param DOMNode $oldnode The old node.
 	 * @return DOMNode The old node or false if an error occur.
 	 */
 	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
@@ -2126,9 +1708,7 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Removes child from list of children
 	 * @link http://www.php.net/manual/en/domnode.removechild.php
-	 * @param DOMNode $oldnode <p>
-	 * The removed child.
-	 * </p>
+	 * @param DOMNode $oldnode The removed child.
 	 * @return DOMNode If the child could be removed the function returns the old child.
 	 */
 	public function removeChild (DOMNode $oldnode) {}
@@ -2136,9 +1716,7 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Adds new child at the end of the children
 	 * @link http://www.php.net/manual/en/domnode.appendchild.php
-	 * @param DOMNode $newnode <p>
-	 * The appended child.
-	 * </p>
+	 * @param DOMNode $newnode The appended child.
 	 * @return DOMNode The node added.
 	 */
 	public function appendChild (DOMNode $newnode) {}
@@ -2153,10 +1731,8 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Clones a node
 	 * @link http://www.php.net/manual/en/domnode.clonenode.php
-	 * @param bool $deep [optional] <p>
-	 * Indicates whether to copy all descendant nodes. This parameter is 
+	 * @param bool $deep [optional] Indicates whether to copy all descendant nodes. This parameter is 
 	 * defaulted to false.
-	 * </p>
 	 * @return DOMNode The cloned node.
 	 */
 	public function cloneNode (bool $deep = null) {}
@@ -2171,14 +1747,10 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Checks if feature is supported for specified version
 	 * @link http://www.php.net/manual/en/domnode.issupported.php
-	 * @param string $feature <p>
-	 * The feature to test. See the example of 
+	 * @param string $feature The feature to test. See the example of 
 	 * DOMImplementation::hasFeature for a
 	 * list of features.
-	 * </p>
-	 * @param string $version <p>
-	 * The version number of the feature to test.
-	 * </p>
+	 * @param string $version The version number of the feature to test.
 	 * @return bool true on success or false on failure
 	 */
 	public function isSupported (string $feature, string $version) {}
@@ -2198,9 +1770,7 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Indicates if two nodes are the same node
 	 * @link http://www.php.net/manual/en/domnode.issamenode.php
-	 * @param DOMNode $node <p>
-	 * The compared node.
-	 * </p>
+	 * @param DOMNode $node The compared node.
 	 * @return bool true on success or false on failure
 	 */
 	public function isSameNode (DOMNode $node) {}
@@ -2208,9 +1778,7 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Gets the namespace prefix of the node based on the namespace URI
 	 * @link http://www.php.net/manual/en/domnode.lookupprefix.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI.
 	 * @return string The prefix of the namespace.
 	 */
 	public function lookupPrefix (string $namespaceURI) {}
@@ -2218,9 +1786,7 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
 	 * @link http://www.php.net/manual/en/domnode.isdefaultnamespace.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI to look for.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI to look for.
 	 * @return bool Return true if namespaceURI is the default
 	 * namespace, false otherwise.
 	 */
@@ -2229,9 +1795,7 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Gets the namespace URI of the node based on the prefix
 	 * @link http://www.php.net/manual/en/domnode.lookupnamespaceuri.php
-	 * @param string $prefix <p>
-	 * The prefix of the namespace.
-	 * </p>
+	 * @param string $prefix The prefix of the namespace.
 	 * @return string The namespace URI of the node.
 	 */
 	public function lookupNamespaceUri (string $prefix) {}
@@ -2276,19 +1840,11 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Canonicalize nodes to a string
 	 * @link http://www.php.net/manual/en/domnode.c14n.php
-	 * @param bool $exclusive [optional] <p>
-	 * Enable exclusive parsing of only the nodes matched by the provided
+	 * @param bool $exclusive [optional] Enable exclusive parsing of only the nodes matched by the provided
 	 * xpath or namespace prefixes.
-	 * </p>
-	 * @param bool $with_comments [optional] <p>
-	 * Retain comments in output.
-	 * </p>
-	 * @param array $xpath [optional] <p>
-	 * An array of xpaths to filter the nodes by.
-	 * </p>
-	 * @param array $ns_prefixes [optional] <p>
-	 * An array of namespace prefixes to filter the nodes by.
-	 * </p>
+	 * @param bool $with_comments [optional] Retain comments in output.
+	 * @param array $xpath [optional] An array of xpaths to filter the nodes by.
+	 * @param array $ns_prefixes [optional] An array of namespace prefixes to filter the nodes by.
 	 * @return string canonicalized nodes as a string or false on failure
 	 */
 	public function C14N (bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
@@ -2296,22 +1852,12 @@ class DOMElement extends DOMNode  {
 	/**
 	 * Canonicalize nodes to a file
 	 * @link http://www.php.net/manual/en/domnode.c14nfile.php
-	 * @param string $uri <p>
-	 * Path to write the output to.
-	 * </p>
-	 * @param bool $exclusive [optional] <p>
-	 * Enable exclusive parsing of only the nodes matched by the provided
+	 * @param string $uri Path to write the output to.
+	 * @param bool $exclusive [optional] Enable exclusive parsing of only the nodes matched by the provided
 	 * xpath or namespace prefixes.
-	 * </p>
-	 * @param bool $with_comments [optional] <p>
-	 * Retain comments in output.
-	 * </p>
-	 * @param array $xpath [optional] <p>
-	 * An array of xpaths to filter the nodes by.
-	 * </p>
-	 * @param array $ns_prefixes [optional] <p>
-	 * An array of namespace prefixes to filter the nodes by.
-	 * </p>
+	 * @param bool $with_comments [optional] Retain comments in output.
+	 * @param array $xpath [optional] An array of xpaths to filter the nodes by.
+	 * @param array $ns_prefixes [optional] An array of namespace prefixes to filter the nodes by.
 	 * @return int Number of bytes written or false on failure
 	 */
 	public function C14NFile (string $uri, bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
@@ -2323,9 +1869,7 @@ class DOMText extends DOMCharacterData  {
 	/**
 	 * Breaks this node into two nodes at the specified offset
 	 * @link http://www.php.net/manual/en/domtext.splittext.php
-	 * @param int $offset <p>
-	 * The offset at which to split, starting from 0.
-	 * </p>
+	 * @param int $offset The offset at which to split, starting from 0.
 	 * @return DOMText The new node of the same type, which contains all the content at and after the 
 	 * offset.
 	 */
@@ -2356,12 +1900,8 @@ class DOMText extends DOMCharacterData  {
 	/**
 	 * Extracts a range of data from the node
 	 * @link http://www.php.net/manual/en/domcharacterdata.substringdata.php
-	 * @param int $offset <p>
-	 * Start offset of substring to extract.
-	 * </p>
-	 * @param int $count <p>
-	 * The number of characters to extract.
-	 * </p>
+	 * @param int $offset Start offset of substring to extract.
+	 * @param int $count The number of characters to extract.
 	 * @return string The specified substring. If the sum of offset 
 	 * and count exceeds the length, then all 16-bit units 
 	 * to the end of the data are returned.
@@ -2371,9 +1911,7 @@ class DOMText extends DOMCharacterData  {
 	/**
 	 * Append the string to the end of the character data of the node
 	 * @link http://www.php.net/manual/en/domcharacterdata.appenddata.php
-	 * @param string $data <p>
-	 * The string to append.
-	 * </p>
+	 * @param string $data The string to append.
 	 * @return void 
 	 */
 	public function appendData (string $data) {}
@@ -2381,12 +1919,8 @@ class DOMText extends DOMCharacterData  {
 	/**
 	 * Insert a string at the specified 16-bit unit offset
 	 * @link http://www.php.net/manual/en/domcharacterdata.insertdata.php
-	 * @param int $offset <p>
-	 * The character offset at which to insert.
-	 * </p>
-	 * @param string $data <p>
-	 * The string to insert.
-	 * </p>
+	 * @param int $offset The character offset at which to insert.
+	 * @param string $data The string to insert.
 	 * @return void 
 	 */
 	public function insertData (int $offset, string $data) {}
@@ -2394,14 +1928,10 @@ class DOMText extends DOMCharacterData  {
 	/**
 	 * Remove a range of characters from the node
 	 * @link http://www.php.net/manual/en/domcharacterdata.deletedata.php
-	 * @param int $offset <p>
-	 * The offset from which to start removing.
-	 * </p>
-	 * @param int $count <p>
-	 * The number of characters to delete. If the sum of 
+	 * @param int $offset The offset from which to start removing.
+	 * @param int $count The number of characters to delete. If the sum of 
 	 * offset and count exceeds
 	 * the length, then all characters to the end of the data are deleted.
-	 * </p>
 	 * @return void 
 	 */
 	public function deleteData (int $offset, int $count) {}
@@ -2409,17 +1939,11 @@ class DOMText extends DOMCharacterData  {
 	/**
 	 * Replace a substring within the DOMCharacterData node
 	 * @link http://www.php.net/manual/en/domcharacterdata.replacedata.php
-	 * @param int $offset <p>
-	 * The offset from which to start replacing.
-	 * </p>
-	 * @param int $count <p>
-	 * The number of characters to replace. If the sum of 
+	 * @param int $offset The offset from which to start replacing.
+	 * @param int $count The number of characters to replace. If the sum of 
 	 * offset and count exceeds
 	 * the length, then all characters to the end of the data are replaced.
-	 * </p>
-	 * @param string $data <p>
-	 * The string with which the range must be replaced.
-	 * </p>
+	 * @param string $data The string with which the range must be replaced.
 	 * @return void 
 	 */
 	public function replaceData (int $offset, int $count, string $data) {}
@@ -2427,13 +1951,9 @@ class DOMText extends DOMCharacterData  {
 	/**
 	 * Adds a new child before a reference node
 	 * @link http://www.php.net/manual/en/domnode.insertbefore.php
-	 * @param DOMNode $newnode <p>
-	 * The new node.
-	 * </p>
-	 * @param DOMNode $refnode [optional] <p>
-	 * The reference node. If not supplied, newnode is
+	 * @param DOMNode $newnode The new node.
+	 * @param DOMNode $refnode [optional] The reference node. If not supplied, newnode is
 	 * appended to the children.
-	 * </p>
 	 * @return DOMNode The inserted node.
 	 */
 	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
@@ -2441,14 +1961,10 @@ class DOMText extends DOMCharacterData  {
 	/**
 	 * Replaces a child
 	 * @link http://www.php.net/manual/en/domnode.replacechild.php
-	 * @param DOMNode $newnode <p>
-	 * The new node. It must be a member of the target document, i.e.
+	 * @param DOMNode $newnode The new node. It must be a member of the target document, i.e.
 	 * created by one of the DOMDocument->createXXX() methods or imported in
 	 * the document by .
-	 * </p>
-	 * @param DOMNode $oldnode <p>
-	 * The old node.
-	 * </p>
+	 * @param DOMNode $oldnode The old node.
 	 * @return DOMNode The old node or false if an error occur.
 	 */
 	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
@@ -2456,9 +1972,7 @@ class DOMText extends DOMCharacterData  {
 	/**
 	 * Removes child from list of children
 	 * @link http://www.php.net/manual/en/domnode.removechild.php
-	 * @param DOMNode $oldnode <p>
-	 * The removed child.
-	 * </p>
+	 * @param DOMNode $oldnode The removed child.
 	 * @return DOMNode If the child could be removed the function returns the old child.
 	 */
 	public function removeChild (DOMNode $oldnode) {}
@@ -2466,9 +1980,7 @@ class DOMText extends DOMCharacterData  {
 	/**
 	 * Adds new child at the end of the children
 	 * @link http://www.php.net/manual/en/domnode.appendchild.php
-	 * @param DOMNode $newnode <p>
-	 * The appended child.
-	 * </p>
+	 * @param DOMNode $newnode The appended child.
 	 * @return DOMNode The node added.
 	 */
 	public function appendChild (DOMNode $newnode) {}
@@ -2483,10 +1995,8 @@ class DOMText extends DOMCharacterData  {
 	/**
 	 * Clones a node
 	 * @link http://www.php.net/manual/en/domnode.clonenode.php
-	 * @param bool $deep [optional] <p>
-	 * Indicates whether to copy all descendant nodes. This parameter is 
+	 * @param bool $deep [optional] Indicates whether to copy all descendant nodes. This parameter is 
 	 * defaulted to false.
-	 * </p>
 	 * @return DOMNode The cloned node.
 	 */
 	public function cloneNode (bool $deep = null) {}
@@ -2501,14 +2011,10 @@ class DOMText extends DOMCharacterData  {
 	/**
 	 * Checks if feature is supported for specified version
 	 * @link http://www.php.net/manual/en/domnode.issupported.php
-	 * @param string $feature <p>
-	 * The feature to test. See the example of 
+	 * @param string $feature The feature to test. See the example of 
 	 * DOMImplementation::hasFeature for a
 	 * list of features.
-	 * </p>
-	 * @param string $version <p>
-	 * The version number of the feature to test.
-	 * </p>
+	 * @param string $version The version number of the feature to test.
 	 * @return bool true on success or false on failure
 	 */
 	public function isSupported (string $feature, string $version) {}
@@ -2528,9 +2034,7 @@ class DOMText extends DOMCharacterData  {
 	/**
 	 * Indicates if two nodes are the same node
 	 * @link http://www.php.net/manual/en/domnode.issamenode.php
-	 * @param DOMNode $node <p>
-	 * The compared node.
-	 * </p>
+	 * @param DOMNode $node The compared node.
 	 * @return bool true on success or false on failure
 	 */
 	public function isSameNode (DOMNode $node) {}
@@ -2538,9 +2042,7 @@ class DOMText extends DOMCharacterData  {
 	/**
 	 * Gets the namespace prefix of the node based on the namespace URI
 	 * @link http://www.php.net/manual/en/domnode.lookupprefix.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI.
 	 * @return string The prefix of the namespace.
 	 */
 	public function lookupPrefix (string $namespaceURI) {}
@@ -2548,9 +2050,7 @@ class DOMText extends DOMCharacterData  {
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
 	 * @link http://www.php.net/manual/en/domnode.isdefaultnamespace.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI to look for.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI to look for.
 	 * @return bool Return true if namespaceURI is the default
 	 * namespace, false otherwise.
 	 */
@@ -2559,9 +2059,7 @@ class DOMText extends DOMCharacterData  {
 	/**
 	 * Gets the namespace URI of the node based on the prefix
 	 * @link http://www.php.net/manual/en/domnode.lookupnamespaceuri.php
-	 * @param string $prefix <p>
-	 * The prefix of the namespace.
-	 * </p>
+	 * @param string $prefix The prefix of the namespace.
 	 * @return string The namespace URI of the node.
 	 */
 	public function lookupNamespaceUri (string $prefix) {}
@@ -2606,19 +2104,11 @@ class DOMText extends DOMCharacterData  {
 	/**
 	 * Canonicalize nodes to a string
 	 * @link http://www.php.net/manual/en/domnode.c14n.php
-	 * @param bool $exclusive [optional] <p>
-	 * Enable exclusive parsing of only the nodes matched by the provided
+	 * @param bool $exclusive [optional] Enable exclusive parsing of only the nodes matched by the provided
 	 * xpath or namespace prefixes.
-	 * </p>
-	 * @param bool $with_comments [optional] <p>
-	 * Retain comments in output.
-	 * </p>
-	 * @param array $xpath [optional] <p>
-	 * An array of xpaths to filter the nodes by.
-	 * </p>
-	 * @param array $ns_prefixes [optional] <p>
-	 * An array of namespace prefixes to filter the nodes by.
-	 * </p>
+	 * @param bool $with_comments [optional] Retain comments in output.
+	 * @param array $xpath [optional] An array of xpaths to filter the nodes by.
+	 * @param array $ns_prefixes [optional] An array of namespace prefixes to filter the nodes by.
 	 * @return string canonicalized nodes as a string or false on failure
 	 */
 	public function C14N (bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
@@ -2626,22 +2116,12 @@ class DOMText extends DOMCharacterData  {
 	/**
 	 * Canonicalize nodes to a file
 	 * @link http://www.php.net/manual/en/domnode.c14nfile.php
-	 * @param string $uri <p>
-	 * Path to write the output to.
-	 * </p>
-	 * @param bool $exclusive [optional] <p>
-	 * Enable exclusive parsing of only the nodes matched by the provided
+	 * @param string $uri Path to write the output to.
+	 * @param bool $exclusive [optional] Enable exclusive parsing of only the nodes matched by the provided
 	 * xpath or namespace prefixes.
-	 * </p>
-	 * @param bool $with_comments [optional] <p>
-	 * Retain comments in output.
-	 * </p>
-	 * @param array $xpath [optional] <p>
-	 * An array of xpaths to filter the nodes by.
-	 * </p>
-	 * @param array $ns_prefixes [optional] <p>
-	 * An array of namespace prefixes to filter the nodes by.
-	 * </p>
+	 * @param bool $with_comments [optional] Retain comments in output.
+	 * @param array $xpath [optional] An array of xpaths to filter the nodes by.
+	 * @param array $ns_prefixes [optional] An array of namespace prefixes to filter the nodes by.
 	 * @return int Number of bytes written or false on failure
 	 */
 	public function C14NFile (string $uri, bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
@@ -2660,12 +2140,8 @@ class DOMComment extends DOMCharacterData  {
 	/**
 	 * Extracts a range of data from the node
 	 * @link http://www.php.net/manual/en/domcharacterdata.substringdata.php
-	 * @param int $offset <p>
-	 * Start offset of substring to extract.
-	 * </p>
-	 * @param int $count <p>
-	 * The number of characters to extract.
-	 * </p>
+	 * @param int $offset Start offset of substring to extract.
+	 * @param int $count The number of characters to extract.
 	 * @return string The specified substring. If the sum of offset 
 	 * and count exceeds the length, then all 16-bit units 
 	 * to the end of the data are returned.
@@ -2675,9 +2151,7 @@ class DOMComment extends DOMCharacterData  {
 	/**
 	 * Append the string to the end of the character data of the node
 	 * @link http://www.php.net/manual/en/domcharacterdata.appenddata.php
-	 * @param string $data <p>
-	 * The string to append.
-	 * </p>
+	 * @param string $data The string to append.
 	 * @return void 
 	 */
 	public function appendData (string $data) {}
@@ -2685,12 +2159,8 @@ class DOMComment extends DOMCharacterData  {
 	/**
 	 * Insert a string at the specified 16-bit unit offset
 	 * @link http://www.php.net/manual/en/domcharacterdata.insertdata.php
-	 * @param int $offset <p>
-	 * The character offset at which to insert.
-	 * </p>
-	 * @param string $data <p>
-	 * The string to insert.
-	 * </p>
+	 * @param int $offset The character offset at which to insert.
+	 * @param string $data The string to insert.
 	 * @return void 
 	 */
 	public function insertData (int $offset, string $data) {}
@@ -2698,14 +2168,10 @@ class DOMComment extends DOMCharacterData  {
 	/**
 	 * Remove a range of characters from the node
 	 * @link http://www.php.net/manual/en/domcharacterdata.deletedata.php
-	 * @param int $offset <p>
-	 * The offset from which to start removing.
-	 * </p>
-	 * @param int $count <p>
-	 * The number of characters to delete. If the sum of 
+	 * @param int $offset The offset from which to start removing.
+	 * @param int $count The number of characters to delete. If the sum of 
 	 * offset and count exceeds
 	 * the length, then all characters to the end of the data are deleted.
-	 * </p>
 	 * @return void 
 	 */
 	public function deleteData (int $offset, int $count) {}
@@ -2713,17 +2179,11 @@ class DOMComment extends DOMCharacterData  {
 	/**
 	 * Replace a substring within the DOMCharacterData node
 	 * @link http://www.php.net/manual/en/domcharacterdata.replacedata.php
-	 * @param int $offset <p>
-	 * The offset from which to start replacing.
-	 * </p>
-	 * @param int $count <p>
-	 * The number of characters to replace. If the sum of 
+	 * @param int $offset The offset from which to start replacing.
+	 * @param int $count The number of characters to replace. If the sum of 
 	 * offset and count exceeds
 	 * the length, then all characters to the end of the data are replaced.
-	 * </p>
-	 * @param string $data <p>
-	 * The string with which the range must be replaced.
-	 * </p>
+	 * @param string $data The string with which the range must be replaced.
 	 * @return void 
 	 */
 	public function replaceData (int $offset, int $count, string $data) {}
@@ -2731,13 +2191,9 @@ class DOMComment extends DOMCharacterData  {
 	/**
 	 * Adds a new child before a reference node
 	 * @link http://www.php.net/manual/en/domnode.insertbefore.php
-	 * @param DOMNode $newnode <p>
-	 * The new node.
-	 * </p>
-	 * @param DOMNode $refnode [optional] <p>
-	 * The reference node. If not supplied, newnode is
+	 * @param DOMNode $newnode The new node.
+	 * @param DOMNode $refnode [optional] The reference node. If not supplied, newnode is
 	 * appended to the children.
-	 * </p>
 	 * @return DOMNode The inserted node.
 	 */
 	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
@@ -2745,14 +2201,10 @@ class DOMComment extends DOMCharacterData  {
 	/**
 	 * Replaces a child
 	 * @link http://www.php.net/manual/en/domnode.replacechild.php
-	 * @param DOMNode $newnode <p>
-	 * The new node. It must be a member of the target document, i.e.
+	 * @param DOMNode $newnode The new node. It must be a member of the target document, i.e.
 	 * created by one of the DOMDocument->createXXX() methods or imported in
 	 * the document by .
-	 * </p>
-	 * @param DOMNode $oldnode <p>
-	 * The old node.
-	 * </p>
+	 * @param DOMNode $oldnode The old node.
 	 * @return DOMNode The old node or false if an error occur.
 	 */
 	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
@@ -2760,9 +2212,7 @@ class DOMComment extends DOMCharacterData  {
 	/**
 	 * Removes child from list of children
 	 * @link http://www.php.net/manual/en/domnode.removechild.php
-	 * @param DOMNode $oldnode <p>
-	 * The removed child.
-	 * </p>
+	 * @param DOMNode $oldnode The removed child.
 	 * @return DOMNode If the child could be removed the function returns the old child.
 	 */
 	public function removeChild (DOMNode $oldnode) {}
@@ -2770,9 +2220,7 @@ class DOMComment extends DOMCharacterData  {
 	/**
 	 * Adds new child at the end of the children
 	 * @link http://www.php.net/manual/en/domnode.appendchild.php
-	 * @param DOMNode $newnode <p>
-	 * The appended child.
-	 * </p>
+	 * @param DOMNode $newnode The appended child.
 	 * @return DOMNode The node added.
 	 */
 	public function appendChild (DOMNode $newnode) {}
@@ -2787,10 +2235,8 @@ class DOMComment extends DOMCharacterData  {
 	/**
 	 * Clones a node
 	 * @link http://www.php.net/manual/en/domnode.clonenode.php
-	 * @param bool $deep [optional] <p>
-	 * Indicates whether to copy all descendant nodes. This parameter is 
+	 * @param bool $deep [optional] Indicates whether to copy all descendant nodes. This parameter is 
 	 * defaulted to false.
-	 * </p>
 	 * @return DOMNode The cloned node.
 	 */
 	public function cloneNode (bool $deep = null) {}
@@ -2805,14 +2251,10 @@ class DOMComment extends DOMCharacterData  {
 	/**
 	 * Checks if feature is supported for specified version
 	 * @link http://www.php.net/manual/en/domnode.issupported.php
-	 * @param string $feature <p>
-	 * The feature to test. See the example of 
+	 * @param string $feature The feature to test. See the example of 
 	 * DOMImplementation::hasFeature for a
 	 * list of features.
-	 * </p>
-	 * @param string $version <p>
-	 * The version number of the feature to test.
-	 * </p>
+	 * @param string $version The version number of the feature to test.
 	 * @return bool true on success or false on failure
 	 */
 	public function isSupported (string $feature, string $version) {}
@@ -2832,9 +2274,7 @@ class DOMComment extends DOMCharacterData  {
 	/**
 	 * Indicates if two nodes are the same node
 	 * @link http://www.php.net/manual/en/domnode.issamenode.php
-	 * @param DOMNode $node <p>
-	 * The compared node.
-	 * </p>
+	 * @param DOMNode $node The compared node.
 	 * @return bool true on success or false on failure
 	 */
 	public function isSameNode (DOMNode $node) {}
@@ -2842,9 +2282,7 @@ class DOMComment extends DOMCharacterData  {
 	/**
 	 * Gets the namespace prefix of the node based on the namespace URI
 	 * @link http://www.php.net/manual/en/domnode.lookupprefix.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI.
 	 * @return string The prefix of the namespace.
 	 */
 	public function lookupPrefix (string $namespaceURI) {}
@@ -2852,9 +2290,7 @@ class DOMComment extends DOMCharacterData  {
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
 	 * @link http://www.php.net/manual/en/domnode.isdefaultnamespace.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI to look for.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI to look for.
 	 * @return bool Return true if namespaceURI is the default
 	 * namespace, false otherwise.
 	 */
@@ -2863,9 +2299,7 @@ class DOMComment extends DOMCharacterData  {
 	/**
 	 * Gets the namespace URI of the node based on the prefix
 	 * @link http://www.php.net/manual/en/domnode.lookupnamespaceuri.php
-	 * @param string $prefix <p>
-	 * The prefix of the namespace.
-	 * </p>
+	 * @param string $prefix The prefix of the namespace.
 	 * @return string The namespace URI of the node.
 	 */
 	public function lookupNamespaceUri (string $prefix) {}
@@ -2910,19 +2344,11 @@ class DOMComment extends DOMCharacterData  {
 	/**
 	 * Canonicalize nodes to a string
 	 * @link http://www.php.net/manual/en/domnode.c14n.php
-	 * @param bool $exclusive [optional] <p>
-	 * Enable exclusive parsing of only the nodes matched by the provided
+	 * @param bool $exclusive [optional] Enable exclusive parsing of only the nodes matched by the provided
 	 * xpath or namespace prefixes.
-	 * </p>
-	 * @param bool $with_comments [optional] <p>
-	 * Retain comments in output.
-	 * </p>
-	 * @param array $xpath [optional] <p>
-	 * An array of xpaths to filter the nodes by.
-	 * </p>
-	 * @param array $ns_prefixes [optional] <p>
-	 * An array of namespace prefixes to filter the nodes by.
-	 * </p>
+	 * @param bool $with_comments [optional] Retain comments in output.
+	 * @param array $xpath [optional] An array of xpaths to filter the nodes by.
+	 * @param array $ns_prefixes [optional] An array of namespace prefixes to filter the nodes by.
 	 * @return string canonicalized nodes as a string or false on failure
 	 */
 	public function C14N (bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
@@ -2930,22 +2356,12 @@ class DOMComment extends DOMCharacterData  {
 	/**
 	 * Canonicalize nodes to a file
 	 * @link http://www.php.net/manual/en/domnode.c14nfile.php
-	 * @param string $uri <p>
-	 * Path to write the output to.
-	 * </p>
-	 * @param bool $exclusive [optional] <p>
-	 * Enable exclusive parsing of only the nodes matched by the provided
+	 * @param string $uri Path to write the output to.
+	 * @param bool $exclusive [optional] Enable exclusive parsing of only the nodes matched by the provided
 	 * xpath or namespace prefixes.
-	 * </p>
-	 * @param bool $with_comments [optional] <p>
-	 * Retain comments in output.
-	 * </p>
-	 * @param array $xpath [optional] <p>
-	 * An array of xpaths to filter the nodes by.
-	 * </p>
-	 * @param array $ns_prefixes [optional] <p>
-	 * An array of namespace prefixes to filter the nodes by.
-	 * </p>
+	 * @param bool $with_comments [optional] Retain comments in output.
+	 * @param array $xpath [optional] An array of xpaths to filter the nodes by.
+	 * @param array $ns_prefixes [optional] An array of namespace prefixes to filter the nodes by.
 	 * @return int Number of bytes written or false on failure
 	 */
 	public function C14NFile (string $uri, bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
@@ -3009,9 +2425,7 @@ class DOMCdataSection extends DOMText  {
 	/**
 	 * Breaks this node into two nodes at the specified offset
 	 * @link http://www.php.net/manual/en/domtext.splittext.php
-	 * @param int $offset <p>
-	 * The offset at which to split, starting from 0.
-	 * </p>
+	 * @param int $offset The offset at which to split, starting from 0.
 	 * @return DOMText The new node of the same type, which contains all the content at and after the 
 	 * offset.
 	 */
@@ -3035,12 +2449,8 @@ class DOMCdataSection extends DOMText  {
 	/**
 	 * Extracts a range of data from the node
 	 * @link http://www.php.net/manual/en/domcharacterdata.substringdata.php
-	 * @param int $offset <p>
-	 * Start offset of substring to extract.
-	 * </p>
-	 * @param int $count <p>
-	 * The number of characters to extract.
-	 * </p>
+	 * @param int $offset Start offset of substring to extract.
+	 * @param int $count The number of characters to extract.
 	 * @return string The specified substring. If the sum of offset 
 	 * and count exceeds the length, then all 16-bit units 
 	 * to the end of the data are returned.
@@ -3050,9 +2460,7 @@ class DOMCdataSection extends DOMText  {
 	/**
 	 * Append the string to the end of the character data of the node
 	 * @link http://www.php.net/manual/en/domcharacterdata.appenddata.php
-	 * @param string $data <p>
-	 * The string to append.
-	 * </p>
+	 * @param string $data The string to append.
 	 * @return void 
 	 */
 	public function appendData (string $data) {}
@@ -3060,12 +2468,8 @@ class DOMCdataSection extends DOMText  {
 	/**
 	 * Insert a string at the specified 16-bit unit offset
 	 * @link http://www.php.net/manual/en/domcharacterdata.insertdata.php
-	 * @param int $offset <p>
-	 * The character offset at which to insert.
-	 * </p>
-	 * @param string $data <p>
-	 * The string to insert.
-	 * </p>
+	 * @param int $offset The character offset at which to insert.
+	 * @param string $data The string to insert.
 	 * @return void 
 	 */
 	public function insertData (int $offset, string $data) {}
@@ -3073,14 +2477,10 @@ class DOMCdataSection extends DOMText  {
 	/**
 	 * Remove a range of characters from the node
 	 * @link http://www.php.net/manual/en/domcharacterdata.deletedata.php
-	 * @param int $offset <p>
-	 * The offset from which to start removing.
-	 * </p>
-	 * @param int $count <p>
-	 * The number of characters to delete. If the sum of 
+	 * @param int $offset The offset from which to start removing.
+	 * @param int $count The number of characters to delete. If the sum of 
 	 * offset and count exceeds
 	 * the length, then all characters to the end of the data are deleted.
-	 * </p>
 	 * @return void 
 	 */
 	public function deleteData (int $offset, int $count) {}
@@ -3088,17 +2488,11 @@ class DOMCdataSection extends DOMText  {
 	/**
 	 * Replace a substring within the DOMCharacterData node
 	 * @link http://www.php.net/manual/en/domcharacterdata.replacedata.php
-	 * @param int $offset <p>
-	 * The offset from which to start replacing.
-	 * </p>
-	 * @param int $count <p>
-	 * The number of characters to replace. If the sum of 
+	 * @param int $offset The offset from which to start replacing.
+	 * @param int $count The number of characters to replace. If the sum of 
 	 * offset and count exceeds
 	 * the length, then all characters to the end of the data are replaced.
-	 * </p>
-	 * @param string $data <p>
-	 * The string with which the range must be replaced.
-	 * </p>
+	 * @param string $data The string with which the range must be replaced.
 	 * @return void 
 	 */
 	public function replaceData (int $offset, int $count, string $data) {}
@@ -3106,13 +2500,9 @@ class DOMCdataSection extends DOMText  {
 	/**
 	 * Adds a new child before a reference node
 	 * @link http://www.php.net/manual/en/domnode.insertbefore.php
-	 * @param DOMNode $newnode <p>
-	 * The new node.
-	 * </p>
-	 * @param DOMNode $refnode [optional] <p>
-	 * The reference node. If not supplied, newnode is
+	 * @param DOMNode $newnode The new node.
+	 * @param DOMNode $refnode [optional] The reference node. If not supplied, newnode is
 	 * appended to the children.
-	 * </p>
 	 * @return DOMNode The inserted node.
 	 */
 	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
@@ -3120,14 +2510,10 @@ class DOMCdataSection extends DOMText  {
 	/**
 	 * Replaces a child
 	 * @link http://www.php.net/manual/en/domnode.replacechild.php
-	 * @param DOMNode $newnode <p>
-	 * The new node. It must be a member of the target document, i.e.
+	 * @param DOMNode $newnode The new node. It must be a member of the target document, i.e.
 	 * created by one of the DOMDocument->createXXX() methods or imported in
 	 * the document by .
-	 * </p>
-	 * @param DOMNode $oldnode <p>
-	 * The old node.
-	 * </p>
+	 * @param DOMNode $oldnode The old node.
 	 * @return DOMNode The old node or false if an error occur.
 	 */
 	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
@@ -3135,9 +2521,7 @@ class DOMCdataSection extends DOMText  {
 	/**
 	 * Removes child from list of children
 	 * @link http://www.php.net/manual/en/domnode.removechild.php
-	 * @param DOMNode $oldnode <p>
-	 * The removed child.
-	 * </p>
+	 * @param DOMNode $oldnode The removed child.
 	 * @return DOMNode If the child could be removed the function returns the old child.
 	 */
 	public function removeChild (DOMNode $oldnode) {}
@@ -3145,9 +2529,7 @@ class DOMCdataSection extends DOMText  {
 	/**
 	 * Adds new child at the end of the children
 	 * @link http://www.php.net/manual/en/domnode.appendchild.php
-	 * @param DOMNode $newnode <p>
-	 * The appended child.
-	 * </p>
+	 * @param DOMNode $newnode The appended child.
 	 * @return DOMNode The node added.
 	 */
 	public function appendChild (DOMNode $newnode) {}
@@ -3162,10 +2544,8 @@ class DOMCdataSection extends DOMText  {
 	/**
 	 * Clones a node
 	 * @link http://www.php.net/manual/en/domnode.clonenode.php
-	 * @param bool $deep [optional] <p>
-	 * Indicates whether to copy all descendant nodes. This parameter is 
+	 * @param bool $deep [optional] Indicates whether to copy all descendant nodes. This parameter is 
 	 * defaulted to false.
-	 * </p>
 	 * @return DOMNode The cloned node.
 	 */
 	public function cloneNode (bool $deep = null) {}
@@ -3180,14 +2560,10 @@ class DOMCdataSection extends DOMText  {
 	/**
 	 * Checks if feature is supported for specified version
 	 * @link http://www.php.net/manual/en/domnode.issupported.php
-	 * @param string $feature <p>
-	 * The feature to test. See the example of 
+	 * @param string $feature The feature to test. See the example of 
 	 * DOMImplementation::hasFeature for a
 	 * list of features.
-	 * </p>
-	 * @param string $version <p>
-	 * The version number of the feature to test.
-	 * </p>
+	 * @param string $version The version number of the feature to test.
 	 * @return bool true on success or false on failure
 	 */
 	public function isSupported (string $feature, string $version) {}
@@ -3207,9 +2583,7 @@ class DOMCdataSection extends DOMText  {
 	/**
 	 * Indicates if two nodes are the same node
 	 * @link http://www.php.net/manual/en/domnode.issamenode.php
-	 * @param DOMNode $node <p>
-	 * The compared node.
-	 * </p>
+	 * @param DOMNode $node The compared node.
 	 * @return bool true on success or false on failure
 	 */
 	public function isSameNode (DOMNode $node) {}
@@ -3217,9 +2591,7 @@ class DOMCdataSection extends DOMText  {
 	/**
 	 * Gets the namespace prefix of the node based on the namespace URI
 	 * @link http://www.php.net/manual/en/domnode.lookupprefix.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI.
 	 * @return string The prefix of the namespace.
 	 */
 	public function lookupPrefix (string $namespaceURI) {}
@@ -3227,9 +2599,7 @@ class DOMCdataSection extends DOMText  {
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
 	 * @link http://www.php.net/manual/en/domnode.isdefaultnamespace.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI to look for.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI to look for.
 	 * @return bool Return true if namespaceURI is the default
 	 * namespace, false otherwise.
 	 */
@@ -3238,9 +2608,7 @@ class DOMCdataSection extends DOMText  {
 	/**
 	 * Gets the namespace URI of the node based on the prefix
 	 * @link http://www.php.net/manual/en/domnode.lookupnamespaceuri.php
-	 * @param string $prefix <p>
-	 * The prefix of the namespace.
-	 * </p>
+	 * @param string $prefix The prefix of the namespace.
 	 * @return string The namespace URI of the node.
 	 */
 	public function lookupNamespaceUri (string $prefix) {}
@@ -3285,19 +2653,11 @@ class DOMCdataSection extends DOMText  {
 	/**
 	 * Canonicalize nodes to a string
 	 * @link http://www.php.net/manual/en/domnode.c14n.php
-	 * @param bool $exclusive [optional] <p>
-	 * Enable exclusive parsing of only the nodes matched by the provided
+	 * @param bool $exclusive [optional] Enable exclusive parsing of only the nodes matched by the provided
 	 * xpath or namespace prefixes.
-	 * </p>
-	 * @param bool $with_comments [optional] <p>
-	 * Retain comments in output.
-	 * </p>
-	 * @param array $xpath [optional] <p>
-	 * An array of xpaths to filter the nodes by.
-	 * </p>
-	 * @param array $ns_prefixes [optional] <p>
-	 * An array of namespace prefixes to filter the nodes by.
-	 * </p>
+	 * @param bool $with_comments [optional] Retain comments in output.
+	 * @param array $xpath [optional] An array of xpaths to filter the nodes by.
+	 * @param array $ns_prefixes [optional] An array of namespace prefixes to filter the nodes by.
 	 * @return string canonicalized nodes as a string or false on failure
 	 */
 	public function C14N (bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
@@ -3305,22 +2665,12 @@ class DOMCdataSection extends DOMText  {
 	/**
 	 * Canonicalize nodes to a file
 	 * @link http://www.php.net/manual/en/domnode.c14nfile.php
-	 * @param string $uri <p>
-	 * Path to write the output to.
-	 * </p>
-	 * @param bool $exclusive [optional] <p>
-	 * Enable exclusive parsing of only the nodes matched by the provided
+	 * @param string $uri Path to write the output to.
+	 * @param bool $exclusive [optional] Enable exclusive parsing of only the nodes matched by the provided
 	 * xpath or namespace prefixes.
-	 * </p>
-	 * @param bool $with_comments [optional] <p>
-	 * Retain comments in output.
-	 * </p>
-	 * @param array $xpath [optional] <p>
-	 * An array of xpaths to filter the nodes by.
-	 * </p>
-	 * @param array $ns_prefixes [optional] <p>
-	 * An array of namespace prefixes to filter the nodes by.
-	 * </p>
+	 * @param bool $with_comments [optional] Retain comments in output.
+	 * @param array $xpath [optional] An array of xpaths to filter the nodes by.
+	 * @param array $ns_prefixes [optional] An array of namespace prefixes to filter the nodes by.
 	 * @return int Number of bytes written or false on failure
 	 */
 	public function C14NFile (string $uri, bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
@@ -3332,13 +2682,9 @@ class DOMDocumentType extends DOMNode  {
 	/**
 	 * Adds a new child before a reference node
 	 * @link http://www.php.net/manual/en/domnode.insertbefore.php
-	 * @param DOMNode $newnode <p>
-	 * The new node.
-	 * </p>
-	 * @param DOMNode $refnode [optional] <p>
-	 * The reference node. If not supplied, newnode is
+	 * @param DOMNode $newnode The new node.
+	 * @param DOMNode $refnode [optional] The reference node. If not supplied, newnode is
 	 * appended to the children.
-	 * </p>
 	 * @return DOMNode The inserted node.
 	 */
 	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
@@ -3346,14 +2692,10 @@ class DOMDocumentType extends DOMNode  {
 	/**
 	 * Replaces a child
 	 * @link http://www.php.net/manual/en/domnode.replacechild.php
-	 * @param DOMNode $newnode <p>
-	 * The new node. It must be a member of the target document, i.e.
+	 * @param DOMNode $newnode The new node. It must be a member of the target document, i.e.
 	 * created by one of the DOMDocument->createXXX() methods or imported in
 	 * the document by .
-	 * </p>
-	 * @param DOMNode $oldnode <p>
-	 * The old node.
-	 * </p>
+	 * @param DOMNode $oldnode The old node.
 	 * @return DOMNode The old node or false if an error occur.
 	 */
 	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
@@ -3361,9 +2703,7 @@ class DOMDocumentType extends DOMNode  {
 	/**
 	 * Removes child from list of children
 	 * @link http://www.php.net/manual/en/domnode.removechild.php
-	 * @param DOMNode $oldnode <p>
-	 * The removed child.
-	 * </p>
+	 * @param DOMNode $oldnode The removed child.
 	 * @return DOMNode If the child could be removed the function returns the old child.
 	 */
 	public function removeChild (DOMNode $oldnode) {}
@@ -3371,9 +2711,7 @@ class DOMDocumentType extends DOMNode  {
 	/**
 	 * Adds new child at the end of the children
 	 * @link http://www.php.net/manual/en/domnode.appendchild.php
-	 * @param DOMNode $newnode <p>
-	 * The appended child.
-	 * </p>
+	 * @param DOMNode $newnode The appended child.
 	 * @return DOMNode The node added.
 	 */
 	public function appendChild (DOMNode $newnode) {}
@@ -3388,10 +2726,8 @@ class DOMDocumentType extends DOMNode  {
 	/**
 	 * Clones a node
 	 * @link http://www.php.net/manual/en/domnode.clonenode.php
-	 * @param bool $deep [optional] <p>
-	 * Indicates whether to copy all descendant nodes. This parameter is 
+	 * @param bool $deep [optional] Indicates whether to copy all descendant nodes. This parameter is 
 	 * defaulted to false.
-	 * </p>
 	 * @return DOMNode The cloned node.
 	 */
 	public function cloneNode (bool $deep = null) {}
@@ -3406,14 +2742,10 @@ class DOMDocumentType extends DOMNode  {
 	/**
 	 * Checks if feature is supported for specified version
 	 * @link http://www.php.net/manual/en/domnode.issupported.php
-	 * @param string $feature <p>
-	 * The feature to test. See the example of 
+	 * @param string $feature The feature to test. See the example of 
 	 * DOMImplementation::hasFeature for a
 	 * list of features.
-	 * </p>
-	 * @param string $version <p>
-	 * The version number of the feature to test.
-	 * </p>
+	 * @param string $version The version number of the feature to test.
 	 * @return bool true on success or false on failure
 	 */
 	public function isSupported (string $feature, string $version) {}
@@ -3433,9 +2765,7 @@ class DOMDocumentType extends DOMNode  {
 	/**
 	 * Indicates if two nodes are the same node
 	 * @link http://www.php.net/manual/en/domnode.issamenode.php
-	 * @param DOMNode $node <p>
-	 * The compared node.
-	 * </p>
+	 * @param DOMNode $node The compared node.
 	 * @return bool true on success or false on failure
 	 */
 	public function isSameNode (DOMNode $node) {}
@@ -3443,9 +2773,7 @@ class DOMDocumentType extends DOMNode  {
 	/**
 	 * Gets the namespace prefix of the node based on the namespace URI
 	 * @link http://www.php.net/manual/en/domnode.lookupprefix.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI.
 	 * @return string The prefix of the namespace.
 	 */
 	public function lookupPrefix (string $namespaceURI) {}
@@ -3453,9 +2781,7 @@ class DOMDocumentType extends DOMNode  {
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
 	 * @link http://www.php.net/manual/en/domnode.isdefaultnamespace.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI to look for.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI to look for.
 	 * @return bool Return true if namespaceURI is the default
 	 * namespace, false otherwise.
 	 */
@@ -3464,9 +2790,7 @@ class DOMDocumentType extends DOMNode  {
 	/**
 	 * Gets the namespace URI of the node based on the prefix
 	 * @link http://www.php.net/manual/en/domnode.lookupnamespaceuri.php
-	 * @param string $prefix <p>
-	 * The prefix of the namespace.
-	 * </p>
+	 * @param string $prefix The prefix of the namespace.
 	 * @return string The namespace URI of the node.
 	 */
 	public function lookupNamespaceUri (string $prefix) {}
@@ -3511,19 +2835,11 @@ class DOMDocumentType extends DOMNode  {
 	/**
 	 * Canonicalize nodes to a string
 	 * @link http://www.php.net/manual/en/domnode.c14n.php
-	 * @param bool $exclusive [optional] <p>
-	 * Enable exclusive parsing of only the nodes matched by the provided
+	 * @param bool $exclusive [optional] Enable exclusive parsing of only the nodes matched by the provided
 	 * xpath or namespace prefixes.
-	 * </p>
-	 * @param bool $with_comments [optional] <p>
-	 * Retain comments in output.
-	 * </p>
-	 * @param array $xpath [optional] <p>
-	 * An array of xpaths to filter the nodes by.
-	 * </p>
-	 * @param array $ns_prefixes [optional] <p>
-	 * An array of namespace prefixes to filter the nodes by.
-	 * </p>
+	 * @param bool $with_comments [optional] Retain comments in output.
+	 * @param array $xpath [optional] An array of xpaths to filter the nodes by.
+	 * @param array $ns_prefixes [optional] An array of namespace prefixes to filter the nodes by.
 	 * @return string canonicalized nodes as a string or false on failure
 	 */
 	public function C14N (bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
@@ -3531,22 +2847,12 @@ class DOMDocumentType extends DOMNode  {
 	/**
 	 * Canonicalize nodes to a file
 	 * @link http://www.php.net/manual/en/domnode.c14nfile.php
-	 * @param string $uri <p>
-	 * Path to write the output to.
-	 * </p>
-	 * @param bool $exclusive [optional] <p>
-	 * Enable exclusive parsing of only the nodes matched by the provided
+	 * @param string $uri Path to write the output to.
+	 * @param bool $exclusive [optional] Enable exclusive parsing of only the nodes matched by the provided
 	 * xpath or namespace prefixes.
-	 * </p>
-	 * @param bool $with_comments [optional] <p>
-	 * Retain comments in output.
-	 * </p>
-	 * @param array $xpath [optional] <p>
-	 * An array of xpaths to filter the nodes by.
-	 * </p>
-	 * @param array $ns_prefixes [optional] <p>
-	 * An array of namespace prefixes to filter the nodes by.
-	 * </p>
+	 * @param bool $with_comments [optional] Retain comments in output.
+	 * @param array $xpath [optional] An array of xpaths to filter the nodes by.
+	 * @param array $ns_prefixes [optional] An array of namespace prefixes to filter the nodes by.
 	 * @return int Number of bytes written or false on failure
 	 */
 	public function C14NFile (string $uri, bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
@@ -3558,13 +2864,9 @@ class DOMNotation extends DOMNode  {
 	/**
 	 * Adds a new child before a reference node
 	 * @link http://www.php.net/manual/en/domnode.insertbefore.php
-	 * @param DOMNode $newnode <p>
-	 * The new node.
-	 * </p>
-	 * @param DOMNode $refnode [optional] <p>
-	 * The reference node. If not supplied, newnode is
+	 * @param DOMNode $newnode The new node.
+	 * @param DOMNode $refnode [optional] The reference node. If not supplied, newnode is
 	 * appended to the children.
-	 * </p>
 	 * @return DOMNode The inserted node.
 	 */
 	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
@@ -3572,14 +2874,10 @@ class DOMNotation extends DOMNode  {
 	/**
 	 * Replaces a child
 	 * @link http://www.php.net/manual/en/domnode.replacechild.php
-	 * @param DOMNode $newnode <p>
-	 * The new node. It must be a member of the target document, i.e.
+	 * @param DOMNode $newnode The new node. It must be a member of the target document, i.e.
 	 * created by one of the DOMDocument->createXXX() methods or imported in
 	 * the document by .
-	 * </p>
-	 * @param DOMNode $oldnode <p>
-	 * The old node.
-	 * </p>
+	 * @param DOMNode $oldnode The old node.
 	 * @return DOMNode The old node or false if an error occur.
 	 */
 	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
@@ -3587,9 +2885,7 @@ class DOMNotation extends DOMNode  {
 	/**
 	 * Removes child from list of children
 	 * @link http://www.php.net/manual/en/domnode.removechild.php
-	 * @param DOMNode $oldnode <p>
-	 * The removed child.
-	 * </p>
+	 * @param DOMNode $oldnode The removed child.
 	 * @return DOMNode If the child could be removed the function returns the old child.
 	 */
 	public function removeChild (DOMNode $oldnode) {}
@@ -3597,9 +2893,7 @@ class DOMNotation extends DOMNode  {
 	/**
 	 * Adds new child at the end of the children
 	 * @link http://www.php.net/manual/en/domnode.appendchild.php
-	 * @param DOMNode $newnode <p>
-	 * The appended child.
-	 * </p>
+	 * @param DOMNode $newnode The appended child.
 	 * @return DOMNode The node added.
 	 */
 	public function appendChild (DOMNode $newnode) {}
@@ -3614,10 +2908,8 @@ class DOMNotation extends DOMNode  {
 	/**
 	 * Clones a node
 	 * @link http://www.php.net/manual/en/domnode.clonenode.php
-	 * @param bool $deep [optional] <p>
-	 * Indicates whether to copy all descendant nodes. This parameter is 
+	 * @param bool $deep [optional] Indicates whether to copy all descendant nodes. This parameter is 
 	 * defaulted to false.
-	 * </p>
 	 * @return DOMNode The cloned node.
 	 */
 	public function cloneNode (bool $deep = null) {}
@@ -3632,14 +2924,10 @@ class DOMNotation extends DOMNode  {
 	/**
 	 * Checks if feature is supported for specified version
 	 * @link http://www.php.net/manual/en/domnode.issupported.php
-	 * @param string $feature <p>
-	 * The feature to test. See the example of 
+	 * @param string $feature The feature to test. See the example of 
 	 * DOMImplementation::hasFeature for a
 	 * list of features.
-	 * </p>
-	 * @param string $version <p>
-	 * The version number of the feature to test.
-	 * </p>
+	 * @param string $version The version number of the feature to test.
 	 * @return bool true on success or false on failure
 	 */
 	public function isSupported (string $feature, string $version) {}
@@ -3659,9 +2947,7 @@ class DOMNotation extends DOMNode  {
 	/**
 	 * Indicates if two nodes are the same node
 	 * @link http://www.php.net/manual/en/domnode.issamenode.php
-	 * @param DOMNode $node <p>
-	 * The compared node.
-	 * </p>
+	 * @param DOMNode $node The compared node.
 	 * @return bool true on success or false on failure
 	 */
 	public function isSameNode (DOMNode $node) {}
@@ -3669,9 +2955,7 @@ class DOMNotation extends DOMNode  {
 	/**
 	 * Gets the namespace prefix of the node based on the namespace URI
 	 * @link http://www.php.net/manual/en/domnode.lookupprefix.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI.
 	 * @return string The prefix of the namespace.
 	 */
 	public function lookupPrefix (string $namespaceURI) {}
@@ -3679,9 +2963,7 @@ class DOMNotation extends DOMNode  {
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
 	 * @link http://www.php.net/manual/en/domnode.isdefaultnamespace.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI to look for.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI to look for.
 	 * @return bool Return true if namespaceURI is the default
 	 * namespace, false otherwise.
 	 */
@@ -3690,9 +2972,7 @@ class DOMNotation extends DOMNode  {
 	/**
 	 * Gets the namespace URI of the node based on the prefix
 	 * @link http://www.php.net/manual/en/domnode.lookupnamespaceuri.php
-	 * @param string $prefix <p>
-	 * The prefix of the namespace.
-	 * </p>
+	 * @param string $prefix The prefix of the namespace.
 	 * @return string The namespace URI of the node.
 	 */
 	public function lookupNamespaceUri (string $prefix) {}
@@ -3737,19 +3017,11 @@ class DOMNotation extends DOMNode  {
 	/**
 	 * Canonicalize nodes to a string
 	 * @link http://www.php.net/manual/en/domnode.c14n.php
-	 * @param bool $exclusive [optional] <p>
-	 * Enable exclusive parsing of only the nodes matched by the provided
+	 * @param bool $exclusive [optional] Enable exclusive parsing of only the nodes matched by the provided
 	 * xpath or namespace prefixes.
-	 * </p>
-	 * @param bool $with_comments [optional] <p>
-	 * Retain comments in output.
-	 * </p>
-	 * @param array $xpath [optional] <p>
-	 * An array of xpaths to filter the nodes by.
-	 * </p>
-	 * @param array $ns_prefixes [optional] <p>
-	 * An array of namespace prefixes to filter the nodes by.
-	 * </p>
+	 * @param bool $with_comments [optional] Retain comments in output.
+	 * @param array $xpath [optional] An array of xpaths to filter the nodes by.
+	 * @param array $ns_prefixes [optional] An array of namespace prefixes to filter the nodes by.
 	 * @return string canonicalized nodes as a string or false on failure
 	 */
 	public function C14N (bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
@@ -3757,22 +3029,12 @@ class DOMNotation extends DOMNode  {
 	/**
 	 * Canonicalize nodes to a file
 	 * @link http://www.php.net/manual/en/domnode.c14nfile.php
-	 * @param string $uri <p>
-	 * Path to write the output to.
-	 * </p>
-	 * @param bool $exclusive [optional] <p>
-	 * Enable exclusive parsing of only the nodes matched by the provided
+	 * @param string $uri Path to write the output to.
+	 * @param bool $exclusive [optional] Enable exclusive parsing of only the nodes matched by the provided
 	 * xpath or namespace prefixes.
-	 * </p>
-	 * @param bool $with_comments [optional] <p>
-	 * Retain comments in output.
-	 * </p>
-	 * @param array $xpath [optional] <p>
-	 * An array of xpaths to filter the nodes by.
-	 * </p>
-	 * @param array $ns_prefixes [optional] <p>
-	 * An array of namespace prefixes to filter the nodes by.
-	 * </p>
+	 * @param bool $with_comments [optional] Retain comments in output.
+	 * @param array $xpath [optional] An array of xpaths to filter the nodes by.
+	 * @param array $ns_prefixes [optional] An array of namespace prefixes to filter the nodes by.
 	 * @return int Number of bytes written or false on failure
 	 */
 	public function C14NFile (string $uri, bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
@@ -3784,13 +3046,9 @@ class DOMEntity extends DOMNode  {
 	/**
 	 * Adds a new child before a reference node
 	 * @link http://www.php.net/manual/en/domnode.insertbefore.php
-	 * @param DOMNode $newnode <p>
-	 * The new node.
-	 * </p>
-	 * @param DOMNode $refnode [optional] <p>
-	 * The reference node. If not supplied, newnode is
+	 * @param DOMNode $newnode The new node.
+	 * @param DOMNode $refnode [optional] The reference node. If not supplied, newnode is
 	 * appended to the children.
-	 * </p>
 	 * @return DOMNode The inserted node.
 	 */
 	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
@@ -3798,14 +3056,10 @@ class DOMEntity extends DOMNode  {
 	/**
 	 * Replaces a child
 	 * @link http://www.php.net/manual/en/domnode.replacechild.php
-	 * @param DOMNode $newnode <p>
-	 * The new node. It must be a member of the target document, i.e.
+	 * @param DOMNode $newnode The new node. It must be a member of the target document, i.e.
 	 * created by one of the DOMDocument->createXXX() methods or imported in
 	 * the document by .
-	 * </p>
-	 * @param DOMNode $oldnode <p>
-	 * The old node.
-	 * </p>
+	 * @param DOMNode $oldnode The old node.
 	 * @return DOMNode The old node or false if an error occur.
 	 */
 	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
@@ -3813,9 +3067,7 @@ class DOMEntity extends DOMNode  {
 	/**
 	 * Removes child from list of children
 	 * @link http://www.php.net/manual/en/domnode.removechild.php
-	 * @param DOMNode $oldnode <p>
-	 * The removed child.
-	 * </p>
+	 * @param DOMNode $oldnode The removed child.
 	 * @return DOMNode If the child could be removed the function returns the old child.
 	 */
 	public function removeChild (DOMNode $oldnode) {}
@@ -3823,9 +3075,7 @@ class DOMEntity extends DOMNode  {
 	/**
 	 * Adds new child at the end of the children
 	 * @link http://www.php.net/manual/en/domnode.appendchild.php
-	 * @param DOMNode $newnode <p>
-	 * The appended child.
-	 * </p>
+	 * @param DOMNode $newnode The appended child.
 	 * @return DOMNode The node added.
 	 */
 	public function appendChild (DOMNode $newnode) {}
@@ -3840,10 +3090,8 @@ class DOMEntity extends DOMNode  {
 	/**
 	 * Clones a node
 	 * @link http://www.php.net/manual/en/domnode.clonenode.php
-	 * @param bool $deep [optional] <p>
-	 * Indicates whether to copy all descendant nodes. This parameter is 
+	 * @param bool $deep [optional] Indicates whether to copy all descendant nodes. This parameter is 
 	 * defaulted to false.
-	 * </p>
 	 * @return DOMNode The cloned node.
 	 */
 	public function cloneNode (bool $deep = null) {}
@@ -3858,14 +3106,10 @@ class DOMEntity extends DOMNode  {
 	/**
 	 * Checks if feature is supported for specified version
 	 * @link http://www.php.net/manual/en/domnode.issupported.php
-	 * @param string $feature <p>
-	 * The feature to test. See the example of 
+	 * @param string $feature The feature to test. See the example of 
 	 * DOMImplementation::hasFeature for a
 	 * list of features.
-	 * </p>
-	 * @param string $version <p>
-	 * The version number of the feature to test.
-	 * </p>
+	 * @param string $version The version number of the feature to test.
 	 * @return bool true on success or false on failure
 	 */
 	public function isSupported (string $feature, string $version) {}
@@ -3885,9 +3129,7 @@ class DOMEntity extends DOMNode  {
 	/**
 	 * Indicates if two nodes are the same node
 	 * @link http://www.php.net/manual/en/domnode.issamenode.php
-	 * @param DOMNode $node <p>
-	 * The compared node.
-	 * </p>
+	 * @param DOMNode $node The compared node.
 	 * @return bool true on success or false on failure
 	 */
 	public function isSameNode (DOMNode $node) {}
@@ -3895,9 +3137,7 @@ class DOMEntity extends DOMNode  {
 	/**
 	 * Gets the namespace prefix of the node based on the namespace URI
 	 * @link http://www.php.net/manual/en/domnode.lookupprefix.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI.
 	 * @return string The prefix of the namespace.
 	 */
 	public function lookupPrefix (string $namespaceURI) {}
@@ -3905,9 +3145,7 @@ class DOMEntity extends DOMNode  {
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
 	 * @link http://www.php.net/manual/en/domnode.isdefaultnamespace.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI to look for.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI to look for.
 	 * @return bool Return true if namespaceURI is the default
 	 * namespace, false otherwise.
 	 */
@@ -3916,9 +3154,7 @@ class DOMEntity extends DOMNode  {
 	/**
 	 * Gets the namespace URI of the node based on the prefix
 	 * @link http://www.php.net/manual/en/domnode.lookupnamespaceuri.php
-	 * @param string $prefix <p>
-	 * The prefix of the namespace.
-	 * </p>
+	 * @param string $prefix The prefix of the namespace.
 	 * @return string The namespace URI of the node.
 	 */
 	public function lookupNamespaceUri (string $prefix) {}
@@ -3963,19 +3199,11 @@ class DOMEntity extends DOMNode  {
 	/**
 	 * Canonicalize nodes to a string
 	 * @link http://www.php.net/manual/en/domnode.c14n.php
-	 * @param bool $exclusive [optional] <p>
-	 * Enable exclusive parsing of only the nodes matched by the provided
+	 * @param bool $exclusive [optional] Enable exclusive parsing of only the nodes matched by the provided
 	 * xpath or namespace prefixes.
-	 * </p>
-	 * @param bool $with_comments [optional] <p>
-	 * Retain comments in output.
-	 * </p>
-	 * @param array $xpath [optional] <p>
-	 * An array of xpaths to filter the nodes by.
-	 * </p>
-	 * @param array $ns_prefixes [optional] <p>
-	 * An array of namespace prefixes to filter the nodes by.
-	 * </p>
+	 * @param bool $with_comments [optional] Retain comments in output.
+	 * @param array $xpath [optional] An array of xpaths to filter the nodes by.
+	 * @param array $ns_prefixes [optional] An array of namespace prefixes to filter the nodes by.
 	 * @return string canonicalized nodes as a string or false on failure
 	 */
 	public function C14N (bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
@@ -3983,22 +3211,12 @@ class DOMEntity extends DOMNode  {
 	/**
 	 * Canonicalize nodes to a file
 	 * @link http://www.php.net/manual/en/domnode.c14nfile.php
-	 * @param string $uri <p>
-	 * Path to write the output to.
-	 * </p>
-	 * @param bool $exclusive [optional] <p>
-	 * Enable exclusive parsing of only the nodes matched by the provided
+	 * @param string $uri Path to write the output to.
+	 * @param bool $exclusive [optional] Enable exclusive parsing of only the nodes matched by the provided
 	 * xpath or namespace prefixes.
-	 * </p>
-	 * @param bool $with_comments [optional] <p>
-	 * Retain comments in output.
-	 * </p>
-	 * @param array $xpath [optional] <p>
-	 * An array of xpaths to filter the nodes by.
-	 * </p>
-	 * @param array $ns_prefixes [optional] <p>
-	 * An array of namespace prefixes to filter the nodes by.
-	 * </p>
+	 * @param bool $with_comments [optional] Retain comments in output.
+	 * @param array $xpath [optional] An array of xpaths to filter the nodes by.
+	 * @param array $ns_prefixes [optional] An array of namespace prefixes to filter the nodes by.
 	 * @return int Number of bytes written or false on failure
 	 */
 	public function C14NFile (string $uri, bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
@@ -4017,13 +3235,9 @@ class DOMEntityReference extends DOMNode  {
 	/**
 	 * Adds a new child before a reference node
 	 * @link http://www.php.net/manual/en/domnode.insertbefore.php
-	 * @param DOMNode $newnode <p>
-	 * The new node.
-	 * </p>
-	 * @param DOMNode $refnode [optional] <p>
-	 * The reference node. If not supplied, newnode is
+	 * @param DOMNode $newnode The new node.
+	 * @param DOMNode $refnode [optional] The reference node. If not supplied, newnode is
 	 * appended to the children.
-	 * </p>
 	 * @return DOMNode The inserted node.
 	 */
 	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
@@ -4031,14 +3245,10 @@ class DOMEntityReference extends DOMNode  {
 	/**
 	 * Replaces a child
 	 * @link http://www.php.net/manual/en/domnode.replacechild.php
-	 * @param DOMNode $newnode <p>
-	 * The new node. It must be a member of the target document, i.e.
+	 * @param DOMNode $newnode The new node. It must be a member of the target document, i.e.
 	 * created by one of the DOMDocument->createXXX() methods or imported in
 	 * the document by .
-	 * </p>
-	 * @param DOMNode $oldnode <p>
-	 * The old node.
-	 * </p>
+	 * @param DOMNode $oldnode The old node.
 	 * @return DOMNode The old node or false if an error occur.
 	 */
 	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
@@ -4046,9 +3256,7 @@ class DOMEntityReference extends DOMNode  {
 	/**
 	 * Removes child from list of children
 	 * @link http://www.php.net/manual/en/domnode.removechild.php
-	 * @param DOMNode $oldnode <p>
-	 * The removed child.
-	 * </p>
+	 * @param DOMNode $oldnode The removed child.
 	 * @return DOMNode If the child could be removed the function returns the old child.
 	 */
 	public function removeChild (DOMNode $oldnode) {}
@@ -4056,9 +3264,7 @@ class DOMEntityReference extends DOMNode  {
 	/**
 	 * Adds new child at the end of the children
 	 * @link http://www.php.net/manual/en/domnode.appendchild.php
-	 * @param DOMNode $newnode <p>
-	 * The appended child.
-	 * </p>
+	 * @param DOMNode $newnode The appended child.
 	 * @return DOMNode The node added.
 	 */
 	public function appendChild (DOMNode $newnode) {}
@@ -4073,10 +3279,8 @@ class DOMEntityReference extends DOMNode  {
 	/**
 	 * Clones a node
 	 * @link http://www.php.net/manual/en/domnode.clonenode.php
-	 * @param bool $deep [optional] <p>
-	 * Indicates whether to copy all descendant nodes. This parameter is 
+	 * @param bool $deep [optional] Indicates whether to copy all descendant nodes. This parameter is 
 	 * defaulted to false.
-	 * </p>
 	 * @return DOMNode The cloned node.
 	 */
 	public function cloneNode (bool $deep = null) {}
@@ -4091,14 +3295,10 @@ class DOMEntityReference extends DOMNode  {
 	/**
 	 * Checks if feature is supported for specified version
 	 * @link http://www.php.net/manual/en/domnode.issupported.php
-	 * @param string $feature <p>
-	 * The feature to test. See the example of 
+	 * @param string $feature The feature to test. See the example of 
 	 * DOMImplementation::hasFeature for a
 	 * list of features.
-	 * </p>
-	 * @param string $version <p>
-	 * The version number of the feature to test.
-	 * </p>
+	 * @param string $version The version number of the feature to test.
 	 * @return bool true on success or false on failure
 	 */
 	public function isSupported (string $feature, string $version) {}
@@ -4118,9 +3318,7 @@ class DOMEntityReference extends DOMNode  {
 	/**
 	 * Indicates if two nodes are the same node
 	 * @link http://www.php.net/manual/en/domnode.issamenode.php
-	 * @param DOMNode $node <p>
-	 * The compared node.
-	 * </p>
+	 * @param DOMNode $node The compared node.
 	 * @return bool true on success or false on failure
 	 */
 	public function isSameNode (DOMNode $node) {}
@@ -4128,9 +3326,7 @@ class DOMEntityReference extends DOMNode  {
 	/**
 	 * Gets the namespace prefix of the node based on the namespace URI
 	 * @link http://www.php.net/manual/en/domnode.lookupprefix.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI.
 	 * @return string The prefix of the namespace.
 	 */
 	public function lookupPrefix (string $namespaceURI) {}
@@ -4138,9 +3334,7 @@ class DOMEntityReference extends DOMNode  {
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
 	 * @link http://www.php.net/manual/en/domnode.isdefaultnamespace.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI to look for.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI to look for.
 	 * @return bool Return true if namespaceURI is the default
 	 * namespace, false otherwise.
 	 */
@@ -4149,9 +3343,7 @@ class DOMEntityReference extends DOMNode  {
 	/**
 	 * Gets the namespace URI of the node based on the prefix
 	 * @link http://www.php.net/manual/en/domnode.lookupnamespaceuri.php
-	 * @param string $prefix <p>
-	 * The prefix of the namespace.
-	 * </p>
+	 * @param string $prefix The prefix of the namespace.
 	 * @return string The namespace URI of the node.
 	 */
 	public function lookupNamespaceUri (string $prefix) {}
@@ -4196,19 +3388,11 @@ class DOMEntityReference extends DOMNode  {
 	/**
 	 * Canonicalize nodes to a string
 	 * @link http://www.php.net/manual/en/domnode.c14n.php
-	 * @param bool $exclusive [optional] <p>
-	 * Enable exclusive parsing of only the nodes matched by the provided
+	 * @param bool $exclusive [optional] Enable exclusive parsing of only the nodes matched by the provided
 	 * xpath or namespace prefixes.
-	 * </p>
-	 * @param bool $with_comments [optional] <p>
-	 * Retain comments in output.
-	 * </p>
-	 * @param array $xpath [optional] <p>
-	 * An array of xpaths to filter the nodes by.
-	 * </p>
-	 * @param array $ns_prefixes [optional] <p>
-	 * An array of namespace prefixes to filter the nodes by.
-	 * </p>
+	 * @param bool $with_comments [optional] Retain comments in output.
+	 * @param array $xpath [optional] An array of xpaths to filter the nodes by.
+	 * @param array $ns_prefixes [optional] An array of namespace prefixes to filter the nodes by.
 	 * @return string canonicalized nodes as a string or false on failure
 	 */
 	public function C14N (bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
@@ -4216,22 +3400,12 @@ class DOMEntityReference extends DOMNode  {
 	/**
 	 * Canonicalize nodes to a file
 	 * @link http://www.php.net/manual/en/domnode.c14nfile.php
-	 * @param string $uri <p>
-	 * Path to write the output to.
-	 * </p>
-	 * @param bool $exclusive [optional] <p>
-	 * Enable exclusive parsing of only the nodes matched by the provided
+	 * @param string $uri Path to write the output to.
+	 * @param bool $exclusive [optional] Enable exclusive parsing of only the nodes matched by the provided
 	 * xpath or namespace prefixes.
-	 * </p>
-	 * @param bool $with_comments [optional] <p>
-	 * Retain comments in output.
-	 * </p>
-	 * @param array $xpath [optional] <p>
-	 * An array of xpaths to filter the nodes by.
-	 * </p>
-	 * @param array $ns_prefixes [optional] <p>
-	 * An array of namespace prefixes to filter the nodes by.
-	 * </p>
+	 * @param bool $with_comments [optional] Retain comments in output.
+	 * @param array $xpath [optional] An array of xpaths to filter the nodes by.
+	 * @param array $ns_prefixes [optional] An array of namespace prefixes to filter the nodes by.
 	 * @return int Number of bytes written or false on failure
 	 */
 	public function C14NFile (string $uri, bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
@@ -4251,13 +3425,9 @@ class DOMProcessingInstruction extends DOMNode  {
 	/**
 	 * Adds a new child before a reference node
 	 * @link http://www.php.net/manual/en/domnode.insertbefore.php
-	 * @param DOMNode $newnode <p>
-	 * The new node.
-	 * </p>
-	 * @param DOMNode $refnode [optional] <p>
-	 * The reference node. If not supplied, newnode is
+	 * @param DOMNode $newnode The new node.
+	 * @param DOMNode $refnode [optional] The reference node. If not supplied, newnode is
 	 * appended to the children.
-	 * </p>
 	 * @return DOMNode The inserted node.
 	 */
 	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
@@ -4265,14 +3435,10 @@ class DOMProcessingInstruction extends DOMNode  {
 	/**
 	 * Replaces a child
 	 * @link http://www.php.net/manual/en/domnode.replacechild.php
-	 * @param DOMNode $newnode <p>
-	 * The new node. It must be a member of the target document, i.e.
+	 * @param DOMNode $newnode The new node. It must be a member of the target document, i.e.
 	 * created by one of the DOMDocument->createXXX() methods or imported in
 	 * the document by .
-	 * </p>
-	 * @param DOMNode $oldnode <p>
-	 * The old node.
-	 * </p>
+	 * @param DOMNode $oldnode The old node.
 	 * @return DOMNode The old node or false if an error occur.
 	 */
 	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
@@ -4280,9 +3446,7 @@ class DOMProcessingInstruction extends DOMNode  {
 	/**
 	 * Removes child from list of children
 	 * @link http://www.php.net/manual/en/domnode.removechild.php
-	 * @param DOMNode $oldnode <p>
-	 * The removed child.
-	 * </p>
+	 * @param DOMNode $oldnode The removed child.
 	 * @return DOMNode If the child could be removed the function returns the old child.
 	 */
 	public function removeChild (DOMNode $oldnode) {}
@@ -4290,9 +3454,7 @@ class DOMProcessingInstruction extends DOMNode  {
 	/**
 	 * Adds new child at the end of the children
 	 * @link http://www.php.net/manual/en/domnode.appendchild.php
-	 * @param DOMNode $newnode <p>
-	 * The appended child.
-	 * </p>
+	 * @param DOMNode $newnode The appended child.
 	 * @return DOMNode The node added.
 	 */
 	public function appendChild (DOMNode $newnode) {}
@@ -4307,10 +3469,8 @@ class DOMProcessingInstruction extends DOMNode  {
 	/**
 	 * Clones a node
 	 * @link http://www.php.net/manual/en/domnode.clonenode.php
-	 * @param bool $deep [optional] <p>
-	 * Indicates whether to copy all descendant nodes. This parameter is 
+	 * @param bool $deep [optional] Indicates whether to copy all descendant nodes. This parameter is 
 	 * defaulted to false.
-	 * </p>
 	 * @return DOMNode The cloned node.
 	 */
 	public function cloneNode (bool $deep = null) {}
@@ -4325,14 +3485,10 @@ class DOMProcessingInstruction extends DOMNode  {
 	/**
 	 * Checks if feature is supported for specified version
 	 * @link http://www.php.net/manual/en/domnode.issupported.php
-	 * @param string $feature <p>
-	 * The feature to test. See the example of 
+	 * @param string $feature The feature to test. See the example of 
 	 * DOMImplementation::hasFeature for a
 	 * list of features.
-	 * </p>
-	 * @param string $version <p>
-	 * The version number of the feature to test.
-	 * </p>
+	 * @param string $version The version number of the feature to test.
 	 * @return bool true on success or false on failure
 	 */
 	public function isSupported (string $feature, string $version) {}
@@ -4352,9 +3508,7 @@ class DOMProcessingInstruction extends DOMNode  {
 	/**
 	 * Indicates if two nodes are the same node
 	 * @link http://www.php.net/manual/en/domnode.issamenode.php
-	 * @param DOMNode $node <p>
-	 * The compared node.
-	 * </p>
+	 * @param DOMNode $node The compared node.
 	 * @return bool true on success or false on failure
 	 */
 	public function isSameNode (DOMNode $node) {}
@@ -4362,9 +3516,7 @@ class DOMProcessingInstruction extends DOMNode  {
 	/**
 	 * Gets the namespace prefix of the node based on the namespace URI
 	 * @link http://www.php.net/manual/en/domnode.lookupprefix.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI.
 	 * @return string The prefix of the namespace.
 	 */
 	public function lookupPrefix (string $namespaceURI) {}
@@ -4372,9 +3524,7 @@ class DOMProcessingInstruction extends DOMNode  {
 	/**
 	 * Checks if the specified namespaceURI is the default namespace or not
 	 * @link http://www.php.net/manual/en/domnode.isdefaultnamespace.php
-	 * @param string $namespaceURI <p>
-	 * The namespace URI to look for.
-	 * </p>
+	 * @param string $namespaceURI The namespace URI to look for.
 	 * @return bool Return true if namespaceURI is the default
 	 * namespace, false otherwise.
 	 */
@@ -4383,9 +3533,7 @@ class DOMProcessingInstruction extends DOMNode  {
 	/**
 	 * Gets the namespace URI of the node based on the prefix
 	 * @link http://www.php.net/manual/en/domnode.lookupnamespaceuri.php
-	 * @param string $prefix <p>
-	 * The prefix of the namespace.
-	 * </p>
+	 * @param string $prefix The prefix of the namespace.
 	 * @return string The namespace URI of the node.
 	 */
 	public function lookupNamespaceUri (string $prefix) {}
@@ -4430,19 +3578,11 @@ class DOMProcessingInstruction extends DOMNode  {
 	/**
 	 * Canonicalize nodes to a string
 	 * @link http://www.php.net/manual/en/domnode.c14n.php
-	 * @param bool $exclusive [optional] <p>
-	 * Enable exclusive parsing of only the nodes matched by the provided
+	 * @param bool $exclusive [optional] Enable exclusive parsing of only the nodes matched by the provided
 	 * xpath or namespace prefixes.
-	 * </p>
-	 * @param bool $with_comments [optional] <p>
-	 * Retain comments in output.
-	 * </p>
-	 * @param array $xpath [optional] <p>
-	 * An array of xpaths to filter the nodes by.
-	 * </p>
-	 * @param array $ns_prefixes [optional] <p>
-	 * An array of namespace prefixes to filter the nodes by.
-	 * </p>
+	 * @param bool $with_comments [optional] Retain comments in output.
+	 * @param array $xpath [optional] An array of xpaths to filter the nodes by.
+	 * @param array $ns_prefixes [optional] An array of namespace prefixes to filter the nodes by.
 	 * @return string canonicalized nodes as a string or false on failure
 	 */
 	public function C14N (bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
@@ -4450,22 +3590,12 @@ class DOMProcessingInstruction extends DOMNode  {
 	/**
 	 * Canonicalize nodes to a file
 	 * @link http://www.php.net/manual/en/domnode.c14nfile.php
-	 * @param string $uri <p>
-	 * Path to write the output to.
-	 * </p>
-	 * @param bool $exclusive [optional] <p>
-	 * Enable exclusive parsing of only the nodes matched by the provided
+	 * @param string $uri Path to write the output to.
+	 * @param bool $exclusive [optional] Enable exclusive parsing of only the nodes matched by the provided
 	 * xpath or namespace prefixes.
-	 * </p>
-	 * @param bool $with_comments [optional] <p>
-	 * Retain comments in output.
-	 * </p>
-	 * @param array $xpath [optional] <p>
-	 * An array of xpaths to filter the nodes by.
-	 * </p>
-	 * @param array $ns_prefixes [optional] <p>
-	 * An array of namespace prefixes to filter the nodes by.
-	 * </p>
+	 * @param bool $with_comments [optional] Retain comments in output.
+	 * @param array $xpath [optional] An array of xpaths to filter the nodes by.
+	 * @param array $ns_prefixes [optional] An array of namespace prefixes to filter the nodes by.
 	 * @return int Number of bytes written or false on failure
 	 */
 	public function C14NFile (string $uri, bool $exclusive = null, bool $with_comments = null, array $xpath = null, array $ns_prefixes = null) {}
@@ -4498,12 +3628,8 @@ class DOMXPath  {
 	/**
 	 * Registers the namespace with the DOMXPath object
 	 * @link http://www.php.net/manual/en/domxpath.registernamespace.php
-	 * @param string $prefix <p>
-	 * The prefix.
-	 * </p>
-	 * @param string $namespaceURI <p>
-	 * The URI of the namespace.
-	 * </p>
+	 * @param string $prefix The prefix.
+	 * @param string $namespaceURI The URI of the namespace.
 	 * @return bool true on success or false on failure
 	 */
 	public function registerNamespace (string $prefix, string $namespaceURI) {}
@@ -4511,18 +3637,12 @@ class DOMXPath  {
 	/**
 	 * Evaluates the given XPath expression
 	 * @link http://www.php.net/manual/en/domxpath.query.php
-	 * @param string $expression <p>
-	 * The XPath expression to execute.
-	 * </p>
-	 * @param DOMNode $contextnode [optional] <p>
-	 * The optional contextnode can be specified for
+	 * @param string $expression The XPath expression to execute.
+	 * @param DOMNode $contextnode [optional] The optional contextnode can be specified for
 	 * doing relative XPath queries. By default, the queries are relative to 
 	 * the root element.
-	 * </p>
-	 * @param bool $registerNodeNS [optional] <p>
-	 * The optional registerNodeNS can be specified to 
+	 * @param bool $registerNodeNS [optional] The optional registerNodeNS can be specified to 
 	 * disable automatic registration of the context node.
-	 * </p>
 	 * @return DOMNodeList a DOMNodeList containing all nodes matching
 	 * the given XPath expression. Any expression which
 	 * does not return nodes will return an empty
@@ -4538,18 +3658,12 @@ class DOMXPath  {
 	/**
 	 * Evaluates the given XPath expression and returns a typed result if possible
 	 * @link http://www.php.net/manual/en/domxpath.evaluate.php
-	 * @param string $expression <p>
-	 * The XPath expression to execute.
-	 * </p>
-	 * @param DOMNode $contextnode [optional] <p>
-	 * The optional contextnode can be specified for
+	 * @param string $expression The XPath expression to execute.
+	 * @param DOMNode $contextnode [optional] The optional contextnode can be specified for
 	 * doing relative XPath queries. By default, the queries are relative to 
 	 * the root element.
-	 * </p>
-	 * @param bool $registerNodeNS [optional] <p>
-	 * The optional registerNodeNS can be specified to 
+	 * @param bool $registerNodeNS [optional] The optional registerNodeNS can be specified to 
 	 * disable automatic registration of the context node.
-	 * </p>
 	 * @return mixed a typed result if possible or a DOMNodeList 
 	 * containing all nodes matching the given XPath expression. 
 	 * <p>
@@ -4580,9 +3694,7 @@ class DOMXPath  {
  * Gets a DOMElement object from a
  * SimpleXMLElement object
  * @link http://www.php.net/manual/en/function.dom-import-simplexml.php
- * @param SimpleXMLElement $node <p>
- * The SimpleXMLElement node.
- * </p>
+ * @param SimpleXMLElement $node The SimpleXMLElement node.
  * @return DOMElement The DOMElement node added or false if any errors occur.
  */
 function dom_import_simplexml (SimpleXMLElement $node) {}
@@ -4659,21 +3771,96 @@ define ('XML_DOCUMENT_FRAG_NODE', 11);
  * @link http://www.php.net/manual/en/dom.constants.php
  */
 define ('XML_NOTATION_NODE', 12);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/dom.constants.php
+ */
 define ('XML_HTML_DOCUMENT_NODE', 13);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/dom.constants.php
+ */
 define ('XML_DTD_NODE', 14);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/dom.constants.php
+ */
 define ('XML_ELEMENT_DECL_NODE', 15);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_DECL_NODE', 16);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/dom.constants.php
+ */
 define ('XML_ENTITY_DECL_NODE', 17);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/dom.constants.php
+ */
 define ('XML_NAMESPACE_DECL_NODE', 18);
 define ('XML_LOCAL_NAMESPACE', 18);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_CDATA', 1);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_ID', 2);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_IDREF', 3);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_IDREFS', 4);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_ENTITY', 6);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_NMTOKEN', 7);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_NMTOKENS', 8);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_ENUMERATION', 9);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_NOTATION', 10);
 
 /**

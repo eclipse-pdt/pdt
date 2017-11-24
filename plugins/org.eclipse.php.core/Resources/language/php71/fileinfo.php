@@ -43,10 +43,8 @@ class finfo  {
 /**
  * Create a new fileinfo resource
  * @link http://www.php.net/manual/en/function.finfo-open.php
- * @param int $options [optional] <p>
- * One or disjunction of more Fileinfo
+ * @param int $options [optional] One or disjunction of more Fileinfo
  * constants.
- * </p>
  * @param string $magic_file [optional] <p>
  * Name of a magic database file, usually something like
  * /path/to/magic.mime. If not specified, the
@@ -66,9 +64,7 @@ function finfo_open (int $options = null, string $magic_file = null) {}
 /**
  * Close fileinfo resource
  * @link http://www.php.net/manual/en/function.finfo-close.php
- * @param resource $finfo <p>
- * Fileinfo resource returned by finfo_open.
- * </p>
+ * @param resource $finfo Fileinfo resource returned by finfo_open.
  * @return bool true on success or false on failure
  */
 function finfo_close ($finfo) {}
@@ -76,13 +72,9 @@ function finfo_close ($finfo) {}
 /**
  * Set libmagic configuration options
  * @link http://www.php.net/manual/en/function.finfo-set-flags.php
- * @param resource $finfo <p>
- * Fileinfo resource returned by finfo_open.
- * </p>
- * @param int $options <p>
- * One or disjunction of more Fileinfo
+ * @param resource $finfo Fileinfo resource returned by finfo_open.
+ * @param int $options One or disjunction of more Fileinfo
  * constants.
- * </p>
  * @return bool true on success or false on failure
  */
 function finfo_set_flags ($finfo, int $options) {}
@@ -90,19 +82,11 @@ function finfo_set_flags ($finfo, int $options) {}
 /**
  * Return information about a file
  * @link http://www.php.net/manual/en/function.finfo-file.php
- * @param resource $finfo <p>
- * Fileinfo resource returned by finfo_open.
- * </p>
- * @param string $file_name <p>
- * Name of a file to be checked.
- * </p>
- * @param int $options [optional] <p>
- * One or disjunction of more Fileinfo
+ * @param resource $finfo Fileinfo resource returned by finfo_open.
+ * @param string $file_name Name of a file to be checked.
+ * @param int $options [optional] One or disjunction of more Fileinfo
  * constants.
- * </p>
- * @param resource $context [optional] <p>
- * For a description of contexts, refer to .
- * </p>
+ * @param resource $context [optional] For a description of contexts, refer to .
  * @return string a textual description of the contents of the
  * file_name argument, or false if an error occurred.
  */
@@ -111,18 +95,11 @@ function finfo_file ($finfo, string $file_name, int $options = null, $context = 
 /**
  * Return information about a string buffer
  * @link http://www.php.net/manual/en/function.finfo-buffer.php
- * @param resource $finfo <p>
- * Fileinfo resource returned by finfo_open.
- * </p>
- * @param string $string <p>
- * Content of a file to be checked.
- * </p>
- * @param int $options [optional] <p>
- * One or disjunction of more Fileinfo
+ * @param resource $finfo Fileinfo resource returned by finfo_open.
+ * @param string $string Content of a file to be checked.
+ * @param int $options [optional] One or disjunction of more Fileinfo
  * constants.
- * </p>
- * @param resource $context [optional] <p>
- * </p>
+ * @param resource $context [optional] 
  * @return string a textual description of the string
  * argument, or false if an error occurred.
  */
@@ -131,9 +108,7 @@ function finfo_buffer ($finfo, string $string, int $options = null, $context = n
 /**
  * Detect MIME Content-type for a file
  * @link http://www.php.net/manual/en/function.mime-content-type.php
- * @param string $filename <p>
- * Path to the tested file.
- * </p>
+ * @param string $filename Path to the tested file.
  * @return string the content type in MIME format, like 
  * text/plain or application/octet-stream.
  */

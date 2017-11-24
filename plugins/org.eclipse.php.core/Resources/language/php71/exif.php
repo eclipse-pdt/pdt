@@ -5,13 +5,10 @@
 /**
  * Reads the EXIF headers from an image file
  * @link http://www.php.net/manual/en/function.exif-read-data.php
- * @param mixed $stream <p>
- * The location of the image file. This can either be a path to the file
+ * @param mixed $stream The location of the image file. This can either be a path to the file
  * (stream wrappers are also supported as usual)
  * or a stream resource.
- * </p>
- * @param string $sections [optional] <p>
- * Is a comma separated list of sections that need to be present in file 
+ * @param string $sections [optional] Is a comma separated list of sections that need to be present in file 
  * to produce a result array. If none of the requested 
  * sections could be found the return value is false.
  * <table>
@@ -61,18 +58,13 @@
  * </td>
  * </tr>
  * </table>
- * </p>
- * @param bool $arrays [optional] <p>
- * Specifies whether or not each section becomes an array. The 
+ * @param bool $arrays [optional] Specifies whether or not each section becomes an array. The 
  * sections COMPUTED,
  * THUMBNAIL, and COMMENT 
  * always become arrays as they may contain values whose names conflict
  * with other sections.
- * </p>
- * @param bool $thumbnail [optional] <p>
- * When set to true the thumbnail itself is read. Otherwise, only the
+ * @param bool $thumbnail [optional] When set to true the thumbnail itself is read. Otherwise, only the
  * tagged data is read.
- * </p>
  * @return array It returns an associative array where the array indexes are 
  * the header names and the array values are the values associated with 
  * those headers. If no data can be returned, 
@@ -93,9 +85,7 @@ function read_exif_data ($filename, $sections_needed = null, $sub_arrays = null,
 /**
  * Get the header name for an index
  * @link http://www.php.net/manual/en/function.exif-tagname.php
- * @param int $index <p>
- * The Tag ID for which a Tag Name will be looked up.
- * </p>
+ * @param int $index The Tag ID for which a Tag Name will be looked up.
  * @return string the header name, or false if index is
  * not a defined EXIF tag id.
  */
@@ -104,20 +94,12 @@ function exif_tagname (int $index) {}
 /**
  * Retrieve the embedded thumbnail of an image
  * @link http://www.php.net/manual/en/function.exif-thumbnail.php
- * @param mixed $stream <p>
- * The location of the image file. This can either be a path to the file 
+ * @param mixed $stream The location of the image file. This can either be a path to the file 
  * or a stream resource.
- * </p>
- * @param int $width [optional] <p>
- * The return width of the returned thumbnail.
- * </p>
- * @param int $height [optional] <p>
- * The returned height of the returned thumbnail.
- * </p>
- * @param int $imagetype [optional] <p>
- * The returned image type of the returned thumbnail. This is either
+ * @param int $width [optional] The return width of the returned thumbnail.
+ * @param int $height [optional] The returned height of the returned thumbnail.
+ * @param int $imagetype [optional] The returned image type of the returned thumbnail. This is either
  * TIFF or JPEG.
- * </p>
  * @return string the embedded thumbnail, or false if the image contains no 
  * thumbnail.
  */

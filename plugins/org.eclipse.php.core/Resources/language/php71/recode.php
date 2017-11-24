@@ -5,12 +5,8 @@
 /**
  * Recode a string according to a recode request
  * @link http://www.php.net/manual/en/function.recode-string.php
- * @param string $request <p>
- * The desired recode request type
- * </p>
- * @param string $string <p>
- * The string to be recoded
- * </p>
+ * @param string $request The desired recode request type
+ * @param string $string The string to be recoded
  * @return string the recoded string or false, if unable to 
  * perform the recode request.
  */
@@ -19,17 +15,11 @@ function recode_string (string $request, string $string) {}
 /**
  * Recode from file to file according to recode request
  * @link http://www.php.net/manual/en/function.recode-file.php
- * @param string $request <p>
- * The desired recode request type
- * </p>
- * @param resource $input <p>
- * A local file handle resource for 
+ * @param string $request The desired recode request type
+ * @param resource $input A local file handle resource for 
  * the input
- * </p>
- * @param resource $output <p>
- * A local file handle resource for 
+ * @param resource $output A local file handle resource for 
  * the output
- * </p>
  * @return bool false, if unable to comply, true otherwise.
  */
 function recode_file (string $request, $input, $output) {}
