@@ -5,41 +5,26 @@
 /**
  * Open a connection to a database
  * @link http://www.php.net/manual/en/function.ibase-connect.php
- * @param string $database [optional] <p>
- * The database argument has to be a valid path to
+ * @param string $database [optional] The database argument has to be a valid path to
  * database file on the server it resides on. If the server is not local,
  * it must be prefixed with either 'hostname:' (TCP/IP), 'hostname/port:'
  * (TCP/IP with interbase server on custom TCP port), '//hostname/'
  * (NetBEUI), depending on the connection
- * protocol used. 
- * </p>
- * @param string $username [optional] <p>
- * The user name. Can be set with the
+ * protocol used.
+ * @param string $username [optional] The user name. Can be set with the
  * ibase.default_user php.ini directive.
- * </p>
- * @param string $password [optional] <p>
- * The password for username. Can be set with the
+ * @param string $password [optional] The password for username. Can be set with the
  * ibase.default_password php.ini directive.
- * </p>
- * @param string $charset [optional] <p>
- * charset is the default character set for a
+ * @param string $charset [optional] charset is the default character set for a
  * database.
- * </p>
- * @param int $buffers [optional] <p>
- * buffers is the number of database buffers to
+ * @param int $buffers [optional] buffers is the number of database buffers to
  * allocate for the server-side cache. If 0 or omitted, server chooses
  * its own default.
- * </p>
- * @param int $dialect [optional] <p>
- * dialect selects the default SQL dialect for any
+ * @param int $dialect [optional] dialect selects the default SQL dialect for any
  * statement executed within a connection, and it defaults to the highest
  * one supported by client libraries.
- * </p>
- * @param string $role [optional] <p>
- * Functional only with InterBase 5 and up.
- * </p>
- * @param int $sync [optional] <p>
- * </p>
+ * @param string $role [optional] Functional only with InterBase 5 and up.
+ * @param int $sync [optional] 
  * @return resource an Firebird/InterBase link identifier on success, or false on error.
  */
 function ibase_connect (string $database = null, string $username = null, string $password = null, string $charset = null, int $buffers = null, int $dialect = null, string $role = null, int $sync = null) {}
@@ -47,41 +32,26 @@ function ibase_connect (string $database = null, string $username = null, string
 /**
  * Open a persistent connection to an InterBase database
  * @link http://www.php.net/manual/en/function.ibase-pconnect.php
- * @param string $database [optional] <p>
- * The database argument has to be a valid path to
+ * @param string $database [optional] The database argument has to be a valid path to
  * database file on the server it resides on. If the server is not local,
  * it must be prefixed with either 'hostname:' (TCP/IP), '//hostname/'
  * (NetBEUI) or 'hostname@' (IPX/SPX), depending on the connection
- * protocol used. 
- * </p>
- * @param string $username [optional] <p>
- * The user name. Can be set with the
+ * protocol used.
+ * @param string $username [optional] The user name. Can be set with the
  * ibase.default_user php.ini directive.
- * </p>
- * @param string $password [optional] <p>
- * The password for username. Can be set with the
+ * @param string $password [optional] The password for username. Can be set with the
  * ibase.default_password php.ini directive.
- * </p>
- * @param string $charset [optional] <p>
- * charset is the default character set for a
+ * @param string $charset [optional] charset is the default character set for a
  * database.
- * </p>
- * @param int $buffers [optional] <p>
- * buffers is the number of database buffers to
+ * @param int $buffers [optional] buffers is the number of database buffers to
  * allocate for the server-side cache. If 0 or omitted, server chooses
  * its own default.
- * </p>
- * @param int $dialect [optional] <p>
- * dialect selects the default SQL dialect for any
+ * @param int $dialect [optional] dialect selects the default SQL dialect for any
  * statement executed within a connection, and it defaults to the highest
  * one supported by client libraries. Functional only with InterBase 6
  * and up.
- * </p>
- * @param string $role [optional] <p>
- * Functional only with InterBase 5 and up.
- * </p>
- * @param int $sync [optional] <p>
- * </p>
+ * @param string $role [optional] Functional only with InterBase 5 and up.
+ * @param int $sync [optional] 
  * @return resource an InterBase link identifier on success, or false on error.
  */
 function ibase_pconnect (string $database = null, string $username = null, string $password = null, string $charset = null, int $buffers = null, int $dialect = null, string $role = null, int $sync = null) {}
@@ -89,11 +59,9 @@ function ibase_pconnect (string $database = null, string $username = null, strin
 /**
  * Close a connection to an InterBase database
  * @link http://www.php.net/manual/en/function.ibase-close.php
- * @param resource $connection_id [optional] <p>
- * An InterBase link identifier returned from
+ * @param resource $connection_id [optional] An InterBase link identifier returned from
  * ibase_connect. If omitted, the last opened link
  * is assumed.
- * </p>
  * @return bool true on success or false on failure
  */
 function ibase_close ($connection_id = null) {}
@@ -101,10 +69,8 @@ function ibase_close ($connection_id = null) {}
 /**
  * Drops a database
  * @link http://www.php.net/manual/en/function.ibase-drop-db.php
- * @param resource $connection [optional] <p>
- * An InterBase link identifier. If omitted, the last opened link is
+ * @param resource $connection [optional] An InterBase link identifier. If omitted, the last opened link is
  * assumed.
- * </p>
  * @return bool true on success or false on failure
  */
 function ibase_drop_db ($connection = null) {}
@@ -112,15 +78,10 @@ function ibase_drop_db ($connection = null) {}
 /**
  * Execute a query on an InterBase database
  * @link http://www.php.net/manual/en/function.ibase-query.php
- * @param resource $link_identifier [optional] <p>
- * An InterBase link identifier. If omitted, the last opened link is
+ * @param resource $link_identifier [optional] An InterBase link identifier. If omitted, the last opened link is
  * assumed.
- * </p>
- * @param string $query <p>
- * An InterBase query.
- * </p>
- * @param int $bind_args [optional] <p>
- * </p>
+ * @param string $query An InterBase query.
+ * @param int $bind_args [optional] 
  * @return resource If the query raises an error, returns false. If it is successful and
  * there is a (possibly empty) result set (such as with a SELECT query),
  * returns a result identifier. If the query was successful and there were
@@ -137,17 +98,13 @@ function ibase_query ($link_identifier = null, string $query, int $bind_args = n
 /**
  * Fetch a row from an InterBase database
  * @link http://www.php.net/manual/en/function.ibase-fetch-row.php
- * @param resource $result_identifier <p>
- * An InterBase result identifier.
- * </p>
- * @param int $fetch_flag [optional] <p>
- * fetch_flag is a combination of the constants
+ * @param resource $result_identifier An InterBase result identifier.
+ * @param int $fetch_flag [optional] fetch_flag is a combination of the constants
  * IBASE_TEXT and IBASE_UNIXTIME
  * ORed together. Passing IBASE_TEXT will cause this
  * function to return BLOB contents instead of BLOB ids. Passing
  * IBASE_UNIXTIME will cause this function to return
  * date/time values as Unix timestamps instead of as formatted strings.
- * </p>
  * @return array an array that corresponds to the fetched row, or false if there
  * are no more rows. Each result column is stored in an array offset,
  * starting at offset 0.
@@ -157,17 +114,13 @@ function ibase_fetch_row ($result_identifier, int $fetch_flag = null) {}
 /**
  * Fetch a result row from a query as an associative array
  * @link http://www.php.net/manual/en/function.ibase-fetch-assoc.php
- * @param resource $result <p>
- * The result handle.
- * </p>
- * @param int $fetch_flag [optional] <p>
- * fetch_flag is a combination of the constants
+ * @param resource $result The result handle.
+ * @param int $fetch_flag [optional] fetch_flag is a combination of the constants
  * IBASE_TEXT and IBASE_UNIXTIME
  * ORed together. Passing IBASE_TEXT will cause this
  * function to return BLOB contents instead of BLOB ids. Passing
  * IBASE_UNIXTIME will cause this function to return
  * date/time values as Unix timestamps instead of as formatted strings.
- * </p>
  * @return array an associative array that corresponds to the fetched row.
  * Subsequent calls will return the next row in the result set, or false if
  * there are no more rows.
@@ -177,18 +130,14 @@ function ibase_fetch_assoc ($result, int $fetch_flag = null) {}
 /**
  * Get an object from a InterBase database
  * @link http://www.php.net/manual/en/function.ibase-fetch-object.php
- * @param resource $result_id <p>
- * An InterBase result identifier obtained either by
+ * @param resource $result_id An InterBase result identifier obtained either by
  * ibase_query or ibase_execute.
- * </p>
- * @param int $fetch_flag [optional] <p>
- * fetch_flag is a combination of the constants
+ * @param int $fetch_flag [optional] fetch_flag is a combination of the constants
  * IBASE_TEXT and IBASE_UNIXTIME
  * ORed together. Passing IBASE_TEXT will cause this
  * function to return BLOB contents instead of BLOB ids. Passing
  * IBASE_UNIXTIME will cause this function to return
  * date/time values as Unix timestamps instead of as formatted strings.
- * </p>
  * @return object an object with the next row information, or false if there are
  * no more rows.
  */
@@ -197,10 +146,8 @@ function ibase_fetch_object ($result_id, int $fetch_flag = null) {}
 /**
  * Free a result set
  * @link http://www.php.net/manual/en/function.ibase-free-result.php
- * @param resource $result_identifier <p>
- * A result set created by ibase_query or
+ * @param resource $result_identifier A result set created by ibase_query or
  * ibase_execute.
- * </p>
  * @return bool true on success or false on failure
  */
 function ibase_free_result ($result_identifier) {}
@@ -208,12 +155,8 @@ function ibase_free_result ($result_identifier) {}
 /**
  * Assigns a name to a result set
  * @link http://www.php.net/manual/en/function.ibase-name-result.php
- * @param resource $result <p>
- * An InterBase result set.
- * </p>
- * @param string $name <p>
- * The name to be assigned.
- * </p>
+ * @param resource $result An InterBase result set.
+ * @param string $name The name to be assigned.
  * @return bool true on success or false on failure
  */
 function ibase_name_result ($result, string $name) {}
@@ -221,9 +164,7 @@ function ibase_name_result ($result, string $name) {}
 /**
  * Prepare a query for later binding of parameter placeholders and execution
  * @link http://www.php.net/manual/en/function.ibase-prepare.php
- * @param string $query <p>
- * An InterBase query.
- * </p>
+ * @param string $query An InterBase query.
  * @return resource a prepared query handle, or false on error.
  */
 function ibase_prepare (string $query) {}
@@ -231,11 +172,8 @@ function ibase_prepare (string $query) {}
 /**
  * Execute a previously prepared query
  * @link http://www.php.net/manual/en/function.ibase-execute.php
- * @param resource $query <p>
- * An InterBase query prepared by ibase_prepare.
- * </p>
- * @param mixed $bind_arg [optional] <p>
- * </p>
+ * @param resource $query An InterBase query prepared by ibase_prepare.
+ * @param mixed $bind_arg [optional] 
  * @param mixed $_ [optional] 
  * @return resource If the query raises an error, returns false. If it is successful and
  * there is a (possibly empty) result set (such as with a SELECT query),
@@ -253,9 +191,7 @@ function ibase_execute ($query, $bind_arg = null, $_ = null) {}
 /**
  * Free memory allocated by a prepared query
  * @link http://www.php.net/manual/en/function.ibase-free-query.php
- * @param resource $query <p>
- * A query prepared with ibase_prepare.
- * </p>
+ * @param resource $query A query prepared with ibase_prepare.
  * @return bool true on success or false on failure
  */
 function ibase_free_query ($query) {}
@@ -273,9 +209,7 @@ function ibase_gen_id (string $generator, int $increment = null, $link_identifie
 /**
  * Get the number of fields in a result set
  * @link http://www.php.net/manual/en/function.ibase-num-fields.php
- * @param resource $result_id <p>
- * An InterBase result identifier.
- * </p>
+ * @param resource $result_id An InterBase result identifier.
  * @return int the number of fields as an integer.
  */
 function ibase_num_fields ($result_id) {}
@@ -283,9 +217,7 @@ function ibase_num_fields ($result_id) {}
 /**
  * Return the number of parameters in a prepared query
  * @link http://www.php.net/manual/en/function.ibase-num-params.php
- * @param resource $query <p>
- * The prepared query handle.
- * </p>
+ * @param resource $query The prepared query handle.
  * @return int the number of parameters as an integer.
  */
 function ibase_num_params ($query) {}
@@ -293,10 +225,8 @@ function ibase_num_params ($query) {}
 /**
  * Return the number of rows that were affected by the previous query
  * @link http://www.php.net/manual/en/function.ibase-affected-rows.php
- * @param resource $link_identifier [optional] <p>
- * A transaction context. If link_identifier is a
+ * @param resource $link_identifier [optional] A transaction context. If link_identifier is a
  * connection resource, its default transaction is used.
- * </p>
  * @return int the number of rows as an integer.
  */
 function ibase_affected_rows ($link_identifier = null) {}
@@ -304,12 +234,8 @@ function ibase_affected_rows ($link_identifier = null) {}
 /**
  * Get information about a field
  * @link http://www.php.net/manual/en/function.ibase-field-info.php
- * @param resource $result <p>
- * An InterBase result identifier.
- * </p>
- * @param int $field_number <p>
- * Field offset.
- * </p>
+ * @param resource $result An InterBase result identifier.
+ * @param int $field_number Field offset.
  * @return array an array with the following keys: name,
  * alias, relation,
  * length and type.
@@ -319,12 +245,8 @@ function ibase_field_info ($result, int $field_number) {}
 /**
  * Return information about a parameter in a prepared query
  * @link http://www.php.net/manual/en/function.ibase-param-info.php
- * @param resource $query <p>
- * An InterBase prepared query handle.
- * </p>
- * @param int $param_number <p>
- * Parameter offset.
- * </p>
+ * @param resource $query An InterBase prepared query handle.
+ * @param int $param_number Parameter offset.
  * @return array an array with the following keys: name,
  * alias, relation,
  * length and type.
@@ -334,8 +256,7 @@ function ibase_param_info ($query, int $param_number) {}
 /**
  * Begin a transaction
  * @link http://www.php.net/manual/en/function.ibase-trans.php
- * @param int $trans_args [optional] <p>
- * trans_args can be a combination of
+ * @param int $trans_args [optional] trans_args can be a combination of
  * IBASE_READ,
  * IBASE_WRITE,
  * IBASE_COMMITTED, 
@@ -345,11 +266,8 @@ function ibase_param_info ($query, int $param_number) {}
  * IBASE_REC_NO_VERSION,
  * IBASE_WAIT and 
  * IBASE_NOWAIT.
- * </p>
- * @param resource $link_identifier [optional] <p>
- * An InterBase link identifier. If omitted, the last opened link is
+ * @param resource $link_identifier [optional] An InterBase link identifier. If omitted, the last opened link is
  * assumed.
- * </p>
  * @return resource a transaction handle, or false on error.
  */
 function ibase_trans (int $trans_args = null, $link_identifier = null) {}
@@ -357,13 +275,11 @@ function ibase_trans (int $trans_args = null, $link_identifier = null) {}
 /**
  * Commit a transaction
  * @link http://www.php.net/manual/en/function.ibase-commit.php
- * @param resource $link_or_trans_identifier [optional] <p>
- * If called without an argument, this function commits the default
+ * @param resource $link_or_trans_identifier [optional] If called without an argument, this function commits the default
  * transaction of the default link. If the argument is a connection
  * identifier, the default transaction of the corresponding connection
  * will be committed. If the argument is a transaction identifier, the
  * corresponding transaction will be committed.
- * </p>
  * @return bool true on success or false on failure
  */
 function ibase_commit ($link_or_trans_identifier = null) {}
@@ -371,13 +287,11 @@ function ibase_commit ($link_or_trans_identifier = null) {}
 /**
  * Roll back a transaction
  * @link http://www.php.net/manual/en/function.ibase-rollback.php
- * @param resource $link_or_trans_identifier [optional] <p>
- * If called without an argument, this function rolls back the default
+ * @param resource $link_or_trans_identifier [optional] If called without an argument, this function rolls back the default
  * transaction of the default link. If the argument is a connection
  * identifier, the default transaction of the corresponding connection
  * will be rolled back. If the argument is a transaction identifier, the
  * corresponding transaction will be rolled back.
- * </p>
  * @return bool true on success or false on failure
  */
 function ibase_rollback ($link_or_trans_identifier = null) {}
@@ -385,15 +299,13 @@ function ibase_rollback ($link_or_trans_identifier = null) {}
 /**
  * Commit a transaction without closing it
  * @link http://www.php.net/manual/en/function.ibase-commit-ret.php
- * @param resource $link_or_trans_identifier [optional] <p>
- * If called without an argument, this function commits the default
+ * @param resource $link_or_trans_identifier [optional] If called without an argument, this function commits the default
  * transaction of the default link. If the argument is a connection
  * identifier, the default transaction of the corresponding connection
  * will be committed. If the argument is a transaction identifier, the
  * corresponding transaction will be committed. The transaction context
  * will be retained, so statements executed from within this transaction
  * will not be invalidated.
- * </p>
  * @return bool true on success or false on failure
  */
 function ibase_commit_ret ($link_or_trans_identifier = null) {}
@@ -401,15 +313,13 @@ function ibase_commit_ret ($link_or_trans_identifier = null) {}
 /**
  * Roll back a transaction without closing it
  * @link http://www.php.net/manual/en/function.ibase-rollback-ret.php
- * @param resource $link_or_trans_identifier [optional] <p>
- * If called without an argument, this function rolls back the default
+ * @param resource $link_or_trans_identifier [optional] If called without an argument, this function rolls back the default
  * transaction of the default link. If the argument is a connection
  * identifier, the default transaction of the corresponding connection
  * will be rolled back. If the argument is a transaction identifier, the
  * corresponding transaction will be rolled back. The transaction context
  * will be retained, so statements executed from within this transaction
  * will not be invalidated.
- * </p>
  * @return bool true on success or false on failure
  */
 function ibase_rollback_ret ($link_or_trans_identifier = null) {}
@@ -417,13 +327,9 @@ function ibase_rollback_ret ($link_or_trans_identifier = null) {}
 /**
  * Return blob length and other useful info
  * @link http://www.php.net/manual/en/function.ibase-blob-info.php
- * @param resource $link_identifier <p>
- * An InterBase link identifier. If omitted, the last opened link is
+ * @param resource $link_identifier An InterBase link identifier. If omitted, the last opened link is
  * assumed.
- * </p>
- * @param string $blob_id <p>
- * A BLOB id.
- * </p>
+ * @param string $blob_id A BLOB id.
  * @return array an array containing information about a BLOB. The information returned
  * consists of the length of the BLOB, the number of segments it contains, the size
  * of the largest segment, and whether it is a stream BLOB or a segmented BLOB.
@@ -433,10 +339,8 @@ function ibase_blob_info ($link_identifier, string $blob_id) {}
 /**
  * Create a new blob for adding data
  * @link http://www.php.net/manual/en/function.ibase-blob-create.php
- * @param resource $link_identifier [optional] <p>
- * An InterBase link identifier. If omitted, the last opened link is
+ * @param resource $link_identifier [optional] An InterBase link identifier. If omitted, the last opened link is
  * assumed.
- * </p>
  * @return resource a BLOB handle for later use with
  * ibase_blob_add or false on failure.
  */
@@ -445,12 +349,8 @@ function ibase_blob_create ($link_identifier = null) {}
 /**
  * Add data into a newly created blob
  * @link http://www.php.net/manual/en/function.ibase-blob-add.php
- * @param resource $blob_handle <p>
- * A blob handle opened with ibase_blob_create.
- * </p>
- * @param string $data <p>
- * The data to be added.
- * </p>
+ * @param resource $blob_handle A blob handle opened with ibase_blob_create.
+ * @param string $data The data to be added.
  * @return void 
  */
 function ibase_blob_add ($blob_handle, string $data) {}
@@ -458,9 +358,7 @@ function ibase_blob_add ($blob_handle, string $data) {}
 /**
  * Cancel creating blob
  * @link http://www.php.net/manual/en/function.ibase-blob-cancel.php
- * @param resource $blob_handle <p>
- * A BLOB handle opened with ibase_blob_create.
- * </p>
+ * @param resource $blob_handle A BLOB handle opened with ibase_blob_create.
  * @return bool true on success or false on failure
  */
 function ibase_blob_cancel ($blob_handle) {}
@@ -468,10 +366,8 @@ function ibase_blob_cancel ($blob_handle) {}
 /**
  * Close blob
  * @link http://www.php.net/manual/en/function.ibase-blob-close.php
- * @param resource $blob_handle <p>
- * A BLOB handle opened with ibase_blob_create or
+ * @param resource $blob_handle A BLOB handle opened with ibase_blob_create or
  * ibase_blob_open.
- * </p>
  * @return mixed If the BLOB was being read, this function returns true on success, if
  * the BLOB was being written to, this function returns a string containing
  * the BLOB id that has been assigned to it by the database. On failure, this
@@ -482,13 +378,9 @@ function ibase_blob_close ($blob_handle) {}
 /**
  * Open blob for retrieving data parts
  * @link http://www.php.net/manual/en/function.ibase-blob-open.php
- * @param resource $link_identifier <p>
- * An InterBase link identifier. If omitted, the last opened link is
+ * @param resource $link_identifier An InterBase link identifier. If omitted, the last opened link is
  * assumed.
- * </p>
- * @param string $blob_id <p>
- * A BLOB id.
- * </p>
+ * @param string $blob_id A BLOB id.
  * @return resource a BLOB handle for later use with 
  * ibase_blob_get or false on failure.
  */
@@ -497,12 +389,8 @@ function ibase_blob_open ($link_identifier, string $blob_id) {}
 /**
  * Get len bytes data from open blob
  * @link http://www.php.net/manual/en/function.ibase-blob-get.php
- * @param resource $blob_handle <p>
- * A BLOB handle opened with ibase_blob_open.
- * </p>
- * @param int $len <p>
- * Size of returned data.
- * </p>
+ * @param resource $blob_handle A BLOB handle opened with ibase_blob_open.
+ * @param int $len Size of returned data.
  * @return string at most len bytes from the BLOB, or false
  * on failure.
  */
@@ -511,8 +399,7 @@ function ibase_blob_get ($blob_handle, int $len) {}
 /**
  * Output blob contents to browser
  * @link http://www.php.net/manual/en/function.ibase-blob-echo.php
- * @param string $blob_id <p>
- * </p>
+ * @param string $blob_id 
  * @return bool true on success or false on failure
  */
 function ibase_blob_echo (string $blob_id) {}
@@ -520,13 +407,9 @@ function ibase_blob_echo (string $blob_id) {}
 /**
  * Create blob, copy file in it, and close it
  * @link http://www.php.net/manual/en/function.ibase-blob-import.php
- * @param resource $link_identifier <p>
- * An InterBase link identifier. If omitted, the last opened link is
+ * @param resource $link_identifier An InterBase link identifier. If omitted, the last opened link is
  * assumed.
- * </p>
- * @param resource $file_handle <p>
- * The file handle is a handle returned by fopen.
- * </p>
+ * @param resource $file_handle The file handle is a handle returned by fopen.
  * @return string the BLOB id on success, or false on error.
  */
 function ibase_blob_import ($link_identifier, $file_handle) {}
@@ -656,11 +539,8 @@ function ibase_server_info ($service_handle, int $action) {}
 /**
  * Wait for an event to be posted by the database
  * @link http://www.php.net/manual/en/function.ibase-wait-event.php
- * @param string $event_name1 <p>
- * The event name.
- * </p>
- * @param string $event_name2 [optional] <p>
- * </p>
+ * @param string $event_name1 The event name.
+ * @param string $event_name2 [optional] 
  * @param string $_ [optional] 
  * @return string the name of the event that was posted.
  */
@@ -679,12 +559,8 @@ function ibase_wait_event (string $event_name1, string $event_name2 = null, stri
  * canceled. Any other return value is ignored. This function accepts up
  * to 15 event arguments.
  * </p>
- * @param string $event_name1 <p>
- * An event name.
- * </p>
- * @param string $event_name2 [optional] <p>
- * At most 15 events allowed.
- * </p>
+ * @param string $event_name1 An event name.
+ * @param string $event_name2 [optional] At most 15 events allowed.
  * @param string $_ [optional] 
  * @return resource The return value is an event resource. This resource can be used to free
  * the event handler using ibase_free_event_handler.
@@ -694,10 +570,8 @@ function ibase_set_event_handler (callable $event_handler, string $event_name1, 
 /**
  * Cancels a registered event handler
  * @link http://www.php.net/manual/en/function.ibase-free-event-handler.php
- * @param resource $event <p>
- * An event resource, created by
+ * @param resource $event An event resource, created by
  * ibase_set_event_handler.
- * </p>
  * @return bool true on success or false on failure
  */
 function ibase_free_event_handler ($event) {}
@@ -1024,11 +898,41 @@ define ('IBASE_REC_VERSION', 64);
 define ('IBASE_REC_NO_VERSION', 32);
 define ('IBASE_NOWAIT', 256);
 define ('IBASE_WAIT', 128);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_BKP_IGNORE_CHECKSUMS', 1);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_BKP_IGNORE_LIMBO', 2);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_BKP_METADATA_ONLY', 4);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_BKP_NO_GARBAGE_COLLECT', 8);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_BKP_OLD_DESCRIPTIONS', 16);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_BKP_NON_TRANSPORTABLE', 32);
 
 /**
@@ -1036,11 +940,41 @@ define ('IBASE_BKP_NON_TRANSPORTABLE', 32);
  * @link http://www.php.net/manual/en/ibase.constants.php
  */
 define ('IBASE_BKP_CONVERT', 64);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_RES_DEACTIVATE_IDX', 256);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_RES_NO_SHADOW', 512);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_RES_NO_VALIDITY', 1024);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_RES_ONE_AT_A_TIME', 2048);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_RES_REPLACE', 4096);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_RES_CREATE', 8192);
 
 /**
@@ -1048,28 +982,143 @@ define ('IBASE_RES_CREATE', 8192);
  * @link http://www.php.net/manual/en/ibase.constants.php
  */
 define ('IBASE_RES_USE_ALL_SPACE', 16384);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_PRP_PAGE_BUFFERS', 5);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_PRP_SWEEP_INTERVAL', 6);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_PRP_SHUTDOWN_DB', 7);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_PRP_DENY_NEW_TRANSACTIONS', 10);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_PRP_DENY_NEW_ATTACHMENTS', 9);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_PRP_RESERVE_SPACE', 11);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_PRP_RES_USE_FULL', 35);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_PRP_RES', 36);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_PRP_WRITE_MODE', 12);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_PRP_WM_ASYNC', 37);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_PRP_WM_SYNC', 38);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_PRP_ACCESS_MODE', 13);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_PRP_AM_READONLY', 39);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_PRP_AM_READWRITE', 40);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_PRP_SET_SQL_DIALECT', 14);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_PRP_ACTIVATE', 256);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_PRP_DB_ONLINE', 512);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_RPR_CHECK_DB', 16);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_RPR_IGNORE_CHECKSUM', 32);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_RPR_KILL_SHADOWS', 64);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_RPR_MEND_DB', 4);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_RPR_VALIDATE_DB', 1);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_RPR_FULL', 128);
 
 /**
@@ -1077,9 +1126,29 @@ define ('IBASE_RPR_FULL', 128);
  * @link http://www.php.net/manual/en/ibase.constants.php
  */
 define ('IBASE_RPR_SWEEP_DB', 2);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_STS_DATA_PAGES', 1);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_STS_DB_LOG', 2);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_STS_HDR_PAGES', 4);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_STS_IDX_PAGES', 8);
 
 /**
@@ -1087,12 +1156,47 @@ define ('IBASE_STS_IDX_PAGES', 8);
  * @link http://www.php.net/manual/en/ibase.constants.php
  */
 define ('IBASE_STS_SYS_RELATIONS', 16);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_SVC_SERVER_VERSION', 55);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_SVC_IMPLEMENTATION', 56);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_SVC_GET_ENV', 59);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_SVC_GET_ENV_LOCK', 60);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_SVC_GET_ENV_MSG', 61);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_SVC_USER_DBPATH', 58);
+
+/**
+ * 
+ * @link http://www.php.net/manual/en/ibase.constants.php
+ */
 define ('IBASE_SVC_SVR_DB_INFO', 50);
 
 /**
