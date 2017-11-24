@@ -1,0 +1,15 @@
+--TEST--
+Test Factory Method #05 - Simple factory method (using ::class and class in current namespace)
+--FILE--
+<?php
+namespace FactoryNamespace;
+class FactoryClass
+{
+    function factoryMethod() { }
+}
+$factory = new FactoryClass();
+$b = $factory->factoryMethod(subNamespace\className::class);
+testFactoryMethod05($b);
+?>
+--EXPECT--
+\FactoryNamespace\subNamespace\className
