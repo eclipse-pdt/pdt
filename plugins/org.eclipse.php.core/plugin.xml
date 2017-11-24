@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.0"?><!--
-    Copyright (c) 2009, 2015 IBM Corporation and others.
+<?eclipse version="3.0"?>
+<!--
+    Copyright (c) 2009, 2015, 2017 IBM Corporation and others.
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the Eclipse Public License v1.0
     which accompanies this distribution, and is available at
@@ -10,10 +11,12 @@
         IBM Corporation - initial API and implementation
         Zend Technologies
         Yannick de Lange <yannickl88@gmail.com>
+        Michele Locati <michele@locati.it>
 -->
 
 <plugin>
 	<extension-point id="goalEvaluatorFactories" name="PHP Evaluator Factory" schema="schema/goalEvaluatorFactories.exsd" />
+	<extension-point id="factoryMethodGoalEvaluatorFactories" name="PHP Factory Method Evaluator Factory" schema="schema/factoryMethodGoalEvaluatorFactories.exsd" />
 	<extension-point id="phpSourceElementRequestors" name="PHP Source Element Requestor" schema="schema/phpSourceElementRequestors.exsd" />
  	<extension-point id="phpIndexingVisitors" name="PHP Indexing Visitor" schema="schema/phpIndexingVisitors.exsd"/>
 	<extension-point id="completionStrategyFactories" name="PHP Completion Strategy Factory" schema="schema/completionStrategyFactories.exsd" />
