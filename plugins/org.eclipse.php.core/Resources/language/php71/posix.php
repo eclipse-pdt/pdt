@@ -5,12 +5,8 @@
 /**
  * Send a signal to a process
  * @link http://www.php.net/manual/en/function.posix-kill.php
- * @param int $pid <p>
- * The process identifier.
- * </p>
- * @param int $sig <p>
- * One of the PCNTL signals constants.
- * </p>
+ * @param int $pid The process identifier.
+ * @param int $sig One of the PCNTL signals constants.
  * @return bool true on success or false on failure
  */
 function posix_kill (int $pid, int $sig) {}
@@ -39,9 +35,7 @@ function posix_getuid () {}
 /**
  * Set the UID of the current process
  * @link http://www.php.net/manual/en/function.posix-setuid.php
- * @param int $uid <p>
- * The user id.
- * </p>
+ * @param int $uid The user id.
  * @return bool true on success or false on failure
  */
 function posix_setuid (int $uid) {}
@@ -56,9 +50,7 @@ function posix_geteuid () {}
 /**
  * Set the effective UID of the current process
  * @link http://www.php.net/manual/en/function.posix-seteuid.php
- * @param int $uid <p>
- * The user id.
- * </p>
+ * @param int $uid The user id.
  * @return bool true on success or false on failure
  */
 function posix_seteuid (int $uid) {}
@@ -73,9 +65,7 @@ function posix_getgid () {}
 /**
  * Set the GID of the current process
  * @link http://www.php.net/manual/en/function.posix-setgid.php
- * @param int $gid <p>
- * The group id.
- * </p>
+ * @param int $gid The group id.
  * @return bool true on success or false on failure
  */
 function posix_setgid (int $gid) {}
@@ -90,9 +80,7 @@ function posix_getegid () {}
 /**
  * Set the effective GID of the current process
  * @link http://www.php.net/manual/en/function.posix-setegid.php
- * @param int $gid <p>
- * The group id.
- * </p>
+ * @param int $gid The group id.
  * @return bool true on success or false on failure
  */
 function posix_setegid (int $gid) {}
@@ -129,12 +117,8 @@ function posix_setsid () {}
 /**
  * Set process group id for job control
  * @link http://www.php.net/manual/en/function.posix-setpgid.php
- * @param int $pid <p>
- * The process id.
- * </p>
- * @param int $pgid <p>
- * The process group id.
- * </p>
+ * @param int $pid The process id.
+ * @param int $pgid The process group id.
  * @return bool true on success or false on failure
  */
 function posix_setpgid (int $pid, int $pgid) {}
@@ -142,9 +126,7 @@ function posix_setpgid (int $pid, int $pgid) {}
 /**
  * Get process group id for job control
  * @link http://www.php.net/manual/en/function.posix-getpgid.php
- * @param int $pid <p>
- * The process id.
- * </p>
+ * @param int $pid The process id.
  * @return int the identifier, as an integer.
  */
 function posix_getpgid (int $pid) {}
@@ -152,12 +134,10 @@ function posix_getpgid (int $pid) {}
 /**
  * Get the current sid of the process
  * @link http://www.php.net/manual/en/function.posix-getsid.php
- * @param int $pid <p>
- * The process identifier. If set to 0, the current process is
+ * @param int $pid The process identifier. If set to 0, the current process is
  * assumed. If an invalid pid is
  * specified, then false is returned and an error is set which
  * can be checked with posix_get_last_error.
- * </p>
  * @return int the identifier, as an integer.
  */
 function posix_getsid (int $pid) {}
@@ -167,13 +147,21 @@ function posix_getsid (int $pid) {}
  * @link http://www.php.net/manual/en/function.posix-uname.php
  * @return array a hash of strings with information about the
  * system. The indices of the hash are
+ * <p>
+ * <br>
  * sysname - operating system name (e.g. Linux)
+ * <br>
  * nodename - system name (e.g. valiant)
+ * <br>
  * release - operating system release (e.g. 2.2.10)
+ * <br>
  * version - operating system version (e.g. #4 Tue Jul 20
  * 17:01:36 MEST 1999)
+ * <br>
  * machine - system architecture (e.g. i586)
+ * <br>
  * domainname - DNS domainname (e.g. example.com)
+ * </p>
  * <p>
  * domainname is a GNU extension and not part of POSIX.1, so this
  * field is only available on GNU systems or when using the GNU
@@ -187,12 +175,19 @@ function posix_uname () {}
  * @link http://www.php.net/manual/en/function.posix-times.php
  * @return array a hash of strings with information about the current
  * process CPU usage. The indices of the hash are:
+ * <p>
+ * <br>
  * ticks - the number of clock ticks that have elapsed since
  * reboot.
+ * <br>
  * utime - user time used by the current process.
+ * <br>
  * stime - system time used by the current process.
+ * <br>
  * cutime - user time used by current process and children.
+ * <br>
  * cstime - system time used by current process and children.
+ * </p>
  */
 function posix_times () {}
 
@@ -235,16 +230,12 @@ function posix_getcwd () {}
 /**
  * Create a fifo special file (a named pipe)
  * @link http://www.php.net/manual/en/function.posix-mkfifo.php
- * @param string $pathname <p>
- * Path to the FIFO file.
- * </p>
- * @param int $mode <p>
- * The second parameter mode has to be given in
+ * @param string $pathname Path to the FIFO file.
+ * @param int $mode The second parameter mode has to be given in
  * octal notation (e.g. 0644). The permission of the newly created
  * FIFO also depends on the setting of the current
  * umask. The permissions of the created file are
  * (mode &amp; ~umask).
- * </p>
  * @return bool true on success or false on failure
  */
 function posix_mkfifo (string $pathname, int $mode) {}
@@ -252,23 +243,15 @@ function posix_mkfifo (string $pathname, int $mode) {}
 /**
  * Create a special or ordinary file (POSIX.1)
  * @link http://www.php.net/manual/en/function.posix-mknod.php
- * @param string $pathname <p>
- * The file to create
- * </p>
- * @param int $mode <p>
- * This parameter is constructed by a bitwise OR between file type (one of
+ * @param string $pathname The file to create
+ * @param int $mode This parameter is constructed by a bitwise OR between file type (one of
  * the following constants: POSIX_S_IFREG,
  * POSIX_S_IFCHR, POSIX_S_IFBLK,
  * POSIX_S_IFIFO or
  * POSIX_S_IFSOCK) and permissions.
- * </p>
- * @param int $major [optional] <p>
- * The major device kernel identifier (required to pass when using
+ * @param int $major [optional] The major device kernel identifier (required to pass when using
  * S_IFCHR or S_IFBLK).
- * </p>
- * @param int $minor [optional] <p>
- * The minor device kernel identifier.
- * </p>
+ * @param int $minor [optional] The minor device kernel identifier.
  * @return bool true on success or false on failure
  */
 function posix_mknod (string $pathname, int $mode, int $major = null, int $minor = null) {}
@@ -276,9 +259,7 @@ function posix_mknod (string $pathname, int $mode, int $major = null, int $minor
 /**
  * Determine accessibility of a file
  * @link http://www.php.net/manual/en/function.posix-access.php
- * @param string $file <p>
- * The name of the file to be tested.
- * </p>
+ * @param string $file The name of the file to be tested.
  * @param int $mode [optional] <p>
  * A mask consisting of one or more of POSIX_F_OK,
  * POSIX_R_OK, POSIX_W_OK and
@@ -298,7 +279,7 @@ function posix_access (string $file, int $mode = null) {}
 /**
  * Return info about a group by name
  * @link http://www.php.net/manual/en/function.posix-getgrnam.php
- * @param string $name <p>The name of the group</p>
+ * @param string $name The name of the group
  * @return array The array elements returned are:
  * <table>
  * The group information array
@@ -346,9 +327,7 @@ function posix_getgrnam (string $name) {}
 /**
  * Return info about a group by group id
  * @link http://www.php.net/manual/en/function.posix-getgrgid.php
- * @param int $gid <p>
- * The group id.
- * </p>
+ * @param int $gid The group id.
  * @return array The array elements returned are:
  * <table>
  * The group information array
@@ -396,9 +375,7 @@ function posix_getgrgid (int $gid) {}
 /**
  * Return info about a user by username
  * @link http://www.php.net/manual/en/function.posix-getpwnam.php
- * @param string $username <p>
- * An alphanumeric username.
- * </p>
+ * @param string $username An alphanumeric username.
  * @return array On success an array with the following elements is returned, else 
  * false is returned:
  * <table>
@@ -474,9 +451,7 @@ function posix_getpwnam (string $username) {}
 /**
  * Return info about a user by user id
  * @link http://www.php.net/manual/en/function.posix-getpwuid.php
- * @param int $uid <p>
- * The user identifier.
- * </p>
+ * @param int $uid The user identifier.
  * @return array an associative array with the following elements:
  * <table>
  * The user information array
@@ -637,19 +612,13 @@ function posix_getrlimit () {}
 /**
  * Set system resource limits
  * @link http://www.php.net/manual/en/function.posix-setrlimit.php
- * @param int $resource <p>
- * The
+ * @param int $resource The
  * resource limit constant
  * corresponding to the limit that is being set.
- * </p>
- * @param int $softlimit <p>
- * The soft limit, in whatever unit the resource limit requires, or
+ * @param int $softlimit The soft limit, in whatever unit the resource limit requires, or
  * POSIX_RLIMIT_INFINITY.
- * </p>
- * @param int $hardlimit <p>
- * The hard limit, in whatever unit the resource limit requires, or
+ * @param int $hardlimit The hard limit, in whatever unit the resource limit requires, or
  * POSIX_RLIMIT_INFINITY.
- * </p>
  * @return bool true on success or false on failure
  */
 function posix_setrlimit (int $resource, int $softlimit, int $hardlimit) {}
@@ -671,11 +640,9 @@ function posix_errno () {}
 /**
  * Retrieve the system error message associated with the given errno
  * @link http://www.php.net/manual/en/function.posix-strerror.php
- * @param int $errno <p>
- * A POSIX error number, returned by 
+ * @param int $errno A POSIX error number, returned by 
  * posix_get_last_error. If set to 0, then the
  * string "Success" is returned.
- * </p>
  * @return string the error message, as a string.
  */
 function posix_strerror (int $errno) {}
@@ -683,12 +650,8 @@ function posix_strerror (int $errno) {}
 /**
  * Calculate the group access list
  * @link http://www.php.net/manual/en/function.posix-initgroups.php
- * @param string $name <p>
- * The user to calculate the list for.
- * </p>
- * @param int $base_group_id <p>
- * Typically the group number from the password file.
- * </p>
+ * @param string $name The user to calculate the list for.
+ * @param int $base_group_id Typically the group number from the password file.
  * @return bool true on success or false on failure
  */
 function posix_initgroups (string $name, int $base_group_id) {}

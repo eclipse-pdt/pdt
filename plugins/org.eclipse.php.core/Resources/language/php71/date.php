@@ -78,9 +78,7 @@ class DateTime implements DateTimeInterface {
 	/**
 	 * The __set_state handler
 	 * @link http://www.php.net/manual/en/datetime.set-state.php
-	 * @param array $array <p>
-	 * Initialization array.
-	 * </p>
+	 * @param array $array Initialization array.
 	 * @return DateTime a new instance of a DateTime object.
 	 */
 	public static function __set_state (array $array) {}
@@ -349,9 +347,7 @@ class DateTime implements DateTimeInterface {
 	 * <p>
 	 * The Unix epoch is 1970-01-01 00:00:00 UTC.
 	 * </p>
-	 * @param string $time <p>
-	 * String representing the time.
-	 * </p>
+	 * @param string $time String representing the time.
 	 * @param DateTimeZone $timezone [optional] <p>
 	 * A DateTimeZone object representing the
 	 * desired time zone.
@@ -383,9 +379,7 @@ class DateTime implements DateTimeInterface {
 	/**
 	 * Returns date formatted according to given format
 	 * @link http://www.php.net/manual/en/datetime.format.php
-	 * @param string $format <p>
-	 * Format accepted by date.
-	 * </p>
+	 * @param string $format Format accepted by date.
 	 * @return string the formatted date string on success or false on failure.
 	 */
 	public function format (string $format) {}
@@ -393,7 +387,7 @@ class DateTime implements DateTimeInterface {
 	/**
 	 * Alters the timestamp
 	 * @link http://www.php.net/manual/en/datetime.modify.php
-	 * @param string $modify <p>A date/time string. date.formats</p>
+	 * @param string $modify A date/time string. date.formats
 	 * @return DateTime the DateTime object for method chainingreturn.falseforfailure.
 	 */
 	public function modify (string $modify) {}
@@ -402,9 +396,7 @@ class DateTime implements DateTimeInterface {
 	 * Adds an amount of days, months, years, hours, minutes and seconds to a
 	 * DateTime object
 	 * @link http://www.php.net/manual/en/datetime.add.php
-	 * @param DateInterval $interval <p>
-	 * A DateInterval object
-	 * </p>
+	 * @param DateInterval $interval A DateInterval object
 	 * @return DateTime the DateTime object for method chainingreturn.falseforfailure.
 	 */
 	public function add (DateInterval $interval) {}
@@ -413,9 +405,7 @@ class DateTime implements DateTimeInterface {
 	 * Subtracts an amount of days, months, years, hours, minutes and seconds from
 	 * a DateTime object
 	 * @link http://www.php.net/manual/en/datetime.sub.php
-	 * @param DateInterval $interval <p>
-	 * A DateInterval object
-	 * </p>
+	 * @param DateInterval $interval A DateInterval object
 	 * @return DateTime the DateTime object for method chainingreturn.falseforfailure.
 	 */
 	public function sub (DateInterval $interval) {}
@@ -431,10 +421,8 @@ class DateTime implements DateTimeInterface {
 	/**
 	 * Sets the time zone for the DateTime object
 	 * @link http://www.php.net/manual/en/datetime.settimezone.php
-	 * @param DateTimeZone $timezone <p>
-	 * A DateTimeZone object representing the
+	 * @param DateTimeZone $timezone A DateTimeZone object representing the
 	 * desired time zone.
-	 * </p>
 	 * @return DateTime the DateTime object for method chainingreturn.falseforfailure.
 	 */
 	public function setTimezone (DateTimeZone $timezone) {}
@@ -450,18 +438,10 @@ class DateTime implements DateTimeInterface {
 	/**
 	 * Sets the time
 	 * @link http://www.php.net/manual/en/datetime.settime.php
-	 * @param int $hour <p>
-	 * Hour of the time.
-	 * </p>
-	 * @param int $minute <p>
-	 * Minute of the time.
-	 * </p>
-	 * @param int $second [optional] <p>
-	 * Second of the time.
-	 * </p>
-	 * @param int $microseconds [optional] <p>
-	 * Microsecond of the time.
-	 * </p>
+	 * @param int $hour Hour of the time.
+	 * @param int $minute Minute of the time.
+	 * @param int $second [optional] Second of the time.
+	 * @param int $microseconds [optional] Microsecond of the time.
 	 * @return DateTime the DateTime object for method chainingreturn.falseforfailure.
 	 */
 	public function setTime (int $hour, int $minute, int $second = null, int $microseconds = null) {}
@@ -469,15 +449,9 @@ class DateTime implements DateTimeInterface {
 	/**
 	 * Sets the date
 	 * @link http://www.php.net/manual/en/datetime.setdate.php
-	 * @param int $year <p>
-	 * Year of the date.
-	 * </p>
-	 * @param int $month <p>
-	 * Month of the date.
-	 * </p>
-	 * @param int $day <p>
-	 * Day of the date.
-	 * </p>
+	 * @param int $year Year of the date.
+	 * @param int $month Month of the date.
+	 * @param int $day Day of the date.
 	 * @return DateTime the DateTime object for method chainingreturn.falseforfailure.
 	 */
 	public function setDate (int $year, int $month, int $day) {}
@@ -485,15 +459,9 @@ class DateTime implements DateTimeInterface {
 	/**
 	 * Sets the ISO date
 	 * @link http://www.php.net/manual/en/datetime.setisodate.php
-	 * @param int $year <p>
-	 * Year of the date.
-	 * </p>
-	 * @param int $week <p>
-	 * Week of the date.
-	 * </p>
-	 * @param int $day [optional] <p>
-	 * Offset from the first day of the week.
-	 * </p>
+	 * @param int $year Year of the date.
+	 * @param int $week Week of the date.
+	 * @param int $day [optional] Offset from the first day of the week.
 	 * @return DateTime the DateTime object for method chainingreturn.falseforfailure.
 	 */
 	public function setISODate (int $year, int $week, int $day = null) {}
@@ -501,9 +469,7 @@ class DateTime implements DateTimeInterface {
 	/**
 	 * Sets the date and time based on an Unix timestamp
 	 * @link http://www.php.net/manual/en/datetime.settimestamp.php
-	 * @param int $unixtimestamp <p>
-	 * Unix timestamp representing the date.
-	 * </p>
+	 * @param int $unixtimestamp Unix timestamp representing the date.
 	 * @return DateTime the DateTime object for method chainingreturn.falseforfailure.
 	 */
 	public function setTimestamp (int $unixtimestamp) {}
@@ -519,9 +485,7 @@ class DateTime implements DateTimeInterface {
 	 * Returns the difference between two DateTime objects
 	 * @link http://www.php.net/manual/en/datetime.diff.php
 	 * @param DateTimeInterface $datetime2 
-	 * @param bool $absolute [optional] <p>
-	 * Should the interval be forced to be positive?
-	 * </p>
+	 * @param bool $absolute [optional] Should the interval be forced to be positive?
 	 * @return DateInterval The DateInterval object representing the
 	 * difference between the two dates or false on failure.
 	 */
@@ -587,7 +551,7 @@ class DateTimeImmutable implements DateTimeInterface {
 	/**
 	 * Creates a new object with modified timestamp
 	 * @link http://www.php.net/manual/en/datetimeimmutable.modify.php
-	 * @param string $modify <p>A date/time string. date.formats</p>
+	 * @param string $modify A date/time string. date.formats
 	 * @return DateTimeImmutable the newly created object or false on failure.
 	 */
 	public function modify (string $modify) {}
@@ -658,12 +622,10 @@ class DateTimeImmutable implements DateTimeInterface {
 	/**
 	 * Returns new DateTimeImmutable object encapsulating the given DateTime object
 	 * @link http://www.php.net/manual/en/datetimeimmutable.createfrommutable.php
-	 * @param DateTime $datetime <p>
-	 * The mutable DateTime object that you want to
+	 * @param DateTime $datetime The mutable DateTime object that you want to
 	 * convert to an immutable version. This object is not modified, but
 	 * instead a new DateTimeImmutable object is
 	 * created containing the same date time and timezone information.
-	 * </p>
 	 * @return DateTimeImmutable a new DateTimeImmutable instance.
 	 */
 	public static function createFromMutable (DateTime $datetime) {}
@@ -690,10 +652,8 @@ class DateTimeZone  {
 	/**
 	 * Creates new DateTimeZone object
 	 * @link http://www.php.net/manual/en/datetimezone.construct.php
-	 * @param string $timezone <p>
-	 * One of the supported timezone names
+	 * @param string $timezone One of the supported timezone names
 	 * or an offset value (+0200).
-	 * </p>
 	 * @return DateTimeZone DateTimeZone on success.
 	 * style.procedural returns false on failure.
 	 */
@@ -707,16 +667,14 @@ class DateTimeZone  {
 	 * Returns the name of the timezone
 	 * @link http://www.php.net/manual/en/datetimezone.getname.php
 	 * @return string One of the timezone names in the
-	 * list of timezones.
+	 * <p>.
 	 */
 	public function getName () {}
 
 	/**
 	 * Returns the timezone offset from GMT
 	 * @link http://www.php.net/manual/en/datetimezone.getoffset.php
-	 * @param DateTime $datetime <p>
-	 * DateTime that contains the date/time to compute the offset from. 
-	 * </p>
+	 * @param DateTime $datetime DateTime that contains the date/time to compute the offset from.
 	 * @return int time zone offset in seconds on success or false on failure.
 	 */
 	public function getOffset (DateTime $datetime) {}
@@ -724,12 +682,8 @@ class DateTimeZone  {
 	/**
 	 * Returns all transitions for the timezone
 	 * @link http://www.php.net/manual/en/datetimezone.gettransitions.php
-	 * @param int $timestamp_begin [optional] <p>
-	 * Begin timestamp.
-	 * </p>
-	 * @param int $timestamp_end [optional] <p>
-	 * End timestamp.
-	 * </p>
+	 * @param int $timestamp_begin [optional] Begin timestamp.
+	 * @param int $timestamp_end [optional] End timestamp.
 	 * @return array numerically indexed array containing associative array with all
 	 * transitions on success or false on failure.
 	 */
@@ -752,9 +706,7 @@ class DateTimeZone  {
 	/**
 	 * Returns a numerically indexed array containing all defined timezone identifiers
 	 * @link http://www.php.net/manual/en/datetimezone.listidentifiers.php
-	 * @param int $what [optional] <p>
-	 * One of DateTimeZone class constants.
-	 * </p>
+	 * @param int $what [optional] One of DateTimeZone class constants.
 	 * @param string $country [optional] <p>
 	 * A two-letter ISO 3166-1 compatible country code.
 	 * </p>
@@ -782,8 +734,7 @@ class DateInterval  {
 	/**
 	 * Formats the interval
 	 * @link http://www.php.net/manual/en/dateinterval.format.php
-	 * @param string $format <p>
-	 * <table>
+	 * @param string $format <table>
 	 * The following characters are recognized in the
 	 * format parameter string.
 	 * Each format character must be prefixed by a percent sign
@@ -887,7 +838,6 @@ class DateInterval  {
 	 * </tr>
 	 * </table>
 	 * </table>
-	 * </p>
 	 * @return string the formatted interval.
 	 */
 	public function format (string $format) {}
@@ -895,13 +845,11 @@ class DateInterval  {
 	/**
 	 * Sets up a DateInterval from the relative parts of the string
 	 * @link http://www.php.net/manual/en/dateinterval.createfromdatestring.php
-	 * @param string $time <p>
-	 * A date with relative parts. Specifically, the
+	 * @param string $time A date with relative parts. Specifically, the
 	 * relative formats
 	 * supported by the parser used for strtotime and
 	 * DateTime will be used to construct the
 	 * DateInterval.
-	 * </p>
 	 * @return DateInterval a new DateInterval instance.
 	 */
 	public static function createFromDateString (string $time) {}
@@ -972,11 +920,9 @@ class DatePeriod implements Traversable {
 /**
  * Parse about any English textual datetime description into a Unix timestamp
  * @link http://www.php.net/manual/en/function.strtotime.php
- * @param string $time <p>A date/time string. date.formats</p>
- * @param int $now [optional] <p>
- * The timestamp which is used as a base for the calculation of relative
+ * @param string $time A date/time string. date.formats
+ * @param int $now [optional] The timestamp which is used as a base for the calculation of relative
  * dates.
- * </p>
  * @return int a timestamp on success, false otherwise. Previous to PHP 5.1.0,
  * this function would return -1 on failure.
  */
@@ -1269,8 +1215,7 @@ function date (string $format, int $timestamp = null) {}
 /**
  * Format a local time/date as integer
  * @link http://www.php.net/manual/en/function.idate.php
- * @param string $format <p>
- * <table>
+ * @param string $format <table>
  * The following characters are recognized in the
  * format parameter string
  * <table>
@@ -1352,7 +1297,6 @@ function date (string $format, int $timestamp = null) {}
  * </tr>
  * </table>
  * </table>
- * </p>
  * @param int $timestamp [optional] 
  * @return int an integer.
  * <p>
@@ -1366,10 +1310,8 @@ function idate (string $format, int $timestamp = null) {}
 /**
  * Format a GMT/UTC date/time
  * @link http://www.php.net/manual/en/function.gmdate.php
- * @param string $format <p>
- * The format of the outputted date string. See the formatting
+ * @param string $format The format of the outputted date string. See the formatting
  * options for the date function.
- * </p>
  * @param int $timestamp [optional] 
  * @return string a formatted date string. If a non-numeric value is used for 
  * timestamp, false is returned and an 
@@ -1380,42 +1322,30 @@ function gmdate (string $format, int $timestamp = null) {}
 /**
  * Get Unix timestamp for a date
  * @link http://www.php.net/manual/en/function.mktime.php
- * @param int $hour [optional] <p>
- * The number of the hour relative to the start of the day determined by
+ * @param int $hour [optional] The number of the hour relative to the start of the day determined by
  * month, day and year.
  * Negative values reference the hour before midnight of the day in question.
  * Values greater than 23 reference the appropriate hour in the following day(s).
- * </p>
- * @param int $minute [optional] <p>
- * The number of the minute relative to the start of the hour.
+ * @param int $minute [optional] The number of the minute relative to the start of the hour.
  * Negative values reference the minute in the previous hour.
  * Values greater than 59 reference the appropriate minute in the following hour(s).
- * </p>
- * @param int $second [optional] <p>
- * The number of seconds relative to the start of the minute.
+ * @param int $second [optional] The number of seconds relative to the start of the minute.
  * Negative values reference the second in the previous minute.
  * Values greater than 59 reference the appropriate second in the following minute(s).
- * </p>
- * @param int $month [optional] <p>
- * The number of the month relative to the end of the previous year.
+ * @param int $month [optional] The number of the month relative to the end of the previous year.
  * Values 1 to 12 reference the normal calendar months of the year in question.
  * Values less than 1 (including negative values) reference the months in the previous year in reverse order, so 0 is December, -1 is November, etc.
  * Values greater than 12 reference the appropriate month in the following year(s).
- * </p>
- * @param int $day [optional] <p>
- * The number of the day relative to the end of the previous month.
+ * @param int $day [optional] The number of the day relative to the end of the previous month.
  * Values 1 to 28, 29, 30 or 31 (depending upon the month) reference the normal days in the relevant month.
  * Values less than 1 (including negative values) reference the days in the previous month, so 0 is the last day of the previous month, -1 is the day before that, etc.
  * Values greater than the number of days in the relevant month reference the appropriate day in the following month(s).
- * </p>
- * @param int $year [optional] <p>
- * The number of the year, may be a two or four digit value,
+ * @param int $year [optional] The number of the year, may be a two or four digit value,
  * with values between 0-69 mapping to 2000-2069 and 70-100 to
  * 1970-2000. On systems where time_t is a 32bit signed integer, as
  * most common today, the valid range for year 
  * is somewhere between 1901 and 2038. However, before PHP 5.1.0 this
  * range was limited from 1970 to 2038 on some systems (e.g. Windows).
- * </p>
  * @param int $is_dst [optional] <p>
  * This parameter can be set to 1 if the time is during daylight savings time (DST), 
  * 0 if it is not, or -1 (the default) if it is unknown whether the time is within 
@@ -1445,37 +1375,25 @@ function mktime (int $hour = null, int $minute = null, int $second = null, int $
 /**
  * Get Unix timestamp for a GMT date
  * @link http://www.php.net/manual/en/function.gmmktime.php
- * @param int $hour [optional] <p>
- * The number of the hour relative to the start of the day determined by
+ * @param int $hour [optional] The number of the hour relative to the start of the day determined by
  * month, day and year.
  * Negative values reference the hour before midnight of the day in question.
  * Values greater than 23 reference the appropriate hour in the following day(s).
- * </p>
- * @param int $minute [optional] <p>
- * The number of the minute relative to the start of the hour.
+ * @param int $minute [optional] The number of the minute relative to the start of the hour.
  * Negative values reference the minute in the previous hour.
  * Values greater than 59 reference the appropriate minute in the following hour(s).
- * </p>
- * @param int $second [optional] <p>
- * The number of seconds relative to the start of the minute.
+ * @param int $second [optional] The number of seconds relative to the start of the minute.
  * Negative values reference the second in the previous minute.
  * Values greater than 59 reference the appropriate second in the following minute(s).
- * </p>
- * @param int $month [optional] <p>
- * The number of the month relative to the end of the previous year.
+ * @param int $month [optional] The number of the month relative to the end of the previous year.
  * Values 1 to 12 reference the normal calendar months of the year in question.
  * Values less than 1 (including negative values) reference the months in the previous year in reverse order, so 0 is December, -1 is November, etc.
  * Values greater than 12 reference the appropriate month in the following year(s).
- * </p>
- * @param int $day [optional] <p>
- * The number of the day relative to the end of the previous month.
+ * @param int $day [optional] The number of the day relative to the end of the previous month.
  * Values 1 to 28, 29, 30 or 31 (depending upon the month) reference the normal days in the relevant month.
  * Values less than 1 (including negative values) reference the days in the previous month, so 0 is the last day of the previous month, -1 is the day before that, etc.
  * Values greater than the number of days in the relevant month reference the appropriate day in the following month(s).
- * </p>
- * @param int $year [optional] <p>
- * The year
- * </p>
+ * @param int $year [optional] The year
  * @param int $is_dst [optional] <p>
  * Parameters always represent a GMT date so is_dst
  * doesn't influence the result.
@@ -1490,17 +1408,11 @@ function gmmktime (int $hour = null, int $minute = null, int $second = null, int
 /**
  * Validate a Gregorian date
  * @link http://www.php.net/manual/en/function.checkdate.php
- * @param int $month <p>
- * The month is between 1 and 12 inclusive.
- * </p>
- * @param int $day <p>
- * The day is within the allowed number of days for the given 
+ * @param int $month The month is between 1 and 12 inclusive.
+ * @param int $day The day is within the allowed number of days for the given 
  * month. Leap years 
  * are taken into consideration.
- * </p>
- * @param int $year <p>
- * The year is between 1 and 32767 inclusive.
- * </p>
+ * @param int $year The year is between 1 and 32767 inclusive.
  * @return bool true if the date given is valid; otherwise returns false.
  */
 function checkdate (int $month, int $day, int $year) {}
@@ -1807,9 +1719,7 @@ function strftime (string $format, int $timestamp = null) {}
 /**
  * Format a GMT/UTC time/date according to locale settings
  * @link http://www.php.net/manual/en/function.gmstrftime.php
- * @param string $format <p>
- * See description in strftime.
- * </p>
+ * @param string $format See description in strftime.
  * @param int $timestamp [optional] 
  * @return string a string formatted according to the given format string
  * using the given timestamp or the current
@@ -1839,7 +1749,28 @@ function time () {}
  * the associative array are as follows:
  * </p>
  * <p>
+ * <p>
+ * <br>
  * "tm_sec" - seconds, 0 to 59
+ * <br>
+ * "tm_min" - minutes, 0 to 59
+ * <br>
+ * "tm_hour" - hours, 0 to 23
+ * <br>
+ * "tm_mday" - day of the month, 1 to 31
+ * <br>
+ * "tm_mon" - month of the year, 0 (Jan) to 11 (Dec)
+ * <br>
+ * "tm_year" - years since 1900
+ * <br>
+ * "tm_wday" - day of the week, 0 (Sun) to 6 (Sat)
+ * <br>
+ * "tm_yday" - day of the year, 0 to 365
+ * <br>
+ * "tm_isdst" - is daylight savings time in effect? 
+ * Positive if yes, 0 if not, negative if unknown.
+ * </p>
+ * </p>
  * @return array 
  */
 function localtime (int $timestamp = null, bool $is_associative = null) {}
@@ -1964,9 +1895,7 @@ function date_create_immutable_from_format ($format, $time, $object = null) {}
 /**
  * Returns associative array with detailed info about given date
  * @link http://www.php.net/manual/en/function.date-parse.php
- * @param string $date <p>
- * Date in format accepted by strtotime.
- * </p>
+ * @param string $date Date in format accepted by strtotime.
  * @return array array with information about the parsed date
  * on success or false on failure.
  */
@@ -1975,12 +1904,8 @@ function date_parse (string $date) {}
 /**
  * Get info about given date formatted according to the specified format
  * @link http://www.php.net/manual/en/function.date-parse-from-format.php
- * @param string $format <p>
- * Format accepted by DateTime::createFromFormat.
- * </p>
- * @param string $date <p>
- * String representing the date.
- * </p>
+ * @param string $format Format accepted by DateTime::createFromFormat.
+ * @param string $date String representing the date.
  * @return array associative array with detailed info about given date.
  */
 function date_parse_from_format (string $format, string $date) {}
@@ -2117,17 +2042,12 @@ function timezone_name_get ($object) {}
 /**
  * Returns the timezone name from abbreviation
  * @link http://www.php.net/manual/en/function.timezone-name-from-abbr.php
- * @param string $abbr <p>
- * Time zone abbreviation.
- * </p>
- * @param int $gmtOffset [optional] <p>
- * Offset from GMT in seconds. Defaults to -1 which means that first found
+ * @param string $abbr Time zone abbreviation.
+ * @param int $gmtOffset [optional] Offset from GMT in seconds. Defaults to -1 which means that first found
  * time zone corresponding to abbr is returned.
  * Otherwise exact offset is searched and only if not found then the first
  * time zone with any offset is returned.
- * </p>
- * @param int $isdst [optional] <p>
- * Daylight saving time indicator. Defaults to -1, which means that
+ * @param int $isdst [optional] Daylight saving time indicator. Defaults to -1, which means that
  * whether the time zone has daylight saving or not is not taken into
  * consideration when searching. If this is set to 1, then the
  * gmtOffset is assumed to be an offset with
@@ -2136,7 +2056,6 @@ function timezone_name_get ($object) {}
  * abbr doesn't exist then the time zone is
  * searched solely by the gmtOffset and
  * isdst.
- * </p>
  * @return string time zone name on success or false on failure.
  */
 function timezone_name_from_abbr (string $abbr, int $gmtOffset = null, int $isdst = null) {}
@@ -2204,11 +2123,9 @@ function date_interval_format ($object, $format) {}
 /**
  * Sets the default timezone used by all date/time functions in a script
  * @link http://www.php.net/manual/en/function.date-default-timezone-set.php
- * @param string $timezone_identifier <p>
- * The timezone identifier, like UTC or
+ * @param string $timezone_identifier The timezone identifier, like UTC or
  * Europe/Lisbon. The list of valid identifiers is
  * available in the .
- * </p>
  * @return bool This function returns false if the
  * timezone_identifier isn't valid, or true
  * otherwise.
@@ -2225,12 +2142,9 @@ function date_default_timezone_get () {}
 /**
  * Returns time of sunrise for a given day and location
  * @link http://www.php.net/manual/en/function.date-sunrise.php
- * @param int $timestamp <p>
- * The timestamp of the day from which the sunrise
+ * @param int $timestamp The timestamp of the day from which the sunrise
  * time is taken.
- * </p>
- * @param int $format [optional] <p>
- * <table>
+ * @param int $format [optional] <table>
  * format constants
  * <table>
  * <tr valign="top">
@@ -2255,18 +2169,11 @@ function date_default_timezone_get () {}
  * </tr>
  * </table>
  * </table>
- * </p>
- * @param float $latitude [optional] <p>
- * Defaults to North, pass in a negative value for South.
+ * @param float $latitude [optional] Defaults to North, pass in a negative value for South.
  * See also: date.default_latitude
- * </p>
- * @param float $longitude [optional] <p>
- * Defaults to East, pass in a negative value for West.
+ * @param float $longitude [optional] Defaults to East, pass in a negative value for West.
  * See also: date.default_longitude
- * </p>
- * @param float $zenith [optional] <p>
- * Default: date.sunrise_zenith
- * </p>
+ * @param float $zenith [optional] Default: date.sunrise_zenith
  * @param float $gmt_offset [optional] 
  * @return mixed the sunrise time in a specified format on
  * success or false on failure.
@@ -2276,12 +2183,9 @@ function date_sunrise (int $timestamp, int $format = null, float $latitude = nul
 /**
  * Returns time of sunset for a given day and location
  * @link http://www.php.net/manual/en/function.date-sunset.php
- * @param int $timestamp <p>
- * The timestamp of the day from which the sunset
+ * @param int $timestamp The timestamp of the day from which the sunset
  * time is taken.
- * </p>
- * @param int $format [optional] <p>
- * <table>
+ * @param int $format [optional] <table>
  * format constants
  * <table>
  * <tr valign="top">
@@ -2306,18 +2210,11 @@ function date_sunrise (int $timestamp, int $format = null, float $latitude = nul
  * </tr>
  * </table>
  * </table>
- * </p>
- * @param float $latitude [optional] <p>
- * Defaults to North, pass in a negative value for South.
+ * @param float $latitude [optional] Defaults to North, pass in a negative value for South.
  * See also: date.default_latitude
- * </p>
- * @param float $longitude [optional] <p>
- * Defaults to East, pass in a negative value for West.
+ * @param float $longitude [optional] Defaults to East, pass in a negative value for West.
  * See also: date.default_longitude
- * </p>
- * @param float $zenith [optional] <p>
- * Default: date.sunset_zenith
- * </p>
+ * @param float $zenith [optional] Default: date.sunset_zenith
  * @param float $gmt_offset [optional] 
  * @return mixed the sunset time in a specified format on
  * success or false on failure.
@@ -2327,15 +2224,9 @@ function date_sunset (int $timestamp, int $format = null, float $latitude = null
 /**
  * Returns an array with information about sunset/sunrise and twilight begin/end
  * @link http://www.php.net/manual/en/function.date-sun-info.php
- * @param int $time <p>
- * Timestamp.
- * </p>
- * @param float $latitude <p>
- * Latitude in degrees.
- * </p>
- * @param float $longitude <p>
- * Longitude in degrees.
- * </p>
+ * @param int $time Timestamp.
+ * @param float $latitude Latitude in degrees.
+ * @param float $longitude Longitude in degrees.
  * @return array array on success or false on failure.
  */
 function date_sun_info (int $time, float $latitude, float $longitude) {}

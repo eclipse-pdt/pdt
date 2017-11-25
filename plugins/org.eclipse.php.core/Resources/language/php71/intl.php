@@ -39,12 +39,10 @@ class Collator  {
 	/**
 	 * Create a collator
 	 * @link http://www.php.net/manual/en/collator.create.php
-	 * @param string $locale <p>
-	 * The locale containing the required collation rules. Special values for
+	 * @param string $locale The locale containing the required collation rules. Special values for
 	 * locales can be passed in - if null is passed for the locale, the
 	 * default locale collation rules will be used. If empty string ("") or
 	 * "root" are passed, UCA rules will be used.
-	 * </p>
 	 * @return Collator Return new instance of Collator object, or null
 	 * on error.
 	 */
@@ -53,25 +51,26 @@ class Collator  {
 	/**
 	 * Compare two Unicode strings
 	 * @link http://www.php.net/manual/en/collator.compare.php
-	 * @param string $str1 <p>
-	 * The first string to compare.
-	 * </p>
-	 * @param string $str2 <p>
-	 * The second string to compare.
-	 * </p>
+	 * @param string $str1 The first string to compare.
+	 * @param string $str2 The second string to compare.
 	 * @return int Return comparison result:
 	 * <p>
+	 * <p>
+	 * <br>
 	 * <p>
 	 * 1 if str1 is greater than 
 	 * str2 ;
 	 * </p>
+	 * <br>
 	 * <p>
 	 * 0 if str1 is equal to 
 	 * str2;
 	 * </p>
+	 * <br>
 	 * <p>
 	 * -1 if str1 is less than 
 	 * str2 .
+	 * </p>
 	 * </p>
 	 * On error
 	 * boolean
@@ -84,16 +83,30 @@ class Collator  {
 	/**
 	 * Sort array using specified collator
 	 * @link http://www.php.net/manual/en/collator.sort.php
-	 * @param array $arr <p>
-	 * Array of strings to sort.
-	 * </p>
+	 * @param array $arr Array of strings to sort.
 	 * @param int $sort_flag [optional] <p>
 	 * Optional sorting type, one of the following:
 	 * </p>
 	 * <p>
 	 * <p>
+	 * <br>
+	 * <p>
 	 * Collator::SORT_REGULAR
 	 * - compare items normally (don't change types)
+	 * </p>
+	 * <br>
+	 * <p>
+	 * Collator::SORT_NUMERIC
+	 * - compare items numerically
+	 * </p>
+	 * <br>
+	 * <p>
+	 * Collator::SORT_STRING
+	 * - compare items as strings
+	 * </p>
+	 * </p>
+	 * Default sorting type is Collator::SORT_REGULAR.
+	 * It is also used if an invalid sort_flag value has been specified.
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
@@ -102,7 +115,7 @@ class Collator  {
 	/**
 	 * Sort array using specified collator and sort keys
 	 * @link http://www.php.net/manual/en/collator.sortwithsortkeys.php
-	 * @param array $arr <p>Array of strings to sort</p>
+	 * @param array $arr Array of strings to sort
 	 * @return bool true on success or false on failure
 	 */
 	public function sortWithSortKeys (array &$arr) {}
@@ -110,12 +123,31 @@ class Collator  {
 	/**
 	 * Sort array maintaining index association
 	 * @link http://www.php.net/manual/en/collator.asort.php
-	 * @param array $arr <p>Array of strings to sort.</p>
+	 * @param array $arr Array of strings to sort.
 	 * @param int $sort_flag [optional] <p>
 	 * Optional sorting type, one of the following:
 	 * <p>
+	 * <br>
+	 * <p>
 	 * Collator::SORT_REGULAR
 	 * - compare items normally (don't change types)
+	 * </p>
+	 * <br>
+	 * <p>
+	 * Collator::SORT_NUMERIC
+	 * - compare items numerically
+	 * </p>
+	 * <br>
+	 * <p>
+	 * Collator::SORT_STRING
+	 * - compare items as strings
+	 * </p>
+	 * </p>
+	 * </p>
+	 * <p>
+	 * Default $sort_flag value is
+	 * Collator::SORT_REGULAR.
+	 * It is also used if an invalid $sort_flag value has been specified.
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
@@ -124,9 +156,7 @@ class Collator  {
 	/**
 	 * Get collation attribute value
 	 * @link http://www.php.net/manual/en/collator.getattribute.php
-	 * @param int $attr <p>
-	 * Attribute to get value for.
-	 * </p>
+	 * @param int $attr Attribute to get value for.
 	 * @return int Attribute value, or boolean false on error.
 	 */
 	public function getAttribute (int $attr) {}
@@ -134,10 +164,8 @@ class Collator  {
 	/**
 	 * Set collation attribute
 	 * @link http://www.php.net/manual/en/collator.setattribute.php
-	 * @param int $attr <p>Attribute.</p>
-	 * @param int $val <p>
-	 * Attribute value.
-	 * </p>
+	 * @param int $attr Attribute.
+	 * @param int $val Attribute value.
 	 * @return bool true on success or false on failure
 	 */
 	public function setAttribute (int $attr, int $val) {}
@@ -156,7 +184,31 @@ class Collator  {
 	 * <p>
 	 * Possible values are:
 	 * <p>
+	 * <br>
+	 * <p>
 	 * Collator::PRIMARY
+	 * </p>
+	 * <br>
+	 * <p>
+	 * Collator::SECONDARY
+	 * </p>
+	 * <br>
+	 * <p>
+	 * Collator::TERTIARY
+	 * </p>
+	 * <br>
+	 * <p>
+	 * Collator::QUATERNARY
+	 * </p>
+	 * <br>
+	 * <p>
+	 * Collator::IDENTICAL
+	 * </p>
+	 * <br>
+	 * <p>
+	 * Collator::DEFAULT_STRENGTH
+	 * </p>
+	 * </p>
 	 * </p>
 	 * @return bool true on success or false on failure
 	 */
@@ -165,12 +217,10 @@ class Collator  {
 	/**
 	 * Get the locale name of the collator
 	 * @link http://www.php.net/manual/en/collator.getlocale.php
-	 * @param int $type <p>
-	 * You can choose between valid and actual locale (
+	 * @param int $type You can choose between valid and actual locale (
 	 * Locale::VALID_LOCALE and 
 	 * Locale::ACTUAL_LOCALE,
 	 * respectively).
-	 * </p>
 	 * @return string Real locale name from which the collation data comes. If the collator was
 	 * instantiated from rules or an error occurred, returns
 	 * boolean false.
@@ -194,9 +244,7 @@ class Collator  {
 	/**
 	 * Get sorting key for a string
 	 * @link http://www.php.net/manual/en/collator.getsortkey.php
-	 * @param string $str <p>
-	 * The string to produce the key from.
-	 * </p>
+	 * @param string $str The string to produce the key from.
 	 * @return string the collation key for the string. Collation keys can be compared directly instead of strings.
 	 */
 	public function getSortKey (string $str) {}
@@ -289,11 +337,8 @@ class NumberFormatter  {
 	/**
 	 * Create a number formatter
 	 * @link http://www.php.net/manual/en/numberformatter.create.php
-	 * @param string $locale <p>
-	 * Locale in which the number would be formatted (locale name, e.g. en_CA).
-	 * </p>
-	 * @param int $style <p>
-	 * Style of the formatting, one of the
+	 * @param string $locale Locale in which the number would be formatted (locale name, e.g. en_CA).
+	 * @param int $style Style of the formatting, one of the
 	 * format style constants. If
 	 * NumberFormatter::PATTERN_DECIMAL
 	 * or NumberFormatter::PATTERN_RULEBASED
@@ -303,10 +348,7 @@ class NumberFormatter  {
 	 * documentation or
 	 * ICU RuleBasedNumberFormat
 	 * documentation, respectively.
-	 * </p>
-	 * @param string $pattern [optional] <p>
-	 * Pattern string if the chosen style requires a pattern.
-	 * </p>
+	 * @param string $pattern [optional] Pattern string if the chosen style requires a pattern.
 	 * @return NumberFormatter NumberFormatter object or false on error.
 	 */
 	public static function create (string $locale, int $style, string $pattern = null) {}
@@ -314,14 +356,10 @@ class NumberFormatter  {
 	/**
 	 * Format a number
 	 * @link http://www.php.net/manual/en/numberformatter.format.php
-	 * @param number $value <p>
-	 * The value to format. Can be integer or float,
+	 * @param number $value The value to format. Can be integer or float,
 	 * other values will be converted to a numeric value.
-	 * </p>
-	 * @param int $type [optional] <p>
-	 * The
+	 * @param int $type [optional] The
 	 * formatting type to use.
-	 * </p>
 	 * @return string the string containing formatted value, or false on error.
 	 */
 	public function format ($value, int $type = null) {}
@@ -330,15 +368,11 @@ class NumberFormatter  {
 	 * Parse a number
 	 * @link http://www.php.net/manual/en/numberformatter.parse.php
 	 * @param string $value 
-	 * @param int $type [optional] <p>
-	 * The
+	 * @param int $type [optional] The
 	 * formatting type to use. By default,
 	 * NumberFormatter::TYPE_DOUBLE is used.
-	 * </p>
-	 * @param int $position [optional] <p>
-	 * Offset in the string at which to begin parsing. On return, this value
+	 * @param int $position [optional] Offset in the string at which to begin parsing. On return, this value
 	 * will hold the offset at which parsing ended.
-	 * </p>
 	 * @return mixed The value of the parsed number or false on error.
 	 */
 	public function parse (string $value, int $type = null, int &$position = null) {}
@@ -346,12 +380,8 @@ class NumberFormatter  {
 	/**
 	 * Format a currency value
 	 * @link http://www.php.net/manual/en/numberformatter.formatcurrency.php
-	 * @param float $value <p>
-	 * The numeric currency value.
-	 * </p>
-	 * @param string $currency <p>
-	 * The 3-letter ISO 4217 currency code indicating the currency to use.
-	 * </p>
+	 * @param float $value The numeric currency value.
+	 * @param string $currency The 3-letter ISO 4217 currency code indicating the currency to use.
 	 * @return string String representing the formatted currency value.
 	 */
 	public function formatCurrency (float $value, string $currency) {}
@@ -360,14 +390,10 @@ class NumberFormatter  {
 	 * Parse a currency number
 	 * @link http://www.php.net/manual/en/numberformatter.parsecurrency.php
 	 * @param string $value 
-	 * @param string $currency <p>
-	 * Parameter to receive the currency name (3-letter ISO 4217 currency
+	 * @param string $currency Parameter to receive the currency name (3-letter ISO 4217 currency
 	 * code).
-	 * </p>
-	 * @param int $position [optional] <p>
-	 * Offset in the string at which to begin parsing. On return, this value
+	 * @param int $position [optional] Offset in the string at which to begin parsing. On return, this value
 	 * will hold the offset at which parsing ended.
-	 * </p>
 	 * @return float The parsed numeric value or false on error.
 	 */
 	public function parseCurrency (string $value, string &$currency, int &$position = null) {}
@@ -375,13 +401,9 @@ class NumberFormatter  {
 	/**
 	 * Set an attribute
 	 * @link http://www.php.net/manual/en/numberformatter.setattribute.php
-	 * @param int $attr <p>
-	 * Attribute specifier - one of the
+	 * @param int $attr Attribute specifier - one of the
 	 * numeric attribute constants.
-	 * </p>
-	 * @param int $value <p>
-	 * The attribute value.
-	 * </p>
+	 * @param int $value The attribute value.
 	 * @return bool true on success or false on failure
 	 */
 	public function setAttribute (int $attr, int $value) {}
@@ -389,10 +411,8 @@ class NumberFormatter  {
 	/**
 	 * Get an attribute
 	 * @link http://www.php.net/manual/en/numberformatter.getattribute.php
-	 * @param int $attr <p>
-	 * Attribute specifier - one of the
+	 * @param int $attr Attribute specifier - one of the
 	 * numeric attribute constants.
-	 * </p>
 	 * @return int Return attribute value on success, or false on error.
 	 */
 	public function getAttribute (int $attr) {}
@@ -400,14 +420,10 @@ class NumberFormatter  {
 	/**
 	 * Set a text attribute
 	 * @link http://www.php.net/manual/en/numberformatter.settextattribute.php
-	 * @param int $attr <p>
-	 * Attribute specifier - one of the
+	 * @param int $attr Attribute specifier - one of the
 	 * text attribute
 	 * constants.
-	 * </p>
-	 * @param string $value <p>
-	 * Text for the attribute value.
-	 * </p>
+	 * @param string $value Text for the attribute value.
 	 * @return bool true on success or false on failure
 	 */
 	public function setTextAttribute (int $attr, string $value) {}
@@ -415,10 +431,8 @@ class NumberFormatter  {
 	/**
 	 * Get a text attribute
 	 * @link http://www.php.net/manual/en/numberformatter.gettextattribute.php
-	 * @param int $attr <p>
-	 * Attribute specifier - one of the
+	 * @param int $attr Attribute specifier - one of the
 	 * text attribute constants.
-	 * </p>
 	 * @return string Return attribute value on success, or false on error.
 	 */
 	public function getTextAttribute (int $attr) {}
@@ -426,13 +440,9 @@ class NumberFormatter  {
 	/**
 	 * Set a symbol value
 	 * @link http://www.php.net/manual/en/numberformatter.setsymbol.php
-	 * @param int $attr <p>
-	 * Symbol specifier, one of the
+	 * @param int $attr Symbol specifier, one of the
 	 * format symbol constants.
-	 * </p>
-	 * @param string $value <p>
-	 * Text for the symbol.
-	 * </p>
+	 * @param string $value Text for the symbol.
 	 * @return bool true on success or false on failure
 	 */
 	public function setSymbol (int $attr, string $value) {}
@@ -440,10 +450,8 @@ class NumberFormatter  {
 	/**
 	 * Get a symbol value
 	 * @link http://www.php.net/manual/en/numberformatter.getsymbol.php
-	 * @param int $attr <p>
-	 * Symbol specifier, one of the
+	 * @param int $attr Symbol specifier, one of the
 	 * format symbol constants.
-	 * </p>
 	 * @return string The symbol string or false on error.
 	 */
 	public function getSymbol (int $attr) {}
@@ -451,11 +459,9 @@ class NumberFormatter  {
 	/**
 	 * Set formatter pattern
 	 * @link http://www.php.net/manual/en/numberformatter.setpattern.php
-	 * @param string $pattern <p>
-	 * Pattern in syntax described in
+	 * @param string $pattern Pattern in syntax described in
 	 * ICU DecimalFormat
 	 * documentation.
-	 * </p>
 	 * @return bool true on success or false on failure
 	 */
 	public function setPattern (string $pattern) {}
@@ -470,12 +476,10 @@ class NumberFormatter  {
 	/**
 	 * Get formatter locale
 	 * @link http://www.php.net/manual/en/numberformatter.getlocale.php
-	 * @param int $type [optional] <p>
-	 * You can choose between valid and actual locale (
+	 * @param int $type [optional] You can choose between valid and actual locale (
 	 * Locale::VALID_LOCALE,
 	 * Locale::ACTUAL_LOCALE,
 	 * respectively). The default is the actual locale.
-	 * </p>
 	 * @return string The locale name used to create the formatter.
 	 */
 	public function getLocale (int $type = null) {}
@@ -511,8 +515,8 @@ class Normalizer  {
 	/**
 	 * Normalizes the input provided and returns the normalized string
 	 * @link http://www.php.net/manual/en/normalizer.normalize.php
-	 * @param string $input <p>The input string to normalize</p>
-	 * @param int $form [optional] <p>One of the normalization forms.</p>
+	 * @param string $input The input string to normalize
+	 * @param int $form [optional] One of the normalization forms.
 	 * @return string The normalized string or false if an error occurred.
 	 */
 	public static function normalize (string $input, int $form = null) {}
@@ -521,10 +525,8 @@ class Normalizer  {
 	 * Checks if the provided string is already in the specified normalization
 	 * form.
 	 * @link http://www.php.net/manual/en/normalizer.isnormalized.php
-	 * @param string $input <p>The input string to normalize</p>
-	 * @param int $form [optional] <p>
-	 * One of the normalization forms.
-	 * </p>
+	 * @param string $input The input string to normalize
+	 * @param int $form [optional] One of the normalization forms.
 	 * @return bool true if normalized, false otherwise or if there an error
 	 */
 	public static function isNormalized (string $input, int $form = null) {}
@@ -554,9 +556,7 @@ class Locale  {
 	/**
 	 * sets the default runtime locale
 	 * @link http://www.php.net/manual/en/locale.setdefault.php
-	 * @param string $locale <p>
-	 * Is a BCP 47 compliant language tag.
-	 * </p>
+	 * @param string $locale Is a BCP 47 compliant language tag.
 	 * @return bool true on success or false on failure
 	 */
 	public static function setDefault (string $locale) {}
@@ -564,9 +564,7 @@ class Locale  {
 	/**
 	 * Gets the primary language for the input locale
 	 * @link http://www.php.net/manual/en/locale.getprimarylanguage.php
-	 * @param string $locale <p>
-	 * The locale to extract the primary language code from
-	 * </p>
+	 * @param string $locale The locale to extract the primary language code from
 	 * @return string The language code associated with the language or null in case of error.
 	 */
 	public static function getPrimaryLanguage (string $locale) {}
@@ -574,9 +572,7 @@ class Locale  {
 	/**
 	 * Gets the script for the input locale
 	 * @link http://www.php.net/manual/en/locale.getscript.php
-	 * @param string $locale <p>
-	 * The locale to extract the script code from
-	 * </p>
+	 * @param string $locale The locale to extract the script code from
 	 * @return string The script subtag for the locale or null if not present
 	 */
 	public static function getScript (string $locale) {}
@@ -584,9 +580,7 @@ class Locale  {
 	/**
 	 * Gets the region for the input locale
 	 * @link http://www.php.net/manual/en/locale.getregion.php
-	 * @param string $locale <p>
-	 * The locale to extract the region code from
-	 * </p>
+	 * @param string $locale The locale to extract the region code from
 	 * @return string The region subtag for the locale or null if not present
 	 */
 	public static function getRegion (string $locale) {}
@@ -594,9 +588,7 @@ class Locale  {
 	/**
 	 * Gets the keywords for the input locale
 	 * @link http://www.php.net/manual/en/locale.getkeywords.php
-	 * @param string $locale <p>
-	 * The locale to extract the keywords from
-	 * </p>
+	 * @param string $locale The locale to extract the keywords from
 	 * @return array Associative array containing the keyword-value pairs for this locale
 	 */
 	public static function getKeywords (string $locale) {}
@@ -604,12 +596,8 @@ class Locale  {
 	/**
 	 * Returns an appropriately localized display name for script of the input locale
 	 * @link http://www.php.net/manual/en/locale.getdisplayscript.php
-	 * @param string $locale <p>
-	 * The locale to return a display script for
-	 * </p>
-	 * @param string $in_locale [optional] <p>
-	 * Optional format locale to use to display the script name
-	 * </p>
+	 * @param string $locale The locale to return a display script for
+	 * @param string $in_locale [optional] Optional format locale to use to display the script name
 	 * @return string Display name of the script for the $locale in the format appropriate for
 	 * $in_locale.
 	 */
@@ -618,12 +606,8 @@ class Locale  {
 	/**
 	 * Returns an appropriately localized display name for region of the input locale
 	 * @link http://www.php.net/manual/en/locale.getdisplayregion.php
-	 * @param string $locale <p>
-	 * The locale to return a display region for.
-	 * </p>
-	 * @param string $in_locale [optional] <p>
-	 * Optional format locale to use to display the region name
-	 * </p>
+	 * @param string $locale The locale to return a display region for.
+	 * @param string $in_locale [optional] Optional format locale to use to display the region name
 	 * @return string display name of the region for the $locale in the format appropriate for
 	 * $in_locale.
 	 */
@@ -632,10 +616,8 @@ class Locale  {
 	/**
 	 * Returns an appropriately localized display name for the input locale
 	 * @link http://www.php.net/manual/en/locale.getdisplayname.php
-	 * @param string $locale <p>
-	 * The locale to return a display name for.
-	 * </p>
-	 * @param string $in_locale [optional] <p>optional format locale</p>
+	 * @param string $locale The locale to return a display name for.
+	 * @param string $in_locale [optional] optional format locale
 	 * @return string Display name of the locale in the format appropriate for $in_locale.
 	 */
 	public static function getDisplayName (string $locale, string $in_locale = null) {}
@@ -643,12 +625,8 @@ class Locale  {
 	/**
 	 * Returns an appropriately localized display name for language of the inputlocale
 	 * @link http://www.php.net/manual/en/locale.getdisplaylanguage.php
-	 * @param string $locale <p>
-	 * The locale to return a display language for
-	 * </p>
-	 * @param string $in_locale [optional] <p>
-	 * Optional format locale to use to display the language name
-	 * </p>
+	 * @param string $locale The locale to return a display language for
+	 * @param string $in_locale [optional] Optional format locale to use to display the language name
 	 * @return string display name of the language for the $locale in the format appropriate for
 	 * $in_locale.
 	 */
@@ -657,12 +635,8 @@ class Locale  {
 	/**
 	 * Returns an appropriately localized display name for variants of the input locale
 	 * @link http://www.php.net/manual/en/locale.getdisplayvariant.php
-	 * @param string $locale <p>
-	 * The locale to return a display variant for
-	 * </p>
-	 * @param string $in_locale [optional] <p>
-	 * Optional format locale to use to display the variant name
-	 * </p>
+	 * @param string $locale The locale to return a display variant for
+	 * @param string $in_locale [optional] Optional format locale to use to display the variant name
 	 * @return string Display name of the variant for the $locale in the format appropriate for
 	 * $in_locale.
 	 */
@@ -696,11 +670,9 @@ class Locale  {
 	/**
 	 * Returns a key-value array of locale ID subtag elements.
 	 * @link http://www.php.net/manual/en/locale.parselocale.php
-	 * @param string $locale <p>
-	 * The locale to extract the subtag array from. Note: The 'variant' and
+	 * @param string $locale The locale to extract the subtag array from. Note: The 'variant' and
 	 * 'private' subtags can take maximum 15 values whereas 'extlang' can take
 	 * maximum 3 values.
-	 * </p>
 	 * @return array an array containing a list of key-value pairs, where the keys
 	 * identify the particular locale ID subtags, and the values are the
 	 * associated subtag values. The array will be ordered as the locale id
@@ -717,9 +689,7 @@ class Locale  {
 	/**
 	 * Gets the variants for the input locale
 	 * @link http://www.php.net/manual/en/locale.getallvariants.php
-	 * @param string $locale <p>
-	 * The locale to extract the variants from
-	 * </p>
+	 * @param string $locale The locale to extract the variants from
 	 * @return array The array containing the list of all variants subtag for the locale 
 	 * or null if not present
 	 */
@@ -728,16 +698,10 @@ class Locale  {
 	/**
 	 * Checks if a language tag filter matches with locale
 	 * @link http://www.php.net/manual/en/locale.filtermatches.php
-	 * @param string $langtag <p>
-	 * The language tag to check
-	 * </p>
-	 * @param string $locale <p>
-	 * The language range to check against
-	 * </p>
-	 * @param bool $canonicalize [optional] <p>
-	 * If true, the arguments will be converted to canonical form before
-	 * matching. 
-	 * </p>
+	 * @param string $langtag The language tag to check
+	 * @param string $locale The language range to check against
+	 * @param bool $canonicalize [optional] If true, the arguments will be converted to canonical form before
+	 * matching.
 	 * @return bool true if $locale matches $langtag false otherwise.
 	 */
 	public static function filterMatches (string $langtag, string $locale, bool $canonicalize = null) {}
@@ -746,19 +710,12 @@ class Locale  {
 	 * Searches the language tag list for the best match to the language
 	 * @link http://www.php.net/manual/en/locale.lookup.php
 	 * @param array $langtag <p>
-	 * An array containing a list of language tags to compare to 
-	 * locale. Maximum 100 items allowed.
+	 * An <p>locale. Maximum 100 items allowed.
 	 * </p>
-	 * @param string $locale <p>
-	 * The locale to use as the language range when matching.
-	 * </p>
-	 * @param bool $canonicalize [optional] <p>
-	 * If true, the arguments will be converted to canonical form before
+	 * @param string $locale The locale to use as the language range when matching.
+	 * @param bool $canonicalize [optional] If true, the arguments will be converted to canonical form before
 	 * matching.
-	 * </p>
-	 * @param string $default [optional] <p>
-	 * The locale to use if no match is found.
-	 * </p>
+	 * @param string $default [optional] The locale to use if no match is found.
 	 * @return string The closest matching language tag or default value.
 	 */
 	public static function lookup (array $langtag, string $locale, bool $canonicalize = null, string $default = null) {}
@@ -766,8 +723,7 @@ class Locale  {
 	/**
 	 * Canonicalize the locale string
 	 * @link http://www.php.net/manual/en/locale.canonicalize.php
-	 * @param string $locale <p>
-	 * </p>
+	 * @param string $locale 
 	 * @return string 
 	 */
 	public static function canonicalize (string $locale) {}
@@ -775,9 +731,7 @@ class Locale  {
 	/**
 	 * Tries to find out best available locale based on HTTP "Accept-Language" header
 	 * @link http://www.php.net/manual/en/locale.acceptfromhttp.php
-	 * @param string $header <p>
-	 * The string containing the "Accept-Language" header according to format in RFC 2616.
-	 * </p>
+	 * @param string $header The string containing the "Accept-Language" header according to format in RFC 2616.
 	 * @return string The corresponding locale identifier.
 	 */
 	public static function acceptFromHttp (string $header) {}
@@ -795,15 +749,11 @@ class MessageFormatter  {
 	/**
 	 * Constructs a new Message Formatter
 	 * @link http://www.php.net/manual/en/messageformatter.create.php
-	 * @param string $locale <p>
-	 * The locale to use when formatting arguments
-	 * </p>
-	 * @param string $pattern <p>
-	 * The pattern string to stick arguments into. 
+	 * @param string $locale The locale to use when formatting arguments
+	 * @param string $pattern The pattern string to stick arguments into. 
 	 * The pattern uses an 'apostrophe-friendly' syntax; it is run through
 	 * umsg_autoQuoteApostrophe 
 	 * before being interpreted.
-	 * </p>
 	 * @return MessageFormatter The formatter object
 	 */
 	public static function create (string $locale, string $pattern) {}
@@ -811,9 +761,7 @@ class MessageFormatter  {
 	/**
 	 * Format the message
 	 * @link http://www.php.net/manual/en/messageformatter.format.php
-	 * @param array $args <p>
-	 * Arguments to insert into the format string
-	 * </p>
+	 * @param array $args Arguments to insert into the format string
 	 * @return string The formatted string, or false if an error occurred
 	 */
 	public function format (array $args) {}
@@ -821,18 +769,12 @@ class MessageFormatter  {
 	/**
 	 * Quick format message
 	 * @link http://www.php.net/manual/en/messageformatter.formatmessage.php
-	 * @param string $locale <p>
-	 * The locale to use for formatting locale-dependent parts
-	 * </p>
-	 * @param string $pattern <p>
-	 * The pattern string to insert things into.
+	 * @param string $locale The locale to use for formatting locale-dependent parts
+	 * @param string $pattern The pattern string to insert things into.
 	 * The pattern uses an 'apostrophe-friendly' syntax; it is run through
 	 * umsg_autoQuoteApostrophe 
 	 * before being interpreted.
-	 * </p>
-	 * @param array $args <p>
-	 * The array of values to insert into the format string
-	 * </p>
+	 * @param array $args The array of values to insert into the format string
 	 * @return string The formatted pattern string or false if an error occurred
 	 */
 	public static function formatMessage (string $locale, string $pattern, array $args) {}
@@ -840,9 +782,7 @@ class MessageFormatter  {
 	/**
 	 * Parse input string according to pattern
 	 * @link http://www.php.net/manual/en/messageformatter.parse.php
-	 * @param string $value <p>
-	 * The string to parse
-	 * </p>
+	 * @param string $value The string to parse
 	 * @return array An array containing the items extracted, or false on error
 	 */
 	public function parse (string $value) {}
@@ -850,15 +790,9 @@ class MessageFormatter  {
 	/**
 	 * Quick parse input string
 	 * @link http://www.php.net/manual/en/messageformatter.parsemessage.php
-	 * @param string $locale <p>
-	 * The locale to use for parsing locale-dependent parts
-	 * </p>
-	 * @param string $pattern <p>
-	 * The pattern with which to parse the value.
-	 * </p>
-	 * @param string $source <p>
-	 * The string to parse, conforming to the pattern.
-	 * </p>
+	 * @param string $locale The locale to use for parsing locale-dependent parts
+	 * @param string $pattern The pattern with which to parse the value.
+	 * @param string $source The string to parse, conforming to the pattern.
 	 * @return array An array containing items extracted, or false on error
 	 */
 	public static function parseMessage (string $locale, string $pattern, string $source) {}
@@ -866,12 +800,10 @@ class MessageFormatter  {
 	/**
 	 * Set the pattern used by the formatter
 	 * @link http://www.php.net/manual/en/messageformatter.setpattern.php
-	 * @param string $pattern <p>
-	 * The pattern string to use in this message formatter.
+	 * @param string $pattern The pattern string to use in this message formatter.
 	 * The pattern uses an 'apostrophe-friendly' syntax; it is run through
 	 * umsg_autoQuoteApostrophe 
 	 * before being interpreted.
-	 * </p>
 	 * @return bool true on success or false on failure
 	 */
 	public function setPattern (string $pattern) {}
@@ -929,24 +861,18 @@ class IntlDateFormatter  {
 	/**
 	 * Create a date formatter
 	 * @link http://www.php.net/manual/en/intldateformatter.create.php
-	 * @param string $locale <p>
-	 * Locale to use when formatting or parsing or null to use the value
+	 * @param string $locale Locale to use when formatting or parsing or null to use the value
 	 * specified in the ini setting intl.default_locale.
-	 * </p>
-	 * @param int $datetype <p>
-	 * Date type to use (none, short,
+	 * @param int $datetype Date type to use (none, short,
 	 * medium, long,
 	 * full). This is one of the IntlDateFormatter
 	 * constants. It can also be null, in which case ICUʼs default
 	 * date type will be used.
-	 * </p>
-	 * @param int $timetype <p>
-	 * Time type to use (none, short,
+	 * @param int $timetype Time type to use (none, short,
 	 * medium, long,
 	 * full). This is one of the IntlDateFormatter
 	 * constants. It can also be null, in which case ICUʼs default
 	 * time type will be used.
-	 * </p>
 	 * @param mixed $timezone [optional] <p>
 	 * Time zone ID. The default (and the one used if null is given) is the
 	 * one returned by date_default_timezone_get or, if
@@ -959,8 +885,7 @@ class IntlDateFormatter  {
 	 * This can also be an IntlTimeZone or a
 	 * DateTimeZone object.
 	 * </p>
-	 * @param mixed $calendar [optional] <p>
-	 * Calendar to use for formatting or parsing. The default value is null,
+	 * @param mixed $calendar [optional] Calendar to use for formatting or parsing. The default value is null,
 	 * which corresponds to IntlDateFormatter::GREGORIAN.
 	 * This can either be one of the 
 	 * IntlDateFormatter
@@ -970,11 +895,8 @@ class IntlDateFormatter  {
 	 * determine the calendar type used (gregorian, islamic, persian, etc.) and,
 	 * if null is given for the timezone parameter,
 	 * also the timezone used.
-	 * </p>
-	 * @param string $pattern [optional] <p>
-	 * Optional pattern to use when formatting or parsing.
+	 * @param string $pattern [optional] Optional pattern to use when formatting or parsing.
 	 * Possible patterns are documented at url.icu.datepattern.
-	 * </p>
 	 * @return IntlDateFormatter The created IntlDateFormatter or false in case of
 	 * failure.
 	 */
@@ -1064,10 +986,8 @@ class IntlDateFormatter  {
 	/**
 	 * Set the pattern used for the IntlDateFormatter
 	 * @link http://www.php.net/manual/en/intldateformatter.setpattern.php
-	 * @param string $pattern <p>
-	 * New pattern string to use.
+	 * @param string $pattern New pattern string to use.
 	 * Possible patterns are documented at url.icu.datepattern.
-	 * </p>
 	 * @return bool true on success or false on failure
 	 * Bad formatstrings are usually the cause of the failure.
 	 */
@@ -1091,9 +1011,7 @@ class IntlDateFormatter  {
 	/**
 	 * Set the leniency of the parser
 	 * @link http://www.php.net/manual/en/intldateformatter.setlenient.php
-	 * @param bool $lenient <p>
-	 * Sets whether the parser is lenient or not, default is true (lenient).
-	 * </p>
+	 * @param bool $lenient Sets whether the parser is lenient or not, default is true (lenient).
 	 * @return bool true on success or false on failure
 	 */
 	public function setLenient (bool $lenient) {}
@@ -1131,13 +1049,10 @@ class IntlDateFormatter  {
 	/**
 	 * Formats an object
 	 * @link http://www.php.net/manual/en/intldateformatter.formatobject.php
-	 * @param object $object <p>
-	 * An object of type IntlCalendar or
+	 * @param object $object An object of type IntlCalendar or
 	 * DateTime. The timezone information in the object
 	 * will be used.
-	 * </p>
-	 * @param mixed $format [optional] <p>
-	 * How to format the date/time. This can either be an array with
+	 * @param mixed $format [optional] How to format the date/time. This can either be an array with
 	 * two elements (first the date style, then the time style, these being one
 	 * of the constants IntlDateFormatter::NONE,
 	 * IntlDateFormatter::SHORT,
@@ -1148,10 +1063,7 @@ class IntlDateFormatter  {
 	 * for the time and the date) or a string with the format
 	 * described in the ICU
 	 * documentation. If null, the default style will be used.
-	 * </p>
-	 * @param string $locale [optional] <p>
-	 * The locale to use, or null to use the default one.
-	 * </p>
+	 * @param string $locale [optional] The locale to use, or null to use the default one.
 	 * @return string A string with result or false on failure.
 	 */
 	public static function formatObject ($object, $format = null, string $locale = null) {}
@@ -1159,16 +1071,12 @@ class IntlDateFormatter  {
 	/**
 	 * Parse string to a timestamp value
 	 * @link http://www.php.net/manual/en/intldateformatter.parse.php
-	 * @param string $value <p>
-	 * string to convert to a time 
-	 * </p>
-	 * @param int $position [optional] <p>
-	 * Position at which to start the parsing in $value (zero-based).
+	 * @param string $value string to convert to a time
+	 * @param int $position [optional] Position at which to start the parsing in $value (zero-based).
 	 * If no error occurs before $value is consumed, $parse_pos will contain -1
 	 * otherwise it will contain the position at which parsing ended (and the error occurred).
 	 * This variable will contain the end position if the parse fails.
-	 * If $parse_pos > strlen($value), the parse fails immediately. 
-	 * </p>
+	 * If $parse_pos > strlen($value), the parse fails immediately.
 	 * @return int timestamp parsed value, or false if value can't be parsed.
 	 */
 	public function parse (string $value, int &$position = null) {}
@@ -1176,15 +1084,11 @@ class IntlDateFormatter  {
 	/**
 	 * Parse string to a field-based time value
 	 * @link http://www.php.net/manual/en/intldateformatter.localtime.php
-	 * @param string $value <p>
-	 * string to convert to a time 
-	 * </p>
-	 * @param int $position [optional] <p>
-	 * Position at which to start the parsing in $value (zero-based).
+	 * @param string $value string to convert to a time
+	 * @param int $position [optional] Position at which to start the parsing in $value (zero-based).
 	 * If no error occurs before $value is consumed, $parse_pos will contain -1
 	 * otherwise it will contain the position at which parsing ended .
-	 * If $parse_pos > strlen($value), the parse fails immediately. 
-	 * </p>
+	 * If $parse_pos > strlen($value), the parse fails immediately.
 	 * @return array Localtime compatible array of integers : contains 24 hour clock value in tm_hour field
 	 */
 	public function localtime (string $value, int &$position = null) {}
@@ -1217,15 +1121,9 @@ class ResourceBundle implements Traversable {
 	/**
 	 * Create a resource bundle
 	 * @link http://www.php.net/manual/en/resourcebundle.create.php
-	 * @param string $locale <p>
-	 * Locale for which the resources should be loaded (locale name, e.g. en_CA).
-	 * </p>
-	 * @param string $bundlename <p>
-	 * The directory where the data is stored or the name of the .dat file.
-	 * </p>
-	 * @param bool $fallback [optional] <p>
-	 * Whether locale should match exactly or fallback to parent locale is allowed.
-	 * </p>
+	 * @param string $locale Locale for which the resources should be loaded (locale name, e.g. en_CA).
+	 * @param string $bundlename The directory where the data is stored or the name of the .dat file.
+	 * @param bool $fallback [optional] Whether locale should match exactly or fallback to parent locale is allowed.
 	 * @return ResourceBundle ResourceBundle object or null on error.
 	 */
 	public static function create (string $locale, string $bundlename, bool $fallback = null) {}
@@ -1233,12 +1131,8 @@ class ResourceBundle implements Traversable {
 	/**
 	 * Get data from the bundle
 	 * @link http://www.php.net/manual/en/resourcebundle.get.php
-	 * @param string|int $index <p>
-	 * Data index, must be string or integer.
-	 * </p>
-	 * @param bool $fallback [optional] <p>
-	 * Whether locale should match exactly or fallback to parent locale is allowed.
-	 * </p>
+	 * @param string|int $index Data index, must be string or integer.
+	 * @param bool $fallback [optional] Whether locale should match exactly or fallback to parent locale is allowed.
 	 * @return mixed the data located at the index or null on error. Strings, integers and binary data strings
 	 * are returned as corresponding PHP types, integer array is returned as PHP array. Complex types are
 	 * returned as ResourceBundle object.
@@ -1255,10 +1149,8 @@ class ResourceBundle implements Traversable {
 	/**
 	 * Get supported locales
 	 * @link http://www.php.net/manual/en/resourcebundle.locales.php
-	 * @param string $bundlename <p>
-	 * Path of ResourceBundle for which to get available locales, or
+	 * @param string $bundlename Path of ResourceBundle for which to get available locales, or
 	 * empty string for default locales list.
-	 * </p>
 	 * @return array the list of locales supported by the bundle.
 	 */
 	public static function getLocales (string $bundlename) {}
@@ -1295,15 +1187,11 @@ class Transliterator  {
 	/**
 	 * Create a transliterator
 	 * @link http://www.php.net/manual/en/transliterator.create.php
-	 * @param string $id <p>
-	 * The id.
-	 * </p>
-	 * @param int $direction [optional] <p>
-	 * The direction, defaults to 
+	 * @param string $id The id.
+	 * @param int $direction [optional] The direction, defaults to 
 	 * >Transliterator::FORWARD.
 	 * May also be set to
 	 * Transliterator::REVERSE.
-	 * </p>
 	 * @return Transliterator a Transliterator object on success,
 	 * or null on failure.
 	 */
@@ -1312,15 +1200,11 @@ class Transliterator  {
 	/**
 	 * Create transliterator from rules
 	 * @link http://www.php.net/manual/en/transliterator.createfromrules.php
-	 * @param string $rules <p>
-	 * The rules.
-	 * </p>
-	 * @param string $direction [optional] <p>
-	 * The direction, defaults to 
+	 * @param string $rules The rules.
+	 * @param string $direction [optional] The direction, defaults to 
 	 * >Transliterator::FORWARD.
 	 * May also be set to
 	 * Transliterator::REVERSE.
-	 * </p>
 	 * @return Transliterator a Transliterator object on success,
 	 * or null on failure.
 	 */
@@ -1345,19 +1229,13 @@ class Transliterator  {
 	/**
 	 * Transliterate a string
 	 * @link http://www.php.net/manual/en/transliterator.transliterate.php
-	 * @param string $subject <p>
-	 * The string to be transformed.
-	 * </p>
-	 * @param int $start [optional] <p>
-	 * The start index (in UTF-16 code units) from which the string will start
+	 * @param string $subject The string to be transformed.
+	 * @param int $start [optional] The start index (in UTF-16 code units) from which the string will start
 	 * to be transformed, inclusive. Indexing starts at 0. The text before will
 	 * be left as is.
-	 * </p>
-	 * @param int $end [optional] <p>
-	 * The end index (in UTF-16 code units) until which the string will be
+	 * @param int $end [optional] The end index (in UTF-16 code units) until which the string will be
 	 * transformed, exclusive. Indexing starts at 0. The text after will be
 	 * left as is.
-	 * </p>
 	 * @return string The transfomed string on success, or false on failure.
 	 */
 	public function transliterate (string $subject, int $start = null, int $end = null) {}
@@ -1399,8 +1277,7 @@ class IntlTimeZone  {
 	/**
 	 * Create a timezone object for the given ID
 	 * @link http://www.php.net/manual/en/intltimezone.createtimezone.php
-	 * @param string $zoneId <p>
-	 * </p>
+	 * @param string $zoneId 
 	 * @return IntlTimeZone 
 	 */
 	public static function createTimeZone (string $zoneId) {}
@@ -1408,8 +1285,7 @@ class IntlTimeZone  {
 	/**
 	 * Create a timezone object from DateTimeZone
 	 * @link http://www.php.net/manual/en/intltimezone.fromdatetimezone.php
-	 * @param DateTimeZone $zoneId <p>
-	 * </p>
+	 * @param DateTimeZone $zoneId 
 	 * @return IntlTimeZone 
 	 */
 	public static function fromDateTimeZone (DateTimeZone $zoneId) {}
@@ -1434,8 +1310,7 @@ class IntlTimeZone  {
 	 * Get an enumeration over time zone IDs associated with the
 	 * given country or offset
 	 * @link http://www.php.net/manual/en/intltimezone.createenumeration.php
-	 * @param mixed $countryOrRawOffset [optional] <p>
-	 * </p>
+	 * @param mixed $countryOrRawOffset [optional] 
 	 * @return IntlIterator 
 	 */
 	public static function createEnumeration ($countryOrRawOffset = null) {}
@@ -1443,8 +1318,7 @@ class IntlTimeZone  {
 	/**
 	 * Get the number of IDs in the equivalency group that includes the given ID
 	 * @link http://www.php.net/manual/en/intltimezone.countequivalentids.php
-	 * @param string $zoneId <p>
-	 * </p>
+	 * @param string $zoneId 
 	 * @return integer 
 	 */
 	public static function countEquivalentIDs (string $zoneId) {}
@@ -1459,10 +1333,8 @@ class IntlTimeZone  {
 	/**
 	 * Get the canonical system timezone ID or the normalized custom time zone ID for the given time zone ID
 	 * @link http://www.php.net/manual/en/intltimezone.getcanonicalid.php
-	 * @param string $zoneId <p>
-	 * </p>
-	 * @param bool $isSystemID [optional] <p>
-	 * </p>
+	 * @param string $zoneId 
+	 * @param bool $isSystemID [optional] 
 	 * @return string 
 	 */
 	public static function getCanonicalID (string $zoneId, bool &$isSystemID = null) {}
@@ -1482,10 +1354,8 @@ class IntlTimeZone  {
 	/**
 	 * Get an ID in the equivalency group that includes the given ID
 	 * @link http://www.php.net/manual/en/intltimezone.getequivalentid.php
-	 * @param string $zoneId <p>
-	 * </p>
-	 * @param integer $index <p>
-	 * </p>
+	 * @param string $zoneId 
+	 * @param integer $index 
 	 * @return string 
 	 */
 	public static function getEquivalentID (string $zoneId, int $index) {}
@@ -1507,14 +1377,10 @@ class IntlTimeZone  {
 	/**
 	 * Get the time zone raw and GMT offset for the given moment in time
 	 * @link http://www.php.net/manual/en/intltimezone.getoffset.php
-	 * @param float $date <p>
-	 * </p>
-	 * @param bool $local <p>
-	 * </p>
-	 * @param integer $rawOffset <p>
-	 * </p>
-	 * @param integer $dstOffset <p>
-	 * </p>
+	 * @param float $date 
+	 * @param bool $local 
+	 * @param integer $rawOffset 
+	 * @param integer $dstOffset 
 	 * @return integer 
 	 */
 	public function getOffset (float $date, bool $local, int &$rawOffset, int &$dstOffset) {}
@@ -1529,8 +1395,7 @@ class IntlTimeZone  {
 	/**
 	 * Check if this zone has the same rules and offset as another zone
 	 * @link http://www.php.net/manual/en/intltimezone.hassamerules.php
-	 * @param IntlTimeZone $otherTimeZone <p>
-	 * </p>
+	 * @param IntlTimeZone $otherTimeZone 
 	 * @return bool 
 	 */
 	public function hasSameRules (IntlTimeZone $otherTimeZone) {}
@@ -1538,12 +1403,9 @@ class IntlTimeZone  {
 	/**
 	 * Get a name of this time zone suitable for presentation to the user
 	 * @link http://www.php.net/manual/en/intltimezone.getdisplayname.php
-	 * @param bool $isDaylight [optional] <p>
-	 * </p>
-	 * @param integer $style [optional] <p>
-	 * </p>
-	 * @param string $locale [optional] <p>
-	 * </p>
+	 * @param bool $isDaylight [optional] 
+	 * @param integer $style [optional] 
+	 * @param string $locale [optional] 
 	 * @return string 
 	 */
 	public function getDisplayName (bool $isDaylight = null, int $style = null, string $locale = null) {}
@@ -1644,9 +1506,7 @@ class IntlCalendar  {
 	 * The timezone to use.
 	 * </p>
 	 * reference.intl.inctimezoneparam
-	 * @param string $locale [optional] <p>
-	 * A locale to use or null to use the default locale.
-	 * </p>
+	 * @param string $locale [optional] A locale to use or null to use the default locale.
 	 * @return IntlCalendar The created IntlCalendar instance or null on
 	 * failure.
 	 */
@@ -1655,16 +1515,10 @@ class IntlCalendar  {
 	/**
 	 * Get set of locale keyword values
 	 * @link http://www.php.net/manual/en/intlcalendar.getkeywordvaluesforlocale.php
-	 * @param string $key <p>
-	 * The locale keyword for which relevant values are to be queried. Only
+	 * @param string $key The locale keyword for which relevant values are to be queried. Only
 	 * 'calendar' is supported.
-	 * </p>
-	 * @param string $locale <p>
-	 * The locale onto which the keyword/value pair are to be appended.
-	 * </p>
-	 * @param boolean $commonlyUsed <p>
-	 * Whether to show only the values commonly used for the specified locale.
-	 * </p>
+	 * @param string $locale The locale onto which the keyword/value pair are to be appended.
+	 * @param boolean $commonlyUsed Whether to show only the values commonly used for the specified locale.
 	 * @return Iterator An iterator that yields strings with the locale keyword
 	 * values or false on failure.
 	 */
@@ -1704,10 +1558,8 @@ class IntlCalendar  {
 	/**
 	 * Set the calendar time in milliseconds since the epoch
 	 * @link http://www.php.net/manual/en/intlcalendar.settime.php
-	 * @param float $date <p>
-	 * An instant represented by the number of number of milliseconds between
+	 * @param float $date An instant represented by the number of number of milliseconds between
 	 * such instant and the epoch, ignoring leap seconds.
-	 * </p>
 	 * @return bool true on success and false on failure.
 	 */
 	public function setTime (float $date) {}
@@ -1716,12 +1568,10 @@ class IntlCalendar  {
 	 * Add a (signed) amount of time to a field
 	 * @link http://www.php.net/manual/en/intlcalendar.add.php
 	 * @param int $field reference.intl.incfieldparam
-	 * @param int $amount <p>
-	 * The signed amount to add to the current field. If the amount is positive,
+	 * @param int $amount The signed amount to add to the current field. If the amount is positive,
 	 * the instant will be moved forward; if it is negative, the instant wil be
 	 * moved into the past. The unit is implicit to the field type. For instance,
 	 * hours for IntlCalendar::FIELD_HOUR_OF_DAY.
-	 * </p>
 	 * @return bool true on success or false on failure.
 	 */
 	public function add (int $field, int $amount) {}
@@ -1729,11 +1579,9 @@ class IntlCalendar  {
 	/**
 	 * Set the timezone used by this calendar
 	 * @link http://www.php.net/manual/en/intlcalendar.settimezone.php
-	 * @param mixed $timeZone <p>
-	 * The new timezone to be used by this calendar. It can be specified in the
+	 * @param mixed $timeZone The new timezone to be used by this calendar. It can be specified in the
 	 * following ways:
 	 * reference.intl.inctimezoneparam
-	 * </p>
 	 * @return bool true on success and false on failure.
 	 */
 	public function setTimeZone ($timeZone) {}
@@ -1741,9 +1589,7 @@ class IntlCalendar  {
 	/**
 	 * Whether this objectʼs time is after that of the passed object
 	 * @link http://www.php.net/manual/en/intlcalendar.after.php
-	 * @param IntlCalendar $other <p>
-	 * The calendar whose time will be checked against the primary objectʼs time.
-	 * </p>
+	 * @param IntlCalendar $other The calendar whose time will be checked against the primary objectʼs time.
 	 * @return bool true if this objectʼs current time is after that of the
 	 * calendar argumentʼs time. Returns false otherwise.
 	 * Also returns false on failure. You can use exceptions or
@@ -1754,9 +1600,7 @@ class IntlCalendar  {
 	/**
 	 * Whether this objectʼs time is before that of the passed object
 	 * @link http://www.php.net/manual/en/intlcalendar.before.php
-	 * @param IntlCalendar $other <p>
-	 * The calendar whose time will be checked against the primary objectʼs time.
-	 * </p>
+	 * @param IntlCalendar $other The calendar whose time will be checked against the primary objectʼs time.
 	 * @return bool true if this objectʼs current time is before that of the
 	 * calendar argumentʼs time. Returns false otherwise.
 	 * Also returns false on failure. You can use exceptions or
@@ -1768,9 +1612,7 @@ class IntlCalendar  {
 	 * Set a time field or several common fields at once
 	 * @link http://www.php.net/manual/en/intlcalendar.set.php
 	 * @param int $field reference.intl.incfieldparam
-	 * @param int $value <p>
-	 * The new value of the given field.
-	 * </p>
+	 * @param int $value The new value of the given field.
 	 * @return bool true on success and false on failure.
 	 */
 	public function set (int $field, int $value) {}
@@ -1779,11 +1621,9 @@ class IntlCalendar  {
 	 * Add value to field without carrying into more significant fields
 	 * @link http://www.php.net/manual/en/intlcalendar.roll.php
 	 * @param int $field reference.intl.incfieldparam
-	 * @param mixed $amountOrUpOrDown <p>
-	 * The (signed) amount to add to the field, true for rolling up (adding
+	 * @param mixed $amountOrUpOrDown The (signed) amount to add to the field, true for rolling up (adding
 	 * 1), or false for rolling down (subtracting
 	 * 1).
-	 * </p>
 	 * @return bool true on success or false on failure.
 	 */
 	public function roll (int $field, $amountOrUpOrDown) {}
@@ -1800,12 +1640,10 @@ class IntlCalendar  {
 	/**
 	 * Calculate difference between given time and this objectʼs time
 	 * @link http://www.php.net/manual/en/intlcalendar.fielddifference.php
-	 * @param float $when <p>
-	 * The time against which to compare the quantity represented by the
+	 * @param float $when The time against which to compare the quantity represented by the
 	 * field. For the result to be positive, the time
 	 * given for this parameter must be ahead of the time of the object the
 	 * method is being invoked on.
-	 * </p>
 	 * @param int $field <p>
 	 * The field that represents the quantity being compared.
 	 * </p>
@@ -1836,11 +1674,9 @@ class IntlCalendar  {
 	/**
 	 * Tell whether a day is a weekday, weekend or a day that has a transition between the two
 	 * @link http://www.php.net/manual/en/intlcalendar.getdayofweektype.php
-	 * @param int $dayOfWeek <p>
-	 * One of the constants IntlCalendar::DOW_SUNDAY,
+	 * @param int $dayOfWeek One of the constants IntlCalendar::DOW_SUNDAY,
 	 * IntlCalendar::DOW_MONDAY, …,
 	 * IntlCalendar::DOW_SATURDAY.
-	 * </p>
 	 * @return int one of the constants 
 	 * IntlCalendar::DOW_TYPE_WEEKDAY,
 	 * IntlCalendar::DOW_TYPE_WEEKEND,
@@ -1879,14 +1715,12 @@ class IntlCalendar  {
 	/**
 	 * Get the locale associated with the object
 	 * @link http://www.php.net/manual/en/intlcalendar.getlocale.php
-	 * @param int $localeType <p>
-	 * Whether to fetch the actual locale (the locale from which the calendar
+	 * @param int $localeType Whether to fetch the actual locale (the locale from which the calendar
 	 * data originates, with Locale::ACTUAL_LOCALE) or the
 	 * valid locale, i.e., the most specific locale supported by ICU relatively
 	 * to the requested locale – see Locale::VALID_LOCALE.
 	 * From the most general to the most specific, the locales are ordered in
 	 * this fashion – actual locale, valid locale, requested locale.
-	 * </p>
 	 * @return string A locale string or false on failure.
 	 */
 	public function getLocale (int $localeType) {}
@@ -1935,11 +1769,9 @@ class IntlCalendar  {
 	/**
 	 * Get time of the day at which weekend begins or ends
 	 * @link http://www.php.net/manual/en/intlcalendar.getweekendtransition.php
-	 * @param string $dayOfWeek <p>
-	 * One of the constants IntlCalendar::DOW_SUNDAY,
+	 * @param string $dayOfWeek One of the constants IntlCalendar::DOW_SUNDAY,
 	 * IntlCalendar::DOW_MONDAY, …,
 	 * IntlCalendar::DOW_SATURDAY.
-	 * </p>
 	 * @return int The number of milliseconds into the day at which the weekend begins or
 	 * ends or false on failure.
 	 */
@@ -1958,9 +1790,7 @@ class IntlCalendar  {
 	/**
 	 * Whether another calendar is equal but for a different time
 	 * @link http://www.php.net/manual/en/intlcalendar.isequivalentto.php
-	 * @param IntlCalendar $other <p>
-	 * The other calendar against which the comparison is to be made.
-	 * </p>
+	 * @param IntlCalendar $other The other calendar against which the comparison is to be made.
 	 * @return bool Assuming there are no argument errors, returns true iif the calendars are
 	 * equivalent except possibly for their set time.
 	 */
@@ -1984,11 +1814,9 @@ class IntlCalendar  {
 	/**
 	 * Whether a certain date/time is in the weekend
 	 * @link http://www.php.net/manual/en/intlcalendar.isweekend.php
-	 * @param float $date [optional] <p>
-	 * An optional timestamp representing the number of milliseconds since the
+	 * @param float $date [optional] An optional timestamp representing the number of milliseconds since the
 	 * epoch, excluding leap seconds. If null, this objectʼs current time is
 	 * used instead.
-	 * </p>
 	 * @return bool A bool indicating whether the given or this objectʼs time occurs
 	 * in a weekend.
 	 * <p>
@@ -2002,11 +1830,9 @@ class IntlCalendar  {
 	/**
 	 * Set the day on which the week is deemed to start
 	 * @link http://www.php.net/manual/en/intlcalendar.setfirstdayofweek.php
-	 * @param int $dayOfWeek <p>
-	 * One of the constants IntlCalendar::DOW_SUNDAY,
+	 * @param int $dayOfWeek One of the constants IntlCalendar::DOW_SUNDAY,
 	 * IntlCalendar::DOW_MONDAY, …,
 	 * IntlCalendar::DOW_SATURDAY.
-	 * </p>
 	 * @return bool true on success. Failure can only happen due to invalid parameters.
 	 */
 	public function setFirstDayOfWeek (int $dayOfWeek) {}
@@ -2014,9 +1840,7 @@ class IntlCalendar  {
 	/**
 	 * Set whether date/time interpretation is to be lenient
 	 * @link http://www.php.net/manual/en/intlcalendar.setlenient.php
-	 * @param string $isLenient <p>
-	 * Use true to activate the lenient mode; false otherwise.
-	 * </p>
+	 * @param string $isLenient Use true to activate the lenient mode; false otherwise.
 	 * @return ReturnType true on success. Failure can only happen due to invalid parameters.
 	 */
 	public function setLenient (string $isLenient) {}
@@ -2024,9 +1848,7 @@ class IntlCalendar  {
 	/**
 	 * Set minimal number of days the first week in a year or month can have
 	 * @link http://www.php.net/manual/en/intlcalendar.setminimaldaysinfirstweek.php
-	 * @param int $minimalDays <p>
-	 * The number of minimal days to set.
-	 * </p>
+	 * @param int $minimalDays The number of minimal days to set.
 	 * @return bool true on success, false on failure.
 	 */
 	public function setMinimalDaysInFirstWeek (int $minimalDays) {}
@@ -2034,9 +1856,7 @@ class IntlCalendar  {
 	/**
 	 * Compare time of two IntlCalendar objects for equality
 	 * @link http://www.php.net/manual/en/intlcalendar.equals.php
-	 * @param IntlCalendar $other <p>
-	 * The calendar to compare with the primary object.
-	 * </p>
+	 * @param IntlCalendar $other The calendar to compare with the primary object.
 	 * @return bool true if the current time of both this and the passed in
 	 * IntlCalendar object are the same, or false
 	 * otherwise. The value false can also be returned on failure. This can only
@@ -2065,10 +1885,8 @@ class IntlCalendar  {
 	/**
 	 * Set behavior for handling repeating wall times at negative timezone offset transitions
 	 * @link http://www.php.net/manual/en/intlcalendar.setrepeatedwalltimeoption.php
-	 * @param int $wallTimeOption <p>
-	 * One of the constants IntlCalendar::WALLTIME_FIRST or
+	 * @param int $wallTimeOption One of the constants IntlCalendar::WALLTIME_FIRST or
 	 * IntlCalendar::WALLTIME_LAST.
-	 * </p>
 	 * @return bool true on success. Failure can only happen due to invalid parameters.
 	 */
 	public function setRepeatedWallTimeOption (int $wallTimeOption) {}
@@ -2076,11 +1894,9 @@ class IntlCalendar  {
 	/**
 	 * Set behavior for handling skipped wall times at positive timezone offset transitions
 	 * @link http://www.php.net/manual/en/intlcalendar.setskippedwalltimeoption.php
-	 * @param int $wallTimeOption <p>
-	 * One of the constants IntlCalendar::WALLTIME_FIRST,
+	 * @param int $wallTimeOption One of the constants IntlCalendar::WALLTIME_FIRST,
 	 * IntlCalendar::WALLTIME_LAST or
-	 * IntlCalendar::WALLTIME_NEXT_VALID. 
-	 * </p>
+	 * IntlCalendar::WALLTIME_NEXT_VALID.
 	 * @return bool true on success. Failure can only happen due to invalid parameters.
 	 */
 	public function setSkippedWallTimeOption (int $wallTimeOption) {}
@@ -2088,10 +1904,8 @@ class IntlCalendar  {
 	/**
 	 * Create an IntlCalendar from a DateTime object or string
 	 * @link http://www.php.net/manual/en/intlcalendar.fromdatetime.php
-	 * @param mixed $dateTime <p>
-	 * A DateTime object or a string that
+	 * @param mixed $dateTime A DateTime object or a string that
 	 * can be passed to DateTime::__construct.
-	 * </p>
 	 * @return IntlCalendar The created IntlCalendar object or null in case of
 	 * failure. If a string is passed, any exception that occurs
 	 * inside the DateTime constructor is propagated.
@@ -2156,9 +1970,7 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * The timezone to use.
 	 * </p>
 	 * reference.intl.inctimezoneparam
-	 * @param string $locale [optional] <p>
-	 * A locale to use or null to use the default locale.
-	 * </p>
+	 * @param string $locale [optional] A locale to use or null to use the default locale.
 	 * @return IntlCalendar The created IntlCalendar instance or null on
 	 * failure.
 	 */
@@ -2167,16 +1979,10 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	/**
 	 * Get set of locale keyword values
 	 * @link http://www.php.net/manual/en/intlcalendar.getkeywordvaluesforlocale.php
-	 * @param string $key <p>
-	 * The locale keyword for which relevant values are to be queried. Only
+	 * @param string $key The locale keyword for which relevant values are to be queried. Only
 	 * 'calendar' is supported.
-	 * </p>
-	 * @param string $locale <p>
-	 * The locale onto which the keyword/value pair are to be appended.
-	 * </p>
-	 * @param boolean $commonlyUsed <p>
-	 * Whether to show only the values commonly used for the specified locale.
-	 * </p>
+	 * @param string $locale The locale onto which the keyword/value pair are to be appended.
+	 * @param boolean $commonlyUsed Whether to show only the values commonly used for the specified locale.
 	 * @return Iterator An iterator that yields strings with the locale keyword
 	 * values or false on failure.
 	 */
@@ -2216,10 +2022,8 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	/**
 	 * Set the calendar time in milliseconds since the epoch
 	 * @link http://www.php.net/manual/en/intlcalendar.settime.php
-	 * @param float $date <p>
-	 * An instant represented by the number of number of milliseconds between
+	 * @param float $date An instant represented by the number of number of milliseconds between
 	 * such instant and the epoch, ignoring leap seconds.
-	 * </p>
 	 * @return bool true on success and false on failure.
 	 */
 	public function setTime (float $date) {}
@@ -2228,12 +2032,10 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * Add a (signed) amount of time to a field
 	 * @link http://www.php.net/manual/en/intlcalendar.add.php
 	 * @param int $field reference.intl.incfieldparam
-	 * @param int $amount <p>
-	 * The signed amount to add to the current field. If the amount is positive,
+	 * @param int $amount The signed amount to add to the current field. If the amount is positive,
 	 * the instant will be moved forward; if it is negative, the instant wil be
 	 * moved into the past. The unit is implicit to the field type. For instance,
 	 * hours for IntlCalendar::FIELD_HOUR_OF_DAY.
-	 * </p>
 	 * @return bool true on success or false on failure.
 	 */
 	public function add (int $field, int $amount) {}
@@ -2241,11 +2043,9 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	/**
 	 * Set the timezone used by this calendar
 	 * @link http://www.php.net/manual/en/intlcalendar.settimezone.php
-	 * @param mixed $timeZone <p>
-	 * The new timezone to be used by this calendar. It can be specified in the
+	 * @param mixed $timeZone The new timezone to be used by this calendar. It can be specified in the
 	 * following ways:
 	 * reference.intl.inctimezoneparam
-	 * </p>
 	 * @return bool true on success and false on failure.
 	 */
 	public function setTimeZone ($timeZone) {}
@@ -2253,9 +2053,7 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	/**
 	 * Whether this objectʼs time is after that of the passed object
 	 * @link http://www.php.net/manual/en/intlcalendar.after.php
-	 * @param IntlCalendar $other <p>
-	 * The calendar whose time will be checked against the primary objectʼs time.
-	 * </p>
+	 * @param IntlCalendar $other The calendar whose time will be checked against the primary objectʼs time.
 	 * @return bool true if this objectʼs current time is after that of the
 	 * calendar argumentʼs time. Returns false otherwise.
 	 * Also returns false on failure. You can use exceptions or
@@ -2266,9 +2064,7 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	/**
 	 * Whether this objectʼs time is before that of the passed object
 	 * @link http://www.php.net/manual/en/intlcalendar.before.php
-	 * @param IntlCalendar $other <p>
-	 * The calendar whose time will be checked against the primary objectʼs time.
-	 * </p>
+	 * @param IntlCalendar $other The calendar whose time will be checked against the primary objectʼs time.
 	 * @return bool true if this objectʼs current time is before that of the
 	 * calendar argumentʼs time. Returns false otherwise.
 	 * Also returns false on failure. You can use exceptions or
@@ -2280,9 +2076,7 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * Set a time field or several common fields at once
 	 * @link http://www.php.net/manual/en/intlcalendar.set.php
 	 * @param int $field reference.intl.incfieldparam
-	 * @param int $value <p>
-	 * The new value of the given field.
-	 * </p>
+	 * @param int $value The new value of the given field.
 	 * @return bool true on success and false on failure.
 	 */
 	public function set (int $field, int $value) {}
@@ -2291,11 +2085,9 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * Add value to field without carrying into more significant fields
 	 * @link http://www.php.net/manual/en/intlcalendar.roll.php
 	 * @param int $field reference.intl.incfieldparam
-	 * @param mixed $amountOrUpOrDown <p>
-	 * The (signed) amount to add to the field, true for rolling up (adding
+	 * @param mixed $amountOrUpOrDown The (signed) amount to add to the field, true for rolling up (adding
 	 * 1), or false for rolling down (subtracting
 	 * 1).
-	 * </p>
 	 * @return bool true on success or false on failure.
 	 */
 	public function roll (int $field, $amountOrUpOrDown) {}
@@ -2312,12 +2104,10 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	/**
 	 * Calculate difference between given time and this objectʼs time
 	 * @link http://www.php.net/manual/en/intlcalendar.fielddifference.php
-	 * @param float $when <p>
-	 * The time against which to compare the quantity represented by the
+	 * @param float $when The time against which to compare the quantity represented by the
 	 * field. For the result to be positive, the time
 	 * given for this parameter must be ahead of the time of the object the
 	 * method is being invoked on.
-	 * </p>
 	 * @param int $field <p>
 	 * The field that represents the quantity being compared.
 	 * </p>
@@ -2348,11 +2138,9 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	/**
 	 * Tell whether a day is a weekday, weekend or a day that has a transition between the two
 	 * @link http://www.php.net/manual/en/intlcalendar.getdayofweektype.php
-	 * @param int $dayOfWeek <p>
-	 * One of the constants IntlCalendar::DOW_SUNDAY,
+	 * @param int $dayOfWeek One of the constants IntlCalendar::DOW_SUNDAY,
 	 * IntlCalendar::DOW_MONDAY, …,
 	 * IntlCalendar::DOW_SATURDAY.
-	 * </p>
 	 * @return int one of the constants 
 	 * IntlCalendar::DOW_TYPE_WEEKDAY,
 	 * IntlCalendar::DOW_TYPE_WEEKEND,
@@ -2391,14 +2179,12 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	/**
 	 * Get the locale associated with the object
 	 * @link http://www.php.net/manual/en/intlcalendar.getlocale.php
-	 * @param int $localeType <p>
-	 * Whether to fetch the actual locale (the locale from which the calendar
+	 * @param int $localeType Whether to fetch the actual locale (the locale from which the calendar
 	 * data originates, with Locale::ACTUAL_LOCALE) or the
 	 * valid locale, i.e., the most specific locale supported by ICU relatively
 	 * to the requested locale – see Locale::VALID_LOCALE.
 	 * From the most general to the most specific, the locales are ordered in
 	 * this fashion – actual locale, valid locale, requested locale.
-	 * </p>
 	 * @return string A locale string or false on failure.
 	 */
 	public function getLocale (int $localeType) {}
@@ -2447,11 +2233,9 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	/**
 	 * Get time of the day at which weekend begins or ends
 	 * @link http://www.php.net/manual/en/intlcalendar.getweekendtransition.php
-	 * @param string $dayOfWeek <p>
-	 * One of the constants IntlCalendar::DOW_SUNDAY,
+	 * @param string $dayOfWeek One of the constants IntlCalendar::DOW_SUNDAY,
 	 * IntlCalendar::DOW_MONDAY, …,
 	 * IntlCalendar::DOW_SATURDAY.
-	 * </p>
 	 * @return int The number of milliseconds into the day at which the weekend begins or
 	 * ends or false on failure.
 	 */
@@ -2470,9 +2254,7 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	/**
 	 * Whether another calendar is equal but for a different time
 	 * @link http://www.php.net/manual/en/intlcalendar.isequivalentto.php
-	 * @param IntlCalendar $other <p>
-	 * The other calendar against which the comparison is to be made.
-	 * </p>
+	 * @param IntlCalendar $other The other calendar against which the comparison is to be made.
 	 * @return bool Assuming there are no argument errors, returns true iif the calendars are
 	 * equivalent except possibly for their set time.
 	 */
@@ -2496,11 +2278,9 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	/**
 	 * Whether a certain date/time is in the weekend
 	 * @link http://www.php.net/manual/en/intlcalendar.isweekend.php
-	 * @param float $date [optional] <p>
-	 * An optional timestamp representing the number of milliseconds since the
+	 * @param float $date [optional] An optional timestamp representing the number of milliseconds since the
 	 * epoch, excluding leap seconds. If null, this objectʼs current time is
 	 * used instead.
-	 * </p>
 	 * @return bool A bool indicating whether the given or this objectʼs time occurs
 	 * in a weekend.
 	 * <p>
@@ -2514,11 +2294,9 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	/**
 	 * Set the day on which the week is deemed to start
 	 * @link http://www.php.net/manual/en/intlcalendar.setfirstdayofweek.php
-	 * @param int $dayOfWeek <p>
-	 * One of the constants IntlCalendar::DOW_SUNDAY,
+	 * @param int $dayOfWeek One of the constants IntlCalendar::DOW_SUNDAY,
 	 * IntlCalendar::DOW_MONDAY, …,
 	 * IntlCalendar::DOW_SATURDAY.
-	 * </p>
 	 * @return bool true on success. Failure can only happen due to invalid parameters.
 	 */
 	public function setFirstDayOfWeek (int $dayOfWeek) {}
@@ -2526,9 +2304,7 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	/**
 	 * Set whether date/time interpretation is to be lenient
 	 * @link http://www.php.net/manual/en/intlcalendar.setlenient.php
-	 * @param string $isLenient <p>
-	 * Use true to activate the lenient mode; false otherwise.
-	 * </p>
+	 * @param string $isLenient Use true to activate the lenient mode; false otherwise.
 	 * @return ReturnType true on success. Failure can only happen due to invalid parameters.
 	 */
 	public function setLenient (string $isLenient) {}
@@ -2536,9 +2312,7 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	/**
 	 * Set minimal number of days the first week in a year or month can have
 	 * @link http://www.php.net/manual/en/intlcalendar.setminimaldaysinfirstweek.php
-	 * @param int $minimalDays <p>
-	 * The number of minimal days to set.
-	 * </p>
+	 * @param int $minimalDays The number of minimal days to set.
 	 * @return bool true on success, false on failure.
 	 */
 	public function setMinimalDaysInFirstWeek (int $minimalDays) {}
@@ -2546,9 +2320,7 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	/**
 	 * Compare time of two IntlCalendar objects for equality
 	 * @link http://www.php.net/manual/en/intlcalendar.equals.php
-	 * @param IntlCalendar $other <p>
-	 * The calendar to compare with the primary object.
-	 * </p>
+	 * @param IntlCalendar $other The calendar to compare with the primary object.
 	 * @return bool true if the current time of both this and the passed in
 	 * IntlCalendar object are the same, or false
 	 * otherwise. The value false can also be returned on failure. This can only
@@ -2577,10 +2349,8 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	/**
 	 * Set behavior for handling repeating wall times at negative timezone offset transitions
 	 * @link http://www.php.net/manual/en/intlcalendar.setrepeatedwalltimeoption.php
-	 * @param int $wallTimeOption <p>
-	 * One of the constants IntlCalendar::WALLTIME_FIRST or
+	 * @param int $wallTimeOption One of the constants IntlCalendar::WALLTIME_FIRST or
 	 * IntlCalendar::WALLTIME_LAST.
-	 * </p>
 	 * @return bool true on success. Failure can only happen due to invalid parameters.
 	 */
 	public function setRepeatedWallTimeOption (int $wallTimeOption) {}
@@ -2588,11 +2358,9 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	/**
 	 * Set behavior for handling skipped wall times at positive timezone offset transitions
 	 * @link http://www.php.net/manual/en/intlcalendar.setskippedwalltimeoption.php
-	 * @param int $wallTimeOption <p>
-	 * One of the constants IntlCalendar::WALLTIME_FIRST,
+	 * @param int $wallTimeOption One of the constants IntlCalendar::WALLTIME_FIRST,
 	 * IntlCalendar::WALLTIME_LAST or
-	 * IntlCalendar::WALLTIME_NEXT_VALID. 
-	 * </p>
+	 * IntlCalendar::WALLTIME_NEXT_VALID.
 	 * @return bool true on success. Failure can only happen due to invalid parameters.
 	 */
 	public function setSkippedWallTimeOption (int $wallTimeOption) {}
@@ -2600,10 +2368,8 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	/**
 	 * Create an IntlCalendar from a DateTime object or string
 	 * @link http://www.php.net/manual/en/intlcalendar.fromdatetime.php
-	 * @param mixed $dateTime <p>
-	 * A DateTime object or a string that
+	 * @param mixed $dateTime A DateTime object or a string that
 	 * can be passed to DateTime::__construct.
-	 * </p>
 	 * @return IntlCalendar The created IntlCalendar object or null in case of
 	 * failure. If a string is passed, any exception that occurs
 	 * inside the DateTime constructor is propagated.
@@ -2656,13 +2422,9 @@ class Spoofchecker  {
 	/**
 	 * Checks if a given text contains any suspicious characters
 	 * @link http://www.php.net/manual/en/spoofchecker.issuspicious.php
-	 * @param string $text <p>
-	 * String to test.
-	 * </p>
-	 * @param string $error [optional] <p>
-	 * This variable is set by-reference to string containing an error, if there
+	 * @param string $text String to test.
+	 * @param string $error [optional] This variable is set by-reference to string containing an error, if there
 	 * were any.
-	 * </p>
 	 * @return bool true if there are suspicious characters, false otherwise.
 	 */
 	public function isSuspicious (string $text, string &$error = null) {}
@@ -2670,16 +2432,10 @@ class Spoofchecker  {
 	/**
 	 * Checks if given strings can be confused
 	 * @link http://www.php.net/manual/en/spoofchecker.areconfusable.php
-	 * @param string $str1 <p>
-	 * First string to check.
-	 * </p>
-	 * @param string $str2 <p>
-	 * Second string to check.
-	 * </p>
-	 * @param string $error [optional] <p>
-	 * This variable is set by-reference to string containing an error, if there
+	 * @param string $str1 First string to check.
+	 * @param string $str2 Second string to check.
+	 * @param string $error [optional] This variable is set by-reference to string containing an error, if there
 	 * were any.
-	 * </p>
 	 * @return bool true if two given strings can be confused, false otherwise.
 	 */
 	public function areConfusable (string $str1, string $str2, string &$error = null) {}
@@ -2687,8 +2443,7 @@ class Spoofchecker  {
 	/**
 	 * Locales to use when running checks
 	 * @link http://www.php.net/manual/en/spoofchecker.setallowedlocales.php
-	 * @param string $locale_list <p>
-	 * </p>
+	 * @param string $locale_list 
 	 * @return void 
 	 */
 	public function setAllowedLocales (string $locale_list) {}
@@ -2696,8 +2451,7 @@ class Spoofchecker  {
 	/**
 	 * Set the checks to run
 	 * @link http://www.php.net/manual/en/spoofchecker.setchecks.php
-	 * @param long $checks <p>
-	 * </p>
+	 * @param long $checks 
 	 * @return void 
 	 */
 	public function setChecks ($checks) {}
@@ -3467,8 +3221,7 @@ class UConverter  {
 	/**
 	 * Set the source encoding
 	 * @link http://www.php.net/manual/en/uconverter.setsourceencoding.php
-	 * @param string $encoding <p>
-	 * </p>
+	 * @param string $encoding 
 	 * @return void 
 	 */
 	public function setSourceEncoding (string $encoding) {}
@@ -3476,8 +3229,7 @@ class UConverter  {
 	/**
 	 * Set the destination encoding
 	 * @link http://www.php.net/manual/en/uconverter.setdestinationencoding.php
-	 * @param string $encoding <p>
-	 * </p>
+	 * @param string $encoding 
 	 * @return void 
 	 */
 	public function setDestinationEncoding (string $encoding) {}
@@ -3520,8 +3272,7 @@ class UConverter  {
 	/**
 	 * Set the substitution chars
 	 * @link http://www.php.net/manual/en/uconverter.setsubstchars.php
-	 * @param string $chars <p>
-	 * </p>
+	 * @param string $chars 
 	 * @return void 
 	 */
 	public function setSubstChars (string $chars) {}
@@ -3529,14 +3280,10 @@ class UConverter  {
 	/**
 	 * Default "to" callback function
 	 * @link http://www.php.net/manual/en/uconverter.toucallback.php
-	 * @param integer $reason <p>
-	 * </p>
-	 * @param string $source <p>
-	 * </p>
-	 * @param string $codeUnits <p>
-	 * </p>
-	 * @param integer $error <p>
-	 * </p>
+	 * @param integer $reason 
+	 * @param string $source 
+	 * @param string $codeUnits 
+	 * @param integer $error 
 	 * @return mixed 
 	 */
 	public function toUCallback (int $reason, string $source, string $codeUnits, int &$error) {}
@@ -3544,14 +3291,10 @@ class UConverter  {
 	/**
 	 * Default "from" callback function
 	 * @link http://www.php.net/manual/en/uconverter.fromucallback.php
-	 * @param integer $reason <p>
-	 * </p>
-	 * @param string $source <p>
-	 * </p>
-	 * @param string $codePoint <p>
-	 * </p>
-	 * @param integer $error <p>
-	 * </p>
+	 * @param integer $reason 
+	 * @param string $source 
+	 * @param string $codePoint 
+	 * @param integer $error 
 	 * @return mixed 
 	 */
 	public function fromUCallback (int $reason, string $source, string $codePoint, int &$error) {}
@@ -3559,10 +3302,8 @@ class UConverter  {
 	/**
 	 * Convert string from one charset to another
 	 * @link http://www.php.net/manual/en/uconverter.convert.php
-	 * @param string $str <p>
-	 * </p>
-	 * @param bool $reverse [optional] <p>
-	 * </p>
+	 * @param string $str 
+	 * @param bool $reverse [optional] 
 	 * @return string 
 	 */
 	public function convert (string $str, bool $reverse = null) {}
@@ -3570,14 +3311,10 @@ class UConverter  {
 	/**
 	 * Convert string from one charset to another
 	 * @link http://www.php.net/manual/en/uconverter.transcode.php
-	 * @param string $str <p>
-	 * </p>
-	 * @param string $toEncoding <p>
-	 * </p>
-	 * @param string $fromEncoding <p>
-	 * </p>
-	 * @param array $options [optional] <p>
-	 * </p>
+	 * @param string $str 
+	 * @param string $toEncoding 
+	 * @param string $fromEncoding 
+	 * @param array $options [optional] 
 	 * @return string 
 	 */
 	public static function transcode (string $str, string $toEncoding, string $fromEncoding, array $options = null) {}
@@ -3599,8 +3336,7 @@ class UConverter  {
 	/**
 	 * Get string representation of the callback reason
 	 * @link http://www.php.net/manual/en/uconverter.reasontext.php
-	 * @param integer $reason [optional] <p>
-	 * </p>
+	 * @param integer $reason [optional] 
 	 * @return string 
 	 */
 	public static function reasonText (int $reason = null) {}
@@ -3615,8 +3351,7 @@ class UConverter  {
 	/**
 	 * Get the aliases of the given name
 	 * @link http://www.php.net/manual/en/uconverter.getaliases.php
-	 * @param string $name <p>
-	 * </p>
+	 * @param string $name 
 	 * @return array 
 	 */
 	public static function getAliases (string $name) {}
@@ -4299,7 +4034,7 @@ class IntlChar  {
 	/**
 	 * Return Unicode character by code point value
 	 * @link http://www.php.net/manual/en/intlchar.chr.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return string A string containing the single character specified by the Unicode code point value.
 	 */
 	public static function chr ($codepoint) {}
@@ -4307,9 +4042,7 @@ class IntlChar  {
 	/**
 	 * Return Unicode code point value of character
 	 * @link http://www.php.net/manual/en/intlchar.ord.php
-	 * @param mixed $character <p>
-	 * A Unicode character.
-	 * </p>
+	 * @param mixed $character A Unicode character.
 	 * @return int the Unicode code point value as an integer.
 	 */
 	public static function ord ($character) {}
@@ -4317,8 +4050,8 @@ class IntlChar  {
 	/**
 	 * Check a binary Unicode property for a code point
 	 * @link http://www.php.net/manual/en/intlchar.hasbinaryproperty.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
-	 * @param int $property <p>The Unicode property to lookup (see the IntlChar::PROPERTY_&#42; constants).</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
+	 * @param int $property The Unicode property to lookup (see the IntlChar::PROPERTY_&#42; constants).
 	 * @return bool true or false according to the binary Unicode property value for codepoint.
 	 * Also false if property is out of bounds or if the Unicode version does not have data for
 	 * the property at all, or not for this code point.
@@ -4328,7 +4061,7 @@ class IntlChar  {
 	/**
 	 * Check if code point has the Alphabetic Unicode property
 	 * @link http://www.php.net/manual/en/intlchar.isualphabetic.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return bool true if
 	 * codepoint has the Alphabetic Unicode property, false if not.
 	 */
@@ -4337,7 +4070,7 @@ class IntlChar  {
 	/**
 	 * Check if code point has the Lowercase Unicode property
 	 * @link http://www.php.net/manual/en/intlchar.isulowercase.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return bool true if
 	 * codepoint has the Lowercase Unicode property, false if not.
 	 */
@@ -4346,7 +4079,7 @@ class IntlChar  {
 	/**
 	 * Check if code point has the Uppercase Unicode property
 	 * @link http://www.php.net/manual/en/intlchar.isuuppercase.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return bool true if
 	 * codepoint has the Uppercase Unicode property, false if not.
 	 */
@@ -4355,7 +4088,7 @@ class IntlChar  {
 	/**
 	 * Check if code point has the White_Space Unicode property
 	 * @link http://www.php.net/manual/en/intlchar.isuwhitespace.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return bool true if
 	 * codepoint has the White_Space Unicode property, false if not.
 	 */
@@ -4364,8 +4097,8 @@ class IntlChar  {
 	/**
 	 * Get the value for a Unicode property for a code point
 	 * @link http://www.php.net/manual/en/intlchar.getintpropertyvalue.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
-	 * @param int $property <p>The Unicode property to lookup (see the IntlChar::PROPERTY_&#42; constants).</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
+	 * @param int $property The Unicode property to lookup (see the IntlChar::PROPERTY_&#42; constants).
 	 * @return int the numeric value that is directly the property value or, for enumerated properties, corresponds to the
 	 * numeric value of the enumerated constant of the respective property value enumeration type.
 	 * <p>
@@ -4384,7 +4117,7 @@ class IntlChar  {
 	/**
 	 * Get the min value for a Unicode property
 	 * @link http://www.php.net/manual/en/intlchar.getintpropertyminvalue.php
-	 * @param int $property <p>The Unicode property to lookup (see the IntlChar::PROPERTY_&#42; constants).</p>
+	 * @param int $property The Unicode property to lookup (see the IntlChar::PROPERTY_&#42; constants).
 	 * @return int The minimum value returned by IntlChar::getIntPropertyValue for a Unicode property.
 	 * 0 if the property selector is out of range.
 	 */
@@ -4393,7 +4126,7 @@ class IntlChar  {
 	/**
 	 * Get the max value for a Unicode property
 	 * @link http://www.php.net/manual/en/intlchar.getintpropertymaxvalue.php
-	 * @param int $property <p>The Unicode property to lookup (see the IntlChar::PROPERTY_&#42; constants).</p>
+	 * @param int $property The Unicode property to lookup (see the IntlChar::PROPERTY_&#42; constants).
 	 * @return int The maximum value returned by IntlChar::getIntPropertyValue for a Unicode property.
 	 * &lt;=0 if the property selector is out of range.
 	 */
@@ -4402,7 +4135,7 @@ class IntlChar  {
 	/**
 	 * Get the numeric value for a Unicode code point
 	 * @link http://www.php.net/manual/en/intlchar.getnumericvalue.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return float Numeric value of codepoint,
 	 * or IntlChar::NO_NUMERIC_VALUE if none is defined. This
 	 * constant was added in PHP 7.0.6, prior to this version the literal value
@@ -4413,7 +4146,7 @@ class IntlChar  {
 	/**
 	 * Check if code point is a lowercase letter
 	 * @link http://www.php.net/manual/en/intlchar.islower.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return bool true if
 	 * codepoint is an Ll lowercase letter, false if not.
 	 */
@@ -4422,7 +4155,7 @@ class IntlChar  {
 	/**
 	 * Check if code point has the general category "Lu" (uppercase letter)
 	 * @link http://www.php.net/manual/en/intlchar.isupper.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return bool true if
 	 * codepoint is an Lu uppercase letter, false if not.
 	 */
@@ -4431,7 +4164,7 @@ class IntlChar  {
 	/**
 	 * Check if code point is a titlecase letter
 	 * @link http://www.php.net/manual/en/intlchar.istitle.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return bool true if
 	 * codepoint is a titlecase letter, false if not.
 	 */
@@ -4440,7 +4173,7 @@ class IntlChar  {
 	/**
 	 * Check if code point is a digit character
 	 * @link http://www.php.net/manual/en/intlchar.isdigit.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return bool true if
 	 * codepoint is a digit character, false if not.
 	 */
@@ -4449,7 +4182,7 @@ class IntlChar  {
 	/**
 	 * Check if code point is a letter character
 	 * @link http://www.php.net/manual/en/intlchar.isalpha.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return bool true if
 	 * codepoint is a letter character, false if not.
 	 */
@@ -4458,7 +4191,7 @@ class IntlChar  {
 	/**
 	 * Check if code point is an alphanumeric character
 	 * @link http://www.php.net/manual/en/intlchar.isalnum.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return bool true if
 	 * codepoint is an alphanumeric character, false if not.
 	 */
@@ -4467,7 +4200,7 @@ class IntlChar  {
 	/**
 	 * Check if code point is a hexadecimal digit
 	 * @link http://www.php.net/manual/en/intlchar.isxdigit.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return bool true if
 	 * codepoint is a hexadecimal character, false if not.
 	 */
@@ -4476,7 +4209,7 @@ class IntlChar  {
 	/**
 	 * Check if code point is punctuation character
 	 * @link http://www.php.net/manual/en/intlchar.ispunct.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return bool true if
 	 * codepoint is a punctuation character, false if not.
 	 */
@@ -4485,7 +4218,7 @@ class IntlChar  {
 	/**
 	 * Check if code point is a graphic character
 	 * @link http://www.php.net/manual/en/intlchar.isgraph.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return bool true if
 	 * codepoint is a "graphic" character, false if not.
 	 */
@@ -4494,7 +4227,7 @@ class IntlChar  {
 	/**
 	 * Check if code point is a "blank" or "horizontal space" character
 	 * @link http://www.php.net/manual/en/intlchar.isblank.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return bool true if
 	 * codepoint is either a "blank" or "horizontal space" character, false if not.
 	 */
@@ -4503,7 +4236,7 @@ class IntlChar  {
 	/**
 	 * Check whether the code point is defined
 	 * @link http://www.php.net/manual/en/intlchar.isdefined.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return bool true if
 	 * codepoint is a defined character, false if not.
 	 */
@@ -4512,7 +4245,7 @@ class IntlChar  {
 	/**
 	 * Check if code point is a space character
 	 * @link http://www.php.net/manual/en/intlchar.isspace.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return bool true if
 	 * codepoint is a space character, false if not.
 	 */
@@ -4521,7 +4254,7 @@ class IntlChar  {
 	/**
 	 * Check if code point is a space character according to Java
 	 * @link http://www.php.net/manual/en/intlchar.isjavaspacechar.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return bool true if
 	 * codepoint is a space character according to Java, false if not.
 	 */
@@ -4530,7 +4263,7 @@ class IntlChar  {
 	/**
 	 * Check if code point is a whitespace character according to ICU
 	 * @link http://www.php.net/manual/en/intlchar.iswhitespace.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return bool true if
 	 * codepoint is a whitespace character according to ICU, false if not.
 	 */
@@ -4539,7 +4272,7 @@ class IntlChar  {
 	/**
 	 * Check if code point is a control character
 	 * @link http://www.php.net/manual/en/intlchar.iscntrl.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return bool true if
 	 * codepoint is a control character, false if not.
 	 */
@@ -4548,7 +4281,7 @@ class IntlChar  {
 	/**
 	 * Check if code point is an ISO control code
 	 * @link http://www.php.net/manual/en/intlchar.isisocontrol.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return bool true if
 	 * codepoint is an ISO control code, false if not.
 	 */
@@ -4557,7 +4290,7 @@ class IntlChar  {
 	/**
 	 * Check if code point is a printable character
 	 * @link http://www.php.net/manual/en/intlchar.isprint.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return bool true if
 	 * codepoint is a printable character, false if not.
 	 */
@@ -4566,7 +4299,7 @@ class IntlChar  {
 	/**
 	 * Check if code point is a base character
 	 * @link http://www.php.net/manual/en/intlchar.isbase.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return bool true if
 	 * codepoint is a base character, false if not.
 	 */
@@ -4575,8 +4308,9 @@ class IntlChar  {
 	/**
 	 * Get bidirectional category value for a code point
 	 * @link http://www.php.net/manual/en/intlchar.chardirection.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return int The bidirectional category value; one of the following constants:
+	 * <p>
 	 * IntlChar::CHAR_DIRECTION_LEFT_TO_RIGHT
 	 * IntlChar::CHAR_DIRECTION_RIGHT_TO_LEFT
 	 * IntlChar::CHAR_DIRECTION_EUROPEAN_NUMBER
@@ -4601,13 +4335,14 @@ class IntlChar  {
 	 * IntlChar::CHAR_DIRECTION_RIGHT_TO_LEFT_ISOLATE
 	 * IntlChar::CHAR_DIRECTION_POP_DIRECTIONAL_ISOLATE
 	 * IntlChar::CHAR_DIRECTION_CHAR_DIRECTION_COUNT
+	 * </p>
 	 */
 	public static function charDirection ($codepoint) {}
 
 	/**
 	 * Check if code point has the Bidi_Mirrored property
 	 * @link http://www.php.net/manual/en/intlchar.ismirrored.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return bool true if
 	 * codepoint has the Bidi_Mirrored property, false if not.
 	 */
@@ -4616,7 +4351,7 @@ class IntlChar  {
 	/**
 	 * Get the "mirror-image" character for a code point
 	 * @link http://www.php.net/manual/en/intlchar.charmirror.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return mixed another Unicode code point that may serve as a mirror-image substitute, or codepoint
 	 * itself if there is no such mapping or codepoint does not have the
 	 * Bidi_Mirrored property.
@@ -4627,7 +4362,7 @@ class IntlChar  {
 	/**
 	 * Get the paired bracket character for a code point
 	 * @link http://www.php.net/manual/en/intlchar.getbidipairedbracket.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return mixed the paired bracket code point, or codepoint itself if there is no such mapping.
 	 * <p>The return type will be integer unless the code point was passed as a UTF-8 string, in which case a string will be returned.</p>
 	 */
@@ -4636,8 +4371,9 @@ class IntlChar  {
 	/**
 	 * Get the general category value for a code point
 	 * @link http://www.php.net/manual/en/intlchar.chartype.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return int the general category type, which may be one of the following constants:
+	 * <p>
 	 * IntlChar::CHAR_CATEGORY_UNASSIGNED
 	 * IntlChar::CHAR_CATEGORY_GENERAL_OTHER_TYPES
 	 * IntlChar::CHAR_CATEGORY_UPPERCASE_LETTER
@@ -4670,6 +4406,7 @@ class IntlChar  {
 	 * IntlChar::CHAR_CATEGORY_INITIAL_PUNCTUATION
 	 * IntlChar::CHAR_CATEGORY_FINAL_PUNCTUATION
 	 * IntlChar::CHAR_CATEGORY_CHAR_CATEGORY_COUNT
+	 * </p>
 	 */
 	public static function charType ($codepoint) {}
 
@@ -4679,9 +4416,11 @@ class IntlChar  {
 	 * @param callable $callback <p>
 	 * The function that is to be called for each contiguous range of code points with the same general category.
 	 * The following three arguments will be passed into it:
+	 * <p>
 	 * integer $start - The starting code point of the range
 	 * integer $end - The ending code point of the range
 	 * integer $name - The category type (one of the IntlChar::CHAR_CATEGORY_&#42; constants)
+	 * </p>
 	 * </p>
 	 * @return void 
 	 */
@@ -4690,7 +4429,7 @@ class IntlChar  {
 	/**
 	 * Get the combining class of a code point
 	 * @link http://www.php.net/manual/en/intlchar.getcombiningclass.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return int the combining class of the character.
 	 */
 	public static function getCombiningClass ($codepoint) {}
@@ -4698,7 +4437,7 @@ class IntlChar  {
 	/**
 	 * Get the decimal digit value of a decimal digit character
 	 * @link http://www.php.net/manual/en/intlchar.chardigitvalue.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return int The decimal digit value of codepoint,
 	 * or -1 if it is not a decimal digit character.
 	 */
@@ -4707,7 +4446,7 @@ class IntlChar  {
 	/**
 	 * Get the Unicode allocation block containing a code point
 	 * @link http://www.php.net/manual/en/intlchar.getblockcode.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return int the block value for codepoint.
 	 * See the IntlChar::BLOCK_CODE_&#42; constants for possible return values.
 	 */
@@ -4716,14 +4455,16 @@ class IntlChar  {
 	/**
 	 * Retrieve the name of a Unicode character
 	 * @link http://www.php.net/manual/en/intlchar.charname.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @param int $nameChoice [optional] <p>
 	 * Which set of names to use for the lookup. Can be any of these constants:
+	 * <p>
 	 * IntlChar::UNICODE_CHAR_NAME (default)
 	 * IntlChar::UNICODE_10_CHAR_NAME
 	 * IntlChar::EXTENDED_CHAR_NAME
 	 * IntlChar::CHAR_NAME_ALIAS
 	 * IntlChar::CHAR_NAME_CHOICE_COUNT
+	 * </p>
 	 * </p>
 	 * @return string The corresponding name, or an empty string if there is no name for this character.
 	 */
@@ -4732,16 +4473,16 @@ class IntlChar  {
 	/**
 	 * Find Unicode character by name and return its code point value
 	 * @link http://www.php.net/manual/en/intlchar.charfromname.php
-	 * @param string $characterName <p>
-	 * Full name of the Unicode character.
-	 * </p>
+	 * @param string $characterName Full name of the Unicode character.
 	 * @param int $nameChoice [optional] <p>
 	 * Which set of names to use for the lookup. Can be any of these constants:
+	 * <p>
 	 * IntlChar::UNICODE_CHAR_NAME (default)
 	 * IntlChar::UNICODE_10_CHAR_NAME
 	 * IntlChar::EXTENDED_CHAR_NAME
 	 * IntlChar::CHAR_NAME_ALIAS
 	 * IntlChar::CHAR_NAME_CHOICE_COUNT
+	 * </p>
 	 * </p>
 	 * @return int The Unicode value of the code point with the given name (as an integer), or false if there is no such code point.
 	 */
@@ -4750,25 +4491,25 @@ class IntlChar  {
 	/**
 	 * Enumerate all assigned Unicode characters within a range
 	 * @link http://www.php.net/manual/en/intlchar.enumcharnames.php
-	 * @param mixed $start <p>
-	 * The first code point in the enumeration range.
-	 * </p>
-	 * @param mixed $limit <p>
-	 * One more than the last code point in the enumeration range (the first one after the range).
-	 * </p>
+	 * @param mixed $start The first code point in the enumeration range.
+	 * @param mixed $limit One more than the last code point in the enumeration range (the first one after the range).
 	 * @param callable $callback <p>
 	 * The function that is to be called for each character name. The following three arguments will be passed into it:
+	 * <p>
 	 * integer $codepoint - The numeric code point value
 	 * integer $nameChoice - The same value as the nameChoice parameter below
 	 * string $name - The name of the character
 	 * </p>
+	 * </p>
 	 * @param int $nameChoice [optional] <p>
 	 * Selector for which kind of names to enumerate. Can be any of these constants:
+	 * <p>
 	 * IntlChar::UNICODE_CHAR_NAME (default)
 	 * IntlChar::UNICODE_10_CHAR_NAME
 	 * IntlChar::EXTENDED_CHAR_NAME
 	 * IntlChar::CHAR_NAME_ALIAS
 	 * IntlChar::CHAR_NAME_CHOICE_COUNT
+	 * </p>
 	 * </p>
 	 * @return void 
 	 */
@@ -4803,9 +4544,7 @@ class IntlChar  {
 	/**
 	 * Get the property constant value for a given property name
 	 * @link http://www.php.net/manual/en/intlchar.getpropertyenum.php
-	 * @param string $alias <p>
-	 * The property name to be matched. The name is compared using "loose matching" as described in PropertyAliases.txt.
-	 * </p>
+	 * @param string $alias The property name to be matched. The name is compared using "loose matching" as described in PropertyAliases.txt.
 	 * @return int an IntlChar::PROPERTY_ constant value,
 	 * or IntlChar::PROPERTY_INVALID_CODE if the given name does not match any property.
 	 */
@@ -4823,8 +4562,10 @@ class IntlChar  {
 	 * </p>
 	 * <p>
 	 * In general, valid values range from 0 up to some maximum. There are a couple exceptions:
+	 * <p>
 	 * IntlChar::PROPERTY_BLOCK values begin at the non-zero value IntlChar::BLOCK_CODE_BASIC_LATIN
 	 * IntlChar::PROPERTY_CANONICAL_COMBINING_CLASS values are not contiguous and range from 0..240.
+	 * </p>
 	 * </p>
 	 * @param int $nameChoice [optional] <p>
 	 * Selector for which name to get. If out of range, false is returned.
@@ -4851,9 +4592,7 @@ class IntlChar  {
 	 * If out of range, or this method doesn't work with the given value,
 	 * IntlChar::PROPERTY_INVALID_CODE is returned.
 	 * </p>
-	 * @param string $name <p>
-	 * The value name to be matched. The name is compared using "loose matching" as described in PropertyValueAliases.txt.
-	 * </p>
+	 * @param string $name The value name to be matched. The name is compared using "loose matching" as described in PropertyValueAliases.txt.
 	 * @return int the corresponding value integer, or IntlChar::PROPERTY_INVALID_CODE if the given name
 	 * does not match any value of the given property, or if the property is invalid.
 	 */
@@ -4862,7 +4601,7 @@ class IntlChar  {
 	/**
 	 * Check if code point is permissible as the first character in an identifier
 	 * @link http://www.php.net/manual/en/intlchar.isidstart.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return bool true if
 	 * codepoint may start an identifier, false if not.
 	 */
@@ -4871,7 +4610,7 @@ class IntlChar  {
 	/**
 	 * Check if code point is permissible in an identifier
 	 * @link http://www.php.net/manual/en/intlchar.isidpart.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return bool true if
 	 * codepoint is the code point may occur in an identifier, false if not.
 	 */
@@ -4880,7 +4619,7 @@ class IntlChar  {
 	/**
 	 * Check if code point is an ignorable character
 	 * @link http://www.php.net/manual/en/intlchar.isidignorable.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return bool true if
 	 * codepoint is ignorable in identifiers, false if not.
 	 */
@@ -4889,7 +4628,7 @@ class IntlChar  {
 	/**
 	 * Check if code point is permissible as the first character in a Java identifier
 	 * @link http://www.php.net/manual/en/intlchar.isjavaidstart.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return bool true if
 	 * codepoint may start a Java identifier, false if not.
 	 */
@@ -4898,7 +4637,7 @@ class IntlChar  {
 	/**
 	 * Check if code point is permissible in a Java identifier
 	 * @link http://www.php.net/manual/en/intlchar.isjavaidpart.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return bool true if
 	 * codepoint may occur in a Java identifier, false if not.
 	 */
@@ -4907,7 +4646,7 @@ class IntlChar  {
 	/**
 	 * Make Unicode character lowercase
 	 * @link http://www.php.net/manual/en/intlchar.tolower.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return mixed the Simple_Lowercase_Mapping of the code point, if any;
 	 * otherwise the code point itself.
 	 * <p>The return type will be integer unless the code point was passed as a UTF-8 string, in which case a string will be returned.</p>
@@ -4917,7 +4656,7 @@ class IntlChar  {
 	/**
 	 * Make Unicode character uppercase
 	 * @link http://www.php.net/manual/en/intlchar.toupper.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return mixed the Simple_Uppercase_Mapping of the code point, if any;
 	 * otherwise the code point itself.
 	 * <p>The return type will be integer unless the code point was passed as a UTF-8 string, in which case a string will be returned.</p>
@@ -4927,7 +4666,7 @@ class IntlChar  {
 	/**
 	 * Make Unicode character titlecase
 	 * @link http://www.php.net/manual/en/intlchar.totitle.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return mixed the Simple_Titlecase_Mapping of the code point, if any;
 	 * otherwise the code point itself.
 	 * <p>The return type will be integer unless the code point was passed as a UTF-8 string, in which case a string will be returned.</p>
@@ -4937,11 +4676,9 @@ class IntlChar  {
 	/**
 	 * Perform case folding on a code point
 	 * @link http://www.php.net/manual/en/intlchar.foldcase.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
-	 * @param int $options [optional] <p>
-	 * Either IntlChar::FOLD_CASE_DEFAULT (default)
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
+	 * @param int $options [optional] Either IntlChar::FOLD_CASE_DEFAULT (default)
 	 * or IntlChar::FOLD_CASE_EXCLUDE_SPECIAL_I.
-	 * </p>
 	 * @return mixed the Simple_Case_Folding of the code point, if any; otherwise the code point itself.
 	 */
 	public static function foldCase ($codepoint, int $options = null) {}
@@ -4949,10 +4686,8 @@ class IntlChar  {
 	/**
 	 * Get the decimal digit value of a code point for a given radix
 	 * @link http://www.php.net/manual/en/intlchar.digit.php
-	 * @param string $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
-	 * @param int $radix [optional] <p>
-	 * The radix (defaults to 10).
-	 * </p>
+	 * @param string $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
+	 * @param int $radix [optional] The radix (defaults to 10).
 	 * @return int the numeric value represented by the character in the specified radix,
 	 * or false if there is no value or if the value exceeds the radix.
 	 */
@@ -4961,12 +4696,8 @@ class IntlChar  {
 	/**
 	 * Get character representation for a given digit and radix
 	 * @link http://www.php.net/manual/en/intlchar.fordigit.php
-	 * @param int $digit <p>
-	 * The number to convert to a character.
-	 * </p>
-	 * @param int $radix [optional] <p>
-	 * The radix (defaults to 10).
-	 * </p>
+	 * @param int $digit The number to convert to a character.
+	 * @param int $radix [optional] The radix (defaults to 10).
 	 * @return int The character representation (as a string) of the specified digit in the specified radix.
 	 */
 	public static function forDigit (int $digit, int $radix = null) {}
@@ -4974,7 +4705,7 @@ class IntlChar  {
 	/**
 	 * Get the "age" of the code point
 	 * @link http://www.php.net/manual/en/intlchar.charage.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return array The Unicode version number, as an array.
 	 * For example, version 1.3.31.2 would be represented as [1, 3, 31, 2].
 	 */
@@ -4990,7 +4721,7 @@ class IntlChar  {
 	/**
 	 * Get the FC_NFKC_Closure property for a code point
 	 * @link http://www.php.net/manual/en/intlchar.getfc-nfkc-closure.php
-	 * @param mixed $codepoint <p>The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")</p>
+	 * @param mixed $codepoint The integer codepoint value (e.g. 0x2603 for U+2603 SNOWMAN), or the character encoded as a UTF-8 string (e.g. "\u{2603}")
 	 * @return string the FC_NFKC_Closure property string for the codepoint, or an empty string if there is none.
 	 */
 	public static function getFC_NFKC_Closure ($codepoint) {}
@@ -5465,9 +5196,7 @@ function datefmt_get_error_message ($coll) {}
 /**
  * Get string length in grapheme units
  * @link http://www.php.net/manual/en/function.grapheme-strlen.php
- * @param string $input <p>
- * The string being measured for length. It must be a valid UTF-8 string.
- * </p>
+ * @param string $input The string being measured for length. It must be a valid UTF-8 string.
  * @return int The length of the string on success, and 0 if the string is empty.
  */
 function grapheme_strlen (string $input) {}
@@ -5475,19 +5204,13 @@ function grapheme_strlen (string $input) {}
 /**
  * Find position (in grapheme units) of first occurrence of a string
  * @link http://www.php.net/manual/en/function.grapheme-strpos.php
- * @param string $haystack <p>
- * The string to look in. Must be valid UTF-8.
- * </p>
- * @param string $needle <p>
- * The string to look for. Must be valid UTF-8.
- * </p>
- * @param int $offset [optional] <p>
- * The optional $offset parameter allows you to specify where in $haystack to
+ * @param string $haystack The string to look in. Must be valid UTF-8.
+ * @param string $needle The string to look for. Must be valid UTF-8.
+ * @param int $offset [optional] The optional $offset parameter allows you to specify where in $haystack to
  * start searching as an offset in grapheme units (not bytes or characters).
  * If the offset is negative, it is treated relative to the end of the string.
  * The position returned is still relative to the beginning of haystack
  * regardless of the value of $offset.
- * </p>
  * @return int the position as an integer. If needle is not found, grapheme_strpos() will return boolean FALSE.
  */
 function grapheme_strpos (string $haystack, string $needle, int $offset = null) {}
@@ -5495,19 +5218,13 @@ function grapheme_strpos (string $haystack, string $needle, int $offset = null) 
 /**
  * Find position (in grapheme units) of first occurrence of a case-insensitive string
  * @link http://www.php.net/manual/en/function.grapheme-stripos.php
- * @param string $haystack <p>
- * The string to look in. Must be valid UTF-8.
- * </p>
- * @param string $needle <p>
- * The string to look for. Must be valid UTF-8. 
- * </p>
- * @param int $offset [optional] <p>
- * The optional $offset parameter allows you to specify where in haystack to
+ * @param string $haystack The string to look in. Must be valid UTF-8.
+ * @param string $needle The string to look for. Must be valid UTF-8.
+ * @param int $offset [optional] The optional $offset parameter allows you to specify where in haystack to
  * start searching as an offset in grapheme units (not bytes or characters).
  * If the offset is negative, it is treated relative to the end of the string.
  * The position returned is still relative to the beginning of haystack
  * regardless of the value of $offset.
- * </p>
  * @return int the position as an integer. If needle is not found, grapheme_stripos() will return boolean FALSE.
  */
 function grapheme_stripos (string $haystack, string $needle, int $offset = null) {}
@@ -5515,18 +5232,12 @@ function grapheme_stripos (string $haystack, string $needle, int $offset = null)
 /**
  * Find position (in grapheme units) of last occurrence of a string
  * @link http://www.php.net/manual/en/function.grapheme-strrpos.php
- * @param string $haystack <p>
- * The string to look in. Must be valid UTF-8.
- * </p>
- * @param string $needle <p>
- * The string to look for. Must be valid UTF-8.
- * </p>
- * @param int $offset [optional] <p>
- * The optional $offset parameter allows you to specify where in $haystack to
+ * @param string $haystack The string to look in. Must be valid UTF-8.
+ * @param string $needle The string to look for. Must be valid UTF-8.
+ * @param int $offset [optional] The optional $offset parameter allows you to specify where in $haystack to
  * start searching as an offset in grapheme units (not bytes or characters).
  * The position returned is still relative to the beginning of haystack
  * regardless of the value of $offset.
- * </p>
  * @return int the position as an integer. If needle is not found, grapheme_strrpos() will return boolean FALSE.
  */
 function grapheme_strrpos (string $haystack, string $needle, int $offset = null) {}
@@ -5534,18 +5245,12 @@ function grapheme_strrpos (string $haystack, string $needle, int $offset = null)
 /**
  * Find position (in grapheme units) of last occurrence of a case-insensitive string
  * @link http://www.php.net/manual/en/function.grapheme-strripos.php
- * @param string $haystack <p>
- * The string to look in. Must be valid UTF-8.
- * </p>
- * @param string $needle <p>
- * The string to look for. Must be valid UTF-8.
- * </p>
- * @param int $offset [optional] <p>
- * The optional $offset parameter allows you to specify where in $haystack to
+ * @param string $haystack The string to look in. Must be valid UTF-8.
+ * @param string $needle The string to look for. Must be valid UTF-8.
+ * @param int $offset [optional] The optional $offset parameter allows you to specify where in $haystack to
  * start searching as an offset in grapheme units (not bytes or characters).
  * The position returned is still relative to the beginning of haystack
  * regardless of the value of $offset.
- * </p>
  * @return int the position as an integer. If needle is not found, grapheme_strripos() will return boolean FALSE.
  */
 function grapheme_strripos (string $haystack, string $needle, int $offset = null) {}
@@ -5553,25 +5258,19 @@ function grapheme_strripos (string $haystack, string $needle, int $offset = null
 /**
  * Return part of a string
  * @link http://www.php.net/manual/en/function.grapheme-substr.php
- * @param string $string <p>
- * The input string. Must be valid UTF-8. 
- * </p>
- * @param int $start <p>
- * Start position in default grapheme units.
+ * @param string $string The input string. Must be valid UTF-8.
+ * @param int $start Start position in default grapheme units.
  * If $start is non-negative, the returned string will start at the
  * $start'th position in $string, counting from zero. If $start is negative,
  * the returned string will start at the $start'th grapheme unit from the 
  * end of string.
- * </p>
- * @param int $length [optional] <p>
- * Length in grapheme units.
+ * @param int $length [optional] Length in grapheme units.
  * If $length is given and is positive, the string returned will contain
  * at most $length grapheme units beginning from $start (depending on the 
  * length of string). If $length is given and is negative, then
  * that many grapheme units will be omitted from the end of string (after the
  * start position has been calculated when a start is negative). If $start
- * denotes a position beyond this truncation, false will be returned. 
- * </p>
+ * denotes a position beyond this truncation, false will be returned.
  * @return string the extracted part of $string.
  */
 function grapheme_substr (string $string, int $start, int $length = null) {}
@@ -5579,16 +5278,10 @@ function grapheme_substr (string $string, int $start, int $length = null) {}
 /**
  * Returns part of haystack string from the first occurrence of needle to the end of haystack.
  * @link http://www.php.net/manual/en/function.grapheme-strstr.php
- * @param string $haystack <p>
- * The input string. Must be valid UTF-8. 
- * </p>
- * @param string $needle <p>
- * The string to look for. Must be valid UTF-8. 
- * </p>
- * @param bool $before_needle [optional] <p>
- * If true, grapheme_strstr() returns the part of the
+ * @param string $haystack The input string. Must be valid UTF-8.
+ * @param string $needle The string to look for. Must be valid UTF-8.
+ * @param bool $before_needle [optional] If true, grapheme_strstr() returns the part of the
  * haystack before the first occurrence of the needle (excluding the needle).
- * </p>
  * @return string the portion of string, or FALSE if needle is not found.
  */
 function grapheme_strstr (string $haystack, string $needle, bool $before_needle = null) {}
@@ -5596,16 +5289,10 @@ function grapheme_strstr (string $haystack, string $needle, bool $before_needle 
 /**
  * Returns part of haystack string from the first occurrence of case-insensitive needle to the end of haystack.
  * @link http://www.php.net/manual/en/function.grapheme-stristr.php
- * @param string $haystack <p>
- * The input string. Must be valid UTF-8.
- * </p>
- * @param string $needle <p>
- * The string to look for. Must be valid UTF-8.
- * </p>
- * @param bool $before_needle [optional] <p>
- * If true, grapheme_strstr() returns the part of the
+ * @param string $haystack The input string. Must be valid UTF-8.
+ * @param string $needle The string to look for. Must be valid UTF-8.
+ * @param bool $before_needle [optional] If true, grapheme_strstr() returns the part of the
  * haystack before the first occurrence of the needle (excluding needle).
- * </p>
  * @return string the portion of $haystack, or FALSE if $needle is not found.
  */
 function grapheme_stristr (string $haystack, string $needle, bool $before_needle = null) {}
@@ -5613,15 +5300,12 @@ function grapheme_stristr (string $haystack, string $needle, bool $before_needle
 /**
  * Function to extract a sequence of default grapheme clusters from a text buffer, which must be encoded in UTF-8.
  * @link http://www.php.net/manual/en/function.grapheme-extract.php
- * @param string $haystack <p>
- * String to search.
- * </p>
- * @param int $size <p>
- * Maximum number items - based on the $extract_type - to return.
- * </p>
+ * @param string $haystack String to search.
+ * @param int $size Maximum number items - based on the $extract_type - to return.
  * @param int $extract_type [optional] <p>
  * Defines the type of units referred to by the $size parameter:
  * </p>
+ * <p>
  * <p>
  * GRAPHEME_EXTR_COUNT (default) - $size is the number of default
  * grapheme clusters to extract.
@@ -5630,17 +5314,14 @@ function grapheme_stristr (string $haystack, string $needle, bool $before_needle
  * GRAPHEME_EXTR_MAXCHARS - $size is the maximum number of UTF-8
  * characters returned.
  * </p>
- * @param int $start [optional] <p>
- * Starting position in $haystack in bytes - if given, it must be zero or a
+ * </p>
+ * @param int $start [optional] Starting position in $haystack in bytes - if given, it must be zero or a
  * positive value that is less than or equal to the length of $haystack in
  * bytes, or a negative value that counts from the end of $haystack.
  * If $start does not point to the first byte of a UTF-8
  * character, the start position is moved to the next character boundary.
- * </p>
- * @param int $next [optional] <p>
- * Reference to a value that will be set to the next starting position.
+ * @param int $next [optional] Reference to a value that will be set to the next starting position.
  * When the call returns, this may point to the first byte position past the end of the string.
- * </p>
  * @return string A string starting at offset $start and ending on a default grapheme cluster
  * boundary that conforms to the $size and $extract_type specified.
  */
@@ -5649,19 +5330,12 @@ function grapheme_extract (string $haystack, int $size, int $extract_type = null
 /**
  * Convert domain name to IDNA ASCII form.
  * @link http://www.php.net/manual/en/function.idn-to-ascii.php
- * @param string $domain <p>
- * The domain to convert, which must be UTF-8 encoded.
- * </p>
- * @param int $options [optional] <p>
- * Conversion options - combination of IDNA_&#42; constants
+ * @param string $domain The domain to convert, which must be UTF-8 encoded.
+ * @param int $options [optional] Conversion options - combination of IDNA_&#42; constants
  * (except IDNA_ERROR_&#42; constants).
- * </p>
- * @param int $variant [optional] <p>
- * Either INTL_IDNA_VARIANT_2003 for IDNA 2003 or
+ * @param int $variant [optional] Either INTL_IDNA_VARIANT_2003 for IDNA 2003 or
  * INTL_IDNA_VARIANT_UTS46 for UTS #46.
- * </p>
- * @param array $idna_info [optional] <p>
- * This parameter can be used only if
+ * @param array $idna_info [optional] This parameter can be used only if
  * INTL_IDNA_VARIANT_UTS46 was used for
  * variant. In that case, it will be filled with an
  * array with the keys 'result', the possibly illegal
@@ -5671,7 +5345,6 @@ function grapheme_extract (string $haystack, int $size, int $extract_type = null
  * or would have changed the result and 'errors',
  * which is an int representing a bitset of the error
  * constants IDNA_ERROR_&#42;.
- * </p>
  * @return string The domain name encoded in ASCII-compatible form, or false on failure
  */
 function idn_to_ascii (string $domain, int $options = null, int $variant = null, array &$idna_info = null) {}
@@ -5679,19 +5352,12 @@ function idn_to_ascii (string $domain, int $options = null, int $variant = null,
 /**
  * Convert domain name from IDNA ASCII to Unicode.
  * @link http://www.php.net/manual/en/function.idn-to-utf8.php
- * @param string $domain <p>
- * Domain to convert in an IDNA ASCII-compatible format.
- * </p>
- * @param int $options [optional] <p>
- * Conversion options - combination of IDNA_&#42; constants
+ * @param string $domain Domain to convert in an IDNA ASCII-compatible format.
+ * @param int $options [optional] Conversion options - combination of IDNA_&#42; constants
  * (except IDNA_ERROR_&#42; constants).
- * </p>
- * @param int $variant [optional] <p>
- * Either INTL_IDNA_VARIANT_2003 for IDNA 2003 or
+ * @param int $variant [optional] Either INTL_IDNA_VARIANT_2003 for IDNA 2003 or
  * INTL_IDNA_VARIANT_UTS46 for UTS #46.
- * </p>
- * @param array $idna_info [optional] <p>
- * This parameter can be used only if
+ * @param array $idna_info [optional] This parameter can be used only if
  * INTL_IDNA_VARIANT_UTS46 was used for
  * variant. In that case, it will be filled with an
  * array with the keys 'result', the possibly illegal
@@ -5701,7 +5367,6 @@ function idn_to_ascii (string $domain, int $options = null, int $variant = null,
  * or would have changed the result and 'errors',
  * which is an int representing a bitset of the error
  * constants IDNA_ERROR_&#42;.
- * </p>
  * @return string The domain name in Unicode, encoded in UTF-8, or false on failure
  */
 function idn_to_utf8 (string $domain, int $options = null, int $variant = null, array &$idna_info = null) {}
@@ -6189,11 +5854,9 @@ function intl_get_error_message () {}
 /**
  * Check whether the given error code indicates failure
  * @link http://www.php.net/manual/en/function.intl-is-failure.php
- * @param int $error_code <p>
- * is a value that returned by functions:
+ * @param int $error_code is a value that returned by functions:
  * intl_get_error_code,
  * collator_get_error_code .
- * </p>
  * @return bool true if it the code indicates some failure, and false
  * in case of success or a warning.
  */
@@ -6202,9 +5865,7 @@ function intl_is_failure (int $error_code) {}
 /**
  * Get symbolic name for a given error code
  * @link http://www.php.net/manual/en/function.intl-error-name.php
- * @param int $error_code <p>
- * ICU error code.
- * </p>
+ * @param int $error_code ICU error code.
  * @return string The returned string will be the same as the name of the error code
  * constant.
  */

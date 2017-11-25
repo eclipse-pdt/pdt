@@ -7,10 +7,8 @@ class tidy  {
 	/**
 	 * Returns the value of the specified configuration option for the tidy document
 	 * @link http://www.php.net/manual/en/tidy.getopt.php
-	 * @param string $option <p>
-	 * You will find a list with each configuration option and their types
+	 * @param string $option You will find a list with each configuration option and their types
 	 * at: url.tidy.conf.
-	 * </p>
 	 * @return mixed the value of the specified option.
 	 * The return type depends on the type of the specified one.
 	 */
@@ -26,11 +24,9 @@ class tidy  {
 	/**
 	 * Parse markup in file or URI
 	 * @link http://www.php.net/manual/en/tidy.parsefile.php
-	 * @param string $filename <p>
-	 * If the filename parameter is given, this function
+	 * @param string $filename If the filename parameter is given, this function
 	 * will also read that file and initialize the object with the file,
 	 * acting like tidy_parse_file.
-	 * </p>
 	 * @param mixed $config [optional] <p>
 	 * The config config can be passed either as an
 	 * array or as a string. If a string is passed, it is interpreted as the
@@ -41,18 +37,14 @@ class tidy  {
 	 * For an explanation about each option, see
 	 * url.tidy.conf.
 	 * </p>
-	 * @param string $encoding [optional] <p>
-	 * The encoding parameter sets the encoding for
+	 * @param string $encoding [optional] The encoding parameter sets the encoding for
 	 * input/output documents. The possible values for encoding are: 
 	 * ascii, latin0, latin1,
 	 * raw, utf8, iso2022,
 	 * mac, win1252, ibm858,
 	 * utf16, utf16le, utf16be,
 	 * big5, and shiftjis.
-	 * </p>
-	 * @param bool $use_include_path [optional] <p>
-	 * Search for the file in the include_path.
-	 * </p>
+	 * @param bool $use_include_path [optional] Search for the file in the include_path.
 	 * @return bool true on success or false on failure
 	 */
 	public function parseFile (string $filename, $config = null, string $encoding = null, bool $use_include_path = null) {}
@@ -60,9 +52,7 @@ class tidy  {
 	/**
 	 * Parse a document stored in a string
 	 * @link http://www.php.net/manual/en/tidy.parsestring.php
-	 * @param string $input <p>
-	 * The data to be parsed.
-	 * </p>
+	 * @param string $input The data to be parsed.
 	 * @param mixed $config [optional] <p>
 	 * The config config can be passed either as an
 	 * array or as a string. If a string is passed, it is interpreted as the
@@ -72,15 +62,13 @@ class tidy  {
 	 * <p>
 	 * For an explanation about each option, visit url.tidy.conf.
 	 * </p>
-	 * @param string $encoding [optional] <p>
-	 * The encoding parameter sets the encoding for
+	 * @param string $encoding [optional] The encoding parameter sets the encoding for
 	 * input/output documents. The possible values for encoding are: 
 	 * ascii, latin0, latin1,
 	 * raw, utf8, iso2022,
 	 * mac, win1252, ibm858,
 	 * utf16, utf16le, utf16be,
 	 * big5, and shiftjis.
-	 * </p>
 	 * @return bool a new tidy instance.
 	 */
 	public function parseString (string $input, $config = null, string $encoding = null) {}
@@ -88,9 +76,7 @@ class tidy  {
 	/**
 	 * Repair a string using an optionally provided configuration file
 	 * @link http://www.php.net/manual/en/tidy.repairstring.php
-	 * @param string $data <p>
-	 * The data to be repaired.
-	 * </p>
+	 * @param string $data The data to be repaired.
 	 * @param mixed $config [optional] <p>
 	 * The config config can be passed either as an
 	 * array or as a string. If a string is passed, it is interpreted as the
@@ -101,15 +87,13 @@ class tidy  {
 	 * Check url.tidy.conf for
 	 * an explanation about each option.
 	 * </p>
-	 * @param string $encoding [optional] <p>
-	 * The encoding parameter sets the encoding for
+	 * @param string $encoding [optional] The encoding parameter sets the encoding for
 	 * input/output documents. The possible values for encoding are: 
 	 * ascii, latin0, latin1,
 	 * raw, utf8, iso2022,
 	 * mac, win1252, ibm858,
 	 * utf16, utf16le, utf16be,
 	 * big5, and shiftjis.
-	 * </p>
 	 * @return string the repaired string.
 	 */
 	public function repairString (string $data, $config = null, string $encoding = null) {}
@@ -117,9 +101,7 @@ class tidy  {
 	/**
 	 * Repair a file and return it as a string
 	 * @link http://www.php.net/manual/en/tidy.repairfile.php
-	 * @param string $filename <p>
-	 * The file to be repaired.
-	 * </p>
+	 * @param string $filename The file to be repaired.
 	 * @param mixed $config [optional] <p>
 	 * The config config can be passed either as an
 	 * array or as a string. If a string is passed, it is interpreted as the
@@ -130,18 +112,14 @@ class tidy  {
 	 * Check http://tidy.sourceforge.net/docs/quickref.html for an
 	 * explanation about each option.
 	 * </p>
-	 * @param string $encoding [optional] <p>
-	 * The encoding parameter sets the encoding for
+	 * @param string $encoding [optional] The encoding parameter sets the encoding for
 	 * input/output documents. The possible values for encoding are: 
 	 * ascii, latin0, latin1,
 	 * raw, utf8, iso2022,
 	 * mac, win1252, ibm858,
 	 * utf16, utf16le, utf16be,
 	 * big5, and shiftjis.
-	 * </p>
-	 * @param bool $use_include_path [optional] <p>
-	 * Search for the file in the include_path.
-	 * </p>
+	 * @param bool $use_include_path [optional] Search for the file in the include_path.
 	 * @return string the repaired contents as a string.
 	 */
 	public function repairFile (string $filename, $config = null, string $encoding = null, bool $use_include_path = null) {}
@@ -192,9 +170,7 @@ class tidy  {
 	/**
 	 * Returns the documentation for the given option name
 	 * @link http://www.php.net/manual/en/tidy.getoptdoc.php
-	 * @param string $optname <p>
-	 * The option name
-	 * </p>
+	 * @param string $optname The option name
 	 * @return string a string if the option exists and has documentation available, or
 	 * false otherwise.
 	 */
@@ -355,9 +331,7 @@ function tidy_parse_file ($file, $config_options = null, $encoding = null, $use_
 /**
  * Return a string representing the parsed tidy markup
  * @link http://www.php.net/manual/en/function.tidy-get-output.php
- * @param tidy $object <p>
- * The Tidy object.
- * </p>
+ * @param tidy $object The Tidy object.
  * @return string the parsed tidy markup.
  */
 function tidy_get_output (tidy $object) {}
@@ -398,9 +372,7 @@ function tidy_is_xml () {}
 /**
  * Returns the Number of Tidy errors encountered for specified document
  * @link http://www.php.net/manual/en/function.tidy-error-count.php
- * @param tidy $object <p>
- * The Tidy object.
- * </p>
+ * @param tidy $object The Tidy object.
  * @return int the number of errors.
  */
 function tidy_error_count (tidy $object) {}
@@ -408,9 +380,7 @@ function tidy_error_count (tidy $object) {}
 /**
  * Returns the Number of Tidy warnings encountered for specified document
  * @link http://www.php.net/manual/en/function.tidy-warning-count.php
- * @param tidy $object <p>
- * The Tidy object.
- * </p>
+ * @param tidy $object The Tidy object.
  * @return int the number of warnings.
  */
 function tidy_warning_count (tidy $object) {}
@@ -418,9 +388,7 @@ function tidy_warning_count (tidy $object) {}
 /**
  * Returns the Number of Tidy accessibility warnings encountered for specified document
  * @link http://www.php.net/manual/en/function.tidy-access-count.php
- * @param tidy $object <p>
- * The Tidy object.
- * </p>
+ * @param tidy $object The Tidy object.
  * @return int the number of warnings.
  */
 function tidy_access_count (tidy $object) {}
@@ -428,9 +396,7 @@ function tidy_access_count (tidy $object) {}
 /**
  * Returns the Number of Tidy configuration errors encountered for specified document
  * @link http://www.php.net/manual/en/function.tidy-config-count.php
- * @param tidy $object <p>
- * The Tidy object.
- * </p>
+ * @param tidy $object The Tidy object.
  * @return int the number of errors.
  */
 function tidy_config_count (tidy $object) {}

@@ -25,8 +25,7 @@ interface JsonSerializable  {
  * All string data must be UTF-8 encoded.
  * </p>
  * json.implementation.superset
- * @param int $options [optional] <p>
- * Bitmask consisting of JSON_HEX_QUOT,
+ * @param int $options [optional] Bitmask consisting of JSON_HEX_QUOT,
  * JSON_HEX_TAG,
  * JSON_HEX_AMP,
  * JSON_HEX_APOS,
@@ -39,10 +38,7 @@ interface JsonSerializable  {
  * JSON_PARTIAL_OUTPUT_ON_ERROR. The behaviour of these
  * constants is described on the
  * JSON constants page.
- * </p>
- * @param int $depth [optional] <p>
- * Set the maximum depth. Must be greater than zero.
- * </p>
+ * @param int $depth [optional] Set the maximum depth. Must be greater than zero.
  * @return string a JSON encoded string on success or false on failure.
  */
 function json_encode ($value, int $options = null, int $depth = null) {}
@@ -57,21 +53,15 @@ function json_encode ($value, int $options = null, int $depth = null) {}
  * This function only works with UTF-8 encoded strings.
  * </p>
  * json.implementation.superset
- * @param bool $assoc [optional] <p>
- * When true, returned objects will be converted into
+ * @param bool $assoc [optional] When true, returned objects will be converted into
  * associative arrays.
- * </p>
- * @param int $depth [optional] <p>
- * User specified recursion depth.
- * </p>
- * @param int $options [optional] <p>
- * Bitmask of JSON decode options. Currently there are two supported
+ * @param int $depth [optional] User specified recursion depth.
+ * @param int $options [optional] Bitmask of JSON decode options. Currently there are two supported
  * options. The first is JSON_BIGINT_AS_STRING that
  * allows casting big integers to string instead of floats which is the
  * default. The second option is JSON_OBJECT_AS_ARRAY
  * that has the same effect as setting assoc to
  * true.
- * </p>
  * @return mixed the value encoded in json in appropriate
  * PHP type. Values true, false and
  * null are returned as true, false and null
