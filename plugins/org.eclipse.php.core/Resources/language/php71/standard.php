@@ -3337,7 +3337,7 @@ function link (string $target, string $link) {}
  * Deletes a file
  * @link http://www.php.net/manual/en/function.unlink.php
  * @param string $filename Path to the file.
- * @param resource $context [optional] &note.context-support;
+ * @param resource $context [optional] note.context-support
  * @return bool true on success or false on failure
  */
 function unlink (string $filename, $context = null) {}
@@ -6095,7 +6095,7 @@ function rewind ($handle) {}
  * Removes directory
  * @link http://www.php.net/manual/en/function.rmdir.php
  * @param string $dirname Path to the directory.
- * @param resource $context [optional] &note.context-support;
+ * @param resource $context [optional] note.context-support
  * @return bool true on success or false on failure
  */
 function rmdir (string $dirname, $context = null) {}
@@ -6393,7 +6393,7 @@ function fread ($handle, int $length) {}
  * @param bool $use_include_path [optional] The optional third use_include_path parameter
  * can be set to '1' or true if you want to search for the file in the
  * include_path, too.
- * @param resource $context [optional] &note.context-support;
+ * @param resource $context [optional] note.context-support
  * @return resource a file pointer resource on success, or false on error.
  */
 function fopen (string $filename, string $mode, bool $use_include_path = null, $context = null) {}
@@ -6540,7 +6540,7 @@ function fputs ($fp, $str, $length = null) {}
  * </p>
  * @param bool $recursive [optional] Allows the creation of nested directories specified in the 
  * pathname.
- * @param resource $context [optional] &note.context-support;
+ * @param resource $context [optional] note.context-support
  * @return bool true on success or false on failure
  */
 function mkdir (string $pathname, int $mode = null, bool $recursive = null, $context = null) {}
@@ -6557,7 +6557,7 @@ function mkdir (string $pathname, int $mode = null, bool $recursive = null, $con
  * newname.
  * </p>
  * @param string $newname The new name.
- * @param resource $context [optional] &note.context-support;
+ * @param resource $context [optional] note.context-support
  * @return bool true on success or false on failure
  */
 function rename (string $oldname, string $newname, $context = null) {}
@@ -6607,7 +6607,7 @@ function tmpfile () {}
  * @param string $filename <p>
  * Path to the file.
  * </p>
- * &tip.fopen-wrapper;
+ * tip.fopen-wrapper
  * @param int $flags [optional] <p>
  * The optional parameter flags can be one, or
  * more, of the following constants:
@@ -6628,7 +6628,7 @@ function tmpfile () {}
  * stream_context_create function.
  * </p>
  * <p>
- * &note.context-support;
+ * note.context-support
  * </p>
  * @return array the file in an array. Each element of the array corresponds to a
  * line in the file, with the newline still attached. Upon failure,
@@ -7271,7 +7271,7 @@ function stream_supports_lock ($stream) {}
  * comprising a single null field, and will not be treated
  * as an error.
  * </p>
- * &note.line-endings;
+ * note.line-endings
  * <p>
  * fgetcsv returns null if an invalid
  * handle is supplied or false on other errors,
@@ -8041,7 +8041,7 @@ function readdir ($dir_handle = null) {}
  * Return an instance of the Directory class
  * @link http://www.php.net/manual/en/function.dir.php
  * @param string $directory Directory to open
- * @param resource $context [optional] &note.context-support;
+ * @param resource $context [optional] note.context-support
  * @return Directory an instance of Directory, or null with
  * wrong parameters, or false in case of another error.
  */

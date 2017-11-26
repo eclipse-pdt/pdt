@@ -1,6 +1,6 @@
 <?php
 
-// Start of mbstring v.7.1.1
+// Start of mbstring v.7.1.11
 
 /**
  * Perform case folding on a string
@@ -1135,8 +1135,9 @@ function mbereg_replace ($pattern, $replacement, $string, $option = null) {}
  * @param $pattern
  * @param $replacement
  * @param $string
+ * @param $option [optional]
  */
-function mberegi_replace ($pattern, $replacement, $string) {}
+function mberegi_replace ($pattern, $replacement, $string, $option = null) {}
 
 /**
  * @param $pattern
@@ -1223,4 +1224,4 @@ define ('MB_CASE_LOWER', 1);
  */
 define ('MB_CASE_TITLE', 2);
 
-// End of mbstring v.7.1.1
+// End of mbstring v.7.1.11

@@ -1867,13 +1867,13 @@ define ('IMG_ARC_NOFILL', 2);
 define ('IMG_ARC_EDGED', 4);
 
 /**
- * &gd.constants.gd2;
+ * gd.constants.gd2
  * @link http://www.php.net/manual/en/image.constants.php
  */
 define ('IMG_GD2_RAW', 1);
 
 /**
- * &gd.constants.gd2;
+ * gd.constants.gd2
  * @link http://www.php.net/manual/en/image.constants.php
  */
 define ('IMG_GD2_COMPRESSED', 2);
@@ -2198,43 +2198,43 @@ define ('GD_RELEASE_VERSION', 3);
 define ('GD_EXTRA_VERSION', "");
 
 /**
- * &gd.constants.png-filter;
+ * gd.constants.png-filter
  * @link http://www.php.net/manual/en/image.constants.php
  */
 define ('PNG_NO_FILTER', 0);
 
 /**
- * &gd.constants.png-filter;
+ * gd.constants.png-filter
  * @link http://www.php.net/manual/en/image.constants.php
  */
 define ('PNG_FILTER_NONE', 8);
 
 /**
- * &gd.constants.png-filter;
+ * gd.constants.png-filter
  * @link http://www.php.net/manual/en/image.constants.php
  */
 define ('PNG_FILTER_SUB', 16);
 
 /**
- * &gd.constants.png-filter;
+ * gd.constants.png-filter
  * @link http://www.php.net/manual/en/image.constants.php
  */
 define ('PNG_FILTER_UP', 32);
 
 /**
- * &gd.constants.png-filter;
+ * gd.constants.png-filter
  * @link http://www.php.net/manual/en/image.constants.php
  */
 define ('PNG_FILTER_AVG', 64);
 
 /**
- * &gd.constants.png-filter;
+ * gd.constants.png-filter
  * @link http://www.php.net/manual/en/image.constants.php
  */
 define ('PNG_FILTER_PAETH', 128);
 
 /**
- * &gd.constants.png-filter;
+ * gd.constants.png-filter
  * @link http://www.php.net/manual/en/image.constants.php
  */
 define ('PNG_ALL_FILTERS', 248);

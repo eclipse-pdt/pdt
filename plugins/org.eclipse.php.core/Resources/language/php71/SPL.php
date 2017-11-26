@@ -3086,7 +3086,7 @@ class SplFileInfo  {
 	 * @param string $open_mode [optional] The mode for opening the file. See the fopen
 	 * documentation for descriptions of possible modes. The default 
 	 * is read only.
-	 * @param bool $use_include_path [optional] &parameter.use_include_path;
+	 * @param bool $use_include_path [optional] parameter.use_include_path
 	 * @param resource $context [optional] parameter.context
 	 * @return SplFileObject The opened file as an SplFileObject object.
 	 */
@@ -3370,7 +3370,7 @@ class DirectoryIterator extends SplFileInfo implements Iterator, Traversable, Se
 	 * @param string $open_mode [optional] The mode for opening the file. See the fopen
 	 * documentation for descriptions of possible modes. The default 
 	 * is read only.
-	 * @param bool $use_include_path [optional] &parameter.use_include_path;
+	 * @param bool $use_include_path [optional] parameter.use_include_path
 	 * @param resource $context [optional] parameter.context
 	 * @return SplFileObject The opened file as an SplFileObject object.
 	 */
@@ -3679,7 +3679,7 @@ class FilesystemIterator extends DirectoryIterator implements SeekableIterator, 
 	 * @param string $open_mode [optional] The mode for opening the file. See the fopen
 	 * documentation for descriptions of possible modes. The default 
 	 * is read only.
-	 * @param bool $use_include_path [optional] &parameter.use_include_path;
+	 * @param bool $use_include_path [optional] parameter.use_include_path
 	 * @param resource $context [optional] parameter.context
 	 * @return SplFileObject The opened file as an SplFileObject object.
 	 */
@@ -4019,7 +4019,7 @@ class RecursiveDirectoryIterator extends FilesystemIterator implements Iterator,
 	 * @param string $open_mode [optional] The mode for opening the file. See the fopen
 	 * documentation for descriptions of possible modes. The default 
 	 * is read only.
-	 * @param bool $use_include_path [optional] &parameter.use_include_path;
+	 * @param bool $use_include_path [optional] parameter.use_include_path
 	 * @param resource $context [optional] parameter.context
 	 * @return SplFileObject The opened file as an SplFileObject object.
 	 */
@@ -4336,7 +4336,7 @@ class GlobIterator extends FilesystemIterator implements Iterator, Traversable, 
 	 * @param string $open_mode [optional] The mode for opening the file. See the fopen
 	 * documentation for descriptions of possible modes. The default 
 	 * is read only.
-	 * @param bool $use_include_path [optional] &parameter.use_include_path;
+	 * @param bool $use_include_path [optional] parameter.use_include_path
 	 * @param resource $context [optional] parameter.context
 	 * @return SplFileObject The opened file as an SplFileObject object.
 	 */
@@ -4866,7 +4866,7 @@ class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversabl
 	 * @param string $open_mode [optional] The mode for opening the file. See the fopen
 	 * documentation for descriptions of possible modes. The default 
 	 * is read only.
-	 * @param bool $use_include_path [optional] &parameter.use_include_path;
+	 * @param bool $use_include_path [optional] parameter.use_include_path
 	 * @param resource $context [optional] parameter.context
 	 * @return SplFileObject The opened file as an SplFileObject object.
 	 */
@@ -5393,7 +5393,7 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	 * @param string $open_mode [optional] The mode for opening the file. See the fopen
 	 * documentation for descriptions of possible modes. The default 
 	 * is read only.
-	 * @param bool $use_include_path [optional] &parameter.use_include_path;
+	 * @param bool $use_include_path [optional] parameter.use_include_path
 	 * @param resource $context [optional] parameter.context
 	 * @return SplFileObject The opened file as an SplFileObject object.
 	 */

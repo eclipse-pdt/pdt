@@ -1,6 +1,6 @@
 <?php
 
-// Start of mysqli v.7.1.1
+// Start of mysqli v.7.1.11
 
 final class mysqli_sql_exception extends RuntimeException implements Throwable {
 	protected $message;
@@ -1613,9 +1613,9 @@ function mysqli_more_results ($link) {}
 
 /**
  * @param $link
- * @param $query
+ * @param $query [optional]
  */
-function mysqli_multi_query ($link, $query) {}
+function mysqli_multi_query ($link, $query = null) {}
 
 /**
  * @param $link
@@ -1669,8 +1669,9 @@ function mysqli_report ($flags) {}
 /**
  * @param $link
  * @param $query
+ * @param $resultmode [optional]
  */
-function mysqli_query ($link, $query) {}
+function mysqli_query ($link, $query, $resultmode = null) {}
 
 /**
  * @param $link
@@ -1692,9 +1693,9 @@ function mysqli_real_escape_string ($link, $string_to_escape) {}
 
 /**
  * @param $link
- * @param $query
+ * @param $query [optional]
  */
-function mysqli_real_query ($link, $query) {}
+function mysqli_real_query ($link, $query = null) {}
 
 /**
  * @param $link
@@ -1931,8 +1932,9 @@ function mysqli_refresh ($link, $options) {}
  * @link http://www.php.net/manual/en/function.mysqli-escape-string.php
  * @param $link
  * @param $query
+ * @param $resultmode [optional]
  */
-function mysqli_escape_string ($link, $query) {}
+function mysqli_escape_string ($link, $query, $resultmode = null) {}
 
 function mysqli_set_opt () {}
 
@@ -2518,4 +2520,4 @@ define ('MYSQLI_TRANS_COR_RELEASE', 4);
  */
 define ('MYSQLI_TRANS_COR_NO_RELEASE', 8);
 
-// End of mysqli v.7.1.1
+// End of mysqli v.7.1.11

@@ -997,7 +997,7 @@ function xml_to_phpdoc ($str) {
 	$str = str_replace("&Alias;", "Alias:", $str);
 	// rewrite all non-html entities like "&null;", "&true;", "&false;"
 	// as "null", "true", "false"
-	preg_match_all ('@&([a-zA-Z.]+);@s', $str, $matches);
+	preg_match_all ('@&([a-zA-Z0-9._-]+);@s', $str, $matches);
 	if ($matches) {
 		foreach ($matches[1] as $v) {
 			if (html_entity_decode ("&" . $v . ";") === "&" . $v . ";") {

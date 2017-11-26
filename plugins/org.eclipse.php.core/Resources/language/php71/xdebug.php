@@ -1,6 +1,6 @@
 <?php
 
-// Start of xdebug v.2.5.0
+// Start of xdebug v.2.5.5
 
 function xdebug_get_stack_depth () {}
 
@@ -8,23 +8,48 @@ function xdebug_get_function_stack () {}
 
 function xdebug_get_formatted_function_stack () {}
 
-function xdebug_print_function_stack () {}
+/**
+ * @param $message [optional]
+ * @param $options [optional]
+ */
+function xdebug_print_function_stack ($message = null, $options = null) {}
 
 function xdebug_get_declared_vars () {}
 
-function xdebug_call_class () {}
+/**
+ * @param $depth [optional]
+ */
+function xdebug_call_class ($depth = null) {}
 
-function xdebug_call_function () {}
+/**
+ * @param $depth [optional]
+ */
+function xdebug_call_function ($depth = null) {}
 
-function xdebug_call_file () {}
+/**
+ * @param $depth [optional]
+ */
+function xdebug_call_file ($depth = null) {}
 
-function xdebug_call_line () {}
+/**
+ * @param $depth [optional]
+ */
+function xdebug_call_line ($depth = null) {}
 
-function xdebug_var_dump () {}
+/**
+ * @param $var
+ */
+function xdebug_var_dump ($var) {}
 
-function xdebug_debug_zval () {}
+/**
+ * @param $var
+ */
+function xdebug_debug_zval ($var) {}
 
-function xdebug_debug_zval_stdout () {}
+/**
+ * @param $var
+ */
+function xdebug_debug_zval_stdout ($var) {}
 
 function xdebug_enable () {}
 
@@ -34,7 +59,11 @@ function xdebug_is_enabled () {}
 
 function xdebug_break () {}
 
-function xdebug_start_trace () {}
+/**
+ * @param $fname [optional]
+ * @param $options [optional]
+ */
+function xdebug_start_trace ($fname = null, $options = null) {}
 
 function xdebug_stop_trace () {}
 
@@ -42,7 +71,10 @@ function xdebug_get_tracefile_name () {}
 
 function xdebug_get_profiler_filename () {}
 
-function xdebug_dump_aggr_profiling_data () {}
+/**
+ * @param $prefix [optional]
+ */
+function xdebug_dump_aggr_profiling_data ($prefix = null) {}
 
 function xdebug_clear_aggr_profiling_data () {}
 
@@ -56,17 +88,32 @@ function xdebug_start_error_collection () {}
 
 function xdebug_stop_error_collection () {}
 
-function xdebug_get_collected_errors () {}
+/**
+ * @param $clear [optional]
+ */
+function xdebug_get_collected_errors ($clear = null) {}
 
-function xdebug_start_function_monitor () {}
+/**
+ * @param $functions_to_monitor
+ */
+function xdebug_start_function_monitor ($functions_to_monitor) {}
 
 function xdebug_stop_function_monitor () {}
 
-function xdebug_get_monitored_functions () {}
+/**
+ * @param $clear [optional]
+ */
+function xdebug_get_monitored_functions ($clear = null) {}
 
-function xdebug_start_code_coverage () {}
+/**
+ * @param $options [optional]
+ */
+function xdebug_start_code_coverage ($options = null) {}
 
-function xdebug_stop_code_coverage () {}
+/**
+ * @param $cleanup [optional]
+ */
+function xdebug_stop_code_coverage ($cleanup = null) {}
 
 function xdebug_get_code_coverage () {}
 
@@ -87,4 +134,4 @@ define ('XDEBUG_CC_DEAD_CODE', 2);
 define ('XDEBUG_CC_BRANCH_CHECK', 4);
 define ('XDEBUG_STACK_NO_DESC', 1);
 
-// End of xdebug v.2.5.0
+// End of xdebug v.2.5.5
