@@ -952,7 +952,7 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Seek
 	 * @param string $open_mode [optional] The mode for opening the file. See the fopen
 	 * documentation for descriptions of possible modes. The default 
 	 * is read only.
-	 * @param bool $use_include_path [optional] &parameter.use_include_path;
+	 * @param bool $use_include_path [optional] parameter.use_include_path
 	 * @param resource $context [optional] parameter.context
 	 * @return SplFileObject The opened file as an SplFileObject object.
 	 */
@@ -1641,7 +1641,7 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	 * @param string $open_mode [optional] The mode for opening the file. See the fopen
 	 * documentation for descriptions of possible modes. The default 
 	 * is read only.
-	 * @param bool $use_include_path [optional] &parameter.use_include_path;
+	 * @param bool $use_include_path [optional] parameter.use_include_path
 	 * @param resource $context [optional] parameter.context
 	 * @return SplFileObject The opened file as an SplFileObject object.
 	 */
@@ -1958,7 +1958,7 @@ class PharFileInfo extends SplFileInfo  {
 	 * @param string $open_mode [optional] The mode for opening the file. See the fopen
 	 * documentation for descriptions of possible modes. The default 
 	 * is read only.
-	 * @param bool $use_include_path [optional] &parameter.use_include_path;
+	 * @param bool $use_include_path [optional] parameter.use_include_path
 	 * @param resource $context [optional] parameter.context
 	 * @return SplFileObject The opened file as an SplFileObject object.
 	 */
