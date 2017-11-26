@@ -1,6 +1,6 @@
 <?php
 
-// Start of gd v.7.1.1
+// Start of gd v.7.1.11
 
 /**
  * Retrieve information about the currently installed GD library
@@ -610,6 +610,15 @@ function imagerotate ($image, float $angle, int $bgd_color, int $ignore_transpar
 function imageflip ($image, int $mode) {}
 
 /**
+ * Should antialias functions be used or not
+ * @link http://www.php.net/manual/en/function.imageantialias.php
+ * @param resource $image 
+ * @param bool $enabled Whether to enable antialiasing or not.
+ * @return bool true on success or false on failure
+ */
+function imageantialias ($image, bool $enabled) {}
+
+/**
  * Crop an image to the given rectangle
  * @link http://www.php.net/manual/en/function.imagecrop.php
  * @param resource $image 
@@ -832,14 +841,6 @@ function imagecreatefrompng (string $filename) {}
 
 /**
  * Create a new image from file or URL
- * @link http://www.php.net/manual/en/function.imagecreatefromwebp.php
- * @param string $filename Path to the WebP image.
- * @return resource an image resource identifier on success, false on errors.
- */
-function imagecreatefromwebp (string $filename) {}
-
-/**
- * Create a new image from file or URL
  * @link http://www.php.net/manual/en/function.imagecreatefromgif.php
  * @param string $filename Path to the GIF image.
  * @return resource an image resource identifier on success, false on errors.
@@ -869,14 +870,6 @@ function imagecreatefromwbmp (string $filename) {}
  * @return resource an image resource identifier on success, false on errors.
  */
 function imagecreatefromxbm (string $filename) {}
-
-/**
- * Create a new image from file or URL
- * @link http://www.php.net/manual/en/function.imagecreatefromxpm.php
- * @param string $filename Path to the XPM image.
- * @return resource an image resource identifier on success, false on errors.
- */
-function imagecreatefromxpm (string $filename) {}
 
 /**
  * Create a new image from GD file or URL
@@ -925,17 +918,6 @@ function imagecreatefromgd2part (string $filename, int $srcX, int $srcY, int $wi
  * @return bool true on success or false on failure
  */
 function imagepng ($image, $to = null, int $quality = null, int $filters = null) {}
-
-/**
- * Output a WebP image to browser or file
- * @link http://www.php.net/manual/en/function.imagewebp.php
- * @param resource $image 
- * @param mixed $to [optional] The path or an open stream resource (which is automatically being closed after this function returns) to save the file to. If not set or null, the raw image stream will be outputted directly.
- * @param int $quality [optional] quality ranges from 0 (worst
- * quality, smaller file) to 100 (best quality, biggest file).
- * @return bool true on success or false on failure
- */
-function imagewebp ($image, $to = null, int $quality = null) {}
 
 /**
  * Output image to browser or file
@@ -1867,13 +1849,13 @@ define ('IMG_ARC_NOFILL', 2);
 define ('IMG_ARC_EDGED', 4);
 
 /**
- * &gd.constants.gd2;
+ * gd.constants.gd2
  * @link http://www.php.net/manual/en/image.constants.php
  */
 define ('IMG_GD2_RAW', 1);
 
 /**
- * &gd.constants.gd2;
+ * gd.constants.gd2
  * @link http://www.php.net/manual/en/image.constants.php
  */
 define ('IMG_GD2_COMPRESSED', 2);
@@ -2087,7 +2069,7 @@ define ('IMG_AFFINE_SHEAR_VERTICAL', 4);
  * its set to 0.
  * @link http://www.php.net/manual/en/image.constants.php
  */
-define ('GD_BUNDLED', 0);
+define ('GD_BUNDLED', 1);
 
 /**
  * gd.constants.filter
@@ -2167,7 +2149,7 @@ define ('IMG_FILTER_PIXELATE', 11);
  * (Available as of PHP 5.2.4)
  * @link http://www.php.net/manual/en/image.constants.php
  */
-define ('GD_VERSION', "2.2.3");
+define ('GD_VERSION', "2.0.35");
 
 /**
  * The GD major version PHP was compiled against.
@@ -2181,14 +2163,14 @@ define ('GD_MAJOR_VERSION', 2);
  * (Available as of PHP 5.2.4)
  * @link http://www.php.net/manual/en/image.constants.php
  */
-define ('GD_MINOR_VERSION', 2);
+define ('GD_MINOR_VERSION', 0);
 
 /**
  * The GD release version PHP was compiled against.
  * (Available as of PHP 5.2.4)
  * @link http://www.php.net/manual/en/image.constants.php
  */
-define ('GD_RELEASE_VERSION', 3);
+define ('GD_RELEASE_VERSION', 35);
 
 /**
  * The GD "extra" version (beta/rc..) PHP was compiled against.
@@ -2198,45 +2180,45 @@ define ('GD_RELEASE_VERSION', 3);
 define ('GD_EXTRA_VERSION', "");
 
 /**
- * &gd.constants.png-filter;
+ * gd.constants.png-filter
  * @link http://www.php.net/manual/en/image.constants.php
  */
 define ('PNG_NO_FILTER', 0);
 
 /**
- * &gd.constants.png-filter;
+ * gd.constants.png-filter
  * @link http://www.php.net/manual/en/image.constants.php
  */
 define ('PNG_FILTER_NONE', 8);
 
 /**
- * &gd.constants.png-filter;
+ * gd.constants.png-filter
  * @link http://www.php.net/manual/en/image.constants.php
  */
 define ('PNG_FILTER_SUB', 16);
 
 /**
- * &gd.constants.png-filter;
+ * gd.constants.png-filter
  * @link http://www.php.net/manual/en/image.constants.php
  */
 define ('PNG_FILTER_UP', 32);
 
 /**
- * &gd.constants.png-filter;
+ * gd.constants.png-filter
  * @link http://www.php.net/manual/en/image.constants.php
  */
 define ('PNG_FILTER_AVG', 64);
 
 /**
- * &gd.constants.png-filter;
+ * gd.constants.png-filter
  * @link http://www.php.net/manual/en/image.constants.php
  */
 define ('PNG_FILTER_PAETH', 128);
 
 /**
- * &gd.constants.png-filter;
+ * gd.constants.png-filter
  * @link http://www.php.net/manual/en/image.constants.php
  */
 define ('PNG_ALL_FILTERS', 248);
 
-// End of gd v.7.1.1
+// End of gd v.7.1.11

@@ -73,9 +73,8 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Seek
 	 * @param $filename
 	 * @param $flags [optional]
 	 * @param $alias [optional]
-	 * @param $fileformat [optional]
 	 */
-	public function __construct ($filename, $flags = null, $alias = null, $fileformat = null) {}
+	public function __construct ($filename, $flags = null, $alias = null) {}
 
 	public function __destruct () {}
 
@@ -952,7 +951,7 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Seek
 	 * @param string $open_mode [optional] The mode for opening the file. See the fopen
 	 * documentation for descriptions of possible modes. The default 
 	 * is read only.
-	 * @param bool $use_include_path [optional] &parameter.use_include_path;
+	 * @param bool $use_include_path [optional] parameter.use_include_path
 	 * @param resource $context [optional] parameter.context
 	 * @return SplFileObject The opened file as an SplFileObject object.
 	 */
@@ -1338,9 +1337,9 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	final public static function mapPhar ($alias = null, $offset = null) {}
 
 	/**
-	 * @param $retphar
+	 * @param $retphar [optional]
 	 */
-	final public static function running ($retphar) {}
+	final public static function running ($retphar = null) {}
 
 	/**
 	 * @param $inphar
@@ -1641,7 +1640,7 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	 * @param string $open_mode [optional] The mode for opening the file. See the fopen
 	 * documentation for descriptions of possible modes. The default 
 	 * is read only.
-	 * @param bool $use_include_path [optional] &parameter.use_include_path;
+	 * @param bool $use_include_path [optional] parameter.use_include_path
 	 * @param resource $context [optional] parameter.context
 	 * @return SplFileObject The opened file as an SplFileObject object.
 	 */
@@ -1958,7 +1957,7 @@ class PharFileInfo extends SplFileInfo  {
 	 * @param string $open_mode [optional] The mode for opening the file. See the fopen
 	 * documentation for descriptions of possible modes. The default 
 	 * is read only.
-	 * @param bool $use_include_path [optional] &parameter.use_include_path;
+	 * @param bool $use_include_path [optional] parameter.use_include_path
 	 * @param resource $context [optional] parameter.context
 	 * @return SplFileObject The opened file as an SplFileObject object.
 	 */

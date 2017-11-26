@@ -274,7 +274,7 @@ function openssl_x509_check_private_key ($cert, $key) {}
  * @link http://www.php.net/manual/en/function.openssl-x509-export.php
  * @param mixed $x509 
  * @param string $output On success, this will hold the PEM.
- * @param bool $notext [optional] &note.openssl.param-notext;
+ * @param bool $notext [optional] note.openssl.param-notext
  * @return bool true on success or false on failure
  */
 function openssl_x509_export ($x509, string &$output, bool $notext = null) {}
@@ -297,7 +297,7 @@ function openssl_x509_fingerprint ($x509, string $hash_algorithm = null, bool $r
  * @link http://www.php.net/manual/en/function.openssl-x509-export-to-file.php
  * @param mixed $x509 
  * @param string $outfilename Path to the output file.
- * @param bool $notext [optional] &note.openssl.param-notext;
+ * @param bool $notext [optional] note.openssl.param-notext
  * @return bool true on success or false on failure
  */
 function openssl_x509_export_to_file ($x509, string $outfilename, bool $notext = null) {}
@@ -476,7 +476,7 @@ function openssl_csr_new (array $dn, &$privkey, array $configargs = null, array 
  * @link http://www.php.net/manual/en/function.openssl-csr-export.php
  * @param mixed $csr 
  * @param string $out on success, this string will contain the PEM encoded CSR
- * @param bool $notext [optional] &note.openssl.param-notext;
+ * @param bool $notext [optional] note.openssl.param-notext
  * @return bool true on success or false on failure
  */
 function openssl_csr_export ($csr, string &$out, bool $notext = null) {}
@@ -486,7 +486,7 @@ function openssl_csr_export ($csr, string &$out, bool $notext = null) {}
  * @link http://www.php.net/manual/en/function.openssl-csr-export-to-file.php
  * @param mixed $csr 
  * @param string $outfilename Path to the output file.
- * @param bool $notext [optional] &note.openssl.param-notext;
+ * @param bool $notext [optional] note.openssl.param-notext
  * @return bool true on success or false on failure
  */
 function openssl_csr_export_to_file ($csr, string $outfilename, bool $notext = null) {}

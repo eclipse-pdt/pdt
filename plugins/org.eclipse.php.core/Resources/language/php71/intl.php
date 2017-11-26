@@ -1940,6 +1940,46 @@ class IntlCalendar  {
 }
 
 class IntlGregorianCalendar extends IntlCalendar  {
+	const FIELD_ERA = 0;
+	const FIELD_YEAR = 1;
+	const FIELD_MONTH = 2;
+	const FIELD_WEEK_OF_YEAR = 3;
+	const FIELD_WEEK_OF_MONTH = 4;
+	const FIELD_DATE = 5;
+	const FIELD_DAY_OF_YEAR = 6;
+	const FIELD_DAY_OF_WEEK = 7;
+	const FIELD_DAY_OF_WEEK_IN_MONTH = 8;
+	const FIELD_AM_PM = 9;
+	const FIELD_HOUR = 10;
+	const FIELD_HOUR_OF_DAY = 11;
+	const FIELD_MINUTE = 12;
+	const FIELD_SECOND = 13;
+	const FIELD_MILLISECOND = 14;
+	const FIELD_ZONE_OFFSET = 15;
+	const FIELD_DST_OFFSET = 16;
+	const FIELD_YEAR_WOY = 17;
+	const FIELD_DOW_LOCAL = 18;
+	const FIELD_EXTENDED_YEAR = 19;
+	const FIELD_JULIAN_DAY = 20;
+	const FIELD_MILLISECONDS_IN_DAY = 21;
+	const FIELD_IS_LEAP_MONTH = 22;
+	const FIELD_FIELD_COUNT = 23;
+	const FIELD_DAY_OF_MONTH = 5;
+	const DOW_SUNDAY = 1;
+	const DOW_MONDAY = 2;
+	const DOW_TUESDAY = 3;
+	const DOW_WEDNESDAY = 4;
+	const DOW_THURSDAY = 5;
+	const DOW_FRIDAY = 6;
+	const DOW_SATURDAY = 7;
+	const DOW_TYPE_WEEKDAY = 0;
+	const DOW_TYPE_WEEKEND = 1;
+	const DOW_TYPE_WEEKEND_OFFSET = 2;
+	const DOW_TYPE_WEEKEND_CEASE = 3;
+	const WALLTIME_FIRST = 1;
+	const WALLTIME_LAST = 0;
+	const WALLTIME_NEXT_VALID = 2;
+
 
 	/**
 	 * @param $timeZoneOrYear [optional]
@@ -3366,7 +3406,7 @@ class UConverter  {
 }
 
 class IntlChar  {
-	const UNICODE_VERSION = 7.0;
+	const UNICODE_VERSION = 6.3;
 	const CODEPOINT_MIN = 0;
 	const CODEPOINT_MAX = 1114111;
 	const FOLD_CASE_DEFAULT = 0;
@@ -3760,39 +3800,7 @@ class IntlChar  {
 	const BLOCK_CODE_SORA_SOMPENG = 218;
 	const BLOCK_CODE_SUNDANESE_SUPPLEMENT = 219;
 	const BLOCK_CODE_TAKRI = 220;
-	const BLOCK_CODE_BASSA_VAH = 221;
-	const BLOCK_CODE_CAUCASIAN_ALBANIAN = 222;
-	const BLOCK_CODE_COPTIC_EPACT_NUMBERS = 223;
-	const BLOCK_CODE_COMBINING_DIACRITICAL_MARKS_EXTENDED = 224;
-	const BLOCK_CODE_DUPLOYAN = 225;
-	const BLOCK_CODE_ELBASAN = 226;
-	const BLOCK_CODE_GEOMETRIC_SHAPES_EXTENDED = 227;
-	const BLOCK_CODE_GRANTHA = 228;
-	const BLOCK_CODE_KHOJKI = 229;
-	const BLOCK_CODE_KHUDAWADI = 230;
-	const BLOCK_CODE_LATIN_EXTENDED_E = 231;
-	const BLOCK_CODE_LINEAR_A = 232;
-	const BLOCK_CODE_MAHAJANI = 233;
-	const BLOCK_CODE_MANICHAEAN = 234;
-	const BLOCK_CODE_MENDE_KIKAKUI = 235;
-	const BLOCK_CODE_MODI = 236;
-	const BLOCK_CODE_MRO = 237;
-	const BLOCK_CODE_MYANMAR_EXTENDED_B = 238;
-	const BLOCK_CODE_NABATAEAN = 239;
-	const BLOCK_CODE_OLD_NORTH_ARABIAN = 240;
-	const BLOCK_CODE_OLD_PERMIC = 241;
-	const BLOCK_CODE_ORNAMENTAL_DINGBATS = 242;
-	const BLOCK_CODE_PAHAWH_HMONG = 243;
-	const BLOCK_CODE_PALMYRENE = 244;
-	const BLOCK_CODE_PAU_CIN_HAU = 245;
-	const BLOCK_CODE_PSALTER_PAHLAVI = 246;
-	const BLOCK_CODE_SHORTHAND_FORMAT_CONTROLS = 247;
-	const BLOCK_CODE_SIDDHAM = 248;
-	const BLOCK_CODE_SINHALA_ARCHAIC_NUMBERS = 249;
-	const BLOCK_CODE_SUPPLEMENTAL_ARROWS_C = 250;
-	const BLOCK_CODE_TIRHUTA = 251;
-	const BLOCK_CODE_WARANG_CITI = 252;
-	const BLOCK_CODE_COUNT = 253;
+	const BLOCK_CODE_COUNT = 221;
 	const BLOCK_CODE_INVALID_CODE = -1;
 	const BPT_NONE = 0;
 	const BPT_OPEN = 1;
@@ -3898,35 +3906,7 @@ class IntlChar  {
 	const JG_FARSI_YEH = 55;
 	const JG_NYA = 56;
 	const JG_ROHINGYA_YEH = 57;
-	const JG_MANICHAEAN_ALEPH = 58;
-	const JG_MANICHAEAN_AYIN = 59;
-	const JG_MANICHAEAN_BETH = 60;
-	const JG_MANICHAEAN_DALETH = 61;
-	const JG_MANICHAEAN_DHAMEDH = 62;
-	const JG_MANICHAEAN_FIVE = 63;
-	const JG_MANICHAEAN_GIMEL = 64;
-	const JG_MANICHAEAN_HETH = 65;
-	const JG_MANICHAEAN_HUNDRED = 66;
-	const JG_MANICHAEAN_KAPH = 67;
-	const JG_MANICHAEAN_LAMEDH = 68;
-	const JG_MANICHAEAN_MEM = 69;
-	const JG_MANICHAEAN_NUN = 70;
-	const JG_MANICHAEAN_ONE = 71;
-	const JG_MANICHAEAN_PE = 72;
-	const JG_MANICHAEAN_QOPH = 73;
-	const JG_MANICHAEAN_RESH = 74;
-	const JG_MANICHAEAN_SADHE = 75;
-	const JG_MANICHAEAN_SAMEKH = 76;
-	const JG_MANICHAEAN_TAW = 77;
-	const JG_MANICHAEAN_TEN = 78;
-	const JG_MANICHAEAN_TETH = 79;
-	const JG_MANICHAEAN_THAMEDH = 80;
-	const JG_MANICHAEAN_TWENTY = 81;
-	const JG_MANICHAEAN_WAW = 82;
-	const JG_MANICHAEAN_YODH = 83;
-	const JG_MANICHAEAN_ZAYIN = 84;
-	const JG_STRAIGHT_WAW = 85;
-	const JG_COUNT = 86;
+	const JG_COUNT = 58;
 	const GCB_OTHER = 0;
 	const GCB_CONTROL = 1;
 	const GCB_CR = 2;
@@ -4772,11 +4752,10 @@ function collator_set_strength (Collator $object, $arg1) {}
 function collator_sort (Collator $objectarray , &$arr, $sort_flags = null) {}
 
 /**
- * @param Collator $object
+ * @param Collator $coll
  * @param $arr
- * @param $sort_flags [optional]
  */
-function collator_sort_with_sort_keys (Collator $objectarray , &$arr, $sort_flags = null) {}
+function collator_sort_with_sort_keys (Collator $collarray , &$arr) {}
 
 /**
  * @param Collator $object
@@ -4804,9 +4783,8 @@ function collator_get_error_message (Collator $object) {}
 /**
  * @param Collator $object
  * @param $arg1
- * @param $arg2
  */
-function collator_get_sort_key (Collator $object, $arg1, $arg2) {}
+function collator_get_sort_key (Collator $object, $arg1) {}
 
 /**
  * @param $locale
@@ -4951,34 +4929,34 @@ function locale_get_region ($arg1) {}
 function locale_get_keywords ($arg1) {}
 
 /**
- * @param $arg1
- * @param $arg2
+ * @param $locale
+ * @param $in_locale [optional]
  */
-function locale_get_display_script ($arg1, $arg2) {}
+function locale_get_display_script ($locale, $in_locale = null) {}
 
 /**
- * @param $arg1
- * @param $arg2
+ * @param $locale
+ * @param $in_locale [optional]
  */
-function locale_get_display_region ($arg1, $arg2) {}
+function locale_get_display_region ($locale, $in_locale = null) {}
 
 /**
- * @param $arg1
- * @param $arg2
+ * @param $locale
+ * @param $in_locale [optional]
  */
-function locale_get_display_name ($arg1, $arg2) {}
+function locale_get_display_name ($locale, $in_locale = null) {}
 
 /**
- * @param $arg1
- * @param $arg2
+ * @param $locale
+ * @param $in_locale [optional]
  */
-function locale_get_display_language ($arg1, $arg2) {}
+function locale_get_display_language ($locale, $in_locale = null) {}
 
 /**
- * @param $arg1
- * @param $arg2
+ * @param $locale
+ * @param $in_locale [optional]
  */
-function locale_get_display_variant ($arg1, $arg2) {}
+function locale_get_display_variant ($locale, $in_locale = null) {}
 
 /**
  * @param $arg1
@@ -4996,11 +4974,11 @@ function locale_parse ($arg1) {}
 function locale_get_all_variants ($arg1) {}
 
 /**
- * @param $arg1
- * @param $arg2
- * @param $arg3
+ * @param $langtag
+ * @param $locale
+ * @param $canonicalize [optional]
  */
-function locale_filter_matches ($arg1, $arg2, $arg3) {}
+function locale_filter_matches ($langtag, $locale, $canonicalize = null) {}
 
 /**
  * @param $arg1
@@ -5008,12 +4986,12 @@ function locale_filter_matches ($arg1, $arg2, $arg3) {}
 function locale_canonicalize ($arg1) {}
 
 /**
- * @param $arg1
- * @param $arg2
- * @param $arg3
- * @param $arg4
+ * @param $langtag
+ * @param $locale
+ * @param $canonicalize [optional]
+ * @param $def [optional]
  */
-function locale_lookup ($arg1, $arg2, $arg3, $arg4) {}
+function locale_lookup ($langtag, $locale, $canonicalize = null, $def = null) {}
 
 /**
  * @param $arg1
@@ -5878,8 +5856,8 @@ function intl_error_name (int $error_code) {}
  * @link http://www.php.net/manual/en/intl.constants.php
  */
 define ('INTL_MAX_LOCALE_LEN', 80);
-define ('INTL_ICU_VERSION', 55.1);
-define ('INTL_ICU_DATA_VERSION', 55.1);
+define ('INTL_ICU_VERSION', 52.1);
+define ('INTL_ICU_DATA_VERSION', 52.1);
 define ('ULOC_ACTUAL_LOCALE', 0);
 define ('ULOC_VALID_LOCALE', 1);
 define ('GRAPHEME_EXTR_COUNT', 0);
@@ -6010,7 +5988,7 @@ define ('U_REGEX_INVALID_BACK_REF', 66314);
 define ('U_REGEX_INVALID_FLAG', 66315);
 define ('U_REGEX_LOOK_BEHIND_LIMIT', 66316);
 define ('U_REGEX_SET_CONTAINS_STRING', 66317);
-define ('U_REGEX_ERROR_LIMIT', 66326);
+define ('U_REGEX_ERROR_LIMIT', 66325);
 define ('U_IDNA_PROHIBITED_ERROR', 66560);
 define ('U_IDNA_ERROR_START', 66560);
 define ('U_IDNA_UNASSIGNED_ERROR', 66561);

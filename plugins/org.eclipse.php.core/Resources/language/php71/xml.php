@@ -80,7 +80,7 @@ function xml_set_object ($parser, &$object) {}
  * attribute, and so on.
  * </p>
  * </p>
- * &note.func-callback;
+ * note.func-callback
  * @param callable $end_element_handler <p>
  * The function named by end_element_handler
  * must accept two parameters:
@@ -142,7 +142,7 @@ function xml_set_element_handler ($parser, callable $start_element_handler, call
  * If a handler function is set to an empty string, or false, the handler
  * in question is disabled.
  * </p>
- * &note.func-callback;
+ * note.func-callback
  * @return bool true on success or false on failure
  */
 function xml_set_character_data_handler ($parser, callable $handler) {}
@@ -182,7 +182,7 @@ function xml_set_character_data_handler ($parser, callable $handler) {}
  * If a handler function is set to an empty string, or false, the handler
  * in question is disabled.
  * </p>
- * &note.func-callback;
+ * note.func-callback
  * @return bool true on success or false on failure
  */
 function xml_set_processing_instruction_handler ($parser, callable $handler) {}
@@ -219,7 +219,7 @@ function xml_set_processing_instruction_handler ($parser, callable $handler) {}
  * If a handler function is set to an empty string, or false, the handler
  * in question is disabled.
  * </p>
- * &note.func-callback;
+ * note.func-callback
  * @return bool true on success or false on failure
  */
 function xml_set_default_handler ($parser, callable $handler) {}
@@ -273,7 +273,7 @@ function xml_set_default_handler ($parser, callable $handler) {}
  * If a handler function is set to an empty string, or false, the handler
  * in question is disabled.
  * </p>
- * &note.func-callback;
+ * note.func-callback
  * @return bool true on success or false on failure
  */
 function xml_set_unparsed_entity_decl_handler ($parser, callable $handler) {}
@@ -322,7 +322,7 @@ function xml_set_unparsed_entity_decl_handler ($parser, callable $handler) {}
  * If a handler function is set to an empty string, or false, the handler
  * in question is disabled.
  * </p>
- * &note.func-callback;
+ * note.func-callback
  * @return bool true on success or false on failure
  */
 function xml_set_notation_decl_handler ($parser, callable $handler) {}
@@ -382,7 +382,7 @@ function xml_set_notation_decl_handler ($parser, callable $handler) {}
  * If a handler function is set to an empty string, or false, the handler
  * in question is disabled.
  * </p>
- * &note.func-callback;
+ * note.func-callback
  * @return bool true on success or false on failure
  */
 function xml_set_external_entity_ref_handler ($parser, callable $handler) {}
@@ -424,7 +424,7 @@ function xml_set_external_entity_ref_handler ($parser, callable $handler) {}
  * If a handler function is set to an empty string, or false, the handler
  * in question is disabled.
  * </p>
- * &note.func-callback;
+ * note.func-callback
  * @return bool true on success or false on failure
  */
 function xml_set_start_namespace_decl_handler ($parser, callable $handler) {}
@@ -462,7 +462,7 @@ function xml_set_start_namespace_decl_handler ($parser, callable $handler) {}
  * If a handler function is set to an empty string, or false, the handler
  * in question is disabled.
  * </p>
- * &note.func-callback;
+ * note.func-callback
  * @return bool true on success or false on failure
  */
 function xml_set_end_namespace_decl_handler ($parser, callable $handler) {}
