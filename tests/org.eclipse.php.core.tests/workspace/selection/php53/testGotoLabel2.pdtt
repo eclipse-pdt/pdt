@@ -1,0 +1,38 @@
+--TEST--
+Bug 346579 - [php5.3] add click for goto label
+--FILE--
+<?php
+
+function foo($b){
+  $a = null;
+  if($b){
+    goto |bar|;
+  }
+
+  //do something
+  $a = 'a';
+
+  bar:
+
+  //do something
+  $c = 'c';
+  return [$a, $c];
+}//fin fonction foo()
+
+
+//do something
+$b = true;
+
+bar2:
+list($a, $c) = foo($b);
+
+if($a === null){
+  $b = false;
+  goto bar2;
+}
+
+var_dump($a);
+
+?>
+--EXPECT--
+field(bar)

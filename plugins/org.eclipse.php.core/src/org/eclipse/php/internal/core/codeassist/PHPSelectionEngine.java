@@ -84,6 +84,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	private static final String FUNCTION = "function"; //$NON-NLS-1$
 	private static final String INSTEADOF = "insteadof"; //$NON-NLS-1$
 	private static final String AS = "as"; //$NON-NLS-1$
+	private static final String GOTO = "goto"; //$NON-NLS-1$
 	private static final IType[] EMPTY = {};
 	private PHPVersion phpVersion;
 
@@ -718,6 +719,11 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			IType containerType = PHPModelUtils.getCurrentType(sourceModule, offset);
 			if (containerType == null) {
 				containerType = PHPModelUtils.getCurrentNamespace(sourceModule, offset);
+			}
+
+			if (!phpVersion.isLessThan(PHPVersion.PHP5_3) && GOTO.equalsIgnoreCase(prevWord)
+					&& elementName.charAt(0) != '$') {
+				return PHPModelUtils.getGotoLabels(elementName, sourceModule, offset, null);
 			}
 
 			// If we are in function declaration:

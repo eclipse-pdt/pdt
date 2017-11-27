@@ -29,6 +29,7 @@ import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.Modifiers;
+import org.eclipse.dltk.ast.declarations.Declaration;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
@@ -43,6 +44,7 @@ import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceField;
 import org.eclipse.dltk.internal.core.SourceRefElement;
+import org.eclipse.dltk.ti.IContext;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.core.PHPVersion;
@@ -62,6 +64,8 @@ import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.typeinference.DeclarationSearcher.DeclarationType;
+import org.eclipse.php.internal.core.typeinference.context.MethodContext;
+import org.eclipse.php.internal.core.typeinference.context.TypeContext;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
@@ -918,6 +922,64 @@ public class PHPModelUtils {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * This method returns goto labels (as fake fields) corresponding to its
+	 * name.
+	 * 
+	 * @param gotoName
+	 *            The goto name
+	 * @param sourceModule
+	 *            The file where the element is referenced
+	 * @param offset
+	 *            The offset where the element is referenced
+	 * @param monitor
+	 *            Progress monitor
+	 * @return a list of relevant IModelElement elements
+	 */
+	public static IModelElement[] getGotoLabels(final String gotoName, final ISourceModule sourceModule,
+			final int offset, final IProgressMonitor monitor) {
+
+		final List<IField> elements = new LinkedList<>();
+
+		try {
+			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+			IContext context = ASTUtils.findContext(sourceModule, moduleDeclaration, offset);
+			if (moduleDeclaration != null && context != null) {
+				final ASTNode rootNode;
+				if (context instanceof MethodContext || context instanceof TypeContext) {
+					rootNode = ((MethodContext) context).getMethodNode();
+				} else {
+					rootNode = moduleDeclaration;
+				}
+				rootNode.traverse(new ASTVisitor() {
+					@Override
+					public boolean visitGeneral(ASTNode node) throws Exception {
+						if (node instanceof Declaration && node != rootNode) {
+							return false;
+						}
+						return super.visitGeneral(node);
+					}
+
+					@Override
+					public boolean visit(Statement s) throws Exception {
+						if (s instanceof GotoLabel) {
+							GotoLabel gotoLabel = (GotoLabel) s;
+							if (gotoLabel.getLabel().equals(gotoName)) {
+								elements.add(new FakeField((ModelElement) sourceModule, gotoName,
+										gotoLabel.sourceStart(), gotoLabel.sourceEnd() - gotoLabel.sourceStart()));
+							}
+						}
+						return super.visit(s);
+					}
+				});
+			}
+		} catch (Exception e) {
+			PHPCorePlugin.log(e);
+		}
+
+		return elements.toArray(new IModelElement[elements.size()]);
 	}
 
 	/**
