@@ -1,57 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <psf version="2.0">
- <provider id="org.eclipse.egit.core.GitProvider">
- <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.core"/>
- <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.core.parser"/>
- <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.debug.core"/>
- <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.debug.daemon"/>
- <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.debug.ui"/>
- <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.help"/>
- <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.mylyn.ui"/>
- <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.server.core"/>
- <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.server.ui"/>
- <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.ui"/>
- <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.formatter.core"/>
- <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.formatter.ui"/>
- <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.refactoring.core"/>
- <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.refactoring.ui"/>
- 
- <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,features/org.eclipse.php-feature"/>
- <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,features/org.eclipse.php.mylyn-feature"/>
- <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,features/org.eclipse.php.source-feature"/>
- <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,features/org.eclipse.php.test-feature"/>
- 
- <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,tests/org.eclipse.php.tests"/>
- <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,tests/org.eclipse.php.core.tests"/>
- <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,tests/org.eclipse.php.ui.tests"/>
- <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,tests/org.eclipse.php.formatter.core.tests"/>
- <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,tests/org.eclipse.php.refactoring.core.tests"/>
+<provider id="org.eclipse.egit.core.GitProvider">
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,features/org.eclipse.php-feature"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,dev/org.eclipse.php-repository"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.astview"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,incubation/builtin-php/org.eclipse.php.builtin.executables-feature"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,incubation/builtin-php/org.eclipse.php.builtin.executables-repository"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,incubation/builtin-php/org.eclipse.php.builtin.executables.linux.x86_64"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,incubation/builtin-php/org.eclipse.php.builtin.executables.macosx"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,incubation/builtin-php/org.eclipse.php.builtin.executables.windows"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.builtin.server.core"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.builtin.server.ui"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,features/org.eclipse.php.composer-feature"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.composer.api"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,tests/org.eclipse.php.composer.api.tests"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.composer.core"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,tests/org.eclipse.php.composer.tests"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.composer.ui"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.core"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.core.parser"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,tests/org.eclipse.php.core.performance.tests"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,tests/org.eclipse.php.core.tests"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.debug.core"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.debug.daemon"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.debug.ui"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,examples/org.eclipse.php.examples.xss"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.formatter.core"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,tests/org.eclipse.php.formatter.core.tests"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.formatter.ui"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.help"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,features/org.eclipse.php.mylyn-feature"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.mylyn.ui"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.phpunit"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,features/org.eclipse.php.phpunit-feature"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.profile.core"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.profile.ui"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,features/org.eclipse.php.profiler-feature"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.rdt.sync.ui"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.refactoring.core"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,tests/org.eclipse.php.refactoring.core.tests"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.refactoring.ui"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,features/org.eclipse.php.sdk-feature"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.server.core"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.server.ui"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,features/org.eclipse.php.source-feature"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,features/org.eclipse.php.test-feature"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,tests/org.eclipse.php.tests"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.ui"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.ui.importer"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,tests/org.eclipse.php.ui.tests"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,tests/org.eclipse.test.performance"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,tests/org.eclipse.test.performance.ui"/>
 </provider>
 <workingSets editPageId="org.eclipse.jdt.ui.JavaWorkingSetPage" label="pdt" name="pdt">
-<item elementID="=org.eclipse.php.core" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.eclipse.php.core.parser" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.eclipse.php.composer.api" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.eclipse.php.debug.core" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.eclipse.php.debug.daemon" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.eclipse.php.debug.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.eclipse.php.help" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.eclipse.php.mylyn.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.eclipse.php.server.core" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.eclipse.php.server.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.eclipse.php.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.eclipse.php.formatter.core" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.eclipse.php.formatter.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.eclipse.php.refactoring.core" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.eclipse.php.refactoring.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-
-<item elementID="=org.eclipse.php.tests" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.eclipse.php.server.core" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.eclipse.php.composer.api.tests" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.eclipse.php.sdk-feature" type="4"/>
+<item elementID="=org.eclipse.php.core.parser" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.eclipse.php.profile.core" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.eclipse.php.core.tests" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.eclipse.php.ui.tests" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.eclipse.php.formatter.core.tests" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.eclipse.php.refactoring.core.tests" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-
-<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.eclipse.php-feature" type="4"/>
-<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.eclipse.php.mylyn-feature" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.eclipse.php.composer-feature" type="4"/>
+<item elementID="=org.eclipse.php.refactoring.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.eclipse.php.profiler-feature" type="4"/>
 <item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.eclipse.php.source-feature" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.eclipse.php.mylyn-feature" type="4"/>
+<item elementID="=org.eclipse.php.composer.tests" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.eclipse.php-feature" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.eclipse.php.help" type="4"/>
+<item elementID="=org.eclipse.php.profile.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.eclipse.php.composer.core" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.eclipse.test.performance" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.eclipse.php.phpunit" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.eclipse.php.server.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.eclipse.php.ui.importer" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.eclipse.php.ui.tests" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.eclipse.php.builtin.executables-feature" type="4"/>
+<item elementID="=org.eclipse.php.builtin.server.core" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.eclipse.php.core.performance.tests" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.eclipse.php.builtin.executables.macosx" type="4"/>
+<item elementID="=org.eclipse.php.refactoring.core.test" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.eclipse.php.builtin.executables-repository" type="4"/>
+<item elementID="=org.eclipse.php.debug.daemon" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.eclipse.php.builtin.server.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.eclipse.php.rdt.sync.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.eclipse.php.examples.xss" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.eclipse.php.test-feature" type="4"/>
+<item elementID="=org.eclipse.php.mylyn.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.eclipse.php.builtin.executables.windows" type="4"/>
+<item elementID="=org.eclipse.php.composer.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.eclipse.php.builtin.executables.linux" type="4"/>
+<item elementID="=org.eclipse.php.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.eclipse.php-repository" type="4"/>
+<item elementID="=org.eclipse.php.core" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.eclipse.php.formatter.core" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.eclipse.php.refactoring.core" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.eclipse.php.astview" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.eclipse.php.debug.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.eclipse.php.formatter.core.tests" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.eclipse.php.tests" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.eclipse.php.phpunit-feature" type="4"/>
+<item elementID="=org.eclipse.test.performance.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 </workingSets>
 </psf>
