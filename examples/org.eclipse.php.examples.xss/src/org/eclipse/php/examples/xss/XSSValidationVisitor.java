@@ -16,9 +16,9 @@ import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.eclipse.dltk.core.builder.IBuildContext;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayVariableReference;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
-import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
+import org.eclipse.php.core.compiler.ast.nodes.ArrayVariableReference;
+import org.eclipse.php.core.compiler.ast.nodes.PHPCallExpression;
+import org.eclipse.php.core.compiler.ast.visitor.PHPASTVisitor;
 
 /**
  * This validator searches for unsafe places that can be used for XSS, and
