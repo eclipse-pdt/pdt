@@ -88,7 +88,14 @@ public class LanguageModelContainer implements IBuildpathContainer {
 			map.put("$nl$", Platform.getNL()); //$NON-NLS-1$
 			URL url = FileLocator.find(provider.getPlugin().getBundle(), provider.getPath(project), map);
 			File sourceFile = new File(FileLocator.toFileURL(url).getPath());
-			LocalFile sourceDir = new LocalFile(sourceFile);
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=515150
+			// XXX: workaround for the update bug of the php language buildpath:
+			// it seems that some OSes need canonical pathes here, otherwise
+			// sourceDir.fetchInfo().getLastModified() will always return
+			// EFS.NONE and sourceDir.fetchInfo().isDirectory() will always
+			// return false.
+			// LocalFile sourceDir = new LocalFile(sourceFile);
+			LocalFile sourceDir = new LocalFile(sourceFile.getCanonicalFile());
 
 			IPath targetPath = LanguageModelInitializer.getTargetLocation(provider,
 					Path.fromOSString(sourceFile.getAbsolutePath()), project);
