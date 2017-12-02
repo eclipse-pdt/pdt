@@ -127,16 +127,21 @@ function make_funckey_from_str ($name) {
 }
 
 /**
- * Replaces all invalid characters with '_' in PHP identifier
+ * Replaces all invalid characters with '_' in PHP identifier.
+ * Can also remove dollar signs when asked to do so.
  * @param $name string PHP identifier
  * @param $isInPhpdoc boolean true when it's a phpdoc identifier, false otherwise
+ * @param $removeDollars boolean true when dollar signs should be removed, false otherwise
  * @return string PHP identifier with stripped invalid characters
  */
-function clean_php_identifier ($name, $isInPhpdoc = false) {
+function clean_php_identifier ($name, $isInPhpdoc = false, $removeDollars = false) {
 	if ($isInPhpdoc) {
 		$name = preg_replace('/[^\$\w\\_\|\[\]]+/', '_', $name);
 	} else {
 		$name = preg_replace('/[^\$\w\\_]+/', '_', $name);
+	}
+	if ($removeDollars) {
+	    $name = str_replace('$', '', $name);
 	}
 	return $name;
 }
@@ -292,7 +297,7 @@ function parse_phpdoc_functions ($phpdocDir) {
 						for ($i = 0; $i < count($match[0]); ++$i) {
 							$parameter = array (
 								'type' => trim($match[2][$i]),
-								'name' => clean_php_identifier(trim($match[4][$i])),
+								'name' => clean_php_identifier(trim($match[4][$i]), false, true),
 							);
 							if (preg_match ('@choice=[\'"]opt[\'"]@', $match[1][$i])) {
 								$parameter['isoptional'] = true;

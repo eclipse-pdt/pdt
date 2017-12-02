@@ -133,12 +133,12 @@ class Memcached  {
 	 * @link http://www.php.net/manual/en/memcached.get.php
 	 * @param string $key The key of the item to retrieve.
 	 * @param callable $cache_cb [optional] Read-through caching callback or null.
-	 * @param int $$flags [optional] 
+	 * @param int $flags [optional] 
 	 * @return mixed the value stored in the cache or false otherwise.
 	 * The Memcached::getResultCode will return
 	 * Memcached::RES_NOTFOUND if the key does not exist.
 	 */
-	public function get (string $key, callable $cache_cb = null, int $$flags = null) {}
+	public function get (string $key, callable $cache_cb = null, int $flags = null) {}
 
 	/**
 	 * Retrieve an item from a specific server
