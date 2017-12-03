@@ -53,6 +53,7 @@ public class XDebugConfigurationDialog extends AbstractDebuggerConfigurationDial
 	private Spinner maxData;
 	private Button useMultiSession;
 	private Combo acceptRemoteSession;
+	private Button useExtendedProperties;
 
 	// output capture options
 	private Combo captureStdout;
@@ -163,6 +164,9 @@ public class XDebugConfigurationDialog extends AbstractDebuggerConfigurationDial
 				XDebugPreferenceMgr.XDEBUG_PREF_MULTISESSION, 0);
 		showGlobals = addCheckBox(generalSettingsGroup, PHPDebugCoreMessages.XDebugConfigurationDialog_showSuperGlobals,
 				XDebugPreferenceMgr.XDEBUG_PREF_SHOWSUPERGLOBALS, 0);
+		useExtendedProperties = addCheckBox(generalSettingsGroup,
+				PHPDebugCoreMessages.XDebugConfigurationDialog_useExtendedProperties,
+				XDebugPreferenceMgr.XDEBUG_PREF_USE_EXTENDED_PROPERTIES, 0);
 		addLabelControl(generalSettingsGroup, PHPDebugCoreMessages.XDebugConfigurationDialog_maxArrayDepth,
 				XDebugPreferenceMgr.XDEBUG_PREF_ARRAYDEPTH);
 		variableDepth = addVariableLevel(generalSettingsGroup, XDebugPreferenceMgr.XDEBUG_PREF_ARRAYDEPTH, 1, 150, 2);
@@ -270,6 +274,7 @@ public class XDebugConfigurationDialog extends AbstractDebuggerConfigurationDial
 		// general
 		prefs.put(XDebugPreferenceMgr.XDEBUG_PREF_PORT, portTextBox.getText());
 		prefs.putBoolean(XDebugPreferenceMgr.XDEBUG_PREF_SHOWSUPERGLOBALS, showGlobals.getSelection());
+		prefs.putBoolean(XDebugPreferenceMgr.XDEBUG_PREF_USE_EXTENDED_PROPERTIES, useExtendedProperties.getSelection());
 		prefs.putInt(XDebugPreferenceMgr.XDEBUG_PREF_ARRAYDEPTH, variableDepth.getSelection());
 		prefs.putInt(XDebugPreferenceMgr.XDEBUG_PREF_CHILDREN, maxChildren.getSelection());
 		prefs.putInt(XDebugPreferenceMgr.XDEBUG_PREF_DATA, maxData.getSelection());
@@ -303,6 +308,8 @@ public class XDebugConfigurationDialog extends AbstractDebuggerConfigurationDial
 				service.getBoolean(PHPDebugPlugin.ID, XDebugPreferenceMgr.XDEBUG_PREF_SHOWSUPERGLOBALS, false, null));
 		useMultiSession.setSelection(
 				service.getBoolean(PHPDebugPlugin.ID, XDebugPreferenceMgr.XDEBUG_PREF_MULTISESSION, false, null));
+		useExtendedProperties.setSelection(service.getBoolean(PHPDebugPlugin.ID,
+				XDebugPreferenceMgr.XDEBUG_PREF_USE_EXTENDED_PROPERTIES, false, null));
 		variableDepth
 				.setSelection(service.getInt(PHPDebugPlugin.ID, XDebugPreferenceMgr.XDEBUG_PREF_ARRAYDEPTH, 0, null));
 		maxChildren.setSelection(service.getInt(PHPDebugPlugin.ID, XDebugPreferenceMgr.XDEBUG_PREF_CHILDREN, 0, null));

@@ -22,6 +22,7 @@ public class XDebugPreferenceMgr {
 	// general
 	public static final String XDEBUG_PREF_PORT = PHPDebugPlugin.ID + ".xdebug_port"; //$NON-NLS-1$
 	public static final String XDEBUG_PREF_SHOWSUPERGLOBALS = PHPDebugPlugin.ID + ".xdebug_showSuperGlobals"; //$NON-NLS-1$
+	public static final String XDEBUG_PREF_USE_EXTENDED_PROPERTIES = PHPDebugPlugin.ID + ".xdebug_useExtendedProperties"; //$NON-NLS-1$
 	public static final String XDEBUG_PREF_ARRAYDEPTH = PHPDebugPlugin.ID + ".xdebug_arrayDepth"; //$NON-NLS-1$
 	public static final String XDEBUG_PREF_CHILDREN = PHPDebugPlugin.ID + ".xdebug_children"; //$NON-NLS-1$
 	public static final String XDEBUG_PREF_DATA = PHPDebugPlugin.ID + ".xdebug_data"; //$NON-NLS-1$
@@ -61,6 +62,7 @@ public class XDebugPreferenceMgr {
 		IEclipsePreferences prefs = PHPDebugPlugin.getDefaultPreferences();
 		prefs.putInt(XDebugPreferenceMgr.XDEBUG_PREF_PORT, getPortDefault());
 		prefs.putBoolean(XDebugPreferenceMgr.XDEBUG_PREF_SHOWSUPERGLOBALS, showSuperGlobalsDefault());
+		prefs.putBoolean(XDebugPreferenceMgr.XDEBUG_PREF_USE_EXTENDED_PROPERTIES, useExtendedPropertiesDefault());
 		prefs.putInt(XDebugPreferenceMgr.XDEBUG_PREF_ARRAYDEPTH, getDepthDefault());
 		prefs.putBoolean(XDebugPreferenceMgr.XDEBUG_PREF_MULTISESSION, useMultiSessionDefault());
 		prefs.putInt(XDebugPreferenceMgr.XDEBUG_PREF_CHILDREN, getChildrenDefault());
@@ -77,6 +79,8 @@ public class XDebugPreferenceMgr {
 		prefs.putInt(XDebugPreferenceMgr.XDEBUG_PREF_PORT, defaults.getInt(XDebugPreferenceMgr.XDEBUG_PREF_PORT, 0));
 		prefs.putBoolean(XDebugPreferenceMgr.XDEBUG_PREF_SHOWSUPERGLOBALS,
 				defaults.getBoolean(XDebugPreferenceMgr.XDEBUG_PREF_SHOWSUPERGLOBALS, false));
+		prefs.putBoolean(XDebugPreferenceMgr.XDEBUG_PREF_USE_EXTENDED_PROPERTIES,
+				defaults.getBoolean(XDebugPreferenceMgr.XDEBUG_PREF_USE_EXTENDED_PROPERTIES, false));
 		prefs.putInt(XDebugPreferenceMgr.XDEBUG_PREF_ARRAYDEPTH,
 				defaults.getInt(XDebugPreferenceMgr.XDEBUG_PREF_ARRAYDEPTH, 0));
 		prefs.putInt(XDebugPreferenceMgr.XDEBUG_PREF_CHILDREN,
@@ -117,6 +121,9 @@ public class XDebugPreferenceMgr {
 			maxDepth = XDebugPreferenceMgr.getDepthDefault();
 		}
 		sessionPrefs.setValue(DBGpPreferences.DBGP_MAX_DEPTH_PROPERTY, maxDepth);
+
+		boolean useExtendedProperties = getBoolean(XDebugPreferenceMgr.XDEBUG_PREF_USE_EXTENDED_PROPERTIES);
+		sessionPrefs.setValue(DBGpPreferences.DBGP_USE_EXTENDED_PROPERTIES_PROPERTY, useExtendedProperties ? 1 : 0);
 
 		int maxChildren = getInt(XDebugPreferenceMgr.XDEBUG_PREF_CHILDREN);
 		sessionPrefs.setValue(DBGpPreferences.DBGP_MAX_CHILDREN_PROPERTY, maxChildren);
@@ -200,6 +207,10 @@ public class XDebugPreferenceMgr {
 
 	private static boolean showSuperGlobalsDefault() {
 		return DBGpPreferences.DBGP_SHOW_GLOBALS_DEFAULT;
+	}
+
+	private static boolean useExtendedPropertiesDefault() {
+		return DBGpPreferences.DBGP_USE_EXTENDED_PROPERTIES_DEFAULT != 0;
 	}
 
 	private static int getCaptureDefault() {
