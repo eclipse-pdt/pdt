@@ -107,6 +107,7 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String XDebugConfigurationDialog_proxyGroup;
 	public static String XDebugConfigurationDialog_invalidTimeout;
 	public static String XDebugConfigurationDialog_invalidTimeoutValue;
+	public static String XDebugConfigurationDialog_useExtendedProperties;
 	public static String XDebugConfigurationDialog_maxArrayDepth;
 	public static String XDebugConfigurationDialog_maxChildren;
 	public static String XDebugConfigurationDialog_showSuperGlobals;

@@ -60,7 +60,9 @@ public class DBGpObjectValue extends AbstractDBGpContainerValue {
 	 */
 	@Override
 	protected String createValueString(DBGpValueData valueData) {
-		return DBGpResponse.getAttribute(fDescriptor, "classname"); //$NON-NLS-1$
+		DBGpTarget target = (DBGpTarget) getDebugTarget();
+		return DBGpResponse.getAttribute(fDescriptor, "classname", //$NON-NLS-1$
+				target.getUseExtendedProperties() != 0 ? target.getBinaryEncoding() : null);
 	}
 
 	/*
