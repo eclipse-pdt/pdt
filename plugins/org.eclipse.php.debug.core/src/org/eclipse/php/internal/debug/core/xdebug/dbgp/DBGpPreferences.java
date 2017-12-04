@@ -20,6 +20,7 @@ public class DBGpPreferences {
 	public static final int DBGP_TIMEOUT_DEFAULT = 500;
 
 	// define DBGp session defaults
+	public static final int DBGP_USE_EXTENDED_PROPERTIES_DEFAULT = 1;
 	public static final int DBGP_MAX_DEPTH_DEFAULT = 3;
 	public static final int DBGP_MAX_CHILDREN_DEFAULT = 51;
 	public static final boolean DBGP_SHOW_GLOBALS_DEFAULT = true;
@@ -28,6 +29,7 @@ public class DBGpPreferences {
 	public static final boolean WARN_NO_LOCALHOST_SESSION = true;
 
 	// define the session property keys
+	public static final String DBGP_USE_EXTENDED_PROPERTIES_PROPERTY = "UseExtendedProperties"; //$NON-NLS-1$
 	public static final String DBGP_MAX_DEPTH_PROPERTY = "MaxDepth"; //$NON-NLS-1$
 	public static final String DBGP_SHOW_GLOBALS_PROPERTY = "ShowGlobals"; //$NON-NLS-1$
 	public static final String DBGP_MAX_CHILDREN_PROPERTY = "MaxChildren"; //$NON-NLS-1$
