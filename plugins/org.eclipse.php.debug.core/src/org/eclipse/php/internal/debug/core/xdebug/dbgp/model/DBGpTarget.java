@@ -1219,6 +1219,8 @@ public class DBGpTarget extends DBGpElement
 		resp = session.sendSyncCmd(DBGpCommand.featureSet, "-n show_hidden -v 1"); //$NON-NLS-1$
 		// check the responses, but keep going.
 		DBGpUtils.isGoodDBGpResponse(this, resp);
+		resp = session.sendSyncCmd(DBGpCommand.featureSet, "-n extended_properties -v " + getUseExtendedProperties()); //$NON-NLS-1$
+		DBGpUtils.isGoodDBGpResponse(this, resp);
 		resp = session.sendSyncCmd(DBGpCommand.featureSet, "-n max_depth -v " + getMaxDepth()); //$NON-NLS-1$
 		DBGpUtils.isGoodDBGpResponse(this, resp);
 		resp = session.sendSyncCmd(DBGpCommand.featureSet, "-n max_children -v " + getMaxChildren()); //$NON-NLS-1$
@@ -2308,6 +2310,14 @@ public class DBGpTarget extends DBGpElement
 			return DBGpSession.DEFAULT_BINARY_ENCODING;
 		}
 
+	}
+
+	public int getUseExtendedProperties() {
+		if (sessionPreferences != null) {
+			return sessionPreferences.getInt(DBGpPreferences.DBGP_USE_EXTENDED_PROPERTIES_PROPERTY,
+					DBGpPreferences.DBGP_USE_EXTENDED_PROPERTIES_DEFAULT);
+		}
+		return DBGpPreferences.DBGP_USE_EXTENDED_PROPERTIES_DEFAULT;
 	}
 
 	private int getMaxDepth() {

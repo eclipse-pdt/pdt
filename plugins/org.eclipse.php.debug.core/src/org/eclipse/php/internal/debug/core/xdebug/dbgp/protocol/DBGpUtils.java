@@ -11,20 +11,63 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 
 public class DBGpUtils {
 
+	private static final String ENCODING_BASE64 = "base64"; //$NON-NLS-1$
 	private static Map<String, String> encoded;
 
 	static {
 		encoded = Collections.synchronizedMap(new HashMap<String, String>());
+	}
+
+	/**
+	 * Retrieves node's content, using encodingCharset to decode text content
+	 * when node's "encoding" attribute is set to ENCODING_BASE64.
+	 * 
+	 * @param node
+	 * @param encodingCharset
+	 * @return
+	 */
+	public static String getEncodedStringValue(@NonNull Node node, @NonNull String encodingCharset) {
+		String valueString = ""; //$NON-NLS-1$
+		Node child = node.getFirstChild();
+		if (child != null) {
+			String valueData = child.getNodeValue();
+			valueString = valueData;
+			if (node.hasAttributes()) {
+				NamedNodeMap attrs = node.getAttributes();
+				Node attribute = attrs.getNamedItem("encoding"); //$NON-NLS-1$
+				String nodeEncoding = null;
+				if (attribute != null) {
+					nodeEncoding = attribute.getNodeValue();
+				}
+				if (nodeEncoding != null && nodeEncoding.equalsIgnoreCase(ENCODING_BASE64)) {
+					if (valueData != null && valueData.trim().length() != 0) {
+						byte[] valueBytes = Base64.decode(valueData.trim());
+						try {
+							valueString = new String(valueBytes, encodingCharset);
+						} catch (UnsupportedEncodingException e) {
+							DBGpLogger.logException("Unexpected encoding problem", //$NON-NLS-1$
+									node, e);
+							valueString = new String(valueBytes);
+						}
+					}
+				}
+			}
+		}
+		return valueString;
 	}
 
 	/**

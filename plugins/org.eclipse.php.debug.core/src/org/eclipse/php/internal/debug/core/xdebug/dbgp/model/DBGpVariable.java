@@ -231,12 +231,15 @@ public abstract class DBGpVariable extends DBGpElement implements IVariable, IVa
 	}
 
 	protected void update(Node descriptor) {
+		DBGpTarget target = (DBGpTarget) getDebugTarget();
 		// Set up descriptor
 		fDescriptor = descriptor;
 		// Set name
-		fName = DBGpResponse.getAttribute(fDescriptor, "name"); //$NON-NLS-1$
+		fName = DBGpResponse.getAttribute(fDescriptor, "name", //$NON-NLS-1$
+				target.getUseExtendedProperties() != 0 ? target.getBinaryEncoding() : null);
 		// Set full name (elements chain)
-		fFullName = DBGpResponse.getAttribute(fDescriptor, "fullname"); //$NON-NLS-1$
+		fFullName = DBGpResponse.getAttribute(fDescriptor, "fullname", //$NON-NLS-1$
+				target.getUseExtendedProperties() != 0 ? target.getBinaryEncoding() : null);
 		// Set address
 		fAddress = DBGpResponse.getAttribute(fDescriptor, "address"); //$NON-NLS-1$
 		// Set facets

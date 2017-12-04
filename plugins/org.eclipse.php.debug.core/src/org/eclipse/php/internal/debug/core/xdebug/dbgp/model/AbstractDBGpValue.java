@@ -10,16 +10,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 
-import java.io.UnsupportedEncodingException;
-
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.php.internal.debug.core.model.IPHPDataType;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.Base64;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpUtils;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Abstract base class for DBGp values.
@@ -33,8 +31,6 @@ public abstract class AbstractDBGpValue extends DBGpElement implements IValue, I
 	 */
 	protected class DBGpValueData {
 
-		private static final String ENCODING_BASE64 = "base64"; //$NON-NLS-1$
-
 		private byte[] fValueBytes = null;
 		private String fValueString;
 
@@ -43,25 +39,18 @@ public abstract class AbstractDBGpValue extends DBGpElement implements IValue, I
 		}
 
 		private void decode(Node property) {
-			String encoding = DBGpResponse.getAttribute(property, "encoding"); //$NON-NLS-1$
-			Node Child = property.getFirstChild();
-			if (Child != null) {
-				String valueData = Child.getNodeValue();
-				fValueString = valueData;
-				if (encoding != null && encoding.equalsIgnoreCase(ENCODING_BASE64)) {
-					if (valueData != null && valueData.trim().length() != 0) {
-						DBGpTarget target = (DBGpTarget) getDebugTarget();
-						fValueBytes = Base64.decode(valueData.trim());
-						try {
-							fValueString = new String(fValueBytes, target.getBinaryEncoding());
-						} catch (UnsupportedEncodingException e) {
-							DBGpLogger.logException("Unexpected encoding problem", //$NON-NLS-1$
-									this, e);
-							fValueString = new String(fValueBytes);
-						}
+			if (property.hasChildNodes()) {
+				NodeList childProperties = property.getChildNodes();
+				int nbChildrens = childProperties.getLength();
+				for (int i = 0; i < nbChildrens; i++) {
+					Node childProperty = childProperties.item(i);
+					if (childProperty.getNodeName().equals("value")) { //$NON-NLS-1$
+						property = childProperty;
 					}
 				}
 			}
+			DBGpTarget target = (DBGpTarget) getDebugTarget();
+			fValueString = DBGpUtils.getEncodedStringValue(property, target.getBinaryEncoding());
 		}
 
 		public byte[] getValueBytes() {

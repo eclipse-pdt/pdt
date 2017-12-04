@@ -18,6 +18,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.eclipse.dltk.annotations.NonNull;
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -319,13 +321,27 @@ public class DBGpResponse {
 		return getAttribute(parent, attrName);
 	}
 
-	public static String getAttribute(Node node, String attrName) {
+	public static String getAttribute(@NonNull Node node, @NonNull String attrName) {
+		return getAttribute(node, attrName, null);
+	}
+
+	public static String getAttribute(@NonNull Node node, @NonNull String attrName, @Nullable String encodingCharset) {
 		String attrValue = ""; //$NON-NLS-1$
 		if (node != null && node.hasAttributes()) {
 			NamedNodeMap attrs = node.getAttributes();
 			Node attribute = attrs.getNamedItem(attrName);
-			if (attribute != null)
+			if (attribute != null) {
 				attrValue = attribute.getNodeValue();
+			} else if (encodingCharset != null && node.hasChildNodes()) {
+				NodeList childProperties = node.getChildNodes();
+				int nbChildrens = childProperties.getLength();
+				for (int i = 0; i < nbChildrens; i++) {
+					Node childProperty = childProperties.item(i);
+					if (childProperty.getNodeName().equals(attrName)) {
+						attrValue = DBGpUtils.getEncodedStringValue(childProperty, encodingCharset);
+					}
+				}
+			}
 		}
 		return attrValue;
 	}
