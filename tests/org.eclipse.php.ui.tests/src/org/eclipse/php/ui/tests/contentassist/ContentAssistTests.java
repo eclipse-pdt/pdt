@@ -86,6 +86,10 @@ public class ContentAssistTests {
 				"/workspace/codeassist/php56", "/workspace/codeassist/php7" });
 		TESTS.put(PHPVersion.PHP7_1, new String[] { "/workspace/codeassist/php5", "/workspace/codeassist/php53",
 				"/workspace/codeassist/php56", "/workspace/codeassist/php7", "/workspace/codeassist/php71" });
+		TESTS.put(PHPVersion.PHP7_2,
+				new String[] { "/workspace/codeassist/php5", "/workspace/codeassist/php53",
+						"/workspace/codeassist/php56", "/workspace/codeassist/php7", "/workspace/codeassist/php71",
+						"/workspace/codeassist/php72" });
 	};
 
 	@Context

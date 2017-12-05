@@ -27,6 +27,7 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.SourceRange;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.TestUtils;
@@ -36,7 +37,6 @@ import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.junit.After;
 import org.junit.ClassRule;
@@ -70,6 +70,10 @@ public class SelectionEngineTests {
 				new String[] { "/workspace/selection/php5", "/workspace/selection/php53", "/workspace/selection/php54",
 						"/workspace/selection/php55", "/workspace/selection/php56", "/workspace/selection/php7",
 						"/workspace/selection/php71" });
+		TESTS.put(PHPVersion.PHP7_2,
+				new String[] { "/workspace/selection/php5", "/workspace/selection/php53", "/workspace/selection/php54",
+						"/workspace/selection/php55", "/workspace/selection/php56", "/workspace/selection/php7",
+						"/workspace/selection/php71", "/workspace/selection/php72" });
 	};
 
 	protected IProject project;

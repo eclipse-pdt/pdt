@@ -3087,5 +3087,14 @@
              <feature name="class constant visibility"></feature>
              <feature name="nullable types"></feature>
        </phpVersion>              
+       <phpVersion
+             name="7.2"
+             version="php7.2">
+             <feature name="object type hint"></feature>
+             <feature name="object return type"></feature>
+             <feature name="parameter type widening"></feature>
+             <feature name="group use statements trailing comma"></feature>
+             <feature name="trailing comma in function and method calls"></feature>
+       </phpVersion>
    </extension>
 </plugin>

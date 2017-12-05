@@ -65,7 +65,10 @@ class DefaultLanguageModelProvider implements ILanguageModelProvider {
 		if (phpVersion == PHPVersion.PHP7_0) {
 			return LANGUAGE_LIBRARY_PATH + "7"; //$NON-NLS-1$
 		}
-		return LANGUAGE_LIBRARY_PATH + "71"; //$NON-NLS-1$
+		if (phpVersion == PHPVersion.PHP7_1) {
+			return LANGUAGE_LIBRARY_PATH + "71"; //$NON-NLS-1$
+		}
+		return LANGUAGE_LIBRARY_PATH + "72"; //$NON-NLS-1$
 	}
 
 	@Override

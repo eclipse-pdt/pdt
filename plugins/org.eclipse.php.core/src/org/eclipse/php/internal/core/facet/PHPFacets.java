@@ -17,8 +17,8 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
-import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject;
 import org.eclipse.wst.common.project.facet.core.IProjectFacet;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
@@ -112,6 +112,9 @@ public class PHPFacets {
 				if (PHPFacetsConstants.PHP_COMPONENT_VERSION_7_1.equals(version.getVersionString())) {
 					return PHPVersion.PHP7_1;
 				}
+				if (PHPFacetsConstants.PHP_COMPONENT_VERSION_7_2.equals(version.getVersionString())) {
+					return PHPVersion.PHP7_2;
+				}
 			}
 		} catch (CoreException ex) {
 			// silently ignore
@@ -143,8 +146,10 @@ public class PHPFacets {
 		case PHP7_0:
 			return phpFacet.getVersion(PHPFacetsConstants.PHP_COMPONENT_VERSION_7);
 		case PHP7_1:
-		default:
 			return phpFacet.getVersion(PHPFacetsConstants.PHP_COMPONENT_VERSION_7_1);
+		case PHP7_2:
+		default:
+			return phpFacet.getVersion(PHPFacetsConstants.PHP_COMPONENT_VERSION_7_2);
 		}
 	}
 

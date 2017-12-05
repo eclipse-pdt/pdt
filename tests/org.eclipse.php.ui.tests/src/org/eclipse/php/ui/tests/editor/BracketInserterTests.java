@@ -69,6 +69,7 @@ public class BracketInserterTests {
 
 	static {
 		TESTS.put(PHPVersion.PHP7_1, new String[] { "/workspace/bracket-inserter" });
+		TESTS.put(PHPVersion.PHP7_2, new String[] { "/workspace/bracket-inserter" });
 	};
 
 	@Context
