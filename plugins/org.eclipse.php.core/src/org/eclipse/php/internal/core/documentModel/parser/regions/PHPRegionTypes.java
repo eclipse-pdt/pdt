@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.documentModel.parser.regions;
 
-@SuppressWarnings("all") 
+@SuppressWarnings("all")
 public interface PHPRegionTypes {
 
 	static final String PHP_KEYWORD = "PHP_KEYWORD"; //$NON-NLS-1$
@@ -50,6 +50,8 @@ public interface PHPRegionTypes {
 	static final String PHP_BOOL = "PHP_BOOL"; //$NON-NLS-1$
 
 	static final String PHP_VOID = "PHP_VOID"; //$NON-NLS-1$
+
+	static final String PHP_OBJECT = "PHP_OBJECT"; //$NON-NLS-1$
 
 	// static final String PHP_TILDA = "PHP_TILDA";
 

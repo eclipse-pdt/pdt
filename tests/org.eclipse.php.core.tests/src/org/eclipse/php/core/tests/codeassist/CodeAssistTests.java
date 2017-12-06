@@ -31,6 +31,7 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.TestUtils;
@@ -40,7 +41,6 @@ import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
 import org.eclipse.php.core.tests.runner.PDTTList.BeforeList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
 import org.eclipse.php.internal.core.documentModel.loader.PHPDocumentLoader;
@@ -128,6 +128,10 @@ public class CodeAssistTests {
 				new String[] { "/workspace/codeassist/php5", "/workspace/codeassist/php53",
 						"/workspace/codeassist/php54", "/workspace/codeassist/php55", "/workspace/codeassist/php56",
 						"/workspace/codeassist/php7", "/workspace/codeassist/php71" });
+		TESTS.put(PHPVersion.PHP7_2,
+				new String[] { "/workspace/codeassist/php5", "/workspace/codeassist/php53",
+						"/workspace/codeassist/php54", "/workspace/codeassist/php55", "/workspace/codeassist/php56",
+						"/workspace/codeassist/php7", "/workspace/codeassist/php71", "/workspace/codeassist/php72" });
 	};
 
 	private IProject project;
