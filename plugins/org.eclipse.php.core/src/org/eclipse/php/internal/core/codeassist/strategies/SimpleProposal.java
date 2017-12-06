@@ -28,7 +28,9 @@ class SimpleProposal {
 			new SimpleProposal("parent", PHPVersion.PHP5_3), //$NON-NLS-1$
 			new SimpleProposal("Closure"), //$NON-NLS-1$
 
-			new SimpleProposal("iterable", PHPVersion.PHP7_1) //$NON-NLS-1$
+			new SimpleProposal("iterable", PHPVersion.PHP7_1), //$NON-NLS-1$
+
+			new SimpleProposal("object", PHPVersion.PHP7_2) //$NON-NLS-1$
 	};
 
 	public String proposal;

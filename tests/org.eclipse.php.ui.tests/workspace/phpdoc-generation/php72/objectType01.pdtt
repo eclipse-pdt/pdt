@@ -1,0 +1,17 @@
+--TEST--
+Test object pseudo type
+--FILE--
+<?php
+/**|
+function fill(array $data, object $object): object
+{}
+--EXPECT--
+<?php
+/**
+ * 
+ * @param array $data
+ * @param object $object
+ * @return object
+ */
+function fill(array $data, object $object): object
+{}

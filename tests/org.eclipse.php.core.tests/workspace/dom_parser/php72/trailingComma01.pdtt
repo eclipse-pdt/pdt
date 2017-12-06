@@ -1,0 +1,201 @@
+--TEST--
+Test trailing commas
+--FILE--
+<?php
+// Grouped statements
+use Foo\Bar\{ Foo, Bar, Baz, };
+// Mixed grouped statements
+use Foo\Bar\{ function Foo, const Bar, Baz, };
+
+// Arrays (already possible)
+$array = [1, 2, 3,];
+
+// Function/method arguments (call)
+fooCall($arg1, $arg2, $arg3,);
+$obj->methodCall($arg1, $arg2, $arg3,);
+
+unset($a, $b, $c, );
+isset($a, $b, $c, );
+--EXPECT--
+<Program start='0' length='336'>
+	<Statements>
+		<UseStatement start='28' length='31'>
+			<NamespaceName start='32' length='8' global='false' current='false'>
+				<Identifier start='32' length='3' name='Foo'/>
+				<Identifier start='36' length='3' name='Bar'/>
+			</NamespaceName>
+			<UseStatementPart start='42' length='3'>
+				<Name>
+					<NamespaceName start='42' length='3' global='false' current='false'>
+						<Identifier start='42' length='3' name='Foo'/>
+					</NamespaceName>
+				</Name>
+			</UseStatementPart>
+			<UseStatementPart start='47' length='3'>
+				<Name>
+					<NamespaceName start='47' length='3' global='false' current='false'>
+						<Identifier start='47' length='3' name='Bar'/>
+					</NamespaceName>
+				</Name>
+			</UseStatementPart>
+			<UseStatementPart start='52' length='3'>
+				<Name>
+					<NamespaceName start='52' length='3' global='false' current='false'>
+						<Identifier start='52' length='3' name='Baz'/>
+					</NamespaceName>
+				</Name>
+			</UseStatementPart>
+		</UseStatement>
+		<UseStatement start='88' length='46'>
+			<NamespaceName start='92' length='8' global='false' current='false'>
+				<Identifier start='92' length='3' name='Foo'/>
+				<Identifier start='96' length='3' name='Bar'/>
+			</NamespaceName>
+			<UseStatementPart start='111' length='3' statementType='1'>
+				<Name>
+					<NamespaceName start='111' length='3' global='false' current='false'>
+						<Identifier start='111' length='3' name='Foo'/>
+					</NamespaceName>
+				</Name>
+			</UseStatementPart>
+			<UseStatementPart start='122' length='3' statementType='2'>
+				<Name>
+					<NamespaceName start='122' length='3' global='false' current='false'>
+						<Identifier start='122' length='3' name='Bar'/>
+					</NamespaceName>
+				</Name>
+			</UseStatementPart>
+			<UseStatementPart start='127' length='3'>
+				<Name>
+					<NamespaceName start='127' length='3' global='false' current='false'>
+						<Identifier start='127' length='3' name='Baz'/>
+					</NamespaceName>
+				</Name>
+			</UseStatementPart>
+		</UseStatement>
+		<ExpressionStatement start='165' length='20'>
+			<Assignment start='165' length='19' operator='='>
+				<Variable start='165' length='6' isDollared='true'>
+					<Identifier start='166' length='5' name='array'/>
+				</Variable>
+				<Value>
+					<ArrayCreation start='174' length='10'>
+						<ArrayElement start='175' length='1'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='175' length='1' type='int' value='1'/>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='178' length='1'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='178' length='1' type='int' value='2'/>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='181' length='1'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='181' length='1' type='int' value='3'/>
+							</Value>
+						</ArrayElement>
+					</ArrayCreation>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='223' length='30'>
+			<FunctionInvocation start='223' length='29'>
+				<FunctionName start='223' length='7'>
+					<NamespaceName start='223' length='7' global='false' current='false'>
+						<Identifier start='223' length='7' name='fooCall'/>
+					</NamespaceName>
+				</FunctionName>
+				<Parameters>
+					<Variable start='231' length='5' isDollared='true'>
+						<Identifier start='232' length='4' name='arg1'/>
+					</Variable>
+					<Variable start='238' length='5' isDollared='true'>
+						<Identifier start='239' length='4' name='arg2'/>
+					</Variable>
+					<Variable start='245' length='5' isDollared='true'>
+						<Identifier start='246' length='4' name='arg3'/>
+					</Variable>
+				</Parameters>
+			</FunctionInvocation>
+		</ExpressionStatement>
+		<ExpressionStatement start='254' length='39'>
+			<MethodInvocation start='254' length='38'>
+				<Dispatcher>
+					<Variable start='254' length='4' isDollared='true'>
+						<Identifier start='255' length='3' name='obj'/>
+					</Variable>
+				</Dispatcher>
+				<Property>
+					<FunctionInvocation start='260' length='32'>
+						<FunctionName start='260' length='10'>
+							<Variable start='260' length='10' isDollared='false'>
+								<Identifier start='260' length='10' name='methodCall'/>
+							</Variable>
+						</FunctionName>
+						<Parameters>
+							<Variable start='271' length='5' isDollared='true'>
+								<Identifier start='272' length='4' name='arg1'/>
+							</Variable>
+							<Variable start='278' length='5' isDollared='true'>
+								<Identifier start='279' length='4' name='arg2'/>
+							</Variable>
+							<Variable start='285' length='5' isDollared='true'>
+								<Identifier start='286' length='4' name='arg3'/>
+							</Variable>
+						</Parameters>
+					</FunctionInvocation>
+				</Property>
+			</MethodInvocation>
+		</ExpressionStatement>
+		<ExpressionStatement start='295' length='20'>
+			<FunctionInvocation start='295' length='19'>
+				<FunctionName start='295' length='5'>
+					<Identifier start='295' length='5' name='unset'/>
+				</FunctionName>
+				<Parameters>
+					<Variable start='301' length='2' isDollared='true'>
+						<Identifier start='302' length='1' name='a'/>
+					</Variable>
+					<Variable start='305' length='2' isDollared='true'>
+						<Identifier start='306' length='1' name='b'/>
+					</Variable>
+					<Variable start='309' length='2' isDollared='true'>
+						<Identifier start='310' length='1' name='c'/>
+					</Variable>
+				</Parameters>
+			</FunctionInvocation>
+		</ExpressionStatement>
+		<ExpressionStatement start='316' length='20'>
+			<FunctionInvocation start='316' length='19'>
+				<FunctionName start='316' length='5'>
+					<Identifier start='316' length='5' name='isset'/>
+				</FunctionName>
+				<Parameters>
+					<Variable start='322' length='2' isDollared='true'>
+						<Identifier start='323' length='1' name='a'/>
+					</Variable>
+					<Variable start='326' length='2' isDollared='true'>
+						<Identifier start='327' length='1' name='b'/>
+					</Variable>
+					<Variable start='330' length='2' isDollared='true'>
+						<Identifier start='331' length='1' name='c'/>
+					</Variable>
+				</Parameters>
+			</FunctionInvocation>
+		</ExpressionStatement>
+	</Statements>
+	<Comments>
+		<Comment start='6' length='22' commentType='singleLine'/>
+		<Comment start='60' length='28' commentType='singleLine'/>
+		<Comment start='136' length='29' commentType='singleLine'/>
+		<Comment start='187' length='36' commentType='singleLine'/>
+	</Comments>
+</Program>
+

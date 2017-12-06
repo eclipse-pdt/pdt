@@ -17,16 +17,16 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.ast.nodes.ASTParser;
+import org.eclipse.php.core.ast.nodes.Program;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
-import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.core.ast.nodes.ASTParser;
-import org.eclipse.php.core.ast.nodes.Program;
-import org.eclipse.php.core.project.ProjectOptions;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -58,6 +58,10 @@ public class DomParserTests {
 				new String[] { "/workspace/dom_parser/php53", "/workspace/dom_parser/php54",
 						"/workspace/dom_parser/php55", "/workspace/dom_parser/php56", "/workspace/dom_parser/php7",
 						"/workspace/dom_parser/php71" });
+		TESTS.put(PHPVersion.PHP7_2,
+				new String[] { "/workspace/dom_parser/php53", "/workspace/dom_parser/php54",
+						"/workspace/dom_parser/php55", "/workspace/dom_parser/php56", "/workspace/dom_parser/php7",
+						"/workspace/dom_parser/php71", "/workspace/dom_parser/php72" });
 	};
 
 	private ASTParser parser;

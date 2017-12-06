@@ -377,6 +377,13 @@
              </and>
          </constraint>
       </project-facet-version>
+      <project-facet-version facet="php.component" version="7.2">
+         <constraint>
+             <and>
+                <requires facet="php.core.component" />
+             </and>
+         </constraint>
+      </project-facet-version>
       
       <action facet="php.core.component" version="1" type="install">
          <delegate class="org.eclipse.php.internal.core.facet.InstallActionDelegate" />
@@ -402,6 +409,9 @@
       <action facet="php.component" version="7.1" type="install">
          <delegate class="org.eclipse.php.internal.core.facet.InstallActionDelegate" />
       </action>
+      <action facet="php.component" version="7.2" type="install">
+         <delegate class="org.eclipse.php.internal.core.facet.InstallActionDelegate" />
+      </action>
       <action facet="php.component" version="5" type="version-change">
          <delegate class="org.eclipse.php.internal.core.facet.VersionChangeActionDelegate" />
       </action>
@@ -421,6 +431,9 @@
          <delegate class="org.eclipse.php.internal.core.facet.VersionChangeActionDelegate" />
       </action>
       <action facet="php.component" version="7.1" type="version-change">
+         <delegate class="org.eclipse.php.internal.core.facet.VersionChangeActionDelegate" />
+      </action>
+      <action facet="php.component" version="7.2" type="version-change">
          <delegate class="org.eclipse.php.internal.core.facet.VersionChangeActionDelegate" />
       </action>
    </extension>

@@ -1,0 +1,143 @@
+--TEST--
+Test trailing commas
+--FILE--
+<?php
+// Grouped statements
+use Foo\Bar\{ Foo, Bar, Baz, };
+// Mixed grouped statements
+use Foo\Bar\{ function Foo, const Bar, Baz, };
+
+// Arrays (already possible)
+$array = [1, 2, 3,];
+
+// Function/method arguments (call)
+fooCall($arg1, $arg2, $arg3,);
+$obj->methodCall($arg1, $arg2, $arg3,);
+
+unset($a, $b, $c, );
+isset($a, $b, $c, );
+--EXPECT--
+<ModuleDeclaration start="0" end="337">
+	<UseStatement start="28" end="59">
+		<Namespace>
+			<FullyQualifiedReference start="32" end="40" name="Foo\Bar">
+				<NamespaceReference start="32" end="35" name="Foo" global="false" local="false">
+				</NamespaceReference>
+			</FullyQualifiedReference>
+		</Namespace>
+		<Parts>
+			<UsePart start="0" end="0">
+				<FullyQualifiedReference start="42" end="45" name="Foo">
+				</FullyQualifiedReference>
+			</UsePart>
+			<UsePart start="0" end="0">
+				<FullyQualifiedReference start="47" end="50" name="Bar">
+				</FullyQualifiedReference>
+			</UsePart>
+			<UsePart start="0" end="0">
+				<FullyQualifiedReference start="52" end="55" name="Baz">
+				</FullyQualifiedReference>
+			</UsePart>
+		</Parts>
+	</UseStatement>
+	<UseStatement start="88" end="134">
+		<Namespace>
+			<FullyQualifiedReference start="92" end="100" name="Foo\Bar">
+				<NamespaceReference start="92" end="95" name="Foo" global="false" local="false">
+				</NamespaceReference>
+			</FullyQualifiedReference>
+		</Namespace>
+		<Parts>
+			<UsePart start="0" end="0" statementType="1">
+				<FullyQualifiedReference start="111" end="114" name="Foo">
+				</FullyQualifiedReference>
+			</UsePart>
+			<UsePart start="0" end="0" statementType="2">
+				<FullyQualifiedReference start="122" end="125" name="Bar">
+				</FullyQualifiedReference>
+			</UsePart>
+			<UsePart start="0" end="0">
+				<FullyQualifiedReference start="127" end="130" name="Baz">
+				</FullyQualifiedReference>
+			</UsePart>
+		</Parts>
+	</UseStatement>
+	<ExpressionStatement start="165" end="185">
+		<Assignment start="165" end="184" operator="=">
+			<VariableReference start="165" end="171" name="$array">
+			</VariableReference>
+			<ArrayCreation start="174" end="184">
+				<ArrayElement start="175" end="176">
+					<Scalar start="175" end="176" type="int" value="1">
+					</Scalar>
+				</ArrayElement>
+				<ArrayElement start="178" end="179">
+					<Scalar start="178" end="179" type="int" value="2">
+					</Scalar>
+				</ArrayElement>
+				<ArrayElement start="181" end="182">
+					<Scalar start="181" end="182" type="int" value="3">
+					</Scalar>
+				</ArrayElement>
+			</ArrayCreation>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="223" end="253">
+		<PHPCallExpression start="223" end="252">
+			<FullyQualifiedReference start="223" end="230" name="fooCall">
+			</FullyQualifiedReference>
+			<PHPCallArgumentsList start="231" end="251">
+				<VariableReference start="231" end="236" name="$arg1">
+				</VariableReference>
+				<VariableReference start="238" end="243" name="$arg2">
+				</VariableReference>
+				<VariableReference start="245" end="250" name="$arg3">
+				</VariableReference>
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="254" end="293">
+		<PHPCallExpression start="254" end="292">
+			<VariableReference start="254" end="258" name="$obj">
+			</VariableReference>
+			<SimpleReference start="260" end="270" name="methodCall">
+			</SimpleReference>
+			<PHPCallArgumentsList start="271" end="291">
+				<VariableReference start="271" end="276" name="$arg1">
+				</VariableReference>
+				<VariableReference start="278" end="283" name="$arg2">
+				</VariableReference>
+				<VariableReference start="285" end="290" name="$arg3">
+				</VariableReference>
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="295" end="315">
+		<PHPCallExpression start="295" end="314">
+			<SimpleReference start="295" end="300" name="unset">
+			</SimpleReference>
+			<PHPCallArgumentsList start="301" end="313">
+				<VariableReference start="301" end="303" name="$a">
+				</VariableReference>
+				<VariableReference start="305" end="307" name="$b">
+				</VariableReference>
+				<VariableReference start="309" end="311" name="$c">
+				</VariableReference>
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="316" end="336">
+		<PHPCallExpression start="316" end="335">
+			<SimpleReference start="316" end="321" name="isset">
+			</SimpleReference>
+			<PHPCallArgumentsList start="322" end="334">
+				<VariableReference start="322" end="324" name="$a">
+				</VariableReference>
+				<VariableReference start="326" end="328" name="$b">
+				</VariableReference>
+				<VariableReference start="330" end="332" name="$c">
+				</VariableReference>
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+</ModuleDeclaration>

@@ -487,7 +487,7 @@ public class ChangeParametersControl extends Composite {
 				// StubUtility.suggestArgumentName(javaProject, "default name",
 				// excludedParamNames);
 				String newParamName = "argu"; //$NON-NLS-1$
-				ParameterInfo newInfo = ParameterInfo.createInfoForAddedParameter("Object", newParamName, "null"); //$NON-NLS-1$ //$NON-NLS-2$
+				ParameterInfo newInfo = ParameterInfo.createInfoForAddedParameter("stdClass", newParamName, "null"); //$NON-NLS-1$ //$NON-NLS-2$
 				int insertIndex = fParameterInfos.size();
 				for (int i = fParameterInfos.size() - 1; i >= 0; i--) {
 					ParameterInfo info = fParameterInfos.get(i);

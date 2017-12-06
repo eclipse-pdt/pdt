@@ -91,7 +91,7 @@ public abstract class PHPElementTemplate extends TextTemplate {
 	public static final String USE_IN_STRUCT_COMPILED = "use_in_file_compiled"; //$NON-NLS-1$
 
 	public static final String[] EXCLUDE_PARAM_TYPES_LIST = new String[] { "boolean", "bool", "integer", "int", "float", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-			"double", "string", "mixed", "void", "unknown_type" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+			"double", "string", "mixed", "void", "unknown_type", "object" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 
 	public String resolveTemplate() throws IOException {
 		return set(INPUT, readTemplate());

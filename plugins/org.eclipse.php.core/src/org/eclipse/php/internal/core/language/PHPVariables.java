@@ -72,6 +72,7 @@ public class PHPVariables {
 			case PHP5_6:
 			case PHP7_0:
 			case PHP7_1:
+			case PHP7_2:
 				initializer = new PHPVariablesInitializerPHP_5_4();
 				break;
 			case PHP5:

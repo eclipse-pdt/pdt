@@ -20,17 +20,17 @@ import java.util.Map;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.parser.IModuleDeclaration;
+import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.parser.AbstractPHPSourceParser;
 import org.eclipse.php.internal.core.compiler.ast.parser.PHPSourceParserFactory;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
-import org.eclipse.php.core.project.ProjectOptions;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -66,6 +66,11 @@ public class CompilerParserTests {
 				new String[] { "/workspace/compiler_parser/php53", "/workspace/compiler_parser/php54",
 						"/workspace/compiler_parser/php55", "/workspace/compiler_parser/php56",
 						"/workspace/compiler_parser/php7", "/workspace/compiler_parser/php71" });
+		TESTS.put(PHPVersion.PHP7_2,
+				new String[] { "/workspace/compiler_parser/php53", "/workspace/compiler_parser/php54",
+						"/workspace/compiler_parser/php55", "/workspace/compiler_parser/php56",
+						"/workspace/compiler_parser/php7", "/workspace/compiler_parser/php71",
+						"/workspace/compiler_parser/php72" });
 	};
 
 	private AbstractPHPSourceParser parser;
