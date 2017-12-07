@@ -1,0 +1,48 @@
+--TEST--
+Test PHPModelUtils.getFullName
+--CONFIG--
+method: getFullName
+--FILE--
+<?php
+
+namespace Foo\Bar;
+
+use UseRoot;
+use UseRootAliased as UseRootAlias;
+use Other\Namespace\UseNamespaced;
+use Other\Namespace\UseNamespacedAliased as UseNamespacedAlias;
+
+class Class1
+{
+}
+class Class2
+{
+	public function m()
+	{
+		>>self<<::class;
+		>>static<<::class;
+		>>UseRoot<<::class;
+		>>UseRootAlias<<::class;
+		>>UseNamespaced<<::class;
+		>>UseNamespacedAlias<<::class;
+		>>Baz<<::class;
+		>>Baz\Qux<<::class;
+		>>\Quux<<::class;
+		>>\Corge\Grault<<::class;
+	}
+}
+class Class3
+{
+}
+?>
+--EXPECT--
+Foo\Bar\Class2
+Foo\Bar\Class2
+UseRoot
+UseRootAliased
+Other\Namespace\UseNamespaced
+Other\Namespace\UseNamespacedAliased
+Foo\Bar\Baz
+Foo\Bar\Baz\Qux
+Quux
+Corge\Grault
