@@ -1,0 +1,58 @@
+--TEST--
+Test PHPModelUtils.getFullName
+--CONFIG--
+method: getFullName
+--FILE--
+<?php
+
+namespace Foo\Bar;
+
+use UseRoot;
+use \UseRootBackslashed;
+use UseRootAliased as UseRootAlias;
+use \UseRootAliasedBackslashed as UseRootAliasBackslashed;
+use Other\MyNamespace\UseNamespaced;
+use \Other\MyNamespace\UseNamespacedBackslashed;
+use Other\MyNamespace\UseNamespacedAliased as UseNamespacedAlias;
+use \Other\MyNamespace\UseNamespacedAliasedBackslashed as UseNamespacedAliasBackslashed;
+
+class Class1
+{
+}
+class Class2
+{
+	public function m()
+	{
+		echo >>UseRoot<<::class, "\n";
+		echo >>UseRootBackslashed<<::class, "\n";
+		echo >>UseRootAlias<<::class, "\n";
+		echo >>UseRootAliasBackslashed<<::class, "\n";
+		echo >>UseNamespaced<<::class, "\n";
+		echo >>UseNamespacedBackslashed<<::class, "\n";
+		echo >>UseNamespacedAlias<<::class, "\n";
+		echo >>UseNamespacedAliasBackslashed<<::class, "\n";
+		echo >>UseNamespacedAliasBackslashed\SubClass<<::class, "\n";
+		echo >>Baz<<::class, "\n";
+		echo >>Baz\Qux<<::class, "\n";
+		echo >>\Quux<<::class, "\n";
+		echo >>\Corge\Grault<<::class, "\n";
+	}
+}
+class Class3
+{
+}
+?>
+--EXPECT--
+UseRoot
+UseRootBackslashed
+UseRootAliased
+UseRootAliasedBackslashed
+Other\MyNamespace\UseNamespaced
+Other\MyNamespace\UseNamespacedBackslashed
+Other\MyNamespace\UseNamespacedAliased
+Other\MyNamespace\UseNamespacedAliasedBackslashed
+\Other\MyNamespace\UseNamespacedAliasedBackslashed\SubClass
+Foo\Bar\Baz
+Foo\Bar\Baz\Qux
+Quux
+Corge\Grault
