@@ -2349,15 +2349,19 @@ public class PHPModelUtils {
 		String namespace = extractNamespaceName(typeName, sourceModule, offset);
 		String elementName = extractElementName(typeName);
 		if (namespace != null) {
-			if (namespace.length() > 0) {
-				elementName = getRealName(elementName, sourceModule, offset, elementName);
-				elementName = namespace + NamespaceReference.NAMESPACE_SEPARATOR + elementName;
+			elementName = getRealName(elementName, sourceModule, offset, elementName);
+			if (namespace.length() > 0 && namespace.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+				namespace = NamespaceReference.NAMESPACE_SEPARATOR + namespace;
 			}
+			elementName = namespace + NamespaceReference.NAMESPACE_SEPARATOR + elementName;
 		} else {
 			// look for the element in current namespace:
 			IType currentNamespace = getCurrentNamespace(sourceModule, offset);
 			if (currentNamespace != null) {
 				namespace = currentNamespace.getElementName();
+				if (namespace.length() > 0 && namespace.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+					namespace = NamespaceReference.NAMESPACE_SEPARATOR + namespace;
+				}
 				elementName = namespace + NamespaceReference.NAMESPACE_SEPARATOR + elementName;
 			}
 		}
