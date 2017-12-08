@@ -15,7 +15,7 @@ use const Test\Boo\ {FooX};
 --EXPECT--
 <?php
 use foo\math\ {
-    \Math,
+    Math,
     const PI,
     function sin as TestSin
 };

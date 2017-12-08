@@ -114,12 +114,14 @@ public class RemoveUnusedUseStatementProposal extends CUCorrectionProposal {
 	private static String getNamespaceName(NamespaceName namespace) {
 		StringBuilder namespaces = new StringBuilder(""); //$NON-NLS-1$
 		List<Identifier> segments = namespace.segments();
+		int idx = 0;
 		for (Identifier segment : segments) {
-			if (segments.indexOf(segment) == 0) {
+			if (idx == 0) {
 				namespaces.append(segment.getName());
 			} else {
 				namespaces.append(NamespaceReference.NAMESPACE_DELIMITER).append(segment.getName());
 			}
+			idx++;
 		}
 		return namespaces.toString();
 	}

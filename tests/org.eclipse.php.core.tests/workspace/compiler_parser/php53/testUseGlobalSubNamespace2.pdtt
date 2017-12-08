@@ -1,0 +1,19 @@
+--TEST--
+Test Use Global Sub Namespace
+--FILE--
+<?php use A\B\C; ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="20">
+	<UseStatement start="6" end="16">
+		<Parts>
+			<UsePart start="0" end="0">
+				<FullyQualifiedReference start="10" end="15" name="A\B\C">
+					<NamespaceReference start="10" end="13" name="A\B" global="false" local="false">
+					</NamespaceReference>
+				</FullyQualifiedReference>
+			</UsePart>
+		</Parts>
+	</UseStatement>
+	<EmptyStatement start="17" end="19">
+	</EmptyStatement>
+</ModuleDeclaration>

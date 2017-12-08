@@ -136,9 +136,6 @@ public class FunctionsStrategy extends ElementsStrategy {
 		for (Entry<String, UsePart> entry : result.entrySet()) {
 			String name = entry.getKey();
 			String fullName = entry.getValue().getNamespace().getFullyQualifiedName();
-			if (fullName.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
-				fullName = fullName.substring(1);
-			}
 			IMethod[] elements;
 			if (!fullName.contains(NamespaceReference.NAMESPACE_DELIMITER)) {
 				elements = PHPModelAccess.getDefault().findMethods(null, fullName, MatchRule.PREFIX, 0, 0, scope, null);
