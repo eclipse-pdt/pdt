@@ -886,14 +886,14 @@ namespace_name:list
 
 | T_NS_SEPARATOR:s namespace_name:list
 {:
-	RESULT = new UseStatementPart(sleft, listright, parser.ast,
-		new NamespaceName(sleft, listright, parser.ast, list, true, false), null);
+	RESULT = new UseStatementPart(sright, listright, parser.ast,
+		new NamespaceName(sright, listright, parser.ast, list, false, false), null);
 :}
 
 | T_NS_SEPARATOR:s namespace_name:list T_AS T_STRING:aliasName
 {:
-	RESULT = new UseStatementPart(sleft, aliasNameright, parser.ast,
-		new NamespaceName(sleft, listright, parser.ast, list, true, false),
+	RESULT = new UseStatementPart(sright, aliasNameright, parser.ast,
+		new NamespaceName(sright, listright, parser.ast, list, false, false),
 		new Identifier(aliasNameleft, aliasNameright, parser.ast, aliasName));
 :}
 ;

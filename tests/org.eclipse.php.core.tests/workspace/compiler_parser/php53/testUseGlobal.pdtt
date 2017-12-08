@@ -7,9 +7,7 @@ Test Use Global
 	<UseStatement start="6" end="13">
 		<Parts>
 			<UsePart start="0" end="0">
-				<FullyQualifiedReference start="10" end="12" name="\A">
-					<NamespaceReference start="10" end="11" name="\" global="true" local="false">
-					</NamespaceReference>
+				<FullyQualifiedReference start="11" end="12" name="A">
 				</FullyQualifiedReference>
 			</UsePart>
 		</Parts>
