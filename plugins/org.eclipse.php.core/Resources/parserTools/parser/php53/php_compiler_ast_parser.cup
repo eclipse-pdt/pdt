@@ -589,32 +589,16 @@ namespace_name:name
 
 | T_NS_SEPARATOR:s namespace_name:name
 {:
-	NamespaceReference namespace = name.getNamespace();
-	if (namespace == null) {
-		namespace = new NamespaceReference(sleft, sright, "");
-		name.setNamespace(namespace);
-	}
-	namespace.setGlobal(true);
-	namespace.setStart(sleft);
-	name.setStart(sleft);
+	// NB: leading backslash is optional and has no special meaning here
 	name.setElementType(FullyQualifiedReference.T_TYPE);
-
 	UsePart usePart = new UsePart(name, null);
 	RESULT = usePart;
 :}
 
 | T_NS_SEPARATOR:s namespace_name:name T_AS T_STRING:aliasName
 {:
-	NamespaceReference namespace = name.getNamespace();
-	if (namespace == null) {
-		namespace = new NamespaceReference(sleft, sright, "");
-		name.setNamespace(namespace);
-	}
-	namespace.setGlobal(true);
-	namespace.setStart(sleft);
-	name.setStart(sleft);
+	// NB: leading backslash is optional and has no special meaning here
 	name.setElementType(FullyQualifiedReference.T_TYPE);
-
 	UsePart usePart = new UsePart(name,
 		new SimpleReference(aliasNameleft, aliasNameright, aliasName));
 	RESULT = usePart;

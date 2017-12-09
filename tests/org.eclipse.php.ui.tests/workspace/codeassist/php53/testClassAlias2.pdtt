@@ -1,0 +1,36 @@
+--TEST--
+Bug 527153 - Code assist not working for static calls when using a class alias
+--FILE--
+<?php
+namespace Foo\Bar;
+
+class Util
+{
+	public static function doStuff()
+	{
+	}
+}
+
+namespace Foo\Bar2;
+
+use Foo\Bar\Util as UUtil;
+
+UUtil::do|
+?>
+--EXPECT--
+<?php
+namespace Foo\Bar;
+
+class Util
+{
+	public static function doStuff()
+	{
+	}
+}
+
+namespace Foo\Bar2;
+
+use Foo\Bar\Util as UUtil;
+
+UUtil::doStuff()
+?>

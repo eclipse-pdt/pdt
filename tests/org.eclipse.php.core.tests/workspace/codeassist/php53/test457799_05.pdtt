@@ -1,0 +1,37 @@
+--TEST--
+http://eclip.se/457799
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+
+use Iooa\|
+--FILE0--
+<?php
+namespace Iooa\Boo {
+	class Test01{
+		
+	}
+}
+
+namespace Iooa\Boo2 {
+	class Test01{
+
+	}
+}
+--FILE1--
+<?php
+namespace Iooa\Boo {
+	class Test02{
+		
+	}
+}
+
+namespace Iooa\Boo2 {
+	class Test02{
+
+	}
+}
+--EXPECT--
+type(Iooa\Boo)
+type(Iooa\Boo2)
