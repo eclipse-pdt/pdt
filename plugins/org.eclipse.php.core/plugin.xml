@@ -54,7 +54,7 @@
 		point="org.eclipse.core.contenttype.contentTypes">
 		<content-type
 			base-type="org.eclipse.core.runtime.text"
-			file-extensions="php,php3,php4,php5,phtml,inc,phps"
+			file-extensions="php,php3,php4,php5,php7,phtml,inc,phps"
 			id="phpsource"
 			name="%content-type.name.0"
 			priority="high">
