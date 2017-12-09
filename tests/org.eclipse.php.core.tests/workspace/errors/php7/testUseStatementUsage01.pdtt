@@ -17,8 +17,8 @@ use grup3\model3\ { model4, mode, model2, model4\Foo4 };
 
 new model4\Foo3();
 --EXPECT--
-[line=12, start=117, end=122] The import grup3\model3\mode cannot be resolved
-[line=12, start=124, end=131] The import grup3\model3\model2 cannot be resolved
+[line=12, start=118, end=122] The import grup3\model3\mode cannot be resolved
+[line=12, start=125, end=131] The import grup3\model3\model2 cannot be resolved
 [line=13, start=169, end=175] Cannot use grup3\model3\model4 as model4 because the name is already in use
 [line=13, start=177, end=181] The import grup3\model3\mode cannot be resolved
 [line=13, start=183, end=189] The import grup3\model3\model2 cannot be resolved

@@ -142,8 +142,7 @@ public class ConstantsStrategy extends ElementsStrategy {
 			IField field = (IField) constant;
 			if (nsUseGroupPrefix != null) {
 				reporter.reportField(field, nsUseGroupPrefix, "", memberReplacementRange, //$NON-NLS-1$
-						getRelevance(namespace, (IMember) constant),
-						extraInfo);
+						getRelevance(namespace, (IMember) constant), extraInfo);
 			} else {
 				reporter.reportField(field, "", isAbsoluteField ? replacementRange : memberReplacementRange, false,
 						getRelevance(namespace, (IMember) constant),
@@ -182,9 +181,6 @@ public class ConstantsStrategy extends ElementsStrategy {
 		for (Entry<String, UsePart> entry : result.entrySet()) {
 			String name = entry.getKey();
 			String fullName = entry.getValue().getNamespace().getFullyQualifiedName();
-			if (fullName.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
-				fullName = fullName.substring(1);
-			}
 			IField[] elements = PHPModelAccess.getDefault().findFields(null, fullName, MatchRule.PREFIX, 0, 0, scope,
 					null);
 			for (int i = 0; i < elements.length; i++) {

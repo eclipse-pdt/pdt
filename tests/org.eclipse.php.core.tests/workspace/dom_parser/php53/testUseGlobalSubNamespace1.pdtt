@@ -6,9 +6,9 @@ Test Use Global Sub Namespace
 <Program start='0' length='20'>
 	<Statements>
 		<UseStatement start='6' length='11'>
-			<UseStatementPart start='10' length='6'>
+			<UseStatementPart start='11' length='5'>
 				<Name>
-					<NamespaceName start='10' length='6' global='true' current='false'>
+					<NamespaceName start='11' length='5' global='false' current='false'>
 						<Identifier start='11' length='1' name='A'/>
 						<Identifier start='13' length='1' name='B'/>
 						<Identifier start='15' length='1' name='C'/>

@@ -1,0 +1,22 @@
+--TEST--
+Test use function statement
+--FILE--
+<?php
+namespace A {
+
+	/**
+	 * My magic test class
+	 *
+	 * @return \DateTime
+	 */
+	function getdate() {
+		return 'what_ever';
+	}
+}
+
+namespace B {
+	use function \A\getdate as getdate_alias;
+	getdate_alias()->a|
+}
+--EXPECT--
+method(add)

@@ -1,0 +1,10 @@
+--TEST--
+Test CA aliased constructor 
+--FILE--
+<?php
+namespace Y {
+	use Exception as MyException;
+	new MyE|
+}
+--EXPECT--
+method(MyException)
