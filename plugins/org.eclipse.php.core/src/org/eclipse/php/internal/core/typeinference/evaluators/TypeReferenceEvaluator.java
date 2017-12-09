@@ -308,6 +308,9 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 						if (result.containsKey(prefix)) {
 							String fullName = result.get(prefix).getNamespace().getFullyQualifiedName();
 							typeName = typeName.replace(prefix, fullName);
+							if (typeName.length() > 0 && typeName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+								typeName = NamespaceReference.NAMESPACE_SEPARATOR + typeName;
+							}
 						}
 					} else if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) < 0) {
 
@@ -317,6 +320,9 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 						if (result.containsKey(prefix)) {
 							String fullName = result.get(prefix).getNamespace().getFullyQualifiedName();
 							typeName = fullName;
+							if (typeName.length() > 0 && typeName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+								typeName = NamespaceReference.NAMESPACE_SEPARATOR + typeName;
+							}
 						}
 					}
 					IEvaluatedType type = PHPSimpleTypes.fromString(typeName);
