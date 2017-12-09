@@ -585,9 +585,6 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 					}
 				} else if (fLastUseParts.containsKey(name)) {
 					name = fLastUseParts.get(name).getNamespace().getFullyQualifiedName();
-					if (name.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
-						name = name.substring(1);
-					}
 				} else {
 					if (fCurrentNamespace != null) {
 						name = new StringBuilder(fCurrentNamespace.getName())

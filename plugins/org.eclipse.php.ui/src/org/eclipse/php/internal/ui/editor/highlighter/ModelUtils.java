@@ -189,6 +189,9 @@ public abstract class ModelUtils {
 				if (result.containsKey(prefix)) {
 					String fullName = result.get(prefix).getNamespace().getFullyQualifiedName();
 					typeName = typeName.replace(prefix, fullName);
+					if (typeName.length() > 0 && typeName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+						typeName = NamespaceReference.NAMESPACE_SEPARATOR + typeName;
+					}
 				}
 			} else if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) < 0) {
 
@@ -198,6 +201,9 @@ public abstract class ModelUtils {
 				if (result.containsKey(prefix)) {
 					String fullName = result.get(prefix).getNamespace().getFullyQualifiedName();
 					typeName = fullName;
+					if (typeName.length() > 0 && typeName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+						typeName = NamespaceReference.NAMESPACE_SEPARATOR + typeName;
+					}
 				}
 			}
 		}

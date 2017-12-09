@@ -1,0 +1,10 @@
+--TEST--
+Test CA aliased constructor (bug 434454)
+--FILE--
+<?php
+namespace Y {
+   use DateTime as TTT;
+   new TTT|
+}
+--EXPECT--
+method(TTT)

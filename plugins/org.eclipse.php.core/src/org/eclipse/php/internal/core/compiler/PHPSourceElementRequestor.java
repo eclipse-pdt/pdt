@@ -644,9 +644,6 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				}
 			} else if (fLastUseParts.containsKey(name)) {
 				name = fLastUseParts.get(name).getNamespace().getFullyQualifiedName();
-				if (name.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
-					name = name.substring(1);
-				}
 			} else {
 				if (fLastNamespace != null) {
 					name = new StringBuilder(fLastNamespace.getName()).append(NamespaceReference.NAMESPACE_SEPARATOR)
