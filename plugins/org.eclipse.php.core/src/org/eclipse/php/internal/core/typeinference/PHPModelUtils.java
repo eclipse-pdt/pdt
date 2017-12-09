@@ -2349,8 +2349,8 @@ public class PHPModelUtils {
 		String namespace = extractNamespaceName(typeName, sourceModule, offset);
 		String elementName = extractElementName(typeName);
 		if (namespace != null) {
+			elementName = getRealName(elementName, sourceModule, offset, elementName);
 			if (namespace.length() > 0) {
-				elementName = getRealName(elementName, sourceModule, offset, elementName);
 				elementName = namespace + NamespaceReference.NAMESPACE_SEPARATOR + elementName;
 			}
 		} else {

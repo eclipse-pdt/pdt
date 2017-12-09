@@ -7,8 +7,8 @@ Test Use Global Sub Namespace
 	<UseStatement start="6" end="17">
 		<Parts>
 			<UsePart start="0" end="0">
-				<FullyQualifiedReference start="10" end="16" name="\A\B\C">
-					<NamespaceReference start="10" end="14" name="\A\B" global="true" local="false">
+				<FullyQualifiedReference start="11" end="16" name="A\B\C">
+					<NamespaceReference start="11" end="14" name="A\B" global="false" local="false">
 					</NamespaceReference>
 				</FullyQualifiedReference>
 			</UsePart>

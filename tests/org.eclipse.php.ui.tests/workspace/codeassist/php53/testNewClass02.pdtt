@@ -1,0 +1,14 @@
+--TEST--
+Test CA aliased constructor 
+--FILE--
+<?php
+namespace Y {
+	use DateTimeZone as MyDateTimeZone;
+	new MyDateTime|
+}
+--EXPECT--
+<?php
+namespace Y {
+	use DateTimeZone as MyDateTimeZone;
+	new MyDateTimeZone($timezone)
+}

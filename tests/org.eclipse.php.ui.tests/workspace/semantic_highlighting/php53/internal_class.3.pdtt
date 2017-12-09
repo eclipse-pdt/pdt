@@ -1,0 +1,21 @@
+--TEST--
+Test Internal Class Semantic highlighting
+--FILE--
+<?php
+namespace Test;
+
+use LogicException as LogicExceptionAlias;
+
+class Test {
+	public function test() {
+		\SplFixedArray::fromArray ( $array );
+		new LogicExceptionAlias ( $message, $code, $previous );
+		throw new \Exception ();
+	}
+}
+?>
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.InternalClassHighlighting:
+highlight(\SplFixedArray)
+highlight(LogicExceptionAlias)
+highlight(\Exception)

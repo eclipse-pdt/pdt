@@ -192,9 +192,6 @@ public class TypesStrategy extends ElementsStrategy {
 			if (entry.getValue().getAlias() != null) {
 				String name = entry.getKey();
 				String fullName = entry.getValue().getNamespace().getFullyQualifiedName();
-				if (fullName.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
-					fullName = fullName.substring(1);
-				}
 				try {
 					IType[] elements = PHPModelAccess.getDefault().findTypes(fullName, MatchRule.EXACT, 0, 0, scope,
 							null);
