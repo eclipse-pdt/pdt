@@ -67,16 +67,16 @@ public abstract class UseStatementContext extends StatementContext {
 	}
 
 	/**
-	 * Returns true when the use statement (TYPES.USE) or the group use
-	 * statement (TYPES.USE_GROUP) contains the keyword "function".
+	 * Returns true when the use statement (TYPES.USE) or the group use statement
+	 * (TYPES.USE_GROUP) contains the keyword "function".
 	 */
 	public boolean isUseFunctionStatement() {
 		return isUseFunctionStatement;
 	}
 
 	/**
-	 * Returns true when the use statement (TYPES.USE) or the group use
-	 * statement (TYPES.USE_GROUP) contains the keyword "const".
+	 * Returns true when the use statement (TYPES.USE) or the group use statement
+	 * (TYPES.USE_GROUP) contains the keyword "const".
 	 */
 	public boolean isUseConstStatement() {
 		return isUseConstStatement;
@@ -128,7 +128,7 @@ public abstract class UseStatementContext extends StatementContext {
 		boolean hasUsePrefix = hasUsePrefix(statementText);
 		if (hasUsePrefix) {
 			if (isClassStatementContext) {
-				if (getPHPVersion().isLessThan(PHPVersion.PHP5_4)) {
+				if (getCompanion().getPHPVersion().isLessThan(PHPVersion.PHP5_4)) {
 					return false;
 				}
 				type = TYPES.TRAIT;
@@ -142,7 +142,7 @@ public abstract class UseStatementContext extends StatementContext {
 			return false;
 		}
 
-		if (!getPHPVersion().isLessThan(PHPVersion.PHP7_0) && foundDelimiter[0] != null
+		if (!getCompanion().getPHPVersion().isLessThan(PHPVersion.PHP7_0) && foundDelimiter[0] != null
 				&& foundDelimiter[0].getType() == PHPRegionTypes.PHP_CURLY_OPEN
 				&& foundDelimiter[0].getStart() >= 4 /* "use " */) {
 			// Check for "grouped use statements" like
@@ -219,9 +219,9 @@ public abstract class UseStatementContext extends StatementContext {
 	}
 
 	/**
-	 * Prefix part of a "grouped use statement", in the statement part before
-	 * '{'. Returned value is null for other statement types. For example, with
-	 * "use X\Y\ { A, B, \C\D| };" this method would return "X\Y\".
+	 * Prefix part of a "grouped use statement", in the statement part before '{'.
+	 * Returned value is null for other statement types. For example, with "use X\Y\
+	 * { A, B, \C\D| };" this method would return "X\Y\".
 	 * 
 	 * @return
 	 */
@@ -239,10 +239,9 @@ public abstract class UseStatementContext extends StatementContext {
 	}
 
 	/**
-	 * When isCursorInsideGroupStatement() is true, only the prefix part after
-	 * '{' is returned, otherwise same content as getPrefix() is returned. For
-	 * example, with "use X\Y\ { A, B, \C\D| };" this method would return
-	 * "\C\D".
+	 * When isCursorInsideGroupStatement() is true, only the prefix part after '{'
+	 * is returned, otherwise same content as getPrefix() is returned. For example,
+	 * with "use X\Y\ { A, B, \C\D| };" this method would return "\C\D".
 	 * 
 	 * @return
 	 */
@@ -255,14 +254,14 @@ public abstract class UseStatementContext extends StatementContext {
 		int statementLength = longestPrefixTextBeforeCursor.length();
 		int prefixEnd = PHPTextSequenceUtilities.readBackwardSpaces(longestPrefixTextBeforeCursor, statementLength); // read
 		// whitespace
-		int prefixStart = PHPTextSequenceUtilities.readIdentifierStartIndex(getPHPVersion(),
+		int prefixStart = PHPTextSequenceUtilities.readIdentifierStartIndex(getCompanion().getPHPVersion(),
 				longestPrefixTextBeforeCursor, prefixEnd, true);
 		return prefixStart < 0 ? "" : longestPrefixTextBeforeCursor.subSequence(prefixStart, prefixEnd).toString(); //$NON-NLS-1$
 	}
 
 	@Override
 	public int getReplacementStart() {
-		return getOffset() - getPrefixBeforeCursor().length();
+		return getCompanion().getOffset() - getPrefixBeforeCursor().length();
 	}
 
 	@Override
@@ -270,7 +269,9 @@ public abstract class UseStatementContext extends StatementContext {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		boolean isClassStatementContext = new ClassStatementContext().isValid(sourceModule, offset, requestor);
-		return buildUseStatement(offset, getStructuredDocumentRegion(), isClassStatementContext);
+		ClassStatementContext classStatementContext = new ClassStatementContext();
+		classStatementContext.init(getCompanion());
+		boolean isClassStatementContext = classStatementContext.isValid(sourceModule, offset, requestor);
+		return buildUseStatement(offset, getCompanion().getStructuredDocumentRegion(), isClassStatementContext);
 	}
 }

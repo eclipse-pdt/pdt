@@ -62,13 +62,13 @@ public class ArrayKeyContext extends AbstractCompletionContext {
 			return false;
 		}
 		try {
-			ITextRegion phpToken = getPHPToken();
+			ITextRegion phpToken = getCompanion().getPHPToken();
 
 			TextSequence statementText = getStatementText();
 			int length = statementText.length();
 			int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, length);
-			int startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(getPHPVersion(), statementText,
-					endPosition, true);
+			int startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(getCompanion().getPHPVersion(),
+					statementText, endPosition, true);
 
 			hasQuotes = false;
 
@@ -94,8 +94,8 @@ public class ArrayKeyContext extends AbstractCompletionContext {
 			}
 
 			endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, endPosition - 1);
-			startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(getPHPVersion(), statementText,
-					endPosition, true);
+			startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(getCompanion().getPHPVersion(),
+					statementText, endPosition, true);
 			arrayVarName = statementText.subSequence(startPosition, endPosition).toString();
 			if (!arrayVarName.startsWith("$")) { //$NON-NLS-1$
 				return false;
