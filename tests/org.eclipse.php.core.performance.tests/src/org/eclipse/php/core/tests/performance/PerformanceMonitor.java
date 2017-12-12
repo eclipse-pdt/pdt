@@ -43,6 +43,7 @@ import org.apache.lucene.search.SortedNumericSortField;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
+import org.eclipse.php.internal.core.Logger;
 import org.junit.Assert;
 import org.osgi.framework.Bundle;
 
@@ -80,10 +81,10 @@ public class PerformanceMonitor {
 	private long executionId;
 
 	public PerformanceMonitor(Bundle bundle) throws Exception {
-		String baseDir = System.getProperty("user.home") + File.separator + ".perf_results_lucene" + File.separator
+		String baseDir = System.getProperty("user.home") + File.separator + ".perf_results_lucene" + File.separator //$NON-NLS-1$ //$NON-NLS-2$
 				+ bundle.getSymbolicName() + bundle.getVersion();
-		File executionsDir = new File(baseDir + File.separator + "executions");
-		File resultsDir = new File(baseDir + File.separator + "results");
+		File executionsDir = new File(baseDir + File.separator + "executions"); //$NON-NLS-1$
+		File resultsDir = new File(baseDir + File.separator + "results"); //$NON-NLS-1$
 		if (!executionsDir.exists()) {
 			executionsDir.mkdirs();
 		}
@@ -101,7 +102,7 @@ public class PerformanceMonitor {
 		this.resultsSearcher = new IndexSearcher(this.resultsReader);
 		this.executionId = System.currentTimeMillis();
 		for (;;) {
-			if (this.executionsSearcher.search(LongPoint.newExactQuery("executionId", this.executionId),
+			if (this.executionsSearcher.search(LongPoint.newExactQuery("executionId", this.executionId), //$NON-NLS-1$
 					1).scoreDocs.length == 0) {
 				break;
 			}
@@ -121,7 +122,7 @@ public class PerformanceMonitor {
 			try {
 				this.resultsReader.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				Logger.logException(e);
 			} finally {
 				this.resultsReader = null;
 			}
@@ -130,7 +131,7 @@ public class PerformanceMonitor {
 			try {
 				this.executionsReader.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				Logger.logException(e);
 			} finally {
 				this.executionsReader = null;
 			}
@@ -139,7 +140,7 @@ public class PerformanceMonitor {
 			try {
 				this.resultsWriter.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				Logger.logException(e);
 			} finally {
 				this.resultsWriter = null;
 			}
@@ -148,7 +149,7 @@ public class PerformanceMonitor {
 			try {
 				this.executionsWriter.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				Logger.logException(e);
 			} finally {
 				this.executionsWriter = null;
 			}
@@ -164,13 +165,13 @@ public class PerformanceMonitor {
 	}
 
 	private void compact() throws IOException {
-		Sort sort = new Sort(new SortedNumericSortField("executionId", SortField.Type.LONG, true));
+		Sort sort = new Sort(new SortedNumericSortField("executionId", SortField.Type.LONG, true)); //$NON-NLS-1$
 		TopDocs executions = this.executionsSearcher.search(new MatchAllDocsQuery(), HISTORY_SIZE + 1, sort, false,
 				false);
 		if (executions.scoreDocs.length > HISTORY_SIZE) {
 			Document firstExecutionToDelete = this.executionsReader.document(executions.scoreDocs[HISTORY_SIZE].doc);
-			long deleteFromExecutionID = firstExecutionToDelete.getField("executionId").numericValue().longValue();
-			Query deleteQuery = LongPoint.newRangeQuery("executionId", Long.MIN_VALUE, deleteFromExecutionID);
+			long deleteFromExecutionID = firstExecutionToDelete.getField("executionId").numericValue().longValue(); //$NON-NLS-1$
+			Query deleteQuery = LongPoint.newRangeQuery("executionId", Long.MIN_VALUE, deleteFromExecutionID); //$NON-NLS-1$
 			this.resultsWriter.deleteDocuments(deleteQuery);
 			this.executionsWriter.deleteDocuments(deleteQuery);
 			this.resultsWriter.flush();
@@ -205,8 +206,9 @@ public class PerformanceMonitor {
 		if (savedAverage != 0 && savedAverage != -1 && testAverage > savedAverage) {
 			long diff = testAverage - savedAverage;
 			if (diff * 100 / savedAverage > threshold) {
-				Assert.fail("Average execution time (" + testAverage + "ms) is greater by more than " + threshold
-						+ "% than the saved average (" + savedAverage + "ms)");
+				Assert.fail("Average execution time (" + testAverage + "ms) is greater by more than " + threshold // $NON-NLS-1 //$NON-NLS-2$
+																													// $
+						+ "% than the saved average (" + savedAverage + "ms)"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
@@ -230,8 +232,8 @@ public class PerformanceMonitor {
 	 * @throws IOException
 	 */
 	private long getAverage(String testId, int samples) throws IOException {
-		Query query = new TermQuery(new Term("testName", testId));
-		Sort sort = new Sort(new SortedNumericSortField("executionId", SortField.Type.LONG, true));
+		Query query = new TermQuery(new Term("testName", testId)); // $NON-NLS-1
+		Sort sort = new Sort(new SortedNumericSortField("executionId", SortField.Type.LONG, true)); // $NON-NLS-1
 		TopDocs topDocs = this.resultsSearcher.search(query, samples, sort, false, false);
 
 		if (topDocs.scoreDocs.length != samples) {
@@ -239,7 +241,7 @@ public class PerformanceMonitor {
 		}
 		long totalTime = 0;
 		for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
-			long thisValue = this.resultsReader.document(scoreDoc.doc).getField("time").numericValue().longValue();
+			long thisValue = this.resultsReader.document(scoreDoc.doc).getField("time").numericValue().longValue(); // $NON-NLS-1
 			totalTime += thisValue;
 		}
 		return totalTime / samples;
@@ -270,16 +272,16 @@ public class PerformanceMonitor {
 
 	private class ExecutionDocument extends CustomDocument {
 		public ExecutionDocument(long executionId) {
-			this.fields.add(new StoredSortedLongField("executionId", executionId));
+			this.fields.add(new StoredSortedLongField("executionId", executionId)); // $NON-NLS-1
 		}
 
 	}
 
 	private class ResultDocument extends CustomDocument {
 		public ResultDocument(long executionId, String testName, long time) {
-			this.fields.add(new StoredSortedLongField("executionId", executionId));
-			this.fields.add(new StringField("testName", testName, Field.Store.YES));
-			this.fields.add(new StoredLongField("time", time));
+			this.fields.add(new StoredSortedLongField("executionId", executionId)); // $NON-NLS-1
+			this.fields.add(new StringField("testName", testName, Field.Store.YES)); // $NON-NLS-1
+			this.fields.add(new StoredLongField("time", time)); // $NON-NLS-1
 		}
 	}
 }
