@@ -1,0 +1,24 @@
+--TEST--
+Bug 528364 - [code assist] incorrect use statement completion proposals when there's no leading backslash
+--FILE--
+<?php
+namespace MyTestNS1 {	class MyTestClass1 {}	}
+namespace MyTestNS2 {	class MyTestClass2 {}	}
+
+namespace MyTestNS1\NS11 { class MyTestClass3 {} }
+namespace MyTestNS1\NS12 { class MyTestClass4 {} }
+
+namespace MyTestNS2\NS21 { class MyTestClass5 {} }
+namespace MyTestNS2\NS22 { class MyTestClass6 {} }
+
+namespace test{
+	use MyTest|
+}
+?>
+--EXPECT--
+type(MyTestNS1)
+type(MyTestNS2)
+type(MyTestNS1\NS11)
+type(MyTestNS1\NS12)
+type(MyTestNS2\NS21)
+type(MyTestNS2\NS22)
