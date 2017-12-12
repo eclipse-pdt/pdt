@@ -106,7 +106,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 				strategyFactories = CompletionStrategyFactory.getActive();
 			}
 
-			CompletionCompanion companion = new CompletionCompanion();
+			CompletionCompanion companion = new CompletionCompanion(requestor, module, position);
+
 			org.eclipse.dltk.core.ISourceModule sourceModule = (org.eclipse.dltk.core.ISourceModule) module
 					.getModelElement();
 

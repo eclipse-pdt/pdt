@@ -63,6 +63,7 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 
 		// if method parameter context, return false
 		FunctionParameterDefaultValueContext parameterDefaultValueContext = new FunctionParameterDefaultValueContext();
+		parameterDefaultValueContext.init(getCompanion());
 		if (parameterDefaultValueContext.isValid(sourceModule, offset, requestor)) {
 			this.isFunctionParameterContext = true;
 		}

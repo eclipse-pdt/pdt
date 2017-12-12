@@ -29,9 +29,10 @@ public class QuotesContext extends AbstractCompletionContext {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
+		includeStatementContext.init(getCompanion());
 		if (includeStatementContext.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		return (getPartitionType() == PHPPartitionTypes.PHP_QUOTED_STRING);
+		return (getCompanion().getPartitionType() == PHPPartitionTypes.PHP_QUOTED_STRING);
 	}
 }

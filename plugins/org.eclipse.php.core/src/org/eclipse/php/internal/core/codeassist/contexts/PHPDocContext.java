@@ -42,12 +42,12 @@ public abstract class PHPDocContext extends AbstractCompletionContext {
 	}
 
 	protected boolean isRightPartitionType() {
-		return getPartitionType() == PHPPartitionTypes.PHP_DOC;
+		return getCompanion().getPartitionType() == PHPPartitionTypes.PHP_DOC;
 	}
 
 	@Override
 	public int getReplacementEnd() throws BadLocationException {
-		int prefixEnd = getOffset();
+		int prefixEnd = getCompanion().getOffset();
 		// NB: getChar(prefixEnd) returns ' ' if offset is at end of document
 		while (!Character.isWhitespace(getChar(prefixEnd)) && getChar(prefixEnd) != Constants.TYPE_SEPARATOR_CHAR) {
 			++prefixEnd;
@@ -58,6 +58,7 @@ public abstract class PHPDocContext extends AbstractCompletionContext {
 	@Override
 	@NonNull
 	public TextSequence getStatementText() {
-		return PHPTextSequenceUtilities.getStatement(getOffset(), getStructuredDocumentRegion(), false);
+		return PHPTextSequenceUtilities.getStatement(getCompanion().getOffset(),
+				getCompanion().getStructuredDocumentRegion(), false);
 	}
 }

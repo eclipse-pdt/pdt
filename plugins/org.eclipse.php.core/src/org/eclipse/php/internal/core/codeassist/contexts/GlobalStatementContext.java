@@ -47,12 +47,12 @@ public class GlobalStatementContext extends AbstractGlobalStatementContext {
 			if (enclosingElement == null) {
 				int actualOffset = offset - 1;
 				try {
-					PHPHeuristicScanner scanner = PHPHeuristicScanner.createHeuristicScanner(getDocument(),
-							actualOffset, true);
+					PHPHeuristicScanner scanner = PHPHeuristicScanner
+							.createHeuristicScanner(getCompanion().getDocument(), actualOffset, true);
 					int index = scanner.findOpeningPeer(actualOffset, PHPHeuristicScanner.UNBOUND,
 							PHPHeuristicScanner.LBRACE, PHPHeuristicScanner.RBRACE);
 					if (index != PHPHeuristicScanner.NOT_FOUND) {
-						ITextRegion textRegion = getPHPToken(index);
+						ITextRegion textRegion = getCompanion().getPHPToken(index);
 						while (textRegion.getStart() != 0 && textRegion.getType() != PHPRegionTypes.PHP_CURLY_CLOSE) {
 							if (textRegion.getType() == PHPRegionTypes.PHP_CLASS
 									|| textRegion.getType() == PHPRegionTypes.PHP_INTERFACE
@@ -62,7 +62,7 @@ public class GlobalStatementContext extends AbstractGlobalStatementContext {
 							}
 
 							actualOffset = textRegion.getStart() - 1;
-							textRegion = getPHPScriptRegion().getPHPToken(actualOffset);
+							textRegion = getCompanion().getPHPScriptRegion().getPHPToken(actualOffset);
 						}
 					}
 				} catch (BadLocationException e1) {

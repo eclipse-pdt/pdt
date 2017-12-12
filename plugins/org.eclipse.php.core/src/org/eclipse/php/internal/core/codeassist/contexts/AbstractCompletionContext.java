@@ -11,19 +11,15 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.contexts;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.*;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.codeassist.CompletionCompanion;
 import org.eclipse.php.core.codeassist.ICompletionContext;
@@ -31,11 +27,9 @@ import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.core.compiler.ast.visitor.PHPASTVisitor;
-import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
@@ -43,9 +37,6 @@ import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes
 import org.eclipse.php.internal.core.format.PHPHeuristicScanner;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
-import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceAlreadyExists;
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
 
 /**
@@ -62,14 +53,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	private CompletionRequestor requestor;
 	private ISourceModule sourceModule;
 	private int offset;
-	private PHPVersion phpVersion;
-	private IStructuredDocument document;
-	private IStructuredDocumentRegion structuredDocumentRegion;
-	private ITextRegionCollection regionCollection;
-	private IPHPScriptRegion phpScriptRegion;
-	private String partitionType;
-	private String currentNamespaceName;
-	private ISourceRange currentNamespaceRange;
+
 	private boolean namesCalculated = false;
 	private String memberName = null;
 	private String namespaceName = null;
@@ -81,7 +65,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		this.companion = companion;
 	}
 
-	protected CompletionCompanion getCompanion() {
+	public CompletionCompanion getCompanion() {
 		return companion;
 	}
 
@@ -90,31 +74,11 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		this.requestor = requestor;
 		this.sourceModule = sourceModule;
 		this.offset = offset;
-		this.phpVersion = ProjectOptions.getPHPVersion(sourceModule.getScriptProject().getProject());
 
 		try {
-			this.document = determineDocument(sourceModule, requestor);
-			if (this.document != null) {
-
-				structuredDocumentRegion = determineStructuredDocumentRegion(document, offset);
-				if (structuredDocumentRegion != null) {
-
-					regionCollection = determineRegionCollection(document, structuredDocumentRegion, offset);
-					if (regionCollection != null) {
-
-						phpScriptRegion = determinePHPRegion(document, regionCollection, offset);
-						if (phpScriptRegion != null) {
-
-							partitionType = determinePartitionType(regionCollection, phpScriptRegion, offset);
-							if (partitionType != null) {
-								determineNamespace();
-								return true;
-							}
-						}
-					}
-				}
+			if (companion.getPartitionType() != null) {
+				return true;
 			}
-
 		} catch (Exception e) {
 			PHPCorePlugin.log(e);
 		}
@@ -127,250 +91,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	/**
-	 * Determines the structured document region of the place in PHP code where
-	 * completion was requested
-	 * 
-	 * @return structured document region or <code>null</code> in case it could
-	 *         not be determined
-	 */
-	protected IStructuredDocumentRegion determineStructuredDocumentRegion(IStructuredDocument document, int offset) {
-
-		IStructuredDocumentRegion sdRegion = null;
-
-		int lastOffset = offset;
-		// find the structured document region:
-		while (sdRegion == null && lastOffset >= 0) {
-			sdRegion = document.getRegionAtCharacterOffset(lastOffset);
-			lastOffset--;
-		}
-
-		return sdRegion;
-	}
-
-	/**
-	 * Determines the relevant region collection of the place in PHP code where
-	 * completion was requested
-	 * 
-	 * @return text region collection or <code>null</code> in case it could not
-	 *         be determined
-	 */
-	protected ITextRegionCollection determineRegionCollection(IStructuredDocument document,
-			IStructuredDocumentRegion sdRegion, int offset) {
-		ITextRegionCollection regionCollection = sdRegion;
-
-		ITextRegion textRegion = determineTextRegion(document, sdRegion, offset);
-		if (textRegion instanceof ITextRegionContainer) {
-			regionCollection = (ITextRegionContainer) textRegion;
-		}
-		return regionCollection;
-	}
-
-	/**
-	 * Determines the text region from the text region collection and offset
-	 * 
-	 * @param regionCollection
-	 * @param offset
-	 */
-	protected ITextRegion determineTextRegion(IStructuredDocument document, ITextRegionCollection regionCollection,
-			int offset) {
-		ITextRegion textRegion;
-		// in case we are at the end of the document, asking for completion
-		if (offset == document.getLength()) {
-			textRegion = regionCollection.getLastRegion();
-		} else {
-			textRegion = regionCollection.getRegionAtCharacterOffset(offset);
-		}
-		return textRegion;
-	}
-
-	/**
-	 * Determines the PHP script region of PHP code where completion was
-	 * requested
-	 * 
-	 * @return php script region or <code>null</code> in case it could not be
-	 *         determined
-	 */
-	protected IPHPScriptRegion determinePHPRegion(IStructuredDocument document, ITextRegionCollection regionCollection,
-			int offset) {
-		ITextRegion textRegion = determineTextRegion(document, regionCollection, offset);
-		IPHPScriptRegion phpScriptRegion = null;
-
-		if (textRegion != null) {
-			if (textRegion.getType() == PHPRegionContext.PHP_OPEN) {
-				return null;
-			} else if (textRegion.getType() == PHPRegionContext.PHP_CLOSE) {
-				if (regionCollection.getStartOffset(textRegion) == offset) {
-					textRegion = regionCollection.getRegionAtCharacterOffset(offset - 1);
-				} else {
-					return null;
-				}
-			}
-		}
-
-		if (textRegion instanceof IPHPScriptRegion) {
-			phpScriptRegion = (IPHPScriptRegion) textRegion;
-		}
-
-		return phpScriptRegion;
-	}
-
-	/**
-	 * Determines the partition type of the code where cursor is located.
-	 * 
-	 * @param regionCollection
-	 *            Text region collection
-	 * @param phpScriptRegion
-	 *            PHP script region
-	 * @param offset
-	 * @return partition type (see {@link PHPRegionTypes})
-	 * @throws BadLocationException
-	 */
-	protected String determinePartitionType(ITextRegionCollection regionCollection, IPHPScriptRegion phpScriptRegion,
-			int offset) throws BadLocationException {
-		int internalOffset = getOffset(offset, regionCollection, phpScriptRegion);
-		String partitionType = phpScriptRegion.getPartition(internalOffset);
-
-		// if we are at the begining of multi-line comment or docBlock then we
-		// should get completion.
-		if (partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT || partitionType == PHPPartitionTypes.PHP_DOC) {
-			String regionType = phpScriptRegion.getPHPToken(internalOffset).getType();
-			if (PHPPartitionTypes.isPHPMultiLineCommentStartRegion(regionType)
-					|| PHPPartitionTypes.isPHPDocStartRegion(regionType)) {
-				if (phpScriptRegion.getPHPToken(internalOffset).getStart() == internalOffset) {
-					partitionType = phpScriptRegion.getPartition(internalOffset - 1);
-				}
-			}
-		}
-		return partitionType;
-	}
-
-	/**
-	 * Determines the document associated with the editor where code assist has
-	 * been invoked.
-	 * 
-	 * @param module
-	 *            Source module ({@link ISourceModule})
-	 * @param requestor
-	 *            Completion requestor ({@link CompletionRequestor})
-	 * @return structured document or <code>null</code> if it couldn't be found
-	 * @throws CoreException
-	 * @throws IOException
-	 * @throws ResourceAlreadyExists
-	 */
-	protected IStructuredDocument determineDocument(ISourceModule module, CompletionRequestor requestor)
-			throws ResourceAlreadyExists, IOException, CoreException {
-		IStructuredDocument document = null;
-
-		if (requestor instanceof IPHPCompletionRequestor) {
-			IDocument d = ((IPHPCompletionRequestor) requestor).getDocument();
-			if (d instanceof IStructuredDocument) {
-				document = (IStructuredDocument) d;
-			}
-		}
-		if (document == null) {
-			IStructuredModel structuredModel = null;
-			try {
-				IFile file = (IFile) module.getResource();
-				if (file != null) {
-					if (file.exists()) {
-						structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(file);
-						if (structuredModel != null) {
-							document = structuredModel.getStructuredDocument();
-						} else {
-							document = StructuredModelManager.getModelManager().createStructuredDocumentFor(file);
-						}
-					} else {
-						document = StructuredModelManager.getModelManager().createNewStructuredDocumentFor(file);
-						document.set(module.getSource());
-					}
-				}
-			} finally {
-				if (structuredModel != null) {
-					structuredModel.releaseFromRead();
-				}
-			}
-		}
-
-		return document;
-	}
-
-	/**
-	 * Returns PHP version of the file where code assist was requested
-	 * 
-	 * @return PHP version
-	 * @see #isValid(ISourceModule, int, CompletionRequestor)
-	 */
-	public final PHPVersion getPHPVersion() {
-		return phpVersion;
-	}
-
-	/**
-	 * Returns the file where code assist was requested
-	 * 
-	 * @return source module
-	 * @see #isValid(ISourceModule, int, CompletionRequestor)
-	 */
-	@NonNull
-	public final ISourceModule getSourceModule() {
-		return sourceModule;
-	}
-
-	/**
-	 * Returns document associated with the editor where code assist was
-	 * requested
-	 * 
-	 * @return document
-	 * @see #isValid(ISourceModule, int, CompletionRequestor)
-	 */
-	public final IStructuredDocument getDocument() {
-		return document;
-	}
-
-	/**
-	 * Returns the relevant region collection of the place in PHP code where
-	 * completion was requested
-	 * 
-	 * @return text region collection
-	 * @see #isValid(ISourceModule, int, CompletionRequestor)
-	 */
-	public final ITextRegionCollection getRegionCollection() {
-		return regionCollection;
-	}
-
-	/**
-	 * Returns the PHP script region of PHP code where completion was requested
-	 * 
-	 * @return php script region (see {@link IPHPScriptRegion})
-	 * @see #isValid(ISourceModule, int, CompletionRequestor)
-	 */
-	public final IPHPScriptRegion getPHPScriptRegion() {
-		return phpScriptRegion;
-	}
-
-	/**
-	 * Returns partition type of the code where cursor is located.
-	 * 
-	 * @return partition type (see {@link PHPRegionTypes})
-	 * @see #isValid(ISourceModule, int, CompletionRequestor)
-	 */
-	public final String getPartitionType() {
-		return partitionType;
-	}
-
-	/**
-	 * Returns the statement text that is before the cursor
-	 * 
-	 * @return statement text
-	 * @see #isValid(ISourceModule, int, CompletionRequestor)
-	 */
-	@NonNull
-	public TextSequence getStatementText() {
-		return PHPTextSequenceUtilities.getStatement(offset, structuredDocumentRegion, true);
-	}
-
-	/**
-	 * Returns whether there are whitespace characters before the cursor where
-	 * code assist was being invoked
+	 * Returns whether there are whitespace characters before the cursor where code
+	 * assist was being invoked
 	 * 
 	 * @return <code>true</code> if there are whitespace characters before the
 	 *         cursor
@@ -389,15 +111,15 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 * <b>IMPORTANT</b>: note that while {@link #getNextChar()} and
 	 * {@link #getChar(int offset)} will return a space when cursor is at end of
 	 * document, this method will return false when cursor is at end of
-	 * document.
+	 * companion.getDocument().
 	 * 
-	 * @return <code>true</code> if there is a space character at offset
-	 *         position, false otherwise or false when cursor is at end of
-	 *         document
+	 * @return <code>true</code> if there is a space character at offset position,
+	 *         false otherwise or false when cursor is at end of document
 	 */
 	public boolean hasSpaceAtPosition(int offset) {
 		try {
-			return offset >= 0 && offset < document.getLength() && document.getChar(offset) == ' ';
+			return offset >= 0 && offset < companion.getDocument().getLength()
+					&& companion.getDocument().getChar(offset) == ' ';
 		} catch (BadLocationException e) {
 			return false;
 		}
@@ -414,15 +136,6 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	/**
-	 * Returns offset of the cursor position when code assist was invoked
-	 * 
-	 * @return offset
-	 */
-	public final int getOffset() {
-		return offset;
-	}
-
-	/**
 	 * Returns previous word before the cursor position
 	 * 
 	 * @throws BadLocationException
@@ -433,7 +146,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		int statementLength = statementText.length();
 		int wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementLength); // read
 																									// whitespace
-		int wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
+		int wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(companion.getPHPVersion(), statementText,
+				wordEnd, true);
 		if (wordStart < 0 || wordEnd < 0) {
 			return ""; //$NON-NLS-1$
 		}
@@ -445,7 +159,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 
 		wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, wordStart - 1); // read
 																								// whitespace
-		wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
+		wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(companion.getPHPVersion(), statementText, wordEnd,
+				true);
 		if (wordStart < 0 || wordEnd < 0) {
 			return ""; //$NON-NLS-1$
 		}
@@ -465,13 +180,15 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		int statementLength = statementText.length();
 		int wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementLength); // read
 																									// whitespace
-		int wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
+		int wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(companion.getPHPVersion(), statementText,
+				wordEnd, true);
 
 		for (int i = 0; i < times - 1; i++) {
 			statementLength = wordStart;
 			wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementLength); // read
 																									// whitespace
-			wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
+			wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(companion.getPHPVersion(), statementText,
+					wordEnd, true);
 
 		}
 		if (wordStart < 0 || wordEnd < 0) {
@@ -485,7 +202,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 
 		wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, wordStart - 1); // read
 																								// whitespace
-		wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
+		wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(companion.getPHPVersion(), statementText, wordEnd,
+				true);
 		if (wordStart < 0 || wordEnd < 0) {
 			return ""; //$NON-NLS-1$
 		}
@@ -505,13 +223,15 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		int statementLength = statementText.length();
 		int wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementLength); // read
 																									// whitespace
-		int wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
+		int wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(companion.getPHPVersion(), statementText,
+				wordEnd, true);
 
 		for (int i = 0; i < times - 1; i++) {
 			statementLength = wordStart;
 			wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementLength); // read
 																									// whitespace
-			wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
+			wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(companion.getPHPVersion(), statementText,
+					wordEnd, true);
 
 		}
 		if (wordStart < 0 || wordEnd < 0) {
@@ -524,34 +244,13 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 
 		wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, wordStart - 1); // read
 																								// whitespace
-		wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
+		wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(companion.getPHPVersion(), statementText, wordEnd,
+				true);
 		// if (wordStart < 0 || wordEnd < 0) {
 		// return wordStart;
 		// }
 
 		return wordStart;
-	}
-
-	/**
-	 * Returns PHP token under offset
-	 * 
-	 * @return PHP token
-	 * @throws BadLocationException
-	 */
-	public ITextRegion getPHPToken() throws BadLocationException {
-		return getPHPToken(offset);
-	}
-
-	public ITextRegion getPHPToken(int offset) throws BadLocationException {
-		return phpScriptRegion.getPHPToken(getOffset(offset, regionCollection, phpScriptRegion));
-	}
-
-	private int getOffset(int offset, ITextRegionCollection regionCollection, IPHPScriptRegion phpScriptRegion) {
-		int result = offset - regionCollection.getStartOffset() - phpScriptRegion.getStart() - 1;
-		if (result < 0) {
-			result = 0;
-		}
-		return result;
 	}
 
 	/**
@@ -568,7 +267,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		int statementLength = statementText.length();
 		int prefixEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementLength); // read
 																										// whitespace
-		int prefixStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, prefixEnd, true);
+		int prefixStart = PHPTextSequenceUtilities.readIdentifierStartIndex(companion.getPHPVersion(), statementText,
+				prefixEnd, true);
 		return prefixStart < 0 ? "" : statementText.subSequence(prefixStart, prefixEnd).toString(); //$NON-NLS-1$
 	}
 
@@ -589,12 +289,13 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 * @throws BadLocationException
 	 */
 	public int getReplacementEnd() throws BadLocationException {
-		ITextRegion phpToken = getPHPToken();
-		int endOffset = regionCollection.getStartOffset() + phpScriptRegion.getStart() + phpToken.getTextEnd();
+		ITextRegion phpToken = companion.getPHPToken();
+		int endOffset = companion.getRegionCollection().getStartOffset() + companion.getPHPScriptRegion().getStart()
+				+ phpToken.getTextEnd();
 		if (PHPPartitionTypes.isPHPQuotesState(phpToken.getType())) {
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=475671
 			for (int index = offset; index < endOffset; index++) {
-				char charAt = document.getChar(index);
+				char charAt = companion.getDocument().getChar(index);
 				// Stop on quote (even in a heredoc section) or on whitespace:
 				if (Character.isWhitespace(charAt) || charAt == '\'' || charAt == '"') {
 					return index;
@@ -611,14 +312,14 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 * @throws BadLocationException
 	 */
 	public ITextRegion getNextPHPToken() throws BadLocationException {
-		ITextRegion phpToken = getPHPToken();
+		ITextRegion phpToken = companion.getPHPToken();
 		do {
-			phpToken = phpScriptRegion.getPHPToken(phpToken.getEnd());
+			phpToken = companion.getPHPScriptRegion().getPHPToken(phpToken.getEnd());
 			if (!PHPPartitionTypes.isPHPCommentState(phpToken.getType())
 					&& phpToken.getType() != PHPRegionTypes.WHITESPACE) {
 				break;
 			}
-		} while (phpToken.getEnd() < phpScriptRegion.getLength());
+		} while (phpToken.getEnd() < companion.getPHPScriptRegion().getLength());
 
 		return phpToken;
 	}
@@ -627,18 +328,19 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		ITextRegion phpToken = null;
 		int offset = this.offset;
 		while (times-- > 0) {
-			phpToken = getPHPToken(offset);
+			phpToken = companion.getPHPToken(offset);
 			do {
-				phpToken = phpScriptRegion.getPHPToken(phpToken.getEnd());
+				phpToken = companion.getPHPScriptRegion().getPHPToken(phpToken.getEnd());
 				if (!PHPPartitionTypes.isPHPCommentState(phpToken.getType())
 						&& phpToken.getType() != PHPRegionTypes.WHITESPACE) {
 					break;
 				}
-			} while (phpToken.getEnd() < phpScriptRegion.getLength());
+			} while (phpToken.getEnd() < companion.getPHPScriptRegion().getLength());
 			if (phpToken == null) {
 				return null;
 			} else {
-				offset = regionCollection.getStartOffset() + phpScriptRegion.getStart() + phpToken.getEnd();
+				offset = companion.getRegionCollection().getStartOffset() + companion.getPHPScriptRegion().getStart()
+						+ phpToken.getEnd();
 			}
 		}
 
@@ -652,19 +354,19 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 */
 	public String getNextWord() throws BadLocationException {
 		ITextRegion nextPHPToken = getNextPHPToken();
-		return document.get(regionCollection.getStartOffset() + phpScriptRegion.getStart() + nextPHPToken.getStart(),
-				nextPHPToken.getTextLength());
+		return companion.getDocument().get(companion.getRegionCollection().getStartOffset()
+				+ companion.getPHPScriptRegion().getStart() + nextPHPToken.getStart(), nextPHPToken.getTextLength());
 	}
 
 	public String getNextWord(int times) throws BadLocationException {
 		ITextRegion nextPHPToken = getNextPHPToken(times);
-		return document.get(regionCollection.getStartOffset() + phpScriptRegion.getStart() + nextPHPToken.getStart(),
-				nextPHPToken.getTextLength());
+		return companion.getDocument().get(companion.getRegionCollection().getStartOffset()
+				+ companion.getPHPScriptRegion().getStart() + nextPHPToken.getStart(), nextPHPToken.getTextLength());
 	}
 
 	/**
-	 * Returns next character after the cursor position (or ' ' if cursor
-	 * position is at end of document)
+	 * Returns next character after the cursor position (or ' ' if cursor position
+	 * is at end of document)
 	 * 
 	 * @throws BadLocationException
 	 */
@@ -681,20 +383,20 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	public char getChar(int offset) throws BadLocationException {
 		// if the location is the end of the document, we return ' ' to
 		// avoid the BadLocationException
-		if (document.getLength() == offset) {
+		if (companion.getDocument().getLength() == offset) {
 			return ' ';
 		}
-		return document.getChar(offset);
+		return companion.getDocument().getChar(offset);
 	}
 
 	public int getUseTraitStatementContext() {
-		return getUseTraitStatementContext(offset, structuredDocumentRegion);
+		return getUseTraitStatementContext(offset, companion.getStructuredDocumentRegion());
 	}
 
 	public int getUseTraitStatementContext(int offset, IStructuredDocumentRegion sdRegion) {
 		List<String> types = new ArrayList<>();
 		if (sdRegion == null) {
-			sdRegion = structuredDocumentRegion;
+			sdRegion = companion.getStructuredDocumentRegion();
 		}
 		int documentOffset = offset;
 		if (documentOffset == sdRegion.getEndOffset()) {
@@ -768,7 +470,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 			String type = types.get(1);
 			try {
 				if (type == PHPRegionTypes.PHP_SEMICOLON && type1 == PHPRegionTypes.PHP_LABEL
-						&& Character.isWhitespace(document.getChar(offset - 1))) {
+						&& Character.isWhitespace(companion.getDocument().getChar(offset - 1))) {
 
 					return TRAIT_KEYWORD;
 				}
@@ -800,21 +502,20 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	public boolean isInUseTraitStatement() {
-		return isInUseTraitStatement(offset, structuredDocumentRegion);
+		return isInUseTraitStatement(offset, companion.getStructuredDocumentRegion());
 	}
 
 	private List<String> useTypes;
 
 	public boolean isInUseTraitStatement(int offset, IStructuredDocumentRegion sdRegion) {
-		PHPVersion phpVersion = ProjectOptions.getPHPVersion(sourceModule.getScriptProject().getProject());
-		if (phpVersion.isLessThan(PHPVersion.PHP5_4)) {
+		if (companion.getPHPVersion().isLessThan(PHPVersion.PHP5_4)) {
 			return false;
 		}
 		if (useTypes != null) {
 			return true;
 		}
 		if (sdRegion == null) {
-			sdRegion = structuredDocumentRegion;
+			sdRegion = companion.getStructuredDocumentRegion();
 		}
 		int documentOffset = offset;
 		if (documentOffset == sdRegion.getEndOffset()) {
@@ -860,7 +561,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 						// should go right after this startTokenRegion):
 						// startOffset += startTokenRegion.getEnd();
 						TextSequence statementText1 = PHPTextSequenceUtilities.getStatement(
-								startOffset + startTokenRegion.getStart() - 1, structuredDocumentRegion, true);
+								startOffset + startTokenRegion.getStart() - 1, companion.getStructuredDocumentRegion(),
+								true);
 						startTokenRegion = phpScriptRegion
 								.getPHPToken(startTokenRegion.getStart() - statementText1.length());
 						if (startTokenRegion.getType() == PHPRegionTypes.PHP_USE) {
@@ -894,9 +596,10 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	protected IModelElement getEnclosingElement() {
 		try {
 			int offset = this.offset;
-			PHPHeuristicScanner heuristicScanner = PHPHeuristicScanner.createHeuristicScanner(document, offset, true);
-			if (offset >= document.getLength()) {
-				offset = document.getLength() - 1;
+			PHPHeuristicScanner heuristicScanner = PHPHeuristicScanner.createHeuristicScanner(companion.getDocument(),
+					offset, true);
+			if (offset >= companion.getDocument().getLength()) {
+				offset = companion.getDocument().getLength() - 1;
 			}
 			int open = heuristicScanner.findOpeningPeer(offset, PHPHeuristicScanner.UNBOUND, PHPHeuristicScanner.LBRACE,
 					PHPHeuristicScanner.RBRACE);
@@ -941,86 +644,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		return null;
 	}
 
-	@NonNull
-	public final IStructuredDocumentRegion getStructuredDocumentRegion() {
-		return structuredDocumentRegion;
-	}
-
 	public List<String> getUseTypes() {
 		return useTypes;
-	}
-
-	private void determineNamespace() throws BadLocationException {
-		int pos = offset;
-		if (pos >= document.getLength() - 1) {
-			pos = document.getLength() - 1;
-		}
-
-		PHPHeuristicScanner scanner = new PHPHeuristicScanner(document,
-				IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, PHPPartitionTypes.PHP_DEFAULT);
-		int token = PHPHeuristicScanner.UNBOUND;
-		while (token != PHPHeuristicScanner.NOT_FOUND && pos > 0) {
-			token = scanner.previousToken(pos, PHPHeuristicScanner.UNBOUND);
-			pos = scanner.getPosition();
-			if (token != PHPHeuristicScanner.NOT_FOUND) {
-				ITextRegion textRegion = scanner.getTextRegion(pos);
-				if (textRegion != null && textRegion.getType() == PHPRegionTypes.PHP_NAMESPACE) {
-					int nameStart = scanner.findNonWhitespaceForward(pos, PHPHeuristicScanner.UNBOUND);
-					if (!Character.isWhitespace(document.getChar(pos))) {
-						continue;
-					}
-					int nameEnd = nameStart;
-					int detectRange = PHPHeuristicScanner.NOT_FOUND;
-					char part = document.getChar(nameEnd);
-					if (part != PHPHeuristicScanner.LBRACE) {
-						StringBuilder name = new StringBuilder();
-						while (Character.isJavaIdentifierPart(part) || part == NamespaceReference.NAMESPACE_SEPARATOR) {
-							name.append(part);
-							nameEnd++;
-							part = document.getChar(nameEnd);
-						}
-						currentNamespaceName = name.toString();
-						if (Character.isWhitespace(part)) {
-							nameEnd = scanner.findNonWhitespaceForward(nameEnd, PHPHeuristicScanner.UNBOUND);
-							if (nameEnd != PHPHeuristicScanner.NOT_FOUND) {
-								part = document.getChar(nameEnd);
-							}
-						}
-						if (part == PHPHeuristicScanner.LBRACE) {
-							detectRange = nameEnd;
-						}
-					} else {
-						detectRange = nameStart;
-					}
-					if (detectRange != PHPHeuristicScanner.NOT_FOUND) {
-						int close = scanner.findClosingPeer(detectRange, PHPHeuristicScanner.LBRACE,
-								PHPHeuristicScanner.RBRACE);
-						if (close != PHPHeuristicScanner.NOT_FOUND) {
-							currentNamespaceRange = new SourceRange(textRegion.getStart(),
-									close - textRegion.getStart());
-						}
-					}
-					break;
-				} else if (textRegion instanceof IPHPScriptRegion) {
-					pos = textRegion.getStart() - 1;
-				}
-			}
-		}
-		if (currentNamespaceRange == null) {
-			currentNamespaceRange = new SourceRange(0, document.getLength());
-		}
-	}
-
-	public String getCurrentNamespace() {
-		return currentNamespaceName;
-	}
-
-	public ISourceRange getCurrentNamespaceRange() {
-		return currentNamespaceRange;
-	}
-
-	public boolean isGlobalNamespace() {
-		return getCurrentNamespace() == null;
 	}
 
 	private void calculateNames() throws BadLocationException {
@@ -1130,10 +755,10 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 
 	private String resolveNamespace(String name) throws BadLocationException {
 		if (name == null) {
-			return getCurrentNamespace();
+			return companion.getCurrentNamespace();
 		}
-		ISourceModule sourceModule = getSourceModule();
-		final ISourceRange validRange = getCurrentNamespaceRange();
+		ISourceModule sourceModule = companion.getSourceModule();
+		final ISourceRange validRange = companion.getCurrentNamespaceRange();
 
 		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 		try {
@@ -1144,8 +769,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 			} else {
 				search = name.substring(0, searchEnd);
 			}
-			if ("namespace".equalsIgnoreCase(search)) {
-				search = getCurrentNamespace();
+			if ("namespace".equalsIgnoreCase(search)) { // $NON-NLS-1$
+				search = companion.getCurrentNamespace();
 				if (searchEnd < 1) {
 					return search;
 				} else {
@@ -1166,7 +791,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
-		String current = getCurrentNamespace();
+		String current = companion.getCurrentNamespace();
 
 		if (current != null) {
 			return new StringBuilder(current).append(NamespaceReference.NAMESPACE_SEPARATOR).append(name).toString();
@@ -1225,5 +850,76 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 
 			return false;
 		}
+	}
+
+	/**
+	 * Returns the statement text that is before the cursor
+	 * 
+	 * @return statement text
+	 * @see #isValid(ISourceModule, int, CompletionRequestor)
+	 */
+	@NonNull
+	public TextSequence getStatementText() {
+		return PHPTextSequenceUtilities.getStatement(offset, companion.getStructuredDocumentRegion(), true);
+	}
+
+	@Deprecated
+	public final int getOffset() {
+		return getCompanion().getOffset();
+	}
+
+	@Deprecated
+	public final ISourceModule getSourceModule() {
+		return getCompanion().getSourceModule();
+	}
+
+	@Deprecated
+	public final IStructuredDocument getDocument() {
+		return getCompanion().getDocument();
+	}
+
+	@Deprecated
+	public final PHPVersion getPHPVersion() {
+		return getCompanion().getPHPVersion();
+	}
+
+	@Deprecated
+	public final IPHPScriptRegion getPHPScriptRegion() {
+		return getCompanion().getPHPScriptRegion();
+	}
+
+	@Deprecated
+	public final ITextRegion getPHPToken() throws BadLocationException {
+		return getCompanion().getPHPToken();
+	}
+
+	@Deprecated
+	public final ITextRegion getPHPToken(int offset) throws BadLocationException {
+		return getCompanion().getPHPToken(offset);
+	}
+
+	@Deprecated
+	public final String getCurrentNamespace() {
+		return getCompanion().getCurrentNamespace();
+	}
+
+	@Deprecated
+	public final boolean isGlobalNamespace() {
+		return getCompanion().isGlobalNamespace();
+	}
+
+	@Deprecated
+	public final ISourceRange getCurrentNamespaceRange() {
+		return getCompanion().getCurrentNamespaceRange();
+	}
+
+	@Deprecated
+	public final String getPartitionType() {
+		return getCompanion().getPartitionType();
+	}
+
+	@Deprecated
+	public final IStructuredDocumentRegion getStructuredDocumentRegion() {
+		return getCompanion().getStructuredDocumentRegion();
 	}
 }

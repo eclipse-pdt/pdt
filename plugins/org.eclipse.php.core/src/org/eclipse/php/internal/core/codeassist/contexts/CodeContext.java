@@ -28,6 +28,6 @@ public abstract class CodeContext extends AbstractCompletionContext {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		return (getPartitionType() == PHPPartitionTypes.PHP_DEFAULT);
+		return (getCompanion().getPartitionType() == PHPPartitionTypes.PHP_DEFAULT);
 	}
 }
