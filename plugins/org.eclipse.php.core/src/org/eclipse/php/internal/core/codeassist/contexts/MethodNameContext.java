@@ -50,7 +50,8 @@ public class MethodNameContext extends FunctionDeclarationContext {
 			}
 		}
 
-		declaringClass = PHPModelUtils.getCurrentType(getSourceModule(), statementText.getOriginalOffset(functionEnd));
+		declaringClass = PHPModelUtils.getCurrentType(getCompanion().getSourceModule(),
+				statementText.getOriginalOffset(functionEnd));
 		if (declaringClass == null) {
 			return false;
 		}

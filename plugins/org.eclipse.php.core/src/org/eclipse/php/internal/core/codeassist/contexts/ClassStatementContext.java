@@ -53,7 +53,8 @@ public final class ClassStatementContext extends AbstractGlobalStatementContext 
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=495022
 					offset--;
 				}
-				PHPHeuristicScanner scanner = PHPHeuristicScanner.createHeuristicScanner(getDocument(), offset, true);
+				PHPHeuristicScanner scanner = PHPHeuristicScanner.createHeuristicScanner(getCompanion().getDocument(),
+						offset, true);
 				isAssignment = scanner.scanBackward(offset, ((IType) enclosingElement).getSourceRange().getOffset(),
 						'=') > -1;
 				return true;
