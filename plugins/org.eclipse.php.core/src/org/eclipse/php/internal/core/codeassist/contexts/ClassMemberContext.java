@@ -151,10 +151,10 @@ public abstract class ClassMemberContext extends StatementContext {
 
 	@Override
 	public int getReplacementEnd() throws BadLocationException {
-		ITextRegion phpToken = getPHPToken();
+		ITextRegion phpToken = getCompanion().getPHPToken();
 		if (phpToken.getType() == PHPRegionTypes.PHP_OBJECT_OPERATOR
 				|| phpToken.getType() == PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM) {
-			IPHPScriptRegion phpScriptRegion = getPHPScriptRegion();
+			IPHPScriptRegion phpScriptRegion = getCompanion().getPHPScriptRegion();
 			ITextRegion nextRegion = phpScriptRegion.getPHPToken(phpToken.getEnd());
 
 			if (phpToken.getTextLength() == phpToken.getLength()) {
@@ -165,7 +165,7 @@ public abstract class ClassMemberContext extends StatementContext {
 				} else {
 					addOffset = nextRegion.getTextEnd();
 				}
-				return getRegionCollection().getStartOffset() + phpScriptRegion.getStart() + addOffset;
+				return getCompanion().getRegionCollection().getStartOffset() + phpScriptRegion.getStart() + addOffset;
 			}
 		}
 		return super.getReplacementEnd();

@@ -34,7 +34,7 @@ public class FunctionReturnTypeContext extends FunctionDeclarationContext {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		if (getPHPVersion().isLessThan(PHPVersion.PHP7_0)) {
+		if (getCompanion().getPHPVersion().isLessThan(PHPVersion.PHP7_0)) {
 			return false;
 		}
 
@@ -58,7 +58,7 @@ public class FunctionReturnTypeContext extends FunctionDeclarationContext {
 			return false;
 		}
 		if (prevChar == '?') {
-			if (getPHPVersion().isLessThan(PHPVersion.PHP7_1)) {
+			if (getCompanion().getPHPVersion().isLessThan(PHPVersion.PHP7_1)) {
 				return false;
 			}
 			curr = PHPTextSequenceUtilities.readBackwardSpaces(statementText, curr - 1);

@@ -29,7 +29,7 @@ public class GotoStatementContext extends StatementContext {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		if (getPHPVersion().isLessThan(PHPVersion.PHP5_3)) {
+		if (getCompanion().getPHPVersion().isLessThan(PHPVersion.PHP5_3)) {
 			return false;
 		}
 		try {
