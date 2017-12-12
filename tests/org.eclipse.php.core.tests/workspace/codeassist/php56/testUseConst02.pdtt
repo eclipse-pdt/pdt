@@ -12,7 +12,7 @@ namespace Foo{
 
 namespace Bar{
 
-	use const foo_|
+	use const Foo\foo_|
 }
 --EXPECT--
 field(foo_max)

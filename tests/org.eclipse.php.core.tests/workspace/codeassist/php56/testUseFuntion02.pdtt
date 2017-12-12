@@ -15,7 +15,7 @@ namespace Foo{
 
 namespace Bar{
 
-	use function foo_|
+	use function Foo\foo_|
 }
 --EXPECT--
 method(foo_function)
