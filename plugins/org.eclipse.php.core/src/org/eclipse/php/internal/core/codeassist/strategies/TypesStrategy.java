@@ -114,7 +114,8 @@ public class TypesStrategy extends ElementsStrategy {
 					reporter.reportType(type, nsUseGroupPrefix, isNamespace ? nsSuffix : suffix,
 							isNamespace ? replacementRange : memberReplacementRange, extraInfo, relevance);
 				} else {
-					if (isNamespace || abstractContext.isAbsoluteName() || abstractContext.isAbsolute()) {
+					boolean isAbsoluteType = abstractContext.isAbsoluteName() || abstractContext.isAbsolute();
+					if (isNamespace || isAbsoluteType) {
 						reporter.reportType(type, isNamespace ? nsSuffix : suffix, replacementRange,
 								extraInfo | ProposalExtraInfo.MEMBER_IN_NAMESPACE, relevance);
 					} else {
@@ -259,14 +260,17 @@ public class TypesStrategy extends ElementsStrategy {
 		List<IType> result = new LinkedList<>();
 		String memberName = context.getMemberName();
 		String namespaceName = context.getQualifier(false);
+		boolean isAbsoluteType = context.isAbsoluteName() || context.isAbsolute();
 
 		StringBuilder sb = new StringBuilder();
 		String altNamespacePrefix = null;
 		if (namespaceName != null) {
 			sb.append(namespaceName).append(NamespaceReference.NAMESPACE_SEPARATOR);
-		} else if (!context.isAbsoluteName() && context.getCurrentNamespace() != null && useCurrentNamespace) {
+		} else if (!isAbsoluteType && context.getCurrentNamespace() != null && useCurrentNamespace) {
 			altNamespacePrefix = new StringBuilder().append(context.getCurrentNamespace())
 					.append(NamespaceReference.NAMESPACE_SEPARATOR).append(memberName).toString();
+		} else if (!context.isAbsoluteName() && context.isAbsolute()) {
+			sb.append(NamespaceReference.NAMESPACE_SEPARATOR);
 		}
 		String namespacePrefix = sb.append(memberName).toString();
 		if (memberName.length() > 1 && memberName.toUpperCase().equals(memberName)) {
@@ -276,7 +280,7 @@ public class TypesStrategy extends ElementsStrategy {
 					MatchRule.CAMEL_CASE, trueFlag, falseFlag, scope, null);
 
 			result.addAll(Arrays.asList(types));
-			if ((falseFlag & PHPFlags.AccNameSpace) == 0 || context.isAbsoluteName() || namespaceName != null) {
+			if ((falseFlag & PHPFlags.AccNameSpace) == 0 || isAbsoluteType || namespaceName != null) {
 				if (namespacePrefix.length() > 0) {
 					IType[] namespaces = PHPModelAccess.getDefault().findNamespaces(null, namespacePrefix.toString(),
 							MatchRule.CAMEL_CASE, trueFlag, 0, scope, null);
@@ -288,7 +292,7 @@ public class TypesStrategy extends ElementsStrategy {
 				MatchRule.PREFIX, trueFlag, falseFlag, scope, null);
 
 		result.addAll(Arrays.asList(types));
-		if ((falseFlag & PHPFlags.AccNameSpace) == 0 || context.isAbsoluteName() || namespaceName != null
+		if ((falseFlag & PHPFlags.AccNameSpace) == 0 || isAbsoluteType || namespaceName != null
 				|| altNamespacePrefix != null) {
 			if (namespacePrefix.length() > 0) {
 				IType[] namespaces = PHPModelAccess.getDefault().findNamespaces(null, namespacePrefix, MatchRule.PREFIX,

@@ -18,6 +18,7 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.annotations.NonNull;
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.*;
@@ -1030,21 +1031,33 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		String prefix = getNamesPrefix();
 		namespaceName = extractNamespace(prefix);
 		memberName = extractMemberName(prefix);
+		resolvedNamespaceName = null;
 
-		if (prefix.length() > 0 && prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+		if (namespaceName != null && namespaceName.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
 			absolute = true;
 		} else {
 			absolute = false;
 		}
 
 		if (absolute || isAbsolute()) {
-			resolvedNamespaceName = namespaceName;
-		} else if (!absolute && namespaceName != null) {
+			if (!absolute && namespaceName != null) {
+				resolvedNamespaceName = NamespaceReference.NAMESPACE_SEPARATOR + namespaceName;
+			} else {
+				resolvedNamespaceName = namespaceName;
+			}
+		} else if (namespaceName != null) {
 			resolvedNamespaceName = resolveNamespace(namespaceName);
 		}
 	}
 
-	protected String extractNamespace(String prefix) {
+	/**
+	 * Extracts namespace name.
+	 * 
+	 * @param prefix
+	 * @return non-empty namespace name, otherwise null
+	 */
+	@Nullable
+	private String extractNamespace(String prefix) {
 		prefix = realPrefix(prefix);
 
 		int pos = prefix.lastIndexOf(NamespaceReference.NAMESPACE_DELIMITER);
@@ -1060,7 +1073,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		return name;
 	}
 
-	protected String extractMemberName(String prefix) {
+	@NonNull
+	private String extractMemberName(String prefix) {
 		prefix = realPrefix(prefix);
 
 		int pos = prefix.lastIndexOf(NamespaceReference.NAMESPACE_DELIMITER);
@@ -1095,6 +1109,16 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		return absolute;
 	}
 
+	/**
+	 * Returns the qualifier. For global namespaces, it either returns null or
+	 * <code>PHPCoreConstants.GLOBAL_NAMESPACE</code> depending on the value of
+	 * parameter <code>useGlobal</code>.
+	 * 
+	 * @param useGlobal
+	 * @return
+	 * @throws BadLocationException
+	 */
+	@Nullable
 	public String getQualifier(boolean useGlobal) throws BadLocationException {
 		if (isAbsoluteName()) {
 			if (resolvedNamespaceName == null && useGlobal) {
@@ -1111,7 +1135,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		return false;
 	}
 
-	public String resolveNamespace(String name) throws BadLocationException {
+	private String resolveNamespace(String name) throws BadLocationException {
 		if (name == null) {
 			return getCurrentNamespace();
 		}
@@ -1158,7 +1182,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		return name;
 	}
 
-	protected String realPrefix(String prefix) {
+	private String realPrefix(String prefix) {
 		prefix = prefix.replaceAll("\\s+", ""); //$NON-NLS-1$ //$NON-NLS-2$
 		if (prefix.length() > 0 && prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
 			return prefix.substring(1);
