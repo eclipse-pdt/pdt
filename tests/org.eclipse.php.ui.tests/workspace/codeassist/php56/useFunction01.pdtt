@@ -5,18 +5,18 @@ org.eclipse.php.core/contentAssistInsertCompletion=true
 --FILE--
 <?php
 namespace Bar{
-    function foo(){
+    function goo(){
     }
 }
 namespace {
-    use function foo|
+    use function Bar\g|
 }
 --EXPECT--
 <?php
 namespace Bar{
-    function foo(){
+    function goo(){
     }
 }
 namespace {
-    use function Bar\foo
+    use function Bar\goo
 }
