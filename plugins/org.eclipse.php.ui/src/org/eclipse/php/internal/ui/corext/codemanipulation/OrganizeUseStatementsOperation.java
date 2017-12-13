@@ -61,9 +61,10 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 		 * @param openChoices
 		 *            From each array, a type reference has to be selected
 		 * @param ranges
-		 *            For each choice the range of the corresponding type reference.
-		 * @return Returns <code>null</code> to cancel the operation, or the selected
-		 *         imports.
+		 *            For each choice the range of the corresponding type
+		 *            reference.
+		 * @return Returns <code>null</code> to cancel the operation, or the
+		 *         selected imports.
 		 */
 		IElementNameMatch[] chooseImports(IElementNameMatch[][] openChoices, ISourceRange[] ranges);
 	}
@@ -100,7 +101,7 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 				}
 				for (UseStatementPart part : importDeclaration.parts()) {
 
-					String qualifiedName = part.getName().getName();
+					String qualifiedName = part.getFullUseStatementName();
 
 					String simpleName = qualifiedName
 							.substring(qualifiedName.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR) + 1);
@@ -233,7 +234,8 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 		}
 
 		/**
-		 * Tries to find the given element name and add it to the import structure.
+		 * Tries to find the given element name and add it to the import
+		 * structure.
 		 * 
 		 * @param ref
 		 *            the name node
@@ -753,7 +755,7 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 		for (int i = 0; i < imports.size(); i++) {
 			UseStatement curr = imports.get(i);
 			for (UseStatementPart part : curr.parts()) {
-				String importName = part.getName().getName();
+				String importName = part.getFullUseStatementName();
 				if (part.getAlias() != null) {
 					importName += " as " + part.getAlias().getName(); //$NON-NLS-1$
 				}

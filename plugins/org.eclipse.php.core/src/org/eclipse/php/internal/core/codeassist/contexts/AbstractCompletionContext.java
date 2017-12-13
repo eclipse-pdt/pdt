@@ -1212,13 +1212,13 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 				return false;
 			}
 			for (UsePart part : s.getParts()) {
-				if (part.getNamespace() == null || part.getStatementType() != UseStatement.T_NONE) {
+				if (part.getStatementType() != UseStatement.T_NONE) {
 					continue;
 				}
 				String name = part.getAlias() != null ? part.getAlias().getName() : part.getNamespace().getName();
 				if (name.equalsIgnoreCase(search)) {
 					stop = true;
-					found = part.getNamespace().getFullyQualifiedName();
+					found = part.getFullUseStatementName();
 					break;
 				}
 			}
