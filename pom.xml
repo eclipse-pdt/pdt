@@ -241,7 +241,7 @@
 				</property>
 			</activation>
 			<properties>
-				<eclipse.name>neon</eclipse.name>
+				<eclipse.name>photon</eclipse.name>
 			</properties>
 		</profile>
 		<profile>
