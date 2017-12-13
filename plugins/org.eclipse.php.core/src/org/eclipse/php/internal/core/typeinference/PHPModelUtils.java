@@ -146,6 +146,7 @@ public class PHPModelUtils {
 
 	/**
 	 * Concatenate FQN parameters into one string e.g. 'A\B' + 'C\D' = 'A\B\C\D'
+	 * or '\A\B' + '\C\D' = '\A\B\C\D'
 	 * 
 	 * @param fqns
 	 *            names to concat
@@ -169,14 +170,16 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * Concatenes FQN from UseStatement and one of its UsePart. Supports normal use
-	 * statements and grouped use statements.
+	 * Concatenes FQN from UseStatement and one of its UsePart. Supports normal
+	 * use statements and grouped use statements. <b>Returned FQN should have
+	 * no leading '\'.</b>
 	 * 
 	 * @param declaration
 	 * @param part
 	 * @return
 	 * @see ASTUtils.createFakeGroupUseType(usePart)
 	 */
+	@Deprecated
 	public static String concatFullyQualifiedNames(UseStatement declaration, UsePart part) {
 		if (declaration.getNamespace() == null) {
 			return part.getNamespace().getFullyQualifiedName();

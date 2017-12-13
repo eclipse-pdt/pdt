@@ -18,6 +18,7 @@ import java.util.List;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.match.ASTMatcher;
 import org.eclipse.php.core.ast.visitor.Visitor;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
  * Represents an element of the 'use' declaration.
@@ -278,6 +279,26 @@ public class UseStatementPart extends ASTNode {
 			}
 		}
 		return super.internalGetSetIntProperty(property, get, value);
+	}
+
+	/**
+	 * Returns the fully qualified name (without leading '\') that is the
+	 * concatenation of the group use statement name (if any) and this use
+	 * statement part name. Supports normal use statements and grouped use
+	 * statements. <b>Returned name will not be null, will not be empty and will
+	 * have no leading '\'.</b>
+	 * 
+	 * @return full use statement name
+	 */
+	public String getFullUseStatementName() {
+		UseStatement declaration = null;
+		if (getParent() instanceof UseStatement) {
+			declaration = (UseStatement) getParent();
+		}
+		if (declaration == null || declaration.getNamespace() == null) {
+			return getName().getName();
+		}
+		return PHPModelUtils.concatFullyQualifiedNames(declaration.getNamespace().getName(), getName().getName());
 	}
 
 }

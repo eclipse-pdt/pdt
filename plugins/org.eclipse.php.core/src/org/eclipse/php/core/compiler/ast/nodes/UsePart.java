@@ -14,6 +14,8 @@ package org.eclipse.php.core.compiler.ast.nodes;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.references.SimpleReference;
+import org.eclipse.php.core.ast.nodes.UseStatement;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
  * Represent a 'use' part statement. e.g.
@@ -103,5 +105,22 @@ public class UsePart extends ASTNode {
 
 	public int getStatementType() {
 		return statementType;
+	}
+
+	/**
+	 * Returns the fully qualified name (without leading '\') that is the
+	 * concatenation of the group use statement name (if any) and this use
+	 * statement part name. Supports normal use statements and grouped use
+	 * statements. <b>Returned name will not be null, will not be empty and will
+	 * have no leading '\'.</b>
+	 * 
+	 * @return full use statement name
+	 */
+	public String getFullUseStatementName() {
+		if (getGroupNamespace() == null) {
+			return getNamespace().getFullyQualifiedName();
+		}
+		return PHPModelUtils.concatFullyQualifiedNames(getGroupNamespace().getFullyQualifiedName(),
+				getNamespace().getFullyQualifiedName());
 	}
 }
