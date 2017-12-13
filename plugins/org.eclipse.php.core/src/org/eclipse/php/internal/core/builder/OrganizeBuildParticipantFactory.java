@@ -149,7 +149,7 @@ public class OrganizeBuildParticipantFactory extends AbstractBuildParticipantTyp
 				int lineNumber = context.getLineTracker().getLineNumberOfOffset(sourceStart);
 
 				DefaultProblem problem = new DefaultProblem(context.getFile().getName(),
-						Messages.format(UNUSED_MESSAGE, part.getNamespace().getFullyQualifiedName()),
+						Messages.format(UNUSED_MESSAGE, part.getFullUseStatementName()),
 						PHPProblemIdentifier.USE_STATEMENTS, new String[0], ProblemSeverities.Warning, sourceStart,
 						sourceEnd, lineNumber, -1);
 

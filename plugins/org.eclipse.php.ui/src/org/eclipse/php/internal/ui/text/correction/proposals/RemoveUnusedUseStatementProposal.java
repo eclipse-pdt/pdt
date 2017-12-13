@@ -89,7 +89,7 @@ public class RemoveUnusedUseStatementProposal extends CUCorrectionProposal {
 			}
 			for (UseStatementPart part : parts) {
 				int index = parts.indexOf(part);
-				String namespace = getNamespaceName(part.getName());
+				String namespace = part.getFullUseStatementName();
 				if (currentNamespace.equals(namespace)) {
 					int start = part.getStart();
 					int length = 0;

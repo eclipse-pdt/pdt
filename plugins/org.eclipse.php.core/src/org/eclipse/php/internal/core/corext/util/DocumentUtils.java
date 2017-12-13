@@ -259,7 +259,7 @@ public class DocumentUtils {
 			if (!first) {
 				use += ", "; //$NON-NLS-1$
 			}
-			use += part.getNamespace().getFullyQualifiedName();
+			use += part.getFullUseStatementName();
 			if (part.getAlias() != null) {
 				use += " as " + part.getAlias().getName(); //$NON-NLS-1$
 			}
