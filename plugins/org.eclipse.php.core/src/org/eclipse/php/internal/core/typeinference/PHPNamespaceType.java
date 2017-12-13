@@ -28,7 +28,7 @@ public class PHPNamespaceType implements IClassType {
 	 * Constructs evaluated type for PHP namespace.
 	 */
 	public PHPNamespaceType(String typeName) {
-		if (typeName != null && typeName.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
+		if (typeName != null && !typeName.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
 			// make the namespace fully qualified:
 			typeName = new StringBuilder().append(NamespaceReference.NAMESPACE_DELIMITER).append(typeName).toString();
 		}

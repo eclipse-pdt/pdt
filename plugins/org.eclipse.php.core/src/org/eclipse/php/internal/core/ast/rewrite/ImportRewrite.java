@@ -204,7 +204,7 @@ public final class ImportRewrite {
 							buf.append(part.getAlias().getName());
 						} else {
 							buf.append(NORMAL_PREFIX);
-							buf.append(part.getName().getName());
+							buf.append(part.getFullUseStatementName());
 						}
 						imports.add(buf.toString());
 					}
