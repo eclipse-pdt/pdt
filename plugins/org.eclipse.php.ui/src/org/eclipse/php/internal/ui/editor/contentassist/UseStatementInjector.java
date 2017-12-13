@@ -228,7 +228,7 @@ public class UseStatementInjector {
 									offset += edits.getLength();
 									proposal.setReplacementOffset(replacementOffset);
 								} else if (!useAlias && (usePart == null
-										|| !usePartName.equals(usePart.getNamespace().getFullyQualifiedName()))) {
+										|| !usePartName.equals(usePart.getFullUseStatementName()))) {
 									// if the type name already exists, use
 									// fully
 									// qualified name to replace
@@ -396,8 +396,7 @@ public class UseStatementInjector {
 				int replacementOffset = proposal.getReplacementOffset() + edits.getLength();
 				offset += edits.getLength();
 				proposal.setReplacementOffset(replacementOffset);
-			} else if (!useAlias
-					&& (usePart == null || !usePartName.equals(usePart.getNamespace().getFullyQualifiedName()))) {
+			} else if (!useAlias && (usePart == null || !usePartName.equals(usePart.getFullUseStatementName()))) {
 				String namespacePrefix = NamespaceReference.NAMESPACE_SEPARATOR + namespaceName
 						+ NamespaceReference.NAMESPACE_SEPARATOR;
 				String replacementString = proposal.getReplacementString();
