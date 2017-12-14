@@ -4225,7 +4225,7 @@ class DOMXPath  {
 	 * the root element.
 	 * @param bool $registerNodeNS [optional] The optional registerNodeNS can be specified to 
 	 * disable automatic registration of the context node.
-	 * @return DOMNodeList a DOMNodeList containing all nodes matching
+	 * @return DOMNodeList|array[DOMNode] a DOMNodeList containing all nodes matching
 	 * the given XPath expression. Any expression which
 	 * does not return nodes will return an empty
 	 * DOMNodeList.
