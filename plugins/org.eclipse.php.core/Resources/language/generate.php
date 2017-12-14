@@ -26,6 +26,11 @@ function rewrite_phpdoc_return_types ($funckey, $returnTypes) {
 			$returnTypes = 'mysqli_result|bool';
 		}
 	}
+	if ($funckey == 'domxpath::query') {
+		if ($returnTypes == 'DOMNodeList') {
+			$returnTypes = 'DOMNodeList|DOMNode[]';
+		}
+	}
 	return $returnTypes;
 }
 
