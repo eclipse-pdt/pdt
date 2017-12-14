@@ -2,6 +2,10 @@
 
 // Start of snmp v.0.1
 
+/**
+ * Represents SNMP session.
+ * @link http://www.php.net/manual/en/class.snmp.php
+ */
 class SNMP  {
 	const VERSION_1 = 0;
 	const VERSION_2c = 1;
@@ -16,6 +20,65 @@ class SNMP  {
 	const ERRNO_OID_PARSING_ERROR = 32;
 	const ERRNO_MULTIPLE_SET_QUERIES = 64;
 
+
+	/**
+	 * Maximum OID per GET/SET/GETBULK request
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.snmp.php#snmp.props.max_oids
+	 */
+	public $max_oids;
+
+	/**
+	 * Controls the method how the SNMP values will be returned
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.snmp.php#snmp.props.valueretrieval
+	 */
+	public $valueretrieval;
+
+	/**
+	 * Value of quick_print within the NET-SNMP library
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.snmp.php#snmp.props.quick_print
+	 */
+	public $quick_print;
+
+	/**
+	 * Controls the way enum values are printed
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.snmp.php#snmp.props.enum_print
+	 */
+	public $enum_print;
+
+	/**
+	 * Controls OID output format
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.snmp.php#snmp.props.oid_output_format
+	 */
+	public $oid_output_format;
+
+	/**
+	 * Controls disabling check for increasing OID while walking OID tree
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.snmp.php#snmp.props.oid_increasing_check
+	 */
+	public $oid_increasing_check;
+
+	/**
+	 * Controls which failures will raise SNMPException instead of
+	 * warning. Use bitwise OR'ed SNMP::ERRNO_&#42; constants.
+	 * By default all SNMP exceptions are disabled.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.snmp.php#snmp.props.exceptions_enabled
+	 */
+	public $exceptions_enabled;
+
+	/**
+	 * Read-only property with remote agent configuration: hostname,
+	 * port, default timeout, default retries count
+	 * @var array
+	 * @link http://www.php.net/manual/en/class.snmp.php#snmp.props.info
+	 */
+	public $info;
 
 	/**
 	 * Creates SNMP instance representing session to remote SNMP agent
@@ -130,6 +193,13 @@ class SNMP  {
 
 }
 
+/**
+ * Represents an error raised by SNMP. You should not throw a 
+ * SNMPException from your own code.
+ * See Exceptions for more
+ * information about Exceptions in PHP.
+ * @link http://www.php.net/manual/en/class.snmpexception.php
+ */
 class SNMPException extends RuntimeException implements Throwable {
 	protected $message;
 	protected $code;

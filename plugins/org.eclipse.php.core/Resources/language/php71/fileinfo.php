@@ -2,6 +2,11 @@
 
 // Start of fileinfo v.1.0.5
 
+/**
+ * This class provides an object oriented interface into the fileinfo
+ * functions.
+ * @link http://www.php.net/manual/en/class.finfo.php
+ */
 class finfo  {
 
 	/**

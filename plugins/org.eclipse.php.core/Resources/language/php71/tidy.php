@@ -2,6 +2,10 @@
 
 // Start of tidy v.7.1.1
 
+/**
+ * An HTML node in an HTML file, as detected by tidy.
+ * @link http://www.php.net/manual/en/class.tidy.php
+ */
 class tidy  {
 
 	/**
@@ -238,6 +242,10 @@ class tidy  {
 
 }
 
+/**
+ * An HTML node in an HTML file, as detected by tidy.
+ * @link http://www.php.net/manual/en/class.tidynode.php
+ */
 final class tidyNode  {
 
 	/**
