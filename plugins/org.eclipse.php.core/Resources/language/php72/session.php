@@ -2,6 +2,16 @@
 
 // Start of session v.7.1.1
 
+/**
+ * SessionHandlerInterface is an
+ * interface which defines a
+ * prototype for creating a custom session handler. In order to pass a custom
+ * session handler to session_set_save_handler using its
+ * OOP invocation, the class must implement this interface.
+ * <p>Please note the callback methods of this class are designed to be called internally by
+ * PHP and are not meant to be called from user-space code.</p>
+ * @link http://www.php.net/manual/en/class.sessionhandlerinterface.php
+ */
 interface SessionHandlerInterface  {
 
 	/**
@@ -77,6 +87,41 @@ interface SessionUpdateTimestampHandlerInterface  {
 
 }
 
+/**
+ * SessionHandler is a special class that can be used
+ * to expose the current internal PHP session save handler by inheritance.
+ * There are seven methods which wrap the seven internal session save handler
+ * callbacks (open, close,
+ * read, write,
+ * destroy, gc and
+ * create_sid). By default, this class will wrap
+ * whatever internal save handler is set as defined by the
+ * session.save_handler
+ * configuration directive which is usually files by
+ * default. Other internal session save handlers are provided by PHP
+ * extensions such as SQLite (as sqlite), Memcache (as
+ * memcache), and Memcached (as
+ * memcached).
+ * <p>When a plain instance of SessionHandler is set as the save handler using
+ * session_set_save_handler it will wrap the current save handlers.
+ * A class extending from SessionHandler allows you to override
+ * the methods or intercept or filter them by calls the parent class methods which ultimately wrap
+ * the internal PHP session handlers.</p>
+ * <p>This allows you, for example, to intercept the read and write
+ * methods to encrypt/decrypt the session data and then pass the result to and from the parent class.
+ * Alternatively one might chose to entirely override a method like the garbage collection callback
+ * gc.</p>
+ * <p>Because the SessionHandler wraps the current internal save handler
+ * methods, the above example of encryption can be applied to any internal save handler without
+ * having to know the internals of the handlers.</p>
+ * <p>To use this class, first set the save handler you wish to expose using
+ * session.save_handler and then pass an instance of
+ * SessionHandler or one extending it to session_set_save_handler.</p>
+ * <p>Please note the callback methods of this class are designed to be called internally by
+ * PHP and are not meant to be called from user-space code. The return values are equally processed internally
+ * by PHP. For more information on the session workflow, please refer session_set_save_handler.</p>
+ * @link http://www.php.net/manual/en/class.sessionhandler.php
+ */
 class SessionHandler implements SessionHandlerInterface, SessionIdInterface {
 
 	/**

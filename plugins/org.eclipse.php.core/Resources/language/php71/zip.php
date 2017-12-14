@@ -2,6 +2,10 @@
 
 // Start of zip v.1.13.5
 
+/**
+ * A file archive, compressed with Zip.
+ * @link http://www.php.net/manual/en/class.ziparchive.php
+ */
 class ZipArchive  {
 	const CREATE = 1;
 	const EXCL = 2;

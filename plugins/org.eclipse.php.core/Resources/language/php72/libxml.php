@@ -2,7 +2,58 @@
 
 // Start of libxml v.7.1.1
 
+/**
+ * Contains various information about errors thrown by libxml. The error codes
+ * are described within the official 
+ * xmlError API documentation.
+ * @link http://www.php.net/manual/en/class.libxmlerror.php
+ */
 class LibXMLError  {
+
+	/**
+	 * the severity of the error (one of the following constants:
+	 * LIBXML_ERR_WARNING,
+	 * LIBXML_ERR_ERROR or
+	 * LIBXML_ERR_FATAL)
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.libxmlerror.php#libxmlerror.props.level
+	 */
+	public $level;
+
+	/**
+	 * The error's code.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.libxmlerror.php#libxmlerror.props.code
+	 */
+	public $code;
+
+	/**
+	 * The column where the error occurred.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.libxmlerror.php#libxmlerror.props.column
+	 */
+	public $column;
+
+	/**
+	 * The error message, if any.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.libxmlerror.php#libxmlerror.props.message
+	 */
+	public $message;
+
+	/**
+	 * The filename, or empty if the XML was loaded from a string.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.libxmlerror.php#libxmlerror.props.file
+	 */
+	public $file;
+
+	/**
+	 * The line where the error occurred.
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.libxmlerror.php#libxmlerror.props.line
+	 */
+	public $line;
 }
 
 /**

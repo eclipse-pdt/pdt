@@ -2,6 +2,10 @@
 
 // Start of mysqli v.7.1.11
 
+/**
+ * The mysqli exception handling class.
+ * @link http://www.php.net/manual/en/class.mysqli_sql_exception.php
+ */
 final class mysqli_sql_exception extends RuntimeException implements Throwable {
 	protected $message;
 	protected $file;
@@ -39,6 +43,10 @@ final class mysqli_sql_exception extends RuntimeException implements Throwable {
 
 }
 
+/**
+ * MySQLi Driver.
+ * @link http://www.php.net/manual/en/class.mysqli_driver.php
+ */
 final class mysqli_driver  {
 	public $client_info;
 	public $client_version;
@@ -49,6 +57,10 @@ final class mysqli_driver  {
 
 }
 
+/**
+ * Represents a connection between PHP and a MySQL database.
+ * @link http://www.php.net/manual/en/class.mysqli.php
+ */
 class mysqli  {
 	public $affected_rows;
 	public $client_info;
@@ -730,6 +742,10 @@ class mysqli  {
 
 }
 
+/**
+ * Represents a MySQL warning.
+ * @link http://www.php.net/manual/en/class.mysqli_warning.php
+ */
 final class mysqli_warning  {
 	public $message;
 	public $sqlstate;
@@ -751,6 +767,11 @@ final class mysqli_warning  {
 
 }
 
+/**
+ * Represents the result set obtained from a query against the database.
+ * <p>Changelog</p>
+ * @link http://www.php.net/manual/en/class.mysqli_result.php
+ */
 class mysqli_result implements Traversable {
 	public $current_field;
 	public $field_count;
@@ -1061,6 +1082,10 @@ class mysqli_result implements Traversable {
 
 }
 
+/**
+ * Represents a prepared statement.
+ * @link http://www.php.net/manual/en/class.mysqli_stmt.php
+ */
 class mysqli_stmt  {
 	public $affected_rows;
 	public $insert_id;

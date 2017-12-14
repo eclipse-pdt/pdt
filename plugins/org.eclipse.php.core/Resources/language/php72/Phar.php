@@ -2,6 +2,11 @@
 
 // Start of Phar v.2.0.2
 
+/**
+ * The PharException class provides a phar-specific exception class
+ * for try/catch blocks.
+ * @link http://www.php.net/manual/en/class.pharexception.php
+ */
 class PharException extends Exception implements Throwable {
 	protected $message;
 	protected $code;
@@ -38,6 +43,11 @@ class PharException extends Exception implements Throwable {
 
 }
 
+/**
+ * The Phar class provides a high-level interface to accessing and creating
+ * phar archives.
+ * @link http://www.php.net/manual/en/class.phar.php
+ */
 class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, SeekableIterator, Traversable, Iterator, Countable, ArrayAccess {
 	const CURRENT_MODE_MASK = 240;
 	const CURRENT_AS_PATHNAME = 32;
@@ -980,6 +990,14 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Seek
 
 }
 
+/**
+ * The PharData class provides a high-level interface to accessing and creating
+ * non-executable tar and zip archives. Because these archives do not contain
+ * a stub and cannot be executed by the phar extension, it is possible to create
+ * and manipulate regular zip and tar files using the PharData class even if
+ * phar.readonly php.ini setting is 1.
+ * @link http://www.php.net/manual/en/class.phardata.php
+ */
 class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, SeekableIterator, Traversable, Iterator, Countable, ArrayAccess {
 	const CURRENT_MODE_MASK = 240;
 	const CURRENT_AS_PATHNAME = 32;
@@ -1669,6 +1687,11 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 
 }
 
+/**
+ * The PharFileInfo class provides a high-level interface to the contents
+ * and attributes of a single file within a phar archive.
+ * @link http://www.php.net/manual/en/class.pharfileinfo.php
+ */
 class PharFileInfo extends SplFileInfo  {
 
 	/**

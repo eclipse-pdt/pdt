@@ -2,6 +2,11 @@
 
 // Start of intl v.1.1.0
 
+/**
+ * Provides string comparison capability with support for appropriate
+ * locale-sensitive sort orderings.
+ * @link http://www.php.net/manual/en/class.collator.php
+ */
 class Collator  {
 	const DEFAULT_VALUE = -1;
 	const PRIMARY = 0;
@@ -28,6 +33,13 @@ class Collator  {
 	const SORT_STRING = 1;
 	const SORT_NUMERIC = 2;
 
+
+	/**
+	 * Prop description
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.collator.php#collator.props.name
+	 */
+	public $name;
 
 	/**
 	 * Create a collator
@@ -251,6 +263,20 @@ class Collator  {
 
 }
 
+/**
+ * For currencies you can use currency format type to create a formatter that
+ * returns a string with the formatted number and the appropriate currency
+ * sign. Of course, the NumberFormatter class is unaware of exchange rates
+ * so, the number output is the same regardless of the specified currency.
+ * This means that the same number has different monetary values depending on
+ * the currency locale. If the number is 9988776.65 the results will be:
+ * <p>
+ * 9 988 776,65 € in France
+ * 9.988.776,65 € in Germany
+ * $9,988,776.65 in the United States
+ * </p>
+ * @link http://www.php.net/manual/en/class.numberformatter.php
+ */
 class NumberFormatter  {
 	const PATTERN_DECIMAL = 0;
 	const DECIMAL = 1;
@@ -326,6 +352,13 @@ class NumberFormatter  {
 	const TYPE_DOUBLE = 3;
 	const TYPE_CURRENCY = 4;
 
+
+	/**
+	 * Prop description
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.numberformatter.php#numberformatter.props.name
+	 */
+	public $name;
 
 	/**
 	 * @param $locale
@@ -500,6 +533,22 @@ class NumberFormatter  {
 
 }
 
+/**
+ * The Unicode Consortium has defined a number of normalization forms
+ * reflecting the various needs of applications:
+ * <p>
+ * Normalization Form D (NFD) - Canonical Decomposition
+ * Normalization Form C (NFC) - Canonical Decomposition followed by
+ * Canonical Composition
+ * Normalization Form KD (NFKD) - Compatibility Decomposition
+ * Normalization Form KC (NFKC) - Compatibility Decomposition followed by
+ * Canonical Composition
+ * </p>
+ * The different forms are defined in terms of a set of transformations on
+ * the text, transformations that are expressed by both an algorithm and a
+ * set of data files.
+ * @link http://www.php.net/manual/en/class.normalizer.php
+ */
 class Normalizer  {
 	const NONE = 1;
 	const FORM_D = 2;
@@ -511,6 +560,13 @@ class Normalizer  {
 	const FORM_KC = 5;
 	const NFKC = 5;
 
+
+	/**
+	 * Prop description
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.normalizer.php#normalizer.props.name
+	 */
+	public $name;
 
 	/**
 	 * Normalizes the input provided and returns the normalized string
@@ -533,6 +589,15 @@ class Normalizer  {
 
 }
 
+/**
+ * Examples of identifiers include:
+ * <p>
+ * en-US (English, United States)
+ * zh-Hant-TW (Chinese, Traditional Script, Taiwan)
+ * fr-CA, fr-FR (French for Canada and France respectively)
+ * </p>
+ * @link http://www.php.net/manual/en/class.locale.php
+ */
 class Locale  {
 	const ACTUAL_LOCALE = 0;
 	const VALID_LOCALE = 1;
@@ -545,6 +610,13 @@ class Locale  {
 	const GRANDFATHERED_LANG_TAG = "grandfathered";
 	const PRIVATE_TAG = "private";
 
+
+	/**
+	 * Prop description
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.locale.php#locale.props.name
+	 */
+	public $name;
 
 	/**
 	 * Gets the default locale value from the INTL global 'default_locale'
@@ -738,6 +810,9 @@ class Locale  {
 
 }
 
+/**
+ * @link http://www.php.net/manual/en/class.messageformatter.php
+ */
 class MessageFormatter  {
 
 	/**
@@ -838,6 +913,9 @@ class MessageFormatter  {
 
 }
 
+/**
+ * @link http://www.php.net/manual/en/class.intldateformatter.php
+ */
 class IntlDateFormatter  {
 	const FULL = 0;
 	const LONG = 1;
@@ -1109,6 +1187,9 @@ class IntlDateFormatter  {
 
 }
 
+/**
+ * @link http://www.php.net/manual/en/class.resourcebundle.php
+ */
 class ResourceBundle implements Traversable {
 
 	/**
@@ -1171,6 +1252,9 @@ class ResourceBundle implements Traversable {
 
 }
 
+/**
+ * @link http://www.php.net/manual/en/class.transliterator.php
+ */
 class Transliterator  {
 	const FORWARD = 0;
 	const REVERSE = 1;
@@ -1258,6 +1342,9 @@ class Transliterator  {
 
 }
 
+/**
+ * @link http://www.php.net/manual/en/class.intltimezone.php
+ */
 class IntlTimeZone  {
 	const DISPLAY_SHORT = 1;
 	const DISPLAY_LONG = 2;
@@ -1451,6 +1538,9 @@ class IntlTimeZone  {
 
 }
 
+/**
+ * @link http://www.php.net/manual/en/class.intlcalendar.php
+ */
 class IntlCalendar  {
 	const FIELD_ERA = 0;
 	const FIELD_YEAR = 1;
@@ -2443,6 +2533,16 @@ class IntlGregorianCalendar extends IntlCalendar  {
 
 }
 
+/**
+ * This class is provided because Unicode contains large number of characters
+ * and incorporates the varied writing systems of the world and their incorrect
+ * usage can expose programs or systems to possible security attacks using
+ * characters similarity.
+ * <p>Provided methods alllow to check whether an individual string is likely an attempt
+ * at confusing the reader (spoof detection), such as "pаypаl"
+ * spelled with Cyrillic 'а' characters.</p>
+ * @link http://www.php.net/manual/en/class.spoofchecker.php
+ */
 class Spoofchecker  {
 	const SINGLE_SCRIPT_CONFUSABLE = 1;
 	const MIXED_SCRIPT_CONFUSABLE = 2;
@@ -2498,6 +2598,11 @@ class Spoofchecker  {
 
 }
 
+/**
+ * This class is used for generating exceptions when errors occur inside intl
+ * functions. Such exceptions are only generated when intl.use_exceptions is enabled.
+ * @link http://www.php.net/manual/en/class.intlexception.php
+ */
 class IntlException extends Exception implements Throwable {
 	protected $message;
 	protected $code;
@@ -2534,6 +2639,22 @@ class IntlException extends Exception implements Throwable {
 
 }
 
+/**
+ * This class represents iterator objects throughout the intl extension
+ * whenever the iterator cannot be identified with any other object provided
+ * by the extension. The distinct iterator object used internally by the
+ * foreach
+ * construct can only be obtained (in the relevant part here) from
+ * objects, so objects of this class serve the purpose of providing the hook
+ * through which this internal object can be obtained. As a convenience, this
+ * class also implements the Iterator interface,
+ * allowing the collection of values to be navigated using the methods
+ * defined in that interface. Both these methods and the internal iterator
+ * objects provided to foreach are backed by the same
+ * state (e.g. the position of the iterator and its current value).
+ * <p>Subclasses may provide richer functionality.</p>
+ * @link http://www.php.net/manual/en/class.intliterator.php
+ */
 class IntlIterator implements Iterator, Traversable {
 
 	/**
@@ -2573,6 +2694,24 @@ class IntlIterator implements Iterator, Traversable {
 
 }
 
+/**
+ * A “break iterator” is an ICU object that exposes methods for locating
+ * boundaries in text (e.g. word or sentence boundaries).
+ * The PHP IntlBreakIterator serves as the base class
+ * for all types of ICU break iterators. Where extra functionality is
+ * available, the intl extension may expose the ICU break iterator with
+ * suitable subclasses, such as
+ * IntlRuleBasedBreakIterator or
+ * IntlCodePointBreaIterator.
+ * <p>This class implements Traversable. Traversing an
+ * IntlBreakIterator yields non-negative integer
+ * values representing the successive locations of the text boundaries,
+ * expressed as UTF-8 code units (byte) counts, taken from the beggining of
+ * the text (which has the location 0). The keys yielded
+ * by the iterator simply form the sequence of natural numbers
+ * {0, 1, 2, …}.</p>
+ * @link http://www.php.net/manual/en/class.intlbreakiterator.php
+ */
 class IntlBreakIterator implements Traversable {
 	const DONE = -1;
 	const WORD_NONE = 0;
@@ -2755,6 +2894,14 @@ class IntlBreakIterator implements Traversable {
 
 }
 
+/**
+ * A subclass of IntlBreakIterator that encapsulates
+ * ICU break iterators whose behavior is specified using a set of rules. This
+ * is the most common kind of break iterators.
+ * <p>These rules are described in the ICU Boundary Analysis
+ * User Guide.</p>
+ * @link http://www.php.net/manual/en/class.intlrulebasedbreakiterator.php
+ */
 class IntlRuleBasedBreakIterator extends IntlBreakIterator implements Traversable {
 	const DONE = -1;
 	const WORD_NONE = 0;
@@ -2967,6 +3114,11 @@ class IntlRuleBasedBreakIterator extends IntlBreakIterator implements Traversabl
 
 }
 
+/**
+ * This break iterator
+ * identifies the boundaries between UTF-8 code points.
+ * @link http://www.php.net/manual/en/class.intlcodepointbreakiterator.php
+ */
 class IntlCodePointBreakIterator extends IntlBreakIterator implements Traversable {
 	const DONE = -1;
 	const WORD_NONE = 0;
@@ -3156,6 +3308,18 @@ class IntlCodePointBreakIterator extends IntlBreakIterator implements Traversabl
 
 }
 
+/**
+ * Objects of this class can be obtained from
+ * IntlBreakIterator objects. While the break
+ * iterators provide a sequence of boundary positions when iterated,
+ * IntlPartsIterator objects provide, as a
+ * convenience, the text fragments comprehended between two successive
+ * boundaries.
+ * <p>The keys may represent the offset of the left boundary, right boundary, or
+ * they may just the sequence of non-negative integers. See
+ * IntlBreakIterator::getPartsIterator.</p>
+ * @link http://www.php.net/manual/en/class.intlpartsiterator.php
+ */
 class IntlPartsIterator extends IntlIterator implements Traversable, Iterator {
 	const KEY_SEQUENTIAL = 0;
 	const KEY_LEFT = 1;
@@ -3206,6 +3370,9 @@ class IntlPartsIterator extends IntlIterator implements Traversable, Iterator {
 
 }
 
+/**
+ * @link http://www.php.net/manual/en/class.uconverter.php
+ */
 class UConverter  {
 	const REASON_UNASSIGNED = 0;
 	const REASON_ILLEGAL = 1;
@@ -3405,6 +3572,12 @@ class UConverter  {
 
 }
 
+/**
+ * IntlChar provides access to a number of utility
+ * methods that can be used to access information about Unicode characters.
+ * <p>The methods and constants adhere closely to the names and behavior used by the underlying ICU library.</p>
+ * @link http://www.php.net/manual/en/class.intlchar.php
+ */
 class IntlChar  {
 	const UNICODE_VERSION = 6.3;
 	const CODEPOINT_MIN = 0;
