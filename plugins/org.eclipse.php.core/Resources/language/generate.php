@@ -360,8 +360,10 @@ function parse_phpdoc_functions ($phpdocDir) {
 function parse_phpdoc_classes ($phpdocDir) {
 	$classesDoc = array();
 	$xml_files = array_merge (
-		glob ("{$phpdocDir}/reference/*/reference.xml"),
-		glob ("{$phpdocDir}/reference/*/classes.xml"),
+		// glob ("{$phpdocDir}/reference/*/reference.xml"),
+		// glob ("{$phpdocDir}/reference/*/classes.xml"),
+		glob ("{$phpdocDir}/reference/*/*.xml"),
+		glob ("{$phpdocDir}/reference/*/*.xml"),
 		glob ("{$phpdocDir}/language/*/*.xml"),
 		glob ("{$phpdocDir}/language/*.xml")
 	);
@@ -385,8 +387,8 @@ function parse_phpdoc_classes ($phpdocDir) {
 							for($i = 1; $i < count ( $match3 [1] ); ++ $i) {
 								$doc .= "\n<p>" . xml_to_phpdoc ( $match3 [1][$i] ) . "</p>";
 							}
+							$classesDoc [$refname] ['doc'] = $doc;
 						}
-						$classesDoc [$refname] ['doc'] = $doc;
 					}
 					//pass over class fields here
 					$fields_xml_file = array_merge (
@@ -406,6 +408,8 @@ function parse_phpdoc_classes ($phpdocDir) {
 									if(preg_match_all('@<varname\s*linkend="'.$refname.'\.props\.(.*?)">(.*?)</varname>@', $fieldsynopsis, $varname)) {
 										$field_name = $varname[2][0];
 										$fields_doc[$refname][$field_name]['name'] = $field_name;
+									} else {
+									    continue;
 									}
 
 									// <varlistentry xml:id="domdocument.props.formatoutput">
@@ -424,6 +428,7 @@ function parse_phpdoc_classes ($phpdocDir) {
 									}
 
 									if(preg_match_all('@<modifier(?:\s(?:[^>]*?[^/>])?)?>(.*?)</modifier>@', $fieldsynopsis, $modifier_list)) {
+									    $modifier = '';
 										foreach ($modifier_list[1] as $current_modifier) {
 											if($current_modifier == "readonly") {
 												continue;
@@ -463,8 +468,11 @@ function parse_phpdoc_classes ($phpdocDir) {
  */
 function parse_phpdoc_constants ($phpdocDir) {
 	$constantsDoc = array();
-	exec ("find ".addslashes($phpdocDir)." -name \"*constants.xml\"", $xml_files);
-	foreach ($xml_files as $xml_file) {
+	// will only work on Unix OSes:
+	// exec ("find ".addslashes($phpdocDir)." -name \"*constants.xml\"", $xml_files);
+	$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($phpdocDir), RecursiveIteratorIterator::SELF_FIRST);
+	$regex = new RegexIterator($iterator, '@^.*constants\.xml$@', RecursiveRegexIterator::GET_MATCH);
+	foreach (iterator_to_array($regex) as $xml_file => $xml_file_regex) {
 		$xml = load_xml ($xml_file);
 		if (preg_match ('@xml:id=["\'](.*?)["\']@', $xml, $match)) {
 			$id = $match[1];
@@ -571,6 +579,8 @@ function print_class ($classRef, $tabs = 0) {
 
 	global $classesDoc;
 
+	$printedFields = array();
+
 	// process properties
 	$propertiesRef = $classRef->getProperties();
 	if (count ($propertiesRef) > 0) {
@@ -590,7 +600,7 @@ function print_class ($classRef, $tabs = 0) {
 	if (@$fields_doc[$className]) {
 		$fields = @$fields_doc[$className];
 		foreach ($fields as $field) {
-			if(!$printedFields[$field['name']]) {
+		    if(!key_exists ($field['name'], $printedFields) && trim (@$field['modifier']) !== '') {
 
 				//print doc here
 				print("\n");
