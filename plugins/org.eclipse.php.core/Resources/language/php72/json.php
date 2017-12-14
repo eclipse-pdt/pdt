@@ -2,6 +2,12 @@
 
 // Start of json v.1.5.0
 
+/**
+ * Objects implementing JsonSerializable
+ * can customize their JSON representation when encoded with
+ * json_encode.
+ * @link http://www.php.net/manual/en/class.jsonserializable.php
+ */
 interface JsonSerializable  {
 
 	/**

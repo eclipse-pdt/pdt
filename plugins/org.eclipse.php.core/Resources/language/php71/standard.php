@@ -5,6 +5,11 @@
 class __PHP_Incomplete_Class  {
 }
 
+/**
+ * Children of this class are passed to
+ * stream_filter_register.
+ * @link http://www.php.net/manual/en/class.php_user_filter.php
+ */
 class php_user_filter  {
 	public $filtername;
 	public $params;
@@ -73,7 +78,28 @@ class php_user_filter  {
 
 }
 
+/**
+ * Instances of Directory are created by calling the
+ * dir function, not by the new operator.
+ * @link http://www.php.net/manual/en/class.directory.php
+ */
 class Directory  {
+
+	/**
+	 * The directory that was opened.
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.directory.php#directory.props.path
+	 */
+	public $path;
+
+	/**
+	 * Can be used with other directory functions such as
+	 * readdir, rewinddir and
+	 * closedir.
+	 * @var resource
+	 * @link http://www.php.net/manual/en/class.directory.php#directory.props.handle
+	 */
+	public $handle;
 
 	/**
 	 * Close directory handle

@@ -2,6 +2,11 @@
 
 // Start of curl v.7.1.1
 
+/**
+ * CURLFile should be used to upload a file with
+ * CURLOPT_POSTFIELDS.
+ * @link http://www.php.net/manual/en/class.curlfile.php
+ */
 class CURLFile  {
 	public $name;
 	public $mime;

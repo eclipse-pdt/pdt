@@ -2,6 +2,11 @@
 
 // Start of SPL v.7.1.1
 
+/**
+ * Exception that represents error in the program logic. This kind of
+ * exception should lead directly to a fix in your code.
+ * @link http://www.php.net/manual/en/class.logicexception.php
+ */
 class LogicException extends Exception implements Throwable {
 	protected $message;
 	protected $code;
@@ -38,6 +43,11 @@ class LogicException extends Exception implements Throwable {
 
 }
 
+/**
+ * Exception thrown if a callback refers to an undefined function or if some
+ * arguments are missing.
+ * @link http://www.php.net/manual/en/class.badfunctioncallexception.php
+ */
 class BadFunctionCallException extends LogicException implements Throwable {
 	protected $message;
 	protected $code;
@@ -74,6 +84,11 @@ class BadFunctionCallException extends LogicException implements Throwable {
 
 }
 
+/**
+ * Exception thrown if a callback refers to an undefined method or if some
+ * arguments are missing.
+ * @link http://www.php.net/manual/en/class.badmethodcallexception.php
+ */
 class BadMethodCallException extends BadFunctionCallException implements Throwable {
 	protected $message;
 	protected $code;
@@ -110,6 +125,10 @@ class BadMethodCallException extends BadFunctionCallException implements Throwab
 
 }
 
+/**
+ * Exception thrown if a value does not adhere to a defined valid data domain.
+ * @link http://www.php.net/manual/en/class.domainexception.php
+ */
 class DomainException extends LogicException implements Throwable {
 	protected $message;
 	protected $code;
@@ -146,6 +165,10 @@ class DomainException extends LogicException implements Throwable {
 
 }
 
+/**
+ * Exception thrown if an argument is not of the expected type.
+ * @link http://www.php.net/manual/en/class.invalidargumentexception.php
+ */
 class InvalidArgumentException extends LogicException implements Throwable {
 	protected $message;
 	protected $code;
@@ -182,6 +205,10 @@ class InvalidArgumentException extends LogicException implements Throwable {
 
 }
 
+/**
+ * Exception thrown if a length is invalid.
+ * @link http://www.php.net/manual/en/class.lengthexception.php
+ */
 class LengthException extends LogicException implements Throwable {
 	protected $message;
 	protected $code;
@@ -218,6 +245,11 @@ class LengthException extends LogicException implements Throwable {
 
 }
 
+/**
+ * Exception thrown when an illegal index was requested. This represents
+ * errors that should be detected at compile time.
+ * @link http://www.php.net/manual/en/class.outofrangeexception.php
+ */
 class OutOfRangeException extends LogicException implements Throwable {
 	protected $message;
 	protected $code;
@@ -254,6 +286,10 @@ class OutOfRangeException extends LogicException implements Throwable {
 
 }
 
+/**
+ * Exception thrown if an error which can only be found on runtime occurs.
+ * @link http://www.php.net/manual/en/class.runtimeexception.php
+ */
 class RuntimeException extends Exception implements Throwable {
 	protected $message;
 	protected $code;
@@ -290,6 +326,11 @@ class RuntimeException extends Exception implements Throwable {
 
 }
 
+/**
+ * Exception thrown if a value is not a valid key. This represents errors
+ * that cannot be detected at compile time.
+ * @link http://www.php.net/manual/en/class.outofboundsexception.php
+ */
 class OutOfBoundsException extends RuntimeException implements Throwable {
 	protected $message;
 	protected $code;
@@ -326,6 +367,10 @@ class OutOfBoundsException extends RuntimeException implements Throwable {
 
 }
 
+/**
+ * Exception thrown when adding an element to a full container.
+ * @link http://www.php.net/manual/en/class.overflowexception.php
+ */
 class OverflowException extends RuntimeException implements Throwable {
 	protected $message;
 	protected $code;
@@ -362,6 +407,13 @@ class OverflowException extends RuntimeException implements Throwable {
 
 }
 
+/**
+ * Exception thrown to indicate range errors during program execution.
+ * Normally this means there was an arithmetic error other than
+ * under/overflow. This is the runtime version of
+ * DomainException.
+ * @link http://www.php.net/manual/en/class.rangeexception.php
+ */
 class RangeException extends RuntimeException implements Throwable {
 	protected $message;
 	protected $code;
@@ -398,6 +450,11 @@ class RangeException extends RuntimeException implements Throwable {
 
 }
 
+/**
+ * Exception thrown when performing an invalid operation on an empty
+ * container, such as removing an element.
+ * @link http://www.php.net/manual/en/class.underflowexception.php
+ */
 class UnderflowException extends RuntimeException implements Throwable {
 	protected $message;
 	protected $code;
@@ -434,6 +491,13 @@ class UnderflowException extends RuntimeException implements Throwable {
 
 }
 
+/**
+ * Exception thrown if a value does not match with a set of values. Typically
+ * this happens when a function calls another function and expects the return
+ * value to be of a certain type or value not including arithmetic or buffer
+ * related errors.
+ * @link http://www.php.net/manual/en/class.unexpectedvalueexception.php
+ */
 class UnexpectedValueException extends RuntimeException implements Throwable {
 	protected $message;
 	protected $code;
@@ -470,6 +534,11 @@ class UnexpectedValueException extends RuntimeException implements Throwable {
 
 }
 
+/**
+ * Classes implementing RecursiveIterator can be used to iterate
+ * over iterators recursively.
+ * @link http://www.php.net/manual/en/class.recursiveiterator.php
+ */
 interface RecursiveIterator extends Iterator, Traversable {
 
 	/**
@@ -498,6 +567,10 @@ interface RecursiveIterator extends Iterator, Traversable {
 
 }
 
+/**
+ * Can be used to iterate through recursive iterators.
+ * @link http://www.php.net/manual/en/class.recursiveiteratoriterator.php
+ */
 class RecursiveIteratorIterator implements Iterator, Traversable, OuterIterator {
 	const LEAVES_ONLY = 0;
 	const SELF_FIRST = 1;
@@ -638,6 +711,11 @@ class RecursiveIteratorIterator implements Iterator, Traversable, OuterIterator 
 
 }
 
+/**
+ * Classes implementing OuterIterator can be used to iterate
+ * over iterators.
+ * @link http://www.php.net/manual/en/class.outeriterator.php
+ */
 interface OuterIterator extends Iterator, Traversable {
 
 	/**
@@ -659,6 +737,15 @@ interface OuterIterator extends Iterator, Traversable {
 
 }
 
+/**
+ * This iterator wrapper allows the conversion of anything that is
+ * Traversable into an Iterator.
+ * It is important to understand that most classes that do not implement
+ * Iterators have reasons as most likely they do not allow the full
+ * Iterator feature set. If so, techniques should be provided to prevent
+ * misuse, otherwise expect exceptions or fatal errors.
+ * @link http://www.php.net/manual/en/class.iteratoriterator.php
+ */
 class IteratorIterator implements Iterator, Traversable, OuterIterator {
 
 	/**
@@ -712,7 +799,20 @@ class IteratorIterator implements Iterator, Traversable, OuterIterator {
 
 }
 
+/**
+ * This abstract iterator filters out unwanted values. This class should be extended to
+ * implement custom iterator filters. The FilterIterator::accept
+ * must be implemented in the subclass.
+ * @link http://www.php.net/manual/en/class.filteriterator.php
+ */
 abstract class FilterIterator extends IteratorIterator implements OuterIterator, Traversable, Iterator {
+
+	/**
+	 * Prop description
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.filteriterator.php#filteriterator.props.name
+	 */
+	public $name;
 
 	/**
 	 * Construct a filterIterator
@@ -772,6 +872,12 @@ abstract class FilterIterator extends IteratorIterator implements OuterIterator,
 
 }
 
+/**
+ * This abstract iterator filters out unwanted values for a RecursiveIterator.
+ * This class should be extended to implement custom filters. 
+ * The RecursiveFilterIterator::accept must be implemented in the subclass.
+ * @link http://www.php.net/manual/en/class.recursivefilteriterator.php
+ */
 abstract class RecursiveFilterIterator extends FilterIterator implements Iterator, Traversable, OuterIterator, RecursiveIterator {
 
 	/**
@@ -846,6 +952,9 @@ abstract class RecursiveFilterIterator extends FilterIterator implements Iterato
 
 }
 
+/**
+ * @link http://www.php.net/manual/en/class.callbackfilteriterator.php
+ */
 class CallbackFilterIterator extends FilterIterator implements Iterator, Traversable, OuterIterator {
 
 	/**
@@ -907,6 +1016,9 @@ class CallbackFilterIterator extends FilterIterator implements Iterator, Travers
 
 }
 
+/**
+ * @link http://www.php.net/manual/en/class.recursivecallbackfilteriterator.php
+ */
 class RecursiveCallbackFilterIterator extends CallbackFilterIterator implements OuterIterator, Traversable, Iterator, RecursiveIterator {
 
 	/**
@@ -983,7 +1095,20 @@ class RecursiveCallbackFilterIterator extends CallbackFilterIterator implements 
 
 }
 
+/**
+ * This extended FilterIterator allows a recursive
+ * iteration using RecursiveIteratorIterator that only
+ * shows those elements which have children.
+ * @link http://www.php.net/manual/en/class.parentiterator.php
+ */
 class ParentIterator extends RecursiveFilterIterator implements RecursiveIterator, OuterIterator, Traversable, Iterator {
+
+	/**
+	 * Prop description
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.parentiterator.php#parentiterator.props.name
+	 */
+	public $name;
 
 	/**
 	 * Constructs a ParentIterator
@@ -1057,6 +1182,11 @@ class ParentIterator extends RecursiveFilterIterator implements RecursiveIterato
 
 }
 
+/**
+ * Classes implementing Countable can be used with the
+ * count function.
+ * @link http://www.php.net/manual/en/class.countable.php
+ */
 interface Countable  {
 
 	/**
@@ -1071,6 +1201,10 @@ interface Countable  {
 
 }
 
+/**
+ * The Seekable iterator.
+ * @link http://www.php.net/manual/en/class.seekableiterator.php
+ */
 interface SeekableIterator extends Iterator, Traversable {
 
 	/**
@@ -1093,7 +1227,19 @@ interface SeekableIterator extends Iterator, Traversable {
 
 }
 
+/**
+ * The LimitIterator class allows iteration over 
+ * a limited subset of items in an Iterator.
+ * @link http://www.php.net/manual/en/class.limititerator.php
+ */
 class LimitIterator extends IteratorIterator implements OuterIterator, Traversable, Iterator {
+
+	/**
+	 * Prop description
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.limititerator.php#limititerator.props.name
+	 */
+	public $name;
 
 	/**
 	 * Construct a LimitIterator
@@ -1163,6 +1309,10 @@ class LimitIterator extends IteratorIterator implements OuterIterator, Traversab
 
 }
 
+/**
+ * This object supports cached iteration over another iterator.
+ * @link http://www.php.net/manual/en/class.cachingiterator.php
+ */
 class CachingIterator extends IteratorIterator implements OuterIterator, Traversable, Iterator, ArrayAccess, Countable {
 	const CALL_TOSTRING = 1;
 	const CATCH_GET_CHILD = 16;
@@ -1300,6 +1450,10 @@ class CachingIterator extends IteratorIterator implements OuterIterator, Travers
 
 }
 
+/**
+ * ...
+ * @link http://www.php.net/manual/en/class.recursivecachingiterator.php
+ */
 class RecursiveCachingIterator extends CachingIterator implements Countable, ArrayAccess, Iterator, Traversable, OuterIterator, RecursiveIterator {
 	const CALL_TOSTRING = 1;
 	const CATCH_GET_CHILD = 16;
@@ -1308,6 +1462,13 @@ class RecursiveCachingIterator extends CachingIterator implements Countable, Arr
 	const TOSTRING_USE_INNER = 8;
 	const FULL_CACHE = 256;
 
+
+	/**
+	 * Prop description
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.recursivecachingiterator.php#recursivecachingiterator.props.name
+	 */
+	public $name;
 
 	/**
 	 * Construct
@@ -1451,7 +1612,18 @@ class RecursiveCachingIterator extends CachingIterator implements Countable, Arr
 
 }
 
+/**
+ * This iterator cannot be rewound.
+ * @link http://www.php.net/manual/en/class.norewinditerator.php
+ */
 class NoRewindIterator extends IteratorIterator implements OuterIterator, Traversable, Iterator {
+
+	/**
+	 * Prop description
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.norewinditerator.php#norewinditerator.props.name
+	 */
+	public $name;
 
 	/**
 	 * Construct a NoRewindIterator
@@ -1504,6 +1676,10 @@ class NoRewindIterator extends IteratorIterator implements OuterIterator, Traver
 
 }
 
+/**
+ * An Iterator that iterates over several iterators one after the other.
+ * @link http://www.php.net/manual/en/class.appenditerator.php
+ */
 class AppendIterator extends IteratorIterator implements OuterIterator, Traversable, Iterator {
 
 	/**
@@ -1580,6 +1756,12 @@ class AppendIterator extends IteratorIterator implements OuterIterator, Traversa
 
 }
 
+/**
+ * The InfiniteIterator allows one to
+ * infinitely iterate over an iterator without having to manually
+ * rewind the iterator upon reaching its end.
+ * @link http://www.php.net/manual/en/class.infiniteiterator.php
+ */
 class InfiniteIterator extends IteratorIterator implements OuterIterator, Traversable, Iterator {
 
 	/**
@@ -1633,6 +1815,10 @@ class InfiniteIterator extends IteratorIterator implements OuterIterator, Traver
 
 }
 
+/**
+ * This iterator can be used to filter another iterator based on a regular expression.
+ * @link http://www.php.net/manual/en/class.regexiterator.php
+ */
 class RegexIterator extends FilterIterator implements Iterator, Traversable, OuterIterator {
 	const USE_KEY = 1;
 	const INVERT_MATCH = 2;
@@ -1644,6 +1830,13 @@ class RegexIterator extends FilterIterator implements Iterator, Traversable, Out
 
 	public $replacement;
 
+
+	/**
+	 * Prop description
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.regexiterator.php#regexiterator.props.name
+	 */
+	public $name;
 
 	/**
 	 * Create a new RegexIterator
@@ -1828,6 +2021,10 @@ class RegexIterator extends FilterIterator implements Iterator, Traversable, Out
 
 }
 
+/**
+ * This recursive iterator can filter another recursive iterator via a regular expression.
+ * @link http://www.php.net/manual/en/class.recursiveregexiterator.php
+ */
 class RecursiveRegexIterator extends RegexIterator implements OuterIterator, Traversable, Iterator, RecursiveIterator {
 	const USE_KEY = 1;
 	const INVERT_MATCH = 2;
@@ -1839,6 +2036,13 @@ class RecursiveRegexIterator extends RegexIterator implements OuterIterator, Tra
 
 	public $replacement;
 
+
+	/**
+	 * Prop description
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.recursiveregexiterator.php#recursiveregexiterator.props.name
+	 */
+	public $name;
 
 	/**
 	 * Creates a new RecursiveRegexIterator.
@@ -2032,6 +2236,10 @@ class RecursiveRegexIterator extends RegexIterator implements OuterIterator, Tra
 
 }
 
+/**
+ * The EmptyIterator class for an empty iterator.
+ * @link http://www.php.net/manual/en/class.emptyiterator.php
+ */
 class EmptyIterator implements Iterator, Traversable {
 
 	/**
@@ -2071,6 +2279,10 @@ class EmptyIterator implements Iterator, Traversable {
 
 }
 
+/**
+ * Allows iterating over a RecursiveIterator to generate an ASCII graphic tree.
+ * @link http://www.php.net/manual/en/class.recursivetreeiterator.php
+ */
 class RecursiveTreeIterator extends RecursiveIteratorIterator implements OuterIterator, Traversable, Iterator {
 	const LEAVES_ONLY = 0;
 	const SELF_FIRST = 1;
@@ -2252,10 +2464,21 @@ class RecursiveTreeIterator extends RecursiveIteratorIterator implements OuterIt
 
 }
 
+/**
+ * This class allows objects to work as arrays.
+ * @link http://www.php.net/manual/en/class.arrayobject.php
+ */
 class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serializable, Countable {
 	const STD_PROP_LIST = 1;
 	const ARRAY_AS_PROPS = 2;
 
+
+	/**
+	 * Prop description
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.arrayobject.php#arrayobject.props.name
+	 */
+	public $name;
 
 	/**
 	 * Construct a new array object
@@ -2477,10 +2700,26 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serial
 
 }
 
+/**
+ * This iterator allows to unset and modify values and keys while iterating
+ * over Arrays and Objects.
+ * <p>When you want to iterate over the same array multiple times you need to
+ * instantiate ArrayObject and let it create ArrayIterator instances that
+ * refer to it either by using foreach or by calling its getIterator()
+ * method manually.</p>
+ * @link http://www.php.net/manual/en/class.arrayiterator.php
+ */
 class ArrayIterator implements Iterator, Traversable, ArrayAccess, SeekableIterator, Serializable, Countable {
 	const STD_PROP_LIST = 1;
 	const ARRAY_AS_PROPS = 2;
 
+
+	/**
+	 * Prop description
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.arrayiterator.php#arrayiterator.props.name
+	 */
+	public $name;
 
 	/**
 	 * Construct an ArrayIterator
@@ -2680,9 +2919,22 @@ class ArrayIterator implements Iterator, Traversable, ArrayAccess, SeekableItera
 
 }
 
+/**
+ * This iterator allows to unset and modify values and keys while iterating over Arrays and Objects
+ * in the same way as the ArrayIterator. Additionally it is possible to iterate
+ * over the current iterator entry.
+ * @link http://www.php.net/manual/en/class.recursivearrayiterator.php
+ */
 class RecursiveArrayIterator extends ArrayIterator implements Countable, Serializable, SeekableIterator, ArrayAccess, Traversable, Iterator, RecursiveIterator {
 	const CHILD_ARRAYS_ONLY = 4;
 
+
+	/**
+	 * Prop description
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.recursivearrayiterator.php#recursivearrayiterator.props.name
+	 */
+	public $name;
 
 	/**
 	 * Returns whether current entry is an array or an object.
@@ -2897,6 +3149,11 @@ class RecursiveArrayIterator extends ArrayIterator implements Countable, Seriali
 
 }
 
+/**
+ * The SplFileInfo class offers a high-level object oriented interface to
+ * information for an individual file.
+ * @link http://www.php.net/manual/en/class.splfileinfo.php
+ */
 class SplFileInfo  {
 
 	/**
@@ -3122,7 +3379,19 @@ class SplFileInfo  {
 
 }
 
+/**
+ * The DirectoryIterator class provides a simple interface for viewing
+ * the contents of filesystem directories.
+ * @link http://www.php.net/manual/en/class.directoryiterator.php
+ */
 class DirectoryIterator extends SplFileInfo implements Iterator, Traversable, SeekableIterator {
+
+	/**
+	 * Prop description
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.directoryiterator.php#directoryiterator.props.name
+	 */
+	public $name;
 
 	/**
 	 * Constructs a new directory iterator from a path
@@ -3399,6 +3668,10 @@ class DirectoryIterator extends SplFileInfo implements Iterator, Traversable, Se
 
 }
 
+/**
+ * The Filesystem iterator
+ * @link http://www.php.net/manual/en/class.filesystemiterator.php
+ */
 class FilesystemIterator extends DirectoryIterator implements SeekableIterator, Traversable, Iterator {
 	const CURRENT_MODE_MASK = 240;
 	const CURRENT_AS_PATHNAME = 32;
@@ -3708,6 +3981,11 @@ class FilesystemIterator extends DirectoryIterator implements SeekableIterator, 
 
 }
 
+/**
+ * The RecursiveDirectoryIterator provides
+ * an interface for iterating recursively over filesystem directories.
+ * @link http://www.php.net/manual/en/class.recursivedirectoryiterator.php
+ */
 class RecursiveDirectoryIterator extends FilesystemIterator implements Iterator, Traversable, SeekableIterator, RecursiveIterator {
 	const CURRENT_MODE_MASK = 240;
 	const CURRENT_AS_PATHNAME = 32;
@@ -3722,6 +4000,13 @@ class RecursiveDirectoryIterator extends FilesystemIterator implements Iterator,
 	const SKIP_DOTS = 4096;
 	const UNIX_PATHS = 8192;
 
+
+	/**
+	 * Prop description
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.recursivedirectoryiterator.php#recursivedirectoryiterator.props.name
+	 */
+	public $name;
 
 	/**
 	 * Constructs a RecursiveDirectoryIterator
@@ -4048,6 +4333,11 @@ class RecursiveDirectoryIterator extends FilesystemIterator implements Iterator,
 
 }
 
+/**
+ * Iterates through a file system in a similar fashion to 
+ * glob.
+ * @link http://www.php.net/manual/en/class.globiterator.php
+ */
 class GlobIterator extends FilesystemIterator implements Iterator, Traversable, SeekableIterator, Countable {
 	const CURRENT_MODE_MASK = 240;
 	const CURRENT_AS_PATHNAME = 32;
@@ -4365,6 +4655,10 @@ class GlobIterator extends FilesystemIterator implements Iterator, Traversable, 
 
 }
 
+/**
+ * The SplFileObject class offers an object oriented interface for a file.
+ * @link http://www.php.net/manual/en/class.splfileobject.php
+ */
 class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversable, Iterator, SeekableIterator {
 	const DROP_NEW_LINE = 1;
 	const READ_AHEAD = 2;
@@ -4895,6 +5189,10 @@ class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversabl
 
 }
 
+/**
+ * The SplTempFileObject class offers an object oriented interface for a temporary file.
+ * @link http://www.php.net/manual/en/class.spltempfileobject.php
+ */
 class SplTempFileObject extends SplFileObject implements SeekableIterator, Iterator, Traversable, RecursiveIterator {
 	const DROP_NEW_LINE = 1;
 	const READ_AHEAD = 2;
@@ -5422,12 +5720,23 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 
 }
 
+/**
+ * The SplDoublyLinkedList class provides the main functionalities of a doubly linked list.
+ * @link http://www.php.net/manual/en/class.spldoublylinkedlist.php
+ */
 class SplDoublyLinkedList implements Iterator, Traversable, Countable, ArrayAccess, Serializable {
 	const IT_MODE_LIFO = 2;
 	const IT_MODE_FIFO = 0;
 	const IT_MODE_DELETE = 1;
 	const IT_MODE_KEEP = 0;
 
+
+	/**
+	 * Prop description
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.spldoublylinkedlist.php#spldoublylinkedlist.props.name
+	 */
+	public $name;
 
 	/**
 	 * Pops a node from the end of the doubly linked list
@@ -5622,12 +5931,23 @@ class SplDoublyLinkedList implements Iterator, Traversable, Countable, ArrayAcce
 
 }
 
+/**
+ * The SplQueue class provides the main functionalities of a queue implemented using a doubly linked list.
+ * @link http://www.php.net/manual/en/class.splqueue.php
+ */
 class SplQueue extends SplDoublyLinkedList implements Serializable, ArrayAccess, Countable, Traversable, Iterator {
 	const IT_MODE_LIFO = 2;
 	const IT_MODE_FIFO = 0;
 	const IT_MODE_DELETE = 1;
 	const IT_MODE_KEEP = 0;
 
+
+	/**
+	 * Prop description
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.splqueue.php#splqueue.props.name
+	 */
+	public $name;
 
 	/**
 	 * Adds an element to the queue.
@@ -5837,12 +6157,23 @@ class SplQueue extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 
 }
 
+/**
+ * The SplStack class provides the main functionalities of a stack implemented using a doubly linked list.
+ * @link http://www.php.net/manual/en/class.splstack.php
+ */
 class SplStack extends SplDoublyLinkedList implements Serializable, ArrayAccess, Countable, Traversable, Iterator {
 	const IT_MODE_LIFO = 2;
 	const IT_MODE_FIFO = 0;
 	const IT_MODE_DELETE = 1;
 	const IT_MODE_KEEP = 0;
 
+
+	/**
+	 * Prop description
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.splstack.php#splstack.props.name
+	 */
+	public $name;
 
 	/**
 	 * Pops a node from the end of the doubly linked list
@@ -6037,7 +6368,18 @@ class SplStack extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 
 }
 
+/**
+ * The SplHeap class provides the main functionalities of a Heap.
+ * @link http://www.php.net/manual/en/class.splheap.php
+ */
 abstract class SplHeap implements Iterator, Traversable, Countable {
+
+	/**
+	 * Prop description
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.splheap.php#splheap.props.name
+	 */
+	public $name;
 
 	/**
 	 * Extracts a node from top of the heap and sift up.
@@ -6133,7 +6475,18 @@ abstract class SplHeap implements Iterator, Traversable, Countable {
 
 }
 
+/**
+ * The SplMinHeap class provides the main functionalities of a heap, keeping the minimum on the top.
+ * @link http://www.php.net/manual/en/class.splminheap.php
+ */
 class SplMinHeap extends SplHeap implements Countable, Traversable, Iterator {
+
+	/**
+	 * Prop description
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.splminheap.php#splminheap.props.name
+	 */
+	public $name;
 
 	/**
 	 * Compare elements in order to place them correctly in the heap while sifting up.
@@ -6229,7 +6582,18 @@ class SplMinHeap extends SplHeap implements Countable, Traversable, Iterator {
 
 }
 
+/**
+ * The SplMaxHeap class provides the main functionalities of a heap, keeping the maximum on the top.
+ * @link http://www.php.net/manual/en/class.splmaxheap.php
+ */
 class SplMaxHeap extends SplHeap implements Countable, Traversable, Iterator {
+
+	/**
+	 * Prop description
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.splmaxheap.php#splmaxheap.props.name
+	 */
+	public $name;
 
 	/**
 	 * Compare elements in order to place them correctly in the heap while sifting up.
@@ -6325,11 +6689,23 @@ class SplMaxHeap extends SplHeap implements Countable, Traversable, Iterator {
 
 }
 
+/**
+ * The SplPriorityQueue class provides the main functionalities of a 
+ * prioritized queue, implemented using a max heap.
+ * @link http://www.php.net/manual/en/class.splpriorityqueue.php
+ */
 class SplPriorityQueue implements Iterator, Traversable, Countable {
 	const EXTR_BOTH = 3;
 	const EXTR_PRIORITY = 2;
 	const EXTR_DATA = 1;
 
+
+	/**
+	 * Prop description
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.splpriorityqueue.php#splpriorityqueue.props.name
+	 */
+	public $name;
 
 	/**
 	 * Compare priorities in order to place elements correctly in the heap while sifting up.
@@ -6448,6 +6824,14 @@ class SplPriorityQueue implements Iterator, Traversable, Countable {
 
 }
 
+/**
+ * The SplFixedArray class provides the main functionalities of array. The 
+ * main differences between a SplFixedArray and a normal PHP array is that 
+ * the SplFixedArray is of fixed length and allows only integers within 
+ * the range as indexes. The advantage is that it allows a faster array
+ * implementation.
+ * @link http://www.php.net/manual/en/class.splfixedarray.php
+ */
 class SplFixedArray implements Iterator, Traversable, ArrayAccess, Countable {
 
 	/**
@@ -6573,6 +6957,11 @@ class SplFixedArray implements Iterator, Traversable, ArrayAccess, Countable {
 
 }
 
+/**
+ * The SplObserver interface is used alongside
+ * SplSubject to implement the Observer Design Pattern.
+ * @link http://www.php.net/manual/en/class.splobserver.php
+ */
 interface SplObserver  {
 
 	/**
@@ -6585,6 +6974,11 @@ interface SplObserver  {
 
 }
 
+/**
+ * The SplSubject interface is used alongside
+ * SplObserver to implement the Observer Design Pattern.
+ * @link http://www.php.net/manual/en/class.splsubject.php
+ */
 interface SplSubject  {
 
 	/**
@@ -6612,6 +7006,12 @@ interface SplSubject  {
 
 }
 
+/**
+ * The SplObjectStorage class provides a map from objects to data or, by
+ * ignoring data, an object set. This dual purpose can be useful in many
+ * cases involving the need to uniquely identify objects.
+ * @link http://www.php.net/manual/en/class.splobjectstorage.php
+ */
 class SplObjectStorage implements Countable, Iterator, Traversable, Serializable, ArrayAccess {
 
 	/**
@@ -6779,6 +7179,10 @@ class SplObjectStorage implements Countable, Iterator, Traversable, Serializable
 
 }
 
+/**
+ * An Iterator that sequentially iterates over all attached iterators
+ * @link http://www.php.net/manual/en/class.multipleiterator.php
+ */
 class MultipleIterator implements Iterator, Traversable {
 	const MIT_NEED_ANY = 0;
 	const MIT_NEED_ALL = 1;

@@ -12,6 +12,21 @@ if (version_compare(phpversion(), "5.0.0") < 0) {
 	die ("This script requires PHP 5.0.0 or higher!\n");
 }
 
+/**
+ * Hack to rewrite some PHPDoc return type(s) for a given function or method.
+ * Necessary to overcome some limitations from the official PHP documentation.
+ * @param $funckey string function key created by make_funckey_from_ref($ref)
+ * @param $returnTypes string current PHPDoc type(s)
+ * @return string new PHPDoc type(s)
+ * @see make_funckey_from_ref($ref)
+ */
+function rewrite_phpdoc_return_types ($funckey, $returnTypes) {
+	if ($funckey === 'mysqli::query') {
+		$returnTypes = str_replace ('mixed', 'mysqli_result|bool', $returnTypes);
+	}
+	return $returnTypes;
+}
+
 $splitFiles = true;
 $phpdocDir = null;
 
@@ -169,7 +184,7 @@ function clean_php_type_hint ($name) {
 
 /**
  * Makes generic key from given function reference
- * @param $name ReflectionMethod function reference
+ * @param $ref ReflectionMethod function reference
  * @return string generic key
  */
 function make_funckey_from_ref ($ref) {
@@ -360,8 +375,10 @@ function parse_phpdoc_functions ($phpdocDir) {
 function parse_phpdoc_classes ($phpdocDir) {
 	$classesDoc = array();
 	$xml_files = array_merge (
-		glob ("{$phpdocDir}/reference/*/reference.xml"),
-		glob ("{$phpdocDir}/reference/*/classes.xml"),
+		// glob ("{$phpdocDir}/reference/*/reference.xml"),
+		// glob ("{$phpdocDir}/reference/*/classes.xml"),
+		glob ("{$phpdocDir}/reference/*/*.xml"),
+		glob ("{$phpdocDir}/reference/*/*.xml"),
 		glob ("{$phpdocDir}/language/*/*.xml"),
 		glob ("{$phpdocDir}/language/*.xml")
 	);
@@ -385,8 +402,8 @@ function parse_phpdoc_classes ($phpdocDir) {
 							for($i = 1; $i < count ( $match3 [1] ); ++ $i) {
 								$doc .= "\n<p>" . xml_to_phpdoc ( $match3 [1][$i] ) . "</p>";
 							}
+							$classesDoc [$refname] ['doc'] = $doc;
 						}
-						$classesDoc [$refname] ['doc'] = $doc;
 					}
 					//pass over class fields here
 					$fields_xml_file = array_merge (
@@ -406,6 +423,8 @@ function parse_phpdoc_classes ($phpdocDir) {
 									if(preg_match_all('@<varname\s*linkend="'.$refname.'\.props\.(.*?)">(.*?)</varname>@', $fieldsynopsis, $varname)) {
 										$field_name = $varname[2][0];
 										$fields_doc[$refname][$field_name]['name'] = $field_name;
+									} else {
+										continue;
 									}
 
 									// <varlistentry xml:id="domdocument.props.formatoutput">
@@ -424,6 +443,7 @@ function parse_phpdoc_classes ($phpdocDir) {
 									}
 
 									if(preg_match_all('@<modifier(?:\s(?:[^>]*?[^/>])?)?>(.*?)</modifier>@', $fieldsynopsis, $modifier_list)) {
+										$modifier = '';
 										foreach ($modifier_list[1] as $current_modifier) {
 											if($current_modifier == "readonly") {
 												continue;
@@ -463,8 +483,11 @@ function parse_phpdoc_classes ($phpdocDir) {
  */
 function parse_phpdoc_constants ($phpdocDir) {
 	$constantsDoc = array();
-	exec ("find ".addslashes($phpdocDir)." -name \"*constants.xml\"", $xml_files);
-	foreach ($xml_files as $xml_file) {
+	// will only work on Unix OSes:
+	// exec ("find ".addslashes($phpdocDir)." -name \"*constants.xml\"", $xml_files);
+	$iterator = new RecursiveIteratorIterator (new RecursiveDirectoryIterator ($phpdocDir), RecursiveIteratorIterator::SELF_FIRST);
+	$regex = new RegexIterator ($iterator, '@^.*constants\.xml$@', RecursiveRegexIterator::GET_MATCH);
+	foreach (iterator_to_array ($regex) as $xml_file => $xml_file_regex) {
 		$xml = load_xml ($xml_file);
 		if (preg_match ('@xml:id=["\'](.*?)["\']@', $xml, $match)) {
 			$id = $match[1];
@@ -571,6 +594,8 @@ function print_class ($classRef, $tabs = 0) {
 
 	global $classesDoc;
 
+	$printedFields = array();
+
 	// process properties
 	$propertiesRef = $classRef->getProperties();
 	if (count ($propertiesRef) > 0) {
@@ -590,7 +615,7 @@ function print_class ($classRef, $tabs = 0) {
 	if (@$fields_doc[$className]) {
 		$fields = @$fields_doc[$className];
 		foreach ($fields as $field) {
-			if(!$printedFields[$field['name']]) {
+			if (!key_exists ($field['name'], $printedFields) && trim (@$field['modifier']) !== '') {
 
 				//print doc here
 				print("\n");
@@ -973,6 +998,7 @@ function print_doccomment ($ref, $tabs = 0) {
 			}
 			if ($returntype) {
 				print_tabs ($tabs);
+				$returntype = rewrite_phpdoc_return_types ($funckey, $returntype);
 				if (clean_php_identifier ($returntype, true) === $returntype) {
 					print " * @return {$returntype} {$returndoc}\n";
 				} else {

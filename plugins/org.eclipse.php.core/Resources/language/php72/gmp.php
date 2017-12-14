@@ -2,6 +2,16 @@
 
 // Start of gmp v.7.1.1
 
+/**
+ * A GMP number. These objects support overloaded
+ * arithmetic,
+ * bitwise and
+ * comparison operators.
+ * <p>No object oriented interface is provided to manipulate
+ * GMP objects. Please use the
+ * procedural GMP API.</p>
+ * @link http://www.php.net/manual/en/class.gmp.php
+ */
 class GMP  {
 }
 

@@ -2,6 +2,10 @@
 
 // Start of memcached v.3.0.3
 
+/**
+ * Represents a connection to a set of memcached servers.
+ * @link http://www.php.net/manual/en/class.memcached.php
+ */
 class Memcached  {
 	const LIBMEMCACHED_VERSION_HEX = 16777240;
 	const OPT_COMPRESSION = -1001;
@@ -133,7 +137,8 @@ class Memcached  {
 	 * @link http://www.php.net/manual/en/memcached.get.php
 	 * @param string $key The key of the item to retrieve.
 	 * @param callable $cache_cb [optional] Read-through caching callback or null.
-	 * @param int $flags [optional] 
+	 * @param int $flags [optional] Flags to control the returned result. When value of Memcached::GET_EXTENDED
+	 * is given will return the CAS token.
 	 * @return mixed the value stored in the cache or false otherwise.
 	 * The Memcached::getResultCode will return
 	 * Memcached::RES_NOTFOUND if the key does not exist.
@@ -659,6 +664,9 @@ class Memcached  {
 
 }
 
+/**
+ * @link http://www.php.net/manual/en/class.memcachedexception.php
+ */
 class MemcachedException extends RuntimeException implements Throwable {
 	protected $message;
 	protected $code;

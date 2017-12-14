@@ -2,6 +2,13 @@
 
 // Start of PDO v.7.1.11
 
+/**
+ * Represents an error raised by PDO. You should not throw a
+ * PDOException from your own code.
+ * See Exceptions for more
+ * information about Exceptions in PHP.
+ * @link http://www.php.net/manual/en/class.pdoexception.php
+ */
 class PDOException extends RuntimeException implements Throwable {
 	protected $message;
 	protected $code;
@@ -39,6 +46,10 @@ class PDOException extends RuntimeException implements Throwable {
 
 }
 
+/**
+ * Represents a connection between PHP and a database server.
+ * @link http://www.php.net/manual/en/class.pdo.php
+ */
 class PDO  {
 	const PARAM_BOOL = 5;
 	const PARAM_NULL = 0;
@@ -410,6 +421,11 @@ class PDO  {
 
 }
 
+/**
+ * Represents a prepared statement and, after the statement is executed, an 
+ * associated result set.
+ * @link http://www.php.net/manual/en/class.pdostatement.php
+ */
 class PDOStatement implements Traversable {
 	public $queryString;
 

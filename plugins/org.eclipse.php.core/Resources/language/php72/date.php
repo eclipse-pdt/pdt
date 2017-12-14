@@ -2,6 +2,12 @@
 
 // Start of date v.7.1.1
 
+/**
+ * DateTimeInterface is meant so that both DateTime and DateTimeImmutable can
+ * be type hinted for. It is not possible to implement this interface with
+ * userland classes.
+ * @link http://www.php.net/manual/en/class.datetimeinterface.php
+ */
 interface DateTimeInterface  {
 
 	/**
@@ -25,6 +31,10 @@ interface DateTimeInterface  {
 
 }
 
+/**
+ * Representation of date and time.
+ * @link http://www.php.net/manual/en/class.datetime.php
+ */
 class DateTime implements DateTimeInterface {
 	const ATOM = "Y-m-d\TH:i:sP";
 	const COOKIE = "l, d-M-Y H:i:s T";
@@ -493,6 +503,11 @@ class DateTime implements DateTimeInterface {
 
 }
 
+/**
+ * This class behaves the same as DateTime except it
+ * never modifies itself but returns a new object instead.
+ * @link http://www.php.net/manual/en/class.datetimeimmutable.php
+ */
 class DateTimeImmutable implements DateTimeInterface {
 
 	/**
@@ -632,6 +647,10 @@ class DateTimeImmutable implements DateTimeInterface {
 
 }
 
+/**
+ * Representation of time zone.
+ * @link http://www.php.net/manual/en/class.datetimezone.php
+ */
 class DateTimeZone  {
 	const AFRICA = 1;
 	const AMERICA = 2;
@@ -718,7 +737,83 @@ class DateTimeZone  {
 
 }
 
+/**
+ * Represents a date interval.
+ * <p>A date interval stores either a fixed amount of time (in years, months,
+ * days, hours etc) or a relative time string in the format that
+ * DateTime's constructor supports.</p>
+ * @link http://www.php.net/manual/en/class.dateinterval.php
+ */
 class DateInterval  {
+
+	/**
+	 * Number of years.
+	 * @var integer
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.y
+	 */
+	public $y;
+
+	/**
+	 * Number of months.
+	 * @var integer
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.m
+	 */
+	public $m;
+
+	/**
+	 * Number of days.
+	 * @var integer
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.d
+	 */
+	public $d;
+
+	/**
+	 * Number of hours.
+	 * @var integer
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.h
+	 */
+	public $h;
+
+	/**
+	 * Number of minutes.
+	 * @var integer
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.i
+	 */
+	public $i;
+
+	/**
+	 * Number of seconds.
+	 * @var integer
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.s
+	 */
+	public $s;
+
+	/**
+	 * Number of microseconds, as a fraction of a second.
+	 * @var float
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.f
+	 */
+	public $f;
+
+	/**
+	 * Is 1 if the interval
+	 * represents a negative time period and
+	 * 0 otherwise.
+	 * See DateInterval::format.
+	 * @var integer
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.invert
+	 */
+	public $invert;
+
+	/**
+	 * If the DateInterval object was created by
+	 * DateTime::diff, then this is the total number of
+	 * days between the start and end dates. Otherwise,
+	 * days will be false.
+	 * @var mixed
+	 * @link http://www.php.net/manual/en/class.dateinterval.php#dateinterval.props.days
+	 */
+	public $days;
 
 	/**
 	 * Creates a new DateInterval object
@@ -856,6 +951,12 @@ class DateInterval  {
 
 }
 
+/**
+ * Represents a date period.
+ * <p>A date period allows iteration over a set of dates and times, recurring at
+ * regular intervals, over a given period.</p>
+ * @link http://www.php.net/manual/en/class.dateperiod.php
+ */
 class DatePeriod implements Traversable {
 	const EXCLUDE_START_DATE = 1;
 

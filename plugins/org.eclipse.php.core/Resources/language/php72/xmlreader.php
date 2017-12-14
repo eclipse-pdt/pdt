@@ -2,6 +2,12 @@
 
 // Start of xmlreader v.7.1.1
 
+/**
+ * The XMLReader extension is an XML Pull parser. The reader acts as a 
+ * cursor going forward on the document stream and stopping at each node 
+ * on the way.
+ * @link http://www.php.net/manual/en/class.xmlreader.php
+ */
 class XMLReader  {
 	const NONE = 0;
 	const ELEMENT = 1;
@@ -26,6 +32,104 @@ class XMLReader  {
 	const VALIDATE = 3;
 	const SUBST_ENTITIES = 4;
 
+
+	/**
+	 * The number of attributes on the node
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.xmlreader.php#xmlreader.props.attributecount
+	 */
+	public $attributeCount;
+
+	/**
+	 * The base URI of the node
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.xmlreader.php#xmlreader.props.baseuri
+	 */
+	public $baseURI;
+
+	/**
+	 * Depth of the node in the tree, starting at 0
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.xmlreader.php#xmlreader.props.depth
+	 */
+	public $depth;
+
+	/**
+	 * Indicates if node has attributes
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.xmlreader.php#xmlreader.props.hasattributes
+	 */
+	public $hasAttributes;
+
+	/**
+	 * Indicates if node has a text value
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.xmlreader.php#xmlreader.props.hasvalue
+	 */
+	public $hasValue;
+
+	/**
+	 * Indicates if attribute is defaulted from DTD
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.xmlreader.php#xmlreader.props.isdefault
+	 */
+	public $isDefault;
+
+	/**
+	 * Indicates if node is an empty element tag
+	 * @var bool
+	 * @link http://www.php.net/manual/en/class.xmlreader.php#xmlreader.props.isemptyelement
+	 */
+	public $isEmptyElement;
+
+	/**
+	 * The local name of the node
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.xmlreader.php#xmlreader.props.localname
+	 */
+	public $localName;
+
+	/**
+	 * The qualified name of the node
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.xmlreader.php#xmlreader.props.name
+	 */
+	public $name;
+
+	/**
+	 * The URI of the namespace associated with the node
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.xmlreader.php#xmlreader.props.namespaceuri
+	 */
+	public $namespaceURI;
+
+	/**
+	 * The node type for the node
+	 * @var int
+	 * @link http://www.php.net/manual/en/class.xmlreader.php#xmlreader.props.nodetype
+	 */
+	public $nodeType;
+
+	/**
+	 * The prefix of the namespace associated with the node
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.xmlreader.php#xmlreader.props.prefix
+	 */
+	public $prefix;
+
+	/**
+	 * The text value of the node
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.xmlreader.php#xmlreader.props.value
+	 */
+	public $value;
+
+	/**
+	 * The xml:lang scope which the node resides
+	 * @var string
+	 * @link http://www.php.net/manual/en/class.xmlreader.php#xmlreader.props.xmllang
+	 */
+	public $xmlLang;
 
 	/**
 	 * Close the XMLReader input

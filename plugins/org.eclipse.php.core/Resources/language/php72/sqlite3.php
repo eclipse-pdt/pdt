@@ -2,6 +2,10 @@
 
 // Start of sqlite3 v.7.1.11
 
+/**
+ * A class that interfaces SQLite 3 databases.
+ * @link http://www.php.net/manual/en/class.sqlite3.php
+ */
 class SQLite3  {
 
 	/**
@@ -235,6 +239,10 @@ class SQLite3  {
 
 }
 
+/**
+ * A class that handles prepared statements for the SQLite 3 extension.
+ * @link http://www.php.net/manual/en/class.sqlite3stmt.php
+ */
 class SQLite3Stmt  {
 
 	/**
@@ -370,6 +378,10 @@ class SQLite3Stmt  {
 
 }
 
+/**
+ * A class that handles result sets for the SQLite 3 extension.
+ * @link http://www.php.net/manual/en/class.sqlite3result.php
+ */
 class SQLite3Result  {
 
 	/**

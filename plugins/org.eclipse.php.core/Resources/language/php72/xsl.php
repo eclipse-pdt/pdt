@@ -2,6 +2,9 @@
 
 // Start of xsl v.7.1.1
 
+/**
+ * @link http://www.php.net/manual/en/class.xsltprocessor.php
+ */
 class XSLTProcessor  {
 
 	/**

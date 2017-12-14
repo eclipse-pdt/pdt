@@ -2,6 +2,10 @@
 
 // Start of Reflection v.7.1.1
 
+/**
+ * The ReflectionException class.
+ * @link http://www.php.net/manual/en/class.reflectionexception.php
+ */
 class ReflectionException extends Exception implements Throwable {
 	protected $message;
 	protected $code;
@@ -38,6 +42,10 @@ class ReflectionException extends Exception implements Throwable {
 
 }
 
+/**
+ * The reflection class.
+ * @link http://www.php.net/manual/en/class.reflection.php
+ */
 class Reflection  {
 
 	/**
@@ -59,6 +67,11 @@ class Reflection  {
 
 }
 
+/**
+ * Reflector is an interface implemented by all
+ * exportable Reflection classes.
+ * @link http://www.php.net/manual/en/class.reflector.php
+ */
 interface Reflector  {
 
 	/**
@@ -77,6 +90,11 @@ interface Reflector  {
 
 }
 
+/**
+ * A parent class to ReflectionFunction, read its
+ * description for details.
+ * @link http://www.php.net/manual/en/class.reflectionfunctionabstract.php
+ */
 abstract class ReflectionFunctionAbstract implements Reflector {
 	public $name;
 
@@ -282,6 +300,11 @@ abstract class ReflectionFunctionAbstract implements Reflector {
 
 }
 
+/**
+ * The ReflectionFunction class reports
+ * information about a function.
+ * @link http://www.php.net/manual/en/class.reflectionfunction.php
+ */
 class ReflectionFunction extends ReflectionFunctionAbstract implements Reflector {
 	const IS_DEPRECATED = 262144;
 
@@ -532,6 +555,11 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflector
 
 }
 
+/**
+ * The ReflectionGenerator class reports
+ * information about a generator.
+ * @link http://www.php.net/manual/en/class.reflectiongenerator.php
+ */
 class ReflectionGenerator  {
 
 	/**
@@ -620,6 +648,16 @@ class ReflectionGenerator  {
 
 }
 
+/**
+ * The ReflectionParameter class retrieves
+ * information about function's or method's parameters.
+ * <p>To introspect function parameters, first create an instance
+ * of the ReflectionFunction or
+ * ReflectionMethod classes and then use their
+ * ReflectionFunctionAbstract::getParameters method
+ * to retrieve an array of parameters.</p>
+ * @link http://www.php.net/manual/en/class.reflectionparameter.php
+ */
 class ReflectionParameter implements Reflector {
 	public $name;
 
@@ -788,6 +826,11 @@ class ReflectionParameter implements Reflector {
 
 }
 
+/**
+ * The ReflectionType class reports
+ * information about a function's return type.
+ * @link http://www.php.net/manual/en/class.reflectiontype.php
+ */
 class ReflectionType  {
 
 	final private function __clone () {}
@@ -844,6 +887,11 @@ class ReflectionNamedType extends ReflectionType  {
 
 }
 
+/**
+ * The ReflectionMethod class reports
+ * information about a method.
+ * @link http://www.php.net/manual/en/class.reflectionmethod.php
+ */
 class ReflectionMethod extends ReflectionFunctionAbstract implements Reflector {
 	const IS_STATIC = 1;
 	const IS_PUBLIC = 256;
@@ -1187,6 +1235,11 @@ class ReflectionMethod extends ReflectionFunctionAbstract implements Reflector {
 
 }
 
+/**
+ * The ReflectionClass class reports
+ * information about a class.
+ * @link http://www.php.net/manual/en/class.reflectionclass.php
+ */
 class ReflectionClass implements Reflector {
 	const IS_IMPLICIT_ABSTRACT = 16;
 	const IS_EXPLICIT_ABSTRACT = 32;
@@ -1624,6 +1677,11 @@ class ReflectionClass implements Reflector {
 
 }
 
+/**
+ * The ReflectionObject class reports
+ * information about an object.
+ * @link http://www.php.net/manual/en/class.reflectionobject.php
+ */
 class ReflectionObject extends ReflectionClass implements Reflector {
 	const IS_IMPLICIT_ABSTRACT = 16;
 	const IS_EXPLICIT_ABSTRACT = 32;
@@ -2061,6 +2119,11 @@ class ReflectionObject extends ReflectionClass implements Reflector {
 
 }
 
+/**
+ * The ReflectionProperty class reports
+ * information about classes properties.
+ * @link http://www.php.net/manual/en/class.reflectionproperty.php
+ */
 class ReflectionProperty implements Reflector {
 	const IS_STATIC = 1;
 	const IS_PUBLIC = 256;
@@ -2199,6 +2262,11 @@ class ReflectionProperty implements Reflector {
 
 }
 
+/**
+ * The ReflectionClassConstant class reports
+ * information about a class constant.
+ * @link http://www.php.net/manual/en/class.reflectionclassconstant.php
+ */
 class ReflectionClassConstant implements Reflector {
 	public $name;
 	public $class;
@@ -2286,6 +2354,11 @@ class ReflectionClassConstant implements Reflector {
 
 }
 
+/**
+ * The ReflectionExtension class reports
+ * information about an extension.
+ * @link http://www.php.net/manual/en/class.reflectionextension.php
+ */
 class ReflectionExtension implements Reflector {
 	public $name;
 
@@ -2410,6 +2483,9 @@ class ReflectionExtension implements Reflector {
 
 }
 
+/**
+ * @link http://www.php.net/manual/en/class.reflectionzendextension.php
+ */
 class ReflectionZendExtension implements Reflector {
 	public $name;
 

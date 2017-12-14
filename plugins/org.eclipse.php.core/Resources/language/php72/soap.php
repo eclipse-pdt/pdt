@@ -2,6 +2,11 @@
 
 // Start of soap v.7.1.1
 
+/**
+ * The SoapClient class provides a client for SOAP 1.1, SOAP 1.2 servers. It can be used in WSDL
+ * or non-WSDL mode.
+ * @link http://www.php.net/manual/en/class.soapclient.php
+ */
 class SoapClient  {
 
 	/**
@@ -142,6 +147,10 @@ class SoapClient  {
 
 }
 
+/**
+ * A class representing a variable or object for use with SOAP services.
+ * @link http://www.php.net/manual/en/class.soapvar.php
+ */
 class SoapVar  {
 
 	/**
@@ -158,6 +167,10 @@ class SoapVar  {
 
 }
 
+/**
+ * The SoapServer class provides a server for the SOAP 1.1 and SOAP 1.2 protocols. It can be used with or without a WSDL service description.
+ * @link http://www.php.net/manual/en/class.soapserver.php
+ */
 class SoapServer  {
 
 	/**
@@ -269,6 +282,10 @@ class SoapServer  {
 
 }
 
+/**
+ * Represents a SOAP fault.
+ * @link http://www.php.net/manual/en/class.soapfault.php
+ */
 class SoapFault extends Exception implements Throwable {
 	protected $message;
 	protected $code;
@@ -315,6 +332,10 @@ class SoapFault extends Exception implements Throwable {
 
 }
 
+/**
+ * Represents parameter to a SOAP call.
+ * @link http://www.php.net/manual/en/class.soapparam.php
+ */
 class SoapParam  {
 
 	/**
@@ -327,6 +348,10 @@ class SoapParam  {
 
 }
 
+/**
+ * Represents a SOAP header.
+ * @link http://www.php.net/manual/en/class.soapheader.php
+ */
 class SoapHeader  {
 
 	/**

@@ -2,6 +2,15 @@
 
 // Start of apcu v.5.1.8
 
+/**
+ * The APCUIterator class makes it easier to iterate
+ * over large APCu caches. This is helpful as it allows iterating over large
+ * caches in steps, while grabbing a defined number of entries per lock instance,
+ * so it frees the cache locks for other activities rather than hold up the
+ * entire cache to grab 100 (the default) entries. Also, using regular expression
+ * matching is more efficient as it's been moved to the C level.
+ * @link http://www.php.net/manual/en/class.apcuiterator.php
+ */
 class APCuIterator implements Iterator, Traversable {
 
 	/**
