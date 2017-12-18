@@ -27,6 +27,7 @@ import org.eclipse.dltk.core.builder.IBuildParticipant;
  */
 public class XSSProtectionParticipant implements IBuildParticipant {
 
+	@Override
 	public void build(IBuildContext context) throws CoreException {
 		// Current file is being built:
 		ISourceModule sourceModule = context.getSourceModule();

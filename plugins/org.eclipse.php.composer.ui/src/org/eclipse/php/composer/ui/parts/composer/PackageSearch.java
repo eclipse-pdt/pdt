@@ -49,7 +49,7 @@ public class PackageSearch implements PackageSearchListenerInterface, IPackageCh
 	protected PackageController searchController;
 	protected Composite body;
 	protected Composite pickedResults;
-	protected Map<String, PackageSearchPart> packageControls = new HashMap<String, PackageSearchPart>();
+	protected Map<String, PackageSearchPart> packageControls = new HashMap<>();
 	protected Button addButton;
 
 	protected AsyncPackageSearch downloader = new AsyncPackagistSearch();
@@ -73,7 +73,7 @@ public class PackageSearch implements PackageSearchListenerInterface, IPackageCh
 
 	protected ComposerPackage composerPackage;
 
-	protected Set<PackageSelectionFinishedListener> packageListeners = new HashSet<PackageSelectionFinishedListener>();
+	protected Set<PackageSelectionFinishedListener> packageListeners = new HashSet<>();
 
 	public PackageSearch(Composite parent, ComposerPackage composerPackage, FormToolkit toolkit, String buttonText) {
 		this.composerPackage = composerPackage;

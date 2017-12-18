@@ -38,6 +38,7 @@ public class XSSValidationVisitor extends PHPASTVisitor {
 		this.context = context;
 	}
 	
+	@Override
 	public boolean visit(PHPCallExpression node) throws Exception {
 		// Check the parent: it should be either isset() or htmlentities() call
 		if (node.getReceiver() == null) { // if this is a function call, not method
@@ -49,6 +50,7 @@ public class XSSValidationVisitor extends PHPASTVisitor {
 		return visitGeneral(node);
 	}
 
+	@Override
 	public boolean endvisit(PHPCallExpression node) throws Exception {
 		hasSafeCallInParent = false;
 		endvisitGeneral(node);
@@ -65,6 +67,7 @@ public class XSSValidationVisitor extends PHPASTVisitor {
 		return ("$_GET".equals(name) || "$_POST".equals(name) || "$_REQUEST".equals(name));
 	}
 
+	@Override
 	public boolean visit(ArrayVariableReference s) throws Exception {
 		if (isURLParemeterVariable(s) && !hasSafeCallInParent) {
 			context.getProblemReporter().reportProblem(
