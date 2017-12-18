@@ -61,9 +61,10 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 		 * @param openChoices
 		 *            From each array, a type reference has to be selected
 		 * @param ranges
-		 *            For each choice the range of the corresponding type reference.
-		 * @return Returns <code>null</code> to cancel the operation, or the selected
-		 *         imports.
+		 *            For each choice the range of the corresponding type
+		 *            reference.
+		 * @return Returns <code>null</code> to cancel the operation, or the
+		 *         selected imports.
 		 */
 		IElementNameMatch[] chooseImports(IElementNameMatch[][] openChoices, ISourceRange[] ranges);
 	}
@@ -233,7 +234,8 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 		}
 
 		/**
-		 * Tries to find the given element name and add it to the import structure.
+		 * Tries to find the given element name and add it to the import
+		 * structure.
 		 * 
 		 * @param ref
 		 *            the name node
@@ -373,23 +375,29 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 				if (typeKind == SimilarElementsRequestor.ALL_TYPES) {
 					TypeNameMatchCollector collector = new TypeNameMatchCollector(typesFound);
 					IType[] types = modelAccess.findTypes(key, MatchRule.EXACT, 0, 0, scope, monitor);
-					for (IType type : types) {
-						TypeNameMatch match = new PHPSearchTypeNameMatch(type, type.getFlags());
-						collector.acceptTypeNameMatch(match);
+					if (types != null) {
+						for (IType type : types) {
+							TypeNameMatch match = new PHPSearchTypeNameMatch(type, type.getFlags());
+							collector.acceptTypeNameMatch(match);
+						}
 					}
 				} else if (typeKind == SimilarElementsRequestor.FUNCTIONS) {
 					IMethod[] methods = modelAccess.findMethods(key, MatchRule.EXACT, 0, 0, scope, monitor);
-					for (IMethod method : methods) {
-						MethodNameMatchCollector collector = new MethodNameMatchCollector(methodsFound);
-						MethodNameMatch match = new PHPSearchMethodNameMatch(method, method.getFlags());
-						collector.acceptMethodNameMatch(match);
+					if (methods != null) {
+						for (IMethod method : methods) {
+							MethodNameMatchCollector collector = new MethodNameMatchCollector(methodsFound);
+							MethodNameMatch match = new PHPSearchMethodNameMatch(method, method.getFlags());
+							collector.acceptMethodNameMatch(match);
+						}
 					}
 				} else if (typeKind == SimilarElementsRequestor.CONSTANTS) {
 					IField[] fields = modelAccess.findFields(key, MatchRule.EXACT, 0, 0, scope, monitor);
-					for (IField field : fields) {
-						FieldNameMatchCollector collector = new FieldNameMatchCollector(fieldsFound);
-						FieldNameMatch match = new PHPSearchFieldNameMatch(field, field.getFlags());
-						collector.acceptFieldNameMatch(match);
+					if (fields != null) {
+						for (IField field : fields) {
+							FieldNameMatchCollector collector = new FieldNameMatchCollector(fieldsFound);
+							FieldNameMatch match = new PHPSearchFieldNameMatch(field, field.getFlags());
+							collector.acceptFieldNameMatch(match);
+						}
 					}
 				}
 			}
