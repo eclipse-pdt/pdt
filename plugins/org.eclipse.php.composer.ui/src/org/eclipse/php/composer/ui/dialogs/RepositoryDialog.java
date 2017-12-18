@@ -38,7 +38,7 @@ public class RepositoryDialog extends Dialog {
 	private String name;
 	private String type;
 
-	private static Map<String, String> repos = new HashMap<String, String>();
+	private static Map<String, String> repos = new HashMap<>();
 	static {
 		repos.put("composer", Messages.RepositoryDialog_ComposerRepoType); //$NON-NLS-1$
 		repos.put("package", Messages.RepositoryDialog_PackageRepoType); //$NON-NLS-1$
@@ -152,7 +152,7 @@ public class RepositoryDialog extends Dialog {
 	}
 
 	private List<Entry> buildEntryList() {
-		List<Entry> res = new LinkedList<ValuedCombo.Entry>();
+		List<Entry> res = new LinkedList<>();
 		for (java.util.Map.Entry<String, String> entry : repos.entrySet()) {
 			res.add(new Entry(entry.getKey(), entry.getValue()));
 		}

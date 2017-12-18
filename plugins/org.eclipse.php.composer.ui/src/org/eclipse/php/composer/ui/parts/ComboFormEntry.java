@@ -34,7 +34,7 @@ public class ComboFormEntry {
 	private ComboPart combo;
 	private boolean ignoreNotify = false;
 
-	private ArrayList<IComboFormEntryListener> listeners = new ArrayList<IComboFormEntryListener>();
+	private ArrayList<IComboFormEntryListener> listeners = new ArrayList<>();
 
 	public ComboFormEntry(Composite parent, FormToolkit toolkit, String labelText) {
 		this(parent, toolkit, labelText, SWT.FLAT);

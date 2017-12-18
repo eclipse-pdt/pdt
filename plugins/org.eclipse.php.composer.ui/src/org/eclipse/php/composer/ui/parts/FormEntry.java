@@ -38,7 +38,7 @@ public class FormEntry {
 	private Button browse;
 	boolean ignoreModify = false;
 
-	private ArrayList<IFormEntryListener> listeners = new ArrayList<IFormEntryListener>();
+	private ArrayList<IFormEntryListener> listeners = new ArrayList<>();
 
 	public static final int DEFAULT_TEXT_WIDTH_HINT = 100;
 

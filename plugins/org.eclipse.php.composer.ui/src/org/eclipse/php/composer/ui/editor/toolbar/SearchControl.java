@@ -34,7 +34,7 @@ public class SearchControl extends ControlContribution {
 
 	Text searchText;
 
-	private List<ModifyListener> modifyListeners = new ArrayList<ModifyListener>();
+	private List<ModifyListener> modifyListeners = new ArrayList<>();
 
 	public SearchControl(String id, IManagedForm managedForm) {
 		super(id);

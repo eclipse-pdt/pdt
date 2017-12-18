@@ -117,7 +117,7 @@ public class PHPModelUtilsTests {
 	}
 
 	protected PreparedFile prepareFile(String originalPHPCode) throws Exception {
-		List<Placeholder> placeholders = new ArrayList<Placeholder>();
+		List<Placeholder> placeholders = new ArrayList<>();
 		StringBuilder finalPHPCode = new StringBuilder();
 		int offset = 0;
 		for (;;) {

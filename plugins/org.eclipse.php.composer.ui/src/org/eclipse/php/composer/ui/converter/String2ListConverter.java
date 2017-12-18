@@ -24,7 +24,7 @@ public abstract class String2ListConverter extends ComposerConverter {
 	@Override
 	public Object convert(Object fromObject) {
 		List<String> oldValues = Arrays.asList(start());
-		List<String> newValues = new ArrayList<String>();
+		List<String> newValues = new ArrayList<>();
 
 		// add chunks
 		String[] chunks = ((String) fromObject).split(","); //$NON-NLS-1$
