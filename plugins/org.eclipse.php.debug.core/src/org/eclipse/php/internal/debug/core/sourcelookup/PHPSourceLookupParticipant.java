@@ -33,6 +33,7 @@ import org.eclipse.dltk.core.IArchiveEntry;
 import org.eclipse.dltk.core.IModelStatusConstants;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
+import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
@@ -326,11 +327,13 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 				// Check if we have it in DLTK model
 				HandleFactory handleFactory = new HandleFactory();
 				IDLTKSearchScope scope = SearchEngine.createWorkspaceScope(PHPLanguageToolkit.getDefault());
-				IPath localPath = EnvironmentPathUtils.getFile(LocalEnvironment.getInstance(), new Path(sourceFilePath))
-						.getFullPath();
-				Openable openable = handleFactory.createOpenable(localPath.toString(), scope);
-				if (openable instanceof IStorage) {
-					return new Object[] { openable };
+				IFileHandle handle = EnvironmentPathUtils.getFile(LocalEnvironment.getInstance(),
+						new Path(sourceFilePath));
+				if (handle != null) {
+					Openable openable = handleFactory.createOpenable(handle.getFullPath().toString(), scope);
+					if (openable instanceof IStorage) {
+						return new Object[] { openable };
+					}
 				}
 				// Check if it is not a file from PHAR
 				final PharPath pharPath = PharPath.getPharPath(new Path(sourceFilePath));
