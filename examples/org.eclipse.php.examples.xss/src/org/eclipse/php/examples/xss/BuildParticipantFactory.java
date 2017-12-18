@@ -18,6 +18,7 @@ import org.eclipse.dltk.core.builder.IBuildParticipantFactory;
 
 public class BuildParticipantFactory implements IBuildParticipantFactory {
 
+	@Override
 	public IBuildParticipant createBuildParticipant(IScriptProject project) throws CoreException {
 		return new XSSProtectionParticipant();
 	}

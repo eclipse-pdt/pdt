@@ -57,7 +57,7 @@ public class PackagistItem extends AbstractDiscoveryItem<PackageFilterItem> {
 	private Button favorButton;
 	private Combo versionCombo;
 	private boolean isLoadingVersions = false;
-	private List<PackageFilterChangedListener> listeners = new ArrayList<PackageFilterChangedListener>();
+	private List<PackageFilterChangedListener> listeners = new ArrayList<>();
 
 	public PackagistItem(Composite parent, int style, DiscoveryResources resources, PackageFilterItem element) {
 		super(parent, style, resources, element);
@@ -251,7 +251,7 @@ public class PackagistItem extends AbstractDiscoveryItem<PackageFilterItem> {
 			@Override
 			public void packageLoaded(RepositoryPackage repositoryPackage) {
 				final Versions versions = repositoryPackage.getVersions();
-				final List<String> versionNames = new ArrayList<String>();
+				final List<String> versionNames = new ArrayList<>();
 				for (Entry<String, ComposerPackage> version : versions) {
 					versionNames.add(version.getValue().getVersion());
 				}
