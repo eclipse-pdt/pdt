@@ -246,7 +246,7 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 			if (part.getAlias() != null) {
 				name = part.getAlias().getName();
 			} else {
-				name = part.getName().getName();
+				name = part.getFullUseStatementName();
 				int index = name.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
 				if (index >= 0) {
 					name = name.substring(index + 1);
@@ -269,12 +269,12 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 			if (index >= 0) {
 				String namespace = fullName.substring(0, index);
 				if (lastUseParts.containsKey(namespace)) {
-					fullName = new StringBuilder(lastUseParts.get(namespace).getName().getName())
+					fullName = new StringBuilder(lastUseParts.get(namespace).getFullUseStatementName())
 							.append(NamespaceReference.NAMESPACE_SEPARATOR).append(fullName.substring(index + 1))
 							.toString();
 				}
 			} else if (lastUseParts.containsKey(fullName)) {
-				fullName = new StringBuilder(lastUseParts.get(fullName).getName().getName()).toString();
+				fullName = new StringBuilder(lastUseParts.get(fullName).getFullUseStatementName()).toString();
 			} else {
 				if (currentNamespace != null && currentNamespace.getName() != null) {
 					fullName = new StringBuilder(currentNamespace.getName().getName())

@@ -635,7 +635,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				if (name.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
 					name = name.substring(1);
 				} else if (fLastUseParts.containsKey(namespace)) {
-					name = new StringBuilder(fLastUseParts.get(namespace).getNamespace().getFullyQualifiedName())
+					name = new StringBuilder(fLastUseParts.get(namespace).getFullUseStatementName())
 							.append(subnamespace).append(NamespaceReference.NAMESPACE_SEPARATOR)
 							.append(fullyQualifiedName.getName()).toString();
 				} else if (fLastNamespace != null) {
@@ -643,7 +643,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 							.append(name).toString();
 				}
 			} else if (fLastUseParts.containsKey(name)) {
-				name = fLastUseParts.get(name).getNamespace().getFullyQualifiedName();
+				name = fLastUseParts.get(name).getFullUseStatementName();
 			} else {
 				if (fLastNamespace != null) {
 					name = new StringBuilder(fLastNamespace.getName()).append(NamespaceReference.NAMESPACE_SEPARATOR)
@@ -1039,7 +1039,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			if (part.getAlias() != null) {
 				name = part.getAlias().getName();
 			} else {
-				name = part.getNamespace().getName();
+				name = part.getFullUseStatementName();
 				int index = name.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
 				if (index >= 0) {
 					name = name.substring(index + 1);
@@ -1053,7 +1053,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				containerName = fLastNamespace.getName();
 			}
 			info.containerName = containerName;
-			info.name = PHPModelUtils.concatFullyQualifiedNames(declaration, part);
+			info.name = part.getFullUseStatementName();
 			if (part.getAlias() != null) {
 				info.alias = part.getAlias().getName();
 			}

@@ -56,7 +56,7 @@ public class UsePart extends ASTNode {
 	@Override
 	public String toString() {
 		StringBuilder buf = new StringBuilder("[USE: ") //$NON-NLS-1$
-				.append(getNamespace().getFullyQualifiedName());
+				.append(getFullUseStatementName());
 		if (getAlias() != null) {
 			buf.append(" AS ").append(getAlias().getName()); //$NON-NLS-1$
 		}
@@ -95,6 +95,12 @@ public class UsePart extends ASTNode {
 		this.namespace = namespace;
 	}
 
+	/**
+	 * <b>WARNING:</b> to get "complete" use statement name, use
+	 * UsePart#getFullUseStatementName().
+	 * 
+	 * @see UsePart#getFullUseStatementName()
+	 */
 	public FullyQualifiedReference getNamespace() {
 		return namespace;
 	}

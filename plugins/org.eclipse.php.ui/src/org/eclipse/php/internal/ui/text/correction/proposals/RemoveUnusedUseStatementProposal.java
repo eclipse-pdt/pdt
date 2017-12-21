@@ -87,9 +87,9 @@ public class RemoveUnusedUseStatementProposal extends CUCorrectionProposal {
 			} else {
 				currentNamespace = ((Identifier) current).getName();
 			}
+			int index = 0;
 			for (UseStatementPart part : parts) {
-				int index = parts.indexOf(part);
-				String namespace = getNamespaceName(part.getName());
+				String namespace = part.getFullUseStatementName();
 				if (currentNamespace.equals(namespace)) {
 					int start = part.getStart();
 					int length = 0;
@@ -104,6 +104,7 @@ public class RemoveUnusedUseStatementProposal extends CUCorrectionProposal {
 					root.addChild(new DeleteEdit(start, length));
 					return;
 				}
+				index++;
 			}
 
 		} catch (BadLocationException e) {

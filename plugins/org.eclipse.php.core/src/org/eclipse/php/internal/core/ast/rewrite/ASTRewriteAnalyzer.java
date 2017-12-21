@@ -97,8 +97,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 *            the source range computer to use
 	 */
 	public ASTRewriteAnalyzer(AstLexer scanner, IDocument document, LineInformation lineInfo, String lineDelim,
-			TextEdit rootEdit, RewriteEventStore eventStore, NodeInfoStore nodeInfos, List<?> comments, Map<String, String> options,
-			TargetSourceRangeComputer extendedSourceRangeComputer) {
+			TextEdit rootEdit, RewriteEventStore eventStore, NodeInfoStore nodeInfos, List<?> comments,
+			Map<String, String> options, TargetSourceRangeComputer extendedSourceRangeComputer) {
 		this.scanner = scanner;
 		this.eventStore = eventStore;
 		this.document = document;
@@ -3706,17 +3706,19 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			case RewriteEvent.REPLACED:
 				String insertString = ""; //$NON-NLS-1$
 				if (useStatement.getStatementType() == UseStatement.T_FUNCTION) {
-					insertString = "function"; //$NON-NLS-1$
+					insertString = "function "; //$NON-NLS-1$
 				} else if (useStatement.getStatementType() == UseStatement.T_CONST) {
-					insertString = "const"; //$NON-NLS-1$
+					insertString = "const "; //$NON-NLS-1$
 				}
 
 				int start = useStatement.getStart() + 4; // move after 'use '
 				int length = 0;
-				if (!useStatement.parts().isEmpty()) {
+				if (!useStatement.parts().isEmpty() && useStatement.getNamespace() == null) {
 					length = useStatement.parts().get(0).getStart() - start;
+				} else if (useStatement.getNamespace() != null) {
+					length = useStatement.getNamespace().getStart() - start;
 				}
-				doTextReplace(useStatement.getStart() + 4, length, insertString, getEditGroup(event));
+				doTextReplace(start, length, insertString, getEditGroup(event));
 				break;
 			}
 		}

@@ -14,7 +14,6 @@ import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.php.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.core.compiler.ast.nodes.UseStatement;
-import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
  * AST visitor for finding use statements by namespace.
@@ -82,11 +81,11 @@ public class FindUseStatementByNamespaceASTVisitor extends AbstractUseStatementA
 	 */
 	@Override
 	protected boolean visit(UsePart usePart) {
-		String ns = PHPModelUtils.concatFullyQualifiedNames(currentUseStatement, usePart);
+		String ns = usePart.getFullUseStatementName();
 
 		if (namespace.equalsIgnoreCase(ns)) {
 			boolean isGroupStatement = currentUseStatement != null && currentUseStatement.getNamespace() != null
-					&& usePart.getGroupNamespace() != null;
+					&& usePart.getGroupNamespace() == currentUseStatement.getNamespace();
 			if (isGroupStatement) {
 				FullyQualifiedReference fqn = ASTUtils.createFakeGroupUseType(usePart);
 
