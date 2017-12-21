@@ -152,9 +152,13 @@ public class UseStatementPart extends ASTNode {
 	}
 
 	/**
-	 * Returns the name of this array element(null if missing).
+	 * Returns the name of this array element.<br>
+	 * 
+	 * <b>WARNING:</b> to get "complete" use statement name, use
+	 * UseStatementPart#getFullUseStatementName().
 	 * 
 	 * @return the name of the array element
+	 * @see UseStatementPart#getFullUseStatementName()
 	 */
 	public NamespaceName getName() {
 		return name;

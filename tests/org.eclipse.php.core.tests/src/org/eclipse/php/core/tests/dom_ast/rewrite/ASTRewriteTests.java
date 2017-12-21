@@ -107,7 +107,7 @@ public class ASTRewriteTests {
 
 	@RunWith(org.junit.runners.Suite.class)
 	@SuiteClasses({ ASTRewriteTests.class, ASTRewriteTestsPHP54.Suite.class, ASTRewriteTestsPHP55.Suite.class,
-			ASTRewriteTestsPHP56.Suite.class, ASTRewriteTestsPHP7.Suite.class })
+			ASTRewriteTestsPHP56.Suite.class, ASTRewriteTestsPHP7.Suite.class, ASTRewriteTestsPHP71.Suite.class })
 	public static class Suite {
 
 	}
@@ -736,7 +736,7 @@ public class ASTRewriteTests {
 	}
 
 	@Test
-	public void refernceInstanciation() throws Exception {
+	public void referenceInstanciation() throws Exception {
 		String str = "<?php $b = &new MyClass(); ?>";
 		initialize(str);
 

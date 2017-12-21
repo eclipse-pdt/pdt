@@ -89,6 +89,12 @@ public class UseStatement extends Statement {
 		this.statementType = statementType;
 	}
 
+	/**
+	 * <b>WARNING:</b> to get "full" use statement type, use
+	 * UsePart#getStatementType().
+	 * 
+	 * @see UsePart#getStatementType()
+	 */
 	public int getStatementType() {
 		return statementType;
 	}
