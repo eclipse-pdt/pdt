@@ -476,7 +476,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		for (UsePartInfo useInfo : useInfos) {
 			if (!useInfo.isProblemReported && useInfo.getRefCount() == 0) {
 				FullyQualifiedReference m = useInfo.getUsePart().getNamespace();
-				String name = m.getFullyQualifiedName();
+				String name = useInfo.getUsePart().getFullUseStatementName();
 				reportProblem(m, Messages.UnusedImport, PHPProblemIdentifier.UnusedImport, name,
 						ProblemSeverities.Warning);
 			}
