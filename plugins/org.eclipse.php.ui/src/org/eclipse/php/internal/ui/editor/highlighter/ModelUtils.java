@@ -187,7 +187,7 @@ public abstract class ModelUtils {
 				final Map<String, UsePart> result = PHPModelUtils.getAliasToNSMap(prefix, moduleDeclaration, offset,
 						currentNamespace, true);
 				if (result.containsKey(prefix)) {
-					String fullName = result.get(prefix).getNamespace().getFullyQualifiedName();
+					String fullName = result.get(prefix).getFullUseStatementName();
 					typeName = typeName.replace(prefix, fullName);
 					if (typeName.length() > 0 && typeName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
 						typeName = NamespaceReference.NAMESPACE_SEPARATOR + typeName;
@@ -199,7 +199,7 @@ public abstract class ModelUtils {
 				final Map<String, UsePart> result = PHPModelUtils.getAliasToNSMap(prefix, moduleDeclaration, offset,
 						currentNamespace, true);
 				if (result.containsKey(prefix)) {
-					String fullName = result.get(prefix).getNamespace().getFullyQualifiedName();
+					String fullName = result.get(prefix).getFullUseStatementName();
 					typeName = fullName;
 					if (typeName.length() > 0 && typeName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
 						typeName = NamespaceReference.NAMESPACE_SEPARATOR + typeName;
