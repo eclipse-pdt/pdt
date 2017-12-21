@@ -243,8 +243,6 @@ public class DocumentUtils {
 			use = indent + "use "; //$NON-NLS-1$
 
 			switch (statement.getStatementType()) {
-			case UseStatement.T_NONE:
-				break;
 			case UseStatement.T_FUNCTION:
 				use += "function "; //$NON-NLS-1$
 				break;
@@ -252,12 +250,27 @@ public class DocumentUtils {
 				use += "const "; //$NON-NLS-1$
 				break;
 			}
+
+			if (statement.getNamespace() != null) {
+				use += statement.getNamespace().getFullyQualifiedName();
+				use += "\\{"; //$NON-NLS-1$
+			}
 		}
 
 		boolean first = true;
 		for (UsePart part : statement.getParts()) {
 			if (!first) {
 				use += ", "; //$NON-NLS-1$
+			}
+			if (addIndentedUsePrefixAndNewline && statement.getStatementType() == UseStatement.T_NONE) {
+				switch (part.getStatementType()) {
+				case UseStatement.T_FUNCTION:
+					use += "function "; //$NON-NLS-1$
+					break;
+				case UseStatement.T_CONST:
+					use += "const "; //$NON-NLS-1$
+					break;
+				}
 			}
 			use += part.getNamespace().getFullyQualifiedName();
 			if (part.getAlias() != null) {
@@ -267,6 +280,10 @@ public class DocumentUtils {
 		}
 
 		if (addIndentedUsePrefixAndNewline) {
+			if (statement.getNamespace() != null) {
+				use += "}"; //$NON-NLS-1$
+			}
+
 			return use + ";\n"; //$NON-NLS-1$
 		}
 		return use;

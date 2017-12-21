@@ -192,10 +192,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 
 	@Override
 	public boolean visit(UseStatementPart part) {
-		NamespaceName namespace = part.getName();
-		if (namespace != null) {
-			dealIdentifier(namespace);
-		}
+		nodeToFullName.put(part.getName(), part.getFullUseStatementName());
 		return false;
 	}
 

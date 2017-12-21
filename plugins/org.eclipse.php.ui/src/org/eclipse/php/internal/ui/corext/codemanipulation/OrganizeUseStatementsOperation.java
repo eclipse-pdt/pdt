@@ -101,7 +101,13 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 				}
 				for (UseStatementPart part : importDeclaration.parts()) {
 
-					String qualifiedName = part.getName().getName();
+					if (part.getStatementType() == UseStatement.T_FUNCTION) {
+						prefix = FUNCTION_PREFIX;
+					} else if (part.getStatementType() == UseStatement.T_CONST) {
+						prefix = CONSTANT_PREFIX;
+					}
+
+					String qualifiedName = part.getFullUseStatementName();
 
 					String simpleName = qualifiedName
 							.substring(qualifiedName.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR) + 1);
@@ -761,7 +767,7 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 		for (int i = 0; i < imports.size(); i++) {
 			UseStatement curr = imports.get(i);
 			for (UseStatementPart part : curr.parts()) {
-				String importName = part.getName().getName();
+				String importName = part.getFullUseStatementName();
 				if (part.getAlias() != null) {
 					importName += " as " + part.getAlias().getName(); //$NON-NLS-1$
 				}

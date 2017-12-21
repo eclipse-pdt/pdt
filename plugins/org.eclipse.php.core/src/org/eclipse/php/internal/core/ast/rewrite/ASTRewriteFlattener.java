@@ -581,6 +581,10 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		} else if (useStatement.getStatementType() == UseStatement.T_CONST) {
 			result.append("const "); //$NON-NLS-1$
 		}
+		if (useStatement.getNamespace() != null) {
+			useStatement.getNamespace().accept(this);
+			result.append("\\{"); //$NON-NLS-1$
+		}
 		Iterator<UseStatementPart> it = useStatement.parts().iterator();
 		while (it.hasNext()) {
 			it.next().accept(this);
@@ -588,12 +592,23 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 				result.append(", "); //$NON-NLS-1$
 			}
 		}
+		if (useStatement.getNamespace() != null) {
+			result.append("}"); //$NON-NLS-1$
+		}
 		result.append(";\n"); //$NON-NLS-1$
 		return false;
 	}
 
 	@Override
 	public boolean visit(UseStatementPart useStatementPart) {
+		if (useStatementPart.getParent() instanceof UseStatement
+				&& ((UseStatement) useStatementPart.getParent()).getStatementType() == UseStatement.T_NONE) {
+			if (useStatementPart.getStatementType() == UseStatement.T_FUNCTION) {
+				result.append("function "); //$NON-NLS-1$
+			} else if (useStatementPart.getStatementType() == UseStatement.T_CONST) {
+				result.append("const "); //$NON-NLS-1$
+			}
+		}
 		useStatementPart.getName().accept(this);
 		Identifier alias = useStatementPart.getAlias();
 		if (alias != null) {

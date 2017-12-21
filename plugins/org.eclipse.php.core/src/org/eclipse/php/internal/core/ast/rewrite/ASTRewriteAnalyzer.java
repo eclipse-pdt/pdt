@@ -97,8 +97,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 *            the source range computer to use
 	 */
 	public ASTRewriteAnalyzer(AstLexer scanner, IDocument document, LineInformation lineInfo, String lineDelim,
-			TextEdit rootEdit, RewriteEventStore eventStore, NodeInfoStore nodeInfos, List<?> comments, Map<String, String> options,
-			TargetSourceRangeComputer extendedSourceRangeComputer) {
+			TextEdit rootEdit, RewriteEventStore eventStore, NodeInfoStore nodeInfos, List<?> comments,
+			Map<String, String> options, TargetSourceRangeComputer extendedSourceRangeComputer) {
 		this.scanner = scanner;
 		this.eventStore = eventStore;
 		this.document = document;
@@ -3706,17 +3706,19 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			case RewriteEvent.REPLACED:
 				String insertString = ""; //$NON-NLS-1$
 				if (useStatement.getStatementType() == UseStatement.T_FUNCTION) {
-					insertString = "function"; //$NON-NLS-1$
+					insertString = "function "; //$NON-NLS-1$
 				} else if (useStatement.getStatementType() == UseStatement.T_CONST) {
-					insertString = "const"; //$NON-NLS-1$
+					insertString = "const "; //$NON-NLS-1$
 				}
 
 				int start = useStatement.getStart() + 4; // move after 'use '
 				int length = 0;
-				if (!useStatement.parts().isEmpty()) {
+				if (!useStatement.parts().isEmpty() && useStatement.getNamespace() == null) {
 					length = useStatement.parts().get(0).getStart() - start;
+				} else if (useStatement.getNamespace() != null) {
+					length = useStatement.getNamespace().getStart() - start;
 				}
-				doTextReplace(useStatement.getStart() + 4, length, insertString, getEditGroup(event));
+				doTextReplace(start, length, insertString, getEditGroup(event));
 				break;
 			}
 		}
@@ -3724,8 +3726,51 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 
 	@Override
 	public boolean visit(UseStatementPart useStatementPart) {
+		rewriteUseStatementPartType(useStatementPart);
 		return rewriteRequiredNodeVisit(useStatementPart, UseStatementPart.NAME_PROPERTY,
 				UseStatementPart.ALIAS_PROPERTY);
+	}
+
+	private void rewriteUseStatementPartType(UseStatementPart useStatementPart) {
+		// Rewrite the statement part type
+		RewriteEvent event = getEvent(useStatementPart, UseStatementPart.STATEMENT_TYPE_PROPERTY);
+		if (event != null) {
+			int kind = event.getChangeKind();
+			switch (kind) {
+			case RewriteEvent.REPLACED:
+				if (!(useStatementPart.getParent() instanceof UseStatement)) {
+					break;
+				}
+				UseStatement useStatement = ((UseStatement) useStatementPart.getParent());
+				if (useStatement.getNamespace() == null) {
+					break;
+				}
+				List<UseStatementPart> parts = useStatement.parts();
+				int idx = parts.indexOf(useStatementPart);
+				assert idx != -1;
+				if (idx == -1) {
+					break;
+				}
+
+				String insertString = ""; //$NON-NLS-1$
+				int start;
+				if (idx == 0) {
+					insertString += "{"; //$NON-NLS-1$
+					start = useStatement.getNamespace().getEnd();
+				} else {
+					insertString += ", "; //$NON-NLS-1$
+					start = parts.get(idx - 1).getEnd();
+				}
+				if (useStatementPart.getStatementType() == UseStatement.T_FUNCTION) {
+					insertString += "function "; //$NON-NLS-1$
+				} else if (useStatementPart.getStatementType() == UseStatement.T_CONST) {
+					insertString += "const "; //$NON-NLS-1$
+				}
+				int length = useStatementPart.getStart() - start;
+				doTextReplace(start, length, insertString, getEditGroup(event));
+				break;
+			}
+		}
 	}
 
 	/**

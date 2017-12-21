@@ -53,7 +53,7 @@ public class NodeDeletionTests {
 	public void variable() throws Exception {
 		String str = "<?php $a; $A; ?>";
 		String expected = "<?php ?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				List<? extends ASTNode> allOfType = getAllOfType(program, ExpressionStatement.class);
@@ -68,7 +68,7 @@ public class NodeDeletionTests {
 	public void functionInvocationWithParamsFirst() throws Exception {
 		String str = "<?php $foo($a, 's<>&', 12, true, __CLASS__); ?>";
 		String expected = "<?php $foo('s<>&', 12, true, __CLASS__); ?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				ExpressionStatement statement = (ExpressionStatement) program.statements().get(0);
@@ -82,7 +82,7 @@ public class NodeDeletionTests {
 	public void functionInvocationWithParamsLast() throws Exception {
 		String str = "<?php $foo($a, 's<>&', 12, true, __CLASS__); ?>";
 		String expected = "<?php $foo($a, 's<>&', 12, true); ?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				ExpressionStatement statement = (ExpressionStatement) program.statements().get(0);
@@ -96,7 +96,7 @@ public class NodeDeletionTests {
 	public void functionInvocationWithParamsMiddle() throws Exception {
 		String str = "<?php $foo($a, 's<>&', 12, true, __CLASS__); ?>";
 		String expected = "<?php $foo($a, 's<>&', true, __CLASS__); ?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				ExpressionStatement statement = (ExpressionStatement) program.statements().get(0);
@@ -110,7 +110,7 @@ public class NodeDeletionTests {
 	public void classRemove() throws Exception {
 		String str = "<?php $a = 5; class A { } ?>";
 		String expected = "<?php $a = 5; ?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				Statement statement = program.statements().get(1);
@@ -123,7 +123,7 @@ public class NodeDeletionTests {
 	public void statementBeforeClass() throws Exception {
 		String str = "<?php $a = 5; class A { } ?>";
 		String expected = "<?php class A { } ?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				Statement statement = program.statements().get(0);
@@ -136,7 +136,7 @@ public class NodeDeletionTests {
 	public void arrayFirst() throws Exception {
 		String str = "<?php array (0, 1, 2, 3) ?>";
 		String expected = "<?php array (1, 2, 3) ?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				ExpressionStatement statement = (ExpressionStatement) program.statements().get(0);
@@ -150,7 +150,7 @@ public class NodeDeletionTests {
 	public void arrayLast() throws Exception {
 		String str = "<?php array (0, 1, 2, 3) ?>";
 		String expected = "<?php array (0, 1, 2) ?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				ExpressionStatement statement = (ExpressionStatement) program.statements().get(0);
@@ -164,7 +164,7 @@ public class NodeDeletionTests {
 	public void arrayMiddle() throws Exception {
 		String str = "<?php array (0, 1, 2, 3) ?>";
 		String expected = "<?php array (0, 1, 3) ?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				ExpressionStatement statement = (ExpressionStatement) program.statements().get(0);
@@ -178,7 +178,7 @@ public class NodeDeletionTests {
 	public void deleteArrayKeyValue() throws Exception {
 		String str = "<?php array('Dodo'=>'Golo','Dafna'=>'Dodidu');?>";
 		String expected = "<?php array('Dafna'=>'Dodidu');?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				ExpressionStatement statement = (ExpressionStatement) program.statements().get(0);
@@ -192,7 +192,7 @@ public class NodeDeletionTests {
 	public void listFirst() throws Exception {
 		String str = "<?php list($a, $b, $c, $d) = array () ?>";
 		String expected = "<?php list($b, $c, $d) = array () ?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				ExpressionStatement statement = (ExpressionStatement) program.statements().get(0);
@@ -207,7 +207,7 @@ public class NodeDeletionTests {
 	public void listMiddle() throws Exception {
 		String str = "<?php list($a, $b, $c, $d)  = array ()  ?>";
 		String expected = "<?php list($a, $b, $d)  = array ()  ?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				ExpressionStatement statement = (ExpressionStatement) program.statements().get(0);
@@ -222,7 +222,7 @@ public class NodeDeletionTests {
 	public void listLast() throws Exception {
 		String str = "<?php list ($a, $b, $c, $d)  = array ()  ?>";
 		String expected = "<?php list ($a, $b, $c)  = array ()  ?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				ExpressionStatement statement = (ExpressionStatement) program.statements().get(0);
@@ -237,7 +237,7 @@ public class NodeDeletionTests {
 	public void deleteBreak() throws Exception {
 		String str = "<?php break $a;?>";
 		String expected = "<?php break;?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				BreakStatement statement = (BreakStatement) program.statements().get(0);
@@ -250,7 +250,7 @@ public class NodeDeletionTests {
 	public void deleteContinue() throws Exception {
 		String str = "<?php continue $a;?>";
 		String expected = "<?php continue;?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				ContinueStatement statement = (ContinueStatement) program.statements().get(0);
@@ -263,7 +263,7 @@ public class NodeDeletionTests {
 	public void deleteReturn() throws Exception {
 		String str = "<?php return $a;?>";
 		String expected = "<?php return;?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				ReturnStatement statement = (ReturnStatement) program.statements().get(0);
@@ -276,7 +276,7 @@ public class NodeDeletionTests {
 	public void deleteEchoFirst() throws Exception {
 		String str = "<?php echo $a, $b , $c; ?>";
 		String expected = "<?php echo $b , $c; ?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				EchoStatement statement = (EchoStatement) program.statements().get(0);
@@ -289,7 +289,7 @@ public class NodeDeletionTests {
 	public void deleteEchoLast() throws Exception {
 		String str = "<?php echo $a, $b , $c; ?>";
 		String expected = "<?php echo $a, $b; ?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				EchoStatement statement = (EchoStatement) program.statements().get(0);
@@ -302,7 +302,7 @@ public class NodeDeletionTests {
 	public void deleteEchoMiddle() throws Exception {
 		String str = "<?php echo $a, $b , $c; ?>";
 		String expected = "<?php echo $a, $c; ?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				EchoStatement statement = (EchoStatement) program.statements().get(0);
@@ -315,7 +315,7 @@ public class NodeDeletionTests {
 	public void deleteSwitch() throws Exception {
 		String str = "<?php switch ($i) { case 0:    echo 'i equals 0';    break; case 1:     echo 'i equals 1';     break; default:    echo 'i not equals 0,1';  }  ?>";
 		String expected = "<?php switch ($i) { case 0:    echo 'i equals 0';    break; default:    echo 'i not equals 0,1';  }  ?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				SwitchStatement statement = (SwitchStatement) program.statements().get(0);
@@ -328,7 +328,7 @@ public class NodeDeletionTests {
 	public void deleteBlockFirst() throws Exception {
 		String str = "<?php if ($a) { $a = 5; $b = 4; $c = 4; }  ?>";
 		String expected = "<?php if ($a) { $b = 4; $c = 4; }  ?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				IfStatement statement = (IfStatement) program.statements().get(0);
@@ -342,7 +342,7 @@ public class NodeDeletionTests {
 	public void deleteBlockMiddle() throws Exception {
 		String str = "<?php if ($a) { $a = 5; $b = 4; }  ?>";
 		String expected = "<?php if ($a) { $a = 5; }  ?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				IfStatement statement = (IfStatement) program.statements().get(0);
@@ -356,7 +356,7 @@ public class NodeDeletionTests {
 	public void deleteBlockLast() throws Exception {
 		String str = "<?php if ($a) { $a = 5; $b = 4; $c = 4;}  ?>";
 		String expected = "<?php if ($a) { $a = 5; $b = 4;}  ?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				IfStatement statement = (IfStatement) program.statements().get(0);
@@ -370,7 +370,7 @@ public class NodeDeletionTests {
 	public void deleteForComponent1() throws Exception {
 		String str = "<?php for ($i = 1; $i <= 10; $i++) {  echo $i; } ?>";
 		String expected = "<?php for (;;) {  echo $i; } ?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				ForStatement statement = (ForStatement) program.statements().get(0);
@@ -400,7 +400,7 @@ public class NodeDeletionTests {
 	public void deleteFunctionFormalFirst() throws Exception {
 		String str = "<?php function foo($a, $b, $c = 5) { $a= 5; $b = 6; $c = 7; } ?>";
 		String expected = "<?php function foo($b, $c = 5) { $a= 5; $b = 6; $c = 7; } ?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				FunctionDeclaration statement = (FunctionDeclaration) program.statements().get(0);
@@ -413,7 +413,7 @@ public class NodeDeletionTests {
 	public void deleteFunctionFormalLast() throws Exception {
 		String str = "<?php function foo($a, $b, $c = 5) { $a= 5; $b = 6; $c = 7; } ?>";
 		String expected = "<?php function foo($a, $b) { $a= 5; $b = 6; $c = 7; } ?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				FunctionDeclaration statement = (FunctionDeclaration) program.statements().get(0);
@@ -426,7 +426,7 @@ public class NodeDeletionTests {
 	public void deleteFunctionFormalMiddle() throws Exception {
 		String str = "<?php function foo($a, $b, $c = 5) { $a= 5; $b = 6; $c = 7; } ?>";
 		String expected = "<?php function foo($a, $c = 5) { $a= 5; $b = 6; $c = 7; } ?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				FunctionDeclaration statement = (FunctionDeclaration) program.statements().get(0);
@@ -439,7 +439,7 @@ public class NodeDeletionTests {
 	public void deleteFunctionBodyFirst() throws Exception {
 		String str = "<?php function foo() { $a= 5; $b = 6; $c = 7; } ?>";
 		String expected = "<?php function foo() { $b = 6; $c = 7; } ?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				FunctionDeclaration statement = (FunctionDeclaration) program.statements().get(0);
@@ -452,7 +452,7 @@ public class NodeDeletionTests {
 	public void deleteFunctionBodyLast() throws Exception {
 		String str = "<?php function foo() { $a= 5; $b = 6; $c = 7; } ?>";
 		String expected = "<?php function foo() { $a= 5; $b = 6; } ?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				FunctionDeclaration statement = (FunctionDeclaration) program.statements().get(0);
@@ -465,7 +465,7 @@ public class NodeDeletionTests {
 	public void deleteFunctionBodyMiddle() throws Exception {
 		String str = "<?php function foo() { $a= 5; $b = 6; $c = 7; } ?>";
 		String expected = "<?php function foo() { $a= 5; $c = 7; } ?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				FunctionDeclaration statement = (FunctionDeclaration) program.statements().get(0);
@@ -478,7 +478,7 @@ public class NodeDeletionTests {
 	public void deleteClassElements() throws Exception {
 		String str = "<?php final class MyClass extends SuperClass implements Interface1, Interface2 { const MY_CONSTANT = 3; public static final $myVar = 5, $yourVar; var $anotherOne; private function myFunction(MyClass $a, $b = 6) { }  } ?>";
 		String expected = "<?php final class MyClass extends SuperClass {  } ?>";
-		parseAndCompare(str, expected, new ICodeManiplator() {
+		parseAndCompare(str, expected, new ICodeManipulator() {
 			@Override
 			public void manipulate(Program program) {
 				ClassDeclaration statement = (ClassDeclaration) program.statements().get(0);
@@ -499,7 +499,7 @@ public class NodeDeletionTests {
 	 * @param str
 	 * @throws Exception
 	 */
-	public void parseAndCompare(String string, String expected, ICodeManiplator manipulator) throws Exception {
+	public void parseAndCompare(String string, String expected, ICodeManipulator manipulator) throws Exception {
 		IDocument document = new Document(string);
 		Program program = initialize(document);
 
