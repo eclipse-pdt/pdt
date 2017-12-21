@@ -79,7 +79,7 @@ public class AbstractSemanticApplyWithNS extends AbstractSemanticApply {
 			if (part.getAlias() != null) {
 				name = part.getAlias().getName();
 			} else {
-				name = part.getName().getName();
+				name = part.getFullUseStatementName();
 				int index = name.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
 				if (index >= 0) {
 					name = name.substring(index + 1);

@@ -112,7 +112,7 @@ public class ASTRewriteTestsPHP7 extends ASTRewriteTestsPHP56 {
 
 	@Override
 	@Ignore
-	public void refernceInstanciation() throws Exception {
+	public void referenceInstanciation() throws Exception {
 		// no longer valid for PHP7+
 	}
 
