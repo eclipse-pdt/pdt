@@ -192,6 +192,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 
 	@Override
 	public boolean visit(UseStatementPart part) {
+		// XXX: is it enough?
 		nodeToFullName.put(part.getName(), part.getFullUseStatementName());
 		return false;
 	}

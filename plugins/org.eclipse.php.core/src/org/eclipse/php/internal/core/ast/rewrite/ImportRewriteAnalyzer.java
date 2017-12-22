@@ -206,6 +206,8 @@ public final class ImportRewriteAnalyzer {
 		int currEndLine = root.getLineNumber(currOffset + currLength);
 
 		for (int i = 1; i < decls.size(); i++) {
+			// XXX: what should be done when UseStatement has multiple
+			// UseStatementParts?
 			int statementType = curr.getStatementType();
 			String name = getFullName(curr);
 			String packName = getQualifier(name);

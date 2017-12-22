@@ -342,6 +342,9 @@ public class DocumentUtils {
 					return a.getStatementType() - b.getStatementType();
 				}
 
+				/*
+				 * XXX: needs to be reworked to handle grouped use statements
+				 */
 				String partA = createStringFromUseStatement(a, false).toLowerCase();
 				String partB = createStringFromUseStatement(b, false).toLowerCase();
 				String[] partsA = partA.split("\\\\"); //$NON-NLS-1$
