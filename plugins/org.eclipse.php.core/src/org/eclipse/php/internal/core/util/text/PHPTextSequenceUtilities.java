@@ -21,8 +21,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.annotations.Nullable;
-import org.eclipse.dltk.core.ISourceRange;
-import org.eclipse.dltk.core.SourceRange;
+import org.eclipse.dltk.core.*;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -34,6 +33,7 @@ import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -63,16 +63,16 @@ public class PHPTextSequenceUtilities {
 
 	/**
 	 * This function returns statement text depending on the current offset. It
-	 * searches backwards (starting from offset - 1) until it finds delimiter
-	 * ';', '{' or '}'.
+	 * searches backwards (starting from offset - 1) until it finds delimiter ';',
+	 * '{' or '}'.
 	 * 
 	 * @param offset
 	 *            The absolute offset in the document
 	 * @param sdRegion
 	 *            Structured document region of the offset
 	 * @param removeComments
-	 *            Flag determining whether to remove comments in the resulted
-	 *            text sequence
+	 *            Flag determining whether to remove comments in the resulted text
+	 *            sequence
 	 * 
 	 * @return text sequence of the statement, cannot be null
 	 */
@@ -83,32 +83,31 @@ public class PHPTextSequenceUtilities {
 
 	/**
 	 * This function returns statement text depending on the current offset. It
-	 * searches backwards (starting from offset - 1) until it finds delimiter
-	 * ';', '{' or '}'.
+	 * searches backwards (starting from offset - 1) until it finds delimiter ';',
+	 * '{' or '}'.
 	 * 
 	 * @param offset
 	 *            The absolute offset in the document
 	 * @param sdRegion
 	 *            Structured document region of the offset
 	 * @param removeComments
-	 *            Flag determining whether to remove comments in the resulted
-	 *            text sequence
+	 *            Flag determining whether to remove comments in the resulted text
+	 *            sequence
 	 * @param ignoreDelimiters
 	 *            Delimiter types that will be ignored while searching backwards
 	 *            (ignoreDelimiters can be null). Supported delimiter types are
-	 *            PHPRegionTypes.PHP_CURLY_OPEN, PHPRegionTypes.PHP_CURLY_CLOSE
-	 *            and PHPRegionTypes.PHP_SEMICOLON
+	 *            PHPRegionTypes.PHP_CURLY_OPEN, PHPRegionTypes.PHP_CURLY_CLOSE and
+	 *            PHPRegionTypes.PHP_SEMICOLON
 	 * @param limit
-	 *            Controls how many times a delimiter (from ignoreDelimiters)
-	 *            should be ignored. 0 or less means no limit.
+	 *            Controls how many times a delimiter (from ignoreDelimiters) should
+	 *            be ignored. 0 or less means no limit.
 	 * @param foundDelimiter
-	 *            If foundDelimiter is not null and foundDelimiter length is
-	 *            greater than 0 then foundDelimiter[0] will contain the
-	 *            delimiter region found while searching backwards (or null if
-	 *            no delimiter was found, typically when the backward search
-	 *            reached the beginning of sdRegion). Note that the
-	 *            foundDelimiter[0] offset will be <b>relative to the beginning
-	 *            of the document</b>.
+	 *            If foundDelimiter is not null and foundDelimiter length is greater
+	 *            than 0 then foundDelimiter[0] will contain the delimiter region
+	 *            found while searching backwards (or null if no delimiter was
+	 *            found, typically when the backward search reached the beginning of
+	 *            sdRegion). Note that the foundDelimiter[0] offset will be
+	 *            <b>relative to the beginning of the document</b>.
 	 * 
 	 * @return text sequence of the statement, cannot be null
 	 */
@@ -202,14 +201,13 @@ public class PHPTextSequenceUtilities {
 
 	/**
 	 * <p>
-	 * This function returns statement region depending on the current offset.
-	 * It searches backwards (starting from offset - 1) until it finds ';', '{'
-	 * or '}'.
+	 * This function returns statement region depending on the current offset. It
+	 * searches backwards (starting from offset - 1) until it finds ';', '{' or '}'.
 	 * </p>
 	 * <p>
-	 * <b> Be careful, empty region can be returned (i.e. region's length is 0)
-	 * when no statement was found. In this case, the offset from the returned
-	 * region has no special meaning.
+	 * <b> Be careful, empty region can be returned (i.e. region's length is 0) when
+	 * no statement was found. In this case, the offset from the returned region has
+	 * no special meaning.
 	 * </p>
 	 * </b>
 	 * 
@@ -559,8 +557,7 @@ public class PHPTextSequenceUtilities {
 	}
 
 	/**
-	 * Returns the next position on the text where one the given delimiters
-	 * start
+	 * Returns the next position on the text where one the given delimiters start
 	 * 
 	 * @param textSequence
 	 *            - The input text sequence
@@ -705,14 +702,25 @@ public class PHPTextSequenceUtilities {
 	/**
 	 * Read string argnames from CharSequence
 	 * 
-	 * TODO Nested parenthesis expression
-	 * 
 	 * @param phpVersion
 	 * @param textSequence
 	 * @return
 	 */
 	@SuppressWarnings("null")
 	public static @NonNull String[] getArgNames(@Nullable PHPVersion phpVersion, @Nullable CharSequence textSequence) {
+		return getArgNames(phpVersion, textSequence, null, -1);
+	}
+
+	/**
+	 * Read string argnames from CharSequence
+	 * 
+	 * TODO Nested parenthesis expression
+	 * 
+	 * @return
+	 */
+	@SuppressWarnings("null")
+	public static @NonNull String[] getArgNames(@Nullable PHPVersion phpVersion, @Nullable CharSequence textSequence,
+			@Nullable ISourceModule sourceModule, int offset) {
 		List<String> args = new ArrayList<>();
 		if (textSequence != null && textSequence.length() > 2) {
 			if (textSequence.charAt(textSequence.length() - 1) == ')') {
@@ -722,8 +730,8 @@ public class PHPTextSequenceUtilities {
 				textSequence = textSequence.subSequence(1, textSequence.length());
 			}
 			if (textSequence == null) {
-				// should never happen (but makes @Nullable control for
-				// parameter textSequence happy)
+				// should never happen (but makes @Nullable control for parameter textSequence
+				// happy)
 				return args.toArray(new String[args.size()]);
 			}
 			if (phpVersion == null) {
@@ -732,6 +740,11 @@ public class PHPTextSequenceUtilities {
 
 			AbstractPHPLexer lexer = PHPLexerFactory.createLexer(new StringReader(textSequence.toString()), phpVersion);
 			lexer.initialize(lexer.getScriptingState());
+			ArgNameClassDecoder ancd = null;
+			if (sourceModule != null && !phpVersion.isLessThan(PHPVersion.PHP5_5)) {
+				PHPTextSequenceUtilities out = new PHPTextSequenceUtilities();
+				ancd = out.new ArgNameClassDecoder();
+			}
 			String symbol = null;
 			int level = 0;
 			int argIndex = 0;
@@ -741,6 +754,9 @@ public class PHPTextSequenceUtilities {
 					if (symbol != null) {
 						CharSequence text = textSequence.subSequence(lexer.getTokenStart(),
 								lexer.getTokenStart() + lexer.getLength());
+						if (level == 0 && ancd != null) {
+							ancd.addSymbol(symbol, text);
+						}
 						if (symbol.equals(PHPRegionTypes.PHP_TOKEN)) {
 							if (text.equals(LPAREN) || text.equals(LBRACE) || text.equals(LBRACKET)) {
 								level++;
@@ -748,19 +764,34 @@ public class PHPTextSequenceUtilities {
 								level--;
 							} else if (level == 0 && text.equals(COMMA)) {
 								argIndex++;
+								if (ancd != null) {
+									ancd.reset();
+								}
 							}
-						} else if (level == 0 && symbol.equals(PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING)) {
-							if (args.size() < argIndex + 1) {
-								args.add(text.toString());
-							}
-						} else if (level == 0 && !symbol.equals(PHPRegionTypes.WHITESPACE)) {
-							if (args.size() < argIndex + 1) {
-								args.add(null);
-							} else {
-								args.set(argIndex, null);
+						} else if (level == 0) {
+							if (symbol.equals(PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING)) {
+								if (args.size() < argIndex + 1) {
+									args.add(text.toString());
+								}
+							} else if (ancd != null && ancd.isBuilding()) {
+								if (ancd.getAssignedArgumentIndex() < 0) {
+									ancd.setAssignedArgumentIndex(args.size());
+								}
+								if (args.size() < ancd.getAssignedArgumentIndex() + 1) {
+									args.add(null);
+								}
+							} else if (ancd != null && ancd.isReady()) {
+								if (argIndex == ancd.getAssignedArgumentIndex()) {
+									args.set(argIndex, ancd.resolve(sourceModule, offset));
+								}
+							} else if (!symbol.equals(PHPRegionTypes.WHITESPACE)) {
+								if (args.size() < argIndex + 1) {
+									args.add(null);
+								} else {
+									args.set(argIndex, null);
+								}
 							}
 						}
-
 					}
 				} catch (IOException e) {
 					symbol = null;
@@ -825,4 +856,123 @@ public class PHPTextSequenceUtilities {
 		return insert;
 	}
 
+	private class ArgNameClassDecoder {
+		private final int STATE_DISABLED = 0;
+		private final int STATE_EMPTY = 1;
+		private final int STATE_BUILDING_SUBJECT = 2;
+		private final int STATE_PAAMAYIMNEKUDOTAYIM_RECEIVED = 3;
+		private final int STATE_CLASS_RECEIVED = 4;
+		private int assignedArgumentIndex;
+		private StringBuilder subject;
+		private String resolveResult;
+		private int state;
+
+		public ArgNameClassDecoder() {
+			this.reset();
+		}
+
+		public void reset() {
+			this.subject = null;
+			this.state = STATE_EMPTY;
+			this.assignedArgumentIndex = -1;
+			this.resolveResult = null;
+		}
+
+		private void disable() {
+			this.reset();
+			this.state = STATE_DISABLED;
+		}
+
+		public void addSymbol(String symbol, @NonNull CharSequence text) {
+			if (this.state == STATE_DISABLED) {
+				return;
+			}
+			if (this.state >= STATE_CLASS_RECEIVED) {
+				this.disable();
+				return;
+			} else {
+				switch (symbol) {
+				case PHPRegionTypes.WHITESPACE:
+					if (this.state > STATE_EMPTY && this.state < STATE_CLASS_RECEIVED) {
+						this.disable();
+					}
+					break;
+				case PHPRegionTypes.PHP_NS_SEPARATOR:
+				case PHPRegionTypes.PHP_LABEL:
+					if (this.state == STATE_EMPTY) {
+						this.subject = new StringBuilder();
+						this.state = STATE_BUILDING_SUBJECT;
+					}
+					if (this.state == STATE_BUILDING_SUBJECT) {
+						this.subject.append(text);
+					} else {
+						this.disable();
+					}
+					break;
+				case PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM:
+					if (this.state == STATE_BUILDING_SUBJECT) {
+						this.state = STATE_PAAMAYIMNEKUDOTAYIM_RECEIVED;
+					} else {
+						this.disable();
+					}
+					break;
+				case PHPRegionTypes.PHP_CLASS:
+					if (this.state == STATE_PAAMAYIMNEKUDOTAYIM_RECEIVED) {
+						this.state = STATE_CLASS_RECEIVED;
+					} else {
+						this.disable();
+					}
+					break;
+				default:
+					this.disable();
+					break;
+				}
+			}
+		}
+
+		public boolean isBuilding() {
+			return this.state >= STATE_BUILDING_SUBJECT && this.state <= STATE_PAAMAYIMNEKUDOTAYIM_RECEIVED;
+		}
+
+		public boolean isReady() {
+			return this.state == STATE_CLASS_RECEIVED;
+		}
+
+		public void setAssignedArgumentIndex(int value) {
+			this.assignedArgumentIndex = value;
+		}
+
+		public int getAssignedArgumentIndex() {
+			return this.assignedArgumentIndex;
+		}
+
+		@Nullable
+		public String resolve(@Nullable ISourceModule sourceModule, int offset) {
+			if (this.state != STATE_CLASS_RECEIVED || sourceModule == null) {
+				return null;
+			}
+			if (this.resolveResult == null) {
+				String localClassName = this.subject.toString();
+				if (localClassName.equalsIgnoreCase("self") || localClassName.equalsIgnoreCase("static")) { //$NON-NLS-1$ //$NON-NLS-2$
+					IType type = PHPModelUtils.getCurrentType(sourceModule, offset);
+					if (type != null) {
+						System.out.println(type.getClass().toString());
+					}
+					IModelElement element = null;
+					try {
+						element = sourceModule.getElementAt(offset);
+					} catch (ModelException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					if (element != null) {
+						System.out.println(element.getClass().toString());
+					}
+				} else {
+					this.resolveResult = PHPModelUtils.getFullName(localClassName, sourceModule, offset);
+				}
+			}
+			return this.resolveResult;
+		}
+	}
 }
