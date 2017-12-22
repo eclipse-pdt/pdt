@@ -277,8 +277,8 @@ public class CodeAssistUtils {
 	}
 
 	/**
-	 * The "self" function needs to be added only if we are in a class method
-	 * and it is not an abstract class or an interface
+	 * The "self" function needs to be added only if we are in a class method and it
+	 * is not an abstract class or an interface
 	 * 
 	 * @param fileData
 	 * @param offset
@@ -374,7 +374,8 @@ public class CodeAssistUtils {
 		}
 		String functionName = propertyName.substring(0, bracketIndex).trim();
 
-		String[] argNames = PHPTextSequenceUtilities.getArgNames(version, propertyName.substring(bracketIndex));
+		String[] argNames = PHPTextSequenceUtilities.getArgNames(version, propertyName.substring(bracketIndex),
+				sourceModule, offset);
 		Set<IType> result = new LinkedHashSet<>();
 		IType[] returnTypes = null;
 		if (arrayReference) {
@@ -696,7 +697,7 @@ public class CodeAssistUtils {
 
 			} else {
 				String[] argNames = PHPTextSequenceUtilities.getArgNames(phpVersion,
-						statementText.subSequence(functionNameEnd, propertyEndPosition - 1));
+						statementText.subSequence(functionNameEnd, propertyEndPosition - 1), sourceModule, offset);
 				if (arrayReference) {
 
 					IType[] types = getFunctionArrayReturnType(null, functionName, USE_PHPDOC, sourceModule, offset,
