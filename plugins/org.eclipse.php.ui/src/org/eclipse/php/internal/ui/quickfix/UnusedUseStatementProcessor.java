@@ -29,6 +29,7 @@ import org.eclipse.php.ui.text.correction.IProblemLocation;
 import org.eclipse.php.ui.text.correction.IQuickFixProcessor;
 import org.eclipse.text.edits.TextEditGroup;
 
+@Deprecated
 public class UnusedUseStatementProcessor implements IQuickFixProcessor {
 	private final static String ORGANIZE_USE_STATEMENTS_ID = "org.eclipse.php.ui.editor.organize.use.statements"; //$NON-NLS-1$
 

@@ -71,7 +71,8 @@ public class DocumentUtils {
 				Vector<UsePart> parts = new Vector<>();
 				parts.add(part);
 
-				total.add(new UseStatement(statement.start(), statement.end(), parts, statement.getStatementType()));
+				total.add(new UseStatement(statement.start(), statement.end(), statement.getNamespace(), parts,
+						statement.getStatementType()));
 			}
 		}
 
@@ -225,44 +226,54 @@ public class DocumentUtils {
 		return createStringFromUseStatement(statement, ""); //$NON-NLS-1$
 	}
 
-	public static String createStringFromUseStatement(UseStatement statement, boolean addIndentedUsePrefixAndNewline) {
-		return createStringFromUseStatement(statement, "", addIndentedUsePrefixAndNewline); //$NON-NLS-1$
+	public static String createStringFromUseStatement(UseStatement statement, String indent) {
+		return createStringFromUseStatement(statement, indent, -1);
 	}
 
-	public static String createStringFromUseStatement(UseStatement statement, String indent) {
-		return createStringFromUseStatement(statement, indent, true);
+	private static String createStringFromUseStatement(UseStatement statement, int usePartIndex) {
+		return createStringFromUseStatement(statement, "", usePartIndex); //$NON-NLS-1$
 	}
 
 	/**
-	 * Create a string from the given UseStatement
+	 * Create a string from the given statement
+	 * 
+	 * @param statement
+	 * @param indent
+	 * @param usePartIndex
+	 *            create a string including only UsePart at index usePartIndex
+	 *            (usePartIndex must be >= 0), otherwise include all UseParts
+	 *            (usePartIndex must be < 0)
+	 * @return string
 	 */
-	public static String createStringFromUseStatement(UseStatement statement, String indent,
-			boolean addIndentedUsePrefixAndNewline) {
-		String use = ""; //$NON-NLS-1$
-		if (addIndentedUsePrefixAndNewline) {
-			use = indent + "use "; //$NON-NLS-1$
+	private static String createStringFromUseStatement(UseStatement statement, String indent, int usePartIndex) {
+		String use = indent + "use "; //$NON-NLS-1$
 
-			switch (statement.getStatementType()) {
-			case UseStatement.T_FUNCTION:
-				use += "function "; //$NON-NLS-1$
-				break;
-			case UseStatement.T_CONST:
-				use += "const "; //$NON-NLS-1$
-				break;
-			}
-
-			if (statement.getNamespace() != null) {
-				use += statement.getNamespace().getFullyQualifiedName();
-				use += "\\{"; //$NON-NLS-1$
-			}
+		switch (statement.getStatementType()) {
+		case UseStatement.T_FUNCTION:
+			use += "function "; //$NON-NLS-1$
+			break;
+		case UseStatement.T_CONST:
+			use += "const "; //$NON-NLS-1$
+			break;
 		}
 
-		boolean first = true;
+		if (statement.getNamespace() != null) {
+			use += statement.getNamespace().getFullyQualifiedName();
+			use += "\\{"; //$NON-NLS-1$
+		}
+
+		assert usePartIndex < 0 || usePartIndex < statement.getParts().size();
+		int index = -1;
+
 		for (UsePart part : statement.getParts()) {
-			if (!first) {
+			index++;
+			if (usePartIndex >= 0 && usePartIndex != index) {
+				continue;
+			}
+			if (usePartIndex < 0 && index > 0) {
 				use += ", "; //$NON-NLS-1$
 			}
-			if (addIndentedUsePrefixAndNewline && statement.getStatementType() == UseStatement.T_NONE) {
+			if (statement.getStatementType() == UseStatement.T_NONE) {
 				switch (part.getStatementType()) {
 				case UseStatement.T_FUNCTION:
 					use += "function "; //$NON-NLS-1$
@@ -276,17 +287,13 @@ public class DocumentUtils {
 			if (part.getAlias() != null) {
 				use += " as " + part.getAlias().getName(); //$NON-NLS-1$
 			}
-			first = false;
 		}
 
-		if (addIndentedUsePrefixAndNewline) {
-			if (statement.getNamespace() != null) {
-				use += "}"; //$NON-NLS-1$
-			}
-
-			return use + ";\n"; //$NON-NLS-1$
+		if (statement.getNamespace() != null) {
+			use += "}"; //$NON-NLS-1$
 		}
-		return use;
+
+		return use + ";\n"; //$NON-NLS-1$
 	}
 
 	/**
@@ -327,30 +334,64 @@ public class DocumentUtils {
 			}
 
 			if (parts.size() > 0) {
-				total.add(new UseStatement(statement.start(), statement.end(), parts, statement.getStatementType()));
+				total.add(new UseStatement(statement.start(), statement.end(), statement.getNamespace(), parts,
+						statement.getStatementType()));
 			}
 		}
 
 		// sort and remove duplicate UseStatements
 		Set<UseStatement> set = new TreeSet<>(new Comparator<UseStatement>() {
+			private int compare(FullyQualifiedReference a, FullyQualifiedReference b) {
+				if (a == b) {
+					return 0;
+				}
+				if (a == null) {
+					return b == null ? 0 : -1;
+				}
+				if (b == null) {
+					return 1;
+				}
+				return a.getFullyQualifiedName().toLowerCase().compareTo(b.getFullyQualifiedName().toLowerCase());
+			}
+
 			@Override
 			public int compare(UseStatement a, UseStatement b) {
 				if (a == b) {
 					return 0;
 				}
-				if (a.getStatementType() != b.getStatementType()) {
-					return a.getStatementType() - b.getStatementType();
+				int comp = a.getStatementType() - b.getStatementType();
+				if (comp != 0) {
+					return comp;
+				}
+				comp = compare(a.getNamespace(), b.getNamespace());
+				if (comp != 0) {
+					return comp;
 				}
 
-				String partA = createStringFromUseStatement(a, false).toLowerCase();
-				String partB = createStringFromUseStatement(b, false).toLowerCase();
-				String[] partsA = partA.split("\\\\"); //$NON-NLS-1$
-				String[] partsB = partB.split("\\\\"); //$NON-NLS-1$
+				UsePart[] partsA = a.getParts().toArray(new UsePart[a.getParts().size()]);
+				UsePart[] partsB = b.getParts().toArray(new UsePart[b.getParts().size()]);
+				int minPartslength = Math.min(partsA.length, partsB.length);
 
-				int checkLength = Math.min(partsA.length, partsB.length);
-				for (int i = 0; i < checkLength; i++) {
-					int comp = partsA[i].compareTo(partsB[i]);
+				for (int i = 0; i < minPartslength; i++) {
+					comp = partsA[i].getStatementType() - partsB[i].getStatementType();
+					if (comp != 0) {
+						return comp;
+					}
 
+					String partA = createStringFromUseStatement(a, i).toLowerCase();
+					String partB = createStringFromUseStatement(b, i).toLowerCase();
+					String[] splitsA = partA.split("\\\\"); //$NON-NLS-1$
+					String[] splitsB = partB.split("\\\\"); //$NON-NLS-1$
+
+					int minSplitsLength = Math.min(splitsA.length, splitsB.length);
+					for (int j = 0; j < minSplitsLength; j++) {
+						comp = splitsA[j].compareTo(splitsB[j]);
+						if (comp != 0) {
+							return comp;
+						}
+					}
+
+					comp = splitsA.length - splitsB.length;
 					if (comp != 0) {
 						return comp;
 					}
