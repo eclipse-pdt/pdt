@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 Alex Xu and others.
+ * Copyright (c) 2017, 2018 Alex Xu and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,7 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.references.TypeReference;
+import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.compiler.problem.*;
 import org.eclipse.dltk.core.*;
@@ -53,21 +54,22 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 
 	private static final String PAAMAYIM_NEKUDOTAIM = "::"; //$NON-NLS-1$
 	private static final List<String> TYPE_SKIP = new ArrayList<>();
-	private static final List<String> PHPDOC_TYPE_SKIP = new ArrayList<>();
+	private static final List<String> COMMENT_TYPE_SKIP = new ArrayList<>();
 
 	static {
 		TYPE_SKIP.add("parent"); //$NON-NLS-1$
 		TYPE_SKIP.add("self"); //$NON-NLS-1$
 		TYPE_SKIP.add("static"); //$NON-NLS-1$
 		TYPE_SKIP.add("null"); //$NON-NLS-1$
-		PHPDOC_TYPE_SKIP.add("true"); //$NON-NLS-1$
-		PHPDOC_TYPE_SKIP.add("false"); //$NON-NLS-1$
+		COMMENT_TYPE_SKIP.add("true"); //$NON-NLS-1$
+		COMMENT_TYPE_SKIP.add("false"); //$NON-NLS-1$
 	}
 
 	private Map<String, UsePartInfo> usePartInfo = new LinkedHashMap<>();
 	private Map<String, Boolean> elementExists = new HashMap<>();
 	private NamespaceDeclaration currentNamespace;
 	private Set<String> typeDeclared = new HashSet<>();
+	private ArrayList<VarComment> varComments = new ArrayList<>();
 	private boolean hasNamespace;
 	private ISourceModule sourceModule;
 	private PHPVersion version;
@@ -103,8 +105,18 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	}
 
 	@Override
+	public boolean visit(ModuleDeclaration s) throws Exception {
+		if (s instanceof PHPModuleDeclaration) {
+			// See also VariableReferenceEvaluator.init().
+			varComments.addAll(((PHPModuleDeclaration) s).getVarComments());
+		}
+		return super.visit(s);
+	}
+
+	@Override
 	public boolean endvisit(ModuleDeclaration s) throws Exception {
 		boolean res = super.endvisit(s);
+
 		if (!hasNamespace) {
 			checkUnusedImport();
 		}
@@ -340,8 +352,8 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	 * and precise PHPDoc type references handling.
 	 */
 	@SuppressWarnings("null")
-	private void visitPHPDocType(TypeReference typeReference, ProblemSeverity severity) throws Exception {
-		if (PHPDOC_TYPE_SKIP.contains(typeReference.getName().toLowerCase())) {
+	private void visitCommentType(TypeReference typeReference, ProblemSeverity severity) throws Exception {
+		if (COMMENT_TYPE_SKIP.contains(typeReference.getName().toLowerCase())) {
 			return;
 		}
 
@@ -364,35 +376,84 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		}
 	}
 
+	private void visitCommentTypes(TypeReference fullTypeReference) throws Exception {
+		String fullTypeName = fullTypeReference.getName();
+		// look for all type names inside fullTypeName by removing all type
+		// delimiters, regardless if fullTypeName's content respects PHPDoc
+		// standards or not
+		Matcher matcher = PHPEvaluationUtils.TYPE_DELIMS_PATTERN.matcher(fullTypeName);
+		int start = 0;
+		while (matcher.find()) {
+			if (matcher.start() != start) {
+				String typeName = fullTypeName.substring(start, matcher.start());
+				TypeReference typeReference = new TypeReference(fullTypeReference.start() + start,
+						fullTypeReference.start() + start + typeName.length(), typeName);
+				visitCommentType(typeReference, ProblemSeverities.Warning);
+			}
+			start = matcher.end();
+		}
+		if (start == 0) {
+			visitCommentType(fullTypeReference, ProblemSeverities.Warning);
+		} else if (start != fullTypeName.length()) {
+			String typeName = fullTypeName.substring(start);
+			TypeReference typeReference = new TypeReference(fullTypeReference.start() + start,
+					fullTypeReference.start() + start + typeName.length(), typeName);
+			visitCommentType(typeReference, ProblemSeverities.Warning);
+		}
+	}
+
 	@Override
 	public boolean visit(PHPDocTag phpDocTag) throws Exception {
 		for (TypeReference fullTypeReference : phpDocTag.getTypeReferences()) {
-			String fullTypeName = fullTypeReference.getName();
-			// look for all type names inside fullTypeName by removing all type
-			// delimiters, regardless if fullTypeName's content respects PHPDoc
-			// standards or not
-			Matcher matcher = PHPEvaluationUtils.TYPE_DELIMS_PATTERN.matcher(fullTypeName);
-			int start = 0;
-			while (matcher.find()) {
-				if (matcher.start() != start) {
-					String typeName = fullTypeName.substring(start, matcher.start());
-					TypeReference typeReference = new TypeReference(fullTypeReference.start() + start,
-							fullTypeReference.start() + start + typeName.length(), typeName);
-					visitPHPDocType(typeReference, ProblemSeverities.Warning);
-				}
-				start = matcher.end();
-			}
-			if (start == 0) {
-				visitPHPDocType(fullTypeReference, ProblemSeverities.Warning);
-			} else if (start != fullTypeName.length()) {
-				String typeName = fullTypeName.substring(start);
-				TypeReference typeReference = new TypeReference(fullTypeReference.start() + start,
-						fullTypeReference.start() + start + typeName.length(), typeName);
-				visitPHPDocType(typeReference, ProblemSeverities.Warning);
-			}
+			visitCommentTypes(fullTypeReference);
 		}
 		visitGeneral(phpDocTag);
 		return false;
+	}
+
+	/**
+	 * Fake VarComment visitor.
+	 */
+	private boolean visit(VarComment varComment) throws Exception {
+		for (TypeReference fullTypeReference : varComment.getTypeReferences()) {
+			visitCommentTypes(fullTypeReference);
+		}
+		visitGeneral(varComment);
+		return false;
+	}
+
+	private void checkVarComment(VariableReference s) throws Exception {
+		// See also VariableReferenceEvaluator.init().
+		// XXX: we only analyze VarComments that are located before some
+		// VariableReferences but we don't check that those VarComments are
+		// *directly* located before the VariableReferences.
+		int minPos = currentNamespace != null ? currentNamespace.sourceStart() : 0;
+		int maxPos = s.sourceStart();
+		Iterator<VarComment> itr = varComments.iterator();
+		while (itr.hasNext()) {
+			VarComment varComment = itr.next();
+			if (varComment.sourceStart() < minPos) {
+				itr.remove();
+				continue;
+			}
+			if (varComment.sourceEnd() > maxPos) {
+				break;
+			}
+			visit(varComment);
+			itr.remove();
+		}
+	}
+
+	@Override
+	public boolean visit(VariableReference s) throws Exception {
+		checkVarComment(s);
+		return super.visit(s);
+	}
+
+	@Override
+	public boolean visit(ArrayVariableReference s) throws Exception {
+		checkVarComment(s);
+		return super.visit(s);
 	}
 
 	private void checkDuplicateTypeDeclaration(TypeDeclaration node) {

@@ -1,0 +1,52 @@
+--TEST--
+Bug 529163 - "Import is never used" false positive
+--FILE--
+<?php
+namespace A\B;
+
+use A\B\C\ClassABC;
+
+class ClassAB
+{
+
+    public function foo()
+    {
+        /* @var $a ClassABC */
+        $a = null;
+        /* @var $b ClassAB */
+        $b = null;
+    }
+}
+
+$a = array();
+$b = array();
+
+/* @var $a ClassABC */
+$a[] = null;
+/* @var $b ClassAB */
+$b[] = null;
+
+namespace A\B\C;
+
+use A\B\ClassAB;
+
+class ClassABC
+{
+
+    public function foo()
+    {
+        /* @var $a ClassABC */
+        $a = null;
+        /* @var $b ClassAB */
+        $b = null;
+    }
+}
+
+$a = array();
+$b = array();
+
+/* @var $a ClassABC */
+$a[] = null;
+/* @var $b ClassAB */
+$b[] = null;
+--EXPECT--

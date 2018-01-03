@@ -1,0 +1,62 @@
+--TEST--
+Bug 529163 - "Import is never used" false positive
+--FILE--
+<?php
+namespace A\B;
+
+use A\B\C\ClassABC;
+
+class ClassAB
+{
+
+    public function foo()
+    {
+        /* @var $a FakeClassABC */
+        $a = null;
+        /* @var $b FakeClassAB */
+        $b = null;
+    }
+}
+
+$a = array();
+$b = array();
+
+/* @var $a FakeClassABC */
+$a[] = null;
+/* @var $b FakeClassAB */
+$b[] = null;
+
+namespace A\B\C;
+
+use A\B\ClassAB;
+
+class ClassABC
+{
+
+    public function foo()
+    {
+        /* @var $a FakeClassABC */
+        $a = null;
+        /* @var $b FakeClassAB */
+        $b = null;
+    }
+}
+
+$a = array();
+$b = array();
+
+/* @var $a FakeClassABC */
+$a[] = null;
+/* @var $b FakeClassAB */
+$b[] = null;
+--EXPECT--
+[line=4, start=26, end=40] The import A\B\C\ClassABC is never used
+[line=11, start=111, end=123] FakeClassABC cannot be resolved to a type
+[line=13, start=165, end=176] FakeClassAB cannot be resolved to a type
+[line=21, start=248, end=260] FakeClassABC cannot be resolved to a type
+[line=23, start=288, end=299] FakeClassAB cannot be resolved to a type
+[line=28, start=339, end=350] The import A\B\ClassAB is never used
+[line=35, start=422, end=434] FakeClassABC cannot be resolved to a type
+[line=37, start=476, end=487] FakeClassAB cannot be resolved to a type
+[line=45, start=559, end=571] FakeClassABC cannot be resolved to a type
+[line=47, start=599, end=610] FakeClassAB cannot be resolved to a type
