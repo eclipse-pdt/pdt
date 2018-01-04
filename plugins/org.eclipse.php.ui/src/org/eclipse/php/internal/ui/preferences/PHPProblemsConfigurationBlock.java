@@ -185,6 +185,7 @@ public class PHPProblemsConfigurationBlock extends OptionsConfigurationBlock {
 				ProblemSeverity.INFO.toString(), ProblemSeverity.IGNORE.toString() };
 	}
 
+	@Override
 	public boolean hasProjectSpecificOptions(IProject project) {
 		if (project != null) {
 			return PHPCorePlugin.getDefault().getProblemPreferences().hasProjectSettings(project);
@@ -193,6 +194,7 @@ public class PHPProblemsConfigurationBlock extends OptionsConfigurationBlock {
 		return false;
 	}
 
+	@Override
 	public void useProjectSpecificSettings(boolean enable) {
 		if (enable) {
 			new ProjectScope(fProject).getNode(PHPCorePlugin.ID).node(PHPCoreConstants.VALIDATOR_PREFERENCES_NODE_ID)
@@ -237,7 +239,7 @@ public class PHPProblemsConfigurationBlock extends OptionsConfigurationBlock {
 			for (ConcreteProblem v : category.problems) {
 				Combo combo = fields[i] = addComboBox(inner, v.name, new Key(v.qualifier, PHPCoreConstants.SEVERITY),
 						getSeverityValues(), getSeverityLabels(), 0);
-				Label object = (Label) fLabels.get(combo);
+				Label object = fLabels.get(combo);
 				object.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 2, 1));
 				i++;
 			}
@@ -254,6 +256,7 @@ public class PHPProblemsConfigurationBlock extends OptionsConfigurationBlock {
 		excomposite.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false, 3, 1));
 		excomposite.setExpanded(true);
 		excomposite.addExpansionListener(new ExpansionAdapter() {
+			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
 				expandedStateChanged((ExpandableComposite) e.getSource());
 			}

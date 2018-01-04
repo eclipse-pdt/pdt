@@ -64,6 +64,7 @@ public class PHPProblemsPreferencePage extends PropertyAndPreferencePage impleme
 		return super.performOk();
 	}
 
+	@Override
 	protected void performDefaults() {
 		super.performDefaults();
 		if (fConfigurationBlock != null) {

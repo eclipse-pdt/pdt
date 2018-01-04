@@ -3078,9 +3078,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		}
 		int lastPosition = declareStatement.getStart() + 7;
 		lineWidth += 7;
-		List<Identifier> direciveNameList = declareStatement.directiveNames();
-		Identifier[] directiveNames = new Identifier[direciveNameList.size()];
-		directiveNames = direciveNameList.toArray(directiveNames);
+		List<Identifier> directiveNameList = declareStatement.directiveNames();
+		Identifier[] directiveNames = new Identifier[directiveNameList.size()];
+		directiveNames = directiveNameList.toArray(directiveNames);
 
 		for (int i = 0; i < directiveNames.length; i++) {
 			// handle comma between variables
