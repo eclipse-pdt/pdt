@@ -114,7 +114,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	private String binaryExpressionSavedBuffer = null;
 	private InfixExpression binaryExpressionSavedNode = null;
 	private int binaryExpressionSavedChangesIndex = -1;
-	private int binaryExpressionRevertPolicy = -1;
 	private boolean isBinaryExpressionExtraIndentation = false;
 
 	// append chars to buffer through insertSpace or appendToBuffer
@@ -762,7 +761,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			switch (lineWrapPolicy) {
 			case NO_LINE_WRAP:
 				break;
-			case FIRST_WRAP_WHEN_NECESSARY:
+			case FIRST_WRAP_WHEN_NECESSARY: // Wrap only when necessary
 				if (lineWidth + array[i].getLength() > this.preferences.line_wrap_line_split) {
 					lineWrapPolicy = WRAP_WHEN_NECESSARY;
 					insertNewLine();
@@ -781,21 +780,21 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					isInsertNewLine = true;
 				}
 				break;
-			case WRAP_FIRST_ELEMENT:
-				if (forceSplit || lineWidth + array[i].getLength() > this.preferences.line_wrap_line_split) {
-					revert(savedBuffer, changesIndex);
-					lastPosition = savedLastPosition;
-					i = 0;
-					lineWrapPolicy = WRAP_WHEN_NECESSARY;
-					insertNewLine();
-					if (!cio.indented) {
-						indentationLevel += indentGap;
-					}
-					indent();
-					isInsertNewLine = true;
+			case WRAP_FIRST_ELEMENT: // Always wrap first element, others when
+										// necessary
+				revert(savedBuffer, changesIndex);
+				lastPosition = savedLastPosition;
+				i = 0;
+				lineWrapPolicy = WRAP_WHEN_NECESSARY;
+				insertNewLine();
+				if (!cio.indented) {
+					indentationLevel += indentGap;
 				}
+				indent();
+				isInsertNewLine = true;
 				break;
-			case WRAP_ALL_ELEMENTS:
+			case WRAP_ALL_ELEMENTS: // Wrap all elements, every element on a new
+									// line
 				if (forceSplit || lineWidth + array[i].getLength() > this.preferences.line_wrap_line_split) {
 					revert(savedBuffer, changesIndex);
 					lastPosition = savedLastPosition;
@@ -809,7 +808,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					isInsertNewLine = true;
 				}
 				break;
-			case WRAP_ALL_ELEMENTS_NO_INDENT_FIRST:
+			case WRAP_ALL_ELEMENTS_NO_INDENT_FIRST: // Wrap all elements, indent
+													// all but the first element
 				if (forceSplit || lineWidth + array[i].getLength() > this.preferences.line_wrap_line_split) {
 					// revert the buffer
 					revert(savedBuffer, changesIndex);
@@ -828,7 +828,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					isExtraIndentation = true;
 				}
 				break;
-			case WRAP_ALL_ELEMENTS_EXCEPT_FIRST:
+			case WRAP_ALL_ELEMENTS_EXCEPT_FIRST: // Wrap all elements, except
+													// first element if not
+													// necessary
 				if (forceSplit || lineWidth + array[i].getLength() > this.preferences.line_wrap_line_split) {
 					// revert
 					revert(savedBuffer, changesIndex);
@@ -3953,7 +3955,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			binaryExpressionSavedBuffer = replaceBuffer.toString();
 			binaryExpressionSavedNode = infixExpression;
 			binaryExpressionSavedChangesIndex = changes.size() - 1;
-			binaryExpressionRevertPolicy = -1;
 		}
 
 		infixExpression.getLeft().accept(this);
@@ -3976,7 +3977,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		case NO_LINE_WRAP:
 			// no_wrap
 			break;
-		case FIRST_WRAP_WHEN_NECESSARY:
+		case FIRST_WRAP_WHEN_NECESSARY: // Wrap only when necessary
 			if (lineW > this.preferences.line_wrap_line_split) {
 				binaryExpressionLineWrapPolicy = WRAP_WHEN_NECESSARY;
 				insertNewLine();
@@ -3992,63 +3993,49 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				wasBinaryExpressionWrapped = true;
 			}
 			break;
-		case WRAP_FIRST_ELEMENT:
+		case WRAP_FIRST_ELEMENT: // Always wrap first element, others when
+									// necessary
+			binaryExpressionLineWrapPolicy = WRAP_WHEN_NECESSARY;
+			insertNewLine();
+			indentationLevel += binaryExpressionIndentGap;
+			indent();
+			wasBinaryExpressionWrapped = true;
+			break;
+		case WRAP_ALL_ELEMENTS: // Wrap all elements, every element on a new
+								// line
 			if (forceSplit || lineW > this.preferences.line_wrap_line_split) {
-				if (binaryExpressionRevertPolicy != -1) {
-					binaryExpressionRevertPolicy = -1;
-					binaryExpressionLineWrapPolicy = WRAP_WHEN_NECESSARY;
-					insertNewLine();
-					indentationLevel += binaryExpressionIndentGap;
-					indent();
-					wasBinaryExpressionWrapped = true;
-				} else {
-					binaryExpressionRevertPolicy = WRAP_FIRST_ELEMENT;
-					binaryExpressionLineWrapPolicy = NO_LINE_WRAP;
-				}
+				binaryExpressionLineWrapPolicy = ALWAYS_WRAP_ELEMENT;
+				insertNewLine();
+				indentationLevel += binaryExpressionIndentGap;
+				indent();
+				wasBinaryExpressionWrapped = true;
+			} else {
+				binaryExpressionLineWrapPolicy = NO_LINE_WRAP;
 			}
 			break;
-		case WRAP_ALL_ELEMENTS:
+		case WRAP_ALL_ELEMENTS_NO_INDENT_FIRST: // Wrap all elements, indent all
+												// but the first element
 			if (forceSplit || lineW > this.preferences.line_wrap_line_split) {
-				if (binaryExpressionRevertPolicy != -1) {
-					binaryExpressionRevertPolicy = -1;
-					binaryExpressionLineWrapPolicy = ALWAYS_WRAP_ELEMENT;
-					insertNewLine();
-					indentationLevel += binaryExpressionIndentGap;
-					indent();
-					wasBinaryExpressionWrapped = true;
-				} else {
-					binaryExpressionRevertPolicy = WRAP_ALL_ELEMENTS;
-					binaryExpressionLineWrapPolicy = NO_LINE_WRAP;
-				}
-			}
-			break;
-		case WRAP_ALL_ELEMENTS_NO_INDENT_FIRST:
-			if (forceSplit || lineW > this.preferences.line_wrap_line_split) {
-				if (binaryExpressionRevertPolicy != -1) {
-					binaryExpressionRevertPolicy = -1;
-					binaryExpressionLineWrapPolicy = ALWAYS_WRAP_ELEMENT;
-					insertNewLine();
-					indentationLevel += binaryExpressionIndentGap;
-					indent();
-					wasBinaryExpressionWrapped = true;
+				binaryExpressionLineWrapPolicy = ALWAYS_WRAP_ELEMENT;
+				insertNewLine();
+				indentationLevel += binaryExpressionIndentGap;
+				indent();
+				wasBinaryExpressionWrapped = true;
 
-					// increase the indentation level after the first element
-					indentationLevel++;
-					isBinaryExpressionExtraIndentation = true;
-				} else {
-					binaryExpressionRevertPolicy = WRAP_ALL_ELEMENTS_NO_INDENT_FIRST;
-					binaryExpressionLineWrapPolicy = NO_LINE_WRAP;
-				}
+				// increase the indentation level after the first element
+				indentationLevel++;
+				isBinaryExpressionExtraIndentation = true;
+			} else {
+				binaryExpressionLineWrapPolicy = NO_LINE_WRAP;
 			}
 			break;
-		case WRAP_ALL_ELEMENTS_EXCEPT_FIRST:
+		case WRAP_ALL_ELEMENTS_EXCEPT_FIRST:// Wrap all elements, except first
+											// element if not necessary
 			if (forceSplit || lineW > this.preferences.line_wrap_line_split) {
-				if (binaryExpressionRevertPolicy != -1) {
-					binaryExpressionLineWrapPolicy = WRAP_ALL_ELEMENTS;
-				} else {
-					binaryExpressionRevertPolicy = WRAP_ALL_ELEMENTS_EXCEPT_FIRST;
-					binaryExpressionLineWrapPolicy = NO_LINE_WRAP;
-				}
+				binaryExpressionLineWrapPolicy = ALWAYS_WRAP_ELEMENT;
+				indentationLevel += binaryExpressionIndentGap;
+			} else {
+				binaryExpressionLineWrapPolicy = NO_LINE_WRAP;
 			}
 			break;
 		case ALWAYS_WRAP_ELEMENT:
@@ -4065,29 +4052,22 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		// handle the chars between the variable to the value
 		handleChars(infixExpression.getLeft().getEnd(), infixExpression.getRight().getStart());
 
-		if (binaryExpressionRevertPolicy != -1 && infixExpression == binaryExpressionSavedNode) {
-			if (binaryExpressionLineWrapPolicy == WRAP_ALL_ELEMENTS
-					&& binaryExpressionRevertPolicy == WRAP_ALL_ELEMENTS_EXCEPT_FIRST) {
-				infixExpression.getRight().accept(this);
-			} else {
-				revert(binaryExpressionSavedBuffer, binaryExpressionSavedChangesIndex);
-				binaryExpressionLineWrapPolicy = binaryExpressionRevertPolicy;
-				// undo everything
-				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=506488
-				binaryExpressionSavedBuffer = replaceBuffer.toString();
-				// must be null to avoid infinite loop (note that
-				// binaryExpressionSavedBuffer must stay non-null here to avoid
-				// resetting binaryExpressionSavedNode to a non-null value later
-				// again)
-				binaryExpressionSavedNode = null;
-				binaryExpressionSavedChangesIndex = changes.size() - 1;
-				binaryExpressionRevertPolicy = -1;
-				indentationLevel = oldIndentationLevel;
-				wasBinaryExpressionWrapped = oldWasBinaryExpressionWrapped;
-				infixExpression.accept(this);
-			}
-		} else {
-			infixExpression.getRight().accept(this);
+		infixExpression.getRight().accept(this);
+
+		if (infixExpression == binaryExpressionSavedNode && binaryExpressionLineWrapPolicy == NO_LINE_WRAP) {
+			revert(binaryExpressionSavedBuffer, binaryExpressionSavedChangesIndex);
+			// undo everything
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=506488
+			binaryExpressionSavedBuffer = replaceBuffer.toString();
+			// must be null to avoid infinite loop (note that
+			// binaryExpressionSavedBuffer must stay non-null here to avoid
+			// resetting binaryExpressionSavedNode to a non-null value later
+			// again)
+			binaryExpressionSavedNode = null;
+			binaryExpressionSavedChangesIndex = changes.size() - 1;
+			indentationLevel = oldIndentationLevel;
+			wasBinaryExpressionWrapped = oldWasBinaryExpressionWrapped;
+			infixExpression.accept(this);
 		}
 		return false;
 	}
