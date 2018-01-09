@@ -640,6 +640,7 @@ T_INCLUDE:v
 	RESULT = v;
 :}
 ;
+
 semi_reserved ::=
 reserved_non_modifiers:v
 {:
@@ -681,6 +682,7 @@ string_st:v
 	RESULT = v;
 :}
 ;
+
 namespace_name ::=
 string_st:n
 {:
