@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015, 2016 IBM Corporation and others.
+ * Copyright (c) 2009, 2015, 2016, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -421,7 +421,15 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			Argument arg = (Argument) args.get(a);
 			parameter[a] = arg.getName();
 			if (arg.getInitialization() != null) {
-				if (arg.getInitialization() instanceof Literal) {
+				if (arg.getInitialization() instanceof UnaryOperation) {
+					UnaryOperation initialization = (UnaryOperation) arg.getInitialization();
+					if (initialization.getExpr() instanceof Literal) {
+						Literal scalar = (Literal) initialization.getExpr();
+						initializers[a] = initialization.getOperator() + scalar.getValue();
+					} else {
+						initializers[a] = PHPIndexingVisitor.DEFAULT_VALUE;
+					}
+				} else if (arg.getInitialization() instanceof Literal) {
 					Literal scalar = (Literal) arg.getInitialization();
 					initializers[a] = scalar.getValue();
 				} else if (arg.getInitialization() instanceof ArrayCreation) {
