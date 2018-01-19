@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015, 2016 IBM Corporation and others.
+ * Copyright (c) 2009, 2015, 2016, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import java.util.Map.Entry;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.ast.ASTListNode;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.Modifiers;
@@ -50,7 +51,7 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.util.MagicMemberUtil;
 
 /**
- * PHP indexing visitor for H2 database
+ * PHP indexing visitor for Lucene database
  * 
  * @author michael
  * 
@@ -63,8 +64,8 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 	public static final String CONSTRUCTOR_NAME = "__construct"; //$NON-NLS-1$
 	public static final String PARAMETER_SEPERATOR = "|"; //$NON-NLS-1$
 	public static final String NULL_VALUE = "#"; //$NON-NLS-1$
-	public static final char QUALIFIER_SEPERATOR = ';';
-	public static final char RETURN_TYPE_SEPERATOR = ':';
+	public static final String QUALIFIER_SEPERATOR = ";"; //$NON-NLS-1$
+	public static final String RETURN_TYPE_SEPERATOR = ":"; //$NON-NLS-1$
 	public static final String DEFAULT_VALUE = " "; //$NON-NLS-1$
 	public static final String EMPTY_ARRAY_VALUE = "[]"; //$NON-NLS-1$
 	public static final String ARRAY_VALUE = "[...]"; //$NON-NLS-1$
@@ -171,6 +172,28 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 			visitor.modifyReference(node, info);
 		}
 		requestor.addReference(info);
+	}
+
+	@SuppressWarnings("null")
+	@NonNull
+	public static String encodeValue(@NonNull String value) {
+		return value.replace("&", "&a") //$NON-NLS-1$ //$NON-NLS-2$
+				.replace(PARAMETER_SEPERATOR, "&p") //$NON-NLS-1$
+				// these conversions should not be necessary, but let's be
+				// safe for future evolutions:
+				.replace(QUALIFIER_SEPERATOR, "&q") //$NON-NLS-1$
+				.replace(RETURN_TYPE_SEPERATOR, "&r") //$NON-NLS-1$
+				.replace(NULL_VALUE, "&n"); //$NON-NLS-1$
+	}
+
+	@SuppressWarnings("null")
+	@NonNull
+	public static String decodeValue(@NonNull String value) {
+		return value.replace("&n", NULL_VALUE) //$NON-NLS-1$
+				.replace("&r", RETURN_TYPE_SEPERATOR) //$NON-NLS-1$
+				.replace("&q", QUALIFIER_SEPERATOR) //$NON-NLS-1$
+				.replace("&p", PARAMETER_SEPERATOR) //$NON-NLS-1$
+				.replace("&a", "&"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -286,7 +309,7 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "null" })
 	public boolean visit(MethodDeclaration method) throws Exception {
 		fNodes.push(method);
 		methodGlobalVars.add(new HashSet<String>());
@@ -385,11 +408,20 @@ public class PHPIndexingVisitor extends PHPIndexingVisitorExtension {
 				metadata.append(PARAMETER_SEPERATOR);
 				String defaultValue = NULL_VALUE;
 				if (arg.getInitialization() != null) {
-					if (arg.getInitialization() instanceof Literal) {
+					if (arg.getInitialization() instanceof UnaryOperation) {
+						UnaryOperation initialization = (UnaryOperation) arg.getInitialization();
+						if (initialization.getExpr() instanceof Literal) {
+							Literal scalar = (Literal) initialization.getExpr();
+							defaultValue = initialization.getOperator() + scalar.getValue();
+							// we need to encode all problematic characters
+							defaultValue = encodeValue(defaultValue);
+						} else {
+							defaultValue = DEFAULT_VALUE;
+						}
+					} else if (arg.getInitialization() instanceof Literal) {
 						Literal scalar = (Literal) arg.getInitialization();
-						// we need to encode all pipe characters inside string
-						// literals
-						defaultValue = scalar.getValue().replace("&", "&a").replace(PARAMETER_SEPERATOR, "&p"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						// we need to encode all problematic characters
+						defaultValue = encodeValue(scalar.getValue());
 					} else if (arg.getInitialization() instanceof ArrayCreation) {
 						ArrayCreation arrayCreation = (ArrayCreation) arg.getInitialization();
 						if (arrayCreation.getElements().isEmpty()) {
