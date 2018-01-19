@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 IBM Corporation and others.
+ * Copyright (c) 2009, 2015, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,6 @@ import java.util.StringTokenizer;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.core.SourceRange;
 import org.eclipse.dltk.core.index2.IElementResolver;
 import org.eclipse.dltk.internal.core.*;
 import org.eclipse.php.core.compiler.IPHPModifiers;
@@ -263,8 +262,8 @@ public class PHPElementResolver implements IElementResolver {
 							defaultValue = null;
 						}
 						if (defaultValue != null) {
-							defaultValue = defaultValue.replace("&p", PHPIndexingVisitor.PARAMETER_SEPERATOR) //$NON-NLS-1$
-									.replace("&a", "&"); //$NON-NLS-1$ //$NON-NLS-2$
+							// we need to decode all problematic characters
+							defaultValue = PHPIndexingVisitor.decodeValue(defaultValue);
 						}
 						int modifiers = 0;
 						if (values.length == 4) {
