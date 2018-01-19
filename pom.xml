@@ -243,6 +243,27 @@
 			<properties>
 				<eclipse.name>photon</eclipse.name>
 			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.tycho</groupId>
+						<artifactId>target-platform-configuration</artifactId>
+						<version>${tycho-version}</version>
+						<configuration>
+							<dependency-resolution>
+								<extraRequirements>
+									<requirement>
+										<type>eclipse-feature</type>
+										<id>org.eclipse.dltk.core.index.lucene</id>
+										<versionRange>5.9.0.201801191115</versionRange>
+										<!-- Eclipse Photon M4 repository contain problematic DLTK 5.9 build, we need never version. --> 
+									</requirement>
+								</extraRequirements>
+							</dependency-resolution>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 		<profile>
 			<id>eclipse-current</id>
