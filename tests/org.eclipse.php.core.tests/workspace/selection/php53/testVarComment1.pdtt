@@ -1,0 +1,13 @@
+--TEST--
+No bug - add selection support for type references inside VarComments
+--CONFIG--
+cursor: _
+--FILE--
+<?php
+function foo() {
+    /* @var $myVar _DateTime_|ReflectionClass */
+    $myVar = null;
+}
+?>
+--EXPECT--
+type(DateTime)
