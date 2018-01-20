@@ -65,7 +65,7 @@ public class PHPUnitLaunchUtils {
 	}
 
 	public static String findComposerExecutionFile(@Nullable IProject project) {
-		if (project == null) {
+		if (project == null || project.getLocation() == null) {
 			return null;
 		}
 		IPath startScriptDirectory = project.getLocation().append(START_SCRIPT_PATH);
