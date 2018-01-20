@@ -89,13 +89,13 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	private PHPVersion phpVersion;
 
 	@Override
-	public IModelElement[] select(IModuleSource sourceUnit, int offset, int end) {
+	public IModelElement[] select(IModuleSource sourceUnit, int offset, int inclusiveEnd) {
 		if (!PHPCorePlugin.toolkitInitialized) {
 			return EMPTY;
 		}
 
-		if (end < offset) {
-			end = offset + 1;
+		if (inclusiveEnd < offset) {
+			inclusiveEnd = offset + 1;
 		}
 
 		ISourceModule sourceModule = (ISourceModule) sourceUnit.getModelElement();
@@ -104,7 +104,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		// First, try to resolve using AST (if we have parsed it well):
 		IModelAccessCache cache = new PerFileModelAccessCache(sourceModule);
 		try {
-			IModelElement[] elements = internalASTResolve(sourceModule, cache, offset, end);
+			IModelElement[] elements = internalASTResolve(sourceModule, cache, offset, inclusiveEnd);
 			if (elements != null) {
 				Collection<IModelElement> filtered = PHPModelUtils.filterElements(sourceModule, Arrays.asList(elements),
 						null, null);
@@ -147,7 +147,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		}
 		IModelElement[] elements = null;
 		try {
-			elements = internalResolve(document, sourceModule, cache, offset, end);
+			elements = internalResolve(document, sourceModule, cache, offset);
 		} catch (BadLocationException e1) {
 			PHPCorePlugin.log(e1);
 		} catch (ModelException e) {
@@ -227,8 +227,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		return filtered.toArray(new IModelElement[filtered.size()]);
 	}
 
-	private IModelElement[] internalASTResolve(ISourceModule sourceModule, IModelAccessCache cache, int offset, int end)
-			throws ModelException {
+	private IModelElement[] internalASTResolve(ISourceModule sourceModule, IModelAccessCache cache, int offset,
+			int end /* inclusive end */) throws ModelException {
 		String source;
 
 		try {
@@ -265,6 +265,22 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					boolean isMethodOrFunction = PHPTextSequenceUtilities.getMethodEndIndex(source, end, false) != -1;
 					return lookForMatchingElements(tags, sourceModule, parsedUnit, offset, end, isMethodOrFunction,
 							cache);
+				}
+				if (offset < realStart) {
+					break;
+				}
+			}
+			List<VarComment> varComments = phpModuleDeclaration.getVarComments();
+			for (VarComment varComment : varComments) {
+				int realStart = varComment.sourceStart();
+				int realEnd = varComment.sourceEnd();
+				if (realStart <= offset && realEnd >= end) {
+					boolean isMethodOrFunction = PHPTextSequenceUtilities.getMethodEndIndex(source, end, false) != -1;
+					return lookForMatchingElements(varComment.getTypeReferences(), sourceModule, offset, end,
+							isMethodOrFunction, cache);
+				}
+				if (offset < realStart) {
+					break;
 				}
 			}
 		}
@@ -557,85 +573,90 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							}
 						}
 					}
+					return null;
 				} else {
-					for (TypeReference typeReference : phpDocTag.getTypeReferences()) {
-						if (typeReference.sourceStart() <= offset && typeReference.sourceEnd() >= end) {
-							boolean isNamespacePart = false;
-							String name = typeReference.getName();
-							// remove additional end elements like ']', '[]' or
-							// '()'
-							if (typeReference.sourceEnd() > end) {
-								isNamespacePart = name.charAt(
-										end - typeReference.sourceStart()) == NamespaceReference.NAMESPACE_SEPARATOR;
-								name = name.substring(0, end - typeReference.sourceStart());
-								// check if we're in an array
-								int idx = name.lastIndexOf('[', offset - typeReference.sourceStart() - 1);
-								if (idx != -1) {
-									name = name.substring(idx + 1);
+					List<TypeReference> typeReferences = phpDocTag.getTypeReferences();
+					return lookForMatchingElements(typeReferences.toArray(new TypeReference[typeReferences.size()]),
+							sourceModule, offset, end, isMethodOrFunction, cache);
+				}
+			}
+		}
+		return null;
+	}
+
+	private IModelElement[] lookForMatchingElements(TypeReference[] references, ISourceModule sourceModule, int offset,
+			int end, boolean isMethodOrFunction, IModelAccessCache cache) throws ModelException {
+		for (TypeReference typeReference : references) {
+			if (typeReference.sourceStart() <= offset && typeReference.sourceEnd() >= end) {
+				boolean isNamespacePart = false;
+				String name = typeReference.getName();
+				// remove additional end elements like ']', '[]' or
+				// '()'
+				if (typeReference.sourceEnd() > end) {
+					isNamespacePart = name
+							.charAt(end - typeReference.sourceStart()) == NamespaceReference.NAMESPACE_SEPARATOR;
+					name = name.substring(0, end - typeReference.sourceStart());
+					// check if we're in an array
+					int idx = name.lastIndexOf('[', offset - typeReference.sourceStart() - 1);
+					if (idx != -1) {
+						name = name.substring(idx + 1);
+					}
+				}
+				String[] parts = name.split(Pattern.quote(PAAMAYIM_NEKUDOTAIM), 3);
+				if (parts.length > 1) {
+					if (parts.length == 2 && parts[0].length() > 0 && parts[1].length() > 0) {
+						boolean isVariable = parts[1].charAt(0) == '$';
+						// to determine if it was the part before
+						// "::" that was selected
+						boolean isClassOrNamespacePartSelected = offset <= typeReference.sourceStart()
+								+ parts[0].length();
+						IType[] types = filterNS(PHPModelUtils.getTypes(parts[0], sourceModule, offset, cache, null));
+						if (isClassOrNamespacePartSelected) {
+							// NB : no need to check for namespaces,
+							// we cannot end here with variable
+							// "isNamespacePart" set to true
+							// and variable "name" containing "::"
+							return types;
+						} else {
+							if (isMethodOrFunction && !isVariable) {
+								// class method
+								List<IMethod> methods = new LinkedList<>();
+								for (IType type : types) {
+									methods.addAll(Arrays.asList(PHPModelUtils.getTypeMethod(type, parts[1], true)));
 								}
-							}
-							String[] parts = name.split(Pattern.quote(PAAMAYIM_NEKUDOTAIM), 3);
-							if (parts.length > 1) {
-								if (parts.length == 2 && parts[0].length() > 0 && parts[1].length() > 0) {
-									boolean isVariable = parts[1].charAt(0) == '$';
-									// to determine if it was the part before
-									// "::" that was selected
-									boolean isClassOrNamespacePartSelected = offset <= typeReference.sourceStart()
-											+ parts[0].length();
-									IType[] types = filterNS(
-											PHPModelUtils.getTypes(parts[0], sourceModule, offset, cache, null));
-									if (isClassOrNamespacePartSelected) {
-										// NB : no need to check for namespaces,
-										// we cannot end here with variable
-										// "isNamespacePart" set to true
-										// and variable "name" containing "::"
-										return types;
-									} else {
-										if (isMethodOrFunction && !isVariable) {
-											// class method
-											List<IMethod> methods = new LinkedList<>();
-											for (IType type : types) {
-												methods.addAll(Arrays
-														.asList(PHPModelUtils.getTypeMethod(type, parts[1], true)));
-											}
-											return methods.toArray(new IMethod[methods.size()]);
-										} else {
-											// class field or class constant
-											List<IField> fields = new LinkedList<>();
-											for (IType type : types) {
-												fields.addAll(Arrays
-														.asList(PHPModelUtils.getTypeField(type, parts[1], true)));
-											}
-											return fields.toArray(new IField[fields.size()]);
-										}
-									}
+								return methods.toArray(new IMethod[methods.size()]);
+							} else {
+								// class field or class constant
+								List<IField> fields = new LinkedList<>();
+								for (IType type : types) {
+									fields.addAll(Arrays.asList(PHPModelUtils.getTypeField(type, parts[1], true)));
 								}
-							} else if (name.length() > 0) {
-								boolean isVariable = name.charAt(0) == '$';
-								if (isVariable) {
-									return PHPModelUtils.getFields(name, sourceModule, offset, cache, null);
-								} else if (isMethodOrFunction) {
-									return PHPModelUtils.getFunctions(name, sourceModule, offset, cache, null);
-								} else {
-									// it's either a
-									// class/interface/namespace...
-									if (isNamespacePart) {
-										return PHPModelUtils.getNamespaceOf(
-												name + NamespaceReference.NAMESPACE_SEPARATOR, sourceModule, offset,
-												cache, null);
-									}
-									IType[] types = filterNS(
-											PHPModelUtils.getTypes(name, sourceModule, offset, cache, null));
-									if (types.length == 0) {
-										// ... or a global constant
-										return PHPModelUtils.getFields(name, sourceModule, offset, cache, null);
-									}
-									return types;
-								}
+								return fields.toArray(new IField[fields.size()]);
 							}
 						}
 					}
+				} else if (name.length() > 0) {
+					boolean isVariable = name.charAt(0) == '$';
+					if (isVariable) {
+						return PHPModelUtils.getFields(name, sourceModule, offset, cache, null);
+					} else if (isMethodOrFunction) {
+						return PHPModelUtils.getFunctions(name, sourceModule, offset, cache, null);
+					} else {
+						// it's either a
+						// class/interface/namespace...
+						if (isNamespacePart) {
+							return PHPModelUtils.getNamespaceOf(name + NamespaceReference.NAMESPACE_SEPARATOR,
+									sourceModule, offset, cache, null);
+						}
+						IType[] types = filterNS(PHPModelUtils.getTypes(name, sourceModule, offset, cache, null));
+						if (types.length == 0) {
+							// ... or a global constant
+							return PHPModelUtils.getFields(name, sourceModule, offset, cache, null);
+						}
+						return types;
+					}
 				}
+				return null;
 			}
 		}
 		return null;
@@ -656,7 +677,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	}
 
 	private IModelElement[] internalResolve(IStructuredDocument sDoc, ISourceModule sourceModule,
-			IModelAccessCache cache, int offset, int end) throws BadLocationException, CoreException {
+			IModelAccessCache cache, int offset) throws BadLocationException, CoreException {
 		IStructuredDocumentRegion sRegion = sDoc.getRegionAtCharacterOffset(offset);
 		if (sRegion == null) {
 			return EMPTY;

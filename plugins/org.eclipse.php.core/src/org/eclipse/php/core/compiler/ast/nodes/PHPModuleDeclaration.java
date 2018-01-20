@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
@@ -34,8 +35,8 @@ public class PHPModuleDeclaration extends ModuleDeclaration {
 	private List<PHPDocBlock> phpDocBlocks = new LinkedList<>();
 	private List<Comment> commentList = new LinkedList<>();
 
-	public PHPModuleDeclaration(int start, int end, List<ASTNode> statements, List<ASTError> errors,
-			List<VarComment> varComments) {
+	public PHPModuleDeclaration(int start, int end, @NonNull List<ASTNode> statements, @NonNull List<ASTError> errors,
+			@NonNull List<VarComment> varComments) {
 		super(end - start, true);
 		setStatements(statements);
 		setStart(start);
