@@ -256,7 +256,7 @@
 										<type>eclipse-feature</type>
 										<id>org.eclipse.dltk.core.index.lucene</id>
 										<versionRange>5.9.0.201801191115</versionRange>
-										<!-- Eclipse Photon M4 repository contain problematic DLTK 5.9 build, we need never version. --> 
+										<!-- Eclipse Photon M4 repository contain problematic DLTK 5.9 build, we need newer version. --> 
 									</requirement>
 								</extraRequirements>
 							</dependency-resolution>
