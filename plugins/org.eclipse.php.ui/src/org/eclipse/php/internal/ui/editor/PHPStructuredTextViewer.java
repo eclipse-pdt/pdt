@@ -11,13 +11,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.EventObject;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.internal.ui.dialogs.OptionalMessageDialog;
@@ -39,9 +39,9 @@ import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.projection.ProjectionMapping;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconciler;
+import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.source.*;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
@@ -70,84 +70,10 @@ import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.StructuredDocumentToTextAdapter;
 import org.eclipse.wst.sse.ui.internal.StructuredTextAnnotationHover;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
+import org.eclipse.wst.sse.ui.internal.reconcile.DocumentRegionProcessor;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
 
 public class PHPStructuredTextViewer extends StructuredTextViewer {
-
-	private class EditorReconcilingListener
-			implements IDocumentListener, ITextInputListener, IPHPScriptReconcilingListener {
-
-		/** Some changes need to be processed. */
-		private boolean fIsDirty = false;
-
-		public void install() {
-			StyledText text = getTextWidget();
-			if (text == null || text.isDisposed())
-				return;
-
-			if (getTextEditor() instanceof PHPStructuredEditor) {
-				((PHPStructuredEditor) getTextEditor()).addReconcileListener(this);
-			}
-
-			addTextInputListener(this);
-
-			IDocument document = getDocument();
-			if (document != null) {
-				document.addDocumentListener(this);
-			}
-		}
-
-		public void uninstall() {
-			removeTextInputListener(this);
-			if (getTextEditor() instanceof PHPStructuredEditor) {
-				((PHPStructuredEditor) getTextEditor()).removeReconcileListener(this);
-			}
-
-			IDocument document = getDocument();
-			if (document != null) {
-				document.removeDocumentListener(this);
-			}
-		}
-
-		@Override
-		public void inputDocumentAboutToBeChanged(IDocument oldInput, IDocument newInput) {
-			if (oldInput != null) {
-				oldInput.removeDocumentListener(this);
-			}
-		}
-
-		@Override
-		public void inputDocumentChanged(IDocument oldInput, IDocument newInput) {
-			if (newInput != null) {
-				newInput.addDocumentListener(this);
-				if (getTextEditor() instanceof PHPStructuredEditor) {
-					((PHPStructuredEditor) getTextEditor()).aboutToBeReconciled();
-				}
-			}
-		}
-
-		@Override
-		public void documentAboutToBeChanged(DocumentEvent event) {
-		}
-
-		@Override
-		public void documentChanged(DocumentEvent event) {
-			if (!fIsDirty && getTextEditor() instanceof PHPStructuredEditor) {
-				((PHPStructuredEditor) getTextEditor()).aboutToBeReconciled();
-				fIsDirty = true;
-			}
-		}
-
-		@Override
-		public void aboutToBeReconciled() {
-		}
-
-		@Override
-		public void reconciled(Program program, boolean forced, IProgressMonitor progressMonitor) {
-			fIsDirty = false;
-		}
-
-	}
 
 	/**
 	 * Text operation code for requesting the outline for the current input.
@@ -155,8 +81,8 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	public static final int SHOW_OUTLINE = 51;
 
 	/**
-	 * Text operation code for requesting the outline for the element at the
-	 * current position.
+	 * Text operation code for requesting the outline for the element at the current
+	 * position.
 	 */
 	public static final int OPEN_STRUCTURE = 52;
 
@@ -173,7 +99,6 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	private IInformationPresenter fHierarchyPresenter;
 	private IAnnotationHover fProjectionAnnotationHover;
 	private boolean fFireSelectionChanged = true;
-	private EditorReconcilingListener fEditorReconcilingListener;
 
 	private IDocumentAdapter documentAdapter;
 
@@ -195,9 +120,9 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	}
 
 	/**
-	 * This method overrides WST since sometimes we get a subset of the document
-	 * and NOT the whole document, although the case is FORMAT_DOCUMENT. In all
-	 * other cases we call the parent method.
+	 * This method overrides WST since sometimes we get a subset of the document and
+	 * NOT the whole document, although the case is FORMAT_DOCUMENT. In all other
+	 * cases we call the parent method.
 	 */
 	@Override
 	public void doOperation(int operation) {
@@ -387,8 +312,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.wst.sse.ui.internal.StructuredTextViewer#canDoOperation(int)
+	 * @see org.eclipse.wst.sse.ui.internal.StructuredTextViewer#canDoOperation(int)
 	 */
 	@Override
 	public boolean canDoOperation(int operation) {
@@ -438,9 +362,9 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	 * 
 	 * @see org.eclipse.jface.text.source.projection.ProjectionViewer#addVerticalRulerColumn(org.eclipse.jface.text.source.IVerticalRulerColumn)
 	 * 
-	 *      This method is only called to add Projection ruler column. It's
-	 *      actually a hack to override Projection presentation (information
-	 *      control) in order to enable syntax highlighting
+	 *      This method is only called to add Projection ruler column. It's actually
+	 *      a hack to override Projection presentation (information control) in
+	 *      order to enable syntax highlighting
 	 */
 	@Override
 	public void addVerticalRulerColumn(IVerticalRulerColumn column) {
@@ -483,19 +407,11 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	}
 
 	/**
-	 * We override this function in order to use content assist for php and not
-	 * use the default one dictated by StructuredTextViewerConfiguration
+	 * We override this function in order to use content assist for php and not use
+	 * the default one dictated by StructuredTextViewerConfiguration
 	 */
 	@Override
 	public void configure(SourceViewerConfiguration configuration) {
-
-		// need to install the EditorReconcilingListener before reconciler is
-		// installed so that PHPStructuredEditor.aboutToBeReconciled() can be
-		// called when editor opened
-		if (fEditorReconcilingListener == null) {
-			fEditorReconcilingListener = new EditorReconcilingListener();
-			fEditorReconcilingListener.install();
-		}
 
 		super.configure(configuration);
 
@@ -535,6 +451,32 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			enableOperation(CONTENTASSIST_PROPOSALS, false);
 		}
 
+		IReconciler newReconciler = phpConfiguration.getPHPReconciler(fTextEditor, this);
+
+		if (newReconciler instanceof DocumentRegionProcessor && fReconciler instanceof DocumentRegionProcessor) {
+			Method accessHighlighter;
+			try {
+				// we need access to old semantic highlighting strategy to move it between
+				// reconcilers
+				accessHighlighter = DocumentRegionProcessor.class.getDeclaredMethod("getSemanticHighlightingStrategy");//$NON-NLS-1$
+				accessHighlighter.setAccessible(true);
+				IReconcilingStrategy highlighter = (IReconcilingStrategy) accessHighlighter.invoke(fReconciler);
+				if (highlighter != null) {
+					((DocumentRegionProcessor) newReconciler).setSemanticHighlightingStrategy(highlighter);
+				}
+			} catch (Exception e) {
+				Logger.logException(e);
+			}
+
+		}
+		if (newReconciler != null) {
+			newReconciler.install(this);
+			if (newReconciler instanceof StructuredRegionProcessor) {
+				((StructuredRegionProcessor) newReconciler).setDocument(getDocument());
+			}
+			fReconciler = newReconciler;
+		}
+
 		fOutlinePresenter = phpConfiguration.getOutlinePresenter(this);
 		if (fOutlinePresenter != null) {
 			fOutlinePresenter.install(this);
@@ -560,10 +502,6 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		if (fOutlinePresenter != null) {
 			fOutlinePresenter.uninstall();
 			fOutlinePresenter = null;
-		}
-		if (fEditorReconcilingListener != null) {
-			fEditorReconcilingListener.uninstall();
-			fEditorReconcilingListener = null;
 		}
 		super.unconfigure();
 	}
@@ -642,10 +580,9 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	}
 
 	/**
-	 * Prepends the text presentation listener at the beginning of the viewer's
-	 * list of text presentation listeners. If the listener is already
-	 * registered with the viewer this call moves the listener to the beginning
-	 * of the list.
+	 * Prepends the text presentation listener at the beginning of the viewer's list
+	 * of text presentation listeners. If the listener is already registered with
+	 * the viewer this call moves the listener to the beginning of the list.
 	 * 
 	 * @param listener
 	 *            the text presentation listener
@@ -666,8 +603,8 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 
 	/**
 	 * Sends out a text selection changed event to all registered listeners and
-	 * registers the selection changed event to be sent out to all post
-	 * selection listeners.
+	 * registers the selection changed event to be sent out to all post selection
+	 * listeners.
 	 * 
 	 * @param offset
 	 *            the offset of the newly selected range in the visible document
