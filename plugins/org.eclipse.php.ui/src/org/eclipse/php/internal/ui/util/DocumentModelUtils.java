@@ -44,8 +44,8 @@ public class DocumentModelUtils {
 	}
 
 	/**
-	 * Reparse PhpScriptRegions content of document attached to textViewer. Also
-	 * do a document reconcile afterwards.
+	 * Reparse PhpScriptRegions content of document attached to textViewer. Also do
+	 * a document reconcile afterwards.
 	 * 
 	 * @param textViewer
 	 */
@@ -53,15 +53,14 @@ public class DocumentModelUtils {
 		IDocument document = textViewer.getDocument();
 		if (document instanceof IStructuredDocument) {
 			reparseDocument(document);
-			textViewer.reconcile();
 		}
 	}
 
 	/**
-	 * Reparse PhpScriptRegions content of document attached to textViewer, by
-	 * using new project settings. Also do a document reconcile afterwards. If
-	 * parameter project is not null, be sure that the document really belongs
-	 * to this project!
+	 * Reparse PhpScriptRegions content of document attached to textViewer, by using
+	 * new project settings. Also do a document reconcile afterwards. If parameter
+	 * project is not null, be sure that the document really belongs to this
+	 * project!
 	 * 
 	 * @param textViewer
 	 * @param project
@@ -71,7 +70,6 @@ public class DocumentModelUtils {
 		IDocument document = textViewer.getDocument();
 		if (document instanceof IStructuredDocument) {
 			reparseDocument(document, project);
-			textViewer.reconcile();
 		}
 	}
 
@@ -96,8 +94,8 @@ public class DocumentModelUtils {
 
 	/**
 	 * Reparse content of all document PhpScriptRegions, by using new project
-	 * settings. If parameter project is not null, be sure that the document
-	 * really belongs to this project!
+	 * settings. If parameter project is not null, be sure that the document really
+	 * belongs to this project!
 	 * 
 	 * @param document
 	 * @param project
@@ -119,8 +117,8 @@ public class DocumentModelUtils {
 	}
 
 	/**
-	 * iterate over regions in case of PhpScriptRegion. In case of region
-	 * container iterate over the container regions.
+	 * iterate over regions in case of PhpScriptRegion. In case of region container
+	 * iterate over the container regions.
 	 * 
 	 * @param document
 	 *            document
@@ -131,8 +129,8 @@ public class DocumentModelUtils {
 	 * @param project
 	 *            the new project to use (only if setNewProject is set to true)
 	 * @param setNewProject
-	 *            use the new project value (even if null) when setNewProject is
-	 *            set to true
+	 *            use the new project value (even if null) when setNewProject is set
+	 *            to true
 	 */
 	@SuppressWarnings("null")
 	private static void reparseRegion(@NonNull IDocument document, @NonNull Iterator<?> regionsIt, int offset,

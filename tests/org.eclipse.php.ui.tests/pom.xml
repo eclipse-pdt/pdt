@@ -25,7 +25,7 @@
 				<configuration>
 					<testClass>org.eclipse.php.ui.tests.AllTests</testClass>
 					<useUIHarness>true</useUIHarness>
-					<useUIThread>true</useUIThread>
+					<useUIThread>false</useUIThread>
 					<argLine>-Dh2.syncMethod=force -Xmx512m -XX:MaxPermSize=256m ${test.vmargs} ${tycho.testArgLine}</argLine>
 					<dependencies>
 						<dependency>
