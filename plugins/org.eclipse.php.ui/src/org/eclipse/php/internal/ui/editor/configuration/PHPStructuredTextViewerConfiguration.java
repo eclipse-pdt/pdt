@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.configuration;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
 
 import org.eclipse.core.runtime.IAdaptable;
@@ -33,6 +35,8 @@ import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.*;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.quickassist.IQuickAssistAssistant;
+import org.eclipse.jface.text.reconciler.IReconciler;
+import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.php.internal.core.PHPCoreConstants;
@@ -42,11 +46,13 @@ import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.php.internal.core.format.FormatterUtils;
 import org.eclipse.php.internal.core.format.IFormatterCommonPreferences;
+import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.autoEdit.CloseTagAutoEditStrategyPHP;
 import org.eclipse.php.internal.ui.autoEdit.MainAutoEditStrategy;
 import org.eclipse.php.internal.ui.doubleclick.PHPDoubleClickStrategy;
+import org.eclipse.php.internal.ui.editor.PHPStructuredRegionProcessor;
 import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProcessor;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPContentAssistant;
@@ -72,11 +78,14 @@ import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
 import org.eclipse.wst.sse.core.text.IStructuredPartitions;
+import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
+import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.StructuredContentAssistant;
 import org.eclipse.wst.sse.ui.internal.correction.CompoundQuickAssistProcessor;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.provisional.style.ReconcilerHighlighter;
 import org.eclipse.wst.sse.ui.internal.provisional.style.StructuredPresentationReconciler;
+import org.eclipse.wst.sse.ui.internal.reconcile.DocumentRegionProcessor;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
 import org.w3c.dom.Attr;
@@ -106,8 +115,8 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	}
 
 	/*
-	 * Returns an array of all the contentTypes (partition names) supported by
-	 * this editor. They include all those supported by HTML editor plus PHP.
+	 * Returns an array of all the contentTypes (partition names) supported by this
+	 * editor. They include all those supported by HTML editor plus PHP.
 	 */
 	@Override
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
@@ -145,8 +154,8 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	}
 
 	/**
-	 * Method overrides default status line label provider because HTML version
-	 * can freeze UI during searching image for status line for large PHP files.
+	 * Method overrides default status line label provider because HTML version can
+	 * freeze UI during searching image for status line for large PHP files.
 	 * 
 	 * @see http://eclip.se\474115
 	 */
@@ -244,6 +253,53 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 			processors = new IContentAssistProcessor[0];
 		}
 		return processors;
+	}
+
+	/**
+	 * Replace IReconciler (StructuredRegionProcessor) via Java reflection
+	 * 
+	 * @since 5.3
+	 */
+	public IReconciler replaceReconciler(ITextEditor editor, ISourceViewer sourceViewer) {
+
+		IReconciler oldReconciler = getReconciler(sourceViewer);
+		PHPStructuredRegionProcessor newReconciler = new PHPStructuredRegionProcessor(editor);
+		newReconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
+
+		newReconciler.install(sourceViewer);
+		Field fReconcilerField;
+		try {
+			// we have to replace old reconciler
+			fReconcilerField = StructuredTextViewerConfiguration.class.getDeclaredField("fReconciler"); //$NON-NLS-1$
+			fReconcilerField.setAccessible(true);
+			fReconcilerField.set(this, newReconciler);
+			fReconcilerField.setAccessible(false);
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+		newReconciler.setDocument(((StructuredTextViewer) sourceViewer).getDocument());
+
+		if (newReconciler instanceof DocumentRegionProcessor && oldReconciler instanceof DocumentRegionProcessor) {
+			Method accessHighlighter;
+			try {
+				// we need access to old semantic highlighting strategy and move it between
+				// reconcilers
+				accessHighlighter = DocumentRegionProcessor.class.getDeclaredMethod("getSemanticHighlightingStrategy");//$NON-NLS-1$
+				accessHighlighter.setAccessible(true);
+				IReconcilingStrategy highlighter = (IReconcilingStrategy) accessHighlighter.invoke(oldReconciler);
+				if (highlighter != null) {
+					((DocumentRegionProcessor) newReconciler).setSemanticHighlightingStrategy(highlighter);
+				}
+				accessHighlighter.setAccessible(false);
+			} catch (Exception e) {
+				Logger.logException(e);
+			}
+		}
+		if (oldReconciler != null) {
+			oldReconciler.uninstall();
+		}
+
+		return newReconciler;
 	}
 
 	public IContentAssistant getPHPContentAssistant(ISourceViewer sourceViewer) {
@@ -555,14 +611,14 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	}
 
 	/**
-	 * Returns the hierarchy presenter which will determine and shown type
-	 * hierarchy information requested for the current cursor position.
+	 * Returns the hierarchy presenter which will determine and shown type hierarchy
+	 * information requested for the current cursor position.
 	 * 
 	 * @param sourceViewer
 	 *            the source viewer to be configured by this configuration
 	 * @param doCodeResolve
-	 *            a boolean which specifies whether code resolve should be used
-	 *            to compute the PHP element
+	 *            a boolean which specifies whether code resolve should be used to
+	 *            compute the PHP element
 	 * @return an information presenter
 	 * @since 3.4
 	 */
