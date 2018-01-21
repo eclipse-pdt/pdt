@@ -33,6 +33,7 @@ import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.*;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.quickassist.IQuickAssistAssistant;
+import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.php.internal.core.PHPCoreConstants;
@@ -47,6 +48,7 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.autoEdit.CloseTagAutoEditStrategyPHP;
 import org.eclipse.php.internal.ui.autoEdit.MainAutoEditStrategy;
 import org.eclipse.php.internal.ui.doubleclick.PHPDoubleClickStrategy;
+import org.eclipse.php.internal.ui.editor.PHPStructuredRegionProcessor;
 import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProcessor;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPContentAssistant;
@@ -102,12 +104,14 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	private ReconcilerHighlighter fHighlighter = null;
 	private ILabelProvider fStatusLineLabelProvider;
 
+	private IReconciler fReconciler;
+
 	public PHPStructuredTextViewerConfiguration() {
 	}
 
 	/*
-	 * Returns an array of all the contentTypes (partition names) supported by
-	 * this editor. They include all those supported by HTML editor plus PHP.
+	 * Returns an array of all the contentTypes (partition names) supported by this
+	 * editor. They include all those supported by HTML editor plus PHP.
 	 */
 	@Override
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
@@ -145,8 +149,8 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	}
 
 	/**
-	 * Method overrides default status line label provider because HTML version
-	 * can freeze UI during searching image for status line for large PHP files.
+	 * Method overrides default status line label provider because HTML version can
+	 * freeze UI during searching image for status line for large PHP files.
 	 * 
 	 * @see http://eclip.se\474115
 	 */
@@ -244,6 +248,16 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 			processors = new IContentAssistProcessor[0];
 		}
 		return processors;
+	}
+
+	public IReconciler getPHPReconciler(ITextEditor editor, ISourceViewer sourceViewer) {
+		if (fReconciler == null && editor != null && editor.isEditable()) {
+			PHPStructuredRegionProcessor reconciler = new PHPStructuredRegionProcessor(editor);
+			reconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
+
+			fReconciler = reconciler;
+		}
+		return fReconciler;
 	}
 
 	public IContentAssistant getPHPContentAssistant(ISourceViewer sourceViewer) {
@@ -555,14 +569,14 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	}
 
 	/**
-	 * Returns the hierarchy presenter which will determine and shown type
-	 * hierarchy information requested for the current cursor position.
+	 * Returns the hierarchy presenter which will determine and shown type hierarchy
+	 * information requested for the current cursor position.
 	 * 
 	 * @param sourceViewer
 	 *            the source viewer to be configured by this configuration
 	 * @param doCodeResolve
-	 *            a boolean which specifies whether code resolve should be used
-	 *            to compute the PHP element
+	 *            a boolean which specifies whether code resolve should be used to
+	 *            compute the PHP element
 	 * @return an information presenter
 	 * @since 3.4
 	 */
