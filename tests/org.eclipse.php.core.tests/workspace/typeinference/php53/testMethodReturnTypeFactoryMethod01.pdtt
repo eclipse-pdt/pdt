@@ -1,0 +1,17 @@
+--TEST--
+Test Method Return Type with FactoryMethod
+--CONFIG--
+prune: factorymethodGoals
+--FILE--
+<?php
+class FactoryMethodClass
+{
+	public function factoryMethodName()
+	{
+	    return 1;
+	}
+}
+$instance = new FactoryMethodClass();
+testMethodReturnTypeFactoryMethod01($instance->factoryMethodName('FactoryMethodClass'));
+--EXPECT--
+FactoryMethodClass

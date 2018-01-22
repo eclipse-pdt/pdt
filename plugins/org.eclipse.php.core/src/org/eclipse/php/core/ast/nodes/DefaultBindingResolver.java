@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016 IBM Corporation and others.
+ * Copyright (c) 2009, 2016, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Michele Locati
  *******************************************************************************/
 /**
  * 
@@ -206,7 +207,8 @@ public class DefaultBindingResolver extends BindingResolver {
 				if (parentElement instanceof IType) {
 					IType parent = (IType) parentElement;
 					IType[] functionReturnTypes = CodeAssistUtils.getFunctionReturnType(new IType[] { parent },
-							method.getElementName(), CodeAssistUtils.USE_PHPDOC, method.getSourceModule(), 0);
+							method.getElementName(), CodeAssistUtils.USE_FACTORYMETHOD | CodeAssistUtils.USE_PHPDOC,
+							method.getSourceModule(), 0);
 					for (IType currentEvaluatedType : functionReturnTypes) {
 						ITypeBinding typeBinding = getTypeBinding(currentEvaluatedType);
 						if (typeBinding != null) {

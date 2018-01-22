@@ -42,6 +42,9 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		if (goalClass == MethodElementReturnTypeGoal.class) {
 			return new MethodReturnTypeEvaluator(goal);
 		}
+		// if (goalClass == FactoryMethodMethodReturnTypeGoal.class) {
+		// return new FactoryMethodMethodReturnTypeEvaluator(goal);
+		// }
 		if (goalClass == PHPDocMethodReturnTypeGoal.class) {
 			return new PHPDocMethodReturnTypeEvaluator(goal);
 		}

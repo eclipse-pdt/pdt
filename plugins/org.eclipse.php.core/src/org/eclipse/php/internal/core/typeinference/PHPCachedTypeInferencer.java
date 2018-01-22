@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 IBM Corporation and others.
+ * Copyright (c) 2014, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
  *     Dawid Pakuła - cached inferencer
+ *     Michele Locati
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference;
 
@@ -21,6 +22,7 @@ import org.eclipse.dltk.ti.statistics.IEvaluationStatisticsRequestor;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.typeinference.evaluators.PHPGoalEvaluatorFactory;
 import org.eclipse.php.internal.core.typeinference.goals.ClassVariableDeclarationGoal;
+import org.eclipse.php.internal.core.typeinference.goals.FactoryMethodMethodReturnTypeGoal;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocClassVariableGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
@@ -129,6 +131,16 @@ public class PHPCachedTypeInferencer implements IPHPTypeInferencer {
 	}
 
 	@Override
+	public IEvaluatedType evaluateTypeFactoryMethod(AbstractTypeGoal goal, int timeout) {
+		return evaluateType(goal, new FactoryMethodGoalsPruner(timeout));
+	}
+
+	@Override
+	public IEvaluatedType evaluateTypeFactoryMethod(AbstractTypeGoal goal) {
+		return evaluateTypeFactoryMethod(goal, 3000);
+	}
+
+	@Override
 	public IEvaluatedType evaluateTypePHPDoc(AbstractTypeGoal goal, int timeout) {
 		return evaluateType(goal, new PHPDocGoalsPruner(timeout));
 	}
@@ -165,7 +177,7 @@ public class PHPCachedTypeInferencer implements IPHPTypeInferencer {
 	}
 
 	/**
-	 * This class prunes all PHP goals except for PHPDoc based goals
+	 * This class prunes all PHP goals except for FactoryMethod/PHPDoc based goals
 	 */
 	static class HeavyGoalsPruner extends TimelimitPruner {
 
@@ -177,6 +189,25 @@ public class PHPCachedTypeInferencer implements IPHPTypeInferencer {
 		public boolean prune(IGoal goal, EvaluatorStatistics stat) {
 			// here are heavy goals pruned
 			if (goal instanceof MethodElementReturnTypeGoal || goal instanceof ClassVariableDeclarationGoal) {
+				return true;
+			}
+			return super.prune(goal, stat);
+		}
+	}
+
+	/**
+	 * This class prunes all FactoryMethod based goals
+	 */
+	static class FactoryMethodGoalsPruner extends TimelimitPruner {
+
+		public FactoryMethodGoalsPruner(long timeLimit) {
+			super(timeLimit);
+		}
+
+		@Override
+		public boolean prune(IGoal goal, EvaluatorStatistics stat) {
+			// here are FactoryMethod (liteweight) goals pruned
+			if (goal instanceof FactoryMethodMethodReturnTypeGoal) {
 				return true;
 			}
 			return super.prune(goal, stat);

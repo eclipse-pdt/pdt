@@ -171,6 +171,9 @@ public class TypeInferenceTests {
 		assertNotNull("Method call " + criteriaFunction + "() in code: " + code, searcher.getResult());
 		assertNotNull("Can't find context for " + criteriaFunction + "() in code: " + code, searcher.getContext());
 		ExpressionTypeGoal goal = new ExpressionTypeGoal(searcher.getContext(), searcher.getResult());
+		if ("factorymethodGoals".equals(pruner)) {
+			return typeInferenceEngine.evaluateTypeFactoryMethod(goal, ENGINE_TIMEOUT);
+		}
 		if ("phpdocGoals".equals(pruner)) {
 			return typeInferenceEngine.evaluateTypeHeavy(goal, ENGINE_TIMEOUT);
 		}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Michele Locati
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference;
 
@@ -19,6 +20,7 @@ import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.typeinference.evaluators.PHPGoalEvaluatorFactory;
 import org.eclipse.php.internal.core.typeinference.goals.ClassVariableDeclarationGoal;
+import org.eclipse.php.internal.core.typeinference.goals.FactoryMethodMethodReturnTypeGoal;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocClassVariableGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
@@ -28,6 +30,28 @@ public class PHPTypeInferencer extends DefaultTypeInferencer implements IPHPType
 
 	public PHPTypeInferencer() {
 		super(new PHPGoalEvaluatorFactory());
+	}
+
+	/**
+	 * Evaluates Factory Method goal
+	 * 
+	 * @param goal
+	 * @return evaluated type
+	 */
+	@Override
+	public IEvaluatedType evaluateTypeFactoryMethod(AbstractTypeGoal goal, int timeout) {
+		return super.evaluateType(goal, new HeavyGoalsPruner(timeout));
+	}
+
+	/**
+	 * Evaluates Factory Method goal with default timeout (3000 ms)
+	 * 
+	 * @param goal
+	 * @return evaluated type
+	 */
+	@Override
+	public IEvaluatedType evaluateTypeFactoryMethod(AbstractTypeGoal goal) {
+		return evaluateTypeFactoryMethod(goal, 3000);
 	}
 
 	/**
@@ -58,7 +82,7 @@ public class PHPTypeInferencer extends DefaultTypeInferencer implements IPHPType
 	}
 
 	/**
-	 * This class prunes all PHP goals except for PHPDoc based goals
+	 * This class prunes all PHP goals except for FactoryMethod/PHPDoc based goals
 	 */
 	class HeavyGoalsPruner extends TimelimitPruner {
 
@@ -70,6 +94,25 @@ public class PHPTypeInferencer extends DefaultTypeInferencer implements IPHPType
 		public boolean prune(IGoal goal, EvaluatorStatistics stat) {
 			// here are heavy goals pruned
 			if (goal instanceof MethodElementReturnTypeGoal || goal instanceof ClassVariableDeclarationGoal) {
+				return true;
+			}
+			return super.prune(goal, stat);
+		}
+	}
+
+	/**
+	 * This class prunes all FactoryMethod based goals
+	 */
+	class FactoryMethodGoalsPruner extends TimelimitPruner {
+
+		public FactoryMethodGoalsPruner(long timeLimit) {
+			super(timeLimit);
+		}
+
+		@Override
+		public boolean prune(IGoal goal, EvaluatorStatistics stat) {
+			// here are FactoryMethod (liteweight) goals pruned
+			if (goal instanceof FactoryMethodMethodReturnTypeGoal) {
 				return true;
 			}
 			return super.prune(goal, stat);

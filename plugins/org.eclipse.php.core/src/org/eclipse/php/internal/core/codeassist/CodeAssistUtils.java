@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 IBM Corporation and others.
+ * Copyright (c) 2009, 2015, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Michele Locati
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist;
 
@@ -41,6 +42,7 @@ import org.eclipse.php.internal.core.typeinference.*;
 import org.eclipse.php.internal.core.typeinference.context.FileContext;
 import org.eclipse.php.internal.core.typeinference.context.TypeContext;
 import org.eclipse.php.internal.core.typeinference.goals.ClassVariableDeclarationGoal;
+import org.eclipse.php.internal.core.typeinference.goals.FactoryMethodMethodReturnTypeGoal;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocClassVariableGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
@@ -54,6 +56,11 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
  * @author michael
  */
 public class CodeAssistUtils {
+
+	/**
+	 * Whether to use FactoryMethod in type inference
+	 */
+	public static final int USE_FACTORYMETHOD = 1 << 6;
 
 	/**
 	 * Whether to use PHPDoc in type inference
@@ -224,7 +231,7 @@ public class CodeAssistUtils {
 	 */
 	public static IType[] getFunctionReturnType(IType[] types, String method,
 			org.eclipse.dltk.core.ISourceModule sourceModule, int offset) {
-		return getFunctionReturnType(types, method, USE_PHPDOC, sourceModule, offset);
+		return getFunctionReturnType(types, method, USE_FACTORYMETHOD | USE_PHPDOC, sourceModule, offset);
 	}
 
 	public static IType[] getFunctionReturnType(IType[] types, String method, int mask,
@@ -248,6 +255,18 @@ public class CodeAssistUtils {
 
 		IEvaluatedType evaluatedType;
 		IType[] modelElements;
+		boolean useFactoryMethod = (mask & USE_FACTORYMETHOD) != 0;
+		if (useFactoryMethod) {
+			FactoryMethodMethodReturnTypeGoal factoryMethodGoal = new FactoryMethodMethodReturnTypeGoal(context, types,
+					method, argNames, offset);
+			evaluatedType = typeInferencer.evaluateTypeFactoryMethod(factoryMethodGoal);
+
+			modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, (ISourceModuleContext) context,
+					offset);
+			if (ArrayUtils.isNotEmpty(modelElements)) {
+				return modelElements;
+			}
+		}
 		boolean usePhpDoc = (mask & USE_PHPDOC) != 0;
 		if (usePhpDoc) {
 			PHPDocMethodReturnTypeGoal phpDocGoal = new PHPDocMethodReturnTypeGoal(context, types, method, argNames,
@@ -379,9 +398,11 @@ public class CodeAssistUtils {
 		Set<IType> result = new LinkedHashSet<>();
 		IType[] returnTypes = null;
 		if (arrayReference) {
-			returnTypes = getFunctionArrayReturnType(types, functionName, USE_PHPDOC, sourceModule, offset, argNames);
+			returnTypes = getFunctionArrayReturnType(types, functionName, USE_FACTORYMETHOD | USE_PHPDOC, sourceModule,
+					offset, argNames);
 		} else {
-			returnTypes = getFunctionReturnType(types, functionName, USE_PHPDOC, sourceModule, offset, argNames);
+			returnTypes = getFunctionReturnType(types, functionName, USE_FACTORYMETHOD | USE_PHPDOC, sourceModule,
+					offset, argNames);
 		}
 		if (returnTypes != null) {
 			result.addAll(Arrays.asList(returnTypes));
@@ -445,8 +466,8 @@ public class CodeAssistUtils {
 	// private static IType[] getFunctionArrayReturnType(IType[] types, String
 	// method, ISourceModule sourceModule,
 	// int offset) {
-	// return getFunctionArrayReturnType(types, method, USE_PHPDOC,
-	// sourceModule, offset);
+	// return getFunctionArrayReturnType(types, method, USE_FACTORYMETHOD |
+	// USE_PHPDOC, sourceModule, offset);
 	// }
 
 	// /**
@@ -488,6 +509,43 @@ public class CodeAssistUtils {
 		}
 
 		IEvaluatedType evaluatedType;
+		boolean useFactoryMethod = (mask & USE_FACTORYMETHOD) != 0;
+		if (useFactoryMethod) {
+			FactoryMethodMethodReturnTypeGoal factoryMethodGoal = new FactoryMethodMethodReturnTypeGoal(context, types,
+					method, argNames, offset);
+			evaluatedType = typeInferencer.evaluateTypeFactoryMethod(factoryMethodGoal);
+			List<IEvaluatedType> possibleTypes = null;
+			if (!PHPTypeInferenceUtils.isSimple(evaluatedType)) {
+				if (evaluatedType instanceof MultiTypeType) {
+					possibleTypes = ((MultiTypeType) evaluatedType).getTypes();
+				} else if (evaluatedType instanceof AmbiguousType) {
+					possibleTypes = new ArrayList<>();
+					for (IEvaluatedType pType : ((AmbiguousType) evaluatedType).getPossibleTypes()) {
+						if (pType instanceof MultiTypeType) {
+							possibleTypes.addAll(((MultiTypeType) pType).getTypes());
+						}
+					}
+				}
+				if (possibleTypes != null && possibleTypes.size() > 0) {
+					List<IType> tmpList = new LinkedList<>();
+					for (IEvaluatedType possibleType : possibleTypes) {
+						IType[] tmpArray = PHPTypeInferenceUtils.getModelElements(possibleType,
+								(ISourceModuleContext) context, offset, (IModelAccessCache) null);
+						if (ArrayUtils.isNotEmpty(tmpArray)) {
+							tmpList.addAll(Arrays.asList(tmpArray));
+						}
+					}
+					// the elements are filtered already
+					return tmpList.toArray(new IType[tmpList.size()]);
+				}
+			}
+
+			// modelElements = PHPTypeInferenceUtils.getModelElements(
+			// evaluatedType, (ISourceModuleContext) context, offset);
+			// if (modelElements != null) {
+			// return modelElements;
+			// }
+		}
 		boolean usePhpDoc = (mask & USE_PHPDOC) != 0;
 		if (usePhpDoc) {
 			PHPDocMethodReturnTypeGoal phpDocGoal = new PHPDocMethodReturnTypeGoal(context, types, method, argNames,
@@ -700,14 +758,14 @@ public class CodeAssistUtils {
 						statementText.subSequence(functionNameEnd, propertyEndPosition - 1), sourceModule, offset);
 				if (arrayReference) {
 
-					IType[] types = getFunctionArrayReturnType(null, functionName, USE_PHPDOC, sourceModule, offset,
-							argNames);
+					IType[] types = getFunctionArrayReturnType(null, functionName, USE_FACTORYMETHOD | USE_PHPDOC,
+							sourceModule, offset, argNames);
 					if (types != null) {
 						returnTypes.addAll(Arrays.asList(types));
 					}
 				} else {
-					IType[] types = getFunctionReturnType(null, functionName, USE_PHPDOC, sourceModule, offset,
-							argNames);
+					IType[] types = getFunctionReturnType(null, functionName, USE_FACTORYMETHOD | USE_PHPDOC,
+							sourceModule, offset, argNames);
 					if (ArrayUtils.isNotEmpty(types)) {
 						returnTypes.addAll(Arrays.asList(types));
 					} else {
@@ -720,7 +778,8 @@ public class CodeAssistUtils {
 							if (name.length() > 0 && name.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
 								name = NamespaceReference.NAMESPACE_SEPARATOR + name;
 							}
-							types = getFunctionReturnType(null, name, USE_PHPDOC, sourceModule, offset, argNames);
+							types = getFunctionReturnType(null, name, USE_FACTORYMETHOD | USE_PHPDOC, sourceModule,
+									offset, argNames);
 							if (types != null) {
 								returnTypes.addAll(Arrays.asList(types));
 							}

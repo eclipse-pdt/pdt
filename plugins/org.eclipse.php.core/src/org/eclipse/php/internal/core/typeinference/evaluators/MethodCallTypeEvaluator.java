@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015 IBM Corporation and others.
+ * Copyright (c) 2009, 2015, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Michele Locati
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
@@ -40,6 +41,7 @@ import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.goals.FactoryMethodMethodReturnTypeGoal;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
 
@@ -48,8 +50,9 @@ public class MethodCallTypeEvaluator extends GoalEvaluator {
 	private final static int STATE_INIT = 0;
 	private final static int STATE_WAITING_RECEIVER = 1;
 	private final static int STATE_GOT_RECEIVER = 2;
-	private final static int STATE_WAITING_METHOD_PHPDOC = 3;
-	private final static int STATE_WAITING_METHOD = 4;
+	private final static int STATE_WAITING_FACTORYMETHOD = 3;
+	private final static int STATE_WAITING_METHOD_PHPDOC = 4;
+	private final static int STATE_WAITING_METHOD = 5;
 
 	private int state = STATE_INIT;
 	private IEvaluatedType receiverType;
@@ -87,16 +90,34 @@ public class MethodCallTypeEvaluator extends GoalEvaluator {
 			state = STATE_GOT_RECEIVER;
 		}
 
-		// we've evaluated receiver, lets evaluate the method return type now
-		// (using PHP Doc first):
+		// Check the result of factory method/PHPDoc logic
+		if ((state == STATE_WAITING_FACTORYMETHOD || state == STATE_WAITING_METHOD_PHPDOC)
+				&& goalState != GoalState.PRUNED && previousResult != null && previousResult != UnknownType.INSTANCE) {
+			result = previousResult;
+			previousResult = null;
+			// BUGS 404031 & 525480, stop when it's not a "generic" simple element
+			if (!PHPTypeInferenceUtils.isGenericSimple(result)) {
+				return null;
+			}
+		}
+
+		// First logic: check factory methods
 		if (state == STATE_GOT_RECEIVER) {
+			state = STATE_WAITING_FACTORYMETHOD;
+			IContext context = typedGoal.getContext();
+			return new FactoryMethodMethodReturnTypeGoal(context, receiverType, expression.getName(),
+					getFunctionCallArgs(context, expression), expression.sourceStart());
+		}
+
+		// Second logic: check PHPDoc
+		if (state == STATE_WAITING_FACTORYMETHOD) {
 			state = STATE_WAITING_METHOD_PHPDOC;
 			IContext context = typedGoal.getContext();
 			return new PHPDocMethodReturnTypeGoal(context, receiverType, expression.getName(),
 					getFunctionCallArgs(context, expression), expression.sourceStart());
 		}
 
-		// PHPDoc logic is done, start evaluating 'return' statements here:
+		// Third method: start evaluating 'return' statements here:
 		if (state == STATE_WAITING_METHOD_PHPDOC) {
 			if (goalState != GoalState.PRUNED && previousResult != null && previousResult != UnknownType.INSTANCE) {
 				result = previousResult;
