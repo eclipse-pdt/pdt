@@ -173,6 +173,11 @@
 
 	<repositories>
 		<repository>
+			<id>license-feature</id>
+			<url>http://download.eclipse.org/cbi/updates/license/</url>
+			<layout>p2</layout>
+		</repository>
+		<!--repository>
 			<id>dltk-tests</id>
 			<layout>p2</layout>
 			<url>http://download.eclipse.org/technology/dltk/updates-dev/latest-nightly</url>
@@ -183,15 +188,10 @@
 			<url>http://download.eclipse.org/eclipse/updates/4.2/R-4.2-201206081400</url>
 		</repository>
 		<repository>
-			<id>license-feature</id>
-			<url>http://download.eclipse.org/cbi/updates/license/</url>
-			<layout>p2</layout>
-		</repository>
-		<repository>
 			<id>eclipse</id>
 			<layout>p2</layout>
 			<url>http://download.eclipse.org/releases/${eclipse.name}</url>
-		</repository>
+		</repository-->
 	</repositories>
 
 	<pluginRepositories>
@@ -233,6 +233,9 @@
 			<properties>
 				<eclipse.name>photon</eclipse.name>
 			</properties>
+			<modules>
+				<module>dev/org.eclipse.php.target.next</module>
+			</modules>
 			<build>
 				<plugins>
 					<plugin>
@@ -240,6 +243,13 @@
 						<artifactId>target-platform-configuration</artifactId>
 						<version>${tycho-version}</version>
 						<configuration>
+							<target>
+								<artifact>
+									<groupId>org.eclipse.php</groupId>
+									<artifactId>org.eclipse.php.target.next</artifactId>
+									<version>${project.version}</version>
+								</artifact>
+							</target>
 							<dependency-resolution>
 								<extraRequirements>
 									<requirement>
@@ -266,8 +276,27 @@
 				<eclipse.name>oxygen</eclipse.name>
 			</properties>
 			<modules>
+				<module>dev/org.eclipse.php.target.current</module>
 				<module>dev/org.eclipse.php-repository</module>
 			</modules>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.tycho</groupId>
+						<artifactId>target-platform-configuration</artifactId>
+						<version>${tycho-version}</version>
+						<configuration>
+							<target>
+								<artifact>
+									<groupId>org.eclipse.php</groupId>
+									<artifactId>org.eclipse.php.target.current</artifactId>
+									<version>${project.version}</version>
+								</artifact>
+							</target>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 	</profiles>
 
