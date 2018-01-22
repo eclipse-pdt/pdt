@@ -24,7 +24,7 @@
 				<version>${tycho-version}</version>
 				<configuration>
 					<testClass>org.eclipse.php.core.tests.AllTests</testClass>
-					<argLine>-Dh2.syncMethod=force ${tycho.testArgLine}</argLine>
+					<argLine>${tycho.testArgLine}</argLine>
 					<dependencies>
 						<dependency>
 							<type>p2-installable-unit</type>

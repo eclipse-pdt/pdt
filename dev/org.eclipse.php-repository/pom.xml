@@ -68,7 +68,7 @@
 											<layout>p2</layout>
 										</repository>
 										<repository>
-											<url>http://download.eclipse.org/releases/mars</url>
+											<url>http://download.eclipse.org/releases/${eclipse.name}</url>
 											<layout>p2</layout>
 										</repository>
 									</repositories>
