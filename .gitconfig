@@ -1,0 +1,2 @@
+[format]
+  pretty = format:%h %Cblue%ad%Creset %ae %Cgreen%s%Creset
