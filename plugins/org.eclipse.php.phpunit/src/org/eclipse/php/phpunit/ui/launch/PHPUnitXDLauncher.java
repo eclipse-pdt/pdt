@@ -198,7 +198,7 @@ public class PHPUnitXDLauncher extends PHPUnitBasicLauncher {
 			envVarString = PHPLaunchUtilities.getEnvironment(configuration, new String[] { getLibraryPath(phpExe) });
 		}
 
-		IProgressMonitor subMonitor = new SubProgressMonitor(monitor, 30);
+		IProgressMonitor subMonitor = SubMonitor.convert(monitor, 30);
 		subMonitor.beginTask(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_3, 10);
 
 		// Detect PHP SAPI type and thus where we need arguments

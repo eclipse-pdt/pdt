@@ -146,9 +146,9 @@ public class PHPUnitBasicLauncher {
 		}
 		programName = programName.toLowerCase();
 		processAttributes.put(IProcess.ATTR_PROCESS_TYPE, programName);
-		IProgressMonitor subMonitor = new SubProgressMonitor(monitor, 10);
+		IProgressMonitor subMonitor = SubMonitor.convert(monitor, 10);
 		if (p != null) {
-			subMonitor = new SubProgressMonitor(monitor, 80);
+			subMonitor = SubMonitor.convert(monitor, 80);
 			process = DebugPlugin.newProcess(launch, p, phpExe.toOSString(), processAttributes);
 			if (process == null) {
 				p.destroy();
@@ -178,7 +178,7 @@ public class PHPUnitBasicLauncher {
 				}
 			}
 			// Refresh resources
-			subMonitor = new SubProgressMonitor(monitor, 10);
+			subMonitor = SubMonitor.convert(monitor, 10);
 			RefreshTab.refreshResources(configuration, subMonitor);
 		}
 	}

@@ -185,6 +185,8 @@ public class PHPUnitView extends ViewPart {
 
 	private IProject project;
 
+	private DiffTrace fDiffTrace;
+
 	public PHPUnitView() {
 		super();
 		if (instance == null) {
@@ -423,19 +425,18 @@ public class PHPUnitView extends ViewPart {
 		return traceTab;
 	}
 
-	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=517513
-	// CTabItem createDiffTab(final CTabFolder parent) {
-	// final CTabItem diffTab = new CTabItem(parent, SWT.NONE);
-	// diffTab.setText(PHPUnitMessages.PHPUnitView_Tab_Diff);
-	// diffTab.setImage(fDiffViewIcon);
-	// final ViewForm diffForm = new ViewForm(parent, SWT.NONE);
-	// final ToolBar failureToolBar = new ToolBar(diffForm, SWT.FLAT | SWT.WRAP);
-	// diffForm.setTopCenter(failureToolBar);
-	// fDiffTrace = new DiffTrace(diffForm, this);
-	// diffForm.setContent(fDiffTrace.getComposite());
-	// diffTab.setControl(diffForm);
-	// return diffTab;
-	// }
+	CTabItem createDiffTab(final CTabFolder parent) {
+		final CTabItem diffTab = new CTabItem(parent, SWT.NONE);
+		diffTab.setText(PHPUnitMessages.PHPUnitView_Tab_Diff);
+		diffTab.setImage(fDiffViewIcon);
+		final ViewForm diffForm = new ViewForm(parent, SWT.NONE);
+		final ToolBar failureToolBar = new ToolBar(diffForm, SWT.FLAT | SWT.WRAP);
+		diffForm.setTopCenter(failureToolBar);
+		fDiffTrace = new DiffTrace(diffForm, this);
+		diffForm.setContent(fDiffTrace.getComposite());
+		diffTab.setControl(diffForm);
+		return diffTab;
+	}
 
 	void setShowFailuresOnly(final boolean failuresOnly) {
 		setFilterAndLayout(failuresOnly);
@@ -445,8 +446,8 @@ public class PHPUnitView extends ViewPart {
 		bottomTabFolder = SWTUtil.createTabFolder(parent);
 		parent.setContent(bottomTabFolder);
 		final CTabItem traceTab = createTraceTab(bottomTabFolder);
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=517513
-		// createDiffTab(bottomTabFolder);
+
+		createDiffTab(bottomTabFolder);
 		setCodeCoverageTabVisible(codeCoverageTabVisibile);
 		bottomTabFolder.setSelection(traceTab);
 	}
@@ -650,8 +651,7 @@ public class PHPUnitView extends ViewPart {
 	private void showFailure(final PHPUnitElement failure) {
 		postSyncRunnable(() -> {
 			if (!isDisposed()) {
-				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=517513
-				// fDiffTrace.showFailure(failure);
+				fDiffTrace.showFailure(failure);
 				fFailureTrace.showFailure(failure);
 			}
 		});
