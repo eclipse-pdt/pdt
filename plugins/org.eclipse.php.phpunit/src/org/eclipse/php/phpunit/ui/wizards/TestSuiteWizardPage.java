@@ -21,7 +21,7 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.search.DLTKSearchTypeNameMatch;
 import org.eclipse.dltk.ui.DLTKPluginImages;
@@ -178,8 +178,8 @@ public class TestSuiteWizardPage extends PHPUnitWizardPage {
 	}
 
 	/**
-	 * This method finds all types that extend basic PHPUnit suite class,
-	 * including abstract classes.
+	 * This method finds all types that extend basic PHPUnit suite class, including
+	 * abstract classes.
 	 * 
 	 * @param scriptProject
 	 */
@@ -195,7 +195,7 @@ public class TestSuiteWizardPage extends PHPUnitWizardPage {
 				container.run(true, true, pm -> {
 					pm.beginTask(PHPUnitMessages.PHPUnitSearchEngine_Searching, IProgressMonitor.UNKNOWN);
 					List<IType> elements = searchEngine.findPHPUnitClassesByTestSuite(scriptProject, true, false,
-							new SubProgressMonitor(pm, IProgressMonitor.UNKNOWN));
+							SubMonitor.convert(pm, IProgressMonitor.UNKNOWN));
 					if (pm.isCanceled()) {
 						return;
 					}
@@ -212,8 +212,8 @@ public class TestSuiteWizardPage extends PHPUnitWizardPage {
 	}
 
 	/**
-	 * This method returns all non types that extend from PHPUnit test case or
-	 * test suite, that may be used to build another test suite
+	 * This method returns all non types that extend from PHPUnit test case or test
+	 * suite, that may be used to build another test suite
 	 * 
 	 * @param scriptProject
 	 */
@@ -228,7 +228,7 @@ public class TestSuiteWizardPage extends PHPUnitWizardPage {
 				getContainer().run(true, true, pm -> {
 					pm.beginTask(PHPUnitMessages.PHPUnitSearchEngine_Searching, IProgressMonitor.UNKNOWN);
 					List<IType> elements = searchEngine.findAllTestCasesAndSuites(scriptProject, false,
-							new SubProgressMonitor(pm, IProgressMonitor.UNKNOWN));
+							SubMonitor.convert(pm));
 					if (pm.isCanceled()) {
 						return;
 					}
