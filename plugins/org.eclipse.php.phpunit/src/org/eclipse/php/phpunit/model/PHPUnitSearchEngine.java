@@ -40,10 +40,11 @@ public class PHPUnitSearchEngine {
 	public static final String CLASS_CASE = "PHPUnit_Framework_TestCase"; //$NON-NLS-1$
 	public static final String CLASS_SUITE = "PHPUnit_Framework_TestSuite"; //$NON-NLS-1$
 	public static final String PHPUNIT_BASE = "PHPUnit_Framework_Test"; //$NON-NLS-1$
+
+	public static final String CLASS_CASE5 = "PHPUnit\\Framework\\TestCase";//$NON-NLS-1$
+	public static final String CLASS_SUITE5 = "PHPUnit\\Framework\\TestSuite"; //$NON-NLS-1$
+	public static final String PHPUNIT_BASE5 = "PHPUnit\\Framework\\Test"; //$NON-NLS-1$
 	public static final String FUNCTION_SUITE = "suite"; //$NON-NLS-1$
-	// public static final String INTERFACE_TEST = "PHPUnit_Framework_Test";
-	// //$NON-NLS-1$
-	// public static final String RETURN_UNKNOWN = "unknown"; //$NON-NLS-1$
 
 	private Map<IType, Set<IType>> typeHierarchyCache = new HashMap<>();
 	private IScriptProject project;
@@ -113,8 +114,13 @@ public class PHPUnitSearchEngine {
 				try {
 					subClasses = typeHierarchyCache.get(superClass);
 					if (subClasses == null) {
-
-						IType baseClass = getByName(PHPUNIT_BASE);
+						IType baseClass = getByName(PHPUNIT_BASE5);
+						if (baseClass == null) {
+							baseClass = getByName(PHPUNIT_BASE5);
+						}
+						if (baseClass == null) {
+							return Collections.emptyList();
+						}
 						ITypeHierarchy hierarchy = baseClass.newTypeHierarchy(scriptProject, monitor);
 
 						if (monitor != null && monitor.isCanceled()) {
@@ -252,7 +258,7 @@ public class PHPUnitSearchEngine {
 		}
 		if ((flags & FIND_ELEMENT_PHPUNIT_CASE) > 0) {
 			List<IType> findPHPUnitClassesBySupertype1 = findPHPUnitClassesBySupertype(parent, getTestCase(), false,
-					isFirts, new SubProgressMonitor(pm, IProgressMonitor.UNKNOWN));
+					isFirts, SubMonitor.convert(pm, IProgressMonitor.UNKNOWN));
 			if (findPHPUnitClassesBySupertype1 != null) {
 				result.addAll(findPHPUnitClassesBySupertype1);
 			}
@@ -260,7 +266,7 @@ public class PHPUnitSearchEngine {
 
 		if ((flags & FIND_ELEMENT_PHPUNIT_SUITE) > 0) {
 			List<IType> findPHPUnitClassesBySupertype2 = findPHPUnitClassesBySupertype(parent, getTestSuite(), false,
-					isFirts, new SubProgressMonitor(pm, IProgressMonitor.UNKNOWN));
+					isFirts, SubMonitor.convert(pm, IProgressMonitor.UNKNOWN));
 			if (findPHPUnitClassesBySupertype2 != null) {
 				result.addAll(findPHPUnitClassesBySupertype2);
 			}
@@ -287,7 +293,7 @@ public class PHPUnitSearchEngine {
 		}
 
 		final int nItems = items.length;
-		final IProgressMonitor ipm = new SubProgressMonitor(pm, 1);
+		final IProgressMonitor ipm = SubMonitor.convert(pm, 1);
 		boolean r = false;
 		for (int i = 0; i < nItems; ++i) {
 			r |= collectElementsRecursive(items[i], ipm, result, flags);
@@ -360,10 +366,18 @@ public class PHPUnitSearchEngine {
 	}
 
 	private IType getTestCase() {
+		IType type = getByName(CLASS_CASE5);
+		if (type != null) {
+			return type;
+		}
 		return getByName(CLASS_CASE);
 	}
 
 	private IType getTestSuite() {
+		IType type = getByName(CLASS_SUITE5);
+		if (type != null) {
+			return type;
+		}
 		return getByName(CLASS_SUITE);
 	}
 

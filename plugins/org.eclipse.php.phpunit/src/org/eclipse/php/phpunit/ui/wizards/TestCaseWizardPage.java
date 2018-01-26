@@ -21,7 +21,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
@@ -198,7 +198,7 @@ public class TestCaseWizardPage extends PHPUnitWizardPage {
 					getWizard().getContainer().run(true, true, pm -> {
 						pm.beginTask(PHPUnitMessages.PHPUnitSearchEngine_Searching, IProgressMonitor.UNKNOWN);
 						List<IType> elements = searchEngine.findPHPUnitClassesByTestCase(scriptProject, true, false,
-								new SubProgressMonitor(pm, IProgressMonitor.UNKNOWN));
+								SubMonitor.convert(pm, IProgressMonitor.UNKNOWN));
 						elementsList.addAll(elements);
 						pm.done();
 					});
