@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -35,12 +35,12 @@ public class PHPUnitTestElementFinder {
 			pm.beginTask(PHPUnitMessages.PHPUnitSearchEngine_Searching, IProgressMonitor.UNKNOWN);
 			if (PHP_UNIT_CASE_CACHED == null) {
 				List<IType> cases = searchEngine.findTestCaseBaseClasses(phpProject, false,
-						new SubProgressMonitor(pm, IProgressMonitor.UNKNOWN));
+						SubMonitor.convert(pm, IProgressMonitor.UNKNOWN));
 				updateCasesCache(cases);
 			}
 			if (PHP_UNIT_SUITE_CACHED == null) {
 				List<IType> suites = searchEngine.findTestSuiteBaseClasses(phpProject, false,
-						new SubProgressMonitor(pm, IProgressMonitor.UNKNOWN));
+						SubMonitor.convert(pm, IProgressMonitor.UNKNOWN));
 				updateSuitesCache(suites);
 			}
 			pm.done();

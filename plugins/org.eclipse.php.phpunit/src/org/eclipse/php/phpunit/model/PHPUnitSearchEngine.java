@@ -252,7 +252,7 @@ public class PHPUnitSearchEngine {
 		}
 		if ((flags & FIND_ELEMENT_PHPUNIT_CASE) > 0) {
 			List<IType> findPHPUnitClassesBySupertype1 = findPHPUnitClassesBySupertype(parent, getTestCase(), false,
-					isFirts, new SubProgressMonitor(pm, IProgressMonitor.UNKNOWN));
+					isFirts, SubMonitor.convert(pm, IProgressMonitor.UNKNOWN));
 			if (findPHPUnitClassesBySupertype1 != null) {
 				result.addAll(findPHPUnitClassesBySupertype1);
 			}
@@ -260,7 +260,7 @@ public class PHPUnitSearchEngine {
 
 		if ((flags & FIND_ELEMENT_PHPUNIT_SUITE) > 0) {
 			List<IType> findPHPUnitClassesBySupertype2 = findPHPUnitClassesBySupertype(parent, getTestSuite(), false,
-					isFirts, new SubProgressMonitor(pm, IProgressMonitor.UNKNOWN));
+					isFirts, SubMonitor.convert(pm, IProgressMonitor.UNKNOWN));
 			if (findPHPUnitClassesBySupertype2 != null) {
 				result.addAll(findPHPUnitClassesBySupertype2);
 			}
@@ -287,7 +287,7 @@ public class PHPUnitSearchEngine {
 		}
 
 		final int nItems = items.length;
-		final IProgressMonitor ipm = new SubProgressMonitor(pm, 1);
+		final IProgressMonitor ipm = SubMonitor.convert(pm, 1);
 		boolean r = false;
 		for (int i = 0; i < nItems; ++i) {
 			r |= collectElementsRecursive(items[i], ipm, result, flags);
