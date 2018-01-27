@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015, 2017 IBM Corporation and others.
+ * Copyright (c) 2009, 2015, 2017, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Dawid Pakuła
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.parser;
 
@@ -35,6 +36,7 @@ import org.eclipse.dltk.ti.IContext;
 import org.eclipse.php.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.Constants;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.index.PHPIndexingVisitor;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
 import org.eclipse.php.internal.core.typeinference.context.FileContext;
@@ -112,8 +114,8 @@ public class ASTUtils {
 	}
 
 	/**
-	 * Strips single or double quotes from the start and from the end of the
-	 * given string
+	 * Strips single or double quotes from the start and from the end of the given
+	 * string
 	 * 
 	 * @param name
 	 *            String
@@ -366,8 +368,7 @@ public class ASTUtils {
 		}
 		if (visitor.getContext() == null) {
 			/*
-			 * offset can be bigger than unit.end when sourceunit have syntax
-			 * error on end
+			 * offset can be bigger than unit.end when sourceunit have syntax error on end
 			 */
 			Logger.log(Logger.WARNING_DEBUG, "Context is null"); //$NON-NLS-1$
 			return new FileContext(sourceModule, unit, offset);
@@ -443,13 +444,13 @@ public class ASTUtils {
 	}
 
 	/**
-	 * Creates declaration of constant for the given call expression in case if
-	 * it represents define() call expression.
+	 * Creates declaration of constant for the given call expression in case if it
+	 * represents define() call expression.
 	 * 
 	 * @param callExpression
 	 *            Call expression
-	 * @return constant declaration if the given call expression represents
-	 *         define() expression, otherwise <code>null</code>
+	 * @return constant declaration if the given call expression represents define()
+	 *         expression, otherwise <code>null</code>
 	 */
 	public static FieldDeclaration getConstantDeclaration(CallExpression callExpression) {
 		String name = callExpression.getName();
@@ -477,9 +478,8 @@ public class ASTUtils {
 	 * @param aliasName
 	 *            The alias name.
 	 * @param offset
-	 *            Current position in the file (this is needed since we don't
-	 *            want to take USE statements placed below current position into
-	 *            account)
+	 *            Current position in the file (this is needed since we don't want
+	 *            to take USE statements placed below current position into account)
 	 * @return USE statement part node, or <code>null</code> in case relevant
 	 *         statement couldn't be found
 	 */
@@ -504,9 +504,8 @@ public class ASTUtils {
 	 * @param namespace
 	 *            Namespace name
 	 * @param offset
-	 *            Current position in the file (this is needed since we don't
-	 *            want to take USE statements placed below current position into
-	 *            account)
+	 *            Current position in the file (this is needed since we don't want
+	 *            to take USE statements placed below current position into account)
 	 * @return USE statement part node, or <code>null</code> in case relevant
 	 *         statement couldn't be found
 	 */
@@ -527,18 +526,16 @@ public class ASTUtils {
 	/**
 	 * Used to create a fake FullyQualifiedReference object that combines use
 	 * statement namespace and use part namespace of a group use statement. For
-	 * example, this method will return an object for type
-	 * <code>"A\B\C\D\E"</code> from statement
-	 * <code>"use A\B\ { \C\D\E };"</code>. <b>Note that this type will have its
-	 * source start and end range limited to the source start and end range of
-	 * <code>"\C\D\E"</code>. Also note that UsePart aliases are not handled by
-	 * this method.</b>
+	 * example, this method will return an object for type <code>"A\B\C\D\E"</code>
+	 * from statement <code>"use A\B\ { \C\D\E };"</code>. <b>Note that this type
+	 * will have its source start and end range limited to the source start and end
+	 * range of <code>"\C\D\E"</code>. Also note that UsePart aliases are not
+	 * handled by this method.</b>
 	 * 
 	 * @param usePart
-	 * @return fake type, null if usePart is not part of a group use statement
-	 *         (i.e. when usePart.getGroupNamespace() is null)
-	 * @see PHPModelUtils.concatFullyQualifiedNames(currentUseStatement,
-	 *      usePart)
+	 * @return fake type, null if usePart is not part of a group use statement (i.e.
+	 *         when usePart.getGroupNamespace() is null)
+	 * @see PHPModelUtils.concatFullyQualifiedNames(currentUseStatement, usePart)
 	 */
 	@Nullable
 	public static FullyQualifiedReference createFakeGroupUseType(UsePart usePart) {
@@ -575,9 +572,8 @@ public class ASTUtils {
 	 * @param moduleDeclaration
 	 *            The AST root node
 	 * @param offset
-	 *            Current position in the file (this is needed since we don't
-	 *            want to take USE statements placed below current position into
-	 *            account)
+	 *            Current position in the file (this is needed since we don't want
+	 *            to take USE statements placed below current position into account)
 	 * @return USE statements list
 	 */
 	public static UseStatement[] getUseStatements(ModuleDeclaration moduleDeclaration, final int offset) {
@@ -592,4 +588,29 @@ public class ASTUtils {
 
 		return visitor.getResult();
 	}
+
+	public static boolean isConstructor(String name, ASTNode parentDeclaration, NamespaceDeclaration namespace) {
+		if (!(parentDeclaration instanceof ClassDeclaration)) {
+			return false;
+		}
+		if (parentDeclaration instanceof TraitDeclaration) {
+			return false;
+		}
+
+		if (name.equalsIgnoreCase(PHPIndexingVisitor.CONSTRUCTOR_NAME)) {
+			return true;
+		}
+		ClassDeclaration clazz = (ClassDeclaration) parentDeclaration;
+		if ((namespace == null || namespace.isGlobal()) && name.equalsIgnoreCase(clazz.getName())) {
+			for (MethodDeclaration m : clazz.getMethods()) {
+				if (m.getName().equalsIgnoreCase(PHPIndexingVisitor.CONSTRUCTOR_NAME)) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		return false;
+	}
+
 }

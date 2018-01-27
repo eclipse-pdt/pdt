@@ -63,21 +63,21 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	private static final String GLOBAL_NAMESPACE_CONTAINER_NAME = "global namespace"; //$NON-NLS-1$
 	private static final String ANONYMOUS_CLASS_TEMPLATE = "new %s() {...}"; //$NON-NLS-1$
 	/**
-	 * This should replace the need for fInClass, fInMethod and fCurrentMethod
-	 * since in php the type declarations can be nested.
+	 * This should replace the need for fInClass, fInMethod and fCurrentMethod since
+	 * in php the type declarations can be nested.
 	 */
 	protected Stack<ASTNode> declarations = new Stack<>();
 	private PHPSourceElementRequestorExtension[] extensions;
 
 	/**
-	 * Deferred elements that where declared in method/function but should
-	 * belong to the global scope.
+	 * Deferred elements that where declared in method/function but should belong to
+	 * the global scope.
 	 */
 	protected List<ASTNode> deferredDeclarations = new LinkedList<>();
 
 	/**
-	 * Deferred elements that where declared in method/function but should
-	 * belong to current namespace scope
+	 * Deferred elements that where declared in method/function but should belong to
+	 * current namespace scope
 	 */
 	protected List<ASTNode> deferredNamespacedDeclarations = new LinkedList<>();
 
@@ -488,9 +488,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 		declarations.push(methodDeclaration);
 
-		mi.isConstructor = mi.name.equalsIgnoreCase(PHPIndexingVisitor.CONSTRUCTOR_NAME)
-				|| (parentDeclaration instanceof ClassDeclaration
-						&& mi.name.equalsIgnoreCase(((ClassDeclaration) parentDeclaration).getName()));
+		mi.isConstructor = ASTUtils.isConstructor(mi.name, parentDeclaration, fLastNamespace);
 
 		if (fCurrentClass == null || fCurrentClass == fLastNamespace) {
 			mi.modifiers |= Modifiers.AccGlobal;

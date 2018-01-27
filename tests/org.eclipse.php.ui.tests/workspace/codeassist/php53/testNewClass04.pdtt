@@ -1,0 +1,14 @@
+--TEST--
+Test CA aliased constructor 
+--FILE--
+<?php
+namespace Y {
+	class Foo { public function Foo($param1) {} }
+	new Fo|
+}
+--EXPECT--
+<?php
+namespace Y {
+	class Foo { public function Foo($param1) {} }
+	new Foo()
+}

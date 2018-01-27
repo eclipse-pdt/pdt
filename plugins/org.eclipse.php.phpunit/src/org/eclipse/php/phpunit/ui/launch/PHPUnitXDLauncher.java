@@ -204,12 +204,10 @@ public class PHPUnitXDLauncher extends PHPUnitBasicLauncher {
 		// Detect PHP SAPI type and thus where we need arguments
 		File phpExeFile = new File(phpExeString);
 		String sapiType = null;
-		String phpV = null;
 		PHPexeItem[] items = PHPexes.getInstance().getAllItems();
 		for (PHPexeItem item : items) {
 			if (item.getExecutable().equals(phpExeFile)) {
 				sapiType = item.getSapiType();
-				phpV = item.getVersion();
 				break;
 			}
 		}

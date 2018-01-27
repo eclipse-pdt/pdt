@@ -1,0 +1,11 @@
+--TEST--
+Test CA aliased constructor 
+--FILE--
+<?php
+class Foo { public function Foo($param1) {} }
+new Fo|
+
+--EXPECT--
+<?php
+class Foo { public function Foo($param1) {} }
+new Foo($param1)

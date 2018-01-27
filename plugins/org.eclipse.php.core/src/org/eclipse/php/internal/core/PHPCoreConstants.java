@@ -18,7 +18,7 @@ public interface PHPCoreConstants {
 	/**
 	 * Increase this value to force rebuilding PHP projects during startup
 	 */
-	public static final String STRUCTURE_VERSION = "13"; //$NON-NLS-1$
+	public static final String STRUCTURE_VERSION = "14"; //$NON-NLS-1$
 	public static final String STRUCTURE_VERSION_PREFERENCE = "pdt.structure.version"; //$NON-NLS-1$
 
 	public static final String FILE_PARENT = "<f>"; //$NON-NLS-1$
@@ -90,8 +90,7 @@ public interface PHPCoreConstants {
 	public final static String CODEASSIST_ADDIMPORT = "contentAssistAddImport"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls if the PHP code assist gets auto
-	 * activated.
+	 * A named preference that controls if the PHP code assist gets auto activated.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
@@ -99,8 +98,7 @@ public interface PHPCoreConstants {
 	public final static String CODEASSIST_AUTOACTIVATION = "contentAssistAutoactivation"; //$NON-NLS-1$
 
 	/**
-	 * A name preference that holds the auto activation delay time in
-	 * milliseconds.
+	 * A name preference that holds the auto activation delay time in milliseconds.
 	 * <p>
 	 * Value is of type <code>Integer</code>.
 	 * </p>
@@ -108,8 +106,8 @@ public interface PHPCoreConstants {
 	public final static String CODEASSIST_AUTOACTIVATION_DELAY = "contentAssistAutoactivationDelay"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls if the php code assist inserts a
-	 * proposal automatically if only one proposal is available.
+	 * A named preference that controls if the php code assist inserts a proposal
+	 * automatically if only one proposal is available.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
@@ -117,8 +115,8 @@ public interface PHPCoreConstants {
 	public final static String CODEASSIST_AUTOINSERT = "contentAssistAutoinsert"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls whether code assist proposals filtering
-	 * is case sensitive or not.
+	 * A named preference that controls whether code assist proposals filtering is
+	 * case sensitive or not.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
@@ -135,9 +133,9 @@ public interface PHPCoreConstants {
 	public final static String CODEASSIST_FILL_ARGUMENT_NAMES = "contentAssistFillMethodArguments"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls if global prefix ("\") should be
-	 * inserted for global function call inside namespace method is selected
-	 * from as list of code assist proposal.
+	 * A named preference that controls if global prefix ("\") should be inserted
+	 * for global function call inside namespace method is selected from as list of
+	 * code assist proposal.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
@@ -147,9 +145,9 @@ public interface PHPCoreConstants {
 	public final static String CODEASSIST_PREFIX_GLOBAL_FUNCTION_CALL = "contentAssistPrefixGlobalFunctionCall"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls if code assist also contains proposals
-	 * of class/method/field stub which does not exist,and when user choose it,a
-	 * new class/method/field will be inserted
+	 * A named preference that controls if code assist also contains proposals of
+	 * class/method/field stub which does not exist,and when user choose it,a new
+	 * class/method/field will be inserted
 	 * <p>
 	 * Value is of type <code>Boolean</code>. if
 	 * <code>false<code> code assist does not contain stubs. If
@@ -177,8 +175,8 @@ public interface PHPCoreConstants {
 	public final static String CODEASSIST_INSERT_COMPLETION = "contentAssistInsertCompletion"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls whether to show options that are
-	 * restricted by PHP
+	 * A named preference that controls whether to show options that are restricted
+	 * by PHP
 	 * <p>
 	 * Value is of type <code>Boolean</code>. if
 	 * <code>true<code> constant assist will be visible
@@ -188,20 +186,20 @@ public interface PHPCoreConstants {
 	public final static String CODEASSIST_SHOW_STRICT_OPTIONS = "contentAssistShowStrictOptions"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls if code assist insert full qualified
-	 * name for use statement.
+	 * A named preference that controls if code assist insert full qualified name
+	 * for use statement.
 	 * <p>
 	 * Value is of type <code>Boolean</code>. if
 	 * <code>false<code> code assist insert use statement only with the namespace name. If
-	 * <code>true</code> code assist insert use statement with the full
-	 * qualified name.
+	 * <code>true</code> code assist insert use statement with the full qualified
+	 * name.
 	 * </p>
 	 */
 	public final static String CODEASSIST_INSERT_FULL_QUALIFIED_NAME_FOR_NAMESPACE = "contentAssistInsertFullyQualifiedNameForNamespaceCheckBox"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls if code assist also contains proposals
-	 * from other files
+	 * A named preference that controls if code assist also contains proposals from
+	 * other files
 	 * <p>
 	 * Value is of type <code>Boolean</code>. if
 	 * <code>false<code> code assist only contains visible members. If
