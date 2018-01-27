@@ -75,17 +75,6 @@
 				</plugins>
 			</build>
 		</profile>
-		<profile>
-			<id>eclipse-current</id>
-			<activation>
-				<property>
-					<name>!eclipseNext</name>
-				</property>
-			</activation>
-			<modules>
-				<module>org.eclipse.php.ui.importer</module>
-			</modules>
-		</profile>
 	</profiles>
 
 	<modules>
@@ -113,6 +102,7 @@
 		<module>org.eclipse.php.profile.core</module>
 		<module>org.eclipse.php.profile.ui</module>
 		<module>org.eclipse.php.rdt.sync.ui</module>
+		<module>org.eclipse.php.ui.importer</module>
 	</modules>
 	
 </project>
