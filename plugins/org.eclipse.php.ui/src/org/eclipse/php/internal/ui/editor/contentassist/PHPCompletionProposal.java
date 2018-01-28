@@ -18,6 +18,7 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.dltk.ui.text.ScriptTextTools;
+import org.eclipse.dltk.ui.text.completion.IImageFactory;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposal;
 import org.eclipse.jface.internal.text.html.BrowserInformationControl;
 import org.eclipse.jface.text.DefaultInformationControl;
@@ -34,7 +35,6 @@ import org.eclipse.php.internal.core.codeassist.strategies.IncludeStatementStrat
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.text.hover.CompletionHoverControlCreator;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
 public class PHPCompletionProposal extends ScriptCompletionProposal implements IPHPCompletionProposalExtension {
@@ -44,18 +44,13 @@ public class PHPCompletionProposal extends ScriptCompletionProposal implements I
 	 */
 	private IInformationControlCreator fCreator;
 
-	public PHPCompletionProposal(String replacementString, int replacementOffset, int replacementLength, Image image,
-			String displayString, int relevance) {
-		super(replacementString, replacementOffset, replacementLength, image, displayString, relevance);
-	}
-
-	public PHPCompletionProposal(String replacementString, int replacementOffset, int replacementLength, Image image,
-			StyledString displayString, int relevance) {
+	public PHPCompletionProposal(String replacementString, int replacementOffset, int replacementLength,
+			IImageFactory image, StyledString displayString, int relevance) {
 		super(replacementString, replacementOffset, replacementLength, image, displayString, relevance, false);
 	}
 
-	public PHPCompletionProposal(String replacementString, int replacementOffset, int replacementLength, Image image,
-			StyledString displayString, int relevance, boolean indoc) {
+	public PHPCompletionProposal(String replacementString, int replacementOffset, int replacementLength,
+			IImageFactory image, StyledString displayString, int relevance, boolean indoc) {
 		super(replacementString, replacementOffset, replacementLength, image, displayString, relevance, indoc);
 	}
 

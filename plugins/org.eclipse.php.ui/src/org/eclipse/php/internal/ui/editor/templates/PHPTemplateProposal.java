@@ -11,17 +11,17 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.templates;
 
+import org.eclipse.dltk.ui.templates.ScriptTemplateProposal;
+import org.eclipse.dltk.ui.text.completion.IImageFactory;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.contentassist.ICompletionProposalExtension4;
 import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jface.text.templates.TemplateContext;
-import org.eclipse.jface.text.templates.TemplateProposal;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 
-public class PHPTemplateProposal extends TemplateProposal implements ICompletionProposalExtension4 {
+public class PHPTemplateProposal extends ScriptTemplateProposal {
 
-	public PHPTemplateProposal(Template template, TemplateContext context, IRegion region, Image image, int relevance) {
+	public PHPTemplateProposal(Template template, TemplateContext context, IRegion region, IImageFactory image,
+			int relevance) {
 		super(template, context, region, image, relevance);
 	}
 
