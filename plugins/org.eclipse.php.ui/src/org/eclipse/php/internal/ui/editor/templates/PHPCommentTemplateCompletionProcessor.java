@@ -201,7 +201,7 @@ public class PHPCommentTemplateCompletionProcessor extends ScriptTemplateComplet
 	@Override
 	protected ICompletionProposal createProposal(Template template, TemplateContext context, IRegion region,
 			int relevance) {
-		return new PHPTemplateProposal(template, context, region, getImage(template), relevance);
+		return new PHPTemplateProposal(template, context, region, () -> getImage(template), relevance);
 	}
 
 	@Override

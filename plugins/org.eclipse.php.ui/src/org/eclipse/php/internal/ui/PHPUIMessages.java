@@ -107,6 +107,7 @@ public final class PHPUIMessages extends NLS {
 	public static String CodeTemplateBlock_getterstub_label;
 	public static String CodeAssistPreferencePage_insertSignleProposals;
 	public static String CodeAssistPreferencePage_insertCommonPrefix;
+	public static String CodeAssistPreferencePage_async;
 	public static String NewPHPManualSiteDialog_chooseDir;
 	public static String OpenProjectAction_dialog_message;
 	public static String NewPHPManualSiteDialog_chooseCHMFile;

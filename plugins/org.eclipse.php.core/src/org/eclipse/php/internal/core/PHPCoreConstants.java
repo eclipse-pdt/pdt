@@ -213,6 +213,11 @@ public interface PHPCoreConstants {
 	String CODEASSIST_AUTOINSERT_COMMON_PREFIX = "contentAssistAutoInsertCommonPrefix"; //$NON-NLS-1$
 
 	/**
+	 * @since 6.0
+	 */
+	String CODEASSIST_ASYNC = "contentAssistAsync"; //$NON-NLS-1$
+
+	/**
 	 * PHP Task Marker
 	 */
 	String PHP_MARKER_TYPE = "org.eclipse.php.core.phpTaskMarker"; //$NON-NLS-1$

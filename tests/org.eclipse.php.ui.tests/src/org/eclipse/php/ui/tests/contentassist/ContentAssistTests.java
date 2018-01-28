@@ -108,10 +108,15 @@ public class ContentAssistTests {
 		project = TestUtils.createProject("Content Assist_" + this.phpVersion);
 		ResourcesPlugin.getWorkspace().getRoot().getProject("Content Assist_" + this.phpVersion);
 		/*
-		 * Set auto insert to true,if there are only one proposal in the CA,it
-		 * will insert the proposal,so we can test CA without UI interaction
+		 * Set auto insert to true,if there are only one proposal in the CA,it will
+		 * insert the proposal,so we can test CA without UI interaction
 		 */
 		DefaultScope.INSTANCE.getNode(PHPUiPlugin.ID).putBoolean(PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
+
+		/**
+		 * Disable async mode
+		 */
+		DefaultScope.INSTANCE.getNode(PHPUiPlugin.ID).putBoolean(PHPCoreConstants.CODEASSIST_ASYNC, false);
 		TestUtils.setProjectPHPVersion(project, phpVersion);
 
 		IEclipsePreferences node = DefaultScope.INSTANCE.getNode("org.eclipse.php.formatter.core");

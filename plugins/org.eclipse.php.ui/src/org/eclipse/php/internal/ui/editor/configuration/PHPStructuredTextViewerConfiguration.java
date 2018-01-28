@@ -313,7 +313,9 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 			if (fContentAssistant != null) {
 				fContentAssistant.uninstall();
 			}
-			fContentAssistant = new PHPContentAssistant();
+			IPreferencesService preferencesService = Platform.getPreferencesService();
+			fContentAssistant = new PHPContentAssistant(
+					preferencesService.getBoolean(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_ASYNC, false, null));
 
 			// content assistant configurations
 			fContentAssistant.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
@@ -330,7 +332,6 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 				fContentAssistant.setRestoreCompletionProposalSize(section);
 			}
 
-			IPreferencesService preferencesService = Platform.getPreferencesService();
 			fContentAssistant.enableAutoActivation(preferencesService.getBoolean(PHPCorePlugin.ID,
 					PHPCoreConstants.CODEASSIST_AUTOACTIVATION, false, null));
 			fContentAssistant.setAutoActivationDelay(preferencesService.getInt(PHPCorePlugin.ID,
@@ -588,7 +589,8 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	 * requested for the current cursor position.
 	 * 
 	 * @param sourceViewer
-	 *            the source viewer to be configured by this configuration
+	 *                         the source viewer to be configured by this
+	 *                         configuration
 	 * @return an information presenter
 	 * @since 2.1
 	 */
@@ -623,10 +625,11 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	 * information requested for the current cursor position.
 	 * 
 	 * @param sourceViewer
-	 *            the source viewer to be configured by this configuration
+	 *                          the source viewer to be configured by this
+	 *                          configuration
 	 * @param doCodeResolve
-	 *            a boolean which specifies whether code resolve should be used to
-	 *            compute the PHP element
+	 *                          a boolean which specifies whether code resolve
+	 *                          should be used to compute the PHP element
 	 * @return an information presenter
 	 * @since 3.4
 	 */
@@ -668,9 +671,10 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	 * <code>PHPOutlineInformationControl</code> instances.
 	 * 
 	 * @param sourceViewer
-	 *            the source viewer to be configured by this configuration
+	 *                         the source viewer to be configured by this
+	 *                         configuration
 	 * @param commandId
-	 *            the ID of the command that opens this control
+	 *                         the ID of the command that opens this control
 	 * @return an information control creator
 	 * @since 2.1
 	 */
