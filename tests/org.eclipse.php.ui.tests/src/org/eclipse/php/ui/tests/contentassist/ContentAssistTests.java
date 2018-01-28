@@ -27,6 +27,9 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.PreferenceConstants;
+import org.eclipse.jface.text.contentassist.ContentAssistEvent;
+import org.eclipse.jface.text.contentassist.ICompletionListener;
+import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.tests.PDTTUtils;
@@ -43,6 +46,7 @@ import org.eclipse.php.formatter.core.profiles.PHPDefaultFormatterPreferences;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
+import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
 import org.eclipse.php.ui.tests.PHPTestEditor;
 import org.eclipse.php.ui.tests.PHPUiTests;
 import org.eclipse.swt.custom.StyledText;
@@ -108,8 +112,8 @@ public class ContentAssistTests {
 		project = TestUtils.createProject("Content Assist_" + this.phpVersion);
 		ResourcesPlugin.getWorkspace().getRoot().getProject("Content Assist_" + this.phpVersion);
 		/*
-		 * Set auto insert to true,if there are only one proposal in the CA,it
-		 * will insert the proposal,so we can test CA without UI interaction
+		 * Set auto insert to true,if there are only one proposal in the CA,it will
+		 * insert the proposal,so we can test CA without UI interaction
 		 */
 		DefaultScope.INSTANCE.getNode(PHPUiPlugin.ID).putBoolean(PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
 		TestUtils.setProjectPHPVersion(project, phpVersion);
@@ -142,6 +146,7 @@ public class ContentAssistTests {
 		final Exception[] exception = new Exception[1];
 		final String[] result = new String[1];
 		// Wait for UI
+
 		Display.getDefault().syncExec(new Runnable() {
 			@Override
 			public void run() {
@@ -151,7 +156,37 @@ public class ContentAssistTests {
 					fileName = fileName.substring(0, fileName.indexOf('.')) + ".php";
 					createFiles(data, fileName, pdttFile.getOtherFiles());
 					openEditor();
-					result[0] = executeAutoInsert(offset);
+					PHPStructuredTextViewer viewer = (PHPStructuredTextViewer) fEditor.getTextViewer();
+					viewer.getContentAssistFacade().addCompletionListener(new ICompletionListener() {
+
+						@Override
+						public void selectionChanged(ICompletionProposal proposal, boolean smartToggle) {
+						}
+
+						@Override
+						public void assistSessionStarted(ContentAssistEvent event) {
+							System.out.println("DUPA");
+						}
+
+						@SuppressWarnings("restriction")
+						@Override
+						public void assistSessionEnded(ContentAssistEvent event) {
+							result[0] = fEditor.getDocument().get();
+						}
+					});
+
+					executeAutoInsert(offset);
+				} catch (Exception e) {
+					exception[0] = e;
+				}
+			}
+		});
+		Thread.sleep(10000);
+		result[0] = fEditor.getDocument().get();
+		Display.getDefault().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				try {
 					closeEditor();
 					deleteFiles();
 				} catch (Exception e) {
@@ -206,7 +241,7 @@ public class ContentAssistTests {
 		fEditor = null;
 	}
 
-	private String executeAutoInsert(int offset) {
+	private void executeAutoInsert(int offset) {
 		StructuredTextViewer viewer = null;
 		Display display = Display.getDefault();
 		long timeout = System.currentTimeMillis() + 3000;
@@ -221,8 +256,10 @@ public class ContentAssistTests {
 		}
 		StyledText textWidget = viewer.getTextWidget();
 		textWidget.setCaretOffset(offset);
+		textWidget.setSelection(offset);
+		textWidget.toDisplay(textWidget.getLocationAtOffset(offset));
 		viewer.doOperation(ISourceViewer.CONTENTASSIST_PROPOSALS);
-		return fEditor.getDocument().get();
+
 	}
 
 	private void createFiles(String content, String fileName, String[] other) throws Exception {
