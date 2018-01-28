@@ -56,6 +56,7 @@ public class PHPContentAssistant extends StructuredContentAssistant implements I
 	private ITextViewer fViewer;
 
 	public PHPContentAssistant() {
+		super(true);
 		enableColoredLabels(true);
 		enablePrefixCompletion(InstanceScope.INSTANCE.getNode(PHPCorePlugin.ID)
 				.getBoolean(PHPCoreConstants.CODEASSIST_AUTOINSERT_COMMON_PREFIX, true));

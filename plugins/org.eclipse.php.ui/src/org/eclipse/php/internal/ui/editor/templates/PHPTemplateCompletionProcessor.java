@@ -142,7 +142,7 @@ public class PHPTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 			PHPCorePlugin.log(e);
 		}
 
-		ITextSelection selection = (ITextSelection) viewer.getSelectionProvider().getSelection();
+		ITextSelection selection = getTextSelection(viewer);
 
 		ICompletionProposal[] selectionProposal = EMPTY;
 		if (selection.getLength() != 0) {
@@ -409,7 +409,13 @@ public class PHPTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 	@Override
 	protected ICompletionProposal createProposal(Template template, TemplateContext context, IRegion region,
 			int relevance) {
-		return new PHPTemplateProposal(template, context, region, getImage(template), relevance);
+		return new PHPTemplateProposal(template, context, region, null, relevance) {
+			@Override
+			public Image getImage() {
+				return PHPTemplateCompletionProcessor.this.getImage(template);
+			}
+
+		};
 	}
 
 	@Override
