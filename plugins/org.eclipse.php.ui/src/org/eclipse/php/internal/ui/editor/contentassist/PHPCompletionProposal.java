@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.contentassist;
 
+import java.util.function.Supplier;
+
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.dltk.core.IModelElement;
@@ -44,18 +46,13 @@ public class PHPCompletionProposal extends ScriptCompletionProposal implements I
 	 */
 	private IInformationControlCreator fCreator;
 
-	public PHPCompletionProposal(String replacementString, int replacementOffset, int replacementLength, Image image,
-			String displayString, int relevance) {
-		super(replacementString, replacementOffset, replacementLength, image, displayString, relevance);
-	}
-
-	public PHPCompletionProposal(String replacementString, int replacementOffset, int replacementLength, Image image,
-			StyledString displayString, int relevance) {
+	public PHPCompletionProposal(String replacementString, int replacementOffset, int replacementLength,
+			Supplier<Image> image, StyledString displayString, int relevance) {
 		super(replacementString, replacementOffset, replacementLength, image, displayString, relevance, false);
 	}
 
-	public PHPCompletionProposal(String replacementString, int replacementOffset, int replacementLength, Image image,
-			StyledString displayString, int relevance, boolean indoc) {
+	public PHPCompletionProposal(String replacementString, int replacementOffset, int replacementLength,
+			Supplier<Image> image, StyledString displayString, int relevance, boolean indoc) {
 		super(replacementString, replacementOffset, replacementLength, image, displayString, relevance, indoc);
 	}
 

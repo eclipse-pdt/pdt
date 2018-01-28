@@ -13,9 +13,9 @@ package org.eclipse.php.internal.core.preferences;
 
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.core.PHPVersion;
 
 import com.ibm.icu.util.ULocale;
 
@@ -31,7 +31,7 @@ public class CorePreferenceConstants {
 	 * Initializes the given preference store with the default values.
 	 * 
 	 * @param store
-	 *            the preference store to be initialized
+	 *                  the preference store to be initialized
 	 */
 	public static void initializeDefaultValues() {
 		IEclipsePreferences node = DefaultScope.INSTANCE.getNode(PHPCorePlugin.ID);
@@ -63,6 +63,7 @@ public class CorePreferenceConstants {
 		node.putBoolean(PHPCoreConstants.CODEASSIST_INSERT_FULL_QUALIFIED_NAME_FOR_NAMESPACE, true);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_SHOW_STRICT_OPTIONS, false);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION, true);
+		node.putBoolean(PHPCoreConstants.CODEASSIST_ASYNC, false);
 		node.putInt(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, 200);
 	}
 

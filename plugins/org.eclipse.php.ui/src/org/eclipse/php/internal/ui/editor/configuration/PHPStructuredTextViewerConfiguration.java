@@ -267,7 +267,9 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 			if (fContentAssistant != null) {
 				fContentAssistant.uninstall();
 			}
-			fContentAssistant = new PHPContentAssistant();
+			IPreferencesService preferencesService = Platform.getPreferencesService();
+			fContentAssistant = new PHPContentAssistant(
+					preferencesService.getBoolean(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_ASYNC, false, null));
 
 			// content assistant configurations
 			fContentAssistant.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
@@ -284,7 +286,6 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 				fContentAssistant.setRestoreCompletionProposalSize(section);
 			}
 
-			IPreferencesService preferencesService = Platform.getPreferencesService();
 			fContentAssistant.enableAutoActivation(preferencesService.getBoolean(PHPCorePlugin.ID,
 					PHPCoreConstants.CODEASSIST_AUTOACTIVATION, false, null));
 			fContentAssistant.setAutoActivationDelay(preferencesService.getInt(PHPCorePlugin.ID,

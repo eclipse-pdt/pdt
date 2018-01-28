@@ -38,6 +38,7 @@ public class PHPContentAssistOptionsConfigurationBlock extends AbstractPHPConten
 	protected Button completionOverrideRadioButton;
 	protected Button insertSingleproposalsCheckBox;
 	protected Button autoInsertCommonPrefixCheckbox;
+	protected Button asyncCodeCompletionCheckbox;
 	protected Button showVariableFromOtherFilesCheckBox;
 	protected Button showVariableFromReferencedFilesCheckBox;
 	protected Button insertFullyQualifiedNameForNamespaceCheckBox;
@@ -67,6 +68,9 @@ public class PHPContentAssistOptionsConfigurationBlock extends AbstractPHPConten
 		completionOverrideRadioButton.setLayoutData(new GridData());
 
 		add(completionOverrideRadioButton);
+
+		asyncCodeCompletionCheckbox = addCheckBox(composite, PHPUIMessages.CodeAssistPreferencePage_async,
+				PHPCoreConstants.CODEASSIST_ASYNC, 0);
 
 		insertSingleproposalsCheckBox = addCheckBox(composite,
 				PHPUIMessages.CodeAssistPreferencePage_insertSignleProposals, PHPCoreConstants.CODEASSIST_AUTOINSERT,
