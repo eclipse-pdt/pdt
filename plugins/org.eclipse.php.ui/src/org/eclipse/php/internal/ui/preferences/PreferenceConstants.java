@@ -1060,6 +1060,7 @@ public class PreferenceConstants {
 		store.setDefault(EDITOR_ADD_PHPCLOSE_TAGS, true);
 		store.setDefault(EDITOR_ADD_PHP_FOR_PHPSTART_TAGS, true);
 		store.setDefault(EDITOR_SMART_PASTE, true);
+		store.setDefault(PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
 
 		// mark occurrences
 		store.setDefault(PreferenceConstants.EDITOR_MARK_OCCURRENCES, true);

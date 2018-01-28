@@ -12,10 +12,7 @@
 <unit id="org.eclipse.ptp.remote.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.remote.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.tm.terminal.feature.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.wst.jsdt.feature.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.wst.json_ui.feature.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.wst.web_ui.feature.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.wst.xml_ui.feature.feature.group" version="0.0.0"/>
+
 <unit id="org.eclipse.zest.core" version="0.0.0"/>
 <unit id="org.eclipse.zest.layouts" version="0.0.0"/>
 <repository location="http://download.eclipse.org/releases/photon/"/>
@@ -41,6 +38,13 @@
 <unit id="org.eclipse.dltk.core.tests" version="0.0.0"/>
 <unit id="org.eclipse.dltk.mylyn.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/technology/dltk/updates-dev/latest-nightly/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
+<unit id="org.eclipse.wst.jsdt.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.wst.json_ui.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.wst.web_ui.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.wst.xml_ui.feature.feature.group" version="0.0.0"/>
+<repository location="http://download.eclipse.org/webtools/downloads/drops/R3.10.0/I-latest/repository" />
 </location>
 </locations>
 <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>

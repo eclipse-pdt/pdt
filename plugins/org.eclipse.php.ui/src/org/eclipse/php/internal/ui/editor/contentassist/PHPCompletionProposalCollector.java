@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.contentassist;
 
+import java.util.function.Supplier;
+
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ui.ScriptElementImageDescriptor;
 import org.eclipse.dltk.ui.ScriptElementImageProvider;
@@ -44,6 +46,7 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 		super(cu);
 		this.document = document;
 		this.explicit = explicit;
+		setAsyncCompletion(true);
 	}
 
 	@Override
@@ -54,32 +57,11 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 				string);
 	}
 
-	protected ScriptCompletionProposal createScriptCompletionProposal(String completion, int replaceStart, int length,
-			Image image, StyledString displayString, int i) {
-		return new PHPCompletionProposal(completion, replaceStart, length, image, displayString, i);
-	}
-
 	@Override
 	protected ScriptCompletionProposal createScriptCompletionProposal(String completion, int replaceStart, int length,
-			Image image, StyledString displayString, int i, boolean isInDoc) {
+			Supplier<Image> image, StyledString displayString, int i, boolean isInDoc) {
 		return new PHPCompletionProposal(completion, replaceStart, length, image, displayString, i, isInDoc);
 	}
-
-	// protected CompletionProposalLabelProvider createLabelProvider() {
-	// CompletionProposalLabelProvider labelProvider = new
-	// PHPCompletionProposalLabelProvider();
-	//
-	// // check if there are any adapters extending basic label provider
-	// CompletionProposalLabelProvider extended =
-	// (CompletionProposalLabelProvider) Platform
-	// .getAdapterManager().getAdapter(labelProvider,
-	// CompletionProposalLabelProvider.class);
-	//
-	// if (extended != null)
-	// return extended;
-	//
-	// return labelProvider;
-	// }
 
 	@Override
 	protected IScriptCompletionProposal createPackageProposal(CompletionProposal proposal) {
@@ -98,7 +80,7 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 				proposal);
 		final IModelElement modelElement = proposal.getModelElement();
 		if (modelElement != null && modelElement.getElementType() == IModelElement.SOURCE_MODULE) {
-			scriptProposal.setImage(PHPPluginImages.get(PHPPluginImages.IMG_OBJS_PHP_FILE));
+			scriptProposal.setImageFactory(() -> PHPPluginImages.get(PHPPluginImages.IMG_OBJS_PHP_FILE));
 		}
 		return scriptProposal;
 	}
@@ -125,7 +107,7 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 							ScriptElementImageProvider.SMALL_ICONS | ScriptElementImageProvider.OVERLAY_ICONS);
 					ScriptElementImageDescriptor descriptor = new ScriptElementImageDescriptor(typeImageDescriptor,
 							adornmentFlags, ScriptElementImageProvider.SMALL_SIZE);
-					completionProposal.setImage(getImage(descriptor));
+					completionProposal.setImageFactory(getImageFactory(descriptor));
 				}
 			} catch (ModelException e) {
 				if (DLTKCore.DEBUG_COMPLETION) {
@@ -176,9 +158,7 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 
 		ScriptCompletionProposal scriptProposal = null;
 		if (ProposalExtraInfo.isNotInsertUse(proposal.getExtraInfo())) {
-			Image image = getImage(
-					((PHPCompletionProposalLabelProvider) getLabelProvider()).createMethodImageDescriptor(proposal));
-			scriptProposal = new PHPCompletionProposal(completion, replaceStart, length, image, displayString, 0) {
+			scriptProposal = new PHPCompletionProposal(completion, replaceStart, length, null, displayString, 0) {
 				private boolean fReplacementStringComputed = false;
 
 				@Override
@@ -229,7 +209,7 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 					completion, proposal.getExtraInfo());
 		}
 
-		scriptProposal.setImage(getImage(getLabelProvider().createMethodImageDescriptor(proposal)));
+		scriptProposal.setImageFactory(getImageFactory(getLabelProvider().createMethodImageDescriptor(proposal)));
 
 		ProposalInfo info = new MethodProposalInfo(getSourceModule().getScriptProject(), proposal);
 		scriptProposal.setProposalInfo(info);
@@ -249,13 +229,13 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 		String completion = typeProposal.getCompletion();
 		int replaceStart = typeProposal.getReplaceStart();
 		int length = getLength(typeProposal);
-		Image image = getImage(
-				((PHPCompletionProposalLabelProvider) getLabelProvider()).createTypeImageDescriptor(typeProposal));
 
 		StyledString displayString = ((PHPCompletionProposalLabelProvider) getLabelProvider())
 				.createStyledTypeProposalLabel(typeProposal);
 
-		ScriptCompletionProposal scriptProposal = new PHPCompletionProposal(completion, replaceStart, length, image,
+		ScriptCompletionProposal scriptProposal = new PHPCompletionProposal(completion, replaceStart, length,
+				() -> getImage(((PHPCompletionProposalLabelProvider) getLabelProvider())
+						.createTypeImageDescriptor(typeProposal)),
 				displayString, 0) {
 			private boolean fReplacementStringComputed = false;
 
@@ -354,7 +334,7 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 		int length = getLength(proposal);
 		StyledString displayString = ((PHPCompletionProposalLabelProvider) getLabelProvider())
 				.createStyledFieldProposalLabel(proposal);
-		Image image = getImage(
+		Supplier<Image> image = getImageFactory(
 				((PHPCompletionProposalLabelProvider) getLabelProvider()).createFieldImageDescriptor(proposal));
 
 		ScriptCompletionProposal scriptProposal = new PHPCompletionProposal(completion, start, length, image,
