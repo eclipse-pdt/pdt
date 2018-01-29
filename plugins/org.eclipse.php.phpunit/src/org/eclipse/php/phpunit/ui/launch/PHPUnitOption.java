@@ -13,7 +13,8 @@ package org.eclipse.php.phpunit.ui.launch;
 public enum PHPUnitOption {
 
 	INCLUDE_PATH("--include-path"), PRINTER("--printer"), LOG_JUNIT( //$NON-NLS-1$ //$NON-NLS-2$
-			"--log-junit"), CONFIGURATION("--configuration"); //$NON-NLS-1$ //$NON-NLS-2$
+			"--log-junit"), CONFIGURATION("--configuration"), //$NON-NLS-1$ //$NON-NLS-2$
+	FILTER("--filter"); //$NON-NLS-1$
 
 	private String optionName;
 

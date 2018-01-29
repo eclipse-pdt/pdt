@@ -10,8 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.phpunit.ui.view.actions;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.dltk.core.IType;
 import org.eclipse.jface.action.Action;
 import org.eclipse.php.phpunit.PHPUnitMessages;
 import org.eclipse.php.phpunit.ui.view.PHPUnitView;
@@ -20,7 +22,7 @@ import org.eclipse.php.phpunit.ui.view.PHPUnitView;
  * Requests to rerun a test.
  */
 public class RerunAction extends Action {
-	private IType fClass;
+	private List<String> fFilters;
 	private String fLaunchMode;
 	private int fTestId;
 	private PHPUnitView fTestRunner;
@@ -28,7 +30,14 @@ public class RerunAction extends Action {
 	/**
 	 * Constructor for RerunAction.
 	 */
-	public RerunAction(final PHPUnitView runner, final int testId, final IType phpClass, final String testName,
+	public RerunAction(final PHPUnitView runner, final int testId, final String filter, final String launchMode) {
+		this(runner, testId, Arrays.asList(new String[] { filter }), launchMode);
+	}
+
+	/**
+	 * Constructor for RerunAction.
+	 */
+	public RerunAction(final PHPUnitView runner, final int testId, final List<String> filters,
 			final String launchMode) {
 		super();
 		if (launchMode.equals(ILaunchManager.RUN_MODE))
@@ -37,12 +46,12 @@ public class RerunAction extends Action {
 			setText(PHPUnitMessages.RerunAction_Debug);
 		fTestRunner = runner;
 		fTestId = testId;
-		fClass = phpClass;
 		fLaunchMode = launchMode;
+		fFilters = filters;
 	}
 
 	@Override
 	public void run() {
-		fTestRunner.rerunTest(fTestId, fClass.getSourceModule(), fLaunchMode);
+		fTestRunner.rerunTest(fTestId, fFilters, fFilters.get(0), fLaunchMode);
 	}
 }

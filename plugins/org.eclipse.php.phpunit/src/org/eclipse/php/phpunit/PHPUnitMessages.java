@@ -159,6 +159,8 @@ public class PHPUnitMessages extends NLS {
 	public static String TestCaseWizardPage_3;
 	public static String TestCaseWizardPage_4;
 	public static String TestCaseWizardPage_5;
+	public static String TestLabelProvider_0;
+	public static String TestLabelProvider_1;
 	public static String TestSuiteWizard_0;
 	public static String TestSuiteWizardPage_2;
 	public static String TestSuiteWizardPage_4;

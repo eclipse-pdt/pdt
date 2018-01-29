@@ -27,6 +27,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.zend.debugger.CodeCoverageData;
 import org.eclipse.php.internal.debug.ui.views.coverage.CodeCoverageSection;
 import org.eclipse.php.internal.ui.util.SWTUtil;
@@ -277,7 +278,7 @@ public class PHPUnitView extends ViewPart {
 
 	}
 
-	public void rerunTest(final int testId, final ISourceModule sourceModule, final String launchMode) {
+	public void rerunTest(final int testId, java.util.List<String> filters, String title, final String launchMode) {
 		try {
 			// run the selected test using the previous fConfiguration
 			// configuration
@@ -287,12 +288,13 @@ public class PHPUnitView extends ViewPart {
 						PHPUnitMessages.PHPUnitView_Rerun_Error_Message);
 				return;
 			}
-			final String name = sourceModule.getElementName();
 			final String configName = MessageFormat.format(PHPUnitMessages.PHPUnitView_Rerun_Config,
-					new Object[] { name });
-			final ILaunchConfigurationWorkingCopy tmp = launchConfiguration.copy(configName);
+					new Object[] { title });
+			final ILaunchConfigurationWorkingCopy tmp = launchConfiguration.getWorkingCopy();
 
-			tmp.setAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_RERUN, true);
+			tmp.setAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_RERUN, configName);
+
+			tmp.setAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_FILTER, filters);
 			tmp.launch(launchMode, null);
 		} catch (final CoreException e) {
 			ErrorDialog.openError(getSite().getShell(), PHPUnitMessages.PHPUnitView_Cant_Rerun, e.getMessage(),
@@ -715,8 +717,18 @@ public class PHPUnitView extends ViewPart {
 			if (launch != null) {
 				fConfiguration = launch.getLaunchConfiguration();
 				fMode = launch.getLaunchMode();
-				setToolTipText(fConfiguration.getName());
-				setText(fConfiguration.getName());
+				String name = fConfiguration.getName();
+
+				try {
+					if (fConfiguration.hasAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_RERUN)) {
+						name = fConfiguration.getAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_RERUN,
+								fConfiguration.getName());
+					}
+				} catch (CoreException e) {
+					Logger.logException(e);
+				}
+				setToolTipText(name);
+				setText(name.replace('@', '#'));
 			}
 			fParent = parent;
 			setHoverImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/relaunch.png")); //$NON-NLS-1$

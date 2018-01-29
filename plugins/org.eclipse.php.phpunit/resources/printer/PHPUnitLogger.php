@@ -18,6 +18,7 @@ if (class_exists('PHPUnit_Util_Printer')) {
     class_alias('PHPUnit_Framework_TestCase', 'TestCase');
     class_alias('PHPUnit_Framework_AssertionFailedError', 'AssertionFailedError');
     class_alias('PHPUnit_TextUI_ResultPrinter', 'TextPrinter');
+    class_alias('PHPUnit_Framework_Warning', 'Warning');
     define('RUNNER_VERSION', 5);
 } else {
     class_alias('PHPUnit\Util\Printer', 'Printer');
@@ -348,27 +349,50 @@ class PHPUnitEclipseLogger extends Printer implements TestListener
                     $this->dataProviderNumerator = 0;
                     elseif ($event == 'end')
                     $this->dataProviderNumerator = - 1;
+                    
+                try {
+                    $ex = explode('::',$test->getName(), 2);
+                    $class = new ReflectionClass($ex[0]);
+                    $name = $test->getName();
+                    $file = $class->getFileName();
+                    $line = $class->getStartLine();
+                    $result['test'] = array(
+                        'name' => $name,
+                        'tests' => $test->count(),
+                        'file' => $file,
+                        'line' => $line
+                    );
+                    
+                    $method = $class->getMethod($ex[1]);
+                    $result['test']['line'] = $method->getStartLine();
+                } catch (ReflectionException $re) {
+                    $name = $test->getName();
+                    $result['test'] = array(
+                        'name' => $name,
+                        'tests' => $test->count()
+                    );
+                }
             } else {
                 $result['target'] = 'testsuite';
                 $this->dataProviderNumerator = - 1;
-            }
-            try {
-                $class = new ReflectionClass($test->getName());
-                $name = $class->getName();
-                $file = $class->getFileName();
-                $line = $class->getStartLine();
-                $result['test'] = array(
-                    'name' => $name,
-                    'tests' => $test->count(),
-                    'file' => $file,
-                    'line' => $line
-                );
-            } catch (ReflectionException $re) {
-                $name = $test->getName();
-                $result['test'] = array(
-                    'name' => $name,
-                    'tests' => $test->count()
-                );
+                try {
+                    $class = new ReflectionClass($test->getName());
+                    $name = $class->getName();
+                    $file = $class->getFileName();
+                    $line = $class->getStartLine();
+                    $result['test'] = array(
+                        'name' => $name,
+                        'tests' => $test->count(),
+                        'file' => $file,
+                        'line' => $line
+                    );
+                } catch (ReflectionException $re) {
+                    $name = $test->getName();
+                    $result['test'] = array(
+                        'name' => $name,
+                        'tests' => $test->count()
+                    );
+                }
             }
         } else { // If we're dealing with TestCase
             $result['target'] = 'testcase';
