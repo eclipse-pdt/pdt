@@ -241,6 +241,11 @@ public class PHPUnitLaunchConfigurationDelegate extends PHPExecutableLaunchDeleg
 				optionsList.add(PHPUnitOption.CONFIGURATION, configurationXmlResource.getLocation().toOSString());
 			}
 		}
+		if (config.hasAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_FILTER)) {
+			optionsList.add(PHPUnitOption.FILTER, config
+					.getAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_FILTER, PHPUnitLaunchAttributes.ATTRIBUTE_FILTER)
+					.replace("\\", "\\\\")); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 		return optionsList;
 	}
 

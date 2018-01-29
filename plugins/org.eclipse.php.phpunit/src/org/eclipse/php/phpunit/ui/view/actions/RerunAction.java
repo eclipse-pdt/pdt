@@ -13,6 +13,7 @@ package org.eclipse.php.phpunit.ui.view.actions;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.jface.action.Action;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.phpunit.PHPUnitMessages;
 import org.eclipse.php.phpunit.ui.view.PHPUnitView;
 
@@ -20,15 +21,25 @@ import org.eclipse.php.phpunit.ui.view.PHPUnitView;
  * Requests to rerun a test.
  */
 public class RerunAction extends Action {
-	private IType fClass;
+	private String fClass;
 	private String fLaunchMode;
 	private int fTestId;
 	private PHPUnitView fTestRunner;
+	private String fTestName;
 
 	/**
 	 * Constructor for RerunAction.
 	 */
+	@Deprecated
 	public RerunAction(final PHPUnitView runner, final int testId, final IType phpClass, final String testName,
+			final String launchMode) {
+		this(runner, testId, PHPModelUtils.getFullName(phpClass), testName, launchMode);
+	}
+
+	/**
+	 * Constructor for RerunAction.
+	 */
+	public RerunAction(final PHPUnitView runner, final int testId, final String phpClass, final String testName,
 			final String launchMode) {
 		super();
 		if (launchMode.equals(ILaunchManager.RUN_MODE))
@@ -39,10 +50,11 @@ public class RerunAction extends Action {
 		fTestId = testId;
 		fClass = phpClass;
 		fLaunchMode = launchMode;
+		fTestName = testName;
 	}
 
 	@Override
 	public void run() {
-		fTestRunner.rerunTest(fTestId, fClass.getSourceModule(), fLaunchMode);
+		fTestRunner.rerunTest(fTestId, fClass, fTestName, fLaunchMode);
 	}
 }

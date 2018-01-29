@@ -277,7 +277,19 @@ public class PHPUnitView extends ViewPart {
 
 	}
 
+	/**
+	 * No longer used, should be removed in 6.0
+	 * 
+	 * @param testId
+	 * @param sourceModule
+	 * @param launchMode
+	 */
+	@Deprecated
 	public void rerunTest(final int testId, final ISourceModule sourceModule, final String launchMode) {
+		rerunTest(testId, sourceModule.getElementName(), null, launchMode);
+	}
+
+	public void rerunTest(final int testId, String className, String testName, final String launchMode) {
 		try {
 			// run the selected test using the previous fConfiguration
 			// configuration
@@ -287,12 +299,22 @@ public class PHPUnitView extends ViewPart {
 						PHPUnitMessages.PHPUnitView_Rerun_Error_Message);
 				return;
 			}
-			final String name = sourceModule.getElementName();
+			StringBuilder filterBuilder = new StringBuilder();
+			if (className != null) {
+				filterBuilder.append(className);
+			}
+			if (testName != null) {
+				filterBuilder.append("::"); //$NON-NLS-1$
+				filterBuilder.append(testName);
+			}
+			String filter = filterBuilder.toString();
 			final String configName = MessageFormat.format(PHPUnitMessages.PHPUnitView_Rerun_Config,
-					new Object[] { name });
+					new Object[] { filter });
 			final ILaunchConfigurationWorkingCopy tmp = launchConfiguration.copy(configName);
 
 			tmp.setAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_RERUN, true);
+
+			tmp.setAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_FILTER, filter);
 			tmp.launch(launchMode, null);
 		} catch (final CoreException e) {
 			ErrorDialog.openError(getSite().getShell(), PHPUnitMessages.PHPUnitView_Cant_Rerun, e.getMessage(),

@@ -305,18 +305,25 @@ public class TestViewer {
 			final String testLabel = test.getName();
 			String className = testLabel;
 			String fileName = test.getLocalFile();
+			String testMethodName = null;
 			int lineNumber = test.getLine();
 			if (test instanceof PHPUnitTestGroup) {
+				if (test.getName().contains("::")) { //$NON-NLS-1$
+					className = className.split("::")[0]; //$NON-NLS-1$
+				}
 				manager.add(new OpenTestAction(null, view, testLabel, fileName, lineNumber));
 				manager.add(new Separator());
-				final IType phpClass = getClass(className, fileName);
-				if (phpClass != null) {
-					manager.add(new RerunAction(view, test.getTestId(), phpClass, null, ILaunchManager.RUN_MODE));
-					manager.add(new RerunAction(view, test.getTestId(), phpClass, null, ILaunchManager.DEBUG_MODE));
-				}
+				manager.add(
+						new RerunAction(view, test.getTestId(), className, testMethodName, ILaunchManager.RUN_MODE));
+				manager.add(
+						new RerunAction(view, test.getTestId(), className, testMethodName, ILaunchManager.DEBUG_MODE));
 			} else {
-				final String testMethodName = test.getName();
-				final PHPUnitTestGroup parent = (PHPUnitTestGroup) test.getParent();
+				testMethodName = test.getName().replace(" with data set ", ""); //$NON-NLS-1$ //$NON-NLS-2$
+				PHPUnitTestGroup parent = (PHPUnitTestGroup) test.getParent();
+
+				if (parent.getName().contains("::")) { //$NON-NLS-1$
+					parent = (PHPUnitTestGroup) parent.getParent();
+				}
 				className = parent.getName();
 				fileName = parent.getFile();
 				lineNumber = parent.getLine();
@@ -325,6 +332,11 @@ public class TestViewer {
 					manager.add(new OpenTestAction(null, view, className,
 							phpClass.getResource().getFullPath().toPortableString(), lineNumber, testMethodName));
 				}
+				manager.add(new Separator());
+				manager.add(
+						new RerunAction(view, test.getTestId(), className, testMethodName, ILaunchManager.RUN_MODE));
+				manager.add(
+						new RerunAction(view, test.getTestId(), className, testMethodName, ILaunchManager.DEBUG_MODE));
 			}
 		}
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
