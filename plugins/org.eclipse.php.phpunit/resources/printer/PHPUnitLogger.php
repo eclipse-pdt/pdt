@@ -18,6 +18,7 @@ if (class_exists('PHPUnit_Util_Printer')) {
     class_alias('PHPUnit_Framework_TestCase', 'TestCase');
     class_alias('PHPUnit_Framework_AssertionFailedError', 'AssertionFailedError');
     class_alias('PHPUnit_TextUI_ResultPrinter', 'TextPrinter');
+    class_alias('PHPUnit_Framework_Warning', 'Warning');
     define('RUNNER_VERSION', 5);
 } else {
     class_alias('PHPUnit\Util\Printer', 'Printer');
