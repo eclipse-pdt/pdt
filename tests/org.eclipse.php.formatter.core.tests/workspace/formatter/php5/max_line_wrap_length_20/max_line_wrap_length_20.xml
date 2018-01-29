@@ -165,6 +165,7 @@
 <setting id="org.eclipse.php.formatter.core.formatter.number_of_blank_lines_at_beginning_of_method_body" value="0"/>
 <setting id="org.eclipse.php.formatter.core.formatter.number_of_empty_lines_to_preserve" value="1"/>
 <setting id="org.eclipse.php.formatter.core.formatter.put_empty_statement_on_new_line" value="true"/>
+<setting id="org.eclipse.php.formatter.core.formatter.tabulation.size" value="4"/>
 <setting id="indentationChar" value="&#9;"/>
 <setting id="insert_space_after_opening_paren_in_declare" value="false"/>
 <setting id="insert_space_before_closing_paren_in_declare" value="false"/>
