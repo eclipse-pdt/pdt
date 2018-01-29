@@ -23,6 +23,7 @@ public class PHPUnitTest extends PHPUnitElement {
 	public static final int STATUS_INCOMPLETE = 3;
 	public static final int STATUS_FAIL = 4;
 	public static final int STATUS_ERROR = 5;
+	public static final String METHOD_SEPARATOR = "::"; //$NON-NLS-1$
 
 	protected String name = ""; //$NON-NLS-1$
 	protected int status = 0;
@@ -32,8 +33,12 @@ public class PHPUnitTest extends PHPUnitElement {
 		if (test == null) {
 			name = ""; //$NON-NLS-1$
 		} else {
-			name = (String) test.get(PHPUnitMessageParser.PROPERTY_NAME);
+			processName((String) test.get(PHPUnitMessageParser.PROPERTY_NAME));
 		}
+	}
+
+	protected void processName(String name) {
+		this.name = name;
 	}
 
 	public String getName() {
@@ -55,5 +60,9 @@ public class PHPUnitTest extends PHPUnitElement {
 	@Override
 	public String toString() {
 		return file + SEPARATOR_LINE + String.valueOf(line) + SEPARATOR_NAME + name;
+	}
+
+	public String getFilterName() {
+		return this.getName();
 	}
 }

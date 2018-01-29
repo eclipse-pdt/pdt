@@ -34,12 +34,25 @@ public class PHPUnitTestGroup extends PHPUnitTest {
 
 	private int totalCount;
 
+	private boolean method;
+
 	public PHPUnitTestGroup(final Map<?, ?> test, final PHPUnitTestGroup parent, RemoteDebugger remoteDebugger) {
 		super(test, parent, remoteDebugger);
 		if (test == null)
 			totalCount = 0;
 		else
 			totalCount = Integer.parseInt((String) test.get(PHPUnitMessageParser.PROPERTY_COUNT));
+	}
+
+	@Override
+	protected void processName(String name) {
+		int cutFrom = name.indexOf(METHOD_SEPARATOR);
+		if (cutFrom > 0) {
+			this.name = name.substring(cutFrom + 2);
+			method = true;
+		} else {
+			this.name = name;
+		}
 	}
 
 	public void addChild(final PHPUnitTest test, boolean finished) {
@@ -86,10 +99,32 @@ public class PHPUnitTestGroup extends PHPUnitTest {
 	}
 
 	@Override
+	public String getLocalFile() {
+		if (isMethod() && parent != null) {
+			return parent.getLocalFile();
+		}
+
+		return super.getLocalFile();
+	}
+
+	@Override
 	public void setStatus(final int status) {
 		statusCount.counts[status]++;
 		this.status = Math.max(this.status, status);
 		if (parent != null)
 			((PHPUnitTestGroup) parent).setStatus(status);
+	}
+
+	public boolean isMethod() {
+		return method;
+	}
+
+	public String getFilterName() {
+		if (method) {
+			return new StringBuilder(((PHPUnitTestGroup) parent).getName()).append(METHOD_SEPARATOR).append(getName())
+					.toString();
+		}
+
+		return getName();
 	}
 }

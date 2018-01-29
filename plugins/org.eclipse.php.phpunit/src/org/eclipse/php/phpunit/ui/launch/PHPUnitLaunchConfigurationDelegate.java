@@ -15,8 +15,10 @@ import static org.eclipse.php.phpunit.ui.launch.PHPUnitLaunchAttributes.*;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IProject;
@@ -57,6 +59,7 @@ public class PHPUnitLaunchConfigurationDelegate extends PHPExecutableLaunchDeleg
 	private static final String ENV_PORT = "PHPUNIT_PORT"; //$NON-NLS-1$
 	private static final String TIMESTAMP_DATA_FORMAT = "yyyyMMdd-HHmm"; //$NON-NLS-1$
 	private static final String XML_FILE_FORMAT = "%s-%s.xml";//$NON-NLS-1$
+	private static final List<String> EMPTY_LIST = Collections.emptyList();
 
 	@Override
 	public boolean buildForLaunch(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor)
@@ -240,6 +243,21 @@ public class PHPUnitLaunchConfigurationDelegate extends PHPExecutableLaunchDeleg
 			if (configurationXmlResource != null && configurationXmlResource.exists()) {
 				optionsList.add(PHPUnitOption.CONFIGURATION, configurationXmlResource.getLocation().toOSString());
 			}
+		}
+		if (config.hasAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_FILTER)) {
+			List<String> filters = config.getAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_FILTER, EMPTY_LIST);
+			if (filters.size() > 0) {
+				int pos = 0;
+				StringBuilder sb = new StringBuilder();
+				for (String filter : filters) {
+					if (pos++ > 0) {
+						sb.append(',');
+					}
+					sb.append(filter);
+				}
+				optionsList.add(PHPUnitOption.FILTER, sb.toString().replace("\\", "\\\\")); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+
 		}
 		return optionsList;
 	}

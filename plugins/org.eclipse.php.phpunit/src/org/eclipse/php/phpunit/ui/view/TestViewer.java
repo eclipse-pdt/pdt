@@ -280,17 +280,30 @@ public class TestViewer {
 			return;
 		}
 
-		final PHPUnitTest test = (PHPUnitTest) selection.getFirstElement();
+		PHPUnitTest test = (PHPUnitTest) selection.getFirstElement();
 
-		OpenTestAction action;
-		if (test instanceof PHPUnitTestGroup)
-			action = new OpenTestAction(null, view, test.getName(), test.getLocalFile(), test.getLine());
-		else if (test instanceof PHPUnitTestCase) {
+		OpenTestAction action = null;
+		if (test instanceof PHPUnitTestCase) {
 			final PHPUnitTestCase testCase = (PHPUnitTestCase) test;
-			action = new OpenTestAction(null, view, ((PHPUnitTestGroup) testCase.getParent()).getName(),
-					testCase.getLocalFile(), testCase.getLine(), testCase.getName());
-		} else
+			if (((PHPUnitTestCase) test).isDataProviderCase()) {
+				test = (PHPUnitTest) test.getParent();
+			} else {
+				action = new OpenTestAction(null, view, ((PHPUnitTestGroup) testCase.getParent()).getName(),
+						testCase.getLocalFile(), testCase.getLine(), testCase.getName());
+			}
+
+		}
+		if (test instanceof PHPUnitTestGroup) {
+			if (((PHPUnitTestGroup) test).isMethod()) {
+				PHPUnitTestGroup parent = (PHPUnitTestGroup) test.getParent();
+				action = new OpenTestAction(null, view, parent.getName(), test.getLocalFile(), test.getLine(),
+						test.getName());
+			} else {
+				action = new OpenTestAction(null, view, test.getName(), test.getLocalFile(), test.getLine());
+			}
+		} else if (action == null) {
 			throw new IllegalStateException(String.valueOf(test));
+		}
 
 		if (action.isEnabled()) {
 			action.run();
@@ -303,28 +316,33 @@ public class TestViewer {
 			final PHPUnitTest test = (PHPUnitTest) selection.getFirstElement();
 
 			final String testLabel = test.getName();
-			String className = testLabel;
 			String fileName = test.getLocalFile();
 			int lineNumber = test.getLine();
 			if (test instanceof PHPUnitTestGroup) {
-				manager.add(new OpenTestAction(null, view, testLabel, fileName, lineNumber));
-				manager.add(new Separator());
-				final IType phpClass = getClass(className, fileName);
-				if (phpClass != null) {
-					manager.add(new RerunAction(view, test.getTestId(), phpClass, null, ILaunchManager.RUN_MODE));
-					manager.add(new RerunAction(view, test.getTestId(), phpClass, null, ILaunchManager.DEBUG_MODE));
+				if (((PHPUnitTestGroup) test).isMethod()) {
+					PHPUnitTestGroup parent = (PHPUnitTestGroup) test.getParent();
+					manager.add(new OpenTestAction(null, view, parent.getName(), fileName, lineNumber, testLabel));
+				} else {
+					manager.add(new OpenTestAction(null, view, testLabel, fileName, lineNumber));
 				}
+				manager.add(new Separator());
+				manager.add(new RerunAction(view, test.getTestId(), test.getFilterName(), ILaunchManager.RUN_MODE));
+				manager.add(new RerunAction(view, test.getTestId(), test.getFilterName(), ILaunchManager.DEBUG_MODE));
 			} else {
-				final String testMethodName = test.getName();
-				final PHPUnitTestGroup parent = (PHPUnitTestGroup) test.getParent();
-				className = parent.getName();
+				String testMethodName = test.getName();
+				PHPUnitTestGroup parent = (PHPUnitTestGroup) test.getParent();
+
+				if (parent.isMethod()) {
+					parent = ((PHPUnitTestGroup) parent.getParent());
+				}
 				fileName = parent.getFile();
 				lineNumber = parent.getLine();
-				final IType phpClass = getClass(className, fileName);
-				if (phpClass != null) {
-					manager.add(new OpenTestAction(null, view, className,
-							phpClass.getResource().getFullPath().toPortableString(), lineNumber, testMethodName));
+				if (test instanceof PHPUnitTestCase && !((PHPUnitTestCase) test).isDataProviderCase()) {
+					manager.add(new OpenTestAction(null, view, parent.getName(), fileName, lineNumber, testMethodName));
+					manager.add(new Separator());
 				}
+				manager.add(new RerunAction(view, test.getTestId(), test.getFilterName(), ILaunchManager.RUN_MODE));
+				manager.add(new RerunAction(view, test.getTestId(), test.getFilterName(), ILaunchManager.DEBUG_MODE));
 			}
 		}
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));

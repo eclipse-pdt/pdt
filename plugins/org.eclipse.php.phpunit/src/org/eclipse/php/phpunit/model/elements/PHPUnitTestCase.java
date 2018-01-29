@@ -20,6 +20,7 @@ public class PHPUnitTestCase extends PHPUnitTest {
 
 	protected PHPUnitTestException exception = null;
 	protected List<PHPUnitElement> warnings = null;
+	protected boolean dataProviderCase;
 
 	public PHPUnitTestCase(final Map<?, ?> test, final PHPUnitTestGroup parent, RemoteDebugger remoteDebugger) {
 		super(test, parent, remoteDebugger);
@@ -29,6 +30,26 @@ public class PHPUnitTestCase extends PHPUnitTest {
 			RemoteDebugger remoteDebugger) {
 		this(test, parent, remoteDebugger);
 		updateStatus(sStatus);
+	}
+
+	@Override
+	protected void processName(String name) {
+		int test = name.lastIndexOf(' ');
+		// extract data provider name / number
+		if (test > 0) {
+			int cutFrom = -1;
+			cutFrom = name.indexOf('"', test);
+			if (cutFrom < 0) {
+				cutFrom = name.indexOf('#', test);
+				this.name = name.substring(cutFrom);
+			} else {
+				this.name = name.substring(cutFrom + 1, name.lastIndexOf('"'));
+			}
+
+			this.dataProviderCase = true;
+		} else {
+			this.name = name;
+		}
 	}
 
 	public void updateStatus(String sStatus) {
@@ -61,6 +82,22 @@ public class PHPUnitTestCase extends PHPUnitTest {
 
 	public void setWarnings(final List<PHPUnitElement> warnings) {
 		this.warnings = warnings;
+	}
+
+	public boolean isDataProviderCase() {
+		return dataProviderCase;
+	}
+
+	public String getFilterName() {
+		StringBuilder sb = new StringBuilder(((PHPUnitTestGroup) getParent()).getFilterName());
+		if (!dataProviderCase) {
+			sb.append(METHOD_SEPARATOR);
+		} else if (getName().charAt(0) != '#') {
+			sb.append('@');
+		}
+		sb.append(getName());
+
+		return sb.toString();
 	}
 
 }

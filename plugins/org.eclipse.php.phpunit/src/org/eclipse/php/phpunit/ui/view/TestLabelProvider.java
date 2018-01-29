@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.util.PHPElementImageDescriptor;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
+import org.eclipse.php.phpunit.PHPUnitMessages;
 import org.eclipse.php.phpunit.PHPUnitPlugin;
 import org.eclipse.php.phpunit.model.connection.PHPUnitMessageParser;
 import org.eclipse.php.phpunit.model.elements.*;
@@ -134,20 +135,23 @@ public class TestLabelProvider extends LabelProvider {
 
 		final int line = test.getLine();
 		if (test instanceof PHPUnitTest) {
-			String name = ((PHPUnitTest) test).getName();
-			if (StringUtils.isEmpty(name)) {
-				name = fileName + ":" + line; //$NON-NLS-1$
+			StringBuilder sb = new StringBuilder(((PHPUnitTest) test).getName());
+			if (StringUtils.isEmpty(sb.toString())) {
+				sb.append(fileName).append(':').append(line);
 			}
 			if (test instanceof PHPUnitTestCase) {
 				final PHPUnitTestException exception = ((PHPUnitTestCase) test).getException();
+				if (((PHPUnitTestCase) test).isDataProviderCase()) {
+					sb.insert(0, PHPUnitMessages.TestLabelProvider_0);
+				}
 				if (exception != null && StringUtils.isNotEmpty(exception.getMessage())) {
-					name += ": " + exception.getMessage(); //$NON-NLS-1$
+					sb.append(':').append(exception.getMessage());
 					if (StringUtils.isNotEmpty(exception.getDiff())) {
-						name += " (see Object Diff tab ->)";//$NON-NLS-1$
+						sb.append(PHPUnitMessages.TestLabelProvider_1);
 					}
 				}
 			}
-			return name;
+			return sb.toString();
 		}
 		if (test instanceof PHPUnitTestEvent) {
 			final String message = ((PHPUnitTestEvent) test).getMessage();
@@ -158,14 +162,14 @@ public class TestLabelProvider extends LabelProvider {
 				prefix = ((PHPUnitTestWarning) test).getCode();
 			}
 			if (StringUtils.isNotEmpty(message)) {
-				return prefix + ": " + message; //$NON-NLS-1$
+				return new StringBuilder(prefix).append(':').append(message).toString();
 			}
 			return prefix;
 		}
 		if (test instanceof PHPUnitTraceFrame) {
 			PHPUnitTraceFrame frame = (PHPUnitTraceFrame) test;
 			IPath path = new Path(frame.getFile());
-			return path.lastSegment() + " - " + test.toString() + "()"; //$NON-NLS-1$ //$NON-NLS-2$
+			return new StringBuilder(path.lastSegment()).append(" - ").append(test.toString()).append("()").toString(); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return test.toString();
 	}

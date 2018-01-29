@@ -208,6 +208,7 @@ public class PHPUnitBasicLauncher {
 		if (args != null) {
 			cmdLineList.addAll(Arrays.asList(args));
 		}
+
 		return cmdLineList.toArray(new String[cmdLineList.size()]);
 	}
 
