@@ -114,7 +114,7 @@ public class PHPUnitSearchEngine {
 				try {
 					subClasses = typeHierarchyCache.get(superClass);
 					if (subClasses == null) {
-						IType baseClass = getByName(PHPUNIT_BASE5);
+						IType baseClass = getByName(PHPUNIT_BASE);
 						if (baseClass == null) {
 							baseClass = getByName(PHPUNIT_BASE5);
 						}
@@ -366,19 +366,19 @@ public class PHPUnitSearchEngine {
 	}
 
 	private IType getTestCase() {
-		IType type = getByName(CLASS_CASE5);
+		IType type = getByName(CLASS_CASE);
 		if (type != null) {
 			return type;
 		}
-		return getByName(CLASS_CASE);
+		return getByName(CLASS_CASE5);
 	}
 
 	private IType getTestSuite() {
-		IType type = getByName(CLASS_SUITE5);
+		IType type = getByName(CLASS_SUITE);
 		if (type != null) {
 			return type;
 		}
-		return getByName(CLASS_SUITE);
+		return getByName(CLASS_SUITE5);
 	}
 
 	private IType getByName(String elementName) {
