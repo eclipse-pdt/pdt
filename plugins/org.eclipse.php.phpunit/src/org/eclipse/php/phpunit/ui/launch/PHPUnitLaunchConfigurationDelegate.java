@@ -59,6 +59,8 @@ public class PHPUnitLaunchConfigurationDelegate extends PHPExecutableLaunchDeleg
 	private static final String ENV_PORT = "PHPUNIT_PORT"; //$NON-NLS-1$
 	private static final String TIMESTAMP_DATA_FORMAT = "yyyyMMdd-HHmm"; //$NON-NLS-1$
 	private static final String XML_FILE_FORMAT = "%s-%s.xml";//$NON-NLS-1$
+	private static final String NAMESPACE_SEPARATOR = "\\"; //$NON-NLS-1$
+	private static final String NAMESPACE_SEPARATOR_ESCAPED = "\\\\"; //$NON-NLS-1$
 
 	@Override
 	public boolean buildForLaunch(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor)
@@ -253,11 +255,17 @@ public class PHPUnitLaunchConfigurationDelegate extends PHPExecutableLaunchDeleg
 				StringBuilder sb = new StringBuilder();
 				for (String filter : filters) {
 					if (pos++ > 0) {
-						sb.append(',');
+						sb.append('|');
 					}
+					sb.append('(');
 					sb.append(filter);
+					sb.append(')');
 				}
-				optionsList.add(PHPUnitOption.FILTER, sb.toString().replace("\\", "\\\\")); //$NON-NLS-1$ //$NON-NLS-2$
+				sb.insert(0, '/');
+				sb.append('/');
+				System.out.println(sb.toString());
+				optionsList.add(PHPUnitOption.FILTER,
+						sb.toString().replace(NAMESPACE_SEPARATOR, NAMESPACE_SEPARATOR_ESCAPED));
 			}
 		}
 
@@ -273,7 +281,8 @@ public class PHPUnitLaunchConfigurationDelegate extends PHPExecutableLaunchDeleg
 					}
 					sb.append(filter);
 				}
-				optionsList.add(PHPUnitOption.TEST_SUITE, sb.toString().replace("\\", "\\\\")); //$NON-NLS-1$ //$NON-NLS-2$
+				optionsList.add(PHPUnitOption.TEST_SUITE,
+						sb.toString().replace(NAMESPACE_SEPARATOR, NAMESPACE_SEPARATOR_ESCAPED));
 			}
 
 		}

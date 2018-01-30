@@ -90,6 +90,10 @@ public class PHPUnitTestGroup extends PHPUnitTest {
 		return statusCount.counts[status];
 	}
 
+	public int getFailedCount() {
+		return getStatusCount(STATUS_FAIL) + getStatusCount(STATUS_ERROR);
+	}
+
 	public int getTotalCount() {
 		return totalCount;
 	}

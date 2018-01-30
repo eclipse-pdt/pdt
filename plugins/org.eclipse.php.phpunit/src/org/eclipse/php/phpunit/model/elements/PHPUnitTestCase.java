@@ -90,12 +90,16 @@ public class PHPUnitTestCase extends PHPUnitTest {
 
 	public String getFilterName() {
 		StringBuilder sb = new StringBuilder(((PHPUnitTestGroup) getParent()).getFilterName());
-		if (!dataProviderCase) {
-			sb.append(METHOD_SEPARATOR);
-		} else if (getName().charAt(0) != '#') {
-			sb.append('@');
+		if (dataProviderCase) {
+			sb.append(" .*"); //$NON-NLS-1$
+			if (getName().charAt(0) != '#') {
+				sb.append('"').append(getName()).append('"');
+			} else {
+				sb.append(getName());
+			}
+		} else {
+			sb.append(METHOD_SEPARATOR).append(getName());
 		}
-		sb.append(getName());
 
 		return sb.toString();
 	}

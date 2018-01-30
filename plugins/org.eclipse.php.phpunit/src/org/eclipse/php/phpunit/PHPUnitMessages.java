@@ -124,6 +124,7 @@ public class PHPUnitMessages extends NLS {
 	public static String PHPUnitView_Run_Error;
 	public static String PHPUnitView_Run_SocketError;
 	public static String PHPUnitView_Run_ToolTip;
+	public static String PHPUnitView_RunFailed_ToolTip;
 	public static String PHPUnitView_Stop_Name;
 	public static String PHPUnitView_Stop_ToolTip;
 	public static String PHPUnitView_Tab_Coverage;

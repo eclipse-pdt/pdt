@@ -166,6 +166,7 @@ public class PHPUnitView extends ViewPart {
 	private Action fPreviousAction;
 
 	private RerunLastAction fRerunLastTestAction;
+	private RerunLastFailedTestAction fRerunLastFailedTestAction;
 
 	private SashForm fSashForm;
 
@@ -277,8 +278,11 @@ public class PHPUnitView extends ViewPart {
 
 	}
 
-	public void rerunTest(final int testId, java.util.List<String> suites, java.util.List<String> filters, String title,
-			final String launchMode) {
+	public void rerunTest(int testId, final String launchMode) {
+		rerunTest(new int[] { testId }, null, launchMode);
+	}
+
+	public void rerunTest(int[] testIds, String title, final String launchMode) {
 		try {
 			// run the selected test using the previous fConfiguration
 			// configuration
@@ -287,6 +291,21 @@ public class PHPUnitView extends ViewPart {
 				MessageDialog.openInformation(getSite().getShell(), PHPUnitMessages.PHPUnitView_Rerun_Error,
 						PHPUnitMessages.PHPUnitView_Rerun_Error_Message);
 				return;
+			}
+			java.util.List<String> suites = new ArrayList<String>();
+			java.util.List<String> filters = new ArrayList<String>();
+
+			for (int testId : testIds) {
+				PHPUnitElement testElement = getTestElement(testId);
+				if (testElement instanceof PHPUnitTestCase) {
+					filters.add(((PHPUnitTestCase) testElement).getFilterName());
+				} else if (testElement instanceof PHPUnitTestGroup) {
+					if (((PHPUnitTestGroup) testElement).getSuiteName() == null) {
+						suites.add(((PHPUnitTestGroup) testElement).getSuiteName());
+					} else {
+						filters.add(((PHPUnitTestGroup) testElement).getFilterName());
+					}
+				}
 			}
 			if (title == null) {
 				if (!suites.isEmpty()) {
@@ -300,10 +319,13 @@ public class PHPUnitView extends ViewPart {
 			final ILaunchConfigurationWorkingCopy tmp = launchConfiguration.copy(configName);
 
 			tmp.setAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_RERUN, true);
-
-			tmp.setAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_TEST_SUITE, suites);
-			tmp.setAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_FILTER, filters);
-			tmp.launch(launchMode, null);
+			if (!suites.isEmpty()) {
+				tmp.setAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_TEST_SUITE, suites);
+			}
+			if (!filters.isEmpty()) {
+				tmp.setAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_FILTER, filters);
+			}
+			DebugUITools.launch(tmp, launchMode);
 		} catch (final CoreException e) {
 			ErrorDialog.openError(getSite().getShell(), PHPUnitMessages.PHPUnitView_Cant_Rerun, e.getMessage(),
 					e.getStatus());
@@ -372,6 +394,7 @@ public class PHPUnitView extends ViewPart {
 		this.listener = listener;
 		Display.getDefault().asyncExec(() -> reset());
 		fRerunLastTestAction.setEnabled(false);
+		fRerunLastFailedTestAction.setEnabled(false);
 		fStopAction.setEnabled(true);
 	}
 
@@ -381,6 +404,7 @@ public class PHPUnitView extends ViewPart {
 			instance.fProgressBar.stopped();
 		}
 		instance.fRerunLastTestAction.setEnabled(true);
+		instance.fRerunLastFailedTestAction.setEnabled(root.getFailedCount() > 0);
 
 		PHPUnitTestCase currentTestCase = PHPUnitMessageParser.getInstance().getCurrentTestCase();
 		if (currentTestCase != null) {
@@ -531,6 +555,7 @@ public class PHPUnitView extends ViewPart {
 		fStopAction.setEnabled(false);
 
 		fRerunLastTestAction = new RerunLastAction();
+		fRerunLastFailedTestAction = new RerunLastFailedTestAction();
 
 		fFailuresOnlyFilterAction = new FailuresOnlyFilterAction();
 
@@ -556,6 +581,7 @@ public class PHPUnitView extends ViewPart {
 		toolBar.add(fScrollLockAction);
 		toolBar.add(new Separator());
 		toolBar.add(fRerunLastTestAction);
+		toolBar.add(fRerunLastFailedTestAction);
 		toolBar.add(fStopAction);
 		viewMenu.add(new Separator());
 
@@ -731,6 +757,7 @@ public class PHPUnitView extends ViewPart {
 			fParent = parent;
 			setHoverImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/relaunch.png")); //$NON-NLS-1$
 			setImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/relaunch.png")); //$NON-NLS-1$
+			setDisabledImageDescriptor(PHPUnitPlugin.getImageDescriptor("dlcl16/relaunch.png")); //$NON-NLS-1$
 		}
 
 		@Override
@@ -798,6 +825,21 @@ public class PHPUnitView extends ViewPart {
 		}
 	}
 
+	private class RerunLastFailedTestAction extends Action {
+		public RerunLastFailedTestAction() {
+			setToolTipText(PHPUnitMessages.PHPUnitView_RunFailed_ToolTip);
+			setEnabled(false);
+			setHoverImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/relaunchf.png")); //$NON-NLS-1$
+			setImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/relaunchf.png")); //$NON-NLS-1$
+			setDisabledImageDescriptor(PHPUnitPlugin.getImageDescriptor("dlcl16/relaunchf.png")); //$NON-NLS-1$
+		}
+
+		@Override
+		public void run() {
+			rerunFailedTests();
+		}
+	}
+
 	private class StopAction extends Action {
 		public StopAction() {
 			setText(PHPUnitMessages.PHPUnitView_Stop_Name);
@@ -854,8 +896,33 @@ public class PHPUnitView extends ViewPart {
 		disposeImages();
 	}
 
+	public void rerunFailedTests() {
+		java.util.List<Integer> failedTests = new ArrayList<>(input.getFailedCount());
+		collectFailed(failedTests, input);
+		int[] ids = new int[failedTests.size()];
+		int pos = 0;
+		for (int id : failedTests) {
+			ids[pos++] = id;
+		}
+		rerunTest(ids, PHPUnitMessages.PHPUnitView_RunFailed_ToolTip, fRerunLastTestAction.fMode);
+	}
+
+	protected void collectFailed(java.util.List<Integer> list, PHPUnitTest test) {
+		if (test.getStatus() != PHPUnitTest.STATUS_FAIL && test.getStatus() != PHPUnitTest.STATUS_ERROR) {
+			return;
+		}
+		if (test instanceof PHPUnitTestCase) {
+			list.add(test.getTestId());
+		} else if (test instanceof PHPUnitTestGroup) {
+
+			for (PHPUnitTest tmp : ((PHPUnitTestGroup) test).getChildren()) {
+				collectFailed(list, tmp);
+			}
+		}
+	}
+
 	public PHPUnitElement getTestElement(final int testId) {
-		if (testId != 0) {
+		if (testId == 0) {
 			return null;
 		}
 		return PHPUnitElementManager.getInstance().findTest(testId);
