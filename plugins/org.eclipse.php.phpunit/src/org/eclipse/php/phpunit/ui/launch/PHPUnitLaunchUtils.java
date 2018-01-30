@@ -12,6 +12,8 @@ package org.eclipse.php.phpunit.ui.launch;
 
 import static org.eclipse.php.phpunit.ui.launch.PHPUnitLaunchAttributes.*;
 
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 
 import org.eclipse.core.resources.IFile;
@@ -35,10 +37,20 @@ import org.eclipse.php.phpunit.ui.preference.PHPUnitPreferenceKeys;
 import org.eclipse.ui.*;
 import org.osgi.framework.Bundle;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
+
 public class PHPUnitLaunchUtils {
 
 	private static final String RESOURCES_DIRECTORY = "resources"; //$NON-NLS-1$
-	private static final String START_SCRIPT_PATH = "vendor/phpunit/phpunit"; //$NON-NLS-1$
+	private static final String COMPOSER_JSON_FILENAME = "composer.json"; //$NON-NLS-1$
+	private static final String COMPOSER_JSON_CONFIG = "config"; //$NON-NLS-1$
+	private static final String COMPOSER_JSON_CONFIG_VENDORDIR = "vendor-dir"; //$NON-NLS-1$
+	private static final String COMPOSER_JSON_CONFIG_VENDORDIR_DIRSEP = "/"; //$NON-NLS-1$
+	private static final String DEFAULT_COMPOSER_VENDORDIR = "vendor"; //$NON-NLS-1$
+	private static final String START_SCRIPT_PATH = "phpunit/phpunit"; //$NON-NLS-1$
 	private static final String START_SCRIPT_NAME = "phpunit";//$NON-NLS-1$
 	private static final String OLD_START_SCRIPT_NAME = START_SCRIPT_NAME + ".php";//$NON-NLS-1$
 
@@ -64,23 +76,61 @@ public class PHPUnitLaunchUtils {
 		}
 	}
 
-	public static String findComposerExecutionFile(@Nullable IProject project) {
-		if (project == null || project.getLocation() == null) {
+	private static @Nullable IPath getVendorPath(@Nullable IProject project) {
+		if (project == null) {
 			return null;
 		}
-		IPath startScriptDirectory = project.getLocation().append(START_SCRIPT_PATH);
+		IPath projectLocation = project.getLocation();
+		if (projectLocation == null) {
+			return null;
+		}
+		String vendorDir = null;
+		try {
+			File composerJsonFile = projectLocation.append(COMPOSER_JSON_FILENAME).toFile();
+			if (composerJsonFile.exists() && composerJsonFile.isFile() && composerJsonFile.length() > 0) {
+				FileReader reader;
+				reader = new FileReader(composerJsonFile);
+				if (reader != null) {
+					JsonParser parser = new JsonParser();
+					JsonElement jComposer = parser.parse(reader);
+					if (jComposer.isJsonObject() && ((JsonObject) jComposer).has(COMPOSER_JSON_CONFIG)) {
+						JsonElement jConfig = ((JsonObject) jComposer).get(COMPOSER_JSON_CONFIG);
+						if (jConfig.isJsonObject() && ((JsonObject) jConfig).has(COMPOSER_JSON_CONFIG_VENDORDIR)) {
+							JsonElement jVendorDir = ((JsonObject) jConfig).get(COMPOSER_JSON_CONFIG_VENDORDIR);
+							if (jVendorDir.isJsonPrimitive() && ((JsonPrimitive) jVendorDir).isString()) {
+								vendorDir = ((JsonPrimitive) jVendorDir).getAsString();
+								int vendorDirLength = vendorDir.length();
+								if (vendorDirLength > 1 && vendorDir.endsWith(COMPOSER_JSON_CONFIG_VENDORDIR_DIRSEP)) {
+									vendorDir = vendorDir.substring(0, vendorDirLength - 1);
+								}
+							}
+						}
+					}
+				}
+			}
+		} catch (Throwable e) {
+			PHPUnitPlugin.log(e);
+		}
+		if (vendorDir == null) {
+			vendorDir = DEFAULT_COMPOSER_VENDORDIR;
+		}
+		return projectLocation.append(vendorDir);
+	}
 
-		IPath startScriptPath = startScriptDirectory.append(START_SCRIPT_NAME);
-		if (startScriptPath.toFile().exists() && startScriptPath.toFile().isFile()) {
-			return startScriptPath.toOSString();
-		} else {
-			startScriptPath = startScriptDirectory.append(OLD_START_SCRIPT_NAME);
-			if (startScriptPath.toFile().exists() && startScriptPath.toFile().isFile()) {
-				return startScriptDirectory.append(OLD_START_SCRIPT_NAME).toOSString();
-			} else {
-				return null;
+	public static @Nullable String findComposerExecutionFile(@Nullable IProject project) {
+		IPath vendorPath = getVendorPath(project);
+		if (vendorPath == null) {
+			return null;
+		}
+		IPath startScriptDirectory = vendorPath.append(START_SCRIPT_PATH);
+		for (String startScriptName : new String[] { START_SCRIPT_NAME, OLD_START_SCRIPT_NAME }) {
+			IPath startScriptPath = startScriptDirectory.append(startScriptName);
+			File startScriptFile = startScriptPath.toFile();
+			if (startScriptFile.exists() && startScriptFile.isFile()) {
+				return startScriptPath.toOSString();
 			}
 		}
+		return null;
 	}
 
 	public static IModelElement calculateContext(final IEditorPart part) {
