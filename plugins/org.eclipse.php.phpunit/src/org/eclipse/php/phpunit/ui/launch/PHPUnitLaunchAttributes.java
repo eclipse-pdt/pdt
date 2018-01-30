@@ -42,6 +42,7 @@ public interface PHPUnitLaunchAttributes {
 	String ATTRIBUTE_PROJECT = PHPUnitPlugin.ID + ".project"; //$NON-NLS-1$
 	String ATTRIBUTE_RERUN = PHPUnitPlugin.ID + ".rerun"; //$NON-NLS-1$
 	String ATTRIBUTE_FILTER = PHPUnitPlugin.ID + ".filter"; //$NON-NLS-1$
+	String ATTRIBUTE_TEST_SUITE = PHPUnitPlugin.ID + ".suite"; //$NON-NLS-1$
 	String ATTRIBUTE_RUN_CONTAINER = PHPUnitPlugin.ID + ".is_suite"; //$NON-NLS-1$
 
 	String ATTRIBUTE_COLLECT_CODE_COVERAGE = "collectCodeCoverage"; //$NON-NLS-1$

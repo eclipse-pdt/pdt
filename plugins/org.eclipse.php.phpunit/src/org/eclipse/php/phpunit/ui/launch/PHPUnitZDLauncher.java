@@ -62,10 +62,9 @@ public class PHPUnitZDLauncher extends PHPUnitBasicLauncher {
 			super.run();
 			/*
 			 * In case this thread ended and we do not have any IDebugTarget
-			 * (PHPDebugTarget) hooked in the launch that was created, we can
-			 * tell that there is something wrong, and probably there is no
-			 * debugger installed (e.g. the debugger dll/so is not properly
-			 * configured in the php.ini).
+			 * (PHPDebugTarget) hooked in the launch that was created, we can tell that
+			 * there is something wrong, and probably there is no debugger installed (e.g.
+			 * the debugger dll/so is not properly configured in the php.ini).
 			 */
 			if (launch != null && launch.getDebugTarget() == null) {
 				String launchName = launch.getLaunchConfiguration().getName();
@@ -132,7 +131,9 @@ public class PHPUnitZDLauncher extends PHPUnitBasicLauncher {
 		wc.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING, PHPProjectPreferences.getTransferEncoding(project));
 		wc.setAttribute(IDebugParametersKeys.OUTPUT_ENCODING, PHPProjectPreferences.getOutputEncoding(project));
 		wc.setAttribute(IDebugParametersKeys.PHP_DEBUG_TYPE, IDebugParametersKeys.PHP_EXE_SCRIPT_DEBUG);
-		wc.doSave();
+		if (!wc.hasAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_RERUN)) {
+			wc.doSave();
+		}
 
 		if (monitor.isCanceled()) {
 			return;

@@ -103,7 +103,9 @@ public class PHPUnitXDLauncher extends PHPUnitBasicLauncher {
 		wc.setAttribute(IPHPDebugConstants.PHP_Project, project.getFullPath().toString());
 		wc.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING, PHPProjectPreferences.getTransferEncoding(project));
 		wc.setAttribute(IDebugParametersKeys.OUTPUT_ENCODING, PHPProjectPreferences.getOutputEncoding(project));
-		wc.doSave();
+		if (!wc.hasAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_RERUN)) {
+			wc.doSave();
+		}
 
 		if (monitor.isCanceled()) {
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);

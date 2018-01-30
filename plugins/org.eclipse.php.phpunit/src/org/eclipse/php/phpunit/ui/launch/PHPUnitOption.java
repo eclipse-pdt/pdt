@@ -14,7 +14,7 @@ public enum PHPUnitOption {
 
 	INCLUDE_PATH("--include-path"), PRINTER("--printer"), LOG_JUNIT( //$NON-NLS-1$ //$NON-NLS-2$
 			"--log-junit"), CONFIGURATION("--configuration"), //$NON-NLS-1$ //$NON-NLS-2$
-	FILTER("--filter"); //$NON-NLS-1$
+	FILTER("--filter"), TEST_SUITE("--testsuite"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	private String optionName;
 

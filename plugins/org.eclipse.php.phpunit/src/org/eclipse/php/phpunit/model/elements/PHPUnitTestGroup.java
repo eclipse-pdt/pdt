@@ -119,7 +119,18 @@ public class PHPUnitTestGroup extends PHPUnitTest {
 		return method;
 	}
 
+	public String getSuiteName() {
+		if (getLocalFile() == null) {
+			return getName();
+		}
+
+		return null;
+	}
+
 	public String getFilterName() {
+		if (getLocalFile() == null) {
+			return null;
+		}
 		if (method) {
 			return new StringBuilder(((PHPUnitTestGroup) parent).getName()).append(METHOD_SEPARATOR).append(getName())
 					.toString();

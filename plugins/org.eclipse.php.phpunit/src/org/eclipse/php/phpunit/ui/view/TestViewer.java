@@ -326,8 +326,10 @@ public class TestViewer {
 					manager.add(new OpenTestAction(null, view, testLabel, fileName, lineNumber));
 				}
 				manager.add(new Separator());
-				manager.add(new RerunAction(view, test.getTestId(), test.getFilterName(), ILaunchManager.RUN_MODE));
-				manager.add(new RerunAction(view, test.getTestId(), test.getFilterName(), ILaunchManager.DEBUG_MODE));
+				manager.add(new RerunAction(view, test.getTestId(), ((PHPUnitTestGroup) test).getSuiteName(),
+						test.getFilterName(), ILaunchManager.RUN_MODE));
+				manager.add(new RerunAction(view, test.getTestId(), ((PHPUnitTestGroup) test).getSuiteName(),
+						test.getFilterName(), ILaunchManager.DEBUG_MODE));
 			} else {
 				String testMethodName = test.getName();
 				PHPUnitTestGroup parent = (PHPUnitTestGroup) test.getParent();
@@ -341,8 +343,10 @@ public class TestViewer {
 					manager.add(new OpenTestAction(null, view, parent.getName(), fileName, lineNumber, testMethodName));
 					manager.add(new Separator());
 				}
-				manager.add(new RerunAction(view, test.getTestId(), test.getFilterName(), ILaunchManager.RUN_MODE));
-				manager.add(new RerunAction(view, test.getTestId(), test.getFilterName(), ILaunchManager.DEBUG_MODE));
+				manager.add(
+						new RerunAction(view, test.getTestId(), null, test.getFilterName(), ILaunchManager.RUN_MODE));
+				manager.add(
+						new RerunAction(view, test.getTestId(), null, test.getFilterName(), ILaunchManager.DEBUG_MODE));
 			}
 		}
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));

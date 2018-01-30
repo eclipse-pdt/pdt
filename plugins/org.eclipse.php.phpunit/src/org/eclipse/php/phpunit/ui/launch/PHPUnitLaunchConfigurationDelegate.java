@@ -59,7 +59,6 @@ public class PHPUnitLaunchConfigurationDelegate extends PHPExecutableLaunchDeleg
 	private static final String ENV_PORT = "PHPUNIT_PORT"; //$NON-NLS-1$
 	private static final String TIMESTAMP_DATA_FORMAT = "yyyyMMdd-HHmm"; //$NON-NLS-1$
 	private static final String XML_FILE_FORMAT = "%s-%s.xml";//$NON-NLS-1$
-	private static final List<String> EMPTY_LIST = Collections.emptyList();
 
 	@Override
 	public boolean buildForLaunch(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor)
@@ -152,7 +151,9 @@ public class PHPUnitLaunchConfigurationDelegate extends PHPExecutableLaunchDeleg
 			} else {
 				wc.setAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, (String) null);
 			}
-			config = wc.doSave();
+			if (!wc.hasAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_RERUN)) {
+				wc.doSave();
+			}
 		}
 
 		if (execItem != null) {
@@ -245,7 +246,8 @@ public class PHPUnitLaunchConfigurationDelegate extends PHPExecutableLaunchDeleg
 			}
 		}
 		if (config.hasAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_FILTER)) {
-			List<String> filters = config.getAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_FILTER, EMPTY_LIST);
+			List<String> filters = config.getAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_FILTER,
+					Collections.emptyList());
 			if (filters.size() > 0) {
 				int pos = 0;
 				StringBuilder sb = new StringBuilder();
@@ -256,6 +258,22 @@ public class PHPUnitLaunchConfigurationDelegate extends PHPExecutableLaunchDeleg
 					sb.append(filter);
 				}
 				optionsList.add(PHPUnitOption.FILTER, sb.toString().replace("\\", "\\\\")); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+		}
+
+		if (config.hasAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_TEST_SUITE)) {
+			List<String> filters = config.getAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_TEST_SUITE,
+					Collections.emptyList());
+			if (filters.size() > 0) {
+				int pos = 0;
+				StringBuilder sb = new StringBuilder();
+				for (String filter : filters) {
+					if (pos++ > 0) {
+						sb.append(',');
+					}
+					sb.append(filter);
+				}
+				optionsList.add(PHPUnitOption.TEST_SUITE, sb.toString().replace("\\", "\\\\")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
 		}
