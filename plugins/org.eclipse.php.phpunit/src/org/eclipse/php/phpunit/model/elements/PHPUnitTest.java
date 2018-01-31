@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.phpunit.model.elements;
 
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
@@ -25,6 +26,8 @@ public class PHPUnitTest extends PHPUnitElement {
 	public static final int STATUS_ERROR = 5;
 	public static final String METHOD_SEPARATOR = "::"; //$NON-NLS-1$
 
+	protected PHPUnitTestException exception = null;
+	protected List<PHPUnitElement> warnings = null;
 	protected String name = ""; //$NON-NLS-1$
 	protected int status = 0;
 
@@ -57,6 +60,26 @@ public class PHPUnitTest extends PHPUnitElement {
 		this.status = status;
 	}
 
+	/**
+	 * Map and save parser status to model status
+	 * 
+	 * @param sStatus
+	 */
+	public void setStatus(String sStatus) {
+		if (sStatus.equals(PHPUnitMessageParser.STATUS_PASS))
+			setStatus(STATUS_PASS);
+		else if (sStatus.equals(PHPUnitMessageParser.STATUS_SKIP))
+			setStatus(STATUS_SKIP);
+		else if (sStatus.equals(PHPUnitMessageParser.STATUS_INCOMPLETE))
+			setStatus(STATUS_INCOMPLETE);
+		else if (sStatus.equals(PHPUnitMessageParser.STATUS_FAIL))
+			setStatus(STATUS_FAIL);
+		else if (sStatus.equals(PHPUnitMessageParser.STATUS_ERROR))
+			setStatus(STATUS_ERROR);
+		else if (sStatus.equals(PHPUnitMessageParser.TAG_START))
+			setStatus(STATUS_STARTED);
+	}
+
 	@Override
 	public String toString() {
 		return file + SEPARATOR_LINE + String.valueOf(line) + SEPARATOR_NAME + name;
@@ -64,5 +87,22 @@ public class PHPUnitTest extends PHPUnitElement {
 
 	public String getFilterName() {
 		return this.getName();
+	}
+
+	public PHPUnitTestException getException() {
+		return exception;
+	}
+
+	public List<PHPUnitElement> getWarnings() {
+		return warnings;
+	}
+
+	public void setException(final PHPUnitTestException exception) {
+		this.exception = exception;
+
+	}
+
+	public void setWarnings(final List<PHPUnitElement> warnings) {
+		this.warnings = warnings;
 	}
 }

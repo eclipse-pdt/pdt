@@ -33,8 +33,8 @@ public class PHPUnitTestTraceTreeContentProvider extends ArrayContentProvider im
 	@Override
 	public Object[] getChildren(final Object parentElement) {
 		final List<PHPUnitElement> results = new ArrayList<>();
-		if (parentElement instanceof PHPUnitTestCase) {
-			getCaseChildren((PHPUnitTestCase) parentElement, results);
+		if (parentElement instanceof PHPUnitTest) {
+			getCaseChildren((PHPUnitTest) parentElement, results);
 		}
 		if (parentElement instanceof PHPUnitTestEvent) {
 			getEventChildren((PHPUnitTestEvent) parentElement, results);
@@ -42,9 +42,9 @@ public class PHPUnitTestTraceTreeContentProvider extends ArrayContentProvider im
 		return results.toArray();
 	}
 
-	private void getCaseChildren(final PHPUnitTestCase testCase, final List<PHPUnitElement> results) {
+	private void getCaseChildren(final PHPUnitTest testCase, final List<PHPUnitElement> results) {
 		final PHPUnitTestException exception = testCase.getException();
-		if (exception != null && exception.getTrace() != null && (!filter || !exception.isFiltered())) {
+		if (exception != null && (!filter || !exception.isFiltered())) {
 			results.add(testCase.getException());
 		}
 		final List<PHPUnitElement> warnings = testCase.getWarnings();
@@ -89,8 +89,8 @@ public class PHPUnitTestTraceTreeContentProvider extends ArrayContentProvider im
 
 	@Override
 	public boolean hasChildren(final Object element) {
-		if (element instanceof PHPUnitTestCase) {
-			return hasChildrenCase((PHPUnitTestCase) element);
+		if (element instanceof PHPUnitTest) {
+			return hasChildrenCase((PHPUnitTest) element);
 		}
 		if (element instanceof PHPUnitTestEvent) {
 			return hasChildrenEvent((PHPUnitTestEvent) element);
@@ -98,7 +98,7 @@ public class PHPUnitTestTraceTreeContentProvider extends ArrayContentProvider im
 		return false;
 	}
 
-	private boolean hasChildrenCase(final PHPUnitTestCase testCase) {
+	private boolean hasChildrenCase(final PHPUnitTest testCase) {
 		if (testCase.getException() != null) {
 			return true;
 		}

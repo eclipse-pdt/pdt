@@ -16,7 +16,7 @@ import java.util.Stack;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.php.phpunit.model.elements.PHPUnitTestCase;
+import org.eclipse.php.phpunit.model.elements.PHPUnitTest;
 import org.eclipse.php.phpunit.model.elements.PHPUnitTestException;
 
 public class PHPUnitTestDiffTreeContentProvider extends ArrayContentProvider implements ITreeContentProvider {
@@ -29,14 +29,14 @@ public class PHPUnitTestDiffTreeContentProvider extends ArrayContentProvider imp
 			return ((DiffLine) parentElement).getChildren().toArray();
 		} else {
 			final List<DiffLine> results = new ArrayList<>();
-			if (parentElement instanceof PHPUnitTestCase) {
-				getCaseChildren((PHPUnitTestCase) parentElement, results);
+			if (parentElement instanceof PHPUnitTest) {
+				getCaseChildren((PHPUnitTest) parentElement, results);
 			}
 			return results.toArray();
 		}
 	}
 
-	private void getCaseChildren(final PHPUnitTestCase testCase, final List<DiffLine> results) {
+	private void getCaseChildren(final PHPUnitTest testCase, final List<DiffLine> results) {
 		final PHPUnitTestException exception = testCase.getException();
 		if (hasChildren(testCase)) {
 			final DiffLine testDiffLine = new DiffLine(exception.getMessage(), null);
@@ -71,8 +71,8 @@ public class PHPUnitTestDiffTreeContentProvider extends ArrayContentProvider imp
 
 	@Override
 	public boolean hasChildren(final Object element) {
-		if (element instanceof PHPUnitTestCase) {
-			final PHPUnitTestException exception = ((PHPUnitTestCase) element).getException();
+		if (element instanceof PHPUnitTest) {
+			final PHPUnitTestException exception = ((PHPUnitTest) element).getException();
 			if (exception == null) {
 				return false;
 			}

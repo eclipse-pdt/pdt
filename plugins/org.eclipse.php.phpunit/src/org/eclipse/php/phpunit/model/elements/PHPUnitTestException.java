@@ -22,7 +22,7 @@ public class PHPUnitTestException extends PHPUnitTestEvent {
 	private static final String TOP_CLASS = "Exception"; //$NON-NLS-1$
 	private String exceptionClass = TOP_CLASS;
 
-	public PHPUnitTestException(Map<?, ?> exception, PHPUnitTestCase parent, RemoteDebugger remoteDebugger) {
+	public PHPUnitTestException(Map<?, ?> exception, PHPUnitTest parent, RemoteDebugger remoteDebugger) {
 		super(exception, parent, remoteDebugger);
 		exceptionClass = (String) exception.get(PHPUnitMessageParser.PROPERTY_CLASS);
 	}

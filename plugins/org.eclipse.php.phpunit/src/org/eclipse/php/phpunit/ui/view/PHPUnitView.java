@@ -12,6 +12,7 @@ package org.eclipse.php.phpunit.ui.view;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -300,7 +301,7 @@ public class PHPUnitView extends ViewPart {
 				if (testElement instanceof PHPUnitTestCase) {
 					filters.add(((PHPUnitTestCase) testElement).getFilterName());
 				} else if (testElement instanceof PHPUnitTestGroup) {
-					if (((PHPUnitTestGroup) testElement).getSuiteName() == null) {
+					if (((PHPUnitTestGroup) testElement).getSuiteName() != null) {
 						suites.add(((PHPUnitTestGroup) testElement).getSuiteName());
 					} else {
 						filters.add(((PHPUnitTestGroup) testElement).getFilterName());
@@ -321,9 +322,13 @@ public class PHPUnitView extends ViewPart {
 			tmp.setAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_RERUN, true);
 			if (!suites.isEmpty()) {
 				tmp.setAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_TEST_SUITE, suites);
+			} else {
+				tmp.removeAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_TEST_SUITE);
 			}
 			if (!filters.isEmpty()) {
 				tmp.setAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_FILTER, filters);
+			} else {
+				tmp.removeAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_FILTER);
 			}
 			DebugUITools.launch(tmp, launchMode);
 		} catch (final CoreException e) {
@@ -914,10 +919,15 @@ public class PHPUnitView extends ViewPart {
 		if (test instanceof PHPUnitTestCase) {
 			list.add(test.getTestId());
 		} else if (test instanceof PHPUnitTestGroup) {
-
-			for (PHPUnitTest tmp : ((PHPUnitTestGroup) test).getChildren()) {
-				collectFailed(list, tmp);
+			Set<PHPUnitTest> childs = ((PHPUnitTestGroup) test).getChildren();
+			if (childs == null || childs.size() == 0) {
+				list.add(test.getTestId());
+			} else {
+				for (PHPUnitTest tmp : childs) {
+					collectFailed(list, tmp);
+				}
 			}
+
 		}
 	}
 

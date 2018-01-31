@@ -103,9 +103,13 @@ public class PHPUnitMessageParser {
 		final String event = (String) message.get(ELEMENT_EVENT);
 		final Map<?, ?> mTest = (Map<?, ?>) message.get(ELEMENT_TEST);
 		if (target.equals(ELEMENT_TARGET_TESTSUITE)) {
-			parseGroupStart(viewer, event, mTest);
-			if (event.equals(TAG_END)) {
-				parseGroupEnd(viewer);
+			if (event.equals(TAG_START)) {
+				parseGroupStart(viewer, event, mTest);
+			} else if (event.equals(TAG_END)) {
+				parseGroupEnd(viewer, message);
+			} else {
+				currentGroup.setStatus(event);
+				currentGroup.addRunCount(1);
 			}
 		} else if (target.equals(ELEMENT_TARGET_TESTCASE)) {
 			if (event.equals(TAG_START)) {
@@ -147,20 +151,24 @@ public class PHPUnitMessageParser {
 	private void parseTestEnd(final Map<?, ?> message, final TestViewer viewer, final String event,
 			final Map<?, ?> mTest) {
 		final PHPUnitTestCase testCase = currentTestCase;
-		testCase.updateStatus(event);
-		final Map<?, ?> exception = (Map<?, ?>) message.get(ELEMENT_EXCEPTION);
-		if (exception != null) {
-			mapException(testCase, exception);
-		}
-		final Map<?, ?> warnings = (Map<?, ?>) message.get(ELEMENT_WARNINGS);
-		if (warnings != null) {
-			mapWarnings(testCase, warnings);
-		}
+		testCase.setStatus(event);
+		parseProblems(testCase, message);
 		currentGroup.addChild(testCase, true);
 		viewer.registerTestAdded();
 		if (testCase.getStatus() > PHPUnitTest.STATUS_PASS) {
 			viewer.registerAutoScrollTarget(testCase);
 			viewer.registerFailedForAutoScroll(testCase);
+		}
+	}
+
+	private void parseProblems(PHPUnitTest model, Map<?, ?> message) {
+		final Map<?, ?> exception = (Map<?, ?>) message.get(ELEMENT_EXCEPTION);
+		if (exception != null) {
+			mapException(model, exception);
+		}
+		final Map<?, ?> warnings = (Map<?, ?>) message.get(ELEMENT_WARNINGS);
+		if (warnings != null) {
+			mapWarnings(model, warnings);
 		}
 	}
 
@@ -179,7 +187,7 @@ public class PHPUnitMessageParser {
 	 * @param testCase
 	 * @param exception
 	 */
-	public void mapException(final PHPUnitTestCase testCase, final Map<?, ?> exception) {
+	public void mapException(final PHPUnitTest testCase, final Map<?, ?> exception) {
 		testCase.setException(new PHPUnitTestException(exception, testCase, remoteDebugger));
 		mapTest(testCase.getException());
 	}
@@ -188,7 +196,7 @@ public class PHPUnitMessageParser {
 		PHPUnitElementManager.getInstance().add(test.getTestId(), test);
 	}
 
-	private void mapWarnings(final PHPUnitTestCase testCase, final Map<?, ?> warnings) {
+	private void mapWarnings(final PHPUnitTest testCase, final Map<?, ?> warnings) {
 		Map<?, ?> mWarning;
 		// keep initial order
 		for (int i = 0; (mWarning = (Map<?, ?>) warnings.get(String.valueOf(i))) != null; ++i) {
@@ -200,7 +208,11 @@ public class PHPUnitMessageParser {
 		}
 	}
 
-	private void parseGroupEnd(final TestViewer viewer) {
+	private void parseGroupEnd(final TestViewer viewer, Map<?, ?> mTest) {
+
+		if (currentGroup.getChildren() == null) {
+			parseProblems(currentGroup, mTest);
+		}
 		currentGroup = (PHPUnitTestGroup) currentGroup.getParent();
 		currentTestCase = null;
 		viewer.registerViewerUpdate(currentGroup);

@@ -135,20 +135,18 @@ public class TestLabelProvider extends LabelProvider {
 
 		final int line = test.getLine();
 		if (test instanceof PHPUnitTest) {
-			StringBuilder sb = new StringBuilder(((PHPUnitTest) test).getName());
+			PHPUnitTest unit = (PHPUnitTest) test;
+			StringBuilder sb = new StringBuilder(unit.getName());
 			if (StringUtils.isEmpty(sb.toString())) {
 				sb.append(fileName).append(':').append(line);
 			}
-			if (test instanceof PHPUnitTestCase) {
-				final PHPUnitTestException exception = ((PHPUnitTestCase) test).getException();
-				if (((PHPUnitTestCase) test).isDataProviderCase()) {
-					sb.insert(0, PHPUnitMessages.TestLabelProvider_0);
-				}
-				if (exception != null && StringUtils.isNotEmpty(exception.getMessage())) {
-					sb.append(':').append(exception.getMessage());
-					if (StringUtils.isNotEmpty(exception.getDiff())) {
-						sb.append(PHPUnitMessages.TestLabelProvider_1);
-					}
+			if (test instanceof PHPUnitTestCase && ((PHPUnitTestCase) test).isDataProviderCase()) {
+				sb.insert(0, PHPUnitMessages.TestLabelProvider_0);
+			}
+			final PHPUnitTestException exception = unit.getException();
+			if (exception != null && StringUtils.isNotEmpty(exception.getMessage())) {
+				if (StringUtils.isNotEmpty(exception.getDiff())) {
+					sb.append(':').append(PHPUnitMessages.TestLabelProvider_1);
 				}
 			}
 			return sb.toString();
