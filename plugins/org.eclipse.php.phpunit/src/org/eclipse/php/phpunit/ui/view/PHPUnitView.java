@@ -300,7 +300,7 @@ public class PHPUnitView extends ViewPart {
 				if (testElement instanceof PHPUnitTestCase) {
 					filters.add(((PHPUnitTestCase) testElement).getFilterName());
 				} else if (testElement instanceof PHPUnitTestGroup) {
-					if (((PHPUnitTestGroup) testElement).getSuiteName() == null) {
+					if (((PHPUnitTestGroup) testElement).getSuiteName() != null) {
 						suites.add(((PHPUnitTestGroup) testElement).getSuiteName());
 					} else {
 						filters.add(((PHPUnitTestGroup) testElement).getFilterName());
@@ -321,9 +321,13 @@ public class PHPUnitView extends ViewPart {
 			tmp.setAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_RERUN, true);
 			if (!suites.isEmpty()) {
 				tmp.setAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_TEST_SUITE, suites);
+			} else {
+				tmp.removeAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_TEST_SUITE);
 			}
 			if (!filters.isEmpty()) {
 				tmp.setAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_FILTER, filters);
+			} else {
+				tmp.removeAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_FILTER);
 			}
 			DebugUITools.launch(tmp, launchMode);
 		} catch (final CoreException e) {

@@ -89,8 +89,9 @@ public class PHPUnitTestCase extends PHPUnitTest {
 	}
 
 	public String getFilterName() {
-		StringBuilder sb = new StringBuilder(((PHPUnitTestGroup) getParent()).getFilterName());
+		StringBuilder sb = new StringBuilder();
 		if (dataProviderCase) {
+			sb.append(((PHPUnitTestGroup) getParent()).getFilterName());
 			sb.append(" .*"); //$NON-NLS-1$
 			if (getName().charAt(0) != '#') {
 				sb.append('"').append(getName()).append('"');
@@ -98,6 +99,7 @@ public class PHPUnitTestCase extends PHPUnitTest {
 				sb.append(getName());
 			}
 		} else {
+			sb.append(((PHPUnitTestGroup) getParent()).getName());
 			sb.append(METHOD_SEPARATOR).append(getName());
 		}
 
