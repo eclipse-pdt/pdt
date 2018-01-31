@@ -9,7 +9,6 @@
  * Contributors:
  *  Rogue Wave Software Inc. - initial implementation
  *******************************************************************************/
-
 if (class_exists('PHPUnit_Util_Printer')) {
     class_alias('PHPUnit_Util_Printer', 'Printer');
     class_alias('PHPUnit_Framework_TestListener', 'TestListener');
@@ -19,6 +18,11 @@ if (class_exists('PHPUnit_Util_Printer')) {
     class_alias('PHPUnit_Framework_AssertionFailedError', 'AssertionFailedError');
     class_alias('PHPUnit_TextUI_ResultPrinter', 'TextPrinter');
     class_alias('PHPUnit_Framework_Warning', 'Warning');
+    class_alias('PHPUnit_Framework_Error', 'Error_Error');
+    class_alias('PHPUnit_Framework_Error_Warning', 'Error_Warning');
+    class_alias('PHPUnit_Framework_Error_Notice', 'Error_Notice');
+    class_alias('PHPUnit_Framework_Error_Deprecated', 'Error_Deprecated');
+    
     define('RUNNER_VERSION', 5);
 } else {
     class_alias('PHPUnit\Util\Printer', 'Printer');
@@ -30,15 +34,20 @@ if (class_exists('PHPUnit_Util_Printer')) {
     class_alias('PHPUnit\Framework\AssertionFailedError', 'AssertionFailedError');
     class_alias('PHPUnit\Framework\ExpectationFailedException', 'ExpectationFailedException');
     class_alias('PHPUnit\TextUI\ResultPrinter', 'TextPrinter');
+    class_alias('PHPUnit\Framework\Error\Error', 'Error_Error');
+    class_alias('PHPUnit\Framework\Error\Warning', 'Error_Warning');
+    class_alias('PHPUnit\Framework\Error\Notice', 'Error_Notice');
+    class_alias('PHPUnit\Framework\Error\Deprecated', 'Error_Deprecated');
     define('RUNNER_VERSION', 6);
 }
 
-class PHPUnitLogger extends  TextPrinter implements TestListener
+class PHPUnitLogger extends TextPrinter implements TestListener
 {
+
     public function __construct($out = null)
     {
         parent::__construct('php://stdout', true);
-        switch(RUNNER_VERSION) {
+        switch (RUNNER_VERSION) {
             case 5:
                 if (class_exists('PHPUnit_Framework_ExceptionWrapper')) {
                     class_alias('PHPUnit_Framework_ExceptionWrapper', 'ExceptionWrapper');
@@ -52,170 +61,198 @@ class PHPUnitLogger extends  TextPrinter implements TestListener
                 class_alias('PHPUnit\\Util\\Blacklist', 'Blacklist');
                 break;
         }
-        $this->loggers = array(new PHPUnitEclipseLogger());
+        $this->loggers = array(
+            new PHPUnitEclipseLogger()
+        );
     }
-    
-    public function setAutoFlush($autoFlush) {
+
+    public function setAutoFlush($autoFlush)
+    {
         parent::setAutoFlush($autoFlush);
         foreach ($this->loggers as $logger) {
             $logger->setAutoFlush($autoFlush);
         }
     }
-    
-    public function flush() {
+
+    public function flush()
+    {
         parent::flush();
         foreach ($this->loggers as $logger) {
             $logger->flush();
         }
     }
-    
-    public function incrementalFlush() {
+
+    public function incrementalFlush()
+    {
         parent::incrementalFlush();
         foreach ($this->loggers as $logger) {
             $logger->incrementalFlush();
         }
     }
-    
+
     /**
      * An error occurred.
      *
-     * @param Test       $test
+     * @param Test $test
      * @param \Throwable $t
-     * @param float      $time
+     * @param float $time
      */
-    public function addError(Test $test, \Exception $t, $time) {
+    public function addError(Test $test, \Exception $t, $time)
+    {
         parent::addError($test, $t, $time);
         foreach ($this->loggers as $logger) {
             $logger->addError($test, $t, $time);
         }
     }
+
     /**
      * A warning occurred.
      *
-     * @param Test    $test
+     * @param Test $test
      * @param Warning $e
-     * @param float   $time
+     * @param float $time
      */
-    public function addWarning(Test $test, Warning $e, $time) {
-        parent::addWarning($test, $e,$time);
+    public function addWarning(Test $test, Warning $e, $time)
+    {
+        parent::addWarning($test, $e, $time);
         foreach ($this->loggers as $logger) {
-            $logger->addWarning($test, $e,$time);
+            $logger->addWarning($test, $e, $time);
         }
     }
+
     /**
      * A failure occurred.
      *
-     * @param Test                 $test
+     * @param Test $test
      * @param AssertionFailedError $e
-     * @param float                $time
+     * @param float $time
      */
-    public function addFailure(Test $test, AssertionFailedError $e, $time) {
-        parent::addFailure($test, $e,$time);
+    public function addFailure(Test $test, AssertionFailedError $e, $time)
+    {
+        parent::addFailure($test, $e, $time);
         foreach ($this->loggers as $logger) {
-            $logger->addFailure($test, $e,$time);
+            $logger->addFailure($test, $e, $time);
         }
     }
+
     /**
      * Incomplete test.
      *
-     * @param Test       $test
+     * @param Test $test
      * @param \Throwable $t
-     * @param float      $time
+     * @param float $time
      */
-    public function addIncompleteTest(Test $test, \Exception $t, $time) {
-        parent::addIncompleteTest($test, $t,$time);
+    public function addIncompleteTest(Test $test, \Exception $t, $time)
+    {
+        parent::addIncompleteTest($test, $t, $time);
         foreach ($this->loggers as $logger) {
-            $logger->addIncompleteTest($test, $t,$time);
+            $logger->addIncompleteTest($test, $t, $time);
         }
     }
+
     /**
      * Risky test.
      *
-     * @param Test       $test
+     * @param Test $test
      * @param \Throwable $t
-     * @param float      $time
+     * @param float $time
      */
-    public function addRiskyTest(Test $test, \Exception $t, $time) {
-        parent::addRiskyTest($test, $t,$time);
+    public function addRiskyTest(Test $test, \Exception $t, $time)
+    {
+        parent::addRiskyTest($test, $t, $time);
         foreach ($this->loggers as $logger) {
-            $logger->addRiskyTest($test, $t,$time);
+            $logger->addRiskyTest($test, $t, $time);
         }
     }
+
     /**
      * Skipped test.
      *
-     * @param Test       $test
+     * @param Test $test
      * @param \Throwable $t
-     * @param float      $time
+     * @param float $time
      */
-    public function addSkippedTest(Test $test, \Exception $t, $time) {
-        parent::addSkippedTest($test, $t,$time);
+    public function addSkippedTest(Test $test, \Exception $t, $time)
+    {
+        parent::addSkippedTest($test, $t, $time);
         foreach ($this->loggers as $logger) {
-            $logger->addSkippedTest($test, $t,$time);
+            $logger->addSkippedTest($test, $t, $time);
         }
     }
+
     /**
      * A test suite started.
      *
      * @param TestSuite $suite
      */
-    public function startTestSuite(TestSuite $suite) {
+    public function startTestSuite(TestSuite $suite)
+    {
         parent::startTestSuite($suite);
         foreach ($this->loggers as $logger) {
             $logger->startTestSuite($suite);
         }
     }
+
     /**
      * A test suite ended.
      *
      * @param TestSuite $suite
      */
-    public function endTestSuite(TestSuite $suite) {
+    public function endTestSuite(TestSuite $suite)
+    {
         parent::endTestSuite($suite);
         foreach ($this->loggers as $logger) {
             $logger->endTestSuite($suite);
         }
     }
+
     /**
      * A test started.
      *
      * @param Test $test
      */
-    public function startTest(Test $test) {
+    public function startTest(Test $test)
+    {
         parent::startTest($test);
+       
         foreach ($this->loggers as $logger) {
             $logger->startTest($test);
         }
     }
+
     /**
      * A test ended.
      *
-     * @param Test  $test
+     * @param Test $test
      * @param float $time
      */
-    public function endTest(Test $test, $time) {
-        parent::endTest($test,$time);
+    public function endTest(Test $test, $time)
+    {
+        parent::endTest($test, $time);
         foreach ($this->loggers as $logger) {
-            $logger->endTest($test,$time);
+            $logger->endTest($test, $time);
         }
     }
-    
 }
 
 class PHPUnitEclipseLogger extends Printer implements TestListener
 {
-    
+
     private $status;
+
     private $exception;
+
     private $time;
+
     private $warnings;
+
     private $varx;
-    
+
     /**
      * data provider support - enumerates the test cases
      */
     private $dataProviderNumerator = - 1;
-    
+
     public function __construct()
     {
         $this->cleanTest();
@@ -223,68 +260,69 @@ class PHPUnitEclipseLogger extends Printer implements TestListener
         $port = isset($_SERVER['PHPUNIT_PORT']) ? $_SERVER['PHPUNIT_PORT'] : 7478;
         $this->out = fsockopen('127.0.0.1', $port, $errno, $errstr, 5);
     }
-    
+
     public function startTestSuite(TestSuite $suite)
     {
         $this->writeTest($suite, 'start');
     }
-    
+
     public function startTest(Test $test)
     {
-        $this->cleanTest();
-        $this->writeTest($test, 'start');
         ZendPHPUnitErrorHandlerTracer::getInstance()->start();
+        $this->cleanTest();
+        $this->writeTest($test, 'start', true);
     }
-    
+
     public function addError(Test $test, \Exception $e, $time)
     {
         $this->status = 'error';
         $this->exception = $e;
     }
-    
-    public function addWarning(Test $test, Warning $e, $time) {
+
+    public function addWarning(Test $test, Warning $e, $time)
+    {
         $this->status = 'warning';
         $this->exception = $e;
     }
-    
+
     public function addFailure(Test $test, AssertionFailedError $e, $time)
     {
         $this->status = 'fail';
         $this->exception = $e;
     }
-    
+
     public function addIncompleteTest(Test $test, \Exception $e, $time)
     {
         $this->status = 'incomplete';
         $this->exception = $e;
     }
-    
+
     public function addSkippedTest(Test $test, \Exception $e, $time)
     {
         $this->status = 'skip';
         $this->exception = $e;
     }
-    
+
     public function endTest(Test $test, $time)
     {
         $this->warnings = ZendPHPUnitErrorHandlerTracer::getInstance()->stop();
         $this->time = $time;
         $this->writeTest($test, $this->status);
     }
-    
+
     public function endTestSuite(TestSuite $suite)
     {
         $this->writeTest($suite, 'end');
     }
-    
+
     public function addRiskyTest(Test $test, \Exception $e, $time)
     {}
-    
+
     public function flush()
     {
         parent::flush();
     }
-    
+
     public function getWrappedTrace($e)
     {
         if ($e->getPrevious() != null) {
@@ -295,7 +333,7 @@ class PHPUnitEclipseLogger extends Printer implements TestListener
         }
         return $e->getTrace();
     }
-    
+
     public function getWrappedName($e)
     {
         if ($e->getPrevious() != null) {
@@ -306,8 +344,7 @@ class PHPUnitEclipseLogger extends Printer implements TestListener
         }
         return get_class($e);
     }
-    
-    
+
     private function cleanTest()
     {
         $this->status = 'pass';
@@ -315,14 +352,14 @@ class PHPUnitEclipseLogger extends Printer implements TestListener
         $this->warnings = array();
         $this->time = 0;
     }
-    
+
     private function writeArray($array)
     {
         $result = $this->writeJson($this->encodeJson($array));
         return $result;
     }
-    
-    private function writeTest(Test $test, $event)
+
+    private function writeTest(Test $test, $event, $isTestCase = false)
     {
         // echo out test output
         if ($test instanceof TestCase) {
@@ -334,24 +371,28 @@ class PHPUnitEclipseLogger extends Printer implements TestListener
             }
             
             if (! $hasPerformed && $test->getActualOutput() != null) {
-                //echo $test->getActualOutput();
+                // echo $test->getActualOutput();
             }
         }
+        
         // write log
         $result = array(
             'event' => $event
         );
         if ($test instanceof TestSuite) {
+            if ($isTestCase) { // skip test suite called inside startTestCase
+                return;
+            }
             if (preg_match("*::*", $test->getName()) != 0) { // if it is a dataprovider test suite
-                // $result['target'] = 'testsuite-dataprovider';
+                                                             // $result['target'] = 'testsuite-dataprovider';
                 $result['target'] = 'testsuite';
                 if ($event == 'start')
                     $this->dataProviderNumerator = 0;
-                    elseif ($event == 'end')
+                elseif ($event == 'end')
                     $this->dataProviderNumerator = - 1;
-                    
+                
                 try {
-                    $ex = explode('::',$test->getName(), 2);
+                    $ex = explode('::', $test->getName(), 2);
                     $class = new ReflectionClass($ex[0]);
                     $name = $test->getName();
                     $file = $class->getFileName();
@@ -425,10 +466,10 @@ class PHPUnitEclipseLogger extends Printer implements TestListener
             if ($this->exception instanceof ExpectationFailedException) {
                 if (method_exists($this->exception, "getDescription")) {
                     $message = $this->exception->getDescription();
-                } else
+                } else 
                     if (method_exists($this->exception, "getMessage")) { // PHPUnit 3.6.3
                         $message = $this->exception->getMessage();
-                }
+                    }
                 if (method_exists($this->exception, "getComparisonFailure") && method_exists($this->exception->getComparisonFailure(), "getDiff")) {
                     $diff = $this->exception->getComparisonFailure()->getDiff();
                 }
@@ -457,14 +498,14 @@ class PHPUnitEclipseLogger extends Printer implements TestListener
             die();
         }
     }
-    
+
     private function writeJson($buffer)
     {
         if ($this->out && ! @feof($this->out)) {
             return @fwrite($this->out, "$buffer\n");
         }
     }
-    
+
     private function escapeString($string)
     {
         return str_replace(array(
@@ -487,7 +528,7 @@ class PHPUnitEclipseLogger extends Printer implements TestListener
             '\t'
         ), $string);
     }
-    
+
     private function encodeJson($array)
     {
         $result = '';
@@ -495,28 +536,27 @@ class PHPUnitEclipseLogger extends Printer implements TestListener
             $array = array(
                 $array
             );
-            $first = true;
-            foreach ($array as $key => $value) {
-                if (! $first)
-                    $result .= ',';
-                    else
-                        $first = false;
-                        $result .= sprintf('"%s":', $this->escapeString($key));
-                        if (is_array($value) || is_object($value))
-                            $result .= sprintf('%s', $this->encodeJson($value));
-                            else
-                                $result .= sprintf('"%s"', $this->escapeString($value));
-            }
-            return '{' . $result . '}';
+        $first = true;
+        foreach ($array as $key => $value) {
+            if (! $first)
+                $result .= ',';
+            else
+                $first = false;
+            $result .= sprintf('"%s":', $this->escapeString($key));
+            if (is_array($value) || is_object($value))
+                $result .= sprintf('%s', $this->encodeJson($value));
+            else
+                $result .= sprintf('"%s"', $this->escapeString($value));
+        }
+        return '{' . $result . '}';
     }
-
 }
 
 class ZendPHPUnitErrorHandlerTracer extends ZendPHPUnitErrorHandler
 {
-    
+
     private static $ZendPHPUnitErrorHandlerTracer;
-    
+
     /**
      *
      * @return ZendPHPUnitErrorHandlerTracer
@@ -528,7 +568,7 @@ class ZendPHPUnitErrorHandlerTracer extends ZendPHPUnitErrorHandler
         }
         return self::$ZendPHPUnitErrorHandlerTracer;
     }
-    
+
     public static $errorCodes = array(
         E_ERROR => 'Error',
         E_WARNING => 'Warning',
@@ -546,9 +586,9 @@ class ZendPHPUnitErrorHandlerTracer extends ZendPHPUnitErrorHandler
         E_DEPRECATED => 'Deprecated',
         E_USER_DEPRECATED => 'User Deprecated'
     );
-    
+
     protected $warnings;
-    
+
     public function handle($errno, $errstr, $errfile, $errline)
     {
         parent::handle($errno, $errstr, $errfile, $errline);
@@ -569,13 +609,13 @@ class ZendPHPUnitErrorHandlerTracer extends ZendPHPUnitErrorHandler
         $this->warnings[] = $warning;
         return $return;
     }
-    
+
     public function start()
     {
         $this->warnings = array();
         parent::start();
     }
-    
+
     public function stop()
     {
         parent::stop();
@@ -587,9 +627,9 @@ class ZendPHPUnitErrorHandlerTracer extends ZendPHPUnitErrorHandler
 
 class ZendPHPUnitErrorHandler
 {
-    
+
     private static $ZendPHPUnitErrorHandler;
-    
+
     /**
      *
      * @return ZendPHPUnitErrorHandler
@@ -601,47 +641,42 @@ class ZendPHPUnitErrorHandler
         }
         return self::$ZendPHPUnitErrorHandler;
     }
-    
+
     public function handle($errno, $errstr, $errfile, $errline)
     {
-        if (error_reporting() === 0) {
+        if (! ($errno & error_reporting())) {
             return false;
         }
         
-        if ($errfile === __FILE__ || (stripos($errfile, dirname(dirname(__FILE__))) === 0 && $errno !== E_USER_NOTICE))
+        // handle errors same as PHPUnit_Util_ErrorHandler
+        if ($errfile === __FILE__ || (stripos($errfile, dirname(dirname(__FILE__))) === 0 && $errno !== E_USER_NOTICE)) {
             return true;
-            
-            // handle errors same as PHPUnit_Util_ErrorHandler
-            if ($errno == E_STRICT) {
-                if (PHPUnit_Framework_Error_Notice::$enabled !== TRUE) {
-                    return FALSE;
-                }
-                
-                $exception = 'PHPUnit_Framework_Error_Notice';
+        } elseif ($errno === E_NOTICE || $errno === E_USER_NOTICE || $errno === E_STRICT) {
+            if (Error_Notice::$enabled !== true) {
+                return false;
+            }
+            $exception = 'Error_Notice';
+        } elseif ($errno == E_WARNING) {
+            if (Error_Warning::$enabled !== TRUE) {
+                return FALSE;
             }
             
-            else
-                if ($errno == E_WARNING) {
-                    if (PHPUnit_Framework_Error_Warning::$enabled !== TRUE) {
-                        return FALSE;
-                    }
-                    
-                    $exception = 'PHPUnit_Framework_Error_Warning';
-                }
-            
-            else
-                if ($errno == E_NOTICE) {
-                    trigger_error($errstr, E_USER_NOTICE);
-                    return FALSE;
-                }
-            
-            else {
-                $exception = 'PHPUnit_Framework_Error';
+            $exception = 'Error_Warning';
+        } elseif ($errno == E_NOTICE) {
+            //trigger_error($errstr, E_USER_NOTICE);
+            return FALSE;
+        } elseif ($errno === E_DEPRECATED || $errno === E_USER_DEPRECATED) {
+            if (Error_Deprecated::$enabled !== true) {
+                return false;
             }
-            
-            throw new $exception($errstr, $errno, $errfile, $errline, $trace = null);
+            $exception = 'Error_Deprecated';
+        } else {
+            $exception = 'Error_Error';
+        }
+        
+        throw new $exception($errstr, $errno, $errfile, $errline, $trace = null);
     }
-    
+
     public function start()
     {
         set_error_handler(array(
@@ -649,7 +684,7 @@ class ZendPHPUnitErrorHandler
             'handle'
         ));
     }
-    
+
     public function stop()
     {
         restore_error_handler();
@@ -665,7 +700,7 @@ function filterTrace($trace)
     $filteredTrace = [];
     
     if (class_exists('Blacklist')) {
-        $blacklist = new Blacklist;
+        $blacklist = new Blacklist();
     }
     $prefix = false;
     if (\defined('__PHPUNIT_PHAR_ROOT__')) {
@@ -676,12 +711,7 @@ function filterTrace($trace)
         if (! isset($frame['file'])) {
             continue;
         }
-        if (
-            ($blacklist && $blacklist->isBlacklisted($frame['file'])) ||  
-            !($prefix === false || \strpos($frame['file'], $prefix) !== 0) ||
-            !is_file($frame['file']) || 
-            $frame['file'] === $script
-            ) {
+        if (($blacklist && $blacklist->isBlacklisted($frame['file'])) || ! ($prefix === false || \strpos($frame['file'], $prefix) !== 0) || ! is_file($frame['file']) || $frame['file'] === $script) {
             continue;
         }
         $filteredFrame = array(

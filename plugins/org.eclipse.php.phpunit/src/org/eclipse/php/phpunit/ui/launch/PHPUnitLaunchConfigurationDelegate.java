@@ -261,9 +261,8 @@ public class PHPUnitLaunchConfigurationDelegate extends PHPExecutableLaunchDeleg
 					sb.append(filter);
 					sb.append(')');
 				}
-				sb.insert(0, '/');
-				sb.append('/');
-				System.out.println(sb.toString());
+				sb.insert(0, "/^"); //$NON-NLS-1$
+				sb.append("$/"); //$NON-NLS-1$
 				optionsList.add(PHPUnitOption.FILTER,
 						sb.toString().replace(NAMESPACE_SEPARATOR, NAMESPACE_SEPARATOR_ESCAPED));
 			}
