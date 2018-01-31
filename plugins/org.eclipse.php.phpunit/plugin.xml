@@ -56,7 +56,7 @@
 				perspective="org.eclipse.debug.ui.DebugPerspective">
 			</modeCombination>
 			<modeCombination modes="profile"
-				perspective="com.zend.php.profile.ui.perspective">
+				perspective="org.eclipse.php.perspective">
 			</modeCombination>
 		</launchDelegate>
 	</extension>

@@ -108,7 +108,11 @@ public class PHPUnitLaunchConfigurationDelegate extends PHPExecutableLaunchDeleg
 		setEnvironmentVariables(wconfig, project);
 
 		PHPUnitOptionsList phpUnitOptionsList = createPHPUnitOptionsList(wconfig, project);
-		config = wconfig.doSave();
+		if (!wconfig.hasAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_RERUN)) {
+			config = wconfig.doSave();
+		} else {
+			config = wconfig;
+		}
 
 		if (!(resource instanceof IProject)) {
 			phpUnitOptionsList.setElementToTest(resource.getLocation().toOSString());
