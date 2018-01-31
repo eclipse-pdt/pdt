@@ -36,14 +36,12 @@ $arr = array ('one',
 		'five' );
 while ( list ( , $val ) = each ( $arr ) ) {
 	if ($val ==
-			 'stop') {
+			'stop') {
 		break; /* You could also write 'break 1;' here. */
 	}
 	echo "$val<br />\n";
 }
-
 /* Using the optional argument. */
-
 $i = 0;
 while ( ++ $i ) {
 	switch ($i) {

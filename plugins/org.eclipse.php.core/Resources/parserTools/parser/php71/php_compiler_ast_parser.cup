@@ -413,6 +413,7 @@ top_statement_list:statementList
 	RESULT = program;
 :}
 ;
+
 reserved_non_modifiers ::=
 T_INCLUDE:v
 {:
@@ -651,6 +652,7 @@ T_INCLUDE:v
 	RESULT = v.value;
 :}
 ;
+
 semi_reserved ::=
 reserved_non_modifiers:v
 {:
@@ -692,6 +694,7 @@ string_st:v
 	RESULT = v;
 :}
 ;
+
 namespace_name ::=
 namespace_name_list:list
 {:

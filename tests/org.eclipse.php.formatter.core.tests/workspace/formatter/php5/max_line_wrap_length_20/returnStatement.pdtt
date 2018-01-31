@@ -19,19 +19,17 @@ function &returns_reference() {
 <?php
 function square($num) {
 	return $num *
-			 $num *
-			 $num *
-			 $num *
-			 $num *
-			 $num *
-			 $num;
+			$num *
+			$num *
+			$num *
+			$num *
+			$num *
+			$num;
 }
-
 function small_numbers() {
 	return array (0,
 			1, 2 );
 }
-
 function &returns_reference() {
 	return $someref;
 }
