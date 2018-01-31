@@ -37,13 +37,13 @@ public class PHPUnitTestCase extends PHPUnitTest {
 		int test = name.lastIndexOf(' ');
 		// extract data provider name / number
 		if (test > 0) {
-			int cutFrom = -1;
-			cutFrom = name.indexOf('"', test);
-			if (cutFrom < 0) {
-				cutFrom = name.indexOf('#', test);
+			int cutTo = name.lastIndexOf('"');
+			if (cutTo < 0 || cutTo < test) {
+				int cutFrom = name.indexOf('#', test);
 				this.name = name.substring(cutFrom);
 			} else {
-				this.name = name.substring(cutFrom + 1, name.lastIndexOf('"'));
+				int cutFrom = name.lastIndexOf('"', cutTo - 1);
+				this.name = name.substring(cutFrom + 1, cutTo);
 			}
 
 			this.dataProviderCase = true;
