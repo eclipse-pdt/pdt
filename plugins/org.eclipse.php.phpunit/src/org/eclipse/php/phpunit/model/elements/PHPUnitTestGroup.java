@@ -66,7 +66,7 @@ public class PHPUnitTestGroup extends PHPUnitTest {
 		setStatus(test.getStatus());
 	}
 
-	private void addRunCount(final int count) {
+	public void addRunCount(final int count) {
 		runCount += count;
 		if (parent != null)
 			((PHPUnitTestGroup) parent).addRunCount(count);
@@ -135,11 +135,13 @@ public class PHPUnitTestGroup extends PHPUnitTest {
 		if (getLocalFile() == null) {
 			return null;
 		}
+		StringBuilder sb = new StringBuilder(getName());
 		if (method) {
-			return new StringBuilder(((PHPUnitTestGroup) parent).getName()).append(METHOD_SEPARATOR).append(getName())
-					.toString();
+			sb.insert(0, METHOD_SEPARATOR).insert(0, ((PHPUnitTestGroup) parent).getName());
+		} else {
+			sb.append(METHOD_SEPARATOR);
 		}
 
-		return getName();
+		return sb.append(".*").toString(); //$NON-NLS-1$
 	}
 }
