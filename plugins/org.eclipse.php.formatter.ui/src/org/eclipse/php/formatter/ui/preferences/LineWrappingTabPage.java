@@ -270,6 +270,7 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 			CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_BINARY_EXPRESSION_KEY,
 			"class Example extends AnotherClass {" + //$NON-NLS-1$
 					"function foo() {" + //$NON-NLS-1$
+					"  $txt= 'abc' . 'def' . 'ghi' . 'jkl' . 'mno' . 'pqr' . 'stu' . 'vwx' . 'yz';" + //$NON-NLS-1$
 					"  $sum= 100 + 200 + 300 + 400 + 500 + 600 + 700 + 800;" + //$NON-NLS-1$
 					"  $product= 1 * 2 * 3 * 4 * 5 * 6 * 7 * 8 * 9 * 10;" + //$NON-NLS-1$
 					"  $val = true && false && true && false && true;" + //$NON-NLS-1$

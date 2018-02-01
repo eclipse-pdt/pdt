@@ -77,11 +77,11 @@ class Test {
 			$this->application->render ();
 			// Get debug level
 			$registryDebugLevel = 'Core_Debug::' .
-					 Core_Registry::get ( 'SYSTEM:DEBUG_LEVEL' );
+					Core_Registry::get ( 'SYSTEM:DEBUG_LEVEL' );
 			$debugLevel = defined ( $registryDebugLevel ) ? constant ( $registryDebugLevel ) : NULL;
 			// Display debug information if requested
 			if ($debugLevel === Core_Debug::DEBUG_ALL || $debugLevel ===
-					 Core_Debug::DEBUG_PERFORMANCE) {
+					Core_Debug::DEBUG_PERFORMANCE) {
 				Core_Debug::outputDebugPerformanceInfo ( $this->applicationType );
 			}
 			if ($debugLevel === Core_Debug::DEBUG_ALL)
@@ -105,7 +105,7 @@ class Test {
 		// Set system timezone
 		$defaultTimezone = Core_Registry::get ( 'SYSTEM:DEFAULT_TIMEZONE' );
 		if (! $defaultTimezone ||
-				 ! date_default_timezone_set ( $defaultTimezone )) {
+				! date_default_timezone_set ( $defaultTimezone )) {
 			date_default_timezone_set ( 'Europe/Helsinki' );
 		}
 	}
@@ -124,9 +124,8 @@ class Test {
 		Lib_NativeFunctions::ob_end_clean ();
 		if (! empty ( $obOutput )) {
 			Core_Logger::write ( 'Output written outside view components. Output: ' .
-					 $obOutput, 'SYSTEM' );
+					$obOutput, 'SYSTEM' );
 		}
 	}
 }
-
 ?>
