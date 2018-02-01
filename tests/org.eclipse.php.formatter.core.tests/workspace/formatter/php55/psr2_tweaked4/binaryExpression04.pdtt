@@ -1,0 +1,42 @@
+--TEST--
+Test array & binary indentation policies
+--FILE--
+<?php
+class Foo
+{
+public function foo(array $_infos)
+{
+$a['tttt'] = TestMe::url('xxx', 'yyy', $_infos + array(
+'file' => $tmpFileName
+));
+}
+
+public function retrieveCumulDSN(array $_infos)
+{
+header('xxxx ' . rawurlencode(implode('-', TestMe::getAny($b, array(
+'xxxxx',
+'yyyyy',
+'zzzzz'
+)))) . '.' . $a . '"');
+}
+}
+--EXPECT--
+<?php
+class Foo
+{
+    public function foo(array $_infos)
+    {
+        $a['tttt'] = TestMe::url('xxx', 'yyy', $_infos +
+            array('file' => $tmpFileName
+            ));
+    }
+    public function retrieveCumulDSN(array $_infos)
+    {
+        header('xxxx ' .
+            rawurlencode(implode('-', TestMe::getAny($b, array('xxxxx','yyyyy','zzzzz'
+            )))) .
+            '.' .
+            $a .
+            '"');
+    }
+}
