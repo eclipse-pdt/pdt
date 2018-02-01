@@ -1,0 +1,26 @@
+--TEST--
+Test array & binary indentation policies
+--FILE--
+<?php
+$concat= /* com1 */ array/* com2 */ (/* com3 */ array/* com4 */ (/* com5 */ 100 + 200 + 300 + 400/* com6 */ )/* com7 */  +/* com8 */  array(500 + 600 + 700 + 800), array(100 + 200 + 300 + 400) + array(500 + 600 + 700 + 800));
+--EXPECT--
+<?php
+$concat= /* com1 */ array/* com2 */ (/* com3 */ array/* com4 */ (/* com5 */ 100 +
+        200 +
+        300 +
+        400 /* com6 */
+    )/* com7 */  +/* com8 */  array(500 +
+        600 +
+        700 +
+        800
+    ),array(100 +
+        200 +
+        300 +
+        400
+    ) +
+    array(500 +
+        600 +
+        700 +
+        800
+    )
+);

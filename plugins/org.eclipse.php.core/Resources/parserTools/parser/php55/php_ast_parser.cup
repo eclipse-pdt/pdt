@@ -2611,6 +2611,7 @@ T_LNUMBER:scalar
 	RESULT = new Quote(labelleft, eright, parser.ast, new LinkedList(), label.charAt(0) == '\'' ? Quote.QT_NOWDOC : Quote.QT_HEREDOC);
 :}
 ;
+
 static_array_creation ::=
 T_ARRAY:s T_OPEN_PARENTHESE static_array_pair_list:list T_CLOSE_PARENTHESE:e
 {:

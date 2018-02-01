@@ -22,15 +22,12 @@ function Sum2()
 <?php
 $a = 1;
 $b = 2;
-
 function Sum1() {
 	global $a, $b;
 	$b = $a + $b;
 }
-
 function Sum2() {
 	$GLOBALS ['b'] = $GLOBALS ['a'] +
-			 $GLOBALS ['b'];
+			$GLOBALS ['b'];
 }
-
 ?>
