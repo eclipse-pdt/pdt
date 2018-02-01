@@ -3784,6 +3784,7 @@ reference_variable:var
 	RESULT = finalVar;
 :}
 ;
+
 field_access_dim_list_indirect_reference ::=
 field_access_dim_list:var
 {:
