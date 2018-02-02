@@ -32,43 +32,38 @@ if ($c > $b) {
 ?>
 --EXPECT--
 <?php
-
 if ($a > $b &&
-		 $a > $b &&
-		 $a > $b &&
-		 $a > $b &&
-		 $a > $b) {
+		$a > $b &&
+		$a > $b &&
+		$a > $b &&
+		$a > $b) {
 	echo $a;
 }
-
 if ($c > $b) {
 	echo $c;
 } else {
 	echo $b;
 }
-
 if ($c > $b) {
 	echo $c;
 } elseif ($a > $b &&
-		 $a > $b &&
-		 $a > $b &&
-		 $a > $b &&
-		 $a > $b) {
+		$a > $b &&
+		$a > $b &&
+		$a > $b &&
+		$a > $b) {
 	echo $a;
 } else {
 	echo $b;
 }
-
 if ($c > $b) {
 	echo $c;
 } else if ($a > $b &&
-		 $a > $b &&
-		 $a > $b &&
-		 $a > $b &&
-		 $a > $b) {
+		$a > $b &&
+		$a > $b &&
+		$a > $b &&
+		$a > $b) {
 	echo $a;
 } else {
 	echo $b;
 }
-
 ?>

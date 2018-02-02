@@ -16,15 +16,11 @@ class Foo
 --EXPECT--
 <?php
 namespace Foo;
-
 use Psr\Http\Message\ServerRequestInterface as Request;
-
 class Foo
 {
-
     public function __invoke(Request $req)
     {
-        $isAlreadyResolved = $request->getAttribute(
-            DomainModelInterface::class) !== null;
+        $isAlreadyResolved = $request->getAttribute(DomainModelInterface::class) !== null;
     }
 }
