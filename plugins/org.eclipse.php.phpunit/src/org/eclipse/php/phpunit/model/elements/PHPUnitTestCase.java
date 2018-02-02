@@ -56,7 +56,6 @@ public class PHPUnitTestCase extends PHPUnitTest {
 		StringBuilder sb = new StringBuilder();
 		if (dataProviderCase) {
 			sb.append(((PHPUnitTestGroup) getParent()).getFilterName());
-			sb.append(" .*"); //$NON-NLS-1$
 			if (getName().charAt(0) != '#') {
 				sb.append('"').append(getName()).append('"');
 			} else {

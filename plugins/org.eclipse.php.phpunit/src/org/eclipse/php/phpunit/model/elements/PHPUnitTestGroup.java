@@ -137,11 +137,11 @@ public class PHPUnitTestGroup extends PHPUnitTest {
 		}
 		StringBuilder sb = new StringBuilder(getName());
 		if (method) {
-			sb.insert(0, METHOD_SEPARATOR).insert(0, ((PHPUnitTestGroup) parent).getName());
+			sb.insert(0, METHOD_SEPARATOR).insert(0, ((PHPUnitTestGroup) parent).getName()).append(" .*"); //$NON-NLS-1$
 		} else {
-			sb.append(METHOD_SEPARATOR);
+			sb.append(METHOD_SEPARATOR).append(".*"); //$NON-NLS-1$
 		}
 
-		return sb.append(".*").toString(); //$NON-NLS-1$
+		return sb.toString();
 	}
 }
