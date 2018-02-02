@@ -12,18 +12,12 @@ package org.eclipse.php.phpunit.ui.view;
 
 import java.util.*;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
-import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.ui.viewsupport.SelectionProviderMediator;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.*;
-import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.phpunit.PHPUnitPlugin;
 import org.eclipse.php.phpunit.model.elements.*;
 import org.eclipse.php.phpunit.model.providers.PHPUnitElementTreeContentProvider;
@@ -203,19 +197,6 @@ public class TestViewer {
 
 	private boolean getActiveViewerNeedsRefresh() {
 		return fTreeNeedsRefresh;
-	}
-
-	private IType getClass(final String className, final String fileName) {
-		IProject project = view.getProject();
-
-		IType[] classes = PHPModelAccess.getDefault().findTypes(className, MatchRule.EXACT, 0, 0,
-				SearchEngine.createSearchScope(DLTKCore.create(project)), null);
-
-		if (classes != null && classes.length > 0) {
-			return classes[0];
-		}
-
-		return null;
 	}
 
 	private PHPUnitTestCase getNextChildFailure(final PHPUnitTestGroup root, boolean showNext) {
