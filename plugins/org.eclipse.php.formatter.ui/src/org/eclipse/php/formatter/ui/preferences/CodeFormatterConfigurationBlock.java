@@ -144,6 +144,9 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 		}
 
 		private void updateSelection() {
+			if (fProfileManager.getSelected() == null) {
+				return;
+			}
 			fProfileCombo.setText(fProfileManager.getSelected().getName());
 		}
 	}
@@ -163,9 +166,10 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 		@Override
 		public void update(Observable o, Object arg) {
 			Profile selected = ((ProfileManager) o).getSelected();
-			final boolean notBuiltIn = !selected.isBuiltInProfile();
+			final boolean notBuiltIn = selected != null && !selected.isBuiltInProfile();
 			fEditButton.setText(notBuiltIn ? FormatterMessages.CodingStyleConfigurationBlock_edit_button_desc
 					: FormatterMessages.CodingStyleConfigurationBlock_show_button_desc);
+			fEditButton.setEnabled(selected != null);
 			fDeleteButton.setEnabled(notBuiltIn);
 			fSaveButton.setEnabled(notBuiltIn);
 			fRenameButton.setEnabled(notBuiltIn);
@@ -193,7 +197,7 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 		}
 
 		private void renameButtonPressed() {
-			if (fProfileManager.getSelected().isBuiltInProfile()) {
+			if (fProfileManager.getSelected() == null || fProfileManager.getSelected().isBuiltInProfile()) {
 				return;
 			}
 			final CustomProfile profile = (CustomProfile) fProfileManager.getSelected();
@@ -205,12 +209,18 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 		}
 
 		private void modifyButtonPressed() {
+			if (fProfileManager.getSelected() == null) {
+				return;
+			}
 			final ModifyDialog modifyDialog = new ModifyDialog(CodeFormatterConfigurationBlock.this,
 					fComposite.getShell(), fProfileManager.getSelected(), fProfileManager, false);
 			modifyDialog.open();
 		}
 
 		private void deleteButtonPressed() {
+			if (fProfileManager.getSelected() == null) {
+				return;
+			}
 			if (MessageDialog.openQuestion(fComposite.getShell(),
 					FormatterMessages.CodingStyleConfigurationBlock_delete_confirmation_title,
 					Messages.format(FormatterMessages.CodingStyleConfigurationBlock_delete_confirmation_question,
@@ -231,6 +241,9 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 		}
 
 		private void saveButtonPressed() {
+			if (fProfileManager.getSelected() == null) {
+				return;
+			}
 			Profile selected = fProfileManager.getSelected();
 
 			final FileDialog dialog = new FileDialog(fComposite.getShell(), SWT.SAVE);
@@ -310,8 +323,10 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 
 		public PreviewController() {
 			fProfileManager.addObserver(this);
-			fPHPPreview.setPreferences(new CodeFormatterPreferences(fProfileManager.getSelected().getSettings()));
-			fPHPPreview.update();
+			if (fProfileManager.getSelected() != null) {
+				fPHPPreview.setPreferences(new CodeFormatterPreferences(fProfileManager.getSelected().getSettings()));
+				fPHPPreview.update();
+			}
 		}
 
 		@Override
@@ -322,9 +337,11 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 			case ProfileManager.PROFILE_DELETED_EVENT:
 			case ProfileManager.SELECTION_CHANGED_EVENT:
 			case ProfileManager.SETTINGS_CHANGED_EVENT:
-				fPHPPreview
-						.setPreferences(new CodeFormatterPreferences(((ProfileManager) o).getSelected().getSettings()));
-				fPHPPreview.update();
+				if (fProfileManager.getSelected() != null) {
+					fPHPPreview.setPreferences(
+							new CodeFormatterPreferences(((ProfileManager) o).getSelected().getSettings()));
+					fPHPPreview.update();
+				}
 			}
 		}
 
