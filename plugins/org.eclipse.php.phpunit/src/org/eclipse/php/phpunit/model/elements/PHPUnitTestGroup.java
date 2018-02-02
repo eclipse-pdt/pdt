@@ -144,4 +144,12 @@ public class PHPUnitTestGroup extends PHPUnitTest {
 
 		return sb.toString();
 	}
+
+	public String toString() {
+		String result = this.getSuiteName();
+		if (result == null) {
+			result = this.getFilterName();
+		}
+		return result;
+	}
 }
