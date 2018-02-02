@@ -1,0 +1,65 @@
+--TEST--
+Test array & binary indentation policies
+--FILE--
+<?php
+$concat = array(array(100 +
+200 +
+300 +
+400
+) +
+array(500 +
+600 +
+array(100 +
+200 +
+300 +
+400
+) +
+800
+),array(100 +
+200 +
+300 +
+400
+) +
+array(array(500 +
+600 +
+700 +
+800
+) +
+600 +
+array(array(100 +
+200 +
+300 +
+400
+) +
+200 +
+300 +
+400
+) +
+800
+)
+);
+--EXPECT--
+<?php
+$concat = array ( 
+    array ( 
+        100 + 200 + 300 + 400 
+    ) + array ( 
+        500 + 600 + array ( 
+            100 + 200 + 300 +
+            400 
+        ) + 800 
+    ) ,
+    array ( 
+        100 + 200 + 300 + 400 
+    ) + array ( 
+        array ( 
+            500 + 600 + 700 +
+            800 
+        ) + 600 + array ( 
+            array ( 
+                100 + 200 + 300 +
+                400 
+            ) + 200 + 300 + 400 
+        ) + 800 
+    ) 
+);
