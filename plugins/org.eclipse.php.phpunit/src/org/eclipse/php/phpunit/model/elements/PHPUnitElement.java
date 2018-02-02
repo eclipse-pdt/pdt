@@ -89,6 +89,12 @@ abstract public class PHPUnitElement {
 	}
 
 	protected void setTestId() {
-		testId = toString().hashCode();
+		String hash;
+		if (this.parent != null && this instanceof PHPUnitTestCase && ((PHPUnitTestCase) this).dataProviderCase) {
+			hash = this.parent.toString() + "@" + this.toString(); //$NON-NLS-1$
+		} else {
+			hash = this.toString();
+		}
+		testId = hash.hashCode();
 	}
 }
