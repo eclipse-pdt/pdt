@@ -60,6 +60,9 @@ public class PHPUnitView extends ViewPart {
 
 	public static final String NAME = PHPUnitPlugin.ID + ".PHPUnitView"; //$NON-NLS-1$
 
+	private static final String RERUN_LAST_COMMAND = "org.eclipse.php.phpunit.LaunchShortcut.rerunLast"; //$NON-NLS-1$
+	private static final String RERUN_LAST_FAILED_COMMAND = "org.eclipse.php.phpunit.LaunchShortcut.rerunLastFailed"; //$NON-NLS-1$
+
 	static final int VIEW_ORIENTATION_AUTOMATIC = 2;
 
 	static final int VIEW_ORIENTATION_HORIZONTAL = 1;
@@ -785,6 +788,7 @@ public class PHPUnitView extends ViewPart {
 			super(null, null);
 			setToolTipText(PHPUnitMessages.PHPUnitView_Run_ToolTip);
 			setEnabled(false);
+			setActionDefinitionId(RERUN_LAST_COMMAND);
 			setMenuCreator(new IMenuCreator() {
 
 				private Menu fMenu;
@@ -837,6 +841,7 @@ public class PHPUnitView extends ViewPart {
 			setHoverImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/relaunchf.png")); //$NON-NLS-1$
 			setImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/relaunchf.png")); //$NON-NLS-1$
 			setDisabledImageDescriptor(PHPUnitPlugin.getImageDescriptor("dlcl16/relaunchf.png")); //$NON-NLS-1$
+			setActionDefinitionId(RERUN_LAST_FAILED_COMMAND);
 		}
 
 		@Override

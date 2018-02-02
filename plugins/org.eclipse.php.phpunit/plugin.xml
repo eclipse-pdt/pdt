@@ -85,14 +85,26 @@
 			name="%run" />
 		<command categoryId="org.eclipse.debug.ui.category.run"
 			description="%debug" id="org.eclipse.php.phpunit.LaunchShortcut.debug"
-			name="%debug" />
+			name="%debug" />	
+		<command
+			name="%rerunLast"
+			description="%rerunLast"
+			categoryId="org.eclipse.debug.ui.category.run"
+			id="org.eclipse.php.phpunit.LaunchShortcut.rerunLast">
+		</command>
+		<command
+			name="%rerunLastFailed"
+			description="%rerunLastFailed"
+			categoryId="org.eclipse.debug.ui.category.run"
+			id="org.eclipse.php.phpunit.LaunchShortcut.rerunLastFailed">
+		</command>
 	</extension>
 	<extension point="org.eclipse.ui.bindings">
 		<key commandId="org.eclipse.php.phpunit.LaunchShortcut.run"
-			contextId="org.eclipse.ui.globalScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			contextId="org.eclipse.ui.contexts.window" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
 			sequence="M3+M2+X U" />
 		<key commandId="org.eclipse.php.phpunit.LaunchShortcut.debug"
-			contextId="org.eclipse.ui.globalScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			contextId="org.eclipse.ui.contexts.window" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
 			sequence="M3+M2+D U" />
 	</extension>
 	<extension point="org.eclipse.core.runtime.preferences">
