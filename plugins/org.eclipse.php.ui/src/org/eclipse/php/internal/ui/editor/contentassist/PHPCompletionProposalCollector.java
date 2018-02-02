@@ -48,10 +48,10 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 
 	@Override
 	protected ScriptCompletionProposal createOverrideCompletionProposal(IScriptProject scriptProject,
-			ISourceModule compilationUnit, String name, String[] paramTypes, int start, int length, String label,
+			ISourceModule compilationUnit, String name, String[] paramTypes, int start, int length, StyledString label,
 			String string) {
-		return new PHPOverrideCompletionProposal(scriptProject, compilationUnit, name, paramTypes, start, length,
-				new StyledString(label), string);
+		return new PHPOverrideCompletionProposal(scriptProject, compilationUnit, name, paramTypes, start, length, label,
+				string);
 	}
 
 	protected ScriptCompletionProposal createScriptCompletionProposal(String completion, int replaceStart, int length,
@@ -106,14 +106,14 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 	@Override
 	protected IScriptCompletionProposal createScriptCompletionProposal(CompletionProposal proposal) {
 		ScriptCompletionProposal completionProposal;
-		if (proposal.getKind() == CompletionProposal.METHOD_DECLARATION) {
+		if (proposal.getKind() == CompletionProposal.METHOD_REF) {
 			completionProposal = createMethodDeclarationProposal(proposal);
 		} else if (proposal.getKind() == CompletionProposal.TYPE_REF) {
 			completionProposal = (ScriptCompletionProposal) createTypeProposal(proposal);
 		} else {
 			completionProposal = (ScriptCompletionProposal) super.createScriptCompletionProposal(proposal);
 		}
-		if (proposal.getKind() == CompletionProposal.METHOD_DECLARATION) {
+		if (proposal.getKind() == CompletionProposal.METHOD_REF) {
 			IMethod method = (IMethod) proposal.getModelElement();
 			try {
 				if (method.isConstructor()) {

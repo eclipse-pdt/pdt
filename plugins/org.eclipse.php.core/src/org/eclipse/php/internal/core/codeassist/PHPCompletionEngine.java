@@ -292,10 +292,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 
 		noProposal = false;
 
-		if (!requestor.isIgnored(CompletionProposal.METHOD_DECLARATION)) {
-
-			CompletionProposal proposal = createProposal(CompletionProposal.METHOD_DECLARATION,
-					actualCompletionPosition);
+		if (!requestor.isIgnored(CompletionProposal.METHOD_REF)) {
+			CompletionProposal proposal = createProposal(CompletionProposal.METHOD_REF, actualCompletionPosition);
 			proposal.setExtraInfo(extraInfo);
 			// show method parameter names:
 			String[] params = null;

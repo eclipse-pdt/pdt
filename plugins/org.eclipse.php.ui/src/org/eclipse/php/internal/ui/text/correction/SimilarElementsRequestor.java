@@ -119,8 +119,7 @@ public class SimilarElementsRequestor extends CompletionRequestor {
 
 	@Override
 	public void accept(CompletionProposal proposal) {
-		if (proposal.getKind() == CompletionProposal.TYPE_REF
-				|| proposal.getKind() == CompletionProposal.METHOD_DECLARATION) {
+		if (proposal.getKind() == CompletionProposal.TYPE_REF || proposal.getKind() == CompletionProposal.METHOD_REF) {
 			String name = null;
 			IModelElement element = proposal.getModelElement();
 			if (element instanceof IType || element instanceof FakeConstructor) {

@@ -18,6 +18,7 @@ import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.dltk.ui.text.completion.CompletionProposalLabelProvider;
 import org.eclipse.dltk.ui.text.completion.ICompletionProposalLabelProviderExtension;
+import org.eclipse.dltk.ui.text.completion.ICompletionProposalLabelProviderExtension2;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposalCollector;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.StyledString;
@@ -35,7 +36,7 @@ import org.eclipse.php.internal.ui.util.PHPModelLabelProvider;
 import org.eclipse.php.ui.PHPElementLabels;
 
 public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelProvider
-		implements ICompletionProposalLabelProviderExtension {
+		implements ICompletionProposalLabelProviderExtension, ICompletionProposalLabelProviderExtension2 {
 	private static final PHPModelLabelProvider fLabelProvider = new PHPModelLabelProvider();
 
 	private static final String ENCLOSING_TYPE_SEPARATOR = String.valueOf(NamespaceReference.NAMESPACE_SEPARATOR);
@@ -50,7 +51,8 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 		return createStyledOverrideMethodProposalLabel(methodProposal).toString();
 	}
 
-	protected StyledString createStyledOverrideMethodProposalLabel(CompletionProposal methodProposal) {
+	@Override
+	public StyledString createStyledOverrideMethodProposalLabel(CompletionProposal methodProposal) {
 		StyledString nameBuffer = new StyledString();
 		IMethod method = (IMethod) methodProposal.getModelElement();
 
