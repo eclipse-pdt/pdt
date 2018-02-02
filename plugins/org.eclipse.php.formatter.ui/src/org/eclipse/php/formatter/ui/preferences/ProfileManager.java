@@ -15,7 +15,6 @@ import java.util.*;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
@@ -25,6 +24,7 @@ import org.eclipse.php.core.format.IProfileManager;
 import org.eclipse.php.formatter.core.CodeFormatterConstants;
 import org.eclipse.php.formatter.core.profiles.CodeFormatterPreferences;
 import org.eclipse.php.formatter.ui.FormatterMessages;
+import org.eclipse.php.formatter.ui.Logger;
 import org.eclipse.php.internal.formatter.core.FormatterCorePlugin;
 import org.eclipse.php.internal.formatter.core.FormattingProfile;
 import org.eclipse.php.internal.formatter.core.FormattingProfileRegistry;
@@ -336,11 +336,15 @@ public class ProfileManager extends Observable implements IProfileManager {
 		}
 
 		Profile profile = fProfiles.get(profileId);
-		Assert.isNotNull(profile);
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=530660
+		// Assert.isNotNull(profile);
+		if (profile == null) {
+			Logger.log(Logger.ERROR, "ProfileManager: could not load profile " + profileId); //$NON-NLS-1$
+		}
 
 		fSelected = profile;
 
-		if (context.getName() == ProjectScope.SCOPE && hasProjectSpecificSettings(context)) {
+		if (fSelected != null && context.getName() == ProjectScope.SCOPE && hasProjectSpecificSettings(context)) {
 			Map<String, Object> map = readFromPreferenceStore(context, profile);
 			if (map != null) {
 				Profile matching = null;
