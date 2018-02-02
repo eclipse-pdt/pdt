@@ -144,4 +144,8 @@ public class PHPUnitTestGroup extends PHPUnitTest {
 
 		return sb.toString();
 	}
+
+	public String toString() {
+		return this.getSuiteName();
+	}
 }

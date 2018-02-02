@@ -69,4 +69,8 @@ public class PHPUnitTestCase extends PHPUnitTest {
 		return sb.toString();
 	}
 
+	public String toString() {
+		return this.getFilterName();
+	}
+
 }
