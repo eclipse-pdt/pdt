@@ -19,7 +19,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.php.phpunit.PHPUnitPlugin;
 import org.eclipse.php.phpunit.model.elements.PHPUnitElement;
-import org.eclipse.php.phpunit.model.elements.PHPUnitTestCase;
+import org.eclipse.php.phpunit.model.elements.PHPUnitTest;
 import org.eclipse.php.phpunit.model.elements.PHPUnitTestException;
 import org.eclipse.php.phpunit.model.elements.PHPUnitTraceFrame;
 import org.eclipse.php.phpunit.model.providers.PHPUnitTestTraceTreeContentProvider;
@@ -92,7 +92,7 @@ public class FailureTrace implements IMenuListener {
 			action = new OpenEditorAtLineAction("", fTestRunner, frame.getFile(), frame.getLine(), methodName); //$NON-NLS-1$
 		} else if (test instanceof PHPUnitTestException) {
 			PHPUnitTestException te = (PHPUnitTestException) test;
-			PHPUnitTestCase parent = (PHPUnitTestCase) te.getParent();
+			PHPUnitTest parent = (PHPUnitTest) te.getParent();
 			String methodName = parent.getName();
 			action = new OpenEditorAtLineAction("", fTestRunner, test.getParent().getFile(), parent.getLine(), //$NON-NLS-1$
 					methodName);
