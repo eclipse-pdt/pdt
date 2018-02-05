@@ -1,0 +1,21 @@
+--TEST--
+Bug 423089 - Broken formatter with non-PHPDoc tags
+--FILE--
+/**
+ *
+ * @author John Doe
+ * @ORM\Entity
+ * @MyProject\Annotations\Foobarable
+ */
+--EXPECT--
+<PHPDocBlock start="0" end="82" shortDescription="">
+	<PHPDocTag start="10" end="27" tagKind="author" matchedTag="@author" value=" John Doe
+">
+	</PHPDocTag>
+	<PHPDocTag start="30" end="42" tagKind="unsupported" matchedTag="@ORM\Entity" value="
+">
+	</PHPDocTag>
+	<PHPDocTag start="45" end="79" tagKind="unsupported" matchedTag="@MyProject\Annotations\Foobarable" value="
+ ">
+	</PHPDocTag>
+</PHPDocBlock>

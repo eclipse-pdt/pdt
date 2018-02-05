@@ -50,6 +50,10 @@ public class PHPDocTagStrategy extends AbstractCompletionStrategy {
 		String suffix = ""; //$NON-NLS-1$
 
 		for (TagKind nextTag : TagKind.values()) {
+			// The special tag UNSUPPORTED must be ignored:
+			if (nextTag == TagKind.UNSUPPORTED) {
+				continue;
+			}
 			String nextTagName = nextTag.getName();
 			if (StringUtils.startsWithIgnoreCase(nextTagName, tagName)) {
 				if (!requestor.isContextInformationMode() || nextTagName.length() == tagName.length()) {

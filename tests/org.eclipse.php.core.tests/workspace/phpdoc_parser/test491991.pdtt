@@ -13,30 +13,34 @@ Bug 491991 - Tag @inheritdoc is not colored editor and proposed in CA for PHPDoc
  */
 --EXPECT--
 <PHPDocBlock start="0" end="266" shortDescription="">
-	<PHPDocTag start="7" end="71" tagKind="param" value=" string  $a valid tag
-@paramxxx string  $a invalid tag
+	<PHPDocTag start="7" end="35" tagKind="param" matchedTag="@param" value=" string  $a valid tag
 ">
 		<TypeReference start="14" end="20" name="string">
 		</TypeReference>
 		<VariableReference start="22" end="24" name="$a">
 		</VariableReference>
 	</PHPDocTag>
-	<PHPDocTag start="74" end="138" tagKind="param" value=" string  $b valid tag
-@pArAmxxx string  $b invalid tag
+	<PHPDocTag start="38" end="71" tagKind="unsupported" matchedTag="@paramxxx" value=" string  $a invalid tag
+">
+	</PHPDocTag>
+	<PHPDocTag start="74" end="102" tagKind="param" matchedTag="@param" value=" string  $b valid tag
 ">
 		<TypeReference start="81" end="87" name="string">
 		</TypeReference>
 		<VariableReference start="89" end="91" name="$b">
 		</VariableReference>
 	</PHPDocTag>
-	<PHPDocTag start="141" end="165" tagKind="inheritdoc" value=" valid tag
+	<PHPDocTag start="105" end="138" tagKind="unsupported" matchedTag="@pArAmxxx" value=" string  $b invalid tag
 ">
 	</PHPDocTag>
-	<PHPDocTag start="168" end="224" tagKind="inheritdoc" value=" valid tag
+	<PHPDocTag start="141" end="165" tagKind="inheritdoc" matchedTag="{@inheritdoc}" value=" valid tag
+">
+	</PHPDocTag>
+	<PHPDocTag start="168" end="224" tagKind="inheritdoc" matchedTag="{@inheritdoc}" value=" valid tag
 {@inheritdocxxx} invalid tag
 ">
 	</PHPDocTag>
-	<PHPDocTag start="227" end="263" tagKind="todo" value=" special tag (treated as text)
+	<PHPDocTag start="227" end="263" tagKind="todo" matchedTag="@todo" value=" special tag (treated as text)
  ">
 	</PHPDocTag>
 </PHPDocBlock>

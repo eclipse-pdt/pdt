@@ -399,7 +399,7 @@ public class PHPClassTemplate extends PHPElementTemplate {
 					// loop on all phpdoc params
 					for (PHPDocTag docTag : tags) {
 						String phpdocParamType = " " //$NON-NLS-1$
-								+ docTag.getTagKind().getValue();
+								+ docTag.getMatchedTag();
 						String phpdocParamValue = docTag.getValue();
 						set(FUNC_PHPDOC_PARAM_VAR, phpdocParamType + " " + phpdocParamValue); //$NON-NLS-1$
 						compile(FUNC_PHPDOC_PARAMS_STRUCT_COMPILED, FUNC_PHPDOC_PARAMS_STRUCT, true);
