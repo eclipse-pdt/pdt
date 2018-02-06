@@ -7,7 +7,7 @@ Test Throws Tag
 */
 --EXPECT--
 <PHPDocBlock start="0" end="46" shortDescription="Test throws tag">
-	<PHPDocTag start="24" end="44" tagKind="throws" value=" MyException
+	<PHPDocTag start="24" end="44" tagKind="throws" matchedTag="@throws" value=" MyException
 ">
 		<TypeReference start="32" end="43" name="MyException">
 		</TypeReference>

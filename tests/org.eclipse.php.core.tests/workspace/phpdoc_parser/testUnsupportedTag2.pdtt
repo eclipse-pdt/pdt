@@ -1,0 +1,23 @@
+--TEST--
+Bug 423089 - Broken formatter with non-PHPDoc tags
+--FILE--
+/**
+ *
+ * @ORM\Id @ORM\Column @ORM\GeneratedValue
+ * @dummy
+ * @var int
+ */
+--EXPECT--
+<PHPDocBlock start="0" end="75" shortDescription="">
+	<PHPDocTag start="10" end="50" tagKind="unknown" matchedTag="@ORM\Id" value=" @ORM\Column @ORM\GeneratedValue
+">
+	</PHPDocTag>
+	<PHPDocTag start="53" end="60" tagKind="unknown" matchedTag="@dummy" value="
+">
+	</PHPDocTag>
+	<PHPDocTag start="63" end="72" tagKind="var" matchedTag="@var" value=" int
+ ">
+		<TypeReference start="68" end="71" name="int">
+		</TypeReference>
+	</PHPDocTag>
+</PHPDocBlock>

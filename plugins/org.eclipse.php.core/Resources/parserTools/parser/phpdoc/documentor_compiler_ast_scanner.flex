@@ -308,6 +308,7 @@ import org.eclipse.php.core.compiler.ast.nodes.Scalar;
 TABS_AND_SPACES=[ \t]*
 ANY_CHAR=(.|[\n])
 NEWLINE=("\r"|"\n"|"\r\n")
+NON_WHITESPACE_CHAR=[^ \n\r\t]
 LINESTART=({TABS_AND_SPACES}"*"?{TABS_AND_SPACES})
 EMPTYLINE=({LINESTART}{TABS_AND_SPACES})
 PHPDOCSTART="/**"{TABS_AND_SPACES}
@@ -331,7 +332,19 @@ PHPDOCSTART="/**"{TABS_AND_SPACES}
 
 <YYINITIAL>{ANY_CHAR}     {}
 
-<ST_IN_FIRST_LINE>^{PHPDOCSTART}(("{@"[a-zA-Z-]+"}")|("@"[a-zA-Z-]+)) {
+<ST_IN_FIRST_LINE>^{PHPDOCSTART}("@"{NON_WHITESPACE_CHAR}+) {
+	int position = findTagPosition();
+	String value = new String(zzBuffer, position, zzMarkedPos - position);
+	TagKind tagkind = TagKind.getTagKindFromValue(value);
+	if (tagkind != null) {
+		startTagsState(tagkind, position);
+	} else {
+		startTagsState(TagKind.UNKNOWN, position);
+		matchedTag = value;
+	}
+}
+
+<ST_IN_FIRST_LINE>^{PHPDOCSTART}("{@"[a-zA-Z-]+"}") {
 	int position = findTagPosition();
 	TagKind tagkind = TagKind.getTagKindFromValue(new String(zzBuffer, position, zzMarkedPos - position));
 	if (tagkind != null) {
@@ -375,7 +388,19 @@ PHPDOCSTART="/**"{TABS_AND_SPACES}
 <ST_IN_SHORT_DESC>{NEWLINE}     {handleNewLine();}
 <ST_IN_SHORT_DESC>.             {}
 
-<ST_IN_SHORT_DESC,ST_IN_LONG_DESC>^{LINESTART}(("{@"[a-zA-Z-]+"}")|("@"[a-zA-Z-]+)) {
+<ST_IN_SHORT_DESC,ST_IN_LONG_DESC>^{LINESTART}("@"{NON_WHITESPACE_CHAR}+) {
+	int position = findTagPosition();
+	String value = new String(zzBuffer, position, zzMarkedPos - position);
+	TagKind tagkind = TagKind.getTagKindFromValue(value);
+	if (tagkind != null) {
+		startTagsState(tagkind, position);
+	} else {
+		startTagsState(TagKind.UNKNOWN, position);
+		matchedTag = value;
+	}
+}
+
+<ST_IN_SHORT_DESC,ST_IN_LONG_DESC>^{LINESTART}("{@"[a-zA-Z-]+"}") {
 	int position = findTagPosition();
 	TagKind tagkind = TagKind.getTagKindFromValue(new String(zzBuffer, position, zzMarkedPos - position));
 	if (tagkind != null) {
@@ -394,7 +419,19 @@ PHPDOCSTART="/**"{TABS_AND_SPACES}
 
 <ST_IN_LONG_DESC>.             {}
 
-<ST_IN_TAGS>^{LINESTART}(("{@"[a-zA-Z-]+"}")|("@"[a-zA-Z-]+)) {
+<ST_IN_TAGS>^{LINESTART}("@"{NON_WHITESPACE_CHAR}+) {
+	int position = findTagPosition();
+	String value = new String(zzBuffer, position, zzMarkedPos - position);
+	TagKind tagkind = TagKind.getTagKindFromValue(value);
+	if (tagkind != null) {
+		setNewTag(tagkind, position);
+	} else {
+		setNewTag(TagKind.UNKNOWN, position);
+		matchedTag = value;
+	}
+}
+
+<ST_IN_TAGS>^{LINESTART}("{@"[a-zA-Z-]+"}") {
 	int position = findTagPosition();
 	TagKind tagkind = TagKind.getTagKindFromValue(new String(zzBuffer, position, zzMarkedPos - position));
 	if (tagkind != null) {

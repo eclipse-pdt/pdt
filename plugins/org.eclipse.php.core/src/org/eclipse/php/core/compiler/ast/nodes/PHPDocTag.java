@@ -67,7 +67,15 @@ public class PHPDocTag extends ASTNode {
 		NAMESPACE("namespace"), //$NON-NLS-1$
 		INHERITDOC("inheritdoc", "{@inheritdoc}"), //$NON-NLS-1$ //$NON-NLS-2$
 		EXCEPTION("exception"), //$NON-NLS-1$
-		MAGIC("magic"); //$NON-NLS-1$
+		MAGIC("magic"), //$NON-NLS-1$
+		/**
+		 * Special tag kind used as a placeholder for all non-PHPDoc tags like
+		 * Doctrine ORM annotations. Use {@link PHPDocTag#getMatchedTag()} to
+		 * retrieve the real tag name attached to this tag kind.
+		 * 
+		 * @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=469402
+		 */
+		UNKNOWN("unknown"); //$NON-NLS-1$
 
 		@NonNull
 		String name;
@@ -406,6 +414,13 @@ public class PHPDocTag extends ASTNode {
 		return tagKind;
 	}
 
+	/**
+	 * Returns matched tag name when getTagKind() is equal to
+	 * <code>TagKind.UNKNOWN</code>. Otherwise returns same result as
+	 * <code>getTagKind().getValue()</code>.
+	 * 
+	 * @return matched tag name
+	 */
 	@NonNull
 	public String getMatchedTag() {
 		return matchedTag;

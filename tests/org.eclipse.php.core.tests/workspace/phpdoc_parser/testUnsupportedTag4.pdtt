@@ -1,0 +1,17 @@
+--TEST--
+Bug 423089 - Broken formatter with non-PHPDoc tags
+--FILE--
+/**
+ *
+ * @Annotation
+ * @Target({"METHOD","PROPERTY"})
+ */
+--EXPECT--
+<PHPDocBlock start="0" end="59" shortDescription="">
+	<PHPDocTag start="10" end="22" tagKind="unknown" matchedTag="@Annotation" value="
+">
+	</PHPDocTag>
+	<PHPDocTag start="25" end="56" tagKind="unknown" matchedTag="@Target({&quot;METHOD&quot;,&quot;PROPERTY&quot;})" value="
+ ">
+	</PHPDocTag>
+</PHPDocBlock>
