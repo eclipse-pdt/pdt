@@ -1254,6 +1254,8 @@ public class PHPDocumentationContentAccess {
 					continue;
 				}
 				handleBlockTagTitle(PHPDocumentationMessages.JavaDoc2HTMLTextReader_var_section);
+			} else if (tag.getTagKind() == TagKind.UNKNOWN) {
+				handleBlockTagTitle(tag.getMatchedTag());
 			} else {
 				handleBlockTagTitle(tag.getTagKind().getName());
 			}
