@@ -91,8 +91,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	/**
-	 * Returns whether there are whitespace characters before the cursor where code
-	 * assist was being invoked
+	 * Returns whether there are whitespace characters before the cursor where
+	 * code assist was being invoked
 	 * 
 	 * @return <code>true</code> if there are whitespace characters before the
 	 *         cursor
@@ -113,8 +113,9 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 * document, this method will return false when cursor is at end of
 	 * companion.getDocument().
 	 * 
-	 * @return <code>true</code> if there is a space character at offset position,
-	 *         false otherwise or false when cursor is at end of document
+	 * @return <code>true</code> if there is a space character at offset
+	 *         position, false otherwise or false when cursor is at end of
+	 *         document
 	 */
 	public boolean hasSpaceAtPosition(int offset) {
 		try {
@@ -365,8 +366,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	/**
-	 * Returns next character after the cursor position (or ' ' if cursor position
-	 * is at end of document)
+	 * Returns next character after the cursor position (or ' ' if cursor
+	 * position is at end of document)
 	 * 
 	 * @throws BadLocationException
 	 */
@@ -801,7 +802,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	private String realPrefix(String prefix) {
-		prefix = prefix.replaceAll("\\s+", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		prefix = prefix.replaceAll("\\p{javaWhitespace}+", ""); //$NON-NLS-1$ //$NON-NLS-2$
 		if (prefix.length() > 0 && prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
 			return prefix.substring(1);
 		}
