@@ -1,0 +1,31 @@
+--TEST--
+Bug 423089 - Broken formatter with non-PHPDoc tags
+--FILE--
+/**
+ *
+ * @Annotation
+ * @Target({"METHOD","PROPERTY"})
+ * @Attributes({
+ * @Attribute("stringProperty", type = "string"),
+ * @Attribute("annotProperty", type = "SomeAnnotationClass"),
+ * })
+ */
+--EXPECT--
+<PHPDocBlock start="0" end="194" shortDescription="">
+	<PHPDocTag start="10" end="22" tagKind="unknown" matchedTag="@Annotation" value="
+">
+	</PHPDocTag>
+	<PHPDocTag start="25" end="56" tagKind="unknown" matchedTag="@Target({&quot;METHOD&quot;,&quot;PROPERTY&quot;})" value="
+">
+	</PHPDocTag>
+	<PHPDocTag start="59" end="73" tagKind="unknown" matchedTag="@Attributes({" value="
+">
+	</PHPDocTag>
+	<PHPDocTag start="76" end="123" tagKind="unknown" matchedTag="@Attribute(&quot;stringProperty&quot;," value=" type = &quot;string&quot;),
+">
+	</PHPDocTag>
+	<PHPDocTag start="126" end="191" tagKind="unknown" matchedTag="@Attribute(&quot;annotProperty&quot;," value=" type = &quot;SomeAnnotationClass&quot;),
+})
+ ">
+	</PHPDocTag>
+</PHPDocBlock>

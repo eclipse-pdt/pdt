@@ -185,6 +185,7 @@ final public class PSR2FormatterPreferences implements ICodeFormatterPreferences
 		preferences.comment_format_html = true;
 		preferences.comment_format_source = true;
 		preferences.comment_indent_parameter_description = true;
+		preferences.comment_never_format_unknown_tags = false;
 		preferences.comment_indent_root_tags = true;
 		preferences.comment_insert_empty_line_before_root_tags = true;
 		preferences.comment_insert_new_line_for_parameter = true;
