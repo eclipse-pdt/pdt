@@ -468,6 +468,7 @@ final public class FormatterMessages extends NLS {
 	public static String CommentsTabPage_blank_line_before_javadoc_tags;
 	public static String CommentsTabPage_indent_javadoc_tags;
 	public static String CommentsTabPage_indent_description_after_param;
+	public static String CommentsTabPage_never_format_unknown_tags;
 	public static String CommentsTabPage_new_line_after_param_tags;
 	public static String CommentsTabPage_group3_title;
 	public static String CommentsTabPage_group4_title;
