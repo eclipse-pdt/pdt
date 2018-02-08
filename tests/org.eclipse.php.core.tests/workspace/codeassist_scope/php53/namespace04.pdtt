@@ -1,0 +1,16 @@
+--TEST--
+
+--FILE--
+<?php 
+namespace Foo\Bar {
+    
+}
+namespace Second\Bar {
+    |
+}
+
+
+--EXPECT--
+BLOCK(55,8)
+NAMESPACE(34,29,Second\Bar)
+FILE(0,66)

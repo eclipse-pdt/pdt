@@ -1,0 +1,16 @@
+--TEST--
+
+--FILE--
+<?php 
+trait FOO {
+    public $x = '|';
+    public function name() {
+        
+    }
+}
+
+--EXPECT--
+FIELD(23,15)
+BLOCK(17,67)
+TRAIT(7,77,FOO)
+FILE(0,86)

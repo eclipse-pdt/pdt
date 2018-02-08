@@ -1,0 +1,9 @@
+--TEST--
+Global
+--FILE--
+<?php 
+use Somet|hing\About;
+
+--EXPECT--
+USE(7,20)
+FILE(0,29)

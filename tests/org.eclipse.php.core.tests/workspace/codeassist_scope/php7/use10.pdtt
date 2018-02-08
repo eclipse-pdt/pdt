@@ -1,0 +1,10 @@
+--TEST--
+
+--FILE--
+<?php 
+use const Item{More|};
+
+--EXPECT--
+USE_GROUP(21,6)
+USE_CONST(7,21)
+FILE(0,30)

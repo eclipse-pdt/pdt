@@ -235,8 +235,7 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 					: document.get(prevTokenOffset, offset - prevTokenOffset).trim();
 
 			if (prevToken == Symbols.TokenLBRACE || prevToken == Symbols.TokenRBRACE
-					|| prevToken == Symbols.TokenSEMICOLON || prevToken == Symbols.TokenSYNCHRONIZED
-					|| prevToken == Symbols.TokenSTATIC
+					|| prevToken == Symbols.TokenSEMICOLON || prevToken == Symbols.TokenSTATIC
 					|| (prevToken == Symbols.TokenIDENT && isTypeParameterIntroducer(previous))
 					|| prevToken == Symbols.TokenEOF) {
 				return true;

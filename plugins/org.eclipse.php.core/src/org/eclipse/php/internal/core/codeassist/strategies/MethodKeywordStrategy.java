@@ -14,11 +14,10 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ITypeHierarchy;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.core.compiler.PHPFlags;
-import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.GlobalMethodStatementContext;
 import org.eclipse.php.internal.core.language.keywords.PHPKeywords;
 import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
@@ -81,7 +80,7 @@ public class MethodKeywordStrategy extends KeywordsStrategy {
 
 	protected boolean isParent(KeywordData keyword) {
 		String name = keyword.name;
-		if (PHPVersion.PHP5_4.isLessThan(((AbstractCompletionContext) getContext()).getPHPVersion())) {
+		if (PHPVersion.PHP5_4.isLessThan(getCompanion().getPHPVersion())) {
 			name = name.toLowerCase();
 		}
 

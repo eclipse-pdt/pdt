@@ -46,6 +46,7 @@ import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
 import org.eclipse.php.internal.core.documentModel.loader.PHPDocumentLoader;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.junit.After;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -161,10 +162,10 @@ public class CodeAssistTests {
 		final int offset = createFiles(pdttFile);
 		CompletionProposal[] proposals = getProposals(DLTKCore.createSourceModuleFrom(testFile), offset);
 		compareProposals(proposals, pdttFile);
-		deleteFiles();
 	}
 
-	private void deleteFiles() {
+	@After
+	public void deleteFiles() {
 		if (testFile != null) {
 			TestUtils.deleteFile(testFile);
 		}

@@ -1,0 +1,12 @@
+--TEST--
+Comment
+--FILE--
+<?php 
+/**
+* multi line
+*|/
+?>
+
+--EXPECT--
+PHPDOC(7,19)
+FILE(0,31)

@@ -74,7 +74,7 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) context;
 
-		int offset = completionContext.getOffset();
+		int offset = getCompanion().getOffset();
 		int start = completionContext.getReplacementStart();
 		int prefixEnd = completionContext.getReplacementEnd();
 
@@ -89,7 +89,7 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) context;
 
-		int offset = completionContext.getOffset();
+		int offset = getCompanion().getOffset();
 		int start = completionContext.getReplacementStart();
 		int prefixEnd = completionContext.getReplacementEnd();
 
@@ -116,7 +116,7 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) context;
 
-		int offset = completionContext.getOffset();
+		int offset = getCompanion().getOffset();
 		int start = completionContext.getReplacementStart();
 		int prefixEnd = completionContext.getReplacementEnd();
 
@@ -124,7 +124,7 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 
 		int length = Math.max(offset, prefixEnd) - start;
 
-		IDocument document = completionContext.getDocument();
+		IDocument document = getCompanion().getDocument();
 
 		int endOfReplacement = start + length;
 		if (document.getLength() == start) {
@@ -190,7 +190,7 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 	 * Creates search scope
 	 */
 	protected IDLTKSearchScope createSearchScope() {
-		ISourceModule sourceModule = ((AbstractCompletionContext) context).getSourceModule();
+		ISourceModule sourceModule = getCompanion().getSourceModule();
 		IScriptProject scriptProject = sourceModule.getScriptProject();
 		if (scriptProject != null) {
 			return SearchEngine.createSearchScope(scriptProject);
