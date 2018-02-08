@@ -1,0 +1,13 @@
+--TEST--
+
+--FILE--
+<?php 
+function my_func(|) {
+    
+}
+?>
+
+--EXPECT--
+HEAD(23,2)
+FUNCTION(7,27,my_func)
+FILE(0,39)
