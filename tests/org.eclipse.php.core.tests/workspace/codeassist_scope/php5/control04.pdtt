@@ -1,0 +1,16 @@
+--TEST--
+
+--FILE--
+<?php
+if (true) 
+    for($s; |) {
+        
+    }
+
+?>
+--EXPECT--
+HEAD(24,6)
+FOR(21,26)
+BLOCK(21,26)
+IF(6,41)
+FILE(0,52)

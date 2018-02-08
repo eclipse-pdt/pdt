@@ -20,6 +20,7 @@ import java.util.List;
 import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.core.*;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.core.codeassist.ICompletionScope.Type;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
@@ -89,7 +90,6 @@ public abstract class ClassMemberContext extends StatementContext {
 			// characters
 			return false;
 		}
-
 		String triggerText = statementText.subSequence(elementStart - 2, elementStart).toString();
 		if (triggerText.equals("->")) { //$NON-NLS-1$
 			triggerType = Trigger.OBJECT;
@@ -115,8 +115,8 @@ public abstract class ClassMemberContext extends StatementContext {
 		} catch (ModelException e) {
 			PHPCorePlugin.log(e);
 		}
-
-		tmpTypes.addAll(Arrays.asList(getCompanion().getLeftHandType(this, !isInUseTraitStatement())));
+		tmpTypes.addAll(Arrays.asList(
+				getCompanion().getLeftHandType(this, getCompanion().getScope().findParent(Type.TRAIT_USE) == null)));
 		types = tmpTypes.toArray(new IType[0]);
 		return true;
 	}

@@ -78,7 +78,7 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 				new PHPDocReturnTagContext(), new PHPDocMagicTagsContext(), new PHPDocTagInnerContext(),
 				new ArrayKeyContext(), new CatchTypeContext(), new CatchVariableContext(),
 				new ClassDeclarationKeywordContext(), new ClassExtendsContext(), new ClassImplementsContext(),
-				new ClassInstantiationContext(), new ClassObjMemberContext(), new ClassStatementContext(),
+				new ClassInstantiationContext(), new ClassObjMemberContext(), new TypeStatementContext(),
 				new ClassStaticMemberContext(), new FunctionParameterTypeContext(), new FunctionReturnTypeContext(),
 				new FunctionParameterValueContext(), new FunctionParameterVariableContext(), new MethodNameContext(),
 				new GlobalStatementContext(), new GlobalMethodStatementContext(), new InstanceOfContext(),
@@ -101,7 +101,6 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 		// find correct completion contexts according to known information:
 		for (ICompletionContext context : contexts) {
 			context.init(companion);
-
 			try {
 				if (context.isValid(sourceModule, offset, requestor)) {
 					result.add(context);

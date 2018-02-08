@@ -49,10 +49,10 @@ public class ClassPropertiesStrategy extends AbstractCompletionStrategy {
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) getContext();
 		CompletionRequestor requestor = abstractContext.getCompletionRequestor();
 
-		int offset = abstractContext.getOffset();
+		int offset = abstractContext.getCompanion().getOffset();
 
 		// find class properties
-		ISourceModule sourceModule = abstractContext.getSourceModule();
+		ISourceModule sourceModule = abstractContext.getCompanion().getSourceModule();
 		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
 
 		List<PHPFieldDeclaration> declarations = ASTUtils.findClassPropertiesAfterPHPdoc(moduleDeclaration, offset);

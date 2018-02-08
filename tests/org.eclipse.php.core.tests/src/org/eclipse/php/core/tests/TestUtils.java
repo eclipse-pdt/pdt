@@ -78,8 +78,8 @@ public final class TestUtils {
 		@Override
 		protected void run() throws CoreException, IOException {
 			/*
-			 * Check if there were some new index requests added to the queue in the
-			 * meantime, if so go back to the end of the queue.
+			 * Check if there were some new index requests added to the queue in
+			 * the meantime, if so go back to the end of the queue.
 			 */
 			if (indexManager.awaitingJobsCount() > 1) {
 				noWaitSignalThread.interrupt();
@@ -92,8 +92,8 @@ public final class TestUtils {
 			// Interrupt "wait for indexer" thread (no sleeping dude...).
 			noWaitSignalThread.interrupt();
 			/*
-			 * Requests queue is empty, we can assume that indexer has finished so release
-			 * semaphore to move on with processing.
+			 * Requests queue is empty, we can assume that indexer has finished
+			 * so release semaphore to move on with processing.
 			 */
 			waitForIndexerSemaphore.release();
 		}
@@ -429,6 +429,10 @@ public final class TestUtils {
 
 	private static void disableLibraryDetection() {
 		LibraryFolderManager.getInstance().suspendAllDetection(true);
+	}
+
+	public static void indexFile(IFile file) {
+		ModelManager.getModelManager().getIndexManager().recreateIndex(file.getFullPath());
 	}
 
 }
