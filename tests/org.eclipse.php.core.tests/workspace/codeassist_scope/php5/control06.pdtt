@@ -1,0 +1,17 @@
+--TEST--
+
+--FILE--
+<?php
+function Test() {
+    do {
+        |
+    } while(true);
+}
+
+?>
+--EXPECT--
+BLOCK(31,16)
+DOWHILE(28,32)
+BLOCK(22,40)
+FUNCTION(6,56,Test)
+FILE(0,67)

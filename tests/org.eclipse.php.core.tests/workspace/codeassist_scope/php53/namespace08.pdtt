@@ -1,0 +1,15 @@
+--TEST--
+Global
+--FILE--
+<?php 
+namespace NS;
+function AAA() {}
+class AAA {}
+const AAA = 5;
+$AAA = "";
+
+namespace\|
+--EXPECT--
+BLOCK(20,70)
+NAMESPACE(7,83,NS)
+FILE(0,90)
