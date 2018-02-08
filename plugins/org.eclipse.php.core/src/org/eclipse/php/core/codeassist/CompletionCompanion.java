@@ -19,6 +19,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.annotations.NonNull;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.hierarchy.TypeHierarchy;
@@ -27,11 +28,13 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.core.compiler.ast.nodes.PHPModuleDeclaration;
 import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
+import org.eclipse.php.internal.core.codeassist.scope.ScopeParser;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
@@ -71,6 +74,8 @@ public class CompletionCompanion {
 	private ITextRegionCollection regionCollection;
 	private IPHPScriptRegion phpScriptRegion;
 	private String partitionType;
+	private PHPModuleDeclaration phpModuleDeclaration;
+	private ICompletionScope scope;
 
 	private static class FakeTypeHierarchy extends TypeHierarchy {
 		public FakeTypeHierarchy() {
@@ -88,30 +93,29 @@ public class CompletionCompanion {
 		this.phpVersion = ProjectOptions.getPHPVersion(getSourceModule().getScriptProject().getProject());
 		try {
 			this.document = determineDocument(sourceModule, requestor);
-			if (this.document != null) {
-
-				structuredDocumentRegion = determineStructuredDocumentRegion(document, offset);
-				if (structuredDocumentRegion != null) {
-
-					regionCollection = determineRegionCollection(document, structuredDocumentRegion, offset);
-					if (regionCollection != null) {
-
-						phpScriptRegion = determinePHPRegion(document, regionCollection, offset);
-						if (phpScriptRegion != null) {
-
-							partitionType = determinePartitionType(regionCollection, phpScriptRegion, offset);
-							if (partitionType != null) {
-								determineNamespace();
-							}
-
-						}
-					}
-				}
+			if (this.document == null) {
+				return;
+			}
+			structuredDocumentRegion = determineStructuredDocumentRegion(document, offset);
+			if (structuredDocumentRegion == null) {
+				return;
+			}
+			regionCollection = determineRegionCollection(document, structuredDocumentRegion, offset);
+			if (regionCollection == null) {
+				return;
+			}
+			phpScriptRegion = determinePHPRegion(document, regionCollection, offset);
+			if (phpScriptRegion == null) {
+				return;
+			}
+			partitionType = determinePartitionType(regionCollection, phpScriptRegion, offset);
+			if (partitionType != null) {
+				determineScope();
+				determineNamespace();
 			}
 		} catch (ResourceAlreadyExists | IOException | CoreException | BadLocationException e) {
 			Logger.logException(e);
 		}
-
 	}
 
 	/**
@@ -404,6 +408,7 @@ public class CompletionCompanion {
 		if (currentNamespaceRange == null) {
 			currentNamespaceRange = new SourceRange(0, document.getLength());
 		}
+
 	}
 
 	/*
@@ -516,5 +521,30 @@ public class CompletionCompanion {
 
 	public ISourceRange getCurrentNamespaceRange() {
 		return currentNamespaceRange;
+	}
+
+	public PHPModuleDeclaration getModuleDeclaration() {
+		if (phpModuleDeclaration == null) {
+			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(getSourceModule(), null);
+			if (moduleDeclaration instanceof PHPModuleDeclaration) {
+				phpModuleDeclaration = (PHPModuleDeclaration) moduleDeclaration;
+			}
+		}
+
+		return phpModuleDeclaration;
+	}
+
+	private void determineScope() {
+		ScopeParser scopeParser = new ScopeParser(document);
+		scope = scopeParser.parse(offset);
+	}
+
+	@NonNull
+	public ICompletionScope getScope() {
+		if (scope == null) {
+			determineScope();
+		}
+
+		return scope;
 	}
 }

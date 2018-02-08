@@ -91,8 +91,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	/**
-	 * Returns whether there are whitespace characters before the cursor where
-	 * code assist was being invoked
+	 * Returns whether there are whitespace characters before the cursor where code
+	 * assist was being invoked
 	 * 
 	 * @return <code>true</code> if there are whitespace characters before the
 	 *         cursor
@@ -113,9 +113,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 * document, this method will return false when cursor is at end of
 	 * companion.getDocument().
 	 * 
-	 * @return <code>true</code> if there is a space character at offset
-	 *         position, false otherwise or false when cursor is at end of
-	 *         document
+	 * @return <code>true</code> if there is a space character at offset position,
+	 *         false otherwise or false when cursor is at end of document
 	 */
 	public boolean hasSpaceAtPosition(int offset) {
 		try {
@@ -366,8 +365,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	/**
-	 * Returns next character after the cursor position (or ' ' if cursor
-	 * position is at end of document)
+	 * Returns next character after the cursor position (or ' ' if cursor position
+	 * is at end of document)
 	 * 
 	 * @throws BadLocationException
 	 */
@@ -502,94 +501,6 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		return NONE;
 	}
 
-	public boolean isInUseTraitStatement() {
-		return isInUseTraitStatement(offset, companion.getStructuredDocumentRegion());
-	}
-
-	private List<String> useTypes;
-
-	public boolean isInUseTraitStatement(int offset, IStructuredDocumentRegion sdRegion) {
-		if (companion.getPHPVersion().isLessThan(PHPVersion.PHP5_4)) {
-			return false;
-		}
-		if (useTypes != null) {
-			return true;
-		}
-		if (sdRegion == null) {
-			sdRegion = companion.getStructuredDocumentRegion();
-		}
-		int documentOffset = offset;
-		if (documentOffset == sdRegion.getEndOffset()) {
-			documentOffset -= 1;
-		}
-		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(documentOffset);
-
-		ITextRegionCollection container = sdRegion;
-
-		if (tRegion instanceof ITextRegionContainer) {
-			container = (ITextRegionContainer) tRegion;
-			tRegion = container.getRegionAtCharacterOffset(offset);
-		}
-		if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CLOSE) {
-			tRegion = container.getRegionAtCharacterOffset(container.getStartOffset() + tRegion.getStart() - 1);
-		}
-
-		// This text region must be of type PhpScriptRegion:
-		if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-			IPHPScriptRegion phpScriptRegion = (IPHPScriptRegion) tRegion;
-
-			try {
-				// Set default starting position to the beginning of the
-				// PhpScriptRegion:
-				int startOffset = container.getStartOffset() + phpScriptRegion.getStart();
-
-				// Now, search backwards for the statement start (in this
-				// PhpScriptRegion):
-				ITextRegion startTokenRegion;
-				if (documentOffset == startOffset) {
-					startTokenRegion = phpScriptRegion.getPHPToken(0);
-				} else {
-					startTokenRegion = phpScriptRegion.getPHPToken(offset - startOffset - 1);
-				}
-				// If statement start is at the beginning of the PHP script
-				// region:
-				while (true) {
-					if (startTokenRegion.getStart() == 0) {
-						return false;
-					}
-					if (startTokenRegion.getType() == PHPRegionTypes.PHP_CURLY_OPEN) {
-						// Calculate starting position of the statement (it
-						// should go right after this startTokenRegion):
-						// startOffset += startTokenRegion.getEnd();
-						TextSequence statementText1 = PHPTextSequenceUtilities.getStatement(
-								startOffset + startTokenRegion.getStart() - 1, companion.getStructuredDocumentRegion(),
-								true);
-						startTokenRegion = phpScriptRegion
-								.getPHPToken(startTokenRegion.getStart() - statementText1.length());
-						if (startTokenRegion.getType() == PHPRegionTypes.PHP_USE) {
-							String[] types = statementText1.toString().trim().substring(3).trim().split(","); //$NON-NLS-1$
-							useTypes = new ArrayList<>();
-							for (String type : types) {
-								useTypes.add(type.trim());
-							}
-							return true;
-						} else {
-							return false;
-						}
-					} else if (startTokenRegion.getType() == PHPRegionTypes.PHP_CURLY_CLOSE) {
-						return false;
-					}
-
-					startTokenRegion = phpScriptRegion.getPHPToken(startTokenRegion.getStart() - 1);
-				}
-
-			} catch (BadLocationException e) {
-			}
-		}
-
-		return false;
-	}
-
 	/**
 	 * This method get enclosing type element. It completely ignore statements
 	 * without {
@@ -643,10 +554,6 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		}
 
 		return null;
-	}
-
-	public List<String> getUseTypes() {
-		return useTypes;
 	}
 
 	private void calculateNames() throws BadLocationException {
@@ -730,8 +637,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	/**
 	 * Returns the qualifier. For global namespaces, it either returns null or
 	 * <code>PHPCoreConstants.GLOBAL_NAMESPACE</code> depending on the value of
-	 * parameter <code>useGlobal</code>. Other qualifiers will never be empty
-	 * and never be prefixed by a backslash.
+	 * parameter <code>useGlobal</code>. Other qualifiers will never be empty and
+	 * never be prefixed by a backslash.
 	 * 
 	 * @param useGlobal
 	 * @return non-empty qualifier or null
@@ -761,7 +668,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		ISourceModule sourceModule = companion.getSourceModule();
 		final ISourceRange validRange = companion.getCurrentNamespaceRange();
 
-		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+		ModuleDeclaration moduleDeclaration = getCompanion().getModuleDeclaration();
 		try {
 			int searchEnd = name.indexOf(NamespaceReference.NAMESPACE_SEPARATOR);
 			String search;

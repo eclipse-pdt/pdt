@@ -1,0 +1,17 @@
+--TEST--
+
+--FILE--
+<?php
+function Test() {
+    do {
+        
+    } while(tr|ue);
+}
+
+?>
+--EXPECT--
+HEAD(53,6)
+DOWHILE(28,32)
+BLOCK(22,40)
+FUNCTION(6,56,Test)
+FILE(0,67)

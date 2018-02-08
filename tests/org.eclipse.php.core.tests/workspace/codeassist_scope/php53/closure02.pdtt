@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+<?php 
+$x = function() {
+    |
+};
+
+--EXPECT--
+BLOCK(23,8)
+FUNCTION(12,19)
+FILE(0,34)
