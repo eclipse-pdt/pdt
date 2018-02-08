@@ -1,0 +1,12 @@
+--TEST--
+Comment
+--FILE--
+<?php 
+/*
+* multi line
+*|/
+?>
+
+--EXPECT--
+COMMENT(7,18)
+FILE(0,30)

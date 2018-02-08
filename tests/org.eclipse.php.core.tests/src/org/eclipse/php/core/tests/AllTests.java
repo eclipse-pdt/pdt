@@ -15,6 +15,7 @@
 package org.eclipse.php.core.tests;
 
 import org.eclipse.php.core.tests.codeassist.CodeAssistTests;
+import org.eclipse.php.core.tests.codeassist.scope.CodeAssistScopeTests;
 import org.eclipse.php.core.tests.compiler_ast.parser.CompilerParserTests;
 import org.eclipse.php.core.tests.compiler_ast.parser.FindUseStatementByAliasTests;
 import org.eclipse.php.core.tests.compiler_ast.parser.FindUseStatementByNamespaceTests;
@@ -53,10 +54,10 @@ import org.junit.runners.Suite;
 		DomParserTests.class, CompilerParserTests.class, FindUseStatementByAliasTests.class,
 		FindUseStatementByNamespaceTests.class, GetUseStatementsByTests.class, TraitUseStatementVisitorTests.class,
 		TypeDeclarationVisitorTests.class, ErrorReportingTests.class, ASTRewriteTests.Suite.class,
-		ASTMatcherTests.class, CommentMapperTests.class, StaticScalarExpressionsTests.class, CodeAssistTests.class,
-		SelectionEngineTests.class, ModelStructureTests.class, TypeInferenceTests.class, FileNetworkTests.class,
-		PHPDocParserTests.class, PHPDocAwareDeclarationTests.class, IncludePathManagerTests.class, BindingTests.class,
-		PHPModelUtilsTests.class,
+		ASTMatcherTests.class, CommentMapperTests.class, StaticScalarExpressionsTests.class, CodeAssistScopeTests.class,
+		CodeAssistTests.class, SelectionEngineTests.class, ModelStructureTests.class, TypeInferenceTests.class,
+		FileNetworkTests.class, PHPDocParserTests.class, PHPDocAwareDeclarationTests.class,
+		IncludePathManagerTests.class, BindingTests.class, PHPModelUtilsTests.class,
 		// Document tests:
 		DocumentLexerTests.class, PHPPartitionerTests.class,
 		// Phar files

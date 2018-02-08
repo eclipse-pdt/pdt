@@ -1,0 +1,10 @@
+--TEST--
+
+--FILE--
+<?php
+if (true) 
+    ;
+|
+?>
+--EXPECT--
+FILE(0,27)

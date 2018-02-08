@@ -377,6 +377,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 	@Override
 	public void reportType(IType type, String prefix, String suffix, ISourceRange replaceRange, Object extraInfo,
 			int subRelevance) {
+
 		if (processedElements.containsKey(type) && processedElements.get(type).getClass() == type.getClass()) {
 			return;
 		}

@@ -1,0 +1,10 @@
+--TEST--
+
+--FILE--
+<?php 
+use function Item{More|};
+
+--EXPECT--
+USE_GROUP(24,6)
+USE_FUNCTION(7,24)
+FILE(0,33)

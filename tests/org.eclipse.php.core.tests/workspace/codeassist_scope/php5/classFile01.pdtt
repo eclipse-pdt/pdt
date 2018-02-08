@@ -1,0 +1,17 @@
+--TEST--
+Description
+--FILE--
+<?php 
+// ignore me
+?>
+<html></html>
+<?php 
+class MyName {
+    |
+}
+?>
+
+--EXPECT--
+BLOCK(57,8)
+CLASS(44,21,MyName)
+FILE(0,70)

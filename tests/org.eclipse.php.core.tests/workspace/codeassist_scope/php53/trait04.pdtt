@@ -1,0 +1,24 @@
+--TEST--
+
+--FILE--
+<?php 
+trait Foo {
+    public $x = '';
+    public function name() {
+        
+    }
+}
+
+class Bar {
+    use Foo, Other {
+        Foo::a as b;
+        Other::c inste|adof Foo;
+    }
+}
+
+--EXPECT--
+TRAIT_PRECEDENCE(117,60)
+TRAIT_USE(102,75)
+BLOCK(96,83)
+CLASS(86,93,Bar)
+FILE(0,181)
