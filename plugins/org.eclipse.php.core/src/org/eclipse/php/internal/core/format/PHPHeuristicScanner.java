@@ -540,87 +540,101 @@ public final class PHPHeuristicScanner implements Symbols {
 
 		switch (s.length()) {
 		case 2:
-			if ("if".equals(s)) {
+			if ("if".equalsIgnoreCase(s)) { //$NON-NLS-1$
 				return TokenIF;
 			}
-			if ("do".equals(s)) {
+			if ("do".equalsIgnoreCase(s)) { //$NON-NLS-1$
 				return TokenDO;
 			}
 			break;
 		case 3:
-			if ("for".equals(s)) {
+			if ("for".equalsIgnoreCase(s)) { //$NON-NLS-1$
 				return TokenFOR;
 			}
-			if ("try".equals(s)) {
+			if ("try".equalsIgnoreCase(s)) { //$NON-NLS-1$
 				return TokenTRY;
 			}
-			if ("new".equals(s)) {
+			if ("new".equalsIgnoreCase(s)) { //$NON-NLS-1$
 				return TokenNEW;
 			}
 			break;
 		case 4:
-			if ("case".equals(s)) {
+			if ("case".equalsIgnoreCase(s)) { //$NON-NLS-1$
 				return TokenCASE;
 			}
-			if ("else".equals(s)) {
+			if ("else".equalsIgnoreCase(s)) { //$NON-NLS-1$
 				return TokenELSE;
 			}
-			if ("enum".equals(s)) {
-				return TokenENUM;
-			}
-			if ("goto".equals(s)) {
+			if ("goto".equalsIgnoreCase(s)) { //$NON-NLS-1$
 				return TokenGOTO;
 			}
 			break;
 		case 5:
-			if ("break".equals(s)) {
+
+			if ("break".equalsIgnoreCase(s)) { //$NON-NLS-1$
 				return TokenBREAK;
 			}
-			if ("catch".equals(s)) {
+			if ("catch".equalsIgnoreCase(s)) {//$NON-NLS-1$
 				return TokenCATCH;
 			}
-			if ("class".equals(s)) {
+			if ("class".equalsIgnoreCase(s)) {//$NON-NLS-1$
 				return TokenCLASS;
 			}
-			if ("while".equals(s)) {
+			if ("while".equalsIgnoreCase(s)) {//$NON-NLS-1$
 				return TokenWHILE;
 			}
-			if ("array".equals(s)) {
+			if ("array".equalsIgnoreCase(s)) {//$NON-NLS-1$
 				return TokenARRAY;
+			}
+			if ("trait".equalsIgnoreCase(s)) {// $NON-NLS-1$
+				return TokenTRAIT;
+			}
+			if ("endif".equalsIgnoreCase(s)) {// $NON-NLS-1$
+				return TokenENDIF;
 			}
 			break;
 		case 6:
-			if ("return".equals(s)) {
+			if ("return".equalsIgnoreCase(s)) {//$NON-NLS-1$
 				return TokenRETURN;
 			}
-			if ("static".equals(s)) {
+			if ("static".equalsIgnoreCase(s)) {//$NON-NLS-1$
 				return TokenSTATIC;
 			}
-			if ("switch".equals(s)) {
+			if ("switch".equalsIgnoreCase(s)) {//$NON-NLS-1$
 				return TokenSWITCH;
+			}
+			if ("elseif".equalsIgnoreCase(s)) {//$NON-NLS-1$
+				return TokenELSEIF;
 			}
 			break;
 		case 7:
-			if ("default".equals(s)) {
+			if ("default".equalsIgnoreCase(s)) {//$NON-NLS-1$
 				return TokenDEFAULT;
 			}
-			if ("finally".equals(s)) {
+			if ("finally".equalsIgnoreCase(s)) {//$NON-NLS-1$
 				return TokenFINALLY;
 			}
-			if ("foreach".equals(s)) {
+			if ("foreach".equalsIgnoreCase(s)) {//$NON-NLS-1$
 				return TokenFOR;
+			}
+			if ("endfor".equals(s)) { // $NON-NLS-1$
+				return TokenENDFOR;
+			}
+			break;
+		case 8:
+			if ("endwhile".equalsIgnoreCase(s)) {//$NON-NLS-1$
+				return TokenENDWHILE;
 			}
 			break;
 		case 9:
-			if ("interface".equals(s)) {
+			if ("interface".equalsIgnoreCase(s)) {//$NON-NLS-1$
 				return TokenINTERFACE;
 			}
-			break;
-		case 12:
-			if ("synchronized".equals(s)) {
-				return TokenSYNCHRONIZED;
+			if ("endswitch".equalsIgnoreCase(s)) {//$NON-NLS-1$
+				return TokenENDWITCH;
 			}
 			break;
+
 		}
 		return TokenIDENT;
 	}

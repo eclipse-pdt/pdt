@@ -20,7 +20,6 @@ import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.core.ISourceRange;
-import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
@@ -54,7 +53,7 @@ public class GotoStatementStrategy extends ElementsStrategy {
 			return;
 		}
 		try {
-			ModuleDeclaration rootNode = SourceParserUtil.getModuleDeclaration(gotoStatementContext.getSourceModule());
+			ModuleDeclaration rootNode = getCompanion().getModuleDeclaration();
 			ASTNode node;
 			if (gotoStatementContext.getCurrentElement() != null) {
 				node = PHPModelUtils.getNodeByElement(rootNode, gotoStatementContext.getCurrentElement());

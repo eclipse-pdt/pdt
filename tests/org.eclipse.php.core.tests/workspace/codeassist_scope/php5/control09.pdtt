@@ -1,0 +1,37 @@
+--TEST--
+
+--FILE--
+<?php
+class Foo {
+    function Test() {
+        do {
+            while((true)):
+                for ($i; $i; $i):
+                    if (true):
+                        switch ($e):
+                            case '':
+                                break|;
+                        endswitch;
+                    endif;
+                endfor;
+            endwhile;
+        } while(true);
+    }
+}
+?>
+--EXPECT--
+BLOCK(180,111)
+SWITCH(169,122)
+BLOCK(143,175)
+IF(134,184)
+BLOCK(112,230)
+FOR(96,246)
+BLOCK(78,286)
+WHILE(65,299)
+BLOCK(51,324)
+DOWHILE(48,340)
+BLOCK(38,356)
+FUNCTION(22,372,Test)
+BLOCK(16,380)
+CLASS(6,390,Foo)
+FILE(0,400)
