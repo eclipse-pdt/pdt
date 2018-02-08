@@ -1,0 +1,19 @@
+--TEST--
+Description
+--FILE--
+<?php 
+// ignore me
+?>
+<html></html>
+<?php 
+interface MyName {
+    const CC = '|';
+    public function func();
+}
+?>
+
+--EXPECT--
+CONST(67,14)
+BLOCK(61,50)
+INTERFACE(44,67,MyName)
+FILE(0,116)

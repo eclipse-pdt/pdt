@@ -1,0 +1,18 @@
+--TEST--
+Description
+--FILE--
+<?php 
+// ignore me
+?>
+<html></html>
+<?php 
+class MyName {
+    var $x = '|';
+}
+?>
+
+--EXPECT--
+FIELD(63,12)
+BLOCK(57,20)
+CLASS(44,33,MyName)
+FILE(0,82)

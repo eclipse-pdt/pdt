@@ -22,7 +22,6 @@ import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceRange;
-import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
@@ -54,11 +53,11 @@ public class FunctionArgumentsStrategy extends AbstractCompletionStrategy {
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) getContext();
 		CompletionRequestor requestor = abstractContext.getCompletionRequestor();
 
-		int offset = abstractContext.getOffset();
+		int offset = getCompanion().getOffset();
 
 		// find function arguments
-		ISourceModule sourceModule = abstractContext.getSourceModule();
-		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+		ISourceModule sourceModule = getCompanion().getSourceModule();
+		ModuleDeclaration moduleDeclaration = getCompanion().getModuleDeclaration();
 
 		Declaration declaration = ASTUtils.findDeclarationAfterPHPdoc(moduleDeclaration, offset);
 		if (declaration instanceof MethodDeclaration) {
