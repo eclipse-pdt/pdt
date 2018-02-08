@@ -40,7 +40,7 @@ public class ExceptionClassInstantiationStrategy extends AbstractClassInstantiat
 			return super.getTypes(context);
 		List<IType> result = new LinkedList<>();
 		ITypeHierarchy typeHierarchy;
-		ISourceModule sourceModule = context.getSourceModule();
+		ISourceModule sourceModule = getCompanion().getSourceModule();
 		IScriptProject scriptProject = sourceModule.getScriptProject();
 		try {
 			if (scriptProject != null) {

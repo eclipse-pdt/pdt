@@ -13,10 +13,10 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
 import org.eclipse.php.core.codeassist.IElementFilter;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
 
@@ -63,7 +63,7 @@ public class InUseTraitKeywordStrategy extends KeywordsStrategy {
 		// }
 		// }
 
-		PHPVersion phpVersion = context.getPHPVersion();
+		PHPVersion phpVersion = getCompanion().getPHPVersion();
 		if (phpVersion.isGreaterThan(PHPVersion.PHP5_3)) {
 			for (String keyword : KEYWORDS) {
 				if (keyword.startsWith(prefix)) {
@@ -76,8 +76,7 @@ public class InUseTraitKeywordStrategy extends KeywordsStrategy {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.core.codeassist.strategies.KeywordsStrategy#
+	 * @see org.eclipse.php.internal.core.codeassist.strategies.KeywordsStrategy#
 	 * filterKeyword
 	 * (org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData)
 	 */

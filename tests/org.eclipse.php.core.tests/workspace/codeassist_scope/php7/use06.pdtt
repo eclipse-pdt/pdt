@@ -1,0 +1,10 @@
+--TEST--
+
+--FILE--
+<?php 
+use Item as Another, With\{Me|};
+
+--EXPECT--
+USE_GROUP(33,4)
+USE(7,30)
+FILE(0,40)

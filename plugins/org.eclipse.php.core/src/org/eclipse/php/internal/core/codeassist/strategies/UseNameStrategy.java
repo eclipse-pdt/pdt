@@ -77,7 +77,7 @@ public class UseNameStrategy extends TypesStrategy {
 
 	@Override
 	public String getSuffix(AbstractCompletionContext abstractContext) {
-		return isInsertMode() && abstractContext.hasSpaceAtPosition(abstractContext.getOffset()) ? "" : " "; //$NON-NLS-1$ //$NON-NLS-2$
+		return isInsertMode() && abstractContext.hasSpaceAtPosition(getCompanion().getOffset()) ? "" : " "; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override
