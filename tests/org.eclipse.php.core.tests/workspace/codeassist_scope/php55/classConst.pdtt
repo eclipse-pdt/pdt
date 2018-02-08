@@ -1,0 +1,9 @@
+--TEST--
+Global
+--FILE--
+<?php 
+
+echo \Something::cla|ss;
+
+--EXPECT--
+FILE(0,33)

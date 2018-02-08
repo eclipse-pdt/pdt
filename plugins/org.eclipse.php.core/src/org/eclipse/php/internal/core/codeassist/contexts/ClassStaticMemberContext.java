@@ -19,7 +19,6 @@ import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.core.PHPVersion;
@@ -99,7 +98,7 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 		if (!isParent || !isSelf) {
 			IType[] types = getLhsTypes();
 			if (ArrayUtils.isNotEmpty(types)) {
-				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+				ModuleDeclaration moduleDeclaration = getCompanion().getModuleDeclaration();
 				if (moduleDeclaration != null) {
 					IContext context = ASTUtils.findContext(sourceModule, moduleDeclaration, offset);
 					if (context instanceof MethodContext) {

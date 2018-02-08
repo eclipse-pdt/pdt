@@ -1,0 +1,13 @@
+--TEST--
+
+--FILE--
+<?php 
+function my_func() {
+    |
+}
+?>
+
+--EXPECT--
+BLOCK(26,8)
+FUNCTION(7,27,my_func)
+FILE(0,39)

@@ -1,0 +1,9 @@
+--TEST--
+Simple file
+--FILE--
+<?php 
+do_some|
+?>
+
+--EXPECT--
+FILE(0,19)

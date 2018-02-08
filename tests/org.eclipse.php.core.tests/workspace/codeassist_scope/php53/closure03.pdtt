@@ -1,0 +1,16 @@
+--TEST--
+
+--FILE--
+<?php 
+$x = function() {
+    $nested = function() {
+        |
+    };
+};
+
+--EXPECT--
+BLOCK(50,16)
+FUNCTION(39,27)
+BLOCK(23,46)
+FUNCTION(12,57)
+FILE(0,72)
