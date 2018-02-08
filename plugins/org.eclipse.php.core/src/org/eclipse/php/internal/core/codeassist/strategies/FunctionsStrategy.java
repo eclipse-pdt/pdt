@@ -92,7 +92,7 @@ public class FunctionsStrategy extends ElementsStrategy {
 		ISourceRange memberReplacementRange = getReplacementRangeForMember(abstractContext);
 		boolean isAbsoluteMethod = abstractContext.isAbsoluteName() || abstractContext.isAbsolute();
 		String suffix = getSuffix(abstractContext);
-		String namespace = abstractContext.getCurrentNamespace();
+		String namespace = getCompanion().getCurrentNamespace();
 		for (IMethod method : functions) {
 			if (nsUseGroupPrefix != null) {
 				reporter.reportMethod(method, nsUseGroupPrefix, suffix, memberReplacementRange, extraInfo,
@@ -120,8 +120,8 @@ public class FunctionsStrategy extends ElementsStrategy {
 		IModuleSource module = reporter.getModule();
 		org.eclipse.dltk.core.ISourceModule sourceModule = (org.eclipse.dltk.core.ISourceModule) module
 				.getModelElement();
-		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
-		final int offset = abstractContext.getOffset();
+		ModuleDeclaration moduleDeclaration = getCompanion().getModuleDeclaration();
+		final int offset = getCompanion().getOffset();
 		IType namespace = PHPModelUtils.getCurrentNamespace(sourceModule, offset);
 
 		final Map<String, UsePart> result = PHPModelUtils.getAliasToNSMap(prefix, moduleDeclaration, offset, namespace,

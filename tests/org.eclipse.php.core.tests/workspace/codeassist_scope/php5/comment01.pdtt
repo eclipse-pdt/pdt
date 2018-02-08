@@ -1,0 +1,10 @@
+--TEST--
+Comment
+--FILE--
+<?php 
+// on| line
+?>
+
+--EXPECT--
+COMMENT(9,9)
+FILE(0,22)

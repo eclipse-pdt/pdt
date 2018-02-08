@@ -18,6 +18,7 @@ import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.codeassist.ICompletionScope;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.util.MagicMemberUtil;
@@ -116,29 +117,37 @@ public abstract class UseStatementContext extends StatementContext {
 		}
 	}
 
-	private boolean buildUseStatement(int offset, @NonNull IStructuredDocumentRegion sdRegion,
-			boolean isClassStatementContext) {
+	private boolean buildUseStatement(int offset, @NonNull IStructuredDocumentRegion sdRegion) {
 		ContextRegion[] foundDelimiter = new ContextRegion[1];
 		TextSequence statementText = PHPTextSequenceUtilities.getStatement(offset, sdRegion, true, null, 0,
 				foundDelimiter);
 		biggestCommonStatementText = longestPrefixTextBeforeCursor = rebuiltUseStatementText = statementText;
 		isCursorInsideGroupStatement = isUseFunctionStatement = isUseConstStatement = false;
 		type = TYPES.NONE;
+		ICompletionScope scope = getCompanion().getScope();
 
-		boolean hasUsePrefix = hasUsePrefix(statementText);
-		if (hasUsePrefix) {
-			if (isClassStatementContext) {
-				if (getCompanion().getPHPVersion().isLessThan(PHPVersion.PHP5_4)) {
-					return false;
-				}
-				type = TYPES.TRAIT;
-			} else {
-				type = TYPES.USE;
-				findConstOrFunctionWord(statementText, 1, false);
+		switch (scope.getType()) {
+		case USE:
+		case USE_CONST:
+		case USE_FUNCTION:
+			type = TYPES.USE;
+			findConstOrFunctionWord(statementText, 1, false);
+			if (hasUsePrefix(statementText)) {
+				return true;
+			}
+			break;
+		case USE_GROUP:
+			type = TYPES.USE_GROUP;
+			isCursorInsideGroupStatement = true;
+			break;
+		case TRAIT_USE:
+		case TRAIT_PRECEDENCE:
+			type = TYPES.TRAIT;
+			if (getCompanion().getPHPVersion().isLessThan(PHPVersion.PHP5_4)) {
+				return false;
 			}
 			return true;
-		}
-		if (isClassStatementContext) {
+		default:
 			return false;
 		}
 
@@ -269,9 +278,6 @@ public abstract class UseStatementContext extends StatementContext {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		ClassStatementContext classStatementContext = new ClassStatementContext();
-		classStatementContext.init(getCompanion());
-		boolean isClassStatementContext = classStatementContext.isValid(sourceModule, offset, requestor);
-		return buildUseStatement(offset, getCompanion().getStructuredDocumentRegion(), isClassStatementContext);
+		return buildUseStatement(offset, getCompanion().getStructuredDocumentRegion());
 	}
 }

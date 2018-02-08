@@ -1,0 +1,16 @@
+--TEST--
+
+--FILE--
+<?php 
+trait Foo {
+    public function name() {
+        |
+    }
+}
+
+--EXPECT--
+BLOCK(46,16)
+FUNCTION(23,39,name)
+BLOCK(17,47)
+TRAIT(7,57,Foo)
+FILE(0,66)

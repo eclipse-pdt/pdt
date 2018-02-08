@@ -1,0 +1,13 @@
+--TEST--
+Comment
+--FILE--
+<?php 
+/**
+* @param x|
+* Do something
+*|/
+?>
+
+--EXPECT--
+PHPDOC(7,33)
+FILE(0,45)
