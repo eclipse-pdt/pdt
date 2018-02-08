@@ -1,0 +1,11 @@
+--TEST--
+
+--FILE--
+<?php
+if (true) 
+    |;
+?>
+--EXPECT--
+BLOCK(10,12)
+IF(6,16)
+FILE(0,26)

@@ -16,6 +16,7 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.eclipse.php.core.codeassist.CompletionCompanion;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
 import org.eclipse.php.core.codeassist.ICompletionStrategy;
@@ -39,12 +40,21 @@ public class ElementsCompositeStrategy extends AbstractCompletionStrategy {
 		if (includeKeywords) {
 			strategies.add(new GlobalKeywordsStrategy(context));
 		}
+
 	}
 
 	@Override
 	public void apply(ICompletionReporter reporter) throws Exception {
 		for (ICompletionStrategy strategy : strategies) {
 			strategy.apply(reporter);
+		}
+	}
+
+	@Override
+	public void init(CompletionCompanion companion) {
+		super.init(companion);
+		for (ICompletionStrategy strategy : strategies) {
+			strategy.init(companion);
 		}
 	}
 }

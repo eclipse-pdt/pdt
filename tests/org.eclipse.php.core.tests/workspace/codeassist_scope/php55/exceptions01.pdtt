@@ -1,0 +1,16 @@
+--TEST--
+Comment
+--FILE--
+<?php 
+try {
+    
+} catch(Exception $e) {
+    
+} finally {
+    |
+}
+
+--EXPECT--
+BLOCK(57,8)
+FINALLY(49,16)
+FILE(0,67)
