@@ -1,0 +1,14 @@
+--TEST--
+
+--FILE--
+<?php 
+namespace Foo\Bar {
+    
+}
+namespace Second\Bar {
+    
+}
+|
+
+--EXPECT--
+FILE(0,66)

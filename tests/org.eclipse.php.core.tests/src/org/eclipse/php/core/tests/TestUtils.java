@@ -26,8 +26,12 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.search.indexing.AbstractJob;
 import org.eclipse.dltk.core.search.indexing.IndexManager;
+import org.eclipse.dltk.internal.core.DefaultWorkingCopyOwner;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.libfolders.LibraryFolderManager;
@@ -78,8 +82,8 @@ public final class TestUtils {
 		@Override
 		protected void run() throws CoreException, IOException {
 			/*
-			 * Check if there were some new index requests added to the queue in the
-			 * meantime, if so go back to the end of the queue.
+			 * Check if there were some new index requests added to the queue in
+			 * the meantime, if so go back to the end of the queue.
 			 */
 			if (indexManager.awaitingJobsCount() > 1) {
 				noWaitSignalThread.interrupt();
@@ -92,8 +96,8 @@ public final class TestUtils {
 			// Interrupt "wait for indexer" thread (no sleeping dude...).
 			noWaitSignalThread.interrupt();
 			/*
-			 * Requests queue is empty, we can assume that indexer has finished so release
-			 * semaphore to move on with processing.
+			 * Requests queue is empty, we can assume that indexer has finished
+			 * so release semaphore to move on with processing.
 			 */
 			waitForIndexerSemaphore.release();
 		}
@@ -429,6 +433,14 @@ public final class TestUtils {
 
 	private static void disableLibraryDetection() {
 		LibraryFolderManager.getInstance().suspendAllDetection(true);
+	}
+
+	public static void indexFile(IFile file) {
+		ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(file);
+		try {
+			sourceModule.reconcile(true, DefaultWorkingCopyOwner.PRIMARY, null);
+		} catch (ModelException e) {
+		}
 	}
 
 }

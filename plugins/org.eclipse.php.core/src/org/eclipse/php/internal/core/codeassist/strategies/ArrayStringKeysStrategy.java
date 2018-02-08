@@ -20,7 +20,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceRange;
-import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.SourceRange;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.jface.text.BadLocationException;
@@ -66,9 +65,9 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 		CompletionRequestor requestor = arrayContext.getCompletionRequestor();
 
 		String prefix = arrayContext.getPrefix();
-		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(arrayContext.getSourceModule());
+		ModuleDeclaration moduleDeclaration = getCompanion().getModuleDeclaration();
 		try {
-			ArrayKeyFinder finder = new ArrayKeyFinder(prefix, arrayContext.getOffset());
+			ArrayKeyFinder finder = new ArrayKeyFinder(prefix, getCompanion().getOffset());
 			moduleDeclaration.traverse(finder);
 			Set<String> names = finder.getNames();
 			int extraObject = ProposalExtraInfo.DEFAULT;
@@ -78,7 +77,7 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 			for (String name : names) {
 
 				if (!requestor.isContextInformationMode()) {
-					reporter.reportField(new FakeField((ModelElement) arrayContext.getSourceModule(), name, 0, 0), "", //$NON-NLS-1$
+					reporter.reportField(new FakeField((ModelElement) getCompanion().getSourceModule(), name, 0, 0), "", //$NON-NLS-1$
 							replaceRange, false, 0, extraObject);
 				}
 
@@ -102,7 +101,8 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 			}
 			if (variable.startsWith(prefix)) {
 				if (!requestor.isContextInformationMode() || variable.length() == prefix.length()) {
-					reporter.reportField(new FakeField((ModelElement) context.getSourceModule(), variable, 0, 0), "", //$NON-NLS-1$
+					reporter.reportField(new FakeField((ModelElement) getCompanion().getSourceModule(), variable, 0, 0),
+							"", //$NON-NLS-1$
 							replaceRange, false);
 				}
 			}

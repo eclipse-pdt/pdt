@@ -77,7 +77,7 @@ public class LocalMethodVariablesStrategy extends ElementsStrategy {
 				}
 			} else {
 				if (enclosingMethod.getParent() instanceof IField
-						&& concreteContext.getPHPVersion().isGreaterThan(PHPVersion.PHP5_3)) {
+						&& getCompanion().getPHPVersion().isGreaterThan(PHPVersion.PHP5_3)) {
 					IMethod method = (IMethod) enclosingMethod.getParent().getAncestor(IModelElement.METHOD);
 					if (method != null) {
 						declaringType = method.getDeclaringType();
@@ -96,12 +96,12 @@ public class LocalMethodVariablesStrategy extends ElementsStrategy {
 					ICompletionReporter.RELEVANCE_ADJUST, null);
 		}
 
-		PHPVersion phpVersion = concreteContext.getPHPVersion();
+		PHPVersion phpVersion = getCompanion().getPHPVersion();
 		for (String variable : PHPVariables.getVariables(phpVersion, PHPVariables.SUPER_GLOBAL)) {
 			if (variable.startsWith(prefix)) {
 				if (!requestor.isContextInformationMode() || variable.length() == prefix.length()) {
-					reporter.reportField(
-							new FakeField((ModelElement) concreteContext.getSourceModule(), variable, 0, 0), "", //$NON-NLS-1$
+					reporter.reportField(new FakeField((ModelElement) getCompanion().getSourceModule(), variable, 0, 0),
+							"", //$NON-NLS-1$
 							replaceRange, false, -ICompletionReporter.RELEVANCE_ADJUST, null);
 				}
 			}
