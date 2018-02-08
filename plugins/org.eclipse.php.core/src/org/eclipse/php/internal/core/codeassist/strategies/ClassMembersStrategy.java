@@ -17,12 +17,12 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext.Trigger;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassObjMemberContext;
@@ -56,7 +56,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	}
 
 	protected boolean showStaticMembers(ClassMemberContext context) {
-		return context.getTriggerType() == Trigger.CLASS || context.getPHPVersion().isGreaterThan(PHPVersion.PHP5);
+		return context.getTriggerType() == Trigger.CLASS
+				|| getCompanion().getPHPVersion().isGreaterThan(PHPVersion.PHP5);
 	}
 
 	protected boolean showNonStaticMembers(ClassMemberContext context) {
@@ -112,8 +113,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	}
 
 	/**
-	 * Returns whether the specified member should be filtered from the code
-	 * assist
+	 * Returns whether the specified member should be filtered from the code assist
 	 * 
 	 * @param member
 	 * @param type
@@ -127,7 +127,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 		if (PHPFlags.isConstant(member.getFlags())) {
 			if (context.getTriggerType() == Trigger.CLASS) {
 				if (PHPFlags.isPrivate(flags) && (member.getDeclaringType().equals(type)
-						&& !isTraitMember(context.getPHPVersion(), type, member))) {
+						&& !isTraitMember(getCompanion().getPHPVersion(), type, member))) {
 					if (isParent(context)) { // is Parent
 						return true; // 1:1
 					} else if (isSelfKeyword(context)) {
@@ -161,7 +161,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 				if (context.getTriggerType() == Trigger.CLASS && !isFunctionParameterContext) {
 					/* check 5 */
 					if (PHPFlags.isPrivate(flags) && (member.getDeclaringType().equals(type)
-							|| isTraitMember(context.getPHPVersion(), type, member))) {
+							|| isTraitMember(getCompanion().getPHPVersion(), type, member))) {
 						if (isParent(context)) { // is Parent
 							return true; // 1:1
 						} else if (isSelfKeyword(context)) {
@@ -187,7 +187,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 
 				} else if (context.getTriggerType() == Trigger.OBJECT) {
 					if (PHPFlags.isPrivate(flags) && (member.getDeclaringType().equals(type)
-							|| isTraitMember(context.getPHPVersion(), type, member))) {
+							|| isTraitMember(getCompanion().getPHPVersion(), type, member))) {
 						if (isThisKeyWord(context) && showStrictOptions()) {
 							return false; // 1:5
 						} else if (isIndirectThis(context)) {
@@ -217,7 +217,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 			} else if (member instanceof IMethod) {
 				if (context.getTriggerType() == Trigger.CLASS && !isFunctionParameterContext) {
 					if (PHPFlags.isPrivate(flags) && (member.getDeclaringType().equals(type)
-							|| isTraitMember(context.getPHPVersion(), type, member))) {
+							|| isTraitMember(getCompanion().getPHPVersion(), type, member))) {
 						if (isParent(context)) {
 							return true; // 5:1
 						} else if (isSelfCall(context)) {
@@ -260,7 +260,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 					}
 				} else if (context.getTriggerType() == Trigger.OBJECT) {
 					if (PHPFlags.isPrivate(flags) && (member.getDeclaringType().equals(type)
-							|| isTraitMember(context.getPHPVersion(), type, member))) {
+							|| isTraitMember(getCompanion().getPHPVersion(), type, member))) {
 						if (isThisKeyWord(context)) {
 							return false; // 5:5
 						} else if (isIndirectThis(context)) {
@@ -302,7 +302,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 					return true; // 9:1 - 12:4
 				} else if (context.getTriggerType() == Trigger.OBJECT) {
 					if (PHPFlags.isPrivate(flags) && (member.getDeclaringType().equals(type)
-							|| isTraitMember(context.getPHPVersion(), type, member))) {
+							|| isTraitMember(getCompanion().getPHPVersion(), type, member))) {
 						if (isThisKeyWord(context)) {
 							return false; // 9:5
 						} else if (isIndirectThis(context)) {
@@ -332,7 +332,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 			} else if (member instanceof IMethod) {
 				if (context.getTriggerType() == Trigger.CLASS && !isFunctionParameterContext) {
 					if (PHPFlags.isPrivate(flags) && (member.getDeclaringType().equals(type)
-							|| isTraitMember(context.getPHPVersion(), type, member))) {
+							|| isTraitMember(getCompanion().getPHPVersion(), type, member))) {
 						if (isParent(context)) {
 							return true; // 13:1
 						} else if (isSelfKeyword(context)) {
@@ -375,7 +375,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 					}
 				} else if (context.getTriggerType() == Trigger.OBJECT) {
 					if (PHPFlags.isPrivate(flags) && (member.getDeclaringType().equals(type)
-							|| isTraitMember(context.getPHPVersion(), type, member))) {
+							|| isTraitMember(getCompanion().getPHPVersion(), type, member))) {
 						if (isThisKeyWord(context)) {
 							return false; // 13:5
 						} else if (isIndirectThis(context)) {
@@ -463,8 +463,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	}
 
 	/**
-	 * class A { static private $var = 0; function foo() { A::$var; //has an
-	 * access to private $var field } }
+	 * class A { static private $var = 0; function foo() { A::$var; //has an access
+	 * to private $var field } }
 	 * 
 	 * @param context
 	 * @return
@@ -474,9 +474,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	}
 
 	/**
-	 * class A { static private $var = 0; public function foo() {} } A::$var;
-	 * //has no access to private $var field A::foo(); //has access to public
-	 * function foo
+	 * class A { static private $var = 0; public function foo() {} } A::$var; //has
+	 * no access to private $var field A::foo(); //has access to public function foo
 	 * 
 	 * 
 	 * @param context
@@ -497,8 +496,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	}
 
 	/**
-	 * class A { static private $var = 0; function foo() { $a = new A(); $a->| }
-	 * } access level as for 'this' keyword in this case.
+	 * class A { static private $var = 0; function foo() { $a = new A(); $a->| } }
+	 * access level as for 'this' keyword in this case.
 	 * 
 	 * @param context
 	 * @return
@@ -521,8 +520,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	 * Removes overridden members from the completion list
 	 * 
 	 * @param members
-	 *            Class/Interface members in type hierarchy order (from bottom
-	 *            to up)
+	 *            Class/Interface members in type hierarchy order (from bottom to
+	 *            up)
 	 */
 	protected <T extends IMember> Collection<T> removeOverriddenElements(Collection<T> members) {
 		List<T> result = new LinkedList<>();

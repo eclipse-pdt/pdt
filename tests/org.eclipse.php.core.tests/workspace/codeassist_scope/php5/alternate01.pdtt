@@ -1,0 +1,9 @@
+--TEST--
+Simple file
+--FILE--
+<?php if (true) : | ?>
+<?php endif; ?>
+--EXPECT--
+BLOCK(16,22)
+IF(6,32)
+FILE(0,38)

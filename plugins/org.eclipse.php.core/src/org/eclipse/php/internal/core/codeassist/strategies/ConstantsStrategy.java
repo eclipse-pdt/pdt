@@ -80,11 +80,11 @@ public class ConstantsStrategy extends ElementsStrategy {
 			matchRule = MatchRule.EXACT;
 		}
 
-		ISourceModule sourceModule = abstractContext.getSourceModule();
+		ISourceModule sourceModule = getCompanion().getSourceModule();
 
 		IType enclosingType = null;
 		try {
-			IModelElement enclosingElement = sourceModule.getElementAt(abstractContext.getOffset());
+			IModelElement enclosingElement = sourceModule.getElementAt(getCompanion().getOffset());
 
 			if (enclosingElement != null && enclosingElement instanceof IType) {
 				enclosingType = (IType) enclosingElement;
@@ -98,7 +98,7 @@ public class ConstantsStrategy extends ElementsStrategy {
 		IModelElement[] enclosingTypeConstants = null;
 
 		if (enclosingType != null && nsUseGroupPrefix != null
-				&& isStartOfStatement(prefix, abstractContext, abstractContext.getOffset())) {
+				&& isStartOfStatement(prefix, abstractContext, getCompanion().getOffset())) {
 			// See the case of testClassStatement1.pdtt and
 			// testClassStatement2.pdtt
 			scope = SearchEngine.createSearchScope(enclosingType);
@@ -137,7 +137,7 @@ public class ConstantsStrategy extends ElementsStrategy {
 		ISourceRange replacementRange = getReplacementRange(abstractContext);
 		ISourceRange memberReplacementRange = getReplacementRangeForMember(abstractContext);
 		boolean isAbsoluteField = abstractContext.isAbsoluteName() || abstractContext.isAbsolute();
-		String namespace = abstractContext.getCurrentNamespace();
+		String namespace = getCompanion().getCurrentNamespace();
 		for (IModelElement constant : enclosingTypeConstants) {
 			IField field = (IField) constant;
 			if (nsUseGroupPrefix != null) {
@@ -165,8 +165,8 @@ public class ConstantsStrategy extends ElementsStrategy {
 		IModuleSource module = reporter.getModule();
 		org.eclipse.dltk.core.ISourceModule sourceModule = (org.eclipse.dltk.core.ISourceModule) module
 				.getModelElement();
-		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
-		final int offset = abstractContext.getOffset();
+		ModuleDeclaration moduleDeclaration = getCompanion().getModuleDeclaration();
+		final int offset = getCompanion().getOffset();
 		IType namespace = PHPModelUtils.getCurrentNamespace(sourceModule, offset);
 
 		final Map<String, UsePart> result = PHPModelUtils.getAliasToNSMap(prefix, moduleDeclaration, offset, namespace,
@@ -204,7 +204,7 @@ public class ConstantsStrategy extends ElementsStrategy {
 	}
 
 	private boolean isStartOfStatement(String prefix, AbstractCompletionContext abstractContext, int offset) {
-		IDocument doc = abstractContext.getDocument();
+		IDocument doc = getCompanion().getDocument();
 		try {
 			int pos = offset - prefix.length() - 1;
 			char previousChar = doc.getChar(pos);

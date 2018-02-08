@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+<?php 
+$x = function(|) {
+    
+};
+
+--EXPECT--
+HEAD(20,2)
+FUNCTION(12,19)
+FILE(0,34)

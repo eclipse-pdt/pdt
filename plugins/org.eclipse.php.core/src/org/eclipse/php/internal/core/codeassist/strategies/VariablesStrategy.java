@@ -85,7 +85,7 @@ public class VariablesStrategy extends ElementsStrategy {
 		} else if (showVarsFromOtherFiles(PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_REFERENCED_FILES)) {
 			// FIXME why we can't get $myGlobalVar from php
 			// code:list($myGlobalVar) = 0;
-			IDLTKSearchScope scope = createSearchScopeWithReferencedFiles(abstractContext.getSourceModule());
+			IDLTKSearchScope scope = createSearchScopeWithReferencedFiles(getCompanion().getSourceModule());
 			fields = PHPModelAccess.getDefault().findFileFields(prefix, matchRule, Modifiers.AccGlobal,
 					Modifiers.AccConstant, scope, null);
 		}
@@ -95,7 +95,7 @@ public class VariablesStrategy extends ElementsStrategy {
 			result.addAll(Arrays.asList(fields));
 		}
 
-		fields = PHPModelUtils.getFileFields(abstractContext.getSourceModule(), prefix, false, null);
+		fields = PHPModelUtils.getFileFields(getCompanion().getSourceModule(), prefix, false, null);
 		if (fields != null) {
 			result.addAll(Arrays.asList(fields));
 		}
@@ -107,12 +107,12 @@ public class VariablesStrategy extends ElementsStrategy {
 		}
 
 		if (showPhpVariables) {
-			PHPVersion phpVersion = abstractContext.getPHPVersion();
+			PHPVersion phpVersion = getCompanion().getPHPVersion();
 			for (String variable : PHPVariables.getVariables(phpVersion)) {
 				if (variable.startsWith(prefix)) {
 					if (!requestor.isContextInformationMode() || variable.length() == prefix.length()) {
 						reporter.reportField(
-								new FakeField((ModelElement) abstractContext.getSourceModule(), variable, 0, 0), "", //$NON-NLS-1$
+								new FakeField((ModelElement) getCompanion().getSourceModule(), variable, 0, 0), "", //$NON-NLS-1$
 								replaceRange, false);
 					}
 				}
@@ -155,7 +155,7 @@ public class VariablesStrategy extends ElementsStrategy {
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
 		try {
 			if (StringUtils.isBlank(abstractContext.getPrefix())) {
-				ISourceModule sourceModule = ((AbstractCompletionContext) context).getSourceModule();
+				ISourceModule sourceModule = getCompanion().getSourceModule();
 				return SearchEngine.createSearchScope(sourceModule);
 			}
 		} catch (BadLocationException e) {

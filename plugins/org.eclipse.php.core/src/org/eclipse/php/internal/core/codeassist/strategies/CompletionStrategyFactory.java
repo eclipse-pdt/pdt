@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionContextResolver;
+import org.eclipse.php.core.codeassist.ICompletionScope.Type;
 import org.eclipse.php.core.codeassist.ICompletionStrategy;
 import org.eclipse.php.core.codeassist.ICompletionStrategyFactory;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -131,8 +132,10 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new MethodNameStrategy(context) };
 		}
 
-		if (contextClass == ClassStatementContext.class) {
-			if (((AbstractCompletionContext) context).isInUseTraitStatement()) {
+		if (contextClass == TypeStatementContext.class) {
+			boolean inUseTrait = ((AbstractCompletionContext) context).getCompanion().getScope()
+					.findParent(Type.TRAIT_USE) != null;
+			if (inUseTrait) {
 				int type = ((AbstractCompletionContext) context).getUseTraitStatementContext();
 				if (type == AbstractCompletionContext.TRAIT_NAME) {
 					return new ICompletionStrategy[] { new InUseTraitStrategy(context) };
@@ -141,7 +144,7 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 				} else {
 					return new ICompletionStrategy[] {};
 				}
-			} else if (((ClassStatementContext) context).isAssignment()) {
+			} else if (((TypeStatementContext) context).isAssignment()) {
 				return new ICompletionStrategy[] { new ClassKeywordsStrategy(context), new ConstantsStrategy(context),
 						new TypesStrategy(context) };
 			} else {
@@ -178,7 +181,9 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		// new ClassMethodsStrategy(context) };
 		// }
 		if (contextClass == ClassStaticMemberContext.class || contextClass == ClassObjMemberContext.class) {
-			if (((AbstractCompletionContext) context).isInUseTraitStatement()) {
+			boolean inUseTrait = ((AbstractCompletionContext) context).getCompanion().getScope()
+					.findParent(Type.TRAIT_USE) != null;
+			if (inUseTrait) {
 				int type = ((AbstractCompletionContext) context).getUseTraitStatementContext();
 				if (type == AbstractCompletionContext.TRAIT_NAME) {
 					return new ICompletionStrategy[] { new InUseTraitStrategy(context) };
