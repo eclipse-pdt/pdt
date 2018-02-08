@@ -25,6 +25,7 @@ import org.eclipse.dltk.core.ISourceModule;
  * @author michael
  */
 public interface ICompletionContext {
+	static final Class<?>[] EMPTY = new Class[0];
 
 	/**
 	 * Returns whether this context is applicable for the position in the document

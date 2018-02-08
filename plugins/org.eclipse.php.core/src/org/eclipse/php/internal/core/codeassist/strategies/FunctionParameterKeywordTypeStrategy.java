@@ -61,7 +61,8 @@ public class FunctionParameterKeywordTypeStrategy extends KeywordsStrategy {
 			try {
 				int flags = context.getEnclosingType().getFlags();
 				if (!PHPFlags.isNamespace(flags)) {
-					String pref = PHPVersion.PHP5_4.isLessThan(context.getPHPVersion()) ? prefix.toLowerCase() : prefix;
+					String pref = PHPVersion.PHP5_4.isLessThan(getCompanion().getPHPVersion()) ? prefix.toLowerCase()
+							: prefix;
 
 					for (String keyword : KEYWORDS) {
 						if (keyword.startsWith(pref)) {
@@ -74,7 +75,7 @@ public class FunctionParameterKeywordTypeStrategy extends KeywordsStrategy {
 			}
 		}
 
-		PHPVersion phpVersion = context.getPHPVersion();
+		PHPVersion phpVersion = getCompanion().getPHPVersion();
 		for (SimpleProposal proposal : SimpleProposal.BASIC_TYPES) {
 			if (proposal.isValidPrefix(prefix, phpVersion)) {
 				reporter.reportKeyword(proposal.getProposal(), suffix, replaceRange);
