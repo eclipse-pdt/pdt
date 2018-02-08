@@ -939,6 +939,8 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	public boolean visit(PHPDocTag s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("tagKind", s.getTagKind().getName()); //$NON-NLS-1$
+		parameters.put("matchedTag", s.getMatchedTag()); //$NON-NLS-1$
+		parameters.put("tagText", s.getTagText().getValue()); //$NON-NLS-1$
 		parameters.put("value", s.getValue()); //$NON-NLS-1$
 		xmlWriter.startTag("PHPDocTag", parameters); //$NON-NLS-1$
 		return true;

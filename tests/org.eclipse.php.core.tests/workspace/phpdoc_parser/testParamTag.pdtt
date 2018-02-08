@@ -11,35 +11,35 @@ Test Param Tag
 */
 --EXPECT--
 <PHPDocBlock start="0" end="228" shortDescription="Test param tag">
-	<PHPDocTag start="23" end="56" tagKind="param" value=" $a Myclass holds my class
+	<PHPDocTag start="23" end="56" tagKind="param" matchedTag="@param" tagText=" @param" value=" $a Myclass holds my class
 ">
 		<VariableReference start="30" end="32" name="$a">
 		</VariableReference>
 		<TypeReference start="33" end="40" name="Myclass">
 		</TypeReference>
 	</PHPDocTag>
-	<PHPDocTag start="58" end="94" tagKind="param" value=" Myclass2 $b holds my class 2
+	<PHPDocTag start="58" end="94" tagKind="param" matchedTag="@param" tagText=" @param" value=" Myclass2 $b holds my class 2
 ">
 		<TypeReference start="65" end="73" name="Myclass2">
 		</TypeReference>
 		<VariableReference start="74" end="76" name="$b">
 		</VariableReference>
 	</PHPDocTag>
-	<PHPDocTag start="96" end="144" tagKind="param" value=" Myclass3 ...$b holds collection of class
+	<PHPDocTag start="96" end="144" tagKind="param" matchedTag="@param" tagText=" @param" value=" Myclass3 ...$b holds collection of class
 ">
 		<TypeReference start="103" end="111" name="Myclass3">
 		</TypeReference>
 		<VariableReference start="112" end="117" name="...$b">
 		</VariableReference>
 	</PHPDocTag>
-	<PHPDocTag start="146" end="194" tagKind="param" value=" ...$b Myclass3 holds collection of class
+	<PHPDocTag start="146" end="194" tagKind="param" matchedTag="@param" tagText=" @param" value=" ...$b Myclass3 holds collection of class
 ">
 		<VariableReference start="153" end="158" name="...$b">
 		</VariableReference>
 		<TypeReference start="159" end="167" name="Myclass3">
 		</TypeReference>
 	</PHPDocTag>
-	<PHPDocTag start="196" end="226" tagKind="param" value=" Myclass wrong comment!
+	<PHPDocTag start="196" end="226" tagKind="param" matchedTag="@param" tagText=" @param" value=" Myclass wrong comment!
 ">
 	</PHPDocTag>
 </PHPDocBlock>

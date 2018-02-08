@@ -776,7 +776,8 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 <ST_PHP_DOC_COMMENT>{
 
 	"{@"[a-zA-Z-]+"}" {
-		if (TagKind.getTagKindFromValue(yytext()) != null) {
+		TagKind tagkind = TagKind.getTagKindFromValue(yytext());
+		if (tagkind != null && tagkind != TagKind.UNKNOWN) {
 			return PHPDOC_GENERIC_TAG;
 		}
 		return PHPDOC_COMMENT;
@@ -784,8 +785,8 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 
 	"@"[a-zA-Z-]+ {
 		TagKind tagkind = TagKind.getTagKindFromValue(yytext());
-		if (tagkind != null /* ignore @todo tag */
-			&& !"@todo".equalsIgnoreCase(tagkind.getValue())) {
+		if (tagkind != null && tagkind != TagKind.UNKNOWN
+			&& /* ignore @todo tag */ tagkind != TagKind.TODO) {
 				return PHPDOC_GENERIC_TAG;
 		}
 		return PHPDOC_COMMENT;
