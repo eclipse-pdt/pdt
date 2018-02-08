@@ -50,6 +50,10 @@ public class PHPDocTagStrategy extends AbstractCompletionStrategy {
 		String suffix = ""; //$NON-NLS-1$
 
 		for (TagKind nextTag : TagKind.values()) {
+			// The special tag UNKNOWN must be ignored:
+			if (nextTag == TagKind.UNKNOWN) {
+				continue;
+			}
 			String nextTagName = nextTag.getName();
 			if (StringUtils.startsWithIgnoreCase(nextTagName, tagName)) {
 				if (!requestor.isContextInformationMode() || nextTagName.length() == tagName.length()) {

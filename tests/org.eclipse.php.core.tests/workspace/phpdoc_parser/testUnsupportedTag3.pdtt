@@ -1,0 +1,27 @@
+--TEST--
+Bug 423089 - Broken formatter with non-PHPDoc tags
+--FILE--
+/**
+ *
+ * @ORM\Column(type="string")
+ * @Assert\NotEmpty
+ * @Assert\Email
+ * @var string
+ */
+--EXPECT--
+<PHPDocBlock start="0" end="92" shortDescription="">
+	<PHPDocTag start="10" end="37" tagKind="unknown" matchedTag="@ORM\Column(type=&quot;string&quot;)" tagText=" @ORM\Column(type=&quot;string&quot;)" value="
+">
+	</PHPDocTag>
+	<PHPDocTag start="40" end="57" tagKind="unknown" matchedTag="@Assert\NotEmpty" tagText=" @Assert\NotEmpty" value="
+">
+	</PHPDocTag>
+	<PHPDocTag start="60" end="74" tagKind="unknown" matchedTag="@Assert\Email" tagText=" @Assert\Email" value="
+">
+	</PHPDocTag>
+	<PHPDocTag start="77" end="89" tagKind="var" matchedTag="@var" tagText=" @var" value=" string
+ ">
+		<TypeReference start="82" end="88" name="string">
+		</TypeReference>
+	</PHPDocTag>
+</PHPDocBlock>

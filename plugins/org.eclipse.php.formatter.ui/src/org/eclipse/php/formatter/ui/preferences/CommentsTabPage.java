@@ -101,6 +101,8 @@ public class CommentsTabPage extends ModifyDialogTabPage {
 			+ " * The following is some sample code which illustrates source formatting within javadoc comments:" //$NON-NLS-1$
 			+ LINE_SEPARATOR
 			+ " * Descriptions of parameters and return values are best appended at end of the javadoc comment." //$NON-NLS-1$
+			+ LINE_SEPARATOR + " * @Orm\\Unknown\\Tag()   This is an unknown PHPDoc tag," //$NON-NLS-1$
+			+ LINE_SEPARATOR + " *       but could be a PHP framework annotation" //$NON-NLS-1$
 			+ LINE_SEPARATOR
 			+ " * @param $a int The first parameter. For an optimum result, this should be an odd number" //$NON-NLS-1$
 			+ LINE_SEPARATOR + " * between 0 and 100." + LINE_SEPARATOR + " * @param $b int The second parameter." //$NON-NLS-1$ //$NON-NLS-2$
@@ -140,6 +142,8 @@ public class CommentsTabPage extends ModifyDialogTabPage {
 	private CheckboxPreference indentJavadoc;
 
 	private CheckboxPreference indentDesc;
+
+	private CheckboxPreference nerverFormatUnknownTags;
 
 	private CheckboxPreference nlParam;
 
@@ -226,6 +230,10 @@ public class CommentsTabPage extends ModifyDialogTabPage {
 		indentDesc = createCheckboxPref(settingsGroup, numColumns,
 				FormatterMessages.CommentsTabPage_indent_description_after_param);
 		indentDesc.setIsChecked(codeFormatterPreferences.comment_indent_parameter_description);
+
+		nerverFormatUnknownTags = createCheckboxPref(settingsGroup, numColumns,
+				FormatterMessages.CommentsTabPage_never_format_unknown_tags);
+		nerverFormatUnknownTags.setIsChecked(codeFormatterPreferences.comment_never_format_unknown_tags);
 
 		((GridData) indentDesc.getControl().getLayoutData()).horizontalIndent = indent;
 		nlParam = createPrefInsert(settingsGroup, numColumns,
@@ -374,6 +382,8 @@ public class CommentsTabPage extends ModifyDialogTabPage {
 			codeFormatterPreferences.comment_indent_root_tags = indentJavadoc.isChecked();
 
 			codeFormatterPreferences.comment_indent_parameter_description = indentDesc.isChecked();
+
+			codeFormatterPreferences.comment_never_format_unknown_tags = nerverFormatUnknownTags.isChecked();
 
 			codeFormatterPreferences.comment_insert_new_line_for_parameter = nlParam.isChecked();
 
