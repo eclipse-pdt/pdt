@@ -1,0 +1,9 @@
+--TEST--
+
+--FILE--
+<?php 
+use | function func;
+
+--EXPECT--
+USE_FUNCTION(7,19)
+FILE(0,28)

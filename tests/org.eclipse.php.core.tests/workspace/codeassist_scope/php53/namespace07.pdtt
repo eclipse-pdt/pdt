@@ -1,0 +1,12 @@
+--TEST--
+Global
+--FILE--
+<?php 
+namespace  {
+    use Somet|hing\About;
+}
+--EXPECT--
+USE(24,20)
+BLOCK(18,28)
+NAMESPACE(7,39)
+FILE(0,47)

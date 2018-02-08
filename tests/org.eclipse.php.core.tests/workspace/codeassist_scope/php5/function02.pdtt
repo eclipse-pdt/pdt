@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+<?php 
+function my_|func() {
+    
+}
+?>
+
+--EXPECT--
+FUNCTION(7,27,my_func)
+FILE(0,39)
