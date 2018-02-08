@@ -37,6 +37,7 @@ import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.core.tests.TestUtils.ColliderType;
 import org.eclipse.php.core.tests.codeassist.CodeAssistPdttFile.ExpectedProposal;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.AfterList;
@@ -48,6 +49,7 @@ import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
 import org.eclipse.php.internal.core.documentModel.loader.PHPDocumentLoader;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.junit.After;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -157,11 +159,13 @@ public class CodeAssistTests {
 	public void setUpSuite() throws Exception {
 		project = TestUtils.createProject("CodeAssistTests_" + version.toString());
 		TestUtils.setProjectPHPVersion(project, version);
+		TestUtils.enableColliders(ColliderType.AUTO_BUILD);
 	}
 
 	@AfterList
 	public void tearDownSuite() throws Exception {
 		TestUtils.deleteProject(project);
+		TestUtils.disableColliders(ColliderType.AUTO_BUILD);
 	}
 
 	@Test
@@ -171,10 +175,10 @@ public class CodeAssistTests {
 		final int offset = createFiles(pdttFile);
 		CompletionProposal[] proposals = getProposals(DLTKCore.createSourceModuleFrom(testFile), offset);
 		compareProposals(proposals, pdttFile);
-		deleteFiles();
 	}
 
-	private void deleteFiles() {
+	@After
+	public void deleteFiles() {
 		if (testFile != null) {
 			TestUtils.deleteFile(testFile);
 		}

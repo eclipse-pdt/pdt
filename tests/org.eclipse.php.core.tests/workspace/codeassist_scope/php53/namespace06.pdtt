@@ -1,0 +1,11 @@
+--TEST--
+Global
+--FILE--
+<?php 
+namespace  {
+    |
+}
+--EXPECT--
+BLOCK(18,8)
+NAMESPACE(7,19)
+FILE(0,27)

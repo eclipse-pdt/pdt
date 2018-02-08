@@ -45,7 +45,7 @@ public class ClassInstantiationStrategy extends AbstractClassInstantiationStrate
 		addSelf(completionContext, reporter);
 
 		// for anonymous class (PHP 7)
-		if (completionContext.getPHPVersion().isGreaterThan(PHPVersion.PHP5_6)) {
+		if (getCompanion().getPHPVersion().isGreaterThan(PHPVersion.PHP5_6)) {
 			String prefix = completionContext.getPrefix();
 			ISourceRange replaceRange = getReplacementRangeForMember(completionContext);
 			if (CLASS_KEYWORD.startsWith(prefix) && prefix.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) == -1) {

@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+<?php
+if (true) 
+    for($s; $i; $k) {
+        
+    }
+|
+?>
+--EXPECT--
+FILE(0,58)
