@@ -1,0 +1,21 @@
+--TEST--
+Description
+--FILE--
+<?php 
+// ignore me
+?>
+<html></html>
+<?php 
+class MyName {
+    public static function test() {
+        |
+    }
+}
+?>
+
+--EXPECT--
+BLOCK(93,16)
+FUNCTION(63,46,test)
+BLOCK(57,54)
+CLASS(44,67,MyName)
+FILE(0,116)

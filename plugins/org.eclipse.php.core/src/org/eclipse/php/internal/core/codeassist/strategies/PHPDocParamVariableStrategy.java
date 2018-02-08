@@ -47,6 +47,7 @@ public class PHPDocParamVariableStrategy extends FunctionArgumentsStrategy {
 			super.apply(reporter);
 		} else {
 			final PHPDocReturnTypeStrategy returnStrategy = new PHPDocReturnTypeStrategy(context);
+			returnStrategy.init(getCompanion());
 			returnStrategy.apply(reporter);
 		}
 	}

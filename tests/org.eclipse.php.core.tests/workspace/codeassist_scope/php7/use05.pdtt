@@ -1,0 +1,10 @@
+--TEST--
+
+--FILE--
+<?php 
+use Something\{After,|Me};
+
+--EXPECT--
+USE_GROUP(21,10)
+USE(7,24)
+FILE(0,34)

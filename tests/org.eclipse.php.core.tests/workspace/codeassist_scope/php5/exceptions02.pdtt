@@ -1,0 +1,14 @@
+--TEST--
+Comment
+--FILE--
+<?php 
+try {
+    
+} catch(Exception $e|) {
+    
+}
+
+--EXPECT--
+HEAD(25,14)
+CATCH(20,28)
+FILE(0,50)

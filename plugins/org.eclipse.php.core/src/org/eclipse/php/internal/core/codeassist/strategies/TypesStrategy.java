@@ -21,7 +21,6 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
-import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
@@ -110,7 +109,7 @@ public class TypesStrategy extends ElementsStrategy {
 			extraInfo |= ProposalExtraInfo.NO_INSERT_USE;
 		}
 
-		String namespace = abstractContext.getCurrentNamespace();
+		String namespace = getCompanion().getCurrentNamespace();
 		for (IType type : types) {
 			try {
 				int flags = type.getFlags();
@@ -158,23 +157,20 @@ public class TypesStrategy extends ElementsStrategy {
 			}
 
 			if (prefix.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) < 0) {
-				IModuleSource module = reporter.getModule();
-				org.eclipse.dltk.core.ISourceModule sourceModule = (org.eclipse.dltk.core.ISourceModule) module
-						.getModelElement();
-				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
-				final int offset = abstractContext.getOffset();
-				IType namespace = PHPModelUtils.getCurrentNamespace(sourceModule, offset);
+				ModuleDeclaration moduleDeclaration = getCompanion().getModuleDeclaration();
+				final int offset = getCompanion().getOffset();
+				IType namespace = PHPModelUtils.getCurrentNamespace(getCompanion().getSourceModule(), offset);
 
 				final Map<String, UsePart> result = PHPModelUtils.getAliasToNSMap(prefix, moduleDeclaration, offset,
 						namespace, exactMatch);
-				reportAlias(reporter, suffix, abstractContext, module, result);
+				reportAlias(reporter, suffix, abstractContext, getCompanion().getSourceModule(), result);
 
 			}
 		}
 	}
 
 	protected void reportAliasForNS(ICompletionReporter reporter, String suffix,
-			AbstractCompletionContext abstractContext, IModuleSource module, final Map<String, UsePart> result)
+			AbstractCompletionContext abstractContext, ISourceModule module, final Map<String, UsePart> result)
 			throws BadLocationException {
 		ISourceRange replacementRange = getReplacementRange(abstractContext);
 		IDLTKSearchScope scope = createSearchScope();
@@ -191,7 +187,7 @@ public class TypesStrategy extends ElementsStrategy {
 	}
 
 	protected void reportAlias(ICompletionReporter reporter, String suffix, AbstractCompletionContext abstractContext,
-			IModuleSource module, final Map<String, UsePart> result) throws BadLocationException {
+			ISourceModule module, final Map<String, UsePart> result) throws BadLocationException {
 		ISourceRange replacementRange = getReplacementRange(abstractContext);
 		String prefix = abstractContext.getPrefix();
 		IDLTKSearchScope scope = createSearchScope();
@@ -237,7 +233,7 @@ public class TypesStrategy extends ElementsStrategy {
 		}
 	}
 
-	protected void reportAlias(ICompletionReporter reporter, IDLTKSearchScope scope, IModuleSource module,
+	protected void reportAlias(ICompletionReporter reporter, IDLTKSearchScope scope, ISourceModule module,
 			ISourceRange replacementRange, IType type, String fullName, String alias, String suffix) {
 		reporter.reportType(new AliasType((ModelElement) type, fullName, alias), suffix, replacementRange,
 				getExtraInfo());
@@ -272,8 +268,8 @@ public class TypesStrategy extends ElementsStrategy {
 		String altNamespacePrefix = null;
 		if (namespaceName != null) {
 			sb.append(namespaceName).append(NamespaceReference.NAMESPACE_SEPARATOR);
-		} else if (!isAbsoluteType && context.getCurrentNamespace() != null && useCurrentNamespace) {
-			altNamespacePrefix = new StringBuilder().append(context.getCurrentNamespace())
+		} else if (!isAbsoluteType && getCompanion().getCurrentNamespace() != null && useCurrentNamespace) {
+			altNamespacePrefix = new StringBuilder().append(getCompanion().getCurrentNamespace())
 					.append(NamespaceReference.NAMESPACE_SEPARATOR).append(memberName).toString();
 		}
 		String namespacePrefix = sb.append(memberName).toString();
@@ -333,7 +329,8 @@ public class TypesStrategy extends ElementsStrategy {
 
 				// get the class data for "self". In case of null, the self
 				// function will not be added
-				IType selfClassData = CodeAssistUtils.getSelfClassData(context.getSourceModule(), context.getOffset());
+				IType selfClassData = CodeAssistUtils.getSelfClassData(getCompanion().getSourceModule(),
+						getCompanion().getOffset());
 				if (selfClassData != null) {
 					try {
 						IMethod ctor = null;

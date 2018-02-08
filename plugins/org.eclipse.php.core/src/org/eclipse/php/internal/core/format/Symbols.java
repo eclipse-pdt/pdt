@@ -50,13 +50,19 @@ public interface Symbols {
 	int TokenSTATIC = 1019;
 	int TokenSWITCH = 1020;
 	int TokenFINALLY = 1021;
-	int TokenSYNCHRONIZED = 1022;
+	// int TokenSYNCHRONIZED = 1022;
 	int TokenGOTO = 1023;
 	int TokenDEFAULT = 1024;
 	int TokenNEW = 1025;
 	int TokenCLASS = 1026;
 	int TokenINTERFACE = 1027;
-	int TokenENUM = 1028;
+	// int TokenENUM = 1028;
 	int TokenARRAY = 1029;
+	int TokenTRAIT = 1030;
+	int TokenENDIF = 1031;
+	int TokenENDFOR = 1032;
+	int TokenENDWHILE = 1033;
+	int TokenENDWITCH = 1034;
+	int TokenELSEIF = 1035;
 	int TokenIDENT = 2000;
 }
