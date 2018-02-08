@@ -22,12 +22,13 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.hierarchy.FakeType;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
+import org.eclipse.php.core.codeassist.ICompletionScope.Type;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext.Trigger;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassStaticMemberContext;
@@ -68,12 +69,11 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 		ISourceRange replaceRange = getReplacementRange(concreteContext);
 
 		List<IField> result = new LinkedList<>();
-
+		boolean inUseTrait = getCompanion().getScope().findParent(Type.TRAIT_USE) != null;
 		for (IType type : concreteContext.getLhsTypes()) {
 			try {
 				ITypeHierarchy hierarchy = getCompanion().getSuperTypeHierarchy(type, null);
 				IField[] fields = null;
-
 				if (concreteContext instanceof ClassStaticMemberContext
 						&& concreteContext.getTriggerType() == Trigger.CLASS
 						&& ((ClassStaticMemberContext) concreteContext).isParent()) {
@@ -90,7 +90,7 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 				}
 
 				for (IField field : removeOverriddenElements(Arrays.asList(fields))) {
-					if (concreteContext.isInUseTraitStatement()) {
+					if (inUseTrait) {
 						result.add(field);
 					} else if (!isFiltered(field, type, concreteContext)) {
 						result.add(field);
@@ -101,18 +101,17 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 			}
 		}
 		if (concreteContext instanceof ClassStaticMemberContext && concreteContext.getTriggerType() == Trigger.CLASS
-				&& !concreteContext.isInUseTraitStatement()
-				&& PHPVersion.PHP5_4.isLessThan(concreteContext.getPHPVersion())
+				&& !inUseTrait && PHPVersion.PHP5_4.isLessThan(getCompanion().getPHPVersion())
 				&& (CLASS_KEYWORD.startsWith(prefix.toLowerCase()) || CLASS_KEYWORD.equals(prefix.toLowerCase()))) {
 			try {
-				ITextRegion phpToken = concreteContext.getPHPScriptRegion()
-						.getPHPToken(concreteContext.getPHPToken().getStart() - 1);
+				ITextRegion phpToken = getCompanion().getPHPScriptRegion()
+						.getPHPToken(getCompanion().getPHPToken().getStart() - 1);
 				if (PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM.equals(phpToken.getType())) {
-					phpToken = concreteContext.getPHPToken(phpToken.getStart() - 1);
+					phpToken = getCompanion().getPHPToken(phpToken.getStart() - 1);
 				}
 
 				if (isStaticCall(phpToken.getType())) {
-					result.add(new FakeField(new FakeType((ModelElement) concreteContext.getSourceModule(), STD_CLASS),
+					result.add(new FakeField(new FakeType((ModelElement) getCompanion().getSourceModule(), STD_CLASS),
 							CLASS_KEYWORD, Modifiers.AccConstant | Modifiers.AccPublic));
 				}
 			} catch (BadLocationException e) {

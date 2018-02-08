@@ -11,12 +11,16 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.contexts;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.dltk.annotations.NonNull;
-import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.CompletionRequestor;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.format.PHPHeuristicScanner;
+import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
+import org.eclipse.php.internal.core.util.text.TextSequence;
 
 /**
  * This context represents state when staying in a class statements. <br/>
@@ -30,8 +34,18 @@ import org.eclipse.php.internal.core.format.PHPHeuristicScanner;
  * 
  * @author michael
  */
-public final class ClassStatementContext extends AbstractGlobalStatementContext {
+public final class TypeStatementContext extends AbstractGlobalStatementContext {
 	private boolean isAssignment = false;
+
+	public enum Type {
+		CLASS, TRAIT, INTERFACE;
+	}
+
+	private Type type;
+
+	public Type getType() {
+		return type;
+	}
 
 	@Override
 	public boolean isValid(@NonNull ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
@@ -41,31 +55,29 @@ public final class ClassStatementContext extends AbstractGlobalStatementContext 
 
 		// check whether enclosing element is class
 		try {
-			IModelElement enclosingElement = getEnclosingElement();
-			while (enclosingElement instanceof IField) {
-				enclosingElement = enclosingElement.getParent();
+			PHPHeuristicScanner scanner2 = PHPHeuristicScanner.createHeuristicScanner(getCompanion().getDocument(),
+					offset, true);
+			if (!scanner2.isDefaultPartition(offset)) {
+				return false;
 			}
-			if (enclosingElement instanceof IType && !PHPFlags.isNamespace(((IType) enclosingElement).getFlags())) {
-				if (isBeforeName(offset, (IType) enclosingElement)) {
-					return false;
-				}
-				if (offset > 0) {
-					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=495022
-					offset--;
-				}
-				PHPHeuristicScanner scanner = PHPHeuristicScanner.createHeuristicScanner(getCompanion().getDocument(),
-						offset, true);
-				isAssignment = scanner.scanBackward(offset, ((IType) enclosingElement).getSourceRange().getOffset(),
-						'=') > -1;
-				return true;
+			IRegion surroundingBlock = scanner2.findSurroundingBlock(offset);
+			if (surroundingBlock == null) {
+				return false;
 			}
-			if (enclosingElement instanceof IMethod) {
-				if (isBeforeName(offset, (IMethod) enclosingElement)) {
-					return true;
+			TextSequence statement = PHPTextSequenceUtilities.getStatement(surroundingBlock.getOffset(),
+					getCompanion().getStructuredDocumentRegion(), true);
+
+			for (Type type : Type.values()) {
+				if (StringUtils.startsWithIgnoreCase(statement, type.name())) {
+					this.type = type;
+					break;
 				}
 			}
-		} catch (ModelException e) {
-			PHPCorePlugin.log(e);
+			if (type == null) {
+				return false;
+			}
+			isAssignment = scanner2.scanBackward(offset, statement.getOriginalOffset(0), '=') > -1;
+			return true;
 		} catch (BadLocationException e) {
 			PHPCorePlugin.log(e);
 		}

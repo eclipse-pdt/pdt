@@ -1,0 +1,9 @@
+--TEST--
+
+--FILE--
+<?php 
+use | const XX;
+
+--EXPECT--
+USE_CONST(7,16)
+FILE(0,23)
