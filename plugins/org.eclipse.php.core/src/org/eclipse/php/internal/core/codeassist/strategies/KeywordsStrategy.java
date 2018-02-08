@@ -45,7 +45,7 @@ public abstract class KeywordsStrategy extends ElementsStrategy {
 
 		ICompletionContext context = getContext();
 		AbstractCompletionContext concreteContext = (AbstractCompletionContext) context;
-		ISourceModule sourceModule = concreteContext.getSourceModule();
+		ISourceModule sourceModule = getCompanion().getSourceModule();
 		String prefix = concreteContext.getPrefix();
 		ISourceRange replaceRange = getReplacementRange(concreteContext);
 		Collection<KeywordData> keywordsList = PHPKeywords.getInstance(sourceModule.getScriptProject().getProject())
@@ -67,12 +67,12 @@ public abstract class KeywordsStrategy extends ElementsStrategy {
 		AbstractCompletionContext context = (AbstractCompletionContext) getContext();
 		int offset;
 		if (isInsertMode()) {
-			offset = context.getOffset();
+			offset = getCompanion().getOffset();
 		} else {
 			offset = replaceRange.getOffset() + replaceRange.getLength();
 		}
 		try {
-			String realSuffix = context.getDocument().get(offset, suffix.length());
+			String realSuffix = getCompanion().getDocument().get(offset, suffix.length());
 			if (suffix.equals(realSuffix)) {
 				// return empty suffix if exists in target document
 				return StringUtils.EMPTY;

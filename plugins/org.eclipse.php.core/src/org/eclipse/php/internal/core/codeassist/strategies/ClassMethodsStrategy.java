@@ -20,6 +20,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
+import org.eclipse.php.core.codeassist.ICompletionScope.Type;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
@@ -66,17 +67,18 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 			replaceRange = getReplacementRangeWithBraces(concreteContext);
 		}
 
-		PHPVersion phpVersion = concreteContext.getPHPVersion();
+		PHPVersion phpVersion = getCompanion().getPHPVersion();
 		Set<String> magicMethods = new HashSet<>();
 		magicMethods.addAll(Arrays.asList(PHPMagicMethods.getMethods(phpVersion)));
 
 		boolean exactName = requestor.isContextInformationMode();
 		// for methodName(|),we need set exactName to true
-		if (!exactName && concreteContext.getOffset() - 1 >= 0
-				&& concreteContext.getDocument().getChar(concreteContext.getOffset() - 1) == '(') {
+		if (!exactName && getCompanion().getOffset() - 1 >= 0
+				&& getCompanion().getDocument().getChar(getCompanion().getOffset() - 1) == '(') {
 			exactName = true;
 		}
 		List<IMethod> result = new LinkedList<>();
+		boolean inUseTrait = getCompanion().getScope().findParent(Type.TRAIT_USE) != null;
 		for (IType type : concreteContext.getLhsTypes()) {
 			try {
 				ITypeHierarchy hierarchy = getCompanion().getSuperTypeHierarchy(type, null);
@@ -88,7 +90,7 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 				boolean inConstructor = isInConstructor(type, type.getMethods(), concreteContext);
 				for (IMethod method : removeOverriddenElements(Arrays.asList(methods))) {
 
-					if (concreteContext.isInUseTraitStatement()) {
+					if (inUseTrait) {
 						// result.add(method);
 						reporter.reportMethod(method, "", //$NON-NLS-1$
 								replaceRange, ProposalExtraInfo.METHOD_ONLY | ProposalExtraInfo.FULL_NAME);
@@ -118,7 +120,7 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 				IMethod method = methods[i];
 				if (PHPModelUtils.isConstructor(method) && method.getDeclaringType().equals(type)) {
 					ISourceRange constructorRange = method.getSourceRange();
-					if (concreteContext.getOffset() > constructorRange.getOffset() && concreteContext
+					if (getCompanion().getOffset() > constructorRange.getOffset() && getCompanion()
 							.getOffset() < constructorRange.getOffset() + constructorRange.getLength()) {
 						return true;
 					}
@@ -165,8 +167,8 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 
 	public String getSuffix(AbstractCompletionContext abstractContext) throws BadLocationException {
 		// look for method bracket or end of line
-		IDocument document = abstractContext.getDocument();
-		int offset = abstractContext.getOffset();
+		IDocument document = getCompanion().getDocument();
+		int offset = getCompanion().getOffset();
 		while (document.getLength() > offset) {
 			char ch = document.getChar(offset);
 			if (ch == '(') {

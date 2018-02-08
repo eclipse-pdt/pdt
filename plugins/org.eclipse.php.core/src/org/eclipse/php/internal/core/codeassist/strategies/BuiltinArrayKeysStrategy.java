@@ -120,7 +120,7 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 				}
 			}
 
-			PHPVersion phpVersion = arrayContext.getPHPVersion();
+			PHPVersion phpVersion = getCompanion().getPHPVersion();
 			reportVariables(reporter, arrayContext, PHPVariables.getVariables(phpVersion), prefix, true, extraObject);
 		}
 	}
@@ -140,7 +140,8 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 			}
 			if (variable.startsWith(prefix)) {
 				if (!requestor.isContextInformationMode() || variable.length() == prefix.length()) {
-					reporter.reportField(new FakeField((ModelElement) context.getSourceModule(), variable, 0, 0), "", //$NON-NLS-1$
+					reporter.reportField(new FakeField((ModelElement) getCompanion().getSourceModule(), variable, 0, 0),
+							"", //$NON-NLS-1$
 							replaceRange, false, 0, extraObject);
 				}
 			}
