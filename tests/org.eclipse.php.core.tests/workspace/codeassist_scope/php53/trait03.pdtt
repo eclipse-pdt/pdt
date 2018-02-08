@@ -1,0 +1,20 @@
+--TEST--
+
+--FILE--
+<?php 
+trait Foo {
+    public $x = '';
+    public function name() {
+        
+    }
+}
+
+class Bar {
+    use Other, Fo|o;
+}
+
+--EXPECT--
+TRAIT_USE(102,15)
+BLOCK(96,23)
+CLASS(86,33,Bar)
+FILE(0,121)
