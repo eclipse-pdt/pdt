@@ -1,0 +1,12 @@
+--TEST--
+
+--FILE--
+<?php
+if (true) {
+    |
+}
+?>
+--EXPECT--
+BLOCK(16,8)
+IF(6,18)
+FILE(0,28)

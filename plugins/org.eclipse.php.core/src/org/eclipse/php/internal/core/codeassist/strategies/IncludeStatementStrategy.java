@@ -58,7 +58,7 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 		String prefix = includeContext.getPrefix();
 		ISourceRange replaceRange = getReplacementRange(includeContext);
 
-		final ISourceModule sourceModule = includeContext.getSourceModule();
+		final ISourceModule sourceModule = getCompanion().getSourceModule();
 		if (sourceModule == null || sourceModule.getScriptProject() == null) {
 			if (DLTKCore.DEBUG_COMPLETION) {
 				System.out.println("Unable to locate source module or project"); //$NON-NLS-1$
@@ -293,7 +293,7 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 				}
 				if (resource.getType() == IResource.FILE) {
 					if (PHPToolkitUtil.isPHPFile((IFile) resource)
-							&& !modelElement.equals(((IncludeStatementContext) context).getSourceModule())) {
+							&& !modelElement.equals(getCompanion().getSourceModule())) {
 						reporter.reportResource(modelElement, rel, getSuffix(modelElement), replaceRange);
 					}
 				} else {

@@ -1,0 +1,9 @@
+--TEST--
+
+--FILE--
+<?php 
+use function fu|nc;
+
+--EXPECT--
+USE_FUNCTION(7,20)
+FILE(0,27)

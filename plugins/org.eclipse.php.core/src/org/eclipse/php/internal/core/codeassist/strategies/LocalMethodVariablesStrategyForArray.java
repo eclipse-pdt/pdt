@@ -43,7 +43,7 @@ public class LocalMethodVariablesStrategyForArray extends AbstractCompletionStra
 		CompletionRequestor requestor = arrayContext.getCompletionRequestor();
 		IModelElement enclosingElement;
 		try {
-			enclosingElement = arrayContext.getSourceModule().getElementAt(arrayContext.getOffset());
+			enclosingElement = getCompanion().getSourceModule().getElementAt(getCompanion().getOffset());
 			while (enclosingElement instanceof IField) {
 				enclosingElement = enclosingElement.getParent();
 			}

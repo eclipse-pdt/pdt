@@ -269,7 +269,7 @@ public abstract class UseStatementContext extends StatementContext {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		ClassStatementContext classStatementContext = new ClassStatementContext();
+		TypeStatementContext classStatementContext = new TypeStatementContext();
 		classStatementContext.init(getCompanion());
 		boolean isClassStatementContext = classStatementContext.isValid(sourceModule, offset, requestor);
 		return buildUseStatement(offset, getCompanion().getStructuredDocumentRegion(), isClassStatementContext);
