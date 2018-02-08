@@ -1,0 +1,16 @@
+--TEST--
+Description
+--FILE--
+<?php 
+// ignore me
+?>
+<html></html>
+<?php 
+class MyName {
+    |
+}
+?>
+
+--EXPECT--
+CLASS(44,21)
+FILE(0,70)

@@ -219,10 +219,9 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 	 */
 	private boolean isTypeParameterBracket(int offset, IDocument document, PHPHeuristicScanner scanner) {
 		/*
-		 * type parameter come after braces (closing or opening), semicolons, or
-		 * after a Type name (heuristic: starts with capital character, or after
-		 * a modifier keyword in a method declaration (visibility, static,
-		 * synchronized, final)
+		 * type parameter come after braces (closing or opening), semicolons, or after a
+		 * Type name (heuristic: starts with capital character, or after a modifier
+		 * keyword in a method declaration (visibility, static, synchronized, final)
 		 */
 
 		try {
@@ -234,8 +233,7 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 					: document.get(prevTokenOffset, offset - prevTokenOffset).trim();
 
 			if (prevToken == Symbols.TokenLBRACE || prevToken == Symbols.TokenRBRACE
-					|| prevToken == Symbols.TokenSEMICOLON || prevToken == Symbols.TokenSYNCHRONIZED
-					|| prevToken == Symbols.TokenSTATIC
+					|| prevToken == Symbols.TokenSEMICOLON || prevToken == Symbols.TokenSTATIC
 					|| (prevToken == Symbols.TokenIDENT && isTypeParameterIntroducer(previous))
 					|| prevToken == Symbols.TokenEOF) {
 				return true;
@@ -248,16 +246,16 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 	}
 
 	/**
-	 * Returns <code>true</code> if <code>identifier</code> is an identifier
-	 * that could come right before a type parameter list. It uses a heuristic:
-	 * if the identifier starts with an upper case, it is assumed a type name.
-	 * Also, if <code>identifier</code> is a method modifier, it is assumed that
-	 * the angular bracket is part of the generic type parameter of a method.
+	 * Returns <code>true</code> if <code>identifier</code> is an identifier that
+	 * could come right before a type parameter list. It uses a heuristic: if the
+	 * identifier starts with an upper case, it is assumed a type name. Also, if
+	 * <code>identifier</code> is a method modifier, it is assumed that the angular
+	 * bracket is part of the generic type parameter of a method.
 	 * 
 	 * @param identifier
 	 *            the identifier to check
-	 * @return <code>true</code> if the identifier could introduce a type
-	 *         parameter list
+	 * @return <code>true</code> if the identifier could introduce a type parameter
+	 *         list
 	 * @since 3.1
 	 */
 	private boolean isTypeParameterIntroducer(String identifier) {

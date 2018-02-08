@@ -20,6 +20,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
+import org.eclipse.php.core.codeassist.ICompletionScope.Type;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
@@ -77,6 +78,7 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 			exactName = true;
 		}
 		List<IMethod> result = new LinkedList<>();
+		boolean inUseTrait = getCompanion().getScope().findParent(Type.TRAIT_USE) != null;
 		for (IType type : concreteContext.getLhsTypes()) {
 			try {
 				ITypeHierarchy hierarchy = getCompanion().getSuperTypeHierarchy(type, null);
@@ -88,7 +90,7 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 				boolean inConstructor = isInConstructor(type, type.getMethods(), concreteContext);
 				for (IMethod method : removeOverriddenElements(Arrays.asList(methods))) {
 
-					if (concreteContext.isInUseTraitStatement()) {
+					if (inUseTrait) {
 						// result.add(method);
 						reporter.reportMethod(method, "", //$NON-NLS-1$
 								replaceRange, ProposalExtraInfo.METHOD_ONLY | ProposalExtraInfo.FULL_NAME);

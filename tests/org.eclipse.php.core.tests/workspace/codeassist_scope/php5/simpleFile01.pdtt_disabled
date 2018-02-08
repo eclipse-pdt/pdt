@@ -1,0 +1,6 @@
+--TEST--
+File without PHP Code
+--FILE--
+My file |
+--EXPECT--
+FILE(0,9)

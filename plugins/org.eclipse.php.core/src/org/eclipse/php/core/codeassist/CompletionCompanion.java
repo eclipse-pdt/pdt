@@ -19,6 +19,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.annotations.NonNull;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.hierarchy.TypeHierarchy;
@@ -26,17 +27,18 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.core.compiler.ast.nodes.NamespaceDeclaration;
+import org.eclipse.php.core.compiler.ast.nodes.PHPModuleDeclaration;
 import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
+import org.eclipse.php.internal.core.codeassist.scope.ScopeParser;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.php.internal.core.format.PHPHeuristicScanner;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -71,6 +73,8 @@ public class CompletionCompanion {
 	private ITextRegionCollection regionCollection;
 	private IPHPScriptRegion phpScriptRegion;
 	private String partitionType;
+	private PHPModuleDeclaration phpModuleDeclaration;
+	private ICompletionScope scope;
 
 	private static class FakeTypeHierarchy extends TypeHierarchy {
 		public FakeTypeHierarchy() {
@@ -88,30 +92,29 @@ public class CompletionCompanion {
 		this.phpVersion = ProjectOptions.getPHPVersion(getSourceModule().getScriptProject().getProject());
 		try {
 			this.document = determineDocument(sourceModule, requestor);
-			if (this.document != null) {
-
-				structuredDocumentRegion = determineStructuredDocumentRegion(document, offset);
-				if (structuredDocumentRegion != null) {
-
-					regionCollection = determineRegionCollection(document, structuredDocumentRegion, offset);
-					if (regionCollection != null) {
-
-						phpScriptRegion = determinePHPRegion(document, regionCollection, offset);
-						if (phpScriptRegion != null) {
-
-							partitionType = determinePartitionType(regionCollection, phpScriptRegion, offset);
-							if (partitionType != null) {
-								determineNamespace();
-							}
-
-						}
-					}
-				}
+			if (this.document == null) {
+				return;
+			}
+			structuredDocumentRegion = determineStructuredDocumentRegion(document, offset);
+			if (structuredDocumentRegion == null) {
+				return;
+			}
+			regionCollection = determineRegionCollection(document, structuredDocumentRegion, offset);
+			if (regionCollection == null) {
+				return;
+			}
+			phpScriptRegion = determinePHPRegion(document, regionCollection, offset);
+			if (phpScriptRegion == null) {
+				return;
+			}
+			partitionType = determinePartitionType(regionCollection, phpScriptRegion, offset);
+			if (partitionType != null) {
+				determineScope();
+				determineNamespace();
 			}
 		} catch (ResourceAlreadyExists | IOException | CoreException | BadLocationException e) {
 			Logger.logException(e);
 		}
-
 	}
 
 	/**
@@ -345,65 +348,19 @@ public class CompletionCompanion {
 		return partitionType;
 	}
 
-	private void determineNamespace() throws BadLocationException {
-		int pos = offset;
-		if (pos >= document.getLength() - 1) {
-			pos = document.getLength() - 1;
+	private void determineNamespace() {
+		ICompletionScope namespaceScope = getScope().findParent(ICompletionScope.Type.NAMESPACE);
+		if (namespaceScope != null) {
+			currentNamespaceRange = namespaceScope.getRange();
+			NamespaceDeclaration declaration = (NamespaceDeclaration) namespaceScope.getAST();
+			if (declaration != null && !declaration.isGlobal()) {
+				currentNamespaceName = declaration.getName();
+			}
+
+		} else {
+			currentNamespaceRange = getScope().getRange();
 		}
 
-		PHPHeuristicScanner scanner = new PHPHeuristicScanner(document,
-				IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, PHPPartitionTypes.PHP_DEFAULT);
-		int token = PHPHeuristicScanner.UNBOUND;
-		while (token != PHPHeuristicScanner.NOT_FOUND && pos > 0) {
-			token = scanner.previousToken(pos, PHPHeuristicScanner.UNBOUND);
-			pos = scanner.getPosition();
-			if (token != PHPHeuristicScanner.NOT_FOUND) {
-				ITextRegion textRegion = scanner.getTextRegion(pos);
-				if (textRegion != null && textRegion.getType() == PHPRegionTypes.PHP_NAMESPACE) {
-					int nameStart = scanner.findNonWhitespaceForward(pos, PHPHeuristicScanner.UNBOUND);
-					if (!Character.isWhitespace(document.getChar(pos))) {
-						continue;
-					}
-					int nameEnd = nameStart;
-					int detectRange = PHPHeuristicScanner.NOT_FOUND;
-					char part = document.getChar(nameEnd);
-					if (part != PHPHeuristicScanner.LBRACE) {
-						StringBuilder name = new StringBuilder();
-						while (Character.isJavaIdentifierPart(part) || part == NamespaceReference.NAMESPACE_SEPARATOR) {
-							name.append(part);
-							nameEnd++;
-							part = document.getChar(nameEnd);
-						}
-						currentNamespaceName = name.toString();
-						if (Character.isWhitespace(part)) {
-							nameEnd = scanner.findNonWhitespaceForward(nameEnd, PHPHeuristicScanner.UNBOUND);
-							if (nameEnd != PHPHeuristicScanner.NOT_FOUND) {
-								part = document.getChar(nameEnd);
-							}
-						}
-						if (part == PHPHeuristicScanner.LBRACE) {
-							detectRange = nameEnd;
-						}
-					} else {
-						detectRange = nameStart;
-					}
-					if (detectRange != PHPHeuristicScanner.NOT_FOUND) {
-						int close = scanner.findClosingPeer(detectRange, PHPHeuristicScanner.LBRACE,
-								PHPHeuristicScanner.RBRACE);
-						if (close != PHPHeuristicScanner.NOT_FOUND) {
-							currentNamespaceRange = new SourceRange(textRegion.getStart(),
-									close - textRegion.getStart());
-						}
-					}
-					break;
-				} else if (textRegion instanceof IPHPScriptRegion) {
-					pos = textRegion.getStart() - 1;
-				}
-			}
-		}
-		if (currentNamespaceRange == null) {
-			currentNamespaceRange = new SourceRange(0, document.getLength());
-		}
 	}
 
 	/*
@@ -516,5 +473,30 @@ public class CompletionCompanion {
 
 	public ISourceRange getCurrentNamespaceRange() {
 		return currentNamespaceRange;
+	}
+
+	public PHPModuleDeclaration getModuleDeclaration() {
+		if (phpModuleDeclaration == null) {
+			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(getSourceModule(), null);
+			if (moduleDeclaration instanceof PHPModuleDeclaration) {
+				phpModuleDeclaration = (PHPModuleDeclaration) moduleDeclaration;
+			}
+		}
+
+		return phpModuleDeclaration;
+	}
+
+	private void determineScope() {
+		ScopeParser scopeParser = new ScopeParser(getModuleDeclaration(), document);
+		scope = scopeParser.parse(offset);
+	}
+
+	@NonNull
+	public ICompletionScope getScope() {
+		if (scope == null) {
+			determineScope();
+		}
+
+		return scope;
 	}
 }
