@@ -1163,7 +1163,7 @@ public class PHPDocumentationContentAccess {
 	}
 
 	private void handleContentElements(PHPDocTag tag) {
-		fBuf.append(tag.getValue());
+		fBuf.append(tag.getValue().trim());
 	}
 
 	private boolean handleInherited(CharSequence inherited) {
@@ -1254,6 +1254,8 @@ public class PHPDocumentationContentAccess {
 					continue;
 				}
 				handleBlockTagTitle(PHPDocumentationMessages.JavaDoc2HTMLTextReader_var_section);
+			} else if (tag.getTagKind() == TagKind.UNKNOWN) {
+				handleBlockTagTitle(tag.getMatchedTag());
 			} else {
 				handleBlockTagTitle(tag.getTagKind().getName());
 			}
@@ -1385,7 +1387,7 @@ public class PHPDocumentationContentAccess {
 	private void handleParamTag(PHPDocTag tag) {
 		if (tag.getTypeReferences().size() == 0) {
 			fBuf.append(BlOCK_TAG_ENTRY_START);
-			fBuf.append(tag.getValue());
+			fBuf.append(tag.getValue().trim());
 			doWorkAround();
 			fBuf.append(BlOCK_TAG_ENTRY_END);
 			return;

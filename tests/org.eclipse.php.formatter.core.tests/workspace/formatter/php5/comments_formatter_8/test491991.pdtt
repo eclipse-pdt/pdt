@@ -23,10 +23,10 @@ class A {
 	 *
 	 * @param string $a
 	 *        	valid tag
-	 *        	@paramxxx string $a invalid tag
+	 * @paramxxx string  $a invalid tag
 	 * @param string $b
 	 *        	valid tag
-	 *        	@pArAmxxx string $b invalid tag
+	 * @pArAmxxx string  $b invalid tag
 	 * {@inheritdoc} valid tag
 	 * {@inheritdoc} valid tag
 	 *               {@inheritdocxxx} invalid tag

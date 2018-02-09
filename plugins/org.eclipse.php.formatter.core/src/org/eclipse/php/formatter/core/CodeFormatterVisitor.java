@@ -37,6 +37,7 @@ import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.php.internal.core.format.ICodeFormattingProcessor;
 import org.eclipse.php.internal.core.util.MagicMemberUtil;
+import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.formatter.core.DocumentReader;
 import org.eclipse.php.internal.formatter.core.Logger;
 import org.eclipse.text.edits.MultiTextEdit;
@@ -1205,7 +1206,31 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 							}
 							commentWords = new ArrayList<>();
 
-							if (getNonblankWords(words).length == 0) {
+							if (phpDocTag.getTagKind() == TagKind.UNKNOWN
+									&& this.preferences.comment_never_format_unknown_tags) {
+								List<org.eclipse.php.core.compiler.ast.nodes.Scalar> scalars = phpDocTag.getTexts();
+								List<String> scalarTexts = new ArrayList<String>();
+								for (int j = 0; j < scalars.size(); j++) {
+									scalarTexts.add(scalars.get(j).getValue());
+								}
+								words = scalarTexts.toArray(new String[0]);
+								if ((i == tags.length - 1)
+										&& !this.preferences.comment_new_lines_at_javadoc_boundaries) {
+									words = getNonblankWords(words);
+								}
+
+								insertNewLineForPHPDoc();
+								appendToBuffer(phpDocTag.getTagText().getValue());
+
+								for (int j = 0; j < words.length; j++) {
+									if (j > 0) {
+										insertNewLineForPHPDoc();
+									}
+									@SuppressWarnings("null")
+									int idx = PHPTextSequenceUtilities.readBackwardSpaces(words[j], words[j].length());
+									appendToBuffer(words[j].substring(0, idx));
+								}
+							} else if (getNonblankWords(words).length == 0) {
 								boolean hasRefs = phpDocTag.getAllReferencesWithOrigOrder().size() != 0;
 								int nbLines = words.length;
 								// https://bugs.eclipse.org/bugs/show_bug.cgi?id=433938

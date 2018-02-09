@@ -398,10 +398,9 @@ public class PHPClassTemplate extends PHPElementTemplate {
 					PHPDocTag[] tags = docBlock.getTags();
 					// loop on all phpdoc params
 					for (PHPDocTag docTag : tags) {
-						String phpdocParamType = " " //$NON-NLS-1$
-								+ docTag.getTagKind().getValue();
+						String phpdocParamType = docTag.getTagText().getValue();
 						String phpdocParamValue = docTag.getValue();
-						set(FUNC_PHPDOC_PARAM_VAR, phpdocParamType + " " + phpdocParamValue); //$NON-NLS-1$
+						set(FUNC_PHPDOC_PARAM_VAR, phpdocParamType + phpdocParamValue);
 						compile(FUNC_PHPDOC_PARAMS_STRUCT_COMPILED, FUNC_PHPDOC_PARAMS_STRUCT, true);
 					}
 				} else {
