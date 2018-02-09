@@ -37,7 +37,6 @@ import org.eclipse.jface.text.formatter.IFormattingContext;
 import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.projection.ProjectionMapping;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
-import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.*;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;

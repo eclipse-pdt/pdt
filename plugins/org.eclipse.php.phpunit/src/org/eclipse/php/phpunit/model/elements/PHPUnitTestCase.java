@@ -52,6 +52,7 @@ public class PHPUnitTestCase extends PHPUnitTest {
 		return dataProviderCase;
 	}
 
+	@Override
 	public String getFilterName() {
 		StringBuilder sb = new StringBuilder();
 		if (dataProviderCase) {
@@ -69,6 +70,7 @@ public class PHPUnitTestCase extends PHPUnitTest {
 		return sb.toString();
 	}
 
+	@Override
 	public String toString() {
 		return this.getFilterName();
 	}

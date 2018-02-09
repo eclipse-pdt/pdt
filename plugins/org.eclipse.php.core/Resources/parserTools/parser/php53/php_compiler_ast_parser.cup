@@ -555,7 +555,6 @@ T_CURLY_OPEN:start namespace_statement_list:statementList T_CURLY_CLOSE:end
 :}
 ;
 
-
 use_declarations ::=
 use_declarations:useDeclList T_COMMA use_declaration:useDecl
 {:

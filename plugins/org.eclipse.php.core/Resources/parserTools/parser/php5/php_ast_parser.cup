@@ -1930,7 +1930,6 @@ dynamic_class_name_variable_property:var
 :}
 ;
 
-
 dynamic_class_name_variable_property ::=
 base_variable:var
 {:

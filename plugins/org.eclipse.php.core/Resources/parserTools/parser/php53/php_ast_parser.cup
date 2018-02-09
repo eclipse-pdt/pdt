@@ -472,7 +472,6 @@ use_declarations:list T_COMMA use_declaration:useDecl
 :}
 ;
 
-
 use_declaration ::=
 namespace_name:list
 {:
@@ -2120,7 +2119,6 @@ dynamic_class_name_variable_property:var
 :}
 ;
 
-
 dynamic_class_name_variable_property ::=
 base_variable:var
 {:
@@ -2304,7 +2302,6 @@ class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:varName
 		new Identifier(varNameleft, varNameright, parser.ast, varName));
 :}
 ;
-
 
 scalar ::=
 class_constant:classConstant

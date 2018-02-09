@@ -808,7 +808,6 @@ top_statement_list:statementList top_statement:statement
 | /* empty */
 ;
 
-
 top_statement ::=
 statement:statement
 {:
@@ -3354,7 +3353,6 @@ ctor_arguments ::=
 	RESULT = paramsList;
 :}
 ;
-
 
 scalar ::=
 T_LNUMBER:scalar

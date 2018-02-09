@@ -525,7 +525,6 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	return PHP_ARRAY;
 }
 
-
 <ST_PHP_IN_SCRIPTING>"string" {
 	return PHP_STRING;
 }
@@ -814,7 +813,6 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 <ST_PHP_COMMENT>"*" {
 	return PHP_COMMENT;
 }
-
 
 <ST_PHP_IN_SCRIPTING,ST_PHP_LINE_COMMENT>"?>" {
 	return PHP_CLOSETAG;

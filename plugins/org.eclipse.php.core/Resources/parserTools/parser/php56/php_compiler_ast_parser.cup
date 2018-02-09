@@ -642,7 +642,6 @@ T_CURLY_OPEN:start namespace_statement_list:statementList T_CURLY_CLOSE:end
 :}
 ;
 
-
 use_declarations ::=
 use_declarations:useDeclList T_COMMA use_declaration:useDecl
 {:
@@ -2298,8 +2297,6 @@ class_variable_declaration:list T_COMMA T_VARIABLE:var
 :}
 ;
 
-
-
 chain_instance_call ::=
 T_OPEN_PARENTHESE:start new_expr:expr T_CLOSE_PARENTHESE:end
 {:
@@ -2886,7 +2883,6 @@ array_creation:creation T_OPEN_RECT dim_offset:ex T_CLOSE_RECT:end
 	RESULT = new ReflectionArrayVariableReference(creationleft, endright, creation, ex, ReflectionArrayVariableReference.VARIABLE_ARRAY);
 :}
 ;
-
 
 lexical_vars ::=
 /* empty */
@@ -3797,7 +3793,6 @@ field_access_dim_list:var
 	RESULT = var;
 :}
 ;
-
 
 field_access_dim_list ::=
 field_access_dim_list:var T_OPEN_RECT dim_offset:index T_CLOSE_RECT:end
