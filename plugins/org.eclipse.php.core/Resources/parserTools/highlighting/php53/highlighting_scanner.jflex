@@ -755,7 +755,6 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	return PHP_COMMENT;
 }
 
-
 <ST_PHP_IN_SCRIPTING,ST_PHP_LINE_COMMENT>"?>" {
 	return PHP_CLOSETAG;
 }

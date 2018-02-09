@@ -518,7 +518,6 @@ use_declarations:list T_COMMA use_declaration:useDecl
 :}
 ;
 
-
 use_declaration ::=
 namespace_name:list
 {:
@@ -2716,7 +2715,6 @@ class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:varName
 		new Identifier(varNameleft, varNameright, parser.ast, "class"));
 :}
 ;
-
 
 scalar ::=
 class_constant:classConstant

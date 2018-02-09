@@ -810,7 +810,6 @@ top_statement_list:statementList top_statement:statement
 | /* empty */
 ;
 
-
 top_statement ::=
 statement:statement
 {:
@@ -3359,7 +3358,6 @@ ctor_arguments ::=
 :}
 ;
 
-
 scalar ::=
 T_LNUMBER:scalar
 {:
@@ -3705,7 +3703,6 @@ string_st:varName
 	RESULT = v;
 :}
 ;
-
 
 assignment_list ::=
 assignment_list:listElements T_COMMA assignment_list_element:element

@@ -1764,7 +1764,6 @@ return_type ::=
 :}
 ;
 
-
 simple_variable_list ::=
 simple_variable_list:list T_COMMA simple_variable:var
 {:
@@ -2211,7 +2210,6 @@ non_empty_for_expr:exprList T_COMMA expr:expr
 :}
 ;
 
-
 anonymous_class ::=
 extends_from:superClass implements_list:interfaces
 T_CURLY_OPEN:blockStart class_statement_list:sList T_CURLY_CLOSE:blockEnd
@@ -2620,7 +2618,6 @@ T_CURLY_OPEN:blockStart inner_statement_list:list T_CURLY_CLOSE:blockEnd
 :}
 ;
 
-
 lexical_vars ::=
 /* empty */
 {:
@@ -2666,7 +2663,6 @@ name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARE
 	RESULT = new FunctionInvocation(listleft, eright, parser.ast,
 		new FunctionName(listleft, listright, parser.ast, list), parameters);
 :}
-
 
 | class_name:className T_PAAMAYIM_NEKUDOTAYIM member_name:reflectionName T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
 {:
@@ -2779,7 +2775,6 @@ ctor_arguments ::=
 :}
 ;
 
-
 scalar ::=
 T_LNUMBER:scalar
 {:
@@ -2880,7 +2875,6 @@ possible_comma ::=
 | T_COMMA
 ;
 
-
 expr ::=
 variable:var
 {: RESULT = var; :}
@@ -2888,7 +2882,6 @@ variable:var
 | expr_without_variable:ewv
 {: RESULT = ewv; :}
 ;
-
 
 variable ::=
 callable_variable:var
@@ -3065,7 +3058,6 @@ optional_expr ::=
 	RESULT = expr;
 :}
 ;
-
 
 member_name ::=
 identifier:varName

@@ -131,6 +131,7 @@ public class PHPUnitTestGroup extends PHPUnitTest {
 		return null;
 	}
 
+	@Override
 	public String getFilterName() {
 		if (getLocalFile() == null) {
 			return null;
@@ -145,6 +146,7 @@ public class PHPUnitTestGroup extends PHPUnitTest {
 		return sb.toString();
 	}
 
+	@Override
 	public String toString() {
 		String result = this.getSuiteName();
 		if (result == null) {

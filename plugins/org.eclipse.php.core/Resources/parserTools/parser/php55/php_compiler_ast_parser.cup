@@ -606,7 +606,6 @@ T_CURLY_OPEN:start namespace_statement_list:statementList T_CURLY_CLOSE:end
 :}
 ;
 
-
 use_declarations ::=
 use_declarations:useDeclList T_COMMA use_declaration:useDecl
 {:
@@ -2761,7 +2760,6 @@ array_creation:creation T_OPEN_RECT dim_offset:ex T_CLOSE_RECT:end
 	RESULT = new ReflectionArrayVariableReference(creationleft, endright, creation, ex, ReflectionArrayVariableReference.VARIABLE_ARRAY);
 :}
 ;
-
 
 lexical_vars ::=
 /* empty */

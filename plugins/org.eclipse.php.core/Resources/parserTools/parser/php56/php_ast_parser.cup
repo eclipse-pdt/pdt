@@ -551,7 +551,6 @@ use_declarations:list T_COMMA use_declaration:useDecl
 :}
 ;
 
-
 use_declaration ::=
 namespace_name:list
 {:
@@ -1448,7 +1447,6 @@ expr_without_variable:var
 	RESULT = paramsList;
 :}
 
-
 | non_empty_function_call_parameter_list:paramsList T_COMMA variable:var
 {:
 	paramsList.add(var);
@@ -1919,7 +1917,6 @@ non_empty_for_expr:exprList T_COMMA expr:expr
 	RESULT = exprList;
 :}
 ;
-
 
 chain_instance_call ::=
 T_OPEN_PARENTHESE:open new_expr:expr T_CLOSE_PARENTHESE:end
@@ -2476,7 +2473,6 @@ namespace_name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_
 				fn), parameters));
 :}
 
-
 | variable_without_objects:reflectionName T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
 {:
 	RESULT = new FunctionInvocation(reflectionNameleft, eright, parser.ast,
@@ -2546,7 +2542,6 @@ dynamic_class_name_variable_property:var
 	RESULT = new ClassName(varleft, varright, parser.ast, var);
 :}
 ;
-
 
 dynamic_class_name_variable_property ::=
 base_variable:var
@@ -2983,7 +2978,6 @@ class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:varName
 		new Identifier(varNameleft, varNameright, parser.ast, "class"));
 :}
 ;
-
 
 scalar ::=
 class_constant:classConstant

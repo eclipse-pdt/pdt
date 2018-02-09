@@ -584,7 +584,6 @@ T_CURLY_OPEN:start namespace_statement_list:statementList T_CURLY_CLOSE:end
 :}
 ;
 
-
 use_declarations ::=
 use_declarations:useDeclList T_COMMA use_declaration:useDecl
 {:
@@ -2183,7 +2182,6 @@ T_OPEN_PARENTHESE:start new_expr:expr T_CLOSE_PARENTHESE:end
 	RESULT = parser.resolveDimList(RESULT, list);
 :}
 ;
-
 
 non_empty_for_expr ::=
 non_empty_for_expr:exprList T_COMMA expr:expr
