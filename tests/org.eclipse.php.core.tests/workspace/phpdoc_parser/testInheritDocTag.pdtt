@@ -7,10 +7,10 @@ Test Var Tag
 */
 --EXPECT--
 <PHPDocBlock start="0" end="38" shortDescription="">
-	<PHPDocTag start="6" end="20" tagKind="inheritdoc" value="
+	<PHPDocTag start="6" end="20" tagKind="inheritdoc" matchedTag="{@inheritdoc}" tagText=" {@inheritDoc}" value="
 ">
 	</PHPDocTag>
-	<PHPDocTag start="22" end="36" tagKind="inheritdoc" value="
+	<PHPDocTag start="22" end="36" tagKind="inheritdoc" matchedTag="{@inheritdoc}" tagText=" {@inheritdoc}" value="
 ">
 	</PHPDocTag>
 </PHPDocBlock>

@@ -67,7 +67,15 @@ public class PHPDocTag extends ASTNode {
 		NAMESPACE("namespace"), //$NON-NLS-1$
 		INHERITDOC("inheritdoc", "{@inheritdoc}"), //$NON-NLS-1$ //$NON-NLS-2$
 		EXCEPTION("exception"), //$NON-NLS-1$
-		MAGIC("magic"); //$NON-NLS-1$
+		MAGIC("magic"), //$NON-NLS-1$
+		/**
+		 * Special tag kind used as a placeholder for all non-PHPDoc tags like
+		 * Doctrine ORM annotations. Use {@link PHPDocTag#getMatchedTag()} to
+		 * retrieve the real tag name attached to this tag kind.
+		 * 
+		 * @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=469402
+		 */
+		UNKNOWN("unknown"); //$NON-NLS-1$
 
 		@NonNull
 		String name;
@@ -145,6 +153,8 @@ public class PHPDocTag extends ASTNode {
 	@NonNull
 	private final String matchedTag;
 	@NonNull
+	private final Scalar matchedTagText;
+	@NonNull
 	private String value;
 	@NonNull
 	private List<Scalar> texts;
@@ -156,16 +166,26 @@ public class PHPDocTag extends ASTNode {
 	private String trimmedDescText;
 
 	public PHPDocTag(int start, int end, @NonNull TagKind tag, @NonNull String matchedTag, @NonNull String value,
-			@NonNull List<Scalar> texts) {
+			@NonNull Scalar matchedTagText, @NonNull List<Scalar> texts) {
 		super(start, end);
-		if (!(0 <= start && start <= end) || tag == null || matchedTag == null || value == null || texts == null) {
+		if (!(0 <= start && start <= end) || tag == null || matchedTag == null || value == null
+				|| matchedTagText == null || texts == null) {
 			throw new IllegalArgumentException();
 		}
 		this.tagKind = tag;
 		this.matchedTag = matchedTag;
 		this.value = value;
+		this.matchedTagText = matchedTagText;
 		this.texts = texts;
 		updateReferences(start, end);
+	}
+
+	/**
+	 * Never null.
+	 */
+	@NonNull
+	public Scalar getTagText() {
+		return matchedTagText;
 	}
 
 	/**
@@ -406,6 +426,13 @@ public class PHPDocTag extends ASTNode {
 		return tagKind;
 	}
 
+	/**
+	 * Returns matched tag name when getTagKind() is equal to
+	 * <code>TagKind.UNKNOWN</code>. Otherwise returns same result as
+	 * <code>getTagKind().getValue()</code>.
+	 * 
+	 * @return matched tag name
+	 */
 	@NonNull
 	public String getMatchedTag() {
 		return matchedTag;
@@ -477,6 +504,8 @@ public class PHPDocTag extends ASTNode {
 	public void adjustStart(int start) {
 		setStart(sourceStart() + start);
 		setEnd(sourceEnd() + start);
+		matchedTagText.setStart(matchedTagText.sourceStart() + start);
+		matchedTagText.setEnd(matchedTagText.sourceEnd() + start);
 		for (Scalar text : texts) {
 			text.setStart(text.sourceStart() + start);
 			text.setEnd(text.sourceEnd() + start);

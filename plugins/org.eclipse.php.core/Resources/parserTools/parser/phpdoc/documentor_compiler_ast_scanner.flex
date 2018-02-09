@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2015 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2006, 2015, 2018 Zend Corporation and IBM Corporation.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -56,7 +56,8 @@ import org.eclipse.php.core.compiler.ast.nodes.Scalar;
 	private ArrayList<PHPDocTag> tagList;
 	private TagKind currTagKind;
 	private int tagPosition;
-	private String matchedTag;
+	private String matchedTagName;
+	private Scalar indentedTagName;
 	private StringBuilder sBuffer;
 	private int numOfLines;
 	private List<Scalar> textList;
@@ -69,7 +70,8 @@ import org.eclipse.php.core.compiler.ast.nodes.Scalar;
 		tagList = new ArrayList<>();
 		currTagKind = null;
 		tagPosition = 0;
-		matchedTag = "";
+		matchedTagName = "";
+		indentedTagName = null;
 		sBuffer = new StringBuilder();
 		numOfLines = 1;
 		textList = new ArrayList<>();
@@ -94,7 +96,7 @@ import org.eclipse.php.core.compiler.ast.nodes.Scalar;
 					lastTag.getTexts().add(lastText);
 					// replace last tag by a new one with updated source range and internal references
 					tagList.set(tagList.size() - 1, new PHPDocTag(lastTag.sourceStart(), lastText.sourceEnd(),
-							lastTag.getTagKind(), lastTag.getMatchedTag(), lastTag.getValue(), lastTag.getTexts()));
+							lastTag.getTagKind(), lastTag.getMatchedTag(), lastTag.getValue(), lastTag.getTagText(), lastTag.getTexts()));
 				}
 			}
 		}
@@ -108,12 +110,13 @@ import org.eclipse.php.core.compiler.ast.nodes.Scalar;
 		return rv;
 	}
 
-	private void startTagsState(TagKind firstState, int position) {
+	private void startTagsState(TagKind firstState, int position, String tagName, Scalar indentedTag) {
 		updateStartPos();
 		handleDesc();
 		currTagKind = firstState;
 		tagPosition = position - _zzPushbackPos;
-		matchedTag = firstState.getValue();
+		matchedTagName = tagName;
+		indentedTagName = indentedTag;
 		sBuffer = new StringBuilder();
 		yybegin(ST_IN_TAGS);
 	}
@@ -127,14 +130,30 @@ import org.eclipse.php.core.compiler.ast.nodes.Scalar;
 		return -1;
 	}
 
-	private void setNewTag(TagKind newTag, int position) {
+	// should only be used with ^{LINESTART}... rules:
+	private int findIndentedLineStartTagPosition() {
+		// we want to keep all blanks after
+		// '*', see also token LINESTART
+		for (int i = zzStartRead; i < zzMarkedPos; i++) {
+			if (zzBuffer[i] == '*') {
+				return i + 1;
+			}
+			if (zzBuffer[i] == '@' || zzBuffer[i] == '{') {
+				break;
+			}
+		}
+		return zzStartRead;
+	}
+
+	private void setNewTag(TagKind newTag, int position, String tagName, Scalar indentedTag) {
 		updateStartPos();
 		setTagValue();
 
 		sBuffer = new StringBuilder();
 		currTagKind = newTag;
 		tagPosition = position - _zzPushbackPos;
-		matchedTag = newTag.getValue();
+		matchedTagName = tagName;
+		indentedTagName = indentedTag;
 	}
 
 	private void setTagValue() {
@@ -145,8 +164,8 @@ import org.eclipse.php.core.compiler.ast.nodes.Scalar;
 			return;
 		}
 
-		PHPDocTag basicPHPDocTag = new PHPDocTag(tagPosition, zzStartRead - _zzPushbackPos, currTagKind, matchedTag,
-				value, getTexts(tagPosition, zzStartRead - _zzPushbackPos, true));
+		PHPDocTag basicPHPDocTag = new PHPDocTag(tagPosition, zzStartRead - _zzPushbackPos, currTagKind, matchedTagName,
+				value, indentedTagName, getTexts(tagPosition, zzStartRead - _zzPushbackPos, true));
 		tagList.add(basicPHPDocTag);
 	}
 
@@ -311,6 +330,7 @@ NEWLINE=("\r"|"\n"|"\r\n")
 LINESTART=({TABS_AND_SPACES}"*"?{TABS_AND_SPACES})
 EMPTYLINE=({LINESTART}{TABS_AND_SPACES})
 PHPDOCSTART="/**"{TABS_AND_SPACES}
+TAG_NAME_CHARS=[^ \n\r\t*]+
 
 
 %%
@@ -331,17 +351,40 @@ PHPDOCSTART="/**"{TABS_AND_SPACES}
 
 <YYINITIAL>{ANY_CHAR}     {}
 
-<ST_IN_FIRST_LINE>^{PHPDOCSTART}(("{@"[a-zA-Z-]+"}")|("@"[a-zA-Z-]+)) {
+<ST_IN_FIRST_LINE>^{PHPDOCSTART}("@"{TAG_NAME_CHARS}) {
 	int position = findTagPosition();
-	TagKind tagkind = TagKind.getTagKindFromValue(new String(zzBuffer, position, zzMarkedPos - position));
-	if (tagkind != null) {
-		startTagsState(tagkind, position);
+	// NB: no need to check if "value" contains the closing "*/" PHPDoc string
+	// since character '*' is not allowed in {TAG_NAME_CHARS}
+	String value = new String(zzBuffer, position, zzMarkedPos - position);
+
+	TagKind tagkind = TagKind.getTagKindFromValue(value);
+	int indentedTagPosition = zzStartRead + 3; // skip "/**"
+	String indentedText = new String(zzBuffer, indentedTagPosition, zzMarkedPos - indentedTagPosition);
+	Scalar indentedTag = new Scalar(indentedTagPosition - _zzPushbackPos, indentedTagPosition - _zzPushbackPos + indentedText.length(),
+		indentedText, Scalar.TYPE_STRING);
+	if (tagkind != null && tagkind != TagKind.UNKNOWN) {
+		startTagsState(tagkind, position, tagkind.getValue(), indentedTag);
+	} else {
+		startTagsState(TagKind.UNKNOWN, position, value, indentedTag);
+	}
+}
+
+<ST_IN_FIRST_LINE>^{PHPDOCSTART}("{@"[a-zA-Z-]+"}") {
+	int position = findTagPosition();
+	String value = new String(zzBuffer, position, zzMarkedPos - position);
+	TagKind tagkind = TagKind.getTagKindFromValue(value);
+	int indentedTagPosition = zzStartRead + 3; // skip "/**"
+	if (tagkind != null && tagkind != TagKind.UNKNOWN) {
+		String indentedText = new String(zzBuffer, indentedTagPosition, zzMarkedPos - indentedTagPosition);
+		Scalar indentedTag = new Scalar(indentedTagPosition - _zzPushbackPos, indentedTagPosition - _zzPushbackPos + indentedText.length(),
+			indentedText, Scalar.TYPE_STRING);
+		startTagsState(tagkind, position, tagkind.getValue(), indentedTag);
 	} else {
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=474332
 		// no @tags were found on first line, continue normal
 		// processing...
-		updateStartPos(position);
-		// no need to call yypushback(zzMarkedPos - position) here...
+		updateStartPos(indentedTagPosition);
+		// no need to call yypushback(zzMarkedPos - indentedTagPosition) here...
 		yybegin(ST_IN_SHORT_DESC);
 	}
 }
@@ -350,7 +393,7 @@ PHPDOCSTART="/**"{TABS_AND_SPACES}
 	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=474332
 	// no @tags were found on first line, continue normal
 	// processing...
-	updateStartPos();
+	updateStartPos(zzStartRead + 3); // skip "/**"
 	yybegin(ST_IN_SHORT_DESC);
 }
 
@@ -375,18 +418,41 @@ PHPDOCSTART="/**"{TABS_AND_SPACES}
 <ST_IN_SHORT_DESC>{NEWLINE}     {handleNewLine();}
 <ST_IN_SHORT_DESC>.             {}
 
-<ST_IN_SHORT_DESC,ST_IN_LONG_DESC>^{LINESTART}(("{@"[a-zA-Z-]+"}")|("@"[a-zA-Z-]+)) {
+<ST_IN_SHORT_DESC,ST_IN_LONG_DESC>^{LINESTART}("@"{TAG_NAME_CHARS}) {
 	int position = findTagPosition();
-	TagKind tagkind = TagKind.getTagKindFromValue(new String(zzBuffer, position, zzMarkedPos - position));
-	if (tagkind != null) {
-		startTagsState(tagkind, position);
+	// NB: no need to check if "value" contains the closing "*/" PHPDoc string
+	// since character '*' is not allowed in {TAG_NAME_CHARS}
+	String value = new String(zzBuffer, position, zzMarkedPos - position);
+
+	TagKind tagkind = TagKind.getTagKindFromValue(value);
+	int indentedTagPosition = findIndentedLineStartTagPosition();
+	String indentedText = new String(zzBuffer, indentedTagPosition, zzMarkedPos - indentedTagPosition);
+	Scalar indentedTag = new Scalar(indentedTagPosition - _zzPushbackPos, indentedTagPosition - _zzPushbackPos + indentedText.length(),
+		indentedText, Scalar.TYPE_STRING);
+	if (tagkind != null && tagkind != TagKind.UNKNOWN) {
+		startTagsState(tagkind, position, tagkind.getValue(), indentedTag);
 	} else {
-		updateStartPos(position);
-		// no need to call yypushback(zzMarkedPos - position) here...
+		startTagsState(TagKind.UNKNOWN, position, value, indentedTag);
 	}
 }
 
-<ST_IN_SHORT_DESC,ST_IN_LONG_DESC,ST_IN_TAGS>^{LINESTART}     {updateStartPos();}
+<ST_IN_SHORT_DESC,ST_IN_LONG_DESC>^{LINESTART}("{@"[a-zA-Z-]+"}") {
+	int position = findTagPosition();
+	String value = new String(zzBuffer, position, zzMarkedPos - position);
+	TagKind tagkind = TagKind.getTagKindFromValue(value);
+	int indentedTagPosition = findIndentedLineStartTagPosition();
+	if (tagkind != null && tagkind != TagKind.UNKNOWN) {
+		String indentedText = new String(zzBuffer, indentedTagPosition, zzMarkedPos - indentedTagPosition);
+		Scalar indentedTag = new Scalar(indentedTagPosition - _zzPushbackPos, indentedTagPosition - _zzPushbackPos + indentedText.length(),
+			indentedText, Scalar.TYPE_STRING);
+		startTagsState(tagkind, position, tagkind.getValue(), indentedTag);
+	} else {
+		updateStartPos(indentedTagPosition);
+		// no need to call yypushback(zzMarkedPos - indentedTagPosition) here...
+	}
+}
+
+<ST_IN_SHORT_DESC,ST_IN_LONG_DESC,ST_IN_TAGS>^{LINESTART}     {updateStartPos(findIndentedLineStartTagPosition());}
 
 <ST_IN_LONG_DESC>{TABS_AND_SPACES}("*/")     {handleDocEnd_longDesc();return -1;}
 
@@ -394,14 +460,37 @@ PHPDOCSTART="/**"{TABS_AND_SPACES}
 
 <ST_IN_LONG_DESC>.             {}
 
-<ST_IN_TAGS>^{LINESTART}(("{@"[a-zA-Z-]+"}")|("@"[a-zA-Z-]+)) {
+<ST_IN_TAGS>^{LINESTART}("@"{TAG_NAME_CHARS}) {
 	int position = findTagPosition();
-	TagKind tagkind = TagKind.getTagKindFromValue(new String(zzBuffer, position, zzMarkedPos - position));
-	if (tagkind != null) {
-		setNewTag(tagkind, position);
+	// NB: no need to check if "value" contains the closing "*/" PHPDoc string
+	// since character '*' is not allowed in {TAG_NAME_CHARS}
+	String value = new String(zzBuffer, position, zzMarkedPos - position);
+
+	TagKind tagkind = TagKind.getTagKindFromValue(value);
+	int indentedTagPosition = findIndentedLineStartTagPosition();
+	String indentedText = new String(zzBuffer, indentedTagPosition, zzMarkedPos - indentedTagPosition);
+	Scalar indentedTag = new Scalar(indentedTagPosition - _zzPushbackPos, indentedTagPosition - _zzPushbackPos + indentedText.length(),
+		indentedText, Scalar.TYPE_STRING);
+	if (tagkind != null && tagkind != TagKind.UNKNOWN) {
+		setNewTag(tagkind, position, tagkind.getValue(), indentedTag);
 	} else {
-		updateStartPos(position);
-		// no need to call yypushback(zzMarkedPos - position) here...
+		setNewTag(TagKind.UNKNOWN, position, value, indentedTag);
+	}
+}
+
+<ST_IN_TAGS>^{LINESTART}("{@"[a-zA-Z-]+"}") {
+	int position = findTagPosition();
+	String value = new String(zzBuffer, position, zzMarkedPos - position);
+	TagKind tagkind = TagKind.getTagKindFromValue(value);
+	int indentedTagPosition = findIndentedLineStartTagPosition();
+	if (tagkind != null && tagkind != TagKind.UNKNOWN) {
+		String indentedText = new String(zzBuffer, indentedTagPosition, zzMarkedPos - indentedTagPosition);
+		Scalar indentedTag = new Scalar(indentedTagPosition - _zzPushbackPos, indentedTagPosition - _zzPushbackPos + indentedText.length(),
+			indentedText, Scalar.TYPE_STRING);
+		setNewTag(tagkind, position, tagkind.getValue(), indentedTag);
+	} else {
+		updateStartPos(indentedTagPosition);
+		// no need to call yypushback(zzMarkedPos - indentedTagPosition) here...
 	}
 }
 

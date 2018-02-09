@@ -1,0 +1,102 @@
+--TEST--
+Bug 423089 - Broken formatter with non-PHPDoc tags
+--FILE--
+<?php
+/**
+ *
+ * @author John Doe
+ * @ORM\Entity
+ * @MyProject\Annotations\Foobarable
+ */
+class User
+{
+    /**
+     *
+     * @ORM\Id @ORM\Column @ORM\GeneratedValue
+     * @dummy
+     * @var int
+     */
+    private $id;
+
+    /**
+     *
+     * @ORM\Column(type="string")
+     * @Assert\NotEmpty
+     * @Assert\Email
+     * @var string
+     */
+    private $email;
+}
+
+/**
+ *
+ * @Annotation
+ * @Target({"METHOD","PROPERTY"})
+ */
+class Bar
+{
+}
+
+/**
+ *
+ * @Annotation
+ * @Target({"METHOD","PROPERTY"})
+ * @Attributes({
+ * @Attribute("stringProperty", type = "string"),
+ * @Attribute("annotProperty", type = "SomeAnnotationClass"),
+ * })
+ */
+class Foo
+{
+    public function __construct(array $values)
+    {
+    }
+}
+?>
+--EXPECT--
+<?php
+/**
+ *
+ * @author John Doe
+ * @ORM\Entity
+ * @MyProject\Annotations\Foobarable
+ */
+class User {
+	/**
+	 *
+	 * @ORM\Id @ORM\Column @ORM\GeneratedValue
+	 * @dummy
+	 * @var int
+	 */
+	private $id;
+	
+	/**
+	 *
+	 * @ORM\Column(type="string")
+	 * @Assert\NotEmpty
+	 * @Assert\Email
+	 * @var string
+	 */
+	private $email;
+}
+/**
+ *
+ * @Annotation
+ * @Target({"METHOD","PROPERTY"})
+ */
+class Bar {
+}
+/**
+ *
+ * @Annotation
+ * @Target({"METHOD","PROPERTY"})
+ * @Attributes({
+ * @Attribute("stringProperty", type = "string"),
+ * @Attribute("annotProperty", type = "SomeAnnotationClass"),
+ *                             })
+ */
+class Foo {
+	public function __construct(array $values) {
+	}
+}
+?>
