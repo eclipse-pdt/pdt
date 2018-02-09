@@ -1930,7 +1930,7 @@ public class CodeFormatterConstants {
 	 * FORMATTER / Option to control whether unknown tags should keep their content unchanged (i.e. no code formatting)
 	 *     - option id:         "org.eclipse.jdt.core.formatter.never_format_unknown_tags"
 	 *     - possible values:   { TRUE, FALSE }
-	 *     - default:           FALSE
+	 *     - default:           TRUE
 	 * </pre>
 	 * 
 	 * @see #TRUE

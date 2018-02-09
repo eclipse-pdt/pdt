@@ -22,8 +22,11 @@ public final class PHPDefaultFormatterPreferences implements ICodeFormatterPrefe
 
 	@Override
 	public CodeFormatterPreferences initValues() {
-		CodeFormatterPreferences preferences = new CodeFormatterPreferences();
+		return initValues(new CodeFormatterPreferences());
+	}
 
+	@Override
+	public CodeFormatterPreferences initValues(CodeFormatterPreferences preferences) {
 		preferences.indentationChar = CodeFormatterPreferences.TAB_CHAR;
 		preferences.indentationSize = 1;
 		preferences.tabSize = 4;
@@ -256,7 +259,7 @@ public final class PHPDefaultFormatterPreferences implements ICodeFormatterPrefe
 		preferences.comment_format_html = true;
 		preferences.comment_format_source = true;
 		preferences.comment_indent_parameter_description = true;
-		preferences.comment_never_format_unknown_tags = false;
+		preferences.comment_never_format_unknown_tags = true;
 		preferences.comment_indent_root_tags = true;
 		preferences.comment_insert_empty_line_before_root_tags = true;
 		preferences.comment_insert_new_line_for_parameter = true;

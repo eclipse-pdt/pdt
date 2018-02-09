@@ -170,5 +170,6 @@
 <setting id="insert_space_after_opening_paren_in_declare" value="false"/>
 <setting id="insert_space_before_closing_paren_in_declare" value="false"/>
 <setting id="insert_space_before_opening_paren_in_declare" value="false"/>
+<setting id="org.eclipse.php.formatter.core.formatter.comment.never_format_unknown_tags" value="false"/>
 </profile>
 </profiles>

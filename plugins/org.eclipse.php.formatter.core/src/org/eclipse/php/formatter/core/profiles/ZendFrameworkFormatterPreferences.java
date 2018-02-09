@@ -20,13 +20,13 @@ final public class ZendFrameworkFormatterPreferences implements ICodeFormatterPr
 
 	public static final String ID = "org.eclipse.php.formatter.ui.preferences.ZendFrameworkFormatterPreferences"; //$NON-NLS-1$
 
-	public ZendFrameworkFormatterPreferences() {
+	@Override
+	public CodeFormatterPreferences initValues() {
+		return initValues(new CodeFormatterPreferences());
 	}
 
 	@Override
-	public CodeFormatterPreferences initValues() {
-		CodeFormatterPreferences preferences = new CodeFormatterPreferences();
-
+	public CodeFormatterPreferences initValues(CodeFormatterPreferences preferences) {
 		preferences.indentationChar = CodeFormatterPreferences.SPACE_CHAR;
 		preferences.indentationSize = 4;
 		preferences.tabSize = 4;
@@ -180,7 +180,7 @@ final public class ZendFrameworkFormatterPreferences implements ICodeFormatterPr
 		preferences.comment_format_html = true;
 		preferences.comment_format_source = true;
 		preferences.comment_indent_parameter_description = true;
-		preferences.comment_never_format_unknown_tags = false;
+		preferences.comment_never_format_unknown_tags = true;
 		preferences.comment_indent_root_tags = true;
 		preferences.comment_insert_empty_line_before_root_tags = true;
 		preferences.comment_insert_new_line_for_parameter = true;

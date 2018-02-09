@@ -186,7 +186,6 @@
 <setting id="org.eclipse.php.formatter.core.formatter.comment.insert_new_line_before_root_tags" value="true"/>
 <setting id="org.eclipse.php.formatter.core.formatter.comment.indent_root_tags" value="true"/>
 <setting id="org.eclipse.php.formatter.core.formatter.comment.indent_parameter_description" value="false"/>
-<setting id="org.eclipse.php.formatter.core.formatter.comment.never_format_unknown_tags" value="true"/>
 <setting id="org.eclipse.php.formatter.core.formatter.comment.insert_new_line_for_parameter" value="true"/>
 <setting id="org.eclipse.php.formatter.core.formatter.comment.new_lines_at_javadoc_boundaries" value="false"/>
 <setting id="org.eclipse.php.formatter.core.formatter.comment.clear_blank_lines_in_javadoc_comment" value="false"/>

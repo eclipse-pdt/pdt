@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Zend Techologies Ltd.
+ * Copyright (c) 2013, 2018 Zend Techologies Ltd.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,5 +13,7 @@ package org.eclipse.php.formatter.core.profiles;
 public interface ICodeFormatterPreferencesInitializer {
 
 	public CodeFormatterPreferences initValues();
+
+	public CodeFormatterPreferences initValues(CodeFormatterPreferences preferences);
 
 }

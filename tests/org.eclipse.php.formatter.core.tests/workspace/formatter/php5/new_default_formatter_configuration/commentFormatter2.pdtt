@@ -93,7 +93,7 @@ class Bar {
  * @Attributes({
  * @Attribute("stringProperty", type = "string"),
  * @Attribute("annotProperty", type = "SomeAnnotationClass"),
- *                             })
+ * })
  */
 class Foo {
 	public function __construct(array $values) {

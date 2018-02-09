@@ -299,6 +299,12 @@ public class CodeFormatterPreferences {
 	}
 
 	public void setPreferencesValues(Map<String, Object> preferences) {
+		// First at all, use default preferences initializer to set default
+		// values to all CodeFormatterPreferences properties in case some of its
+		// properties (for example some comment properties) cannot be set or
+		// updated afterwards:
+		getDefaultPreferencesInitializer().initValues(this);
+
 		String indentChar = ((String) preferences.get("indentationChar")); //$NON-NLS-1$
 		if (indentChar != null) {
 			indentationChar = indentChar.charAt(0);
@@ -1380,16 +1386,20 @@ public class CodeFormatterPreferences {
 		return options;
 	}
 
-	public static CodeFormatterPreferences getDefaultPreferences() {
+	public static ICodeFormatterPreferencesInitializer getDefaultPreferencesInitializer() {
 		IEclipsePreferences preferences = DefaultScope.INSTANCE.getNode(FormatterCorePlugin.PLUGIN_ID);
 		String profile = preferences.get(CodeFormatterConstants.FORMATTER_PROFILE, null);
 		if (profile != null) {
 			FormattingProfile formattingProfile = new FormattingProfileRegistry().getProfile(profile);
 			if (formattingProfile != null) {
-				return formattingProfile.getImplementation().initValues();
+				return formattingProfile.getImplementation();
 			}
 		}
-		return new CodeFormatterPreferences();
+		return new PHPDefaultFormatterPreferences();
+	}
+
+	public static CodeFormatterPreferences getDefaultPreferences() {
+		return getDefaultPreferencesInitializer().initValues();
 	}
 
 }
