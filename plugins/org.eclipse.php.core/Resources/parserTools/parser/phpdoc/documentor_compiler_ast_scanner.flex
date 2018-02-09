@@ -238,7 +238,11 @@ import org.eclipse.php.core.compiler.ast.nodes.Scalar;
 	private void appendLastText() {
 		String sb = new String(zzBuffer, startPos, zzMarkedPos - startPos - 2);
 		addText(sb);
-		sBuffer.append(sb);
+		// append last text only if it's not totally blank,
+		// to be in sync with lastText.getValue() handling in method parse()
+		if (StringUtils.isNotBlank(sb)) {
+			sBuffer.append(sb);
+		}
 		updateStartPos();
 	}
 
