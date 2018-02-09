@@ -274,6 +274,7 @@ public class CodeFormatterPreferences {
 	public boolean comment_format_html;
 	public boolean comment_format_source;
 	public boolean comment_indent_parameter_description;
+	public boolean comment_never_format_unknown_tags;
 	public boolean comment_indent_root_tags;
 	public boolean comment_insert_empty_line_before_root_tags;
 	public boolean comment_insert_new_line_for_parameter;
@@ -747,6 +748,11 @@ public class CodeFormatterPreferences {
 		if (commentIndentParameterDescriptionOption != null) {
 			this.comment_indent_parameter_description = CodeFormatterConstants.TRUE
 					.equals(commentIndentParameterDescriptionOption);
+		}
+		final Object commentNeverFormatUnknownTags = preferences
+				.get(CodeFormatterConstants.FORMATTER_COMMENT_NEVER_FORMAT_UNKNOWN_TAGS);
+		if (commentNeverFormatUnknownTags != null) {
+			this.comment_never_format_unknown_tags = CodeFormatterConstants.TRUE.equals(commentNeverFormatUnknownTags);
 		}
 		final Object commentIndentRootTagsOption = preferences
 				.get(CodeFormatterConstants.FORMATTER_COMMENT_INDENT_ROOT_TAGS);
@@ -1341,6 +1347,8 @@ public class CodeFormatterPreferences {
 				this.comment_format_source ? CodeFormatterConstants.TRUE : CodeFormatterConstants.FALSE);
 		options.put(CodeFormatterConstants.FORMATTER_COMMENT_INDENT_PARAMETER_DESCRIPTION,
 				this.comment_indent_parameter_description ? CodeFormatterConstants.TRUE : CodeFormatterConstants.FALSE);
+		options.put(CodeFormatterConstants.FORMATTER_COMMENT_NEVER_FORMAT_UNKNOWN_TAGS,
+				this.comment_never_format_unknown_tags ? CodeFormatterConstants.TRUE : CodeFormatterConstants.FALSE);
 		options.put(CodeFormatterConstants.FORMATTER_COMMENT_INDENT_ROOT_TAGS,
 				this.comment_indent_root_tags ? CodeFormatterConstants.TRUE : CodeFormatterConstants.FALSE);
 		options.put(CodeFormatterConstants.FORMATTER_COMMENT_INSERT_EMPTY_LINE_BEFORE_ROOT_TAGS,

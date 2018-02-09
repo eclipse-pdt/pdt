@@ -1927,6 +1927,21 @@ public class CodeFormatterConstants {
 
 	/**
 	 * <pre>
+	 * FORMATTER / Option to control whether unknown tags should keep their content unchanged (i.e. no code formatting)
+	 *     - option id:         "org.eclipse.jdt.core.formatter.never_format_unknown_tags"
+	 *     - possible values:   { TRUE, FALSE }
+	 *     - default:           FALSE
+	 * </pre>
+	 * 
+	 * @see #TRUE
+	 * @see #FALSE
+	 * @since 5.3
+	 */
+	public final static String FORMATTER_COMMENT_NEVER_FORMAT_UNKNOWN_TAGS = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.comment.never_format_unknown_tags"; //$NON-NLS-1$
+
+	/**
+	 * <pre>
 	 * FORMATTER / Option to control whether Javadoc root tags are indented.
 	 *     - option id:         "org.eclipse.jdt.core.formatter.comment.indent_root_tags"
 	 *     - possible values:   { TRUE, FALSE }

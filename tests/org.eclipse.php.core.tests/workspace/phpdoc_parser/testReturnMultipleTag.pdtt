@@ -7,7 +7,7 @@ Test Return Multiple Tag
 */
 --EXPECT--
 <PHPDocBlock start="0" end="65" shortDescription="Test return multiple types">
-	<PHPDocTag start="35" end="63" tagKind="return" value=" MyClass|OtherClass 
+	<PHPDocTag start="35" end="63" tagKind="return" matchedTag="@return" tagText=" @return" value=" MyClass|OtherClass 
 ">
 		<TypeReference start="43" end="50" name="MyClass">
 		</TypeReference>
