@@ -12,6 +12,6 @@ Bug 423089 - Broken formatter with non-PHPDoc tags
 ">
 	</PHPDocTag>
 	<PHPDocTag start="25" end="56" tagKind="unknown" matchedTag="@Target({&quot;METHOD&quot;,&quot;PROPERTY&quot;})" tagText=" @Target({&quot;METHOD&quot;,&quot;PROPERTY&quot;})" value="
- ">
+">
 	</PHPDocTag>
 </PHPDocBlock>

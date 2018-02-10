@@ -41,6 +41,6 @@ Bug 491991 - Tag @inheritdoc is not colored editor and proposed in CA for PHPDoc
 ">
 	</PHPDocTag>
 	<PHPDocTag start="227" end="263" tagKind="todo" matchedTag="@todo" tagText=" @todo" value=" special tag (treated as text)
- ">
+">
 	</PHPDocTag>
 </PHPDocBlock>

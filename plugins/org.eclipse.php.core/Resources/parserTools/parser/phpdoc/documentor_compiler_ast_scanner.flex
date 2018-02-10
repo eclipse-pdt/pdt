@@ -86,18 +86,14 @@ import org.eclipse.php.core.compiler.ast.nodes.Scalar;
 			Logger.logException(e);
 		}
 		if (!tagList.isEmpty() && !textList.isEmpty()) {
-			// lastText is empty if the last line only contains '*/' and white
-			// spaces
 			Scalar lastText = textList.get(textList.size() - 1);
 			PHPDocTag lastTag = tagList.get(tagList.size() - 1);
 			if (lastText.sourceEnd() >= lastTag.sourceEnd()) {
 				textList.remove(textList.size() - 1);
-				if (StringUtils.isNotBlank(lastText.getValue())) {
-					lastTag.getTexts().add(lastText);
-					// replace last tag by a new one with updated source range and internal references
-					tagList.set(tagList.size() - 1, new PHPDocTag(lastTag.sourceStart(), lastText.sourceEnd(),
-							lastTag.getTagKind(), lastTag.getMatchedTag(), lastTag.getValue(), lastTag.getTagText(), lastTag.getTexts()));
-				}
+				lastTag.getTexts().add(lastText);
+				// replace last tag by a new one with updated source range and internal references
+				tagList.set(tagList.size() - 1, new PHPDocTag(lastTag.sourceStart(), lastText.sourceEnd(),
+						lastTag.getTagKind(), lastTag.getMatchedTag(), lastTag.getValue(), lastTag.getTagText(), lastTag.getTexts()));
 			}
 		}
 
@@ -161,6 +157,7 @@ import org.eclipse.php.core.compiler.ast.nodes.Scalar;
 		// special case for backward compatibility
 		if (currTagKind == TagKind.DESC) {
 			shortDesc = shortDesc + value;
+			shortDesc = shortDesc.trim();
 			return;
 		}
 
@@ -237,8 +234,11 @@ import org.eclipse.php.core.compiler.ast.nodes.Scalar;
 	}
 	private void appendLastText() {
 		String sb = new String(zzBuffer, startPos, zzMarkedPos - startPos - 2);
-		addText(sb);
-		sBuffer.append(sb);
+		// ignore last text if it only contains white spaces
+		if (StringUtils.isNotBlank(sb)) {
+			addText(sb);
+			sBuffer.append(sb);
+		}
 		updateStartPos();
 	}
 
@@ -361,7 +361,7 @@ TAG_NAME_CHARS=[^ \n\r\t*]+
 	int indentedTagPosition = zzStartRead + 3; // skip "/**"
 	String indentedText = new String(zzBuffer, indentedTagPosition, zzMarkedPos - indentedTagPosition);
 	Scalar indentedTag = new Scalar(indentedTagPosition - _zzPushbackPos, indentedTagPosition - _zzPushbackPos + indentedText.length(),
-		indentedText, Scalar.TYPE_STRING);
+			indentedText, Scalar.TYPE_STRING);
 	if (tagkind != null && tagkind != TagKind.UNKNOWN) {
 		startTagsState(tagkind, position, tagkind.getValue(), indentedTag);
 	} else {
@@ -377,7 +377,7 @@ TAG_NAME_CHARS=[^ \n\r\t*]+
 	if (tagkind != null && tagkind != TagKind.UNKNOWN) {
 		String indentedText = new String(zzBuffer, indentedTagPosition, zzMarkedPos - indentedTagPosition);
 		Scalar indentedTag = new Scalar(indentedTagPosition - _zzPushbackPos, indentedTagPosition - _zzPushbackPos + indentedText.length(),
-			indentedText, Scalar.TYPE_STRING);
+				indentedText, Scalar.TYPE_STRING);
 		startTagsState(tagkind, position, tagkind.getValue(), indentedTag);
 	} else {
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=474332
@@ -428,7 +428,7 @@ TAG_NAME_CHARS=[^ \n\r\t*]+
 	int indentedTagPosition = findIndentedLineStartTagPosition();
 	String indentedText = new String(zzBuffer, indentedTagPosition, zzMarkedPos - indentedTagPosition);
 	Scalar indentedTag = new Scalar(indentedTagPosition - _zzPushbackPos, indentedTagPosition - _zzPushbackPos + indentedText.length(),
-		indentedText, Scalar.TYPE_STRING);
+			indentedText, Scalar.TYPE_STRING);
 	if (tagkind != null && tagkind != TagKind.UNKNOWN) {
 		startTagsState(tagkind, position, tagkind.getValue(), indentedTag);
 	} else {
@@ -444,7 +444,7 @@ TAG_NAME_CHARS=[^ \n\r\t*]+
 	if (tagkind != null && tagkind != TagKind.UNKNOWN) {
 		String indentedText = new String(zzBuffer, indentedTagPosition, zzMarkedPos - indentedTagPosition);
 		Scalar indentedTag = new Scalar(indentedTagPosition - _zzPushbackPos, indentedTagPosition - _zzPushbackPos + indentedText.length(),
-			indentedText, Scalar.TYPE_STRING);
+				indentedText, Scalar.TYPE_STRING);
 		startTagsState(tagkind, position, tagkind.getValue(), indentedTag);
 	} else {
 		updateStartPos(indentedTagPosition);
@@ -470,7 +470,7 @@ TAG_NAME_CHARS=[^ \n\r\t*]+
 	int indentedTagPosition = findIndentedLineStartTagPosition();
 	String indentedText = new String(zzBuffer, indentedTagPosition, zzMarkedPos - indentedTagPosition);
 	Scalar indentedTag = new Scalar(indentedTagPosition - _zzPushbackPos, indentedTagPosition - _zzPushbackPos + indentedText.length(),
-		indentedText, Scalar.TYPE_STRING);
+			indentedText, Scalar.TYPE_STRING);
 	if (tagkind != null && tagkind != TagKind.UNKNOWN) {
 		setNewTag(tagkind, position, tagkind.getValue(), indentedTag);
 	} else {
@@ -486,7 +486,7 @@ TAG_NAME_CHARS=[^ \n\r\t*]+
 	if (tagkind != null && tagkind != TagKind.UNKNOWN) {
 		String indentedText = new String(zzBuffer, indentedTagPosition, zzMarkedPos - indentedTagPosition);
 		Scalar indentedTag = new Scalar(indentedTagPosition - _zzPushbackPos, indentedTagPosition - _zzPushbackPos + indentedText.length(),
-			indentedText, Scalar.TYPE_STRING);
+				indentedText, Scalar.TYPE_STRING);
 		setNewTag(tagkind, position, tagkind.getValue(), indentedTag);
 	} else {
 		updateStartPos(indentedTagPosition);

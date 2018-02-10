@@ -16,6 +16,6 @@ Bug 423089 - Broken formatter with non-PHPDoc tags
 ">
 	</PHPDocTag>
 	<PHPDocTag start="45" end="79" tagKind="unknown" matchedTag="@MyProject\Annotations\Foobarable" tagText=" @MyProject\Annotations\Foobarable" value="
- ">
+">
 	</PHPDocTag>
 </PHPDocBlock>
