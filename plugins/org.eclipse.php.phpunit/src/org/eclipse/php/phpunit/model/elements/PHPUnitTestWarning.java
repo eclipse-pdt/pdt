@@ -10,18 +10,16 @@
  *******************************************************************************/
 package org.eclipse.php.phpunit.model.elements;
 
-import java.util.Map;
-
 import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
-import org.eclipse.php.phpunit.model.connection.PHPUnitMessageParser;
+import org.eclipse.php.phpunit.model.connection.MessageException;
 
 public class PHPUnitTestWarning extends PHPUnitTestEvent {
 
 	private String code = ""; //$NON-NLS-1$
 
-	public PHPUnitTestWarning(final Map<?, ?> warning, final PHPUnitElement parent, RemoteDebugger remoteDebugger) {
+	public PHPUnitTestWarning(MessageException warning, final PHPUnitElement parent, RemoteDebugger remoteDebugger) {
 		super(warning, parent, remoteDebugger);
-		code = (String) warning.get(PHPUnitMessageParser.PROPERTY_CODE);
+		code = warning.getCode();
 	}
 
 	public String getCode() {

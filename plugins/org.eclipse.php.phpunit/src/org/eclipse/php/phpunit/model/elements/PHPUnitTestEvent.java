@@ -15,7 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
-import org.eclipse.php.phpunit.model.connection.PHPUnitMessageParser;
+import org.eclipse.php.phpunit.model.connection.MessageException;
+import org.eclipse.php.phpunit.model.connection.MessageFrame;
 
 public abstract class PHPUnitTestEvent extends PHPUnitElement {
 
@@ -23,16 +24,17 @@ public abstract class PHPUnitTestEvent extends PHPUnitElement {
 	protected String diff;
 	protected List<PHPUnitTraceFrame> trace;
 
-	public PHPUnitTestEvent(final Map<?, ?> event, final PHPUnitElement parent, RemoteDebugger remoteDebugger) {
-		super(event, parent, remoteDebugger);
-		message = (String) event.get(PHPUnitMessageParser.PROPERTY_MESSAGE);
-		diff = (String) event.get(PHPUnitMessageParser.PROPERTY_DIFF);
-		final Map<?, ?> mTrace = (Map<?, ?>) event.get(PHPUnitMessageParser.PROPERTY_TRACE);
-		if (mTrace == null || mTrace.isEmpty())
+	public PHPUnitTestEvent(MessageException exception, final PHPUnitElement parent, RemoteDebugger remoteDebugger) {
+		super(exception, parent, remoteDebugger);
+		message = exception.getMessage();
+		diff = exception.getDiff();
+		final Map<Integer, MessageFrame> frames = exception.getTrace();
+		if (frames == null || frames.isEmpty()) {
 			return;
-		trace = new ArrayList<>(mTrace.size());
-		for (int i = 0; i < mTrace.size(); ++i) {
-			trace.add(new PHPUnitTraceFrame((Map<?, ?>) mTrace.get(String.valueOf(i)), this, remoteDebugger));
+		}
+		trace = new ArrayList<>(frames.size());
+		for (Integer key : frames.keySet()) {
+			trace.add(new PHPUnitTraceFrame(frames.get(key), this, remoteDebugger));
 		}
 	}
 

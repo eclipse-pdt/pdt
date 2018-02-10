@@ -10,9 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.phpunit.model.elements;
 
-import java.util.Map;
-
 import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
+import org.eclipse.php.phpunit.model.connection.MessageFrame;
 import org.eclipse.php.phpunit.model.connection.PHPUnitMessageParser;
 
 public class PHPUnitTraceFrame extends PHPUnitElement {
@@ -21,11 +20,11 @@ public class PHPUnitTraceFrame extends PHPUnitElement {
 	private String traceClass = ""; //$NON-NLS-1$
 	private String traceType = PHPUnitMessageParser.CALL_DYNAMIC;
 
-	public PHPUnitTraceFrame(final Map<?, ?> frame, final PHPUnitTestEvent parent, RemoteDebugger remoteDebugger) {
+	public PHPUnitTraceFrame(MessageFrame frame, final PHPUnitTestEvent parent, RemoteDebugger remoteDebugger) {
 		super(frame, parent, remoteDebugger);
-		traceFunction = (String) frame.get("function"); //$NON-NLS-1$
-		traceClass = (String) frame.get("class"); //$NON-NLS-1$
-		traceType = (String) frame.get("type"); //$NON-NLS-1$
+		traceFunction = frame.getFunction();
+		traceClass = frame.getClazz();
+		traceType = frame.getType();
 	}
 
 	public String getFunction() {
@@ -43,10 +42,12 @@ public class PHPUnitTraceFrame extends PHPUnitElement {
 	@Override
 	public String toString() {
 		final StringBuilder result = new StringBuilder(1);
-		if (traceClass != null)
+		if (traceClass != null) {
 			result.append(traceClass);
-		if (traceType != null)
+		}
+		if (traceType != null) {
 			result.append(traceType);
+		}
 		result.append(traceFunction);
 		return result.toString();
 	}
