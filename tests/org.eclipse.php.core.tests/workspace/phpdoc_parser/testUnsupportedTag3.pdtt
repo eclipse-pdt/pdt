@@ -20,7 +20,7 @@ Bug 423089 - Broken formatter with non-PHPDoc tags
 ">
 	</PHPDocTag>
 	<PHPDocTag start="77" end="89" tagKind="var" matchedTag="@var" tagText=" @var" value=" string
- ">
+">
 		<TypeReference start="82" end="88" name="string">
 		</TypeReference>
 	</PHPDocTag>

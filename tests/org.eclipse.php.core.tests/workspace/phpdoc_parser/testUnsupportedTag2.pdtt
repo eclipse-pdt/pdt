@@ -16,7 +16,7 @@ Bug 423089 - Broken formatter with non-PHPDoc tags
 ">
 	</PHPDocTag>
 	<PHPDocTag start="63" end="72" tagKind="var" matchedTag="@var" tagText=" @var" value=" int
- ">
+">
 		<TypeReference start="68" end="71" name="int">
 		</TypeReference>
 	</PHPDocTag>

@@ -26,6 +26,6 @@ Bug 423089 - Broken formatter with non-PHPDoc tags
 	</PHPDocTag>
 	<PHPDocTag start="133" end="199" tagKind="unknown" matchedTag="@Attribute(&quot;annotProperty&quot;," tagText="     @Attribute(&quot;annotProperty&quot;," value=" type = &quot;SomeAnnotationClass&quot;),
   })
- ">
+">
 	</PHPDocTag>
 </PHPDocBlock>
