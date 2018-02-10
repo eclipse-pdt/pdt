@@ -11,11 +11,10 @@
 package org.eclipse.php.phpunit.model.elements;
 
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
-import org.eclipse.php.phpunit.model.connection.PHPUnitMessageParser;
+import org.eclipse.php.phpunit.model.connection.MessageTest;
 
 public class PHPUnitTestGroup extends PHPUnitTest {
 
@@ -36,12 +35,12 @@ public class PHPUnitTestGroup extends PHPUnitTest {
 
 	private boolean method;
 
-	public PHPUnitTestGroup(final Map<?, ?> test, final PHPUnitTestGroup parent, RemoteDebugger remoteDebugger) {
+	public PHPUnitTestGroup(MessageTest test, final PHPUnitTestGroup parent, RemoteDebugger remoteDebugger) {
 		super(test, parent, remoteDebugger);
 		if (test == null)
 			totalCount = 0;
 		else
-			totalCount = Integer.parseInt((String) test.get(PHPUnitMessageParser.PROPERTY_COUNT));
+			totalCount = test.getTests();
 	}
 
 	@Override

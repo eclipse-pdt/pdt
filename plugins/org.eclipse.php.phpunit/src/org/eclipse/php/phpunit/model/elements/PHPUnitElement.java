@@ -10,10 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.phpunit.model.elements;
 
-import java.util.Map;
-
 import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
-import org.eclipse.php.phpunit.model.connection.PHPUnitMessageParser;
+import org.eclipse.php.phpunit.model.connection.MessageElement;
 
 abstract public class PHPUnitElement {
 
@@ -28,14 +26,13 @@ abstract public class PHPUnitElement {
 	protected PHPUnitElement parent;
 	protected int testId = 0;
 
-	public PHPUnitElement(final Map<?, ?> test, final PHPUnitElement parent, RemoteDebugger remoteDebugger) {
-		if (test == null) {
-			file = ""; //$NON-NLS-1$
-			line = 0;
-		} else
+	public PHPUnitElement(MessageElement test, final PHPUnitElement parent, RemoteDebugger remoteDebugger) {
+		if (test != null) {
 			parseFrame(test, remoteDebugger);
-		if (parent != null)
+		}
+		if (parent != null) {
 			setParent(parent);
+		}
 	}
 
 	/**
@@ -71,8 +68,8 @@ abstract public class PHPUnitElement {
 		return isFiltered;
 	}
 
-	private void parseFrame(final Map<?, ?> test, RemoteDebugger remoteDebugger) {
-		final String sFile = (String) test.get(PHPUnitMessageParser.PROPERTY_FILE);
+	private void parseFrame(MessageElement test, RemoteDebugger remoteDebugger) {
+		final String sFile = test.getFile();
 		if (sFile != null) {
 			file = sFile;
 			if (remoteDebugger != null) {
@@ -81,9 +78,9 @@ abstract public class PHPUnitElement {
 			if (localFile == null) {
 				localFile = file;
 			}
-			line = Integer.parseInt((String) test.get(PHPUnitMessageParser.PROPERTY_LINE));
+			line = test.getLine();
 		}
-		if ((String) test.get(PHPUnitMessageParser.PROPERTY_FILTERED) != null) {
+		if (test.getFiltered() != null) {
 			isFiltered = true;
 		}
 	}

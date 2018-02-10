@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.debug.core.DebugException;
@@ -32,7 +31,6 @@ import org.eclipse.php.phpunit.ui.view.PHPUnitView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.internal.LinkedTreeMap;
 
 public class PHPUnitConnectionListener implements Runnable, ILaunchesListener2 {
 	protected ILaunch launch;
@@ -76,24 +74,9 @@ public class PHPUnitConnectionListener implements Runnable, ILaunchesListener2 {
 		if (StringUtils.isEmpty(line) || line.charAt(0) != '{') {
 			return;
 		}
-		Map<?, ?> value = gson.fromJson(line, LinkedTreeMap.class);
-		parser.parseMessage(value, PHPUnitView.getDefault().getViewer());
+		Message message = gson.fromJson(line, Message.class);
+		parser.parseMessage(message, PHPUnitView.getDefault().getViewer());
 		PHPUnitView.getDefault().refresh(PHPUnitElementManager.getInstance().getRoot());
-	}
-
-	@Override
-	public void launchesAdded(final ILaunch[] launches) {
-		// ignore
-	}
-
-	@Override
-	public void launchesChanged(final ILaunch[] launches) {
-		// ignore
-	}
-
-	@Override
-	public void launchesRemoved(final ILaunch[] launches) {
-		// ignore
 	}
 
 	@Override
@@ -158,5 +141,20 @@ public class PHPUnitConnectionListener implements Runnable, ILaunchesListener2 {
 	public void start() {
 		listenThread = new Thread(this, "PHPUnit PHPUnitConnectionListener"); //$NON-NLS-1$
 		listenThread.start();
+	}
+
+	@Override
+	public void launchesAdded(final ILaunch[] launches) {
+		// ignore
+	}
+
+	@Override
+	public void launchesChanged(final ILaunch[] launches) {
+		// ignore
+	}
+
+	@Override
+	public void launchesRemoved(final ILaunch[] launches) {
+		// ignore
 	}
 }
