@@ -10,19 +10,19 @@
  *******************************************************************************/
 package org.eclipse.php.phpunit.model.elements;
 
-import java.util.Map;
-
 import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
+import org.eclipse.php.phpunit.model.connection.MessageEventType;
+import org.eclipse.php.phpunit.model.connection.MessageTest;
 
 public class PHPUnitTestCase extends PHPUnitTest {
 
 	protected boolean dataProviderCase;
 
-	public PHPUnitTestCase(final Map<?, ?> test, final PHPUnitTestGroup parent, RemoteDebugger remoteDebugger) {
+	public PHPUnitTestCase(MessageTest test, final PHPUnitTestGroup parent, RemoteDebugger remoteDebugger) {
 		super(test, parent, remoteDebugger);
 	}
 
-	public PHPUnitTestCase(final Map<?, ?> test, final PHPUnitTestGroup parent, final String sStatus,
+	public PHPUnitTestCase(MessageTest test, final PHPUnitTestGroup parent, final MessageEventType sStatus,
 			RemoteDebugger remoteDebugger) {
 		this(test, parent, remoteDebugger);
 		setStatus(sStatus);

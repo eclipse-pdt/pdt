@@ -11,10 +11,10 @@
 package org.eclipse.php.phpunit.model.elements;
 
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
-import org.eclipse.php.phpunit.model.connection.PHPUnitMessageParser;
+import org.eclipse.php.phpunit.model.connection.MessageEventType;
+import org.eclipse.php.phpunit.model.connection.MessageTest;
 
 public class PHPUnitTest extends PHPUnitElement {
 
@@ -31,12 +31,10 @@ public class PHPUnitTest extends PHPUnitElement {
 	protected String name = ""; //$NON-NLS-1$
 	protected int status = 0;
 
-	public PHPUnitTest(final Map<?, ?> test, final PHPUnitTestGroup parent, RemoteDebugger remoteDebugger) {
+	public PHPUnitTest(MessageTest test, final PHPUnitTestGroup parent, RemoteDebugger remoteDebugger) {
 		super(test, parent, remoteDebugger);
-		if (test == null) {
-			name = ""; //$NON-NLS-1$
-		} else {
-			processName((String) test.get(PHPUnitMessageParser.PROPERTY_NAME));
+		if (test != null) {
+			processName(test.getName());
 		}
 	}
 
@@ -65,24 +63,20 @@ public class PHPUnitTest extends PHPUnitElement {
 	 * 
 	 * @param sStatus
 	 */
-	public void setStatus(String sStatus) {
-		if (sStatus.equals(PHPUnitMessageParser.STATUS_PASS))
+	public void setStatus(MessageEventType sStatus) {
+		if (sStatus == MessageEventType.pass) {
 			setStatus(STATUS_PASS);
-		else if (sStatus.equals(PHPUnitMessageParser.STATUS_SKIP))
+		} else if (sStatus == MessageEventType.skip) {
 			setStatus(STATUS_SKIP);
-		else if (sStatus.equals(PHPUnitMessageParser.STATUS_INCOMPLETE))
+		} else if (sStatus == MessageEventType.incomplete) {
 			setStatus(STATUS_INCOMPLETE);
-		else if (sStatus.equals(PHPUnitMessageParser.STATUS_FAIL))
+		} else if (sStatus == MessageEventType.fail) {
 			setStatus(STATUS_FAIL);
-		else if (sStatus.equals(PHPUnitMessageParser.STATUS_ERROR))
+		} else if (sStatus == MessageEventType.error) {
 			setStatus(STATUS_ERROR);
-		else if (sStatus.equals(PHPUnitMessageParser.TAG_START))
+		} else if (sStatus == MessageEventType.start) {
 			setStatus(STATUS_STARTED);
-	}
-
-	@Override
-	public String toString() {
-		return file + SEPARATOR_LINE + String.valueOf(line) + SEPARATOR_NAME + name;
+		}
 	}
 
 	public String getFilterName() {
@@ -105,4 +99,10 @@ public class PHPUnitTest extends PHPUnitElement {
 	public void setWarnings(final List<PHPUnitElement> warnings) {
 		this.warnings = warnings;
 	}
+
+	@Override
+	public String toString() {
+		return file + SEPARATOR_LINE + String.valueOf(line) + SEPARATOR_NAME + name;
+	}
+
 }

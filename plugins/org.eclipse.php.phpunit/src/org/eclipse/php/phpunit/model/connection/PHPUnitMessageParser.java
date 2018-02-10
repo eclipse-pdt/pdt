@@ -25,53 +25,9 @@ public class PHPUnitMessageParser {
 
 	public static final String CALL_STATIC = "::"; //$NON-NLS-1$
 
-	private static final String ELEMENT_EVENT = "event"; //$NON-NLS-1$
-
-	private static final String ELEMENT_EXCEPTION = "exception"; //$NON-NLS-1$
-
 	private static final String ELEMENT_TARGET_TESTSUITE = "testsuite"; //$NON-NLS-1$
 
 	private static final String ELEMENT_TARGET_TESTCASE = "testcase"; //$NON-NLS-1$
-
-	private static final String ELEMENT_TEST = "test"; //$NON-NLS-1$
-
-	private static final String ELEMENT_WARNINGS = "warnings"; //$NON-NLS-1$
-
-	public static final String PROPERTY_CLASS = "class"; //$NON-NLS-1$
-
-	public static final String PROPERTY_CODE = "code"; //$NON-NLS-1$
-
-	public static final String PROPERTY_COUNT = "tests"; //$NON-NLS-1$
-
-	public static final String PROPERTY_FILE = "file"; //$NON-NLS-1$
-
-	public static final String PROPERTY_FILTERED = "filtered"; //$NON-NLS-1$
-
-	public static final String PROPERTY_LINE = "line"; //$NON-NLS-1$
-
-	public static final String PROPERTY_MESSAGE = "message"; //$NON-NLS-1$
-
-	public static final String PROPERTY_DIFF = "diff"; //$NON-NLS-1$
-
-	public static final String PROPERTY_NAME = "name"; //$NON-NLS-1$
-
-	private static final String PROPERTY_TARGET = "target"; //$NON-NLS-1$
-
-	public static final String PROPERTY_TRACE = "trace"; //$NON-NLS-1$
-
-	public static final String STATUS_ERROR = "error"; //$NON-NLS-1$
-
-	public static final String STATUS_FAIL = "fail"; //$NON-NLS-1$
-
-	public static final String STATUS_INCOMPLETE = "incomplete"; //$NON-NLS-1$
-
-	public static final String STATUS_PASS = "pass"; //$NON-NLS-1$
-
-	public static final String STATUS_SKIP = "skip"; //$NON-NLS-1$
-
-	public static final String TAG_END = "end"; //$NON-NLS-1$
-
-	public static final String TAG_START = "start"; //$NON-NLS-1$
 
 	private static PHPUnitMessageParser instance;
 
@@ -92,39 +48,39 @@ public class PHPUnitMessageParser {
 	private PHPUnitMessageParser() {
 	}
 
-	public void parseMessage(final Map<?, ?> message, final TestViewer viewer) {
+	public void parseMessage(Message message, final TestViewer viewer) {
 		if (!isInProgress()) {
 			setInProgress(true);
 		}
 		if (message == null) {
 			return;
 		}
-		final String target = (String) message.get(PROPERTY_TARGET);
-		final String event = (String) message.get(ELEMENT_EVENT);
-		final Map<?, ?> mTest = (Map<?, ?>) message.get(ELEMENT_TEST);
+
+		final String target = message.getTarget();
+		final MessageEventType event = message.getEvent();
 		if (target.equals(ELEMENT_TARGET_TESTSUITE)) {
-			if (event.equals(TAG_START)) {
-				parseGroupStart(viewer, event, mTest);
-			} else if (event.equals(TAG_END)) {
+			if (event == MessageEventType.start) {
+				parseGroupStart(viewer, message);
+			} else if (event == MessageEventType.end) {
 				parseGroupEnd(viewer, message);
 			} else {
 				currentGroup.setStatus(event);
 				currentGroup.addRunCount(1);
 			}
 		} else if (target.equals(ELEMENT_TARGET_TESTCASE)) {
-			if (event.equals(TAG_START)) {
-				parseTestStart(viewer, event, mTest);
+			if (event == MessageEventType.start) {
+				parseTestStart(viewer, message);
 			} else {
-				parseTestEnd(message, viewer, event, mTest);
+				parseTestEnd(viewer, message);
 			}
 		}
 	}
 
-	private void parseGroupStart(final TestViewer viewer, final String event, final Map<?, ?> mTest) {
-		if (!event.equals(TAG_START)) {
+	private void parseGroupStart(final TestViewer viewer, Message message) {
+		if (message.getEvent() != MessageEventType.start) {
 			return;
 		}
-		final PHPUnitTestGroup group = new PHPUnitTestGroup(mTest, currentGroup, remoteDebugger);
+		final PHPUnitTestGroup group = new PHPUnitTestGroup(message.getTest(), currentGroup, remoteDebugger);
 		mapTest(group);
 		if (currentGroup.getTotalCount() > 0) {
 			currentGroup.addChild(group, false);
@@ -140,18 +96,18 @@ public class PHPUnitMessageParser {
 		}
 	}
 
-	private void parseTestStart(final TestViewer viewer, final String event, final Map<?, ?> mTest) {
-		final PHPUnitTestCase testCase = new PHPUnitTestCase(mTest, currentGroup, event, remoteDebugger);
+	private void parseTestStart(final TestViewer viewer, Message message) {
+		final PHPUnitTestCase testCase = new PHPUnitTestCase(message.getTest(), currentGroup, message.getEvent(),
+				remoteDebugger);
 		currentTestCase = testCase;
 		mapTest(testCase);
 		currentGroup.addChild(testCase, false);
 		viewer.registerTestAdded();
 	}
 
-	private void parseTestEnd(final Map<?, ?> message, final TestViewer viewer, final String event,
-			final Map<?, ?> mTest) {
+	private void parseTestEnd(final TestViewer viewer, Message message) {
 		final PHPUnitTestCase testCase = currentTestCase;
-		testCase.setStatus(event);
+		testCase.setStatus(message.getEvent());
 		parseProblems(testCase, message);
 		currentGroup.addChild(testCase, true);
 		viewer.registerTestAdded();
@@ -161,15 +117,9 @@ public class PHPUnitMessageParser {
 		}
 	}
 
-	private void parseProblems(PHPUnitTest model, Map<?, ?> message) {
-		final Map<?, ?> exception = (Map<?, ?>) message.get(ELEMENT_EXCEPTION);
-		if (exception != null) {
-			mapException(model, exception);
-		}
-		final Map<?, ?> warnings = (Map<?, ?>) message.get(ELEMENT_WARNINGS);
-		if (warnings != null) {
-			mapWarnings(model, warnings);
-		}
+	private void parseProblems(PHPUnitTest model, Message message) {
+		mapException(model, message.getException());
+		mapWarnings(model, message.getWarnings());
 	}
 
 	public void clean() {
@@ -187,7 +137,10 @@ public class PHPUnitMessageParser {
 	 * @param testCase
 	 * @param exception
 	 */
-	public void mapException(final PHPUnitTest testCase, final Map<?, ?> exception) {
+	public void mapException(final PHPUnitTest testCase, MessageException exception) {
+		if (exception == null) {
+			return;
+		}
 		testCase.setException(new PHPUnitTestException(exception, testCase, remoteDebugger));
 		mapTest(testCase.getException());
 	}
@@ -196,22 +149,24 @@ public class PHPUnitMessageParser {
 		PHPUnitElementManager.getInstance().add(test.getTestId(), test);
 	}
 
-	private void mapWarnings(final PHPUnitTest testCase, final Map<?, ?> warnings) {
-		Map<?, ?> mWarning;
-		// keep initial order
-		for (int i = 0; (mWarning = (Map<?, ?>) warnings.get(String.valueOf(i))) != null; ++i) {
-			if (testCase.getWarnings() == null)
-				testCase.setWarnings(new ArrayList<PHPUnitElement>(warnings.size()));
-			final PHPUnitTestWarning warning = new PHPUnitTestWarning(mWarning, testCase, remoteDebugger);
+	private void mapWarnings(final PHPUnitTest testCase, Map<Integer, MessageException> warnings) {
+		if (warnings == null) {
+			return;
+		}
+
+		if (testCase.getWarnings() == null) {
+			testCase.setWarnings(new ArrayList<>(warnings.size()));
+		}
+		for (Integer key : warnings.keySet()) {
+			final PHPUnitTestWarning warning = new PHPUnitTestWarning(warnings.get(key), testCase, remoteDebugger);
 			mapTest(warning);
-			testCase.getWarnings().add(i, warning);
+			testCase.getWarnings().add(key, warning);
 		}
 	}
 
-	private void parseGroupEnd(final TestViewer viewer, Map<?, ?> mTest) {
-
+	private void parseGroupEnd(final TestViewer viewer, Message message) {
 		if (currentGroup.getChildren() == null) {
-			parseProblems(currentGroup, mTest);
+			parseProblems(currentGroup, message);
 		}
 		currentGroup = (PHPUnitTestGroup) currentGroup.getParent();
 		currentTestCase = null;
