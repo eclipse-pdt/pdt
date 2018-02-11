@@ -18,7 +18,7 @@ public class Message {
 
 	private String target;
 
-	private String time;
+	private Double time;
 
 	private MessageTest test;
 
@@ -34,7 +34,7 @@ public class Message {
 		return target;
 	}
 
-	public String getTime() {
+	public Double getTime() {
 		return time;
 	}
 

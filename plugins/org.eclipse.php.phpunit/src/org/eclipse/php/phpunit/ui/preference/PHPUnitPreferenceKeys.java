@@ -28,6 +28,8 @@ public class PHPUnitPreferenceKeys {
 	public static final String PHPUNIT_PATH = "PHPUnit_Path"; //$NON-NLS-1$
 	public static final String PHPUNIT_PHAR_PATH = "PHPUnit_Phar_Path"; //$NON-NLS-1$
 
+	public static final String SHOW_EXECUTION_TIME = "show_execution_time"; //$NON-NLS-1$
+
 	public static boolean getCodeCoverage() {
 		return getPreferenceStore().getBoolean(CODE_COVERAGE);
 	}

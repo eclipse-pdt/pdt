@@ -108,6 +108,9 @@ public class PHPUnitMessageParser {
 	private void parseTestEnd(final TestViewer viewer, Message message) {
 		final PHPUnitTestCase testCase = currentTestCase;
 		testCase.setStatus(message.getEvent());
+		if (message.getTime() != null) {
+			testCase.setTime(message.getTime());
+		}
 		parseProblems(testCase, message);
 		currentGroup.addChild(testCase, true);
 		viewer.registerTestAdded();

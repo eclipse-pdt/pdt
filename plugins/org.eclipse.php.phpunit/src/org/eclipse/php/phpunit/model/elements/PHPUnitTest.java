@@ -30,6 +30,7 @@ public class PHPUnitTest extends PHPUnitElement {
 	protected List<PHPUnitElement> warnings = null;
 	protected String name = ""; //$NON-NLS-1$
 	protected int status = 0;
+	protected Double time = null;
 
 	public PHPUnitTest(MessageTest test, final PHPUnitTestGroup parent, RemoteDebugger remoteDebugger) {
 		super(test, parent, remoteDebugger);
@@ -81,6 +82,14 @@ public class PHPUnitTest extends PHPUnitElement {
 
 	public String getFilterName() {
 		return this.getName();
+	}
+
+	public Double getTime() {
+		return time;
+	}
+
+	public void setTime(Double time) {
+		this.time = time;
 	}
 
 	public PHPUnitTestException getException() {

@@ -126,10 +126,6 @@ public class PHPUnitView extends ViewPart {
 
 	protected ProgressBar fProgressBar;
 
-	// protected boolean fShowOnErrorOnly = false;
-	//
-	// protected Image fViewImage;
-
 	private CTabFolder bottomTabFolder;
 
 	private CTabItem codeCoverageTab;

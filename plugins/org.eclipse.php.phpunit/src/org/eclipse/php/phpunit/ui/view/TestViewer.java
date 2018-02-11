@@ -12,15 +12,19 @@ package org.eclipse.php.phpunit.ui.view;
 
 import java.util.*;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.dltk.ui.viewsupport.SelectionProviderMediator;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.php.phpunit.PHPUnitPlugin;
 import org.eclipse.php.phpunit.model.elements.*;
 import org.eclipse.php.phpunit.model.providers.PHPUnitElementTreeContentProvider;
+import org.eclipse.php.phpunit.ui.preference.PHPUnitPreferenceKeys;
 import org.eclipse.php.phpunit.ui.view.actions.OpenTestAction;
 import org.eclipse.php.phpunit.ui.view.actions.RerunAction;
 import org.eclipse.swt.SWT;
@@ -90,6 +94,16 @@ public class TestViewer {
 	private PHPUnitTestGroup testRoot;
 	private final PHPUnitView view;
 
+	private IPropertyChangeListener preferenceChangeListener = new IPropertyChangeListener() {
+
+		@Override
+		public void propertyChange(PropertyChangeEvent event) {
+			if (StringUtils.equals(event.getProperty(), PHPUnitPreferenceKeys.SHOW_EXECUTION_TIME)) {
+				getActiveViewer().refresh();
+			}
+		}
+	};
+
 	public TestViewer(final Composite parent, final PHPUnitView runner) {
 		view = runner;
 
@@ -98,6 +112,8 @@ public class TestViewer {
 
 		createTestViewers(parent);
 		registerViewersRefresh();
+
+		PHPUnitPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(preferenceChangeListener);
 
 		initContextMenu();
 	}
@@ -169,7 +185,9 @@ public class TestViewer {
 		fTreeViewer.setUseHashlookup(true);
 		fTreeContentProvider = new PHPUnitElementTreeContentProvider();
 		fTreeViewer.setContentProvider(fTreeContentProvider);
-		fTreeViewer.setLabelProvider(new TestLabelProvider(view));
+		DecoratingStyledCellLabelProvider labelProvider = new DecoratingStyledCellLabelProvider(
+				new TestLabelProvider(view), null, null);
+		fTreeViewer.setLabelProvider(labelProvider);
 
 		fSelectionProvider = new SelectionProviderMediator(new StructuredViewer[] { fTreeViewer }, fTreeViewer);
 		fSelectionProvider.addSelectionChangedListener(new TestSelectionListener());
