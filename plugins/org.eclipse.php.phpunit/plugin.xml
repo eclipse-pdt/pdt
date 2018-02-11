@@ -217,4 +217,27 @@
 			</enablement>
 		</commonWizard>
 	</extension>
+ <extension
+       point="org.eclipse.ui.commands">
+    <command
+          defaultHandler="org.eclipse.php.phpunit.ui.view.commands.ShowExecutionTimeHandler"
+          id="org.eclipse.php.phpunit.commands.showExecutionTime"
+          name="%command.showExecutionTime">
+	   <state
+	         class="org.eclipse.ui.handlers.RegistryToggleState:true"
+	         id="org.eclipse.ui.commands.toggleState">
+	   </state>
+    </command>
+ </extension>
+ <extension
+       point="org.eclipse.ui.menus">
+    <menuContribution
+          allPopups="false"
+          locationURI="menu:org.eclipse.php.phpunit.PHPUnitView">
+       <command
+             commandId="org.eclipse.php.phpunit.commands.showExecutionTime"
+             style="toggle">
+       </command>
+    </menuContribution>
+ </extension>
 </plugin>

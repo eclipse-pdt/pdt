@@ -12,9 +12,9 @@ package org.eclipse.php.phpunit.model.connection;
 
 public class MessageTest extends MessageElement {
 
-	public String name;
+	private String name;
 
-	public Integer tests;
+	private Integer tests;
 
 	public String getName() {
 		return name;

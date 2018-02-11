@@ -16,9 +16,12 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.util.PHPElementImageDescriptor;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
@@ -26,12 +29,13 @@ import org.eclipse.php.phpunit.PHPUnitMessages;
 import org.eclipse.php.phpunit.PHPUnitPlugin;
 import org.eclipse.php.phpunit.model.connection.PHPUnitMessageParser;
 import org.eclipse.php.phpunit.model.elements.*;
+import org.eclipse.php.phpunit.ui.preference.PHPUnitPreferenceKeys;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.markers.internal.Util;
 
-public class TestLabelProvider extends LabelProvider {
+public class TestLabelProvider extends LabelProvider implements IStyledLabelProvider {
 
 	private final Image fExceptionIcon = Util.getImage(IMarker.SEVERITY_ERROR);
 	private final Image fFunctionIcon = PHPUiPlugin.getImageDescriptorRegistry().get(PHPPluginImages.DESC_MISC_PUBLIC);
@@ -51,9 +55,12 @@ public class TestLabelProvider extends LabelProvider {
 	private final Image fTestRunningIcon;
 
 	private PHPUnitView view;
+	private IPreferenceStore preferences;
 
 	public TestLabelProvider(final PHPUnitView view) {
 		this.view = view;
+		this.preferences = PHPUnitPlugin.getDefault().getPreferenceStore();
+
 		Image image = PHPUnitPlugin.createImage("obj16/test.png"); //$NON-NLS-1$
 		Image testSuiteImage = PHPUnitPlugin.createImage("obj16/tsuite.png"); //$NON-NLS-1$
 
@@ -137,7 +144,7 @@ public class TestLabelProvider extends LabelProvider {
 		if (test instanceof PHPUnitTest) {
 			PHPUnitTest unit = (PHPUnitTest) test;
 			StringBuilder sb = new StringBuilder(unit.getName());
-			if (StringUtils.isEmpty(sb.toString())) {
+			if (sb.length() == 0) {
 				sb.append(fileName).append(':').append(line);
 			}
 			if (test instanceof PHPUnitTestCase && ((PHPUnitTestCase) test).isDataProviderCase()) {
@@ -149,6 +156,7 @@ public class TestLabelProvider extends LabelProvider {
 					sb.append(':').append(PHPUnitMessages.TestLabelProvider_1);
 				}
 			}
+
 			return sb.toString();
 		}
 		if (test instanceof PHPUnitTestEvent) {
@@ -183,6 +191,19 @@ public class TestLabelProvider extends LabelProvider {
 		fSuiteRunningIcon.dispose();
 		fWarningIcon.dispose();
 		fSuiteWarningIcon.dispose();
+	}
+
+	@Override
+	public StyledString getStyledText(Object element) {
+		StyledString styledString = new StyledString(getText(element));
+
+		if (element instanceof PHPUnitTest) {
+			PHPUnitTest unit = (PHPUnitTest) element;
+			if (unit.getTime() != null && preferences.getBoolean(PHPUnitPreferenceKeys.SHOW_EXECUTION_TIME)) {
+				styledString.append(String.format(" (%.3f s)", unit.getTime()), StyledString.COUNTER_STYLER); //$NON-NLS-1$
+			}
+		}
+		return styledString;
 	}
 
 }
