@@ -479,8 +479,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		} else if (action.getType() == ASTNode.EMPTY_STATEMENT) {
 			// This is an empty statement
 			if (this.preferences.new_line_for_empty_statement) {
-				insertNewLine();
 				indentationLevel++;
+				insertNewLines(1);
 				indent();
 				isIndentationAdded = true;
 			}
@@ -488,7 +488,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			if (addNewlineBeforeAction) {
 				// single statement should indent
 				indentationLevel++;
-				insertNewLine();
+				insertNewLines(1);
 				indent();
 				isIndentationAdded = true;
 			} else {
@@ -523,7 +523,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			indentationLevel++;
 			isIndentationAdded = true;
 		case CodeFormatterPreferences.NEXT_LINE:
-			insertNewLine();
+			insertNewLines(1);
 			indent();
 			break;
 		default:
@@ -645,8 +645,29 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					// ignored because it either ends a non-empty line or some
 					// formatter preference already forced the insertion of a
 					// newline.
+					// XXX: write a method that has same indentation logic as
+					// method insertNewLines(int numberOfLines)
 					for (int line = newLinesInBuffer == 0 ? 1 : newLinesInBuffer; line < emptyLines + 1; line++) {
+						if (preferences.indent_empty_lines && line == (newLinesInBuffer == 0 ? 1 : newLinesInBuffer)
+								&& replaceBuffer.toString().endsWith(lineSeparator)) {
+							if (inComment) {
+								if (!doNotIndent) {
+									indentForComment(indentationLevelDescending);
+								}
+							} else {
+								indent();
+							}
+						}
 						insertNewLine();
+						if (preferences.indent_empty_lines && line < emptyLines) {
+							if (inComment) {
+								if (!doNotIndent) {
+									indentForComment(indentationLevelDescending);
+								}
+							} else {
+								indent();
+							}
+						}
 					}
 					if (inComment) {
 						if (!doNotIndent) {
@@ -780,18 +801,17 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			case FIRST_WRAP_WHEN_NECESSARY: // Wrap only when necessary
 				if (lineWidth + array[i].getLength() > this.preferences.line_wrap_line_split) {
 					lineWrapPolicy = WRAP_WHEN_NECESSARY;
-					insertNewLine();
 					if (!cio.indented) {
 						indentationLevel += indentGap;
 					}
-
+					insertNewLines(1);
 					indent();
 					isInsertNewLine = true;
 				}
 				break;
 			case WRAP_WHEN_NECESSARY:
 				if (lineWidth + array[i].getLength() > this.preferences.line_wrap_line_split) {
-					insertNewLine();
+					insertNewLines(1);
 					indent();
 					isInsertNewLine = true;
 				}
@@ -803,10 +823,10 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				lastPosition = savedLastPosition;
 				i = 0;
 				lineWrapPolicy = WRAP_WHEN_NECESSARY;
-				insertNewLine();
 				if (!cio.indented) {
 					indentationLevel += indentGap;
 				}
+				insertNewLines(1);
 				indent();
 				isInsertNewLine = true;
 				break;
@@ -818,10 +838,10 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					lastPosition = savedLastPosition;
 					i = 0;
 					lineWrapPolicy = ALWAYS_WRAP_ELEMENT;
-					insertNewLine();
 					if (!cio.indented) {
 						indentationLevel += indentGap;
 					}
+					insertNewLines(1);
 					indent();
 					isInsertNewLine = true;
 				}
@@ -835,10 +855,10 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					lastPosition = savedLastPosition;
 					i = 0;
 					lineWrapPolicy = ALWAYS_WRAP_ELEMENT_ADD_LEVEL;
-					insertNewLine();
 					if (!cio.indented) {
 						indentationLevel += indentGap;
 					}
+					insertNewLines(1);
 					indent();
 					isInsertNewLine = true;
 				}
@@ -853,10 +873,10 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					lastPosition = savedLastPosition;
 					i = (i > 0) ? 1 : 0;
 					lineWrapPolicy = ALWAYS_WRAP_ELEMENT;
-					insertNewLine();
 					if (!cio.indented) {
 						indentationLevel += indentGap;
 					}
+					insertNewLines(1);
 					indent();
 					isInsertNewLine = true;
 				}
@@ -868,7 +888,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				lineWrapPolicy = ALWAYS_WRAP_ELEMENT;
 				// no break here, continue with ALWAYS_WRAP_ELEMENT
 			case ALWAYS_WRAP_ELEMENT:
-				insertNewLine();
+				insertNewLines(1);
 				indent();
 				isInsertNewLine = true;
 				break;
@@ -1289,7 +1309,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					handleCharsWithoutComments(comment.sourceStart() + offset, comment.sourceEnd() + offset, true);
 				}
 				start = comment.sourceEnd() + offset;
-				insertNewLine();
+				insertNewLines(1);
 				indent();
 				break;
 			case org.eclipse.php.core.compiler.ast.nodes.Comment.TYPE_MULTILINE:
@@ -2029,16 +2049,23 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		}
 	}
 
-	private void insertNewLines(Statement statement) {
-
-		int numberOfLines = getNumbreOfLines(statement);
-
-		for (int i = 0; i < numberOfLines; i++) {
+	private void insertNewLines(int numberOfLines) {
+		for (int i = 1; i <= numberOfLines; i++) {
+			if (preferences.indent_empty_lines && i == 1 && replaceBuffer.toString().endsWith(lineSeparator)) {
+				indent();
+			}
 			insertNewLine();
+			if (preferences.indent_empty_lines && i < numberOfLines) {
+				indent();
+			}
 		}
 	}
 
-	private int getNumbreOfLines(Statement statement) {
+	private void insertNewLines(Statement statement) {
+		insertNewLines(getNumberOfLines(statement));
+	}
+
+	private int getNumberOfLines(Statement statement) {
 		int numberOfLines = 1;
 		switch (statement.getType()) {
 		case ASTNode.NAMESPACE:
@@ -2271,8 +2298,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			boolean oldWasBinaryExpressionWrapped = wasBinaryExpressionWrapped;
 
 			if (this.preferences.new_line_after_open_array_parenthesis) {
-				insertNewLine();
 				indentationLevel++;
+				insertNewLines(1);
 				indent();
 				wasBinaryExpressionWrapped = true;
 			} else {
@@ -2303,7 +2330,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			wasBinaryExpressionWrapped = oldWasBinaryExpressionWrapped;
 
 			if (this.preferences.new_line_before_close_array_parenthesis_array) {
-				insertNewLine();
+				insertNewLines(1);
 				indent();
 			}
 
@@ -2402,7 +2429,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	public boolean visit(Block block) {
 		boolean blockIndentation = false;
 		boolean isPHPMode = true;
-		boolean isEmptyBlockNewLine = true;
+		boolean isAddEmptyBlockNewLine = true;
 		boolean isUnbracketedNamespace = false;
 		boolean isNamespace = false;
 
@@ -2413,23 +2440,19 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		case ASTNode.NAMESPACE:
 			isNamespace = true;
 			if (!block.isCurly()) {
-				isEmptyBlockNewLine = false;
+				isAddEmptyBlockNewLine = false;
 				isUnbracketedNamespace = true;
 				if (block.statements().size() > 0) {
 					Statement statement = block.statements().get(0);
 					// need check how many new lines will the next statement
 					// insert
-					int numberOfLines = getNumbreOfLines(statement) - 1;
+					int numberOfLines = getNumberOfLines(statement) - 1;
 					numberOfLines = this.preferences.blank_lines_after_namespace - numberOfLines;
 					if (numberOfLines > 0) {
-						for (int j = 0; j < numberOfLines; j++) {
-							insertNewLine();
-						}
+						insertNewLines(numberOfLines);
 					}
 				} else {
-					for (int i = 0; i < this.preferences.blank_lines_after_namespace; i++) {
-						insertNewLine();
-					}
+					insertNewLines(this.preferences.blank_lines_after_namespace);
 				}
 				// ignoreEmptyLineSetting = true;
 				ignoreEmptyLineSetting = !preferences.indent_empty_lines;
@@ -2439,36 +2462,39 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			if (block.statements().size() > 0) {
 				Statement statement = block.statements().get(0);
 				// need check how many new lines will the next statement insert
-				int numberOfLines = getNumbreOfLines(statement) - 1;
+				int numberOfLines = getNumberOfLines(statement) - 1;
 				numberOfLines = this.preferences.blank_lines_after_namespace - numberOfLines;
 				if (numberOfLines > 0) {
-					for (int j = 0; j < numberOfLines; j++) {
-						insertNewLine();
-					}
+					insertNewLines(numberOfLines);
 				}
 			} else {
-				for (int i = 0; i < this.preferences.blank_lines_after_namespace; i++) {
-					insertNewLine();
-				}
+				insertNewLines(this.preferences.blank_lines_after_namespace);
 			}
 			// ignoreEmptyLineSetting = true;
 			ignoreEmptyLineSetting = !preferences.indent_empty_lines;
 
 		case ASTNode.CLASS_DECLARATION:
 		case ASTNode.INTERFACE_DECLARATION:
-			isEmptyBlockNewLine = preferences.new_line_in_empty_class_body;
+			isAddEmptyBlockNewLine = preferences.new_line_in_empty_class_body;
 			blockIndentation = this.preferences.indent_statements_within_type_declaration;
+			if (blockIndentation) {
+				indentationLevel++;
+			}
 			isClassDeclaration = true;
 			break;
 		case ASTNode.SWITCH_STATEMENT:
 			blockIndentation = this.preferences.indent_statements_within_switch;
+			if (blockIndentation) {
+				indentationLevel++;
+			}
 			break;
 		case ASTNode.FUNCTION_DECLARATION:
-			isEmptyBlockNewLine = preferences.new_line_in_empty_method_body;
+			isAddEmptyBlockNewLine = preferences.new_line_in_empty_method_body;
 			blockIndentation = this.preferences.indent_statements_within_function;
-			for (int i = 0; i < this.preferences.blank_line_at_begin_of_method; i++) {
-				insertNewLine();
+			if (blockIndentation) {
+				indentationLevel++;
 			}
+			insertNewLines(this.preferences.blank_line_at_begin_of_method);
 			isFunctionDeclaration = true;
 
 			// ignoreEmptyLineSetting = true;
@@ -2476,13 +2502,12 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 			break;
 		default:
-			isEmptyBlockNewLine = preferences.new_line_in_empty_block;
+			isAddEmptyBlockNewLine = preferences.new_line_in_empty_block;
 			blockIndentation = this.preferences.indent_statements_within_block;
+			if (blockIndentation) {
+				indentationLevel++;
+			}
 			break;
-		}
-
-		if (blockIndentation) {
-			indentationLevel++;
 		}
 
 		int lastStatementEndOffset;
@@ -2566,12 +2591,10 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					} else {
 						// need check how many new lines will the next statement
 						// insert
-						int numberOfLines = getNumbreOfLines(statements[i + 1]) - 1;
+						int numberOfLines = getNumberOfLines(statements[i + 1]) - 1;
 						numberOfLines = this.preferences.blank_lines_after_use_statements - numberOfLines;
 						if (numberOfLines > 0) {
-							for (int j = 0; j < numberOfLines; j++) {
-								insertNewLine();
-							}
+							insertNewLines(numberOfLines);
 						}
 
 						// ignoreEmptyLineSetting = true;
@@ -2600,39 +2623,58 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			}
 		}
 
-		if (statements.length > 0 || isEmptyBlockNewLine || hasComments) {
+		if (statements.length > 0 || isAddEmptyBlockNewLine || hasComments) {
 			if (isUnbracketedNamespace || isThrowOrReturnFormatCase(statements)) {
 				// do not add new line... Throw/Return Statements within an If
 				// Statement block
 			} else {
-				// if ((statements.length > 0 || hasComments)
-				// && (isClassDeclaration || isFunctionDeclaration)) {
-				// if (isClassDeclaration) {
-				// for (int j = 0; j < preferences.blank_line_at_end_of_class;
-				// j++) {
-				// insertNewLine();
-				// }
-				// if (preferences.blank_line_at_end_of_class > 0) {
-				// indent();
-				// }
-				// } else {
-				// for (int j = 0; j < preferences.blank_line_at_end_of_method;
-				// j++) {
-				// insertNewLine();
-				// }
-				// if (preferences.blank_line_at_end_of_method > 0) {
-				// indent();
-				// }
-				// }
-				// } else {
-				insertNewLine();
-				indent();
-				// }
+				// Safly apply previous indentation when we later insert (at
+				// least) one newline
+				boolean isIndentFollowedByNewLine = endPosition > lastStatementEndOffset
+						&& ((isClassDeclaration && preferences.blank_line_at_end_of_class > 0)
+								|| (isFunctionDeclaration && preferences.blank_line_at_end_of_method > 0));
 
+				if (blockIndentation && isIndentFollowedByNewLine) {
+					indentationLevel++;
+					insertNewLines(1);
+					indent();
+					indentationLevel--;
+				} else {
+					insertNewLines(1);
+					indent();
+				}
 			}
 		}
 
 		if (endPosition > lastStatementEndOffset) {
+			if (isClassDeclaration) {
+				// Apply previous indentation (because it's still valid)...
+				if (blockIndentation) {
+					indentationLevel++;
+					insertNewLines(preferences.blank_line_at_end_of_class);
+					indentationLevel--;
+				} else {
+					insertNewLines(preferences.blank_line_at_end_of_class);
+				}
+				// ...before indenting last line with current indentation
+				if (preferences.blank_line_at_end_of_class > 0) {
+					indent();
+				}
+			} else if (isFunctionDeclaration) {
+				// Apply previous indentation (because it's still valid)...
+				if (blockIndentation) {
+					indentationLevel++;
+					insertNewLines(preferences.blank_line_at_end_of_method);
+					indentationLevel--;
+				} else {
+					insertNewLines(preferences.blank_line_at_end_of_method);
+				}
+				// ...before indenting last line with current indentation
+				if (preferences.blank_line_at_end_of_method > 0) {
+					indent();
+				}
+			}
+
 			// exclude closing curly
 			int end = endPosition - 1;
 			if (!block.isCurly()) {
@@ -2655,25 +2697,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				case ASTNode.IF_STATEMENT:
 					end = endPosition;
 					break;
-				}
-			}
-			if (/*
-				 * (statements.length > 0 || hasComments) &&
-				 */(isClassDeclaration || isFunctionDeclaration)) {
-				if (isClassDeclaration) {
-					for (int j = 0; j < preferences.blank_line_at_end_of_class; j++) {
-						insertNewLine();
-					}
-					if (preferences.blank_line_at_end_of_class > 0) {
-						indent();
-					}
-				} else {
-					for (int j = 0; j < preferences.blank_line_at_end_of_method; j++) {
-						insertNewLine();
-					}
-					if (preferences.blank_line_at_end_of_method > 0) {
-						indent();
-					}
 				}
 			}
 
@@ -3190,7 +3213,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		Statement body = doStatement.getBody();
 		handleAction(doStatement.getStart() + 2, body, true);
 		if (preferences.control_statement_insert_newline_before_while_in_do) {
-			insertNewLine();
+			insertNewLines(1);
 			indent();
 		} else {
 			setSpaceAfterBlock(body);
@@ -3782,7 +3805,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		} else { // the false statement is not 'elseif' or 'else if'
 			if (ifStatement.getTrueStatement().getType() == ASTNode.BLOCK) {
 				if (preferences.control_statement_insert_newline_before_else_and_elseif_in_if) {
-					insertNewLine();
+					insertNewLines(1);
 					indent();
 				} else {
 					setSpaceAfterBlock(ifStatement.getTrueStatement());
@@ -3803,7 +3826,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				}
 			} else { // if the true statement is not a block then we should add
 				// new line
-				insertNewLine();
+				insertNewLines(1);
 				indent();
 
 				try {
@@ -3852,7 +3875,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		if (ifStatement.getTrueStatement().getType() == ASTNode.BLOCK) {
 			if (preferences.control_statement_insert_newline_before_else_and_elseif_in_if) {
-				insertNewLine();
+				insertNewLines(1);
 				indent();
 			} else {
 				if (isIfToken) {
@@ -3877,18 +3900,18 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					handleChars(trueStatementEnd, positionOfElse);
 					appendToBuffer("else "); //$NON-NLS-1$
 					if (!preferences.control_statement_keep_else_if_on_same_line) {
-						insertNewLine();
 						indentationLevel++;
 						elseIndentationLevelChanged = true;
+						insertNewLines(1);
 						indent();
 					}
 					handleChars(positionOfElse, ifStatement.getFalseStatement().getStart());
 				} else {
 					appendToBuffer("else "); //$NON-NLS-1$
 					if (!preferences.control_statement_keep_else_if_on_same_line) {
-						insertNewLine();
 						indentationLevel++;
 						elseIndentationLevelChanged = true;
+						insertNewLines(1);
 						indent();
 					}
 					// the following line also handles the case : '}else' when
@@ -3898,24 +3921,24 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			}
 		} else { // if the true statement is not a block then we should add new
 			// line
-			insertNewLine();
+			insertNewLines(1);
 			indent();
 			if (positionOfElse > trueStatementEnd) {
 				handleChars(trueStatementEnd, positionOfElse);
 				appendToBuffer("else "); //$NON-NLS-1$
 				if (!preferences.control_statement_keep_else_if_on_same_line) {
-					insertNewLine();
 					indentationLevel++;
 					elseIndentationLevelChanged = true;
+					insertNewLines(1);
 					indent();
 				}
 				handleChars(positionOfElse, ifStatement.getFalseStatement().getStart());
 			} else {
 				appendToBuffer(isIfToken ? "else " : EMPTY_STRING); //$NON-NLS-1$
 				if (isIfToken && !preferences.control_statement_keep_else_if_on_same_line) {
-					insertNewLine();
 					indentationLevel++;
 					elseIndentationLevelChanged = true;
+					insertNewLines(1);
 					indent();
 				}
 				// in case of: STATEMENT;elseif ...
@@ -4028,8 +4051,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			if (calcLinesWidth(inFixOperand) > this.preferences.line_wrap_line_split) {
 				binaryExpressionLineWrapPolicy = WRAP_WHEN_NECESSARY;
 				if (doFirstWrap) {
-					insertNewLine();
 					indentationLevel += binaryExpressionIndentGap;
+					insertNewLines(1);
 					indent();
 					isInsertNewLine = true;
 				}
@@ -4039,7 +4062,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		case WRAP_WHEN_NECESSARY:
 			if (calcLinesWidth(inFixOperand) > this.preferences.line_wrap_line_split) {
 				if (doFirstWrap) {
-					insertNewLine();
+					insertNewLines(1);
 					indent();
 					isInsertNewLine = true;
 				}
@@ -4050,8 +4073,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 									// necessary
 			binaryExpressionLineWrapPolicy = WRAP_WHEN_NECESSARY;
 			if (doFirstWrap) {
-				insertNewLine();
 				indentationLevel += binaryExpressionIndentGap;
+				insertNewLines(1);
 				indent();
 				isInsertNewLine = true;
 			}
@@ -4062,8 +4085,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			if (forceSplit || calcLinesWidth(inFixOperand) > this.preferences.line_wrap_line_split) {
 				binaryExpressionLineWrapPolicy = ALWAYS_WRAP_ELEMENT;
 				if (doFirstWrap) {
-					insertNewLine();
 					indentationLevel += binaryExpressionIndentGap;
+					insertNewLines(1);
 					indent();
 					isInsertNewLine = true;
 				}
@@ -4077,8 +4100,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			if (forceSplit || calcLinesWidth(inFixOperand) > this.preferences.line_wrap_line_split) {
 				binaryExpressionLineWrapPolicy = ALWAYS_WRAP_ELEMENT_ADD_LEVEL;
 				if (doFirstWrap) {
-					insertNewLine();
 					indentationLevel += binaryExpressionIndentGap;
+					insertNewLines(1);
 					indent();
 					isInsertNewLine = true;
 				}
@@ -4105,7 +4128,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			// no break here, continue with ALWAYS_WRAP_ELEMENT
 		case ALWAYS_WRAP_ELEMENT:
 			if (doFirstWrap) {
-				insertNewLine();
+				insertNewLines(1);
 				indent();
 				isInsertNewLine = true;
 			}
@@ -4387,9 +4410,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			if (peek > this.preferences.new_line_in_second_invoke - 1) {
 				if (dispatch instanceof MethodInvocation) {
 
-					insertNewLine();
-
 					indentationLevel++;
+					insertNewLines(1);
 					indent();
 					indentationLevel--;
 				}
@@ -4585,12 +4607,10 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				// insert
 				if (i + 1 < statements.length && statements[i].getType() == ASTNode.NAMESPACE
 						&& statements[i + 1].getType() == ASTNode.NAMESPACE) {
-					int numberOfLines = getNumbreOfLines(statements[i + 1]) - 1;
+					int numberOfLines = getNumberOfLines(statements[i + 1]) - 1;
 					numberOfLines = this.preferences.blank_lines_between_namespaces - numberOfLines;
 					if (numberOfLines > 0) {
-						for (int j = 0; j < numberOfLines; j++) {
-							insertNewLine();
-						}
+						insertNewLines(numberOfLines);
 					}
 					// ignoreEmptyLineSetting = true;
 					ignoreEmptyLineSetting = !preferences.indent_empty_lines;
@@ -4797,7 +4817,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				}
 				boolean isBreakStatement = actions[i].getType() == ASTNode.BREAK_STATEMENT;
 				this.indentationLevel += isBreakStatement ? breakStatementIndentation : regularStatementIndentation;
-				insertNewLine();
+				insertNewLines(1);
 				indent();
 				handleChars(lastStatementEndOffset, actions[i].getStart());
 				actions[i].accept(this);
@@ -4884,7 +4904,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		for (int i = 0; i < catchClauses.length; i++) {
 			if (preferences.control_statement_insert_newline_before_catch_in_try) {
-				insertNewLine();
+				insertNewLines(1);
 				indent();
 			} else {
 				if (this.preferences.insert_space_after_closing_brace_in_block) {
@@ -4897,7 +4917,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		}
 		if (tryStatement.finallyClause() != null) {
 			if (preferences.control_statement_insert_newline_before_finally_in_try) {
-				insertNewLine();
+				insertNewLines(1);
 				indent();
 			} else {
 				if (this.preferences.insert_space_after_closing_brace_in_block) {
@@ -5064,7 +5084,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				spaceAfterComma, lineWrapPolicy, indentationGap, forceSplit);
 
 		if (useStatement.getNamespace() != null) {
-			insertNewLine();
+			insertNewLines(1);
 			indent();
 			appendToBuffer(CLOSE_CURLY);
 		}
