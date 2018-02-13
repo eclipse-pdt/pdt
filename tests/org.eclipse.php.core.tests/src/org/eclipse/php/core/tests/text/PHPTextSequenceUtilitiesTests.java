@@ -34,14 +34,14 @@ public class PHPTextSequenceUtilitiesTests {
 	public void singleArgument() {
 		String[] argNames = PHPTextSequenceUtilities.getArgNames(null, "('MyArg')");
 		assertEquals(1, argNames.length);
-		assertEquals("'MyArg'", argNames[0]);
+		assertEquals("MyArg", argNames[0]);
 	}
 
 	@Test
 	public void singleArgumentDoubleQuote() {
 		String[] argNames = PHPTextSequenceUtilities.getArgNames(null, "(\"MyArg\")");
 		assertEquals(1, argNames.length);
-		assertEquals("\"MyArg\"", argNames[0]);
+		assertEquals("MyArg", argNames[0]);
 	}
 
 	@Test
@@ -55,14 +55,14 @@ public class PHPTextSequenceUtilitiesTests {
 	public void singleArgumentIgnoreParenthesis() {
 		String[] argNames = PHPTextSequenceUtilities.getArgNames(null, "'MyArg'");
 		assertEquals(1, argNames.length);
-		assertEquals("'MyArg'", argNames[0]);
+		assertEquals("MyArg", argNames[0]);
 	}
 
 	@Test
 	public void multiArgumentIgnore() {
 		String[] argNames = PHPTextSequenceUtilities.getArgNames(null, "('MyString', $anyElement)");
 		assertEquals(2, argNames.length);
-		assertEquals("'MyString'", argNames[0]);
+		assertEquals("MyString", argNames[0]);
 		assertNull(argNames[1]);
 	}
 
@@ -70,7 +70,7 @@ public class PHPTextSequenceUtilitiesTests {
 	public void multiArgumentIgnore2() {
 		String[] argNames = PHPTextSequenceUtilities.getArgNames(null, "($anyElement, 'MyString')");
 		assertEquals(2, argNames.length);
-		assertEquals("'MyString'", argNames[1]);
+		assertEquals("MyString", argNames[1]);
 		assertNull(argNames[0]);
 	}
 
@@ -78,7 +78,7 @@ public class PHPTextSequenceUtilitiesTests {
 	public void ignoreInternalCall() {
 		String[] argNames = PHPTextSequenceUtilities.getArgNames(null, "(call('something'), 'MyString')");
 		assertEquals(2, argNames.length);
-		assertEquals("'MyString'", argNames[1]);
+		assertEquals("MyString", argNames[1]);
 		assertNull(argNames[0]);
 	}
 
@@ -87,7 +87,7 @@ public class PHPTextSequenceUtilitiesTests {
 		String[] argNames = PHPTextSequenceUtilities.getArgNames(null,
 				"(call('something', $this->callMe(\"Another\")), 'MyString')");
 		assertEquals(2, argNames.length);
-		assertEquals("'MyString'", argNames[1]);
+		assertEquals("MyString", argNames[1]);
 		assertNull(argNames[0]);
 	}
 
