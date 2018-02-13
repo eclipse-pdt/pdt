@@ -16,6 +16,7 @@ if (class_exists('PHPUnit_Util_Printer')) {
     class_alias('PHPUnit_Framework_TestSuite', 'TestSuite');
     class_alias('PHPUnit_Framework_TestCase', 'TestCase');
     class_alias('PHPUnit_Framework_AssertionFailedError', 'AssertionFailedError');
+    class_alias('PHPUnit_Framework_ExpectationFailedException', 'ExpectationFailedException');
     class_alias('PHPUnit_TextUI_ResultPrinter', 'TextPrinter');
     class_alias('PHPUnit_Framework_Warning', 'Warning');
     class_alias('PHPUnit_Framework_Error', 'Error_Error');
@@ -463,6 +464,7 @@ class PHPUnitEclipseLogger extends Printer implements TestListener
         if ($this->exception !== null) {
             $message = $this->exception->getMessage();
             $diff = "";
+            echo get_class($this->exception);
             if ($this->exception instanceof ExpectationFailedException) {
                 if (method_exists($this->exception, "getDescription")) {
                     $message = $this->exception->getDescription();
