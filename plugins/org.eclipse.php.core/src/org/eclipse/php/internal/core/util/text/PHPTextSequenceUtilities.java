@@ -30,6 +30,7 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.documentModel.parser.AbstractPHPLexer;
 import org.eclipse.php.internal.core.documentModel.parser.PHPLexerFactory;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
@@ -774,7 +775,7 @@ public class PHPTextSequenceUtilities {
 						} else if (level == 0) {
 							if (symbol.equals(PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING)) {
 								if (args.size() < argIndex + 1) {
-									args.add(text.toString());
+									args.add(ASTUtils.stripQuotes(text.toString()));
 								}
 							} else if (ancd != null && ancd.isBuilding()) {
 								if (ancd.getAssignedArgumentIndex() < 0) {
