@@ -14,9 +14,12 @@ class IndexController extends Zend_Controller_Action {
 
 --EXPECT--
 <?php
+
 class IndexController extends Zend_Controller_Action {
+	
 	public function indexAction() {
 		
 		// action body
 	}
+
 }

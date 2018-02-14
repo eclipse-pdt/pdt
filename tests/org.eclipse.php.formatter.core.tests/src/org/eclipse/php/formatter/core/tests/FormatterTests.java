@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 Zend Techologies Ltd.
+ * Copyright (c) 2013, 2014, 2018 Zend Techologies Ltd.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -63,12 +63,15 @@ public class FormatterTests {
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<>();
 
 	static {
-		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/formatter/php5" });
+		TESTS.put(PHPVersion.PHP5,
+				new String[] { "/workspace/formatter/php5", "/workspace/formatter_indent_empty_lines/php5" });
 		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/formatter/php53" });
 		TESTS.put(PHPVersion.PHP5_4, new String[] { "/workspace/formatter/php54" });
-		TESTS.put(PHPVersion.PHP5_5, new String[] { "/workspace/formatter/php55" });
+		TESTS.put(PHPVersion.PHP5_5,
+				new String[] { "/workspace/formatter/php55", "/workspace/formatter_indent_empty_lines/php55" });
 		TESTS.put(PHPVersion.PHP5_6, new String[] { "/workspace/formatter/php56" });
-		TESTS.put(PHPVersion.PHP7_0, new String[] { "/workspace/formatter/php7" });
+		TESTS.put(PHPVersion.PHP7_0,
+				new String[] { "/workspace/formatter/php7", "/workspace/formatter_indent_empty_lines/php7" });
 		TESTS.put(PHPVersion.PHP7_1, new String[] { "/workspace/formatter/php71" });
 		TESTS.put(PHPVersion.PHP7_2, new String[] { "/workspace/formatter/php72" });
 	};

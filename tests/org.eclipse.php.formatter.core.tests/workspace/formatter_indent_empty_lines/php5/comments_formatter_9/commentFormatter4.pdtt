@@ -29,14 +29,14 @@ class MyClass extends MyBaseClass
 
 class MyClass extends MyBaseClass
 {
-
+    
     private function foo(& $row)
     {
         /*
          * indentation string for this comment should not be stored...
          */
     }
-
+    
     function addColumns(Table $table)
     {
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

@@ -31,11 +31,13 @@ class A {
 	function A() {
 		echo "I am the constructor of A.<br />\n";
 	}
+	
 	function B() {
 		echo "I am a regular function named B in class A.<br />\n";
 		echo "I am not a constructor in A.<br />\n";
 	}
 }
+
 class B extends A {
 }
 
