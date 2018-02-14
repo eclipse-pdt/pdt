@@ -27,13 +27,13 @@ function &foo(): Test\Exception
 
 interface A
 {
-
+    
     function make(): A;
 }
 
 class B
 {
-
+    
     public function make(): Boo
     {}
 }

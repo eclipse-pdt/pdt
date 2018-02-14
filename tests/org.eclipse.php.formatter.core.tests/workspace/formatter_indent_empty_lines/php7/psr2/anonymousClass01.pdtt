@@ -13,11 +13,11 @@ const TEST = 1;
 --EXPECT--
 <?php
 foo(new class($var) extends SuperClass01 implements Interface01, Interface02 {
-
+    
     const TEST = 1;
-
+    
     protected $field;
-
+    
     private function function_name($param)
     {}
 });

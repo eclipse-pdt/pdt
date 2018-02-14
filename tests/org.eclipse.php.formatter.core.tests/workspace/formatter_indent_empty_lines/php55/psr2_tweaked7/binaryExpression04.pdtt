@@ -25,7 +25,7 @@ header('xxxx ' . rawurlencode(implode('-', TestMe::getAny($b, array(
 
 class Foo
 {
-
+    
     public function foo(
         array $_infos)
     {
@@ -35,7 +35,7 @@ class Foo
                 'file' => $tmpFileName 
             ));
     }
-
+    
     public function retrieveCumulDSN(
         array $_infos)
     {
