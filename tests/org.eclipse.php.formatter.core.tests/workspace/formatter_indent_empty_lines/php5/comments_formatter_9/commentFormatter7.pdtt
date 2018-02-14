@@ -64,7 +64,7 @@ class Foo
  */
 class User
 {
-
+    
     /**
      *
      * @ORM\Id @ORM\Column @ORM\GeneratedValue
@@ -72,7 +72,7 @@ class User
      * @var int
      */
     private $id;
-
+    
     /**
      *
      * @ORM\Column(type="string")
@@ -103,7 +103,7 @@ class Bar
  */
 class Foo
 {
-
+    
     public function __construct(array $values)
     {
     }
