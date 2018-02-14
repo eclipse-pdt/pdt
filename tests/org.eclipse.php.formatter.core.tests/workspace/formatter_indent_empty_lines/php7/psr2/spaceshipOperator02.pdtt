@@ -15,8 +15,8 @@ const TEST = VARR <=> 1;
 
 class MyClass
 {
-
+    
     const FOO = 10 <=> 1.5 * 10;
-
+    
     const FOO = 'Bar'[0] <=> "Foo"[0] <=> MyClass::ABC[0][1];
 }
