@@ -41,7 +41,9 @@ while ( list ( , $val ) = each ( $arr ) ) {
 	}
 	echo "$val<br />\n";
 }
+
 /* Using the optional argument. */
+
 $i = 0;
 while ( ++ $i ) {
 	switch ($i) {
