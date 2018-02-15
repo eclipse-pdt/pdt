@@ -25,7 +25,7 @@ import junit.framework.TestCase;
 
 public class PackagesTest extends TestCase {
 
-	private final static int TIMEOUT = 10;
+	private final static int TIMEOUT = 60;
 
 	private CountDownLatch counter;
 	private Object asyncResult;
