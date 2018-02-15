@@ -56,7 +56,6 @@ foreach (array(1, 2, 3, 4, 5) as $v) {
 --EXPECT--
 <?php
 /* foreach example 1: value only */
-
 $a = array (1, 2, 3,
 		17 );
 

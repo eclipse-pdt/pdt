@@ -79,6 +79,7 @@ class User {
 	 */
 	private $email;
 }
+
 /**
  *
  * @Annotation
@@ -86,6 +87,7 @@ class User {
  */
 class Bar {
 }
+
 /**
  *
  * @Annotation

@@ -11,12 +11,10 @@ namespace MyNamespace;
 ?>
 --EXPECT--
 <?php
-
 // Comment
 /* Comment */
 /**
  * Comment
  */
 namespace MyNamespace;
-
 ?>
