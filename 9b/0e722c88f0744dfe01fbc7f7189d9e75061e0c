@@ -1,0 +1,9 @@
+Verified+1: Hudson CI
+Code-Review+1: Michele Locati <michele@locati.it>
+Code-Review+2: Dawid Pakula <zulus@w3des.net>
+Verified+1: Dawid Pakula <zulus@w3des.net>
+Submitted-by: Dawid Pakula <zulus@w3des.net>
+Submitted-at: Thu, 15 Feb 2018 09:16:44 -0500
+Reviewed-on: https://git.eclipse.org/r/117276
+Project: pdt/org.eclipse.pdt
+Branch: refs/heads/master
