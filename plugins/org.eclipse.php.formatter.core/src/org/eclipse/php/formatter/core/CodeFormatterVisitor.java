@@ -2053,8 +2053,41 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	private void insertNewLine() {
 		if (!isPHPEqualTag) {
+			removePreviousLineIndentation();
 			appendToBuffer(lineSeparator);
 			lineWidth = 0;
+		}
+	}
+
+	private void removePreviousLineIndentation() {
+		int rv = replaceBuffer.length();
+		for (; rv > 0; rv--) {
+			char currChar = replaceBuffer.charAt(rv - 1);
+			if (currChar != ' ' && currChar != '\t') {
+				break;
+			}
+		}
+
+		if (rv == 0) {
+			// replaceBuffer contains only whitespaces:
+			// this can happen when a newline was flushed by
+			// handleCharsWithoutComments() without the whitespaces that will be
+			// inserted after that newline, or when some whitespaces will be
+			// appended to the end of a non-empty document line
+			replaceBuffer.setLength(0);
+			return;
+		}
+
+		if (rv == replaceBuffer.length() || rv - lineSeparator.length() < 0) {
+			// nothing to remove, we either have no newline in replaceBuffer or
+			// a newline is at the end of replaceBuffer
+			return;
+		}
+
+		if (!preferences.indent_empty_lines /* && !inComment */ && replaceBuffer.toString()
+				.substring(rv - lineSeparator.length(), rv).equals(lineSeparator)) {
+			// remove the blank line after last newline
+			replaceBuffer.replace(rv, replaceBuffer.length(), "");//$NON-NLS-1$
 		}
 	}
 
