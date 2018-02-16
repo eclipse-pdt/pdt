@@ -16,7 +16,7 @@ class stats {
 			'map' => array (
 					2,
 					100 
-			)  // 49
+			) // 49
 	
 	);
 }

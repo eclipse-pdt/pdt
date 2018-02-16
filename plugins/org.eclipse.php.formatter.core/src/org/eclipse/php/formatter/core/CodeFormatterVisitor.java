@@ -971,7 +971,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 							afterNewLine = replaceBuffer.substring(position + lineSeparator.length(),
 									replaceBuffer.length());
 							replaceBuffer.replace(position, replaceBuffer.length(), ""); //$NON-NLS-1$
-							insertSpaces(1);
+							isPrevSpace = replaceBuffer.length() > 0
+									? replaceBuffer.charAt(replaceBuffer.length() - 1) == SPACE : false;
+							insertSpace();
 						} else {
 							insertSpace();
 						}
@@ -992,6 +994,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 							insertNewLine();
 						} else {
 							replaceBuffer.setLength(0);
+							isPrevSpace = false;
 							lineWidth = 0;
 						}
 					} else {
@@ -1319,6 +1322,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				// example while /* kuku */ ( /* kuku */$a > 0 )
 				if (getBufferFirstChar(0) != '\0') {
 					replaceBuffer.setLength(0);
+					isPrevSpace = false;
 					IRegion reg = document.getLineInformationOfOffset(end);
 					// TODO: Do line width calculation based on the
 					// formatted content instead of the original content
@@ -1350,7 +1354,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						afterNewLine = replaceBuffer.substring(position + lineSeparator.length(),
 								replaceBuffer.length());
 						replaceBuffer.replace(position, replaceBuffer.length(), ""); //$NON-NLS-1$
-						insertSpaces(1);
+						isPrevSpace = replaceBuffer.length() > 0
+								? replaceBuffer.charAt(replaceBuffer.length() - 1) == SPACE : false;
+						insertSpace();
 						// } else {
 						// insertSpace();
 						// }
@@ -1367,6 +1373,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						// if (getBufferFirstChar(position
 						// + lineSeparator.length()) == '\0') {
 						replaceBuffer.replace(position + lineSeparator.length(), replaceBuffer.length(), ""); //$NON-NLS-1$
+						isPrevSpace = false;
 						lineWidth = 0;
 						// } else {
 						// insertNewLine();
@@ -1374,6 +1381,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					} else {
 						// if (getBufferFirstChar(0) == '\0') {
 						replaceBuffer.setLength(0);
+						isPrevSpace = false;
 						lineWidth = 0;
 						// } else {
 						// insertNewLine();
