@@ -93,7 +93,7 @@ class Test {
 			exit ( 1 );
 		}
 	}
-	
+
 	/**
 	 * Internal initilization helper function.
 	 * Overwrites default
@@ -109,7 +109,7 @@ class Test {
 			date_default_timezone_set ( 'Europe/Helsinki' );
 		}
 	}
-	
+
 	/**
 	 * Cleans used output buffer.
 	 * If something was sent to

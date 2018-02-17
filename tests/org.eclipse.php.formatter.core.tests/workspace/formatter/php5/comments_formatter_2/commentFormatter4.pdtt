@@ -65,7 +65,7 @@ interface Example
      *
      * These possibilities include:
      * <ul><li>Formatting of header comments.</li><li>Formatting of Javadoc tags</li></ul>
-     
+
      */
     function bar2 (); // This is a long comment that should
                      // be split in multiple line comments

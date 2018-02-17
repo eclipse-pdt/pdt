@@ -40,7 +40,7 @@ if (true) {
 <?php
 if (true) {
     // comment 1
-    
+
 
 
 
@@ -51,9 +51,9 @@ if (true) {
 
 
     // comment 2
-    
+
     $x = 0;
-    
+
 
 
 
