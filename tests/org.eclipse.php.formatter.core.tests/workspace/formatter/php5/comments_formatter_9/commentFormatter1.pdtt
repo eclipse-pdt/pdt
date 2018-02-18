@@ -18,14 +18,14 @@ if(true){
 --EXPECT--
 <?php
 if (true) {
-    
+
     //test
     echo 'test';
-    
+
     //test2
-    
+
     echo 'test2'; //test3
-    
+
     echo 'test3';
 }
 ?>
