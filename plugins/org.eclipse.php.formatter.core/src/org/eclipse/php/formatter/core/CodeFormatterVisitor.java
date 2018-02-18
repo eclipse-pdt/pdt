@@ -2060,8 +2060,31 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	private void insertNewLine() {
 		if (!isPHPEqualTag) {
+			removePreviousLineIndentation();
 			appendToBuffer(lineSeparator);
 			lineWidth = 0;
+		}
+	}
+
+	private void removePreviousLineIndentation() {
+		int rv = replaceBuffer.length();
+		for (; rv > 0; rv--) {
+			char currChar = replaceBuffer.charAt(rv - 1);
+			if (currChar != ' ' && currChar != '\t') {
+				break;
+			}
+		}
+
+		if (rv == 0 || rv == replaceBuffer.length() || rv - lineSeparator.length() < 0) {
+			// nothing to remove, we either have no newline in replaceBuffer or
+			// a newline at the end of replaceBuffer
+			return;
+		}
+
+		if (!preferences.indent_empty_lines /* && !inComment */ && replaceBuffer.toString()
+				.substring(rv - lineSeparator.length(), rv).equals(lineSeparator)) {
+			// remove the blank line after last newline
+			replaceBuffer.replace(rv, replaceBuffer.length(), "");//$NON-NLS-1$
 		}
 	}
 

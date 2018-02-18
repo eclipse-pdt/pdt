@@ -69,7 +69,7 @@ class User {
 	 * @var int
 	 */
 	private $id;
-	
+
 	/**
 	 *
 	 * @ORM\Column(type="string")
