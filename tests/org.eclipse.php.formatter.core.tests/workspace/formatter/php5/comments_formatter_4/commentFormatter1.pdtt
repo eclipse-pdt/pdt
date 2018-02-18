@@ -24,7 +24,7 @@ interface Example
  *             This is the header comment for the example interface.
  */
 /**
- 
+
  *    This is the phpdoc for the example interface.
  */
 interface Example
