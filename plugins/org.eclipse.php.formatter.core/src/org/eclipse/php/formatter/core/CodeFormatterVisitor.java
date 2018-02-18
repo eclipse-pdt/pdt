@@ -1059,15 +1059,19 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 					commentContent = document.get(comment.sourceStart() + offset,
 							comment.sourceEnd() - comment.sourceStart());
+					start = comment.sourceEnd() + offset;
 					boolean needInsertNewLine = commentContent.endsWith(lineSeparator);
 					if (!needInsertNewLine) {
 						String[] delimiters = document.getLegalLineDelimiters();
 						for (int i = 0; i < delimiters.length; i++) {
 							needInsertNewLine = commentContent.endsWith(delimiters[i]);
 							if (needInsertNewLine) {
+								start -= delimiters[i].length();
 								break;
 							}
 						}
+					} else {
+						start -= lineSeparator.length();
 					}
 					int commentTokLen = commentContent.startsWith("#") ? 1 : 2;//$NON-NLS-1$
 					commentWords = Arrays.asList(
@@ -1101,6 +1105,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 							newLineStart = false;
 						}
 					}
+					handleCharsWithoutComments(comment.sourceStart() + offset, start, true);
 					if (needInsertNewLine) {
 						insertNewLine();
 						needInsertNewLine = false;
@@ -1110,23 +1115,26 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						needIndentNewLine = false;
 						afterNewLine = EMPTY_STRING;
 					}
-					handleCharsWithoutComments(comment.sourceStart() + offset, comment.sourceEnd() + offset, true);
 				} else {
 					commentContent = document.get(comment.sourceStart() + offset,
 							comment.sourceEnd() - comment.sourceStart());
+					start = comment.sourceEnd() + offset;
 					boolean needInsertNewLine = commentContent.endsWith(lineSeparator);
 					if (!needInsertNewLine) {
 						String[] delimiters = document.getLegalLineDelimiters();
 						for (int i = 0; i < delimiters.length; i++) {
 							needInsertNewLine = commentContent.endsWith(delimiters[i]);
 							if (needInsertNewLine) {
+								start -= delimiters[i].length();
 								break;
 							}
 						}
+					} else {
+						start -= lineSeparator.length();
 					}
 					if (needInsertNewLine) {
 						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=441825
-						lineWidth = 0;
+						insertNewLine();
 						needInsertNewLine = false;
 					} else {
 						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=489488
@@ -1135,7 +1143,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					}
 				}
 
-				start = comment.sourceEnd() + offset;
 				break;
 			case org.eclipse.php.core.compiler.ast.nodes.Comment.TYPE_PHPDOC:
 				previousCommentIsSingleLine = false;
@@ -2053,8 +2060,31 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	private void insertNewLine() {
 		if (!isPHPEqualTag) {
+			removePreviousLineIndentation();
 			appendToBuffer(lineSeparator);
 			lineWidth = 0;
+		}
+	}
+
+	private void removePreviousLineIndentation() {
+		int rv = replaceBuffer.length();
+		for (; rv > 0; rv--) {
+			char currChar = replaceBuffer.charAt(rv - 1);
+			if (currChar != ' ' && currChar != '\t') {
+				break;
+			}
+		}
+
+		if (rv == 0 || rv == replaceBuffer.length() || rv - lineSeparator.length() < 0) {
+			// nothing to remove, we either have no newline in replaceBuffer or
+			// a newline at the end of replaceBuffer
+			return;
+		}
+
+		if (!preferences.indent_empty_lines /* && !inComment */ && replaceBuffer.toString()
+				.substring(rv - lineSeparator.length(), rv).equals(lineSeparator)) {
+			// remove the blank line after last newline
+			replaceBuffer.replace(rv, replaceBuffer.length(), "");//$NON-NLS-1$
 		}
 	}
 

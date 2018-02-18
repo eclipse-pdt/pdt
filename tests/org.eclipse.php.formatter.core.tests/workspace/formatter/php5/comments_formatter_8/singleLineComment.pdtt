@@ -8,5 +8,5 @@ if (true) {
 --EXPECT--
 <?php
 if (true) {
-	
+
 	// comment?> <?php } ?>
