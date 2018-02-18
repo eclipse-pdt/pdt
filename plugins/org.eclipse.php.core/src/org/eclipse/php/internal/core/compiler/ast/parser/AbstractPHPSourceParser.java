@@ -20,8 +20,11 @@ import org.eclipse.dltk.ast.parser.IModuleDeclaration;
 import org.eclipse.dltk.ast.parser.ISourceParser;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
-import org.eclipse.php.internal.core.Logger;
+import org.eclipse.dltk.core.IBuffer;
+import org.eclipse.dltk.core.IOpenable;
+import org.eclipse.dltk.internal.core.BufferManager;
 import org.eclipse.php.core.project.ProjectOptions;
+import org.eclipse.php.internal.core.Logger;
 
 public abstract class AbstractPHPSourceParser extends AbstractSourceParser implements ISourceParser {
 	private String fileName;
@@ -37,7 +40,18 @@ public abstract class AbstractPHPSourceParser extends AbstractSourceParser imple
 	@Override
 	public IModuleDeclaration parse(IModuleSource input, IProblemReporter reporter) {
 		try {
-			return parse(new CharArrayReader(input.getContentsAsCharArray()), reporter,
+
+			Reader reader = null;
+			if (input instanceof IOpenable) {
+				IBuffer buffer = BufferManager.getDefaultBufferManager().getBuffer((IOpenable) input);
+				if (buffer != null) {
+					reader = new CharArrayReader(buffer.getCharacters());
+				}
+			}
+			if (reader == null) {
+				reader = new CharArrayReader(input.getContentsAsCharArray());
+			}
+			return parse(reader, reporter,
 					ProjectOptions.useShortTags(input.getModelElement().getScriptProject().getProject()));
 		} catch (Exception e) {
 			Logger.logException(e);
