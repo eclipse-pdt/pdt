@@ -44,12 +44,12 @@ endforeach;
 			?>
    <a href="<?php echo $this->url(array('page' => $page));?>"><?php echo $page;?> </a> |
 <?php
-		
+
 else :
 			echo $page;
 			?> |
 <?php
-		
+
 endif;
 	endforeach
 	;

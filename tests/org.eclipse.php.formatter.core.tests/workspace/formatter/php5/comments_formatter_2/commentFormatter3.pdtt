@@ -25,7 +25,7 @@ interface Example
  * The following is some sample code which illustrates source formatting
  * within javadoc comments: Descriptions of parameters and return values are best appended at end of the javadoc comment.
  *
- 
+
  */
     function foo (int $a, int $b);
 }
