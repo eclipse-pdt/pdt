@@ -74,7 +74,7 @@ public class XSSValidationVisitor extends PHPASTVisitor {
 				new DefaultProblem(
 					context.getFile().getName(),
 					"Unsafe use of " + s.getName() + ": possible XSS attack",
-					IProblem.Unclassified,
+					IProblem.Unclassified, // NB: DefaultProblemIdentifier.decode(IProblem.Unclassified) will return null
 					new String[0],
 					ProblemSeverities.Warning,
 					s.sourceStart(),

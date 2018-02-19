@@ -39,6 +39,9 @@ public class ProblemFactory extends DefaultProblemFactory {
 
 		@Override
 		public ProblemSeverity getSeverity(IProblemIdentifier problemId, ProblemSeverity defaultServerity) {
+			if (problemId == null) {
+				return IProblemSeverityTranslator.IDENTITY.getSeverity(problemId, defaultServerity);
+			}
 			if (cache.containsKey(problemId)) {
 				return cache.get(problemId);
 			}
