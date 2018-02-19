@@ -30,7 +30,7 @@ public class PHPUnitTest extends PHPUnitElement {
 	protected List<PHPUnitElement> warnings = null;
 	protected String name = ""; //$NON-NLS-1$
 	protected int status = 0;
-	protected Double time = null;
+	protected double time = 0;
 
 	public PHPUnitTest(MessageTest test, final PHPUnitTestGroup parent, RemoteDebugger remoteDebugger) {
 		super(test, parent, remoteDebugger);
@@ -84,11 +84,15 @@ public class PHPUnitTest extends PHPUnitElement {
 		return this.getName();
 	}
 
-	public Double getTime() {
+	public double getTime() {
 		return time;
 	}
 
-	public void setTime(Double time) {
+	public void setTime(double time) {
+		if (parent instanceof PHPUnitTest) {
+			PHPUnitTest p = (PHPUnitTest) parent;
+			p.setTime(p.time - this.time + time);
+		}
 		this.time = time;
 	}
 

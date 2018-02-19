@@ -198,6 +198,7 @@ public class TestViewer {
 
 	void disposeIcons() {
 		fHierarchyIcon.dispose();
+		PHPUnitPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(preferenceChangeListener);
 	}
 
 	public void expandAll() {

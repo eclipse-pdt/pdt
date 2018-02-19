@@ -16,7 +16,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.IDecoration;
@@ -55,11 +55,18 @@ public class TestLabelProvider extends LabelProvider implements IStyledLabelProv
 	private final Image fTestRunningIcon;
 
 	private PHPUnitView view;
-	private IPreferenceStore preferences;
+	private IPropertyChangeListener preferenceListener = event -> {
+		if (event.getProperty().equals(PHPUnitPreferenceKeys.SHOW_EXECUTION_TIME)) {
+			showExecutionTime = (Boolean) event.getNewValue();
+		}
+	};
+	private boolean showExecutionTime;
 
 	public TestLabelProvider(final PHPUnitView view) {
 		this.view = view;
-		this.preferences = PHPUnitPlugin.getDefault().getPreferenceStore();
+		PHPUnitPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this.preferenceListener);
+		showExecutionTime = PHPUnitPlugin.getDefault().getPreferenceStore()
+				.getBoolean(PHPUnitPreferenceKeys.SHOW_EXECUTION_TIME);
 
 		Image image = PHPUnitPlugin.createImage("obj16/test.png"); //$NON-NLS-1$
 		Image testSuiteImage = PHPUnitPlugin.createImage("obj16/tsuite.png"); //$NON-NLS-1$
@@ -128,6 +135,26 @@ public class TestLabelProvider extends LabelProvider implements IStyledLabelProv
 
 	@Override
 	public String getText(final Object element) {
+		return getStyledText(element).toString();
+	}
+
+	@Override
+	public void dispose() {
+		fOkIcon.dispose();
+		fErrorIcon.dispose();
+		fFailureIcon.dispose();
+		fSuiteOkIcon.dispose();
+		fSuiteErrorIcon.dispose();
+		fSuiteFailIcon.dispose();
+		fSuiteRunningIcon.dispose();
+		fWarningIcon.dispose();
+		fSuiteWarningIcon.dispose();
+		PHPUnitPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(this.preferenceListener);
+	}
+
+	@Override
+	public StyledString getStyledText(Object element) {
+		StyledString sb = new StyledString();
 		final PHPUnitElement test = (PHPUnitElement) element;
 		String fileName = test.getLocalFile();
 		if (StringUtils.isNotEmpty(fileName)) {
@@ -143,23 +170,35 @@ public class TestLabelProvider extends LabelProvider implements IStyledLabelProv
 		final int line = test.getLine();
 		if (test instanceof PHPUnitTest) {
 			PHPUnitTest unit = (PHPUnitTest) test;
-			StringBuilder sb = new StringBuilder(unit.getName());
-			if (sb.length() == 0) {
-				sb.append(fileName).append(':').append(line);
-			}
 			if (test instanceof PHPUnitTestCase && ((PHPUnitTestCase) test).isDataProviderCase()) {
-				sb.insert(0, PHPUnitMessages.TestLabelProvider_0);
+				sb.append(PHPUnitMessages.TestLabelProvider_0, StyledString.DECORATIONS_STYLER);
+				sb.append(unit.getName());
+			} else {
+				sb.append(unit.getName());
 			}
+
+			if (sb.length() == 0) {
+				sb.append(fileName).append(':').append(String.valueOf(line), StyledString.DECORATIONS_STYLER);
+			}
+
 			final PHPUnitTestException exception = unit.getException();
 			if (exception != null && StringUtils.isNotEmpty(exception.getMessage())) {
 				if (StringUtils.isNotEmpty(exception.getDiff())) {
-					sb.append(':').append(PHPUnitMessages.TestLabelProvider_1);
+					sb.append(PHPUnitMessages.TestLabelProvider_1, StyledString.QUALIFIER_STYLER);
+				}
+			}
+			if (showExecutionTime) {
+				boolean showExecutionTime = unit.getStatus() > PHPUnitTest.STATUS_STARTED;
+				if (unit instanceof PHPUnitTestGroup
+						&& ((PHPUnitTestGroup) unit).getTotalCount() > unit.getRunCount()) {
+					showExecutionTime = false;
+				}
+				if (showExecutionTime) {
+					sb.append(String.format(" (%.3f s)", unit.getTime()), StyledString.COUNTER_STYLER); //$NON-NLS-1$
 				}
 			}
 
-			return sb.toString();
-		}
-		if (test instanceof PHPUnitTestEvent) {
+		} else if (test instanceof PHPUnitTestEvent) {
 			final String message = ((PHPUnitTestEvent) test).getMessage();
 			String prefix = StringUtils.EMPTY;
 			if (test instanceof PHPUnitTestException) {
@@ -167,43 +206,23 @@ public class TestLabelProvider extends LabelProvider implements IStyledLabelProv
 			} else if (test instanceof PHPUnitTestWarning) {
 				prefix = ((PHPUnitTestWarning) test).getCode();
 			}
+
 			if (StringUtils.isNotEmpty(message)) {
-				return new StringBuilder(prefix).append(':').append(message).toString();
+				sb.append(prefix, StyledString.QUALIFIER_STYLER).append(": ", StyledString.QUALIFIER_STYLER) //$NON-NLS-1$
+						.append(message);
+			} else {
+				sb.append(prefix);
 			}
-			return prefix;
-		}
-		if (test instanceof PHPUnitTraceFrame) {
+		} else if (test instanceof PHPUnitTraceFrame) {
 			PHPUnitTraceFrame frame = (PHPUnitTraceFrame) test;
 			IPath path = new Path(frame.getFile());
-			return new StringBuilder(path.lastSegment()).append(" - ").append(test.toString()).append("()").toString(); //$NON-NLS-1$ //$NON-NLS-2$
+			sb.append(path.lastSegment(), StyledString.QUALIFIER_STYLER).append(" - ", StyledString.QUALIFIER_STYLER) //$NON-NLS-1$
+					.append(test.toString()).append("()").toString(); //$NON-NLS-1$
+		} else {
+			sb.append(test.toString());
 		}
-		return test.toString();
-	}
 
-	@Override
-	public void dispose() {
-		fOkIcon.dispose();
-		fErrorIcon.dispose();
-		fFailureIcon.dispose();
-		fSuiteOkIcon.dispose();
-		fSuiteErrorIcon.dispose();
-		fSuiteFailIcon.dispose();
-		fSuiteRunningIcon.dispose();
-		fWarningIcon.dispose();
-		fSuiteWarningIcon.dispose();
-	}
-
-	@Override
-	public StyledString getStyledText(Object element) {
-		StyledString styledString = new StyledString(getText(element));
-
-		if (element instanceof PHPUnitTest) {
-			PHPUnitTest unit = (PHPUnitTest) element;
-			if (unit.getTime() != null && preferences.getBoolean(PHPUnitPreferenceKeys.SHOW_EXECUTION_TIME)) {
-				styledString.append(String.format(" (%.3f s)", unit.getTime()), StyledString.COUNTER_STYLER); //$NON-NLS-1$
-			}
-		}
-		return styledString;
+		return sb;
 	}
 
 }

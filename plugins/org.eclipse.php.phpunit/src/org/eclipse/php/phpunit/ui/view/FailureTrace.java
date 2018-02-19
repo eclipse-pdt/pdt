@@ -15,6 +15,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.php.phpunit.PHPUnitPlugin;
@@ -63,7 +64,7 @@ public class FailureTrace implements IMenuListener {
 
 		fTreeViewer = new TreeViewer(parent, SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL);
 		fTreeViewer.setAutoExpandLevel(AbstractTreeViewer.ALL_LEVELS);
-		fTreeViewer.setLabelProvider(new TestLabelProvider(fTestRunner));
+		fTreeViewer.setLabelProvider(new DelegatingStyledCellLabelProvider(new TestLabelProvider(fTestRunner)));
 
 		final TestOpenListener testOpenListener = new TestOpenListener();
 		fTreeViewer.getTree().addSelectionListener(testOpenListener);
