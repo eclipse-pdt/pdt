@@ -3240,9 +3240,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			return false;
 		}
 		if (positionOfWhile > lastPosition) {
-			handleChars(lastPosition, positionOfWhile + 5); // 5 =
-															// "while".length()
-			appendToBuffer("while"); //$NON-NLS-1$
+			// 5 = "while".length()
+			handleChars(lastPosition, positionOfWhile);
 			handleChars(positionOfWhile + 5, positionOfWhile + 5);
 			lastPosition = positionOfWhile + 5;
 		} else {
