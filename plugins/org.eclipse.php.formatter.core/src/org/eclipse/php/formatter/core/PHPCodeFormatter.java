@@ -34,6 +34,7 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.formatter.core.FormatterCorePlugin;
 import org.eclipse.php.internal.formatter.core.HtmlFormatterForPHPCode;
 import org.eclipse.php.internal.formatter.core.Logger;
+import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
@@ -170,9 +171,18 @@ public class PHPCodeFormatter implements IContentFormatter, IFormatterProcessorF
 	}
 
 	private void replaceAll(IDocument document, List<ReplaceEdit> changes, IStructuredModel domModelForPHP)
-			throws BadLocationException {
-		MultiTextEdit multiEdit = new MultiTextEdit();
+			throws MalformedTreeException, BadLocationException {
+		TextEdit multiEdit = new MultiTextEdit();
 		multiEdit.addChildren(changes.toArray(new ReplaceEdit[0]));
+
+		// On large edits, merge all edits into a single one to speed up
+		// the edit processor.
+		if (RewriteSessionEditProcessor.isLargeEdit(multiEdit)) {
+			IDocument finalDocument = new Document(document.get());
+			multiEdit.apply(finalDocument);
+			multiEdit = new ReplaceEdit(0, document.getLength(), finalDocument.get());
+		}
+
 		Map<String, IDocumentPartitioner> partitioners = null;
 		try {
 			if (multiEdit.getChildrenSize() > 20) {
