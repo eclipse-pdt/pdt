@@ -3240,9 +3240,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			return false;
 		}
 		if (positionOfWhile > lastPosition) {
-			handleChars(lastPosition, positionOfWhile + 5); // 5 =
-															// "while".length()
-			appendToBuffer("while"); //$NON-NLS-1$
+			// 5 = "while".length()
+			handleChars(lastPosition, positionOfWhile);
+			lineWidth += 5;
 			handleChars(positionOfWhile + 5, positionOfWhile + 5);
 			lastPosition = positionOfWhile + 5;
 		} else {
@@ -3997,6 +3997,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		if (positionOfElse > lastPosition) {
 			// 4 = "else".length()
 			handleChars(lastPosition, positionOfElse);
+			lineWidth += 4;
 			handleChars(positionOfElse + 4, positionOfElse + 4);
 			lastPosition = positionOfElse + 4;
 		} else {
