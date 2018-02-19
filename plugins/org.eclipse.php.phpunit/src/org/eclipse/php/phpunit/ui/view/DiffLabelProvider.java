@@ -24,9 +24,15 @@ public class DiffLabelProvider extends ColumnLabelProvider {
 	private final Color plusBackground = new Color(Display.getDefault(), 220, 245, 185);
 	private final Color minusForeground = Display.getDefault().getSystemColor(SWT.COLOR_BLUE);
 	private final Color plusForeground = Display.getDefault().getSystemColor(SWT.COLOR_DARK_MAGENTA);
-	private final Color sameForeground = Display.getDefault().getSystemColor(SWT.COLOR_DARK_BLUE);
 
 	public DiffLabelProvider() {
+	}
+
+	@Override
+	public void dispose() {
+		minusBackground.dispose();
+		plusBackground.dispose();
+
 	}
 
 	@Override
@@ -54,14 +60,10 @@ public class DiffLabelProvider extends ColumnLabelProvider {
 	public Color getForeground(Object element) {
 		if (element instanceof DiffLine) {
 			final String text = element.toString();
-			if (text.contains("=>")) { //$NON-NLS-1$
-				if (text.startsWith("+")) { //$NON-NLS-1$
-					return plusForeground;
-				} else if (text.startsWith("-")) { //$NON-NLS-1$
-					return minusForeground;
-				} else {
-					return sameForeground;
-				}
+			if (text.startsWith("+")) { //$NON-NLS-1$
+				return plusForeground;
+			} else if (text.startsWith("-")) { //$NON-NLS-1$
+				return minusForeground;
 			}
 		}
 		return null;
@@ -71,12 +73,10 @@ public class DiffLabelProvider extends ColumnLabelProvider {
 	public Color getBackground(Object element) {
 		if (element instanceof DiffLine) {
 			final String text = element.toString();
-			if (text.contains("=>")) { //$NON-NLS-1$
-				if (text.startsWith("+")) { //$NON-NLS-1$
-					return plusBackground;
-				} else if (text.startsWith("-")) { //$NON-NLS-1$
-					return minusBackground;
-				}
+			if (text.startsWith("+")) { //$NON-NLS-1$
+				return plusBackground;
+			} else if (text.startsWith("-")) { //$NON-NLS-1$
+				return minusBackground;
 			}
 		}
 		return null;
