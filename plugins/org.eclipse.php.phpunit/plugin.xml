@@ -102,10 +102,26 @@
 	<extension point="org.eclipse.ui.bindings">
 		<key commandId="org.eclipse.php.phpunit.LaunchShortcut.run"
 			contextId="org.eclipse.ui.contexts.window" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-			sequence="M3+M2+X U" />
+			sequence="M2+M3+X U" />
+			
+		<key commandId="org.eclipse.php.phpunit.LaunchShortcut.run"
+			contextId="org.eclipse.ui.contexts.window" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			sequence="M2+M3+X U" platform="cocoa" />
+		<key commandId="org.eclipse.php.phpunit.LaunchShortcut.run"
+			contextId="org.eclipse.ui.contexts.window" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			sequence="M1+M3+X U" platform="cocoa" />
+			
+			
 		<key commandId="org.eclipse.php.phpunit.LaunchShortcut.debug"
 			contextId="org.eclipse.ui.contexts.window" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-			sequence="M3+M2+D U" />
+			sequence="M2+M3+D U" />
+			
+		<key commandId="org.eclipse.php.phpunit.LaunchShortcut.debug"
+			contextId="org.eclipse.ui.contexts.window" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			sequence="M2+M3+D U" platform="cocoa" />
+		<key commandId="org.eclipse.php.phpunit.LaunchShortcut.debug"
+			contextId="org.eclipse.ui.contexts.window" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			sequence="M1+M3+M4+D U" platform="cocoa" />
 	</extension>
 	<extension point="org.eclipse.core.runtime.preferences">
 		<initializer
