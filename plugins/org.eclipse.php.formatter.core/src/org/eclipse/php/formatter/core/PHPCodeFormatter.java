@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Zend Techologies Ltd.
+ * Copyright (c) 2013, 2018 Zend Techologies Ltd.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -80,10 +80,7 @@ public class PHPCodeFormatter implements IContentFormatter, IFormatterProcessorF
 				}
 
 				// php format
-				PHPVersion version = ProjectOptions.getPHPVersion(project);
-				boolean useShortTags = ProjectOptions.useShortTags(project);
-				ICodeFormattingProcessor codeFormatterVisitor = getCodeFormattingProcessor(project, document, version,
-						useShortTags, region);
+				ICodeFormattingProcessor codeFormatterVisitor = getCodeFormattingProcessor(project, document, region);
 				if (codeFormatterVisitor instanceof CodeFormatterVisitor) {
 					List<ReplaceEdit> changes = ((CodeFormatterVisitor) codeFormatterVisitor).getChanges();
 					if (changes.size() > 0) {
@@ -112,6 +109,13 @@ public class PHPCodeFormatter implements IContentFormatter, IFormatterProcessorF
 			boolean useShortTags, IRegion region) throws Exception {
 		IProject project = getProject(document);
 		return getCodeFormattingProcessor(project, document, phpVersion, useShortTags, region);
+	}
+
+	@Override
+	public ICodeFormattingProcessor getCodeFormattingProcessor(IProject project, IDocument document, IRegion region)
+			throws Exception {
+		return getCodeFormattingProcessor(project, document, ProjectOptions.getPHPVersion(project),
+				ProjectOptions.useShortTags(project), region);
 	}
 
 	private ICodeFormattingProcessor getCodeFormattingProcessor(IProject project, IDocument document,
