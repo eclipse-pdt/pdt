@@ -69,6 +69,7 @@ public class PHPUnitPreferenceKeys {
 		store.setDefault(CODE_COVERAGE, false);
 		store.setDefault(REPORTING, false);
 		store.setDefault(REPORT_PATH, getWritableDir());
+		store.setDefault(SHOW_EXECUTION_TIME, true);
 	}
 
 	public static void setFilterStack(final boolean filter) {
