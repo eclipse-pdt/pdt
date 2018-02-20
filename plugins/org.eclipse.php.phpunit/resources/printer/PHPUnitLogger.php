@@ -464,7 +464,6 @@ class PHPUnitEclipseLogger extends Printer implements TestListener
         if ($this->exception !== null) {
             $message = $this->exception->getMessage();
             $diff = "";
-            echo get_class($this->exception);
             if ($this->exception instanceof ExpectationFailedException) {
                 if (method_exists($this->exception, "getDescription")) {
                     $message = $this->exception->getDescription();
