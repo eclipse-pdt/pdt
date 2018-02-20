@@ -1170,7 +1170,7 @@ function load_entities()
 {
 	global $phpdocDir;
 	$result = array();
-	$needExpand = [];
+	$needExpand = array();
 	$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($phpdocDir));
 	foreach ($iterator as $file) {
 		if (! $file->isFile() || !in_array($file->getExtension(), array("xml", "ent"))) {
