@@ -114,6 +114,13 @@ public class PHPCodeFormatter implements IContentFormatter, IFormatterProcessorF
 		return getCodeFormattingProcessor(project, document, phpVersion, useShortTags, region);
 	}
 
+	@Override
+	public ICodeFormattingProcessor getCodeFormattingProcessor(IProject project, IDocument document, IRegion region)
+			throws Exception {
+		return getCodeFormattingProcessor(project, document, ProjectOptions.getPHPVersion(project),
+				ProjectOptions.useShortTags(project), region);
+	}
+
 	private ICodeFormattingProcessor getCodeFormattingProcessor(IProject project, IDocument document,
 			PHPVersion phpVersion, boolean useShortTags, IRegion region) throws Exception {
 		CodeFormatterPreferences fCodeFormatterPreferences = getPreferences(project);

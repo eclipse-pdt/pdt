@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 IBM Corporation and others.
+ * Copyright (c) 2016, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,7 +28,6 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.ltk.core.refactoring.TextFileChange;
-import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.format.ICodeFormattingProcessor;
 import org.eclipse.php.internal.core.format.IFormatterProcessorFactory;
 import org.eclipse.php.internal.core.preferences.PreferencesSupport;
@@ -100,8 +99,8 @@ public class CodeFormatSaveParticipant implements IPostSaveListener {
 			try {
 				IDocument document = new Document(compilationUnit.getSource());
 				ICodeFormattingProcessor processor = ((IFormatterProcessorFactory) formatter)
-						.getCodeFormattingProcessor(document, ProjectOptions.getPHPVersion(project),
-								ProjectOptions.useShortTags(project), new Region(0, document.getLength()));
+						.getCodeFormattingProcessor(project != null ? project.getProject() : null, document,
+								new Region(0, document.getLength()));
 				MultiTextEdit edits = processor.getTextEdits();
 				if (edits.hasChildren()) {
 					final SourceModuleChange change = new SourceModuleChange(
