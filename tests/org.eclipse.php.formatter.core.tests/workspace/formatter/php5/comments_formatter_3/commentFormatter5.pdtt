@@ -21,7 +21,7 @@ interface Example
 {
     function foo3 ();
     /**
-     * 
+     *
      * @param $a int
      * @param $b int
      *

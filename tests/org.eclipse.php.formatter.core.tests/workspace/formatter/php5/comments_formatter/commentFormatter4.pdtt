@@ -76,7 +76,7 @@ interface Example
      * within javadoc comments:
      * Descriptions of parameters and return values are best appended at end of
      * the javadoc comment.
-     * 
+     *
      * @param $a int
      *            The first parameter. For an optimum result, this should be an
      *            odd number

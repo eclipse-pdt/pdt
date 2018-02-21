@@ -64,13 +64,13 @@ class Foo
 class User
 {
     /**
-     * 
+     *
      * @ORM\Id @ORM\Column @ORM\GeneratedValue
      * @dummy
      * @var int */
     private $id;
     /**
-     * 
+     *
      * @ORM\Column(type="string")
      * @Assert\NotEmpty
      * @Assert\Email
@@ -78,14 +78,14 @@ class User
     private $email;
 }
 /**
- * 
+ *
  * @Annotation
  * @Target({"METHOD","PROPERTY"}) */
 class Bar
 {
 }
 /**
- * 
+ *
  * @Annotation
  * @Target({"METHOD","PROPERTY"})
  * @Attributes({

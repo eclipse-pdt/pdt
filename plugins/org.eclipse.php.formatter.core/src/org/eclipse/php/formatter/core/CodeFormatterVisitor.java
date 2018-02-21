@@ -1225,7 +1225,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					if (tags != null && tags.length > 0) {
 						if (this.preferences.comment_insert_empty_line_before_root_tags && !lastLineIsBlank) {
 							insertNewLineForPHPDoc();
-							appendToBuffer(" "); //$NON-NLS-1$
 						}
 						for (int i = 0; i < tags.length; i++) {
 							PHPDocTag phpDocTag = tags[i];
