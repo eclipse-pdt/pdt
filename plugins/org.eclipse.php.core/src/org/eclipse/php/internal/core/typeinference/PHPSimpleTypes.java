@@ -103,7 +103,7 @@ public class PHPSimpleTypes {
 	 * @since 5.1
 	 */
 	@NonNull
-	public static final IEvaluatedType ITERABLE = new PHPClassType("callable"); //$NON-NLS-1$
+	public static final IEvaluatedType ITERABLE = new PHPClassType("iterable"); //$NON-NLS-1$
 
 	static {
 
