@@ -736,22 +736,30 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	}
 
+	private int handleCommaList(ASTNode[] array, int lastPosition, boolean insertSpaceBeforeComma,
+			boolean insertSpaceAfterComma, int lineWrapPolicy, int indentGap, boolean forceSplit) {
+		return handleCommaList(array, lastPosition, -1, insertSpaceBeforeComma, insertSpaceAfterComma, lineWrapPolicy,
+				indentGap, forceSplit);
+	}
+
 	/**
 	 * handle comma list (e.g. 1,2,3)
 	 * 
 	 * @param array
 	 *            ASTNode array
 	 * @param lastPosition
-	 *            the position of the last ASTNode
+	 *            the position after last ASTNode
+	 * @param lastEmptyASTNodePosition
 	 * @param insertSpaceBeforeComma
 	 * @param insertSpaceAfterComma
-	 * @param b
-	 * @param k
-	 * @param j
+	 * @param lineWrapPolicy
+	 * @param indentGap
+	 * @param forceSplit
 	 * @return the last element end position
 	 */
-	private int handleCommaList(ASTNode[] array, int lastPosition, boolean insertSpaceBeforeComma,
-			boolean insertSpaceAfterComma, int lineWrapPolicy, int indentGap, boolean forceSplit) {
+	private int handleCommaList(ASTNode[] array, int lastPosition, int lastEmptyASTNodePosition,
+			boolean insertSpaceBeforeComma, boolean insertSpaceAfterComma, int lineWrapPolicy, int indentGap,
+			boolean forceSplit) {
 		int oldIndentationLevel = indentationLevel;
 		boolean oldWasBinaryExpressionWrapped = wasBinaryExpressionWrapped;
 		if (array.length == 0) {
@@ -902,7 +910,34 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				wasBinaryExpressionWrapped = true;
 			}
 
-			handleChars1(lastPosition, array[i].getStart(), oldIndentationLevel != indentationLevel, indentGap);
+			if (lastEmptyASTNodePosition >= 0 && array[i].getLength() == 0) {
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=531468
+				// We have a (fake) empty ASTNode. By construction, whitespaces "around" empty
+				// ASTNodes are always located "after" ASTNode.getStart() (and
+				// ASTNode.getEnd()), so we have to "eat" those whitespaces to correctly
+				// generate/calculate ReplaceEdits in handleCharsWithoutComments().
+				int end = i < array.length - 1 ? array[i + 1].getStart() : lastEmptyASTNodePosition;
+				// handleCharsWithoutComments() checks if lastPosition - offset ==
+				// replaceBuffer.length(), so don't "eat" too much whitespaces.
+				end = Math.min(lastPosition + replaceBuffer.length(), end);
+				int offset = array[i].getStart();
+				for (; offset < end; offset++) {
+					char currChar = '_';
+					try {
+						currChar = document.getChar(offset);
+					} catch (BadLocationException e) {
+						Logger.logException(e);
+					}
+					if (currChar != ' ' && currChar != '\t' && currChar != '\r' && currChar != '\n') {
+						break;
+					}
+				}
+				handleChars1(lastPosition, offset, oldIndentationLevel != indentationLevel, indentGap);
+				lastPosition = offset;
+			} else {
+				handleChars1(lastPosition, array[i].getStart(), oldIndentationLevel != indentationLevel, indentGap);
+				lastPosition = array[i].getEnd();
+			}
 
 			int oldBinaryExpressionLineWrapPolicy = binaryExpressionLineWrapPolicy;
 			int oldBinaryExpressionIndentGap = binaryExpressionIndentGap;
@@ -914,8 +949,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 			binaryExpressionLineWrapPolicy = oldBinaryExpressionLineWrapPolicy;
 			binaryExpressionIndentGap = oldBinaryExpressionIndentGap;
-
-			lastPosition = array[i].getEnd();
 
 			isFirst = false;
 		}
@@ -972,7 +1005,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 									replaceBuffer.length());
 							replaceBuffer.replace(position, replaceBuffer.length(), ""); //$NON-NLS-1$
 							isPrevSpace = replaceBuffer.length() > 0
-									? replaceBuffer.charAt(replaceBuffer.length() - 1) == SPACE : false;
+									? replaceBuffer.charAt(replaceBuffer.length() - 1) == SPACE
+									: false;
 							insertSpace();
 						} else {
 							insertSpace();
@@ -1361,7 +1395,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 								replaceBuffer.length());
 						replaceBuffer.replace(position, replaceBuffer.length(), ""); //$NON-NLS-1$
 						isPrevSpace = replaceBuffer.length() > 0
-								? replaceBuffer.charAt(replaceBuffer.length() - 1) == SPACE : false;
+								? replaceBuffer.charAt(replaceBuffer.length() - 1) == SPACE
+								: false;
 						insertSpace();
 						// } else {
 						// insertSpace();
@@ -2065,9 +2100,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	}
 
 	/**
-	 * Inserts "numberOfLines" newlines. When the "empty line indentation" rule
-	 * is enabled (and numberOfLines > 0), last empty line in replaceBuffer and
-	 * next (numberOfLines - 1) inserted empty lines will be indented.
+	 * Inserts "numberOfLines" newlines. When the "empty line indentation" rule is
+	 * enabled (and numberOfLines > 0), last empty line in replaceBuffer and next
+	 * (numberOfLines - 1) inserted empty lines will be indented.
 	 * 
 	 * @param numberOfLines
 	 *            number of newlines to insert
@@ -4038,9 +4073,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	 * 
 	 * @param inFixOperand
 	 * @param doFirstWrap
-	 *            true when the first line wrap can be done, false when a new
-	 *            line was already inserted and there is no need to add a
-	 *            "first" line wrap
+	 *            true when the first line wrap can be done, false when a new line
+	 *            was already inserted and there is no need to add a "first" line
+	 *            wrap
 	 * @return true if a new line was inserted, false otherwise
 	 */
 	public boolean indentInfixOperand(Expression inFixOperand, boolean doFirstWrap) {
@@ -4343,8 +4378,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		// XXX: variablesArray will contain one empty Variable object (i.e. with
 		// zero-length name) to represent empty list() statements.
 		Expression[] variablesArray = variables.toArray(new Expression[variables.size()]);
-		lastPosition = handleCommaList(variablesArray, lastPosition, this.preferences.insert_space_before_comma_in_list,
-				this.preferences.insert_space_after_comma_in_list, NO_LINE_WRAP, NO_LINE_WRAP_INDENT, false);
+		lastPosition = handleCommaList(variablesArray, lastPosition, listVariable.getEnd(),
+				this.preferences.insert_space_before_comma_in_list, this.preferences.insert_space_after_comma_in_list,
+				NO_LINE_WRAP, NO_LINE_WRAP_INDENT, false);
 
 		if (this.preferences.insert_space_before_closing_paren_in_list) {
 			if (variablesArray[variablesArray.length - 1].getLength() == 0
@@ -5363,8 +5399,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	/**
 	 * PHP Partitions can contain contiguous &lt;?php ?&gt; regions (see
-	 * {@link PHPStructuredTextPartitioner#computePartitioning(int, int)}), we
-	 * have to split them manually.
+	 * {@link PHPStructuredTextPartitioner#computePartitioning(int, int)}), we have
+	 * to split them manually.
 	 * 
 	 * @param partition
 	 *            PHP Partition
