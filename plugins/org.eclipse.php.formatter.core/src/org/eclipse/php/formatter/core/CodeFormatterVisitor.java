@@ -4501,7 +4501,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			insertSpace();
 		}
 		appendToBuffer(PostfixExpression.getOperator(postfixExpressions.getOperator()));
-		if (this.preferences.insert_space_before_prefix_expression) {
+		if (this.preferences.insert_space_after_postfix_expression) {
 			insertSpace();
 		}
 		// handle the chars between the variable to the value
