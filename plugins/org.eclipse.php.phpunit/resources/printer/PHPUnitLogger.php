@@ -23,8 +23,9 @@ if (class_exists('PHPUnit_Util_Printer')) {
     class_alias('PHPUnit_Framework_Error_Warning', 'Error_Warning');
     class_alias('PHPUnit_Framework_Error_Notice', 'Error_Notice');
     class_alias('PHPUnit_Framework_Error_Deprecated', 'Error_Deprecated');
+    list($version) = explode('.', PHPUnit_Runner_Version::id());
     
-    define('RUNNER_VERSION', 5);
+    define('_RUNNER_VERSION', (int)$version);
 } else {
     class_alias('PHPUnit\Util\Printer', 'Printer');
     class_alias('PHPUnit\Framework\TestListener', 'TestListener');
@@ -39,204 +40,443 @@ if (class_exists('PHPUnit_Util_Printer')) {
     class_alias('PHPUnit\Framework\Error\Warning', 'Error_Warning');
     class_alias('PHPUnit\Framework\Error\Notice', 'Error_Notice');
     class_alias('PHPUnit\Framework\Error\Deprecated', 'Error_Deprecated');
-    define('RUNNER_VERSION', 6);
+    list($version) = explode('.', PHPUnit\Runner\Version::id());
+    
+    define('_RUNNER_VERSION', (int)$version);
 }
-
-class PHPUnitLogger extends TextPrinter implements TestListener
-{
-
-    public function __construct($out = null)
+if (_RUNNER_VERSION  >= 7) {
+$logger = <<<'LOGGER'
+    class PHPUnitLogger extends TextPrinter implements TestListener
     {
-        parent::__construct('php://stdout', true);
-        switch (RUNNER_VERSION) {
-            case 5:
-                if (class_exists('PHPUnit_Framework_ExceptionWrapper')) {
-                    class_alias('PHPUnit_Framework_ExceptionWrapper', 'ExceptionWrapper');
-                }
-                if (class_exists('PHPUnit_Util_Blacklist')) {
-                    class_alias('PHPUnit_Util_Blacklist', 'Blacklist');
-                }
-                break;
-            case 6:
-                class_alias('PHPUnit\Framework\ExceptionWrapper', 'ExceptionWrapper');
-                class_alias('PHPUnit\\Util\\Blacklist', 'Blacklist');
-                break;
+        protected $loggers = [];
+        public function __construct($out = null)
+        {
+            parent::__construct('php://stdout', true);
+            class_alias('PHPUnit\Framework\ExceptionWrapper', 'ExceptionWrapper');
+            class_alias('PHPUnit\Util\Blacklist', 'Blacklist');
+            $this->loggers = array(
+                new PHPUnitEclipseLogger()
+            );
         }
-        $this->loggers = array(
-            new PHPUnitEclipseLogger()
-        );
-    }
-
-    public function setAutoFlush($autoFlush)
-    {
-        parent::setAutoFlush($autoFlush);
-        foreach ($this->loggers as $logger) {
-            $logger->setAutoFlush($autoFlush);
+        
+        public function setAutoFlush($autoFlush): void
+        {
+            parent::setAutoFlush($autoFlush);
+            foreach ($this->loggers as $logger) {
+                $logger->setAutoFlush($autoFlush);
+            }
         }
-    }
-
-    public function flush()
-    {
-        parent::flush();
-        foreach ($this->loggers as $logger) {
-            $logger->flush();
+        
+        public function flush(): void
+        {
+            parent::flush();
+            foreach ($this->loggers as $logger) {
+                $logger->flush();
+            }
         }
-    }
-
-    public function incrementalFlush()
-    {
-        parent::incrementalFlush();
-        foreach ($this->loggers as $logger) {
-            $logger->incrementalFlush();
+        
+        public function incrementalFlush(): void
+        {
+            parent::incrementalFlush();
+            foreach ($this->loggers as $logger) {
+                $logger->incrementalFlush();
+            }
         }
-    }
-
-    /**
-     * An error occurred.
-     *
-     * @param Test $test
-     * @param \Throwable $t
-     * @param float $time
-     */
-    public function addError(Test $test, \Exception $t, $time)
-    {
-        parent::addError($test, $t, $time);
-        foreach ($this->loggers as $logger) {
-            $logger->addError($test, $t, $time);
+        
+        public function addError(Test $test, Throwable $t, float $time): void 
+        {
+            parent::addError($test, $t, $time);
+            foreach ($this->loggers as $logger) {
+                $logger->addError($test, $t, $time);
+            }
         }
-    }
-
-    /**
-     * A warning occurred.
-     *
-     * @param Test $test
-     * @param Warning $e
-     * @param float $time
-     */
-    public function addWarning(Test $test, Warning $e, $time)
-    {
-        parent::addWarning($test, $e, $time);
-        foreach ($this->loggers as $logger) {
-            $logger->addWarning($test, $e, $time);
+        
+        public function addWarning(Test $test, Warning $e, $time): void
+        {
+            parent::addWarning($test, $e, $time);
+            foreach ($this->loggers as $logger) {
+                $logger->addWarning($test, $e, $time);
+            }
         }
-    }
-
-    /**
-     * A failure occurred.
-     *
-     * @param Test $test
-     * @param AssertionFailedError $e
-     * @param float $time
-     */
-    public function addFailure(Test $test, AssertionFailedError $e, $time)
-    {
-        parent::addFailure($test, $e, $time);
-        foreach ($this->loggers as $logger) {
-            $logger->addFailure($test, $e, $time);
+        
+        public function addFailure(Test $test, AssertionFailedError $e, $time): void
+        {
+            parent::addFailure($test, $e, $time);
+            foreach ($this->loggers as $logger) {
+                $logger->addFailure($test, $e, $time);
+            }
         }
-    }
-
-    /**
-     * Incomplete test.
-     *
-     * @param Test $test
-     * @param \Throwable $t
-     * @param float $time
-     */
-    public function addIncompleteTest(Test $test, \Exception $t, $time)
-    {
-        parent::addIncompleteTest($test, $t, $time);
-        foreach ($this->loggers as $logger) {
-            $logger->addIncompleteTest($test, $t, $time);
+        
+        public function addIncompleteTest(Test $test, Throwable $t, $time): void
+        {
+            parent::addIncompleteTest($test, $t, $time);
+            foreach ($this->loggers as $logger) {
+                $logger->addIncompleteTest($test, $t, $time);
+            }
         }
-    }
-
-    /**
-     * Risky test.
-     *
-     * @param Test $test
-     * @param \Throwable $t
-     * @param float $time
-     */
-    public function addRiskyTest(Test $test, \Exception $t, $time)
-    {
-        parent::addRiskyTest($test, $t, $time);
-        foreach ($this->loggers as $logger) {
-            $logger->addRiskyTest($test, $t, $time);
+        
+        public function addRiskyTest(Test $test, Throwable $t, $time): void
+        {
+            parent::addRiskyTest($test, $t, $time);
+            foreach ($this->loggers as $logger) {
+                $logger->addRiskyTest($test, $t, $time);
+            }
+        }
+        
+        public function addSkippedTest(Test $test, Throwable $t, $time): void
+        {
+            parent::addSkippedTest($test, $t, $time);
+            foreach ($this->loggers as $logger) {
+                $logger->addSkippedTest($test, $t, $time);
+            }
+        }
+        
+        public function startTestSuite(TestSuite $suite): void
+        {
+            parent::startTestSuite($suite);
+            foreach ($this->loggers as $logger) {
+                $logger->startTestSuite($suite);
+            }
+        }
+        
+        public function endTestSuite(TestSuite $suite): void
+        {
+            parent::endTestSuite($suite);
+            foreach ($this->loggers as $logger) {
+                $logger->endTestSuite($suite);
+            }
+        }
+        
+        public function startTest(Test $test): void
+        {
+            parent::startTest($test);
+            
+            foreach ($this->loggers as $logger) {
+                $logger->startTest($test);
+            }
+        }
+        
+        public function endTest(Test $test, $time): void
+        {
+            parent::endTest($test, $time);
+            foreach ($this->loggers as $logger) {
+                $logger->endTest($test, $time);
+            }
         }
     }
-
-    /**
-     * Skipped test.
-     *
-     * @param Test $test
-     * @param \Throwable $t
-     * @param float $time
-     */
-    public function addSkippedTest(Test $test, \Exception $t, $time)
+LOGGER;
+} elseif (_RUNNER_VERSION == 6) {
+$logger = <<<'LOGGER'
+    class PHPUnitLogger extends TextPrinter implements TestListener
     {
-        parent::addSkippedTest($test, $t, $time);
-        foreach ($this->loggers as $logger) {
-            $logger->addSkippedTest($test, $t, $time);
+        protected $loggers = [];
+        public function __construct($out = null)
+        {
+            parent::__construct('php://stdout', true);
+            
+            class_alias('PHPUnit\Framework\ExceptionWrapper', 'ExceptionWrapper');
+            class_alias('PHPUnit\Util\Blacklist', 'Blacklist');
+             
+            $this->loggers = array(
+                new PHPUnitEclipseLogger()
+            );
+        }
+        
+        public function setAutoFlush($autoFlush)
+        {
+            parent::setAutoFlush($autoFlush);
+            foreach ($this->loggers as $logger) {
+                $logger->setAutoFlush($autoFlush);
+            }
+        }
+        
+        public function flush()
+        {
+            parent::flush();
+            foreach ($this->loggers as $logger) {
+                $logger->flush();
+            }
+        }
+        
+        public function incrementalFlush()
+        {
+            parent::incrementalFlush();
+            foreach ($this->loggers as $logger) {
+                $logger->incrementalFlush();
+            }
+        }
+        
+        public function addError(Test $test, Exception $t, $time)
+        {
+            parent::addError($test, $t, $time);
+            foreach ($this->loggers as $logger) {
+                $logger->addError($test, $t, $time);
+            }
+        }
+        
+        public function addWarning(Test $test, Warning $e, $time)
+        {
+            parent::addWarning($test, $e, $time);
+            foreach ($this->loggers as $logger) {
+                $logger->addWarning($test, $e, $time);
+            }
+        }
+        
+        public function addFailure(Test $test, AssertionFailedError $e, $time)
+        {
+            parent::addFailure($test, $e, $time);
+            foreach ($this->loggers as $logger) {
+                $logger->addFailure($test, $e, $time);
+            }
+        }
+        
+        public function addIncompleteTest(Test $test, Exception $t, $time)
+        {
+            parent::addIncompleteTest($test, $t, $time);
+            foreach ($this->loggers as $logger) {
+                $logger->addIncompleteTest($test, $t, $time);
+            }
+        }
+        
+        public function addRiskyTest(Test $test, Exception $t, $time)
+        {
+            parent::addRiskyTest($test, $t, $time);
+            foreach ($this->loggers as $logger) {
+                $logger->addRiskyTest($test, $t, $time);
+            }
+        }
+        
+        public function addSkippedTest(Test $test, Exception $t, $time)
+        {
+            parent::addSkippedTest($test, $t, $time);
+            foreach ($this->loggers as $logger) {
+                $logger->addSkippedTest($test, $t, $time);
+            }
+        }
+        
+        public function startTestSuite(TestSuite $suite)
+        {
+            parent::startTestSuite($suite);
+            foreach ($this->loggers as $logger) {
+                $logger->startTestSuite($suite);
+            }
+        }
+        
+        public function endTestSuite(TestSuite $suite)
+        {
+            parent::endTestSuite($suite);
+            foreach ($this->loggers as $logger) {
+                $logger->endTestSuite($suite);
+            }
+        }
+        
+        public function startTest(Test $test)
+        {
+            parent::startTest($test);
+            
+            foreach ($this->loggers as $logger) {
+                $logger->startTest($test);
+            }
+        }
+        
+        public function endTest(Test $test, $time)
+        {
+            parent::endTest($test, $time);
+            foreach ($this->loggers as $logger) {
+                $logger->endTest($test, $time);
+            }
         }
     }
-
-    /**
-     * A test suite started.
-     *
-     * @param TestSuite $suite
-     */
-    public function startTestSuite(TestSuite $suite)
+LOGGER;
+} else {
+    $logger = <<<'LOGGER'
+    class PHPUnitLogger extends TextPrinter implements TestListener
     {
-        parent::startTestSuite($suite);
-        foreach ($this->loggers as $logger) {
-            $logger->startTestSuite($suite);
+        protected $loggers = [];
+        public function __construct($out = null)
+        {
+            parent::__construct('php://stdout', true);
+            if (class_exists('PHPUnit_Framework_ExceptionWrapper')) {
+                class_alias('PHPUnit_Framework_ExceptionWrapper', 'ExceptionWrapper');
+            }
+            $this->loggers = array(
+                new PHPUnitEclipseLogger()
+            );
+        }
+        
+        public function setAutoFlush($autoFlush)
+        {
+            parent::setAutoFlush($autoFlush);
+            foreach ($this->loggers as $logger) {
+                $logger->setAutoFlush($autoFlush);
+            }
+        }
+        
+        public function flush()
+        {
+            parent::flush();
+            foreach ($this->loggers as $logger) {
+                $logger->flush();
+            }
+        }
+        
+        public function incrementalFlush()
+        {
+            parent::incrementalFlush();
+            foreach ($this->loggers as $logger) {
+                $logger->incrementalFlush();
+            }
+        }
+        
+        /**
+         * An error occurred.
+         *
+         * @param Test $test
+         * @param \Throwable $t
+         * @param float $time
+         */
+        public function addError(Test $test, Exception $t, $time)
+        {
+            parent::addError($test, $t, $time);
+            foreach ($this->loggers as $logger) {
+                $logger->addError($test, $t, $time);
+            }
+        }
+        
+        /**
+         * A warning occurred.
+         *
+         * @param Test $test
+         * @param Warning $e
+         * @param float $time
+         */
+        public function addWarning(Test $test, Warning $e, $time)
+        {
+            parent::addWarning($test, $e, $time);
+            foreach ($this->loggers as $logger) {
+                $logger->addWarning($test, $e, $time);
+            }
+        }
+        
+        /**
+         * A failure occurred.
+         *
+         * @param Test $test
+         * @param AssertionFailedError $e
+         * @param float $time
+         */
+        public function addFailure(Test $test, AssertionFailedError $e, $time)
+        {
+            parent::addFailure($test, $e, $time);
+            foreach ($this->loggers as $logger) {
+                $logger->addFailure($test, $e, $time);
+            }
+        }
+        
+        /**
+         * Incomplete test.
+         *
+         * @param Test $test
+         * @param \Throwable $t
+         * @param float $time
+         */
+        public function addIncompleteTest(Test $test, Exception $t, $time)
+        {
+            parent::addIncompleteTest($test, $t, $time);
+            foreach ($this->loggers as $logger) {
+                $logger->addIncompleteTest($test, $t, $time);
+            }
+        }
+        
+        /**
+         * Risky test.
+         *
+         * @param Test $test
+         * @param \Throwable $t
+         * @param float $time
+         */
+        public function addRiskyTest(Test $test, Exception $t, $time)
+        {
+            parent::addRiskyTest($test, $t, $time);
+            foreach ($this->loggers as $logger) {
+                $logger->addRiskyTest($test, $t, $time);
+            }
+        }
+        
+        /**
+         * Skipped test.
+         *
+         * @param Test $test
+         * @param \Throwable $t
+         * @param float $time
+         */
+        public function addSkippedTest(Test $test, Exception $t, $time)
+        {
+            parent::addSkippedTest($test, $t, $time);
+            foreach ($this->loggers as $logger) {
+                $logger->addSkippedTest($test, $t, $time);
+            }
+        }
+        
+        /**
+         * A test suite started.
+         *
+         * @param TestSuite $suite
+         */
+        public function startTestSuite(TestSuite $suite)
+        {
+            parent::startTestSuite($suite);
+            foreach ($this->loggers as $logger) {
+                $logger->startTestSuite($suite);
+            }
+        }
+        
+        /**
+         * A test suite ended.
+         *
+         * @param TestSuite $suite
+         */
+        public function endTestSuite(TestSuite $suite)
+        {
+            parent::endTestSuite($suite);
+            foreach ($this->loggers as $logger) {
+                $logger->endTestSuite($suite);
+            }
+        }
+        
+        /**
+         * A test started.
+         *
+         * @param Test $test
+         */
+        public function startTest(Test $test)
+        {
+            parent::startTest($test);
+            
+            foreach ($this->loggers as $logger) {
+                $logger->startTest($test);
+            }
+        }
+        
+        /**
+         * A test ended.
+         *
+         * @param Test $test
+         * @param float $time
+         */
+        public function endTest(Test $test, $time)
+        {
+            parent::endTest($test, $time);
+            foreach ($this->loggers as $logger) {
+                $logger->endTest($test, $time);
+            }
         }
     }
-
-    /**
-     * A test suite ended.
-     *
-     * @param TestSuite $suite
-     */
-    public function endTestSuite(TestSuite $suite)
-    {
-        parent::endTestSuite($suite);
-        foreach ($this->loggers as $logger) {
-            $logger->endTestSuite($suite);
-        }
-    }
-
-    /**
-     * A test started.
-     *
-     * @param Test $test
-     */
-    public function startTest(Test $test)
-    {
-        parent::startTest($test);
-       
-        foreach ($this->loggers as $logger) {
-            $logger->startTest($test);
-        }
-    }
-
-    /**
-     * A test ended.
-     *
-     * @param Test $test
-     * @param float $time
-     */
-    public function endTest(Test $test, $time)
-    {
-        parent::endTest($test, $time);
-        foreach ($this->loggers as $logger) {
-            $logger->endTest($test, $time);
-        }
-    }
+LOGGER;
 }
-
-class PHPUnitEclipseLogger extends Printer implements TestListener
+// eval is evil but we need it to avoid syntax errors
+eval($logger);
+class PHPUnitEclipseLogger
 {
 
     private $status;
@@ -274,7 +514,7 @@ class PHPUnitEclipseLogger extends Printer implements TestListener
         $this->writeTest($test, 'start', true);
     }
 
-    public function addError(Test $test, \Exception $e, $time)
+    public function addError(Test $test, $e, $time)
     {
         $this->status = 'error';
         $this->exception = $e;
@@ -292,13 +532,13 @@ class PHPUnitEclipseLogger extends Printer implements TestListener
         $this->exception = $e;
     }
 
-    public function addIncompleteTest(Test $test, \Exception $e, $time)
+    public function addIncompleteTest(Test $test, $e, $time)
     {
         $this->status = 'incomplete';
         $this->exception = $e;
     }
 
-    public function addSkippedTest(Test $test, \Exception $e, $time)
+    public function addSkippedTest(Test $test, $e, $time)
     {
         $this->status = 'skip';
         $this->exception = $e;
@@ -316,12 +556,11 @@ class PHPUnitEclipseLogger extends Printer implements TestListener
         $this->writeTest($suite, 'end');
     }
 
-    public function addRiskyTest(Test $test, \Exception $e, $time)
+    public function addRiskyTest(Test $test, $e, $time)
     {}
 
     public function flush()
     {
-        parent::flush();
     }
 
     public function getWrappedTrace($e)
@@ -706,10 +945,10 @@ function filterTrace($trace)
         $blacklist = new Blacklist();
     }
     $prefix = false;
-    if (\defined('__PHPUNIT_PHAR_ROOT__')) {
+    if (defined('__PHPUNIT_PHAR_ROOT__')) {
         $prefix = __PHPUNIT_PHAR_ROOT__;
     }
-    $script = \realpath($GLOBALS['_SERVER']['SCRIPT_NAME']);
+    $script = realpath($GLOBALS['_SERVER']['SCRIPT_NAME']);
     foreach ($trace as $frame) {
         if (! isset($frame['file'])) {
             if (isset($frame['class']) && isset($frame['function'])) {
@@ -725,7 +964,7 @@ function filterTrace($trace)
                 }
             }
         }
-        if (($blacklist && $blacklist->isBlacklisted($frame['file'])) || ! ($prefix === false || \strpos($frame['file'], $prefix) !== 0) || ! is_file($frame['file']) || $frame['file'] === $script) {
+        if (($blacklist && $blacklist->isBlacklisted($frame['file'])) || ! ($prefix === false || strpos($frame['file'], $prefix) !== 0) || ! is_file($frame['file']) || $frame['file'] === $script) {
             continue;
         }
         $filteredFrame = array(
