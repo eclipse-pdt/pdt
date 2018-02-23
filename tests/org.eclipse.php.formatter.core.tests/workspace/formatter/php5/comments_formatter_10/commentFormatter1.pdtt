@@ -1,0 +1,16 @@
+--TEST--
+Bug 531574 - [formatter] avoid "double spaces" around expression operators
+--FILE--
+<?php
+$a =  - 4 +  - 9;
+$b = $a ++  /  -- $number;
+$c += 4;
+$value = true && false;
+?>
+--EXPECT--
+<?php
+$a = - 4 + - 9;
+$b = $a ++ / -- $number;
+$c += 4;
+$value = true && false;
+?>
