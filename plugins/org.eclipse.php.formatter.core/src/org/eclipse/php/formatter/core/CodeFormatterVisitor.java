@@ -210,14 +210,21 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	}
 
+	private void addToLineWidth(int nbChars) {
+		isPrevSpace = false;
+		lineWidth += nbChars;
+	}
+
 	// insert chars to the buffer
 	private void appendToBuffer(Object obj) {
 		isPrevSpace = false;
 		if (obj == null)
 			return;
 		replaceBuffer.append(obj);
-		if (!lineSeparator.equals(obj)) {
-			lineWidth += obj.toString().length();
+		if (lineSeparator.equals(obj)) {
+			lineWidth = 0;
+		} else {
+			addToLineWidth(obj.toString().length());
 		}
 	}
 
@@ -609,12 +616,12 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		int phpTagOpenIndex = -1;
 		if (!isComment && ((phpTagOpenIndex = content.indexOf("<?")) != -1 //$NON-NLS-1$
 				|| (phpTagOpenIndex = content.indexOf("<%")) != -1)) { //$NON-NLS-1$
+			// reset the isPrevSpace
+			isPrevSpace = false;
 			handleSplittedPHPBlock(offset + phpTagOpenIndex, end);
 		}
 
 		else {
-			// reset the isPrevSpace while replacing the chars
-			isPrevSpace = false;
 			int startLine = document.getLineOfOffset(offset);
 			int endLine = document.getLineOfOffset(end);
 			int emptyLines = 0;
@@ -708,6 +715,10 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			if (needToReplace && editsEnabled) {
 				insertString(offset, end, replaceBuffer.toString());
 			}
+			// keep isPrevSpace information, to correctly handle whitespaces
+			// around prefix and unary operators
+			isPrevSpace = replaceBuffer.length() > 0 ? replaceBuffer.charAt(replaceBuffer.length() - 1) == SPACE
+					: isPrevSpace;
 			if (recordCommentIndentVariables) {
 				recordCommentIndentVariables = false;
 				indentLengthForComment = lineWidth;
@@ -742,12 +753,12 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	 * @param array
 	 *            ASTNode array
 	 * @param lastPosition
-	 *            the position of the last ASTNode
+	 *            the position after last ASTNode
 	 * @param insertSpaceBeforeComma
 	 * @param insertSpaceAfterComma
-	 * @param b
-	 * @param k
-	 * @param j
+	 * @param lineWrapPolicy
+	 * @param indentGap
+	 * @param forceSplit
 	 * @return the last element end position
 	 */
 	private int handleCommaList(ASTNode[] array, int lastPosition, boolean insertSpaceBeforeComma,
@@ -972,7 +983,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 									replaceBuffer.length());
 							replaceBuffer.replace(position, replaceBuffer.length(), ""); //$NON-NLS-1$
 							isPrevSpace = replaceBuffer.length() > 0
-									? replaceBuffer.charAt(replaceBuffer.length() - 1) == SPACE : false;
+									? replaceBuffer.charAt(replaceBuffer.length() - 1) == SPACE
+									: false;
 							insertSpace();
 						} else {
 							insertSpace();
@@ -1014,7 +1026,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					if (indentationLevelDescending || blockEnd) {
 						for (int i = 0; i < preferences.indentationSize; i++) {
 							appendToBuffer(preferences.indentationChar);
-							lineWidth += (preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3;
+							addToLineWidth(
+									(preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3);
 						}
 					}
 				}
@@ -1361,7 +1374,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 								replaceBuffer.length());
 						replaceBuffer.replace(position, replaceBuffer.length(), ""); //$NON-NLS-1$
 						isPrevSpace = replaceBuffer.length() > 0
-								? replaceBuffer.charAt(replaceBuffer.length() - 1) == SPACE : false;
+								? replaceBuffer.charAt(replaceBuffer.length() - 1) == SPACE
+								: false;
 						insertSpace();
 						// } else {
 						// insertSpace();
@@ -1400,7 +1414,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						// level
 						for (int i = 0; i < preferences.indentationSize; i++) {
 							appendToBuffer(preferences.indentationChar);
-							lineWidth += (preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3;
+							addToLineWidth(
+									(preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3);
 						}
 					}
 				}
@@ -1623,7 +1638,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		if (indentationLevelDescending || blockEnd) {
 			for (int i = 0; i < preferences.indentationSize; i++) {
 				appendToBuffer(preferences.indentationChar);
-				lineWidth += (preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3;
+				addToLineWidth((preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3);
 			}
 		}
 	}
@@ -1787,7 +1802,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		insertNewLine();
 		if (indentLength >= 0) {
 			appendToBuffer(blanks);
-			lineWidth = lineWidth + (indentLength - blanks.length());
+			addToLineWidth(indentLength - blanks.length());
 		} else {
 			indent();
 		}
@@ -1861,7 +1876,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 							&& this.preferences.comment_indent_parameter_description) {
 						for (int i = 0; i < preferences.indentationSize; i++) {
 							appendToBuffer(preferences.indentationChar);
-							lineWidth += (preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3;
+							addToLineWidth(
+									(preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3);
 						}
 
 					}
@@ -1903,7 +1919,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			insertNewLine();
 			if (indentLength >= 0) {
 				appendToBuffer(blanks);
-				lineWidth = lineWidth + (indentLength - blanks.length());
+				addToLineWidth(indentLength - blanks.length());
 			} else {
 				indent();
 			}
@@ -1934,7 +1950,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						&& phpDocTag.getTagKind() == TagKind.PARAM) {
 					for (int i = 0; i < preferences.indentationSize; i++) {
 						appendToBuffer(preferences.indentationChar);
-						lineWidth += (preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3;
+						addToLineWidth((preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3);
 					}
 				}
 			}
@@ -2033,7 +2049,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			indentationLevelList.add(indentationLevel);
 			for (int i = 0; i < indentationLevel * preferences.indentationSize; i++) {
 				appendToBuffer(preferences.indentationChar);
-				lineWidth += (preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3;
+				addToLineWidth((preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3);
 			}
 		}
 	}
@@ -2048,8 +2064,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			int lineForEnd = document.getLineOfOffset(node.getEnd());
 
 			if (lineForStart == lineForEnd) {
-				lineWidth += node.getLength();
+				addToLineWidth(node.getLength());
 			} else {
+				isPrevSpace = false;
 				lineWidth = document.getLineLength(lineForEnd);
 			}
 		} catch (BadLocationException e) {
@@ -2060,14 +2077,13 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	private void insertNewLine() {
 		if (!isPHPEqualTag) {
 			appendToBuffer(lineSeparator);
-			lineWidth = 0;
 		}
 	}
 
 	/**
-	 * Inserts "numberOfLines" newlines. When the "empty line indentation" rule
-	 * is enabled (and numberOfLines > 0), last empty line in replaceBuffer and
-	 * next (numberOfLines - 1) inserted empty lines will be indented.
+	 * Inserts "numberOfLines" newlines. When the "empty line indentation" rule is
+	 * enabled (and numberOfLines > 0), last empty line in replaceBuffer and next
+	 * (numberOfLines - 1) inserted empty lines will be indented.
 	 * 
 	 * @param numberOfLines
 	 *            number of newlines to insert
@@ -2290,13 +2306,18 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		indentationLevelDescending = true;
 		handleChars(lastPosition, arrayAccess.getEnd() - 1);
-		lineWidth++;// we need to add the closing bracket/curly
+		addToLineWidth(1);// we need to add the closing bracket/curly
 
 		return false;
 	}
 
 	@Override
 	public boolean visit(ArrayCreation arrayCreation) {
+		if (arrayCreation.isHasArrayKey()) {
+			addToLineWidth(5); // 5 = "array".length()
+		} else {
+			addToLineWidth(1); // 1 = "[".length()
+		}
 		if (this.preferences.insert_space_before_opening_paren_in_array) {
 			insertSpace();
 		}
@@ -2330,7 +2351,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				wasBinaryExpressionWrapped = false;
 			}
 
-			lineWidth += 5;
 			int indentationGap = calculateIndentGap(this.preferences.line_wrap_expressions_in_array_init_indent_policy,
 					this.preferences.line_wrap_array_init_indentation);
 
@@ -2373,7 +2393,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		indentationLevelDescending = true;
 		handleChars(lastPosition, arrayCreation.getEnd() - 1);
-		lineWidth++;// we need to add the closing bracket/parenthesis
+		addToLineWidth(1);// we need to add the closing bracket/parenthesis
 
 		return false;
 	}
@@ -2725,7 +2745,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			handleChars(lastStatementEndOffset, end);
 			blockEnd = false;
 			if (block.isCurly()) {
-				lineWidth++;// closing curly
+				addToLineWidth(1);// closing curly
 			}
 		}
 		return false;
@@ -2746,7 +2766,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	@Override
 	public boolean visit(BreakStatement breakStatement) {
 		int lastPosition = breakStatement.getStart() + 5;
-		lineWidth += 5;
+		addToLineWidth(5);
 		Expression expression = breakStatement.getExpression();
 		if (expression != null) {
 			insertSpace();
@@ -2827,6 +2847,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(CatchClause catchClause) {
+		addToLineWidth(5);
 		// handle the chars between the 'catch' and the identifier start
 		// position
 		if (this.preferences.insert_space_before_opening_paren_in_catch) {
@@ -2836,7 +2857,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		if (this.preferences.insert_space_after_opening_paren_in_catch) {
 			insertSpace();
 		}
-		lineWidth += 5;
 		handleChars(catchClause.getStart() + 5, catchClause.getClassNames().get(0).getStart());
 
 		// handle the catch identifiers
@@ -3068,9 +3088,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(CloneExpression cloneExpression) {
-		insertSpace();
-		lineWidth += 5;// the 'clone'
+		addToLineWidth(5);// the 'clone'
 		// till the expression
+		insertSpace();
 		Expression expression = cloneExpression.getExpression();
 		handleChars(cloneExpression.getStart() + 5, expression.getStart());
 
@@ -3152,7 +3172,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	@Override
 	public boolean visit(ContinueStatement continueStatement) {
 		int lastPosition = continueStatement.getStart() + 8;
-		lineWidth += 8;
+		addToLineWidth(8);
 		Expression expression = continueStatement.getExpression();
 		if (expression != null) {
 			insertSpace();
@@ -3168,6 +3188,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(DeclareStatement declareStatement) {
+		addToLineWidth(7);
 		boolean isFirst = true;
 		if (this.preferences.insert_space_before_opening_paren_in_declare) {
 			insertSpace();
@@ -3177,7 +3198,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			insertSpace();
 		}
 		int lastPosition = declareStatement.getStart() + 7;
-		lineWidth += 7;
 		List<Identifier> directiveNameList = declareStatement.directiveNames();
 		Identifier[] directiveNames = new Identifier[directiveNameList.size()];
 		directiveNames = directiveNameList.toArray(directiveNames);
@@ -3227,7 +3247,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	@Override
 	public boolean visit(DoStatement doStatement) {
 		// do-while body
-		lineWidth += 2;
+		addToLineWidth(2);
 		Statement body = doStatement.getBody();
 		handleAction(doStatement.getStart() + 2, body, true);
 		if (preferences.control_statement_insert_newline_before_while_in_do) {
@@ -3248,7 +3268,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		if (positionOfWhile > lastPosition) {
 			// 5 = "while".length()
 			handleChars(lastPosition, positionOfWhile);
-			lineWidth += 5;
+			addToLineWidth(5);
 			handleChars(positionOfWhile + 5, positionOfWhile + 5);
 			lastPosition = positionOfWhile + 5;
 		} else {
@@ -3289,7 +3309,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		// check if short echo syntax (<?=)
 		if (expressions.length > 0 && echoStatement.getStart() != expressions[0].getStart()) {
 			lastPosition += 4;
-			lineWidth += 4;
+			addToLineWidth(4);
 			insertSpace();
 		}
 
@@ -3403,6 +3423,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(ForEachStatement forEachStatement) {
+		addToLineWidth(7);
 		if (this.preferences.insert_space_before_open_paren_in_foreach) {
 			insertSpace();
 		}
@@ -3410,7 +3431,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		if (this.preferences.insert_space_after_open_paren_in_foreach) {
 			insertSpace();
 		}
-		lineWidth += 7;
 		handleChars(forEachStatement.getStart() + 7, forEachStatement.getExpression().getStart());
 		// handle [as key => value] or just [as value]
 		forEachStatement.getExpression().accept(this);
@@ -3447,7 +3467,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		if (formalParameter.isMandatory()) {
 			// the word 'const'
 			lastPosition += 5;
-			lineWidth += 5;
+			addToLineWidth(5);
 		}
 
 		// handle type
@@ -3487,7 +3507,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	@Override
 	public boolean visit(ForStatement forStatement) {
 		int lastPosition = forStatement.getStart() + 3;
-		lineWidth += 3;
+		addToLineWidth(3);
 		if (this.preferences.insert_space_before_open_paren_in_for) {
 			insertSpace();
 		}
@@ -3717,6 +3737,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			return;
 		}
 
+		addToLineWidth(5); // 5 = "print".length()
 		insertSpace();
 
 		Expression functionName = functionInvocation.getFunctionName().getName();
@@ -3742,7 +3763,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	@Override
 	public boolean visit(GlobalStatement globalStatement) {
 		int lastPosition = globalStatement.getStart() + 6;
-		lineWidth += 6;// the word 'global'
+		addToLineWidth(6);// the word 'global'
 		insertSpace();
 
 		List<Variable> varList = globalStatement.variables();
@@ -3758,7 +3779,10 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(Identifier identifier) {
-		lineWidth += identifier.getLength();
+		// ListVariable can contain empty identifiers
+		if (identifier.getLength() > 0) {
+			addToLineWidth(identifier.getLength());
+		}
 		return false;
 	}
 
@@ -3774,6 +3798,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			return false;
 		}
 
+		addToLineWidth(len); // add the word 'if' OR 'elseif'
 		// handle the chars between the 'while' and the condition start position
 		if (this.preferences.insert_space_before_opening_paren_in_if) {
 			insertSpace();
@@ -3782,7 +3807,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		if (this.preferences.insert_space_after_opening_paren_in_if) {
 			insertSpace();
 		}
-		lineWidth += len; // add the word 'if' OR 'elseif'
 		handleChars(ifStatement.getStart() + len, ifStatement.getCondition().getStart());
 
 		// handle the if condition
@@ -4003,7 +4027,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		if (positionOfElse > lastPosition) {
 			// 4 = "else".length()
 			handleChars(lastPosition, positionOfElse);
-			lineWidth += 4;
+			addToLineWidth(4);
 			handleChars(positionOfElse + 4, positionOfElse + 4);
 			lastPosition = positionOfElse + 4;
 		} else {
@@ -4014,7 +4038,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(IgnoreError ignoreError) {
-		lineWidth++;// the '@' sign
+		addToLineWidth(1);// the '@' sign
 		ignoreError.getExpression().accept(this);
 		return false;
 	}
@@ -4025,7 +4049,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		int len = (include.getIncludeType() == Include.IT_INCLUDE || include.getIncludeType() == Include.IT_REQUIRE) ? 7
 				: 12;
 		lastPosition += len;
-		lineWidth += len;// add 'include' 'require' 'require_once'
+		addToLineWidth(len);// add 'include' 'require' 'require_once'
 
 		insertSpace();
 		handleChars(lastPosition, include.getExpression().getStart());
@@ -4038,9 +4062,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	 * 
 	 * @param inFixOperand
 	 * @param doFirstWrap
-	 *            true when the first line wrap can be done, false when a new
-	 *            line was already inserted and there is no need to add a
-	 *            "first" line wrap
+	 *            true when the first line wrap can be done, false when a new line
+	 *            was already inserted and there is no need to add a "first" line
+	 *            wrap
 	 * @return true if a new line was inserted, false otherwise
 	 */
 	public boolean indentInfixOperand(Expression inFixOperand, boolean doFirstWrap) {
@@ -4291,8 +4315,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(InterfaceDeclaration interfaceDeclaration) {
+		addToLineWidth(9);// interface
 		insertSpace();
-		lineWidth += 9;// interface
 		handleChars(interfaceDeclaration.getStart() + 9, interfaceDeclaration.getName().getStart());
 		interfaceDeclaration.getName().accept(this);
 
@@ -4329,6 +4353,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(ListVariable listVariable) {
+		addToLineWidth(4);
 		if (this.preferences.insert_space_before_opening_paren_in_list) {
 			insertSpace();
 		}
@@ -4338,7 +4363,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		}
 
 		int lastPosition = listVariable.getStart() + 4;
-		lineWidth += 4;
 		List<Expression> variables = listVariable.variables();
 		// XXX: variablesArray will contain one empty Variable object (i.e. with
 		// zero-length name) to represent empty list() statements.
@@ -4659,14 +4683,14 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(Reference reference) {
-		lineWidth++;// &$a
+		addToLineWidth(1);// &$a
 		reference.getExpression().accept(this);
 		return false;
 	}
 
 	@Override
 	public boolean visit(ReflectionVariable reflectionVariable) {
-		lineWidth++;// $$a
+		addToLineWidth(1);// $$a
 		reflectionVariable.getName().accept(this);
 		return false;
 	}
@@ -4674,7 +4698,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	@Override
 	public boolean visit(ReturnStatement returnStatement) {
 		int lastPosition = returnStatement.getStart() + 6;
-		lineWidth += 6;
+		addToLineWidth(6);
 
 		Expression expression = returnStatement.getExpression();
 		if (expression != null) {
@@ -4690,7 +4714,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(YieldExpression yieldExpression) {
-		lineWidth += 5;
+		addToLineWidth(5);
 		// handle [key => expr] or just [expr]
 		int lastPosition = yieldExpression.getStart() + 5;
 		insertSpace();
@@ -4776,7 +4800,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	@Override
 	public boolean visit(StaticStatement staticStatement) {
 		int lastPosition = staticStatement.getStart() + 6;
-		lineWidth += 6;
+		addToLineWidth(6);
 		insertSpace();
 
 		List<Expression> expList = staticStatement.expressions();
@@ -4796,14 +4820,14 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		// position/ first statement
 		int lastStatementEndOffset = 0;
 		if (switchCase.isDefault()) {
+			addToLineWidth(7);// the word 'default'
 			if (this.preferences.insert_space_after_switch_default) {
 				insertSpace();
 			}
 			lastStatementEndOffset = switchCase.getStart() + 7;
-			lineWidth += 7;// the word 'default'
 		} else {
+			addToLineWidth(4);// the word 'case'
 			insertSpace();
-			lineWidth += 4;// the word 'case'
 			handleChars(switchCase.getStart() + 4, switchCase.getValue().getStart());
 			switchCase.getValue().accept(this);
 			if (this.preferences.insert_space_after_switch_case_value) {
@@ -4848,6 +4872,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(SwitchStatement switchStatement) {
+		addToLineWidth(6);
 		// handle the chars between the 'switch' and the expr start position
 		if (this.preferences.insert_space_before_opening_paren_in_switch) {
 			insertSpace();
@@ -4856,7 +4881,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		if (this.preferences.insert_space_after_opening_paren_in_switch) {
 			insertSpace();
 		}
-		lineWidth += 6;
 		Expression expression = switchStatement.getExpression();
 		handleChars(switchStatement.getStart() + 6, expression.getStart());
 
@@ -4890,8 +4914,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(ThrowStatement throwStatement) {
+		addToLineWidth(5);
 		insertSpace();
-		lineWidth += 5;
 		Expression expr = throwStatement.getExpression();
 		handleChars(throwStatement.getStart() + 5, expr.getStart());
 
@@ -4904,9 +4928,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(TryStatement tryStatement) {
+		addToLineWidth(3);
 		boolean isIndentationAdded = handleBlockOpenBrace(this.preferences.brace_position_for_block,
 				this.preferences.insert_space_before_opening_brace_in_block);
-		lineWidth += 3;
 		Block body = tryStatement.getBody();
 		handleChars(tryStatement.getStart() + 3, body.getStart());
 		body.accept(this);
@@ -4968,7 +4992,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	@Override
 	public boolean visit(Variable variable) {
 		if (variable.isDollared()) {
-			lineWidth++;
+			addToLineWidth(1);
 		}
 		variable.getName().accept(this);
 		return false;
@@ -4976,6 +5000,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(WhileStatement whileStatement) {
+		addToLineWidth(5);
 		// handle the chars between the 'while' and the condition start position
 		if (this.preferences.insert_space_before_opening_paren_in_while) {
 			insertSpace();
@@ -4984,7 +5009,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		if (this.preferences.insert_space_after_opening_paren_in_while) {
 			insertSpace();
 		}
-		lineWidth += 5;
 		handleChars(whileStatement.getStart() + 5, whileStatement.getCondition().getStart());
 
 		// handle the while condition
@@ -5071,7 +5095,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	@Override
 	public boolean visit(UseStatement useStatement) {
 		int lastPosition = useStatement.getStart() + 3;
-		lineWidth += 3;// the word 'use'
+		addToLineWidth(3);// the word 'use'
 		insertSpace();
 
 		appendStatementType(useStatement.getStatementType());
@@ -5248,7 +5272,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	public boolean visit(TraitUseStatement node) {
 		if (node.getTraitList().size() > 0) {
 			// int lastPosition = node.getStart() + 3;
-			lineWidth += 3;// the word 'use'
+			addToLineWidth(3);// the word 'use'
 			insertSpace();
 			handleChars(node.getStart() + 3, node.getTraitList().get(0).getStart());
 		}
@@ -5363,8 +5387,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	/**
 	 * PHP Partitions can contain contiguous &lt;?php ?&gt; regions (see
-	 * {@link PHPStructuredTextPartitioner#computePartitioning(int, int)}), we
-	 * have to split them manually.
+	 * {@link PHPStructuredTextPartitioner#computePartitioning(int, int)}), we have
+	 * to split them manually.
 	 * 
 	 * @param partition
 	 *            PHP Partition
