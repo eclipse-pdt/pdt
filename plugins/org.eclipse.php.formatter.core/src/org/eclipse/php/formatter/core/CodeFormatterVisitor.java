@@ -747,6 +747,12 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	}
 
+	private int handleCommaList(ASTNode[] array, int lastPosition, boolean insertSpaceBeforeComma,
+			boolean insertSpaceAfterComma, int lineWrapPolicy, int indentGap, boolean forceSplit) {
+		return handleCommaList(array, lastPosition, -1, insertSpaceBeforeComma, insertSpaceAfterComma, lineWrapPolicy,
+				indentGap, forceSplit);
+	}
+
 	/**
 	 * handle comma list (e.g. 1,2,3)
 	 * 
@@ -754,6 +760,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	 *            ASTNode array
 	 * @param lastPosition
 	 *            the position after last ASTNode
+	 * @param lastEmptyASTNodePosition
 	 * @param insertSpaceBeforeComma
 	 * @param insertSpaceAfterComma
 	 * @param lineWrapPolicy
@@ -761,8 +768,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	 * @param forceSplit
 	 * @return the last element end position
 	 */
-	private int handleCommaList(ASTNode[] array, int lastPosition, boolean insertSpaceBeforeComma,
-			boolean insertSpaceAfterComma, int lineWrapPolicy, int indentGap, boolean forceSplit) {
+	private int handleCommaList(ASTNode[] array, int lastPosition, int lastEmptyASTNodePosition,
+			boolean insertSpaceBeforeComma, boolean insertSpaceAfterComma, int lineWrapPolicy, int indentGap,
+			boolean forceSplit) {
 		int oldIndentationLevel = indentationLevel;
 		boolean oldWasBinaryExpressionWrapped = wasBinaryExpressionWrapped;
 		if (array.length == 0) {
@@ -913,7 +921,34 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				wasBinaryExpressionWrapped = true;
 			}
 
-			handleChars1(lastPosition, array[i].getStart(), oldIndentationLevel != indentationLevel, indentGap);
+			if (lastEmptyASTNodePosition >= 0 && array[i].getLength() == 0) {
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=531468
+				// We have a (fake) empty ASTNode. By construction, whitespaces "around" empty
+				// ASTNodes are always located "after" ASTNode.getStart() (and
+				// ASTNode.getEnd()), so we have to "eat" those whitespaces to correctly
+				// generate/calculate ReplaceEdits in handleCharsWithoutComments().
+				int end = i < array.length - 1 ? array[i + 1].getStart() : lastEmptyASTNodePosition;
+				// handleCharsWithoutComments() checks if offset - lastPosition ==
+				// replaceBuffer.length(), so don't "eat" too much whitespaces.
+				end = Math.min(lastPosition + replaceBuffer.length(), end);
+				int offset = array[i].getStart();
+				for (; offset < end; offset++) {
+					char currChar = '_';
+					try {
+						currChar = document.getChar(offset);
+					} catch (BadLocationException e) {
+						Logger.logException(e);
+					}
+					if (currChar != ' ' && currChar != '\t' && currChar != '\r' && currChar != '\n') {
+						break;
+					}
+				}
+				handleChars1(lastPosition, offset, oldIndentationLevel != indentationLevel, indentGap);
+				lastPosition = offset;
+			} else {
+				handleChars1(lastPosition, array[i].getStart(), oldIndentationLevel != indentationLevel, indentGap);
+				lastPosition = array[i].getEnd();
+			}
 
 			int oldBinaryExpressionLineWrapPolicy = binaryExpressionLineWrapPolicy;
 			int oldBinaryExpressionIndentGap = binaryExpressionIndentGap;
@@ -925,8 +960,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 			binaryExpressionLineWrapPolicy = oldBinaryExpressionLineWrapPolicy;
 			binaryExpressionIndentGap = oldBinaryExpressionIndentGap;
-
-			lastPosition = array[i].getEnd();
 
 			isFirst = false;
 		}
@@ -4390,8 +4423,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		// XXX: variablesArray will contain one empty Variable object (i.e. with
 		// zero-length name) to represent empty list() statements.
 		Expression[] variablesArray = variables.toArray(new Expression[variables.size()]);
-		lastPosition = handleCommaList(variablesArray, lastPosition, this.preferences.insert_space_before_comma_in_list,
-				this.preferences.insert_space_after_comma_in_list, NO_LINE_WRAP, NO_LINE_WRAP_INDENT, false);
+		lastPosition = handleCommaList(variablesArray, lastPosition, listVariable.getEnd(),
+				this.preferences.insert_space_before_comma_in_list, this.preferences.insert_space_after_comma_in_list,
+				NO_LINE_WRAP, NO_LINE_WRAP_INDENT, false);
 
 		if (this.preferences.insert_space_before_closing_paren_in_list) {
 			if (variablesArray[variablesArray.length - 1].getLength() == 0

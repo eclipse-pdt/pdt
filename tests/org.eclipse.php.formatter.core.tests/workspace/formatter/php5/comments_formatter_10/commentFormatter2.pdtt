@@ -1,0 +1,12 @@
+--TEST--
+Bug 531468 - code formatter sometimes create unnecessary TextEdits
+--FILE--
+<?php
+list    (     ,      $a   ,   ,    )    = null;
+list     (  ,   $a   ,   ,    $a  ) = null;
+?>
+--EXPECT--
+<?php
+list ( , $a , , ) = null;
+list ( , $a , , $a ) = null;
+?>
