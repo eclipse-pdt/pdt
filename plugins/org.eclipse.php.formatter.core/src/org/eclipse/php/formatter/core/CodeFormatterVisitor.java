@@ -215,6 +215,22 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		lineWidth += nbChars;
 	}
 
+	private void removeFromLineWidth(int nbChars, boolean recalcLineWidth) {
+		lineWidth -= nbChars;
+		if (!recalcLineWidth && lineWidth < 0) {
+			lineWidth = 0;
+		}
+		replaceBuffer.replace(replaceBuffer.length() - nbChars, replaceBuffer.length(), ""); //$NON-NLS-1$
+		isPrevSpace = replaceBuffer.length() > 0 ? replaceBuffer.charAt(replaceBuffer.length() - 1) == SPACE : false;
+		if (recalcLineWidth) {
+			lineWidth = replaceBuffer.length();
+			int position = replaceBuffer.lastIndexOf(lineSeparator);
+			if (position >= 0) {
+				lineWidth -= position + lineSeparator.length();
+			}
+		}
+	}
+
 	// insert chars to the buffer
 	private void appendToBuffer(Object obj) {
 		isPrevSpace = false;
@@ -1006,25 +1022,18 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						|| !this.preferences.never_indent_line_comments_on_first_column;
 				if (startLine == commentStartLine) {
 					indentOnFirstColumn = false;
-					IRegion startLinereg = document.getLineInformation(startLine);
-					// TODO: Do line width calculation based on the
-					// formatted content instead of the original content
-					lineWidth = comment.sourceStart() + offset - startLinereg.getOffset();
 					if (position >= 0) {
 						if (getBufferFirstChar(position + lineSeparator.length()) == '\0') {
 							afterNewLine = replaceBuffer.substring(position + lineSeparator.length(),
 									replaceBuffer.length());
-							replaceBuffer.replace(position, replaceBuffer.length(), ""); //$NON-NLS-1$
-							isPrevSpace = replaceBuffer.length() > 0
-									? replaceBuffer.charAt(replaceBuffer.length() - 1) == SPACE
-									: false;
+							removeFromLineWidth(replaceBuffer.length() - position, true);
 							insertSpace();
 						} else {
 							insertSpace();
 						}
 					} else {
 						if (getBufferFirstChar(0) == '\0') {
-							replaceBuffer.setLength(0);
+							removeFromLineWidth(replaceBuffer.length(), false);
 							insertSpaces(1);
 						} else {
 							insertSpace();
@@ -1034,17 +1043,15 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					if (getBufferFirstChar(0) == '\0') {
 						if (position >= 0) {
 							if (getBufferFirstChar(position + lineSeparator.length()) == '\0') {
-								replaceBuffer.replace(position, replaceBuffer.length(), ""); //$NON-NLS-1$
+								removeFromLineWidth(replaceBuffer.length() - position, true);
 							}
 							insertNewLine();
 						} else {
-							replaceBuffer.setLength(0);
-							isPrevSpace = false;
-							lineWidth = 0;
+							removeFromLineWidth(replaceBuffer.length(), false);
 						}
 					} else {
 						if (position >= 0 && getBufferFirstChar(position + lineSeparator.length()) == '\0') {
-							replaceBuffer.replace(position, replaceBuffer.length(), ""); //$NON-NLS-1$
+							removeFromLineWidth(replaceBuffer.length() - position, true);
 						}
 						insertNewLine();
 						if (!isIndented && !commentIndentationStack.isEmpty()) {
@@ -1378,7 +1385,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					IRegion reg = document.getLineInformationOfOffset(end);
 					// TODO: Do line width calculation based on the
 					// formatted content instead of the original content
-					lineWidth = end - reg.getOffset();
+					lineWidth += end - Math.max(reg.getOffset(), comment.sourceStart() + offset);
 					resetEnableStatus(
 							document.get(comment.sourceStart() + offset, comment.sourceEnd() - comment.sourceStart()));
 					for (; iter.hasNext();) {
@@ -1396,26 +1403,19 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						|| !this.preferences.never_indent_block_comments_on_first_column;
 				if (startLine == commentStartLine) {
 					indentOnFirstColumn = false;
-					IRegion startLinereg = document.getLineInformation(startLine);
-					// TODO: Do line width calculation based on the
-					// formatted content instead of the original content
-					lineWidth = comment.sourceStart() + offset - startLinereg.getOffset();
 					if (position >= 0) {
 						// if (getBufferFirstChar(position
 						// + lineSeparator.length()) == '\0') {
 						afterNewLine = replaceBuffer.substring(position + lineSeparator.length(),
 								replaceBuffer.length());
-						replaceBuffer.replace(position, replaceBuffer.length(), ""); //$NON-NLS-1$
-						isPrevSpace = replaceBuffer.length() > 0
-								? replaceBuffer.charAt(replaceBuffer.length() - 1) == SPACE
-								: false;
+						removeFromLineWidth(replaceBuffer.length() - position, true);
 						insertSpace();
 						// } else {
 						// insertSpace();
 						// }
 					} else {
 						// if (getBufferFirstChar(0) == '\0') {
-						replaceBuffer.setLength(0);
+						removeFromLineWidth(replaceBuffer.length(), false);
 						insertSpaces(1);
 						// } else {
 						// insertSpace();
@@ -1425,17 +1425,13 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					if (position >= 0) {
 						// if (getBufferFirstChar(position
 						// + lineSeparator.length()) == '\0') {
-						replaceBuffer.replace(position + lineSeparator.length(), replaceBuffer.length(), ""); //$NON-NLS-1$
-						isPrevSpace = false;
-						lineWidth = 0;
+						removeFromLineWidth(replaceBuffer.length() - (position + lineSeparator.length()), true);
 						// } else {
 						// insertNewLine();
 						// }
 					} else {
 						// if (getBufferFirstChar(0) == '\0') {
-						replaceBuffer.setLength(0);
-						isPrevSpace = false;
-						lineWidth = 0;
+						removeFromLineWidth(replaceBuffer.length(), false);
 						// } else {
 						// insertNewLine();
 						// }
