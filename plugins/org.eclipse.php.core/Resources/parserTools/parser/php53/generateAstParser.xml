@@ -15,7 +15,7 @@
 		<uptodate
 			property="upToDate"
 			srcfile="php_ast_parser.cup"
-			targetfile="../../../../src/org/eclipse/php/internal/core/ast/scanner/php53/PHPAstParser.java" />
+			targetfile="../../../../gen/org/eclipse/php/internal/core/ast/scanner/php53/PHPAstParser.java" />
 	</target>
 
 	<target name="generateParser" depends="checkUpToDate" unless="upToDate">
@@ -37,11 +37,11 @@
 
 		<move
 			file="PHPAstParser.java"
-			todir="../../../../src/org/eclipse/php/internal/core/ast/scanner/php53" />
+			todir="../../../../gen/org/eclipse/php/internal/core/ast/scanner/php53" />
 
 		<move
 			file="ParserConstants.java"
-			todir="../../../../src/org/eclipse/php/internal/core/ast/scanner/php53" />
+			todir="../../../../gen/org/eclipse/php/internal/core/ast/scanner/php53" />
 
 	</target>
 

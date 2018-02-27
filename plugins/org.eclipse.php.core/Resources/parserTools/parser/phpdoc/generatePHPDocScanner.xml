@@ -16,7 +16,7 @@
 	<target name="checkUpToDate">
 		<uptodate
 			property="upToDate"
-			targetfile="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser/DocumentorLexer.java">
+			targetfile="../../../../gen/org/eclipse/php/internal/core/compiler/ast/parser/DocumentorLexer.java">
 			<srcfiles dir="." includes="documentor_compiler_ast_scanner.flex" />
 			<srcfiles dir="../../jflex" includes="common.skeleton" />
 		</uptodate>
@@ -26,7 +26,7 @@
 		<java jar="${jflexJar}" fork="true">
 			<arg value="--legacydot" />
 			<arg value="-d" />
-			<arg value="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser" />
+			<arg value="../../../../gen/org/eclipse/php/internal/core/compiler/ast/parser" />
 			<arg value="-skel" />
 			<arg value="../../jflex/common.skeleton" />
 			<arg value="-nobak" />

@@ -17,7 +17,7 @@
 		<test.proxy />
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-		<sonar.exclusions>**/parser/*/CompilerAstParser.java,**/parser/DocumentorLexer.java,**/scanner/*/PHPAstLexer.java,**/scanner/*/PHPAstParser.java,**/scanner/*/ParserConstants.java,**/documentModel/parser/PHPTokenizer.java,**/parser/*/PHPLexer.java,**/*Messages.java,**/parser/*/CompilerParserConstants.java</sonar.exclusions>
+		<sonar.exclusions>**/gen/**,**/*Messages.java</sonar.exclusions>
 		<sonar.jacoco.reportPath>../../target/jacoco.exec</sonar.jacoco.reportPath>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git</tycho.scmUrl>
