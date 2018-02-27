@@ -188,9 +188,18 @@ import org.eclipse.php.core.compiler.ast.nodes.Scalar;
 			sBuffer.append(oldString);
 		}
 		String sb = new String(zzBuffer, startPos, zzMarkedPos - startPos);
-		addText(sb);
+		if (oldString != null) {
+			addText(oldString, sb);
+		} else {
+			addText(sb);
+		}
 		sBuffer.append(sb);
 		updateStartPos();
+	}
+
+	private void addText(String oldString, String string) {
+		textList.add(new Scalar(startPos - _zzPushbackPos - oldString.length(), startPos - _zzPushbackPos + string.length(), oldString + string,
+				Scalar.TYPE_STRING));
 	}
 
 	private void addText(String string) {
