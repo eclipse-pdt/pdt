@@ -16,7 +16,7 @@
 	<target name="checkUpToDate">
 		<uptodate
 			property="upToDate"
-			targetfile="../../../../src/org/eclipse/php/internal/core/documentModel/parser/php55/PHPLexer.java">
+			targetfile="../../../../gen/org/eclipse/php/internal/core/documentModel/parser/php55/PHPLexer.java">
 			<srcfiles dir="." includes="highlighting_scanner.jflex" />
 			<srcfiles dir="../../jflex" includes="common.skeleton" />
 		</uptodate>
@@ -26,7 +26,7 @@
 		<java jar="${jflexJar}" fork="true">
 			<arg value="--legacydot" />
 			<arg value="-d" />
-			<arg value="../../../../src/org/eclipse/php/internal/core/documentModel/parser/php55" />
+			<arg value="../../../../gen/org/eclipse/php/internal/core/documentModel/parser/php55" />
 			<arg value="-skel" />
 			<arg value="../../jflex/common.skeleton" />
 			<arg value="-nobak" />

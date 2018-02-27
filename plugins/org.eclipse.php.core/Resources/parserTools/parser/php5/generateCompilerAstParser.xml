@@ -15,7 +15,7 @@
 		<uptodate
 			property="upToDate"
 			srcfile="php_compiler_ast_parser.cup"
-			targetfile="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser/php5/CompilerAstParser.java" />
+			targetfile="../../../../gen/org/eclipse/php/internal/core/compiler/ast/parser/php5/CompilerAstParser.java" />
 	</target>
 
 	<target name="generateParser" depends="checkUpToDate" unless="upToDate">
@@ -40,9 +40,9 @@
 			token="extends java_cup.runtime.lr_parser"
 			value="extends AbstractASTParser"/>
 
-		<move file="CompilerAstParser.java" todir="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser/php5/" />
+		<move file="CompilerAstParser.java" todir="../../../../gen/org/eclipse/php/internal/core/compiler/ast/parser/php5/" />
 
-		<move file="CompilerParserConstants.java" todir="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser/php5" />
+		<move file="CompilerParserConstants.java" todir="../../../../gen/org/eclipse/php/internal/core/compiler/ast/parser/php5" />
 
 	</target>
 
