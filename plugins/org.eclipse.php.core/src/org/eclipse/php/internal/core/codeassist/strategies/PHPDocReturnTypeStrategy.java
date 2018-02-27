@@ -39,7 +39,8 @@ public class PHPDocReturnTypeStrategy extends TypesStrategy {
 
 			// additional not specified in phpDoc manual
 			"NULL", //$NON-NLS-1$
-			"double" //$NON-NLS-1$
+			"double", //$NON-NLS-1$
+			"callback" //$NON-NLS-1$
 	};
 
 	// https://phpdoc.org/docs/latest/guides/types.html#keywords
