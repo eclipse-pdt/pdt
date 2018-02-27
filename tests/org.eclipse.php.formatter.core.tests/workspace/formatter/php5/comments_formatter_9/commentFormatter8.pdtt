@@ -1,0 +1,462 @@
+--TEST--
+Bug 531737 - Big PHPDoc comments are sometimes incomplete after code formatting
+--FILE--
+<?php
+
+
+/**
+ * Base class that represents a query for the 'MYTABLE1' table.
+ *
+ *
+ *
+ * @method MYTABLE1Query orderByspss($order = Criteria::ASC) Order by the spss column
+ * @method MYTABLE1Query orderBysp1($order = Criteria::ASC) Order by the sp1 column
+ * @method MYTABLE1Query orderBysp2($order = Criteria::ASC) Order by the sp2 column
+ * @method MYTABLE1Query orderBysp3($order = Criteria::ASC) Order by the sp3 column
+ * @method MYTABLE1Query orderBysp4($order = Criteria::ASC) Order by the sp4 column
+ * @method MYTABLE1Query orderBysp5($order = Criteria::ASC) Order by the sp5 column
+ * @method MYTABLE1Query orderBysp6($order = Criteria::ASC) Order by the sp6 column
+ * @method MYTABLE1Query orderBysp7($order = Criteria::ASC) Order by the sp7 column
+ * @method MYTABLE1Query orderBysp8($order = Criteria::ASC) Order by the sp8 column
+ * @method MYTABLE1Query orderBysptaux($order = Criteria::ASC) Order by the sptaux column
+ * @method MYTABLE1Query orderByspbase($order = Criteria::ASC) Order by the spbase column
+ * @method MYTABLE1Query orderByspdatref($order = Criteria::ASC) Order by the spdatref column
+ * @method MYTABLE1Query orderByspnom1($order = Criteria::ASC) Order by the spnom1 column
+ * @method MYTABLE1Query orderByspnais1($order = Criteria::ASC) Order by the spnais1 column
+ * @method MYTABLE1Query orderByspnom2($order = Criteria::ASC) Order by the spnom2 column
+ * @method MYTABLE1Query orderByspnais2($order = Criteria::ASC) Order by the spnais2 column
+ * @method MYTABLE1Query orderByspnom3($order = Criteria::ASC) Order by the spnom3 column
+ * @method MYTABLE1Query orderByspnais3($order = Criteria::ASC) Order by the spnais3 column
+ * @method MYTABLE1Query orderByspnom4($order = Criteria::ASC) Order by the spnom4 column
+ * @method MYTABLE1Query orderByspnais4($order = Criteria::ASC) Order by the spnais4 column
+ * @method MYTABLE1Query orderByspnom5($order = Criteria::ASC) Order by the spnom5 column
+ * @method MYTABLE1Query orderByspnais5($order = Criteria::ASC) Order by the spnais5 column
+ * @method MYTABLE1Query orderByspnom30($order = Criteria::ASC) Order by the spnom30 column
+ * @method MYTABLE1Query orderByspnomass($order = Criteria::ASC) Order by the spnomass column
+ * @method MYTABLE1Query orderBysppth($order = Criteria::ASC) Order by the sppth column
+ * @method MYTABLE1Query orderByspcart($order = Criteria::ASC) Order by the spcart column
+ * @method MYTABLE1Query orderByspchq($order = Criteria::ASC) Order by the spchq column
+ * @method MYTABLE1Query orderByspates($order = Criteria::ASC) Order by the spates column
+ * @method MYTABLE1Query orderByspindiv($order = Criteria::ASC) Order by the spindiv column
+ * @method MYTABLE1Query orderByspcontrat($order = Criteria::ASC) Order by the spcontrat column
+ * @method MYTABLE1Query orderByspaff($order = Criteria::ASC) Order by the spaff column
+ * @method MYTABLE1Query orderByspnom6($order = Criteria::ASC) Order by the spnom6 column
+ * @method MYTABLE1Query orderByspnais6($order = Criteria::ASC) Order by the spnais6 column
+ * @method MYTABLE1Query orderByspnom7($order = Criteria::ASC) Order by the spnom7 column
+ * @method MYTABLE1Query orderByspnais7($order = Criteria::ASC) Order by the spnais7 column
+ * @method MYTABLE1Query orderByspnom8($order = Criteria::ASC) Order by the spnom8 column
+ * @method MYTABLE1Query orderByspnais8($order = Criteria::ASC) Order by the spnais8 column
+ * @method MYTABLE1Query orderByspnom9($order = Criteria::ASC) Order by the spnom9 column
+ * @method MYTABLE1Query orderByspnais9($order = Criteria::ASC) Order by the spnais9 column
+ * @method MYTABLE1Query orderByspnom10($order = Criteria::ASC) Order by the spnom10 column
+ * @method MYTABLE1Query orderByspnais10($order = Criteria::ASC) Order by the spnais10 column
+ * @method MYTABLE1Query orderByspdeff($order = Criteria::ASC) Order by the spdeff column
+ * @method MYTABLE1Query orderByspmil($order = Criteria::ASC) Order by the spmil column
+ * @method MYTABLE1Query orderByspclea($order = Criteria::ASC) Order by the spclea column
+ * @method MYTABLE1Query orderByspclec($order = Criteria::ASC) Order by the spclec column
+ * @method MYTABLE1Query orderByspdroit($order = Criteria::ASC) Order by the spdroit column
+ * @method MYTABLE1Query orderByspnomc($order = Criteria::ASC) Order by the spnomc column
+ * @method MYTABLE1Query orderByspemet($order = Criteria::ASC) Order by the spemet column
+ * @method MYTABLE1Query orderByspaff2($order = Criteria::ASC) Order by the spaff2 column
+ * @method MYTABLE1Query orderByspdeb($order = Criteria::ASC) Order by the spdeb column
+ * @method MYTABLE1Query orderByspfin($order = Criteria::ASC) Order by the spfin column
+ * @method MYTABLE1Query orderById($order = Criteria::ASC) Order by the id column
+ *
+ * @method MYTABLE1Query groupByspss() Group by the spss column
+ * @method MYTABLE1Query groupBysp1() Group by the sp1 column
+ * @method MYTABLE1Query groupBysp2() Group by the sp2 column
+ * @method MYTABLE1Query groupBysp3() Group by the sp3 column
+ * @method MYTABLE1Query groupBysp4() Group by the sp4 column
+ * @method MYTABLE1Query groupBysp5() Group by the sp5 column
+ * @method MYTABLE1Query groupBysp6() Group by the sp6 column
+ * @method MYTABLE1Query groupBysp7() Group by the sp7 column
+ * @method MYTABLE1Query groupBysp8() Group by the sp8 column
+ * @method MYTABLE1Query groupBysptaux() Group by the sptaux column
+ * @method MYTABLE1Query groupByspbase() Group by the spbase column
+ * @method MYTABLE1Query groupByspdatref() Group by the spdatref column
+ * @method MYTABLE1Query groupByspnom1() Group by the spnom1 column
+ * @method MYTABLE1Query groupByspnais1() Group by the spnais1 column
+ * @method MYTABLE1Query groupByspnom2() Group by the spnom2 column
+ * @method MYTABLE1Query groupByspnais2() Group by the spnais2 column
+ * @method MYTABLE1Query groupByspnom3() Group by the spnom3 column
+ * @method MYTABLE1Query groupByspnais3() Group by the spnais3 column
+ * @method MYTABLE1Query groupByspnom4() Group by the spnom4 column
+ * @method MYTABLE1Query groupByspnais4() Group by the spnais4 column
+ * @method MYTABLE1Query groupByspnom5() Group by the spnom5 column
+ * @method MYTABLE1Query groupByspnais5() Group by the spnais5 column
+ * @method MYTABLE1Query groupByspnom30() Group by the spnom30 column
+ * @method MYTABLE1Query groupByspnomass() Group by the spnomass column
+ * @method MYTABLE1Query groupBysppth() Group by the sppth column
+ * @method MYTABLE1Query groupByspcart() Group by the spcart column
+ * @method MYTABLE1Query groupByspchq() Group by the spchq column
+ * @method MYTABLE1Query groupByspates() Group by the spates column
+ * @method MYTABLE1Query groupByspindiv() Group by the spindiv column
+ * @method MYTABLE1Query groupByspcontrat() Group by the spcontrat column
+ * @method MYTABLE1Query groupByspaff() Group by the spaff column
+ * @method MYTABLE1Query groupByspnom6() Group by the spnom6 column
+ * @method MYTABLE1Query groupByspnais6() Group by the spnais6 column
+ * @method MYTABLE1Query groupByspnom7() Group by the spnom7 column
+ * @method MYTABLE1Query groupByspnais7() Group by the spnais7 column
+ * @method MYTABLE1Query groupByspnom8() Group by the spnom8 column
+ * @method MYTABLE1Query groupByspnais8() Group by the spnais8 column
+ * @method MYTABLE1Query groupByspnom9() Group by the spnom9 column
+ * @method MYTABLE1Query groupByspnais9() Group by the spnais9 column
+ * @method MYTABLE1Query groupByspnom10() Group by the spnom10 column
+ * @method MYTABLE1Query groupByspnais10() Group by the spnais10 column
+ * @method MYTABLE1Query groupByspdeff() Group by the spdeff column
+ * @method MYTABLE1Query groupByspmil() Group by the spmil column
+ * @method MYTABLE1Query groupByspclea() Group by the spclea column
+ * @method MYTABLE1Query groupByspclec() Group by the spclec column
+ * @method MYTABLE1Query groupByspdroit() Group by the spdroit column
+ * @method MYTABLE1Query groupByspnomc() Group by the spnomc column
+ * @method MYTABLE1Query groupByspemet() Group by the spemet column
+ * @method MYTABLE1Query groupByspaff2() Group by the spaff2 column
+ * @method MYTABLE1Query groupByspdeb() Group by the spdeb column
+ * @method MYTABLE1Query groupByspfin() Group by the spfin column
+ * @method MYTABLE1Query groupById() Group by the id column
+ *
+ * @method MYTABLE1Query leftJoin($relation) Adds a LEFT JOIN clause to the query
+ * @method MYTABLE1Query rightJoin($relation) Adds a RIGHT JOIN clause to the query
+ * @method MYTABLE1Query innerJoin($relation) Adds a INNER JOIN clause to the query
+ *
+ * @method MYTABLE1 findOne(PropelPDO $con = null) Return the first MYTABLE1 matching the query
+ * @method MYTABLE1 findOneOrCreate(PropelPDO $con = null) Return the first MYTABLE1 matching the query, or a new MYTABLE1 object populated from the query conditions when no match is found
+ *
+ * @method MYTABLE1 findOneByspss(string $spss) Return the first MYTABLE1 filtered by the spss column
+ * @method MYTABLE1 findOneBysp1(string $sp1) Return the first MYTABLE1 filtered by the sp1 column
+ * @method MYTABLE1 findOneBysp2(string $sp2) Return the first MYTABLE1 filtered by the sp2 column
+ * @method MYTABLE1 findOneBysp3(string $sp3) Return the first MYTABLE1 filtered by the sp3 column
+ * @method MYTABLE1 findOneBysp4(string $sp4) Return the first MYTABLE1 filtered by the sp4 column
+ * @method MYTABLE1 findOneBysp5(string $sp5) Return the first MYTABLE1 filtered by the sp5 column
+ * @method MYTABLE1 findOneBysp6(string $sp6) Return the first MYTABLE1 filtered by the sp6 column
+ * @method MYTABLE1 findOneBysp7(string $sp7) Return the first MYTABLE1 filtered by the sp7 column
+ * @method MYTABLE1 findOneBysp8(string $sp8) Return the first MYTABLE1 filtered by the sp8 column
+ * @method MYTABLE1 findOneBysptaux(string $sptaux) Return the first MYTABLE1 filtered by the sptaux column
+ * @method MYTABLE1 findOneByspbase(string $spbase) Return the first MYTABLE1 filtered by the spbase column
+ * @method MYTABLE1 findOneByspdatref(string $spdatref) Return the first MYTABLE1 filtered by the spdatref column
+ * @method MYTABLE1 findOneByspnom1(string $spnom1) Return the first MYTABLE1 filtered by the spnom1 column
+ * @method MYTABLE1 findOneByspnais1(string $spnais1) Return the first MYTABLE1 filtered by the spnais1 column
+ * @method MYTABLE1 findOneByspnom2(string $spnom2) Return the first MYTABLE1 filtered by the spnom2 column
+ * @method MYTABLE1 findOneByspnais2(string $spnais2) Return the first MYTABLE1 filtered by the spnais2 column
+ * @method MYTABLE1 findOneByspnom3(string $spnom3) Return the first MYTABLE1 filtered by the spnom3 column
+ * @method MYTABLE1 findOneByspnais3(string $spnais3) Return the first MYTABLE1 filtered by the spnais3 column
+ * @method MYTABLE1 findOneByspnom4(string $spnom4) Return the first MYTABLE1 filtered by the spnom4 column
+ * @method MYTABLE1 findOneByspnais4(string $spnais4) Return the first MYTABLE1 filtered by the spnais4 column
+ * @method MYTABLE1 findOneByspnom5(string $spnom5) Return the first MYTABLE1 filtered by the spnom5 column
+ * @method MYTABLE1 findOneByspnais5(string $spnais5) Return the first MYTABLE1 filtered by the spnais5 column
+ * @method MYTABLE1 findOneByspnom30(string $spnom30) Return the first MYTABLE1 filtered by the spnom30 column
+ * @method MYTABLE1 findOneByspnomass(string $spnomass) Return the first MYTABLE1 filtered by the spnomass column
+ * @method MYTABLE1 findOneBysppth(string $sppth) Return the first MYTABLE1 filtered by the sppth column
+ * @method MYTABLE1 findOneByspcart(string $spcart) Return the first MYTABLE1 filtered by the spcart column
+ * @method MYTABLE1 findOneByspchq(string $spchq) Return the first MYTABLE1 filtered by the spchq column
+ * @method MYTABLE1 findOneByspates(string $spates) Return the first MYTABLE1 filtered by the spates column
+ * @method MYTABLE1 findOneByspindiv(string $spindiv) Return the first MYTABLE1 filtered by the spindiv column
+ * @method MYTABLE1 findOneByspcontrat(string $spcontrat) Return the first MYTABLE1 filtered by the spcontrat column
+ * @method MYTABLE1 findOneByspaff(string $spaff) Return the first MYTABLE1 filtered by the spaff column
+ * @method MYTABLE1 findOneByspnom6(string $spnom6) Return the first MYTABLE1 filtered by the spnom6 column
+ * @method MYTABLE1 findOneByspnais6(string $spnais6) Return the first MYTABLE1 filtered by the spnais6 column
+ * @method MYTABLE1 findOneByspnom7(string $spnom7) Return the first MYTABLE1 filtered by the spnom7 column
+ * @method MYTABLE1 findOneByspnais7(string $spnais7) Return the first MYTABLE1 filtered by the spnais7 column
+ * @method MYTABLE1 findOneByspnom8(string $spnom8) Return the first MYTABLE1 filtered by the spnom8 column
+ * @method MYTABLE1 findOneByspnais8(string $spnais8) Return the first MYTABLE1 filtered by the spnais8 column
+ * @method MYTABLE1 findOneByspnom9(string $spnom9) Return the first MYTABLE1 filtered by the spnom9 column
+ * @method MYTABLE1 findOneByspnais9(string $spnais9) Return the first MYTABLE1 filtered by the spnais9 column
+ * @method MYTABLE1 findOneByspnom10(string $spnom10) Return the first MYTABLE1 filtered by the spnom10 column
+ * @method MYTABLE1 findOneByspnais10(string $spnais10) Return the first MYTABLE1 filtered by the spnais10 column
+ * @method MYTABLE1 findOneByspdeff(string $spdeff) Return the first MYTABLE1 filtered by the spdeff column
+ * @method MYTABLE1 findOneByspmil(string $spmil) Return the first MYTABLE1 filtered by the spmil column
+ * @method MYTABLE1 findOneByspclea(string $spclea) Return the first MYTABLE1 filtered by the spclea column
+ * @method MYTABLE1 findOneByspclec(string $spclec) Return the first MYTABLE1 filtered by the spclec column
+ * @method MYTABLE1 findOneByspdroit(string $spdroit) Return the first MYTABLE1 filtered by the spdroit column
+ * @method MYTABLE1 findOneByspnomc(string $spnomc) Return the first MYTABLE1 filtered by the spnomc column
+ * @method MYTABLE1 findOneByspemet(string $spemet) Return the first MYTABLE1 filtered by the spemet column
+ * @method MYTABLE1 findOneByspaff2(string $spaff2) Return the first MYTABLE1 filtered by the spaff2 column
+ * @method MYTABLE1 findOneByspdeb(string $spdeb) Return the first MYTABLE1 filtered by the spdeb column
+ * @method MYTABLE1 findOneByspfin(string $spfin) Return the first MYTABLE1 filtered by the spfin column
+ *
+ * @method array findByspss(string $spss) Return MYTABLE1 objects filtered by the spss column
+ * @method array findBysp1(string $sp1) Return MYTABLE1 objects filtered by the sp1 column
+ * @method array findBysp2(string $sp2) Return MYTABLE1 objects filtered by the sp2 column
+ * @method array findBysp3(string $sp3) Return MYTABLE1 objects filtered by the sp3 column
+ * @method array findBysp4(string $sp4) Return MYTABLE1 objects filtered by the sp4 column
+ * @method array findBysp5(string $sp5) Return MYTABLE1 objects filtered by the sp5 column
+ * @method array findBysp6(string $sp6) Return MYTABLE1 objects filtered by the sp6 column
+ * @method array findBysp7(string $sp7) Return MYTABLE1 objects filtered by the sp7 column
+ * @method array findBysp8(string $sp8) Return MYTABLE1 objects filtered by the sp8 column
+ * @method array findBysptaux(string $sptaux) Return MYTABLE1 objects filtered by the sptaux column
+ * @method array findByspbase(string $spbase) Return MYTABLE1 objects filtered by the spbase column
+ * @method array findByspdatref(string $spdatref) Return MYTABLE1 objects filtered by the spdatref column
+ * @method array findByspnom1(string $spnom1) Return MYTABLE1 objects filtered by the spnom1 column
+ * @method array findByspnais1(string $spnais1) Return MYTABLE1 objects filtered by the spnais1 column
+ * @method array findByspnom2(string $spnom2) Return MYTABLE1 objects filtered by the spnom2 column
+ * @method array findByspnais2(string $spnais2) Return MYTABLE1 objects filtered by the spnais2 column
+ * @method array findByspnom3(string $spnom3) Return MYTABLE1 objects filtered by the spnom3 column
+ * @method array findByspnais3(string $spnais3) Return MYTABLE1 objects filtered by the spnais3 column
+ * @method array findByspnom4(string $spnom4) Return MYTABLE1 objects filtered by the spnom4 column
+ * @method array findByspnais4(string $spnais4) Return MYTABLE1 objects filtered by the spnais4 column
+ * @method array findByspnom5(string $spnom5) Return MYTABLE1 objects filtered by the spnom5 column
+ * @method array findByspnais5(string $spnais5) Return MYTABLE1 objects filtered by the spnais5 column
+ * @method array findByspnom30(string $spnom30) Return MYTABLE1 objects filtered by the spnom30 column
+ * @method array findByspnomass(string $spnomass) Return MYTABLE1 objects filtered by the spnomass column
+ * @method array findBysppth(string $sppth) Return MYTABLE1 objects filtered by the sppth column
+ * @method array findByspcart(string $spcart) Return MYTABLE1 objects filtered by the spcart column
+ * @method array findByspchq(string $spchq) Return MYTABLE1 objects filtered by the spchq column
+ * @method array findByspates(string $spates) Return MYTABLE1 objects filtered by the spates column
+ * @method array findByspindiv(string $spindiv) Return MYTABLE1 objects filtered by the spindiv column
+ * @method array findByspcontrat(string $spcontrat) Return MYTABLE1 objects filtered by the spcontrat column
+ * @method array findByspaff(string $spaff) Return MYTABLE1 objects filtered by the spaff column
+ * @method array findByspnom6(string $spnom6) Return MYTABLE1 objects filtered by the spnom6 column
+ * @method array findByspnais6(string $spnais6) Return MYTABLE1 objects filtered by the spnais6 column
+ * @method array findByspnom7(string $spnom7) Return MYTABLE1 objects filtered by the spnom7 column
+ * @method array findByspnais7(string $spnais7) Return MYTABLE1 objects filtered by the spnais7 column
+ * @method array findByspnom8(string $spnom8) Return MYTABLE1 objects filtered by the spnom8 column
+ * @method array findByspnais8(string $spnais8) Return MYTABLE1 objects filtered by the spnais8 column
+ * @method array findByspnom9(string $spnom9) Return MYTABLE1 objects filtered by the spnom9 column
+ * @method array findByspnais9(string $spnais9) Return MYTABLE1 objects filtered by the spnais9 column
+ * @method array findByspnom10(string $spnom10) Return MYTABLE1 objects filtered by the spnom10 column
+ * @method array findByspnais10(string $spnais10) Return MYTABLE1 objects filtered by the spnais10 column
+ * @method array findByspdeff(string $spdeff) Return MYTABLE1 objects filtered by the spdeff column
+ * @method array findByspmil(string $spmil) Return MYTABLE1 objects filtered by the spmil column
+ * @method array findByspclea(string $spclea) Return MYTABLE1 objects filtered by the spclea column
+ * @method array findByspclec(string $spclec) Return MYTABLE1 objects filtered by the spclec column
+ * @method array findByspdroit(string $spdroit) Return MYTABLE1 objects filtered by the spdroit column
+ * @method array findByspnomc(string $spnomc) Return MYTABLE1 objects filtered by the spnomc column
+ * @method array findByspemet(string $spemet) Return MYTABLE1 objects filtered by the spemet column
+ * @method array findByspaff2(string $spaff2) Return MYTABLE1 objects filtered by the spaff2 column
+ * @method array findByspdeb(string $spdeb) Return MYTABLE1 objects filtered by the spdeb column
+ * @method array findByspfin(string $spfin) Return MYTABLE1 objects filtered by the spfin column
+ * @method array findById(int $id) Return MYTABLE1 objects filtered by the id column
+ */
+abstract class BaseMYTABLE1Query extends ModelCriteria
+{
+}
+?>
+--EXPECT--
+<?php
+/**
+ * Base class that represents a query for the 'MYTABLE1' table.
+ *
+ *
+ *
+ * @method MYTABLE1Query orderByspss($order = Criteria::ASC) Order by the spss column
+ * @method MYTABLE1Query orderBysp1($order = Criteria::ASC) Order by the sp1 column
+ * @method MYTABLE1Query orderBysp2($order = Criteria::ASC) Order by the sp2 column
+ * @method MYTABLE1Query orderBysp3($order = Criteria::ASC) Order by the sp3 column
+ * @method MYTABLE1Query orderBysp4($order = Criteria::ASC) Order by the sp4 column
+ * @method MYTABLE1Query orderBysp5($order = Criteria::ASC) Order by the sp5 column
+ * @method MYTABLE1Query orderBysp6($order = Criteria::ASC) Order by the sp6 column
+ * @method MYTABLE1Query orderBysp7($order = Criteria::ASC) Order by the sp7 column
+ * @method MYTABLE1Query orderBysp8($order = Criteria::ASC) Order by the sp8 column
+ * @method MYTABLE1Query orderBysptaux($order = Criteria::ASC) Order by the sptaux column
+ * @method MYTABLE1Query orderByspbase($order = Criteria::ASC) Order by the spbase column
+ * @method MYTABLE1Query orderByspdatref($order = Criteria::ASC) Order by the spdatref column
+ * @method MYTABLE1Query orderByspnom1($order = Criteria::ASC) Order by the spnom1 column
+ * @method MYTABLE1Query orderByspnais1($order = Criteria::ASC) Order by the spnais1 column
+ * @method MYTABLE1Query orderByspnom2($order = Criteria::ASC) Order by the spnom2 column
+ * @method MYTABLE1Query orderByspnais2($order = Criteria::ASC) Order by the spnais2 column
+ * @method MYTABLE1Query orderByspnom3($order = Criteria::ASC) Order by the spnom3 column
+ * @method MYTABLE1Query orderByspnais3($order = Criteria::ASC) Order by the spnais3 column
+ * @method MYTABLE1Query orderByspnom4($order = Criteria::ASC) Order by the spnom4 column
+ * @method MYTABLE1Query orderByspnais4($order = Criteria::ASC) Order by the spnais4 column
+ * @method MYTABLE1Query orderByspnom5($order = Criteria::ASC) Order by the spnom5 column
+ * @method MYTABLE1Query orderByspnais5($order = Criteria::ASC) Order by the spnais5 column
+ * @method MYTABLE1Query orderByspnom30($order = Criteria::ASC) Order by the spnom30 column
+ * @method MYTABLE1Query orderByspnomass($order = Criteria::ASC) Order by the spnomass column
+ * @method MYTABLE1Query orderBysppth($order = Criteria::ASC) Order by the sppth column
+ * @method MYTABLE1Query orderByspcart($order = Criteria::ASC) Order by the spcart column
+ * @method MYTABLE1Query orderByspchq($order = Criteria::ASC) Order by the spchq column
+ * @method MYTABLE1Query orderByspates($order = Criteria::ASC) Order by the spates column
+ * @method MYTABLE1Query orderByspindiv($order = Criteria::ASC) Order by the spindiv column
+ * @method MYTABLE1Query orderByspcontrat($order = Criteria::ASC) Order by the spcontrat column
+ * @method MYTABLE1Query orderByspaff($order = Criteria::ASC) Order by the spaff column
+ * @method MYTABLE1Query orderByspnom6($order = Criteria::ASC) Order by the spnom6 column
+ * @method MYTABLE1Query orderByspnais6($order = Criteria::ASC) Order by the spnais6 column
+ * @method MYTABLE1Query orderByspnom7($order = Criteria::ASC) Order by the spnom7 column
+ * @method MYTABLE1Query orderByspnais7($order = Criteria::ASC) Order by the spnais7 column
+ * @method MYTABLE1Query orderByspnom8($order = Criteria::ASC) Order by the spnom8 column
+ * @method MYTABLE1Query orderByspnais8($order = Criteria::ASC) Order by the spnais8 column
+ * @method MYTABLE1Query orderByspnom9($order = Criteria::ASC) Order by the spnom9 column
+ * @method MYTABLE1Query orderByspnais9($order = Criteria::ASC) Order by the spnais9 column
+ * @method MYTABLE1Query orderByspnom10($order = Criteria::ASC) Order by the spnom10 column
+ * @method MYTABLE1Query orderByspnais10($order = Criteria::ASC) Order by the spnais10 column
+ * @method MYTABLE1Query orderByspdeff($order = Criteria::ASC) Order by the spdeff column
+ * @method MYTABLE1Query orderByspmil($order = Criteria::ASC) Order by the spmil column
+ * @method MYTABLE1Query orderByspclea($order = Criteria::ASC) Order by the spclea column
+ * @method MYTABLE1Query orderByspclec($order = Criteria::ASC) Order by the spclec column
+ * @method MYTABLE1Query orderByspdroit($order = Criteria::ASC) Order by the spdroit column
+ * @method MYTABLE1Query orderByspnomc($order = Criteria::ASC) Order by the spnomc column
+ * @method MYTABLE1Query orderByspemet($order = Criteria::ASC) Order by the spemet column
+ * @method MYTABLE1Query orderByspaff2($order = Criteria::ASC) Order by the spaff2 column
+ * @method MYTABLE1Query orderByspdeb($order = Criteria::ASC) Order by the spdeb column
+ * @method MYTABLE1Query orderByspfin($order = Criteria::ASC) Order by the spfin column
+ * @method MYTABLE1Query orderById($order = Criteria::ASC) Order by the id column
+ *        
+ * @method MYTABLE1Query groupByspss() Group by the spss column
+ * @method MYTABLE1Query groupBysp1() Group by the sp1 column
+ * @method MYTABLE1Query groupBysp2() Group by the sp2 column
+ * @method MYTABLE1Query groupBysp3() Group by the sp3 column
+ * @method MYTABLE1Query groupBysp4() Group by the sp4 column
+ * @method MYTABLE1Query groupBysp5() Group by the sp5 column
+ * @method MYTABLE1Query groupBysp6() Group by the sp6 column
+ * @method MYTABLE1Query groupBysp7() Group by the sp7 column
+ * @method MYTABLE1Query groupBysp8() Group by the sp8 column
+ * @method MYTABLE1Query groupBysptaux() Group by the sptaux column
+ * @method MYTABLE1Query groupByspbase() Group by the spbase column
+ * @method MYTABLE1Query groupByspdatref() Group by the spdatref column
+ * @method MYTABLE1Query groupByspnom1() Group by the spnom1 column
+ * @method MYTABLE1Query groupByspnais1() Group by the spnais1 column
+ * @method MYTABLE1Query groupByspnom2() Group by the spnom2 column
+ * @method MYTABLE1Query groupByspnais2() Group by the spnais2 column
+ * @method MYTABLE1Query groupByspnom3() Group by the spnom3 column
+ * @method MYTABLE1Query groupByspnais3() Group by the spnais3 column
+ * @method MYTABLE1Query groupByspnom4() Group by the spnom4 column
+ * @method MYTABLE1Query groupByspnais4() Group by the spnais4 column
+ * @method MYTABLE1Query groupByspnom5() Group by the spnom5 column
+ * @method MYTABLE1Query groupByspnais5() Group by the spnais5 column
+ * @method MYTABLE1Query groupByspnom30() Group by the spnom30 column
+ * @method MYTABLE1Query groupByspnomass() Group by the spnomass column
+ * @method MYTABLE1Query groupBysppth() Group by the sppth column
+ * @method MYTABLE1Query groupByspcart() Group by the spcart column
+ * @method MYTABLE1Query groupByspchq() Group by the spchq column
+ * @method MYTABLE1Query groupByspates() Group by the spates column
+ * @method MYTABLE1Query groupByspindiv() Group by the spindiv column
+ * @method MYTABLE1Query groupByspcontrat() Group by the spcontrat column
+ * @method MYTABLE1Query groupByspaff() Group by the spaff column
+ * @method MYTABLE1Query groupByspnom6() Group by the spnom6 column
+ * @method MYTABLE1Query groupByspnais6() Group by the spnais6 column
+ * @method MYTABLE1Query groupByspnom7() Group by the spnom7 column
+ * @method MYTABLE1Query groupByspnais7() Group by the spnais7 column
+ * @method MYTABLE1Query groupByspnom8() Group by the spnom8 column
+ * @method MYTABLE1Query groupByspnais8() Group by the spnais8 column
+ * @method MYTABLE1Query groupByspnom9() Group by the spnom9 column
+ * @method MYTABLE1Query groupByspnais9() Group by the spnais9 column
+ * @method MYTABLE1Query groupByspnom10() Group by the spnom10 column
+ * @method MYTABLE1Query groupByspnais10() Group by the spnais10 column
+ * @method MYTABLE1Query groupByspdeff() Group by the spdeff column
+ * @method MYTABLE1Query groupByspmil() Group by the spmil column
+ * @method MYTABLE1Query groupByspclea() Group by the spclea column
+ * @method MYTABLE1Query groupByspclec() Group by the spclec column
+ * @method MYTABLE1Query groupByspdroit() Group by the spdroit column
+ * @method MYTABLE1Query groupByspnomc() Group by the spnomc column
+ * @method MYTABLE1Query groupByspemet() Group by the spemet column
+ * @method MYTABLE1Query groupByspaff2() Group by the spaff2 column
+ * @method MYTABLE1Query groupByspdeb() Group by the spdeb column
+ * @method MYTABLE1Query groupByspfin() Group by the spfin column
+ * @method MYTABLE1Query groupById() Group by the id column
+ *        
+ * @method MYTABLE1Query leftJoin($relation) Adds a LEFT JOIN clause to the query
+ * @method MYTABLE1Query rightJoin($relation) Adds a RIGHT JOIN clause to the query
+ * @method MYTABLE1Query innerJoin($relation) Adds a INNER JOIN clause to the query
+ *        
+ * @method MYTABLE1 findOne(PropelPDO $con = null) Return the first MYTABLE1 matching the query
+ * @method MYTABLE1 findOneOrCreate(PropelPDO $con = null) Return the first MYTABLE1 matching the query, or a new MYTABLE1 object populated from the query conditions when no match is found
+ *        
+ * @method MYTABLE1 findOneByspss(string $spss) Return the first MYTABLE1 filtered by the spss column
+ * @method MYTABLE1 findOneBysp1(string $sp1) Return the first MYTABLE1 filtered by the sp1 column
+ * @method MYTABLE1 findOneBysp2(string $sp2) Return the first MYTABLE1 filtered by the sp2 column
+ * @method MYTABLE1 findOneBysp3(string $sp3) Return the first MYTABLE1 filtered by the sp3 column
+ * @method MYTABLE1 findOneBysp4(string $sp4) Return the first MYTABLE1 filtered by the sp4 column
+ * @method MYTABLE1 findOneBysp5(string $sp5) Return the first MYTABLE1 filtered by the sp5 column
+ * @method MYTABLE1 findOneBysp6(string $sp6) Return the first MYTABLE1 filtered by the sp6 column
+ * @method MYTABLE1 findOneBysp7(string $sp7) Return the first MYTABLE1 filtered by the sp7 column
+ * @method MYTABLE1 findOneBysp8(string $sp8) Return the first MYTABLE1 filtered by the sp8 column
+ * @method MYTABLE1 findOneBysptaux(string $sptaux) Return the first MYTABLE1 filtered by the sptaux column
+ * @method MYTABLE1 findOneByspbase(string $spbase) Return the first MYTABLE1 filtered by the spbase column
+ * @method MYTABLE1 findOneByspdatref(string $spdatref) Return the first MYTABLE1 filtered by the spdatref column
+ * @method MYTABLE1 findOneByspnom1(string $spnom1) Return the first MYTABLE1 filtered by the spnom1 column
+ * @method MYTABLE1 findOneByspnais1(string $spnais1) Return the first MYTABLE1 filtered by the spnais1 column
+ * @method MYTABLE1 findOneByspnom2(string $spnom2) Return the first MYTABLE1 filtered by the spnom2 column
+ * @method MYTABLE1 findOneByspnais2(string $spnais2) Return the first MYTABLE1 filtered by the spnais2 column
+ * @method MYTABLE1 findOneByspnom3(string $spnom3) Return the first MYTABLE1 filtered by the spnom3 column
+ * @method MYTABLE1 findOneByspnais3(string $spnais3) Return the first MYTABLE1 filtered by the spnais3 column
+ * @method MYTABLE1 findOneByspnom4(string $spnom4) Return the first MYTABLE1 filtered by the spnom4 column
+ * @method MYTABLE1 findOneByspnais4(string $spnais4) Return the first MYTABLE1 filtered by the spnais4 column
+ * @method MYTABLE1 findOneByspnom5(string $spnom5) Return the first MYTABLE1 filtered by the spnom5 column
+ * @method MYTABLE1 findOneByspnais5(string $spnais5) Return the first MYTABLE1 filtered by the spnais5 column
+ * @method MYTABLE1 findOneByspnom30(string $spnom30) Return the first MYTABLE1 filtered by the spnom30 column
+ * @method MYTABLE1 findOneByspnomass(string $spnomass) Return the first MYTABLE1 filtered by the spnomass column
+ * @method MYTABLE1 findOneBysppth(string $sppth) Return the first MYTABLE1 filtered by the sppth column
+ * @method MYTABLE1 findOneByspcart(string $spcart) Return the first MYTABLE1 filtered by the spcart column
+ * @method MYTABLE1 findOneByspchq(string $spchq) Return the first MYTABLE1 filtered by the spchq column
+ * @method MYTABLE1 findOneByspates(string $spates) Return the first MYTABLE1 filtered by the spates column
+ * @method MYTABLE1 findOneByspindiv(string $spindiv) Return the first MYTABLE1 filtered by the spindiv column
+ * @method MYTABLE1 findOneByspcontrat(string $spcontrat) Return the first MYTABLE1 filtered by the spcontrat column
+ * @method MYTABLE1 findOneByspaff(string $spaff) Return the first MYTABLE1 filtered by the spaff column
+ * @method MYTABLE1 findOneByspnom6(string $spnom6) Return the first MYTABLE1 filtered by the spnom6 column
+ * @method MYTABLE1 findOneByspnais6(string $spnais6) Return the first MYTABLE1 filtered by the spnais6 column
+ * @method MYTABLE1 findOneByspnom7(string $spnom7) Return the first MYTABLE1 filtered by the spnom7 column
+ * @method MYTABLE1 findOneByspnais7(string $spnais7) Return the first MYTABLE1 filtered by the spnais7 column
+ * @method MYTABLE1 findOneByspnom8(string $spnom8) Return the first MYTABLE1 filtered by the spnom8 column
+ * @method MYTABLE1 findOneByspnais8(string $spnais8) Return the first MYTABLE1 filtered by the spnais8 column
+ * @method MYTABLE1 findOneByspnom9(string $spnom9) Return the first MYTABLE1 filtered by the spnom9 column
+ * @method MYTABLE1 findOneByspnais9(string $spnais9) Return the first MYTABLE1 filtered by the spnais9 column
+ * @method MYTABLE1 findOneByspnom10(string $spnom10) Return the first MYTABLE1 filtered by the spnom10 column
+ * @method MYTABLE1 findOneByspnais10(string $spnais10) Return the first MYTABLE1 filtered by the spnais10 column
+ * @method MYTABLE1 findOneByspdeff(string $spdeff) Return the first MYTABLE1 filtered by the spdeff column
+ * @method MYTABLE1 findOneByspmil(string $spmil) Return the first MYTABLE1 filtered by the spmil column
+ * @method MYTABLE1 findOneByspclea(string $spclea) Return the first MYTABLE1 filtered by the spclea column
+ * @method MYTABLE1 findOneByspclec(string $spclec) Return the first MYTABLE1 filtered by the spclec column
+ * @method MYTABLE1 findOneByspdroit(string $spdroit) Return the first MYTABLE1 filtered by the spdroit column
+ * @method MYTABLE1 findOneByspnomc(string $spnomc) Return the first MYTABLE1 filtered by the spnomc column
+ * @method MYTABLE1 findOneByspemet(string $spemet) Return the first MYTABLE1 filtered by the spemet column
+ * @method MYTABLE1 findOneByspaff2(string $spaff2) Return the first MYTABLE1 filtered by the spaff2 column
+ * @method MYTABLE1 findOneByspdeb(string $spdeb) Return the first MYTABLE1 filtered by the spdeb column
+ * @method MYTABLE1 findOneByspfin(string $spfin) Return the first MYTABLE1 filtered by the spfin column
+ *        
+ * @method array findByspss(string $spss) Return MYTABLE1 objects filtered by the spss column
+ * @method array findBysp1(string $sp1) Return MYTABLE1 objects filtered by the sp1 column
+ * @method array findBysp2(string $sp2) Return MYTABLE1 objects filtered by the sp2 column
+ * @method array findBysp3(string $sp3) Return MYTABLE1 objects filtered by the sp3 column
+ * @method array findBysp4(string $sp4) Return MYTABLE1 objects filtered by the sp4 column
+ * @method array findBysp5(string $sp5) Return MYTABLE1 objects filtered by the sp5 column
+ * @method array findBysp6(string $sp6) Return MYTABLE1 objects filtered by the sp6 column
+ * @method array findBysp7(string $sp7) Return MYTABLE1 objects filtered by the sp7 column
+ * @method array findBysp8(string $sp8) Return MYTABLE1 objects filtered by the sp8 column
+ * @method array findBysptaux(string $sptaux) Return MYTABLE1 objects filtered by the sptaux column
+ * @method array findByspbase(string $spbase) Return MYTABLE1 objects filtered by the spbase column
+ * @method array findByspdatref(string $spdatref) Return MYTABLE1 objects filtered by the spdatref column
+ * @method array findByspnom1(string $spnom1) Return MYTABLE1 objects filtered by the spnom1 column
+ * @method array findByspnais1(string $spnais1) Return MYTABLE1 objects filtered by the spnais1 column
+ * @method array findByspnom2(string $spnom2) Return MYTABLE1 objects filtered by the spnom2 column
+ * @method array findByspnais2(string $spnais2) Return MYTABLE1 objects filtered by the spnais2 column
+ * @method array findByspnom3(string $spnom3) Return MYTABLE1 objects filtered by the spnom3 column
+ * @method array findByspnais3(string $spnais3) Return MYTABLE1 objects filtered by the spnais3 column
+ * @method array findByspnom4(string $spnom4) Return MYTABLE1 objects filtered by the spnom4 column
+ * @method array findByspnais4(string $spnais4) Return MYTABLE1 objects filtered by the spnais4 column
+ * @method array findByspnom5(string $spnom5) Return MYTABLE1 objects filtered by the spnom5 column
+ * @method array findByspnais5(string $spnais5) Return MYTABLE1 objects filtered by the spnais5 column
+ * @method array findByspnom30(string $spnom30) Return MYTABLE1 objects filtered by the spnom30 column
+ * @method array findByspnomass(string $spnomass) Return MYTABLE1 objects filtered by the spnomass column
+ * @method array findBysppth(string $sppth) Return MYTABLE1 objects filtered by the sppth column
+ * @method array findByspcart(string $spcart) Return MYTABLE1 objects filtered by the spcart column
+ * @method array findByspchq(string $spchq) Return MYTABLE1 objects filtered by the spchq column
+ * @method array findByspates(string $spates) Return MYTABLE1 objects filtered by the spates column
+ * @method array findByspindiv(string $spindiv) Return MYTABLE1 objects filtered by the spindiv column
+ * @method array findByspcontrat(string $spcontrat) Return MYTABLE1 objects filtered by the spcontrat column
+ * @method array findByspaff(string $spaff) Return MYTABLE1 objects filtered by the spaff column
+ * @method array findByspnom6(string $spnom6) Return MYTABLE1 objects filtered by the spnom6 column
+ * @method array findByspnais6(string $spnais6) Return MYTABLE1 objects filtered by the spnais6 column
+ * @method array findByspnom7(string $spnom7) Return MYTABLE1 objects filtered by the spnom7 column
+ * @method array findByspnais7(string $spnais7) Return MYTABLE1 objects filtered by the spnais7 column
+ * @method array findByspnom8(string $spnom8) Return MYTABLE1 objects filtered by the spnom8 column
+ * @method array findByspnais8(string $spnais8) Return MYTABLE1 objects filtered by the spnais8 column
+ * @method array findByspnom9(string $spnom9) Return MYTABLE1 objects filtered by the spnom9 column
+ * @method array findByspnais9(string $spnais9) Return MYTABLE1 objects filtered by the spnais9 column
+ * @method array findByspnom10(string $spnom10) Return MYTABLE1 objects filtered by the spnom10 column
+ * @method array findByspnais10(string $spnais10) Return MYTABLE1 objects filtered by the spnais10 column
+ * @method array findByspdeff(string $spdeff) Return MYTABLE1 objects filtered by the spdeff column
+ * @method array findByspmil(string $spmil) Return MYTABLE1 objects filtered by the spmil column
+ * @method array findByspclea(string $spclea) Return MYTABLE1 objects filtered by the spclea column
+ * @method array findByspclec(string $spclec) Return MYTABLE1 objects filtered by the spclec column
+ * @method array findByspdroit(string $spdroit) Return MYTABLE1 objects filtered by the spdroit column
+ * @method array findByspnomc(string $spnomc) Return MYTABLE1 objects filtered by the spnomc column
+ * @method array findByspemet(string $spemet) Return MYTABLE1 objects filtered by the spemet column
+ * @method array findByspaff2(string $spaff2) Return MYTABLE1 objects filtered by the spaff2 column
+ * @method array findByspdeb(string $spdeb) Return MYTABLE1 objects filtered by the spdeb column
+ * @method array findByspfin(string $spfin) Return MYTABLE1 objects filtered by the spfin column
+ * @method array findById(int $id) Return MYTABLE1 objects filtered by the id column
+ */
+abstract class BaseMYTABLE1Query extends ModelCriteria
+{
+}
+?>
