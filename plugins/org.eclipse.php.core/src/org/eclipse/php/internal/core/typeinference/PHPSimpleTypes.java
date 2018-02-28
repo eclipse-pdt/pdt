@@ -100,6 +100,12 @@ public class PHPSimpleTypes {
 	public static final IEvaluatedType CALLABLE = new PHPClassType("callable"); //$NON-NLS-1$
 
 	/**
+	 * @since 6.0
+	 */
+	@NonNull
+	public static final IEvaluatedType CALLBACK = new PHPClassType("callback"); //$NON-NLS-1$
+
+	/**
 	 * @since 5.1
 	 */
 	@NonNull
@@ -123,6 +129,9 @@ public class PHPSimpleTypes {
 		SIMPLE_TYPES.put("null", new TypeInfo(NULL, null)); //$NON-NLS-1$
 		SIMPLE_TYPES.put("mixed", new TypeInfo(MIXED, null)); //$NON-NLS-1$
 		SIMPLE_TYPES.put("callable", new TypeInfo(CALLABLE, PHPVersion.PHP5_4)); //$NON-NLS-1$
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=531379
+		// "callback" has same meaning as "callable"
+		SIMPLE_TYPES.put("callback", new TypeInfo(CALLBACK, PHPVersion.PHP5_3)); //$NON-NLS-1$
 		SIMPLE_TYPES.put("iterable", new TypeInfo(ITERABLE, PHPVersion.PHP7_1)); //$NON-NLS-1$
 	}
 
