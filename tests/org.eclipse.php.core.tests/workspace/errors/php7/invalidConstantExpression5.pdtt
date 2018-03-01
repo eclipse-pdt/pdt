@@ -1,0 +1,8 @@
+--TEST--
+Test unfinished method declaration error reporting
+--FILE--
+<?php
+function foo($a = !$c) {}
+?>
+--EXPECT--
+[line=2, start=25, end=27] Constant expression contains invalid operations

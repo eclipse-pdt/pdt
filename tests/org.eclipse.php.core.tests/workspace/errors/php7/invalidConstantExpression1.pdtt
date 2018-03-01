@@ -1,0 +1,8 @@
+--TEST--
+Test unfinished method declaration error reporting
+--FILE--
+<?php
+const TEST = [2,$x];
+?>
+--EXPECT--
+[line=2, start=22, end=24] Constant expression contains invalid operations
