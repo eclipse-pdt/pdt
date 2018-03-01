@@ -84,12 +84,14 @@ public class FragmentedWizard implements IWizard {
 	 */
 	public FragmentedWizard(String title, WizardFragment rootFragment, WizardModel taskModel) {
 		super();
-		if (title != null)
+		if (title != null) {
 			setWindowTitle(title);
+		}
 		this.rootFragment = rootFragment;
 		this.wizardModel = taskModel;
-		if (taskModel == null)
+		if (taskModel == null) {
 			this.wizardModel = new WizardModel();
+		}
 
 		setNeedsProgressMonitor(true);
 		setForcePreviousAndNextButtons(true);
@@ -124,8 +126,9 @@ public class FragmentedWizard implements IWizard {
 			public void run(IProgressMonitor monitor) throws InvocationTargetException {
 				try {
 					Iterator<WizardFragment> iterator = list.iterator();
-					while (iterator.hasNext())
+					while (iterator.hasNext()) {
 						executeTask(iterator.next(), CANCEL, monitor);
+					}
 				} catch (CoreException ce) {
 					throw new InvocationTargetException(ce);
 				}
@@ -134,10 +137,11 @@ public class FragmentedWizard implements IWizard {
 
 		Throwable t = null;
 		try {
-			if (getContainer() != null)
+			if (getContainer() != null) {
 				getContainer().run(true, true, runnable);
-			else
+			} else {
 				runnable.run(new NullProgressMonitor());
+			}
 			return true;
 		} catch (InvocationTargetException te) {
 			t = te.getCause();
@@ -148,8 +152,9 @@ public class FragmentedWizard implements IWizard {
 
 		if (t instanceof CoreException) {
 			openError(t.getLocalizedMessage(), ((CoreException) t).getStatus());
-		} else
+		} else {
 			openError(t.getLocalizedMessage());
+		}
 
 		return false;
 
@@ -189,8 +194,9 @@ public class FragmentedWizard implements IWizard {
 
 	@Override
 	public boolean performFinish() {
-		if (currentFragment != null)
+		if (currentFragment != null) {
 			currentFragment.exit();
+		}
 
 		final WizardFragment cFragment = currentFragment;
 
@@ -237,8 +243,9 @@ public class FragmentedWizard implements IWizard {
 						public IStatus run(IProgressMonitor monitor2) {
 							try {
 								Iterator<WizardFragment> iterator = list.iterator();
-								while (iterator.hasNext())
+								while (iterator.hasNext()) {
 									executeTask(iterator.next(), FINISH, monitor2);
+								}
 							} catch (CoreException ce) {
 								Status status = new Status(IStatus.ERROR, PHPUiPlugin.ID, 0, ce.getLocalizedMessage(),
 										null);
@@ -254,7 +261,7 @@ public class FragmentedWizard implements IWizard {
 					job.schedule();
 				} else {
 					Iterator<WizardFragment> iterator = list.iterator();
-					while (iterator.hasNext())
+					while (iterator.hasNext()) {
 						try {
 							WizardFragment fragment = iterator.next();
 							if (!executeTask(fragment, FINISH, monitor)) {
@@ -266,16 +273,18 @@ public class FragmentedWizard implements IWizard {
 						} catch (CoreException e) {
 							PHPUiPlugin.log(e);
 						}
+					}
 				}
 			}
 		};
 
 		Throwable t = null;
 		try {
-			if (getContainer() != null)
+			if (getContainer() != null) {
 				getContainer().run(true, true, runnable);
-			else
+			} else {
 				runnable.run(new NullProgressMonitor());
+			}
 			if (status.getSeverity() != IStatus.OK) {
 				((WizardDialog) getContainer()).setErrorMessage(status.getMessage());
 				return false;
@@ -290,10 +299,11 @@ public class FragmentedWizard implements IWizard {
 		}
 		if (t instanceof CoreException) {
 			openError(t.getLocalizedMessage(), ((CoreException) t).getStatus());
-		} else if (t instanceof NullPointerException)
+		} else if (t instanceof NullPointerException) {
 			openError(PHPUIMessages.FragmentedWizard_7);
-		else
+		} else {
 			openError(t.getLocalizedMessage());
+		}
 
 		return false;
 	}
@@ -323,25 +333,29 @@ public class FragmentedWizard implements IWizard {
 		List<WizardFragment> list = getAllWizardFragments();
 		int oldIndex = list.indexOf(currentFragment);
 		int newIndex = list.indexOf(newFragment);
-		if (oldIndex == newIndex)
+		if (oldIndex == newIndex) {
 			return;
+		}
 
-		if (currentFragment != null)
+		if (currentFragment != null) {
 			currentFragment.exit();
+		}
 
-		if (oldIndex < newIndex)
+		if (oldIndex < newIndex) {
 			oldIndex++;
-		else
+		} else {
 			oldIndex--;
+		}
 
 		while (oldIndex != newIndex) {
 			WizardFragment fragment = list.get(oldIndex);
 			fragment.enter();
 			fragment.exit();
-			if (oldIndex < newIndex)
+			if (oldIndex < newIndex) {
 				oldIndex++;
-			else
+			} else {
 				oldIndex--;
+			}
 		}
 
 		currentFragment = newFragment;
@@ -379,8 +393,9 @@ public class FragmentedWizard implements IWizard {
 	 */
 	@Override
 	public void addPages() {
-		if (addingPages)
+		if (addingPages) {
 			return;
+		}
 
 		try {
 			addingPages = true;
@@ -413,8 +428,9 @@ public class FragmentedWizard implements IWizard {
 	private FragmentedWizardPage getFragmentData(WizardFragment fragment) {
 		try {
 			FragmentedWizardPage page = fragmentData.get(fragment);
-			if (page != null)
+			if (page != null) {
 				return page;
+			}
 		} catch (Exception e) {
 			PHPUiPlugin.log(new Status(IStatus.ERROR, PHPUiPlugin.ID, 0, "Error getting fragment data", e)); //$NON-NLS-1$
 		}
@@ -435,8 +451,9 @@ public class FragmentedWizard implements IWizard {
 	public boolean canFinish() {
 		// Default implementation is to check if all pages are complete.
 		for (int i = 0; i < pages.size(); i++) {
-			if (!pages.get(i).isPageComplete())
+			if (!pages.get(i).isPageComplete()) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -517,9 +534,10 @@ public class FragmentedWizard implements IWizard {
 	@Override
 	public IWizardPage getNextPage(IWizardPage page) {
 		int index = pages.indexOf(page);
-		if (index == pages.size() - 1 || index == -1)
+		if (index == pages.size() - 1 || index == -1) {
 			// last page or page not found
 			return null;
+		}
 
 		return pages.get(index + 1);
 	}
@@ -534,8 +552,9 @@ public class FragmentedWizard implements IWizard {
 		for (int i = 0; i < pages.size(); i++) {
 			IWizardPage page = pages.get(i);
 			String pageName = page.getName();
-			if (pageName.equals(name))
+			if (pageName.equals(name)) {
 				return page;
+			}
 		}
 		return null;
 	}
@@ -570,9 +589,10 @@ public class FragmentedWizard implements IWizard {
 	@Override
 	public IWizardPage getPreviousPage(IWizardPage page) {
 		int index = pages.indexOf(page);
-		if (index == 0 || index == -1)
+		if (index == 0 || index == -1) {
 			// first page or page not found
 			return null;
+		}
 		return pages.get(index - 1);
 	}
 
@@ -583,8 +603,9 @@ public class FragmentedWizard implements IWizard {
 	 */
 	@Override
 	public IWizardPage getStartingPage() {
-		if (pages.size() == 0)
+		if (pages.size() == 0) {
 			return null;
+		}
 
 		return pages.get(0);
 	}

@@ -118,14 +118,16 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 			if (fEndPos > -1) {
 				fAnchor = RIGHT;
 				fStartPos = searchForOpeningPeer(fEndPos, fPairs[pairIndex2 - 1], fPairs[pairIndex2], fDocument);
-				if (fStartPos > -1)
+				if (fStartPos > -1) {
 					return true;
+				}
 				fEndPos = -1;
 			} else if (fStartPos > -1) {
 				fAnchor = LEFT;
 				fEndPos = searchForClosingPeer(fStartPos, fPairs[pairIndex1], fPairs[pairIndex1 + 1], fDocument);
-				if (fEndPos > -1)
+				if (fEndPos > -1) {
 					return true;
+				}
 				fStartPos = -1;
 			}
 

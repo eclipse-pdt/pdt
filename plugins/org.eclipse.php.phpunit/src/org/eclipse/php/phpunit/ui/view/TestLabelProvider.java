@@ -108,8 +108,9 @@ public class TestLabelProvider extends LabelProvider implements IStyledLabelProv
 			}
 		} else if (element instanceof PHPUnitTestGroup) {
 			final PHPUnitTestGroup test = (PHPUnitTestGroup) element;
-			if (test.getTotalCount() > test.getRunCount())
+			if (test.getTotalCount() > test.getRunCount()) {
 				return fSuiteRunningIcon;
+			}
 			switch (test.getStatus()) {
 			case PHPUnitTest.STATUS_PASS:
 				return fSuiteOkIcon;
@@ -122,13 +123,15 @@ public class TestLabelProvider extends LabelProvider implements IStyledLabelProv
 				return fSuiteErrorIcon;
 			}
 		} else if (element instanceof PHPUnitTraceFrame) {
-			if (PHPUnitMessageParser.CALL_STATIC.equals(((PHPUnitTraceFrame) element).getTraceType()))
+			if (PHPUnitMessageParser.CALL_STATIC.equals(((PHPUnitTraceFrame) element).getTraceType())) {
 				return fStaticFunctionIcon;
+			}
 			return fFunctionIcon;
-		} else if (element instanceof PHPUnitTestException)
+		} else if (element instanceof PHPUnitTestException) {
 			return fExceptionIcon;
-		else if (element instanceof PHPUnitTestWarning)
+		} else if (element instanceof PHPUnitTestWarning) {
 			return Util.getImage(IMarker.SEVERITY_WARNING);
+		}
 
 		return null;
 	}

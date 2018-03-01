@@ -216,25 +216,33 @@ public class DebugError implements Cloneable {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		DebugError other = (DebugError) obj;
 		if (fileName == null) {
-			if (other.fileName != null)
+			if (other.fileName != null) {
 				return false;
-		} else if (!fileName.equals(other.fileName))
+			}
+		} else if (!fileName.equals(other.fileName)) {
 			return false;
-		if (lineNumber != other.lineNumber)
+		}
+		if (lineNumber != other.lineNumber) {
 			return false;
+		}
 		if (text == null) {
-			if (other.text != null)
+			if (other.text != null) {
 				return false;
-		} else if (!text.equals(other.text))
+			}
+		} else if (!text.equals(other.text)) {
 			return false;
+		}
 		return true;
 	}
 }

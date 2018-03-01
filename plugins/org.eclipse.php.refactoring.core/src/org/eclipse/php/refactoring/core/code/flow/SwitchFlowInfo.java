@@ -20,8 +20,9 @@ class SwitchFlowInfo extends FlowInfo {
 	}
 
 	public void mergeTest(FlowInfo info, FlowContext context) {
-		if (info == null)
+		if (info == null) {
 			return;
+		}
 		mergeSequential(info, context);
 	}
 
@@ -34,8 +35,9 @@ class SwitchFlowInfo extends FlowInfo {
 	}
 
 	public void mergeDefault(boolean defaultCaseExists, FlowContext context) {
-		if (!defaultCaseExists || fHasNullCaseInfo)
+		if (!defaultCaseExists || fHasNullCaseInfo) {
 			fCases.mergeEmptyCondition(context);
+		}
 		mergeSequential(fCases, context);
 	}
 }

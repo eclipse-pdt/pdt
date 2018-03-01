@@ -505,8 +505,9 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		dialog.setFilterExtensions(new String[] { PreferencesMessages.CodeTemplateBlock_import_extension });
 		String path = dialog.open();
 
-		if (path == null)
+		if (path == null) {
 			return;
+		}
 
 		try {
 			TemplateReaderWriter reader = new TemplateReaderWriter();
@@ -574,8 +575,9 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		dialog.setFileName(PreferencesMessages.CodeTemplateBlock_export_filename);
 		String path = dialog.open();
 
-		if (path == null)
+		if (path == null) {
 			return;
+		}
 
 		File file = new File(path);
 
@@ -634,8 +636,9 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 
 	public boolean performOk(boolean enabled) {
 		boolean res = super.performOk();
-		if (!res)
+		if (!res) {
 			return false;
+		}
 
 		if (fProject != null) {
 			TemplatePersistenceData[] templateData = fTemplateStore.getTemplateData();
@@ -664,10 +667,11 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		String title = PreferencesMessages.CodeTemplateBlock_error_read_title;
 
 		String message = e.getLocalizedMessage();
-		if (message != null)
+		if (message != null) {
 			message = Messages.format(PreferencesMessages.CodeTemplateBlock_error_parse_message, message);
-		else
+		} else {
 			message = PreferencesMessages.CodeTemplateBlock_error_read_message;
+		}
 		MessageDialog.openError(getShell(), title, message);
 	}
 

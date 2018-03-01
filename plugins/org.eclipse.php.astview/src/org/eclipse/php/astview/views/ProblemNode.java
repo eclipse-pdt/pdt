@@ -66,10 +66,12 @@ public class ProblemNode extends ASTAttribute {
 		int offset= fProblem.getSourceStart();
 		int length= fProblem.getSourceEnd() + 1 - offset;
 		
-		if (fProblem.isError())
+		if (fProblem.isError()) {
 			buf.append("E");
-		if (fProblem.isWarning())
+		}
+		if (fProblem.isWarning()) {
 			buf.append("W");
+		}
 		buf.append('[').append(offset).append(", ").append(length).append(']').append(' ');
 		buf.append(fProblem.getMessage());
 		
@@ -220,23 +222,26 @@ public class ProblemNode extends ASTAttribute {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
+		}
 		if (obj == null || !obj.getClass().equals(getClass())) {
 			return false;
 		}
 		
 		ProblemNode other= (ProblemNode) obj;
 		if (fParent == null) {
-			if (other.fParent != null)
+			if (other.fParent != null) {
 				return false;
+			}
 		} else if (! fParent.equals(other.fParent)) {
 			return false;
 		}
 		
 		if (fProblem== null) {
-			if (other.fProblem != null)
+			if (other.fProblem != null) {
 				return false;
+			}
 		} else if (! fProblem.equals(other.fProblem)) {
 			return false;
 		}

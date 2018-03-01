@@ -134,8 +134,9 @@ public class PHPCorrectionProcessor
 	}
 
 	private static boolean hasCorrections(IMarker marker) {
-		if (marker == null || !marker.exists())
+		if (marker == null || !marker.exists()) {
 			return false;
+		}
 
 		IMarkerHelpRegistry registry = IDE.getMarkerHelpRegistry();
 		return registry != null && registry.hasResolutions(marker);
@@ -199,18 +200,22 @@ public class PHPCorrectionProcessor
 			private String getJumpHintStatusLineMessage() {
 				if (fAssistant.isUpdatedOffset()) {
 					String key = getQuickAssistBinding();
-					if (key == null)
+					if (key == null) {
 						return CorrectionMessages.JavaCorrectionProcessor_go_to_original_using_menu;
-					else
+					} else {
 						return NLS.bind(CorrectionMessages.JavaCorrectionProcessor_go_to_original_using_key, key);
+					}
 				} else if (fAssistant.isProblemLocationAvailable()) {
 					String key = getQuickAssistBinding();
-					if (key == null)
+					if (key == null) {
 						return CorrectionMessages.JavaCorrectionProcessor_go_to_closest_using_menu;
-					else
+					} else {
 						return NLS.bind(CorrectionMessages.JavaCorrectionProcessor_go_to_closest_using_key, key);
-				} else
+					}
+				}
+				else {
 					return ""; //$NON-NLS-1$
+				}
 			}
 
 			private String getQuickAssistBinding() {
@@ -575,8 +580,9 @@ public class PHPCorrectionProcessor
 	 */
 	@Override
 	public boolean canAssist(IQuickAssistInvocationContext invocationContext) {
-		if (invocationContext instanceof IInvocationContext)
+		if (invocationContext instanceof IInvocationContext) {
 			return hasAssists((IInvocationContext) invocationContext);
+		}
 		return false;
 	}
 

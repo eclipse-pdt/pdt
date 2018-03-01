@@ -36,8 +36,9 @@ public class StructureSelectEnclosingAction extends StructureSelectionAction {
 	ISourceRange internalGetNewSelectionRange(ISourceRange oldSourceRange, ISourceReference sr,
 			SelectionAnalyzer selAnalyzer) throws ModelException {
 		ASTNode first = selAnalyzer.getFirstSelectedNode();
-		if (first == null || first.getParent() == null)
+		if (first == null || first.getParent() == null) {
 			return getLastCoveringNodeRange(oldSourceRange, sr, selAnalyzer);
+		}
 
 		return getSelectedNodeSourceRange(sr, first.getParent());
 	}

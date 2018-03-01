@@ -170,8 +170,9 @@ public class PHPDocumentLoader extends HTMLDocumentLoader {
 			// [228366] For files that have a unicode BOM, and a charset name of
 			// UTF-16, the charset decoder needs "UTF-16LE"
 			if (CHARSET_UTF_16.equals(charsetName)
-					&& encodingMemento.getUnicodeBOM() == IContentDescription.BOM_UTF_16LE)
+					&& encodingMemento.getUnicodeBOM() == IContentDescription.BOM_UTF_16LE) {
 				charsetName = CHARSET_UTF_16LE;
+			}
 			reader = new BufferedReader(new InputStreamReader(is, charsetName), CodedIO.MAX_BUF_SIZE);
 			return reader;
 		}
@@ -179,8 +180,9 @@ public class PHPDocumentLoader extends HTMLDocumentLoader {
 		private boolean forceDefault() {
 
 			boolean result = false;
-			if (fEncodingRule != null && fEncodingRule == EncodingRule.FORCE_DEFAULT)
+			if (fEncodingRule != null && fEncodingRule == EncodingRule.FORCE_DEFAULT) {
 				result = true;
+			}
 			return result;
 		}
 

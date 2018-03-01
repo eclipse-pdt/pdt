@@ -142,8 +142,9 @@ class OverrideIndicatorManager implements IPHPScriptReconcilingListener {
 	private Object getLockObject(IAnnotationModel annotationModel) {
 		if (annotationModel instanceof ISynchronizable) {
 			Object lock = ((ISynchronizable) annotationModel).getLockObject();
-			if (lock != null)
+			if (lock != null) {
 				return lock;
+			}
 		}
 		return annotationModel;
 	}
@@ -159,8 +160,9 @@ class OverrideIndicatorManager implements IPHPScriptReconcilingListener {
 	 */
 	protected void updateAnnotations(Program ast, IProgressMonitor progressMonitor) {
 
-		if (ast == null || progressMonitor.isCanceled())
+		if (ast == null || progressMonitor.isCanceled()) {
 			return;
+		}
 
 		final Map<OverrideIndicator, Position> annotationMap = new HashMap<>(50);
 
@@ -194,12 +196,13 @@ class OverrideIndicatorManager implements IPHPScriptReconcilingListener {
 
 						boolean isImplements = (Modifiers.AccAbstract & definingMethod.getModifiers()) != 0;
 						String text;
-						if (isImplements)
+						if (isImplements) {
 							text = Messages.format(PHPUIMessages.OverrideIndicatorManager_implements,
 									qualifiedMethodName);
-						else
+						} else {
 							text = Messages.format(PHPUIMessages.OverrideIndicatorManager_overrides,
 									qualifiedMethodName);
+						}
 
 						Identifier name = node.getFunction().getFunctionName();
 						Position position = new Position(name.getStart(), name.getLength());
@@ -212,8 +215,9 @@ class OverrideIndicatorManager implements IPHPScriptReconcilingListener {
 			}
 		});
 
-		if (progressMonitor.isCanceled())
+		if (progressMonitor.isCanceled()) {
 			return;
+		}
 
 		synchronized (fAnnotationModelLockObject) {
 			if (fAnnotationModel instanceof IAnnotationModelExtension) {
@@ -234,15 +238,17 @@ class OverrideIndicatorManager implements IPHPScriptReconcilingListener {
 	 * Removes all override indicators from this manager's annotation model.
 	 */
 	void removeAnnotations() {
-		if (fOverrideAnnotations == null)
+		if (fOverrideAnnotations == null) {
 			return;
+		}
 
 		synchronized (fAnnotationModelLockObject) {
 			if (fAnnotationModel instanceof IAnnotationModelExtension) {
 				((IAnnotationModelExtension) fAnnotationModel).replaceAnnotations(fOverrideAnnotations, null);
 			} else {
-				for (int i = 0, length = fOverrideAnnotations.length; i < length; i++)
+				for (int i = 0, length = fOverrideAnnotations.length; i < length; i++) {
 					fAnnotationModel.removeAnnotation(fOverrideAnnotations[i]);
+				}
 			}
 			fOverrideAnnotations = null;
 		}

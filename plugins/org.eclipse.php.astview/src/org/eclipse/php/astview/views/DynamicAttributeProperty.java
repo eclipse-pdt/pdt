@@ -42,8 +42,9 @@ public abstract class DynamicAttributeProperty extends ExceptionAttribute {
 	}
 	
 	public void setViewerElement(Object viewerAttribute) {
-		if (fViewerElement == viewerAttribute)
+		if (fViewerElement == viewerAttribute) {
 			return;
+		}
 		
 		fViewerElement= viewerAttribute;
 		fException= null;
@@ -58,10 +59,11 @@ public abstract class DynamicAttributeProperty extends ExceptionAttribute {
 				fException= e;
 				buf.append(e.getClass().getName());
 				buf.append(" for \""); //$NON-NLS-1$
-				if (viewerObject == null)
+				if (viewerObject == null) {
 					buf.append("null"); //$NON-NLS-1$
-				else
+				} else {
 					buf.append('"').append(objectToString(viewerObject));
+				}
 				buf.append("\" and "); //$NON-NLS-1$
 				buf.append(objectToString(trayObject)).append('"');
 			}

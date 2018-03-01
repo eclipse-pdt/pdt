@@ -125,14 +125,17 @@ public class TextTemplate {
 	 * @return Content of a found struct
 	 */
 	public static String extract(final String text, final String structName) {
-		if ("".equals(text)) //$NON-NLS-1$
+		if ("".equals(text)) {
 			return null;
-		if (!structName.matches(REGEXP_ELEMENT_VALID))
+		}
+		if (!structName.matches(REGEXP_ELEMENT_VALID)) {
 			return null;
+		}
 		patternHandler.setStructName(structName);
 		final Matcher matcher = patternHandler.getMatcher().reset(text);
-		if (matcher.find())
+		if (matcher.find()) {
 			return matcher.group();
+		}
 		return null;
 	}
 
@@ -148,8 +151,10 @@ public class TextTemplate {
 		String valCompiled;
 		String var;
 
-		if ("".equals(text)) //$NON-NLS-1$
+		if ("".equals(text))
+		 {
 			return ""; //$NON-NLS-1$
+		}
 
 		final Matcher matcher = Pattern
 				.compile(StringUtils.replace(REGEXP_VAR, REGEXP_ELEMENT_PLACEHOLDER, REGEXP_ELEMENT_VALID))
@@ -157,8 +162,9 @@ public class TextTemplate {
 		while (matcher.find()) {
 			var = matcher.group(1);
 			val = vars.get(var);
-			if (val == null)
+			if (val == null) {
 				continue;
+			}
 			valCompiled = compile(val.toString()); // WARNING: recursion
 			text = StringUtils.replace(text, matcher.group(0), valCompiled);
 		}
@@ -193,10 +199,12 @@ public class TextTemplate {
 	 */
 	public void extract(final String sourceVar, final String structName, String targetVar) {
 		String text = get(sourceVar);
-		if (text == null)
+		if (text == null) {
 			return;
-		if (targetVar == null)
+		}
+		if (targetVar == null) {
 			targetVar = structName;
+		}
 		final String struct = extract(text, structName);
 		if (struct != null) {
 			text = StringUtils.replace(text, struct,
@@ -213,10 +221,14 @@ public class TextTemplate {
 	 */
 	public String get(final String var) {
 		if (vars == null)
+		 {
 			return ""; //$NON-NLS-1$
+		}
 		final Object val = vars.get(var);
 		if (val == null)
+		 {
 			return ""; //$NON-NLS-1$
+		}
 		return val.toString();
 	}
 
@@ -228,8 +240,9 @@ public class TextTemplate {
 	 * @return previous {@link #get(String)}
 	 */
 	public String set(final String var, final String val) {
-		if (vars == null)
+		if (vars == null) {
 			vars = new HashMap<>();
+		}
 		return vars.put(var, val);
 	}
 

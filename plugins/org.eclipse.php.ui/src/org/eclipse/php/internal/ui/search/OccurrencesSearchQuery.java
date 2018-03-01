@@ -61,8 +61,9 @@ public class OccurrencesSearchQuery implements ISearchQuery {
 		if (fFinder == null) {
 			return new StatusInfo(IStatus.ERROR, org.eclipse.php.internal.ui.search.Messages.OccurrencesSearchQuery_0);
 		}
-		if (monitor == null)
+		if (monitor == null) {
 			monitor = new NullProgressMonitor();
+		}
 
 		try {
 			OccurrenceLocation[] occurrences = fFinder.getOccurrences();

@@ -100,8 +100,9 @@ public class XMLPreferencesReader {
 	 */
 	public static List<Map<String, Object>> read(IEclipsePreferences store, String prefsKey, boolean skipEmptyNodes) {
 		String storedValue = store.get(prefsKey, null);
-		if (storedValue == null)
+		if (storedValue == null) {
 			return new ArrayList<>();
+		}
 		return getMapsFromValue(storedValue, skipEmptyNodes);
 	}
 

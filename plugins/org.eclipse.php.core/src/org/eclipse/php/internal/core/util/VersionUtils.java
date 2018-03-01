@@ -73,15 +73,19 @@ public class VersionUtils {
 
 	private static void alignVersionLists(List<List<String>> versions, int parts) {
 		int length = 0;
-		for (int i = 0; i < versions.size(); i++)
-			length = Math.max(length, versions.get(i).size());
-		if (length > parts)
-			length = parts;
 		for (int i = 0; i < versions.size(); i++) {
-			while (versions.get(i).size() > length)
+			length = Math.max(length, versions.get(i).size());
+		}
+		if (length > parts) {
+			length = parts;
+		}
+		for (int i = 0; i < versions.size(); i++) {
+			while (versions.get(i).size() > length) {
 				versions.get(i).remove(versions.get(i).size() - 1);
-			while (versions.get(i).size() < length)
+			}
+			while (versions.get(i).size() < length) {
 				versions.get(i).add(EMPTY);
+			}
 		}
 	}
 
@@ -91,8 +95,9 @@ public class VersionUtils {
 		lists.add(version2);
 		alignVersionLists(lists, parts);
 		for (int i = 0; i < version1.size(); i++) {
-			if (0 != compare(version1.get(i), version2.get(i)))
+			if (0 != compare(version1.get(i), version2.get(i))) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -103,10 +108,12 @@ public class VersionUtils {
 		lists.add(version2);
 		alignVersionLists(lists, parts);
 		for (int i = 0; i < version1.size(); i++) {
-			if (compare(version1.get(i), version2.get(i)) > 0)
+			if (compare(version1.get(i), version2.get(i)) > 0) {
 				return true;
-			if (compare(version1.get(i), version2.get(i)) < 0)
+			}
+			if (compare(version1.get(i), version2.get(i)) < 0) {
 				return false;
+			}
 		}
 		return false;
 	}
@@ -115,11 +122,13 @@ public class VersionUtils {
 		int number1 = 0;
 		int number2 = 0;
 		try {
-			if (!EMPTY.equals(string1))
+			if (!EMPTY.equals(string1)) {
 				number1 = Integer.valueOf(string1);
+			}
 
-			if (!EMPTY.equals(string2))
+			if (!EMPTY.equals(string2)) {
 				number2 = Integer.valueOf(string2);
+			}
 
 			return number1 - number2;
 		} catch (NumberFormatException ex) {

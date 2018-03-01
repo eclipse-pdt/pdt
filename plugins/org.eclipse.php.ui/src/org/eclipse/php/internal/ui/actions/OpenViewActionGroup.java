@@ -139,10 +139,12 @@ public class OpenViewActionGroup extends ActionGroup {
 	@Override
 	public void fillContextMenu(IMenuManager menu) {
 		super.fillContextMenu(menu);
-		if (!fIsTypeHiararchyViewerOwner)
+		if (!fIsTypeHiararchyViewerOwner) {
 			appendToGroup(menu, fOpenTypeHierarchy);
-		if (!fIsCallHiararchyViewerOwner)
+		}
+		if (!fIsCallHiararchyViewerOwner) {
 			appendToGroup(menu, fOpenCallHierarchy);
+		}
 		IStructuredSelection selection = getStructuredSelection();
 		if (fShowOpenPropertiesAction && fOpenPropertiesDialog != null && fOpenPropertiesDialog.isEnabled()
 				&& selection != null && fOpenPropertiesDialog.isApplicableForSelection(selection)) {
@@ -168,13 +170,15 @@ public class OpenViewActionGroup extends ActionGroup {
 	private void setGlobalActionHandlers(IActionBars actionBars) {
 		actionBars.setGlobalActionHandler(PHPActionConstants.OPEN_TYPE_HIERARCHY, fOpenTypeHierarchy);
 		actionBars.setGlobalActionHandler(PHPActionConstants.OPEN_CALL_HIERARCHY, fOpenCallHierarchy);
-		if (!fEditorIsOwner)
+		if (!fEditorIsOwner) {
 			actionBars.setGlobalActionHandler(ActionFactory.PROPERTIES.getId(), fOpenPropertiesDialog);
+		}
 	}
 
 	private void appendToGroup(IMenuManager menu, IAction action) {
-		if (action.isEnabled())
+		if (action.isEnabled()) {
 			menu.appendToGroup(IContextMenuConstants.GROUP_OPEN, action);
+		}
 	}
 
 	private IStructuredSelection getStructuredSelection() {
@@ -182,8 +186,9 @@ public class OpenViewActionGroup extends ActionGroup {
 			return null;
 		}
 		ISelection selection = getContext().getSelection();
-		if (selection instanceof IStructuredSelection)
+		if (selection instanceof IStructuredSelection) {
 			return (IStructuredSelection) selection;
+		}
 		return null;
 	}
 
@@ -192,10 +197,14 @@ public class OpenViewActionGroup extends ActionGroup {
 
 		IBindingService bindingService = PlatformUI.getWorkbench().getAdapter(IBindingService.class);
 		if (bindingService != null)
+		 {
 			keyBinding = bindingService.getBestActiveBindingFormattedFor("org.eclipse.ui.navigate.showInQuickMenu"); //$NON-NLS-1$
+		}
 
 		if (keyBinding == null)
+		 {
 			keyBinding = ""; //$NON-NLS-1$
+		}
 
 		return Messages.OpenViewActionGroup_ShowInLabel + '\t' + keyBinding;
 	}

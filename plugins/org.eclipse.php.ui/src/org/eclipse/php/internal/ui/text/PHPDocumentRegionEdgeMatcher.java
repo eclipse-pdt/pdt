@@ -41,8 +41,9 @@ public class PHPDocumentRegionEdgeMatcher extends DocumentRegionEdgeMatcher {
 
 	@Override
 	public IRegion match(IDocument document, int offset) {
-		if (offset < 0 || offset > document.getLength())
+		if (offset < 0 || offset > document.getLength()) {
 			return null;
+		}
 
 		IRegion match = null;
 		if (!fRegionTypes.isEmpty() && document instanceof IStructuredDocument) {

@@ -41,16 +41,18 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements I
 		Assert.isTrue(!Util.covers(range, nodeRange));
 		Assert.isTrue(Util.covers(nodeRange, range));
 
-		if (!isAssociativeInfix(node))
+		if (!isAssociativeInfix(node)) {
 			return null;
+		}
 
 		InfixExpression groupRoot = findGroupRoot(node);
 		Assert.isTrue(isAGroupRoot(groupRoot));
 
 		List<Expression> groupMembers = AssociativeInfixExpressionFragment.findGroupMembersInOrderFor(groupRoot);
 		List<Expression> subGroup = findSubGroupForSourceRange(groupMembers, range);
-		if (subGroup.isEmpty() || rangeIncludesExtraNonWhitespace(range, subGroup, document, node))
+		if (subGroup.isEmpty() || rangeIncludesExtraNonWhitespace(range, subGroup, document, node)) {
 			return null;
+		}
 
 		return new AssociativeInfixExpressionFragment(groupRoot, subGroup);
 	}
@@ -58,8 +60,9 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements I
 	public static IExpressionFragment createFragmentForFullSubtree(InfixExpression node) {
 		Assert.isNotNull(node);
 
-		if (!isAssociativeInfix(node))
+		if (!isAssociativeInfix(node)) {
 			return null;
+		}
 
 		// InfixExpression groupRoot = findGroupRoot(node);
 		InfixExpression groupRoot = findGroupRoot(node);
@@ -220,19 +223,22 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements I
 			if (matchesAt(i, source, toMatch)) {
 				subsequences.add(source.subList(i, i + toMatch.size()));
 				i += toMatch.size();
-			} else
+			} else {
 				i++;
+			}
 		}
 
 		return subsequences;
 	}
 
 	private static boolean matchesAt(int index, List<?> subject, List<?> toMatch) {
-		if (index + toMatch.size() > subject.size())
+		if (index + toMatch.size() > subject.size()) {
 			return false;
+		}
 		for (int i = 0; i < toMatch.size(); i++, index++) {
-			if (!PHPASTMatcher.doNodesMatch((ASTNode) subject.get(index), (ASTNode) toMatch.get(i)))
+			if (!PHPASTMatcher.doNodesMatch((ASTNode) subject.get(index), (ASTNode) toMatch.get(i))) {
 				return false;
+			}
 		}
 		return true;
 
@@ -270,16 +276,18 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements I
 
 	@Override
 	public boolean matches(IASTFragment other) {
-		if (!other.getClass().equals(getClass()))
+		if (!other.getClass().equals(getClass())) {
 			return false;
+		}
 
 		AssociativeInfixExpressionFragment otherOfKind = (AssociativeInfixExpressionFragment) other;
 		return getOperator() == otherOfKind.getOperator() && doOperandsMatch(otherOfKind);
 	}
 
 	private boolean doOperandsMatch(AssociativeInfixExpressionFragment other) {
-		if (getOperands().size() != other.getOperands().size())
+		if (getOperands().size() != other.getOperands().size()) {
 			return false;
+		}
 
 		Iterator<Expression> myOperands = getOperands().iterator();
 		Iterator<Expression> othersOperands = other.getOperands().iterator();
@@ -289,8 +297,9 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements I
 			ASTNode othersOperand = othersOperands.next();
 
 			// TODO - check that it works after implementing matching
-			if (!PHPASTMatcher.doNodesMatch(myOperand, othersOperand))
+			if (!PHPASTMatcher.doNodesMatch(myOperand, othersOperand)) {
 				return false;
+			}
 		}
 
 		return true;
@@ -302,12 +311,14 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements I
 	}
 
 	private IASTFragment[] getSubFragmentsWithMyNodeMatching(IASTFragment toMatch) {
-		if (toMatch.getClass() != getClass())
+		if (toMatch.getClass() != getClass()) {
 			return new IASTFragment[0];
+		}
 
 		AssociativeInfixExpressionFragment kinToMatch = (AssociativeInfixExpressionFragment) toMatch;
-		if (kinToMatch.getOperator() != getOperator())
+		if (kinToMatch.getOperator() != getOperator()) {
 			return new IASTFragment[0];
+		}
 
 		List<List<Expression>> matchingSubsequences = getMatchingContiguousNodeSubsequences(getOperands(),
 				kinToMatch.getOperands());
@@ -413,8 +424,9 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements I
 
 		@Override
 		protected boolean apply(ASTNode node) {
-			if (node instanceof InfixExpression && ((InfixExpression) node).getOperator() == fGroupRoot.getOperator())
+			if (node instanceof InfixExpression && ((InfixExpression) node).getOperator() == fGroupRoot.getOperator()) {
 				return true;
+			}
 
 			assert node instanceof Expression;
 			fMembersInOrder.add((Expression) node);
@@ -429,12 +441,15 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements I
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		AssociativeInfixExpressionFragment other = (AssociativeInfixExpressionFragment) obj;
 		return fGroupRoot.equals(other.fGroupRoot) && fOperands.equals(other.fOperands);
 	}

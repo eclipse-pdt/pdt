@@ -56,7 +56,8 @@ public class OpenPHPSearchPageAction implements IWorkbenchWindowActionDelegate {
 
 	protected void beep() {
 		Shell shell = PHPUiPlugin.getActiveWorkbenchShell();
-		if (shell != null && shell.getDisplay() != null)
+		if (shell != null && shell.getDisplay() != null) {
 			shell.getDisplay().beep();
+		}
 	}
 }

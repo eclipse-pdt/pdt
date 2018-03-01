@@ -77,8 +77,9 @@ public class PHPLaunchProxy extends LaunchProxy {
 			if (this.fLaunch == launch) {
 				ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
 				ModelDelta delta = new ModelDelta(manager, 0, IModelDelta.NO_CHANGE, manager.getLaunches().length);
-				for (Object element : fLaunch.getChildren())
+				for (Object element : fLaunch.getChildren()) {
 					delta.addNode(element, IModelDelta.UNINSTALL);
+				}
 				fireModelChanged(delta);
 			}
 		}

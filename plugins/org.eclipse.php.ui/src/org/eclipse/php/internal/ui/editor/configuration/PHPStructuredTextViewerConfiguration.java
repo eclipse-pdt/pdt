@@ -165,8 +165,9 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 			fStatusLineLabelProvider = new JFaceNodeLabelProvider() {
 				@Override
 				public String getText(Object element) {
-					if (element == null)
+					if (element == null) {
 						return null;
+					}
 
 					StringBuilder s = new StringBuilder();
 					Node node = (Node) element;
@@ -175,10 +176,11 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 							s.insert(0, super.getText(node));
 						}
 
-						if (node.getNodeType() == Node.ATTRIBUTE_NODE)
+						if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
 							node = ((Attr) node).getOwnerElement();
-						else
+						} else {
 							node = node.getParentNode();
+						}
 
 						if (node != null && node.getNodeType() != Node.DOCUMENT_NODE) {
 							s.insert(0, IPath.SEPARATOR);
@@ -389,16 +391,19 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 				int j = 0;
 				int stateMask = hoverDescs[i].getStateMask();
 				while (j < stateMasksLength) {
-					if (stateMasks[j] == stateMask)
+					if (stateMasks[j] == stateMask) {
 						break;
+					}
 					j++;
 				}
-				if (j == stateMasksLength)
+				if (j == stateMasksLength) {
 					stateMasks[stateMasksLength++] = stateMask;
+				}
 			}
 		}
-		if (stateMasksLength == hoverDescs.length)
+		if (stateMasksLength == hoverDescs.length) {
 			return stateMasks;
+		}
 
 		int[] shortenedStateMasks = new int[stateMasksLength];
 		System.arraycopy(stateMasks, 0, shortenedStateMasks, 0, stateMasksLength);
@@ -439,8 +444,9 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 	@Override
 	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
-		if (!fPreferenceStore.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED))
+		if (!fPreferenceStore.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED)) {
 			return null;
+		}
 
 		// Create proxy to prevent throwing of errors in case there's an
 		// exception occurred in hyperlink detector:
@@ -536,8 +542,9 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		if (contentType == PHPPartitionTypes.PHP_DEFAULT) {
 			// use php's doubleclick strategy
 			return new PHPDoubleClickStrategy();
-		} else
+		} else {
 			return super.getDoubleClickStrategy(sourceViewer, contentType);
+		}
 	}
 
 	@Override
@@ -553,8 +560,9 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 			StringBuilder prefix = new StringBuilder();
 			boolean appendTab = false;
 
-			for (int j = 0; j + i < indentationSize; j++)
+			for (int j = 0; j + i < indentationSize; j++) {
 				prefix.append(indentCharPref);
+			}
 
 			if (i != 0) {
 				appendTab = true;
@@ -698,8 +706,9 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 	@Override
 	protected IInformationProvider getInformationProvider(ISourceViewer sourceViewer, String partitionType) {
-		if (!(sourceViewer instanceof PHPStructuredTextViewer))
+		if (!(sourceViewer instanceof PHPStructuredTextViewer)) {
 			return super.getInformationProvider(sourceViewer, partitionType);
+		}
 		ITextHover bestMatchHover = new BestMatchHover(((PHPStructuredTextViewer) sourceViewer).getTextEditor(),
 				PHPUiPlugin.getDefault().getPreferenceStore());
 
@@ -729,8 +738,9 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 		@Override
 		public IInformationControlCreator getInformationPresenterControlCreator() {
-			if (fTextHover instanceof IInformationProviderExtension2)
+			if (fTextHover instanceof IInformationProviderExtension2) {
 				return ((IInformationProviderExtension2) fTextHover).getInformationPresenterControlCreator();
+			}
 
 			return null;
 		}
@@ -768,8 +778,9 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 					// StructuredDocumentDamagerRepairer.createPresentation(TextPresentation
 					// presentation, ITypedRegion region).
 					LineStyleProvider provider = fHighlighter.getProvider(contentTypes[i]);
-					if (provider == null)
+					if (provider == null) {
 						continue;
+					}
 
 					dr = new StructuredDocumentDamagerRepairer(provider);
 					dr.setDocument(sourceViewer.getDocument());

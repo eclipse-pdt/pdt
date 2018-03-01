@@ -116,8 +116,9 @@ public class RefactoringUtility {
 	public static RefactoringStatus validateModifiesFiles(IResource[] iResources, Object context) {
 		RefactoringStatus result = new RefactoringStatus();
 		IStatus status = Resources.checkInSync(iResources);
-		if (!status.isOK())
+		if (!status.isOK()) {
 			result.merge(RefactoringStatus.create(status));
+		}
 		status = Resources.makeCommittable(iResources, context);
 		if (!status.isOK()) {
 			result.merge(RefactoringStatus.create(status));

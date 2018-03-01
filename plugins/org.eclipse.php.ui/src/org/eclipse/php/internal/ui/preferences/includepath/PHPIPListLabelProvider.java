@@ -51,8 +51,9 @@ public class PHPIPListLabelProvider extends BPListLabelProvider {
 			// handling Folder special case - need to decide if it's in the
 			// build path or not.
 			ImageDescriptor folderBaseImage = getFolderBaseImage(cpentry.getResource());
-			if (null != folderBaseImage)
+			if (null != folderBaseImage) {
 				return folderBaseImage;
+			}
 		}
 		return super.getCPListElementBaseImage(cpentry);
 
@@ -92,10 +93,11 @@ public class PHPIPListLabelProvider extends BPListLabelProvider {
 		if (null != modelElement) {
 			if (modelElement instanceof IScriptFolder) {
 				LibraryFolderManager lfm = LibraryFolderManager.getInstance();
-				if (lfm.isInLibraryFolder(modelElement.getResource()))
+				if (lfm.isInLibraryFolder(modelElement.getResource())) {
 					return PHPPluginImages.DESC_OBJS_PHP_LIBFOLDER;
-				else
+				} else {
 					return PHPPluginImages.DESC_OBJS_PHPFOLDER_ROOT;
+				}
 			}
 		} else {
 			return PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJ_FOLDER);

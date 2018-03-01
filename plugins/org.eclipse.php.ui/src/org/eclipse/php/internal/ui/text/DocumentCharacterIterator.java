@@ -77,12 +77,15 @@ public class DocumentCharacterIterator implements CharacterIterator, CharSequenc
 	 *             if the indices are out of bounds
 	 */
 	public DocumentCharacterIterator(IDocument document, int first, int last) throws IllegalArgumentException {
-		if (document == null)
+		if (document == null) {
 			throw new NullPointerException();
-		if (first < 0 || first > last)
+		}
+		if (first < 0 || first > last) {
 			throw new IllegalArgumentException();
-		if (last > document.getLength())
+		}
+		if (last > document.getLength()) {
 			throw new IllegalArgumentException();
+		}
 		fDocument = document;
 		fFirst = first;
 		fLast = last;
@@ -103,10 +106,11 @@ public class DocumentCharacterIterator implements CharacterIterator, CharSequenc
 	 */
 	@Override
 	public char last() {
-		if (fFirst == fLast)
+		if (fFirst == fLast) {
 			return setIndex(getEndIndex());
-		else
+		} else {
 			return setIndex(getEndIndex() - 1);
+		}
 	}
 
 	/*
@@ -114,12 +118,13 @@ public class DocumentCharacterIterator implements CharacterIterator, CharSequenc
 	 */
 	@Override
 	public char current() {
-		if (fIndex >= fFirst && fIndex < fLast)
+		if (fIndex >= fFirst && fIndex < fLast) {
 			try {
 				return fDocument.getChar(fIndex);
 			} catch (BadLocationException e) {
 				// ignore
 			}
+		}
 		return DONE;
 	}
 
@@ -148,10 +153,11 @@ public class DocumentCharacterIterator implements CharacterIterator, CharSequenc
 	 */
 	@Override
 	public char setIndex(int position) {
-		if (position >= getBeginIndex() && position <= getEndIndex())
+		if (position >= getBeginIndex() && position <= getEndIndex()) {
 			fIndex = position;
-		else
+		} else {
 			throw new IllegalArgumentException();
+		}
 
 		invariant();
 		return current();
@@ -215,15 +221,16 @@ public class DocumentCharacterIterator implements CharacterIterator, CharSequenc
 	 */
 	@Override
 	public char charAt(int index) {
-		if (index >= 0 && index < length())
+		if (index >= 0 && index < length()) {
 			try {
 				return fDocument.getChar(getBeginIndex() + index);
 			} catch (BadLocationException e) {
 				// ignore and return DONE
 				return DONE;
 			}
-		else
+		} else {
 			throw new IndexOutOfBoundsException();
+		}
 	}
 
 	/*
@@ -231,12 +238,15 @@ public class DocumentCharacterIterator implements CharacterIterator, CharSequenc
 	 */
 	@Override
 	public CharSequence subSequence(int start, int end) {
-		if (start < 0)
+		if (start < 0) {
 			throw new IndexOutOfBoundsException();
-		if (end < start)
+		}
+		if (end < start) {
 			throw new IndexOutOfBoundsException();
-		if (end > length())
+		}
+		if (end > length()) {
 			throw new IndexOutOfBoundsException();
+		}
 		return new DocumentCharacterIterator(fDocument, getBeginIndex() + start, getBeginIndex() + end);
 	}
 }

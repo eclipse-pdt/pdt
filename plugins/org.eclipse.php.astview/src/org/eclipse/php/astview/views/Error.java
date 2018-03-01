@@ -51,23 +51,26 @@ public class Error extends ExceptionAttribute {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
+		}
 		if (obj == null || !obj.getClass().equals(getClass())) {
 			return false;
 		}
 		
 		Error other= (Error) obj;
 		if (fParent == null) {
-			if (other.fParent != null)
+			if (other.fParent != null) {
 				return false;
+			}
 		} else if (! fParent.equals(other.fParent)) {
 			return false;
 		}
 		
 		if (fLabel == null) {
-			if (other.fLabel != null)
+			if (other.fLabel != null) {
 				return false;
+			}
 		} else if (! fLabel.equals(other.fLabel)) {
 			return false;
 		}

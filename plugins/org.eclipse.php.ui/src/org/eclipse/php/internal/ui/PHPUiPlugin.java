@@ -260,8 +260,9 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	}
 
 	private synchronized ImageDescriptorRegistry internalGetImageDescriptorRegistry() {
-		if (fImageDescriptorRegistry == null)
+		if (fImageDescriptorRegistry == null) {
 			fImageDescriptorRegistry = new ImageDescriptorRegistry();
+		}
 		return fImageDescriptorRegistry;
 	}
 
@@ -283,14 +284,16 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 
 	private IWorkbenchPage internalGetActivePage() {
 		IWorkbenchWindow window = getWorkbench().getActiveWorkbenchWindow();
-		if (window == null)
+		if (window == null) {
 			return null;
+		}
 		return getWorkbench().getActiveWorkbenchWindow().getActivePage();
 	}
 
 	public static void createStandardGroups(IMenuManager menu) {
-		if (!menu.isEmpty())
+		if (!menu.isEmpty()) {
 			return;
+		}
 
 		menu.add(new Separator(IContextMenuConstants.GROUP_NEW));
 		menu.add(new GroupMarker(IContextMenuConstants.GROUP_GOTO));
@@ -385,8 +388,9 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	}
 
 	public synchronized MembersOrderPreferenceCache getMemberOrderPreferenceCache() {
-		if (fMembersOrderPreferenceCache == null)
+		if (fMembersOrderPreferenceCache == null) {
 			fMembersOrderPreferenceCache = new MembersOrderPreferenceCache();
+		}
 		return fMembersOrderPreferenceCache;
 	}
 
@@ -404,8 +408,9 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 * @since 3.1
 	 */
 	public synchronized PHPFoldingStructureProviderRegistry getFoldingStructureProviderRegistry() {
-		if (fFoldingStructureProviderRegistry == null)
+		if (fFoldingStructureProviderRegistry == null) {
 			fFoldingStructureProviderRegistry = new PHPFoldingStructureProviderRegistry();
+		}
 		return fFoldingStructureProviderRegistry;
 	}
 
@@ -434,8 +439,9 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 			for (int i = 0; i < fPHPEditorTextHoverDescriptors.length - 1; i++) {
 				if (PreferenceConstants.ID_BESTMATCH_HOVER.equals(fPHPEditorTextHoverDescriptors[i].getId())) {
 					PHPEditorTextHoverDescriptor hoverDescriptor = fPHPEditorTextHoverDescriptors[i];
-					for (int j = i; j > 0; j--)
+					for (int j = i; j > 0; j--) {
 						fPHPEditorTextHoverDescriptors[j] = fPHPEditorTextHoverDescriptors[j - 1];
+					}
 					fPHPEditorTextHoverDescriptors[0] = hoverDescriptor;
 					break;
 				}
@@ -476,8 +482,9 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 * @since 3.0
 	 */
 	public synchronized ASTProvider getASTProvider() {
-		if (fASTProvider == null)
+		if (fASTProvider == null) {
 			fASTProvider = new ASTProvider();
+		}
 
 		return fASTProvider;
 	}
@@ -489,8 +496,9 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 * @since 3.0
 	 */
 	public synchronized ColorManager getColorManager() {
-		if (fColorManager == null)
+		if (fColorManager == null) {
 			fColorManager = new ColorManager();
+		}
 
 		return fColorManager;
 	}
@@ -502,8 +510,9 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 * @since 3.0
 	 */
 	public synchronized PHPTextTools getTextTools() {
-		if (fTextTools == null)
+		if (fTextTools == null) {
 			fTextTools = new PHPTextTools(true);
+		}
 
 		return fTextTools;
 	}
@@ -522,8 +531,9 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	public static ISourceModule getEditorInputTypeRoot(IEditorInput editorInput) {
 		// Performance: check working copy manager first: this is faster
 		ISourceModule cu = DLTKUIPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(editorInput);
-		if (cu != null)
+		if (cu != null) {
 			return cu;
+		}
 
 		ISourceModule je = editorInput.getAdapter(ISourceModule.class);
 		return je;

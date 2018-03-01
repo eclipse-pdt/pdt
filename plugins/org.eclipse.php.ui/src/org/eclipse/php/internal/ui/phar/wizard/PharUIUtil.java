@@ -42,8 +42,9 @@ import org.eclipse.swt.widgets.Shell;
 public class PharUIUtil {
 
 	public static boolean askForOverwritePermission(final Shell parent, IPath filePath, boolean isOSPath) {
-		if (parent == null)
+		if (parent == null) {
 			return false;
+		}
 		return queryDialog(parent, PharPackagerMessages.JarPackage_confirmReplace_title,
 				Messages.format(PharPackagerMessages.JarPackage_confirmReplace_message,
 						BasicElementLabels.getPathLabel(filePath, isOSPath)));
@@ -51,8 +52,9 @@ public class PharUIUtil {
 
 	private static boolean queryDialog(final Shell parent, final String title, final String message) {
 		Display display = parent.getDisplay();
-		if (display == null || display.isDisposed())
+		if (display == null || display.isDisposed()) {
 			return false;
+		}
 		final boolean[] returnValue = new boolean[1];
 		Runnable runnable = new Runnable() {
 			@Override
@@ -65,8 +67,9 @@ public class PharUIUtil {
 	}
 
 	public static boolean askToCreateDirectory(final Shell parent, File directory) {
-		if (parent == null)
+		if (parent == null) {
 			return false;
+		}
 		return queryDialog(parent, PharPackagerMessages.JarPackage_confirmCreate_title, Messages.format(
 				PharPackagerMessages.JarPackage_confirmCreate_message, BasicElementLabels.getPathLabel(directory)));
 	}
@@ -82,7 +85,9 @@ public class PharUIUtil {
 	 */
 	public static CoreException createCoreException(String message, Exception ex) {
 		if (message == null)
+		 {
 			message = ""; //$NON-NLS-1$
+		}
 		return new CoreException(
 				new Status(IStatus.ERROR, PHPUiPlugin.ID, IDLTKStatusConstants.INTERNAL_ERROR, message, ex));
 	}
@@ -112,8 +117,9 @@ public class PharUIUtil {
 								 */);
 				}
 
-				if (pharFile == null || !pharFile.exists())
+				if (pharFile == null || !pharFile.exists()) {
 					return true;
+				}
 				if (PHPToolkitUtil.PHAR_EXTENSTION.equals(extension)) {
 					new PharArchiveFile(pharFile);
 				} else if (PHPToolkitUtil.ZIP_EXTENSTION.equals(extension)) {

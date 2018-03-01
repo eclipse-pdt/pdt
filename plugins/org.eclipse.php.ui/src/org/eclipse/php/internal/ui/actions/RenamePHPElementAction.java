@@ -55,17 +55,20 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 
 	private static boolean canEnable(IStructuredSelection selection) throws CoreException {
 		IModelElement element = getPHPElement(selection);
-		if (element == null)
+		if (element == null) {
 			return false;
+		}
 		return isRenameAvailable(element);
 	}
 
 	private static IModelElement getPHPElement(IStructuredSelection selection) {
-		if (selection.size() != 1)
+		if (selection.size() != 1) {
 			return null;
+		}
 		Object first = selection.getFirstElement();
-		if (!(first instanceof IModelElement))
+		if (!(first instanceof IModelElement)) {
 			return null;
+		}
 		return (IModelElement) first;
 	}
 
@@ -110,8 +113,9 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 
 	public boolean canRun() throws ModelException {
 		IModelElement element = getPHPElement();
-		if (element == null)
+		if (element == null) {
 			return false;
+		}
 		try {
 			return isRenameAvailable(element);
 		} catch (CoreException e) {
@@ -122,8 +126,9 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 
 	private IModelElement getPHPElement() throws ModelException {
 		IModelElement[] elements = SelectionConverter.codeResolve(fEditor);
-		if (elements == null || elements.length != 1)
+		if (elements == null || elements.length != 1) {
 			return null;
+		}
 		return elements[0];
 	}
 
@@ -131,8 +136,9 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 	// -------------------------------------------------------------------
 
 	private void run(IModelElement element) throws CoreException {
-		if (!ActionUtils.isProcessable(getShell(), element))
+		if (!ActionUtils.isProcessable(getShell(), element)) {
 			return;
+		}
 		throw new RuntimeException(PHPUIMessages.RenamePHPElementAction_0);
 	}
 

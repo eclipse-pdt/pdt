@@ -93,8 +93,9 @@ public class CommunicationUtilities {
 			breakPoint.setExpression(readString(in));
 		}
 		breakPoint.setFileName(readString(in));
-		if (breakPoint.getType() == Breakpoint.ZEND_STATIC_BREAKPOINT)
+		if (breakPoint.getType() == Breakpoint.ZEND_STATIC_BREAKPOINT) {
 			breakPoint.setLineNumber(in.readInt());
+		}
 		return breakPoint;
 	}
 }

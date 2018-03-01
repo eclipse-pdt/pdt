@@ -450,19 +450,24 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 	@Override
 	protected IStatus validateItem(Object item) {
 		if (item == null)
+		 {
 			return new Status(IStatus.ERROR, DLTKUIPlugin.getPluginId(), IStatus.ERROR, "", null); //$NON-NLS-1$
+		}
 
 		if (fValidator != null) {
 			IType type = ((TypeNameMatch) item).getType();
-			if (!type.exists())
+			if (!type.exists()) {
 				return new Status(IStatus.ERROR, DLTKUIPlugin.getPluginId(), IStatus.ERROR,
 						Messages.format(DLTKUIMessages.FilteredTypesSelectionDialog_error_type_doesnot_exist,
 								((TypeNameMatch) item).getFullyQualifiedName()),
 						null);
+			}
 			Object[] elements = { type };
 			return fValidator.validate(elements);
-		} else
+		}
+		else {
 			return new Status(IStatus.OK, DLTKUIPlugin.getPluginId(), IStatus.OK, "", null); //$NON-NLS-1$
+		}
 	}
 
 	/**
@@ -697,8 +702,9 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 						if (filePath != null) {
 							// on MacOS X install locations end in an additional
 							// "/Home" segment; remove it
-							if (isMac && filePath.endsWith(HOME_SUFFIX))
+							if (isMac && filePath.endsWith(HOME_SUFFIX)) {
 								filePath = filePath.substring(0, filePath.length() - HOME_SUFFIX.length() + 1);
+							}
 							locations.add(filePath);
 							labels.add(label);
 						}
@@ -805,27 +811,34 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 		 */
 		@Override
 		public boolean isSubFilter(ItemsFilter filter) {
-			if (!super.isSubFilter(filter))
+			if (!super.isSubFilter(filter)) {
 				return false;
+			}
 			TypeItemsFilter typeItemsFilter = (TypeItemsFilter) filter;
-			if (fScope != typeItemsFilter.getSearchScope())
+			if (fScope != typeItemsFilter.getSearchScope()) {
 				return false;
-			if (fMyTypeFilterVersion != typeItemsFilter.getMyTypeFilterVersion())
+			}
+			if (fMyTypeFilterVersion != typeItemsFilter.getMyTypeFilterVersion()) {
 				return false;
+			}
 			return getPattern().indexOf('.', filter.getPattern().length()) == -1;
 		}
 
 		@Override
 		public boolean equalsFilter(ItemsFilter iFilter) {
-			if (!super.equalsFilter(iFilter))
+			if (!super.equalsFilter(iFilter)) {
 				return false;
-			if (!(iFilter instanceof TypeItemsFilter))
+			}
+			if (!(iFilter instanceof TypeItemsFilter)) {
 				return false;
+			}
 			TypeItemsFilter typeItemsFilter = (TypeItemsFilter) iFilter;
-			if (fScope != typeItemsFilter.getSearchScope())
+			if (fScope != typeItemsFilter.getSearchScope()) {
 				return false;
-			if (fMyTypeFilterVersion != typeItemsFilter.getMyTypeFilterVersion())
+			}
+			if (fMyTypeFilterVersion != typeItemsFilter.getMyTypeFilterVersion()) {
 				return false;
+			}
 			return true;
 		}
 
@@ -842,14 +855,16 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 		}
 
 		public String getPackagePattern() {
-			if (fPackageMatcher == null)
+			if (fPackageMatcher == null) {
 				return null;
+			}
 			return fPackageMatcher.getPattern();
 		}
 
 		public int getPackageFlags() {
-			if (fPackageMatcher == null)
+			if (fPackageMatcher == null) {
 				return SearchPattern.RULE_EXACT_MATCH;
+			}
 
 			return fPackageMatcher.getMatchRule();
 		}
@@ -859,8 +874,9 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 		}
 
 		public boolean matchesFilterExtension(TypeNameMatch type) {
-			if (fFilterExt == null)
+			if (fFilterExt == null) {
 				return true;
+			}
 			fAdapter.setMatch(type);
 			return fFilterExt.select(fAdapter);
 		}
@@ -870,21 +886,24 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 		}
 
 		private boolean matchesPackage(TypeNameMatch type) {
-			if (fPackageMatcher == null)
+			if (fPackageMatcher == null) {
 				return true;
+			}
 			return fPackageMatcher.matches(type.getPackageName());
 		}
 
 		private boolean matchesScope(TypeNameMatch type) {
-			if (fIsWorkspaceScope)
+			if (fIsWorkspaceScope) {
 				return true;
+			}
 			return fScope.encloses(type.getType());
 
 		}
 
 		private boolean matchesModifiers(TypeNameMatch type) {
-			if (fElemKind == IDLTKSearchConstants.TYPE)
+			if (fElemKind == IDLTKSearchConstants.TYPE) {
 				return true;
+			}
 			int modifiers = type.getModifiers() & TYPE_MODIFIERS;
 			switch (fElemKind) {
 			case IDLTKSearchConstants.TYPE:
@@ -918,8 +937,9 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 			}
 
 			TypeNameMatch type = (TypeNameMatch) item;
-			if (!(matchesPackage(type) && matchesModifiers(type) && matchesScope(type) && matchesFilterExtension(type)))
+			if (!(matchesPackage(type) && matchesModifiers(type) && matchesScope(type) && matchesFilterExtension(type))) {
 				return false;
+			}
 			return matchesName(type);
 		}
 
@@ -947,7 +967,9 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 				packPattern = evaluatePackagePattern(stringPattern.substring(0, index));
 				pattern = stringPattern.substring(index + 1);
 				if (pattern.length() == 0)
+				 {
 					pattern = "**"; //$NON-NLS-1$
+				}
 			}
 			super.setPattern(pattern);
 			packagePattern = packPattern;
@@ -1097,18 +1119,22 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 		@Override
 		public int compare(TypeNameMatch leftInfo, TypeNameMatch rightInfo) {
 			int result = compareName(leftInfo.getSimpleTypeName(), rightInfo.getSimpleTypeName());
-			if (result != 0)
+			if (result != 0) {
 				return result;
+			}
 			result = compareTypeContainerName(leftInfo.getTypeContainerName(), rightInfo.getTypeContainerName());
-			if (result != 0)
+			if (result != 0) {
 				return result;
+			}
 
 			int leftCategory = getElementTypeCategory(leftInfo);
 			int rightCategory = getElementTypeCategory(rightInfo);
-			if (leftCategory < rightCategory)
+			if (leftCategory < rightCategory) {
 				return -1;
-			if (leftCategory > rightCategory)
+			}
+			if (leftCategory > rightCategory) {
 				return +1;
+			}
 			return compareContainerName(leftInfo, rightInfo);
 		}
 
@@ -1128,12 +1154,15 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 		private int compareTypeContainerName(String leftString, String rightString) {
 			int leftLength = leftString.length();
 			int rightLength = rightString.length();
-			if (leftLength == 0 && rightLength > 0)
+			if (leftLength == 0 && rightLength > 0) {
 				return -1;
-			if (leftLength == 0 && rightLength == 0)
+			}
+			if (leftLength == 0 && rightLength == 0) {
 				return 0;
-			if (leftLength > 0 && rightLength == 0)
+			}
+			if (leftLength > 0 && rightLength == 0) {
 				return +1;
+			}
 			return compareName(leftString, rightString);
 		}
 
@@ -1151,8 +1180,9 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 					}
 				}
 				String lib = fLib2Name.get(name);
-				if (lib != null)
+				if (lib != null) {
 					return lib;
+				}
 			}
 			StringBuffer buf = new StringBuffer();
 			ScriptElementLabels labels = getUIToolkit().getScriptElementLabels();
@@ -1163,8 +1193,9 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 
 		private int getElementTypeCategory(TypeNameMatch type) {
 			try {
-				if (type.getProjectFragment().getKind() == IProjectFragment.K_SOURCE)
+				if (type.getProjectFragment().getKind() == IProjectFragment.K_SOURCE) {
 					return 0;
+				}
 			} catch (ModelException e) {
 				DLTKUIPlugin.log(e);
 			}

@@ -56,10 +56,11 @@ public class QuickAssistLightBulbUpdater {
 			Annotation annotation = new Annotation("org.eclipse.dltk.ui.warning", false, null); //$NON-NLS-1$
 			AnnotationPreference preference = EditorsUI.getAnnotationPreferenceLookup()
 					.getAnnotationPreference(annotation);
-			if (preference != null)
+			if (preference != null) {
 				LAYER = preference.getPresentationLayer() - 1;
-			else
+			} else {
 				LAYER = IAnnotationAccessExtension.DEFAULT_LAYER;
+			}
 
 		}
 

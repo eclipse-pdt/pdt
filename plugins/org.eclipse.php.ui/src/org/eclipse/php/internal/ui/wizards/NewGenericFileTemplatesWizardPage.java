@@ -266,8 +266,9 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 					Template left = (Template) object1;
 					Template right = (Template) object2;
 					int result = left.getName().compareToIgnoreCase(right.getName());
-					if (result != 0)
+					if (result != 0) {
 						return result;
+					}
 					return left.getDescription().compareToIgnoreCase(right.getDescription());
 				}
 				return super.compare(viewer, object1, object2);
@@ -389,10 +390,12 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		if (!enabled) {
 			// save last selected template
 			Template template = getSelectedTemplate();
-			if (template != null)
+			if (template != null) {
 				fLastSelectedTemplateName = template.getName();
-			else
+			}
+			else {
 				fLastSelectedTemplateName = ""; //$NON-NLS-1$
+			}
 
 			fTableViewer.setSelection(null);
 		} else {

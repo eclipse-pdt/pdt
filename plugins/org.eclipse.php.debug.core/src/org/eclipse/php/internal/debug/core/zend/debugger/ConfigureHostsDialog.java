@@ -50,16 +50,18 @@ public class ConfigureHostsDialog extends MessageDialog {
 		@Override
 		public Image getImage(Object element) {
 			Inet4Address address = (Inet4Address) element;
-			if (!detectedIPs.contains(address))
+			if (!detectedIPs.contains(address)) {
 				return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK);
+			}
 			return null;
 		}
 
 		@Override
 		public String getToolTipText(Object element) {
 			Inet4Address address = (Inet4Address) element;
-			if (!detectedIPs.contains(address))
+			if (!detectedIPs.contains(address)) {
 				return PHPDebugCoreMessages.ConfigureHostsDialog_Address_could_not_be_detected;
+			}
 			return null;
 		}
 
@@ -86,8 +88,9 @@ public class ConfigureHostsDialog extends MessageDialog {
 		@Override
 		public String getToolTipText(Object element) {
 			Inet4Address address = (Inet4Address) element;
-			if (!detectedIPs.contains(address))
+			if (!detectedIPs.contains(address)) {
 				return PHPDebugCoreMessages.ConfigureHostsDialog_Address_could_not_be_detected;
+			}
 			return null;
 		}
 
@@ -163,8 +166,9 @@ public class ConfigureHostsDialog extends MessageDialog {
 		mergedIPs = new ArrayList<>();
 		mergedIPs.addAll(allIPs);
 		for (Inet4Address ip : detectedIPs) {
-			if (!mergedIPs.contains(ip))
+			if (!mergedIPs.contains(ip)) {
 				mergedIPs.add(ip);
+			}
 		}
 	}
 
@@ -309,10 +313,11 @@ public class ConfigureHostsDialog extends MessageDialog {
 	private void setSelection() {
 		for (int i = 0; i < mergedIPs.size(); i++) {
 			Inet4Address next = mergedIPs.get(i);
-			if (inputIPs.contains(next))
+			if (inputIPs.contains(next)) {
 				ipsTableViewer.setChecked(next, true);
-			else
+			} else {
 				ipsTableViewer.setChecked(next, false);
+			}
 		}
 	}
 

@@ -170,8 +170,9 @@ public class CreateProfileDialog extends StatusDialog {
 
 	@Override
 	protected void okPressed() {
-		if (!getStatus().isOK())
+		if (!getStatus().isOK()) {
 			return;
+		}
 
 		FormatterUIPlugin.getDefault().getDialogSettings().put(PREF_OPEN_EDIT_DIALOG, fOpenEditDialog);
 

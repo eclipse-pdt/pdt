@@ -69,8 +69,9 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 		public GrayedCheckedModelElement[] getChecked() {
 			ArrayList<GrayedCheckedModelElement> result = new ArrayList<>();
 			for (int i = 0; i < fElements.size(); i++) {
-				if (fElements.get(i).isChecked())
+				if (fElements.get(i).isChecked()) {
 					result.add(fElements.get(i));
+				}
 			}
 			return result.toArray(new GrayedCheckedModelElement[result.size()]);
 		}
@@ -78,8 +79,9 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 		public GrayedCheckedModelElement[] getGrayed() {
 			ArrayList<GrayedCheckedModelElement> result = new ArrayList<>();
 			for (int i = 0; i < fElements.size(); i++) {
-				if (fElements.get(i).isGrayed())
+				if (fElements.get(i).isGrayed()) {
 					result.add(fElements.get(i));
+				}
 			}
 			return result.toArray(new GrayedCheckedModelElement[result.size()]);
 		}
@@ -194,8 +196,9 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 		public Image getImage(Object object) {
 			IWorkingSet workingSet = ((GrayedCheckedModelElement) object).getWorkingSet();
 			ImageDescriptor imageDescriptor = workingSet.getImageDescriptor();
-			if (imageDescriptor == null)
+			if (imageDescriptor == null) {
 				return null;
+			}
 
 			Image icon = fIcons.get(imageDescriptor);
 			if (icon == null) {
@@ -258,16 +261,19 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 			}
 
 			private boolean accept(IWorkingSet set) {
-				if (!isValidWorkingSet(set))
+				if (!isValidWorkingSet(set)) {
 					return false;
+				}
 
 				ScriptExplorerPart activePart = getActivePackageExplorer();
 				if (fWorkingSetModel == null
-						|| activePart != null && activePart.getRootMode() == ScriptExplorerPart.PROJECTS_AS_ROOTS)
+						|| activePart != null && activePart.getRootMode() == ScriptExplorerPart.PROJECTS_AS_ROOTS) {
 					return true;
+				}
 
-				if (fShowVisibleOnly && !fWorkingSetModel.isActiveWorkingSet(set))
+				if (fShowVisibleOnly && !fWorkingSetModel.isActiveWorkingSet(set)) {
 					return false;
+				}
 
 				return true;
 			}
@@ -404,8 +410,9 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 					// can only allow to create java working sets at the moment,
 					// see bug 186762
 					IWorkingSetNewWizard wizard = manager.createWorkingSetNewWizard(VALID_WORKING_SET_IDS);
-					if (wizard == null)
+					if (wizard == null) {
 						return;
+					}
 
 					WizardDialog dialog = new WizardDialog(getShell(), wizard);
 					dialog.create();
@@ -478,8 +485,9 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 		private void createShowVisibleOnly(Composite parent) {
 			ScriptExplorerPart activePart = getActivePackageExplorer();
 			if (fWorkingSetModel == null
-					|| activePart != null && activePart.getRootMode() == ScriptExplorerPart.PROJECTS_AS_ROOTS)
+					|| activePart != null && activePart.getRootMode() == ScriptExplorerPart.PROJECTS_AS_ROOTS) {
 				return;
+			}
 
 			final Button showVisibleOnly = new Button(parent, SWT.CHECK);
 			showVisibleOnly.setText(WorkingSetMessages.ConfigureWorkingSetAssignementAction_OnlyShowVisible_check);
@@ -529,19 +537,22 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 		 */
 		@Override
 		protected void buttonPressed(int buttonId) {
-			if (IDialogConstants.OK_ID == buttonId)
+			if (IDialogConstants.OK_ID == buttonId) {
 				fSettings.put(SETTINGS_SHOW_VISIBLE_ONLY, fShowVisibleOnly);
+			}
 			super.buttonPressed(buttonId);
 		}
 
 		private void recalculateCheckedState(List<IWorkingSet> addedWorkingSets) {
 			Set<IWorkingSet> checkedWorkingSets = new HashSet<>();
 			GrayedCheckedModelElement[] elements = fModel.getChecked();
-			for (int i = 0; i < elements.length; i++)
+			for (int i = 0; i < elements.length; i++) {
 				checkedWorkingSets.add(elements[i].getWorkingSet());
+			}
 
-			if (addedWorkingSets != null)
+			if (addedWorkingSets != null) {
 				checkedWorkingSets.addAll(addedWorkingSets);
+			}
 
 			fModel = createGrayedCheckedModel(fElements, getAllWorkingSets(), checkedWorkingSets);
 
@@ -590,14 +601,16 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 	}
 
 	private boolean canEnable(IStructuredSelection selection) {
-		if (selection.isEmpty())
+		if (selection.isEmpty()) {
 			return false;
+		}
 
 		List<?> list = selection.toList();
 		for (Iterator<?> iterator = list.iterator(); iterator.hasNext();) {
 			Object object = iterator.next();
-			if (!(object instanceof IResource) && !(object instanceof IModelElement))
+			if (!(object instanceof IResource) && !(object instanceof IModelElement)) {
 				return false;
+			}
 		}
 
 		return true;
@@ -656,11 +669,13 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 			for (int j = 0; j < elements.length; j++) {
 				if (checkedWorkingSets == null) {
 					IAdaptable adapted = adapt(workingSet, elements[j]);
-					if (adapted != null && contains(workingSet, adapted))
+					if (adapted != null && contains(workingSet, adapted)) {
 						checkCount++;
+					}
 				} else {
-					if (checkedWorkingSets.contains(workingSet))
+					if (checkedWorkingSets.contains(workingSet)) {
 						checkCount++;
+					}
 				}
 			}
 
@@ -704,8 +719,9 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 					IWorkingSet[] activeSets = getActiveWorkingSets();
 					if (activeSets != null) {
 						List<IWorkingSet> activeWorkingSets = new ArrayList<>(Arrays.asList(activeSets));
-						if (!activeWorkingSets.contains(set))
+						if (!activeWorkingSets.contains(set)) {
 							activateWorkingSet(set);
+						}
 					}
 				}
 			}
@@ -751,8 +767,9 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 		} else {
 			WorkingSetModel model = null;
 			ScriptExplorerPart activePart = getActivePackageExplorer();
-			if (activePart != null)
+			if (activePart != null) {
 				model = activePart.getWorkingSetModel();
+			}
 			return model == null ? null : model.getActiveWorkingSets();
 		}
 	}
@@ -766,18 +783,22 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 	}
 
 	private static boolean isValidWorkingSet(IWorkingSet set) {
-		if (set.isAggregateWorkingSet() || !set.isSelfUpdating())
+		if (set.isAggregateWorkingSet() || !set.isSelfUpdating()) {
 			return false;
+		}
 
-		if (!set.isVisible())
+		if (!set.isVisible()) {
 			return false;
+		}
 
-		if (!set.isEditable())
+		if (!set.isEditable()) {
 			return false;
+		}
 
 		for (int i = 0; i < VALID_WORKING_SET_IDS.length; i++) {
-			if (VALID_WORKING_SET_IDS[i].equals(set.getId()))
+			if (VALID_WORKING_SET_IDS[i].equals(set.getId())) {
 				return true;
+			}
 		}
 
 		return false;
@@ -785,8 +806,9 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 
 	private static IAdaptable adapt(IWorkingSet set, IAdaptable element) {
 		IAdaptable[] adaptedElements = set.adaptElements(new IAdaptable[] { element });
-		if (adaptedElements.length != 1)
+		if (adaptedElements.length != 1) {
 			return null;
+		}
 
 		return adaptedElements[0];
 	}
@@ -794,8 +816,9 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 	private static boolean contains(IWorkingSet set, IAdaptable adaptedElement) {
 		IAdaptable[] elements = set.getElements();
 		for (int i = 0; i < elements.length; i++) {
-			if (elements[i].equals(adaptedElement))
+			if (elements[i].equals(adaptedElement)) {
 				return true;
+			}
 		}
 
 		return false;
@@ -817,8 +840,9 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 
 	private void selectAndReveal(IAdaptable[] elements) {
 		ScriptExplorerPart explorer = getActivePackageExplorer();
-		if (explorer != null)
+		if (explorer != null) {
 			explorer.selectReveal(new StructuredSelection(elements));
+		}
 	}
 
 	private ScriptExplorerPart getActivePackageExplorer() {

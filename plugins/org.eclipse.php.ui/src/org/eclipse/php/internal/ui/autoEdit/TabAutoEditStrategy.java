@@ -165,8 +165,9 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 		int caretIndexInLine = (command.offset - lineOffset);
 
 		for (int i = 0; i < caretIndexInLine; i++) {
-			if ((lineText.charAt(i) != ' ') && (lineText.charAt(i) != '\t'))
+			if ((lineText.charAt(i) != ' ') && (lineText.charAt(i) != '\t')) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -176,18 +177,21 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 		boolean result = false;
 		IRegion lineInfo = document.getLineInformation(lineNumber);
 		int length = lineInfo.getLength();
-		if (length == 0)
+		if (length == 0) {
 			return false;
+		}
 		String lineText = document.get(originalLineStart, length);
 		int caretIndexInString = command.offset - originalLineStart;
 
 		// in case the caret is located at the line's end
-		if (caretIndexInString == lineText.length())
+		if (caretIndexInString == lineText.length()) {
 			return false;
+		}
 
 		char charAfterCaret = lineText.charAt(caretIndexInString);
-		if (charAfterCaret == ' ' || charAfterCaret == '\t')
+		if (charAfterCaret == ' ' || charAfterCaret == '\t') {
 			result = true;
+		}
 		return result;
 
 	}
@@ -236,8 +240,9 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 
 		// find the first non blank char of the element.
 		int i;
-		for (i = 0; i < length && (lineText.charAt(i) == ' ' || lineText.charAt(i) == '\t'); i++)
+		for (i = 0; i < length && (lineText.charAt(i) == ' ' || lineText.charAt(i) == '\t'); i++) {
 			;
+		}
 		return i;
 	}
 

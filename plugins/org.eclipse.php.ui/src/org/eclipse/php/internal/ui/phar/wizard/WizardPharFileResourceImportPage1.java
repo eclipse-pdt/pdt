@@ -86,10 +86,11 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 		setTitle(PharImportMessages.ArchiveExport_exportTitle);
 		setDescription(PharImportMessages.ArchiveImport_description);
 
-		if (fileImportMask == null)
+		if (fileImportMask == null) {
 			this.fileImportMask = FILE_IMPORT_MASK;
-		else
+		} else {
 			this.fileImportMask = fileImportMask;
+		}
 	}
 
 	/**
@@ -449,8 +450,9 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 				importStructureProvider, this, fileSystemObjects);
 
 		operation.setContext(getShell());
-		if (!executeImportOperation(operation))
+		if (!executeImportOperation(operation)) {
 			return false;
+		}
 
 		ArchiveFileManipulations.closeStructureProvider(importStructureProvider, getShell());
 		return true;

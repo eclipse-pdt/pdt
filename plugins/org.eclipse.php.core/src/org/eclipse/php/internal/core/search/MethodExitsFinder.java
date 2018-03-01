@@ -42,7 +42,9 @@ public class MethodExitsFinder extends AbstractOccurrencesFinder {
 		if (isExitExecutionPath(node)) {
 			fFunctionDeclaration = (FunctionDeclaration) ASTNodes.getParent(node, ASTNode.FUNCTION_DECLARATION);
 			if (fFunctionDeclaration == null)
+			 {
 				return "MethodExitsFinder_no_return_type_selected"; //$NON-NLS-1$
+			}
 			return null;
 
 		}

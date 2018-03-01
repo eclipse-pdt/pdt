@@ -366,8 +366,9 @@ public class GettersSettersHandler extends AbstractHandler {
 					list.remove(entry.field);
 					getterSet = false;
 				}
-			} else
+			} else {
 				getterSet = false;
+			}
 		}
 		list = reorderFields(list, set);
 		return list.toArray(new IField[list.size()]);
@@ -390,8 +391,9 @@ public class GettersSettersHandler extends AbstractHandler {
 					list.add(entry.field);
 					getterSet = false;
 				}
-			} else
+			} else {
 				getterSet = false;
+			}
 		}
 		list = reorderFields(list, set);
 		return list.toArray(new IField[list.size()]);
@@ -414,8 +416,9 @@ public class GettersSettersHandler extends AbstractHandler {
 					list.add(entry.field);
 					getterSet = false;
 				}
-			} else
+			} else {
 				getterSet = false;
+			}
 		}
 		list = reorderFields(list, set);
 		return list.toArray(new IField[list.size()]);

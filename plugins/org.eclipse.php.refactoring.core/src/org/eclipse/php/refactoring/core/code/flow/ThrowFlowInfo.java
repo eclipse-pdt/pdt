@@ -20,14 +20,16 @@ class ThrowFlowInfo extends FlowInfo {
 	}
 
 	public void merge(FlowInfo info, FlowContext context) {
-		if (info == null)
+		if (info == null) {
 			return;
+		}
 
 		assignAccessMode(info);
 	}
 
 	public void mergeException(ITypeBinding exception, FlowContext context) {
-		if (exception != null && context.isExceptionCaught(exception))
+		if (exception != null && context.isExceptionCaught(exception)) {
 			addException(exception);
+		}
 	}
 }

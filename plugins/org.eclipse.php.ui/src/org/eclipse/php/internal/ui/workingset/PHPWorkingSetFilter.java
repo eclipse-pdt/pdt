@@ -52,40 +52,48 @@ public class PHPWorkingSetFilter extends WorkingSetFilter {
 		IPath path = resource.getFullPath();
 		for (int i = 0; i < cachedWorkingSet.length; i++) {
 			// compare resource paths
-			if (isEnclosing(cachedWorkingSet[i], path))
+			if (isEnclosing(cachedWorkingSet[i], path)) {
 				return true;
+			}
 		}
 
 		return false;
 	}
 
 	private boolean isEnclosing(IAdaptable element, IPath path) {
-		if (path == null)
+		if (path == null) {
 			return false;
+		}
 
 		IPath elementPath = null;
 
 		IResource elementResource = element.getAdapter(IResource.class);
-		if (elementResource != null)
+		if (elementResource != null) {
 			elementPath = elementResource.getFullPath();
+		}
 
 		if (elementPath == null) {
 			IModelElement scriptElement = element.getAdapter(IModelElement.class);
-			if (scriptElement != null)
+			if (scriptElement != null) {
 				elementPath = scriptElement.getPath();
+			}
 		}
 
-		if (elementPath == null && element instanceof IStorage)
+		if (elementPath == null && element instanceof IStorage) {
 			elementPath = ((IStorage) element).getFullPath();
+		}
 
-		if (elementPath == null)
+		if (elementPath == null) {
 			return false;
+		}
 
-		if (elementPath.isPrefixOf(path))
+		if (elementPath.isPrefixOf(path)) {
 			return true;
+		}
 
-		if (path.isPrefixOf(elementPath))
+		if (path.isPrefixOf(elementPath)) {
 			return true;
+		}
 
 		return false;
 	}

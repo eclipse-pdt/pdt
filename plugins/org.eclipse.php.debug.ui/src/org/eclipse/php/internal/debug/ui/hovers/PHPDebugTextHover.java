@@ -105,8 +105,9 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements 
 	@Override
 	public Object getHoverInfo2(ITextViewer textViewer, IRegion hoverRegion) {
 		PHPStackFrame frame = (PHPStackFrame) getFrame();
-		if (frame == null)
+		if (frame == null) {
 			return null;
+		}
 
 		expressionsUtil = ExpressionsUtil.getInstance(getDebugTarget().getExpressionManager());
 
@@ -258,8 +259,9 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements 
 			public boolean visit(Identifier identifier) {
 				if (identifier.getParent() instanceof Identifier) {
 					String typeName = resolveTypeName((Identifier) identifier.getParent());
-					if (typeName != null)
+					if (typeName != null) {
 						dispatcher.append(typeName);
+					}
 				} else if (identifier.getParent() instanceof Variable) {
 					Variable variable = (Variable) identifier.getParent();
 					if (variable.isDollared()) {
@@ -287,8 +289,9 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements 
 	}
 
 	private PHPVariable fetchClassMember(Expression expression, String fieldName) {
-		if (expression.getValue().getOriChildren() == null)
+		if (expression.getValue().getOriChildren() == null) {
 			return null;
+		}
 		for (Expression child : expression.getValue().getOriChildren()) {
 			if (child.getLastName().endsWith(fieldName)) {
 				return new PHPVariable(getDebugTarget(), child);

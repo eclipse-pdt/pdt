@@ -67,8 +67,9 @@ public class BreakpointSet {
 
 	public boolean supportsBreakpoint(IBreakpoint breakpoint) {
 		// If no project, assume everything in the workspace
-		if (fProject == null)
+		if (fProject == null) {
 			return true;
+		}
 
 		PHPLineBreakpoint bp = (PHPLineBreakpoint) breakpoint;
 		IMarker marker = bp.getMarker();

@@ -40,10 +40,12 @@ public class TestViewer {
 		public boolean select(final PHPUnitElement testInfo) {
 			if (testInfo instanceof PHPUnitTestGroup) {
 				final PHPUnitTestGroup testGroup = (PHPUnitTestGroup) testInfo;
-				if (testGroup.getRunCount() > testGroup.getTotalCount())
+				if (testGroup.getRunCount() > testGroup.getTotalCount()) {
 					return true;
-				if (testInfo == PHPUnitElementManager.getInstance().getRoot())
+				}
+				if (testInfo == PHPUnitElementManager.getInstance().getRoot()) {
 					return true;
+				}
 			}
 			if (testInfo instanceof PHPUnitTest && ((PHPUnitTest) testInfo).getStatus() >= PHPUnitTest.STATUS_FAIL) {
 				return true;
@@ -141,8 +143,9 @@ public class TestViewer {
 			// we're in a new branch, so let's close old OK branches:
 			for (final ListIterator<Object> iter = fAutoClose.listIterator(fAutoClose.size()); iter.hasPrevious();) {
 				final PHPUnitTestGroup previousAutoOpened = (PHPUnitTestGroup) iter.previous();
-				if (previousAutoOpened.equals(parent))
+				if (previousAutoOpened.equals(parent)) {
 					break;
+				}
 
 				if (previousAutoOpened.getStatus() == PHPUnitTest.STATUS_PASS) {
 					// auto-opened the element, and all children are OK -> auto
@@ -263,8 +266,9 @@ public class TestViewer {
 		for (int i = nextIndex; i < siblings.size(); i++) {
 			final PHPUnitTest sibling = siblings.get(i);
 			if (sibling.getStatus() > PHPUnitTest.STATUS_PASS) {
-				if (sibling instanceof PHPUnitTestCase)
+				if (sibling instanceof PHPUnitTestCase) {
 					return (PHPUnitTestCase) sibling;
+				}
 				return getNextChildFailure((PHPUnitTestGroup) sibling, showNext);
 			}
 		}
@@ -391,11 +395,12 @@ public class TestViewer {
 				toUpdate = fNeedUpdate.toArray(new PHPUnitElement[0]);
 				fNeedUpdate.clear();
 			}
-			if (!fTreeNeedsRefresh && toUpdate.length > 0)
-				if (fTreeHasFilter)
-					for (PHPUnitElement element : toUpdate)
+			if (!fTreeNeedsRefresh && toUpdate.length > 0) {
+				if (fTreeHasFilter) {
+					for (PHPUnitElement element : toUpdate) {
 						updateElementInTree(element);
-				else {
+					}
+				} else {
 					final Set<PHPUnitElement> toUpdateWithParents = new HashSet<>();
 					toUpdateWithParents.addAll(Arrays.asList(toUpdate));
 					for (PHPUnitElement element : toUpdate) {
@@ -409,6 +414,7 @@ public class TestViewer {
 					}
 					fTreeViewer.update(toUpdateWithParents.toArray(), null);
 				}
+			}
 		}
 		autoScrollInUI();
 	}
@@ -466,8 +472,9 @@ public class TestViewer {
 
 	public void selectFirstFailure() {
 		final PHPUnitTestCase firstFailure = getNextChildFailure(testRoot, true);
-		if (firstFailure != null)
+		if (firstFailure != null) {
 			getActiveViewer().setSelection(new StructuredSelection(firstFailure), true);
+		}
 	}
 
 	private void setActiveViewerHasFilter(final boolean filter) {
@@ -487,15 +494,17 @@ public class TestViewer {
 			if (failuresOnly) {
 				if (!getActiveViewerHasFilter()) {
 					setActiveViewerHasFilter(true);
-					if (getActiveViewerNeedsRefresh())
+					if (getActiveViewerNeedsRefresh()) {
 						viewer.setInput(null);
+					}
 					viewer.addFilter(fFailuresOnlyFilter);
 				}
 
 			} else if (getActiveViewerHasFilter()) {
 				setActiveViewerHasFilter(false);
-				if (getActiveViewerNeedsRefresh())
+				if (getActiveViewerNeedsRefresh()) {
 					viewer.setInput(null);
+				}
 				viewer.removeFilter(fFailuresOnlyFilter);
 			}
 			processChangesInUI();
@@ -505,13 +514,14 @@ public class TestViewer {
 	}
 
 	private void updateElementInTree(final PHPUnitElement test) {
-		if (isShown(test))
+		if (isShown(test)) {
 			updateShownElementInTree(test);
-		else {
+		} else {
 			PHPUnitElement current = test;
 			do {
-				if (fTreeViewer.testFindItem(current) != null)
+				if (fTreeViewer.testFindItem(current) != null) {
 					fTreeViewer.remove(current);
+				}
 				current = current.getParent();
 			} while (!(current instanceof PHPUnitTestGroup) && !isShown(current));
 
@@ -534,9 +544,11 @@ public class TestViewer {
 		updateShownElementInTree(parent); // make sure parent is shown and
 		// up-to-date
 
-		if (fTreeViewer.testFindItem(test) == null)
+		if (fTreeViewer.testFindItem(test) == null) {
 			fTreeViewer.add(parent, test); // if not yet in tree: add
-		else
+		}
+		else {
 			fTreeViewer.update(test, null); // if in tree: update
+		}
 	}
 }

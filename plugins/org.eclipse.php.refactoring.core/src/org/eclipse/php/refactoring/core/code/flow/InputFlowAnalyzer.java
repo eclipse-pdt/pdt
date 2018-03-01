@@ -57,8 +57,9 @@ public class InputFlowAnalyzer extends FlowAnalyzer {
 
 		@Override
 		public void endVisit(DoStatement node) {
-			if (skipNode(node))
+			if (skipNode(node)) {
 				return;
+			}
 			DoWhileFlowInfo info = createDoWhile();
 			setFlowInfo(node, info);
 			info.mergeAction(getFlowInfo(node.getBody()), fFlowContext);
@@ -93,8 +94,9 @@ public class InputFlowAnalyzer extends FlowAnalyzer {
 		// }
 		@Override
 		public void endVisit(ForStatement node) {
-			if (skipNode(node))
+			if (skipNode(node)) {
 				return;
+			}
 			FlowInfo initInfo = createSequential(node.initializers());
 			FlowInfo conditionInfo = createSequential(node.conditions());
 			FlowInfo incrementInfo = createSequential(node.updaters());
@@ -185,15 +187,17 @@ public class InputFlowAnalyzer extends FlowAnalyzer {
 	}
 
 	private void createLoopReentranceVisitor(ASTNode node) {
-		if (fLoopReentranceVisitor == null && fDoLoopReentrance)
+		if (fLoopReentranceVisitor == null && fDoLoopReentrance) {
 			fLoopReentranceVisitor = new LoopReentranceVisitor(fFlowContext,
 					fSelection, node);
+		}
 	}
 
 	@Override
 	public void endVisit(ConditionalExpression node) {
-		if (skipNode(node))
+		if (skipNode(node)) {
 			return;
+		}
 		Expression thenPart = node.getIfTrue();
 		Expression elsePart = node.getIfFalse();
 		if ((thenPart != null && fSelection.coveredBy(thenPart))
@@ -215,8 +219,9 @@ public class InputFlowAnalyzer extends FlowAnalyzer {
 
 	@Override
 	public void endVisit(IfStatement node) {
-		if (skipNode(node))
+		if (skipNode(node)) {
 			return;
+		}
 		Statement thenPart = node.getTrueStatement();
 		Statement elsePart = node.getFalseStatement();
 		if ((thenPart != null && fSelection.coveredBy(thenPart))
@@ -243,8 +248,9 @@ public class InputFlowAnalyzer extends FlowAnalyzer {
 
 	@Override
 	public void endVisit(SwitchStatement node) {
-		if (skipNode(node))
+		if (skipNode(node)) {
 			return;
+		}
 		SwitchData data = createSwitchData(node);
 		IRegion[] ranges = data.getRanges();
 		for (int i = 0; i < ranges.length; i++) {
@@ -281,8 +287,9 @@ public class InputFlowAnalyzer extends FlowAnalyzer {
 
 	private void handleLoopReentrance(ASTNode node) {
 		if (!fSelection.coveredBy(node) || fLoopReentranceVisitor == null
-				|| fLoopReentranceVisitor.getLoopNode() != node)
+				|| fLoopReentranceVisitor.getLoopNode() != node) {
 			return;
+		}
 
 		fLoopReentranceVisitor.process(node);
 		GenericSequentialFlowInfo info = createSequential();

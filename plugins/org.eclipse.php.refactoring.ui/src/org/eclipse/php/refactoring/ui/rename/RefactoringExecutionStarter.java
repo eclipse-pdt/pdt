@@ -34,9 +34,9 @@ public class RefactoringExecutionStarter {
 	public static void startRenameRefactoring(IResource resource, ASTNode locateNode, final Shell shell)
 			throws CoreException {
 		final RenameSupport support = createRenameSupport(resource, locateNode, null, RenameSupport.UPDATE_REFERENCES);
-		if (support != null && support.preCheck().isOK())
+		if (support != null && support.preCheck().isOK()) {
 			support.openDialog(shell);
-		else {
+		} else {
 			MessageDialog.openInformation(shell, Messages.RefactoringExecutionStarter_0,
 					Messages.RefactoringExecutionStarter_1);
 		}

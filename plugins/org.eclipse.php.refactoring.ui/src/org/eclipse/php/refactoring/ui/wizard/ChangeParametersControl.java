@@ -77,8 +77,9 @@ public class ChangeParametersControl extends Composite {
 			List<ParameterInfo> result = new ArrayList<>(paramInfos.size());
 			for (Iterator<?> iter = paramInfos.iterator(); iter.hasNext();) {
 				ParameterInfo info = (ParameterInfo) iter.next();
-				if (!info.isDeleted())
+				if (!info.isDeleted()) {
 					result.add(info);
+				}
 			}
 			return result.toArray(new ParameterInfo[result.size()]);
 		}
@@ -109,10 +110,12 @@ public class ChangeParametersControl extends Composite {
 			case NEWNAME_PROP:
 				return info.getNewDisplayName();
 			case DEFAULT_PROP:
-				if (info.isAdded())
+				if (info.isAdded()) {
 					return info.getDefaultValue();
-				else
+				}
+				else {
 					return "-"; //$NON-NLS-1$
+				}
 			default:
 				throw new IllegalArgumentException(columnIndex + ": " + element); //$NON-NLS-1$
 			}
@@ -121,10 +124,11 @@ public class ChangeParametersControl extends Composite {
 		@Override
 		public Font getFont(Object element, int columnIndex) {
 			ParameterInfo info = (ParameterInfo) element;
-			if (info.isAdded())
+			if (info.isAdded()) {
 				return JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT);
-			else
+			} else {
 				return null;
+			}
 		}
 	}
 
@@ -132,10 +136,11 @@ public class ChangeParametersControl extends Composite {
 		@Override
 		public boolean canModify(Object element, String property) {
 			Assert.isTrue(element instanceof ParameterInfo);
-			if (property.equals(PROPERTIES[NEWNAME_PROP]))
+			if (property.equals(PROPERTIES[NEWNAME_PROP])) {
 				return true;
-			else if (property.equals(PROPERTIES[DEFAULT_PROP]))
+			} else if (property.equals(PROPERTIES[DEFAULT_PROP])) {
 				return (((ParameterInfo) element).isAdded());
+			}
 			Assert.isTrue(false);
 			return false;
 		}
@@ -143,20 +148,23 @@ public class ChangeParametersControl extends Composite {
 		@Override
 		public Object getValue(Object element, String property) {
 			Assert.isTrue(element instanceof ParameterInfo);
-			if (property.equals(PROPERTIES[NEWNAME_PROP]))
+			if (property.equals(PROPERTIES[NEWNAME_PROP])) {
 				return ((ParameterInfo) element).getNewDisplayName();
-			else if (property.equals(PROPERTIES[DEFAULT_PROP]))
+			} else if (property.equals(PROPERTIES[DEFAULT_PROP])) {
 				return ((ParameterInfo) element).getDefaultValue();
+			}
 			Assert.isTrue(false);
 			return null;
 		}
 
 		@Override
 		public void modify(Object element, String property, Object value) {
-			if (element instanceof TableItem)
+			if (element instanceof TableItem) {
 				element = ((TableItem) element).getData();
-			if (!(element instanceof ParameterInfo))
+			}
+			if (!(element instanceof ParameterInfo)) {
 				return;
+			}
 			boolean unchanged;
 			ParameterInfo parameterInfo = (ParameterInfo) element;
 			if (property.equals(PROPERTIES[NEWNAME_PROP])) {
@@ -249,8 +257,9 @@ public class ChangeParametersControl extends Composite {
 		Assert.isNotNull(parameterInfos);
 		fParameterInfos = parameterInfos;
 		fTableViewer.setInput(fParameterInfos);
-		if (fParameterInfos.size() > 0)
+		if (fParameterInfos.size() > 0) {
 			fTableViewer.setSelection(new StructuredSelection(fParameterInfos.get(0)));
+		}
 	}
 
 	public void editParameter(ParameterInfo info) {
@@ -328,26 +337,30 @@ public class ChangeParametersControl extends Composite {
 
 	private void editColumnOrNextPossible(int column) {
 		ParameterInfo[] selected = getSelectedElements();
-		if (selected.length != 1)
+		if (selected.length != 1) {
 			return;
+		}
 		int nextColumn = column;
 		do {
 			fTableViewer.editElement(selected[0], nextColumn);
-			if (fTableViewer.isCellEditorActive())
+			if (fTableViewer.isCellEditorActive()) {
 				return;
+			}
 			nextColumn = nextColumn(nextColumn);
 		} while (nextColumn != column);
 	}
 
 	private void editColumnOrPrevPossible(int column) {
 		ParameterInfo[] selected = getSelectedElements();
-		if (selected.length != 1)
+		if (selected.length != 1) {
 			return;
+		}
 		int prevColumn = column;
 		do {
 			fTableViewer.editElement(selected[0], prevColumn);
-			if (fTableViewer.isCellEditorActive())
+			if (fTableViewer.isCellEditorActive()) {
 				return;
+			}
 			prevColumn = prevColumn(prevColumn);
 		} while (prevColumn != column);
 	}
@@ -373,11 +386,13 @@ public class ChangeParametersControl extends Composite {
 
 	private ParameterInfo[] getSelectedElements() {
 		ISelection selection = fTableViewer.getSelection();
-		if (selection == null)
+		if (selection == null) {
 			return new ParameterInfo[0];
+		}
 
-		if (!(selection instanceof IStructuredSelection))
+		if (!(selection instanceof IStructuredSelection)) {
 			return new ParameterInfo[0];
+		}
 
 		List<?> selected = ((IStructuredSelection) selection).toList();
 		return selected.toArray(new ParameterInfo[selected.size()]);
@@ -394,16 +409,19 @@ public class ChangeParametersControl extends Composite {
 		gl.marginWidth = 0;
 		buttonComposite.setLayout(gl);
 
-		if (fMode.canAddParameters())
+		if (fMode.canAddParameters()) {
 			fAddButton = createAddButton(buttonComposite);
+		}
 
 		fEditButton = createEditButton(buttonComposite);
 
-		if (fMode.canAddParameters())
+		if (fMode.canAddParameters()) {
 			fRemoveButton = createRemoveButton(buttonComposite);
+		}
 
-		if (buttonComposite.getChildren().length != 0)
+		if (buttonComposite.getChildren().length != 0) {
 			addSpacer(buttonComposite);
+		}
 
 		fUpButton = createButton(buttonComposite, RefactoringMessages.ChangeParametersControl_buttons_move_up, true);
 		fDownButton = createButton(buttonComposite, RefactoringMessages.ChangeParametersControl_buttons_move_down,
@@ -422,12 +440,15 @@ public class ChangeParametersControl extends Composite {
 	private void updateButtonsEnabledState() {
 		fUpButton.setEnabled(canMove(true));
 		fDownButton.setEnabled(canMove(false));
-		if (fEditButton != null)
+		if (fEditButton != null) {
 			fEditButton.setEnabled(getTableSelectionCount() == 1);
-		if (fAddButton != null)
+		}
+		if (fAddButton != null) {
 			fAddButton.setEnabled(true);
-		if (fRemoveButton != null)
+		}
+		if (fRemoveButton != null) {
 			fRemoveButton.setEnabled(getTableSelectionCount() != 0);
+		}
 	}
 
 	private int getTableSelectionCount() {
@@ -519,10 +540,11 @@ public class ChangeParametersControl extends Composite {
 				int index = getTable().getSelectionIndices()[0];
 				ParameterInfo[] selected = getSelectedElements();
 				for (int i = 0; i < selected.length; i++) {
-					if (selected[i].isAdded())
+					if (selected[i].isAdded()) {
 						fParameterInfos.remove(selected[i]);
-					else
+					} else {
 						selected[i].markAsDeleted();
+					}
 				}
 				restoreSelection(index);
 			}
@@ -532,8 +554,9 @@ public class ChangeParametersControl extends Composite {
 				fTableViewer.getControl().setFocus();
 				int itemCount = getTableItemCount();
 				if (itemCount != 0) {
-					if (index >= itemCount)
+					if (index >= itemCount) {
 						index = itemCount - 1;
+					}
 					getTable().setSelection(index);
 				}
 				fListener.parameterListChanged();
@@ -552,11 +575,13 @@ public class ChangeParametersControl extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				ISelection savedSelection = fTableViewer.getSelection();
-				if (savedSelection == null)
+				if (savedSelection == null) {
 					return;
+				}
 				ParameterInfo[] selection = getSelectedElements();
-				if (selection.length == 0)
+				if (selection.length == 0) {
 					return;
+				}
 
 				if (up) {
 					moveUp(selection);
@@ -687,8 +712,9 @@ public class ChangeParametersControl extends Composite {
 			} else if (curr.isDeleted()) {
 				deleted.add(curr);
 			} else {
-				if (floating != null)
+				if (floating != null) {
 					res.add(floating);
+				}
 				floating = curr;
 			}
 		}
@@ -704,27 +730,32 @@ public class ChangeParametersControl extends Composite {
 
 	private boolean canMove(boolean up) {
 		int notDeletedInfosCount = getNotDeletedInfosCount();
-		if (notDeletedInfosCount == 0)
+		if (notDeletedInfosCount == 0) {
 			return false;
+		}
 		int[] indc = getTable().getSelectionIndices();
-		if (indc.length == 0)
+		if (indc.length == 0) {
 			return false;
+		}
 		int invalid = up ? 0 : notDeletedInfosCount - 1;
 		for (int i = 0; i < indc.length; i++) {
-			if (indc[i] == invalid)
+			if (indc[i] == invalid) {
 				return false;
+			}
 		}
 		return true;
 	}
 
 	private int getNotDeletedInfosCount() {
-		if (fParameterInfos == null) // during initialization
+		if (fParameterInfos == null) {
 			return 0;
+		}
 		int result = 0;
 		for (Iterator<ParameterInfo> iter = fParameterInfos.iterator(); iter.hasNext();) {
 			ParameterInfo info = iter.next();
-			if (!info.isDeleted())
+			if (!info.isDeleted()) {
 				result++;
+			}
 		}
 		return result;
 	}

@@ -87,24 +87,27 @@ public class MethodDeclaration extends BodyDeclaration {
 
 	@Override
 	public void childrenAccept(Visitor visitor) {
-		if (comment != null)
+		if (comment != null) {
 			comment.accept(visitor);
+		}
 		function.accept(visitor);
 	}
 
 	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
-		if (comment != null)
+		if (comment != null) {
 			comment.traverseTopDown(visitor);
+		}
 		function.traverseTopDown(visitor);
 	}
 
 	@Override
 	public void traverseBottomUp(Visitor visitor) {
 		function.traverseBottomUp(visitor);
-		if (comment != null)
+		if (comment != null) {
 			comment.traverseBottomUp(visitor);
+		}
 		accept(visitor);
 	}
 

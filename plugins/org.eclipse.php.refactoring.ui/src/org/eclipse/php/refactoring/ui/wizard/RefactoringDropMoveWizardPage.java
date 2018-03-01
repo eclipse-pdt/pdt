@@ -69,10 +69,11 @@ public class RefactoringDropMoveWizardPage extends UserInputWizardPage {
 	private final void verifyDestination(Object selected, boolean initialVerification) {
 		try {
 			RefactoringStatus status = verifyDestination(selected);
-			if (initialVerification)
+			if (initialVerification) {
 				setPageComplete(status.isOK());
-			else
+			} else {
 				setPageComplete(status);
+			}
 		} catch (Exception e) {
 			Logger.logException(e);
 			setPageComplete(false);
@@ -83,11 +84,13 @@ public class RefactoringDropMoveWizardPage extends UserInputWizardPage {
 
 		final RefactoringStatus refactoringStatus;
 
-		if (selected instanceof IContainer)
+		if (selected instanceof IContainer) {
 			refactoringStatus = processor.setDestination((IContainer) selected);
-		else
+		}
+		else {
 			refactoringStatus = RefactoringStatus
 					.createFatalErrorStatus(PHPRefactoringUIMessages.getString("RefactoringMoveWizardPage.2")); //$NON-NLS-1$
+		}
 
 		return refactoringStatus;
 	}

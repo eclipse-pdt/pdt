@@ -104,10 +104,12 @@ public class ModifyDialog extends StatusDialog {
 		int lastFocusNr = 0;
 		try {
 			lastFocusNr = fDialogSettings.getInt(DS_KEY_LAST_FOCUS);
-			if (lastFocusNr < 0)
+			if (lastFocusNr < 0) {
 				lastFocusNr = 0;
-			if (lastFocusNr > fTabPages.size() - 1)
+			}
+			if (lastFocusNr > fTabPages.size() - 1) {
 				lastFocusNr = fTabPages.size() - 1;
+			}
 		} catch (NumberFormatException x) {
 			lastFocusNr = 0;
 		}
@@ -189,11 +191,13 @@ public class ModifyDialog extends StatusDialog {
 		Point initialSize = super.getInitialSize();
 		try {
 			int lastWidth = fDialogSettings.getInt(DS_KEY_PREFERRED_WIDTH);
-			if (initialSize.x > lastWidth)
+			if (initialSize.x > lastWidth) {
 				lastWidth = initialSize.x;
+			}
 			int lastHeight = fDialogSettings.getInt(DS_KEY_PREFERRED_HEIGHT);
-			if (initialSize.y > lastHeight)
+			if (initialSize.y > lastHeight) {
 				lastHeight = initialSize.x;
+			}
 			return new Point(lastWidth, lastHeight);
 		} catch (NumberFormatException ex) {
 		}

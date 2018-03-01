@@ -58,7 +58,7 @@ public class PHPProblemsConfigurationBlock extends OptionsConfigurationBlock {
 
 		private int priority;
 
-		private List<ConcreteProblem> problems = new ArrayList<ConcreteProblem>();
+		private List<ConcreteProblem> problems = new ArrayList<>();
 
 		public Category(String id, String name, int priority) {
 			this.id = id;
@@ -126,7 +126,7 @@ public class PHPProblemsConfigurationBlock extends OptionsConfigurationBlock {
 				return Integer.compare(o1.priority, o2.priority);
 			}
 		});
-		model = new LinkedHashMap<String, Category>();
+		model = new LinkedHashMap<>();
 		categories.forEach((v) -> model.put(v.id, v));
 		for (IConfigurationElement element : Platform.getExtensionRegistry()
 				.getConfigurationElementsFor(PreferenceConstants.PROBLEM_CONFIGURATION_EXTENSION_POINT)) {

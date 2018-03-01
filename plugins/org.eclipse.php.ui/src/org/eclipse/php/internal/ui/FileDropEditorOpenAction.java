@@ -30,8 +30,9 @@ public class FileDropEditorOpenAction extends FileDropAction {
 	@Override
 	public boolean run(DropTargetEvent event, IEditorPart targetEditor) {
 
-		if (!(targetEditor instanceof PHPStructuredEditor))
+		if (!(targetEditor instanceof PHPStructuredEditor)) {
 			return super.run(event, targetEditor);
+		}
 
 		final String[] fileNames = (String[]) event.data;
 		if (fileNames == null || fileNames.length == 0) {

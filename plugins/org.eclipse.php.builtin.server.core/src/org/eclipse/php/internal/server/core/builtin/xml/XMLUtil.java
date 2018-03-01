@@ -51,7 +51,7 @@ public class XMLUtil {
 	}
 
 	public static DocumentBuilder getDocumentBuilder() {
-		if (documentBuilder == null)
+		if (documentBuilder == null) {
 			try {
 				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 				factory.setValidating(false);
@@ -77,6 +77,7 @@ public class XMLUtil {
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Rrror creating document builder"); //$NON-NLS-1$
 			}
+		}
 
 		return documentBuilder;
 	}
@@ -152,12 +153,13 @@ public class XMLUtil {
 		} catch (Exception ex) {
 			throw new IOException(ex.getLocalizedMessage());
 		} finally {
-			if (out != null)
+			if (out != null) {
 				try {
 					out.close();
 				} catch (Exception e) {
 					// ignore
 				}
+			}
 		}
 	}
 
@@ -167,10 +169,14 @@ public class XMLUtil {
 			data += " PUBLIC \"" + doctype.getPublicId() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
 			String systemId = doctype.getSystemId();
 			if (systemId == null)
+			 {
 				systemId = ""; //$NON-NLS-1$
+			}
 			data += " \"" + systemId + "\""; //$NON-NLS-1$ //$NON-NLS-2$
-		} else
+		}
+		else {
 			data += " SYSTEM \"" + doctype.getSystemId() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
+		}
 
 		return data;
 	}
@@ -189,8 +195,9 @@ public class XMLUtil {
 		NodeList nodeList = element.getElementsByTagName(name);
 
 		int length = nodeList.getLength();
-		for (int i = 0; i < length; i++)
+		for (int i = 0; i < length; i++) {
 			list.add(nodeList.item(i));
+		}
 
 		return list.iterator();
 	}
@@ -269,8 +276,9 @@ public class XMLUtil {
 	}
 
 	protected static void print(PrintStream out, Node node) {
-		if (node == null)
+		if (node == null) {
 			return;
+		}
 		short type = node.getNodeType();
 		switch (type) {
 		case Node.DOCUMENT_NODE: {
@@ -278,8 +286,9 @@ public class XMLUtil {
 			// out.println("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n");
 			NodeList nodelist = node.getChildNodes();
 			int size = nodelist.getLength();
-			for (int i = 0; i < size; i++)
+			for (int i = 0; i < size; i++) {
 				print(out, nodelist.item(i));
+			}
 			break;
 		}
 
@@ -305,14 +314,15 @@ public class XMLUtil {
 				}
 			}
 
-			if (!node.hasChildNodes())
+			if (!node.hasChildNodes()) {
 				out.print("/>"); //$NON-NLS-1$
-			else {
+			} else {
 				out.print('>');
 				NodeList nodelist = node.getChildNodes();
 				int numChildren = nodelist.getLength();
-				for (int i = 0; i < numChildren; i++)
+				for (int i = 0; i < numChildren; i++) {
 					print(out, nodelist.item(i));
+				}
 
 				out.print("</"); //$NON-NLS-1$
 				out.print(node.getNodeName());
@@ -325,8 +335,9 @@ public class XMLUtil {
 			NodeList nodelist = node.getChildNodes();
 			if (nodelist != null) {
 				int size = nodelist.getLength();
-				for (int i = 0; i < size; i++)
+				for (int i = 0; i < size; i++) {
 					print(out, nodelist.item(i));
+				}
 
 			}
 			break;
@@ -378,12 +389,13 @@ public class XMLUtil {
 		} catch (Exception ex) {
 			throw new IOException(ex.getLocalizedMessage());
 		} finally {
-			if (out != null)
+			if (out != null) {
 				try {
 					out.close();
 				} catch (Exception e) {
 					// ignore
 				}
+			}
 		}
 	}
 
@@ -395,12 +407,13 @@ public class XMLUtil {
 		} catch (Exception ex) {
 			throw new IOException(ex.getLocalizedMessage());
 		} finally {
-			if (out != null)
+			if (out != null) {
 				try {
 					out.close();
 				} catch (Exception e) {
 					// ignore
 				}
+			}
 		}
 	}
 
@@ -438,12 +451,13 @@ public class XMLUtil {
 		} catch (Exception ex) {
 			// ignore
 		} finally {
-			if (out != null)
+			if (out != null) {
 				try {
 					out.close();
 				} catch (Exception e) {
 					// ignore
 				}
+			}
 		}
 		return null;
 	}

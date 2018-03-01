@@ -55,16 +55,20 @@ class HTMLFormatterFactoryForPHPCode {
 	/**
 	 */
 	private boolean isEmbeddedCSS(Node node) {
-		if (node == null)
+		if (node == null) {
 			return false;
+		}
 		Node parent = node.getParentNode();
-		if (parent == null)
+		if (parent == null) {
 			return false;
-		if (parent.getNodeType() != Node.ELEMENT_NODE)
+		}
+		if (parent.getNodeType() != Node.ELEMENT_NODE) {
 			return false;
+		}
 		String name = parent.getNodeName();
-		if (name == null)
+		if (name == null) {
 			return false;
+		}
 		return name.equalsIgnoreCase("STYLE");//$NON-NLS-1$
 	}
 

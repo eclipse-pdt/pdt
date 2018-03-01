@@ -111,8 +111,9 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 				return;
 			}
 
-			if (!fOptionsGroup.isEnabled())
+			if (!fOptionsGroup.isEnabled()) {
 				enableDefaultComponents(true);
+			}
 
 			fSelectionState.refreshState(fSelection);
 

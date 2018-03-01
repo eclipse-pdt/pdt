@@ -65,14 +65,16 @@ import org.eclipse.php.refactoring.core.visitor.ScopeSyntaxErrorsVisitor;
 	public RefactoringStatus checkInitialConditions() {
 		RefactoringStatus result = getStatus();
 		checkExpression(result);
-		if (result.hasFatalError())
+		if (result.hasFatalError()) {
 			return result;
+		}
 
 		fReturnKind = UNDEFINED;
 
 		fMaxVariableId = LocalVariableIndex.perform(getEnclosingBodyDeclaration());
-		if (analyzeSelection(result).hasFatalError())
+		if (analyzeSelection(result).hasFatalError()) {
 			return result;
+		}
 
 		int returns = fReturnKind == NO ? 0 : 1;
 		if (fReturnValue != null) {
@@ -115,8 +117,10 @@ import org.eclipse.php.refactoring.core.visitor.ScopeSyntaxErrorsVisitor;
 
 			ASTNode enclosingBodyNode = getFirstSelectedNode().getEnclosingBodyNode();
 			if (enclosingBodyNode == null)
+			 {
 				return RefactoringStatus
 						.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.3")); //$NON-NLS-1$
+			}
 			pm.worked(1);
 
 			if (scopeHasSyntaxErrors(enclosingBodyNode)) {
@@ -243,12 +247,14 @@ import org.eclipse.php.refactoring.core.visitor.ScopeSyntaxErrorsVisitor;
 
 	private boolean isVoidMethod() {
 		// if we have an initializer
-		if (fEnclosingMethodBinding == null)
+		if (fEnclosingMethodBinding == null) {
 			return true;
+		}
 		ITypeBinding[] binding = fEnclosingMethodBinding.getReturnType();
 		for (ITypeBinding currentBinding : binding) {
-			if (fEnclosingBodyDeclaration.getAST().resolveWellKnownType("void").equals(currentBinding)) //$NON-NLS-1$
+			if (fEnclosingBodyDeclaration.getAST().resolveWellKnownType("void").equals(currentBinding)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -395,8 +401,9 @@ import org.eclipse.php.refactoring.core.visitor.ScopeSyntaxErrorsVisitor;
 		Selection selection = getSelection();
 
 		for (int i = 0; i < bindings.length; i++) {
-			if (!selection.covers(((VariableBinding) bindings[i]).getVarialbe()))
+			if (!selection.covers(((VariableBinding) bindings[i]).getVarialbe())) {
 				;
+			}
 			result.add(bindings[i]);
 		}
 		return result.toArray(new IVariableBinding[result.size()]);

@@ -43,8 +43,9 @@ public class PHPNavigatorActionProvider extends CommonActionProvider {
 	public void init(ICommonActionExtensionSite site) {
 
 		ICommonViewerWorkbenchSite workbenchSite = null;
-		if (site.getViewSite() instanceof ICommonViewerWorkbenchSite)
+		if (site.getViewSite() instanceof ICommonViewerWorkbenchSite) {
 			workbenchSite = (ICommonViewerWorkbenchSite) site.getViewSite();
+		}
 
 		if (workbenchSite != null) {
 			if (workbenchSite.getPart() != null && workbenchSite.getPart() instanceof IViewPart) {

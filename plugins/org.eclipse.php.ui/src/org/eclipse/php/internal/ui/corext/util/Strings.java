@@ -66,13 +66,15 @@ public class Strings {
 		 * null)
 		 */
 
-		if (!USE_TEXT_PROCESSOR)
+		if (!USE_TEXT_PROCESSOR) {
 			return styledString;
+		}
 
 		String inputString = styledString.getString();
 		String string = TextProcessor.process(inputString);
-		if (string != inputString)
+		if (string != inputString) {
 			insertMarks(styledString, inputString, string);
+		}
 		return styledString;
 	}
 
@@ -88,13 +90,15 @@ public class Strings {
 	 * @since 3.4
 	 */
 	public static StyledString markLTR(StyledString styledString, String additionalDelimiters) {
-		if (!USE_TEXT_PROCESSOR)
+		if (!USE_TEXT_PROCESSOR) {
 			return styledString;
+		}
 
 		String inputString = styledString.getString();
 		String string = TextProcessor.process(inputString, TextProcessor.getDefaultDelimiters() + additionalDelimiters);
-		if (string != inputString)
+		if (string != inputString) {
 			insertMarks(styledString, inputString, string);
+		}
 		return styledString;
 	}
 
@@ -115,10 +119,11 @@ public class Strings {
 		int processedStringLength = originalString.length();
 		for (int processedIndex = 0; processedIndex < processedStringLength; processedIndex++) {
 			char processed = processedString.charAt(processedIndex);
-			if (orig == processed)
+			if (orig == processed) {
 				orig = originalString.charAt(++i);
-			else
+			} else {
 				styledString.insert(processed, processedIndex);
+			}
 		}
 	}
 
@@ -132,8 +137,9 @@ public class Strings {
 	 * @since 3.4
 	 */
 	public static String markLTR(String string) {
-		if (!USE_TEXT_PROCESSOR)
+		if (!USE_TEXT_PROCESSOR) {
 			return string;
+		}
 
 		return TextProcessor.process(string);
 	}
@@ -150,8 +156,9 @@ public class Strings {
 	 * @since 3.4
 	 */
 	public static String markLTR(String string, String additionalDelimiters) {
-		if (!USE_TEXT_PROCESSOR)
+		if (!USE_TEXT_PROCESSOR) {
 			return string;
+		}
 
 		return TextProcessor.process(string, TextProcessor.getDefaultDelimiters() + additionalDelimiters);
 	}
@@ -173,8 +180,9 @@ public class Strings {
 		int index = message.indexOf('\n', 0);
 		while (index != -1) {
 			result.append(message.substring(current, index));
-			if (current < index && index != 0)
+			if (current < index && index != 0) {
 				result.append(' ');
+			}
 			current = index + 1;
 			index = message.indexOf('\n', current);
 		}
@@ -223,8 +231,9 @@ public class Strings {
 	public static boolean containsOnlyWhitespaces(String s) {
 		int size = s.length();
 		for (int i = 0; i < size; i++) {
-			if (!Character.isWhitespace(s.charAt(i)))
+			if (!Character.isWhitespace(s.charAt(i))) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -248,12 +257,13 @@ public class Strings {
 				break;
 			}
 		}
-		if (start == 0)
+		if (start == 0) {
 			return line;
-		else if (start == size)
+		} else if (start == size) {
 			return ""; //$NON-NLS-1$
-		else
+		} else {
 			return line.substring(start);
+		}
 	}
 
 	public static String trimTrailingTabsAndSpaces(String line) {
@@ -267,12 +277,13 @@ public class Strings {
 				break;
 			}
 		}
-		if (end == size)
+		if (end == size) {
 			return line;
-		else if (end == 0)
+		} else if (end == 0) {
 			return ""; //$NON-NLS-1$
-		else
+		} else {
 			return line.substring(0, end);
+		}
 	}
 
 	/**
@@ -451,8 +462,9 @@ public class Strings {
 		int minIndent = Integer.MAX_VALUE; // very large
 		for (int i = considerFirstLine ? 0 : 1; i < lines.length; i++) {
 			String line = lines[i];
-			if (containsOnlyWhitespaces(line))
+			if (containsOnlyWhitespaces(line)) {
 				continue;
+			}
 			toDo[i] = line;
 			int indent = computeIndentUnits(line, tabWidth, indentWidth);
 			if (indent < minIndent) {
@@ -464,15 +476,16 @@ public class Strings {
 			// remove this indent from all lines
 			for (int i = considerFirstLine ? 0 : 1; i < toDo.length; i++) {
 				String s = toDo[i];
-				if (s != null)
+				if (s != null) {
 					lines[i] = trimIndent(s, minIndent, tabWidth, indentWidth);
-				else {
+				} else {
 					String line = lines[i];
 					int indent = computeIndentUnits(line, tabWidth, indentWidth);
-					if (indent > minIndent)
+					if (indent > minIndent) {
 						lines[i] = trimIndent(line, minIndent, tabWidth, indentWidth);
-					else
+					} else {
 						lines[i] = trimLeadingTabsAndSpaces(line);
+					}
 				}
 			}
 		}
@@ -525,8 +538,9 @@ public class Strings {
 
 	private static int findLastNonEmptyLineIndex(String[] sourceLines) {
 		for (int i = sourceLines.length - 1; i >= 0; i--) {
-			if (!sourceLines[i].trim().equals("")) //$NON-NLS-1$
+			if (!sourceLines[i].trim().equals("")) {
 				return i;
+			}
 		}
 		return -1;
 	}
@@ -596,8 +610,9 @@ public class Strings {
 			ILineTracker tracker = new DefaultLineTracker();
 			tracker.set(source);
 			int size = tracker.getNumberOfLines();
-			if (size == 1)
+			if (size == 1) {
 				return source;
+			}
 			String lines[] = new String[size];
 			for (int i = 0; i < size; i++) {
 				IRegion region = tracker.getLineInformation(i);
@@ -609,8 +624,9 @@ public class Strings {
 			int last = size - 1;
 			for (int i = 0; i < size; i++) {
 				result.append(lines[i]);
-				if (i < last)
+				if (i < last) {
 					result.append(tracker.getLineDelimiter(i));
+				}
 			}
 			return result.toString();
 		} catch (BadLocationException e) {
@@ -632,20 +648,24 @@ public class Strings {
 	public static String concatenate(String[] lines, String delimiter) {
 		StringBuilder buffer = new StringBuilder();
 		for (int i = 0; i < lines.length; i++) {
-			if (i > 0)
+			if (i > 0) {
 				buffer.append(delimiter);
+			}
 			buffer.append(lines[i]);
 		}
 		return buffer.toString();
 	}
 
 	public static boolean equals(String s, char[] c) {
-		if (s.length() != c.length)
+		if (s.length() != c.length) {
 			return false;
+		}
 
-		for (int i = c.length; --i >= 0;)
-			if (s.charAt(i) != c[i])
+		for (int i = c.length; --i >= 0;) {
+			if (s.charAt(i) != c[i]) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -660,12 +680,13 @@ public class Strings {
 				break;
 			}
 		}
-		if (end == size)
+		if (end == size) {
 			return text;
-		else if (end == 0)
+		} else if (end == 0) {
 			return ""; //$NON-NLS-1$
-		else
+		} else {
 			return text.substring(0, end);
+		}
 	}
 
 	public static String removeMnemonicIndicator(String string) {

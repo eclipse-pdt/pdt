@@ -32,8 +32,9 @@ public class NonPHPProjectsFilter extends ViewerFilter {
 				return false;
 			}
 
-		} else if (element instanceof IProject)
+		} else if (element instanceof IProject) {
 			return !((IProject) element).isOpen();
+		}
 
 		return true;
 	}

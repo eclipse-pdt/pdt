@@ -21,8 +21,9 @@ public class ElementSpecificFilter extends SimpleFilter {
 		List<Object> out = new ArrayList<>(elements.length);
 		for (int i = 0; i < elements.length; ++i) {
 			Object element = elements[i];
-			if (select(element))
+			if (select(element)) {
 				out.add(element);
+			}
 		}
 		return out.toArray();
 	}

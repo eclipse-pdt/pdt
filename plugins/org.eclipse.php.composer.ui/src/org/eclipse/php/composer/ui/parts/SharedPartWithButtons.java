@@ -111,9 +111,9 @@ public abstract class SharedPartWithButtons extends SharedPart {
 
 	protected Button createButton(Composite parent, String label, int index, FormToolkit toolkit) {
 		Button button;
-		if (toolkit != null)
+		if (toolkit != null) {
 			button = toolkit.createButton(parent, label, SWT.PUSH);
-		else {
+		} else {
 			button = new Button(parent, SWT.PUSH);
 			button.setText(label);
 		}

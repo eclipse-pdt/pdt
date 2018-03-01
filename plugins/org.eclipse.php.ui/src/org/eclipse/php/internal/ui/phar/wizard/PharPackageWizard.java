@@ -50,9 +50,9 @@ public class PharPackageWizard extends Wizard implements IExportWizard {
 	public PharPackageWizard() {
 		IDialogSettings workbenchSettings = PHPUiPlugin.getDefault().getDialogSettings();
 		IDialogSettings section = workbenchSettings.getSection(DIALOG_SETTINGS_KEY);
-		if (section == null)
+		if (section == null) {
 			fHasNewDialogSettings = true;
-		else {
+		} else {
 			fHasNewDialogSettings = false;
 			setDialogSettings(section);
 		}
@@ -62,8 +62,9 @@ public class PharPackageWizard extends Wizard implements IExportWizard {
 	public boolean performFinish() {
 		pharPackage.setElements(pharPackageWizardPage.getSelectedElementsWithoutContainedChildren());
 
-		if (!executeExportOperation(new PharFileExportOperation(pharPackage, getShell())))
+		if (!executeExportOperation(new PharFileExportOperation(pharPackage, getShell()))) {
 			return false;
+		}
 
 		// Save the dialog settings
 		if (fHasNewDialogSettings) {
@@ -74,8 +75,9 @@ public class PharPackageWizard extends Wizard implements IExportWizard {
 		IWizardPage[] pages = getPages();
 		for (int i = 0; i < getPageCount(); i++) {
 			IWizardPage page = pages[i];
-			if (page instanceof IPharWizardPage)
+			if (page instanceof IPharWizardPage) {
 				((IPharWizardPage) page).finish();
+			}
 		}
 		return true;
 	}
@@ -142,19 +144,21 @@ public class PharPackageWizard extends Wizard implements IExportWizard {
 			Iterator<?> iter = structuredSelection.iterator();
 			while (iter.hasNext()) {
 				Object selectedElement = iter.next();
-				if (selectedElement instanceof IProject)
+				if (selectedElement instanceof IProject) {
 					addProject(selectedElements, (IProject) selectedElement);
-				else if (selectedElement instanceof IResource)
+				} else if (selectedElement instanceof IResource) {
 					addResource(selectedElements, (IResource) selectedElement);
-				else if (selectedElement instanceof IScriptProject) {
+				} else if (selectedElement instanceof IScriptProject) {
 					addProject(selectedElements, ((IScriptProject) selectedElement).getProject());
-				} else if (selectedElement instanceof IModelElement)
+				} else if (selectedElement instanceof IModelElement) {
 					addJavaElement(selectedElements, (IModelElement) selectedElement);
+				}
 
 			}
 			return new StructuredSelection(selectedElements);
-		} else
+		} else {
 			return StructuredSelection.EMPTY;
+		}
 	}
 
 	private void addJavaElement(List<IAdaptable> selectedElements, IModelElement selectedElement) {
@@ -164,23 +168,26 @@ public class PharPackageWizard extends Wizard implements IExportWizard {
 		// }
 		if (selectedElement != null && selectedElement.exists()
 				&& (selectedElement.getElementType() == IModelElement.SOURCE_MODULE
-						|| selectedElement.getElementType() == IModelElement.SCRIPT_FOLDER))
+						|| selectedElement.getElementType() == IModelElement.SCRIPT_FOLDER)) {
 			selectedElements.add(selectedElement);
+		}
 	}
 
 	private void addResource(List<IAdaptable> selectedElements, IResource resource) {
 
 		IModelElement je = DLTKCore.create(resource);
-		if (je != null && je.exists() && je.getElementType() == IModelElement.SOURCE_MODULE)
+		if (je != null && je.exists() && je.getElementType() == IModelElement.SOURCE_MODULE) {
 			selectedElements.add(je);
-		else
+		} else {
 			selectedElements.add(resource);
+		}
 	}
 
 	private void addProject(List<IAdaptable> selectedElements, IProject project) {
 		try {
-			if (project.isAccessible() && project.hasNature(PHPNature.ID))
+			if (project.isAccessible() && project.hasNature(PHPNature.ID)) {
 				selectedElements.add(DLTKCore.create(project));
+			}
 		} catch (CoreException ex) {
 			// ignore selected element
 		}

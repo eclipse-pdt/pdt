@@ -122,8 +122,9 @@ public class FileUtils {
 			output = new BufferedWriter(new FileWriter(file));
 			output.write(contents);
 		} finally {
-			if (output != null)
+			if (output != null) {
 				output.close();
+			}
 		}
 	}
 

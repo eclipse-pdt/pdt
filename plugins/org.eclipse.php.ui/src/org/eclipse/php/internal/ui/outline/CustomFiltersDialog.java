@@ -86,10 +86,12 @@ public class CustomFiltersDialog extends SelectionDialog {
 		List<FilterDescriptor> result = new ArrayList<>(filterDescs.length);
 		for (int i = 0; i < filterDescs.length; i++) {
 			String tid = filterDescs[i].getTargetId();
-			if (WorkbenchActivityHelper.filterItem(filterDescs[i]))
+			if (WorkbenchActivityHelper.filterItem(filterDescs[i])) {
 				continue;
-			if (targetId.equals(tid))// exactly equal
+			}
+			if (targetId.equals(tid)) {
 				result.add(filterDescs[i]);
+			}
 		}
 		return result.toArray(new FilterDescriptor[result.size()]);
 	}
@@ -151,14 +153,16 @@ public class CustomFiltersDialog extends SelectionDialog {
 				boolean state = fEnableUserDefinedPatterns.getSelection();
 				fUserDefinedPatterns.setEnabled(state);
 				info.setEnabled(fEnableUserDefinedPatterns.getSelection());
-				if (state)
+				if (state) {
 					fUserDefinedPatterns.setFocus();
+				}
 			}
 		});
 
 		// Filters provided by extension point
-		if (fBuiltInFilters.length > 0)
+		if (fBuiltInFilters.length > 0) {
 			createCheckBoxList(group);
+		}
 
 		applyDialogFont(parent);
 		return parent;
@@ -183,8 +187,9 @@ public class CustomFiltersDialog extends SelectionDialog {
 		setInitialSelections(getEnabledFilterDescriptors());
 
 		List<?> initialSelection = getInitialElementSelections();
-		if (initialSelection != null && !initialSelection.isEmpty())
+		if (initialSelection != null && !initialSelection.isEmpty()) {
 			checkInitialSelections();
+		}
 
 		// Description
 		info = new Label(parent, SWT.LEFT);
@@ -200,8 +205,9 @@ public class CustomFiltersDialog extends SelectionDialog {
 				ISelection selection = event.getSelection();
 				if (selection instanceof IStructuredSelection) {
 					Object selectedElement = ((IStructuredSelection) selection).getFirstElement();
-					if (selectedElement instanceof FilterDescriptor)
+					if (selectedElement instanceof FilterDescriptor) {
 						description.setText(((FilterDescriptor) selectedElement).getDescription());
+					}
 				}
 			}
 		});
@@ -246,8 +252,9 @@ public class CustomFiltersDialog extends SelectionDialog {
 			public void widgetSelected(SelectionEvent e) {
 				fCheckBoxList.setAllChecked(true);
 				fFilterDescriptorChangeHistory.clear();
-				for (int i = 0; i < fBuiltInFilters.length; i++)
+				for (int i = 0; i < fBuiltInFilters.length; i++) {
 					fFilterDescriptorChangeHistory.push(fBuiltInFilters[i]);
+				}
 			}
 		};
 		selectButton.addSelectionListener(listener);
@@ -261,8 +268,9 @@ public class CustomFiltersDialog extends SelectionDialog {
 			public void widgetSelected(SelectionEvent e) {
 				fCheckBoxList.setAllChecked(false);
 				fFilterDescriptorChangeHistory.clear();
-				for (int i = 0; i < fBuiltInFilters.length; i++)
+				for (int i = 0; i < fBuiltInFilters.length; i++) {
 					fFilterDescriptorChangeHistory.push(fBuiltInFilters[i]);
+				}
 			}
 		};
 		deselectButton.addSelectionListener(listener);
@@ -270,8 +278,9 @@ public class CustomFiltersDialog extends SelectionDialog {
 
 	private void checkInitialSelections() {
 		Iterator<?> itemsToCheck = getInitialElementSelections().iterator();
-		while (itemsToCheck.hasNext())
+		while (itemsToCheck.hasNext()) {
 			fCheckBoxList.setChecked(itemsToCheck.next(), true);
+		}
 	}
 
 	@Override
@@ -279,8 +288,9 @@ public class CustomFiltersDialog extends SelectionDialog {
 		if (fBuiltInFilters != null) {
 			ArrayList<FilterDescriptor> result = new ArrayList<>();
 			for (int i = 0; i < fBuiltInFilters.length; ++i) {
-				if (fCheckBoxList.getChecked(fBuiltInFilters[i]))
+				if (fCheckBoxList.getChecked(fBuiltInFilters[i])) {
 					result.add(fBuiltInFilters[i]);
+				}
 			}
 			setResult(result);
 		}
@@ -296,10 +306,11 @@ public class CustomFiltersDialog extends SelectionDialog {
 
 			@Override
 			public String getText(Object element) {
-				if (element instanceof FilterDescriptor)
+				if (element instanceof FilterDescriptor) {
 					return ((FilterDescriptor) element).getName();
-				else
+				} else {
 					return null;
+				}
 			}
 		};
 	}
@@ -331,8 +342,9 @@ public class CustomFiltersDialog extends SelectionDialog {
 	public String[] getEnabledFilterIds() {
 		Object[] result = getResult();
 		Set<String> enabledIds = new HashSet<>(result.length);
-		for (int i = 0; i < result.length; i++)
+		for (int i = 0; i < result.length; i++) {
 			enabledIds.add(((FilterDescriptor) result[i]).getId());
+		}
 		return enabledIds.toArray(new String[enabledIds.size()]);
 	}
 
@@ -357,8 +369,9 @@ public class CustomFiltersDialog extends SelectionDialog {
 		List<String> enabledFilterIds = Arrays.asList(fEnabledFilterIds);
 		for (int i = 0; i < filterDescs.length; i++) {
 			String id = filterDescs[i].getId();
-			if (enabledFilterIds.contains(id))
+			if (enabledFilterIds.contains(id)) {
 				result.add(filterDescs[i]);
+			}
 		}
 		return result.toArray(new FilterDescriptor[result.size()]);
 	}
@@ -372,17 +385,18 @@ public class CustomFiltersDialog extends SelectionDialog {
 		while (tokenizer.hasMoreTokens()) {
 			String token = tokenizer.nextToken().trim();
 			if (separator.equals(token)) {
-				if (!escape)
+				if (!escape) {
 					escape = true;
-				else {
+				} else {
 					addPattern(result, separator);
 					append = true;
 				}
 			} else {
-				if (!append)
+				if (!append) {
 					result.add(token);
-				else
+				} else {
 					addPattern(result, token);
+				}
 				append = false;
 				escape = false;
 			}
@@ -391,9 +405,9 @@ public class CustomFiltersDialog extends SelectionDialog {
 	}
 
 	private static void addPattern(List<String> list, String pattern) {
-		if (list.isEmpty())
+		if (list.isEmpty()) {
 			list.add(pattern);
-		else {
+		} else {
 			int index = list.size() - 1;
 			list.set(index, (list.get(index)) + pattern);
 		}
@@ -402,10 +416,12 @@ public class CustomFiltersDialog extends SelectionDialog {
 	public static String convertToString(String[] patterns, String separator) {
 		int length = patterns.length;
 		StringBuilder strBuf = new StringBuilder();
-		if (length > 0)
+		if (length > 0) {
 			strBuf.append(escapeSeparator(patterns[0], separator));
-		else
+		}
+		else {
 			return ""; //$NON-NLS-1$
+		}
 		int i = 1;
 		while (i < length) {
 			strBuf.append(separator);
@@ -420,8 +436,9 @@ public class CustomFiltersDialog extends SelectionDialog {
 		StringBuilder buf = new StringBuilder(length);
 		for (int i = 0; i < length; i++) {
 			char ch = pattern.charAt(i);
-			if (separator.equals(String.valueOf(ch)))
+			if (separator.equals(String.valueOf(ch))) {
 				buf.append(ch);
+			}
 			buf.append(ch);
 		}
 		return buf.toString();

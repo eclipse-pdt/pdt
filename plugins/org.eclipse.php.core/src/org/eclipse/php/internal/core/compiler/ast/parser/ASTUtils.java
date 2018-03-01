@@ -180,7 +180,9 @@ public class ASTUtils {
 					}
 					// ssanders: END
 					if (DLTKCore.DEBUG_SELECTION)
+					 {
 						System.out.println("Found " + s.getClass().getName()); //$NON-NLS-1$
+					}
 				}
 				return true;
 			}

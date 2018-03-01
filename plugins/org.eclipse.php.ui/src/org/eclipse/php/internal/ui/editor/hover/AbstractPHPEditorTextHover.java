@@ -105,8 +105,9 @@ public class AbstractPHPEditorTextHover extends AbstractScriptEditorTextHover im
 		 * needed because codeSelect(...) also finds the Java element if the
 		 * offset is behind the word.
 		 */
-		if (hoverRegion.getLength() == 0)
+		if (hoverRegion.getLength() == 0) {
 			return null;
+		}
 		IModelElement[] elements = null;
 		ICodeAssist resolve = getCodeAssist();
 		if (resolve != null) {

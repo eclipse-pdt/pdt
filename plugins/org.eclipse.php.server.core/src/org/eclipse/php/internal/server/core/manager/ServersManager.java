@@ -54,13 +54,15 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 		void check(Map<String, Object> serverMap) {
 			Map<String, String> attributes = (Map<String, String>) serverMap.get(Server.SERVER_ELEMENT);
 			// Upgrade servers with unique ID element
-			if (!attributes.containsKey(Server.UNIQUE_ID))
+			if (!attributes.containsKey(Server.UNIQUE_ID)) {
 				upgraded = false;
+			}
 		}
 
 		void perform() {
-			if (!upgraded)
+			if (!upgraded) {
 				schedule();
+			}
 		}
 
 		@Override
@@ -309,8 +311,9 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 		// Find all servers that match given URL host address
 		List<Server> matchedByHost = new ArrayList<>();
 		for (Server server : getServers()) {
-			if (isNoneServer(server))
+			if (isNoneServer(server)) {
 				continue;
+			}
 			String serverHost = server.getHost();
 			try {
 				InetAddress serverHostAddress = InetAddress.getByName(serverHost);
@@ -322,8 +325,9 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 			}
 		}
 		matches = matchedByHost;
-		if (matches.isEmpty())
+		if (matches.isEmpty()) {
 			return null;
+		}
 		// Filter out the servers by URL protocol
 		List<Server> matchedByProtocol = new ArrayList<>();
 		for (Server server : matches) {
@@ -331,8 +335,9 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 				matchedByProtocol.add(server);
 			}
 		}
-		if (!matchedByProtocol.isEmpty())
+		if (!matchedByProtocol.isEmpty()) {
 			matches = matchedByProtocol;
+		}
 		// Filter out the servers by URL port
 		List<Server> matchedByPort = new ArrayList<>();
 		int urlPort = url.getPort() != -1 ? url.getPort() : Server.DEFAULT_HTTP_PORT;
@@ -341,8 +346,9 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 				matchedByPort.add(server);
 			}
 		}
-		if (!matchedByPort.isEmpty())
+		if (!matchedByPort.isEmpty()) {
 			matches = matchedByPort;
+		}
 		// Return first match
 		return matches.get(0);
 	}
@@ -486,8 +492,9 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 		List<IXMLPreferencesStorable> serversToSave = new ArrayList<>();
 		for (Server server : getServers()) {
 			// <none> server only in memory
-			if (isNoneServer(server))
+			if (isNoneServer(server)) {
 				continue;
+			}
 			serversToSave.add(server);
 		}
 		IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode(Activator.PLUGIN_ID);
@@ -643,8 +650,9 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 			List<IXMLPreferencesStorable> serversToSave = new ArrayList<>();
 			for (Server toSave : servers.values()) {
 				// <none> server only in memory
-				if (isNoneServer(toSave))
+				if (isNoneServer(toSave)) {
 					continue;
+				}
 				serversToSave.add(toSave);
 			}
 			IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode(Activator.PLUGIN_ID);

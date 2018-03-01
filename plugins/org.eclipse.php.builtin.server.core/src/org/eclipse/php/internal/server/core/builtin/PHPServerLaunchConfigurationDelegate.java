@@ -35,8 +35,9 @@ public class PHPServerLaunchConfigurationDelegate extends LaunchConfigurationDel
 
 		PHPServerBehaviour phpServer = (PHPServerBehaviour) server.loadAdapter(PHPServerBehaviour.class, null);
 
-		if (server.shouldPublish() && ServerCore.isAutoPublishing())
+		if (server.shouldPublish() && ServerCore.isAutoPublishing()) {
 			server.publish(IServer.PUBLISH_INCREMENTAL, monitor);
+		}
 
 		// Determine PHP configuration file location:
 		String workingDir = phpServer.getServerDeployDirectory().toOSString();

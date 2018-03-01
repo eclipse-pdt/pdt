@@ -34,10 +34,11 @@ public class TablePart extends StructuredViewerPart {
 	@Override
 	protected StructuredViewer createStructuredViewer(Composite parent, int style, FormToolkit toolkit) {
 		style |= SWT.H_SCROLL | SWT.V_SCROLL;
-		if (toolkit == null)
+		if (toolkit == null) {
 			style |= SWT.BORDER;
-		else
+		} else {
 			style |= toolkit.getBorderStyle();
+		}
 		TableViewer tableViewer = new TableViewer(parent, style);
 		tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override

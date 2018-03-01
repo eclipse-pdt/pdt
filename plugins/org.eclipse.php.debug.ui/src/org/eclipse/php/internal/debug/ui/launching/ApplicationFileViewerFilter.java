@@ -41,10 +41,12 @@ public class ApplicationFileViewerFilter extends ViewerFilter {
 	}
 
 	public boolean isValid(Object element) {
-		if (IFile.class.isInstance(element))
+		if (IFile.class.isInstance(element)) {
 			return isValidFile((IFile) element);
-		if (IContainer.class.isInstance(element))
+		}
+		if (IContainer.class.isInstance(element)) {
 			return isValidDirectory((IContainer) element);
+		}
 		return false;
 	}
 
@@ -83,8 +85,9 @@ public class ApplicationFileViewerFilter extends ViewerFilter {
 	private boolean projectHasRequiredNatures(IProject project) throws CoreException {
 		if (requiredNatures != null) {
 			for (int i = 0; i < requiredNatures.length; i++) {
-				if (!project.hasNature(requiredNatures[i]))
+				if (!project.hasNature(requiredNatures[i])) {
 					return false;
+				}
 			}
 		}
 		return true;

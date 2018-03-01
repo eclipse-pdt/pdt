@@ -51,12 +51,14 @@ public class DBGpProxyHandler {
 			boolean configure = false;
 			for (PropertyChangeEvent event : events) {
 				IDebuggerSettings source = (IDebuggerSettings) event.getSource();
-				if (!source.getOwnerId().equals(getOwnerId()))
+				if (!source.getOwnerId().equals(getOwnerId())) {
 					continue;
+				}
 				configure = true;
 			}
-			if (configure)
+			if (configure) {
 				configure();
+			}
 		}
 
 	}
@@ -131,9 +133,10 @@ public class DBGpProxyHandler {
 		if (registered) {
 			DBGpResponse resp = sendcmd("proxystop" + " -k " + currentIdeKey); //$NON-NLS-1$ //$NON-NLS-2$
 			registered = false;
-			if (resp == null)
+			if (resp == null) {
 				// Proxy could be shutdown externally
 				return;
+			}
 			String isOk = DBGpResponse.getAttribute(resp.getParentNode(), "success"); //$NON-NLS-1$
 			if (isOk == null || !isOk.equals("1")) { //$NON-NLS-1$
 				DBGpLogger.logWarning("Unexpected response from proxystop. ErrorCode=" + resp.getErrorCode() + ". msg=" //$NON-NLS-1$ //$NON-NLS-2$

@@ -81,18 +81,23 @@ public class PHPNamespaceType implements IClassType {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		PHPNamespaceType other = (PHPNamespaceType) obj;
 		if (namespace == null) {
-			if (other.namespace != null)
+			if (other.namespace != null) {
 				return false;
-		} else if (!namespace.equals(other.namespace))
+			}
+		} else if (!namespace.equals(other.namespace)) {
 			return false;
+		}
 		return true;
 	}
 }

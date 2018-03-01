@@ -65,10 +65,12 @@ public class ASTFragmentFactory {
 		SelectionAnalyzer sa = new SelectionAnalyzer(
 				Selection.createFromStartLength(range.getOffset(), range.getLength()), false);
 		scope.accept(sa);
-		if (isSingleNodeSelected(sa, range, document, scope))
+		if (isSingleNodeSelected(sa, range, document, scope)) {
 			return ASTFragmentFactory.createFragmentForFullSubtree(sa.getFirstSelectedNode(), null);
-		if (isEmptySelectionCoveredByANode(range, sa))
+		}
+		if (isEmptySelectionCoveredByANode(range, sa)) {
 			return ASTFragmentFactory.createFragmentForFullSubtree(sa.getLastCoveringNode(), null);
+		}
 		return ASTFragmentFactory.createFragmentForSubPartBySourceRange(sa.getLastCoveringNode(), range, scope,
 				document);
 	}
@@ -151,8 +153,9 @@ public class ASTFragmentFactory {
 			fScope = scope;
 			fDocument = document;
 			IASTFragment result = createFragment(node, null);
-			if (modelException != null)
+			if (modelException != null) {
 				throw modelException;
+			}
 			return result;
 		}
 
@@ -176,8 +179,9 @@ public class ASTFragmentFactory {
 			 * generic.
 			 */
 			IASTFragment fragment = AssociativeInfixExpressionFragment.createFragmentForFullSubtree(node);
-			if (fragment == null)
+			if (fragment == null) {
 				return visit((Expression) node);
+			}
 			if (oldFragment instanceof AssociativeInfixExpressionFragment
 					&& fragment instanceof AssociativeInfixExpressionFragment) {
 				AssociativeInfixExpressionFragment f1 = (AssociativeInfixExpressionFragment) oldFragment;

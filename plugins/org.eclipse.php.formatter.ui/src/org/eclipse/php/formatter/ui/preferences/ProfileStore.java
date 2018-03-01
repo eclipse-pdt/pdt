@@ -186,8 +186,9 @@ public class ProfileStore {
 		final String STORE_FILE = "code_formatter_profiles.xml"; //$NON-NLS-1$
 
 		File file = FormatterUIPlugin.getDefault().getStateLocation().append(STORE_FILE).toFile();
-		if (!file.exists())
+		if (!file.exists()) {
 			return null;
+		}
 
 		try {
 			// note that it's wrong to use a file reader when XML declares

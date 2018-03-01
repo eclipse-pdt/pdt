@@ -48,8 +48,9 @@ public class QuickFixProcessor implements IQuickFixProcessor {
 
 	private void process(IInvocationContext context, IProblemLocation problem,
 			Collection<IScriptCompletionProposal> proposals) throws CoreException {
-		if (!(problem.getProblemIdentifier() instanceof PHPProblemIdentifier))
+		if (!(problem.getProblemIdentifier() instanceof PHPProblemIdentifier)) {
 			return;
+		}
 
 		PHPProblemIdentifier id = (PHPProblemIdentifier) problem.getProblemIdentifier();
 		switch (id) {
@@ -91,8 +92,9 @@ public class QuickFixProcessor implements IQuickFixProcessor {
 
 	@Override
 	public boolean hasCorrections(ISourceModule unit, IProblemIdentifier identifier) {
-		if (!(identifier instanceof PHPProblemIdentifier))
+		if (!(identifier instanceof PHPProblemIdentifier)) {
 			return false;
+		}
 		PHPProblemIdentifier problem = (PHPProblemIdentifier) identifier;
 		switch (problem) {
 		case AbstractMethodInAbstractClass:

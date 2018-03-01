@@ -95,8 +95,9 @@ public class PHPWordIterator extends BreakIterator {
 		int first = fIterator.preceding(offset);
 		if (isWhitespace(first, offset)) {
 			int second = fIterator.preceding(first);
-			if (second != DONE && !isDelimiter(second, first))
+			if (second != DONE && !isDelimiter(second, first)) {
 				return second;
+			}
 		}
 		return first;
 	}
@@ -109,20 +110,24 @@ public class PHPWordIterator extends BreakIterator {
 		int first = fIterator.following(offset);
 		if (eatFollowingWhitespace(offset, first)) {
 			int second = fIterator.following(first);
-			if (isWhitespace(first, second))
+			if (isWhitespace(first, second)) {
 				return second;
+			}
 		}
 		return first;
 	}
 
 	private boolean eatFollowingWhitespace(int offset, int exclusiveEnd) {
-		if (exclusiveEnd == DONE || offset == DONE)
+		if (exclusiveEnd == DONE || offset == DONE) {
 			return false;
+		}
 
-		if (isWhitespace(offset, exclusiveEnd))
+		if (isWhitespace(offset, exclusiveEnd)) {
 			return false;
-		if (isDelimiter(offset, exclusiveEnd))
+		}
+		if (isDelimiter(offset, exclusiveEnd)) {
 			return false;
+		}
 
 		return true;
 	}
@@ -138,8 +143,9 @@ public class PHPWordIterator extends BreakIterator {
 	 * @return <code>true</code> if the given range is a delimiter
 	 */
 	private boolean isDelimiter(int offset, int exclusiveEnd) {
-		if (exclusiveEnd == DONE || offset == DONE)
+		if (exclusiveEnd == DONE || offset == DONE) {
 			return false;
+		}
 
 		Assert.isTrue(offset >= 0);
 		Assert.isTrue(exclusiveEnd <= getText().getEndIndex());
@@ -149,8 +155,9 @@ public class PHPWordIterator extends BreakIterator {
 
 		while (offset < exclusiveEnd) {
 			char ch = seq.charAt(offset);
-			if (ch != '\n' && ch != '\r')
+			if (ch != '\n' && ch != '\r') {
 				return false;
+			}
 			offset++;
 		}
 
@@ -168,8 +175,9 @@ public class PHPWordIterator extends BreakIterator {
 	 * @return <code>true</code> if the given range is whitespace
 	 */
 	private boolean isWhitespace(int offset, int exclusiveEnd) {
-		if (exclusiveEnd == DONE || offset == DONE)
+		if (exclusiveEnd == DONE || offset == DONE) {
 			return false;
+		}
 
 		Assert.isTrue(offset >= 0);
 		Assert.isTrue(exclusiveEnd <= getText().getEndIndex());
@@ -179,10 +187,12 @@ public class PHPWordIterator extends BreakIterator {
 
 		while (offset < exclusiveEnd) {
 			char ch = seq.charAt(offset);
-			if (!Character.isWhitespace(ch))
+			if (!Character.isWhitespace(ch)) {
 				return false;
-			if (ch == '\n' || ch == '\r')
+			}
+			if (ch == '\n' || ch == '\r') {
 				return false;
+			}
 			offset++;
 		}
 

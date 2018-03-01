@@ -118,8 +118,9 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 			starter = ReorgCopyStarter.create(modelElements, resources, (IResource) target);
 		}
 
-		if (starter != null)
+		if (starter != null) {
 			starter.run(this.getViewer().getControl().getShell());
+		}
 	}
 
 	public IResource[] getResources(IModelElement[] elements) {
@@ -134,10 +135,11 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 	}
 
 	public IResource getResource(IModelElement element) {
-		if (element instanceof ISourceModule)
+		if (element instanceof ISourceModule) {
 			return ((ISourceModule) element).getPrimary().getResource();
-		else
+		} else {
 			return element.getResource();
+		}
 	}
 
 	private List<Object> fElements;
@@ -160,8 +162,9 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 	@Override
 	public boolean isEnabled(DropTargetEvent event) {
 		Object target = event.item != null ? event.item.getData() : null;
-		if (target == null)
+		if (target == null) {
 			return false;
+		}
 		return target instanceof IModelElement || target instanceof IResource;
 	}
 
@@ -219,18 +222,21 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 
 		initializeSelection();
 
-		if (target == null)
+		if (target == null) {
 			return DND.DROP_NONE;
+		}
 
 		IResource[] resources = getResources(fElements);
 		// Do not allow to drop on itself, bug 14228
 		if (getCurrentLocation() == LOCATION_ON) {
 			IModelElement[] javaElements = ReorgUtils.getModelElements(fElements);
-			if (contains(javaElements, target))
+			if (contains(javaElements, target)) {
 				return DND.DROP_NONE;
+			}
 
-			if (contains(resources, target))
+			if (contains(resources, target)) {
 				return DND.DROP_NONE;
+			}
 		}
 
 		if (target instanceof IModelElement) {
@@ -260,8 +266,9 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 
 	private static boolean isParentOfAny(IContainer container, IResource[] roots) {
 		for (int i = 0; i < roots.length; i++) {
-			if (ReorgUtils.isParentInWorkspaceOrOnDisk(roots[i], container))
+			if (ReorgUtils.isParentInWorkspaceOrOnDisk(roots[i], container)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -283,8 +290,9 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 	private boolean contains(IResource[] resources, Object target) {
 		for (int i = 0; i < resources.length; i++) {
 			if (resources[i] != null) {
-				if (resources[i].equals(target))
+				if (resources[i].equals(target)) {
 					return true;
+				}
 			}
 		}
 
@@ -293,8 +301,9 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 
 	private boolean contains(IModelElement[] elements, Object target) {
 		for (int i = 0; i < elements.length; i++) {
-			if (elements[i].equals(target))
+			if (elements[i].equals(target)) {
 				return true;
+			}
 		}
 
 		return false;
@@ -303,8 +312,9 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void initializeSelection() {
-		if (fElements != null)
+		if (fElements != null) {
 			return;
+		}
 		ISelection s = LocalSelectionTransfer.getTransfer().getSelection();
 		if (!(s instanceof IStructuredSelection)) {
 			fSelection = StructuredSelection.EMPTY;
@@ -323,8 +333,9 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 	private int handleValidateDefault(Object target, int operations) throws ModelException {
 		if ((operations & DND.DROP_MOVE) != 0) {
 			int result = handleValidateMove(target);
-			if (result != DND.DROP_NONE)
+			if (result != DND.DROP_NONE) {
 				return result;
+			}
 		}
 
 		return handleValidateCopy(target);
@@ -334,15 +345,18 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 		if (fMoveProcessor == null) {
 			IMovePolicy policy = ReorgPolicyFactory.createMovePolicy(getResources(fElements),
 					ReorgUtils.getModelElements(fElements));
-			if (policy.canEnable())
+			if (policy.canEnable()) {
 				fMoveProcessor = new ScriptMoveProcessor(policy);
+			}
 		}
 
-		if (!canMoveElements())
+		if (!canMoveElements()) {
 			return DND.DROP_NONE;
+		}
 
-		if (fMoveProcessor == null)
+		if (fMoveProcessor == null) {
 			return DND.DROP_NONE;
+		}
 
 		// if (!fMoveProcessor.setDestination(
 		// ReorgDestinationFactory.createDestination(target,
@@ -365,8 +379,9 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 	private boolean canMoveElements() {
 		if (fCanMoveElements == 0) {
 			fCanMoveElements = 2;
-			if (fMoveProcessor == null)
+			if (fMoveProcessor == null) {
 				fCanMoveElements = 1;
+			}
 		}
 		return fCanMoveElements == 2;
 	}
@@ -379,11 +394,13 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 			fCopyProcessor = policy.canEnable() ? new ScriptCopyProcessor(policy) : null;
 		}
 
-		if (!canCopyElements())
+		if (!canCopyElements()) {
 			return DND.DROP_NONE;
+		}
 
-		if (fCopyProcessor == null)
+		if (fCopyProcessor == null) {
 			return DND.DROP_NONE;
+		}
 		if (target instanceof IModelElement) {
 			if (!fCopyProcessor.setDestination((IModelElement) target).isOK()) {
 				return DND.DROP_NONE;
@@ -405,8 +422,9 @@ public class PHPSelectionTransferDropAdapter extends SelectionTransferDropAdapte
 	private boolean canCopyElements() {
 		if (fCanCopyElements == 0) {
 			fCanCopyElements = 2;
-			if (fCopyProcessor == null)
+			if (fCopyProcessor == null) {
 				fCanCopyElements = 1;
+			}
 		}
 		return fCanCopyElements == 2;
 	}

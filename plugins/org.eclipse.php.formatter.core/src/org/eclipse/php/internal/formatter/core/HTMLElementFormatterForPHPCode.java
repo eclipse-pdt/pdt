@@ -75,8 +75,9 @@ public class HTMLElementFormatterForPHPCode extends HTMLElementFormatter {
 		boolean insertBreak = true;
 		IDOMNode child = (IDOMNode) node.getFirstChild();
 		while (child != null) {
-			if (child.getParentNode() != node)
+			if (child.getParentNode() != node) {
 				break;
+			}
 			IDOMNode next = (IDOMNode) child.getNextSibling();
 
 			if (insertBreak && canInsertBreakBefore(child)) {
@@ -104,8 +105,9 @@ public class HTMLElementFormatterForPHPCode extends HTMLElementFormatter {
 			child = next;
 		}
 
-		if (contraints != null)
+		if (contraints != null) {
 			contraints.setFormatWithSiblingIndent(indent);
+		}
 	}
 
 	@Override

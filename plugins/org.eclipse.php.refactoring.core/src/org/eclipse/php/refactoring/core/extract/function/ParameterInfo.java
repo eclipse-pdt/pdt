@@ -211,10 +211,11 @@ public class ParameterInfo {
 	}
 
 	public static String stripEllipsis(String typeName) {
-		if (isVarargs(typeName))
+		if (isVarargs(typeName)) {
 			return typeName.substring(0, typeName.length() - 3);
-		else
+		} else {
 			return typeName;
+		}
 	}
 
 	public static boolean isVarargs(String typeName) {

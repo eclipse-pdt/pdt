@@ -117,8 +117,9 @@ public class PHPINIUtil {
 											.getProjectFragments();
 									for (IProjectFragment projectFragment : projectFragments) {
 										if (projectFragment.getResource() instanceof IFolder
-												|| projectFragment.getResource() instanceof IProject)
+												|| projectFragment.getResource() instanceof IProject) {
 											addIncludePath(includePath, projectFragment.getPath());
+										}
 									}
 
 								} catch (ModelException e) {

@@ -130,8 +130,9 @@ public class PHPFormatProcessorProxy implements IStructuredFormatProcessor {
 	public void formatModel(IStructuredModel structuredModel) {
 		IStructuredDocument document = structuredModel.getStructuredDocument();
 		IContentFormatter formatter = getFormatter();
-		if (formatter != null)
+		if (formatter != null) {
 			formatter.format(document, new Region(0, document.getLength()));
+		}
 	}
 
 	/*
@@ -147,8 +148,9 @@ public class PHPFormatProcessorProxy implements IStructuredFormatProcessor {
 		IStructuredDocument document = structuredModel.getStructuredDocument();
 		Region region = new Region(start, length);
 		IContentFormatter formatter = getFormatter();
-		if (formatter != null)
+		if (formatter != null) {
 			formatter.format(document, region);
+		}
 	}
 
 	/*

@@ -172,8 +172,9 @@ public class ProfileManager extends Observable implements IProfileManager {
 		@Override
 		public Profile rename(String name, ProfileManager manager) {
 			final String trimmed = name.trim();
-			if (trimmed.equals(getName()))
+			if (trimmed.equals(getName())) {
 				return this;
+			}
 
 			String oldID = getID(); // remember old id before changing name
 			fName = trimmed;
@@ -189,8 +190,9 @@ public class ProfileManager extends Observable implements IProfileManager {
 
 		@Override
 		public void setSettings(Map<String, Object> settings) {
-			if (settings == null)
+			if (settings == null) {
 				throw new IllegalArgumentException();
+			}
 			fSettings = settings;
 			if (fManager != null) {
 				fManager.profileChanged(this);
@@ -681,8 +683,9 @@ public class ProfileManager extends Observable implements IProfileManager {
 	 *         otherwise.
 	 */
 	public boolean deleteSelected() {
-		if (!(fSelected instanceof CustomProfile))
+		if (!(fSelected instanceof CustomProfile)) {
 			return false;
+		}
 
 		Profile removedProfile = fSelected;
 
@@ -693,8 +696,9 @@ public class ProfileManager extends Observable implements IProfileManager {
 
 		((CustomProfile) removedProfile).setManager(null);
 
-		if (index >= fProfilesByName.size())
+		if (index >= fProfilesByName.size()) {
 			index--;
+		}
 		fSelected = fProfilesByName.get(index);
 
 		if (!removedProfile.isSharedProfile()) {

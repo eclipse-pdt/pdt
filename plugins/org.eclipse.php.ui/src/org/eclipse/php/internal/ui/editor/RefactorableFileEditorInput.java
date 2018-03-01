@@ -137,8 +137,9 @@ public class RefactorableFileEditorInput
 	public IPersistableElement getPersistable() {
 		// if the file has been deleted,return null will make this EidtorInput
 		// be removed from NavigationHistory
-		if (!innerEditorInput.getFile().exists())
+		if (!innerEditorInput.getFile().exists()) {
 			return null;
+		}
 		return innerEditorInput.getPersistable();
 	}
 

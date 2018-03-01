@@ -412,8 +412,9 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 					assert false;// we shouldn't get here ...
 				}
 
-				if (data instanceof AbstractSourceModule)
+				if (data instanceof AbstractSourceModule) {
 					insertDocBlock(document, offset, docBlock);
+				}
 
 			} catch (BadLocationException e) {
 			}

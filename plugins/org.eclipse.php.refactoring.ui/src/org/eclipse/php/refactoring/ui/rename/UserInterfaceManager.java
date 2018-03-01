@@ -43,11 +43,13 @@ public class UserInterfaceManager {
 
 	public UserInterfaceStarter getStarter(Refactoring refactoring) {
 		RefactoringProcessor processor = refactoring.getAdapter(RefactoringProcessor.class);
-		if (processor == null)
+		if (processor == null) {
 			return null;
+		}
 		Tuple tuple = fMap.get(processor.getClass());
-		if (tuple == null)
+		if (tuple == null) {
 			return null;
+		}
 		try {
 			UserInterfaceStarter starter = (UserInterfaceStarter) tuple.starter.newInstance();
 			Class<?> wizardClass = tuple.wizard;

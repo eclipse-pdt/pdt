@@ -99,8 +99,9 @@ public class PHPFoldingStructureProviderRegistry {
 	 * <code>fDescriptors</code>.
 	 */
 	private void ensureRegistered() {
-		if (fDescriptors == null)
+		if (fDescriptors == null) {
 			reloadExtensions();
+		}
 	}
 
 	/**

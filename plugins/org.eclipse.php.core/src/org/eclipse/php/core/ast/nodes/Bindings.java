@@ -30,8 +30,9 @@ public class Bindings {
 	public static int hashCode(IBinding binding) {
 		Assert.isNotNull(binding);
 		String key = binding.getKey();
-		if (key == null)
+		if (key == null) {
 			return binding.hashCode();
+		}
 		return key.hashCode();
 	}
 
@@ -46,18 +47,20 @@ public class Bindings {
 	 * @see org.eclipse.jdt.internal.ui.viewsupport.BindingLabelProvider
 	 */
 	public static String asString(IBinding binding) {
-		if (binding instanceof IMethodBinding)
+		if (binding instanceof IMethodBinding) {
 			return asString((IMethodBinding) binding);
-		else if (binding instanceof ITypeBinding)
+		} else if (binding instanceof ITypeBinding) {
 			return ((ITypeBinding) binding).getBinaryName(); // getQualifiedName()
-		else if (binding instanceof IVariableBinding)
+		} else if (binding instanceof IVariableBinding) {
 			return asString((IVariableBinding) binding);
+		}
 		return binding.toString();
 	}
 
 	private static String asString(IVariableBinding variableBinding) {
-		if (!variableBinding.isField())
+		if (!variableBinding.isField()) {
 			return variableBinding.toString();
+		}
 		if (variableBinding.getDeclaringClass() == null) {
 			Assert.isTrue(variableBinding.getName().equals("length"));//$NON-NLS-1$
 			return ARRAY_LENGTH_FIELD_BINDING_STRING;
@@ -81,7 +84,9 @@ public class Bindings {
 			ITypeBinding parameter = parameters[i];
 			result.append(parameter.getName());
 			if (i < lastComma)
+			 {
 				result.append(", "); //$NON-NLS-1$
+			}
 		}
 		result.append(')');
 		return result.toString();
@@ -106,8 +111,9 @@ public class Bindings {
 	 *         exception; otherwise <code>false</code> is returned
 	 */
 	public static boolean isRuntimeException(ITypeBinding thrownException) {
-		if (thrownException == null || thrownException.isPrimitive() || thrownException.isArray())
+		if (thrownException == null || thrownException.isPrimitive() || thrownException.isArray()) {
 			return false;
+		}
 		return findTypeInHierarchy(thrownException, "java.lang.RuntimeException") != null; //$NON-NLS-1$
 	}
 
@@ -123,14 +129,16 @@ public class Bindings {
 	 * @return the binding representing the field or <code>null</code>
 	 */
 	public static IVariableBinding findFieldInType(ITypeBinding type, String fieldName) {
-		if (type.isPrimitive())
+		if (type.isPrimitive()) {
 			return null;
+		}
 		IVariableBinding[] fields = type.getDeclaredFields();
 		for (int i = 0; i < fields.length; i++) {
 			IVariableBinding field = fields[i];
 			// TODO see if we can remove the dollar sign from here
-			if (field.getName().equals(fieldName))
+			if (field.getName().equals(fieldName)) {
 				return field;
+			}
 		}
 		return null;
 	}
@@ -150,19 +158,22 @@ public class Bindings {
 	 */
 	public static IVariableBinding findFieldInHierarchy(ITypeBinding type, String fieldName) {
 		IVariableBinding field = findFieldInType(type, fieldName);
-		if (field != null)
+		if (field != null) {
 			return field;
+		}
 		ITypeBinding superClass = type.getSuperclass();
 		if (superClass != null) {
 			field = findFieldInHierarchy(superClass, fieldName);
-			if (field != null)
+			if (field != null) {
 				return field;
+			}
 		}
 		ITypeBinding[] interfaces = type.getInterfaces();
 		for (int i = 0; i < interfaces.length; i++) {
 			field = findFieldInHierarchy(interfaces[i], fieldName);
-			if (field != null) // no private fields in interfaces
+			if (field != null) {
 				return field;
+			}
 		}
 		return null;
 	}
@@ -179,12 +190,14 @@ public class Bindings {
 	 * @return the method binding representing the method
 	 */
 	public static IMethodBinding findMethodInType(ITypeBinding type, String methodName) {
-		if (type.isPrimitive())
+		if (type.isPrimitive()) {
 			return null;
+		}
 		IMethodBinding[] methods = type.getDeclaredMethods();
 		for (int i = 0; i < methods.length; i++) {
-			if (methodName.equalsIgnoreCase(methods[i].getName()))
+			if (methodName.equalsIgnoreCase(methods[i].getName())) {
 				return methods[i];
+			}
 
 		}
 		return null;
@@ -205,19 +218,22 @@ public class Bindings {
 	 */
 	public static IMethodBinding findMethodInHierarchy(ITypeBinding type, String methodName) {
 		IMethodBinding method = findMethodInType(type, methodName);
-		if (method != null)
+		if (method != null) {
 			return method;
+		}
 		ITypeBinding superClass = type.getSuperclass();
 		if (superClass != null) {
 			method = findMethodInHierarchy(superClass, methodName);
-			if (method != null)
+			if (method != null) {
 				return method;
+			}
 		}
 		ITypeBinding[] interfaces = type.getInterfaces();
 		for (int i = 0; i < interfaces.length; i++) {
 			method = findMethodInHierarchy(interfaces[i], methodName);
-			if (method != null)
+			if (method != null) {
 				return method;
+			}
 		}
 		return null;
 	}
@@ -310,8 +326,9 @@ public class Bindings {
 	public static IMethodBinding findOverriddenMethodInType(ITypeBinding type, IMethodBinding method) {
 		IMethodBinding[] methods = type.getDeclaredMethods();
 		for (int i = 0; i < methods.length; i++) {
-			if (isSubsignature(method, methods[i]))
+			if (isSubsignature(method, methods[i])) {
 				return methods[i];
+			}
 		}
 		return null;
 	}
@@ -340,8 +357,9 @@ public class Bindings {
 		}
 
 		IMethodBinding method = findOverriddenMethodInType(type, binding);
-		if (method != null)
+		if (method != null) {
 			return method;
+		}
 		ITypeBinding superClass = type.getSuperclass();
 		if (superClass != null) {
 			method = innerFindOverriddenMethodInHierarchy(superClass, binding, processedTypes);
@@ -353,8 +371,9 @@ public class Bindings {
 		if (interfaces != null) {
 			for (int i = 0; i < interfaces.length; i++) {
 				method = innerFindOverriddenMethodInHierarchy(interfaces[i], binding, processedTypes);
-				if (method != null)
+				if (method != null) {
 					return method;
+				}
 			}
 		}
 		return null;

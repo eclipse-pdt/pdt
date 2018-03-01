@@ -172,25 +172,31 @@ public class PHPUnitLaunchUtils {
 		IEditorPart editor = null;
 		IModelElement obj = null;
 
-		if (context != null)
-			if (context instanceof IStructuredSelection)
+		if (context != null) {
+			if (context instanceof IStructuredSelection) {
 				sSelection = (IStructuredSelection) context;
-			else if (context instanceof IEditorPart)
+			} else if (context instanceof IEditorPart) {
 				editor = (IEditorPart) context;
+			}
+		}
 		if (sSelection == null && editor == null) {
 			final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-			if (window == null)
+			if (window == null) {
 				return null;
+			}
 			final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			if (page == null)
+			if (page == null) {
 				return null;
+			}
 			final ISelection selection = page.getSelection();
-			if (selection instanceof IStructuredSelection)
+			if (selection instanceof IStructuredSelection) {
 				sSelection = (IStructuredSelection) selection;
+			}
 			editor = page.getActiveEditor();
 		}
-		if (sSelection != null)
+		if (sSelection != null) {
 			obj = calculateContext(sSelection);
+		}
 		if (obj == null && editor != null) {
 			obj = calculateContext(editor);
 		}

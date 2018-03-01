@@ -45,8 +45,9 @@ public abstract class PHPEditorResolvingAction extends TextEditorAction implemen
 				IModelElement[] filteredElements = filterElements(modelElement);
 				selected = OpenActionUtil.selectModelElement(filteredElements, getTextEditor().getSite().getShell(),
 						ActionMessages.OpenAction_error_title, ActionMessages.OpenAction_select_element);
-				if (selected == null)
+				if (selected == null) {
 					return;
+				}
 			} else {
 				selected = modelElement[0];
 			}
@@ -85,8 +86,9 @@ public abstract class PHPEditorResolvingAction extends TextEditorAction implemen
 		try {
 			IDocument document = editor.getDocumentProvider().getDocument(editor.getEditorInput());
 			IRegion wordRegion = ScriptWordFinder.findWord(document, offset);
-			if (wordRegion == null)
+			if (wordRegion == null) {
 				return null;
+			}
 
 			if (wordRegion.getOffset() < 0 || wordRegion.getLength() < 0) {
 				return null;
@@ -105,8 +107,9 @@ public abstract class PHPEditorResolvingAction extends TextEditorAction implemen
 	}
 
 	private IModelElement[] filterElements(IModelElement[] elements) {
-		if (elements == null)
+		if (elements == null) {
 			return null;
+		}
 
 		Map<IModelElement, IModelElement> uniqueElements = new HashMap<>();
 		for (int i = 0; i < elements.length; i++) {

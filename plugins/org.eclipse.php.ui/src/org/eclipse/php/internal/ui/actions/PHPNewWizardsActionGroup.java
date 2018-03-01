@@ -64,8 +64,9 @@ public class PHPNewWizardsActionGroup extends ActionGroup {
 	}
 
 	private boolean isNewTarget(Object element) {
-		if (element == null)
+		if (element == null) {
 			return true;
+		}
 		if (element instanceof IResource) {
 			return true;
 		}

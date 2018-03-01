@@ -343,8 +343,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		 * @param selectionProvider
 		 */
 		public void install(ISelectionProvider selectionProvider) {
-			if (selectionProvider == null)
+			if (selectionProvider == null) {
 				return;
+			}
 
 			if (selectionProvider instanceof IPostSelectionProvider) {
 				IPostSelectionProvider provider = (IPostSelectionProvider) selectionProvider;
@@ -361,8 +362,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		 *            the selection provider
 		 */
 		public void uninstall(ISelectionProvider selectionProvider) {
-			if (selectionProvider == null)
+			if (selectionProvider == null) {
 				return;
+			}
 
 			if (selectionProvider instanceof IPostSelectionProvider) {
 				IPostSelectionProvider provider = (IPostSelectionProvider) selectionProvider;
@@ -438,11 +440,13 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			if (fSize == fStack.size() && !isMasked(offset)) {
 				if (event.character == fExitCharacter) {
 					BracketLevel level = fStack.peek();
-					if (level.fFirstPosition.offset > offset || level.fSecondPosition.offset < offset)
+					if (level.fFirstPosition.offset > offset || level.fSecondPosition.offset < offset) {
 						return null;
-					if (level.fSecondPosition.offset == offset && length == 0)
+					}
+					if (level.fSecondPosition.offset == offset && length == 0) {
 						// don't enter the character if if its the closing peer
 						return new ExitFlags(ILinkedModeListener.UPDATE_CARET, false);
+					}
 				}
 				// when entering an anonymous class between the parenthesis', we
 				// don't want
@@ -451,8 +455,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 					ISourceViewer sourceViewer = getSourceViewer();
 					IDocument document = sourceViewer.getDocument();
 					try {
-						if (document.getChar(offset - 1) == '{')
+						if (document.getChar(offset - 1) == '{') {
 							return new ExitFlags(ILinkedModeListener.EXIT_ALL, true);
+						}
 
 						// see bug 308217: while overriding a method and using
 						// '(' followed by parameter type to filter the content
@@ -539,18 +544,19 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 					Position position = positions[i];
 
-					if (position.isDeleted())
+					if (position.isDeleted()) {
 						continue;
+					}
 
 					int offset = position.getOffset();
 					int length = position.getLength();
 					int end = offset + length;
 
-					if (offset >= eventOffset + eventOldLength)
+					if (offset >= eventOffset + eventOldLength) {
 						// position comes
 						// after change - shift
 						position.setOffset(offset + deltaLength);
-					else if (end <= eventOffset) {
+					} else if (end <= eventOffset) {
 						// position comes way before change -
 						// leave alone
 					} else if (offset <= eventOffset && end >= eventOffset + eventOldLength) {
@@ -612,8 +618,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 			// early pruning to slow down normal typing as little as possible
 			if (!event.doit || getInsertMode() != SMART_INSERT
-					|| isBlockSelectionModeEnabled() && isMultilineSelection())
+					|| isBlockSelectionModeEnabled() && isMultilineSelection()) {
 				return;
+			}
 			switch (event.character) {
 			case '(':
 			case '[':
@@ -648,20 +655,23 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				switch (event.character) {
 				case '(':
 					if (!fCloseBrackets || nextToken == Symbols.TokenLPAREN || nextToken == Symbols.TokenIDENT
-							|| next != null && next.length() > 1)
+							|| next != null && next.length() > 1) {
 						return;
+					}
 					break;
 				case '[':
-					if (!fCloseBrackets || nextToken == Symbols.TokenIDENT || next != null && next.length() > 1)
+					if (!fCloseBrackets || nextToken == Symbols.TokenIDENT || next != null && next.length() > 1) {
 						return;
+					}
 					break;
 
 				case '\'':
 				case '"':
 				case '`':
 					if (!fCloseStrings || nextToken == Symbols.TokenIDENT || prevToken == Symbols.TokenIDENT
-							|| next != null && next.length() > 1 || previous != null && previous.length() > 1)
+							|| next != null && next.length() > 1 || previous != null && previous.length() > 1) {
 						return;
+					}
 					break;
 
 				default:
@@ -669,11 +679,13 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				}
 
 				String partitionType = FormatterUtils.getPartitionType((IStructuredDocument) document, offset);
-				if (!PHPPartitionTypes.PHP_DEFAULT.equals(partitionType))
+				if (!PHPPartitionTypes.PHP_DEFAULT.equals(partitionType)) {
 					return;
+				}
 
-				if (!validateEditorInputState())
+				if (!validateEditorInputState()) {
 					return;
+				}
 
 				final char character = event.character;
 				final char closingCharacter = getPeerCharacter(character);
@@ -729,8 +741,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 			final BracketLevel level = fBracketLevelStack.pop();
 
-			if (flags != ILinkedModeListener.EXTERNAL_MODIFICATION)
+			if (flags != ILinkedModeListener.EXTERNAL_MODIFICATION) {
 				return;
+			}
 
 			// remove brackets
 			final ISourceViewer sourceViewer = getSourceViewer();
@@ -792,8 +805,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				break;
 			}
 		}
-		if (!isActivePart() && PHPUiPlugin.getActivePage() != null)
+		if (!isActivePart() && PHPUiPlugin.getActivePage() != null) {
 			PHPUiPlugin.getActivePage().bringToTop(this);
+		}
 		setSelection(reference, !isActivePart());
 
 	}
@@ -832,8 +846,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		public InformationDispatchAction(final ResourceBundle resourceBundle, final String prefix,
 				final TextOperationAction textOperationAction) {
 			super(resourceBundle, prefix, PHPStructuredEditor.this);
-			if (textOperationAction == null)
+			if (textOperationAction == null) {
 				throw new IllegalArgumentException();
+			}
 			fTextOperationAction = textOperationAction;
 		}
 
@@ -843,14 +858,16 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			final StyledText styledText = textViewer.getTextWidget();
 			final IDocument document = textViewer.getDocument();
 
-			if (styledText == null || document == null)
+			if (styledText == null || document == null) {
 				return -1;
+			}
 
 			try {
 				int widgetOffset = styledText.getOffsetAtLocation(new Point(x, y));
 				final Point p = styledText.getLocationAtOffset(widgetOffset);
-				if (p.x > x)
+				if (p.x > x) {
 					widgetOffset--;
+				}
 
 				if (textViewer instanceof ITextViewerExtension5) {
 					final ITextViewerExtension5 extension = (ITextViewerExtension5) textViewer;
@@ -878,8 +895,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				final IAnnotationHover annotationHover) {
 			final IVerticalRulerInfo info = getVerticalRuler();
 			final int line = info.getLineOfLastMouseButtonActivity();
-			if (line == -1)
+			if (line == -1) {
 				return false;
+			}
 
 			try {
 
@@ -888,8 +906,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				if (annotationHover instanceof IAnnotationHoverExtension) {
 					final IAnnotationHoverExtension extension = (IAnnotationHoverExtension) annotationHover;
 					final ILineRange hoverLineRange = extension.getHoverLineRange(sourceViewer, line);
-					if (hoverLineRange == null)
+					if (hoverLineRange == null) {
 						return false;
+					}
 					final int maxVisibleLines = Integer.MAX_VALUE; // allow any
 					// number of
 					// lines
@@ -898,8 +917,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 					// as we
 					// support scrolling
 					hoverInfo = extension.getHoverInfo(sourceViewer, hoverLineRange, maxVisibleLines);
-				} else
+				} else {
 					hoverInfo = annotationHover.getHoverInfo(sourceViewer, line);
+				}
 
 				// hover region: the beginning of the concerned line to place
 				// the control right over the line
@@ -914,7 +934,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				 * XXX: This is a hack to avoid API changes at the end of 3.2,
 				 */
 				if ("org.eclipse.jface.text.source.projection.ProjectionAnnotationHover" //$NON-NLS-1$
-						.equals(annotationHover.getClass().getName()))
+						.equals(annotationHover.getClass().getName())) {
 					controlCreator = new IInformationControlCreator() {
 						@Override
 						public IInformationControl createInformationControl(final Shell shell) {
@@ -923,11 +943,12 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 							return new PHPSourceViewerInformationControl(shell, shellStyle, style);
 						}
 					};
-				else if (annotationHover instanceof IInformationProviderExtension2)
+				} else if (annotationHover instanceof IInformationProviderExtension2) {
 					controlCreator = ((IInformationProviderExtension2) annotationHover)
 							.getInformationPresenterControlCreator();
-				else if (annotationHover instanceof IAnnotationHoverExtension)
+				} else if (annotationHover instanceof IAnnotationHoverExtension) {
 					controlCreator = ((IAnnotationHoverExtension) annotationHover).getHoverControlCreator();
+				}
 
 				final IInformationProvider informationProvider = new InformationProvider(new Region(offset, 0),
 						hoverInfo, controlCreator);
@@ -960,13 +981,15 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		private boolean makeTextHoverFocusable(final ISourceViewer sourceViewer, final ITextHover textHover) {
 			final Point hoverEventLocation = ((ITextViewerExtension2) sourceViewer).getHoverEventLocation();
 			final int offset = computeOffsetAtLocation(sourceViewer, hoverEventLocation.x, hoverEventLocation.y);
-			if (offset == -1)
+			if (offset == -1) {
 				return false;
+			}
 
 			try {
 				final IRegion hoverRegion = textHover.getHoverRegion(sourceViewer, offset);
-				if (hoverRegion == null)
+				if (hoverRegion == null) {
 					return false;
+				}
 
 				String hoverInfo = textHover.getHoverInfo(sourceViewer, hoverRegion);
 
@@ -974,15 +997,17 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 					final IHoverMessageDecorator decorator = ((IPHPTextHover) textHover).getMessageDecorator();
 					if (decorator != null) {
 						final String decoratedMessage = decorator.getDecoratedMessage(hoverInfo);
-						if (decoratedMessage != null && decoratedMessage.length() > 0)
+						if (decoratedMessage != null && decoratedMessage.length() > 0) {
 							hoverInfo = decoratedMessage;
+						}
 					}
 				}
 
 				IInformationControlCreator controlCreator = null;
-				if (textHover instanceof IInformationProviderExtension2)
+				if (textHover instanceof IInformationProviderExtension2) {
 					controlCreator = ((IInformationProviderExtension2) textHover)
 							.getInformationPresenterControlCreator();
+				}
 
 				final IInformationProvider informationProvider = new InformationProvider(hoverRegion, hoverInfo,
 						controlCreator);
@@ -1017,23 +1042,26 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 			if (sourceViewer instanceof ITextViewerExtension4) {
 				final ITextViewerExtension4 extension4 = (ITextViewerExtension4) sourceViewer;
-				if (extension4.moveFocusToWidgetToken())
+				if (extension4.moveFocusToWidgetToken()) {
 					return;
+				}
 			}
 
 			if (sourceViewer instanceof ITextViewerExtension2) {
 				// does a text hover exist?
 				final ITextHover textHover = ((ITextViewerExtension2) sourceViewer).getCurrentTextHover();
-				if (textHover != null && makeTextHoverFocusable(sourceViewer, textHover))
+				if (textHover != null && makeTextHoverFocusable(sourceViewer, textHover)) {
 					return;
+				}
 			}
 
 			if (sourceViewer instanceof ISourceViewerExtension3) {
 				// does an annotation hover exist?
 				final IAnnotationHover annotationHover = ((ISourceViewerExtension3) sourceViewer)
 						.getCurrentAnnotationHover();
-				if (annotationHover != null && makeAnnotationHoverFocusable(sourceViewer, annotationHover))
+				if (annotationHover != null && makeAnnotationHoverFocusable(sourceViewer, annotationHover)) {
 					return;
+				}
 			}
 
 			// otherwise, just run the action
@@ -1108,30 +1136,35 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 		public void install() {
 			ISourceViewer sourceViewer = getSourceViewer();
-			if (sourceViewer == null)
+			if (sourceViewer == null) {
 				return;
+			}
 
 			StyledText text = sourceViewer.getTextWidget();
-			if (text == null || text.isDisposed())
+			if (text == null || text.isDisposed()) {
 				return;
+			}
 
 			sourceViewer.addTextInputListener(this);
 
 			IDocument document = sourceViewer.getDocument();
-			if (document != null)
+			if (document != null) {
 				document.addDocumentListener(this);
+			}
 		}
 
 		public void uninstall() {
 			ISourceViewer sourceViewer = getSourceViewer();
-			if (sourceViewer != null)
+			if (sourceViewer != null) {
 				sourceViewer.removeTextInputListener(this);
+			}
 
 			IDocumentProvider documentProvider = getDocumentProvider();
 			if (documentProvider != null) {
 				IDocument document = documentProvider.getDocument(getEditorInput());
-				if (document != null)
+				if (document != null) {
 					document.removeDocumentListener(this);
+				}
 			}
 		}
 
@@ -1141,8 +1174,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		 */
 		@Override
 		public void documentAboutToBeChanged(DocumentEvent event) {
-			if (fOccurrencesFinderJob != null)
+			if (fOccurrencesFinderJob != null) {
 				fOccurrencesFinderJob.doCancel();
+			}
 		}
 
 		/*
@@ -1159,8 +1193,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		 */
 		@Override
 		public void inputDocumentAboutToBeChanged(IDocument oldInput, IDocument newInput) {
-			if (oldInput == null)
+			if (oldInput == null) {
 				return;
+			}
 
 			oldInput.removeDocumentListener(this);
 		}
@@ -1171,8 +1206,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		 */
 		@Override
 		public void inputDocumentChanged(IDocument oldInput, IDocument newInput) {
-			if (newInput == null)
+			if (newInput == null) {
 				return;
+			}
 			newInput.addDocumentListener(this);
 		}
 	}
@@ -1197,10 +1233,11 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			fSelection = selection;
 			fLocations = locations;
 
-			if (getSelectionProvider() instanceof ISelectionValidator)
+			if (getSelectionProvider() instanceof ISelectionValidator) {
 				fPostSelectionValidator = (ISelectionValidator) getSelectionProvider();
-			else
+			} else {
 				fPostSelectionValidator = null;
+			}
 		}
 
 		// cannot use cancel() because it is declared final
@@ -1220,32 +1257,38 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		 */
 		@Override
 		public IStatus run(IProgressMonitor progressMonitor) {
-			if (isCanceled(progressMonitor))
+			if (isCanceled(progressMonitor)) {
 				return Status.CANCEL_STATUS;
+			}
 
 			ITextViewer textViewer = getTextViewer();
-			if (textViewer == null)
+			if (textViewer == null) {
 				return Status.CANCEL_STATUS;
+			}
 
 			IDocument document = textViewer.getDocument();
-			if (document == null)
+			if (document == null) {
 				return Status.CANCEL_STATUS;
+			}
 
 			IDocumentProvider documentProvider = getDocumentProvider();
-			if (documentProvider == null)
+			if (documentProvider == null) {
 				return Status.CANCEL_STATUS;
+			}
 
 			IAnnotationModel annotationModel = documentProvider.getAnnotationModel(getEditorInput());
-			if (annotationModel == null)
+			if (annotationModel == null) {
 				return Status.CANCEL_STATUS;
+			}
 
 			// Add occurrence annotations
 			int length = fLocations.length;
 			Map<Annotation, Position> annotationMap = new HashMap<>(length);
 			for (int i = 0; i < length; i++) {
 
-				if (isCanceled(progressMonitor))
+				if (isCanceled(progressMonitor)) {
 					return Status.CANCEL_STATUS;
+				}
 
 				OccurrenceLocation location = fLocations[i];
 				Position position = new Position(location.getOffset(), location.getLength());
@@ -1274,8 +1317,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				annotationMap.put(annotation, position);
 			}
 
-			if (isCanceled(progressMonitor))
+			if (isCanceled(progressMonitor)) {
 				return Status.CANCEL_STATUS;
+			}
 
 			synchronized (getLockObject(annotationModel)) {
 				if (annotationModel instanceof IAnnotationModelExtension) {
@@ -1607,23 +1651,29 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			final String openGroup = "group.open"; //$NON-NLS-1$
 			menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT, new Separator(openGroup));
 			IAction action = getAction(PHPStructuredEditor.ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION);
-			if (action != null)
+			if (action != null) {
 				menu.appendToGroup(openGroup, action);
+			}
 			action = getAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION);
-			if (action != null)
+			if (action != null) {
 				menu.appendToGroup(openGroup, action);
+			}
 			action = getAction(IScriptEditorActionDefinitionIds.SHOW_OUTLINE);
-			if (action != null)
+			if (action != null) {
 				menu.appendToGroup(openGroup, action);
+			}
 			action = getAction(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);
-			if (action != null)
+			if (action != null) {
 				menu.appendToGroup(openGroup, action);
+			}
 			action = getAction(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY);
-			if (action != null)
+			if (action != null) {
 				menu.appendToGroup(openGroup, action);
+			}
 			action = getAction(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY);
-			if (action != null)
+			if (action != null) {
 				menu.appendToGroup(openGroup, action);
+			}
 		}
 	}
 
@@ -1745,11 +1795,13 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			}
 
 			ISourceViewer fSourceViewer = getSourceViewer();
-			if (fSourceViewer == null)
+			if (fSourceViewer == null) {
 				return;
+			}
 			StyledText st = fSourceViewer.getTextWidget();
-			if (st == null || st.isDisposed())
+			if (st == null || st.isDisposed()) {
 				return;
+			}
 
 			int caretOffset = st.getCaretOffset();
 			int lineNumber = st.getLineAtOffset(caretOffset);
@@ -1783,32 +1835,37 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			int newCaretOffset = -1;
 			if (isSmartHomeEndEnabled) {
 
-				if (caretOffset - lineOffset == index)
+				if (caretOffset - lineOffset == index) {
 					// to beginning of line
 					newCaretOffset = lineOffset;
-				else
+				} else {
 					// to beginning of text
 					newCaretOffset = lineOffset + index;
+				}
 
 			} else {
 
-				if (caretOffset > lineOffset)
+				if (caretOffset > lineOffset) {
 					// to beginning of line
 					newCaretOffset = lineOffset;
+				}
 			}
 
-			if (newCaretOffset == -1)
+			if (newCaretOffset == -1) {
 				newCaretOffset = caretOffset;
-			else
+			} else {
 				st.setCaretOffset(newCaretOffset);
+			}
 
 			if (fDoSelect) {
-				if (caretOffset < oldSelection.y)
+				if (caretOffset < oldSelection.y) {
 					st.setSelection(oldSelection.y, newCaretOffset);
-				else
+				} else {
 					st.setSelection(oldSelection.x, newCaretOffset);
-			} else
+				}
+			} else {
 				st.setSelection(newCaretOffset);
+			}
 
 			fireSelectionChanged(oldSelection);
 		}
@@ -1860,11 +1917,13 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			}
 
 			ISourceViewer fSourceViewer = getSourceViewer();
-			if (fSourceViewer == null)
+			if (fSourceViewer == null) {
 				return;
+			}
 			StyledText st = fSourceViewer.getTextWidget();
-			if (st == null || st.isDisposed())
+			if (st == null || st.isDisposed()) {
 				return;
+			}
 
 			int caretOffset = st.getCaretOffset();
 			int lineNumber = st.getLineAtOffset(caretOffset);
@@ -1886,8 +1945,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			}
 
 			String line = ""; //$NON-NLS-1$
-			if (lineLength > 0)
+			if (lineLength > 0) {
 				line = st.getText(lineOffset, lineEndOffset - 1);
+			}
 			int i = lineLength - 1;
 			while (i > -1 && Character.isWhitespace(line.charAt(i))) {
 				i--;
@@ -1902,23 +1962,26 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 			if (isSmartHomeEndEnabled) {
 
-				if (caretOffset - lineOffset == i)
+				if (caretOffset - lineOffset == i) {
 					// to end of line
 					newCaretOffset = lineEndOffset;
-				else
+				} else {
 					// to end of text
 					newCaretOffset = lineOffset + i;
+				}
 
 			} else {
 
-				if (caretOffset < lineEndOffset)
+				if (caretOffset < lineEndOffset) {
 					// to end of line
 					newCaretOffset = lineEndOffset;
+				}
 
 			}
 
-			if (newCaretOffset == -1)
+			if (newCaretOffset == -1) {
 				newCaretOffset = caretOffset;
+			}
 
 			int offsetInLine = newCaretOffset - lineOffset;
 			int lineFullLength = st.getLine(lineNumber).length();
@@ -1930,12 +1993,14 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			st.setCaretOffset(newCaretOffset);
 
 			if (fDoSelect) {
-				if (caretOffset < oldSelection.y)
+				if (caretOffset < oldSelection.y) {
 					st.setSelection(oldSelection.y, newCaretOffset);
-				else
+				} else {
 					st.setSelection(oldSelection.x, newCaretOffset);
-			} else
+				}
+			} else {
 				st.setSelection(newCaretOffset);
+			}
 
 			fireSelectionChanged(oldSelection);
 		}
@@ -2040,8 +2105,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		@Override
 		protected void setCaretPosition(final int position) {
 			final ISourceViewer viewer = getSourceViewer();
-			if (viewer == null)
+			if (viewer == null) {
 				return;
+			}
 
 			final StyledText text = viewer.getTextWidget();
 			if (text != null && !text.isDisposed()) {
@@ -2184,8 +2250,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		@Override
 		protected void setCaretPosition(final int position) {
 			final ISourceViewer viewer = getSourceViewer();
-			if (viewer == null)
+			if (viewer == null) {
 				return;
+			}
 
 			final StyledText text = viewer.getTextWidget();
 			if (text != null && !text.isDisposed()) {
@@ -2363,11 +2430,13 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	public void gotoMatchingBracket() {
 
 		ISourceViewer sourceViewer = getSourceViewer();
-		if (sourceViewer == null)
+		if (sourceViewer == null) {
 			return;
+		}
 		IDocument document = sourceViewer.getDocument();
-		if (document == null)
+		if (document == null) {
 			return;
+		}
 
 		IRegion selection = getSignedSelection(sourceViewer);
 
@@ -2380,8 +2449,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 		// #26314
 		int sourceCaretOffset = selection.getOffset() + selection.getLength();
-		if (isSurroundedByBrackets(document, sourceCaretOffset))
+		if (isSurroundedByBrackets(document, sourceCaretOffset)) {
 			sourceCaretOffset -= selection.getLength();
+		}
 
 		IRegion region = fBracketMatcher.match(document, sourceCaretOffset);
 		if (region == null) {
@@ -2393,8 +2463,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		int offset = region.getOffset();
 		int length = region.getLength();
 
-		if (length < 1)
+		if (length < 1) {
 			return;
+		}
 
 		int anchor = fBracketMatcher.getAnchor();
 		// http://dev.eclipse.org/bugs/show_bug.cgi?id=34195
@@ -2417,16 +2488,18 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			return;
 		}
 
-		if (selection.getLength() < 0)
+		if (selection.getLength() < 0) {
 			targetOffset -= selection.getLength();
+		}
 
 		sourceViewer.setSelectedRange(targetOffset, selection.getLength());
 		sourceViewer.revealRange(targetOffset, selection.getLength());
 	}
 
 	private static boolean isSurroundedByBrackets(IDocument document, int offset) {
-		if (offset == 0 || offset == document.getLength())
+		if (offset == 0 || offset == document.getLength()) {
 			return false;
+		}
 
 		try {
 			return isBracket(document.getChar(offset - 1)) && isBracket(document.getChar(offset));
@@ -2437,9 +2510,11 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	}
 
 	private static boolean isBracket(char character) {
-		for (int i = 0; i != BRACKETS.length; ++i)
-			if (character == BRACKETS[i])
+		for (int i = 0; i != BRACKETS.length; ++i) {
+			if (character == BRACKETS[i]) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -2487,12 +2562,14 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	private void installProjectionSupport() {
 		projectionSupportInstalled = true;
 		ProjectionViewer projectionViewer = (ProjectionViewer) getSourceViewer();
-		if (projectionViewer == null)
+		if (projectionViewer == null) {
 			return;
+		}
 
 		fProjectionModelUpdater = new PHPFoldingStructureProviderProxy();
-		if (fProjectionModelUpdater != null)
+		if (fProjectionModelUpdater != null) {
 			fProjectionModelUpdater.install(projectionViewer);
+		}
 
 		if (isFoldingEnabled()) {
 			fProjectionModelUpdater.projectionEnabled();
@@ -2515,8 +2592,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			installProjectionSupport();
 		}
 		// end
-		if (isMarkingOccurrences())
+		if (isMarkingOccurrences()) {
 			installOccurrencesFinder(true);
+		}
 
 		final IInformationControlCreator informationControlCreator = new IInformationControlCreator() {
 			@Override
@@ -2589,11 +2667,13 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			installOverrideIndicator(true);
 		}
 
-		if (fProjectionModelUpdater != null)
+		if (fProjectionModelUpdater != null) {
 			updateProjectionSupport();
+		}
 
-		if (fPHPEditorErrorTickUpdater != null)
+		if (fPHPEditorErrorTickUpdater != null) {
 			fPHPEditorErrorTickUpdater.updateEditorImage(getModelElement());
+		}
 	}
 
 	/**
@@ -2608,8 +2688,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 
 		ProjectionViewer projectionViewer = (ProjectionViewer) getSourceViewer();
-		if (projectionViewer == null)
+		if (projectionViewer == null) {
 			return;
+		}
 
 		fProjectionModelUpdater = new PHPFoldingStructureProviderProxy();
 		if (fProjectionModelUpdater != null) {
@@ -2747,10 +2828,11 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			if (PreferenceConstants.EDITOR_MARK_OCCURRENCES.equals(property)) {
 				if (newBooleanValue != fMarkOccurrenceAnnotations) {
 					fMarkOccurrenceAnnotations = newBooleanValue;
-					if (!fMarkOccurrenceAnnotations)
+					if (!fMarkOccurrenceAnnotations) {
 						uninstallOccurrencesFinder();
-					else
+					} else {
 						installOccurrencesFinder(true);
+					}
 				}
 				return;
 			}
@@ -2807,11 +2889,13 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 			if (affectsOverrideIndicatorAnnotations(event)) {
 				if (isShowingOverrideIndicators()) {
-					if (fOverrideIndicatorManager == null)
+					if (fOverrideIndicatorManager == null) {
 						installOverrideIndicator(true);
+					}
 				} else {
-					if (fOverrideIndicatorManager != null)
+					if (fOverrideIndicatorManager != null) {
 						uninstallOverrideIndicator();
+					}
 				}
 				return;
 			}
@@ -2874,8 +2958,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		String key = event.getProperty();
 		AnnotationPreference preference = getAnnotationPreferenceLookup()
 				.getAnnotationPreference(OverrideIndicatorManager.ANNOTATION_TYPE);
-		if (key == null || preference == null)
+		if (key == null || preference == null) {
 			return false;
+		}
 
 		return key.equals(preference.getHighlightPreferenceKey())
 				|| key.equals(preference.getVerticalRulerPreferenceKey())
@@ -2931,10 +3016,12 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	public void markAsCursorDependentAction(final String actionId, final boolean mark) {
 		assert actionId != null;
 		if (mark) {
-			if (!fCursorActions.contains(actionId))
+			if (!fCursorActions.contains(actionId)) {
 				fCursorActions.add(actionId);
-		} else
+			}
+		} else {
 			fCursorActions.remove(actionId);
+		}
 	}
 
 	public IDocument getDocument() {
@@ -2955,8 +3042,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	private void updateAction(final String actionId) {
 		assert actionId != null;
 		final IAction action = getAction(actionId);
-		if (action instanceof IUpdate)
+		if (action instanceof IUpdate) {
 			((IUpdate) action).update();
+		}
 	}
 
 	/**
@@ -2974,8 +3062,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			fLastActionsUpdate = currentTime;
 
 			final Iterator<String> e = fCursorActions.iterator();
-			while (e.hasNext())
+			while (e.hasNext()) {
 				updateAction(e.next());
+			}
 		}
 	}
 
@@ -2995,18 +3084,19 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 				final int[] stateMasks = configuration.getConfiguredTextHoverStateMasks(getSourceViewer(), t);
 
-				if (stateMasks != null)
+				if (stateMasks != null) {
 					for (final int stateMask : stateMasks) {
 						final ITextHover textHover = configuration.getTextHover(sourceViewer, t, stateMask);
 						((ITextViewerExtension2) sourceViewer).setTextHover(textHover, t, stateMask);
 					}
-				else {
+				} else {
 					final ITextHover textHover = configuration.getTextHover(sourceViewer, t);
 					((ITextViewerExtension2) sourceViewer).setTextHover(textHover, t,
 							ITextViewerExtension2.DEFAULT_HOVER_STATE_MASK);
 				}
-			} else
+			} else {
 				sourceViewer.setTextHover(configuration.getTextHover(sourceViewer, t), t);
+			}
 		}
 	}
 
@@ -3122,8 +3212,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		PHPUiPlugin.getDefault().getASTProvider().aboutToBeReconciled((ISourceModule) getModelElement());
 		// Notify listeners
 		Object[] listeners = fReconcilingListeners.getListeners();
-		for (int i = 0, length = listeners.length; i < length; ++i)
+		for (int i = 0, length = listeners.length; i < length; ++i) {
 			((IPHPScriptReconcilingListener) listeners[i]).aboutToBeReconciled();
+		}
 	}
 
 	/*
@@ -3137,8 +3228,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 		// see: https://bugs.eclipse.org/bugs/show_bug.cgi?id=58245
 		PHPUiPlugin phpPlugin = PHPUiPlugin.getDefault();
-		if (phpPlugin == null)
+		if (phpPlugin == null) {
 			return;
+		}
 
 		// Always notify AST provider
 		ISourceModule inputModelElement = (ISourceModule) getModelElement();
@@ -3147,8 +3239,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 		// Notify listeners
 		Object[] listeners = fReconcilingListeners.getListeners();
-		for (int i = 0, length = listeners.length; i < length; ++i)
+		for (int i = 0, length = listeners.length; i < length; ++i) {
 			((IPHPScriptReconcilingListener) listeners[i]).reconciled(ast, forced, progressMonitor);
+		}
 	}
 
 	/**
@@ -3192,13 +3285,16 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				if (reconcile) {
 					ScriptModelUtil.reconcile(unit);
 					return unit.getElementAt(offset);
-				} else if (unit.isConsistent())
+				} else if (unit.isConsistent()) {
 					return unit.getElementAt(offset);
+				}
 			} catch (ModelException x) {
 				if (!x.isDoesNotExist())
+				 {
 					// DLTKUIPlugin.log(x.getStatus());
 					System.err.println(x.getStatus());
 				// nothing found, be tolerant and go on
+				}
 			}
 		}
 		return null;
@@ -3232,8 +3328,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	private Object getLockObject(IAnnotationModel annotationModel) {
 		if (annotationModel instanceof ISynchronizable) {
 			Object lock = ((ISynchronizable) annotationModel).getLockObject();
-			if (lock != null)
+			if (lock != null) {
 				return lock;
+			}
 		}
 		return annotationModel;
 	}
@@ -3253,11 +3350,13 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 */
 	protected void updateOccurrenceAnnotations(final ITextSelection selection, final IModelElement sourceModule) {
 
-		if (fOccurrencesFinderJob != null)
+		if (fOccurrencesFinderJob != null) {
 			fOccurrencesFinderJob.cancel();
+		}
 
-		if (!fMarkOccurrenceAnnotations)
+		if (!fMarkOccurrenceAnnotations) {
 			return;
+		}
 
 		String updatingOccurrencesJobName = "Updating occurrence annotations"; //$NON-NLS-1$
 
@@ -3296,16 +3395,19 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	}
 
 	private void updateOccurrencesAnnotationsRunJob(ITextSelection selection, Program astRoot) {
-		if (astRoot == null || selection == null)
+		if (astRoot == null || selection == null) {
 			return;
+		}
 
 		ISourceViewer viewer = getSourceViewer();
-		if (viewer == null)
+		if (viewer == null) {
 			return;
+		}
 
 		IDocument document = viewer.getDocument();
-		if (document == null)
+		if (document == null) {
 			return;
+		}
 
 		boolean hasChanged = false;
 		if (document instanceof IDocumentExtension4) {
@@ -3315,8 +3417,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			hasChanged = currentModificationStamp != fMarkOccurrenceModificationStamp;
 			if (markOccurrenceTargetRegion != null && !hasChanged) {
 				if (markOccurrenceTargetRegion.getOffset() <= offset
-						&& offset <= markOccurrenceTargetRegion.getOffset() + markOccurrenceTargetRegion.getLength())
+						&& offset <= markOccurrenceTargetRegion.getOffset() + markOccurrenceTargetRegion.getLength()) {
 					return;
+				}
 			}
 			fMarkOccurrenceTargetRegion = ScriptWordFinder.findWord(document, offset);
 			fMarkOccurrenceModificationStamp = currentModificationStamp;
@@ -3384,10 +3487,11 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 
 		if (locations == null) {
-			if (!fStickyOccurrenceAnnotations)
+			if (!fStickyOccurrenceAnnotations) {
 				removeOccurrenceAnnotations();
-			else if (hasChanged) // check consistency of current annotations
+			} else if (hasChanged) {
 				removeOccurrenceAnnotations();
+			}
 			return;
 		}
 
@@ -3424,8 +3528,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 		IAnnotationModel model = getDocumentProvider().getAnnotationModel(getEditorInput());
 		final IModelElement inputElement = getModelElement();
-		if (model == null || inputElement == null || inputElement.getElementType() != IModelElement.SOURCE_MODULE)
+		if (model == null || inputElement == null || inputElement.getElementType() != IModelElement.SOURCE_MODULE) {
 			return;
+		}
 
 		fOverrideIndicatorManager = new OverrideIndicatorManager(model);
 		addReconcileListener(fOverrideIndicatorManager);
@@ -3539,19 +3644,22 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		fMarkOccurrenceTargetRegion = null;
 
 		IDocumentProvider documentProvider = getDocumentProvider();
-		if (documentProvider == null)
+		if (documentProvider == null) {
 			return;
+		}
 
 		IAnnotationModel annotationModel = documentProvider.getAnnotationModel(getEditorInput());
-		if (annotationModel == null || fOccurrenceAnnotations == null)
+		if (annotationModel == null || fOccurrenceAnnotations == null) {
 			return;
+		}
 
 		synchronized (getLockObject(annotationModel)) {
 			if (annotationModel instanceof IAnnotationModelExtension) {
 				((IAnnotationModelExtension) annotationModel).replaceAnnotations(fOccurrenceAnnotations, null);
 			} else {
-				for (int i = 0, length = fOccurrenceAnnotations.length; i < length; i++)
+				for (int i = 0, length = fOccurrenceAnnotations.length; i < length; i++) {
 					annotationModel.removeAnnotation(fOccurrenceAnnotations[i]);
+				}
 			}
 			fOccurrenceAnnotations = null;
 		}
@@ -3575,8 +3683,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 * @since 3.0
 	 */
 	protected void selectionChanged() {
-		if (getSelectionProvider() == null)
+		if (getSelectionProvider() == null) {
 			return;
+		}
 		Job job = new Job("PHPStructuredEditor selection changed job") { //$NON-NLS-1$
 
 			@Override
@@ -3600,11 +3709,13 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 */
 	public ISourceReference computeHighlightRangeSourceReference() {
 		ISourceViewer sourceViewer = getSourceViewer();
-		if (sourceViewer == null)
+		if (sourceViewer == null) {
 			return null;
+		}
 		final StyledText styledText = sourceViewer.getTextWidget();
-		if (styledText == null)
+		if (styledText == null) {
 			return null;
+		}
 		final int[] caret = new int[1];
 		if (sourceViewer instanceof ITextViewerExtension5) {
 			final ITextViewerExtension5 extension = (ITextViewerExtension5) sourceViewer;
@@ -3623,14 +3734,16 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 		IModelElement element = getElementAt(caret[0], false);
 		// IModelElement element = getElementAt(caret[0], true);
-		if (!(element instanceof ISourceReference))
+		if (!(element instanceof ISourceReference)) {
 			return null;
+		}
 		return (ISourceReference) element;
 	}
 
 	protected void setSelection(ISourceReference reference, boolean moveCursor) {
-		if (getSelectionProvider() == null)
+		if (getSelectionProvider() == null) {
 			return;
+		}
 		final ISelection[] selection = new ISelection[1];
 		Display.getDefault().syncExec(new Runnable() {
 			@Override
@@ -3655,31 +3768,37 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			// (which it isn't if
 			// this is called from a PostSelectionEvent that should only update
 			// the magnet)
-			if (moveCursor && (textSelection.getOffset() != 0 || textSelection.getLength() != 0))
+			if (moveCursor && (textSelection.getOffset() != 0 || textSelection.getLength() != 0)) {
 				markInNavigationHistory();
+			}
 		}
 		if (reference != null) {
 			StyledText textWidget = null;
 			ISourceViewer sourceViewer = getSourceViewer();
-			if (sourceViewer != null)
+			if (sourceViewer != null) {
 				textWidget = sourceViewer.getTextWidget();
-			if (textWidget == null)
+			}
+			if (textWidget == null) {
 				return;
+			}
 			try {
 				ISourceRange range = null;
 				range = reference.getSourceRange();
-				if (range == null)
+				if (range == null) {
 					return;
+				}
 				IDocument document = getDocument();
 				int offset = range.getOffset();
 				int length = range.getLength();
 				// avoid throwing BadLocationException in
 				// GenericPositionManager#addPosition(String, Position)
-				if (offset < 0 || length < 0 || (document != null && offset + length > document.getLength()))
+				if (offset < 0 || length < 0 || (document != null && offset + length > document.getLength())) {
 					return;
+				}
 				setHighlightRange(offset, length, moveCursor);
-				if (!moveCursor)
+				if (!moveCursor) {
 					return;
+				}
 				offset = -1;
 				length = -1;
 				if (reference instanceof IMember) {
@@ -3746,8 +3865,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	@Override
 	protected void initializeDragAndDrop(ISourceViewer viewer) {
 		IDragAndDropService dndService = getSite().getService(IDragAndDropService.class);
-		if (dndService == null)
+		if (dndService == null) {
 			return;
+		}
 
 		ITextEditorDropTargetListener listener = (ITextEditorDropTargetListener) getAdapter(
 				ITextEditorDropTargetListener.class);
@@ -3755,17 +3875,20 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		if (listener == null) {
 			Object object = Platform.getAdapterManager().loadAdapter(this,
 					"org.eclipse.ui.texteditor.ITextEditorDropTargetListener"); //$NON-NLS-1$
-			if (object instanceof ITextEditorDropTargetListener)
+			if (object instanceof ITextEditorDropTargetListener) {
 				listener = (ITextEditorDropTargetListener) object;
+			}
 		}
 
-		if (listener != null)
+		if (listener != null) {
 			dndService.addMergedDropTarget(viewer.getTextWidget(), DND.DROP_MOVE | DND.DROP_COPY,
 					listener.getTransfers(), listener);
+		}
 
 		IPreferenceStore store = getPreferenceStore();
-		if (store != null && store.getBoolean(PREFERENCE_TEXT_DRAG_AND_DROP_ENABLED))
+		if (store != null && store.getBoolean(PREFERENCE_TEXT_DRAG_AND_DROP_ENABLED)) {
 			installTextDragAndDrop(viewer);
+		}
 
 	}
 
@@ -3778,16 +3901,19 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 */
 	@Override
 	protected void installTextDragAndDrop(final ISourceViewer viewer) {
-		if (viewer == null || fIsTextDragAndDropInstalled)
+		if (viewer == null || fIsTextDragAndDropInstalled) {
 			return;
+		}
 
 		final IDragAndDropService dndService = getSite().getService(IDragAndDropService.class);
-		if (dndService == null)
+		if (dndService == null) {
 			return;
+		}
 
 		final StyledText st = viewer.getTextWidget();
-		if (st == null)
+		if (st == null) {
 			return;
+		}
 
 		// Install drag source
 		final ISelectionProvider selectionProvider = viewer.getSelectionProvider();
@@ -3805,11 +3931,12 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 					event.doit = isLocationSelected(new Point(event.x, event.y));
 
 					ISelection selection = selectionProvider.getSelection();
-					if (selection instanceof ITextSelection)
+					if (selection instanceof ITextSelection) {
 						fSelectedText = ((ITextSelection) selection).getText();
-					else
+					} else {
 						// fallback to widget
 						fSelectedText = st.getSelectionText();
+					}
 				} catch (IllegalArgumentException ex) {
 					event.doit = false;
 				}
@@ -3817,13 +3944,15 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 			private boolean isLocationSelected(Point point) {
 				// FIXME: https://bugs.eclipse.org/bugs/show_bug.cgi?id=260922
-				if (isBlockSelectionModeEnabled())
+				if (isBlockSelectionModeEnabled()) {
 					return false;
+				}
 
 				int offset = st.getOffsetAtLocation(point);
 				Point p = st.getLocationAtOffset(offset);
-				if (p.x > point.x)
+				if (p.x > point.x) {
 					offset--;
+				}
 				return offset >= fSelection.x && offset < fSelection.y;
 			}
 
@@ -3840,15 +3969,17 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 						Point newSelection = st.getSelection();
 						int length = fSelection.y - fSelection.x;
 						int delta = 0;
-						if (newSelection.x < fSelection.x)
+						if (newSelection.x < fSelection.x) {
 							delta = length;
+						}
 						st.replaceTextRange(fSelection.x + delta, length, ""); //$NON-NLS-1$
 
 						if (fTextDragAndDropToken == null) {
 							// Move in same editor - end compound change
 							IRewriteTarget target = (IRewriteTarget) getAdapter(IRewriteTarget.class);
-							if (target != null)
+							if (target != null) {
 								target.endCompoundChange();
+							}
 						}
 
 					}
@@ -3909,8 +4040,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 						// Start compound change
 						IRewriteTarget target = (IRewriteTarget) getAdapter(IRewriteTarget.class);
-						if (target != null)
+						if (target != null) {
 							target.beginCompoundChange();
+						}
 					}
 
 					if (!validateEditorInputState()) {
@@ -3981,12 +4113,14 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 */
 	@Override
 	protected void uninstallTextDragAndDrop(ISourceViewer viewer) {
-		if (viewer == null || !fIsTextDragAndDropInstalled)
+		if (viewer == null || !fIsTextDragAndDropInstalled) {
 			return;
+		}
 
 		final IDragAndDropService dndService = getSite().getService(IDragAndDropService.class);
-		if (dndService == null)
+		if (dndService == null) {
 			return;
+		}
 
 		StyledText st = viewer.getTextWidget();
 		if (st != null) {

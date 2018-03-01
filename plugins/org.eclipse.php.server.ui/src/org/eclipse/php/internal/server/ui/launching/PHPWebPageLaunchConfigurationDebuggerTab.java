@@ -40,8 +40,9 @@ public class PHPWebPageLaunchConfigurationDebuggerTab extends AbstractPHPLaunchC
 	@Override
 	protected void handleConfigureDebugger() {
 		Server server = getServer();
-		if (server == null || ServersManager.isNoneServer(server))
+		if (server == null || ServersManager.isNoneServer(server)) {
 			return;
+		}
 		NullProgressMonitor monitor = new NullProgressMonitor();
 		if (ServerEditWizardRunner.runWizard(server, DebuggerCompositeFragment.ID) == Window.CANCEL) {
 			monitor.setCanceled(true);

@@ -159,10 +159,11 @@ public class PHPDocumentationContentAccess {
 					} else if (result == InheritDocVisitor.CONTINUE) {
 						visited.add(superClass);
 						result = visitInheritDocInterfaces(visited, superClass, typeHierarchy);
-						if (result != InheritDocVisitor.CONTINUE)
+						if (result != InheritDocVisitor.CONTINUE) {
 							return result;
-						else
+						} else {
 							superClasses = typeHierarchy.getSuperclass(superClass);
+						}
 					} else {
 						return result;
 					}
@@ -191,8 +192,9 @@ public class PHPDocumentationContentAccess {
 			IType[] superInterfaces = typeHierarchy.getSuperclass(currentType);
 			for (int i = 0; i < superInterfaces.length; i++) {
 				IType superInterface = superInterfaces[i];
-				if (visited.contains(superInterface))
+				if (visited.contains(superInterface)) {
 					continue;
+				}
 				visited.add(superInterface);
 				Object result = visit(superInterface);
 				if (result == InheritDocVisitor.STOP_BRANCH) {
@@ -206,8 +208,9 @@ public class PHPDocumentationContentAccess {
 			for (Iterator iter = toVisitChildren.iterator(); iter.hasNext();) {
 				IType child = (IType) iter.next();
 				Object result = visitInheritDocInterfaces(visited, child, typeHierarchy);
-				if (result != InheritDocVisitor.CONTINUE)
+				if (result != InheritDocVisitor.CONTINUE) {
 					return result;
+				}
 			}
 			return InheritDocVisitor.CONTINUE;
 		}
@@ -387,8 +390,9 @@ public class PHPDocumentationContentAccess {
 					@Override
 					public Object visit(IType currType) throws ModelException {
 						IMethod overridden = getOverrideTester().findOverriddenMethodInType(currType, method);
-						if (overridden == null)
+						if (overridden == null) {
 							return InheritDocVisitor.CONTINUE;
+						}
 
 						PHPDocumentationContentAccess contentAccess = getJavadocContentAccess(overridden);
 						if (contentAccess == null) {
@@ -402,10 +406,11 @@ public class PHPDocumentationContentAccess {
 						}
 
 						Object overriddenDescription = descriptionGetter.getDescription(contentAccess);
-						if (overriddenDescription != null)
+						if (overriddenDescription != null) {
 							return overriddenDescription;
-						else
+						} else {
 							return InheritDocVisitor.CONTINUE;
+						}
 					}
 				}.visitInheritDoc(method.getDeclaringType(), getTypeHierarchy());
 			} catch (ModelException e) {
@@ -424,10 +429,12 @@ public class PHPDocumentationContentAccess {
 		 */
 		private PHPDocumentationContentAccess getJavadocContentAccess(IMethod method) throws ModelException {
 			Object cached = fContentAccesses.get(method);
-			if (cached != null)
+			if (cached != null) {
 				return (PHPDocumentationContentAccess) cached;
-			if (fContentAccesses.containsKey(method))
+			}
+			if (fContentAccesses.containsKey(method)) {
 				return null;
+			}
 
 			// IBuffer buf = method.getOpenable().getBuffer();
 			// if (buf == null) { // no source attachment found
@@ -447,14 +454,16 @@ public class PHPDocumentationContentAccess {
 		}
 
 		private ITypeHierarchy getTypeHierarchy() throws ModelException {
-			if (fTypeHierarchy == null)
+			if (fTypeHierarchy == null) {
 				fTypeHierarchy = SuperTypeHierarchyCache.getTypeHierarchy(fStartingType);
+			}
 			return fTypeHierarchy;
 		}
 
 		private MethodOverrideTester getOverrideTester() throws ModelException {
-			if (fOverrideTester == null)
+			if (fOverrideTester == null) {
 				fOverrideTester = SuperTypeHierarchyCache.getMethodOverrideTester(fStartingType);
+			}
 			return fOverrideTester;
 		}
 	}
@@ -522,21 +531,24 @@ public class PHPDocumentationContentAccess {
 			@Override
 			public Object visit(IType currType) throws ModelException {
 				IMethod overridden = tester.findOverriddenMethodInType(currType, method);
-				if (overridden == null)
+				if (overridden == null) {
 					return InheritDocVisitor.CONTINUE;
+				}
 
-				if (PHPFlags.isInterface(currType.getFlags()))
+				if (PHPFlags.isInterface(currType.getFlags())) {
 					superInterfaceMethods.add(overridden);
-				else
+				} else {
 					superClassMethod[0] = overridden;
+				}
 
 				return STOP_BRANCH;
 			}
 		}.visitInheritDoc(type, hierarchy);
 
 		boolean hasSuperInterfaceMethods = superInterfaceMethods.size() != 0;
-		if (!hasSuperInterfaceMethods && superClassMethod[0] == null)
+		if (!hasSuperInterfaceMethods && superClassMethod[0] == null) {
 			return null;
+		}
 
 		StringBuilder buf = new StringBuilder();
 		buf.append("<div>"); //$NON-NLS-1$
@@ -547,13 +559,15 @@ public class PHPDocumentationContentAccess {
 			for (Iterator<IMethod> iter = superInterfaceMethods.iterator(); iter.hasNext();) {
 				IMethod overridden = iter.next();
 				buf.append(createMethodInTypeLinks(overridden));
-				if (iter.hasNext())
+				if (iter.hasNext()) {
 					buf.append(ScriptElementLabels.COMMA_STRING);
+				}
 			}
 		}
 		if (superClassMethod[0] != null) {
-			if (hasSuperInterfaceMethods)
+			if (hasSuperInterfaceMethods) {
 				buf.append(ScriptElementLabels.COMMA_STRING);
+			}
 			buf.append("<b>"); //$NON-NLS-1$
 			buf.append(PHPDocumentationMessages.JavaDoc2HTMLTextReader_overrides_section);
 			buf.append("</b> "); //$NON-NLS-1$
@@ -805,8 +819,9 @@ public class PHPDocumentationContentAccess {
 			if (TagKind.PARAM == tag.getTagKind()) {
 				parameters.add(tag);
 				if (!tag.isValidParamTag()) {
-					if (parameterNames.size() > parameters.indexOf(tag))
+					if (parameterNames.size() > parameters.indexOf(tag)) {
 						parameterNames.set(parameters.indexOf(tag), null);
+					}
 				} else {
 					int paramIndex = parameterNames.indexOf(tag.getVariableReference().getName());
 					if (paramIndex != -1) {
@@ -815,12 +830,15 @@ public class PHPDocumentationContentAccess {
 				}
 			} else if (TagKind.RETURN == tag.getTagKind()) {
 				if (returnTag == null)
+				 {
 					returnTag = tag; // the Javadoc tool only shows the first
 				// return tag
+				}
 
 			} else if (TagKind.NAMESPACE == tag.getTagKind()) {
-				if (namespaceTag == null)
+				if (namespaceTag == null) {
 					namespaceTag = tag;
+				}
 
 			} else if (TagKind.THROWS == tag.getTagKind()) {
 				exceptions.add(tag);
@@ -839,18 +857,22 @@ public class PHPDocumentationContentAccess {
 				sees.add(tag);
 			} else if (TagKind.DEPRECATED == tag.getTagKind()) {
 				if (deprecatedTag == null)
+				 {
 					deprecatedTag = tag; // the Javadoc tool only shows the
 				// first deprecated tag
+				}
 			} else {
 				rest.add(tag);
 			}
 		}
 
-		if (deprecatedTag != null)
+		if (deprecatedTag != null) {
 			handleDeprecatedTag(deprecatedTag);
+		}
 		boolean hasShortDescription = shortDescription != null && shortDescription.length() > 0;
-		if (hasShortDescription)
+		if (hasShortDescription) {
 			fBuf.append(shortDescription);
+		}
 		if (longDescription != null && longDescription.length() > 0) {
 			fBuf.append("<p>"); //$NON-NLS-1$
 			longDescription = longDescription.replaceAll("(\r\n){2,}|\n{2,}|\r{2,}", "</p><p>"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -869,8 +891,9 @@ public class PHPDocumentationContentAccess {
 		boolean hasParameters = parameters.size() > 0 || hasInheritedParameters;
 
 		CharSequence returnDescription = null;
-		if (returnTag == null)
+		if (returnTag == null) {
 			returnDescription = fJavadocLookup.getInheritedReturnDescription(fMethod);
+		}
 		boolean hasReturnTag = returnTag != null || returnDescription != null;
 
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=418890
@@ -958,8 +981,9 @@ public class PHPDocumentationContentAccess {
 		if (fMethod != null && fMethod.getDeclaringType() != null) {
 			try {
 				StringBuilder superMethodReferences = createSuperMethodReferences(fMethod);
-				if (superMethodReferences != null)
+				if (superMethodReferences != null) {
 					fBuf.append(superMethodReferences);
+				}
 			} catch (ModelException e) {
 				PHPUiPlugin.log(e);
 			}
@@ -996,8 +1020,9 @@ public class PHPDocumentationContentAccess {
 			if (name != null) {
 				parameterDescriptions[i] = fJavadocLookup.getInheritedParamDescription(fMethod, i);
 				parameterTypes[i] = fJavadocLookup.getInheritedParamType(fMethod, i);
-				if (parameterDescriptions[i] != null)
+				if (parameterDescriptions[i] != null) {
 					hasInheritedParameters = true;
+				}
 			}
 		}
 		return hasInheritedParameters;
@@ -1012,8 +1037,9 @@ public class PHPDocumentationContentAccess {
 			String name = exceptionNames.get(i);
 			if (name != null) {
 				exceptionDescriptions[i] = fJavadocLookup.getInheritedExceptionDescription(fMethod, name);
-				if (exceptionDescriptions[i] != null)
+				if (exceptionDescriptions[i] != null) {
 					hasInheritedExceptions = true;
+				}
 			}
 		}
 		return hasInheritedExceptions;
@@ -1069,8 +1095,9 @@ public class PHPDocumentationContentAccess {
 
 			String paramName = parameterNames[paramIndex];
 			String info = getParameterInfo(fJavadoc, paramName, PARAMETER_DESCRIPTION_TYPE);
-			if (info != null)
+			if (info != null) {
 				description.append(info);
+			}
 			fBuf = null;
 			return description.length() > 0 ? description : null;
 		}
@@ -1098,8 +1125,9 @@ public class PHPDocumentationContentAccess {
 
 			String paramName = parameterNames[paramIndex];
 			String info = getParameterInfo(fJavadoc, paramName, PARAMETER_TYPE_TYPE);
-			if (info != null)
+			if (info != null) {
 				typeName.append(info);
+			}
 
 			fBuf = null;
 			return typeName.length() > 0 ? typeName : null;
@@ -1167,16 +1195,18 @@ public class PHPDocumentationContentAccess {
 	}
 
 	private boolean handleInherited(CharSequence inherited) {
-		if (inherited == null)
+		if (inherited == null) {
 			return false;
+		}
 
 		fBuf.append(inherited);
 		return true;
 	}
 
 	private void handleBlockTags(String title, List tags) {
-		if (tags.size() == 0)
+		if (tags.size() == 0) {
 			return;
+		}
 
 		handleBlockTagTitle(title);
 
@@ -1207,8 +1237,9 @@ public class PHPDocumentationContentAccess {
 	}
 
 	private void handleReturnTag(PHPDocTag tag, CharSequence returnDescription) {
-		if (tag == null && returnDescription == null)
+		if (tag == null && returnDescription == null) {
 			return;
+		}
 
 		handleBlockTagTitle(PHPDocumentationMessages.JavaDoc2HTMLTextReader_returns_section);
 		fBuf.append(BlOCK_TAG_ENTRY_START);
@@ -1222,8 +1253,9 @@ public class PHPDocumentationContentAccess {
 	}
 
 	private void handleNamespaceTag(PHPDocTag tag) {
-		if (tag == null)
+		if (tag == null) {
 			return;
+		}
 
 		handleBlockTagTitle(PHPDocumentationMessages.JavaDoc2HTMLTextReader_namespace_section);
 		fBuf.append(BlOCK_TAG_ENTRY_START);
@@ -1279,8 +1311,9 @@ public class PHPDocumentationContentAccess {
 	}
 
 	private void handleExceptionTags(List tags, List exceptionNames, CharSequence[] exceptionDescriptions) {
-		if (tags.size() == 0 && containsOnlyNull(exceptionNames))
+		if (tags.size() == 0 && containsOnlyNull(exceptionNames)) {
 			return;
+		}
 
 		handleBlockTagTitle(PHPDocumentationMessages.JavaDoc2HTMLTextReader_throws_section);
 
@@ -1352,8 +1385,9 @@ public class PHPDocumentationContentAccess {
 
 	private void handleParameterTags(List tags, List parameterNames, CharSequence[] parameterTypes,
 			CharSequence[] parameterDescriptions) {
-		if (tags.size() == 0 && containsOnlyNull(parameterNames))
+		if (tags.size() == 0 && containsOnlyNull(parameterNames)) {
 			return;
+		}
 
 		handleBlockTagTitle(PHPDocumentationMessages.JavaDoc2HTMLTextReader_parameters_section);
 
@@ -1505,8 +1539,9 @@ public class PHPDocumentationContentAccess {
 
 	private boolean containsOnlyNull(List parameterNames) {
 		for (Iterator iter = parameterNames.iterator(); iter.hasNext();) {
-			if (iter.next() != null)
+			if (iter.next() != null) {
 				return false;
+			}
 		}
 		return true;
 	}

@@ -98,8 +98,9 @@ public class UseStatementInjector {
 		} catch (ModelException e) {
 			Logger.logException(e);
 		}
-		if (modelElement == null)
+		if (modelElement == null) {
 			return offset;
+		}
 		if (proposal instanceof IPHPCompletionProposalExtension) {
 			IPHPCompletionProposalExtension phpCompletionProposal = (IPHPCompletionProposalExtension) proposal;
 			if (ProposalExtraInfo.isNotInsertUse(phpCompletionProposal.getExtraInfo())) {

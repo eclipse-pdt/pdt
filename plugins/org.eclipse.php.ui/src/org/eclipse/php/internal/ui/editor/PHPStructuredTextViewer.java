@@ -259,17 +259,19 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 
 		case DELETE:
 			StyledText textWidget = getTextWidget();
-			if (textWidget == null)
+			if (textWidget == null) {
 				return;
+			}
 			ITextSelection textSelection = null;
 			if (redraws()) {
 				try {
 					textSelection = (ITextSelection) getSelection();
 					int length = textSelection.getLength();
-					if (!textWidget.getBlockSelection() && (length == 0 || length == textWidget.getSelectionRange().y))
+					if (!textWidget.getBlockSelection() && (length == 0 || length == textWidget.getSelectionRange().y)) {
 						getTextWidget().invokeAction(ST.DELETE_NEXT);
-					else
+					} else {
 						deleteSelection(textSelection, textWidget);
+					}
 
 					if (fFireSelectionChanged) {
 						Point range = textWidget.getSelectionRange();
@@ -440,8 +442,9 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		if (fContentAssistant != null) {
 			fContentAssistant.install(this);
 			if (fContentAssistant instanceof IContentAssistantExtension2
-					&& fContentAssistant instanceof IContentAssistantExtension4)
+					&& fContentAssistant instanceof IContentAssistantExtension4) {
 				fContentAssistantFacade = new ContentAssistantFacade(fContentAssistant);
+			}
 			fContentAssistantInstalled = true;
 		} else {
 			// 248036 - disable the content assist operation if no content

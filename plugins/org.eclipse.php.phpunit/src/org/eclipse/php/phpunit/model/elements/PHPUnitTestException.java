@@ -22,7 +22,7 @@ public class PHPUnitTestException extends PHPUnitTestEvent {
 
 	public PHPUnitTestException(MessageException exception, PHPUnitTest parent, RemoteDebugger remoteDebugger) {
 		super(exception, parent, remoteDebugger);
-		exceptionClass = (String) exception.getClazz();
+		exceptionClass = exception.getClazz();
 	}
 
 	public String getExceptionClass() {

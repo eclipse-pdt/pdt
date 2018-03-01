@@ -107,31 +107,40 @@ public abstract class AbstractMethodReturnTypeGoal extends AbstractTypeGoal {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (!super.equals(obj))
+		}
+		if (!super.equals(obj)) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		AbstractMethodReturnTypeGoal other = (AbstractMethodReturnTypeGoal) obj;
 		if (this.offset != other.offset) {
 			return false;
 		}
 		if (argNames == null) {
-			if (other.argNames != null)
+			if (other.argNames != null) {
 				return false;
-		} else if (!Arrays.equals(argNames, other.argNames))
+			}
+		} else if (!Arrays.equals(argNames, other.argNames)) {
 			return false;
+		}
 		if (evaluatedType == null) {
-			if (other.evaluatedType != null)
+			if (other.evaluatedType != null) {
 				return false;
-		} else if (!evaluatedType.equals(other.evaluatedType))
+			}
+		} else if (!evaluatedType.equals(other.evaluatedType)) {
 			return false;
+		}
 		if (methodName == null) {
-			if (other.methodName != null)
+			if (other.methodName != null) {
 				return false;
-		} else if (!methodName.equals(other.methodName))
+			}
+		} else if (!methodName.equals(other.methodName)) {
 			return false;
+		}
 		return true;
 	}
 }

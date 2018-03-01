@@ -222,8 +222,9 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 	protected void populateServerList(List<Server> serverList) {
 		Server[] servers = ServersManager.getServers();
 
-		if (serverList == null)
+		if (serverList == null) {
 			serverList = new ArrayList<>();
+		}
 
 		if (servers != null) {
 			int size = servers.length;
@@ -308,8 +309,9 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		IResource file = null;
 		file = getFileFromDialog(null);
 
-		if (file == null)
+		if (file == null) {
 			return;
+		}
 
 		String fName = file.getFullPath().toString();
 		fFile.setText(fName);
@@ -342,12 +344,14 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 		IProject[] projects = workspaceRoot.getProjects();
 
-		if (projects == null || projects.length == 0)
+		if (projects == null || projects.length == 0) {
 			return null;
+		}
 
 		for (IProject project : projects) {
-			if (project.getName().equals(name))
+			if (project.getName().equals(name)) {
 				return project;
+			}
 		}
 
 		return null;
@@ -369,9 +373,9 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 			}
 		}
 
-		if (server == null && (index + 1) != numEntries)
+		if (server == null && (index + 1) != numEntries) {
 			setErrorMessage(PHPServerUIMessages.getString("ServerTab.noSelectedServerError")); //$NON-NLS-1$
-		else {
+		} else {
 			setErrorMessage(null);
 		}
 		updateLaunchConfigurationDialog();
@@ -446,8 +450,9 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 	}
 
 	private String initializeBasePath(IProject project) {
-		if (project == null)
+		if (project == null) {
 			return null;
+		}
 		return PHPProjectPreferences.getDefaultBasePath(project);
 
 	}
@@ -490,9 +495,9 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		}
 
 		basePath = getBasePath(resource.getProject());
-		if (basePath == null && resource.getProject() != null)
+		if (basePath == null && resource.getProject() != null) {
 			basePath = resource.getProject().getName();
-		else if (basePath == null && resource.getProject() == null) {
+		} else if (basePath == null && resource.getProject() == null) {
 			basePath = ""; //$NON-NLS-1$
 		}
 

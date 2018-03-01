@@ -27,8 +27,9 @@ class PHPWorkingSetPageContentProvider extends StandardModelElementContentProvid
 	@Override
 	public boolean hasChildren(Object element) {
 
-		if (element instanceof IProject && !((IProject) element).isAccessible())
+		if (element instanceof IProject && !((IProject) element).isAccessible()) {
 			return false;
+		}
 
 		return super.hasChildren(element);
 	}
@@ -36,15 +37,18 @@ class PHPWorkingSetPageContentProvider extends StandardModelElementContentProvid
 	@Override
 	public Object[] getChildren(Object parentElement) {
 		try {
-			if (parentElement instanceof IScriptModel)
+			if (parentElement instanceof IScriptModel) {
 				return concatenate(super.getChildren(parentElement), getForeignProjects((IScriptModel) parentElement));
+			}
 
-			if (parentElement instanceof IProject)
+			if (parentElement instanceof IProject) {
 				return ((IProject) parentElement).members();
+			}
 
-			if (parentElement instanceof IScriptProject)
+			if (parentElement instanceof IScriptProject) {
 				return concatenate(((IScriptProject) parentElement).getProject().members(IContainer.FOLDER),
 						getExternalProjectFragments((IScriptProject) parentElement));
+			}
 
 			return super.getChildren(parentElement);
 		} catch (CoreException e) {

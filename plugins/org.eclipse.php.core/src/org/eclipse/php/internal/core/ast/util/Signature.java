@@ -457,8 +457,9 @@ public final class Signature {
 	private static int checkName(char[] name, char[] typeName, int pos, int length) {
 		if (CharOperation.fragmentEquals(name, typeName, pos, true)) {
 			pos += name.length;
-			if (pos == length)
+			if (pos == length) {
 				return pos;
+			}
 			char currentChar = typeName[pos];
 			switch (currentChar) {
 			case ' ':
@@ -469,8 +470,9 @@ public final class Signature {
 			case ',':
 				return pos;
 			default:
-				if (ScannerHelper.isWhitespace(currentChar))
+				if (ScannerHelper.isWhitespace(currentChar)) {
 					return pos;
+				}
 
 			}
 		}
@@ -490,8 +492,9 @@ public final class Signature {
 	 * @since 2.0
 	 */
 	public static char[] createArraySignature(char[] typeSignature, int arrayCount) {
-		if (arrayCount == 0)
+		if (arrayCount == 0) {
 			return typeSignature;
+		}
 		int sigLength = typeSignature.length;
 		char[] result = new char[arrayCount + sigLength];
 		for (int i = 0; i < arrayCount; i++) {
@@ -675,15 +678,19 @@ public final class Signature {
 	 */
 	public static char[] createCharArrayTypeSignature(char[] typeName, boolean isResolved) {
 		if (typeName == null)
+		 {
 			throw new IllegalArgumentException("null"); //$NON-NLS-1$
+		}
 		int length = typeName.length;
-		if (length == 0)
+		if (length == 0) {
 			throw new IllegalArgumentException(new String(typeName));
+		}
 		StringBuilder buffer = new StringBuilder(5);
 		int pos = encodeTypeSignature(typeName, 0, isResolved, length, buffer);
 		pos = consumeWhitespace(typeName, pos, length);
-		if (pos < length)
+		if (pos < length) {
 			throw new IllegalArgumentException(new String(typeName));
+		}
 		char[] result = new char[length = buffer.length()];
 		buffer.getChars(0, length, result, 0);
 		return result;
@@ -743,8 +750,9 @@ public final class Signature {
 			}
 			pos++;
 		}
-		if (count == 0)
+		if (count == 0) {
 			throw new IllegalArgumentException(new String(typeName));
+		}
 		return pos;
 	}
 
@@ -765,12 +773,14 @@ public final class Signature {
 				genericBalance++;
 				break;
 			case ',':
-				if (genericBalance == 0)
+				if (genericBalance == 0) {
 					return -1;
+				}
 				break;
 			case '>':
-				if (genericBalance == 0)
+				if (genericBalance == 0) {
 					return -1;
+				}
 				genericBalance--;
 				break;
 			case '[':
@@ -785,10 +795,12 @@ public final class Signature {
 
 	private static int checkNextChar(char[] typeName, char expectedChar, int pos, int length, boolean isOptional) {
 		pos = consumeWhitespace(typeName, pos, length);
-		if (pos < length && typeName[pos] == expectedChar)
+		if (pos < length && typeName[pos] == expectedChar) {
 			return pos + 1;
-		if (!isOptional)
+		}
+		if (!isOptional) {
 			throw new IllegalArgumentException(new String(typeName));
+		}
 		return -1;
 	}
 
@@ -796,8 +808,9 @@ public final class Signature {
 			StringBuilder buffer) {
 		int pos = start;
 		pos = consumeWhitespace(typeName, pos, length);
-		if (pos >= length)
+		if (pos >= length) {
 			throw new IllegalArgumentException(new String(typeName));
+		}
 		int checkPos;
 		char currentChar = typeName[pos];
 		switch (currentChar) {
@@ -932,7 +945,9 @@ public final class Signature {
 		}
 		buffer.append(C_NAME_END);
 		if (end > 0)
+		 {
 			pos = end; // skip array dimension which were preprocessed
+		}
 		return pos;
 	}
 
@@ -1029,8 +1044,9 @@ public final class Signature {
 	 */
 	public static char[] getElementType(char[] typeSignature) throws IllegalArgumentException {
 		int count = getArrayCount(typeSignature);
-		if (count == 0)
+		if (count == 0) {
 			return typeSignature;
+		}
 		int length = typeSignature.length;
 		char[] result = new char[length - count];
 		System.arraycopy(typeSignature, count, result, 0, length - count);
@@ -1127,8 +1143,9 @@ public final class Signature {
 					break;
 				}
 				if (count == 0) {
-					if (i + 1 < length)
+					if (i + 1 < length) {
 						c = typeSignature[i + 1];
+					}
 					break;
 				}
 			}
@@ -1194,8 +1211,9 @@ public final class Signature {
 					break;
 				}
 				if (count == 0) {
-					if (i + 1 < length)
+					if (i + 1 < length) {
 						c = typeSignature.charAt(i + 1);
+					}
 					break;
 				}
 			}
@@ -1340,8 +1358,9 @@ public final class Signature {
 			// ignore return type
 			exceptionStart = Util.scanTypeSignature(methodSignature, paren + 1) + 1;
 			int length = methodSignature.length;
-			if (exceptionStart == length)
+			if (exceptionStart == length) {
 				return CharOperation.NO_CHAR_CHAR;
+			}
 			throw new IllegalArgumentException();
 		}
 		int length = methodSignature.length;
@@ -1377,9 +1396,10 @@ public final class Signature {
 	 */
 	public static char[][] getTypeArguments(char[] parameterizedTypeSignature) throws IllegalArgumentException {
 		int length = parameterizedTypeSignature.length;
-		if (length < 2 || parameterizedTypeSignature[length - 2] != C_GENERIC_END)
+		if (length < 2 || parameterizedTypeSignature[length - 2] != C_GENERIC_END) {
 			// cannot have type arguments otherwise signature would end by ">;"
 			return CharOperation.NO_CHAR_CHAR;
+		}
 		int count = 1; // start to count generic end/start peers
 		int start = length - 2;
 		while (start >= 0 && count > 0) {
@@ -1392,8 +1412,9 @@ public final class Signature {
 				break;
 			}
 		}
-		if (start < 0) // invalid number of generic start/end
+		if (start < 0) {
 			throw new IllegalArgumentException();
+		}
 		List<char[]> args = new ArrayList<>();
 		int p = start + 1;
 		while (true) {
@@ -1444,8 +1465,9 @@ public final class Signature {
 	 */
 	public static char[] getTypeErasure(char[] parameterizedTypeSignature) throws IllegalArgumentException {
 		int end = CharOperation.indexOf(C_GENERIC_START, parameterizedTypeSignature);
-		if (end == -1)
+		if (end == -1) {
 			return parameterizedTypeSignature;
+		}
 		int length = parameterizedTypeSignature.length;
 		char[] result = new char[length];
 		int pos = 0;
@@ -1464,15 +1486,18 @@ public final class Signature {
 				break;
 			case C_GENERIC_END:
 				deep--;
-				if (deep < 0)
+				if (deep < 0) {
 					throw new IllegalArgumentException();
-				if (deep == 0)
+				}
+				if (deep == 0) {
 					start = idx + 1;
+				}
 				break;
 			}
 		}
-		if (deep > 0)
+		if (deep > 0) {
 			throw new IllegalArgumentException();
+		}
 		int size = pos + length - start;
 		char[] resized = new char[size];
 		System.arraycopy(result, 0, resized, 0, pos);
@@ -1511,25 +1536,29 @@ public final class Signature {
 	public static char[][] getTypeParameters(char[] methodOrTypeSignature) throws IllegalArgumentException {
 		try {
 			int length = methodOrTypeSignature.length;
-			if (length == 0)
+			if (length == 0) {
 				return CharOperation.NO_CHAR_CHAR;
-			if (methodOrTypeSignature[0] != C_GENERIC_START)
+			}
+			if (methodOrTypeSignature[0] != C_GENERIC_START) {
 				return CharOperation.NO_CHAR_CHAR;
+			}
 
 			List<char[]> paramList = new ArrayList<>(1);
 			int paramStart = 1, i = 1; // start after leading '<'
 			while (i < length) {
 				if (methodOrTypeSignature[i] == C_GENERIC_END) {
 					int size = paramList.size();
-					if (size == 0)
+					if (size == 0) {
 						throw new IllegalArgumentException();
+					}
 					char[][] result;
 					paramList.toArray(result = new char[size][]);
 					return result;
 				}
 				i = CharOperation.indexOf(C_COLON, methodOrTypeSignature, i);
-				if (i < 0 || i >= length)
+				if (i < 0 || i >= length) {
 					throw new IllegalArgumentException();
+				}
 				// iterate over bounds
 				while (methodOrTypeSignature[i] == ':') {
 					i++; // skip colon
@@ -1755,7 +1784,9 @@ public final class Signature {
 	public static String getQualifier(String name) {
 		char[] qualifier = getQualifier(name.toCharArray());
 		if (qualifier.length == 0)
+		 {
 			return ""; //$NON-NLS-1$
+		}
 		return new String(qualifier);
 	}
 
@@ -1815,8 +1846,9 @@ public final class Signature {
 	 * @since 3.1
 	 */
 	public static char[] getSignatureQualifier(char[] typeSignature) {
-		if (typeSignature == null)
+		if (typeSignature == null) {
 			return CharOperation.NO_CHAR;
+		}
 
 		char[] qualifiedType = Signature.toCharArray(typeSignature);
 
@@ -1887,8 +1919,9 @@ public final class Signature {
 	 * @since 3.1
 	 */
 	public static char[] getSignatureSimpleName(char[] typeSignature) {
-		if (typeSignature == null)
+		if (typeSignature == null) {
 			return CharOperation.NO_CHAR;
+		}
 
 		char[] qualifiedType = Signature.toCharArray(typeSignature);
 
@@ -1975,12 +2008,14 @@ public final class Signature {
 				break;
 			case '<':
 				depth--;
-				if (depth == 0)
+				if (depth == 0) {
 					lastGenericStart = i;
+				}
 				break;
 			case '>':
-				if (depth == 0)
+				if (depth == 0) {
 					lastGenericEnd = i;
+				}
 				depth++;
 				break;
 			}
@@ -2042,12 +2077,14 @@ public final class Signature {
 				break;
 			case '<':
 				depth--;
-				if (depth == 0)
+				if (depth == 0) {
 					lastGenericStart = i;
+				}
 				break;
 			case '>':
-				if (depth == 0)
+				if (depth == 0) {
 					lastGenericEnd = i;
+				}
 				depth++;
 				break;
 			}
@@ -2110,12 +2147,14 @@ public final class Signature {
 				break;
 			case '<':
 				depth--;
-				if (depth == 0)
+				if (depth == 0) {
 					lastGenericStart = i;
+				}
 				break;
 			case '>':
-				if (depth == 0)
+				if (depth == 0) {
 					lastGenericEnd = i;
+				}
 				depth++;
 				break;
 			}
@@ -2150,8 +2189,9 @@ public final class Signature {
 				break;
 			case '>':
 				if (depth == 1) {
-					if (argumentCount > 0)
+					if (argumentCount > 0) {
 						buffer.append(',');
+					}
 					appendSimpleName(name, argumentStart, i - 1, buffer);
 					argumentCount++;
 				}
@@ -2159,8 +2199,9 @@ public final class Signature {
 				break;
 			case ',':
 				if (depth == 1) {
-					if (argumentCount > 0)
+					if (argumentCount > 0) {
 						buffer.append(',');
+					}
 					appendSimpleName(name, argumentStart, i - 1, buffer);
 					argumentCount++;
 					argumentStart = i + 1;
@@ -2195,12 +2236,13 @@ public final class Signature {
 	 * @since 2.0
 	 */
 	public static char[][] getSimpleNames(char[] name) {
-		if (ArrayUtils.isEmpty(name))
+		if (ArrayUtils.isEmpty(name)) {
 			return CharOperation.NO_CHAR_CHAR;
+		}
 
 		int length = name.length;
 		int wordCount = 1;
-		countingWords: for (int i = 0; i < length; i++)
+		countingWords: for (int i = 0; i < length; i++) {
 			switch (name[i]) {
 			case C_DOT:
 				wordCount++;
@@ -2208,11 +2250,13 @@ public final class Signature {
 			case C_GENERIC_START:
 				break countingWords;
 			}
+		}
 		char[][] split = new char[wordCount][];
 		int last = 0, currentWord = 0;
 		for (int i = 0; i < length; i++) {
-			if (name[i] == C_GENERIC_START)
+			if (name[i] == C_GENERIC_START) {
 				break;
+			}
 			if (name[i] == C_DOT) {
 				split[currentWord] = new char[i - last];
 				System.arraycopy(name, last, split[currentWord++], 0, i - last);
@@ -2306,8 +2350,9 @@ public final class Signature {
 	public static String removeCapture(String methodOrTypeSignature) {
 		char[] array = methodOrTypeSignature.toCharArray();
 		char[] result = removeCapture(array);
-		if (array == result)
+		if (array == result) {
 			return methodOrTypeSignature;
+		}
 		return new String(result);
 	}
 
@@ -2800,8 +2845,9 @@ public final class Signature {
 					buffer.insert(checkpoint, "new "); //$NON-NLS-1$
 					buffer.append("(){}"); //$NON-NLS-1$
 				}
-				if (!inAnonymousType)
+				if (!inAnonymousType) {
 					buffer.append(c);
+				}
 				innerTypeStart = -1;
 			}
 			p++;
@@ -2921,10 +2967,12 @@ public final class Signature {
 	 */
 	public static char[] toQualifiedName(char[][] segments) {
 		int length = segments.length;
-		if (length == 0)
+		if (length == 0) {
 			return CharOperation.NO_CHAR;
-		if (length == 1)
+		}
+		if (length == 1) {
 			return segments[0];
+		}
 
 		int resultLength = 0;
 		for (int i = 0; i < length; i++) {

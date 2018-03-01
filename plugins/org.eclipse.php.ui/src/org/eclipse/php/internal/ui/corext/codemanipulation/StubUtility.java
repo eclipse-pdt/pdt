@@ -522,10 +522,11 @@ public class StubUtility {
 			List<String> newExceptions) throws CoreException {
 		String templateName = CodeTemplateContextType.METHODCOMMENT_ID;
 		if (target != null) {
-			if (delegate)
+			if (delegate) {
 				templateName = CodeTemplateContextType.DELEGATECOMMENT_ID;
-			else
+			} else {
 				templateName = CodeTemplateContextType.OVERRIDECOMMENT_ID;
+			}
 		} else if (retTypeSig == null && typeName != null && (typeName.equals(methodName) || "constructor" //$NON-NLS-1$
 				.equals(methodName))) {
 			templateName = CodeTemplateContextType.CONSTRUCTORCOMMENT_ID;
@@ -549,12 +550,13 @@ public class StubUtility {
 				targetTypeName = PHPModelUtils.ENCLOSING_TYPE_SEPARATOR + targetTypeName;
 			}
 			String[] targetParamTypeNames = getParameterTypeNamesForSeeTag(target);
-			if (delegate)
+			if (delegate) {
 				context.setVariable(CodeTemplateContextType.SEE_TO_TARGET_TAG,
 						getSeeTag(targetTypeName, methodName, targetParamTypeNames));
-			else
+			} else {
 				context.setVariable(CodeTemplateContextType.SEE_TO_OVERRIDDEN_TAG,
 						getSeeTag(targetTypeName, methodName, targetParamTypeNames));
+			}
 		}
 		TemplateBuffer buffer;
 		try {
@@ -922,8 +924,9 @@ public class StubUtility {
 		}
 
 		String lineDelimiter = getLineDelimiterPreference(project);
-		if (lineDelimiter != null)
+		if (lineDelimiter != null) {
 			return lineDelimiter;
+		}
 
 		return System.getProperty("line.separator", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
@@ -935,8 +938,9 @@ public class StubUtility {
 			scopeContext = new IScopeContext[] { new ProjectScope(project.getProject()) };
 			String lineDelimiter = Platform.getPreferencesService().getString(Platform.PI_RUNTIME,
 					Platform.PREF_LINE_SEPARATOR, null, scopeContext);
-			if (lineDelimiter != null)
+			if (lineDelimiter != null) {
 				return lineDelimiter;
+			}
 		}
 		// workspace preference
 		scopeContext = new IScopeContext[] { InstanceScope.INSTANCE };
@@ -972,8 +976,9 @@ public class StubUtility {
 	}
 
 	private static Template getCodeTemplate(String id, IScriptProject sp) {
-		if (sp == null)
+		if (sp == null) {
 			return PHPUiPlugin.getDefault().getCodeTemplateStore().findTemplateById(id);
+		}
 		ProjectTemplateStore projectStore = new ProjectTemplateStore(sp.getProject());
 		try {
 			projectStore.load();

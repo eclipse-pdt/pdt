@@ -62,8 +62,9 @@ public class LibraryFolderRenameParticipant extends RenameParticipant {
 	@Override
 	protected boolean initialize(Object element) {
 		fFolder = getFolder(element);
-		if (fFolder == null)
+		if (fFolder == null) {
 			return false;
+		}
 
 		LibraryFolderManager lfm = LibraryFolderManager.getInstance();
 
@@ -90,11 +91,13 @@ public class LibraryFolderRenameParticipant extends RenameParticipant {
 			IModelElement modelElement = (IModelElement) element;
 			IResource resource = modelElement.getResource();
 
-			if (resource == null)
+			if (resource == null) {
 				return null;
+			}
 
-			if (resource.getType() == IResource.FOLDER)
+			if (resource.getType() == IResource.FOLDER) {
 				return (IFolder) resource;
+			}
 		}
 
 		return null;

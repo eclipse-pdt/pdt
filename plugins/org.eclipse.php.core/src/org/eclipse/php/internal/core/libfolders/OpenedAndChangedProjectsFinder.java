@@ -46,8 +46,9 @@ public class OpenedAndChangedProjectsFinder implements IResourceDeltaVisitor {
 	@Override
 	public boolean visit(IResourceDelta delta) throws CoreException {
 		IResource resource = delta.getResource();
-		if (resource == null)
+		if (resource == null) {
 			return false;
+		}
 
 		switch (resource.getType()) {
 		case IResource.ROOT:
@@ -84,18 +85,21 @@ public class OpenedAndChangedProjectsFinder implements IResourceDeltaVisitor {
 	}
 
 	private boolean visitProject(IResourceDelta delta) throws CoreException {
-		if ((delta.getFlags() & (IResourceDelta.OPEN | IResourceDelta.DESCRIPTION)) == 0)
+		if ((delta.getFlags() & (IResourceDelta.OPEN | IResourceDelta.DESCRIPTION)) == 0) {
 			// visit project folders
 			return true;
+		}
 
 		IProject project = (IProject) delta.getResource();
-		if (!project.isOpen())
+		if (!project.isOpen()) {
 			// the project is closed
 			return false;
+		}
 
-		if (!project.hasNature(PHPNature.ID))
+		if (!project.hasNature(PHPNature.ID)) {
 			// not a PHP project
 			return false;
+		}
 
 		// add the project to found projects
 		fFoundProjects.add(project);

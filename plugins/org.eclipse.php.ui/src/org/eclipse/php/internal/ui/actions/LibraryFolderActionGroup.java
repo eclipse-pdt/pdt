@@ -90,8 +90,9 @@ public class LibraryFolderActionGroup extends CommonActionProvider {
 	 */
 	private IAction getActionFromSelection() {
 		ISelection sel = fSite.getSelectionProvider().getSelection();
-		if (!(sel instanceof IStructuredSelection))
+		if (!(sel instanceof IStructuredSelection)) {
 			return null;
+		}
 
 		IStructuredSelection selection = (IStructuredSelection) sel;
 		Iterator<?> iterator = selection.iterator();
@@ -106,34 +107,39 @@ public class LibraryFolderActionGroup extends CommonActionProvider {
 				obj = DLTKCore.create((IFolder) obj);
 			}
 
-			if (!(obj instanceof IModelElement))
+			if (!(obj instanceof IModelElement)) {
 				// the selection contains an object that is not a model element
 				return null;
+			}
 
 			IModelElement element = (IModelElement) obj;
 			IResource resource = element.getResource();
 
-			if (resource == null)
+			if (resource == null) {
 				// the selection contains a model element without a
 				// corresponding resource on the file system
 				return null;
+			}
 
-			if (resource.getType() != IResource.FOLDER)
+			if (resource.getType() != IResource.FOLDER) {
 				// the selection contains a model element that is not a folder
 				return null;
+			}
 
 			selected.add((IFolder) resource);
 		}
 
 		IFolder[] folders = selected.toArray(new IFolder[selected.size()]);
 
-		if (folders.length == 0)
+		if (folders.length == 0) {
 			// no folders in the selection
 			return null;
+		}
 
-		if (!allOfSameKind(folders))
+		if (!allOfSameKind(folders)) {
 			// a mixture of source folders and library folders in the selection
 			return null;
+		}
 
 		if (LibraryFolderManager.getInstance().isInLibraryFolder(folders[0])) {
 			// the selection contains only library folders

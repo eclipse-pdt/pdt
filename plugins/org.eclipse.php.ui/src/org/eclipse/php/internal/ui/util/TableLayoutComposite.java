@@ -101,8 +101,9 @@ public class TableLayoutComposite extends Composite {
 				Assert.isTrue(false, "Unknown column layout data"); //$NON-NLS-1$
 			}
 		}
-		if (width > result.x)
+		if (width > result.x) {
 			result.x = width;
+		}
 		return result;
 	}
 
@@ -111,8 +112,9 @@ public class TableLayoutComposite extends Composite {
 		// it is being called on Linux. This method resets the
 		// Layout to null so we make sure we run it only when
 		// the value is OK.
-		if (width <= 1)
+		if (width <= 1) {
 			return;
+		}
 
 		TableColumn[] tableColumns = table.getColumns();
 		int size = Math.min(columns.size(), tableColumns.length);
@@ -160,8 +162,9 @@ public class TableLayoutComposite extends Composite {
 					// tableColumns[i].getWidth();
 					int weight = cw.weight;
 					int pixels = totalWeight == 0 ? 0 : weight * rest / totalWeight;
-					if (pixels < cw.minimumWidth)
+					if (pixels < cw.minimumWidth) {
 						pixels = cw.minimumWidth;
+					}
 					totalDistributed += pixels;
 					widths[i] = pixels;
 				}
@@ -170,8 +173,9 @@ public class TableLayoutComposite extends Composite {
 			// Distribute any remaining pixels to columns with weight.
 			int diff = rest - totalDistributed;
 			for (int i = 0; diff > 0; ++i) {
-				if (i == size)
+				if (i == size) {
 					i = 0;
+				}
 				ColumnLayoutData col = columns.get(i);
 				if (col instanceof ColumnWeightData) {
 					++widths[i];

@@ -141,8 +141,9 @@ public class ExtractVariableRefactoring extends Refactoring {
 			// check if the file is in sync
 			RefactoringStatus status = RefactoringUtility
 					.validateModifiesFiles(new IResource[] { sourceModule.getResource() }, getValidationContext());
-			if (status.hasFatalError())
+			if (status.hasFatalError()) {
 				return status;
+			}
 
 			try {
 				astRoot = ASTUtils.createProgramFromSource(sourceModule);
@@ -153,8 +154,9 @@ public class ExtractVariableRefactoring extends Refactoring {
 
 			status.merge(checkSelection(status, new SubProgressMonitor(pm, 3)));
 
-			if (!status.hasFatalError() && isLiteralNodeSelected())
+			if (!status.hasFatalError() && isLiteralNodeSelected()) {
 				fReplaceAllOccurrences = false;
+			}
 
 			return status;
 
@@ -165,11 +167,13 @@ public class ExtractVariableRefactoring extends Refactoring {
 
 	private boolean isLiteralNodeSelected() {
 		IExpressionFragment fragment = getSelectedExpression();
-		if (fragment == null)
+		if (fragment == null) {
 			return false;
+		}
 		Expression expression = fragment.getAssociatedExpression();
-		if (expression == null)
+		if (expression == null) {
 			return false;
+		}
 		return (expression.getType() == ASTNode.SCALAR);
 	}
 
@@ -194,8 +198,10 @@ public class ExtractVariableRefactoring extends Refactoring {
 
 			enclosingBodyNode = getEnclosingBodyNode();
 			if (enclosingBodyNode == null)
+			 {
 				return RefactoringStatus
 						.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.3")); //$NON-NLS-1$
+			}
 			pm.worked(1);
 
 			if (scopeHasSyntaxErrors(enclosingBodyNode)) {
@@ -361,8 +367,10 @@ public class ExtractVariableRefactoring extends Refactoring {
 		}
 
 		if (isUsedInForInitializerOrUpdaterOrIncrementor(expression))
+		 {
 			return RefactoringStatus
 					.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.11")); //$NON-NLS-1$
+		}
 
 		if (assignmentInStaticStatement(expression)) {
 			return RefactoringStatus
@@ -580,8 +588,9 @@ public class ExtractVariableRefactoring extends Refactoring {
 	 * @return the fragment for the current selection
 	 */
 	private IExpressionFragment getSelectedExpression() {
-		if (fSelectedExpression != null)
+		if (fSelectedExpression != null) {
 			return fSelectedExpression;
+		}
 
 		IASTFragment selectedFragment;
 		try {
@@ -726,8 +735,9 @@ public class ExtractVariableRefactoring extends Refactoring {
 		HashSet<IASTFragment> seen = new HashSet<>();
 		for (int i = 0; i < fragmentsToReplace.length; i++) {
 			IASTFragment fragment = fragmentsToReplace[i];
-			if (!seen.add(fragment))
+			if (!seen.add(fragment)) {
 				continue;
+			}
 			Identifier tempName = fRewriter.getAST().newIdentifier(getFullVariableName());
 			TextEditGroup description = new TextEditGroup("replace "); //$NON-NLS-1$
 
@@ -923,8 +933,9 @@ public class ExtractVariableRefactoring extends Refactoring {
 	}
 
 	private IExpressionFragment getFirstReplacedExpression() {
-		if (!fReplaceAllOccurrences)
+		if (!fReplaceAllOccurrences) {
 			return getSelectedExpression();
+		}
 		IASTFragment[] nodesToReplace = retainOnlyReplacableMatches(false);
 		if (nodesToReplace.length == 0) {
 			return getSelectedExpression();
@@ -957,26 +968,31 @@ public class ExtractVariableRefactoring extends Refactoring {
 	private ASTNode[] getMatchNodes() {
 		IASTFragment[] matches = retainOnlyReplacableMatches(false);
 		ASTNode[] result = new ASTNode[matches.length];
-		for (int i = 0; i < matches.length; i++)
+		for (int i = 0; i < matches.length; i++) {
 			result[i] = matches[i].getAssociatedNode();
+		}
 		return result;
 	}
 
 	private static Object[] getLongestArrayPrefix(Object[][] arrays) {
 		int length = -1;
-		if (arrays.length == 0)
+		if (arrays.length == 0) {
 			return new Object[0];
+		}
 		int minArrayLength = arrays[0].length;
-		for (int i = 1; i < arrays.length; i++)
+		for (int i = 1; i < arrays.length; i++) {
 			minArrayLength = Math.min(minArrayLength, arrays[i].length);
+		}
 
 		for (int i = 0; i < minArrayLength; i++) {
-			if (!allArraysEqual(arrays, i))
+			if (!allArraysEqual(arrays, i)) {
 				break;
+			}
 			length++;
 		}
-		if (length == -1)
+		if (length == -1) {
 			return new Object[0];
+		}
 		return getArrayPrefix(arrays[0], length + 1);
 	}
 
@@ -984,8 +1000,9 @@ public class ExtractVariableRefactoring extends Refactoring {
 		Object element = arrays[0][position];
 		for (int i = 0; i < arrays.length; i++) {
 			Object[] array = arrays[i];
-			if (!element.equals(array[position]))
+			if (!element.equals(array[position])) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -1050,8 +1067,9 @@ public class ExtractVariableRefactoring extends Refactoring {
 	}
 
 	private Statement getParentStatement(ASTNode node) {
-		if (node instanceof Statement)
+		if (node instanceof Statement) {
 			return (Statement) node;
+		}
 
 		ASTNode parent = node.getParent();
 		while (!(parent instanceof Statement)) {
@@ -1104,8 +1122,9 @@ public class ExtractVariableRefactoring extends Refactoring {
 			}
 			return allMatchingFragments;
 
-		} else
+		} else {
 			return new IASTFragment[] { getSelectedExpression() };
+		}
 	}
 
 	/**

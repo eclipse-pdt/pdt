@@ -27,10 +27,11 @@ public class CodeCoverageResult {
 	public CodeCoverageResult(final int lines, final int covered, final int significant, final int files) {
 		this.lines = lines;
 		this.covered = covered;
-		if (significant == -1)
+		if (significant == -1) {
 			this.significant = lines;
-		else
+		} else {
 			this.significant = significant;
+		}
 		this.files = files;
 	}
 

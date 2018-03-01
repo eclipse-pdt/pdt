@@ -235,8 +235,9 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 	protected void populateServerList(List<Server> serverList) {
 		Server[] servers = ServersManager.getServers();
 
-		if (serverList == null)
+		if (serverList == null) {
 			serverList = new ArrayList<>();
+		}
 
 		if (servers != null) {
 			int size = servers.length;

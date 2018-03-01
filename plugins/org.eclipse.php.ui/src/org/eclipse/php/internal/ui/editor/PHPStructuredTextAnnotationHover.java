@@ -72,8 +72,9 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 		}
 
 		void addParagraph(StringBuilder buffer, Reader paragraphReader) {
-			if (paragraphReader != null)
+			if (paragraphReader != null) {
 				addParagraph(buffer, read(paragraphReader));
+			}
 		}
 
 		void addParagraph(StringBuilder buffer, String paragraph) {
@@ -127,8 +128,9 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 			int previous = 0;
 			int current = text.indexOf(c, previous);
 
-			if (current == -1)
+			if (current == -1) {
 				return text;
+			}
 
 			StringBuilder buffer = new StringBuilder();
 			while (current > -1) {
@@ -157,10 +159,12 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 		if (position.getOffset() > -1 && position.getLength() > -1) {
 			try {
 				int markerLine = document.getLineOfOffset(position.getOffset());
-				if (line == markerLine)
+				if (line == markerLine) {
 					return 1;
-				if (markerLine <= line && line <= document.getLineOfOffset(position.getOffset() + position.getLength()))
+				}
+				if (markerLine <= line && line <= document.getLineOfOffset(position.getOffset() + position.getLength())) {
 					return 2;
+				}
 			} catch (BadLocationException x) {
 			}
 		}
@@ -223,8 +227,9 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 
 		printer.startBulletList(buffer);
 		Iterator<String> e = messages.iterator();
-		while (e.hasNext())
+		while (e.hasNext()) {
 			printer.addBullet(buffer, printer.convertToHTMLContent(e.next()));
+		}
 		printer.endBulletList(buffer);
 
 		printer.addPageEpilog(buffer);
@@ -241,8 +246,9 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 			String message = ((Annotation) temporaryAnnotations.get(i)).getText();
 			if (message != null) {
 				boolean duplicated = false;
-				for (int j = 0; j < messages.size(); j++)
+				for (int j = 0; j < messages.size(); j++) {
 					duplicated = duplicated || messages.get(j).equals(message);
+				}
 				if (!duplicated) {
 					messages.add(message);
 				}
@@ -250,12 +256,13 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 				messages.add(temporaryAnnotations.get(i).toString());
 			}
 		}
-		if (messages.size() > 1)
+		if (messages.size() > 1) {
 			return formatMultipleHoverText(messages);
-		else if (messages.size() > 0)
+		} else if (messages.size() > 0) {
 			return formatHoverText(messages.get(0).toString(), sourceViewer);
-		else
+		} else {
 			return null;
+		}
 	}
 
 	private List<String> dropDuplicateMessages(List<String> messages) {
@@ -346,8 +353,9 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 		IDocument document = viewer.getDocument();
 		IAnnotationModel model = viewer.getAnnotationModel();
 
-		if (model == null)
+		if (model == null) {
 			return null;
+		}
 
 		List<ITemporaryAnnotation> annotations = new ArrayList<>();
 
@@ -357,8 +365,9 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 			if (o instanceof ITemporaryAnnotation) {
 				ITemporaryAnnotation a = (ITemporaryAnnotation) o;
 				Position position = model.getPosition((Annotation) a);
-				if (position == null)
+				if (position == null) {
 					continue;
+				}
 
 				if (compareRulerLine(position, document, line) == 1) {
 					annotations.add(a);

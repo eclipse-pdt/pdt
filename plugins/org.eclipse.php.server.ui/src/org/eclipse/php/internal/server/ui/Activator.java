@@ -70,8 +70,9 @@ public class Activator extends AbstractUIPlugin implements ISelectionListener {
 					ISelectionService iss = iww.getSelectionService();
 
 					ISelection s = iss.getSelection();
-					if (s instanceof IStructuredSelection)
+					if (s instanceof IStructuredSelection) {
 						currentSelection = ((IStructuredSelection) s);
+					}
 
 					iss.addSelectionListener(Activator.this);
 				}
@@ -82,8 +83,9 @@ public class Activator extends AbstractUIPlugin implements ISelectionListener {
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		if (selection instanceof IStructuredSelection)
+		if (selection instanceof IStructuredSelection) {
 			currentSelection = ((IStructuredSelection) selection);
+		}
 	}
 
 	/*

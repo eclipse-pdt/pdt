@@ -40,8 +40,9 @@ public class Factory {
 	}
 
 	protected XMLElement createElement(int index, String s, Node node) {
-		if (index < 0)
+		if (index < 0) {
 			return createElement(s, node);
+		}
 
 		Element element = document.createElement(s);
 		try {
@@ -56,10 +57,11 @@ public class Factory {
 				}
 			}
 			// TODO Try to improve formating, maybe dup an appropriate text node
-			if (child != null)
+			if (child != null) {
 				node.insertBefore(element, child);
-			else
+			} else {
 				node.appendChild(element);
+			}
 		} catch (Exception e) {
 			node.appendChild(element);
 		}
@@ -128,7 +130,9 @@ public class Factory {
 
 			// add package name
 			if (packageName != null)
+			 {
 				s = packageName + "." + s; //$NON-NLS-1$
+			}
 			Class<?> class1 = Class.forName(s);
 
 			XMLElement xmlElement = (XMLElement) class1.newInstance();

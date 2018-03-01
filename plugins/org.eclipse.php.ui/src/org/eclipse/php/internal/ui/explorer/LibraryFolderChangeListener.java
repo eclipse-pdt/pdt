@@ -82,13 +82,15 @@ public class LibraryFolderChangeListener implements ILibraryFolderChangeListener
 	private PHPExplorerPart getPHPExplorer() {
 		// find the active workbench window
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		if (window == null)
+		if (window == null) {
 			return null;
+		}
 
 		// find the active workbench page
 		IWorkbenchPage page = window.getActivePage();
-		if (page == null)
+		if (page == null) {
 			return null;
+		}
 
 		// find the PHP Explorer in all available view references
 		for (IWorkbenchPartReference ref : page.getViewReferences()) {

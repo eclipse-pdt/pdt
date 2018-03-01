@@ -206,8 +206,9 @@ public class IteratorTypeGoalEvaluator extends GoalEvaluator {
 	}
 
 	private boolean isImplementedIterator(IType[] superClasses) {
-		if (superClasses == null)
+		if (superClasses == null) {
 			return false;
+		}
 		for (IType superClass : superClasses) {
 			if (superClass.getFullyQualifiedName().equalsIgnoreCase("Iterator")) { //$NON-NLS-1$
 				return true;

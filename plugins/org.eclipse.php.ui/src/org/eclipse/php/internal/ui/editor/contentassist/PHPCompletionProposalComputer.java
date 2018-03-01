@@ -92,9 +92,10 @@ public class PHPCompletionProposalComputer extends ScriptCompletionProposalCompu
 						ScriptTextMessages.CompletionProcessor_error_notOnBuildPath_message);
 			}
 			store.setValue(PreferenceConstants.NOTIFICATION_NOT_ON_BUILDPATH_MESSAGE, true);
-		} else
+		} else {
 			ErrorDialog.openError(shell, ScriptTextMessages.CompletionProcessor_error_accessing_title,
 					ScriptTextMessages.CompletionProcessor_error_accessing_message, e.getStatus());
+		}
 	}
 
 	@Override

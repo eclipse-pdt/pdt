@@ -68,16 +68,20 @@ public class WebModule implements IPHPWebModule {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof WebModule))
+		if (!(obj instanceof WebModule)) {
 			return false;
+		}
 
 		WebModule wm = (WebModule) obj;
-		if (!getDocumentBase().equals(wm.getDocumentBase()))
+		if (!getDocumentBase().equals(wm.getDocumentBase())) {
 			return false;
-		if (!getPath().equals(wm.getPath()))
+		}
+		if (!getPath().equals(wm.getPath())) {
 			return false;
-		if (!getMemento().equals(wm.getMemento()))
+		}
+		if (!getMemento().equals(wm.getMemento())) {
 			return false;
+		}
 		return true;
 	}
 }

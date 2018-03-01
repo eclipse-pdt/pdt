@@ -40,8 +40,9 @@ public class PHPNavigatorFileOperationActionProvider extends CommonActionProvide
 	@Override
 	public void init(ICommonActionExtensionSite site) {
 		ICommonViewerWorkbenchSite workbenchSite = null;
-		if (site.getViewSite() instanceof ICommonViewerWorkbenchSite)
+		if (site.getViewSite() instanceof ICommonViewerWorkbenchSite) {
 			workbenchSite = (ICommonViewerWorkbenchSite) site.getViewSite();
+		}
 
 		// we only initialize the group when in a view part
 		// (required for the constructor)
@@ -62,8 +63,9 @@ public class PHPNavigatorFileOperationActionProvider extends CommonActionProvide
 
 	@Override
 	public void dispose() {
-		if (fFileOperationGroup != null)
+		if (fFileOperationGroup != null) {
 			fFileOperationGroup.dispose();
+		}
 		super.dispose();
 	}
 }

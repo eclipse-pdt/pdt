@@ -179,17 +179,22 @@ public class ProjectBackwardCompatibilityUtil {
 	 * <code>String</code> form.
 	 */
 	static int entryKindFromString(String kindStr) {
-		if (kindStr.equalsIgnoreCase("prj")) //$NON-NLS-1$
+		if (kindStr.equalsIgnoreCase("prj")) {
 			return IBuildpathEntry.BPE_PROJECT;
+		}
 		// TODO: add better variable support
-		if (kindStr.equalsIgnoreCase("var")) //$NON-NLS-1$
+		if (kindStr.equalsIgnoreCase("var")) {
 			return IBuildpathEntry.BPE_LIBRARY;
-		if (kindStr.equalsIgnoreCase("con")) //$NON-NLS-1$
+		}
+		if (kindStr.equalsIgnoreCase("con")) {
 			return IBuildpathEntry.BPE_CONTAINER;
-		if (kindStr.equalsIgnoreCase("src")) //$NON-NLS-1$
+		}
+		if (kindStr.equalsIgnoreCase("src")) {
 			return IBuildpathEntry.BPE_SOURCE;
-		if (kindStr.equalsIgnoreCase("lib")) //$NON-NLS-1$
+		}
+		if (kindStr.equalsIgnoreCase("lib")) {
 			return IBuildpathEntry.BPE_LIBRARY;
+		}
 		return -1;
 	}
 
@@ -242,10 +247,14 @@ public class ProjectBackwardCompatibilityUtil {
 					PHPCoreConstants.INCLUDE_PATH_VARIABLE_PATHS);
 			String[] names = {};
 			if (namesString.length() > 0)
+			 {
 				names = namesString.split(","); //$NON-NLS-1$
+			}
 			String[] paths = {};
 			if (pathsString.length() > 0)
+			 {
 				paths = pathsString.split(","); //$NON-NLS-1$
+			}
 			// Not good since empty paths are allowed!!!
 			// assert (names.length == paths.length);
 			for (int i = 0; i < names.length; i++) {

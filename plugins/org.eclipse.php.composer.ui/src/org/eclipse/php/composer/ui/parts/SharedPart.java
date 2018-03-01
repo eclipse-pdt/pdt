@@ -36,8 +36,9 @@ public abstract class SharedPart {
 	}
 
 	protected Composite createComposite(Composite parent, FormToolkit toolkit) {
-		if (toolkit == null)
+		if (toolkit == null) {
 			return new Composite(parent, SWT.NULL);
+		}
 		return toolkit.createComposite(parent);
 	}
 

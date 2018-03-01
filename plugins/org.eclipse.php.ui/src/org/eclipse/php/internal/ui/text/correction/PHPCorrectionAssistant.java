@@ -156,9 +156,10 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 		fPosition = null;
 		fCurrentAnnotations = null;
 
-		if (fViewer == null || fViewer.getDocument() == null)
+		if (fViewer == null || fViewer.getDocument() == null) {
 			// Let superclass deal with this
 			return super.showPossibleQuickAssists();
+		}
 
 		List<Annotation> resultingAnnotations = new ArrayList<>(20);
 		try {
@@ -332,7 +333,9 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 		}
 
 		if (newOffset <= bestOffset)
+		 {
 			return newOffset; // we are closer or equal
+		}
 
 		return -1; // further away
 	}

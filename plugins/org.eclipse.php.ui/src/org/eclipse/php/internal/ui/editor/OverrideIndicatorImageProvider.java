@@ -55,13 +55,15 @@ public class OverrideIndicatorImageProvider implements IAnnotationImageProvider 
 	 */
 	@Override
 	public String getImageDescriptorId(Annotation annotation) {
-		if (!isImageProviderFor(annotation))
+		if (!isImageProviderFor(annotation)) {
 			return null;
+		}
 
-		if (isOverwriting(annotation))
+		if (isOverwriting(annotation)) {
 			return OVERWRITE_IMG_DESC_ID;
-		else
+		} else {
 			return OVERRIDE_IMG_DESC_ID;
+		}
 	}
 
 	/*

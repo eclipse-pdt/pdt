@@ -81,13 +81,14 @@ public class PHPUnitConnectionListener implements Runnable, ILaunchesListener2 {
 
 	@Override
 	public void launchesTerminated(final ILaunch[] launches) {
-		for (ILaunch launche : launches)
+		for (ILaunch launche : launches) {
 			if (launche == launch && launche.isTerminated()) {
 				if (!PHPUnitMessageParser.getInstance().isInProgress()) {
 					PHPUnitView.getDefault().stopRunning(true);
 				}
 				DebugPlugin.getDefault().getLaunchManager().removeLaunchListener(this);
 			}
+		}
 	}
 
 	@Override
@@ -95,7 +96,7 @@ public class PHPUnitConnectionListener implements Runnable, ILaunchesListener2 {
 		final ILaunch launch = PHPUnitView.getDefault().getLaunch();
 		int tries = 3;
 		String message = PHPUnitMessages.PHPUnitView_Run_Error;
-		do
+		do {
 			try {
 				serverSocket = new ServerSocket(port, 1);
 				serverSocket.setSoTimeout(5000);
@@ -111,7 +112,7 @@ public class PHPUnitConnectionListener implements Runnable, ILaunchesListener2 {
 			} finally {
 				shutdown(false);
 			}
-		while ((tries > 0 && socket == null) || (!launch.isTerminated() && "debug".equals(launch.getLaunchMode()))); //$NON-NLS-1$
+		} while ((tries > 0 && socket == null) || (!launch.isTerminated() && "debug".equals(launch.getLaunchMode()))); //$NON-NLS-1$
 		PHPUnitView.getDefault().stop(PHPUnitElementManager.getInstance().getRoot(), message);
 	}
 

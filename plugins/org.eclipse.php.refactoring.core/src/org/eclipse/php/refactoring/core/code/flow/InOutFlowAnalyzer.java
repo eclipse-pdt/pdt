@@ -94,8 +94,9 @@ public class InOutFlowAnalyzer extends FlowAnalyzer {
 
 	private void clearAccessMode(FlowInfo info, Variable variable) {
 		IVariableBinding binding = variable.resolveVariableBinding();
-		if (binding != null && !binding.isField())
+		if (binding != null && !binding.isField()) {
 			info.clearAccessMode(binding, fFlowContext);
+		}
 	}
 
 	// private void clearAccessMode(FlowInfo info, List nodes) {

@@ -147,8 +147,9 @@ abstract class RenameInputWizardPage extends TextInputWizardPage {
 	}
 
 	protected boolean saveSettings() {
-		if (getContainer() instanceof Dialog)
+		if (getContainer() instanceof Dialog) {
 			return ((Dialog) getContainer()).getReturnCode() == IDialogConstants.OK_ID;
+		}
 		return true;
 	}
 
@@ -158,18 +159,21 @@ abstract class RenameInputWizardPage extends TextInputWizardPage {
 			saveBooleanSetting(UPDATE_TEXTUAL_MATCHES, fUpdateTextualMatches);
 			saveBooleanSetting(UPDATE_QUALIFIED_NAMES, fUpdateQualifiedNames);
 			if (fQualifiedNameComponent != null)
+			 {
 				fQualifiedNameComponent.savePatterns(getRefactoringSettings());
 			// TODO : helps insert here
 			// DelegateUIHelper.saveLeaveDelegateSetting(fLeaveDelegateCheckBox);
 			// DelegateUIHelper.saveDeprecateDelegateSetting(fDeprecateDelegateCheckBox);
+			}
 		}
 		super.dispose();
 	}
 
 	private void addOptionalUpdateTextualMatches(Composite result, RowLayouter layouter) {
 		final ITextUpdating refactoring = getRefactoring().getAdapter(ITextUpdating.class);
-		if (refactoring == null || !refactoring.canEnableTextUpdating())
+		if (refactoring == null || !refactoring.canEnableTextUpdating()) {
 			return;
+		}
 		String title = PHPRefactoringUIMessages.getString("RenameInputWizardPage_update_textual_matches"); //$NON-NLS-1$
 		boolean defaultValue = getBooleanSetting(UPDATE_TEXTUAL_MATCHES, refactoring.getUpdateTextualMatches());
 		fUpdateTextualMatches = createCheckbox(result, title, defaultValue, layouter);
@@ -186,8 +190,9 @@ abstract class RenameInputWizardPage extends TextInputWizardPage {
 	private void addOptionalUpdateQualifiedNameComponent(Composite parent, RowLayouter layouter, int marginWidth) {
 		final IQualifiedNameUpdating ref = getRefactoring()
 				.getAdapter(IQualifiedNameUpdating.class);
-		if (ref == null || !ref.canEnableQualifiedNameUpdating())
+		if (ref == null || !ref.canEnableQualifiedNameUpdating()) {
 			return;
+		}
 		fUpdateQualifiedNames = new Button(parent, SWT.CHECK);
 		int indent = marginWidth + fUpdateQualifiedNames.computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
 		fUpdateQualifiedNames
@@ -225,15 +230,17 @@ abstract class RenameInputWizardPage extends TextInputWizardPage {
 
 	protected boolean getBooleanSetting(String key, boolean defaultValue) {
 		String update = getRefactoringSettings().get(key);
-		if (update != null)
+		if (update != null) {
 			return Boolean.valueOf(update).booleanValue();
-		else
+		} else {
 			return defaultValue;
+		}
 	}
 
 	protected void saveBooleanSetting(String key, Button checkBox) {
-		if (checkBox != null)
+		if (checkBox != null) {
 			getRefactoringSettings().put(key, checkBox.getSelection());
+		}
 	}
 
 	protected static Button createCheckbox(Composite parent, String title, boolean value, RowLayouter layouter) {

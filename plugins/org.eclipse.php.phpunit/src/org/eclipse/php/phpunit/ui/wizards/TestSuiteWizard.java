@@ -44,7 +44,7 @@ public class TestSuiteWizard extends PHPUnitWizard {
 			template.setTestSuperClass(page.getSuperClass(), page.getSuperClassName(),
 					page.getTestContainer().getProject());
 			final IType[] tests = ((TestSuiteWizardPage) page).getElementsToTest();
-			if (tests != null)
+			if (tests != null) {
 				for (int i = 0; i < tests.length; ++i) {
 					template.addTest(tests[i].getElementName());
 					IPath relativeLocation = IncludePathUtils
@@ -53,6 +53,7 @@ public class TestSuiteWizard extends PHPUnitWizard {
 						template.addRequire(relativeLocation.toOSString());
 					}
 				}
+			}
 			template.compileTests();
 			return template.compileTemplate();
 		} catch (final IOException e) {

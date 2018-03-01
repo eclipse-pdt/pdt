@@ -82,20 +82,24 @@ public class StructureSelectPreviousAction extends StructureSelectionAction {
 		if (oldSourceRange.getLength() == 0 && selAnalyzer.getLastCoveringNode() != null) {
 			ASTNode previousNode = PreviousNodeAnalyzer.perform(oldSourceRange.getOffset(),
 					selAnalyzer.getLastCoveringNode());
-			if (previousNode != null)
+			if (previousNode != null) {
 				return getSelectedNodeSourceRange(sr, previousNode);
+			}
 		}
 		ASTNode first = selAnalyzer.getFirstSelectedNode();
-		if (first == null)
+		if (first == null) {
 			return getLastCoveringNodeRange(oldSourceRange, sr, selAnalyzer);
+		}
 
 		ASTNode parent = first.getParent();
-		if (parent == null)
+		if (parent == null) {
 			return getLastCoveringNodeRange(oldSourceRange, sr, selAnalyzer);
+		}
 
 		ASTNode previousNode = getPreviousNode(parent, selAnalyzer.getSelectedNodes()[0]);
-		if (previousNode == parent)
+		if (previousNode == parent) {
 			return getSelectedNodeSourceRange(sr, parent);
+		}
 
 		int offset = previousNode.getStart();
 		int end = oldSourceRange.getOffset() + oldSourceRange.getLength() - 1;
@@ -104,14 +108,16 @@ public class StructureSelectPreviousAction extends StructureSelectionAction {
 
 	private static ASTNode getPreviousNode(ASTNode parent, ASTNode node) {
 		ASTNode[] siblingNodes = StructureSelectionAction.getSiblingNodes(node);
-		if (siblingNodes == null || siblingNodes.length == 0)
+		if (siblingNodes == null || siblingNodes.length == 0) {
 			return parent;
+		}
 		if (node == siblingNodes[0]) {
 			return parent;
 		} else {
 			int index = StructureSelectionAction.findIndex(siblingNodes, node);
-			if (index < 1)
+			if (index < 1) {
 				return parent;
+			}
 			return siblingNodes[index - 1];
 		}
 	}

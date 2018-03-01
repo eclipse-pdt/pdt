@@ -63,8 +63,9 @@ public class PHPTemplateContext extends ScriptTemplateContext {
 					newPattern, template.isAutoInsertable());
 
 		}
-		if (!canEvaluate(template))
+		if (!canEvaluate(template)) {
 			return null;
+		}
 
 		final String[] lines = TextUtils.splitLines(template.getPattern());
 		if (lines.length > 1) {

@@ -91,8 +91,9 @@ public class PHPDebugUICompositeImageDescriptor extends CompositeImageDescriptor
 
 	@Override
 	public boolean equals(Object object) {
-		if (object == null || !PHPDebugUICompositeImageDescriptor.class.equals(object.getClass()))
+		if (object == null || !PHPDebugUICompositeImageDescriptor.class.equals(object.getClass())) {
 			return false;
+		}
 		PHPDebugUICompositeImageDescriptor other = (PHPDebugUICompositeImageDescriptor) object;
 		return (baseImage.equals(other.baseImage) && overlayImage.equals(other.overlayImage)
 				&& overlayPlacement == other.overlayPlacement);

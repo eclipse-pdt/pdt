@@ -67,8 +67,9 @@ public class FileUtil {
 				File current = files[i];
 				String fromFile = current.getAbsolutePath();
 				String toFile = to;
-				if (!toFile.endsWith(File.separator))
+				if (!toFile.endsWith(File.separator)) {
 					toFile += File.separator;
+				}
 				toFile += current.getName();
 				if (current.isFile()) {
 					copyFile(fromFile, toFile);
@@ -77,8 +78,9 @@ public class FileUtil {
 					monitor.subTask(NLS.bind(Messages.copyingTask, new String[] { fromFile, toFile }));
 					copyDirectory(fromFile, toFile, ProgressUtil.getSubMonitorFor(monitor, 50));
 				}
-				if (monitor.isCanceled())
+				if (monitor.isCanceled()) {
 					return;
+				}
 			}
 			monitor.done();
 		} catch (Exception e) {
@@ -113,14 +115,16 @@ public class FileUtil {
 					NLS.bind(Messages.errorCopyingFile, new String[] { to, e.getLocalizedMessage() }), e);
 		} finally {
 			try {
-				if (in != null)
+				if (in != null) {
 					in.close();
+				}
 			} catch (Exception ex) {
 				// ignore
 			}
 			try {
-				if (out != null)
+				if (out != null) {
 					out.close();
+				}
 			} catch (Exception ex) {
 				// ignore
 			}

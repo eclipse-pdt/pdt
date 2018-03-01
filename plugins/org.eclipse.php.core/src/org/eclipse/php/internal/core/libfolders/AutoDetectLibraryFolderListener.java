@@ -30,11 +30,13 @@ public class AutoDetectLibraryFolderListener implements IResourceChangeListener 
 
 	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
-		if (suspendDetection)
+		if (suspendDetection) {
 			return;
+		}
 
-		if (event.getType() != IResourceChangeEvent.POST_CHANGE)
+		if (event.getType() != IResourceChangeEvent.POST_CHANGE) {
 			return;
+		}
 
 		IResourceDelta delta = event.getDelta();
 
@@ -61,10 +63,11 @@ public class AutoDetectLibraryFolderListener implements IResourceChangeListener 
 	 * @param suspend
 	 */
 	public void suspendDetection(IProject project, boolean suspend) {
-		if (suspend)
+		if (suspend) {
 			suspendedProjects.add(project);
-		else
+		} else {
 			suspendedProjects.remove(project);
+		}
 	}
 
 	/**

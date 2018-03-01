@@ -45,12 +45,14 @@ public class RenameUserInterfaceStarter extends UserInterfaceStarter {
 
 		private void init() {
 			IWorkbenchWindow dw = RefactoringUIPlugin.getActiveWorkbenchWindow();
-			if (dw == null)
+			if (dw == null) {
 				return;
+			}
 			fDisplay = dw.getShell().getDisplay();
 			IWorkbenchPage page = dw.getActivePage();
-			if (page == null)
+			if (page == null) {
 				return;
+			}
 			IViewReference vrefs[] = page.getViewReferences();
 			for (int i = 0; i < vrefs.length; i++) {
 				consider(vrefs[i].getPart(false));
@@ -62,32 +64,38 @@ public class RenameUserInterfaceStarter extends UserInterfaceStarter {
 		}
 
 		private void consider(IWorkbenchPart part) {
-			if (part == null)
+			if (part == null) {
 				return;
+			}
 			ISetSelectionTarget target = null;
 			if (!(part instanceof ISetSelectionTarget)) {
 				target = part.getAdapter(ISetSelectionTarget.class);
-				if (target == null)
+				if (target == null) {
 					return;
+				}
 			} else {
 				target = (ISetSelectionTarget) part;
 			}
 			ISelectionProvider selectionProvider = part.getSite().getSelectionProvider();
-			if (selectionProvider == null)
+			if (selectionProvider == null) {
 				return;
+			}
 			ISelection s = selectionProvider.getSelection();
-			if (!(s instanceof IStructuredSelection))
+			if (!(s instanceof IStructuredSelection)) {
 				return;
+			}
 			IStructuredSelection selection = (IStructuredSelection) s;
-			if (!selection.toList().contains(fElement))
+			if (!selection.toList().contains(fElement)) {
 				return;
+			}
 			fParts.add(part);
 			fSelections.add(selection);
 		}
 
 		public void restore(Object newElement) {
-			if (fDisplay == null)
+			if (fDisplay == null) {
 				return;
+			}
 			for (int i = 0; i < fParts.size(); i++) {
 				IStructuredSelection currentSelection = fSelections.get(i);
 				boolean changed = false;

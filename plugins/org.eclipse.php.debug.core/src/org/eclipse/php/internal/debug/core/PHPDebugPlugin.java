@@ -165,8 +165,9 @@ public class PHPDebugPlugin extends Plugin {
 								.concat("/php.ini"); //$NON-NLS-1$
 
 						File phpIni = getFileFromLocation(location, pluginId);
-						if (phpIni == null)
+						if (phpIni == null) {
 							continue;
+						}
 
 						File phpIniDir = phpIni.getParentFile();
 						String fileName = phpIni.getAbsolutePath();

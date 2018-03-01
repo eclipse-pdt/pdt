@@ -38,8 +38,9 @@ public abstract class CodeCompletionRequestor extends CompletionRequestor implem
 
 	@Override
 	public void accept(CompletionProposal proposal) {
-		if (isIgnored(proposal.getKind()))
+		if (isIgnored(proposal.getKind())) {
 			return;
+		}
 		addProposal(proposal);
 	}
 

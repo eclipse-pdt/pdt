@@ -65,7 +65,9 @@ public class PHPStructuredDocumentReParser extends XMLStructuredDocumentReParser
 		if (result == null) {
 			result = checkForCriticalKey("<%"); //$NON-NLS-1$
 			if (result == null)
+			 {
 				result = checkForCriticalKey("%>"); //$NON-NLS-1$
+			}
 
 		}
 		return result;

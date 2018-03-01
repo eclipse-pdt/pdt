@@ -95,8 +95,9 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		}
 
 		private void setFirstElement(IModelElement element) {
-			if (hasFirstElement())
+			if (hasFirstElement()) {
 				throw new IllegalStateException();
+			}
 			fFirstElement = element;
 		}
 
@@ -144,8 +145,9 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		}
 
 		private ICommentScanner getScanner() {
-			if (fScanner == null)
+			if (fScanner == null) {
 				fScanner = new CommentScanner(fDocument);
+			}
 			return fScanner;
 		}
 
@@ -285,9 +287,9 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 					start--;
 				}
 
-				if (start == 0)
+				if (start == 0) {
 					return startElement;
-				else {
+				} else {
 					this.end = end;
 					return start;
 				}
@@ -443,8 +445,9 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 			if (delta != null
 					&& (delta.getFlags() & (IModelElementDelta.F_CONTENT | IModelElementDelta.F_CHILDREN)) != 0) {
 
-				if (shouldIgnoreDelta(e.getDelta().getElement(), delta))
+				if (shouldIgnoreDelta(e.getDelta().getElement(), delta)) {
 					return;
+				}
 
 				update(createContext(false));
 			}
@@ -466,7 +469,9 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		 */
 		private boolean shouldIgnoreDelta(IModelElement ast, IModelElementDelta delta) {
 			if (ast == null)
+			 {
 				return false; // can't compute
+			}
 
 			if (!(ast.getResource() instanceof IFile)) {
 				return false;
@@ -475,11 +480,15 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 
 			IDocument document = getDocument();
 			if (document == null)
+			 {
 				return false; // can't compute
+			}
 
 			PHPStructuredEditor editor = fEditor;
 			if (editor == null || editor.getCachedSelectedRange() == null)
+			 {
 				return false; // can't compute
+			}
 
 			int caretLine = 0;
 			try {
@@ -515,23 +524,27 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 
 		private IModelElementDelta findElement(IModelElement target, IModelElementDelta delta) {
 
-			if (delta == null || target == null)
+			if (delta == null || target == null) {
 				return null;
+			}
 
 			IModelElement element = delta.getElement();
 
-			if (element.getElementType() > IModelElement.BINARY_MODULE)
+			if (element.getElementType() > IModelElement.BINARY_MODULE) {
 				return null;
+			}
 
-			if (target.equals(element))
+			if (target.equals(element)) {
 				return delta;
+			}
 
 			IModelElementDelta[] children = delta.getAffectedChildren();
 
 			for (int i = 0; i < children.length; i++) {
 				IModelElementDelta d = findElement(target, children[i]);
-				if (d != null)
+				if (d != null) {
 					return d;
+				}
 			}
 
 			return null;
@@ -579,14 +592,16 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 				int postOffset = document.getLineOffset(captionLine + 1);
 				IRegion postRegion = new Region(postOffset, offset + length - postOffset);
 
-				if (preRegion == null)
+				if (preRegion == null) {
 					return new IRegion[] { postRegion };
+				}
 
 				return new IRegion[] { preRegion, postRegion };
 			}
 
-			if (preRegion != null)
+			if (preRegion != null) {
 				return new IRegion[] { preRegion };
+			}
 
 			return null;
 		}
@@ -605,8 +620,9 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		private int findFirstContent(final CharSequence content, int prefixEnd) {
 			int lenght = content.length();
 			for (int i = prefixEnd; i < lenght; i++) {
-				if (Character.isUnicodeIdentifierPart(content.charAt(i)))
+				if (Character.isUnicodeIdentifierPart(content.charAt(i))) {
 					return i;
+				}
 			}
 			return 0;
 		}
@@ -658,8 +674,9 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 				 * received lines below.
 				 */
 				ISourceRange nameRange = fMember.getNameRange();
-				if (nameRange != null)
+				if (nameRange != null) {
 					nameStart = nameRange.getOffset();
+				}
 
 			} catch (ModelException e) {
 				// ignore and use default
@@ -674,10 +691,12 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 			 * entire folded region, and rely on later element deltas to correct
 			 * the name range.
 			 */
-			if (captionLine < firstLine)
+			if (captionLine < firstLine) {
 				captionLine = firstLine;
-			if (captionLine > lastLine)
+			}
+			if (captionLine > lastLine) {
 				captionLine = lastLine;
+			}
 
 			IRegion preRegion;
 			if (firstLine < captionLine) {
@@ -693,14 +712,16 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 				int postOffset = document.getLineOffset(captionLine + 1);
 				IRegion postRegion = new Region(postOffset, offset + length - postOffset);
 
-				if (preRegion == null)
+				if (preRegion == null) {
 					return new IRegion[] { postRegion };
+				}
 
 				return new IRegion[] { preRegion, postRegion };
 			}
 
-			if (preRegion != null)
+			if (preRegion != null) {
 				return new IRegion[] { preRegion };
+			}
 
 			return null;
 		}
@@ -715,8 +736,9 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 			try {
 				// need a reconcile here?
 				ISourceRange nameRange = fMember.getNameRange();
-				if (nameRange != null)
+				if (nameRange != null) {
 					nameStart = nameRange.getOffset();
+				}
 			} catch (ModelException e) {
 				// ignore and use default
 			}
@@ -1145,28 +1167,33 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	private FoldingStructureComputationContext createInitialContext() {
 		initializePreferences();
 		fInput = getInputElement();
-		if (fInput == null)
+		if (fInput == null) {
 			return null;
+		}
 
 		return createContext(true);
 	}
 
 	private FoldingStructureComputationContext createContext(boolean allowCollapse) {
-		if (!isInstalled())
+		if (!isInstalled()) {
 			return null;
+		}
 		ProjectionAnnotationModel model = getModel();
-		if (model == null)
+		if (model == null) {
 			return null;
+		}
 		IDocument doc = getDocument();
-		if (doc == null)
+		if (doc == null) {
 			return null;
+		}
 
 		return new FoldingStructureComputationContext(doc, model, allowCollapse);
 	}
 
 	private IModelElement getInputElement() {
-		if (fEditor == null)
+		if (fEditor == null) {
 			return null;
+		}
 		return EditorUtility.getEditorInputModelElement(fEditor, false);
 	}
 
@@ -1181,8 +1208,9 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	}
 
 	private void update(FoldingStructureComputationContext ctx) {
-		if (ctx == null)
+		if (ctx == null) {
 			return;
+		}
 
 		Map<PHPProjectionAnnotation, Position> additions = new HashMap<>();
 		List<PHPProjectionAnnotation> deletions = new ArrayList<>();
@@ -1211,8 +1239,9 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 					&& element.getElementType() == IModelElement.TYPE;
 			List<?> annotations = oldStructure.get(element);
 			if (annotations == null) {
-				if (!isMalformedAnonymousType)
+				if (!isMalformedAnonymousType) {
 					additions.put(newAnnotation, newPosition);
+				}
 			} else {
 				Iterator<?> x = annotations.iterator();
 				boolean matched = false;
@@ -1227,11 +1256,13 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 								&& (!newPosition.equals(existingPosition) || updateCollapsedState)) {
 							existingPosition.setOffset(newPosition.getOffset());
 							existingPosition.setLength(newPosition.getLength());
-							if (updateCollapsedState)
-								if (newAnnotation.isCollapsed())
+							if (updateCollapsedState) {
+								if (newAnnotation.isCollapsed()) {
 									existingAnnotation.markCollapsed();
-								else
+								} else {
 									existingAnnotation.markExpanded();
+								}
+							}
 							updates.add(existingAnnotation);
 						}
 						matched = true;
@@ -1239,19 +1270,22 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 						break;
 					}
 				}
-				if (!matched)
+				if (!matched) {
 					additions.put(newAnnotation, newPosition);
+				}
 
-				if (annotations.isEmpty())
+				if (annotations.isEmpty()) {
 					oldStructure.remove(element);
+				}
 			}
 		}
 
 		for (Object v : oldStructure.values()) {
 			List<?> list = (List<?>) v;
 			int size = list.size();
-			for (int i = 0; i < size; i++)
+			for (int i = 0; i < size; i++) {
 				deletions.add(((Tuple) list.get(i)).annotation);
+			}
 		}
 
 		match(deletions, additions, updates, ctx);
@@ -1264,8 +1298,9 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	private void computeFoldingStructure(FoldingStructureComputationContext ctx) {
 		IParent parent = (IParent) fInput;
 		try {
-			if (!(fInput instanceof ISourceReference))
+			if (!(fInput instanceof ISourceReference)) {
 				return;
+			}
 			computeFoldingStructure(parent.getChildren(), ctx);
 		} catch (ModelException x) {
 		}
@@ -1365,8 +1400,9 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 				if (normalized != null) {
 					Position position = element instanceof IMember ? createMemberPosition(normalized, (IMember) element)
 							: createCommentPosition(normalized);
-					if (position != null)
+					if (position != null) {
 						ctx.addProjectionRange(new PHPProjectionAnnotation(collapse, element, false), position);
+					}
 				}
 			}
 		}
@@ -1392,8 +1428,9 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 			FoldingStructureComputationContext ctx) {
 		try {
 			ISourceRange range = reference.getSourceRange();
-			if (!SourceRange.isAvailable(range))
+			if (!SourceRange.isAvailable(range)) {
 				return new IRegion[0];
+			}
 			List<IRegion> regions = new ArrayList<>();
 			if (!ctx.isHeaderChecked() && reference instanceof IModelElement) {
 				ctx.setFirstElement((IModelElement) reference);
@@ -1568,8 +1605,9 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	 *         small to be foldable (e.g. covers only one line)
 	 */
 	protected final IRegion alignRegion(IRegion region, FoldingStructureComputationContext ctx) {
-		if (region == null)
+		if (region == null) {
 			return null;
+		}
 
 		IDocument document = ctx.getDocument();
 
@@ -1578,15 +1616,17 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 			int start = document.getLineOfOffset(region.getOffset());
 			int end = document
 					.getLineOfOffset(Math.min(region.getOffset() + region.getLength() - 1, document.getLength()));
-			if (start >= end)
+			if (start >= end) {
 				return null;
+			}
 
 			int offset = document.getLineOffset(start);
 			int endOffset;
-			if (document.getNumberOfLines() > end + 1)
+			if (document.getNumberOfLines() > end + 1) {
 				endOffset = document.getLineOffset(end + 1);
-			else
+			} else {
 				endOffset = document.getLineOffset(end) + document.getLineLength(end);
+			}
 
 			return new Region(offset, endOffset - offset);
 
@@ -1602,12 +1642,14 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 
 	private IDocument getDocument() {
 		PHPStructuredEditor editor = fEditor;
-		if (editor == null)
+		if (editor == null) {
 			return null;
+		}
 
 		IDocumentProvider provider = editor.getDocumentProvider();
-		if (provider == null)
+		if (provider == null) {
 			return null;
+		}
 
 		return provider.getDocument(editor.getEditorInput());
 	}
@@ -1630,8 +1672,9 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	 */
 	private void match(List<PHPProjectionAnnotation> deletions, Map<PHPProjectionAnnotation, Position> additions,
 			List<PHPProjectionAnnotation> changes, FoldingStructureComputationContext ctx) {
-		if (deletions.isEmpty() || (additions.isEmpty() && changes.isEmpty()))
+		if (deletions.isEmpty() || (additions.isEmpty() && changes.isEmpty())) {
 			return;
+		}
 
 		List<PHPProjectionAnnotation> newDeletions = new ArrayList<>();
 		List<PHPProjectionAnnotation> newChanges = new ArrayList<>();
@@ -1640,8 +1683,9 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		while (deletionIterator.hasNext()) {
 			PHPProjectionAnnotation deleted = deletionIterator.next();
 			Position deletedPosition = ctx.getModel().getPosition(deleted);
-			if (deletedPosition == null)
+			if (deletedPosition == null) {
 				continue;
+			}
 
 			Tuple deletedTuple = new Tuple(deleted, deletedPosition);
 
@@ -1664,8 +1708,9 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 				deletionIterator.remove();
 				newChanges.add(deleted);
 
-				if (addToDeletions)
+				if (addToDeletions) {
 					newDeletions.add(match.annotation);
+				}
 			}
 		}
 
@@ -1707,8 +1752,9 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 			if (tuple.annotation.isComment() == annotation.isComment()) {
 				Position position = positionMap == null ? ctx.getModel().getPosition(annotation)
 						: positionMap.get(annotation);
-				if (position == null)
+				if (position == null) {
 					continue;
+				}
 
 				if (tuple.position.getOffset() == position.getOffset()) {
 					it.remove();
@@ -1804,12 +1850,14 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	 *            <code>false</code> to collapse them
 	 */
 	private void modifyFiltered(Filter filter, boolean expand) {
-		if (!isInstalled())
+		if (!isInstalled()) {
 			return;
+		}
 
 		ProjectionAnnotationModel model = getModel();
-		if (model == null)
+		if (model == null) {
 			return;
+		}
 
 		List<PHPProjectionAnnotation> modified = new ArrayList<>();
 		Iterator<?> iter = model.getAnnotationIterator();
@@ -1819,10 +1867,11 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 				PHPProjectionAnnotation java = (PHPProjectionAnnotation) annotation;
 
 				if (expand == java.isCollapsed() && filter.match(java)) {
-					if (expand)
+					if (expand) {
 						java.markExpanded();
-					else
+					} else {
 						java.markCollapsed();
+					}
 					modified.add(java);
 				}
 

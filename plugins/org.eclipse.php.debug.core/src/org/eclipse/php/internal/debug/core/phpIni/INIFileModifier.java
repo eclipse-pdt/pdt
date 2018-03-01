@@ -419,8 +419,9 @@ public class INIFileModifier {
 			Matcher m = NAME_VAL_PATTERN.matcher(section.lines.get(i));
 			if (m.matches()) {
 				String entryName = m.group(1);
-				if (entryName.equals(name))
+				if (entryName.equals(name)) {
 					return true;
+				}
 			}
 		}
 		return false;

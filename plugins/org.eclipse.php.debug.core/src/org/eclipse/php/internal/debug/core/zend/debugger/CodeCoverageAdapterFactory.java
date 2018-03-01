@@ -29,8 +29,9 @@ public class CodeCoverageAdapterFactory implements IAdapterFactory {
 	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Object getAdapter(final Object adaptableObject, final Class adapterType) {
-		if (adaptableObject.getClass() == adapterType)
+		if (adaptableObject.getClass() == adapterType) {
 			return adaptableObject;
+		}
 		if (adapterType == ISourceModule.class) {
 			if (adaptableObject instanceof CodeCoverageData) {
 				final CodeCoverageData codeCoverageData = (CodeCoverageData) adaptableObject;

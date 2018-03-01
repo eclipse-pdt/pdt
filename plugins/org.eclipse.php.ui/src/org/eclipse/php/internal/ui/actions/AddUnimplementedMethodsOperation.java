@@ -105,8 +105,9 @@ public final class AddUnimplementedMethodsOperation implements IWorkspaceRunnabl
 
 	@Override
 	public final void run(IProgressMonitor monitor) throws CoreException {
-		if (monitor == null)
+		if (monitor == null) {
 			monitor = new NullProgressMonitor();
+		}
 		try {
 			monitor.beginTask("", 2); //$NON-NLS-1$
 			monitor.setTaskName("AddUnimplementedMethodsOperation_description"); //$NON-NLS-1$

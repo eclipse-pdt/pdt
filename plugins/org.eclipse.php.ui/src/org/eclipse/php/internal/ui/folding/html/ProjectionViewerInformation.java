@@ -62,9 +62,10 @@ class ProjectionViewerInformation {
 			// listeners have been notified
 			IDocument document = event.getDocument();
 			if (document instanceof IDocumentExtension && fInfo.getDocument() == document) {
-				if (fInfo.hasChangesQueued())
+				if (fInfo.hasChangesQueued()) {
 					((IDocumentExtension) document).registerPostNotificationReplace(this,
 							new PostDocumentChangedListener(fInfo));
+				}
 			}
 		}
 	}

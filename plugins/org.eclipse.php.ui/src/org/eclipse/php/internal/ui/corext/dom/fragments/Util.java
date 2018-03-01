@@ -44,33 +44,38 @@ class Util {
 
 	static boolean rangeIncludesNonWhitespaceOutsideRange(ISourceRange selection, ISourceRange nodes,
 			IDocument document) throws BadLocationException {
-		if (!covers(selection, nodes))
+		if (!covers(selection, nodes)) {
 			return false;
+		}
 
 		// TODO: skip leading comments. Consider that leading line comment must
 		// be followed by newline!
 
 		// check the start of the nodes and the selection
-		if (!isJustWhitespace(selection.getOffset(), nodes.getOffset(), document))
+		if (!isJustWhitespace(selection.getOffset(), nodes.getOffset(), document)) {
 			return true;
+		}
 
 		// check the end of the nodes and the selection
 		if (!isJustWhitespaceOrComment(nodes.getOffset() + nodes.getLength(),
-				selection.getOffset() + selection.getLength(), document))
+				selection.getOffset() + selection.getLength(), document)) {
 			return true;
+		}
 		return false;
 	}
 
 	private static boolean isJustWhitespace(int start, int end, IDocument buffer) throws BadLocationException {
-		if (start == end)
+		if (start == end) {
 			return true;
+		}
 		Assert.isTrue(start <= end);
 		return 0 == buffer.get(start, end - start).trim().length();
 	}
 
 	private static boolean isJustWhitespaceOrComment(int start, int end, IDocument document) {
-		if (start == end)
+		if (start == end) {
 			return true;
+		}
 		Assert.isTrue(start <= end);
 
 		// gets the new text from the document

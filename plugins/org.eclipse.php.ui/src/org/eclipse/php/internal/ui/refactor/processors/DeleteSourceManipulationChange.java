@@ -63,8 +63,9 @@ public class DeleteSourceManipulationChange extends AbstractDeleteChange {
 
 	private String getElementName() {
 		IModelElement modelElement = getScriptElement(getSourceModification());
-		if (ModelElementUtil.isDefaultPackage(modelElement))
+		if (ModelElementUtil.isDefaultPackage(modelElement)) {
 			return RefactoringCoreMessages.DeleteSourceManipulationChange_1;
+		}
 		return modelElement.getElementName();
 	}
 

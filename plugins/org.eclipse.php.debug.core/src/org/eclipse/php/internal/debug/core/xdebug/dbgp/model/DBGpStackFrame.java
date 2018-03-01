@@ -61,13 +61,16 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 		 * @return merged variable
 		 */
 		private IVariable merge(IVariable variable) {
-			if (previousVariables == null)
+			if (previousVariables == null) {
 				return variable;
-			if (!(variable instanceof DBGpVariable))
+			}
+			if (!(variable instanceof DBGpVariable)) {
 				return variable;
+			}
 			DBGpVariable incoming = (DBGpVariable) variable;
-			if (incoming.getFullName().isEmpty())
+			if (incoming.getFullName().isEmpty()) {
 				return incoming;
+			}
 			IVariable stored = previousVariables.get(incoming.getFullName());
 			if (stored != null) {
 				((DBGpVariable) stored).update(incoming.getDescriptor());
