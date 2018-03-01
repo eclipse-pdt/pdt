@@ -51,6 +51,8 @@ public class Messages extends NLS {
 	public static String SuperInterfaceMustBeAnInterface;
 	public static String CannotUseTypeAsTrait;
 	public static String NestedNamespaceDeclarations;
+	public static String InvalidConstantExpression;
+	public static String DynamicClassNotAllowed;
 
 	static {
 		// initialize resource bundle
