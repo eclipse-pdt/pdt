@@ -104,26 +104,31 @@ public class OpenEditorActionGroup extends ActionGroup {
 	}
 
 	private void appendToGroup(IMenuManager menu, IAction action) {
-		if (action.isEnabled())
+		if (action.isEnabled()) {
 			menu.appendToGroup(IContextMenuConstants.GROUP_OPEN, action);
+		}
 	}
 
 	private void addOpenWithMenu(IMenuManager menu) {
 		ISelection selection = getContext().getSelection();
-		if (selection.isEmpty() || !(selection instanceof IStructuredSelection))
+		if (selection.isEmpty() || !(selection instanceof IStructuredSelection)) {
 			return;
+		}
 		IStructuredSelection ss = (IStructuredSelection) selection;
-		if (ss.size() != 1)
+		if (ss.size() != 1) {
 			return;
+		}
 
 		Object o = ss.getFirstElement();
-		if (!(o instanceof IAdaptable))
+		if (!(o instanceof IAdaptable)) {
 			return;
+		}
 
 		IAdaptable element = (IAdaptable) o;
 		Object resource = element.getAdapter(IResource.class);
-		if (!(resource instanceof IFile))
+		if (!(resource instanceof IFile)) {
 			return;
+		}
 
 		// Create a menu.
 		IMenuManager submenu = new MenuManager(PHPUIMessages.OpenWithMenu_label);

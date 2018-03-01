@@ -31,8 +31,9 @@ public class PHPElementProvider implements IInformationProvider, IInformationPro
 	private PHPStructuredEditor fEditor;
 
 	public PHPElementProvider(IEditorPart editor) {
-		if (editor instanceof PHPStructuredEditor)
+		if (editor instanceof PHPStructuredEditor) {
 			fEditor = (PHPStructuredEditor) editor;
+		}
 	}
 
 	/*
@@ -42,10 +43,11 @@ public class PHPElementProvider implements IInformationProvider, IInformationPro
 	public IRegion getSubject(ITextViewer textViewer, int offset) {
 		if (textViewer != null && fEditor != null) {
 			IRegion region = ScriptWordFinder.findWord(textViewer.getDocument(), offset);
-			if (region != null)
+			if (region != null) {
 				return region;
-			else
+			} else {
 				return new Region(offset, 0);
+			}
 		}
 		return null;
 	}

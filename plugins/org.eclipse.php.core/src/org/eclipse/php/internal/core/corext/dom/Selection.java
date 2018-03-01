@@ -109,24 +109,26 @@ public class Selection {
 	public int getVisitSelectionMode(ASTNode node) {
 		int nodeStart = node.getStart();
 		int nodeEnd = nodeStart + node.getLength();
-		if (nodeEnd <= fStart)
+		if (nodeEnd <= fStart) {
 			return BEFORE;
-		else if (covers(node))
+		} else if (covers(node)) {
 			return SELECTED;
-		else if (fExclusiveEnd <= nodeStart)
+		} else if (fExclusiveEnd <= nodeStart) {
 			return AFTER;
+		}
 		return INTERSECTS;
 	}
 
 	public int getEndVisitSelectionMode(ASTNode node) {
 		int nodeStart = node.getStart();
 		int nodeEnd = nodeStart + node.getLength();
-		if (nodeEnd <= fStart)
+		if (nodeEnd <= fStart) {
 			return BEFORE;
-		else if (covers(node))
+		} else if (covers(node)) {
 			return SELECTED;
-		else if (nodeEnd >= fExclusiveEnd)
+		} else if (nodeEnd >= fExclusiveEnd) {
 			return AFTER;
+		}
 		return INTERSECTS;
 	}
 

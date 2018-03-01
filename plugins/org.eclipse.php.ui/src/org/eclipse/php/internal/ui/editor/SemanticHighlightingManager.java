@@ -106,8 +106,9 @@ public class SemanticHighlightingManager {
 	 */
 	private static void setDefaultAndFireEvent(IPreferenceStore store, String key, RGB newValue) {
 		RGB oldValue = null;
-		if (store.isDefault(key))
+		if (store.isDefault(key)) {
 			oldValue = PreferenceConverter.getDefaultColor(store, key);
+		}
 
 		PreferenceConverter.setDefault(store, key, newValue);
 		store.setDefault(key, ColorHelper.toRGBString(newValue));

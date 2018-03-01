@@ -97,8 +97,9 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 					|| HTML40Namespace.ElementName.TABLE.equalsIgnoreCase(tagName)
 					|| HTML40Namespace.ElementName.UL.equalsIgnoreCase(tagName)
 					|| HTML40Namespace.ElementName.OL.equalsIgnoreCase(tagName)
-					|| HTML40Namespace.ElementName.DIV.equalsIgnoreCase(tagName))
+					|| HTML40Namespace.ElementName.DIV.equalsIgnoreCase(tagName)) {
 				return true;
+			}
 		}
 		return false;
 	}

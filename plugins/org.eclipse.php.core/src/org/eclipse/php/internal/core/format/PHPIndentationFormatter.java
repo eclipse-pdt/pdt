@@ -243,8 +243,9 @@ public class PHPIndentationFormatter {
 		}
 
 		// if line is empty then the indexes were switched
-		if (leftNonWhitespaceChar > rightNonWhitespaceChar)
+		if (leftNonWhitespaceChar > rightNonWhitespaceChar) {
 			return new SimpleStructuredRegion(lineInfo.getOffset(), 0);
+		}
 
 		// if there are no changes - return the original line information, else
 		// build a fixed region

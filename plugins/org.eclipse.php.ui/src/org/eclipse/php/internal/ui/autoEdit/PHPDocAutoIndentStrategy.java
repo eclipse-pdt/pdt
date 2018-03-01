@@ -86,8 +86,9 @@ public class PHPDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	private void indentAfterNewLine(IDocument d, DocumentCommand c) {
 
 		int offset = c.offset;
-		if (offset == -1 || d.getLength() == 0)
+		if (offset == -1 || d.getLength() == 0) {
 			return;
+		}
 
 		try {
 			int p = (offset == d.getLength() ? offset - 1 : offset);
@@ -146,8 +147,9 @@ public class PHPDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 									buf.append(restOfLine);
 									// only add tags if they are non-empty - the
 									// empty line has already been added above.
-									if (commentBlockBody != null && !commentBlockBody.trim().equals("*")) //$NON-NLS-1$
+									if (commentBlockBody != null && !commentBlockBody.trim().equals("*")) {
 										buf.append(commentBlockBody);
+									}
 								} catch (CoreException e) {
 									Logger.logException(e);
 								}
@@ -164,8 +166,9 @@ public class PHPDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 
 			// move the caret behind the prefix, even if we do not have to
 			// insert it.
-			if (lengthToAdd < prefix.getLength())
+			if (lengthToAdd < prefix.getLength()) {
 				c.caretOffset = offset + prefix.getLength() - lengthToAdd;
+			}
 			c.text = buf.toString();
 
 		} catch (BadLocationException excp) {
@@ -207,8 +210,9 @@ public class PHPDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 		int indentEnd = findEndOfWhiteSpace(document, lineOffset, lineEnd);
 		if (indentEnd < lineEnd && document.getChar(indentEnd) == '*') {
 			indentEnd++;
-			while (indentEnd < lineEnd && document.getChar(indentEnd) == ' ')
+			while (indentEnd < lineEnd && document.getChar(indentEnd) == ' ') {
 				indentEnd++;
+			}
 		}
 		return new Region(lineOffset, indentEnd - lineOffset);
 	}
@@ -358,8 +362,9 @@ public class PHPDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	private String prepareTemplateComment(String comment, String indentation, IScriptProject project,
 			String lineDelimiter) {
 		// trim comment start and end if any
-		if (comment.endsWith("*/")) //$NON-NLS-1$
+		if (comment.endsWith("*/")) {
 			comment = comment.substring(0, comment.length() - 2);
+		}
 		comment = comment.trim();
 		if (comment.startsWith("/*")) { //$NON-NLS-1$
 			if (comment.length() > 2 && comment.charAt(2) == '*') {
@@ -371,8 +376,9 @@ public class PHPDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 		// trim leading spaces, but not new lines
 		int nonSpace = 0;
 		int len = comment.length();
-		while (nonSpace < len && Character.getType(comment.charAt(nonSpace)) == Character.SPACE_SEPARATOR)
+		while (nonSpace < len && Character.getType(comment.charAt(nonSpace)) == Character.SPACE_SEPARATOR) {
 			nonSpace++;
+		}
 		comment = comment.substring(nonSpace);
 
 		return comment;
@@ -505,23 +511,29 @@ public class PHPDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 
 		try {
 			int lineIndex = document.getLineOfOffset(commandOffset) + 1;
-			if (lineIndex >= document.getNumberOfLines())
+			if (lineIndex >= document.getNumberOfLines()) {
 				return true;
+			}
 
 			IRegion line = document.getLineInformation(lineIndex);
 			ITypedRegion partition = TextUtilities.getPartition(document, fPartitioning, commandOffset, false);
 			int partitionEnd = partition.getOffset() + partition.getLength();
-			if (line.getOffset() >= partitionEnd)
+			if (line.getOffset() >= partitionEnd) {
 				return false;
+			}
 
 			if (document.getLength() == partitionEnd)
+			 {
 				return true; // partition goes to end of document - probably a
 								// new comment
+			}
 
 			String comment = document.get(partition.getOffset(), partition.getLength());
-			if (comment.indexOf("/*", 2) != -1) //$NON-NLS-1$
+			if (comment.indexOf("/*", 2) != -1)
+			 {
 				return true; // enclosed another comment -> probably a new
 								// comment
+			}
 
 			return false;
 
@@ -548,8 +560,9 @@ public class PHPDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	@Override
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
 
-		if (!isSmartMode())
+		if (!isSmartMode()) {
 			return;
+		}
 
 		if (command.text != null) {
 			if (command.length == 0) {
@@ -665,21 +678,25 @@ public class PHPDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	private static ISourceModule getCompilationUnit() {
 
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		if (window == null)
+		if (window == null) {
 			return null;
+		}
 
 		IWorkbenchPage page = window.getActivePage();
-		if (page == null)
+		if (page == null) {
 			return null;
+		}
 
 		IEditorPart editor = page.getActiveEditor();
-		if (editor == null)
+		if (editor == null) {
 			return null;
+		}
 
 		IWorkingCopyManager manager = PHPUiPlugin.getWorkingCopyManager();
 		ISourceModule unit = manager.getWorkingCopy(editor.getEditorInput());
-		if (unit == null)
+		if (unit == null) {
 			return null;
+		}
 
 		return unit;
 	}

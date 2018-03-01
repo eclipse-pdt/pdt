@@ -171,10 +171,12 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 
 		IEclipsePreferences prefs = InstanceScope.INSTANCE.getNode(PHPCorePlugin.ID);
 		boolean fileArgumentNames = prefs.getBoolean(PHPCoreConstants.CODEASSIST_FILL_ARGUMENT_NAMES, true);
-		if (fileArgumentNames && !fReplacementStringComputed)
+		if (fileArgumentNames && !fReplacementStringComputed) {
 			setReplacementString(computeReplacementString(prefix));
-		if (!fileArgumentNames)
+		}
+		if (!fileArgumentNames) {
 			setReplacementString(prefix + super.getReplacementString());
+		}
 	}
 
 	private boolean shouldHaveGlobalNamespace() {
@@ -304,8 +306,9 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 	 */
 	@Override
 	public final int getReplacementLength() {
-		if (!fReplacementLengthComputed)
+		if (!fReplacementLengthComputed) {
 			setReplacementLength(fProposal.getReplaceEnd() - fProposal.getReplaceStart());
+		}
 		return super.getReplacementLength();
 	}
 
@@ -383,8 +386,9 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 	 *         an import and comprises the parameter list
 	 */
 	protected boolean hasArgumentList() {
-		if (CompletionProposal.METHOD_NAME_REFERENCE == fProposal.getKind())
+		if (CompletionProposal.METHOD_NAME_REFERENCE == fProposal.getKind()) {
 			return false;
+		}
 		String completion = fProposal.getCompletion();
 		return !isInDoc() && completion.length() > 0;
 	}
@@ -553,8 +557,9 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 	 */
 	@Override
 	public Point getSelection(IDocument document) {
-		if (fSelectedRegion == null)
+		if (fSelectedRegion == null) {
 			return new Point(getReplacementOffset(), 0);
+		}
 
 		return new Point(fSelectedRegion.getOffset(), fSelectedRegion.getLength());
 	}

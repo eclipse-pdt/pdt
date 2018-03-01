@@ -64,7 +64,9 @@ public class UseAsSourceFolderAction extends Action {
 	 */
 	public UseAsSourceFolderAction(IWorkbenchSite site, IFolder[] folders) {
 		if (folders.length == 0)
+		 {
 			throw new IllegalArgumentException("empty folders array"); //$NON-NLS-1$
+		}
 
 		fSite = site;
 		fFolders = folders;
@@ -102,9 +104,10 @@ public class UseAsSourceFolderAction extends Action {
 			String message = NLS.bind(Messages.LibraryFolderAction_Dialog_description,
 					StringUtils.join(getSortedPaths(folders), ",\n\t")); //$NON-NLS-1$
 
-			if (!MessageDialog.openConfirm(fSite.getShell(), title, message))
+			if (!MessageDialog.openConfirm(fSite.getShell(), title, message)) {
 				// the user clicked the Cancel button - abort the action
 				return;
+			}
 		}
 
 		// execute the action in a WorkspaceModifyOperation to batch the

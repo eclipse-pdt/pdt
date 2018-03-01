@@ -85,8 +85,9 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 	public OccurrenceLocation[] getOccurrences() {
 		fResult = new ArrayList<>();
 		findOccurrences();
-		if (fResult.isEmpty())
+		if (fResult.isEmpty()) {
 			return null;
+		}
 
 		return fResult.toArray(new OccurrenceLocation[fResult.size()]);
 	}

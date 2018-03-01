@@ -379,14 +379,16 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 
 		@Override
 		public void settingsAdded(IDebuggerSettings settings) {
-			if (getDebuggerID().equals(settings.getDebuggerId()))
+			if (getDebuggerID().equals(settings.getDebuggerId())) {
 				reset();
+			}
 		}
 
 		@Override
 		public void settingsRemoved(IDebuggerSettings settings) {
-			if (getDebuggerID().equals(settings.getDebuggerId()))
+			if (getDebuggerID().equals(settings.getDebuggerId())) {
 				reset();
+			}
 		}
 
 		@Override
@@ -410,31 +412,37 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 
 	@Override
 	public boolean isListening(int port) {
-		for (ICommunicationDaemon daemon : daemons)
-			if (daemon.isListening(port))
+		for (ICommunicationDaemon daemon : daemons) {
+			if (daemon.isListening(port)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
 	@Override
 	public void startListen() {
-		for (ICommunicationDaemon daemon : daemons)
+		for (ICommunicationDaemon daemon : daemons) {
 			daemon.startListen();
+		}
 	}
 
 	@Override
 	public void stopListen() {
 		unregisterListeners();
-		for (ICommunicationDaemon daemon : daemons)
+		for (ICommunicationDaemon daemon : daemons) {
 			daemon.stopListen();
+		}
 	}
 
 	@Override
 	public boolean resetSocket() {
 		boolean allReset = true;
-		for (ICommunicationDaemon daemon : daemons)
-			if (!daemon.resetSocket())
+		for (ICommunicationDaemon daemon : daemons) {
+			if (!daemon.resetSocket()) {
 				allReset = false;
+			}
+		}
 		return allReset;
 	}
 
@@ -460,9 +468,11 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 
 	@Override
 	public boolean isInitialized() {
-		for (ICommunicationDaemon daemon : daemons)
-			if (!daemon.isInitialized())
+		for (ICommunicationDaemon daemon : daemons) {
+			if (!daemon.isInitialized()) {
 				return false;
+			}
+		}
 		return true;
 	}
 

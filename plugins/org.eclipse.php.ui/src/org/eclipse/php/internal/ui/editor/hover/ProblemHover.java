@@ -56,12 +56,14 @@ public class ProblemHover extends AbstractAnnotationHover implements IPHPTextHov
 		public ICompletionProposal[] getCompletionProposals() {
 			if (annotation instanceof IScriptAnnotation) {
 				ICompletionProposal[] result = getScriptAnnotationFixes((IScriptAnnotation) annotation);
-				if (result.length > 0)
+				if (result.length > 0) {
 					return result;
+				}
 			}
 
-			if (annotation instanceof MarkerAnnotation)
+			if (annotation instanceof MarkerAnnotation) {
 				return getMarkerAnnotationFixes((MarkerAnnotation) annotation);
+			}
 
 			return NO_PROPOSALS;
 		}
@@ -70,12 +72,14 @@ public class ProblemHover extends AbstractAnnotationHover implements IPHPTextHov
 			ProblemLocation location = new ProblemLocation(position.getOffset(), position.getLength(),
 					scriptAnnotation);
 			ISourceModule cu = scriptAnnotation.getSourceModule();
-			if (cu == null)
+			if (cu == null) {
 				return NO_PROPOSALS;
+			}
 
 			ISourceViewer sourceViewer = null;
-			if (viewer instanceof ISourceViewer)
+			if (viewer instanceof ISourceViewer) {
 				sourceViewer = (ISourceViewer) viewer;
+			}
 
 			IInvocationContext context = new AssistContext(cu, sourceViewer, location.getOffset(), location.getLength(),
 					SharedASTProvider.WAIT_ACTIVE_ONLY);
@@ -88,26 +92,31 @@ public class ProblemHover extends AbstractAnnotationHover implements IPHPTextHov
 		}
 
 		private ICompletionProposal[] getMarkerAnnotationFixes(MarkerAnnotation markerAnnotation) {
-			if (markerAnnotation.isQuickFixableStateSet() && !markerAnnotation.isQuickFixable())
+			if (markerAnnotation.isQuickFixableStateSet() && !markerAnnotation.isQuickFixable()) {
 				return NO_PROPOSALS;
+			}
 
 			IMarker marker = markerAnnotation.getMarker();
 
 			ISourceModule cu = getSourceModule(marker);
-			if (cu == null)
+			if (cu == null) {
 				return NO_PROPOSALS;
+			}
 
 			IEditorInput input = EditorUtility.getEditorInput(cu);
-			if (input == null)
+			if (input == null) {
 				return NO_PROPOSALS;
+			}
 
 			IAnnotationModel model = DLTKUIPlugin.getDocumentProvider().getAnnotationModel(input);
-			if (model == null)
+			if (model == null) {
 				return NO_PROPOSALS;
+			}
 
 			ISourceViewer sourceViewer = null;
-			if (viewer instanceof ISourceViewer)
+			if (viewer instanceof ISourceViewer) {
 				sourceViewer = (ISourceViewer) viewer;
+			}
 
 			AssistContext context = new AssistContext(cu, sourceViewer, position.getOffset(), position.getLength());
 
@@ -122,8 +131,9 @@ public class ProblemHover extends AbstractAnnotationHover implements IPHPTextHov
 			IResource res = marker.getResource();
 			if (res instanceof IFile && res.isAccessible()) {
 				IModelElement element = DLTKCore.create((IFile) res);
-				if (element instanceof ISourceModule)
+				if (element instanceof ISourceModule) {
 					return (ISourceModule) element;
+				}
 			}
 			return null;
 		}

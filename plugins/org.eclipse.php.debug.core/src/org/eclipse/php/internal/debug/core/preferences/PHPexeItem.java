@@ -351,19 +351,23 @@ public class PHPexeItem implements IUniqueIdentityElement, IPHPexeItemProperties
 		PHPExeInfo phpInfo;
 		try {
 			phpInfo = PHPExeUtil.getPHPInfo(getExecutable(), false);
-			if (phpInfo == null)
+			if (phpInfo == null) {
 				return;
+			}
 		} catch (PHPExeException e) {
 			Logger.logException("Could not obtain PHP executable info.", //$NON-NLS-1$
 					e);
 			return;
 		}
-		if (getName() == null)
+		if (getName() == null) {
 			setName(phpInfo.getName());
-		if (getSapiType() == null)
+		}
+		if (getSapiType() == null) {
 			setSapiType(phpInfo.getSapiType());
-		if (getVersion() == null)
+		}
+		if (getVersion() == null) {
 			setVersion(phpInfo.getVersion());
+		}
 	}
 
 	private void setProperty(String key, Object newValue) {

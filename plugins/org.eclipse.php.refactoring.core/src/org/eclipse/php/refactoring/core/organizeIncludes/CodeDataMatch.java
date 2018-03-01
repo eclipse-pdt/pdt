@@ -46,17 +46,22 @@ public class CodeDataMatch {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o == null)
+		if (o == null) {
 			return false;
-		if (o == this)
+		}
+		if (o == this) {
 			return true;
-		if (!(o instanceof CodeDataMatch))
+		}
+		if (!(o instanceof CodeDataMatch)) {
 			return false;
+		}
 		CodeDataMatch codeDataMatch = (CodeDataMatch) o;
-		if (codeDataMatch.elementName != elementName)
+		if (codeDataMatch.elementName != elementName) {
 			return false;
-		if (codeDataMatch.elementType != elementType)
+		}
+		if (codeDataMatch.elementType != elementType) {
 			return false;
+		}
 		return true;
 	}
 }

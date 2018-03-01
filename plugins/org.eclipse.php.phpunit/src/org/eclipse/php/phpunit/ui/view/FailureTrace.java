@@ -74,8 +74,9 @@ public class FailureTrace implements IMenuListener {
 	}
 
 	private void disposeIcons() {
-		if (fStackIcon != null && !fStackIcon.isDisposed())
+		if (fStackIcon != null && !fStackIcon.isDisposed()) {
 			fStackIcon.dispose();
+		}
 	}
 
 	void handleDefaultSelected() {
@@ -122,12 +123,14 @@ public class FailureTrace implements IMenuListener {
 
 			String methodName = null;
 
-			if (test instanceof PHPUnitTraceFrame)
+			if (test instanceof PHPUnitTraceFrame) {
 				methodName = ((PHPUnitTraceFrame) test).getFunction();
+			}
 
-			if (test instanceof PHPUnitTestException)
+			if (test instanceof PHPUnitTestException) {
 				manager.add(new OpenTestAction(OpenEditorAction.GOTO_CLASS, fTestRunner,
 						((PHPUnitTestException) test).getExceptionClass(), fileName, lineNumber));
+			}
 
 			if (test instanceof PHPUnitTraceFrame) {
 				final PHPUnitTraceFrame frame = (PHPUnitTraceFrame) test;
@@ -136,9 +139,10 @@ public class FailureTrace implements IMenuListener {
 					manager.add(new OpenTestAction(OpenEditorAction.GOTO_CLASS, fTestRunner, className, null, 0, null));
 					manager.add(new OpenTestAction(OpenEditorAction.GOTO_METHOD, fTestRunner, className, null, 0,
 							methodName));
-				} else
+				} else {
 					manager.add(
 							new OpenTestAction(OpenEditorAction.GOTO_FUNCTION, fTestRunner, null, null, 0, methodName));
+				}
 			}
 
 		}

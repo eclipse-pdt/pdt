@@ -29,8 +29,9 @@ public class NonRelevantFilter extends ViewerFilter {
 
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		if (fShowNonRelevant)
+		if (fShowNonRelevant) {
 			return true;
+		}
 		
 		if (element instanceof Binding) {
 			return ((Binding) element).isRelevant();

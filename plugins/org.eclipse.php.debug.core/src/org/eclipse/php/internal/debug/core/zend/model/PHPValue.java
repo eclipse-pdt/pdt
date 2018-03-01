@@ -73,13 +73,16 @@ public class PHPValue extends PHPDebugElement implements IValue, IPHPDataType {
 		 * @return merged variable
 		 */
 		private IVariable merge(IVariable variable) {
-			if (fAllPreviousVariables == null)
+			if (fAllPreviousVariables == null) {
 				return variable;
-			if (!(variable instanceof PHPVariable))
+			}
+			if (!(variable instanceof PHPVariable)) {
 				return variable;
+			}
 			PHPVariable incoming = (PHPVariable) variable;
-			if (incoming.getFullName().isEmpty())
+			if (incoming.getFullName().isEmpty()) {
 				return incoming;
+			}
 			IVariable stored = fAllPreviousVariables.get(incoming.getFullName());
 			if (stored != null) {
 				((PHPVariable) stored).update(incoming.getExpression());

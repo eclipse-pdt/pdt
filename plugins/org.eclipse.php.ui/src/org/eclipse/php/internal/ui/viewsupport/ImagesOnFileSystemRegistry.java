@@ -80,18 +80,21 @@ public class ImagesOnFileSystemRegistry {
 	public URL getImageURL(IModelElement element) {
 		ImageDescriptor descriptor = fLabelProvider.getImageDescriptor(element,
 				ScriptElementImageProvider.OVERLAY_ICONS | ScriptElementImageProvider.SMALL_ICONS);
-		if (descriptor == null)
+		if (descriptor == null) {
 			return null;
+		}
 		return getImageURL(descriptor);
 	}
 
 	public URL getImageURL(ImageDescriptor descriptor) {
-		if (fTempDir == null)
+		if (fTempDir == null) {
 			return null;
+		}
 
 		URL url = fURLMap.get(descriptor);
-		if (url != null)
+		if (url != null) {
 			return url;
+		}
 
 		File imageFile = getNewFile();
 		ImageData imageData = descriptor.getImageData();

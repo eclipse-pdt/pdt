@@ -165,9 +165,9 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		final IContributionItem sortItem = new ActionContributionItem(sortAction);
 
 		items = super.createToolbarContributions(viewer);
-		if (items == null)
+		if (items == null) {
 			items = new IContributionItem[] { sortItem /* , showGroupsItem */ };
-		else {
+		} else {
 			final IContributionItem[] combinedItems = new IContributionItem[items.length + 2];
 			System.arraycopy(items, 0, combinedItems, 0, items.length);
 			combinedItems[items.length] = sortItem;
@@ -294,11 +294,12 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 						if (computedSourceReference != null) {
 							Object parent = ((PHPOutlineContentProvider) contentProvider)
 									.getParent(computedSourceReference);
-							for (Object element : ((PHPOutlineContentProvider) contentProvider).getChildren(parent))
+							for (Object element : ((PHPOutlineContentProvider) contentProvider).getChildren(parent)) {
 								if (element == computedSourceReference) {
 									lastSelection = new StructuredSelection(computedSourceReference);
 									return lastSelection;
 								}
+							}
 							lastSelection = new StructuredSelection(parent);
 							return lastSelection;
 						}

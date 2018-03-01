@@ -54,8 +54,9 @@ public class PHPServerHelper {
 		} catch (Exception e) {
 			Trace.trace(Trace.WARNING, "Could not load file contents.", e); //$NON-NLS-1$
 		} finally {
-			if (br != null)
+			if (br != null) {
 				br.close();
+			}
 		}
 		return sb.toString();
 	}
@@ -99,11 +100,14 @@ public class PHPServerHelper {
 	 */
 	public static IStatus createDeploymentDirectory(IPath deployDir) {
 		if (Trace.isTraceEnabled())
+		 {
 			Trace.trace(Trace.FINER, "Creating deployment directory at " + deployDir.toOSString()); //$NON-NLS-1$
+		}
 
 		File temp = deployDir.toFile();
-		if (!temp.exists())
+		if (!temp.exists()) {
 			temp.mkdirs();
+		}
 
 		return Status.OK_STATUS;
 	}

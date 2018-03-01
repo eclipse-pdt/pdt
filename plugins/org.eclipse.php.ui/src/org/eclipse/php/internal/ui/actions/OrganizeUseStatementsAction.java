@@ -73,8 +73,9 @@ public class OrganizeUseStatementsAction extends SelectionDispatchAction {
 
 		@Override
 		public void selectionChanged(IAction action, ISelection selection) {
-			if (fAction == null)
+			if (fAction == null) {
 				action.setEnabled(false);
+			}
 		}
 	}
 
@@ -82,16 +83,18 @@ public class OrganizeUseStatementsAction extends SelectionDispatchAction {
 
 		@Override
 		public int compare(String o1, String o2) {
-			if (o1.equals(o2))
+			if (o1.equals(o2)) {
 				return 0;
+			}
 
 			History history = QualifiedTypeNameHistory.getDefault();
 
 			int pos1 = history.getPosition(o1);
 			int pos2 = history.getPosition(o2);
 
-			if (pos1 == pos2)
+			if (pos1 == pos2) {
 				return Collator.getInstance().compare(o1, o2);
+			}
 
 			if (pos1 > pos2) {
 				return -1;

@@ -550,8 +550,9 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 
 		@Override
 		public IModelElement[] getChildren() throws ModelException {
-			if (fUseStatements == null)
+			if (fUseStatements == null) {
 				fUseStatements = getUseStatements(fSourceModule);
+			}
 			return fUseStatements;
 		}
 

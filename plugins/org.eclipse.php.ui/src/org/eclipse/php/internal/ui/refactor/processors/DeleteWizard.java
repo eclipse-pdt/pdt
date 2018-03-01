@@ -88,11 +88,13 @@ public class DeleteWizard extends RefactoringWizard {
 				}
 			} catch (ModelException e) {
 				// http://bugs.eclipse.org/bugs/show_bug.cgi?id=19253
-				if (ScriptModelUtil.isExceptionToBeLogged(e))
+				if (ScriptModelUtil.isExceptionToBeLogged(e)) {
 					DLTKUIPlugin.log(e);
+				}
 				setPageComplete(false);
-				if (e.isDoesNotExist())
+				if (e.isDoesNotExist()) {
 					return RefactoringMessages.DeleteWizard_12;
+				}
 				return RefactoringMessages.DeleteWizard_2;
 			}
 		}
@@ -101,8 +103,9 @@ public class DeleteWizard extends RefactoringWizard {
 		public void createControl(Composite parent) {
 			super.createControl(parent);
 
-			if (getDeleteProcessor().hasSubPackagesToDelete())
+			if (getDeleteProcessor().hasSubPackagesToDelete()) {
 				addDeleteSubPackagesCheckBox();
+			}
 		}
 
 		/**
@@ -142,10 +145,11 @@ public class DeleteWizard extends RefactoringWizard {
 		}
 
 		private String getNameOfSingleSelectedElement() throws ModelException {
-			if (getSingleSelectedResource() != null)
+			if (getSingleSelectedResource() != null) {
 				return ReorgUtils.getName(getSingleSelectedResource());
-			else
+			} else {
 				return ReorgUtils.getName(getSingleSelectedScriptElement());
+			}
 		}
 
 		private IModelElement getSingleSelectedScriptElement() {
@@ -172,16 +176,18 @@ public class DeleteWizard extends RefactoringWizard {
 		}
 
 		protected boolean saveSettings() {
-			if (getContainer() instanceof Dialog)
+			if (getContainer() instanceof Dialog) {
 				return ((Dialog) getContainer()).getReturnCode() == IDialogConstants.OK_ID;
+			}
 			return true;
 		}
 
 		@Override
 		public void dispose() {
-			if (fDeleteSubPackagesCheckBox != null && saveSettings())
+			if (fDeleteSubPackagesCheckBox != null && saveSettings()) {
 				getRefactoringSettings().put(DIALOG_SETTINGS_DELETE_SUB_PACKAGES,
 						fDeleteSubPackagesCheckBox.getSelection());
+			}
 			super.dispose();
 		}
 
@@ -189,35 +195,41 @@ public class DeleteWizard extends RefactoringWizard {
 			IModelElement[] elements = getSelectedScriptElements();
 			if (elements.length == 1) {
 				IModelElement element = elements[0];
-				if (isDefaultPackageWithLinkedFiles(element))
+				if (isDefaultPackageWithLinkedFiles(element)) {
 					return RefactoringMessages.DeleteWizard_3;
+				}
 
-				if (!isLinkedResource(element))
+				if (!isLinkedResource(element)) {
 					return RefactoringMessages.DeleteWizard_4;
+				}
 
-				if (isLinkedPackageOrProjectFragment(element))
+				if (isLinkedPackageOrProjectFragment(element)) {
 					// XXX workaround for jcore bugs 31998 and 31456 - linked
 					// packages or source folders cannot be deleted properly
 					return RefactoringMessages.DeleteWizard_6;
+				}
 
 				return RefactoringMessages.DeleteWizard_5;
 			} else {
-				if (isLinked(getSelectedResources()[0])) // checked before that
+				if (isLinked(getSelectedResources()[0])) {
 					// this will work
 					return RefactoringMessages.DeleteWizard_7;
-				else
+				} else {
 					return RefactoringMessages.DeleteWizard_8;
+				}
 			}
 		}
 
 		private String createConfirmationStringForManyElements() throws ModelException {
 			IResource[] resources = getSelectedResources();
 			IModelElement[] modelElements = getSelectedScriptElements();
-			if (!containsLinkedResources(resources, modelElements))
+			if (!containsLinkedResources(resources, modelElements)) {
 				return RefactoringMessages.DeleteWizard_9;
+			}
 
-			if (!containsLinkedPackagesOrProjectFragments(modelElements))
+			if (!containsLinkedPackagesOrProjectFragments(modelElements)) {
 				return RefactoringMessages.DeleteWizard_10;
+			}
 
 			// XXX workaround for jcore bugs - linked packages or source folders
 			// cannot be deleted properly
@@ -225,17 +237,19 @@ public class DeleteWizard extends RefactoringWizard {
 		}
 
 		private static boolean isLinkedPackageOrProjectFragment(IModelElement element) {
-			if ((element instanceof IScriptFolder) || (element instanceof IProjectFragment))
+			if ((element instanceof IScriptFolder) || (element instanceof IProjectFragment)) {
 				return isLinkedResource(element);
-			else
+			} else {
 				return false;
+			}
 		}
 
 		private static boolean containsLinkedPackagesOrProjectFragments(IModelElement[] modelElements) {
 			for (int i = 0; i < modelElements.length; i++) {
 				IModelElement element = modelElements[i];
-				if (isLinkedPackageOrProjectFragment(element))
+				if (isLinkedPackageOrProjectFragment(element)) {
 					return true;
+				}
 			}
 			return false;
 		}
@@ -244,27 +258,32 @@ public class DeleteWizard extends RefactoringWizard {
 				throws ModelException {
 			for (int i = 0; i < modelElements.length; i++) {
 				IModelElement element = modelElements[i];
-				if (isLinkedResource(element))
+				if (isLinkedResource(element)) {
 					return true;
-				if (isDefaultPackageWithLinkedFiles(element))
+				}
+				if (isDefaultPackageWithLinkedFiles(element)) {
 					return true;
+				}
 			}
 			for (int i = 0; i < resources.length; i++) {
 				IResource resource = resources[i];
-				if (isLinked(resource))
+				if (isLinked(resource)) {
 					return true;
+				}
 			}
 			return false;
 		}
 
 		private static boolean isDefaultPackageWithLinkedFiles(Object firstElement) throws ModelException {
-			if (!ModelElementUtil.isDefaultPackage(firstElement))
+			if (!ModelElementUtil.isDefaultPackage(firstElement)) {
 				return false;
+			}
 			IScriptFolder defaultPackage = (IScriptFolder) firstElement;
 			ISourceModule[] cus = defaultPackage.getSourceModules();
 			for (int i = 0; i < cus.length; i++) {
-				if (isLinkedResource(cus[i]))
+				if (isLinkedResource(cus[i])) {
 					return true;
+				}
 			}
 			return false;
 		}

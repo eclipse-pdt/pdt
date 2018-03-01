@@ -40,8 +40,9 @@ public class RemoveUnusedUseStatementProposal extends CUCorrectionProposal {
 
 	private static String getMessage(IProblemLocation location) {
 		String message = ""; //$NON-NLS-1$
-		if (!(location.getProblemIdentifier() instanceof PHPProblemIdentifier))
+		if (!(location.getProblemIdentifier() instanceof PHPProblemIdentifier)) {
 			return message;
+		}
 		PHPProblemIdentifier id = (PHPProblemIdentifier) location.getProblemIdentifier();
 		switch (id) {
 		case UnusedImport:

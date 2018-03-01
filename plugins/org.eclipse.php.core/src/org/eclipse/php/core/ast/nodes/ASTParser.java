@@ -191,8 +191,9 @@ public class ASTParser {
 		AST ast = p.getAST();
 
 		p.setSourceModule(sourceModule);
-		if (sourceModule != null)
+		if (sourceModule != null) {
 			p.setLineEndTable(Util.lineEndTable(new Document(sourceModule.getSource())));
+		}
 
 		// now reset the ast default node flag back to differntate between
 		// original nodes

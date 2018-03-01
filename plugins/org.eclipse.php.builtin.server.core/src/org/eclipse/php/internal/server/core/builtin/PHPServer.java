@@ -71,8 +71,9 @@ public class PHPServer extends ServerDelegate implements IPHPServer, IPHPServerW
 				return new Status(IStatus.ERROR, PHPServerPlugin.PLUGIN_ID, 0, message, null);
 			}
 
-			if (!PHPProjectModule.PHP_MODULE_TYPE_ID.equals(module.getModuleType().getId()))
+			if (!PHPProjectModule.PHP_MODULE_TYPE_ID.equals(module.getModuleType().getId())) {
 				return new Status(IStatus.ERROR, PHPServerPlugin.PLUGIN_ID, 0, Messages.errorWebModulesOnly, null);
+			}
 
 			// if (module.getProject() != null) {
 			// IStatus status = FacetUtil.verifyFacets(module.getProject(),
@@ -93,8 +94,9 @@ public class PHPServer extends ServerDelegate implements IPHPServer, IPHPServerW
 	public IModule[] getRootModules(IModule module) throws CoreException {
 		if ("php.web".equals(module.getModuleType().getId())) { //$NON-NLS-1$
 			IStatus status = canModifyModules(new IModule[] { module }, null);
-			if (status == null || !status.isOK())
+			if (status == null || !status.isOK()) {
 				throw new CoreException(status);
+			}
 			return new IModule[] { module };
 		}
 		return EMPTY_LIST;
@@ -103,8 +105,9 @@ public class PHPServer extends ServerDelegate implements IPHPServer, IPHPServerW
 	@Override
 	public void modifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) throws CoreException {
 		IStatus status = canModifyModules(add, remove);
-		if (status == null || !status.isOK())
+		if (status == null || !status.isOK()) {
 			throw new CoreException(status);
+		}
 
 		// TODO implement later
 
@@ -147,8 +150,9 @@ public class PHPServer extends ServerDelegate implements IPHPServer, IPHPServerW
 
 	@Override
 	public ServerPort[] getServerPorts() {
-		if (getServer().getServerConfiguration() == null)
+		if (getServer().getServerConfiguration() == null) {
 			return new ServerPort[0];
+		}
 
 		try {
 			List<ServerPort> list = getPHPServerConfiguration().getServerPorts();
@@ -213,8 +217,9 @@ public class PHPServer extends ServerDelegate implements IPHPServer, IPHPServerW
 	 * @return PHP Server runtime for this server
 	 */
 	public PHPRuntime getPHPRuntime() {
-		if (getServer().getRuntime() == null)
+		if (getServer().getRuntime() == null) {
 			return null;
+		}
 
 		return (PHPRuntime) getServer().getRuntime().loadAdapter(PHPRuntime.class, null);
 	}
@@ -235,9 +240,10 @@ public class PHPServer extends ServerDelegate implements IPHPServer, IPHPServerW
 				if (folder != null) {
 					path = folder.getFullPath().toOSString();
 					IProject project = folder.getProject();
-					if (project != null && project.exists() && !project.isOpen())
+					if (project != null && project.exists() && !project.isOpen()) {
 						throw new CoreException(new Status(IStatus.ERROR, PHPServerPlugin.PLUGIN_ID, 0,
 								NLS.bind(Messages.errorConfigurationProjectClosed, path, project.getName()), null));
+					}
 				}
 				throw new CoreException(new Status(IStatus.ERROR, PHPServerPlugin.PLUGIN_ID, 0,
 						NLS.bind(Messages.errorNoConfiguration, path), null));
@@ -268,8 +274,9 @@ public class PHPServer extends ServerDelegate implements IPHPServer, IPHPServerW
 	@Override
 	public void saveConfiguration(IProgressMonitor monitor) throws CoreException {
 		PHPServerConfiguration tcConfig = configuration;
-		if (tcConfig == null)
+		if (tcConfig == null) {
 			return;
+		}
 		tcConfig.save(getServer().getServerConfiguration(), monitor);
 	}
 
@@ -291,20 +298,26 @@ public class PHPServer extends ServerDelegate implements IPHPServer, IPHPServerW
 	@Override
 	public URL getModuleRootURL(IModule module) {
 		try {
-			if (module == null)
+			if (module == null) {
 				return null;
+			}
 			PHPServerConfiguration config = getPHPServerConfiguration();
-			if (config == null)
+			if (config == null) {
 				return null;
+			}
 			URL url = getRootUrl();
 			if (url != null) {
 //				String path = url.getPath() + config.getWebModuleURL(module);
 				String path = url.toString();
-				if (!path.endsWith("/")) //$NON-NLS-1$
+				if (!path.endsWith("/"))
+				 {
 					path += "/"; //$NON-NLS-1$
+				}
 				path += module.getName();
-				if (!path.endsWith("/")) //$NON-NLS-1$
+				if (!path.endsWith("/"))
+				 {
 					path += "/"; //$NON-NLS-1$
+				}
 				return new URL(path);
 			}
 		} catch (Exception e) {
@@ -348,14 +361,17 @@ public class PHPServer extends ServerDelegate implements IPHPServer, IPHPServerW
 	public URL getRootUrl() {
 		try {
 			PHPServerConfiguration config = getPHPServerConfiguration();
-			if (config == null)
+			if (config == null) {
 				return null;
+			}
 
 			String url = "http://" + getServer().getHost(); //$NON-NLS-1$
 			int port = config.getMainPort().getPort();
 			port = ServerUtil.getMonitoredPort(getServer(), port, "web"); //$NON-NLS-1$
 			if (port != 80)
+			 {
 				url += ":" + port; //$NON-NLS-1$
+			}
 			return new URL(url);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not get root URL", e); //$NON-NLS-1$

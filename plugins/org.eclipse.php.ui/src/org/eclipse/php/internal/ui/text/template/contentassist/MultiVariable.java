@@ -58,8 +58,9 @@ public class MultiVariable extends TemplateVariable {
 		// no action when called from super ctor
 		if (fValueMap != null) {
 			fValueMap.put(key, values);
-			if (key.equals(fKey))
+			if (key.equals(fKey)) {
 				fCurrentChoice = getChoices()[0];
+			}
 			setResolved(true);
 		}
 	}
@@ -116,8 +117,9 @@ public class MultiVariable extends TemplateVariable {
 	public String[] getValues() {
 		Object[] values = getChoices();
 		String[] result = new String[values.length];
-		for (int i = 0; i < result.length; i++)
+		for (int i = 0; i < result.length; i++) {
 			result[i] = toString(values[i]);
+		}
 		return result;
 	}
 

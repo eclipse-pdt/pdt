@@ -79,8 +79,9 @@ public class AddSourceFolderWizard extends BuildPathWizard {
 	@Override
 	public List<Object> getInsertedElements() {
 		List<Object> result = super.getInsertedElements();
-		if (getEntryToEdit().getOrginalPath() == null)
+		if (getEntryToEdit().getOrginalPath() == null) {
 			result.add(getEntryToEdit());
+		}
 
 		return result;
 	}

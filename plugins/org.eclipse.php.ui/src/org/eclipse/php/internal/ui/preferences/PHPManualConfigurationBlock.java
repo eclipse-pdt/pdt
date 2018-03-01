@@ -340,8 +340,9 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 			PHPManualConfig config;
 			do {
 				config = PHPManualConfigSerializer.fromStringTokenizer(sitesTokenizer);
-				if (config == null)
+				if (config == null) {
 					break;
+				}
 				boolean alreadyExists = false;
 				for (int i = 0; i < configs.size(); ++i) {
 					PHPManualConfig existing = configs.get(i);

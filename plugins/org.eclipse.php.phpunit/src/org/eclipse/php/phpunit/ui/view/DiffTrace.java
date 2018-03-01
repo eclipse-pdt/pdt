@@ -107,19 +107,22 @@ public class DiffTrace implements IMenuListener {
 
 			String methodName = null;
 
-			if (test instanceof PHPUnitTraceFrame)
+			if (test instanceof PHPUnitTraceFrame) {
 				methodName = ((PHPUnitTraceFrame) test).getFunction();
+			}
 
 			String openLabel = OpenEditorAction.GOTO_FILE;
-			if (test instanceof PHPUnitTraceFrame)
+			if (test instanceof PHPUnitTraceFrame) {
 				openLabel = OpenEditorAction.GOTO_CALL;
-			else if (test instanceof PHPUnitTestEvent)
+			} else if (test instanceof PHPUnitTestEvent) {
 				openLabel = OpenEditorAction.GOTO_OCCURANCE;
+			}
 			manager.add(new OpenEditorAtLineAction(openLabel, fTestRunner, fileName, lineNumber, methodName));
 
-			if (test instanceof PHPUnitTestException)
+			if (test instanceof PHPUnitTestException) {
 				manager.add(new OpenTestAction(OpenEditorAction.GOTO_CLASS, fTestRunner,
 						((PHPUnitTestException) test).getExceptionClass(), fileName, lineNumber));
+			}
 
 			if (test instanceof PHPUnitTraceFrame) {
 				final PHPUnitTraceFrame frame = (PHPUnitTraceFrame) test;
@@ -128,9 +131,10 @@ public class DiffTrace implements IMenuListener {
 					manager.add(new OpenTestAction(OpenEditorAction.GOTO_CLASS, fTestRunner, className, null, 0, null));
 					manager.add(new OpenTestAction(OpenEditorAction.GOTO_METHOD, fTestRunner, className, null, 0,
 							methodName));
-				} else
+				} else {
 					manager.add(
 							new OpenTestAction(OpenEditorAction.GOTO_FUNCTION, fTestRunner, null, null, 0, methodName));
+				}
 			}
 
 		}

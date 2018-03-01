@@ -142,8 +142,9 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 		if (provider instanceof IDocumentProviderExtension4) {
 			try {
 				IContentType type = ((IDocumentProviderExtension4) provider).getContentType(editor.getEditorInput());
-				if (type != null)
+				if (type != null) {
 					contentType = type.getId();
+				}
 			} catch (CoreException e) {
 				/*
 				 * A failure accessing the underlying store really isn't
@@ -183,10 +184,13 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 		}
 		String name = input.getName();
 		int index = name.lastIndexOf('.');
-		if (index == -1)
+		if (index == -1) {
 			return null;
+		}
 		if (index == (name.length() - 1))
+		 {
 			return ""; //$NON-NLS-1$
+		}
 		return name.substring(index + 1);
 	}
 
@@ -200,8 +204,9 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 
 		IEditorInput input = editor.getEditorInput();
 		IDocument document = editor.getDocumentProvider().getDocument(input);
-		if (document == null)
+		if (document == null) {
 			return false;
+		}
 
 		String contentType = getContentType(editor, document);
 		IBreakpointProvider[] providers = BreakpointProviderBuilder.getInstance().getBreakpointProviders(editor,
@@ -218,7 +223,9 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 		for (int i = 0; i < n; i++) {
 			try {
 				if (Debug.debugBreakpoints)
+				 {
 					System.out.println(providers[i].getClass().getName() + " adding breakpoint to line " + lineNumber); //$NON-NLS-1$
+				}
 				IStatus status = providers[i].addBreakpoint(document, input, lineNumber, pos);
 				if (status != null && !status.isOK()) {
 					errors.add(status);
@@ -368,8 +375,9 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 	protected AbstractMarkerAnnotationModel getAnnotationModel(ITextEditor editor) {
 		IDocumentProvider provider = editor.getDocumentProvider();
 		IAnnotationModel model = provider.getAnnotationModel(editor.getEditorInput());
-		if (model instanceof AbstractMarkerAnnotationModel)
+		if (model instanceof AbstractMarkerAnnotationModel) {
 			return (AbstractMarkerAnnotationModel) model;
+		}
 		return null;
 	}
 
@@ -407,12 +415,15 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 	public final IResource getResource(IEditorInput input) {
 		IResource resource = null;
 
-		if (input instanceof IFileEditorInput)
+		if (input instanceof IFileEditorInput) {
 			resource = ((IFileEditorInput) input).getFile();
-		if (resource == null)
+		}
+		if (resource == null) {
 			resource = input.getAdapter(IFile.class);
-		if (resource == null)
+		}
+		if (resource == null) {
 			resource = input.getAdapter(IResource.class);
+		}
 
 		IEditorPart editorPart = null;
 		if (resource == null) {

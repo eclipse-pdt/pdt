@@ -173,19 +173,24 @@ public class DBGpMultiSessionTarget extends DBGpElement
 	public IThread[] getThreads() throws DebugException {
 		// Collect threads from all sub-targets
 		List<IThread> threads = new ArrayList<>();
-		for (IPHPDebugTarget target : debugTargets)
-			if (target.hasThreads())
-				for (IThread thread : target.getThreads())
+		for (IPHPDebugTarget target : debugTargets) {
+			if (target.hasThreads()) {
+				for (IThread thread : target.getThreads()) {
 					threads.add(thread);
+				}
+			}
+		}
 		return threads.toArray(new IThread[threads.size()]);
 	}
 
 	@Override
 	public boolean hasThreads() throws DebugException {
 		// Check if any sub-target has at least one thread
-		for (IPHPDebugTarget target : debugTargets)
-			if (target.hasThreads())
+		for (IPHPDebugTarget target : debugTargets) {
+			if (target.hasThreads()) {
 				return true;
+			}
+		}
 		return false;
 	}
 

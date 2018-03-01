@@ -28,8 +28,9 @@ public final class CoreMessages extends NLS {
 
 	public static ResourceBundle getResourceBundle() {
 		try {
-			if (fResourceBundle == null)
+			if (fResourceBundle == null) {
 				fResourceBundle = ResourceBundle.getBundle(BUNDLE_NAME);
+			}
 		} catch (MissingResourceException x) {
 			fResourceBundle = null;
 		}

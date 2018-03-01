@@ -170,6 +170,7 @@ public class ExternalBreakpointActionHelper {
 				int markerLine = document.getLineOfOffset(position.getOffset());
 				int line = rulerInfo.getLineOfLastMouseButtonActivity();
 				if (line == markerLine)
+				 {
 					return true;
 				// commented because of "1GEUOZ9: ITPJUI:ALL - Confusing UI
 				// for
@@ -177,6 +178,7 @@ public class ExternalBreakpointActionHelper {
 				// return (markerLine <= line && line <=
 				// document.getLineOfOffset(position.getOffset() +
 				// position.getLength()));
+				}
 			} catch (BadLocationException x) {
 			}
 		}

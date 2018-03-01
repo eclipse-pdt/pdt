@@ -27,11 +27,13 @@ import org.eclipse.ui.IWorkingSet;
 
 public class ReorgUtils {
 	public static boolean containsOnlyProjects(List<?> elements) {
-		if (elements.isEmpty())
+		if (elements.isEmpty()) {
 			return false;
+		}
 		for (Iterator<?> iter = elements.iterator(); iter.hasNext();) {
-			if (!isProject(iter.next()))
+			if (!isProject(iter.next())) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -49,27 +51,31 @@ public class ReorgUtils {
 	}
 
 	public static ISourceModule getSourceModule(IModelElement modelElement) {
-		if (modelElement instanceof ISourceModule)
+		if (modelElement instanceof ISourceModule) {
 			return (ISourceModule) modelElement;
+		}
 		return (ISourceModule) modelElement.getAncestor(IModelElement.SOURCE_MODULE);
 	}
 
 	@Deprecated
 	public static boolean isDeletedFromEditor(IModelElement elem) {
-		if (!isInsideSourceModule(elem))
+		if (!isInsideSourceModule(elem)) {
 			return false;
+		}
 		if (elem instanceof IMember) {// && ((IMember)elem).isBinary())
 			return false;
 		}
 		ISourceModule cu = ReorgUtils.getSourceModule(elem);
-		if (cu == null)
+		if (cu == null) {
 			return false;
+		}
 		ISourceModule wc = cu;
 		// TODO have to understand if this method is needed any longer. Since
 		// with the new working copy support a element is never deleted from
 		// the editor if we have a primary working copy.
-		if (cu.equals(wc))
+		if (cu.equals(wc)) {
 			return false;
+		}
 		IModelElement wcElement = ScriptModelUtil.findInSourceModule(wc, elem);
 		return wcElement == null || !wcElement.exists();
 	}
@@ -121,20 +127,23 @@ public class ReorgUtils {
 		case IModelElement.SCRIPT_PROJECT:
 			return RefactoringCoreMessages.ReorgUtils_9;
 		case IModelElement.METHOD:
-			if (((IMethod) element).isConstructor())
+			if (((IMethod) element).isConstructor()) {
 				return RefactoringCoreMessages.ReorgUtils_10;
-			else
+			} else {
 				return RefactoringCoreMessages.ReorgUtils_11;
+			}
 			// case IModelElement.PACKAGE_DECLARATION:
 			// return RefactoringCoreMessages.ReorgUtils_12;
 		case IModelElement.SCRIPT_FOLDER:
-			if (ModelElementUtil.isDefaultPackage(element))
+			if (ModelElementUtil.isDefaultPackage(element)) {
 				return RefactoringCoreMessages.ReorgUtils_13;
-			else
+			} else {
 				return org.eclipse.php.internal.ui.refactor.processors.Messages.ReorgUtils_14;
+			}
 		case IModelElement.PROJECT_FRAGMENT:
-			if (isSourceFolder(element))
+			if (isSourceFolder(element)) {
 				return RefactoringCoreMessages.ReorgUtils_15;
+			}
 			// if (isClassFolder(element))
 			// return RefactoringCoreMessages.ReorgUtils_16;
 			return RefactoringCoreMessages.ReorgUtils_17;
@@ -193,17 +202,19 @@ public class ReorgUtils {
 		List<Object> resources = new ArrayList<>(elements.size());
 		for (Iterator<?> iter = elements.iterator(); iter.hasNext();) {
 			Object element = iter.next();
-			if (element instanceof IResource)
+			if (element instanceof IResource) {
 				resources.add(element);
+			}
 		}
 		return resources.toArray(new IResource[resources.size()]);
 	}
 
 	public static IResource getResource(IModelElement element) {
-		if (element instanceof ISourceModule)
+		if (element instanceof ISourceModule) {
 			return ((ISourceModule) element).getPrimary().getResource();
-		else
+		} else {
 			return element.getResource();
+		}
 	}
 
 	public static IResource[] getResources(IModelElement[] elements) {
@@ -221,8 +232,9 @@ public class ReorgUtils {
 		Collection<IResource> result = new ArrayList<>(resources.length);
 		for (int i = 0; i < resources.length; i++) {
 			IResource resource = resources[i];
-			if (resource != null && !result.contains(resource) && !resource.isLinked())
+			if (resource != null && !result.contains(resource) && !resource.isLinked()) {
 				result.add(resource);
+			}
 		}
 		return result.toArray(new IResource[result.size()]);
 	}
@@ -231,8 +243,9 @@ public class ReorgUtils {
 		Collection<IResource> result = new ArrayList<>(resources.length);
 		for (int i = 0; i < resources.length; i++) {
 			IResource resource = resources[i];
-			if (resource != null && !result.contains(resource))
+			if (resource != null && !result.contains(resource)) {
 				result.add(resource);
+			}
 		}
 		return result.toArray(new IResource[result.size()]);
 	}
@@ -243,8 +256,9 @@ public class ReorgUtils {
 			IModelElement element = iter.next();
 			ISourceModule cu = ReorgUtils.getSourceModule(element);
 			if (cu != null) {
-				if (!result.containsKey(cu))
+				if (!result.containsKey(cu)) {
 					result.put(cu, new ArrayList<>(1));
+				}
 				result.get(cu).add(element);
 			}
 		}
@@ -254,8 +268,9 @@ public class ReorgUtils {
 	public static List<IModelElement> getElementsOfType(IModelElement[] modelElements, int type) {
 		List<IModelElement> result = new ArrayList<>(modelElements.length);
 		for (int i = 0; i < modelElements.length; i++) {
-			if (isOfType(modelElements[i], type))
+			if (isOfType(modelElements[i], type)) {
 				result.add(modelElements[i]);
+			}
 		}
 		return result;
 	}
@@ -305,8 +320,9 @@ public class ReorgUtils {
 
 	private static void addAll(Object[] array, List<Object> list) {
 		for (int i = 0; i < array.length; i++) {
-			if (!list.contains(array[i]))
+			if (!list.contains(array[i])) {
 				list.add(array[i]);
+			}
 		}
 	}
 
@@ -321,8 +337,9 @@ public class ReorgUtils {
 		List<Object> resources = new ArrayList<>(elements.size());
 		for (Iterator<?> iter = elements.iterator(); iter.hasNext();) {
 			Object element = iter.next();
-			if (element instanceof IModelElement)
+			if (element instanceof IModelElement) {
 				resources.add(element);
+			}
 		}
 		return resources.toArray(new IModelElement[resources.size()]);
 	}
@@ -355,37 +372,43 @@ public class ReorgUtils {
 			} else if (element instanceof IResource) {
 				IResource resource = (IResource) element;
 				IModelElement jElement = DLTKCore.create(resource);
-				if (jElement != null && jElement.exists())
+				if (jElement != null && jElement.exists()) {
 					modelElementResult.add(jElement);
-				else
+				} else {
 					resourceResult.add(resource);
+				}
 			}
 		}
 	}
 
 	public static boolean containsElementOrParent(Set<?> elements, IModelElement element) {
-		if (elements.contains(element))
+		if (elements.contains(element)) {
 			return true;
+		}
 		IModelElement parent = element.getParent();
 		while (parent != null) {
-			if (elements.contains(parent))
+			if (elements.contains(parent)) {
 				return true;
+			}
 			parent = parent.getParent();
 		}
 		return false;
 	}
 
 	public static boolean containsElementOrParent(Set<?> elements, IResource element) {
-		if (elements.contains(element))
+		if (elements.contains(element)) {
 			return true;
+		}
 		IResource parent = element.getParent();
 		while (parent != null) {
-			if (elements.contains(parent))
+			if (elements.contains(parent)) {
 				return true;
+			}
 			IModelElement parentAsScriptElement = DLTKCore.create(parent);
 			if (parentAsScriptElement != null && parentAsScriptElement.exists()
-					&& elements.contains(parentAsScriptElement))
+					&& elements.contains(parentAsScriptElement)) {
 				return true;
+			}
 			parent = parent.getParent();
 		}
 		return false;
@@ -394,8 +417,9 @@ public class ReorgUtils {
 	public static boolean hasElementsNotOfType(IResource[] resources, int typeMask) {
 		for (int i = 0; i < resources.length; i++) {
 			IResource resource = resources[i];
-			if (resource != null && !isOfType(resource, typeMask))
+			if (resource != null && !isOfType(resource, typeMask)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -403,8 +427,9 @@ public class ReorgUtils {
 	public static boolean hasElementsNotOfType(IModelElement[] modelElements, int type) {
 		for (int i = 0; i < modelElements.length; i++) {
 			IModelElement element = modelElements[i];
-			if (element != null && !isOfType(element, type))
+			if (element != null && !isOfType(element, type)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -418,8 +443,9 @@ public class ReorgUtils {
 			return isProjectFragmentCorrespondingToProject((IProjectFragment) modelElement);
 		} else if (modelElement instanceof IScriptProject) {
 			return true;// XXX ???
-		} else
+		} else {
 			return false;
+		}
 	}
 
 	private static boolean isProjectFragmentCorrespondingToProject(IProjectFragment root) {
@@ -430,8 +456,9 @@ public class ReorgUtils {
 		for (int i = 0; i < elements.length; i++) {
 			IModelElement element = elements[i];
 			IProjectFragment root = (IProjectFragment) element.getAncestor(IModelElement.PROJECT_FRAGMENT);
-			if (root != null && (root.isArchive() || root.isExternal()))
+			if (root != null && (root.isArchive() || root.isExternal())) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -439,16 +466,18 @@ public class ReorgUtils {
 	public static boolean hasElementsOfType(IModelElement[] modelElements, int type) {
 		for (int i = 0; i < modelElements.length; i++) {
 			IModelElement element = modelElements[i];
-			if (element != null && isOfType(element, type))
+			if (element != null && isOfType(element, type)) {
 				return true;
+			}
 		}
 		return false;
 	}
 
 	public static boolean hasElementsOfType(IModelElement[] modelElements, int[] types) {
 		for (int i = 0; i < types.length; i++) {
-			if (hasElementsOfType(modelElements, types[i]))
+			if (hasElementsOfType(modelElements, types[i])) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -456,8 +485,9 @@ public class ReorgUtils {
 	public static boolean hasElementsOfType(IResource[] resources, int typeMask) {
 		for (int i = 0; i < resources.length; i++) {
 			IResource resource = resources[i];
-			if (resource != null && isOfType(resource, typeMask))
+			if (resource != null && isOfType(resource, typeMask)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -470,8 +500,9 @@ public class ReorgUtils {
 	public static Set<IResource> getResourcesOfType(IResource[] resources, int typeMask) {
 		Set<IResource> result = new HashSet<>(resources.length);
 		for (int i = 0; i < resources.length; i++) {
-			if (isOfType(resources[i], typeMask))
+			if (isOfType(resources[i], typeMask)) {
 				result.add(resources[i]);
+			}
 		}
 		return result;
 	}
@@ -484,16 +515,18 @@ public class ReorgUtils {
 	public static IProjectFragment getCorrespondingProjectFragment(IScriptProject p) throws ModelException {
 		IProjectFragment[] roots = p.getProjectFragments();
 		for (int i = 0; i < roots.length; i++) {
-			if (isProjectFragmentCorrespondingToProject(roots[i]))
+			if (isProjectFragmentCorrespondingToProject(roots[i])) {
 				return roots[i];
+			}
 		}
 		return null;
 	}
 
 	public static boolean containsLinkedResources(IResource[] resources) {
 		for (int i = 0; i < resources.length; i++) {
-			if (resources[i] != null && resources[i].isLinked())
+			if (resources[i] != null && resources[i].isLinked()) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -501,8 +534,9 @@ public class ReorgUtils {
 	public static boolean containsLinkedResources(IModelElement[] modelElements) {
 		for (int i = 0; i < modelElements.length; i++) {
 			IResource res = getResource(modelElements[i]);
-			if (res != null && res.isLinked())
+			if (res != null && res.isLinked()) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -512,59 +546,72 @@ public class ReorgUtils {
 	}
 
 	public static boolean areEqualInWorkspaceOrOnDisk(IResource r1, IResource r2) {
-		if (r1 == null || r2 == null)
+		if (r1 == null || r2 == null) {
 			return false;
-		if (r1.equals(r2))
+		}
+		if (r1.equals(r2)) {
 			return true;
+		}
 		URI r1Location = r1.getLocationURI();
 		URI r2Location = r2.getLocationURI();
-		if (r1Location == null || r2Location == null)
+		if (r1Location == null || r2Location == null) {
 			return false;
+		}
 		return r1Location.equals(r2Location);
 	}
 
 	public static boolean isParentInWorkspaceOrOnDisk(IScriptFolder pack, IProjectFragment root) {
-		if (pack == null)
+		if (pack == null) {
 			return false;
+		}
 		IModelElement packParent = pack.getParent();
-		if (packParent == null)
+		if (packParent == null) {
 			return false;
-		if (packParent.equals(root))
+		}
+		if (packParent.equals(root)) {
 			return true;
+		}
 		IResource packageResource = ResourceUtil.getResource(pack);
 		IResource packageRootResource = ResourceUtil.getResource(root);
 		return isParentInWorkspaceOrOnDisk(packageResource, packageRootResource);
 	}
 
 	public static boolean isParentInWorkspaceOrOnDisk(IProjectFragment root, IScriptProject scriptProject) {
-		if (root == null)
+		if (root == null) {
 			return false;
+		}
 		IModelElement rootParent = root.getParent();
-		if (rootParent == null)
+		if (rootParent == null) {
 			return false;
-		if (rootParent.equals(root))
+		}
+		if (rootParent.equals(root)) {
 			return true;
+		}
 		IResource packageResource = ResourceUtil.getResource(root);
 		IResource packageRootResource = ResourceUtil.getResource(scriptProject);
 		return isParentInWorkspaceOrOnDisk(packageResource, packageRootResource);
 	}
 
 	public static boolean isParentInWorkspaceOrOnDisk(ISourceModule cu, IScriptFolder dest) {
-		if (cu == null)
+		if (cu == null) {
 			return false;
+		}
 		IModelElement cuParent = cu.getParent();
-		if (cuParent == null)
+		if (cuParent == null) {
 			return false;
-		if (cuParent.equals(dest))
+		}
+		if (cuParent.equals(dest)) {
 			return true;
+		}
 		IResource cuResource = ResourceUtil.getResource(cu);
 		IResource packageResource = ResourceUtil.getResource(dest);
 		return isParentInWorkspaceOrOnDisk(cuResource, packageResource);
 	}
 
 	public static boolean isParentInWorkspaceOrOnDisk(IResource res, IResource maybeParent) {
-		if (res == null)
+		if (res == null) {
 			return false;
+		}
 		return areEqualInWorkspaceOrOnDisk(res.getParent(), maybeParent);
 	}
 }

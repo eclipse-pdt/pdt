@@ -83,10 +83,12 @@ public class PHPRefactoringChangeNode extends TextEditChangeNode {
 		public int compare(TextEditBasedChangeGroup c1, TextEditBasedChangeGroup c2) {
 			int p1 = getOffset(c1);
 			int p2 = getOffset(c2);
-			if (p1 < p2)
+			if (p1 < p2) {
 				return -1;
-			if (p1 > p2)
+			}
+			if (p1 > p2) {
 				return 1;
+			}
 			// same offset
 			return 0;
 		}
@@ -140,8 +142,9 @@ public class PHPRefactoringChangeNode extends TextEditChangeNode {
 		TextEditBasedChangeGroup[] edits = change.getChangeGroups();
 		List<TextEditBasedChangeGroup> result = new ArrayList<>(edits.length);
 		for (int i = 0; i < edits.length; i++) {
-			if (!edits[i].getTextEditGroup().isEmpty())
+			if (!edits[i].getTextEditGroup().isEmpty()) {
 				result.add(edits[i]);
+			}
 		}
 		Comparator<TextEditBasedChangeGroup> comparator = new OffsetComparator();
 		Collections.sort(result, comparator);
@@ -150,12 +153,14 @@ public class PHPRefactoringChangeNode extends TextEditChangeNode {
 
 	private ASTNode getModifiedPHPElement(TextEditBasedChangeGroup edit, Program program) throws Exception {
 		IRegion range = edit.getRegion();
-		if (range.getOffset() == 0 && range.getLength() == 0)
+		if (range.getOffset() == 0 && range.getLength() == 0) {
 			return program;
+		}
 		ASTNode result = program.getElementAt(range.getOffset());
 
-		if (result == null)
+		if (result == null) {
 			return program;
+		}
 
 		return getParentContext(result);
 	}
@@ -163,8 +168,9 @@ public class PHPRefactoringChangeNode extends TextEditChangeNode {
 	private PHPLanguageNode getChangeElement(Map<ASTNode, PHPLanguageNode> map, ASTNode element,
 			List<ChildNode> children, TextEditChangeNode cunitChange) {
 		PHPLanguageNode result = map.get(element);
-		if (result != null)
+		if (result != null) {
 			return result;
+		}
 
 		final int type = element.getType();
 		if (type == ASTNode.CLASS_DECLARATION || type == ASTNode.INTERFACE_DECLARATION
@@ -206,24 +212,28 @@ public class PHPRefactoringChangeNode extends TextEditChangeNode {
 
 	private boolean coveredBy(TextEditBasedChangeGroup group, IRegion sourceRegion) {
 		int sLength = sourceRegion.getLength();
-		if (sLength == 0)
+		if (sLength == 0) {
 			return false;
+		}
 		int sOffset = sourceRegion.getOffset();
 		int sEnd = sOffset + sLength - 1;
 		TextEdit[] edits = group.getTextEdits();
 		for (int i = 0; i < edits.length; i++) {
 			TextEdit edit = edits[i];
-			if (edit.isDeleted())
+			if (edit.isDeleted()) {
 				return false;
+			}
 			int rOffset = edit.getOffset();
 			int rLength = edit.getLength();
 			int rEnd = rOffset + rLength - 1;
 			if (rLength == 0) {
-				if (!(sOffset < rOffset && rOffset <= sEnd))
+				if (!(sOffset < rOffset && rOffset <= sEnd)) {
 					return false;
+				}
 			} else {
-				if (!(sOffset <= rOffset && rEnd <= sEnd))
+				if (!(sOffset <= rOffset && rEnd <= sEnd)) {
 					return false;
+				}
 			}
 		}
 		return true;

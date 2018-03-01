@@ -92,8 +92,9 @@ public class CodeCoverageTextViewer extends PHPSourceViewer implements IProperty
 			if (isLineCovered(line)) {
 				text.setLineBackground(line, 1, fCoveredLineBackground);
 			} else {
-				if (isLineSignificant(line))
+				if (isLineSignificant(line)) {
 					text.setLineBackground(line, 1, fUncoveredLineBackground);
+				}
 			}
 		}
 	}

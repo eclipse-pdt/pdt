@@ -66,8 +66,9 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 		 */
 		@Override
 		public void handleEvent(Event e) {
-			if (getControl() == null)
+			if (getControl() == null) {
 				return;
+			}
 			update();
 		}
 	}
@@ -339,8 +340,9 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 	 */
 	protected Label createLabel(Composite parent, String text, boolean bold) {
 		Label label = new Label(parent, SWT.NONE);
-		if (bold)
+		if (bold) {
 			label.setFont(JFaceResources.getBannerFont());
+		}
 		label.setText(text);
 		GridData data = new GridData();
 		data.verticalAlignment = GridData.FILL;
@@ -420,13 +422,14 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 		ElementTreeSelectionDialog dialog = createWorkspaceFileSelectionDialog(
 				PharPackagerMessages.JarManifestWizardPage_manifestSelectionDialog_title,
 				PharPackagerMessages.JarManifestWizardPage_manifestSelectionDialog_message);
-		if (pharData.getStubFile() != null && pharData.isStubAccessible())
+		if (pharData.getStubFile() != null && pharData.isStubAccessible()) {
 			dialog.setInitialSelections(new IResource[] { pharData.getStubFile() });
+		}
 		if (dialog.open() == Window.OK) {
 			Object[] resources = dialog.getResult();
-			if (resources.length != 1)
+			if (resources.length != 1) {
 				setErrorMessage(PharPackagerMessages.JarManifestWizardPage_error_onlyOneManifestMustBeSelected);
-			else {
+			} else {
 				// setErrorMessage("");
 				if (resources[0] instanceof ISourceModule) {
 					ISourceModule sm = (ISourceModule) resources[0];
@@ -460,8 +463,9 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 			public IStatus validate(Object[] selection) {
 				StatusInfo res = new StatusInfo();
 				// only single selection
-				if (selection.length == 1 && (selection[0] instanceof IFile || selection[0] instanceof ISourceModule))
+				if (selection.length == 1 && (selection[0] instanceof IFile || selection[0] instanceof ISourceModule)) {
 					res.setOK();
+				}
 				// else
 				// res.setError("");
 				return res;
@@ -523,8 +527,9 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 			protected void setTreeChecked(final Object element, final boolean state) {
 				if (fInitiallySelecting && element instanceof IResource) {
 					final IResource resource = (IResource) element;
-					if (resource.getName().charAt(0) == '.')
+					if (resource.getName().charAt(0) == '.') {
 						return;
+					}
 				}
 				super.setTreeChecked(element, state);
 			}
@@ -784,8 +789,9 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 		IDialogSettings settings = getDialogSettings();
 		if (settings != null) {
 			String[] directoryNames = settings.getArray(fStoreDestinationNamesId);
-			if (directoryNames == null)
+			if (directoryNames == null) {
 				directoryNames = new String[0];
+			}
 			directoryNames = addToHistory(directoryNames, getDestinationValue());
 			settings.put(fStoreDestinationNamesId, directoryNames);
 
@@ -822,10 +828,12 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 	protected boolean validateDestinationGroup() {
 		if (fDestinationNamesCombo.getText().length() == 0) {
 			// Clear error
-			if (getErrorMessage() != null)
+			if (getErrorMessage() != null) {
 				setErrorMessage(null);
-			if (getMessage() != null)
+			}
+			if (getMessage() != null) {
 				setMessage(null);
+			}
 			return false;
 		}
 		if (pharData.getAbsolutePharLocation().toString().endsWith(SPLASH1)
@@ -855,12 +863,14 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 		// Inform user about relative directory
 		String currentMessage = getMessage();
 		if (!(new File(fDestinationNamesCombo.getText()).isAbsolute())) {
-			if (currentMessage == null)
+			if (currentMessage == null) {
 				setMessage(PharPackagerMessages.JarPackageWizardPage_info_relativeExportDestination,
 						IMessageProvider.INFORMATION);
+			}
 		} else {
-			if (currentMessage != null)
+			if (currentMessage != null) {
 				setMessage(currentMessage);
+			}
 		}
 		return ensureTargetFileIsValid(pharData.getAbsolutePharLocation().toFile());
 	}
@@ -870,8 +880,9 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 	 */
 	@Override
 	public void handleEvent(Event e) {
-		if (getControl() == null)
+		if (getControl() == null) {
 			return;
+		}
 		update();
 	}
 
@@ -989,16 +1000,19 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 	protected void updatePageCompletion() {
 		boolean pageComplete = isPageComplete();
 		setPageComplete(pageComplete);
-		if (pageComplete)
+		if (pageComplete) {
 			setErrorMessage(null);
+		}
 	}
 
 	static boolean contains(java.util.List<?> resources, IFile file) {
-		if (resources == null || file == null)
+		if (resources == null || file == null) {
 			return false;
+		}
 
-		if (resources.contains(file))
+		if (resources.contains(file)) {
 			return true;
+		}
 
 		Iterator<?> iter = resources.iterator();
 		while (iter.hasNext()) {
@@ -1011,8 +1025,9 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 					// ignore this folder
 					continue;
 				}
-				if (children != null && contains(children, file))
+				if (children != null && contains(children, file)) {
 					return true;
+				}
 			}
 		}
 		return false;
@@ -1027,15 +1042,17 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 	 * @return a List with the selected resources
 	 */
 	public static java.util.List<?> asResources(Object[] elements) {
-		if (elements == null)
+		if (elements == null) {
 			return null;
+		}
 		List<Object> selectedResources = new ArrayList<>(elements.length);
 		for (int i = 0; i < elements.length; i++) {
 			Object element = elements[i];
 			if (element instanceof IModelElement) {
 				selectedResources.add(((IModelElement) element).getResource());
-			} else if (element instanceof IResource)
+			} else if (element instanceof IResource) {
 				selectedResources.add(element);
+			}
 		}
 		return selectedResources;
 	}
@@ -1065,8 +1082,9 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 		boolean complete = validateDestinationGroup();
 		complete = validateOptionsGroup() && complete;
 		complete = validateStubGroup() && complete;
-		if (complete)
+		if (complete) {
 			setErrorMessage(null);
+		}
 		return complete;
 	}
 
@@ -1099,20 +1117,23 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 		while (iterator.hasNext()) {
 			Object selectedElement = iterator.next();
 
-			if (selectedElement instanceof IResource && !((IResource) selectedElement).isAccessible())
+			if (selectedElement instanceof IResource && !((IResource) selectedElement).isAccessible()) {
 				continue;
+			}
 
-			if (selectedElement instanceof IModelElement && !((IModelElement) selectedElement).exists())
+			if (selectedElement instanceof IModelElement && !((IModelElement) selectedElement).exists()) {
 				continue;
+			}
 
-			if (selectedElement instanceof ISourceModule || selectedElement instanceof IFile)
+			if (selectedElement instanceof ISourceModule || selectedElement instanceof IFile) {
 				fInputGroup.initialCheckListItem(selectedElement);
-			else {
+			} else {
 				if (selectedElement instanceof IFolder) {
 					// Convert resource to Java element if possible
 					IModelElement je = DLTKCore.create((IResource) selectedElement);
-					if (je != null && je.exists() && je.getScriptProject().isOnBuildpath((IResource) selectedElement))
+					if (je != null && je.exists() && je.getScriptProject().isOnBuildpath((IResource) selectedElement)) {
 						selectedElement = je;
+					}
 				}
 				try {
 					fInputGroup.initialCheckTreeItem(selectedElement);
@@ -1124,8 +1145,9 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 
 		TreeItem[] items = fInputGroup.getTree().getItems();
 		int i = 0;
-		while (i < items.length && !items[i].getChecked())
+		while (i < items.length && !items[i].getChecked()) {
 			i++;
+		}
 		if (i < items.length) {
 			fInputGroup.getTree().setSelection(new TreeItem[] { items[i] });
 			fInputGroup.getTree().showSelection();
@@ -1139,8 +1161,9 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements 
 	@Override
 	public void setPreviousPage(IWizardPage page) {
 		super.setPreviousPage(page);
-		if (getControl() != null)
+		if (getControl() != null) {
 			updatePageCompletion();
+		}
 	}
 
 	Object[] getSelectedElementsWithoutContainedChildren() {

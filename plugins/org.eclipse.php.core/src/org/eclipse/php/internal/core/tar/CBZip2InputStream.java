@@ -52,8 +52,9 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 		int nInUseShadow = 0;
 
 		for (int i = 0; i < 256; i++) {
-			if (inUse[i])
+			if (inUse[i]) {
 				seqToUnseq[nInUseShadow++] = (byte) i;
+			}
 		}
 
 		this.nInUse = nInUseShadow;

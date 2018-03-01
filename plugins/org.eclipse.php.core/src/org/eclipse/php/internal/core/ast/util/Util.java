@@ -133,10 +133,12 @@ public class Util {
 	 *         null if the two arrays are null.
 	 */
 	public static final String[] arrayConcat(String[] first, String second) {
-		if (second == null)
+		if (second == null) {
 			return first;
-		if (first == null)
+		}
+		if (first == null) {
 			return new String[] { second };
+		}
 
 		int length = first.length;
 		if (first.length == 0) {
@@ -155,15 +157,17 @@ public class Util {
 	 * after the signature if valid, or -1 if not valid.
 	 */
 	private static int checkTypeSignature(String sig, int start, int end, boolean allowVoid) {
-		if (start >= end)
+		if (start >= end) {
 			return -1;
+		}
 		int i = start;
 		char c = sig.charAt(i++);
 		int nestingDepth = 0;
 		while (c == '[') {
 			++nestingDepth;
-			if (i >= end)
+			if (i >= end) {
 				return -1;
+			}
 			c = sig.charAt(i++);
 		}
 		switch (c) {
@@ -177,17 +181,20 @@ public class Util {
 		case 'Z':
 			break;
 		case 'V':
-			if (!allowVoid)
+			if (!allowVoid) {
 				return -1;
+			}
 			// array of void is not allowed
-			if (nestingDepth != 0)
+			if (nestingDepth != 0) {
 				return -1;
+			}
 			break;
 		case 'L':
 			int semicolon = sig.indexOf(';', i);
 			// Must have at least one character between L and ;
-			if (semicolon <= i || semicolon >= end)
+			if (semicolon <= i || semicolon >= end) {
 				return -1;
+			}
 			i = semicolon + 1;
 			break;
 		default:
@@ -210,22 +217,28 @@ public class Util {
 	 * if b is null. Returns 0 if they are equal or both null.
 	 */
 	public static int compare(byte[] a, byte[] b) {
-		if (a == b)
+		if (a == b) {
 			return 0;
-		if (a == null)
+		}
+		if (a == null) {
 			return -1;
-		if (b == null)
+		}
+		if (b == null) {
 			return 1;
+		}
 		int len = Math.min(a.length, b.length);
 		for (int i = 0; i < len; ++i) {
 			int diff = a[i] - b[i];
-			if (diff != 0)
+			if (diff != 0) {
 				return diff;
+			}
 		}
-		if (a.length > len)
+		if (a.length > len) {
 			return 1;
-		if (b.length > len)
+		}
+		if (b.length > len) {
 			return -1;
+		}
 		return 0;
 	}
 
@@ -260,9 +273,13 @@ public class Util {
 	 */
 	public static String concat(String s1, char c, String s2) {
 		if (s1 == null)
+		 {
 			s1 = "null"; //$NON-NLS-1$
+		}
 		if (s2 == null)
+		 {
 			s2 = "null"; //$NON-NLS-1$
+		}
 		int l1 = s1.length();
 		int l2 = s2.length();
 		char[] buf = new char[l1 + 1 + l2];
@@ -281,9 +298,13 @@ public class Util {
 	 */
 	public static String concat(String s1, String s2) {
 		if (s1 == null)
+		 {
 			s1 = "null"; //$NON-NLS-1$
+		}
 		if (s2 == null)
+		 {
 			s2 = "null"; //$NON-NLS-1$
+		}
 		int l1 = s1.length();
 		int l2 = s2.length();
 		char[] buf = new char[l1 + l2];
@@ -329,8 +350,9 @@ public class Util {
 		StringBuilder buffer = new StringBuilder();
 		for (int i = 0, length = array.length; i < length; i++) {
 			buffer.append(array[i]);
-			if (i < length - 1)
+			if (i < length - 1) {
 				buffer.append(separator);
+			}
 		}
 		return buffer.toString();
 	}
@@ -384,10 +406,12 @@ public class Util {
 	 */
 	public static final String concatWith(String[] array, String name, char separator) {
 
-		if (ArrayUtils.isEmpty(array))
+		if (ArrayUtils.isEmpty(array)) {
 			return name;
-		if (name == null || name.length() == 0)
+		}
+		if (name == null || name.length() == 0) {
 			return concatWith(array, separator);
+		}
 		StringBuilder buffer = new StringBuilder();
 		for (int i = 0, length = array.length; i < length; i++) {
 			buffer.append(array[i]);
@@ -405,11 +429,17 @@ public class Util {
 	 */
 	public static String concat(String s1, String s2, String s3) {
 		if (s1 == null)
+		 {
 			s1 = "null"; //$NON-NLS-1$
+		}
 		if (s2 == null)
+		 {
 			s2 = "null"; //$NON-NLS-1$
+		}
 		if (s3 == null)
+		 {
 			s3 = "null"; //$NON-NLS-1$
+		}
 		int l1 = s1.length();
 		int l2 = s2.length();
 		int l3 = s3.length();
@@ -469,17 +499,21 @@ public class Util {
 	 * than len.
 	 */
 	public static boolean equalArrays(Object[] a, Object[] b, int len) {
-		if (a == b)
+		if (a == b) {
 			return true;
-		if (a.length < len || b.length < len)
+		}
+		if (a.length < len || b.length < len) {
 			return false;
+		}
 		for (int i = 0; i < len; ++i) {
 			if (a[i] == null) {
-				if (b[i] != null)
+				if (b[i] != null) {
 					return false;
+				}
 			} else {
-				if (!a[i].equals(b[i]))
+				if (!a[i].equals(b[i])) {
 					return false;
+				}
 			}
 		}
 		return true;
@@ -492,16 +526,20 @@ public class Util {
 	 * are equal.
 	 */
 	public static boolean equalArraysOrNull(int[] a, int[] b) {
-		if (a == b)
+		if (a == b) {
 			return true;
-		if (a == null || b == null)
+		}
+		if (a == null || b == null) {
 			return false;
+		}
 		int len = a.length;
-		if (len != b.length)
+		if (len != b.length) {
 			return false;
+		}
 		for (int i = 0; i < len; ++i) {
-			if (a[i] != b[i])
+			if (a[i] != b[i]) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -513,23 +551,28 @@ public class Util {
 	 * compare true with equals.
 	 */
 	public static boolean equalArraysOrNull(Object[] a, Object[] b) {
-		if (a == b)
+		if (a == b) {
 			return true;
-		if (a == null || b == null)
+		}
+		if (a == null || b == null) {
 			return false;
+		}
 
 		int len = a.length;
-		if (len != b.length)
+		if (len != b.length) {
 			return false;
+		}
 		// walk array from end to beginning as this optimizes package name cases
 		// where the first part is always the same (e.g. org.eclipse.jdt)
 		for (int i = len - 1; i >= 0; i--) {
 			if (a[i] == null) {
-				if (b[i] != null)
+				if (b[i] != null) {
 					return false;
+				}
 			} else {
-				if (!a[i].equals(b[i]))
+				if (!a[i].equals(b[i])) {
 					return false;
+				}
 			}
 		}
 		return true;
@@ -543,20 +586,24 @@ public class Util {
 	 * true with equals. The original arrays are left untouched.
 	 */
 	public static boolean equalArraysOrNullSortFirst(Comparable[] a, Comparable[] b) {
-		if (a == b)
+		if (a == b) {
 			return true;
-		if (a == null || b == null)
+		}
+		if (a == null || b == null) {
 			return false;
+		}
 		int len = a.length;
-		if (len != b.length)
+		if (len != b.length) {
 			return false;
+		}
 		if (len >= 2) { // only need to sort if more than two items
 			a = sortCopy(a);
 			b = sortCopy(b);
 		}
 		for (int i = 0; i < len; ++i) {
-			if (!a[i].equals(b[i]))
+			if (!a[i].equals(b[i])) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -569,20 +616,24 @@ public class Util {
 	 * compare true with equals. The original arrays are left untouched.
 	 */
 	public static boolean equalArraysOrNullSortFirst(String[] a, String[] b) {
-		if (a == b)
+		if (a == b) {
 			return true;
-		if (a == null || b == null)
+		}
+		if (a == null || b == null) {
 			return false;
+		}
 		int len = a.length;
-		if (len != b.length)
+		if (len != b.length) {
 			return false;
+		}
 		if (len >= 2) { // only need to sort if more than two items
 			a = sortCopy(a);
 			b = sortCopy(b);
 		}
 		for (int i = 0; i < len; ++i) {
-			if (!a[i].equals(b[i]))
+			if (!a[i].equals(b[i])) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -626,8 +677,9 @@ public class Util {
 	 */
 	public static String extractLastName(String qualifiedName) {
 		int i = qualifiedName.lastIndexOf('.');
-		if (i == -1)
+		if (i == -1) {
 			return qualifiedName;
+		}
 		return qualifiedName.substring(i + 1);
 	}
 
@@ -637,18 +689,21 @@ public class Util {
 	public static String[] extractParameterTypes(char[] sig) {
 		int count = getParameterCount(sig);
 		String[] result = new String[count];
-		if (count == 0)
+		if (count == 0) {
 			return result;
+		}
 		int i = CharOperation.indexOf('(', sig) + 1;
 		count = 0;
 		int len = sig.length;
 		int start = i;
 		for (;;) {
-			if (i == len)
+			if (i == len) {
 				break;
+			}
 			char c = sig[i];
-			if (c == ')')
+			if (c == ')') {
 				break;
+			}
 			if (c == '[') {
 				++i;
 			} else if (c == 'L') {
@@ -749,9 +804,9 @@ public class Util {
 		if (PHP_LIKE_EXTENSIONS == null) {
 			// TODO (jerome) reenable once JDT UI supports other file extensions
 			// (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=71460)
-			if (!ENABLE_PHP_LIKE_EXTENSIONS)
+			if (!ENABLE_PHP_LIKE_EXTENSIONS) {
 				PHP_LIKE_EXTENSIONS = new char[][] { "php".toCharArray() }; //$NON-NLS-1$
-			else {
+			} else {
 				IContentType javaContentType = Platform.getContentTypeManager().getContentType(PHPNature.ID);
 				Set<String> fileExtensions = new HashSet<>();
 				// content types derived from java content type should be
@@ -781,8 +836,9 @@ public class Util {
 				Iterator<String> iterator = fileExtensions.iterator();
 				while (iterator.hasNext()) {
 					String fileExtension = iterator.next();
-					if ("php".equals(fileExtension)) //$NON-NLS-1$
+					if ("php".equals(fileExtension)) {
 						continue;
+					}
 					extensions[index++] = fileExtension.toCharArray();
 				}
 				PHP_LIKE_EXTENSIONS = extensions;
@@ -829,8 +885,9 @@ public class Util {
 	 */
 	public static String getNameWithoutJavaLikeExtension(String fileName) {
 		int index = indexOfJavaLikeExtension(fileName);
-		if (index == -1)
+		if (index == -1) {
 			return fileName;
+		}
 		return fileName.substring(0, index);
 	}
 
@@ -846,8 +903,9 @@ public class Util {
 		// line delimiter in given text
 		if (text != null && text.length() != 0) {
 			lineSeparator = findLineSeparator(text.toCharArray());
-			if (lineSeparator != null)
+			if (lineSeparator != null) {
 				return lineSeparator;
+			}
 		}
 
 		// line delimiter in project preference
@@ -856,16 +914,18 @@ public class Util {
 			scopeContext = new IScopeContext[] { new ProjectScope(project.getProject()) };
 			lineSeparator = Platform.getPreferencesService().getString(Platform.PI_RUNTIME,
 					Platform.PREF_LINE_SEPARATOR, null, scopeContext);
-			if (lineSeparator != null)
+			if (lineSeparator != null) {
 				return lineSeparator;
+			}
 		}
 
 		// line delimiter in workspace preference
 		scopeContext = new IScopeContext[] { InstanceScope.INSTANCE };
 		lineSeparator = Platform.getPreferencesService().getString(Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR,
 				null, scopeContext);
-		if (lineSeparator != null)
+		if (lineSeparator != null) {
 			return lineSeparator;
+		}
 
 		// system line delimiter
 		return org.eclipse.dltk.compiler.util.Util.LINE_SEPARATOR;
@@ -900,11 +960,13 @@ public class Util {
 		int count = 0;
 		int len = sig.length;
 		for (;;) {
-			if (i == len)
+			if (i == len) {
 				break;
+			}
 			char c = sig[i];
-			if (c == ')')
+			if (c == ')') {
 				break;
+			}
 			if (c == '[') {
 				++i;
 			} else if (c == 'L') {
@@ -929,8 +991,9 @@ public class Util {
 		args.append(':');
 
 		for (int j = 0; j < arguments.length; j++) {
-			if (j != 0)
+			if (j != 0) {
 				args.append(ARGUMENTS_DELIMITER);
+			}
 
 			if (arguments[j].length() == 0) {
 				args.append(EMPTY_ARGUMENT);
@@ -946,11 +1009,13 @@ public class Util {
 	 * Separate all the arguments of a String made by getProblemArgumentsForMarker
 	 */
 	public static String[] getProblemArgumentsFromMarker(String argumentsString) {
-		if (argumentsString == null)
+		if (argumentsString == null) {
 			return null;
+		}
 		int index = argumentsString.indexOf(':');
-		if (index == -1)
+		if (index == -1) {
 			return null;
+		}
 
 		int length = argumentsString.length();
 		int numberOfArg;
@@ -968,12 +1033,15 @@ public class Util {
 		while (tokenizer.hasMoreTokens()) {
 			String argument = tokenizer.nextToken();
 			if (argument.equals(EMPTY_ARGUMENT))
+			 {
 				argument = ""; //$NON-NLS-1$
+			}
 			args[count++] = argument;
 		}
 
-		if (count != numberOfArg)
+		if (count != numberOfArg) {
 			return null;
+		}
 
 		System.arraycopy(args, 0, args = new String[count], 0, count);
 		return args;
@@ -1151,8 +1219,9 @@ public class Util {
 
 		int bestMatch = -1, bestLength = -1;
 		for (int i = 0; i < pathCount; i++) {
-			if (paths[i].equals(checkedPath))
+			if (paths[i].equals(checkedPath)) {
 				continue;
+			}
 			if (paths[i].isPrefixOf(checkedPath)) {
 				int currentLength = paths[i].segmentCount();
 				if (currentLength > bestLength) {
@@ -1177,13 +1246,16 @@ public class Util {
 			int extensionLength = extension.length;
 			int extensionStart = fileNameLength - extensionLength;
 			int dotIndex = extensionStart - 1;
-			if (dotIndex < 0)
+			if (dotIndex < 0) {
 				continue;
-			if (fileName.charAt(dotIndex) != '.')
+			}
+			if (fileName.charAt(dotIndex) != '.') {
 				continue;
+			}
 			for (int j = 0; j < extensionLength; j++) {
-				if (fileName.charAt(extensionStart + j) != extension[j])
+				if (fileName.charAt(extensionStart + j) != extension[j]) {
 					continue extensions;
+				}
 			}
 			return dotIndex;
 		}
@@ -1197,8 +1269,9 @@ public class Util {
 	public static int indexOfMatchingPath(IPath checkedPath, IPath[] paths, int pathCount) {
 
 		for (int i = 0; i < pathCount; i++) {
-			if (paths[i].equals(checkedPath))
+			if (paths[i].equals(checkedPath)) {
 				return i;
+			}
 		}
 		return -1;
 	}
@@ -1210,10 +1283,12 @@ public class Util {
 	public static int indexOfNestedPath(IPath checkedPath, IPath[] paths, int pathCount) {
 
 		for (int i = 0; i < pathCount; i++) {
-			if (checkedPath.equals(paths[i]))
+			if (checkedPath.equals(paths[i])) {
 				continue;
-			if (checkedPath.isPrefixOf(paths[i]))
+			}
+			if (checkedPath.isPrefixOf(paths[i])) {
 				return i;
+			}
 		}
 		return -1;
 	}
@@ -1238,7 +1313,9 @@ public class Util {
 		if (isReadOnlySupported()) {
 			ResourceAttributes resourceAttributes = resource.getResourceAttributes();
 			if (resourceAttributes == null)
+			 {
 				return false; // not supported on this platform for this
+			}
 			// resource
 			return resourceAttributes.isReadOnly();
 		}
@@ -1386,21 +1463,26 @@ public class Util {
 	 */
 	public static boolean isValidMethodSignature(String sig) {
 		int len = sig.length();
-		if (len == 0)
+		if (len == 0) {
 			return false;
+		}
 		int i = 0;
 		char c = sig.charAt(i++);
-		if (c != '(')
+		if (c != '(') {
 			return false;
-		if (i >= len)
+		}
+		if (i >= len) {
 			return false;
+		}
 		while (sig.charAt(i) != ')') {
 			// Void is not allowed as a parameter type.
 			i = checkTypeSignature(sig, i, len, false);
-			if (i == -1)
+			if (i == -1) {
 				return false;
-			if (i >= len)
+			}
+			if (i >= len) {
 				return false;
+			}
 		}
 		++i;
 		i = checkTypeSignature(sig, i, len, true);
@@ -1420,13 +1502,15 @@ public class Util {
 	 * last '$' is at lastDollar. The last character of the type name is at end-1.
 	 */
 	public static String localTypeName(String binaryTypeName, int lastDollar, int end) {
-		if (lastDollar > 0 && binaryTypeName.charAt(lastDollar - 1) == '$')
+		if (lastDollar > 0 && binaryTypeName.charAt(lastDollar - 1) == '$') {
 			// local name starts with a dollar sign
 			// (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=103466)
 			return binaryTypeName;
+		}
 		int nameStart = lastDollar + 1;
-		while (nameStart < end && Character.isDigit(binaryTypeName.charAt(nameStart)))
+		while (nameStart < end && Character.isDigit(binaryTypeName.charAt(nameStart))) {
 			nameStart++;
+		}
 		return binaryTypeName.substring(nameStart, end);
 	}
 
@@ -1466,8 +1550,9 @@ public class Util {
 		CharArrayBuffer result = new CharArrayBuffer();
 		int lineStart = 0;
 		int length = text.length;
-		if (length == 0)
+		if (length == 0) {
 			return text;
+		}
 		String lineSeparator = getLineSeparator(text, buffer);
 		char nextChar = text[0];
 		for (int i = 0; i < length; i++) {
@@ -1554,8 +1639,9 @@ public class Util {
 	public static int prefixLength(char[] s1, char[] s2) {
 		int len = 0;
 		int max = Math.min(s1.length, s2.length);
-		for (int i = 0; i < max && s1[i] == s2[i]; ++i)
+		for (int i = 0; i < max && s1[i] == s2[i]; ++i) {
 			++len;
+		}
 		return len;
 	}
 
@@ -1565,8 +1651,9 @@ public class Util {
 	public static int prefixLength(String s1, String s2) {
 		int len = 0;
 		int max = Math.min(s1.length(), s2.length());
-		for (int i = 0; i < max && s1.charAt(i) == s2.charAt(i); ++i)
+		for (int i = 0; i < max && s1.charAt(i) == s2.charAt(i); ++i) {
 			++len;
+		}
 		return len;
 	}
 
@@ -1733,8 +1820,9 @@ public class Util {
 			// add the separator lengths
 			length += max - skipSegmentCount - 1;
 		}
-		if (hasTrailingSeparator)
+		if (hasTrailingSeparator) {
 			length++;
+		}
 
 		char[] result = new char[length];
 		int offset = 0;
@@ -1752,8 +1840,9 @@ public class Util {
 			segments[len].getChars(0, size, result, offset);
 			offset += size;
 		}
-		if (hasTrailingSeparator)
+		if (hasTrailingSeparator) {
 			result[offset++] = '/';
+		}
 		return new String(result);
 	}
 
@@ -1802,9 +1891,11 @@ public class Util {
 		}
 
 		int wordCount = 1;
-		for (int i = start; i < end; i++)
-			if (string.charAt(i) == divider)
+		for (int i = start; i < end; i++) {
+			if (string.charAt(i) == divider) {
 				wordCount++;
+			}
+		}
 		String[] split = new String[wordCount];
 		int last = start, currentWord = 0;
 		for (int i = start; i < end; i++) {
@@ -1831,7 +1922,9 @@ public class Util {
 		if (isReadOnlySupported()) {
 			ResourceAttributes resourceAttributes = resource.getResourceAttributes();
 			if (resourceAttributes == null)
+			 {
 				return; // not supported on this platform for this resource
+			}
 			resourceAttributes.setReadOnly(readOnly);
 			try {
 				resource.setResourceAttributes(resourceAttributes);
@@ -1842,21 +1935,24 @@ public class Util {
 	}
 
 	public static void sort(char[][] list) {
-		if (list.length > 1)
+		if (list.length > 1) {
 			quickSort(list, 0, list.length - 1);
+		}
 	}
 
 	/**
 	 * Sorts an array of Comparable objects in place.
 	 */
 	public static void sort(Comparable[] objects) {
-		if (objects.length > 1)
+		if (objects.length > 1) {
 			quickSort(objects, 0, objects.length - 1);
+		}
 	}
 
 	public static void sort(int[] list) {
-		if (list.length > 1)
+		if (list.length > 1) {
 			quickSort(list, 0, list.length - 1);
+		}
 	}
 
 	/**
@@ -1864,16 +1960,18 @@ public class Util {
 	 * items.
 	 */
 	public static void sort(Object[] objects, Comparer comparer) {
-		if (objects.length > 1)
+		if (objects.length > 1) {
 			quickSort(objects, 0, objects.length - 1, comparer);
+		}
 	}
 
 	/**
 	 * Sorts an array of strings in place using quicksort.
 	 */
 	public static void sort(String[] strings) {
-		if (strings.length > 1)
+		if (strings.length > 1) {
 			quickSort(strings, 0, strings.length - 1);
+		}
 	}
 
 	/**
@@ -1938,11 +2036,13 @@ public class Util {
 	public static boolean startsWithIgnoreCase(String[] compoundName, String[] prefix, boolean partialMatch) {
 		int prefixLength = prefix.length;
 		int nameLength = compoundName.length;
-		if (prefixLength > nameLength)
+		if (prefixLength > nameLength) {
 			return false;
+		}
 		for (int i = 0; i < prefixLength - 1; i++) {
-			if (!compoundName[i].equalsIgnoreCase(prefix[i]))
+			if (!compoundName[i].equalsIgnoreCase(prefix[i])) {
 				return false;
+			}
 		}
 		return (partialMatch || prefixLength == nameLength)
 				&& compoundName[prefixLength - 1].toLowerCase().startsWith(prefix[prefixLength - 1].toLowerCase());
@@ -1952,13 +2052,16 @@ public class Util {
 	 * Returns whether the given compound name matches the given pattern.
 	 */
 	public static boolean matchesWithIgnoreCase(String[] compoundName, String pattern) {
-		if (pattern.equals("*")) //$NON-NLS-1$
+		if (pattern.equals("*")) {
 			return true;
+		}
 		int nameLength = compoundName.length;
-		if (pattern.length() == 0)
+		if (pattern.length() == 0) {
 			return nameLength == 0;
-		if (nameLength == 0)
+		}
+		if (nameLength == 0) {
 			return false;
+		}
 		int length = nameLength - 1;
 		for (int i = 0; i < nameLength; i++) {
 			length += compoundName[i].length();
@@ -1966,8 +2069,9 @@ public class Util {
 		char[] compoundChars = new char[length];
 		int pos = 0;
 		for (int i = 0; i < nameLength; i++) {
-			if (pos > 0)
+			if (pos > 0) {
 				compoundChars[pos++] = '.';
+			}
 			char[] array = compoundName[i].toCharArray();
 			int size = array.length;
 			System.arraycopy(array, 0, compoundChars, pos, size);
@@ -1981,8 +2085,9 @@ public class Util {
 	 */
 	public static char[][] toCharArrays(String[] a) {
 		int len = a.length;
-		if (len == 0)
+		if (len == 0) {
 			return CharOperation.NO_CHAR_CHAR;
+		}
 		char[][] result = new char[len][];
 		for (int i = 0; i < len; ++i) {
 			result[i] = a[i].toCharArray();
@@ -2022,9 +2127,10 @@ public class Util {
 	public static File toLocalFile(URI uri, IProgressMonitor monitor) throws CoreException {
 		IFileStore fileStore = EFS.getStore(uri);
 		File localFile = fileStore.toLocalFile(EFS.NONE, monitor);
-		if (localFile == null)
+		if (localFile == null) {
 			// non local file system
 			localFile = fileStore.toLocalFile(EFS.CACHE, monitor);
+		}
 		return localFile;
 	}
 
@@ -2034,8 +2140,9 @@ public class Util {
 	public static String toString(char[][] c) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0, max = c.length; i < max; ++i) {
-			if (i != 0)
+			if (i != 0) {
 				sb.append('.');
+			}
 			sb.append(c[i]);
 		}
 		return sb.toString();
@@ -2046,8 +2153,9 @@ public class Util {
 	 * '.'.
 	 */
 	public static String toString(char[][] c, char[] d) {
-		if (c == null)
+		if (c == null) {
 			return new String(d);
+		}
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0, max = c.length; i < max; ++i) {
 			sb.append(c[i]);
@@ -2303,8 +2411,9 @@ public class Util {
 	 * extension. (implementation is not creating extra strings)
 	 */
 	public final static boolean isJavaLikeFileName(String name) {
-		if (name == null)
+		if (name == null) {
 			return false;
+		}
 		return indexOfJavaLikeExtension(name) != -1;
 	}
 
@@ -2313,21 +2422,25 @@ public class Util {
 	 * extension. (implementation is not creating extra strings)
 	 */
 	public final static boolean isJavaLikeFileName(char[] fileName) {
-		if (fileName == null)
+		if (fileName == null) {
 			return false;
+		}
 		int fileNameLength = fileName.length;
 		char[][] javaLikeExtensions = getPHPLikeExtensions();
 		extensions: for (int i = 0, length = javaLikeExtensions.length; i < length; i++) {
 			char[] extension = javaLikeExtensions[i];
 			int extensionLength = extension.length;
 			int extensionStart = fileNameLength - extensionLength;
-			if (extensionStart - 1 < 0)
+			if (extensionStart - 1 < 0) {
 				continue;
-			if (fileName[extensionStart - 1] != '.')
+			}
+			if (fileName[extensionStart - 1] != '.') {
 				continue;
+			}
 			for (int j = 0; j < extensionLength; j++) {
-				if (fileName[extensionStart + j] != extension[j])
+				if (fileName[extensionStart + j] != extension[j]) {
 					continue extensions;
+				}
 			}
 			return true;
 		}
@@ -2774,8 +2887,9 @@ public class Util {
 	 * @return char[][][] Array of type arguments for each signature
 	 */
 	public final static char[][][] getAllTypeArguments(char[][] typeSignatures) {
-		if (typeSignatures == null)
+		if (typeSignatures == null) {
 			return null;
+		}
 		int length = typeSignatures.length;
 		char[][][] typeArguments = new char[length][][];
 		for (int i = 0; i < length; i++) {

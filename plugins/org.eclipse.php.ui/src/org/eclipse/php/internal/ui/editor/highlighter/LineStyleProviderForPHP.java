@@ -285,13 +285,15 @@ public class LineStyleProviderForPHP extends AbstractLineStyleProvider implement
 	protected StyleRange createStyleRange(ITextRegionCollection flatNode, ITextRegion region, TextAttribute attr,
 			int startOffset, int length) {
 		int start = flatNode.getStartOffset(region);
-		if (start < startOffset)
+		if (start < startOffset) {
 			start = startOffset;
+		}
 		int maxOffset = startOffset + length;
 		int end = flatNode.getEndOffset(region); // use get length directly
 		// instead of end-start?
-		if (end > maxOffset)
+		if (end > maxOffset) {
 			end = maxOffset;
+		}
 		StyleRange result = new StyleRange(start, end - start, attr.getForeground(), attr.getBackground(),
 				attr.getStyle());
 		if ((attr.getStyle() & TextAttribute.UNDERLINE) != 0) {
@@ -356,10 +358,12 @@ public class LineStyleProviderForPHP extends AbstractLineStyleProvider implement
 		for (int i = 0; i < nRegions; i++) {
 			region = regions.get(i);
 			final int startOffset = blockedRegion.getStartOffset(region);
-			if (startOffset >= partitionEndOffset)
+			if (startOffset >= partitionEndOffset) {
 				break;
-			if (blockedRegion.getEndOffset(region) <= partitionStartOffset)
+			}
+			if (blockedRegion.getEndOffset(region) <= partitionStartOffset) {
 				continue;
+			}
 
 			if (region instanceof ITextRegionCollection) {
 				handled = prepareTextRegion((ITextRegionCollection) region, partitionStartOffset, partitionLength,
@@ -442,10 +446,12 @@ public class LineStyleProviderForPHP extends AbstractLineStyleProvider implement
 			for (int i = 0; i < nRegions; i++) {
 				region = regions.get(i);
 				final int startOffset = structuredDocumentRegion.getStartOffset(region);
-				if (startOffset >= partitionEndOffset)
+				if (startOffset >= partitionEndOffset) {
 					break;
-				if (structuredDocumentRegion.getEndOffset(region) <= partitionStartOffset)
+				}
+				if (structuredDocumentRegion.getEndOffset(region) <= partitionStartOffset) {
 					continue;
+				}
 
 				if (region instanceof ITextRegionCollection) {
 					handled = prepareTextRegion((ITextRegionCollection) region, partitionStartOffset, partitionLength,

@@ -507,14 +507,16 @@ public class PHPTextSequenceUtilities {
 	 * @return
 	 */
 	public static @Nullable ISourceRange getEnclosingIdentifier(@NonNull CharSequence textSequence, int pos) {
-		if (pos < 0 || pos >= textSequence.length())
+		if (pos < 0 || pos >= textSequence.length()) {
 			return null;
+		}
 
 		int start = readIdentifierStartIndex(textSequence, pos, true);
 		int end = readIdentifierEndIndex(textSequence, pos, true);
 
-		if (start < 0 || start > end)
+		if (start < 0 || start > end) {
 			return null;
+		}
 
 		return new SourceRange(start, end - start + 1);
 	}

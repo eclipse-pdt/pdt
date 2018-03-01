@@ -50,8 +50,9 @@ public class QualifiedNameComponent extends Composite {
 		gd.horizontalSpan = 2;
 		label.setLayoutData(gd);
 		String text = refactoring.getFilePatterns();
-		if (text == null)
+		if (text == null) {
 			text = settings.get(PATTERNS);
+		}
 		if (text != null) {
 			fPatterns.setText(text);
 			refactoring.setFilePatterns(text);

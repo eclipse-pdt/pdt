@@ -28,10 +28,11 @@ public class RerunAction extends Action {
 	 */
 	public RerunAction(final PHPUnitView runner, final int testId, final String launchMode) {
 		super();
-		if (launchMode.equals(ILaunchManager.RUN_MODE))
+		if (launchMode.equals(ILaunchManager.RUN_MODE)) {
 			setText(PHPUnitMessages.RerunAction_Run);
-		else if (launchMode.equals(ILaunchManager.DEBUG_MODE))
+		} else if (launchMode.equals(ILaunchManager.DEBUG_MODE)) {
 			setText(PHPUnitMessages.RerunAction_Debug);
+		}
 		fTestRunner = runner;
 		fTestId = testId;
 		fLaunchMode = launchMode;

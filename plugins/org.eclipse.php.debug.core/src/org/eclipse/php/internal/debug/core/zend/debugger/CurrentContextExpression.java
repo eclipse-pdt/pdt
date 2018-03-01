@@ -39,12 +39,13 @@ public class CurrentContextExpression extends DefaultExpression {
 	@Override
 	public Expression createChildExpression(String endName, String endRepresentation, Facet... facets) {
 		endName = '$' + endName;
-		if (VariablesUtil.isThis(endName))
+		if (VariablesUtil.isThis(endName)) {
 			return new DefaultExpression(endName, KIND_THIS);
-		else if (VariablesUtil.isSuperGlobal(endName))
+		} else if (VariablesUtil.isSuperGlobal(endName)) {
 			return new DefaultExpression(endName, KIND_SUPER_GLOBAL);
-		else
+		} else {
 			return new DefaultExpression(endName, KIND_LOCAL);
+		}
 	}
 
 	/**

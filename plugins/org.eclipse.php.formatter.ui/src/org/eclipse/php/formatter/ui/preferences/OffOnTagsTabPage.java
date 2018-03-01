@@ -64,14 +64,17 @@ public class OffOnTagsTabPage extends ModifyDialogTabPage {
 			 */
 			@Override
 			public String isValid(String input) {
-				if (input.length() == 0)
+				if (input.length() == 0) {
 					return null;
+				}
 
-				if (Character.isWhitespace(input.charAt(0)))
+				if (Character.isWhitespace(input.charAt(0))) {
 					return FormatterMessages.OffOnTagsTabPage_error_startsWithWhitespace;
+				}
 
-				if (Character.isWhitespace(input.charAt(input.length() - 1)))
+				if (Character.isWhitespace(input.charAt(input.length() - 1))) {
 					return FormatterMessages.OffOnTagsTabPage_error_endsWithWhitespace;
+				}
 
 				return null;
 			}
@@ -115,8 +118,9 @@ public class OffOnTagsTabPage extends ModifyDialogTabPage {
 
 	@Override
 	public final Composite createContents(Composite parent) {
-		if (fPixelConverter == null)
+		if (fPixelConverter == null) {
 			fPixelConverter = new PixelConverter(parent);
+		}
 
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayoutData(new GridData());

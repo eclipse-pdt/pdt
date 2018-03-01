@@ -565,7 +565,9 @@ public class DebugSearchEngine {
 			}
 			Collection<IPathEntryFilter> l = filtersMap.values();
 			while (l.remove(null))
+			 {
 				; // remove null elements
+			}
 			filters = l.toArray(new IPathEntryFilter[filtersMap.size()]);
 		}
 		return filters;

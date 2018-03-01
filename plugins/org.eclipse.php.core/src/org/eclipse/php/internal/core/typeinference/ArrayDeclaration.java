@@ -61,18 +61,23 @@ public class ArrayDeclaration extends Declaration {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (!super.equals(obj))
+		}
+		if (!super.equals(obj)) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		ArrayDeclaration other = (ArrayDeclaration) obj;
 		if (decls == null) {
-			if (other.decls != null)
+			if (other.decls != null) {
 				return false;
-		} else if (!decls.equals(other.decls))
+			}
+		} else if (!decls.equals(other.decls)) {
 			return false;
+		}
 		return true;
 	}
 

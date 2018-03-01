@@ -116,8 +116,9 @@ public class XDebugDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	public IStatus validate(PHPexeItem item) {
 		File executable = item.getExecutable();
 		PHPexes.changePermissions(executable);
-		if (isInstalled(item, EXTENSION_MODULE_ID))
+		if (isInstalled(item, EXTENSION_MODULE_ID)) {
 			return Status.OK_STATUS;
+		}
 		return new Status(IStatus.WARNING, PHPDebugPlugin.ID,
 				PHPDebugCoreMessages.XDebugDebuggerConfiguration_XDebugNotInstalledError);
 	}

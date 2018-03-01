@@ -134,9 +134,10 @@ public class IncludeOccurrencesFinder extends AbstractOccurrencesFinder {
 			Identifier id = (Identifier) className2;
 			String name = id.getName();
 			for (IType type : types) {
-				if (type.getElementName().equals(name))
+				if (type.getElementName().equals(name)) {
 					fResult.add(new OccurrenceLocation(className.getStart(), className.getLength(),
 							getOccurrenceType(null), fDescription));
+				}
 			}
 		}
 		return false;
@@ -150,9 +151,10 @@ public class IncludeOccurrencesFinder extends AbstractOccurrencesFinder {
 				|| location == FormalParameter.PARAMETER_TYPE_PROPERTY) {
 			String name = className.getName();
 			for (IType type : types) {
-				if (type.getElementName().equals(name))
+				if (type.getElementName().equals(name)) {
 					fResult.add(new OccurrenceLocation(className.getStart(), className.getLength(),
 							getOccurrenceType(null), fDescription));
+				}
 			}
 		}
 		return false;
@@ -165,9 +167,10 @@ public class IncludeOccurrencesFinder extends AbstractOccurrencesFinder {
 			Identifier id = (Identifier) functionName2;
 			String name = id.getName();
 			for (IMethod method : methods) {
-				if (method.getElementName().equals(name))
+				if (method.getElementName().equals(name)) {
 					fResult.add(new OccurrenceLocation(functionInvocation.getStart(), functionInvocation.getLength(),
 							getOccurrenceType(null), fDescription));
+				}
 			}
 		}
 		return true;

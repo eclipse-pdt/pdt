@@ -377,10 +377,11 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 		String id = fStore.getString(PreferenceConstants.EDITOR_FOLDING_PROVIDER);
 		Object provider = fProviderDescriptors.get(id);
 		if (provider != null) {
-			if (fProviderViewer == null)
+			if (fProviderViewer == null) {
 				updateListDependencies();
-			else
+			} else {
 				fProviderViewer.setSelection(new StructuredSelection(provider), true);
+			}
 		}
 	}
 }

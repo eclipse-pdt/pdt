@@ -296,8 +296,9 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 		IResource file = null;
 		file = getFileFromDialog(this.project.getProject());
 
-		if (file == null)
+		if (file == null) {
 			return;
+		}
 
 		String fName = file.getFullPath().toString();
 		fFile.setText(fName);

@@ -93,8 +93,9 @@ public class UnresolvedElementsSubProcessor {
 		importRewrite = ImportRewrite.create((Program) node.getRoot(), true);
 		String simpleName = importRewrite.addImport(namespace, fullName);
 
-		if (simpleName == null)
+		if (simpleName == null) {
 			return null;
+		}
 
 		if (!isLikelyTypeName(simpleName)) {
 			relevance -= 2;

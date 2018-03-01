@@ -126,10 +126,11 @@ public class PharPackage {
 	 */
 	public IFile getStubFile() {
 		IPath path = getStubLocation();
-		if (path != null && path.isValidPath(path.toString()) && path.segmentCount() >= 2)
+		if (path != null && path.isValidPath(path.toString()) && path.segmentCount() >= 2) {
 			return ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-		else
+		} else {
 			return null;
+		}
 	}
 
 	/**
@@ -172,7 +173,9 @@ public class PharPackage {
 	 */
 	public String getStubVersion() {
 		if (stubVersion == null)
+		 {
 			return "1.1.0"; //$NON-NLS-1$
+		}
 		return stubVersion;
 	}
 
@@ -183,8 +186,9 @@ public class PharPackage {
 	 * @return an array of leaf objects
 	 */
 	public Object[] getElements() {
-		if (fElements == null)
+		if (fElements == null) {
 			setElements(new Object[0]);
+		}
 		return fElements;
 	}
 
@@ -247,8 +251,9 @@ public class PharPackage {
 	 *         one is accessible
 	 */
 	public boolean isStubAccessible() {
-		if (isStubGenerated())
+		if (isStubGenerated()) {
 			return true;
+		}
 		IFile file = getStubFile();
 		return file != null && file.isAccessible();
 	}

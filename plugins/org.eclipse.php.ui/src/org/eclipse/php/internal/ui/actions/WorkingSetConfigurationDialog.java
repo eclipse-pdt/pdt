@@ -65,8 +65,9 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 			Assert.isTrue(object instanceof IWorkingSet);
 			IWorkingSet workingSet = (IWorkingSet) object;
 			ImageDescriptor imageDescriptor = workingSet.getImageDescriptor();
-			if (imageDescriptor == null)
+			if (imageDescriptor == null) {
 				return null;
+			}
 			Image icon = fIcons.get(imageDescriptor);
 			if (icon == null) {
 				icon = imageDescriptor.createImage();
@@ -93,16 +94,19 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 		}
 
 		private boolean isCompatible(IWorkingSet set) {
-			if (!set.isSelfUpdating() || set.isAggregateWorkingSet())
+			if (!set.isSelfUpdating() || set.isAggregateWorkingSet()) {
 				return false;
+			}
 			IAdaptable[] elements = set.getElements();
-			if (elements.length == 0)
+			if (elements.length == 0) {
 				return false;
+			}
 			for (int i = 0; i < elements.length; i++) {
 				IAdaptable element = elements[i];
 				IProject p = element.getAdapter(IProject.class);
-				if (p == null || p.exists())
+				if (p == null || p.exists()) {
 					return true;
+				}
 			}
 			return false;
 		}
@@ -141,8 +145,9 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 		fActiveWorkingSets = Arrays.asList(activeWorkingSets);
 		Filter filter = new Filter();
 		for (int i = 0; i < allWorkingSets.length; i++) {
-			if (filter.select(null, null, allWorkingSets[i]))
+			if (filter.select(null, null, allWorkingSets[i])) {
 				fAllWorkingSets.add(allWorkingSets[i]);
+			}
 		}
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 	}
@@ -545,8 +550,9 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 		Set<IWorkingSet> globals = new HashSet<>(
 				Arrays.asList(PlatformUI.getWorkbench().getWorkingSetManager().getWorkingSets()));
 		for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
-			if (!globals.contains(iter.next()))
+			if (!globals.contains(iter.next())) {
 				return false;
+			}
 		}
 		return true;
 	}

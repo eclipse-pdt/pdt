@@ -151,10 +151,11 @@ public class ContextManager {
 						: layers[layers.length - 1].getCalledFunctionName(),
 				fTarget.getLastStop(), frameCt, getLocalVariables());
 
-		if (fFrames != null)
+		if (fFrames != null) {
 			frames[0] = mergeFrame((PHPStackFrame) fFrames[0], topFrame);
-		else
+		} else {
 			frames[0] = topFrame;
+		}
 
 		return frames;
 	}

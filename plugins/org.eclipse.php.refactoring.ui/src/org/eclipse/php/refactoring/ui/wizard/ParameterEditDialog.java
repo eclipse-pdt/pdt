@@ -73,9 +73,9 @@ public class ParameterEditDialog extends StatusDialog {
 
 		label = new Label(result, SWT.NONE);
 		String newName = fParameter.getNewDisplayName();
-		if (newName.length() == 0)
+		if (newName.length() == 0) {
 			label.setText(RefactoringMessages.ParameterEditDialog_message_new);
-		else {
+		} else {
 			label.setText(NLS.bind(RefactoringMessages.ParameterEditDialog_message, newName));
 		}
 		gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -155,41 +155,50 @@ public class ParameterEditDialog extends StatusDialog {
 	}
 
 	private IStatus validateType() {
-		if (fType == null)
+		if (fType == null) {
 			return null;
+		}
 		String type = fType.getText();
 
 		RefactoringStatus status = PHPConventionsUtil.checkParameterTypeSyntax(type,
 				fContext.getCuHandle().getSourceModule().getScriptProject());
-		if (status == null || status.isOK())
+		if (status == null || status.isOK()) {
 			return createOkStatus();
-		if (status.hasError())
+		}
+		if (status.hasError()) {
 			return createErrorStatus(status.getEntryWithHighestSeverity().getMessage());
-		else
+		} else {
 			return createWarningStatus(status.getEntryWithHighestSeverity().getMessage());
+		}
 	}
 
 	private IStatus validateName() {
-		if (fName == null)
+		if (fName == null) {
 			return null;
+		}
 		String text = fName.getText();
-		if (text.length() == 0)
+		if (text.length() == 0) {
 			return createErrorStatus(RefactoringMessages.ParameterEditDialog_name_error);
+		}
 		IStatus status = PHPConventionsUtil.validateFieldName(text);
 
-		if (status.matches(IStatus.ERROR))
+		if (status.matches(IStatus.ERROR)) {
 			return status;
-		if (!PHPConventionsUtil.startsWithLowerCase(text))
+		}
+		if (!PHPConventionsUtil.startsWithLowerCase(text)) {
 			return createWarningStatus(RefactoringCoreMessages.ExtractTempRefactoring_convention);
+		}
 		return createOkStatus();
 	}
 
 	private IStatus validateDefaultValue() {
-		if (fDefaultValue == null)
+		if (fDefaultValue == null) {
 			return null;
+		}
 		String defaultValue = fDefaultValue.getText();
-		if (defaultValue.length() == 0)
+		if (defaultValue.length() == 0) {
 			return createErrorStatus(RefactoringMessages.ParameterEditDialog_defaultValue_error);
+		}
 		// if (ChangeSignatureProcessor.isValidExpression(defaultValue))
 		// return createOkStatus();
 		String msg = RefactoringMessages.bind(RefactoringMessages.ParameterEditDialog_defaultValue_invalid,

@@ -336,8 +336,9 @@ public class AddPHPExceptionBreakpointDialog extends SelectionDialog {
 			fExceptionTypesCache = new TreeSet<>(new Comparator<IType>() {
 				@Override
 				public int compare(IType o1, IType o2) {
-					if (o1 instanceof ErrorType && !(o2 instanceof ErrorType))
+					if (o1 instanceof ErrorType && !(o2 instanceof ErrorType)) {
 						return -1;
+					}
 					return o1.getElementName().toLowerCase().compareTo(o2.getElementName().toLowerCase());
 				}
 			});

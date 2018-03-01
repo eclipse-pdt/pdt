@@ -86,8 +86,9 @@ public class RenameFunctionProcessor extends AbstractRenameProcessor<IFile>
 					participantFiles.size());
 			pm.setTaskName(RenameFunctionProcessor.CREATING_MODIFICATIONS_LABEL);
 
-			if (pm.isCanceled())
+			if (pm.isCanceled()) {
 				throw new OperationCanceledException();
+			}
 
 			// get target parameters
 			final String newElementName = getNewElementName();
@@ -103,8 +104,9 @@ public class RenameFunctionProcessor extends AbstractRenameProcessor<IFile>
 				// aggregate the changes identifiers
 				program.accept(rename);
 
-				if (pm.isCanceled())
+				if (pm.isCanceled()) {
 					throw new OperationCanceledException();
+				}
 
 				pm.worked(1);
 

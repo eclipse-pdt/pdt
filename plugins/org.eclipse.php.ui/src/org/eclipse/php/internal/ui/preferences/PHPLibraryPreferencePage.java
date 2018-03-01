@@ -653,8 +653,9 @@ public class PHPLibraryPreferencePage extends UserLibraryPreferencePage {
 	}
 
 	private boolean canEdit(List<?> list) {
-		if (list.size() != 1)
+		if (list.size() != 1) {
 			return false;
+		}
 
 		Object firstElement = list.get(0);
 		if (firstElement instanceof BPUserLibraryElement) {

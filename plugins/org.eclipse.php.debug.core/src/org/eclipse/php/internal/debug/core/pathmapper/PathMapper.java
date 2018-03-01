@@ -273,27 +273,36 @@ public class PathMapper implements IXMLPreferencesStorable {
 
 		@Override
 		public boolean equals(Object obj) {
-			if (this == obj)
+			if (this == obj) {
 				return true;
-			if (obj == null)
+			}
+			if (obj == null) {
 				return false;
-			if (getClass() != obj.getClass())
+			}
+			if (getClass() != obj.getClass()) {
 				return false;
+			}
 			Mapping other = (Mapping) obj;
 			if (localPath == null) {
-				if (other.localPath != null)
+				if (other.localPath != null) {
 					return false;
-			} else if (!localPath.equals(other.localPath))
+				}
+			} else if (!localPath.equals(other.localPath)) {
 				return false;
+			}
 			if (remotePath == null) {
-				if (other.remotePath != null)
+				if (other.remotePath != null) {
 					return false;
-			} else if (!remotePath.equals(other.remotePath))
+				}
+			} else if (!remotePath.equals(other.remotePath)) {
 				return false;
-			if (source != other.source)
+			}
+			if (source != other.source) {
 				return false;
-			if (type != other.type)
+			}
+			if (type != other.type) {
 				return false;
+			}
 			return true;
 		}
 

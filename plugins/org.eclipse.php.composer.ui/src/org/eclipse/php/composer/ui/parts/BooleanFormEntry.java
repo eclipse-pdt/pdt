@@ -111,8 +111,9 @@ public class BooleanFormEntry {
 		checkbox.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (ignoreNotify)
+				if (ignoreNotify) {
 					return;
+				}
 
 				for (IBooleanFormEntryListener listener : listeners) {
 					listener.selectionChanged(BooleanFormEntry.this);

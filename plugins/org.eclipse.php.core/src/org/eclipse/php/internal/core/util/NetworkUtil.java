@@ -106,8 +106,9 @@ public class NetworkUtil {
 	public static List<Inet4Address> getAllAddresses() {
 		final List<Inet4Address> descriptors = new ArrayList<>();
 		Inet4Address publicAddress = getPublicAddress();
-		if (publicAddress != null)
+		if (publicAddress != null) {
 			descriptors.add(getPublicAddress());
+		}
 		descriptors.addAll(getPrivateAddresses());
 		descriptors.add(LOCALHOST);
 		return descriptors;
@@ -272,8 +273,9 @@ public class NetworkUtil {
 	public static boolean isSamePrivateClass(Inet4Address address1, Inet4Address address2) {
 		if ((isPrivateClassA(address1) && isPrivateClassA(address2))
 				|| (isPrivateClassB(address1) && isPrivateClassB(address2))
-				|| (isPrivateClassC(address1) && isPrivateClassC(address2)))
+				|| (isPrivateClassC(address1) && isPrivateClassC(address2))) {
 			return true;
+		}
 		return false;
 	}
 

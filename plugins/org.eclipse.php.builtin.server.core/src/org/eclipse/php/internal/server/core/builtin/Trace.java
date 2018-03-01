@@ -61,8 +61,9 @@ public class Trace {
 	 *            a throwable
 	 */
 	public static void trace(byte level, String s, Throwable t) {
-		if (!PHPServerPlugin.getDefault().isDebugging())
+		if (!PHPServerPlugin.getDefault().isDebugging()) {
 			return;
+		}
 
 		trace(PHPServerPlugin.PLUGIN_ID, level, s, t);
 	}
@@ -78,17 +79,20 @@ public class Trace {
 	 *            a throwable
 	 */
 	private static void trace(String pluginId, int level, String s, Throwable t) {
-		if (pluginId == null || s == null)
+		if (pluginId == null || s == null) {
 			return;
+		}
 
-		if (!PHPServerPlugin.getDefault().isDebugging())
+		if (!PHPServerPlugin.getDefault().isDebugging()) {
 			return;
+		}
 
 		StringBuffer sb = new StringBuffer(pluginId);
-		if (pluginId.length() > pluginLength)
+		if (pluginId.length() > pluginLength) {
 			pluginLength = pluginId.length();
-		else if (pluginId.length() < pluginLength)
+		} else if (pluginId.length() < pluginLength) {
 			sb.append(spacer.substring(0, pluginLength - pluginId.length()));
+		}
 		sb.append(" "); //$NON-NLS-1$
 		sb.append(levelNames[level]);
 		sb.append(" "); //$NON-NLS-1$
@@ -97,8 +101,9 @@ public class Trace {
 		sb.append(s);
 
 		System.out.println(sb.toString());
-		if (t != null)
+		if (t != null) {
 			t.printStackTrace();
+		}
 	}
 
 	/**

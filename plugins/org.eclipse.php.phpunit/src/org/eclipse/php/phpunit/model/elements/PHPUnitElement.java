@@ -59,8 +59,9 @@ abstract public class PHPUnitElement {
 	}
 
 	public int getTestId() {
-		if (testId == 0)
+		if (testId == 0) {
 			setTestId();
+		}
 		return testId;
 	}
 

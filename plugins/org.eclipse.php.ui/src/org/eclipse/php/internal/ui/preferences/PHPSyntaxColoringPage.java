@@ -191,8 +191,9 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 	 * Color the text in the sample area according to the current preferences
 	 */
 	void applyStyles() {
-		if (fText == null || fText.isDisposed())
+		if (fText == null || fText.isDisposed()) {
 			return;
+		}
 
 		fStyleProvider.loadColors();
 
@@ -416,8 +417,9 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 					Object o = ((IStructuredSelection) event.getSelection()).getFirstElement();
 					String namedStyle = o.toString();
 					activate(namedStyle);
-					if (namedStyle == null)
+					if (namedStyle == null) {
 						return;
+					}
 				}
 			}
 		});
@@ -656,8 +658,9 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 		fClearStyle.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (fStylesViewer.getSelection().isEmpty())
+				if (fStylesViewer.getSelection().isEmpty()) {
 					return;
+				}
 				String namedStyle = ((IStructuredSelection) fStylesViewer.getSelection()).getFirstElement().toString();
 				if (SemanticHighlightingManager.getInstance().getSemanticHighlightings().containsKey(namedStyle)) {
 					AbstractSemanticHighlighting semanticHighlighting = SemanticHighlightingManager.getInstance()
@@ -781,9 +784,9 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 			@Override
 			public String getText(Object element) {
 				Object description = fStyleToDescriptionMap.get(element);
-				if (description != null)
+				if (description != null) {
 					return description.toString();
-				else if (SemanticHighlightingManager.getInstance().getSemanticHighlightings().containsKey(element)) {
+				} else if (SemanticHighlightingManager.getInstance().getSemanticHighlightings().containsKey(element)) {
 					AbstractSemanticHighlighting semanticHighlighting = SemanticHighlightingManager.getInstance()
 							.getSemanticHighlightings().get(element);
 					return semanticHighlighting.getDisplayName();
@@ -848,20 +851,24 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 
 				int fontModifier = SWT.NORMAL;
 				boolean on = getOverlayStore().getBoolean(semanticHighlightingType.getBoldPreferenceKey());
-				if (on)
+				if (on) {
 					fontModifier = fontModifier | SWT.BOLD;
+				}
 
 				on = getOverlayStore().getBoolean(semanticHighlightingType.getItalicPreferenceKey());
-				if (on)
+				if (on) {
 					fontModifier = fontModifier | SWT.ITALIC;
+				}
 
 				on = getOverlayStore().getBoolean(semanticHighlightingType.getStrikethroughPreferenceKey());
-				if (on)
+				if (on) {
 					fontModifier = fontModifier | TextAttribute.STRIKETHROUGH;
+				}
 
 				on = getOverlayStore().getBoolean(semanticHighlightingType.getUnderlinePreferenceKey());
-				if (on)
+				if (on) {
 					fontModifier = fontModifier | TextAttribute.UNDERLINE;
+				}
 
 				String color = getOverlayStore().getString(semanticHighlightingType.getColorPreferenceKey());
 				RGB foreground = ColorHelper.toRGB(color);
@@ -884,23 +891,27 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 
 				if (stylePrefs.length > 2) {
 					boolean on = Boolean.valueOf(stylePrefs[2]).booleanValue();
-					if (on)
+					if (on) {
 						fontModifier = fontModifier | SWT.BOLD;
+					}
 				}
 				if (stylePrefs.length > 3) {
 					boolean on = Boolean.valueOf(stylePrefs[3]).booleanValue();
-					if (on)
+					if (on) {
 						fontModifier = fontModifier | SWT.ITALIC;
+					}
 				}
 				if (stylePrefs.length > 4) {
 					boolean on = Boolean.valueOf(stylePrefs[4]).booleanValue();
-					if (on)
+					if (on) {
 						fontModifier = fontModifier | TextAttribute.STRIKETHROUGH;
+					}
 				}
 				if (stylePrefs.length > 5) {
 					boolean on = Boolean.valueOf(stylePrefs[5]).booleanValue();
-					if (on)
+					if (on) {
 						fontModifier = fontModifier | TextAttribute.UNDERLINE;
+					}
 				}
 
 				ta = new TextAttribute((foreground != null) ? EditorUtility.getColor(foreground) : null,
@@ -916,10 +927,11 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 
 	private String getNamedStyleAtOffset(int offset) {
 		// ensure the offset is clean
-		if (offset >= fDocument.getLength())
+		if (offset >= fDocument.getLength()) {
 			return getNamedStyleAtOffset(fDocument.getLength() - 1);
-		else if (offset < 0)
+		} else if (offset < 0) {
 			return getNamedStyleAtOffset(0);
+		}
 
 		if (highlightingPositionMap == null) {
 			initHighlightingPositions();
@@ -1347,8 +1359,9 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 			@Override
 			public void keyTraversed(TraverseEvent e) {
 				if (e.widget instanceof StyledText) {
-					if ((e.detail == SWT.TRAVERSE_TAB_NEXT) || (e.detail == SWT.TRAVERSE_TAB_PREVIOUS))
+					if ((e.detail == SWT.TRAVERSE_TAB_NEXT) || (e.detail == SWT.TRAVERSE_TAB_PREVIOUS)) {
 						e.doit = true;
+					}
 				}
 			}
 		};
@@ -1435,14 +1448,16 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 	 * Specifically set the reporting name of a control for accessibility
 	 */
 	private void setAccessible(Control control, String name) {
-		if (control == null)
+		if (control == null) {
 			return;
+		}
 		final String n = name;
 		control.getAccessible().addAccessibleListener(new AccessibleAdapter() {
 			@Override
 			public void getName(AccessibleEvent e) {
-				if (e.childID == ACC.CHILDID_SELF)
+				if (e.childID == ACC.CHILDID_SELF) {
 					e.result = n;
+				}
 			}
 		});
 	}
@@ -1483,27 +1498,33 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 			TextAttribute attribute = null;
 			int style = getBoolean(store, highlighting.getBoldPreferenceKey()) ? SWT.BOLD : SWT.NORMAL;
 
-			if (getBoolean(store, highlighting.getItalicPreferenceKey()))
+			if (getBoolean(store, highlighting.getItalicPreferenceKey())) {
 				style |= SWT.ITALIC;
-			if (getBoolean(store, highlighting.getStrikethroughPreferenceKey()))
+			}
+			if (getBoolean(store, highlighting.getStrikethroughPreferenceKey())) {
 				style |= TextAttribute.STRIKETHROUGH;
-			if (getBoolean(store, highlighting.getUnderlinePreferenceKey()))
+			}
+			if (getBoolean(store, highlighting.getUnderlinePreferenceKey())) {
 				style |= TextAttribute.UNDERLINE;
+			}
 
 			String rgbString = getString(store, highlighting.getColorPreferenceKey());
 			Color color = null;
 
-			if (rgbString != null)
+			if (rgbString != null) {
 				color = EditorUtility.getColor(ColorHelper.toRGB(rgbString));
+			}
 
 			String bgrgbString = null;
-			if (highlighting instanceof ISemanticHighlightingExtension2)
+			if (highlighting instanceof ISemanticHighlightingExtension2) {
 				bgrgbString = getString(store,
 						((ISemanticHighlightingExtension2) highlighting).getBackgroundColorPreferenceKey());
+			}
 			Color bgcolor = null;
 
-			if (bgrgbString != null)
+			if (bgrgbString != null) {
 				bgcolor = EditorUtility.getColor(ColorHelper.toRGB(bgrgbString));
+			}
 
 			attribute = new TextAttribute(color, bgcolor, style);
 
@@ -1612,8 +1633,9 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 	 */
 	private void handleHighlightingPropertyChange(PropertyChangeEvent event) {
 		String property = event.getProperty();
-		if (property == null)
+		if (property == null) {
 			return;
+		}
 		for (Iterator<?> iterator = SemanticHighlightingManager.getInstance().getSemanticHighlightings().keySet()
 				.iterator(); iterator.hasNext();) {
 			String type = (String) iterator.next();
@@ -1642,12 +1664,13 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 	private void adaptToEnablementChange(HighlightingStyle highlighting, PropertyChangeEvent event) {
 		Object value = event.getNewValue();
 		boolean eventValue;
-		if (value instanceof Boolean)
+		if (value instanceof Boolean) {
 			eventValue = ((Boolean) value).booleanValue();
-		else if (IPreferenceStore.TRUE.equals(value))
+		} else if (IPreferenceStore.TRUE.equals(value)) {
 			eventValue = true;
-		else
+		} else {
 			eventValue = false;
+		}
 		highlighting.setEnabled(eventValue);
 	}
 
@@ -1655,10 +1678,11 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 		RGB rgb = null;
 
 		Object value = event.getNewValue();
-		if (value instanceof RGB)
+		if (value instanceof RGB) {
 			rgb = (RGB) value;
-		else if (value instanceof String)
+		} else if (value instanceof String) {
 			rgb = ColorHelper.toRGB((String) value);
+		}
 
 		if (rgb != null) {
 			Color color = EditorUtility.getColor(rgb);
@@ -1671,10 +1695,11 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 		RGB rgb = null;
 
 		Object value = event.getNewValue();
-		if (value instanceof RGB)
+		if (value instanceof RGB) {
 			rgb = (RGB) value;
-		else if (value instanceof String)
+		} else if (value instanceof String) {
 			rgb = ColorHelper.toRGB((String) value);
+		}
 
 		if (rgb != null) {
 			Color color = EditorUtility.getColor(rgb);
@@ -1686,17 +1711,19 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 	private void adaptToTextStyleChange(HighlightingStyle highlighting, PropertyChangeEvent event, int styleAttribute) {
 		boolean eventValue = false;
 		Object value = event.getNewValue();
-		if (value instanceof Boolean)
+		if (value instanceof Boolean) {
 			eventValue = ((Boolean) value).booleanValue();
-		else if (IPreferenceStore.TRUE.equals(value))
+		} else if (IPreferenceStore.TRUE.equals(value)) {
 			eventValue = true;
+		}
 
 		TextAttribute oldAttr = highlighting.getTextAttribute();
 		boolean activeValue = (oldAttr.getStyle() & styleAttribute) == styleAttribute;
 
-		if (activeValue != eventValue)
+		if (activeValue != eventValue) {
 			highlighting.setTextAttribute(new TextAttribute(oldAttr.getForeground(), oldAttr.getBackground(),
 					eventValue ? oldAttr.getStyle() | styleAttribute : oldAttr.getStyle() & ~styleAttribute));
+		}
 	}
 
 }

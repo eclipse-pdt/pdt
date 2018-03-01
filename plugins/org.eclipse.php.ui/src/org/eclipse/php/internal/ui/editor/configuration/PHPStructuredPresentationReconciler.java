@@ -277,8 +277,9 @@ public class PHPStructuredPresentationReconciler extends StructuredPresentationR
 					for (int i = 0; i < damagedPartitions.size(); i++) {
 						ITypedRegion r = damagedPartitions.get(i);
 						IPresentationRepairer repairer = getRepairer(r.getType());
-						if (repairer != null)
+						if (repairer != null) {
 							repairer.createPresentation(presentation, r);
+						}
 					}
 				}
 
@@ -394,12 +395,14 @@ public class PHPStructuredPresentationReconciler extends StructuredPresentationR
 		super.setRepairer(repairer, contentType);
 		Assert.isNotNull(contentType);
 
-		if (fRepairers == null)
+		if (fRepairers == null) {
 			fRepairers = new HashMap<>();
+		}
 
-		if (repairer == null)
+		if (repairer == null) {
 			fRepairers.remove(contentType);
-		else
+		} else {
 			fRepairers.put(contentType, repairer);
+		}
 	}
 }

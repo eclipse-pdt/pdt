@@ -96,8 +96,9 @@ public final class PHPDebugUtil {
 					final URL urlToOpen = new URL(launchURL);
 					StringBuilder browserTitle = new StringBuilder(urlToOpen.getProtocol()).append("://").append( //$NON-NLS-1$
 							urlToOpen.getHost());
-					if (urlToOpen.getPort() != -1)
+					if (urlToOpen.getPort() != -1) {
 						browserTitle.append(':').append(urlToOpen.getPort());
+					}
 					browserTitle.append(urlToOpen.getPath());
 					IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
 					IWebBrowser browser = browserSupport.createBrowser(
@@ -105,9 +106,10 @@ public final class PHPDebugUtil {
 									| IWorkbenchBrowserSupport.STATUS,
 							"PHP Debugger Browser", //$NON-NLS-1$
 							browserTitle.toString(), browserTitle.toString());
-					if (PHPDebugPlugin.DEBUG)
+					if (PHPDebugPlugin.DEBUG) {
 						System.out.println("Opening debug/launch URL in a Web Browser: " //$NON-NLS-1$
 								+ urlToOpen.toString());
+					}
 					browser.openURL(urlToOpen);
 				} catch (Throwable t) {
 					Logger.logException(
@@ -202,8 +204,9 @@ public final class PHPDebugUtil {
 	 * @return array of Zend Debugger specific hosts/IPs.
 	 */
 	public static String[] getZendHostsArray(String hostsString) {
-		if (hostsString.isEmpty())
+		if (hostsString.isEmpty()) {
 			return new String[0];
+		}
 		String[] hosts = hostsString.split(","); //$NON-NLS-1$
 		for (int i = 0; i < hosts.length; i++) {
 			hosts[i] = hosts[i].trim();

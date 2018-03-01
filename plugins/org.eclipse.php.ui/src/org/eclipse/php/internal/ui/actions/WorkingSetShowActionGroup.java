@@ -36,8 +36,9 @@ public class WorkingSetShowActionGroup extends ActionGroup implements IWorkingSe
 
 	public void setWorkingSetMode(WorkingSetModel model) {
 		fWorkingSetModel = model;
-		if (fConfigureWorkingSetAction != null)
+		if (fConfigureWorkingSetAction != null) {
 			fConfigureWorkingSetAction.setWorkingSetModel(fWorkingSetModel);
+		}
 	}
 
 	/**
@@ -53,8 +54,9 @@ public class WorkingSetShowActionGroup extends ActionGroup implements IWorkingSe
 	@Override
 	public void fillViewMenu(IMenuManager menuManager) {
 		fConfigureWorkingSetAction = new ConfigureWorkingSetAction(fSite);
-		if (fWorkingSetModel != null)
+		if (fWorkingSetModel != null) {
 			fConfigureWorkingSetAction.setWorkingSetModel(fWorkingSetModel);
+		}
 		addAction(menuManager, fConfigureWorkingSetAction);
 	}
 

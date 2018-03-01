@@ -134,8 +134,9 @@ public class DefaultCommentMapper {
 		if (this.leadingPtr >= 0) {
 			long range = -1;
 			for (int i = 0; range < 0 && i <= this.leadingPtr; i++) {
-				if (this.leadingNodes[i] == node)
+				if (this.leadingNodes[i] == node) {
 					range = this.leadingIndexes[i];
+				}
 			}
 			if (range >= 0) {
 				return this.comments[(int) (range >> 32)].getStart();
@@ -170,8 +171,9 @@ public class DefaultCommentMapper {
 		if (this.trailingPtr >= 0) {
 			long range = -1;
 			for (int i = 0; range < 0 && i <= this.trailingPtr; i++) {
-				if (this.trailingNodes[i] == node)
+				if (this.trailingNodes[i] == node) {
 					range = this.trailingIndexes[i];
+				}
 			}
 			if (range >= 0) {
 				Comment lastComment = this.comments[(int) range];
@@ -525,8 +527,9 @@ public class DefaultCommentMapper {
 				int nextLine = getLineNumber(nextStart, parentLineRange);
 				int previousLine = getLineNumber(previousEnd, parentLineRange);
 				if ((nextLine - previousLine) <= 1) {
-					if (sameLineIdx == -1)
+					if (sameLineIdx == -1) {
 						return nodeEnd;
+					}
 					endIdx = sameLineIdx;
 				}
 			}
@@ -554,10 +557,14 @@ public class DefaultCommentMapper {
 			while (ptr >= 0) {
 				long range = this.trailingIndexes[ptr];
 				if (range != -1)
+				 {
 					break; // there's no more unresolved nodes
+				}
 				ASTNode unresolved = this.trailingNodes[ptr];
 				if (previousNode != unresolved.getParent())
+				 {
 					break; // we're no longer in node ancestor hierarchy
+				}
 				this.trailingIndexes[ptr] = nodeRange;
 				previousNode = unresolved;
 				ptr--; // get previous node

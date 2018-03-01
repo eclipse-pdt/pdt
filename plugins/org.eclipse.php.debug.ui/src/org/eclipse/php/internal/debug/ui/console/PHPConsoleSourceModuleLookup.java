@@ -75,8 +75,9 @@ public class PHPConsoleSourceModuleLookup {
 				if (!checkScope(project, enclosingProjectsAndZips)) {
 					continue;
 				}
-				if (!project.isAccessible() || !DLTKLanguageManager.hasScriptNature(project))
+				if (!project.isAccessible() || !DLTKLanguageManager.hasScriptNature(project)) {
 					continue;
+				}
 
 				IScriptProject scriptProject = model.getScriptProject(project);
 				final ISourceModule module = findInProject(scriptProject, path, isFullPath);

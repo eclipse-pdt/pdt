@@ -66,8 +66,9 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 				openUrlConnection(launch, parametersInitializer);
 			}
 		} finally {
-			if (launch instanceof PHPLaunch)
+			if (launch instanceof PHPLaunch) {
 				((PHPLaunch) launch).pretendRunning(false);
+			}
 		}
 	}
 

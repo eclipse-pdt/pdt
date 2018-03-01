@@ -345,8 +345,9 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 	 */
 	protected int getDebugPort(PHPexeItem phpExe) throws CoreException {
 		int customRequestPort = XDebugDebuggerSettingsUtil.getDebugPort(phpExe.getUniqueId());
-		if (customRequestPort != -1)
+		if (customRequestPort != -1) {
 			return customRequestPort;
+		}
 		return PHPDebugPlugin.getDebugPort(XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID);
 	}
 

@@ -160,14 +160,16 @@ public abstract class AbstractAnnotationHover extends AbstractScriptEditorTextHo
 		@Override
 		public void setFocus() {
 			super.setFocus();
-			if (fFocusControl != null)
+			if (fFocusControl != null) {
 				fFocusControl.setFocus();
+			}
 		}
 
 		@Override
 		public final void setVisible(boolean visible) {
-			if (!visible)
+			if (!visible) {
 				disposeDeferredCreatedContent();
+			}
 			super.setVisible(visible);
 		}
 
@@ -177,8 +179,9 @@ public abstract class AbstractAnnotationHover extends AbstractScriptEditorTextHo
 				children[i].dispose();
 			}
 			ToolBarManager toolBarManager = getToolBarManager();
-			if (toolBarManager != null)
+			if (toolBarManager != null) {
 				toolBarManager.removeAll();
+			}
 		}
 
 		@Override
@@ -196,8 +199,9 @@ public abstract class AbstractAnnotationHover extends AbstractScriptEditorTextHo
 			Point preferedSize = getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
 
 			Point constrains = getSizeConstraints();
-			if (constrains == null)
+			if (constrains == null) {
 				return preferedSize;
+			}
 
 			int trimWidth = getShell().computeTrim(0, 0, 0, 0).width;
 			Point constrainedSize = getShell().computeSize(constrains.x - trimWidth, SWT.DEFAULT, true);
@@ -214,8 +218,9 @@ public abstract class AbstractAnnotationHover extends AbstractScriptEditorTextHo
 		 */
 		protected void fillToolbar() {
 			ToolBarManager toolBarManager = getToolBarManager();
-			if (toolBarManager == null)
+			if (toolBarManager == null) {
 				return;
+			}
 			fInput.fillToolBar(toolBarManager, this);
 			toolBarManager.update(true);
 		}
@@ -231,8 +236,9 @@ public abstract class AbstractAnnotationHover extends AbstractScriptEditorTextHo
 			setColorAndFont(fParent, fParent.getForeground(), fParent.getBackground(), JFaceResources.getDialogFont());
 
 			ICompletionProposal[] proposals = getAnnotationInfo().getCompletionProposals();
-			if (proposals.length > 0)
+			if (proposals.length > 0) {
 				createCompletionProposalsControl(fParent, proposals);
+			}
 
 			fParent.layout(true);
 		}
@@ -276,8 +282,9 @@ public abstract class AbstractAnnotationHover extends AbstractScriptEditorTextHo
 			GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
 			text.setLayoutData(data);
 			String annotationText = annotation.getText();
-			if (annotationText != null)
+			if (annotationText != null) {
 				text.setText(annotationText);
+			}
 		}
 
 		private void createCompletionProposalsControl(Composite parent, ICompletionProposal[] proposals) {
@@ -388,8 +395,9 @@ public abstract class AbstractAnnotationHover extends AbstractScriptEditorTextHo
 						int linkPosition = link.getLocation().y;
 
 						if (linkPosition < currentPosition) {
-							if (linkPosition < 10)
+							if (linkPosition < 10) {
 								linkPosition = 0;
+							}
 
 							scrolledComposite.setOrigin(0, linkPosition);
 						} else if (linkPosition + 20 > currentPosition + hight) {
@@ -477,8 +485,9 @@ public abstract class AbstractAnnotationHover extends AbstractScriptEditorTextHo
 					target = extension.getRewriteTarget();
 				}
 
-				if (target != null)
+				if (target != null) {
 					target.beginCompoundChange();
+				}
 
 				if (p instanceof ICompletionProposalExtension2) {
 					ICompletionProposalExtension2 e = (ICompletionProposalExtension2) p;
@@ -496,8 +505,9 @@ public abstract class AbstractAnnotationHover extends AbstractScriptEditorTextHo
 					viewer.revealRange(selection.x, selection.y);
 				}
 			} finally {
-				if (target != null)
+				if (target != null) {
 					target.endCompoundChange();
+				}
 			}
 		}
 	}
@@ -538,11 +548,13 @@ public abstract class AbstractAnnotationHover extends AbstractScriptEditorTextHo
 
 		@Override
 		public boolean canReuse(IInformationControl control) {
-			if (!super.canReuse(control))
+			if (!super.canReuse(control)) {
 				return false;
+			}
 
-			if (control instanceof IInformationControlExtension4)
+			if (control instanceof IInformationControlExtension4) {
 				((IInformationControlExtension4) control).setStatusText(EditorsUI.getTooltipAffordanceString());
+			}
 
 			return true;
 		}
@@ -573,8 +585,9 @@ public abstract class AbstractAnnotationHover extends AbstractScriptEditorTextHo
 
 			Object data = null;
 			AnnotationPreference preference = getAnnotationPreference(fAnnotation);
-			if (preference != null)
+			if (preference != null) {
 				data = preference.getPreferenceLabel();
+			}
 
 			fInfoControl.dispose(); // FIXME: should have protocol to hide,
 									// rather than dispose
@@ -688,15 +701,17 @@ public abstract class AbstractAnnotationHover extends AbstractScriptEditorTextHo
 
 	@Override
 	public IInformationControlCreator getHoverControlCreator() {
-		if (fHoverControlCreator == null)
+		if (fHoverControlCreator == null) {
 			fHoverControlCreator = new HoverControlCreator(getInformationPresenterControlCreator());
+		}
 		return fHoverControlCreator;
 	}
 
 	// @Override
 	public IInformationControlCreator getInformationPresenterControlCreator() {
-		if (fPresenterControlCreator == null)
+		if (fPresenterControlCreator == null) {
 			fPresenterControlCreator = new PresenterControlCreator();
+		}
 		return fPresenterControlCreator;
 	}
 
@@ -719,8 +734,9 @@ public abstract class AbstractAnnotationHover extends AbstractScriptEditorTextHo
 	}
 
 	protected IPath getEditorInputPath() {
-		if (getEditor() == null)
+		if (getEditor() == null) {
 			return null;
+		}
 
 		IEditorInput input = getEditor().getEditorInput();
 		if (input instanceof IStorageEditorInput) {
@@ -734,8 +750,9 @@ public abstract class AbstractAnnotationHover extends AbstractScriptEditorTextHo
 	}
 
 	protected IAnnotationModel getAnnotationModel(IPath path) {
-		if (path == null)
+		if (path == null) {
 			return null;
+		}
 
 		ITextFileBufferManager manager = FileBuffers.getTextFileBufferManager();
 		try {

@@ -129,8 +129,9 @@ public class ServerCompositeFragment extends CompositeFragment {
 
 	protected void init() {
 		Server server = getServer();
-		if (name == null || server == null)
+		if (name == null || server == null) {
 			return;
+		}
 		if (getServer().getName() != null) {
 			boolean nameSet = false;
 			String serverName = getServer().getName();
@@ -310,8 +311,9 @@ public class ServerCompositeFragment extends CompositeFragment {
 					dialog.setFilterPath(initialDir);
 				}
 				String result = dialog.open();
-				if (result != null)
+				if (result != null) {
 					webroot.setText(result.toString());
+				}
 			}
 		});
 
@@ -324,8 +326,9 @@ public class ServerCompositeFragment extends CompositeFragment {
 			int size = allServers.length;
 			for (int i = 0; i < size; i++) {
 				Server server = allServers[i];
-				if (name.equals(server.getName()) && !getServer().getUniqueId().equals(server.getUniqueId()))
+				if (name.equals(server.getName()) && !getServer().getUniqueId().equals(server.getUniqueId())) {
 					return false;
+				}
 			}
 		}
 		return true;
@@ -338,8 +341,9 @@ public class ServerCompositeFragment extends CompositeFragment {
 			int size = allServers.length;
 			for (int i = 0; i < size; i++) {
 				Server server = allServers[i];
-				if (url.equals(server.getBaseURL()) && !getServer().getUniqueId().equals(server.getUniqueId()))
+				if (url.equals(server.getBaseURL()) && !getServer().getUniqueId().equals(server.getUniqueId())) {
 					return false;
+				}
 			}
 		}
 		return true;

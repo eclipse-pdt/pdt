@@ -63,12 +63,15 @@ public class CodeCoverageSection implements Listener {
 		final TreeItem item = getTreeItem(p);
 		final int column = getColumn(p);
 	
-		if (event.type == SWT.MouseDoubleClick)
+		if (event.type == SWT.MouseDoubleClick) {
 			doubleClick(item, column);
-		if (event.type == SWT.MouseDown)
+		}
+		if (event.type == SWT.MouseDown) {
 			click(item, column);
-		if (event.type == SWT.MouseMove)
+		}
+		if (event.type == SWT.MouseMove) {
 			hover(item, column);
+		}
 	
 	}
 
@@ -77,10 +80,12 @@ public class CodeCoverageSection implements Listener {
 	}
 
 	public void dispose() {
-		if (arrowCursor != null)
+		if (arrowCursor != null) {
 			arrowCursor.dispose();
-		if (handCursor != null)
+		}
+		if (handCursor != null) {
 			handCursor.dispose();
+		}
 		if (!viewer.getTree().isDisposed()) {
 			viewer.getTree().removeListener(SWT.MouseDoubleClick, this);
 			viewer.getTree().removeListener(SWT.MouseDown, this);
@@ -124,18 +129,21 @@ public class CodeCoverageSection implements Listener {
 	private void click(final TreeItem item, final int column) {
 		Object fileData = getFileData(item);
 		if (column == 1
-				&& (fileData instanceof ISourceModule || fileData instanceof IFile || fileData instanceof String))
+				&& (fileData instanceof ISourceModule || fileData instanceof IFile || fileData instanceof String)) {
 			actionGroup.showCoverage(fileData);
+		}
 	}
 
 	private void doubleClick(final TreeItem item, final int column) {
-		if (column == 0 && item != null)
+		if (column == 0 && item != null) {
 			actionGroup.doubleClickFile(item.getData());
+		}
 	}
 
 	private Cursor getArrowCursor() {
-		if (arrowCursor == null)
+		if (arrowCursor == null) {
 			arrowCursor = new Cursor(viewer.getTree().getDisplay(), SWT.CURSOR_ARROW);
+		}
 		return arrowCursor;
 	}
 
@@ -148,8 +156,9 @@ public class CodeCoverageSection implements Listener {
 		int right;
 		for (int i = 0; i < columns.length; ++i) {
 			right = left + columns[order[i]].getWidth();
-			if (left <= p.x && p.x < right)
+			if (left <= p.x && p.x < right) {
 				return order[i];
+			}
 			left += columns[order[i]].getWidth() + gridLineWidth;
 		}
 		return 0;
@@ -157,8 +166,9 @@ public class CodeCoverageSection implements Listener {
 	}
 
 	private Object getFileData(final TreeItem item) {
-		if (item == null)
+		if (item == null) {
 			return null;
+		}
 		ISourceModule fileData = PHPToolkitUtil.getSourceModule(item.getData());
 		if (fileData != null) {
 			return fileData;
@@ -167,8 +177,9 @@ public class CodeCoverageSection implements Listener {
 	}
 
 	private Cursor getHandCursor() {
-		if (handCursor == null)
+		if (handCursor == null) {
 			handCursor = new Cursor(viewer.getTree().getDisplay(), SWT.CURSOR_HAND);
+		}
 		return handCursor;
 	}
 
@@ -177,8 +188,9 @@ public class CodeCoverageSection implements Listener {
 		TreeItem foundItem = null;
 		for (int i = 0; i < items.length; ++i) {
 			foundItem = getTreeItemRecursive(p, items[i]);
-			if (foundItem != null)
+			if (foundItem != null) {
 				return foundItem;
+			}
 		}
 		return null;
 
@@ -187,13 +199,15 @@ public class CodeCoverageSection implements Listener {
 	private TreeItem getTreeItemRecursive(final Point p, final TreeItem item) {
 		final Rectangle bounds = item.getBounds();
 		TreeItem foundItem = null;
-		if (bounds.y <= p.y && bounds.y + bounds.height > p.y)
+		if (bounds.y <= p.y && bounds.y + bounds.height > p.y) {
 			return item;
+		}
 		final TreeItem[] items = item.getItems();
 		for (int i = 0; i < items.length; ++i) {
 			foundItem = getTreeItemRecursive(p, items[i]);
-			if (foundItem != null)
+			if (foundItem != null) {
 				return foundItem;
+			}
 		}
 		return null;
 	}
@@ -202,12 +216,14 @@ public class CodeCoverageSection implements Listener {
 		boolean isLink = false;
 		Object fileData = getFileData(item);
 		if (column == 1
-				&& (fileData instanceof ISourceModule || fileData instanceof IFile || fileData instanceof String))
+				&& (fileData instanceof ISourceModule || fileData instanceof IFile || fileData instanceof String)) {
 			isLink = true;
+		}
 		viewer.getTree().setCursor(isLink ? getHandCursor() : getArrowCursor());
-		if (isLink)
+		if (isLink) {
 			viewer.getTree().setToolTipText(PHPDebugUIMessages.CodeCoverageSection_1);
-		else
+		} else {
 			viewer.getTree().setToolTipText(null);
+		}
 	}
 }

@@ -221,8 +221,9 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 	public static Display getStandardDisplay() {
 		Display display;
 		display = Display.getCurrent();
-		if (display == null)
+		if (display == null) {
 			display = Display.getDefault();
+		}
 		return display;
 	}
 
@@ -368,8 +369,9 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 					if (event.getKind() == DebugEvent.CREATE) {
 						Object obj = events[i].getSource();
 
-						if (!(obj instanceof IPHPDebugTarget))
+						if (!(obj instanceof IPHPDebugTarget)) {
 							continue;
+						}
 						if (PHPDebugPlugin.getOpenDebugViewsOption()) {
 							Job job = new org.eclipse.ui.progress.UIJob(PHPDebugUIMessages.PHPDebugUIPlugin_0) {
 								@Override
@@ -386,8 +388,9 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 					if (event.getKind() == DebugEvent.MODEL_SPECIFIC) {
 						Object obj = events[i].getSource();
 
-						if (!(obj instanceof IPHPDebugTarget))
+						if (!(obj instanceof IPHPDebugTarget)) {
 							continue;
+						}
 						final Object data = events[i].getData();
 						if (data instanceof IStatus) {
 							Job job = new org.eclipse.ui.progress.UIJob(PHPDebugUIMessages.PHPDebugUIPlugin_0) {
@@ -480,23 +483,28 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 							return;
 						}
 						IWorkbenchPage page = activeWorkbenchWindow.getActivePage();
-						if (page == null)
+						if (page == null) {
 							return;
+						}
 						LaunchView view = (LaunchView) page.findView(IDebugUIConstants.ID_DEBUG_VIEW);
-						if (view == null)
+						if (view == null) {
 							return;
+						}
 						try {
 							// build the tree path
 							// LaunchManager->Launch->DebugTarget->PHPThread->PHPStackFrame
 							IDebugTarget target = currentLaunches[0].getDebugTarget();
-							if (target == null)
+							if (target == null) {
 								return;
-							if (target.getThreads() == null || target.getThreads().length == 0)
+							}
+							if (target.getThreads() == null || target.getThreads().length == 0) {
 								return;
+							}
 							IThread thread = target.getThreads()[0];
 							IStackFrame frame = thread.getTopStackFrame();
-							if (frame == null)
+							if (frame == null) {
 								return;
+							}
 							Object[] segments = new Object[5];
 							segments[0] = DebugPlugin.getDefault().getLaunchManager();
 							segments[1] = currentLaunches[0];

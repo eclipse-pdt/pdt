@@ -62,8 +62,9 @@ public class PharEntryBufferedRandomInputStream extends InputStream {
 	public int read(byte[] b, int off, int len) throws IOException {
 		// if(flag){
 		int readLength = totalLength - currentIndex;
-		if (readLength <= 0)
+		if (readLength <= 0) {
 			return -1;
+		}
 		if (readLength < len) {
 			len = readLength;
 		} else {

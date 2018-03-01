@@ -94,8 +94,9 @@ public class DefaultPHPServerConfiguration extends PHPServerConfiguration {
 		while (iterator.hasNext()) {
 			ServerPort port = iterator.next();
 			// Return only an HTTP port from the selected Service
-			if (port.getProtocol().toLowerCase().equals("http") && port.getId().indexOf('/') < 0) //$NON-NLS-1$
+			if (port.getProtocol().toLowerCase().equals("http") && port.getId().indexOf('/') < 0) {
 				return port;
+			}
 		}
 		return null;
 	}
@@ -111,12 +112,14 @@ public class DefaultPHPServerConfiguration extends PHPServerConfiguration {
 			InputStream in = new ByteArrayInputStream(data);
 			IFile file = folder.getFile(SERVER_XML_FILENAME);
 			if (file.exists()) {
-				if (isServerDirty)
+				if (isServerDirty) {
 					file.setContents(in, true, true, ProgressUtil.getSubMonitorFor(monitor, 200));
-				else
+				} else {
 					monitor.worked(200);
-			} else
+				}
+			} else {
 				file.create(in, true, ProgressUtil.getSubMonitorFor(monitor, 200));
+			}
 			isServerDirty = false;
 
 			// save php.ini
@@ -125,13 +128,15 @@ public class DefaultPHPServerConfiguration extends PHPServerConfiguration {
 			}
 			in = new ByteArrayInputStream(fPhpIniFile.getBytes());
 			file = folder.getFile(PHP_INI_FILENAME);
-			if (file.exists())
+			if (file.exists()) {
 				monitor.worked(200);
-			else
+			} else {
 				file.create(in, true, ProgressUtil.getSubMonitorFor(monitor, 200));
+			}
 
-			if (monitor.isCanceled())
+			if (monitor.isCanceled()) {
 				return;
+			}
 			monitor.done();
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Could not save PHP 7.0 Built-in Server configuration to " + folder.toString(), //$NON-NLS-1$
@@ -155,14 +160,16 @@ public class DefaultPHPServerConfiguration extends PHPServerConfiguration {
 
 			// load php.ini file
 			File file = phpExeItem.getINILocation();
-			if (file != null && file.exists())
+			if (file != null && file.exists()) {
 				fPhpIniFile = PHPServerHelper.getFileContents(new FileInputStream(file));
-			else
+			} else {
 				fPhpIniFile = null;
+			}
 			monitor.worked(1);
 
-			if (monitor.isCanceled())
+			if (monitor.isCanceled()) {
 				return;
+			}
 			monitor.done();
 		} catch (Exception e) {
 			Trace.trace(Trace.WARNING, "Could not load PHP ini from " + path.toOSString() + ": " + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -191,12 +198,15 @@ public class DefaultPHPServerConfiguration extends PHPServerConfiguration {
 			if (file.exists()) {
 				in = file.getContents();
 				fPhpIniFile = PHPServerHelper.getFileContents(in);
-			} else
+			} else {
 				fPhpIniFile = null;
+			}
 			monitor.worked(200);
 
 			if (monitor.isCanceled())
+			 {
 				throw new Exception("Cancelled"); //$NON-NLS-1$
+			}
 			monitor.done();
 		} catch (Exception e) {
 			Trace.trace(Trace.WARNING, "Could not load PHP ini from " + folder.getFullPath() + ": " + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$

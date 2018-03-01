@@ -156,8 +156,9 @@ public class MultiVariableGuess {
 		 */
 		@Override
 		public String getDisplayString() {
-			if (fDisplayString != null)
+			if (fDisplayString != null) {
 				return fDisplayString;
+			}
 			return fReplacementString;
 		}
 
@@ -207,8 +208,9 @@ public class MultiVariableGuess {
 		public boolean validate(IDocument document, int offset, DocumentEvent event) {
 			try {
 				String content = document.get(fReplacementOffset, fReplacementLength);
-				if (content.startsWith(fReplacementString))
+				if (content.startsWith(fReplacementString)) {
 					return true;
+				}
 			} catch (BadLocationException e) {
 				// ignore concurrently modified document
 			}
@@ -226,13 +228,15 @@ public class MultiVariableGuess {
 	public ICompletionProposal[] getProposals(final MultiVariable variable, int offset, int length) {
 		MultiVariable master = fBackwardDeps.get(variable);
 		Object[] choices;
-		if (master == null)
+		if (master == null) {
 			choices = variable.getChoices();
-		else
+		} else {
 			choices = variable.getChoices(master.getCurrentChoice());
+		}
 
-		if (choices == null)
+		if (choices == null) {
 			return null;
+		}
 
 		if (fDependencies.containsKey(variable)) {
 			ICompletionProposal[] ret = new ICompletionProposal[choices.length];
@@ -252,12 +256,14 @@ public class MultiVariableGuess {
 			return ret;
 
 		} else {
-			if (choices.length < 2)
+			if (choices.length < 2) {
 				return null;
+			}
 
 			ICompletionProposal[] ret = new ICompletionProposal[choices.length];
-			for (int i = 0; i < ret.length; i++)
+			for (int i = 0; i < ret.length; i++) {
 				ret[i] = new Proposal(variable.toString(choices[i]), offset, length, offset + length);
+			}
 
 			return ret;
 		}
@@ -279,8 +285,9 @@ public class MultiVariableGuess {
 					// ignore and continue
 				}
 				// handle slaves recursively
-				if (fDependencies.containsKey(slave))
+				if (fDependencies.containsKey(slave)) {
 					updateSlaves(slave, document, slavesOldChoice);
+				}
 			}
 		}
 	}
@@ -300,12 +307,16 @@ public class MultiVariableGuess {
 	public void addDependency(MultiVariable master, MultiVariable slave) {
 		// check for cycles and multi-slaves
 		if (fBackwardDeps.containsKey(slave))
+		 {
 			throw new IllegalArgumentException("slave can only serve one master"); //$NON-NLS-1$
+		}
 		Object parent = master;
 		while (parent != null) {
 			parent = fBackwardDeps.get(parent);
 			if (parent == slave)
+			 {
 				throw new IllegalArgumentException("cycle detected"); //$NON-NLS-1$
+			}
 		}
 
 		Set<MultiVariable> slaves = fDependencies.get(master);

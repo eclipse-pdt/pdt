@@ -316,8 +316,9 @@ public class ASTNodeLabels {
 	}
 
 	public static void getTypeLabel(TypeDeclaration type, long flags, StringBuilder buf) {
-		if (type == null)
+		if (type == null) {
 			return;
+		}
 
 		String typeName = type.getName().getName();
 		buf.append(typeName);

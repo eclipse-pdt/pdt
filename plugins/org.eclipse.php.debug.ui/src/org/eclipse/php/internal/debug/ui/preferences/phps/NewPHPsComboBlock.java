@@ -746,8 +746,9 @@ public class NewPHPsComboBlock {
 				if (null != o1 && null != o2) {
 					String o1Name = o1.getName();
 					String o2Name = o2.getName();
-					if (null != o1Name && null != o2Name)
+					if (null != o1Name && null != o2Name) {
 						return o1Name.compareToIgnoreCase(o2Name);
+					}
 				}
 				return 0;
 			}
@@ -849,8 +850,9 @@ public class NewPHPsComboBlock {
 	 */
 	public String getSelectedExecutablePath() {
 		final PHPexeItem item = getPHPexe(project);
-		if (item != null)
+		if (item != null) {
 			return item.getExecutable().toString();
+		}
 		return ""; //$NON-NLS-1$
 	}
 

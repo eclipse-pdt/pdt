@@ -149,8 +149,9 @@ public class PHPTemplateVariables {
 
 			try {
 				ISourceModule module = getSourceModule(context);
-				if (module == null)
+				if (module == null) {
 					return null;
+				}
 
 				IFile file = (IFile) module.getResource();
 				return file.getCharset();
@@ -178,8 +179,9 @@ public class PHPTemplateVariables {
 		@Override
 		protected String resolve(TemplateContext context) {
 			ISourceModule module = getSourceModule(context);
-			if (module == null)
+			if (module == null) {
 				return null;
+			}
 
 			int position = ((ScriptTemplateContext) context).getCompletionOffset();
 			try {
@@ -212,8 +214,9 @@ public class PHPTemplateVariables {
 		@Override
 		protected String resolve(TemplateContext context) {
 			ISourceModule module = getSourceModule(context);
-			if (module == null)
+			if (module == null) {
 				return null;
+			}
 
 			int position = ((ScriptTemplateContext) context).getCompletionOffset();
 			try {
@@ -250,8 +253,9 @@ public class PHPTemplateVariables {
 			CodeCompletionRequestor requestor = new CodeCompletionRequestor() {
 				@Override
 				public void accept(CompletionProposal proposal) {
-					if (isIgnored(proposal.getKind()))
+					if (isIgnored(proposal.getKind())) {
 						return;
+					}
 					switch (proposal.getKind()) {
 					case CompletionProposal.TYPE_REF:
 						try {
@@ -378,8 +382,9 @@ public class PHPTemplateVariables {
 
 		@Override
 		public void accept(CompletionProposal proposal) {
-			if (isIgnored(proposal.getKind()))
+			if (isIgnored(proposal.getKind())) {
 				return;
+			}
 
 			switch (proposal.getKind()) {
 			case CompletionProposal.LOCAL_VARIABLE_REF:

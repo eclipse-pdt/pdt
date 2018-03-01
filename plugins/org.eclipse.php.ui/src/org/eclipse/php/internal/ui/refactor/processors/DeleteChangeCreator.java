@@ -61,8 +61,9 @@ class DeleteChangeCreator {
 		}
 		for (int i = 0; i < modelElements.length; i++) {
 			IModelElement element = modelElements[i];
-			if (!ReorgUtils.isInsideSourceModule(element))
+			if (!ReorgUtils.isInsideSourceModule(element)) {
 				result.add(createDeleteChange(element));
+			}
 		}
 
 		for (int i = 0; i < resources.length; i++) {
@@ -88,10 +89,12 @@ class DeleteChangeCreator {
 		Assert.isTrue(!(resource instanceof IProject)); // project deletion is
 		// handled by the
 		// workbench
-		if (resource instanceof IFile)
+		if (resource instanceof IFile) {
 			return new DeleteFileChange((IFile) resource, true);
-		if (resource instanceof IFolder)
+		}
+		if (resource instanceof IFolder) {
 			return new DeleteFolderChange((IFolder) resource, true);
+		}
 		Assert.isTrue(false);// there're no more kinds
 		return null;
 	}
@@ -223,8 +226,9 @@ class DeleteChangeCreator {
 		List<IModelElement> result = new ArrayList<>();
 		for (int i = 0; i < modelElements.length; i++) {
 			IModelElement element = modelElements[i];
-			if (ReorgUtils.isInsideSourceModule(element))
+			if (ReorgUtils.isInsideSourceModule(element)) {
 				result.add(element);
+			}
 		}
 		return result;
 	}
@@ -269,12 +273,14 @@ class DeleteChangeCreator {
 		// delete the resource
 		if (element instanceof ISourceModule || element instanceof IScriptFolder) {
 			IResource resource;
-			if (element instanceof ISourceModule)
+			if (element instanceof ISourceModule) {
 				resource = ReorgUtils.getResource((ISourceModule) element);
-			else
+			} else {
 				resource = ((IScriptFolder) element).getResource();
-			if (resource != null && resource.isLinked())
+			}
+			if (resource != null && resource.isLinked()) {
 				return createDeleteChange(resource);
+			}
 		}
 		return new DeleteSourceManipulationChange(element, true);
 	}

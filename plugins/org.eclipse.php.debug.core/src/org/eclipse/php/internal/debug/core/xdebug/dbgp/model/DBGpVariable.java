@@ -168,8 +168,9 @@ public abstract class DBGpVariable extends DBGpElement implements IVariable, IVa
 	 */
 	@Override
 	public void addFacets(Facet... facets) {
-		for (Facet facet : facets)
+		for (Facet facet : facets) {
 			this.fFacets.add(facet);
+		}
 	}
 
 	/*
@@ -200,7 +201,9 @@ public abstract class DBGpVariable extends DBGpElement implements IVariable, IVa
 	@Override
 	public String getReferenceTypeName() throws DebugException {
 		if (getName().equals(VariablesUtil.CLASS_INDICATOR))
+		 {
 			return "class"; //$NON-NLS-1$
+		}
 		return fValue.getDataType().getText();
 	}
 
@@ -244,24 +247,28 @@ public abstract class DBGpVariable extends DBGpElement implements IVariable, IVa
 		fAddress = DBGpResponse.getAttribute(fDescriptor, "address"); //$NON-NLS-1$
 		// Set facets
 		String facets = DBGpResponse.getAttribute(fDescriptor, "facet"); //$NON-NLS-1$
-		if (facets.contains("static")) //$NON-NLS-1$
+		if (facets.contains("static")) {
 			addFacets(Facet.MOD_STATIC);
-		if (facets.contains("public")) //$NON-NLS-1$
+		}
+		if (facets.contains("public")) {
 			addFacets(Facet.MOD_PUBLIC);
-		else if (facets.contains("protected")) //$NON-NLS-1$
+		} else if (facets.contains("protected")) {
 			addFacets(Facet.MOD_PROTECTED);
-		else if (facets.contains("private")) //$NON-NLS-1$
+		} else if (facets.contains("private")) {
 			addFacets(Facet.MOD_PRIVATE);
+		}
 		// Adjust name
-		if (hasFacet(KIND_ARRAY_MEMBER))
+		if (hasFacet(KIND_ARRAY_MEMBER)) {
 			fName = '[' + fName + ']';
-		else if (hasFacet(Facet.MOD_STATIC) && fName.startsWith(":")) //$NON-NLS-1$
+		} else if (hasFacet(Facet.MOD_STATIC) && fName.startsWith(":")) {
 			fName = fName.substring(fName.lastIndexOf(':') + 1);
-		else if (fName.equals("::")) //$NON-NLS-1$
+		} else if (fName.equals("::")) {
 			fName = VariablesUtil.CLASS_INDICATOR;
+		}
 		// Hopefully this will put the $ at appropriate point in the name
-		if (fFullName.length() > 1 && fName.equals(fFullName.substring(1)))
+		if (fFullName.length() > 1 && fName.equals(fFullName.substring(1))) {
 			fName = fFullName;
+		}
 		// Build value
 		String type = DBGpResponse.getAttribute(fDescriptor, "type"); //$NON-NLS-1$
 		// Catch previous value string if there is any

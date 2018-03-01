@@ -84,8 +84,9 @@ public class DefaultDebugParametersInitializer extends AbstractDebugParametersIn
 				try {
 					Server server = ServersManager.getServer(launchConfiguration.getAttribute(Server.NAME, "")); //$NON-NLS-1$
 					String customHosts = ZendDebuggerSettingsUtil.getDebugHosts(server.getUniqueId());
-					if (!customHosts.isEmpty())
+					if (!customHosts.isEmpty()) {
 						debugHosts = customHosts;
+					}
 				} catch (CoreException ce) {
 					Logger.logException(ce);
 				}
@@ -150,8 +151,9 @@ public class DefaultDebugParametersInitializer extends AbstractDebugParametersIn
 
 		String codeCoverageFlag = launch.getAttribute(IPHPDebugConstants.DEBUGGING_COLLECT_CODE_COVERAGE);
 		if (codeCoverageFlag != null) {
-			if (Integer.parseInt(codeCoverageFlag) > 0)
+			if (Integer.parseInt(codeCoverageFlag) > 0) {
 				parameters.put(CODE_COVERAGE, codeCoverageFlag);
+			}
 		}
 		// Set the use_ssl for any local or remote debug configuration
 		boolean useSSL = InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID)

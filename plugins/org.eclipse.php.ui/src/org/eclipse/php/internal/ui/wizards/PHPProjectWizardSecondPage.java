@@ -403,8 +403,9 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 			byte[] buffer = new byte[8192];
 			while (true) {
 				int bytesRead = is.read(buffer);
-				if (bytesRead == -1)
+				if (bytesRead == -1) {
 					break;
+				}
 
 				os.write(buffer, 0, bytesRead);
 			}

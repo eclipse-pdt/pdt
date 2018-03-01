@@ -21,8 +21,9 @@ class ReturnFlowInfo extends FlowInfo {
 	}
 
 	public void merge(FlowInfo info, FlowContext context) {
-		if (info == null)
+		if (info == null) {
 			return;
+		}
 
 		assignAccessMode(info);
 	}
@@ -32,8 +33,9 @@ class ReturnFlowInfo extends FlowInfo {
 
 		// TODO need to check the type of the return value -
 		// .resolveTypeBinding() == node.getAST().resolveWellKnownType("void")
-		if (expression == null || expression.isNullExpression()) 
+		if (expression == null || expression.isNullExpression()) {
 			return VOID_RETURN;
+		}
 		return VALUE_RETURN;
 	}
 }

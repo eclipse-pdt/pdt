@@ -92,8 +92,9 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 			} catch (ModelException e) {
 				PHPUiPlugin.log(e);
 			}
-			if (constantValue != null)
+			if (constantValue != null) {
 				constantValue = HTMLPrinter.convertToHTMLContent(constantValue);
+			}
 		}
 
 		HTMLPrinter.addSmallHeader(buffer, getInfoText(element, constantValue, true));
@@ -175,8 +176,9 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 	 * @return the updated style sheet
 	 */
 	protected static String getStyleSheet() {
-		if (fgStyleSheet == null)
+		if (fgStyleSheet == null) {
 			fgStyleSheet = loadStyleSheet();
+		}
 		String css = fgStyleSheet;
 		if (css != null) {
 			FontData fontData = JFaceResources.getFontRegistry()
@@ -212,8 +214,9 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 				return ""; //$NON-NLS-1$
 			} finally {
 				try {
-					if (reader != null)
+					if (reader != null) {
 						reader.close();
+					}
 				} catch (IOException e) {
 				}
 			}

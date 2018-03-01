@@ -52,8 +52,9 @@ public abstract class TableSection extends StructuredViewerSection {
 		@Override
 		public void buttonSelected(Button button, int index) {
 			TableSection.this.buttonSelected(index);
-			if (handleDefaultButton)
+			if (handleDefaultButton) {
 				button.getShell().setDefaultButton(null);
+			}
 		}
 
 		@Override
@@ -77,9 +78,10 @@ public abstract class TableSection extends StructuredViewerSection {
 		}
 
 		protected void updateLabel() {
-			if (count != null && !count.isDisposed())
+			if (count != null && !count.isDisposed()) {
 				count.setText(
 						NLS.bind(Messages.TableSection_TotalCountLabel, getTableViewer().getTable().getItemCount()));
+			}
 		}
 	}
 

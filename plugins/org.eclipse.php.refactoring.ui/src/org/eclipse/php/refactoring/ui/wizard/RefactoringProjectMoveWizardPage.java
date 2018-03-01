@@ -109,10 +109,11 @@ public class RefactoringProjectMoveWizardPage extends UserInputWizardPage {
 	private final void verifyDestination(String selected, boolean initialVerification) {
 		try {
 			RefactoringStatus status = verifyDestination(selected);
-			if (initialVerification)
+			if (initialVerification) {
 				setPageComplete(status.isOK());
-			else
+			} else {
 				setPageComplete(status);
+			}
 		} catch (Exception e) {
 			Logger.logException(e);
 			setPageComplete(false);

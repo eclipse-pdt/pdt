@@ -125,9 +125,10 @@ public abstract class ModifyDialogTabPage {
 		private final Combo fCombo;
 
 		public ComboPreference(Composite composite, int numColumns, String text, String[] items) {
-			if (items == null || text == null)
+			if (items == null || text == null) {
 				throw new IllegalArgumentException(
 						FormatterMessages.ModifyDialogTabPage_error_msg_values_items_text_unassigned);
+			}
 
 			fItems = items;
 			createLabel(numColumns - 1, composite, text);
@@ -433,8 +434,9 @@ public abstract class ModifyDialogTabPage {
 
 		public void add(Preference preference) {
 			final Control control = preference.getControl();
-			if (control != null)
+			if (control != null) {
 				add(control);
+			}
 		}
 
 		public boolean isUsed() {

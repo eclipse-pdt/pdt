@@ -63,8 +63,9 @@ public class PHPElementNameMatchLabelProvider extends LabelProvider {
 	@Override
 	public String getText(Object element) {
 		element = convert(element);
-		if (!(element instanceof IElementNameMatch))
+		if (!(element instanceof IElementNameMatch)) {
 			return super.getText(element);
+		}
 
 		IElementNameMatch elementRef = (IElementNameMatch) element;
 		StringBuilder buf = new StringBuilder();
@@ -108,10 +109,11 @@ public class PHPElementNameMatchLabelProvider extends LabelProvider {
 	}
 
 	private String getPackageName(String packName) {
-		if (packName.length() == 0)
+		if (packName.length() == 0) {
 			return DLTKUIMessages.TypeInfoLabelProvider_default_package;
-		else
+		} else {
 			return packName;
+		}
 	}
 
 	@Override

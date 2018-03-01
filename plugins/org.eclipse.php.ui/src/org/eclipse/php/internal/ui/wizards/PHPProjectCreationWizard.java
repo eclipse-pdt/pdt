@@ -85,11 +85,17 @@ public class PHPProjectCreationWizard extends NewElementWizard implements INewWi
 	@Override
 	protected void finishPage(IProgressMonitor monitor) throws InterruptedException, CoreException {
 		if (fFirstPage != null)
+		 {
 			fFirstPage.performFinish(monitor); // use the full progress monitor
+		}
 		if (fSecondPage != null)
+		 {
 			fSecondPage.performFinish(monitor); // use the full progress monitor
+		}
 		if (fThirdPage != null)
+		 {
 			fThirdPage.performFinish(monitor); // use the full progress monitor
+		}
 	}
 
 	@Override
@@ -151,8 +157,9 @@ public class PHPProjectCreationWizard extends NewElementWizard implements INewWi
 
 	@Override
 	public boolean performCancel() {
-		if (!fFirstPage.isExistingLocation())
+		if (!fFirstPage.isExistingLocation()) {
 			fFirstPage.performCancel();
+		}
 		return super.performCancel();
 	}
 

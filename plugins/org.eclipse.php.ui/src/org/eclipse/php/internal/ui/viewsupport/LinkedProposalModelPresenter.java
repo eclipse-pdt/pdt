@@ -252,8 +252,9 @@ public class LinkedProposalModelPresenter {
 			if (offset <= document.getLength()) {
 				try {
 					String content = document.get(off, length);
-					if (insert.startsWith(content))
+					if (insert.startsWith(content)) {
 						return true;
+					}
 				} catch (BadLocationException e) {
 					PHPUiPlugin.log(e);
 					// and ignore and return false

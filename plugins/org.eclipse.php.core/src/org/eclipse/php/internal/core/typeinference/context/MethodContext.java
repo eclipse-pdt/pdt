@@ -148,33 +148,44 @@ public class MethodContext implements IContext, INamespaceContext, IArgumentsCon
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MethodContext other = (MethodContext) obj;
 		if (instanceType == null) {
-			if (other.instanceType != null)
+			if (other.instanceType != null) {
 				return false;
-		} else if (!instanceType.equals(other.instanceType))
+			}
+		} else if (!instanceType.equals(other.instanceType)) {
 			return false;
+		}
 		if (methodNode == null) {
-			if (other.methodNode != null)
+			if (other.methodNode != null) {
 				return false;
-		} else if (!methodNode.equals(other.methodNode))
+			}
+		} else if (!methodNode.equals(other.methodNode)) {
 			return false;
+		}
 		if (namespaceName == null) {
-			if (other.namespaceName != null)
+			if (other.namespaceName != null) {
 				return false;
-		} else if (!namespaceName.equals(other.namespaceName))
+			}
+		} else if (!namespaceName.equals(other.namespaceName)) {
 			return false;
+		}
 		if (sourceModule == null) {
-			if (other.sourceModule != null)
+			if (other.sourceModule != null) {
 				return false;
-		} else if (!sourceModule.equals(other.sourceModule))
+			}
+		} else if (!sourceModule.equals(other.sourceModule)) {
 			return false;
+		}
 		return true;
 	}
 

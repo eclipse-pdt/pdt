@@ -369,15 +369,18 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 		}
 
 		List<?> elements = fFoldersList.getElements();
-		if (elements.size() > 1)
+		if (elements.size() > 1) {
 			return true;
+		}
 
-		if (elements.size() == 0)
+		if (elements.size() == 0) {
 			return false;
+		}
 
 		BPListElement single = (BPListElement) elements.get(0);
-		if (single.getPath().equals(fCurrJProject.getPath()))
+		if (single.getPath().equals(fCurrJProject.getPath())) {
 			return false;
+		}
 
 		return true;
 	}
@@ -509,8 +512,9 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 		Object elem = selElements.get(0);
 		if (elem instanceof BPListElement) {
 			BPListElement cp = ((BPListElement) elem);
-			if (cp.getPath().equals(cp.getScriptProject().getPath()))
+			if (cp.getPath().equals(cp.getScriptProject().getPath())) {
 				return false;
+			}
 
 			return true;
 		}

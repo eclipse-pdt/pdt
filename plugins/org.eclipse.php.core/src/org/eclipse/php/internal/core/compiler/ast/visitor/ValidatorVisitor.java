@@ -146,8 +146,9 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 
 	@Override
 	public boolean visit(PHPMethodDeclaration s) throws Exception {
-		if (s.getPHPDoc() != null)
+		if (s.getPHPDoc() != null) {
 			s.getPHPDoc().traverse(this);
+		}
 		return visitGeneral(s);
 	}
 
@@ -226,13 +227,15 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		checkUnimplementedMethods(s, start + 1, end);
 
 		IModelElement element = sourceModule.getElementAt(s.start());
-		if (s.getSuperClass() != null && element != null)
+		if (s.getSuperClass() != null && element != null) {
 			checkSuperclass(s.getSuperClass(), false, element.getElementName());
+		}
 
 		Collection<TypeReference> interfaces = s.getInterfaceList();
 		if (interfaces != null && element != null) {
-			for (TypeReference itf : interfaces)
+			for (TypeReference itf : interfaces) {
 				checkSuperclass(itf, true, element.getElementName());
+			}
 		}
 		return super.visit(s);
 	}
@@ -240,13 +243,15 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	@Override
 	public boolean visit(ClassDeclaration s) throws Exception {
 		checkUnimplementedMethods(s, s.getRef());
-		if (s.getSuperClass() != null)
+		if (s.getSuperClass() != null) {
 			checkSuperclass(s.getSuperClass(), false, s.getName());
+		}
 
 		Collection<TypeReference> interfaces = s.getInterfaceList();
 		if (interfaces != null && interfaces.size() > 0) {
-			for (TypeReference itf : interfaces)
+			for (TypeReference itf : interfaces) {
 				checkSuperclass(itf, true, s.getName());
+			}
 		}
 		return visitGeneral(s);
 	}
@@ -270,8 +275,9 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 
 	@Override
 	public boolean visit(InterfaceDeclaration s) throws Exception {
-		if (s.getSuperClasses() == null)
+		if (s.getSuperClasses() == null) {
 			return visitGeneral(s);
+		}
 		for (ASTNode node : s.getSuperClasses().getChilds()) {
 			checkSuperclass((TypeReference) node, true, s.getName());
 		}
@@ -485,8 +491,9 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 
 	private void checkUnimplementedMethods(Statement statement, int nodeStart, int nodeEnd) throws ModelException {
 		IModelElement element = sourceModule.getElementAt(statement.start());
-		if (!(element instanceof IType))
+		if (!(element instanceof IType)) {
 			return;
+		}
 		IType type = (IType) element;
 		if (type.getSuperClasses().length > 0 && !PHPFlags.isAbstract(type.getFlags())) {
 			IMethod[] methods = PHPModelUtils.getUnimplementedMethods(type, null);

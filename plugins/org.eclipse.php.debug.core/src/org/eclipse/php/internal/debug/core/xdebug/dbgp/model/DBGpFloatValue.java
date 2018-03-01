@@ -37,8 +37,9 @@ public class DBGpFloatValue extends AbstractDBGpValue {
 	@Override
 	protected String createValueString(DBGpValueData valueData) {
 		String valueString = valueData.getValueString();
-		if (valueString != null)
+		if (valueString != null) {
 			return valueString.trim();
+		}
 		return IDBGpModelConstants.INVALID_VAR_CONTENT;
 	}
 

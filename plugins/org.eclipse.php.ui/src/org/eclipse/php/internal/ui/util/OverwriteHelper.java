@@ -108,8 +108,9 @@ class OverwriteHelper {
 		List<IProjectFragment> toNotOverwrite = new ArrayList<>(1);
 		for (int i = 0; i < fRoots.length; i++) {
 			IProjectFragment root = fRoots[i];
-			if (canOverwrite(root) && !skip(root.getElementName(), overwriteQuery))
+			if (canOverwrite(root) && !skip(root.getElementName(), overwriteQuery)) {
 				toNotOverwrite.add(root);
+			}
 		}
 		IProjectFragment[] roots = toNotOverwrite
 				.toArray(new IProjectFragment[toNotOverwrite.size()]);
@@ -120,8 +121,9 @@ class OverwriteHelper {
 		List<ISourceModule> cusToNotOverwrite = new ArrayList<>(1);
 		for (int i = 0; i < fCus.length; i++) {
 			ISourceModule cu = fCus[i];
-			if (canOverwrite(cu) && !overwrite(cu, overwriteQuery))
+			if (canOverwrite(cu) && !overwrite(cu, overwriteQuery)) {
 				cusToNotOverwrite.add(cu);
+			}
 		}
 		ISourceModule[] cus = cusToNotOverwrite.toArray(new ISourceModule[cusToNotOverwrite.size()]);
 		fCus = ArrayTypeConverter.toCuArray(ReorgUtils.setMinus(fCus, cus));
@@ -131,8 +133,9 @@ class OverwriteHelper {
 		List<IFolder> foldersToNotOverwrite = new ArrayList<>(1);
 		for (int i = 0; i < fFolders.length; i++) {
 			IFolder folder = fFolders[i];
-			if (canOverwrite(folder) && !skip(folder.getName(), overwriteQuery))
+			if (canOverwrite(folder) && !skip(folder.getName(), overwriteQuery)) {
 				foldersToNotOverwrite.add(folder);
+			}
 		}
 		IFolder[] folders = foldersToNotOverwrite.toArray(new IFolder[foldersToNotOverwrite.size()]);
 		fFolders = ArrayTypeConverter.toFolderArray(ReorgUtils.setMinus(fFolders, folders));
@@ -142,8 +145,9 @@ class OverwriteHelper {
 		List<IFile> filesToNotOverwrite = new ArrayList<>(1);
 		for (int i = 0; i < fFiles.length; i++) {
 			IFile file = fFiles[i];
-			if (canOverwrite(file) && !overwrite(file, overwriteQuery))
+			if (canOverwrite(file) && !overwrite(file, overwriteQuery)) {
 				filesToNotOverwrite.add(file);
+			}
 		}
 		IFile[] files = filesToNotOverwrite.toArray(new IFile[filesToNotOverwrite.size()]);
 		fFiles = ArrayTypeConverter.toFileArray(ReorgUtils.setMinus(fFiles, files));
@@ -153,8 +157,9 @@ class OverwriteHelper {
 		List<IScriptFolder> toNotOverwrite = new ArrayList<>(1);
 		for (int i = 0; i < fScriptFolders.length; i++) {
 			IScriptFolder pack = fScriptFolders[i];
-			if (canOverwrite(pack) && !overwrite(pack, overwriteQuery))
+			if (canOverwrite(pack) && !overwrite(pack, overwriteQuery)) {
 				toNotOverwrite.add(pack);
+			}
 		}
 		IScriptFolder[] packages = toNotOverwrite.toArray(new IScriptFolder[toNotOverwrite.size()]);
 		fScriptFolders = ArrayTypeConverter.toPackageArray(ReorgUtils.setMinus(fScriptFolders, packages));
@@ -167,20 +172,24 @@ class OverwriteHelper {
 	}
 
 	private boolean canOverwrite(IResource resource) {
-		if (resource == null)
+		if (resource == null) {
 			return false;
+		}
 		IResource destinationResource = ResourceUtil.getResource(fDestination);
-		if (destinationResource.equals(resource.getParent()))
+		if (destinationResource.equals(resource.getParent())) {
 			return false;
+		}
 		if (destinationResource instanceof IContainer) {
 			IContainer container = (IContainer) destinationResource;
 			IResource member = container.findMember(resource.getName());
-			if (member == null || !member.exists())
+			if (member == null || !member.exists()) {
 				return false;
+			}
 			if (member instanceof IContainer) {
 				try {
-					if (((IContainer) member).members().length == 0)
+					if (((IContainer) member).members().length == 0) {
 						return false;
+					}
 				} catch (CoreException e) {
 					return true;
 				}

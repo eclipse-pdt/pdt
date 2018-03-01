@@ -135,6 +135,7 @@ public class OrganizeIncludesProcessorDelegate {
 
 		// 2. resolve includes for the elements:
 		if (monitor.isCanceled())
+		 {
 			return null;
 		// resolveIncludes(foundClasses, existingIncludes, missingHardIncludes,
 		// missingSoftIncludes, new SubProgressMonitor(monitor, 1));
@@ -169,6 +170,7 @@ public class OrganizeIncludesProcessorDelegate {
 		// OrganizeIncludesChange change = new OrganizeIncludesChange(this);
 		// change.addEdits(existingIncludes, missingHardIncludes,
 		// missingSoftIncludes, unneededIncludes, unresolvedIncludes);
+		}
 
 		// TextEditChangeGroup[] textEditChangeGroups =
 		// change.getTextEditChangeGroups();
@@ -272,16 +274,18 @@ public class OrganizeIncludesProcessorDelegate {
 
 	private static boolean isHardMatch(Set<CodeDataMatch> matches) {
 		for (CodeDataMatch match : matches) {
-			if (!CodeDataSearchEngine.elementIsOptional(match.getElementType()))
+			if (!CodeDataSearchEngine.elementIsOptional(match.getElementType())) {
 				return true;
+			}
 			break;
 		}
 		return false;
 	}
 
 	void disposeModel() {
-		if (model != null)
+		if (model != null) {
 			model.releaseFromRead();
+		}
 	}
 
 	// private void collectUnneededIncludes(BucketMap<String, CodeData>

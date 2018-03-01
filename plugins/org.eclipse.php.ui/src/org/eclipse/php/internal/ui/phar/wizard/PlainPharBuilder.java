@@ -52,8 +52,9 @@ public class PlainPharBuilder extends PharBuilder {
 		super.open(jarPackage, displayShell, statusMsg);
 		fJarPackage = jarPackage;
 		Assert.isTrue(fJarPackage.isValid(), "The PHAR package specification is invalid"); //$NON-NLS-1$
-		if (!canCreateJar(displayShell))
+		if (!canCreateJar(displayShell)) {
 			throw new OperationCanceledException();
+		}
 
 		try {
 			fileExporter = PharExportHelper.createFileExporter(fJarPackage);
@@ -76,10 +77,12 @@ public class PlainPharBuilder extends PharBuilder {
 	protected boolean canCreateJar(Shell parent) {
 		File file = fJarPackage.getAbsolutePharLocation().toFile();
 		if (file.exists()) {
-			if (!file.canWrite())
+			if (!file.canWrite()) {
 				return false;
-			if (fJarPackage.allowOverwrite())
+			}
+			if (fJarPackage.allowOverwrite()) {
 				return true;
+			}
 			return parent != null
 					&& PharUIUtil.askForOverwritePermission(parent, fJarPackage.getAbsolutePharLocation(), true);
 		}
@@ -87,14 +90,16 @@ public class PlainPharBuilder extends PharBuilder {
 		// Test if directory exists
 		String path = file.getAbsolutePath();
 		int separatorIndex = path.lastIndexOf(File.separator);
-		if (separatorIndex == -1) // i.e.- default directory, which is fine
+		if (separatorIndex == -1) {
 			return true;
+		}
 		File directory = new File(path.substring(0, separatorIndex));
 		if (!directory.exists()) {
-			if (PharUIUtil.askToCreateDirectory(parent, directory))
+			if (PharUIUtil.askToCreateDirectory(parent, directory)) {
 				return directory.mkdirs();
-			else
+			} else {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -158,8 +163,9 @@ public class PlainPharBuilder extends PharBuilder {
 					jarPath = jarPath.removeFirstSegments(projectLocation.segmentCount());
 					jarPath = jarPath.removeLastSegments(1);
 					IResource containingFolder = project.findMember(jarPath);
-					if (containingFolder != null && containingFolder.isAccessible())
+					if (containingFolder != null && containingFolder.isAccessible()) {
 						containingFolder.refreshLocal(IResource.DEPTH_ONE, null);
+					}
 				} catch (CoreException ex) {
 					// don't refresh the folder but log the problem
 					PHPUiPlugin.log(ex);

@@ -27,12 +27,14 @@ public class PHPRuntime extends RuntimeDelegate implements IPHPRuntimeWorkingCop
 	@Override
 	public IStatus validate() {
 		IStatus status = super.validate();
-		if (!status.isOK())
+		if (!status.isOK()) {
 			return status;
+		}
 
 		File f = getRuntime().getLocation().toFile();
-		if (!f.canRead())
+		if (!f.canRead()) {
 			return new Status(IStatus.WARNING, PHPServerPlugin.PLUGIN_ID, 0, Messages.warningCantReadDirectory, null);
+		}
 		PHPexeItem installedItem = getExecutableInstall();
 
 		if (installedItem == null || !"CLI".equals(installedItem.getSapiType())) { //$NON-NLS-1$
@@ -47,24 +49,28 @@ public class PHPRuntime extends RuntimeDelegate implements IPHPRuntimeWorkingCop
 	public void setExecutableInstall(PHPexeItem item) {
 		if (item == null) {
 			internalSetExecutableInstall(null);
-		} else
+		} else {
 			internalSetExecutableInstall(item.getName());
+		}
 		exeItem = item;
 	}
 
 	private void internalSetExecutableInstall(String name) {
-		if (name == null)
+		if (name == null) {
 			setAttribute(PROP_EXECUTABLE_INSTALL_NAME, (String) null);
-		else
+		} else {
 			setAttribute(PROP_EXECUTABLE_INSTALL_NAME, name);
+		}
 	}
 
 	@Override
 	public PHPexeItem getExecutableInstall() {
-		if (exeItem != null)
+		if (exeItem != null) {
 			return exeItem;
-		if (getExecutableInstallName() == null)
+		}
+		if (getExecutableInstallName() == null) {
 			return null;
+		}
 		try {
 			String name = getExecutableInstallName();
 			return PHPexes.getInstance().getItem(name);

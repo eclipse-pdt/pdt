@@ -147,8 +147,9 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 			Object element = fJarPackage.getElements()[i];
 
 			IScriptProject javaProject = getEnclosingJavaProject(element);
-			if (javaProject != null)
+			if (javaProject != null) {
 				enclosingJavaProjects.add(javaProject);
+			}
 
 			IResource resource = null;
 			if (element instanceof IModelElement) {
@@ -161,10 +162,11 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 				resource = (IResource) element;
 			}
 			if (resource != null) {
-				if (resource.getType() == IResource.FILE)
+				if (resource.getType() == IResource.FILE) {
 					count++;
-				else
+				} else {
 					count += getTotalChildCount((IContainer) resource);
+				}
 			}
 		}
 
@@ -180,10 +182,11 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 		}
 		int count = 0;
 		for (int i = 0; i < members.length; i++) {
-			if (members[i].getType() == IResource.FILE)
+			if (members[i].getType() == IResource.FILE) {
 				count++;
-			else
+			} else {
 				count += getTotalChildCount((IContainer) members[i]);
+			}
 		}
 		return count;
 	}
@@ -245,10 +248,11 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 				try {
 					IProjectFragment pkgFragment = jProject
 							.findProjectFragment(resource.getFullPath().removeLastSegments(1));
-					if (pkgFragment != null)
+					if (pkgFragment != null) {
 						pkgRoot = pkgFragment;
-					else
+					} else {
 						pkgRoot = findPackageFragmentRoot(jProject, resource.getFullPath().removeLastSegments(1));
+					}
 				} catch (ModelException ex) {
 					addWarning("", ex); //$NON-NLS-1$
 					return;
@@ -260,8 +264,9 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 			leadSegmentsToRemove = pkgRoot.getPath().segmentCount();
 			boolean isOnBuildPath;
 			isOnBuildPath = jProject.isOnBuildpath(resource);
-			if (!isOnBuildPath || (!pkgRoot.getElementName().equals(IProjectFragment.DEFAULT_PACKAGE_ROOT)))
+			if (!isOnBuildPath || (!pkgRoot.getElementName().equals(IProjectFragment.DEFAULT_PACKAGE_ROOT))) {
 				leadSegmentsToRemove--;
+			}
 		}
 
 		IPath destinationPath = resource.getFullPath().removeFirstSegments(leadSegmentsToRemove);
@@ -306,13 +311,15 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 	}
 
 	private IProjectFragment findPackageFragmentRoot(IScriptProject jProject, IPath path) throws ModelException {
-		if (jProject == null || path == null || path.segmentCount() <= 0)
+		if (jProject == null || path == null || path.segmentCount() <= 0) {
 			return null;
+		}
 		IProjectFragment pkgRoot = jProject.findProjectFragment(path);
-		if (pkgRoot != null)
+		if (pkgRoot != null) {
 			return pkgRoot;
-		else
+		} else {
 			return findPackageFragmentRoot(jProject, path.removeLastSegments(1));
+		}
 	}
 
 	private void exportResource(IProgressMonitor progressMonitor, IResource resource, IPath destinationPath) {
@@ -353,8 +360,9 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 		} else if (element instanceof IResource) {
 			IProject project = ((IResource) element).getProject();
 			try {
-				if (project.hasNature(PHPNature.ID))
+				if (project.hasNature(PHPNature.ID)) {
 					return DLTKCore.create(project);
+				}
 			} catch (CoreException ex) {
 				addWarning("", ex); //$NON-NLS-1$
 			}
@@ -373,14 +381,15 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 	private void handleCoreExceptionOnExport(CoreException ex) {
 		Throwable realEx = ex.getStatus().getException();
 		if (realEx instanceof IOException && realEx.getMessage() != null
-				&& realEx.getMessage().startsWith("duplicate entry:")) // hardcoded //$NON-NLS-1$
-																		// message
+				&& realEx.getMessage().startsWith("duplicate entry:")) {
+			// message
 																		// string
 																		// from
 																		// java.util.zip.ZipOutputStream.putNextEntry(ZipEntry)
 			addWarning(ex.getMessage(), realEx);
-		else
+		} else {
 			addToStatus(ex);
+		}
 	}
 
 	/**
@@ -403,10 +412,11 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 			message = PharPackagerMessages.PharFileExportOperation_12;
 			break;
 		case IStatus.ERROR:
-			if (fJarPackages.length > 1)
+			if (fJarPackages.length > 1) {
 				message = PharPackagerMessages.PharFileExportOperation_13;
-			else
+			} else {
 				message = PharPackagerMessages.PharFileExportOperation_13;
+			}
 			break;
 		default:
 			// defensive code in case new severity is defined
@@ -437,8 +447,9 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 				SubProgressMonitor subProgressMonitor = new SubProgressMonitor(progressMonitor, 1,
 						SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);
 				fJarPackage = fJarPackages[i];
-				if (fJarPackage != null)
+				if (fJarPackage != null) {
 					singleRun(subProgressMonitor);
+				}
 			}
 		} finally {
 			progressMonitor.done();
@@ -448,7 +459,9 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 	private void singleRun(IProgressMonitor progressMonitor) throws InvocationTargetException, InterruptedException {
 		try {
 			if (!preconditionsOK())
+			 {
 				throw new InvocationTargetException(null, ""); //$NON-NLS-1$
+			}
 			int totalWork = countSelectedElements();
 			progressMonitor.beginTask("", totalWork); //$NON-NLS-1$
 
@@ -466,8 +479,9 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 			addToStatus(ex);
 		} finally {
 			try {
-				if (fJarBuilder != null)
+				if (fJarBuilder != null) {
 					fJarBuilder.close();
+				}
 			} catch (CoreException ex) {
 				addToStatus(ex);
 			}

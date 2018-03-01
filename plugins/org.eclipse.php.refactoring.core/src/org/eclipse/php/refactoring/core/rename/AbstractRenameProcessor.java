@@ -155,8 +155,9 @@ public abstract class AbstractRenameProcessor<R extends IResource> extends Renam
 
 	protected static int getSearchFlags(boolean includeInterp) {
 		int flags = IDLTKSearchScope.SOURCES | IDLTKSearchScope.APPLICATION_LIBRARIES;
-		if (includeInterp)
+		if (includeInterp) {
 			flags |= IDLTKSearchScope.SYSTEM_LIBRARIES;
+		}
 		return flags;
 	}
 
@@ -320,15 +321,18 @@ public abstract class AbstractRenameProcessor<R extends IResource> extends Renam
 	 */
 	@Override
 	public boolean isApplicable() throws CoreException {
-		if (resource == null)
+		if (resource == null) {
 			return false;
+		}
 
-		if (!resource.isAccessible())
+		if (!resource.isAccessible()) {
 			return false;
+		}
 
 		ResourceAttributes attributes = resource.getResourceAttributes();
-		if (attributes == null)
+		if (attributes == null) {
 			return false;
+		}
 
 		return !resource.getResourceAttributes().isReadOnly();
 	}

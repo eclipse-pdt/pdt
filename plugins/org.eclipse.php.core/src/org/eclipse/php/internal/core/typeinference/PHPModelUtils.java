@@ -2313,8 +2313,9 @@ public class PHPModelUtils {
 				inStringMode = inStringMode == 0 ? charAt : inStringMode == charAt ? 0 : inStringMode;
 			}
 
-			if (inStringMode != 0)
+			if (inStringMode != 0) {
 				continue;
+			}
 
 			if (charAt == ')') {
 				bracketsNum++;

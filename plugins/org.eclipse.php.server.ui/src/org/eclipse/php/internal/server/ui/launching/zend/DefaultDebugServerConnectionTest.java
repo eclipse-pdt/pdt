@@ -159,8 +159,9 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 		private boolean checkTimeout(IProgressMonitor monitor) throws InterruptedException {
 			for (int i = 0; i < 10; i++) {
 				// Go out if cancelled
-				if (monitor.isCanceled())
+				if (monitor.isCanceled()) {
 					return false;
+				}
 				Thread.sleep(DEFAULT_TIMEOUT / 10);
 				if (fIsFinished) {
 					return false;
@@ -180,8 +181,9 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 					// Ignore
 				}
 			}
-			if (fClientTest.exception != null)
+			if (fClientTest.exception != null) {
 				throw fClientTest.exception;
+			}
 		}
 
 		private void checkServer() throws MalformedURLException, IOException {
@@ -355,8 +357,9 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 		String port = Integer.toString(PHPDebugPlugin.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID));
 		// Set up custom port from server configuration
 		int customPort = ZendDebuggerSettingsUtil.getDebugPort(fServer.getUniqueId());
-		if (customPort != -1)
+		if (customPort != -1) {
 			port = String.valueOf(customPort);
+		}
 		return port;
 	}
 
@@ -380,8 +383,9 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 		String hosts = PHPDebugPlugin.getDebugHosts();
 		// Set up custom hosts from server configuration
 		String customHosts = ZendDebuggerSettingsUtil.getDebugHosts(fServer.getUniqueId());
-		if (!customHosts.isEmpty())
+		if (!customHosts.isEmpty()) {
 			hosts = customHosts;
+		}
 		StringTokenizer tokenizer = new StringTokenizer(hosts, ", "); //$NON-NLS-1$
 		List<String> list = new ArrayList<>();
 		while (tokenizer.hasMoreTokens()) {

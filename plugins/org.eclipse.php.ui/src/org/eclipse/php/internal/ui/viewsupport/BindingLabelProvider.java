@@ -35,11 +35,13 @@ public class BindingLabelProvider extends LabelProvider {
 
 	private static int getAdornmentFlags(IBinding binding) {
 		int adornments = 0;
-		if (binding instanceof IMethodBinding && ((IMethodBinding) binding).isConstructor())
+		if (binding instanceof IMethodBinding && ((IMethodBinding) binding).isConstructor()) {
 			adornments |= PHPElementImageDescriptor.CONSTRUCTOR;
+		}
 		final int modifiers = binding.getModifiers();
-		if (PHPFlags.isAbstract(modifiers))
+		if (PHPFlags.isAbstract(modifiers)) {
 			adornments |= PHPElementImageDescriptor.ABSTRACT;
+		}
 		if (PHPFlags.isConstant(modifiers)) {
 			adornments |= PHPElementImageDescriptor.CONSTANT;
 		} else if (PHPFlags.isFinal(modifiers)) {
@@ -47,10 +49,12 @@ public class BindingLabelProvider extends LabelProvider {
 		}
 		// if (PHPFlags.isSynchronized(modifiers))
 		// adornments|= PHPElementImageDescriptor.SYNCHRONIZED;
-		if (PHPFlags.isStatic(modifiers))
+		if (PHPFlags.isStatic(modifiers)) {
 			adornments |= PHPElementImageDescriptor.STATIC;
-		if (binding.isDeprecated())
+		}
+		if (binding.isDeprecated()) {
 			adornments |= PHPElementImageDescriptor.DEPRECATED;
+		}
 		// if (binding instanceof IVariableBinding && ((IVariableBinding)
 		// binding).isField()) {
 		// if (PHPFlags.isTransient(modifiers))
@@ -84,8 +88,9 @@ public class BindingLabelProvider extends LabelProvider {
 			// binding).isConstructor())
 			// return DLTKPluginImages.DESC_MISC_PRIVATE;
 			return getMethodImageDescriptor(binding.getModifiers());
-		} else if (binding instanceof IVariableBinding)
+		} else if (binding instanceof IVariableBinding) {
 			return getFieldImageDescriptor((IVariableBinding) binding);
+		}
 		return DLTKPluginImages.DESC_OBJS_UNKNOWN;
 	}
 
@@ -99,12 +104,15 @@ public class BindingLabelProvider extends LabelProvider {
 
 	private static ImageDescriptor getFieldImageDescriptor(IVariableBinding binding) {
 		final int modifiers = binding.getModifiers();
-		if (PHPFlags.isPublic(modifiers)/* || binding.isEnumConstant() */)
+		if (PHPFlags.isPublic(modifiers)/* || binding.isEnumConstant() */) {
 			return DLTKPluginImages.DESC_FIELD_PUBLIC;
-		if (PHPFlags.isProtected(modifiers))
+		}
+		if (PHPFlags.isProtected(modifiers)) {
 			return DLTKPluginImages.DESC_FIELD_PROTECTED;
-		if (PHPFlags.isPrivate(modifiers))
+		}
+		if (PHPFlags.isPrivate(modifiers)) {
 			return DLTKPluginImages.DESC_FIELD_PRIVATE;
+		}
 
 		return DLTKPluginImages.DESC_FIELD_DEFAULT;
 	}
@@ -202,12 +210,15 @@ public class BindingLabelProvider extends LabelProvider {
 	}
 
 	private static ImageDescriptor getMethodImageDescriptor(int modifiers) {
-		if (PHPFlags.isPublic(modifiers))
+		if (PHPFlags.isPublic(modifiers)) {
 			return DLTKPluginImages.DESC_METHOD_PUBLIC;
-		if (PHPFlags.isProtected(modifiers))
+		}
+		if (PHPFlags.isProtected(modifiers)) {
 			return DLTKPluginImages.DESC_METHOD_PROTECTED;
-		if (PHPFlags.isPrivate(modifiers))
+		}
+		if (PHPFlags.isPrivate(modifiers)) {
 			return DLTKPluginImages.DESC_METHOD_PRIVATE;
+		}
 
 		return DLTKPluginImages.DESC_METHOD_DEFAULT;
 	}
@@ -333,14 +344,16 @@ public class BindingLabelProvider extends LabelProvider {
 		 * (binding.isAnnotation()) return
 		 * DLTKPluginImages.DESC_OBJS_ANNOTATION; else
 		 */if (binding.isInterface()) {
-			if ((flags & ScriptElementImageProvider.LIGHT_TYPE_ICONS) != 0)
+			if ((flags & ScriptElementImageProvider.LIGHT_TYPE_ICONS) != 0) {
 				return DLTKPluginImages.DESC_OBJS_INTERFACEALT;
+			}
 			// if (inner)
 			// return getInnerInterfaceImageDescriptor(binding.getModifiers());
 			return getInterfaceImageDescriptor(binding.getModifiers());
 		} else if (binding.isClass()) {
-			if ((flags & ScriptElementImageProvider.LIGHT_TYPE_ICONS) != 0)
+			if ((flags & ScriptElementImageProvider.LIGHT_TYPE_ICONS) != 0) {
 				return DLTKPluginImages.DESC_OBJS_CLASSALT;
+			}
 			// if (inner)
 			// return getInnerClassImageDescriptor(binding.getModifiers());
 			return getClassImageDescriptor(binding.getModifiers());
@@ -502,10 +515,11 @@ public class BindingLabelProvider extends LabelProvider {
 			getMethodLabel(((IMethodBinding) binding), flags, buffer);
 		} else if (binding instanceof IVariableBinding) {
 			final IVariableBinding variable = (IVariableBinding) binding;
-			if (variable.isField())
+			if (variable.isField()) {
 				getFieldLabel(variable, flags, buffer);
-			else
+			} else {
 				getLocalVariableLabel(variable, flags, buffer);
+			}
 		}
 		return Strings.markLTR(buffer.toString());
 	}
@@ -574,8 +588,9 @@ public class BindingLabelProvider extends LabelProvider {
 	}
 
 	private ImageDescriptorRegistry getRegistry() {
-		if (fRegistry == null)
+		if (fRegistry == null) {
 			fRegistry = DLTKUIPlugin.getImageDescriptorRegistry();
+		}
 		return fRegistry;
 	}
 

@@ -214,7 +214,9 @@ public class Server implements IXMLPreferencesStorable, IAdaptable, IUniqueIdent
 
 	protected static String renderCommandLine(String[] commandLine, String separator) {
 		if (commandLine == null || commandLine.length < 1)
+		 {
 			return ""; //$NON-NLS-1$
+		}
 		StringBuilder buf = new StringBuilder(commandLine[0]);
 		for (int i = 1; i < commandLine.length; i++) {
 			buf.append(separator);
@@ -372,18 +374,21 @@ public class Server implements IXMLPreferencesStorable, IAdaptable, IUniqueIdent
 		Set<String> keys = copy.helper.map.keySet();
 		// Update all attributes of original server
 		for (String key : keys) {
-			if (key.equals(UNIQUE_ID))
+			if (key.equals(UNIQUE_ID)) {
 				continue;
+			}
 			helper.setAttribute(key, copy.helper.map.get(key));
 		}
 		// Remove the attributes that were removed in a copy
 		List<String> attributesToRemove = new ArrayList<>();
 		for (String key : helper.map.keySet()) {
-			if (!copy.helper.map.containsKey(key))
+			if (!copy.helper.map.containsKey(key)) {
 				attributesToRemove.add(key);
+			}
 		}
-		for (String key : attributesToRemove)
+		for (String key : attributesToRemove) {
 			helper.removeAttribute(key);
+		}
 	}
 
 }

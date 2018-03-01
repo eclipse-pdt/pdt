@@ -90,10 +90,11 @@ public class ProjectReferenceChange extends Change {
 		IBuildpathEntry[] oldEntries = referencingProject.getRawBuildpath();
 		IBuildpathEntry[] newEntries = new IBuildpathEntry[oldEntries.length];
 		for (int i = 0; i < newEntries.length; i++) {
-			if (isOurEntry(oldEntries[i]))
+			if (isOurEntry(oldEntries[i])) {
 				newEntries[i] = createModifiedEntry(oldEntries[i]);
-			else
+			} else {
 				newEntries[i] = oldEntries[i];
+			}
 		}
 
 		IncludePath[] includes = IncludePathManager.getInstance()
@@ -102,10 +103,11 @@ public class ProjectReferenceChange extends Change {
 		IncludePath[] newInclude = new IncludePath[includes.length];
 
 		for (int i = 0; i < includes.length; i++) {
-			if (isOurEntry(includes[i]))
+			if (isOurEntry(includes[i])) {
 				newInclude[i] = createModifiedIncludePath(includes[i], project);
-			else
+			} else {
 				newInclude[i] = includes[i];
+			}
 		}
 
 		referencingProject.setRawBuildpath(newEntries, pm);
@@ -145,10 +147,12 @@ public class ProjectReferenceChange extends Change {
 	}
 
 	private boolean isOurEntry(IBuildpathEntry cpe) {
-		if (cpe.getEntryKind() != IBuildpathEntry.BPE_PROJECT)
+		if (cpe.getEntryKind() != IBuildpathEntry.BPE_PROJECT) {
 			return false;
-		if (!cpe.getPath().equals(new Path("/" + oldName))) //$NON-NLS-1$
+		}
+		if (!cpe.getPath().equals(new Path("/" + oldName))) {
 			return false;
+		}
 		return true;
 	}
 

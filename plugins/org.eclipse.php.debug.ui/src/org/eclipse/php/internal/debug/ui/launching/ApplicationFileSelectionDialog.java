@@ -64,10 +64,12 @@ public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
 		this.fAllowExternalFiles = allowExternalFiles;
 		setShellStyle(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.RESIZE);
 		setTitle(title);
-		if (title == null)
+		if (title == null) {
 			setTitle(Messages.ApplicationFileSelectionDialog_2);
-		if (message == null)
+		}
+		if (message == null) {
 			message = Messages.ApplicationFileSelectionDialog_1;
+		}
 		setMessage(message);
 		setAllowMultiple(allowMultiple);
 

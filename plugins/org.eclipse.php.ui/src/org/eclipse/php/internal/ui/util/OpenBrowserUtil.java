@@ -66,10 +66,11 @@ public class OpenBrowserUtil {
 				try {
 					IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
 					IWebBrowser browser;
-					if (useExternalBrowser)
+					if (useExternalBrowser) {
 						browser = browserSupport.getExternalBrowser();
-					else
+					} else {
 						browser = browserSupport.createBrowser(null);
+					}
 					browser.openURL(helpSystemUrl);
 				} catch (PartInitException ex) {
 					// XXX: show dialog?

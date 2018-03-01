@@ -92,12 +92,14 @@ public class ASTNodes {
 			int d = path.length - 1;
 			for (; d >= 0 && current != null; d--) {
 				StructuralPropertyDescriptor descriptor = path[d];
-				if (!descriptor.equals(current.getLocationInParent()))
+				if (!descriptor.equals(current.getLocationInParent())) {
 					break;
+				}
 				current = current.getParent();
 			}
-			if (d < 0)
+			if (d < 0) {
 				return current;
+			}
 		}
 		return null;
 	}
@@ -106,8 +108,9 @@ public class ASTNodes {
 		Assert.isNotNull(parent);
 		do {
 			node = node.getParent();
-			if (node == parent)
+			if (node == parent) {
 				return true;
+			}
 		} while (node != null);
 		return false;
 	}

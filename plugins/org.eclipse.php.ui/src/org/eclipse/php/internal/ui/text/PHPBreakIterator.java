@@ -101,8 +101,9 @@ public class PHPBreakIterator extends BreakIterator {
 		 */
 		@Override
 		protected boolean consume(char ch) {
-			if (!isValid(ch) || fState == EXIT)
+			if (!isValid(ch) || fState == EXIT) {
 				return false;
+			}
 
 			if (fState == INIT) {
 				fState = ch;
@@ -198,12 +199,15 @@ public class PHPBreakIterator extends BreakIterator {
 		 *            the character to test
 		 */
 		private int getKind(char ch) {
-			if (Character.isUpperCase(ch))
+			if (Character.isUpperCase(ch)) {
 				return K_UPPER;
-			if (Character.isLowerCase(ch))
+			}
+			if (Character.isLowerCase(ch)) {
 				return K_LOWER;
-			if (Character.isJavaIdentifierPart(ch)) // _, digits...
+			}
+			if (Character.isJavaIdentifierPart(ch)) {
 				return K_OTHER;
+			}
 			return K_INVALID;
 		}
 
@@ -270,12 +274,14 @@ public class PHPBreakIterator extends BreakIterator {
 	@Override
 	public int following(int offset) {
 		// work around too eager IAEs in standard implementation
-		if (offset == getText().getEndIndex())
+		if (offset == getText().getEndIndex()) {
 			return DONE;
+		}
 
 		int next = fIterator.following(offset);
-		if (next == DONE)
+		if (next == DONE) {
 			return DONE;
+		}
 
 		// TODO deal with complex script word boundaries
 		// Math.min(offset + run.length, next) does not work
@@ -316,15 +322,15 @@ public class PHPBreakIterator extends BreakIterator {
 	 */
 	private Run getRun(char ch) {
 		Run run;
-		if (WHITESPACE.isValid(ch))
+		if (WHITESPACE.isValid(ch)) {
 			run = WHITESPACE;
-		else if (DELIMITER.isValid(ch))
+		} else if (DELIMITER.isValid(ch)) {
 			run = DELIMITER;
-		else if (CAMELCASE.isValid(ch))
+		} else if (CAMELCASE.isValid(ch)) {
 			run = CAMELCASE;
-		else if (OTHER.isValid(ch))
+		} else if (OTHER.isValid(ch)) {
 			run = OTHER;
-		else {
+		} else {
 			Assert.isTrue(false);
 			return null;
 		}
@@ -346,10 +352,11 @@ public class PHPBreakIterator extends BreakIterator {
 	 */
 	@Override
 	public boolean isBoundary(int offset) {
-		if (offset == getText().getBeginIndex())
+		if (offset == getText().getBeginIndex()) {
 			return true;
-		else
+		} else {
 			return following(offset - 1) == offset;
+		}
 	}
 
 	/*
@@ -383,11 +390,13 @@ public class PHPBreakIterator extends BreakIterator {
 	 */
 	@Override
 	public int preceding(int offset) {
-		if (offset == getText().getBeginIndex())
+		if (offset == getText().getBeginIndex()) {
 			return DONE;
+		}
 
-		if (isBoundary(offset - 1))
+		if (isBoundary(offset - 1)) {
 			return offset - 1;
+		}
 
 		int previous = offset - 1;
 		do {

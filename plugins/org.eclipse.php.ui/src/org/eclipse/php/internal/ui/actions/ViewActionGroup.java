@@ -61,10 +61,11 @@ public class ViewActionGroup extends org.eclipse.dltk.internal.ui.workingsets.Vi
 		site.getSelectionProvider().addSelectionChangedListener(fWorkingSetAssignementAction);
 		fSite = site;
 		fMode = mode;
-		if (showWorkingSets())
+		if (showWorkingSets()) {
 			fActiveActionGroup = fShowActionGroup;
-		else
+		} else {
 			fActiveActionGroup = fFilterActionGroup;
+		}
 	}
 
 	@Override
@@ -99,8 +100,9 @@ public class ViewActionGroup extends org.eclipse.dltk.internal.ui.workingsets.Vi
 		fMenuManager = actionBars.getMenuManager();
 		fillViewMenu(fMenuManager);
 
-		if (fActiveActionGroup == null)
+		if (fActiveActionGroup == null) {
 			fActiveActionGroup = fFilterActionGroup;
+		}
 		((ActionGroup) fActiveActionGroup).fillActionBars(actionBars);
 	}
 
@@ -149,8 +151,9 @@ public class ViewActionGroup extends org.eclipse.dltk.internal.ui.workingsets.Vi
 		}
 		fActiveActionGroup.fillViewMenu(fMenuManager);
 		fMenuManager.updateAll(true);
-		if (fChangeListener != null)
+		if (fChangeListener != null) {
 			fChangeListener.propertyChange(event);
+		}
 	}
 
 	@Override

@@ -49,8 +49,9 @@ public class PHPDebugElementAdapterFactory extends DebugElementAdapterFactory {
 		}
 		if (adapterType.equals(IModelProxyFactory.class)) {
 			if (adaptableObject instanceof PHPLaunch || adaptableObject instanceof PHPMultiDebugTarget
-					|| adaptableObject instanceof DBGpMultiSessionTarget)
+					|| adaptableObject instanceof DBGpMultiSessionTarget) {
 				return (T) fgModelFactory;
+			}
 		}
 		if (adapterType.equals(IElementLabelProvider.class)) {
 			if (adaptableObject instanceof DBGpVariable) {

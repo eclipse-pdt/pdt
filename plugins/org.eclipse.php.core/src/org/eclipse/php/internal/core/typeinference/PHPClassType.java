@@ -228,23 +228,30 @@ public class PHPClassType extends ClassType implements IClassType {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		PHPClassType other = (PHPClassType) obj;
 		if (namespace == null) {
-			if (other.namespace != null)
+			if (other.namespace != null) {
 				return false;
-		} else if (!namespace.equals(other.namespace))
+			}
+		} else if (!namespace.equals(other.namespace)) {
 			return false;
+		}
 		if (typeName == null) {
-			if (other.typeName != null)
+			if (other.typeName != null) {
 				return false;
-		} else if (!typeName.equals(other.typeName))
+			}
+		} else if (!typeName.equals(other.typeName)) {
 			return false;
+		}
 		return true;
 	}
 }

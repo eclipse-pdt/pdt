@@ -83,8 +83,9 @@ public class RenameLocalVariableProcessor extends
 					participantFiles.size());
 			pm.setTaskName(RenameLocalVariableProcessor.CREATING_MODIFICATIONS_LABEL);
 
-			if (pm.isCanceled())
+			if (pm.isCanceled()) {
 				throw new OperationCanceledException();
+			}
 
 			// get target parameters
 			final String newElementName = getNewElementName();
@@ -95,8 +96,9 @@ public class RenameLocalVariableProcessor extends
 			// aggregate the changes identifiers
 			this.functionDeclaration.accept(rename);
 
-			if (pm.isCanceled())
+			if (pm.isCanceled()) {
 				throw new OperationCanceledException();
+			}
 
 			pm.worked(1);
 			TextFileChange change = null;

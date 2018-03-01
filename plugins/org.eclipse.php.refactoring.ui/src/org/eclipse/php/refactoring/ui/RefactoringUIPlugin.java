@@ -64,8 +64,9 @@ public class RefactoringUIPlugin extends AbstractUIPlugin {
 
 	private IWorkbenchPage internalGetActivePage() {
 		IWorkbenchWindow window = getWorkbench().getActiveWorkbenchWindow();
-		if (window == null)
+		if (window == null) {
 			return null;
+		}
 		return window.getActivePage();
 	}
 

@@ -153,8 +153,9 @@ public class PHPElementConciliator {
 			}
 		}
 
-		if (parent.getType() == ASTNode.CONSTANT_DECLARATION)
+		if (parent.getType() == ASTNode.CONSTANT_DECLARATION) {
 			return true;
+		}
 
 		// check if it is a dispatch
 		while (parent != null) {
@@ -702,8 +703,9 @@ public class PHPElementConciliator {
 		@Override
 		public boolean apply(ASTNode node) {
 			// stops when found - that's the reason to use ApplyAll
-			if (exists)
+			if (exists) {
 				return false;
+			}
 
 			if (node.getType() == ASTNode.SCALAR) {
 				final Scalar scalar = (Scalar) node;
@@ -765,8 +767,9 @@ public class PHPElementConciliator {
 		@Override
 		public boolean apply(ASTNode node) {
 			// stops when found - that's the reason to use ApplyAll
-			if (exists)
+			if (exists) {
 				return false;
+			}
 
 			if (node.getType() == ASTNode.VARIABLE) {
 				Variable variable = (Variable) node;
@@ -801,8 +804,9 @@ public class PHPElementConciliator {
 		@Override
 		public boolean apply(ASTNode node) {
 			// stops when found - that's the reason to use ApplyAll
-			if (exists)
+			if (exists) {
 				return false;
+			}
 
 			if (node.getType() == ASTNode.CLASS_DECLARATION || node.getType() == ASTNode.INTERFACE_DECLARATION) {
 				TypeDeclaration typeDeclaration = (TypeDeclaration) node;
@@ -839,8 +843,9 @@ public class PHPElementConciliator {
 		@Override
 		public boolean apply(ASTNode node) {
 			// stops when found - that's the reason to use ApplyAll
-			if (exists)
+			if (exists) {
 				return false;
+			}
 
 			if (node instanceof Identifier) {
 				final Identifier id = (Identifier) node;
@@ -872,8 +877,9 @@ public class PHPElementConciliator {
 		@Override
 		public boolean apply(ASTNode node) {
 			// stops when found - that's the reason to use ApplyAll
-			if (exists)
+			if (exists) {
 				return false;
+			}
 
 			if (node.getType() == ASTNode.CLASS_DECLARATION) {
 				// do nothing never catch method names
@@ -910,8 +916,9 @@ public class PHPElementConciliator {
 		public boolean apply(ASTNode node) {
 
 			// stops when found - that's the reason to use ApplyAll
-			if (exists)
+			if (exists) {
 				return false;
+			}
 
 			if (node.getType() == ASTNode.CLASS_DECLARATION || node.getType() == ASTNode.FUNCTION_DECLARATION) {
 				isGlobalScope = false;

@@ -149,15 +149,17 @@ public class PHPTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 			isSelection = true;
 			int tempOffset = offset;
 			// adjust offset to end of normalized selection
-			if (selection.getOffset() == tempOffset)
+			if (selection.getOffset() == tempOffset) {
 				tempOffset = selection.getOffset() + selection.getLength();
+			}
 
 			String prefix = extractPrefix(viewer, tempOffset);
 			IRegion region = new Region(selection.getOffset(), 0);
 			Position position = new Position(offset, selection.getLength());
 			TemplateContext context = createContext(viewer, region, position);//
-			if (context == null)
+			if (context == null) {
 				return new ICompletionProposal[0];
+			}
 
 			try {
 				document.addPosition(position);
@@ -191,8 +193,9 @@ public class PHPTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 		}
 		IRegion region = new Region(offset - prefix.length(), prefix.length());
 		TemplateContext context = createContext(viewer, region);
-		if (context == null)
+		if (context == null) {
 			return new ICompletionProposal[0];
+		}
 
 		// name of the selection variables {line, word}_selection
 		context.setVariable("selection", selection.getText()); //$NON-NLS-1$
@@ -207,9 +210,10 @@ public class PHPTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 			} catch (TemplateException e) {
 				continue;
 			}
-			if (template.getName().startsWith(prefix))
+			if (template.getName().startsWith(prefix)) {
 				matches.add(
 						(TemplateProposal) createProposal(template, context, region, getRelevance(template, prefix)));
+			}
 		}
 
 		final IInformationControlCreator controlCreator = getInformationControlCreator();
@@ -340,7 +344,9 @@ public class PHPTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 		int i = offset;
 		IDocument document = viewer.getDocument();
 		if (i > document.getLength())
+		 {
 			return ""; //$NON-NLS-1$
+		}
 
 		try {
 			while (i > 0) {
@@ -363,8 +369,9 @@ public class PHPTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 	protected Template[] getTemplates(String contextTypeId) {
 		Template templates[] = null;
 		TemplateStore store = getTemplateStore();
-		if (store != null)
+		if (store != null) {
 			templates = store.getTemplates(contextTypeId);
+		}
 
 		return templates;
 	}
@@ -376,8 +383,9 @@ public class PHPTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 		TemplateContextType type = null;
 
 		ContextTypeRegistry registry = getTemplateContextRegistry();
-		if (registry != null)
+		if (registry != null) {
 			type = registry.getContextType(contextTypeId);
+		}
 
 		return type;
 	}
@@ -409,10 +417,12 @@ public class PHPTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 	protected IInformationControlCreator getInformationControlCreator() {
 		int orientation = Window.getDefaultOrientation();
 		IEditorPart editor = getContext().getEditor();
-		if (editor == null)
+		if (editor == null) {
 			editor = DLTKUIPlugin.getActivePage().getActiveEditor();
-		if (editor instanceof IWorkbenchPartOrientation)
+		}
+		if (editor instanceof IWorkbenchPartOrientation) {
 			orientation = ((IWorkbenchPartOrientation) editor).getOrientation();
+		}
 		return new TemplateInformationControlCreator(orientation);
 	}
 
@@ -455,12 +465,14 @@ public class PHPTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 	 * @since 2.1
 	 */
 	private boolean areMultipleLinesSelected(ITextViewer viewer) {
-		if (viewer == null)
+		if (viewer == null) {
 			return false;
+		}
 
 		Point s = viewer.getSelectedRange();
-		if (s.y == 0)
+		if (s.y == 0) {
 			return false;
+		}
 
 		try {
 

@@ -48,13 +48,15 @@ public class ExecutionStatisticsSorter extends AbstractTableSorter {
 			case 2:
 				double averageOwnTime1 = f1.getOwnTime();
 				double averageOwnTime2 = f2.getOwnTime();
-				if (f1.getCallsCount() > 0)
+				if (f1.getCallsCount() > 0) {
 					averageOwnTime1 = f1.getOwnTime() / f1.getCallsCount()
 							/ f1.getTotalTime();
+				}
 
-				if (f2.getCallsCount() > 0)
+				if (f2.getCallsCount() > 0) {
 					averageOwnTime2 = f2.getOwnTime() / f2.getCallsCount()
 							/ f2.getTotalTime();
+				}
 				return compare(averageOwnTime1, averageOwnTime2);
 			case 3:
 				double ownTime1 = f1.getOwnTime();

@@ -110,13 +110,15 @@ public class PHPContextInformationValidator implements IContextInformationValida
 
 				if (considerNesting) {
 
-					if ('(' == curr)
+					if ('(' == curr) {
 						++nestingLevel;
-					else if (')' == curr)
+					} else if (')' == curr) {
 						--nestingLevel;
+					}
 
-					if (nestingLevel != 0)
+					if (nestingLevel != 0) {
 						break;
+					}
 				}
 
 				if (increments.indexOf(curr) >= 0) {
@@ -135,14 +137,16 @@ public class PHPContextInformationValidator implements IContextInformationValida
 	@Override
 	public boolean isContextInformationValid(int offset) {
 		try {
-			if (offset < fPosition)
+			if (offset < fPosition) {
 				return false;
+			}
 
 			IDocument document = fViewer.getDocument();
 			IRegion line = document.getLineInformationOfOffset(fPosition);
 			// offset could equals to document's length
-			if (offset < line.getOffset() || offset > document.getLength())
+			if (offset < line.getOffset() || offset > document.getLength()) {
 				return false;
+			}
 
 			return getCharCount(document, fPosition, offset, "(", ")", false) >= 0; //$NON-NLS-1$//$NON-NLS-2$
 
@@ -175,8 +179,9 @@ public class PHPContextInformationValidator implements IContextInformationValida
 		}
 
 		if (fCurrentParameter != -1) {
-			if (currentParameter == fCurrentParameter)
+			if (currentParameter == fCurrentParameter) {
 				return false;
+			}
 		}
 
 		presentation.clear();
@@ -193,8 +198,9 @@ public class PHPContextInformationValidator implements IContextInformationValida
 		int occurrences = 0;
 		while (occurrences < fCurrentParameter) {
 			int found = s.indexOf(',', start);
-			if (found == -1)
+			if (found == -1) {
 				break;
+			}
 			start = found + 1;
 			++occurrences;
 		}
@@ -204,21 +210,26 @@ public class PHPContextInformationValidator implements IContextInformationValida
 			return true;
 		}
 
-		if (start == -1)
+		if (start == -1) {
 			start = 0;
+		}
 
 		int end = s.indexOf(',', start);
-		if (end == -1)
+		if (end == -1) {
 			end = s.length();
+		}
 
-		if (start > 0)
+		if (start > 0) {
 			presentation.addStyleRange(new StyleRange(0, start, null, null, SWT.NORMAL));
+		}
 
-		if (end > start)
+		if (end > start) {
 			presentation.addStyleRange(new StyleRange(start, end - start, null, null, SWT.BOLD));
+		}
 
-		if (end < s.length())
+		if (end < s.length()) {
 			presentation.addStyleRange(new StyleRange(end, s.length() - end, null, null, SWT.NORMAL));
+		}
 
 		return true;
 	}

@@ -172,8 +172,9 @@ public class ActionContributorForPHP extends ActionContributorHTML {
 		super.setActiveEditor(part);
 
 		ITextEditor editor = null;
-		if (part instanceof ITextEditor)
+		if (part instanceof ITextEditor) {
 			editor = (ITextEditor) part;
+		}
 
 		if (editor != null) {
 			OrganizeUseStatementsAction organizeUseStatementsAction = new OrganizeUseStatementsAction(part);
@@ -216,8 +217,9 @@ public class ActionContributorForPHP extends ActionContributorHTML {
 	@Override
 	public void dispose() {
 		Iterator<RetargetAction> e = fPartListeners.iterator();
-		while (e.hasNext())
+		while (e.hasNext()) {
 			getPage().removePartListener(e.next());
+		}
 		fPartListeners.clear();
 
 		if (fRetargetShowPHPDoc != null) {

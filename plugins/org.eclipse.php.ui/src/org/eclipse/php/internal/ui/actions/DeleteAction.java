@@ -55,8 +55,9 @@ public class DeleteAction extends SelectionDispatchAction {
 		} catch (CoreException e) {
 			// no ui here - this happens on selection changes
 			// http://bugs.eclipse.org/bugs/show_bug.cgi?id=19253
-			if (ScriptModelUtil.isExceptionToBeLogged(e))
+			if (ScriptModelUtil.isExceptionToBeLogged(e)) {
 				DLTKUIPlugin.log(e);
+			}
 			setEnabled(false);
 		}
 	}

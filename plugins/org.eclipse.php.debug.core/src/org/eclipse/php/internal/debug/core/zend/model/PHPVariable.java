@@ -75,8 +75,9 @@ public class PHPVariable extends PHPDebugElement implements IVariable, IPHPDataT
 			String endName = fExpression.getLastName();
 			if (fExpression.hasFacet(KIND_OBJECT_MEMBER)) {
 				int idx = endName.lastIndexOf(':');
-				if (idx != -1)
+				if (idx != -1) {
 					endName = endName.substring(idx + 1);
+				}
 			} else if (fExpression.hasFacet(KIND_ARRAY_MEMBER)) {
 				endName = '[' + endName + ']';
 			}
@@ -151,8 +152,9 @@ public class PHPVariable extends PHPDebugElement implements IVariable, IPHPDataT
 	@Override
 	public boolean supportsValueModification() {
 		// Not supported yet
-		if (fExpression.hasFacet(MOD_STATIC) || fExpression.hasFacet(VIRTUAL_CLASS))
+		if (fExpression.hasFacet(MOD_STATIC) || fExpression.hasFacet(VIRTUAL_CLASS)) {
 			return false;
+		}
 		return true;
 	}
 

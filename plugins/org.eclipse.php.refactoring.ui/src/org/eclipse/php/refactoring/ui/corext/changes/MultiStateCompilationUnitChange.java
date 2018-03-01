@@ -49,8 +49,9 @@ public final class MultiStateCompilationUnitChange extends MultiStateTextFileCha
 	@Override
 	public final Object getAdapter(final Class adapter) {
 
-		if (ISourceModule.class.equals(adapter))
+		if (ISourceModule.class.equals(adapter)) {
 			return fUnit;
+		}
 
 		return super.getAdapter(adapter);
 	}

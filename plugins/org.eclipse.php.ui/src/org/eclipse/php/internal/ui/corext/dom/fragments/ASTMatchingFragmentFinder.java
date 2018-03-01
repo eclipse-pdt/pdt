@@ -48,8 +48,9 @@ class ASTMatchingFragmentFinder extends ApplyAll {
 	protected boolean apply(ASTNode node) {
 		// if the change scope is the program scope, we don't want it to affect
 		// the function scope
-		if (node.getType() == ASTNode.FUNCTION_DECLARATION && isProgramScope)
+		if (node.getType() == ASTNode.FUNCTION_DECLARATION && isProgramScope) {
 			return false;
+		}
 
 		IASTFragment[] localMatches = fFragmentToMatch.getMatchingFragmentsWithNode(node);
 		for (int i = 0; i < localMatches.length; i++) {

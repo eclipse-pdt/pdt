@@ -170,8 +170,9 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 			scripProject = (IScriptProject) element;
 			return ProjectOutlineGroups.values();
 		}
-		if (element instanceof ProjectOutlineGroups)
+		if (element instanceof ProjectOutlineGroups) {
 			return ((ProjectOutlineGroups) element).getChildren();
+		}
 
 		return super.getChildren(element);
 	}
@@ -189,14 +190,17 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 		if (element instanceof IModelElement) {
 			IModelElement modelElement = (IModelElement) element;
 
-			if (OutlineUtils.isGlobalClass(modelElement))
+			if (OutlineUtils.isGlobalClass(modelElement)) {
 				return ProjectOutlineGroups.GROUP_CLASSES;
+			}
 
-			if (OutlineUtils.isGlobalFunction(modelElement))
+			if (OutlineUtils.isGlobalFunction(modelElement)) {
 				return ProjectOutlineGroups.GROUP_FUNCTIONS;
+			}
 
-			if (OutlineUtils.isConstant(modelElement))
+			if (OutlineUtils.isConstant(modelElement)) {
 				return ProjectOutlineGroups.GROUP_CONSTANTS;
+			}
 
 			return ProjectOutlineGroups.GROUP_NAMESPACES;
 		}
@@ -219,8 +223,9 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 		}
 
 		fViewer = (TreeViewer) viewer;
-		if (fInput == null || !fInput.equals(newInput))
+		if (fInput == null || !fInput.equals(newInput)) {
 			fInput = newInput;
+		}
 	}
 
 	// ------ delta processing ------

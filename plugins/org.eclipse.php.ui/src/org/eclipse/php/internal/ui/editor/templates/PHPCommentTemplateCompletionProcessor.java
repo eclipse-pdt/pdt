@@ -136,7 +136,9 @@ public class PHPCommentTemplateCompletionProcessor extends ScriptTemplateComplet
 		int i = offset;
 		IDocument document = viewer.getDocument();
 		if (i > document.getLength())
+		 {
 			return ""; //$NON-NLS-1$
+		}
 
 		try {
 			while (i > 0) {
@@ -159,8 +161,9 @@ public class PHPCommentTemplateCompletionProcessor extends ScriptTemplateComplet
 	protected Template[] getTemplates(String contextTypeId) {
 		Template templates[] = null;
 		TemplateStore store = getTemplateStore();
-		if (store != null)
+		if (store != null) {
 			templates = store.getTemplates(contextTypeId);
+		}
 
 		return templates;
 	}
@@ -172,8 +175,9 @@ public class PHPCommentTemplateCompletionProcessor extends ScriptTemplateComplet
 		TemplateContextType type = null;
 
 		ContextTypeRegistry registry = getTemplateContextRegistry();
-		if (registry != null)
+		if (registry != null) {
 			type = registry.getContextType(contextTypeId);
+		}
 
 		return type;
 	}
@@ -205,10 +209,12 @@ public class PHPCommentTemplateCompletionProcessor extends ScriptTemplateComplet
 	protected IInformationControlCreator getInformationControlCreator() {
 		int orientation = Window.getDefaultOrientation();
 		IEditorPart editor = getContext().getEditor();
-		if (editor == null)
+		if (editor == null) {
 			editor = DLTKUIPlugin.getActivePage().getActiveEditor();
-		if (editor instanceof IWorkbenchPartOrientation)
+		}
+		if (editor instanceof IWorkbenchPartOrientation) {
 			orientation = ((IWorkbenchPartOrientation) editor).getOrientation();
+		}
 		return new TemplateInformationControlCreator(orientation);
 	}
 

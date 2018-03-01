@@ -45,21 +45,26 @@ public class PHPDocClassVariableGoal extends AbstractTypeGoal {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (!super.equals(obj))
+		}
+		if (!super.equals(obj)) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		PHPDocClassVariableGoal other = (PHPDocClassVariableGoal) obj;
 		if (this.offset != other.offset) {
 			return false;
 		}
 		if (variableName == null) {
-			if (other.variableName != null)
+			if (other.variableName != null) {
 				return false;
-		} else if (!variableName.equals(other.variableName))
+			}
+		} else if (!variableName.equals(other.variableName)) {
 			return false;
+		}
 		return true;
 	}
 }

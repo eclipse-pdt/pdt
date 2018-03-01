@@ -123,8 +123,9 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 
 		@Override
 		public void update(Observable o, Object arg) {
-			if (arg == null)
+			if (arg == null) {
 				return;
+			}
 			final int value = ((Integer) arg).intValue();
 			switch (value) {
 			case ProfileManager.PROFILE_CREATED_EVENT:
@@ -178,18 +179,19 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			final Button button = (Button) e.widget;
-			if (button == fSaveButton)
+			if (button == fSaveButton) {
 				saveButtonPressed();
-			else if (button == fEditButton)
+			} else if (button == fEditButton) {
 				modifyButtonPressed();
-			else if (button == fDeleteButton)
+			} else if (button == fDeleteButton) {
 				deleteButtonPressed();
-			else if (button == fNewButton)
+			} else if (button == fNewButton) {
 				newButtonPressed();
-			else if (button == fLoadButton)
+			} else if (button == fLoadButton) {
 				loadButtonPressed();
-			else if (button == fRenameButton)
+			} else if (button == fRenameButton) {
 				renameButtonPressed();
+			}
 		}
 
 		@Override
@@ -231,10 +233,12 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 
 		private void newButtonPressed() {
 			final CreateProfileDialog p = new CreateProfileDialog(fComposite.getShell(), fProfileManager);
-			if (p.open() != Window.OK)
+			if (p.open() != Window.OK) {
 				return;
-			if (!p.openEditDialog())
+			}
+			if (!p.openEditDialog()) {
 				return;
+			}
 			final ModifyDialog modifyDialog = new ModifyDialog(CodeFormatterConfigurationBlock.this,
 					fComposite.getShell(), p.getCreatedProfile(), fProfileManager, true);
 			modifyDialog.open();
@@ -291,8 +295,9 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 				dialog.setFilterPath(lastPath);
 			}
 			final String path = dialog.open();
-			if (path == null)
+			if (path == null) {
 				return;
+			}
 			FormatterUIPlugin.getDefault().getDialogSettings().put(DIALOGSTORE_LASTLOADPATH, dialog.getFilterPath());
 
 			final File file = new File(path);
@@ -304,16 +309,18 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 				final String message = FormatterMessages.CodingStyleConfigurationBlock_load_profile_error_message;
 				ExceptionHandler.handle(e, fComposite.getShell(), title, message);
 			}
-			if (profiles == null || profiles.isEmpty())
+			if (profiles == null || profiles.isEmpty()) {
 				return;
+			}
 
 			final CustomProfile profile = (CustomProfile) profiles.iterator().next();
 
 			if (fProfileManager.containsName(profile.getName())) {
 				final AlreadyExistsDialog aeDialog = new AlreadyExistsDialog(fComposite.getShell(), profile,
 						fProfileManager);
-				if (aeDialog.open() != Window.OK)
+				if (aeDialog.open() != Window.OK) {
 					return;
+				}
 			}
 			fProfileManager.addProfile(profile);
 		}
@@ -413,8 +420,9 @@ public class CodeFormatterConfigurationBlock extends PHPCoreOptionsConfiguration
 			}
 		}
 
-		if (profiles == null)
+		if (profiles == null) {
 			profiles = new ArrayList<>();
+		}
 
 		PreferencesAccess access = PreferencesAccess.getWorkingCopyPreferences(fManager);
 

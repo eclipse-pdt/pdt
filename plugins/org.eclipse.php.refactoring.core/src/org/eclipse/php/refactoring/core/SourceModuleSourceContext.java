@@ -22,8 +22,9 @@ public class SourceModuleSourceContext extends ScriptStatusContext {
 	public SourceModuleSourceContext(ISourceModule cunit, ISourceRange range) {
 		fCUnit = cunit;
 		fSourceRange = range;
-		if (fSourceRange == null)
+		if (fSourceRange == null) {
 			fSourceRange = new SourceRange(0, 0);
+		}
 	}
 
 	@Override

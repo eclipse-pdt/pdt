@@ -191,11 +191,12 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 				String configuredServerName = configs[i].getAttribute(Server.NAME, (String) null);
 				String configuredFileName = configs[i].getAttribute(Server.FILE_NAME, (String) null);
 
-				if (configuredFileName != null)
+				if (configuredFileName != null) {
 					if (configuredFileName.equals(fileName) && server.getName().equals(configuredServerName)) {
 						config = configs[i].getWorkingCopy();
 						break;
 					}
+				}
 			}
 
 			if (config == null) {
@@ -299,17 +300,19 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 			removeFirstSegment = false;
 		}
 		url = url.append(basePath);
-		if (removeFirstSegment)
+		if (removeFirstSegment) {
 			url = url.append(path.removeFirstSegments(1));
-		else
+		} else {
 			url = url.append(path);
+		}
 		return new URL(server.getProtocol(), server.getHost(), server.getPort(), url.toString());
 
 	}
 
 	private static String getProjectsBasePath(IProject project) {
-		if (project == null)
+		if (project == null) {
 			return null;
+		}
 		return PHPProjectPreferences.getDefaultBasePath(project);
 
 	}

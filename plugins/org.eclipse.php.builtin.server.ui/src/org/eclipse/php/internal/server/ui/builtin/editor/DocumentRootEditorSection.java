@@ -86,8 +86,9 @@ public class DocumentRootEditorSection extends ServerEditorSection {
 		listener = new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent event) {
-				if (updating)
+				if (updating) {
 					return;
+				}
 				updating = true;
 				if (IPHPServer.PROPERTY_DOCUMENT_ROOT_DIR.equals(event.getPropertyName())) {
 					updateServerDirButtons();
@@ -103,8 +104,9 @@ public class DocumentRootEditorSection extends ServerEditorSection {
 			@Override
 			public void publishFinished(IServer server2, IStatus status) {
 				boolean flag = false;
-				if (status.isOK() && server2.getModules().length == 0)
+				if (status.isOK() && server2.getModules().length == 0) {
 					flag = true;
+				}
 				if (flag != allowRestrictedEditing) {
 					allowRestrictedEditing = flag;
 					// Update the state of the fields
@@ -112,18 +114,23 @@ public class DocumentRootEditorSection extends ServerEditorSection {
 						@Override
 						public void run() {
 							boolean customServerDir = false;
-							if (!DocumentRootEditorSection.this.serverDirCustom.isDisposed())
+							if (!DocumentRootEditorSection.this.serverDirCustom.isDisposed()) {
 								customServerDir = DocumentRootEditorSection.this.serverDirCustom.getSelection();
-							if (!DocumentRootEditorSection.this.serverDirMetadata.isDisposed())
+							}
+							if (!DocumentRootEditorSection.this.serverDirMetadata.isDisposed()) {
 								DocumentRootEditorSection.this.serverDirMetadata.setEnabled(allowRestrictedEditing);
-							if (!DocumentRootEditorSection.this.serverDirCustom.isDisposed())
+							}
+							if (!DocumentRootEditorSection.this.serverDirCustom.isDisposed()) {
 								DocumentRootEditorSection.this.serverDirCustom.setEnabled(allowRestrictedEditing);
-							if (!DocumentRootEditorSection.this.serverDir.isDisposed())
+							}
+							if (!DocumentRootEditorSection.this.serverDir.isDisposed()) {
 								DocumentRootEditorSection.this.serverDir
 										.setEnabled(allowRestrictedEditing && customServerDir);
-							if (!DocumentRootEditorSection.this.serverDirBrowse.isDisposed())
+							}
+							if (!DocumentRootEditorSection.this.serverDirBrowse.isDisposed()) {
 								DocumentRootEditorSection.this.serverDirBrowse
 										.setEnabled(allowRestrictedEditing && customServerDir);
+							}
 						}
 					});
 				}
@@ -171,8 +178,9 @@ public class DocumentRootEditorSection extends ServerEditorSection {
 		serverDirMetadata.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (updating || !serverDirMetadata.getSelection())
+				if (updating || !serverDirMetadata.getSelection()) {
 					return;
+				}
 				updating = true;
 				execute(new SetTestEnvironmentCommand(phpServer));
 				updateServerDirFields();
@@ -188,8 +196,9 @@ public class DocumentRootEditorSection extends ServerEditorSection {
 		serverDirCustom.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (updating || !serverDirCustom.getSelection())
+				if (updating || !serverDirCustom.getSelection()) {
 					return;
+				}
 				updating = true;
 				execute(new SetTestEnvironmentCommand(phpServer));
 				updateServerDirFields();
@@ -210,8 +219,9 @@ public class DocumentRootEditorSection extends ServerEditorSection {
 		serverDir.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
-				if (updating)
+				if (updating) {
 					return;
+				}
 				updating = true;
 				execute(new SetDocumentRootDirectoryCommand(phpServer, getServerDir()));
 				updating = false;
@@ -262,8 +272,9 @@ public class DocumentRootEditorSection extends ServerEditorSection {
 	public void dispose() {
 		if (server != null) {
 			server.removePropertyChangeListener(listener);
-			if (server.getOriginal() != null)
+			if (server.getOriginal() != null) {
 				server.getOriginal().removePublishListener(publishListener);
+			}
 		}
 	}
 
@@ -289,13 +300,15 @@ public class DocumentRootEditorSection extends ServerEditorSection {
 	 * Initialize the fields in this editor.
 	 */
 	protected void initialize() {
-		if (serverDir == null || phpServer == null)
+		if (serverDir == null || phpServer == null) {
 			return;
+		}
 		updating = true;
 
 		IRuntime runtime = server.getRuntime();
-		if (runtime != null)
+		if (runtime != null) {
 			installDirPath = runtime.getLocation();
+		}
 
 		// determine if editing of locations is allowed
 		allowRestrictedEditing = false;
@@ -328,10 +341,9 @@ public class DocumentRootEditorSection extends ServerEditorSection {
 			dir = serverDir.getText().trim();
 			IPath path = new Path(dir);
 			// Adjust if the temp dir is known and has been entered
-			if (tempDirPath != null && tempDirPath.equals(path))
+			if (tempDirPath != null && tempDirPath.equals(path)) {
 				dir = null;
-			// If under the workspace, make relative
-			else if (workspacePath.isPrefixOf(path)) {
+			} else if (workspacePath.isPrefixOf(path)) {
 				int cnt = path.matchingFirstSegments(workspacePath);
 				path = path.removeFirstSegments(cnt).setDevice(null);
 				dir = path.toOSString();
@@ -365,19 +377,21 @@ public class DocumentRootEditorSection extends ServerEditorSection {
 
 	protected void updateServerDir() {
 		IPath path = phpServer.getRuntimeBaseDirectory();
-		if (path == null)
+		if (path == null) {
 			serverDir.setText(""); //$NON-NLS-1$
-		else if (workspacePath.isPrefixOf(path)) {
+		} else if (workspacePath.isPrefixOf(path)) {
 			int cnt = path.matchingFirstSegments(workspacePath);
 			path = path.removeFirstSegments(cnt).setDevice(null);
 			serverDir.setText(path.toOSString());
 			// cache the relative temp dir path if that is what we have
 			if (tempDirPath == null) {
-				if (phpServer.getDocumentRootDirectory() == null)
+				if (phpServer.getDocumentRootDirectory() == null) {
 					tempDirPath = path;
+				}
 			}
-		} else
+		} else {
 			serverDir.setText(path.toOSString());
+		}
 	}
 
 	/**
@@ -405,9 +419,11 @@ public class DocumentRootEditorSection extends ServerEditorSection {
 								NLS.bind(Messages.errorServerDirUnderRoot, METADATADIR)) };
 					}
 				} else if (path.equals(installDirPath))
+				 {
 					return new IStatus[] { new Status(IStatus.ERROR, PHPServerUIPlugin.PLUGIN_ID,
 							NLS.bind(Messages.errorServerDirCustomNotInstall,
 									NLS.bind(Messages.serverEditorServerDirInstall, "").trim())) }; //$NON-NLS-1$
+				}
 			} else {
 				IPath path = phpServer.getRuntimeBaseDirectory();
 				// If non-custom instance dir is not the install and metadata

@@ -103,8 +103,9 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 		public void markCollapsed() {
 			/* workaround for BUG85874 */
 			// do not mark collapsed if annotation is not visible
-			if (fIsVisible)
+			if (fIsVisible) {
 				super.markCollapsed();
+			}
 		}
 	}
 
@@ -267,8 +268,9 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 
 			// only update when there is something to update
 			if ((oldList != null && oldList.length > 0) || (!additions.isEmpty())
-					|| (modifyList != null && modifyList.length > 0))
+					|| (modifyList != null && modifyList.length > 0)) {
 				fAdapterFactory.queueAnnotationModelChanges(node, oldList, additions, modifyList);
+			}
 		}
 
 		// save new list of annotations

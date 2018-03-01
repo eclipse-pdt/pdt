@@ -427,8 +427,9 @@ public class PHPTokenContainer implements Cloneable {
 		public boolean equals(final Object obj) {
 			assert state != null && obj.getClass() == LexerState.class;
 
-			if (this.state == obj)
+			if (this.state == obj) {
 				return true;
+			}
 			return state.equals(obj);
 		}
 
