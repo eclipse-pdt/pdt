@@ -145,10 +145,11 @@ public class PackageSearch implements PackageSearchListenerInterface, IPackageCh
 
 		// create search results viewer
 		int style = SWT.H_SCROLL | SWT.V_SCROLL;
-		if (toolkit == null)
+		if (toolkit == null) {
 			style |= SWT.BORDER;
-		else
+		} else {
 			style |= toolkit.getBorderStyle();
+		}
 
 		searchController = getSearchResultsController();
 		searchController.addPackageCheckStateChangedListener(this);

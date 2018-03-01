@@ -84,8 +84,9 @@ public class PHPDebuggersRegistry {
 	 *         exists.
 	 */
 	public static AbstractDebuggerConfiguration getDebuggerConfiguration(String debuggerId) {
-		if (NONE_DEBUGGER_ID.equals(debuggerId))
+		if (NONE_DEBUGGER_ID.equals(debuggerId)) {
 			return getInstance().noneDebuggerConfiguration;
+		}
 		return getInstance().configurations.get(debuggerId);
 	}
 

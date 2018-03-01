@@ -18,14 +18,16 @@ class GenericSequentialFlowInfo extends FlowInfo {
 	}
 
 	public void merge(FlowInfo info, FlowContext context) {
-		if (info == null)
+		if (info == null) {
 			return;
+		}
 		mergeSequential(info, context);
 	}
 
 	public void mergeAccessMode(FlowInfo info, FlowContext context) {
-		if (info == null)
+		if (info == null) {
 			return;
+		}
 		mergeAccessModeSequential(info, context);
 	}
 

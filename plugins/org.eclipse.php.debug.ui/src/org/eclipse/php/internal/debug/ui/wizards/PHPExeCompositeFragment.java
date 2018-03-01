@@ -205,12 +205,15 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 					File executable = new File(newPath);
 					PHPExeInfo phpExecInfo = getPHPInfo(executable);
 					if (phpExecInfo != null) {
-						if (fPHPexeName.getText().isEmpty() && phpExecInfo.getName() != null)
+						if (fPHPexeName.getText().isEmpty() && phpExecInfo.getName() != null) {
 							fPHPexeName.setTextWithoutUpdate(phpExecInfo.getName());
-						if (phpExecInfo.getSapiType() != null)
+						}
+						if (phpExecInfo.getSapiType() != null) {
 							fSapiTypes.setText(phpExecInfo.getSapiType());
-						if (phpExecInfo.getVersion() != null)
+						}
+						if (phpExecInfo.getVersion() != null) {
 							fVersionLabel.setText(phpExecInfo.getVersion());
+						}
 					} else {
 						fSapiTypes.deselectAll();
 						fVersionLabel.setText(""); //$NON-NLS-1$
@@ -391,8 +394,9 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 
 	private void updateItem() {
 		PHPexeItem phpExeItem = getPHPExeItem();
-		if (phpExeItem == null)
+		if (phpExeItem == null) {
 			return;
+		}
 		// Check whether we can edit this item
 		if (phpExeItem != null && !phpExeItem.isEditable()) {
 			setMessage(PHPDebugUIMessages.addPHPexeDialog_readOnlyPHPExe, IMessageProvider.INFORMATION);

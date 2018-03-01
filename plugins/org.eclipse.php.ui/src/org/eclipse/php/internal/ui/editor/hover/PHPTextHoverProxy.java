@@ -35,8 +35,9 @@ public class PHPTextHoverProxy extends AbstractPHPEditorTextHover
 	public void setPreferenceStore(IPreferenceStore store) {
 		super.setPreferenceStore(store);
 
-		if (fHover != null)
+		if (fHover != null) {
 			fHover.setPreferenceStore(getPreferenceStore());
+		}
 	}
 
 	@Override
@@ -77,18 +78,20 @@ public class PHPTextHoverProxy extends AbstractPHPEditorTextHover
 	@Override
 	public Object getHoverInfo2(ITextViewer textViewer, IRegion hoverRegion) {
 		if (ensureHoverCreated()) {
-			if (fHover instanceof ITextHoverExtension2)
+			if (fHover instanceof ITextHoverExtension2) {
 				return ((ITextHoverExtension2) fHover).getHoverInfo2(textViewer, hoverRegion);
-			else
+			} else {
 				return fHover.getHoverInfo(textViewer, hoverRegion);
+			}
 		}
 
 		return null;
 	}
 
 	private boolean ensureHoverCreated() {
-		if (!isEnabled() || fHoverDescriptor == null)
+		if (!isEnabled() || fHoverDescriptor == null) {
 			return false;
+		}
 		return isCreated() || createHover();
 	}
 
@@ -111,16 +114,18 @@ public class PHPTextHoverProxy extends AbstractPHPEditorTextHover
 	 */
 	@Override
 	public IInformationControlCreator getHoverControlCreator() {
-		if (ensureHoverCreated() && (fHover instanceof ITextHoverExtension))
+		if (ensureHoverCreated() && (fHover instanceof ITextHoverExtension)) {
 			return ((ITextHoverExtension) fHover).getHoverControlCreator();
+		}
 
 		return null;
 	}
 
 	@Override
 	public IInformationControlCreator getInformationPresenterControlCreator() {
-		if (ensureHoverCreated() && (fHover instanceof IInformationProviderExtension2))
+		if (ensureHoverCreated() && (fHover instanceof IInformationProviderExtension2)) {
 			return ((IInformationProviderExtension2) fHover).getInformationPresenterControlCreator();
+		}
 
 		return null;
 	}

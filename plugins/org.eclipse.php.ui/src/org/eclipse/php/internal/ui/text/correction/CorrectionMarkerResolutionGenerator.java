@@ -170,8 +170,9 @@ public class CorrectionMarkerResolutionGenerator implements IMarkerResolutionGen
 		IResource res = marker.getResource();
 		if (res instanceof IFile && res.isAccessible()) {
 			IModelElement element = DLTKCore.create((IFile) res);
-			if (element instanceof ISourceModule)
+			if (element instanceof ISourceModule) {
 				return (ISourceModule) element;
+			}
 		}
 		return null;
 	}

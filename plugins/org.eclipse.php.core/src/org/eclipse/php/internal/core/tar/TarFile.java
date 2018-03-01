@@ -85,10 +85,12 @@ public class TarFile {
 	 *             if the file cannot be successfully closed
 	 */
 	public void close() throws IOException {
-		if (entryEnumerationStream != null)
+		if (entryEnumerationStream != null) {
 			entryEnumerationStream.close();
-		if (internalEntryStream != null)
+		}
+		if (internalEntryStream != null) {
 			internalEntryStream.close();
+		}
 	}
 
 	/**

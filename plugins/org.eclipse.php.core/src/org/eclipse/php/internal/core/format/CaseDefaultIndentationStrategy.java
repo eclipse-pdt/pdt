@@ -88,8 +88,9 @@ public class CaseDefaultIndentationStrategy implements IIndentationStrategy {
 				} else if (token == PHPRegionTypes.PHP_CURLY_CLOSE) {
 					curlyCount++;
 				} else if ((token == PHPRegionTypes.PHP_CASE) || (token == PHPRegionTypes.PHP_DEFAULT)) {
-					if (curlyCount == 0)
+					if (curlyCount == 0) {
 						found = true;
+					}
 				}
 				if (found) {
 					indentationBase = document.getLineInformationOfOffset(tRegion.getStart() + regionStart);

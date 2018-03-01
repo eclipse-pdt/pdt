@@ -384,15 +384,17 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 	private Object[] getContainerPackageFragmentRoots(PackageFragmentRootContainer container, boolean createFolder) {
 
 		Object[] children = container.getChildren();
-		if (children == null)
+		if (children == null) {
 			return new Object[0];
+		}
 
 		ArrayList<IJavaScriptElement> allChildren = new ArrayList<>();
 		ArrayList<Object> expanded = new ArrayList<>();
 		expanded.addAll(Arrays.asList(children));
 
-		if (expanded == null || expanded.size() < 1)
+		if (expanded == null || expanded.size() < 1) {
 			return new Object[0];
+		}
 
 		Object next = expanded.remove(0);
 
@@ -416,10 +418,11 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 				Logger.logException(ex);
 			}
 
-			if (expanded.size() > 0)
+			if (expanded.size() > 0) {
 				next = expanded.remove(0);
-			else
+			} else {
 				next = null;
+			}
 		}
 
 		return allChildren.toArray();
@@ -473,17 +476,22 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 
 		@Override
 		public boolean equals(Object obj) {
-			if (this == obj)
+			if (this == obj) {
 				return true;
-			if (!super.equals(obj))
+			}
+			if (!super.equals(obj)) {
 				return false;
-			if (getClass() != obj.getClass())
+			}
+			if (getClass() != obj.getClass()) {
 				return false;
+			}
 			IncludePathContainer other = (IncludePathContainer) obj;
-			if (!getOuterType().equals(other.getOuterType()))
+			if (!getOuterType().equals(other.getOuterType())) {
 				return false;
-			if (!Arrays.equals(fIncludePath, other.fIncludePath))
+			}
+			if (!Arrays.equals(fIncludePath, other.fIncludePath)) {
 				return false;
+			}
 			return true;
 		}
 
@@ -545,8 +553,9 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		if (elementType != IJavaScriptElement.JAVASCRIPT_MODEL
 				&& elementType != IJavaScriptElement.JAVASCRIPT_PROJECT) {
 			IJavaScriptProject proj = element.getJavaScriptProject();
-			if (proj == null || !proj.getProject().isOpen())
+			if (proj == null || !proj.getProject().isOpen()) {
 				return false;
+			}
 		}
 
 		if (elementType == IJavaScriptElement.JAVASCRIPT_PROJECT) {

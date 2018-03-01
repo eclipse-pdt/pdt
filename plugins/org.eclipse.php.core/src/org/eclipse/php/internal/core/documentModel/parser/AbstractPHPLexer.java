@@ -66,11 +66,14 @@ public abstract class AbstractPHPLexer implements Scanner, PHPRegionTypes {
 	public abstract int getScriptingState();
 
 	protected static final boolean isLowerCase(final String text) {
-		if (text == null)
+		if (text == null) {
 			return false;
-		for (int i = 0; i < text.length(); i++)
-			if (!Character.isLowerCase(text.charAt(i)))
+		}
+		for (int i = 0; i < text.length(); i++) {
+			if (!Character.isLowerCase(text.charAt(i))) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -131,7 +134,9 @@ public abstract class AbstractPHPLexer implements Scanner, PHPRegionTypes {
 	@Override
 	public void getText(final int start, final int length, final Segment s) {
 		if (start + length > getZZEndRead())
+		 {
 			throw new RuntimeException("bad segment !!"); //$NON-NLS-1$
+		}
 		s.array = getZZBuffer();
 		s.offset = start;
 		s.count = length;
@@ -319,38 +324,49 @@ public abstract class AbstractPHPLexer implements Scanner, PHPRegionTypes {
 
 		@Override
 		public boolean equals(final Object obj) {
-			if (this == obj)
+			if (this == obj) {
 				return true;
-			if (obj == null)
+			}
+			if (obj == null) {
 				return false;
-			if (getClass() != obj.getClass())
+			}
+			if (getClass() != obj.getClass()) {
 				return false;
+			}
 			BasicLexerState other = (BasicLexerState) obj;
-			if (lexicalState != other.lexicalState)
+			if (lexicalState != other.lexicalState) {
 				return false;
+			}
 			if (phpStack == null) {
-				if (other.phpStack != null)
+				if (other.phpStack != null) {
 					return false;
-			} else if (!phpStack.equals(other.phpStack))
+				}
+			} else if (!phpStack.equals(other.phpStack)) {
 				return false;
+			}
 			return true;
 		}
 
 		@Override
 		public boolean equalsCurrentStack(final LexerState obj) {
-			if (this == obj)
+			if (this == obj) {
 				return true;
-			if (obj == null)
+			}
+			if (obj == null) {
 				return false;
-			if (getClass() != obj.getClass())
+			}
+			if (getClass() != obj.getClass()) {
 				return false;
+			}
 			BasicLexerState other = (BasicLexerState) obj;
-			if (lexicalState != other.lexicalState)
+			if (lexicalState != other.lexicalState) {
 				return false;
+			}
 			final StateStack activeStack = getActiveStack();
 			final StateStack otherActiveStack = other.getActiveStack();
-			if (!(activeStack == otherActiveStack || activeStack != null && activeStack.equals(otherActiveStack)))
+			if (!(activeStack == otherActiveStack || activeStack != null && activeStack.equals(otherActiveStack))) {
 				return false;
+			}
 			return true;
 		}
 
@@ -372,11 +388,13 @@ public abstract class AbstractPHPLexer implements Scanner, PHPRegionTypes {
 
 		@Override
 		public boolean isSubstateOf(final int state) {
-			if (lexicalState == state)
+			if (lexicalState == state) {
 				return true;
+			}
 			final StateStack activeStack = getActiveStack();
-			if (activeStack == null)
+			if (activeStack == null) {
 				return false;
+			}
 			return activeStack.contains(state);
 		}
 
@@ -384,10 +402,11 @@ public abstract class AbstractPHPLexer implements Scanner, PHPRegionTypes {
 		public void restoreState(final Scanner scanner) {
 			final AbstractPHPLexer lexer = (AbstractPHPLexer) scanner;
 
-			if (phpStack == null)
+			if (phpStack == null) {
 				lexer.phpStack.clear();
-			else
+			} else {
 				lexer.phpStack.copyFrom(phpStack);
+			}
 
 			lexer.yybegin(lexicalState);
 		}
@@ -423,31 +442,40 @@ public abstract class AbstractPHPLexer implements Scanner, PHPRegionTypes {
 
 		@Override
 		public boolean equals(final Object obj) {
-			if (this == obj)
+			if (this == obj) {
 				return true;
-			if (obj == null)
+			}
+			if (obj == null) {
 				return false;
-			if (getClass() != obj.getClass())
+			}
+			if (getClass() != obj.getClass()) {
 				return false;
+			}
 			HeredocState other = (HeredocState) obj;
-			if (!Arrays.equals(heredocIds, other.heredocIds))
+			if (!Arrays.equals(heredocIds, other.heredocIds)) {
 				return false;
+			}
 			if (theState == null) {
-				if (other.theState != null)
+				if (other.theState != null) {
 					return false;
-			} else if (!theState.equals(other.theState))
+				}
+			} else if (!theState.equals(other.theState)) {
 				return false;
+			}
 			return true;
 		}
 
 		@Override
 		public boolean equalsCurrentStack(final LexerState obj) {
-			if (this == obj)
+			if (this == obj) {
 				return true;
-			if (obj == null)
+			}
+			if (obj == null) {
 				return false;
-			if (getClass() != obj.getClass())
+			}
+			if (getClass() != obj.getClass()) {
 				return false;
+			}
 			return theState.equals(((HeredocState) obj).theState);
 		}
 

@@ -323,15 +323,17 @@ public class Program extends ASTNode {
 	 * @since 3.2
 	 */
 	public int getColumnNumber(final int position) {
-		if (this.lineEndTable == null)
+		if (this.lineEndTable == null) {
 			return -2;
+		}
 		final int line = getLineNumber(position);
 		if (line == -1) {
 			return -1;
 		}
 		if (line == 1) {
-			if (position >= getStart() + getLength())
+			if (position >= getStart() + getLength()) {
 				return -1;
+			}
 			return position;
 		}
 		// length is different from 0
@@ -372,8 +374,9 @@ public class Program extends ASTNode {
 	 * @since 3.2
 	 */
 	public int getLineNumber(int position) {
-		if (this.lineEndTable == null)
+		if (this.lineEndTable == null) {
 			return -2;
+		}
 		int length;
 		if ((length = this.lineEndTable.length) == 0) {
 			if (position >= getStart() + getLength()) {
@@ -451,14 +454,17 @@ public class Program extends ASTNode {
 	 * @since 3.2
 	 */
 	public int getPosition(int line, int column) {
-		if (this.lineEndTable == null)
+		if (this.lineEndTable == null) {
 			return -2;
-		if (line < 1 || column < 0)
+		}
+		if (line < 1 || column < 0) {
 			return -1;
+		}
 		int length;
 		if ((length = this.lineEndTable.length) == 0) {
-			if (line != 1)
+			if (line != 1) {
 				return -1;
+			}
 			return column >= getStart() + getLength() ? -1 : column;
 		}
 		if (line == 1) {

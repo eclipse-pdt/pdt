@@ -72,8 +72,9 @@ public class FormEntryAdapter implements IFormEntryListener {
 	 */
 	@Override
 	public void linkEntered(HyperlinkEvent e) {
-		if (actionBars == null)
+		if (actionBars == null) {
 			return;
+		}
 		IStatusLineManager mng = actionBars.getStatusLineManager();
 		mng.setMessage(e.getLabel());
 	}
@@ -87,8 +88,9 @@ public class FormEntryAdapter implements IFormEntryListener {
 	 */
 	@Override
 	public void linkExited(HyperlinkEvent e) {
-		if (actionBars == null)
+		if (actionBars == null) {
 			return;
+		}
 		IStatusLineManager mng = actionBars.getStatusLineManager();
 		mng.setMessage(null);
 	}

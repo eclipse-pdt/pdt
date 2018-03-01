@@ -108,25 +108,29 @@ public class TableSorter {
 	}
 
 	protected void registerTableViewer(TableViewer viewer) {
-		if (viewer == null)
+		if (viewer == null) {
 			return;
+		}
 
 		viewer.setComparator(fViewerComparator);
 		addColumnSelectionListeners(viewer);
 	}
 
 	protected void unregisterTableViewer(TableViewer viewer) {
-		if (viewer == null)
+		if (viewer == null) {
 			return;
+		}
 
-		if (viewer.getComparator() == fViewerComparator)
+		if (viewer.getComparator() == fViewerComparator) {
 			viewer.setComparator(null);
+		}
 		removeColumnSelectionListeners(viewer);
 	}
 
 	protected void addColumnSelectionListeners(TableViewer viewer) {
-		if (viewer == null)
+		if (viewer == null) {
 			return;
+		}
 
 		for (TableColumn column : viewer.getTable().getColumns()) {
 			addColumnSelectionListener(column);
@@ -134,8 +138,9 @@ public class TableSorter {
 	}
 
 	protected void removeColumnSelectionListeners(TableViewer viewer) {
-		if (viewer == null)
+		if (viewer == null) {
 			return;
+		}
 
 		for (Map.Entry<TableColumn, SelectionAdapter> entry : fSelectionAdapters.entrySet()) {
 			TableColumn tableColumn = entry.getKey();
@@ -157,8 +162,9 @@ public class TableSorter {
 	}
 
 	public void setTableViewer(TableViewer viewer) {
-		if (fTableViewer == viewer)
+		if (fTableViewer == viewer) {
 			return;
+		}
 
 		unregisterTableViewer(fTableViewer);
 		registerTableViewer(viewer);

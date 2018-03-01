@@ -139,8 +139,9 @@ public class PHPElementImageDescriptor extends CompositeImageDescriptor {
 
 	@Override
 	public boolean equals(Object object) {
-		if (object == null || !PHPElementImageDescriptor.class.equals(object.getClass()))
+		if (object == null || !PHPElementImageDescriptor.class.equals(object.getClass())) {
 			return false;
+		}
 
 		PHPElementImageDescriptor other = (PHPElementImageDescriptor) object;
 		return (fBaseImage.equals(other.fBaseImage) && fFlags == other.fFlags && fSize.equals(other.fSize));

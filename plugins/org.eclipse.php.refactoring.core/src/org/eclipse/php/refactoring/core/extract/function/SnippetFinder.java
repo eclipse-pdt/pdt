@@ -33,11 +33,13 @@ import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 		}
 
 		public boolean hasCorrectNesting(ASTNode node) {
-			if (fNodes.size() == 0)
+			if (fNodes.size() == 0) {
 				return true;
+			}
 			ASTNode parent = node.getParent();
-			if (fNodes.get(0).getParent() != parent)
+			if (fNodes.get(0).getParent() != parent) {
 				return false;
+			}
 			// Here we know that we have two elements. In this case the
 			// parent must be a block or a switch statement. Otherwise a
 			// snippet like "if (true) foo(); else foo();" would match
@@ -77,11 +79,13 @@ import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 		 */
 		public boolean isMethodBody() {
 			ASTNode first = fNodes.get(0);
-			if (first.getParent() == null)
+			if (first.getParent() == null) {
 				return false;
+			}
 			ASTNode candidate = first.getParent().getParent();
-			if (candidate == null || candidate.getType() != ASTNode.METHOD_DECLARATION)
+			if (candidate == null || candidate.getType() != ASTNode.METHOD_DECLARATION) {
 				return false;
+			}
 			MethodDeclaration method = (MethodDeclaration) candidate;
 			return method.getFunction().getBody().statements().size() == fNodes.size();
 		}
@@ -95,8 +99,9 @@ import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 	private class Matcher extends ASTMatcher {
 		@Override
 		public boolean match(Identifier candidate, Object s) {
-			if (!(s instanceof Identifier))
+			if (!(s instanceof Identifier)) {
 				return false;
+			}
 
 			Identifier snippet = (Identifier) s;
 
@@ -109,16 +114,18 @@ import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 
 			IVariableBinding cb = cv.resolveVariableBinding();
 			IVariableBinding sb = sv.resolveVariableBinding();
-			if (cb == null || sb == null)
+			if (cb == null || sb == null) {
 				return false;
+			}
 
 			if (!cb.isField() && !sb.isField()) {
 				Identifier mapped = fMatch.getMappedName(sb);
 				if (mapped != null) {
 					Variable parent = (Variable) mapped.getParent();
 					IVariableBinding mappedBinding = parent.resolveVariableBinding();
-					if (!cb.equals(mappedBinding))
+					if (!cb.equals(mappedBinding)) {
 						return false;
+					}
 				}
 				fMatch.addLocal(sb, candidate);
 				return true;
@@ -183,8 +190,9 @@ import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 
 	@Override
 	public boolean visit(FunctionDeclaration node) {
-		if (++fTypes > 1)
+		if (++fTypes > 1) {
 			return false;
+		}
 		return super.visit(node);
 	}
 
@@ -199,15 +207,17 @@ import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 			return false;
 		} else if (!isResetted()) {
 			reset();
-			if (matches(node))
+			if (matches(node)) {
 				return false;
+			}
 		}
 		return true;
 	}
 
 	private boolean matches(ASTNode node) {
-		if (isSnippetNode(node))
+		if (isSnippetNode(node)) {
 			return false;
+		}
 		if (node.subtreeMatch(fMatcher, fSnippet[fIndex]) && fMatch.hasCorrectNesting(node)) {
 			fMatch.add(node);
 			fIndex++;
@@ -231,8 +241,9 @@ import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 
 	private boolean isSnippetNode(ASTNode node) {
 		for (int i = 0; i < fSnippet.length; i++) {
-			if (node == fSnippet[i])
+			if (node == fSnippet[i]) {
 				return true;
+			}
 		}
 		return false;
 	}

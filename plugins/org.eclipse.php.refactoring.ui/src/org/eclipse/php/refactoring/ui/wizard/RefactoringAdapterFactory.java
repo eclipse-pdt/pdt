@@ -34,11 +34,13 @@ public class RefactoringAdapterFactory implements IAdapterFactory {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public Object getAdapter(Object object, Class key) {
-		if (!TextEditChangeNode.class.equals(key))
+		if (!TextEditChangeNode.class.equals(key)) {
 			return null;
+		}
 		if ((object instanceof TextFileChange) || (object instanceof MultiStateTextFileChange)
-				|| (object instanceof ProgramDocumentChange))
+				|| (object instanceof ProgramDocumentChange)) {
 			return new PHPRefactoringChangeNode((TextEditBasedChange) object);
+		}
 		return null;
 
 	}

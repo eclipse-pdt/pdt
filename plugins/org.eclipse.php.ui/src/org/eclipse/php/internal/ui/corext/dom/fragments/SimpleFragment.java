@@ -29,8 +29,9 @@ class SimpleFragment extends ASTFragment {
 
 	@Override
 	public IASTFragment[] getMatchingFragmentsWithNode(ASTNode node) {
-		if (!PHPASTMatcher.doNodesMatch(getAssociatedNode(), node))
+		if (!PHPASTMatcher.doNodesMatch(getAssociatedNode(), node)) {
 			return new IASTFragment[0];
+		}
 
 		IASTFragment match = ASTFragmentFactory.createFragmentForFullSubtree(node, this);
 		Assert.isTrue(match.matches(this) || this.matches(match));
@@ -81,12 +82,15 @@ class SimpleFragment extends ASTFragment {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		SimpleFragment other = (SimpleFragment) obj;
 		return fNode.equals(other.fNode);
 	}

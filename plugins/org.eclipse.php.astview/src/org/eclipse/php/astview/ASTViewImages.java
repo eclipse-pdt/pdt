@@ -40,8 +40,9 @@ public class ASTViewImages {
 
 	public static void setImageDescriptors(IAction action, String type) {
 		ImageDescriptor id= create("d", type); //$NON-NLS-1$
-		if (id != null)
+		if (id != null) {
 			action.setDisabledImageDescriptor(id);
+		}
 	
 		id= create("c", type); //$NON-NLS-1$
 		if (id != null) {

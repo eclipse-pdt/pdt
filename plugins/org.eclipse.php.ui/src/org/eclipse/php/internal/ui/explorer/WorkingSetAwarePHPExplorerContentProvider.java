@@ -71,8 +71,9 @@ public class WorkingSetAwarePHPExplorerContentProvider extends PHPExplorerConten
 	 */
 	@Override
 	public boolean hasChildren(Object element) {
-		if (element instanceof IWorkingSet)
+		if (element instanceof IWorkingSet) {
 			return true;
+		}
 		return super.hasChildren(element);
 	}
 
@@ -137,11 +138,13 @@ public class WorkingSetAwarePHPExplorerContentProvider extends PHPExplorerConten
 	}
 
 	private IProject getProject(IModelElement element) {
-		if (element == null)
+		if (element == null) {
 			return null;
+		}
 		IScriptProject project = element.getScriptProject();
-		if (project == null)
+		if (project == null) {
 			return null;
+		}
 		return project.getProject();
 	}
 
@@ -183,8 +186,9 @@ public class WorkingSetAwarePHPExplorerContentProvider extends PHPExplorerConten
 		Object[] parents = fWorkingSetModel.getAllParents(element);
 		for (int i = 0; i < parents.length; i++) {
 			List<Object> chain = new ArrayList<>();
-			if (!parents[i].equals(input))
+			if (!parents[i].equals(input)) {
 				chain.add(parents[i]);
+			}
 			for (int m = index; m < modelParents.size(); m++) {
 				chain.add(modelParents.get(m));
 			}
@@ -199,8 +203,9 @@ public class WorkingSetAwarePHPExplorerContentProvider extends PHPExplorerConten
 	@Override
 	public Object getParent(Object child) {
 		Object[] parents = fWorkingSetModel.getAllParents(child);
-		if (parents.length == 0)
+		if (parents.length == 0) {
 			return super.getParent(child);
+		}
 		Object first = parents[0];
 		return first;
 	}
@@ -218,13 +223,15 @@ public class WorkingSetAwarePHPExplorerContentProvider extends PHPExplorerConten
 			}
 		}
 		List<?> nonProjetTopLevelElemens = fWorkingSetModel.getNonProjectTopLevelElements();
-		if (nonProjetTopLevelElemens.isEmpty())
+		if (nonProjetTopLevelElemens.isEmpty()) {
 			return;
+		}
 		List<Object> toAdd = new ArrayList<>();
 		for (Iterator<?> iter = nonProjetTopLevelElemens.iterator(); iter.hasNext();) {
 			Object element = iter.next();
-			if (isChildOf(element, toRefresh))
+			if (isChildOf(element, toRefresh)) {
 				toAdd.add(element);
+			}
 		}
 		toRefresh.addAll(toAdd);
 	}
@@ -248,13 +255,15 @@ public class WorkingSetAwarePHPExplorerContentProvider extends PHPExplorerConten
 	private boolean isChildOf(Object element, List<Object> potentialParents) {
 		// Calling super get parent to bypass working set mapping
 		Object parent = super.getParent(element);
-		if (parent == null)
+		if (parent == null) {
 			return false;
+		}
 		for (Iterator<Object> iter = potentialParents.iterator(); iter.hasNext();) {
 			Object potentialParent = iter.next();
 			while (parent != null) {
-				if (parent.equals(potentialParent))
+				if (parent.equals(potentialParent)) {
 					return true;
+				}
 				parent = super.getParent(parent);
 			}
 

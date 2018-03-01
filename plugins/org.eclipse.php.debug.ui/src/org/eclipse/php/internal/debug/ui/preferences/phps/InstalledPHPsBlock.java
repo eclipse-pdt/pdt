@@ -241,8 +241,9 @@ public class InstalledPHPsBlock {
 		fPHPExeList.addDoubleClickListener(new IDoubleClickListener() {
 			@Override
 			public void doubleClick(final DoubleClickEvent e) {
-				if (!fPHPExeList.getSelection().isEmpty())
+				if (!fPHPExeList.getSelection().isEmpty()) {
 					editPHPexe();
+				}
 			}
 		});
 		table.addKeyListener(new KeyAdapter() {
@@ -251,8 +252,9 @@ public class InstalledPHPsBlock {
 				if (fRemoveButton != null && !fRemoveButton.isDisposed() && !fRemoveButton.isEnabled()) {
 					return;
 				}
-				if (event.character == SWT.DEL && event.stateMask == 0)
+				if (event.character == SWT.DEL && event.stateMask == 0) {
 					removePHPexes();
+				}
 			}
 		});
 
@@ -396,8 +398,9 @@ public class InstalledPHPsBlock {
 	public boolean isDuplicateName(final String name) {
 		for (int i = 0; i < fPHPexes.size(); i++) {
 			final PHPexeItem phpExe = fPHPexes.get(i);
-			if (phpExe.getName().equals(name))
+			if (phpExe.getName().equals(name)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -440,8 +443,9 @@ public class InstalledPHPsBlock {
 		dialog.setMessage(PHPDebugUIMessages.InstalledPHPsBlock_9);
 		dialog.setText(PHPDebugUIMessages.InstalledPHPsBlock_10);
 		final String path = dialog.open();
-		if (path == null)
+		if (path == null) {
 			return;
+		}
 		final File rootDir = new File(path);
 		final List<File> locations = new ArrayList<>();
 		final List<PHPexeItem> found = new ArrayList<>();
@@ -454,26 +458,30 @@ public class InstalledPHPsBlock {
 					monitor.setTaskName(PHPDebugUIMessages.InstalledPHPsBlock_Processing_search_results);
 					Iterator<File> iter2 = locations.iterator();
 					while (iter2.hasNext()) {
-						if (monitor.isCanceled())
+						if (monitor.isCanceled()) {
 							break;
+						}
 						File location = iter2.next();
 						PHPexeItem phpExe = new PHPexeItem(null, location, null, null, true);
-						if (phpExe.getName() == null)
+						if (phpExe.getName() == null) {
 							continue;
+						}
 						String nameCopy = new String(phpExe.getName());
 						monitor.subTask(MessageFormat
 								.format(PHPDebugUIMessages.InstalledPHPsBlock_Fetching_php_exe_info, nameCopy));
 						List<PHPModuleInfo> modules = PHPExeUtil.getModules(phpExe);
 						AbstractDebuggerConfiguration[] debuggers = PHPDebuggersRegistry.getDebuggersConfigurations();
 						for (AbstractDebuggerConfiguration debugger : debuggers) {
-							for (PHPModuleInfo m : modules)
+							for (PHPModuleInfo m : modules) {
 								if (m.getName().equalsIgnoreCase(debugger.getModuleId())) {
 									phpExe.setDebuggerID(debugger.getDebuggerId());
 									break;
 								}
+							}
 						}
-						if (phpExe.getDebuggerID() == null)
+						if (phpExe.getDebuggerID() == null) {
 							phpExe.setDebuggerID(PHPDebuggersRegistry.NONE_DEBUGGER_ID);
+						}
 						int i = 1;
 						// Check for duplicated names
 						duplicates: while (true) {
@@ -481,11 +489,12 @@ public class InstalledPHPsBlock {
 								nameCopy = phpExe.getName() + ' ' + '[' + i++ + ']';
 								continue duplicates;
 							} else {
-								for (PHPexeItem item : found)
+								for (PHPexeItem item : found) {
 									if (nameCopy.equalsIgnoreCase(item.getName())) {
 										nameCopy = phpExe.getName() + ' ' + '[' + i++ + ']';
 										continue duplicates;
 									}
+								}
 							}
 							break duplicates;
 						}
@@ -556,8 +565,9 @@ public class InstalledPHPsBlock {
 	 * @param ignore
 	 */
 	protected void search(final File directory, final List<File> found, final IProgressMonitor monitor) {
-		if (monitor.isCanceled())
+		if (monitor.isCanceled()) {
 			return;
+		}
 		// Search the root directory
 		List<File> foundExecs = findPHPExecutable(directory);
 		if (!foundExecs.isEmpty()) {
@@ -566,12 +576,14 @@ public class InstalledPHPsBlock {
 					MessageFormat.format(PHPDebugUIMessages.InstalledPHPsBlock_Searching_with_found, found.size()));
 		}
 		final String[] names = directory.list();
-		if (names == null)
+		if (names == null) {
 			return;
+		}
 		final List<File> subDirs = new ArrayList<>();
 		for (String element : names) {
-			if (monitor.isCanceled())
+			if (monitor.isCanceled()) {
 				return;
+			}
 			final File file = new File(directory, element);
 			if (file.isDirectory()) {
 				try {
@@ -579,16 +591,18 @@ public class InstalledPHPsBlock {
 							MessageFormat.format(PHPDebugUIMessages.InstalledPHPsBlock_14, file.getCanonicalPath()));
 				} catch (final IOException e) {
 				}
-				if (monitor.isCanceled())
+				if (monitor.isCanceled()) {
 					return;
+				}
 				subDirs.add(file);
 			}
 		}
 		while (!subDirs.isEmpty()) {
 			final File subDir = subDirs.remove(0);
 			search(subDir, found, monitor);
-			if (monitor.isCanceled())
+			if (monitor.isCanceled()) {
 				return;
+			}
 		}
 	}
 

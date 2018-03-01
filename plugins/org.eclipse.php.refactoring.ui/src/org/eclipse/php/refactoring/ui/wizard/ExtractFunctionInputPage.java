@@ -129,8 +129,9 @@ public class ExtractFunctionInputPage extends UserInputWizardPage {
 				Button radio = new Button(group, SWT.RADIO);
 				radio.setText(labels[i]);
 				radio.setData(data[i]);
-				if (data[i].equals(visibility))
+				if (data[i].equals(visibility)) {
 					radio.setSelection(true);
+				}
 				radio.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent event) {
@@ -262,8 +263,9 @@ public class ExtractFunctionInputPage extends UserInputWizardPage {
 	}
 
 	private String getText() {
-		if (fTextField == null)
+		if (fTextField == null) {
 			return null;
+		}
 		return fTextField.getText();
 	}
 
@@ -278,8 +280,9 @@ public class ExtractFunctionInputPage extends UserInputWizardPage {
 
 	private boolean computeGeneratePHPdoc() {
 		boolean result = fRefactoring.getGeneratePHPdoc();
-		if (result)
+		if (result) {
 			return result;
+		}
 		return fSettings.getBoolean(GENERATE_PHPDOC);
 	}
 
@@ -323,11 +326,14 @@ public class ExtractFunctionInputPage extends UserInputWizardPage {
 	}
 
 	private void updatePreview(String text) {
-		if (fSignaturePreview == null)
+		if (fSignaturePreview == null) {
 			return;
+		}
 
 		if (text.length() == 0)
+		 {
 			text = "someMethodName"; //$NON-NLS-1$
+		}
 
 		int top = fSignaturePreview.getTextWidget().getTopPixel();
 		String signature;

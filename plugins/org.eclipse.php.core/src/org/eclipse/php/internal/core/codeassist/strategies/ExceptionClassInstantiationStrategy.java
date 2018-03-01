@@ -36,8 +36,9 @@ public class ExceptionClassInstantiationStrategy extends AbstractClassInstantiat
 	@Override
 	protected IType[] getTypes(AbstractCompletionContext context) throws BadLocationException {
 		IType exceptionType = getExceptionType();
-		if (exceptionType == null)
+		if (exceptionType == null) {
 			return super.getTypes(context);
+		}
 		List<IType> result = new LinkedList<>();
 		ITypeHierarchy typeHierarchy;
 		ISourceModule sourceModule = context.getSourceModule();
@@ -74,8 +75,9 @@ public class ExceptionClassInstantiationStrategy extends AbstractClassInstantiat
 	}
 
 	protected IType getExceptionType() {
-		if (exceptionType != null)
+		if (exceptionType != null) {
 			return exceptionType;
+		}
 		IDLTKSearchScope scope = createSearchScope();
 		IType[] exceptionTypes = PHPModelAccess.getDefault().findTypes(EXCEPTION, MatchRule.EXACT, trueFlag, falseFlag,
 				scope, null);
@@ -90,8 +92,9 @@ public class ExceptionClassInstantiationStrategy extends AbstractClassInstantiat
 
 	private boolean isExceptionType(IType iType) {
 		if (EXCEPTION.equals(iType.getElementName()) && (CORE_PHP.equals(iType.getParent().getElementName())
-				|| BASIC_PHP.equals(iType.getParent().getElementName())))
+				|| BASIC_PHP.equals(iType.getParent().getElementName()))) {
 			return true;
+		}
 		return false;
 	}
 }

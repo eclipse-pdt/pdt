@@ -266,8 +266,9 @@ public class CompilationUnitRewrite {
 			// fImportRewrite.hasRecordedChanges() || needsImportRemoval;
 			if (!needsAstRewrite/*
 								 * && !needsImportRemoval && !needsImportRewrite
-								 */)
+								 */) {
 				return null;
+			}
 
 			MultiTextEdit multiEdit = (MultiTextEdit) cuChange.getEdit();
 			if (multiEdit == null) {
@@ -307,12 +308,14 @@ public class CompilationUnitRewrite {
 			// } else {
 			//
 			// }
-			if (isEmptyEdit(multiEdit))
+			if (isEmptyEdit(multiEdit)) {
 				return null;
+			}
 			return cuChange;
 		} finally {
-			if (monitor != null)
+			if (monitor != null) {
 				monitor.done();
+			}
 		}
 	}
 

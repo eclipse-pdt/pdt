@@ -186,10 +186,12 @@ public class AlreadyExistsDialog extends StatusDialog {
 
 	@Override
 	protected void okPressed() {
-		if (!getStatus().isOK())
+		if (!getStatus().isOK()) {
 			return;
-		if (fRenameRadio.getSelection())
+		}
+		if (fRenameRadio.getSelection()) {
 			fProfile.rename(fNameText.getText().trim(), fProfileManager);
+		}
 		super.okPressed();
 	}
 }

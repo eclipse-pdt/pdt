@@ -112,23 +112,26 @@ public class BindingProperty extends ASTAttribute {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
+		}
 		if (obj == null || !obj.getClass().equals(getClass())) {
 			return false;
 		}
 		
 		BindingProperty other= (BindingProperty) obj;
 		if (fParent == null) {
-			if (other.fParent != null)
+			if (other.fParent != null) {
 				return false;
+			}
 		} else if (! fParent.equals(other.fParent)) {
 			return false;
 		}
 		
 		if (fName == null) {
-			if (other.fName != null)
+			if (other.fName != null) {
 				return false;
+			}
 		} else if (! fName.equals(other.fName)) {
 			return false;
 		}

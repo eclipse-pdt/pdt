@@ -44,32 +44,37 @@ public class SelectionAnalyzer extends ApplyAll {
 	}
 
 	public ASTNode[] getSelectedNodes() {
-		if (fSelectedNodes == null || fSelectedNodes.isEmpty())
+		if (fSelectedNodes == null || fSelectedNodes.isEmpty()) {
 			return new ASTNode[0];
+		}
 		return fSelectedNodes.toArray(new ASTNode[fSelectedNodes.size()]);
 	}
 
 	public ASTNode getFirstSelectedNode() {
-		if (fSelectedNodes == null || fSelectedNodes.isEmpty())
+		if (fSelectedNodes == null || fSelectedNodes.isEmpty()) {
 			return null;
+		}
 		return fSelectedNodes.get(0);
 	}
 
 	public ASTNode getLastSelectedNode() {
-		if (fSelectedNodes == null || fSelectedNodes.isEmpty())
+		if (fSelectedNodes == null || fSelectedNodes.isEmpty()) {
 			return null;
+		}
 		return fSelectedNodes.get(fSelectedNodes.size() - 1);
 	}
 
 	public boolean isExpressionSelected() {
-		if (!hasSelectedNodes())
+		if (!hasSelectedNodes()) {
 			return false;
+		}
 		return fSelectedNodes.get(0) instanceof Expression;
 	}
 
 	public IRegion getSelectedNodeRange() {
-		if (fSelectedNodes == null || fSelectedNodes.isEmpty())
+		if (fSelectedNodes == null || fSelectedNodes.isEmpty()) {
 			return null;
+		}
 		ASTNode firstNode = fSelectedNodes.get(0);
 		ASTNode lastNode = fSelectedNodes.get(fSelectedNodes.size() - 1);
 		int start = firstNode.getStart();

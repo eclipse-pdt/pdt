@@ -38,8 +38,9 @@ public class CodeAnalyzer extends StatementAnalyzer {
 	protected final void checkSelectedNodes() {
 		super.checkSelectedNodes();
 		RefactoringStatus status = getStatus();
-		if (status.hasFatalError())
+		if (status.hasFatalError()) {
 			return;
+		}
 		ASTNode node = getFirstSelectedNode();
 		// TODO - check if this needs to be here at all
 		if (node instanceof SingleFieldDeclaration) {

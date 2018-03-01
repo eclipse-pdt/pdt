@@ -57,10 +57,12 @@ public class PHPUnitValidator {
 		if (project != null) {
 
 			final IType[] typesByName = getTypesByName(className, project);
-			if (typesByName != null && typesByName.length > 0)
-				if (status != null)
+			if (typesByName != null && typesByName.length > 0) {
+				if (status != null) {
 					status.setError(MessageFormat.format(PHPUnitMessages.PHPUnitValidator_Class_Exists,
 							project.getName(), className));
+				}
+			}
 		}
 		return matcher.group();
 	}
@@ -93,11 +95,12 @@ public class PHPUnitValidator {
 		} else if (container instanceof IContainer) {
 			final IContainer theContainer = (IContainer) container;
 			containerName = theContainer.getFullPath().toOSString();
-			if (!theContainer.isAccessible())
+			if (!theContainer.isAccessible()) {
 				if (status != null) {
 					status.setError(MessageFormat.format(PHPUnitMessages.PHPUnitValidator_Not_Accessible,
 							new Object[] { containerName }));
 				}
+			}
 		} else {
 			if (status != null) {
 				status.setError(MessageFormat.format(PHPUnitMessages.PHPUnitValidator_Not_Folder, container));
@@ -167,17 +170,19 @@ public class PHPUnitValidator {
 				IType[] foundClassElementsToTest = PHPModelAccess.getDefault().findTypes(modelElement.getElementName(),
 						MatchRule.EXACT, 0, Modifiers.AccInterface, searchScope, null);
 				if (foundClassElementsToTest == null || foundClassElementsToTest.length < 1) {
-					if (status != null)
+					if (status != null) {
 						status.setError(MessageFormat.format(PHPUnitMessages.PHPUnitValidator_Not_In_Project,
 								modelElement.getElementName(), project.getName()));
+					}
 					return null;
 				}
 				modelElement = foundClassElementsToTest[0];
 			}
 			return modelElement;
 		} else if (element instanceof String) {
-			if (project == null)
+			if (project == null) {
 				return null;
+			}
 			final String elementName = ((String) element).trim();
 			if (elementName.length() == 0) {
 				if (status != null) {
@@ -199,9 +204,10 @@ public class PHPUnitValidator {
 			}
 
 			if (foundClassElementsToTest == null || foundClassElementsToTest.length == 0) {
-				if (status != null)
+				if (status != null) {
 					status.setWarning(MessageFormat.format(PHPUnitMessages.PHPUnitValidator_No_Element_In_Project,
 							elementName, project.getName()));
+				}
 				return null;
 			} else if (foundClassElementsToTest.length > 1) {
 				if (status != null) {
@@ -212,8 +218,9 @@ public class PHPUnitValidator {
 			}
 			return foundClassElementsToTest[0];
 		} else {
-			if (status != null)
+			if (status != null) {
 				status.setWarning(MessageFormat.format(PHPUnitMessages.PHPUnitValidator_Unknown_Element, element));
+			}
 			return null;
 		}
 	}
@@ -277,9 +284,10 @@ public class PHPUnitValidator {
 		try {
 
 			if (!theProject.isAccessible()) {
-				if (status != null)
+				if (status != null) {
 					status.setError(MessageFormat.format(PHPUnitMessages.PHPUnitValidator_Project_Not_Accessible,
 							theProject.getName()));
+				}
 				return null;
 			}
 
@@ -307,8 +315,9 @@ public class PHPUnitValidator {
 			return EMPTY_TYPES;
 		}
 
-		if (project == null)
+		if (project == null) {
 			return EMPTY_TYPES;
+		}
 
 		if (tests == null) {
 			status.setWarning(

@@ -102,16 +102,31 @@ public class Binding extends ASTAttribute {
 					// final boolean isNonPrimitive= ! isType(typeKind, PRIMITIVE_TYPE);
 					
 					StringBuffer kinds= new StringBuffer("KIND:"); //$NON-NLS-1$
-					if (typeBinding.isArray()) kinds.append(" isArray"); //$NON-NLS-1$
+					if (typeBinding.isArray())
+					 {
+						kinds.append(" isArray"); //$NON-NLS-1$
+					}
 					//FIXME: if (typeBinding.isCapture()) kinds.append(" isCapture"); //$NON-NLS-1$
-					if (typeBinding.isNullType()) kinds.append(" isNullType"); //$NON-NLS-1$
-					if (typeBinding.isPrimitive()) kinds.append(" isPrimitive"); //$NON-NLS-1$
+					if (typeBinding.isNullType())
+					 {
+						kinds.append(" isNullType"); //$NON-NLS-1$
+					}
+					if (typeBinding.isPrimitive())
+					 {
+						kinds.append(" isPrimitive"); //$NON-NLS-1$
+					}
 					//FIXME: if (typeBinding.isTypeVariable()) kinds.append(" isTypeVariable"); //$NON-NLS-1$
 					//FIXME: if (typeBinding.isWildcardType()) kinds.append(" isWildcardType"); //$NON-NLS-1$
 					// ref types
 					//FIXME: if (typeBinding.isAnnotation()) kinds.append(" isAnnotation"); //$NON-NLS-1$
-					if (typeBinding.isClass()) kinds.append(" isClass"); //$NON-NLS-1$
-					if (typeBinding.isInterface()) kinds.append(" isInterface"); //$NON-NLS-1$
+					if (typeBinding.isClass())
+					 {
+						kinds.append(" isClass"); //$NON-NLS-1$
+					}
+					if (typeBinding.isInterface())
+					 {
+						kinds.append(" isInterface"); //$NON-NLS-1$
+					}
 					//FIXME: if (typeBinding.isEnum()) kinds.append(" isEnum"); //$NON-NLS-1$
 					res.add(new BindingProperty(this, kinds, true)); 
 					
@@ -250,19 +265,34 @@ public class Binding extends ASTAttribute {
 	private final static int UNKNOWN_TYPE= 1 << 9;
 	
 	private int getTypeKind(ITypeBinding typeBinding) {
-		if (typeBinding.isArray()) return ARRAY_TYPE;
+		if (typeBinding.isArray()) {
+			return ARRAY_TYPE;
+		}
 		//if (typeBinding.isCapture()) return CAPTURE_TYPE;
-		if (typeBinding.isNullType()) return NULL_TYPE;
-		if (typeBinding.isPrimitive()) return PRIMITIVE_TYPE;
-		//if (typeBinding.isTypeVariable()) return VARIABLE_TYPE;
-		//if (typeBinding.isWildcardType()) return WILDCARD_TYPE;
+		if (typeBinding.isNullType()) {
+			return NULL_TYPE;
+		}
+		if (typeBinding.isPrimitive())
+		 {
+			return PRIMITIVE_TYPE;
+			//if (typeBinding.isTypeVariable()) return VARIABLE_TYPE;
+			//if (typeBinding.isWildcardType()) return WILDCARD_TYPE;
+		}
 		
 		//NIRC
-		if (typeBinding.isAmbiguous()) return AMBIGOUS_TYPE;
-		if (typeBinding.isClass()) return CLASS_TYPE;
-		if (typeBinding.isInterface()) return INTERFACE_TYPE;
+		if (typeBinding.isAmbiguous()) {
+			return AMBIGOUS_TYPE;
+		}
+		if (typeBinding.isClass()) {
+			return CLASS_TYPE;
+		}
+		if (typeBinding.isInterface()) {
+			return INTERFACE_TYPE;
+		}
 	//	if (typeBinding.isSynthetic()) return SYNTHETIC_TYPE;
-		if (typeBinding.isUnknown()) return UNKNOWN_TYPE;
+		if (typeBinding.isUnknown()) {
+			return UNKNOWN_TYPE;
+		}
 		
 		//if (typeBinding.isGenericType())  return REF_TYPE | GENERIC;
 		//if (typeBinding.isParameterizedType() || typeBinding.isRawType()) return REF_TYPE | PARAMETRIZED;
@@ -335,23 +365,26 @@ public class Binding extends ASTAttribute {
 	
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
+		}
 		if (obj == null || !obj.getClass().equals(getClass())) {
 			return false;
 		}
 		
 		Binding other= (Binding) obj;
 		if (fParent == null) {
-			if (other.fParent != null)
+			if (other.fParent != null) {
 				return false;
+			}
 		} else if (! fParent.equals(other.fParent)) {
 			return false;
 		}
 		
 		if (fBinding == null) {
-			if (other.fBinding != null)
+			if (other.fBinding != null) {
 				return false;
+			}
 		} else if (! fBinding.equals(other.fBinding)) {
 			return false;
 		}

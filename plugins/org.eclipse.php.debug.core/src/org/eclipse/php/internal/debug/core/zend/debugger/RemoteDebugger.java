@@ -426,8 +426,9 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		String currentScript = null;
 		PHPstack callStack = getCallStack();
-		if (callStack == null)
+		if (callStack == null) {
 			return null;
+		}
 		if (callStack.getSize() > 0) {
 			currentScript = callStack.getLayer(callStack.getSize() - 1).getResolvedCalledFileName();
 		}
@@ -1052,8 +1053,9 @@ public class RemoteDebugger implements IRemoteDebugger {
 			// All of above failed, check if the connection is active (it could
 			// be
 			// terminated in the meantime by the user i.e.)
-			if (!isActive())
+			if (!isActive()) {
 				return true;
+			}
 			// user is using an incompatible version of debugger:
 			getDebugHandler().wrongDebugServer();
 		}
@@ -1551,8 +1553,9 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	public List<IPath> getIncludePaths(IProject project) throws ModelException {
-		if (project == null)
+		if (project == null) {
 			return new ArrayList<>();
+		}
 		List<IPath> includePaths = resolvedIncludePaths.get(project.getName());
 		if (includePaths != null) {
 			return includePaths;

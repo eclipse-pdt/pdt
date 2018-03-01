@@ -60,19 +60,23 @@ public class FakeType extends SourceType {
 
 	@Override
 	public ISourceRange getNameRange() throws ModelException {
-		if (hasSpecialOffsets)
+		if (hasSpecialOffsets) {
 			return new SourceRange(nameOffset, nameLength);
-		if (getElementInfo() != null)
+		}
+		if (getElementInfo() != null) {
 			return super.getNameRange();
+		}
 		return new SourceRange(0, 0);
 	}
 
 	@Override
 	public ISourceRange getSourceRange() throws ModelException {
-		if (hasSpecialOffsets)
+		if (hasSpecialOffsets) {
 			return new SourceRange(offset, length);
-		if (getElementInfo() != null)
+		}
+		if (getElementInfo() != null) {
 			return super.getSourceRange();
+		}
 		return new SourceRange(0, 0);
 	}
 

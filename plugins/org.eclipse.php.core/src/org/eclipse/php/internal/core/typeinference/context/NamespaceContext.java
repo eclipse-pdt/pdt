@@ -54,18 +54,23 @@ public class NamespaceContext extends InstanceContext implements INamespaceConte
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (!super.equals(obj))
+		}
+		if (!super.equals(obj)) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		NamespaceContext other = (NamespaceContext) obj;
 		if (namespaceName == null) {
-			if (other.namespaceName != null)
+			if (other.namespaceName != null) {
 				return false;
-		} else if (!namespaceName.equals(other.namespaceName))
+			}
+		} else if (!namespaceName.equals(other.namespaceName)) {
 			return false;
+		}
 		return true;
 	}
 }

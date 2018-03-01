@@ -63,8 +63,9 @@ public class ToggleMarkOccurrencesAction extends TextEditorAction implements IPr
 		ITextEditor editor = getTextEditor();
 
 		boolean checked = false;
-		if (editor instanceof PHPStructuredEditor)
+		if (editor instanceof PHPStructuredEditor) {
 			checked = ((PHPStructuredEditor) editor).isMarkingOccurrences();
+		}
 
 		setChecked(checked);
 		setEnabled(editor != null);
@@ -93,7 +94,8 @@ public class ToggleMarkOccurrencesAction extends TextEditorAction implements IPr
 	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
-		if (event.getProperty().equals(PreferenceConstants.EDITOR_MARK_OCCURRENCES))
+		if (event.getProperty().equals(PreferenceConstants.EDITOR_MARK_OCCURRENCES)) {
 			setChecked(Boolean.valueOf(event.getNewValue().toString()).booleanValue());
+		}
 	}
 }

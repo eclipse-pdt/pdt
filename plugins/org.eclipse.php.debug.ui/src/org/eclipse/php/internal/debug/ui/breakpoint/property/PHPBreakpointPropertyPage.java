@@ -94,8 +94,9 @@ public class PHPBreakpointPropertyPage extends PropertyPage implements IWorkbenc
 	public boolean performOk() {
 		if (breakpoint != null) {
 			String condition = text.getText().trim();
-			if (condition.equals("")) //$NON-NLS-1$
+			if (condition.equals("")) {
 				conditionEnabled = false;
+			}
 			try {
 				breakpoint.setConditionWithEnable(conditionEnabled, condition);
 			} catch (CoreException e) {

@@ -80,8 +80,9 @@ public class SelectionListenerWithASTManager {
 			fPostSelectionListener = new ISelectionListener() {
 				@Override
 				public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-					if (part == fPart && selection instanceof ITextSelection)
+					if (part == fPart && selection instanceof ITextSelection) {
 						firePostSelectionChanged((ITextSelection) selection);
+					}
 				}
 			};
 		}
@@ -94,8 +95,9 @@ public class SelectionListenerWithASTManager {
 			if (isEmpty()) {
 				fPart.getEditorSite().getPage().addPostSelectionListener(fPostSelectionListener);
 				ISelectionProvider selectionProvider = fPart.getSelectionProvider();
-				if (selectionProvider != null)
+				if (selectionProvider != null) {
 					selectionProvider.addSelectionChangedListener(fSelectionListener);
+				}
 			}
 			fAstListeners.add(listener);
 		}
@@ -105,8 +107,9 @@ public class SelectionListenerWithASTManager {
 			if (isEmpty()) {
 				fPart.getEditorSite().getPage().removePostSelectionListener(fPostSelectionListener);
 				ISelectionProvider selectionProvider = fPart.getSelectionProvider();
-				if (selectionProvider != null)
+				if (selectionProvider != null) {
 					selectionProvider.removeSelectionChangedListener(fSelectionListener);
+				}
 			}
 		}
 

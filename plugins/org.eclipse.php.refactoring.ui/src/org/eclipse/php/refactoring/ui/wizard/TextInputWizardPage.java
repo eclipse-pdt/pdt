@@ -88,8 +88,9 @@ public abstract class TextInputWizardPage extends UserInputWizardPage {
 	 *         not text input field has been created
 	 */
 	protected String getText() {
-		if (fTextField == null)
+		if (fTextField == null) {
 			return null;
+		}
 		return fTextField.getText();
 	}
 
@@ -101,8 +102,9 @@ public abstract class TextInputWizardPage extends UserInputWizardPage {
 	 *            the new value
 	 */
 	protected void setText(String text) {
-		if (fTextField == null)
+		if (fTextField == null) {
 			return;
+		}
 		fTextField.setText(text);
 	}
 
@@ -168,8 +170,9 @@ public abstract class TextInputWizardPage extends UserInputWizardPage {
 		}
 
 		RefactoringStatus status = validateTextField(text);
-		if (status == null)
+		if (status == null) {
 			status = new RefactoringStatus();
+		}
 		setPageComplete(status);
 	}
 

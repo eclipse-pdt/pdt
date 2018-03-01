@@ -43,8 +43,9 @@ public class PHPEditorErrorTickUpdater implements IProblemChangedListener {
 
 	@Override
 	public void problemsChanged(IResource[] changedResources, boolean isMarkerChange) {
-		if (!isMarkerChange)
+		if (!isMarkerChange) {
 			return;
+		}
 
 		IEditorInput input = fPHPEditor.getEditorInput();
 		if (input != null) {
@@ -66,10 +67,11 @@ public class PHPEditorErrorTickUpdater implements IProblemChangedListener {
 			return;
 		}
 		Image newImage;
-		if (element instanceof ISourceModule && !element.getScriptProject().isOnBuildpath(element))
+		if (element instanceof ISourceModule && !element.getScriptProject().isOnBuildpath(element)) {
 			newImage = fLabelProvider.getImage(element.getResource());
-		else
+		} else {
 			newImage = fLabelProvider.getImage(element);
+		}
 		if (titleImage != newImage) {
 			postImageChange(newImage);
 		}

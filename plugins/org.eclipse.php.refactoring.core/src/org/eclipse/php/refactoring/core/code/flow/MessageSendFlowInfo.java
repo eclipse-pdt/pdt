@@ -21,27 +21,32 @@ class MessageSendFlowInfo extends FlowInfo {
 	}
 
 	public void mergeArgument(FlowInfo info, FlowContext context) {
-		if (info == null)
+		if (info == null) {
 			return;
+		}
 		mergeSequential(info, context);
 	}
 
 	public void mergeReceiver(FlowInfo info, FlowContext context) {
-		if (info == null)
+		if (info == null) {
 			return;
+		}
 		mergeSequential(info, context);
 	}
 
 	public void mergeExceptions(IMethodBinding binding, FlowContext context) {
-		if (binding == null)
+		if (binding == null) {
 			return;
+		}
 		ITypeBinding[] exceptions = binding.getExceptionTypes();
-		if (exceptions == null)
+		if (exceptions == null) {
 			return;
+		}
 		for (int i = 0; i < exceptions.length; i++) {
 			ITypeBinding exception = exceptions[i];
-			if (context.isExceptionCaught(exception))
+			if (context.isExceptionCaught(exception)) {
 				addException(exception);
+			}
 		}
 	}
 }

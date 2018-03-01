@@ -36,14 +36,16 @@ public final class WhiteSpaceOptions {
 		protected final ArrayList<Node> fChildren;
 
 		public Node(InnerNode parent, Map<String, Object> workingValues, String message) {
-			if (workingValues == null || message == null)
+			if (workingValues == null || message == null) {
 				throw new IllegalArgumentException();
+			}
 			fParent = parent;
 			fWorkingValues = workingValues;
 			fName = message;
 			fChildren = new ArrayList<>();
-			if (fParent != null)
+			if (fParent != null) {
 				fParent.add(this);
+			}
 		}
 
 		public abstract void setChecked(boolean checked);
@@ -81,8 +83,9 @@ public final class WhiteSpaceOptions {
 
 		@Override
 		public void setChecked(boolean checked) {
-			for (final Iterator<Node> iter = fChildren.iterator(); iter.hasNext();)
+			for (final Iterator<Node> iter = fChildren.iterator(); iter.hasNext();) {
 				(iter.next()).setChecked(checked);
+			}
 		}
 
 		public void add(Node child) {
@@ -96,8 +99,9 @@ public final class WhiteSpaceOptions {
 				final List<String> childSnippets = iter.next().getSnippets();
 				for (final Iterator<String> chIter = childSnippets.iterator(); chIter.hasNext();) {
 					final String snippet = chIter.next();
-					if (!snippets.contains(snippet))
+					if (!snippets.contains(snippet)) {
 						snippets.add(snippet);
+					}
 				}
 			}
 			return snippets;
@@ -142,8 +146,9 @@ public final class WhiteSpaceOptions {
 
 		@Override
 		public void getCheckedLeafs(List<Node> list) {
-			if (getChecked())
+			if (getChecked()) {
 				list.add(this);
+			}
 		}
 	}
 

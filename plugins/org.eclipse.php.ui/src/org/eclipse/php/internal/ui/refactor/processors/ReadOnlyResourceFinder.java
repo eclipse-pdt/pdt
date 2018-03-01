@@ -60,8 +60,9 @@ class ReadOnlyResourceFinder {
 
 	private static boolean hasReadOnlyResourcesAndSubResources(IModelElement[] modelElements) throws CoreException {
 		for (int i = 0; i < modelElements.length; i++) {
-			if (hasReadOnlyResourcesAndSubResources(modelElements[i]))
+			if (hasReadOnlyResourcesAndSubResources(modelElements[i])) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -73,32 +74,39 @@ class ReadOnlyResourceFinder {
 			return (resource != null && Resources.isReadOnly(resource));
 		case IModelElement.SCRIPT_FOLDER:
 			IResource packResource = ReorgUtils.getResource(modelElement);
-			if (packResource == null)
+			if (packResource == null) {
 				return false;
+			}
 			IScriptFolder pack = (IScriptFolder) modelElement;
-			if (Resources.isReadOnly(packResource))
+			if (Resources.isReadOnly(packResource)) {
 				return true;
+			}
 			Object[] nonScript = pack.getForeignResources();
 			for (int i = 0; i < nonScript.length; i++) {
 				Object object = nonScript[i];
-				if (object instanceof IResource && hasReadOnlyResourcesAndSubResources((IResource) object))
+				if (object instanceof IResource && hasReadOnlyResourcesAndSubResources((IResource) object)) {
 					return true;
+				}
 			}
 			return hasReadOnlyResourcesAndSubResources(pack.getChildren());
 		case IModelElement.PROJECT_FRAGMENT:
 			IProjectFragment root = (IProjectFragment) modelElement;
-			if (root.isArchive())
+			if (root.isArchive()) {
 				return false;
+			}
 			IResource pfrResource = ReorgUtils.getResource(modelElement);
-			if (pfrResource == null)
+			if (pfrResource == null) {
 				return false;
-			if (Resources.isReadOnly(pfrResource))
+			}
+			if (Resources.isReadOnly(pfrResource)) {
 				return true;
+			}
 			Object[] nonScript1 = root.getForeignResources();
 			for (int i = 0; i < nonScript1.length; i++) {
 				Object object = nonScript1[i];
-				if (object instanceof IResource && hasReadOnlyResourcesAndSubResources((IResource) object))
+				if (object instanceof IResource && hasReadOnlyResourcesAndSubResources((IResource) object)) {
 					return true;
+				}
 			}
 			return hasReadOnlyResourcesAndSubResources(root.getChildren());
 
@@ -118,20 +126,24 @@ class ReadOnlyResourceFinder {
 
 	private static boolean hasReadOnlyResourcesAndSubResources(IResource[] resources) throws CoreException {
 		for (int i = 0; i < resources.length; i++) {
-			if (hasReadOnlyResourcesAndSubResources(resources[i]))
+			if (hasReadOnlyResourcesAndSubResources(resources[i])) {
 				return true;
+			}
 		}
 		return false;
 	}
 
 	private static boolean hasReadOnlyResourcesAndSubResources(IResource resource) throws CoreException {
-		if (resource.isLinked()) // we don't want to count these because we
-									// never actually delete linked resources
+		if (resource.isLinked()) {
+			// never actually delete linked resources
 			return false;
-		if (Resources.isReadOnly(resource))
+		}
+		if (Resources.isReadOnly(resource)) {
 			return true;
-		if (resource instanceof IContainer)
+		}
+		if (resource instanceof IContainer) {
 			return hasReadOnlyResourcesAndSubResources(((IContainer) resource).members());
+		}
 		return false;
 	}
 }

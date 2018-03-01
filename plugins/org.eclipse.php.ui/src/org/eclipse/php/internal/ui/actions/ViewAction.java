@@ -27,7 +27,8 @@ public class ViewAction extends Action {
 	 */
 	@Override
 	public void run() {
-		if (isChecked())
+		if (isChecked()) {
 			fActionGroup.setMode(fMode);
+		}
 	}
 }

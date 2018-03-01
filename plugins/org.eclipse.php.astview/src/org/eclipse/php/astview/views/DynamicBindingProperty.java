@@ -40,8 +40,9 @@ public abstract class DynamicBindingProperty extends ExceptionAttribute {
 	}
 	
 	public void setViewerElement(Binding viewerElement) {
-		if (fViewerElement == viewerElement)
+		if (fViewerElement == viewerElement) {
 			return;
+		}
 		
 		fViewerElement= viewerElement;
 		fException= null;
@@ -56,10 +57,11 @@ public abstract class DynamicBindingProperty extends ExceptionAttribute {
 				fException= e;
 				buf.append(e.getClass().getName());
 				buf.append(" for \""); //$NON-NLS-1$
-				if (viewerBinding == null)
+				if (viewerBinding == null) {
 					buf.append("null"); //$NON-NLS-1$
-				else
+				} else {
 					buf.append('"').append(viewerBinding.getKey());
+				}
 				buf.append("\" and "); //$NON-NLS-1$
 				buf.append(trayBinding.getKey()).append('"');
 			}

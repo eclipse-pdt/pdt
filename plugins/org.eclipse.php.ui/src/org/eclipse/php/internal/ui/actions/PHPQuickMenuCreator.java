@@ -44,8 +44,9 @@ public class PHPQuickMenuCreator extends QuickMenuCreator {
 
 	@Override
 	protected Point computeMenuLocation(StyledText text) {
-		if (editor == null || text != editor.getViewer().getTextWidget())
+		if (editor == null || text != editor.getViewer().getTextWidget()) {
 			return super.computeMenuLocation(text);
+		}
 		return computeWordStart();
 	}
 
@@ -61,12 +62,14 @@ public class PHPQuickMenuCreator extends QuickMenuCreator {
 	private Point computeWordStart() {
 		ITextSelection selection = (ITextSelection) editor.getSelectionProvider().getSelection();
 		IRegion textRegion = PHPWordFinder.findWord(editor.getViewer().getDocument(), selection.getOffset());
-		if (textRegion == null)
+		if (textRegion == null) {
 			return null;
+		}
 
 		IRegion widgetRegion = modelRange2WidgetRange(textRegion);
-		if (widgetRegion == null)
+		if (widgetRegion == null) {
 			return null;
+		}
 
 		int start = widgetRegion.getOffset();
 

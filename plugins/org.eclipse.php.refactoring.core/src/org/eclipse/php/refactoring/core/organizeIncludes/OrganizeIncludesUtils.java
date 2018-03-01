@@ -128,8 +128,9 @@ public class OrganizeIncludesUtils {
 
 	static String getEditGroupName(String prefix, String includeLocation,
 			Set<?> elements) {
-		if (elements == null || elements.size() == 0)
+		if (elements == null || elements.size() == 0) {
 			return getEditGroupName(prefix, includeLocation);
+		}
 		StringBuffer editGroupNameSuffix = OrganizeIncludesUtils
 				.concatenateElementLabels(elements);
 		return getEditGroupName(prefix, includeLocation,

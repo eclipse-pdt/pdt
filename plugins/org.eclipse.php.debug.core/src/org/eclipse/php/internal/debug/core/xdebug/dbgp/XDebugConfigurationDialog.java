@@ -107,13 +107,15 @@ public class XDebugConfigurationDialog extends AbstractDebuggerConfigurationDial
 		setTitle(PHPDebugCoreMessages.XDebugConfigurationDialog_mainTitle);
 		setMessage(PHPDebugCoreMessages.XDebugConfigurationDialog_Dialog_description);
 		titleImage = getDialogImage();
-		if (titleImage != null)
+		if (titleImage != null) {
 			setTitleImage(titleImage);
+		}
 		getShell().addDisposeListener(new DisposeListener() {
 			@Override
 			public void widgetDisposed(DisposeEvent e) {
-				if (titleImage != null)
+				if (titleImage != null) {
 					titleImage.dispose();
+				}
 			}
 		});
 		// Create main groups

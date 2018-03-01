@@ -93,9 +93,9 @@ public class PHPDebugPropertyPreferencePage extends AbstractPHPPropertyPreferenc
 
 				pageValidator.validate();
 				setValid(pageValidator.isValid());
-				if (!pageValidator.isValid())
+				if (!pageValidator.isValid()) {
 					setErrorMessage(pageValidator.getErrorMessage());
-				else {
+				} else {
 					setErrorMessage(null);
 				}
 			}

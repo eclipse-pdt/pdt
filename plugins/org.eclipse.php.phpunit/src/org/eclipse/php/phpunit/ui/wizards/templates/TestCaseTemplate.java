@@ -68,7 +68,8 @@ abstract public class TestCaseTemplate extends TestTemplate {
 			compile(MASTER_ELEMENT_STATIC_METHOD, MASTER_ELEMENT_STATIC_METHOD, false);
 		}
 		set(MASTER_ELEMENT_NAME, name);
-		if (relativeLocation != null)
+		if (relativeLocation != null) {
 			addRequire(relativeLocation);
+		}
 	}
 }

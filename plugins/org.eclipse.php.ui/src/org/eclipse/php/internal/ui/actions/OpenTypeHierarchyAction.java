@@ -150,8 +150,9 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 	 * is a TYPE (e.g. Class or Interface).
 	 */
 	private boolean isEnabled(ITextSelection selection) {
-		if (fEditor == null || selection == null)
+		if (fEditor == null || selection == null) {
 			return false;
+		}
 		if (fEditor.getModelElement() instanceof ISourceModule) {
 			ISourceModule sourceModule = (ISourceModule) fEditor.getModelElement();
 			IModelElement element = PHPSelectionUtil.getSelectionModelElement(selection.getOffset(),
@@ -192,14 +193,16 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 		if (selection instanceof ITextSelection) {
 			run((ITextSelection) selection);
 		} else {
-			if (selection.size() != 1)
+			if (selection.size() != 1) {
 				return;
+			}
 			Object input = selection.getFirstElement();
 
 			if (input instanceof LogicalPackage) {
 				IScriptFolder[] fragments = ((LogicalPackage) input).getFragments();
-				if (fragments.length == 0)
+				if (fragments.length == 0) {
 					return;
+				}
 				input = fragments[0];
 			}
 
@@ -212,8 +215,9 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 				return;
 			}
 			IModelElement element = (IModelElement) input;
-			if (!ActionUtil.isProcessable(getShell(), element))
+			if (!ActionUtil.isProcessable(getShell(), element)) {
 				return;
+			}
 
 			List<IModelElement> result = new ArrayList<>(1);
 			IStatus status = compileCandidates(result, element);
@@ -273,8 +277,9 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 			input = candidates[0];
 		}
 
-		if (input == null)
+		if (input == null) {
 			return null;
+		}
 
 		return openInViewPart(window, input);
 	}

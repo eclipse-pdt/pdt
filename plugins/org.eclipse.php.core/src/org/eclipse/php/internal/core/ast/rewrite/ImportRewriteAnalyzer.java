@@ -980,8 +980,9 @@ public final class ImportRewriteAnalyzer {
 		}
 
 		String lineDelimiter = getLineDelimiterPreference(project);
-		if (lineDelimiter != null)
+		if (lineDelimiter != null) {
 			return lineDelimiter;
+		}
 
 		return System.getProperty("line.separator", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
@@ -993,8 +994,9 @@ public final class ImportRewriteAnalyzer {
 			scopeContext = new IScopeContext[] { new ProjectScope(project.getProject()) };
 			String lineDelimiter = Platform.getPreferencesService().getString(Platform.PI_RUNTIME,
 					Platform.PREF_LINE_SEPARATOR, null, scopeContext);
-			if (lineDelimiter != null)
+			if (lineDelimiter != null) {
 				return lineDelimiter;
+			}
 		}
 		// workspace preference
 		scopeContext = new IScopeContext[] { InstanceScope.INSTANCE };

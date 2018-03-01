@@ -70,12 +70,13 @@ public class TemplateVariableProposal implements ICompletionProposal {
 		try {
 			String variable;
 			String type = fResolver.getType();
-			if (type.equals("dollar")) //$NON-NLS-1$
+			if (type.equals("dollar")) {
 				variable = "$$"; //$NON-NLS-1$
-			else if (fIncludeBrace)
+			} else if (fIncludeBrace) {
 				variable = "${" + type + '}'; //$NON-NLS-1$
-			else
+			} else {
 				variable = type;
+			}
 			document.replace(fOffset, fLength, variable);
 			fSelection = new Point(fOffset + variable.length(), 0);
 

@@ -187,8 +187,9 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		}
 		if (debuggerSettingsSection != null) {
 			boolean isOK = debuggerSettingsSection.performOK();
-			if (!isOK)
+			if (!isOK) {
 				return isOK;
+			}
 		}
 		if (debuggerSettingsWC != null) {
 			if (debuggerSettingsWC.isDirty()) {
@@ -207,8 +208,9 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 	 */
 	@Override
 	public boolean performCancel() {
-		if (debuggerSettingsSection != null)
+		if (debuggerSettingsSection != null) {
 			debuggerSettingsSection.performCancel();
+		}
 		if (debuggerSettingsWC != null) {
 			DebuggerSettingsManager.INSTANCE.dropWorkingCopy(debuggerSettingsWC);
 		}
@@ -224,8 +226,9 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 	public void validate() {
 		setComplete(true);
 		// Delegate validation to settings composite
-		if (debuggerSettingsSection != null)
+		if (debuggerSettingsSection != null) {
 			debuggerSettingsSection.validate();
+		}
 	}
 
 	/**
@@ -253,8 +256,9 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 
 	void createSettings(String debuggerId) {
 		IUniqueIdentityElement debuggerOwner = getDebuggerOwner();
-		if (debuggerOwner == null || debuggerId == null)
+		if (debuggerOwner == null || debuggerId == null) {
 			return;
+		}
 		IDebuggerSettings settings = DebuggerSettingsManager.INSTANCE.findSettings(debuggerOwner.getUniqueId(),
 				debuggerId);
 		boolean repaint = controlHandler.getKind() == Kind.WIZARD
@@ -282,10 +286,11 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 					.getBuilder(provider.getId());
 			debuggerSettingsSection = sectionBuilder.build(this, debuggerSettingsComposite, debuggerSettingsWC);
 		}
-		if (!debuggerSettingsSection.canTest())
+		if (!debuggerSettingsSection.canTest()) {
 			debuggerTest.setVisible(false);
-		else
+		} else {
 			debuggerTest.setVisible(true);
+		}
 		this.getParent().layout(true, true);
 		if (repaint) {
 			repaint();
@@ -395,16 +400,18 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 
 	protected void init() {
 		IUniqueIdentityElement debuggerOwner = getDebuggerOwner();
-		if (debuggerOwner == null)
+		if (debuggerOwner == null) {
 			return;
+		}
 		if (debuggerOwner instanceof Server) {
 			originalValuesCache.debuggerId = ((Server) debuggerOwner).getDebuggerId();
 		} else if (debuggerOwner instanceof PHPexeItem) {
 			originalValuesCache.debuggerId = ((PHPexeItem) debuggerOwner).getDebuggerID();
 		}
 		// Clone the cache lazily
-		if (modifiedValuesCache == null)
+		if (modifiedValuesCache == null) {
 			modifiedValuesCache = new ValuesCache(originalValuesCache);
+		}
 		setDebugger();
 	}
 
@@ -426,9 +433,9 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 			modifiedValuesCache.debuggerId = detectedDebuggerId = fetchDebugger(exeItem);
 		}
 		if (detectedDebuggerId == null && (modifiedValuesCache.debuggerId == null
-				|| modifiedValuesCache.debuggerId.equals(PHPDebuggersRegistry.NONE_DEBUGGER_ID)))
+				|| modifiedValuesCache.debuggerId.equals(PHPDebuggersRegistry.NONE_DEBUGGER_ID))) {
 			detectedDebuggerId = PHPDebuggersRegistry.NONE_DEBUGGER_ID;
-		else if (modifiedValuesCache.debuggerId != null) {
+		} else if (modifiedValuesCache.debuggerId != null) {
 			detectedDebuggerId = modifiedValuesCache.debuggerId;
 		}
 		// Set combo to appropriate debugger ID
@@ -450,10 +457,11 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 		List<PHPModuleInfo> modules = PHPExeUtil.getModules(exeItem);
 		AbstractDebuggerConfiguration[] debuggers = PHPDebuggersRegistry.getDebuggersConfigurations();
 		for (AbstractDebuggerConfiguration debugger : debuggers) {
-			for (PHPModuleInfo module : modules)
+			for (PHPModuleInfo module : modules) {
 				if (module.getName().equalsIgnoreCase(debugger.getModuleId())) {
 					return debugger.getDebuggerId();
 				}
+			}
 		}
 		return null;
 	}
@@ -507,8 +515,9 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 
 	private void unregisterListeners() {
 		Object data = getData();
-		if (data == null)
+		if (data == null) {
 			return;
+		}
 
 		if (phpExeListener != null) {
 			((PHPexeItem) data).removePHPexeListener(phpExeListener);

@@ -33,8 +33,9 @@ public class SelectionHistory {
 		fSelectionListener = new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
-				if (fSelectionChangeListenerCounter == 0)
+				if (fSelectionChangeListenerCounter == 0) {
 					flush();
+				}
 			}
 		};
 		fEditor.getSelectionProvider().addSelectionChangedListener(fSelectionListener);
@@ -55,8 +56,9 @@ public class SelectionHistory {
 	}
 
 	public ISourceRange getLast() {
-		if (isEmpty())
+		if (isEmpty()) {
 			return null;
+		}
 		int size = fHistory.size();
 		ISourceRange result = fHistory.remove(size - 1);
 		fHistoryAction.update();
@@ -64,8 +66,9 @@ public class SelectionHistory {
 	}
 
 	public void flush() {
-		if (fHistory.isEmpty())
+		if (fHistory.isEmpty()) {
 			return;
+		}
 		fHistory.clear();
 		fHistoryAction.update();
 	}

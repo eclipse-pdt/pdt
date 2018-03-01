@@ -42,10 +42,12 @@ public class PHPTemplateProposal extends TemplateProposal implements ICompletion
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (!(obj instanceof PHPTemplateProposal))
+		}
+		if (!(obj instanceof PHPTemplateProposal)) {
 			return false;
+		}
 		PHPTemplateProposal newTemplateProposal = (PHPTemplateProposal) obj;
 		return getTemplate().equals(newTemplateProposal.getTemplate());
 	}

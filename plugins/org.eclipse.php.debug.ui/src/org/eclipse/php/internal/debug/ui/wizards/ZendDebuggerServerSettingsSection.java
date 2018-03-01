@@ -170,8 +170,9 @@ public class ZendDebuggerServerSettingsSection implements IDebuggerSettingsSecti
 							@Override
 							public void run() {
 								if (!compositeFragment.isDisposed() && compositeFragment.isVisible()
-										&& compositeFragment.isComplete())
+										&& compositeFragment.isComplete()) {
 									compositeFragment.setMessage(warningMessage, IMessageProvider.WARNING);
+								}
 							}
 						});
 					} else {
@@ -179,8 +180,9 @@ public class ZendDebuggerServerSettingsSection implements IDebuggerSettingsSecti
 						PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 							@Override
 							public void run() {
-								if (!compositeFragment.isDisposed() && compositeFragment.isVisible())
+								if (!compositeFragment.isDisposed() && compositeFragment.isVisible()) {
 									validate();
+								}
 							}
 						});
 					}
@@ -247,8 +249,9 @@ public class ZendDebuggerServerSettingsSection implements IDebuggerSettingsSecti
 		int port = ZendDebuggerSettingsUtil.getDebugPort(settingsWorkingCopy.getOwnerId());
 		Set<Integer> allDebugPorts = PHPDebugUtil.getDebugPorts(ZendDebuggerConfiguration.ID);
 		AbstractDebuggerCommunicationDaemon tmpDaemon = null;
-		if (!allDebugPorts.contains(port))
+		if (!allDebugPorts.contains(port)) {
 			tmpDaemon = DebuggerCommunicationDaemon.createDaemon(port);
+		}
 		for (IDebugServerConnectionTest test : tests) {
 			test.testConnection(server, PlatformUI.getWorkbench().getDisplay().getActiveShell());
 		}
@@ -356,15 +359,17 @@ public class ZendDebuggerServerSettingsSection implements IDebuggerSettingsSecti
 	private String getIPsProposal() {
 		final Server server = (Server) compositeFragment.getData();
 		// Check if server exists and is not registered yet (wizard context)
-		if (server == null || ServersManager.findServer(server.getUniqueId()) != null)
+		if (server == null || ServersManager.findServer(server.getUniqueId()) != null) {
 			return null;
+		}
 		final StringBuilder bestMatches = new StringBuilder();
 		BusyIndicator.showWhile(PlatformUI.getWorkbench().getDisplay(), new Runnable() {
 			@Override
 			public void run() {
 				String proposals = (new ZendDebuggerHostProposalComputer()).computeProposals(server);
-				if (proposals != null)
+				if (proposals != null) {
 					bestMatches.append(proposals);
+				}
 			}
 		});
 		return bestMatches.length() != 0 ? bestMatches.toString() : null;
@@ -384,18 +389,22 @@ public class ZendDebuggerServerSettingsSection implements IDebuggerSettingsSecti
 		List<Inet4Address> userIPs = new ArrayList<>();
 		for (String userHost : userHostsArray) {
 			Inet4Address address = NetworkUtil.getByName(userHost, 2000);
-			if (address != null)
+			if (address != null) {
 				userIPs.add(address);
+			}
 		}
 		ConfigureHostsDialog configureIPs = new ConfigureHostsDialog(userIPs, detectedIPs);
 		int choice = configureIPs.open();
 		if (choice != Window.OK)
+		 {
 			return ""; //$NON-NLS-1$
+		}
 		List<Inet4Address> selectdIPs = configureIPs.getSelectedIPs();
 		StringBuffer stringBuffer = new StringBuffer();
 		Iterator<Inet4Address> ipsIterator = selectdIPs.iterator();
-		if (ipsIterator.hasNext())
+		if (ipsIterator.hasNext()) {
 			stringBuffer.append(ipsIterator.next().getHostAddress());
+		}
 		while (ipsIterator.hasNext()) {
 			stringBuffer.append(", " + ipsIterator.next().getHostAddress()); //$NON-NLS-1$
 		}

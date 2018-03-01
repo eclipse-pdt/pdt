@@ -84,18 +84,21 @@ public class PHPEditorTextHoverDescriptor {
 	 * @return the state mask or -1 if the input is invalid
 	 */
 	public static int computeStateMask(String modifiers) {
-		if (modifiers == null)
+		if (modifiers == null) {
 			return -1;
+		}
 
-		if (modifiers.length() == 0)
+		if (modifiers.length() == 0) {
 			return SWT.NONE;
+		}
 
 		int stateMask = 0;
 		StringTokenizer modifierTokenizer = new StringTokenizer(modifiers, ",;.:+-* "); //$NON-NLS-1$
 		while (modifierTokenizer.hasMoreTokens()) {
 			int modifier = EditorUtility.findLocalizedModifier(modifierTokenizer.nextToken());
-			if (modifier == 0 || (stateMask & modifier) == modifier)
+			if (modifier == 0 || (stateMask & modifier) == modifier) {
 				return -1;
+			}
 			stateMask = stateMask | modifier;
 		}
 		return stateMask;
@@ -148,16 +151,18 @@ public class PHPEditorTextHoverDescriptor {
 	 */
 	public String getLabel() {
 		String label = fElement.getAttribute(LABEL_ATTRIBUTE);
-		if (label != null)
+		if (label != null) {
 			return label;
+		}
 
 		// Return simple class name
 		label = getHoverClassName();
 		int lastDot = label.lastIndexOf('.');
-		if (lastDot >= 0 && lastDot < label.length() - 1)
+		if (lastDot >= 0 && lastDot < label.length() - 1) {
 			return label.substring(lastDot + 1);
-		else
+		} else {
 			return label;
+		}
 	}
 
 	/**
@@ -175,8 +180,9 @@ public class PHPEditorTextHoverDescriptor {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null || !obj.getClass().equals(this.getClass()) || getId() == null)
+		if (obj == null || !obj.getClass().equals(this.getClass()) || getId() == null) {
 			return false;
+		}
 		return getId().equals(((PHPEditorTextHoverDescriptor) obj).getId());
 	}
 
@@ -205,8 +211,9 @@ public class PHPEditorTextHoverDescriptor {
 
 		while (tokenizer.hasMoreTokens()) {
 			String id = tokenizer.nextToken();
-			if (tokenizer.hasMoreTokens())
+			if (tokenizer.hasMoreTokens()) {
 				idToModifier.put(id, tokenizer.nextToken());
+			}
 		}
 
 		String compiledTextHoverModifierMasks = PreferenceConstants.getPreferenceStore()
@@ -217,15 +224,17 @@ public class PHPEditorTextHoverDescriptor {
 
 		while (tokenizer.hasMoreTokens()) {
 			String id = tokenizer.nextToken();
-			if (tokenizer.hasMoreTokens())
+			if (tokenizer.hasMoreTokens()) {
 				idToModifierMask.put(id, tokenizer.nextToken());
+			}
 		}
 
 		for (int i = 0; i < hovers.length; i++) {
 			String modifierString = idToModifier.get(hovers[i].getId());
 			boolean enabled = true;
-			if (modifierString == null)
+			if (modifierString == null) {
 				modifierString = DISABLED_TAG;
+			}
 
 			if (modifierString.startsWith(DISABLED_TAG)) {
 				enabled = false;
@@ -233,7 +242,9 @@ public class PHPEditorTextHoverDescriptor {
 			}
 
 			if (modifierString.equals(NO_MODIFIER))
+			 {
 				modifierString = ""; //$NON-NLS-1$
+			}
 
 			hovers[i].fModifierString = modifierString;
 			hovers[i].fIsEnabled = enabled;
@@ -247,10 +258,11 @@ public class PHPEditorTextHoverDescriptor {
 				}
 				// Fix modifier string
 				int stateMask = hovers[i].fStateMask;
-				if (stateMask == -1)
+				if (stateMask == -1) {
 					hovers[i].fModifierString = ""; //$NON-NLS-1$
-				else
+				} else {
 					hovers[i].fModifierString = EditorUtility.getModifierString(stateMask);
+				}
 			}
 		}
 	}

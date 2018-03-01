@@ -133,15 +133,17 @@ public abstract class StructuredViewerSection extends ComposerSection {
 	 * @return new selection index or -1 for parent
 	 */
 	protected int getNewSelectionIndex(int thisIndex, int length) {
-		if (thisIndex == length - 1)
+		if (thisIndex == length - 1) {
 			return thisIndex - 1;
+		}
 		return thisIndex + 1;
 	}
 
 	protected int getArrayIndex(Object[] array, Object object) {
 		for (int i = 0; i < array.length; i++) {
-			if (array[i].equals(object))
+			if (array[i].equals(object)) {
 				return i;
+			}
 		}
 		return -1;
 	}

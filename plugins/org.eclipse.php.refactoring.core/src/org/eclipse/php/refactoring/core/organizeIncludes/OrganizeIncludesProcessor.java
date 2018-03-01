@@ -60,8 +60,10 @@ public class OrganizeIncludesProcessor extends RefactoringProcessor {
 			throws OperationCanceledException {
 		RefactoringStatus status = new RefactoringStatus();
 		if (files.size() == 0)
+		 {
 			status.addFatalError(PHPRefactoringCoreMessages
 					.getString("OrganizeIncludesProcessor.Not_Applicable")); //$NON-NLS-1$
+		}
 		return status;
 	}
 
@@ -81,12 +83,14 @@ public class OrganizeIncludesProcessor extends RefactoringProcessor {
 				PHPRefactoringCoreMessages
 						.getString("OrganizeIncludesProcessor.Calculating"), files.size()); //$NON-NLS-1$
 		for (IFile element : files) {
-			if (monitor.isCanceled())
+			if (monitor.isCanceled()) {
 				return rootChange;
+			}
 			IProgressMonitor subMonitor = new SubProgressMonitor(monitor, 1);
 			Change fileChange = createFileChange(element, subMonitor);
-			if (fileChange != null)
+			if (fileChange != null) {
 				rootChange.add(fileChange);
+			}
 		}
 		return rootChange;
 	}

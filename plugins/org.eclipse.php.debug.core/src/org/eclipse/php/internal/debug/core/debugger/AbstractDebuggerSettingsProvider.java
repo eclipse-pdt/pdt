@@ -179,17 +179,21 @@ public abstract class AbstractDebuggerSettingsProvider implements IDebuggerSetti
 	 */
 	private DebuggerSettingsKind getKind(String ownerId) {
 		IUniqueIdentityElement owner = ServersManager.findServer(ownerId);
-		if (owner != null)
+		if (owner != null) {
 			return DebuggerSettingsKind.PHP_SERVER;
+		}
 		owner = PHPexes.getInstance().findItem(ownerId);
-		if (owner != null)
+		if (owner != null) {
 			return DebuggerSettingsKind.PHP_EXE;
+		}
 		// Owner is being created
 		if (owner == null) {
-			if (ownerId.startsWith(Server.ID_PREFIX))
+			if (ownerId.startsWith(Server.ID_PREFIX)) {
 				return DebuggerSettingsKind.PHP_SERVER;
-			if (ownerId.startsWith(PHPexeItem.ID_PREFIX))
+			}
+			if (ownerId.startsWith(PHPexeItem.ID_PREFIX)) {
 				return DebuggerSettingsKind.PHP_EXE;
+			}
 		}
 		// Should not happen
 		return DebuggerSettingsKind.UNKNOWN;
@@ -221,8 +225,9 @@ public abstract class AbstractDebuggerSettingsProvider implements IDebuggerSetti
 	 */
 	private boolean exists(String ownerId) {
 		// Check if owner with given ID exists
-		if (PHPexes.getInstance().findItem(ownerId) == null && ServersManager.findServer(ownerId) == null)
+		if (PHPexes.getInstance().findItem(ownerId) == null && ServersManager.findServer(ownerId) == null) {
 			return false;
+		}
 		return true;
 	}
 
@@ -240,8 +245,9 @@ public abstract class AbstractDebuggerSettingsProvider implements IDebuggerSetti
 	 * Rewrite settings if there is a need.
 	 */
 	void cleanup() {
-		if (cleanup)
+		if (cleanup) {
 			save();
+		}
 	}
 
 	/**
@@ -263,8 +269,9 @@ public abstract class AbstractDebuggerSettingsProvider implements IDebuggerSetti
 		List<Map<String, Object>> settingsList = XMLPreferencesReader
 				.read(InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID), getId(), false);
 		// Hook default settings to owners if preference does not exist
-		if (settingsList.isEmpty())
+		if (settingsList.isEmpty()) {
 			hookSettings();
+		}
 		for (Map<String, Object> settings : settingsList) {
 			settings = (Map<String, Object>) settings.get(PersistentSettings.TAG_SETTINGS);
 			Map<String, String> attributes = new HashMap<>();
@@ -286,8 +293,9 @@ public abstract class AbstractDebuggerSettingsProvider implements IDebuggerSetti
 				continue;
 			}
 			IDebuggerSettings restoredSettings = restoreSettings(ownerId, attributes);
-			if (restoredSettings != null)
+			if (restoredSettings != null) {
 				settingsCache.put(ownerId, restoredSettings);
+			}
 		}
 	}
 

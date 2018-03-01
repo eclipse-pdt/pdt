@@ -80,8 +80,9 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 	}
 
 	protected void updateStatus(IStatus status) {
-		if (fMainPreferencePage == null)
+		if (fMainPreferencePage == null) {
 			return;
+		}
 		fMainPreferencePage.setValid(status.isOK());
 		StatusUtil.applyToStatusLine(fMainPreferencePage, status);
 	}

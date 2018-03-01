@@ -89,22 +89,26 @@ public class StructureSelectNextAction extends StructureSelectionAction {
 		if (oldSourceRange.getLength() == 0 && selAnalyzer.getLastCoveringNode() != null) {
 			ASTNode previousNode = NextNodeAnalyzer.perform(oldSourceRange.getOffset(),
 					selAnalyzer.getLastCoveringNode());
-			if (previousNode != null)
+			if (previousNode != null) {
 				return getSelectedNodeSourceRange(sr, previousNode);
+			}
 		}
 		org.eclipse.php.core.ast.nodes.ASTNode first = selAnalyzer.getFirstSelectedNode();
-		if (first == null)
+		if (first == null) {
 			return getLastCoveringNodeRange(oldSourceRange, sr, selAnalyzer);
+		}
 
 		org.eclipse.php.core.ast.nodes.ASTNode parent = first.getParent();
-		if (parent == null)
+		if (parent == null) {
 			return getLastCoveringNodeRange(oldSourceRange, sr, selAnalyzer);
+		}
 
 		org.eclipse.php.core.ast.nodes.ASTNode lastSelectedNode = selAnalyzer
 				.getSelectedNodes()[selAnalyzer.getSelectedNodes().length - 1];
 		org.eclipse.php.core.ast.nodes.ASTNode nextNode = getNextNode(parent, lastSelectedNode);
-		if (nextNode == parent)
+		if (nextNode == parent) {
 			return getSelectedNodeSourceRange(sr, first.getParent());
+		}
 		int offset = oldSourceRange.getOffset();
 		int end = Math.min(sr.getSourceRange().getLength(), nextNode.getEnd() - 1);
 		return createSourceRange(offset, end);
@@ -116,12 +120,14 @@ public class StructureSelectNextAction extends StructureSelectionAction {
 			org.eclipse.php.core.ast.nodes.ASTNode parent,
 			org.eclipse.php.core.ast.nodes.ASTNode node) {
 		org.eclipse.php.core.ast.nodes.ASTNode[] siblingNodes = getSiblingNodes(node);
-		if (siblingNodes == null || siblingNodes.length == 0)
+		if (siblingNodes == null || siblingNodes.length == 0) {
 			return parent;
-		if (node == siblingNodes[siblingNodes.length - 1])
+		}
+		if (node == siblingNodes[siblingNodes.length - 1]) {
 			return parent;
-		else
+		} else {
 			return siblingNodes[findIndex(siblingNodes, node) + 1];
+		}
 	}
 
 }

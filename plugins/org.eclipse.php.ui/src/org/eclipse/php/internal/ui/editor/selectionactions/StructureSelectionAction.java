@@ -58,8 +58,9 @@ public abstract class StructureSelectionAction extends Action {
 	@Override
 	public final void run() {
 		ISourceModule inputElement = EditorUtility.getEditorInputModelElement(fEditor, false);
-		if (!(inputElement instanceof ISourceModule && inputElement.exists()))
+		if (!(inputElement instanceof ISourceModule && inputElement.exists())) {
 			return;
+		}
 
 		// ITypeRoot typeRoot= (ITypeRoot) inputElement;
 		ISourceRange sourceRange;
@@ -75,8 +76,9 @@ public abstract class StructureSelectionAction extends Action {
 		ITextSelection selection = getTextSelection();
 		ISourceRange newRange = getNewSelectionRange(createSourceRange(selection), inputElement);
 		// Check if new selection differs from current selection
-		if (selection.getOffset() == newRange.getOffset() && selection.getLength() == newRange.getLength())
+		if (selection.getOffset() == newRange.getOffset() && selection.getLength() == newRange.getLength()) {
 			return;
+		}
 		fSelectionHistory.remember(new SourceRange(selection.getOffset(), selection.getLength()));
 		try {
 			fSelectionHistory.ignoreSelectionChanges();
@@ -89,8 +91,9 @@ public abstract class StructureSelectionAction extends Action {
 	public final ISourceRange getNewSelectionRange(ISourceRange oldSourceRange, ISourceModule typeRoot) {
 		try {
 			Program root = getAST(typeRoot);
-			if (root == null)
+			if (root == null) {
 				return oldSourceRange;
+			}
 			Selection selection = Selection.createFromStartLength(oldSourceRange.getOffset(),
 					oldSourceRange.getLength());
 			SelectionAnalyzer selAnalyzer = new SelectionAnalyzer(selection, true);
@@ -126,10 +129,11 @@ public abstract class StructureSelectionAction extends Action {
 
 	protected static ISourceRange getLastCoveringNodeRange(ISourceRange oldSourceRange, ISourceReference sr,
 			SelectionAnalyzer selAnalyzer) throws ModelException {
-		if (selAnalyzer.getLastCoveringNode() == null)
+		if (selAnalyzer.getLastCoveringNode() == null) {
 			return oldSourceRange;
-		else
+		} else {
 			return getSelectedNodeSourceRange(sr, selAnalyzer.getLastCoveringNode());
+		}
 	}
 
 	protected static ISourceRange getSelectedNodeSourceRange(ISourceReference sr, ASTNode nodeToSelect)
@@ -158,8 +162,9 @@ public abstract class StructureSelectionAction extends Action {
 
 	static ISourceRange createSourceRange(int offset, int end) {
 		int length = end - offset + 1;
-		if (length == 0) // to allow 0-length selection
+		if (length == 0) {
 			length = 1;
+		}
 		return new SourceRange(Math.max(0, offset), length);
 	}
 
@@ -176,8 +181,9 @@ public abstract class StructureSelectionAction extends Action {
 	static int findIndex(Object[] array, Object o) {
 		for (int i = 0; i < array.length; i++) {
 			Object object = array[i];
-			if (object == o)
+			if (object == o) {
 				return i;
+			}
 		}
 		return -1;
 	}

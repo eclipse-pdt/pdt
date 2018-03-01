@@ -321,8 +321,9 @@ public class IndentationBaseDetector {
 		try {
 			PHPHeuristicScanner scanner = PHPHeuristicScanner.createHeuristicScanner(document, checkedOffset - 1, true);
 			int start = scanner.previousToken(checkedOffset - 1, PHPHeuristicScanner.UNBOUND);
-			if (!(start == PHPHeuristicScanner.TokenRBRACE))
+			if (!(start == PHPHeuristicScanner.TokenRBRACE)) {
 				return -1;
+			}
 
 			int openingPeer = scanner.findOpeningPeer(scanner.getPosition(), PHPHeuristicScanner.UNBOUND,
 					PHPHeuristicScanner.LBRACE, PHPHeuristicScanner.RBRACE);

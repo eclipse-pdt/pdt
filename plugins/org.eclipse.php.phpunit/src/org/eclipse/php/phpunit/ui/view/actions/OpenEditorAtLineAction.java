@@ -88,7 +88,7 @@ public class OpenEditorAtLineAction extends OpenEditorAction {
 
 	@Override
 	protected void reveal(final ITextEditor textEditor) {
-		if (fLineNumber >= 0)
+		if (fLineNumber >= 0) {
 			try {
 				final IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
 				int startPosition = document.getLineOffset(fLineNumber - 1);
@@ -109,5 +109,6 @@ public class OpenEditorAtLineAction extends OpenEditorAction {
 			} catch (final BadLocationException x) {
 				// marker refers to invalid text position -> do nothing
 			}
+		}
 	}
 }

@@ -434,12 +434,14 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 			}
 		}
 
-		if (fWorkingSetName == null)
+		if (fWorkingSetName == null) {
 			return result;
+		}
 
 		String wsstr = NLS.bind(PHPUIMessages.PHPExplorer_toolTip, new String[] { fWorkingSetName });
-		if (result.length() == 0)
+		if (result.length() == 0) {
 			return wsstr;
+		}
 		return NLS.bind(PHPUIMessages.PHPExplorer_toolTip2, new String[] { result, fWorkingSetName });
 	}
 

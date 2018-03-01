@@ -90,24 +90,28 @@ public class FlowContext {
 	}
 
 	public IVariableBinding getLocalFromIndex(int index) {
-		if (fLocals == null || index > fLocals.length)
+		if (fLocals == null || index > fLocals.length) {
 			return null;
+		}
 		return fLocals[index];
 	}
 
 	public int getIndexFromLocal(IVariableBinding local) {
-		if (fLocals == null)
+		if (fLocals == null) {
 			return -1;
+		}
 		for (int i = 0; i < fLocals.length; i++) {
-			if (fLocals[i] == local)
+			if (fLocals[i] == local) {
 				return i;
+			}
 		}
 		return -1;
 	}
 
 	void manageLocal(IVariableBinding local) {
-		if (fLocals == null)
+		if (fLocals == null) {
 			fLocals = new IVariableBinding[fLength];
+		}
 		fLocals[local.getVariableId() - fStart] = local;
 	}
 
@@ -116,8 +120,9 @@ public class FlowContext {
 
 	void pushExcptions(TryStatement node) {
 		List<?> catchClauses = node.catchClauses();
-		if (catchClauses == null)
+		if (catchClauses == null) {
 			catchClauses = EMPTY_CATCH_CLAUSE;
+		}
 		fExceptionStack.add(catchClauses);
 	}
 

@@ -37,10 +37,11 @@ public class PHPUnitTestGroup extends PHPUnitTest {
 
 	public PHPUnitTestGroup(MessageTest test, final PHPUnitTestGroup parent, RemoteDebugger remoteDebugger) {
 		super(test, parent, remoteDebugger);
-		if (test == null)
+		if (test == null) {
 			totalCount = 0;
-		else
+		} else {
 			totalCount = test.getTests();
+		}
 	}
 
 	@Override
@@ -67,8 +68,9 @@ public class PHPUnitTestGroup extends PHPUnitTest {
 
 	public void addRunCount(final int count) {
 		runCount += count;
-		if (parent != null)
+		if (parent != null) {
 			((PHPUnitTestGroup) parent).addRunCount(count);
+		}
 	}
 
 	public Set<PHPUnitTest> getChildren() {
@@ -114,8 +116,9 @@ public class PHPUnitTestGroup extends PHPUnitTest {
 	public void setStatus(final int status) {
 		statusCount.counts[status]++;
 		this.status = Math.max(this.status, status);
-		if (parent != null)
+		if (parent != null) {
 			((PHPUnitTestGroup) parent).setStatus(status);
+		}
 	}
 
 	public boolean isMethod() {

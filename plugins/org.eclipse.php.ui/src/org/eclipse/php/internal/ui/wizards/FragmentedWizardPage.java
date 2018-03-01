@@ -66,8 +66,9 @@ public class FragmentedWizardPage extends WizardPage implements IWizardHandle {
 		// if (isEmptyError)
 		// return false;
 		try {
-			if (!fragment.isComplete())
+			if (!fragment.isComplete()) {
 				return false;
+			}
 		} catch (Exception e) {
 			return false;
 		}
@@ -77,13 +78,15 @@ public class FragmentedWizardPage extends WizardPage implements IWizardHandle {
 
 	@Override
 	public boolean canFlipToNextPage() {
-		if (getNextPage() == null)
+		if (getNextPage() == null) {
 			return false;
+		}
 		// if (isEmptyError)
 		// return false;
 		try {
-			if (!fragment.isComplete())
+			if (!fragment.isComplete()) {
 				return false;
+			}
 		} catch (Exception e) {
 			return false;
 		}
@@ -99,8 +102,9 @@ public class FragmentedWizardPage extends WizardPage implements IWizardHandle {
 			FragmentedWizard wizard = (FragmentedWizard) getWizard();
 			wizard.switchWizardFragment(fragment);
 
-			if (getContainer().getCurrentPage() != null)
+			if (getContainer().getCurrentPage() != null) {
 				getContainer().updateButtons();
+			}
 		}
 	}
 
@@ -109,12 +113,14 @@ public class FragmentedWizardPage extends WizardPage implements IWizardHandle {
 		if (type == IMessageProvider.ERROR && "".equals(message)) { //$NON-NLS-1$
 			isEmptyError = true;
 			message = null;
-		} else
+		} else {
 			isEmptyError = false;
+		}
 		super.setMessage(message, type);
 		WizardFragment frag = ((FragmentedWizard) getWizard()).getCurrentWizardFragment();
-		if (!fragment.equals(frag))
+		if (!fragment.equals(frag)) {
 			return;
+		}
 		getContainer().updateButtons();
 	}
 

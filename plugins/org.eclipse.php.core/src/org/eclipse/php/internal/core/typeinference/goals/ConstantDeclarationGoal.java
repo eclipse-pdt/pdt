@@ -44,23 +44,30 @@ public class ConstantDeclarationGoal extends AbstractGoal {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (!super.equals(obj))
+		}
+		if (!super.equals(obj)) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		ConstantDeclarationGoal other = (ConstantDeclarationGoal) obj;
 		if (constantName == null) {
-			if (other.constantName != null)
+			if (other.constantName != null) {
 				return false;
-		} else if (!constantName.equals(other.constantName))
+			}
+		} else if (!constantName.equals(other.constantName)) {
 			return false;
+		}
 		if (typeName == null) {
-			if (other.typeName != null)
+			if (other.typeName != null) {
 				return false;
-		} else if (!typeName.equals(other.typeName))
+			}
+		} else if (!typeName.equals(other.typeName)) {
 			return false;
+		}
 		return true;
 	}
 }

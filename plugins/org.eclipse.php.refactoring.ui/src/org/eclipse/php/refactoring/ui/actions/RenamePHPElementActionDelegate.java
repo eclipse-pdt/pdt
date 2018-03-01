@@ -123,13 +123,14 @@ public class RenamePHPElementActionDelegate implements IPHPActionDelegator {
 		if (selectedNode != null) {
 			if (isInline) {
 				new RenameLinkedMode(null, (PHPStructuredEditor) fEditor).start();
-			} else
+			} else {
 				try {
 					RefactoringExecutionStarter.startRenameRefactoring(resource, selectedNode, activeShell);
 				} catch (CoreException e) {
 					MessageDialog.openInformation(fWindow.getShell(), DIALOG_TITLE,
 							Messages.RenamePHPElementActionDelegate_2);
 				}
+			}
 		} else {
 			MessageDialog.openInformation(fWindow.getShell(), DIALOG_TITLE, Messages.RenamePHPElementActionDelegate_2);
 		}

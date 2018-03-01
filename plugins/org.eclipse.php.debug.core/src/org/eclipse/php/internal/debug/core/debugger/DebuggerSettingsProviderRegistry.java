@@ -129,8 +129,9 @@ public class DebuggerSettingsProviderRegistry {
 					break;
 				}
 			}
-			if (isHighestLevel)
+			if (isHighestLevel) {
 				highestLevelEntries.add(entry);
+			}
 		}
 		for (Entry entry : highestLevelEntries) {
 			IDebuggerSettingsProvider provider;

@@ -317,8 +317,9 @@ public class LibraryFolderManager {
 	 * @see ValidationFramework#disableValidation(IResource)
 	 */
 	public boolean isInLibraryFolder(IResource resource) {
-		if (resource == null)
+		if (resource == null) {
 			return false;
+		}
 
 		if (resource.getType() == IResource.FILE) {
 			// the resource is a source file, so take its parent folder
@@ -355,8 +356,9 @@ public class LibraryFolderManager {
 	 *         <code>false</code> otherwise
 	 */
 	public boolean isExplicitlyDisabled(IFolder folder) {
-		if (folder == null)
+		if (folder == null) {
 			return false;
+		}
 
 		return DisabledResourceManager.getDefault().isDisabled(folder);
 	}
@@ -377,8 +379,9 @@ public class LibraryFolderManager {
 	 *         resource
 	 */
 	public IFolder getExplicitlyDisabledParent(IResource resource) {
-		if (resource == null)
+		if (resource == null) {
 			return null;
+		}
 
 		if (resource.getType() == IResource.FILE) {
 			// the resource is a source file, so take its parent folder

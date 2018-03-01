@@ -550,8 +550,9 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 			public void keyPressed(KeyEvent event) {
 				if (event.keyCode == SWT.F2 && event.stateMask == 0) {
 					ISelection selection = tableViewer.getSelection();
-					if (!(selection instanceof IStructuredSelection))
+					if (!(selection instanceof IStructuredSelection)) {
 						return;
+					}
 					IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 					tableViewer.editElement(structuredSelection.getFirstElement(), 0);
 				}
@@ -599,8 +600,9 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 			public void keyPressed(KeyEvent event) {
 				if (event.keyCode == SWT.F2 && event.stateMask == 0) {
 					ISelection selection = tableViewer.getSelection();
-					if (!(selection instanceof IStructuredSelection))
+					if (!(selection instanceof IStructuredSelection)) {
 						return;
+					}
 					IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 					tableViewer.editElement(structuredSelection.getFirstElement(), 0);
 				}

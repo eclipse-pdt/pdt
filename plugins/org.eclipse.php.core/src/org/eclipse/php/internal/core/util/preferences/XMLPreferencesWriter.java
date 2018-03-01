@@ -29,8 +29,9 @@ public class XMLPreferencesWriter {
 
 	public static String getEscaped(String s) {
 		StringBuilder result = new StringBuilder(s.length() + 10);
-		for (int i = 0; i < s.length(); ++i)
+		for (int i = 0; i < s.length(); ++i) {
 			appendEscapedChar(result, s.charAt(i));
+		}
 		return result.toString();
 	}
 

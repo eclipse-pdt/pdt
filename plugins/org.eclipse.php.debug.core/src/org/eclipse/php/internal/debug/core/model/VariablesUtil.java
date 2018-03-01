@@ -30,18 +30,22 @@ public class VariablesUtil {
 
 		@Override
 		public int compare(Object o1, Object o2) {
-			if (!(o1 instanceof IVariableFacet) && !(o2 instanceof IVariableFacet))
+			if (!(o1 instanceof IVariableFacet) && !(o2 instanceof IVariableFacet)) {
 				return 0;
+			}
 			return getPriority((IVariableFacet) o1) - getPriority((IVariableFacet) o2);
 		}
 
 		private int getPriority(IVariableFacet facet) {
-			if (facet.hasFacet(KIND_THIS) || facet.hasFacet(VIRTUAL_CLASS))
+			if (facet.hasFacet(KIND_THIS) || facet.hasFacet(VIRTUAL_CLASS)) {
 				return 0;
-			if (facet.hasFacet(KIND_LOCAL))
+			}
+			if (facet.hasFacet(KIND_LOCAL)) {
 				return 1;
-			if (facet.hasFacet(KIND_SUPER_GLOBAL))
+			}
+			if (facet.hasFacet(KIND_SUPER_GLOBAL)) {
 				return 2;
+			}
 			return 3;
 		}
 
@@ -51,38 +55,43 @@ public class VariablesUtil {
 
 		@Override
 		public int compare(Object o1, Object o2) {
-			if (!(o1 instanceof IVariableFacet) && !(o2 instanceof IVariableFacet))
+			if (!(o1 instanceof IVariableFacet) && !(o2 instanceof IVariableFacet)) {
 				return 0;
+			}
 			// Check by type first
 			int facetOrderDiff = getPriority((IVariableFacet) o1) - getPriority((IVariableFacet) o2);
 			// Same type, check alphabetically
 			if (facetOrderDiff == 0) {
-				if ((o1 instanceof IVariable) && (o2 instanceof IVariable))
+				if ((o1 instanceof IVariable) && (o2 instanceof IVariable)) {
 					try {
 						return ((IVariable) o1).getName().compareToIgnoreCase(((IVariable) o2).getName());
 					} catch (DebugException e) {
 						return 0;
 					}
-				// TODO - should be done better in future at variable level
-				else if ((o1 instanceof Expression) && (o2 instanceof Expression)) {
+				} else if ((o1 instanceof Expression) && (o2 instanceof Expression)) {
 					String o1name = ((Expression) o1).getLastName();
 					int o1idx = o1name.lastIndexOf(':');
-					if (o1idx != -1)
+					if (o1idx != -1) {
 						o1name = o1name.substring(o1idx + 1);
+					}
 					String o2name = ((Expression) o2).getLastName();
 					int o2idx = o2name.lastIndexOf(':');
-					if (o2idx != -1)
+					if (o2idx != -1) {
 						o2name = o2name.substring(o2idx + 1);
+					}
 					return (o1name.compareToIgnoreCase(o2name));
-				} else
+				} else {
 					return facetOrderDiff;
-			} else
+				}
+			} else {
 				return facetOrderDiff;
+			}
 		}
 
 		private int getPriority(IVariableFacet facet) {
-			if (facet.hasFacet(MOD_STATIC))
+			if (facet.hasFacet(MOD_STATIC)) {
 				return 0;
+			}
 			return 1;
 		}
 
@@ -107,9 +116,11 @@ public class VariablesUtil {
 	 *         global variable, <code>false</code> otherwise
 	 */
 	public static boolean isSuperGlobal(String name) {
-		for (int i = 0; i < SUPER_GLOBAL_NAMES.length; i++)
-			if (SUPER_GLOBAL_NAMES[i].equalsIgnoreCase(name))
+		for (int i = 0; i < SUPER_GLOBAL_NAMES.length; i++) {
+			if (SUPER_GLOBAL_NAMES[i].equalsIgnoreCase(name)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -141,8 +152,9 @@ public class VariablesUtil {
 	 * @param members
 	 */
 	public static void sortContextMembers(Object[] members) {
-		if (members != null)
+		if (members != null) {
 			Arrays.sort(members, new ContextMembersComparator());
+		}
 	}
 
 	/**
@@ -151,8 +163,9 @@ public class VariablesUtil {
 	 * @param members
 	 */
 	public static void sortObjectMembers(Object[] members) {
-		if (members != null)
+		if (members != null) {
 			Arrays.sort(members, new ObjectMembersComparator());
+		}
 	}
 
 }

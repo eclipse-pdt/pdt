@@ -314,8 +314,9 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 		 */
 		@Override
 		public boolean canReuse(IInformationControl control) {
-			if (!super.canReuse(control))
+			if (!super.canReuse(control)) {
 				return false;
+			}
 
 			if (control instanceof IInformationControlExtension4) {
 				String tooltipAffordanceString = EditorsUI.getTooltipAffordanceString();
@@ -363,8 +364,9 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 	 */
 	@Override
 	public IInformationControlCreator getInformationPresenterControlCreator() {
-		if (fPresenterControlCreator == null)
+		if (fPresenterControlCreator == null) {
 			fPresenterControlCreator = new PresenterControlCreator();
+		}
 		return fPresenterControlCreator;
 	}
 
@@ -375,8 +377,9 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 	 */
 	@Override
 	public IInformationControlCreator getHoverControlCreator() {
-		if (fHoverControlCreator == null)
+		if (fHoverControlCreator == null) {
 			fHoverControlCreator = new HoverControlCreator(getInformationPresenterControlCreator());
+		}
 		return fHoverControlCreator;
 	}
 
@@ -394,10 +397,11 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 				PHPDocumentationBrowserInformationControlInput hoverInfo = getHoverInfo(
 						new IModelElement[] { linkTarget }, null,
 						(PHPDocumentationBrowserInformationControlInput) control.getInput());
-				if (control.hasDelayedInputChangeListener())
+				if (control.hasDelayedInputChangeListener()) {
 					control.notifyDelayedInputChange(hoverInfo);
-				else
+				} else {
 					control.setInput(hoverInfo);
+				}
 			}
 
 			/*
@@ -461,8 +465,9 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 	private PHPDocumentationBrowserInformationControlInput internalGetHoverInfo(ITextViewer textViewer,
 			IRegion hoverRegion) {
 		IModelElement[] elements = getElementsAt(textViewer, hoverRegion);
-		if (elements == null || elements.length == 0)
+		if (elements == null || elements.length == 0) {
 			return null;
+		}
 		// filter the same namespace
 		Set<IModelElement> elementSet = new TreeSet<>(new Comparator<IModelElement>() {
 
@@ -495,8 +500,9 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 		String constantValue;
 		if (elements.length == 1 && elements[0].getElementType() == IModelElement.FIELD) {
 			constantValue = getConstantValue((IField) elements[0], hoverRegion);
-			if (constantValue != null)
+			if (constantValue != null) {
 				constantValue = HTMLPrinter.convertToHTMLContent(constantValue);
+			}
 		} else {
 			constantValue = null;
 		}
@@ -548,8 +554,9 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 			}
 		}
 
-		if (!hasContents)
+		if (!hasContents) {
 			return null;
+		}
 
 		if (buffer.length() > 0) {
 			HTMLPrinter.insertPageProlog(buffer, 0, getStyleSheet());
@@ -610,12 +617,14 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 	 * @since 3.4
 	 */
 	private String getConstantValue(IField field, IRegion hoverRegion) {
-		if (!isFinal(field))
+		if (!isFinal(field)) {
 			return null;
+		}
 
 		ISourceModule typeRoot = getEditorInputModelElement();
-		if (typeRoot == null)
+		if (typeRoot == null) {
 			return null;
+		}
 
 		Object constantValue = null;
 		if (field != null && field.exists()) {
@@ -686,8 +695,9 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 			}
 		}
 
-		if (constantValue == null)
+		if (constantValue == null) {
 			return null;
+		}
 
 		if (constantValue instanceof String) {
 			StringBuilder result = new StringBuilder();
@@ -732,8 +742,9 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 	 * @since 3.4
 	 */
 	protected static String getStyleSheet() {
-		if (fgStyleSheet == null)
+		if (fgStyleSheet == null) {
 			fgStyleSheet = loadStyleSheet();
+		}
 		String css = fgStyleSheet;
 		if (css != null) {
 			FontData fontData = JFaceResources.getFontRegistry()
@@ -770,8 +781,9 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 				return ""; //$NON-NLS-1$
 			} finally {
 				try {
-					if (reader != null)
+					if (reader != null) {
 						reader.close();
+					}
 				} catch (IOException e) {
 				}
 			}

@@ -87,12 +87,14 @@ public class ExpressionValue implements IPHPDataType {
 				public int compare(Expression o1, Expression o2) {
 					String o1name = o1.getLastName();
 					int o1idx = o1name.lastIndexOf(':');
-					if (o1idx != -1)
+					if (o1idx != -1) {
 						o1name = o1name.substring(o1idx + 1);
+					}
 					String o2name = o2.getLastName();
 					int o2idx = o2name.lastIndexOf(':');
-					if (o2idx != -1)
+					if (o2idx != -1) {
 						o2name = o2name.substring(o2idx + 1);
+					}
 					return o1name.compareToIgnoreCase(o2name);
 				}
 			});

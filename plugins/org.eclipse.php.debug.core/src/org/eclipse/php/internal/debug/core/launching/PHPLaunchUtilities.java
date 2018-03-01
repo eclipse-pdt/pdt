@@ -1224,8 +1224,9 @@ public class PHPLaunchUtilities {
 					customPort = XDebugDebuggerSettingsUtil.getDebugPort(server.getUniqueId());
 				}
 			}
-			if (customPort != -1)
+			if (customPort != -1) {
 				port = customPort;
+			}
 		} catch (Exception e) {
 			Logger.logException("Could not retrieve the debugger's port number", //$NON-NLS-1$
 					e);

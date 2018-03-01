@@ -91,16 +91,19 @@ public class FilteredElementTreeSelectionDialog extends ElementTreeSelectionDial
 			boolean hasChildren = ((ITreeContentProvider) ((AbstractTreeViewer) viewer).getContentProvider())
 					.hasChildren(element);
 			if (fIsDeepFiltering) {
-				if (!super.isElementVisible(viewer, element))
+				if (!super.isElementVisible(viewer, element)) {
 					return false;
+				}
 
 				// Also apply deep filtering to the other registered filters
 				ViewerFilter[] filters = ((TreeViewer) viewer).getFilters();
 				for (int i = 0; i < filters.length; i++) {
-					if (filters[i] == this)
+					if (filters[i] == this) {
 						continue;
-					if (!filters[i].select(viewer, element, element))
+					}
+					if (!filters[i].select(viewer, element, element)) {
 						return false;
+					}
 				}
 				return true;
 			}

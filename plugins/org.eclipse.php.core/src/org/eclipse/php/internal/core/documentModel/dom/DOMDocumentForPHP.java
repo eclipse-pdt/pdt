@@ -29,8 +29,9 @@ public class DOMDocumentForPHP extends DocumentStyleImpl {
 	@Override
 	public Node cloneNode(boolean deep) {
 		DOMDocumentForPHP cloned = new DOMDocumentForPHP(this);
-		if (deep)
+		if (deep) {
 			cloned.importChildNodes(this, true);
+		}
 		return cloned;
 	}
 

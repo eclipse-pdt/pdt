@@ -104,15 +104,17 @@ public class FormatActionDelegate extends org.eclipse.wst.sse.ui.internal.action
 					IResource resource = (IResource) elements[i];
 					available = (null != resource) ? processorAvailable(resource) : false;
 
-					if (available)
+					if (available) {
 						break;
+					}
 				}
 				if (elements[i] instanceof IModelElement) {
 					IResource resource = ((IModelElement) elements[i]).getResource();
 					available = (null != resource) ? processorAvailable(resource) : false;
 
-					if (available)
+					if (available) {
 						break;
+					}
 				}
 			}
 

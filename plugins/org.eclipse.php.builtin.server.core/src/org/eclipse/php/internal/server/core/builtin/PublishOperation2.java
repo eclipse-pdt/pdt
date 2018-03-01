@@ -136,8 +136,9 @@ public class PublishOperation2 extends PublishOperation {
 				addArrayToList(status, stat);
 			}
 
-			if (deltaKind == ServerBehaviourDelegate.REMOVED)
+			if (deltaKind == ServerBehaviourDelegate.REMOVED) {
 				return;
+			}
 		}
 
 		if (kind == IServer.PUBLISH_CLEAN || kind == IServer.PUBLISH_FULL) {
@@ -165,8 +166,9 @@ public class PublishOperation2 extends PublishOperation {
 	 * @throws CoreException
 	 */
 	protected static void throwException(List<IStatus> status) throws CoreException {
-		if (status == null || status.size() == 0)
+		if (status == null || status.size() == 0) {
 			return;
+		}
 
 		if (status.size() == 1) {
 			IStatus status2 = status.get(0);
@@ -180,11 +182,13 @@ public class PublishOperation2 extends PublishOperation {
 	}
 
 	protected static void addArrayToList(List<IStatus> list, IStatus[] a) {
-		if (list == null || a == null || a.length == 0)
+		if (list == null || a == null || a.length == 0) {
 			return;
+		}
 
 		int size = a.length;
-		for (int i = 0; i < size; i++)
+		for (int i = 0; i < size; i++) {
 			list.add(a[i]);
+		}
 	}
 }

@@ -43,8 +43,9 @@ public class RenameAction implements IWorkbenchWindowActionDelegate, IEditorActi
 			if (fRenamePHPElement == null) {
 				IWorkbenchPage page = window.getActivePage();
 				if (page != null) {
-					if (page.getActivePart() != null)
+					if (page.getActivePart() != null) {
 						resourceAction = new RenameResourceAction(page.getActivePart().getSite());
+					}
 				}
 			} else {
 				fRenamePHPElement.init(window);

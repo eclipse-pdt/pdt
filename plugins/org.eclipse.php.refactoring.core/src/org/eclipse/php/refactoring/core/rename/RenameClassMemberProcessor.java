@@ -99,8 +99,9 @@ public class RenameClassMemberProcessor extends AbstractRenameProcessor<IFile> i
 			pm.beginTask(RenameClassMemberProcessor.RENAME_IS_PROCESSING, participantFiles.size());
 			pm.setTaskName(RenameClassMemberProcessor.CREATING_MODIFICATIONS_LABEL);
 
-			if (pm.isCanceled())
+			if (pm.isCanceled()) {
 				throw new OperationCanceledException();
+			}
 
 			// get target parameters
 			final String newElementName = getNewElementName();
@@ -119,8 +120,9 @@ public class RenameClassMemberProcessor extends AbstractRenameProcessor<IFile> i
 					RefactoringPlugin.logException(e);
 				}
 
-				if (pm.isCanceled())
+				if (pm.isCanceled()) {
 					throw new OperationCanceledException();
+				}
 
 				pm.worked(1);
 

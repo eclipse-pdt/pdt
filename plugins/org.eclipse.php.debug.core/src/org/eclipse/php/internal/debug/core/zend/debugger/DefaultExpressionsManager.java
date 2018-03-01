@@ -87,11 +87,13 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 		for (int i = 0; i < variables.length - 1; i++) {
 			String s = variables[i].getFullName();
 			// Skip $GLOBALS variable (since PHP 5.0.0)
-			if (s.equals("$GLOBALS")) //$NON-NLS-1$
+			if (s.equals("$GLOBALS")) {
 				continue;
+			}
 			// Check if object context is active
-			if (s.equals("$this")) //$NON-NLS-1$
+			if (s.equals("$this")) {
 				hasThis = true;
+			}
 			currentVariables.add(variables[i]);
 		}
 		// Last one in the list is dummy for a current class name
@@ -100,8 +102,9 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 		// Check if we are in static context
 		if (!hasThis && !"0".equals(className)) { //$NON-NLS-1$
 			Expression staticClassContext = fExpressionsUtil.fetchStaticContext(className);
-			if (staticClassContext != null)
+			if (staticClassContext != null) {
 				currentVariables.add(staticClassContext);
+			}
 		}
 		variables = currentVariables.toArray(new Expression[currentVariables.size()]);
 		// Sort by type (default order: this or class, locals, super globals)
@@ -117,8 +120,9 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 
 	@Override
 	public void update(Expression expression, int depth) {
-		if (expression.getValue().getDataType() == PHP_VIRTUAL_CLASS)
+		if (expression.getValue().getDataType() == PHP_VIRTUAL_CLASS) {
 			return;
+		}
 		byte[] value = getExpressionValue(expression, depth);
 		ExpressionValue expressionValue = expressionValueDeserializer.deserializer(expression, value);
 		// Workaround for fetching static members for objects
@@ -133,8 +137,9 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 					expressionValue.getChildrenCount() + expressionStaticNodes.length);
 		}
 		// Sort object members by type & name
-		if (!PHPProjectPreferences.isSortByName() && expressionValue.getDataType() == PHP_OBJECT)
+		if (!PHPProjectPreferences.isSortByName() && expressionValue.getDataType() == PHP_OBJECT) {
 			VariablesUtil.sortObjectMembers(expressionValue.getOriChildren());
+		}
 		expression.setValue(expressionValue);
 	}
 

@@ -40,15 +40,21 @@ public class GetCodeCoverageResponse extends DebugMessageResponseImpl implements
 			// reading file name:
 			String fileName = CommunicationUtilities.readString(in);
 			if (isDebugMode)
+			 {
 				System.out.println("Covered file: " + fileName); //$NON-NLS-1$
+			}
 
 			// reading number of lines:
 			int numberOfLines = in.readInt();
 			if (isDebugMode)
+			 {
 				System.out.println("Number of lines (1): " + numberOfLines); //$NON-NLS-1$
+			}
 			int numberOfBytes = numberOfLines / 8 + 1;
 			if (isDebugMode)
+			 {
 				System.out.println("Number of bytes (1): " + numberOfBytes); //$NON-NLS-1$
+			}
 			byte[] coverageBitmask = new byte[numberOfBytes];
 
 			// reading covered bitmask:
@@ -61,12 +67,18 @@ public class GetCodeCoverageResponse extends DebugMessageResponseImpl implements
 			// reading number of lines again:
 			int numberOfLines2 = in.readInt();
 			if (isDebugMode)
+			 {
 				System.out.println("Number of lines (2): " + numberOfLines2); //$NON-NLS-1$
+			}
 			if (numberOfLines != numberOfLines2)
+			 {
 				throw new IOException("Old format code coverage responce."); //$NON-NLS-1$
+			}
 			numberOfBytes = numberOfLines / 8 + 1;
 			if (isDebugMode)
+			 {
 				System.out.println("Number of bytes (2): " + numberOfBytes); //$NON-NLS-1$
+			}
 			byte[] significanceBitmask = new byte[numberOfBytes];
 
 			// reading significant bitmask:
@@ -78,7 +90,9 @@ public class GetCodeCoverageResponse extends DebugMessageResponseImpl implements
 			// reading number of php lines:
 			int numberOfPHPLines = in.readInt();
 			if (isDebugMode)
+			 {
 				System.out.println("Number of php lines: " + numberOfPHPLines); //$NON-NLS-1$
+			}
 			fCodeCoverageData[i].setPHPLinesNum(numberOfPHPLines);
 		}
 	}

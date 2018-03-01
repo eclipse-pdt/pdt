@@ -170,8 +170,9 @@ public class PHPReconcilingStrategy implements IReconcilingStrategy, IReconcilin
 
 	private IProblemRequestorExtension getProblemRequestorExtension() {
 		IAnnotationModel model = fDocumentProvider.getAnnotationModel(fEditor.getEditorInput());
-		if (model instanceof IProblemRequestorExtension)
+		if (model instanceof IProblemRequestorExtension) {
 			return (IProblemRequestorExtension) model;
+		}
 		return null;
 	}
 

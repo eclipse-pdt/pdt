@@ -18,22 +18,25 @@ class TryFlowInfo extends FlowInfo {
 	}
 
 	public void mergeTry(FlowInfo info, FlowContext context) {
-		if (info == null)
+		if (info == null) {
 			return;
+		}
 
 		assign(info);
 	}
 
 	public void mergeCatch(FlowInfo info, FlowContext context) {
-		if (info == null)
+		if (info == null) {
 			return;
+		}
 
 		mergeConditional(info, context);
 	}
 
 	public void mergeFinally(FlowInfo info, FlowContext context) {
-		if (info == null)
+		if (info == null) {
 			return;
+		}
 
 		mergeSequential(info, context);
 	}

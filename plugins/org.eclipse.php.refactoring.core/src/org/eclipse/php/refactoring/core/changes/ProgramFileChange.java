@@ -118,15 +118,15 @@ public class ProgramFileChange extends TextFileChange {
 		super.releaseDocument(document, pm);
 		ISourceModule sm = program.getSourceModule();
 		if (isModified && !isDocumentAcquired()) {
-			if (sm.isWorkingCopy())
+			if (sm.isWorkingCopy()) {
 				sm.reconcile(false /* don't force problem detection */,
 						null /* use primary owner */,
 						null /*
 								 * no progress monitor
 								 */);
-
-			else
+			} else {
 				sm.makeConsistent(pm);
+			}
 		}
 	}
 

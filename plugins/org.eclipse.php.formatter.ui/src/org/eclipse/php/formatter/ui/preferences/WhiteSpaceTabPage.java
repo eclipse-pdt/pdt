@@ -112,8 +112,9 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 
 		public void refreshState() {
 			final ArrayList<Node> checked = new ArrayList<>(100);
-			for (Iterator<Node> iter = fTree.iterator(); iter.hasNext();)
+			for (Iterator<Node> iter = fTree.iterator(); iter.hasNext();) {
 				(iter.next()).getCheckedLeafs(checked);
+			}
 			fTreeViewer.setGrayedElements(new Object[0]);
 			fTreeViewer.setCheckedElements(checked.toArray());
 			setPreviewText();
@@ -123,11 +124,13 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		@Override
 		public void selectionChanged(SelectionChangedEvent event) {
 			final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-			if (selection.isEmpty())
+			if (selection.isEmpty()) {
 				return;
+			}
 			final Node node = (Node) selection.getFirstElement();
-			if (node == fLastSelected)
+			if (node == fLastSelected) {
 				return;
+			}
 			fDialogSettings.put(PREF_NODE_KEY, node.index);
 			fLastSelected = node;
 			setPreviewText();
@@ -236,25 +239,29 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 					final ArrayList<Node> innerChildren = new ArrayList<>();
 					for (final Iterator<Node> iter = children.iterator(); iter.hasNext();) {
 						final Node o = iter.next();
-						if (o instanceof InnerNode)
+						if (o instanceof InnerNode) {
 							innerChildren.add(o);
+						}
 					}
 					return innerChildren.toArray();
 				}
 
 				@Override
 				public Object getParent(Object element) {
-					if (element instanceof InnerNode)
+					if (element instanceof InnerNode) {
 						return ((InnerNode) element).getParent();
+					}
 					return null;
 				}
 
 				@Override
 				public boolean hasChildren(Object element) {
 					final List<Node> children = ((Node) element).getChildren();
-					for (final Iterator<Node> iter = children.iterator(); iter.hasNext();)
-						if (iter.next() instanceof InnerNode)
+					for (final Iterator<Node> iter = children.iterator(); iter.hasNext();) {
+						if (iter.next() instanceof InnerNode) {
 							return true;
+						}
+					}
 					return false;
 				}
 
@@ -342,20 +349,23 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		public void selectionChanged(SelectionChangedEvent event) {
 			final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 
-			if (selection.isEmpty() || !(selection.getFirstElement() instanceof Node))
+			if (selection.isEmpty() || !(selection.getFirstElement() instanceof Node)) {
 				return;
+			}
 
 			final Node selected = (Node) selection.getFirstElement();
 
-			if (selected == null || selected == fLastSelected)
+			if (selected == null || selected == fLastSelected) {
 				return;
+			}
 
 			if (event.getSource() == fInnerViewer && selected instanceof InnerNode) {
 				fLastSelected = (InnerNode) selected;
 				fDialogSettings.put(PREF_INNER_INDEX, selected.index);
 				innerViewerChanged((InnerNode) selected);
-			} else if (event.getSource() == fOptionsViewer && selected instanceof OptionNode)
+			} else if (event.getSource() == fOptionsViewer && selected instanceof OptionNode) {
 				fDialogSettings.put(PREF_OPTION_INDEX, selected.index);
+			}
 		}
 
 		private void innerViewerChanged(InnerNode selectedNode) {
@@ -365,8 +375,9 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 			final ArrayList<Node> optionsChildren = new ArrayList<>();
 			for (final Iterator<Node> iter = children.iterator(); iter.hasNext();) {
 				final Node o = iter.next();
-				if (o instanceof OptionNode)
+				if (o instanceof OptionNode) {
 					optionsChildren.add(o);
+				}
 			}
 
 			fOptionsViewer.setInput(optionsChildren.toArray());

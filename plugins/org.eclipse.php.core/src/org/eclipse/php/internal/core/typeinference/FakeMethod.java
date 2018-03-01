@@ -67,15 +67,17 @@ public class FakeMethod extends SourceMethod {
 
 	@Override
 	public ISourceRange getNameRange() throws ModelException {
-		if (hasSpecialOffsets)
+		if (hasSpecialOffsets) {
 			return new SourceRange(nameOffset, nameLength);
+		}
 		return super.getNameRange();
 	}
 
 	@Override
 	public ISourceRange getSourceRange() throws ModelException {
-		if (hasSpecialOffsets)
+		if (hasSpecialOffsets) {
 			return new SourceRange(offset, length);
+		}
 		return super.getSourceRange();
 	}
 

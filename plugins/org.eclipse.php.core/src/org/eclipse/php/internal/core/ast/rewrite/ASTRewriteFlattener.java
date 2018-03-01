@@ -105,8 +105,9 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 
 	protected Object getAttribute(ASTNode parent, StructuralPropertyDescriptor childProperty) {
-		if (store != null)
+		if (store != null) {
 			return this.store.getNewValue(parent, childProperty);
+		}
 
 		return null;
 	}

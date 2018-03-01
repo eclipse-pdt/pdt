@@ -48,12 +48,14 @@ public class CommentIndentationStrategy extends DefaultIndentationStrategy {
 		IRegion previousLine = document.getLineInformation(lineNumber - 1);
 
 		IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(previousLine.getOffset());
-		if (sdRegion == null)
+		if (sdRegion == null) {
 			return;
+		}
 
 		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(previousLine.getOffset());
-		if (tRegion == null)
+		if (tRegion == null) {
 			return;
+		}
 
 		int regionStart = sdRegion.getStartOffset(tRegion);
 		// in case of container we have to extract the PhpScriptRegion

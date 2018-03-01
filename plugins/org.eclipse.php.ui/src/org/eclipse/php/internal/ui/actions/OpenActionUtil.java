@@ -50,12 +50,14 @@ public class OpenActionUtil {
 	 */
 	public static void open(Object element, boolean activate) throws PartInitException, ModelException {
 		IEditorPart part = EditorUtility.openInEditor(element, activate);
-		if (element instanceof IModelElement)
+		if (element instanceof IModelElement) {
 			EditorUtility.revealInEditor(part, ((IModelElement) element));
+		}
 		if (element instanceof TreeItem) {
 			TreeItem item = (TreeItem) element;
-			if (item.getData() instanceof IModelElement)
+			if (item.getData() instanceof IModelElement) {
 				EditorUtility.revealInEditor(part, ((IModelElement) (item.getData())));
+			}
 		}
 	}
 
@@ -67,11 +69,13 @@ public class OpenActionUtil {
 
 		int nResults = elements.length;
 
-		if (nResults == 0)
+		if (nResults == 0) {
 			return null;
+		}
 
-		if (nResults == 1)
+		if (nResults == 1) {
 			return elements[0];
+		}
 
 		int flags = ModelElementLabelProvider.SHOW_DEFAULT | ModelElementLabelProvider.SHOW_QUALIFIED
 				| ModelElementLabelProvider.SHOW_ROOT;
@@ -87,8 +91,9 @@ public class OpenActionUtil {
 				nResults = selection.length;
 				for (int i = 0; i < nResults; i++) {
 					Object current = selection[i];
-					if (current instanceof ISourceModule)
+					if (current instanceof ISourceModule) {
 						return (IModelElement) current;
+					}
 				}
 			}
 		}

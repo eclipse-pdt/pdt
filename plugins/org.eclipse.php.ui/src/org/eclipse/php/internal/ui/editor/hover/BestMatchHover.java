@@ -56,14 +56,16 @@ public class BestMatchHover extends AbstractPHPEditorTextHover
 		PHPEditorTextHoverDescriptor[] hoverDescs = PHPUiPlugin.getDefault().getPHPEditorTextHoverDescriptors();
 		for (int i = 0; i < hoverDescs.length; i++) {
 			// ensure that we don't add ourselves to the list
-			if (!PreferenceConstants.ID_BESTMATCH_HOVER.equals(hoverDescs[i].getId()))
+			if (!PreferenceConstants.ID_BESTMATCH_HOVER.equals(hoverDescs[i].getId())) {
 				fTextHoverSpecifications.add(hoverDescs[i]);
+			}
 		}
 	}
 
 	private void checkTextHovers() {
-		if (fTextHoverSpecifications.size() == 0)
+		if (fTextHoverSpecifications.size() == 0) {
 			return;
+		}
 
 		for (Iterator<PHPEditorTextHoverDescriptor> iterator = new ArrayList<>(
 				fTextHoverSpecifications).iterator(); iterator.hasNext();) {
@@ -80,8 +82,9 @@ public class BestMatchHover extends AbstractPHPEditorTextHover
 	}
 
 	protected void addTextHover(ITextHover hover) {
-		if (!fInstantiatedTextHovers.contains(hover))
+		if (!fInstantiatedTextHovers.contains(hover)) {
 			fInstantiatedTextHovers.add(hover);
+		}
 	}
 
 	/*
@@ -93,8 +96,9 @@ public class BestMatchHover extends AbstractPHPEditorTextHover
 		checkTextHovers();
 		fBestHover = null;
 
-		if (fInstantiatedTextHovers == null)
+		if (fInstantiatedTextHovers == null) {
 			return null;
+		}
 
 		for (Iterator<ITextHover> iterator = fInstantiatedTextHovers.iterator(); iterator.hasNext();) {
 			ITextHover hover = iterator.next();
@@ -118,8 +122,9 @@ public class BestMatchHover extends AbstractPHPEditorTextHover
 		checkTextHovers();
 		fBestHover = null;
 
-		if (fInstantiatedTextHovers == null)
+		if (fInstantiatedTextHovers == null) {
 			return null;
+		}
 
 		for (Iterator<ITextHover> iterator = fInstantiatedTextHovers.iterator(); iterator.hasNext();) {
 			ITextHover hover = iterator.next();
@@ -149,8 +154,9 @@ public class BestMatchHover extends AbstractPHPEditorTextHover
 	 */
 	@Override
 	public IInformationControlCreator getHoverControlCreator() {
-		if (fBestHover instanceof ITextHoverExtension)
+		if (fBestHover instanceof ITextHoverExtension) {
 			return ((ITextHoverExtension) fBestHover).getHoverControlCreator();
+		}
 
 		return null;
 	}
@@ -163,8 +169,9 @@ public class BestMatchHover extends AbstractPHPEditorTextHover
 	 */
 	@Override
 	public IInformationControlCreator getInformationPresenterControlCreator() {
-		if (fBestHover instanceof IInformationProviderExtension2)
+		if (fBestHover instanceof IInformationProviderExtension2) {
 			return ((IInformationProviderExtension2) fBestHover).getInformationPresenterControlCreator();
+		}
 
 		return null;
 	}

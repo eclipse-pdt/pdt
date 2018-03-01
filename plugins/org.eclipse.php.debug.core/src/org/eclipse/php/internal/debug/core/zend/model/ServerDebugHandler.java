@@ -79,8 +79,9 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 				try {
 					String serverName = null;
 					Server serverLookup = ServersManager.findByURL(serverURL);
-					if (serverLookup != null)
+					if (serverLookup != null) {
 						serverName = serverLookup.getName();
+					}
 					if (serverName != null) {
 						ILaunchConfigurationWorkingCopy wc = launchConfiguration.getWorkingCopy();
 						wc.setAttribute(Server.NAME, serverName);
@@ -131,8 +132,9 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 					// Bind server with this configuration, if we can find any.
 					String serverName = null;
 					Server serverLookup = ServersManager.findByURL(fDebugTarget.getURL());
-					if (serverLookup != null)
+					if (serverLookup != null) {
 						serverName = serverLookup.getName();
+					}
 					if (serverName != null) {
 						ILaunchConfigurationWorkingCopy wc = launchConfiguration.getWorkingCopy();
 						wc.setAttribute(Server.NAME, serverName);

@@ -148,20 +148,23 @@ public class PHPElementLinks {
 				String scheme = uri.getScheme();
 				if (PHPElementLinks.PHPDOC_SCHEME.equals(scheme)) {
 					IModelElement linkTarget = PHPElementLinks.parseURI(uri);
-					if (linkTarget == null)
+					if (linkTarget == null) {
 						return;
+					}
 
 					handler.handleInlineLink(linkTarget);
 				} else if (PHPElementLinks.OPEN_LINK_SCHEME.equals(scheme)) {
 					IModelElement linkTarget = PHPElementLinks.parseURI(uri);
-					if (linkTarget == null)
+					if (linkTarget == null) {
 						return;
+					}
 
 					handler.handleDeclarationLink(linkTarget);
 				} else {
 					try {
-						if (handler.handleExternalLink(new URL(loc), event.display))
+						if (handler.handleExternalLink(new URL(loc), event.display)) {
 							return;
+						}
 
 						event.doit = true;
 					} catch (MalformedURLException e) {

@@ -70,10 +70,12 @@ public class ProgressBar extends Canvas {
 	public Point computeSize(final int wHint, final int hHint, final boolean changed) {
 		checkWidget();
 		final Point size = new Point(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-		if (wHint != SWT.DEFAULT)
+		if (wHint != SWT.DEFAULT) {
 			size.x = wHint;
-		if (hHint != SWT.DEFAULT)
+		}
+		if (hHint != SWT.DEFAULT) {
 			size.y = hHint;
+		}
 		return size;
 	}
 
@@ -124,8 +126,9 @@ public class ProgressBar extends Canvas {
 	private int scale(final int value) {
 		if (fMaxTickCount > 0) {
 			final Rectangle r = getClientArea();
-			if (r.width != 0)
+			if (r.width != 0) {
 				return Math.max(0, value * (r.width - 2) / fMaxTickCount);
+			}
 		}
 		return value;
 	}
@@ -135,14 +138,15 @@ public class ProgressBar extends Canvas {
 	}
 
 	private void setStatusColor(final GC gc) {
-		if (fStopped)
+		if (fStopped) {
 			gc.setBackground(fStoppedColor);
-		else if (fError)
+		} else if (fError) {
 			gc.setBackground(fFailureColor);
-		else if (fStopped)
+		} else if (fStopped) {
 			gc.setBackground(fStoppedColor);
-		else
+		} else {
 			gc.setBackground(fOKColor);
+		}
 	}
 
 	public void step(final boolean failed, final int tickCount) {
@@ -156,8 +160,9 @@ public class ProgressBar extends Canvas {
 			fError = true;
 			x = 1;
 		}
-		if (fCurrentTickCount == fMaxTickCount)
+		if (fCurrentTickCount == fMaxTickCount) {
 			fColorBarWidth = getClientArea().width - 1;
+		}
 		paintStep(x, fColorBarWidth);
 	}
 

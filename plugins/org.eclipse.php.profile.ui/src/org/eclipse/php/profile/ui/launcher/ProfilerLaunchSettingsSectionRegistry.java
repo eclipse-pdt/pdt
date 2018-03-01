@@ -140,8 +140,9 @@ public class ProfilerLaunchSettingsSectionRegistry {
 					break;
 				}
 			}
-			if (isTopHierarchy)
+			if (isTopHierarchy) {
 				topHierarchyEntries.add(entryToCheck);
+			}
 		}
 		return topHierarchyEntries;
 	}

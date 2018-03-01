@@ -90,10 +90,11 @@ public abstract class MatchingCharAutoEditStrategy implements IAutoEditStrategy 
 		// and we do need completion
 		// (can't check region type since it is wrong)
 		if (document.getLength() == offset) {
-			if (offset >= 2 && document.getChar(offset - 2) == '?' && document.getChar(offset - 1) == '>')
+			if (offset >= 2 && document.getChar(offset - 2) == '?' && document.getChar(offset - 1) == '>') {
 				return false;
-			else
+			} else {
 				return true;
+			}
 		}
 		if (document.getLength() == offset + 1) {
 			return true;
@@ -103,39 +104,48 @@ public abstract class MatchingCharAutoEditStrategy implements IAutoEditStrategy 
 		final char nextChar = document.getChar(offset + 1);
 
 		if (Character.isWhitespace(currChar) || isClosingBracket(currChar) || isQuote && isQuote(currChar)
-				|| currChar == ';' || currChar == ',')
+				|| currChar == ';' || currChar == ',') {
 			return true;
-		if (offset + 1 >= document.getLength())
+		}
+		if (offset + 1 >= document.getLength()) {
 			return false;
+		}
 
 		final String state = FormatterUtils.getPartitionType(document, offset);
 
-		if (state == PHPRegionTypes.PHP_OPENTAG)
+		if (state == PHPRegionTypes.PHP_OPENTAG) {
 			return true;
-		if (currChar == '/' && (nextChar == '/' || nextChar == '*'))
+		}
+		if (currChar == '/' && (nextChar == '/' || nextChar == '*')) {
 			return true;
-		if (currChar == '?' && nextChar == '>')
+		}
+		if (currChar == '?' && nextChar == '>') {
 			return true;
+		}
 		// in case of <<<
 		if (currChar == '<' && nextChar == '<' && offset + 2 < document.getLength()
-				&& document.getChar(offset + 2) == '<')
+				&& document.getChar(offset + 2) == '<') {
 			return true;
+		}
 		return false;
 	}
 
 	protected static boolean isSpecialOpenCurlyInQuotes(final IStructuredDocument document, final int offset)
 			throws BadLocationException {
 		final IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
-		if (sdRegion == null)
+		if (sdRegion == null) {
 			return false;
+		}
 		final ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
 		// TODO need to support heredoc also
-		if (tRegion == null || tRegion.getType() != PHPRegionTypes.PHP_ENCAPSED_AND_WHITESPACE)
+		if (tRegion == null || tRegion.getType() != PHPRegionTypes.PHP_ENCAPSED_AND_WHITESPACE) {
 			return false;
+		}
 
 		final char firstChar = document.getChar(sdRegion.getStartOffset() + tRegion.getStart());
-		if (firstChar != DOUBLE_QUOTES && firstChar != BACK_QUOTE)
+		if (firstChar != DOUBLE_QUOTES && firstChar != BACK_QUOTE) {
 			return false;
+		}
 
 		final char bracketChar = document.getChar(offset + 1);
 		return bracketChar == '$';

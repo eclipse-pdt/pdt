@@ -50,18 +50,21 @@ public enum DebuggerSettingsManager {
 		private void fireEvent() {
 			switch (kind) {
 			case ADDED: {
-				for (Object listener : listeners.getListeners())
+				for (Object listener : listeners.getListeners()) {
 					((IDebuggerSettingsListener) listener).settingsAdded(settings);
+				}
 				break;
 			}
 			case REMOVED: {
-				for (Object listener : listeners.getListeners())
+				for (Object listener : listeners.getListeners()) {
 					((IDebuggerSettingsListener) listener).settingsRemoved(settings);
+				}
 				break;
 			}
 			case CHANGED: {
-				for (Object listener : listeners.getListeners())
+				for (Object listener : listeners.getListeners()) {
 					((IDebuggerSettingsListener) listener).settingsChanged(events);
+				}
 				break;
 			}
 			default:
@@ -95,8 +98,9 @@ public enum DebuggerSettingsManager {
 		public void phpExeAdded(PHPExesEvent event) {
 			for (String debuggerId : PHPDebuggersRegistry.getDebuggersIds()) {
 				IDebuggerSettings settings = findSettings(event.getPHPExeItem().getUniqueId(), debuggerId);
-				if (settings != null)
+				if (settings != null) {
 					save(settings);
+				}
 			}
 		}
 
@@ -104,8 +108,9 @@ public enum DebuggerSettingsManager {
 		public void phpExeRemoved(PHPExesEvent event) {
 			for (String debuggerId : PHPDebuggersRegistry.getDebuggersIds()) {
 				IDebuggerSettings settings = findSettings(event.getPHPExeItem().getUniqueId(), debuggerId);
-				if (settings != null)
+				if (settings != null) {
 					delete(settings);
+				}
 			}
 		}
 
@@ -113,8 +118,9 @@ public enum DebuggerSettingsManager {
 		public void serverAdded(ServerManagerEvent event) {
 			for (String debuggerId : PHPDebuggersRegistry.getDebuggersIds()) {
 				IDebuggerSettings settings = findSettings(event.getServer().getUniqueId(), debuggerId);
-				if (settings != null)
+				if (settings != null) {
 					save(settings);
+				}
 			}
 		}
 
@@ -122,8 +128,9 @@ public enum DebuggerSettingsManager {
 		public void serverRemoved(ServerManagerEvent event) {
 			for (String debuggerId : PHPDebuggersRegistry.getDebuggersIds()) {
 				IDebuggerSettings settings = findSettings(event.getServer().getUniqueId(), debuggerId);
-				if (settings != null)
+				if (settings != null) {
 					delete(settings);
+				}
 			}
 		}
 
@@ -180,14 +187,16 @@ public enum DebuggerSettingsManager {
 	 */
 	public IDebuggerSettings findSettings(String ownerId, String debuggerId) {
 		IDebuggerSettingsProvider provider = settingsCache.get(debuggerId);
-		if (provider == null)
+		if (provider == null) {
 			// There is no provider registered
 			return null;
+		}
 		IDebuggerSettings settings = provider.get(ownerId);
 		// Check if there is any pending working copy
 		IDebuggerSettingsWorkingCopy pendingCopy = findWorkingCopy(settings);
-		if (pendingCopy != null)
+		if (pendingCopy != null) {
 			return pendingCopy;
+		}
 		return settings;
 	}
 
@@ -199,9 +208,10 @@ public enum DebuggerSettingsManager {
 	 */
 	public List<IDebuggerSettings> findSettings(String debuggerId) {
 		IDebuggerSettingsProvider provider = settingsCache.get(debuggerId);
-		if (provider == null)
+		if (provider == null) {
 			// There is no provider registered
 			return new ArrayList<>();
+		}
 		return provider.getAll();
 	}
 
@@ -285,8 +295,9 @@ public enum DebuggerSettingsManager {
 			}
 		}
 		// Go out if there are no changes
-		if (events.isEmpty())
+		if (events.isEmpty()) {
 			return;
+		}
 		// Update original settings
 		((AbstractDebuggerSettings) settings).update(settingsWorkingCopy);
 		// Delegate saving of persistent data to related provider
@@ -327,8 +338,9 @@ public enum DebuggerSettingsManager {
 	 */
 	private IDebuggerSettingsWorkingCopy findWorkingCopy(IDebuggerSettings settings) {
 		for (IDebuggerSettings key : settingsCopies.keySet()) {
-			if (key == settings)
+			if (key == settings) {
 				return settingsCopies.get(key);
+			}
 		}
 		return null;
 	}

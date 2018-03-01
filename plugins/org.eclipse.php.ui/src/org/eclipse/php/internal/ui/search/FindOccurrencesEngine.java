@@ -29,15 +29,17 @@ public final class FindOccurrencesEngine {
 	private IOccurrencesFinder fFinder;
 
 	private FindOccurrencesEngine(IOccurrencesFinder finder) {
-		if (finder == null)
+		if (finder == null) {
 			throw new IllegalArgumentException();
+		}
 		fFinder = finder;
 	}
 
 	private String run(Program astRoot, int offset, int length) {
 		String message = fFinder.initialize(astRoot, offset, length);
-		if (message != null)
+		if (message != null) {
 			return message;
+		}
 
 		performNewSearch(fFinder, astRoot.getSourceModule());
 		return null;

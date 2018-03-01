@@ -46,8 +46,9 @@ public class CloseTagAutoEditStrategyPHP implements IAutoEditStrategy {
 		}
 		Object textEditor = getActiveTextEditor();
 		if (!(textEditor instanceof ITextEditorExtension3
-				&& ((ITextEditorExtension3) textEditor).getInsertMode() == ITextEditorExtension3.SMART_INSERT))
+				&& ((ITextEditorExtension3) textEditor).getInsertMode() == ITextEditorExtension3.SMART_INSERT)) {
 			return;
+		}
 
 		IStructuredModel model = null;
 		try {
@@ -84,8 +85,9 @@ public class CloseTagAutoEditStrategyPHP implements IAutoEditStrategy {
 				}
 			}
 		} finally {
-			if (model != null)
+			if (model != null) {
 				model.releaseFromRead();
+			}
 		}
 	}
 
@@ -106,11 +108,13 @@ public class CloseTagAutoEditStrategyPHP implements IAutoEditStrategy {
 			if (page != null) {
 				IEditorPart editor = page.getActiveEditor();
 				if (editor != null) {
-					if (editor instanceof ITextEditor)
+					if (editor instanceof ITextEditor) {
 						return editor;
+					}
 					ITextEditor textEditor = editor.getAdapter(ITextEditor.class);
-					if (textEditor != null)
+					if (textEditor != null) {
 						return textEditor;
+					}
 					return editor;
 				}
 			}

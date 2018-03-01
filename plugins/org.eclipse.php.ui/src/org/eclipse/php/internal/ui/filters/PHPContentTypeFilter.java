@@ -42,8 +42,9 @@ public class PHPContentTypeFilter extends ViewerFilter implements IExecutableExt
 	public boolean select(Viewer viewer, Object parent, Object element) {
 		if (element instanceof IFile) {
 			IFile file = (IFile) element;
-			if (contentType.isAssociatedWith(file.getName()))
+			if (contentType.isAssociatedWith(file.getName())) {
 				return false;
+			}
 
 		}
 
@@ -56,8 +57,9 @@ public class PHPContentTypeFilter extends ViewerFilter implements IExecutableExt
 		String pattern = config.getAttribute("pattern"); //$NON-NLS-1$
 		if (pattern != null) {
 			IContentType newcontentType = Platform.getContentTypeManager().getContentType(pattern);
-			if (newcontentType != null)
+			if (newcontentType != null) {
 				contentType = newcontentType;
+			}
 		}
 	}
 

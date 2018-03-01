@@ -38,8 +38,9 @@ public class DBGpResourceValue extends AbstractDBGpValue {
 	@Override
 	protected String createValueString(DBGpValueData valueData) {
 		String valueString = valueData.getValueString();
-		if (valueString != null && valueString.trim().length() > 0)
+		if (valueString != null && valueString.trim().length() > 0) {
 			return valueString;
+		}
 		return ""; //$NON-NLS-1$
 	}
 

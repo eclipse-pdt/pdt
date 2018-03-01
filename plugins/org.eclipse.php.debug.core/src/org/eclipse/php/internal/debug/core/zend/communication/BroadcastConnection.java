@@ -68,8 +68,9 @@ public class BroadcastConnection {
 				String currentLine;
 				while (true) {
 					currentLine = reader.readLine();
-					if (currentLine == null || currentLine.isEmpty())
+					if (currentLine == null || currentLine.isEmpty()) {
 						break;
+					}
 					requestLines.add(currentLine);
 				}
 				String firstLine = requestLines.isEmpty() ? null : requestLines.get(0);
@@ -237,33 +238,39 @@ public class BroadcastConnection {
 	}
 
 	protected boolean isRequestFromZendServer(String line) {
-		if (line == null)
+		if (line == null) {
 			return false;
+		}
 		String zendServerString = "ZendServer="; //$NON-NLS-1$
 		int index = line.indexOf(zendServerString);
-		if (index == -1)
+		if (index == -1) {
 			return false;
+		}
 		String value = null;
 		value = line.substring(index + zendServerString.length());
 		index = value.indexOf("HTTP");//$NON-NLS-1$
-		if (index == -1)
+		if (index == -1) {
 			return false;
+		}
 		value = value.substring(0, index);
 		return isBiggerOrEqual(value, "4.0.0");//$NON-NLS-1$
 	}
 
 	protected boolean isBiggerOrEqual(String value, String baseVersion) {
-		if (value == null)
+		if (value == null) {
 			return false;
+		}
 		return VersionUtils.equal(value, baseVersion, 3) || VersionUtils.greater(value, baseVersion, 3);
 	}
 
 	protected String getPlatformValue(String line) {
-		if (line == null)
+		if (line == null) {
 			return null;
+		}
 		int index = line.indexOf(PLATFORM_GUI);
-		if (index == -1)
+		if (index == -1) {
 			return null;
+		}
 		String value = null;
 		try {
 			value = line.substring(index + PLATFORM_GUI.length());
@@ -286,8 +293,9 @@ public class BroadcastConnection {
 		result += DEBUG_PORT + '=' + port;
 		result += '&' + DEBUG_HOST + '=' + host;
 		result += '&' + DEBUG_FASTFILE + '=' + String.valueOf(1);
-		if (isUseSSL())
+		if (isUseSSL()) {
 			result += '&' + USE_SSL + '=' + String.valueOf(sslOn);
+		}
 		return result;
 	}
 
@@ -298,8 +306,9 @@ public class BroadcastConnection {
 		descriptor.put(DEBUG_HOST, JSONDescriptor.quote(host));
 		descriptor.put(DEBUG_PORT, String.valueOf(port));
 		descriptor.put(DEBUG_FASTFILE, String.valueOf(1));
-		if (isUseSSL())
+		if (isUseSSL()) {
 			descriptor.put(USE_SSL, String.valueOf(sslOn));
+		}
 		result = IDE_SETTINGS + descriptor.getString();
 		return result;
 	}
@@ -307,8 +316,10 @@ public class BroadcastConnection {
 	protected String getHTMLContent(String platformValue, String host, int port) {
 		String platformPath = platformValue;
 		// There is no http:// or https:// in the value
-		if (platformValue.indexOf("://") == -1) //$NON-NLS-1$
+		if (platformValue.indexOf("://") == -1)
+		 {
 			platformPath = "http://" + platformValue; //$NON-NLS-1$
+		}
 		// Add question mark if not exists
 		platformPath += getResponseString(platformValue.indexOf('?') == -1, host, port);
 		String htmlContent = MessageFormat.format(Messages.BroadcastConnection_HTML_content_message, platformPath,

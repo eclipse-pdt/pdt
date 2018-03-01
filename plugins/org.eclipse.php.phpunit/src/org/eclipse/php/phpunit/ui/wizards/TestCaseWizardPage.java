@@ -97,8 +97,9 @@ public class TestCaseWizardPage extends PHPUnitWizardPage {
 	private IModelElement chooseElementToTest() {
 		final IContainer root = getTestContainer();
 
-		if (root == null)
+		if (root == null) {
 			return null;
+		}
 
 		IProject project = getTestContainer().getProject();
 
@@ -313,8 +314,9 @@ public class TestCaseWizardPage extends PHPUnitWizardPage {
 
 		// set default and focus
 		final IModelElement elementToTest = getElementToTest();
-		if (elementToTest != null)
+		if (elementToTest != null) {
 			setClassName(elementToTest.getElementName() + testSuffix());
+		}
 	}
 
 	@Override
@@ -365,8 +367,9 @@ public class TestCaseWizardPage extends PHPUnitWizardPage {
 		}
 
 		final String elementToTestName = fElementToTest != null ? fElementToTest.getPath().lastSegment() : ""; //$NON-NLS-1$
-		if (fElementToTestFileNameLabel != null && !fElementToTestFileNameLabel.isDisposed())
+		if (fElementToTestFileNameLabel != null && !fElementToTestFileNameLabel.isDisposed()) {
 			fElementToTestFileNameLabel.setText(elementToTestName);
+		}
 		fClassNameProposal = (fElementToTest != null ? fElementToTest.getElementName() : fElementToTestField.getText())
 				+ testSuffix();
 		if (!fClassNameManual && fClassNameDialogField != null) {

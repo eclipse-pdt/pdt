@@ -80,8 +80,9 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 			// Explorer .
 			if (entry instanceof IFolder) {
 				IModelElement createdScriptFolder = DLTKCore.create((IFolder) entry);
-				if (null == createdScriptFolder)
+				if (null == createdScriptFolder) {
 					return getImage(entry);
+				}
 				return getImage(createdScriptFolder);
 			}
 
@@ -103,11 +104,13 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 			if (!project.isOnBuildpath(modelElement)) {// not in build path,
 				// hence: hollow,
 				// non-pakg icons
-				if (modelElement.getElementType() == IModelElement.SOURCE_MODULE)
+				if (modelElement.getElementType() == IModelElement.SOURCE_MODULE) {
 					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_CUNIT_RESOURCE);
+				}
 				if (modelElement.getElementType() == IModelElement.PROJECT_FRAGMENT
-						|| modelElement.getElementType() == IModelElement.SCRIPT_FOLDER)
+						|| modelElement.getElementType() == IModelElement.SCRIPT_FOLDER) {
 					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_PHP_FOLDER);
+				}
 			} else {// in build path ...
 				if (modelElement.getElementType() == IModelElement.PROJECT_FRAGMENT
 						|| modelElement.getElementType() == IModelElement.SCRIPT_FOLDER || element instanceof IFolder) {

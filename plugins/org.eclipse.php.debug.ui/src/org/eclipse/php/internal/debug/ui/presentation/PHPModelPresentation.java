@@ -266,8 +266,9 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 		} else {
 			facetOwner = variable.getAdapter(IVariableFacet.class);
 		}
-		if (facetOwner == null)
+		if (facetOwner == null) {
 			return null;
+		}
 		if (facetOwner.hasFacet(KIND_SUPER_GLOBAL)) {
 			return PHPDebugUIImages.get(PHPDebugUIImages.IMG_OBJ_MEMBER_SUPER_GLOBAL);
 		}
@@ -290,27 +291,30 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 		}
 		if (facetOwner.hasFacet(KIND_OBJECT_MEMBER)) {
 			if (facetOwner.hasFacet(Facet.MOD_PUBLIC)) {
-				if (facetOwner.hasFacet(Facet.MOD_STATIC))
+				if (facetOwner.hasFacet(Facet.MOD_STATIC)) {
 					return getDebugImageRegistry().get(new PHPDebugUICompositeImageDescriptor(
 							PHPDebugUIImages.getImageDescriptor(PHPDebugUIImages.IMG_OBJ_MEMBER_PUBLIC_ACCESS),
 							PHPDebugUIImages.getImageDescriptor(PHPDebugUIImages.IMG_OVR_MEMBER_STATIC),
 							PHPDebugUICompositeImageDescriptor.TOP_RIGHT));
+				}
 				return PHPDebugUIImages.get(PHPDebugUIImages.IMG_OBJ_MEMBER_PUBLIC_ACCESS);
 			}
 			if (facetOwner.hasFacet(Facet.MOD_PROTECTED)) {
-				if (facetOwner.hasFacet(Facet.MOD_STATIC))
+				if (facetOwner.hasFacet(Facet.MOD_STATIC)) {
 					return getDebugImageRegistry().get(new PHPDebugUICompositeImageDescriptor(
 							PHPDebugUIImages.getImageDescriptor(PHPDebugUIImages.IMG_OBJ_MEMBER_PROTECTED_ACCESS),
 							PHPDebugUIImages.getImageDescriptor(PHPDebugUIImages.IMG_OVR_MEMBER_STATIC),
 							PHPDebugUICompositeImageDescriptor.TOP_RIGHT));
+				}
 				return PHPDebugUIImages.get(PHPDebugUIImages.IMG_OBJ_MEMBER_PROTECTED_ACCESS);
 			}
 			if (facetOwner.hasFacet(Facet.MOD_PRIVATE)) {
-				if (facetOwner.hasFacet(Facet.MOD_STATIC))
+				if (facetOwner.hasFacet(Facet.MOD_STATIC)) {
 					return getDebugImageRegistry().get(new PHPDebugUICompositeImageDescriptor(
 							PHPDebugUIImages.getImageDescriptor(PHPDebugUIImages.IMG_OBJ_MEMBER_PRIVATE_ACCESS),
 							PHPDebugUIImages.getImageDescriptor(PHPDebugUIImages.IMG_OVR_MEMBER_STATIC),
 							PHPDebugUICompositeImageDescriptor.TOP_RIGHT));
+				}
 				return PHPDebugUIImages.get(PHPDebugUIImages.IMG_OBJ_MEMBER_PRIVATE_ACCESS);
 			}
 		}

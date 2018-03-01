@@ -58,8 +58,9 @@ public final class TextSequenceUtilities {
 			sourceOffset--;
 		}
 		ITextRegion tRegion = source.getRegionAtCharacterOffset(sourceOffset);
-		if (tRegion == null)
+		if (tRegion == null) {
 			return null;
+		}
 		if (tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 			try {
 				return ((IPHPScriptRegion) tRegion)

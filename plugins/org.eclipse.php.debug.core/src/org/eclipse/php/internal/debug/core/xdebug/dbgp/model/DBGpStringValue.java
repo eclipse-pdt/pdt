@@ -107,8 +107,9 @@ public class DBGpStringValue extends AbstractDBGpValue {
 
 		@Override
 		public void addFacets(Facet... facets) {
-			for (Facet facet : facets)
+			for (Facet facet : facets) {
 				this.fFacets.add(facet);
+			}
 		}
 
 	}

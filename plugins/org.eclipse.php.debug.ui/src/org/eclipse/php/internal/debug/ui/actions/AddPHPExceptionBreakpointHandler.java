@@ -45,8 +45,9 @@ public class AddPHPExceptionBreakpointHandler extends AbstractHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		SelectionDialog dialog = createDialog();
 		int result = dialog.open();
-		if (result != IDialogConstants.OK_ID)
+		if (result != IDialogConstants.OK_ID) {
 			return null;
+		}
 		Object[] types = dialog.getResult();
 		addBreakpoints(types);
 		return null;

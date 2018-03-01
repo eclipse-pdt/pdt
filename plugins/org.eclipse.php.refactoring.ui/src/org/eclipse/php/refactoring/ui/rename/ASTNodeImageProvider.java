@@ -72,8 +72,9 @@ public class ASTNodeImageProvider {
 	}
 
 	private Image getImageLabel(ImageDescriptor descriptor) {
-		if (descriptor == null)
+		if (descriptor == null) {
 			return null;
+		}
 		return getRegistry().get(descriptor);
 	}
 
@@ -186,11 +187,12 @@ public class ASTNodeImageProvider {
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
-		if (!containsPHPElements && false)// (folder.getNonPHPResources().length
-											// > 0))
+		if (!containsPHPElements && false) {
+			// > 0))
 			return PHPPluginImages.DESC_OBJS_EMPTY_PHP_FOLDER_RESOURCES;
-		else if (!containsPHPElements)
+		} else if (!containsPHPElements) {
 			return PHPPluginImages.DESC_OBJS_PHPFOLDER_ROOT;
+		}
 		return PHPPluginImages.DESC_OBJS_PHPFOLDER_ROOT;
 	}
 

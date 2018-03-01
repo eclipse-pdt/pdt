@@ -68,8 +68,9 @@ public class DeleteModifications extends RefactoringModifications {
 			return;
 		case IModelElement.SCRIPT_PROJECT:
 			fDelete.add(element);
-			if (element.getResource() != null)
+			if (element.getResource() != null) {
 				getResourceModifications().addDelete(element.getResource());
+			}
 			return;
 		case IModelElement.PROJECT_FRAGMENT:
 			fDelete.add(element);
@@ -77,8 +78,9 @@ public class DeleteModifications extends RefactoringModifications {
 			// Flag an resource change even if we have an archive. If it is
 			// internal (we have a underlying resource then we have a resource
 			// change.
-			if (resource != null)
+			if (resource != null) {
 				getResourceModifications().addDelete(resource);
+			}
 			return;
 		case IModelElement.SCRIPT_FOLDER:
 			fDelete.add(element);
@@ -93,8 +95,9 @@ public class DeleteModifications extends RefactoringModifications {
 				// Ignore content retrieve errors
 				DLTKUIPlugin.log(e);
 			}
-			if (element.getResource() != null)
+			if (element.getResource() != null) {
 				getResourceModifications().addDelete(element.getResource());
+			}
 			return;
 		case IModelElement.TYPE:
 			fDelete.add(element);
@@ -105,8 +108,9 @@ public class DeleteModifications extends RefactoringModifications {
 			if (type.getDeclaringType() == null && unit.getElementName().endsWith(type.getElementName())) {
 				if (unit.getTypes().length == 1) {
 					fDelete.add(unit);
-					if (unit.getResource() != null)
+					if (unit.getResource() != null) {
 						getResourceModifications().addDelete(unit.getResource());
+					}
 				}
 			}
 			return;
@@ -161,8 +165,9 @@ public class DeleteModifications extends RefactoringModifications {
 	 */
 	private void handleScriptFolderDelete(IScriptFolder pack, ArrayList<IResource> resourcesCollector) throws CoreException {
 		final IContainer container = (IContainer) pack.getResource();
-		if (container == null)
+		if (container == null) {
 			return;
+		}
 
 		final IResource[] members = container.members();
 
@@ -213,15 +218,17 @@ public class DeleteModifications extends RefactoringModifications {
 				IResource member = members[m];
 				if (member instanceof IFile) {
 					IFile file = (IFile) member;
-					if ("class".equals(file.getFileExtension()) && file.isDerived()) //$NON-NLS-1$
+					if ("class".equals(file.getFileExtension()) && file.isDerived()) {
 						continue;
+					}
 					IDLTKLanguageToolkit toolkit = DLTKLanguageManager.getLanguageToolkit(pack);
 					if (DLTKCore.DEBUG) {
 						System.err.println(Messages.DeleteModifications_1);
 					}
 					if (pack.isRootFolder() && (toolkit == null || (toolkit != null
-							&& (!DLTKContentTypeManager.isValidResourceForContentType(toolkit, file)))))
+							&& (!DLTKContentTypeManager.isValidResourceForContentType(toolkit, file))))) {
 						continue;
+					}
 					resourcesCollector.add(member);
 					getResourceModifications().addDelete(member);
 				}
@@ -247,8 +254,9 @@ public class DeleteModifications extends RefactoringModifications {
 	private boolean canRemoveCompletely(IScriptFolder pack) throws ModelException {
 		final IScriptFolder[] subPackages = ModelElementUtil.getPackageAndSubpackages(pack);
 		for (int i = 0; i < subPackages.length; i++) {
-			if (!(subPackages[i].equals(pack)) && !(fPackagesToDelete.contains(subPackages[i])))
+			if (!(subPackages[i].equals(pack)) && !(fPackagesToDelete.contains(subPackages[i]))) {
 				return false;
+			}
 		}
 		return true;
 	}

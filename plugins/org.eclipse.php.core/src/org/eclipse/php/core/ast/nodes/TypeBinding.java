@@ -540,8 +540,9 @@ public class TypeBinding implements ITypeBinding {
 	 */
 	@Override
 	public ITypeBinding getTypeDeclaration() {
-		if (elements.length > 0)
+		if (elements.length > 0) {
 			return resolver.getTypeBinding((IType) elements[0]);
+		}
 		return null;
 	}
 

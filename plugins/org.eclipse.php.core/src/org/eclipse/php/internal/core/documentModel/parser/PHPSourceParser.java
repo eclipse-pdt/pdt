@@ -246,8 +246,10 @@ public class PHPSourceParser extends XMLSourceParser {
 					((ITextRegionContainer) region).setParent(currentNode);
 				}
 				if (Debug.debugTokenizer)
+				 {
 					System.out.println(getClass().getName() + " found region of not specifically handled type " //$NON-NLS-1$
 							+ region.getType() + " @ " + region.getStart() + "[" + region.getLength() + "]"); //$NON-NLS-3$//$NON-NLS-2$//$NON-NLS-1$
+				}
 			}
 
 			// these regions also get their own node, so close them cleanly

@@ -250,8 +250,9 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 				ppp.notifyPropagatorEvent(event);
 			} else {
 				List<IPreferencesPropagatorListener> list = getPropagatorListeners(propertyKey);
-				if (list == null)
+				if (list == null) {
 					return;
+				}
 				Iterator<IPreferencesPropagatorListener> iterator = list.iterator();
 				while (iterator.hasNext()) {
 					iterator.next().preferencesEventOccured(event);

@@ -61,16 +61,18 @@ public class RenameLinkedMode {
 	private class FocusEditingSupport implements IEditingSupport {
 		@Override
 		public boolean ownsFocusShell() {
-			if (fInfoPopup == null)
+			if (fInfoPopup == null) {
 				return false;
+			}
 			if (fInfoPopup.ownsFocusShell()) {
 				return true;
 			}
 
 			Shell editorShell = fEditor.getSite().getShell();
 			Shell activeShell = editorShell.getDisplay().getActiveShell();
-			if (editorShell == activeShell)
+			if (editorShell == activeShell) {
 				return true;
+			}
 			return false;
 		}
 
@@ -260,10 +262,11 @@ public class RenameLinkedMode {
 				 */
 				private int rank(OccurrenceLocation node) {
 					int relativeRank = node.getOffset() + node.getLength() - pos;
-					if (relativeRank < 0)
+					if (relativeRank < 0) {
 						return Integer.MAX_VALUE + relativeRank;
-					else
+					} else {
 						return relativeRank;
+					}
 				}
 			});
 
@@ -390,12 +393,14 @@ public class RenameLinkedMode {
 			}
 
 			String newName = fNamePosition.getContent();
-			if (fOriginalName.equals(newName))
+			if (fOriginalName.equals(newName)) {
 				return;
+			}
 			RenameSupport renameSupport = undoAndCreateRenameSupport(newName);
 
-			if (renameSupport == null)
+			if (renameSupport == null) {
 				return;
+			}
 
 			Shell shell = fEditor.getSite().getShell();
 			boolean executed;
@@ -423,10 +428,12 @@ public class RenameLinkedMode {
 			// TODO: handle the errors.
 
 		} finally {
-			if (label != null)
+			if (label != null) {
 				label.dispose();
-			if (image != null)
+			}
+			if (image != null) {
 				image.dispose();
+			}
 		}
 	}
 
@@ -503,8 +510,9 @@ public class RenameLinkedMode {
 		try {
 			String newName = fNamePosition.getContent();
 			RenameSupport renameSupport = undoAndCreateRenameSupport(newName);
-			if (renameSupport != null)
+			if (renameSupport != null) {
 				renameSupport.openDialog(fEditor.getSite().getShell());
+			}
 		} catch (CoreException e) {
 		} catch (BadLocationException e) {
 		}
@@ -538,8 +546,9 @@ public class RenameLinkedMode {
 		LinkedPosition[] positions = fLinkedPositionGroup.getPositions();
 		for (int i = 0; i < positions.length; i++) {
 			LinkedPosition position = positions[i];
-			if (position.includes(start) && position.includes(end))
+			if (position.includes(start) && position.includes(end)) {
 				return position;
+			}
 		}
 		return null;
 	}
@@ -547,8 +556,9 @@ public class RenameLinkedMode {
 	public boolean isEnabled() {
 		try {
 			String newName = fNamePosition.getContent();
-			if (fOriginalName.equals(newName))
+			if (fOriginalName.equals(newName)) {
 				return false;
+			}
 			return PHPConventionsUtil.validateIdentifier(newName);
 		} catch (BadLocationException e) {
 			return false;

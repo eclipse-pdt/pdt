@@ -147,8 +147,9 @@ public class RefactoringMoveWizardPage extends UserInputWizardPage {
 
 	private void viewerSelectionChanged(SelectionChangedEvent event) {
 		ISelection selection = event.getSelection();
-		if (!(selection instanceof IStructuredSelection))
+		if (!(selection instanceof IStructuredSelection)) {
 			return;
+		}
 		IStructuredSelection ss = (IStructuredSelection) selection;
 		verifyDestination(ss.getFirstElement(), false);
 	}
@@ -156,10 +157,11 @@ public class RefactoringMoveWizardPage extends UserInputWizardPage {
 	private final void verifyDestination(Object selected, boolean initialVerification) {
 		try {
 			RefactoringStatus status = verifyDestination(selected);
-			if (initialVerification)
+			if (initialVerification) {
 				setPageComplete(status.isOK());
-			else
+			} else {
 				setPageComplete(status);
+			}
 		} catch (Exception e) {
 			Logger.logException(e);
 			setPageComplete(false);
@@ -178,11 +180,13 @@ public class RefactoringMoveWizardPage extends UserInputWizardPage {
 			}
 		}
 
-		if (selected instanceof IContainer)
+		if (selected instanceof IContainer) {
 			refactoringStatus = processor.setDestination((IContainer) selected);
-		else
+		}
+		else {
 			refactoringStatus = RefactoringStatus
 					.createFatalErrorStatus(PHPRefactoringUIMessages.getString("RefactoringMoveWizardPage.2")); //$NON-NLS-1$
+		}
 
 		return refactoringStatus;
 	}

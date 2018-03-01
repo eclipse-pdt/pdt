@@ -73,12 +73,14 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate, IObje
 		@Override
 		public Object execute(ExecutionEvent event) throws ExecutionException {
 			IWorkbenchSite activeSite = HandlerUtil.getActiveSite(event);
-			if (activeSite == null)
+			if (activeSite == null) {
 				return null;
+			}
 			Command command = activeSite.getService(ICommandService.class)
 					.getCommand(ACTION_DEFININITION_ID);
-			if (!command.isEnabled())
+			if (!command.isEnabled()) {
 				return null;
+			}
 			final Event trigger = new Event();
 			ExecutionEvent executionEvent = activeSite.getService(IHandlerService.class)
 					.createExecutionEvent(command, trigger);

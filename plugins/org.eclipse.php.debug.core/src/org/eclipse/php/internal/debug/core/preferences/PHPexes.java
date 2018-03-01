@@ -48,8 +48,9 @@ public class PHPexes {
 					PHPDebugCorePreferenceNames.INSTALLED_PHP_UNIQUE_IDS, null, null);
 			PHPexeItem[] userItems = getEditableItems();
 			// There are no user items, no need to upgrade
-			if (userItems.length == 0)
+			if (userItems.length == 0) {
 				return;
+			}
 			// Upgrade unique IDs if those don't exist in preferences
 			if (uniqueIds == null || uniqueIds.isEmpty()) {
 				save();
@@ -283,9 +284,11 @@ public class PHPexes {
 			String debuggerId = iterator.next();
 			HashMap<String, PHPexeItem> map = items.get(debuggerId);
 			if (map != null) {
-				for (PHPexeItem value : map.values())
-					if (value.getUniqueId().equals(id))
+				for (PHPexeItem value : map.values()) {
+					if (value.getUniqueId().equals(id)) {
 						return value;
+					}
+				}
 			}
 		}
 		return null;
@@ -497,8 +500,9 @@ public class PHPexes {
 					loadDefaultInis[i] != null && loadDefaultInis[i].equals(TRUE));
 			// Overwrite the one generated in new executable constructor with
 			// one that is stored in preferences
-			if (phpExecutablesUniqueIds.length != 0)
+			if (phpExecutablesUniqueIds.length != 0) {
 				item.setUniqueId(phpExecutablesUniqueIds[i]);
+			}
 			// the size of defaultItemForPHPVersions may be 0 when you use this
 			// first time
 			if (defaultItemForPHPVersions.length == phpExecutablesLocations.length) {
@@ -565,7 +569,9 @@ public class PHPexes {
 							.getAttribute(DEFAULT_ATTRIBUTE));
 
 					if (isWindows)
+					 {
 						location = location + ".exe"; //$NON-NLS-1$
+					}
 
 					final String pluginId = element.getDeclaringExtension().getNamespaceIdentifier();
 					final String finalDebuggerID = debuggerID;
@@ -592,7 +598,9 @@ public class PHPexes {
 					if (file != null && file.exists()) {
 						final PHPexeItem newItem = new PHPexeItem(name, file, phpIniFile, debuggerID, false);
 						if (null == newItem || null == newItem.getExecutable() || newItem.getVersion() == null)
+						 {
 							continue; // not adding "problematic" executables
+						}
 						/*
 						 * Override unique ID to be always the same when loading
 						 * item from extension once again (restart)
@@ -681,8 +689,9 @@ public class PHPexes {
 			}
 		};
 		Arrays.sort(allItems, sorter);
-		if (allItems.length > 0)
+		if (allItems.length > 0) {
 			setDefaultItem(allItems[0]);
+		}
 	}
 
 	/**

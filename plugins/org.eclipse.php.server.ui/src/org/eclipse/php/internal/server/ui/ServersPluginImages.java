@@ -111,8 +111,9 @@ public class ServersPluginImages {
 
 		try {
 			ImageDescriptor id = ImageDescriptor.createFromURL(makeIconFileURL("d" + type, relPath)); //$NON-NLS-1$
-			if (id != null)
+			if (id != null) {
 				action.setDisabledImageDescriptor(id);
+			}
 		} catch (MalformedURLException e) {
 		}
 		ImageDescriptor descriptor = create("e" + type, relPath); //$NON-NLS-1$
@@ -150,8 +151,9 @@ public class ServersPluginImages {
 	}
 
 	private static URL makeIconFileURL(String prefix, String name) throws MalformedURLException {
-		if (fgIconBaseURL == null)
+		if (fgIconBaseURL == null) {
 			throw new MalformedURLException();
+		}
 
 		StringBuilder buffer = new StringBuilder(prefix);
 		buffer.append('/');

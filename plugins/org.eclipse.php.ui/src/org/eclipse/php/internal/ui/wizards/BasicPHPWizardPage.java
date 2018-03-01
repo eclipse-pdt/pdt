@@ -69,8 +69,9 @@ public abstract class BasicPHPWizardPage extends WizardPage {
 	protected void createSeparator(Composite composite, int horizontalSpan) {
 		Label line = new Label(composite, SWT.SEPARATOR | SWT.HORIZONTAL);
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
-		if (horizontalSpan > 0)
+		if (horizontalSpan > 0) {
 			gridData.horizontalSpan = horizontalSpan;
+		}
 
 		line.setLayoutData(gridData);
 	}
@@ -84,16 +85,18 @@ public abstract class BasicPHPWizardPage extends WizardPage {
 
 	protected Text createText(Composite composite, int style, String message, GridData gd) {
 		Text text = new Text(composite, style);
-		if (message != null)
+		if (message != null) {
 			text.setText(message);
+		}
 		text.setLayoutData(gd);
 		return text;
 	}
 
 	protected Combo createCombo(Composite composite, int style, String message, GridData gd) {
 		Combo combo = new Combo(composite, style);
-		if (message != null)
+		if (message != null) {
 			combo.setText(message);
+		}
 		combo.setLayoutData(gd);
 		return combo;
 	}
@@ -105,13 +108,15 @@ public abstract class BasicPHPWizardPage extends WizardPage {
 		String dirName = text.getText();
 		if (!dirName.equals("")) { //$NON-NLS-1$
 			File path = new File(dirName);
-			if (path.exists())
+			if (path.exists()) {
 				dialog.setFilterPath(dirName);
+			}
 
 		}
 		String selectedDirectory = dialog.open();
-		if (selectedDirectory != null)
+		if (selectedDirectory != null) {
 			text.setText(selectedDirectory);
+		}
 	}
 
 	protected void handleFileBrowseButtonPressed(Combo text, String[] extensions, String title) {
@@ -121,8 +126,9 @@ public abstract class BasicPHPWizardPage extends WizardPage {
 		String dirName = text.getText();
 		if (!dirName.equals("")) { //$NON-NLS-1$
 			File path = new File(dirName);
-			if (path.exists())
+			if (path.exists()) {
 				dialog.setFilterPath(dirName);
+			}
 
 		}
 		String selectedDirectory = dialog.open();
@@ -141,8 +147,9 @@ public abstract class BasicPHPWizardPage extends WizardPage {
 		String dirName = text.getText();
 		if (!dirName.equals("")) { //$NON-NLS-1$
 			File path = new File(dirName);
-			if (path.exists())
+			if (path.exists()) {
 				dialog.setFilterPath(dirName);
+			}
 
 		}
 		String selectedDirectory = dialog.open();
@@ -161,8 +168,9 @@ public abstract class BasicPHPWizardPage extends WizardPage {
 		String res = dialog.open();
 		if (res != null) {
 			File file = new File(res);
-			if (file.isDirectory())
+			if (file.isDirectory()) {
 				return res;
+			}
 		}
 		return dir;
 	}

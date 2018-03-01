@@ -32,8 +32,9 @@ public class LaunchUtilities {
 	 */
 	public static Display getStandardDisplay() {
 		Display display = Display.getCurrent();
-		if (display == null)
+		if (display == null) {
 			display = Display.getDefault();
+		}
 
 		return display;
 	}
@@ -117,10 +118,11 @@ public class LaunchUtilities {
 			Object obj = resource[0];
 			IPath path = null;
 
-			if (obj instanceof IPath)
+			if (obj instanceof IPath) {
 				path = (IPath) resource[0];
-			else if (obj instanceof IProject)
+			} else if (obj instanceof IProject) {
 				path = ((IProject) obj).getFullPath();
+			}
 
 			if (path != null) {
 				text = path.makeRelative().toString();

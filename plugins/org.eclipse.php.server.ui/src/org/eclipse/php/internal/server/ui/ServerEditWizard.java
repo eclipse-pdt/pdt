@@ -42,10 +42,11 @@ public class ServerEditWizard extends Wizard {
 	@Override
 	public void addPages() {
 		super.addPages();
-		if (tabID != null)
+		if (tabID != null) {
 			serverPage = new ServerEditPage(server, tabID);
-		else
+		} else {
 			serverPage = new ServerEditPage(server);
+		}
 		addPage(serverPage);
 	}
 

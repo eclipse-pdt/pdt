@@ -128,13 +128,14 @@ public class PHPWorkingSetPage extends WizardPage implements IWorkingSetPage {
 			@Override
 			public void treeExpanded(TreeExpansionEvent event) {
 				final Object element = event.getElement();
-				if (fTree.getGrayed(element) == false)
+				if (fTree.getGrayed(element) == false) {
 					BusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
 						@Override
 						public void run() {
 							setSubtreeChecked(element, fTree.getChecked(element), false);
 						}
 					});
+				}
 			}
 		});
 
@@ -172,8 +173,9 @@ public class PHPWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		deselectAllButton.setLayoutData(new GridData());
 		SWTUtil.setButtonDimensionHint(deselectAllButton);
 
-		if (fWorkingSet != null)
+		if (fWorkingSet != null) {
 			fWorkingSetName.setText(fWorkingSet.getName());
+		}
 		initializeCheckedState();
 		validateInput();
 
@@ -285,8 +287,9 @@ public class PHPWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	private boolean hasCheckedElement() {
 		TreeItem[] items = fTree.getTree().getItems();
 		for (int i = 0; i < items.length; i++) {
-			if (items[i].getChecked())
+			if (items[i].getChecked()) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -294,9 +297,9 @@ public class PHPWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	private void findCheckedElements(List<Object> checkedResources, Object parent) {
 		Object[] children = fTreeContentProvider.getChildren(parent);
 		for (int i = 0; i < children.length; i++) {
-			if (fTree.getGrayed(children[i]))
+			if (fTree.getGrayed(children[i])) {
 				findCheckedElements(checkedResources, children[i]);
-			else if (fTree.getChecked(children[i])) {
+			} else if (fTree.getChecked(children[i])) {
 				checkedResources.add(children[i]);
 			}
 		}
@@ -308,10 +311,12 @@ public class PHPWorkingSetPage extends WizardPage implements IWorkingSetPage {
 			boolean state = event.getChecked();
 			fTree.setGrayed(element, false);
 			if (isExpandable(element))
+			 {
 				setSubtreeChecked(element, state, state); // only check
 			// subtree if
 			// state is set
 			// to true
+			}
 
 			updateParentState(element, state);
 			validateInput();
@@ -334,8 +339,9 @@ public class PHPWorkingSetPage extends WizardPage implements IWorkingSetPage {
 			if (state) {
 				fTree.setChecked(element, true);
 				fTree.setGrayed(element, false);
-			} else
+			} else {
 				fTree.setGrayChecked(element, false);
+			}
 			if (isExpandable(element)) {
 				setSubtreeChecked(element, state, true);
 			}
@@ -353,8 +359,9 @@ public class PHPWorkingSetPage extends WizardPage implements IWorkingSetPage {
 			}
 		}
 		Object parent = fTreeContentProvider.getParent(child);
-		if (parent == null)
+		if (parent == null) {
 			return;
+		}
 
 		boolean allSameState = true;
 		Object[] children = null;
@@ -412,8 +419,9 @@ public class PHPWorkingSetPage extends WizardPage implements IWorkingSetPage {
 				Object element1 = elements[i2];
 				if (element1 instanceof IResource) {
 					IProject project = ((IResource) element1).getProject();
-					if (!project.isAccessible())
+					if (!project.isAccessible()) {
 						elements[i2] = project;
+					}
 				}
 				if (element1 instanceof IModelElement) {
 					IScriptProject jProject = ((IModelElement) element1).getScriptProject();
@@ -426,8 +434,9 @@ public class PHPWorkingSetPage extends WizardPage implements IWorkingSetPage {
 			fTree.setCheckedElements(elements);
 			for (int i3 = 0; i3 < elements.length; i3++) {
 				Object element2 = elements[i3];
-				if (isExpandable(element2))
+				if (isExpandable(element2)) {
 					setSubtreeChecked(element2, true, true);
+				}
 
 				updateParentState(element2, true);
 			}

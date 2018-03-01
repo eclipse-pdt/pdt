@@ -184,8 +184,9 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 
 				@Override
 				public boolean visit(ReplaceEdit edit) {
-					if (edit.getLength() > 0)
+					if (edit.getLength() > 0) {
 						return rangeAdded(edit);
+					}
 					return rangeRemoved(edit);
 				}
 

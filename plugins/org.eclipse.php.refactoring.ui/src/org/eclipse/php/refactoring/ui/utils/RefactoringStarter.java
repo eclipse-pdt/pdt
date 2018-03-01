@@ -43,8 +43,9 @@ public class RefactoringStarter {
 	 */
 	public boolean activate(Refactoring refactoring, RefactoringWizard wizard, Shell parent, String dialogTitle,
 			boolean mustSaveEditors) {
-		if (!canActivate(mustSaveEditors, parent))
+		if (!canActivate(mustSaveEditors, parent)) {
 			return false;
+		}
 
 		try {
 			RefactoringWizardOpenOperation op = new RefactoringWizardOpenOperation(wizard);
@@ -82,8 +83,9 @@ public class RefactoringStarter {
 		boolean autoSave = false;
 
 		SaveFilesResult result = SaveFilesHandler.handle(null, autoSave, false, new NullProgressMonitor());
-		if (!result.isAccepted())
+		if (!result.isAccepted()) {
 			return false;
+		}
 
 		return true;
 

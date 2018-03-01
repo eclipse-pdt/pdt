@@ -52,17 +52,22 @@ public class PHPManualConfig {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (super.equals(obj))
+		if (super.equals(obj)) {
 			return true;
-		if (!(obj instanceof PHPManualConfig))
+		}
+		if (!(obj instanceof PHPManualConfig)) {
 			return false;
+		}
 		PHPManualConfig other = (PHPManualConfig) obj;
-		if (!getLabel().equals(other.getLabel()))
+		if (!getLabel().equals(other.getLabel())) {
 			return false;
-		if (!getUrl().equals(other.getUrl()))
+		}
+		if (!getUrl().equals(other.getUrl())) {
 			return false;
-		if (!getExtension().equals(other.getExtension()))
+		}
+		if (!getExtension().equals(other.getExtension())) {
 			return false;
+		}
 		return true;
 	}
 

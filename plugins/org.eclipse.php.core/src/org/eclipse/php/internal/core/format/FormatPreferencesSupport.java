@@ -176,8 +176,9 @@ public class FormatPreferencesSupport implements IFormatterCommonPreferences {
 					verifyListening();
 				}
 			} finally {
-				if (editorModel != null)
+				if (editorModel != null) {
 					editorModel.releaseFromRead();
+				}
 			}
 		}
 

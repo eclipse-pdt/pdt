@@ -64,8 +64,9 @@ public class PharArchiveFile implements IArchive {
 
 	@Override
 	public void close() throws IOException {
-		if (pharFile != null)
+		if (pharFile != null) {
 			pharFile.close();
+		}
 	}
 
 	@Override

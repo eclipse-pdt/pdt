@@ -31,7 +31,9 @@ public class PHPSearchFieldNameMatch extends FieldNameMatch implements IElementN
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == this)
+		 {
 			return true; // avoid unnecessary calls for identical objects
+		}
 		if (obj instanceof FieldNameMatch) {
 			FieldNameMatch match = (FieldNameMatch) obj;
 			if (this.field == null) {
@@ -54,15 +56,17 @@ public class PHPSearchFieldNameMatch extends FieldNameMatch implements IElementN
 
 	@Override
 	public int hashCode() {
-		if (this.field == null)
+		if (this.field == null) {
 			return this.modifiers;
+		}
 		return this.field.hashCode();
 	}
 
 	@Override
 	public String toString() {
-		if (this.field == null)
+		if (this.field == null) {
 			return super.toString();
+		}
 		return this.field.toString();
 	}
 

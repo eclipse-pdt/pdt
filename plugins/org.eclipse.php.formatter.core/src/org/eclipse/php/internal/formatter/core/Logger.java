@@ -54,8 +54,9 @@ public class Logger {
 	 */
 	protected static void _log(int level, String message, Throwable exception) {
 		if (level == OK_DEBUG || level == INFO_DEBUG || level == WARNING_DEBUG || level == ERROR_DEBUG) {
-			if (!isDebugging())
+			if (!isDebugging()) {
 				return;
+			}
 		}
 
 		int severity = IStatus.OK;
@@ -76,8 +77,10 @@ public class Logger {
 		Status statusObj = new Status(severity, PLUGIN_ID, severity, message, exception);
 		Bundle bundle = Platform.getBundle(PLUGIN_ID);
 		if (bundle != null)
+		 {
 			Platform.getLog(bundle).log(statusObj);
 		// debugMSG(statusObj.toString());
+		}
 
 	}
 
@@ -95,8 +98,9 @@ public class Logger {
 			message = (message != null) ? message : "null"; //$NON-NLS-1$
 			Status statusObj = new Status(IStatus.OK, PLUGIN_ID, IStatus.OK, message, exception);
 			Bundle bundle = Platform.getBundle(PLUGIN_ID);
-			if (bundle != null)
+			if (bundle != null) {
 				Platform.getLog(bundle).log(statusObj);
+			}
 		}
 	}
 
@@ -114,8 +118,9 @@ public class Logger {
 	 * @return true if tracing category, false otherwise
 	 */
 	public static boolean isTracing(String category) {
-		if (!isDebugging())
+		if (!isDebugging()) {
 			return false;
+		}
 
 		String traceFilter = Platform.getDebugOption(PLUGIN_ID + TRACEFILTER_LOCATION);
 		if (traceFilter != null) {

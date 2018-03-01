@@ -52,8 +52,9 @@ public class PHPHyperlinkDetector extends AbstractHyperlinkDetector {
 		int offset = region.getOffset();
 		try {
 			IRegion wordRegion = findWord(document, offset, namespacesSupported);
-			if (wordRegion == null)
+			if (wordRegion == null) {
 				return null;
+			}
 
 			try {
 				String text = document.get(wordRegion.getOffset(), wordRegion.getLength());

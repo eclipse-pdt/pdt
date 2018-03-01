@@ -198,8 +198,9 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 			} else {
 				IAction openAction = fNavigateActionGroup.getOpenAction();
 				if (openAction != null && openAction.isEnabled()
-						&& OpenStrategy.getOpenMethod() == OpenStrategy.DOUBLE_CLICK)
+						&& OpenStrategy.getOpenMethod() == OpenStrategy.DOUBLE_CLICK) {
 					return;
+				}
 				if (selection instanceof ITreeSelection) {
 					TreePath[] paths = ((ITreeSelection) selection).getPathsFor(element);
 					for (int i = 0; i < paths.length; i++) {

@@ -106,8 +106,9 @@ public final class PHPExeUtil {
 		}
 
 		private void build(String version) {
-			if (version == null)
+			if (version == null) {
 				return;
+			}
 			String[] parts = version.split("\\."); //$NON-NLS-1$
 			try {
 				major = Integer.valueOf(parts[0]);
@@ -175,8 +176,9 @@ public final class PHPExeUtil {
 	 */
 	public synchronized static PHPExeInfo getPHPInfo(final File executableFile, boolean reload) throws PHPExeException {
 		PHPExeInfo phpInfo = phpInfos.get(executableFile);
-		if (phpInfo != null && !reload)
+		if (phpInfo != null && !reload) {
 			return phpInfo;
+		}
 		String version = null, sapiType = null, name = null;
 		String exePath = executableFile == null ? "<null>" //$NON-NLS-1$
 				: executableFile.getAbsolutePath();
@@ -232,12 +234,14 @@ public final class PHPExeUtil {
 		PHPVersion phpVersion = new PHPVersion(phpExeItem);
 		File exec = phpExeItem.getExecutable();
 		try {
-			if (phpVersion.getMajor() >= 5)
+			if (phpVersion.getMajor() >= 5) {
 				return PHPExeUtil.exec(exec.getAbsolutePath(), phpExeItem.isLoadDefaultINI() ? null : "-n", "-c", //$NON-NLS-1$ //$NON-NLS-2$
 						getINIFile(exec).getAbsolutePath(), "-i"); //$NON-NLS-1$
-			else
+			}
+			else {
 				return PHPExeUtil.exec(phpExeItem.getExecutable().getAbsolutePath(), "-c", //$NON-NLS-1$
 						getINIFile(exec).getAbsolutePath(), "-i"); //$NON-NLS-1$
+			}
 		} catch (IOException e) {
 			Logger.logException(e);
 			return ""; //$NON-NLS-1$
@@ -257,12 +261,14 @@ public final class PHPExeUtil {
 		PHPVersion phpVersion = new PHPVersion(phpExeItem);
 		File exec = phpExeItem.getExecutable();
 		try {
-			if (phpVersion.getMajor() >= 5)
+			if (phpVersion.getMajor() >= 5) {
 				result = PHPExeUtil.exec(exec.getAbsolutePath(), phpExeItem.isLoadDefaultINI() ? null : "-n", "-c", //$NON-NLS-1$ //$NON-NLS-2$
 						getINIFile(exec).getAbsolutePath(), "-m"); //$NON-NLS-1$
-			else
+			}
+			else {
 				result = PHPExeUtil.exec(phpExeItem.getExecutable().getAbsolutePath(), "-c", //$NON-NLS-1$
 						getINIFile(exec).getAbsolutePath(), "-m"); //$NON-NLS-1$
+			}
 		} catch (IOException e) {
 			// empty list
 			return modules;
@@ -275,8 +281,9 @@ public final class PHPExeUtil {
 				currentGroup = line;
 				continue;
 			}
-			if (!line.isEmpty())
+			if (!line.isEmpty()) {
 				modules.add(new PHPModuleInfo(line, currentGroup));
+			}
 		}
 		scanner.close();
 		return modules;
@@ -292,9 +299,11 @@ public final class PHPExeUtil {
 	 */
 	public static boolean hasModule(PHPexeItem phpExeItem, String moduleName) {
 		List<PHPModuleInfo> modules = getModules(phpExeItem);
-		for (PHPModuleInfo module : modules)
-			if (module.getName().equalsIgnoreCase(moduleName))
+		for (PHPModuleInfo module : modules) {
+			if (module.getName().equalsIgnoreCase(moduleName)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -309,9 +318,11 @@ public final class PHPExeUtil {
 	 */
 	public static boolean hasModule(PHPexeItem phpExeItem, String moduleName, String groupName) {
 		List<PHPModuleInfo> modules = getModules(phpExeItem);
-		for (PHPModuleInfo module : modules)
-			if (module.getName().equalsIgnoreCase(moduleName) && module.getGroupName().equalsIgnoreCase(groupName))
+		for (PHPModuleInfo module : modules) {
+			if (module.getName().equalsIgnoreCase(moduleName) && module.getGroupName().equalsIgnoreCase(groupName)) {
 				return true;
+			}
+		}
 		return false;
 	}
 

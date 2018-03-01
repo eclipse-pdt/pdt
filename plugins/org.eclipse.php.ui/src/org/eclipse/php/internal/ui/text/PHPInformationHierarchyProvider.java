@@ -38,8 +38,9 @@ public class PHPInformationHierarchyProvider implements IInformationProvider, II
 
 	public PHPInformationHierarchyProvider(IEditorPart editor) {
 		fUseCodeResolve = false;
-		if (editor instanceof PHPStructuredEditor)
+		if (editor instanceof PHPStructuredEditor) {
 			fEditor = (PHPStructuredEditor) editor;
+		}
 	}
 
 	public PHPInformationHierarchyProvider(IEditorPart editor, boolean useCodeResolve) {
@@ -54,10 +55,11 @@ public class PHPInformationHierarchyProvider implements IInformationProvider, II
 	public IRegion getSubject(ITextViewer textViewer, int offset) {
 		if (textViewer != null && fEditor != null) {
 			IRegion region = ScriptWordFinder.findWord(textViewer.getDocument(), offset);
-			if (region != null)
+			if (region != null) {
 				return region;
-			else
+			} else {
 				return new Region(offset, 0);
+			}
 		}
 		return null;
 	}
@@ -80,8 +82,9 @@ public class PHPInformationHierarchyProvider implements IInformationProvider, II
 	 */
 	@Override
 	public Object getInformation2(ITextViewer textViewer, IRegion subject) {
-		if (fEditor == null)
+		if (fEditor == null) {
 			return null;
+		}
 
 		if (fUseCodeResolve) {
 			IModelElement inputModelElement = fEditor.getModelElement();
