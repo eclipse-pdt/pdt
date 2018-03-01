@@ -207,8 +207,10 @@ public class XDebugTextHover extends PHPDebugTextHover {
 
 	@Nullable
 	protected DBGpVariable getVariable(String expression) {
-		DBGpVariable variable = null;
 		DBGpStackFrame frame = (DBGpStackFrame) getFrame();
+		if (frame == null)
+			return null;
+		DBGpVariable variable = null;
 		if (isStack(expression)) {
 			variable = getByProperty(frame, expression);
 		} else {
