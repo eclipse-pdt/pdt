@@ -102,7 +102,7 @@ public class ASTParser {
 
 	public static ASTParser newParser(PHPVersion version, ISourceModule sourceModule) {
 		if (sourceModule == null) {
-			throw new IllegalStateException("ASTParser - Can't parser with null ISourceModule"); //$NON-NLS-1$
+			throw new IllegalStateException("ASTParser - Can't parse with null ISourceModule"); //$NON-NLS-1$
 		}
 		try {
 			final ASTParser parser = new ASTParser(new StringReader(""), //$NON-NLS-1$

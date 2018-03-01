@@ -545,7 +545,7 @@ public class PHPDebugPlugin extends Plugin {
 
 	public static String getCurrentDebuggerId(IProject project) {
 		if (project != null) {
-			PHPVersion phpVersion = ProjectOptions.getPHPVersion(project);
+			PHPVersion phpVersion = ProjectOptions.getPHPVersion(project, null);
 			if (phpVersion != null) {
 				return getCurrentDebuggerId(phpVersion);
 			}
@@ -574,7 +574,7 @@ public class PHPDebugPlugin extends Plugin {
 					return PHPexes.getInstance().getItem(phpExe);
 				}
 			}
-			PHPVersion phpVersion = ProjectOptions.getPHPVersion(project);
+			PHPVersion phpVersion = ProjectOptions.getPHPVersion(project, null);
 			if (phpVersion != null) {
 				return getPHPexeItem(phpVersion);
 			}

@@ -44,10 +44,24 @@ public class ProjectOptions {
 		return getPHPVersion(getProject(modelElement));
 	}
 
+	public static PHPVersion getPHPVersion(IProject project, PHPVersion defaultPHPVersion) {
+		if (project != null) {
+			PHPVersion version = PHPVersion
+					.byAlias(CorePreferencesSupport.getInstance().getPreferencesValue(Keys.PHP_VERSION, null, project));
+			if (version != null) {
+				return version;
+			}
+		}
+		return defaultPHPVersion;
+	}
+
 	public static PHPVersion getPHPVersion(IProject project) {
 		if (project != null) {
-			return PHPVersion
+			PHPVersion version = PHPVersion
 					.byAlias(CorePreferencesSupport.getInstance().getPreferencesValue(Keys.PHP_VERSION, null, project));
+			if (version != null) {
+				return version;
+			}
 		}
 		return getDefaultPHPVersion();
 	}
