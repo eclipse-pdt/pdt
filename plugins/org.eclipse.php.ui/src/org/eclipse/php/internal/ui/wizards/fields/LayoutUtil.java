@@ -49,21 +49,25 @@ public class LayoutUtil {
 			final int marginWidth, final int marginHeight) {
 		int nCulumns = getNumberOfColumns(editors);
 		final Control[][] controls = new Control[editors.length][];
-		for (int i = 0; i < editors.length; i++)
+		for (int i = 0; i < editors.length; i++) {
 			controls[i] = editors[i].doFillIntoGrid(parent, nCulumns);
+		}
 		if (labelOnTop) {
 			nCulumns--;
 			modifyLabelSpans(controls, nCulumns);
 		}
 		GridLayout layout = null;
-		if (parent.getLayout() instanceof GridLayout)
+		if (parent.getLayout() instanceof GridLayout) {
 			layout = (GridLayout) parent.getLayout();
-		else
+		} else {
 			layout = new GridLayout();
-		if (marginWidth != SWT.DEFAULT)
+		}
+		if (marginWidth != SWT.DEFAULT) {
 			layout.marginWidth = marginWidth;
-		if (marginHeight != SWT.DEFAULT)
+		}
+		if (marginHeight != SWT.DEFAULT) {
 			layout.marginHeight = marginHeight;
+		}
 		layout.numColumns = nCulumns;
 		parent.setLayout(layout);
 	}
@@ -80,14 +84,16 @@ public class LayoutUtil {
 	 */
 	public static int getNumberOfColumns(final DialogField[] editors) {
 		int nCulumns = 0;
-		for (int i = 0; i < editors.length; i++)
+		for (int i = 0; i < editors.length; i++) {
 			nCulumns = Math.max(editors[i].getNumberOfControls(), nCulumns);
+		}
 		return nCulumns;
 	}
 
 	private static void modifyLabelSpans(final Control[][] controls, final int nCulumns) {
-		for (int i = 0; i < controls.length; i++)
+		for (int i = 0; i < controls.length; i++) {
 			setHorizontalSpan(controls[i][0], nCulumns);
+		}
 	}
 
 	/**
@@ -95,8 +101,9 @@ public class LayoutUtil {
 	 */
 	public static void setHeightHint(final Control control, final int heightHint) {
 		final Object ld = control.getLayoutData();
-		if (ld instanceof GridData)
+		if (ld instanceof GridData) {
 			((GridData) ld).heightHint = heightHint;
+		}
 	}
 
 	/**
@@ -105,8 +112,9 @@ public class LayoutUtil {
 	 */
 	public static void setHorizontalGrabbing(final Control control) {
 		final Object ld = control.getLayoutData();
-		if (ld instanceof GridData)
+		if (ld instanceof GridData) {
 			((GridData) ld).grabExcessHorizontalSpace = true;
+		}
 	}
 
 	/**
@@ -114,8 +122,9 @@ public class LayoutUtil {
 	 */
 	public static void setHorizontalIndent(final Control control, final int horizontalIndent) {
 		final Object ld = control.getLayoutData();
-		if (ld instanceof GridData)
+		if (ld instanceof GridData) {
 			((GridData) ld).horizontalIndent = horizontalIndent;
+		}
 	}
 
 	/**
@@ -123,9 +132,9 @@ public class LayoutUtil {
 	 */
 	public static void setHorizontalSpan(final Control control, final int span) {
 		final Object ld = control.getLayoutData();
-		if (ld instanceof GridData)
+		if (ld instanceof GridData) {
 			((GridData) ld).horizontalSpan = span;
-		else if (span != 1) {
+		} else if (span != 1) {
 			final GridData gd = new GridData();
 			gd.horizontalSpan = span;
 			control.setLayoutData(gd);
@@ -137,8 +146,9 @@ public class LayoutUtil {
 	 */
 	public static void setWidthHint(final Control control, final int widthHint) {
 		final Object ld = control.getLayoutData();
-		if (ld instanceof GridData)
+		if (ld instanceof GridData) {
 			((GridData) ld).widthHint = widthHint;
+		}
 	}
 
 }

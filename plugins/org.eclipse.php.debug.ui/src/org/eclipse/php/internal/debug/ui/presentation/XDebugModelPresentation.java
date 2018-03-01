@@ -75,8 +75,9 @@ public class XDebugModelPresentation extends PHPModelPresentation implements IDe
 		if (target instanceof DBGpTarget || target instanceof DBGpMultiSessionTarget) {
 			name = PHPDebugUIMessages.PHPModelPresentation_PHP_Applications;
 			try {
-				if (!target.hasThreads() && !target.isTerminated())
+				if (!target.hasThreads() && !target.isTerminated()) {
 					name += PHPDebugUIMessages.XDebugModelPresentation_Waiting;
+				}
 			} catch (DebugException e) {
 			}
 		}

@@ -57,8 +57,9 @@ public class XMLElement {
 			@SuppressWarnings("null")
 			Node node = nodelist.item(j);
 			String s1 = node.getNodeName().trim();
-			if (s1.equals(s))
+			if (s1.equals(s)) {
 				return factory.newInstance((Element) node);
+			}
 		}
 
 		return createElement(s);
@@ -71,8 +72,9 @@ public class XMLElement {
 			@SuppressWarnings("null")
 			Node node = nodelist.item(k);
 			String s1 = node.getNodeName().trim();
-			if (s1.equals(s) && k == i)
+			if (s1.equals(s) && k == i) {
 				return factory.newInstance((Element) node);
+			}
 		}
 
 		return createElement(s);
@@ -80,8 +82,9 @@ public class XMLElement {
 
 	public String getAttributeValue(String s) {
 		Attr attr = xmlElement.getAttributeNode(s);
-		if (attr != null)
+		if (attr != null) {
 			return attr.getValue();
+		}
 
 		return null;
 	}
@@ -110,12 +113,15 @@ public class XMLElement {
 
 	protected static String getElementValue(Element element) {
 		String s = element.getNodeValue();
-		if (s != null)
+		if (s != null) {
 			return s;
+		}
 		NodeList nodelist = element.getChildNodes();
-		for (int i = 0; i < nodelist.getLength(); i++)
-			if (nodelist.item(i) instanceof Text)
+		for (int i = 0; i < nodelist.getLength(); i++) {
+			if (nodelist.item(i) instanceof Text) {
 				return ((Text) nodelist.item(i)).getData();
+			}
+		}
 
 		return null;
 	}
@@ -127,8 +133,9 @@ public class XMLElement {
 			@SuppressWarnings("null")
 			Node node = nodelist.item(j);
 			String s1 = node.getNodeName().trim();
-			if (s1.equals(s))
+			if (s1.equals(s)) {
 				return (Element) node;
+			}
 		}
 
 		return null;
@@ -136,12 +143,14 @@ public class XMLElement {
 
 	public String getSubElementValue(String s) {
 		Element element = getSubElement(s);
-		if (element == null)
+		if (element == null) {
 			return null;
+		}
 
 		String value = getElementValue(element);
-		if (value == null)
+		if (value == null) {
 			return null;
+		}
 
 		return value.trim();
 	}
@@ -173,10 +182,11 @@ public class XMLElement {
 
 	public void setAttributeValue(String s, String s1) {
 		Attr attr = xmlElement.getAttributeNode(s);
-		if (attr == null)
+		if (attr == null) {
 			attr = addAttribute(s, s1);
-		else
+		} else {
 			attr.setValue(s1);
+		}
 	}
 
 	void setElement(Element element) {
@@ -190,12 +200,13 @@ public class XMLElement {
 			return;
 		}
 		NodeList nodelist = element.getChildNodes();
-		for (int i = 0; i < nodelist.getLength(); i++)
+		for (int i = 0; i < nodelist.getLength(); i++) {
 			if (nodelist.item(i) instanceof Text) {
 				Text text = (Text) nodelist.item(i);
 				text.setData(value);
 				return;
 			}
+		}
 
 		return;
 	}
@@ -228,11 +239,12 @@ public class XMLElement {
 			NodeList nodelist = xmlElement.getChildNodes();
 			int i = nodelist == null ? 0 : nodelist.getLength();
 			if (i > 0) {
-				for (int j = 0; j < i; j++)
+				for (int j = 0; j < i; j++) {
 					if (nodelist.item(j) instanceof Text) {
 						((Text) nodelist.item(j)).setData(s);
 						return;
 					}
+				}
 			} else {
 				xmlElement.appendChild(factory.document.createTextNode(s));
 			}
@@ -290,11 +302,13 @@ public class XMLElement {
 	}
 
 	private static boolean elementsAreEquivalent(Element element, Element otherElement) {
-		if (element == otherElement)
+		if (element == otherElement) {
 			return true;
+		}
 
-		if (!element.getNodeName().equals(otherElement.getNodeName()))
+		if (!element.getNodeName().equals(otherElement.getNodeName())) {
 			return false;
+		}
 
 		if (element.hasChildNodes()) {
 			if (otherElement.hasChildNodes() && attributesAreEqual(element, otherElement)) {
@@ -305,20 +319,24 @@ public class XMLElement {
 					Node node = nextNonTextNode(element.getFirstChild());
 					Node otherNode = nextNonTextNode(otherElement.getFirstChild());
 					while (node != null) {
-						if (otherNode == null)
+						if (otherNode == null) {
 							return false;
+						}
 						short nextNodeType = node.getNodeType();
-						if (nextNodeType != otherNode.getNodeType())
+						if (nextNodeType != otherNode.getNodeType()) {
 							return false;
+						}
 						// If elements, compare
 						if (nextNodeType == Node.ELEMENT_NODE) {
-							if (!elementsAreEquivalent((Element) node, (Element) otherNode))
+							if (!elementsAreEquivalent((Element) node, (Element) otherNode)) {
 								return false;
+							}
 						}
 						// Else if comment, compare
 						else if (nextNodeType == Node.COMMENT_NODE) {
-							if (!nodeValuesAreEqual(node, otherNode))
+							if (!nodeValuesAreEqual(node, otherNode)) {
 								return false;
+							}
 						}
 						// Else punt on other node types
 						else {
@@ -328,8 +346,9 @@ public class XMLElement {
 						otherNode = nextNonTextNode(otherNode.getNextSibling());
 					}
 					// If also at end of other children, return equal
-					if (otherNode == null)
+					if (otherNode == null) {
 						return true;
+					}
 				}
 			}
 		} else if (!otherElement.hasChildNodes()) {
@@ -339,8 +358,9 @@ public class XMLElement {
 	}
 
 	private static Node nextNonTextNode(Node node) {
-		while (node != null && node.getNodeType() == Node.TEXT_NODE)
+		while (node != null && node.getNodeType() == Node.TEXT_NODE) {
 			node = node.getNextSibling();
+		}
 		return node;
 	}
 
@@ -353,16 +373,18 @@ public class XMLElement {
 		}
 
 		if (attrs != null && otherAttrs != null && attrs.getLength() == otherAttrs.getLength()) {
-			if (attrs.getLength() == 0)
+			if (attrs.getLength() == 0) {
 				// Return comparison of element values if there are no
 				// attributes
 				return nodeValuesAreEqual(element, otherElement);
+			}
 
 			for (int i = 0; i < attrs.getLength(); i++) {
 				Node attr = attrs.item(i);
 				Node otherAttr = otherAttrs.getNamedItem(attr.getNodeName());
-				if (!nodeValuesAreEqual(attr, otherAttr))
+				if (!nodeValuesAreEqual(attr, otherAttr)) {
 					return false;
+				}
 			}
 			return true;
 		}
@@ -373,10 +395,12 @@ public class XMLElement {
 		String value = node.getNodeValue();
 		String otherValue = otherNode.getNodeValue();
 		if (value != null && otherValue != null) {
-			if (value.equals(otherValue))
+			if (value.equals(otherValue)) {
 				return true;
-		} else if (value == null && otherValue == null)
+			}
+		} else if (value == null && otherValue == null) {
 			return true;
+		}
 		return false;
 	}
 }

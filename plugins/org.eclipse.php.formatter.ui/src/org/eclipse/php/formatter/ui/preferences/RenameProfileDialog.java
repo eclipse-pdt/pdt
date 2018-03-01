@@ -125,8 +125,9 @@ public class RenameProfileDialog extends StatusDialog {
 
 	@Override
 	protected void okPressed() {
-		if (!getStatus().isOK())
+		if (!getStatus().isOK()) {
 			return;
+		}
 		fRenamedProfile = fProfile.rename(fNameText.getText(), fManager);
 		super.okPressed();
 	}

@@ -79,10 +79,13 @@ public abstract class AbstractPHPServerRunner implements IPHPServerRunner {
 
 	private static boolean needsQuoting(String s) {
 		int len = s.length();
-		if (len == 0) // empty string has to be quoted
+		if (len == 0) {
 			return true;
-		if ("\"\"".equals(s)) //$NON-NLS-1$
+		}
+		if ("\"\"".equals(s))
+		 {
 			return false; // empty quotes must not be quoted again
+		}
 		for (int i = 0; i < len; i++) {
 			switch (s.charAt(i)) {
 			case ' ':
@@ -96,8 +99,9 @@ public abstract class AbstractPHPServerRunner implements IPHPServerRunner {
 	}
 
 	private static String winQuote(String s) {
-		if (!needsQuoting(s))
+		if (!needsQuoting(s)) {
 			return s;
+		}
 		s = s.replaceAll("([\\\\]*)\"", "$1$1\\\\\""); //$NON-NLS-1$ //$NON-NLS-2$
 		s = s.replaceAll("([\\\\]*)\\z", "$1$1"); //$NON-NLS-1$ //$NON-NLS-2$
 		return "\"" + s + "\""; //$NON-NLS-1$ //$NON-NLS-2$

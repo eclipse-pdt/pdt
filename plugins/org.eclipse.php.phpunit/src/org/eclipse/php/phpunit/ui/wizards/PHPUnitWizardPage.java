@@ -173,10 +173,11 @@ public abstract class PHPUnitWizardPage extends WizardPage {
 		final StatusInfo status = new StatusInfo();
 		final String updatedClassName = PHPUnitValidator.validateClassName(getClassName(),
 				fContainer != null ? fContainer.getProject() : null, status);
-		if ("".equals(updatedClassName) || updatedClassName.equalsIgnoreCase(fClassNameProposal)) //$NON-NLS-1$
+		if ("".equals(updatedClassName) || updatedClassName.equalsIgnoreCase(fClassNameProposal)) {
 			fClassNameManual = false;
-		else
+		} else {
 			fClassNameManual = true;
+		}
 		fClassNameStatus = status;
 		fFileNameProposal = getClassName() != null ? getClassName() + DEFAULT_EXTENSION : ""; //$NON-NLS-1$
 		if (!fFileNameManual && fFileNameDialogField != null) {
@@ -187,8 +188,9 @@ public abstract class PHPUnitWizardPage extends WizardPage {
 	}
 
 	private void classNameFieldChanged(final DialogField field) {
-		if (field == fClassNameDialogField)
+		if (field == fClassNameDialogField) {
 			classNameChanged();
+		}
 		updateStatus(getStatusList());
 	}
 
@@ -327,8 +329,9 @@ public abstract class PHPUnitWizardPage extends WizardPage {
 	}
 
 	private void fileNameFieldChanged(final DialogField field) {
-		if (field == fFileNameDialogField)
+		if (field == fFileNameDialogField) {
 			fileNameChanged();
+		}
 		updateStatus(getStatusList());
 	}
 
@@ -549,11 +552,14 @@ public abstract class PHPUnitWizardPage extends WizardPage {
 		fSuperClass = (IType) PHPUnitValidator.validateElement(element,
 				fContainer != null ? fContainer.getProject() : null, false, IModelElement.TYPE, status);
 		final String superClassName = fSuperClass != null ? fSuperClass.getElementName() : ""; //$NON-NLS-1$
-		if (fSuperClassFileNameLabel != null && !fSuperClassFileNameLabel.isDisposed())
+		if (fSuperClassFileNameLabel != null && !fSuperClassFileNameLabel.isDisposed()) {
 			fSuperClassFileNameLabel.setText(superClassName);
+		}
 		fSuperClassStatus = status;
-		if ("".equals(getSuperClassName())) //$NON-NLS-1$
+		if ("".equals(getSuperClassName()))
+		 {
 			status.setError(PHPUnitMessages.PHPUnitWizardPage_20); // higher
+		}
 		// severity
 		updateStatus(getStatusList());
 	}

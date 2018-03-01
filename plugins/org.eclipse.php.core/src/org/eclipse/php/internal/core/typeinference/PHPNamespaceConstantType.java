@@ -128,20 +128,26 @@ public class PHPNamespaceConstantType implements IEvaluatedType {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		PHPNamespaceConstantType other = (PHPNamespaceConstantType) obj;
-		if (!namespace.equals(other.namespace))
+		if (!namespace.equals(other.namespace)) {
 			return false;
+		}
 		if (constantName == null) {
-			if (other.constantName != null)
+			if (other.constantName != null) {
 				return false;
-		} else if (!constantName.equals(other.constantName))
+			}
+		} else if (!constantName.equals(other.constantName)) {
 			return false;
+		}
 		return true;
 	}
 }

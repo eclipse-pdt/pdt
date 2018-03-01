@@ -94,8 +94,9 @@ public class CharArrayBuffer {
 		fBuffer = new char[fSize][];
 		fRanges = new int[fSize][];
 		fEnd = 0;
-		if (first != null)
+		if (first != null) {
 			append(first, 0, first.length);
+		}
 	}
 
 	/**
@@ -115,8 +116,9 @@ public class CharArrayBuffer {
 	 *            - a char array which is appended to the end of the buffer.
 	 */
 	public CharArrayBuffer append(char[] src) {
-		if (src != null)
+		if (src != null) {
 			append(src, 0, src.length);
+		}
 		return this;
 	}
 
@@ -135,16 +137,20 @@ public class CharArrayBuffer {
 	 *             - if arguments specify an array index out of bounds.
 	 */
 	public CharArrayBuffer append(char[] src, int start, int length) {
-		if (start < 0)
+		if (start < 0) {
 			throw new ArrayIndexOutOfBoundsException();
-		if (length < 0)
+		}
+		if (length < 0) {
 			throw new ArrayIndexOutOfBoundsException();
+		}
 		if (src != null) {
 			int srcLength = src.length;
-			if (start > srcLength)
+			if (start > srcLength) {
 				throw new ArrayIndexOutOfBoundsException();
-			if (length + start > srcLength)
+			}
+			if (length + start > srcLength) {
 				throw new ArrayIndexOutOfBoundsException();
+			}
 			/** do length check here to allow exceptions to be thrown */
 			if (length > 0) {
 				if (fEnd == fSize) {
@@ -180,8 +186,9 @@ public class CharArrayBuffer {
 	 *            - a char array which is appended to the end of the buffer.
 	 */
 	public CharArrayBuffer append(String src) {
-		if (src != null)
+		if (src != null) {
 			append(src.toCharArray(), 0, src.length());
+		}
 		return this;
 	}
 
@@ -190,13 +197,15 @@ public class CharArrayBuffer {
 	 * nothing has been put in the buffer.
 	 */
 	public char[] getContents() {
-		if (fEnd == 0)
+		if (fEnd == 0) {
 			return null;
+		}
 
 		// determine the size of the array
 		int size = 0;
-		for (int i = 0; i < fEnd; i++)
+		for (int i = 0; i < fEnd; i++) {
 			size += fRanges[i][1];
+		}
 
 		if (size > 0) {
 			char[] result = new char[size];

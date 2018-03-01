@@ -60,8 +60,9 @@ public class ElementImplForPHP extends ElementStyleImpl implements IAdaptable, I
 	@Override
 	public Node cloneNode(boolean deep) {
 		ElementImpl cloned = new ElementImplForPHP(this);
-		if (deep)
+		if (deep) {
 			cloneChildNodes(cloned, deep);
+		}
 		return cloned;
 	}
 

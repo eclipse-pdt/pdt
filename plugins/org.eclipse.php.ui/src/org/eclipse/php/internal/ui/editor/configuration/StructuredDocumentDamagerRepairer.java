@@ -115,8 +115,9 @@ public class StructuredDocumentDamagerRepairer extends DefaultDamagerRepairer {
 	@Override
 	public void setDocument(IDocument document) {
 		super.setDocument(document);
-		if (fProvider instanceof AbstractLineStyleProvider)
+		if (fProvider instanceof AbstractLineStyleProvider) {
 			((AbstractLineStyleProvider) fProvider).setDocument((IStructuredDocument) document);
+		}
 	}
 
 }

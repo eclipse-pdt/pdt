@@ -52,8 +52,9 @@ public class OpenCoverageAction extends Action {
 		if (selection instanceof IStructuredSelection) {
 			final IStructuredSelection sSelection = (IStructuredSelection) selection;
 			element = sSelection.getFirstElement();
-		} else
+		} else {
 			element = null;
+		}
 	}
 
 }

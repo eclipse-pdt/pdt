@@ -80,8 +80,9 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor imple
 		try {
 			pm.beginTask(PHPRefactoringCoreMessages.getString("RenameFolderProcessor.RenamingFile"), 100); //$NON-NLS-1$
 
-			if (pm.isCanceled())
+			if (pm.isCanceled()) {
 				throw new OperationCanceledException();
+			}
 
 			if (getUpdateReferences()) {
 				createRenameTextChanges(pm, rootChange);
@@ -120,8 +121,9 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor imple
 				dest.removeLastSegments(0), oldName, fNewElementName);
 		rootChange.add(confChange);
 
-		if (pm.isCanceled())
+		if (pm.isCanceled()) {
 			throw new OperationCanceledException();
+		}
 
 		createFileRenameChange(rootChange);
 		if (resource instanceof IProject) {
@@ -242,8 +244,9 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor imple
 			pm.beginTask(RenameClassProcessor.RENAME_IS_PROCESSING, 1);
 			pm.setTaskName(RenameClassProcessor.CREATING_MODIFICATIONS_LABEL);
 
-			if (pm.isCanceled())
+			if (pm.isCanceled()) {
 				throw new OperationCanceledException();
+			}
 
 			// get target parameters
 			String newElementName = getNewElementName();
@@ -260,8 +263,9 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor imple
 					// aggregate the changes identifiers
 					program.accept(rename);
 
-					if (pm.isCanceled())
+					if (pm.isCanceled()) {
 						throw new OperationCanceledException();
+					}
 
 					pm.worked(1);
 

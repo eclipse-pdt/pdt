@@ -404,8 +404,9 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 
 	@Override
 	protected void updateButtonsEnableState(IStatus status) {
-		if (okButton != null && !okButton.isDisposed() && name.getText().trim().length() != 0)
+		if (okButton != null && !okButton.isDisposed() && name.getText().trim().length() != 0) {
 			okButton.setEnabled(!status.matches(IStatus.ERROR));
+		}
 	}
 
 	private String detectCHMLanguageSuffix(String chmFile) {

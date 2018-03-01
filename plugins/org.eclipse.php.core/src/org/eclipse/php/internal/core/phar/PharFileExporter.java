@@ -62,8 +62,9 @@ public class PharFileExporter extends AbstractFileExporter {
 	}
 
 	private void write(PharAchiveOutputEntry entry, File file) throws IOException, CoreException {
-		if (exportedField.contains(file))
+		if (exportedField.contains(file)) {
 			return;
+		}
 		exportedField.add(file);
 		// final URI location = contents.getLocationURI();
 		if (!file.exists()) {

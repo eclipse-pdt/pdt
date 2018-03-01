@@ -413,10 +413,13 @@ public abstract class lr_parser {
 
 	  System.err.print(message);
       System.err.flush();
-      if (info instanceof Symbol)
-    	  if (((Symbol)info).left != -1)
-    		  System.err.println(" at character " + ((Symbol)info).left + " of input");
-      else System.err.println("");
+      if (info instanceof Symbol) {
+		if (((Symbol)info).left != -1) {
+			System.err.println(" at character " + ((Symbol)info).left + " of input");
+		} else {
+			System.err.println("");
+		}
+	}
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
@@ -441,7 +444,7 @@ public abstract class lr_parser {
   };
   protected void report_expected_token_ids(){
 	  List<Integer> ids = expected_token_ids();
-	  LinkedList<String> list = new LinkedList<String>();
+	  LinkedList<String> list = new LinkedList<>();
 	  for (Integer expected : ids){
 		  list.add(symbl_name_from_id(expected));
 	  }
@@ -456,8 +459,9 @@ public abstract class lr_parser {
 	  Field[] fields = getSymbolContainer().getFields();
 	  for(Field f : fields){
 		  try {
-			if (f.getInt(null)==id)
-			  return f.getName();
+			if (f.getInt(null)==id) {
+				return f.getName();
+			}
 		} catch (IllegalArgumentException e) {
 			//e.printStackTrace();
 		} catch (IllegalAccessException e) {
@@ -471,12 +475,16 @@ public abstract class lr_parser {
    * @return list of integer (non)temrinal ids
    */
   public List<Integer> expected_token_ids(){
-	  List<Integer> ret = new LinkedList<Integer>();
+	  List<Integer> ret = new LinkedList<>();
 	  int parse_state = ((Symbol)stack.peek()).parse_state ;
 	  short[] row = action_tab[parse_state];
 	  for (int i = 0; i<row.length; i+=2){
-		  if (row[i]==-1) continue;
-		  if (!validate_expected_symbol(row[i])) continue;
+		  if (row[i]==-1) {
+			continue;
+		}
+		  if (!validate_expected_symbol(row[i])) {
+			continue;
+		}
 		  ret.add(new Integer(row[i]));
 	  }
 	  return ret;
@@ -493,7 +501,9 @@ public abstract class lr_parser {
 			  act = get_action(vstack.top(), id);
 
 			  /* if its an error, we fail */
-			  if (act == 0) return false;
+			  if (act == 0) {
+				return false;
+			}
 
 			  /* > 0 encodes a shift */
 			  if (act > 0)
@@ -502,19 +512,25 @@ public abstract class lr_parser {
 				  vstack.push(act-1);
 
 				  /* advance simulated input, if we run off the end, we are done */
-				  if (!advance_lookahead()) return true;
+				  if (!advance_lookahead()) {
+					return true;
+				}
 			  }
 			  /* < 0 encodes a reduce */
 			  else
 			  {
 				  /* if this is a reduce with the start production we are done */
-				  if ((-act)-1 == start_production())  return true;
+				  if ((-act)-1 == start_production()) {
+					return true;
+				}
 
 				  /* get the lhs Symbol and the rhs size */
 				  lhs = production_tab[(-act)-1][0];
 				  rhs_size = production_tab[(-act)-1][1];
 				  /* pop handle off the stack */
-				  for (int i = 0; i < rhs_size; i++) vstack.pop();
+				  for (int i = 0; i < rhs_size; i++) {
+					vstack.pop();
+				}
 
 				  vstack.push(get_reduce(vstack.top(), lhs));
 			  }
@@ -558,8 +574,8 @@ public abstract class lr_parser {
       short[] row = action_tab[state];
 
       /* linear search if we are < 10 entries */
-      if (row.length < 20)
-        for (probe = 0; probe < row.length; probe++)
+      if (row.length < 20) {
+		for (probe = 0; probe < row.length; probe++)
 	  {
 	    /* is this entry labeled with our Symbol or the default? */
 	    tag = row[probe++];
@@ -570,19 +586,20 @@ public abstract class lr_parser {
 	      }
 	  }
       /* otherwise binary search */
-      else
+	} else
 	{
 	  first = 0; 
 	  last = (row.length-1)/2 - 1;  /* leave out trailing default entry */
 	  while (first <= last)
 	    {
 	      probe = (first+last)/2;
-	      if (sym == row[probe*2])
-		return row[probe*2+1];
-	      else if (sym > row[probe*2])
-		first = probe+1;
-	      else
-	        last = probe-1;
+	      if (sym == row[probe*2]) {
+			return row[probe*2+1];
+		} else if (sym > row[probe*2]) {
+			first = probe+1;
+		} else {
+			last = probe-1;
+		}
 	    }
 
 	  /* not found, use the default at the end */
@@ -612,8 +629,9 @@ public abstract class lr_parser {
       short[] row = reduce_tab[state];
 
       /* if we have a null row we go with the default */
-      if (row == null)
-        return -1;
+      if (row == null) {
+		return -1;
+	}
 
       for (int probe = 0; probe < row.length; probe++)
 	{
@@ -672,8 +690,9 @@ public abstract class lr_parser {
       for (_done_parsing = false; !_done_parsing; )
 	{
 	  /* Check current token for freshness. */
-	  if (cur_token.used_by_parser)
-	    throw new Error("Symbol recycling detected (fix your scanner).");
+	  if (cur_token.used_by_parser) {
+		throw new Error("Symbol recycling detected (fix your scanner).");
+	}
 
 	  /* current state is always on the top of the stack */
 
@@ -862,8 +881,9 @@ public abstract class lr_parser {
       for (_done_parsing = false; !_done_parsing; )
 	{
 	  /* Check current token for freshness. */
-	  if (cur_token.used_by_parser)
-	    throw new Error("Symbol recycling detected (fix your scanner).");
+	  if (cur_token.used_by_parser) {
+		throw new Error("Symbol recycling detected (fix your scanner).");
+	}
 
 	  /* current state is always on the top of the stack */
 	  //debug_stack();
@@ -969,13 +989,17 @@ public abstract class lr_parser {
   protected boolean error_recovery(boolean debug)
     throws java.lang.Exception
     {
-      if (debug) debug_message("# Attempting error recovery");
+      if (debug) {
+		debug_message("# Attempting error recovery");
+	}
 
       /* first pop the stack back into a state that can shift on error and 
 	 do that shift (if that fails, we fail) */
       if (!find_recovery_config(debug))
 	{
-	  if (debug) debug_message("# Error recovery fails");
+	  if (debug) {
+		debug_message("# Error recovery fails");
+	}
 	  return false;
 	}
 
@@ -986,7 +1010,9 @@ public abstract class lr_parser {
       for (;;)
 	{
 	  /* try to parse forward, if it makes it, bail out of loop */
-	  if (debug) debug_message("# Trying to parse ahead");
+	  if (debug) {
+		debug_message("# Trying to parse ahead");
+	}
 	  if (try_parse_ahead(debug))
 	    {
 	      break;
@@ -995,7 +1021,9 @@ public abstract class lr_parser {
 	  /* if we are now at EOF, we have failed */
 	  if (lookahead[0].sym == EOF_sym()) 
 	    {
-	      if (debug) debug_message("# Error recovery fails at EOF");
+	      if (debug) {
+			debug_message("# Error recovery fails at EOF");
+		}
 	      return false;
 	    }
 
@@ -1005,13 +1033,16 @@ public abstract class lr_parser {
 	  // Auckland, New Zealand.
 	  // It is the first token that is being consumed, not the one 
 	  // we were up to parsing
-	  if (debug) 
-	      debug_message("# Consuming Symbol #" + lookahead[ 0 ].sym);
+	  if (debug) {
+		debug_message("# Consuming Symbol #" + lookahead[ 0 ].sym);
+	}
 	  restart_lookahead();
 	}
 
       /* we have consumed to a point where we can parse forward */
-      if (debug) debug_message("# Parse-ahead ok, going back to normal parse");
+      if (debug) {
+		debug_message("# Parse-ahead ok, going back to normal parse");
+	}
 
       /* do the real parse (including actions) across the lookahead */
       parse_lookahead(debug);
@@ -1045,7 +1076,9 @@ public abstract class lr_parser {
       Symbol error_token;
       int act;
 
-      if (debug) debug_message("# Finding recovery state on stack");
+      if (debug) {
+		debug_message("# Finding recovery state on stack");
+	}
 
       /* Remember the right-position of the top symbol on the stack */
       Symbol right = ((Symbol)stack.peek());// TUM 20060327 removed .right	
@@ -1055,16 +1088,19 @@ public abstract class lr_parser {
       while (!shift_under_error())
 	{
 	  /* pop the stack */
-	  if (debug) 
-	    debug_message("# Pop stack by one, state was # " +
+	  if (debug) {
+		debug_message("# Pop stack by one, state was # " +
 	                  ((Symbol)stack.peek()).parse_state);
+	}
           left = ((Symbol)stack.pop()); // TUM 20060327 removed .left	
 	  tos--;
 
 	  /* if we have hit bottom, we fail */
 	  if (stack.empty()) 
 	    {
-	      if (debug) debug_message("# No recovery state found on stack");
+	      if (debug) {
+			debug_message("# No recovery state found on stack");
+		}
 	      return false;
 	    }
 	}
@@ -1144,8 +1180,9 @@ public abstract class lr_parser {
   protected void restart_lookahead() throws java.lang.Exception
     {
       /* move all the existing input over */
-      for (int i = 1; i < error_sync_size(); i++)
-	lookahead[i-1] = lookahead[i];
+      for (int i = 1; i < error_sync_size(); i++) {
+		lookahead[i-1] = lookahead[i];
+	}
 
       /* read a new Symbol into the last spot */
       // BUG Fix by Bruce Hutton
@@ -1186,7 +1223,9 @@ public abstract class lr_parser {
 	  act = get_action(vstack.top(), cur_err_token().sym);
 
 	  /* if its an error, we fail */
-	  if (act == 0) return false;
+	  if (act == 0) {
+		return false;
+	}
 
 	  /* > 0 encodes a shift */
 	  if (act > 0)
@@ -1194,11 +1233,15 @@ public abstract class lr_parser {
 	      /* push the new state on the stack */
 	      vstack.push(act-1);
 
-	      if (debug) debug_message("# Parse-ahead shifts Symbol #" + 
-		       cur_err_token().sym + " into state #" + (act-1));
+	      if (debug) {
+			debug_message("# Parse-ahead shifts Symbol #" + 
+			       cur_err_token().sym + " into state #" + (act-1));
+		}
 
 	      /* advance simulated input, if we run off the end, we are done */
-	      if (!advance_lookahead()) return true;
+	      if (!advance_lookahead()) {
+			return true;
+		}
 	    }
 	  /* < 0 encodes a reduce */
 	  else
@@ -1206,7 +1249,9 @@ public abstract class lr_parser {
 	      /* if this is a reduce with the start production we are done */
 	      if ((-act)-1 == start_production()) 
 		{
-		  if (debug) debug_message("# Parse-ahead accepts");
+		  if (debug) {
+			debug_message("# Parse-ahead accepts");
+		}
 		  return true;
 		}
 
@@ -1215,17 +1260,20 @@ public abstract class lr_parser {
 	      rhs_size = production_tab[(-act)-1][1];
 
 	      /* pop handle off the stack */
-	      for (int i = 0; i < rhs_size; i++)
-		vstack.pop();
+	      for (int i = 0; i < rhs_size; i++) {
+			vstack.pop();
+		}
 
-	      if (debug) 
-		debug_message("# Parse-ahead reduces: handle size = " + 
-	          rhs_size + " lhs = #" + lhs + " from state #" + vstack.top());
+	      if (debug) {
+			debug_message("# Parse-ahead reduces: handle size = " + 
+			      rhs_size + " lhs = #" + lhs + " from state #" + vstack.top());
+		}
 
 	      /* look up goto and push it onto the stack */
 	      vstack.push(get_reduce(vstack.top(), lhs));
-	      if (debug) 
-		debug_message("# Goto state #" + vstack.top());
+	      if (debug) {
+			debug_message("# Goto state #" + vstack.top());
+		}
 	    }
 	}
     }
@@ -1279,14 +1327,18 @@ public abstract class lr_parser {
 	      /* shift to the encoded state by pushing it on the stack */
 	      cur_err_token().parse_state = act-1;
 	      cur_err_token().used_by_parser = true;
-	      if (debug) debug_shift(cur_err_token());
+	      if (debug) {
+			debug_shift(cur_err_token());
+		}
 	      stack.push(cur_err_token());
 	      tos++;
 
 	      /* advance to the next Symbol, if there is none, we are done */
 	      if (!advance_lookahead()) 
 		{
-		  if (debug) debug_message("# Completed reparse");
+		  if (debug) {
+			debug_message("# Completed reparse");
+		}
 
 		  /* scan next Symbol so we can continue parse */
 		  // BUGFIX by Chris Harris <ckharris@ucsd.edu>:
@@ -1298,8 +1350,9 @@ public abstract class lr_parser {
 		  return;
 		}
 	      
-	      if (debug) 
-		debug_message("# Current Symbol is #" + cur_err_token().sym);
+	      if (debug) {
+			debug_message("# Current Symbol is #" + cur_err_token().sym);
+		}
 	    }
 	  /* if its less than zero, then it encodes a reduce action */
 	  else if (act < 0)
@@ -1311,7 +1364,9 @@ public abstract class lr_parser {
 	      lhs_sym_num = production_tab[(-act)-1][0];
 	      handle_size = production_tab[(-act)-1][1];
 
-	      if (debug) debug_reduce((-act)-1, lhs_sym_num, handle_size);
+	      if (debug) {
+			debug_reduce((-act)-1, lhs_sym_num, handle_size);
+		}
 
 	      /* pop the handle off the stack */
 	      for (int i = 0; i < handle_size; i++)
@@ -1329,7 +1384,9 @@ public abstract class lr_parser {
 	      stack.push(lhs_sym);
 	      tos++;
 	       
-	      if (debug) debug_message("# Goto state #" + act);
+	      if (debug) {
+			debug_message("# Goto state #" + act);
+		}
 
 	    }
 	  /* finally if the entry is zero, we have an error 
@@ -1351,16 +1408,18 @@ public abstract class lr_parser {
     {
       // Concatanate initialization strings.
       StringBuffer sb = new StringBuffer(sa[0]);
-      for (int i=1; i<sa.length; i++)
-	sb.append(sa[i]);
+      for (int i=1; i<sa.length; i++) {
+		sb.append(sa[i]);
+	}
       int n=0; // location in initialization string
-      int size1 = (((int)sb.charAt(n))<<16) | ((int)sb.charAt(n+1)); n+=2;
+      int size1 = ((sb.charAt(n))<<16) | (sb.charAt(n+1)); n+=2;
       short[][] result = new short[size1][];
       for (int i=0; i<size1; i++) {
-        int size2 = (((int)sb.charAt(n))<<16) | ((int)sb.charAt(n+1)); n+=2;
+        int size2 = ((sb.charAt(n))<<16) | (sb.charAt(n+1)); n+=2;
         result[i] = new short[size2];
-        for (int j=0; j<size2; j++)
-          result[i][j] = (short) (sb.charAt(n++)-2);
+        for (int j=0; j<size2; j++) {
+			result[i][j] = (short) (sb.charAt(n++)-2);
+		}
       }
       return result;
     }

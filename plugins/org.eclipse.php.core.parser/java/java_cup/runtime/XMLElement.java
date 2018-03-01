@@ -1,7 +1,6 @@
 package java_cup.runtime;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -76,16 +75,19 @@ public abstract class XMLElement {
 	public abstract Location right();
 	public abstract Location left();
 	protected abstract void dump(XMLStreamWriter writer) throws XMLStreamException;
-        public List<XMLElement> getChildren() {return new LinkedList<XMLElement>(); };
+        public List<XMLElement> getChildren() {return new LinkedList<>(); };
         public boolean hasChildren() { return false; };
 	public static class NonTerminal extends XMLElement {
-	    public boolean hasChildren()  { return !list.isEmpty(); }
-	    public List<XMLElement> getChildren()  { return list; }
+	    @Override
+		public boolean hasChildren()  { return !list.isEmpty(); }
+	    @Override
+		public List<XMLElement> getChildren()  { return list; }
 	    @Override
 		public List<XMLElement> selectById(String s) {
-			LinkedList<XMLElement> response= new LinkedList<XMLElement>();
-			if (tagname.equals(s))
+			LinkedList<XMLElement> response= new LinkedList<>();
+			if (tagname.equals(s)) {
 				response.add(this);
+			}
 			for (XMLElement e : list){
 				List<XMLElement> selection =e.selectById(s);
 				response.addAll(selection);
@@ -100,32 +102,40 @@ public abstract class XMLElement {
 		public NonTerminal(String tagname, int variant, XMLElement... l) {
 			this.tagname=tagname;
 			this.variant=variant;
-			list = new LinkedList<XMLElement>(Arrays.asList(l));
+			list = new LinkedList<>(Arrays.asList(l));
 		}
 
+		@Override
 		public Location left() {
 			for (XMLElement e : list){
 				Location loc = e.left();
-				if (loc!=null) return loc;
+				if (loc!=null) {
+					return loc;
+				}
 			}
 			return null;	
 		}
+		@Override
 		public Location right() {
 			for (Iterator<XMLElement> it = list.descendingIterator();it.hasNext();){
 				 Location loc = it.next().right();
-				 if (loc!=null) return loc;
+				 if (loc!=null) {
+					return loc;
+				}
 			}
 			return null;
 		}
 
+		@Override
 		public String toString() {
 			if (list.isEmpty()){
 				return "<nonterminal id=\"" + tagname +"\" variant=\""+variant+"\" />" ;
 			}
 			String ret = "<nonterminal id=\"" + tagname +"\" left=\"" + left()
 					+ "\" right=\"" + right() + "\" variant=\""+variant+"\">";
-			for (XMLElement e : list)
+			for (XMLElement e : list) {
 				ret += e.toString();
+			}
 			return ret + "</nonterminal>";
 		}
 		@Override
@@ -135,30 +145,39 @@ public abstract class XMLElement {
 			writer.writeAttribute("variant", variant+"");
 //			if (!list.isEmpty()){
 				Location loc = left();
-				if (loc!=null) loc.toXML(writer, "left");
+				if (loc!=null) {
+					loc.toXML(writer, "left");
+				}
 //			}
-			for (XMLElement e:list)
+			for (XMLElement e:list) {
 				e.dump(writer);
+			}
 			loc = right();
-			if (loc!=null) loc.toXML(writer, "right");
+			if (loc!=null) {
+				loc.toXML(writer, "right");
+			}
 			writer.writeEndElement();
 		}
 	}
 
 	public static class Error extends XMLElement {
-	    public boolean hasChildren()  { return false; }
+	    @Override
+		public boolean hasChildren()  { return false; }
 	    @Override
 		public List<XMLElement> selectById(String s) {
-			return new LinkedList<XMLElement>();
+			return new LinkedList<>();
 		}
 		Location l,r;
 		public Error(Location l, Location r) {
 			this.l=l;
 			this.r=r;
 		}
+		@Override
 		public Location left() {	return l; 	}
+		@Override
 		public Location right() {	return r;	}
 
+		@Override
 		public String toString() {
 			return  "<error left=\"" + l + "\" right=\"" + r + "\"/>";
 		}
@@ -172,9 +191,11 @@ public abstract class XMLElement {
 	}
 	
 	public static class Terminal extends XMLElement {
-	    public boolean hasChildren()  { return false; }
-	    public List<XMLElement> selectById(String s) {
-			List<XMLElement> ret = new LinkedList<XMLElement>();
+	    @Override
+		public boolean hasChildren()  { return false; }
+	    @Override
+		public List<XMLElement> selectById(String s) {
+			List<XMLElement> ret = new LinkedList<>();
 			if (tagname.equals(s)) { ret.add(this);	}
 			return ret;
 		};
@@ -193,9 +214,12 @@ public abstract class XMLElement {
 		}
 
 		public Object   value() {return value; }
+		@Override
 		public Location left() {	return l; 	}
+		@Override
 		public Location right() {	return r;	}
 
+		@Override
 		public String toString() {
 			return (value == null) ? "<terminal id=\"" + tagname + "\"/>"
 					: "<terminal id=\"" + tagname + "\" left=\"" + l
@@ -208,7 +232,9 @@ public abstract class XMLElement {
 			writer.writeAttribute("id", tagname);
 			writer.writeAttribute("left", left()+"");
 			writer.writeAttribute("right", right()+"");
-			if (value!=null) writer.writeCharacters(value+"");
+			if (value!=null) {
+				writer.writeCharacters(value+"");
+			}
 			writer.writeEndElement();
 		}
 	}

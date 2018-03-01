@@ -56,8 +56,9 @@ public class terminal_set {
    */
   protected void not_null(Object obj) throws internal_error
     {
-      if (obj == null) 
-	throw new internal_error("Null object used in set operation");
+      if (obj == null) {
+		throw new internal_error("Null object used in set operation");
+	}
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
@@ -139,8 +140,9 @@ public class terminal_set {
       result = _elements.get(sym.index());
 
       /* if not we add it */
-      if (!result)
-	_elements.set(sym.index());
+      if (!result) {
+		_elements.set(sym.index());
+	}
 
       return result;
     }
@@ -195,27 +197,31 @@ public class terminal_set {
   /** Equality comparison. */
   public boolean equals(terminal_set other)
     {
-      if (other == null) 
-	return false;
-      else
-	return _elements.equals(other._elements);
+      if (other == null) {
+		return false;
+	} else {
+		return _elements.equals(other._elements);
+	}
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Generic equality comparison. */
-  public boolean equals(Object other)
+  @Override
+public boolean equals(Object other)
     {
-      if (!(other instanceof terminal_set))
-	return false;
-      else
-	return equals((terminal_set)other);
+      if (!(other instanceof terminal_set)) {
+		return false;
+	} else {
+		return equals((terminal_set)other);
+	}
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Convert to string. */
-  public String toString()
+  @Override
+public String toString()
     {
       String result;
       boolean comma_flag;
@@ -226,10 +232,11 @@ public class terminal_set {
 	{
 	  if (_elements.get(t))
 	    {
-	      if (comma_flag)
-	        result += ", ";
-	      else
-	        comma_flag = true;
+	      if (comma_flag) {
+			result += ", ";
+		} else {
+			comma_flag = true;
+		}
 
 	      result += terminal.find(t).name();
 	    }

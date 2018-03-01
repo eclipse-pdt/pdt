@@ -161,14 +161,17 @@ public class ServerPortEditorSection extends ServerEditorSection {
 			public Object getValue(Object element, String property) {
 				ServerPort sp = (ServerPort) element;
 				if (sp.getPort() < 0)
+				 {
 					return "-"; //$NON-NLS-1$
+				}
 				return Integer.toString(sp.getPort());
 			}
 
 			@Override
 			public boolean canModify(Object element, String property) {
-				if ("port".equals(property)) //$NON-NLS-1$
+				if ("port".equals(property)) {
 					return true;
+				}
 
 				return false;
 			}
@@ -206,8 +209,9 @@ public class ServerPortEditorSection extends ServerEditorSection {
 
 	@Override
 	public void dispose() {
-		if (fPHPServerConfiguration != null)
+		if (fPHPServerConfiguration != null) {
 			fPHPServerConfiguration.removePropertyChangeListener(listener);
+		}
 	}
 
 	@Override
@@ -228,8 +232,9 @@ public class ServerPortEditorSection extends ServerEditorSection {
 	 * Initialize the fields in this editor.
 	 */
 	protected void initialize() {
-		if (ports == null)
+		if (ports == null) {
 			return;
+		}
 
 		ports.removeAll();
 
@@ -238,8 +243,9 @@ public class ServerPortEditorSection extends ServerEditorSection {
 			ServerPort port = iterator.next();
 			TableItem item = new TableItem(ports, SWT.NONE);
 			String portStr = "-"; //$NON-NLS-1$
-			if (port.getPort() >= 0)
+			if (port.getPort() >= 0) {
 				portStr = Integer.toString(port.getPort());
+			}
 			String[] s = new String[] { port.getName(), portStr };
 			item.setText(s);
 			item.setImage(PHPServerUIPlugin.getImage(PHPServerUIPlugin.IMG_PORT));

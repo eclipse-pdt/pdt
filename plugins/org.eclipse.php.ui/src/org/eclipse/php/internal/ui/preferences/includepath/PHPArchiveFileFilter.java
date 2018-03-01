@@ -75,8 +75,9 @@ public class PHPArchiveFileFilter extends ViewerFilter {
 				return true;
 			}
 			// Ignore closed projects
-			if (element instanceof IProject && !((IProject) element).isOpen())
+			if (element instanceof IProject && !((IProject) element).isOpen()) {
 				return false;
+			}
 			try {
 				IResource[] resources = ((IContainer) element).members();
 				for (int i = 0; i < resources.length; i++) {

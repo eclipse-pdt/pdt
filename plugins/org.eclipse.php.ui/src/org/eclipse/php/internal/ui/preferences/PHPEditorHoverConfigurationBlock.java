@@ -250,8 +250,9 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 			@Override
 			public void checkStateChanged(CheckStateChangedEvent event) {
 				String id = ((PHPEditorTextHoverDescriptor) event.getElement()).getId();
-				if (id == null)
+				if (id == null) {
 					return;
+				}
 				PHPEditorTextHoverDescriptor[] descriptors = getContributedHovers();
 				HoverConfig hoverConfig = null;
 				int i = 0, length = fHoverConfigs.length;
@@ -309,23 +310,25 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 
 					String insertString;
 
-					if (needsPrefixDelimiter && needsPostfixDelimiter)
+					if (needsPrefixDelimiter && needsPostfixDelimiter) {
 						insertString = NLS.bind(
 								PHPUIMessages.PHPEditorHoverConfigurationBlock_insertDelimiterAndModifierAndDelimiter,
 								new String[] { Action.findModifierString(e.stateMask) });
-					else if (needsPrefixDelimiter)
+					} else if (needsPrefixDelimiter) {
 						insertString = NLS.bind(
 								PHPUIMessages.PHPEditorHoverConfigurationBlock_insertDelimiterAndModifier,
 								new String[] { Action.findModifierString(e.stateMask) });
-					else if (needsPostfixDelimiter)
+					} else if (needsPostfixDelimiter) {
 						insertString = NLS.bind(
 								PHPUIMessages.PHPEditorHoverConfigurationBlock_insertModifierAndDelimiter,
 								new String[] { Action.findModifierString(e.stateMask) });
-					else
+					} else {
 						insertString = Action.findModifierString(e.stateMask);
+					}
 
-					if (insertString != null)
+					if (insertString != null) {
 						fModifierEditor.insert(insertString);
+					}
 				}
 			}
 		});
@@ -367,9 +370,10 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 	public void initialize() {
 		PHPEditorTextHoverDescriptor[] hoverDescs = getContributedHovers();
 		fHoverConfigs = new HoverConfig[hoverDescs.length];
-		for (int i = 0; i < hoverDescs.length; i++)
+		for (int i = 0; i < hoverDescs.length; i++) {
 			fHoverConfigs[i] = new HoverConfig(hoverDescs[i].getModifierString(), hoverDescs[i].getStateMask(),
 					hoverDescs[i].isEnabled());
+		}
 
 		fHoverTableViewer.setInput(hoverDescs);
 
@@ -384,8 +388,9 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 			entry.getKey().setSelection(fStore.getBoolean(entry.getValue()));
 		}
 
-		for (int i = 0; i < fHoverConfigs.length; i++)
+		for (int i = 0; i < fHoverConfigs.length; i++) {
 			fHoverTable.getItem(i).setChecked(fHoverConfigs[i].fIsEnabled);
+		}
 		fHoverTableViewer.refresh();
 	}
 
@@ -396,11 +401,13 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 		for (int i = 0; i < fHoverConfigs.length; i++) {
 			buf.append(getContributedHovers()[i].getId());
 			buf.append(PHPEditorTextHoverDescriptor.VALUE_SEPARATOR);
-			if (!fHoverConfigs[i].fIsEnabled)
+			if (!fHoverConfigs[i].fIsEnabled) {
 				buf.append(PHPEditorTextHoverDescriptor.DISABLED_TAG);
+			}
 			String modifier = fHoverConfigs[i].fModifierString;
-			if (modifier == null || modifier.length() == 0)
+			if (modifier == null || modifier.length() == 0) {
 				modifier = PHPEditorTextHoverDescriptor.NO_MODIFIER;
+			}
 			buf.append(modifier);
 			buf.append(PHPEditorTextHoverDescriptor.VALUE_SEPARATOR);
 
@@ -432,8 +439,9 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 
 		while (tokenizer.hasMoreTokens()) {
 			String id = tokenizer.nextToken();
-			if (tokenizer.hasMoreTokens())
+			if (tokenizer.hasMoreTokens()) {
 				idToModifier.put(id, tokenizer.nextToken());
+			}
 		}
 
 		String compiledTextHoverModifierMasks = PHPUiPlugin.getDefault().getPreferenceStore()
@@ -444,15 +452,17 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 
 		while (tokenizer.hasMoreTokens()) {
 			String id = tokenizer.nextToken();
-			if (tokenizer.hasMoreTokens())
+			if (tokenizer.hasMoreTokens()) {
 				idToModifierMask.put(id, tokenizer.nextToken());
+			}
 		}
 
 		for (int i = 0; i < fHoverConfigs.length; i++) {
 			String modifierString = idToModifier.get(getContributedHovers()[i].getId());
 			boolean enabled = true;
-			if (modifierString == null)
+			if (modifierString == null) {
 				modifierString = PHPEditorTextHoverDescriptor.DISABLED_TAG;
+			}
 
 			if (modifierString.startsWith(PHPEditorTextHoverDescriptor.DISABLED_TAG)) {
 				enabled = false;
@@ -460,7 +470,9 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 			}
 
 			if (modifierString.equals(PHPEditorTextHoverDescriptor.NO_MODIFIER))
+			 {
 				modifierString = ""; //$NON-NLS-1$
+			}
 
 			fHoverConfigs[i].fModifierString = modifierString;
 			fHoverConfigs[i].fIsEnabled = enabled;
@@ -479,8 +491,9 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 
 	private void handleModifierModified() {
 		int i = fHoverTable.getSelectionIndex();
-		if (i == -1)
+		if (i == -1) {
 			return;
+		}
 
 		String modifiers = fModifierEditor.getText();
 		fHoverConfigs[i].fModifierString = modifiers;
@@ -496,8 +509,9 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 		int i = fHoverTable.getSelectionIndex();
 
 		if (i == -1) {
-			if (fHoverTable.getSelectionCount() == 0)
+			if (fHoverTable.getSelectionCount() == 0) {
 				fModifierEditor.setEnabled(false);
+			}
 			return;
 		}
 
@@ -506,23 +520,27 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 		fModifierEditor.setText(fHoverConfigs[i].fModifierString);
 		String description = getContributedHovers()[i].getDescription();
 		if (description == null)
+		 {
 			description = ""; //$NON-NLS-1$
+		}
 		fDescription.setText(description);
 	}
 
 	IStatus getStatus() {
-		if (fStatus == null)
+		if (fStatus == null) {
 			fStatus = new StatusInfo();
+		}
 		return fStatus;
 	}
 
 	private void updateStatus(HoverConfig hoverConfig) {
-		if (hoverConfig != null && hoverConfig.fIsEnabled && hoverConfig.fStateMask == -1)
+		if (hoverConfig != null && hoverConfig.fIsEnabled && hoverConfig.fStateMask == -1) {
 			fStatus = new StatusInfo(IStatus.ERROR,
 					NLS.bind(PHPUIMessages.PHPEditorHoverConfigurationBlock_modifierIsNotValid,
 							new Object[] { hoverConfig.fModifierString }));
-		else
+		} else {
 			fStatus = new StatusInfo();
+		}
 
 		int i = 0;
 		HashMap<Integer, String> stateMasks = new HashMap<>(fHoverConfigs.length);
@@ -530,16 +548,17 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 			if (fHoverConfigs[i].fIsEnabled) {
 				String label = getContributedHovers()[i].getLabel();
 				Integer stateMask = Integer.valueOf(fHoverConfigs[i].fStateMask);
-				if (fHoverConfigs[i].fStateMask == -1)
+				if (fHoverConfigs[i].fStateMask == -1) {
 					fStatus = new StatusInfo(IStatus.ERROR,
 							NLS.bind(PHPUIMessages.PHPEditorHoverConfigurationBlock_modifierIsNotValidForHover,
 									new String[] { fHoverConfigs[i].fModifierString, label }));
-				else if (stateMasks.containsKey(stateMask))
+				} else if (stateMasks.containsKey(stateMask)) {
 					fStatus = new StatusInfo(IStatus.ERROR,
 							NLS.bind(PHPUIMessages.PHPEditorHoverConfigurationBlock_duplicateModifier,
 									new String[] { label, stateMasks.get(stateMask) }));
-				else
+				} else {
 					stateMasks.put(stateMask, label);
+				}
 			}
 			i++;
 		}

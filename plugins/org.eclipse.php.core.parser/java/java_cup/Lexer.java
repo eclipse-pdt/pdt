@@ -419,7 +419,9 @@ public class Lexer implements sym, java_cup.runtime.Scanner {
       int count = packed.charAt(i++);
       int value = packed.charAt(i++);
       value--;
-      do trans[j++] = value; while (--count > 0);
+      do {
+		trans[j++] = value;
+	} while (--count > 0);
     }
     return j;
   }
@@ -437,7 +439,9 @@ public class Lexer implements sym, java_cup.runtime.Scanner {
     while (i < 2238) {
       int  count = packed.charAt(i++);
       char value = packed.charAt(i++);
-      do map[j++] = value; while (--count > 0);
+      do {
+		map[j++] = value;
+	} while (--count > 0);
     }
     return map;
   }
@@ -495,8 +499,9 @@ public class Lexer implements sym, java_cup.runtime.Scanner {
     yy_atEOF = true;            /* indicate end of file */
     yy_endRead = yy_startRead;  /* invalidate buffer    */
 
-    if (yy_reader != null)
-      yy_reader.close();
+    if (yy_reader != null) {
+		yy_reader.close();
+	}
   }
 
 
@@ -608,8 +613,9 @@ public class Lexer implements sym, java_cup.runtime.Scanner {
    *                This number must not be greater than yylength()!
    */
   private void yypushback(int number)  {
-    if ( number > yylength() )
-      yy_ScanError(YY_PUSHBACK_2BIG);
+    if ( number > yylength() ) {
+		yy_ScanError(YY_PUSHBACK_2BIG);
+	}
 
     yy_markedPos -= number;
   }
@@ -634,7 +640,8 @@ public class Lexer implements sym, java_cup.runtime.Scanner {
    * @return      the next token
    * @exception   IOException  if any I/O-Error occurs
    */
-  public java_cup.runtime.Symbol next_token() throws java.io.IOException {
+  @Override
+public java_cup.runtime.Symbol next_token() throws java.io.IOException {
     int yy_input;
     int yy_action;
 
@@ -672,9 +679,9 @@ public class Lexer implements sym, java_cup.runtime.Scanner {
           yy_r = true;
           break;
         case '\n':
-          if (yy_r)
-            yy_r = false;
-          else {
+          if (yy_r) {
+			yy_r = false;
+		} else {
             yyline++;
             yycolumn = 0;
           }
@@ -688,20 +695,23 @@ public class Lexer implements sym, java_cup.runtime.Scanner {
       if (yy_r) {
         // peek one character ahead if it is \n (if we have counted one line too much)
         boolean yy_peek;
-        if (yy_markedPos_l < yy_endRead_l)
-          yy_peek = yy_buffer_l[yy_markedPos_l] == '\n';
-        else if (yy_atEOF)
-          yy_peek = false;
-        else {
+        if (yy_markedPos_l < yy_endRead_l) {
+			yy_peek = yy_buffer_l[yy_markedPos_l] == '\n';
+		} else if (yy_atEOF) {
+			yy_peek = false;
+		} else {
           boolean eof = yy_refill();
           yy_markedPos_l = yy_markedPos;
           yy_buffer_l = yy_buffer;
-          if (eof) 
-            yy_peek = false;
-          else 
-            yy_peek = yy_buffer_l[yy_markedPos_l] == '\n';
+          if (eof) {
+			yy_peek = false;
+		} else {
+			yy_peek = yy_buffer_l[yy_markedPos_l] == '\n';
+		}
         }
-        if (yy_peek) yyline--;
+        if (yy_peek) {
+			yyline--;
+		}
       }
       yy_action = -1;
 
@@ -714,9 +724,9 @@ public class Lexer implements sym, java_cup.runtime.Scanner {
       yy_forAction: {
         while (true) {
 
-          if (yy_currentPos_l < yy_endRead_l)
-            yy_input = yy_buffer_l[yy_currentPos_l++];
-          else if (yy_atEOF) {
+          if (yy_currentPos_l < yy_endRead_l) {
+			yy_input = yy_buffer_l[yy_currentPos_l++];
+		} else if (yy_atEOF) {
             yy_input = YYEOF;
             break yy_forAction;
           }
@@ -739,14 +749,18 @@ public class Lexer implements sym, java_cup.runtime.Scanner {
             }
           }
           int yy_next = yytrans_l[ yy_rowMap_l[yy_state] + yycmap_l[yy_input] ];
-          if (yy_next == -1) break yy_forAction;
+          if (yy_next == -1) {
+			break yy_forAction;
+		}
           yy_state = yy_next;
 
           int yy_attributes = yy_attr_l[yy_state];
           if ( (yy_attributes & 1) == 1 ) {
             yy_action = yy_state; 
             yy_markedPos_l = yy_currentPos_l; 
-            if ( (yy_attributes & 8) == 8 ) break yy_forAction;
+            if ( (yy_attributes & 8) == 8 ) {
+				break yy_forAction;
+			}
           }
 
         }

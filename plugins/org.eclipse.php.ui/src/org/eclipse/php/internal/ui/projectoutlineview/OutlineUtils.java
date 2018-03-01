@@ -25,8 +25,9 @@ public class OutlineUtils {
 				flags = ((IField) modelElement).getFlags();
 			} catch (ModelException e) {
 			}
-			if ((flags & Modifiers.AccConstant) != 0)
+			if ((flags & Modifiers.AccConstant) != 0) {
 				return true;
+			}
 		}
 		return false;
 	}

@@ -172,8 +172,9 @@ public class VirtualPartition implements IVirtualPartition {
 
 	@Override
 	public boolean hasFacet(Facet facet) {
-		if (facet == VIRTUAL_PARTITION)
+		if (facet == VIRTUAL_PARTITION) {
 			return true;
+		}
 		return false;
 	}
 

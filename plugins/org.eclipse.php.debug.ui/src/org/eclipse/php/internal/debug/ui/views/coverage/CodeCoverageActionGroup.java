@@ -77,10 +77,12 @@ public class CodeCoverageActionGroup extends ActionGroup implements IMenuListene
 				}
 			} else if (element instanceof ISourceModule || element instanceof IFile) {
 				final IEditorPart part = org.eclipse.dltk.internal.ui.editor.EditorUtility.openInEditor(element, false);
-				if (part != null && element instanceof IModelElement && !(element instanceof ISourceModule))
+				if (part != null && element instanceof IModelElement && !(element instanceof ISourceModule)) {
 					org.eclipse.dltk.internal.ui.editor.EditorUtility.revealInEditor(part, (IModelElement) element);
-			} else
+				}
+			} else {
 				viewer.setExpandedState(element, !viewer.getExpandedState(element));
+			}
 		} catch (final CoreException e) {
 		}
 
@@ -120,14 +122,17 @@ public class CodeCoverageActionGroup extends ActionGroup implements IMenuListene
 
 	public void showCoverage(final CodeCoverageData coverageData) {
 		IWorkbench workbench = PlatformUI.getWorkbench();
-		if (workbench == null)
+		if (workbench == null) {
 			return;
+		}
 		final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
-		if (activeWorkbenchWindow == null)
+		if (activeWorkbenchWindow == null) {
 			return;
+		}
 		final IWorkbenchPage page = activeWorkbenchWindow.getActivePage();
-		if (page == null)
+		if (page == null) {
 			return;
+		}
 		try {
 			final IViewPart part = page.showView(COVERAGE_VIEW_ID, coverageData.getFileName().replace(':', '_'),
 					IWorkbenchPage.VIEW_ACTIVATE);
@@ -141,8 +146,9 @@ public class CodeCoverageActionGroup extends ActionGroup implements IMenuListene
 	}
 
 	public void showCoverage(final Object data) {
-		if (data == null)
+		if (data == null) {
 			return;
+		}
 		final CodeCoverageContentProvider provider = (CodeCoverageContentProvider) viewer.getContentProvider();
 		CodeCoverageData coverageData = null;
 		if (data instanceof ISourceModule) {
@@ -152,8 +158,9 @@ public class CodeCoverageActionGroup extends ActionGroup implements IMenuListene
 		} else if (data instanceof String) {
 			coverageData = provider.getCoverageData((String) data);
 		}
-		if (coverageData != null)
+		if (coverageData != null) {
 			showCoverage(coverageData);
+		}
 	}
 
 }

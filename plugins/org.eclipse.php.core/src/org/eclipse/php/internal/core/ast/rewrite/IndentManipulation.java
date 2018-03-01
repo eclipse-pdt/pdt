@@ -223,8 +223,9 @@ public final class IndentManipulation {
 			throw new IllegalArgumentException();
 		}
 
-		if (indentUnitsToRemove <= 0)
+		if (indentUnitsToRemove <= 0) {
 			return line;
+		}
 
 		final int spaceEquivalentsToRemove = indentUnitsToRemove * indentWidth;
 
@@ -262,13 +263,15 @@ public final class IndentManipulation {
 			}
 		}
 		String trimmed;
-		if (start == size)
+		if (start == size) {
 			trimmed = ""; //$NON-NLS-1$
-		else
+		} else {
 			trimmed = line.substring(start);
+		}
 
-		if (prefix == null)
+		if (prefix == null) {
 			return trimmed;
+		}
 		return prefix + trimmed;
 	}
 
@@ -399,8 +402,9 @@ public final class IndentManipulation {
 			ILineTracker tracker = new DefaultLineTracker();
 			tracker.set(source);
 			int nLines = tracker.getNumberOfLines();
-			if (nLines == 1)
+			if (nLines == 1) {
 				return result.toArray(new ReplaceEdit[result.size()]);
+			}
 			for (int i = 1; i < nLines; i++) {
 				IRegion region = tracker.getLineInformation(i);
 				int offset = region.getOffset();
@@ -443,8 +447,9 @@ public final class IndentManipulation {
 			}
 			result = i;
 		}
-		if (blanks < spaceEquivalents)
+		if (blanks < spaceEquivalents) {
 			return -1;
+		}
 		return result + 1;
 	}
 

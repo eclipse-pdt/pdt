@@ -52,13 +52,15 @@ public final class PHPFoldingStructureProviderDescriptor {
 		Assert.isLegal(fId != null);
 
 		fName = element.getAttribute(NAME);
-		if (fName == null)
+		if (fName == null) {
 			fName = fId;
+		}
 
-		if (element.getAttribute(PREFERENCES_CLASS) == null)
+		if (element.getAttribute(PREFERENCES_CLASS) == null) {
 			fHasPreferences = false;
-		else
+		} else {
 			fHasPreferences = true;
+		}
 	}
 
 	/**

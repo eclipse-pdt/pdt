@@ -113,10 +113,12 @@ public class ASTViewLabelProvider extends LabelProvider implements IColorProvide
 
 	@Override
 	public Color getForeground(Object element) {
-		if ((element instanceof Error))
+		if ((element instanceof Error)) {
 			return fRed;
-		if ((element instanceof ExceptionAttribute) && ((ExceptionAttribute) element).getException() != null)
+		}
+		if ((element instanceof ExceptionAttribute) && ((ExceptionAttribute) element).getException() != null) {
 			return fRed;
+		}
 		
 		if (element instanceof ASTNode) {
 			ASTNode node= (ASTNode) element;
@@ -126,15 +128,17 @@ public class ASTViewLabelProvider extends LabelProvider implements IColorProvide
 			return fDarkGray;
 		} else if (element instanceof Binding) {
 			Binding binding= (Binding) element;
-			if (!binding.isRelevant())
+			if (!binding.isRelevant()) {
 				return fDarkGray;
+			}
 			return fBlue;
 		} else if (element instanceof NodeProperty) {
 			return null; // normal color
 		} else if (element instanceof BindingProperty) {
 			BindingProperty binding= (BindingProperty) element;
-			if (!binding.isRelevant())
+			if (!binding.isRelevant()) {
 				return fDarkGray;
+			}
 			return fBlue;
 		} else if (element instanceof PhpElement) {
 			PhpElement javaElement= (PhpElement) element;
@@ -202,10 +206,11 @@ public class ASTViewLabelProvider extends LabelProvider implements IColorProvide
 	public Font getFont(Object element) {
 		if (element instanceof ASTNode) {
 			ASTNode node= (ASTNode) element;
-			if ((node.getFlags() & ASTNode.RECOVERED) != 0)
+			if ((node.getFlags() & ASTNode.RECOVERED) != 0) {
 				return fAllocatedBoldItalic;
-			else
+			} else {
 				return fBold;
+			}
 		}
 		return null;
 	}

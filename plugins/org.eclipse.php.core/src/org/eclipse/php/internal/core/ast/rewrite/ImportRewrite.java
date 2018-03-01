@@ -269,7 +269,9 @@ public final class ImportRewrite {
 	 */
 	public void setImportOrder(String[] order) {
 		if (order == null)
+		 {
 			throw new IllegalArgumentException("Order must not be null"); //$NON-NLS-1$
+		}
 		this.importOrder = order;
 	}
 
@@ -453,8 +455,9 @@ public final class ImportRewrite {
 			typeName = fullTypeName;
 		}
 
-		if (context == null)
+		if (context == null) {
 			context = this.defaultContext;
+		}
 
 		if (alias != null) {
 			typeName = alias;
@@ -711,8 +714,9 @@ public final class ImportRewrite {
 		if (namespaces.size() > 0) {
 			for (NamespaceDeclaration namespace : namespaces) {
 				hasRecordedChanges = hasRecordedChanges(namespace);
-				if (hasRecordedChanges)
+				if (hasRecordedChanges) {
 					return hasRecordedChanges;
+				}
 			}
 			return hasRecordedChanges;
 		}

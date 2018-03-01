@@ -103,10 +103,11 @@ public class LocalCorrectionsSubProcessor {
 		ASTNode typeDecl = selectedNode.getParent();
 		{
 			ChildListPropertyDescriptor property = null;
-			if (locationInParent == ClassDeclaration.SUPER_CLASS_PROPERTY)
+			if (locationInParent == ClassDeclaration.SUPER_CLASS_PROPERTY) {
 				property = ClassDeclaration.INTERFACES_PROPERTY;
-			else
+			} else {
 				property = AnonymousClassDeclaration.INTERFACES_PROPERTY;
+			}
 
 			ASTRewrite rewrite = ASTRewrite.create(context.getASTRoot().getAST());
 			ASTNode placeHolder = rewrite.createMoveTarget(selectedNode);

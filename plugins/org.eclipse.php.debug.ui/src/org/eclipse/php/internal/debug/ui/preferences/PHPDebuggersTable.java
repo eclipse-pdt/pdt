@@ -179,8 +179,9 @@ public class PHPDebuggersTable {
 		debuggerTypeColumn.addControlListener(new ControlAdapter() {
 			@Override
 			public void controlResized(final ControlEvent e) {
-				if (debuggerTypeColumn.getWidth() > 0 && !fResizingTable)
+				if (debuggerTypeColumn.getWidth() > 0 && !fResizingTable) {
 					fWeight1 = getColumnWeight(0);
+				}
 			}
 		});
 	}
@@ -229,8 +230,9 @@ public class PHPDebuggersTable {
 		final Table table = fPHPDebuggers.getTable();
 		final int tableWidth = table.getSize().x;
 		final int columnWidth = table.getColumn(col).getWidth();
-		if (tableWidth > columnWidth)
+		if (tableWidth > columnWidth) {
 			return (float) columnWidth / tableWidth;
+		}
 		switch (col) {
 		case 0:
 			return 4.9F / 5F;

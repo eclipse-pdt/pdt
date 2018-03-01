@@ -132,10 +132,11 @@ public class PHPStructuredTextProjectionAnnotationHover extends StructuredTextAn
 		if (position.getOffset() > -1 && position.getLength() > -1) {
 			try {
 				int captionOffset;
-				if (position instanceof IProjectionPosition)
+				if (position instanceof IProjectionPosition) {
 					captionOffset = ((IProjectionPosition) position).computeCaptionOffset(document);
-				else
+				} else {
 					captionOffset = 0;
+				}
 				int startLine = document.getLineOfOffset(position.getOffset() + captionOffset);
 				return line == startLine;
 			} catch (BadLocationException x) {

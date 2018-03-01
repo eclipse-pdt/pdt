@@ -68,12 +68,15 @@ public class SequenceCharacterIterator implements CharacterIterator {
 	 *             if the indices are out of bounds
 	 */
 	public SequenceCharacterIterator(CharSequence sequence, int first, int last) throws IllegalArgumentException {
-		if (sequence == null)
+		if (sequence == null) {
 			throw new NullPointerException();
-		if (first < 0 || first > last)
+		}
+		if (first < 0 || first > last) {
 			throw new IllegalArgumentException();
-		if (last > sequence.length())
+		}
+		if (last > sequence.length()) {
 			throw new IllegalArgumentException();
+		}
 		fSequence = sequence;
 		fFirst = first;
 		fLast = last;
@@ -94,10 +97,11 @@ public class SequenceCharacterIterator implements CharacterIterator {
 	 */
 	@Override
 	public char last() {
-		if (fFirst == fLast)
+		if (fFirst == fLast) {
 			return setIndex(getEndIndex());
-		else
+		} else {
 			return setIndex(getEndIndex() - 1);
+		}
 	}
 
 	/*
@@ -105,10 +109,11 @@ public class SequenceCharacterIterator implements CharacterIterator {
 	 */
 	@Override
 	public char current() {
-		if (fIndex >= fFirst && fIndex < fLast)
+		if (fIndex >= fFirst && fIndex < fLast) {
 			return fSequence.charAt(fIndex);
-		else
+		} else {
 			return DONE;
+		}
 	}
 
 	/*
@@ -136,10 +141,11 @@ public class SequenceCharacterIterator implements CharacterIterator {
 	 */
 	@Override
 	public char setIndex(int position) {
-		if (position >= getBeginIndex() && position <= getEndIndex())
+		if (position >= getBeginIndex() && position <= getEndIndex()) {
 			fIndex = position;
-		else
+		} else {
 			throw new IllegalArgumentException();
+		}
 
 		invariant();
 		return current();

@@ -69,8 +69,9 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy imple
 			if (command.offset > 0) {
 				final IAfterNewLineAutoEditStrategy autoEditStrategy = getAfterNewLineAutoEditStrategy(document,
 						command);
-				if (autoEditStrategy != null)
+				if (autoEditStrategy != null) {
 					futureCaretPosition = autoEditStrategy.autoEditAfterNewLine(document, command, helpBuffer);
+				}
 			}
 
 			final int startOffset = command.offset;
@@ -110,8 +111,9 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy imple
 			if (startOffset > firstLineOffset) {
 				int pos = 0;
 				for (; pos < startOffset - firstLineOffset
-						&& (firstLineText.charAt(pos) == ' ' || firstLineText.charAt(pos) == '\t'); pos++)
+						&& (firstLineText.charAt(pos) == ' ' || firstLineText.charAt(pos) == '\t'); pos++) {
 					;
+				}
 				if (pos == startOffset - firstLineOffset) {
 					// Tweak: also try to keep previous indentation when
 					// "helpBuffer" starts with a newline char. It's mainly
@@ -129,8 +131,9 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy imple
 			// Continue by removing all blank chars AFTER end of
 			// selection.
 			for (int i = endOffset - lastLineOffset; i < lastLineLength
-					&& (lastLineText.charAt(i) == ' ' || lastLineText.charAt(i) == '\t'); i++, command.length++)
+					&& (lastLineText.charAt(i) == ' ' || lastLineText.charAt(i) == '\t'); i++, command.length++) {
 				;
+			}
 
 			command.text = helpBuffer.toString();
 
@@ -168,8 +171,9 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy imple
 
 	private IAfterNewLineAutoEditStrategy getAfterNewLineAutoEditStrategy(final IStructuredDocument document,
 			final DocumentCommand command) throws BadLocationException {
-		if (command.length > 0)
+		if (command.length > 0) {
 			return null;
+		}
 
 		final int offset = command.offset;
 
@@ -187,8 +191,9 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy imple
 		}
 
 		if (TypingPreferences.closeCurlyBracket && prevChar == '{') {
-			if (currentState == PHPPartitionTypes.PHP_DEFAULT)
+			if (currentState == PHPPartitionTypes.PHP_DEFAULT) {
 				return pairCurlyBracketAutoEditStrategy;
+			}
 
 		}
 		return null;

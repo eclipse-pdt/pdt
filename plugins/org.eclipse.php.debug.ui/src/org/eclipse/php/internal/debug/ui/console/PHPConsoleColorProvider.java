@@ -123,7 +123,9 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 			}
 			Collection<IPHPConsoleEventListener> l = listeners.values();
 			while (l.remove(null))
+			 {
 				; // remove null elements
+			}
 			fConsoleEventListeners = l.toArray(new IPHPConsoleEventListener[listeners.size()]);
 		}
 		return fConsoleEventListeners;

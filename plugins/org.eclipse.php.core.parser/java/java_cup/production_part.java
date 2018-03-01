@@ -50,30 +50,36 @@ public abstract class production_part {
   /** Equality comparison. */
   public boolean equals(production_part other)
     {
-      if (other == null) return false;
+      if (other == null) {
+		return false;
+	}
 
       /* compare the labels */
-      if (label() != null)
-	return label().equals(other.label());
-      else
-	return other.label() == null;
+      if (label() != null) {
+		return label().equals(other.label());
+	} else {
+		return other.label() == null;
+	}
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Generic equality comparison. */
-  public boolean equals(Object other)
+  @Override
+public boolean equals(Object other)
     {
-      if (!(other instanceof production_part))
-        return false;
-      else
-	return equals((production_part)other);
+      if (!(other instanceof production_part)) {
+		return false;
+	} else {
+		return equals((production_part)other);
+	}
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Produce a hash code. */
-  public int hashCode()
+  @Override
+public int hashCode()
     {
       return label()==null ? 0 : label().hashCode();
     }
@@ -81,12 +87,14 @@ public abstract class production_part {
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Convert to a string. */
-  public String toString()
+  @Override
+public String toString()
     {
-      if (label() != null)
-	return label() + ":";
-      else
-	return " ";
+      if (label() != null) {
+		return label() + ":";
+	} else {
+		return " ";
+	}
     }
 
   /*-----------------------------------------------------------*/

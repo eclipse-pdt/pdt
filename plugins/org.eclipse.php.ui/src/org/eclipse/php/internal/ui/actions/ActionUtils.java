@@ -38,22 +38,26 @@ public class ActionUtils {
 			.getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
 
 	public static boolean containsOnlyProjects(List<?> elements) {
-		if (elements.isEmpty())
+		if (elements.isEmpty()) {
 			return false;
+		}
 		for (Iterator<?> iter = elements.iterator(); iter.hasNext();) {
-			if (!isProject(iter.next()))
+			if (!isProject(iter.next())) {
 				return false;
+			}
 		}
 		return true;
 	}
 
 	public static boolean containsOnly(List<?> elements, Class<?> clazz) {
-		if (elements.isEmpty())
+		if (elements.isEmpty()) {
 			return false;
+		}
 		for (Iterator<?> iter = elements.iterator(); iter.hasNext();) {
 			// if (!clazz.isAssignableFrom(iter.next().getClass()))
-			if (!clazz.isAssignableFrom(iter.next().getClass()))
+			if (!clazz.isAssignableFrom(iter.next().getClass())) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -113,13 +117,14 @@ public class ActionUtils {
 	public static Object[] getPHPElements(List<?> elements, boolean phpFileDataIsResource) {
 		List<Object> phpElements = new ArrayList<>(elements.size());
 		for (Object element : elements) {
-			if (element instanceof IModelElement || element instanceof IScriptProject)/* PHPProjectModel */// ||
-																											// element
+			if (element instanceof IModelElement || element instanceof IScriptProject) {
+				// element
 																											// instanceof
 																											// PHPWorkspaceModelManager)
 				if (!phpFileDataIsResource || !(element instanceof ISourceModule)) {
 					phpElements.add(element);
 				}
+			}
 		}
 		return phpElements.toArray();
 	}
@@ -127,11 +132,12 @@ public class ActionUtils {
 	public static Object[] getPHPElements(final Object[] elements) {
 		List<Object> resources = new ArrayList<>(elements.length);
 		for (Object element : elements) {
-			if (element instanceof ISourceModule || element instanceof IScriptProject)/* PHPProjectModel */// ||
-																											// element
+			if (element instanceof ISourceModule || element instanceof IScriptProject) {
+				// element
 																											// instanceof
 																											// PHPWorkspaceModelManager)
 				resources.add(element);
+			}
 		}
 		return resources.toArray();
 	}
@@ -143,8 +149,9 @@ public class ActionUtils {
 			if (project != null) {
 				try {
 					IProjectNature nature = project.getNature(PHPNature.ID);
-					if (nature != null)
+					if (nature != null) {
 						return true;
+					}
 				} catch (CoreException e) {
 				}
 			}
@@ -153,18 +160,21 @@ public class ActionUtils {
 	}
 
 	public static boolean isProcessable(Shell shell, Object element) {
-		if (!(element instanceof ISourceModule))
+		if (!(element instanceof ISourceModule)) {
 			return true;
+		}
 
-		if (isPHPSource((ISourceModule) element))
+		if (isPHPSource((ISourceModule) element)) {
 			return true;
+		}
 
 		return false;
 	}
 
 	public static boolean isProcessable(Shell shell, PHPStructuredEditor editor) {
-		if (editor == null)
+		if (editor == null) {
 			return true;
+		}
 		ISourceModule input = SelectionConverter.getInput(editor);
 		// if a PHP editor doesn't have an input of type PHP element
 		// then it is for sure not on the build path
@@ -175,30 +185,37 @@ public class ActionUtils {
 	}
 
 	public static boolean isRenameAvailable(final IResource resource) {
-		if (resource == null)
+		if (resource == null) {
 			return false;
-		if (!resource.exists())
+		}
+		if (!resource.exists()) {
 			return false;
-		if (!resource.isAccessible())
+		}
+		if (!resource.isAccessible()) {
 			return false;
+		}
 		return true;
 	}
 
 	public static boolean isDeleteAvailable(final IResource resource) {
-		if (!resource.exists() || resource.isPhantom())
+		if (!resource.exists() || resource.isPhantom()) {
 			return false;
-		if (resource.getType() == IResource.ROOT || resource.getType() == IResource.PROJECT)
+		}
+		if (resource.getType() == IResource.ROOT || resource.getType() == IResource.PROJECT) {
 			return false;
+		}
 		return true;
 	}
 
 	public static boolean isDeleteAvailable(final Object element) {
 
-		if (/* element instanceof PHPWorkspaceModelManager || */element instanceof IScriptProject /* PHPProjectModel */)
+		if (/* element instanceof PHPWorkspaceModelManager || */element instanceof IScriptProject /* PHPProjectModel */) {
 			return false;
+		}
 
-		if (PHPUiConstants.DISABLE_ELEMENT_REFACTORING && !(element instanceof ISourceModule))
+		if (PHPUiConstants.DISABLE_ELEMENT_REFACTORING && !(element instanceof ISourceModule)) {
 			return false;
+		}
 		return true;
 	}
 
@@ -206,15 +223,18 @@ public class ActionUtils {
 		if (objects.length != 0) {
 			final IResource[] resources = getResources(objects);
 			final Object[] elements = getPHPElements(objects);
-			if (objects.length != resources.length + elements.length)
+			if (objects.length != resources.length + elements.length) {
 				return false;
+			}
 			for (int index = 0; index < resources.length; index++) {
-				if (!isDeleteAvailable(resources[index]))
+				if (!isDeleteAvailable(resources[index])) {
 					return false;
+				}
 			}
 			for (int index = 0; index < elements.length; index++) {
-				if (!isDeleteAvailable(elements[index]))
+				if (!isDeleteAvailable(elements[index])) {
 					return false;
+				}
 			}
 			return true;
 		}
@@ -224,8 +244,9 @@ public class ActionUtils {
 	public static boolean arePHPElements(final Object[] elements) {
 		if (elements != null) {
 			for (int index = 0; index < elements.length; index++) {
-				if (elements[index] instanceof IMember && !(elements[index] instanceof ISourceModule))
+				if (elements[index] instanceof IMember && !(elements[index] instanceof ISourceModule)) {
 					return true;
+				}
 			}
 		}
 		return false;

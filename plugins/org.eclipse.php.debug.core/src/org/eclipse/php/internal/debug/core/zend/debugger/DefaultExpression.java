@@ -101,8 +101,9 @@ public class DefaultExpression implements Expression {
 
 	@Override
 	public void addFacets(Facet... facets) {
-		for (Facet facet : facets)
+		for (Facet facet : facets) {
 			this.facets.add(facet);
+		}
 	}
 
 	@Override

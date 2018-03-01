@@ -280,8 +280,9 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 		fPopup.addShellListener(new ShellAdapter() {
 			@Override
 			public void shellDeactivated(ShellEvent e) {
-				if (fIsMenuUp)
+				if (fIsMenuUp) {
 					return;
+				}
 
 				final Shell editorShell = fEditor.getSite().getShell();
 				display.asyncExec(new Runnable() {
@@ -348,8 +349,9 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 	}
 
 	private void updatePopupLocation(boolean force) {
-		if (!force && fSnapPosition == SNAP_POSITION_LOWER_RIGHT)
+		if (!force && fSnapPosition == SNAP_POSITION_LOWER_RIGHT) {
 			return;
+		}
 
 		packPopup();
 		Point loc = computePopupLocation(fSnapPosition);
@@ -406,8 +408,9 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 	 *         visible
 	 */
 	private Point computePopupLocation(int snapPosition) {
-		if (fPopup == null || fPopup.isDisposed())
+		if (fPopup == null || fPopup.isDisposed()) {
 			return null;
+		}
 
 		switch (snapPosition) {
 		case SNAP_POSITION_LOWER_RIGHT: {
@@ -421,8 +424,9 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 		case SNAP_POSITION_UNDER_RIGHT_FIELD:
 		case SNAP_POSITION_OVER_RIGHT_FIELD: {
 			LinkedPosition position = fRenameLinkedMode.getCurrentLinkedPosition();
-			if (position == null)
+			if (position == null) {
 				return null;
+			}
 			ISourceViewer viewer = fEditor.getTextViewer();
 			ITextViewerExtension5 viewer5 = (ITextViewerExtension5) viewer;
 			int widgetOffset = viewer5.modelOffset2WidgetOffset(position.offset + position.length);
@@ -448,8 +452,9 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 		default: // same as SNAP_POSITION_UNDER_LEFT_FIELD
 		{
 			LinkedPosition position = fRenameLinkedMode.getCurrentLinkedPosition();
-			if (position == null)
+			if (position == null) {
 				return null;
+			}
 			ISourceViewer viewer = fEditor.getTextViewer();
 			ITextViewerExtension5 viewer5 = (ITextViewerExtension5) viewer;
 			int widgetOffset = viewer5.modelOffset2WidgetOffset(
@@ -777,7 +782,9 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 	private static String getOpenDialogBinding() {
 		IBindingService bindingService = PlatformUI.getWorkbench().getAdapter(IBindingService.class);
 		if (bindingService == null)
+		 {
 			return ""; //$NON-NLS-1$
+		}
 		String binding = bindingService.getBestActiveBindingFormattedFor("org.eclipse.php.ui.edit.text.rename.element"); //$NON-NLS-1$
 		return binding == null ? "" : binding; //$NON-NLS-1$
 	}
@@ -793,13 +800,16 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 	}
 
 	public boolean ownsFocusShell() {
-		if (fIsMenuUp)
+		if (fIsMenuUp) {
 			return true;
-		if (fPopup == null || fPopup.isDisposed())
+		}
+		if (fPopup == null || fPopup.isDisposed()) {
 			return false;
+		}
 		Shell activeShell = fPopup.getDisplay().getActiveShell();
-		if (fPopup == activeShell)
+		if (fPopup == activeShell) {
 			return true;
+		}
 		return false;
 	}
 
@@ -825,8 +835,9 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 
 	@Override
 	public boolean setFocus(IWidgetTokenOwner owner) {
-		if (fToolBar != null && !fToolBar.isDisposed())
+		if (fToolBar != null && !fToolBar.isDisposed()) {
 			showMenu(fToolBar);
+		}
 		return true;
 	}
 }

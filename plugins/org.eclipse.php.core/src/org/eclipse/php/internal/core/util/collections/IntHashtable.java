@@ -66,12 +66,17 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 */
 	public IntHashtable(int initialCapacity, float loadFactor) {
 		if (initialCapacity < 0)
+		 {
 			throw new IllegalArgumentException("Illegal Capacity: " + initialCapacity); //$NON-NLS-1$
+		}
 		if (loadFactor <= 0 || Float.isNaN(loadFactor))
+		 {
 			throw new IllegalArgumentException("Illegal Load: " + loadFactor); //$NON-NLS-1$
+		}
 
-		if (initialCapacity == 0)
+		if (initialCapacity == 0) {
 			initialCapacity = 1;
+		}
 		this.loadFactor = loadFactor;
 		table = new Entry[initialCapacity];
 		threshold = (int) (initialCapacity * loadFactor);
@@ -398,8 +403,9 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	public synchronized void clear() {
 		Entry tab[] = table;
 		modCount++;
-		for (int index = tab.length; --index >= 0;)
+		for (int index = tab.length; --index >= 0;) {
 			tab[index] = null;
+		}
 		count = 0;
 	}
 
@@ -452,7 +458,9 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 			Map.Entry<?, ?> e = (Map.Entry<?, ?>) (it.next());
 			buf.append(e.getKey() + "=" + e.getValue()); //$NON-NLS-1$
 			if (i < max)
+			 {
 				buf.append(", "); //$NON-NLS-1$
+			}
 		}
 		buf.append("}"); //$NON-NLS-1$
 		return buf.toString();
@@ -511,8 +519,9 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 */
 	@Override
 	public Set<?> entrySet() {
-		if (entrySet == null)
+		if (entrySet == null) {
 			entrySet = Collections.synchronizedSet(new EntrySet());
+		}
 		return entrySet;
 	}
 
@@ -524,24 +533,28 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 
 		@Override
 		public boolean contains(Object o) {
-			if (!(o instanceof IntMap.Entry))
+			if (!(o instanceof IntMap.Entry)) {
 				return false;
+			}
 			IntMap.Entry entry = (IntMap.Entry) o;
 			/* Object */int key = entry.getKey();
 			Entry tab[] = table;
 			int hash = key;// .hashCode();
 			int index = (hash & 0x7FFFFFFF) % tab.length;
 
-			for (Entry e = tab[index]; e != null; e = e.next)
-				if (e.hash == hash && e.equals(entry))
+			for (Entry e = tab[index]; e != null; e = e.next) {
+				if (e.hash == hash && e.equals(entry)) {
 					return true;
+				}
+			}
 			return false;
 		}
 
 		@Override
 		public boolean remove(Object o) {
-			if (!(o instanceof IntMap.Entry))
+			if (!(o instanceof IntMap.Entry)) {
 				return false;
+			}
 			IntMap.Entry entry = (IntMap.Entry) o;
 			/* Object */int key = entry.getKey();
 			Entry tab[] = table;
@@ -551,10 +564,11 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 			for (Entry e = tab[index], prev = null; e != null; prev = e, e = e.next) {
 				if (e.hash == hash && e.equals(entry)) {
 					modCount++;
-					if (prev != null)
+					if (prev != null) {
 						prev.next = e.next;
-					else
+					} else {
 						tab[index] = e.next;
+					}
 
 					count--;
 					e.value = null;
@@ -587,8 +601,9 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 */
 	@Override
 	public Collection<?> values() {
-		if (values == null)
+		if (values == null) {
 			values = Collections.synchronizedCollection(new ValueCollection());
+		}
 		return values;
 	}
 
@@ -626,14 +641,17 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 */
 	@Override
 	public synchronized boolean equals(Object o) {
-		if (o == this)
+		if (o == this) {
 			return true;
+		}
 
-		if (!(o instanceof IntMap))
+		if (!(o instanceof IntMap)) {
 			return false;
+		}
 		IntMap t = (IntMap) o;
-		if (t.size() != size())
+		if (t.size() != size()) {
 			return false;
+		}
 
 		Iterator<?> i = entrySet().iterator();
 		while (i.hasNext()) {
@@ -641,11 +659,13 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 			/* Object */int key = e.getKey();
 			Object value = e.getValue();
 			if (value == null) {
-				if (!(t.get(key) == null && t.containsKey(key)))
+				if (!(t.get(key) == null && t.containsKey(key))) {
 					return false;
+				}
 			} else {
-				if (!value.equals(t.get(key)))
+				if (!value.equals(t.get(key))) {
 					return false;
+				}
 			}
 		}
 		return true;
@@ -662,8 +682,9 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	public synchronized int hashCode() {
 		int h = 0;
 		Iterator<?> i = entrySet().iterator();
-		while (i.hasNext())
+		while (i.hasNext()) {
 			h += i.next().hashCode();
+		}
 		return h;
 	}
 
@@ -711,10 +732,12 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 		// odd if it's large enough, this helps distribute the entries.
 		// Guard against the length ending up zero, that's not valid.
 		int length = (int) (elements * loadFactor) + (elements / 20) + 3;
-		if (length > elements && (length & 1) == 0)
+		if (length > elements && (length & 1) == 0) {
 			length--;
-		if (origlength > 0 && length > origlength)
+		}
+		if (origlength > 0 && length > origlength) {
 			length = origlength;
+		}
 
 		table = new Entry[length];
 		count = 0;
@@ -762,8 +785,9 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 
 		@Override
 		public Object setValue(Object value) {
-			if (value == null)
+			if (value == null) {
 				throw new NullPointerException();
+			}
 
 			Object oldValue = this.value;
 			this.value = value;
@@ -772,8 +796,9 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 
 		@Override
 		public boolean equals(Object o) {
-			if (!(o instanceof IntMap.Entry))
+			if (!(o instanceof IntMap.Entry)) {
 				return false;
+			}
 			IntMap.Entry e = (IntMap.Entry) o;
 
 			return (key == 0 ? e.getKey() == 0 : key/* .equals( */ == e.getKey()/* ) */)
@@ -869,19 +894,24 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 
 		@Override
 		public Object next() {
-			if (modCount != expectedModCount)
+			if (modCount != expectedModCount) {
 				throw new ConcurrentModificationException();
+			}
 			return nextElement();
 		}
 
 		@Override
 		public void remove() {
-			if (!iterator)
+			if (!iterator) {
 				throw new UnsupportedOperationException();
+			}
 			if (lastReturned == null)
+			 {
 				throw new IllegalStateException("Hashtable Enumerator"); //$NON-NLS-1$
-			if (modCount != expectedModCount)
+			}
+			if (modCount != expectedModCount) {
 				throw new ConcurrentModificationException();
+			}
 
 			synchronized (IntHashtable.this) {
 				Entry[] tab = IntHashtable.this.table;
@@ -891,10 +921,11 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 					if (e == lastReturned) {
 						modCount++;
 						expectedModCount++;
-						if (prev == null)
+						if (prev == null) {
 							tab[index] = e.next;
-						else
+						} else {
 							prev.next = e.next;
+						}
 						count--;
 						lastReturned = null;
 						return;

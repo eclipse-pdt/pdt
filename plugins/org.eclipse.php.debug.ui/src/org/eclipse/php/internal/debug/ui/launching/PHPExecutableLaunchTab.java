@@ -83,10 +83,11 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		public void widgetSelected(final SelectionEvent e) {
 			setDirty(true);
 			final Object source = e.getSource();
-			if (source == fileLocationButton)
+			if (source == fileLocationButton) {
 				handleFileLocationButtonSelected();
-			else if (source == argumentVariablesButton)
+			} else if (source == argumentVariablesButton) {
 				handleChangeFileToDebug(fileTextField);
+			}
 		}
 	}
 
@@ -168,8 +169,9 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 */
 	@Override
 	public void initializeFrom(final ILaunchConfiguration configuration) {
-		if (enableFileSelection)
+		if (enableFileSelection) {
 			updateArgument(configuration);
+		}
 		try {
 			prgmArgumentsText
 					.setText(configuration.getAttribute(IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS, "")); //$NON-NLS-1$
@@ -196,8 +198,9 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			boolean phpExeExists = true;
 			try {
 				final File file = new File(phpExe);
-				if (!file.exists())
+				if (!file.exists()) {
 					phpExeExists = false;
+				}
 			} catch (final NullPointerException e) {
 				phpExeExists = false;
 			}
@@ -235,10 +238,13 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			// Check if script arguments can be passed (CLI SAPI required)
 			String exeProgramArgs = prgmArgumentsText != null ? prgmArgumentsText.getText() : null;
 			if (exeProgramArgs == null)
+			 {
 				exeProgramArgs = launchConfig.getAttribute(IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS, ""); //$NON-NLS-1$
+			}
 			if (!exeProgramArgs.isEmpty()) {
-				if (phpExeItem != null && !(PHPexeItem.SAPI_CLI.equals(phpExeItem.getSapiType())))
+				if (phpExeItem != null && !(PHPexeItem.SAPI_CLI.equals(phpExeItem.getSapiType()))) {
 					setWarningMessage(PHPDebugUIMessages.PHPExecutableLaunchTab_argumentsWillNotBePassed);
+				}
 			}
 		} catch (final CoreException e) {
 		}
@@ -303,8 +309,9 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			if (executableLocation.equals("")) { //$NON-NLS-1$
 				PHPexes phpExes = PHPexes.getInstance();
 				final PHPexeItem phpExeItem = phpExes.getDefaultItem();
-				if (phpExeItem == null)
+				if (phpExeItem == null) {
 					return;
+				}
 				executableLocation = phpExeItem.getExecutable().toString();
 				configuration.setAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, executableLocation);
 				String iniPath = phpExeItem.getINILocation() != null ? phpExeItem.getINILocation().toString() : null;
@@ -325,19 +332,23 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		// strip mnemonic (&)
 		final String[] strs = controlName.split("&"); //$NON-NLS-1$
 		final StringBuffer stripped = new StringBuffer();
-		for (String element : strs)
+		for (String element : strs) {
 			stripped.append(element);
+		}
 		control.getAccessible().addAccessibleListener(new ControlAccessibleListener(stripped.toString()));
 	}
 
 	public void setEnableFileSelection(final boolean enabled) {
-		if (enabled == enableFileSelection)
+		if (enabled == enableFileSelection) {
 			return;
+		}
 		enableFileSelection = enabled;
-		if (argumentVariablesButton != null)
+		if (argumentVariablesButton != null) {
 			argumentVariablesButton.setVisible(enabled);
-		if (fileTextField != null)
+		}
+		if (fileTextField != null) {
 			fileTextField.setVisible(enabled);
+		}
 	}
 
 	/**
@@ -474,8 +485,9 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		fileDialog.setFileName(locationField.getText());
 
 		final String text = fileDialog.open();
-		if (text != null)
+		if (text != null) {
 			locationField.setText(text);
+		}
 
 	}
 

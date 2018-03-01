@@ -23,8 +23,9 @@ public class PublishTask extends PublishTaskDelegate {
 
 	@Override
 	public PublishOperation[] getTasks(IServer server, int kind, List modules, List kindList) {
-		if (modules == null)
+		if (modules == null) {
 			return null;
+		}
 
 		PHPServerBehaviour phpServer = (PHPServerBehaviour) server.loadAdapter(PHPServerBehaviour.class, null);
 

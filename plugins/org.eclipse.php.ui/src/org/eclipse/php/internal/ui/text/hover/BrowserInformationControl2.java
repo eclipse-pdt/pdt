@@ -38,10 +38,12 @@ public class BrowserInformationControl2 extends BrowserInformationControl
 	@Override
 	public boolean containsControl(Control control) {
 		do {
-			if (control == getShell())
+			if (control == getShell()) {
 				return true;
-			if (control instanceof Shell)
+			}
+			if (control instanceof Shell) {
 				return false;
+			}
 			control = control.getParent();
 		} while (control != null);
 		return false;

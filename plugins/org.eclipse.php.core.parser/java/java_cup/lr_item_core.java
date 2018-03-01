@@ -35,15 +35,17 @@ public class lr_item_core {
       symbol          after_dot = null;
       production_part part;
 
-      if (prod == null)
-	throw new internal_error(
-	  "Attempt to create an lr_item_core with a null production");
+      if (prod == null) {
+		throw new internal_error(
+		  "Attempt to create an lr_item_core with a null production");
+	}
 
       _the_production = prod;
 
-      if (pos < 0 || pos > _the_production.rhs_length())
-	throw new internal_error(
-	  "Attempt to create an lr_item_core with a bad dot position");
+      if (pos < 0 || pos > _the_production.rhs_length()) {
+		throw new internal_error(
+		  "Attempt to create an lr_item_core with a bad dot position");
+	}
 
       _dot_pos = pos;
 
@@ -54,8 +56,9 @@ public class lr_item_core {
       if (_dot_pos < _the_production.rhs_length())
 	{
 	  part = _the_production.rhs(_dot_pos);
-	  if (!part.is_action())
-	    _symbol_after_dot = ((symbol_part)part).the_symbol();
+	  if (!part.is_action()) {
+		_symbol_after_dot = ((symbol_part)part).the_symbol();
+	}
 	}
     } 
 
@@ -134,10 +137,11 @@ public class lr_item_core {
       sym = symbol_after_dot();
 
       /* if it exists and is a non terminal, return it */
-      if (sym != null && sym.is_non_term())
-	return (non_terminal)sym;
-      else
-	return null;
+      if (sym != null && sym.is_non_term()) {
+		return (non_terminal)sym;
+	} else {
+		return null;
+	}
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
@@ -147,9 +151,10 @@ public class lr_item_core {
    */
   public lr_item_core shift_core() throws internal_error
     {
-      if (dot_at_end()) 
-	throw new internal_error(
-	  "Attempt to shift past end of an lr_item_core");
+      if (dot_at_end()) {
+		throw new internal_error(
+		  "Attempt to shift past end of an lr_item_core");
+	}
 
       return new lr_item_core(_the_production, _dot_pos+1);
     }
@@ -174,12 +179,14 @@ public class lr_item_core {
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Generic equality comparison. */
-  public boolean equals(Object other)
+  @Override
+public boolean equals(Object other)
     {
-      if (!(other instanceof lr_item_core))
-	return false;
-      else
-	return equals((lr_item_core)other);
+      if (!(other instanceof lr_item_core)) {
+		return false;
+	} else {
+		return equals((lr_item_core)other);
+	}
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
@@ -193,7 +200,8 @@ public class lr_item_core {
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Hash code for the item. */
-  public int hashCode() 
+  @Override
+public int hashCode() 
     {
       return _core_hash_cache;
     }
@@ -220,18 +228,20 @@ public class lr_item_core {
 
       if (_the_production.lhs() != null && 
 	  _the_production.lhs().the_symbol() != null &&
-	  _the_production.lhs().the_symbol().name() != null)
-	result = _the_production.lhs().the_symbol().name();
-      else
-	result = "$$NULL$$";
+	  _the_production.lhs().the_symbol().name() != null) {
+		result = _the_production.lhs().the_symbol().name();
+	} else {
+		result = "$$NULL$$";
+	}
 
       result += " ::= ";
 
       for (int i = 0; i<_the_production.rhs_length(); i++)
 	{
 	  /* do we need the dot before this one? */
-	  if (i == _dot_pos)
-	    result += "(*) ";
+	  if (i == _dot_pos) {
+		result += "(*) ";
+	}
 	  
 	  /* print the name of the part */
 	  if (_the_production.rhs(i) == null)
@@ -241,21 +251,23 @@ public class lr_item_core {
 	  else
 	    {
 	      part = _the_production.rhs(i);
-	      if (part == null)
-		result += "$$NULL$$ ";
-	      else if (part.is_action())
-		result += "{ACTION} ";
-	      else if (((symbol_part)part).the_symbol() != null &&
-                       ((symbol_part)part).the_symbol().name() != null)
-		result += ((symbol_part)part).the_symbol().name() + " ";
-	      else
-		result += "$$NULL$$ ";
+	      if (part == null) {
+			result += "$$NULL$$ ";
+		} else if (part.is_action()) {
+			result += "{ACTION} ";
+		} else if (((symbol_part)part).the_symbol() != null &&
+                       ((symbol_part)part).the_symbol().name() != null) {
+			result += ((symbol_part)part).the_symbol().name() + " ";
+		} else {
+			result += "$$NULL$$ ";
+		}
 	    }
 	}
 
       /* put the dot after if needed */
-      if (_dot_pos == _the_production.rhs_length())
-	result += "(*) ";
+      if (_dot_pos == _the_production.rhs_length()) {
+		result += "(*) ";
+	}
 
       return result;
     }
@@ -263,7 +275,8 @@ public class lr_item_core {
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Convert to a string */
-  public String toString() 
+  @Override
+public String toString() 
     {
       /* can't throw here since super class doesn't, so we crash instead */
       try {

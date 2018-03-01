@@ -203,13 +203,16 @@ public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 		 * @return merged variable
 		 */
 		protected IVariable merge(IVariable variable) {
-			if (fPreviousVariables == null)
+			if (fPreviousVariables == null) {
 				return variable;
-			if (!(variable instanceof DBGpVariable))
+			}
+			if (!(variable instanceof DBGpVariable)) {
 				return variable;
+			}
 			DBGpVariable incoming = (DBGpVariable) variable;
-			if (incoming.getFullName().isEmpty())
+			if (incoming.getFullName().isEmpty()) {
 				return incoming;
+			}
 			IVariable stored = fPreviousVariables.get(incoming.getFullName());
 			if (stored != null) {
 				((DBGpVariable) stored).update(incoming.getDescriptor());
@@ -327,8 +330,9 @@ public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 
 		@Override
 		public void addFacets(Facet... facets) {
-			for (Facet facet : facets)
+			for (Facet facet : facets) {
 				this.fFacets.add(facet);
+			}
 		}
 
 	}
@@ -378,8 +382,9 @@ public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 		if (childCountNumber != null && childCountNumber.trim().length() != 0) {
 			try {
 				childCount = Integer.parseInt(childCountNumber);
-				if (childCount > 0)
+				if (childCount > 0) {
 					fHasVariables = true;
+				}
 			} catch (NumberFormatException nfe) {
 			}
 		}

@@ -59,17 +59,20 @@ public class ImageDescriptorRegistry {
 	 *         requested image.
 	 */
 	public Image get(ImageDescriptor descriptor) {
-		if (descriptor == null)
+		if (descriptor == null) {
 			descriptor = ImageDescriptor.getMissingImageDescriptor();
+		}
 
 		Image result = fRegistry.get(descriptor);
-		if (result != null)
+		if (result != null) {
 			return result;
+		}
 
 		Assert.isTrue(fDisplay == SWTUtil.getStandardDisplay(), "Allocating image for wrong display."); //$NON-NLS-1$
 		result = descriptor.createImage();
-		if (result != null)
+		if (result != null) {
 			fRegistry.put(descriptor, result);
+		}
 		return result;
 	}
 

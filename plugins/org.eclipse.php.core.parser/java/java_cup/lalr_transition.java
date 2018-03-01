@@ -25,10 +25,12 @@ public class lalr_transition {
     throws internal_error
     {
       /* sanity checks */
-      if (on_sym == null)
-	throw new internal_error("Attempt to create transition on null symbol");
-      if (to_st == null)
-	throw new internal_error("Attempt to create transition to null state");
+      if (on_sym == null) {
+		throw new internal_error("Attempt to create transition on null symbol");
+	}
+      if (to_st == null) {
+		throw new internal_error("Attempt to create transition to null state");
+	}
 
       /* initialize */
       _on_symbol = on_sym;
@@ -78,7 +80,8 @@ public class lalr_transition {
   /*-----------------------------------------------------------*/
 
   /** Convert to a string. */
-  public String toString()
+  @Override
+public String toString()
     {
       String result;
 

@@ -60,8 +60,9 @@ public class StatementAnalyzer extends SelectionAnalyzer {
 
 	protected void checkSelectedNodes() {
 		ASTNode[] nodes = getSelectedNodes();
-		if (nodes.length == 0)
+		if (nodes.length == 0) {
 			return;
+		}
 
 		ASTNode node = nodes[0];
 		int selectionOffset = getSelection().getOffset();
@@ -125,8 +126,9 @@ public class StatementAnalyzer extends SelectionAnalyzer {
 		// fStatus.merge(CommentAnalyzer.perform(selection,
 		// fScanner.getScanner(), parent.getStart(), parent.getLength()));
 		// }
-		if (!fStatus.hasFatalError())
+		if (!fStatus.hasFatalError()) {
 			checkSelectedNodes();
+		}
 		super.endVisit(program);
 	}
 
@@ -250,24 +252,27 @@ public class StatementAnalyzer extends SelectionAnalyzer {
 		List<Object> result = new ArrayList<>();
 		for (Iterator<?> iter = node.getBody().statements().iterator(); iter.hasNext();) {
 			Object element = iter.next();
-			if (element instanceof SwitchCase)
+			if (element instanceof SwitchCase) {
 				result.add(element);
+			}
 		}
 		return result;
 	}
 
 	protected static boolean contains(ASTNode[] nodes, ASTNode node) {
 		for (int i = 0; i < nodes.length; i++) {
-			if (nodes[i] == node)
+			if (nodes[i] == node) {
 				return true;
+			}
 		}
 		return false;
 	}
 
 	protected static boolean contains(ASTNode[] nodes, List<?> list) {
 		for (int i = 0; i < nodes.length; i++) {
-			if (list.contains(nodes[i]))
+			if (list.contains(nodes[i])) {
 				return true;
+			}
 		}
 		return false;
 	}

@@ -99,10 +99,12 @@ public final class ProjectTemplateStore {
 
 	public Template findTemplateById(String id) {
 		Template template = null;
-		if (fProjectStore != null)
+		if (fProjectStore != null) {
 			template = fProjectStore.findTemplateById(id);
-		if (template == null)
+		}
+		if (template == null) {
 			template = fInstanceStore.findTemplateById(id);
+		}
 
 		return template;
 	}
@@ -135,8 +137,9 @@ public final class ProjectTemplateStore {
 			return false;
 		}
 
-		if (fProjectStore == null)
+		if (fProjectStore == null) {
 			return false;
+		}
 
 		return fProjectStore.findTemplateById(id) != null;
 	}

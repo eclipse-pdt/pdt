@@ -55,13 +55,15 @@ public class DeleteResourceElementsOperation extends MultiOperation {
 			Object[] nonScriptResources = frag.getForeignResources();
 			int actualResourceCount = 0;
 			for (int i = 0, max = nonScriptResources.length; i < max; i++) {
-				if (nonScriptResources[i] instanceof IResource)
+				if (nonScriptResources[i] instanceof IResource) {
 					actualResourceCount++;
+				}
 			}
 			IResource[] actualNonScriptResources = new IResource[actualResourceCount];
 			for (int i = 0, max = nonScriptResources.length, index = 0; i < max; i++) {
-				if (nonScriptResources[i] instanceof IResource)
+				if (nonScriptResources[i] instanceof IResource) {
 					actualNonScriptResources[index++] = (IResource) nonScriptResources[i];
+				}
 			}
 			deleteResources(actualNonScriptResources, force);
 			// delete remaining files in this package (.class file in the case
@@ -139,11 +141,12 @@ public class DeleteResourceElementsOperation extends MultiOperation {
 			error(IModelStatusConstants.ELEMENT_DOES_NOT_EXIST, element);
 		} else {
 			int type = element.getElementType();
-			if (type <= IModelElement.PROJECT_FRAGMENT || type > IModelElement.SOURCE_MODULE)
+			if (type <= IModelElement.PROJECT_FRAGMENT || type > IModelElement.SOURCE_MODULE) {
 				error(IModelStatusConstants.INVALID_ELEMENT_TYPES, element);
-			else if (type == IModelElement.SCRIPT_FOLDER
-					&& (element instanceof ArchiveProjectFragment || element instanceof ExternalScriptFolder))
+			} else if (type == IModelElement.SCRIPT_FOLDER
+					&& (element instanceof ArchiveProjectFragment || element instanceof ExternalScriptFolder)) {
 				error(IModelStatusConstants.INVALID_ELEMENT_TYPES, element);
+			}
 			IResource resource = element.getResource();
 			if (resource instanceof IFolder) {
 				if (resource.isLinked()) {

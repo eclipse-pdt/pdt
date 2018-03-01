@@ -133,8 +133,9 @@ public class DaemonsRegistry {
 					break;
 				}
 			}
-			if (isTopHierarchy)
+			if (isTopHierarchy) {
 				topHierarchyEntries.add(entryToCheck);
+			}
 		}
 		for (Entry entry : topHierarchyEntries) {
 			ICommunicationDaemon daemon;

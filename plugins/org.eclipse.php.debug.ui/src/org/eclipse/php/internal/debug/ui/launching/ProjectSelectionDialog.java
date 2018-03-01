@@ -46,8 +46,9 @@ public class ProjectSelectionDialog extends ElementListSelectionDialog {
 				int numProjects = projects.length;
 				for (int i = 0; i < numProjects; i++) {
 					try {
-						if (projectHasRequiredNatures(projects[i]))
+						if (projectHasRequiredNatures(projects[i])) {
 							filteredProjects.add(projects[i]);
+						}
 					} catch (CoreException ce) {
 						// Project does not exist or is not open, so skip it
 					}
@@ -66,8 +67,9 @@ public class ProjectSelectionDialog extends ElementListSelectionDialog {
 	private boolean projectHasRequiredNatures(IProject project) throws CoreException {
 		if (requiredNatures != null) {
 			for (int i = 0; i < requiredNatures.length; i++) {
-				if (!project.hasNature(requiredNatures[i]))
+				if (!project.hasNature(requiredNatures[i])) {
 					return false;
+				}
 			}
 			return true;
 		}

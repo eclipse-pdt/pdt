@@ -165,10 +165,11 @@ public class PHPResourceMarkerAnnotationModel extends SourceModuleAnnotationMode
 				image = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_INFO_TSK);
 			}
 
-			if (image != null && isGrayed())
+			if (image != null && isGrayed()) {
 				setImage(getGrayImage(display, image));
-			else
+			} else {
 				setImage(image);
+			}
 
 			return super.getImage(display);
 		}

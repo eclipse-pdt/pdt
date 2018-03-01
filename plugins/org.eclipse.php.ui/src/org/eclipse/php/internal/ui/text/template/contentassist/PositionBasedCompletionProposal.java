@@ -144,8 +144,9 @@ public class PositionBasedCompletionProposal
 	 */
 	@Override
 	public String getDisplayString() {
-		if (fDisplayString != null)
+		if (fDisplayString != null) {
 			return fDisplayString;
+		}
 		return fReplacementString;
 	}
 
@@ -192,8 +193,9 @@ public class PositionBasedCompletionProposal
 	public boolean validate(IDocument document, int offset, DocumentEvent event) {
 		try {
 			String content = document.get(fReplacementPosition.getOffset(), offset - fReplacementPosition.getOffset());
-			if (fReplacementString.startsWith(content))
+			if (fReplacementString.startsWith(content)) {
 				return true;
+			}
 		} catch (BadLocationException e) {
 			// ignore concurrently modified document
 		}

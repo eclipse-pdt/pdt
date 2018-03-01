@@ -60,13 +60,15 @@ public class lalr_state {
   public lalr_state(lalr_item_set itms) throws internal_error
    {
      /* don't allow null or duplicate item sets */
-     if (itms == null)
-       throw new internal_error(
-	 "Attempt to construct an LALR state from a null item set");
+     if (itms == null) {
+		throw new internal_error(
+		 "Attempt to construct an LALR state from a null item set");
+	}
 
-     if (find_state(itms) != null)
-       throw new internal_error(
-	 "Attempt to construct a duplicate LALR state");
+     if (find_state(itms) != null) {
+		throw new internal_error(
+		 "Attempt to construct a duplicate LALR state");
+	}
 
      /* assign a unique index */
       _index = next_index++;
@@ -119,10 +121,11 @@ public class lalr_state {
    */
   public static lalr_state find_state(lalr_item_set itms)
     {
-      if (itms == null) 
-  	return null;
-      else
-  	return (lalr_state)_all.get(itms);
+      if (itms == null) {
+		return null;
+	} else {
+		return (lalr_state)_all.get(itms);
+	}
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
@@ -185,14 +188,19 @@ public class lalr_state {
 	  System.out.print(" ::= ");
 	  for (int i = 0; i<itm.the_production().rhs_length(); i++)
 	    {
-	      if (i == itm.dot_pos()) System.out.print("(*) ");
+	      if (i == itm.dot_pos()) {
+			System.out.print("(*) ");
+		}
 	      part = itm.the_production().rhs(i);
-	      if (part.is_action()) 
-		System.out.print("{action} ");
-	      else
-		System.out.print(((symbol_part)part).the_symbol().name() + " ");
+	      if (part.is_action()) {
+			System.out.print("{action} ");
+		} else {
+			System.out.print(((symbol_part)part).the_symbol().name() + " ");
+		}
 	    }
-	  if (itm.dot_at_end()) System.out.print("(*) ");
+	  if (itm.dot_at_end()) {
+		System.out.print("(*) ");
+	}
 	  System.out.println("]");
 	}
       System.out.println("}");
@@ -291,9 +299,10 @@ public class lalr_state {
       Enumeration   i, s, fix;
 
       /* sanity check */
-      if (start_prod == null)
-	throw new internal_error(
- 	  "Attempt to build viable prefix recognizer using a null production");
+      if (start_prod == null) {
+		throw new internal_error(
+		  "Attempt to build viable prefix recognizer using a null production");
+	}
 
       /* build item with dot at front of start production and EOF lookahead */
       start_items = new lalr_item_set();
@@ -330,7 +339,9 @@ public class lalr_state {
 
 	      /* add the symbol before the dot (if any) to our collection */
 	      sym = itm.symbol_after_dot();
-	      if (sym != null) outgoing.add(sym);
+	      if (sym != null) {
+			outgoing.add(sym);
+		}
 	    }
 
 	  /* now create a transition out for each individual symbol */
@@ -400,8 +411,9 @@ public class lalr_state {
 			  existing = new_st.items().find(new_itm);
 
 			  /* fix up the item so it points to the existing set */
-			  if (existing != null)
-			    fix_itm.propagate_items().setElementAt(existing ,l);
+			  if (existing != null) {
+				fix_itm.propagate_items().setElementAt(existing ,l);
+			}
 			}
 		    }
 		}
@@ -428,8 +440,9 @@ public class lalr_state {
   protected void propagate_lookaheads() throws internal_error
     {
       /* recursively propagate out from each item in the state */
-      for (Enumeration itm = items().all(); itm.hasMoreElements(); )
-	((lalr_item)itm.nextElement()).propagate_lookaheads(null);
+      for (Enumeration itm = items().all(); itm.hasMoreElements(); ) {
+		((lalr_item)itm.nextElement()).propagate_lookaheads(null);
+	}
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
@@ -486,7 +499,9 @@ public class lalr_state {
 	      for (int t = 0; t < terminal.number(); t++)
 		{
 		  /* skip over the ones not in the lookahead */
-		  if (!itm.lookahead().contains(t)) continue;
+		  if (!itm.lookahead().contains(t)) {
+			continue;
+		}
 
 	          /* if we don't already have an action put this one in */
 	          if (our_act_row.under_term[t].kind() == 
@@ -562,8 +577,9 @@ public class lalr_state {
 	}
 
       /* if we end up with conflict(s), report them */
-      if (!conflict_set.empty())
-        report_conflicts(conflict_set);
+      if (!conflict_set.empty()) {
+		report_conflicts(conflict_set);
+	}
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
@@ -729,7 +745,9 @@ public class lalr_state {
 		  compare = (lalr_item)comps.nextElement();
 
 		  /* if this is the item, next one is after it */
-		  if (itm == compare) after_itm = true;
+		  if (itm == compare) {
+			after_itm = true;
+		}
 
 		  /* only look at it if its not the same item */
 		  if (itm != compare)
@@ -738,19 +756,23 @@ public class lalr_state {
 		      if (compare.dot_at_end())
 			{
 			  /* only look at reduces after itm */
-			  if (after_itm)
-                            /* does the comparison item conflict? */
-                            if (compare.lookahead().intersects(itm.lookahead()))
-                              /* report a reduce/reduce conflict */
-                              report_reduce_reduce(itm, compare);
+			  if (after_itm) {
+				/* does the comparison item conflict? */
+				if (compare.lookahead().intersects(itm.lookahead())) {
+					/* report a reduce/reduce conflict */
+					  report_reduce_reduce(itm, compare);
+				}
+			}
 			}
 		    }
 		}
 	      /* report S/R conflicts under all the symbols we conflict under */
 	      terminal_set lookahead = itm.lookahead(); 
-	      for (int t = 0; t < terminal.number(); t++)
-	    	  if (conflict_set.contains(t) && lookahead.contains(t))
-	    		  report_shift_reduce(itm,t);
+	      for (int t = 0; t < terminal.number(); t++) {
+			if (conflict_set.contains(t) && lookahead.contains(t)) {
+				report_shift_reduce(itm,t);
+			}
+		}
 	    }
 	}
     }
@@ -775,15 +797,20 @@ public class lalr_state {
 	{
 	  if (itm1.lookahead().contains(t) && itm2.lookahead().contains(t))
 	    {
-	      if (comma_flag) message+=(", "); else comma_flag = true;
+	      if (comma_flag) {
+			message+=(", ");
+		} else {
+			comma_flag = true;
+		}
 	      message += (terminal.find(t).name());
 	    }
 	}
       message += "}\n  Resolved in favor of ";
-      if (itm1.the_production().index() < itm2.the_production().index())
-	message+="the first production.\n";
-      else
-	message+="the second production.\n";
+      if (itm1.the_production().index() < itm2.the_production().index()) {
+		message+="the first production.\n";
+	} else {
+		message+="the second production.\n";
+	}
 
       /* count the conflict */
       emit.num_conflicts++;
@@ -831,7 +858,9 @@ public class lalr_state {
 	}
       message += "  under symbol "+ terminal.find(conflict_sym).name() + "\n"+
       "  Resolved in favor of shifting.\n";
-      if (relevancecounter==0) return;
+      if (relevancecounter==0) {
+		return;
+	}
       /* count the conflict */
       emit.num_conflicts++;
       ErrorManager.getManager().emit_warning(message);
@@ -849,18 +878,21 @@ public class lalr_state {
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Generic equality comparison. */
-  public boolean equals(Object other)
+  @Override
+public boolean equals(Object other)
     {
-      if (!(other instanceof lalr_state))
-	return false;
-      else
-	return equals((lalr_state)other);
+      if (!(other instanceof lalr_state)) {
+		return false;
+	} else {
+		return equals((lalr_state)other);
+	}
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Produce a hash code. */
-  public int hashCode()
+  @Override
+public int hashCode()
     {
       /* just use the item set hash code */
       return items().hashCode();
@@ -869,7 +901,8 @@ public class lalr_state {
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Convert to a string. */
-  public String toString()
+  @Override
+public String toString()
     {
       String result;
       lalr_transition tr;

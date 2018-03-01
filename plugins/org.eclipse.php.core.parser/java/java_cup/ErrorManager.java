@@ -55,9 +55,13 @@ public class ErrorManager{
         String result = (symbol.value == null)? "" : " (\""+symbol.value.toString()+"\")";
         Field [] fields = sym.class.getFields();
         for (int i = 0; i < fields.length ; i++){
-            if (!Modifier.isPublic(fields[i].getModifiers())) continue;
+            if (!Modifier.isPublic(fields[i].getModifiers())) {
+				continue;
+			}
             try {
-                if (fields[i].getInt(null) == symbol.sym) return fields[i].getName()+result;
+                if (fields[i].getInt(null) == symbol.sym) {
+					return fields[i].getName()+result;
+				}
             }catch (Exception ex) {
             }
         }

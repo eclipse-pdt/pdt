@@ -114,13 +114,15 @@ public class FindMethodExitOccurrencesAction extends org.eclipse.dltk.ui.actions
 	@Override
 	public final void run(ITextSelection ts) {
 		ISourceModule input = getEditorInput(fEditor);
-		if (!ActionUtil.isProcessable(getShell(), input))
+		if (!ActionUtil.isProcessable(getShell(), input)) {
 			return;
+		}
 		FindOccurrencesEngine engine = FindOccurrencesEngine.create(new MethodExitsFinder());
 		try {
 			String result = engine.run(input, ts.getOffset(), ts.getLength());
-			if (result != null)
+			if (result != null) {
 				showMessage(getShell(), fEditor, result);
+			}
 		} catch (ModelException | IOException e) {
 			PHPUiPlugin.log(e);
 		}
@@ -132,8 +134,9 @@ public class FindMethodExitOccurrencesAction extends org.eclipse.dltk.ui.actions
 
 	private static void showMessage(Shell shell, PHPStructuredEditor editor, String msg) {
 		IEditorStatusLine statusLine = (IEditorStatusLine) editor.getAdapter(IEditorStatusLine.class);
-		if (statusLine != null)
+		if (statusLine != null) {
 			statusLine.setMessage(true, msg, null);
+		}
 		shell.getDisplay().beep();
 	}
 }

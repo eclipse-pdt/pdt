@@ -20,9 +20,10 @@ public class shift_action extends parse_action {
   public shift_action(lalr_state shft_to) throws internal_error
     {
       /* sanity check */
-      if (shft_to == null)
-	throw new internal_error(
-	  "Attempt to create a shift_action to a null state");
+      if (shft_to == null) {
+		throw new internal_error(
+		  "Attempt to create a shift_action to a null state");
+	}
 
       _shift_to = shft_to;
     }
@@ -42,7 +43,8 @@ public class shift_action extends parse_action {
   /*-----------------------------------------------------------*/
 
   /** Quick access to type of action. */
-  public int kind() {return SHIFT;}
+  @Override
+public int kind() {return SHIFT;}
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
@@ -55,18 +57,21 @@ public class shift_action extends parse_action {
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Generic equality test. */
-  public boolean equals(Object other)
+  @Override
+public boolean equals(Object other)
     {
-      if (other instanceof shift_action)
-	return equals((shift_action)other);
-      else
-       return false;
+      if (other instanceof shift_action) {
+		return equals((shift_action)other);
+	} else {
+		return false;
+	}
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Compute a hash code. */
-  public int hashCode()
+  @Override
+public int hashCode()
     {
       /* use the hash code of the state we are shifting to */
       return shift_to().hashCode();
@@ -75,7 +80,8 @@ public class shift_action extends parse_action {
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Convert to a string. */
-  public String toString() {return "SHIFT(to state " + shift_to().index() + ")";}
+  @Override
+public String toString() {return "SHIFT(to state " + shift_to().index() + ")";}
 
   /*-----------------------------------------------------------*/
 

@@ -45,8 +45,9 @@ abstract public class TestTemplate extends TextTemplate {
 	private List<String> requires;
 
 	public void addRequire(final String location) {
-		if (requires == null)
+		if (requires == null) {
 			requires = new ArrayList<>(1);
+		}
 		requires.add(location.replace('\\', '/'));
 	}
 
@@ -98,9 +99,9 @@ abstract public class TestTemplate extends TextTemplate {
 
 	public void setTestSuperClass(final IType superClass, String superClassName, final IProject project) {
 		String superClassFileName = null;
-		if (superClass == null)
+		if (superClass == null) {
 			superClassFileName = null;
-		else {
+		} else {
 			final IScriptProject create = DLTKCore.create(project);
 			final IPath relative = IncludePathUtils.getRelativeLocationFromIncludePath(create, superClass);
 			if (!relative.isEmpty()) {

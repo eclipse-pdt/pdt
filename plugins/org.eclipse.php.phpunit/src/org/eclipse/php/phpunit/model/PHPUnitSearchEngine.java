@@ -230,18 +230,24 @@ public class PHPUnitSearchEngine {
 
 	private boolean collectElementsRecursive(final Object parent, final IProgressMonitor pm, final Set<IType> result,
 			final int flags) {
-		if (parent instanceof Collection)
+		if (parent instanceof Collection) {
 			return collectFromObject(((Collection<?>) parent).toArray(), pm, result, flags);
-		if (parent instanceof Object[])
+		}
+		if (parent instanceof Object[]) {
 			return collectFromObject((Object[]) parent, pm, result, flags);
-		if (parent instanceof IModelElement)
+		}
+		if (parent instanceof IModelElement) {
 			return collectFromModelElement((IModelElement) parent, pm, result, flags);
-		if (parent instanceof IProject)
+		}
+		if (parent instanceof IProject) {
 			return collectFromProject((IProject) parent, pm, result, flags);
-		if (parent instanceof IContainer)
+		}
+		if (parent instanceof IContainer) {
 			return collectFromContainer((IContainer) parent, pm, result, flags);
-		if (parent instanceof IFile)
+		}
+		if (parent instanceof IFile) {
 			return collectFromFile((IFile) parent, pm, result, flags);
+		}
 		if (parent instanceof IAdaptable) {
 			IResource resource = ((IAdaptable) parent).getAdapter(IResource.class);
 			if (resource != null && resource instanceof IFile) {

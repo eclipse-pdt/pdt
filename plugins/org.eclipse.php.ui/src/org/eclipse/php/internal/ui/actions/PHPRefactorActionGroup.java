@@ -70,10 +70,11 @@ public class PHPRefactorActionGroup extends RefactorActionGroup {
 	 */
 	public ISelection getSelection() {
 		ISelectionProvider selectionProvider = getSelectionProvider();
-		if (selectionProvider != null)
+		if (selectionProvider != null) {
 			return selectionProvider.getSelection();
-		else
+		} else {
 			return null;
+		}
 	}
 
 	@Override

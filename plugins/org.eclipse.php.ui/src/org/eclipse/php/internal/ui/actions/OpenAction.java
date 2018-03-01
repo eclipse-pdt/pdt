@@ -87,8 +87,9 @@ public class OpenAction extends SelectionDispatchAction {
 	}
 
 	private boolean checkEnabled(IStructuredSelection selection) {
-		if (selection.isEmpty())
+		if (selection.isEmpty()) {
 			return false;
+		}
 		for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
 			Object element = iter.next();
 			if (!checkElement(element)) {
@@ -100,14 +101,17 @@ public class OpenAction extends SelectionDispatchAction {
 
 	protected boolean checkElement(Object element) {
 		if ((element instanceof ISourceReference) || ((element instanceof IAdaptable)
-				&& (((IAdaptable) element).getAdapter(ISourceReference.class) != null)))
+				&& (((IAdaptable) element).getAdapter(ISourceReference.class) != null))) {
 			return true;
+		}
 		if ((element instanceof IFile)
-				|| ((element instanceof IAdaptable) && (((IAdaptable) element).getAdapter(IFile.class) != null)))
+				|| ((element instanceof IAdaptable) && (((IAdaptable) element).getAdapter(IFile.class) != null))) {
 			return true;
+		}
 		if ((element instanceof IStorage)
-				|| ((element instanceof IAdaptable) && (((IAdaptable) element).getAdapter(IStorage.class) != null)))
+				|| ((element instanceof IAdaptable) && (((IAdaptable) element).getAdapter(IStorage.class) != null))) {
 			return true;
+		}
 		return false;
 	}
 
@@ -116,8 +120,9 @@ public class OpenAction extends SelectionDispatchAction {
 	 */
 	@Override
 	public void run(ITextSelection selection) {
-		if (!ActionUtils.isProcessable(getShell(), fEditor))
+		if (!ActionUtils.isProcessable(getShell(), fEditor)) {
 			return;
+		}
 		// TODO open in a dialog ? with these parameters: getShell(),
 		// getDialogTitle(),
 		// PHPUIMessages.getString("OpenAction_select_element")
@@ -129,8 +134,9 @@ public class OpenAction extends SelectionDispatchAction {
 		}
 		if (element == null) {
 			IEditorStatusLine statusLine = (IEditorStatusLine) fEditor.getAdapter(IEditorStatusLine.class);
-			if (statusLine != null)
+			if (statusLine != null) {
 				statusLine.setMessage(true, PHPUIMessages.OpenAction_error_messageBadSelection, null);
+			}
 			getShell().getDisplay().beep();
 			return;
 		}
@@ -143,8 +149,9 @@ public class OpenAction extends SelectionDispatchAction {
 	 */
 	@Override
 	public void run(IStructuredSelection selection) {
-		if (!checkEnabled(selection))
+		if (!checkEnabled(selection)) {
 			return;
+		}
 		run(selection.toArray(), ((TreeViewer) getSelectionProvider()).getTree().getSelection());
 	}
 
@@ -156,8 +163,9 @@ public class OpenAction extends SelectionDispatchAction {
 	 *            the elements to process
 	 */
 	public void run(Object[] elements, Object[] treeNodes) {
-		if (elements == null)
+		if (elements == null) {
 			return;
+		}
 		for (int i = 0; i < elements.length; i++) {
 			Object element = elements[i];
 			try {

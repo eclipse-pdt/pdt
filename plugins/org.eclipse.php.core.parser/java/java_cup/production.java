@@ -66,17 +66,19 @@ public class production {
       int rightlen = rhs_l;
 
       /* remember the length */
-      if (rhs_l >= 0)
-	_rhs_length = rhs_l;
-      else if (rhs_parts != null)
-	_rhs_length = rhs_parts.length;
-      else
-	_rhs_length = 0;
+      if (rhs_l >= 0) {
+		_rhs_length = rhs_l;
+	} else if (rhs_parts != null) {
+		_rhs_length = rhs_parts.length;
+	} else {
+		_rhs_length = 0;
+	}
 	
       /* make sure we have a valid left-hand-side */
-      if (lhs_sym == null) 
-	throw new internal_error(
-	  "Attempt to construct a production with a null LHS");
+      if (lhs_sym == null) {
+		throw new internal_error(
+		  "Attempt to construct a production with a null LHS");
+	}
 
       /* I'm not translating labels anymore, I'm adding code to declare
 	 labels as valid variables.  This way, the users code string is
@@ -100,10 +102,11 @@ public class production {
       declare_str = declare_labels(
 		    rhs_parts, rightlen, action_str);
 
-      if (action_str == null) 
-	action_str = declare_str;
-      else 
-	action_str = declare_str + action_str;	 	  
+      if (action_str == null) {
+		action_str = declare_str;
+	} else {
+		action_str = declare_str + action_str;
+	}	 	  
 
       /* count use of lhs */
       lhs_sym.note_use();
@@ -116,7 +119,9 @@ public class production {
 
       /* strip off any trailing action */
       tail_action = strip_trailing_action(rhs_parts, _rhs_length);
-      if (tail_action != null) _rhs_length--;
+      if (tail_action != null) {
+		_rhs_length--;
+	}
 
       /* Why does this run through the right hand side happen
 	 over and over?  here a quick combination of two 
@@ -140,9 +145,12 @@ public class production {
 
       /*now action string is really declaration string, so put it in front!
 	6/14/96 frankf */
-      if (action_str == null) action_str = "";
-      if (tail_action != null && tail_action.code_string() != null)
-	action_str = action_str + "\t\t" +  tail_action.code_string();
+      if (action_str == null) {
+		action_str = "";
+	}
+      if (tail_action != null && tail_action.code_string() != null) {
+		action_str = action_str + "\t\t" +  tail_action.code_string();
+	}
 
       /* stash the action */
       _action = new action_part(action_str);
@@ -279,11 +287,12 @@ public class production {
   /** Access to the collection of parts for the right hand side. */
   public production_part rhs(int indx) throws internal_error
     {
-      if (indx >= 0 && indx < _rhs_length)
-	return _rhs[indx];
-      else
-	throw new internal_error(
-	  "Index out of range for right hand side of production");
+      if (indx >= 0 && indx < _rhs_length) {
+		return _rhs[indx];
+	} else {
+		throw new internal_error(
+		  "Index out of range for right hand side of production");
+	}
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
@@ -396,8 +405,8 @@ public class production {
 
       /* Put in the left/right value labels */
       if (emit.lr_values()){
-	if (!emit.locations())
-        ret = "\t\tint " + labelname + "left = ((java_cup.runtime.Symbol)" + 
+	if (!emit.locations()) {
+		ret = "\t\tint " + labelname + "left = ((java_cup.runtime.Symbol)" + 
 	  emit.pre("stack") + 
  	    // TUM 20050917
 	    ((offset==0)?".peek()":(".elementAt(" + emit.pre("top") + "-" + offset + ")"))+
@@ -407,8 +416,8 @@ public class production {
  	    // TUM 20050917
 	    ((offset==0)?".peek()":(".elementAt(" + emit.pre("top") + "-" + offset + ")"))+
 	    ").right;\n";
-	else
-        ret = "\t\tLocation " + labelname + "xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)" + 
+	} else {
+		ret = "\t\tLocation " + labelname + "xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)" + 
 	  emit.pre("stack") + 
  	    // TUM 20050917
 	    ((offset==0)?".peek()":(".elementAt(" + emit.pre("top") + "-" + offset + ")"))+
@@ -417,8 +426,10 @@ public class production {
 	  emit.pre("stack") +
  	    // TUM 20050917
 	    ((offset==0)?".peek()":(".elementAt(" + emit.pre("top") + "-" + offset + ")"))+
-	    ").xright;\n";}
-      else ret = "";
+	    ").xright;\n";
+	}} else {
+		ret = "";
+	}
 
       /* otherwise, just declare label. */
 	return ret + "\t\t" + stack_type + " " + labelname + " = (" + stack_type + 
@@ -457,7 +468,9 @@ public class production {
 	      /* if it has a label, make declaration! */
 	      if ((label=part.label()) != null || emit._xmlactions)
 		{
-	    	  if (label==null) label=part.the_symbol().name()+pos;
+	    	  if (label==null) {
+				label=part.the_symbol().name()+pos;
+			}
 		  declaration = declaration + 
 		    make_declaration(label, part.the_symbol().stack_type(), 
 				     rhs_len-pos-1);
@@ -481,7 +494,9 @@ public class production {
       int from_loc, to_loc, merge_cnt;
 
       /* bail out early if we have no work to do */
-      if (rhs_parts == null || len == 0) return 0;
+      if (rhs_parts == null || len == 0) {
+		return 0;
+	}
 
       merge_cnt = 0;
       to_loc = -1;
@@ -495,7 +510,9 @@ public class production {
 	      to_loc++;
 
 	      /* clear the way for it */
-	      if (to_loc != from_loc) rhs_parts[to_loc] = null;
+	      if (to_loc != from_loc) {
+			rhs_parts[to_loc] = null;
+		}
 	    }
 
 	  /* if this is not trivial? */
@@ -537,7 +554,9 @@ public class production {
       action_part result;
 
       /* bail out early if we have nothing to do */
-      if (rhs_parts == null || len == 0) return null;
+      if (rhs_parts == null || len == 0) {
+		return null;
+	}
 
       /* see if we have a trailing action */
       if (rhs_parts[len-1].is_action())
@@ -546,9 +565,9 @@ public class production {
 	  result = (action_part)rhs_parts[len-1];
 	  rhs_parts[len-1] = null;
 	  return result;
+	} else {
+		return null;
 	}
-      else
-	return null;
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
@@ -579,25 +598,26 @@ public class production {
       String declare_str;
       int lastLocation = -1;
       /* walk over the production and process each action */
-      for (int act_loc = 0; act_loc < rhs_length(); act_loc++)
-	if (rhs(act_loc).is_action())
-	  {
-	    
-	    
-	    declare_str = declare_labels(
-		      _rhs, act_loc, "");
-	    /* create a new non terminal for the action production */
-	    new_nt = non_terminal.create_new(null, lhs().the_symbol().stack_type()); // TUM 20060608 embedded actions patch
-	    new_nt.is_embedded_action = true; /* 24-Mar-1998, CSA */
+      for (int act_loc = 0; act_loc < rhs_length(); act_loc++) {
+		if (rhs(act_loc).is_action())
+		  {
+		    
+		    
+		    declare_str = declare_labels(
+			      _rhs, act_loc, "");
+		    /* create a new non terminal for the action production */
+		    new_nt = non_terminal.create_new(null, lhs().the_symbol().stack_type()); // TUM 20060608 embedded actions patch
+		    new_nt.is_embedded_action = true; /* 24-Mar-1998, CSA */
 
-	    /* create a new production with just the action */
-	    new_prod = new action_production(this, new_nt, null, 0, 
-		declare_str + ((action_part)rhs(act_loc)).code_string(), (lastLocation==-1)?-1:(act_loc-lastLocation));
+		    /* create a new production with just the action */
+		    new_prod = new action_production(this, new_nt, null, 0, 
+			declare_str + ((action_part)rhs(act_loc)).code_string(), (lastLocation==-1)?-1:(act_loc-lastLocation));
 
-	    /* replace the action with the generated non terminal */
-	    _rhs[act_loc] = new symbol_part(new_nt);
-            lastLocation = act_loc;
-	  }
+		    /* replace the action with the generated non terminal */
+		    _rhs[act_loc] = new symbol_part(new_nt);
+		        lastLocation = act_loc;
+		  }
+	}
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
@@ -614,7 +634,9 @@ public class production {
       int             pos;
 
       /* if we already know bail out early */
-      if (nullable_known()) return nullable();
+      if (nullable_known()) {
+		return nullable();
+	}
 
       /* if we have a zero size RHS we are directly nullable */
       if (rhs_length() == 0)
@@ -634,12 +656,12 @@ public class production {
 	      sym = ((symbol_part)part).the_symbol();
 
 	      /* if its a terminal we are definitely not nullable */
-	      if (!sym.is_non_term()) 
-		return set_nullable(false);
-	      /* its a non-term, is it marked nullable */
-	      else if (!((non_terminal)sym).nullable())
-		/* this one not (yet) nullable, so we aren't */
+	      if (!sym.is_non_term()) {
+			return set_nullable(false);
+		} else if (!((non_terminal)sym).nullable()) {
+			/* this one not (yet) nullable, so we aren't */
 	        return false;
+		}
 	    }
 	}
 
@@ -681,8 +703,9 @@ public class production {
 		  _first_set.add(((non_terminal)sym).first_set());
 
 		  /* if its not nullable, we are done */
-		  if (!((non_terminal)sym).nullable())
-		    break;
+		  if (!((non_terminal)sym).nullable()) {
+			break;
+		}
 		}
 	      else
 		{
@@ -704,25 +727,30 @@ public class production {
   /** Equality comparison. */
   public boolean equals(production other)
     {
-      if (other == null) return false;
+      if (other == null) {
+		return false;
+	}
       return other._index == _index;
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Generic equality comparison. */
-  public boolean equals(Object other)
+  @Override
+public boolean equals(Object other)
     {
-      if (!(other instanceof production))
-	return false;
-      else
-	return equals((production)other);
+      if (!(other instanceof production)) {
+		return false;
+	} else {
+		return equals((production)other);
+	}
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Produce a hash code. */
-  public int hashCode()
+  @Override
+public int hashCode()
     {
       /* just use a simple function of the index */
       return _index*13;
@@ -731,7 +759,8 @@ public class production {
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Convert to a string. */
-  public String toString() 
+  @Override
+public String toString() 
     {
       String result;
       
@@ -740,17 +769,21 @@ public class production {
         result = "production [" + index() + "]: "; 
         result += ((lhs() != null) ? lhs().toString() : "$$NULL-LHS$$");
         result += " :: = ";
-        for (int i = 0; i<rhs_length(); i++)
-	  result += rhs(i) + " ";
+        for (int i = 0; i<rhs_length(); i++) {
+			result += rhs(i) + " ";
+		}
         result += ";";
-        if (action()  != null && action().code_string() != null) 
-	  result += " {" + action().code_string() + "}";
+        if (action()  != null && action().code_string() != null) {
+			result += " {" + action().code_string() + "}";
+		}
 
-        if (nullable_known())
-	  if (nullable())
-	    result += "[NULLABLE]";
-	  else
-	    result += "[NOT NULLABLE]";
+        if (nullable_known()) {
+			if (nullable()) {
+				result += "[NULLABLE]";
+			} else {
+				result += "[NOT NULLABLE]";
+			}
+		}
       } catch (internal_error e) {
 	/* crash on internal error since we can't throw it from here (because
 	   superclass does not throw anything. */
@@ -770,9 +803,11 @@ public class production {
 
       result = ((lhs() != null) ? lhs().the_symbol().name() : "NULL_LHS");
       result += " ::= ";
-      for (int i = 0; i < rhs_length(); i++)
-	if (!rhs(i).is_action())
-	  result += ((symbol_part)rhs(i)).the_symbol().name() + " ";
+      for (int i = 0; i < rhs_length(); i++) {
+		if (!rhs(i).is_action()) {
+			result += ((symbol_part)rhs(i)).the_symbol().name() + " ";
+		}
+	}
 
       return result;
     }

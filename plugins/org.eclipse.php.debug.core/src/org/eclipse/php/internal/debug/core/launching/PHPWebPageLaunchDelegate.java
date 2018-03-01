@@ -279,12 +279,13 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 				errorMessage = status.getMessage();
 			}
 			String errorTitle = PHPDebugCoreMessages.PHPWebPageLaunchDelegate_DialogError;
-			if (ILaunchManager.RUN_MODE.equals(launch.getLaunchMode()))
+			if (ILaunchManager.RUN_MODE.equals(launch.getLaunchMode())) {
 				errorTitle = PHPDebugCoreMessages.PHPWebPageLaunchDelegate_DialogErrorRun;
-			else if (ILaunchManager.DEBUG_MODE.equals(launch.getLaunchMode()))
+			} else if (ILaunchManager.DEBUG_MODE.equals(launch.getLaunchMode())) {
 				errorTitle = PHPDebugCoreMessages.PHPWebPageLaunchDelegate_DialogErrorDebug;
-			else if (ILaunchManager.PROFILE_MODE.equals(launch.getLaunchMode()))
+			} else if (ILaunchManager.PROFILE_MODE.equals(launch.getLaunchMode())) {
 				errorTitle = PHPDebugCoreMessages.PHPWebPageLaunchDelegate_DialogErrorProfile;
+			}
 			displayErrorMessage(errorTitle, errorMessage);
 		}
 	}
@@ -305,8 +306,9 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	 */
 	protected int getDebugPort(Server server) throws CoreException {
 		int customRequestPort = ZendDebuggerSettingsUtil.getDebugPort(server.getUniqueId());
-		if (customRequestPort != -1)
+		if (customRequestPort != -1) {
 			return customRequestPort;
+		}
 		return PHPDebugPlugin.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
 	}
 

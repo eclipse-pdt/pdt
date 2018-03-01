@@ -585,8 +585,9 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 			if (astRoot == null) {
 				astRoot = SharedASTProvider.getAST(fSourceModule, SharedASTProvider.WAIT_YES,
 						SubMonitor.convert(monitor, 2));
-				if (monitor.isCanceled())
+				if (monitor.isCanceled()) {
 					throw new OperationCanceledException();
+				}
 			} else {
 				monitor.worked(2);
 			}
@@ -596,8 +597,9 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 			Map<NamespaceDeclaration, Set<String>> oldSingleImports = new HashMap<>();
 			List<ASTNode> elementReferences = new ArrayList<>();
 
-			if (!collectReferences(astRoot, elementReferences, oldSingleImports))
+			if (!collectReferences(astRoot, elementReferences, oldSingleImports)) {
 				return null;
+			}
 
 			UnresolvableImportMatcher unresolvableImportMatcher = UnresolvableImportMatcher.forProgram(astRoot);
 
@@ -682,8 +684,9 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 			Object[] content = oldSingleImports.toArray();
 			for (int i = 0; i < content.length; i++) {
 				String importName = (String) content[i];
-				if (importsAdded.remove(importName))
+				if (importsAdded.remove(importName)) {
 					oldSingleImports.remove(importName);
+				}
 			}
 			fNumberOfImportsRemoved += oldSingleImports.size();
 		}

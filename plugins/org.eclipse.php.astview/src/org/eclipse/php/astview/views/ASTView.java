@@ -115,8 +115,9 @@ public class ASTView extends ViewPart implements IShowInSource {
 			ArrayList<Object> externalSelection = new ArrayList<>();
 			for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
 				Object unwrapped = ASTView.unwrapAttribute(iter.next());
-				if (unwrapped != null)
+				if (unwrapped != null) {
 					externalSelection.add(unwrapped);
+				}
 			}
 			return new StructuredSelection(externalSelection);
 		}
@@ -643,8 +644,9 @@ public class ASTView extends ViewPart implements IShowInSource {
 		fViewer.addFilter(new ViewerFilter() {
 			@Override
 			public boolean select(Viewer viewer, Object parentElement, Object element) {
-				if (!fCreateBindings && element instanceof Binding)
+				if (!fCreateBindings && element instanceof Binding) {
 					return false;
+				}
 				return true;
 			}
 		});
@@ -1171,8 +1173,9 @@ public class ASTView extends ViewPart implements IShowInSource {
 	protected void performFindDeclaringNode() {
 		String msg = "Find Declaring Node from Key";
 		String key = askForKey(msg);
-		if (key == null)
+		if (key == null) {
 			return;
+		}
 		// TODO : should look for the declaring node
 		ASTNode node = null; // fRoot. findDeclaringNode(key);
 		if (node != null) {
@@ -1186,12 +1189,14 @@ public class ASTView extends ViewPart implements IShowInSource {
 	private String askForKey(String dialogTitle) {
 		InputDialog dialog = new InputDialog(getSite().getShell(), dialogTitle,
 				"Key: (optionally surrounded by <KEY: '> and <'>)", "", null);
-		if (dialog.open() != Window.OK)
+		if (dialog.open() != Window.OK) {
 			return null;
+		}
 
 		String key = dialog.getValue();
-		if (key.startsWith("KEY: '") && key.endsWith("'"))
+		if (key.startsWith("KEY: '") && key.endsWith("'")) {
 			key = key.substring(6, key.length() - 1);
+		}
 		return key;
 	}
 
@@ -1233,8 +1238,9 @@ public class ASTView extends ViewPart implements IShowInSource {
 	protected void performParseBindingFromElement() {
 		InputDialog dialog = new InputDialog(getSite().getShell(), "Parse Binding from Java Element",
 				"IJavaElement#getHandleIdentifier():", "", null);
-		if (dialog.open() != Window.OK)
+		if (dialog.open() != Window.OK) {
 			return;
+		}
 
 		// TODO : work on this action is required
 		/*
@@ -1322,8 +1328,9 @@ public class ASTView extends ViewPart implements IShowInSource {
 
 	protected void performTrayDoubleClick() {
 		IStructuredSelection selection = (IStructuredSelection) fTray.getSelection();
-		if (selection.size() != 1)
+		if (selection.size() != 1) {
 			return;
+		}
 		Object obj = selection.getFirstElement();
 		if (obj instanceof ExceptionAttribute) {
 			Throwable exception = ((ExceptionAttribute) obj).getException();
@@ -1344,15 +1351,18 @@ public class ASTView extends ViewPart implements IShowInSource {
 		IStructuredSelection selection = (IStructuredSelection) fTray.getSelection();
 		for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
 			Object obj = iter.next();
-			if (obj instanceof DynamicAttributeProperty)
+			if (obj instanceof DynamicAttributeProperty) {
 				obj = ((DynamicAttributeProperty) obj).getParent();
-			if (obj instanceof DynamicBindingProperty)
+			}
+			if (obj instanceof DynamicBindingProperty) {
 				obj = ((DynamicBindingProperty) obj).getParent();
+			}
 
 			removed |= fTrayRoots.remove(obj);
 		}
-		if (removed)
+		if (removed) {
 			fTray.setInput(fTrayRoots);
+		}
 	}
 
 	@Override

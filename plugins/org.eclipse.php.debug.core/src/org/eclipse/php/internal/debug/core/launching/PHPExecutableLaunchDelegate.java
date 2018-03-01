@@ -332,8 +332,9 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 	 */
 	protected int getDebugPort(PHPexeItem phpExe) throws CoreException {
 		int customRequestPort = ZendDebuggerSettingsUtil.getDebugPort(phpExe.getUniqueId());
-		if (customRequestPort != -1)
+		if (customRequestPort != -1) {
 			return customRequestPort;
+		}
 		return PHPDebugPlugin.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
 	}
 

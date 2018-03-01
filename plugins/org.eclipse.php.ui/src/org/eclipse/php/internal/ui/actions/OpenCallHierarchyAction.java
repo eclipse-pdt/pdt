@@ -115,13 +115,16 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 	}
 
 	private boolean isEnabled(IStructuredSelection selection) {
-		if (selection.size() != 1)
+		if (selection.size() != 1) {
 			return false;
+		}
 		Object input = selection.getFirstElement();
-		if (!(input instanceof IModelElement) && (input instanceof IAdaptable))
+		if (!(input instanceof IModelElement) && (input instanceof IAdaptable)) {
 			input = ((IAdaptable) input).getAdapter(IModelElement.class);
-		if (!(input instanceof IModelElement))
+		}
+		if (!(input instanceof IModelElement)) {
 			return false;
+		}
 
 		switch (((IModelElement) input).getElementType()) {
 		case IModelElement.METHOD:
@@ -137,8 +140,9 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 	 */
 	private boolean isEnabled(ITextSelection selection) {
 
-		if (fEditor == null || selection == null)
+		if (fEditor == null || selection == null) {
 			return false;
+		}
 		if (fEditor.getModelElement() instanceof ISourceModule) {
 			ISourceModule sourceModule = (ISourceModule) fEditor.getModelElement();
 			IModelElement element = PHPSelectionUtil.getSelectionModelElement(selection.getOffset(),
@@ -159,18 +163,21 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 	@Override
 	public void run(ITextSelection selection) {
 		ISourceModule input = SelectionConverter.getInput(fEditor);
-		if (!ActionUtil.isProcessable(getShell(), input))
+		if (!ActionUtil.isProcessable(getShell(), input)) {
 			return;
+		}
 
 		try {
 			IModelElement[] elements = SelectionConverter.codeResolveOrInputForked(fEditor);
-			if (elements == null)
+			if (elements == null) {
 				return;
+			}
 			List<IModelElement> candidates = new ArrayList<>(elements.length);
 			for (int i = 0; i < elements.length; i++) {
 				IModelElement[] resolvedElements = CallHierarchyUI.getCandidates(elements[i]);
-				if (resolvedElements != null)
+				if (resolvedElements != null) {
 					candidates.addAll(Arrays.asList(resolvedElements));
+				}
 			}
 			if (candidates.isEmpty()) {
 				IModelElement enclosingMethod = getEnclosingMethod(input, selection);
@@ -219,8 +226,9 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 		if (selection instanceof ITextSelection) {
 			run((ITextSelection) selection);
 		} else {
-			if (selection.size() != 1)
+			if (selection.size() != 1) {
 				return;
+			}
 			Object input = selection.getFirstElement();
 			if (!(input instanceof IModelElement)) {
 				IStatus status = createStatus(Messages.OpenCallHierarchyAction_0);
@@ -229,8 +237,9 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 				return;
 			}
 			IModelElement element = (IModelElement) input;
-			if (!ActionUtil.isProcessable(getShell(), element))
+			if (!ActionUtil.isProcessable(getShell(), element)) {
 				return;
+			}
 			List<IModelElement> result = new ArrayList<>(1);
 			IStatus status = compileCandidates(result, element);
 			if (status.isOK()) {

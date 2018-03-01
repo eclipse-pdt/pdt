@@ -166,8 +166,9 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 	private static LocalStorageModelProvider fInstance = null;
 
 	public synchronized static LocalStorageModelProvider getInstance() {
-		if (fInstance == null)
+		if (fInstance == null) {
 			fInstance = new LocalStorageModelProvider();
+		}
 		return fInstance;
 	}
 
@@ -208,14 +209,16 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 						location = storagePath.makeAbsolute().toString();
 					}
 				}
-				if (location == null)
+				if (location == null) {
 					location = name;
+				}
 			}
 		} catch (CoreException e) {
 			Logger.logException(e);
 		} finally {
-			if (location == null)
+			if (location == null) {
 				location = input.getName();
+			}
 		}
 		return location;
 	}
@@ -258,17 +261,21 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 						path = storagePath.makeAbsolute().toString();
 					}
 				}
-				if (path == null)
+				if (path == null) {
 					path = name;
+				}
 			}
 		} catch (CoreException e) {
 			Logger.logException(e);
 		} finally {
 			if (path == null)
+			 {
 				path = ""; //$NON-NLS-1$
+			}
 		}
-		if (addHash)
+		if (addHash) {
 			path = input.hashCode() + path;
+		}
 		return path;
 	}
 
@@ -286,10 +293,11 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 			}
 			// we can only create a resource marker annotationmodel off of a
 			// valid resource
-			if (res != null)
+			if (res != null) {
 				model = new PHPResourceMarkerAnnotationModel(res, id);
-			else
+			} else {
 				model = new AnnotationModel();
+			}
 		}
 		if (model == null) {
 			model = super.createAnnotationModel(element);
@@ -483,8 +491,9 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 		if (element instanceof IEditorInput) {
 			provider = DocumentProviderRegistry.getDefault().getDocumentProvider((IEditorInput) element);
 		}
-		if (provider == null)
+		if (provider == null) {
 			provider = new FileDocumentProvider();
+		}
 		provider.saveDocument(monitor, element, document, overwrite);
 	}
 
@@ -504,8 +513,9 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 	 */
 	@Override
 	public IStructuredModel getModel(Object element) {
-		if (element instanceof IEditorInput)
+		if (element instanceof IEditorInput) {
 			return getModel((IEditorInput) element);
+		}
 		return null;
 	}
 

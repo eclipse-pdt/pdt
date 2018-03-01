@@ -58,8 +58,9 @@ public class CodeTemplateContext extends TemplateContext {
 		// }
 		// }
 
-		if (!canEvaluate(template))
+		if (!canEvaluate(template)) {
 			return null;
+		}
 
 		String pattern = template.getPattern();
 		if (fLineDelimiter != null) {

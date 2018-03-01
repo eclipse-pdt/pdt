@@ -66,7 +66,8 @@ public class parser extends java_cup.runtime.lr_parser {
     "\036\002" });
 
   /** Access to production table. */
-  public short[][] production_table() {return _production_table;}
+  @Override
+public short[][] production_table() {return _production_table;}
 
   /** Parse-action table. */
   protected static final short[][] _action_table = 
@@ -286,7 +287,8 @@ public class parser extends java_cup.runtime.lr_parser {
     "\000\004\002\001\001\002" });
 
   /** Access to parse-action table. */
-  public short[][] action_table() {return _action_table;}
+  @Override
+public short[][] action_table() {return _action_table;}
 
   /** <code>reduce_goto</code> table. */
   protected static final short[][] _reduce_table = 
@@ -372,19 +374,22 @@ public class parser extends java_cup.runtime.lr_parser {
     "\000\006\027\167\046\164\001\001\000\002\001\001" });
 
   /** Access to <code>reduce_goto</code> table. */
-  public short[][] reduce_table() {return _reduce_table;}
+  @Override
+public short[][] reduce_table() {return _reduce_table;}
 
   /** Instance of action encapsulation class. */
   protected CUP$parser$actions action_obj;
 
   /** Action encapsulation object initializer. */
-  protected void init_actions()
+  @Override
+protected void init_actions()
     {
       action_obj = new CUP$parser$actions(this);
     }
 
   /** Invoke a user supplied parse action. */
-  public java_cup.runtime.Symbol do_action(
+  @Override
+public java_cup.runtime.Symbol do_action(
     int                        act_num,
     java_cup.runtime.lr_parser parser,
     java.util.Stack            stack,
@@ -396,19 +401,24 @@ public class parser extends java_cup.runtime.lr_parser {
   }
 
   /** Indicates start state. */
-  public int start_state() {return 0;}
+  @Override
+public int start_state() {return 0;}
   /** Indicates start production. */
-  public int start_production() {return 0;}
+  @Override
+public int start_production() {return 0;}
 
   /** <code>EOF</code> Symbol index. */
-  public int EOF_sym() {return 0;}
+  @Override
+public int EOF_sym() {return 0;}
 
   /** <code>error</code> Symbol index. */
-  public int error_sym() {return 1;}
+  @Override
+public int error_sym() {return 1;}
 
 
   /** User initialization code. */
-  public void user_init() throws java.lang.Exception
+  @Override
+public void user_init() throws java.lang.Exception
     {
  
     ComplexSymbolFactory f = new ComplexSymbolFactory();
@@ -418,7 +428,8 @@ public class parser extends java_cup.runtime.lr_parser {
     }
 
   /** Scan to get the next Symbol. */
-  public java_cup.runtime.Symbol scan()
+  @Override
+public java_cup.runtime.Symbol scan()
     throws java.lang.Exception
     {
  
@@ -433,22 +444,28 @@ public class parser extends java_cup.runtime.lr_parser {
   public void setDebugSymbols(boolean debugSymbols){
   	this.debugSymbols = debugSymbols;
   }
-  public void report_fatal_error(
+  @Override
+public void report_fatal_error(
     String   message,
     Object   info)
     {
       done_parsing();
-      if (info instanceof Symbol) ErrorManager.getManager().emit_fatal(message+ "\nCan't recover from previous error(s), giving up.",(Symbol)info);
-      else ErrorManager.getManager().emit_fatal(message + "\nCan't recover from previous error(s), giving up.",cur_token);
+      if (info instanceof Symbol) {
+		ErrorManager.getManager().emit_fatal(message+ "\nCan't recover from previous error(s), giving up.",(Symbol)info);
+	} else {
+		ErrorManager.getManager().emit_fatal(message + "\nCan't recover from previous error(s), giving up.",cur_token);
+	}
       System.exit(1);
     }
 
-    public void report_error(String message, Object info)
+    @Override
+	public void report_error(String message, Object info)
     {
-      if (info instanceof Symbol)
-         ErrorManager.getManager().emit_error(message,(Symbol)info);
-      else
-         ErrorManager.getManager().emit_error(message,cur_token);
+      if (info instanceof Symbol) {
+		ErrorManager.getManager().emit_error(message,(Symbol)info);
+	} else {
+		ErrorManager.getManager().emit_error(message,cur_token);
+	}
     }
 
 }
@@ -462,7 +479,9 @@ class CUP$parser$actions {
     throws internal_error
     {
       /* if there is no label, or this is an action, just return the original */
-      if (lab == null || part.is_action()) return part;
+      if (lab == null || part.is_action()) {
+		return part;
+	}
 
       /* otherwise build a new one with the given label attached */
       return new symbol_part(((symbol_part)part).the_symbol(),lab);
@@ -483,9 +502,10 @@ class CUP$parser$actions {
   /** add a new right hand side part */
   protected void add_rhs_part(production_part part) throws java.lang.Exception
     {
-      if (rhs_pos >= MAX_RHS)
-	throw new Exception("Internal Error: Productions limited to " + 
-			     MAX_RHS + " symbols and actions"); 
+      if (rhs_pos >= MAX_RHS) {
+		throw new Exception("Internal Error: Productions limited to " + 
+				     MAX_RHS + " symbols and actions");
+	} 
 
       rhs_parts[rhs_pos] = part;
       rhs_pos++;
@@ -541,9 +561,11 @@ class CUP$parser$actions {
 	System.err.println("Could find terminal " + term + " while declaring precedence");
       } else {
 	java_cup.symbol sym = sp.the_symbol();
-	if (sym instanceof terminal) 
-	  ((terminal)sym).set_precedence(_cur_side, _cur_prec);
-	else System.err.println("Precedence declaration: Can't find terminal " + term);
+	if (sym instanceof terminal) {
+		((terminal)sym).set_precedence(_cur_side, _cur_prec);
+	} else {
+		System.err.println("Precedence declaration: Can't find terminal " + term);
+	}
       }
     }
   }
@@ -554,8 +576,9 @@ class CUP$parser$actions {
   }
    
   public String attach_debug_symbol(int id, String code) {
- 	if (!parser.debugSymbols)
- 		return code;
+ 	if (!parser.debugSymbols) {
+		return code;
+	}
  	return "//@@CUPDBG" + id + "\n" + code;
   }
 
@@ -1030,7 +1053,7 @@ class CUP$parser$actions {
             {
               Object RESULT =null;
               // propagate RESULT from NT$13
-                RESULT = (Object) ((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
+                RESULT = ((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
 		int typesleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
 		int typesright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
 		String types = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
@@ -1114,9 +1137,10 @@ class CUP$parser$actions {
 	  /* if that fails, symbol is undeclared */
 	  if (symb == null)
 	    {
-	      if (ErrorManager.getManager().getErrorCount() == 0)
-	        ErrorManager.getManager().emit_error("java_cup.runtime.Symbol \"" + symid + 
+	      if (ErrorManager.getManager().getErrorCount() == 0) {
+			ErrorManager.getManager().emit_error("java_cup.runtime.Symbol \"" + symid + 
 			       "\" has not been declared");
+		}
 	    }
 	  else
 	    {
@@ -1167,7 +1191,9 @@ class CUP$parser$actions {
 	          new_rhs();
 	          add_rhs_part(add_lab(new symbol_part(start_nt),"start_val"));
 	          add_rhs_part(new symbol_part(terminal.EOF));
-		  if (!emit._xmlactions) add_rhs_part(new action_part("RESULT = start_val;"));
+		  if (!emit._xmlactions) {
+			add_rhs_part(new action_part("RESULT = start_val;"));
+		}
 	          emit.start_production = 
 		     new production(non_terminal.START_nt, rhs_parts, rhs_pos);
 
@@ -1224,7 +1250,9 @@ class CUP$parser$actions {
 	          new_rhs();
 	          add_rhs_part(add_lab(new symbol_part(start_nt),"start_val"));
 	          add_rhs_part(new symbol_part(terminal.EOF));
-		  if (!emit._xmlactions) add_rhs_part(new action_part("RESULT = start_val;"));
+		  if (!emit._xmlactions) {
+			add_rhs_part(new action_part("RESULT = start_val;"));
+		}
 		  if ((sym!=null) && (sym instanceof terminal)) {
 		    emit.start_production = 
 		      new production(non_terminal.START_nt, rhs_parts, 
@@ -1268,7 +1296,7 @@ class CUP$parser$actions {
             {
               Object RESULT =null;
               // propagate RESULT from NT$12
-                RESULT = (Object) ((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+                RESULT = ((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("production",21, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1288,7 +1316,7 @@ class CUP$parser$actions {
             {
               Object RESULT =null;
               // propagate RESULT from NT$11
-                RESULT = (Object) ((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
+                RESULT = ((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
 		int lhs_idleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)).left;
 		int lhs_idright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)).right;
 		String lhs_id = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-4)).value;
@@ -1311,9 +1339,10 @@ class CUP$parser$actions {
           /* if it wasn't declared, emit a message */
 	  if (lhs_nt == null)
 	    {
-	      if (ErrorManager.getManager().getErrorCount() == 0)
-	      ErrorManager.getManager().emit_warning("LHS non terminal \"" + lhs_id + 
-			       "\" has not been declared");
+	      if (ErrorManager.getManager().getErrorCount() == 0) {
+			ErrorManager.getManager().emit_warning("LHS non terminal \"" + lhs_id + 
+				       "\" has not been declared");
+		}
 	    }
 
 	  /* reset the rhs accumulation */
@@ -1355,7 +1384,7 @@ class CUP$parser$actions {
             {
               Object RESULT =null;
               // propagate RESULT from NT$10
-                RESULT = (Object) ((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+                RESULT = ((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 		int start_nameleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
 		int start_nameright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
 		String start_name = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
@@ -1388,7 +1417,9 @@ class CUP$parser$actions {
 	      new_rhs();
 	      add_rhs_part(add_lab(new symbol_part(start_nt), "start_val"));
 	      add_rhs_part(new symbol_part(terminal.EOF));
-	      if (!emit._xmlactions) add_rhs_part(new action_part("RESULT = start_val;"));
+	      if (!emit._xmlactions) {
+			add_rhs_part(new action_part("RESULT = start_val;"));
+		}
 	      emit.start_production = 
 		     new production(non_terminal.START_nt, rhs_parts, rhs_pos);
 	      new_rhs();
@@ -1457,7 +1488,7 @@ class CUP$parser$actions {
             {
               Object RESULT =null;
               // propagate RESULT from NT$9
-                RESULT = (Object) ((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
+                RESULT = ((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("preced",30, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1479,7 +1510,7 @@ class CUP$parser$actions {
             {
               Object RESULT =null;
               // propagate RESULT from NT$8
-                RESULT = (Object) ((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
+                RESULT = ((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("preced",30, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1501,7 +1532,7 @@ class CUP$parser$actions {
             {
               Object RESULT =null;
               // propagate RESULT from NT$7
-                RESULT = (Object) ((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
+                RESULT = ((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("preced",30, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1595,7 +1626,7 @@ class CUP$parser$actions {
             {
               Object RESULT =null;
               // propagate RESULT from NT$6
-                RESULT = (Object) ((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+                RESULT = ((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("declares_non_term",34, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1618,7 +1649,7 @@ class CUP$parser$actions {
             {
               Object RESULT =null;
               // propagate RESULT from NT$5
-                RESULT = (Object) ((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+                RESULT = ((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("declares_term",33, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1641,7 +1672,7 @@ class CUP$parser$actions {
             {
               Object RESULT =null;
               // propagate RESULT from NT$4
-                RESULT = (Object) ((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+                RESULT = ((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("symbol",17, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1664,7 +1695,7 @@ class CUP$parser$actions {
             {
               Object RESULT =null;
               // propagate RESULT from NT$3
-                RESULT = (Object) ((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+                RESULT = ((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("symbol",17, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1744,10 +1775,11 @@ class CUP$parser$actions {
 		int user_coderight = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
 		String user_code = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 		 
-	  if (emit.scan_code!=null)
-	    ErrorManager.getManager().emit_warning("Redundant scan code (skipping)");
-	  else /* save the user code */
-	    emit.scan_code = attach_debug_symbol(get_new_debug_id(),user_code);
+	  if (emit.scan_code!=null) {
+		ErrorManager.getManager().emit_warning("Redundant scan code (skipping)");
+	} else {
+		emit.scan_code = attach_debug_symbol(get_new_debug_id(),user_code);
+	}
 	
               CUP$parser$result = parser.getSymbolFactory().newSymbol("scan_code",16, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1761,10 +1793,11 @@ class CUP$parser$actions {
 		int user_coderight = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
 		String user_code = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 		 
-	  if (emit.init_code!=null)
-	    ErrorManager.getManager().emit_warning("Redundant init code (skipping)");
-	  else /* save the user code */
-	    emit.init_code = attach_debug_symbol(get_new_debug_id(),user_code);
+	  if (emit.init_code!=null) {
+		ErrorManager.getManager().emit_warning("Redundant init code (skipping)");
+	} else {
+		emit.init_code = attach_debug_symbol(get_new_debug_id(),user_code);
+	}
 	
               CUP$parser$result = parser.getSymbolFactory().newSymbol("init_code",15, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1778,10 +1811,11 @@ class CUP$parser$actions {
 		int user_coderight = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
 		String user_code = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 		
-	  if (emit.parser_code!=null)
-	    ErrorManager.getManager().emit_warning("Redundant parser code (skipping)");
-	  else /* save the user included code string */
-	    emit.parser_code = attach_debug_symbol(get_new_debug_id(),user_code);
+	  if (emit.parser_code!=null) {
+		ErrorManager.getManager().emit_warning("Redundant parser code (skipping)");
+	} else {
+		emit.parser_code = attach_debug_symbol(get_new_debug_id(),user_code);
+	}
 	
               CUP$parser$result = parser.getSymbolFactory().newSymbol("parser_code_part",8, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1795,10 +1829,11 @@ class CUP$parser$actions {
 		int user_coderight = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
 		String user_code = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 		
-	  if (emit.action_code!=null)
-	    ErrorManager.getManager().emit_warning("Redundant action code (skipping)");
-	  else /* save the user included code string */
-	    emit.action_code = attach_debug_symbol(get_new_debug_id(),user_code);
+	  if (emit.action_code!=null) {
+		ErrorManager.getManager().emit_warning("Redundant action code (skipping)");
+	} else {
+		emit.action_code = attach_debug_symbol(get_new_debug_id(),user_code);
+	}
 	
               CUP$parser$result = parser.getSymbolFactory().newSymbol("action_code_part",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1887,7 +1922,7 @@ class CUP$parser$actions {
             {
               Object RESULT =null;
               // propagate RESULT from NT$2
-                RESULT = (Object) ((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+                RESULT = ((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("import_spec",13, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -1940,7 +1975,7 @@ class CUP$parser$actions {
             {
               Object RESULT =null;
               // propagate RESULT from NT$1
-                RESULT = (Object) ((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+                RESULT = ((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("package_spec",1, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -2000,7 +2035,7 @@ class CUP$parser$actions {
               Object RESULT =null;
 		int start_valleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
 		int start_valright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
-		Object start_val = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		Object start_val = ((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 		RESULT = start_val;
               CUP$parser$result = parser.getSymbolFactory().newSymbol("$START",0, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }

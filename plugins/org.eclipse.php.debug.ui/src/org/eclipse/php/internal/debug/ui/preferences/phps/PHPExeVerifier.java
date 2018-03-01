@@ -162,8 +162,9 @@ public class PHPExeVerifier extends Job {
 		 */
 		if (Platform.getOS().equals(Platform.OS_WIN32)) {
 			File exeLocation = exeItem.getExecutable();
-			if (exeLocation == null || !exeLocation.exists() || !exeLocation.getName().contains("php")) //$NON-NLS-1$
+			if (exeLocation == null || !exeLocation.exists() || !exeLocation.getName().contains("php")) {
 				return;
+			}
 			boolean valid = true;
 			try {
 				String version = PHPExeUtil.fetchVersion(exeLocation);

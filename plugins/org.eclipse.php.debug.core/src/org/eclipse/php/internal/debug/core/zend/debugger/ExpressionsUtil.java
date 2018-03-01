@@ -120,22 +120,25 @@ public class ExpressionsUtil {
 		fExpressionsManager.update(staticMembers, 1);
 		Expression[] members = staticMembers.getValue().getChildren();
 		// Possibly interrupted, crash, etc.
-		if (members == null)
+		if (members == null) {
 			return new Expression[0];
+		}
 		int[] mods = fetchStaticMembersVisibility(className, members);
 		// Possibly interrupted, crash, etc.
-		if (mods == null)
+		if (mods == null) {
 			return new Expression[0];
+		}
 		if (members.length > 0) {
 			for (int i = 0; i < members.length; i++) {
 				Expression member = members[i];
 				staticMemberClassNames.put(member, className);
-				if ((mods[i] & PROP_MOD_PRIVATE) > 0)
+				if ((mods[i] & PROP_MOD_PRIVATE) > 0) {
 					member.addFacets(Facet.MOD_PRIVATE);
-				else if ((mods[i] & PROP_MOD_PROTECTED) > 0)
+				} else if ((mods[i] & PROP_MOD_PROTECTED) > 0) {
 					member.addFacets(Facet.MOD_PROTECTED);
-				else if ((mods[i] & PROP_MOD_PUBLIC) > 0)
+				} else if ((mods[i] & PROP_MOD_PUBLIC) > 0) {
 					member.addFacets(Facet.MOD_PUBLIC);
+				}
 			}
 			return members;
 		}
@@ -147,8 +150,9 @@ public class ExpressionsUtil {
 		fExpressionsManager.update(constants, 1);
 		Expression[] members = constants.getValue().getChildren();
 
-		if (members == null)
+		if (members == null) {
 			return new Expression[0];
+		}
 		for (Expression e : members) {
 			e.addFacets(Facet.MOD_PUBLIC);
 		}
@@ -196,8 +200,9 @@ public class ExpressionsUtil {
 	 */
 	public Expression fetchStaticContext(String className) {
 		Expression[] staticMembers = fetchStaticMembers(className);
-		if (staticMembers.length == 0)
+		if (staticMembers.length == 0) {
 			return null;
+		}
 		Expression classStaticContext = new DefaultExpression(VariablesUtil.CLASS_INDICATOR, VIRTUAL_CLASS);
 		ExpressionValue classStaticContextValue = new ExpressionValue(PHP_VIRTUAL_CLASS, className, "Class of: " //$NON-NLS-1$
 				+ className, staticMembers, staticMembers.length);
@@ -210,17 +215,20 @@ public class ExpressionsUtil {
 		for (int i = 0; i < members.length; i++) {
 			tuple.append(MessageFormat.format(FetchStaticsVisibilityExpression.TUPLE_ELEMENT, className,
 					members[i].getLastName()));
-			if (i < members.length - 1)
+			if (i < members.length - 1) {
 				tuple.append(',');
+			}
 		}
 		Expression fetchModifiersExpression = new FetchStaticsVisibilityExpression(tuple.toString());
 		fExpressionsManager.update(fetchModifiersExpression, 1);
 		Expression[] computed = fetchModifiersExpression.getValue().getOriChildren();
-		if (computed == null)
+		if (computed == null) {
 			return null;
+		}
 		int[] mods = new int[computed.length];
-		for (int i = 0; i < computed.length; i++)
+		for (int i = 0; i < computed.length; i++) {
 			mods[i] = Integer.valueOf((String) computed[i].getValue().getValue());
+		}
 		return mods;
 	}
 
@@ -236,8 +244,9 @@ public class ExpressionsUtil {
 		if (value.getDataType() == DataType.PHP_OBJECT) {
 			StringBuffer result = new StringBuffer();
 			boolean exists = invokeMethod(expression.getFullName(), "__toString", result); //$NON-NLS-1$
-			if (exists)
+			if (exists) {
 				return result.toString();
+			}
 		} else if (value.getDataType() == DataType.PHP_ARRAY) {
 			fExpressionsManager.update(expression, 1);
 			StringBuffer result = new StringBuffer("["); //$NON-NLS-1$

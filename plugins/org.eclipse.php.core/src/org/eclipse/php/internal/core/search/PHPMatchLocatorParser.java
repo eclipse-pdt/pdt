@@ -174,8 +174,9 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 	}
 
 	static boolean locationEquals(ASTNode node, Object obj) {
-		if (obj == node)
+		if (obj == node) {
 			return true;
+		}
 		if (obj instanceof ASTNode) {
 			return node.locationMatches((ASTNode) obj);
 		}

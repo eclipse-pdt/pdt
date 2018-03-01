@@ -81,12 +81,13 @@ public class PHPUnitView extends ViewPart {
 			final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 			if (window != null) {
 				final IWorkbenchPage activePage = window.getActivePage();
-				if (activePage == null)
+				if (activePage == null) {
 					return;
+				}
 				try {
-					if (focus)
+					if (focus) {
 						instance = (PHPUnitView) activePage.showView(NAME);
-					else {
+					} else {
 						IViewPart foundView = activePage.findView(NAME);
 						if (foundView != null) {
 							instance = (PHPUnitView) foundView;
@@ -239,14 +240,16 @@ public class PHPUnitView extends ViewPart {
 
 		boolean hasErrorsOrFailures = false;
 
-		if (input != null)
+		if (input != null) {
 			hasErrorsOrFailures = input.getStatus() > PHPUnitTest.STATUS_PASS;
+		}
 		fNextAction.setEnabled(hasErrorsOrFailures);
 		fPreviousAction.setEnabled(hasErrorsOrFailures);
 
 		boolean empty = true;
-		if (input != null && input.getRunCount() > 0)
+		if (input != null && input.getRunCount() > 0) {
 			empty = false;
+		}
 		fExpandAllAction.setEnabled(!empty);
 		fCollapseAllAction.setEnabled(!empty);
 		fTestViewer.processChangesInUI();
@@ -301,8 +304,8 @@ public class PHPUnitView extends ViewPart {
 						PHPUnitMessages.PHPUnitView_Rerun_Error_Message);
 				return;
 			}
-			java.util.List<String> suites = new ArrayList<String>();
-			java.util.List<String> filters = new ArrayList<String>();
+			java.util.List<String> suites = new ArrayList<>();
+			java.util.List<String> filters = new ArrayList<>();
 
 			for (int testId : testIds) {
 				PHPUnitElement testElement = getTestElement(testId);
@@ -382,8 +385,9 @@ public class PHPUnitView extends ViewPart {
 
 	@Override
 	public void setFocus() {
-		if (fTestViewer != null)
+		if (fTestViewer != null) {
 			fTestViewer.getTestViewerControl().setFocus();
+		}
 	}
 
 	public void setInput(final PHPUnitTestGroup newInput) {
@@ -450,12 +454,13 @@ public class PHPUnitView extends ViewPart {
 			setOrientation(fCurrentOrientation);
 		} else {
 			final Point size = fParent.getSize();
-			if (size.x != 0 && size.y != 0)
+			if (size.x != 0 && size.y != 0) {
 				if (size.x > size.y) {
 					setOrientation(VIEW_ORIENTATION_HORIZONTAL);
 				} else {
 					setOrientation(VIEW_ORIENTATION_VERTICAL);
 				}
+			}
 		}
 	}
 
@@ -532,10 +537,11 @@ public class PHPUnitView extends ViewPart {
 
 			final String codeCoverageAttributeValue = launch
 					.getAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_COLLECT_CODE_COVERAGE);
-			if (codeCoverageAttributeValue != null && !"profile".equals(launch.getLaunchMode())) //$NON-NLS-1$
+			if (codeCoverageAttributeValue != null && !"profile".equals(launch.getLaunchMode())) {
 				setCodeCoverageTabVisible(Integer.parseInt(codeCoverageAttributeValue) > 0);
-			else
+			} else {
 				setCodeCoverageTabVisible(false);
+			}
 			fRerunLastTestAction.setLaunch(launch);
 		} catch (final CoreException e) {
 			PHPUnitPlugin.log(e);
@@ -714,8 +720,9 @@ public class PHPUnitView extends ViewPart {
 	}
 
 	private void setOrientation(final int orientation) {
-		if (fSashForm == null || fSashForm.isDisposed())
+		if (fSashForm == null || fSashForm.isDisposed()) {
 			return;
+		}
 		final boolean horizontal = orientation == VIEW_ORIENTATION_HORIZONTAL;
 		fSashForm.setOrientation(horizontal ? SWT.HORIZONTAL : SWT.VERTICAL);
 		for (ToggleOrientationAction fToggleOrientationAction : fToggleOrientationActions) {
@@ -834,8 +841,9 @@ public class PHPUnitView extends ViewPart {
 
 				@Override
 				public Menu getMenu(Control parent) {
-					if (fMenu != null)
+					if (fMenu != null) {
 						fMenu.dispose();
+					}
 					fMenu = new Menu(parent);
 					for (Object element : previousLaunches) {
 						RerunAction action = (RerunAction) element;

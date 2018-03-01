@@ -30,8 +30,9 @@ public class parse_action_table {
 
       /* allocate the array and fill it in with empty rows */
       under_state = new parse_action_row[_num_states];
-      for (int i=0; i<_num_states; i++)
-	under_state[i] = new parse_action_row();
+      for (int i=0; i<_num_states; i++) {
+		under_state[i] = new parse_action_row();
+	}
     }
 
   /*-----------------------------------------------------------*/
@@ -103,7 +104,8 @@ public class parse_action_table {
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*
 
   /** Convert to a string. */
-  public String toString()
+  @Override
+public String toString()
     {
       String result;
       int cnt;
@@ -130,7 +132,9 @@ public class parse_action_table {
 		}
 	    }
           /* finish the line if we haven't just done that */
-	  if (cnt != 0) result += "\n";
+	  if (cnt != 0) {
+		result += "\n";
+	}
 	}
       result += "------------------------------";
 

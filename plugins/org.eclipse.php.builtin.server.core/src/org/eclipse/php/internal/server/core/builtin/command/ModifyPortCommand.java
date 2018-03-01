@@ -49,8 +49,9 @@ public class ModifyPortCommand extends ConfigurationCommand {
 		Iterator<ServerPort> iterator = configuration.getServerPorts().iterator();
 		while (iterator.hasNext()) {
 			ServerPort temp = iterator.next();
-			if (id.equals(temp.getId()))
+			if (id.equals(temp.getId())) {
 				oldPort = temp.getPort();
+			}
 		}
 
 		// make the change

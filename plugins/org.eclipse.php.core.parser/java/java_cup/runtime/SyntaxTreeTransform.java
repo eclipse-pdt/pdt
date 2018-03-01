@@ -9,19 +9,23 @@ public class SyntaxTreeTransform {
 		public XMLElement root(){
 			return stack.pop();
 		}
-		private Stack<XMLElement> stack = new Stack<XMLElement>();
+		private Stack<XMLElement> stack = new Stack<>();
 		@Override
 		public void defaultPost(XMLElement arg0, List<XMLElement> arg1) {
 			int n = arg1.size();
 			if (n>1){
 				LinkedList<XMLElement> elems = new LinkedList<>();
-				while (n-->0) elems.addFirst(stack.pop());
+				while (n-->0) {
+					elems.addFirst(stack.pop());
+				}
 				XMLElement ne = new XMLElement.NonTerminal(arg0.getTagname(),0,elems.toArray(new XMLElement[0]));
 				stack.push(ne);
 				return;
 			}
 			//if (n==1){}
-			if (n==0) stack.push(arg0);
+			if (n==0) {
+				stack.push(arg0);
+			}
 		}
 
 		@Override

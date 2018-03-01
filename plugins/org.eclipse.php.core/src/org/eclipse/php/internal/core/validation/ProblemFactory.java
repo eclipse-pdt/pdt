@@ -30,7 +30,7 @@ public class ProblemFactory extends DefaultProblemFactory {
 
 	private class SeverityTranslator implements IProblemSeverityTranslator {
 
-		final private Map<IProblemIdentifier, ProblemSeverity> cache = new HashMap<IProblemIdentifier, ProblemSeverity>();
+		final private Map<IProblemIdentifier, ProblemSeverity> cache = new HashMap<>();
 		final private IScopeContext[] contexts;
 
 		public SeverityTranslator(IScriptProject project) {

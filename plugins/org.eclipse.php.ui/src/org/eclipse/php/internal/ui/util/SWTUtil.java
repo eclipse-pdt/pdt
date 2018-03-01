@@ -44,8 +44,9 @@ public class SWTUtil {
 	public static Display getStandardDisplay() {
 		Display display;
 		display = Display.getCurrent();
-		if (display == null)
+		if (display == null) {
 			display = Display.getDefault();
+		}
 		return display;
 	}
 
@@ -56,28 +57,36 @@ public class SWTUtil {
 	 * @return the shell for the given widget
 	 */
 	public static Shell getShell(Widget widget) {
-		if (widget instanceof Control)
+		if (widget instanceof Control) {
 			return ((Control) widget).getShell();
-		if (widget instanceof Caret)
+		}
+		if (widget instanceof Caret) {
 			return ((Caret) widget).getParent().getShell();
-		if (widget instanceof DragSource)
+		}
+		if (widget instanceof DragSource) {
 			return ((DragSource) widget).getControl().getShell();
-		if (widget instanceof DropTarget)
+		}
+		if (widget instanceof DropTarget) {
 			return ((DropTarget) widget).getControl().getShell();
-		if (widget instanceof Menu)
+		}
+		if (widget instanceof Menu) {
 			return ((Menu) widget).getParent().getShell();
-		if (widget instanceof ScrollBar)
+		}
+		if (widget instanceof ScrollBar) {
 			return ((ScrollBar) widget).getParent().getShell();
+		}
 
 		return null;
 	}
 
 	public static int getTableHeightHint(Table table, int rows) {
-		if (table.getFont().equals(JFaceResources.getDefaultFont()))
+		if (table.getFont().equals(JFaceResources.getDefaultFont())) {
 			table.setFont(JFaceResources.getDialogFont());
+		}
 		int result = table.getItemHeight() * rows + table.getHeaderHeight();
-		if (table.getLinesVisible())
+		if (table.getLinesVisible()) {
 			result += table.getGridLineWidth() * (rows - 1);
+		}
 		return result;
 	}
 

@@ -65,8 +65,9 @@ public class ColorManager extends DLTKColorManager {
 			Iterator<Color> e = colorTable.values().iterator();
 			while (e.hasNext()) {
 				Color color = e.next();
-				if (color != null && !color.isDisposed())
+				if (color != null && !color.isDisposed()) {
 					color.dispose();
+				}
 			}
 		}
 	}
@@ -77,8 +78,9 @@ public class ColorManager extends DLTKColorManager {
 	@Override
 	public Color getColor(RGB rgb) {
 
-		if (rgb == null)
+		if (rgb == null) {
 			return null;
+		}
 
 		final Display display = Display.getCurrent();
 		Map<RGB, Color> colorTable = fDisplayTable.get(display);
@@ -104,8 +106,9 @@ public class ColorManager extends DLTKColorManager {
 	 */
 	@Override
 	public void dispose() {
-		if (!fAutoDisposeOnDisplayDispose)
+		if (!fAutoDisposeOnDisplayDispose) {
 			dispose(Display.getCurrent());
+		}
 	}
 
 	/*
@@ -114,8 +117,9 @@ public class ColorManager extends DLTKColorManager {
 	@Override
 	public Color getColor(String key) {
 
-		if (key == null)
+		if (key == null) {
 			return null;
+		}
 
 		RGB rgb = fKeyTable.get(key);
 		return getColor(rgb);
@@ -127,8 +131,9 @@ public class ColorManager extends DLTKColorManager {
 	@Override
 	public void bindColor(String key, RGB rgb) {
 		Object value = fKeyTable.get(key);
-		if (value != null)
+		if (value != null) {
 			throw new UnsupportedOperationException();
+		}
 
 		fKeyTable.put(key, rgb);
 	}

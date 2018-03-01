@@ -44,12 +44,13 @@ public class AddBlockCommentHandler extends CommentHandler implements IHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IEditorPart editor = HandlerUtil.getActiveEditor(event);
 		ITextEditor textEditor = null;
-		if (editor instanceof ITextEditor)
+		if (editor instanceof ITextEditor) {
 			textEditor = (ITextEditor) editor;
-		else if (editor != null) {
+		} else if (editor != null) {
 			Object o = editor.getAdapter(ITextEditor.class);
-			if (o != null)
+			if (o != null) {
 				textEditor = (ITextEditor) o;
+			}
 		}
 		if (textEditor != null) {
 			IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());

@@ -35,8 +35,9 @@ public class PHPUnitMessageParser {
 	 * @return Singleton
 	 */
 	public static PHPUnitMessageParser getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new PHPUnitMessageParser();
+		}
 		return instance;
 	}
 

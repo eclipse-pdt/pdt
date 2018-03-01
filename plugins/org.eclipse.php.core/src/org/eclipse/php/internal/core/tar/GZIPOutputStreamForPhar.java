@@ -86,8 +86,9 @@ public class GZIPOutputStreamForPhar extends DeflaterOutputStream implements CRC
 			def.finish();
 			while (!def.finished()) {
 				int len = def.deflate(buf, 0, buf.length);
-				if (len > 0)
+				if (len > 0) {
 					out.write(buf, 0, len);
+				}
 			}
 		}
 	}

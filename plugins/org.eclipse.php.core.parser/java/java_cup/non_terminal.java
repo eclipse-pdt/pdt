@@ -29,12 +29,13 @@ public class non_terminal extends symbol {
 
       /* add to set of all non terminals and check for duplicates */
       Object conflict = _all.put(nm,this);
-      if (conflict != null)
-	// can't throw an exception here because these are used in static
-	// initializers, so we crash instead
-	// was: 
-	// throw new internal_error("Duplicate non-terminal ("+nm+") created");
-	(new internal_error("Duplicate non-terminal ("+nm+") created")).crash();
+      if (conflict != null) {
+		// can't throw an exception here because these are used in static
+		// initializers, so we crash instead
+		// was: 
+		// throw new internal_error("Duplicate non-terminal ("+nm+") created");
+		(new internal_error("Duplicate non-terminal ("+nm+") created")).crash();
+	}
 
       /* assign a unique index */
       _index = next_index++;
@@ -76,10 +77,11 @@ public class non_terminal extends symbol {
   /** lookup a non terminal by name string */ 
   public static non_terminal find(String with_name)
     {
-      if (with_name == null)
-        return null;
-      else 
-        return (non_terminal)_all.get(with_name);
+      if (with_name == null) {
+		return null;
+	} else {
+		return (non_terminal)_all.get(with_name);
+	}
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
@@ -144,7 +146,9 @@ public class non_terminal extends symbol {
      * TUM 20060608 bugfix for embedded action codes
      */
     static non_terminal create_new(String prefix, String type) throws internal_error{
-        if (prefix==null) prefix = "NT$";
+        if (prefix==null) {
+			prefix = "NT$";
+		}
         return new non_terminal(prefix + next_nt++,type);
     }
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
@@ -253,9 +257,10 @@ public class non_terminal extends symbol {
   public void add_production(production prod) throws internal_error
     {
       /* catch improper productions */
-      if (prod == null || prod.lhs() == null || prod.lhs().the_symbol() != this)
-	throw new internal_error(
-	  "Attempt to add invalid production to non terminal production table");
+      if (prod == null || prod.lhs() == null || prod.lhs().the_symbol() != this) {
+		throw new internal_error(
+		  "Attempt to add invalid production to non terminal production table");
+	}
 
       /* add it to the table, keyed with itself */
       _productions.put(prod,prod);
@@ -282,7 +287,8 @@ public class non_terminal extends symbol {
   /*-----------------------------------------------------------*/
 
   /** Indicate that this symbol is a non-terminal. */
-  public boolean is_non_term() 
+  @Override
+public boolean is_non_term() 
     {
       return true;
     }
@@ -293,10 +299,12 @@ public class non_terminal extends symbol {
   protected boolean looks_nullable() throws internal_error
     {
       /* look and see if any of the productions now look nullable */
-      for (Enumeration e = productions(); e.hasMoreElements(); )
-	/* if the production can go to empty, we are nullable */
-	if (((production)e.nextElement()).check_nullable())
-	  return true;
+      for (Enumeration e = productions(); e.hasMoreElements(); ) {
+		/* if the production can go to empty, we are nullable */
+		if (((production)e.nextElement()).check_nullable()) {
+			return true;
+		}
+	}
 
       /* none of the productions can go to empty, so we are not nullable */
       return false;
@@ -305,7 +313,8 @@ public class non_terminal extends symbol {
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** convert to string */
-  public String toString()
+  @Override
+public String toString()
     {
       return super.toString() + "[" + index() + "]" + (nullable() ? "*" : "");
     }

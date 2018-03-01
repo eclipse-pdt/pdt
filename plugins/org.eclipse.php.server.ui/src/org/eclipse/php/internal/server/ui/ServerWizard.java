@@ -125,8 +125,9 @@ public class ServerWizard extends FragmentedWizard implements INewWizard {
 	 */
 	@Override
 	public boolean canFinish() {
-		if (getCurrentWizardFragment() != null && getCurrentWizardFragment().equals(serverTypeWizardFragment))
+		if (getCurrentWizardFragment() != null && getCurrentWizardFragment().equals(serverTypeWizardFragment)) {
 			return false;
+		}
 		return super.canFinish();
 	}
 

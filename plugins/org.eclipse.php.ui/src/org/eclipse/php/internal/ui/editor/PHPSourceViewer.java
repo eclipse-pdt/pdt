@@ -93,18 +93,20 @@ public class PHPSourceViewer extends Composite implements IPropertyChangeListene
 	@Override
 	public void propertyChange(final PropertyChangeEvent event) {
 		if (AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT.equals(event.getProperty())) {
-			if (editorStore.getBoolean(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT))
+			if (editorStore.getBoolean(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT)) {
 				fDefaultBackground = null;
-			else
+			} else {
 				fDefaultBackground = new Color(Display.getCurrent(),
 						PreferenceConverter.getColor(editorStore, AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND));
+			}
 			refresh();
 		} else if (AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND_SYSTEM_DEFAULT.equals(event.getProperty())) {
-			if (editorStore.getBoolean(AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND_SYSTEM_DEFAULT))
+			if (editorStore.getBoolean(AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND_SYSTEM_DEFAULT)) {
 				fDefaultForeground = null;
-			else
+			} else {
 				fDefaultForeground = new Color(Display.getCurrent(),
 						PreferenceConverter.getColor(editorStore, AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND));
+			}
 			refresh();
 		} else if (AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND.equals(event.getProperty())) {
 			fDefaultBackground = new Color(Display.getCurrent(),
@@ -208,14 +210,16 @@ public class PHPSourceViewer extends Composite implements IPropertyChangeListene
 	 * Specifically set the reporting name of a control for accessibility
 	 */
 	private void setAccessible(Control control, String name) {
-		if (control == null)
+		if (control == null) {
 			return;
+		}
 		final String n = name;
 		control.getAccessible().addAccessibleListener(new AccessibleAdapter() {
 			@Override
 			public void getName(AccessibleEvent e) {
-				if (e.childID == ACC.CHILDID_SELF)
+				if (e.childID == ACC.CHILDID_SELF) {
 					e.result = n;
+				}
 			}
 		});
 	}

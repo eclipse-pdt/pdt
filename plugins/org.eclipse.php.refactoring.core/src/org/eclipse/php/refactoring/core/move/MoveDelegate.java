@@ -91,8 +91,9 @@ public class MoveDelegate {
 		IContainer destination = fProcessor.getDestination();
 		IProject sourceProject = fProcessor.getSourceSelection()[0].getProject();
 		IProject destinationProject = destination.getProject();
-		if (sourceProject != destinationProject)
+		if (sourceProject != destinationProject) {
 			status.merge(MoveUtils.checkMove(phpFiles, sourceProject, destination));
+		}
 
 		// Checks if one of the resources already exists with the same name in
 		// the destination
@@ -465,8 +466,9 @@ public class MoveDelegate {
 					// aggregate the changes identifiers
 					program.accept(rename);
 
-					if (pm.isCanceled())
+					if (pm.isCanceled()) {
 						throw new OperationCanceledException();
+					}
 
 					pm.worked(1);
 
@@ -497,8 +499,9 @@ public class MoveDelegate {
 						// aggregate the changes identifiers
 						program.accept(rename);
 
-						if (pm.isCanceled())
+						if (pm.isCanceled()) {
 							throw new OperationCanceledException();
+						}
 
 						pm.worked(1);
 
@@ -628,15 +631,21 @@ public class MoveDelegate {
 
 		Assert.isNotNull(destination);
 		if (!destination.exists() || destination.isPhantom())
+		 {
 			return RefactoringStatus.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("MoveDelegate.2")); //$NON-NLS-1$
+		}
 		if (!destination.isAccessible())
+		 {
 			return RefactoringStatus.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("MoveDelegate.3")); //$NON-NLS-1$
+		}
 		Assert.isTrue(destination.getType() != IResource.ROOT);
 
 		IResource[] sourceResources = fProcessor.getSourceSelection();
 		for (IResource element : sourceResources) {
 			if (destination.equals(element.getParent()))
+			 {
 				return RefactoringStatus.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("MoveDelegate.4")); //$NON-NLS-1$
+			}
 			if (destination.equals(element)) {
 				return RefactoringStatus.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("MoveDelegate.5")); //$NON-NLS-1$
 			}

@@ -71,9 +71,11 @@ public class PHPStructuredTextPartitioner extends StructuredTextPartitionerForHT
 	}
 
 	public static boolean isPHPPartitionType(final String type) {
-		for (int i = 0; i < configuredContentTypes.length; i++)
-			if (configuredContentTypes[i].equals(type))
+		for (int i = 0; i < configuredContentTypes.length; i++) {
+			if (configuredContentTypes[i].equals(type)) {
 				return true;
+			}
+		}
 		return false;
 	}
 

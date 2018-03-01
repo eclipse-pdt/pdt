@@ -67,16 +67,18 @@ public class VariableNameProcessor implements IContentAssistProcessor, ISubjectC
 	@Override
 	public ICompletionProposal[] computeCompletionProposals(IContentAssistSubjectControl contentAssistSubject,
 			int documentOffset) {
-		if (fVariableNameProposals.length == 0)
+		if (fVariableNameProposals.length == 0) {
 			return null;
+		}
 		String input = contentAssistSubject.getDocument().get();
 
 		ArrayList<ICompletionProposal> proposals = new ArrayList<>();
 		String prefix = input.substring(0, documentOffset);
 		for (int i = 0; i < fVariableNameProposals.length; i++) {
 			String tempName = fVariableNameProposals[i];
-			if (tempName.length() == 0 || !tempName.startsWith(prefix))
+			if (tempName.length() == 0 || !tempName.startsWith(prefix)) {
 				continue;
+			}
 			CompletionProposal proposal = new CompletionProposal(tempName, 0, input.length(), 0);
 			proposals.add(proposal);
 		}

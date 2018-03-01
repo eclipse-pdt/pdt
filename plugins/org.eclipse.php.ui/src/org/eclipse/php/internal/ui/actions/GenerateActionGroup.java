@@ -153,8 +153,9 @@ public class GenerateActionGroup extends ActionGroup {
 	}
 
 	private void registerSelectionListener(ISelectionProvider provider, ISelectionChangedListener listener) {
-		if (fRegisteredSelectionListeners == null)
+		if (fRegisteredSelectionListeners == null) {
 			fRegisteredSelectionListeners = new ArrayList<>(20);
+		}
 		provider.addSelectionChangedListener(listener);
 		fRegisteredSelectionListeners.add(listener);
 	}
@@ -196,8 +197,9 @@ public class GenerateActionGroup extends ActionGroup {
 		} else {
 			added = fillViewSubMenu(subMenu);
 		}
-		if (added > 0)
+		if (added > 0) {
 			menu.appendToGroup(fGroupName, subMenu);
+		}
 	}
 
 	/**
@@ -264,13 +266,16 @@ public class GenerateActionGroup extends ActionGroup {
 	}
 
 	protected int addEditorAction(IMenuManager menu, String groupName, String actionID) {
-		if (fEditor == null)
+		if (fEditor == null) {
 			return 0;
+		}
 		IAction action = fEditor.getAction(actionID);
-		if (action == null)
+		if (action == null) {
 			return 0;
-		if (action instanceof IUpdate)
+		}
+		if (action instanceof IUpdate) {
 			((IUpdate) action).update();
+		}
 		if (action.isEnabled()) {
 			menu.appendToGroup(groupName, action);
 			return 1;
@@ -279,13 +284,16 @@ public class GenerateActionGroup extends ActionGroup {
 	}
 
 	protected int addEditorAction(IMenuManager menu, String actionID) {
-		if (fEditor == null)
+		if (fEditor == null) {
 			return 0;
+		}
 		IAction action = fEditor.getAction(actionID);
-		if (action == null)
+		if (action == null) {
 			return 0;
-		if (action instanceof IUpdate)
+		}
+		if (action instanceof IUpdate) {
 			((IUpdate) action).update();
+		}
 		if (action.isEnabled()) {
 			menu.add(action);
 			return 1;

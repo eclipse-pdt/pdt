@@ -58,8 +58,9 @@ public class TryStatement extends Statement {
 			for (CatchClause catchClause : catchClauses) {
 				catchClause.traverse(visitor);
 			}
-			if (finallyClause != null)
+			if (finallyClause != null) {
 				finallyClause.traverse(visitor);
+			}
 		}
 		visitor.endvisit(this);
 	}

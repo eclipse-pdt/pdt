@@ -156,13 +156,15 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 			if (event.getKey().equals(PHPDebugCorePreferenceNames.ZEND_DEBUG_ENCRYPTED_SSL_DATA)) {
 				Object newValueObj = event.getNewValue();
 				if (newValueObj != null) {
-					if (newValueObj instanceof String)
+					if (newValueObj instanceof String) {
 						setUseSSL(Boolean.valueOf((String) newValueObj));
-					else if (newValueObj instanceof Boolean)
+					} else if (newValueObj instanceof Boolean) {
 						setUseSSL((Boolean) newValueObj);
+					}
 				}
-				if (newValueObj == null)
+				if (newValueObj == null) {
 					setUseSSL(false);
+				}
 			}
 		}
 	}
@@ -181,14 +183,16 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 
 		@Override
 		public void settingsAdded(IDebuggerSettings settings) {
-			if (getDebuggerID().equals(settings.getDebuggerId()))
+			if (getDebuggerID().equals(settings.getDebuggerId())) {
 				reset();
+			}
 		}
 
 		@Override
 		public void settingsRemoved(IDebuggerSettings settings) {
-			if (getDebuggerID().equals(settings.getDebuggerId()))
+			if (getDebuggerID().equals(settings.getDebuggerId())) {
 				reset();
+			}
 		}
 
 		@Override
@@ -250,31 +254,37 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 
 	@Override
 	public boolean isListening(int port) {
-		for (ICommunicationDaemon daemon : daemons)
-			if (daemon.isListening(port))
+		for (ICommunicationDaemon daemon : daemons) {
+			if (daemon.isListening(port)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
 	@Override
 	public void startListen() {
-		for (ICommunicationDaemon daemon : daemons)
+		for (ICommunicationDaemon daemon : daemons) {
 			daemon.startListen();
+		}
 	}
 
 	@Override
 	public void stopListen() {
 		unregisterListeners();
-		for (ICommunicationDaemon daemon : daemons)
+		for (ICommunicationDaemon daemon : daemons) {
 			daemon.stopListen();
+		}
 	}
 
 	@Override
 	public boolean resetSocket() {
 		boolean allReset = true;
-		for (ICommunicationDaemon daemon : daemons)
-			if (!daemon.resetSocket())
+		for (ICommunicationDaemon daemon : daemons) {
+			if (!daemon.resetSocket()) {
 				allReset = false;
+			}
+		}
 		return allReset;
 	}
 
@@ -300,9 +310,11 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 
 	@Override
 	public boolean isInitialized() {
-		for (ICommunicationDaemon daemon : daemons)
-			if (!daemon.isInitialized())
+		for (ICommunicationDaemon daemon : daemons) {
+			if (!daemon.isInitialized()) {
 				return false;
+			}
+		}
 		return true;
 	}
 

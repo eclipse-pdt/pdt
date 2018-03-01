@@ -139,8 +139,9 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			indentationBaseLineIndex = lineOfOffset;
 			int i = lineInformationOfOffset.getOffset();
 			for (; i < lineInformationOfOffset.getOffset() + lineInformationOfOffset.getLength()
-					&& document.getChar(i) != '/'; i++)
+					&& document.getChar(i) != '/'; i++) {
 				;
+			}
 			newForOffset = (i < forOffset) ? i : forOffset;
 		}
 		// end
@@ -460,8 +461,9 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		try {
 			IRegion lineInfo = document.getLineInformation(lineNumber);
 			ITextRegion token = getLastTokenRegion(document, lineInfo, offset);
-			if (token == null)
+			if (token == null) {
 				return -1;
+			}
 			String tokenType = token.getType();
 
 			if (tokenType == PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
@@ -480,8 +482,9 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		try {
 			IRegion lineInfo = document.getLineInformation(lineNumber);
 			ITextRegion token = getLastTokenRegion(document, lineInfo, lineInfo.getOffset() + lineInfo.getLength());
-			if (token == null)// comment
+			if (token == null) {
 				return true;
+			}
 			if (token.getType() == PHPRegionTypes.PHP_SEMICOLON || token.getType() == PHPRegionTypes.PHP_CURLY_CLOSE) {
 				return true;
 			} else if (token.getType() == PHPRegionTypes.PHP_HEREDOC_CLOSE_TAG
@@ -501,12 +504,14 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			int offset = lineInfo.getOffset() + lineInfo.getLength();
 			final IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
 			ITextRegion token = getLastTokenRegion(document, lineInfo, offset);
-			if (token == null)
+			if (token == null) {
 				return;
+			}
 			String tokenType = token.getType();
 
-			if (tokenType == PHPRegionTypes.PHP_CURLY_OPEN)
+			if (tokenType == PHPRegionTypes.PHP_CURLY_OPEN) {
 				return;
+			}
 
 			ITextRegion scriptRegion = sdRegion.getRegionAtCharacterOffset(offset);
 			if (scriptRegion == null && offset == document.getLength()) {
@@ -553,12 +558,14 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 
 			final IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
 			ITextRegion token = getLastTokenRegion(document, lineInfo, offset);
-			if (token == null)
+			if (token == null) {
 				return false;
+			}
 			String tokenType = token.getType();
 
-			if (tokenType == PHPRegionTypes.PHP_CURLY_OPEN)
+			if (tokenType == PHPRegionTypes.PHP_CURLY_OPEN) {
 				return true;
+			}
 
 			ITextRegion scriptRegion = sdRegion.getRegionAtCharacterOffset(offset);
 			if (scriptRegion == null && offset == document.getLength()) {
@@ -579,8 +586,9 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					while (currentOffset >= lineInfo.getOffset()) {
 						token = ((IPHPScriptRegion) scriptRegion).getPHPToken(token.getStart() - 1);
 						tokenType = token.getType();
-						if (tokenType == PHPRegionTypes.PHP_CASE || tokenType == PHPRegionTypes.PHP_DEFAULT)
+						if (tokenType == PHPRegionTypes.PHP_CASE || tokenType == PHPRegionTypes.PHP_DEFAULT) {
 							return true;
+						}
 						currentOffset = regionStart + token.getStart() - 1;
 					}
 				}

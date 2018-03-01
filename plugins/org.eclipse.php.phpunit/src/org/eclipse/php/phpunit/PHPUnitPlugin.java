@@ -78,8 +78,9 @@ public class PHPUnitPlugin extends AbstractUIPlugin {
 
 	public static ImageDescriptor createImageDescriptor(final Bundle bundle, final IPath path) {
 		final URL url = FileLocator.find(bundle, path, null);
-		if (url != null)
+		if (url != null) {
 			return ImageDescriptor.createFromURL(url);
+		}
 		return ImageDescriptor.getMissingImageDescriptor();
 	}
 

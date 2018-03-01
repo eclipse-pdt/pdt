@@ -250,8 +250,9 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 	protected int getDebugPort(Server server) {
 		// Set custom port if any from debugger's owner settings
 		int customRequestPort = XDebugDebuggerSettingsUtil.getDebugPort(server.getUniqueId());
-		if (customRequestPort != -1)
+		if (customRequestPort != -1) {
 			return customRequestPort;
+		}
 		return PHPDebugPlugin.getDebugPort(XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID);
 	}
 

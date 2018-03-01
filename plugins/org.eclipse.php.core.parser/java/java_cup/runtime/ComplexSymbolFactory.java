@@ -92,12 +92,15 @@ public class ComplexSymbolFactory implements SymbolFactory{
          * @param offsetdiff
          */
         public void move(int linediff, int coldiff, int offsetdiff){
-    		if (this.line >= 0)
-    			this.line += linediff;
-    		if (this.column >= 0)
-    			this.column += coldiff;
-    		if (this.offset >= 0)
-    			this.offset += offsetdiff;
+    		if (this.line >= 0) {
+				this.line += linediff;
+			}
+    		if (this.column >= 0) {
+				this.column += coldiff;
+			}
+    		if (this.offset >= 0) {
+				this.offset += offsetdiff;
+			}
         }
         /**
          * Cloning factory method
@@ -118,7 +121,8 @@ public class ComplexSymbolFactory implements SymbolFactory{
 	 * getLine
 	 * @returns line if known, else -1
 	 */
-        public String toString(){
+        @Override
+		public String toString(){
             return getUnit()+":"+getLine()+"/"+getColumn()+"("+offset+")";
         }
         /**
@@ -158,8 +162,11 @@ public class ComplexSymbolFactory implements SymbolFactory{
             super(id,value);
             this.name=name;
         }
-        public String toString(){
-            if (xleft==null || xright==null) return "Symbol: "+name;
+        @Override
+		public String toString(){
+            if (xleft==null || xright==null) {
+				return "Symbol: "+name;
+			}
             return "Symbol: "+name+" ("+xleft+" - "+xright+")";
         }
         public String getName(){
@@ -172,8 +179,12 @@ public class ComplexSymbolFactory implements SymbolFactory{
         public ComplexSymbol(String name, int id, Symbol left, Symbol right) {
             super(id,left,right);
             this.name=name;
-            if (left!=null)  this.xleft = ((ComplexSymbol)left).xleft;
-            if (right!=null) this.xright= ((ComplexSymbol)right).xright;
+            if (left!=null) {
+				this.xleft = ((ComplexSymbol)left).xleft;
+			}
+            if (right!=null) {
+				this.xright= ((ComplexSymbol)right).xright;
+			}
         }
         public ComplexSymbol(String name, int id, Location left, Location right) {
             super(id,left.offset,right.offset);
@@ -184,8 +195,12 @@ public class ComplexSymbolFactory implements SymbolFactory{
         public ComplexSymbol(String name, int id, Symbol left, Symbol right, Object value) {
             super(id,left.left,right.right,value);
             this.name=name;
-            if (left!=null)  this.xleft = ((ComplexSymbol)left).xleft;
-            if (right!=null) this.xright= ((ComplexSymbol)right).xright;
+            if (left!=null) {
+				this.xleft = ((ComplexSymbol)left).xleft;
+			}
+            if (right!=null) {
+				this.xright= ((ComplexSymbol)right).xright;
+			}
         }
         public ComplexSymbol(String name, int id, Symbol left, Object value) {
             super(id,left.right,left.right,value);
@@ -227,22 +242,28 @@ public class ComplexSymbolFactory implements SymbolFactory{
     public Symbol newSymbol(String name, int id, Location left, Location right){
         return new ComplexSymbol(name,id,left,right);
     }
+	@Override
 	public Symbol newSymbol(String name, int id, Symbol left, Object value) {
 		return new ComplexSymbol(name,id,left,value);
 	}
-    public Symbol newSymbol(String name, int id, Symbol left, Symbol right, Object value){
+    @Override
+	public Symbol newSymbol(String name, int id, Symbol left, Symbol right, Object value){
         return new ComplexSymbol(name,id,left,right,value);
     }
-    public Symbol newSymbol(String name, int id, Symbol left, Symbol right){
+    @Override
+	public Symbol newSymbol(String name, int id, Symbol left, Symbol right){
         return new ComplexSymbol(name,id,left,right);
     }
-    public Symbol newSymbol(String name, int id){
+    @Override
+	public Symbol newSymbol(String name, int id){
         return new ComplexSymbol(name,id);
     }
-    public Symbol newSymbol(String name, int id, Object value){
+    @Override
+	public Symbol newSymbol(String name, int id, Object value){
         return new ComplexSymbol(name,id,value);
     }
-    public Symbol startSymbol(String name, int id, int state){
+    @Override
+	public Symbol startSymbol(String name, int id, int state){
         return new ComplexSymbol(name,id,state);
     }
 }

@@ -24,25 +24,29 @@ public class PHPDeployableObjectAdapterUtil {
 
 	public static IModuleArtifact getModuleObject(Object obj) throws CoreException {
 		IResource resource = null;
-		if (obj instanceof IResource)
+		if (obj instanceof IResource) {
 			resource = (IResource) obj;
-		else if (obj instanceof IAdaptable)
+		} else if (obj instanceof IAdaptable) {
 			resource = ((IAdaptable) obj).getAdapter(IResource.class);
+		}
 
-		if (resource == null)
+		if (resource == null) {
 			return null;
+		}
 
 		IProject project = resource.getProject();
-		if (project != null && !hasInterestedComponents(project))
+		if (project != null && !hasInterestedComponents(project)) {
 			return null;
+		}
 
 		// return Web resource type
 		return new WebResource(getModule(project), resource.getProjectRelativePath());
 	}
 
 	protected static IModule getModule(IProject project) throws CoreException {
-		if (hasInterestedComponents(project))
+		if (hasInterestedComponents(project)) {
 			return ServerUtil.getModule(project);
+		}
 		return null;
 	}
 

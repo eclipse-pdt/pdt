@@ -235,8 +235,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	// insert chars to the buffer
 	private void appendToBuffer(Object obj) {
 		isPrevSpace = false;
-		if (obj == null)
+		if (obj == null) {
 			return;
+		}
 		replaceBuffer.append(obj);
 		if (lineSeparator.equals(obj)) {
 			lineWidth = 0;
@@ -1293,7 +1294,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 							if (phpDocTag.getTagKind() == TagKind.UNKNOWN
 									&& this.preferences.comment_never_format_unknown_tags) {
 								List<org.eclipse.php.core.compiler.ast.nodes.Scalar> scalars = phpDocTag.getTexts();
-								List<String> scalarTexts = new ArrayList<String>();
+								List<String> scalarTexts = new ArrayList<>();
 								for (int j = 0; j < scalars.size(); j++) {
 									scalarTexts.add(scalars.get(j).getValue());
 								}
@@ -5509,7 +5510,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	public static String join(Collection<String> s, String delimiter) {
 		if (s == null || s.isEmpty())
+		 {
 			return ""; //$NON-NLS-1$
+		}
 		Iterator<String> iter = s.iterator();
 		StringBuilder builder = new StringBuilder(iter.next());
 		while (iter.hasNext()) {

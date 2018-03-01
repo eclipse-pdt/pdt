@@ -53,8 +53,9 @@ public class StateStack implements Cloneable {
 
 	public void pushStack(int state) {
 		lastIn++;
-		if (lastIn == stack.length)
+		if (lastIn == stack.length) {
 			multiplySize();
+		}
 		stack[lastIn] = (byte) state;
 	}
 
@@ -95,17 +96,22 @@ public class StateStack implements Cloneable {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		StateStack other = (StateStack) obj;
-		if (lastIn != other.lastIn)
+		if (lastIn != other.lastIn) {
 			return false;
-		if (!Arrays.equals(stack, other.stack))
+		}
+		if (!Arrays.equals(stack, other.stack)) {
 			return false;
+		}
 		return true;
 	}
 

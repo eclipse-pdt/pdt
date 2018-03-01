@@ -73,8 +73,9 @@ class RefreshStructureJob extends Job {
 				 * discard the new request
 				 */
 				Node node2 = fRequests.get(i);
-				if (contains(node2, node))
+				if (contains(node2, node)) {
 					return;
+				}
 				/*
 				 * If new request contains any existing requests, replace it
 				 * with new request
@@ -116,19 +117,25 @@ class RefreshStructureJob extends Job {
 		// can't contain the parent if it's null
 		if (root == null) {
 			if (DEBUG)
+			 {
 				System.out.println("returning false: root is null"); //$NON-NLS-1$
+			}
 			return false;
 		}
 		// nothing can be parent of Document node
 		if (possible instanceof Document) {
 			if (DEBUG)
+			 {
 				System.out.println("returning false: possible is Document node"); //$NON-NLS-1$
+			}
 			return false;
 		}
 		// document contains everything
 		if (root instanceof Document) {
 			if (DEBUG)
+			 {
 				System.out.println("returning true: root is Document node"); //$NON-NLS-1$
+			}
 			return true;
 		}
 
@@ -137,12 +144,16 @@ class RefreshStructureJob extends Job {
 		// loop siblings
 		while (current != null) {
 			if (DEBUG)
+			 {
 				System.out.println("   -> iterating sibling (" + current.getNodeName() + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+			}
 			// found it
 			if (possible.equals(current)) {
 				if (DEBUG)
+				 {
 					System.out.println(
 							"   !!! found: " + possible.getNodeName() + " in subtree for: " + root.getNodeName()); //$NON-NLS-1$ //$NON-NLS-2$
+				}
 				return true;
 			}
 			// drop one level deeper if necessary

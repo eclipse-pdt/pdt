@@ -88,8 +88,9 @@ public class NetworkMonitor {
 			privateAddresses = new ArrayList<>();
 			privateAddresses.addAll(NetworkUtil.getPrivateAddresses());
 			allAddresses = new ArrayList<>();
-			if (publicAddress != null)
+			if (publicAddress != null) {
 				allAddresses.add(publicAddress);
+			}
 			allAddresses.addAll(privateAddresses);
 			allAddresses.add(NetworkUtil.LOCALHOST);
 			return Status.OK_STATUS;
@@ -118,15 +119,17 @@ public class NetworkMonitor {
 			}
 			List<String> invalid = new ArrayList<>();
 			for (String clientHost : addresses) {
-				if (monitor.isCanceled())
+				if (monitor.isCanceled()) {
 					return Status.CANCEL_STATUS;
+				}
 				if (!NetworkUtil.isIPv4Address(clientHost) && !clientHost.equalsIgnoreCase("localhost")) { //$NON-NLS-1$
 					// Mark invalid if it is not a literal IP address
 					invalid.add(clientHost);
 					continue;
 				}
-				if (monitor.isCanceled())
+				if (monitor.isCanceled()) {
 					return Status.CANCEL_STATUS;
+				}
 				Inet4Address clientHostAddress;
 				try {
 					clientHostAddress = (Inet4Address) InetAddress.getByName(clientHost);
@@ -136,9 +139,10 @@ public class NetworkMonitor {
 				}
 				boolean isInvalid = true;
 				if (clientHostAddress != null) {
-					if (NetworkUtil.isLoopbackAddress(clientHostAddress))
+					if (NetworkUtil.isLoopbackAddress(clientHostAddress)) {
 						// Local addresses are always valid
 						continue;
+					}
 					for (Inet4Address address : allAddresses) {
 						if (clientHostAddress.getHostAddress().equals(address.getHostAddress())) {
 							isInvalid = false;
@@ -146,11 +150,13 @@ public class NetworkMonitor {
 						}
 					}
 				}
-				if (isInvalid)
+				if (isInvalid) {
 					invalid.add(clientHost);
+				}
 			}
-			for (IHostsValidationListener validationListener : validationListeners)
+			for (IHostsValidationListener validationListener : validationListeners) {
 				validationListener.validated(invalid);
+			}
 			return monitor.isCanceled() ? Status.CANCEL_STATUS : Status.OK_STATUS;
 		}
 

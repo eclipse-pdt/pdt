@@ -57,12 +57,14 @@ public interface IPHPDataType {
 		 */
 		public static DataType find(String type) {
 			for (DataType t : values()) {
-				if (t.getText().equalsIgnoreCase(type))
+				if (t.getText().equalsIgnoreCase(type)) {
 					return t;
+				}
 			}
 			for (String t : TYPE_UNINITIALIZED) {
-				if (t.equalsIgnoreCase(type))
+				if (t.equalsIgnoreCase(type)) {
 					return PHP_UNINITIALIZED;
+				}
 			}
 			// Log the info if something like this will ever happen...
 			Logger.log(Logger.WARNING, "Unknown PHP data type: " + type); //$NON-NLS-1$

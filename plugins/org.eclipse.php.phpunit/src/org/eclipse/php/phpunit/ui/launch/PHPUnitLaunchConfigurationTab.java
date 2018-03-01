@@ -71,8 +71,9 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 	protected static PHPUnitLaunchConfigurationTab theTab;
 
 	public static PHPUnitLaunchConfigurationTab getCurrent() {
-		if (theTab == null)
+		if (theTab == null) {
 			theTab = new PHPUnitLaunchConfigurationTab();
+		}
 		return theTab;
 	}
 
@@ -436,8 +437,9 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 		fTestContainerRadioButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				if (fTestContainerRadioButton.getSelection())
+				if (fTestContainerRadioButton.getSelection()) {
 					testModeChanged();
+				}
 			}
 		});
 
@@ -550,8 +552,9 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 
 	private void handleContainerSearchButtonSelected() {
 		final IResource phpElement = chooseContainer(fContainerElement);
-		if (phpElement != null)
+		if (phpElement != null) {
 			setContainerElement(phpElement);
+		}
 	}
 
 	private IResource chooseContainer(final Object initElement) {

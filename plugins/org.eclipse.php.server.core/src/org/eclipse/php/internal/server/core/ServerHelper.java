@@ -35,13 +35,15 @@ public class ServerHelper {
 
 	public void setAttribute(String attributeName, String value) {
 		String current = getAttribute(attributeName, (String) null);
-		if (current != null && current.equals(value))
+		if (current != null && current.equals(value)) {
 			return;
+		}
 
-		if (value == null)
+		if (value == null) {
 			map.remove(attributeName);
-		else
+		} else {
 			map.put(attributeName, value);
+		}
 		firePropertyChangeEvent(attributeName, current, value);
 	}
 
@@ -77,8 +79,9 @@ public class ServerHelper {
 	 *            the new value
 	 */
 	public void firePropertyChangeEvent(String propertyName, Object oldValue, Object newValue) {
-		if (propertyListeners == null)
+		if (propertyListeners == null) {
 			return;
+		}
 
 		PropertyChangeEvent event = new PropertyChangeEvent(server, propertyName, oldValue, newValue);
 		for (Object listener : propertyListeners.getListeners()) {
@@ -94,8 +97,9 @@ public class ServerHelper {
 	public String getAttribute(String attributeName, String defaultValue) {
 		try {
 			Object obj = map.get(attributeName);
-			if (obj == null)
+			if (obj == null) {
 				return defaultValue;
+			}
 			return (String) obj;
 		} catch (Exception e) {
 			// ignore
@@ -117,18 +121,23 @@ public class ServerHelper {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		ServerHelper other = (ServerHelper) obj;
 		if (server == null) {
-			if (other.server != null)
+			if (other.server != null) {
 				return false;
-		} else if (!server.equals(other.server))
+			}
+		} else if (!server.equals(other.server)) {
 			return false;
+		}
 		return true;
 	}
 

@@ -494,8 +494,9 @@ public abstract class OptionsConfigurationBlock {
 
 			@Override
 			public void mouseExit(MouseEvent e) {
-				if (!comboBox.isFocusControl())
+				if (!comboBox.isFocusControl()) {
 					highlight(parent, labelControl, comboBox, HIGHLIGHT_NONE);
+				}
 			}
 		};
 		comboBox.addMouseTrackListener(labelComboListener);
@@ -504,8 +505,9 @@ public abstract class OptionsConfigurationBlock {
 		class MouseMoveTrackListener extends MouseTrackAdapter implements MouseMoveListener, MouseListener {
 			@Override
 			public void mouseExit(MouseEvent e) {
-				if (!comboBox.isFocusControl())
+				if (!comboBox.isFocusControl()) {
 					highlight(parent, labelControl, comboBox, HIGHLIGHT_NONE);
+				}
 			}
 
 			@Override
@@ -517,8 +519,9 @@ public abstract class OptionsConfigurationBlock {
 
 			@Override
 			public void mouseDown(MouseEvent e) {
-				if (isAroundLabel(e))
+				if (isAroundLabel(e)) {
 					comboBox.setFocus();
+				}
 			}
 
 			@Override
@@ -580,8 +583,9 @@ public abstract class OptionsConfigurationBlock {
 
 	protected int getHighlight(Label labelControl) {
 		Object data = labelControl.getData();
-		if (data == null)
+		if (data == null) {
 			return HIGHLIGHT_NONE;
+		}
 		return ((HighlightPainter) data).fColor;
 	}
 
@@ -1181,8 +1185,9 @@ public abstract class OptionsConfigurationBlock {
 	}
 
 	protected Link getCheckBoxLink(Key key) {
-		if (fCheckBoxes == null)
+		if (fCheckBoxes == null) {
 			return null;
+		}
 
 		for (int i = fCheckBoxes.size() - 1; i >= 0; i--) {
 			Button curr = fCheckBoxes.get(i);

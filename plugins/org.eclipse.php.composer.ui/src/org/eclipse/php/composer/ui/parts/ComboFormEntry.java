@@ -105,8 +105,9 @@ public class ComboFormEntry {
 		combo.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
-				if (ignoreNotify)
+				if (ignoreNotify) {
 					return;
+				}
 
 				for (IComboFormEntryListener listener : listeners) {
 					listener.textValueChanged(ComboFormEntry.this);
@@ -117,8 +118,9 @@ public class ComboFormEntry {
 		combo.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (ignoreNotify)
+				if (ignoreNotify) {
 					return;
+				}
 
 				for (IComboFormEntryListener listener : listeners) {
 					listener.selectionChanged(ComboFormEntry.this);

@@ -36,13 +36,15 @@ public class ExtractVariableActionDelegate implements IEditorActionDelegate, IWo
 
 	@Override
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
-		if (targetEditor == null)
+		if (targetEditor == null) {
 			return;
+		}
 
 		this.targetEditor = targetEditor;
 		IWorkbenchPartSite site = targetEditor.getSite();
-		if (site != null)
+		if (site != null) {
 			shell = site.getShell();
+		}
 
 	}
 
@@ -54,8 +56,9 @@ public class ExtractVariableActionDelegate implements IEditorActionDelegate, IWo
 		if (shell == null) {
 			shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		}
-		if (!(targetEditor instanceof PHPStructuredEditor))
+		if (!(targetEditor instanceof PHPStructuredEditor)) {
 			return;
+		}
 
 		PHPStructuredEditor phpEditor = (PHPStructuredEditor) targetEditor;
 

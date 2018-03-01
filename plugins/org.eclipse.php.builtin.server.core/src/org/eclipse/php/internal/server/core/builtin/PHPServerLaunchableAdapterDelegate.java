@@ -25,10 +25,12 @@ public class PHPServerLaunchableAdapterDelegate extends LaunchableAdapterDelegat
 	@Override
 	public Object getLaunchable(IServer server, IModuleArtifact moduleArtifact)
 			throws CoreException {
-		if (server.getAdapter(PHPServer.class) == null)
+		if (server.getAdapter(PHPServer.class) == null) {
 			return null;
-		if (!(moduleArtifact instanceof WebResource))
+		}
+		if (!(moduleArtifact instanceof WebResource)) {
 			return null;
+		}
 
 		HttpLaunchable launchable = null;
 		try {

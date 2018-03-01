@@ -107,13 +107,15 @@ public class ZendDebuggerConfigurationDialog extends AbstractDebuggerConfigurati
 		setTitle(PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_zendDebuggerSettings);
 		setMessage(PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_Dialog_description);
 		fTitleImage = getDialogImage();
-		if (fTitleImage != null)
+		if (fTitleImage != null) {
 			setTitleImage(fTitleImage);
+		}
 		getShell().addDisposeListener(new DisposeListener() {
 			@Override
 			public void widgetDisposed(DisposeEvent e) {
-				if (fTitleImage != null)
+				if (fTitleImage != null) {
 					fTitleImage.dispose();
+				}
 			}
 		});
 		// Connection settings
@@ -293,18 +295,22 @@ public class ZendDebuggerConfigurationDialog extends AbstractDebuggerConfigurati
 		List<Inet4Address> userIPs = new ArrayList<>();
 		for (String userHost : userHostsArray) {
 			Inet4Address address = NetworkUtil.getByName(userHost, 2000);
-			if (address != null)
+			if (address != null) {
 				userIPs.add(address);
+			}
 		}
 		ConfigureHostsDialog configureIPs = new ConfigureHostsDialog(userIPs, detectedIPs);
 		int choice = configureIPs.open();
 		if (choice != Window.OK)
+		 {
 			return ""; //$NON-NLS-1$
+		}
 		List<Inet4Address> selectdIPs = configureIPs.getSelectedIPs();
 		StringBuffer stringBuffer = new StringBuffer();
 		Iterator<Inet4Address> ipsIterator = selectdIPs.iterator();
-		if (ipsIterator.hasNext())
+		if (ipsIterator.hasNext()) {
 			stringBuffer.append(ipsIterator.next().getHostAddress());
+		}
 		while (ipsIterator.hasNext()) {
 			stringBuffer.append(", " + ipsIterator.next().getHostAddress()); //$NON-NLS-1$
 		}
@@ -439,8 +445,9 @@ public class ZendDebuggerConfigurationDialog extends AbstractDebuggerConfigurati
 					PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 						@Override
 						public void run() {
-							if (!getShell().isDisposed() && getButton(IDialogConstants.OK_ID).isEnabled())
+							if (!getShell().isDisposed() && getButton(IDialogConstants.OK_ID).isEnabled()) {
 								setMessage(warningMessage, IMessageProvider.WARNING);
+							}
 						}
 					});
 				}

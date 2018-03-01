@@ -24,8 +24,9 @@ import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 public class ASTNodes {
 
 	public static ASTNode getParent(ASTNode node, Class<?> parentClass) {
-		if (node == null)
+		if (node == null) {
 			return null;
+		}
 
 		do {
 			node = node.getParent();
@@ -34,8 +35,9 @@ public class ASTNodes {
 	}
 
 	public static ASTNode getParent(ASTNode node, int nodeType) {
-		if (node == null)
+		if (node == null) {
 			return null;
+		}
 
 		do {
 			node = node.getParent();

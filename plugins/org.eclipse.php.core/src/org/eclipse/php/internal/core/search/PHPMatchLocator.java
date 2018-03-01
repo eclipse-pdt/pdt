@@ -145,8 +145,9 @@ public class PHPMatchLocator extends MatchLocator {
 				parent = createSourceModuleHandle();
 			}
 			if ((this.matchContainer & PatternLocator.METHOD_CONTAINER) != 0) {
-				if (enclosingElement == null)
+				if (enclosingElement == null) {
 					enclosingElement = createHandle(method, parent);
+				}
 				if (encloses(enclosingElement)) {
 					for (int i = 0, l = nodes.length; i < l; i++) {
 						ASTNode node = nodes[i];
@@ -160,8 +161,9 @@ public class PHPMatchLocator extends MatchLocator {
 					return;
 				}
 			}
-			for (int i = 0, l = nodes.length; i < l; i++)
+			for (int i = 0, l = nodes.length; i < l; i++) {
 				nodeSet.matchingNodes.removeKey(nodes[i]);
+			}
 		}
 	}
 
@@ -198,8 +200,9 @@ public class PHPMatchLocator extends MatchLocator {
 			ASTNode[] nodes = nodeSet.matchingNodes(method.sourceStart(), method.sourceEnd());
 			if (nodes != null) {
 				if ((this.matchContainer & PatternLocator.CLASS_CONTAINER) != 0) {
-					if (enclosingElement == null)
+					if (enclosingElement == null) {
 						enclosingElement = createHandle(method, parent);
+					}
 					if (encloses(enclosingElement)) {
 						for (int i = 0, l = nodes.length; i < l; i++) {
 							ASTNode node = nodes[i];
@@ -213,8 +216,9 @@ public class PHPMatchLocator extends MatchLocator {
 						return;
 					}
 				}
-				for (int i = 0, l = nodes.length; i < l; i++)
+				for (int i = 0, l = nodes.length; i < l; i++) {
 					nodeSet.matchingNodes.removeKey(nodes[i]);
+				}
 			}
 		}
 	}

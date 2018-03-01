@@ -88,8 +88,9 @@ public class MultipleFolderSelectionDialog extends SelectionStatusDialog impleme
 	 *            a filter.
 	 */
 	public void addFilter(ViewerFilter filter) {
-		if (fFilters == null)
+		if (fFilters == null) {
 			fFilters = new ArrayList<>(4);
+		}
 
 		fFilters.add(filter);
 	}
@@ -181,8 +182,9 @@ public class MultipleFolderSelectionDialog extends SelectionStatusDialog impleme
 
 		fViewer.setComparator(new ResourceComparator(ResourceComparator.NAME));
 		if (fFilters != null) {
-			for (int i = 0; i != fFilters.size(); i++)
+			for (int i = 0; i != fFilters.size(); i++) {
 				fViewer.addFilter(fFilters.get(i));
+			}
 		}
 
 		fViewer.setInput(fInput);

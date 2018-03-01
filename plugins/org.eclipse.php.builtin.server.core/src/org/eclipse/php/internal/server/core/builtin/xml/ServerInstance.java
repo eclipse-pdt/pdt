@@ -43,7 +43,9 @@ public class ServerInstance {
 	 */
 	public ServerInstance(Server server) {
 		if (server == null)
+		 {
 			throw new IllegalArgumentException("Server argument may not be null."); //$NON-NLS-1$
+		}
 		this.server = server;
 	}
 

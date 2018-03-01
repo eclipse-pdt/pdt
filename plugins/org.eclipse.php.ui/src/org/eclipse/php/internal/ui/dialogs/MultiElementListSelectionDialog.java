@@ -87,8 +87,9 @@ public class MultiElementListSelectionDialog extends AbstractElementListSelectio
 	public void setElements(Object[][] elements) {
 		fNumberOfPages = elements.length;
 		fPages = new Page[fNumberOfPages];
-		for (int i = 0; i != fNumberOfPages; i++)
+		for (int i = 0; i != fNumberOfPages; i++) {
 			fPages[i] = new Page(elements[i]);
+		}
 
 		initializeResult(fNumberOfPages);
 	}
@@ -232,8 +233,9 @@ public class MultiElementListSelectionDialog extends AbstractElementListSelectio
 		fPages[fCurrentPage].okState = isOK;
 
 		boolean isAllOK = isOK;
-		for (int i = 0; i != fNumberOfPages; i++)
+		for (int i = 0; i != fNumberOfPages; i++) {
 			isAllOK = isAllOK && fPages[i].okState;
+		}
 
 		fFinishButton.setEnabled(isAllOK);
 
@@ -255,7 +257,9 @@ public class MultiElementListSelectionDialog extends AbstractElementListSelectio
 		// store filter
 		String filter = getFilter();
 		if (filter == null)
+		 {
 			filter = ""; //$NON-NLS-1$
+		}
 		page.filter = filter;
 
 		// store selection
@@ -267,19 +271,22 @@ public class MultiElementListSelectionDialog extends AbstractElementListSelectio
 		setResult(fCurrentPage, selectedElements);
 
 		if (toNextPage) {
-			if (fCurrentPage + 1 >= fNumberOfPages)
+			if (fCurrentPage + 1 >= fNumberOfPages) {
 				return;
+			}
 
 			fCurrentPage++;
 		} else {
-			if (fCurrentPage - 1 < 0)
+			if (fCurrentPage - 1 < 0) {
 				return;
+			}
 
 			fCurrentPage--;
 		}
 
-		if (fPageInfoLabel != null && !fPageInfoLabel.isDisposed())
+		if (fPageInfoLabel != null && !fPageInfoLabel.isDisposed()) {
 			fPageInfoLabel.setText(getPageInfoMessage());
+		}
 
 		setPageData();
 
@@ -295,7 +302,9 @@ public class MultiElementListSelectionDialog extends AbstractElementListSelectio
 		// 2. apply filter
 		String filter = page.filter;
 		if (filter == null)
+		 {
 			filter = ""; //$NON-NLS-1$
+		}
 		setFilter(filter);
 
 		// 3. select elements
@@ -306,7 +315,9 @@ public class MultiElementListSelectionDialog extends AbstractElementListSelectio
 
 	private String getPageInfoMessage() {
 		if (fPageInfoMessage == null)
+		 {
 			return ""; //$NON-NLS-1$
+		}
 
 		String[] args = new String[] { Integer.toString(fCurrentPage + 1), Integer.toString(fNumberOfPages) };
 		return Messages.format(fPageInfoMessage, args);
@@ -314,8 +325,9 @@ public class MultiElementListSelectionDialog extends AbstractElementListSelectio
 
 	private void initializeResult(int length) {
 		List<Object> result = new ArrayList<>(length);
-		for (int i = 0; i != length; i++)
+		for (int i = 0; i != length; i++) {
 			result.add(null);
+		}
 
 		setResult(result);
 	}
@@ -337,8 +349,9 @@ public class MultiElementListSelectionDialog extends AbstractElementListSelectio
 	 */
 	public void setComparator(Comparator<?> comparator) {
 		fComparator = comparator;
-		if (fFilteredList != null)
+		if (fFilteredList != null) {
 			fFilteredList.setComparator(fComparator);
+		}
 	}
 
 	@Override

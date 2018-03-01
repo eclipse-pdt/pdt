@@ -61,8 +61,9 @@ public class PHPModelLabelProvider extends LabelProvider implements ILabelProvid
 	}
 
 	private ImageDescriptorRegistry getRegistry() {
-		if (fRegistry == null)
+		if (fRegistry == null) {
 			fRegistry = DLTKUIPlugin.getImageDescriptorRegistry();
+		}
 		return fRegistry;
 	}
 
@@ -111,25 +112,29 @@ public class PHPModelLabelProvider extends LabelProvider implements ILabelProvid
 			}
 		}
 		try {
-			if (element.getElementType() == IModelElement.METHOD && ((IMethod) element).isConstructor())
+			if (element.getElementType() == IModelElement.METHOD && ((IMethod) element).isConstructor()) {
 				adornments |= PHPElementImageDescriptor.CONSTRUCTOR;
+			}
 		} catch (ModelException e) {
 			if (e.isDoesNotExist()) {
 				return modifiers;
 			}
 			Logger.logException(e);
 		}
-		if (PHPFlags.isAbstract(modifiers))
+		if (PHPFlags.isAbstract(modifiers)) {
 			adornments |= PHPElementImageDescriptor.ABSTRACT;
+		}
 		if (PHPFlags.isConstant(modifiers)) {
 			adornments |= PHPElementImageDescriptor.CONSTANT;
 		} else if (PHPFlags.isFinal(modifiers)) {
 			adornments |= PHPElementImageDescriptor.FINAL;
 		}
-		if (PHPFlags.isStatic(modifiers))
+		if (PHPFlags.isStatic(modifiers)) {
 			adornments |= PHPElementImageDescriptor.STATIC;
-		if (PHPFlags.isDeprecated(modifiers))
+		}
+		if (PHPFlags.isDeprecated(modifiers)) {
 			adornments |= PHPElementImageDescriptor.DEPRECATED;
+		}
 		return adornments;
 	}
 

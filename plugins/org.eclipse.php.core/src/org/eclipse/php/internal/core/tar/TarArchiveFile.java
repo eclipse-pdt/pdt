@@ -73,8 +73,9 @@ public class TarArchiveFile implements IArchive {
 	private void initMap() {
 		// TODO Auto-generated method stub
 
-		if (mapInited)
+		if (mapInited) {
 			return;
+		}
 		Enumeration<? extends IArchiveEntry> e = getArchiveEntries();
 		while (e.hasMoreElements()) {
 			TarArchiveEntry tarArchiveEntry = (TarArchiveEntry) e.nextElement();

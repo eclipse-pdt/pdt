@@ -48,8 +48,9 @@ public class ZendDebuggerHostProposalComputer {
 		this.serverTypeId = server.getAttribute(IServerType.TYPE, null);
 		String proposals = null;
 		proposals = computeByServerType();
-		if (proposals != null)
+		if (proposals != null) {
 			return proposals;
+		}
 		return computeByServerAddress();
 	}
 
@@ -74,13 +75,13 @@ public class ZendDebuggerHostProposalComputer {
 	}
 
 	private String computeByServerType() {
-		if (serverTypeId == null)
+		if (serverTypeId == null) {
 			return null;
+		}
 		final Inet4Address serverHostAddress = fetchHostAddress();
-		if (serverHostAddress == null)
+		if (serverHostAddress == null) {
 			return null;
-		// Workaround for Docker specific case
-		else if (NetworkUtil.TYPE_LOOPBACK == NetworkUtil.getType(serverHostAddress)) {
+		} else if (NetworkUtil.TYPE_LOOPBACK == NetworkUtil.getType(serverHostAddress)) {
 			return getPrivateAddressProposals(serverHostAddress);
 		}
 		return null;
@@ -88,8 +89,9 @@ public class ZendDebuggerHostProposalComputer {
 
 	private String computeByServerAddress() {
 		final Inet4Address serverHostAddress = fetchHostAddress();
-		if (serverHostAddress == null)
+		if (serverHostAddress == null) {
 			return null;
+		}
 		switch (NetworkUtil.getType(serverHostAddress)) {
 		case NetworkUtil.TYPE_PUBLIC: {
 			return getPublicAddressProposal();
@@ -111,17 +113,20 @@ public class ZendDebuggerHostProposalComputer {
 
 	private String getPrivateAddressProposals(final Inet4Address serverHostAddress) {
 		List<Inet4Address> privateAddresses = NetworkUtil.getPrivateAddresses();
-		if (privateAddresses.isEmpty())
+		if (privateAddresses.isEmpty()) {
 			return null;
+		}
 		Collections.sort(privateAddresses, new Comparator<Inet4Address>() {
 			@Override
 			public int compare(Inet4Address a1, Inet4Address a2) {
 				if (NetworkUtil.isSamePrivateClass(a1, serverHostAddress)
-						&& !NetworkUtil.isSamePrivateClass(a2, serverHostAddress))
+						&& !NetworkUtil.isSamePrivateClass(a2, serverHostAddress)) {
 					return 1;
+				}
 				if (NetworkUtil.isSamePrivateClass(a2, serverHostAddress)
-						&& !NetworkUtil.isSamePrivateClass(a1, serverHostAddress))
+						&& !NetworkUtil.isSamePrivateClass(a1, serverHostAddress)) {
 					return -1;
+				}
 				return 0;
 			}
 		});
@@ -134,8 +139,9 @@ public class ZendDebuggerHostProposalComputer {
 
 	private String getPublicAddressProposal() {
 		Inet4Address publicAddress = NetworkUtil.getPublicAddress();
-		if (publicAddress != null)
+		if (publicAddress != null) {
 			return publicAddress.getHostAddress();
+		}
 		return null;
 	}
 

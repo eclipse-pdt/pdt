@@ -72,8 +72,9 @@ public class DebugOutputView extends AbstractDebugOutputView implements ISelecti
 					DebugOutput debugOutput = target.getOutputBuffer();
 					fUpdateCount = debugOutput.getUpdateCount();
 					// check if output hasn't been updated
-					if (fUpdateCount == oldcount)
+					if (fUpdateCount == oldcount) {
 						return;
+					}
 					String contentType = debugOutput.getContentType();
 					// we don't show garbage anymore
 					if (contentType != null && !contentType.startsWith("text")) { //$NON-NLS-1$
@@ -142,8 +143,9 @@ public class DebugOutputView extends AbstractDebugOutputView implements ISelecti
 					int size = events.length;
 					for (int i = 0; i < size; i++) {
 						Object obj = events[i].getSource();
-						if (!(obj instanceof IPHPDebugTarget || obj instanceof PHPThread))
+						if (!(obj instanceof IPHPDebugTarget || obj instanceof PHPThread)) {
 							continue;
+						}
 						if (events[i].getKind() == DebugEvent.TERMINATE || events[i].getKind() == DebugEvent.SUSPEND) {
 							final IPHPDebugTarget target;
 							if (obj instanceof IPHPDebugTarget) {

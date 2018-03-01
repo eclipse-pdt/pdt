@@ -255,8 +255,9 @@ public class MarkOccurrencesConfigurationBlock implements IPreferenceConfigurati
 	}
 
 	IStatus getStatus() {
-		if (fStatus == null)
+		if (fStatus == null) {
 			fStatus = new StatusInfo();
+		}
 		return fStatus;
 	}
 

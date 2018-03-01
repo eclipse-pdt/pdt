@@ -188,24 +188,27 @@ public abstract class FlowInfo {
 	protected void removeLabel(Identifier label) {
 		if (fBranches != null) {
 			fBranches.remove(makeString(label));
-			if (fBranches.isEmpty())
+			if (fBranches.isEmpty()) {
 				fBranches = null;
+			}
 		}
 	}
 
 	protected static String makeString(Identifier label) {
-		if (label == null)
+		if (label == null) {
 			return UNLABELED;
-		else
+		} else {
 			return label.getName();
+		}
 	}
 
 	// ---- Exceptions
 	// -----------------------------------------------------------------------
 
 	public ITypeBinding[] getExceptions() {
-		if (fExceptions == null)
+		if (fExceptions == null) {
 			return new ITypeBinding[0];
+		}
 		return fExceptions.toArray(new ITypeBinding[fExceptions.size()]);
 	}
 
@@ -214,25 +217,29 @@ public abstract class FlowInfo {
 	}
 
 	protected void addException(ITypeBinding type) {
-		if (fExceptions == null)
+		if (fExceptions == null) {
 			fExceptions = new HashSet<>(2);
+		}
 		fExceptions.add(type);
 	}
 
 	protected void removeExceptions(TryStatement node) {
-		if (fExceptions == null)
+		if (fExceptions == null) {
 			return;
+		}
 
 		List<?> catchClauses = node.catchClauses();
-		if (catchClauses.isEmpty())
+		if (catchClauses.isEmpty()) {
 			return;
+		}
 		// Make sure we have a copy since we are modifing the fExceptions list
 		ITypeBinding[] exceptions = fExceptions.toArray(new ITypeBinding[fExceptions.size()]);
 		for (int i = 0; i < exceptions.length; i++) {
 			handleException(catchClauses, exceptions[i]);
 		}
-		if (fExceptions.isEmpty())
+		if (fExceptions.isEmpty()) {
 			fExceptions = null;
+		}
 	}
 
 	private void handleException(List<?> catchClauses, ITypeBinding type) {
@@ -255,14 +262,16 @@ public abstract class FlowInfo {
 	// -----------------------------------------------------------------
 
 	public ITypeBinding[] getTypeVariables() {
-		if (fTypeVariables == null)
+		if (fTypeVariables == null) {
 			return new ITypeBinding[0];
+		}
 		return fTypeVariables.toArray(new ITypeBinding[fTypeVariables.size()]);
 	}
 
 	protected void addTypeVariable(ITypeBinding typeParameter) {
-		if (fTypeVariables == null)
+		if (fTypeVariables == null) {
 			fTypeVariables = new HashSet<>();
+		}
 		fTypeVariables.add(typeParameter);
 	}
 
@@ -279,8 +288,9 @@ public abstract class FlowInfo {
 
 	private void mergeExecutionFlowSequential(FlowInfo otherInfo, FlowContext context) {
 		int other = otherInfo.fReturnKind;
-		if (branches() && other == VALUE_RETURN)
+		if (branches() && other == VALUE_RETURN) {
 			other = PARTIAL_RETURN;
+		}
 		fReturnKind = RETURN_KIND_SEQUENTIAL_TABLE[fReturnKind][other];
 		mergeBranches(otherInfo, context);
 		mergeExceptions(otherInfo, context);
@@ -332,12 +342,14 @@ public abstract class FlowInfo {
 	public IVariableBinding[] get(FlowContext context, int mode) {
 		List<IVariableBinding> result = new ArrayList<>();
 		int[] locals = getAccessModes();
-		if (locals == null)
+		if (locals == null) {
 			return EMPTY_ARRAY;
+		}
 		for (int i = 0; i < locals.length; i++) {
 			int accessMode = locals[i];
-			if ((accessMode & mode) != 0)
+			if ((accessMode & mode) != 0) {
 				result.add(context.getLocalFromIndex(i));
+			}
 		}
 		return result.toArray(new IVariableBinding[result.size()]);
 	}
@@ -351,11 +363,13 @@ public abstract class FlowInfo {
 	 */
 	public boolean hasAccessMode(FlowContext context, IVariableBinding local, int mode) {
 		boolean unusedMode = (mode & UNUSED) != 0;
-		if (fAccessModes == null && unusedMode)
+		if (fAccessModes == null && unusedMode) {
 			return true;
+		}
 		int index = context.getIndexFromLocal(local);
-		if (index == -1)
+		if (index == -1) {
 			return unusedMode;
+		}
 		return (fAccessModes[index] & mode) != 0;
 	}
 
@@ -370,11 +384,13 @@ public abstract class FlowInfo {
 	 * @return the access mode of the local variable
 	 */
 	public int getAccessMode(FlowContext context, IVariableBinding local) {
-		if (fAccessModes == null)
+		if (fAccessModes == null) {
 			return UNUSED;
+		}
 		int index = context.getIndexFromLocal(local);
-		if (index == -1)
+		if (index == -1) {
 			return UNUSED;
+		}
 		return fAccessModes[index];
 	}
 
@@ -383,25 +399,29 @@ public abstract class FlowInfo {
 	}
 
 	protected void clearAccessMode(IVariableBinding binding, FlowContext context) {
-		if (fAccessModes == null) // all are unused
+		if (fAccessModes == null) {
 			return;
+		}
 		fAccessModes[binding.getVariableId() - context.getStartingIndex()] = UNUSED;
 	}
 
 	protected void mergeAccessModeSequential(FlowInfo otherInfo, FlowContext context) {
-		if (!context.considerAccessMode())
+		if (!context.considerAccessMode()) {
 			return;
+		}
 
 		int[] others = otherInfo.fAccessModes;
-		if (others == null) // others are all unused. So nothing to do
+		if (others == null) {
 			return;
+		}
 
 		// Must not consider return kind since a return statement can't control
 		// execution flow
 		// inside a method. It always leaves the method.
 		if (branches() || hasUncaughtException()) {
-			for (int i = 0; i < others.length; i++)
+			for (int i = 0; i < others.length; i++) {
 				others[i] = ACCESS_MODE_OPEN_BRANCH_TABLE[getIndex(others[i])];
+			}
 		}
 
 		if (fAccessModes == null) { // all current variables are unused
@@ -422,16 +442,19 @@ public abstract class FlowInfo {
 		for (int i = 0; i < fAccessModes.length; i++) {
 			int accessmode = fAccessModes[i];
 			int othermode = others[i];
-			if (accessmode == WRITE)
+			if (accessmode == WRITE) {
 				continue;
+			}
 			if (accessmode == WRITE_POTENTIAL) {
-				if (othermode == WRITE)
+				if (othermode == WRITE) {
 					fAccessModes[i] = WRITE;
+				}
 				continue;
 			}
 
-			if (others[i] != UNUSED)
+			if (others[i] != UNUSED) {
 				fAccessModes[i] = othermode;
+			}
 		}
 	}
 
@@ -466,16 +489,18 @@ public abstract class FlowInfo {
 	}
 
 	protected void mergeAccessModeConditional(FlowInfo otherInfo, FlowContext context) {
-		if (!context.considerAccessMode())
+		if (!context.considerAccessMode()) {
 			return;
+		}
 
 		int[] others = otherInfo.fAccessModes;
 		// first access
 		if (fAccessModes == null) {
-			if (others != null)
+			if (others != null) {
 				fAccessModes = others;
-			else
+			} else {
 				createAccessModeArray(context);
+			}
 			return;
 		} else {
 			if (others == null) {
@@ -492,11 +517,13 @@ public abstract class FlowInfo {
 	}
 
 	protected void mergeEmptyCondition(FlowContext context) {
-		if (fReturnKind == VALUE_RETURN || fReturnKind == VOID_RETURN)
+		if (fReturnKind == VALUE_RETURN || fReturnKind == VOID_RETURN) {
 			fReturnKind = PARTIAL_RETURN;
+		}
 
-		if (!context.considerAccessMode())
+		if (!context.considerAccessMode()) {
 			return;
+		}
 
 		if (fAccessModes == null) {
 			createAccessModeArray(context);

@@ -154,8 +154,9 @@ public class BreakpointSetConditionAction implements IObjectActionDelegate {
 
 		String currentCondition = breakpoint.getCondition();
 		boolean enableCondition = breakpoint.isConditionEnabled();
-		if (currentCondition.equals("")) //$NON-NLS-1$
+		if (currentCondition.equals("")) {
 			enableCondition = true;
+		}
 
 		Shell activeShell = PHPDebugUIPlugin.getActiveWorkbenchShell();
 		String title = MessageFormat.format(PHPDebugUIMessages.SetCondition_1, new Object[] {});
@@ -167,8 +168,9 @@ public class BreakpointSetConditionAction implements IObjectActionDelegate {
 		}
 		String condition = dialog.getValue();
 		enableCondition = dialog.isSetConditionEnabled();
-		if (condition.equals("")) //$NON-NLS-1$
+		if (condition.equals("")) {
 			enableCondition = false;
+		}
 		breakpoint.setConditionWithEnable(enableCondition, condition);
 		return true;
 	}

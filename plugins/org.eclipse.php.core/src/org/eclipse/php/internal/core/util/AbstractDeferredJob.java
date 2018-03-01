@@ -39,11 +39,11 @@ public abstract class AbstractDeferredJob extends Job {
 	 * Defer execution of this job.
 	 */
 	public synchronized void defer() {
-		if (getState() == NONE)
+		if (getState() == NONE) {
 			schedule(delay);
-		else if (getState() == SLEEPING)
+		} else if (getState() == SLEEPING) {
 			wakeUp(delay);
-		else if (getState() == WAITING) {
+		} else if (getState() == WAITING) {
 			sleep();
 			wakeUp(delay);
 		} else {

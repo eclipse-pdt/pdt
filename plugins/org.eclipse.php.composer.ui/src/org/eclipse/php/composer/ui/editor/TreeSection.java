@@ -52,8 +52,9 @@ public abstract class TreeSection extends StructuredViewerSection {
 		@Override
 		public void buttonSelected(Button button, int index) {
 			TreeSection.this.buttonSelected(index);
-			if (handleDefaultButton)
+			if (handleDefaultButton) {
 				button.getShell().setDefaultButton(null);
+			}
 		}
 
 		@Override
@@ -77,8 +78,9 @@ public abstract class TreeSection extends StructuredViewerSection {
 		}
 
 		protected void updateLabel() {
-			if (count != null && !count.isDisposed())
+			if (count != null && !count.isDisposed()) {
 				count.setText(NLS.bind(Messages.TreeSection_TotalCountLabel, getTreeViewer().getTree().getItemCount()));
+			}
 		}
 	}
 

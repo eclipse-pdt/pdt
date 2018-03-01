@@ -66,10 +66,12 @@ public class RenameSupport {
 	 */
 	public IStatus preCheck() throws CoreException {
 		ensureChecked();
-		if (fPreCheckStatus.hasFatalError())
+		if (fPreCheckStatus.hasFatalError()) {
 			return fPreCheckStatus.getEntryMatchingSeverity(RefactoringStatus.FATAL).toStatus();
-		else
+		}
+		else {
 			return new Status(IStatus.OK, RefactoringUIPlugin.PLUGIN_ID, 0, "", null); //$NON-NLS-1$
+		}
 	}
 
 	/**
@@ -209,8 +211,9 @@ public class RenameSupport {
 	}
 
 	private static void initialize(RenameRefactoring refactoring, String newName, int flags) {
-		if (refactoring.getProcessor() == null)
+		if (refactoring.getProcessor() == null) {
 			return;
+		}
 		setNewName(refactoring.getAdapter(INameUpdating.class), newName);
 
 		ITextUpdating text = refactoring.getAdapter(ITextUpdating.class);
@@ -220,8 +223,9 @@ public class RenameSupport {
 	}
 
 	private static void setNewName(INameUpdating refactoring, String newName) {
-		if (newName != null)
+		if (newName != null) {
 			refactoring.setNewElementName(newName);
+		}
 	}
 
 	private static boolean updateTextualMatches(int flags) {

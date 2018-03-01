@@ -172,8 +172,9 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 
 	public WorkingSetGroup createWorkingSetGroup(Composite composite, IStructuredSelection selection,
 			String[] supportedWorkingSetTypes) {
-		if (fWorkingSetGroup != null)
+		if (fWorkingSetGroup != null) {
 			return fWorkingSetGroup;
+		}
 		fWorkingSetGroup = new WorkingSetGroup(composite, selection, supportedWorkingSetTypes);
 		return fWorkingSetGroup;
 	}
@@ -353,8 +354,9 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 	private boolean canCreate(File file) {
 		while (!file.exists()) {
 			file = file.getParentFile();
-			if (file == null)
+			if (file == null) {
 				return false;
+			}
 		}
 
 		return file.canWrite();
@@ -468,8 +470,9 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		}
 
 		private void updateEnableState() {
-			if (fDetectGroup == null)
+			if (fDetectGroup == null) {
 				return;
+			}
 
 			final boolean detect = fDetectGroup.mustDetect();
 			fStdRadio.setEnabled(!detect);
@@ -609,8 +612,9 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		public void dialogFieldChanged(DialogField field) {
 			if (field == fDefaultValues) {
 				final boolean checked = fDefaultValues.isSelected();
-				if (null != fConfigurationBlock)
+				if (null != fConfigurationBlock) {
 					this.fConfigurationBlock.setEnabled(!checked);
+				}
 			}
 
 			fireEvent();
@@ -835,8 +839,9 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 			byte[] buffer = new byte[8192];
 			while (true) {
 				int bytesRead = is.read(buffer);
-				if (bytesRead == -1)
+				if (bytesRead == -1) {
 					break;
+				}
 
 				os.write(buffer, 0, bytesRead);
 			}

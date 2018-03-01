@@ -30,12 +30,13 @@ public class terminal extends symbol {
 
       /* add to set of all terminals and check for duplicates */
       Object conflict = _all.put(nm,this);
-      if (conflict != null)
-	// can't throw an execption here because this is used in static 
-	// initializers, so we do a crash instead
-	// was:
-	// throw new internal_error("Duplicate terminal (" + nm + ") created");
-	(new internal_error("Duplicate terminal (" + nm + ") created")).crash();
+      if (conflict != null) {
+		// can't throw an execption here because this is used in static 
+		// initializers, so we do a crash instead
+		// was:
+		// throw new internal_error("Duplicate terminal (" + nm + ") created");
+		(new internal_error("Duplicate terminal (" + nm + ") created")).crash();
+	}
 
       /* assign a unique index */
       _index = next_index++;
@@ -99,10 +100,11 @@ public class terminal extends symbol {
   /** Lookup a terminal by name string. */ 
   public static terminal find(String with_name)
     {
-      if (with_name == null)
-	return null;
-      else 
-	return (terminal)_all.get(with_name);
+      if (with_name == null) {
+		return null;
+	} else {
+		return (terminal)_all.get(with_name);
+	}
     }
 
 
@@ -144,7 +146,8 @@ public class terminal extends symbol {
   /*-----------------------------------------------------------*/
 
   /** Report this symbol as not being a non-terminal. */
-  public boolean is_non_term() 
+  @Override
+public boolean is_non_term() 
     {
       return false;
     }
@@ -152,7 +155,8 @@ public class terminal extends symbol {
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Convert to a string. */
-  public String toString()
+  @Override
+public String toString()
     {
       return super.toString() + "[" + index() + "]";
     }

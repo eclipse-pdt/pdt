@@ -235,8 +235,9 @@ public class PHPSourceViewerInformationControl
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if (e.character == 0x1B) // ESC
+				if (e.character == 0x1B) {
 					fShell.dispose();
+				}
 			}
 
 			@Override
@@ -256,8 +257,9 @@ public class PHPSourceViewerInformationControl
 			fStatusField.setText(statusFieldText);
 			Font font = fStatusField.getFont();
 			FontData[] fontDatas = font.getFontData();
-			for (int i = 0; i < fontDatas.length; i++)
+			for (int i = 0; i < fontDatas.length; i++) {
 				fontDatas[i].setHeight(fontDatas[i].getHeight() * 9 / 10);
+			}
 			fStatusTextFont = new Font(fStatusField.getDisplay(), fontDatas);
 			fStatusField.setFont(fStatusTextFont);
 			GridData gd2 = new GridData(GridData.FILL_VERTICAL | GridData.FILL_HORIZONTAL
@@ -420,8 +422,9 @@ public class PHPSourceViewerInformationControl
 	 */
 	@Override
 	public void widgetDisposed(DisposeEvent event) {
-		if (fStatusTextFont != null && !fStatusTextFont.isDisposed())
+		if (fStatusTextFont != null && !fStatusTextFont.isDisposed()) {
 			fStatusTextFont.dispose();
+		}
 
 		fStatusTextFont = null;
 		fShell = null;
@@ -433,10 +436,11 @@ public class PHPSourceViewerInformationControl
 	 */
 	@Override
 	public final void dispose() {
-		if (fShell != null && !fShell.isDisposed())
+		if (fShell != null && !fShell.isDisposed()) {
 			fShell.dispose();
-		else
+		} else {
 			widgetDisposed(null);
+		}
 	}
 
 	/*
@@ -453,8 +457,9 @@ public class PHPSourceViewerInformationControl
 		}
 		fShell.setSize(width, height);
 
-		if (fStatusField != null)
+		if (fStatusField != null) {
 			fShell.pack(true);
+		}
 	}
 
 	/*
@@ -483,15 +488,18 @@ public class PHPSourceViewerInformationControl
 		int x = SWT.DEFAULT;
 		int y = SWT.DEFAULT;
 		Point size = fShell.computeSize(x, y);
-		if (size.x > fMaxWidth)
+		if (size.x > fMaxWidth) {
 			x = fMaxWidth;
-		if (size.y > fMaxHeight)
+		}
+		if (size.y > fMaxHeight) {
 			y = fMaxHeight;
+		}
 
 		// recompute using the constraints if the preferred size is larger than
 		// the constraints
-		if (x != SWT.DEFAULT || y != SWT.DEFAULT)
+		if (x != SWT.DEFAULT || y != SWT.DEFAULT) {
 			size = fShell.computeSize(x, y, false);
+		}
 
 		return size;
 	}

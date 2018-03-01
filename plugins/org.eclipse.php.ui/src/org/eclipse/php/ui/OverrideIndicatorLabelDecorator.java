@@ -102,8 +102,9 @@ public class OverrideIndicatorLabelDecorator implements ILabelDecorator, ILightw
 	 */
 	@Override
 	public Image decorateImage(Image image, Object element) {
-		if (image == null)
+		if (image == null) {
 			return null;
+		}
 
 		int adornmentFlags = computeAdornmentFlags(element);
 		if (adornmentFlags != 0) {

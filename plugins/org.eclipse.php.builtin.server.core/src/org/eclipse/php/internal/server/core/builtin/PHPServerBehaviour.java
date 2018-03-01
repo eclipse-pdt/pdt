@@ -168,8 +168,9 @@ public class PHPServerBehaviour extends ServerBehaviourDelegate implements IPHPS
 	}
 
 	protected void addProcessListener(final IProcess newProcess) {
-		if (processListener != null || newProcess == null)
+		if (processListener != null || newProcess == null) {
 			return;
+		}
 
 		processListener = new IDebugEventSetListener() {
 			@Override
@@ -234,8 +235,9 @@ public class PHPServerBehaviour extends ServerBehaviourDelegate implements IPHPS
 		fLaunch = launch;
 
 		IStatus status = getPHPRuntime().validate();
-		if (status != null && status.getSeverity() == IStatus.ERROR)
+		if (status != null && status.getSeverity() == IStatus.ERROR) {
 			throw new CoreException(status);
+		}
 		//
 		// // setRestartNeeded(false);
 		PHPServerConfiguration configuration = getPHPServerConfiguration();
@@ -245,9 +247,10 @@ public class PHPServerBehaviour extends ServerBehaviourDelegate implements IPHPS
 		List<ServerPort> usedPorts = new ArrayList<>();
 		while (iterator.hasNext()) {
 			ServerPort sp = iterator.next();
-			if (sp.getPort() < 0)
+			if (sp.getPort() < 0) {
 				throw new CoreException(
 						new Status(IStatus.ERROR, PHPServerPlugin.PLUGIN_ID, 0, Messages.errorPortInvalid, null));
+			}
 			if (SocketUtil.isPortInUse(sp.getPort(), 5)) {
 				usedPorts.add(sp);
 			}
@@ -263,7 +266,9 @@ public class PHPServerBehaviour extends ServerBehaviourDelegate implements IPHPS
 			boolean first = true;
 			while (iterator.hasNext()) {
 				if (!first)
+				 {
 					portStr += ", "; //$NON-NLS-1$
+				}
 				first = false;
 				ServerPort sp = iterator.next();
 				portStr += "" + sp.getPort(); //$NON-NLS-1$
@@ -290,7 +295,9 @@ public class PHPServerBehaviour extends ServerBehaviourDelegate implements IPHPS
 			String url = "http://" + getServer().getHost(); //$NON-NLS-1$
 			int port = configuration.getMainPort().getPort();
 			if (port != 80)
+			 {
 				url += ":" + port; //$NON-NLS-1$
+			}
 			ping = new PingThread(getServer(), url, -1, this);
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Can't ping for PHP Server startup."); //$NON-NLS-1$
@@ -301,13 +308,16 @@ public class PHPServerBehaviour extends ServerBehaviourDelegate implements IPHPS
 	 * Terminates the server.
 	 */
 	protected void terminate() {
-		if (getServer().getServerState() == IServer.STATE_STOPPED)
+		if (getServer().getServerState() == IServer.STATE_STOPPED) {
 			return;
+		}
 
 		try {
 			setServerState(IServer.STATE_STOPPING);
 			if (Trace.isTraceEnabled())
+			 {
 				Trace.trace(Trace.FINER, "Killing the PHP Server process"); //$NON-NLS-1$
+			}
 			if (fLaunch != null) {
 				fLaunch.terminate();
 				stopImpl();
@@ -342,8 +352,9 @@ public class PHPServerBehaviour extends ServerBehaviourDelegate implements IPHPS
 
 	@Override
 	public IPath getPublishDirectory(IModule[] module) {
-		if (module == null || module.length != 1)
+		if (module == null || module.length != 1) {
 			return null;
+		}
 
 		return getModuleDeployDirectory(module[0]);
 	}
@@ -413,33 +424,38 @@ public class PHPServerBehaviour extends ServerBehaviourDelegate implements IPHPS
 
 	@Override
 	protected void publishServer(int kind, IProgressMonitor monitor) throws CoreException {
-		if (getServer().getRuntime() == null)
+		if (getServer().getRuntime() == null) {
 			return;
+		}
 
 		IPath installDir = getServer().getRuntime().getLocation();
 		IPath confDir = null;
 		confDir = installDir;
 		IStatus status = PHPServerHelper.createDeploymentDirectory(getServerDeployDirectory());
-		if (status != null && !status.isOK())
+		if (status != null && !status.isOK()) {
 			throw new CoreException(status);
+		}
 
 		monitor = ProgressUtil.getMonitorFor(monitor);
 		monitor.beginTask(Messages.publishServerTask, 600);
 
 		status = getPHPServerConfiguration().cleanupServer(confDir, installDir, false,
 				ProgressUtil.getSubMonitorFor(monitor, 100));
-		if (status != null && !status.isOK())
+		if (status != null && !status.isOK()) {
 			throw new CoreException(status);
+		}
 
 		status = getPHPServerConfiguration().backupAndPublish(confDir, false,
 				ProgressUtil.getSubMonitorFor(monitor, 400));
-		if (status != null && !status.isOK())
+		if (status != null && !status.isOK()) {
 			throw new CoreException(status);
+		}
 
 		status = getPHPServerConfiguration().localizeConfiguration(confDir, getServerDeployDirectory(), getPHPServer(),
 				ProgressUtil.getSubMonitorFor(monitor, 100));
-		if (status != null && !status.isOK())
+		if (status != null && !status.isOK()) {
 			throw new CoreException(status);
+		}
 
 		monitor.done();
 
@@ -571,8 +587,9 @@ public class PHPServerBehaviour extends ServerBehaviourDelegate implements IPHPS
 	}
 
 	public PHPRuntime getPHPRuntime() {
-		if (getServer().getRuntime() == null)
+		if (getServer().getRuntime() == null) {
 			return null;
+		}
 
 		return (PHPRuntime) getServer().getRuntime().loadAdapter(PHPRuntime.class, null);
 	}

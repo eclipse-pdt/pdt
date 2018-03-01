@@ -84,8 +84,9 @@ public final class CompletionHoverControlCreator extends AbstractReusableInforma
 	 */
 	@Override
 	public boolean canReuse(IInformationControl control) {
-		if (!super.canReuse(control))
+		if (!super.canReuse(control)) {
 			return false;
+		}
 
 		if (control instanceof IInformationControlExtension4) {
 			String tooltipAffordanceString = fAdditionalInfoAffordance

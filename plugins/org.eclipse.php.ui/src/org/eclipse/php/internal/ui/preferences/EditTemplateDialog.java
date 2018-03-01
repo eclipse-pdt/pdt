@@ -105,8 +105,9 @@ public class EditTemplateDialog extends StatusDialog {
 		public void update() {
 			// XXX: workaround for
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=206111
-			if (fOperationCode == ITextOperationTarget.REDO)
+			if (fOperationCode == ITextOperationTarget.REDO) {
 				return;
+			}
 
 			boolean wasEnabled = isEnabled();
 			boolean isEnabled = (fOperationTarget != null && fOperationTarget.canDoOperation(fOperationCode));
@@ -179,10 +180,12 @@ public class EditTemplateDialog extends StatusDialog {
 		List<String[]> contexts = new ArrayList<>();
 		for (Iterator<TemplateContextType> it = registry.contextTypes(); it.hasNext();) {
 			TemplateContextType type = it.next();
-			if (type.getId().equals("javadoc")) //$NON-NLS-1$
+			if (type.getId().equals("javadoc")) {
 				contexts.add(new String[] { type.getId(), type.getName(), "/**" + delim }); //$NON-NLS-1$
-			else
+			}
+			else {
 				contexts.add(0, new String[] { type.getId(), type.getName(), "" }); //$NON-NLS-1$
+			}
 		}
 		fContextTypes = contexts.toArray(new String[contexts.size()][]);
 
@@ -432,8 +435,9 @@ public class EditTemplateDialog extends StatusDialog {
 		viewer.addTextListener(new ITextListener() {
 			@Override
 			public void textChanged(TextEvent event) {
-				if (event.getDocumentEvent() != null)
+				if (event.getDocumentEvent() != null) {
 					doSourceChanged(event.getDocumentEvent().getDocument());
+				}
 			}
 		});
 
@@ -475,10 +479,12 @@ public class EditTemplateDialog extends StatusDialog {
 	private String getPrefix() {
 		String id = getContextId();
 		int idx = getIndex(id);
-		if (idx != -1)
+		if (idx != -1) {
 			return fContextTypes[idx][2];
-		else
+		}
+		else {
 			return ""; //$NON-NLS-1$
+		}
 	}
 
 	private void initializeActions() {
@@ -564,8 +570,9 @@ public class EditTemplateDialog extends StatusDialog {
 
 	protected void updateSelectionDependentActions() {
 		Iterator<String> iterator = fSelectionActions.iterator();
-		while (iterator.hasNext())
+		while (iterator.hasNext()) {
 			updateAction(iterator.next());
+		}
 	}
 
 	protected void updateAction(String actionId) {
@@ -577,8 +584,9 @@ public class EditTemplateDialog extends StatusDialog {
 
 	private int getIndex(String contextid) {
 
-		if (contextid == null)
+		if (contextid == null) {
 			return -1;
+		}
 
 		for (int i = 0; i < fContextTypes.length; i++) {
 			if (contextid.equals(fContextTypes[i][0])) {
@@ -662,8 +670,9 @@ public class EditTemplateDialog extends StatusDialog {
 		String sectionName = getClass().getName() + "_dialogBounds"; //$NON-NLS-1$
 		IDialogSettings settings = PHPUiPlugin.getDefault().getDialogSettings();
 		IDialogSettings section = settings.getSection(sectionName);
-		if (section == null)
+		if (section == null) {
 			section = settings.addNewSection(sectionName);
+		}
 		return section;
 	}
 

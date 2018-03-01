@@ -16,14 +16,17 @@ public class parse_action_row {
   public parse_action_row()
     {
       /* make sure the size is set */
-      if (_size <= 0 )  _size = terminal.number();
+      if (_size <= 0 ) {
+		_size = terminal.number();
+	}
 
       /* allocate the array */
       under_term = new parse_action[size()];
 
       /* set each element to an error action */
-      for (int i=0; i<_size; i++)
-	under_term[i] = new parse_action();
+      for (int i=0; i<_size; i++) {
+		under_term[i] = new parse_action();
+	}
     }
 
   /*-----------------------------------------------------------*/
@@ -78,29 +81,32 @@ public class parse_action_row {
       int i, prod, max_prod, max_red;
 
       /* if we haven't allocated the count table, do so now */
-      if (reduction_count == null) 
-	reduction_count = new int[production.number()];
+      if (reduction_count == null) {
+		reduction_count = new int[production.number()];
+	}
 
       /* clear the reduction count table and maximums */
-      for (i = 0; i < production.number(); i++)
-	reduction_count[i] = 0;
+      for (i = 0; i < production.number(); i++) {
+		reduction_count[i] = 0;
+	}
       max_prod = -1;
       max_red = 0;
      
       /* walk down the row and look at the reduces */
-      for (i = 0; i < size(); i++)
-	if (under_term[i].kind() == parse_action.REDUCE)
-	  {
-	    /* count the reduce in the proper production slot and keep the 
-	       max up to date */
-	    prod = ((reduce_action)under_term[i]).reduce_with().index();
-	    reduction_count[prod]++;
-	    if (reduction_count[prod] > max_red)
-	      {
-		max_red = reduction_count[prod];
-		max_prod = prod;
-	      }
-	  }
+      for (i = 0; i < size(); i++) {
+		if (under_term[i].kind() == parse_action.REDUCE)
+		  {
+		    /* count the reduce in the proper production slot and keep the 
+		       max up to date */
+		    prod = ((reduce_action)under_term[i]).reduce_with().index();
+		    reduction_count[prod]++;
+		    if (reduction_count[prod] > max_red)
+		      {
+			max_red = reduction_count[prod];
+			max_prod = prod;
+		      }
+		  }
+	}
 
        /* record the max as the default (or -1 for not found) */
        default_reduce = max_prod;

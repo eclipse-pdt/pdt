@@ -220,7 +220,9 @@ public class emit {
   protected static void set_locations(boolean b) { _locations = b; }
   protected static void set_genericlabels(boolean b) { _genericlabels = b; }
   protected static void set_xmlactions(boolean b) { _xmlactions = b; 
- 	if (!b) return;
+ 	if (!b) {
+		return;
+	}
  	_locations=true; 
  	_lr_values=true;
   }
@@ -424,7 +426,7 @@ public class emit {
       /* emit action code for each production as a separate case */
       int proditeration = instancecounter*UPPERLIMIT;
       prod=production.find(proditeration);
-      for ( ;proditeration<Math.min((instancecounter+1)*UPPERLIMIT,production.number());prod=(production)production.find(++proditeration) )
+      for ( ;proditeration<Math.min((instancecounter+1)*UPPERLIMIT,production.number());prod=production.find(++proditeration) )
 	{
 	  /* case label */
           out.println("          /*. . . . . . . . . . . . . . . . . . . .*/");
@@ -463,12 +465,18 @@ public class emit {
 	   */
 	  for (int i=prod.rhs_length()-1; i>=0; i--) {
 	    // only interested in non-terminal symbols.
-	    if (!(prod.rhs(i) instanceof symbol_part)) continue;
+	    if (!(prod.rhs(i) instanceof symbol_part)) {
+			continue;
+		}
 	    symbol s = ((symbol_part)prod.rhs(i)).the_symbol();
-	    if (!(s instanceof non_terminal)) continue;
+	    if (!(s instanceof non_terminal)) {
+			continue;
+		}
 	    // skip this non-terminal unless it corresponds to
 	    // an embedded action production.
-	    if (((non_terminal)s).is_embedded_action == false) continue;
+	    if (((non_terminal)s).is_embedded_action == false) {
+			continue;
+		}
 	    // OK, it fits.  Make a conditional assignment to RESULT.
 	    int index = prod.rhs_length() - i - 1; // last rhs is on top.
             // set comment to inform about where the intermediate result came from
@@ -494,8 +502,9 @@ public class emit {
 
         /* if there is an action string, emit it */
           if (prod.action() != null && prod.action().code_string() != null &&
-              !prod.action().equals(""))
-            out.println(prod.action().code_string());
+              !prod.action().equals("")) {
+			out.println(prod.action().code_string());
+		}
 
 	  /* here we have the left and right values being propagated.  
 		must make this a command line option.
@@ -514,9 +523,9 @@ public class emit {
 		".peek()"+
                 // TUM 20060327 removed .right
 		")"; 	  
-	    if (prod.rhs_length() == 0) 
-	      leftstring = rightstring;
-	    else {
+	    if (prod.rhs_length() == 0) {
+			leftstring = rightstring;
+		} else {
 	      loffset = prod.rhs_length() - 1;
 	      leftstring = "((java_cup.runtime.Symbol)" + emit.pre("stack") + 
 		  // TUM 20050917
@@ -696,10 +705,11 @@ public class emit {
 	  row = act_tab.under_state[i];
 
 	  /* determine the default for the row */
-	  if (compact_reduces)
-	    row.compute_default();
-	  else
-	    row.default_reduce = -1;
+	  if (compact_reduces) {
+		row.compute_default();
+	} else {
+		row.default_reduce = -1;
+	}
 
 	  /* make temporary table for the row. */
 	  short[] temp_table = new short[2*parse_action_row.size()];
@@ -739,10 +749,10 @@ public class emit {
 		      {
 			/* do nothing, since we just want a syntax error */
 		      }
-		  /* shouldn't be anything else */
-		  else
-		    throw new internal_error("Unrecognized action code " + 
-					     act.kind() + " found in parse table");
+		  /* shouldn't be anything else */ else {
+				throw new internal_error("Unrecognized action code " + 
+						     act.kind() + " found in parse table");
+			}
 		}
 	    }
 
@@ -752,10 +762,11 @@ public class emit {
 
 	  /* finish off the row with a default entry */
 	  action_table[i][nentries++] = -1;
-	  if (row.default_reduce != -1)
-	    action_table[i][nentries++] = (short) (-(row.default_reduce+1));
-	  else
-	    action_table[i][nentries++] = 0;
+	  if (row.default_reduce != -1) {
+		action_table[i][nentries++] = (short) (-(row.default_reduce+1));
+	} else {
+		action_table[i][nentries++] = 0;
+	}
 	}
 
       /* finish off the init of the table */
@@ -863,8 +874,9 @@ public class emit {
   // split string if it is very long; start new line occasionally for neatness
   protected static int do_newline(PrintWriter out, int nchar, int nbytes) {
     if (nbytes > 65500)  { out.println("\", "); out.print("    \""); }
-    else if (nchar > 11) { out.println("\" +"); out.print("    \""); }
-    else return nchar+1;
+    else if (nchar > 11) { out.println("\" +"); out.print("    \""); } else {
+		return nchar+1;
+	}
     return 0;
   }
   // output an escape sequence for the given character code.
@@ -872,19 +884,29 @@ public class emit {
     StringBuffer escape = new StringBuffer();
     if (c <= 0xFF) {
       escape.append(Integer.toOctalString(c));
-      while(escape.length() < 3) escape.insert(0, '0');
+      while(escape.length() < 3) {
+		escape.insert(0, '0');
+	}
     } else {
       escape.append(Integer.toHexString(c));
-      while(escape.length() < 4) escape.insert(0, '0');
+      while(escape.length() < 4) {
+		escape.insert(0, '0');
+	}
       escape.insert(0, 'u');
     }
     escape.insert(0, '\\');
     out.print(escape.toString());
 
     // return number of bytes this takes up in UTF-8 encoding.
-    if (c == 0) return 2;
-    if (c >= 0x01 && c <= 0x7F) return 1;
-    if (c >= 0x80 && c <= 0x7FF) return 2;
+    if (c == 0) {
+		return 2;
+	}
+    if (c >= 0x01 && c <= 0x7F) {
+		return 1;
+	}
+    if (c >= 0x80 && c <= 0x7FF) {
+		return 2;
+	}
     return 3;
   }
 
@@ -920,10 +942,12 @@ public class emit {
       emit_package(out);
 
       /* user supplied imports */
-      for (int i = 0; i < import_list.size(); i++)
-	out.println("import " + import_list.elementAt(i) + ";");
-      if (locations())
-	out.println("import java_cup.runtime.ComplexSymbolFactory.Location;");
+      for (int i = 0; i < import_list.size(); i++) {
+		out.println("import " + import_list.elementAt(i) + ";");
+	}
+      if (locations()) {
+		out.println("import java_cup.runtime.ComplexSymbolFactory.Location;");
+	}
   	out.println("import java_cup.runtime.XMLElement;");
 
       /* class header */
@@ -1045,10 +1069,11 @@ public class emit {
 
 
       /* put out the action code class */
-      if (!_xmlactions)
-    	  emit_action_code(out, start_prod);
-      else
-    	  emit_xmlaction_code(out, start_prod);
+      if (!_xmlactions) {
+		emit_action_code(out, start_prod);
+	} else {
+		emit_xmlaction_code(out, start_prod);
+	}
 
       /* end of class */
       out.println("}");
@@ -1111,7 +1136,7 @@ public class emit {
       /* emit action code for each production as a separate case */
       int proditeration = instancecounter*UPPERLIMIT;
       prod=production.find(proditeration);
-      for ( ;proditeration<Math.min((instancecounter+1)*UPPERLIMIT,production.number());prod=(production)production.find(++proditeration) )
+      for ( ;proditeration<Math.min((instancecounter+1)*UPPERLIMIT,production.number());prod=production.find(++proditeration) )
 	{
 	  /* case label */
           out.println("          /*. . . . . . . . . . . . . . . . . . . .*/");
@@ -1128,27 +1153,36 @@ public class emit {
           // Generate the XML Output
           String nested="";
           for (int rhsi=0;rhsi<prod.rhs_length();rhsi++){
-        	  if (!(prod.rhs(rhsi) instanceof symbol_part)) continue;
+        	  if (!(prod.rhs(rhsi) instanceof symbol_part)) {
+				continue;
+			}
         	  String label = prod.rhs(rhsi).label();
         	  symbol_part sym  = (symbol_part)prod.rhs(rhsi);
         	  if (label==null) {
-        		  if (!_genericlabels) continue;
+        		  if (!_genericlabels) {
+					continue;
+				}
         		  label = sym.the_symbol().name()+rhsi;
         	  }
-        	  if (sym.the_symbol().is_non_term())
-        		  nested+=",(XMLElement)"+label;
-        	  else 
-        		  nested+=",new XMLElement.Terminal("+label+"xleft,\""+label+"\","+label+","+label+"xright)";
+        	  if (sym.the_symbol().is_non_term()) {
+				nested+=",(XMLElement)"+label;
+			} else {
+				nested+=",new XMLElement.Terminal("+label+"xleft,\""+label+"\","+label+","+label+"xright)";
+			}
           }
           
           if (prod.action() != null && prod.action().code_string() != null &&
-                  !prod.action().equals(""))
-                out.println(prod.action().code_string());
+                  !prod.action().equals("")) {
+			out.println(prod.action().code_string());
+		}
           
           // determine the variant:
           int variant=0;
-          for (int i=0;i<proditeration;i++)
-        	  if (production.find(i).lhs().equals(prod.lhs())) variant++;
+          for (int i=0;i<proditeration;i++) {
+			if (production.find(i).lhs().equals(prod.lhs())) {
+				variant++;
+			}
+		}
           
           String lhsname =prod.lhs().the_symbol().name().replace('$','_'); 
           out.println("                RESULT = new XMLElement.NonTerminal(\""+
@@ -1162,9 +1196,9 @@ public class emit {
 	    int loffset;
 	    String leftstring, rightstring;
 	    rightstring = "((java_cup.runtime.Symbol)" + emit.pre("stack") + ".peek()"+")"; 	  
-	    if (prod.rhs_length() == 0) 
-	      leftstring = rightstring;
-	    else {
+	    if (prod.rhs_length() == 0) {
+			leftstring = rightstring;
+		} else {
 	      loffset = prod.rhs_length() - 1;
 	      leftstring = "((java_cup.runtime.Symbol)" + emit.pre("stack") + 
 		  ((loffset==0)?(".peek()"):(".elementAt(" + emit.pre("top") + "-" + loffset + ")")) +")";

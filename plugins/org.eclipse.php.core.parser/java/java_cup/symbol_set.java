@@ -53,8 +53,9 @@ public class symbol_set {
    */
   protected void not_null(Object obj) throws internal_error
     {
-      if (obj == null) 
-	throw new internal_error("Null object used in set operation");
+      if (obj == null) {
+		throw new internal_error("Null object used in set operation");
+	}
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
@@ -74,9 +75,11 @@ public class symbol_set {
       not_null(other);
 
       /* walk down our set and make sure every element is in the other */
-      for (Enumeration e = all(); e.hasMoreElements(); )
-	if (!other.contains((symbol)e.nextElement()))
-	  return false;
+      for (Enumeration e = all(); e.hasMoreElements(); ) {
+		if (!other.contains((symbol)e.nextElement())) {
+			return false;
+		}
+	}
 
       /* they were all there */
       return true;
@@ -136,8 +139,9 @@ public class symbol_set {
       not_null(other);
 
       /* walk down the other set and do the adds individually */
-      for (Enumeration e = other.all(); e.hasMoreElements(); )
-	result = add((symbol)e.nextElement()) || result;
+      for (Enumeration e = other.all(); e.hasMoreElements(); ) {
+		result = add((symbol)e.nextElement()) || result;
+	}
 
       return result;
     }
@@ -152,8 +156,9 @@ public class symbol_set {
       not_null(other);
 
       /* walk down the other set and do the removes individually */
-      for (Enumeration e = other.all(); e.hasMoreElements(); )
-	remove((symbol)e.nextElement());
+      for (Enumeration e = other.all(); e.hasMoreElements(); ) {
+		remove((symbol)e.nextElement());
+	}
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
@@ -161,7 +166,9 @@ public class symbol_set {
   /** Equality comparison. */
   public boolean equals(symbol_set other) 
     {
-      if (other == null || other.size() != size()) return false;
+      if (other == null || other.size() != size()) {
+		return false;
+	}
 
       /* once we know they are the same size, then improper subset does test */
       try {
@@ -176,26 +183,30 @@ public class symbol_set {
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Generic equality comparison. */
-  public boolean equals(Object other)
+  @Override
+public boolean equals(Object other)
     {
-      if (!(other instanceof symbol_set))
-	return false;
-      else
-	return equals((symbol_set)other);
+      if (!(other instanceof symbol_set)) {
+		return false;
+	} else {
+		return equals((symbol_set)other);
+	}
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Compute a hash code. */
-  public int hashCode()
+  @Override
+public int hashCode()
     {
       int result = 0;
       int cnt;
       Enumeration e;
 
       /* hash together codes from at most first 5 elements */
-      for (e = all(), cnt=0 ; e.hasMoreElements() && cnt<5; cnt++)
-	result ^= ((symbol)e.nextElement()).hashCode();
+      for (e = all(), cnt=0 ; e.hasMoreElements() && cnt<5; cnt++) {
+		result ^= ((symbol)e.nextElement()).hashCode();
+	}
 
       return result;
     }
@@ -203,7 +214,8 @@ public class symbol_set {
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Convert to a string. */
-  public String toString()
+  @Override
+public String toString()
     {
       String result;
       boolean comma_flag;
@@ -212,10 +224,11 @@ public class symbol_set {
       comma_flag = false;
       for (Enumeration e = all(); e.hasMoreElements(); )
 	{
-	  if (comma_flag)
-	    result += ", ";
-	  else
-	    comma_flag = true;
+	  if (comma_flag) {
+		result += ", ";
+	} else {
+		comma_flag = true;
+	}
 
 	  result += ((symbol)e.nextElement()).name();
 	}

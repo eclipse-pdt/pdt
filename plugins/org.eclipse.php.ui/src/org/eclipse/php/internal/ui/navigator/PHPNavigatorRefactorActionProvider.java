@@ -41,8 +41,9 @@ public class PHPNavigatorRefactorActionProvider extends CommonActionProvider {
 	@Override
 	public void init(ICommonActionExtensionSite site) {
 		ICommonViewerWorkbenchSite workbenchSite = null;
-		if (site.getViewSite() instanceof ICommonViewerWorkbenchSite)
+		if (site.getViewSite() instanceof ICommonViewerWorkbenchSite) {
 			workbenchSite = (ICommonViewerWorkbenchSite) site.getViewSite();
+		}
 
 		// we only initialize the refactor group when in a view part
 		// (required for the constructor)
@@ -69,8 +70,9 @@ public class PHPNavigatorRefactorActionProvider extends CommonActionProvider {
 	 */
 	@Override
 	public void dispose() {
-		if (fRefactorGroup != null)
+		if (fRefactorGroup != null) {
 			fRefactorGroup.dispose();
+		}
 		super.dispose();
 	}
 }

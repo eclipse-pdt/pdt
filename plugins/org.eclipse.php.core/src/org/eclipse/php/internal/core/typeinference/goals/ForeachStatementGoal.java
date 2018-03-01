@@ -39,18 +39,23 @@ public class ForeachStatementGoal extends AbstractGoal {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (!super.equals(obj))
+		}
+		if (!super.equals(obj)) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		ForeachStatementGoal other = (ForeachStatementGoal) obj;
 		if (expression == null) {
-			if (other.expression != null)
+			if (other.expression != null) {
 				return false;
-		} else if (!expression.equals(other.expression))
+			}
+		} else if (!expression.equals(other.expression)) {
 			return false;
+		}
 		return true;
 	}
 }

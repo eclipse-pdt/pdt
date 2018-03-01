@@ -244,8 +244,9 @@ public class CustomFiltersActionGroup extends ActionGroup {
 			Entry<String, Boolean> entry = iter.next();
 			String id = entry.getKey();
 			boolean isEnabled = entry.getValue().booleanValue();
-			if (isEnabled)
+			if (isEnabled) {
 				enabledFilterIds.add(id);
+			}
 		}
 		return enabledFilterIds.toArray(new String[enabledFilterIds.size()]);
 	}
@@ -269,13 +270,15 @@ public class CustomFiltersActionGroup extends ActionGroup {
 		for (int i = 0; i < enabledFilters.length; i++) {
 			String filterName = enabledFilters[i];
 			ViewerFilter filter = fInstalledBuiltInFilters.get(filterName);
-			if (filter == null)
+			if (filter == null) {
 				newFilters.add(filterName);
-			else if (isSelected(parent, element, contentProvider, filter))
+			} else if (isSelected(parent, element, contentProvider, filter)) {
 				newFilters.add(filterName);
+			}
 		}
-		if (newFilters.size() == enabledFilters.length)
+		if (newFilters.size() == enabledFilters.length) {
 			return new String[0];
+		}
 		return newFilters.toArray(new String[newFilters.size()]);
 	}
 
@@ -295,8 +298,9 @@ public class CustomFiltersActionGroup extends ActionGroup {
 			// the element and all its parents have to be selected
 			ITreeContentProvider provider = (ITreeContentProvider) contentProvider;
 			while (element != null && !(element instanceof IScriptModel)) {
-				if (!filter.select(fViewer, parent, element))
+				if (!filter.select(fViewer, parent, element)) {
 					return false;
+				}
 				element = provider.getParent(element);
 			}
 			return true;
@@ -329,8 +333,9 @@ public class CustomFiltersActionGroup extends ActionGroup {
 			String id = iter.next();
 			fEnabledFilterIds.put(id, Boolean.FALSE);
 		}
-		for (int i = 0; i < enabledIds.length; i++)
+		for (int i = 0; i < enabledIds.length; i++) {
 			fEnabledFilterIds.put(enabledIds[i], Boolean.TRUE);
+		}
 	}
 
 	private void setUserDefinedPatterns(String[] patterns) {
@@ -349,15 +354,17 @@ public class CustomFiltersActionGroup extends ActionGroup {
 		Stack<String> oldestFirstStack = new Stack<>();
 
 		int length = Math.min(changeHistory.size(), MAX_FILTER_MENU_ENTRIES);
-		for (int i = 0; i < length; i++)
+		for (int i = 0; i < length; i++) {
 			oldestFirstStack.push((changeHistory.pop()).getId());
+		}
 
 		length = Math.min(fLRUFilterIdsStack.size(), MAX_FILTER_MENU_ENTRIES - oldestFirstStack.size());
 		int NEWEST = 0;
 		for (int i = 0; i < length; i++) {
 			String filter = fLRUFilterIdsStack.remove(NEWEST);
-			if (!oldestFirstStack.contains(filter))
+			if (!oldestFirstStack.contains(filter)) {
 				oldestFirstStack.push(filter);
+			}
 		}
 		fLRUFilterIdsStack = oldestFirstStack;
 	}
@@ -400,11 +407,13 @@ public class CustomFiltersActionGroup extends ActionGroup {
 	}
 
 	private void removePreviousLRUFilterActions(IMenuManager mm) {
-		if (fFilterIdsUsedInLastViewMenu == null)
+		if (fFilterIdsUsedInLastViewMenu == null) {
 			return;
+		}
 
-		for (int i = 0; i < fFilterIdsUsedInLastViewMenu.length; i++)
+		for (int i = 0; i < fFilterIdsUsedInLastViewMenu.length; i++) {
 			mm.remove(fFilterIdsUsedInLastViewMenu[i]);
+		}
 	}
 
 	private void addLRUFilterActions(IMenuManager mm) {
@@ -435,8 +444,9 @@ public class CustomFiltersActionGroup extends ActionGroup {
 	 */
 	@Override
 	public void dispose() {
-		if (fMenuManager != null)
+		if (fMenuManager != null) {
 			fMenuManager.removeMenuListener(fMenuListener);
+		}
 		fCachedFilterDescriptors = null;
 		if (fViewer != null && !fViewer.getControl().isDisposed()) {
 			fViewer.setFilters(new ViewerFilter[0]);
@@ -480,8 +490,9 @@ public class CustomFiltersActionGroup extends ActionGroup {
 		fPatternFilter.setPatterns(patterns);
 		fViewer.getControl().setRedraw(false);
 		updateBuiltInFilters();
-		if (refresh)
+		if (refresh) {
 			fViewer.refresh();
+		}
 		fViewer.getControl().setRedraw(true);
 	}
 
@@ -494,10 +505,11 @@ public class CustomFiltersActionGroup extends ActionGroup {
 			Entry<String, Boolean> entry = iter.next();
 			String id = entry.getKey();
 			boolean isEnabled = entry.getValue().booleanValue();
-			if (isEnabled && !installedFilters.contains(id))
+			if (isEnabled && !installedFilters.contains(id)) {
 				filtersToAdd.add(id);
-			else if (!isEnabled && installedFilters.contains(id))
+			} else if (!isEnabled && installedFilters.contains(id)) {
 				filtersToRemove.add(id);
+			}
 		}
 
 		// Install the filters
@@ -524,15 +536,17 @@ public class CustomFiltersActionGroup extends ActionGroup {
 
 	private String[] getUserAndBuiltInPatterns() {
 		List<String> patterns = new ArrayList<>(fUserDefinedPatterns.length);
-		if (areUserDefinedPatternsEnabled())
+		if (areUserDefinedPatternsEnabled()) {
 			patterns.addAll(Arrays.asList(fUserDefinedPatterns));
+		}
 		FilterDescriptor[] filterDescs = getCachedFilterDescriptors();
 		for (int i = 0; i < filterDescs.length; i++) {
 			String id = filterDescs[i].getId();
 			boolean isPatternFilter = filterDescs[i].isPatternFilter();
 			Object isEnabled = fEnabledFilterIds.get(id);
-			if (isEnabled != null && isPatternFilter && ((Boolean) isEnabled).booleanValue())
+			if (isEnabled != null && isPatternFilter && ((Boolean) isEnabled).booleanValue()) {
 				patterns.add(filterDescs[i].getPattern());
+			}
 		}
 		return patterns.toArray(new String[patterns.size()]);
 	}
@@ -544,8 +558,9 @@ public class CustomFiltersActionGroup extends ActionGroup {
 		IPreferenceStore store = PHPUiPlugin.getDefault().getPreferenceStore();
 
 		// see bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=22533
-		if (!store.contains(getPreferenceKey(TAG_DUMMY_TO_TEST_EXISTENCE)))
+		if (!store.contains(getPreferenceKey(TAG_DUMMY_TO_TEST_EXISTENCE))) {
 			return;
+		}
 
 		fUserDefinedPatternsEnabled = store.getBoolean(getPreferenceKey(TAG_USER_DEFINED_PATTERNS_ENABLED));
 		setUserDefinedPatterns(CustomFiltersDialog
@@ -567,8 +582,9 @@ public class CustomFiltersActionGroup extends ActionGroup {
 		StringTokenizer tokenizer = new StringTokenizer(lruFilterIds, SEPARATOR);
 		while (tokenizer.hasMoreTokens()) {
 			String id = tokenizer.nextToken();
-			if (fFilterDescriptorMap.containsKey(id) && !fLRUFilterIdsStack.contains(id))
+			if (fFilterDescriptorMap.containsKey(id) && !fLRUFilterIdsStack.contains(id)) {
 				fLRUFilterIdsStack.push(id);
+			}
 		}
 	}
 
@@ -674,14 +690,17 @@ public class CustomFiltersActionGroup extends ActionGroup {
 	 *            the memento from which the state is restored
 	 */
 	public void restoreState(IMemento memento) {
-		if (memento == null)
+		if (memento == null) {
 			return;
+		}
 		IMemento customFilters = memento.getChild(TAG_CUSTOM_FILTERS);
-		if (customFilters == null)
+		if (customFilters == null) {
 			return;
+		}
 		String userDefinedPatternsEnabled = customFilters.getString(TAG_USER_DEFINED_PATTERNS_ENABLED);
-		if (userDefinedPatternsEnabled == null)
+		if (userDefinedPatternsEnabled == null) {
 			return;
+		}
 
 		fUserDefinedPatternsEnabled = Boolean.valueOf(userDefinedPatternsEnabled).booleanValue();
 		restoreUserDefinedPatterns(customFilters);
@@ -696,12 +715,14 @@ public class CustomFiltersActionGroup extends ActionGroup {
 		if (userDefinedPatterns != null) {
 			IMemento children[] = userDefinedPatterns.getChildren(TAG_CHILD);
 			String[] patterns = new String[children.length];
-			for (int i = 0; i < children.length; i++)
+			for (int i = 0; i < children.length; i++) {
 				patterns[i] = children[i].getString(TAG_PATTERN);
+			}
 
 			setUserDefinedPatterns(patterns);
-		} else
+		} else {
 			setUserDefinedPatterns(new String[0]);
+		}
 	}
 
 	private void restoreXmlDefinedFilters(IMemento memento) {
@@ -723,15 +744,17 @@ public class CustomFiltersActionGroup extends ActionGroup {
 			IMemento[] children = lruFilters.getChildren(TAG_CHILD);
 			for (int i = 0; i < children.length; i++) {
 				String id = children[i].getString(TAG_FILTER_ID);
-				if (fFilterDescriptorMap.containsKey(id) && !fLRUFilterIdsStack.contains(id))
+				if (fFilterDescriptorMap.containsKey(id) && !fLRUFilterIdsStack.contains(id)) {
 					fLRUFilterIdsStack.push(id);
+				}
 			}
 		}
 	}
 
 	private void cleanUpPatternDuplicates() {
-		if (!areUserDefinedPatternsEnabled())
+		if (!areUserDefinedPatternsEnabled()) {
 			return;
+		}
 		List<String> userDefinedPatterns = new ArrayList<>(Arrays.asList(fUserDefinedPatterns));
 		FilterDescriptor[] filters = getCachedFilterDescriptors();
 
@@ -741,8 +764,9 @@ public class CustomFiltersActionGroup extends ActionGroup {
 				if (userDefinedPatterns.contains(pattern)) {
 					fEnabledFilterIds.put(filters[i].getId(), Boolean.TRUE);
 					boolean hasMore = true;
-					while (hasMore)
+					while (hasMore) {
 						hasMore = userDefinedPatterns.remove(pattern);
+					}
 				}
 			}
 		}

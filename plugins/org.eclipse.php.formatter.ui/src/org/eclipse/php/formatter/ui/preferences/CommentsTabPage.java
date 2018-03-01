@@ -74,8 +74,9 @@ public class CommentsTabPage extends ModifyDialogTabPage {
 		@Override
 		protected boolean areSlavesEnabled() {
 			for (final Iterator<CheckboxPreference> iter = getMasters().iterator(); iter.hasNext();) {
-				if (iter.next().isChecked())
+				if (iter.next().isChecked()) {
 					return true;
+				}
 			}
 			return false;
 		}

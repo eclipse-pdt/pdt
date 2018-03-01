@@ -137,8 +137,9 @@ public class DebugBrowserView extends AbstractDebugOutputView implements ISelect
 					int size = events.length;
 					for (int i = 0; i < size; i++) {
 						Object obj = events[i].getSource();
-						if (!(obj instanceof IPHPDebugTarget))
+						if (!(obj instanceof IPHPDebugTarget)) {
 							continue;
+						}
 						// Update when debug target is done
 						if (events[i].getKind() == DebugEvent.TERMINATE) {
 							final IPHPDebugTarget target = (IPHPDebugTarget) obj;

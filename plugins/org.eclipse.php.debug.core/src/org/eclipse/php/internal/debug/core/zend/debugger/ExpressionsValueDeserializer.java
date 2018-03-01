@@ -202,8 +202,9 @@ public class ExpressionsValueDeserializer {
 
 		private String readString() {
 			int length = readInt();
-			while ((char) super.read() != '"')
+			while ((char) super.read() != '"') {
 				;
+			}
 
 			byte[] bytes = new byte[length];
 

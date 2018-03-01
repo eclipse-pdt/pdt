@@ -24,8 +24,9 @@ public class TestSuiteTemplate extends TestTemplate {
 	private List<String> tests;
 
 	public void addTest(final String name) {
-		if (tests == null)
+		if (tests == null) {
 			tests = new ArrayList<>();
+		}
 		tests.add(name);
 	}
 

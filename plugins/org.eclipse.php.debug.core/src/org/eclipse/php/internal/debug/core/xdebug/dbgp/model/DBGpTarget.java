@@ -564,8 +564,9 @@ public class DBGpTarget extends DBGpElement
 	 */
 	@Override
 	public IThread[] getThreads() throws DebugException {
-		if (isTerminated() || hasState(STATE_STARTED_SESSION_WAIT))
+		if (isTerminated() || hasState(STATE_STARTED_SESSION_WAIT)) {
 			return new IThread[0];
+		}
 		return allThreads;
 	}
 
@@ -845,13 +846,14 @@ public class DBGpTarget extends DBGpElement
 				fireTerminateEvent();
 			}
 		}
-		if (!isMultiSessionManaged())
+		if (!isMultiSessionManaged()) {
 			// Terminate corresponding launch if target is not multi-session
 			// managed
 			try {
 				getLaunch().terminate();
 			} catch (DebugException e) {
 			}
+		}
 	}
 
 	/*
@@ -964,8 +966,9 @@ public class DBGpTarget extends DBGpElement
 	@Override
 	public void stepInto() throws DebugException {
 		synchronized (commandMutex) {
-			if (!canStepInto())
+			if (!canStepInto()) {
 				return;
+			}
 			stepping = true;
 			resumed(DebugEvent.STEP_INTO);
 		}
@@ -980,8 +983,9 @@ public class DBGpTarget extends DBGpElement
 	@Override
 	public void stepOver() throws DebugException {
 		synchronized (commandMutex) {
-			if (!canStepOver())
+			if (!canStepOver()) {
 				return;
+			}
 			stepping = true;
 			resumed(DebugEvent.STEP_OVER);
 		}
@@ -997,8 +1001,9 @@ public class DBGpTarget extends DBGpElement
 	@Override
 	public void stepReturn() throws DebugException {
 		synchronized (commandMutex) {
-			if (!canStepReturn())
+			if (!canStepReturn()) {
 				return;
+			}
 			stepping = true;
 			resumed(DebugEvent.STEP_RETURN);
 		}
@@ -1013,8 +1018,9 @@ public class DBGpTarget extends DBGpElement
 	@Override
 	public void resume() throws DebugException {
 		synchronized (commandMutex) {
-			if (!canResume())
+			if (!canResume()) {
 				return;
+			}
 			stepping = false;
 			resumed(DebugEvent.RESUME);
 		}
@@ -1425,14 +1431,15 @@ public class DBGpTarget extends DBGpElement
 				String endName;
 				try {
 					endName = dbgpVariable.getName();
-					if (VariablesUtil.isThis(endName))
+					if (VariablesUtil.isThis(endName)) {
 						dbgpVariable.addFacets(KIND_THIS);
-					else if (VariablesUtil.isSuperGlobal(endName))
+					} else if (VariablesUtil.isSuperGlobal(endName)) {
 						dbgpVariable.addFacets(KIND_SUPER_GLOBAL);
-					else if (VariablesUtil.isClassIndicator(endName))
+					} else if (VariablesUtil.isClassIndicator(endName)) {
 						dbgpVariable.addFacets(VIRTUAL_CLASS);
-					else
+					} else {
 						dbgpVariable.addFacets(KIND_LOCAL);
+					}
 				} catch (DebugException e) {
 					// should not happen
 				}
@@ -1457,8 +1464,9 @@ public class DBGpTarget extends DBGpElement
 			NodeList properties = parent.getChildNodes();
 			for (int i = 0; i < properties.getLength(); i++) {
 				Node property = properties.item(i);
-				if (shouldSkip(property))
+				if (shouldSkip(property)) {
 					continue;
+				}
 				variables.add(new DBGpStackVariable(this, property, Integer.valueOf(reportedLevel)));
 			}
 		}
@@ -1468,8 +1476,9 @@ public class DBGpTarget extends DBGpElement
 	private boolean shouldSkip(Node property) {
 		String type = DBGpResponse.getAttribute(property, "type"); //$NON-NLS-1$
 		// Skip uninitialized variables
-		if (type.equalsIgnoreCase("uninitialized")) //$NON-NLS-1$
+		if (type.equalsIgnoreCase("uninitialized")) {
 			return true;
+		}
 		return false;
 	}
 
@@ -1831,8 +1840,9 @@ public class DBGpTarget extends DBGpElement
 	@Override
 	public boolean supportsBreakpoint(IBreakpoint breakpoint) {
 		if (breakpoint.getModelIdentifier().equals(IPHPDebugConstants.ID_PHP_DEBUG_CORE)) {
-			if (breakpoint instanceof IPHPExceptionBreakpoint)
+			if (breakpoint instanceof IPHPExceptionBreakpoint) {
 				return true;
+			}
 			boolean support = getBreakpointSet().supportsBreakpoint(breakpoint);
 			return support;
 		}

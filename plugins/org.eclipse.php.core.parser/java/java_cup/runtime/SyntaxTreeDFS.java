@@ -17,16 +17,18 @@ public class SyntaxTreeDFS {
 			ElementHandler handler = preMap.get(element.tagname);
 			if (handler==null) {
 				defaultPre(element,element.getChildren());
-			} else
+			} else {
 				handler.handle(element, element.getChildren());
+			}
 		}
 		@Override
 		public void postVisit(XMLElement element) {
 			ElementHandler handler = postMap.get(element.tagname);
 			if (handler==null) {
 				defaultPost(element,element.getChildren());
-			} else
-				handler.handle(element, element.getChildren());			
+			} else {
+				handler.handle(element, element.getChildren());
+			}			
 		}
 		public void registerPreVisit(String s,ElementHandler h){
 			preMap.put(s, h);

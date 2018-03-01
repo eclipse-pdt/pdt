@@ -120,10 +120,12 @@ public class PHPSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 		}
 
 		if (fHasCorrection) {
-			if (fAnnotation instanceof AssistAnnotation)
+			if (fAnnotation instanceof AssistAnnotation) {
 				initialize(fBundle, "PhpSelectAnnotationRulerAction_QuickAssist_"); //$NON-NLS-1$
-			else
+			}
+			else {
 				initialize(fBundle, "PhpSelectAnnotationRulerAction_QuickFix_"); //$NON-NLS-1$
+			}
 			return;
 		}
 
@@ -140,8 +142,9 @@ public class PHPSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 		IAnnotationAccessExtension annotationAccess = getAnnotationAccessExtension();
 
 		IDocument document = getDocument();
-		if (model == null)
+		if (model == null) {
 			return;
+		}
 
 		boolean hasAssistLightbulb = fStore.getBoolean(PreferenceConstants.EDITOR_QUICKASSIST_LIGHTBULB);
 
@@ -150,19 +153,22 @@ public class PHPSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 
 		while (iter.hasNext()) {
 			Annotation annotation = (Annotation) iter.next();
-			if (annotation.isMarkedDeleted())
+			if (annotation.isMarkedDeleted()) {
 				continue;
+			}
 
 			int annotationLayer = layer;
 			if (annotationAccess != null) {
 				annotationLayer = annotationAccess.getLayer(annotation);
-				if (annotationLayer < layer)
+				if (annotationLayer < layer) {
 					continue;
+				}
 			}
 
 			Position position = model.getPosition(annotation);
-			if (!includesRulerLine(position, document))
+			if (!includesRulerLine(position, document)) {
 				continue;
+			}
 
 			boolean isReadOnly = fTextEditor instanceof ITextEditorExtension
 					&& ((ITextEditorExtension) fTextEditor).isEditorInputReadOnly();
@@ -175,12 +181,14 @@ public class PHPSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 				continue;
 			} else if (!fHasCorrection) {
 				AnnotationPreference preference = fAnnotationPreferenceLookup.getAnnotationPreference(annotation);
-				if (preference == null)
+				if (preference == null) {
 					continue;
+				}
 
 				String key = preference.getVerticalRulerPreferenceKey();
-				if (key == null)
+				if (key == null) {
 					continue;
+				}
 
 				// if (fStore.getBoolean(key)) {
 				if (annotation instanceof OverrideIndicatorManager.OverrideIndicator) {

@@ -34,8 +34,9 @@ public class DebugViewHelper {
 					StructuredSelection sSelection = (StructuredSelection) selection;
 					if (!sSelection.isEmpty()) {
 						Object first = sSelection.getFirstElement();
-						if (first instanceof IDebugElement)
+						if (first instanceof IDebugElement) {
 							element = (IDebugElement) first;
+						}
 					}
 				}
 			}

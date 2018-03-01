@@ -61,20 +61,26 @@ public class ClassVariableDeclarationGoal extends AbstractTypeGoal implements IG
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (!super.equals(obj))
+		}
+		if (!super.equals(obj)) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		ClassVariableDeclarationGoal other = (ClassVariableDeclarationGoal) obj;
-		if (!Arrays.equals(types, other.types))
+		if (!Arrays.equals(types, other.types)) {
 			return false;
+		}
 		if (variableName == null) {
-			if (other.variableName != null)
+			if (other.variableName != null) {
 				return false;
-		} else if (!variableName.equals(other.variableName))
+			}
+		} else if (!variableName.equals(other.variableName)) {
 			return false;
+		}
 		return true;
 	}
 }

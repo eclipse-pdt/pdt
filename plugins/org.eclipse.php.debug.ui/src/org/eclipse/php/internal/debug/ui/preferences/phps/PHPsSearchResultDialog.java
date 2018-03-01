@@ -175,8 +175,9 @@ public class PHPsSearchResultDialog extends MessageDialog {
 			for (Object s : selected) {
 				PHPexeItem phpExe = (PHPexeItem) s;
 				// If no debugger installed, set ID for default one
-				if (phpExe.getDebuggerID() == null)
+				if (phpExe.getDebuggerID() == null) {
 					phpExe.setDebuggerID(PHPDebuggersRegistry.getDefaultDebuggerId());
+				}
 				phpExecs.add(phpExe);
 			}
 		}

@@ -94,8 +94,9 @@ public class DebugConnection {
 		public IStatus run(IProgressMonitor monitor) {
 			// 'while(true)' is OK here since we have blocking queue
 			while (true) {
-				if (monitor.isCanceled())
+				if (monitor.isCanceled()) {
 					return Status.OK_STATUS;
+				}
 				try {
 					IDebugMessage incomingMessage = (IDebugMessage) inputMessageQueue.queueOut();
 					Logger.debugMSG("NEW MESSAGE RECEIVED: " + incomingMessage); //$NON-NLS-1$
@@ -241,8 +242,9 @@ public class DebugConnection {
 			// 'while(true)' is OK here since we use blocking read
 			while (true) {
 				try {
-					if (monitor.isCanceled())
+					if (monitor.isCanceled()) {
 						return Status.OK_STATUS;
+					}
 					// Reads the length
 					int length = connectionIn.readInt();
 					if (length < 0) {
@@ -385,10 +387,11 @@ public class DebugConnection {
 
 		private void build() {
 			String params;
-			if (startedNotification.getQuery().contains(AbstractDebugParametersInitializer.DEBUG_SESSION_ID))
+			if (startedNotification.getQuery().contains(AbstractDebugParametersInitializer.DEBUG_SESSION_ID)) {
 				params = startedNotification.getQuery();
-			else
+			} else {
 				params = startedNotification.getOptions();
+			}
 			List<String> parameters = Arrays.asList(params.split("&")); //$NON-NLS-1$
 			Iterator<String> i = parameters.iterator();
 			while (i.hasNext()) {
@@ -396,12 +399,14 @@ public class DebugConnection {
 				if (parameter.startsWith(AbstractDebugParametersInitializer.DEBUG_SESSION_ID)) {
 					int idx = parameter.indexOf('=');
 					Integer parsedId = parseInt(parameter.substring(idx + 1));
-					if (parsedId != null)
+					if (parsedId != null) {
 						id = parsedId;
+					}
 					if (i.hasNext()) {
 						Integer parsedOrdinal = parseInt(i.next());
-						if (parsedOrdinal != null)
+						if (parsedOrdinal != null) {
 							ordinal = parsedOrdinal;
+						}
 					}
 				}
 			}
@@ -526,9 +531,10 @@ public class DebugConnection {
 	 *            The delivered notification message.
 	 */
 	public void sendNotification(Object msg) {
-		if (!isConnected)
+		if (!isConnected) {
 			// Skip if already disconnected
 			return;
+		}
 		try {
 			synchronized (connectionOut) {
 				byteArrayOutputStream.reset();
@@ -556,9 +562,10 @@ public class DebugConnection {
 	 * @return A response for the delivered request.
 	 */
 	public Object sendRequest(Object request) throws Exception {
-		if (!isConnected)
+		if (!isConnected) {
 			// Skip if already disconnected
 			return null;
+		}
 		Logger.debugMSG("SENDING SYNCHRONOUS REQUEST: " + request); //$NON-NLS-1$
 		try {
 			IDebugRequestMessage theMsg = (IDebugRequestMessage) request;
@@ -616,8 +623,9 @@ public class DebugConnection {
 						PHPLaunchUtilities.hideWaitForDebuggerMessage();
 						PHPLaunchUtilities.showLaunchErrorMessage();
 					}
-					if (!isConnected())
+					if (!isConnected()) {
 						break;
+					}
 				}
 			}
 			PHPLaunchUtilities.hideWaitForDebuggerMessage();
@@ -638,9 +646,10 @@ public class DebugConnection {
 	 * @param responseHandler
 	 */
 	public void sendRequest(Object request, ResponseHandler responseHandler) {
-		if (!isConnected)
+		if (!isConnected) {
 			// Skip if already disconnected
 			return;
+		}
 		Logger.debugMSG("SENDING ASYNCHRONOUS REQUEST: " + request); //$NON-NLS-1$
 		int msgId = lastRequestID++;
 		IDebugRequestMessage theMsg = (IDebugRequestMessage) request;
@@ -689,15 +698,16 @@ public class DebugConnection {
 	protected boolean hookLaunch(SessionDescriptor sessionDescriptor) throws CoreException {
 		// Try to hook any of the existing launches
 		ILaunch launch = PHPSessionLaunchMapper.get(sessionDescriptor.getId());
-		if (launch != null && isDifferentOriginalURL(sessionDescriptor, launch))
+		if (launch != null && isDifferentOriginalURL(sessionDescriptor, launch)) {
 			return true;
+		}
 		/*
 		 * There are no existing launches (created by user nor "mock" ones) for
 		 * incoming session ID, try to find/create new "mock" launch
 		 */
-		if (launch == null)
+		if (launch == null) {
 			launch = fetchLaunch(sessionDescriptor);
-		else if (isBuildinServerLaunch(launch)) {
+		} else if (isBuildinServerLaunch(launch)) {
 			hookBuiltinServerLaunch(launch, sessionDescriptor);
 			return true;
 			/*
@@ -705,12 +715,13 @@ public class DebugConnection {
 			 * it means that session has been restarted. If so, terminate the
 			 * previous launch.
 			 */
-		} else if (sessionDescriptor.isPrimary() && !launch.isTerminated())
+		} else if (sessionDescriptor.isPrimary() && !launch.isTerminated()) {
 			try {
 				launch.terminate();
 			} catch (DebugException e) {
 				// ignore
 			}
+		}
 		// Move on with the launch
 		if (launch != null) {
 			// Remove terminated elements if any
@@ -989,12 +1000,14 @@ public class DebugConnection {
 		 * with the new launch and the acquired launch id. This is a case when
 		 * we get a launch id from the toolbar or from the Platform.
 		 */
-		if (sessionID < 0)
+		if (sessionID < 0) {
 			sessionID = DebugSessionIdGenerator.generateSessionID();
+		}
 		PHPSessionLaunchMapper.put(sessionID, launch);
-		if (PHPDebugPlugin.DEBUG)
+		if (PHPDebugPlugin.DEBUG) {
 			System.out.println("Added a remote launch mapping to session with ID: " //$NON-NLS-1$
 					+ sessionID);
+		}
 		return launch;
 	}
 
@@ -1100,8 +1113,10 @@ public class DebugConnection {
 			HOOK_LOCK.tryLock(HOOK_TIMEOUT, TimeUnit.MILLISECONDS);
 			SessionDescriptor sessionDescriptor = new SessionDescriptor(debugSessionStartedNotification);
 			if (!hookLaunch(sessionDescriptor))
+			 {
 				// May happen
 				hookError("No session id"); //$NON-NLS-1$
+			}
 		} catch (InterruptedException e) {
 			Logger.logException(e);
 		} finally {
@@ -1135,8 +1150,9 @@ public class DebugConnection {
 				// Cleanup 'single' info
 				launch.removeDebugTarget(single);
 				IProcess[] processes = launch.getProcesses();
-				for (IProcess p : processes)
+				for (IProcess p : processes) {
 					launch.removeProcess(p);
+				}
 				// Create 'multi' process & target
 				PHPProcess process = new PHPProcess(launch, "Parallel Requests' Process"); //$NON-NLS-1$
 				PHPMultiDebugTarget multi = new PHPMultiDebugTarget(launch, process);
@@ -1218,8 +1234,9 @@ public class DebugConnection {
 	 * Destroys the socket and initialize it to null.
 	 */
 	private void cleanSocket() {
-		if (!isInitialized)
+		if (!isInitialized) {
 			return;
+		}
 		if (socket != null) {
 			try {
 				socket.shutdownInput();
@@ -1269,8 +1286,9 @@ public class DebugConnection {
 	 * Terminates connection completely.
 	 */
 	private void terminate() {
-		if (!isConnected())
+		if (!isConnected()) {
 			return;
+		}
 		// Mark it as closed already
 		isConnected = false;
 		cleanSocket();
@@ -1282,8 +1300,9 @@ public class DebugConnection {
 		debugResponseTimeout = Platform.getPreferencesService().getInt(PHPDebugPlugin.ID,
 				PHPDebugCorePreferenceNames.DEBUG_RESPONSE_TIMEOUT, 60000, null);
 		int customResponseTimeout = ZendDebuggerSettingsUtil.getResponseTimeout(startedNotification);
-		if (customResponseTimeout != -1)
+		if (customResponseTimeout != -1) {
 			debugResponseTimeout = customResponseTimeout;
+		}
 	}
 
 	/**
@@ -1310,8 +1329,9 @@ public class DebugConnection {
 		try {
 			// Might be null - not a web launch
 			String originalURL = launch.getAttribute(IDebugParametersKeys.ORIGINAL_URL);
-			if (originalURL == null)
+			if (originalURL == null) {
 				return false;
+			}
 			URL launchUrl = new URL(originalURL);
 			String incomingUrl = getOriginalURL(sessionDescriptor.getStartedNotification().getOptions());
 			URL currentUrl = incomingUrl == null ? null : new URL(incomingUrl);

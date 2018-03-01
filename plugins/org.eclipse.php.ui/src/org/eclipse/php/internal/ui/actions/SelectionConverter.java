@@ -56,13 +56,15 @@ public class SelectionConverter {
 	 * @throws ModelException
 	 */
 	public static IStructuredSelection getStructuredSelection(IWorkbenchPart part) throws ModelException {
-		if (part instanceof PHPStructuredEditor)
+		if (part instanceof PHPStructuredEditor) {
 			return new StructuredSelection(codeResolve((PHPStructuredEditor) part));
+		}
 		ISelectionProvider provider = part.getSite().getSelectionProvider();
 		if (provider != null) {
 			ISelection selection = provider.getSelection();
-			if (selection instanceof IStructuredSelection)
+			if (selection instanceof IStructuredSelection) {
 				return (IStructuredSelection) selection;
+			}
 		}
 		return StructuredSelection.EMPTY;
 	}
@@ -82,8 +84,9 @@ public class SelectionConverter {
 			int i = 0;
 			for (Iterator<?> iter = selection.iterator(); iter.hasNext(); i++) {
 				Object element = iter.next();
-				if (!(element instanceof IModelElement))
+				if (!(element instanceof IModelElement)) {
 					return EMPTY_RESULT;
+				}
 				result[i] = (IModelElement) element;
 			}
 			return result;
@@ -92,8 +95,9 @@ public class SelectionConverter {
 	}
 
 	public static boolean canOperateOn(PHPStructuredEditor editor) {
-		if (editor == null)
+		if (editor == null) {
 			return false;
+		}
 		return getInput(editor) != null;
 
 	}
@@ -101,8 +105,9 @@ public class SelectionConverter {
 	public static IModelElement[] codeResolveOrInputForked(PHPStructuredEditor editor)
 			throws InvocationTargetException, InterruptedException {
 		ISourceModule input = getInput(editor);
-		if (input == null)
+		if (input == null) {
 			return EMPTY_RESULT;
+		}
 
 		ITextSelection selection = (ITextSelection) editor.getSelectionProvider().getSelection();
 		IModelElement[] result = performForkedCodeResolve(input, selection);
@@ -130,8 +135,9 @@ public class SelectionConverter {
 	 */
 	public static IModelElement[] codeResolve(PHPStructuredEditor editor, boolean primaryOnly) throws ModelException {
 		ISourceModule input = getInput(editor, primaryOnly);
-		if (input != null)
+		if (input != null) {
 			return codeResolve(input, (ITextSelection) editor.getSelectionProvider().getSelection());
+		}
 		return EMPTY_RESULT;
 	}
 
@@ -151,8 +157,9 @@ public class SelectionConverter {
 	public static IModelElement[] codeResolveForked(PHPStructuredEditor editor, boolean primaryOnly)
 			throws InvocationTargetException, InterruptedException {
 		ISourceModule input = getInput(editor, primaryOnly);
-		if (input != null)
+		if (input != null) {
 			return performForkedCodeResolve(input, (ITextSelection) editor.getSelectionProvider().getSelection());
+		}
 		return EMPTY_RESULT;
 	}
 
@@ -175,8 +182,9 @@ public class SelectionConverter {
 	private static IModelElement getElementAtOffset(PHPStructuredEditor editor, boolean primaryOnly)
 			throws ModelException {
 		ISourceModule input = getInput(editor, primaryOnly);
-		if (input != null)
+		if (input != null) {
 			return getElementAtOffset(input, (ITextSelection) editor.getSelectionProvider().getSelection());
+		}
 		return null;
 	}
 
@@ -212,8 +220,9 @@ public class SelectionConverter {
 	 * @since 3.2
 	 */
 	private static ISourceModule getInput(PHPStructuredEditor editor, boolean primaryOnly) {
-		if (editor == null)
+		if (editor == null) {
 			return null;
+		}
 		return EditorUtility.getEditorInputModelElement(editor, primaryOnly);
 	}
 
@@ -287,8 +296,9 @@ public class SelectionConverter {
 	public static IModelElement resolveEnclosingElement(PHPStructuredEditor editor, ITextSelection selection)
 			throws ModelException {
 		ISourceModule input = getInput(editor);
-		if (input != null)
+		if (input != null) {
 			return resolveEnclosingElement(input, selection);
+		}
 		return null;
 	}
 
@@ -339,10 +349,12 @@ public class SelectionConverter {
 	 */
 	public static IModelElement selectJavaElement(IModelElement[] elements, Shell shell, String title, String message) {
 		int nResults = elements.length;
-		if (nResults == 0)
+		if (nResults == 0) {
 			return null;
-		if (nResults == 1)
+		}
+		if (nResults == 1) {
 			return elements[0];
+		}
 
 		int flags = ModelElementLabelProvider.SHOW_DEFAULT | ModelElementLabelProvider.SHOW_QUALIFIED
 				| ModelElementLabelProvider.SHOW_ROOT;

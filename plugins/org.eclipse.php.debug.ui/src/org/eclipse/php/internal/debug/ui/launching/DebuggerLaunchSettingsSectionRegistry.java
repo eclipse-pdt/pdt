@@ -143,8 +143,9 @@ public class DebuggerLaunchSettingsSectionRegistry {
 					break;
 				}
 			}
-			if (isTopHierarchy)
+			if (isTopHierarchy) {
 				topHierarchyEntries.add(entryToCheck);
+			}
 		}
 		return topHierarchyEntries;
 	}

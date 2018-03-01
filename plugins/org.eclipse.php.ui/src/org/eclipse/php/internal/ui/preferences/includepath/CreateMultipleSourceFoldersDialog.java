@@ -47,8 +47,9 @@ public class CreateMultipleSourceFoldersDialog extends TrayDialog {
 		@Override
 		public Object getParent(Object element) {
 			Object object = fNonExistingFolders.get(element);
-			if (object != null)
+			if (object != null) {
 				return object;
+			}
 
 			return super.getParent(element);
 		}
@@ -67,8 +68,9 @@ public class CreateMultipleSourceFoldersDialog extends TrayDialog {
 					result.add(key);
 				}
 			}
-			if (result.size() == 0)
+			if (result.size() == 0) {
 				return super.getChildren(element);
+			}
 
 			Object[] children = super.getChildren(element);
 			for (int i = 0; i < children.length; i++) {

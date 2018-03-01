@@ -122,20 +122,24 @@ public class FormEntry {
 
 	public void setEnabled(boolean enabled) {
 		text.setEnabled(enabled);
-		if (label instanceof Hyperlink)
+		if (label instanceof Hyperlink) {
 			((Hyperlink) label).setUnderlined(enabled);
+		}
 
-		if (browse != null)
+		if (browse != null) {
 			browse.setEnabled(enabled);
+		}
 	}
 
 	public void setEditable(boolean editable) {
 		text.setEditable(editable);
-		if (label instanceof Hyperlink)
+		if (label instanceof Hyperlink) {
 			((Hyperlink) label).setUnderlined(editable);
+		}
 
-		if (browse != null)
+		if (browse != null) {
 			browse.setEnabled(editable);
+		}
 	}
 
 	private void fillIntoGrid(Composite parent, int indent, int tcolspan) {
@@ -143,10 +147,11 @@ public class FormEntry {
 		int tspan;
 		if (layout instanceof GridLayout) {
 			int span = ((GridLayout) layout).numColumns;
-			if (tcolspan > 0)
+			if (tcolspan > 0) {
 				tspan = tcolspan;
-			else
+			} else {
 				tspan = browse != null ? span - 2 : span - 1;
+			}
 			GridData gd;
 			if (label != null) {
 				gd = new GridData(GridData.VERTICAL_ALIGN_CENTER);
@@ -167,10 +172,11 @@ public class FormEntry {
 			}
 		} else if (layout instanceof TableWrapLayout) {
 			int span = ((TableWrapLayout) layout).numColumns;
-			if (tcolspan > 0)
+			if (tcolspan > 0) {
 				tspan = tcolspan;
-			else
+			} else {
 				tspan = browse != null ? span - 2 : span - 1;
+			}
 			TableWrapData td;
 			if (label != null) {
 				td = new TableWrapData();
@@ -309,12 +315,15 @@ public class FormEntry {
 	}
 
 	public void setVisible(boolean visible) {
-		if (label != null)
+		if (label != null) {
 			label.setVisible(visible);
-		if (text != null)
+		}
+		if (text != null) {
 			text.setVisible(visible);
-		if (browse != null)
+		}
+		if (browse != null) {
 			browse.setVisible(visible);
+		}
 	}
 
 	/**

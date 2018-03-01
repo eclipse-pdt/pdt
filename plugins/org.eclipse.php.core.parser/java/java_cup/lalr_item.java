@@ -1,7 +1,6 @@
 package java_cup;
 
 import java.util.Stack;
-import java.util.Enumeration;
 
 /** This class represents an LALR item. Each LALR item consists of 
  *  a production, a "dot" at a position within that production, and
@@ -117,8 +116,9 @@ public class lalr_item extends lr_item_core {
       boolean change = false;
 
       /* if we don't need to propagate, then bail out now */
-      if (!needs_propagation && (incoming == null || incoming.empty()))
-	return;
+      if (!needs_propagation && (incoming == null || incoming.empty())) {
+		return;
+	}
 
       /* if we have null incoming, treat as an empty set */
       if (incoming != null)
@@ -134,9 +134,10 @@ public class lalr_item extends lr_item_core {
           needs_propagation = false;
 
 	  /* propagate our lookahead into each item we are linked to */
-	  for (int i = 0; i < propagate_items().size(); i++)
-	    ((lalr_item)propagate_items().elementAt(i))
+	  for (int i = 0; i < propagate_items().size(); i++) {
+		((lalr_item)propagate_items().elementAt(i))
 					  .propagate_lookaheads(lookahead());
+	}
 	}
     }
 
@@ -150,8 +151,9 @@ public class lalr_item extends lr_item_core {
       lalr_item result;
 
       /* can't shift if we have dot already at the end */
-      if (dot_at_end())
-	throw new internal_error("Attempt to shift past end of an lalr_item");
+      if (dot_at_end()) {
+		throw new internal_error("Attempt to shift past end of an lalr_item");
+	}
 
       /* create the new item w/ the dot shifted by one */
       result = new lalr_item(the_production(), dot_pos()+1, 
@@ -179,9 +181,10 @@ public class lalr_item extends lr_item_core {
       symbol          sym;
 
       /* sanity check */
-      if (dot_at_end())
-	throw new internal_error(
-	  "Attempt to calculate a lookahead set with a completed item");
+      if (dot_at_end()) {
+		throw new internal_error(
+		  "Attempt to calculate a lookahead set with a completed item");
+	}
 
       /* start with an empty result */
       result = new terminal_set();
@@ -208,8 +211,9 @@ public class lalr_item extends lr_item_core {
 		   result.add(((non_terminal)sym).first_set());
 
 		   /* if its nullable we continue adding, if not, we are done */
-		   if (!((non_terminal)sym).nullable())
-		     return result;
+		   if (!((non_terminal)sym).nullable()) {
+			return result;
+		}
 		 }
 	     }
 	}
@@ -236,7 +240,9 @@ public class lalr_item extends lr_item_core {
 
       /* if the dot is at the end, we have a problem, but the cleanest thing
 	 to do is just return true. */
-      if (dot_at_end()) return true;
+      if (dot_at_end()) {
+		return true;
+	}
 
       /* walk down the rhs and bail if we get a non-nullable symbol */
       for (int pos = dot_pos() + 1; pos < the_production().rhs_length(); pos++)
@@ -249,10 +255,14 @@ public class lalr_item extends lr_item_core {
 	      sym = ((symbol_part)part).the_symbol();
 
 	      /* if its a terminal we fail */
-	      if (!sym.is_non_term()) return false;
+	      if (!sym.is_non_term()) {
+			return false;
+		}
 
 	      /* if its not nullable we fail */
-	      if (!((non_terminal)sym).nullable()) return false;
+	      if (!((non_terminal)sym).nullable()) {
+			return false;
+		}
 	    }
 	}
 
@@ -268,19 +278,23 @@ public class lalr_item extends lr_item_core {
    */
   public boolean equals(lalr_item other)
     {
-      if (other == null) return false;
+      if (other == null) {
+		return false;
+	}
       return super.equals(other);
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Generic equality comparison. */
-  public boolean equals(Object other)
+  @Override
+public boolean equals(Object other)
     {
-      if (!(other instanceof lalr_item)) 
-	return false;
-      else
-	return equals((lalr_item)other);
+      if (!(other instanceof lalr_item)) {
+		return false;
+	} else {
+		return equals((lalr_item)other);
+	}
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
@@ -288,7 +302,8 @@ public class lalr_item extends lr_item_core {
   /** Return a hash code -- here we only hash the core since we only test core
    *  matching in LALR items. 
    */
-  public int hashCode()
+  @Override
+public int hashCode()
     {
       return super.hashCode();
     }
@@ -296,7 +311,8 @@ public class lalr_item extends lr_item_core {
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Convert to string. */
-  public String toString()
+  @Override
+public String toString()
     {
       String result = "";
 
@@ -308,13 +324,15 @@ public class lalr_item extends lr_item_core {
       if (lookahead() != null)
 	{
 	  result += "{";
-	  for (int t = 0; t < terminal.number(); t++)
-	    if (lookahead().contains(t))
-	      result += terminal.find(t).name() + " ";
-	  result += "}";
+	  for (int t = 0; t < terminal.number(); t++) {
+		if (lookahead().contains(t)) {
+			result += terminal.find(t).name() + " ";
+		}
 	}
-      else
-	result += "NULL LOOKAHEAD!!";
+	  result += "}";
+	} else {
+		result += "NULL LOOKAHEAD!!";
+	}
       result += "]";
 
       // additional output for debugging:

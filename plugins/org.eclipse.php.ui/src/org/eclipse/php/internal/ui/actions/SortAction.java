@@ -55,8 +55,9 @@ public class SortAction extends Action {
 					}
 					ISourceRange sr1 = ((ISourceReference) e1).getSourceRange();
 					ISourceRange sr2 = ((ISourceReference) e2).getSourceRange();
-					if (sr1 == null || sr2 == null)
+					if (sr1 == null || sr2 == null) {
 						return 0;
+					}
 
 					return sr1.getOffset() - sr2.getOffset();
 
@@ -102,7 +103,8 @@ public class SortAction extends Action {
 			}
 		});
 
-		if (store)
+		if (store) {
 			PHPUiPlugin.getDefault().getPreferenceStore().setValue(PREF_IS_SORTED, on);
+		}
 	}
 }

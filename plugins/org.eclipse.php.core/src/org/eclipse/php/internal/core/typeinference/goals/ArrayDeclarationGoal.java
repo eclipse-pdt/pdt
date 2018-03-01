@@ -38,18 +38,23 @@ public class ArrayDeclarationGoal extends AbstractTypeGoal {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (!super.equals(obj))
+		}
+		if (!super.equals(obj)) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		ArrayDeclarationGoal other = (ArrayDeclarationGoal) obj;
 		if (arrayDeclaration == null) {
-			if (other.arrayDeclaration != null)
+			if (other.arrayDeclaration != null) {
 				return false;
-		} else if (!arrayDeclaration.equals(other.arrayDeclaration))
+			}
+		} else if (!arrayDeclaration.equals(other.arrayDeclaration)) {
 			return false;
+		}
 		return true;
 	}
 

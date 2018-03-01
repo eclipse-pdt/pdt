@@ -6,7 +6,7 @@ import java.util.List;
 
 public class ScannerBuffer implements Scanner {
 	private Scanner inner;
-	private List<Symbol> buffer = new LinkedList<Symbol>();
+	private List<Symbol> buffer = new LinkedList<>();
 	/**
 	 * Wraps around a custom scanner and stores all so far produced tokens in a buffer
 	 * @param inner the scanner to buffer

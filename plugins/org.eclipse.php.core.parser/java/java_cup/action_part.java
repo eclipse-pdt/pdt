@@ -49,7 +49,8 @@ public class action_part extends production_part {
   /*-----------------------------------------------------------*/
 
   /** Override to report this object as an action. */
-  public boolean is_action() { return true; }
+  @Override
+public boolean is_action() { return true; }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
@@ -64,18 +65,21 @@ public class action_part extends production_part {
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Generic equality comparison. */
-  public boolean equals(Object other)
+  @Override
+public boolean equals(Object other)
     {
-      if (!(other instanceof action_part)) 
-	return false;
-      else
-	return equals((action_part)other);
+      if (!(other instanceof action_part)) {
+		return false;
+	} else {
+		return equals((action_part)other);
+	}
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Produce a hash code. */
-  public int hashCode()
+  @Override
+public int hashCode()
     {
       return super.hashCode() ^ 
 	     (code_string()==null ? 0 : code_string().hashCode());
@@ -84,7 +88,8 @@ public class action_part extends production_part {
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Convert to a string.  */
-  public String toString()
+  @Override
+public String toString()
     {
       return super.toString() + "{" + code_string() + "}";
     }

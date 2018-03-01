@@ -34,8 +34,9 @@ public class EditorHighlightingSynchronizer implements ILinkedModeListener {
 		fEditor = editor;
 		fWasOccurrencesOn = fEditor.isMarkingOccurrences();
 
-		if (fWasOccurrencesOn && !isEditorDisposed())
+		if (fWasOccurrencesOn && !isEditorDisposed()) {
 			fEditor.uninstallOccurrencesFinder();
+		}
 	}
 
 	/*
@@ -45,8 +46,9 @@ public class EditorHighlightingSynchronizer implements ILinkedModeListener {
 	 */
 	@Override
 	public void left(LinkedModeModel environment, int flags) {
-		if (fWasOccurrencesOn && !isEditorDisposed())
+		if (fWasOccurrencesOn && !isEditorDisposed()) {
 			fEditor.installOccurrencesFinder(true);
+		}
 	}
 
 	/*

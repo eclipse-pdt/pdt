@@ -28,9 +28,10 @@ public class virtual_parse_stack {
   public virtual_parse_stack(Stack shadowing_stack) throws java.lang.Exception
     {
       /* sanity check */
-      if (shadowing_stack == null)
-	throw new Exception(
-	  "Internal parser error: attempt to create null virtual stack");
+      if (shadowing_stack == null) {
+		throw new Exception(
+		  "Internal parser error: attempt to create null virtual stack");
+	}
 
       /* set up our internals */
       real_stack = shadowing_stack;
@@ -81,7 +82,9 @@ public class virtual_parse_stack {
       Symbol stack_sym;
 
       /* don't transfer if the real stack is empty */
-      if (real_next >= real_stack.size()) return;
+      if (real_next >= real_stack.size()) {
+		return;
+	}
 
       /* get a copy of the first Symbol we have not transfered */
       stack_sym = (Symbol)real_stack.elementAt(real_stack.size()-1-real_next);
@@ -108,9 +111,10 @@ public class virtual_parse_stack {
   /** Return value on the top of the stack (without popping it). */
   public int top() throws java.lang.Exception
     {
-      if (vstack.empty())
-	throw new Exception(
-		  "Internal parser error: top() called on empty virtual stack");
+      if (vstack.empty()) {
+		throw new Exception(
+			  "Internal parser error: top() called on empty virtual stack");
+	}
 
       return ((Integer)vstack.peek()).intValue();
     }
@@ -120,16 +124,18 @@ public class virtual_parse_stack {
   /** Pop the stack. */
   public void pop() throws java.lang.Exception
     {
-      if (vstack.empty())
-	throw new Exception(
-		  "Internal parser error: pop from empty virtual stack");
+      if (vstack.empty()) {
+		throw new Exception(
+			  "Internal parser error: pop from empty virtual stack");
+	}
 
       /* pop it */
       vstack.pop();
 
       /* if we are now empty transfer an element (if there is one) */
-      if (vstack.empty())
-        get_from_real();
+      if (vstack.empty()) {
+		get_from_real();
+	}
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/

@@ -61,25 +61,29 @@ public class PHPRuntimeLocator extends RuntimeLocatorDelegate {
 			monitor.setTaskName(Messages.PHPRuntimeLocator_Processing_search_results);
 			Iterator<File> iter2 = locations.iterator();
 			while (iter2.hasNext()) {
-				if (monitor.isCanceled())
+				if (monitor.isCanceled()) {
 					break;
+				}
 				File location = iter2.next();
 				PHPexeItem phpExe = new PHPexeItem(null, location, null, null, true);
-				if (phpExe.getName() == null)
+				if (phpExe.getName() == null) {
 					continue;
+				}
 				String nameCopy = new String(phpExe.getName());
 				monitor.subTask(MessageFormat.format(Messages.PHPRuntimeLocator_Fetching_php_exe_info, nameCopy));
 				List<PHPModuleInfo> modules = PHPExeUtil.getModules(phpExe);
 				AbstractDebuggerConfiguration[] debuggers = PHPDebuggersRegistry.getDebuggersConfigurations();
 				for (AbstractDebuggerConfiguration debugger : debuggers) {
-					for (PHPModuleInfo m : modules)
+					for (PHPModuleInfo m : modules) {
 						if (m.getName().equalsIgnoreCase(debugger.getModuleId())) {
 							phpExe.setDebuggerID(debugger.getDebuggerId());
 							break;
 						}
+					}
 				}
-				if (phpExe.getDebuggerID() == null)
+				if (phpExe.getDebuggerID() == null) {
 					phpExe.setDebuggerID(PHPDebuggersRegistry.NONE_DEBUGGER_ID);
+				}
 				phpExe.setName(nameCopy);
 				phpExe.setLoadDefaultINI(true);
 				if (phpExe.getExecutable() != null) {
@@ -109,8 +113,9 @@ public class PHPRuntimeLocator extends RuntimeLocatorDelegate {
 	 * @param ignore
 	 */
 	protected void searchForRuntimes2(final File directory, final List<File> found, final IProgressMonitor monitor) {
-		if (monitor.isCanceled())
+		if (monitor.isCanceled()) {
 			return;
+		}
 		// Search the root directory
 		List<File> foundExecs = findPHPExecutable(directory);
 		if (!foundExecs.isEmpty()) {
@@ -118,28 +123,32 @@ public class PHPRuntimeLocator extends RuntimeLocatorDelegate {
 			monitor.setTaskName(MessageFormat.format(Messages.PHPRuntimeLocator_Searching_with_found, found.size()));
 		}
 		final String[] names = directory.list();
-		if (names == null)
+		if (names == null) {
 			return;
+		}
 		final List<File> subDirs = new ArrayList<>();
 		for (String element : names) {
-			if (monitor.isCanceled())
+			if (monitor.isCanceled()) {
 				return;
+			}
 			final File file = new File(directory, element);
 			if (file.isDirectory()) {
 				try {
 					monitor.subTask(MessageFormat.format(Messages.PHPRuntimeLocator_14, file.getCanonicalPath()));
 				} catch (final IOException e) {
 				}
-				if (monitor.isCanceled())
+				if (monitor.isCanceled()) {
 					return;
+				}
 				subDirs.add(file);
 			}
 		}
 		while (!subDirs.isEmpty()) {
 			final File subDir = subDirs.remove(0);
 			searchForRuntimes2(subDir, found, monitor);
-			if (monitor.isCanceled())
+			if (monitor.isCanceled()) {
 				return;
+			}
 		}
 	}
 
@@ -174,11 +183,13 @@ public class PHPRuntimeLocator extends RuntimeLocatorDelegate {
 				runtime.setName(phpExe.getName());
 				runtime.setLocation(new Path(absolutePath));
 				PHPRuntime phpRuntime = (PHPRuntime) runtime.loadAdapter(PHPRuntime.class, monitor);
-				if (phpRuntime != null)
+				if (phpRuntime != null) {
 					phpRuntime.setExecutableInstall(phpExe);
+				}
 				IStatus status = runtime.validate(monitor);
-				if (status == null || status.getSeverity() != IStatus.ERROR)
+				if (status == null || status.getSeverity() != IStatus.ERROR) {
 					return runtime;
+				}
 				Trace.trace(Trace.FINER, "False runtime found at " + absolutePath + ": " + status.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "Could not find runtime", e); //$NON-NLS-1$

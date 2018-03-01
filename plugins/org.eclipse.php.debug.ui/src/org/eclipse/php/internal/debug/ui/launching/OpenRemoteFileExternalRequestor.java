@@ -56,8 +56,9 @@ public class OpenRemoteFileExternalRequestor implements IRemoteFileContentReques
 	public void fileContentReceived(final byte[] content, final String serverAddress, final String originalURL,
 			final String fileName, final int lineNumber) {
 		final IEditorInput editorInput = getEditorInput(content, serverAddress, originalURL, fileName);
-		if (editorInput == null)
+		if (editorInput == null) {
 			return;
+		}
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
@@ -126,8 +127,9 @@ public class OpenRemoteFileExternalRequestor implements IRemoteFileContentReques
 				for (Server server : ServersManager.getServers()) {
 					mapper = PathMapperRegistry.getByServer(server);
 					entry = mapper.getLocalFile(remoteFile);
-					if (entry != null)
+					if (entry != null) {
 						break;
+					}
 				}
 			}
 		} catch (InterruptedException e) {

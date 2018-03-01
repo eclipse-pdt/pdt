@@ -15,7 +15,9 @@ public class parse_reduce_row {
   public parse_reduce_row()
     {
       /* make sure the size is set */
-      if (_size <= 0 )  _size = non_terminal.number();
+      if (_size <= 0 ) {
+		_size = non_terminal.number();
+	}
 
       /* allocate the array */
       under_non_term = new lalr_state[size()];

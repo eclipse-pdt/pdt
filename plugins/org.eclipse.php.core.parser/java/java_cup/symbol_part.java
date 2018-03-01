@@ -22,9 +22,10 @@ public class symbol_part extends production_part {
     {
       super(lab);
 
-      if (sym == null)
-	throw new internal_error(
-	  "Attempt to construct a symbol_part with a null symbol");
+      if (sym == null) {
+		throw new internal_error(
+		  "Attempt to construct a symbol_part with a null symbol");
+	}
       _the_symbol = sym;
     }
 
@@ -53,7 +54,8 @@ public class symbol_part extends production_part {
   /*-----------------------------------------------------------*/
 
   /** Respond that we are not an action part. */
-  public boolean is_action() { return false; }
+  @Override
+public boolean is_action() { return false; }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
@@ -67,18 +69,21 @@ public class symbol_part extends production_part {
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Generic equality comparison. */
-  public boolean equals(Object other)
+  @Override
+public boolean equals(Object other)
     {
-      if (!(other instanceof symbol_part))
-	return false;
-      else
-	return equals((symbol_part)other);
+      if (!(other instanceof symbol_part)) {
+		return false;
+	} else {
+		return equals((symbol_part)other);
+	}
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Produce a hash code. */
-  public int hashCode()
+  @Override
+public int hashCode()
     {
       return super.hashCode() ^ 
 	     (the_symbol()==null ? 0 : the_symbol().hashCode());
@@ -87,12 +92,14 @@ public class symbol_part extends production_part {
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Convert to a string. */
-  public String toString()
+  @Override
+public String toString()
     {
-      if (the_symbol() != null)
-	return super.toString() + the_symbol();
-      else
-	return super.toString() + "$$MISSING-SYMBOL$$";
+      if (the_symbol() != null) {
+		return super.toString() + the_symbol();
+	} else {
+		return super.toString() + "$$MISSING-SYMBOL$$";
+	}
     }
 
   /*-----------------------------------------------------------*/

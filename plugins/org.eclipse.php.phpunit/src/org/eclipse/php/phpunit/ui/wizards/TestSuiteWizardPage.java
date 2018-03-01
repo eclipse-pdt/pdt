@@ -416,9 +416,9 @@ public class TestSuiteWizardPage extends PHPUnitWizardPage {
 		Object next;
 		for (final Iterator<?> i = selection.iterator(); i.hasNext();) {
 			next = i.next();
-			if ((container = getInitialContainer(new StructuredSelection(next))) != null)
+			if ((container = getInitialContainer(new StructuredSelection(next))) != null) {
 				containers.add(container);
-			else if (superClass == null && (element = getInitialPHPElement(new StructuredSelection(next))) != null) {
+			} else if (superClass == null && (element = getInitialPHPElement(new StructuredSelection(next))) != null) {
 				final IResource res = element.getResource();
 				if (res != null) {
 					setContainer(res.getParent());
@@ -435,22 +435,26 @@ public class TestSuiteWizardPage extends PHPUnitWizardPage {
 				}
 				// if a folder, first find the most rooted folder
 				if (container == null
-						|| iContainer.getFullPath().segmentCount() < container.getFullPath().segmentCount())
+						|| iContainer.getFullPath().segmentCount() < container.getFullPath().segmentCount()) {
 					container = iContainer;
+				}
 			}
 			// now find the common root:
 			for (final Iterator<IContainer> i = containers.iterator(); i.hasNext();) {
 				// the most rooted folder has highest priority:
 				IContainer iContainer = i.next();
-				if (iContainer.getProject() != container.getProject())
+				if (iContainer.getProject() != container.getProject()) {
 					continue;
+				}
 				// get higher to the level of the most rooted folder:
 				for (int j = 0; j < iContainer.getFullPath().segmentCount()
-						- container.getFullPath().segmentCount(); ++j)
+						- container.getFullPath().segmentCount(); ++j) {
 					iContainer = iContainer.getParent();
+				}
 				// if still not equals - get 1 level higher:
-				if (iContainer != container)
+				if (iContainer != container) {
 					container = container.getParent();
+				}
 			}
 			setContainer(container);
 		} else if (!containers.isEmpty()) {

@@ -86,8 +86,9 @@ public abstract class PHPServerConfiguration implements IPHPServerConfiguration,
 	protected void backupFolder(IFolder folder, IPath confDir, IPath backup, MultiStatus ms, IProgressMonitor monitor)
 			throws CoreException {
 		IResource[] children = folder.members();
-		if (children == null)
+		if (children == null) {
 			return;
+		}
 
 		int size = children.length;
 		monitor.beginTask(Messages.publishConfigurationTask, size * 100);
@@ -98,7 +99,9 @@ public abstract class PHPServerConfiguration implements IPHPServerConfiguration,
 					String name = file.getName();
 					monitor.subTask(NLS.bind(Messages.publisherPublishTask, new String[] { name }));
 					if (Trace.isTraceEnabled())
+					 {
 						Trace.trace(Trace.FINEST, "Publishing " + name); //$NON-NLS-1$
+					}
 
 					// backup and copy file
 					boolean copy = true;
@@ -106,8 +109,9 @@ public abstract class PHPServerConfiguration implements IPHPServerConfiguration,
 						IStatus status = FileUtil.copyFile(confDir.append(name).toOSString(),
 								backup + File.separator + name);
 						ms.add(status);
-						if (!status.isOK())
+						if (!status.isOK()) {
 							copy = false;
+						}
 					}
 
 					if (copy) {
@@ -140,8 +144,9 @@ public abstract class PHPServerConfiguration implements IPHPServerConfiguration,
 
 	protected void backupPath(IPath path, IPath confDir, IPath backup, MultiStatus ms, IProgressMonitor monitor) {
 		File[] files = path.toFile().listFiles();
-		if (files == null)
+		if (files == null) {
 			return;
+		}
 
 		int size = files.length;
 		monitor.beginTask(Messages.publishConfigurationTask, size * 100);
@@ -151,7 +156,9 @@ public abstract class PHPServerConfiguration implements IPHPServerConfiguration,
 				String name = file.getName();
 				monitor.subTask(NLS.bind(Messages.publisherPublishTask, new String[] { name }));
 				if (Trace.isTraceEnabled())
+				 {
 					Trace.trace(Trace.FINEST, "Publishing " + name); //$NON-NLS-1$
+				}
 
 				// backup and copy file
 				boolean copy = true;
@@ -159,12 +166,14 @@ public abstract class PHPServerConfiguration implements IPHPServerConfiguration,
 					IStatus status = FileUtil.copyFile(confDir.append(name).toOSString(),
 							backup + File.separator + name);
 					ms.add(status);
-					if (!status.isOK())
+					if (!status.isOK()) {
 						copy = false;
+					}
 				}
 
-				if (copy)
+				if (copy) {
 					ms.add(FileUtil.copyFile(file.getAbsolutePath(), confDir.append(name).toOSString()));
+				}
 			} catch (Exception e) {
 				Trace.trace(Trace.SEVERE, "backupAndPublish() error", e); //$NON-NLS-1$
 				ms.add(new Status(IStatus.ERROR, PHPServerPlugin.PLUGIN_ID, 0,
@@ -240,8 +249,9 @@ public abstract class PHPServerConfiguration implements IPHPServerConfiguration,
 	 */
 	protected String getWebModuleURL(IModule webModule) {
 		WebModule module = getWebModule(webModule);
-		if (module != null)
+		if (module != null) {
 			return module.getPath();
+		}
 
 		return null;
 	}
@@ -254,8 +264,9 @@ public abstract class PHPServerConfiguration implements IPHPServerConfiguration,
 	 * @return a web module
 	 */
 	public WebModule getWebModule(IModule module) {
-		if (module == null)
+		if (module == null) {
 			return null;
+		}
 
 		String memento = module.getId();
 
@@ -273,8 +284,9 @@ public abstract class PHPServerConfiguration implements IPHPServerConfiguration,
 	protected abstract void save(IFolder folder, IProgressMonitor monitor) throws CoreException;
 
 	protected void firePropertyChangeEvent(String propertyName, Object oldValue, Object newValue) {
-		if (propertyListeners == null)
+		if (propertyListeners == null) {
 			return;
+		}
 
 		PropertyChangeEvent event = new PropertyChangeEvent(this, propertyName, oldValue, newValue);
 		try {
@@ -299,8 +311,9 @@ public abstract class PHPServerConfiguration implements IPHPServerConfiguration,
 	 *            java.beans.PropertyChangeListener
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		if (propertyListeners == null)
+		if (propertyListeners == null) {
 			propertyListeners = new ArrayList<>();
+		}
 		propertyListeners.add(listener);
 	}
 
@@ -311,8 +324,9 @@ public abstract class PHPServerConfiguration implements IPHPServerConfiguration,
 	 *            java.beans.PropertyChangeListener
 	 */
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
-		if (propertyListeners != null)
+		if (propertyListeners != null) {
 			propertyListeners.remove(listener);
+		}
 	}
 
 	public void importFromPath(IPath path, PHPexeItem phpExeItem, IProgressMonitor monitor) throws CoreException {

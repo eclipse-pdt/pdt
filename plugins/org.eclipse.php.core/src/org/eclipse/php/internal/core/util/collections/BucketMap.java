@@ -79,8 +79,9 @@ public class BucketMap<K, V> {
 
 	public boolean contains(K key, V value) {
 		Set<V> values = map.get(key);
-		if (values == null)
+		if (values == null) {
 			return false;
+		}
 		return values.contains(value);
 	}
 
@@ -90,8 +91,9 @@ public class BucketMap<K, V> {
 
 	public Set<V> get(K key) {
 		Set<V> values = getSet(key);
-		if (values == null)
+		if (values == null) {
 			return createSet();
+		}
 		return values;
 	}
 
@@ -102,16 +104,18 @@ public class BucketMap<K, V> {
 	public Set<V> getAll() {
 		Set<V> valuesSet = createSet();
 		for (Set<V> values : map.values()) {
-			for (V v : values)
+			for (V v : values) {
 				valuesSet.add(v);
+			}
 		}
 		return valuesSet;
 	}
 
 	public boolean remove(K key, V value) {
 		Set<V> values = map.get(key);
-		if (values == null)
+		if (values == null) {
 			return false;
+		}
 		boolean result = values.remove(value);
 		if (values.size() == 0) {
 			map.remove(key);
@@ -120,8 +124,9 @@ public class BucketMap<K, V> {
 	}
 
 	public Collection<V> removeAll(K key) {
-		if (map.remove(key) != null)
+		if (map.remove(key) != null) {
 			return map.remove(key);
+		}
 		return createSet();
 	}
 

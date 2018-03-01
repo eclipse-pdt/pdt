@@ -43,8 +43,9 @@ public class XDebugTextHover extends PHPDebugTextHover {
 	@Override
 	public Object getHoverInfo2(ITextViewer textViewer, IRegion hoverRegion) {
 		DBGpStackFrame frame = (DBGpStackFrame) getFrame();
-		if (frame == null)
+		if (frame == null) {
 			return null;
+		}
 
 		DBGpVariable variable = null;
 		try {
@@ -208,8 +209,9 @@ public class XDebugTextHover extends PHPDebugTextHover {
 	@Nullable
 	protected DBGpVariable getVariable(String expression) {
 		DBGpStackFrame frame = (DBGpStackFrame) getFrame();
-		if (frame == null)
+		if (frame == null) {
 			return null;
+		}
 		DBGpVariable variable = null;
 		if (isStack(expression)) {
 			variable = getByProperty(frame, expression);
@@ -224,14 +226,15 @@ public class XDebugTextHover extends PHPDebugTextHover {
 			DBGpVariable dbgpVariable = (DBGpVariable) variable;
 			try {
 				String endName = dbgpVariable.getName();
-				if (VariablesUtil.isThis(endName))
+				if (VariablesUtil.isThis(endName)) {
 					dbgpVariable.addFacets(KIND_THIS);
-				else if (VariablesUtil.isSuperGlobal(endName))
+				} else if (VariablesUtil.isSuperGlobal(endName)) {
 					dbgpVariable.addFacets(KIND_SUPER_GLOBAL);
-				else if (VariablesUtil.isClassIndicator(endName))
+				} else if (VariablesUtil.isClassIndicator(endName)) {
 					dbgpVariable.addFacets(VIRTUAL_CLASS);
-				else
+				} else {
 					dbgpVariable.addFacets(KIND_LOCAL);
+				}
 			} catch (DebugException e) {
 				// should not happen
 			}
@@ -283,8 +286,9 @@ public class XDebugTextHover extends PHPDebugTextHover {
 
 	private DBGpVariable fetchMember(DBGpVariable variable, String memberName) {
 		try {
-			if (variable.getValue() == null || variable.getValue().getVariables() == null)
+			if (variable.getValue() == null || variable.getValue().getVariables() == null) {
 				return null;
+			}
 			for (IVariable child : variable.getValue().getVariables()) {
 				if (child.getName().equals(memberName) && child instanceof DBGpVariable) {
 					return (DBGpVariable) child;

@@ -20,9 +20,10 @@ public class reduce_action extends parse_action {
   public reduce_action(production prod ) throws internal_error
     {
       /* sanity check */
-      if (prod == null)
-	throw new internal_error(
-	  "Attempt to create a reduce_action with a null production");
+      if (prod == null) {
+		throw new internal_error(
+		  "Attempt to create a reduce_action with a null production");
+	}
 
       _reduce_with = prod;
     }
@@ -42,7 +43,8 @@ public class reduce_action extends parse_action {
   /*-----------------------------------------------------------*/
 
   /** Quick access to type of action. */
-  public int kind() {return REDUCE;}
+  @Override
+public int kind() {return REDUCE;}
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
@@ -55,18 +57,21 @@ public class reduce_action extends parse_action {
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Generic equality test. */
-  public boolean equals(Object other)
+  @Override
+public boolean equals(Object other)
     {
-      if (other instanceof reduce_action)
-	return equals((reduce_action)other);
-      else
-       return false;
+      if (other instanceof reduce_action) {
+		return equals((reduce_action)other);
+	} else {
+		return false;
+	}
     }
 
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Compute a hash code. */
-  public int hashCode()
+  @Override
+public int hashCode()
     {
       /* use the hash code of the production we are reducing with */
       return reduce_with().hashCode();
@@ -74,7 +79,8 @@ public class reduce_action extends parse_action {
 
 
   /** Convert to string. */
-  public String toString() 
+  @Override
+public String toString() 
     {
       return "REDUCE(with prod " + reduce_with().index() + ")";
     }

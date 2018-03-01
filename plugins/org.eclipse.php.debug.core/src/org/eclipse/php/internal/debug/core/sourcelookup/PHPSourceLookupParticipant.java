@@ -180,11 +180,13 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 
 		@Override
 		public boolean equals(Object obj) {
-			if (!(obj instanceof ExternalEntryFile))
+			if (!(obj instanceof ExternalEntryFile)) {
 				return false;
+			}
 			ExternalEntryFile other = (ExternalEntryFile) obj;
-			if (!fileName.equalsIgnoreCase(other.fileName))
+			if (!fileName.equalsIgnoreCase(other.fileName)) {
 				return false;
+			}
 			return true;
 		}
 

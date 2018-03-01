@@ -175,8 +175,9 @@ abstract public class AbstractWizardFirstPage extends WizardPage implements IPHP
 	public boolean canCreate(File file) {
 		while (!file.exists()) {
 			file = file.getParentFile();
-			if (file == null)
+			if (file == null) {
 				return false;
+			}
 		}
 
 		return file.canWrite();

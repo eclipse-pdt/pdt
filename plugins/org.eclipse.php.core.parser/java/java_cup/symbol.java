@@ -25,10 +25,14 @@ public abstract class symbol {
    public symbol(String nm, String tp)
      {
        /* sanity check */
-       if (nm == null) nm = "";
+       if (nm == null) {
+		nm = "";
+	}
 
        /* apply default if no type given */
-       if (tp == null) tp = "Object";
+       if (tp == null) {
+		tp = "Object";
+	}
 
        _name = nm;
        _stack_type = tp;
@@ -97,7 +101,8 @@ public abstract class symbol {
   /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 
   /** Convert to a string. */
-  public String toString()
+  @Override
+public String toString()
     {
       return name();
     }

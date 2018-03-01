@@ -94,8 +94,9 @@ public class RenameGlobalConstantProcessor extends AbstractRenameProcessor<IFile
 			pm.beginTask(RenameGlobalConstantProcessor.RENAME_IS_PROCESSING, participantFiles.size());
 			pm.setTaskName(RenameGlobalConstantProcessor.CREATING_MODIFICATIONS_LABEL);
 
-			if (pm.isCanceled())
+			if (pm.isCanceled()) {
 				throw new OperationCanceledException();
+			}
 
 			// get target parameters
 			final String newElementName = getNewElementName();
@@ -110,8 +111,9 @@ public class RenameGlobalConstantProcessor extends AbstractRenameProcessor<IFile
 				// aggregate the changes identifiers
 				program.accept(rename);
 
-				if (pm.isCanceled())
+				if (pm.isCanceled()) {
 					throw new OperationCanceledException();
+				}
 
 				pm.worked(1);
 

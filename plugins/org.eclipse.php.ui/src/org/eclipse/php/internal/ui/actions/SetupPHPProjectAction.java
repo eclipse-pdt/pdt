@@ -77,8 +77,9 @@ public class SetupPHPProjectAction implements IObjectActionDelegate, IActionDele
 
 	@Override
 	public void run(IAction action) {
-		if (fTarget == null)
+		if (fTarget == null) {
 			return;
+		}
 
 		for (int i = 0; i < fTarget.length; i++) {
 			if (fTarget[i] instanceof IResource) {

@@ -36,16 +36,21 @@ public class LaunchUtil {
 		IContentType htmlContentType = typeManager.getContentType(ORG_ECLIPSE_WST_HTML_CORE_HTMLSOURCE);
 		String[] htmlExtensions = htmlContentType.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
 
-		if (phpExtensions != null)
-			for (int i = 0; i < phpExtensions.length; i++)
+		if (phpExtensions != null) {
+			for (int i = 0; i < phpExtensions.length; i++) {
 				extensions.add(phpExtensions[i]);
+			}
+		}
 
-		if (htmlExtensions != null)
-			for (int i = 0; i < htmlExtensions.length; i++)
+		if (htmlExtensions != null) {
+			for (int i = 0; i < htmlExtensions.length; i++) {
 				extensions.add(htmlExtensions[i]);
+			}
+		}
 
-		if (extensions.isEmpty())
+		if (extensions.isEmpty()) {
 			return null;
+		}
 
 		return extensions.toArray(new String[extensions.size()]);
 	}

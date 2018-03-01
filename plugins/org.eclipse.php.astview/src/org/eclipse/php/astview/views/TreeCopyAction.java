@@ -58,21 +58,26 @@ public class TreeCopyAction extends Action {
 		public String toString() {
 			StringBuffer buf= new StringBuffer();
 			if (fSelected)
+			 {
 				buf.append("* "); //$NON-NLS-1$
+			}
 			buf.append(trim(fTreeItem.getText())).append(" ["); //$NON-NLS-1$
 			for (int i= 0; i < fChildren.size(); i++) {
 				TreeObject child= fChildren.get(i);
 				buf.append(trim(child.getTreeItem().getText()));
 				if (i > 0)
+				 {
 					buf.append(", "); //$NON-NLS-1$
+				}
 			}
 			return buf.append("]").toString(); //$NON-NLS-1$
 		}
 		private String trim(String string) {
-			if (string.length() > 60)
+			if (string.length() > 60) {
 				return string.substring(0, 60) + "..."; //$NON-NLS-1$
-			else
+			} else {
 				return string;
+			}
 		}
 	}
 	
@@ -97,12 +102,14 @@ public class TreeCopyAction extends Action {
 				break;
 			}
 		}
-		if (tree == null)
+		if (tree == null) {
 			return;
+		}
 		
 		TreeItem[] selection= tree.getSelection();
-		if (selection.length == 0)
+		if (selection.length == 0) {
 			return;
+		}
 		
 		Clipboard clipboard= null;
 		try {
@@ -113,8 +120,9 @@ public class TreeCopyAction extends Action {
 				copyTree(selection, clipboard);
 			}
 		} finally {
-			if (clipboard != null)
+			if (clipboard != null) {
 				clipboard.dispose();
+			}
 		}
 	}
 
@@ -168,8 +176,9 @@ public class TreeCopyAction extends Action {
 			TreeObject selObj= iter.next();
 			if (selObj.isSelected()) {
 				buffer.append('\n');
-				for (int d= 0; d < indent; d++)
+				for (int d= 0; d < indent; d++) {
 					buffer.append('\t');
+				}
 				buffer.append(selObj.getTreeItem().getText());
 			}
 			appendSelectionObjects(buffer, indent + 1, selObj.getChildren());

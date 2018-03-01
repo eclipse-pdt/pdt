@@ -85,8 +85,9 @@ public class RenameFileProcessor extends AbstraceRenameResourceProcessor impleme
 		try {
 			pm.beginTask(PHPRefactoringCoreMessages.getString("RenameFileProcessor.RenamingFile"), 100); //$NON-NLS-1$
 
-			if (pm.isCanceled())
+			if (pm.isCanceled()) {
 				throw new OperationCanceledException();
+			}
 
 			if (getUpdateClassName() || getUpdateReferences()) {
 				createRenameTextChanges(pm, rootChange);
@@ -153,8 +154,9 @@ public class RenameFileProcessor extends AbstraceRenameResourceProcessor impleme
 			pm.beginTask(RenameClassProcessor.RENAME_IS_PROCESSING, 1);
 			pm.setTaskName(RenameClassProcessor.CREATING_MODIFICATIONS_LABEL);
 
-			if (pm.isCanceled())
+			if (pm.isCanceled()) {
 				throw new OperationCanceledException();
+			}
 
 			// get target parameters
 			String newElementName = getNewElementName();
@@ -175,8 +177,9 @@ public class RenameFileProcessor extends AbstraceRenameResourceProcessor impleme
 				// aggregate the changes identifiers
 				program.accept(rename);
 
-				if (pm.isCanceled())
+				if (pm.isCanceled()) {
 					throw new OperationCanceledException();
+				}
 
 				pm.worked(1);
 

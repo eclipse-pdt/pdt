@@ -127,8 +127,9 @@ public class SearchFieldTests {
 
 	protected static int getSearchFlags(boolean includeInterp) {
 		int flags = IDLTKSearchScope.SOURCES | IDLTKSearchScope.APPLICATION_LIBRARIES;
-		if (includeInterp)
+		if (includeInterp) {
 			flags |= IDLTKSearchScope.SYSTEM_LIBRARIES;
+		}
 		return flags;
 	}
 

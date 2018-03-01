@@ -154,18 +154,22 @@ public class CodeDataSearchEngine {
 	private static void collectCallbacks(IStructuredModel model, BucketMap<String, CodeDataMatch> searchResults,
 			IProgressMonitor monitor) {
 		monitor.beginTask(PHPRefactoringCoreMessages.getString("CodeDataSearchEngine.5"), 4); //$NON-NLS-1$
-		if (monitor.isCanceled())
+		if (monitor.isCanceled()) {
 			return;
+		}
 		Set<String> set = searchElementNames(model, PATTERN_ELEMENT_CALLBACK_DOUBLE, 1,
 				new SubProgressMonitor(monitor, 1));
-		if (monitor.isCanceled())
+		if (monitor.isCanceled()) {
 			return;
+		}
 		fillSearchResults(searchResults, set, ELEMENT_CALLBACK, true, new SubProgressMonitor(monitor, 1));
-		if (monitor.isCanceled())
+		if (monitor.isCanceled()) {
 			return;
+		}
 		set = searchElementNames(model, PATTERN_ELEMENT_CALLBACK_SINGLE, 1, new SubProgressMonitor(monitor, 1));
-		if (monitor.isCanceled())
+		if (monitor.isCanceled()) {
 			return;
+		}
 		fillSearchResults(searchResults, set, ELEMENT_CALLBACK, true, new SubProgressMonitor(monitor, 1));
 	}
 
@@ -177,12 +181,14 @@ public class CodeDataSearchEngine {
 	private static void collectClasses(IStructuredModel model, BucketMap<String, CodeDataMatch> searchResults,
 			IProgressMonitor monitor) {
 		monitor.beginTask(PHPRefactoringCoreMessages.getString("CodeDataSearchEngine.6"), 2); //$NON-NLS-1$
-		if (monitor.isCanceled())
+		if (monitor.isCanceled()) {
 			return;
+		}
 		// collectClassesFromModel(model.getFileData(), searchResults, new
 		// SubProgressMonitor(monitor, 1));
-		if (monitor.isCanceled())
+		if (monitor.isCanceled()) {
 			return;
+		}
 		collectClassesFromText(model, searchResults, new SubProgressMonitor(monitor, 1));
 	}
 
@@ -243,23 +249,29 @@ public class CodeDataSearchEngine {
 	private static void collectClassesFromText(IStructuredModel model, BucketMap<String, CodeDataMatch> searchResults,
 			IProgressMonitor monitor) {
 		monitor.beginTask(PHPRefactoringCoreMessages.getString("CodeDataSearchEngine.9"), 6); //$NON-NLS-1$
-		if (monitor.isCanceled())
+		if (monitor.isCanceled()) {
 			return;
+		}
 		Set<String> set = searchElementNames(model, PATTERN_CLASS_NEW, 1, new SubProgressMonitor(monitor, 1));
-		if (monitor.isCanceled())
+		if (monitor.isCanceled()) {
 			return;
+		}
 		fillSearchResults(searchResults, set, ELEMENT_CLASS_NEW, new SubProgressMonitor(monitor, 1));
-		if (monitor.isCanceled())
+		if (monitor.isCanceled()) {
 			return;
+		}
 		set = searchElementNames(model, PATTERN_CLASS_MEMBER, 1, new SubProgressMonitor(monitor, 1));
-		if (monitor.isCanceled())
+		if (monitor.isCanceled()) {
 			return;
+		}
 		fillSearchResults(searchResults, set, ELEMENT_CLASS_MEMBER, new SubProgressMonitor(monitor, 1));
-		if (monitor.isCanceled())
+		if (monitor.isCanceled()) {
 			return;
+		}
 		set = searchElementNames(model, PATTERN_CLASS_INSTANCE, 1, new SubProgressMonitor(monitor, 1));
-		if (monitor.isCanceled())
+		if (monitor.isCanceled()) {
 			return;
+		}
 		fillSearchResults(searchResults, set, ELEMENT_CLASS_INSTANCE, new SubProgressMonitor(monitor, 1));
 	}
 
@@ -271,11 +283,13 @@ public class CodeDataSearchEngine {
 	private static void collectConstants(IStructuredModel model, BucketMap<String, CodeDataMatch> searchResults,
 			IProgressMonitor monitor) {
 		monitor.beginTask(PHPRefactoringCoreMessages.getString("CodeDataSearchEngine.10"), 2); //$NON-NLS-1$
-		if (monitor.isCanceled())
+		if (monitor.isCanceled()) {
 			return;
+		}
 		Set<String> set = searchElementNames(model, PATTERN_CONSTANT_READ, 1, new SubProgressMonitor(monitor, 1));
-		if (monitor.isCanceled())
+		if (monitor.isCanceled()) {
 			return;
+		}
 		fillSearchResults(searchResults, set, ELEMENT_CONSTANT_READ, true, new SubProgressMonitor(monitor, 1));
 	}
 
@@ -303,23 +317,27 @@ public class CodeDataSearchEngine {
 	private static void collectFunctions(IStructuredModel model, BucketMap<String, CodeDataMatch> searchResults,
 			IProgressMonitor monitor) {
 		monitor.beginTask(PHPRefactoringCoreMessages.getString("CodeDataSearchEngine.11"), 2); //$NON-NLS-1$
-		if (monitor.isCanceled())
+		if (monitor.isCanceled()) {
 			return;
+		}
 		Set<String> set = searchElementNames(model, PATTERN_FUNCTION_CALL, 1, new SubProgressMonitor(monitor, 1));
-		if (monitor.isCanceled())
+		if (monitor.isCanceled()) {
 			return;
+		}
 		fillSearchResults(searchResults, set, ELEMENT_FUNCTION_CALL, new SubProgressMonitor(monitor, 1));
 	}
 
 	private static void collectInterfaces(IStructuredModel model, BucketMap<String, CodeDataMatch> searchResults,
 			IProgressMonitor monitor) {
 		monitor.beginTask(PHPRefactoringCoreMessages.getString("CodeDataSearchEngine.12"), 2); //$NON-NLS-1$
-		if (monitor.isCanceled())
+		if (monitor.isCanceled()) {
 			return;
+		}
 		// collectInterfacesFromModel(model.getFileData(), searchResults, new
 		// SubProgressMonitor(monitor, 1));
-		if (monitor.isCanceled())
+		if (monitor.isCanceled()) {
 			return;
+		}
 		collectInterfacesFromText(model, searchResults, new SubProgressMonitor(monitor, 1));
 	}
 
@@ -366,17 +384,21 @@ public class CodeDataSearchEngine {
 	private static void collectInterfacesFromText(IStructuredModel model,
 			BucketMap<String, CodeDataMatch> searchResults, IProgressMonitor monitor) {
 		monitor.beginTask(PHPRefactoringCoreMessages.getString("CodeDataSearchEngine.14"), 4); //$NON-NLS-1$
-		if (monitor.isCanceled())
+		if (monitor.isCanceled()) {
 			return;
+		}
 		Set<String> set = searchElementNames(model, PATTERN_CLASS_MEMBER, 1, new SubProgressMonitor(monitor, 1));
-		if (monitor.isCanceled())
+		if (monitor.isCanceled()) {
 			return;
+		}
 		fillSearchResults(searchResults, set, ELEMENT_CLASS_MEMBER, new SubProgressMonitor(monitor, 1));
-		if (monitor.isCanceled())
+		if (monitor.isCanceled()) {
 			return;
+		}
 		set = searchElementNames(model, PATTERN_CLASS_INSTANCE, 1, new SubProgressMonitor(monitor, 1));
-		if (monitor.isCanceled())
+		if (monitor.isCanceled()) {
 			return;
+		}
 		fillSearchResults(searchResults, set, ELEMENT_CLASS_INSTANCE, new SubProgressMonitor(monitor, 1));
 	}
 
@@ -415,8 +437,9 @@ public class CodeDataSearchEngine {
 		for (String elementName : collection) {
 			searchResults.add(caseSensitive ? elementName : elementName.toLowerCase(),
 					new CodeDataMatch(elementName, elementType));
-			if (monitor.isCanceled())
+			if (monitor.isCanceled()) {
 				return;
+			}
 			monitor.worked(1);
 		}
 	}
@@ -424,8 +447,9 @@ public class CodeDataSearchEngine {
 	private static String getPartitionType(IStructuredDocument document, int offset) {
 		IStructuredDocumentRegion region = document.getRegionAtCharacterOffset(offset);
 		TextSequence statement = PHPTextSequenceUtilities.getStatement(offset, region, false);
-		if (statement.length() == 0)
+		if (statement.length() == 0) {
 			return null;
+		}
 		String partitionType = TextSequenceUtilities.getTypeByAbsoluteOffset(statement, offset);
 		return partitionType;
 	}
@@ -445,14 +469,16 @@ public class CodeDataSearchEngine {
 			RefactoringPlugin.logException(e);
 		}
 		Set<String> elements = new HashSet<>();
-		if (documentContents == null)
+		if (documentContents == null) {
 			return elements;
+		}
 		monitor.beginTask(PHPRefactoringCoreMessages.getString("CodeDataSearchEngine.16"), 2); //$NON-NLS-1$
 		Matcher matcher = pattern.matcher(documentContents);
 		while (matcher.find()) {
 			int end = matcher.end();
-			if (!isCode(document, end))
+			if (!isCode(document, end)) {
 				continue;
+			}
 			String elementName = matcher.group(elementPatternPosition);
 			elements.add(elementName);
 		}

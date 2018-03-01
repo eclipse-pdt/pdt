@@ -133,8 +133,9 @@ public class ExtractFunctionRefactoring extends Refactoring {
 			status.merge(fAnalyzer.checkInitialConditions());
 
 			status.merge(fAnalyzer.checkSelection(status, new SubProgressMonitor(pm, 3)));
-			if (status.hasFatalError())
+			if (status.hasFatalError()) {
 				return status;
+			}
 
 			if (fVisibility == -1) {
 				setVisibility(Modifiers.AccPrivate);
@@ -176,8 +177,9 @@ public class ExtractFunctionRefactoring extends Refactoring {
 			fParameterInfos = new ArrayList<>(arguments.length);
 			for (int i = 0; i < arguments.length; i++) {
 				IVariableBinding argument = arguments[i];
-				if (argument == null)
+				if (argument == null) {
 					continue;
+				}
 				ParameterInfo info = new ParameterInfo(argument, argument.getName(), i);
 				fParameterInfos.add(info);
 			}
@@ -199,8 +201,9 @@ public class ExtractFunctionRefactoring extends Refactoring {
 	public static RefactoringStatus validateModifiesFiles(IResource[] filesToModify, Object context) {
 		RefactoringStatus result = new RefactoringStatus();
 		IStatus status = Resources.checkInSync(filesToModify);
-		if (!status.isOK())
+		if (!status.isOK()) {
 			result.merge(RefactoringStatus.create(status));
+		}
 		status = Resources.makeCommittable(filesToModify, context);
 		if (!status.isOK()) {
 			result.merge(RefactoringStatus.create(status));
@@ -404,15 +407,17 @@ public class ExtractFunctionRefactoring extends Refactoring {
 
 	private void replaceDuplicates(DocumentChange textFileChange2) {
 		int numberOf = getNumberOfDuplicates();
-		if (numberOf == 0 || !fReplaceDuplicates)
+		if (numberOf == 0 || !fReplaceDuplicates) {
 			return;
+		}
 		String label = null;
-		if (numberOf == 1)
+		if (numberOf == 1) {
 			label = PHPRefactoringCoreMessages.format("ExtractFunctionRefactoring.5", //$NON-NLS-1$
 					new String[] { fNewFunctionName });
-		else
+		} else {
 			label = PHPRefactoringCoreMessages.format("ExtractFunctionRefactoring.6", //$NON-NLS-1$
 					new String[] { fNewFunctionName });
+		}
 
 		TextEditGroup description = new TextEditGroup(label);
 		textFileChange2.addTextEditGroup(description);

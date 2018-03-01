@@ -119,8 +119,9 @@ public class RenameTraitProcessor extends AbstractRenameProcessor<IFile>
 					participantFiles.size());
 			pm.setTaskName(RenameTraitProcessor.CREATING_MODIFICATIONS_LABEL);
 
-			if (pm.isCanceled())
+			if (pm.isCanceled()) {
 				throw new OperationCanceledException();
+			}
 
 			// get target parameters
 			final String newElementName = getNewElementName();
@@ -136,8 +137,9 @@ public class RenameTraitProcessor extends AbstractRenameProcessor<IFile>
 				// aggregate the changes identifiers
 				program.accept(rename);
 
-				if (pm.isCanceled())
+				if (pm.isCanceled()) {
 					throw new OperationCanceledException();
+				}
 
 				pm.worked(1);
 

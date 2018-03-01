@@ -1,8 +1,6 @@
 
 package java_cup;
 
-import java.util.Enumeration;
-
 /** This class represents the complete "reduce-goto" table of the parser.
  *  It has one row for each state in the parse machines, and a column for
  *  each terminal symbol.  Each entry contains a state number to shift to
@@ -29,8 +27,9 @@ public class parse_reduce_table {
 
       /* allocate the array and fill it in with empty rows */
       under_state = new parse_reduce_row[_num_states];
-      for (int i=0; i<_num_states; i++)
-	under_state[i] = new parse_reduce_row();
+      for (int i=0; i<_num_states; i++) {
+		under_state[i] = new parse_reduce_row();
+	}
     }
 
    
@@ -54,7 +53,8 @@ public class parse_reduce_table {
   /*-----------------------------------------------------------*/
 
   /** Convert to a string. */
-  public String toString()
+  @Override
+public String toString()
     {
       String result;
       lalr_state goto_st;
@@ -86,7 +86,9 @@ public class parse_reduce_table {
 		}
 	    }
           /* finish the line if we haven't just done that */
-	  if (cnt != 0) result += "\n";
+	  if (cnt != 0) {
+		result += "\n";
+	}
 	}
       result += "-----------------------------";
 

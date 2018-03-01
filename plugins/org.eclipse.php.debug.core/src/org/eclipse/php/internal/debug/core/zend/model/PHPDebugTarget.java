@@ -335,9 +335,10 @@ public class PHPDebugTarget extends PHPDebugElement
 	@Override
 	public boolean supportsBreakpoint(IBreakpoint breakpoint) {
 		if (breakpoint.getModelIdentifier().equals(IPHPDebugConstants.ID_PHP_DEBUG_CORE)) {
-			if (breakpoint instanceof IPHPExceptionBreakpoint)
+			if (breakpoint instanceof IPHPExceptionBreakpoint) {
 				// Not supported
 				return false;
+			}
 			boolean support = fBreakpointSet.supportsBreakpoint(breakpoint);
 			return support;
 		}
@@ -448,11 +449,13 @@ public class PHPDebugTarget extends PHPDebugElement
 					return;
 				}
 				IWorkbenchPage page = activeWorkbenchWindow.getActivePage();
-				if (page == null)
+				if (page == null) {
 					return;
+				}
 				AbstractDebugView view = (AbstractDebugView) page.findView(IDebugUIConstants.ID_DEBUG_VIEW);
-				if (view == null)
+				if (view == null) {
 					return;
+				}
 				view.getViewer().refresh();
 			}
 		});
@@ -612,8 +615,9 @@ public class PHPDebugTarget extends PHPDebugElement
 	@Override
 	public void breakpointRemoved(IBreakpoint breakpoint, IMarkerDelta delta) {
 		if (supportsBreakpoint(breakpoint)) {
-			if (breakpoint instanceof PHPRunToLineBreakpoint)
+			if (breakpoint instanceof PHPRunToLineBreakpoint) {
 				return;
+			}
 			fLastcmd = "breakpointRemoved"; //$NON-NLS-1$
 			PHPLineBreakpoint bp = (PHPLineBreakpoint) breakpoint;
 			Breakpoint runtimeBreakpoint = bp.getRuntimeBreakpoint();
@@ -636,8 +640,9 @@ public class PHPDebugTarget extends PHPDebugElement
 	 */
 	@Override
 	public void breakpointChanged(IBreakpoint breakpoint, IMarkerDelta delta) {
-		if (!fBreakpointManager.isEnabled())
+		if (!fBreakpointManager.isEnabled()) {
 			return;
+		}
 		int deltaLNumber = delta.getAttribute(IMarker.LINE_NUMBER, 0);
 		IMarker marker = breakpoint.getMarker();
 		int lineNumber = marker.getAttribute(IMarker.LINE_NUMBER, 0);
