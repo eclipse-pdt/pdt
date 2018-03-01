@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
+import org.eclipse.dltk.ast.references.ConstantReference;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Statement;
@@ -346,10 +347,10 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	}
 
 	/**
-	 * Generic checks to only visit PHPDoc type references whose names are valid
-	 * php identifier names. See also
-	 * {@link PHPSelectionEngine#lookForMatchingElements()} for more complete
-	 * and precise PHPDoc type references handling.
+	 * Generic checks to only visit PHPDoc type references whose names are valid php
+	 * identifier names. See also
+	 * {@link PHPSelectionEngine#lookForMatchingElements()} for more complete and
+	 * precise PHPDoc type references handling.
 	 */
 	@SuppressWarnings("null")
 	private void visitCommentType(TypeReference typeReference, ProblemSeverity severity) throws Exception {
@@ -867,6 +868,62 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	}
 
 	@Override
+	public boolean visit(ConstantDeclaration s) throws Exception {
+		validateConstantExpression(s.getConstantValue());
+		return super.visit(s);
+	}
+
+	@Override
+	public boolean visit(FormalParameter s) throws Exception {
+		validateConstantExpression(s.getInitialization());
+		return super.visit(s);
+	}
+
+	@Override
+	public boolean endvisit(PHPFieldDeclaration s) throws Exception {
+		validateConstantExpression(s.getVariableValue());
+		return super.endvisit(s);
+	}
+
+	private void validateConstantExpression(ASTNode astNode) {
+		if (astNode == null || astNode instanceof Scalar || astNode instanceof ConstantReference) {
+			return;
+		}
+		if (astNode instanceof UnaryOperation) {
+			UnaryOperation op = (UnaryOperation) astNode;
+			if (version.isLessThan(PHPVersion.PHP5_6) && op.getOperatorType() != UnaryOperation.OP_MINUS
+					&& op.getOperatorType() != UnaryOperation.OP_PLUS) {
+				reportProblem(astNode, Messages.InvalidConstantExpression,
+						PHPProblemIdentifier.InvalidConstantExpression, ProblemSeverities.Error);
+			} else {
+				validateConstantExpression(op.getExpr());
+			}
+		} else if (astNode instanceof StaticConstantAccess) {
+			StaticConstantAccess acc = (StaticConstantAccess) astNode;
+			if (!(acc.getDispatcher() instanceof FullyQualifiedReference)) {
+				reportProblem(acc.getDispatcher(), Messages.DynamicClassNotAllowed,
+						PHPProblemIdentifier.InvalidConstantExpression, ProblemSeverities.Error);
+			}
+		} else if (version.isGreaterThan(PHPVersion.PHP5_5) && astNode instanceof InfixExpression) {
+			InfixExpression expr = (InfixExpression) astNode;
+			validateConstantExpression(expr.getLeft());
+			validateConstantExpression(expr.getRight());
+		} else if (version.isGreaterThan(PHPVersion.PHP5_5) && astNode instanceof ArrayCreation) {
+			((ArrayCreation) astNode).getElements().stream().forEach(n -> {
+				validateConstantExpression(n.getKey());
+				validateConstantExpression(n.getValue());
+			});
+		} else if (version.isGreaterThan(PHPVersion.PHP5_5) && astNode instanceof ReflectionArrayVariableReference) {
+			ReflectionArrayVariableReference ref = (ReflectionArrayVariableReference) astNode;
+			validateConstantExpression(ref.getExpression());
+			validateConstantExpression(ref.getIndex());
+		} else {
+			reportProblem(astNode, Messages.InvalidConstantExpression, PHPProblemIdentifier.InvalidConstantExpression,
+					ProblemSeverities.Error);
+		}
+	}
+
+	@Override
 	public boolean visitGeneral(ASTNode node) throws Exception {
 		for (IValidatorExtension extension : extensions) {
 			extension.visit(node);
@@ -895,4 +952,5 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	public NamespaceDeclaration getCurrentNamespace() {
 		return currentNamespace;
 	}
+
 }

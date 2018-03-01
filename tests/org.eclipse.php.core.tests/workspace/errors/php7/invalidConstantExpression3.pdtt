@@ -1,0 +1,10 @@
+--TEST--
+Test unfinished method declaration error reporting
+--FILE--
+<?php
+class Foo {
+    public $x = call();
+}
+?>
+--EXPECT--
+[line=3, start=34, end=40] Constant expression contains invalid operations
