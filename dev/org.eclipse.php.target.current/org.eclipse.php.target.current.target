@@ -23,7 +23,7 @@
 <unit id="org.eclipse.birt.chart.device.swt" version=""/>
 
 
-<repository location="http://download.eclipse.org/releases/oxygen/"/>
+<repository location="http://download.eclipse.org/releases/photon/"/>
 </location>
 
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
