@@ -211,13 +211,15 @@ public abstract class AbstractProjectSuite extends TestSuite {
 			target.mkdirs();
 		}
 		File[] files = source.listFiles();
-		if (files == null)
+		if (files == null) {
 			return;
+		}
 		for (int i = 0; i < files.length; i++) {
 			File sourceChild = files[i];
 			String name = sourceChild.getName();
-			if (name.equals("CVS") || name.equals(".svn"))
+			if (name.equals("CVS") || name.equals(".svn")) {
 				continue;
+			}
 			File targetChild = new File(target, name);
 			if (sourceChild.isDirectory()) {
 				copyDirectory(sourceChild, targetChild);
@@ -400,8 +402,9 @@ public abstract class AbstractProjectSuite extends TestSuite {
 				System.out.println("Retry " + retryCount + ": " + iae.getMessage());
 			}
 		}
-		if (!resource.isAccessible())
+		if (!resource.isAccessible()) {
 			return;
+		}
 		System.err.println("Failed to delete " + resource.getFullPath());
 		if (lastException != null) {
 			throw lastException;

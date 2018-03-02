@@ -95,15 +95,18 @@ public class DltkUtil {
 	}
 
 	public static String displayString(String inputString, int indent, boolean shift) {
-		if (inputString == null)
+		if (inputString == null) {
 			return "null";
+		}
 		int length = inputString.length();
 		StringBuffer buffer = new StringBuffer(length);
 		java.util.StringTokenizer tokenizer = new java.util.StringTokenizer(inputString, "\n\r", true);
-		for (int i = 0; i < indent; i++)
+		for (int i = 0; i < indent; i++) {
 			buffer.append("\t");
-		if (shift)
+		}
+		if (shift) {
 			indent++;
+		}
 		buffer.append("\"");
 		while (tokenizer.hasMoreTokens()) {
 
@@ -116,15 +119,17 @@ public class DltkUtil {
 						buffer.append("\\n");
 						if (tokenizer.hasMoreTokens()) {
 							buffer.append("\" + \n");
-							for (int i = 0; i < indent; i++)
+							for (int i = 0; i < indent; i++) {
 								buffer.append("\t");
+							}
 							buffer.append("\"");
 						}
 						continue;
 					}
 					buffer.append("\" + \n");
-					for (int i = 0; i < indent; i++)
+					for (int i = 0; i < indent; i++) {
 						buffer.append("\t");
+					}
 					buffer.append("\"");
 				} else {
 					continue;
@@ -133,8 +138,9 @@ public class DltkUtil {
 				buffer.append("\\n");
 				if (tokenizer.hasMoreTokens()) {
 					buffer.append("\" + \n");
-					for (int i = 0; i < indent; i++)
+					for (int i = 0; i < indent; i++) {
 						buffer.append("\t");
+					}
 					buffer.append("\"");
 				}
 				continue;
@@ -179,8 +185,9 @@ public class DltkUtil {
 	}
 
 	public static String convertToIndependantLineDelimiter(String source) {
-		if (source.indexOf('\n') == -1 && source.indexOf('\r') == -1)
+		if (source.indexOf('\n') == -1 && source.indexOf('\r') == -1) {
 			return source;
+		}
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0, length = source.length(); i < length; i++) {
 			char car = source.charAt(i);
@@ -237,8 +244,9 @@ public class DltkUtil {
 		} finally {
 			try {
 				zipIn.close();
-				if (zis != null)
+				if (zis != null) {
 					zis.close();
+				}
 			} catch (IOException ioe) {
 			}
 		}

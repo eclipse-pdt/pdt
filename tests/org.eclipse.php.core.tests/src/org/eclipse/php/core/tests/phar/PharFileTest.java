@@ -110,8 +110,9 @@ public class PharFileTest {
 		for (Entry<String, PharEntry> entry : pharEntryMap.entrySet()) {
 			String filename = entry.getKey();
 
-			if (PharConstants.SIGNATURE_PATH.endsWith(filename) || PharConstants.STUB_PATH.endsWith(filename))
+			if (PharConstants.SIGNATURE_PATH.endsWith(filename) || PharConstants.STUB_PATH.endsWith(filename)) {
 				continue;
+			}
 			File file = new File(pharFileFolder, filename);
 			assertTrue(inputStreamEquals(new BufferedInputStream(new FileInputStream(file)),
 					pharFile.getInputStream(entry.getValue())));
@@ -128,8 +129,9 @@ public class PharFileTest {
 				if (n1 != n2) {
 					return false;
 				}
-				if (!byteArrayEquals(buffer1, buffer2, n1))
+				if (!byteArrayEquals(buffer1, buffer2, n1)) {
 					return false;
+				}
 			}
 			n2 = is2.read(buffer2, 0, buffer2.length);
 			if (n1 != n2) {// both should be -1
@@ -145,8 +147,9 @@ public class PharFileTest {
 	public static boolean byteArrayEquals(byte[] b1, byte[] b2, int n) {
 		if (b1 != null && b2 != null && b1.length == b2.length) {
 			for (int i = 0; i < n; i++) {
-				if (b1[i] != b2[i])
+				if (b1[i] != b2[i]) {
 					return false;
+				}
 			}
 			return true;
 		} else {
@@ -229,8 +232,9 @@ public class PharFileTest {
 	}
 
 	private void exportFolder(PharFileExporter exporter, File file) throws IOException, CoreException {
-		if (file.getName().equalsIgnoreCase("CVS"))
+		if (file.getName().equalsIgnoreCase("CVS")) {
 			return;
+		}
 		File[] children = file.listFiles();
 		for (int i = 0; i < children.length; i++) {
 			export(exporter, children[i]);
