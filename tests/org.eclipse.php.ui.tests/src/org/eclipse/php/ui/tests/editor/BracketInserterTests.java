@@ -131,8 +131,9 @@ public class BracketInserterTests {
 				}
 			}
 		});
-		if (exception[0] != null)
+		if (exception[0] != null) {
 			throw exception[0];
+		}
 		PDTTUtils.assertContents(pdttFile.getExpected(), result[0]);
 	}
 

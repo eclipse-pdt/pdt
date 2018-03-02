@@ -35,10 +35,12 @@ public class FileUtil {
 		for (int i = 0; i < files.length; i++) {
 			final File sourceChild = files[i];
 			final String name = sourceChild.getName();
-			if (name.equals("CVS") || name.equals(".svn"))
+			if (name.equals("CVS") || name.equals(".svn")) {
 				continue;
-			if (excludes.contains(sourceChild))
+			}
+			if (excludes.contains(sourceChild)) {
 				continue;
+			}
 			final File targetChild = new File(target, name);
 			if (sourceChild.isDirectory()) {
 				copyDirectory(sourceChild, targetChild, excludes);

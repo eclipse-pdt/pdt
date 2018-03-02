@@ -26,7 +26,7 @@ public abstract class ComposerModelTests extends AbstractModelTests {
 			prj = setUpScriptProject(name);
 		} catch (Exception e) {
 		}
-		
+
 		return prj;
 	}
 }
