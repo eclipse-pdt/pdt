@@ -11,7 +11,6 @@
 package org.eclipse.php.composer.test;
 
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.tests.model.AbstractModelTests;
 
 public abstract class ComposerModelTests extends AbstractModelTests {
 
@@ -26,7 +25,7 @@ public abstract class ComposerModelTests extends AbstractModelTests {
 			prj = setUpScriptProject(name);
 		} catch (Exception e) {
 		}
-		
+
 		return prj;
 	}
 }

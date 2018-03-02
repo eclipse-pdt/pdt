@@ -94,8 +94,9 @@ public abstract class SuiteOfTestCases extends TestCase {
 
 					// skip static and final fields
 					int modifiers = field.getModifiers();
-					if (Modifier.isStatic(modifiers) || Modifier.isFinal(modifiers))
+					if (Modifier.isStatic(modifiers) || Modifier.isFinal(modifiers)) {
 						continue;
+					}
 
 					// make the field accessible
 					field.setAccessible(true);

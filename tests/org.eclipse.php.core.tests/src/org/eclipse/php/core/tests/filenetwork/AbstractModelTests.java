@@ -293,11 +293,14 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	}
 
 	protected void discardWorkingCopies(ISourceModule[] units) throws ModelException {
-		if (units == null)
+		if (units == null) {
 			return;
-		for (int i = 0, length = units.length; i < length; i++)
-			if (units[i] != null)
+		}
+		for (int i = 0, length = units.length; i < length; i++) {
+			if (units[i] != null) {
 				units[i].discardWorkingCopy();
+			}
+		}
 	}
 
 	@Override
@@ -495,8 +498,9 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 				System.out.println("Retry " + retryCount + ": " + iae.getMessage());
 			}
 		}
-		if (!resource.isAccessible())
+		if (!resource.isAccessible()) {
 			return;
+		}
 		System.err.println("Failed to delete " + resource.getFullPath());
 		if (lastException != null) {
 			throw lastException;
@@ -540,8 +544,9 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 			public void run(IProgressMonitor monitor) throws CoreException {
 				if (projectNames != null) {
 					for (int i = 0, max = projectNames.length; i < max; i++) {
-						if (projectNames[i] != null)
+						if (projectNames[i] != null) {
 							deleteProject(projectNames[i]);
+						}
 					}
 				}
 			}
@@ -616,16 +621,18 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 				} else {
 					buffer.append(element.toStringWithAncestors(showResolvedInfo));
 				}
-				if (i != length - 1)
+				if (i != length - 1) {
 					buffer.append("\n");
+				}
 			}
 		} else {
 			buffer.append("<null>");
 		}
 		String actual = buffer.toString();
 		if (!expected.equals(actual)) {
-			if (this.displayName)
+			if (this.displayName) {
 				System.out.println(getName() + " actual result is:");
+			}
 			System.out.println(DltkUtil.displayString(actual, this.tabs) + this.endChar);
 		}
 		assertEquals(message, expected, actual);
@@ -649,8 +656,9 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 		for (int i = 0, length = resources.length; i < length; i++) {
 			IResource resource = (IResource) resources[i];
 			buffer.append(resource == null ? "<null>" : resource.getName());
-			if (i != length - 1)
+			if (i != length - 1) {
 				buffer.append("\n");
+			}
 		}
 		if (!expected.equals(buffer.toString())) {
 			System.out.print(DltkUtil.displayString(buffer.toString(), 2));
@@ -736,8 +744,9 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	 */
 	protected IModelElementDelta getDeltaFor(IModelElement element, boolean returnFirst) {
 		IModelElementDelta[] deltas = this.deltaListener.deltas;
-		if (deltas == null)
+		if (deltas == null) {
 			return null;
+		}
 		IModelElementDelta result = null;
 		for (int i = 0; i < deltas.length; i++) {
 			IModelElementDelta delta = searchForDelta(element, this.deltaListener.deltas[i]);
@@ -841,9 +850,10 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	}
 
 	public ISourceModule getWorkingCopy(String path, String source, boolean computeProblems) throws ModelException {
-		if (this.wcOwner == null)
+		if (this.wcOwner == null) {
 			this.wcOwner = new WorkingCopyOwner() {
 			};
+		}
 		return getWorkingCopy(path, source, this.wcOwner, computeProblems);
 	}
 
@@ -873,16 +883,17 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	public ISourceModule getWorkingCopy(String path, String source, WorkingCopyOwner owner,
 			IProblemRequestor problemRequestor) throws ModelException {
 		ISourceModule workingCopy = getSourceModule(path);
-		if (owner != null)
+		if (owner != null) {
 			workingCopy = workingCopy.getWorkingCopy(
 					/* owner, problemRequestor, */null/*
 														 * no progress monitor
 														 */);
-		else
+		} else {
 			workingCopy.becomeWorkingCopy(problemRequestor,
 					null/*
 						 * no progress monitor
 						 */);
+		}
 		workingCopy.getBuffer().setContents(source);
 		// if (problemRequestor instanceof ProblemRequestor)
 		// ((ProblemRequestor)

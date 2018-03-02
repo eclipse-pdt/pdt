@@ -170,8 +170,9 @@ public class CodeAssistTests {
 		}
 		if (otherFiles != null) {
 			for (IFile file : otherFiles) {
-				if (file != null)
+				if (file != null) {
 					TestUtils.deleteFile(file);
+				}
 			}
 		}
 	}
