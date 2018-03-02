@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016, 2017 IBM Corporation and others.
+ * Copyright (c) 2009, 2016, 2017, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -123,6 +123,9 @@ public class PHPSimpleTypes {
 		SIMPLE_TYPES.put("null", new TypeInfo(NULL, null)); //$NON-NLS-1$
 		SIMPLE_TYPES.put("mixed", new TypeInfo(MIXED, null)); //$NON-NLS-1$
 		SIMPLE_TYPES.put("callable", new TypeInfo(CALLABLE, PHPVersion.PHP5_4)); //$NON-NLS-1$
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=531379
+		// "callback" is a (less complete) synonym of "callable"
+		SIMPLE_TYPES.put("callback", new TypeInfo(CALLABLE, null)); //$NON-NLS-1$
 		SIMPLE_TYPES.put("iterable", new TypeInfo(ITERABLE, PHPVersion.PHP7_1)); //$NON-NLS-1$
 	}
 
