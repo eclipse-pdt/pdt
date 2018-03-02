@@ -24,7 +24,7 @@
 					<testClass>org.eclipse.php.refactoring.core.test.AllTests</testClass>
 					<useUIHarness>true</useUIHarness>
 					<useUIThread>false</useUIThread>
-					<argLine>-XX:MaxPermSize=256m ${test.vmargs} ${tycho.testArgLine}</argLine>
+					<argLine>${test.vmargs} ${tycho.testArgLine}</argLine>
 					<testFailureIgnore>false</testFailureIgnore>
 					<dependencies>
 						<dependency>
