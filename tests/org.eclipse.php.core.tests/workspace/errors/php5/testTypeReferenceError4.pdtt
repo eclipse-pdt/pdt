@@ -1,0 +1,12 @@
+--TEST--
+Bug 531379 - Mark @param callback as well known type
+--FILE--
+<?php
+/**
+ * @param callback $param1
+ * @return callback
+ */
+function foo($param1)
+{
+}
+--EXPECT--
