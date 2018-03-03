@@ -125,7 +125,7 @@ public class TextTemplate {
 	 * @return Content of a found struct
 	 */
 	public static String extract(final String text, final String structName) {
-		if ("".equals(text)) {
+		if ("".equals(text)) { //$NON-NLS-1$
 			return null;
 		}
 		if (!structName.matches(REGEXP_ELEMENT_VALID)) {
@@ -151,8 +151,7 @@ public class TextTemplate {
 		String valCompiled;
 		String var;
 
-		if ("".equals(text))
-		 {
+		if ("".equals(text)) { //$NON-NLS-1$
 			return ""; //$NON-NLS-1$
 		}
 
@@ -220,13 +219,11 @@ public class TextTemplate {
 	 * @return Variable's value
 	 */
 	public String get(final String var) {
-		if (vars == null)
-		 {
+		if (vars == null) {
 			return ""; //$NON-NLS-1$
 		}
 		final Object val = vars.get(var);
-		if (val == null)
-		 {
+		if (val == null) {
 			return ""; //$NON-NLS-1$
 		}
 		return val.toString();

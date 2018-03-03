@@ -94,7 +94,7 @@ public class DefaultPHPServerConfiguration extends PHPServerConfiguration {
 		while (iterator.hasNext()) {
 			ServerPort port = iterator.next();
 			// Return only an HTTP port from the selected Service
-			if (port.getProtocol().toLowerCase().equals("http") && port.getId().indexOf('/') < 0) {
+			if (port.getProtocol().toLowerCase().equals("http") && port.getId().indexOf('/') < 0) { //$NON-NLS-1$
 				return port;
 			}
 		}

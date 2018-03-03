@@ -381,11 +381,11 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 	private void handleCoreExceptionOnExport(CoreException ex) {
 		Throwable realEx = ex.getStatus().getException();
 		if (realEx instanceof IOException && realEx.getMessage() != null
-				&& realEx.getMessage().startsWith("duplicate entry:")) {
+				&& realEx.getMessage().startsWith("duplicate entry:")) { //$NON-NLS-1$
 			// message
-																		// string
-																		// from
-																		// java.util.zip.ZipOutputStream.putNextEntry(ZipEntry)
+			// string
+			// from
+			// java.util.zip.ZipOutputStream.putNextEntry(ZipEntry)
 			addWarning(ex.getMessage(), realEx);
 		} else {
 			addToStatus(ex);
@@ -458,8 +458,7 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 
 	private void singleRun(IProgressMonitor progressMonitor) throws InvocationTargetException, InterruptedException {
 		try {
-			if (!preconditionsOK())
-			 {
+			if (!preconditionsOK()) {
 				throw new InvocationTargetException(null, ""); //$NON-NLS-1$
 			}
 			int totalWork = countSelectedElements();

@@ -316,8 +316,8 @@ public class BroadcastConnection {
 	protected String getHTMLContent(String platformValue, String host, int port) {
 		String platformPath = platformValue;
 		// There is no http:// or https:// in the value
-		if (platformValue.indexOf("://") == -1)
-		 {
+		if (platformValue.indexOf("://") == -1) //$NON-NLS-1$
+		{
 			platformPath = "http://" + platformValue; //$NON-NLS-1$
 		}
 		// Add question mark if not exists

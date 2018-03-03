@@ -82,7 +82,7 @@ public abstract class AbstractPHPServerRunner implements IPHPServerRunner {
 		if (len == 0) {
 			return true;
 		}
-		if ("\"\"".equals(s))
+		if ("\"\"".equals(s)) //$NON-NLS-1$
 		 {
 			return false; // empty quotes must not be quoted again
 		}

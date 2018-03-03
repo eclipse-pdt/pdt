@@ -180,10 +180,9 @@ public class EditTemplateDialog extends StatusDialog {
 		List<String[]> contexts = new ArrayList<>();
 		for (Iterator<TemplateContextType> it = registry.contextTypes(); it.hasNext();) {
 			TemplateContextType type = it.next();
-			if (type.getId().equals("javadoc")) {
+			if (type.getId().equals("javadoc")) { //$NON-NLS-1$
 				contexts.add(new String[] { type.getId(), type.getName(), "/**" + delim }); //$NON-NLS-1$
-			}
-			else {
+			} else {
 				contexts.add(0, new String[] { type.getId(), type.getName(), "" }); //$NON-NLS-1$
 			}
 		}
@@ -481,8 +480,7 @@ public class EditTemplateDialog extends StatusDialog {
 		int idx = getIndex(id);
 		if (idx != -1) {
 			return fContextTypes[idx][2];
-		}
-		else {
+		} else {
 			return ""; //$NON-NLS-1$
 		}
 	}
@@ -549,18 +547,13 @@ public class EditTemplateDialog extends StatusDialog {
 
 	private void fillContextMenu(IMenuManager menu) {
 		menu.add(new GroupMarker(ITextEditorActionConstants.GROUP_UNDO));
-		menu.appendToGroup(ITextEditorActionConstants.GROUP_UNDO,
-				fGlobalActions.get(ITextEditorActionConstants.UNDO));
-		menu.appendToGroup(ITextEditorActionConstants.GROUP_UNDO,
-				fGlobalActions.get(ITextEditorActionConstants.REDO));
+		menu.appendToGroup(ITextEditorActionConstants.GROUP_UNDO, fGlobalActions.get(ITextEditorActionConstants.UNDO));
+		menu.appendToGroup(ITextEditorActionConstants.GROUP_UNDO, fGlobalActions.get(ITextEditorActionConstants.REDO));
 
 		menu.add(new Separator(ITextEditorActionConstants.GROUP_EDIT));
-		menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT,
-				fGlobalActions.get(ITextEditorActionConstants.CUT));
-		menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT,
-				fGlobalActions.get(ITextEditorActionConstants.COPY));
-		menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT,
-				fGlobalActions.get(ITextEditorActionConstants.PASTE));
+		menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT, fGlobalActions.get(ITextEditorActionConstants.CUT));
+		menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT, fGlobalActions.get(ITextEditorActionConstants.COPY));
+		menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT, fGlobalActions.get(ITextEditorActionConstants.PASTE));
 		menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT,
 				fGlobalActions.get(ITextEditorActionConstants.SELECT_ALL));
 

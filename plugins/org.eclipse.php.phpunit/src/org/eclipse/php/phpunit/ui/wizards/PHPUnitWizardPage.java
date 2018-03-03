@@ -173,7 +173,7 @@ public abstract class PHPUnitWizardPage extends WizardPage {
 		final StatusInfo status = new StatusInfo();
 		final String updatedClassName = PHPUnitValidator.validateClassName(getClassName(),
 				fContainer != null ? fContainer.getProject() : null, status);
-		if ("".equals(updatedClassName) || updatedClassName.equalsIgnoreCase(fClassNameProposal)) {
+		if ("".equals(updatedClassName) || updatedClassName.equalsIgnoreCase(fClassNameProposal)) { //$NON-NLS-1$
 			fClassNameManual = false;
 		} else {
 			fClassNameManual = true;
@@ -556,8 +556,7 @@ public abstract class PHPUnitWizardPage extends WizardPage {
 			fSuperClassFileNameLabel.setText(superClassName);
 		}
 		fSuperClassStatus = status;
-		if ("".equals(getSuperClassName()))
-		 {
+		if ("".equals(getSuperClassName())) { //$NON-NLS-1$
 			status.setError(PHPUnitMessages.PHPUnitWizardPage_20); // higher
 		}
 		// severity

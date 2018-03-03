@@ -147,7 +147,7 @@ public class PHPDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 									buf.append(restOfLine);
 									// only add tags if they are non-empty - the
 									// empty line has already been added above.
-									if (commentBlockBody != null && !commentBlockBody.trim().equals("*")) {
+									if (commentBlockBody != null && !commentBlockBody.trim().equals("*")) { //$NON-NLS-1$
 										buf.append(commentBlockBody);
 									}
 								} catch (CoreException e) {
@@ -362,7 +362,7 @@ public class PHPDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	private String prepareTemplateComment(String comment, String indentation, IScriptProject project,
 			String lineDelimiter) {
 		// trim comment start and end if any
-		if (comment.endsWith("*/")) {
+		if (comment.endsWith("*/")) { //$NON-NLS-1$
 			comment = comment.substring(0, comment.length() - 2);
 		}
 		comment = comment.trim();
@@ -522,15 +522,13 @@ public class PHPDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 				return false;
 			}
 
-			if (document.getLength() == partitionEnd)
-			 {
+			if (document.getLength() == partitionEnd) {
 				return true; // partition goes to end of document - probably a
 								// new comment
 			}
 
 			String comment = document.get(partition.getOffset(), partition.getLength());
-			if (comment.indexOf("/*", 2) != -1)
-			 {
+			if (comment.indexOf("/*", 2) != -1) { //$NON-NLS-1$
 				return true; // enclosed another comment -> probably a new
 								// comment
 			}

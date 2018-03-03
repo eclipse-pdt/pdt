@@ -154,7 +154,7 @@ public class BreakpointSetConditionAction implements IObjectActionDelegate {
 
 		String currentCondition = breakpoint.getCondition();
 		boolean enableCondition = breakpoint.isConditionEnabled();
-		if (currentCondition.equals("")) {
+		if (currentCondition.equals("")) { //$NON-NLS-1$
 			enableCondition = true;
 		}
 
@@ -168,7 +168,7 @@ public class BreakpointSetConditionAction implements IObjectActionDelegate {
 		}
 		String condition = dialog.getValue();
 		enableCondition = dialog.isSetConditionEnabled();
-		if (condition.equals("")) {
+		if (condition.equals("")) { //$NON-NLS-1$
 			enableCondition = false;
 		}
 		breakpoint.setConditionWithEnable(enableCondition, condition);

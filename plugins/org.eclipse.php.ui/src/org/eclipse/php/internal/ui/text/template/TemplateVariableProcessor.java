@@ -85,8 +85,8 @@ public class TemplateVariableProcessor implements IContentAssistProcessor {
 				prefix = string.substring(escape + 2);
 			}
 		}
-		if (prefix.equals("$"))
-		 {
+		if (prefix.equals("$")) //$NON-NLS-1$
+		{
 			prefix = ""; //$NON-NLS-1$
 		}
 

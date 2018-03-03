@@ -537,7 +537,7 @@ public class PHPUnitView extends ViewPart {
 
 			final String codeCoverageAttributeValue = launch
 					.getAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_COLLECT_CODE_COVERAGE);
-			if (codeCoverageAttributeValue != null && !"profile".equals(launch.getLaunchMode())) {
+			if (codeCoverageAttributeValue != null && !"profile".equals(launch.getLaunchMode())) { //$NON-NLS-1$
 				setCodeCoverageTabVisible(Integer.parseInt(codeCoverageAttributeValue) > 0);
 			} else {
 				setCodeCoverageTabVisible(false);

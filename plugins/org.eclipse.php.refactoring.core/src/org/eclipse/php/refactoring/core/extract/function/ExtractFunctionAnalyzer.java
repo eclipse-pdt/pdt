@@ -116,8 +116,7 @@ import org.eclipse.php.refactoring.core.visitor.ScopeSyntaxErrorsVisitor;
 			pm.worked(1);
 
 			ASTNode enclosingBodyNode = getFirstSelectedNode().getEnclosingBodyNode();
-			if (enclosingBodyNode == null)
-			 {
+			if (enclosingBodyNode == null) {
 				return RefactoringStatus
 						.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.3")); //$NON-NLS-1$
 			}
@@ -252,7 +251,7 @@ import org.eclipse.php.refactoring.core.visitor.ScopeSyntaxErrorsVisitor;
 		}
 		ITypeBinding[] binding = fEnclosingMethodBinding.getReturnType();
 		for (ITypeBinding currentBinding : binding) {
-			if (fEnclosingBodyDeclaration.getAST().resolveWellKnownType("void").equals(currentBinding)) {
+			if (fEnclosingBodyDeclaration.getAST().resolveWellKnownType("void").equals(currentBinding)) { //$NON-NLS-1$
 				return true;
 			}
 		}
@@ -311,8 +310,7 @@ import org.eclipse.php.refactoring.core.visitor.ScopeSyntaxErrorsVisitor;
 
 		// Global Function case
 		if (fEnclosingBodyDeclaration == null) {
-			fEnclosingBodyDeclaration = ASTNodes.getParent(getFirstSelectedNode(),
-					FunctionDeclaration.class);
+			fEnclosingBodyDeclaration = ASTNodes.getParent(getFirstSelectedNode(), FunctionDeclaration.class);
 		}
 
 		// Global scope case

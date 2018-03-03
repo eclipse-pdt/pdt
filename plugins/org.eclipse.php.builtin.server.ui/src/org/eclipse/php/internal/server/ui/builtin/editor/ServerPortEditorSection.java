@@ -169,7 +169,7 @@ public class ServerPortEditorSection extends ServerEditorSection {
 
 			@Override
 			public boolean canModify(Object element, String property) {
-				if ("port".equals(property)) {
+				if ("port".equals(property)) { //$NON-NLS-1$
 					return true;
 				}
 

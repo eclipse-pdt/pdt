@@ -309,12 +309,12 @@ public class PHPServer extends ServerDelegate implements IPHPServer, IPHPServerW
 			if (url != null) {
 //				String path = url.getPath() + config.getWebModuleURL(module);
 				String path = url.toString();
-				if (!path.endsWith("/"))
+				if (!path.endsWith("/")) //$NON-NLS-1$
 				 {
 					path += "/"; //$NON-NLS-1$
 				}
 				path += module.getName();
-				if (!path.endsWith("/"))
+				if (!path.endsWith("/")) //$NON-NLS-1$
 				 {
 					path += "/"; //$NON-NLS-1$
 				}

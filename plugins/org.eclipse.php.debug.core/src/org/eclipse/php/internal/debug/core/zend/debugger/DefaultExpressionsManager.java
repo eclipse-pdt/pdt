@@ -87,11 +87,11 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 		for (int i = 0; i < variables.length - 1; i++) {
 			String s = variables[i].getFullName();
 			// Skip $GLOBALS variable (since PHP 5.0.0)
-			if (s.equals("$GLOBALS")) {
+			if (s.equals("$GLOBALS")) { //$NON-NLS-1$
 				continue;
 			}
 			// Check if object context is active
-			if (s.equals("$this")) {
+			if (s.equals("$this")) { //$NON-NLS-1$
 				hasThis = true;
 			}
 			currentVariables.add(variables[i]);

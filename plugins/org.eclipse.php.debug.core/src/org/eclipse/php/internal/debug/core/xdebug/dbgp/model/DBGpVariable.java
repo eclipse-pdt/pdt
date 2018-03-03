@@ -200,8 +200,7 @@ public abstract class DBGpVariable extends DBGpElement implements IVariable, IVa
 	 */
 	@Override
 	public String getReferenceTypeName() throws DebugException {
-		if (getName().equals(VariablesUtil.CLASS_INDICATOR))
-		 {
+		if (getName().equals(VariablesUtil.CLASS_INDICATOR)) {
 			return "class"; //$NON-NLS-1$
 		}
 		return fValue.getDataType().getText();
@@ -247,22 +246,22 @@ public abstract class DBGpVariable extends DBGpElement implements IVariable, IVa
 		fAddress = DBGpResponse.getAttribute(fDescriptor, "address"); //$NON-NLS-1$
 		// Set facets
 		String facets = DBGpResponse.getAttribute(fDescriptor, "facet"); //$NON-NLS-1$
-		if (facets.contains("static")) {
+		if (facets.contains("static")) { //$NON-NLS-1$
 			addFacets(Facet.MOD_STATIC);
 		}
-		if (facets.contains("public")) {
+		if (facets.contains("public")) { //$NON-NLS-1$
 			addFacets(Facet.MOD_PUBLIC);
-		} else if (facets.contains("protected")) {
+		} else if (facets.contains("protected")) { //$NON-NLS-1$
 			addFacets(Facet.MOD_PROTECTED);
-		} else if (facets.contains("private")) {
+		} else if (facets.contains("private")) { //$NON-NLS-1$
 			addFacets(Facet.MOD_PRIVATE);
 		}
 		// Adjust name
 		if (hasFacet(KIND_ARRAY_MEMBER)) {
 			fName = '[' + fName + ']';
-		} else if (hasFacet(Facet.MOD_STATIC) && fName.startsWith(":")) {
+		} else if (hasFacet(Facet.MOD_STATIC) && fName.startsWith(":")) { //$NON-NLS-1$
 			fName = fName.substring(fName.lastIndexOf(':') + 1);
-		} else if (fName.equals("::")) {
+		} else if (fName.equals("::")) { //$NON-NLS-1$
 			fName = VariablesUtil.CLASS_INDICATOR;
 		}
 		// Hopefully this will put the $ at appropriate point in the name

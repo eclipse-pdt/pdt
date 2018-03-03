@@ -163,7 +163,8 @@ public class DeleteModifications extends RefactoringModifications {
 	 * @param resourcesCollector
 	 * 
 	 */
-	private void handleScriptFolderDelete(IScriptFolder pack, ArrayList<IResource> resourcesCollector) throws CoreException {
+	private void handleScriptFolderDelete(IScriptFolder pack, ArrayList<IResource> resourcesCollector)
+			throws CoreException {
 		final IContainer container = (IContainer) pack.getResource();
 		if (container == null) {
 			return;
@@ -218,7 +219,7 @@ public class DeleteModifications extends RefactoringModifications {
 				IResource member = members[m];
 				if (member instanceof IFile) {
 					IFile file = (IFile) member;
-					if ("class".equals(file.getFileExtension()) && file.isDerived()) {
+					if ("class".equals(file.getFileExtension()) && file.isDerived()) { //$NON-NLS-1$
 						continue;
 					}
 					IDLTKLanguageToolkit toolkit = DLTKLanguageManager.getLanguageToolkit(pack);

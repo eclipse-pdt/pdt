@@ -796,7 +796,7 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 
 	static class ReferencesCollector extends ApplyAll {
 		private static final List<String> TYPE_SKIP = new ArrayList<>();
-		private static final Pattern CONSTANT_NAME = Pattern.compile("[a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*");
+		private static final Pattern CONSTANT_NAME = Pattern.compile("[a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*"); //$NON-NLS-1$
 
 		static {
 			TYPE_SKIP.add("parent"); //$NON-NLS-1$

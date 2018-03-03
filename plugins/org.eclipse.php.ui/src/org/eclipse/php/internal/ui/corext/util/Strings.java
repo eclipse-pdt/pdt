@@ -538,7 +538,7 @@ public class Strings {
 
 	private static int findLastNonEmptyLineIndex(String[] sourceLines) {
 		for (int i = sourceLines.length - 1; i >= 0; i--) {
-			if (!sourceLines[i].trim().equals("")) {
+			if (!sourceLines[i].trim().equals("")) { //$NON-NLS-1$
 				return i;
 			}
 		}

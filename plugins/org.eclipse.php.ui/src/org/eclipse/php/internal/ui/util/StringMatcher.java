@@ -197,8 +197,8 @@ public class StringMatcher {
 		int segCount = fSegments.length;
 		if (segCount == 0 && (fHasLeadingStar || fHasTrailingStar)) {
 			// contains
-																	// only
-																	// '*'(s)
+			// only
+			// '*'(s)
 			return true;
 		}
 		if (start == end) {
@@ -282,7 +282,7 @@ public class StringMatcher {
 	 * characters.
 	 */
 	private void parseWildCards() {
-		if (fPattern.startsWith("*")) {
+		if (fPattern.startsWith("*")) { //$NON-NLS-1$
 			fHasLeadingStar = true;
 		}
 		if (fPattern.endsWith("*")) { //$NON-NLS-1$

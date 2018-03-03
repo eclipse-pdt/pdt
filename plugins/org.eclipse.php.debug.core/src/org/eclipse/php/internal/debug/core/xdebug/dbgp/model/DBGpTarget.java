@@ -1476,7 +1476,7 @@ public class DBGpTarget extends DBGpElement
 	private boolean shouldSkip(Node property) {
 		String type = DBGpResponse.getAttribute(property, "type"); //$NON-NLS-1$
 		// Skip uninitialized variables
-		if (type.equalsIgnoreCase("uninitialized")) {
+		if (type.equalsIgnoreCase("uninitialized")) { //$NON-NLS-1$
 			return true;
 		}
 		return false;
