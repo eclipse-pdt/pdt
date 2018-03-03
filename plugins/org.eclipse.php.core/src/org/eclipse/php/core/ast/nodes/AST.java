@@ -115,8 +115,8 @@ public class AST {
 	private NodeEventHandler eventHandler = new NodeEventHandler();
 
 	/**
-	 * Internal modification count; initially 0; increases monotonically <b>by
-	 * one or more</b> as the AST is successively modified.
+	 * Internal modification count; initially 0; increases monotonically <b>by one
+	 * or more</b> as the AST is successively modified.
 	 */
 	private long modificationCount = 0;
 
@@ -130,8 +130,8 @@ public class AST {
 	private long originalModificationCount = 0;
 
 	/**
-	 * When disableEvents > 0, events are not reported and the modification
-	 * count stays fixed.
+	 * When disableEvents > 0, events are not reported and the modification count
+	 * stays fixed.
 	 * <p>
 	 * This mechanism is used in lazy initialization of a node to prevent events
 	 * from being reported for the modification of the node as well as for the
@@ -143,8 +143,8 @@ public class AST {
 	private int disableEvents = 0;
 
 	/**
-	 * Internal object unique to the AST instance. Readers must synchronize on
-	 * this object when the modifying instance fields.
+	 * Internal object unique to the AST instance. Readers must synchronize on this
+	 * object when the modifying instance fields.
 	 * 
 	 * @since 3.0
 	 */
@@ -162,8 +162,8 @@ public class AST {
 	InternalASTRewrite rewriter;
 
 	/**
-	 * The binding resolver for this AST. Initially a binding resolver that does
-	 * not resolve names at all.
+	 * The binding resolver for this AST. Initially a binding resolver that does not
+	 * resolve names at all.
 	 */
 	private BindingResolver resolver = new BindingResolver();
 
@@ -344,8 +344,8 @@ public class AST {
 
 	/**
 	 * Returns the modification count for this AST. The modification count is a
-	 * non-negative value that increases (by 1 or perhaps by more) as this AST
-	 * or its nodes are changed. The initial value is unspecified.
+	 * non-negative value that increases (by 1 or perhaps by more) as this AST or
+	 * its nodes are changed. The initial value is unspecified.
 	 * <p>
 	 * The following things count as modifying an AST:
 	 * <ul>
@@ -355,17 +355,17 @@ public class AST {
 	 * <li>setting a non-node attribute of a node owned by this AST.</li>
 	 * </ul>
 	 * </p>
-	 * Operations which do not entail creating or modifying existing nodes do
-	 * not increase the modification count.
+	 * Operations which do not entail creating or modifying existing nodes do not
+	 * increase the modification count.
 	 * <p>
-	 * N.B. This method may be called several times in the course of a single
-	 * client operation. The only promise is that the modification count
-	 * increases monotonically as the AST or its nodes change; there is no
-	 * promise that a modifying operation increases the count by exactly 1.
+	 * N.B. This method may be called several times in the course of a single client
+	 * operation. The only promise is that the modification count increases
+	 * monotonically as the AST or its nodes change; there is no promise that a
+	 * modifying operation increases the count by exactly 1.
 	 * </p>
 	 * 
-	 * @return the current value (non-negative) of the modification counter of
-	 *         this AST
+	 * @return the current value (non-negative) of the modification counter of this
+	 *         AST
 	 */
 	public long modificationCount() {
 		return this.modificationCount;
@@ -383,8 +383,8 @@ public class AST {
 	 * </ul>
 	 * </p>
 	 * <p>
-	 * N.B. This method may be called several times in the course of a single
-	 * client operation.
+	 * N.B. This method may be called several times in the course of a single client
+	 * operation.
 	 * </p>
 	 */
 	void modifying() {
@@ -789,8 +789,7 @@ public class AST {
 	}
 
 	/**
-	 * Set <code>originalModificationCount</code> to the current modification
-	 * count
+	 * Set <code>originalModificationCount</code> to the current modification count
 	 * 
 	 * @since 3.0
 	 */
@@ -801,8 +800,8 @@ public class AST {
 	/**
 	 * Returns the type binding for a "well known" type.
 	 * <p>
-	 * Note that bindings are generally unavailable unless requested when the
-	 * AST is being built.
+	 * Note that bindings are generally unavailable unless requested when the AST is
+	 * being built.
 	 * </p>
 	 * <p>
 	 * The following type names are supported:
@@ -822,8 +821,8 @@ public class AST {
 	 * @param name
 	 *            the name of a well known type
 	 * @return the corresponding type binding, or <code>null</code> if the named
-	 *         type is not considered well known or if no binding can be found
-	 *         for it
+	 *         type is not considered well known or if no binding can be found for
+	 *         it
 	 */
 	public ITypeBinding resolveWellKnownType(String name) {
 		if (name == null) {
@@ -855,8 +854,7 @@ public class AST {
 	}
 
 	/**
-	 * Checks that this AST operation is only used when building level JLS2
-	 * ASTs.
+	 * Checks that this AST operation is only used when building level JLS2 ASTs.
 	 * 
 	 * @exception UnsupportedOperationException
 	 * @since 3.0
@@ -889,8 +887,8 @@ public class AST {
 	private int bits;
 
 	/**
-	 * Creates an unparented node of the given node class (non-abstract subclass
-	 * of {@link ASTNode}).
+	 * Creates an unparented node of the given node class (non-abstract subclass of
+	 * {@link ASTNode}).
 	 * 
 	 * @param nodeClass
 	 *            AST node class
@@ -929,8 +927,8 @@ public class AST {
 	}
 
 	/**
-	 * Creates an unparented node of the given node type. This convenience
-	 * method is equivalent to:
+	 * Creates an unparented node of the given node type. This convenience method is
+	 * equivalent to:
 	 * 
 	 * <pre>
 	 * createInstance(ASTNode.nodeClassForType(nodeType))
@@ -955,17 +953,17 @@ public class AST {
 	/**
 	 * Enables the recording of changes to the given compilation unit and its
 	 * descendents. The compilation unit must have been created by
-	 * <code>ASTParser</code> and still be in its original state. Once recording
-	 * is on, arbitrary changes to the subtree rooted at the compilation unit
-	 * are recorded internally. Once the modification has been completed, call
-	 * <code>rewrite</code> to get an object representing the corresponding
-	 * edits to the original source code string.
+	 * <code>ASTParser</code> and still be in its original state. Once recording is
+	 * on, arbitrary changes to the subtree rooted at the compilation unit are
+	 * recorded internally. Once the modification has been completed, call
+	 * <code>rewrite</code> to get an object representing the corresponding edits to
+	 * the original source code string.
 	 * 
 	 * @exception IllegalArgumentException
-	 *                if this compilation unit is marked as unmodifiable, or if
-	 *                this compilation unit has already been tampered with, or
-	 *                if recording has already been enabled, or if
-	 *                <code>root</code> is not owned by this AST
+	 *                if this compilation unit is marked as unmodifiable, or if this
+	 *                compilation unit has already been tampered with, or if
+	 *                recording has already been enabled, or if <code>root</code> is
+	 *                not owned by this AST
 	 * @see Program#recordModifications()
 	 * @since 3.0
 	 */
@@ -986,25 +984,24 @@ public class AST {
 
 	/**
 	 * Converts all modifications recorded into an object representing the
-	 * corresponding text edits to the given document containing the original
-	 * source code for the compilation unit that gave rise to this AST.
+	 * corresponding text edits to the given document containing the original source
+	 * code for the compilation unit that gave rise to this AST.
 	 * 
 	 * @param document
-	 *            original document containing source code for the compilation
-	 *            unit
+	 *            original document containing source code for the compilation unit
 	 * @param options
 	 *            the table of formatter options (key type: <code>String</code>;
-	 *            value type: <code>String</code>); or <code>null</code> to use
-	 *            the standard global options {@link PHPCore#getOptions()
+	 *            value type: <code>String</code>); or <code>null</code> to use the
+	 *            standard global options {@link PHPCore#getOptions()
 	 *            PHPCore.getOptions()}.
-	 * @return text edit object describing the changes to the document
-	 *         corresponding to the recorded AST modifications
+	 * @return text edit object describing the changes to the document corresponding
+	 *         to the recorded AST modifications
 	 * @exception IllegalArgumentException
 	 *                if the document passed is <code>null</code> or does not
 	 *                correspond to this AST
 	 * @exception IllegalStateException
-	 *                if <code>recordModifications</code> was not called to
-	 *                enable recording
+	 *                if <code>recordModifications</code> was not called to enable
+	 *                recording
 	 * @see Program#rewrite(IDocument, Map)
 	 * @since 3.0
 	 */
@@ -1103,8 +1100,7 @@ public class AST {
 	 * @return a new ArrayAccess.
 	 */
 	public ArrayAccess newArrayAccess() {
-		ArrayAccess arrayAccess = new ArrayAccess(this);
-		return arrayAccess;
+		return new ArrayAccess(this);
 	}
 
 	/**
@@ -1144,8 +1140,7 @@ public class AST {
 	 * @return a new ArrayCreation.
 	 */
 	public ArrayCreation newArrayCreation() {
-		ArrayCreation arrayCreation = new ArrayCreation(this);
-		return arrayCreation;
+		return new ArrayCreation(this);
 	}
 
 	/**
@@ -1167,8 +1162,7 @@ public class AST {
 	 * @return a new ArrayElement.
 	 */
 	public ArrayElement newArrayElement() {
-		ArrayElement arrayElement = new ArrayElement(this);
-		return arrayElement;
+		return new ArrayElement(this);
 	}
 
 	/**
@@ -1193,8 +1187,7 @@ public class AST {
 	 * @return A new Assignment.
 	 */
 	public Assignment newAssignment() {
-		Assignment assignment = new Assignment(this);
-		return assignment;
+		return new Assignment(this);
 	}
 
 	/**
@@ -1222,8 +1215,7 @@ public class AST {
 	 * @return A new ASTError.
 	 */
 	public ASTError newASTError() {
-		ASTError astError = new ASTError(this);
-		return astError;
+		return new ASTError(this);
 	}
 
 	/**
@@ -1232,8 +1224,7 @@ public class AST {
 	 * @return A new BackTickExpression.
 	 */
 	public BackTickExpression newBackTickExpression() {
-		BackTickExpression backTickExpression = new BackTickExpression(this);
-		return backTickExpression;
+		return new BackTickExpression(this);
 	}
 
 	/**
@@ -1283,8 +1274,7 @@ public class AST {
 	 * @return A new BreakStatement.
 	 */
 	public BreakStatement newBreakStatement() {
-		BreakStatement breakStatement = new BreakStatement(this);
-		return breakStatement;
+		return new BreakStatement(this);
 	}
 
 	/**
@@ -1306,8 +1296,7 @@ public class AST {
 	 * @return A new CastExpression.
 	 */
 	public CastExpression newCastExpression() {
-		CastExpression castExpression = new CastExpression(this);
-		return castExpression;
+		return new CastExpression(this);
 	}
 
 	/**
@@ -1330,8 +1319,7 @@ public class AST {
 	 * @return A new CatchClause.
 	 */
 	public CatchClause newCatchClause() {
-		CatchClause catchClause = new CatchClause(this);
-		return catchClause;
+		return new CatchClause(this);
 	}
 
 	/**
@@ -1356,8 +1344,7 @@ public class AST {
 	 * @return A new FinallyClause.
 	 */
 	public FinallyClause newFinallyClause() {
-		FinallyClause finallyClause = new FinallyClause(this);
-		return finallyClause;
+		return new FinallyClause(this);
 	}
 
 	/**
@@ -1378,8 +1365,7 @@ public class AST {
 	 * @return A new ClassConstantDeclaration.
 	 */
 	public ConstantDeclaration newClassConstantDeclaration() {
-		ConstantDeclaration classConstantDeclaration = new ConstantDeclaration(this);
-		return classConstantDeclaration;
+		return new ConstantDeclaration(this);
 	}
 
 	/**
@@ -1402,8 +1388,7 @@ public class AST {
 	 * @return A new ClassDeclaration.
 	 */
 	public ClassDeclaration newClassDeclaration() {
-		ClassDeclaration classDeclaration = new ClassDeclaration(this);
-		return classDeclaration;
+		return new ClassDeclaration(this);
 	}
 
 	/**
@@ -1437,8 +1422,7 @@ public class AST {
 	 * @return A new ClassInstanceCreation.
 	 */
 	public ClassInstanceCreation newClassInstanceCreation() {
-		ClassInstanceCreation classInstanceCreation = new ClassInstanceCreation(this);
-		return classInstanceCreation;
+		return new ClassInstanceCreation(this);
 	}
 
 	/**
@@ -1461,8 +1445,7 @@ public class AST {
 	 * @return A new ClassName.
 	 */
 	public ClassName newClassName() {
-		ClassName className = new ClassName(this);
-		return className;
+		return new ClassName(this);
 	}
 
 	/**
@@ -1483,8 +1466,7 @@ public class AST {
 	 * @return A new CloneExpression.
 	 */
 	public CloneExpression newCloneExpression() {
-		CloneExpression cloneExpression = new CloneExpression(this);
-		return cloneExpression;
+		return new CloneExpression(this);
 	}
 
 	/**
@@ -1505,8 +1487,7 @@ public class AST {
 	 * @return A new Comment.
 	 */
 	public Comment newComment() {
-		Comment comment = new Comment(this);
-		return comment;
+		return new Comment(this);
 	}
 
 	/**
@@ -1527,8 +1508,7 @@ public class AST {
 	 * @return A new ConditionalExpression.
 	 */
 	public ConditionalExpression newConditionalExpression() {
-		ConditionalExpression conditionalExpression = new ConditionalExpression(this);
-		return conditionalExpression;
+		return new ConditionalExpression(this);
 	}
 
 	/**
@@ -1553,8 +1533,7 @@ public class AST {
 	 * @return A new ContinueStatement.
 	 */
 	public ContinueStatement newContinueStatement() {
-		ContinueStatement continueStatement = new ContinueStatement(this);
-		return continueStatement;
+		return new ContinueStatement(this);
 	}
 
 	/**
@@ -1592,8 +1571,7 @@ public class AST {
 	 * @return A new DoStatement.
 	 */
 	public DoStatement newDoStatement() {
-		DoStatement doStatement = new DoStatement(this);
-		return doStatement;
+		return new DoStatement(this);
 	}
 
 	/**
@@ -1616,8 +1594,7 @@ public class AST {
 	 * @return A new EchoStatement.
 	 */
 	public EchoStatement newEchoStatement() {
-		EchoStatement echoStatement = new EchoStatement(this);
-		return echoStatement;
+		return new EchoStatement(this);
 	}
 
 	/**
@@ -1652,8 +1629,7 @@ public class AST {
 	 * @return A new EmptyStatement.
 	 */
 	public EmptyStatement newEmptyStatement() {
-		EmptyStatement emptyStatement = new EmptyStatement(this);
-		return emptyStatement;
+		return new EmptyStatement(this);
 	}
 
 	/**
@@ -1662,17 +1638,15 @@ public class AST {
 	 * @return A new ExpressionStatement.
 	 */
 	public ExpressionStatement newExpressionStatement() {
-		ExpressionStatement expressionStatement = new ExpressionStatement(this);
-		return expressionStatement;
+		return new ExpressionStatement(this);
 	}
 
 	/**
-	 * Creates a new {@link ExpressionStatement} with a given {@link Expression}
-	 * as an expression.
+	 * Creates a new {@link ExpressionStatement} with a given {@link Expression} as
+	 * an expression.
 	 * 
 	 * @param identifier
-	 *            The {@link Expression} that is the expression of the
-	 *            statement.
+	 *            The {@link Expression} that is the expression of the statement.
 	 * @return A new ExpressionStatement
 	 */
 	public ExpressionStatement newExpressionStatement(Expression expression) {
@@ -1687,8 +1661,7 @@ public class AST {
 	 * @return A new FieldAccess.
 	 */
 	public FieldAccess newFieldAccess() {
-		FieldAccess fieldAccess = new FieldAccess(this);
-		return fieldAccess;
+		return new FieldAccess(this);
 	}
 
 	/**
@@ -1711,8 +1684,7 @@ public class AST {
 	 * @return A new FieldsDeclaration.
 	 */
 	public FieldsDeclaration newFieldsDeclaration() {
-		FieldsDeclaration fieldsDeclaration = new FieldsDeclaration(this);
-		return fieldsDeclaration;
+		return new FieldsDeclaration(this);
 	}
 
 	/**
@@ -1736,8 +1708,7 @@ public class AST {
 	 * @return A new ForEachStatement.
 	 */
 	public ForEachStatement newForEachStatement() {
-		ForEachStatement forEachStatement = new ForEachStatement(this);
-		return forEachStatement;
+		return new ForEachStatement(this);
 	}
 
 	/**
@@ -1765,8 +1736,7 @@ public class AST {
 	 * @return A new FormalParameter.
 	 */
 	public FormalParameter newFormalParameter() {
-		FormalParameter formalParameter = new FormalParameter(this);
-		return formalParameter;
+		return new FormalParameter(this);
 	}
 
 	/**
@@ -1793,8 +1763,7 @@ public class AST {
 	 * @return A new ForStatement.
 	 */
 	public ForStatement newForStatement() {
-		ForStatement forStatement = new ForStatement(this);
-		return forStatement;
+		return new ForStatement(this);
 	}
 
 	/**
@@ -1822,8 +1791,7 @@ public class AST {
 	 * @return A new FunctionDeclaration.
 	 */
 	public FunctionDeclaration newFunctionDeclaration() {
-		FunctionDeclaration functionDeclaration = new FunctionDeclaration(this);
-		return functionDeclaration;
+		return new FunctionDeclaration(this);
 	}
 
 	/**
@@ -1851,8 +1819,7 @@ public class AST {
 	 * @return A new FunctionInvocation.
 	 */
 	public FunctionInvocation newFunctionInvocation() {
-		FunctionInvocation functionInvocation = new FunctionInvocation(this);
-		return functionInvocation;
+		return new FunctionInvocation(this);
 	}
 
 	/**
@@ -1878,8 +1845,7 @@ public class AST {
 	 * @return A new FunctionName.
 	 */
 	public FunctionName newFunctionName() {
-		FunctionName functionName = new FunctionName(this);
-		return functionName;
+		return new FunctionName(this);
 	}
 
 	/**
@@ -1900,8 +1866,7 @@ public class AST {
 	 * @return A new FieldsDeclaration.
 	 */
 	public GlobalStatement newGlobalStatement() {
-		GlobalStatement globalStatement = new GlobalStatement(this);
-		return globalStatement;
+		return new GlobalStatement(this);
 	}
 
 	/**
@@ -1922,8 +1887,7 @@ public class AST {
 	 * @return A new Identifier.
 	 */
 	public Identifier newIdentifier() {
-		Identifier identifier = new Identifier(this);
-		return identifier;
+		return new Identifier(this);
 	}
 
 	/**
@@ -1952,8 +1916,7 @@ public class AST {
 	 * @return A new IfStatement.
 	 */
 	public IfStatement newIfStatement() {
-		IfStatement ifStatement = new IfStatement(this);
-		return ifStatement;
+		return new IfStatement(this);
 	}
 
 	/**
@@ -1978,8 +1941,7 @@ public class AST {
 	 * @return A new IgnoreError.
 	 */
 	public IgnoreError newIgnoreError() {
-		IgnoreError ignoreError = new IgnoreError(this);
-		return ignoreError;
+		return new IgnoreError(this);
 	}
 
 	/**
@@ -2000,8 +1962,7 @@ public class AST {
 	 * @return A new Include.
 	 */
 	public Include newInclude() {
-		Include include = new Include(this);
-		return include;
+		return new Include(this);
 	}
 
 	/**
@@ -2024,8 +1985,7 @@ public class AST {
 	 * @return A new InfixExpression.
 	 */
 	public InfixExpression newInfixExpression() {
-		InfixExpression infixExpression = new InfixExpression(this);
-		return infixExpression;
+		return new InfixExpression(this);
 	}
 
 	/**
@@ -2050,8 +2010,7 @@ public class AST {
 	 * @return A new InLineHtml.
 	 */
 	public InLineHtml newInLineHtml() {
-		InLineHtml inLineHtml = new InLineHtml(this);
-		return inLineHtml;
+		return new InLineHtml(this);
 	}
 
 	/**
@@ -2060,9 +2019,7 @@ public class AST {
 	 * @return A new InstanceOfExpression.
 	 */
 	public InstanceOfExpression newInstanceOfExpression() {
-		InstanceOfExpression instanceOfExpression = new InstanceOfExpression(this);
-
-		return instanceOfExpression;
+		return new InstanceOfExpression(this);
 	}
 
 	/**
@@ -2085,8 +2042,7 @@ public class AST {
 	 * @return A new InterfaceDeclaration.
 	 */
 	public InterfaceDeclaration newInterfaceDeclaration() {
-		InterfaceDeclaration interfaceDeclaration = new InterfaceDeclaration(this);
-		return interfaceDeclaration;
+		return new InterfaceDeclaration(this);
 	}
 
 	/**
@@ -2112,8 +2068,7 @@ public class AST {
 	 * @return A new ListVariable.
 	 */
 	public ListVariable newListVariable() {
-		ListVariable listVariable = new ListVariable(this);
-		return listVariable;
+		return new ListVariable(this);
 	}
 
 	/**
@@ -2134,8 +2089,7 @@ public class AST {
 	 * @return A new MethodDeclaration.
 	 */
 	public MethodDeclaration newMethodDeclaration() {
-		MethodDeclaration methodDeclaration = new MethodDeclaration(this);
-		return methodDeclaration;
+		return new MethodDeclaration(this);
 	}
 
 	/**
@@ -2158,8 +2112,7 @@ public class AST {
 	 * @return A new MethodInvocation.
 	 */
 	public MethodInvocation newMethodInvocation() {
-		MethodInvocation methodInvocation = new MethodInvocation(this);
-		return methodInvocation;
+		return new MethodInvocation(this);
 	}
 
 	/**
@@ -2183,8 +2136,7 @@ public class AST {
 	 * @return A new ParenthesisExpression.
 	 */
 	public ParenthesisExpression newParenthesisExpression() {
-		ParenthesisExpression parenthesisExpression = new ParenthesisExpression(this);
-		return parenthesisExpression;
+		return new ParenthesisExpression(this);
 	}
 
 	/**
@@ -2205,8 +2157,7 @@ public class AST {
 	 * @return A new PostfixExpression.
 	 */
 	public PostfixExpression newPostfixExpression() {
-		PostfixExpression postfixExpression = new PostfixExpression(this);
-		return postfixExpression;
+		return new PostfixExpression(this);
 	}
 
 	/**
@@ -2229,8 +2180,7 @@ public class AST {
 	 * @return A new PrefixExpression.
 	 */
 	public PrefixExpression newPrefixExpression() {
-		PrefixExpression prefixExpression = new PrefixExpression(this);
-		return prefixExpression;
+		return new PrefixExpression(this);
 	}
 
 	/**
@@ -2253,8 +2203,7 @@ public class AST {
 	 * @return A new Program.
 	 */
 	public Program newProgram() {
-		Program program = new Program(this);
-		return program;
+		return new Program(this);
 	}
 
 	/**
@@ -2275,8 +2224,7 @@ public class AST {
 	 * @return A new Quote.
 	 */
 	public Quote newQuote() {
-		Quote quote = new Quote(this);
-		return quote;
+		return new Quote(this);
 	}
 
 	/**
@@ -2299,8 +2247,7 @@ public class AST {
 	 * @return A new Reference.
 	 */
 	public Reference newReference() {
-		Reference reference = new Reference(this);
-		return reference;
+		return new Reference(this);
 	}
 
 	/**
@@ -2321,8 +2268,7 @@ public class AST {
 	 * @return A new ReflectionVariable.
 	 */
 	public ReflectionVariable newReflectionVariable() {
-		ReflectionVariable reflectionVariable = new ReflectionVariable(this);
-		return reflectionVariable;
+		return new ReflectionVariable(this);
 	}
 
 	/**
@@ -2343,8 +2289,7 @@ public class AST {
 	 * @return A new ReturnStatement.
 	 */
 	public ReturnStatement newReturnStatement() {
-		ReturnStatement returnStatement = new ReturnStatement(this);
-		return returnStatement;
+		return new ReturnStatement(this);
 	}
 
 	/**
@@ -2365,8 +2310,7 @@ public class AST {
 	 * @return A new YieldExpression.
 	 */
 	public YieldExpression newYieldExpression() {
-		YieldExpression YieldExpression = new YieldExpression(this);
-		return YieldExpression;
+		return new YieldExpression(this);
 	}
 
 	/**
@@ -2401,8 +2345,7 @@ public class AST {
 	 * @return A new Scalar.
 	 */
 	public Scalar newScalar() {
-		Scalar scalar = new Scalar(this);
-		return scalar;
+		return new Scalar(this);
 	}
 
 	/**
@@ -2411,8 +2354,7 @@ public class AST {
 	 * @param string
 	 *            The scalar's value.
 	 * @param scalarType
-	 *            The scalar's type (e.g. Scalar.TYPE_STRING, Scalar.TYPE_INT
-	 *            etc.).
+	 *            The scalar's type (e.g. Scalar.TYPE_STRING, Scalar.TYPE_INT etc.).
 	 * @return A new {@link Scalar}.
 	 */
 	public Scalar newScalar(String string, int scalarType) {
@@ -2440,8 +2382,7 @@ public class AST {
 	 * @return A new SingleFieldDeclaration.
 	 */
 	public SingleFieldDeclaration newSingleFieldDeclaration() {
-		SingleFieldDeclaration singleFieldDeclaration = new SingleFieldDeclaration(this);
-		return singleFieldDeclaration;
+		return new SingleFieldDeclaration(this);
 	}
 
 	/**
@@ -2464,8 +2405,7 @@ public class AST {
 	 * @return A new StaticConstantAccess.
 	 */
 	public StaticConstantAccess newStaticConstantAccess() {
-		StaticConstantAccess staticConstantAccess = new StaticConstantAccess(this);
-		return staticConstantAccess;
+		return new StaticConstantAccess(this);
 	}
 
 	/**
@@ -2488,8 +2428,7 @@ public class AST {
 	 * @return A new StaticFieldAccess.
 	 */
 	public StaticFieldAccess newStaticFieldAccess() {
-		StaticFieldAccess staticFieldAccess = new StaticFieldAccess(this);
-		return staticFieldAccess;
+		return new StaticFieldAccess(this);
 	}
 
 	/**
@@ -2512,8 +2451,7 @@ public class AST {
 	 * @return A new StaticMethodInvocation.
 	 */
 	public StaticMethodInvocation newStaticMethodInvocation() {
-		StaticMethodInvocation staticMethodInvocation = new StaticMethodInvocation(this);
-		return staticMethodInvocation;
+		return new StaticMethodInvocation(this);
 	}
 
 	/**
@@ -2536,8 +2474,7 @@ public class AST {
 	 * @return A new StaticStatement.
 	 */
 	public StaticStatement newStaticStatement() {
-		StaticStatement staticStatement = new StaticStatement(this);
-		return staticStatement;
+		return new StaticStatement(this);
 	}
 
 	/**
@@ -2558,8 +2495,7 @@ public class AST {
 	 * @return A new SwitchCase.
 	 */
 	public SwitchCase newSwitchCase() {
-		SwitchCase switchCase = new SwitchCase(this);
-		return switchCase;
+		return new SwitchCase(this);
 	}
 
 	/**
@@ -2584,8 +2520,7 @@ public class AST {
 	 * @return A new SwitchStatement.
 	 */
 	public SwitchStatement newSwitchStatement() {
-		SwitchStatement switchStatement = new SwitchStatement(this);
-		return switchStatement;
+		return new SwitchStatement(this);
 	}
 
 	/**
@@ -2608,8 +2543,7 @@ public class AST {
 	 * @return A new ThrowStatement.
 	 */
 	public ThrowStatement newThrowStatement() {
-		ThrowStatement throwStatement = new ThrowStatement(this);
-		return throwStatement;
+		return new ThrowStatement(this);
 	}
 
 	/**
@@ -2630,8 +2564,7 @@ public class AST {
 	 * @return A new TryStatement.
 	 */
 	public TryStatement newTryStatement() {
-		TryStatement tryStatement = new TryStatement(this);
-		return tryStatement;
+		return new TryStatement(this);
 	}
 
 	/**
@@ -2654,8 +2587,7 @@ public class AST {
 	 * @return A new UnaryOperation.
 	 */
 	public UnaryOperation newUnaryOperation() {
-		UnaryOperation unaryOperation = new UnaryOperation(this);
-		return unaryOperation;
+		return new UnaryOperation(this);
 	}
 
 	/**
@@ -2681,8 +2613,7 @@ public class AST {
 	 * @return A new {@link Variable}.
 	 */
 	public Variable newVariable() {
-		Variable variable = new Variable(this);
-		return variable;
+		return new Variable(this);
 	}
 
 	/**
@@ -2721,8 +2652,7 @@ public class AST {
 	 * @return A new WhileStatement.
 	 */
 	public WhileStatement newWhileStatement() {
-		WhileStatement whileStatement = new WhileStatement(this);
-		return whileStatement;
+		return new WhileStatement(this);
 	}
 
 	/**
@@ -2872,8 +2802,7 @@ public class AST {
 	 * @return A new TraitDeclaration.
 	 */
 	public TraitDeclaration newTraitDeclaration() {
-		TraitDeclaration lfDeclaration = new TraitDeclaration(this);
-		return lfDeclaration;
+		return new TraitDeclaration(this);
 	}
 
 	/**
