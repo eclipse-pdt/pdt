@@ -49,7 +49,7 @@ public abstract class DynamicAttributeProperty extends ExceptionAttribute {
 		fViewerElement= viewerAttribute;
 		fException= null;
 		Object trayObject= ASTView.unwrapAttribute(fParent);
-		StringBuffer buf= new StringBuffer(fName);
+		StringBuilder buf= new StringBuilder(fName);
 		if (viewerAttribute != null) {
 			Object viewerObject= ASTView.unwrapAttribute(viewerAttribute);
 			try {

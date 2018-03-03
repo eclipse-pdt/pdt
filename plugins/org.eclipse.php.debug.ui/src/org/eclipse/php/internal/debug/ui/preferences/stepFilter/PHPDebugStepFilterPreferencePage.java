@@ -523,7 +523,7 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 		if (list == null) {
 			return ""; //$NON-NLS-1$
 		}
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		for (int i = 0; i < list.length; i++) {
 			if (i > 0) {
 				buffer.append(DebugStepFilter.FILTERS_PREF_LIST_DELIM);

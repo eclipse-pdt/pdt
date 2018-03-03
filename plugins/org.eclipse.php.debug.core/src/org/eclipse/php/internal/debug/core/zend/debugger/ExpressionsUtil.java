@@ -167,7 +167,7 @@ public class ExpressionsUtil {
 		return newExpression;
 	}
 
-	private boolean invokeMethod(String object, String method, StringBuffer result) {
+	private boolean invokeMethod(String object, String method, StringBuilder result) {
 		Expression e = new DefaultExpression(MessageFormat.format(CHECK_CLASS_METHOD_EXISTS, object, method));
 		fExpressionsManager.update(e, 1);
 		if (e.getValue().getValue() != null && e.getValue().getValue().equals("1")) { //$NON-NLS-1$
@@ -242,14 +242,14 @@ public class ExpressionsUtil {
 	public String getValueDetail(Expression expression) {
 		ExpressionValue value = expression.getValue();
 		if (value.getDataType() == DataType.PHP_OBJECT) {
-			StringBuffer result = new StringBuffer();
+			StringBuilder result = new StringBuilder();
 			boolean exists = invokeMethod(expression.getFullName(), "__toString", result); //$NON-NLS-1$
 			if (exists) {
 				return result.toString();
 			}
 		} else if (value.getDataType() == DataType.PHP_ARRAY) {
 			fExpressionsManager.update(expression, 1);
-			StringBuffer result = new StringBuffer("["); //$NON-NLS-1$
+			StringBuilder result = new StringBuilder("["); //$NON-NLS-1$
 			for (int i = 0; i < expression.getValue().getChildren().length; i++) {
 				Expression child = expression.getValue().getChildren()[i];
 				if (i > 0) {

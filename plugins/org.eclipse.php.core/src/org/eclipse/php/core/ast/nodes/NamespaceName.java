@@ -150,7 +150,7 @@ public class NamespaceName extends Identifier {
 	}
 
 	@Override
-	public void toString(StringBuffer buffer, String tab) {
+	public void toString(StringBuilder buffer, String tab) {
 		buffer.append(tab).append("<NamespaceName"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" global='").append(global).append('\''); //$NON-NLS-1$

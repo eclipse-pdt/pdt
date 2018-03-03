@@ -107,7 +107,7 @@ public class SingleFieldDeclaration extends ASTNode {
 	}
 
 	@Override
-	public void toString(StringBuffer buffer, String tab) {
+	public void toString(StringBuilder buffer, String tab) {
 		buffer.append(tab).append("<SingleFieldDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append("'>\n").append(tab).append(TAB).append("<VariableName>\n"); //$NON-NLS-1$ //$NON-NLS-2$

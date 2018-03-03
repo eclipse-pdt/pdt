@@ -77,7 +77,7 @@ public class DefaultPHPServerRunner extends AbstractPHPServerRunner {
 		}
 		// if (envp != null) {
 		// Arrays.sort(envp);
-		// StringBuffer buff = new StringBuffer();
+		// StringBuilder buff = new StringBuilder();
 		// for (int i = 0; i < envp.length; i++) {
 		// buff.append(envp[i]);
 		// if (i < envp.length - 1) {

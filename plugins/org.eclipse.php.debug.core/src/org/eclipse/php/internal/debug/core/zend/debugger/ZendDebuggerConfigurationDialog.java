@@ -306,15 +306,15 @@ public class ZendDebuggerConfigurationDialog extends AbstractDebuggerConfigurati
 			return ""; //$NON-NLS-1$
 		}
 		List<Inet4Address> selectdIPs = configureIPs.getSelectedIPs();
-		StringBuffer stringBuffer = new StringBuffer();
+		StringBuilder StringBuilder = new StringBuilder();
 		Iterator<Inet4Address> ipsIterator = selectdIPs.iterator();
 		if (ipsIterator.hasNext()) {
-			stringBuffer.append(ipsIterator.next().getHostAddress());
+			StringBuilder.append(ipsIterator.next().getHostAddress());
 		}
 		while (ipsIterator.hasNext()) {
-			stringBuffer.append(", " + ipsIterator.next().getHostAddress()); //$NON-NLS-1$
+			StringBuilder.append(", " + ipsIterator.next().getHostAddress()); //$NON-NLS-1$
 		}
-		return stringBuffer.toString();
+		return StringBuilder.toString();
 	}
 
 	private void reloadIPs() {
@@ -326,7 +326,7 @@ public class ZendDebuggerConfigurationDialog extends AbstractDebuggerConfigurati
 				List<Inet4Address> addresses = new ArrayList<>();
 				addresses.addAll(fNetworkMonitor.getPrivateAddresses());
 				addresses.add(NetworkUtil.LOCALHOST);
-				StringBuffer addressesString = new StringBuffer();
+				StringBuilder addressesString = new StringBuilder();
 				for (Inet4Address address : addresses) {
 					addressesString.append((addressesString.length() != 0 ? ", " : "") + address.getHostAddress()); //$NON-NLS-1$ //$NON-NLS-2$
 				}

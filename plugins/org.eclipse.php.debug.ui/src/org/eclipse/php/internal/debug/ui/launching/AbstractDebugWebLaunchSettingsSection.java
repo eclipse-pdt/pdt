@@ -72,7 +72,7 @@ public abstract class AbstractDebugWebLaunchSettingsSection implements IDebugger
 				md.reset();
 				md.update(content.getBytes());
 				byte digest[] = md.digest();
-				StringBuffer buffer = new StringBuffer();
+				StringBuilder buffer = new StringBuilder();
 				for (int i = 0; i < digest.length; i++) {
 					String hex = Integer.toHexString(0xff & digest[i]);
 					if (hex.length() == 1) {

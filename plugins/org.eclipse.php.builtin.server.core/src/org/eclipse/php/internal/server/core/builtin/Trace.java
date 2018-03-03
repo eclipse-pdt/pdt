@@ -87,7 +87,7 @@ public class Trace {
 			return;
 		}
 
-		StringBuffer sb = new StringBuffer(pluginId);
+		StringBuilder sb = new StringBuilder(pluginId);
 		if (pluginId.length() > pluginLength) {
 			pluginLength = pluginId.length();
 		} else if (pluginId.length() < pluginLength) {

@@ -103,7 +103,7 @@ public class PrefixExpression extends Expression implements IOperationNode {
 	}
 
 	@Override
-	public void toString(StringBuffer buffer, String tab) {
+	public void toString(StringBuilder buffer, String tab) {
 		buffer.append(tab).append("<PrefixExpression"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" operator='").append(getOperator(operator)).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$

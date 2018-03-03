@@ -121,7 +121,7 @@ public class Quote extends VariableBase {
 	}
 
 	@Override
-	public void toString(StringBuffer buffer, String tab) {
+	public void toString(StringBuilder buffer, String tab) {
 		buffer.append(tab).append("<Quote"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" type='").append(getType(quoteType)).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$

@@ -218,7 +218,7 @@ public class InfixExpression extends Expression {
 	}
 
 	@Override
-	public void toString(StringBuffer buffer, String tab) {
+	public void toString(StringBuilder buffer, String tab) {
 		buffer.append(tab).append("<InfixExpression"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" operator='") //$NON-NLS-1$

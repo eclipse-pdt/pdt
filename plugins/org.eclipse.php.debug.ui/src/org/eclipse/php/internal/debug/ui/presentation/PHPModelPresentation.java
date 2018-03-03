@@ -496,7 +496,7 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 		if (frame instanceof PHPStackFrame) {
 			PHPStackFrame phpStackFrame = (PHPStackFrame) frame;
 			try {
-				StringBuffer buffer = new StringBuffer();
+				StringBuilder buffer = new StringBuilder();
 				String frameName = phpStackFrame.getName();
 				if (frameName != null && frameName.length() > 0) {
 					buffer.append(frameName);

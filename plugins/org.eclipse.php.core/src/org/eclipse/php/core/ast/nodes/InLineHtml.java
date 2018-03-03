@@ -74,7 +74,7 @@ public class InLineHtml extends Statement {
 	}
 
 	@Override
-	public void toString(StringBuffer buffer, String tab) {
+	public void toString(StringBuilder buffer, String tab) {
 		buffer.append(tab).append("<InLineHtml"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append("/>"); //$NON-NLS-1$

@@ -56,7 +56,7 @@ public class CodeCoveragePreferenceKeys {
 	}
 
 	public static void setCodeCoverageColumnWidths(int[] widths) {
-		StringBuffer widthsBuffer = new StringBuffer();
+		StringBuilder widthsBuffer = new StringBuilder();
 		for (int i = 0; i < widths.length; ++i) {
 			if (widthsBuffer.length() > 0) {
 				widthsBuffer.append(","); //$NON-NLS-1$

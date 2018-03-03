@@ -123,7 +123,7 @@ public class FieldsDeclaration extends BodyDeclaration {
 	}
 
 	@Override
-	public void toString(StringBuffer buffer, String tab) {
+	public void toString(StringBuilder buffer, String tab) {
 		buffer.append(tab).append("<FieldsDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" modifier='").append(getModifierString()).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$

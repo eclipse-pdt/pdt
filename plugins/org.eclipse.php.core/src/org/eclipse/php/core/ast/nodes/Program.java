@@ -218,7 +218,7 @@ public class Program extends ASTNode {
 	 * create program node in XML format.
 	 */
 	@Override
-	public void toString(StringBuffer buffer, String tab) {
+	public void toString(StringBuilder buffer, String tab) {
 		buffer.append("<Program"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(">\n").append(TAB).append("<Statements>\n"); //$NON-NLS-1$ //$NON-NLS-2$

@@ -241,38 +241,38 @@ public class XMLUtil {
 	}
 
 	protected static String normalize(String s) {
-		StringBuffer stringbuffer = new StringBuffer();
+		StringBuilder StringBuilder = new StringBuilder();
 		int i = s == null ? 0 : s.length();
 		for (int j = 0; j < i; j++) {
 			@SuppressWarnings("null")
 			char c = s.charAt(j);
 			switch (c) {
 			case 60: /* '<' */
-				stringbuffer.append("&lt;"); //$NON-NLS-1$
+				StringBuilder.append("&lt;"); //$NON-NLS-1$
 				break;
 
 			case 62: /* '>' */
-				stringbuffer.append("&gt;"); //$NON-NLS-1$
+				StringBuilder.append("&gt;"); //$NON-NLS-1$
 				break;
 
 			case 38: /* '&' */
-				stringbuffer.append("&amp;"); //$NON-NLS-1$
+				StringBuilder.append("&amp;"); //$NON-NLS-1$
 				break;
 
 			case 34: /* '"' */
-				stringbuffer.append("&quot;"); //$NON-NLS-1$
+				StringBuilder.append("&quot;"); //$NON-NLS-1$
 				break;
 
 			case 10: /* '\n' */
 			case 13: /* '\r' */
 			default:
-				stringbuffer.append(c);
+				StringBuilder.append(c);
 				break;
 
 			}
 		}
 
-		return stringbuffer.toString();
+		return StringBuilder.toString();
 	}
 
 	protected static void print(PrintStream out, Node node) {

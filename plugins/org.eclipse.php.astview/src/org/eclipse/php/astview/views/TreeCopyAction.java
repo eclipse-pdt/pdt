@@ -56,7 +56,7 @@ public class TreeCopyAction extends Action {
 		}
 		@Override
 		public String toString() {
-			StringBuffer buf= new StringBuffer();
+			StringBuilder buf= new StringBuilder();
 			if (fSelected)
 			 {
 				buf.append("* "); //$NON-NLS-1$
@@ -165,13 +165,13 @@ public class TreeCopyAction extends Action {
 			}
 		}
 		elementToTreeObj= null;
-		StringBuffer buf= new StringBuffer();
+		StringBuilder buf= new StringBuilder();
 		appendSelectionObjects(buf, indent, roots);
 		String result= buf.length() > 0 ? buf.substring(1) : buf.toString();
 		clipboard.setContents(new Object[] { result }, new Transfer[] { TextTransfer.getInstance() });
 	}
 
-	private void appendSelectionObjects(StringBuffer buffer, int indent, List<TreeObject> selObjs) {
+	private void appendSelectionObjects(StringBuilder buffer, int indent, List<TreeObject> selObjs) {
 		for (Iterator<TreeObject> iter= selObjs.iterator(); iter.hasNext();) {
 			TreeObject selObj= iter.next();
 			if (selObj.isSelected()) {

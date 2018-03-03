@@ -104,7 +104,7 @@ public class Scalar extends VariableBase {
 	}
 
 	@Override
-	public void toString(StringBuffer buffer, String tab) {
+	public void toString(StringBuilder buffer, String tab) {
 		buffer.append(tab).append("<Scalar"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" type='").append(getType(scalarType)).append("'"); //$NON-NLS-1$ //$NON-NLS-2$

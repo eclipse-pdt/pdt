@@ -43,7 +43,7 @@ public class PHPServerHelper {
 	 */
 	public static String getFileContents(InputStream stream) throws IOException {
 		BufferedReader br = null;
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		try {
 			br = new BufferedReader(new InputStreamReader(stream));
 			String temp = br.readLine();

@@ -331,7 +331,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	public void addControlAccessibleListener(final Control control, final String controlName) {
 		// strip mnemonic (&)
 		final String[] strs = controlName.split("&"); //$NON-NLS-1$
-		final StringBuffer stripped = new StringBuffer();
+		final StringBuilder stripped = new StringBuilder();
 		for (String element : strs) {
 			stripped.append(element);
 		}

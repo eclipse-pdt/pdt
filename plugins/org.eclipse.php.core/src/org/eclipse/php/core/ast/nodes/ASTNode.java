@@ -715,7 +715,7 @@ public abstract class ASTNode implements Visitable {
 
 	@Override
 	public String toString() {
-		final StringBuffer buffer = new StringBuffer();
+		final StringBuilder buffer = new StringBuilder();
 		toString(buffer, ""); //$NON-NLS-1$
 		return buffer.toString();
 	}
@@ -723,7 +723,7 @@ public abstract class ASTNode implements Visitable {
 	/**
 	 * Appends the start, length parameters to the buffer
 	 */
-	protected void appendInterval(StringBuffer buffer) {
+	protected void appendInterval(StringBuilder buffer) {
 		buffer.append(" start='").append(start).append("' length='") //$NON-NLS-1$ //$NON-NLS-2$
 				.append(length).append("'"); //$NON-NLS-1$
 	}

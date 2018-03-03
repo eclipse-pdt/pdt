@@ -114,7 +114,7 @@ public class Block extends Statement {
 	}
 
 	@Override
-	public void toString(StringBuffer buffer, String tab) {
+	public void toString(StringBuilder buffer, String tab) {
 		buffer.append(tab).append("<Block"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" isCurly='").append(isCurly).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$

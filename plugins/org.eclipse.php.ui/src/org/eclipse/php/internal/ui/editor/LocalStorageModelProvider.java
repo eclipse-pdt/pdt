@@ -89,7 +89,7 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 
 				int originalLengthToReplace = innerdocument.getLength();
 
-				StringBuilder stringBuffer = new StringBuilder();
+				StringBuilder StringBuilder = new StringBuilder();
 				int bufferSize = 2048;
 				char[] buffer = new char[bufferSize];
 				int nRead = 0;
@@ -99,10 +99,10 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 					if (nRead == -1) {
 						eof = true;
 					} else {
-						stringBuffer.append(buffer, 0, nRead);
+						StringBuilder.append(buffer, 0, nRead);
 					}
 				}
-				innerdocument.replaceText(this, 0, originalLengthToReplace, stringBuffer.toString(), true);
+				innerdocument.replaceText(this, 0, originalLengthToReplace, StringBuilder.toString(), true);
 			} catch (CoreException e) {
 				Logger.logException(e);
 			} catch (IOException e) {
@@ -345,7 +345,7 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 						// innerdocument.startSequentialRewrite(true);
 						// innerdocument.replaceText(this, 0,
 						// innerdocument.getLength(), "");
-						StringBuilder stringBuffer = new StringBuilder();
+						StringBuilder StringBuilder = new StringBuilder();
 						int bufferSize = 2048;
 						char[] buffer = new char[bufferSize];
 						int nRead = 0;
@@ -355,7 +355,7 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 							if (nRead == -1) {
 								eof = true;
 							} else {
-								stringBuffer.append(buffer, 0, nRead);
+								StringBuilder.append(buffer, 0, nRead);
 								// innerdocument.replaceText(this,
 								// innerdocument.getLength(), 0, new
 								// String(buffer, 0, nRead));
@@ -363,7 +363,7 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 						}
 						// ignore read-only settings if reverting whole
 						// document
-						innerdocument.replaceText(this, 0, originalLengthToReplace, stringBuffer.toString(), true);
+						innerdocument.replaceText(this, 0, originalLengthToReplace, StringBuilder.toString(), true);
 						model.setDirtyState(false);
 
 					} catch (CoreException e) {

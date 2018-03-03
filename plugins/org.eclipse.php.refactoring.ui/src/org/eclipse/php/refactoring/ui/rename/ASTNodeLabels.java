@@ -375,7 +375,7 @@ public class ASTNodeLabels {
 	}
 
 	// public static void getClassTooltipText(PHPClassData classData,
-	// StringBuffer buf) {
+	// StringBuilder buf) {
 	// if (classData == null) {
 	// return;
 	// }

@@ -19,7 +19,7 @@ public class PreferenceHelper {
 	private static final String DELIMITER = ";"; //$NON-NLS-1$
 
 	public static String serialize(String[] elements) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		for (int i = 0; i < elements.length; i++) {
 			buffer.append(elements[i]);
 			buffer.append(DELIMITER);

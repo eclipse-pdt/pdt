@@ -689,7 +689,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 				final char character = event.character;
 				final char closingCharacter = getPeerCharacter(character);
-				final StringBuffer buffer = new StringBuffer();
+				final StringBuilder buffer = new StringBuilder();
 				buffer.append(character);
 				buffer.append(closingCharacter);
 

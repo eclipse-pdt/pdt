@@ -99,7 +99,7 @@ public class PHPCompletionProposal extends ScriptCompletionProposal implements I
 		}
 		// int index = word.indexOf(" - ");
 		// if (!result && index >= 0) {
-		// StringBuffer sb = new StringBuffer();
+		// StringBuilder sb = new StringBuilder();
 		// sb.append(word.substring(index + " - ".length()));
 		// sb.append('\\');
 		// sb.append(word.substring(0, index));

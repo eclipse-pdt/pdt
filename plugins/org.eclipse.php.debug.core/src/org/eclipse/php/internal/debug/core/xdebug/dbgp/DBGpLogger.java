@@ -160,7 +160,7 @@ public class DBGpLogger {
 	 */
 	private static void doLog(String info, Object obj, Throwable exc, int type) {
 		ILog theLog = PHPDebugPlugin.getDefault() != null ? PHPDebugPlugin.getDefault().getLog() : null;
-		StringBuffer msg = new StringBuffer();
+		StringBuilder msg = new StringBuilder();
 		if (obj != null) {
 			msg.append(obj.getClass().toString());
 			msg.append(" : "); //$NON-NLS-1$

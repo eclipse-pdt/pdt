@@ -56,5 +56,5 @@ public interface Visitable {
 	 * @param tab
 	 *            - indentation
 	 */
-	public void toString(StringBuffer buffer, String tab);
+	public void toString(StringBuilder buffer, String tab);
 }

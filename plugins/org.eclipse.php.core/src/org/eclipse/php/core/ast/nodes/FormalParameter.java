@@ -170,7 +170,7 @@ public class FormalParameter extends ASTNode {
 	}
 
 	@Override
-	public void toString(StringBuffer buffer, String tab) {
+	public void toString(StringBuilder buffer, String tab) {
 		buffer.append(tab).append("<FormalParameter"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" isMandatory='").append(isMandatory); //$NON-NLS-1$

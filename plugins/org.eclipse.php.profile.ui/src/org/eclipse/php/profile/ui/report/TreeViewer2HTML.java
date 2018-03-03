@@ -49,7 +49,7 @@ public class TreeViewer2HTML {
 	 * 
 	 * @param Tree
 	 *            tree
-	 * @param StringBuffer
+	 * @param StringBuilder
 	 *            string buffer to append the output to
 	 */
 	private void generateTableHeader() {
@@ -78,7 +78,7 @@ public class TreeViewer2HTML {
 			return;
 		}
 
-		StringBuffer tabsBuf = new StringBuffer();
+		StringBuilder tabsBuf = new StringBuilder();
 		for (int i = 0; i < tabs; ++i) {
 			tabsBuf.append("&nbsp;&nbsp;&nbsp;"); //$NON-NLS-1$
 		}

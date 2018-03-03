@@ -163,7 +163,7 @@ public class UseStatement extends Statement {
 	}
 
 	@Override
-	public void toString(StringBuffer buffer, String tab) {
+	public void toString(StringBuilder buffer, String tab) {
 		buffer.append(tab).append("<UseStatement"); //$NON-NLS-1$
 		appendInterval(buffer);
 		if (getStatementType() != T_NONE) {

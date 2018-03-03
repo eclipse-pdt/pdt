@@ -146,7 +146,7 @@ public class YieldExpression extends Expression {
 	}
 
 	@Override
-	public void toString(StringBuffer buffer, String tab) {
+	public void toString(StringBuilder buffer, String tab) {
 		buffer.append(tab).append("<YieldExpression"); //$NON-NLS-1$
 		appendInterval(buffer);
 		if (getOperator() != OP_NONE) {

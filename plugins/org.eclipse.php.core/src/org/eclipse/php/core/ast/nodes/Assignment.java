@@ -154,7 +154,7 @@ public class Assignment extends Expression implements IOperationNode {
 	}
 
 	@Override
-	public void toString(StringBuffer buffer, String tab) {
+	public void toString(StringBuilder buffer, String tab) {
 		buffer.append(tab).append("<Assignment"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" operator='").append(getXmlStringValue(getOperator(operator))).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$

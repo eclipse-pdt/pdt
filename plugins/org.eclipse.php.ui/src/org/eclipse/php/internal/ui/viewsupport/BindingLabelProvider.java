@@ -427,7 +427,7 @@ public class BindingLabelProvider extends LabelProvider {
 			// baseType= binding.getSuperclass();
 			// }
 			// if (baseType != null) {
-			// StringBuffer anonymBaseType= new StringBuffer();
+			// StringBuilder anonymBaseType= new StringBuilder();
 			// getTypeLabel(baseType, flags &
 			// ScriptElementLabels.T_TYPE_PARAMETERS, anonymBaseType);
 			// buffer.append(Messages.format(JavaUIMessages.ScriptElementLabels_anonym_type,
@@ -470,7 +470,7 @@ public class BindingLabelProvider extends LabelProvider {
 	}
 
 	// private static void getTypeArgumentsLabel(ITypeBinding[] typeArgs, long
-	// flags, StringBuffer buf) {
+	// flags, StringBuilder buf) {
 	// if (typeArgs.length > 0) {
 	// buf.append('<');
 	// for (int i = 0; i < typeArgs.length; i++) {

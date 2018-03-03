@@ -70,7 +70,7 @@ public class ASTViewLabelProvider extends LabelProvider implements IColorProvide
 
 	@Override
 	public String getText(Object obj) {
-		StringBuffer buf= new StringBuffer();
+		StringBuilder buf= new StringBuilder();
 		if (obj instanceof ASTNode) {
 			getNodeType((ASTNode) obj, buf);
 		} else if (obj instanceof ASTAttribute) {
@@ -79,7 +79,7 @@ public class ASTViewLabelProvider extends LabelProvider implements IColorProvide
 		return buf.toString(); 
 	}
 	
-	private void getNodeType(ASTNode node, StringBuffer buf) {
+	private void getNodeType(ASTNode node, StringBuilder buf) {
 		buf.append(Signature.getSimpleName(node.getClass().getName()));
 		buf.append(" ["); //$NON-NLS-1$
 		buf.append(node.getStart());

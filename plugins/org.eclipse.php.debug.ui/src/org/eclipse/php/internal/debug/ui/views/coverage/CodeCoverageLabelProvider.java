@@ -73,7 +73,7 @@ public class CodeCoverageLabelProvider extends AppearanceAwareLabelProvider
 			if (element instanceof String) {
 				return (String) element;
 			}
-			StringBuffer text = new StringBuffer(super.getText(element));
+			StringBuilder text = new StringBuilder(super.getText(element));
 			if (coverageResult.getFiles() > 1 || cProvider.hasChildren(element)) {
 				text.append(MessageFormat.format(" ({0})", new Object[] { String.valueOf(coverageResult.getFiles()) })); //$NON-NLS-1$
 			}

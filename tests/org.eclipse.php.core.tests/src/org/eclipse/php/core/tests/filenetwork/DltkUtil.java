@@ -99,7 +99,7 @@ public class DltkUtil {
 			return "null";
 		}
 		int length = inputString.length();
-		StringBuffer buffer = new StringBuffer(length);
+		StringBuilder buffer = new StringBuilder(length);
 		java.util.StringTokenizer tokenizer = new java.util.StringTokenizer(inputString, "\n\r", true);
 		for (int i = 0; i < indent; i++) {
 			buffer.append("\t");
@@ -146,7 +146,7 @@ public class DltkUtil {
 				continue;
 			}
 
-			StringBuffer tokenBuffer = new StringBuffer();
+			StringBuilder tokenBuffer = new StringBuilder();
 			for (int i = 0; i < token.length(); i++) {
 				char c = token.charAt(i);
 				switch (c) {
@@ -188,7 +188,7 @@ public class DltkUtil {
 		if (source.indexOf('\n') == -1 && source.indexOf('\r') == -1) {
 			return source;
 		}
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		for (int i = 0, length = source.length(); i < length; i++) {
 			char car = source.charAt(i);
 			if (car == '\r') {

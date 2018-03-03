@@ -164,7 +164,7 @@ public class FunctionDeclaration extends Statement {
 	}
 
 	@Override
-	public void toString(StringBuffer buffer, String tab) {
+	public void toString(StringBuilder buffer, String tab) {
 		buffer.append(tab).append("<FunctionDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" isReference='").append(isReference).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$

@@ -73,8 +73,8 @@ public class PHPDocumentationContentAccess {
 	private static final int RETURN_DESCRIPTION_TYPE = 5;
 
 	/**
-	 * Implements the "Algorithm for Inheriting Method Comments" as specified
-	 * for <a href=
+	 * Implements the "Algorithm for Inheriting Method Comments" as specified for
+	 * <a href=
 	 * "http://java.sun.com/j2se/1.4.2/docs/tooldocs/solaris/javadoc.html#inheritingcomments"
 	 * >1.4.2</a>, <a href=
 	 * "http://java.sun.com/j2se/1.5.0/docs/tooldocs/windows/javadoc.html#inheritingcomments"
@@ -83,10 +83,10 @@ public class PHPDocumentationContentAccess {
 	 * >1.6</a>.
 	 * 
 	 * <p>
-	 * Unfortunately, the implementation is broken in Javadoc implementations
-	 * since 1.5, see
-	 * <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6376959">Sun'
-	 * s bug</a>.
+	 * Unfortunately, the implementation is broken in Javadoc implementations since
+	 * 1.5, see
+	 * <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6376959">Sun' s
+	 * bug</a>.
 	 * </p>
 	 * 
 	 * <p>
@@ -114,13 +114,12 @@ public class PHPDocumentationContentAccess {
 		 *            the current type
 		 * @return
 		 *         <ul>
-		 *         <li>{@link #STOP_BRANCH} to indicate that no Javadoc has been
-		 *         found and visiting super types should stop here</li>
-		 *         <li>{@link #CONTINUE} to indicate that no Javadoc has been
-		 *         found and visiting super types should continue</li>
-		 *         <li>an {@link Object} or <code>null</code>, to indicate that
-		 *         visiting should be cancelled immediately. The returned value
-		 *         is the result of
+		 *         <li>{@link #STOP_BRANCH} to indicate that no Javadoc has been found
+		 *         and visiting super types should stop here</li>
+		 *         <li>{@link #CONTINUE} to indicate that no Javadoc has been found and
+		 *         visiting super types should continue</li>
+		 *         <li>an {@link Object} or <code>null</code>, to indicate that visiting
+		 *         should be cancelled immediately. The returned value is the result of
 		 *         {@link #visitInheritDoc(IType, ITypeHierarchy)}</li>
 		 *         </ul>
 		 * @throws ModelException
@@ -135,10 +134,9 @@ public class PHPDocumentationContentAccess {
 		 * @param currentType
 		 *            the starting type
 		 * @param typeHierarchy
-		 *            a super type hierarchy that contains
-		 *            <code>currentType</code>
-		 * @return the result from a call to {@link #visit(IType)}, or
-		 *         <code>null</code> if none of the calls returned a result
+		 *            a super type hierarchy that contains <code>currentType</code>
+		 * @return the result from a call to {@link #visit(IType)}, or <code>null</code>
+		 *         if none of the calls returned a result
 		 * @throws ModelException
 		 *             unexpected problem
 		 */
@@ -173,8 +171,8 @@ public class PHPDocumentationContentAccess {
 		}
 
 		/**
-		 * Visits the super interfaces of the given type in the given hierarchy,
-		 * thereby skipping already visited types.
+		 * Visits the super interfaces of the given type in the given hierarchy, thereby
+		 * skipping already visited types.
 		 * 
 		 * @param visited
 		 *            set of visited types
@@ -269,14 +267,12 @@ public class PHPDocumentationContentAccess {
 		}
 
 		/**
-		 * For the given method, returns the main description from an overridden
-		 * method.
+		 * For the given method, returns the main description from an overridden method.
 		 * 
 		 * @param method
 		 *            a method
-		 * @return the description that replaces the
-		 *         <code>{&#64;inheritDoc}</code> tag, or <code>null</code> if
-		 *         none could be found
+		 * @return the description that replaces the <code>{&#64;inheritDoc}</code> tag,
+		 *         or <code>null</code> if none could be found
 		 */
 		public CharSequence getInheritedMainDescription(IMethod method) {
 			return (CharSequence) getInheritedDescription(method, new DescriptionGetter() {
@@ -288,16 +284,15 @@ public class PHPDocumentationContentAccess {
 		}
 
 		/**
-		 * For the given method, returns the @param tag description for the
-		 * given parameter from an overridden method.
+		 * For the given method, returns the @param tag description for the given
+		 * parameter from an overridden method.
 		 * 
 		 * @param method
 		 *            a method
 		 * @param paramIndex
 		 *            the index of the parameter
-		 * @return the description that replaces the
-		 *         <code>{&#64;inheritDoc}</code> tag, or <code>null</code> if
-		 *         none could be found
+		 * @return the description that replaces the <code>{&#64;inheritDoc}</code> tag,
+		 *         or <code>null</code> if none could be found
 		 */
 		public CharSequence getInheritedParamDescription(IMethod method, final int paramIndex) {
 			return (CharSequence) getInheritedDescription(method,
@@ -305,16 +300,15 @@ public class PHPDocumentationContentAccess {
 		}
 
 		/**
-		 * For the given method, returns the @param tag description for the
-		 * given parameter from an overridden method.
+		 * For the given method, returns the @param tag description for the given
+		 * parameter from an overridden method.
 		 * 
 		 * @param method
 		 *            a method
 		 * @param paramIndex
 		 *            the index of the parameter
-		 * @return the description that replaces the
-		 *         <code>{&#64;inheritDoc}</code> tag, or <code>null</code> if
-		 *         none could be found
+		 * @return the description that replaces the <code>{&#64;inheritDoc}</code> tag,
+		 *         or <code>null</code> if none could be found
 		 */
 		public CharSequence getInheritedParamType(IMethod method, final int paramIndex) {
 			return (CharSequence) getInheritedDescription(method, new DescriptionGetter() {
@@ -326,14 +320,13 @@ public class PHPDocumentationContentAccess {
 		}
 
 		/**
-		 * For the given method, returns the @return tag description from an
-		 * overridden method.
+		 * For the given method, returns the @return tag description from an overridden
+		 * method.
 		 * 
 		 * @param method
 		 *            a method
-		 * @return the description that replaces the
-		 *         <code>{&#64;inheritDoc}</code> tag, or <code>null</code> if
-		 *         none could be found
+		 * @return the description that replaces the <code>{&#64;inheritDoc}</code> tag,
+		 *         or <code>null</code> if none could be found
 		 */
 		public CharSequence getInheritedReturnDescription(IMethod method) {
 			return (CharSequence) getInheritedDescription(method, new DescriptionGetter() {
@@ -345,16 +338,15 @@ public class PHPDocumentationContentAccess {
 		}
 
 		/**
-		 * For the given method, returns the @throws/@exception tag description
-		 * for the given exception from an overridden method.
+		 * For the given method, returns the @throws/@exception tag description for the
+		 * given exception from an overridden method.
 		 * 
 		 * @param method
 		 *            a method
 		 * @param simpleName
 		 *            the simple name of an exception
-		 * @return the description that replaces the
-		 *         <code>{&#64;inheritDoc}</code> tag, or <code>null</code> if
-		 *         none could be found
+		 * @return the description that replaces the <code>{&#64;inheritDoc}</code> tag,
+		 *         or <code>null</code> if none could be found
 		 */
 		public CharSequence getInheritedExceptionDescription(IMethod method, final String simpleName) {
 			return (CharSequence) getInheritedDescription(method, new DescriptionGetter() {
@@ -371,9 +363,8 @@ public class PHPDocumentationContentAccess {
 		 * 
 		 * @param method
 		 *            a method
-		 * @return all the exceptions that replace the
-		 *         <code>{&#64;inheritDoc}</code> tag, or <code>null</code> if
-		 *         none could be found
+		 * @return all the exceptions that replace the <code>{&#64;inheritDoc}</code>
+		 *         tag, or <code>null</code> if none could be found
 		 */
 		public List<PHPDocTag> getInheritedExceptions(IMethod method) {
 			return (List<PHPDocTag>) getInheritedDescription(method, new DescriptionGetter() {
@@ -422,8 +413,8 @@ public class PHPDocumentationContentAccess {
 		/**
 		 * @param method
 		 *            the method
-		 * @return the Javadoc content access for the given method, or
-		 *         <code>null</code> if no Javadoc could be found in source
+		 * @return the Javadoc content access for the given method, or <code>null</code>
+		 *         if no Javadoc could be found in source
 		 * @throws ModelException
 		 *             unexpected problem
 		 */
@@ -470,8 +461,8 @@ public class PHPDocumentationContentAccess {
 
 	private final IMember fMember;
 	/**
-	 * The method, or <code>null</code> if {@link #fMember} is not a method
-	 * where {@inheritDoc} could work.
+	 * The method, or <code>null</code> if {@link #fMember} is not a method where
+	 * {@inheritDoc} could work.
 	 */
 	private final IMethod fMethod;
 	private final PHPDocBlock fJavadoc;
@@ -501,9 +492,9 @@ public class PHPDocumentationContentAccess {
 
 	/**
 	 * Gets an IMember's Javadoc comment content from the source or Javadoc
-	 * attachment and renders the tags and links in HTML. Returns
-	 * <code>null</code> if the member does not contain a Javadoc comment or if
-	 * no source is available.
+	 * attachment and renders the tags and links in HTML. Returns <code>null</code>
+	 * if the member does not contain a Javadoc comment or if no source is
+	 * available.
 	 * 
 	 * @param member
 	 *            the member to get the Javadoc of
@@ -511,8 +502,7 @@ public class PHPDocumentationContentAccess {
 	 *            if <code>true</code> Javadoc will be extracted from attached
 	 *            Javadoc if there's no source
 	 * @return the Javadoc comment content in HTML or <code>null</code> if the
-	 *         member does not have a Javadoc comment or if no source is
-	 *         available
+	 *         member does not have a Javadoc comment or if no source is available
 	 * @throws ModelException
 	 *             is thrown when the element's Javadoc can not be accessed
 	 */
@@ -778,8 +768,8 @@ public class PHPDocumentationContentAccess {
 	private static boolean canInheritJavadoc(IMember member) {
 		if (member instanceof IMethod && member.getScriptProject().exists()) {
 			/*
-			 * Exists test catches ExternalJavaProject, in which case no
-			 * hierarchy can be built.
+			 * Exists test catches ExternalJavaProject, in which case no hierarchy can be
+			 * built.
 			 */
 			try {
 				return !((IMethod) member).isConstructor();
@@ -829,10 +819,9 @@ public class PHPDocumentationContentAccess {
 					}
 				}
 			} else if (TagKind.RETURN == tag.getTagKind()) {
-				if (returnTag == null)
-				 {
+				if (returnTag == null) {
 					returnTag = tag; // the Javadoc tool only shows the first
-				// return tag
+					// return tag
 				}
 
 			} else if (TagKind.NAMESPACE == tag.getTagKind()) {
@@ -856,10 +845,9 @@ public class PHPDocumentationContentAccess {
 			} else if (TagKind.SEE == tag.getTagKind()) {
 				sees.add(tag);
 			} else if (TagKind.DEPRECATED == tag.getTagKind()) {
-				if (deprecatedTag == null)
-				 {
+				if (deprecatedTag == null) {
 					deprecatedTag = tag; // the Javadoc tool only shows the
-				// first deprecated tag
+					// first deprecated tag
 				}
 			} else {
 				rest.add(tag);
@@ -1364,7 +1352,7 @@ public class PHPDocumentationContentAccess {
 	}
 
 	private String handleThrowsException(String exceptionName, @Nullable CharSequence rawValue) {
-		StringBuffer fBuf = new StringBuffer();
+		StringBuilder fBuf = new StringBuilder();
 		fBuf.append(PARAM_THROWS_START);
 		fBuf.append(exceptionName);
 		fBuf.append(PARAM_THROWS_END);

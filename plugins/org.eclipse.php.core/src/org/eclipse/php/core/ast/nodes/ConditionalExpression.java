@@ -163,7 +163,7 @@ public class ConditionalExpression extends Expression {
 	}
 
 	@Override
-	public void toString(StringBuffer buffer, String tab) {
+	public void toString(StringBuilder buffer, String tab) {
 		buffer.append(tab).append("<ConditionalExpression"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" operatorType='" + operatorType + "'"); //$NON-NLS-1$ //$NON-NLS-2$

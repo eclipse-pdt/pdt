@@ -100,7 +100,7 @@ public class Comment extends ASTNode {
 	}
 
 	@Override
-	public void toString(StringBuffer buffer, String tab) {
+	public void toString(StringBuilder buffer, String tab) {
 		buffer.append(tab).append("<Comment"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" commentType='").append(getCommentType(commentType)).append("'/>"); //$NON-NLS-1$ //$NON-NLS-2$

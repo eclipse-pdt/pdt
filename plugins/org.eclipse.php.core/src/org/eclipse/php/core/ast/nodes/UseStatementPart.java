@@ -114,7 +114,7 @@ public class UseStatementPart extends ASTNode {
 	}
 
 	@Override
-	public void toString(StringBuffer buffer, String tab) {
+	public void toString(StringBuilder buffer, String tab) {
 		buffer.append(tab).append("<UseStatementPart"); //$NON-NLS-1$
 		appendInterval(buffer);
 		if (getStatementType() != UseStatement.T_NONE) {

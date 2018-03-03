@@ -400,15 +400,15 @@ public class ZendDebuggerServerSettingsSection implements IDebuggerSettingsSecti
 			return ""; //$NON-NLS-1$
 		}
 		List<Inet4Address> selectdIPs = configureIPs.getSelectedIPs();
-		StringBuffer stringBuffer = new StringBuffer();
+		StringBuilder StringBuilder = new StringBuilder();
 		Iterator<Inet4Address> ipsIterator = selectdIPs.iterator();
 		if (ipsIterator.hasNext()) {
-			stringBuffer.append(ipsIterator.next().getHostAddress());
+			StringBuilder.append(ipsIterator.next().getHostAddress());
 		}
 		while (ipsIterator.hasNext()) {
-			stringBuffer.append(", " + ipsIterator.next().getHostAddress()); //$NON-NLS-1$
+			StringBuilder.append(", " + ipsIterator.next().getHostAddress()); //$NON-NLS-1$
 		}
-		return stringBuffer.toString();
+		return StringBuilder.toString();
 	}
 
 }

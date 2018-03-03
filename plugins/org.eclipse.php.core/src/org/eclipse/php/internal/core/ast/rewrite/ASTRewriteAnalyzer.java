@@ -75,8 +75,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @param scanner
 	 *            An {@link AstLexer} scanner.
 	 * @param document
-	 *            The IDocument that contains the content of the compilation
-	 *            unit to rewrite.
+	 *            The IDocument that contains the content of the compilation unit to
+	 *            rewrite.
 	 * @param lineInfo
 	 *            line information for the content of the compilation unit to
 	 *            rewrite.
@@ -85,14 +85,13 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @param eventStore
 	 *            the event store containing the description of changes
 	 * @param nodeInfos
-	 *            annotations to nodes, such as if a node is a string
-	 *            placeholder or a copy target
+	 *            annotations to nodes, such as if a node is a string placeholder or
+	 *            a copy target
 	 * @param comments
-	 *            list of comments of the compilation unit to rewrite (elements
-	 *            of type <code>Comment</code>) or <code>null</code>.
+	 *            list of comments of the compilation unit to rewrite (elements of
+	 *            type <code>Comment</code>) or <code>null</code>.
 	 * @param options
-	 *            the current options (formatting/compliance) or
-	 *            <code>null</code>.
+	 *            the current options (formatting/compliance) or <code>null</code>.
 	 * @param extendedSourceRangeComputer
 	 *            the source range computer to use
 	 */
@@ -1081,8 +1080,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	}
 
 	/*
-	 * Next token is a left parentheses. Returns the offset of the open
-	 * parentheses.
+	 * Next token is a left parentheses. Returns the offset of the open parentheses.
 	 * 
 	 * @throws CoreException
 	 */
@@ -1544,8 +1542,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	}
 
 	/*
-	 * Rewrite the If statement blocks from curly to 'Alternative syntax'
-	 * blocks.
+	 * Rewrite the If statement blocks from curly to 'Alternative syntax' blocks.
 	 * 
 	 * @param node
 	 * 
@@ -1652,8 +1649,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 
 	/*
 	 * Scan to the first semicolon that appears in the content after the given
-	 * position. The scan skip all the whitespace characters and tries to locate
-	 * the first non-whitespace that is a semicolon (;). The return value is the
+	 * position. The scan skip all the whitespace characters and tries to locate the
+	 * first non-whitespace that is a semicolon (;). The return value is the
 	 * semicolon index. The given index is returned when no semicolon was found
 	 * right after the whitespaces.
 	 */
@@ -2050,10 +2047,10 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	}
 
 	/*
-	 * Rewrite an optional value property. This should handle declarations like
-	 * $a = 3 etc. and add, remove or modify the assigned value. Note that the
-	 * new value that will be used must be an ASTNode, so in any other case
-	 * where a value property does not hold an ASTNode this call will fail.
+	 * Rewrite an optional value property. This should handle declarations like $a =
+	 * 3 etc. and add, remove or modify the assigned value. Note that the new value
+	 * that will be used must be an ASTNode, so in any other case where a value
+	 * property does not hold an ASTNode this call will fail.
 	 * 
 	 * @param node The node that we rewrite
 	 * 
@@ -2228,8 +2225,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		if (getChangeKind(node, desc) == RewriteEvent.REPLACED) {
 			int leftOperandEnd = getExtendedEnd((ASTNode) getOriginalValue(node, desc));
 			try {
-				int offset = getScanner()
-						.getNextStartOffset(leftOperandEnd/* , true */); // instanceof
+				int offset = getScanner().getNextStartOffset(leftOperandEnd/* , true */); // instanceof
 
 				if (offset == leftOperandEnd) {
 					doTextInsert(offset, String.valueOf(' '), getEditGroup(node, desc));
@@ -2397,7 +2393,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 				pos = getLeftBraceStartPosition(pos) + 1;
 				int insertIndent = getIndent(body.getStart()) + 1;
 				ParagraphListRewriter listRewriter = new SwitchListRewriter(insertIndent);
-				StringBuffer leadString = new StringBuffer();
+				StringBuilder leadString = new StringBuilder();
 				leadString.append(getLineDelimiter());
 				leadString.append(createIndentString(insertIndent));
 				listRewriter.rewriteList(body, property, pos, leadString.toString());
@@ -3777,9 +3773,9 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * A general visit implementations that calls
 	 * {@link #doVisitUnchangedChildren(ASTNode)} in case that the node has no
 	 * changes in its children, and calls
-	 * {@link #rewriteRequiredNode(ASTNode, StructuralPropertyDescriptor)} on
-	 * the given {@link StructuralPropertyDescriptor} properties. The given
-	 * property descriptors should be only {@link ChildPropertyDescriptor} and
+	 * {@link #rewriteRequiredNode(ASTNode, StructuralPropertyDescriptor)} on the
+	 * given {@link StructuralPropertyDescriptor} properties. The given property
+	 * descriptors should be only {@link ChildPropertyDescriptor} and
 	 * {@link SimplePropertyDescriptor}. In any other case,
 	 * {@link #rewriteNodeList(ASTNode, StructuralPropertyDescriptor, int, String, String)}
 	 * might be needed.

@@ -206,7 +206,7 @@ public class NamespaceDeclaration extends Statement {
 	}
 
 	@Override
-	public void toString(StringBuffer buffer, String tab) {
+	public void toString(StringBuilder buffer, String tab) {
 		buffer.append(tab).append("<NamespaceDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" isBracketed='").append(bracketed).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$

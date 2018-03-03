@@ -101,7 +101,7 @@ public class Binding extends ASTAttribute {
 					boolean isRefType= true ; //FIXME: isType(typeKind, REF_TYPE);
 					// final boolean isNonPrimitive= ! isType(typeKind, PRIMITIVE_TYPE);
 					
-					StringBuffer kinds= new StringBuffer("KIND:"); //$NON-NLS-1$
+					StringBuilder kinds= new StringBuilder("KIND:"); //$NON-NLS-1$
 					if (typeBinding.isArray())
 					 {
 						kinds.append(" isArray"); //$NON-NLS-1$
@@ -149,7 +149,7 @@ public class Binding extends ASTAttribute {
 					
 					//FIXME : res.add(new BindingProperty(this, "TYPE BOUNDS", typeBinding.getTypeBounds(), isType(typeKind, VARIABLE_TYPE | CAPTURE_TYPE))); //$NON-NLS-1$
 					
-					//StringBuffer origin= new StringBuffer("ORIGIN:"); //$NON-NLS-1$
+					//StringBuilder origin= new StringBuilder("ORIGIN:"); //$NON-NLS-1$
 					//FIXME
 					/*if (typeBinding.isTopLevel()) origin.append(" isTopLevel"); //$NON-NLS-1$
 					if (typeBinding.isNested()) origin.append(" isNested"); //$NON-NLS-1$
@@ -194,7 +194,7 @@ public class Binding extends ASTAttribute {
 					res.add(new BindingProperty(this, "IS VARARGS", methodBinding.isVarargs(), true)); //$NON-NLS-1$
 					res.add(new BindingProperty(this, "EXCEPTION TYPES", methodBinding.getExceptionTypes(), true)); //$NON-NLS-1$
 					
-					//StringBuffer genericsM= new StringBuffer("GENERICS:"); //$NON-NLS-1$
+					//StringBuilder genericsM= new StringBuilder("GENERICS:"); //$NON-NLS-1$
 					//FIXME :if (methodBinding.isRawMethod()) genericsM.append(" isRawMethod"); //$NON-NLS-1$
 					//FIXME :if (methodBinding.isGenericMethod()) genericsM.append(" isGenericMethod"); //$NON-NLS-1$
 					//FIXME :if (methodBinding.isParameterizedMethod()) genericsM.append(" isParameterizedMethod"); //$NON-NLS-1$
@@ -302,7 +302,7 @@ public class Binding extends ASTAttribute {
 
 	@Override
 	public String getLabel() {
-		StringBuffer buf= new StringBuffer(fLabel);
+		StringBuilder buf= new StringBuilder(fLabel);
 		buf.append(": "); //$NON-NLS-1$
 		if (fBinding != null) {
 			switch (fBinding.getKind()) {

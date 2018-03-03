@@ -141,7 +141,7 @@ public class Variable extends VariableBase {
 	}
 
 	@Override
-	public void toString(StringBuffer buffer, String tab) {
+	public void toString(StringBuilder buffer, String tab) {
 		buffer.append(tab).append("<Variable"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" isDollared='").append(isDollared).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$

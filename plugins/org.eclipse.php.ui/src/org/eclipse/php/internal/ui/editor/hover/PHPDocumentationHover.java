@@ -290,8 +290,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 				BrowserInformationControl iControl = new BrowserInformationControl(parent, font,
 						tooltipAffordanceString) {
 					/*
-					 * @see
-					 * org.eclipse.jface.text.IInformationControlExtension5#
+					 * @see org.eclipse.jface.text.IInformationControlExtension5#
 					 * getInformationPresenterControlCreator()
 					 */
 					@Override
@@ -388,9 +387,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 			/*
 			 * (non-Javadoc)
 			 * 
-			 * @see org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks
-			 * .ILinkHandler #handleInlineJavadocLink(org.eclipse.jdt.core
-			 * .IModelElement)
+			 * @see org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks .ILinkHandler
+			 * #handleInlineJavadocLink(org.eclipse.jdt.core .IModelElement)
 			 */
 			@Override
 			public void handleInlineLink(IModelElement linkTarget) {
@@ -407,9 +405,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 			/*
 			 * (non-Javadoc)
 			 * 
-			 * @see org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks
-			 * .ILinkHandler #handleDeclarationLink(org.eclipse.jdt.core.
-			 * IModelElement)
+			 * @see org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks .ILinkHandler
+			 * #handleDeclarationLink(org.eclipse.jdt.core. IModelElement)
 			 */
 			@Override
 			public void handleDeclarationLink(IModelElement linkTarget) {
@@ -453,8 +450,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.text.ITextHoverExtension2#getHoverInfo2(org.eclipse
+	 * @see org.eclipse.jface.text.ITextHoverExtension2#getHoverInfo2(org.eclipse
 	 * .jface.text.ITextViewer, org.eclipse.jface.text.IRegion)
 	 */
 	@Override
@@ -516,12 +512,12 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 	 * @param elements
 	 *            the resolved elements
 	 * @param constantValue
-	 *            a constant value iff result contains exactly 1 constant field,
-	 *            or <code>null</code>
+	 *            a constant value iff result contains exactly 1 constant field, or
+	 *            <code>null</code>
 	 * @param previousInput
 	 *            the previous input, or <code>null</code>
-	 * @return the HTML hover info for the given element(s) or <code>null</code>
-	 *         if no information is available
+	 * @return the HTML hover info for the given element(s) or <code>null</code> if
+	 *         no information is available
 	 * @since 3.4
 	 */
 	private static PHPDocumentationBrowserInformationControlInput getHoverInfo(IModelElement[] elements,
@@ -612,8 +608,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 	 *            the field
 	 * @param hoverRegion
 	 *            the hover region
-	 * @return the constant value for the given field or <code>null</code> if
-	 *         none
+	 * @return the constant value for the given field or <code>null</code> if none
 	 * @since 3.4
 	 */
 	private String getConstantValue(IField field, IRegion hoverRegion) {
@@ -719,8 +714,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 	}
 
 	/**
-	 * Creates and returns a formatted message for the given constant with its
-	 * hex value.
+	 * Creates and returns a formatted message for the given constant with its hex
+	 * value.
 	 * 
 	 * @param constantValue
 	 *            the constant value
@@ -735,8 +730,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 	}
 
 	/**
-	 * Returns the Javadoc hover style sheet with the current Javadoc font from
-	 * the preferences.
+	 * Returns the Javadoc hover style sheet with the current Javadoc font from the
+	 * preferences.
 	 * 
 	 * @return the updated style sheet
 	 * @since 3.4

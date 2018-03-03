@@ -41,7 +41,7 @@ public class XDebugModelPresentation extends PHPModelPresentation implements IDe
 					frame = topFrame;
 				} // end fix
 
-				StringBuffer buffer = new StringBuffer();
+				StringBuilder buffer = new StringBuilder();
 				String frameName = frame.getName();
 				if (frameName != null && frameName.length() > 0) {
 					buffer.append(frame.getName());

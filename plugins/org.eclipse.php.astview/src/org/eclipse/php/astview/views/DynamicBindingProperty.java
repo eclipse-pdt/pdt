@@ -47,7 +47,7 @@ public abstract class DynamicBindingProperty extends ExceptionAttribute {
 		fViewerElement= viewerElement;
 		fException= null;
 		IBinding trayBinding= fParent.getBinding();
-		StringBuffer buf= new StringBuffer(getName());
+		StringBuilder buf= new StringBuilder(getName());
 		if (viewerElement != null) {
 			IBinding viewerBinding= viewerElement.getBinding();
 			try {

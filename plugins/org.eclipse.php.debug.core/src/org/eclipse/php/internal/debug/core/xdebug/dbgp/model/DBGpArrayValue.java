@@ -109,7 +109,7 @@ public class DBGpArrayValue extends AbstractDBGpContainerValue {
 
 	@Override
 	public String getValueDetail() throws DebugException {
-		StringBuffer result = new StringBuffer("["); //$NON-NLS-1$
+		StringBuilder result = new StringBuilder("["); //$NON-NLS-1$
 		IVariable[] variables = getVariables();
 		for (int i = 0; i < variables.length; i++) {
 			IVariable child = variables[i];

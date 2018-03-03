@@ -42,7 +42,7 @@ public class WellKnownTypesProperty extends ASTAttribute {
 		"java.lang.RuntimeException",
 		"java.lang.Short",
 		"java.lang.String",
-		"java.lang.StringBuffer",
+		"java.lang.StringBuilder",
 		"java.lang.Throwable",
 		"java.lang.Void",
 		"java.io.Serializable",

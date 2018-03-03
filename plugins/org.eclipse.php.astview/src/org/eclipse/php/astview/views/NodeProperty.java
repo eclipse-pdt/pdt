@@ -45,7 +45,7 @@ public class NodeProperty extends ASTAttribute {
 
 	@Override
 	public String getLabel() {
-		StringBuffer buf= new StringBuffer();
+		StringBuilder buf= new StringBuilder();
 		buf.append(getPropertyName());
 		
 		if (fProperty.isSimpleProperty()) {
@@ -83,7 +83,7 @@ public class NodeProperty extends ASTAttribute {
 	}
 	
 	private static String toConstantName(String string) {
-		StringBuffer buf= new StringBuffer();
+		StringBuilder buf= new StringBuilder();
 		for (int i= 0; i < string.length(); i++) {
 			char ch= string.charAt(i);
 			if (i != 0 && Character.isUpperCase(ch)) {

@@ -96,7 +96,7 @@ public class CodeCoverageView extends ViewPart {
 			if (inputStream != null) {
 				try {
 					BufferedReader is = new BufferedReader(new InputStreamReader(inputStream));
-					StringBuffer fileContents = new StringBuffer();
+					StringBuilder fileContents = new StringBuilder();
 					String line = null;
 					while ((line = is.readLine()) != null) {
 						fileContents.append(line);

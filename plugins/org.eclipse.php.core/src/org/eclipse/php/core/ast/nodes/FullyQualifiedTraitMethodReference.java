@@ -110,7 +110,7 @@ public class FullyQualifiedTraitMethodReference extends Expression {
 	}
 
 	@Override
-	public void toString(StringBuffer buffer, String tab) {
+	public void toString(StringBuilder buffer, String tab) {
 		buffer.append(tab).append("<FunctionName"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" functionName='").append(functionName.getName()) //$NON-NLS-1$

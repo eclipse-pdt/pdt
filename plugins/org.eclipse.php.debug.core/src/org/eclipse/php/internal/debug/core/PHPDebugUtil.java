@@ -224,12 +224,12 @@ public final class PHPDebugUtil {
 		if (hostsArray.length == 1) {
 			return hostsArray[0];
 		} else if (hostsArray.length > 1) {
-			StringBuilder stringBuffer = new StringBuilder();
-			stringBuffer.append(hostsArray[0]);
+			StringBuilder StringBuilder = new StringBuilder();
+			StringBuilder.append(hostsArray[0]);
 			for (int i = 1; i < hostsArray.length; i++) {
-				stringBuffer.append(", " + hostsArray[i]); //$NON-NLS-1$
+				StringBuilder.append(", " + hostsArray[i]); //$NON-NLS-1$
 			}
-			return stringBuffer.toString();
+			return StringBuilder.toString();
 		}
 		return ""; //$NON-NLS-1$
 	}

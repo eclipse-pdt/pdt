@@ -251,7 +251,7 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements 
 	}
 
 	protected String computeExpression(VariableBase node) {
-		final StringBuffer dispatcher = new StringBuffer();
+		final StringBuilder dispatcher = new StringBuilder();
 		node.accept(new AbstractVisitor() {
 			private boolean isFirstVariable = true;
 

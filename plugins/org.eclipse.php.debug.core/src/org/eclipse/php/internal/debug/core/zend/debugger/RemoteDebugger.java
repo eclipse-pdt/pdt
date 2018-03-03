@@ -73,7 +73,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		 * @return query URL
 		 */
 		public static String generateQuery(String url) {
-			StringBuffer buffer = new StringBuffer(url);
+			StringBuilder buffer = new StringBuilder(url);
 			if (url.indexOf("?") == -1) { //$NON-NLS-1$
 				buffer.append('?');
 			} else {

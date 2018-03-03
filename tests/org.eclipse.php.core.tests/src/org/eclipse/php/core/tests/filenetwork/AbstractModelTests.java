@@ -84,7 +84,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 
 		@Override
 		public String toString() {
-			StringBuffer buffer = new StringBuffer();
+			StringBuilder buffer = new StringBuilder();
 			for (int i = 0, length = this.deltas.length; i < length; i++) {
 				IModelElementDelta delta = this.deltas[i];
 				IModelElementDelta[] children = delta.getAffectedChildren();
@@ -612,7 +612,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 
 	protected void assertElementsEqual(String message, String expected, IModelElement[] elements,
 			boolean showResolvedInfo) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		if (elements != null) {
 			for (int i = 0, length = elements.length; i < length; i++) {
 				ModelElement element = (ModelElement) elements[i];
@@ -652,7 +652,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 
 	protected void assertResourceNamesEqual(String message, String expected, Object[] resources) {
 		sortResources(resources);
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		for (int i = 0, length = resources.length; i < length; i++) {
 			IResource resource = (IResource) resources[i];
 			buffer.append(resource == null ? "<null>" : resource.getName());
@@ -691,7 +691,7 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	}
 
 	protected void assertMarkers(String message, String expectedMarkers, IMarker[] markers) throws CoreException {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		if (markers != null) {
 			for (int i = 0, length = markers.length; i < length; i++) {
 				IMarker marker = markers[i];

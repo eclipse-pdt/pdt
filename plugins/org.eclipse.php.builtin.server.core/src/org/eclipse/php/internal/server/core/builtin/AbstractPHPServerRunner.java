@@ -115,7 +115,7 @@ public abstract class AbstractPHPServerRunner implements IPHPServerRunner {
 	 * @return a single space-delimited string
 	 */
 	protected String getCmdLineAsString(String[] cmdLine) {
-		StringBuffer buff = new StringBuffer();
+		StringBuilder buff = new StringBuilder();
 		for (int i = 0, numStrings = cmdLine.length; i < numStrings; i++) {
 			buff.append(cmdLine[i]);
 			buff.append(' ');

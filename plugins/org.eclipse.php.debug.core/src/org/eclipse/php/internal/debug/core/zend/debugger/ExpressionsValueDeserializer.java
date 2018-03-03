@@ -187,7 +187,7 @@ public class ExpressionsValueDeserializer {
 		}
 
 		private String readToken() {
-			StringBuffer buffer = new StringBuffer(6);
+			StringBuilder buffer = new StringBuilder(6);
 			char curr;
 			do {
 				curr = (char) super.read();

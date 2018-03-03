@@ -20,8 +20,8 @@ public class OrganizeIncludesUtils {
 	 *            (CodeData)
 	 * @return
 	 */
-	static StringBuffer concatenateElementLabels(Set/* <CodeData> */<?> elements) {
-		StringBuffer editGroupNameSuffix = new StringBuffer();
+	static StringBuilder concatenateElementLabels(Set/* <CodeData> */<?> elements) {
+		StringBuilder editGroupNameSuffix = new StringBuilder();
 		// for (Iterator j = elements.iterator(); j.hasNext();) {
 		// CodeData element = (CodeData) j.next();
 		// String elementTypeLabel = getElementTypeLabel(element);
@@ -131,7 +131,7 @@ public class OrganizeIncludesUtils {
 		if (elements == null || elements.size() == 0) {
 			return getEditGroupName(prefix, includeLocation);
 		}
-		StringBuffer editGroupNameSuffix = OrganizeIncludesUtils
+		StringBuilder editGroupNameSuffix = OrganizeIncludesUtils
 				.concatenateElementLabels(elements);
 		return getEditGroupName(prefix, includeLocation,
 				editGroupNameSuffix.toString());
