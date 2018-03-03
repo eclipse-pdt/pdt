@@ -11,11 +11,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.parser.php5;
 
-import org.eclipse.php.internal.core.util.collections.IntHashtable;
+import java.util.HashMap;
 
 public abstract class PHPTokenNames {
 
-	private static IntHashtable token2Name = new IntHashtable();
+	private static HashMap<Integer, String> token2Name = new HashMap<>();
 
 	static {
 		token2Name.put(CompilerParserConstants.T_INC, "++"); //$NON-NLS-1$
