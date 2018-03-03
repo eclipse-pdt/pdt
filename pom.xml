@@ -269,7 +269,7 @@
 				</property>
 			</activation>
 			<properties>
-				<eclipse.name>oxygen</eclipse.name>
+				<eclipse.name>photon</eclipse.name>
 			</properties>
 			<modules>
 				<module>dev/org.eclipse.php.target.current</module>
