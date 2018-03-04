@@ -44,15 +44,14 @@ public class SpellcheckDelegateAdapterFactory implements IAdapterFactory {
 	private static final ISpellcheckDelegate DELEGATE = new PHPSpellcheckDelegate();
 
 	/**
-	 * Implementation of <code>ISpellcheckDelegate</code> for XML type
-	 * documents.
+	 * Implementation of <code>ISpellcheckDelegate</code> for XML type documents.
 	 */
 	private static class PHPSpellcheckDelegate implements ISpellcheckDelegate {
 
 		/**
 		 * If the region in the given <code>model</code> at the given
-		 * <code>offset</code> is a <code>Comment</code> region then it should
-		 * be spell checked, otherwise it should not.
+		 * <code>offset</code> is a <code>Comment</code> region then it should be spell
+		 * checked, otherwise it should not.
 		 * 
 		 * @see org.eclipse.wst.sse.ui.internal.spelling.ISpellcheckDelegate#shouldSpellcheck(org.eclipse.wst.sse.core.internal.provisional.IndexedRegion)
 		 */

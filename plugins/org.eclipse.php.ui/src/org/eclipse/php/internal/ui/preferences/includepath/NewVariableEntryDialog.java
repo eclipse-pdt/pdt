@@ -186,11 +186,9 @@ public class NewVariableEntryDialog extends StatusDialog {
 	 */
 	@Override
 	protected IDialogSettings getDialogBoundsSettings() {
-		return PHPUiPlugin.getDefault()
-				.getDialogSettings()/*
-									 * getDialogSettingsSection ( getClass
-									 * ().getName())
-									 */;
+		return PHPUiPlugin.getDefault().getDialogSettings()/*
+															 * getDialogSettingsSection ( getClass ().getName())
+															 */;
 	}
 
 	/*

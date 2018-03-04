@@ -85,8 +85,8 @@ public class Server implements IXMLPreferencesStorable, IAdaptable, IUniqueIdent
 	}
 
 	/**
-	 * Add a property change listener to this server. The same listener will not
-	 * be added twice.
+	 * Add a property change listener to this server. The same listener will not be
+	 * added twice.
 	 * 
 	 * @param listener
 	 *            java.beans.PropertyChangeListener; cannot be <code>null</code>
@@ -213,8 +213,7 @@ public class Server implements IXMLPreferencesStorable, IAdaptable, IUniqueIdent
 	}
 
 	protected static String renderCommandLine(String[] commandLine, String separator) {
-		if (commandLine == null || commandLine.length < 1)
-		 {
+		if (commandLine == null || commandLine.length < 1) {
 			return ""; //$NON-NLS-1$
 		}
 		StringBuilder buf = new StringBuilder(commandLine[0]);
@@ -295,8 +294,7 @@ public class Server implements IXMLPreferencesStorable, IAdaptable, IUniqueIdent
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable
+	 * @see org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable
 	 * #restoreFromMap(java.util.HashMap)
 	 */
 	@Override
@@ -317,8 +315,7 @@ public class Server implements IXMLPreferencesStorable, IAdaptable, IUniqueIdent
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable
+	 * @see org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable
 	 * #storeToMap()
 	 */
 	@Override

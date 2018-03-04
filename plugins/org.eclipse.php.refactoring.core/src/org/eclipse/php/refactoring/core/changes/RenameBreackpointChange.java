@@ -37,8 +37,8 @@ public class RenameBreackpointChange extends Change {
 	private Map<IBreakpoint, Map<String, Object>> fBreakpointAttributes;
 
 	/**
-	 * The constructor gets also a new name in case the move it's actually a
-	 * rename operation
+	 * The constructor gets also a new name in case the move it's actually a rename
+	 * operation
 	 * 
 	 * @param source
 	 * @param dest
@@ -184,10 +184,9 @@ public class RenameBreackpointChange extends Change {
 	 * resource, possibly <code>null</code>.
 	 * 
 	 * @param resource
-	 *            a resource on which a marker will be created, modified, or
-	 *            deleted
-	 * @return a scheduling rule to use when modifying markers on the given
-	 *         resource possibly <code>null</code>
+	 *            a resource on which a marker will be created, modified, or deleted
+	 * @return a scheduling rule to use when modifying markers on the given resource
+	 *         possibly <code>null</code>
 	 * @since 3.1
 	 */
 	protected ISchedulingRule getMarkerRule(IResource resource) {

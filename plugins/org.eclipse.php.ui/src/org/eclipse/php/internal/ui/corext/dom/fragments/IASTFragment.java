@@ -34,23 +34,22 @@ import org.eclipse.text.edits.TextEditGroup;
 public interface IASTFragment {
 
 	/**
-	 * Determines whether <code> other </code> 'matches' <code> this </code>.
-	 * This binary operation should be reflexive, symmetric, and transitive.
+	 * Determines whether <code> other </code> 'matches' <code> this </code>. This
+	 * binary operation should be reflexive, symmetric, and transitive.
 	 * 
-	 * That two node match does not imply that their source ranges are the same,
-	 * or that they map (via getAssociatedNode()) to the same node.
+	 * That two node match does not imply that their source ranges are the same, or
+	 * that they map (via getAssociatedNode()) to the same node.
 	 */
 	public boolean matches(IASTFragment other);
 
 	/**
-	 * Returns (at least some approximation of) a maximal set of sub-fragments
-	 * of this fragment which match <code> toMatch </code>
+	 * Returns (at least some approximation of) a maximal set of sub-fragments of
+	 * this fragment which match <code> toMatch </code>
 	 */
 	public IASTFragment[] getSubFragmentsMatching(IASTFragment toMatch);
 
 	/**
-	 * Every fragment maps to a node. Multiple fragments can map to the same
-	 * node.
+	 * Every fragment maps to a node. Multiple fragments can map to the same node.
 	 * 
 	 * @return ASTNode The node to which this fragment maps.
 	 */

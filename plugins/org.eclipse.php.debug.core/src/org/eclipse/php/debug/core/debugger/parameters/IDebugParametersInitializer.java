@@ -23,8 +23,8 @@ import org.eclipse.debug.core.ILaunch;
 public interface IDebugParametersInitializer {
 
 	/**
-	 * Returns the request URL for the given launch. The request URL holds the
-	 * URL's protocol, domain and path (without the query parameters).
+	 * Returns the request URL for the given launch. The request URL holds the URL's
+	 * protocol, domain and path (without the query parameters).
 	 * 
 	 * @param launch
 	 *            The {@link ILaunch}

@@ -63,19 +63,18 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 		}
 
 		/**
-		 * Does not paint hidden annotations. Annotations are hidden when they
-		 * only span one line.
+		 * Does not paint hidden annotations. Annotations are hidden when they only span
+		 * one line.
 		 * 
 		 * @see ProjectionAnnotation#paint(org.eclipse.swt.graphics.GC,
-		 *      org.eclipse.swt.widgets.Canvas,
-		 *      org.eclipse.swt.graphics.Rectangle)
+		 *      org.eclipse.swt.widgets.Canvas, org.eclipse.swt.graphics.Rectangle)
 		 */
 		@Override
 		public void paint(GC gc, Canvas canvas, Rectangle rectangle) {
 			/* workaround for BUG85874 */
 			/*
-			 * only need to check annotations that are expanded because hidden
-			 * annotations should never have been given the chance to collapse.
+			 * only need to check annotations that are expanded because hidden annotations
+			 * should never have been given the chance to collapse.
 			 */
 			if (!isCollapsed()) {
 				// working with rectangle, so line height
@@ -199,8 +198,7 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 	}
 
 	/**
-	 * Update the projection annotation of all the nodes that are children of
-	 * node
+	 * Update the projection annotation of all the nodes that are children of node
 	 * 
 	 * @param node
 	 */
@@ -209,9 +207,8 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 	}
 
 	/**
-	 * Update the projection annotation of all the nodes that are children of
-	 * node and adds all projection annotations to viewer (for newly added
-	 * viewers)
+	 * Update the projection annotation of all the nodes that are children of node
+	 * and adds all projection annotations to viewer (for newly added viewers)
 	 * 
 	 * @param node
 	 * @param viewer
@@ -257,8 +254,7 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 			}
 			ProjectionAnnotation[] modifyList = null;
 			if (!projectionAnnotations.isEmpty()) {
-				modifyList = projectionAnnotations.keySet()
-						.toArray(new ProjectionAnnotation[0]);
+				modifyList = projectionAnnotations.keySet().toArray(new ProjectionAnnotation[0]);
 			}
 
 			// specifically add all annotations to viewer

@@ -54,7 +54,7 @@ public interface IValidatorVisitor {
 	public void reportProblem(ASTNode s, String message, IProblemIdentifier id, ProblemSeverity severity);
 
 	public void reportProblem(int start, int end, String message, IProblemIdentifier id, ProblemSeverity severity);
-	
+
 	public IUsePartInfo getUsePartInfo(String name);
 
 	public boolean hasNamespace();

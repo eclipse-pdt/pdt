@@ -47,8 +47,7 @@ public class LibraryFolderChangeListener implements ILibraryFolderChangeListener
 	 *            an array of folders to update
 	 * 
 	 * @throws CoreException
-	 *             if any of the folders does not exist or is in a closed
-	 *             project
+	 *             if any of the folders does not exist or is in a closed project
 	 */
 	private void updatePHPExplorer(IFolder[] folders) throws CoreException {
 		LibraryFolderManager lfm = LibraryFolderManager.getInstance();
@@ -76,8 +75,8 @@ public class LibraryFolderChangeListener implements ILibraryFolderChangeListener
 	/**
 	 * Returns a reference to the PHP Explorer view part.
 	 * 
-	 * @return a reference to {@link PHPExplorerPart}, or <code>null</code> if
-	 *         none is available in the active workbench page
+	 * @return a reference to {@link PHPExplorerPart}, or <code>null</code> if none
+	 *         is available in the active workbench page
 	 */
 	private PHPExplorerPart getPHPExplorer() {
 		// find the active workbench window

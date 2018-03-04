@@ -545,9 +545,9 @@ public class PHPScriptRegion extends ForeignRegion implements IPHPScriptRegion {
 	}
 
 	/**
-	 * Returns a stream that represents the new text We have three regions: 1)
-	 * the php region before the change 2) the change 3) the php region after
-	 * the region without the deleted text
+	 * Returns a stream that represents the new text We have three regions: 1) the
+	 * php region before the change 2) the change 3) the php region after the region
+	 * without the deleted text
 	 * 
 	 * @param flatnode
 	 * @param change
@@ -607,8 +607,8 @@ public class PHPScriptRegion extends ForeignRegion implements IPHPScriptRegion {
 		@Override
 		public int read(char[] b, int off, int len) throws IOException {
 			/**
-			 * For boosting performance - Read only 80 characters from the
-			 * buffer as the changes are usually small
+			 * For boosting performance - Read only 80 characters from the buffer as the
+			 * changes are usually small
 			 * 
 			 * Start of change
 			 */

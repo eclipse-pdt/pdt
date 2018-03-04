@@ -34,8 +34,8 @@ public class PHPRuntime {
 	}
 
 	/**
-	 * Returns a path for the PHP classpath container identifying the specified
-	 * VM install by type and name.
+	 * Returns a path for the PHP classpath container identifying the specified VM
+	 * install by type and name.
 	 * 
 	 * @param vm
 	 *            vm install
@@ -47,8 +47,8 @@ public class PHPRuntime {
 	}
 
 	/**
-	 * Returns a path for the PHP classpath container identifying the specified
-	 * VM install by type and name.
+	 * Returns a path for the PHP classpath container identifying the specified VM
+	 * install by type and name.
 	 * 
 	 * @param typeId
 	 *            vm install type identifier

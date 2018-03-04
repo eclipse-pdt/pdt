@@ -18,8 +18,8 @@ package org.eclipse.php.internal.debug.ui.wizards;
 public interface IDebuggerSettingsSection {
 
 	/**
-	 * Performs special processing when parent composite fragment 'OK' button
-	 * has been pressed.
+	 * Performs special processing when parent composite fragment 'OK' button has
+	 * been pressed.
 	 * 
 	 * @return <code>false</code> to abort the container's OK processing and
 	 *         <code>true</code> to allow the OK to happen
@@ -27,8 +27,8 @@ public interface IDebuggerSettingsSection {
 	boolean performOK();
 
 	/**
-	 * Performs special processing when parent composite fragment 'Cancel'
-	 * button has been pressed.
+	 * Performs special processing when parent composite fragment 'Cancel' button
+	 * has been pressed.
 	 * 
 	 * @return <code>true</code> if canceling was OK
 	 */
@@ -40,8 +40,8 @@ public interface IDebuggerSettingsSection {
 	void validate();
 
 	/**
-	 * Returns info if this settings section can perform any kind of debugger
-	 * tests (e.g. connection test).
+	 * Returns info if this settings section can perform any kind of debugger tests
+	 * (e.g. connection test).
 	 * 
 	 * @return <code>true</code> if can perform any tests, <code>false</code>
 	 *         otherwise

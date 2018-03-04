@@ -60,9 +60,9 @@ public class ASTNodeImageProvider {
 	}
 
 	/**
-	 * Returns the icon for a given element. The icon depends on the element
-	 * type and element properties. If configured, overlay icons are constructed
-	 * for <code>ISourceReference</code>s.
+	 * Returns the icon for a given element. The icon depends on the element type
+	 * and element properties. If configured, overlay icons are constructed for
+	 * <code>ISourceReference</code>s.
 	 * 
 	 * @param flags
 	 *            Flags as defined by the PHPImageLabelProvider
@@ -112,8 +112,8 @@ public class ASTNodeImageProvider {
 	}
 
 	/**
-	 * Returns an image descriptor for a compilation unit not on the class path.
-	 * The descriptor includes overlays, if specified.
+	 * Returns an image descriptor for a compilation unit not on the class path. The
+	 * descriptor includes overlays, if specified.
 	 */
 	public ImageDescriptor getCUResourceImageDescriptor(IFile file, int flags) {
 		Point size = useSmallSize(flags) ? SMALL_SIZE : BIG_SIZE;
@@ -132,8 +132,8 @@ public class ASTNodeImageProvider {
 
 	/**
 	 * Returns an image descriptor for a IAdaptable. The descriptor includes
-	 * overlays, if specified (only error ticks apply). Returns
-	 * <code>null</code> if no image could be found.
+	 * overlays, if specified (only error ticks apply). Returns <code>null</code> if
+	 * no image could be found.
 	 */
 	public ImageDescriptor getWorkbenchImageDescriptor(IAdaptable adaptable, int flags) {
 		IWorkbenchAdapter wbAdapter = adaptable.getAdapter(IWorkbenchAdapter.class);

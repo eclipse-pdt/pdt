@@ -29,16 +29,16 @@ public class Declaration {
 	}
 
 	/**
-	 * Whether this declaration actually belongs to global scope - global $var
-	 * was specified earlier.
+	 * Whether this declaration actually belongs to global scope - global $var was
+	 * specified earlier.
 	 */
 	public boolean isGlobal() {
 		return global;
 	}
 
 	/**
-	 * Sets whether this declaration actually belongs to global scope - global
-	 * $var was specified earlier.
+	 * Sets whether this declaration actually belongs to global scope - global $var
+	 * was specified earlier.
 	 */
 	public void setGlobal(boolean global) {
 		this.global = global;

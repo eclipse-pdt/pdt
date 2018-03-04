@@ -102,8 +102,7 @@ public class ServerTypeCompositeFragment extends CompositeFragment {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.ui.wizards.CompositeFragment#createContents(
+	 * @see org.eclipse.php.internal.ui.wizards.CompositeFragment#createContents(
 	 * org.eclipse.swt.widgets.Composite)
 	 */
 	@Override

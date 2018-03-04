@@ -52,8 +52,7 @@ public class XDebugLaunchListener implements ILaunchesListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.ILaunchesListener#launchesAdded(org.eclipse.debug
+	 * @see org.eclipse.debug.core.ILaunchesListener#launchesAdded(org.eclipse.debug
 	 * .core.ILaunch[])
 	 */
 	@Override
@@ -64,8 +63,7 @@ public class XDebugLaunchListener implements ILaunchesListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.ILaunchesListener#launchesChanged(org.eclipse.
+	 * @see org.eclipse.debug.core.ILaunchesListener#launchesChanged(org.eclipse.
 	 * debug.core.ILaunch[])
 	 */
 	@Override
@@ -79,9 +77,9 @@ public class XDebugLaunchListener implements ILaunchesListener {
 	}
 
 	/**
-	 * Update the "org.eclipse.php.debug.ui.activeDebugging" system property.
-	 * This method is important for any action that is defined to be visible
-	 * when a debug session is active (such as the Run to Line action).
+	 * Update the "org.eclipse.php.debug.ui.activeDebugging" system property. This
+	 * method is important for any action that is defined to be visible when a debug
+	 * session is active (such as the Run to Line action).
 	 * 
 	 * @param launches
 	 */

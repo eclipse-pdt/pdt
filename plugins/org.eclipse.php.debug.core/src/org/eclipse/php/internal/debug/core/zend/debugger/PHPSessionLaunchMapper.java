@@ -54,8 +54,8 @@ public class PHPSessionLaunchMapper implements ILaunchesListener {
 	}
 
 	/**
-	 * Returns the ILaunch mapped to the given session ID. In case there is no
-	 * such map, null is returned.
+	 * Returns the ILaunch mapped to the given session ID. In case there is no such
+	 * map, null is returned.
 	 * 
 	 * @param sessionID
 	 * @return The mapped ILaunch, or null if non exists.
@@ -76,9 +76,9 @@ public class PHPSessionLaunchMapper implements ILaunchesListener {
 	}
 
 	/**
-	 * Update the "org.eclipse.php.debug.ui.activeDebugging" system property.
-	 * This method is important for any action that is defined to be visible
-	 * when a debug session is active (such as the Run to Line action).
+	 * Update the "org.eclipse.php.debug.ui.activeDebugging" system property. This
+	 * method is important for any action that is defined to be visible when a debug
+	 * session is active (such as the Run to Line action).
 	 * 
 	 * @param launches
 	 */
@@ -116,9 +116,9 @@ public class PHPSessionLaunchMapper implements ILaunchesListener {
 		}
 		updateSystemProperty(launches);
 		/*
-		 * In case we have no more running debug launches (mapped for Zend
-		 * Debugger only), clear the browser's cache (cookies) to avoid any
-		 * debug session trigger as a result of a remaining cookie.
+		 * In case we have no more running debug launches (mapped for Zend Debugger
+		 * only), clear the browser's cache (cookies) to avoid any debug session trigger
+		 * as a result of a remaining cookie.
 		 */
 		if (map.isEmpty()) {
 			Browser.clearSessions();

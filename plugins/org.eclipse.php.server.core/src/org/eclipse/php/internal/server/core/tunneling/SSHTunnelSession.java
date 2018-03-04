@@ -114,8 +114,8 @@ public class SSHTunnelSession {
 	}
 
 	/**
-	 * Disconnect <b>all</b> of the SSH tunnel sessions that were statically
-	 * created by this SSHTunnelSession class.
+	 * Disconnect <b>all</b> of the SSH tunnel sessions that were statically created
+	 * by this SSHTunnelSession class.
 	 */
 	public static void shutdown() {
 		if (getJSch() != null && pool.size() > 0) {

@@ -30,8 +30,8 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 	// org.eclipse.jst.jsp.ui.internal.projection
 
 	/**
-	 * List of projection viewers currently associated with this projection
-	 * model node adapter factory.
+	 * List of projection viewers currently associated with this projection model
+	 * node adapter factory.
 	 */
 	private HashMap<ProjectionViewer, ProjectionViewerInformation> fProjectionViewers;
 
@@ -114,8 +114,8 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 	}
 
 	/**
-	 * Updates projection annotation model if document is not in flux.
-	 * Otherwise, queues up the changes to be applied when document is ready.
+	 * Updates projection annotation model if document is not in flux. Otherwise,
+	 * queues up the changes to be applied when document is ready.
 	 * 
 	 * @param node
 	 * @param deletions
@@ -129,8 +129,8 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 
 	/**
 	 * Updates projection annotation model for a specific projection viewer if
-	 * document is not in flux. Otherwise, queues up the changes to be applied
-	 * when document is ready.
+	 * document is not in flux. Otherwise, queues up the changes to be applied when
+	 * document is ready.
 	 * 
 	 * @param node
 	 * @param deletions
@@ -179,8 +179,8 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 	 * Adds viewer to list of projection viewers this factory is associated with
 	 * 
 	 * @param viewer
-	 *            - assumes viewer's document and projection annotation model
-	 *            are not null
+	 *            - assumes viewer's document and projection annotation model are
+	 *            not null
 	 */
 	public void addProjectionViewer(ProjectionViewer viewer) {
 		// remove old entry if it exists
@@ -212,8 +212,8 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 	}
 
 	/**
-	 * Removes the given viewer from the list of projection viewers this factor
-	 * is associated with
+	 * Removes the given viewer from the list of projection viewers this factor is
+	 * associated with
 	 * 
 	 * @param viewer
 	 */

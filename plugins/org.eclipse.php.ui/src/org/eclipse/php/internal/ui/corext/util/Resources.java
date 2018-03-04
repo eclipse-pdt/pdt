@@ -40,8 +40,7 @@ public class Resources {
 	}
 
 	/**
-	 * Checks if the given resources are in sync with the underlying file
-	 * system.
+	 * Checks if the given resources are in sync with the underlying file system.
 	 * 
 	 * @param resources
 	 *            the resources to be checked
@@ -63,17 +62,16 @@ public class Resources {
 	}
 
 	/**
-	 * Makes the given resource committable. Committable means that it is
-	 * writeable and that its content hasn't changed by calling
-	 * <code>validateEdit</code> for the given resource on <tt>IWorkspace</tt>.
+	 * Makes the given resource committable. Committable means that it is writeable
+	 * and that its content hasn't changed by calling <code>validateEdit</code> for
+	 * the given resource on <tt>IWorkspace</tt>.
 	 * 
 	 * @param resource
 	 *            the resource to be checked
 	 * @param context
 	 *            the context passed to <code>validateEdit</code>
-	 * @return status describing the method's result. If
-	 *         <code>status.isOK()</code> returns <code>true</code> then the
-	 *         resources are committable.
+	 * @return status describing the method's result. If <code>status.isOK()</code>
+	 *         returns <code>true</code> then the resources are committable.
 	 * 
 	 * @see org.eclipse.core.resources.IWorkspace#validateEdit(org.eclipse.core.resources.IFile[],
 	 *      java.lang.Object)
@@ -83,10 +81,9 @@ public class Resources {
 	}
 
 	/**
-	 * Makes the given resources committable. Committable means that all
-	 * resources are writeable and that the content of the resources hasn't
-	 * changed by calling <code>validateEdit</code> for a given file on
-	 * <tt>IWorkspace</tt>.
+	 * Makes the given resources committable. Committable means that all resources
+	 * are writeable and that the content of the resources hasn't changed by calling
+	 * <code>validateEdit</code> for a given file on <tt>IWorkspace</tt>.
 	 * 
 	 * @param resources
 	 *            the resources to be checked
@@ -176,8 +173,8 @@ public class Resources {
 	}
 
 	/**
-	 * This method is used to generate a list of local locations to be used in
-	 * DnD for file transfers.
+	 * This method is used to generate a list of local locations to be used in DnD
+	 * for file transfers.
 	 * 
 	 * @param resources
 	 *            the array of resources to get the local locations for
@@ -195,14 +192,13 @@ public class Resources {
 	}
 
 	/**
-	 * Returns the location of the given resource. For local resources this is
-	 * the OS path in the local file system. For remote resource this is the
-	 * URI.
+	 * Returns the location of the given resource. For local resources this is the
+	 * OS path in the local file system. For remote resource this is the URI.
 	 * 
 	 * @param resource
 	 *            the resource
-	 * @return the location string or <code>null</code> if the location URI of
-	 *         the resource is <code>null</code>
+	 * @return the location string or <code>null</code> if the location URI of the
+	 *         resource is <code>null</code>
 	 */
 	public static String getLocationString(IResource resource) {
 		URI uri = resource.getLocationURI();

@@ -67,9 +67,8 @@ public class FileDropEditorIncludeAction extends FileDropAction {
 					String relativeLocationFromIncludePath = getFileName(fileNames[i], sourceModule);
 
 					if (relativeLocationFromIncludePath != null) {
-						Include include = ast.newInclude(
-								ast.newScalar("'" //$NON-NLS-1$
-										+ relativeLocationFromIncludePath.toString() + "'"), //$NON-NLS-1$
+						Include include = ast.newInclude(ast.newScalar("'" //$NON-NLS-1$
+								+ relativeLocationFromIncludePath.toString() + "'"), //$NON-NLS-1$
 								Include.IT_REQUIRE_ONCE);
 						program.statements().add(i, ast.newExpressionStatement(include));
 						TextEdit edits = program.rewrite(document, null);

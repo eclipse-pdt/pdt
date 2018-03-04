@@ -18,8 +18,7 @@ import java.util.regex.Pattern;
  */
 public class ProfilerFunctionData {
 
-	private static final Pattern EVALD_CODE_PATTERN = Pattern
-			.compile(".*\\(\\d+\\) : eval\\(\\)'d code"); //$NON-NLS-1$
+	private static final Pattern EVALD_CODE_PATTERN = Pattern.compile(".*\\(\\d+\\) : eval\\(\\)'d code"); //$NON-NLS-1$
 
 	private String fFileName;
 	private String fLocalFileName;
@@ -42,9 +41,8 @@ public class ProfilerFunctionData {
 		setFileName(fileName);
 	}
 
-	public ProfilerFunctionData(String fileName, String functionName,
-			int lineNumber, int calledID, int ownSecond, int ownMicorsecond,
-			int totalSecond, int totalMicorsecond, int callCount) {
+	public ProfilerFunctionData(String fileName, String functionName, int lineNumber, int calledID, int ownSecond,
+			int ownMicorsecond, int totalSecond, int totalMicorsecond, int callCount) {
 		setFileName(fileName);
 		setFunctionName(functionName);
 		setLineNumber(lineNumber);
@@ -252,8 +250,7 @@ public class ProfilerFunctionData {
 	 * @return the double value of the calculation
 	 */
 	public double getTotalTime() {
-		double totalTime = (fTotalTimeSeconds * CONVERTION + fTotalTimeMicroseconds)
-				/ CONVERTION;
+		double totalTime = (fTotalTimeSeconds * CONVERTION + fTotalTimeMicroseconds) / CONVERTION;
 		return totalTime;
 
 	}
@@ -274,8 +271,7 @@ public class ProfilerFunctionData {
 	 * @return the double value of the calculation in seconds
 	 */
 	public double getOwnTime() {
-		double ownTime = (fOwnTimeSeconds * CONVERTION + fOwnTimeMicroseconds)
-				/ CONVERTION;
+		double ownTime = (fOwnTimeSeconds * CONVERTION + fOwnTimeMicroseconds) / CONVERTION;
 		return ownTime;
 	}
 

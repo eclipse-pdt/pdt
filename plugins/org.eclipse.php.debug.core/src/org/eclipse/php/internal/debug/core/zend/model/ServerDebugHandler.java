@@ -123,8 +123,8 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 
 		if (isUsingPathMapper()) {
 			/*
-			 * Hack for the case when htdocs is symlinked to the workspace. Zend
-			 * Debugger resolves symbolic links later and it breaks path mapper.
+			 * Hack for the case when htdocs is symlinked to the workspace. Zend Debugger
+			 * resolves symbolic links later and it breaks path mapper.
 			 */
 			try {
 				String lcServerName = launchConfiguration.getAttribute(Server.NAME, (String) null);
@@ -359,8 +359,8 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 	/**
 	 * Returns code coverage data from the last debug session.
 	 * 
-	 * @return CodeCoverage data or <code>null</code> if there wasn't directive
-	 *         to retreive code coverage data.
+	 * @return CodeCoverage data or <code>null</code> if there wasn't directive to
+	 *         retreive code coverage data.
 	 */
 	public CodeCoverageData[] getLastCodeCoverageData() {
 		return fCodeCoverageData;

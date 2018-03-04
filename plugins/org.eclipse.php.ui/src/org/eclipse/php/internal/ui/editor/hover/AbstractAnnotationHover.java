@@ -63,9 +63,8 @@ import com.ibm.icu.text.MessageFormat;
 public abstract class AbstractAnnotationHover extends AbstractScriptEditorTextHover implements ITextHoverExtension2 {
 
 	/**
-	 * An annotation info contains information about an {@link Annotation} It's
-	 * used as input for the
-	 * {@link AbstractAnnotationHover.AnnotationInformationControl}
+	 * An annotation info contains information about an {@link Annotation} It's used
+	 * as input for the {@link AbstractAnnotationHover.AnnotationInformationControl}
 	 *
 	 * @since 3.4
 	 */
@@ -81,9 +80,8 @@ public abstract class AbstractAnnotationHover extends AbstractScriptEditorTextHo
 		}
 
 		/**
-		 * Create completion proposals which can resolve the given annotation at
-		 * the given position. Returns an empty array if no such proposals
-		 * exist.
+		 * Create completion proposals which can resolve the given annotation at the
+		 * given position. Returns an empty array if no such proposals exist.
 		 *
 		 * @return the proposals or an empty array
 		 */
@@ -108,8 +106,8 @@ public abstract class AbstractAnnotationHover extends AbstractScriptEditorTextHo
 
 	/**
 	 * The annotation information control shows informations about a given
-	 * {@link AbstractAnnotationHover.AnnotationInfo}. It can also show a
-	 * toolbar and a list of {@link ICompletionProposal}s.
+	 * {@link AbstractAnnotationHover.AnnotationInfo}. It can also show a toolbar
+	 * and a list of {@link ICompletionProposal}s.
 	 *
 	 * @since 3.4
 	 */
@@ -213,8 +211,8 @@ public abstract class AbstractAnnotationHover extends AbstractScriptEditorTextHo
 		}
 
 		/**
-		 * Fills the toolbar actions, if a toolbar is available. This is called
-		 * after the input has been set.
+		 * Fills the toolbar actions, if a toolbar is available. This is called after
+		 * the input has been set.
 		 */
 		protected void fillToolbar() {
 			ToolBarManager toolBarManager = getToolBarManager();
@@ -226,8 +224,7 @@ public abstract class AbstractAnnotationHover extends AbstractScriptEditorTextHo
 		}
 
 		/**
-		 * Create content of the hover. This is called after the input has been
-		 * set.
+		 * Create content of the hover. This is called after the input has been set.
 		 */
 		protected void deferredCreateContent() {
 			fillToolbar();

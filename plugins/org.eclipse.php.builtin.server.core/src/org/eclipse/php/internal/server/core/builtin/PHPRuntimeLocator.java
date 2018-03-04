@@ -102,10 +102,9 @@ public class PHPRuntimeLocator extends RuntimeLocatorDelegate {
 	}
 
 	/**
-	 * Searches the specified directory recursively for installed PHP
-	 * executables, adding each detected executable to the <code>found</code>
-	 * list. Any directories specified in the <code>ignore</code> are not
-	 * traversed.
+	 * Searches the specified directory recursively for installed PHP executables,
+	 * adding each detected executable to the <code>found</code> list. Any
+	 * directories specified in the <code>ignore</code> are not traversed.
 	 * 
 	 * @param directory
 	 * @param found
@@ -153,9 +152,8 @@ public class PHPRuntimeLocator extends RuntimeLocatorDelegate {
 	}
 
 	/**
-	 * Locate a PHP executable file in the PHP location given to this method.
-	 * The location should be a directory. The search is done for php and
-	 * php.exe only.
+	 * Locate a PHP executable file in the PHP location given to this method. The
+	 * location should be a directory. The search is done for php and php.exe only.
 	 * 
 	 * @param phpLocation
 	 *            A directory that might hold a PHP executable.

@@ -175,14 +175,13 @@ public abstract class AbstractDebuggerConfiguration implements IDebuggerConfigur
 	}
 
 	/**
-	 * Apply the default values for this debugger configuration and save them.
-	 * Note that the changes affecting the PDT immediately.
+	 * Apply the default values for this debugger configuration and save them. Note
+	 * that the changes affecting the PDT immediately.
 	 */
 	public abstract void applyDefaults();
 
 	/**
-	 * Validate debugger configuration for specified {@link PHPexeItem}
-	 * instance.
+	 * Validate debugger configuration for specified {@link PHPexeItem} instance.
 	 * 
 	 * @return validation status
 	 */

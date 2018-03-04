@@ -46,9 +46,9 @@ public class TreeAndListGroup implements ISelectionChangedListener {
 	private boolean allowMultiselection = false;
 
 	/**
-	 * Create an instance of this class. Use this constructor if you wish to
-	 * specify the width and/or height of the combined widget (to only hardcode
-	 * one of the sizing dimensions, specify the other dimension's value as -1)
+	 * Create an instance of this class. Use this constructor if you wish to specify
+	 * the width and/or height of the combined widget (to only hardcode one of the
+	 * sizing dimensions, specify the other dimension's value as -1)
 	 * 
 	 * @param parent
 	 *            org.eclipse.swt.widgets.Composite
@@ -92,8 +92,8 @@ public class TreeAndListGroup implements ISelectionChangedListener {
 	}
 
 	/**
-	 * Add the passed listener to collection of clients that listen for changes
-	 * to list viewer selection state
+	 * Add the passed listener to collection of clients that listen for changes to
+	 * list viewer selection state
 	 * 
 	 * @param listener
 	 *            ISelectionChangedListener
@@ -125,8 +125,8 @@ public class TreeAndListGroup implements ISelectionChangedListener {
 	}
 
 	/**
-	 * Notify all double click listeners that a double click event has occurred
-	 * in the list viewer
+	 * Notify all double click listeners that a double click event has occurred in
+	 * the list viewer
 	 */
 	protected void notifyDoubleClickListeners(DoubleClickEvent event) {
 		Iterator<IDoubleClickListener> iter = doubleClickListeners.iterator();
@@ -255,8 +255,7 @@ public class TreeAndListGroup implements ISelectionChangedListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(
+	 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(
 	 * org.eclipse.jface.viewers.SelectionChangedEvent)
 	 */
 	@Override
@@ -298,8 +297,8 @@ public class TreeAndListGroup implements ISelectionChangedListener {
 	}
 
 	/**
-	 * Set the root of the widget to be new Root. Regenerate all of the tables
-	 * and lists from this value.
+	 * Set the root of the widget to be new Root. Regenerate all of the tables and
+	 * lists from this value.
 	 * 
 	 * @param newRoot
 	 */

@@ -195,8 +195,7 @@ public class SuperTypeHierarchyCache {
 	 * Check if the given type is in the hierarchy
 	 * 
 	 * @param type
-	 * @return Return <code>true</code> if a hierarchy for the given type is
-	 *         cached.
+	 * @return Return <code>true</code> if a hierarchy for the given type is cached.
 	 */
 	public static boolean hasInCache(IType type) {
 		return findTypeHierarchyInCache(type) != null;

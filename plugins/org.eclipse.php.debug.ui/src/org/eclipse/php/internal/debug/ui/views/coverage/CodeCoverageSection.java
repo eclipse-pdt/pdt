@@ -52,17 +52,16 @@ public class CodeCoverageSection implements Listener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.
+	 * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.
 	 * Event)
 	 */
 	@Override
 	public void handleEvent(final Event event) {
 		final Point p = new Point(event.x, event.y);
-	
+
 		final TreeItem item = getTreeItem(p);
 		final int column = getColumn(p);
-	
+
 		if (event.type == SWT.MouseDoubleClick) {
 			doubleClick(item, column);
 		}
@@ -72,7 +71,7 @@ public class CodeCoverageSection implements Listener {
 		if (event.type == SWT.MouseMove) {
 			hover(item, column);
 		}
-	
+
 	}
 
 	public void addFilter(ViewerFilter filter) {

@@ -44,8 +44,8 @@ public class OrganizeIncludesProcessor extends RefactoringProcessor {
 	 *      org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext)
 	 */
 	@Override
-	public RefactoringStatus checkFinalConditions(IProgressMonitor pm,
-			CheckConditionsContext context) throws OperationCanceledException {
+	public RefactoringStatus checkFinalConditions(IProgressMonitor pm, CheckConditionsContext context)
+			throws OperationCanceledException {
 		RefactoringStatus status = new RefactoringStatus();
 		return status;
 	}
@@ -56,13 +56,10 @@ public class OrganizeIncludesProcessor extends RefactoringProcessor {
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#checkInitialConditions(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	public RefactoringStatus checkInitialConditions(IProgressMonitor pm)
-			throws OperationCanceledException {
+	public RefactoringStatus checkInitialConditions(IProgressMonitor pm) throws OperationCanceledException {
 		RefactoringStatus status = new RefactoringStatus();
-		if (files.size() == 0)
-		 {
-			status.addFatalError(PHPRefactoringCoreMessages
-					.getString("OrganizeIncludesProcessor.Not_Applicable")); //$NON-NLS-1$
+		if (files.size() == 0) {
+			status.addFatalError(PHPRefactoringCoreMessages.getString("OrganizeIncludesProcessor.Not_Applicable")); //$NON-NLS-1$
 		}
 		return status;
 	}
@@ -73,15 +70,11 @@ public class OrganizeIncludesProcessor extends RefactoringProcessor {
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#createChange(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	public Change createChange(IProgressMonitor monitor)
-			throws OperationCanceledException {
+	public Change createChange(IProgressMonitor monitor) throws OperationCanceledException {
 		CompositeChange rootChange = new CompositeChange(
-				PHPRefactoringCoreMessages
-						.getString("OrganizeIncludesProcessor.Organizing_Includes")); //$NON-NLS-1$
+				PHPRefactoringCoreMessages.getString("OrganizeIncludesProcessor.Organizing_Includes")); //$NON-NLS-1$
 		rootChange.markAsSynthetic();
-		monitor.beginTask(
-				PHPRefactoringCoreMessages
-						.getString("OrganizeIncludesProcessor.Calculating"), files.size()); //$NON-NLS-1$
+		monitor.beginTask(PHPRefactoringCoreMessages.getString("OrganizeIncludesProcessor.Calculating"), files.size()); //$NON-NLS-1$
 		for (IFile element : files) {
 			if (monitor.isCanceled()) {
 				return rootChange;
@@ -96,8 +89,7 @@ public class OrganizeIncludesProcessor extends RefactoringProcessor {
 	}
 
 	private Change createFileChange(IFile file, IProgressMonitor monitor) {
-		OrganizeIncludesProcessorDelegate delegate = new OrganizeIncludesProcessorDelegate(
-				file);
+		OrganizeIncludesProcessorDelegate delegate = new OrganizeIncludesProcessorDelegate(file);
 		if (delegate.initializeModel()) {
 			Change change = delegate.createChange(monitor);
 			delegate.disposeModel();

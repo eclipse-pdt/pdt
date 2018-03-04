@@ -23,8 +23,7 @@ import org.eclipse.swt.widgets.Composite;
  * 
  * @author Bartlomiej Laczkowski
  */
-public abstract class AbstractProfileExeLaunchSettingsSection
-		implements IProfilerLaunchSettingsSection {
+public abstract class AbstractProfileExeLaunchSettingsSection implements IProfilerLaunchSettingsSection {
 
 	protected WidgetListener widgetListener;
 	private ILaunchConfiguration configuration;
@@ -38,8 +37,7 @@ public abstract class AbstractProfileExeLaunchSettingsSection
 	 * AbstractPHPLaunchConfigurationProfilerTab.WidgetListener)
 	 */
 	@Override
-	public final void createSection(Composite parent,
-			WidgetListener widgetListener) {
+	public final void createSection(Composite parent, WidgetListener widgetListener) {
 		this.widgetListener = widgetListener;
 		buildSection(parent);
 	}

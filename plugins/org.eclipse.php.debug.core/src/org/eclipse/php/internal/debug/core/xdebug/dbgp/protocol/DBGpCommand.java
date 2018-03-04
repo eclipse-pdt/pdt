@@ -123,12 +123,11 @@ public class DBGpCommand {
 	public DBGpCommand(Socket socket) {
 		this.socket = socket;
 		/*
-		 * try { outStream = new OutputStreamWriter(socket.getOutputStream(),
-		 * ENCODING); } catch (UnsupportedEncodingException e) {
-		 * DBGpLogger.logException(null, this, e); // do nothing until we
-		 * actually try to send a command } catch (IOException e) {
-		 * DBGpLogger.logException(null, this, e); // do nothing until we
-		 * actually try to send a command }
+		 * try { outStream = new OutputStreamWriter(socket.getOutputStream(), ENCODING);
+		 * } catch (UnsupportedEncodingException e) { DBGpLogger.logException(null,
+		 * this, e); // do nothing until we actually try to send a command } catch
+		 * (IOException e) { DBGpLogger.logException(null, this, e); // do nothing until
+		 * we actually try to send a command }
 		 */
 	}
 
@@ -181,14 +180,12 @@ public class DBGpCommand {
 			lastCmdSent = fullCmd;
 
 			/*
-			 * System.out.print("streamed:");
-			 * System.out.write(fullCmd.getBytes(encoding));
+			 * System.out.print("streamed:"); System.out.write(fullCmd.getBytes(encoding));
 			 * System.out.write(0); System.out.flush(); System.out.println();
 			 * 
 			 * outStream.write(command); outStream.write(id);
 			 * outStream.write(Integer.toString(cmdId)); if (args != null) {
-			 * outStream.write(" " + args); } outStream.write(0);
-			 * outStream.flush();
+			 * outStream.write(" " + args); } outStream.write(0); outStream.flush();
 			 */
 		}
 		return cmdId;

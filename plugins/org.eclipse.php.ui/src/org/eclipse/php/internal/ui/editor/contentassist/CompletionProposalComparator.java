@@ -37,12 +37,11 @@ public class CompletionProposalComparator implements Comparator<Object> {
 	}
 
 	/**
-	 * Sets the sort order. Default is <code>false</code>, i.e. order by
-	 * relevance.
+	 * Sets the sort order. Default is <code>false</code>, i.e. order by relevance.
 	 * 
 	 * @param orderAlphabetically
-	 *            <code>true</code> to order alphabetically, <code>false</code>
-	 *            to order by relevance
+	 *            <code>true</code> to order alphabetically, <code>false</code> to
+	 *            order by relevance
 	 */
 	public void setOrderAlphabetically(boolean orderAlphabetically) {
 		fOrderAlphabetically = orderAlphabetically;
@@ -57,8 +56,7 @@ public class CompletionProposalComparator implements Comparator<Object> {
 			return compareRelevance(p1, p2);
 		}
 		/*
-		 * TODO the correct (but possibly much slower) sorting would use a
-		 * collator.
+		 * TODO the correct (but possibly much slower) sorting would use a collator.
 		 */
 		// fix for bug 67468
 		return compareAlphabetically(p1, p2);

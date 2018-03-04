@@ -45,8 +45,8 @@ public class VersionUtils {
 	}
 
 	/**
-	 * Compare if the version 1 is greater that version 2. The version string
-	 * format are "major.minor.micro.[*]"
+	 * Compare if the version 1 is greater that version 2. The version string format
+	 * are "major.minor.micro.[*]"
 	 * 
 	 * @param version1
 	 *            String of version 1

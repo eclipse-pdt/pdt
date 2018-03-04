@@ -135,8 +135,7 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage imp
 		fProjectSettingsLink.setLayoutData(new GridData(SWT.END, SWT.BEGINNING, true, false));
 
 		/*
-		 * "element" should be a project, if null, link to per-project
-		 * properties
+		 * "element" should be a project, if null, link to per-project properties
 		 */
 		if (getProject() != null) {
 			fProjectSettingsLink.setText("<a>" + PHPUIMessages.AbstractPHPPropertyPreferencePage_1 + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$

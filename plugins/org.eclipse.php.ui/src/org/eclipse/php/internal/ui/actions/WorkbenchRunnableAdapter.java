@@ -100,8 +100,7 @@ public class WorkbenchRunnableAdapter implements IRunnableWithProgress, IThreadL
 			/*
 			 * (non-Javadoc)
 			 * 
-			 * @see
-			 * org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime
+			 * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime
 			 * .IProgressMonitor)
 			 */
 			@Override

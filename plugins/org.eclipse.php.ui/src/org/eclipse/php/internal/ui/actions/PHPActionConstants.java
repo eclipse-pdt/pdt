@@ -40,8 +40,8 @@ public class PHPActionConstants {
 	public static final String OPEN_CALL_HIERARCHY = "org.eclipse.php.ui.actions.OpenCallHierarchy"; //$NON-NLS-1$
 
 	/**
-	 * Navigate menu: name of standard Show in Navigator View global action
-	 * (value <code>"org.eclipse.php.ui.actions.ShowInNaviagtorView"</code>).
+	 * Navigate menu: name of standard Show in Navigator View global action (value
+	 * <code>"org.eclipse.php.ui.actions.ShowInNaviagtorView"</code>).
 	 */
 	public static final String SHOW_IN_NAVIGATOR_VIEW = "org.eclipse.php.ui.actions.ShowInNaviagtorView"; //$NON-NLS-1$
 
@@ -143,8 +143,8 @@ public class PHPActionConstants {
 	public static final String SHOW_PHP_DOC = "org.eclipse.php.ui.actions.ShowPHPDoc"; //$NON-NLS-1$
 
 	/**
-	 * Search menu: name of standard method exit occurrences global action
-	 * (value <code>"org.eclipse.php.ui.actions.MethodExitOccurrences"</code>).
+	 * Search menu: name of standard method exit occurrences global action (value
+	 * <code>"org.eclipse.php.ui.actions.MethodExitOccurrences"</code>).
 	 * 
 	 * @since 3.4
 	 */

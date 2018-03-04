@@ -16,26 +16,25 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.swt.graphics.Image;
 
-
 public class PhpElement extends ASTAttribute {
 
-	private static final long LABEL_OPTIONS=
-		ScriptElementLabels.F_APP_TYPE_SIGNATURE | ScriptElementLabels.M_PARAMETER_TYPES | 
-		ScriptElementLabels.M_APP_RETURNTYPE | ScriptElementLabels.ALL_FULLY_QUALIFIED |
-		ScriptElementLabels.T_TYPE_PARAMETERS |ScriptElementLabels.USE_RESOLVED;
-	
+	private static final long LABEL_OPTIONS = ScriptElementLabels.F_APP_TYPE_SIGNATURE
+			| ScriptElementLabels.M_PARAMETER_TYPES | ScriptElementLabels.M_APP_RETURNTYPE
+			| ScriptElementLabels.ALL_FULLY_QUALIFIED | ScriptElementLabels.T_TYPE_PARAMETERS
+			| ScriptElementLabels.USE_RESOLVED;
+
 	private final ISourceModule fPhpElement;
 	private final Object fParent;
 
 	public PhpElement(Object parent, ISourceModule javaElement) {
-		fParent= parent;
-		fPhpElement= javaElement;
+		fParent = parent;
+		fPhpElement = javaElement;
 	}
-	
+
 	public ISourceModule getPhpElement() {
 		return fPhpElement;
 	}
-	
+
 	@Override
 	public Object getParent() {
 		return fParent;
@@ -51,18 +50,20 @@ public class PhpElement extends ASTAttribute {
 		if (fPhpElement == null) {
 			return ">java element: null"; //$NON-NLS-1$
 		} else {
-			String classname= fPhpElement.getClass().getName();
+			String classname = fPhpElement.getClass().getName();
 			return "> " + classname.substring(classname.lastIndexOf('.') + 1) + ": " //$NON-NLS-1$ //$NON-NLS-2$
-					/* +  ScriptElementLabels.getElementLabel(fPhpElement, LABEL_OPTIONS)*/ // TODO check this label provider
-					+ (fPhpElement.exists() ? "" : " (does not exist)");  //$NON-NLS-1$//$NON-NLS-2$
+			/* + ScriptElementLabels.getElementLabel(fPhpElement, LABEL_OPTIONS) */ // TODO check this label provider
+					+ (fPhpElement.exists() ? "" : " (does not exist)"); //$NON-NLS-1$//$NON-NLS-2$
 		}
 	}
-	
+
 	@Override
 	public Image getImage() {
 		return null;
-		//TODO: looks ugly when not all nodes have an icon
-//		return new JavaElementImageProvider().getImageLabel(fJavaElement, JavaElementImageProvider.SMALL_ICONS | JavaElementImageProvider.OVERLAY_ICONS);
+		// TODO: looks ugly when not all nodes have an icon
+		// return new JavaElementImageProvider().getImageLabel(fJavaElement,
+		// JavaElementImageProvider.SMALL_ICONS |
+		// JavaElementImageProvider.OVERLAY_ICONS);
 	}
 
 	/*
@@ -76,27 +77,27 @@ public class PhpElement extends ASTAttribute {
 		if (obj == null || !obj.getClass().equals(getClass())) {
 			return false;
 		}
-		
-		PhpElement other= (PhpElement) obj;
+
+		PhpElement other = (PhpElement) obj;
 		if (fParent == null) {
 			if (other.fParent != null) {
 				return false;
 			}
-		} else if (! fParent.equals(other.fParent)) {
+		} else if (!fParent.equals(other.fParent)) {
 			return false;
 		}
-		
+
 		if (fPhpElement == null) {
 			if (other.fPhpElement != null) {
 				return false;
 			}
-		} else if (! fPhpElement.equals(other.fPhpElement)) {
+		} else if (!fPhpElement.equals(other.fPhpElement)) {
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	/*
 	 * @see java.lang.Object#hashCode()
 	 */

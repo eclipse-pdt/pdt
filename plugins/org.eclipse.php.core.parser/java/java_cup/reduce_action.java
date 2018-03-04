@@ -1,84 +1,91 @@
 
 package java_cup;
 
-/** This class represents a reduce action within the parse table. 
- *  The action simply stores the production that it reduces with and 
- *  responds to queries about its type.
+/**
+ * This class represents a reduce action within the parse table. The action
+ * simply stores the production that it reduces with and responds to queries
+ * about its type.
  *
  * @version last updated: 11/25/95
- * @author  Scott Hudson
+ * @author Scott Hudson
  */
 public class reduce_action extends parse_action {
- 
-  /*-----------------------------------------------------------*/
-  /*--- Constructor(s) ----------------------------------------*/
-  /*-----------------------------------------------------------*/
 
-  /** Simple constructor. 
-   * @param prod the production this action reduces with.
-   */
-  public reduce_action(production prod ) throws internal_error
-    {
-      /* sanity check */
-      if (prod == null)
-	throw new internal_error(
-	  "Attempt to create a reduce_action with a null production");
+	/*-----------------------------------------------------------*/
+	/*--- Constructor(s) ----------------------------------------*/
+	/*-----------------------------------------------------------*/
 
-      _reduce_with = prod;
-    }
+	/**
+	 * Simple constructor.
+	 * 
+	 * @param prod
+	 *            the production this action reduces with.
+	 */
+	public reduce_action(production prod) throws internal_error {
+		/* sanity check */
+		if (prod == null) {
+			throw new internal_error("Attempt to create a reduce_action with a null production");
+		}
 
-  /*-----------------------------------------------------------*/
-  /*--- (Access to) Instance Variables ------------------------*/
-  /*-----------------------------------------------------------*/
-  
-  /** The production we reduce with. */
-  protected production _reduce_with;
+		_reduce_with = prod;
+	}
 
-  /** The production we reduce with. */
-  public production reduce_with() {return _reduce_with;}
+	/*-----------------------------------------------------------*/
+	/*--- (Access to) Instance Variables ------------------------*/
+	/*-----------------------------------------------------------*/
 
-  /*-----------------------------------------------------------*/
-  /*--- General Methods ---------------------------------------*/
-  /*-----------------------------------------------------------*/
+	/** The production we reduce with. */
+	protected production _reduce_with;
 
-  /** Quick access to type of action. */
-  public int kind() {return REDUCE;}
+	/** The production we reduce with. */
+	public production reduce_with() {
+		return _reduce_with;
+	}
 
-  /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
+	/*-----------------------------------------------------------*/
+	/*--- General Methods ---------------------------------------*/
+	/*-----------------------------------------------------------*/
 
-  /** Equality test. */
-  public boolean equals(reduce_action other)
-    {
-      return other != null && other.reduce_with() == reduce_with();
-    }
+	/** Quick access to type of action. */
+	@Override
+	public int kind() {
+		return REDUCE;
+	}
 
-  /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
+	/* . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . */
 
-  /** Generic equality test. */
-  public boolean equals(Object other)
-    {
-      if (other instanceof reduce_action)
-	return equals((reduce_action)other);
-      else
-       return false;
-    }
+	/** Equality test. */
+	public boolean equals(reduce_action other) {
+		return other != null && other.reduce_with() == reduce_with();
+	}
 
-  /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
+	/* . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . */
 
-  /** Compute a hash code. */
-  public int hashCode()
-    {
-      /* use the hash code of the production we are reducing with */
-      return reduce_with().hashCode();
-    }
+	/** Generic equality test. */
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof reduce_action) {
+			return equals((reduce_action) other);
+		} else {
+			return false;
+		}
+	}
 
+	/* . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . */
 
-  /** Convert to string. */
-  public String toString() 
-    {
-      return "REDUCE(with prod " + reduce_with().index() + ")";
-    }
+	/** Compute a hash code. */
+	@Override
+	public int hashCode() {
+		/* use the hash code of the production we are reducing with */
+		return reduce_with().hashCode();
+	}
 
-  /*-----------------------------------------------------------*/
+	/** Convert to string. */
+	@Override
+	public String toString() {
+		return "REDUCE(with prod " + reduce_with().index() + ")";
+	}
+
+	/*-----------------------------------------------------------*/
 
 }

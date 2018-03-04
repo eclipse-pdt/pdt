@@ -26,8 +26,8 @@ public class ComposerPluginConstants {
 	public static final String AUTOLOAD_NAMESPACES = "autoload_namespaces.php"; //$NON-NLS-1$
 
 	/**
-	 * Default src folder constant for creating new composer projects (used in
-	 * new composer project wizards)
+	 * Default src folder constant for creating new composer projects (used in new
+	 * composer project wizards)
 	 */
 	public static final String DEFAULT_SRC_FOLDER = "src"; //$NON-NLS-1$
 

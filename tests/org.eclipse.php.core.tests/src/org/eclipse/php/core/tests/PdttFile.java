@@ -124,8 +124,7 @@ public class PdttFile {
 	 *            The testing plug-in
 	 * @param fileName
 	 * @param charsetName
-	 *            charset to use (if null, platform's default charset will be
-	 *            used)
+	 *            charset to use (if null, platform's default charset will be used)
 	 * @throws Exception
 	 */
 	public PdttFile(Bundle testBundle, String fileName, String charsetName) throws Exception {
@@ -246,13 +245,12 @@ public class PdttFile {
 	}
 
 	/**
-	 * Internal method for parsing a .pdtt test file. Note that inputStream must
-	 * be closed by the caller.
+	 * Internal method for parsing a .pdtt test file. Note that inputStream must be
+	 * closed by the caller.
 	 * 
 	 * @param inputStream
 	 * @param charsetName
-	 *            charset to use (if null, platform's default charset will be
-	 *            used)
+	 *            charset to use (if null, platform's default charset will be used)
 	 * @throws Exception
 	 */
 	protected void parse(InputStream inputStream, String charsetName) throws Exception {

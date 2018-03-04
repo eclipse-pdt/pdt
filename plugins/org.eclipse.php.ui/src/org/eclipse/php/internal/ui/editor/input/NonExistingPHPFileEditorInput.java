@@ -60,8 +60,8 @@ public class NonExistingPHPFileEditorInput extends NonExistingFileEditorInput im
 	}
 
 	/**
-	 * Finds non-existing PHP file editor input by the real path to the
-	 * temporary file.
+	 * Finds non-existing PHP file editor input by the real path to the temporary
+	 * file.
 	 * 
 	 * @param path
 	 * @return
@@ -71,8 +71,8 @@ public class NonExistingPHPFileEditorInput extends NonExistingFileEditorInput im
 	}
 
 	/**
-	 * Destroys instance of non-existing PHP file editor input by the real path
-	 * to the temporary file.
+	 * Destroys instance of non-existing PHP file editor input by the real path to
+	 * the temporary file.
 	 * 
 	 * @param path
 	 * @return

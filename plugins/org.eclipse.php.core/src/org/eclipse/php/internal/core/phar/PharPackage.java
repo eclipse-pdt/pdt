@@ -26,8 +26,8 @@ public class PharPackage {
 	private String alias;
 
 	/*
-	 * What to export - internal locations The list fExported* is null if
-	 * fExport* is false)
+	 * What to export - internal locations The list fExported* is null if fExport*
+	 * is false)
 	 */
 
 	private int exportType;
@@ -172,16 +172,15 @@ public class PharPackage {
 	 * @return a string containing the manifest version
 	 */
 	public String getStubVersion() {
-		if (stubVersion == null)
-		 {
+		if (stubVersion == null) {
 			return "1.1.0"; //$NON-NLS-1$
 		}
 		return stubVersion;
 	}
 
 	/**
-	 * Returns the elements which will be exported. These elements are leaf
-	 * objects e.g. <code>IFile</code> and not containers.
+	 * Returns the elements which will be exported. These elements are leaf objects
+	 * e.g. <code>IFile</code> and not containers.
 	 * 
 	 * @return an array of leaf objects
 	 */
@@ -195,8 +194,7 @@ public class PharPackage {
 	/**
 	 * Set the elements which will be exported.
 	 * 
-	 * These elements are leaf objects e.g. <code>IFile</code>. and not
-	 * containers.
+	 * These elements are leaf objects e.g. <code>IFile</code>. and not containers.
 	 * 
 	 * @param elements
 	 *            an array with leaf objects
@@ -210,22 +208,21 @@ public class PharPackage {
 	/**
 	 * Finds the class files for the given java file and returns them.
 	 * <p>
-	 * This is a hook for subclasses which want to implement a different
-	 * strategy for finding the class files. The default strategy is to query
-	 * the class files for the source file name attribute. If this attribute is
-	 * missing then all class files in the corresponding output folder are
-	 * exported.
+	 * This is a hook for subclasses which want to implement a different strategy
+	 * for finding the class files. The default strategy is to query the class files
+	 * for the source file name attribute. If this attribute is missing then all
+	 * class files in the corresponding output folder are exported.
 	 * </p>
 	 * <p>
-	 * A CoreException can be thrown if an error occurs during this operation.
-	 * The <code>CoreException</code> will not stop the export process but adds
-	 * the status object to the status of the export runnable.
+	 * A CoreException can be thrown if an error occurs during this operation. The
+	 * <code>CoreException</code> will not stop the export process but adds the
+	 * status object to the status of the export runnable.
 	 * </p>
 	 * 
 	 * @param javaFile
 	 *            a .java file
-	 * @return an array with class files or <code>null</code> to used the
-	 *         default strategy
+	 * @return an array with class files or <code>null</code> to used the default
+	 *         strategy
 	 * @throws CoreException
 	 *             if find failed, e.g. I/O error or resource out of sync
 	 * @see IJarExportRunnable#getStatus()
@@ -247,8 +244,8 @@ public class PharPackage {
 	/**
 	 * Tells whether a manifest is available.
 	 * 
-	 * @return <code>true</code> if the manifest is generated or the provided
-	 *         one is accessible
+	 * @return <code>true</code> if the manifest is generated or the provided one is
+	 *         accessible
 	 */
 	public boolean isStubAccessible() {
 		if (isStubGenerated()) {
@@ -273,8 +270,8 @@ public class PharPackage {
 	 * Sets the option to include directory entries into the jar.
 	 * 
 	 * @param includeDirectoryEntries
-	 *            <code>true</code> to include directory entries
-	 *            <code>false</code> otherwise
+	 *            <code>true</code> to include directory entries <code>false</code>
+	 *            otherwise
 	 * 
 	 * @since 3.1
 	 */

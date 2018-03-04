@@ -31,7 +31,8 @@ public class InstanceOfStrategy extends TypesStrategy {
 	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		// let NamespaceInstanceOfStrategy to deal with namespace prefix
-		// AbstractCompletionContext completionContext = (AbstractCompletionContext) getContext();
+		// AbstractCompletionContext completionContext = (AbstractCompletionContext)
+		// getContext();
 		// String suffix = getSuffix(completionContext);
 		// addAlias(reporter, suffix);
 

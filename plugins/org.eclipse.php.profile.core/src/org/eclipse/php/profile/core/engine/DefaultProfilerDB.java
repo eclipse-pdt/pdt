@@ -28,9 +28,9 @@ public class DefaultProfilerDB implements ProfilerDB {
 																// and
 																// functionData
 	private Map<String, ProfilerFileData> fFilesHash = new Hashtable<>(); // hashtable
-																									// of
-																									// file
-																									// name
+																			// of
+																			// file
+																			// name
 	// and fileData
 	private ProfilerData fProfilerData;
 	private Date fProfileDate;
@@ -49,8 +49,8 @@ public class DefaultProfilerDB implements ProfilerDB {
 	}
 
 	/**
-	 * Constructs profiler db from the specified profiler data. May be useful
-	 * when restoring profiler db from file.
+	 * Constructs profiler db from the specified profiler data. May be useful when
+	 * restoring profiler db from file.
 	 * 
 	 * @param ProfilerData
 	 *            data

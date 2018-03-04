@@ -135,8 +135,7 @@ public class PHPCommentTemplateCompletionProcessor extends ScriptTemplateComplet
 	protected String extractPrefix(ITextViewer viewer, int offset) {
 		int i = offset;
 		IDocument document = viewer.getDocument();
-		if (i > document.getLength())
-		 {
+		if (i > document.getLength()) {
 			return ""; //$NON-NLS-1$
 		}
 
@@ -229,8 +228,7 @@ public class PHPCommentTemplateCompletionProcessor extends ScriptTemplateComplet
 
 	/*
 	 * @see
-	 * org.eclipse.dltk.ui.templates.ScriptTemplateCompletionProcessor#getIgnore
-	 * ()
+	 * org.eclipse.dltk.ui.templates.ScriptTemplateCompletionProcessor#getIgnore ()
 	 */
 	@Override
 	protected char[] getIgnore() {

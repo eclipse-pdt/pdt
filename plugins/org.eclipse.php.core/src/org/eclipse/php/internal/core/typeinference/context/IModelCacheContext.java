@@ -23,8 +23,7 @@ import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 public interface IModelCacheContext {
 
 	/**
-	 * @return cache instance if available, otherwise may return
-	 *         <code>null</code>.
+	 * @return cache instance if available, otherwise may return <code>null</code>.
 	 */
 	IModelAccessCache getCache();
 

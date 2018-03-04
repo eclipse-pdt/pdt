@@ -88,8 +88,7 @@ public class IPVariableElementLabelProvider extends LabelProvider implements ICo
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
+	 * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
 	 */
 	@Override
 	public Color getForeground(Object element) {
@@ -99,8 +98,7 @@ public class IPVariableElementLabelProvider extends LabelProvider implements ICo
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
+	 * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
 	 */
 	@Override
 	public Color getBackground(Object element) {

@@ -46,8 +46,7 @@ public abstract class AbstractDebuggerConfigurationDialog extends TitleAreaDialo
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.dialogs.TitleAreaDialog#setMessage(java.lang.String,
+	 * @see org.eclipse.jface.dialogs.TitleAreaDialog#setMessage(java.lang.String,
 	 * int)
 	 */
 	@Override
@@ -171,8 +170,8 @@ public abstract class AbstractDebuggerConfigurationDialog extends TitleAreaDialo
 	}
 
 	/**
-	 * Creates a composite with a highlighted Note entry and a message text.
-	 * This is designed to take up the full width of the page.
+	 * Creates a composite with a highlighted Note entry and a message text. This is
+	 * designed to take up the full width of the page.
 	 * 
 	 * @param font
 	 *            the font to use

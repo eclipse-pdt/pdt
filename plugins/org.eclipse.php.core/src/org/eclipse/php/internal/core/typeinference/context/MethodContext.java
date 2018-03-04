@@ -74,8 +74,8 @@ public class MethodContext implements IContext, INamespaceContext, IArgumentsCon
 	}
 
 	/**
-	 * Returns {@link IEvaluatedType} for the declaring type or
-	 * <code>null</code> if this is a function context
+	 * Returns {@link IEvaluatedType} for the declaring type or <code>null</code> if
+	 * this is a function context
 	 */
 	@Override
 	public IEvaluatedType getInstanceType() {
@@ -83,8 +83,8 @@ public class MethodContext implements IContext, INamespaceContext, IArgumentsCon
 	}
 
 	/**
-	 * Returns namespace where the method was declared or <code>null</code> if
-	 * this is a global scope method/function
+	 * Returns namespace where the method was declared or <code>null</code> if this
+	 * is a global scope method/function
 	 */
 	@Override
 	public String getNamespace() {

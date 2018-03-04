@@ -63,10 +63,10 @@ import org.osgi.framework.SynchronousBundleListener;
 public class PHPDebugPlugin extends Plugin {
 
 	/**
-	 * This class is used to start separate non-UI job just right after
-	 * encompassing bundle is started to perform "right-after startup"
-	 * operations. Everything that doesn't need UI thread and is not required to
-	 * be initialized only while starting bundle should be placed here.
+	 * This class is used to start separate non-UI job just right after encompassing
+	 * bundle is started to perform "right-after startup" operations. Everything
+	 * that doesn't need UI thread and is not required to be initialized only while
+	 * starting bundle should be placed here.
 	 */
 	private class PostStart implements BundleListener {
 
@@ -143,8 +143,8 @@ public class PHPDebugPlugin extends Plugin {
 
 		/**
 		 * Sets extension_dir in php.ini file for all php executables (i.e.
-		 * resources/php53, resources/php54) provided by extension point
-		 * "phpExe", for OSs different than Windows.
+		 * resources/php53, resources/php54) provided by extension point "phpExe", for
+		 * OSs different than Windows.
 		 * 
 		 * @throws IOException
 		 * @throws URISyntaxException
@@ -429,8 +429,8 @@ public class PHPDebugPlugin extends Plugin {
 	}
 
 	/**
-	 * Returns if multiple sessions of debug launches are allowed when one of
-	 * the launches contains a 'debug all pages' attribute.
+	 * Returns if multiple sessions of debug launches are allowed when one of the
+	 * launches contains a 'debug all pages' attribute.
 	 * 
 	 * @return True, the multiple sessions are allowed; False, otherwise.
 	 */
@@ -439,8 +439,8 @@ public class PHPDebugPlugin extends Plugin {
 	}
 
 	/**
-	 * Allow or disallow the multiple debug sessions that has a launch attribute
-	 * of 'debug all pages'.
+	 * Allow or disallow the multiple debug sessions that has a launch attribute of
+	 * 'debug all pages'.
 	 * 
 	 * @param supported
 	 */
@@ -465,9 +465,9 @@ public class PHPDebugPlugin extends Plugin {
 	// }
 
 	/**
-	 * Enable or disable the auto remove old launches flag. The auto remove flag
-	 * is usually disabled when a PHP server launch was triggered and a 'debug
-	 * all pages' flag was on. Note that this method actually sets the
+	 * Enable or disable the auto remove old launches flag. The auto remove flag is
+	 * usually disabled when a PHP server launch was triggered and a 'debug all
+	 * pages' flag was on. Note that this method actually sets the
 	 * IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES preferences key for the
 	 * {@link DebugUIPlugin}.
 	 * 

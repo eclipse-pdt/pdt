@@ -115,8 +115,8 @@ public class PHPResourceSelectionDialog extends SelectionDialog {
 
 	/**
 	 * The <code>ContainerSelectionDialog</code> implementation of this
-	 * <code>Dialog</code> method builds a list of the selected resource
-	 * containers for later retrieval by the client and closes this dialog.
+	 * <code>Dialog</code> method builds a list of the selected resource containers
+	 * for later retrieval by the client and closes this dialog.
 	 */
 	@Override
 	protected void okPressed() {
@@ -141,8 +141,7 @@ public class PHPResourceSelectionDialog extends SelectionDialog {
 	}
 
 	/**
-	 * Set whether or not closed projects should be shown in the selection
-	 * dialog.
+	 * Set whether or not closed projects should be shown in the selection dialog.
 	 * 
 	 * @param show
 	 *            Whether or not to show closed projects.

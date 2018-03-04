@@ -94,8 +94,7 @@ public abstract class TypeDeclarationContext extends DeclarationContext {
 	}
 
 	/**
-	 * Returns the end offset of the type identifier relative to the statement
-	 * text.
+	 * Returns the end offset of the type identifier relative to the statement text.
 	 * 
 	 * @see #getStatementText()
 	 * @return

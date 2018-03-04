@@ -163,8 +163,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.ILaunchConfigurationTab#initializeFrom(org.eclipse
+	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#initializeFrom(org.eclipse
 	 * .debug.core.ILaunchConfiguration)
 	 */
 	@Override
@@ -185,8 +184,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.ILaunchConfigurationTab#isValid(org.eclipse.debug
+	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#isValid(org.eclipse.debug
 	 * .core.ILaunchConfiguration)
 	 */
 	@Override
@@ -233,12 +231,12 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			if (phpExeItem == null) {
 				String storedPHPexePath = launchConfig.getAttribute(PHPRuntime.PHP_CONTAINER, (String) null);
 				phpExeItem = storedPHPexePath != null
-						? PHPRuntime.getPHPexeItem(Path.fromPortableString(storedPHPexePath)) : null;
+						? PHPRuntime.getPHPexeItem(Path.fromPortableString(storedPHPexePath))
+						: null;
 			}
 			// Check if script arguments can be passed (CLI SAPI required)
 			String exeProgramArgs = prgmArgumentsText != null ? prgmArgumentsText.getText() : null;
-			if (exeProgramArgs == null)
-			 {
+			if (exeProgramArgs == null) {
 				exeProgramArgs = launchConfig.getAttribute(IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS, ""); //$NON-NLS-1$
 			}
 			if (!exeProgramArgs.isEmpty()) {
@@ -255,8 +253,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.ILaunchConfigurationTab#performApply(org.eclipse
+	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#performApply(org.eclipse
 	 * .debug.core.ILaunchConfigurationWorkingCopy)
 	 */
 	@Override
@@ -298,8 +295,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.ILaunchConfigurationTab#setDefaults(org.eclipse.
+	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#setDefaults(org.eclipse.
 	 * debug.core.ILaunchConfigurationWorkingCopy)
 	 */
 	@Override
@@ -325,8 +321,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	}
 
 	/*
-	 * Fix for Bug 60163 Accessibility: New Builder Dialog missing object info
-	 * for textInput controls
+	 * Fix for Bug 60163 Accessibility: New Builder Dialog missing object info for
+	 * textInput controls
 	 */
 	public void addControlAccessibleListener(final Control control, final String controlName) {
 		// strip mnemonic (&)

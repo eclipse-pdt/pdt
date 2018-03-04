@@ -33,8 +33,8 @@ public interface IIncludeBinding extends IBinding {
 	/**
 	 * Returns the list of name component making up the name of the include
 	 * represented by this binding. For example, for the include named
-	 * "/com/example/tool", this method returns {"com", "example", "tool"}.
-	 * Returns the empty list for unnamed packages.
+	 * "/com/example/tool", this method returns {"com", "example", "tool"}. Returns
+	 * the empty list for unnamed packages.
 	 * 
 	 * @return the name of the package represented by this binding, or the empty
 	 *         list for unnamed packages

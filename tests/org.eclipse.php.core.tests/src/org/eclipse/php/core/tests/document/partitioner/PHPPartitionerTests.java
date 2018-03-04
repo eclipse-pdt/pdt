@@ -96,8 +96,8 @@ public class PHPPartitionerTests {
 	}
 
 	/**
-	 * Copy the given source directory (and all its contents) to the given
-	 * target directory.
+	 * Copy the given source directory (and all its contents) to the given target
+	 * directory.
 	 */
 	protected void copyDirectory(File source, File target) throws IOException {
 		if (!target.exists()) {
@@ -223,8 +223,8 @@ public class PHPPartitionerTests {
 	}
 
 	/**
-	 * This method invokes the partitioner, and returns the partition type of
-	 * each marker
+	 * This method invokes the partitioner, and returns the partition type of each
+	 * marker
 	 * 
 	 * @param markers
 	 *            Strings to be looked for in the file, which have the same

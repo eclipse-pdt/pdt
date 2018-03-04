@@ -162,8 +162,8 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns an image descriptor for the image file at the given plug-in
-	 * relative path.
+	 * Returns an image descriptor for the image file at the given plug-in relative
+	 * path.
 	 * 
 	 * @param path
 	 *            the path
@@ -276,8 +276,8 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 	}
 
 	/*
-	 * Clean the secure storage from any SSH Tunnel definitions that are no
-	 * longer used by any of the launch configuration definitions.
+	 * Clean the secure storage from any SSH Tunnel definitions that are no longer
+	 * used by any of the launch configuration definitions.
 	 */
 	private void cleanSecuredStorage() {
 		Job cleanStorageJob = new Job(PHPDebugUIMessages.PHPDebugUIPlugin_2) {
@@ -458,8 +458,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 	}
 
 	/*
-	 * A class that is responsible of selecting the new launch in the
-	 * LaunchView.
+	 * A class that is responsible of selecting the new launch in the LaunchView.
 	 */
 	private static class FirstSelectionDebugLaunchListener implements ILaunchesListener2 {
 

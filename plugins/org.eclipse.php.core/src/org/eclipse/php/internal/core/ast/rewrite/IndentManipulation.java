@@ -37,9 +37,9 @@ public final class IndentManipulation {
 	}
 
 	/**
-	 * Returns <code>true</code> if the given character is an indentation
-	 * character. Indentation character are all whitespace characters except the
-	 * line delimiter characters.
+	 * Returns <code>true</code> if the given character is an indentation character.
+	 * Indentation character are all whitespace characters except the line delimiter
+	 * characters.
 	 * 
 	 * @param ch
 	 *            the given character
@@ -56,17 +56,17 @@ public final class IndentManipulation {
 	 * 
 	 * @param ch
 	 *            the given character
-	 * @return Returns <code>true</code> if this the character is a line
-	 *         delimiter character, <code>false</code> otherwise
+	 * @return Returns <code>true</code> if this the character is a line delimiter
+	 *         character, <code>false</code> otherwise
 	 */
 	public static boolean isLineDelimiterChar(char ch) {
 		return ch == '\n' || ch == '\r';
 	}
 
 	/**
-	 * Returns the indentation of the given line in indentation units. Odd
-	 * spaces are not counted. This method only analyzes the content of
-	 * <code>line</code> up to the first non-whitespace character.
+	 * Returns the indentation of the given line in indentation units. Odd spaces
+	 * are not counted. This method only analyzes the content of <code>line</code>
+	 * up to the first non-whitespace character.
 	 * 
 	 * @param line
 	 *            the string to measure the indent of
@@ -78,10 +78,9 @@ public final class IndentManipulation {
 	 * @exception IllegalArgumentException
 	 *                if:
 	 *                <ul>
-	 *                <li>the given <code>indentWidth</code> is lower or equals
-	 *                to zero</li>
-	 *                <li>the given <code>tabWidth</code> is lower than zero
-	 *                </li>
+	 *                <li>the given <code>indentWidth</code> is lower or equals to
+	 *                zero</li>
+	 *                <li>the given <code>tabWidth</code> is lower than zero</li>
 	 *                <li>the given <code>line</code> is null</li>
 	 *                </ul>
 	 */
@@ -98,8 +97,8 @@ public final class IndentManipulation {
 	 * Returns the indentation of the given line in space equivalents.
 	 * 
 	 * <p>
-	 * Tab characters are counted using the given <code>tabWidth</code> and
-	 * every other indent character as one. This method analyzes the content of
+	 * Tab characters are counted using the given <code>tabWidth</code> and every
+	 * other indent character as one. This method analyzes the content of
 	 * <code>line</code> up to the first non-whitespace character.
 	 * </p>
 	 * 
@@ -112,8 +111,7 @@ public final class IndentManipulation {
 	 *                if:
 	 *                <ul>
 	 *                <li>the given <code>line</code> is null</li>
-	 *                <li>the given <code>tabWidth</code> is lower than zero
-	 *                </li>
+	 *                <li>the given <code>tabWidth</code> is lower than zero</li>
 	 *                </ul>
 	 */
 	public static int measureIndentInSpaces(CharSequence line, int tabWidth) {
@@ -139,8 +137,8 @@ public final class IndentManipulation {
 
 	/**
 	 * Returns the leading indentation string of the given line. Note that the
-	 * returned string need not be equal to the leading whitespace as odd spaces
-	 * are not considered part of the indentation.
+	 * returned string need not be equal to the leading whitespace as odd spaces are
+	 * not considered part of the indentation.
 	 * 
 	 * @param line
 	 *            the line to scan
@@ -152,10 +150,9 @@ public final class IndentManipulation {
 	 * @exception IllegalArgumentException
 	 *                if:
 	 *                <ul>
-	 *                <li>the given <code>indentWidth</code> is lower or equals
-	 *                to zero</li>
-	 *                <li>the given <code>tabWidth</code> is lower than zero
-	 *                </li>
+	 *                <li>the given <code>indentWidth</code> is lower or equals to
+	 *                zero</li>
+	 *                <li>the given <code>tabWidth</code> is lower than zero</li>
 	 *                <li>the given <code>line</code> is null</li>
 	 *                </ul>
 	 */
@@ -197,9 +194,9 @@ public final class IndentManipulation {
 	}
 
 	/**
-	 * Removes the given number of indentation units from a given line. If the
-	 * line has less than the given indent, all the available indentation is
-	 * removed. If <code>indentsToRemove <= 0</code> the line is returned.
+	 * Removes the given number of indentation units from a given line. If the line
+	 * has less than the given indent, all the available indentation is removed. If
+	 * <code>indentsToRemove <= 0</code> the line is returned.
 	 * 
 	 * @param line
 	 *            the line to trim
@@ -211,10 +208,9 @@ public final class IndentManipulation {
 	 * @exception IllegalArgumentException
 	 *                if:
 	 *                <ul>
-	 *                <li>the given <code>indentWidth</code> is lower or equals
-	 *                to zero</li>
-	 *                <li>the given <code>tabWidth</code> is lower than zero
-	 *                </li>
+	 *                <li>the given <code>indentWidth</code> is lower or equals to
+	 *                zero</li>
+	 *                <li>the given <code>tabWidth</code> is lower than zero</li>
 	 *                <li>the given <code>line</code> is null</li>
 	 *                </ul>
 	 */
@@ -276,39 +272,37 @@ public final class IndentManipulation {
 	}
 
 	/**
-	 * Change the indent of a, possible multiple line, code string. The given
-	 * number of indent units is removed, and a new indent string is added.
+	 * Change the indent of a, possible multiple line, code string. The given number
+	 * of indent units is removed, and a new indent string is added.
 	 * <p>
-	 * The first line of the code will not be changed (It is considered to have
-	 * no indent as it might start in the middle of a line).
+	 * The first line of the code will not be changed (It is considered to have no
+	 * indent as it might start in the middle of a line).
 	 * </p>
 	 * 
 	 * @param code
 	 *            the code to change the indent of
 	 * @param indentUnitsToRemove
-	 *            the number of indent units to remove from each line (except
-	 *            the first) of the given code
+	 *            the number of indent units to remove from each line (except the
+	 *            first) of the given code
 	 * @param tabWidth
 	 *            the size of one tab in space equivalents
 	 * @param indentWidth
 	 *            the width of one indentation unit in space equivalents
 	 * @param newIndentString
-	 *            the new indent string to be added to all lines (except the
-	 *            first)
+	 *            the new indent string to be added to all lines (except the first)
 	 * @param lineDelim
-	 *            the new line delimiter to be used. The returned code will
-	 *            contain only this line delimiter.
+	 *            the new line delimiter to be used. The returned code will contain
+	 *            only this line delimiter.
 	 * @return the newly indent code, containing only the given line delimiters.
 	 * @exception IllegalArgumentException
 	 *                if:
 	 *                <ul>
-	 *                <li>the given <code>indentWidth</code> is lower or equals
-	 *                to zero</li>
-	 *                <li>the given <code>tabWidth</code> is lower than zero
-	 *                </li>
+	 *                <li>the given <code>indentWidth</code> is lower or equals to
+	 *                zero</li>
+	 *                <li>the given <code>tabWidth</code> is lower than zero</li>
 	 *                <li>the given <code>code</code> is null</li>
-	 *                <li>the given <code>indentUnitsToRemove</code> is lower
-	 *                than zero</li>
+	 *                <li>the given <code>indentUnitsToRemove</code> is lower than
+	 *                zero</li>
 	 *                <li>the given <code>newIndentString</code> is null</li>
 	 *                <li>the given <code>lineDelim</code> is null</li>
 	 *                </ul>
@@ -361,33 +355,31 @@ public final class IndentManipulation {
 	 * added.
 	 * </p>
 	 * <p>
-	 * The first line of the code will not be changed (It is considered to have
-	 * no indent as it might start in the middle of a line).
+	 * The first line of the code will not be changed (It is considered to have no
+	 * indent as it might start in the middle of a line).
 	 * </p>
 	 * 
 	 * @param source
 	 *            The code to change the indent of
 	 * @param indentUnitsToRemove
-	 *            the number of indent units to remove from each line (except
-	 *            the first) of the given code
+	 *            the number of indent units to remove from each line (except the
+	 *            first) of the given code
 	 * @param tabWidth
 	 *            the size of one tab in space equivalents
 	 * @param indentWidth
 	 *            the width of one indentation unit in space equivalents
 	 * @param newIndentString
-	 *            the new indent string to be added to all lines (except the
-	 *            first)
+	 *            the new indent string to be added to all lines (except the first)
 	 * @return returns the resulting text edits
 	 * @exception IllegalArgumentException
 	 *                if:
 	 *                <ul>
-	 *                <li>the given <code>indentWidth</code> is lower or equals
-	 *                to zero</li>
-	 *                <li>the given <code>tabWidth</code> is lower than zero
-	 *                </li>
+	 *                <li>the given <code>indentWidth</code> is lower or equals to
+	 *                zero</li>
+	 *                <li>the given <code>tabWidth</code> is lower than zero</li>
 	 *                <li>the given <code>source</code> is null</li>
-	 *                <li>the given <code>indentUnitsToRemove</code> is lower
-	 *                than zero</li>
+	 *                <li>the given <code>indentUnitsToRemove</code> is lower than
+	 *                zero</li>
 	 *                <li>the given <code>newIndentString</code> is null</li>
 	 *                </ul>
 	 */
@@ -425,8 +417,8 @@ public final class IndentManipulation {
 
 	/*
 	 * Returns the index where the indent of the given size ends. Returns
-	 * <code>-1<code> if the line isn't prefixed with an indent of the given
-	 * number of indents.
+	 * <code>-1<code> if the line isn't prefixed with an indent of the given number
+	 * of indents.
 	 */
 	private static int indexOfIndent(CharSequence line, int numberOfIndentUnits, int tabWidth, int indentWidth) {
 
@@ -456,8 +448,8 @@ public final class IndentManipulation {
 	/**
 	 * Returns the tab width as configured in the given map.
 	 * <p>
-	 * Use {@link org.eclipse.jdt.core.IJavaProject#getOptions(boolean)} to get
-	 * the most current project options.
+	 * Use {@link org.eclipse.jdt.core.IJavaProject#getOptions(boolean)} to get the
+	 * most current project options.
 	 * </p>
 	 * 
 	 * @param options
@@ -478,8 +470,8 @@ public final class IndentManipulation {
 	/**
 	 * Returns the tab width as configured in the given map.
 	 * <p>
-	 * Use {@link org.eclipse.jdt.core.IJavaProject#getOptions(boolean)} to get
-	 * the most current project options.
+	 * Use {@link org.eclipse.jdt.core.IJavaProject#getOptions(boolean)} to get the
+	 * most current project options.
 	 * </p>
 	 * 
 	 * @param options
@@ -496,12 +488,10 @@ public final class IndentManipulation {
 		int tabWidth = getTabWidth(options);
 		// TODO link with PhpCore
 		/*
-		 * boolean isMixedMode=
-		 * DefaultCodeFormatterConstants.MIXED.equals(options
-		 * .get(DefaultCodeFormatterConstants.FORMATTER_TAB_CHAR)); if
-		 * (isMixedMode) { return getIntValue(options,
-		 * DefaultCodeFormatterConstants.FORMATTER_INDENTATION_SIZE, tabWidth);
-		 * }
+		 * boolean isMixedMode= DefaultCodeFormatterConstants.MIXED.equals(options
+		 * .get(DefaultCodeFormatterConstants.FORMATTER_TAB_CHAR)); if (isMixedMode) {
+		 * return getIntValue(options,
+		 * DefaultCodeFormatterConstants.FORMATTER_INDENTATION_SIZE, tabWidth); }
 		 */return tabWidth;
 	}
 

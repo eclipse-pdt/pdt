@@ -155,8 +155,8 @@ public abstract class AbstractDBGpValue extends DBGpElement implements IValue, I
 	/**
 	 * Checks if value modification is supported.
 	 * 
-	 * @return <code>true</code> if modification is supported,
-	 *         <code>false</code> otherwise
+	 * @return <code>true</code> if modification is supported, <code>false</code>
+	 *         otherwise
 	 */
 	protected abstract boolean supportsValueModification();
 

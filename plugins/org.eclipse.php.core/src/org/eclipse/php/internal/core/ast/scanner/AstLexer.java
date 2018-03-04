@@ -42,8 +42,8 @@ public interface AstLexer extends Scanner {
 	public void yyclose() throws java.io.IOException;
 
 	/**
-	 * Closes the current stream, and resets the scanner to read from a new
-	 * input stream.
+	 * Closes the current stream, and resets the scanner to read from a new input
+	 * stream.
 	 * 
 	 * All internal variables are reset, the old input stream <b>cannot</b> be
 	 * reused (internal buffer is discarded and lost). Lexical state is set to

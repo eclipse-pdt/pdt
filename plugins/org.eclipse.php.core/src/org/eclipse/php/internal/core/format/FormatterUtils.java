@@ -143,9 +143,9 @@ public class FormatterUtils {
 	}
 
 	/**
-	 * Returns the previous php structured document. Special cases : 1) previous
-	 * is null - returns null 2) previous is not PHP region - returns the last
-	 * region of the last php block
+	 * Returns the previous php structured document. Special cases : 1) previous is
+	 * null - returns null 2) previous is not PHP region - returns the last region
+	 * of the last php block
 	 * 
 	 * @param currentStructuredDocumentRegion
 	 */

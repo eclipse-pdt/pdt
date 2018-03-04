@@ -266,13 +266,15 @@ public class VersionSuggestion {
 			@Override
 			public void run() {
 				if (uiFinished) {
-					recentMajor.setText(Messages.VersionSuggestion_MajorLabel + (dataArrived && majorVersion != null
-							? "~" + majorVersion : Messages.VersionSuggestion_NAValue)); //$NON-NLS-1$
+					recentMajor.setText(Messages.VersionSuggestion_MajorLabel
+							+ (dataArrived && majorVersion != null ? "~" + majorVersion //$NON-NLS-1$
+									: Messages.VersionSuggestion_NAValue));
 					recentMajor.setEnabled(dataArrived && majorVersion != null);
 					recentMajor.setData(majorVersion);
 
 					String minorValue = (dataArrived && majorVersion != null && minorVersion != null
-							? "~" + majorVersion + "." + minorVersion : null); //$NON-NLS-1$ //$NON-NLS-2$
+							? "~" + majorVersion + "." + minorVersion //$NON-NLS-1$ //$NON-NLS-2$
+							: null);
 					recentMinor.setText(Messages.VersionSuggestion_MinorLabel
 							+ (minorValue != null ? minorValue : Messages.VersionSuggestion_NAValue));
 					recentMinor.setEnabled(dataArrived && minorVersion != null);

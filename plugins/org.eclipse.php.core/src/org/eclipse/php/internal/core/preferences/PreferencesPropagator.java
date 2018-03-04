@@ -53,8 +53,7 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 	}
 
 	/**
-	 * Adds an IPreferencesPropagatorListener with a preferences key to listen
-	 * to.
+	 * Adds an IPreferencesPropagatorListener with a preferences key to listen to.
 	 * 
 	 * @param listener
 	 *            An IPreferencesPropagatorListener.
@@ -73,8 +72,8 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 	}
 
 	/**
-	 * Removes an IPreferencesPropagatorListener that was assigned to listen to
-	 * the given preferences key.
+	 * Removes an IPreferencesPropagatorListener that was assigned to listen to the
+	 * given preferences key.
 	 * 
 	 * @param listener
 	 *            An IPreferencesPropagatorListener.
@@ -96,8 +95,7 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 	 * replace any previous list of listeners for the key.
 	 * 
 	 * @param listeners
-	 *            A List of listeners that contains
-	 *            IPreferencesPropagatorListeners.
+	 *            A List of listeners that contains IPreferencesPropagatorListeners.
 	 * @param preferencesKey
 	 *            The preferences key that will screen the relevant changes.
 	 */
@@ -159,8 +157,8 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 	}
 
 	/*
-	 * Add the listener to a ProjectPreferencesPropagator. Create a new
-	 * propagator if needed.
+	 * Add the listener to a ProjectPreferencesPropagator. Create a new propagator
+	 * if needed.
 	 */
 	private void addToProjectPropagator(IPreferencesPropagatorListener listener, String preferencesKey) {
 		ProjectPreferencesPropagator propagator = projectToPropagator.get(listener.getProject());
@@ -183,8 +181,8 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 	}
 
 	/*
-	 * Returns true if the given project has a specific settings for the given
-	 * key; false, otherwise.
+	 * Returns true if the given project has a specific settings for the given key;
+	 * false, otherwise.
 	 */
 	private boolean isProjectSpecific(IProject project, String preferencesKey) {
 		ProjectScope projectScope = getProjectScope(project);
@@ -274,9 +272,9 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 		}
 
 		/*
-		 * When a node is added, there is a move for a project-specific
-		 * prefernces, thus, we should divert all the listeners for the project
-		 * to the ProjectPreferencesPropagator.
+		 * When a node is added, there is a move for a project-specific prefernces,
+		 * thus, we should divert all the listeners for the project to the
+		 * ProjectPreferencesPropagator.
 		 */
 		@Override
 		public void added(NodeChangeEvent event) {
@@ -391,8 +389,8 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 	}
 
 	/*
-	 * An inner IPropertyChangeListener that listens to the workspace changes
-	 * and notify all the registered listeners.
+	 * An inner IPropertyChangeListener that listens to the workspace changes and
+	 * notify all the registered listeners.
 	 */
 	private class WorkspacePropertyChangeListener implements IPreferenceChangeListener {
 

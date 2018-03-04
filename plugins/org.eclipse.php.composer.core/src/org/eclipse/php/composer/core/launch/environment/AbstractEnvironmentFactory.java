@@ -88,16 +88,16 @@ public abstract class AbstractEnvironmentFactory implements EnvironmentFactory {
 	protected abstract String getExecutableKey();
 
 	/**
-	 * Get the key for the preference setting if the launcher should use a
-	 * script per project or a global script for launching.
+	 * Get the key for the preference setting if the launcher should use a script
+	 * per project or a global script for launching.
 	 * 
 	 * @return
 	 */
 	protected abstract String getUseProjectKey();
 
 	/**
-	 * Get the key for the preference setting for the location of the php script
-	 * to execute (if the user selected a global script for every launcher)
+	 * Get the key for the preference setting for the location of the php script to
+	 * execute (if the user selected a global script for every launcher)
 	 * 
 	 * @return
 	 */

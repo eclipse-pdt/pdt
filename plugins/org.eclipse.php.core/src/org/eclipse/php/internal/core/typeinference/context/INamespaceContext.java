@@ -19,8 +19,8 @@ package org.eclipse.php.internal.core.typeinference.context;
 public interface INamespaceContext {
 
 	/**
-	 * Returns current namespace name or <code>null</code> if the context is
-	 * outside of any namespaces
+	 * Returns current namespace name or <code>null</code> if the context is outside
+	 * of any namespaces
 	 * 
 	 * @return namespace name
 	 */

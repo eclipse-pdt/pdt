@@ -152,8 +152,8 @@ public class HTMLReportWizardFirstPage extends WizardPage {
 			/*
 			 * (non-Javadoc)
 			 * 
-			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.
-			 * eclipse .swt.events.SelectionEvent)
+			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org. eclipse
+			 * .swt.events.SelectionEvent)
 			 */
 			@Override
 			public void widgetSelected(SelectionEvent e) {

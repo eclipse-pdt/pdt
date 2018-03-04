@@ -74,14 +74,13 @@ public class FileSelectionDialog extends MessageDialog {
 
 	/**
 	 * Limits the files displayed in this dialog to files matching the given
-	 * pattern. The string can be a filename or a regular expression containing
-	 * '*' for any series of characters or '?' for any single character.
+	 * pattern. The string can be a filename or a regular expression containing '*'
+	 * for any series of characters or '?' for any single character.
 	 * 
 	 * @param pattern
-	 *            a pattern used to filter the displayed files or
-	 *            <code>null</code> to display all files. If a pattern is
-	 *            supplied, only files whose names match the given pattern will
-	 *            be available for selection.
+	 *            a pattern used to filter the displayed files or <code>null</code>
+	 *            to display all files. If a pattern is supplied, only files whose
+	 *            names match the given pattern will be available for selection.
 	 * @param ignoreCase
 	 *            if true, case is ignored. If the pattern argument is
 	 *            <code>null</code>, this argument is ignored.
@@ -233,8 +232,8 @@ public class FileSelectionDialog extends MessageDialog {
 	}
 
 	/**
-	 * Sets whether this dialog will allow multi-selection. Must be called
-	 * before <code>open</code>
+	 * Sets whether this dialog will allow multi-selection. Must be called before
+	 * <code>open</code>
 	 * 
 	 * @param allowMultiselection
 	 *            whether to allow multi-selection in the dialog

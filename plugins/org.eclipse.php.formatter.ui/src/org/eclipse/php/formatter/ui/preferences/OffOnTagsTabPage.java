@@ -56,8 +56,7 @@ public class OffOnTagsTabPage extends ModifyDialogTabPage {
 
 		IInputValidator inputValidator = new IInputValidator() {
 			/*
-			 * @see org.eclipse.jdt.internal.ui.preferences.formatter.
-			 * ModifyDialogTabPage
+			 * @see org.eclipse.jdt.internal.ui.preferences.formatter. ModifyDialogTabPage
 			 * .StringPreference.Validator#isValid(java.lang.String)
 			 * 
 			 * @since 3.6
@@ -139,8 +138,7 @@ public class OffOnTagsTabPage extends ModifyDialogTabPage {
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jdt.internal.ui.preferences.formatter.ModifyDialogTabPage
+	 * @see org.eclipse.jdt.internal.ui.preferences.formatter.ModifyDialogTabPage
 	 * #initializePage()
 	 */
 	@Override

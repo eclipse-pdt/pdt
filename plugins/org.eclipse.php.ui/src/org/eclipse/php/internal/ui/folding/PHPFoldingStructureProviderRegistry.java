@@ -48,14 +48,13 @@ public class PHPFoldingStructureProviderRegistry {
 	 * describing all extension to the <code>foldingProviders</code> extension
 	 * point.
 	 * 
-	 * @return the list of extensions to the <code>foldingProviders</code>
-	 *         extension point.
+	 * @return the list of extensions to the <code>foldingProviders</code> extension
+	 *         point.
 	 */
 	public PHPFoldingStructureProviderDescriptor[] getFoldingProviderDescriptors() {
 		synchronized (this) {
 			ensureRegistered();
-			return fDescriptors.values()
-					.toArray(new PHPFoldingStructureProviderDescriptor[fDescriptors.size()]);
+			return fDescriptors.values().toArray(new PHPFoldingStructureProviderDescriptor[fDescriptors.size()]);
 		}
 	}
 
@@ -65,8 +64,7 @@ public class PHPFoldingStructureProviderRegistry {
 	 * 
 	 * @param id
 	 *            the identifier for which a provider is wanted
-	 * @return the corresponding provider, or <code>null</code> if none can be
-	 *         found
+	 * @return the corresponding provider, or <code>null</code> if none can be found
 	 */
 	public PHPFoldingStructureProviderDescriptor getFoldingProviderDescriptor(String id) {
 		synchronized (this) {
@@ -95,8 +93,7 @@ public class PHPFoldingStructureProviderRegistry {
 	}
 
 	/**
-	 * Ensures that the extensions are read and stored in
-	 * <code>fDescriptors</code>.
+	 * Ensures that the extensions are read and stored in <code>fDescriptors</code>.
 	 */
 	private void ensureRegistered() {
 		if (fDescriptors == null) {
@@ -107,8 +104,8 @@ public class PHPFoldingStructureProviderRegistry {
 	/**
 	 * Reads all extensions.
 	 * <p>
-	 * This method can be called more than once in order to reload from a
-	 * changed extension registry.
+	 * This method can be called more than once in order to reload from a changed
+	 * extension registry.
 	 * </p>
 	 */
 	public void reloadExtensions() {

@@ -33,8 +33,8 @@ public class DBGpUtils {
 	}
 
 	/**
-	 * Retrieves node's content, using encodingCharset to decode text content
-	 * when node's "encoding" attribute is set to ENCODING_BASE64.
+	 * Retrieves node's content, using encodingCharset to decode text content when
+	 * node's "encoding" attribute is set to ENCODING_BASE64.
 	 * 
 	 * @param node
 	 * @param encodingCharset

@@ -24,10 +24,10 @@ import org.eclipse.dltk.core.IScriptProject;
 public interface ILanguageModelProvider {
 
 	/**
-	 * Returns path to the directory that contains PHP stubs used for building
-	 * PHP Language Library. The path is relative to the plug-in location. If
-	 * this method returns <code>null</code> - this language model provider
-	 * becomes disabled.
+	 * Returns path to the directory that contains PHP stubs used for building PHP
+	 * Language Library. The path is relative to the plug-in location. If this
+	 * method returns <code>null</code> - this language model provider becomes
+	 * disabled.
 	 * 
 	 * @param project
 	 *            Script project

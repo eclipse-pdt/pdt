@@ -71,9 +71,9 @@ import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 		}
 
 		/**
-		 * Tests if the whole duplicate is the full body of a method. If so
-		 * don't replace it since we would replace a method body with a new
-		 * method body which doesn't make to much sense.
+		 * Tests if the whole duplicate is the full body of a method. If so don't
+		 * replace it since we would replace a method body with a new method body which
+		 * doesn't make to much sense.
 		 * 
 		 * @return whether the duplicte is the whole method body
 		 */

@@ -85,8 +85,8 @@ public class FileUtils {
 	}
 
 	/**
-	 * Change the contents of text file in its entirety, overwriting any
-	 * existing text.
+	 * Change the contents of text file in its entirety, overwriting any existing
+	 * text.
 	 * 
 	 * This style of implementation throws all exceptions to the caller.
 	 * 
@@ -129,8 +129,8 @@ public class FileUtils {
 	}
 
 	/**
-	 * Checks if the first given path string is the container of the second
-	 * given file's path
+	 * Checks if the first given path string is the container of the second given
+	 * file's path
 	 * 
 	 * @param containerPathString
 	 * @param filePathString
@@ -162,8 +162,7 @@ public class FileUtils {
 	}
 
 	/**
-	 * Checks the 2 given files paths are equal using device and segments
-	 * comparison
+	 * Checks the 2 given files paths are equal using device and segments comparison
 	 * 
 	 * @param filePathStr1
 	 * @param filePathStr2
@@ -195,8 +194,8 @@ public class FileUtils {
 
 	/**
 	 * <p>
-	 * Checks if provided locations are pointing to the same file in current OS
-	 * file system.
+	 * Checks if provided locations are pointing to the same file in current OS file
+	 * system.
 	 * </p>
 	 * <p>
 	 * <b>NOTE:</b> this method is using NIO libraries to first check if files

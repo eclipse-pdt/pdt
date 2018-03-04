@@ -58,8 +58,7 @@ public class RandomAccessCharArrayReader extends Reader {
 	 *         been reached
 	 *
 	 * @exception IllegalStateException
-	 *                In case this method was called after the reader was
-	 *                closed.
+	 *                In case this method was called after the reader was closed.
 	 */
 	@Override
 	public int read(char[] cbuf, int off, int len) {
@@ -88,8 +87,8 @@ public class RandomAccessCharArrayReader extends Reader {
 	 * @throws IllegalStateException
 	 *             In case that the reader was closed.
 	 * @throws IllegalArgumentException
-	 *             In case that the given position is negative of larger then
-	 *             the input array.
+	 *             In case that the given position is negative of larger then the
+	 *             input array.
 	 */
 	public void reset(int position) {
 		if (input == null) {

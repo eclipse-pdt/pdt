@@ -504,8 +504,8 @@ public class PHPSourceActionDialog extends CheckedTreeSelectionDialog {
 	}
 
 	/***
-	 * Set insert position valid input is 0 for the first position, 1 for the
-	 * last position, > 1 for all else.
+	 * Set insert position valid input is 0 for the first position, 1 for the last
+	 * position, > 1 for all else.
 	 */
 	private void setInsertPosition(int insert) {
 		fCurrentPositionIndex = insert;

@@ -90,8 +90,7 @@ public class ExecutionStatisticsActionGroup extends ActionGroup {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.actions.ActionGroup#fillContextMenu(org.eclipse.jface.
+	 * @see org.eclipse.ui.actions.ActionGroup#fillContextMenu(org.eclipse.jface.
 	 * action.IMenuManager)
 	 */
 	@Override
@@ -326,8 +325,7 @@ public class ExecutionStatisticsActionGroup extends ActionGroup {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.action.IMenuCreator#getMenu(org.eclipse.swt.widgets
+		 * @see org.eclipse.jface.action.IMenuCreator#getMenu(org.eclipse.swt.widgets
 		 * .Control)
 		 */
 		@Override
@@ -357,8 +355,7 @@ public class ExecutionStatisticsActionGroup extends ActionGroup {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.action.IMenuCreator#getMenu(org.eclipse.swt.widgets
+		 * @see org.eclipse.jface.action.IMenuCreator#getMenu(org.eclipse.swt.widgets
 		 * .Menu)
 		 */
 		@Override
@@ -394,7 +391,7 @@ public class ExecutionStatisticsActionGroup extends ActionGroup {
 			}
 
 			public ApplyFilterAction(ExecutionStatisticsFilter filter, String filterName) {
-				super("  " + filterName, AS_RADIO_BUTTON); //$NON-NLS-1$ 
+				super("  " + filterName, AS_RADIO_BUTTON); //$NON-NLS-1$
 				setDescription(PHPProfileUIMessages.getString("ExecutionStatisticsActionGroup.5")); //$NON-NLS-1$
 				setToolTipText(filterName);
 				fFilter = filter;

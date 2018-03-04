@@ -42,16 +42,16 @@ public class SelectionButtonDialogField extends DialogField {
 	}
 
 	/**
-	 * Attaches a field to the selection state of the selection button. The
-	 * attached field will be disabled if the selection button is not selected.
+	 * Attaches a field to the selection state of the selection button. The attached
+	 * field will be disabled if the selection button is not selected.
 	 */
 	public void attachDialogField(DialogField dialogField) {
 		attachDialogFields(new DialogField[] { dialogField });
 	}
 
 	/**
-	 * Attaches fields to the selection state of the selection button. The
-	 * attached fields will be disabled if the selection button is not selected.
+	 * Attaches fields to the selection state of the selection button. The attached
+	 * fields will be disabled if the selection button is not selected.
 	 */
 	public void attachDialogFields(DialogField[] dialogFields) {
 		fAttachedDialogFields = dialogFields;
@@ -108,8 +108,8 @@ public class SelectionButtonDialogField extends DialogField {
 	// ------- ui creation
 
 	/**
-	 * Returns the selection button widget. When called the first time, the
-	 * widget will be created.
+	 * Returns the selection button widget. When called the first time, the widget
+	 * will be created.
 	 * 
 	 * @param group
 	 *            The parent composite when called the first time, or
@@ -213,8 +213,7 @@ public class SelectionButtonDialogField extends DialogField {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jdt.internal.ui.wizards.dialogfields.DialogField#refresh()
+	 * @see org.eclipse.jdt.internal.ui.wizards.dialogfields.DialogField#refresh()
 	 */
 	@Override
 	public void refresh() {

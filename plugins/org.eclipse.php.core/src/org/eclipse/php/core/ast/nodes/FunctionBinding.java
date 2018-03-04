@@ -92,8 +92,7 @@ public class FunctionBinding implements IFunctionBinding {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.core.ast.nodes.IFunctionBinding#getReturnType()
+	 * @see org.eclipse.php.internal.core.ast.nodes.IFunctionBinding#getReturnType()
 	 */
 	@Override
 	public ITypeBinding[] getReturnType() {

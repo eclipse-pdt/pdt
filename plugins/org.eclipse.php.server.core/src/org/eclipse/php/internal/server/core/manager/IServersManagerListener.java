@@ -32,8 +32,8 @@ public interface IServersManagerListener {
 	public void serverRemoved(ServerManagerEvent event);
 
 	/**
-	 * Called when a server is modified. A modification event will be fired for
-	 * any attribute change in the server.
+	 * Called when a server is modified. A modification event will be fired for any
+	 * attribute change in the server.
 	 * 
 	 * @param event
 	 */

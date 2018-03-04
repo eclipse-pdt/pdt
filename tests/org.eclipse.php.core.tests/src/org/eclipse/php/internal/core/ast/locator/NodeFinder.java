@@ -28,8 +28,8 @@ public class NodeFinder extends ApplyAll {
 	 * <ul>
 	 * <li>first the visitor tries to find a node with the exact start and
 	 * length</li>
-	 * <li>if no such node exists than the node that encloses the range defined
-	 * by start and end is returned.</li>
+	 * <li>if no such node exists than the node that encloses the range defined by
+	 * start and end is returned.</li>
 	 * <li>if the length is zero than also nodes are considered where the node's
 	 * start or end position matches <code>start</code>.</li>
 	 * <li>otherwise <code>null</code> is returned.</li>
@@ -65,12 +65,11 @@ public class NodeFinder extends ApplyAll {
 	 * determined as follows:
 	 * <ul>
 	 * <li>first the visitor tries to find a node that is covered by
-	 * <code>start</code> and <code>length</code> where either
-	 * <code>start</code> and <code>length</code> exactly matches the node or
-	 * where the text covered before and after the node only consists of white
-	 * spaces or comments.</li>
-	 * <li>if no such node exists than the node that encloses the range defined
-	 * by start and end is returned.</li>
+	 * <code>start</code> and <code>length</code> where either <code>start</code>
+	 * and <code>length</code> exactly matches the node or where the text covered
+	 * before and after the node only consists of white spaces or comments.</li>
+	 * <li>if no such node exists than the node that encloses the range defined by
+	 * start and end is returned.</li>
 	 * <li>if the length is zero than also nodes are considered where the node's
 	 * start or end position matches <code>start</code>.</li>
 	 * <li>otherwise <code>null</code> is returned.</li>
@@ -92,20 +91,19 @@ public class NodeFinder extends ApplyAll {
 	 * @since 3.0
 	 */
 	/*
-	 * public static ASTNode perform(ASTNode root, int start, int length,
-	 * ITypeRoot source) throws JavaModelException { NodeFinder finder= new
-	 * NodeFinder(start, length); root.accept(finder); ASTNode result=
-	 * finder.getCoveredNode(); if (result == null) return null; Selection
-	 * selection= Selection.createFromStartLength(start, length); if
-	 * (selection.covers(result)) { IBuffer buffer= source.getBuffer(); if
-	 * (buffer != null) { IScanner scanner= ToolFactory.createScanner(false,
-	 * false, false, false); scanner.setSource(buffer.getText(start,
-	 * length).toCharArray()); try { int token= scanner.getNextToken(); if
-	 * (token != ITerminalSymbols.TokenNameEOF) { int tStart=
-	 * scanner.getCurrentTokenStartPosition(); if (tStart ==
+	 * public static ASTNode perform(ASTNode root, int start, int length, ITypeRoot
+	 * source) throws JavaModelException { NodeFinder finder= new NodeFinder(start,
+	 * length); root.accept(finder); ASTNode result= finder.getCoveredNode(); if
+	 * (result == null) return null; Selection selection=
+	 * Selection.createFromStartLength(start, length); if (selection.covers(result))
+	 * { IBuffer buffer= source.getBuffer(); if (buffer != null) { IScanner scanner=
+	 * ToolFactory.createScanner(false, false, false, false);
+	 * scanner.setSource(buffer.getText(start, length).toCharArray()); try { int
+	 * token= scanner.getNextToken(); if (token != ITerminalSymbols.TokenNameEOF) {
+	 * int tStart= scanner.getCurrentTokenStartPosition(); if (tStart ==
 	 * result.getStartPosition() - start) { scanner.resetTo(tStart +
-	 * result.getLength(), length - 1); token= scanner.getNextToken(); if (token
-	 * == ITerminalSymbols.TokenNameEOF) return result; } } } catch
+	 * result.getLength(), length - 1); token= scanner.getNextToken(); if (token ==
+	 * ITerminalSymbols.TokenNameEOF) return result; } } } catch
 	 * (InvalidInputException e) { } } } return finder.getCoveringNode(); }
 	 */
 
@@ -155,9 +153,9 @@ public class NodeFinder extends ApplyAll {
 	}
 
 	/**
-	 * Returns the covering node. If more than one nodes are covering the
-	 * selection, the returned node is last covering node found in a top-down
-	 * traversal of the AST
+	 * Returns the covering node. If more than one nodes are covering the selection,
+	 * the returned node is last covering node found in a top-down traversal of the
+	 * AST
 	 * 
 	 * @return ASTNode
 	 */

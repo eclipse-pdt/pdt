@@ -54,8 +54,8 @@ public class ProgramFileChange extends TextFileChange {
 	}
 
 	/**
-	 * Get the content from the begining (for syntax highlighting reasons) to
-	 * the end of the changes
+	 * Get the content from the begining (for syntax highlighting reasons) to the
+	 * end of the changes
 	 * 
 	 * @see org.eclipse.ltk.core.refactoring.TextChange#getCurrentContent(org.eclipse.jface.text.IRegion,
 	 *      boolean, int, org.eclipse.core.runtime.IProgressMonitor)
@@ -68,8 +68,8 @@ public class ProgramFileChange extends TextFileChange {
 	}
 
 	/**
-	 * Get the content from the begining (for syntax highlighting reasons) to
-	 * the end of the changes
+	 * Get the content from the begining (for syntax highlighting reasons) to the
+	 * end of the changes
 	 * 
 	 * @see org.eclipse.ltk.core.refactoring.TextChange#getPreviewContent(org.eclipse.ltk.core.refactoring.TextEditBasedChangeGroup[],
 	 *      org.eclipse.jface.text.IRegion, boolean, int,
@@ -119,8 +119,7 @@ public class ProgramFileChange extends TextFileChange {
 		ISourceModule sm = program.getSourceModule();
 		if (isModified && !isDocumentAcquired()) {
 			if (sm.isWorkingCopy()) {
-				sm.reconcile(false /* don't force problem detection */,
-						null /* use primary owner */,
+				sm.reconcile(false /* don't force problem detection */, null /* use primary owner */,
 						null /*
 								 * no progress monitor
 								 */);
@@ -133,8 +132,7 @@ public class ProgramFileChange extends TextFileChange {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ltk.core.refactoring.TextFileChange#commit(org.eclipse.jface
+	 * @see org.eclipse.ltk.core.refactoring.TextFileChange#commit(org.eclipse.jface
 	 * .text.IDocument, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override

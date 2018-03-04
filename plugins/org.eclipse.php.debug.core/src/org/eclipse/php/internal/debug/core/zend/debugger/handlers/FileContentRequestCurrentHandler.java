@@ -176,9 +176,8 @@ public class FileContentRequestCurrentHandler extends AbstractFileContentRequest
 			try {
 				return content.getBytes(encoding);
 			} catch (UnsupportedEncodingException e) {
-				Logger.logException(
-						"Failed to create dummy content in the '" //$NON-NLS-1$
-								+ encoding + "' encoding. \nCreating with the default encoding.", //$NON-NLS-1$
+				Logger.logException("Failed to create dummy content in the '" //$NON-NLS-1$
+						+ encoding + "' encoding. \nCreating with the default encoding.", //$NON-NLS-1$
 						e);
 			}
 		}

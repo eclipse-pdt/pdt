@@ -25,24 +25,23 @@ public class TunnelTester {
 
 	/**
 	 * Test SSH tunnel connection. This test will try to establish a connection
-	 * using a SSHTunnel. In case successful, the connection will be closed at
-	 * the end of the test. There are several return values possibilities to
-	 * this test, which are derived from the {@link SSHTunnel#connect()} method:
-	 * <br>
+	 * using a SSHTunnel. In case successful, the connection will be closed at the
+	 * end of the test. There are several return values possibilities to this test,
+	 * which are derived from the {@link SSHTunnel#connect()} method: <br>
 	 * <ul>
-	 * <li>Status OK - Signals that the connection was successful with no errors
-	 * or warnings</li>
+	 * <li>Status OK - Signals that the connection was successful with no errors or
+	 * warnings</li>
 	 * <li>Status ERROR - Signals that the connection was unsuccessful</li>
 	 * <li>Status WARNING - Signals that the connection was successful, however
 	 * there are a few warning notifications that should be reviewed</li>
-	 * <li>Status INFO - Signals that the connection was successful, however
-	 * there was a modification to the connection data that is expressed in the
-	 * INFO code (such as a password change data)</li>
+	 * <li>Status INFO - Signals that the connection was successful, however there
+	 * was a modification to the connection data that is expressed in the INFO code
+	 * (such as a password change data)</li>
 	 * </ul>
 	 * <br>
 	 * A MultiStatus will be returned in case the connection state could not be
-	 * determined (the tunnel connection did not indicate a fatal error,
-	 * however, the SSH connection returned false for an isConnected query).
+	 * determined (the tunnel connection did not indicate a fatal error, however,
+	 * the SSH connection returned false for an isConnected query).
 	 * 
 	 * @param remoteHost
 	 * @param userName

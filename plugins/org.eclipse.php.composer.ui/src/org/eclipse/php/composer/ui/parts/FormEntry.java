@@ -274,8 +274,8 @@ public class FormEntry {
 	}
 
 	/**
-	 * Returns the current entry value. If the entry is dirty and was not
-	 * commited, the value may be different from the text in the widget.
+	 * Returns the current entry value. If the entry is dirty and was not commited,
+	 * the value may be different from the text in the widget.
 	 * 
 	 */
 	public String getValue() {
@@ -302,8 +302,8 @@ public class FormEntry {
 	}
 
 	/**
-	 * Sets the value of this entry with the possibility to turn the
-	 * notification off.
+	 * Sets the value of this entry with the possibility to turn the notification
+	 * off.
 	 * 
 	 * @param value
 	 * @param blockNotification
@@ -327,8 +327,8 @@ public class FormEntry {
 	}
 
 	/**
-	 * If GridData was used, set the width hint. If TableWrapData was used set
-	 * the max width. If no layout data was specified, this method does nothing.
+	 * If GridData was used, set the width hint. If TableWrapData was used set the
+	 * max width. If no layout data was specified, this method does nothing.
 	 * 
 	 * @param width
 	 */

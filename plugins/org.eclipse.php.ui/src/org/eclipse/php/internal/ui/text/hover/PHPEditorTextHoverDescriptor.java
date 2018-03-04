@@ -79,8 +79,8 @@ public class PHPEditorTextHoverDescriptor {
 	 * Computes the state mask for the given modifier string.
 	 * 
 	 * @param modifiers
-	 *            the string with the modifiers, separated by '+', '-', ';', ','
-	 *            or '.'
+	 *            the string with the modifiers, separated by '+', '-', ';', ',' or
+	 *            '.'
 	 * @return the state mask or -1 if the input is invalid
 	 */
 	public static int computeStateMask(String modifiers) {
@@ -105,8 +105,8 @@ public class PHPEditorTextHoverDescriptor {
 	}
 
 	/**
-	 * Creates a new PHP Editor text hover descriptor from the given
-	 * configuration element.
+	 * Creates a new PHP Editor text hover descriptor from the given configuration
+	 * element.
 	 */
 	private PHPEditorTextHoverDescriptor(IConfigurationElement element) {
 		Assert.isNotNull(element);
@@ -241,8 +241,7 @@ public class PHPEditorTextHoverDescriptor {
 				modifierString = modifierString.substring(1);
 			}
 
-			if (modifierString.equals(NO_MODIFIER))
-			 {
+			if (modifierString.equals(NO_MODIFIER)) {
 				modifierString = ""; //$NON-NLS-1$
 			}
 

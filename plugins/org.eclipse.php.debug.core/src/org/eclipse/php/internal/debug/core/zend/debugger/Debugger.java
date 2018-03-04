@@ -37,8 +37,7 @@ public interface Debugger {
 	 * 
 	 * @param protocolID
 	 *            The protocol identification number.
-	 * @return True, if the set protocol command was successful; False,
-	 *         otherwise.
+	 * @return True, if the set protocol command was successful; False, otherwise.
 	 */
 	public boolean setProtocol(int protocolID);
 
@@ -54,8 +53,8 @@ public interface Debugger {
 	public void addBreakpoint(Breakpoint breakpoint);
 
 	/**
-	 * Asynchronic removeBreakpoint Returns true if successed sending the
-	 * request, false otherwise.
+	 * Asynchronic removeBreakpoint Returns true if successed sending the request,
+	 * false otherwise.
 	 */
 	public boolean removeBreakpoint(int id, BreakpointRemovedResponseHandler responseHandler);
 
@@ -66,8 +65,8 @@ public interface Debugger {
 	public boolean removeBreakpoint(int id);
 
 	/**
-	 * Asynchronic removeBreakpoint Returns true if successed sending the
-	 * request, false otherwise.
+	 * Asynchronic removeBreakpoint Returns true if successed sending the request,
+	 * false otherwise.
 	 */
 	public boolean removeBreakpoint(Breakpoint breakpoint, BreakpointRemovedResponseHandler responseHandler);
 
@@ -84,8 +83,8 @@ public interface Debugger {
 	public boolean removeAllBreakpoints(AllBreakpointRemovedResponseHandler responseHandler);
 
 	/**
-	 * Synchronic removeAllBreakpoints Returns true if successed removing all
-	 * the Breakpoint.
+	 * Synchronic removeAllBreakpoints Returns true if successed removing all the
+	 * Breakpoint.
 	 */
 	public boolean removeAllBreakpoints();
 
@@ -158,8 +157,8 @@ public interface Debugger {
 	public String eval(String commandString);
 
 	/**
-	 * Asynchronic assign value Returns true if successed sending the request,
-	 * false otherwise.
+	 * Asynchronic assign value Returns true if successed sending the request, false
+	 * otherwise.
 	 */
 	public boolean assignValue(String var, String value, int depth, String[] path,
 			AssignValueResponseHandler responseHandler);
@@ -170,8 +169,8 @@ public interface Debugger {
 	public boolean assignValue(String var, String value, int depth, String[] path);
 
 	/**
-	 * Asynchronic getVariableValue Returns true if successed sending the
-	 * request, false otherwise.
+	 * Asynchronic getVariableValue Returns true if successed sending the request,
+	 * false otherwise.
 	 */
 	public boolean getVariableValue(String value, int depth, String[] path,
 			VariableValueResponseHandler responseHandler);
@@ -182,8 +181,8 @@ public interface Debugger {
 	public byte[] getVariableValue(String value, int depth, String[] path);
 
 	/**
-	 * Asynchronic getCallStack Returns true if successed sending the request,
-	 * false otherwise.
+	 * Asynchronic getCallStack Returns true if successed sending the request, false
+	 * otherwise.
 	 */
 	public boolean getCallStack(GetCallStackResponseHandler responseHandler);
 
@@ -205,8 +204,8 @@ public interface Debugger {
 	public byte[] getStackVariableValue(int stackDepth, String value, int depth, String[] path);
 
 	/**
-	 * Asynchronous addFiles Returns true if succeeded sending the request,
-	 * false otherwise.
+	 * Asynchronous addFiles Returns true if succeeded sending the request, false
+	 * otherwise.
 	 */
 	public boolean addFiles(String[] paths, AddFilesResponseHandler responseHandler);
 

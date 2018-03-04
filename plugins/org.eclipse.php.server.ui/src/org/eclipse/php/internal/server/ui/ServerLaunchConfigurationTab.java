@@ -80,8 +80,8 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 	// button)
 	private static final String SERVER_ENABLED = "serverEnabled"; //$NON-NLS-1$
 	/**
-	 * Indicates that the URL field is auto-generated according to the user
-	 * Server and resource selections.
+	 * Indicates that the URL field is auto-generated according to the user Server
+	 * and resource selections.
 	 */
 	public static final String AUTO_GENERATED_URL = "auto_generated_url"; //$NON-NLS-1$
 	protected WidgetListener fListener = new WidgetListener();
@@ -358,8 +358,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 	}
 
 	/**
-	 * Called when a server is selected. This method should not be called
-	 * directly.
+	 * Called when a server is selected. This method should not be called directly.
 	 */
 	protected void handleServerSelection() {
 		int numEntries = serverCombo.getItemCount();
@@ -462,8 +461,8 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 	}
 
 	/**
-	 * Constructs the URL string according to the given context root and the
-	 * file name.
+	 * Constructs the URL string according to the given context root and the file
+	 * name.
 	 * 
 	 * @param fileName
 	 * @return
@@ -708,8 +707,8 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 	}
 
 	/*
-	 * Fix for Bug 60163 Accessibility: New Builder Dialog missing object info
-	 * for textInput controls
+	 * Fix for Bug 60163 Accessibility: New Builder Dialog missing object info for
+	 * textInput controls
 	 */
 	public void addControlAccessibleListener(Control control, String controlName) {
 		// strip mnemonic (&)

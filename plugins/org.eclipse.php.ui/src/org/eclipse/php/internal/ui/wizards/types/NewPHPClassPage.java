@@ -294,8 +294,7 @@ public class NewPHPClassPage extends NewPHPTypePage {
 	}
 
 	/**
-	 * Creates a UI component withing this Wizard page for selecting the
-	 * Superclass
+	 * Creates a UI component withing this Wizard page for selecting the Superclass
 	 * 
 	 * @return the selected super class
 	 */
@@ -339,8 +338,7 @@ public class NewPHPClassPage extends NewPHPTypePage {
 	}
 
 	/**
-	 * Returns true/false - whether the requested modifer's check box is
-	 * selected
+	 * Returns true/false - whether the requested modifer's check box is selected
 	 * 
 	 * @param checkBoxIndex
 	 *            - the index of the checkbox

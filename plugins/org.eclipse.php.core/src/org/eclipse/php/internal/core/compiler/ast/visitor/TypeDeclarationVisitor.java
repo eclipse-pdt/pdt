@@ -46,8 +46,8 @@ public abstract class TypeDeclarationVisitor extends ASTVisitor {
 
 	/**
 	 * The visitor must always look into {@link Block}s. A block wraps
-	 * {@link ClassDeclaration} children and it must be traversed in order to
-	 * visit class' children.
+	 * {@link ClassDeclaration} children and it must be traversed in order to visit
+	 * class' children.
 	 */
 	@Override
 	public boolean visit(Expression s) throws Exception {
@@ -55,9 +55,9 @@ public abstract class TypeDeclarationVisitor extends ASTVisitor {
 	}
 
 	/**
-	 * The visitor must look into a {@link TypeDeclaration}s. If class,
-	 * interface or trait (i.e. different than {@link NamespaceDeclaration})
-	 * then raise the {@link #insideType} flag.
+	 * The visitor must look into a {@link TypeDeclaration}s. If class, interface or
+	 * trait (i.e. different than {@link NamespaceDeclaration}) then raise the
+	 * {@link #insideType} flag.
 	 */
 	@Override
 	public boolean visit(TypeDeclaration s) throws Exception {
@@ -70,8 +70,8 @@ public abstract class TypeDeclarationVisitor extends ASTVisitor {
 	}
 
 	/**
-	 * Pull the {@link #insideType} flag down when ending visiting class,
-	 * interface or trait.
+	 * Pull the {@link #insideType} flag down when ending visiting class, interface
+	 * or trait.
 	 */
 	@Override
 	public boolean endvisit(TypeDeclaration s) throws Exception {
@@ -94,8 +94,8 @@ public abstract class TypeDeclarationVisitor extends ASTVisitor {
 	}
 
 	/**
-	 * In all other cases the visitor must look deeper into the AST tree only
-	 * and if only it is outside of a <code>TypeDecalaration</code>.
+	 * In all other cases the visitor must look deeper into the AST tree only and if
+	 * only it is outside of a <code>TypeDecalaration</code>.
 	 */
 	@Override
 	public boolean visitGeneral(ASTNode node) throws Exception {

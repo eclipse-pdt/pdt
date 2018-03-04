@@ -19,8 +19,7 @@ import org.eclipse.debug.ui.CommonTab;
 import org.eclipse.debug.ui.ILaunchConfigurationDialog;
 import org.eclipse.php.internal.debug.ui.launching.PHPExecutableLaunchTab;
 
-public class ProfilePHPExecutableTabGroup
-		extends AbstractLaunchConfigurationTabGroup {
+public class ProfilePHPExecutableTabGroup extends AbstractLaunchConfigurationTabGroup {
 
 	/*
 	 * (non-Javadoc)
@@ -38,8 +37,7 @@ public class ProfilePHPExecutableTabGroup
 		for (AbstractLaunchConfigurationTab tab : tabs) {
 			tab.setLaunchConfigurationDialog(dialog);
 		}
-		AbstractLaunchConfigurationTab[] array = new AbstractLaunchConfigurationTab[tabs
-				.size()];
+		AbstractLaunchConfigurationTab[] array = new AbstractLaunchConfigurationTab[tabs.size()];
 		tabs.toArray(array);
 		setTabs(array);
 	}

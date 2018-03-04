@@ -63,8 +63,7 @@ public class UseAsSourceFolderAction extends Action {
 	 *            an array of library folders to mark as source folders
 	 */
 	public UseAsSourceFolderAction(IWorkbenchSite site, IFolder[] folders) {
-		if (folders.length == 0)
-		 {
+		if (folders.length == 0) {
 			throw new IllegalArgumentException("empty folders array"); //$NON-NLS-1$
 		}
 

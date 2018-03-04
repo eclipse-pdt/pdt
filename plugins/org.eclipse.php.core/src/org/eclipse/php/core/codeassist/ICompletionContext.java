@@ -25,8 +25,7 @@ import org.eclipse.dltk.core.ISourceModule;
 public interface ICompletionContext {
 
 	/**
-	 * Returns whether this context is applicable for the position in the
-	 * document
+	 * Returns whether this context is applicable for the position in the document
 	 * 
 	 * @param regionCollection
 	 *            Text region collection
@@ -36,14 +35,14 @@ public interface ICompletionContext {
 	 *            Partition type (see
 	 *            {@link org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes})
 	 * @param offset
-	 * @return <code>true</code> if this context is valid for the current
-	 *         position, otherwise <code>false</code>
+	 * @return <code>true</code> if this context is valid for the current position,
+	 *         otherwise <code>false</code>
 	 */
 	public boolean isValid(@NonNull ISourceModule sourceModule, int offset, CompletionRequestor requestor);
 
 	/**
-	 * Whether this context may be applied only if it's the only context that
-	 * was found.
+	 * Whether this context may be applied only if it's the only context that was
+	 * found.
 	 * 
 	 * @return <code>true</code> if this context is exclusive, otherwise
 	 *         <code>false</code>
@@ -51,8 +50,7 @@ public interface ICompletionContext {
 	public boolean isExclusive();
 
 	/**
-	 * This method is called by the completion engine when initializing this
-	 * context
+	 * This method is called by the completion engine when initializing this context
 	 */
 	public void init(CompletionCompanion companion);
 }

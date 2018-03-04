@@ -256,8 +256,7 @@ public class Scalar extends VariableBase {
 	/**
 	 * Resolves and returns the binding for the entity referred to by this name.
 	 *
-	 * @return the binding, or <code>null</code> if the binding cannot be
-	 *         resolved
+	 * @return the binding, or <code>null</code> if the binding cannot be resolved
 	 */
 	public final IBinding resolveBinding() {
 		return this.ast.getBindingResolver().resolveField(this);

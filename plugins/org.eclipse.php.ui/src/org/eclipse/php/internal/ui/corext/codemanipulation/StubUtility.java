@@ -92,8 +92,7 @@ public class StubUtility {
 		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 		org.eclipse.dltk.ast.declarations.MethodDeclaration methodDeclaration = PHPModelUtils
 				.getNodeByMethod(moduleDeclaration, method);
-		List<org.eclipse.php.core.compiler.ast.nodes.FormalParameter> arguments = methodDeclaration
-				.getArguments();
+		List<org.eclipse.php.core.compiler.ast.nodes.FormalParameter> arguments = methodDeclaration.getArguments();
 
 		boolean supportNullable = ProjectOptions.getPHPVersion(unit).isGreaterThan(PHPVersion.PHP7_0);
 		Map<String, ImportDeclaration> importContainers = getImportContainer(method);

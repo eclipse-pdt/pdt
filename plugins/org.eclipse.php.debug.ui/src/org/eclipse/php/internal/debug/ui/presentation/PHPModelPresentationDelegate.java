@@ -31,8 +31,7 @@ public class PHPModelPresentationDelegate implements IDebugModelPresentation {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.IDebugModelPresentation#computeDetail(org.eclipse
+	 * @see org.eclipse.debug.ui.IDebugModelPresentation#computeDetail(org.eclipse
 	 * .debug.core.model.IValue, org.eclipse.debug.ui.IValueDetailListener)
 	 */
 	@Override
@@ -43,8 +42,7 @@ public class PHPModelPresentationDelegate implements IDebugModelPresentation {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.IDebugModelPresentation#getImage(java.lang.Object)
+	 * @see org.eclipse.debug.ui.IDebugModelPresentation#getImage(java.lang.Object)
 	 */
 	@Override
 	public Image getImage(Object element) {
@@ -54,8 +52,7 @@ public class PHPModelPresentationDelegate implements IDebugModelPresentation {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.IDebugModelPresentation#getText(java.lang.Object)
+	 * @see org.eclipse.debug.ui.IDebugModelPresentation#getText(java.lang.Object)
 	 */
 	@Override
 	public String getText(Object element) {
@@ -76,8 +73,7 @@ public class PHPModelPresentationDelegate implements IDebugModelPresentation {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.
+	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.
 	 * jface.viewers.ILabelProviderListener)
 	 */
 	@Override
@@ -99,8 +95,7 @@ public class PHPModelPresentationDelegate implements IDebugModelPresentation {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang
+	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang
 	 * .Object, java.lang.String)
 	 */
 	@Override
@@ -111,8 +106,7 @@ public class PHPModelPresentationDelegate implements IDebugModelPresentation {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse
+	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse
 	 * .jface.viewers.ILabelProviderListener)
 	 */
 	@Override

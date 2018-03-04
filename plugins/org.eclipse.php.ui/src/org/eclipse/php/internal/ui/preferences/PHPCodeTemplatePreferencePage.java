@@ -51,8 +51,9 @@ public class PHPCodeTemplatePreferencePage extends PropertyAndPreferencePage {
 
 	@Override
 	public void performHelp() {
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), isProjectPreferencePage()
-				? IPHPHelpContextIds.CODE_TEMPLATES_PROPERTIES : IPHPHelpContextIds.CODE_TEMPLATES_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
+				isProjectPreferencePage() ? IPHPHelpContextIds.CODE_TEMPLATES_PROPERTIES
+						: IPHPHelpContextIds.CODE_TEMPLATES_PREFERENCES);
 		super.performHelp();
 	}
 
@@ -119,8 +120,7 @@ public class PHPCodeTemplatePreferencePage extends PropertyAndPreferencePage {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.ui.wizards.IStatusChangeListener#statusChanged
+	 * @see org.eclipse.php.internal.ui.wizards.IStatusChangeListener#statusChanged
 	 * (org.eclipse.core.runtime.IStatus)
 	 */
 	public void statusChanged(IStatus status) {

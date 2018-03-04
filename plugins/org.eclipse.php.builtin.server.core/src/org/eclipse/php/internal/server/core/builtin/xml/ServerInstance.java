@@ -37,21 +37,19 @@ public class ServerInstance {
 	 *            specified.
 	 * @param hostName
 	 *            Name of the host the instance should use. Defaults to the
-	 *            defaultHost setting on the Engine element found under the
-	 *            service. If the defaultHost is not set, defaults to
-	 *            &quot;localhost&quot;.
+	 *            defaultHost setting on the Engine element found under the service.
+	 *            If the defaultHost is not set, defaults to &quot;localhost&quot;.
 	 */
 	public ServerInstance(Server server) {
-		if (server == null)
-		 {
+		if (server == null) {
 			throw new IllegalArgumentException("Server argument may not be null."); //$NON-NLS-1$
 		}
 		this.server = server;
 	}
 
 	/**
-	 * This method is used to get the problem status following a method call
-	 * that returned <b>null</b> due to an error.
+	 * This method is used to get the problem status following a method call that
+	 * returned <b>null</b> due to an error.
 	 * 
 	 * @return Status of last method call.
 	 */
@@ -76,13 +74,13 @@ public class ServerInstance {
 	}
 
 	/**
-	 * Gets the port at the specified index. If a Port does not exist at that
-	 * index a new Port is appended and returned.
+	 * Gets the port at the specified index. If a Port does not exist at that index
+	 * a new Port is appended and returned.
 	 * 
 	 * @param index
 	 *            Index of the Port to return.
-	 * @return Returns the Port at the specified index or a new Port if one at
-	 *         that index doesn't exist.
+	 * @return Returns the Port at the specified index or a new Port if one at that
+	 *         index doesn't exist.
 	 */
 	public Port getPort(int index) {
 		status = Status.OK_STATUS;
@@ -106,13 +104,13 @@ public class ServerInstance {
 	}
 
 	/**
-	 * Gets the port at the specified index. If a Port does not exist at that
-	 * index a new Port is appended and returned.
+	 * Gets the port at the specified index. If a Port does not exist at that index
+	 * a new Port is appended and returned.
 	 * 
 	 * @param index
 	 *            Index of the Port to return.
-	 * @return Returns the Port at the specified index or a new Port if one at
-	 *         that index doesn't exist.
+	 * @return Returns the Port at the specified index or a new Port if one at that
+	 *         index doesn't exist.
 	 */
 	public PathMapping getPathMapping(int index) {
 		status = Status.OK_STATUS;

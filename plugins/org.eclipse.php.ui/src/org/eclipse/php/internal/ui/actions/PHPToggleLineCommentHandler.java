@@ -205,10 +205,10 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 
 	/**
 	 * <p>
-	 * The actual line toggling takes place in a runnable so it can be run as
-	 * part of a progress dialog if there are many lines to toggle and thus the
-	 * operation will take a noticeable amount of time the user should be aware
-	 * of, this also allows for the operation to be canceled by the user
+	 * The actual line toggling takes place in a runnable so it can be run as part
+	 * of a progress dialog if there are many lines to toggle and thus the operation
+	 * will take a noticeable amount of time the user should be aware of, this also
+	 * allows for the operation to be canceled by the user
 	 * </p>
 	 * 
 	 */
@@ -240,8 +240,7 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 		 * @param selectionEndLine
 		 *            last line in the document to toggle
 		 * @param display
-		 *            {@link Display}, so that it can be updated during a long
-		 *            operation
+		 *            {@link Display}, so that it can be updated during a long operation
 		 */
 		protected ToggleLinesRunnable(String contentTypeIdentifier, IStructuredDocument document,
 				int selectionStartLine, int selectionEndLine, Display display, boolean isSingleLine) {
@@ -334,10 +333,9 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 
 		/**
 		 * <p>
-		 * Assumes that the given offset is at the beginning of a line that is
-		 * commented and removes the comment prefix from the beginning of the
-		 * line, leading whitespace on the line will not prevent this method
-		 * from finishing correctly
+		 * Assumes that the given offset is at the beginning of a line that is commented
+		 * and removes the comment prefix from the beginning of the line, leading
+		 * whitespace on the line will not prevent this method from finishing correctly
 		 * </p>
 		 * 
 		 */
@@ -354,16 +352,16 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 
 		/**
 		 * <p>
-		 * This method modifies the given document to remove the given comment
-		 * prefix at the given comment prefix offset and the given comment
-		 * suffix at the given comment suffix offset. In the case of removing a
-		 * line comment that does not have a suffix, pass <code>null</code> for
-		 * the comment suffix and it and its associated offset will be ignored.
+		 * This method modifies the given document to remove the given comment prefix at
+		 * the given comment prefix offset and the given comment suffix at the given
+		 * comment suffix offset. In the case of removing a line comment that does not
+		 * have a suffix, pass <code>null</code> for the comment suffix and it and its
+		 * associated offset will be ignored.
 		 * </p>
 		 * 
 		 * <p>
-		 * <b>NOTE:</b> it is a good idea if a model is at hand when calling
-		 * this to warn the model of an impending update
+		 * <b>NOTE:</b> it is a good idea if a model is at hand when calling this to
+		 * warn the model of an impending update
 		 * </p>
 		 * 
 		 * @param document
@@ -374,12 +372,11 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 		 *            the offset of the comment suffix (ignored if
 		 *            <code>commentSuffix</code> is <code>null</code>)
 		 * @param commentPrefix
-		 *            the prefix of the comment to remove from its associated
-		 *            given offset
+		 *            the prefix of the comment to remove from its associated given
+		 *            offset
 		 * @param commentSuffix
-		 *            the suffix of the comment to remove from its associated
-		 *            given offset, or null if there is not suffix to remove for
-		 *            this comment
+		 *            the suffix of the comment to remove from its associated given
+		 *            offset, or null if there is not suffix to remove for this comment
 		 */
 		protected static void uncomment(IDocument document, int commentPrefixOffset, String commentPrefix,
 				int commentSuffixOffset, String commentSuffix) {
@@ -418,18 +415,17 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 
 		/**
 		 * <p>
-		 * When calling {@link Display#readAndDispatch()} the game is off as to
-		 * whose code you maybe calling into because of event
-		 * handling/listeners/etc. The only important thing is that the UI has
-		 * been given a chance to react to user clicks. Thus the logging of most
-		 * {@link Exception}s and {@link Error}s as caused by
-		 * {@link Display#readAndDispatch()} because they are not caused by this
-		 * code and do not effect it.
+		 * When calling {@link Display#readAndDispatch()} the game is off as to whose
+		 * code you maybe calling into because of event handling/listeners/etc. The only
+		 * important thing is that the UI has been given a chance to react to user
+		 * clicks. Thus the logging of most {@link Exception}s and {@link Error}s as
+		 * caused by {@link Display#readAndDispatch()} because they are not caused by
+		 * this code and do not effect it.
 		 * </p>
 		 * 
 		 * @param display
-		 *            the {@link Display} to call <code>readAndDispatch</code>
-		 *            on with exception/error handling.
+		 *            the {@link Display} to call <code>readAndDispatch</code> on with
+		 *            exception/error handling.
 		 */
 		private void readAndDispatch(Display display) {
 			try {

@@ -121,8 +121,7 @@ public class PHPDebuggersRegistry {
 	 * @param id
 	 *            The debugger id (must exist in the registered ids)
 	 * @throws IllegalArgumentException
-	 *             If the given id is not registered as part of the supported
-	 *             ids.
+	 *             If the given id is not registered as part of the supported ids.
 	 * @see #getDefaultDebuggerId()
 	 * @see #getDebuggersIds()
 	 */

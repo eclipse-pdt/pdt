@@ -207,8 +207,8 @@ public class PharBufferedOutputStream implements IAchiveOutputStream {
 	}
 
 	/*
-	 * Writes short integer in Intel byte order to a byte array, starting at a
-	 * given offset
+	 * Writes short integer in Intel byte order to a byte array, starting at a given
+	 * offset
 	 */
 	private void writeShort(OutputStream os, int s) throws IOException {
 		os.write((byte) (s & 0xff));

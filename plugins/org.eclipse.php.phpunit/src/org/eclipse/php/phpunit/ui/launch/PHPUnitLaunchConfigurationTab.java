@@ -603,8 +603,8 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 
 	/**
 	 * Show a dialog that lets the user select a project. This in turn provides
-	 * context for the main class, allowing the user to key a main class name,
-	 * or constraining the search for main classes to the specified project.
+	 * context for the main class, allowing the user to key a main class name, or
+	 * constraining the search for main classes to the specified project.
 	 */
 	private void handleProjectButtonPressed() {
 		final IProject project = choosePHPProject();
@@ -681,8 +681,8 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 	}
 
 	/*
-	 * Realize a Project selection dialog and return the first selected project,
-	 * or null if there was none.
+	 * Realize a Project selection dialog and return the first selected project, or
+	 * null if there was none.
 	 */
 	private IProject choosePHPProject() {
 		final ILabelProvider labelProvider = new ModelElementLabelProvider(ModelElementLabelProvider.SHOW_DEFAULT);

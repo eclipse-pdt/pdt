@@ -37,8 +37,8 @@ public class ProfilerFileData {
 		this.fName = name;
 	}
 
-	public ProfilerFileData(String fileName, String localFileName,
-			int functionsCount, double totalOwnTime, List<ProfilerFunctionData> functions) {
+	public ProfilerFileData(String fileName, String localFileName, int functionsCount, double totalOwnTime,
+			List<ProfilerFunctionData> functions) {
 		fName = fileName;
 		fLocalName = localFileName;
 		fFunctionsCount = functionsCount;
@@ -157,8 +157,7 @@ public class ProfilerFileData {
 		String className = function.getClassName();
 		if (className != null) {
 			if (fClasses.containsKey(className)) {
-				ProfilerClassData classData = fClasses
-						.get(className);
+				ProfilerClassData classData = fClasses.get(className);
 				classData.addMethod(function);
 			} else {
 				ProfilerClassData classData = new ProfilerClassData(className);

@@ -108,8 +108,8 @@ public class SearchFieldTests {
 	}
 
 	/**
-	 * Creates test file with the specified content and calculates the source
-	 * range for the selection. Selection characters themself are stripped off.
+	 * Creates test file with the specified content and calculates the source range
+	 * for the selection. Selection characters themself are stripped off.
 	 * 
 	 * @param data
 	 *            File data

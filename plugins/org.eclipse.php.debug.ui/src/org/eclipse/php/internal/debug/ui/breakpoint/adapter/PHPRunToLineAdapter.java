@@ -44,8 +44,7 @@ public class PHPRunToLineAdapter implements IRunToLineTarget {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.actions.IRunToLineTarget#runToLine(org.eclipse.ui
+	 * @see org.eclipse.debug.ui.actions.IRunToLineTarget#runToLine(org.eclipse.ui
 	 * .IWorkbenchPart, org.eclipse.jface.viewers.ISelection,
 	 * org.eclipse.debug.core.model.ISuspendResume)
 	 */
@@ -100,8 +99,7 @@ public class PHPRunToLineAdapter implements IRunToLineTarget {
 				if (lineNumber > 0) {
 					if (getValidPosition(document, lineNumber) != -1) {
 						if (target instanceof IAdaptable) {
-							IDebugTarget debugTarget = ((IAdaptable) target)
-									.getAdapter(IDebugTarget.class);
+							IDebugTarget debugTarget = ((IAdaptable) target).getAdapter(IDebugTarget.class);
 							if (debugTarget != null) {
 								IFile file = getFile(textEditor);
 								IBreakpoint breakpoint = new PHPRunToLineBreakpoint(file, lineNumber);
@@ -151,8 +149,8 @@ public class PHPRunToLineAdapter implements IRunToLineTarget {
 
 	/**
 	 * Finds a valid position somewhere on lineNumber in document, idoc, where a
-	 * breakpoint can be set and returns that position. -1 is returned if a
-	 * position could not be found.
+	 * breakpoint can be set and returns that position. -1 is returned if a position
+	 * could not be found.
 	 * 
 	 * @param idoc
 	 * @param editorLineNumber

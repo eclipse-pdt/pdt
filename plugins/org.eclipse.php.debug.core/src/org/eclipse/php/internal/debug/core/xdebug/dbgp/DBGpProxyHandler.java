@@ -95,18 +95,17 @@ public class DBGpProxyHandler {
 		/*
 		 * proxyinit -a ip:port -k ide_key -m [0|1]
 		 * 
-		 * -p the port that the IDE listens for debugging on. The address is
-		 * retrieved from the connection information. -k a IDE key, which the
-		 * debugger engine will also use in it's debugging init command. this
-		 * allows the proxy to match request to IDE. Typically the user will
-		 * provide the session key as a configuration item. -m this tells the
-		 * demon that the IDE supports (or doesn't) multiple debugger sessions.
-		 * if -m is missing, zero or no support is default.
+		 * -p the port that the IDE listens for debugging on. The address is retrieved
+		 * from the connection information. -k a IDE key, which the debugger engine will
+		 * also use in it's debugging init command. this allows the proxy to match
+		 * request to IDE. Typically the user will provide the session key as a
+		 * configuration item. -m this tells the demon that the IDE supports (or
+		 * doesn't) multiple debugger sessions. if -m is missing, zero or no support is
+		 * default.
 		 * 
-		 * response <proxyinit success="[0|1]" idekey="{ID}"
-		 * address="{IP_ADDRESS}" port="{NUM}> <error
-		 * id="app_specific_error_code"> <message>UI Usable Message</message>
-		 * </error> </proxyinit>
+		 * response <proxyinit success="[0|1]" idekey="{ID}" address="{IP_ADDRESS}"
+		 * port="{NUM}> <error id="app_specific_error_code"> <message>UI Usable
+		 * Message</message> </error> </proxyinit>
 		 */
 		if (!registered) {
 			DBGpResponse resp = sendcmd(
@@ -206,8 +205,8 @@ public class DBGpProxyHandler {
 				setProxyInfo(proxyHost, proxyPort, ideKey, idePort, multisession);
 				if (XDebugPreferenceMgr.getAcceptRemoteSession() != AcceptRemoteSession.off) {
 					/*
-					 * if JIT we must register with the proxy straight away
-					 * rather than wait for the first launch
+					 * if JIT we must register with the proxy straight away rather than wait for the
+					 * first launch
 					 */
 					Job job = new Job(PHPDebugCoreMessages.DBGpProxyConnection_Registering_DBGp_proxy) {
 						@Override
@@ -249,8 +248,7 @@ public class DBGpProxyHandler {
 	/**
 	 * Checks if proxy is enabled.
 	 * 
-	 * @return <code>true</code> if proxy is enabled, <code>false</code>
-	 *         otherwise
+	 * @return <code>true</code> if proxy is enabled, <code>false</code> otherwise
 	 */
 	public boolean useProxy() {
 		return XDebugDebuggerSettingsUtil.getProxyEnabled(getOwnerId());
@@ -326,9 +324,8 @@ public class DBGpProxyHandler {
 	}
 
 	/**
-	 * return the current ide key if we are configured to use the proxy. if
-	 * useProxy is false, you should use the ide key here. It may or may not be
-	 * null.
+	 * return the current ide key if we are configured to use the proxy. if useProxy
+	 * is false, you should use the ide key here. It may or may not be null.
 	 * 
 	 * @return
 	 */

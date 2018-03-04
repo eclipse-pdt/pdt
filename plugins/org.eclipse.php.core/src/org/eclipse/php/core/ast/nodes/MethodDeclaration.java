@@ -220,8 +220,7 @@ public class MethodDeclaration extends BodyDeclaration {
 	/**
 	 * Resolves and returns the binding for this method
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be
-	 *         resolved
+	 * @return the binding, or <code>null</code> if the binding cannot be resolved
 	 */
 	public IMethodBinding resolveMethodBinding() {
 		return this.ast.getBindingResolver().resolveMethod(this);

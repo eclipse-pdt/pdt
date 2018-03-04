@@ -57,9 +57,9 @@ public class MultiVariableGuess {
 		private String fAdditionalProposalInfo;
 
 		/**
-		 * Creates a new completion proposal based on the provided information.
-		 * The replacement string is considered being the display string too.
-		 * All remaining fields are set to <code>null</code>.
+		 * Creates a new completion proposal based on the provided information. The
+		 * replacement string is considered being the display string too. All remaining
+		 * fields are set to <code>null</code>.
 		 * 
 		 * @param replacementString
 		 *            the actual string to be inserted into the document
@@ -68,16 +68,16 @@ public class MultiVariableGuess {
 		 * @param replacementLength
 		 *            the length of the text to be replaced
 		 * @param cursorPosition
-		 *            the position of the cursor following the insert relative
-		 *            to replacementOffset
+		 *            the position of the cursor following the insert relative to
+		 *            replacementOffset
 		 */
 		public Proposal(String replacementString, int replacementOffset, int replacementLength, int cursorPosition) {
 			this(replacementString, replacementOffset, replacementLength, cursorPosition, null, null, null, null);
 		}
 
 		/**
-		 * Creates a new completion proposal. All fields are initialized based
-		 * on the provided information.
+		 * Creates a new completion proposal. All fields are initialized based on the
+		 * provided information.
 		 * 
 		 * @param replacementString
 		 *            the actual string to be inserted into the document
@@ -86,8 +86,8 @@ public class MultiVariableGuess {
 		 * @param replacementLength
 		 *            the length of the text to be replaced
 		 * @param cursorPosition
-		 *            the position of the cursor following the insert relative
-		 *            to replacementOffset
+		 *            the position of the cursor following the insert relative to
+		 *            replacementOffset
 		 * @param image
 		 *            the image to display for this proposal
 		 * @param displayString
@@ -171,8 +171,7 @@ public class MultiVariableGuess {
 		}
 
 		/*
-		 * @see
-		 * org.eclipse.jface.text.contentassist.ICompletionProposalExtension2
+		 * @see org.eclipse.jface.text.contentassist.ICompletionProposalExtension2
 		 * #apply(org.eclipse.jface.text.ITextViewer, char, int, int)
 		 */
 		@Override
@@ -181,8 +180,7 @@ public class MultiVariableGuess {
 		}
 
 		/*
-		 * @see
-		 * org.eclipse.jface.text.contentassist.ICompletionProposalExtension2
+		 * @see org.eclipse.jface.text.contentassist.ICompletionProposalExtension2
 		 * #selected(org.eclipse.jface.text.ITextViewer, boolean)
 		 */
 		@Override
@@ -190,8 +188,7 @@ public class MultiVariableGuess {
 		}
 
 		/*
-		 * @see
-		 * org.eclipse.jface.text.contentassist.ICompletionProposalExtension2
+		 * @see org.eclipse.jface.text.contentassist.ICompletionProposalExtension2
 		 * #unselected(org.eclipse.jface.text.ITextViewer)
 		 */
 		@Override
@@ -199,8 +196,7 @@ public class MultiVariableGuess {
 		}
 
 		/*
-		 * @see
-		 * org.eclipse.jface.text.contentassist.ICompletionProposalExtension2
+		 * @see org.eclipse.jface.text.contentassist.ICompletionProposalExtension2
 		 * #validate(org.eclipse.jface.text.IDocument, int,
 		 * org.eclipse.jface.text.DocumentEvent)
 		 */
@@ -306,15 +302,13 @@ public class MultiVariableGuess {
 	 */
 	public void addDependency(MultiVariable master, MultiVariable slave) {
 		// check for cycles and multi-slaves
-		if (fBackwardDeps.containsKey(slave))
-		 {
+		if (fBackwardDeps.containsKey(slave)) {
 			throw new IllegalArgumentException("slave can only serve one master"); //$NON-NLS-1$
 		}
 		Object parent = master;
 		while (parent != null) {
 			parent = fBackwardDeps.get(parent);
-			if (parent == slave)
-			 {
+			if (parent == slave) {
 				throw new IllegalArgumentException("cycle detected"); //$NON-NLS-1$
 			}
 		}

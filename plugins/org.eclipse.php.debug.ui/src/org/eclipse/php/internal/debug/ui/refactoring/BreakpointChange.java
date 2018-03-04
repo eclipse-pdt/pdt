@@ -92,8 +92,8 @@ public abstract class BreakpointChange extends Change {
 	}
 
 	/**
-	 * Returns the original name of the type the associated breakpoint was set
-	 * on. This can be different than the type being changed.
+	 * Returns the original name of the type the associated breakpoint was set on.
+	 * This can be different than the type being changed.
 	 * 
 	 * @return
 	 */
@@ -104,8 +104,7 @@ public abstract class BreakpointChange extends Change {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ltk.core.refactoring.Change#initializeValidationData(org.
+	 * @see org.eclipse.ltk.core.refactoring.Change#initializeValidationData(org.
 	 * eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
@@ -116,8 +115,7 @@ public abstract class BreakpointChange extends Change {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ltk.core.refactoring.Change#isValid(org.eclipse.core.runtime
+	 * @see org.eclipse.ltk.core.refactoring.Change#isValid(org.eclipse.core.runtime
 	 * .IProgressMonitor)
 	 */
 	@Override
@@ -150,8 +148,8 @@ public abstract class BreakpointChange extends Change {
 	}
 
 	/**
-	 * Returns the new line number of the from the source of the specified
-	 * member's compilation unit
+	 * Returns the new line number of the from the source of the specified member's
+	 * compilation unit
 	 * 
 	 * @param member
 	 *            the member to query
@@ -212,13 +210,13 @@ public abstract class BreakpointChange extends Change {
 	// }
 
 	/**
-	 * Returns the <code>IJavaElement</code> contained within the specified
-	 * parent one, or the parent one by default
+	 * Returns the <code>IJavaElement</code> contained within the specified parent
+	 * one, or the parent one by default
 	 * 
 	 * @param parent
 	 * @param element
-	 * @return the <code>IJavaElement</code> contained within the specified
-	 *         parent one, or the parent one by default
+	 * @return the <code>IJavaElement</code> contained within the specified parent
+	 *         one, or the parent one by default
 	 */
 	// public static IJavaElement findElement(IJavaElement parent, IJavaElement
 	// element) {
@@ -280,8 +278,8 @@ public abstract class BreakpointChange extends Change {
 	// }
 
 	/**
-	 * Returns the path of the given element up to but not including its
-	 * compilation unit, in bottom up order.
+	 * Returns the path of the given element up to but not including its compilation
+	 * unit, in bottom up order.
 	 * 
 	 * @param element
 	 * @return element's path

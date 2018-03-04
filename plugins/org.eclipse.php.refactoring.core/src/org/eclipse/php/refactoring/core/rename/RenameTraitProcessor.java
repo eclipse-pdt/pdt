@@ -47,15 +47,13 @@ import org.eclipse.php.refactoring.core.utils.RefactoringUtility;
  * 
  * @author Roy, 2007
  */
-public class RenameTraitProcessor extends AbstractRenameProcessor<IFile>
-		implements ITextUpdating {
+public class RenameTraitProcessor extends AbstractRenameProcessor<IFile> implements ITextUpdating {
 
 	public static final String RENAME_IS_PROCESSING = PHPRefactoringCoreMessages
 			.getString("RenameClassNameProcessor.0"); //$NON-NLS-1$
 	public static final String CREATING_MODIFICATIONS_LABEL = PHPRefactoringCoreMessages
 			.getString("RenameClassNameProcessor.1"); //$NON-NLS-1$
-	private static final String CLASS_IS_USED = PHPRefactoringCoreMessages
-			.getString("RenameClassNameProcessor.2"); //$NON-NLS-1$
+	private static final String CLASS_IS_USED = PHPRefactoringCoreMessages.getString("RenameClassNameProcessor.2"); //$NON-NLS-1$
 	private static final String ID_RENAME_CLASS = "php.refactoring.ui.rename.className"; //$NON-NLS-1$
 	protected static final String ATTRIBUTE_TEXTUAL_MATCHES = "textual"; //$NON-NLS-1$
 	public static final String RENAME_CLASS_PROCESSOR_NAME = PHPRefactoringCoreMessages
@@ -73,12 +71,11 @@ public class RenameTraitProcessor extends AbstractRenameProcessor<IFile>
 	private IType[] types;
 
 	public RenameTraitProcessor(IFile operatedFile, ASTNode locateNode) {
-		super(operatedFile); 
+		super(operatedFile);
 		this.identifier = locateNode;
 		IModelElement[] elements = null;
 		try {
-			elements = identifier.getProgramRoot().getSourceModule()
-					.codeSelect(getOffset(), 0);
+			elements = identifier.getProgramRoot().getSourceModule().codeSelect(getOffset(), 0);
 		} catch (ModelException e) {
 			elements = new IModelElement[0];
 		}
@@ -92,8 +89,7 @@ public class RenameTraitProcessor extends AbstractRenameProcessor<IFile>
 		List<IType> types = new ArrayList<>();
 		for (int i = 0; i < elements.length; i++) {
 			try {
-				if ((elements[i] instanceof IType)
-						|| PHPFlags.isTrait(((IType) elements[i]).getFlags())) {
+				if ((elements[i] instanceof IType) || PHPFlags.isTrait(((IType) elements[i]).getFlags())) {
 					types.add((IType) elements[i]);
 				}
 			} catch (ModelException e) {
@@ -106,17 +102,14 @@ public class RenameTraitProcessor extends AbstractRenameProcessor<IFile>
 	 * Derive the change
 	 */
 	@Override
-	public Change createChange(IProgressMonitor pm) throws CoreException,
-			OperationCanceledException {
+	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 
 		CompositeChange rootChange = new CompositeChange(
-				PHPRefactoringCoreMessages
-						.getString("RenameClassNameProcessor.4")); //$NON-NLS-1$
+				PHPRefactoringCoreMessages.getString("RenameClassNameProcessor.4")); //$NON-NLS-1$
 		rootChange.markAsSynthetic();
 
 		try {
-			pm.beginTask(RenameTraitProcessor.RENAME_IS_PROCESSING,
-					participantFiles.size());
+			pm.beginTask(RenameTraitProcessor.RENAME_IS_PROCESSING, participantFiles.size());
 			pm.setTaskName(RenameTraitProcessor.CREATING_MODIFICATIONS_LABEL);
 
 			if (pm.isCanceled()) {
@@ -130,8 +123,7 @@ public class RenameTraitProcessor extends AbstractRenameProcessor<IFile>
 			for (Entry<IFile, Program> entry : participantFiles.entrySet()) {
 				final IFile file = entry.getKey();
 				final Program program = entry.getValue();
-				final RenameTrait rename = new RenameTrait(file, identifier,
-						getCurrentElementName(), newElementName,
+				final RenameTrait rename = new RenameTrait(file, identifier, getCurrentElementName(), newElementName,
 						getUpdateTextualMatches(), types);
 
 				// aggregate the changes identifiers
@@ -213,31 +205,23 @@ public class RenameTraitProcessor extends AbstractRenameProcessor<IFile>
 	protected void collectReferences(Program program, IProgressMonitor pm) {
 		final HashSet<IResource> list = new HashSet<>();
 
-		IScriptProject project = this.identifier.getProgramRoot()
-				.getSourceModule().getScriptProject();
+		IScriptProject project = this.identifier.getProgramRoot().getSourceModule().getScriptProject();
 
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(project,
-				getSearchFlags(false));
+		IDLTKSearchScope scope = SearchEngine.createSearchScope(project, getSearchFlags(false));
 
 		SearchPattern pattern = null;
-		int matchMode = SearchPattern.R_EXACT_MATCH
-				| SearchPattern.R_ERASURE_MATCH;
+		int matchMode = SearchPattern.R_EXACT_MATCH | SearchPattern.R_ERASURE_MATCH;
 
 		SearchEngine engine = new SearchEngine();
 
-		pattern = SearchPattern.createPattern(getCurrentElementName(),
-				IDLTKSearchConstants.TYPE,
-				IDLTKSearchConstants.ALL_OCCURRENCES, matchMode,
-				PHPLanguageToolkit.getDefault());
+		pattern = SearchPattern.createPattern(getCurrentElementName(), IDLTKSearchConstants.TYPE,
+				IDLTKSearchConstants.ALL_OCCURRENCES, matchMode, PHPLanguageToolkit.getDefault());
 		try {
-			engine.search(pattern, new SearchParticipant[] { SearchEngine
-					.getDefaultSearchParticipant() }, scope,
+			engine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope,
 					new SearchRequestor() {
 						@Override
-						public void acceptSearchMatch(SearchMatch match)
-								throws CoreException {
-							IModelElement element = (IModelElement) match
-									.getElement();
+						public void acceptSearchMatch(SearchMatch match) throws CoreException {
+							IModelElement element = (IModelElement) match.getElement();
 							list.add(element.getResource());
 						}
 					}, new NullProgressMonitor());
@@ -248,8 +232,7 @@ public class RenameTraitProcessor extends AbstractRenameProcessor<IFile>
 			IResource file = it.next();
 			if (file instanceof IFile) {
 				try {
-					participantFiles.put((IFile) file,
-							RefactoringUtility.getProgramForFile((IFile) file));
+					participantFiles.put((IFile) file, RefactoringUtility.getProgramForFile((IFile) file));
 				} catch (Exception e) {
 				}
 			}
@@ -278,10 +261,8 @@ public class RenameTraitProcessor extends AbstractRenameProcessor<IFile>
 
 	@Override
 	public RefactoringStatus getRefactoringStatus(IFile key, Program program) {
-		if (PHPElementConciliator.classNameAlreadyExists(program,
-				getNewElementName())) {
-			final String message = MessageFormat.format(
-					RenameTraitProcessor.CLASS_IS_USED,
+		if (PHPElementConciliator.classNameAlreadyExists(program, getNewElementName())) {
+			final String message = MessageFormat.format(RenameTraitProcessor.CLASS_IS_USED,
 					new Object[] { key.getName() });
 			return RefactoringStatus.createWarningStatus(message);
 		}
@@ -290,24 +271,18 @@ public class RenameTraitProcessor extends AbstractRenameProcessor<IFile>
 	}
 
 	@Override
-	public RefactoringParticipant[] loadParticipants(RefactoringStatus status,
-			SharableParticipants sharedParticipants) throws CoreException {
-		String[] affectedNatures = ResourceProcessors
-				.computeAffectedNatures(resource);
-		RenameArguments fRenameArguments = new RenameArguments(
-				getNewElementName(), false);
+	public RefactoringParticipant[] loadParticipants(RefactoringStatus status, SharableParticipants sharedParticipants)
+			throws CoreException {
+		String[] affectedNatures = ResourceProcessors.computeAffectedNatures(resource);
+		RenameArguments fRenameArguments = new RenameArguments(getNewElementName(), false);
 		LinkedList<RefactoringParticipant> participants = new LinkedList<>(
-				Arrays.asList(ParticipantManager.loadRenameParticipants(status,
-						this, identifier, fRenameArguments, null,
-						affectedNatures, sharedParticipants)));
+				Arrays.asList(ParticipantManager.loadRenameParticipants(status, this, identifier, fRenameArguments,
+						null, affectedNatures, sharedParticipants)));
 		for (IType type : types) {
-			participants.addAll(Arrays.asList(ParticipantManager
-					.loadRenameParticipants(status, this, type,
-							fRenameArguments, null, affectedNatures,
-							sharedParticipants)));
+			participants.addAll(Arrays.asList(ParticipantManager.loadRenameParticipants(status, this, type,
+					fRenameArguments, null, affectedNatures, sharedParticipants)));
 		}
 
-		return participants.toArray(new RefactoringParticipant[participants
-				.size()]);
+		return participants.toArray(new RefactoringParticipant[participants.size()]);
 	}
 }

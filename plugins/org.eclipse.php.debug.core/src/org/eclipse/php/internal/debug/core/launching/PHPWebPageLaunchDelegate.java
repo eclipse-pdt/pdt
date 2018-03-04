@@ -64,14 +64,12 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	private List<ILaunchDelegateListener> preLaunchListeners = new ArrayList<>();
 
 	/*
-	 * notify all registered ILaunchDelegateListener listeners launch is about
-	 * to be invoked
+	 * notify all registered ILaunchDelegateListener listeners launch is about to be
+	 * invoked
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.model.ILaunchConfigurationDelegate#launch(org.
+	 * @see org.eclipse.debug.core.model.ILaunchConfigurationDelegate#launch(org.
 	 * eclipse.debug.core.ILaunchConfiguration, java.lang.String,
-	 * org.eclipse.debug.core.ILaunch,
-	 * org.eclipse.core.runtime.IProgressMonitor)
+	 * org.eclipse.debug.core.ILaunch, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	protected int notifyPreLaunch(ILaunchConfiguration configuration, String mode, ILaunch launch,
 			IProgressMonitor monitor) {
@@ -126,11 +124,9 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.server.core.launch.IHTTPServerLaunch#launch(
+	 * @see org.eclipse.php.internal.server.core.launch.IHTTPServerLaunch#launch(
 	 * org.eclipse.debug.core.ILaunchConfiguration, java.lang.String,
-	 * org.eclipse.debug.core.ILaunch,
-	 * org.eclipse.core.runtime.IProgressMonitor)
+	 * org.eclipse.debug.core.ILaunch, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
@@ -220,12 +216,11 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	}
 
 	/*
-	 * Override the super preLaunchCheck to make sure that the server we are
-	 * using is still valid. If not, notify the user that a change should be
-	 * made and open the launch configuration page to do so.
+	 * Override the super preLaunchCheck to make sure that the server we are using
+	 * is still valid. If not, notify the user that a change should be made and open
+	 * the launch configuration page to do so.
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.model.LaunchConfigurationDelegate#preLaunchCheck
+	 * @see org.eclipse.debug.core.model.LaunchConfigurationDelegate#preLaunchCheck
 	 * (org.eclipse.debug.core.ILaunchConfiguration, java.lang.String,
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */

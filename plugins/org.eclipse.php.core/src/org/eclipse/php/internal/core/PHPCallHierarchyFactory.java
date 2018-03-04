@@ -24,8 +24,7 @@ public class PHPCallHierarchyFactory implements ICallHierarchyFactory {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.dltk.core.ICallHierarchyFactory#createCalleeProcessor(org
+	 * @see org.eclipse.dltk.core.ICallHierarchyFactory#createCalleeProcessor(org
 	 * .eclipse.dltk.core.IMethod, org.eclipse.core.runtime.IProgressMonitor,
 	 * org.eclipse.dltk.core.search.IDLTKSearchScope)
 	 */

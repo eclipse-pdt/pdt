@@ -49,8 +49,8 @@ public class PDTTList extends AbstractPDTTRunner {
 	@Target(ElementType.FIELD)
 	public static @interface Parameters {
 		/**
-		 * If true, tests will be with real directory structure, each level as
-		 * seperate test tree element
+		 * If true, tests will be with real directory structure, each level as seperate
+		 * test tree element
 		 */
 		boolean recursive() default false;
 	}

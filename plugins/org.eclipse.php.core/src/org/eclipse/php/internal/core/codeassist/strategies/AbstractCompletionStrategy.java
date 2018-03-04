@@ -149,8 +149,8 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 	}
 
 	/**
-	 * Sets element filter that will be used for filtering out model elements
-	 * from proposals list
+	 * Sets element filter that will be used for filtering out model elements from
+	 * proposals list
 	 * 
 	 * @param elementFilter
 	 */

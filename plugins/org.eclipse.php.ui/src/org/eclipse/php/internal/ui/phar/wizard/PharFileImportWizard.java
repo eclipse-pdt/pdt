@@ -33,8 +33,7 @@ public class PharFileImportWizard extends Wizard implements IImportWizard {
 	private WizardPharFileResourceImportPage1 mainPage;
 
 	/**
-	 * Creates a wizard for importing resources into the workspace from a zip
-	 * file.
+	 * Creates a wizard for importing resources into the workspace from a zip file.
 	 */
 	public PharFileImportWizard() {
 		AbstractUIPlugin plugin = WorkbenchPlugin.getDefault();
@@ -57,8 +56,8 @@ public class PharFileImportWizard extends Wizard implements IImportWizard {
 	}
 
 	/**
-	 * Get the file import mask used by the receiver. By default use null so
-	 * that there is no mask.
+	 * Get the file import mask used by the receiver. By default use null so that
+	 * there is no mask.
 	 * 
 	 * @return String[] or <code>null</code>
 	 * @since 3.4

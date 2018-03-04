@@ -204,8 +204,8 @@ public class DltkUtil {
 	}
 
 	/**
-	 * Unzip the contents of the given zip in the given directory (create it if
-	 * it doesn't exist)
+	 * Unzip the contents of the given zip in the given directory (create it if it
+	 * doesn't exist)
 	 */
 	public static void unzip(String zipPath, String destDirPath) throws IOException {
 

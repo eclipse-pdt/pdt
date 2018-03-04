@@ -38,8 +38,7 @@ public abstract class FieldNameMatch {
 
 	/**
 	 * Returns the matched type fully qualified name using '.' character as
-	 * separator (e.g. package name + '.' enclosing type names + '.' simple
-	 * name).
+	 * separator (e.g. package name + '.' enclosing type names + '.' simple name).
 	 *
 	 * @see #getType()
 	 * @see IType#getFullyQualifiedName(char)
@@ -63,8 +62,8 @@ public abstract class FieldNameMatch {
 	public abstract int getModifiers();
 
 	/**
-	 * Returns the project fragment of the stored type. Project fragment cannot
-	 * be null and <strong>does</strong> exist.
+	 * Returns the project fragment of the stored type. Project fragment cannot be
+	 * null and <strong>does</strong> exist.
 	 *
 	 * @see #getType()
 	 * @see IScriptElement#getAncestor(int)
@@ -114,8 +113,8 @@ public abstract class FieldNameMatch {
 	}
 
 	/**
-	 * Returns a Script model method handle. This handle may exist or not, but
-	 * is not supposed to be <code>null</code>.
+	 * Returns a Script model method handle. This handle may exist or not, but is
+	 * not supposed to be <code>null</code>.
 	 * <p>
 	 * This is a handle-only method as neither Script Model nor classpath
 	 * initializations are done while calling this method.

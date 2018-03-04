@@ -30,8 +30,7 @@ public class TrackedNodePosition implements ITrackedNodePosition {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.jdt.internal.corext.dom.ITrackedNodePosition#getStartPosition
-	 * ()
+	 * org.eclipse.jdt.internal.corext.dom.ITrackedNodePosition#getStartPosition ()
 	 */
 	@Override
 	public int getStartPosition() {

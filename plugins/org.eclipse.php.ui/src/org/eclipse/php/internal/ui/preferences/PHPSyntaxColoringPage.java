@@ -1240,8 +1240,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 				Collections.sort(highlightings);
 
 				for (Iterator<AbstractSemanticHighlighting> iterator = highlightings.iterator(); iterator.hasNext();) {
-					AbstractSemanticHighlighting abstractSemanticHighlighting = iterator
-							.next();
+					AbstractSemanticHighlighting abstractSemanticHighlighting = iterator.next();
 					Position[] positions = abstractSemanticHighlighting.consumes(program);
 
 					if (positions != null && positions.length > 0) {
@@ -1483,8 +1482,8 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 	}
 
 	/**
-	 * Creates a highlighting style based on the preferences defined in the
-	 * semantic highlighting
+	 * Creates a highlighting style based on the preferences defined in the semantic
+	 * highlighting
 	 * 
 	 * @param highlighting
 	 *            the semantic highlighting
@@ -1535,30 +1534,26 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 	}
 
 	/**
-	 * Looks up a boolean preference by <code>key</code> from the preference
-	 * store
+	 * Looks up a boolean preference by <code>key</code> from the preference store
 	 * 
 	 * @param store
 	 *            the preference store to lookup the preference from
 	 * @param key
 	 *            the key the preference is stored under
-	 * @return the preference value from the preference store iff key is not
-	 *         null
+	 * @return the preference value from the preference store iff key is not null
 	 */
 	private boolean getBoolean(IPreferenceStore store, String key) {
 		return (key == null) ? false : store.getBoolean(key);
 	}
 
 	/**
-	 * Looks up a String preference by <code>key</code> from the preference
-	 * store
+	 * Looks up a String preference by <code>key</code> from the preference store
 	 * 
 	 * @param store
 	 *            the preference store to lookup the preference from
 	 * @param key
 	 *            the key the preference is stored under
-	 * @return the preference value from the preference store iff key is not
-	 *         null
+	 * @return the preference value from the preference store iff key is not null
 	 */
 	private String getString(IPreferenceStore store, String key) {
 		return (key == null) ? null : store.getString(key);

@@ -25,9 +25,10 @@ public class OrganizeIncludesUtils {
 		// for (Iterator j = elements.iterator(); j.hasNext();) {
 		// CodeData element = (CodeData) j.next();
 		// String elementTypeLabel = getElementTypeLabel(element);
-		//			editGroupNameSuffix.append(elementTypeLabel).append(" ").append(element.getName()); //$NON-NLS-1$
+		// editGroupNameSuffix.append(elementTypeLabel).append("
+		// ").append(element.getName()); //$NON-NLS-1$
 		// if (j.hasNext())
-		//				editGroupNameSuffix.append(", "); //$NON-NLS-1$
+		// editGroupNameSuffix.append(", "); //$NON-NLS-1$
 		// }
 		return editGroupNameSuffix;
 	}
@@ -36,18 +37,18 @@ public class OrganizeIncludesUtils {
 	 * @param element
 	 */
 	// private static String getElementTypeLabel(CodeData element) {
-	//		String elementTypeLabel = ""; //$NON-NLS-1$
+	// String elementTypeLabel = ""; //$NON-NLS-1$
 	// if (element instanceof PHPClassData) {
 	// int modifiers = ((PHPClassData) element).getModifiers();
 	// if (PHPModifier.isInterface(modifiers)) {
-	//				elementTypeLabel = "interface"; //$NON-NLS-1$
+	// elementTypeLabel = "interface"; //$NON-NLS-1$
 	// } else {
-	//				elementTypeLabel = "class"; //$NON-NLS-1$
+	// elementTypeLabel = "class"; //$NON-NLS-1$
 	// }
 	// } else if (element instanceof PHPFunctionData)
-	//			elementTypeLabel = "function"; //$NON-NLS-1$
+	// elementTypeLabel = "function"; //$NON-NLS-1$
 	// else if (element instanceof PHPConstantData)
-	//			elementTypeLabel = "constant"; //$NON-NLS-1$
+	// elementTypeLabel = "constant"; //$NON-NLS-1$
 	// return elementTypeLabel;
 	// }
 	//
@@ -126,15 +127,12 @@ public class OrganizeIncludesUtils {
 	// return includedFiles;
 	// }
 
-	static String getEditGroupName(String prefix, String includeLocation,
-			Set<?> elements) {
+	static String getEditGroupName(String prefix, String includeLocation, Set<?> elements) {
 		if (elements == null || elements.size() == 0) {
 			return getEditGroupName(prefix, includeLocation);
 		}
-		StringBuilder editGroupNameSuffix = OrganizeIncludesUtils
-				.concatenateElementLabels(elements);
-		return getEditGroupName(prefix, includeLocation,
-				editGroupNameSuffix.toString());
+		StringBuilder editGroupNameSuffix = OrganizeIncludesUtils.concatenateElementLabels(elements);
+		return getEditGroupName(prefix, includeLocation, editGroupNameSuffix.toString());
 	}
 
 	private static String getEditGroupName(String prefix, String includeLocation) {
@@ -148,8 +146,7 @@ public class OrganizeIncludesUtils {
 	 * @param suffix
 	 * @return
 	 */
-	static String getEditGroupName(String prefix, String includeLocation,
-			String suffix) {
+	static String getEditGroupName(String prefix, String includeLocation, String suffix) {
 		return MessageFormat.format("{0} {1} - {2}.", new Object[] { prefix, //$NON-NLS-1$
 				includeLocation, suffix });
 	}

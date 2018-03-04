@@ -41,8 +41,7 @@ public class BlockingQueue {
 	}
 
 	/**
-	 * remove en element to the queue, or wait ustil there is an available
-	 * element.
+	 * remove en element to the queue, or wait ustil there is an available element.
 	 */
 	public synchronized Object queueOut() throws InterruptedException {
 		return queueOut(0);

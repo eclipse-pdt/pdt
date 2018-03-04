@@ -45,8 +45,8 @@ public class CaseDefaultIndentationStrategy implements IIndentationStrategy {
 		boolean addIndentation = false;
 		int curlyCount = 0;
 		/*
-		 * TODO this function has a bug in it: if there is a '{' inside inner
-		 * state then it will not ignore it as it should.
+		 * TODO this function has a bug in it: if there is a '{' inside inner state then
+		 * it will not ignore it as it should.
 		 */
 
 		IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);

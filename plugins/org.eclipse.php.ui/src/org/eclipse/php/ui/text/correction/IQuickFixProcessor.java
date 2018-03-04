@@ -45,8 +45,8 @@ public interface IQuickFixProcessor {
 	 * @param unit
 	 *            the compilation unit
 	 * @param identifier
-	 *            the problem Id. The id is of a problem of the problem type(s)
-	 *            this processor specified in the extension point.
+	 *            the problem Id. The id is of a problem of the problem type(s) this
+	 *            processor specified in the extension point.
 	 * @return <code>true</code> if the processor has proposals for the given
 	 *         problem
 	 * @since 5.0
@@ -60,8 +60,8 @@ public interface IQuickFixProcessor {
 	 *            Defines current compilation unit, position and a shared AST
 	 * @param locations
 	 *            Problems are the current location.
-	 * @return the corrections applicable at the location or <code>null</code>
-	 *         if no proposals can be offered
+	 * @return the corrections applicable at the location or <code>null</code> if no
+	 *         proposals can be offered
 	 * @throws CoreException
 	 *             CoreException can be thrown if the operation fails
 	 */

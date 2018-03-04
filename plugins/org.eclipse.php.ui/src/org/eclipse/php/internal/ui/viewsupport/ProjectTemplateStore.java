@@ -48,8 +48,8 @@ public final class ProjectTemplateStore {
 					PHPUiPlugin.ID);
 			fProjectStore = new TemplateStore(projectSettings, KEY) {
 				/*
-				 * Make sure we keep the id of added code templates - add
-				 * removes it in the usual add() method
+				 * Make sure we keep the id of added code templates - add removes it in the
+				 * usual add() method
 				 */
 				@Override
 				public void add(TemplatePersistenceData data) {

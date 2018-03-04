@@ -46,8 +46,8 @@ public class PHPModuleDeclaration extends ModuleDeclaration {
 	}
 
 	/**
-	 * This method goes over the AST and builds a list of types and methods
-	 * declared in this file
+	 * This method goes over the AST and builds a list of types and methods declared
+	 * in this file
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
@@ -115,9 +115,9 @@ public class PHPModuleDeclaration extends ModuleDeclaration {
 	}
 
 	/**
-	 * due to the nature of the parser and the error recovery method not all
-	 * errors can be added to the AST as statements, the error list is made for
-	 * those errors.
+	 * due to the nature of the parser and the error recovery method not all errors
+	 * can be added to the AST as statements, the error list is made for those
+	 * errors.
 	 */
 	public List<ASTError> getErrors() {
 		return errors;

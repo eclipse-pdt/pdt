@@ -48,8 +48,8 @@ public class PersistingSizeAndLocationWizardDialog extends WizardDialog {
 	 *            the wizard this dialog is working on
 	 * @param dialogSettings
 	 *            the dialog settings used to store the dialog's location and/or
-	 *            size, or <code>null</code> if the dialog's bounds should never
-	 *            be stored
+	 *            size, or <code>null</code> if the dialog's bounds should never be
+	 *            stored
 	 */
 	public PersistingSizeAndLocationWizardDialog(Shell parentShell, IWizard wizard, IDialogSettings dialogSettings) {
 		this(parentShell, wizard, dialogSettings, DIALOG_PERSISTLOCATION | DIALOG_PERSISTSIZE);
@@ -64,11 +64,11 @@ public class PersistingSizeAndLocationWizardDialog extends WizardDialog {
 	 *            the wizard this dialog is working on
 	 * @param dialogSettings
 	 *            the dialog settings used to store the dialog's location and/or
-	 *            size, or <code>null</code> if the dialog's bounds should never
-	 *            be stored
+	 *            size, or <code>null</code> if the dialog's bounds should never be
+	 *            stored
 	 * @param persistingStrategy
-	 *            the integer constant that describes the strategy for
-	 *            persisting the dialog location size
+	 *            the integer constant that describes the strategy for persisting
+	 *            the dialog location size
 	 * 
 	 * @see Dialog#DIALOG_PERSISTLOCATION
 	 * @see Dialog#DIALOG_PERSISTSIZE

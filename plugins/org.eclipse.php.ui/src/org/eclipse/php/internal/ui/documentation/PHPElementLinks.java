@@ -79,8 +79,7 @@ public class PHPElementLinks {
 	private static final char LINK_BRACKET_REPLACEMENT = '\u2603';
 
 	/**
-	 * The link is composed of a number of segments, separated by
-	 * LINK_SEPARATOR:
+	 * The link is composed of a number of segments, separated by LINK_SEPARATOR:
 	 * <p>
 	 * segments[0]: ""<br>
 	 * segments[1]: baseElementHandle<br>
@@ -112,10 +111,9 @@ public class PHPElementLinks {
 
 				if ("about:blank".equals(loc)) { //$NON-NLS-1$
 					/*
-					 * Using the Browser.setText API triggers a location change
-					 * to "about:blank". XXX: remove this code once
-					 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=130314 is
-					 * fixed
+					 * Using the Browser.setText API triggers a location change to "about:blank".
+					 * XXX: remove this code once
+					 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=130314 is fixed
 					 */
 					// input set with setText
 					handler.handleTextSet();
@@ -229,8 +227,8 @@ public class PHPElementLinks {
 	 *            the scheme
 	 * @param element
 	 *            the element
-	 * @return an {@link URI}, encoded as {@link URI#toASCIIString() ASCII}
-	 *         string, ready to be used as <code>href</code> attribute in an
+	 * @return an {@link URI}, encoded as {@link URI#toASCIIString() ASCII} string,
+	 *         ready to be used as <code>href</code> attribute in an
 	 *         <code>&lt;a&gt;</code> tag
 	 * @throws URISyntaxException
 	 *             if the arguments were invalid
@@ -240,9 +238,8 @@ public class PHPElementLinks {
 	}
 
 	/**
-	 * Creates an {@link URI} with the given scheme based on the given element.
-	 * The additional arguments specify a member referenced from the given
-	 * element.
+	 * Creates an {@link URI} with the given scheme based on the given element. The
+	 * additional arguments specify a member referenced from the given element.
 	 * 
 	 * @param scheme
 	 *            a scheme
@@ -253,10 +250,10 @@ public class PHPElementLinks {
 	 * @param refMemberName
 	 *            a member name, can be <code>null</code>
 	 * @param refParameterTypes
-	 *            a (possibly empty) array of (possibly qualified) parameter
-	 *            type names, can be <code>null</code>
-	 * @return an {@link URI}, encoded as {@link URI#toASCIIString() ASCII}
-	 *         string, ready to be used as <code>href</code> attribute in an
+	 *            a (possibly empty) array of (possibly qualified) parameter type
+	 *            names, can be <code>null</code>
+	 * @return an {@link URI}, encoded as {@link URI#toASCIIString() ASCII} string,
+	 *         ready to be used as <code>href</code> attribute in an
 	 *         <code>&lt;a&gt;</code> tag
 	 * @throws URISyntaxException
 	 *             if the arguments were invalid
@@ -264,9 +261,8 @@ public class PHPElementLinks {
 	public static String createURI(String scheme, IModelElement element, String refTypeName, String refMemberName,
 			String[] refParameterTypes) throws URISyntaxException {
 		/*
-		 * We use an opaque URI, not ssp and fragments (to work around Safari
-		 * bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=212527 (wrongly
-		 * encodes #)).
+		 * We use an opaque URI, not ssp and fragments (to work around Safari bug
+		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=212527 (wrongly encodes #)).
 		 */
 
 		StringBuilder ssp = new StringBuilder(60);

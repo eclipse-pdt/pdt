@@ -208,9 +208,9 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 		@Override
 		protected void startConnection(Socket socket) {
 			/*
-			 * A socket has been accepted by the listener. This runs on the
-			 * listener thread so we should make damn sure we don't throw an
-			 * exception here otherwise it will abort that thread.
+			 * A socket has been accepted by the listener. This runs on the listener thread
+			 * so we should make damn sure we don't throw an exception here otherwise it
+			 * will abort that thread.
 			 */
 			if (DBGpLogger.debugSession()) {
 				DBGpLogger.debug("Connection established: " + socket.toString()); //$NON-NLS-1$
@@ -237,8 +237,8 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 
 							} else {
 								/*
-								 * session was either local host or from any
-								 * outside one and preferences allow it.
+								 * session was either local host or from any outside one and preferences allow
+								 * it.
 								 */
 								createLaunch(session);
 							}
@@ -255,9 +255,9 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 		}
 
 		/**
-		 * create a launch and appropriate debug targets to automate launch
-		 * initiation. If any problems occurred, we can throw the session away
-		 * using session.endSession();
+		 * create a launch and appropriate debug targets to automate launch initiation.
+		 * If any problems occurred, we can throw the session away using
+		 * session.endSession();
 		 * 
 		 * @param session
 		 *            the DBGpSession.
@@ -297,8 +297,7 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 				((PHPProcess) process).setDebugTarget(target);
 				remoteLaunch.addProcess(process);
 				/*
-				 * try to locate a relevant server definition so we can get its
-				 * path mapper
+				 * try to locate a relevant server definition so we can get its path mapper
 				 */
 				Server server = null;
 				Server[] servers = ServersManager.getServers();
@@ -314,15 +313,13 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 				}
 				if (mapper == null) {
 					/*
-					 * Create a temporary path mapper, we may look to holding
-					 * these via the pathmapper registry in the future but they
-					 * would be persisted.
+					 * Create a temporary path mapper, we may look to holding these via the
+					 * pathmapper registry in the future but they would be persisted.
 					 */
 					mapper = new PathMapper();
 				}
 				/*
-				 * Need to add ourselves as a session listener for future
-				 * sessions.
+				 * Need to add ourselves as a session listener for future sessions.
 				 */
 				DBGpSessionHandler.getInstance().addSessionListener(target);
 			} else {
@@ -353,8 +350,7 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 				target.sessionReceived((DBGpBreakpointFacade) IDELayerFactory.getIDELayer(),
 						XDebugPreferenceMgr.createSessionPreferences());
 				/*
-				 * Probably could do waitForInitialSession as session has
-				 * already been set.
+				 * Probably could do waitForInitialSession as session has already been set.
 				 */
 			}
 		}

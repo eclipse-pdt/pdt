@@ -35,8 +35,7 @@ public class ExecutionStatisticsContentProvider implements ITreeContentProvider 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.
+	 * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.
 	 * Object)
 	 */
 	@Override
@@ -75,8 +74,7 @@ public class ExecutionStatisticsContentProvider implements ITreeContentProvider 
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object
-	 * )
+	 * org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object )
 	 */
 	@Override
 	public Object getParent(Object element) {
@@ -86,8 +84,7 @@ public class ExecutionStatisticsContentProvider implements ITreeContentProvider 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.
+	 * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.
 	 * Object)
 	 */
 	@Override
@@ -98,8 +95,7 @@ public class ExecutionStatisticsContentProvider implements ITreeContentProvider 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java
+	 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java
 	 * .lang.Object)
 	 */
 	@Override

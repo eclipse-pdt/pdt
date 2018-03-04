@@ -56,8 +56,7 @@ public abstract class AbstractDebuggerSettings implements IDebuggerSettings {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.IDebuggerSettings#getOwnerId
-	 * ()
+	 * org.eclipse.php.internal.debug.core.debugger.IDebuggerSettings#getOwnerId ()
 	 */
 	@Override
 	public String getOwnerId() {

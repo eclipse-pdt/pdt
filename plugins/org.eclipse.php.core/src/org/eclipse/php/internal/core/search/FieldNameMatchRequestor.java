@@ -33,9 +33,9 @@ import org.eclipse.dltk.core.search.*;
  */
 public abstract class FieldNameMatchRequestor {
 	/**
-	 * Accepts a type name match ({@link TypeNameMatch}) which contains
-	 * top-level or a member type information as package name, enclosing types
-	 * names, simple type name, modifiers, etc.
+	 * Accepts a type name match ({@link TypeNameMatch}) which contains top-level or
+	 * a member type information as package name, enclosing types names, simple type
+	 * name, modifiers, etc.
 	 * <p>
 	 * The default implementation of this method does nothing. Subclasses should
 	 * override.

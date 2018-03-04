@@ -152,9 +152,9 @@ public abstract class MatchingCharAutoEditStrategy implements IAutoEditStrategy 
 	}
 
 	/**
-	 * when we call command.offset++; we also need to check command.caretOffset.
-	 * bug 312439: Improper cursor jumps when using associative arrays in
-	 * content assist https://bugs.eclipse.org/bugs/show_bug.cgi?id=312439
+	 * when we call command.offset++; we also need to check command.caretOffset. bug
+	 * 312439: Improper cursor jumps when using associative arrays in content assist
+	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=312439
 	 * 
 	 * @param command
 	 */

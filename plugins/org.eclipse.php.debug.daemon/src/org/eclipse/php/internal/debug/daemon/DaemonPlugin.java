@@ -83,8 +83,8 @@ public class DaemonPlugin extends Plugin {
 	}
 
 	/**
-	 * Initializes and starts the daemons that has the given daemonID. In case
-	 * that the give id is null, starts all the registered daemons.
+	 * Initializes and starts the daemons that has the given daemonID. In case that
+	 * the give id is null, starts all the registered daemons.
 	 * 
 	 * @param debuggerID
 	 *            The debugger id, or null.
@@ -168,20 +168,20 @@ public class DaemonPlugin extends Plugin {
 	}
 
 	/**
-	 * Make sure that the communication daemons are alive and listening. This
-	 * method can be called before a communication session is requested in order
-	 * to make sure that the requested communication daemon is up and running.
+	 * Make sure that the communication daemons are alive and listening. This method
+	 * can be called before a communication session is requested in order to make
+	 * sure that the requested communication daemon is up and running.
 	 * 
 	 * The method goes over the registered daemons and reset the socket for any
 	 * communication daemon that is not listening.
 	 * 
-	 * The validation will be made on the daemons that have the given debuggerID
-	 * or on all the daemons in case the id is null.
+	 * The validation will be made on the daemons that have the given debuggerID or
+	 * on all the daemons in case the id is null.
 	 * 
 	 * @param debuggerID
 	 *            The debugger id, or null.
-	 * @return True, if all the communication daemons passed the validation;
-	 *         False, otherwise.
+	 * @return True, if all the communication daemons passed the validation; False,
+	 *         otherwise.
 	 * @since PDT 1.0
 	 */
 	public boolean validateCommunicationDaemons(String debuggerID, int port) {

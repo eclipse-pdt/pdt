@@ -137,11 +137,11 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	}
 
 	/**
-	 * Adds a Server to the manager. If a server with the same name exists in
-	 * the manager, the existing server will be overidden with the new one and
-	 * event notifications will be fired for the removal and for the addition.
-	 * Note: The added server is not saved into the preferences until the
-	 * {@link #save()} is called.
+	 * Adds a Server to the manager. If a server with the same name exists in the
+	 * manager, the existing server will be overidden with the new one and event
+	 * notifications will be fired for the removal and for the addition. Note: The
+	 * added server is not saved into the preferences until the {@link #save()} is
+	 * called.
 	 * 
 	 * @param server
 	 *            A Server
@@ -189,8 +189,8 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	}
 
 	/**
-	 * Removes a Server from the manager. In case that that given server is set
-	 * to be the default server for a project, the project will be set with the
+	 * Removes a Server from the manager. In case that that given server is set to
+	 * be the default server for a project, the project will be set with the
 	 * workspace default server.
 	 * 
 	 * @param serverName
@@ -284,8 +284,8 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	 * 
 	 * @param urlString
 	 *            URL text form
-	 * @return server that corresponds to given URL or <code>null</code> if
-	 *         there is no match
+	 * @return server that corresponds to given URL or <code>null</code> if there is
+	 *         no match
 	 */
 	public static Server findByURL(String urlString) {
 		if (urlString == null) {
@@ -377,9 +377,8 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 		Server server = manager.defaultServersMap.get(project);
 		if (project != null) {
 			/*
-			 * In case that the project is not null, check that we have
-			 * project-specific settings for it. Otherwise, map it to the
-			 * workspace default server.
+			 * In case that the project is not null, check that we have project-specific
+			 * settings for it. Otherwise, map it to the workspace default server.
 			 */
 			IScopeContext[] preferenceScopes = createPreferenceScopes(project);
 			String projectSpecificServer = preferenceScopes[0].getNode(NODE_QUALIFIER)
@@ -392,10 +391,10 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 			}
 		}
 		/*
-		 * If the server was no found in our hash, try to load it from the
-		 * preferences. This part of code should only happen one time when the
-		 * first call for the getDefaultServer. Once it's done, there is no
-		 * reason to re-load the servers definitions from the preferences (XML).
+		 * If the server was no found in our hash, try to load it from the preferences.
+		 * This part of code should only happen one time when the first call for the
+		 * getDefaultServer. Once it's done, there is no reason to re-load the servers
+		 * definitions from the preferences (XML).
 		 */
 		if (server == null) {
 			IEclipsePreferences preferences = InstanceScope.INSTANCE.getNode(Activator.PLUGIN_ID);
@@ -415,8 +414,8 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 			if (serverName != null && !"".equals(serverName)) { //$NON-NLS-1$
 				server = manager.servers.get(serverName);
 				/*
-				 * Map this server as the default for the project (if not null)
-				 * or for the workspace (when the project is null).
+				 * Map this server as the default for the project (if not null) or for the
+				 * workspace (when the project is null).
 				 */
 				manager.defaultServersMap.put(project, server);
 			}
@@ -433,9 +432,9 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	}
 
 	/**
-	 * Sets the default debug server. In case that the given project is null,
-	 * the setting if for the workspace. In case that the given server is null,
-	 * the preferences value stored for the given project will be removed.
+	 * Sets the default debug server. In case that the given project is null, the
+	 * setting if for the workspace. In case that the given server is null, the
+	 * preferences value stored for the given project will be removed.
 	 * 
 	 * @param project
 	 *            A project to assign to a default server.
@@ -445,8 +444,8 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	public static void setDefaultServer(IProject project, Server server) {
 		ServersManager manager = getInstance();
 		/*
-		 * Get the default server for the given project. In case that we need to
-		 * set a new server for the project, make sure we save it as well.
+		 * Get the default server for the given project. In case that we need to set a
+		 * new server for the project, make sure we save it as well.
 		 */
 		Server defaultProjectServer = manager.defaultServersMap.get(project);
 		if (server != defaultProjectServer) {
@@ -456,8 +455,8 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	}
 
 	/**
-	 * Sets the default debug server. In case that the given project is null,
-	 * the setting if for the workspace.
+	 * Sets the default debug server. In case that the given project is null, the
+	 * setting if for the workspace.
 	 * 
 	 * @param project
 	 *            A project to assign to a default server.
@@ -549,8 +548,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	}
 
 	/**
-	 * Fires a ServerManagerEvent to all the registered
-	 * IServersManagerListeners.
+	 * Fires a ServerManagerEvent to all the registered IServersManagerListeners.
 	 * 
 	 * @param event
 	 */

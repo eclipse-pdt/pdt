@@ -26,8 +26,8 @@ public abstract class AbstractPHPLaunchConfigurationTab extends AbstractLaunchCo
 
 	/**
 	 * Initializes this tab's controls with values from the given launch
-	 * configuration. This method is called when a configuration is selected to
-	 * view or edit, after this tab's control has been created.
+	 * configuration. This method is called when a configuration is selected to view
+	 * or edit, after this tab's control has been created.
 	 * 
 	 * @param configuration
 	 *            launch configuration
@@ -37,8 +37,7 @@ public abstract class AbstractPHPLaunchConfigurationTab extends AbstractLaunchCo
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.ILaunchConfigurationTab#initializeFrom(org.eclipse.
+	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#initializeFrom(org.eclipse.
 	 * debug.core.ILaunchConfiguration)
 	 */
 	@Override
@@ -50,8 +49,7 @@ public abstract class AbstractPHPLaunchConfigurationTab extends AbstractLaunchCo
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.ILaunchConfigurationTab#setDefaults(org.eclipse.
+	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#setDefaults(org.eclipse.
 	 * debug.core.ILaunchConfigurationWorkingCopy)
 	 */
 	@Override

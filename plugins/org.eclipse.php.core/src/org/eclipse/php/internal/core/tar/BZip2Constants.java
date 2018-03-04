@@ -32,12 +32,11 @@ public interface BZip2Constants {
 	int NUM_OVERSHOOT_BYTES = 20;
 
 	/**
-	 * This array really shouldn't be here. Again, for historical purposes it
-	 * is.
+	 * This array really shouldn't be here. Again, for historical purposes it is.
 	 * 
 	 * <p>
-	 * FIXME: This array should be in a private or package private location,
-	 * since it could be modified by malicious code.
+	 * FIXME: This array should be in a private or package private location, since
+	 * it could be modified by malicious code.
 	 * </p>
 	 */
 	int[] rNums = { 619, 720, 127, 481, 931, 816, 813, 233, 566, 247, 985, 724, 205, 454, 863, 491, 741, 242, 949, 214,

@@ -36,7 +36,9 @@ public class MissingExecutableDialog extends MessageDialog {
 	public MissingExecutableDialog(Shell parentShell, IStatus info) {
 		super(parentShell, Messages.MissingExecutableDialog_Title, null,
 				NLS.bind(Messages.MissingExecutableDialog_Message, info.getMessage()), MessageDialog.WARNING,
-				new String[] { Messages.MissingExecutableDialog_ConfigureButtonLabel, Messages.MissingExecutableDialog_CancelButtonLabel }, 0);
+				new String[] { Messages.MissingExecutableDialog_ConfigureButtonLabel,
+						Messages.MissingExecutableDialog_CancelButtonLabel },
+				0);
 		shell = parentShell;
 	}
 

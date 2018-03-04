@@ -333,9 +333,9 @@ public class PHPTemplateVariables {
 	}
 
 	/*
-	 * Produces names in following order, skipping all already listed in
-	 * knownNames set: i, j, j2, k, k2, ..., z, z2, a, a2, ..., h, h2, i1, i2,
-	 * i3, ..., i2147483647
+	 * Produces names in following order, skipping all already listed in knownNames
+	 * set: i, j, j2, k, k2, ..., z, z2, a, a2, ..., h, h2, i1, i2, i3, ...,
+	 * i2147483647
 	 */
 	private static String findUnusedName(Set<String> knownNames) {
 		int base = 'i' - 'a';

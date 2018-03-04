@@ -30,8 +30,7 @@ public class PHPExeLaunchConfigurationTabGroup extends AbstractLaunchConfigurati
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.ILaunchConfigurationTabGroup#createTabs(org.eclipse
+	 * @see org.eclipse.debug.ui.ILaunchConfigurationTabGroup#createTabs(org.eclipse
 	 * .debug.ui.ILaunchConfigurationDialog, java.lang.String)
 	 */
 	@Override

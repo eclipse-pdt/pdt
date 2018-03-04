@@ -31,8 +31,7 @@ class DoWhileFlowInfo extends FlowInfo {
 	}
 
 	public void mergeCondition(FlowInfo info, FlowContext context) {
-		if (fActionBranches || fReturnKind == VALUE_RETURN
-				|| fReturnKind == VOID_RETURN || info == null) {
+		if (fActionBranches || fReturnKind == VALUE_RETURN || fReturnKind == VOID_RETURN || info == null) {
 			return;
 		}
 		mergeAccessModeSequential(info, context);

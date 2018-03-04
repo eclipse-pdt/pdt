@@ -45,8 +45,7 @@ public class IncludePath implements IAdaptable {
 	}
 
 	/**
-	 * Returns whether this include path entry represents
-	 * {@link IBuildpathEntry}
+	 * Returns whether this include path entry represents {@link IBuildpathEntry}
 	 */
 	public boolean isBuildpath() {
 		return isBuildpath;

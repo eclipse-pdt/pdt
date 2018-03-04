@@ -144,8 +144,8 @@ public class Block extends Statement {
 	 * 
 	 * @deprecated <code>setBracketAsBodyStartSymbol</code>,
 	 *             <code>setColonAsBodyStartSymbol</code> or
-	 *             <code>clearBodyStartSymbol</code> should be use instead of
-	 *             this method.
+	 *             <code>clearBodyStartSymbol</code> should be use instead of this
+	 *             method.
 	 */
 	@Deprecated
 	public void setIsCurly(boolean isCurly) {

@@ -57,8 +57,8 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 
 	/**
 	 * bug 329194: Changing working set show blank explorer. Now there are two
-	 * working set filters,and the second is not updated when change working
-	 * set.So remove the second one.
+	 * working set filters,and the second is not updated when change working set.So
+	 * remove the second one.
 	 * 
 	 * @param part
 	 */
@@ -78,8 +78,7 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.dltk.internal.ui.actions.CompositeActionGroup#setGroups(org
+	 * @see org.eclipse.dltk.internal.ui.actions.CompositeActionGroup#setGroups(org
 	 * .eclipse.ui.actions.ActionGroup[])
 	 */
 	@Override
@@ -184,8 +183,8 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 	// ------------------------------------------------------------
 
 	/**
-	 * this method call ScriptExplorerActionGroup.handleDoubleClick(event) at
-	 * most cases, except fNavigateActionGroup relative operation
+	 * this method call ScriptExplorerActionGroup.handleDoubleClick(event) at most
+	 * cases, except fNavigateActionGroup relative operation
 	 */
 	@Override
 	protected void handleDoubleClick(DoubleClickEvent event) {

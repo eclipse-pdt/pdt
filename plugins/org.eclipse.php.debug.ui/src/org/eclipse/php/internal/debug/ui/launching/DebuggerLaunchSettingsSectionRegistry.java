@@ -73,8 +73,8 @@ public class DebuggerLaunchSettingsSectionRegistry {
 	}
 
 	/**
-	 * Gets settings section by combination of corresponding debugger ID and
-	 * launch type ID.
+	 * Gets settings section by combination of corresponding debugger ID and launch
+	 * type ID.
 	 * 
 	 * @param debuggerId
 	 * @param launchTypeId

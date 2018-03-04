@@ -112,8 +112,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	}
 
 	/**
-	 * Returns whether the specified member should be filtered from the code
-	 * assist
+	 * Returns whether the specified member should be filtered from the code assist
 	 * 
 	 * @param member
 	 * @param type
@@ -463,8 +462,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	}
 
 	/**
-	 * class A { static private $var = 0; function foo() { A::$var; //has an
-	 * access to private $var field } }
+	 * class A { static private $var = 0; function foo() { A::$var; //has an access
+	 * to private $var field } }
 	 * 
 	 * @param context
 	 * @return
@@ -474,9 +473,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	}
 
 	/**
-	 * class A { static private $var = 0; public function foo() {} } A::$var;
-	 * //has no access to private $var field A::foo(); //has access to public
-	 * function foo
+	 * class A { static private $var = 0; public function foo() {} } A::$var; //has
+	 * no access to private $var field A::foo(); //has access to public function foo
 	 * 
 	 * 
 	 * @param context
@@ -497,8 +495,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	}
 
 	/**
-	 * class A { static private $var = 0; function foo() { $a = new A(); $a->| }
-	 * } access level as for 'this' keyword in this case.
+	 * class A { static private $var = 0; function foo() { $a = new A(); $a->| } }
+	 * access level as for 'this' keyword in this case.
 	 * 
 	 * @param context
 	 * @return
@@ -521,8 +519,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	 * Removes overridden members from the completion list
 	 * 
 	 * @param members
-	 *            Class/Interface members in type hierarchy order (from bottom
-	 *            to up)
+	 *            Class/Interface members in type hierarchy order (from bottom to
+	 *            up)
 	 */
 	protected <T extends IMember> Collection<T> removeOverriddenElements(Collection<T> members) {
 		List<T> result = new LinkedList<>();

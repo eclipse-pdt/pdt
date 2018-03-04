@@ -167,8 +167,8 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	}
 
 	/**
-	 * Copy the given source directory (and all its contents) to the given
-	 * target directory.
+	 * Copy the given source directory (and all its contents) to the given target
+	 * directory.
 	 */
 	protected void copyDirectory(File source, File target) throws IOException {
 		FileUtil.copyDirectory(source, target);
@@ -213,8 +213,8 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	}
 
 	/**
-	 * Returns the specified source module in the given project, root, and
-	 * folder or <code>null</code> if it does not exist.
+	 * Returns the specified source module in the given project, root, and folder or
+	 * <code>null</code> if it does not exist.
 	 */
 	public ISourceModule getSourceModule(String projectName, String rootPath, IPath path) throws ModelException {
 		IScriptFolder folder = getScriptFolder(projectName, rootPath, path.removeLastSegments(1));
@@ -234,9 +234,8 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 
 	/**
 	 * Returns the specified script folder in the given project and fragment, or
-	 * <code>null</code> if it does not exist. The rootPath must be specified as
-	 * a project relative path. The empty path refers to the default package
-	 * fragment.
+	 * <code>null</code> if it does not exist. The rootPath must be specified as a
+	 * project relative path. The empty path refers to the default package fragment.
 	 */
 	public IScriptFolder getScriptFolder(String projectName, String fragmentPath, IPath path) throws ModelException {
 		IProjectFragment root = getProjectFragment(projectName, fragmentPath);
@@ -249,10 +248,9 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	/**
 	 * Returns the specified package fragment root in the given project, or
 	 * <code>null</code> if it does not exist. If relative, the rootPath must be
-	 * specified as a project relative path. The empty path refers to the
-	 * package fragment root that is the project folder iteslf. If absolute, the
-	 * rootPath refers to either an external zip, or a resource internal to the
-	 * workspace
+	 * specified as a project relative path. The empty path refers to the package
+	 * fragment root that is the project folder iteslf. If absolute, the rootPath
+	 * refers to either an external zip, or a resource internal to the workspace
 	 */
 	public IProjectFragment getProjectFragment(String projectName, String fragmentPath) throws ModelException {
 
@@ -284,8 +282,8 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	}
 
 	/**
-	 * Returns the script Project with the given name in this test suite's
-	 * model. This is a convenience method.
+	 * Returns the script Project with the given name in this test suite's model.
+	 * This is a convenience method.
 	 */
 	public IScriptProject getScriptProject(String name) {
 		IProject project = getProject(name);
@@ -361,8 +359,8 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	}
 
 	/*
-	 * Creates a script project with the given source folders an output
-	 * location. Add those on the project's buildpath.
+	 * Creates a script project with the given source folders an output location.
+	 * Add those on the project's buildpath.
 	 */
 	protected IScriptProject createScriptProject(String projectName, String[] natures, String[] sourceFolders)
 			throws CoreException {
@@ -375,8 +373,8 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	}
 
 	/*
-	 * Creates a script project with the given source folders an output
-	 * location. Add those on the project's buildpath.
+	 * Creates a script project with the given source folders an output location.
+	 * Add those on the project's buildpath.
 	 */
 	protected IScriptProject createScriptProject(final String projectName, final String[] natures,
 			final String[] sourceFolders, final String[] projects, final String[] containers) throws CoreException {
@@ -448,10 +446,10 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	}
 
 	/*
-	 * Asserts that the given actual source (usually coming from a file content)
-	 * is equal to the expected one. Note that 'expected' is assumed to have the
-	 * '\n' line separator. The line separators in 'actual' are converted to
-	 * '\n' before the comparison.
+	 * Asserts that the given actual source (usually coming from a file content) is
+	 * equal to the expected one. Note that 'expected' is assumed to have the '\n'
+	 * line separator. The line separators in 'actual' are converted to '\n' before
+	 * the comparison.
 	 */
 	protected void assertSourceEquals(String message, String expected, String actual) {
 		if (actual == null) {
@@ -604,10 +602,9 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	}
 
 	protected void assertElementsEqual(String message, String expected, IModelElement[] elements) {
-		assertElementsEqual(message, expected, elements,
-				false/*
-						 * don't show key
-						 */);
+		assertElementsEqual(message, expected, elements, false/*
+																 * don't show key
+																 */);
 	}
 
 	protected void assertElementsEqual(String message, String expected, IModelElement[] elements,
@@ -739,8 +736,8 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	}
 
 	/**
-	 * Returns the delta for the given element from the cached delta. If the
-	 * boolean is true returns the first delta found.
+	 * Returns the delta for the given element from the cached delta. If the boolean
+	 * is true returns the first delta found.
 	 */
 	protected IModelElementDelta getDeltaFor(IModelElement element, boolean returnFirst) {
 		IModelElementDelta[] deltas = this.deltaListener.deltas;
@@ -798,9 +795,8 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 	}
 
 	/**
-	 * Creates an operation to delete the given elements, asserts the operation
-	 * is successful, and ensures the elements are no longer present in the
-	 * model.
+	 * Creates an operation to delete the given elements, asserts the operation is
+	 * successful, and ensures the elements are no longer present in the model.
 	 */
 	public void assertDeletion(IModelElement[] elementsToDelete) throws ModelException {
 		IModelElement elementToDelete = null;
@@ -884,15 +880,13 @@ public abstract class AbstractModelTests extends SuiteOfTestCases {
 			IProblemRequestor problemRequestor) throws ModelException {
 		ISourceModule workingCopy = getSourceModule(path);
 		if (owner != null) {
-			workingCopy = workingCopy.getWorkingCopy(
-					/* owner, problemRequestor, */null/*
-														 * no progress monitor
-														 */);
+			workingCopy = workingCopy.getWorkingCopy(/* owner, problemRequestor, */null/*
+																						 * no progress monitor
+																						 */);
 		} else {
-			workingCopy.becomeWorkingCopy(problemRequestor,
-					null/*
-						 * no progress monitor
-						 */);
+			workingCopy.becomeWorkingCopy(problemRequestor, null/*
+																 * no progress monitor
+																 */);
 		}
 		workingCopy.getBuffer().setContents(source);
 		// if (problemRequestor instanceof ProblemRequestor)

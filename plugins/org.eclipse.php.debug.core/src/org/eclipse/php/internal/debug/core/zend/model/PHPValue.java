@@ -63,10 +63,10 @@ public class PHPValue extends PHPDebugElement implements IValue, IPHPDataType {
 		}
 
 		/**
-		 * Merges incoming variable. Merge is done by means of checking if
-		 * related child variable existed in "one step back" state of a
-		 * container. If related variable existed, it is updated with the use of
-		 * the most recent descriptor and returned instead of the incoming one.
+		 * Merges incoming variable. Merge is done by means of checking if related child
+		 * variable existed in "one step back" state of a container. If related variable
+		 * existed, it is updated with the use of the most recent descriptor and
+		 * returned instead of the incoming one.
 		 * 
 		 * @param variable
 		 * @param descriptor

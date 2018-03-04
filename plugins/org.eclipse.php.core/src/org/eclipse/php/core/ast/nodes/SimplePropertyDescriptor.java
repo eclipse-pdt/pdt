@@ -25,8 +25,8 @@ package org.eclipse.php.core.ast.nodes;
 public final class SimplePropertyDescriptor extends StructuralPropertyDescriptor {
 
 	/**
-	 * Value type. For example, for a node type like SingleVariableDeclaration,
-	 * the modifiers property is int.class
+	 * Value type. For example, for a node type like SingleVariableDeclaration, the
+	 * modifiers property is int.class
 	 */
 	private final Class<?> valueType;
 
@@ -63,8 +63,8 @@ public final class SimplePropertyDescriptor extends StructuralPropertyDescriptor
 	/**
 	 * Returns the value type of this property.
 	 * <p>
-	 * For example, for a node type like SingleVariableDeclaration, the
-	 * "modifiers" property returns <code>int.class</code>.
+	 * For example, for a node type like SingleVariableDeclaration, the "modifiers"
+	 * property returns <code>int.class</code>.
 	 * </p>
 	 * 
 	 * @return the value type of the property
@@ -74,8 +74,8 @@ public final class SimplePropertyDescriptor extends StructuralPropertyDescriptor
 	}
 
 	/**
-	 * Returns whether this property is mandatory. A property value is not
-	 * allowed to be <code>null</code> if it is mandatory.
+	 * Returns whether this property is mandatory. A property value is not allowed
+	 * to be <code>null</code> if it is mandatory.
 	 * 
 	 * @return <code>true</code> if the property is mandatory, and
 	 *         <code>false</code> if it is may be <code>null</code>

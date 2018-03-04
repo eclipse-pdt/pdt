@@ -26,41 +26,41 @@ package org.eclipse.php.core.ast.nodes;
 public interface IFunctionBinding extends IBinding {
 
 	/**
-	 * Returns the name of the method declared in this binding. The method name
-	 * is always a simple identifier. The name of a constructor is always the
-	 * same as the declared name of its declaring class.
+	 * Returns the name of the method declared in this binding. The method name is
+	 * always a simple identifier. The name of a constructor is always the same as
+	 * the declared name of its declaring class.
 	 * 
-	 * @return the name of this method, or the declared name of this
-	 *         constructor's declaring class
+	 * @return the name of this method, or the declared name of this constructor's
+	 *         declaring class
 	 */
 	@Override
 	public String getName();
 
 	/**
-	 * Returns a list of type bindings representing the formal parameter types,
-	 * in declaration order, of this method or constructor. Returns an array of
-	 * length 0 if this method or constructor does not takes any parameters.
+	 * Returns a list of type bindings representing the formal parameter types, in
+	 * declaration order, of this method or constructor. Returns an array of length
+	 * 0 if this method or constructor does not takes any parameters.
 	 * <p>
 	 * Note that the binding for the last parameter type of a vararg method
-	 * declaration like <code>void fun(Foo... args)</code> is always for an
-	 * array type (i.e., <code>Foo[]</code>) reflecting the the way varargs get
-	 * compiled. However, the type binding obtained directly from the
-	 * <code>SingleVariableDeclaration</code> for the vararg parameter is always
-	 * for the type as written; i.e., the type binding for <code>Foo</code>.
+	 * declaration like <code>void fun(Foo... args)</code> is always for an array
+	 * type (i.e., <code>Foo[]</code>) reflecting the the way varargs get compiled.
+	 * However, the type binding obtained directly from the
+	 * <code>SingleVariableDeclaration</code> for the vararg parameter is always for
+	 * the type as written; i.e., the type binding for <code>Foo</code>.
 	 * </p>
 	 * <p>
-	 * Note: The result does not include synthetic parameters introduced by
-	 * inner class emulation.
+	 * Note: The result does not include synthetic parameters introduced by inner
+	 * class emulation.
 	 * </p>
 	 * 
-	 * @return a (possibly empty) list of type bindings for the formal
-	 *         parameters of this method or constructor
+	 * @return a (possibly empty) list of type bindings for the formal parameters of
+	 *         this method or constructor
 	 */
 	public ITypeBinding[] getParameterTypes();
 
 	/**
-	 * Returns the binding for the return type of this method. Returns the
-	 * special primitive <code>void</code> return type for constructors.
+	 * Returns the binding for the return type of this method. Returns the special
+	 * primitive <code>void</code> return type for constructors.
 	 * 
 	 * @return the binding for the return type of this method, or the
 	 *         <code>void</code> return type for constructors
@@ -69,9 +69,8 @@ public interface IFunctionBinding extends IBinding {
 
 	/**
 	 * Returns a list of type bindings representing the types of the exceptions
-	 * thrown by this method or constructor. Returns an array of length 0 if
-	 * this method throws no exceptions. The resulting types are in no
-	 * particular order.
+	 * thrown by this method or constructor. Returns an array of length 0 if this
+	 * method throws no exceptions. The resulting types are in no particular order.
 	 * 
 	 * @return a list of type bindings for exceptions thrown by this method or
 	 *         constructor

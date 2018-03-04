@@ -57,8 +57,8 @@ public abstract class FlowInfo {
 	// other.fReturnKind)
 	private static final int[][] RETURN_KIND_CONDITIONAL_TABLE = {
 			/*
-			 * NOT_POSSIBLE UNDEFINED NO_RETURN PARTIAL_RETURN VOID_RETURN
-			 * VALUE_RETURN THROW
+			 * NOT_POSSIBLE UNDEFINED NO_RETURN PARTIAL_RETURN VOID_RETURN VALUE_RETURN
+			 * THROW
 			 */
 			/* NOT_POSSIBLE */{ NOT_POSSIBLE, NOT_POSSIBLE, NOT_POSSIBLE, NOT_POSSIBLE, NOT_POSSIBLE, NOT_POSSIBLE,
 					NOT_POSSIBLE },
@@ -77,8 +77,8 @@ public abstract class FlowInfo {
 	// other.fReturnKind)
 	private static final int[][] RETURN_KIND_SEQUENTIAL_TABLE = {
 			/*
-			 * NOT_POSSIBLE UNDEFINED NO_RETURN PARTIAL_RETURN VOID_RETURN
-			 * VALUE_RETURN THROW
+			 * NOT_POSSIBLE UNDEFINED NO_RETURN PARTIAL_RETURN VOID_RETURN VALUE_RETURN
+			 * THROW
 			 */
 			/* NOT_POSSIBLE */{ NOT_POSSIBLE, NOT_POSSIBLE, NOT_POSSIBLE, NOT_POSSIBLE, NOT_POSSIBLE, NOT_POSSIBLE,
 					NOT_POSSIBLE },
@@ -328,15 +328,15 @@ public abstract class FlowInfo {
 	// --------------------------------------------------
 
 	/**
-	 * Returns an array of <code>IVariableBinding</code> that conform to the
-	 * given access mode <code>mode</code>.
+	 * Returns an array of <code>IVariableBinding</code> that conform to the given
+	 * access mode <code>mode</code>.
 	 * 
 	 * @param context
 	 *            the flow context object used to compute this flow info
 	 * @param mode
 	 *            the access type. Valid values are <code>READ</code>,
-	 *            <code>WRITE</code>, <code>UNKNOWN</code> and any combination
-	 *            of them.
+	 *            <code>WRITE</code>, <code>UNKNOWN</code> and any combination of
+	 *            them.
 	 * @return an array of local variable bindings conforming to the given type.
 	 */
 	public IVariableBinding[] get(FlowContext context, int mode) {
@@ -355,8 +355,7 @@ public abstract class FlowInfo {
 	}
 
 	/**
-	 * Checks whether the given local variable binding has the given access
-	 * mode.
+	 * Checks whether the given local variable binding has the given access mode.
 	 * 
 	 * @return <code>true</code> if the binding has the given access mode.
 	 *         <code>False</code> otherwise

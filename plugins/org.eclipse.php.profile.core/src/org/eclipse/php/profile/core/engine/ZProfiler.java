@@ -64,8 +64,7 @@ public class ZProfiler extends ServerDebugHandler implements IProfiler, IDebugHa
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.zend.php.profile.core.profiler.IProfiler#getProfilerFileData(int)
+	 * @see com.zend.php.profile.core.profiler.IProfiler#getProfilerFileData(int)
 	 */
 	@Override
 	public ProfilerFileData getProfilerFileData(int fileNumber) {
@@ -165,8 +164,7 @@ public class ZProfiler extends ServerDebugHandler implements IProfiler, IDebugHa
 	 * (non-Javadoc)
 	 * 
 	 * @seeorg.eclipse.php.internal.debug.core.model.ServerDebugHandler#
-	 * parsingErrorOccured
-	 * (org.eclipse.php.internal.debug.core.debugger.DebugError)
+	 * parsingErrorOccured (org.eclipse.php.internal.debug.core.debugger.DebugError)
 	 */
 	@Override
 	public void parsingErrorOccured(DebugError debugError) {

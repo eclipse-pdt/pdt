@@ -68,8 +68,8 @@ public class MultiElementListSelectionDialog extends AbstractElementListSelectio
 	}
 
 	/**
-	 * Sets message shown in the right top corner. Use {0} and {1} as
-	 * placeholders for the current and the total number of pages.
+	 * Sets message shown in the right top corner. Use {0} and {1} as placeholders
+	 * for the current and the total number of pages.
 	 * 
 	 * @param message
 	 *            the message.
@@ -129,8 +129,7 @@ public class MultiElementListSelectionDialog extends AbstractElementListSelectio
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(Composite)
+	 * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(Composite)
 	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
@@ -146,8 +145,8 @@ public class MultiElementListSelectionDialog extends AbstractElementListSelectio
 	}
 
 	/*
-	 * XXX: Workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=279425
-	 * The whole method can be removed once that bug is fixed.
+	 * XXX: Workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=279425 The
+	 * whole method can be removed once that bug is fixed.
 	 * 
 	 * @see org.eclipse.jface.dialogs.Dialog#initializeBounds()
 	 * 
@@ -256,8 +255,7 @@ public class MultiElementListSelectionDialog extends AbstractElementListSelectio
 
 		// store filter
 		String filter = getFilter();
-		if (filter == null)
-		 {
+		if (filter == null) {
 			filter = ""; //$NON-NLS-1$
 		}
 		page.filter = filter;
@@ -301,8 +299,7 @@ public class MultiElementListSelectionDialog extends AbstractElementListSelectio
 
 		// 2. apply filter
 		String filter = page.filter;
-		if (filter == null)
-		 {
+		if (filter == null) {
 			filter = ""; //$NON-NLS-1$
 		}
 		setFilter(filter);
@@ -314,8 +311,7 @@ public class MultiElementListSelectionDialog extends AbstractElementListSelectio
 	}
 
 	private String getPageInfoMessage() {
-		if (fPageInfoMessage == null)
-		 {
+		if (fPageInfoMessage == null) {
 			return ""; //$NON-NLS-1$
 		}
 

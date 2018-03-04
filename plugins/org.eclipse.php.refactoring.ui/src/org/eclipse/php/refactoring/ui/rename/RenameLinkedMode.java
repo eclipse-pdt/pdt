@@ -252,13 +252,12 @@ public class RenameLinkedMode {
 				}
 
 				/**
-				 * Returns the absolute rank of an <code>ASTNode</code>. Nodes
-				 * preceding <code>pos</code> are ranked last.
+				 * Returns the absolute rank of an <code>ASTNode</code>. Nodes preceding
+				 * <code>pos</code> are ranked last.
 				 * 
 				 * @param node
 				 *            the node to compute the rank for
-				 * @return the rank of the node with respect to the invocation
-				 *         offset
+				 * @return the rank of the node with respect to the invocation offset
 				 */
 				private int rank(OccurrenceLocation node) {
 					int relativeRank = node.getOffset() + node.getLength() - pos;

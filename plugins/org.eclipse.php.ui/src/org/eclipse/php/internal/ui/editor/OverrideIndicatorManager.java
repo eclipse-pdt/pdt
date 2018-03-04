@@ -68,8 +68,8 @@ class OverrideIndicatorManager implements IPHPScriptReconcilingListener {
 		 * Creates a new override annotation.
 		 * 
 		 * @param isOverwriteIndicator
-		 *            <code>true</code> if this annotation is an overwrite
-		 *            indicator, <code>false</code> otherwise
+		 *            <code>true</code> if this annotation is an overwrite indicator,
+		 *            <code>false</code> otherwise
 		 * @param text
 		 *            the text associated with this annotation
 		 * @param key
@@ -175,8 +175,7 @@ class OverrideIndicatorManager implements IPHPScriptReconcilingListener {
 		}
 		ast.accept(new AbstractVisitor() {
 			/*
-			 * @see
-			 * org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core
+			 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core
 			 * .dom.MethodDeclaration)
 			 */
 			@Override
@@ -267,8 +266,7 @@ class OverrideIndicatorManager implements IPHPScriptReconcilingListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.dltk.internal.ui.text.IScriptReconcilingListener#reconciled
+	 * @see org.eclipse.dltk.internal.ui.text.IScriptReconcilingListener#reconciled
 	 * (org.eclipse.dltk.core.ISourceModule, boolean,
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */

@@ -17,18 +17,17 @@ import org.eclipse.wst.server.core.model.IURLProvider;
 public interface IPHPServer extends IURLProvider {
 
 	/**
-	 * Property which specifies the directory where the server instance exists.
-	 * If not specified, instance directory is derived from the textEnvironment
+	 * Property which specifies the directory where the server instance exists. If
+	 * not specified, instance directory is derived from the textEnvironment
 	 * setting.
 	 */
 	public static final String PROPERTY_DOCUMENT_ROOT_DIR = "documentRootDir"; //$NON-NLS-1$
 
 	/**
-	 * Gets the directory where the server instance exists. If not set, the
-	 * instance directory is derived from the testEnvironment setting.
+	 * Gets the directory where the server instance exists. If not set, the instance
+	 * directory is derived from the testEnvironment setting.
 	 * 
-	 * @return directory where the server instance exists. Returns null if not
-	 *         set.
+	 * @return directory where the server instance exists. Returns null if not set.
 	 */
 	public String getDocumentRootDirectory();
 

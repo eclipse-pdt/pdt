@@ -40,8 +40,8 @@ public class ProgressUtil {
 	}
 
 	/**
-	 * Return a sub-progress monitor with the given amount on the current
-	 * progress monitor.
+	 * Return a sub-progress monitor with the given amount on the current progress
+	 * monitor.
 	 *
 	 * @param monitor
 	 *            org.eclipse.core.runtime.IProgressMonitor
@@ -60,8 +60,8 @@ public class ProgressUtil {
 	}
 
 	/**
-	 * Return a sub-progress monitor with the given amount on the current
-	 * progress monitor.
+	 * Return a sub-progress monitor with the given amount on the current progress
+	 * monitor.
 	 *
 	 * @param monitor
 	 *            org.eclipse.core.runtime.IProgressMonitor

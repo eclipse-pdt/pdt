@@ -328,8 +328,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.model.IDebugTarget#supportsBreakpoint(org.eclipse
+	 * @see org.eclipse.debug.core.model.IDebugTarget#supportsBreakpoint(org.eclipse
 	 * .debug.core.model.IBreakpoint)
 	 */
 	@Override
@@ -559,8 +558,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.IBreakpointListener#breakpointAdded(org.eclipse
+	 * @see org.eclipse.debug.core.IBreakpointListener#breakpointAdded(org.eclipse
 	 * .debug.core.model.IBreakpoint)
 	 */
 	@Override
@@ -608,8 +606,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.IBreakpointListener#breakpointRemoved(org.eclipse
+	 * @see org.eclipse.debug.core.IBreakpointListener#breakpointRemoved(org.eclipse
 	 * .debug.core.model.IBreakpoint, org.eclipse.core.resources.IMarkerDelta)
 	 */
 	@Override
@@ -634,8 +631,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.IBreakpointListener#breakpointChanged(org.eclipse
+	 * @see org.eclipse.debug.core.IBreakpointListener#breakpointChanged(org.eclipse
 	 * .debug.core.model.IBreakpoint, org.eclipse.core.resources.IMarkerDelta)
 	 */
 	@Override
@@ -717,8 +713,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.model.IMemoryBlockRetrieval#getMemoryBlock(long,
+	 * @see org.eclipse.debug.core.model.IMemoryBlockRetrieval#getMemoryBlock(long,
 	 * long)
 	 */
 	@Override
@@ -735,19 +730,16 @@ public class PHPDebugTarget extends PHPDebugElement
 	}
 
 	/**
-	 * Install breakpoints that are already registered with the breakpoint
-	 * manager. In case {@link #isRunWithDebug()} returns true, nothing will
-	 * happen.
+	 * Install breakpoints that are already registered with the breakpoint manager.
+	 * In case {@link #isRunWithDebug()} returns true, nothing will happen.
 	 */
 	public void installDeferredBreakpoints() throws CoreException {
 		/*
-		 * if (fIsRunAsDebug) { return; } if (!fBreakpointManager.isEnabled())
-		 * return; IBreakpoint[] breakpoints =
-		 * fBreakpointManager.getBreakpoints(
+		 * if (fIsRunAsDebug) { return; } if (!fBreakpointManager.isEnabled()) return;
+		 * IBreakpoint[] breakpoints = fBreakpointManager.getBreakpoints(
 		 * IPHPDebugConstants.ID_PHP_DEBUG_CORE); for (IBreakpoint element :
-		 * breakpoints) { ((PHPLineBreakpoint)
-		 * element).setConditionChanged(false); if (element.isEnabled()){
-		 * breakpointAdded(element); } }
+		 * breakpoints) { ((PHPLineBreakpoint) element).setConditionChanged(false); if
+		 * (element.isEnabled()){ breakpointAdded(element); } }
 		 */
 	}
 
@@ -842,8 +834,8 @@ public class PHPDebugTarget extends PHPDebugElement
 	}
 
 	/**
-	 * Notification a breakpoint was encountered. Determine which breakpoint was
-	 * hit and fire a suspend event.
+	 * Notification a breakpoint was encountered. Determine which breakpoint was hit
+	 * and fire a suspend event.
 	 * 
 	 * @param event
 	 *            debug event
@@ -914,9 +906,9 @@ public class PHPDebugTarget extends PHPDebugElement
 	}
 
 	/**
-	 * Registers the given event listener. The listener will be notified of
-	 * events in the program being interpretted. Has no effect if the listener
-	 * is already registered.
+	 * Registers the given event listener. The listener will be notified of events
+	 * in the program being interpretted. Has no effect if the listener is already
+	 * registered.
 	 * 
 	 * @param listener
 	 *            event listener
@@ -931,8 +923,8 @@ public class PHPDebugTarget extends PHPDebugElement
 	}
 
 	/**
-	 * Deregisters the given event listener. Has no effect if the listener is
-	 * not currently registered.
+	 * Deregisters the given event listener. Has no effect if the listener is not
+	 * currently registered.
 	 * 
 	 * @param listener
 	 *            event listener

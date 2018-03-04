@@ -92,8 +92,7 @@ public class ExecutionStatisticsFiltersRegistry {
 		}
 
 		/**
-		 * Writes a group of IXMLPreferencesStorables to the given
-		 * IPreferenceStore.
+		 * Writes a group of IXMLPreferencesStorables to the given IPreferenceStore.
 		 * 
 		 * @param store
 		 *            An IPreferenceStore instance
@@ -231,8 +230,8 @@ public class ExecutionStatisticsFiltersRegistry {
 										conditionElements[c].getAttribute(OPERATOR_ATTRIBUTE),
 										conditionElements[c].getAttribute(VALUE_ATTRIBUTE)));
 							}
-							filter.setFilterConditions(conditions
-									.toArray(new ExecutionStatisticsFilterCondition[conditions.size()]));
+							filter.setFilterConditions(
+									conditions.toArray(new ExecutionStatisticsFilterCondition[conditions.size()]));
 						}
 					}
 					filters.add(filter);

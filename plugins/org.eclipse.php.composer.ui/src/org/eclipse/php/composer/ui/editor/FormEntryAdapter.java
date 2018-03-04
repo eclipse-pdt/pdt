@@ -34,8 +34,7 @@ public class FormEntryAdapter implements IFormEntryListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.pde.internal.ui.newparts.IFormEntryListener#textDirty(org.
+	 * @see org.eclipse.pde.internal.ui.newparts.IFormEntryListener#textDirty(org.
 	 * eclipse.pde.internal.ui.newparts.FormEntry)
 	 */
 	@Override
@@ -82,8 +81,7 @@ public class FormEntryAdapter implements IFormEntryListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.forms.events.HyperlinkListener#linkExited(org.eclipse.ui.
+	 * @see org.eclipse.ui.forms.events.HyperlinkListener#linkExited(org.eclipse.ui.
 	 * forms.events.HyperlinkEvent)
 	 */
 	@Override
@@ -98,8 +96,7 @@ public class FormEntryAdapter implements IFormEntryListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.forms.events.HyperlinkListener#linkActivated(org.eclipse.
+	 * @see org.eclipse.ui.forms.events.HyperlinkListener#linkActivated(org.eclipse.
 	 * ui.forms.events.HyperlinkEvent)
 	 */
 	@Override

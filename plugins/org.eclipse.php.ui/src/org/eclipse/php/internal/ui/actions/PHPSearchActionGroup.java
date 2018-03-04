@@ -105,8 +105,7 @@ public class PHPSearchActionGroup extends ActionGroup {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.actions.ActionGroup#fillContextMenu(org.eclipse.jface.
+	 * @see org.eclipse.ui.actions.ActionGroup#fillContextMenu(org.eclipse.jface.
 	 * action.IMenuManager)
 	 */
 	@Override

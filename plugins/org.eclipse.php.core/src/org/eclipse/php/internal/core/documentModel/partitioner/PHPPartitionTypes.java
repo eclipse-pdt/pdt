@@ -198,7 +198,8 @@ public abstract class PHPPartitionTypes {
 	 * @return typed region containing partition
 	 * @throws BadLocationException
 	 */
-	public static final ITypedRegion getPartition(IPHPScriptRegion region, int relativeOffset) throws BadLocationException {
+	public static final ITypedRegion getPartition(IPHPScriptRegion region, int relativeOffset)
+			throws BadLocationException {
 		String partitionType = region.getPartition(relativeOffset);
 		int startOffset = getPartitionStart(region, relativeOffset);
 		int endOffset = getPartitionEnd(region, relativeOffset);

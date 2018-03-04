@@ -68,8 +68,7 @@ public class LinkedProposalModel {
 	 * Sets the end position of the linked mode to the end of the passed range.
 	 * 
 	 * @param position
-	 *            The position that describes the end position of the linked
-	 *            mode.
+	 *            The position that describes the end position of the linked mode.
 	 */
 	public void setEndPosition(PositionInformation position) {
 		fEndPosition = position;

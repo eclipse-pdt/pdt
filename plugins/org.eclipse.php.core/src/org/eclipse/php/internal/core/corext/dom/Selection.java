@@ -93,9 +93,9 @@ public class Selection {
 	}
 
 	/**
-	 * Returns the selection mode of the given AST node regarding this
-	 * selection. Possible values are <code>INTERSECTS</code>,
-	 * <code>BEFORE</code>, <code>SELECTED</code>, and <code>AFTER</code>.
+	 * Returns the selection mode of the given AST node regarding this selection.
+	 * Possible values are <code>INTERSECTS</code>, <code>BEFORE</code>,
+	 * <code>SELECTED</code>, and <code>AFTER</code>.
 	 * 
 	 * @param node
 	 *            the node to return the visit mode for

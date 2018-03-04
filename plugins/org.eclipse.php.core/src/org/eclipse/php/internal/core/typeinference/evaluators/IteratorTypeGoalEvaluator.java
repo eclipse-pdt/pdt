@@ -166,10 +166,10 @@ public class IteratorTypeGoalEvaluator extends GoalEvaluator {
 			if (element instanceof IMethod) {
 				IMethod method = (IMethod) element;
 				if (method.getDeclaringType() != null) {
-					docBlocks = PHPModelUtils
-							.getTypeHierarchyMethodDoc(method.getDeclaringType(),
-									methodContext.getCache() != null ? methodContext.getCache()
-											.getSuperTypeHierarchy(method.getDeclaringType(), null) : null,
+					docBlocks = PHPModelUtils.getTypeHierarchyMethodDoc(method.getDeclaringType(),
+							methodContext.getCache() != null
+									? methodContext.getCache().getSuperTypeHierarchy(method.getDeclaringType(), null)
+									: null,
 							method.getElementName(), true, null);
 				} else {
 					docBlocks = new PHPDocBlock[] { methodDeclaration.getPHPDoc() };

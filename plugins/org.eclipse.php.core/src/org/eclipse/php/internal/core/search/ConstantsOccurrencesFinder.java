@@ -172,8 +172,8 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 
 	/*
 	 * Check the function invocation parameters to see if the case-sensitive
-	 * parameter is true or false. Define signature: { define ( string $name ,
-	 * mixed $value [, bool $case_insensitive ] ) }
+	 * parameter is true or false. Define signature: { define ( string $name , mixed
+	 * $value [, bool $case_insensitive ] ) }
 	 * 
 	 * @param parameters The function invocation parameters.
 	 * 
@@ -199,8 +199,8 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * Check that the given name is equal to the searched constant name. The
 	 * equality check is done according to these rules: 1. In case that the
 	 * case-sensitive flag is false, or in case that the scalar appears before a
-	 * 'define' call, we check for case-insensitive equality. 2. In any other
-	 * case, the equality check is case sensitive.
+	 * 'define' call, we check for case-insensitive equality. 2. In any other case,
+	 * the equality check is case sensitive.
 	 * 
 	 * @param scalarValue The value to compare.
 	 * 
@@ -226,8 +226,7 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * (non-Javadoc)
 	 * 
 	 * @seeorg.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#
-	 * getOccurrenceReadWriteType
-	 * (org.eclipse.php.internal.core.ast.nodes.ASTNode)
+	 * getOccurrenceReadWriteType (org.eclipse.php.internal.core.ast.nodes.ASTNode)
 	 */
 	@Override
 	protected int getOccurrenceType(ASTNode node) {
@@ -239,8 +238,7 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.ui.search.IOccurrencesFinder#getElementName()
+	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getElementName()
 	 */
 	@Override
 	public String getElementName() {

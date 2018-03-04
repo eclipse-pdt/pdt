@@ -40,8 +40,7 @@ public class EditorHighlightingSynchronizer implements ILinkedModeListener {
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.text.link.ILinkedModeListener#left(org.eclipse.jface
+	 * @see org.eclipse.jface.text.link.ILinkedModeListener#left(org.eclipse.jface
 	 * .text.link.LinkedModeModel, int)
 	 */
 	@Override
@@ -68,8 +67,7 @@ public class EditorHighlightingSynchronizer implements ILinkedModeListener {
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.text.link.ILinkedModeListener#resume(org.eclipse.jface
+	 * @see org.eclipse.jface.text.link.ILinkedModeListener#resume(org.eclipse.jface
 	 * .text.link.LinkedModeModel, int)
 	 */
 	@Override

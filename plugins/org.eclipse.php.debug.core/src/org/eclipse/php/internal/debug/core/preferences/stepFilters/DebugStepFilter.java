@@ -39,8 +39,8 @@ public class DebugStepFilter {
 	 * @param isReadOnly
 	 *            - Whether this filter is built-in thus cannot be deleted
 	 * @param path
-	 *            - The path string representation (can have '*' as a prefix
-	 *            and/or postfix)
+	 *            - The path string representation (can have '*' as a prefix and/or
+	 *            postfix)
 	 */
 	public DebugStepFilter(int type, boolean enabled, boolean isReadOnly, String path) {
 		fPath = path;
@@ -59,8 +59,7 @@ public class DebugStepFilter {
 	}
 
 	/**
-	 * Sets the path string representation (can have '*' as a prefix and/or
-	 * postfix)
+	 * Sets the path string representation (can have '*' as a prefix and/or postfix)
 	 * 
 	 * @param path
 	 */

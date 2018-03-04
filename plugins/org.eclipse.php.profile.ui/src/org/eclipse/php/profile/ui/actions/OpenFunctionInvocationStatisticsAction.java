@@ -26,14 +26,10 @@ class OpenFunctionInvocationStatisticsAction extends Action {
 
 	private AbstractProfilerFunctionsView fView;
 
-	public OpenFunctionInvocationStatisticsAction(
-			AbstractProfilerFunctionsView view) {
-		super(PHPProfileUIMessages
-				.getString("OpenFunctionInvocationStatisticsAction_0")); //$NON-NLS-1$
-		setDescription(PHPProfileUIMessages
-				.getString("OpenFunctionInvocationStatisticsAction_0")); //$NON-NLS-1$
-		setToolTipText(PHPProfileUIMessages
-				.getString("OpenFunctionInvocationStatisticsAction_0")); //$NON-NLS-1$
+	public OpenFunctionInvocationStatisticsAction(AbstractProfilerFunctionsView view) {
+		super(PHPProfileUIMessages.getString("OpenFunctionInvocationStatisticsAction_0")); //$NON-NLS-1$
+		setDescription(PHPProfileUIMessages.getString("OpenFunctionInvocationStatisticsAction_0")); //$NON-NLS-1$
+		setToolTipText(PHPProfileUIMessages.getString("OpenFunctionInvocationStatisticsAction_0")); //$NON-NLS-1$
 		setImageDescriptor(ProfilerUIImages.getImageDescriptor(ProfilerUIImages.IMG_ELCL_FUNCTION_STATISTICS));
 		fView = view;
 	}
@@ -47,8 +43,7 @@ class OpenFunctionInvocationStatisticsAction extends Action {
 	public void run() {
 		ISelection selection = fView.getViewer().getSelection();
 		if (selection != null && selection instanceof IStructuredSelection) {
-			TreeElement element = (TreeElement) ((IStructuredSelection) selection)
-					.getFirstElement();
+			TreeElement element = (TreeElement) ((IStructuredSelection) selection).getFirstElement();
 			Object data = element.getData();
 			if (data != null && data instanceof ProfilerFunctionData) {
 				fView.openFunctionInvocationStatisticsView((ProfilerFunctionData) data);

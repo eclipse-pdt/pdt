@@ -25,12 +25,12 @@ public class SearchPattern {
 	}
 
 	/**
-	 * Checks if a given string matches a given pattern. The pattern can contain
-	 * the '*' symbol which can replace any series of carachters, and the '?'
-	 * symbol which can replace any single character. If third argument is
-	 * <code>true</code>, then pattern match behaves as if the given pattern
-	 * ends with '*', thus, for example, matching 'aabbc' string with 'aabb'
-	 * pattern will return a true result. The match is case sensitive.
+	 * Checks if a given string matches a given pattern. The pattern can contain the
+	 * '*' symbol which can replace any series of carachters, and the '?' symbol
+	 * which can replace any single character. If third argument is
+	 * <code>true</code>, then pattern match behaves as if the given pattern ends
+	 * with '*', thus, for example, matching 'aabbc' string with 'aabb' pattern will
+	 * return a true result. The match is case sensitive.
 	 * 
 	 * @param pattern
 	 *            The string pattern
@@ -73,12 +73,12 @@ public class SearchPattern {
 	}
 
 	/**
-	 * Checks if a given string matches a given pattern. The pattern can contain
-	 * the '*' symbol which can replace any series of carachters, and the '?'
-	 * symbol which can replace any single character. If fourth argument is
-	 * <code>true</code>, then pattern match behaves as if the given pattern
-	 * ends with '*', thus, for example, matching 'aabbc' string with 'aabb'
-	 * pattern will return a true result.
+	 * Checks if a given string matches a given pattern. The pattern can contain the
+	 * '*' symbol which can replace any series of carachters, and the '?' symbol
+	 * which can replace any single character. If fourth argument is
+	 * <code>true</code>, then pattern match behaves as if the given pattern ends
+	 * with '*', thus, for example, matching 'aabbc' string with 'aabb' pattern will
+	 * return a true result.
 	 * 
 	 * @param pattern
 	 *            The string pattern
@@ -105,12 +105,11 @@ public class SearchPattern {
 	}
 
 	/**
-	 * Checks if a given string matches a given pattern. The pattern can contain
-	 * the '*' symbol which can replace any series of carachters, and the '?'
-	 * symbol which can replace any single character. The pattern match behaves
-	 * as if the given pattern ends with '*', thus, for example, matching
-	 * 'aabbc' string with 'aabb' pattern will return a true result. The search
-	 * is case sensitive.
+	 * Checks if a given string matches a given pattern. The pattern can contain the
+	 * '*' symbol which can replace any series of carachters, and the '?' symbol
+	 * which can replace any single character. The pattern match behaves as if the
+	 * given pattern ends with '*', thus, for example, matching 'aabbc' string with
+	 * 'aabb' pattern will return a true result. The search is case sensitive.
 	 * 
 	 * @param pattern
 	 *            The string pattern

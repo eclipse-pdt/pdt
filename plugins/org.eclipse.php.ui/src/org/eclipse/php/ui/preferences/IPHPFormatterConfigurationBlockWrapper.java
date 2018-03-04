@@ -41,8 +41,8 @@ public interface IPHPFormatterConfigurationBlockWrapper {
 	void init(IStatusChangeListener statusChangedListener, IProject project, IWorkbenchPreferenceContainer container);
 
 	/**
-	 * The Description for this configuration block that will be presented in
-	 * the dialog
+	 * The Description for this configuration block that will be presented in the
+	 * dialog
 	 */
 	String getDescription();
 }

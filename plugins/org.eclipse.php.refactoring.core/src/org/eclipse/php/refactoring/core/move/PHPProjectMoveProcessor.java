@@ -57,8 +57,7 @@ public class PHPProjectMoveProcessor extends MoveProcessor {
 	 * checkInitialConditions(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	public RefactoringStatus checkInitialConditions(IProgressMonitor pm)
-			throws OperationCanceledException {
+	public RefactoringStatus checkInitialConditions(IProgressMonitor pm) throws OperationCanceledException {
 		return new RefactoringStatus();
 	}
 
@@ -70,8 +69,8 @@ public class PHPProjectMoveProcessor extends MoveProcessor {
 	 * org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext)
 	 */
 	@Override
-	public RefactoringStatus checkFinalConditions(IProgressMonitor pm,
-			CheckConditionsContext context) throws OperationCanceledException {
+	public RefactoringStatus checkFinalConditions(IProgressMonitor pm, CheckConditionsContext context)
+			throws OperationCanceledException {
 		return new RefactoringStatus();
 	}
 
@@ -82,10 +81,8 @@ public class PHPProjectMoveProcessor extends MoveProcessor {
 	 * createChange(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	public Change createChange(IProgressMonitor pm) throws CoreException,
-			OperationCanceledException {
-		return new PHPProjectMoveChange(URIUtil.toURI(fResourceDestination),
-				fProject.getName());
+	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
+		return new PHPProjectMoveChange(URIUtil.toURI(fResourceDestination), fProject.getName());
 	}
 
 	/*
@@ -144,14 +141,12 @@ public class PHPProjectMoveProcessor extends MoveProcessor {
 			SharableParticipants sharedParticipants) {
 
 		try {
-			String[] affectedNatures = ResourceProcessors
-					.computeAffectedNatures(fProject);
-			MoveArguments arguments = new MoveArguments(fResourceDestination,
-					getUpdateReferences());
+			String[] affectedNatures = ResourceProcessors.computeAffectedNatures(fProject);
+			MoveArguments arguments = new MoveArguments(fResourceDestination, getUpdateReferences());
 			List<IProject> list = new ArrayList<>();
 			list.add(fProject);
-			return ParticipantManager.loadMoveParticipants(status, this, list,
-					arguments, null, affectedNatures, sharedParticipants);
+			return ParticipantManager.loadMoveParticipants(status, this, list, arguments, null, affectedNatures,
+					sharedParticipants);
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}

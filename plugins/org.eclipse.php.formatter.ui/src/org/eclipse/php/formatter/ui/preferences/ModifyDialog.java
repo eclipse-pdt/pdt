@@ -51,8 +51,8 @@ public class ModifyDialog extends StatusDialog {
 			+ "formatter_page.modify_dialog.preferred_y"; //$NON-NLS-1$
 
 	/**
-	 * The key to store the number (beginning at 0) of the tab page which had
-	 * the focus last time.
+	 * The key to store the number (beginning at 0) of the tab page which had the
+	 * focus last time.
 	 */
 	private static final String DS_KEY_LAST_FOCUS = FormatterUIPlugin.PLUGIN_ID
 			+ "formatter_page.modify_dialog.last_focus"; //$NON-NLS-1$

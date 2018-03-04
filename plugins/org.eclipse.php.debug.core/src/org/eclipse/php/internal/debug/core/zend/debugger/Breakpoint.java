@@ -128,8 +128,8 @@ public class Breakpoint implements Cloneable {
 	}
 
 	/**
-	 * Sets the break point type. The type can be : ZEND_CONDITIONAL_BREAKPOINT
-	 * or ZEND_STATIC_BREAKPOINT.
+	 * Sets the break point type. The type can be : ZEND_CONDITIONAL_BREAKPOINT or
+	 * ZEND_STATIC_BREAKPOINT.
 	 */
 	public void setConditionalFlag(boolean b) {
 		this.conditionalFlag = b;
@@ -160,8 +160,8 @@ public class Breakpoint implements Cloneable {
 	}
 
 	/**
-	 * Returns the break point type.. make the type variable a combination of
-	 * two values
+	 * Returns the break point type.. make the type variable a combination of two
+	 * values
 	 */
 	public int getType() {
 		int s = staticFlag ? ZEND_STATIC_BREAKPOINT : 0;
@@ -171,8 +171,8 @@ public class Breakpoint implements Cloneable {
 	}
 
 	/**
-	 * Sets the break point lifetime. The lifetime can be:
-	 * ZEND_ONETIME_BREAKPOINT or ZEND_PERMANENT_BREAKPOINT .
+	 * Sets the break point lifetime. The lifetime can be: ZEND_ONETIME_BREAKPOINT
+	 * or ZEND_PERMANENT_BREAKPOINT .
 	 */
 	public void setLifeTime(int lifetime) {
 		if (lifetime == ZEND_ONETIME_BREAKPOINT || lifetime == ZEND_PERMANENT_BREAKPOINT) {

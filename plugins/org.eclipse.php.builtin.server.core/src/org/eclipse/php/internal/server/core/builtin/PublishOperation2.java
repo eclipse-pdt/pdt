@@ -158,8 +158,8 @@ public class PublishOperation2 extends PublishOperation {
 	}
 
 	/**
-	 * Utility method to throw a CoreException based on the contents of a list
-	 * of error and warning status.
+	 * Utility method to throw a CoreException based on the contents of a list of
+	 * error and warning status.
 	 * 
 	 * @param status
 	 *            a List containing error and warning IStatus

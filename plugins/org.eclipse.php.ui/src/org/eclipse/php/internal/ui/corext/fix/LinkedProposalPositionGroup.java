@@ -32,10 +32,10 @@ import org.eclipse.text.edits.TextEdit;
 public class LinkedProposalPositionGroup {
 
 	/**
-	 * {@link LinkedProposalPositionGroup.PositionInformation} describes a
-	 * position insinde a position group. The information provided must be
-	 * accurate after the document change to the proposal has been performed,
-	 * but doesn't need to reflect the changed done by the linking mode.
+	 * {@link LinkedProposalPositionGroup.PositionInformation} describes a position
+	 * insinde a position group. The information provided must be accurate after the
+	 * document change to the proposal has been performed, but doesn't need to
+	 * reflect the changed done by the linking mode.
 	 */
 	public static abstract class PositionInformation {
 		public abstract int getOffset();
@@ -132,9 +132,9 @@ public class LinkedProposalPositionGroup {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see org.eclipse.jdt.internal.corext.fix.PositionGroup.Proposal#
-		 * computeEdits (int, org.eclipse.jface.text.link.LinkedPosition, char,
-		 * int, org.eclipse.jface.text.link.LinkedModeModel)
+		 * @see org.eclipse.jdt.internal.corext.fix.PositionGroup.Proposal# computeEdits
+		 * (int, org.eclipse.jface.text.link.LinkedPosition, char, int,
+		 * org.eclipse.jface.text.link.LinkedModeModel)
 		 */
 		@Override
 		public TextEdit computeEdits(int offset, LinkedPosition position, char trigger, int stateMask,

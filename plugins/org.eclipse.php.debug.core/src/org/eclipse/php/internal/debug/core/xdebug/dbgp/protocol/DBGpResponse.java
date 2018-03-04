@@ -40,23 +40,22 @@ public class DBGpResponse {
 	 * "file:///C%3A%5Cudata-eclipse%5Cphpide025%5CtestXdebug%5CPhpCode%5Ctestcase3.php"
 	 * language="PHP" protocol_version="1.0" appid="2116"
 	 * idekey="ECLIPSE_XDEBUG11623014568921"> <engine version="2.0.0RC2-dev">
-	 * <![CDATA[Xdebug]]> </engine> <author> <![CDATA[Derick Rethans]]>
-	 * </author> <url> <![CDATA[http://xdebug.org]]> </url> <copyright>
-	 * <![CDATA[Copyright (c) 2002-2006 by Derick Rethans]]> </copyright>
-	 * </init>
+	 * <![CDATA[Xdebug]]> </engine> <author> <![CDATA[Derick Rethans]]> </author>
+	 * <url> <![CDATA[http://xdebug.org]]> </url> <copyright> <![CDATA[Copyright (c)
+	 * 2002-2006 by Derick Rethans]]> </copyright> </init>
 	 */
 
 	/*
 	 * Example Responses <response command="property_get" transaction_id="95"
-	 * status="break" reason="ok"> <error code="300"> <message> <![CDATA[can not
-	 * get property]]> </message> </error> </response>
+	 * status="break" reason="ok"> <error code="300"> <message> <![CDATA[can not get
+	 * property]]> </message> </error> </response>
 	 * 
 	 * <response command="stop" transaction_id="32" status="stopped"
 	 * reason="ok"></response>
 	 * 
 	 * <response command="breakpoint_set" transaction_id="1"
-	 * id="49240001"></response> <response command="feature_set"
-	 * transaction_id="19" feature="max_depth" success="1"></response>
+	 * id="49240001"></response> <response command="feature_set" transaction_id="19"
+	 * feature="max_depth" success="1"></response>
 	 */
 
 	/*
@@ -125,16 +124,15 @@ public class DBGpResponse {
 	 * Error codes, eg
 	 * 
 	 * { 0, "no error" }, { 1, "parse error in command" }, { 2,
-	 * "duplicate arguments in command" }, { 3, "invalid or missing options" },
-	 * { 4, "unimplemented command" }, { 5, "command is not available" }, { 100,
+	 * "duplicate arguments in command" }, { 3, "invalid or missing options" }, { 4,
+	 * "unimplemented command" }, { 5, "command is not available" }, { 100,
 	 * "can not open file" }, { 101, "stream redirect failed" }, { 200,
-	 * "breakpoint could not be set" }, { 201,
-	 * "breakpoint type is not supported" }, { 202, "invalid breakpoint line" },
-	 * { 203, "no code on breakpoint line" }, { 204, "invalid breakpoint state"
-	 * }, { 205, "no such breakpoint" }, { 206, "error evaluating code" }, {
-	 * 207, "invalid expression" }, { 300, "can not get property" }, { 301,
-	 * "stack depth invalid" }, { 302, "context invalid" }, { 900,
-	 * "encoding not supported" }, { 998,
+	 * "breakpoint could not be set" }, { 201, "breakpoint type is not supported" },
+	 * { 202, "invalid breakpoint line" }, { 203, "no code on breakpoint line" }, {
+	 * 204, "invalid breakpoint state" }, { 205, "no such breakpoint" }, { 206,
+	 * "error evaluating code" }, { 207, "invalid expression" }, { 300,
+	 * "can not get property" }, { 301, "stack depth invalid" }, { 302,
+	 * "context invalid" }, { 900, "encoding not supported" }, { 998,
 	 * "an internal exception in the debugger" }, { 999, "unknown error" },
 	 */
 	public static final int ERROR_OK = 0;

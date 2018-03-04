@@ -80,9 +80,9 @@ public class Config extends JsonObject {
 	}
 
 	/**
-	 * Returns the <code>github-protocols</code> property. If this property
-	 * isn't present in the json, the default value
-	 * <code>["git", "https", "http"]</code> is returned.
+	 * Returns the <code>github-protocols</code> property. If this property isn't
+	 * present in the json, the default value <code>["git", "https", "http"]</code>
+	 * is returned.
 	 * 
 	 * @return the <code>github-protocols</code> property
 	 */

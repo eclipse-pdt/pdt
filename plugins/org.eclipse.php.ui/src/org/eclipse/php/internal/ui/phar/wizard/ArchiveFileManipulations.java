@@ -64,8 +64,7 @@ public class ArchiveFileManipulations {
 	}
 
 	/**
-	 * Determine whether the file with the given filename is in .zip or .jar
-	 * format.
+	 * Determine whether the file with the given filename is in .zip or .jar format.
 	 * 
 	 * @param fileName
 	 *            file to test

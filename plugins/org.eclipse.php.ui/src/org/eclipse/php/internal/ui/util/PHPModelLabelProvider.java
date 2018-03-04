@@ -87,7 +87,8 @@ public class PHPModelLabelProvider extends LabelProvider implements ILabelProvid
 		if (baseImage != null) {
 			int adornmentFlags = getAdornmentFlags(element);
 			Point size = ((imageFlags & ScriptElementImageProvider.SMALL_ICONS) != 0)
-					? ScriptElementImageProvider.SMALL_SIZE : ScriptElementImageProvider.BIG_SIZE;
+					? ScriptElementImageProvider.SMALL_SIZE
+					: ScriptElementImageProvider.BIG_SIZE;
 			return new PHPElementImageDescriptor(baseImage, adornmentFlags, size);
 		}
 		return null;

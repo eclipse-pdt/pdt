@@ -56,8 +56,8 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 	}
 
 	/*
-	 * This method add the default views that are part of the perspective and
-	 * lays them out in relation to each other and the editor area.
+	 * This method add the default views that are part of the perspective and lays
+	 * them out in relation to each other and the editor area.
 	 */
 	protected void addViews(IPageLayout layout) {
 

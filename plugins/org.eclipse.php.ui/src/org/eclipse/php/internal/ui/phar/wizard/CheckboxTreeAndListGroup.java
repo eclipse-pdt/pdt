@@ -49,8 +49,8 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener, ISelection
 
 	/**
 	 * Creates an instance of this class. Use this constructor if you wish to
-	 * specify the width and/or height of the combined widget (to only hardcode
-	 * one of the sizing dimensions, specify the other dimension's value as -1)
+	 * specify the width and/or height of the combined widget (to only hardcode one
+	 * of the sizing dimensions, specify the other dimension's value as -1)
 	 * 
 	 * @param parent
 	 *            parent composite
@@ -105,8 +105,8 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener, ISelection
 	}
 
 	/**
-	 * Adds the receiver and all of it's ancestors to the checkedStateStore if
-	 * they are not already there.
+	 * Adds the receiver and all of it's ancestors to the checkedStateStore if they
+	 * are not already there.
 	 * 
 	 * @param treeElement
 	 */
@@ -125,8 +125,8 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener, ISelection
 	}
 
 	/**
-	 * Returns a boolean indicating whether all children of the passed tree
-	 * element are currently white-checked
+	 * Returns a boolean indicating whether all children of the passed tree element
+	 * are currently white-checked
 	 * 
 	 * @return boolean
 	 * @param treeElement
@@ -144,8 +144,8 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener, ISelection
 	}
 
 	/**
-	 * Returns a boolean indicating whether all list elements associated with
-	 * the passed tree element are currently checked
+	 * Returns a boolean indicating whether all list elements associated with the
+	 * passed tree element are currently checked
 	 * 
 	 * @return boolean
 	 * @param treeElement
@@ -161,8 +161,8 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener, ISelection
 	}
 
 	/**
-	 * Iterates through the passed elements which are being realized for the
-	 * first time and check each one in the tree viewer as appropriate
+	 * Iterates through the passed elements which are being realized for the first
+	 * time and check each one in the tree viewer as appropriate
 	 * 
 	 * @param elements
 	 */
@@ -278,10 +278,10 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener, ISelection
 
 	/**
 	 * Returns a boolean indicating whether the passed tree element should be at
-	 * LEAST gray-checked. Note that this method does not consider whether it
-	 * should be white-checked, so a specified tree item which should be
-	 * white-checked will result in a <code>true</code> answer from this method.
-	 * To determine whether a tree item should be white-checked use method
+	 * LEAST gray-checked. Note that this method does not consider whether it should
+	 * be white-checked, so a specified tree item which should be white-checked will
+	 * result in a <code>true</code> answer from this method. To determine whether a
+	 * tree item should be white-checked use method
 	 * #determineShouldBeWhiteChecked(Object).
 	 * 
 	 * @param treeElement
@@ -352,8 +352,8 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener, ISelection
 	}
 
 	/**
-	 * Answers a flat collection of all of the checked elements in the list
-	 * portion of self
+	 * Answers a flat collection of all of the checked elements in the list portion
+	 * of self
 	 * 
 	 * @return java.util.Vector
 	 */
@@ -439,8 +439,8 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener, ISelection
 	}
 
 	/**
-	 * Logically gray-check all ancestors of treeItem by ensuring that they
-	 * appear in the checked table
+	 * Logically gray-check all ancestors of treeItem by ensuring that they appear
+	 * in the checked table
 	 * 
 	 * @param treeElement
 	 */
@@ -448,8 +448,7 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener, ISelection
 
 		// if this tree element is already gray then its ancestors all are as
 		// well
-		if (fCheckedStateStore.containsKey(treeElement))
-		 {
+		if (fCheckedStateStore.containsKey(treeElement)) {
 			return; // no need to proceed upwards from here
 		}
 
@@ -490,8 +489,8 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener, ISelection
 	}
 
 	/**
-	 * Sets the initial checked state of the passed element to true, as well as
-	 * to all of its children and associated list elements
+	 * Sets the initial checked state of the passed element to true, as well as to
+	 * all of its children and associated list elements
 	 * 
 	 * @param element
 	 */
@@ -508,8 +507,8 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener, ISelection
 
 	/**
 	 * Callback that's invoked when the checked status of an item in the list is
-	 * changed by the user. Do not try and update the hierarchy if we are
-	 * building the initial list.
+	 * changed by the user. Do not try and update the hierarchy if we are building
+	 * the initial list.
 	 * 
 	 * @param listElement
 	 * @param state
@@ -554,8 +553,8 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener, ISelection
 	}
 
 	/**
-	 * Sets the contents of the list viewer based upon the specified selected
-	 * tree element. This also includes checking the appropriate list items.
+	 * Sets the contents of the list viewer based upon the specified selected tree
+	 * element. This also includes checking the appropriate list items.
 	 * 
 	 * @param treeElement
 	 *            java.lang.Object
@@ -577,8 +576,8 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener, ISelection
 	}
 
 	/**
-	 * Removes the passed listener from self's collection of clients that listen
-	 * for changes to element checked states
+	 * Removes the passed listener from self's collection of clients that listen for
+	 * changes to element checked states
 	 * 
 	 * @param listener
 	 *            ICheckStateListener
@@ -611,9 +610,8 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener, ISelection
 	}
 
 	/**
-	 * Selects or deselect all of the elements in the tree depending on the
-	 * value of the selection boolean. Be sure to update the displayed files as
-	 * well.
+	 * Selects or deselect all of the elements in the tree depending on the value of
+	 * the selection boolean. Be sure to update the displayed files as well.
 	 * 
 	 * @param selection
 	 */
@@ -652,8 +650,8 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener, ISelection
 	}
 
 	/**
-	 * Sets the root of the widget to be new Root. Regenerate all of the tables
-	 * and lists from this value.
+	 * Sets the root of the widget to be new Root. Regenerate all of the tables and
+	 * lists from this value.
 	 * 
 	 * @param newRoot
 	 */
@@ -663,8 +661,8 @@ public class CheckboxTreeAndListGroup implements ICheckStateListener, ISelection
 	}
 
 	/**
-	 * Sets the checked state of the passed tree element appropriately, and do
-	 * so recursively to all of its child tree elements as well
+	 * Sets the checked state of the passed tree element appropriately, and do so
+	 * recursively to all of its child tree elements as well
 	 * 
 	 * @param treeElement
 	 * @param state

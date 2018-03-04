@@ -105,8 +105,7 @@ public class RepositoryPackage extends DistributedPackage {
 
 	/**
 	 *
-	 * Returns the package name suitable for passing it to "composer.phar
-	 * require"
+	 * Returns the package name suitable for passing it to "composer.phar require"
 	 *
 	 * @param version
 	 * @return String the package/version combination

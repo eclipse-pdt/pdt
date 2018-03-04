@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.astview;
 
-
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.ui.IEditorInput;
@@ -29,23 +28,23 @@ public class EditorUtility {
 	}
 
 	public static IEditorPart getActiveEditor() {
-		IWorkbenchWindow window= ASTViewPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
+		IWorkbenchWindow window = ASTViewPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
 		if (window != null) {
-			IWorkbenchPage page= window.getActivePage();
+			IWorkbenchPage page = window.getActivePage();
 			if (page != null) {
 				return page.getActiveEditor();
 			}
 		}
 		return null;
 	}
-	
+
 	public static ISourceModule getPhpInput(IEditorPart part) {
-		IEditorInput editorInput= part.getEditorInput();
+		IEditorInput editorInput = part.getEditorInput();
 		if (editorInput != null) {
-			ISourceModule input= DLTKUIPlugin.getEditorInputModelElement(editorInput);
+			ISourceModule input = DLTKUIPlugin.getEditorInputModelElement(editorInput);
 			return input;
 		}
-		return null;	
+		return null;
 	}
 
 	public static void selectInEditor(ITextEditor editor, int offset, int length) {

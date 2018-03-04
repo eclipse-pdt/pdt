@@ -34,8 +34,7 @@ public abstract class AbstraceRenameResourceProcessor extends AbstractRenameProc
 	HashMap<IBreakpoint, Map<String, Object>> fBreakpointAttributes;
 	private RenameArguments fRenameArguments;
 	/**
-	 * holds wether or not we want to change also the references to the
-	 * opratedFile
+	 * holds wether or not we want to change also the references to the opratedFile
 	 */
 	boolean isUpdateReferences;
 

@@ -81,18 +81,18 @@ public final class SharedASTProvider {
 	}
 
 	/**
-	 * Wait flag indicating that a client requesting an AST wants to wait until
-	 * an AST is ready.
+	 * Wait flag indicating that a client requesting an AST wants to wait until an
+	 * AST is ready.
 	 * <p>
-	 * An AST will be created by this AST provider if the shared AST is not for
-	 * the given php element.
+	 * An AST will be created by this AST provider if the shared AST is not for the
+	 * given php element.
 	 * </p>
 	 */
 	public static final WAIT_FLAG WAIT_YES = new WAIT_FLAG("wait yes"); //$NON-NLS-1$
 
 	/**
-	 * Wait flag indicating that a client requesting an AST only wants to wait
-	 * for the shared AST of the active editor.
+	 * Wait flag indicating that a client requesting an AST only wants to wait for
+	 * the shared AST of the active editor.
 	 * <p>
 	 * No AST will be created by the AST provider.
 	 * </p>
@@ -100,8 +100,8 @@ public final class SharedASTProvider {
 	public static final WAIT_FLAG WAIT_ACTIVE_ONLY = new WAIT_FLAG("wait active only"); //$NON-NLS-1$
 
 	/**
-	 * Wait flag indicating that a client requesting an AST only wants the
-	 * already available shared AST.
+	 * Wait flag indicating that a client requesting an AST only wants the already
+	 * available shared AST.
 	 * <p>
 	 * No AST will be created by the AST provider.
 	 * </p>
@@ -109,30 +109,28 @@ public final class SharedASTProvider {
 	public static final WAIT_FLAG WAIT_NO = new WAIT_FLAG("don't wait"); //$NON-NLS-1$
 
 	/**
-	 * Returns a compilation unit AST for the given php element. If the element
-	 * is the input of the active php editor, the AST is the shared AST.
+	 * Returns a compilation unit AST for the given php element. If the element is
+	 * the input of the active php editor, the AST is the shared AST.
 	 * <p>
-	 * Clients are not allowed to modify the AST and must not keep any
-	 * references.
+	 * Clients are not allowed to modify the AST and must not keep any references.
 	 * </p>
 	 * 
 	 * @param element
 	 *            the {@link ITypeRoot}, must not be <code>null</code>
 	 * @param waitFlag
-	 *            {@link #WAIT_YES}, {@link #WAIT_NO} or
-	 *            {@link #WAIT_ACTIVE_ONLY}
+	 *            {@link #WAIT_YES}, {@link #WAIT_NO} or {@link #WAIT_ACTIVE_ONLY}
 	 * @param progressMonitor
 	 *            the progress monitor or <code>null</code>
 	 * @return the AST or <code>null</code>.
 	 *         <dl>
 	 *         <li>if {@link #WAIT_NO} has been specified <code>null</code> is
-	 *         returned if the element is not input of the current php editor or
-	 *         no AST is available</li>
-	 *         <li>if {@link #WAIT_ACTIVE_ONLY} has been specified
-	 *         <code>null</code> is returned if the element is not input of the
-	 *         current php editor</li>
-	 *         <li>if {@link #WAIT_YES} has been specified either the shared AST
-	 *         is returned or a new AST is created.</li>
+	 *         returned if the element is not input of the current php editor or no
+	 *         AST is available</li>
+	 *         <li>if {@link #WAIT_ACTIVE_ONLY} has been specified <code>null</code>
+	 *         is returned if the element is not input of the current php
+	 *         editor</li>
+	 *         <li>if {@link #WAIT_YES} has been specified either the shared AST is
+	 *         returned or a new AST is created.</li>
 	 *         </dl>
 	 * @throws IOException
 	 * @throws ModelException

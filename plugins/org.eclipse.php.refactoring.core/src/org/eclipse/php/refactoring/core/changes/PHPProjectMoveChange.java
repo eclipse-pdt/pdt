@@ -31,8 +31,7 @@ public class PHPProjectMoveChange extends Change {
 	public PHPProjectMoveChange(URI newLocation, String projectName) {
 		this.fNewLocation = newLocation;
 		this.fProjectName = projectName;
-		fProject = ResourcesPlugin.getWorkspace().getRoot()
-				.getProject(fProjectName);
+		fProject = ResourcesPlugin.getWorkspace().getRoot().getProject(fProjectName);
 	}
 
 	@Override
@@ -51,8 +50,7 @@ public class PHPProjectMoveChange extends Change {
 	}
 
 	@Override
-	public RefactoringStatus isValid(IProgressMonitor arg0)
-			throws CoreException, OperationCanceledException {
+	public RefactoringStatus isValid(IProgressMonitor arg0) throws CoreException, OperationCanceledException {
 		return new RefactoringStatus();
 	}
 

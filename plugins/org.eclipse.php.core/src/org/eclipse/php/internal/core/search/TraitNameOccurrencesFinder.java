@@ -193,8 +193,7 @@ public class TraitNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * (non-Javadoc)
 	 * 
 	 * @seeorg.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#
-	 * getOccurrenceReadWriteType
-	 * (org.eclipse.php.internal.core.ast.nodes.ASTNode)
+	 * getOccurrenceReadWriteType (org.eclipse.php.internal.core.ast.nodes.ASTNode)
 	 */
 	@Override
 	protected int getOccurrenceType(ASTNode node) {
@@ -206,8 +205,7 @@ public class TraitNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.ui.search.IOccurrencesFinder#getElementName()
+	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getElementName()
 	 */
 	@Override
 	public String getElementName() {

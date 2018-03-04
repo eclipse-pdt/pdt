@@ -58,8 +58,8 @@ import org.eclipse.ui.PlatformUI;
 public class PHPLibraryPreferencePage extends UserLibraryPreferencePage {
 
 	/**
-	 * User libraries with such attribute should be treated as non removable and
-	 * non editable
+	 * User libraries with such attribute should be treated as non removable and non
+	 * editable
 	 */
 	private static final String BUILTIN_ATTRIBUTE = "builtin"; //$NON-NLS-1$
 

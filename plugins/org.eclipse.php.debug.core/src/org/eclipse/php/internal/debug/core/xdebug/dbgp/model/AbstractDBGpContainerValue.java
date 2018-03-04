@@ -109,8 +109,8 @@ public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 		}
 
 		/**
-		 * Uses container value related node to fetch child elements and build
-		 * child variables or multiple pages with variables.
+		 * Uses container value related node to fetch child elements and build child
+		 * variables or multiple pages with variables.
 		 */
 		protected void updateVariables() {
 			fPreviousVariables = fCurrentVariables;
@@ -193,10 +193,10 @@ public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 		}
 
 		/**
-		 * Merges incoming variable. Merge is done by means of checking if
-		 * related child variable existed in "one step back" state of a
-		 * container. If related variable existed, it is updated with the use of
-		 * the most recent descriptor and returned instead of the incoming one.
+		 * Merges incoming variable. Merge is done by means of checking if related child
+		 * variable existed in "one step back" state of a container. If related variable
+		 * existed, it is updated with the use of the most recent descriptor and
+		 * returned instead of the incoming one.
 		 * 
 		 * @param variable
 		 * @param descriptor
@@ -224,8 +224,8 @@ public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 	}
 
 	/**
-	 * DBGp unreachable variable (is shown if i.e. XDebug max array depth
-	 * parameter is exceeded while unfolding variables).
+	 * DBGp unreachable variable (is shown if i.e. XDebug max array depth parameter
+	 * is exceeded while unfolding variables).
 	 * 
 	 * @author Bartlomiej Laczkowski
 	 */
@@ -352,8 +352,7 @@ public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
+	 * @see org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
 	 * getVariables()
 	 */
 	@Override
@@ -366,8 +365,7 @@ public abstract class AbstractDBGpContainerValue extends AbstractDBGpValue {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
+	 * @see org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
 	 * update(org.w3c.dom.Node)
 	 */
 	@Override
