@@ -53,8 +53,7 @@ public class ServerLaunchConfigurationTabGroup extends AbstractLaunchConfigurati
 		newTab.setLaunchConfigurationDialog(dialog);
 		list.add(newTab);
 
-		ILaunchConfigurationTab[] allTabs = list
-				.toArray(new ILaunchConfigurationTab[list.size()]);
+		ILaunchConfigurationTab[] allTabs = list.toArray(new ILaunchConfigurationTab[list.size()]);
 		setTabs(allTabs);
 	}
 }

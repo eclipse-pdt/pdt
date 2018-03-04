@@ -70,8 +70,7 @@ public class CodeCoverageContentProvider implements ITreeContentProvider {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.
+	 * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.
 	 * Object)
 	 */
 	@Override
@@ -105,8 +104,7 @@ public class CodeCoverageContentProvider implements ITreeContentProvider {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java
+	 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java
 	 * .lang.Object)
 	 */
 	@Override
@@ -148,8 +146,7 @@ public class CodeCoverageContentProvider implements ITreeContentProvider {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object
-	 * )
+	 * org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object )
 	 */
 	@Override
 	public Object getParent(final Object element) {
@@ -159,8 +156,7 @@ public class CodeCoverageContentProvider implements ITreeContentProvider {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.ui.StandardPHPElementContentProvider#hasChildrenInternal
+	 * @see org.eclipse.php.ui.StandardPHPElementContentProvider#hasChildrenInternal
 	 * (java.lang.Object)
 	 */
 	@Override

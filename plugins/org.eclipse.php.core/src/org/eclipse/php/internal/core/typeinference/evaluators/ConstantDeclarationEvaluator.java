@@ -251,8 +251,8 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 	}
 
 	/**
-	 * Strips single or double quotes from the start and from the end of the
-	 * given string
+	 * Strips single or double quotes from the start and from the end of the given
+	 * string
 	 * 
 	 * @param name
 	 *            String

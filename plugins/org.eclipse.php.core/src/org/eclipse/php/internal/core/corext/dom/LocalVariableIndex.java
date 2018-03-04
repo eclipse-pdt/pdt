@@ -27,12 +27,12 @@ public class LocalVariableIndex extends AbstractVisitor {
 	private final Set<String> variablesSet = new HashSet<>();
 
 	/**
-	 * Computes the maximum number of local variable declarations in the given
-	 * body declaration.
+	 * Computes the maximum number of local variable declarations in the given body
+	 * declaration.
 	 * 
 	 * @param node
-	 *            the body declaration. Must either be a method declaration or
-	 *            an initializer.
+	 *            the body declaration. Must either be a method declaration or an
+	 *            initializer.
 	 * @return the maximum number of local variables
 	 */
 	public static int perform(ASTNode node) {
@@ -60,8 +60,8 @@ public class LocalVariableIndex extends AbstractVisitor {
 	}
 
 	/**
-	 * Insert to the variables Name set each variable that is first encountered
-	 * in the flow
+	 * Insert to the variables Name set each variable that is first encountered in
+	 * the flow
 	 */
 	@Override
 	public boolean visit(Variable variable) {

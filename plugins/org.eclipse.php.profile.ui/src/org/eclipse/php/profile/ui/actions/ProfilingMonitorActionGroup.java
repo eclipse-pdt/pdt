@@ -120,8 +120,7 @@ public class ProfilingMonitorActionGroup extends ActionGroup {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.actions.ActionGroup#fillContextMenu(org.eclipse.jface.
+	 * @see org.eclipse.ui.actions.ActionGroup#fillContextMenu(org.eclipse.jface.
 	 * action.IMenuManager)
 	 */
 	@Override
@@ -340,8 +339,7 @@ public class ProfilingMonitorActionGroup extends ActionGroup {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.action.IMenuCreator#getMenu(org.eclipse.swt.widgets
+		 * @see org.eclipse.jface.action.IMenuCreator#getMenu(org.eclipse.swt.widgets
 		 * .Control)
 		 */
 		@Override
@@ -364,8 +362,7 @@ public class ProfilingMonitorActionGroup extends ActionGroup {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.action.IMenuCreator#getMenu(org.eclipse.swt.widgets
+		 * @see org.eclipse.jface.action.IMenuCreator#getMenu(org.eclipse.swt.widgets
 		 * .Menu)
 		 */
 		@Override

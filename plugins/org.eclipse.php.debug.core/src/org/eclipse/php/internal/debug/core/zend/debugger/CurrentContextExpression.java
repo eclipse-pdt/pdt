@@ -49,8 +49,8 @@ public class CurrentContextExpression extends DefaultExpression {
 	}
 
 	/**
-	 * Builds current context expression with the use of PHP version info taken
-	 * from provided debugger.
+	 * Builds current context expression with the use of PHP version info taken from
+	 * provided debugger.
 	 * 
 	 * @param debugger
 	 * @return context expression
@@ -63,8 +63,8 @@ public class CurrentContextExpression extends DefaultExpression {
 	}
 
 	/**
-	 * Checks if given debugger supports static (extended) context. Static
-	 * context is supported for PHP version >= 5.4.x.
+	 * Checks if given debugger supports static (extended) context. Static context
+	 * is supported for PHP version >= 5.4.x.
 	 * 
 	 * @param debugger
 	 * @return <code>true</code> if given debugger supports static context,

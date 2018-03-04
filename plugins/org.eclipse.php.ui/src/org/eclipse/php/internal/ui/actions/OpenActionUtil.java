@@ -62,8 +62,8 @@ public class OpenActionUtil {
 	}
 
 	/**
-	 * Shows a dialog for resolving an ambiguous php element. Utility method
-	 * that can be called by subclasses.
+	 * Shows a dialog for resolving an ambiguous php element. Utility method that
+	 * can be called by subclasses.
 	 */
 	public static IModelElement selectPHPElement(IModelElement[] elements, Shell shell, String title, String message) {
 

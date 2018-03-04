@@ -44,17 +44,17 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	private float loadFactor;
 
 	/**
-	 * The number of times this Hashtable has been structurally modified
-	 * Structural modifications are those that change the number of entries in
-	 * the Hashtable or otherwise modify its internal structure (e.g., rehash).
-	 * This field is used to make iterators on Collection-views of the Hashtable
-	 * fail-fast. (See ConcurrentModificationException).
+	 * The number of times this Hashtable has been structurally modified Structural
+	 * modifications are those that change the number of entries in the Hashtable or
+	 * otherwise modify its internal structure (e.g., rehash). This field is used to
+	 * make iterators on Collection-views of the Hashtable fail-fast. (See
+	 * ConcurrentModificationException).
 	 */
 	private transient int modCount = 0;
 
 	/**
-	 * Constructs a new, empty hashtable with the specified initial capacity and
-	 * the specified load factor.
+	 * Constructs a new, empty hashtable with the specified initial capacity and the
+	 * specified load factor.
 	 * 
 	 * @param initialCapacity
 	 *            the initial capacity of the hashtable.
@@ -65,12 +65,10 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 *                factor is nonpositive.
 	 */
 	public IntHashtable(int initialCapacity, float loadFactor) {
-		if (initialCapacity < 0)
-		 {
+		if (initialCapacity < 0) {
 			throw new IllegalArgumentException("Illegal Capacity: " + initialCapacity); //$NON-NLS-1$
 		}
-		if (loadFactor <= 0 || Float.isNaN(loadFactor))
-		 {
+		if (loadFactor <= 0 || Float.isNaN(loadFactor)) {
 			throw new IllegalArgumentException("Illegal Load: " + loadFactor); //$NON-NLS-1$
 		}
 
@@ -96,8 +94,8 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	}
 
 	/**
-	 * Constructs a new, empty hashtable with a default capacity and load
-	 * factor, which is <tt>0.75</tt>.
+	 * Constructs a new, empty hashtable with a default capacity and load factor,
+	 * which is <tt>0.75</tt>.
 	 */
 	public IntHashtable() {
 		this(11, 0.75f);
@@ -105,9 +103,9 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 
 	/**
 	 * Constructs a new hashtable with the same mappings as the given Map. The
-	 * hashtable is created with a capacity of twice the number of entries in
-	 * the given Map or 11 (whichever is greater), and a default load factor,
-	 * which is <tt>0.75</tt>.
+	 * hashtable is created with a capacity of twice the number of entries in the
+	 * given Map or 11 (whichever is greater), and a default load factor, which is
+	 * <tt>0.75</tt>.
 	 * 
 	 * @param t
 	 *            the map whose mappings are to be placed in this map.
@@ -148,14 +146,12 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 * @see #keySet()
 	 * @see Map
 	 * 
-	 *      public synchronized Enumeration keys() { return
-	 *      getEnumeration(KEYS); }
+	 *      public synchronized Enumeration keys() { return getEnumeration(KEYS); }
 	 */
 
 	/**
-	 * Returns an enumeration of the values in this hashtable. Use the
-	 * Enumeration methods on the returned object to fetch the elements
-	 * sequentially.
+	 * Returns an enumeration of the values in this hashtable. Use the Enumeration
+	 * methods on the returned object to fetch the elements sequentially.
 	 * 
 	 * @return an enumeration of the values in this hashtable.
 	 * @see java.util.Enumeration
@@ -171,14 +167,14 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 * operation is more expensive than the <code>containsKey</code> method.
 	 * <p>
 	 * 
-	 * Note that this method is identical in functionality to containsValue,
-	 * (which is part of the Map interface in the collections framework).
+	 * Note that this method is identical in functionality to containsValue, (which
+	 * is part of the Map interface in the collections framework).
 	 * 
 	 * @param value
 	 *            a value to search for.
 	 * @return <code>true</code> if and only if some key maps to the
-	 *         <code>value</code> argument in this hashtable as determined by
-	 *         the <tt>equals</tt> method; <code>false</code> otherwise.
+	 *         <code>value</code> argument in this hashtable as determined by the
+	 *         <tt>equals</tt> method; <code>false</code> otherwise.
 	 * @exception NullPointerException
 	 *                if the value is <code>null</code>.
 	 * @see #containsValue(Object)
@@ -265,10 +261,10 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	}
 
 	/**
-	 * Increases the capacity of and internally reorganizes this hashtable, in
-	 * order to accommodate and access its entries more efficiently. This method
-	 * is called automatically when the number of keys in the hashtable exceeds
-	 * this hashtable's capacity and load factor.
+	 * Increases the capacity of and internally reorganizes this hashtable, in order
+	 * to accommodate and access its entries more efficiently. This method is called
+	 * automatically when the number of keys in the hashtable exceeds this
+	 * hashtable's capacity and load factor.
 	 */
 	protected void rehash() {
 		int oldCapacity = table.length;
@@ -294,13 +290,12 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	}
 
 	/**
-	 * Maps the specified <code>key</code> to the specified <code>value</code>
-	 * in this hashtable. Neither the key nor the value can be <code>null</code>
-	 * .
+	 * Maps the specified <code>key</code> to the specified <code>value</code> in
+	 * this hashtable. Neither the key nor the value can be <code>null</code> .
 	 * <p>
 	 * 
-	 * The value can be retrieved by calling the <code>get</code> method with a
-	 * key that is equal to the original key.
+	 * The value can be retrieved by calling the <code>get</code> method with a key
+	 * that is equal to the original key.
 	 * 
 	 * @param key
 	 *            the hashtable key.
@@ -410,9 +405,9 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	}
 
 	/**
-	 * Creates a shallow copy of this hashtable. All the structure of the
-	 * hashtable itself is copied, but the keys and values are not cloned. This
-	 * is a relatively expensive operation.
+	 * Creates a shallow copy of this hashtable. All the structure of the hashtable
+	 * itself is copied, but the keys and values are not cloned. This is a
+	 * relatively expensive operation.
 	 * 
 	 * @return a clone of the hashtable.
 	 */
@@ -436,12 +431,11 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	}
 
 	/**
-	 * Returns a string representation of this <tt>Hashtable</tt> object in the
-	 * form of a set of entries, enclosed in braces and separated by the ASCII
-	 * characters "<tt>,&nbsp;</tt>" (comma and space). Each entry is rendered
-	 * as the key, an equals sign <tt>=</tt>, and the associated element, where
-	 * the <tt>toString</tt> method is used to convert the key and element to
-	 * strings.
+	 * Returns a string representation of this <tt>Hashtable</tt> object in the form
+	 * of a set of entries, enclosed in braces and separated by the ASCII characters
+	 * "<tt>,&nbsp;</tt>" (comma and space). Each entry is rendered as the key, an
+	 * equals sign <tt>=</tt>, and the associated element, where the
+	 * <tt>toString</tt> method is used to convert the key and element to strings.
 	 * <p>
 	 * Overrides to <tt>toString</tt> method of <tt>Object</tt>.
 	 * 
@@ -457,8 +451,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 		for (int i = 0; i <= max; i++) {
 			Map.Entry<?, ?> e = (Map.Entry<?, ?>) (it.next());
 			buf.append(e.getKey() + "=" + e.getValue()); //$NON-NLS-1$
-			if (i < max)
-			 {
+			if (i < max) {
 				buf.append(", "); //$NON-NLS-1$
 			}
 		}
@@ -487,10 +480,10 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	private transient Collection<?> values = null;
 
 	/**
-	 * Returns a Set view of the keys contained in this Hashtable. The Set is
-	 * backed by the Hashtable, so changes to the Hashtable are reflected in the
-	 * Set, and vice-versa. The Set supports element removal (which removes the
-	 * corresponding entry from the Hashtable), but not element addition.
+	 * Returns a Set view of the keys contained in this Hashtable. The Set is backed
+	 * by the Hashtable, so changes to the Hashtable are reflected in the Set, and
+	 * vice-versa. The Set supports element removal (which removes the corresponding
+	 * entry from the Hashtable), but not element addition.
 	 * 
 	 * @return a set view of the keys contained in this map.
 	 * @since 1.2
@@ -498,20 +491,19 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 *        public Set keySet() { if (keySet == null) keySet =
 	 *        Collections.synchronizedSet(new KeySet(), this); return keySet; }
 	 * 
-	 *        private class KeySet extends AbstractSet { public Iterator
-	 *        iterator() { return getIterator(KEYS); } public int size() {
-	 *        return count; } public boolean contains(/*Object* o) { return
-	 *        containsKey(o); } public boolean remove(Object o) { return
-	 *        Hashtable.this.remove(o) != null; } public void clear() {
-	 *        Hashtable.this.clear(); } }
+	 *        private class KeySet extends AbstractSet { public Iterator iterator()
+	 *        { return getIterator(KEYS); } public int size() { return count; }
+	 *        public boolean contains(/*Object* o) { return containsKey(o); } public
+	 *        boolean remove(Object o) { return Hashtable.this.remove(o) != null; }
+	 *        public void clear() { Hashtable.this.clear(); } }
 	 */
 
 	/**
-	 * Returns a Set view of the entries contained in this Hashtable. Each
-	 * element in this collection is a Map.Entry. The Set is backed by the
-	 * Hashtable, so changes to the Hashtable are reflected in the Set, and
-	 * vice-versa. The Set supports element removal (which removes the
-	 * corresponding entry from the Hashtable), but not element addition.
+	 * Returns a Set view of the entries contained in this Hashtable. Each element
+	 * in this collection is a Map.Entry. The Set is backed by the Hashtable, so
+	 * changes to the Hashtable are reflected in the Set, and vice-versa. The Set
+	 * supports element removal (which removes the corresponding entry from the
+	 * Hashtable), but not element addition.
 	 * 
 	 * @return a set view of the mappings contained in this map.
 	 * @see Map.Entry
@@ -592,9 +584,9 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	/**
 	 * Returns a Collection view of the values contained in this Hashtable. The
 	 * Collection is backed by the Hashtable, so changes to the Hashtable are
-	 * reflected in the Collection, and vice-versa. The Collection supports
-	 * element removal (which removes the corresponding entry from the
-	 * Hashtable), but not element addition.
+	 * reflected in the Collection, and vice-versa. The Collection supports element
+	 * removal (which removes the corresponding entry from the Hashtable), but not
+	 * element addition.
 	 * 
 	 * @return a collection view of the values contained in this map.
 	 * @since 1.2
@@ -691,12 +683,12 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	/**
 	 * Save the state of the Hashtable to a stream (i.e., serialize it).
 	 * 
-	 * @serialData The <i>capacity</i> of the Hashtable (the length of the
-	 *             bucket array) is emitted (int), followed by the <i>size</i>
-	 *             of the Hashtable (the number of key-value mappings), followed
-	 *             by the key (Object) and value (Object) for each key-value
-	 *             mapping represented by the Hashtable The key-value mappings
-	 *             are emitted in no particular order.
+	 * @serialData The <i>capacity</i> of the Hashtable (the length of the bucket
+	 *             array) is emitted (int), followed by the <i>size</i> of the
+	 *             Hashtable (the number of key-value mappings), followed by the key
+	 *             (Object) and value (Object) for each key-value mapping
+	 *             represented by the Hashtable The key-value mappings are emitted
+	 *             in no particular order.
 	 */
 	private synchronized void writeObject(java.io.ObjectOutputStream s) throws IOException {
 		// Write out the length, threshold, loadfactor
@@ -822,8 +814,8 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	private static final int ENTRIES = 2;
 
 	/**
-	 * A hashtable enumerator class. This class implements both the Enumeration
-	 * and Iterator interfaces, but individual instances can be created with the
+	 * A hashtable enumerator class. This class implements both the Enumeration and
+	 * Iterator interfaces, but individual instances can be created with the
 	 * Iterator methods disabled. This is necessary to avoid unintentionally
 	 * increasing the capabilities granted a user by passing an Enumeration.
 	 */
@@ -841,9 +833,9 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 		boolean iterator;
 
 		/**
-		 * The modCount value that the iterator believes that the backing List
-		 * should have. If this expectation is violated, the iterator has
-		 * detected concurrent modification.
+		 * The modCount value that the iterator believes that the backing List should
+		 * have. If this expectation is violated, the iterator has detected concurrent
+		 * modification.
 		 */
 		protected int expectedModCount = modCount;
 
@@ -905,8 +897,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 			if (!iterator) {
 				throw new UnsupportedOperationException();
 			}
-			if (lastReturned == null)
-			 {
+			if (lastReturned == null) {
 				throw new IllegalStateException("Hashtable Enumerator"); //$NON-NLS-1$
 			}
 			if (modCount != expectedModCount) {
@@ -940,8 +931,8 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	private static EmptyIterator emptyIterator = new EmptyIterator();
 
 	/**
-	 * A hashtable enumerator class for empty hash tables, specializes the
-	 * general Enumerator
+	 * A hashtable enumerator class for empty hash tables, specializes the general
+	 * Enumerator
 	 */
 	private static class EmptyEnumerator implements Enumeration<Object> {
 

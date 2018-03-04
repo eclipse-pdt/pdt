@@ -31,8 +31,8 @@ public class OccurrencesFinderFactory {
 	 * 
 	 * @param type
 	 *            One of the {@link PHPElementConciliator} constant types.
-	 * @return An {@link IOccurrencesFinder}; Null, if the given type does not
-	 *         have an occurrences finder.
+	 * @return An {@link IOccurrencesFinder}; Null, if the given type does not have
+	 *         an occurrences finder.
 	 */
 	public static IOccurrencesFinder getOccurrencesFinder(int type) {
 		switch (type) {

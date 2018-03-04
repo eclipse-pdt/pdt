@@ -61,10 +61,9 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 		 * @param openChoices
 		 *            From each array, a type reference has to be selected
 		 * @param ranges
-		 *            For each choice the range of the corresponding type
-		 *            reference.
-		 * @return Returns <code>null</code> to cancel the operation, or the
-		 *         selected imports.
+		 *            For each choice the range of the corresponding type reference.
+		 * @return Returns <code>null</code> to cancel the operation, or the selected
+		 *         imports.
 		 */
 		IElementNameMatch[] chooseImports(IElementNameMatch[][] openChoices, ISourceRange[] ranges);
 	}
@@ -240,8 +239,7 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 		}
 
 		/**
-		 * Tries to find the given element name and add it to the import
-		 * structure.
+		 * Tries to find the given element name and add it to the import structure.
 		 * 
 		 * @param ref
 		 *            the name node

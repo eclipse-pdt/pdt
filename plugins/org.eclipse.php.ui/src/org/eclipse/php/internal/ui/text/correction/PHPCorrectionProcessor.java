@@ -212,8 +212,7 @@ public class PHPCorrectionProcessor
 					} else {
 						return NLS.bind(CorrectionMessages.JavaCorrectionProcessor_go_to_closest_using_key, key);
 					}
-				}
-				else {
+				} else {
 					return ""; //$NON-NLS-1$
 				}
 			}
@@ -572,8 +571,7 @@ public class PHPCorrectionProcessor
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.text.quickassist.IQuickAssistProcessor#canAssist(org
+	 * @see org.eclipse.jface.text.quickassist.IQuickAssistProcessor#canAssist(org
 	 * .eclipse.jface.text.quickassist.IQuickAssistInvocationContext)
 	 * 
 	 * @since 3.2

@@ -16,9 +16,9 @@ import org.eclipse.osgi.util.NLS;
  * Messages class.
  */
 public class Messages extends NLS {
-	
+
 	private static final String BUNDLE_NAME = "org.eclipse.php.profile.ui.launcher.messages"; //$NON-NLS-1$
-	
+
 	public static String AbstractProfileExeLaunchSettingsSection_Break_at_first_line;
 	public static String AbstractProfileExeLaunchSettingsSection_Breakpoint;
 	public static String AbstractProfileWebLaunchSettingsSection_Break_at_first_line;

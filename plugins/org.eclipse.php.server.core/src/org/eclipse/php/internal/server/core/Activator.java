@@ -51,8 +51,7 @@ public class Activator extends Plugin {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
+	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
 	 */
 	@Override
 	public void start(BundleContext context) throws Exception {
@@ -64,8 +63,7 @@ public class Activator extends Plugin {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
+	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {

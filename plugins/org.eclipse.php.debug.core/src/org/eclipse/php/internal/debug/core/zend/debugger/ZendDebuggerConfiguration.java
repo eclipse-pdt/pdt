@@ -94,8 +94,7 @@ public class ZendDebuggerConfiguration extends AbstractDebuggerConfiguration {
 
 	/**
 	 * @param broadcastPort
-	 *            Port for broadcasting Studio settings to the ToolBar or Zend
-	 *            GUI
+	 *            Port for broadcasting Studio settings to the ToolBar or Zend GUI
 	 */
 	public void setBroadcastPort(int broadcastPort) {
 		preferences.putInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_BROADCAST_PORT, broadcastPort);

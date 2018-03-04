@@ -71,8 +71,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 	private int origPtr;
 
 	/**
-	 * always: in the range 0 .. 9. The current block size is 100000 * this
-	 * number.
+	 * always: in the range 0 .. 9. The current block size is 100000 * this number.
 	 */
 	private int blockSize100k;
 
@@ -125,8 +124,8 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 	 * 
 	 * <p>
 	 * Although BZip2 headers are marked with the magic <tt>"Bz"</tt> this
-	 * constructor expects the next byte in the stream to be the first one after
-	 * the magic. Thus callers have to skip the first two bytes. Otherwise this
+	 * constructor expects the next byte in the stream to be the first one after the
+	 * magic. Thus callers have to skip the first two bytes. Otherwise this
 	 * constructor will throw an exception.
 	 * </p>
 	 * 
@@ -259,8 +258,8 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 			this.blockRandomised = bsR(1) == 1;
 
 			/**
-			 * Allocate data here instead in constructor, so we do not allocate
-			 * it if the input file is empty.
+			 * Allocate data here instead in constructor, so we do not allocate it if the
+			 * input file is empty.
 			 */
 			if (this.data == null) {
 				this.data = new Data(this.blockSize100k);
@@ -536,9 +535,9 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 		final int limitLast = this.blockSize100k * 100000;
 
 		/*
-		 * Setting up the unzftab entries here is not strictly necessary, but it
-		 * does save having to do it later in a separate pass, and so saves a
-		 * block's worth of cache misses.
+		 * Setting up the unzftab entries here is not strictly necessary, but it does
+		 * save having to do it later in a separate pass, and so saves a block's worth
+		 * of cache misses.
 		 */
 		for (int i = 256; --i >= 0;) {
 			yy[i] = (char) i;
@@ -637,9 +636,8 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 				ll8[lastShadow] = seqToUnseq[tmp];
 
 				/*
-				 * This loop is hammered during decompression, hence avoid
-				 * native method call overhead of System.arraycopy for very
-				 * small ranges to copy.
+				 * This loop is hammered during decompression, hence avoid native method call
+				 * overhead of System.arraycopy for very small ranges to copy.
 				 */
 				if (nextSym <= 16) {
 					for (int j = nextSym - 1; j > 0;) {
@@ -896,8 +894,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 		final byte[] selectorMtf = new byte[MAX_SELECTORS]; // 18002 byte
 
 		/**
-		 * Freq table collected to save a pass over the data during
-		 * decompression.
+		 * Freq table collected to save a pass over the data during decompression.
 		 */
 		final int[] unzftab = new int[256]; // 1024 byte
 
@@ -930,9 +927,9 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 		/**
 		 * Initializes the {@link #tt} array.
 		 * 
-		 * This method is called when the required length of the array is known.
-		 * I don't initialize it at construction time to avoid unneccessary
-		 * memory allocation when compressing small files.
+		 * This method is called when the required length of the array is known. I don't
+		 * initialize it at construction time to avoid unneccessary memory allocation
+		 * when compressing small files.
 		 */
 		final int[] initTT(int length) {
 			int[] ttShadow = this.tt;

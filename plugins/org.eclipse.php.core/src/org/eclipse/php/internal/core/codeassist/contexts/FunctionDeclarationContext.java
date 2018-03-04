@@ -49,8 +49,8 @@ public abstract class FunctionDeclarationContext extends DeclarationContext {
 	}
 
 	/**
-	 * Returns the end offset of word 'function' in function declaration
-	 * relative to the statement text.
+	 * Returns the end offset of word 'function' in function declaration relative to
+	 * the statement text.
 	 * 
 	 * @see #getStatementText()
 	 * @return

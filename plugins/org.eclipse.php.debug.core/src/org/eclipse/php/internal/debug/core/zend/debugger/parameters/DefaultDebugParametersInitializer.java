@@ -169,8 +169,7 @@ public class DefaultDebugParametersInitializer extends AbstractDebugParametersIn
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.php.debug.core.debugger.parameters.
-	 * IDebugParametersInitializer
-	 * #getRequestURL(org.eclipse.debug.core.ILaunch)
+	 * IDebugParametersInitializer #getRequestURL(org.eclipse.debug.core.ILaunch)
 	 */
 	@Override
 	public URL getRequestURL(ILaunch launch) {

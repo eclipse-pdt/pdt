@@ -102,9 +102,9 @@ public class ServerManagerEvent extends EventObject {
 	}
 
 	/**
-	 * Returns the new attribute value that was modified. Return null if this
-	 * event does not indicate a Server modification or when the notification is
-	 * for modification but the attribute was removed.
+	 * Returns the new attribute value that was modified. Return null if this event
+	 * does not indicate a Server modification or when the notification is for
+	 * modification but the attribute was removed.
 	 * 
 	 * @return
 	 */

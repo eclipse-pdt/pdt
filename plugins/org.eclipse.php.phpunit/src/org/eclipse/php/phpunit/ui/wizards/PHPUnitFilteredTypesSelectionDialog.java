@@ -449,8 +449,7 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 
 	@Override
 	protected IStatus validateItem(Object item) {
-		if (item == null)
-		 {
+		if (item == null) {
 			return new Status(IStatus.ERROR, DLTKUIPlugin.getPluginId(), IStatus.ERROR, "", null); //$NON-NLS-1$
 		}
 
@@ -464,8 +463,7 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 			}
 			Object[] elements = { type };
 			return fValidator.validate(elements);
-		}
-		else {
+		} else {
 			return new Status(IStatus.OK, DLTKUIPlugin.getPluginId(), IStatus.OK, "", null); //$NON-NLS-1$
 		}
 	}
@@ -937,7 +935,8 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 			}
 
 			TypeNameMatch type = (TypeNameMatch) item;
-			if (!(matchesPackage(type) && matchesModifiers(type) && matchesScope(type) && matchesFilterExtension(type))) {
+			if (!(matchesPackage(type) && matchesModifiers(type) && matchesScope(type)
+					&& matchesFilterExtension(type))) {
 				return false;
 			}
 			return matchesName(type);
@@ -966,8 +965,7 @@ public class PHPUnitFilteredTypesSelectionDialog extends FilteredItemsSelectionD
 			if (index != -1) {
 				packPattern = evaluatePackagePattern(stringPattern.substring(0, index));
 				pattern = stringPattern.substring(index + 1);
-				if (pattern.length() == 0)
-				 {
+				if (pattern.length() == 0) {
 					pattern = "**"; //$NON-NLS-1$
 				}
 			}

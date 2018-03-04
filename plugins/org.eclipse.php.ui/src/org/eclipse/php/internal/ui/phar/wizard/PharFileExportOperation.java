@@ -95,8 +95,8 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 	}
 
 	/**
-	 * Adds a new info to the list with the passed information. Normally the
-	 * export operation continues after a warning.
+	 * Adds a new info to the list with the passed information. Normally the export
+	 * operation continues after a warning.
 	 * 
 	 * @param message
 	 *            the message
@@ -121,8 +121,8 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 	}
 
 	/**
-	 * Adds a new error to the list with the passed information. Normally an
-	 * error terminates the export operation.
+	 * Adds a new error to the list with the passed information. Normally an error
+	 * terminates the export operation.
 	 * 
 	 * @param message
 	 *            the message
@@ -383,9 +383,9 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 		if (realEx instanceof IOException && realEx.getMessage() != null
 				&& realEx.getMessage().startsWith("duplicate entry:")) {
 			// message
-																		// string
-																		// from
-																		// java.util.zip.ZipOutputStream.putNextEntry(ZipEntry)
+			// string
+			// from
+			// java.util.zip.ZipOutputStream.putNextEntry(ZipEntry)
 			addWarning(ex.getMessage(), realEx);
 		} else {
 			addToStatus(ex);
@@ -458,8 +458,7 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 
 	private void singleRun(IProgressMonitor progressMonitor) throws InvocationTargetException, InterruptedException {
 		try {
-			if (!preconditionsOK())
-			 {
+			if (!preconditionsOK()) {
 				throw new InvocationTargetException(null, ""); //$NON-NLS-1$
 			}
 			int totalWork = countSelectedElements();

@@ -30,8 +30,8 @@ public class ProfilerCallTraceLayer {
 	public ProfilerCallTraceLayer() {
 	}
 
-	public ProfilerCallTraceLayer(int type, int lineNumber, int calledID,
-			int timestampSeconds, int timestampMicroseconds) {
+	public ProfilerCallTraceLayer(int type, int lineNumber, int calledID, int timestampSeconds,
+			int timestampMicroseconds) {
 		setType(type);
 		setLine(lineNumber);
 		setCalledID(calledID);
@@ -39,9 +39,8 @@ public class ProfilerCallTraceLayer {
 		setTimestampMicroseconds(timestampMicroseconds);
 	}
 
-	public ProfilerCallTraceLayer(int type, int lineNumber, int calledID,
-			int timestampSeconds, int timestampMicroseconds,
-			int durationSeconds, int durationMicroSeconds) {
+	public ProfilerCallTraceLayer(int type, int lineNumber, int calledID, int timestampSeconds,
+			int timestampMicroseconds, int durationSeconds, int durationMicroSeconds) {
 		setType(type);
 		setLine(lineNumber);
 		setCalledID(calledID);
@@ -120,8 +119,7 @@ public class ProfilerCallTraceLayer {
 	 * @return the double value of the calculation in seconds
 	 */
 	public double getDuration() {
-		double duration = ((double) fDurationSecond * CONVERTION + fDurationMicrosecond)
-				/ CONVERTION;
+		double duration = ((double) fDurationSecond * CONVERTION + fDurationMicrosecond) / CONVERTION;
 		return duration;
 	}
 
@@ -135,8 +133,7 @@ public class ProfilerCallTraceLayer {
 	}
 
 	/**
-	 * Sets the duration in according to the timestamp(enter time) and the exit
-	 * time
+	 * Sets the duration in according to the timestamp(enter time) and the exit time
 	 * 
 	 * @param exitTimeSeconds
 	 *            - the exit time from the function in seconds

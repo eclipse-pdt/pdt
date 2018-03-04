@@ -343,8 +343,7 @@ public class PHPTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 	protected String extractPrefix(ITextViewer viewer, int offset) {
 		int i = offset;
 		IDocument document = viewer.getDocument();
-		if (i > document.getLength())
-		 {
+		if (i > document.getLength()) {
 			return ""; //$NON-NLS-1$
 		}
 
@@ -437,8 +436,7 @@ public class PHPTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 
 	/*
 	 * @see
-	 * org.eclipse.dltk.ui.templates.ScriptTemplateCompletionProcessor#getIgnore
-	 * ()
+	 * org.eclipse.dltk.ui.templates.ScriptTemplateCompletionProcessor#getIgnore ()
 	 */
 	@Override
 	protected char[] getIgnore() {
@@ -455,9 +453,9 @@ public class PHPTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 	}
 
 	/**
-	 * Returns <code>true</code> if one line is completely selected or if
-	 * multiple lines are selected. Being completely selected means that all
-	 * characters except the new line characters are selected.
+	 * Returns <code>true</code> if one line is completely selected or if multiple
+	 * lines are selected. Being completely selected means that all characters
+	 * except the new line characters are selected.
 	 * 
 	 * @param viewer
 	 *            the text viewer

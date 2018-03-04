@@ -248,8 +248,7 @@ public class PHPTokenContainer implements Cloneable {
 	}
 
 	/**
-	 * One must call getModelForWrite() in order to construct the list of php
-	 * tokens
+	 * One must call getModelForWrite() in order to construct the list of php tokens
 	 */
 	public synchronized void getModelForCreation() {
 		tokensIterator = null;
@@ -264,8 +263,8 @@ public class PHPTokenContainer implements Cloneable {
 	}
 
 	/**
-	 * Returns an read-only iterator to the php tokens, calling next() returns
-	 * the first token in the wanted offset
+	 * Returns an read-only iterator to the php tokens, calling next() returns the
+	 * first token in the wanted offset
 	 * 
 	 * @param offset
 	 * @param length

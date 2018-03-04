@@ -27,8 +27,7 @@ public class OpenTypeInHierarchyAction extends org.eclipse.dltk.ui.actions.OpenT
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.dltk.ui.actions.OpenTypeInHierarchyAction#getLanguageToolkit
+	 * @see org.eclipse.dltk.ui.actions.OpenTypeInHierarchyAction#getLanguageToolkit
 	 * ()
 	 */
 	@Override

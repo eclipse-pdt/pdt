@@ -109,9 +109,9 @@ public class DeleteWizard extends RefactoringWizard {
 		}
 
 		/**
-		 * Adds the "delete subpackages" checkbox to the composite. Note that
-		 * this code assumes that the control of the parent is a Composite with
-		 * GridLayout and a horizontal span of 2.
+		 * Adds the "delete subpackages" checkbox to the composite. Note that this code
+		 * assumes that the control of the parent is a Composite with GridLayout and a
+		 * horizontal span of 2.
 		 * 
 		 * @see MessageWizardPage#createControl(Composite)
 		 */

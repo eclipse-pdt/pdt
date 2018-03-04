@@ -45,8 +45,7 @@ public class ProfileUITools {
 	 * @return IViewPart view, or <code>null</code> if didn's succeed
 	 */
 	public static IViewPart findExistingView(String id) {
-		IWorkbenchWindow window = PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow();
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window != null) {
 			IWorkbenchPage page = window.getActivePage();
 			if (page != null) {

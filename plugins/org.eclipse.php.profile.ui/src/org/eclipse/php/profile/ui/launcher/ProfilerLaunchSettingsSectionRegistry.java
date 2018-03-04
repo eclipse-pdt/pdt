@@ -72,8 +72,8 @@ public class ProfilerLaunchSettingsSectionRegistry {
 	}
 
 	/**
-	 * Gets settings section by combination of corresponding profiler ID and
-	 * launch type ID.
+	 * Gets settings section by combination of corresponding profiler ID and launch
+	 * type ID.
 	 * 
 	 * @param profilerId
 	 * @param launchTypeId

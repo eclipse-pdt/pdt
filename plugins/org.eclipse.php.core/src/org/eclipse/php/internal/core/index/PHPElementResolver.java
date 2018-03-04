@@ -138,8 +138,8 @@ public class PHPElementResolver implements IElementResolver {
 	 * 
 	 * @param doc
 	 *            String representation of encoded PHPDoc info
-	 * @return map of encoded information, or <code>null</code> in case PHPDoc
-	 *         info is <code>null</code>
+	 * @return map of encoded information, or <code>null</code> in case PHPDoc info
+	 *         is <code>null</code>
 	 */
 	protected static Map<String, String> decodeDocInfo(String doc) {
 		if (doc == null) {

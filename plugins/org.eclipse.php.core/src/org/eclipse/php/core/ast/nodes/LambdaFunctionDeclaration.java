@@ -36,8 +36,7 @@ public class LambdaFunctionDeclaration extends Expression {
 	private int staticStart;
 	private final ASTNode.NodeList<FormalParameter> formalParameters = new ASTNode.NodeList<>(
 			FORMAL_PARAMETERS_PROPERTY);
-	private final ASTNode.NodeList<Expression> lexicalVariables = new ASTNode.NodeList<>(
-			LEXICAL_VARIABLES_PROPERTY);
+	private final ASTNode.NodeList<Expression> lexicalVariables = new ASTNode.NodeList<>(LEXICAL_VARIABLES_PROPERTY);
 	private Block body;
 	private ReturnType returnType;
 
@@ -189,9 +188,9 @@ public class LambdaFunctionDeclaration extends Expression {
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<LambdaFunctionDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" isReference='").append(isReference); //$NON-NLS-1$ 
+		buffer.append(" isReference='").append(isReference); //$NON-NLS-1$
 		if (isStatic) {
-			buffer.append(" isStatic='").append(isStatic); //$NON-NLS-1$ 
+			buffer.append(" isStatic='").append(isStatic); //$NON-NLS-1$
 		}
 		buffer.append("'>\n"); //$NON-NLS-1$
 		buffer.append(TAB).append(tab).append("<FormalParameters>\n"); //$NON-NLS-1$

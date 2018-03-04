@@ -25,8 +25,7 @@ public abstract class AbstractTableSorter extends ViewerSorter {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers
+	 * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers
 	 * .Viewer, java.lang.Object, java.lang.Object)
 	 */
 	@Override

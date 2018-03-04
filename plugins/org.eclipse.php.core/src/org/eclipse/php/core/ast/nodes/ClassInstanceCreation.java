@@ -284,8 +284,7 @@ public class ClassInstanceCreation extends VariableBase {
 	 * Resolves and returns the binding for the constructor invoked by this
 	 * expression.
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be
-	 *         resolved
+	 * @return the binding, or <code>null</code> if the binding cannot be resolved
 	 */
 	public IMethodBinding resolveConstructorBinding() {
 		return this.ast.getBindingResolver().resolveConstructor(this);

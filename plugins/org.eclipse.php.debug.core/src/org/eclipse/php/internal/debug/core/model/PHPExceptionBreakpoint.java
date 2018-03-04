@@ -39,8 +39,8 @@ public class PHPExceptionBreakpoint extends Breakpoint implements IPHPExceptionB
 	private Map<IDebugTarget, Integer> ids = new WeakHashMap<>();
 
 	/**
-	 * Creates new "general" PHP exception breakpoint which internal data will
-	 * be set with the use of related persistent marker, see
+	 * Creates new "general" PHP exception breakpoint which internal data will be
+	 * set with the use of related persistent marker, see
 	 * {@link IBreakpoint#setMarker(IMarker)}.
 	 */
 	public PHPExceptionBreakpoint() {
@@ -48,9 +48,9 @@ public class PHPExceptionBreakpoint extends Breakpoint implements IPHPExceptionB
 	}
 
 	/**
-	 * Creates new "general" PHP exception breakpoint. This constructor should
-	 * be used when new type of exception breakpoint should be added and
-	 * registered by breakpoint manager.
+	 * Creates new "general" PHP exception breakpoint. This constructor should be
+	 * used when new type of exception breakpoint should be added and registered by
+	 * breakpoint manager.
 	 * 
 	 * @param name
 	 *            exception or error name
@@ -111,8 +111,7 @@ public class PHPExceptionBreakpoint extends Breakpoint implements IPHPExceptionB
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.model.IPHPExceptionBreakpoint#getId(
+	 * @see org.eclipse.php.internal.debug.core.model.IPHPExceptionBreakpoint#getId(
 	 * org.eclipse.debug.core.model.IDebugTarget)
 	 */
 	@Override
@@ -125,8 +124,7 @@ public class PHPExceptionBreakpoint extends Breakpoint implements IPHPExceptionB
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.php.internal.debug.core.model.IPHPExceptionBreakpoint#getType
-	 * ()
+	 * org.eclipse.php.internal.debug.core.model.IPHPExceptionBreakpoint#getType ()
 	 */
 	@Override
 	public Type getType() {
@@ -161,8 +159,7 @@ public class PHPExceptionBreakpoint extends Breakpoint implements IPHPExceptionB
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.model.IPHPExceptionBreakpoint#setId(
+	 * @see org.eclipse.php.internal.debug.core.model.IPHPExceptionBreakpoint#setId(
 	 * org.eclipse.debug.core.model.IDebugTarget, int)
 	 */
 	@Override

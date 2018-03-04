@@ -59,8 +59,7 @@ public class DebugOutputView extends AbstractDebugOutputView implements ISelecti
 		 * (non-Javadoc)
 		 * 
 		 * @see org.eclipse.php.internal.debug.ui.views.AbstractDebugOutputView.
-		 * IUpdater
-		 * #update(org.eclipse.php.internal.debug.core.model.IPHPDebugTarget)
+		 * IUpdater #update(org.eclipse.php.internal.debug.core.model.IPHPDebugTarget)
 		 */
 		@Override
 		public void update(IPHPDebugTarget target) {

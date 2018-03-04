@@ -33,8 +33,8 @@ public interface ICompletionContextResolver {
 	 *            Completion requestor ({@link CompletionRequestor})
 	 * @param companion
 	 *            Shared instance of completion companion between all contexts
-	 * @return completion contexts or empty list in case no completion context
-	 *         could be found
+	 * @return completion contexts or empty list in case no completion context could
+	 *         be found
 	 */
 	public ICompletionContext[] resolve(ISourceModule sourceModule, int offset, CompletionRequestor requestor,
 			CompletionCompanion companion);

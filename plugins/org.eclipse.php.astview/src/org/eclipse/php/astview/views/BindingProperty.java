@@ -25,55 +25,55 @@ public class BindingProperty extends ASTAttribute {
 	private final boolean fIsRelevant;
 
 	public BindingProperty(Binding parent, String name, String value, boolean isRelevant) {
-		fParent= parent;
+		fParent = parent;
 		if (value == null) {
-			fName= name + ": null"; //$NON-NLS-1$
+			fName = name + ": null"; //$NON-NLS-1$
 		} else if (value.length() > 0) {
-			fName= name + ": '" + value + "'"; //$NON-NLS-1$ //$NON-NLS-2$
+			fName = name + ": '" + value + "'"; //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
-			fName= name + ": (empty string)"; //$NON-NLS-1$
+			fName = name + ": (empty string)"; //$NON-NLS-1$
 		}
-		fValues= null;
-		fIsRelevant= isRelevant;
+		fValues = null;
+		fIsRelevant = isRelevant;
 	}
-	
+
 	public BindingProperty(Binding parent, String name, boolean value, boolean isRelevant) {
-		fParent= parent;
-		fName= name + ": " + String.valueOf(value); //$NON-NLS-1$
-		fValues= null;
-		fIsRelevant= isRelevant;
+		fParent = parent;
+		fName = name + ": " + String.valueOf(value); //$NON-NLS-1$
+		fValues = null;
+		fIsRelevant = isRelevant;
 	}
-	
+
 	public BindingProperty(Binding parent, String name, int value, boolean isRelevant) {
-		fParent= parent;
-		fName= name + ": " + String.valueOf(value); //$NON-NLS-1$
-		fValues= null;
-		fIsRelevant= isRelevant;
+		fParent = parent;
+		fName = name + ": " + String.valueOf(value); //$NON-NLS-1$
+		fValues = null;
+		fIsRelevant = isRelevant;
 	}
-	
+
 	public BindingProperty(Binding parent, String name, IBinding[] bindings, boolean isRelevant) {
-		fParent= parent;
+		fParent = parent;
 		if (bindings == null || bindings.length == 0) {
-			fName= name + " (0)"; //$NON-NLS-1$
-			fValues= null;
+			fName = name + " (0)"; //$NON-NLS-1$
+			fValues = null;
 		} else {
-			fValues= createBindings(bindings, isRelevant);
-			fName= name + " (" + String.valueOf(fValues.length) + ')'; //$NON-NLS-1$
+			fValues = createBindings(bindings, isRelevant);
+			fName = name + " (" + String.valueOf(fValues.length) + ')'; //$NON-NLS-1$
 		}
-		fIsRelevant= isRelevant;
+		fIsRelevant = isRelevant;
 	}
-	
+
 	public BindingProperty(Binding parent, StringBuffer label, boolean isRelevant) {
-		fParent= parent;
-		fName= label.toString();
-		fValues= null;
-		fIsRelevant= isRelevant;
+		fParent = parent;
+		fName = label.toString();
+		fValues = null;
+		fIsRelevant = isRelevant;
 	}
-	
+
 	private Binding[] createBindings(IBinding[] bindings, boolean isRelevant) {
-		Binding[] res= new Binding[bindings.length];
-		for (int i= 0; i < res.length; i++) {
-			res[i]= new Binding(this, String.valueOf(i), bindings[i], isRelevant);
+		Binding[] res = new Binding[bindings.length];
+		for (int i = 0; i < res.length; i++) {
+			res[i] = new Binding(this, String.valueOf(i), bindings[i], isRelevant);
 		}
 		return res;
 	}
@@ -82,7 +82,7 @@ public class BindingProperty extends ASTAttribute {
 	public Object getParent() {
 		return fParent;
 	}
-	
+
 	@Override
 	public Object[] getChildren() {
 		if (fValues != null) {
@@ -90,7 +90,7 @@ public class BindingProperty extends ASTAttribute {
 		}
 		return EMPTY;
 	}
-	
+
 	@Override
 	public String getLabel() {
 		return fName;
@@ -100,12 +100,12 @@ public class BindingProperty extends ASTAttribute {
 	public Image getImage() {
 		return null;
 	}
-	
+
 	@Override
 	public String toString() {
 		return getLabel();
 	}
-	
+
 	public boolean isRelevant() {
 		return fIsRelevant;
 	}
@@ -118,30 +118,29 @@ public class BindingProperty extends ASTAttribute {
 		if (obj == null || !obj.getClass().equals(getClass())) {
 			return false;
 		}
-		
-		BindingProperty other= (BindingProperty) obj;
+
+		BindingProperty other = (BindingProperty) obj;
 		if (fParent == null) {
 			if (other.fParent != null) {
 				return false;
 			}
-		} else if (! fParent.equals(other.fParent)) {
+		} else if (!fParent.equals(other.fParent)) {
 			return false;
 		}
-		
+
 		if (fName == null) {
 			if (other.fName != null) {
 				return false;
 			}
-		} else if (! fName.equals(other.fName)) {
+		} else if (!fName.equals(other.fName)) {
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public int hashCode() {
-		return (fParent != null ? fParent.hashCode() : 0)
-				+ (fName != null ? fName.hashCode() : 0);
+		return (fParent != null ? fParent.hashCode() : 0) + (fName != null ? fName.hashCode() : 0);
 	}
 }

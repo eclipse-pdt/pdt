@@ -168,13 +168,11 @@ public class XMLUtil {
 		if (doctype.getPublicId() != null) {
 			data += " PUBLIC \"" + doctype.getPublicId() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
 			String systemId = doctype.getSystemId();
-			if (systemId == null)
-			 {
+			if (systemId == null) {
 				systemId = ""; //$NON-NLS-1$
 			}
 			data += " \"" + systemId + "\""; //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		else {
+		} else {
 			data += " SYSTEM \"" + doctype.getSystemId() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 

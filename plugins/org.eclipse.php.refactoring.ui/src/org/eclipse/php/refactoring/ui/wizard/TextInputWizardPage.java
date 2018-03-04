@@ -59,12 +59,10 @@ public abstract class TextInputWizardPage extends UserInputWizardPage {
 	}
 
 	/**
-	 * Returns whether the initial input is valid. Typically it is not, because
-	 * the user is required to provide some information e.g. a new type name
-	 * etc.
+	 * Returns whether the initial input is valid. Typically it is not, because the
+	 * user is required to provide some information e.g. a new type name etc.
 	 * 
-	 * @return <code>true</code> iff the input provided at initialization is
-	 *         valid
+	 * @return <code>true</code> iff the input provided at initialization is valid
 	 */
 	protected boolean isInitialInputValid() {
 		return false;
@@ -72,8 +70,8 @@ public abstract class TextInputWizardPage extends UserInputWizardPage {
 
 	/**
 	 * Returns whether an empty string is a valid input. Typically it is not,
-	 * because the user is required to provide some information e.g. a new type
-	 * name etc.
+	 * because the user is required to provide some information e.g. a new type name
+	 * etc.
 	 * 
 	 * @return <code>true</code> iff an empty string is valid
 	 */
@@ -84,8 +82,8 @@ public abstract class TextInputWizardPage extends UserInputWizardPage {
 	/**
 	 * Returns the content of the text input field.
 	 * 
-	 * @return the content of the text input field. Returns <code>null</code> if
-	 *         not text input field has been created
+	 * @return the content of the text input field. Returns <code>null</code> if not
+	 *         text input field has been created
 	 */
 	protected String getText() {
 		if (fTextField == null) {
@@ -95,8 +93,8 @@ public abstract class TextInputWizardPage extends UserInputWizardPage {
 	}
 
 	/**
-	 * Sets the new text for the text field. Does nothing if the text field has
-	 * not been created.
+	 * Sets the new text for the text field. Does nothing if the text field has not
+	 * been created.
 	 * 
 	 * @param text
 	 *            the new value
@@ -128,8 +126,8 @@ public abstract class TextInputWizardPage extends UserInputWizardPage {
 
 	/**
 	 * Performs input validation. Returns a <code>RefactoringStatus</code> which
-	 * describes the result of input validation. <code>Null<code> is interpreted
-	 * as no error.
+	 * describes the result of input validation. <code>Null<code> is interpreted as
+	 * no error.
 	 */
 	protected RefactoringStatus validateTextField(String text) {
 		return null;
@@ -152,8 +150,8 @@ public abstract class TextInputWizardPage extends UserInputWizardPage {
 	}
 
 	/**
-	 * Checks the page's state and issues a corresponding error message. The
-	 * page validation is computed by calling <code>validatePage</code>.
+	 * Checks the page's state and issues a corresponding error message. The page
+	 * validation is computed by calling <code>validatePage</code>.
 	 */
 	protected void textModified(String text) {
 		if (!isEmptyInputValid() && "".equals(text)) { //$NON-NLS-1$
@@ -177,9 +175,9 @@ public abstract class TextInputWizardPage extends UserInputWizardPage {
 	}
 
 	/**
-	 * Subclasses can override if they want to restore the message differently.
-	 * This implementation calls <code>setMessage(null)</code>, which clears the
-	 * message thus exposing the description.
+	 * Subclasses can override if they want to restore the message differently. This
+	 * implementation calls <code>setMessage(null)</code>, which clears the message
+	 * thus exposing the description.
 	 */
 	protected void restoreMessage() {
 		setMessage(null);

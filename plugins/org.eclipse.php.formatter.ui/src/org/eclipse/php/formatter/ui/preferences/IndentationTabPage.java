@@ -158,8 +158,7 @@ public class IndentationTabPage extends ModifyDialogTabPage {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jdt.internal.ui.preferences.formatter.ModifyDialogTabPage
+	 * @see org.eclipse.jdt.internal.ui.preferences.formatter.ModifyDialogTabPage
 	 * #doCreateJavaPreview(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
@@ -171,8 +170,7 @@ public class IndentationTabPage extends ModifyDialogTabPage {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jdt.internal.ui.preferences.formatter.ModifyDialogTabPage
+	 * @see org.eclipse.jdt.internal.ui.preferences.formatter.ModifyDialogTabPage
 	 * #doUpdatePreview()
 	 */
 	@Override

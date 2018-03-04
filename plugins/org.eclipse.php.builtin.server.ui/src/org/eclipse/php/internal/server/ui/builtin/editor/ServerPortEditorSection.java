@@ -160,8 +160,7 @@ public class ServerPortEditorSection extends ServerEditorSection {
 			@Override
 			public Object getValue(Object element, String property) {
 				ServerPort sp = (ServerPort) element;
-				if (sp.getPort() < 0)
-				 {
+				if (sp.getPort() < 0) {
 					return "-"; //$NON-NLS-1$
 				}
 				return Integer.toString(sp.getPort());

@@ -22,8 +22,7 @@ public class InputFlowAnalyzer extends FlowAnalyzer {
 		private Selection fSelection;
 		private ASTNode fLoopNode;
 
-		public LoopReentranceVisitor(FlowContext context, Selection selection,
-				ASTNode loopNode) {
+		public LoopReentranceVisitor(FlowContext context, Selection selection, ASTNode loopNode) {
 			super(context);
 			fSelection = selection;
 			fLoopNode = loopNode;
@@ -135,8 +134,7 @@ public class InputFlowAnalyzer extends FlowAnalyzer {
 	private boolean fDoLoopReentrance;
 	private LoopReentranceVisitor fLoopReentranceVisitor;
 
-	public InputFlowAnalyzer(FlowContext context, Selection selection,
-			boolean doLoopReentrance) {
+	public InputFlowAnalyzer(FlowContext context, Selection selection, boolean doLoopReentrance) {
 		super(context);
 		fSelection = selection;
 		Assert.isNotNull(fSelection);
@@ -188,8 +186,7 @@ public class InputFlowAnalyzer extends FlowAnalyzer {
 
 	private void createLoopReentranceVisitor(ASTNode node) {
 		if (fLoopReentranceVisitor == null && fDoLoopReentrance) {
-			fLoopReentranceVisitor = new LoopReentranceVisitor(fFlowContext,
-					fSelection, node);
+			fLoopReentranceVisitor = new LoopReentranceVisitor(fFlowContext, fSelection, node);
 		}
 	}
 
@@ -204,8 +201,7 @@ public class InputFlowAnalyzer extends FlowAnalyzer {
 				|| (elsePart != null && fSelection.coveredBy(elsePart))) {
 			GenericSequentialFlowInfo info = createSequential();
 			setFlowInfo(node, info);
-			endVisitConditional(info, node.getCondition(), new ASTNode[] {
-					thenPart, elsePart });
+			endVisitConditional(info, node.getCondition(), new ASTNode[] { thenPart, elsePart });
 		} else {
 			super.endVisit(node);
 		}
@@ -228,8 +224,7 @@ public class InputFlowAnalyzer extends FlowAnalyzer {
 				|| (elsePart != null && fSelection.coveredBy(elsePart))) {
 			GenericSequentialFlowInfo info = createSequential();
 			setFlowInfo(node, info);
-			endVisitConditional(info, node.getCondition(), new ASTNode[] {
-					thenPart, elsePart });
+			endVisitConditional(info, node.getCondition(), new ASTNode[] { thenPart, elsePart });
 		} else {
 			super.endVisit(node);
 		}
@@ -273,8 +268,7 @@ public class InputFlowAnalyzer extends FlowAnalyzer {
 		handleLoopReentrance(node);
 	}
 
-	private void endVisitConditional(GenericSequentialFlowInfo info,
-			ASTNode condition, ASTNode[] branches) {
+	private void endVisitConditional(GenericSequentialFlowInfo info, ASTNode condition, ASTNode[] branches) {
 		info.merge(getFlowInfo(condition), fFlowContext);
 		for (int i = 0; i < branches.length; i++) {
 			ASTNode branch = branches[i];

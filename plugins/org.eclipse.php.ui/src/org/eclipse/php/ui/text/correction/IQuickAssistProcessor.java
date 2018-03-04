@@ -40,11 +40,11 @@ public interface IQuickAssistProcessor {
 	 * @param context
 	 *            Defines current compilation unit, position and a shared AST
 	 * @param locations
-	 *            The locations of problems at the invocation offset. The
-	 *            processor can decide to only add assists when there are no
-	 *            errors at the selection offset.
-	 * @return Returns the assists applicable at the location or
-	 *         <code>null</code> if no proposals can be offered.
+	 *            The locations of problems at the invocation offset. The processor
+	 *            can decide to only add assists when there are no errors at the
+	 *            selection offset.
+	 * @return Returns the assists applicable at the location or <code>null</code>
+	 *         if no proposals can be offered.
 	 * @throws CoreException
 	 *             CoreException can be thrown if the operation fails
 	 */

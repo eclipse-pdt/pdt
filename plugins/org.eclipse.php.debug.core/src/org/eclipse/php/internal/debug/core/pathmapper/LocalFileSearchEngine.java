@@ -113,7 +113,8 @@ public class LocalFileSearchEngine {
 			return null;
 		}
 		final PathMapper pathMapper = serverUniqueId != null
-				? PathMapperRegistry.getByServer(ServersManager.findServer(serverUniqueId)) : new PathMapper();
+				? PathMapperRegistry.getByServer(ServersManager.findServer(serverUniqueId))
+				: new PathMapper();
 		final VirtualPath abstractPath = new VirtualPath(remoteFilePath);
 		final SyncObject<LocalFileSearchResult> searchResult = new SyncObject<>();
 		Job findJob = new Job(Messages.LocalFileSearchEngine_Searching_for_local_file) {

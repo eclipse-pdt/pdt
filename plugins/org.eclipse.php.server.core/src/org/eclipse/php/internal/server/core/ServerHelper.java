@@ -48,8 +48,8 @@ public class ServerHelper {
 	}
 
 	/**
-	 * Add a property change listener to this server. The same listener will not
-	 * be added twice.
+	 * Add a property change listener to this server. The same listener will not be
+	 * added twice.
 	 * 
 	 * @param listener
 	 *            java.beans.PropertyChangeListener; cannot be <code>null</code>

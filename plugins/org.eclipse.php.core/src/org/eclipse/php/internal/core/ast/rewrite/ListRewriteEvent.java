@@ -32,8 +32,8 @@ public class ListRewriteEvent extends RewriteEvent {
 	private List<RewriteEvent> listEntries;
 
 	/**
-	 * Creates a ListRewriteEvent from the original ASTNodes. The resulting
-	 * event represents the unmodified list.
+	 * Creates a ListRewriteEvent from the original ASTNodes. The resulting event
+	 * represents the unmodified list.
 	 * 
 	 * @param originalNodes
 	 *            The original nodes (type ASTNode)

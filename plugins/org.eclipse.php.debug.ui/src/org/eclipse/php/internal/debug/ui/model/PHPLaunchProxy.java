@@ -57,8 +57,7 @@ public class PHPLaunchProxy extends LaunchProxy {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.internal.ui.viewers.update.LaunchProxy#launchesRemoved
+	 * @see org.eclipse.debug.internal.ui.viewers.update.LaunchProxy#launchesRemoved
 	 * (org.eclipse.debug.core.ILaunch[])
 	 */
 	@Override

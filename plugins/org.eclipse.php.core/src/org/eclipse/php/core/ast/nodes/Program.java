@@ -88,17 +88,17 @@ public class Program extends ASTNode {
 
 	/**
 	 * The php type root (an <code>org.eclipse.dltk.ISourceModule</code>) this
-	 * source module was created from, or <code>null</code> if it was not
-	 * created from a php type root.
+	 * source module was created from, or <code>null</code> if it was not created
+	 * from a php type root.
 	 */
 	private ISourceModule sourceModule = null;
 
 	/**
 	 * Line end table. If <code>lineEndTable[i] == p</code> then the line number
-	 * <code>i+1</code> ends at character position <code>p</code>. Except for
-	 * the last line, the positions are that of the last character of the line
-	 * delimiter. For example, the source string <code>A\nB\nC</code> has line
-	 * end table {1, 3} (if \n is one character).
+	 * <code>i+1</code> ends at character position <code>p</code>. Except for the
+	 * last line, the positions are that of the last character of the line
+	 * delimiter. For example, the source string <code>A\nB\nC</code> has line end
+	 * table {1, 3} (if \n is one character).
 	 */
 	private int[] lineEndTable = {};
 
@@ -116,40 +116,38 @@ public class Program extends ASTNode {
 	}
 
 	/**
-	 * Returns a list of the comments encountered while parsing this source
-	 * program.
+	 * Returns a list of the comments encountered while parsing this source program.
 	 * <p>
-	 * Since the PHP language allows comments to appear most anywhere in the
-	 * source text, it is problematic to locate comments in relation to the
-	 * structure of an AST. The one exception is doc comments which, by
-	 * convention, immediately precede type, field, and method declarations;
-	 * these comments are located in the AST by {@link BodyDeclaration#getPhpdoc
-	 * BodyDeclaration.getPhpdoc}. Other comments do not show up in the AST. The
-	 * table of comments is provided for clients that need to find the source
-	 * ranges of all comments in the original source string. It includes entries
-	 * for comments of all kinds (line, block, and doc), arranged in order of
-	 * increasing source position.
+	 * Since the PHP language allows comments to appear most anywhere in the source
+	 * text, it is problematic to locate comments in relation to the structure of an
+	 * AST. The one exception is doc comments which, by convention, immediately
+	 * precede type, field, and method declarations; these comments are located in
+	 * the AST by {@link BodyDeclaration#getPhpdoc BodyDeclaration.getPhpdoc}. Other
+	 * comments do not show up in the AST. The table of comments is provided for
+	 * clients that need to find the source ranges of all comments in the original
+	 * source string. It includes entries for comments of all kinds (line, block,
+	 * and doc), arranged in order of increasing source position.
 	 * </p>
 	 * <p>
-	 * Note on comment parenting: The {@link ASTNode#getParent() getParent()} of
-	 * a doc comment associated with a body declaration is the body declaration
-	 * node; for these comment nodes {@link ASTNode#getRoot() getRoot()} will
-	 * return the program (assuming an unmodified AST) reflecting the fact that
-	 * these nodes are property located in the AST for the compilation unit.
-	 * However, for other comment nodes, {@link ASTNode#getParent() getParent()}
-	 * will return <code>null</code>, and {@link ASTNode#getRoot() getRoot()}
-	 * will return the comment node itself, indicating that these comment nodes
-	 * are not directly connected to the AST for the compilation unit. The
-	 * {@link Comment#getAlternateRoot Comment.getAlternateRoot} method provides
-	 * a way to navigate from a comment to its source program
+	 * Note on comment parenting: The {@link ASTNode#getParent() getParent()} of a
+	 * doc comment associated with a body declaration is the body declaration node;
+	 * for these comment nodes {@link ASTNode#getRoot() getRoot()} will return the
+	 * program (assuming an unmodified AST) reflecting the fact that these nodes are
+	 * property located in the AST for the compilation unit. However, for other
+	 * comment nodes, {@link ASTNode#getParent() getParent()} will return
+	 * <code>null</code>, and {@link ASTNode#getRoot() getRoot()} will return the
+	 * comment node itself, indicating that these comment nodes are not directly
+	 * connected to the AST for the compilation unit. The
+	 * {@link Comment#getAlternateRoot Comment.getAlternateRoot} method provides a
+	 * way to navigate from a comment to its source program
 	 * </p>
 	 * <p>
 	 * Clients cannot modify the resulting list.
 	 * </p>
 	 * 
-	 * @return an unmodifiable list of comments in increasing order of source
-	 *         start position, or <code>null</code> if comment information for
-	 *         this compilation unit is not available
+	 * @return an unmodifiable list of comments in increasing order of source start
+	 *         position, or <code>null</code> if comment information for this
+	 *         compilation unit is not available
 	 * @see ASTParser
 	 * @since 3.0
 	 */
@@ -285,11 +283,10 @@ public class Program extends ASTNode {
 
 	/**
 	 * Sets the line end table for this compilation unit. If
-	 * <code>lineEndTable[i] == p</code> then line number <code>i+1</code> ends
-	 * at character position <code>p</code>. Except for the last line, the
-	 * positions are that of (the last character of) the line delimiter. For
-	 * example, the source string <code>A\nB\nC</code> has line end table {1, 3,
-	 * 4}.
+	 * <code>lineEndTable[i] == p</code> then line number <code>i+1</code> ends at
+	 * character position <code>p</code>. Except for the last line, the positions
+	 * are that of (the last character of) the line delimiter. For example, the
+	 * source string <code>A\nB\nC</code> has line end table {1, 3, 4}.
 	 * 
 	 * @param lineEndTable
 	 *            the line end table
@@ -308,17 +305,16 @@ public class Program extends ASTNode {
 
 	/**
 	 * Returns the column number corresponding to the given source character
-	 * position in the original source string. Column number are zero-based.
-	 * Return <code>-1</code> if it is beyond the valid range or <code>-2</code>
-	 * if the column number information is unknown.
+	 * position in the original source string. Column number are zero-based. Return
+	 * <code>-1</code> if it is beyond the valid range or <code>-2</code> if the
+	 * column number information is unknown.
 	 * 
 	 * @param position
-	 *            a 0-based character position, possibly negative or out of
-	 *            range
+	 *            a 0-based character position, possibly negative or out of range
 	 * @return the 0-based column number, or <code>-1</code> if the character
-	 *         position does not correspond to a source line in the original
-	 *         source file or <code>-2</code> if column number information is
-	 *         unknown for this compilation unit
+	 *         position does not correspond to a source line in the original source
+	 *         file or <code>-2</code> if column number information is unknown for
+	 *         this compilation unit
 	 * @see ASTParser
 	 * @since 3.2
 	 */
@@ -352,24 +348,22 @@ public class Program extends ASTNode {
 	}
 
 	/**
-	 * Returns the line number corresponding to the given source character
-	 * position in the original source string. The initial line of the
-	 * compilation unit is numbered 1, and each line extends through the last
-	 * character of the end-of-line delimiter. The very last line extends
-	 * through the end of the source string and has no line delimiter. For
-	 * example, the source string <code>class A\n{\n}</code> has 3 lines
-	 * corresponding to inclusive character ranges [0,7], [8,9], and [10,10].
-	 * Returns -1 for a character position that does not correspond to any
-	 * source line, or -2 if no line number information is available for this
-	 * compilation unit.
+	 * Returns the line number corresponding to the given source character position
+	 * in the original source string. The initial line of the compilation unit is
+	 * numbered 1, and each line extends through the last character of the
+	 * end-of-line delimiter. The very last line extends through the end of the
+	 * source string and has no line delimiter. For example, the source string
+	 * <code>class A\n{\n}</code> has 3 lines corresponding to inclusive character
+	 * ranges [0,7], [8,9], and [10,10]. Returns -1 for a character position that
+	 * does not correspond to any source line, or -2 if no line number information
+	 * is available for this compilation unit.
 	 * 
 	 * @param position
-	 *            a 0-based character position, possibly negative or out of
-	 *            range
-	 * @return the 1-based line number, or <code>-1</code> if the character
-	 *         position does not correspond to a source line in the original
-	 *         source file or <code>-2</code> if line number information is not
-	 *         known for this compilation unit
+	 *            a 0-based character position, possibly negative or out of range
+	 * @return the 1-based line number, or <code>-1</code> if the character position
+	 *         does not correspond to a source line in the original source file or
+	 *         <code>-2</code> if line number information is not known for this
+	 *         compilation unit
 	 * @see ASTParser
 	 * @since 3.2
 	 */
@@ -435,22 +429,21 @@ public class Program extends ASTNode {
 	}
 
 	/**
-	 * Given a line number and column number, returns the corresponding position
-	 * in the original source string. Returns -2 if no line number information
-	 * is available for this compilation unit. Returns the total size of the
-	 * source string if <code>line</code> is greater than the actual number
-	 * lines in the unit. Returns -1 if <code>column</code> is less than 0, or
-	 * the position of the last character of the line if <code>column</code> is
-	 * beyond the legal range, or the given line number is less than one.
+	 * Given a line number and column number, returns the corresponding position in
+	 * the original source string. Returns -2 if no line number information is
+	 * available for this compilation unit. Returns the total size of the source
+	 * string if <code>line</code> is greater than the actual number lines in the
+	 * unit. Returns -1 if <code>column</code> is less than 0, or the position of
+	 * the last character of the line if <code>column</code> is beyond the legal
+	 * range, or the given line number is less than one.
 	 * 
 	 * @param line
 	 *            the one-based line number
 	 * @param column
 	 *            the zero-based column number
-	 * @return the 0-based character position in the source string;
-	 *         <code>-2</code> if line/column number information is not known
-	 *         for this compilation unit or <code>-1</code> the inputs are not
-	 *         valid
+	 * @return the 0-based character position in the source string; <code>-2</code>
+	 *         if line/column number information is not known for this compilation
+	 *         unit or <code>-1</code> the inputs are not valid
 	 * @since 3.2
 	 */
 	public int getPosition(int line, int column) {
@@ -490,8 +483,8 @@ public class Program extends ASTNode {
 	/**
 	 * Returns the extended source length of the given node. Unlike
 	 * {@link ASTNode#getStartPosition()} and {@link ASTNode#getLength()}, the
-	 * extended source range may include comments and whitespace immediately
-	 * before or after the normal source range for the node.
+	 * extended source range may include comments and whitespace immediately before
+	 * or after the normal source range for the node.
 	 * 
 	 * @param node
 	 *            the node
@@ -515,13 +508,13 @@ public class Program extends ASTNode {
 	/**
 	 * Returns the extended start position of the given node. Unlike
 	 * {@link ASTNode#getStartPosition()} and {@link ASTNode#getLength()}, the
-	 * extended source range may include comments and whitespace immediately
-	 * before or after the normal source range for the node.
+	 * extended source range may include comments and whitespace immediately before
+	 * or after the normal source range for the node.
 	 * 
 	 * @param node
 	 *            the node
-	 * @return the 0-based character index, or <code>-1</code> if no source
-	 *         position information is recorded for this node
+	 * @return the 0-based character index, or <code>-1</code> if no source position
+	 *         information is recorded for this node
 	 * @see #getExtendedLength(ASTNode)
 	 * @since 3.0
 	 */
@@ -538,8 +531,8 @@ public class Program extends ASTNode {
 	}
 
 	/**
-	 * Return the index in the whole comments list {@link #comments() } of the
-	 * first leading comments associated with the given node.
+	 * Return the index in the whole comments list {@link #comments() } of the first
+	 * leading comments associated with the given node.
 	 * 
 	 * @param node
 	 *            the node
@@ -558,8 +551,8 @@ public class Program extends ASTNode {
 	}
 
 	/**
-	 * Return the index in the whole comments list {@link #comments() } of the
-	 * last trailing comments associated with the given node.
+	 * Return the index in the whole comments list {@link #comments() } of the last
+	 * trailing comments associated with the given node.
 	 * 
 	 * @param node
 	 *            the node
@@ -578,18 +571,17 @@ public class Program extends ASTNode {
 	}
 
 	/**
-	 * Enables the recording of changes to this program unit and its
-	 * descendents. The program must have been created by <code>ASTParser</code>
-	 * and still be in its original state. Once recording is on, arbitrary
-	 * changes to the subtree rooted at this compilation unit are recorded
-	 * internally. Once the modification has been completed, call
-	 * <code>rewrite</code> to get an object representing the corresponding
-	 * edits to the original source code string.
+	 * Enables the recording of changes to this program unit and its descendents.
+	 * The program must have been created by <code>ASTParser</code> and still be in
+	 * its original state. Once recording is on, arbitrary changes to the subtree
+	 * rooted at this compilation unit are recorded internally. Once the
+	 * modification has been completed, call <code>rewrite</code> to get an object
+	 * representing the corresponding edits to the original source code string.
 	 * 
 	 * @exception IllegalArgumentException
-	 *                if this program is marked as unmodifiable, or if this
-	 *                program has already been tampered with, or recording has
-	 *                already been enabled
+	 *                if this program is marked as unmodifiable, or if this program
+	 *                has already been tampered with, or recording has already been
+	 *                enabled
 	 * @since 3.0
 	 */
 	public void recordModifications() {
@@ -598,37 +590,36 @@ public class Program extends ASTNode {
 
 	/**
 	 * Converts all modifications recorded for this program into an object
-	 * representing the corresponding text edits to the given document
-	 * containing the original source code for this compilation unit.
+	 * representing the corresponding text edits to the given document containing
+	 * the original source code for this compilation unit.
 	 * <p>
-	 * The program must have been created by <code>ASTParser</code> from the
-	 * source code string in the given document, and recording must have been
-	 * turned on with a prior call to <code>recordModifications</code> while the
-	 * AST was still in its original state.
+	 * The program must have been created by <code>ASTParser</code> from the source
+	 * code string in the given document, and recording must have been turned on
+	 * with a prior call to <code>recordModifications</code> while the AST was still
+	 * in its original state.
 	 * </p>
 	 * <p>
 	 * Calling this methods does not discard the modifications on record.
-	 * Subsequence modifications made to the AST are added to the ones already
-	 * on record. If this method is called again later, the resulting text edit
-	 * object will accurately reflect the net cumulative affect of all those
-	 * changes.
+	 * Subsequence modifications made to the AST are added to the ones already on
+	 * record. If this method is called again later, the resulting text edit object
+	 * will accurately reflect the net cumulative affect of all those changes.
 	 * </p>
 	 * 
 	 * @param document
 	 *            original document containing source code for this program
 	 * @param options
 	 *            the table of formatter options (key type: <code>String</code>;
-	 *            value type: <code>String</code>); or <code>null</code> to use
-	 *            the standard global options
+	 *            value type: <code>String</code>); or <code>null</code> to use the
+	 *            standard global options
 	 *            {@link org.eclipse.php.core.PhpPluginCore#getOptions()}.
-	 * @return text edit object describing the changes to the document
-	 *         corresponding to the recorded AST modifications
+	 * @return text edit object describing the changes to the document corresponding
+	 *         to the recorded AST modifications
 	 * @exception IllegalArgumentException
 	 *                if the document passed is <code>null</code> or does not
 	 *                correspond to this AST
 	 * @exception IllegalStateException
-	 *                if <code>recordModifications</code> was not called to
-	 *                enable recording
+	 *                if <code>recordModifications</code> was not called to enable
+	 *                recording
 	 * @see #recordModifications()
 	 * @since 3.0
 	 */

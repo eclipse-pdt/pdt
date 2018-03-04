@@ -103,8 +103,7 @@ public class ProfilerUIImages {
 	}
 
 	/*
-	 * Helper method to access the image registry from the JDIDebugUIPlugin
-	 * class.
+	 * Helper method to access the image registry from the JDIDebugUIPlugin class.
 	 */
 	static ImageRegistry getImageRegistry() {
 		if (fgImageRegistry == null) {
@@ -124,9 +123,9 @@ public class ProfilerUIImages {
 	 * @param key
 	 *            The key to use when registering the image
 	 * @param path
-	 *            The path where the image can be found. This path is relative
-	 *            to where this plugin class is found (i.e. typically the
-	 *            packages directory)
+	 *            The path where the image can be found. This path is relative to
+	 *            where this plugin class is found (i.e. typically the packages
+	 *            directory)
 	 */
 	private final static void declareRegistryImage(String key, String path) {
 		ImageDescriptor desc = ImageDescriptor.getMissingImageDescriptor();

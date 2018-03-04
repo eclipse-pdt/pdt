@@ -94,8 +94,8 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 	}
 
 	/**
-	 * Called when the user presses the Cancel button. Return a boolean
-	 * indicating permission to close the wizard.
+	 * Called when the user presses the Cancel button. Return a boolean indicating
+	 * permission to close the wizard.
 	 * 
 	 * @return boolean
 	 */
@@ -115,8 +115,8 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 	}
 
 	/**
-	 * Create the options specification widgets. There is only one in this case
-	 * so create no group.
+	 * Create the options specification widgets. There is only one in this case so
+	 * create no group.
 	 * 
 	 * @param parent
 	 *            org.eclipse.swt.widgets.Composite
@@ -173,8 +173,8 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 	}
 
 	/**
-	 * Answer a boolean indicating whether the specified source currently exists
-	 * and is valid (ie.- proper format)
+	 * Answer a boolean indicating whether the specified source currently exists and
+	 * is valid (ie.- proper format)
 	 */
 	private boolean ensureZipSourceIsValid() {
 		ZipFile specifiedFile = getSpecifiedZipSourceFile();
@@ -201,8 +201,8 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 	}
 
 	/**
-	 * Answer a boolean indicating whether the specified source currently exists
-	 * and is valid (ie.- proper format)
+	 * Answer a boolean indicating whether the specified source currently exists and
+	 * is valid (ie.- proper format)
 	 */
 	@Override
 	protected boolean ensureSourceIsValid() {
@@ -216,9 +216,9 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 	}
 
 	/**
-	 * The Finish button was pressed. Try to do the required work now and answer
-	 * a boolean indicating success. If <code>false</code> is returned then the
-	 * wizard will not close.
+	 * The Finish button was pressed. Try to do the required work now and answer a
+	 * boolean indicating success. If <code>false</code> is returned then the wizard
+	 * will not close.
 	 * 
 	 * @return boolean
 	 */
@@ -243,8 +243,8 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 	}
 
 	/**
-	 * Returns a content provider for <code>FileSystemElement</code>s that
-	 * returns only files as children.
+	 * Returns a content provider for <code>FileSystemElement</code>s that returns
+	 * only files as children.
 	 */
 	@Override
 	protected ITreeContentProvider getFileProvider() {
@@ -298,8 +298,8 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 	}
 
 	/**
-	 * Returns a content provider for <code>FileSystemElement</code>s that
-	 * returns only folders as children.
+	 * Returns a content provider for <code>FileSystemElement</code>s that returns
+	 * only folders as children.
 	 */
 	@Override
 	protected ITreeContentProvider getFolderProvider() {
@@ -332,8 +332,7 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 	}
 
 	/**
-	 * Answer the string to display as the label for the source specification
-	 * field
+	 * Answer the string to display as the label for the source specification field
 	 */
 	@Override
 	protected String getSourceLabel() {
@@ -403,8 +402,7 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 	}
 
 	/**
-	 * Open a FileDialog so that the user can specify the source file to import
-	 * from
+	 * Open a FileDialog so that the user can specify the source file to import from
 	 */
 	@Override
 	protected void handleSourceBrowseButtonPressed() {
@@ -467,8 +465,8 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 	}
 
 	/**
-	 * Opens a file selection dialog and returns a string representing the
-	 * selected file, or <code>null</code> if the dialog was canceled.
+	 * Opens a file selection dialog and returns a string representing the selected
+	 * file, or <code>null</code> if the dialog was canceled.
 	 */
 	protected String queryZipFileToImport() {
 		FileDialog dialog = new FileDialog(sourceNameField.getShell(), SWT.OPEN | SWT.SHEET);
@@ -495,8 +493,8 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 	}
 
 	/**
-	 * Use the dialog store to restore widget values to the values that they
-	 * held last time this wizard was used to completion
+	 * Use the dialog store to restore widget values to the values that they held
+	 * last time this wizard was used to completion
 	 */
 	@Override
 	protected void restoreWidgetValues() {
@@ -521,9 +519,9 @@ public class WizardPharFileResourceImportPage1 extends WizardFileSystemResourceI
 	 * Since Finish was pressed, write widget values to the dialog store so that
 	 * they will persist into the next invocation of this wizard page.
 	 * 
-	 * Note that this method is identical to the one that appears in the
-	 * superclass. This is necessary because proper overriding of instance
-	 * variables is not occurring.
+	 * Note that this method is identical to the one that appears in the superclass.
+	 * This is necessary because proper overriding of instance variables is not
+	 * occurring.
 	 */
 	@Override
 	protected void saveWidgetValues() {

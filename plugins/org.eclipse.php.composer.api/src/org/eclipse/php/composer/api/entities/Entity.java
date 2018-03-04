@@ -48,8 +48,8 @@ public class Entity {
 	}
 
 	/**
-	 * Removes a listener that no longer receives notification about changes
-	 * from the passed property
+	 * Removes a listener that no longer receives notification about changes from
+	 * the passed property
 	 * 
 	 * @param propertyName
 	 *            the property upon which the listener has been notified

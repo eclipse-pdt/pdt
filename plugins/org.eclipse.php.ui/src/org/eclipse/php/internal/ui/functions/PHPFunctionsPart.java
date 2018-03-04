@@ -200,7 +200,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 								new Path(LanguageModelInitializer.CONTAINER_PATH), scriptProject);
 						if (languageContainer == null) {
 							Logger.log(Logger.ERROR, "project \"" + scriptProject.getProject().getName() //$NON-NLS-1$
-									+ "\" has php nature but has no language container"); //$NON-NLS-1$ 
+									+ "\" has php nature but has no language container"); //$NON-NLS-1$
 							return Status.CANCEL_STATUS;
 						}
 						IBuildpathEntry[] buildpathEntries = languageContainer.getBuildpathEntries();
@@ -236,9 +236,8 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 			}
 
 			/**
-			 * Gets the project: either by searching the current open editor or
-			 * (if there is no open editor) by searching for the first opened
-			 * php project
+			 * Gets the project: either by searching the current open editor or (if there is
+			 * no open editor) by searching for the first opened php project
 			 * 
 			 * @return the selected project
 			 * @throws CoreException
@@ -388,8 +387,8 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 
 		/*
 		 * part = EditorUtility.getPHPStructuredEditor(part); if
-		 * (PHPFunctionsPart.this.getViewer().getTree().getVisible() && part !=
-		 * null) { updateInputForCurrentEditor((IEditorPart) part); }
+		 * (PHPFunctionsPart.this.getViewer().getTree().getVisible() && part != null) {
+		 * updateInputForCurrentEditor((IEditorPart) part); }
 		 */
 	}
 

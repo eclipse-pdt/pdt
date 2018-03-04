@@ -242,8 +242,8 @@ public class SaveAsDialog extends TitleAreaDialog {
 	}
 
 	/**
-	 * Sets the completion state of this dialog and adjusts the enable state of
-	 * the Ok button accordingly.
+	 * Sets the completion state of this dialog and adjusts the enable state of the
+	 * Ok button accordingly.
 	 * 
 	 * @param value
 	 *            <code>true</code> if this dialog is compelete, and
@@ -265,8 +265,8 @@ public class SaveAsDialog extends TitleAreaDialog {
 
 	/**
 	 * Set the original file name to use. Used instead of
-	 * <code>setOriginalFile</code> when the original resource is not an IFile.
-	 * Must be called before <code>create</code>.
+	 * <code>setOriginalFile</code> when the original resource is not an IFile. Must
+	 * be called before <code>create</code>.
 	 * 
 	 * @param originalName
 	 *            default file name

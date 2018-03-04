@@ -84,8 +84,7 @@ public class PharUIUtil {
 	 * @return a CoreException
 	 */
 	public static CoreException createCoreException(String message, Exception ex) {
-		if (message == null)
-		 {
+		if (message == null) {
 			message = ""; //$NON-NLS-1$
 		}
 		return new CoreException(
@@ -111,10 +110,9 @@ public class PharUIUtil {
 				} else {
 					IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 					IResource file = root.findMember(path);
-					pharFile = Util.toLocalFile(file.getLocationURI(),
-							null/*
-								 * no progress availaible
-								 */);
+					pharFile = Util.toLocalFile(file.getLocationURI(), null/*
+																			 * no progress availaible
+																			 */);
 				}
 
 				if (pharFile == null || !pharFile.exists()) {

@@ -82,8 +82,7 @@ public class PHPsSearchResultDialog extends MessageDialog {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.dialogs.MessageDialog#createCustomArea(org.eclipse.
+	 * @see org.eclipse.jface.dialogs.MessageDialog#createCustomArea(org.eclipse.
 	 * swt.widgets.Composite)
 	 */
 	@Override

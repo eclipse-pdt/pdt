@@ -38,8 +38,7 @@ public class EditExternalBreakpointAction extends EditBreakpointAction {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction#hasMarkers()
+	 * @see org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction#hasMarkers()
 	 */
 	@Override
 	protected boolean hasMarkers() {
@@ -50,8 +49,7 @@ public class EditExternalBreakpointAction extends EditBreakpointAction {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction#getMarkers()
+	 * @see org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction#getMarkers()
 	 */
 	@Override
 	protected IMarker[] getMarkers() {

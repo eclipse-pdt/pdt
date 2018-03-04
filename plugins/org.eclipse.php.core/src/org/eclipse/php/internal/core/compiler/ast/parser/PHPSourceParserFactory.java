@@ -55,8 +55,8 @@ public class PHPSourceParserFactory extends AbstractSourceParser implements ISou
 	 * 
 	 * @param fileName
 	 * @param phpVersion
-	 * @return source parser instance or <code>null</code> in case PHP version
-	 *         is incompatibleS
+	 * @return source parser instance or <code>null</code> in case PHP version is
+	 *         incompatibleS
 	 */
 	public static AbstractPHPSourceParser createParser(String fileName, PHPVersion phpVersion) {
 		if (PHPVersion.PHP5 == phpVersion) {
@@ -90,8 +90,8 @@ public class PHPSourceParserFactory extends AbstractSourceParser implements ISou
 	 * Create source parser for the PHP version
 	 * 
 	 * @param phpVersion
-	 * @return source parser instance or <code>null</code> in case PHP version
-	 *         is incompatibleS
+	 * @return source parser instance or <code>null</code> in case PHP version is
+	 *         incompatibleS
 	 */
 	public static AbstractPHPSourceParser createParser(PHPVersion phpVersion) {
 		if (PHPVersion.PHP5 == phpVersion) {

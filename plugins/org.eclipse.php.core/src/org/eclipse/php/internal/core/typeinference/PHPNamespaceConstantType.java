@@ -26,8 +26,8 @@ public class PHPNamespaceConstantType implements IEvaluatedType {
 
 	/**
 	 * Constructs evaluated type for PHP constant declared in namespace. The
-	 * constant name can contain namespace part (namespace name must be real,
-	 * and not point to the alias or subnamespace under current namespace)
+	 * constant name can contain namespace part (namespace name must be real, and
+	 * not point to the alias or subnamespace under current namespace)
 	 */
 	public PHPNamespaceConstantType(String constantName) {
 		if (constantName == null) {
@@ -56,8 +56,8 @@ public class PHPNamespaceConstantType implements IEvaluatedType {
 	}
 
 	/**
-	 * Constructs evaluated type for PHP class or interface that was declared
-	 * under some namespace
+	 * Constructs evaluated type for PHP class or interface that was declared under
+	 * some namespace
 	 */
 	public PHPNamespaceConstantType(String namespace, String typeName) {
 		if (namespace == null || typeName == null) {

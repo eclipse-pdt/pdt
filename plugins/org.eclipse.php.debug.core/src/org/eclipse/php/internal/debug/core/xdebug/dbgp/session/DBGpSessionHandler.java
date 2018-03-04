@@ -89,10 +89,10 @@ public class DBGpSessionHandler {
 	}
 
 	/**
-	 * we synchronize on this to stop the background thread from being able to
-	 * fire sessionAdded events until we know that there isn't a session already
-	 * waiting. At which point we add a listener and the next fire will include
-	 * this listener.
+	 * we synchronize on this to stop the background thread from being able to fire
+	 * sessionAdded events until we know that there isn't a session already waiting.
+	 * At which point we add a listener and the next fire will include this
+	 * listener.
 	 * 
 	 * @param l
 	 * @param ideKey

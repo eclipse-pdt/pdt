@@ -32,14 +32,13 @@ public class EvaluationContextManager implements IWindowListener, IDebugContextL
 	private static EvaluationContextManager fgManager;
 
 	/**
-	 * System property indicating a stack frame is selected in the debug view
-	 * with an <code>IJavaStackFrame</code> adapter.
+	 * System property indicating a stack frame is selected in the debug view with
+	 * an <code>IJavaStackFrame</code> adapter.
 	 */
 	private static final String DEBUGGER_ACTIVE = PHPDebugUIPlugin.ID + ".debuggerActive"; //$NON-NLS-1$
 	/**
-	 * System property indicating an element is selected in the debug view that
-	 * is an instanceof <code>IJavaStackFrame</code> or <code>IJavaThread</code>
-	 * .
+	 * System property indicating an element is selected in the debug view that is
+	 * an instanceof <code>IJavaStackFrame</code> or <code>IJavaThread</code> .
 	 */
 	// private static final String INSTANCE_OF_IJAVA_STACK_FRAME =
 	// PHPDebugUIPlugin.ID
@@ -158,8 +157,8 @@ public class EvaluationContextManager implements IWindowListener, IDebugContextL
 	}
 
 	/**
-	 * Removes an evaluation context for the given page, and determines if any
-	 * valid execution context remain.
+	 * Removes an evaluation context for the given page, and determines if any valid
+	 * execution context remain.
 	 * 
 	 * @param page
 	 */
@@ -176,9 +175,9 @@ public class EvaluationContextManager implements IWindowListener, IDebugContextL
 	}
 
 	/**
-	 * Returns the evaluation context for the given part, or <code>null</code>
-	 * if none. The evaluation context corresponds to the selected stack frame
-	 * in the following priority order:
+	 * Returns the evaluation context for the given part, or <code>null</code> if
+	 * none. The evaluation context corresponds to the selected stack frame in the
+	 * following priority order:
 	 * <ol>
 	 * <li>stack frame in the same page</li>
 	 * <li>stack frame in the same window</li>
@@ -210,9 +209,9 @@ public class EvaluationContextManager implements IWindowListener, IDebugContextL
 	}
 
 	/**
-	 * Returns the evaluation context for the given window, or <code>null</code>
-	 * if none. The evaluation context corresponds to the selected stack frame
-	 * in the following priority order:
+	 * Returns the evaluation context for the given window, or <code>null</code> if
+	 * none. The evaluation context corresponds to the selected stack frame in the
+	 * following priority order:
 	 * <ol>
 	 * <li>stack frame in active page of the window</li>
 	 * <li>stack frame in another page of the window</li>

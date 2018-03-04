@@ -158,8 +158,7 @@ public class ClassDeclaration extends TypeDeclaration implements IPHPDocAwareDec
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.php.internal.core.compiler.ast.nodes.IRecoverable#isRecovered
-	 * ()
+	 * org.eclipse.php.internal.core.compiler.ast.nodes.IRecoverable#isRecovered ()
 	 */
 	@Override
 	public boolean isRecovered() {

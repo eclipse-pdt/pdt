@@ -56,9 +56,8 @@ public class SelectionListenerWithASTManager {
 		private Job fCurrentJob;
 		private ListenerList<ISelectionListenerWithAST> fAstListeners;
 		/**
-		 * Lock to avoid having more than one calculateAndInform job in
-		 * parallel. Only jobs may synchronize on this as otherwise deadlocks
-		 * are possible.
+		 * Lock to avoid having more than one calculateAndInform job in parallel. Only
+		 * jobs may synchronize on this as otherwise deadlocks are possible.
 		 */
 		private final Object fJobLock = new Object();
 

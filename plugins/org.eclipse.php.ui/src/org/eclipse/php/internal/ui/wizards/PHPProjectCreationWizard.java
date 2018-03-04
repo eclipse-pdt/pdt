@@ -84,16 +84,13 @@ public class PHPProjectCreationWizard extends NewElementWizard implements INewWi
 
 	@Override
 	protected void finishPage(IProgressMonitor monitor) throws InterruptedException, CoreException {
-		if (fFirstPage != null)
-		 {
+		if (fFirstPage != null) {
 			fFirstPage.performFinish(monitor); // use the full progress monitor
 		}
-		if (fSecondPage != null)
-		 {
+		if (fSecondPage != null) {
 			fSecondPage.performFinish(monitor); // use the full progress monitor
 		}
-		if (fThirdPage != null)
-		 {
+		if (fThirdPage != null) {
 			fThirdPage.performFinish(monitor); // use the full progress monitor
 		}
 	}
@@ -147,8 +144,8 @@ public class PHPProjectCreationWizard extends NewElementWizard implements INewWi
 	}
 
 	/*
-	 * Stores the configuration element for the wizard. The config element will
-	 * be used in <code>performFinish</code> to set the result perspective.
+	 * Stores the configuration element for the wizard. The config element will be
+	 * used in <code>performFinish</code> to set the result perspective.
 	 */
 	@Override
 	public void setInitializationData(IConfigurationElement cfig, String propertyName, Object data) {

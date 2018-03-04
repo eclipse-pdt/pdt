@@ -85,8 +85,7 @@ public class RefactoringProjectMoveWizardPage extends UserInputWizardPage {
 			/*
 			 * (non-Javadoc)
 			 * 
-			 * @see
-			 * org.eclipse.ui.internal.ide.dialogs.ProjectContentsLocationArea
+			 * @see org.eclipse.ui.internal.ide.dialogs.ProjectContentsLocationArea
 			 * .IErrorMessageReporter#reportError(java.lang.String)
 			 */
 			@Override

@@ -30,8 +30,7 @@ public class ProjectReferenceChange extends Change {
 	private IProject[] referencing;
 	private IBuildpathEntry newEntry;
 
-	public ProjectReferenceChange(String oldName, String newName,
-			IProject[] referencing) {
+	public ProjectReferenceChange(String oldName, String newName, IProject[] referencing) {
 		this.oldName = oldName;
 		this.newName = newName;
 		this.referencing = referencing;
@@ -44,8 +43,7 @@ public class ProjectReferenceChange extends Change {
 
 	@Override
 	public String getName() {
-		return NLS.bind(Messages.ProjectReferenceChange_0, new String[] {
-				oldName, newName });
+		return NLS.bind(Messages.ProjectReferenceChange_0, new String[] { oldName, newName });
 	}
 
 	@Override
@@ -54,8 +52,7 @@ public class ProjectReferenceChange extends Change {
 	}
 
 	@Override
-	public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException,
-			OperationCanceledException {
+	public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		return new RefactoringStatus();
 	}
 
@@ -81,8 +78,7 @@ public class ProjectReferenceChange extends Change {
 		return new ProjectReferenceChange(newName, oldName, referencing);
 	}
 
-	private void modifyBuildpath(IScriptProject referencingProject,
-			IProgressMonitor pm) throws ModelException {
+	private void modifyBuildpath(IScriptProject referencingProject, IProgressMonitor pm) throws ModelException {
 		pm.beginTask("", 1); //$NON-NLS-1$
 
 		IProject project = referencingProject.getProject();
@@ -97,8 +93,7 @@ public class ProjectReferenceChange extends Change {
 			}
 		}
 
-		IncludePath[] includes = IncludePathManager.getInstance()
-				.getIncludePaths(project);
+		IncludePath[] includes = IncludePathManager.getInstance().getIncludePaths(project);
 
 		IncludePath[] newInclude = new IncludePath[includes.length];
 
@@ -131,8 +126,7 @@ public class ProjectReferenceChange extends Change {
 		return false;
 	}
 
-	private IncludePath createModifiedIncludePath(IncludePath includePath,
-			IProject project) {
+	private IncludePath createModifiedIncludePath(IncludePath includePath, IProject project) {
 
 		Object entry = includePath.getEntry();
 		if (entry instanceof IProject) {
@@ -157,8 +151,7 @@ public class ProjectReferenceChange extends Change {
 	}
 
 	private IBuildpathEntry createModifiedEntry(IBuildpathEntry oldEntry) {
-		return DLTKCore.newProjectEntry(createNewPath(),
-				oldEntry.getAccessRules(), oldEntry.combineAccessRules(),
+		return DLTKCore.newProjectEntry(createNewPath(), oldEntry.getAccessRules(), oldEntry.combineAccessRules(),
 				oldEntry.getExtraAttributes(), oldEntry.isExported());
 	}
 

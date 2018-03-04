@@ -25,18 +25,18 @@ import org.eclipse.dltk.internal.core.util.Messages;
  */
 public class DeleteResourceElementsOperation extends MultiOperation {
 	/**
-	 * When executed, this operation will delete the given elements. The
-	 * elements to delete cannot be <code>null</code> or empty, and must have a
-	 * corresponding resource.
+	 * When executed, this operation will delete the given elements. The elements to
+	 * delete cannot be <code>null</code> or empty, and must have a corresponding
+	 * resource.
 	 */
 	protected DeleteResourceElementsOperation(IModelElement[] elementsToProcess, boolean force) {
 		super(elementsToProcess, force);
 	}
 
 	/**
-	 * Deletes the direct children of <code>frag</code> corresponding to its
-	 * kind (K_SOURCE or K_BINARY), and deletes the corresponding folder if it
-	 * is then empty.
+	 * Deletes the direct children of <code>frag</code> corresponding to its kind
+	 * (K_SOURCE or K_BINARY), and deletes the corresponding folder if it is then
+	 * empty.
 	 */
 	private void deleteScriptFolder(IScriptFolder frag) throws ModelException {
 		IResource res = frag.getResource();
@@ -86,10 +86,8 @@ public class DeleteResourceElementsOperation extends MultiOperation {
 			// // }
 			// }
 			if (!frag.isRootFolder()/*
-									 * don't delete default package's folder:
-									 * see
-									 * https://bugs.eclipse.org/bugs/show_bug
-									 * .cgi?id=38450
+									 * don't delete default package's folder: see
+									 * https://bugs.eclipse.org/bugs/show_bug .cgi?id=38450
 									 */) {
 				// delete recursively empty folders
 				IResource fragResource = frag.getResource();
@@ -109,8 +107,8 @@ public class DeleteResourceElementsOperation extends MultiOperation {
 	}
 
 	/**
-	 * @see MultiOperation This method delegate to <code>deleteResource</code>
-	 *      or <code>deleteScriptFolder</code> depending on the type of
+	 * @see MultiOperation This method delegate to <code>deleteResource</code> or
+	 *      <code>deleteScriptFolder</code> depending on the type of
 	 *      <code>element</code>.
 	 */
 	@Override

@@ -67,8 +67,7 @@ public class Comment extends ASTNode {
 	}
 
 	/**
-	 * @return list of todo task tags set by TaskTagBuildParticipantFactory or
-	 *         null
+	 * @return list of todo task tags set by TaskTagBuildParticipantFactory or null
 	 */
 	public List<Scalar> getTaskTags() {
 		return taskTags;

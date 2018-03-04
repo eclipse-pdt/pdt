@@ -74,8 +74,8 @@ public final class New extends WizardHandler {
 	}
 
 	/**
-	 * Sets the id of the category of wizards to show or <code>null</code> to
-	 * show all categories.
+	 * Sets the id of the category of wizards to show or <code>null</code> to show
+	 * all categories.
 	 * 
 	 * @param id
 	 */
@@ -109,8 +109,8 @@ public final class New extends WizardHandler {
 	}
 
 	/**
-	 * Since Eclipse Neon org.eclipse.ui.internal.util.Util.getAdapter is
-	 * removed. This is exact copy of this method.
+	 * Since Eclipse Neon org.eclipse.ui.internal.util.Util.getAdapter is removed.
+	 * This is exact copy of this method.
 	 * 
 	 * @param sourceObject
 	 * @param adapterType

@@ -85,8 +85,7 @@ public class TemplateVariableProcessor implements IContentAssistProcessor {
 				prefix = string.substring(escape + 2);
 			}
 		}
-		if (prefix.equals("$"))
-		 {
+		if (prefix.equals("$")) {
 			prefix = ""; //$NON-NLS-1$
 		}
 
@@ -140,8 +139,7 @@ public class TemplateVariableProcessor implements IContentAssistProcessor {
 	}
 
 	/*
-	 * @see
-	 * IContentAssistProcessor#getCompletionProposalAutoActivationCharacters()
+	 * @see IContentAssistProcessor#getCompletionProposalAutoActivationCharacters()
 	 */
 	@Override
 	public char[] getCompletionProposalAutoActivationCharacters() {
@@ -149,8 +147,7 @@ public class TemplateVariableProcessor implements IContentAssistProcessor {
 	}
 
 	/*
-	 * @see
-	 * IContentAssistProcessor#getContextInformationAutoActivationCharacters()
+	 * @see IContentAssistProcessor#getContextInformationAutoActivationCharacters()
 	 */
 	@Override
 	public char[] getContextInformationAutoActivationCharacters() {

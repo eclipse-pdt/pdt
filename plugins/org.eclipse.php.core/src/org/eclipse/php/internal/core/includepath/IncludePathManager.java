@@ -92,10 +92,8 @@ public class IncludePathManager {
 									removed = false;
 								}
 								/*
-								 * else { if
-								 * (entry.getPath().isPrefixOf(((IResource)
-								 * includePath.getEntry()).getFullPath())) {
-								 * removed = false; break; } }
+								 * else { if (entry.getPath().isPrefixOf(((IResource)
+								 * includePath.getEntry()).getFullPath())) { removed = false; break; } }
 								 */
 							}
 							if (removed) {
@@ -348,8 +346,8 @@ public class IncludePathManager {
 	}
 
 	/**
-	 * Returns whether the given path is in the include definitions Meaning if
-	 * one of the entries in the include path has the same path of this resource
+	 * Returns whether the given path is in the include definitions Meaning if one
+	 * of the entries in the include path has the same path of this resource
 	 * 
 	 * @param project
 	 * @param resourcePath

@@ -49,8 +49,7 @@ public class ASTNodeLabels {
 	public final static int M_FULLY_QUALIFIED = 1 << 5;
 
 	/**
-	 * Method names are post qualified. e.g.
-	 * <code>size - java.util.Vector</code>
+	 * Method names are post qualified. e.g. <code>size - java.util.Vector</code>
 	 */
 	public final static int M_POST_QUALIFIED = 1 << 6;
 
@@ -114,8 +113,7 @@ public class ASTNodeLabels {
 	public final static int P_QUALIFIED = 1 << 22;
 
 	/**
-	 * Folder names are post qualified. e.g.
-	 * <code>java.util - MyProject/src</code>
+	 * Folder names are post qualified. e.g. <code>java.util - MyProject/src</code>
 	 */
 	public final static int P_POST_QUALIFIED = 1 << 23;
 
@@ -201,8 +199,7 @@ public class ASTNodeLabels {
 	 */
 	public final static String DECL_STRING = " :"; //$NON-NLS-1$
 	/**
-	 * User-readable string for the default folder name (e.g. "(default folder)"
-	 * ).
+	 * User-readable string for the default folder name (e.g. "(default folder)" ).
 	 */
 	public final static String DEFAULT_FOLDER = "(source)"; //$NON-NLS-1$
 

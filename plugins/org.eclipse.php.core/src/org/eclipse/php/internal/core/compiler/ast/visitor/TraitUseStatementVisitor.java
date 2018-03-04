@@ -29,10 +29,9 @@ import org.eclipse.php.core.compiler.ast.nodes.TraitUseStatement;
 public abstract class TraitUseStatementVisitor extends TypeDeclarationVisitor {
 
 	/**
-	 * The visitor must check if a {@link Statement} is a
-	 * {@link TraitUseStatement}. If yes then call
-	 * {@link #visit(TraitUseStatement)}. Otherwise the visitor must not look
-	 * deeper in the AST tree.
+	 * The visitor must check if a {@link Statement} is a {@link TraitUseStatement}.
+	 * If yes then call {@link #visit(TraitUseStatement)}. Otherwise the visitor
+	 * must not look deeper in the AST tree.
 	 */
 	@Override
 	public boolean visit(Statement s) throws Exception {
@@ -48,8 +47,8 @@ public abstract class TraitUseStatementVisitor extends TypeDeclarationVisitor {
 	 * 
 	 * @param s
 	 *            the visited AST node
-	 * @return <code>true</code> if the visitor should traverse the children of
-	 *         this node, <code>false</code> - otherwise.
+	 * @return <code>true</code> if the visitor should traverse the children of this
+	 *         node, <code>false</code> - otherwise.
 	 * @throws Exception
 	 */
 	public abstract boolean visit(TraitUseStatement s) throws Exception;

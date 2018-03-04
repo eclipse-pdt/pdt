@@ -310,12 +310,11 @@ public class PHPWorkingSetPage extends WizardPage implements IWorkingSetPage {
 			IAdaptable element = (IAdaptable) event.getElement();
 			boolean state = event.getChecked();
 			fTree.setGrayed(element, false);
-			if (isExpandable(element))
-			 {
+			if (isExpandable(element)) {
 				setSubtreeChecked(element, state, state); // only check
-			// subtree if
-			// state is set
-			// to true
+				// subtree if
+				// state is set
+				// to true
 			}
 
 			updateParentState(element, state);

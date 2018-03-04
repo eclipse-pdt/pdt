@@ -62,8 +62,7 @@ public interface IPHPPreferencePageBlock {
 	public void performDefaults();
 
 	/**
-	 * Returns the addon comparable name in order to determine its page
-	 * location.
+	 * Returns the addon comparable name in order to determine its page location.
 	 * 
 	 * @return The defined addon Id.
 	 * @see #setComparableName(String)
@@ -71,8 +70,8 @@ public interface IPHPPreferencePageBlock {
 	public String getComparableName();
 
 	/**
-	 * Sets the addon comparable name. This is mainly used when determine the
-	 * order of the addons in the preferences page.
+	 * Sets the addon comparable name. This is mainly used when determine the order
+	 * of the addons in the preferences page.
 	 * 
 	 * @param id
 	 *            The addon Id.

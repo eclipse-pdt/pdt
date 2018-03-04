@@ -41,8 +41,8 @@ public class OpenAction extends SelectionDispatchAction {
 	private PHPStructuredEditor fEditor;
 
 	/**
-	 * Creates a new <code>OpenAction</code>. The action requires that the
-	 * selection provided by the site's selection provider is of type <code>
+	 * Creates a new <code>OpenAction</code>. The action requires that the selection
+	 * provided by the site's selection provider is of type <code>
 	 * org.eclipse.jface.viewers.IStructuredSelection</code> .
 	 * 
 	 * @param site
@@ -57,8 +57,8 @@ public class OpenAction extends SelectionDispatchAction {
 	}
 
 	/**
-	 * Note: This constructor is for internal use only. Clients should not call
-	 * this constructor.
+	 * Note: This constructor is for internal use only. Clients should not call this
+	 * constructor.
 	 * 
 	 * @param editor
 	 *            the Script editor
@@ -70,16 +70,16 @@ public class OpenAction extends SelectionDispatchAction {
 	}
 
 	/*
-	 * We override this function since we've changed isEnabled() to check its
-	 * status according to the selection
+	 * We override this function since we've changed isEnabled() to check its status
+	 * according to the selection
 	 */
 	@Override
 	public void selectionChanged(ITextSelection selection) {
 	}
 
 	/*
-	 * We override this function since we've changed isEnabled() to check its
-	 * status according to the selection
+	 * We override this function since we've changed isEnabled() to check its status
+	 * according to the selection
 	 */
 	@Override
 	public void selectionChanged(IStructuredSelection selection) {

@@ -31,10 +31,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  */
 public class DeclareStatement extends Statement {
 
-	private final ASTNode.NodeList<Identifier> directiveNames = new ASTNode.NodeList<>(
-			DIRECTIVE_NAMES_PROPERTY);
-	private final ASTNode.NodeList<Expression> directiveValues = new ASTNode.NodeList<>(
-			DIRECTIVE_VALUES_PROPERTY);
+	private final ASTNode.NodeList<Identifier> directiveNames = new ASTNode.NodeList<>(DIRECTIVE_NAMES_PROPERTY);
+	private final ASTNode.NodeList<Expression> directiveValues = new ASTNode.NodeList<>(DIRECTIVE_VALUES_PROPERTY);
 	private Statement body;
 
 	/**

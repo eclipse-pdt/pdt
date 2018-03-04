@@ -302,8 +302,7 @@ public class MultipleFolderSelectionDialog extends SelectionStatusDialog impleme
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(
+	 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(
 	 * org.eclipse.jface.viewers.SelectionChangedEvent)
 	 */
 	@Override

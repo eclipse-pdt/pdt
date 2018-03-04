@@ -44,8 +44,7 @@ public interface IComposerProject {
 	public String getNamespace(IPath path);
 
 	/**
-	 * Returns the full, absolute path of this resource relative to the
-	 * workspace.
+	 * Returns the full, absolute path of this resource relative to the workspace.
 	 * 
 	 * @return the path
 	 */

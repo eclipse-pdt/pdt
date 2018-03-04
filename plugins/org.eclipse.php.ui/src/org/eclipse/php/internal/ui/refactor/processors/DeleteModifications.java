@@ -154,16 +154,16 @@ public class DeleteModifications extends RefactoringModifications {
 
 	/**
 	 * This method collects file and folder deletion for notifying participants.
-	 * Participants will get notified of * deletion of the package (in any case)
-	 * * deletion of files within the package if only the files are deleted
-	 * without the package folder ("package cleaning") * deletion of the package
-	 * folder if it is not only cleared and if its parent is not removed as
-	 * well.
+	 * Participants will get notified of * deletion of the package (in any case) *
+	 * deletion of files within the package if only the files are deleted without
+	 * the package folder ("package cleaning") * deletion of the package folder if
+	 * it is not only cleared and if its parent is not removed as well.
 	 * 
 	 * @param resourcesCollector
 	 * 
 	 */
-	private void handleScriptFolderDelete(IScriptFolder pack, ArrayList<IResource> resourcesCollector) throws CoreException {
+	private void handleScriptFolderDelete(IScriptFolder pack, ArrayList<IResource> resourcesCollector)
+			throws CoreException {
 		final IContainer container = (IContainer) pack.getResource();
 		if (container == null) {
 			return;
@@ -172,8 +172,8 @@ public class DeleteModifications extends RefactoringModifications {
 		final IResource[] members = container.members();
 
 		/*
-		 * Check whether this package is removed completely or only cleared. The
-		 * default package can never be removed completely.
+		 * Check whether this package is removed completely or only cleared. The default
+		 * package can never be removed completely.
 		 */
 		if (!pack.isRootFolder() && canRemoveCompletely(pack)) {
 			// This package is removed completely, which means its folder will
@@ -248,8 +248,8 @@ public class DeleteModifications extends RefactoringModifications {
 	}
 
 	/**
-	 * Returns true if this initially selected package is really deletable (if
-	 * it has non-selected sub packages, it may only be cleared).
+	 * Returns true if this initially selected package is really deletable (if it
+	 * has non-selected sub packages, it may only be cleared).
 	 */
 	private boolean canRemoveCompletely(IScriptFolder pack) throws ModelException {
 		final IScriptFolder[] subPackages = ModelElementUtil.getPackageAndSubpackages(pack);

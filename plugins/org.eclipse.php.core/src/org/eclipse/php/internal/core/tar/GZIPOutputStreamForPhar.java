@@ -54,8 +54,8 @@ public class GZIPOutputStreamForPhar extends DeflaterOutputStream implements CRC
 	}
 
 	/**
-	 * Writes array of bytes to the compressed output stream. This method will
-	 * block until all the bytes are written.
+	 * Writes array of bytes to the compressed output stream. This method will block
+	 * until all the bytes are written.
 	 * 
 	 * @param buf
 	 *            the data to be written

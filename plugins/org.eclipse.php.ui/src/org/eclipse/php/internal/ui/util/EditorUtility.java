@@ -38,9 +38,8 @@ import org.eclipse.ui.internal.ide.actions.OpenLocalFileAction;
 public class EditorUtility {
 
 	/**
-	 * Returns an editor input according to the model element. This method
-	 * differs from
-	 * {@link org.eclipse.dltk.internal.ui.editor.EditorUtility#getEditorInput}
+	 * Returns an editor input according to the model element. This method differs
+	 * from {@link org.eclipse.dltk.internal.ui.editor.EditorUtility#getEditorInput}
 	 * by that that it supports files opened using File -> Open operation.
 	 * 
 	 * @throws ModelException
@@ -72,9 +71,9 @@ public class EditorUtility {
 	 * Selects a PHP Element in an editor
 	 * 
 	 * @param editor
-	 * @return the php editor (if exists) from the given editor NOTE: editors
-	 *         that wants to work with PHP editor actions must implement the
-	 *         getAdapter() method this way the actions pick the php editor...
+	 * @return the php editor (if exists) from the given editor NOTE: editors that
+	 *         wants to work with PHP editor actions must implement the getAdapter()
+	 *         method this way the actions pick the php editor...
 	 */
 	public static final PHPStructuredEditor getPHPStructuredEditor(final IWorkbenchPart editor) {
 		return editor != null ? (PHPStructuredEditor) editor.getAdapter(PHPStructuredEditor.class) : null;

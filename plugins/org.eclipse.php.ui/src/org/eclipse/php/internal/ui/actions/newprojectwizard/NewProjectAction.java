@@ -53,8 +53,8 @@ public class NewProjectAction extends Action {
 	private IWorkbenchWindow window;
 
 	/**
-	 * This default constructor allows the the action to be called from the
-	 * welcome page.
+	 * This default constructor allows the the action to be called from the welcome
+	 * page.
 	 */
 	public NewProjectAction() {
 		this(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
@@ -64,8 +64,8 @@ public class NewProjectAction extends Action {
 	 * Creates a new action for launching the new project selection wizard.
 	 * 
 	 * @param window
-	 *            the workbench window to query the current selection and shell
-	 *            for opening the wizard.
+	 *            the workbench window to query the current selection and shell for
+	 *            opening the wizard.
 	 */
 	public NewProjectAction(IWorkbenchWindow window) {
 		super(IDEWorkbenchMessages.NewProjectAction_text);

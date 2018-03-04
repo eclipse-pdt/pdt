@@ -38,8 +38,8 @@ public class Logger {
 	 * Adds message to log.
 	 * 
 	 * @param level
-	 *            severity level of the message (OK, INFO, WARNING, ERROR,
-	 *            OK_DEBUG, INFO_DEBUG, WARNING_DEBUG, ERROR_DEBUG)
+	 *            severity level of the message (OK, INFO, WARNING, ERROR, OK_DEBUG,
+	 *            INFO_DEBUG, WARNING_DEBUG, ERROR_DEBUG)
 	 * @param message
 	 *            text to add to the log
 	 * @param exception
@@ -82,8 +82,7 @@ public class Logger {
 	 * @param message
 	 *            text to print
 	 * @param category
-	 *            category of the message, to be compared with
-	 *            /debug/tracefilter
+	 *            category of the message, to be compared with /debug/tracefilter
 	 */
 	protected static void _trace(String category, String message, Throwable exception) {
 		// debug TODO: remove the next line

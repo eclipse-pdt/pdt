@@ -35,8 +35,7 @@ public class DebuggerWizardFragment extends CompositeWizardFragment {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.ui.wizards.CompositeWizardFragment#getComposite
+	 * @see org.eclipse.php.internal.ui.wizards.CompositeWizardFragment#getComposite
 	 * ()
 	 */
 	@Override
@@ -47,8 +46,7 @@ public class DebuggerWizardFragment extends CompositeWizardFragment {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.ui.wizards.WizardFragment#createComposite(org
+	 * @see org.eclipse.php.internal.ui.wizards.WizardFragment#createComposite(org
 	 * .eclipse.swt.widgets.Composite,
 	 * org.eclipse.php.internal.ui.wizards.IWizardHandle)
 	 */
@@ -101,8 +99,7 @@ public class DebuggerWizardFragment extends CompositeWizardFragment {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.ui.wizards.WizardFragment#performFinish(org.
+	 * @see org.eclipse.php.internal.ui.wizards.WizardFragment#performFinish(org.
 	 * eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override

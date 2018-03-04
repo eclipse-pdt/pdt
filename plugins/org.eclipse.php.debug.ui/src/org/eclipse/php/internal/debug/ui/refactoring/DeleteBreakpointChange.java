@@ -47,8 +47,7 @@ public class DeleteBreakpointChange extends BreakpointChange {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ltk.core.refactoring.Change#perform(org.eclipse.core.runtime
+	 * @see org.eclipse.ltk.core.refactoring.Change#perform(org.eclipse.core.runtime
 	 * .IProgressMonitor)
 	 */
 	@Override

@@ -54,8 +54,7 @@ public class PHPThreadEventHandler extends DebugEventHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.internal.ui.viewers.update.DebugEventHandler#dispose()
+	 * @see org.eclipse.debug.internal.ui.viewers.update.DebugEventHandler#dispose()
 	 */
 	@Override
 	public synchronized void dispose() {
@@ -248,8 +247,7 @@ public class PHPThreadEventHandler extends DebugEventHandler {
 	}
 
 	/**
-	 * Returns the index of the given thread, relative to its parent in the
-	 * view.
+	 * Returns the index of the given thread, relative to its parent in the view.
 	 * 
 	 * @param thread
 	 *            thread

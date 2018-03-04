@@ -92,8 +92,8 @@ public class PHPManual {
 	}
 
 	/**
-	 * XXX: support manual for keywords This method tries to determine PHP
-	 * manual URL for the specified PHP element
+	 * XXX: support manual for keywords This method tries to determine PHP manual
+	 * URL for the specified PHP element
 	 * 
 	 * @param codeData
 	 *            PHP element code data
@@ -240,8 +240,8 @@ public class PHPManual {
 	}
 
 	/**
-	 * This function launches browser and shows PHP manual page for the
-	 * specified URL
+	 * This function launches browser and shows PHP manual page for the specified
+	 * URL
 	 */
 	public void showFunctionHelp(String url) {
 		IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();

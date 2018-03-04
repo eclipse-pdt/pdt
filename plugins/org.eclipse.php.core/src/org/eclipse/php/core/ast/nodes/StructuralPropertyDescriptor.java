@@ -43,8 +43,8 @@ public abstract class StructuralPropertyDescriptor {
 
 	/**
 	 * Creates a new property descriptor for the given node type with the given
-	 * property id. Note that this constructor is declared package-private so
-	 * that property descriptors can only be created by the AST implementation.
+	 * property id. Note that this constructor is declared package-private so that
+	 * property descriptors can only be created by the AST implementation.
 	 * 
 	 * @param nodeClass
 	 *            concrete AST node type that owns this property
@@ -71,8 +71,8 @@ public abstract class StructuralPropertyDescriptor {
 	/**
 	 * Returns the AST node type that owns this property.
 	 * <p>
-	 * For example, for all properties of the node type TypeDeclaration, this
-	 * method returns <code>TypeDeclaration.class</code>.
+	 * For example, for all properties of the node type TypeDeclaration, this method
+	 * returns <code>TypeDeclaration.class</code>.
 	 * </p>
 	 * 
 	 * @return the node type that owns this property
@@ -96,8 +96,8 @@ public abstract class StructuralPropertyDescriptor {
 	 * Returns whether this property is a child property (instance of
 	 * {@link ChildPropertyDescriptor}.
 	 * 
-	 * @return <code>true</code> if this is a child property, and
-	 *         <code>false</code> otherwise
+	 * @return <code>true</code> if this is a child property, and <code>false</code>
+	 *         otherwise
 	 */
 	public final boolean isChildProperty() {
 		return (this instanceof ChildPropertyDescriptor);

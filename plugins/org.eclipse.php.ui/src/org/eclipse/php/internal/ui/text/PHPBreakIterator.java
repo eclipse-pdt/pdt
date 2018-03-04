@@ -41,8 +41,8 @@ public class PHPBreakIterator extends BreakIterator {
 
 		/**
 		 * Returns <code>true</code> if this run consumes <code>ch</code>,
-		 * <code>false</code> otherwise. If <code>true</code> is returned, the
-		 * length of the receiver is adjusted accordingly.
+		 * <code>false</code> otherwise. If <code>true</code> is returned, the length of
+		 * the receiver is adjusted accordingly.
 		 * 
 		 * @param ch
 		 *            the character to test
@@ -57,8 +57,8 @@ public class PHPBreakIterator extends BreakIterator {
 		}
 
 		/**
-		 * Whether this run accepts that character; does not update state.
-		 * Called from the default implementation of <code>consume</code>.
+		 * Whether this run accepts that character; does not update state. Called from
+		 * the default implementation of <code>consume</code>.
 		 * 
 		 * @param ch
 		 *            the character to test

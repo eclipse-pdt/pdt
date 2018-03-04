@@ -50,9 +50,9 @@ public final class PHPDebugUtil {
 	}
 
 	/**
-	 * Opens URL from debug/run launch configuration. Users of this method
-	 * should handle exceptions that might be thrown but without need to log the
-	 * exception info (it is already handled by this implementation).
+	 * Opens URL from debug/run launch configuration. Users of this method should
+	 * handle exceptions that might be thrown but without need to log the exception
+	 * info (it is already handled by this implementation).
 	 * 
 	 * @param launchURL
 	 * @throws DebugException
@@ -129,8 +129,8 @@ public final class PHPDebugUtil {
 	}
 
 	/**
-	 * Computes and returns a set of non-duplicated port numbers that are common
-	 * for all of the possible settings for particular debugger type.
+	 * Computes and returns a set of non-duplicated port numbers that are common for
+	 * all of the possible settings for particular debugger type.
 	 * 
 	 * @param debuggerId
 	 * @return set of unique port numbers for given debugger type

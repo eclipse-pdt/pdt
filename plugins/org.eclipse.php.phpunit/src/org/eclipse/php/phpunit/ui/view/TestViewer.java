@@ -546,8 +546,7 @@ public class TestViewer {
 
 		if (fTreeViewer.testFindItem(test) == null) {
 			fTreeViewer.add(parent, test); // if not yet in tree: add
-		}
-		else {
+		} else {
 			fTreeViewer.update(test, null); // if in tree: update
 		}
 	}

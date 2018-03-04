@@ -48,8 +48,7 @@ public class UseAsLibraryFolderAction extends Action {
 	 *            an array of source folders to mark as library folders
 	 */
 	public UseAsLibraryFolderAction(IFolder[] folders) {
-		if (folders.length == 0)
-		 {
+		if (folders.length == 0) {
 			throw new IllegalArgumentException("empty folders array"); //$NON-NLS-1$
 		}
 

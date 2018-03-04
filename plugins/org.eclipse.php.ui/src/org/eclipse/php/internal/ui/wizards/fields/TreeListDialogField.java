@@ -96,10 +96,9 @@ public class TreeListDialogField extends DialogField {
 	}
 
 	/**
-	 * Sets the index of the 'remove' button in the button label array passed in
-	 * the constructor. The behaviour of the button marked as the 'remove'
-	 * button will then behandled internally. (enable state, button invocation
-	 * behaviour)
+	 * Sets the index of the 'remove' button in the button label array passed in the
+	 * constructor. The behaviour of the button marked as the 'remove' button will
+	 * then behandled internally. (enable state, button invocation behaviour)
 	 */
 	public void setRemoveButtonIndex(int removeButtonIndex) {
 		Assert.isTrue(removeButtonIndex < fButtonLabels.length);
@@ -108,8 +107,8 @@ public class TreeListDialogField extends DialogField {
 
 	/**
 	 * Sets the index of the 'up' button in the button label array passed in the
-	 * constructor. The behaviour of the button marked as the 'up' button will
-	 * then behandled internally. (enable state, button invocation behaviour)
+	 * constructor. The behaviour of the button marked as the 'up' button will then
+	 * behandled internally. (enable state, button invocation behaviour)
 	 */
 	public void setUpButtonIndex(int upButtonIndex) {
 		Assert.isTrue(upButtonIndex < fButtonLabels.length);
@@ -117,10 +116,9 @@ public class TreeListDialogField extends DialogField {
 	}
 
 	/**
-	 * Sets the index of the 'down' button in the button label array passed in
-	 * the constructor. The behaviour of the button marked as the 'down' button
-	 * will then be handled internally. (enable state, button invocation
-	 * behaviour)
+	 * Sets the index of the 'down' button in the button label array passed in the
+	 * constructor. The behaviour of the button marked as the 'down' button will
+	 * then be handled internally. (enable state, button invocation behaviour)
 	 */
 	public void setDownButtonIndex(int downButtonIndex) {
 		Assert.isTrue(downButtonIndex < fButtonLabels.length);
@@ -223,8 +221,7 @@ public class TreeListDialogField extends DialogField {
 	}
 
 	/**
-	 * Sets the minimal width of the buttons. Must be called after widget
-	 * creation.
+	 * Sets the minimal width of the buttons. Must be called after widget creation.
 	 */
 	public void setButtonsMinWidth(int minWidth) {
 		if (fLastSeparator != null) {
@@ -323,8 +320,8 @@ public class TreeListDialogField extends DialogField {
 	}
 
 	/**
-	 * Returns the composite containing the buttons. When called the first time,
-	 * the control will be created.
+	 * Returns the composite containing the buttons. When called the first time, the
+	 * control will be created.
 	 * 
 	 * @param parent
 	 *            The parent composite when called the first time, or
@@ -389,8 +386,8 @@ public class TreeListDialogField extends DialogField {
 	}
 
 	/**
-	 * Handles key events in the table viewer. Specifically when the delete key
-	 * is pressed.
+	 * Handles key events in the table viewer. Specifically when the delete key is
+	 * pressed.
 	 */
 	protected void handleKeyPressed(KeyEvent event) {
 		if (event.character == SWT.DEL && event.stateMask == 0) {
@@ -501,8 +498,8 @@ public class TreeListDialogField extends DialogField {
 	}
 
 	/**
-	 * Gets the elements shown in the list. The list returned is a copy, so it
-	 * can be modified by the user.
+	 * Gets the elements shown in the list. The list returned is a copy, so it can
+	 * be modified by the user.
 	 */
 	public List<Object> getElements() {
 		return new ArrayList<>(fElements);
@@ -885,8 +882,8 @@ public class TreeListDialogField extends DialogField {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org.
-		 * eclipse .jface.viewers.DoubleClickEvent)
+		 * @see org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org. eclipse
+		 * .jface.viewers.DoubleClickEvent)
 		 */
 		@Override
 		public void doubleClick(DoubleClickEvent event) {

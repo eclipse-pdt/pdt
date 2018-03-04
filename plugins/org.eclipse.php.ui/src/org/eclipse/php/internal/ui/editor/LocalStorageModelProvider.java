@@ -67,10 +67,9 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 				return;
 			}
 			/**
-			 * Force a reload of the markers into annotations since their
-			 * previous Positions have been deleted. Disconnecting and
-			 * reconnecting forces a call to the private catchupWithMarkers
-			 * method.
+			 * Force a reload of the markers into annotations since their previous Positions
+			 * have been deleted. Disconnecting and reconnecting forces a call to the
+			 * private catchupWithMarkers method.
 			 */
 			if (info.fModel != null) {
 				info.fModel.disconnect(info.fDocument);
@@ -184,8 +183,7 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 
 	/**
 	 * This method simply overrides
-	 * org.eclipse.wst.sse.ui.internal.StorageModelProvider
-	 * .calculateBaseLocation()
+	 * org.eclipse.wst.sse.ui.internal.StorageModelProvider .calculateBaseLocation()
 	 * 
 	 * @param input
 	 * @return
@@ -232,11 +230,11 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 	 */
 	String calculateID(IStorageEditorInput input) {
 		/**
-		 * Typically CVS will return a path of "filename.ext" and the input's
-		 * name will be "filename.ext version". The path must be used to load
-		 * the model so that the suffix will be available to compute the
-		 * contentType properly. The editor input name can then be set as the
-		 * base location for display on the editor title bar.
+		 * Typically CVS will return a path of "filename.ext" and the input's name will
+		 * be "filename.ext version". The path must be used to load the model so that
+		 * the suffix will be available to compute the contentType properly. The editor
+		 * input name can then be set as the base location for display on the editor
+		 * title bar.
 		 * 
 		 */
 		String path = null;
@@ -268,8 +266,7 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 		} catch (CoreException e) {
 			Logger.logException(e);
 		} finally {
-			if (path == null)
-			 {
+			if (path == null) {
 				path = ""; //$NON-NLS-1$
 			}
 		}
@@ -334,12 +331,10 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 						int originalLengthToReplace = innerdocument.getLength();
 
 						/*
-						 * TODO_future: we could implement with sequential
-						 * rewrite, if we don't pickup automatically from
-						 * FileBuffer support, so not so much has to be pulled
-						 * into memory (as an extra big string), but we need to
-						 * carry that API through so that StructuredModel is not
-						 * notified until done.
+						 * TODO_future: we could implement with sequential rewrite, if we don't pickup
+						 * automatically from FileBuffer support, so not so much has to be pulled into
+						 * memory (as an extra big string), but we need to carry that API through so
+						 * that StructuredModel is not notified until done.
 						 */
 
 						// innerdocument.startSequentialRewrite(true);
@@ -417,8 +412,8 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 	}
 
 	/**
-	 * To be used when model is provided to us, ensures that when setInput is
-	 * used on this input, the given model will be used.
+	 * To be used when model is provided to us, ensures that when setInput is used
+	 * on this input, the given model will be used.
 	 */
 	public void createModelInfo(IEditorInput input, IStructuredModel structuredModel,
 			boolean releaseModelOnDisconnect) {
@@ -468,8 +463,7 @@ public class LocalStorageModelProvider extends StorageDocumentProvider implement
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.texteditor.AbstractDocumentProvider#doResetDocument(java
+	 * @see org.eclipse.ui.texteditor.AbstractDocumentProvider#doResetDocument(java
 	 * .lang.Object, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override

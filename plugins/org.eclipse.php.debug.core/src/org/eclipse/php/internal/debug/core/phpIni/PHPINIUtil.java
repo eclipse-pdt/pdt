@@ -82,8 +82,7 @@ public class PHPINIUtil {
 	}
 
 	/**
-	 * Adds/Creates the php ini file according to the project include path
-	 * settings.
+	 * Adds/Creates the php ini file according to the project include path settings.
 	 * 
 	 * @param phpIniFile
 	 *            null or already existing ini file
@@ -241,8 +240,7 @@ public class PHPINIUtil {
 	 * program exits.
 	 * 
 	 * @param originalPHPIniFile
-	 *            If specified - its contents will be copied to the temporary
-	 *            file
+	 *            If specified - its contents will be copied to the temporary file
 	 * @return temporary PHP configuration file instance
 	 */
 	public static File createTemporaryPHPINIFile(File originalPHPIniFile) {
@@ -292,10 +290,10 @@ public class PHPINIUtil {
 	}
 
 	/**
-	 * Locate and return a PHP configuration file path for the given PHP
-	 * executable. The locating is done by trying to return a PHP configuration
-	 * file that is located next to the executable. The return value can be null
-	 * in case it fails to locate a valid file.
+	 * Locate and return a PHP configuration file path for the given PHP executable.
+	 * The locating is done by trying to return a PHP configuration file that is
+	 * located next to the executable. The return value can be null in case it fails
+	 * to locate a valid file.
 	 * 
 	 * @param phpExe
 	 *            The PHP executable path.

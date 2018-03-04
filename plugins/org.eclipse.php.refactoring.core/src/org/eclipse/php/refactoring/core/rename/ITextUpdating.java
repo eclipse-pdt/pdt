@@ -18,20 +18,18 @@ public interface ITextUpdating {
 	public boolean canEnableTextUpdating();
 
 	/**
-	 * If <code>canEnableTextUpdating</code> returns <code>true</code>, then
-	 * this method is used to ask the refactoring object whether references in
-	 * regular (non JavaDoc) comments and string literals should be updated.
-	 * This call can be ignored if <code>canEnableTextUpdating</code> returns
-	 * <code>false</code>.
+	 * If <code>canEnableTextUpdating</code> returns <code>true</code>, then this
+	 * method is used to ask the refactoring object whether references in regular
+	 * (non JavaDoc) comments and string literals should be updated. This call can
+	 * be ignored if <code>canEnableTextUpdating</code> returns <code>false</code>.
 	 */
 	public boolean getUpdateTextualMatches();
 
 	/**
-	 * If <code>canEnableTextUpdating</code> returns <code>true</code>, then
-	 * this method is used to inform the refactoring object whether references
-	 * in regular (non JavaDoc) comments and string literals should be updated.
-	 * This call can be ignored if <code>canEnableTextUpdating</code> returns
-	 * <code>false</code>.
+	 * If <code>canEnableTextUpdating</code> returns <code>true</code>, then this
+	 * method is used to inform the refactoring object whether references in regular
+	 * (non JavaDoc) comments and string literals should be updated. This call can
+	 * be ignored if <code>canEnableTextUpdating</code> returns <code>false</code>.
 	 */
 	public void setUpdateTextualMatches(boolean update);
 

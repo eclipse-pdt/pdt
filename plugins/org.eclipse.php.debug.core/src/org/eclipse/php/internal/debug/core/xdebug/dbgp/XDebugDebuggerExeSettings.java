@@ -46,8 +46,7 @@ public class XDebugDebuggerExeSettings extends AbstractDebuggerSettings {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.IDebuggerSettings#getKind()
+	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerSettings#getKind()
 	 */
 	@Override
 	public DebuggerSettingsKind getKind() {
@@ -68,8 +67,7 @@ public class XDebugDebuggerExeSettings extends AbstractDebuggerSettings {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerSettings
+	 * @see org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerSettings
 	 * #createAttributes()
 	 */
 	@Override

@@ -122,10 +122,9 @@ public class PHPexes {
 	}
 
 	/**
-	 * Adds a {@link PHPexeItem} to the list of installed items that are
-	 * assigned to its debugger id. Note that the first inserted item will set
-	 * to be the default one until a call to {@link #setDefaultItem(PHPexeItem)}
-	 * is made.
+	 * Adds a {@link PHPexeItem} to the list of installed items that are assigned to
+	 * its debugger id. Note that the first inserted item will set to be the default
+	 * one until a call to {@link #setDefaultItem(PHPexeItem)} is made.
 	 * 
 	 * @param item
 	 * @see #setDefaultItem(PHPexeItem)
@@ -202,13 +201,11 @@ public class PHPexes {
 	}
 
 	/**
-	 * Returns true if there are PHP executables registered to the given
-	 * debugger.
+	 * Returns true if there are PHP executables registered to the given debugger.
 	 * 
 	 * @param debuggerId
 	 *            The debugger id.
-	 * @return True, if there are executables for this debugger; False,
-	 *         otherwise.
+	 * @return True, if there are executables for this debugger; False, otherwise.
 	 * @see #hasItems()
 	 */
 	public boolean hasItems(String debuggerId) {
@@ -250,8 +247,8 @@ public class PHPexes {
 	}
 
 	/**
-	 * Returns the {@link PHPexeItem} for the given debuggerId that has the
-	 * given name.
+	 * Returns the {@link PHPexeItem} for the given debuggerId that has the given
+	 * name.
 	 * 
 	 * @param debuggerId
 	 * @param name
@@ -329,8 +326,8 @@ public class PHPexes {
 
 	/**
 	 * Search for the executable file name in all of the registered
-	 * {@link PHPexeItem}s and return a reference to the one that refer to the
-	 * same file.
+	 * {@link PHPexeItem}s and return a reference to the one that refer to the same
+	 * file.
 	 * 
 	 * @param exeFilePath
 	 *            The executable file name.
@@ -366,8 +363,8 @@ public class PHPexes {
 	 * Returns the PHPExeItems registered for the given debugger id.
 	 * 
 	 * @param debuggerId
-	 * @return An array of installed exe items for the given debugger; null if
-	 *         no such debugger is registered, or the debugger does not have any
+	 * @return An array of installed exe items for the given debugger; null if no
+	 *         such debugger is registered, or the debugger does not have any
 	 *         executables.
 	 */
 	public PHPexeItem[] getItems(String debuggerId) {
@@ -486,7 +483,8 @@ public class PHPexes {
 			defaultItemForPHPVersionString = ""; //$NON-NLS-1$
 		}
 		final String[] defaultItemForPHPVersions = defaultItemForPHPVersionString.length() > 0
-				? defaultItemForPHPVersionString.split(SEPARATOR) : new String[0];
+				? defaultItemForPHPVersionString.split(SEPARATOR)
+				: new String[0];
 
 		// Add the executable items
 		assert names.length == phpExecutablesLocations.length;
@@ -508,7 +506,8 @@ public class PHPexes {
 			if (defaultItemForPHPVersions.length == phpExecutablesLocations.length) {
 				if (!NULL_PLACE_HOLDER.equals(defaultItemForPHPVersions[i])) {
 					final String[] phpVersions = defaultItemForPHPVersions[i].length() > 0
-							? defaultItemForPHPVersions[i].split(SEPARATOR_FOR_PHPVERSION) : new String[0];
+							? defaultItemForPHPVersions[i].split(SEPARATOR_FOR_PHPVERSION)
+							: new String[0];
 					for (int j = 0; j < phpVersions.length; j++) {
 						PHPVersion phpVersion = PHPVersion.byAlias(phpVersions[j]);
 						if (phpVersion != null) {
@@ -568,8 +567,7 @@ public class PHPexes {
 					final boolean isDefault = "true".equalsIgnoreCase(element //$NON-NLS-1$
 							.getAttribute(DEFAULT_ATTRIBUTE));
 
-					if (isWindows)
-					 {
+					if (isWindows) {
 						location = location + ".exe"; //$NON-NLS-1$
 					}
 
@@ -597,13 +595,12 @@ public class PHPexes {
 					File phpIniFile = getFileFromLocation(phpIni, pluginId);
 					if (file != null && file.exists()) {
 						final PHPexeItem newItem = new PHPexeItem(name, file, phpIniFile, debuggerID, false);
-						if (null == newItem || null == newItem.getExecutable() || newItem.getVersion() == null)
-						 {
+						if (null == newItem || null == newItem.getExecutable() || newItem.getVersion() == null) {
 							continue; // not adding "problematic" executables
 						}
 						/*
-						 * Override unique ID to be always the same when loading
-						 * item from extension once again (restart)
+						 * Override unique ID to be always the same when loading item from extension
+						 * once again (restart)
 						 */
 						String uniqueID = (id != null) ? id : "php-extension-exe-" + file.getPath().toString(); //$NON-NLS-1$
 						newItem.setUniqueId(uniqueID);
@@ -620,10 +617,9 @@ public class PHPexes {
 					}
 
 					if (!itemFound) {
-						PHPDebugPlugin.log(new Status(1, PHPDebugPlugin.getID(), 1001,
-								"PHP executable " //$NON-NLS-1$
-										+ location + " not found neither in plugin " //$NON-NLS-1$
-										+ pluginId + " nor in fragments attached to it", //$NON-NLS-1$
+						PHPDebugPlugin.log(new Status(1, PHPDebugPlugin.getID(), 1001, "PHP executable " //$NON-NLS-1$
+								+ location + " not found neither in plugin " //$NON-NLS-1$
+								+ pluginId + " nor in fragments attached to it", //$NON-NLS-1$
 								null));
 					}
 				} catch (CoreException | IOException e) {
@@ -634,9 +630,9 @@ public class PHPexes {
 	}
 
 	/**
-	 * Removes an item. In case the removed item was the default one, a
-	 * different random item will be picked to be the new default one for the
-	 * specific debugger.
+	 * Removes an item. In case the removed item was the default one, a different
+	 * random item will be picked to be the new default one for the specific
+	 * debugger.
 	 * 
 	 * @param debuggerID
 	 * @param item

@@ -30,8 +30,7 @@ public class PHPSearchFieldNameMatch extends FieldNameMatch implements IElementN
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == this)
-		 {
+		if (obj == this) {
 			return true; // avoid unnecessary calls for identical objects
 		}
 		if (obj instanceof FieldNameMatch) {

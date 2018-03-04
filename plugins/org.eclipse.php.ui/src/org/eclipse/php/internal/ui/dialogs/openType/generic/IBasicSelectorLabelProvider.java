@@ -26,8 +26,7 @@ public interface IBasicSelectorLabelProvider {
 	public String getElementDescription(Object element);
 
 	/**
-	 * The name is for comparison reasons - is the key that identifies the
-	 * element.
+	 * The name is for comparison reasons - is the key that identifies the element.
 	 * 
 	 * @param element
 	 * @return

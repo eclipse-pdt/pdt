@@ -156,9 +156,9 @@ public class PHPExeVerifier extends Job {
 
 	private void verify(final PHPexeItem exeItem) {
 		/*
-		 * Check if PHP executable version info can be fetched in Win OS. If the
-		 * data can not be fetched, then it probably means that Microsoft Visual
-		 * C++ Redistributables are not installed.
+		 * Check if PHP executable version info can be fetched in Win OS. If the data
+		 * can not be fetched, then it probably means that Microsoft Visual C++
+		 * Redistributables are not installed.
 		 */
 		if (Platform.getOS().equals(Platform.OS_WIN32)) {
 			File exeLocation = exeItem.getExecutable();

@@ -54,8 +54,7 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.console.IConsoleColorProvider#connect(org.eclipse
+	 * @see org.eclipse.debug.ui.console.IConsoleColorProvider#connect(org.eclipse
 	 * .debug.core.model.IProcess, org.eclipse.debug.ui.console.IConsole)
 	 */
 	@Override
@@ -122,8 +121,7 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 				}
 			}
 			Collection<IPHPConsoleEventListener> l = listeners.values();
-			while (l.remove(null))
-			 {
+			while (l.remove(null)) {
 				; // remove null elements
 			}
 			fConsoleEventListeners = l.toArray(new IPHPConsoleEventListener[listeners.size()]);
@@ -155,8 +153,7 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.console.IConsoleColorProvider#getColor(java.lang
+	 * @see org.eclipse.debug.ui.console.IConsoleColorProvider#getColor(java.lang
 	 * .String)
 	 */
 	@Override
@@ -181,8 +178,8 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 	}
 
 	/**
-	 * Returns the console this color provider is connected to, or
-	 * <code>null</code> if none.
+	 * Returns the console this color provider is connected to, or <code>null</code>
+	 * if none.
 	 * 
 	 * @return IConsole the console this color provider is connected to, or
 	 *         <code>null</code> if none

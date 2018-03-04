@@ -90,8 +90,7 @@ public class ProblemLocation implements IProblemLocation {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jdt.internal.ui.text.correction.IProblemLocation#getLength()
+	 * @see org.eclipse.jdt.internal.ui.text.correction.IProblemLocation#getLength()
 	 */
 	@Override
 	public int getLength() {
@@ -101,8 +100,7 @@ public class ProblemLocation implements IProblemLocation {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jdt.internal.ui.text.correction.IProblemLocation#getOffset()
+	 * @see org.eclipse.jdt.internal.ui.text.correction.IProblemLocation#getOffset()
 	 */
 	@Override
 	public int getOffset() {

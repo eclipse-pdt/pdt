@@ -21,10 +21,9 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 public class StatusUtil {
 
 	/**
-	 * Compares two instances of <code>IStatus</code>. The more severe is
-	 * returned: An error is more severe than a warning, and a warning is more
-	 * severe than ok. If the two stati have the same severity, the second is
-	 * returned.
+	 * Compares two instances of <code>IStatus</code>. The more severe is returned:
+	 * An error is more severe than a warning, and a warning is more severe than ok.
+	 * If the two stati have the same severity, the second is returned.
 	 */
 	public static IStatus getMoreSevere(IStatus s1, IStatus s2) {
 		if (s1.getSeverity() > s2.getSeverity()) {
@@ -35,8 +34,8 @@ public class StatusUtil {
 	}
 
 	/**
-	 * Finds the most severe status from a array of stati. An error is more
-	 * severe than a warning, and a warning is more severe than ok.
+	 * Finds the most severe status from a array of stati. An error is more severe
+	 * than a warning, and a warning is more severe than ok.
 	 */
 	public static IStatus getMostSevere(IStatus[] status) {
 		IStatus max = null;

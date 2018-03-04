@@ -40,8 +40,8 @@ public class ProjectRemovedObserversAttacher {
 	}
 
 	/**
-	 * There is no need for a remove method because oll the observer
-	 * automatically removed when a project is closed
+	 * There is no need for a remove method because oll the observer automatically
+	 * removed when a project is closed
 	 * 
 	 * @param project
 	 * @param projectChangeObserver

@@ -48,8 +48,8 @@ public class PHPTypingPreferencePage extends AbstractConfigurationBlockPreferenc
 	}
 
 	/**
-	 * This method overrides the default behavior in order to refresh values
-	 * that are updated due to changes in other Preference pages
+	 * This method overrides the default behavior in order to refresh values that
+	 * are updated due to changes in other Preference pages
 	 */
 	@Override
 	public void setVisible(boolean visible) {

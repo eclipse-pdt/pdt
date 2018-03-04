@@ -24,27 +24,28 @@ import org.osgi.framework.Bundle;
 
 public class ASTViewImages {
 
-	private static final IPath ICONS_PATH= new Path("$nl$/icons"); //$NON-NLS-1$
-	
-	public static final String COLLAPSE= "collapseall.gif"; //$NON-NLS-1$
-	public static final String EXPAND= "expandall.gif"; //$NON-NLS-1$
-	public static final String LINK_WITH_EDITOR= "synced.gif"; //$NON-NLS-1$
+	private static final IPath ICONS_PATH = new Path("$nl$/icons"); //$NON-NLS-1$
 
-	public static final String SETFOCUS= "setfocus.gif"; //$NON-NLS-1$
-	public static final String REFRESH= "refresh.gif"; //$NON-NLS-1$
-	public static final String CLEAR= "clear.gif"; //$NON-NLS-1$
+	public static final String COLLAPSE = "collapseall.gif"; //$NON-NLS-1$
+	public static final String EXPAND = "expandall.gif"; //$NON-NLS-1$
+	public static final String LINK_WITH_EDITOR = "synced.gif"; //$NON-NLS-1$
 
-	public static final String ADD_TO_TRAY= "add.gif"; //$NON-NLS-1$
-	
-	//---- Helper methods to access icons on the file system --------------------------------------
+	public static final String SETFOCUS = "setfocus.gif"; //$NON-NLS-1$
+	public static final String REFRESH = "refresh.gif"; //$NON-NLS-1$
+	public static final String CLEAR = "clear.gif"; //$NON-NLS-1$
+
+	public static final String ADD_TO_TRAY = "add.gif"; //$NON-NLS-1$
+
+	// ---- Helper methods to access icons on the file system
+	// --------------------------------------
 
 	public static void setImageDescriptors(IAction action, String type) {
-		ImageDescriptor id= create("d", type); //$NON-NLS-1$
+		ImageDescriptor id = create("d", type); //$NON-NLS-1$
 		if (id != null) {
 			action.setDisabledImageDescriptor(id);
 		}
-	
-		id= create("c", type); //$NON-NLS-1$
+
+		id = create("c", type); //$NON-NLS-1$
 		if (id != null) {
 			action.setHoverImageDescriptor(id);
 			action.setImageDescriptor(id);
@@ -52,17 +53,17 @@ public class ASTViewImages {
 			action.setImageDescriptor(ImageDescriptor.getMissingImageDescriptor());
 		}
 	}
-	
+
 	private static ImageDescriptor create(String prefix, String name) {
-		IPath path= ICONS_PATH.append(prefix).append(name);
+		IPath path = ICONS_PATH.append(prefix).append(name);
 		return createImageDescriptor(ASTViewPlugin.getDefault().getBundle(), path);
 	}
-	
+
 	/*
 	 * Since 3.1.1. Load from icon paths with $NL$
 	 */
 	public static ImageDescriptor createImageDescriptor(Bundle bundle, IPath path) {
-		URL url= FileLocator.find(bundle, path, null);
+		URL url = FileLocator.find(bundle, path, null);
 		if (url != null) {
 			return ImageDescriptor.createFromURL(url);
 		}

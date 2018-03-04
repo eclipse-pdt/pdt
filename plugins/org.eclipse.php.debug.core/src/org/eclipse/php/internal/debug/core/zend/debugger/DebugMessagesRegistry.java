@@ -64,8 +64,7 @@ public class DebugMessagesRegistry {
 		}
 
 		Collection<IConfigurationElement> configElements = configElementsMap.values();
-		while (configElements.remove(null))
-		 {
+		while (configElements.remove(null)) {
 			; // remove null elements
 		}
 

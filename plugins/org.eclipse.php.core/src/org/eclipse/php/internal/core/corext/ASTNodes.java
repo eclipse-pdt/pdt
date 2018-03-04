@@ -47,9 +47,9 @@ public class ASTNodes {
 	}
 
 	/**
-	 * Returns true if a node at a given location is a body of a control
-	 * statement. Such body nodes are interesting as when replacing them, it has
-	 * to be evaluates if a Block is needed instead. E.g.
+	 * Returns true if a node at a given location is a body of a control statement.
+	 * Such body nodes are interesting as when replacing them, it has to be
+	 * evaluates if a Block is needed instead. E.g.
 	 * <code> if (x) do(); -> if (x) { do1(); do2() } </code>
 	 * 
 	 * @param locationInParent

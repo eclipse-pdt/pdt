@@ -167,9 +167,9 @@ public class PHPexeItem implements IUniqueIdentityElement, IPHPexeItemProperties
 	}
 
 	/**
-	 * Returns the configuration file path. The returned value can be null in
-	 * case the value was not set. In this case, the ini location is assumed to
-	 * be next to the php executable.
+	 * Returns the configuration file path. The returned value can be null in case
+	 * the value was not set. In this case, the ini location is assumed to be next
+	 * to the php executable.
 	 * 
 	 * @return The configuration file location.
 	 */

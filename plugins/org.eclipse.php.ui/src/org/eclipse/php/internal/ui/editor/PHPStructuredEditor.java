@@ -3289,11 +3289,10 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 					return unit.getElementAt(offset);
 				}
 			} catch (ModelException x) {
-				if (!x.isDoesNotExist())
-				 {
+				if (!x.isDoesNotExist()) {
 					// DLTKUIPlugin.log(x.getStatus());
 					System.err.println(x.getStatus());
-				// nothing found, be tolerant and go on
+					// nothing found, be tolerant and go on
 				}
 			}
 		}

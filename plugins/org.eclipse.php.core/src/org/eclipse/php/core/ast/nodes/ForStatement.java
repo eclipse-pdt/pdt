@@ -65,8 +65,8 @@ public class ForStatement extends Statement {
 	}
 
 	/**
-	 * Returns a list of structural property descriptors for this node type.
-	 * Clients must not modify the result.
+	 * Returns a list of structural property descriptors for this node type. Clients
+	 * must not modify the result.
 	 * 
 	 * @param apiLevel
 	 *            the API level; one of the <code>AST.JLS*</code> constants
@@ -184,10 +184,9 @@ public class ForStatement extends Statement {
 	 * Returns the live ordered list of initializer expressions in this for
 	 * statement.
 	 * <p>
-	 * The list should consist of either a list of so called statement
-	 * expressions (JLS2, 14.8), or a single
-	 * <code>VariableDeclarationExpression</code>. Otherwise, the for statement
-	 * would have no Java source equivalent.
+	 * The list should consist of either a list of so called statement expressions
+	 * (JLS2, 14.8), or a single <code>VariableDeclarationExpression</code>.
+	 * Otherwise, the for statement would have no Java source equivalent.
 	 * </p>
 	 * 
 	 * @return the live list of initializer expressions (element type:
@@ -198,22 +197,20 @@ public class ForStatement extends Statement {
 	}
 
 	/**
-	 * Returns the condition expression of this for statement, or
-	 * <code>null</code> if there is none.
+	 * Returns the condition expression of this for statement, or <code>null</code>
+	 * if there is none.
 	 * 
-	 * @return the condition expression node, or <code>null</code> if there is
-	 *         none
+	 * @return the condition expression node, or <code>null</code> if there is none
 	 */
 	public List<Expression> conditions() {
 		return this.conditions;
 	}
 
 	/**
-	 * Returns the live ordered list of update expressions in this for
-	 * statement.
+	 * Returns the live ordered list of update expressions in this for statement.
 	 * <p>
-	 * The list should consist of so called statement expressions. Otherwise,
-	 * the for statement would have no Java source equivalent.
+	 * The list should consist of so called statement expressions. Otherwise, the
+	 * for statement would have no Java source equivalent.
 	 * </p>
 	 * 
 	 * @return the live list of update expressions (element type:
@@ -235,9 +232,9 @@ public class ForStatement extends Statement {
 	/**
 	 * Sets the body of this for statement.
 	 * <p>
-	 * Special note: The Java language does not allow a local variable
-	 * declaration to appear as the body of a for statement (they may only
-	 * appear within a block). However, the AST will allow a
+	 * Special note: The Java language does not allow a local variable declaration
+	 * to appear as the body of a for statement (they may only appear within a
+	 * block). However, the AST will allow a
 	 * <code>VariableDeclarationStatement</code> as the body of a
 	 * <code>ForStatement</code>. To get something that will compile, be sure to
 	 * embed the <code>VariableDeclarationStatement</code> inside a

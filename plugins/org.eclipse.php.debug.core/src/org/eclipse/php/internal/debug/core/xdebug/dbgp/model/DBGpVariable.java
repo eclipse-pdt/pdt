@@ -77,10 +77,9 @@ public abstract class DBGpVariable extends DBGpElement implements IVariable, IVa
 	@Override
 	public void setValue(String value) throws DebugException {
 		/*
-		 * assume never called unless supportsValueModification is true also
-		 * assume that will only be called if been verified BUG in eclipse 3.2:
-		 * Cell modification doesn't call verify Value and it should. It does if
-		 * you use the editor pane.
+		 * assume never called unless supportsValueModification is true also assume that
+		 * will only be called if been verified BUG in eclipse 3.2: Cell modification
+		 * doesn't call verify Value and it should. It does if you use the editor pane.
 		 */
 		if (!verifyValue(value)) {
 			// setValue called, but verifyValue failed
@@ -102,8 +101,7 @@ public abstract class DBGpVariable extends DBGpElement implements IVariable, IVa
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.model.IValueModification#setValue(org.eclipse.
+	 * @see org.eclipse.debug.core.model.IValueModification#setValue(org.eclipse.
 	 * debug.core.model.IValue)
 	 */
 	@Override
@@ -115,8 +113,7 @@ public abstract class DBGpVariable extends DBGpElement implements IVariable, IVa
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.debug.core.model.IValueModification#supportsValueModification
-	 * ()
+	 * org.eclipse.debug.core.model.IValueModification#supportsValueModification ()
 	 */
 	@Override
 	public boolean supportsValueModification() {
@@ -126,8 +123,7 @@ public abstract class DBGpVariable extends DBGpElement implements IVariable, IVa
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.model.IValueModification#verifyValue(java.lang.
+	 * @see org.eclipse.debug.core.model.IValueModification#verifyValue(java.lang.
 	 * String)
 	 */
 	@Override
@@ -138,8 +134,7 @@ public abstract class DBGpVariable extends DBGpElement implements IVariable, IVa
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.model.IValueModification#verifyValue(org.eclipse.
+	 * @see org.eclipse.debug.core.model.IValueModification#verifyValue(org.eclipse.
 	 * debug.core.model.IValue)
 	 */
 	@Override
@@ -150,8 +145,7 @@ public abstract class DBGpVariable extends DBGpElement implements IVariable, IVa
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.model.IVariableFacet#hasFacet(org.
+	 * @see org.eclipse.php.internal.debug.core.model.IVariableFacet#hasFacet(org.
 	 * eclipse.php.internal.debug.core.model.IVariableFacet.Facet)
 	 */
 	@Override
@@ -162,8 +156,7 @@ public abstract class DBGpVariable extends DBGpElement implements IVariable, IVa
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.model.IVariableFacet#addFacets(org.
+	 * @see org.eclipse.php.internal.debug.core.model.IVariableFacet#addFacets(org.
 	 * eclipse.php.internal.debug.core.model.IVariableFacet.Facet[])
 	 */
 	@Override
@@ -200,8 +193,7 @@ public abstract class DBGpVariable extends DBGpElement implements IVariable, IVa
 	 */
 	@Override
 	public String getReferenceTypeName() throws DebugException {
-		if (getName().equals(VariablesUtil.CLASS_INDICATOR))
-		 {
+		if (getName().equals(VariablesUtil.CLASS_INDICATOR)) {
 			return "class"; //$NON-NLS-1$
 		}
 		return fValue.getDataType().getText();

@@ -197,8 +197,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 			pm.worked(1);
 
 			enclosingBodyNode = getEnclosingBodyNode();
-			if (enclosingBodyNode == null)
-			 {
+			if (enclosingBodyNode == null) {
 				return RefactoringStatus
 						.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.3")); //$NON-NLS-1$
 			}
@@ -224,8 +223,8 @@ public class ExtractVariableRefactoring extends Refactoring {
 	}
 
 	/**
-	 * Remove from the matching fragments, the invalid ones and look for non
-	 * fatal errors/warnings
+	 * Remove from the matching fragments, the invalid ones and look for non fatal
+	 * errors/warnings
 	 * 
 	 * @param recalculate
 	 * @return
@@ -366,8 +365,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 					.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.10")); //$NON-NLS-1$
 		}
 
-		if (isUsedInForInitializerOrUpdaterOrIncrementor(expression))
-		 {
+		if (isUsedInForInitializerOrUpdaterOrIncrementor(expression)) {
 			return RefactoringStatus
 					.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("ExtractVariableRefactoring.11")); //$NON-NLS-1$
 		}
@@ -413,8 +411,7 @@ public class ExtractVariableRefactoring extends Refactoring {
 	}
 
 	/**
-	 * Checks the case of try { } catch (Exception $a) { } and the $a is
-	 * selected
+	 * Checks the case of try { } catch (Exception $a) { } and the $a is selected
 	 * 
 	 * @param expression
 	 * @return
@@ -455,9 +452,9 @@ public class ExtractVariableRefactoring extends Refactoring {
 	}
 
 	/**
-	 * Checks if the current selection is in a for statement In this case, the
-	 * only valid area for a selection is the "action"/block of the for
-	 * statement and not the initializer/updater/condition
+	 * Checks if the current selection is in a for statement In this case, the only
+	 * valid area for a selection is the "action"/block of the for statement and not
+	 * the initializer/updater/condition
 	 * 
 	 * @param expression
 	 * @return true, in case the selection is in an invalid position in the for
@@ -1233,8 +1230,8 @@ public class ExtractVariableRefactoring extends Refactoring {
 	}
 
 	/**
-	 * Go over the list of suggestions and adjust the names to the existing
-	 * variable names
+	 * Go over the list of suggestions and adjust the names to the existing variable
+	 * names
 	 * 
 	 * @param guessedTempNames
 	 */

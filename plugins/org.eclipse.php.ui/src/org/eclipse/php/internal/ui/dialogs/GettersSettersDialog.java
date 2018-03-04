@@ -123,8 +123,7 @@ public class GettersSettersDialog extends PHPSourceActionDialog {
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jdt.internal.ui.dialogs.SourceActionDialog#createLinkControl
+	 * @see org.eclipse.jdt.internal.ui.dialogs.SourceActionDialog#createLinkControl
 	 * (org.eclipse.swt.widgets.Composite)
 	 */
 	@Override

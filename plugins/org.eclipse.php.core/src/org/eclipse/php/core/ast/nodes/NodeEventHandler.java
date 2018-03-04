@@ -31,8 +31,8 @@ class NodeEventHandler {
 	}
 
 	/**
-	 * Reports that the given node is about to lose a child. The first half of
-	 * an event pair. The default implementation does nothing.
+	 * Reports that the given node is about to lose a child. The first half of an
+	 * event pair. The default implementation does nothing.
 	 * 
 	 * @param node
 	 *            the node about to be modified
@@ -40,8 +40,7 @@ class NodeEventHandler {
 	 *            the node about to be removed
 	 * @param property
 	 *            the child or child list property descriptor
-	 * @see #postRemoveChildEvent(ASTNode, ASTNode,
-	 *      StructuralPropertyDescriptor)
+	 * @see #postRemoveChildEvent(ASTNode, ASTNode, StructuralPropertyDescriptor)
 	 * @since 3.0
 	 */
 	void preRemoveChildEvent(ASTNode node, ASTNode child, StructuralPropertyDescriptor property) {
@@ -68,8 +67,8 @@ class NodeEventHandler {
 	}
 
 	/**
-	 * Reports that the given node is about to have a child replaced. The first
-	 * half of an event pair. The default implementation does nothing.
+	 * Reports that the given node is about to have a child replaced. The first half
+	 * of an event pair. The default implementation does nothing.
 	 * 
 	 * @param node
 	 *            the node about to be modified
@@ -89,8 +88,8 @@ class NodeEventHandler {
 	}
 
 	/**
-	 * Reports that the given node has had its child replaced. The second half
-	 * of an event pair. The default implementation does nothing.
+	 * Reports that the given node has had its child replaced. The second half of an
+	 * event pair. The default implementation does nothing.
 	 * 
 	 * @param node
 	 *            the node that was modified
@@ -110,14 +109,14 @@ class NodeEventHandler {
 	}
 
 	/**
-	 * Reports that the given node is about to gain a child. The first half of
-	 * an event pair. The default implementation does nothing.
+	 * Reports that the given node is about to gain a child. The first half of an
+	 * event pair. The default implementation does nothing.
 	 * 
 	 * @param node
 	 *            the node that to be modified
 	 * @param child
-	 *            the node that is to be added as a child; note that this node
-	 *            is unparented; in the case of a child list property, the exact
+	 *            the node that is to be added as a child; note that this node is
+	 *            unparented; in the case of a child list property, the exact
 	 *            location of insertion is not supplied (but is known on the
 	 *            corresponding <code>postAddChildEvent</code> to follow)
 	 * @param property
@@ -131,8 +130,8 @@ class NodeEventHandler {
 	}
 
 	/**
-	 * Reports that the given node has just gained a child. The second half of
-	 * an event pair. The default implementation does nothing.
+	 * Reports that the given node has just gained a child. The second half of an
+	 * event pair. The default implementation does nothing.
 	 * 
 	 * @param node
 	 *            the node that was modified
@@ -150,8 +149,8 @@ class NodeEventHandler {
 
 	/**
 	 * Reports that the given node is about to change the value of a non-child
-	 * property. The first half of an event pair. The default implementation
-	 * does nothing.
+	 * property. The first half of an event pair. The default implementation does
+	 * nothing.
 	 * 
 	 * @param node
 	 *            the node to be modified
@@ -167,8 +166,8 @@ class NodeEventHandler {
 
 	/**
 	 * Reports that the given node has just changed the value of a non-child
-	 * property. The second half of an event pair. The default implementation
-	 * does nothing.
+	 * property. The second half of an event pair. The default implementation does
+	 * nothing.
 	 * 
 	 * @param node
 	 *            the node that was modified
@@ -183,8 +182,8 @@ class NodeEventHandler {
 	}
 
 	/**
-	 * Reports that the given node is about to be cloned. The first half of an
-	 * event pair. The default implementation does nothing.
+	 * Reports that the given node is about to be cloned. The first half of an event
+	 * pair. The default implementation does nothing.
 	 * 
 	 * @param node
 	 *            the node to be modified
@@ -197,8 +196,8 @@ class NodeEventHandler {
 	}
 
 	/**
-	 * Reports that the given node has just been cloned. The second half of an
-	 * event pair. The default implementation does nothing.
+	 * Reports that the given node has just been cloned. The second half of an event
+	 * pair. The default implementation does nothing.
 	 * 
 	 * @param node
 	 *            the node that was modified

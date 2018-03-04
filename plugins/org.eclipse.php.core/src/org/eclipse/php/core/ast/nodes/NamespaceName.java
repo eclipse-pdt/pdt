@@ -42,8 +42,8 @@ public class NamespaceName extends Identifier {
 	private boolean global;
 
 	/**
-	 * Whether the namespace name has 'namespace' prefix, which means it relates
-	 * to the current namespace scope
+	 * Whether the namespace name has 'namespace' prefix, which means it relates to
+	 * the current namespace scope
 	 */
 	private boolean current;
 
@@ -214,8 +214,8 @@ public class NamespaceName extends Identifier {
 	/**
 	 * Retrieves names parts of the namespace
 	 * 
-	 * @return segments. If names list is empty, that means that this namespace
-	 *         is global.
+	 * @return segments. If names list is empty, that means that this namespace is
+	 *         global.
 	 */
 	public List<Identifier> segments() {
 		assert segments.size() > 0 || global;

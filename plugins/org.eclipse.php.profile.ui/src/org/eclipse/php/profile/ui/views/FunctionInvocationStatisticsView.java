@@ -148,8 +148,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 				/*
 				 * (non-Javadoc)
 				 * 
-				 * @see
-				 * org.eclipse.swt.events.SelectionAdapter#widgetSelected(org
+				 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org
 				 * .eclipse.swt.events.SelectionEvent)
 				 */
 				@Override
@@ -219,8 +218,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 				/*
 				 * (non-Javadoc)
 				 * 
-				 * @see
-				 * org.eclipse.swt.events.SelectionAdapter#widgetSelected(org
+				 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org
 				 * .eclipse.swt.events.SelectionEvent)
 				 */
 				@Override
@@ -291,8 +289,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 				/*
 				 * (non-Javadoc)
 				 * 
-				 * @see
-				 * org.eclipse.swt.events.SelectionAdapter#widgetSelected(org
+				 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org
 				 * .eclipse.swt.events.SelectionEvent)
 				 */
 				@Override
@@ -357,8 +354,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(
+		 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(
 		 * java.lang.Object)
 		 */
 		@Override
@@ -381,8 +377,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse
+		 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse
 		 * .jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 		 */
 		@Override
@@ -403,8 +398,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java
+		 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java
 		 * .lang.Object, int)
 		 */
 		@Override
@@ -423,8 +417,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.
+		 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.
 		 * lang.Object, int)
 		 */
 		@Override
@@ -454,8 +447,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse
+		 * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse
 		 * .jface.viewers.ILabelProviderListener)
 		 */
 		@Override
@@ -474,8 +466,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java
+		 * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java
 		 * .lang.Object, java.lang.String)
 		 */
 		@Override
@@ -486,8 +477,8 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.
-		 * eclipse .jface.viewers.ILabelProviderListener)
+		 * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org. eclipse
+		 * .jface.viewers.ILabelProviderListener)
 		 */
 		@Override
 		public void removeListener(ILabelProviderListener listener) {
@@ -498,8 +489,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.php.profile.ui.views.AbstractTableSorter#compare(org.
+		 * @see org.eclipse.php.profile.ui.views.AbstractTableSorter#compare(org.
 		 * eclipse .jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 		 */
 		@Override
@@ -554,8 +544,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.php.profile.ui.views.AbstractTableSorter#compare(org.
+		 * @see org.eclipse.php.profile.ui.views.AbstractTableSorter#compare(org.
 		 * eclipse .jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 		 */
 		@Override
@@ -601,8 +590,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java
+		 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java
 		 * .lang.Object, int)
 		 */
 		@Override
@@ -621,8 +609,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.
+		 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.
 		 * lang.Object, int)
 		 */
 		@Override
@@ -655,8 +642,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse
+		 * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse
 		 * .jface.viewers.ILabelProviderListener)
 		 */
 		@Override
@@ -677,8 +663,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java
+		 * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java
 		 * .lang.Object, java.lang.String)
 		 */
 		@Override
@@ -690,8 +675,8 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.
-		 * eclipse .jface.viewers.ILabelProviderListener)
+		 * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org. eclipse
+		 * .jface.viewers.ILabelProviderListener)
 		 */
 		@Override
 		public void removeListener(ILabelProviderListener listener) {
@@ -714,8 +699,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse
+		 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse
 		 * .jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 		 */
 		@Override
@@ -725,8 +709,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(
+		 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(
 		 * java.lang.Object)
 		 */
 		@Override
@@ -735,7 +718,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 				ProfilerFunctionData function = (ProfilerFunctionData) inputElement;
 				IntHashtable invokers = new IntHashtable();
 				Vector<Integer> callerIDs = new Vector<>(); // queue of
-																	// callers
+															// callers
 
 				ProfilerCallTrace callTrace = fProfilerDB.getCallTrace();
 				ProfilerCallTraceLayer[] layers = callTrace.getLayers();
@@ -753,8 +736,8 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 																									// is
 																									// called
 							int id = callerIDs.lastElement().intValue(); // get
-																						// last
-																						// caller
+																			// last
+																			// caller
 							if (invokers.containsKey(id)) {
 								InvokeFunctionTableElement invoker = (InvokeFunctionTableElement) invokers.get(id);
 								invoker.setInvokesNumber(invoker.getInvokesNumber() + 1);
@@ -794,8 +777,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse
+		 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse
 		 * .jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 		 */
 		@Override
@@ -805,8 +787,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(
+		 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(
 		 * java.lang.Object)
 		 */
 		@Override
@@ -815,7 +796,7 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 				ProfilerFunctionData function = (ProfilerFunctionData) inputElement;
 				IntHashtable invokees = new IntHashtable();
 				Vector<Integer> callerIDs = new Vector<>(); // queue of
-																	// callers
+															// callers
 
 				ProfilerCallTrace callTrace = fProfilerDB.getCallTrace();
 				ProfilerCallTraceLayer[] layers = callTrace.getLayers();
@@ -830,9 +811,9 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 						}
 						if (callerIDs.size() > 0) {
 							if (callerIDs.lastElement().intValue() == function.getID()) { // this
-																										// function
-																										// calls
-																										// somebody
+																							// function
+																							// calls
+																							// somebody
 								int id = layers[i].getCalledID();
 								if (invokees.containsKey(id)) {
 									InvokeFunctionTableElement invokee = (InvokeFunctionTableElement) invokees.get(id);

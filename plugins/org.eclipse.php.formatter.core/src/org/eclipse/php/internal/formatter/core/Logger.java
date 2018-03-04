@@ -45,8 +45,8 @@ public class Logger {
 	 * Adds message to log.
 	 * 
 	 * @param level
-	 *            severity level of the message (OK, INFO, WARNING, ERROR,
-	 *            OK_DEBUG, INFO_DEBUG, WARNING_DEBUG, ERROR_DEBUG)
+	 *            severity level of the message (OK, INFO, WARNING, ERROR, OK_DEBUG,
+	 *            INFO_DEBUG, WARNING_DEBUG, ERROR_DEBUG)
 	 * @param message
 	 *            text to add to the log
 	 * @param exception
@@ -76,10 +76,9 @@ public class Logger {
 		message = (message != null) ? message : "null"; //$NON-NLS-1$
 		Status statusObj = new Status(severity, PLUGIN_ID, severity, message, exception);
 		Bundle bundle = Platform.getBundle(PLUGIN_ID);
-		if (bundle != null)
-		 {
+		if (bundle != null) {
 			Platform.getLog(bundle).log(statusObj);
-		// debugMSG(statusObj.toString());
+			// debugMSG(statusObj.toString());
 		}
 
 	}
@@ -90,8 +89,7 @@ public class Logger {
 	 * @param message
 	 *            text to print
 	 * @param category
-	 *            category of the message, to be compared with
-	 *            /debug/tracefilter
+	 *            category of the message, to be compared with /debug/tracefilter
 	 */
 	protected static void _trace(String category, String message, Throwable exception) {
 		if (isTracing(category)) {

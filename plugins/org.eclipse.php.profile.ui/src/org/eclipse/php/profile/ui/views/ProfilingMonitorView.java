@@ -65,8 +65,7 @@ public class ProfilingMonitorView extends ViewPart
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org.eclipse
+	 * @see org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org.eclipse
 	 * .jface.viewers.DoubleClickEvent)
 	 */
 	@Override
@@ -77,8 +76,7 @@ public class ProfilingMonitorView extends ViewPart
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(
+	 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(
 	 * org.eclipse.jface.viewers.SelectionChangedEvent)
 	 */
 	@Override
@@ -175,8 +173,7 @@ public class ProfilingMonitorView extends ViewPart
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface
+	 * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface
 	 * .action.IMenuManager)
 	 */
 	@Override

@@ -56,8 +56,8 @@ public abstract class AbstractDebugWebLaunchSettingsSection implements IDebugger
 		 * 
 		 * @param content
 		 *            The string to digest
-		 * @return MD5 digested string in a hex format; null, in case of an
-		 *         error or a null input
+		 * @return MD5 digested string in a hex format; null, in case of an error or a
+		 *         null input
 		 */
 		public static String digest(String content) {
 			if (content == null) {
@@ -177,10 +177,9 @@ public abstract class AbstractDebugWebLaunchSettingsSection implements IDebugger
 			if (debugThroughTunnel.getSelection()) {
 				configuration.setAttribute(IPHPDebugConstants.SSH_TUNNEL_USER_NAME, userName.getText().trim());
 				/*
-				 * We save a hash of the password and not the real one. This is
-				 * only used to allow an apply when a password change happens.
-				 * The real password saving is done through the secured storage
-				 * right after that line.
+				 * We save a hash of the password and not the real one. This is only used to
+				 * allow an apply when a password change happens. The real password saving is
+				 * done through the secured storage right after that line.
 				 */
 				String passwordDigest = Digester.digest(password.getText().trim());
 				if (passwordDigest == null) {
@@ -191,19 +190,17 @@ public abstract class AbstractDebugWebLaunchSettingsSection implements IDebugger
 				// Save to secured storage
 				try {
 					/*
-					 * Note: At this point we write to the secure storage at any
-					 * apply. This might put in the storage some un-needed keys,
-					 * so we also scan the launch configurations on startup and
-					 * make sure that the storage contains only what we need.
+					 * Note: At this point we write to the secure storage at any apply. This might
+					 * put in the storage some un-needed keys, so we also scan the launch
+					 * configurations on startup and make sure that the storage contains only what
+					 * we need.
 					 */
 					if (!isSSHCredentialsChange) {
 						/*
-						 * We'll save to the secured storage only if the change
-						 * was done outside text fields (that might contains the
-						 * changes in the user-name and password as we type
-						 * them). This flag will be off when the apply button is
-						 * actually clicked (or when other widgets are
-						 * triggering the apply call).
+						 * We'll save to the secured storage only if the change was done outside text
+						 * fields (that might contains the changes in the user-name and password as we
+						 * type them). This flag will be off when the apply button is actually clicked
+						 * (or when other widgets are triggering the apply call).
 						 */
 						PHPLaunchUtilities.getSecurePreferences(PHPLaunchUtilities.getDebugHost(getConfiguration()))
 								.put(userName.getText(), password.getText().trim(), true /* encrypt */);
@@ -362,10 +359,10 @@ public abstract class AbstractDebugWebLaunchSettingsSection implements IDebugger
 	}
 
 	/**
-	 * Test a connection with the user name and password that are currently
-	 * typed in their designated boxes. We assume here that the validation of
-	 * the dialog already eliminated a situation where the Test button is
-	 * enabled when there is a missing user-name or password.
+	 * Test a connection with the user name and password that are currently typed in
+	 * their designated boxes. We assume here that the validation of the dialog
+	 * already eliminated a situation where the Test button is enabled when there is
+	 * a missing user-name or password.
 	 */
 	protected void testTunnelConnection() {
 		testButton.setEnabled(false);
@@ -404,9 +401,8 @@ public abstract class AbstractDebugWebLaunchSettingsSection implements IDebugger
 						testResultLabel.setText(Messages.AbstractDebugWebLaunchSettingsSection_Successfully_connected);
 					} else if (connectionStatus.isMultiStatus()) {
 						/*
-						 * A case where the connection indicate that it was
-						 * successful, however, we were still not able to verify
-						 * that.
+						 * A case where the connection indicate that it was successful, however, we were
+						 * still not able to verify that.
 						 */
 						testResultLabel.setCursor(Display.getDefault().getSystemCursor(SWT.CURSOR_HAND));
 						testResultLabel.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_DARK_YELLOW));
@@ -414,8 +410,8 @@ public abstract class AbstractDebugWebLaunchSettingsSection implements IDebugger
 						testResultLabel.setData("info", //$NON-NLS-1$
 								connectionStatus.getMessage());
 						/*
-						 * Update the password fields in case the multi status
-						 * also contains a password change information.
+						 * Update the password fields in case the multi status also contains a password
+						 * change information.
 						 */
 						IStatus[] children = connectionStatus.getChildren();
 						if (children != null) {
@@ -437,8 +433,7 @@ public abstract class AbstractDebugWebLaunchSettingsSection implements IDebugger
 						testResultLabel.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_DARK_GREEN));
 						testResultLabel.setText(Messages.AbstractDebugWebLaunchSettingsSection_Connected_with_warnings);
 						/*
-						 * Update the password field in case that the info
-						 * indicated a password change.
+						 * Update the password field in case that the info indicated a password change.
 						 */
 						if (connectionStatus.getCode() == TunnelTester.PASSWORD_CHANGED_CODE) {
 							password.setText(connectionStatus.getMessage());

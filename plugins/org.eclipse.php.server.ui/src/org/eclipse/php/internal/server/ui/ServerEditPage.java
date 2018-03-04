@@ -164,8 +164,7 @@ public class ServerEditPage extends WizardPage implements IControlHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.server.apache.ui.IControlHandler#setDescription
+	 * @see org.eclipse.php.internal.server.apache.ui.IControlHandler#setDescription
 	 * (java.lang.String)
 	 */
 	@Override
@@ -204,8 +203,7 @@ public class ServerEditPage extends WizardPage implements IControlHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.server.apache.ui.IControlHandler#getServer()
+	 * @see org.eclipse.php.internal.server.apache.ui.IControlHandler#getServer()
 	 */
 	public Server getServer() {
 		return server;
@@ -214,8 +212,7 @@ public class ServerEditPage extends WizardPage implements IControlHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.server.apache.ui.IControlHandler#setServer(org
+	 * @see org.eclipse.php.internal.server.apache.ui.IControlHandler#setServer(org
 	 * .eclipse.wst.server.core.IServer)
 	 */
 	public void setServer(Server server) {

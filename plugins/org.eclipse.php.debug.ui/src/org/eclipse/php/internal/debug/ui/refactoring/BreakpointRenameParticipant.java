@@ -46,8 +46,7 @@ public abstract class BreakpointRenameParticipant extends RenameParticipant {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#
+	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#
 	 * initialize(java.lang.Object)
 	 */
 	@Override
@@ -80,8 +79,7 @@ public abstract class BreakpointRenameParticipant extends RenameParticipant {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#
+	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#
 	 * getName()
 	 */
 	@Override
@@ -92,8 +90,7 @@ public abstract class BreakpointRenameParticipant extends RenameParticipant {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#
+	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#
 	 * checkConditions(org.eclipse.core.runtime.IProgressMonitor,
 	 * org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext)
 	 */
@@ -106,8 +103,7 @@ public abstract class BreakpointRenameParticipant extends RenameParticipant {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#
+	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant#
 	 * createChange(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
@@ -165,8 +161,8 @@ public abstract class BreakpointRenameParticipant extends RenameParticipant {
 	}
 
 	/**
-	 * Returns the resource that should be considered when searching for
-	 * affected breakpoints.
+	 * Returns the resource that should be considered when searching for affected
+	 * breakpoints.
 	 * 
 	 * @return resource to search for breakpoint markers.
 	 */
@@ -186,8 +182,7 @@ public abstract class BreakpointRenameParticipant extends RenameParticipant {
 	}
 
 	/**
-	 * Creates a specific type of change for a breakpoint that is changing
-	 * types.
+	 * Creates a specific type of change for a breakpoint that is changing types.
 	 * 
 	 * @return type change or <code>null</code>
 	 */
@@ -197,8 +192,8 @@ public abstract class BreakpointRenameParticipant extends RenameParticipant {
 	}
 
 	/**
-	 * Returns whether the given target type is contained in the specified
-	 * container type.
+	 * Returns whether the given target type is contained in the specified container
+	 * type.
 	 * 
 	 * @param container
 	 * @param target

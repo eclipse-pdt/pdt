@@ -32,8 +32,8 @@ public class GeneratorClassType extends PHPClassType {
 		/*
 		 * String names = ""; //$NON-NLS-1$ Iterator<IEvaluatedType> i =
 		 * fTypes.iterator(); while (i.hasNext()) { IEvaluatedType type =
-		 * (IEvaluatedType) i.next(); names += type.getTypeName() + " ";
-		 * //$NON-NLS-1$ } return "generator:" + names; //$NON-NLS-1$
+		 * (IEvaluatedType) i.next(); names += type.getTypeName() + " "; //$NON-NLS-1$ }
+		 * return "generator:" + names; //$NON-NLS-1$
 		 */
 		return super.getTypeName();
 	}

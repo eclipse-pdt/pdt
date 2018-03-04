@@ -180,8 +180,8 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 	}
 
 	/**
-	 * Searches for all class variable declarations using offset and length
-	 * which is hold by model element
+	 * Searches for all class variable declarations using offset and length which is
+	 * hold by model element
 	 * 
 	 * @author michael
 	 */

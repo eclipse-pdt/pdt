@@ -84,9 +84,8 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 						}
 					} catch (Exception e) {
 						/*
-						 * Ignore as some path descriptors might be illegal for
-						 * this check e.g. DLTK external library scripts (see
-						 * next step).
+						 * Ignore as some path descriptors might be illegal for this check e.g. DLTK
+						 * external library scripts (see next step).
 						 */
 					}
 					// TODO - support for DLTK external libraries

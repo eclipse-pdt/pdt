@@ -126,8 +126,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.ViewerSorter#category(java.lang.Object)
+		 * @see org.eclipse.jface.viewers.ViewerSorter#category(java.lang.Object)
 		 */
 		@Override
 		public int category(Object element) {
@@ -191,8 +190,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
+		 * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
 		 */
 		@Override
 		public Image getImage(Object element) {
@@ -203,8 +201,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
+		 * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
 		 */
 		@Override
 		public String getText(Object element) {
@@ -584,18 +581,17 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		// FIXME
 		/*
 		 * if (file.isHidden()) { String title=
-		 * PreferencesMessages.CodeTemplateBlock_export_error_title; String
-		 * message= Messages.format(PreferencesMessages.
-		 * CodeTemplateBlock_export_error_hidden ,
-		 * BasicElementLabels.getPathLabel(file));
-		 * MessageDialog.openError(getShell(), title, message); return; }
+		 * PreferencesMessages.CodeTemplateBlock_export_error_title; String message=
+		 * Messages.format(PreferencesMessages. CodeTemplateBlock_export_error_hidden ,
+		 * BasicElementLabels.getPathLabel(file)); MessageDialog.openError(getShell(),
+		 * title, message); return; }
 		 * 
 		 * if (file.exists() && !file.canWrite()) { String title=
 		 * PreferencesMessages.CodeTemplateBlock_export_error_title; String
 		 * message=Messages.format(PreferencesMessages.
 		 * CodeTemplateBlock_export_error_canNotWrite,
-		 * BasicElementLabels.getPathLabel(file));
-		 * MessageDialog.openError(getShell(), title, message); return; }
+		 * BasicElementLabels.getPathLabel(file)); MessageDialog.openError(getShell(),
+		 * title, message); return; }
 		 */
 
 		if (!file.exists() || confirmOverwrite(file)) {

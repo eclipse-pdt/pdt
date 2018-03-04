@@ -56,9 +56,9 @@ public class NetworkMonitor {
 	public static interface IHostsValidationListener {
 
 		/**
-		 * Notifies about the results of validation process by means of the list
-		 * of invalid addresses (the ones that could not be found in the list of
-		 * addresses detected by the monitor).
+		 * Notifies about the results of validation process by means of the list of
+		 * invalid addresses (the ones that could not be found in the list of addresses
+		 * detected by the monitor).
 		 * 
 		 * @param invalidAddresses
 		 */
@@ -169,8 +169,8 @@ public class NetworkMonitor {
 	}
 
 	/**
-	 * Validates the list of provided addresses by means of their existence in
-	 * the list of detected ones.
+	 * Validates the list of provided addresses by means of their existence in the
+	 * list of detected ones.
 	 * 
 	 * @param addresses
 	 * @param validationListener
@@ -212,8 +212,8 @@ public class NetworkMonitor {
 	/**
 	 * Returns detected public address.
 	 * 
-	 * @return detected public address or <code>null</code> if no address could
-	 *         be detected
+	 * @return detected public address or <code>null</code> if no address could be
+	 *         detected
 	 */
 	public Inet4Address getPublicAddress() {
 		try {

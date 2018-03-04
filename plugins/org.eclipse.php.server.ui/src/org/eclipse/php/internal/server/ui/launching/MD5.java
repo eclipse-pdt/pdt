@@ -27,8 +27,8 @@ public class MD5 {
 	 * 
 	 * @param str
 	 *            The string to digest
-	 * @return MD5 digested string in a hex format; Null, in case of an error or
-	 *         a null input
+	 * @return MD5 digested string in a hex format; Null, in case of an error or a
+	 *         null input
 	 */
 	public static String digest(String str) {
 		if (str == null) {

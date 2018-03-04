@@ -89,8 +89,7 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.IDebugModelPresentation#computeDetail(org.eclipse
+	 * @see org.eclipse.debug.ui.IDebugModelPresentation#computeDetail(org.eclipse
 	 * .debug.core.model.IValue, org.eclipse.debug.ui.IValueDetailListener)
 	 */
 	@Override

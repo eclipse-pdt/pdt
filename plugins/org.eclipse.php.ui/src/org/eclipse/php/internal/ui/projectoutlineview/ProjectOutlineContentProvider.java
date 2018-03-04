@@ -117,8 +117,8 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 	}
 
 	/**
-	 * Run all of the runnables that are the widget updates. Must be called in
-	 * the display thread.
+	 * Run all of the runnables that are the widget updates. Must be called in the
+	 * display thread.
 	 */
 	@Override
 	public void runPendingUpdates() {
@@ -231,20 +231,20 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 	// ------ delta processing ------
 
 	/**
-	 * Processes a delta recursively. When more than two children are affected
-	 * the tree is fully refreshed starting at this node.
+	 * Processes a delta recursively. When more than two children are affected the
+	 * tree is fully refreshed starting at this node.
 	 * 
 	 * @param delta
 	 *            the delta to process
 	 * @param runnables
-	 *            the resulting view changes as runnables (type {@link Runnable}
-	 *            )
+	 *            the resulting view changes as runnables (type {@link Runnable} )
 	 * @return true is returned if the conclusion is to refresh a parent of an
 	 *         element. In that case no siblings need to be processed
 	 * @throws JavaModelException
 	 *             thrown when the access to an element failed
 	 */
-	private boolean processDelta(final IModelElementDelta delta, final Collection<Runnable> runnables) throws ModelException {
+	private boolean processDelta(final IModelElementDelta delta, final Collection<Runnable> runnables)
+			throws ModelException {
 
 		int kind = delta.getKind();
 		IModelElement element = delta.getElement();

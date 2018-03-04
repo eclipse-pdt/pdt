@@ -375,8 +375,7 @@ public abstract class OptionsConfigurationBlock {
 		final Button checkBox = new Button(composite, SWT.CHECK);
 		checkBox.setFont(JFaceResources.getDialogFont());
 		gd = new GridData(GridData.FILL, GridData.CENTER, false, false);
-		int offset = Util.isMac() ? -4
-				: Util.isLinux() ? -2 : /* Windows et al. */ 3;
+		int offset = Util.isMac() ? -4 : Util.isLinux() ? -2 : /* Windows et al. */ 3;
 		gd.widthHint = checkBox.computeSize(SWT.DEFAULT, SWT.DEFAULT).x + offset;
 		checkBox.setLayoutData(gd);
 		checkBox.setData(data);
@@ -488,8 +487,9 @@ public abstract class OptionsConfigurationBlock {
 		MouseTrackAdapter labelComboListener = new MouseTrackAdapter() {
 			@Override
 			public void mouseEnter(MouseEvent e) {
-				highlight(parent, labelControl, comboBox, comboBox.isEnabled()
-						? comboBox.isFocusControl() ? HIGHLIGHT_FOCUS : HIGHLIGHT_MOUSE : HIGHLIGHT_NONE);
+				highlight(parent, labelControl, comboBox,
+						comboBox.isEnabled() ? comboBox.isFocusControl() ? HIGHLIGHT_FOCUS : HIGHLIGHT_MOUSE
+								: HIGHLIGHT_NONE);
 			}
 
 			@Override
@@ -842,9 +842,8 @@ public abstract class OptionsConfigurationBlock {
 	}
 
 	/**
-	 * Sets the option <code>key</code> to the value <code>value</code>. Note
-	 * that callers have to make sure the corresponding controls are updated
-	 * afterwards.
+	 * Sets the option <code>key</code> to the value <code>value</code>. Note that
+	 * callers have to make sure the corresponding controls are updated afterwards.
 	 * 
 	 * @param key
 	 *            the option key
@@ -867,9 +866,8 @@ public abstract class OptionsConfigurationBlock {
 	}
 
 	/**
-	 * Sets the option <code>key</code> to the value <code>value</code>. Note
-	 * that callers have to make sure the corresponding controls are updated
-	 * afterwards.
+	 * Sets the option <code>key</code> to the value <code>value</code>. Note that
+	 * callers have to make sure the corresponding controls are updated afterwards.
 	 * 
 	 * @param key
 	 *            the option key
@@ -1084,8 +1082,8 @@ public abstract class OptionsConfigurationBlock {
 	}
 
 	/**
-	 * Default implementation returns true. Override and return false if the
-	 * changes are incompatible to the underlying project
+	 * Default implementation returns true. Override and return false if the changes
+	 * are incompatible to the underlying project
 	 * 
 	 * @param currContext
 	 * @return false to deny the changes.
@@ -1124,8 +1122,8 @@ public abstract class OptionsConfigurationBlock {
 	}
 
 	/**
-	 * Updates the UI from the current settings. Must be called whenever a
-	 * setting has been changed by code.
+	 * Updates the UI from the current settings. Must be called whenever a setting
+	 * has been changed by code.
 	 */
 	protected void updateControls() {
 		for (int i = fCheckBoxes.size() - 1; i >= 0; i--) {

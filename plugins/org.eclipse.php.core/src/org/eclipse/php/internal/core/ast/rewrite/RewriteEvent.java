@@ -17,26 +17,25 @@ package org.eclipse.php.internal.core.ast.rewrite;
 public abstract class RewriteEvent {
 
 	/**
-	 * Change kind to describe that the event is an insert event. Does not apply
-	 * for list events.
+	 * Change kind to describe that the event is an insert event. Does not apply for
+	 * list events.
 	 */
 	public static final int INSERTED = 1;
 
 	/**
-	 * Change kind to describe that the event is an remove event. Does not apply
-	 * for list events.
+	 * Change kind to describe that the event is an remove event. Does not apply for
+	 * list events.
 	 */
 	public static final int REMOVED = 2;
 
 	/**
-	 * Change kind to describe that the event is an replace event. Does not
-	 * apply for list events.
+	 * Change kind to describe that the event is an replace event. Does not apply
+	 * for list events.
 	 */
 	public static final int REPLACED = 4;
 
 	/**
-	 * Change kind to signal that children changed. Does only apply for list
-	 * events.
+	 * Change kind to signal that children changed. Does only apply for list events.
 	 */
 	public static final int CHILDREN_CHANGED = 8;
 

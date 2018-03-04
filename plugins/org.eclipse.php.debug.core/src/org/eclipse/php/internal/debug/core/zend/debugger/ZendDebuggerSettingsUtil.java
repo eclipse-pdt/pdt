@@ -42,8 +42,8 @@ public class ZendDebuggerSettingsUtil {
 
 	public static int getResponseTimeout(DebugSessionStartedNotification startedNotification) {
 		/*
-		 * Check if we have related server based on original URL host name, if
-		 * yes then set timeout from its debugger settings
+		 * Check if we have related server based on original URL host name, if yes then
+		 * set timeout from its debugger settings
 		 */
 		String debugQuery = startedNotification.getQuery();
 		String originalURLTrigger = "&original_url="; //$NON-NLS-1$

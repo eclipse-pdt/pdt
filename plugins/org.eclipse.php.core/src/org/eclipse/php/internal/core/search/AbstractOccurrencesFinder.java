@@ -66,8 +66,7 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.ui.search.IOccurrencesFinder#initialize(org.
+	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#initialize(org.
 	 * eclipse.php.internal.core.ast.nodes.Program, int, int)
 	 */
 	@Override
@@ -78,8 +77,7 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.ui.search.IOccurrencesFinder#getOccurrences()
+	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getOccurrences()
 	 */
 	@Override
 	public OccurrenceLocation[] getOccurrences() {
@@ -109,10 +107,8 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 				IMarker[] markers = resource.findMarkers(DefaultProblem.MARKER_TYPE_PROBLEM, true, IResource.DEPTH_ONE);
 				ProblemDesc[] problems = new ProblemDesc[markers.length];
 				for (int i = 0; i < markers.length; ++i) {
-					problems[i] = new ProblemDesc(
-							markers[i].getAttribute("id", //$NON-NLS-1$
-									0),
-							markers[i].getAttribute(IMarker.CHAR_START, 0),
+					problems[i] = new ProblemDesc(markers[i].getAttribute("id", //$NON-NLS-1$
+							0), markers[i].getAttribute(IMarker.CHAR_START, 0),
 							markers[i].getAttribute(IMarker.CHAR_END, 0), markers[i].getAttribute(IMarker.SEVERITY, 0));
 				}
 				return problems;
@@ -155,8 +151,8 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 
 	/**
 	 * Find and add all the occurrences. Extending finders must implement this
-	 * method to fill the results list. Note that this method should not be
-	 * called directly. It is being called by the {@link #getOccurrences()}.
+	 * method to fill the results list. Note that this method should not be called
+	 * directly. It is being called by the {@link #getOccurrences()}.
 	 * 
 	 * @see #getOccurrences()
 	 */
@@ -196,8 +192,7 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.ui.search.IOccurrencesFinder#getSearchKind()
+	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getSearchKind()
 	 */
 	@Override
 	public int getSearchKind() {

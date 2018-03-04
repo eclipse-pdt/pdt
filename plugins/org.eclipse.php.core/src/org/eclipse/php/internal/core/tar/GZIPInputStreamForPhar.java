@@ -81,9 +81,9 @@ public class GZIPInputStreamForPhar extends InflaterInputStream {
 	}
 
 	/**
-	 * Reads uncompressed data into an array of bytes. If <code>len</code> is
-	 * not zero, the method will block until some input can be decompressed;
-	 * otherwise, no bytes are read and <code>0</code> is returned.
+	 * Reads uncompressed data into an array of bytes. If <code>len</code> is not
+	 * zero, the method will block until some input can be decompressed; otherwise,
+	 * no bytes are read and <code>0</code> is returned.
 	 * 
 	 * @param buf
 	 *            the buffer into which the data is read
@@ -91,17 +91,17 @@ public class GZIPInputStreamForPhar extends InflaterInputStream {
 	 *            the start offset in the destination array <code>b</code>
 	 * @param len
 	 *            the maximum number of bytes read
-	 * @return the actual number of bytes read, or -1 if the end of the
-	 *         compressed input stream is reached
+	 * @return the actual number of bytes read, or -1 if the end of the compressed
+	 *         input stream is reached
 	 * @exception NullPointerException
 	 *                If <code>buf</code> is <code>null</code>.
 	 * @exception IndexOutOfBoundsException
-	 *                If <code>off</code> is negative, <code>len</code> is
-	 *                negative, or <code>len</code> is greater than
+	 *                If <code>off</code> is negative, <code>len</code> is negative,
+	 *                or <code>len</code> is greater than
 	 *                <code>buf.length - off</code>
 	 * @exception IOException
-	 *                if an I/O error has occurred or the compressed input data
-	 *                is corrupt
+	 *                if an I/O error has occurred or the compressed input data is
+	 *                corrupt
 	 */
 	@Override
 	public int read(byte[] buf, int off, int len) throws IOException {
@@ -127,8 +127,8 @@ public class GZIPInputStreamForPhar extends InflaterInputStream {
 	}
 
 	/**
-	 * Closes this input stream and releases any system resources associated
-	 * with the stream.
+	 * Closes this input stream and releases any system resources associated with
+	 * the stream.
 	 * 
 	 * @exception IOException
 	 *                if an I/O error has occurred

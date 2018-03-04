@@ -73,8 +73,7 @@ public class DefaultServerTestMessageDialog extends MessageDialog {
 	}
 
 	/**
-	 * Add an accessible listener to the label if it can be inferred from the
-	 * image.
+	 * Add an accessible listener to the label if it can be inferred from the image.
 	 * 
 	 * @param label
 	 * @param image

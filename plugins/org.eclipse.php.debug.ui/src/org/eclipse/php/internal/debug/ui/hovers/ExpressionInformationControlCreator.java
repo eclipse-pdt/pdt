@@ -85,18 +85,15 @@ public class ExpressionInformationControlCreator implements IInformationControlC
 		private Tree fTree;
 
 		/**
-		 * Creates the content for the root element of the tree viewer in the
-		 * hover
+		 * Creates the content for the root element of the tree viewer in the hover
 		 */
 		private class TreeRoot extends ElementContentProvider {
 			/*
 			 * (non-Javadoc)
 			 * 
-			 * @see
-			 * org.eclipse.debug.internal.ui.viewers.model.provisional.elements.
+			 * @see org.eclipse.debug.internal.ui.viewers.model.provisional.elements.
 			 * ElementContentProvider#getChildCount(java.lang.Object,
-			 * org.eclipse.debug.internal.ui.viewers.provisional.
-			 * IPresentationContext)
+			 * org.eclipse.debug.internal.ui.viewers.provisional. IPresentationContext)
 			 */
 			@Override
 			protected int getChildCount(Object element, IPresentationContext context, IViewerUpdate monitor)
@@ -107,11 +104,9 @@ public class ExpressionInformationControlCreator implements IInformationControlC
 			/*
 			 * (non-Javadoc)
 			 * 
-			 * @see
-			 * org.eclipse.debug.internal.ui.viewers.model.provisional.elements.
+			 * @see org.eclipse.debug.internal.ui.viewers.model.provisional.elements.
 			 * ElementContentProvider#getChildren(java.lang.Object, int, int,
-			 * org.eclipse.debug.internal.ui.viewers.provisional.
-			 * IPresentationContext)
+			 * org.eclipse.debug.internal.ui.viewers.provisional. IPresentationContext)
 			 */
 			@Override
 			protected Object[] getChildren(Object parent, int index, int length, IPresentationContext context,
@@ -122,8 +117,7 @@ public class ExpressionInformationControlCreator implements IInformationControlC
 			/*
 			 * (non-Javadoc)
 			 * 
-			 * @see
-			 * org.eclipse.debug.internal.ui.viewers.model.provisional.elements.
+			 * @see org.eclipse.debug.internal.ui.viewers.model.provisional.elements.
 			 * ElementContentProvider#supportsContextId(java.lang.String)
 			 */
 			@Override
@@ -133,9 +127,8 @@ public class ExpressionInformationControlCreator implements IInformationControlC
 		}
 
 		/**
-		 * Inner class implementing IDetailPaneContainer methods. Handles
-		 * changes to detail pane and provides limited access to the detail pane
-		 * proxy.
+		 * Inner class implementing IDetailPaneContainer methods. Handles changes to
+		 * detail pane and provides limited access to the detail pane proxy.
 		 */
 		private class DetailPaneContainer implements IDetailPaneContainer {
 
@@ -228,8 +221,7 @@ public class ExpressionInformationControlCreator implements IInformationControlC
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.text.AbstractInformationControl#computeSizeHint()
+		 * @see org.eclipse.jface.text.AbstractInformationControl#computeSizeHint()
 		 */
 		@Override
 		public Point computeSizeHint() {
@@ -247,8 +239,7 @@ public class ExpressionInformationControlCreator implements IInformationControlC
 		}
 
 		/**
-		 * Returns the dialog settings for this hover or <code>null</code> if
-		 * none
+		 * Returns the dialog settings for this hover or <code>null</code> if none
 		 * 
 		 * @param create
 		 *            whether to create the settings
@@ -313,8 +304,7 @@ public class ExpressionInformationControlCreator implements IInformationControlC
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.text.AbstractInformationControl#setVisible(boolean)
+		 * @see org.eclipse.jface.text.AbstractInformationControl#setVisible(boolean)
 		 */
 		@Override
 		public void setVisible(boolean visible) {
@@ -327,8 +317,7 @@ public class ExpressionInformationControlCreator implements IInformationControlC
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.text.AbstractInformationControl#createContent(org.
+		 * @see org.eclipse.jface.text.AbstractInformationControl#createContent(org.
 		 * eclipse.swt.widgets.Composite)
 		 */
 		@Override
@@ -421,8 +410,8 @@ public class ExpressionInformationControlCreator implements IInformationControlC
 		}
 
 		/**
-		 * Attempts to find an appropriate view to emulate, this will either be
-		 * the variables view or the expressions view.
+		 * Attempts to find an appropriate view to emulate, this will either be the
+		 * variables view or the expressions view.
 		 * 
 		 * @return a view to emulate or <code>null</code>
 		 */
@@ -443,8 +432,8 @@ public class ExpressionInformationControlCreator implements IInformationControlC
 		}
 
 		/**
-		 * Initializes the sash form weights from the preference store (using
-		 * default values if no sash weights were stored previously).
+		 * Initializes the sash form weights from the preference store (using default
+		 * values if no sash weights were stored previously).
 		 */
 		protected void initSashWeights() {
 			IDialogSettings settings = getDialogSettings(false);
@@ -462,8 +451,7 @@ public class ExpressionInformationControlCreator implements IInformationControlC
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.text.AbstractInformationControl#setForegroundColor(
+		 * @see org.eclipse.jface.text.AbstractInformationControl#setForegroundColor(
 		 * org.eclipse.swt.graphics.Color)
 		 */
 		@Override
@@ -476,8 +464,7 @@ public class ExpressionInformationControlCreator implements IInformationControlC
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.text.AbstractInformationControl#setBackgroundColor(
+		 * @see org.eclipse.jface.text.AbstractInformationControl#setBackgroundColor(
 		 * org.eclipse.swt.graphics.Color)
 		 */
 		@Override
@@ -501,8 +488,7 @@ public class ExpressionInformationControlCreator implements IInformationControlC
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.text.IInformationControlExtension#hasContents()
+		 * @see org.eclipse.jface.text.IInformationControlExtension#hasContents()
 		 */
 		@Override
 		public boolean hasContents() {
@@ -512,8 +498,7 @@ public class ExpressionInformationControlCreator implements IInformationControlC
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.text.IInformationControlExtension2#setInput(java.
+		 * @see org.eclipse.jface.text.IInformationControlExtension2#setInput(java.
 		 * lang.Object)
 		 */
 		@Override

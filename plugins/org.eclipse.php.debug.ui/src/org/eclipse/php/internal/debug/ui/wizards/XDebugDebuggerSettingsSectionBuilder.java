@@ -26,8 +26,7 @@ public class XDebugDebuggerSettingsSectionBuilder implements IDebuggerSettingsSe
 	 * 
 	 * @see
 	 * org.eclipse.php.internal.debug.ui.wizards.IDebuggerSettingsSectionBuilder
-	 * #build(org.eclipse.php.internal.ui.wizards.CompositeFragment,
-	 * org.eclipse.
+	 * #build(org.eclipse.php.internal.ui.wizards.CompositeFragment, org.eclipse.
 	 * php.internal.debug.core.debugger.IDebuggerSettingsWorkingCopy)
 	 */
 	@Override

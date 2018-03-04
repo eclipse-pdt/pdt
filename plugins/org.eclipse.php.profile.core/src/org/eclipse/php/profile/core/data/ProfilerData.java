@@ -29,8 +29,7 @@ public class ProfilerData {
 		init();
 	}
 
-	public ProfilerData(ProfilerGlobalData globalData, List<ProfilerFileData> filesData,
-			ProfilerCallTrace callTrace) {
+	public ProfilerData(ProfilerGlobalData globalData, List<ProfilerFileData> filesData, ProfilerCallTrace callTrace) {
 		this.globalData = globalData;
 		this.filesData = filesData;
 		this.callTrace = callTrace;

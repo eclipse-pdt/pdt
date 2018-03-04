@@ -64,8 +64,8 @@ public class TryStatement extends Statement {
 	}
 
 	/**
-	 * Returns a list of structural property descriptors for this node type.
-	 * Clients must not modify the result.
+	 * Returns a list of structural property descriptors for this node type. Clients
+	 * must not modify the result.
 	 * 
 	 * @param apiLevel
 	 *            the API level; one of the <code>AST.JLS*</code> constants

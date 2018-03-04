@@ -25,8 +25,8 @@ public interface IProfileManager {
 	public abstract IProfile getProfile(String ID);
 
 	/**
-	 * Activate the selected profile, update all necessary options in
-	 * preferences and save profiles to disk.
+	 * Activate the selected profile, update all necessary options in preferences
+	 * and save profiles to disk.
 	 */
 	public abstract void commitChanges(IScopeContext scopeContext);
 
@@ -56,8 +56,8 @@ public interface IProfileManager {
 	public abstract void setSelected(String profileId);
 
 	/**
-	 * Check whether a user-defined profile in this profile manager already has
-	 * this name.
+	 * Check whether a user-defined profile in this profile manager already has this
+	 * name.
 	 * 
 	 * @param name
 	 *            The name to test for

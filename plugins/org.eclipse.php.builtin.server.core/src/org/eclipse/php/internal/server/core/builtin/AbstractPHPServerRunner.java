@@ -82,8 +82,7 @@ public abstract class AbstractPHPServerRunner implements IPHPServerRunner {
 		if (len == 0) {
 			return true;
 		}
-		if ("\"\"".equals(s))
-		 {
+		if ("\"\"".equals(s)) {
 			return false; // empty quotes must not be quoted again
 		}
 		for (int i = 0; i < len; i++) {

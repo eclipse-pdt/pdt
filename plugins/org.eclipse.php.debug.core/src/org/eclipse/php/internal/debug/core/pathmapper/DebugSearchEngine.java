@@ -50,10 +50,10 @@ public class DebugSearchEngine {
 	private static IPathEntryFilter[] filters;
 
 	/**
-	 * Searches for all local resources that match provided remote file, and
-	 * returns it in best match order. This method skips internal PHP search
-	 * mechanism, going straight to the path mapper, so it's good only for
-	 * resolving absolute paths.
+	 * Searches for all local resources that match provided remote file, and returns
+	 * it in best match order. This method skips internal PHP search mechanism,
+	 * going straight to the path mapper, so it's good only for resolving absolute
+	 * paths.
 	 * 
 	 * @param remoteFile
 	 *            Path of the file on server. This argument must not be
@@ -67,8 +67,8 @@ public class DebugSearchEngine {
 	}
 
 	/**
-	 * Searches for all local resources that match provided remote file, and
-	 * returns it in best match order.
+	 * Searches for all local resources that match provided remote file, and returns
+	 * it in best match order.
 	 * 
 	 * @param remoteFile
 	 *            Path of the file on server. This argument must not be
@@ -147,8 +147,8 @@ public class DebugSearchEngine {
 	}
 
 	/**
-	 * Searches for all local resources that match provided remote file, and
-	 * returns it in best match order.
+	 * Searches for all local resources that match provided remote file, and returns
+	 * it in best match order.
 	 * 
 	 * @param pathMapper
 	 *            Path mapper to look at
@@ -272,7 +272,8 @@ public class DebugSearchEngine {
 								if (entryPath != null && (entryPath.isPrefixOf(Path.fromOSString(remoteFile))
 										|| entryPath.isPrefixOf(remoteFilePath))) {
 									Type type = (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE)
-											? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER;
+											? Type.INCLUDE_VAR
+											: Type.INCLUDE_FOLDER;
 									localFile[0] = new PathEntry(file.getAbsolutePath(), type, entry);
 									return Status.OK_STATUS;
 								}
@@ -564,8 +565,7 @@ public class DebugSearchEngine {
 				}
 			}
 			Collection<IPathEntryFilter> l = filtersMap.values();
-			while (l.remove(null))
-			 {
+			while (l.remove(null)) {
 				; // remove null elements
 			}
 			filters = l.toArray(new IPathEntryFilter[filtersMap.size()]);

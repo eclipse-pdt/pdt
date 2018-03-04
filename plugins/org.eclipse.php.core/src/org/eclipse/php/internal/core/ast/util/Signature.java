@@ -677,8 +677,7 @@ public final class Signature {
 	 * @since 2.0
 	 */
 	public static char[] createCharArrayTypeSignature(char[] typeName, boolean isResolved) {
-		if (typeName == null)
-		 {
+		if (typeName == null) {
 			throw new IllegalArgumentException("null"); //$NON-NLS-1$
 		}
 		int length = typeName.length;
@@ -944,8 +943,7 @@ public final class Signature {
 			}
 		}
 		buffer.append(C_NAME_END);
-		if (end > 0)
-		 {
+		if (end > 0) {
 			pos = end; // skip array dimension which were preprocessed
 		}
 		return pos;
@@ -1783,8 +1781,7 @@ public final class Signature {
 	 */
 	public static String getQualifier(String name) {
 		char[] qualifier = getQualifier(name.toCharArray());
-		if (qualifier.length == 0)
-		 {
+		if (qualifier.length == 0) {
 			return ""; //$NON-NLS-1$
 		}
 		return new String(qualifier);

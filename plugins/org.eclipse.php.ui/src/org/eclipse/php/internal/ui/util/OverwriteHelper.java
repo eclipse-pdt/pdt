@@ -112,8 +112,7 @@ class OverwriteHelper {
 				toNotOverwrite.add(root);
 			}
 		}
-		IProjectFragment[] roots = toNotOverwrite
-				.toArray(new IProjectFragment[toNotOverwrite.size()]);
+		IProjectFragment[] roots = toNotOverwrite.toArray(new IProjectFragment[toNotOverwrite.size()]);
 		fRoots = ArrayTypeConverter.toProjectFragmentArray(ReorgUtils.setMinus(fRoots, roots));
 	}
 

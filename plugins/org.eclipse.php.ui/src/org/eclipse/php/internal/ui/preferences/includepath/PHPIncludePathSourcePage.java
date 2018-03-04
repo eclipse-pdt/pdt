@@ -210,8 +210,7 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 				IProject project = fCurrJProject.getProject();
 				if (project.exists() && hasFolders(project)) {
 					List<?> existingElements = fFoldersList.getElements();
-					BPListElement[] existing = existingElements
-							.toArray(new BPListElement[existingElements.size()]);
+					BPListElement[] existing = existingElements.toArray(new BPListElement[existingElements.size()]);
 					CreateMultipleSourceFoldersDialog dialog = new CreateMultipleSourceFoldersDialog(fCurrJProject,
 							existing, getShell());
 					if (dialog.open() == Window.OK) {

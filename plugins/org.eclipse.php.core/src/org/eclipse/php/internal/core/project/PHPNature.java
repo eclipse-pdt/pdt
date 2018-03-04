@@ -61,8 +61,8 @@ public class PHPNature extends ScriptNature {
 	}
 
 	/**
-	 * Create a default file for the user given the name (directory relative to
-	 * the project) and the default contents for the file.
+	 * Create a default file for the user given the name (directory relative to the
+	 * project) and the default contents for the file.
 	 * 
 	 * @param newFilePath
 	 *            - IPath
@@ -102,8 +102,7 @@ public class PHPNature extends ScriptNature {
 	}
 
 	/**
-	 * Insert the method's description here. Creation date: (11/1/2001 2:25:22
-	 * PM)
+	 * Insert the method's description here. Creation date: (11/1/2001 2:25:22 PM)
 	 * 
 	 * @param builderID
 	 *            java.lang.String
@@ -136,9 +135,9 @@ public class PHPNature extends ScriptNature {
 
 	/**
 	 * Configures the project with this nature. This is called by
-	 * <code>IProject.addNature</code> and should not be called directly by
-	 * clients. The nature extension id is added to the list of natures on the
-	 * project by <code>IProject.addNature</code>, and need not be added here.
+	 * <code>IProject.addNature</code> and should not be called directly by clients.
+	 * The nature extension id is added to the list of natures on the project by
+	 * <code>IProject.addNature</code>, and need not be added here.
 	 * 
 	 * All subtypes must call super.
 	 * 
@@ -158,8 +157,7 @@ public class PHPNature extends ScriptNature {
 	}
 
 	/**
-	 * Create a folder relative to the project based on
-	 * aProjectRelativePathString.
+	 * Create a folder relative to the project based on aProjectRelativePathString.
 	 * 
 	 * @exception com.ibm.itp.core.api.resources.CoreException
 	 *                The exception description.
@@ -172,8 +170,7 @@ public class PHPNature extends ScriptNature {
 	}
 
 	/**
-	 * Create a folder relative to the project based on
-	 * aProjectRelativePathString.
+	 * Create a folder relative to the project based on aProjectRelativePathString.
 	 * 
 	 * @exception com.ibm.itp.core.api.resources.CoreException
 	 *                The exception description.

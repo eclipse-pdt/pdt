@@ -28,14 +28,11 @@ public class ProfilingMonitorElement {
 
 		try {
 			fChildren = new ProfilingMonitorViewElement[] {
-					new ProfilingMonitorViewElement(this,
-							ProfilerUIConstants.PROFILER_INFO_VIEW),
-					new ProfilingMonitorViewElement(this,
-							ProfilerUIConstants.EXECUTION_STATISTICS_VIEW),
-					new ProfilingMonitorViewElement(this,
-							ProfilerUIConstants.EXECUTION_FLOW_VIEW),
-			// new ProfilingMonitorViewElement(this,
-			// ProfilerUIConstants.CODE_COVERAGE_SUMMARY_VIEW),
+					new ProfilingMonitorViewElement(this, ProfilerUIConstants.PROFILER_INFO_VIEW),
+					new ProfilingMonitorViewElement(this, ProfilerUIConstants.EXECUTION_STATISTICS_VIEW),
+					new ProfilingMonitorViewElement(this, ProfilerUIConstants.EXECUTION_FLOW_VIEW),
+					// new ProfilingMonitorViewElement(this,
+					// ProfilerUIConstants.CODE_COVERAGE_SUMMARY_VIEW),
 			};
 		} catch (PartInitException e) {
 			ProfilerUiPlugin.log(e);

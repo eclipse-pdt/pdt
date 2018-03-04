@@ -60,8 +60,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.model.LaunchConfigurationDelegate#getLaunch(org.
+	 * @see org.eclipse.debug.core.model.LaunchConfigurationDelegate#getLaunch(org.
 	 * eclipse.debug.core.ILaunchConfiguration, java.lang.String)
 	 */
 	@Override
@@ -72,11 +71,9 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.model.ILaunchConfigurationDelegate#launch(org.
+	 * @see org.eclipse.debug.core.model.ILaunchConfigurationDelegate#launch(org.
 	 * eclipse.debug.core.ILaunchConfiguration, java.lang.String,
-	 * org.eclipse.debug.core.ILaunch,
-	 * org.eclipse.core.runtime.IProgressMonitor)
+	 * org.eclipse.debug.core.ILaunch, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
@@ -125,14 +122,14 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 		wc.setAttribute(IDebugParametersKeys.OUTPUT_ENCODING, PHPProjectPreferences.getOutputEncoding(proj));
 		wc.doSave();
 		/*
-		 * Determine stop at first line (first calculate the default and then
-		 * try to extract the configuration attribute).
+		 * Determine stop at first line (first calculate the default and then try to
+		 * extract the configuration attribute).
 		 */
 		boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(proj);
 		stopAtFirstLine = wc.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, stopAtFirstLine);
 		/*
-		 * Generate a session id for this launch and start the listener then
-		 * create the start and stop debug URLs
+		 * Generate a session id for this launch and start the listener then create the
+		 * start and stop debug URLs
 		 */
 		String[] startStopURLs;
 		String baseURL = new String(configuration.getAttribute(Server.BASE_URL, "").getBytes()); //$NON-NLS-1$
@@ -214,8 +211,8 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 			}
 		} else {
 			/*
-			 * launched is not in debug mode, so remove the launch from the
-			 * debug view as we are not debugging anything.
+			 * launched is not in debug mode, so remove the launch from the debug view as we
+			 * are not debugging anything.
 			 */
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
 		}

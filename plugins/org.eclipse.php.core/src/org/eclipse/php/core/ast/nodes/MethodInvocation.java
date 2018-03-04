@@ -197,19 +197,16 @@ public class MethodInvocation extends Dispatch {
 	 * Resolves and returns the binding for the Constructor accessed by this
 	 * expression.
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be
-	 *         resolved
+	 * @return the binding, or <code>null</code> if the binding cannot be resolved
 	 */
 	public IMethodBinding resolveConstructorBinding() {
 		return this.ast.getBindingResolver().resolveConstructor(this);
 	}
 
 	/**
-	 * Resolves and returns the binding for the method invoked by this
-	 * expression.
+	 * Resolves and returns the binding for the method invoked by this expression.
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be
-	 *         resolved
+	 * @return the binding, or <code>null</code> if the binding cannot be resolved
 	 */
 	public IMethodBinding resolveMethodBinding() {
 		return this.ast.getBindingResolver().resolveMethod(this);

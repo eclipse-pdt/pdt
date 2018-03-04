@@ -69,16 +69,15 @@ class RefreshStructureJob extends Job {
 		if (size > 0) {
 			for (int i = 0; i < size; i++) {
 				/*
-				 * If we already have a request which contains the new request,
-				 * discard the new request
+				 * If we already have a request which contains the new request, discard the new
+				 * request
 				 */
 				Node node2 = fRequests.get(i);
 				if (contains(node2, node)) {
 					return;
 				}
 				/*
-				 * If new request contains any existing requests, replace it
-				 * with new request
+				 * If new request contains any existing requests, replace it with new request
 				 */
 				if (contains(node, node2)) {
 					fRequests.set(i, node);
@@ -116,24 +115,21 @@ class RefreshStructureJob extends Job {
 
 		// can't contain the parent if it's null
 		if (root == null) {
-			if (DEBUG)
-			 {
+			if (DEBUG) {
 				System.out.println("returning false: root is null"); //$NON-NLS-1$
 			}
 			return false;
 		}
 		// nothing can be parent of Document node
 		if (possible instanceof Document) {
-			if (DEBUG)
-			 {
+			if (DEBUG) {
 				System.out.println("returning false: possible is Document node"); //$NON-NLS-1$
 			}
 			return false;
 		}
 		// document contains everything
 		if (root instanceof Document) {
-			if (DEBUG)
-			 {
+			if (DEBUG) {
 				System.out.println("returning true: root is Document node"); //$NON-NLS-1$
 			}
 			return true;
@@ -143,14 +139,12 @@ class RefreshStructureJob extends Job {
 		Node current = root;
 		// loop siblings
 		while (current != null) {
-			if (DEBUG)
-			 {
+			if (DEBUG) {
 				System.out.println("   -> iterating sibling (" + current.getNodeName() + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			// found it
 			if (possible.equals(current)) {
-				if (DEBUG)
-				 {
+				if (DEBUG) {
 					System.out.println(
 							"   !!! found: " + possible.getNodeName() + " in subtree for: " + root.getNodeName()); //$NON-NLS-1$ //$NON-NLS-2$
 				}
@@ -169,11 +163,11 @@ class RefreshStructureJob extends Job {
 	/**
 	 * Refresh must be on UI thread because it's on a SWT widget.
 	 * 
-	 * The deferance in the functionallty is this: If we are refreshing the
-	 * outline when its in PHPOutlineContentProvider.MODE_PHP mode then it
-	 * doesn't metter which node was changed (unless is not php node) - we need
-	 * to refresh the whole tree. otherwise - (using the default behaivor)
-	 * refreshing only the relevent items in the tree.
+	 * The deferance in the functionallty is this: If we are refreshing the outline
+	 * when its in PHPOutlineContentProvider.MODE_PHP mode then it doesn't metter
+	 * which node was changed (unless is not php node) - we need to refresh the
+	 * whole tree. otherwise - (using the default behaivor) refreshing only the
+	 * relevent items in the tree.
 	 * 
 	 * @param node
 	 */
@@ -194,29 +188,16 @@ class RefreshStructureJob extends Job {
 					((node.getNodeType() == Node.ELEMENT_NODE)
 							&& (((IDOMNode) node).getFirstStructuredDocumentRegion()
 									.getType() == PHPRegionTypes.PHP_CONTENT)
-							&& (viewer.getContentProvider() instanceof PHPOutlineContentProvider) /*
-																									 * &&
-																									 * (
-																									 * (
-																									 * (
-																									 * PHPOutlineContentProvider
-																									 * )
-																									 * viewer
-																									 * .
-																									 * getContentProvider
-																									 * (
-																									 * )
-																									 * )
-																									 * .
-																									 * getMode
-																									 * (
-																									 * )
-																									 * ==
-																									 * PHPOutlineContentProvider
-																									 * .
-																									 * MODE_PHP
-																									 * )
-																									 */)) {
+							&& (viewer
+									.getContentProvider() instanceof PHPOutlineContentProvider) /*
+																								 * && ( ( (
+																								 * PHPOutlineContentProvider
+																								 * ) viewer .
+																								 * getContentProvider (
+																								 * ) ) . getMode ( ) ==
+																								 * PHPOutlineContentProvider
+																								 * . MODE_PHP )
+																								 */)) {
 						viewers[i].refresh(true);
 					} else {
 						viewers[i].refresh(node, true);

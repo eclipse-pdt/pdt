@@ -53,8 +53,7 @@ public class ChartViewer extends Composite implements PaintListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events
+	 * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events
 	 * .PaintEvent)
 	 */
 	@Override
@@ -77,8 +76,7 @@ public class ChartViewer extends Composite implements PaintListener {
 
 		Generator gr = Generator.instance();
 		try {
-			fGeneratedChartState = gr.build(fDeviceRenderer.getDisplayServer(),
-					fChartModel, bo, null, null, null);
+			fGeneratedChartState = gr.build(fDeviceRenderer.getDisplayServer(), fChartModel, bo, null, null, null);
 		} catch (ChartException ce) {
 			ProfilerUiPlugin.log(ce);
 		}

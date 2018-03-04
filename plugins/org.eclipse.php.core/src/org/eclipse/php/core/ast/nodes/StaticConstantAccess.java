@@ -201,8 +201,7 @@ public class StaticConstantAccess extends StaticDispatch {
 	 * Resolves and returns the binding for the static constant accessed by this
 	 * expression.
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be
-	 *         resolved
+	 * @return the binding, or <code>null</code> if the binding cannot be resolved
 	 */
 	public IVariableBinding resolveFieldBinding() {
 		return this.ast.getBindingResolver().resolveField(this);

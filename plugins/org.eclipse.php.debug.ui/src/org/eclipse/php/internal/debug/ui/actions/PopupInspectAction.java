@@ -66,8 +66,7 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate, IObje
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
+		 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
 		 * ExecutionEvent)
 		 */
 		@Override
@@ -76,14 +75,13 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate, IObje
 			if (activeSite == null) {
 				return null;
 			}
-			Command command = activeSite.getService(ICommandService.class)
-					.getCommand(ACTION_DEFININITION_ID);
+			Command command = activeSite.getService(ICommandService.class).getCommand(ACTION_DEFININITION_ID);
 			if (!command.isEnabled()) {
 				return null;
 			}
 			final Event trigger = new Event();
-			ExecutionEvent executionEvent = activeSite.getService(IHandlerService.class)
-					.createExecutionEvent(command, trigger);
+			ExecutionEvent executionEvent = activeSite.getService(IHandlerService.class).createExecutionEvent(command,
+					trigger);
 			try {
 				command.executeWithChecks(executionEvent);
 			} catch (CommandException e) {
@@ -128,9 +126,9 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate, IObje
 
 	/**
 	 * Returns the 'object' context for this evaluation, or <code>null</code> if
-	 * none. If the evaluation is being performed in the context of the
-	 * variables view/inspector. Then perform the evaluation in the context of
-	 * the selected value.
+	 * none. If the evaluation is being performed in the context of the variables
+	 * view/inspector. Then perform the evaluation in the context of the selected
+	 * value.
 	 * 
 	 * @return Java object or <code>null</code>
 	 */
@@ -267,8 +265,7 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate, IObje
 			protected Control createDialogArea(Composite parent) {
 				Control result = super.createDialogArea(parent);
 				if (fTextEditor != null) {
-					IContextService contextService = fTextEditor.getSite()
-							.getService(IContextService.class);
+					IContextService contextService = fTextEditor.getSite().getService(IContextService.class);
 					contextActivation = contextService.activateContext("org.eclipse.php.debug.ui.xdebug"); //$NON-NLS-1$
 				}
 				return result;
@@ -334,9 +331,9 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate, IObje
 	}
 
 	/**
-	 * Resolve an editor input from the source element of the stack frame
-	 * argument, and return whether it's equal to the editor input for the
-	 * editor that owns this action.
+	 * Resolve an editor input from the source element of the stack frame argument,
+	 * and return whether it's equal to the editor input for the editor that owns
+	 * this action.
 	 */
 	protected boolean compareToEditorInput(IStackFrame stackFrame) {
 		ILaunch launch = stackFrame.getLaunch();

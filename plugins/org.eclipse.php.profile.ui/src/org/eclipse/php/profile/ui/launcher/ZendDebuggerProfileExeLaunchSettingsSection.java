@@ -27,8 +27,7 @@ import org.eclipse.swt.widgets.Group;
  * 
  * @author Bartlomiej Laczkowski
  */
-public class ZendDebuggerProfileExeLaunchSettingsSection
-		extends AbstractProfileExeLaunchSettingsSection {
+public class ZendDebuggerProfileExeLaunchSettingsSection extends AbstractProfileExeLaunchSettingsSection {
 
 	private Group fGeneralGroup;
 	private Button fCodeCoverageButton;
@@ -43,9 +42,7 @@ public class ZendDebuggerProfileExeLaunchSettingsSection
 	@Override
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
 		super.setDefaults(configuration);
-		configuration.setAttribute(
-				IPHPDebugConstants.ATTR_ENABLE_CODE_COVERAGE,
-				true);
+		configuration.setAttribute(IPHPDebugConstants.ATTR_ENABLE_CODE_COVERAGE, true);
 	}
 
 	/*
@@ -60,9 +57,8 @@ public class ZendDebuggerProfileExeLaunchSettingsSection
 		super.initialize(configuration);
 		if (fGeneralGroup != null) {
 			try {
-				final boolean enableCodeCoverage = configuration.getAttribute(
-						IPHPDebugConstants.ATTR_ENABLE_CODE_COVERAGE,
-						false);
+				final boolean enableCodeCoverage = configuration
+						.getAttribute(IPHPDebugConstants.ATTR_ENABLE_CODE_COVERAGE, false);
 				fCodeCoverageButton.setSelection(enableCodeCoverage);
 			} catch (CoreException e) {
 				ProfilerUiPlugin.log(e);
@@ -79,8 +75,7 @@ public class ZendDebuggerProfileExeLaunchSettingsSection
 	@Override
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 		if (fGeneralGroup != null) {
-			configuration.setAttribute(
-					IPHPDebugConstants.ATTR_ENABLE_CODE_COVERAGE,
+			configuration.setAttribute(IPHPDebugConstants.ATTR_ENABLE_CODE_COVERAGE,
 					fCodeCoverageButton.getSelection());
 		}
 	}

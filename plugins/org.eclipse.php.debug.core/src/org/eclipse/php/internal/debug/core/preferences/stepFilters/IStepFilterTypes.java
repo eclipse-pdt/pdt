@@ -61,8 +61,8 @@ public interface IStepFilterTypes {
 	public final static int PHP_INCLUDE_PATH_LIBRARY = 9008;
 
 	/**
-	 * A Filter Type representation of a Folder within a PHP Include Path
-	 * Library Entry
+	 * A Filter Type representation of a Folder within a PHP Include Path Library
+	 * Entry
 	 */
 	public final static int PHP_INCLUDE_PATH_LIBRARY_FOLDER = 9009;
 

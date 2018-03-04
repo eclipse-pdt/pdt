@@ -129,8 +129,7 @@ public class Factory {
 			}
 
 			// add package name
-			if (packageName != null)
-			 {
+			if (packageName != null) {
 				s = packageName + "." + s; //$NON-NLS-1$
 			}
 			Class<?> class1 = Class.forName(s);

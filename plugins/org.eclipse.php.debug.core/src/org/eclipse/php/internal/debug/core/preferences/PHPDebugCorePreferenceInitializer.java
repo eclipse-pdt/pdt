@@ -114,8 +114,7 @@ public class PHPDebugCorePreferenceInitializer extends AbstractPreferenceInitial
 	}
 
 	/**
-	 * Checks a network class of specified address. It returns integer from 0 to
-	 * 4.
+	 * Checks a network class of specified address. It returns integer from 0 to 4.
 	 * 
 	 * @param address
 	 * @return integer associated with particular network class with following
@@ -145,8 +144,8 @@ public class PHPDebugCorePreferenceInitializer extends AbstractPreferenceInitial
 	}
 
 	/**
-	 * Checks if specified address is in the range of class A private network
-	 * (RFC 1918) with 10.0.0.0/8 mask.
+	 * Checks if specified address is in the range of class A private network (RFC
+	 * 1918) with 10.0.0.0/8 mask.
 	 * 
 	 * @param address
 	 * @return <code>true</code> if it is in the range; otherwise return
@@ -157,8 +156,8 @@ public class PHPDebugCorePreferenceInitializer extends AbstractPreferenceInitial
 	}
 
 	/**
-	 * Checks if specified address is in the range of class B private network
-	 * (RFC 1918) with 172.16.0.0/12 mask.
+	 * Checks if specified address is in the range of class B private network (RFC
+	 * 1918) with 172.16.0.0/12 mask.
 	 * 
 	 * @param address
 	 * @return <code>true</code> if it is in the range; otherwise return
@@ -169,8 +168,8 @@ public class PHPDebugCorePreferenceInitializer extends AbstractPreferenceInitial
 	}
 
 	/**
-	 * Checks if specified address is in the range of class C private network
-	 * (RFC 1918) with 192.168.0.0/16 mask.
+	 * Checks if specified address is in the range of class C private network (RFC
+	 * 1918) with 192.168.0.0/16 mask.
 	 * 
 	 * @param address
 	 * @return <code>true</code> if it is in the range; otherwise return

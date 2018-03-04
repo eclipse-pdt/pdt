@@ -17,8 +17,7 @@ class LocalFlowInfo extends FlowInfo {
 
 	private int fVariableId;
 
-	public LocalFlowInfo(IVariableBinding binding, int localAccessMode,
-			FlowContext context) {
+	public LocalFlowInfo(IVariableBinding binding, int localAccessMode, FlowContext context) {
 		super(NO_RETURN);
 		fVariableId = binding.getVariableId();
 		if (context.considerAccessMode()) {
@@ -28,8 +27,7 @@ class LocalFlowInfo extends FlowInfo {
 		}
 	}
 
-	public LocalFlowInfo(LocalFlowInfo info, int localAccessMode,
-			FlowContext context) {
+	public LocalFlowInfo(LocalFlowInfo info, int localAccessMode, FlowContext context) {
 		super(NO_RETURN);
 		fVariableId = info.fVariableId;
 		if (context.considerAccessMode()) {

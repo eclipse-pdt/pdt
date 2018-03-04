@@ -147,9 +147,8 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 				}
 			} catch (CoreException e) {
 				/*
-				 * A failure accessing the underlying store really isn't
-				 * interesting, although it can be a problem for
-				 * IStorageEditorInputs.
+				 * A failure accessing the underlying store really isn't interesting, although
+				 * it can be a problem for IStorageEditorInputs.
 				 */
 			}
 		}
@@ -187,8 +186,7 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 		if (index == -1) {
 			return null;
 		}
-		if (index == (name.length() - 1))
-		 {
+		if (index == (name.length() - 1)) {
 			return ""; //$NON-NLS-1$
 		}
 		return name.substring(index + 1);
@@ -196,10 +194,10 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 
 	protected boolean createBreakpoints(ITextEditor editor, int lineNumber) {
 		/*
-		 * Note: we'll always allow processing to continue, even for a "read
-		 * only" IStorageEditorInput, for the ActiveScript debugger. But this
-		 * means sometimes the ActiveScript provider might get an input from CVS
-		 * or something that is not related to debugging.
+		 * Note: we'll always allow processing to continue, even for a "read only"
+		 * IStorageEditorInput, for the ActiveScript debugger. But this means sometimes
+		 * the ActiveScript provider might get an input from CVS or something that is
+		 * not related to debugging.
 		 */
 
 		IEditorInput input = editor.getEditorInput();
@@ -222,8 +220,7 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 		List<IStatus> errors = new ArrayList<>(0);
 		for (int i = 0; i < n; i++) {
 			try {
-				if (Debug.debugBreakpoints)
-				 {
+				if (Debug.debugBreakpoints) {
 					System.out.println(providers[i].getClass().getName() + " adding breakpoint to line " + lineNumber); //$NON-NLS-1$
 				}
 				IStatus status = providers[i].addBreakpoint(document, input, lineNumber, pos);
@@ -250,8 +247,7 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 				Platform.getLog(SSEUIPlugin.getDefault().getBundle()).log(status);
 			}
 			/*
-			 * Show for conditions more severe than INFO or when no breakpoints
-			 * were created
+			 * Show for conditions more severe than INFO or when no breakpoints were created
 			 */
 			if (status.getSeverity() > IStatus.INFO || getBreakpoints(getMarkers(editor)).length < 1) {
 				ErrorDialog.openError(shell, SSEUIMessages.ManageBreakpoints_error_adding_title1, status.getMessage(),
@@ -365,8 +361,7 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 	}
 
 	/**
-	 * Returns the <code>AbstractMarkerAnnotationModel</code> of the editor's
-	 * input.
+	 * Returns the <code>AbstractMarkerAnnotationModel</code> of the editor's input.
 	 * 
 	 * @param editor
 	 * 
@@ -396,8 +391,7 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.actions.IToggleBreakpointsTarget#toggleWatchpoints
+	 * @see org.eclipse.debug.ui.actions.IToggleBreakpointsTarget#toggleWatchpoints
 	 * (org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
 	 */
 	@Override

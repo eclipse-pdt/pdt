@@ -121,11 +121,9 @@ public class PHPElementImageDescriptor extends CompositeImageDescriptor {
 	}
 
 	/**
-	 * Returns the size of the image created by calling
-	 * <code>createImage()</code>.
+	 * Returns the size of the image created by calling <code>createImage()</code>.
 	 * 
-	 * @return the size of the image created by calling
-	 *         <code>createImage()</code>
+	 * @return the size of the image created by calling <code>createImage()</code>
 	 * @see ImageDescriptor#createImage()
 	 */
 	public Point getImageSize() {

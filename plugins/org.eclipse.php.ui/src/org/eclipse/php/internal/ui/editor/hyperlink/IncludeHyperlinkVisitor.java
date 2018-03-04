@@ -88,8 +88,8 @@ public class IncludeHyperlinkVisitor extends ASTVisitor {
 	}
 
 	/**
-	 * Resolves call expression. Actually only expressions with 'dirname' method
-	 * and only first argument from call list is resolved.
+	 * Resolves call expression. Actually only expressions with 'dirname' method and
+	 * only first argument from call list is resolved.
 	 * 
 	 * @param callExpression
 	 * @return path resolved from expression

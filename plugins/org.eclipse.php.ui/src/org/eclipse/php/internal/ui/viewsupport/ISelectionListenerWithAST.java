@@ -24,8 +24,8 @@ import org.eclipse.ui.IEditorPart;
 public interface ISelectionListenerWithAST {
 
 	/**
-	 * Called when a selection has changed. The method is called in a post
-	 * selection event in an background thread.
+	 * Called when a selection has changed. The method is called in a post selection
+	 * event in an background thread.
 	 * 
 	 * @param part
 	 *            The editor part in which the selection change has occurred.

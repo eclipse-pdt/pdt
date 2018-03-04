@@ -41,8 +41,7 @@ public class ProfilingMonitorContentProvider implements ITreeContentProvider {
 
 	@Override
 	public boolean hasChildren(Object element) {
-		if (element instanceof ProfilingMonitorElement
-				|| element instanceof ProfilingMonitorElement[]) {
+		if (element instanceof ProfilingMonitorElement || element instanceof ProfilingMonitorElement[]) {
 			return true;
 		}
 		return false;

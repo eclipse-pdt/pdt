@@ -30,8 +30,8 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * @param root
 	 *            the AST root
 	 * @param node
-	 *            the selected node (must be an {@link Identifier} or
-	 *            {@link Scalar} instance)
+	 *            the selected node (must be an {@link Identifier} or {@link Scalar}
+	 *            instance)
 	 * @return returns a message if there is a problem
 	 */
 	@Override
@@ -157,8 +157,8 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	}
 
 	/**
-	 * Make sure we mark the occurrences when selecting a scalar inside a
-	 * GLOBALS array access.
+	 * Make sure we mark the occurrences when selecting a scalar inside a GLOBALS
+	 * array access.
 	 */
 	@Override
 	public boolean visit(Scalar scalar) {
@@ -187,8 +187,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	}
 
 	/**
-	 * Visit $a on global references (on function/methods) : ...global $a;$a =
-	 * 5;...
+	 * Visit $a on global references (on function/methods) : ...global $a;$a = 5;...
 	 */
 	@Override
 	public boolean visit(GlobalStatement globalStatement) {
@@ -254,8 +253,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * (non-Javadoc)
 	 * 
 	 * @seeorg.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#
-	 * getOccurrenceReadWriteType
-	 * (org.eclipse.php.internal.core.ast.nodes.ASTNode)
+	 * getOccurrenceReadWriteType (org.eclipse.php.internal.core.ast.nodes.ASTNode)
 	 */
 	@Override
 	protected int getOccurrenceType(ASTNode node) {
@@ -283,8 +281,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.ui.search.IOccurrencesFinder#getElementName()
+	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getElementName()
 	 */
 	@Override
 	public String getElementName() {

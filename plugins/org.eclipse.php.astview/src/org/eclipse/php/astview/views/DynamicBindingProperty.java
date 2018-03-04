@@ -12,21 +12,19 @@
 
 package org.eclipse.php.astview.views;
 
-
 import org.eclipse.php.core.ast.nodes.IBinding;
 import org.eclipse.swt.graphics.Image;
 
-
 public abstract class DynamicBindingProperty extends ExceptionAttribute {
 
-	protected static final String N_A= "N/A"; //$NON-NLS-1$
+	protected static final String N_A = "N/A"; //$NON-NLS-1$
 	private final Binding fParent;
-	
+
 	private Binding fViewerElement;
-	private String fLabel= "<unknown>";
-	
+	private String fLabel = "<unknown>";
+
 	public DynamicBindingProperty(Binding parent) {
-		fParent= parent;
+		fParent = parent;
 	}
 
 	@Override
@@ -38,23 +36,23 @@ public abstract class DynamicBindingProperty extends ExceptionAttribute {
 	public Object[] getChildren() {
 		return EMPTY;
 	}
-	
+
 	public void setViewerElement(Binding viewerElement) {
 		if (fViewerElement == viewerElement) {
 			return;
 		}
-		
-		fViewerElement= viewerElement;
-		fException= null;
-		IBinding trayBinding= fParent.getBinding();
-		StringBuffer buf= new StringBuffer(getName());
+
+		fViewerElement = viewerElement;
+		fException = null;
+		IBinding trayBinding = fParent.getBinding();
+		StringBuffer buf = new StringBuffer(getName());
 		if (viewerElement != null) {
-			IBinding viewerBinding= viewerElement.getBinding();
+			IBinding viewerBinding = viewerElement.getBinding();
 			try {
-				String queryResult= executeQuery(viewerBinding, trayBinding);
+				String queryResult = executeQuery(viewerBinding, trayBinding);
 				buf.append(queryResult);
 			} catch (RuntimeException e) {
-				fException= e;
+				fException = e;
 				buf.append(e.getClass().getName());
 				buf.append(" for \""); //$NON-NLS-1$
 				if (viewerBinding == null) {
@@ -68,16 +66,20 @@ public abstract class DynamicBindingProperty extends ExceptionAttribute {
 		} else {
 			buf.append(N_A);
 		}
-		fLabel= buf.toString();
+		fLabel = buf.toString();
 	}
-	
+
 	/**
-	 * Executes this dynamic binding property's query in a protected environment.
-	 * A {@link RuntimeException} thrown by this method is made available via
-	 * {@link #getException()}. 
+	 * Executes this dynamic binding property's query in a protected environment. A
+	 * {@link RuntimeException} thrown by this method is made available via
+	 * {@link #getException()}.
 	 * 
-	 * @param viewerBinding the binding of the element selected in the AST viewer, or <code>null</code> iff none
-	 * @param trayBinding the binding of the element selected in the comparison tray, or <code>null</code> iff none
+	 * @param viewerBinding
+	 *            the binding of the element selected in the AST viewer, or
+	 *            <code>null</code> iff none
+	 * @param trayBinding
+	 *            the binding of the element selected in the comparison tray, or
+	 *            <code>null</code> iff none
 	 * @return this property's result
 	 */
 	protected abstract String executeQuery(IBinding viewerBinding, IBinding trayBinding);

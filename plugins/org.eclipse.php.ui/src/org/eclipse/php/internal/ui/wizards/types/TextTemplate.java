@@ -151,8 +151,7 @@ public class TextTemplate {
 		String valCompiled;
 		String var;
 
-		if ("".equals(text))
-		 {
+		if ("".equals(text)) {
 			return ""; //$NON-NLS-1$
 		}
 
@@ -220,13 +219,11 @@ public class TextTemplate {
 	 * @return Variable's value
 	 */
 	public String get(final String var) {
-		if (vars == null)
-		 {
+		if (vars == null) {
 			return ""; //$NON-NLS-1$
 		}
 		final Object val = vars.get(var);
-		if (val == null)
-		 {
+		if (val == null) {
 			return ""; //$NON-NLS-1$
 		}
 		return val.toString();

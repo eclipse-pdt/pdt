@@ -18,23 +18,23 @@ import org.eclipse.php.core.ast.nodes.StructuralPropertyDescriptor;
 import org.eclipse.swt.graphics.Image;
 
 public class NodeProperty extends ASTAttribute {
-	
+
 	private ASTNode fParent;
 	private StructuralPropertyDescriptor fProperty;
-	
+
 	public NodeProperty(ASTNode parent, StructuralPropertyDescriptor property) {
-		fParent= parent;
-		fProperty= property;
+		fParent = parent;
+		fProperty = property;
 	}
-	
+
 	@Override
 	public Object getParent() {
 		return fParent;
 	}
-	
+
 	@Override
 	public Object[] getChildren() {
-		Object child= getNode();
+		Object child = getNode();
 		if (child instanceof List) {
 			return ((List<?>) child).toArray();
 		} else if (child instanceof ASTNode) {
@@ -45,12 +45,12 @@ public class NodeProperty extends ASTAttribute {
 
 	@Override
 	public String getLabel() {
-		StringBuffer buf= new StringBuffer();
+		StringBuffer buf = new StringBuffer();
 		buf.append(getPropertyName());
-		
+
 		if (fProperty.isSimpleProperty()) {
 			buf.append(": "); //$NON-NLS-1$
-			Object node= getNode();
+			Object node = getNode();
 			if (node != null) {
 				buf.append('\'');
 				buf.append(getNode().toString());
@@ -59,7 +59,7 @@ public class NodeProperty extends ASTAttribute {
 				buf.append("null"); //$NON-NLS-1$
 			}
 		} else if (fProperty.isChildListProperty()) {
-			List<?> node= (List<?>) getNode();
+			List<?> node = (List<?>) getNode();
 			buf.append(" (").append(node.size()).append(')'); //$NON-NLS-1$
 		} else { // child property
 			if (getNode() == null) {
@@ -73,19 +73,19 @@ public class NodeProperty extends ASTAttribute {
 	public Image getImage() {
 		return null;
 	}
-	
+
 	public Object getNode() {
 		return fParent.getStructuralProperty(fProperty);
 	}
-	
+
 	public String getPropertyName() {
 		return toConstantName(fProperty.getId());
 	}
-	
+
 	private static String toConstantName(String string) {
-		StringBuffer buf= new StringBuffer();
-		for (int i= 0; i < string.length(); i++) {
-			char ch= string.charAt(i);
+		StringBuffer buf = new StringBuffer();
+		for (int i = 0; i < string.length(); i++) {
+			char ch = string.charAt(i);
 			if (i != 0 && Character.isUpperCase(ch)) {
 				buf.append('_');
 			}
@@ -93,7 +93,7 @@ public class NodeProperty extends ASTAttribute {
 		}
 		return buf.toString();
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -102,15 +102,15 @@ public class NodeProperty extends ASTAttribute {
 		if (o == null || !o.getClass().equals(getClass())) {
 			return false;
 		}
-		NodeProperty castedObj= (NodeProperty) o;
-		return  fParent.equals(castedObj.fParent) && (fProperty == castedObj.fProperty);
+		NodeProperty castedObj = (NodeProperty) o;
+		return fParent.equals(castedObj.fParent) && (fProperty == castedObj.fProperty);
 	}
 
 	@Override
 	public int hashCode() {
 		return fParent.hashCode() * 31 + fProperty.hashCode();
 	}
-	
+
 	@Override
 	public String toString() {
 		return getLabel();

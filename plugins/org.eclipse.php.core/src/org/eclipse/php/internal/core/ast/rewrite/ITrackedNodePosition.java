@@ -24,9 +24,9 @@ package org.eclipse.php.internal.core.ast.rewrite;
 public interface ITrackedNodePosition {
 
 	/**
-	 * Returns the original or modified start position of the tracked node
-	 * depending if called before or after the rewrite is applied.
-	 * <code>-1</code> is returned for removed nodes.
+	 * Returns the original or modified start position of the tracked node depending
+	 * if called before or after the rewrite is applied. <code>-1</code> is returned
+	 * for removed nodes.
 	 * 
 	 * @return the original or modified start position of the tracked node
 	 */
@@ -34,8 +34,8 @@ public interface ITrackedNodePosition {
 
 	/**
 	 * Returns the original or modified length of the tracked node depending if
-	 * called before or after the rewrite is applied. <code>-1</code> is
-	 * returned for removed nodes.
+	 * called before or after the rewrite is applied. <code>-1</code> is returned
+	 * for removed nodes.
 	 * 
 	 * @return the original or modified length of the tracked node
 	 */

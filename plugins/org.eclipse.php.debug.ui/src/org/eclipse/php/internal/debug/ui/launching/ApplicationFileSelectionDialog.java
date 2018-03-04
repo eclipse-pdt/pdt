@@ -55,8 +55,8 @@ public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
 	 * @param allowMultiple
 	 *            boolean
 	 * @param allowExternalFiles
-	 *            Allows selection from an external files that are currently
-	 *            opened in the editor
+	 *            Allows selection from an external files that are currently opened
+	 *            in the editor
 	 */
 	public ApplicationFileSelectionDialog(Shell parent, ILabelProvider labelProvider, String title, String message,
 			String[] extensions, String[] requiredNatures, boolean allowMultiple, boolean allowExternalFiles) {
@@ -99,8 +99,7 @@ public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.dialogs.ElementTreeSelectionDialog#createDialogArea(org
+	 * @see org.eclipse.ui.dialogs.ElementTreeSelectionDialog#createDialogArea(org
 	 * .eclipse.swt.widgets.Composite)
 	 */
 	@Override

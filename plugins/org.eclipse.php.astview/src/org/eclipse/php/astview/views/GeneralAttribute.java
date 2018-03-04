@@ -14,45 +14,44 @@ package org.eclipse.php.astview.views;
 
 import org.eclipse.swt.graphics.Image;
 
-
 public class GeneralAttribute extends ASTAttribute {
-	
+
 	private final Object fParent;
 	private final String fLabel;
 	private final Object[] fChildren;
-	
+
 	public GeneralAttribute(Object parent, String name, Object value) {
-		fParent= parent;
-		fLabel= name + ": " + String.valueOf(value);
-		fChildren= EMPTY;
+		fParent = parent;
+		fLabel = name + ": " + String.valueOf(value);
+		fChildren = EMPTY;
 	}
-	
+
 	public GeneralAttribute(Object parent, String label) {
-		fParent= parent;
-		fLabel= label;
-		fChildren= EMPTY;
+		fParent = parent;
+		fLabel = label;
+		fChildren = EMPTY;
 	}
-	
+
 	public GeneralAttribute(Object parent, String name, Object[] children) {
-		fParent= parent;
+		fParent = parent;
 		if (children == null) {
-			fLabel= name + ": null";
-			fChildren= EMPTY;
+			fLabel = name + ": null";
+			fChildren = EMPTY;
 		} else if (children.length == 0) {
-			fLabel= name + " (0)";
-			fChildren= EMPTY;
+			fLabel = name + " (0)";
+			fChildren = EMPTY;
 		} else {
-			fChildren= createChildren(children);
-			fLabel= name + " (" + String.valueOf(fChildren.length) + ')';
+			fChildren = createChildren(children);
+			fLabel = name + " (" + String.valueOf(fChildren.length) + ')';
 		}
 	}
-	
+
 	private Object[] createChildren(Object[] children) {
-		ASTAttribute[] res= new ASTAttribute[children.length];
-		for (int i= 0; i < res.length; i++) {
-			Object child= children[i];
-			String name= String.valueOf(i);
-			res[i]= Binding.createValueAttribute(this, name, child);
+		ASTAttribute[] res = new ASTAttribute[children.length];
+		for (int i = 0; i < res.length; i++) {
+			Object child = children[i];
+			String name = String.valueOf(i);
+			res[i] = Binding.createValueAttribute(this, name, child);
 		}
 		return res;
 	}
@@ -71,12 +70,12 @@ public class GeneralAttribute extends ASTAttribute {
 	public String getLabel() {
 		return fLabel;
 	}
-	
+
 	@Override
 	public Image getImage() {
 		return null;
 	}
-	
+
 	/*
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -88,33 +87,32 @@ public class GeneralAttribute extends ASTAttribute {
 		if (obj == null || !obj.getClass().equals(getClass())) {
 			return false;
 		}
-		
-		GeneralAttribute other= (GeneralAttribute) obj;
+
+		GeneralAttribute other = (GeneralAttribute) obj;
 		if (fParent == null) {
 			if (other.fParent != null) {
 				return false;
 			}
-		} else if (! fParent.equals(other.fParent)) {
+		} else if (!fParent.equals(other.fParent)) {
 			return false;
 		}
-		
+
 		if (fLabel == null) {
 			if (other.fLabel != null) {
 				return false;
 			}
-		} else if (! fLabel.equals(other.fLabel)) {
+		} else if (!fLabel.equals(other.fLabel)) {
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	/*
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
-		return (fParent != null ? fParent.hashCode() : 0)
-				+ (fLabel != null ? fLabel.hashCode() : 0);
+		return (fParent != null ? fParent.hashCode() : 0) + (fLabel != null ? fLabel.hashCode() : 0);
 	}
 }

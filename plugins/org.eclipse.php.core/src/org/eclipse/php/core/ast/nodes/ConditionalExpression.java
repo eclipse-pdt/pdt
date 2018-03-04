@@ -233,8 +233,8 @@ public class ConditionalExpression extends Expression {
 	/**
 	 * Returns the "then" part of this conditional expression.
 	 * 
-	 * @return the "then" expression node. This method may return
-	 *         <code>null</code> for PHP 5.3 and greater.
+	 * @return the "then" expression node. This method may return <code>null</code>
+	 *         for PHP 5.3 and greater.
 	 */
 	public Expression getIfTrue() {
 		return ifTrue;

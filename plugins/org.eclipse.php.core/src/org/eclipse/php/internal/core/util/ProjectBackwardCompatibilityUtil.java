@@ -246,13 +246,11 @@ public class ProjectBackwardCompatibilityUtil {
 			String pathsString = PreferencesSupport.getWorkspacePreferencesValue(PHPCorePlugin.ID,
 					PHPCoreConstants.INCLUDE_PATH_VARIABLE_PATHS);
 			String[] names = {};
-			if (namesString.length() > 0)
-			 {
+			if (namesString.length() > 0) {
 				names = namesString.split(","); //$NON-NLS-1$
 			}
 			String[] paths = {};
-			if (pathsString.length() > 0)
-			 {
+			if (pathsString.length() > 0) {
 				paths = pathsString.split(","); //$NON-NLS-1$
 			}
 			// Not good since empty paths are allowed!!!
@@ -270,13 +268,12 @@ public class ProjectBackwardCompatibilityUtil {
 		}
 
 		/**
-		 * Returns resolved IPath from the given path string that starts from
-		 * include path variable
+		 * Returns resolved IPath from the given path string that starts from include
+		 * path variable
 		 * 
 		 * @param path
 		 *            Path string
-		 * @return resolved IPath or <code>null</code> if it couldn't be
-		 *         resolved
+		 * @return resolved IPath or <code>null</code> if it couldn't be resolved
 		 */
 		public IPath resolveVariablePath(String path) {
 			int index = path.indexOf('/');

@@ -35,9 +35,9 @@ import org.eclipse.swt.widgets.TableColumn;
 public class TableLayoutComposite extends Composite {
 
 	/**
-	 * The number of extra pixels taken as horizontal trim by the table column.
-	 * To ensure there are N pixels available for the content of the column,
-	 * assign N+COLUMN_TRIM for the column width.
+	 * The number of extra pixels taken as horizontal trim by the table column. To
+	 * ensure there are N pixels available for the content of the column, assign
+	 * N+COLUMN_TRIM for the column width.
 	 * 
 	 * @since 3.1
 	 */

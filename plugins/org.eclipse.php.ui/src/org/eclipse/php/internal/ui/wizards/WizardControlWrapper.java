@@ -60,8 +60,7 @@ public class WizardControlWrapper implements IControlHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.server.apache.ui.IControlHandler#setDescription(java.
+	 * @see org.eclipse.php.server.apache.ui.IControlHandler#setDescription(java.
 	 * lang.String)
 	 */
 	@Override
@@ -72,8 +71,7 @@ public class WizardControlWrapper implements IControlHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.server.apache.ui.IControlHandler#setImageDescriptor(org
+	 * @see org.eclipse.php.server.apache.ui.IControlHandler#setImageDescriptor(org
 	 * .eclipse.jface.resource.ImageDescriptor)
 	 */
 	@Override
@@ -84,8 +82,7 @@ public class WizardControlWrapper implements IControlHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.server.apache.ui.IControlHandler#setMessage(java.lang
+	 * @see org.eclipse.php.server.apache.ui.IControlHandler#setMessage(java.lang
 	 * .String, int)
 	 */
 	@Override

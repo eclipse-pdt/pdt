@@ -54,8 +54,8 @@ public class GetUseStatementsASTVisitor extends AbstractUseStatementASTVisitor {
 	 * Just add every {@link UseStatement} node visited to the result.
 	 * 
 	 * <p>
-	 * The base AST visitor ensures that only nodes before the
-	 * <code>offset</code> are visited.
+	 * The base AST visitor ensures that only nodes before the <code>offset</code>
+	 * are visited.
 	 * </p>
 	 */
 	@Override

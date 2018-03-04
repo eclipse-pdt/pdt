@@ -24,8 +24,7 @@ public class OpenTypeAction extends org.eclipse.dltk.ui.actions.OpenTypeAction {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.dltk.ui.actions.OpenTypeInHierarchyAction#getLanguageToolkit
+	 * @see org.eclipse.dltk.ui.actions.OpenTypeInHierarchyAction#getLanguageToolkit
 	 * ()
 	 */
 

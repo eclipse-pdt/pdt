@@ -17,8 +17,7 @@ import org.eclipse.php.profile.core.data.ProfilerFunctionData;
 /**
  * Simple HTML presentable tree element.
  */
-public class SimpleHTMLPresentableTreeElement extends TreeElement implements
-		IHTMLPresentableTreeElement {
+public class SimpleHTMLPresentableTreeElement extends TreeElement implements IHTMLPresentableTreeElement {
 
 	private static final String FILE_IMAGE_URL = "file.png"; //$NON-NLS-1$
 	private static final String CLASS_IMAGE_URL = "class.png"; //$NON-NLS-1$

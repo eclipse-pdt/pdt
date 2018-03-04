@@ -103,8 +103,7 @@ public abstract class Expression extends ASTNode {
 	/**
 	 * Resolves and returns the binding for the type of this expression.
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be
-	 *         resolved
+	 * @return the binding, or <code>null</code> if the binding cannot be resolved
 	 */
 	public ITypeBinding resolveTypeBinding() {
 		return this.ast.getBindingResolver().resolveExpressionType(this);
@@ -113,8 +112,7 @@ public abstract class Expression extends ASTNode {
 	/**
 	 * Resolves and returns the constant expression value
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be
-	 *         resolved
+	 * @return the binding, or <code>null</code> if the binding cannot be resolved
 	 */
 	public Object resolveConstantExpressionValue() {
 		return this.ast.getBindingResolver().resolveConstantExpressionValue(this);

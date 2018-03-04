@@ -86,8 +86,7 @@ public class RefactoringDropMoveWizardPage extends UserInputWizardPage {
 
 		if (selected instanceof IContainer) {
 			refactoringStatus = processor.setDestination((IContainer) selected);
-		}
-		else {
+		} else {
 			refactoringStatus = RefactoringStatus
 					.createFatalErrorStatus(PHPRefactoringUIMessages.getString("RefactoringMoveWizardPage.2")); //$NON-NLS-1$
 		}

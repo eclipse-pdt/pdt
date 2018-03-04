@@ -72,8 +72,7 @@ public class DebugServerConnectionTestRegistry {
 			}
 		}
 		Collection<IDebugServerConnectionTest> testers = filtersMap.values();
-		while (testers.remove(null))
-		 {
+		while (testers.remove(null)) {
 			; // remove null elements
 		}
 		IDebugServerConnectionTest[] debugTests = testers.toArray(new IDebugServerConnectionTest[testers.size()]);

@@ -87,10 +87,10 @@ public class PHPNavigatorDropAdapter extends NavigatorDropAdapter {
 	}
 
 	/**
-	 * Returns the actual target of the drop, given the resource under the
-	 * mouse. If the mouse target is a file, then the drop actually occurs in
-	 * its parent. If the drop location is before or after the mouse target and
-	 * feedback is enabled, the target is also the parent.
+	 * Returns the actual target of the drop, given the resource under the mouse. If
+	 * the mouse target is a file, then the drop actually occurs in its parent. If
+	 * the drop location is before or after the mouse target and feedback is
+	 * enabled, the target is also the parent.
 	 */
 	private IContainer getActualTarget(IResource mouseTarget) {
 		/* if cursor is before or after mouseTarget, set target to parent */
@@ -149,8 +149,8 @@ public class PHPNavigatorDropAdapter extends NavigatorDropAdapter {
 	}
 
 	/**
-	 * Adds the given status to the list of problems. Discards OK statuses. If
-	 * the status is a multi-status, only its children are added.
+	 * Adds the given status to the list of problems. Discards OK statuses. If the
+	 * status is a multi-status, only its children are added.
 	 */
 	private void mergeStatus(MultiStatus status, IStatus toMerge) {
 		if (!toMerge.isOK()) {
@@ -166,8 +166,8 @@ public class PHPNavigatorDropAdapter extends NavigatorDropAdapter {
 	}
 
 	/**
-	 * Opens an error dialog if necessary. Takes care of complex rules necessary
-	 * for making the error dialog look nice.
+	 * Opens an error dialog if necessary. Takes care of complex rules necessary for
+	 * making the error dialog look nice.
 	 */
 	private void openError(IStatus status) {
 		if (status == null) {

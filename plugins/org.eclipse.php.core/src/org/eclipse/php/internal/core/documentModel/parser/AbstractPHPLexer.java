@@ -133,8 +133,7 @@ public abstract class AbstractPHPLexer implements Scanner, PHPRegionTypes {
 
 	@Override
 	public void getText(final int start, final int length, final Segment s) {
-		if (start + length > getZZEndRead())
-		 {
+		if (start + length > getZZEndRead()) {
 			throw new RuntimeException("bad segment !!"); //$NON-NLS-1$
 		}
 		s.array = getZZBuffer();

@@ -100,7 +100,8 @@ public class OccurrencesSearchQuery implements ISearchQuery {
 		return Status.OK_STATUS;
 	}
 
-	private DLTKElementLine getLineElement(Program astRoot, OccurrenceLocation location, HashMap<Integer, DLTKElementLine> lineToGroup) {
+	private DLTKElementLine getLineElement(Program astRoot, OccurrenceLocation location,
+			HashMap<Integer, DLTKElementLine> lineToGroup) {
 		int lineNumber = astRoot.getLineNumber(location.getOffset());
 		if (lineNumber <= 0) {
 			return null;

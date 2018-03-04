@@ -66,8 +66,7 @@ public final class PHPFoldingStructureProviderDescriptor {
 	/**
 	 * Creates a folding provider as described in the extension's xml.
 	 * 
-	 * @return a new instance of the folding provider described by this
-	 *         descriptor
+	 * @return a new instance of the folding provider described by this descriptor
 	 * @throws CoreException
 	 *             if creation fails
 	 */
@@ -80,8 +79,7 @@ public final class PHPFoldingStructureProviderDescriptor {
 	/**
 	 * Creates a preferences object as described in the extension's xml.
 	 * 
-	 * @return a new instance of the reference provider described by this
-	 *         descriptor
+	 * @return a new instance of the reference provider described by this descriptor
 	 * @throws CoreException
 	 *             if creation fails
 	 */

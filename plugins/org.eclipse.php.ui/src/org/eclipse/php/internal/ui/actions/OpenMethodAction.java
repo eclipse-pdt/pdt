@@ -24,8 +24,7 @@ public class OpenMethodAction extends org.eclipse.dltk.ui.actions.OpenMethodActi
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.dltk.ui.actions.OpenTypeInHierarchyAction#getLanguageToolkit
+	 * @see org.eclipse.dltk.ui.actions.OpenTypeInHierarchyAction#getLanguageToolkit
 	 * ()
 	 */
 

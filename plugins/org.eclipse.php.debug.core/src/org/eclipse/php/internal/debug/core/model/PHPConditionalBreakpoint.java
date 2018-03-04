@@ -35,8 +35,7 @@ public class PHPConditionalBreakpoint extends PHPLineBreakpoint {
 	}
 
 	/**
-	 * Constructs a line breakpoint on the given resource at the given line
-	 * number.
+	 * Constructs a line breakpoint on the given resource at the given line number.
 	 * 
 	 * @param resource
 	 *            file on which to set the breakpoint

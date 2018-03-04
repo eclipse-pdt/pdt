@@ -92,15 +92,12 @@ public class ProfilerDataSerializationUtil {
 		XMLWriter xml = null;
 		try {
 			xml = new XMLWriter(out);
-			ProfilerDataSerializationUtil su = new ProfilerDataSerializationUtil(
-					xml);
+			ProfilerDataSerializationUtil su = new ProfilerDataSerializationUtil(xml);
 
 			xml.startTag("profilerDB", null); //$NON-NLS-1$
 			for (int i = 0; i < profilerDBs.length; ++i) {
 				HashMap<String, String> parameters = new HashMap<>();
-				parameters
-						.put(
-								"date", Long.toString(profilerDBs[i].getProfileDate().getTime())); //$NON-NLS-1$
+				parameters.put("date", Long.toString(profilerDBs[i].getProfileDate().getTime())); //$NON-NLS-1$
 				xml.startTag("profileSession", parameters); //$NON-NLS-1$
 				su.serialize(profilerDBs[i].getProfilerData());
 				xml.endTag("profileSession"); //$NON-NLS-1$
@@ -152,15 +149,10 @@ public class ProfilerDataSerializationUtil {
 		parameters.put("type", Integer.toString(layer.getType())); //$NON-NLS-1$
 		parameters.put("line", Integer.toString(layer.getLineNumber())); //$NON-NLS-1$
 		parameters.put("id", Integer.toString(layer.getCalledID())); //$NON-NLS-1$
-		parameters.put(
-				"timestampS", Integer.toString(layer.getTimestampSeconds())); //$NON-NLS-1$
-		parameters
-				.put(
-						"timestampM", Integer.toString(layer.getTimestampMicroseconds())); //$NON-NLS-1$
-		parameters.put(
-				"durationS", Integer.toString(layer.getDurationSeconds())); //$NON-NLS-1$
-		parameters.put(
-				"durationM", Integer.toString(layer.getDurationMicroeconds())); //$NON-NLS-1$
+		parameters.put("timestampS", Integer.toString(layer.getTimestampSeconds())); //$NON-NLS-1$
+		parameters.put("timestampM", Integer.toString(layer.getTimestampMicroseconds())); //$NON-NLS-1$
+		parameters.put("durationS", Integer.toString(layer.getDurationSeconds())); //$NON-NLS-1$
+		parameters.put("durationM", Integer.toString(layer.getDurationMicroeconds())); //$NON-NLS-1$
 		fXML.startTag("callTraceLayer", parameters); //$NON-NLS-1$
 		fXML.endTag("callTraceLayer"); //$NON-NLS-1$
 	}
@@ -222,8 +214,7 @@ public class ProfilerDataSerializationUtil {
 		parameters.put("ownS", Integer.toString(data.getOwnTimeSeconds())); //$NON-NLS-1$
 		parameters.put("ownM", Integer.toString(data.getOwnTimeMicroseconds())); //$NON-NLS-1$
 		parameters.put("totalS", Integer.toString(data.getTotalTimeSeconds())); //$NON-NLS-1$
-		parameters.put(
-				"totalM", Integer.toString(data.getTotalTimeMicroseconds())); //$NON-NLS-1$
+		parameters.put("totalM", Integer.toString(data.getTotalTimeMicroseconds())); //$NON-NLS-1$
 		parameters.put("calls", Integer.toString(data.getCallsCount())); //$NON-NLS-1$
 
 		fXML.startTag("functionData", parameters); //$NON-NLS-1$
@@ -240,8 +231,7 @@ public class ProfilerDataSerializationUtil {
 		parameters.put("linesNum", Integer.toString(data.getLinesNum())); //$NON-NLS-1$
 		parameters.put("phpLinesNum", Integer.toString(data.getPHPLinesNum())); //$NON-NLS-1$
 		parameters.put("coverageBitmask", pack(data.getCoverageBitmask())); //$NON-NLS-1$
-		parameters.put(
-				"significanceBitmask", pack(data.getSignificanceBitmask())); //$NON-NLS-1$
+		parameters.put("significanceBitmask", pack(data.getSignificanceBitmask())); //$NON-NLS-1$
 
 		fXML.startTag("coverageData", parameters); //$NON-NLS-1$
 		fXML.endTag("coverageData"); //$NON-NLS-1$
@@ -252,8 +242,7 @@ public class ProfilerDataSerializationUtil {
 
 	public static ProfilerDB[] deserialize(InputStream in) {
 		try {
-			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory
-					.newInstance();
+			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
 			// docBuilderFactory.setValidating(true);
 			DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
 			Document doc = docBuilder.parse(in);
@@ -263,11 +252,9 @@ public class ProfilerDataSerializationUtil {
 			for (int i = 0; l.item(i) != null; ++i) {
 				if (l.item(i).getNodeType() == Node.ELEMENT_NODE) {
 					Element e = (Element) l.item(i);
-					Date profileDate = new Date(Long.parseLong(e
-							.getAttribute("date"))); //$NON-NLS-1$
+					Date profileDate = new Date(Long.parseLong(e.getAttribute("date"))); //$NON-NLS-1$
 					ProfilerDataSerializationUtil su = new ProfilerDataSerializationUtil();
-					ProfilerDB db = new DefaultProfilerDB(su
-							.deserializeProfilerData(e), profileDate);
+					ProfilerDB db = new DefaultProfilerDB(su.deserializeProfilerData(e), profileDate);
 					profilerDBs.add(db);
 				}
 			}
@@ -280,8 +267,7 @@ public class ProfilerDataSerializationUtil {
 	}
 
 	private ProfilerData deserializeProfilerData(Element rootElement) {
-		Element e = (Element) rootElement
-				.getElementsByTagName("globalData").item(0); //$NON-NLS-1$
+		Element e = (Element) rootElement.getElementsByTagName("globalData").item(0); //$NON-NLS-1$
 		ProfilerGlobalData globalData = deserializeGlobalData(e);
 
 		e = (Element) rootElement.getElementsByTagName("callTrace").item(0); //$NON-NLS-1$
@@ -296,14 +282,11 @@ public class ProfilerDataSerializationUtil {
 		return new ProfilerData(globalData, fileData, callTrace);
 	}
 
-	private ProfilerFileData deserializeFileData(Element rootElement,
-			ProfilerGlobalData globalData) {
+	private ProfilerFileData deserializeFileData(Element rootElement, ProfilerGlobalData globalData) {
 		String fileName = rootElement.getAttribute("name"); //$NON-NLS-1$
 		String localFileName = rootElement.getAttribute("local"); //$NON-NLS-1$
-		int functionsNum = Integer.parseInt(rootElement
-				.getAttribute("functions")); //$NON-NLS-1$
-		double totalOwnTime = Double.parseDouble(rootElement
-				.getAttribute("time")); //$NON-NLS-1$
+		int functionsNum = Integer.parseInt(rootElement.getAttribute("functions")); //$NON-NLS-1$
+		double totalOwnTime = Double.parseDouble(rootElement.getAttribute("time")); //$NON-NLS-1$
 
 		ArrayList<ProfilerFunctionData> functionData = new ArrayList<>();
 		NodeList l = rootElement.getElementsByTagName("functionData"); //$NON-NLS-1$
@@ -311,12 +294,10 @@ public class ProfilerDataSerializationUtil {
 			functionData.add(deserializeFunctionData((Element) l.item(i)));
 		}
 
-		Element e = (Element) rootElement
-				.getElementsByTagName("coverageData").item(0); //$NON-NLS-1$
+		Element e = (Element) rootElement.getElementsByTagName("coverageData").item(0); //$NON-NLS-1$
 		CodeCoverageData codeCoverage = deserializeCoverageData(e, globalData);
 
-		ProfilerFileData data = new ProfilerFileData(fileName, localFileName,
-				functionsNum, totalOwnTime, functionData);
+		ProfilerFileData data = new ProfilerFileData(fileName, localFileName, functionsNum, totalOwnTime, functionData);
 		data.setCodeCoverageData(codeCoverage);
 		return data;
 	}
@@ -328,18 +309,13 @@ public class ProfilerDataSerializationUtil {
 		int lineNumber = Integer.parseInt(rootElement.getAttribute("line")); //$NON-NLS-1$
 		int id = Integer.parseInt(rootElement.getAttribute("id")); //$NON-NLS-1$
 		int ownTimeSeconds = Integer.parseInt(rootElement.getAttribute("ownS")); //$NON-NLS-1$
-		int ownTimeMicroSeconds = Integer.parseInt(rootElement
-				.getAttribute("ownM")); //$NON-NLS-1$
-		int totalTimeSeconds = Integer.parseInt(rootElement
-				.getAttribute("totalS")); //$NON-NLS-1$
-		int totalTimeMicroSeconds = Integer.parseInt(rootElement
-				.getAttribute("totalM")); //$NON-NLS-1$
+		int ownTimeMicroSeconds = Integer.parseInt(rootElement.getAttribute("ownM")); //$NON-NLS-1$
+		int totalTimeSeconds = Integer.parseInt(rootElement.getAttribute("totalS")); //$NON-NLS-1$
+		int totalTimeMicroSeconds = Integer.parseInt(rootElement.getAttribute("totalM")); //$NON-NLS-1$
 		int callsCount = Integer.parseInt(rootElement.getAttribute("calls")); //$NON-NLS-1$
 
-		ProfilerFunctionData functionData = new ProfilerFunctionData(fileName,
-				functionName, lineNumber, id, ownTimeSeconds,
-				ownTimeMicroSeconds, totalTimeSeconds, totalTimeMicroSeconds,
-				callsCount);
+		ProfilerFunctionData functionData = new ProfilerFunctionData(fileName, functionName, lineNumber, id,
+				ownTimeSeconds, ownTimeMicroSeconds, totalTimeSeconds, totalTimeMicroSeconds, callsCount);
 		functionData.setLocalFileName(localFileName);
 
 		return functionData;
@@ -361,18 +337,13 @@ public class ProfilerDataSerializationUtil {
 		int type = Integer.parseInt(rootElement.getAttribute("type")); //$NON-NLS-1$
 		int lineNumber = Integer.parseInt(rootElement.getAttribute("line")); //$NON-NLS-1$
 		int id = Integer.parseInt(rootElement.getAttribute("id")); //$NON-NLS-1$
-		int timestampSeconds = Integer.parseInt(rootElement
-				.getAttribute("timestampS")); //$NON-NLS-1$
-		int timestampMicroSeconds = Integer.parseInt(rootElement
-				.getAttribute("timestampM")); //$NON-NLS-1$
-		int durationSeconds = Integer.parseInt(rootElement
-				.getAttribute("durationS")); //$NON-NLS-1$
-		int durationMicroSeconds = Integer.parseInt(rootElement
-				.getAttribute("durationM")); //$NON-NLS-1$
+		int timestampSeconds = Integer.parseInt(rootElement.getAttribute("timestampS")); //$NON-NLS-1$
+		int timestampMicroSeconds = Integer.parseInt(rootElement.getAttribute("timestampM")); //$NON-NLS-1$
+		int durationSeconds = Integer.parseInt(rootElement.getAttribute("durationS")); //$NON-NLS-1$
+		int durationMicroSeconds = Integer.parseInt(rootElement.getAttribute("durationM")); //$NON-NLS-1$
 
-		return new ProfilerCallTraceLayer(type, lineNumber, id,
-				timestampSeconds, timestampMicroSeconds, durationSeconds,
-				durationMicroSeconds);
+		return new ProfilerCallTraceLayer(type, lineNumber, id, timestampSeconds, timestampMicroSeconds,
+				durationSeconds, durationMicroSeconds);
 	}
 
 	private ProfilerGlobalData deserializeGlobalData(Element rootElement) {
@@ -382,8 +353,7 @@ public class ProfilerDataSerializationUtil {
 		String options = rootElement.getAttribute("options"); //$NON-NLS-1$
 		String path = rootElement.getAttribute("path"); //$NON-NLS-1$
 		int timeSeconds = Integer.parseInt(rootElement.getAttribute("timeS")); //$NON-NLS-1$
-		int timeMicroseconds = Integer.parseInt(rootElement
-				.getAttribute("timeM")); //$NON-NLS-1$
+		int timeMicroseconds = Integer.parseInt(rootElement.getAttribute("timeM")); //$NON-NLS-1$
 		int dataSize = Integer.parseInt(rootElement.getAttribute("dataSize")); //$NON-NLS-1$
 		int filesNumber = Integer.parseInt(rootElement.getAttribute("files")); //$NON-NLS-1$
 
@@ -392,27 +362,22 @@ public class ProfilerDataSerializationUtil {
 		for (int i = 0; l.item(i) != null; ++i) {
 			files.add(l.item(i).getFirstChild().getNodeValue());
 		}
-		return new ProfilerGlobalData(uri, originalURL, query, options, path,
-				timeSeconds, timeMicroseconds, dataSize, filesNumber, files);
+		return new ProfilerGlobalData(uri, originalURL, query, options, path, timeSeconds, timeMicroseconds, dataSize,
+				filesNumber, files);
 	}
 
-	private CodeCoverageData deserializeCoverageData(Element rootElement,
-			ProfilerGlobalData globalData) {
+	private CodeCoverageData deserializeCoverageData(Element rootElement, ProfilerGlobalData globalData) {
 		if (rootElement == null) {
 			return null;
 		}
 		String fileName = rootElement.getAttribute("file"); //$NON-NLS-1$
 		String localFileName = rootElement.getAttribute("localFile"); //$NON-NLS-1$
 		int linesNum = Integer.parseInt(rootElement.getAttribute("linesNum")); //$NON-NLS-1$
-		int phpLinesNum = Integer.parseInt(rootElement
-				.getAttribute("phpLinesNum")); //$NON-NLS-1$
-		byte[] coverageBitmask = unpackByte(rootElement
-				.getAttribute("coverageBitmask")); //$NON-NLS-1$
-		byte[] significanceBitmask = unpackByte(rootElement
-				.getAttribute("significanceBitmask")); //$NON-NLS-1$
+		int phpLinesNum = Integer.parseInt(rootElement.getAttribute("phpLinesNum")); //$NON-NLS-1$
+		byte[] coverageBitmask = unpackByte(rootElement.getAttribute("coverageBitmask")); //$NON-NLS-1$
+		byte[] significanceBitmask = unpackByte(rootElement.getAttribute("significanceBitmask")); //$NON-NLS-1$
 
-		CodeCoverageData data = new CodeCoverageData(fileName, linesNum,
-				coverageBitmask);
+		CodeCoverageData data = new CodeCoverageData(fileName, linesNum, coverageBitmask);
 		data.setURL(globalData.getOriginalURL());
 		data.setLocalFileName(localFileName);
 		data.setPHPLinesNum(phpLinesNum);

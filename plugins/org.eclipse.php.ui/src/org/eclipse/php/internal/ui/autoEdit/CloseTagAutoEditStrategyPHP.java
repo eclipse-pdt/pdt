@@ -28,12 +28,11 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 /**
  * 1.when user check both "Add php after PHP start tag (<?)" and "close PHP Tag"
- * ,people type "<?" then get "<? ?>". 2.when user uncheck
- * "Add php after PHP start tag (<?)" and check "close PHP Tag",people type "<?"
- * then get "<?php ?>". 3.when user check "Add php after PHP start tag (<?)" and
- * uncheck "close PHP Tag",no completion at all. 4.when user uncheck both
- * "Add php after PHP start tag (<?)" and "close PHP Tag",people type "<?" then
- * get "<?php"
+ * ,people type "<?" then get "<? ?>". 2.when user uncheck "Add php after PHP
+ * start tag (<?)" and check "close PHP Tag",people type "<?" then get "<?php
+ * ?>". 3.when user check "Add php after PHP start tag (<?)" and uncheck "close
+ * PHP Tag",no completion at all. 4.when user uncheck both "Add php after PHP
+ * start tag (<?)" and "close PHP Tag",people type "<?" then get "<?php"
  * 
  * @author Roy, 2007
  */
@@ -96,8 +95,7 @@ public class CloseTagAutoEditStrategyPHP implements IAutoEditStrategy {
 	}
 
 	/**
-	 * Return the active text editor if possible, otherwise the active editor
-	 * part.
+	 * Return the active text editor if possible, otherwise the active editor part.
 	 * 
 	 * @return
 	 */

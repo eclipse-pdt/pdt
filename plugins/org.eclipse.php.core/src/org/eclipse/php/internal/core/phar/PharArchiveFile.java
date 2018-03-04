@@ -27,8 +27,7 @@ public class PharArchiveFile implements IArchive {
 	private PharFile pharFile;
 	private File file;
 	/**
-	 * Cache of phar files, so we don't create phar files representation every
-	 * call
+	 * Cache of phar files, so we don't create phar files representation every call
 	 */
 	private static final Map<String, WeakReference<PharFile>> pharFiles = new HashMap<>();
 

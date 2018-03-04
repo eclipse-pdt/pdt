@@ -42,8 +42,7 @@ public class MethodBinding extends FunctionBinding implements IMethodBinding {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.core.ast.nodes.IMethodBinding#getDeclaringClass
+	 * @see org.eclipse.php.internal.core.ast.nodes.IMethodBinding#getDeclaringClass
 	 * ()
 	 */
 	@Override
@@ -60,8 +59,7 @@ public class MethodBinding extends FunctionBinding implements IMethodBinding {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.core.ast.nodes.IMethodBinding#isConstructor()
+	 * @see org.eclipse.php.internal.core.ast.nodes.IMethodBinding#isConstructor()
 	 */
 	@Override
 	public boolean isConstructor() {
@@ -129,8 +127,7 @@ public class MethodBinding extends FunctionBinding implements IMethodBinding {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.core.ast.nodes.IFunctionBinding#getReturnType()
+	 * @see org.eclipse.php.internal.core.ast.nodes.IFunctionBinding#getReturnType()
 	 */
 	@Override
 	public ITypeBinding[] getReturnType() {

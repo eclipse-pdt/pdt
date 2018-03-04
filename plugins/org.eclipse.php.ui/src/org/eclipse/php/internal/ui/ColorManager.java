@@ -29,14 +29,14 @@ public class ColorManager extends DLTKColorManager {
 	protected Map<Display, Map<RGB, Color>> fDisplayTable = new HashMap<>(2);
 
 	/**
-	 * Flag which tells if the colors are automatically disposed when the
-	 * current display gets disposed.
+	 * Flag which tells if the colors are automatically disposed when the current
+	 * display gets disposed.
 	 */
 	private boolean fAutoDisposeOnDisplayDispose;
 
 	/**
-	 * Creates a new Java color manager which automatically disposes the
-	 * allocated colors when the current display gets disposed.
+	 * Creates a new Java color manager which automatically disposes the allocated
+	 * colors when the current display gets disposed.
 	 */
 	public ColorManager() {
 		this(true);
@@ -46,9 +46,9 @@ public class ColorManager extends DLTKColorManager {
 	 * Creates a new Java color manager.
 	 * 
 	 * @param autoDisposeOnDisplayDispose
-	 *            if <code>true</code> the color manager automatically disposes
-	 *            all managed colors when the current display gets disposed and
-	 *            all calls to
+	 *            if <code>true</code> the color manager automatically disposes all
+	 *            managed colors when the current display gets disposed and all
+	 *            calls to
 	 *            {@link org.eclipse.jface.text.source.ISharedTextColors#dispose()}
 	 *            are ignored.
 	 * 

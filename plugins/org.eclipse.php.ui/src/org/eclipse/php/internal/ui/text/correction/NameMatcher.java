@@ -13,8 +13,8 @@ package org.eclipse.php.internal.ui.text.correction;
 public class NameMatcher {
 
 	/**
-	 * Returns a similarity value of the two names. The range of is from 0 to
-	 * 256. no similarity is negative
+	 * Returns a similarity value of the two names. The range of is from 0 to 256.
+	 * no similarity is negative
 	 * 
 	 * @param name1
 	 *            the first name
@@ -27,8 +27,8 @@ public class NameMatcher {
 	}
 
 	/**
-	 * Returns a similarity value of the two names. The range of is from 0 to
-	 * 256. no similarity is negative
+	 * Returns a similarity value of the two names. The range of is from 0 to 256.
+	 * no similarity is negative
 	 * 
 	 * @param name1
 	 *            the first name

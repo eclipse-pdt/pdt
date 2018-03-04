@@ -307,15 +307,13 @@ public class PHPServer extends ServerDelegate implements IPHPServer, IPHPServerW
 			}
 			URL url = getRootUrl();
 			if (url != null) {
-//				String path = url.getPath() + config.getWebModuleURL(module);
+				// String path = url.getPath() + config.getWebModuleURL(module);
 				String path = url.toString();
-				if (!path.endsWith("/"))
-				 {
+				if (!path.endsWith("/")) {
 					path += "/"; //$NON-NLS-1$
 				}
 				path += module.getName();
-				if (!path.endsWith("/"))
-				 {
+				if (!path.endsWith("/")) {
 					path += "/"; //$NON-NLS-1$
 				}
 				return new URL(path);
@@ -368,8 +366,7 @@ public class PHPServer extends ServerDelegate implements IPHPServer, IPHPServerW
 			String url = "http://" + getServer().getHost(); //$NON-NLS-1$
 			int port = config.getMainPort().getPort();
 			port = ServerUtil.getMonitoredPort(getServer(), port, "web"); //$NON-NLS-1$
-			if (port != 80)
-			 {
+			if (port != 80) {
 				url += ":" + port; //$NON-NLS-1$
 			}
 			return new URL(url);

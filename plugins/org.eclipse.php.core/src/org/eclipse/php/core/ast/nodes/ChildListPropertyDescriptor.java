@@ -24,8 +24,7 @@ public final class ChildListPropertyDescriptor extends StructuralPropertyDescrip
 	 * Element type. For example, for a node type like CompilationUnit, the
 	 * "imports" property is ImportDeclaration.class.
 	 * <p>
-	 * Field is private, but marked package-visible for fast access from
-	 * ASTNode.
+	 * Field is private, but marked package-visible for fast access from ASTNode.
 	 * </p>
 	 */
 	final Class<?> elementType;
@@ -33,15 +32,14 @@ public final class ChildListPropertyDescriptor extends StructuralPropertyDescrip
 	/**
 	 * Indicates whether a cycle is possible.
 	 * <p>
-	 * Field is private, but marked package-visible for fast access from
-	 * ASTNode.
+	 * Field is private, but marked package-visible for fast access from ASTNode.
 	 * </p>
 	 */
 	final boolean cycleRisk;
 
 	/**
-	 * Creates a new child list property descriptor with the given property id.
-	 * Note that this constructor is declared package-private so that property
+	 * Creates a new child list property descriptor with the given property id. Note
+	 * that this constructor is declared package-private so that property
 	 * descriptors can only be created by the AST implementation.
 	 * 
 	 * @param nodeClass
@@ -79,17 +77,17 @@ public final class ChildListPropertyDescriptor extends StructuralPropertyDescrip
 	/**
 	 * Returns whether this property is vulnerable to cycles.
 	 * <p>
-	 * A property is vulnerable to cycles if a node of the owning type (that is,
-	 * the type that owns this property) could legally appear in the AST subtree
-	 * below this property. For example, the body property of a
-	 * {@link MethodDeclaration} node admits a body which might include
-	 * statement that embeds another {@link MethodDeclaration} node. On the
-	 * other hand, the name property of a MethodDeclaration node admits only
-	 * names, and thereby excludes another MethodDeclaration node.
+	 * A property is vulnerable to cycles if a node of the owning type (that is, the
+	 * type that owns this property) could legally appear in the AST subtree below
+	 * this property. For example, the body property of a {@link MethodDeclaration}
+	 * node admits a body which might include statement that embeds another
+	 * {@link MethodDeclaration} node. On the other hand, the name property of a
+	 * MethodDeclaration node admits only names, and thereby excludes another
+	 * MethodDeclaration node.
 	 * </p>
 	 * 
-	 * @return <code>true</code> if cycles are possible, and <code>false</code>
-	 *         if cycles are impossible
+	 * @return <code>true</code> if cycles are possible, and <code>false</code> if
+	 *         cycles are impossible
 	 */
 	public final boolean cycleRisk() {
 		return this.cycleRisk;

@@ -46,20 +46,18 @@ public class RenameSupport {
 	private RefactoringStatus fPreCheckStatus;
 
 	/**
-	 * Executes some light weight precondition checking. If the returned status
-	 * is an error then the refactoring can't be executed at all. However,
-	 * returning an OK status doesn't guarantee that the refactoring can be
-	 * executed. It may still fail while performing the exhaustive precondition
-	 * checking done inside the methods <code>openDialog</code> or
-	 * <code>perform</code>.
+	 * Executes some light weight precondition checking. If the returned status is
+	 * an error then the refactoring can't be executed at all. However, returning an
+	 * OK status doesn't guarantee that the refactoring can be executed. It may
+	 * still fail while performing the exhaustive precondition checking done inside
+	 * the methods <code>openDialog</code> or <code>perform</code>.
 	 * 
 	 * The method is mainly used to determine enable/disablement of actions.
 	 * 
 	 * @return the result of the light weight precondition checking.
 	 * 
 	 * @throws CoreException
-	 *             if an unexpected exception occurs while performing the
-	 *             checking.
+	 *             if an unexpected exception occurs while performing the checking.
 	 * 
 	 * @see #openDialog(Shell)
 	 * @see #perform(Shell, IRunnableContext)
@@ -68,8 +66,7 @@ public class RenameSupport {
 		ensureChecked();
 		if (fPreCheckStatus.hasFatalError()) {
 			return fPreCheckStatus.getEntryMatchingSeverity(RefactoringStatus.FATAL).toStatus();
-		}
-		else {
+		} else {
 			return new Status(IStatus.OK, RefactoringUIPlugin.PLUGIN_ID, 0, "", null); //$NON-NLS-1$
 		}
 	}
@@ -93,9 +90,9 @@ public class RenameSupport {
 	}
 
 	/**
-	 * Executes the rename refactoring without showing a dialog to gather
-	 * additional user input. Only an error dialog is shown (if necessary) to
-	 * present the result of the refactoring's full precondition checking.
+	 * Executes the rename refactoring without showing a dialog to gather additional
+	 * user input. Only an error dialog is shown (if necessary) to present the
+	 * result of the refactoring's full precondition checking.
 	 * <p>
 	 * The method has to be called from within the UI thread.
 	 * </p>
@@ -138,8 +135,8 @@ public class RenameSupport {
 	public static final int UPDATE_REFERENCES = 1 << 0;
 
 	/**
-	 * Flag indicating that textual matches in comments and in string literals
-	 * are to be updated as well.
+	 * Flag indicating that textual matches in comments and in string literals are
+	 * to be updated as well.
 	 * 
 	 * @since 3.0
 	 */

@@ -41,8 +41,8 @@ public interface IProfilerLaunchSettingsSection {
 
 	/**
 	 * Initializes this sections's controls with values from the given launch
-	 * configuration. This method is called when a configuration is selected to
-	 * view or edit, after 'Profiler' tab's control has been created.
+	 * configuration. This method is called when a configuration is selected to view
+	 * or edit, after 'Profiler' tab's control has been created.
 	 * 
 	 * @param configuration
 	 */
@@ -58,17 +58,17 @@ public interface IProfilerLaunchSettingsSection {
 	/**
 	 * Initializes the given launch configuration with default values for this
 	 * section. This method is called when a new launch configuration is created
-	 * such that the configuration can be initialized with meaningful values.
-	 * This method may be called before this sections's control is created.
+	 * such that the configuration can be initialized with meaningful values. This
+	 * method may be called before this sections's control is created.
 	 * 
 	 * @param configuration
 	 */
 	void setDefaults(ILaunchConfigurationWorkingCopy configuration);
 
 	/**
-	 * Returns whether this tab is in a valid state in the context of the
-	 * specified launch configuration. This information is typically used by the
-	 * launch configuration dialog to decide when it is okay to launch.
+	 * Returns whether this tab is in a valid state in the context of the specified
+	 * launch configuration. This information is typically used by the launch
+	 * configuration dialog to decide when it is okay to launch.
 	 * 
 	 * @param configuration
 	 * @return status message with validation state information

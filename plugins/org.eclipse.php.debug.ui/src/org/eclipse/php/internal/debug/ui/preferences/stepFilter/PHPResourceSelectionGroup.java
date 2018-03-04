@@ -74,8 +74,8 @@ public class PHPResourceSelectionGroup extends Composite {
 	 *            A listener to forward events to. Can be null if no listener is
 	 *            required.
 	 * @param allowNewContainerName
-	 *            Enable the user to type in a new container name instead of
-	 *            just selecting from the existing ones.
+	 *            Enable the user to type in a new container name instead of just
+	 *            selecting from the existing ones.
 	 * @param message
 	 *            The text to present to the user.
 	 * @param showClosedProjects
@@ -96,8 +96,8 @@ public class PHPResourceSelectionGroup extends Composite {
 	 *            A listener to forward events to. Can be null if no listener is
 	 *            required.
 	 * @param allowNewContainerName
-	 *            Enable the user to type in a new container name instead of
-	 *            just selecting from the existing ones.
+	 *            Enable the user to type in a new container name instead of just
+	 *            selecting from the existing ones.
 	 * @param message
 	 *            The text to present to the user.
 	 * @param showClosedProjects
@@ -123,8 +123,8 @@ public class PHPResourceSelectionGroup extends Composite {
 	}
 
 	/**
-	 * The container selection has changed in the tree view. Update the
-	 * container name field value and notify all listeners.
+	 * The container selection has changed in the tree view. Update the container
+	 * name field value and notify all listeners.
 	 * 
 	 * @param container
 	 *            The container that changed
@@ -228,8 +228,8 @@ public class PHPResourceSelectionGroup extends Composite {
 
 	/**
 	 * Returns the currently entered container name. Null if the field is empty.
-	 * Note that the container may not exist yet if the user entered a new
-	 * container name in the field.
+	 * Note that the container may not exist yet if the user entered a new container
+	 * name in the field.
 	 * 
 	 * @return IPath
 	 */
@@ -250,8 +250,7 @@ public class PHPResourceSelectionGroup extends Composite {
 	}
 
 	/**
-	 * Gives focus to one of the widgets in the group, as determined by the
-	 * group.
+	 * Gives focus to one of the widgets in the group, as determined by the group.
 	 */
 	public void setInitialFocus() {
 		treeViewer.getTree().setFocus();

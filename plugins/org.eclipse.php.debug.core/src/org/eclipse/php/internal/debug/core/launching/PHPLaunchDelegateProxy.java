@@ -73,8 +73,7 @@ public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.model.ILaunchConfigurationDelegate2#getLaunch(
+	 * @see org.eclipse.debug.core.model.ILaunchConfigurationDelegate2#getLaunch(
 	 * org.eclipse.debug.core.ILaunchConfiguration, java.lang.String)
 	 */
 	@Override
@@ -108,11 +107,9 @@ public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.model.ILaunchConfigurationDelegate#launch(org.
+	 * @see org.eclipse.debug.core.model.ILaunchConfigurationDelegate#launch(org.
 	 * eclipse.debug.core.ILaunchConfiguration, java.lang.String,
-	 * org.eclipse.debug.core.ILaunch,
-	 * org.eclipse.core.runtime.IProgressMonitor)
+	 * org.eclipse.debug.core.ILaunch, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
@@ -127,10 +124,10 @@ public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 	}
 
 	/**
-	 * Create and return a launch configuration delegate. In case the delegate
-	 * was already created, return the cached delegate. Note that in order to
-	 * allow class instanciation from non-dependent plug-in, there is a need to
-	 * define the plug-in as Eclipse-RegisterBuddy: org.eclipse.php.debug.core
+	 * Create and return a launch configuration delegate. In case the delegate was
+	 * already created, return the cached delegate. Note that in order to allow
+	 * class instanciation from non-dependent plug-in, there is a need to define the
+	 * plug-in as Eclipse-RegisterBuddy: org.eclipse.php.debug.core
 	 * 
 	 * @param configuration
 	 *            An {@link ILaunchConfiguration}

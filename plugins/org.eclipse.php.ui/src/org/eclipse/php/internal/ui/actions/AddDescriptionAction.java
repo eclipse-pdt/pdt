@@ -257,8 +257,8 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 	}
 
 	/**
-	 * Calculates and returns the desired docBlock surrounded by '<?php' and
-	 * '?>' tags (no indentation)
+	 * Calculates and returns the desired docBlock surrounded by '<?php' and '?>'
+	 * tags (no indentation)
 	 * 
 	 * @param document
 	 *            - The IStructuredDocument that we are working on
@@ -342,9 +342,9 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 
 	/**
 	 * Handle a situation where a file DocBlock is requested and there is an
-	 * undocumented class, function or define at the beginning of the document.
-	 * In this case we auto-document the undocumented element to comply the
-	 * DocBlock rules.
+	 * undocumented class, function or define at the beginning of the document. In
+	 * this case we auto-document the undocumented element to comply the DocBlock
+	 * rules.
 	 * 
 	 * @param data
 	 *            A PHPFileData that need to be documented
@@ -436,8 +436,8 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 		public int compare(IModelElement object1, IModelElement object2) {
 			/*
 			 * handling null-pointers on both levels (object=null or
-			 * object1.getUserData()=null) 'null' objects will be considered as
-			 * 'bigger' and will be pushed to the end of the array
+			 * object1.getUserData()=null) 'null' objects will be considered as 'bigger' and
+			 * will be pushed to the end of the array
 			 */
 			if (object1 instanceof ISourceReference && object2 instanceof ISourceReference) {
 				ISourceReference sourceReference1 = (ISourceReference) object1;
