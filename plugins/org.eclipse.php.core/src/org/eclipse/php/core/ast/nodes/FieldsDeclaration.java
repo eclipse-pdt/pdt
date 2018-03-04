@@ -31,8 +31,7 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  */
 public class FieldsDeclaration extends BodyDeclaration {
 
-	private final ASTNode.NodeList<SingleFieldDeclaration> fields = new ASTNode.NodeList<>(
-			FIELDS_PROPERTY);
+	private final ASTNode.NodeList<SingleFieldDeclaration> fields = new ASTNode.NodeList<>(FIELDS_PROPERTY);
 
 	/**
 	 * The structural property of this node type.
@@ -60,7 +59,8 @@ public class FieldsDeclaration extends BodyDeclaration {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
-	public FieldsDeclaration(int start, int end, AST ast, int modifier, List<SingleFieldDeclaration> variablesAndDefaults) {
+	public FieldsDeclaration(int start, int end, AST ast, int modifier,
+			List<SingleFieldDeclaration> variablesAndDefaults) {
 		super(start, end, ast, modifier);
 
 		if (variablesAndDefaults == null || variablesAndDefaults.size() == 0) {
@@ -208,8 +208,7 @@ public class FieldsDeclaration extends BodyDeclaration {
 	/**
 	 * Resolves and returns the binding for this field
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be
-	 *         resolved
+	 * @return the binding, or <code>null</code> if the binding cannot be resolved
 	 */
 	public final IVariableBinding resolveTypeBinding() {
 		return this.ast.getBindingResolver().resolveVariable(this);

@@ -1971,8 +1971,8 @@ public class ASTRewriteTests {
 
 	// //////////////////////// Utility methods //////////////////////////
 	/**
-	 * Set the content into the document and initialize the parser, the program
-	 * and the ast.
+	 * Set the content into the document and initialize the parser, the program and
+	 * the ast.
 	 */
 	private void initialize(String content, PHPVersion phpVersion) throws Exception {
 		document = new Document(content);

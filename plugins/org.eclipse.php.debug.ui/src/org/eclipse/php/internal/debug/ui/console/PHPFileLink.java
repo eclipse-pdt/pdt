@@ -109,8 +109,7 @@ public class PHPFileLink implements IHyperlink {
 	}
 
 	/**
-	 * Finds {@link IFile} or {@link ISourceModule} matching the specified file
-	 * name
+	 * Finds {@link IFile} or {@link ISourceModule} matching the specified file name
 	 * 
 	 * @param fileName
 	 * @return

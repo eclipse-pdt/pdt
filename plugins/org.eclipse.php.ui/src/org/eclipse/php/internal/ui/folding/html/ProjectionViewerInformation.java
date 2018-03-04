@@ -37,8 +37,8 @@ class ProjectionViewerInformation {
 	// org.eclipse.jst.jsp.ui.internal.projection
 
 	/**
-	 * Listens to document to be aware of when to update the projection
-	 * annotation model.
+	 * Listens to document to be aware of when to update the projection annotation
+	 * model.
 	 */
 	private class DocumentListener implements IDocumentListener {
 		private ProjectionViewerInformation fInfo;
@@ -106,8 +106,7 @@ class ProjectionViewerInformation {
 	}
 
 	/**
-	 * Projection annotation model current associated with this projection
-	 * viewer
+	 * Projection annotation model current associated with this projection viewer
 	 */
 	private ProjectionAnnotationModel fProjectionAnnotationModel;
 	/**
@@ -242,8 +241,8 @@ class ProjectionViewerInformation {
 	}
 
 	/**
-	 * Updates projection annotation model if document is not in flux.
-	 * Otherwise, queues up the changes to be applied when document is ready.
+	 * Updates projection annotation model if document is not in flux. Otherwise,
+	 * queues up the changes to be applied when document is ready.
 	 */
 	public void queueAnnotationModelChanges(ProjectionAnnotationModelChanges newChange) {
 

@@ -36,8 +36,7 @@ import org.eclipse.ui.texteditor.IAnnotationImageProvider;
 public class OverrideIndicatorImageProvider implements IAnnotationImageProvider {
 
 	/*
-	 * @see
-	 * org.eclipse.ui.texteditor.IAnnotationImageProvider#getManagedImage(org
+	 * @see org.eclipse.ui.texteditor.IAnnotationImageProvider#getManagedImage(org
 	 * .eclipse.jface.text.source.Annotation)
 	 */
 	private static final String OVERRIDE_IMG_DESC_ID = "PHPPluginImages.DESC_OBJ_OVERRIDES"; //$NON-NLS-1$
@@ -49,8 +48,7 @@ public class OverrideIndicatorImageProvider implements IAnnotationImageProvider 
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.ui.texteditor.IAnnotationImageProvider#getImageDescriptorId
+	 * @see org.eclipse.ui.texteditor.IAnnotationImageProvider#getImageDescriptorId
 	 * (org.eclipse.jface.text.source.Annotation)
 	 */
 	@Override
@@ -67,8 +65,7 @@ public class OverrideIndicatorImageProvider implements IAnnotationImageProvider 
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.ui.texteditor.IAnnotationImageProvider#getImageDescriptor
+	 * @see org.eclipse.ui.texteditor.IAnnotationImageProvider#getImageDescriptor
 	 * (java.lang.String)
 	 */
 	@Override

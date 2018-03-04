@@ -69,8 +69,8 @@ public abstract class StructuredViewerSection extends ComposerSection {
 	}
 
 	/**
-	 * If the context menu for this section should be registered, do it here
-	 * with the appropriate id etc. By default do nothing.
+	 * If the context menu for this section should be registered, do it here with
+	 * the appropriate id etc. By default do nothing.
 	 * 
 	 * @param popupMenuManager
 	 *            the menu manager to be registered
@@ -117,9 +117,8 @@ public abstract class StructuredViewerSection extends ComposerSection {
 
 	/**
 	 * <p>
-	 * Given the index of TreeViewer item and the size of the array of its
-	 * immediate siblings, gets the index of the desired new selection as
-	 * follows:
+	 * Given the index of TreeViewer item and the size of the array of its immediate
+	 * siblings, gets the index of the desired new selection as follows:
 	 * <ul>
 	 * <li>if this is the only item, return -1 (meaning select the parent)</li>
 	 * <li>if this is the last item, return the index of the predecessor</li>

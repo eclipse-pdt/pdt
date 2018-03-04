@@ -28,8 +28,7 @@ import org.eclipse.php.internal.server.ui.ServerEditWizardRunner;
  * 
  * @author Bartlomiej Laczkowski
  */
-public class PHPWebPageLaunchConfigurationProfilerTab
-		extends AbstractPHPLaunchConfigurationProfilerTab {
+public class PHPWebPageLaunchConfigurationProfilerTab extends AbstractPHPLaunchConfigurationProfilerTab {
 
 	/*
 	 * (non-Javadoc)
@@ -44,8 +43,7 @@ public class PHPWebPageLaunchConfigurationProfilerTab
 			return;
 		}
 		NullProgressMonitor monitor = new NullProgressMonitor();
-		if (ServerEditWizardRunner.runWizard(server,
-				DebuggerCompositeFragment.ID) == Window.CANCEL) {
+		if (ServerEditWizardRunner.runWizard(server, DebuggerCompositeFragment.ID) == Window.CANCEL) {
 			monitor.setCanceled(true);
 			return;
 		}
@@ -88,8 +86,7 @@ public class PHPWebPageLaunchConfigurationProfilerTab
 	 */
 	@Override
 	protected void updateProfileTest() {
-		profileTesters = DebugServerConnectionTestRegistry
-				.getTests(getCurrentProfilerId());
+		profileTesters = DebugServerConnectionTestRegistry.getTests(getCurrentProfilerId());
 		if (profileTesters.length == 0) {
 			validateProfilerBtn.setEnabled(false);
 		} else {
@@ -112,8 +109,7 @@ public class PHPWebPageLaunchConfigurationProfilerTab
 
 	private Server getServer() {
 		try {
-			String serverName = getConfiguration().getAttribute(Server.NAME,
-					""); //$NON-NLS-1$
+			String serverName = getConfiguration().getAttribute(Server.NAME, ""); //$NON-NLS-1$
 			Server server = ServersManager.getServer(serverName);
 			return server;
 		} catch (CoreException e) {

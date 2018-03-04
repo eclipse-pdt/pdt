@@ -35,8 +35,8 @@ import org.eclipse.ui.part.PageBook;
 public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 
 	/**
-	 * Encapsulates a view of the options tree which is structured by
-	 * syntactical element.
+	 * Encapsulates a view of the options tree which is structured by syntactical
+	 * element.
 	 */
 
 	private final class SyntaxComponent

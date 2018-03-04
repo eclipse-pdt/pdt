@@ -197,12 +197,10 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 	}
 
 	/**
-	 * Creates a project resource handle for the current project name field
-	 * value.
+	 * Creates a project resource handle for the current project name field value.
 	 * <p>
-	 * This method does not create the project resource; this is the
-	 * responsibility of <code>IProject::create</code> invoked by the new
-	 * project resource wizard.
+	 * This method does not create the project resource; this is the responsibility
+	 * of <code>IProject::create</code> invoked by the new project resource wizard.
 	 * </p>
 	 * 
 	 * @return the new project resource handle
@@ -228,8 +226,8 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 	}
 
 	/**
-	 * returns whether this project layout is "detailed" - meaning tree
-	 * structure - one folder for source, one for resources
+	 * returns whether this project layout is "detailed" - meaning tree structure -
+	 * one folder for source, one for resources
 	 * 
 	 * @return
 	 */
@@ -253,8 +251,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 	}
 
 	/**
-	 * Validate this page and show appropriate warnings and error
-	 * NewWizardMessages.
+	 * Validate this page and show appropriate warnings and error NewWizardMessages.
 	 */
 	public final class Validator implements Observer {
 		@Override
@@ -461,8 +458,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see java.util.Observer#update(java.util.Observable,
-		 * java.lang.Object)
+		 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 		 */
 		@Override
 		public void update(Observable o, Object arg) {
@@ -484,11 +480,11 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		}
 
 		/**
-		 * Return <code>true</code> if the user specified to create
-		 * 'application' and 'public' folders.
+		 * Return <code>true</code> if the user specified to create 'application' and
+		 * 'public' folders.
 		 * 
-		 * @return returns <code>true</code> if the user specified to create
-		 *         'source' and 'bin' folders.
+		 * @return returns <code>true</code> if the user specified to create 'source'
+		 *         and 'bin' folders.
 		 */
 		public boolean isDetailedLayout() {
 			return fSrcBinRadio.isSelected();
@@ -497,8 +493,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse
+		 * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse
 		 * .swt.events.SelectionEvent)
 		 */
 		@Override
@@ -507,8 +502,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		}
 
 		/*
-		 * @see
-		 * org.eclipse.jdt.internal.ui.wizards.dialogfields.IDialogFieldListener
+		 * @see org.eclipse.jdt.internal.ui.wizards.dialogfields.IDialogFieldListener
 		 * #dialogFieldChanged(org.eclipse.jdt.internal.ui.wizards.dialogfields.
 		 * DialogField)
 		 * 
@@ -530,8 +524,8 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 
 	/**
 	 * Request a location. Fires an event whenever the checkbox or the location
-	 * field is changed, regardless of whether the change originates from the
-	 * user or has been invoked programmatically.
+	 * field is changed, regardless of whether the change originates from the user
+	 * or has been invoked programmatically.
 	 */
 	public abstract static class VersionGroup extends Observable
 			implements Observer, IStringButtonAdapter, IDialogFieldListener, SelectionListener {
@@ -585,8 +579,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see java.util.Observer#update(java.util.Observable,
-		 * java.lang.Object)
+		 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 		 */
 		@Override
 		public void update(Observable o, Object arg) {

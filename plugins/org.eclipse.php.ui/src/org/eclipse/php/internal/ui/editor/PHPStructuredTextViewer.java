@@ -267,7 +267,8 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 				try {
 					textSelection = (ITextSelection) getSelection();
 					int length = textSelection.getLength();
-					if (!textWidget.getBlockSelection() && (length == 0 || length == textWidget.getSelectionRange().y)) {
+					if (!textWidget.getBlockSelection()
+							&& (length == 0 || length == textWidget.getSelectionRange().y)) {
 						getTextWidget().invokeAction(ST.DELETE_NEXT);
 					} else {
 						deleteSelection(textSelection, textWidget);

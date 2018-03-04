@@ -37,12 +37,9 @@ public class RenameBuildAndIcludePathChange extends Change {
 	private List<IBuildpathEntry> oldBuildEntries;
 	private List<IBuildpathEntry> oldIncludeEntries;
 
-	public RenameBuildAndIcludePathChange(IPath source, IPath dest,
-			String resName, String newName,
-			List<IBuildpathEntry> oldBiuldEntries,
-			List<IBuildpathEntry> newBiuldEntries,
-			List<IBuildpathEntry> oldIncludePath,
-			List<IBuildpathEntry> newIncludePathEntries) {
+	public RenameBuildAndIcludePathChange(IPath source, IPath dest, String resName, String newName,
+			List<IBuildpathEntry> oldBiuldEntries, List<IBuildpathEntry> newBiuldEntries,
+			List<IBuildpathEntry> oldIncludePath, List<IBuildpathEntry> newIncludePathEntries) {
 
 		fSource = source;
 		fDest = dest;
@@ -70,23 +67,20 @@ public class RenameBuildAndIcludePathChange extends Change {
 	}
 
 	@Override
-	public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException,
-			OperationCanceledException {
+	public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		return new RefactoringStatus();
 	}
 
 	@Override
 	public Change perform(IProgressMonitor pm) throws CoreException {
 		performChanges(pm);
-		return new RenameBuildAndIcludePathChange(fDest, fSource, fNewName,
-				fName, newBuildEntries, oldBuildEntries, newIncludePathEntries,
-				oldIncludeEntries);
+		return new RenameBuildAndIcludePathChange(fDest, fSource, fNewName, fName, newBuildEntries, oldBuildEntries,
+				newIncludePathEntries, oldIncludeEntries);
 	}
 
 	protected void performChanges(IProgressMonitor pm) throws CoreException {
 
-		IResource newResource = RefactoringUtility.getResource(fDest
-				.append(fNewName));
+		IResource newResource = RefactoringUtility.getResource(fDest.append(fNewName));
 		IProject newProject = newResource.getProject();
 
 		IScriptProject newScriptProject = DLTKCore.create(newProject);
@@ -96,16 +90,12 @@ public class RenameBuildAndIcludePathChange extends Change {
 			// Remove all old paths
 			newScriptProject.setRawBuildpath(null, pm);
 
-			newScriptProject
-					.setRawBuildpath(
-							newBuildEntries
-									.toArray(new IBuildpathEntry[newBuildEntries
-											.size()]), null);
+			newScriptProject.setRawBuildpath(newBuildEntries.toArray(new IBuildpathEntry[newBuildEntries.size()]),
+					null);
 		}
 
 		if (newIncludePathEntries.size() > 0) {
-			IncludePathManager.getInstance().addEntriesToIncludePath(
-					newProject, newIncludePathEntries);
+			IncludePathManager.getInstance().addEntriesToIncludePath(newProject, newIncludePathEntries);
 		}
 
 		IncludePathManager.getInstance().refresh(newProject);

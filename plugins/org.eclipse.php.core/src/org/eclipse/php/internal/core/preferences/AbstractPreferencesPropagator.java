@@ -34,8 +34,7 @@ public abstract class AbstractPreferencesPropagator {
 	}
 
 	/**
-	 * Adds an IPreferencesPropagatorListener with a preferences key to listen
-	 * to.
+	 * Adds an IPreferencesPropagatorListener with a preferences key to listen to.
 	 * 
 	 * @param listener
 	 *            An IPreferencesPropagatorListener.
@@ -54,8 +53,8 @@ public abstract class AbstractPreferencesPropagator {
 	}
 
 	/**
-	 * Removes an IPreferencesPropagatorListener that was assigned to listen to
-	 * the given preferences key.
+	 * Removes an IPreferencesPropagatorListener that was assigned to listen to the
+	 * given preferences key.
 	 * 
 	 * @param listener
 	 *            An IPreferencesPropagatorListener.
@@ -84,13 +83,12 @@ public abstract class AbstractPreferencesPropagator {
 	}
 
 	/**
-	 * Returns the list of listeners assigned to the preferences key, or null if
-	 * non exists.
+	 * Returns the list of listeners assigned to the preferences key, or null if non
+	 * exists.
 	 * 
 	 * @param preferencesKey
 	 *            The key that the listeners listen to.
-	 * @return The list of listeners assigned for the key, or null if non
-	 *         exists.
+	 * @return The list of listeners assigned for the key, or null if non exists.
 	 */
 	protected List<IPreferencesPropagatorListener> getPropagatorListeners(String preferencesKey) {
 		synchronized (lock) {

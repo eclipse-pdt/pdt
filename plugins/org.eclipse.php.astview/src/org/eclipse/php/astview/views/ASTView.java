@@ -306,7 +306,7 @@ public class ASTView extends ViewPart implements IShowInSource {
 	private final static String SETTINGS_NO_BINDINGS_RECOVERY = "no_bindings_recovery"; //$NON-NLS-1$
 	private final static String SETTINGS_SHOW_NON_RELEVANT = "show_non_relevant";//$NON-NLS-1$
 
-	public static final String LINK_WITH_EDITOR_COMMAND_ID = IWorkbenchCommandConstants.NAVIGATE_TOGGLE_LINK_WITH_EDITOR; 
+	public static final String LINK_WITH_EDITOR_COMMAND_ID = IWorkbenchCommandConstants.NAVIGATE_TOGGLE_LINK_WITH_EDITOR;
 
 	private SashForm fSash;
 	private TreeViewer fViewer;
@@ -954,7 +954,6 @@ public class ASTView extends ViewPart implements IShowInSource {
 		PHPVersion oldLevel = fPHPVersion;
 		fPHPVersion = level;
 
-
 		if (doRefresh && fSourceRoot != null && oldLevel != fPHPVersion) {
 			try {
 				refreshAST();
@@ -1246,15 +1245,18 @@ public class ASTView extends ViewPart implements IShowInSource {
 		/*
 		 * IJavaElement handle= JavaCore.create(handleIdentifier);
 		 * 
-		 * Object viewerInput= fViewer.getInput(); ASTAttribute item; if (handle == null) { item= new Error(viewerInput,
-		 * "handleIdentifier not resolved: " + handleIdentifier, null); } else if (! handle.exists()) { item= new
-		 * Error(viewerInput, "element does not exist: " + handleIdentifier, null); } else if (handle.getJavaProject()
-		 * == null) { item= new Error(viewerInput, "getJavaProject() is null: " + handleIdentifier, null); } else {
-		 * IJavaProject project= handle.getJavaProject(); ASTParser parser= ASTParser.newParser(fCurrentASTLevel);
-		 * parser.setProject(project); IBinding[] bindings= parser.createBindings(new IJavaElement[] { handle }, null);
-		 * String name= handleIdentifier + ": " + Binding.getBindingLabel(bindings[0]); item= new Binding(viewerInput,
-		 * name, bindings[0], true); } fViewer.add(viewerInput, item); fViewer.setSelection(new
-		 * StructuredSelection(item), true);
+		 * Object viewerInput= fViewer.getInput(); ASTAttribute item; if (handle ==
+		 * null) { item= new Error(viewerInput, "handleIdentifier not resolved: " +
+		 * handleIdentifier, null); } else if (! handle.exists()) { item= new
+		 * Error(viewerInput, "element does not exist: " + handleIdentifier, null); }
+		 * else if (handle.getJavaProject() == null) { item= new Error(viewerInput,
+		 * "getJavaProject() is null: " + handleIdentifier, null); } else { IJavaProject
+		 * project= handle.getJavaProject(); ASTParser parser=
+		 * ASTParser.newParser(fCurrentASTLevel); parser.setProject(project); IBinding[]
+		 * bindings= parser.createBindings(new IJavaElement[] { handle }, null); String
+		 * name= handleIdentifier + ": " + Binding.getBindingLabel(bindings[0]); item=
+		 * new Binding(viewerInput, name, bindings[0], true); } fViewer.add(viewerInput,
+		 * item); fViewer.setSelection(new StructuredSelection(item), true);
 		 */ }
 
 	protected void performDoubleClick() {
@@ -1309,12 +1311,15 @@ public class ASTView extends ViewPart implements IShowInSource {
 		} else if (obj instanceof PhpElement) {
 			// TODO : complete this task for open in edtior
 			/*
-			 * ISourceModule phpElement= ((PhpElement) obj).getPhpElement(); if (phpElement instanceof IPackageFragment)
-			 * { ShowInPackageViewAction showInPackageViewAction= new ShowInPackageViewAction(getViewSite());
-			 * showInPackageViewAction.run(phpElement); } else { try { IEditorPart editorPart=
-			 * JavaUI.openInEditor(phpElement); if (editorPart != null) JavaUI.revealInEditor(editorPart, phpElement); }
-			 * catch (PartInitException e) { showAndLogError( "Could not open editor.", e); //$NON-NLS-1$ } catch
-			 * (JavaModelException e) { showAndLogError("Could not open editor." , e); //$NON-NLS-1$ } }
+			 * ISourceModule phpElement= ((PhpElement) obj).getPhpElement(); if (phpElement
+			 * instanceof IPackageFragment) { ShowInPackageViewAction
+			 * showInPackageViewAction= new ShowInPackageViewAction(getViewSite());
+			 * showInPackageViewAction.run(phpElement); } else { try { IEditorPart
+			 * editorPart= JavaUI.openInEditor(phpElement); if (editorPart != null)
+			 * JavaUI.revealInEditor(editorPart, phpElement); } catch (PartInitException e)
+			 * { showAndLogError( "Could not open editor.", e); //$NON-NLS-1$ } catch
+			 * (JavaModelException e) { showAndLogError("Could not open editor." , e);
+			 * //$NON-NLS-1$ } }
 			 */ return;
 		}
 

@@ -48,8 +48,8 @@ public class InstalledDebuggersPreferencePage extends PreferencePage implements 
 
 	/**
 	 * Creates the debuggers table. The created table allows only viewing and
-	 * modifying any existing debugger that is registered thought the
-	 * phpDebuggers extension point.
+	 * modifying any existing debugger that is registered thought the phpDebuggers
+	 * extension point.
 	 * 
 	 * @param composite
 	 */

@@ -45,13 +45,13 @@ public class ChangeCorrectionProposal extends AbstractCorrectionProposal {
 	 *            The name that is displayed in the proposal selection dialog.
 	 * @param change
 	 *            The change that is executed when the proposal is applied or
-	 *            <code>null</code> if the change will be created by
-	 *            implementors of {@link #createChange()}.
+	 *            <code>null</code> if the change will be created by implementors of
+	 *            {@link #createChange()}.
 	 * @param relevance
 	 *            The relevance of this proposal.
 	 * @param image
-	 *            The image that is displayed for this proposal or
-	 *            <code>null</code> if no image is desired.
+	 *            The image that is displayed for this proposal or <code>null</code>
+	 *            if no image is desired.
 	 * @param commandId
 	 * 
 	 * @since 3.6
@@ -75,11 +75,11 @@ public class ChangeCorrectionProposal extends AbstractCorrectionProposal {
 	 * Performs the change associated with this proposal.
 	 * 
 	 * @param activeEditor
-	 *            The editor currently active or <code>null</code> if no editor
-	 *            is active.
+	 *            The editor currently active or <code>null</code> if no editor is
+	 *            active.
 	 * @param document
-	 *            The document of the editor currently active or
-	 *            <code>null</code> if no editor is visible.
+	 *            The document of the editor currently active or <code>null</code>
+	 *            if no editor is visible.
 	 * @throws CoreException
 	 *             Thrown when the invocation of the change failed.
 	 */
@@ -181,8 +181,8 @@ public class ChangeCorrectionProposal extends AbstractCorrectionProposal {
 	}
 
 	/**
-	 * Creates the text change for this proposal. This method is only called
-	 * once and only when no text change has been passed in
+	 * Creates the text change for this proposal. This method is only called once
+	 * and only when no text change has been passed in
 	 * {@link #ChangeCorrectionProposal(String, Change, int, Image)}.
 	 * 
 	 * @return returns the created change.

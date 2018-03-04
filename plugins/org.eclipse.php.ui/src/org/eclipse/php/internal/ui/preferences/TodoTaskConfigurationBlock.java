@@ -65,8 +65,7 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
+		 * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
 		 */
 		@Override
 		public Image getImage(Object element) {
@@ -76,8 +75,7 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
+		 * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
 		 */
 		@Override
 		public String getText(Object element) {
@@ -87,8 +85,7 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java
+		 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java
 		 * .lang.Object, int)
 		 */
 		@Override
@@ -99,8 +96,7 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.
+		 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.
 		 * lang.Object, int)
 		 */
 		@Override
@@ -128,8 +124,7 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.IFontProvider#getFont(java.lang.Object)
+		 * @see org.eclipse.jface.viewers.IFontProvider#getFont(java.lang.Object)
 		 */
 		@Override
 		public Font getFont(Object element) {

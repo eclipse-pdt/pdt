@@ -142,7 +142,8 @@ public class PackageFilterViewer extends FilteredViewer implements PackageFilter
 				}
 
 				@Override
-				public void packagesFound(List<MinimalPackage> packages, final String query, final SearchResult result) {
+				public void packagesFound(List<MinimalPackage> packages, final String query,
+						final SearchResult result) {
 					if (packages != null) {
 						final List<PackageFilterItem> items = new ArrayList<>();
 						for (MinimalPackage pkg : packages) {

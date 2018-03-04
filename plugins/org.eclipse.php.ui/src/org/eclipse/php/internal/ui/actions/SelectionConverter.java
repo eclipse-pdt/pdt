@@ -42,11 +42,10 @@ public class SelectionConverter {
 	 * Converts the selection provided by the given part into a structured
 	 * selection. The following conversion rules are used:
 	 * <ul>
-	 * <li><code>part instanceof PHPStructuredEditor</code>: returns a
-	 * structured selection using code resolve to convert the editor's text
-	 * selection.</li>
-	 * <li><code>part instanceof IWorkbenchPart</code>: returns the part's
-	 * selection if it is a structured selection.</li>
+	 * <li><code>part instanceof PHPStructuredEditor</code>: returns a structured
+	 * selection using code resolve to convert the editor's text selection.</li>
+	 * <li><code>part instanceof IWorkbenchPart</code>: returns the part's selection
+	 * if it is a structured selection.</li>
 	 * <li><code>default</code>: returns an empty structured selection.</li>
 	 * </ul>
 	 * 
@@ -70,9 +69,9 @@ public class SelectionConverter {
 	}
 
 	/**
-	 * Converts the given structured selection into an array of Java elements.
-	 * An empty array is returned if one of the elements stored in the
-	 * structured selection is not of type <code>IModelElement</code>
+	 * Converts the given structured selection into an array of Java elements. An
+	 * empty array is returned if one of the elements stored in the structured
+	 * selection is not of type <code>IModelElement</code>
 	 * 
 	 * @param selection
 	 *            the selection
@@ -127,8 +126,7 @@ public class SelectionConverter {
 	 * @param editor
 	 *            the editor
 	 * @param primaryOnly
-	 *            if <code>true</code> only primary working copies will be
-	 *            returned
+	 *            if <code>true</code> only primary working copies will be returned
 	 * @return the resolved elements
 	 * @throws ModelException
 	 * @since 3.2
@@ -147,8 +145,7 @@ public class SelectionConverter {
 	 * @param editor
 	 *            the editor
 	 * @param primaryOnly
-	 *            if <code>true</code> only primary working copies will be
-	 *            returned
+	 *            if <code>true</code> only primary working copies will be returned
 	 * @return the resolved elements
 	 * @throws InterruptedException
 	 * @throws InvocationTargetException
@@ -173,8 +170,7 @@ public class SelectionConverter {
 	 * @param editor
 	 *            the editor
 	 * @param primaryOnly
-	 *            if <code>true</code> only primary working copies will be
-	 *            returned
+	 *            if <code>true</code> only primary working copies will be returned
 	 * @return the element surrounding the current selection
 	 * @throws ModelException
 	 * @since 3.2
@@ -214,8 +210,7 @@ public class SelectionConverter {
 	 * @param editor
 	 *            the Java editor
 	 * @param primaryOnly
-	 *            if <code>true</code> only primary working copies will be
-	 *            returned
+	 *            if <code>true</code> only primary working copies will be returned
 	 * @return the type root which is the editor input
 	 * @since 3.2
 	 */
@@ -333,8 +328,8 @@ public class SelectionConverter {
 	}
 
 	/**
-	 * Shows a dialog for resolving an ambiguous Java element. Utility method
-	 * that can be called by subclasses.
+	 * Shows a dialog for resolving an ambiguous Java element. Utility method that
+	 * can be called by subclasses.
 	 * 
 	 * @param elements
 	 *            the elements to select from
@@ -344,8 +339,8 @@ public class SelectionConverter {
 	 *            the title of the selection dialog
 	 * @param message
 	 *            the message of the selection dialog
-	 * @return returns the selected element or <code>null</code> if the dialog
-	 *         has been cancelled
+	 * @return returns the selected element or <code>null</code> if the dialog has
+	 *         been cancelled
 	 */
 	public static IModelElement selectJavaElement(IModelElement[] elements, Shell shell, String title, String message) {
 		int nResults = elements.length;

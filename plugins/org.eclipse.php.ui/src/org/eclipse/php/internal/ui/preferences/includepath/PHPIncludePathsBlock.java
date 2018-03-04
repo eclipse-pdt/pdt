@@ -69,8 +69,8 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 
 	/**
-	 * @author nir.c Wrapper composite, that un/register itself to any
-	 *         includepath changes
+	 * @author nir.c Wrapper composite, that un/register itself to any includepath
+	 *         changes
 	 */
 	private final class IncludePathComposite extends Composite implements IIncludepathListener, IChangeListener {
 
@@ -233,10 +233,10 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 	/**
 	 * The purpose of this method is to adapt the build path according to the
 	 * entries added to the include path. If the user added to the include path
-	 * source folders that are not in (or contained in) the build path, he will
-	 * not get code completion and other functionality for this sources. THe
-	 * user is prompted and asked if he wants to add the relevant sources to the
-	 * build path as well see bug#255930
+	 * source folders that are not in (or contained in) the build path, he will not
+	 * get code completion and other functionality for this sources. THe user is
+	 * prompted and asked if he wants to add the relevant sources to the build path
+	 * as well see bug#255930
 	 */
 	private void updateBuildPath() {
 		PHPIncludePathSourcePage includePathSourcePage = (PHPIncludePathSourcePage) fSourceContainerPage;
@@ -324,21 +324,21 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 	}
 
 	/**
-	 * Initializes the include path for the given project. Multiple calls to
-	 * init are allowed, but all existing settings will be cleared and replace
-	 * by the given or default paths.
+	 * Initializes the include path for the given project. Multiple calls to init
+	 * are allowed, but all existing settings will be cleared and replace by the
+	 * given or default paths.
 	 * 
 	 * @param jproject
 	 *            The java project to configure. Does not have to exist.
 	 * @param outputLocation
-	 *            The output location to be set in the page. If
-	 *            <code>null</code> is passed, jdt default settings are used, or
-	 *            - if the project is an existing script project- the output
-	 *            location of the existing project
+	 *            The output location to be set in the page. If <code>null</code> is
+	 *            passed, jdt default settings are used, or - if the project is an
+	 *            existing script project- the output location of the existing
+	 *            project
 	 * @param buildpathEntries
 	 *            The include path entries to be set in the page. If
-	 *            <code>null</code> is passed, jdt default settings are used, or
-	 *            - if the project is an existing script project - the buildpath
+	 *            <code>null</code> is passed, jdt default settings are used, or -
+	 *            if the project is an existing script project - the buildpath
 	 *            entries of the existing project
 	 */
 	@Override

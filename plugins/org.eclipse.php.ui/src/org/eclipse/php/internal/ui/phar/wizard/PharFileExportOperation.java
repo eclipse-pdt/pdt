@@ -95,8 +95,8 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 	}
 
 	/**
-	 * Adds a new info to the list with the passed information. Normally the
-	 * export operation continues after a warning.
+	 * Adds a new info to the list with the passed information. Normally the export
+	 * operation continues after a warning.
 	 * 
 	 * @param message
 	 *            the message
@@ -121,8 +121,8 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 	}
 
 	/**
-	 * Adds a new error to the list with the passed information. Normally an
-	 * error terminates the export operation.
+	 * Adds a new error to the list with the passed information. Normally an error
+	 * terminates the export operation.
 	 * 
 	 * @param message
 	 *            the message

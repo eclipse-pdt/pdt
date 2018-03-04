@@ -193,8 +193,8 @@ public class NetworkUtil {
 	}
 
 	/**
-	 * Does the same what {@link InetAddress#getByName(String)} but with
-	 * possibility to provide custom timeout.
+	 * Does the same what {@link InetAddress#getByName(String)} but with possibility
+	 * to provide custom timeout.
 	 * 
 	 * @param host
 	 * @param timeout
@@ -214,8 +214,8 @@ public class NetworkUtil {
 	}
 
 	/**
-	 * Checks if specified address is in the range of class A private network
-	 * (RFC 1918) with 10.0.0.0/8 mask.
+	 * Checks if specified address is in the range of class A private network (RFC
+	 * 1918) with 10.0.0.0/8 mask.
 	 * 
 	 * @param address
 	 * @return <code>true</code> if it is in the range; otherwise return
@@ -226,8 +226,8 @@ public class NetworkUtil {
 	}
 
 	/**
-	 * Checks if specified address is in the range of class B private network
-	 * (RFC 1918) with 172.16.0.0/12 mask.
+	 * Checks if specified address is in the range of class B private network (RFC
+	 * 1918) with 172.16.0.0/12 mask.
 	 * 
 	 * @param address
 	 * @return <code>true</code> if it is in the range; otherwise return
@@ -238,8 +238,8 @@ public class NetworkUtil {
 	}
 
 	/**
-	 * Checks if specified address is in the range of class C private network
-	 * (RFC 1918) with 192.168.0.0/16 mask.
+	 * Checks if specified address is in the range of class C private network (RFC
+	 * 1918) with 192.168.0.0/16 mask.
 	 * 
 	 * @param address
 	 * @return <code>true</code> if it is in the range; otherwise return
@@ -250,8 +250,8 @@ public class NetworkUtil {
 	}
 
 	/**
-	 * Checks if specified address is in the range of class A private network
-	 * (RFC 1918) with 127.0.0.0/8 mask.
+	 * Checks if specified address is in the range of class A private network (RFC
+	 * 1918) with 127.0.0.0/8 mask.
 	 * 
 	 * @param address
 	 * @return <code>true</code> if it is in the range; otherwise return
@@ -262,13 +262,13 @@ public class NetworkUtil {
 	}
 
 	/**
-	 * Checks if both of provided addresses belong to the same private network
-	 * class range.
+	 * Checks if both of provided addresses belong to the same private network class
+	 * range.
 	 * 
 	 * @param address1
 	 * @param address2
-	 * @return <code>true</code> if both addresses belong to the same class
-	 *         range, <code>false</code> otherwise
+	 * @return <code>true</code> if both addresses belong to the same class range,
+	 *         <code>false</code> otherwise
 	 */
 	public static boolean isSamePrivateClass(Inet4Address address1, Inet4Address address2) {
 		if ((isPrivateClassA(address1) && isPrivateClassA(address2))
@@ -286,8 +286,8 @@ public class NetworkUtil {
 	 * @param address1
 	 * @param address2
 	 * @param mask
-	 * @return <code>true</code> if both addresses belong to the same
-	 *         sub-network, <code>false</code> otherwise
+	 * @return <code>true</code> if both addresses belong to the same sub-network,
+	 *         <code>false</code> otherwise
 	 */
 	public static boolean isSameNetwork(Inet4Address address1, Inet4Address address2, int mask) {
 		int maskValue = 0xFFFFFFF << (32 - mask);
@@ -300,8 +300,7 @@ public class NetworkUtil {
 	 * Checks if provided address is IPv4 address.
 	 * 
 	 * @param input
-	 * @return <code>true</code> if address is IPv4, <code>false</code>
-	 *         otherwise
+	 * @return <code>true</code> if address is IPv4, <code>false</code> otherwise
 	 */
 	public static boolean isIPv4Address(final String input) {
 		return IPV4_PATTERN.matcher(input).matches();

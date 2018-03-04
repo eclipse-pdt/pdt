@@ -156,10 +156,9 @@ public class ListDialogField<E> extends DialogField {
 	}
 
 	/**
-	 * Sets the index of the 'remove' button in the button label array passed in
-	 * the constructor. The behaviour of the button marked as the 'remove'
-	 * button will then be handled internally. (enable state, button invocation
-	 * behaviour)
+	 * Sets the index of the 'remove' button in the button label array passed in the
+	 * constructor. The behaviour of the button marked as the 'remove' button will
+	 * then be handled internally. (enable state, button invocation behaviour)
 	 * 
 	 * @see #getRemoveButtonIndex()
 	 */
@@ -181,8 +180,8 @@ public class ListDialogField<E> extends DialogField {
 
 	/**
 	 * Sets the index of the 'up' button in the button label array passed in the
-	 * constructor. The behaviour of the button marked as the 'up' button will
-	 * then be handled internally. (enable state, button invocation behaviour)
+	 * constructor. The behaviour of the button marked as the 'up' button will then
+	 * be handled internally. (enable state, button invocation behaviour)
 	 */
 	public void setUpButtonIndex(int upButtonIndex) {
 		Assert.isTrue(upButtonIndex < fButtonLabels.length);
@@ -190,10 +189,9 @@ public class ListDialogField<E> extends DialogField {
 	}
 
 	/**
-	 * Sets the index of the 'down' button in the button label array passed in
-	 * the constructor. The behaviour of the button marked as the 'down' button
-	 * will then be handled internally. (enable state, button invocation
-	 * behaviour)
+	 * Sets the index of the 'down' button in the button label array passed in the
+	 * constructor. The behaviour of the button marked as the 'down' button will
+	 * then be handled internally. (enable state, button invocation behaviour)
 	 */
 	public void setDownButtonIndex(int downButtonIndex) {
 		Assert.isTrue(downButtonIndex < fButtonLabels.length);
@@ -201,13 +199,12 @@ public class ListDialogField<E> extends DialogField {
 	}
 
 	/**
-	 * Sets the viewerSorter. If table sorter has been provided it will replace
-	 * it.
+	 * Sets the viewerSorter. If table sorter has been provided it will replace it.
 	 * 
 	 * @param viewerSorter
 	 *            The viewerSorter to set
-	 * @see ListDialogField#ListDialogField(IListAdapter, String[],
-	 *      ILabelProvider, TableSorter)
+	 * @see ListDialogField#ListDialogField(IListAdapter, String[], ILabelProvider,
+	 *      TableSorter)
 	 */
 	public void setViewerSorter(ViewerComparator viewerSorter) {
 		fViewerSorter = viewerSorter;
@@ -298,8 +295,7 @@ public class ListDialogField<E> extends DialogField {
 	}
 
 	/**
-	 * Sets the minimal width of the buttons. Must be called after widget
-	 * creation.
+	 * Sets the minimal width of the buttons. Must be called after widget creation.
 	 */
 	public void setButtonsMinWidth(int minWidth) {
 		if (fLastSeparator != null) {
@@ -430,8 +426,8 @@ public class ListDialogField<E> extends DialogField {
 	}
 
 	/**
-	 * Returns the composite containing the buttons. When called the first time,
-	 * the control will be created.
+	 * Returns the composite containing the buttons. When called the first time, the
+	 * control will be created.
 	 * 
 	 * @param parent
 	 *            The parent composite when called the first time, or
@@ -495,8 +491,8 @@ public class ListDialogField<E> extends DialogField {
 	}
 
 	/**
-	 * Handles key events in the table viewer. Specifically when the delete key
-	 * is pressed.
+	 * Handles key events in the table viewer. Specifically when the delete key is
+	 * pressed.
 	 */
 	protected void handleKeyPressed(KeyEvent event) {
 		if (event.character == SWT.DEL && event.stateMask == 0) {
@@ -593,8 +589,8 @@ public class ListDialogField<E> extends DialogField {
 	}
 
 	/**
-	 * Gets the elements shown in the list. The list returned is a copy, so it
-	 * can be modified by the user.
+	 * Gets the elements shown in the list. The list returned is a copy, so it can
+	 * be modified by the user.
 	 */
 	public List<E> getElements() {
 		return new ArrayList<>(fElements);

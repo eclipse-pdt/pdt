@@ -29,8 +29,7 @@ import org.eclipse.php.refactoring.core.rename.logic.RenameLocalVariable;
  * 
  * @author Roy, 2007
  */
-public class RenameLocalVariableProcessor extends
-		AbstractRenameProcessor<IFile> implements ITextUpdating {
+public class RenameLocalVariableProcessor extends AbstractRenameProcessor<IFile> implements ITextUpdating {
 
 	private static final String RENAME_IS_PROCESSING = PHPRefactoringCoreMessages
 			.getString("RenameLocalVariableProcessor.0"); //$NON-NLS-1$
@@ -76,11 +75,9 @@ public class RenameLocalVariableProcessor extends
 	 * Derive the change
 	 */
 	@Override
-	public Change createChange(IProgressMonitor pm) throws CoreException,
-			OperationCanceledException {
+	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		try {
-			pm.beginTask(RenameLocalVariableProcessor.RENAME_IS_PROCESSING,
-					participantFiles.size());
+			pm.beginTask(RenameLocalVariableProcessor.RENAME_IS_PROCESSING, participantFiles.size());
 			pm.setTaskName(RenameLocalVariableProcessor.CREATING_MODIFICATIONS_LABEL);
 
 			if (pm.isCanceled()) {
@@ -89,9 +86,8 @@ public class RenameLocalVariableProcessor extends
 
 			// get target parameters
 			final String newElementName = getNewElementName();
-			final RenameLocalVariable rename = new RenameLocalVariable(
-					resource, ((Identifier) identifier.getName()).getName(),
-					newElementName, getUpdateTextualMatches());
+			final RenameLocalVariable rename = new RenameLocalVariable(resource,
+					((Identifier) identifier.getName()).getName(), newElementName, getUpdateTextualMatches());
 
 			// aggregate the changes identifiers
 			this.functionDeclaration.accept(rename);
@@ -104,8 +100,7 @@ public class RenameLocalVariableProcessor extends
 			TextFileChange change = null;
 			if (rename.hasChanges()) {
 				// create the change
-				change = acquireChange(resource,
-						getProgram(functionDeclaration));
+				change = acquireChange(resource, getProgram(functionDeclaration));
 				rename.updateChange(change);
 			}
 			return change;
@@ -169,10 +164,8 @@ public class RenameLocalVariableProcessor extends
 
 	@Override
 	public RefactoringStatus getRefactoringStatus(IFile key, Program program) {
-		if (PHPElementConciliator.localVariableAlreadyExists(
-				this.functionDeclaration, getNewElementName())) {
-			final String message = MessageFormat.format(
-					RenameLocalVariableProcessor.LOCAL_VARIABLE_IS_USED,
+		if (PHPElementConciliator.localVariableAlreadyExists(this.functionDeclaration, getNewElementName())) {
+			final String message = MessageFormat.format(RenameLocalVariableProcessor.LOCAL_VARIABLE_IS_USED,
 					new Object[] { resource.getName() });
 			return RefactoringStatus.createWarningStatus(message);
 		}

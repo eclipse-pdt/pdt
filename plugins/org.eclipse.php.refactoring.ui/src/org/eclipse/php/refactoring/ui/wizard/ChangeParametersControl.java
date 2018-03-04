@@ -112,8 +112,7 @@ public class ChangeParametersControl extends Composite {
 			case DEFAULT_PROP:
 				if (info.isAdded()) {
 					return info.getDefaultValue();
-				}
-				else {
+				} else {
 					return "-"; //$NON-NLS-1$
 				}
 			default:

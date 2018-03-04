@@ -73,9 +73,8 @@ public class PHPInformationHierarchyProvider implements IInformationProvider, II
 	}
 
 	/**
-	 * This method functionality is slightly different then the method it
-	 * implements (
-	 * org.eclipse.jface.text.information.IInformationProviderExtension
+	 * This method functionality is slightly different then the method it implements
+	 * ( org.eclipse.jface.text.information.IInformationProviderExtension
 	 * #getInformation2(org.eclipse.jface.text.ITextViewer,
 	 * org.eclipse.jface.text.IRegion)) as it returns the enclosing type for
 	 * members, and not the element itself (nirc)

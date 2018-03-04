@@ -21,11 +21,9 @@ import org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages;
  */
 public class RenameFunction extends AbstractRename {
 
-	private static final String RENAME_FUNCTION = PHPRefactoringCoreMessages
-			.getString("RenameFunctionName.0"); //$NON-NLS-1$
+	private static final String RENAME_FUNCTION = PHPRefactoringCoreMessages.getString("RenameFunctionName.0"); //$NON-NLS-1$
 
-	public RenameFunction(IFile file, String oldName, String newName,
-			boolean searchTextual) {
+	public RenameFunction(IFile file, String oldName, String newName, boolean searchTextual) {
 		super(file, oldName, newName, searchTextual);
 	}
 
@@ -49,8 +47,7 @@ public class RenameFunction extends AbstractRename {
 		assert functionDeclaration.getParent().getType() != ASTNode.METHOD_DECLARATION;
 
 		// check the function name
-		if (oldName.equalsIgnoreCase(functionDeclaration.getFunctionName()
-				.getName())) {
+		if (oldName.equalsIgnoreCase(functionDeclaration.getFunctionName().getName())) {
 			addChange(functionDeclaration.getFunctionName());
 		}
 
@@ -62,11 +59,9 @@ public class RenameFunction extends AbstractRename {
 	 */
 	@Override
 	public boolean visit(FunctionInvocation functionInvocation) {
-		final Expression functionName = functionInvocation.getFunctionName()
-				.getName();
+		final Expression functionName = functionInvocation.getFunctionName().getName();
 		final int invocationParent = functionInvocation.getParent().getType();
-		if (functionName instanceof Identifier
-				&& invocationParent != ASTNode.METHOD_INVOCATION
+		if (functionName instanceof Identifier && invocationParent != ASTNode.METHOD_INVOCATION
 				&& invocationParent != ASTNode.STATIC_METHOD_INVOCATION) {
 			final Identifier identifier = (Identifier) functionName;
 			if (oldName.equalsIgnoreCase(identifier.getName())) {

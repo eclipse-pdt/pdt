@@ -72,10 +72,10 @@ public interface ICommunicationDaemon {
 	public String getDebuggerID();
 
 	/**
-	 * Returns true if the daemon is a debugger daemon. This method should
-	 * return true if the daemon instance is a debugger daemon listener. Not all
-	 * of the registered daemons are necessarily debugger daemons, thus, this
-	 * method is required to identify the ones that are debugger-related.
+	 * Returns true if the daemon is a debugger daemon. This method should return
+	 * true if the daemon instance is a debugger daemon listener. Not all of the
+	 * registered daemons are necessarily debugger daemons, thus, this method is
+	 * required to identify the ones that are debugger-related.
 	 * 
 	 * @return True, iff this daemon is a debugger daemon.
 	 */

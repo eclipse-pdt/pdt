@@ -127,8 +127,7 @@ public class ExecutionStatisticsFilter extends ViewerFilter implements IXMLPrefe
 				conditions.add(cond);
 			}
 			if (conditions.size() > 0) {
-				fFilterConditions = conditions
-						.toArray(new ExecutionStatisticsFilterCondition[conditions.size()]);
+				fFilterConditions = conditions.toArray(new ExecutionStatisticsFilterCondition[conditions.size()]);
 			}
 		}
 	}

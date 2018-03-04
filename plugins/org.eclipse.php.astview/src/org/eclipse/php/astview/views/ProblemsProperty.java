@@ -18,11 +18,11 @@ import org.eclipse.swt.graphics.Image;
  *
  */
 public class ProblemsProperty extends ASTAttribute {
-	
+
 	private final ISourceModule fRoot;
 
 	public ProblemsProperty(ISourceModule root) {
-		fRoot= root;
+		fRoot = root;
 	}
 
 	@Override
@@ -33,18 +33,16 @@ public class ProblemsProperty extends ASTAttribute {
 	@Override
 	public Object[] getChildren() {
 		// TODO : how to get the IProblems
-		//IProblem[] problems= null ; // fRoot.getProblems();
+		// IProblem[] problems= null ; // fRoot.getProblems();
 		return null;
-/*		Object[] res= new Object[problems.length];
-		for (int i= 0; i < res.length; i++) {
-			res[i]= new ProblemNode(this, problems[i]);
-		}
-		return res;
-*/	}
+		/*
+		 * Object[] res= new Object[problems.length]; for (int i= 0; i < res.length;
+		 * i++) { res[i]= new ProblemNode(this, problems[i]); } return res;
+		 */ }
 
 	@Override
 	public String getLabel() {
-		return "> compiler problems (" /*+  fRoot.getProblems().length*/ + ")";  //$NON-NLS-1$//$NON-NLS-2$
+		return "> compiler problems (" /* + fRoot.getProblems().length */ + ")"; //$NON-NLS-1$//$NON-NLS-2$
 	}
 
 	@Override
@@ -62,7 +60,7 @@ public class ProblemsProperty extends ASTAttribute {
 		}
 		return true;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return 18;

@@ -267,9 +267,9 @@ public final class ImportRewriteAnalyzer {
 
 	/**
 	 * Sets that implicit imports (types in default package, CU- package and
-	 * 'java.lang') should not be created. Note that this is a heuristic filter
-	 * and can lead to missing imports, e.g. in cases where a type is forced to
-	 * be specified due to a name conflict. By default, the filter is enabled.
+	 * 'java.lang') should not be created. Note that this is a heuristic filter and
+	 * can lead to missing imports, e.g. in cases where a type is forced to be
+	 * specified due to a name conflict. By default, the filter is enabled.
 	 * 
 	 * @param filterImplicitImports
 	 *            The filterImplicitImports to set
@@ -837,11 +837,11 @@ public final class ImportRewriteAnalyzer {
 
 		/**
 		 * @param name
-		 *            Name of the package entry. e.g. org.eclipse.jdt.ui,
-		 *            containing imports like org.eclipse.jdt.ui.JavaUI.
+		 *            Name of the package entry. e.g. org.eclipse.jdt.ui, containing
+		 *            imports like org.eclipse.jdt.ui.JavaUI.
 		 * @param group
-		 *            The index of the preference order entry assigned different
-		 *            group id's will result in spacers between the entries
+		 *            The index of the preference order entry assigned different group
+		 *            id's will result in spacers between the entries
 		 */
 		public PackageEntry(String name, String group) {
 			this.name = name;

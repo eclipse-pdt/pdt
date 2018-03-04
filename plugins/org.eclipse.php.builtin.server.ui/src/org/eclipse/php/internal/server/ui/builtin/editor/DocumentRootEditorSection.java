@@ -418,8 +418,7 @@ public class DocumentRootEditorSection extends ServerEditorSection {
 						return new IStatus[] { new Status(IStatus.ERROR, PHPServerUIPlugin.PLUGIN_ID,
 								NLS.bind(Messages.errorServerDirUnderRoot, METADATADIR)) };
 					}
-				} else if (path.equals(installDirPath))
-				 {
+				} else if (path.equals(installDirPath)) {
 					return new IStatus[] { new Status(IStatus.ERROR, PHPServerUIPlugin.PLUGIN_ID,
 							NLS.bind(Messages.errorServerDirCustomNotInstall,
 									NLS.bind(Messages.serverEditorServerDirInstall, "").trim())) }; //$NON-NLS-1$

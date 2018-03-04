@@ -22,8 +22,7 @@ public class XDebugVariableValueEditor extends AbstractVariableValueEditor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.ui.actions.AbstractVariableValueEditor#
+	 * @see org.eclipse.php.internal.debug.ui.actions.AbstractVariableValueEditor#
 	 * getValueString(org.eclipse.debug.core.model.IVariable)
 	 */
 	@Override

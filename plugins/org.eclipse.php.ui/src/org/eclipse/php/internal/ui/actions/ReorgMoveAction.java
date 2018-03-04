@@ -93,8 +93,8 @@ public class ReorgMoveAction extends AbstractMoveDelegator {
 	}
 
 	/**
-	 * Move the resources contained in the selection to the target folder
-	 * directly without opening the dialog.
+	 * Move the resources contained in the selection to the target folder directly
+	 * without opening the dialog.
 	 * 
 	 * The CheckConditionsOperation will ensure no files are overwritten in the
 	 * target folder.

@@ -211,8 +211,8 @@ public class LineStyleProviderForPHP extends AbstractLineStyleProvider implement
 	}
 
 	/**
-	 * Look up the TextAttribute for the given region context. Might return null
-	 * for unusual text.
+	 * Look up the TextAttribute for the given region context. Might return null for
+	 * unusual text.
 	 * 
 	 * @param type
 	 * @return
@@ -222,8 +222,8 @@ public class LineStyleProviderForPHP extends AbstractLineStyleProvider implement
 	}
 
 	/**
-	 * Looks up the colorKey in the preference store and adds the style
-	 * information to list of TextAttributes
+	 * Looks up the colorKey in the preference store and adds the style information
+	 * to list of TextAttributes
 	 * 
 	 * @param colorKey
 	 */

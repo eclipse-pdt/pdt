@@ -204,8 +204,7 @@ public final class WhiteSpaceOptions {
 	private final static String BLOCK_PREVIEW = "if (true) { return 1; } else if(true) {return 3; }else { return 2; }"; //$NON-NLS-1$
 
 	/**
-	 * Create the tree, in this order: syntax element - position - abstract
-	 * element
+	 * Create the tree, in this order: syntax element - position - abstract element
 	 * 
 	 * @param workingValues
 	 * @return returns roots (type <code>Node</code>)
@@ -314,8 +313,7 @@ public final class WhiteSpaceOptions {
 	}
 
 	/**
-	 * Create the tree, in this order: position - syntax element - abstract
-	 * element
+	 * Create the tree, in this order: position - syntax element - abstract element
 	 * 
 	 * @param workingValues
 	 * @return returns roots (type <code>Node</code>)

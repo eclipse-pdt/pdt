@@ -59,8 +59,7 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 	public static final String PAGE_ID = "org.eclipse.php.debug.ui.PHPStepFilterPreferencePage"; //$NON-NLS-1$
 
 	/**
-	 * Content provider for the table. Content consists of instances of
-	 * StepFilter.
+	 * Content provider for the table. Content consists of instances of StepFilter.
 	 */
 	class StepFilterContentProvider implements IStructuredContentProvider {
 		public StepFilterContentProvider() {
@@ -106,8 +105,7 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse
+	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse
 	 * .swt.widgets.Composite)
 	 */
 	@Override
@@ -122,8 +120,7 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
+	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
 	@Override
 	public void init(IWorkbench workbench) {
@@ -455,8 +452,8 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 	}
 
 	/**
-	 * returns all of the filters from the table, this includes ones that have
-	 * not yet been saved
+	 * returns all of the filters from the table, this includes ones that have not
+	 * yet been saved
 	 * 
 	 * @return a possibly empty lits of filters fron the table
 	 * @since 3.2

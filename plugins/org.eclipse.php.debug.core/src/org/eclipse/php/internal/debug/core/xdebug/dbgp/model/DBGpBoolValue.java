@@ -32,8 +32,7 @@ public class DBGpBoolValue extends AbstractDBGpValue {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#verifyValue(java.lang
+	 * @see org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#verifyValue(java.lang
 	 * .String)
 	 */
 	@Override
@@ -49,8 +48,7 @@ public class DBGpBoolValue extends AbstractDBGpValue {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
+	 * @see org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
 	 * createValueString()
 	 */
 	@Override
@@ -73,8 +71,7 @@ public class DBGpBoolValue extends AbstractDBGpValue {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
+	 * @see org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
 	 * supportsValueModification()
 	 */
 	@Override

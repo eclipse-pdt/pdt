@@ -285,8 +285,8 @@ public class FileContentRequestStaleHandler extends AbstractFileContentRequestHa
 	}
 
 	/*
-	 * Returns the dummy file name that was set in the preferences. Cache the
-	 * name through the lifecycle of this instance.
+	 * Returns the dummy file name that was set in the preferences. Cache the name
+	 * through the lifecycle of this instance.
 	 */
 	private String getDummyFileName() {
 		return Platform.getPreferencesService().getString(PHPDebugPlugin.ID,
@@ -333,9 +333,8 @@ public class FileContentRequestStaleHandler extends AbstractFileContentRequestHa
 			try {
 				return content.getBytes(encoding);
 			} catch (UnsupportedEncodingException e) {
-				Logger.logException(
-						"Failed to create dummy content in the '" //$NON-NLS-1$
-								+ encoding + "' encoding. \nCreating with the default encoding.", //$NON-NLS-1$
+				Logger.logException("Failed to create dummy content in the '" //$NON-NLS-1$
+						+ encoding + "' encoding. \nCreating with the default encoding.", //$NON-NLS-1$
 						e);
 			}
 		}

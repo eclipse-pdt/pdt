@@ -153,15 +153,15 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 		for (IBreakpoint bp : breakpoints) {
 			if (bp instanceof IPHPExceptionBreakpoint || PharPath.isPharPath(new Path(processFileLocation))) {
 				/*
-				 * Not supported by Zend Debugger engine - exception breakpoints
-				 * and handling breakpoints in PHAR files.
+				 * Not supported by Zend Debugger engine - exception breakpoints and handling
+				 * breakpoints in PHAR files.
 				 */
 				continue;
 			}
 			IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(processFileLocation);
 			/*
-			 * Check if breakpoint marker resource is the same as the one found
-			 * for file location that should be processed.
+			 * Check if breakpoint marker resource is the same as the one found for file
+			 * location that should be processed.
 			 */
 			if (bp.getMarker().getResource().equals(resource)) {
 				matches.add(bp);
@@ -169,18 +169,17 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 			}
 			try {
 				/*
-				 * If previous check failed, try to establish if PHP breakpoint
-				 * file location is pointing to the same file as the one that
-				 * should be processed. Symbolic links will also be resolved.
+				 * If previous check failed, try to establish if PHP breakpoint file location is
+				 * pointing to the same file as the one that should be processed. Symbolic links
+				 * will also be resolved.
 				 */
 				String bpMarkerFileLocation = bp.getMarker().getResource().getLocation().toOSString();
 				String phpBpFileLocation = ((PHPLineBreakpoint) bp).getRuntimeBreakpoint().getFileName();
 				if (FileUtils.isSameFile(bpMarkerFileLocation, processFileLocation)
 						|| FileUtils.isSameFile(phpBpFileLocation, processFileLocation)) {
 					/*
-					 * If there is a debug target related project then we can
-					 * filter out possible breakpoint duplicates (in case of
-					 * symbolic links)
+					 * If there is a debug target related project then we can filter out possible
+					 * breakpoint duplicates (in case of symbolic links)
 					 */
 					IProject debugProject = PHPLaunchUtilities.getProject(debugTarget);
 					IProject bpProject = bp.getMarker().getResource().getProject();
@@ -191,13 +190,13 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 				}
 			} catch (Exception e) {
 				/*
-				 * Ignore as some path descriptors might be illegal for this
-				 * check e.g. DLTK external library scripts (see next step).
+				 * Ignore as some path descriptors might be illegal for this check e.g. DLTK
+				 * external library scripts (see next step).
 				 */
 			}
 			/*
-			 * Breakpoint may also correspond to a PHP script from project
-			 * external libraries. Try to check it as well.
+			 * Breakpoint may also correspond to a PHP script from project external
+			 * libraries. Try to check it as well.
 			 */
 			String secondaryId = null;
 			try {

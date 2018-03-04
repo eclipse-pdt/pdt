@@ -56,14 +56,14 @@ public class BreakContinueTargetFinder extends AbstractOccurrencesFinder {
 	}
 
 	/*
-	 * Returns the nesting level of the expression. Since the Break and the
-	 * Continue can provide an optional nesting level to break or continue, the
-	 * expression attached to the statements hold this information. In case the
-	 * (optional) expression is null, this method returns a default value of 1.
-	 * Also note that the break argument accepts any expression, including a
-	 * function result. But since this result is dynamically determined at
-	 * runtime, we return a nesting level of 0 in this case. Zero nesting level
-	 * will not mark any occurrence for the break or the continue.
+	 * Returns the nesting level of the expression. Since the Break and the Continue
+	 * can provide an optional nesting level to break or continue, the expression
+	 * attached to the statements hold this information. In case the (optional)
+	 * expression is null, this method returns a default value of 1. Also note that
+	 * the break argument accepts any expression, including a function result. But
+	 * since this result is dynamically determined at runtime, we return a nesting
+	 * level of 0 in this case. Zero nesting level will not mark any occurrence for
+	 * the break or the continue.
 	 * 
 	 * @param expression
 	 * 
@@ -127,8 +127,7 @@ public class BreakContinueTargetFinder extends AbstractOccurrencesFinder {
 	}
 
 	/*
-	 * Traverse up the AST tree and locate the node to add as an occurrence
-	 * target.
+	 * Traverse up the AST tree and locate the node to add as an occurrence target.
 	 */
 	private void addOccurrences() {
 		boolean targetFound = false;
@@ -165,9 +164,8 @@ public class BreakContinueTargetFinder extends AbstractOccurrencesFinder {
 	}
 
 	/*
-	 * Returns the length of the target node start. For example: A
-	 * WhileStatement will return a length of 5, which is the length of the
-	 * keyword 'while'.
+	 * Returns the length of the target node start. For example: A WhileStatement
+	 * will return a length of 5, which is the length of the keyword 'while'.
 	 */
 	private int getLength(ASTNode parent) {
 		switch (parent.getType()) {
@@ -189,8 +187,7 @@ public class BreakContinueTargetFinder extends AbstractOccurrencesFinder {
 	 * (non-Javadoc)
 	 * 
 	 * @seeorg.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#
-	 * getOccurrenceReadWriteType
-	 * (org.eclipse.php.internal.core.ast.nodes.ASTNode)
+	 * getOccurrenceReadWriteType (org.eclipse.php.internal.core.ast.nodes.ASTNode)
 	 */
 	@Override
 	protected int getOccurrenceType(ASTNode node) {

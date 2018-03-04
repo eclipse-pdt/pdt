@@ -51,8 +51,7 @@ public class PHPWebPageURLLaunchDialog extends MessageDialog {
 	 * Constructs a new ServerURLLaunchDialog.
 	 * 
 	 * @param launchConfiguration
-	 *            The launch configuration the we are using for the current
-	 *            launch.
+	 *            The launch configuration the we are using for the current launch.
 	 * @param parentShell
 	 * @param dialogTitle
 	 * @param dialogTitleImage
@@ -103,8 +102,8 @@ public class PHPWebPageURLLaunchDialog extends MessageDialog {
 	}
 
 	/**
-	 * Override the okPressed to save the URL to the URLs history for this PHP
-	 * IDE session. Also, add the URL to the launch configuration attributes.
+	 * Override the okPressed to save the URL to the URLs history for this PHP IDE
+	 * session. Also, add the URL to the launch configuration attributes.
 	 */
 	@Override
 	protected void buttonPressed(int buttonId) {

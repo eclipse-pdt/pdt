@@ -68,8 +68,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.ILaunchShortcut#launch(org.eclipse.jface.viewers
+	 * @see org.eclipse.debug.ui.ILaunchShortcut#launch(org.eclipse.jface.viewers
 	 * .ISelection, java.lang.String)
 	 */
 	@Override
@@ -83,8 +82,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.ILaunchShortcut#launch(org.eclipse.ui.IEditorPart,
+	 * @see org.eclipse.debug.ui.ILaunchShortcut#launch(org.eclipse.ui.IEditorPart,
 	 * java.lang.String)
 	 */
 	@Override
@@ -285,8 +283,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 					// PHPexeItem item =
 					// PHPexes.getInstance().getItemForFile(exeName, iniPath);
 
-					if (phpPathString
-							.equals(fileName)/* && defaultEXE.equals(item) */) {
+					if (phpPathString.equals(fileName)/* && defaultEXE.equals(item) */) {
 						config = configs[i];
 						break;
 					}
@@ -347,8 +344,8 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 	 * 
 	 * @param fileName
 	 *            The original file name that this shortcut shoul execute.
-	 * @return The new configuration name, or "New_configuration" in case it
-	 *         fails for some reason.
+	 * @return The new configuration name, or "New_configuration" in case it fails
+	 *         for some reason.
 	 */
 	protected static String getNewConfigurationName(String fileName) {
 		String configurationName = PHPDebugUIMessages.PHPExeLaunchShortcut_0;
@@ -389,8 +386,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.ILaunchShortcut2#getLaunchableResource(org.eclipse
+	 * @see org.eclipse.debug.ui.ILaunchShortcut2#getLaunchableResource(org.eclipse
 	 * .ui.IEditorPart)
 	 */
 	@Override
@@ -401,8 +397,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.ILaunchShortcut2#getLaunchableResource(org.eclipse
+	 * @see org.eclipse.debug.ui.ILaunchShortcut2#getLaunchableResource(org.eclipse
 	 * .jface.viewers.ISelection)
 	 */
 	@Override
@@ -420,8 +415,8 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 	}
 
 	/**
-	 * Returns the resource containing the Java element associated with the
-	 * given adaptable, or <code>null</code>.
+	 * Returns the resource containing the Java element associated with the given
+	 * adaptable, or <code>null</code>.
 	 * 
 	 * @param adaptable
 	 *            adaptable object

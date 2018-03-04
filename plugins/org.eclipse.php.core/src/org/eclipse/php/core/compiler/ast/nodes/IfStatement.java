@@ -24,8 +24,8 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * e.g.
  * 
  * <pre>
- * if ($a > $b) { echo "a is bigger than b"; } elseif ($a == $b) { echo
- * "a is equal to b"; } else { echo "a is smaller than b"; },
+ * if ($a > $b) { echo "a is bigger than b"; } elseif ($a == $b) { echo "a is
+ * equal to b"; } else { echo "a is smaller than b"; },
  *
  * if ($a): echo "a is bigger than b"; echo "a is NOT bigger than b"; endif;
  */

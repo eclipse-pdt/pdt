@@ -20,8 +20,7 @@ import org.eclipse.php.debug.core.debugger.messages.IDebugRequestMessage;
 /**
  * Get profiler call trace request message.
  */
-public class GetProfilerCallTraceRequest extends DebugMessageRequestImpl
-		implements IDebugRequestMessage {
+public class GetProfilerCallTraceRequest extends DebugMessageRequestImpl implements IDebugRequestMessage {
 
 	@Override
 	public void deserialize(DataInputStream in) throws IOException {

@@ -151,8 +151,8 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 	}
 
 	/**
-	 * Initialize container elements. This code should not be in the constructor
-	 * in order to enable extensibility
+	 * Initialize container elements. This code should not be in the constructor in
+	 * order to enable extensibility
 	 */
 	protected void initContainerElements() {
 		SourceContainerAdapter adapter = new SourceContainerAdapter();

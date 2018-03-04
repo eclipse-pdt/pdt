@@ -112,8 +112,7 @@ public class DBGpLogger {
 	}
 
 	/**
-	 * Log a Warning Message, message and exception sent to debug output as
-	 * well.
+	 * Log a Warning Message, message and exception sent to debug output as well.
 	 * 
 	 * @param pluginId
 	 *            symbolic string name of the plug-in id eg.

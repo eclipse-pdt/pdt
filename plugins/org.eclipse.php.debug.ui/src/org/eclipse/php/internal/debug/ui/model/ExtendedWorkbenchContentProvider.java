@@ -29,9 +29,9 @@ public class ExtendedWorkbenchContentProvider extends BaseWorkbenchContentProvid
 	private boolean isProvidingExternals;
 
 	/**
-	 * Constructs a new ExtendedWorkbenchContentProvider. By default, the
-	 * provider provides the external files when the
-	 * {@link #getChildren(Object)} method is called.
+	 * Constructs a new ExtendedWorkbenchContentProvider. By default, the provider
+	 * provides the external files when the {@link #getChildren(Object)} method is
+	 * called.
 	 */
 	public ExtendedWorkbenchContentProvider() {
 		super();
@@ -73,8 +73,7 @@ public class ExtendedWorkbenchContentProvider extends BaseWorkbenchContentProvid
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.model.BaseWorkbenchContentProvider#getChildren(java.lang
+	 * @see org.eclipse.ui.model.BaseWorkbenchContentProvider#getChildren(java.lang
 	 * .Object)
 	 */
 	@Override

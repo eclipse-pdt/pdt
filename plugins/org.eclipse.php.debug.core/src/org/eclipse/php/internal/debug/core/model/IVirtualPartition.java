@@ -14,8 +14,8 @@ import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IVariable;
 
 /**
- * Implementors of this interface may act as a "container" for grouping variables
- * (i.e. large sets of array members).
+ * Implementors of this interface may act as a "container" for grouping
+ * variables (i.e. large sets of array members).
  * 
  * @author Bartlomiej Laczkowski
  */

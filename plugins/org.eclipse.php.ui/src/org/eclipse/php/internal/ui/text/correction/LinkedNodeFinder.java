@@ -32,10 +32,10 @@ public class LinkedNodeFinder {
 	}
 
 	/**
-	 * Find all nodes connected to the given binding. e.g. Declaration of a
-	 * field and all references. For types this includes also the constructor
-	 * declaration, for methods also overridden methods or methods overriding
-	 * (if existing in the same AST)
+	 * Find all nodes connected to the given binding. e.g. Declaration of a field
+	 * and all references. For types this includes also the constructor declaration,
+	 * for methods also overridden methods or methods overriding (if existing in the
+	 * same AST)
 	 * 
 	 * @param root
 	 *            The root of the AST tree to search
@@ -51,10 +51,10 @@ public class LinkedNodeFinder {
 	}
 
 	/**
-	 * Find all nodes connected to the given name node. If the node has a
-	 * binding then all nodes connected to this binding are returned. If the
-	 * node has no binding, then all nodes that also miss a binding and have the
-	 * same name are returned.
+	 * Find all nodes connected to the given name node. If the node has a binding
+	 * then all nodes connected to this binding are returned. If the node has no
+	 * binding, then all nodes that also miss a binding and have the same name are
+	 * returned.
 	 * 
 	 * @param root
 	 *            The root of the AST tree to search

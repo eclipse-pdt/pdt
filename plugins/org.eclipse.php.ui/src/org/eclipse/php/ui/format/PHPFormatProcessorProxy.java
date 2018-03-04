@@ -123,8 +123,7 @@ public class PHPFormatProcessorProxy implements IStructuredFormatProcessor {
 	 * (non-Javadoc)
 	 * 
 	 * @seeorg.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor#
-	 * formatModel
-	 * (org.eclipse.wst.sse.core.internal.provisional.IStructuredModel)
+	 * formatModel (org.eclipse.wst.sse.core.internal.provisional.IStructuredModel)
 	 */
 	@Override
 	public void formatModel(IStructuredModel structuredModel) {
@@ -139,9 +138,8 @@ public class PHPFormatProcessorProxy implements IStructuredFormatProcessor {
 	 * (non-Javadoc)
 	 * 
 	 * @seeorg.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor#
-	 * formatModel
-	 * (org.eclipse.wst.sse.core.internal.provisional.IStructuredModel, int,
-	 * int)
+	 * formatModel (org.eclipse.wst.sse.core.internal.provisional.IStructuredModel,
+	 * int, int)
 	 */
 	@Override
 	public void formatModel(IStructuredModel structuredModel, int start, int length) {

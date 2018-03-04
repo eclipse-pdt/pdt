@@ -30,7 +30,6 @@ public abstract class DebugMessageImpl implements IDebugMessage {
 	@Override
 	public String toString() {
 		return new StringBuilder(this.getClass().getName().replaceFirst(".*\\.", "")).append(" [ID=").append(getType()) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				.append(']')
-				.toString();
+				.append(']').toString();
 	}
 }

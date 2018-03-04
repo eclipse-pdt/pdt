@@ -78,7 +78,6 @@ public class CodeAssistPdttFile extends PdttFile {
 			}
 			expectedProposals.add(proposal);
 		}
-		this.expectedProposals = expectedProposals
-				.toArray(new ExpectedProposal[expectedProposals.size()]);
+		this.expectedProposals = expectedProposals.toArray(new ExpectedProposal[expectedProposals.size()]);
 	}
 }

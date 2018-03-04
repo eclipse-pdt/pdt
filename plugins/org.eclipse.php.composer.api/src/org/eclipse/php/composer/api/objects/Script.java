@@ -28,16 +28,15 @@ import org.eclipse.php.composer.api.entities.JsonValue;
 public class Script extends JsonObject {
 
 	/**
-	 * Used as a wrapper for string values, since Script objects (i.e. events)
-	 * can hold duplicate string values (i.e. handler values). The HandlerValue
-	 * wrapper class holds a handler value but also its index (i.e. position)
-	 * when stored in the "handlers" array of a Script object. The index
-	 * information could be seen as redundant, but it's used (and necessary) for
-	 * the TreeViewer in the ScriptsSection class to compare handler values
-	 * retrieved by ScriptsController instances because TreeViewers don't
-	 * support duplicate (string) values. To make it simple, the HandlerValue
-	 * class is used to handle only unique values (per Script object) in
-	 * TreeViewers.
+	 * Used as a wrapper for string values, since Script objects (i.e. events) can
+	 * hold duplicate string values (i.e. handler values). The HandlerValue wrapper
+	 * class holds a handler value but also its index (i.e. position) when stored in
+	 * the "handlers" array of a Script object. The index information could be seen
+	 * as redundant, but it's used (and necessary) for the TreeViewer in the
+	 * ScriptsSection class to compare handler values retrieved by ScriptsController
+	 * instances because TreeViewers don't support duplicate (string) values. To
+	 * make it simple, the HandlerValue class is used to handle only unique values
+	 * (per Script object) in TreeViewers.
 	 * 
 	 * @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=510095
 	 */
@@ -201,8 +200,7 @@ public class Script extends JsonObject {
 	}
 
 	/**
-	 * Returns the handler and if there are more than one, returns the first
-	 * one.
+	 * Returns the handler and if there are more than one, returns the first one.
 	 * 
 	 * @return the version
 	 */

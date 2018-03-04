@@ -178,8 +178,7 @@ public class MarkOccurrenceTests {
 	 * Returns is the occurrences of the type should be marked.
 	 * 
 	 * @param type
-	 *            One of the {@link PHPElementConciliator} constants integer
-	 *            type.
+	 *            One of the {@link PHPElementConciliator} constants integer type.
 	 * @return True, if the type occurrences should be marked; False, otherwise.
 	 */
 	public static boolean markOccurrencesOfType(int type) {
@@ -199,8 +198,8 @@ public class MarkOccurrenceTests {
 	}
 
 	/**
-	 * Checks whether or not the node is a scalar and return true only if the
-	 * scalar is not part of a string
+	 * Checks whether or not the node is a scalar and return true only if the scalar
+	 * is not part of a string
 	 * 
 	 * @param node
 	 * @return

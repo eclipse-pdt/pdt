@@ -33,8 +33,8 @@ public class PHPNewWizardsActionGroup extends ActionGroup {
 	private IWorkbenchSite fSite;
 
 	/**
-	 * Creates a new <code>NewWizardsActionGroup</code>. The group requires that
-	 * the selection provided by the part's selection provider is of type <code>
+	 * Creates a new <code>NewWizardsActionGroup</code>. The group requires that the
+	 * selection provided by the part's selection provider is of type <code>
 	 * org.eclipse.jface.viewers.IStructuredSelection</code>.
 	 * 
 	 * @param site

@@ -77,19 +77,18 @@ public class SSHTunnel {
 
 	/**
 	 * Create the tunnel connection. If the tunnel is already connected, nothing
-	 * happens. This call will potentially change the password value of this
-	 * class in case the user is prompted to enter a valid one. There are
-	 * several return values possibilities to this call (as IStatus instances):
-	 * <br>
+	 * happens. This call will potentially change the password value of this class
+	 * in case the user is prompted to enter a valid one. There are several return
+	 * values possibilities to this call (as IStatus instances): <br>
 	 * <ul>
-	 * <li>Status OK - Signals that the connection was successful with no errors
-	 * or warnings</li>
+	 * <li>Status OK - Signals that the connection was successful with no errors or
+	 * warnings</li>
 	 * <li>Status ERROR - Signals that the connection was unsuccessful</li>
 	 * <li>Status WARNING - Signals that the connection was successful, however
 	 * there are a few warning notifications that should be reviewed</li>
-	 * <li>Status INFO - Signals that the connection was successful, however
-	 * there was a modification to the connection data that is expressed in the
-	 * INFO code (such as a password change data)</li>
+	 * <li>Status INFO - Signals that the connection was successful, however there
+	 * was a modification to the connection data that is expressed in the INFO code
+	 * (such as a password change data)</li>
 	 * </ul>
 	 * 
 	 * @return An IStatus that holds the creation result.
@@ -222,9 +221,8 @@ public class SSHTunnel {
 	}
 
 	/**
-	 * Returns the password. The returned password might differ from the
-	 * original given one in case that the user was requested to change it while
-	 * connecting.
+	 * Returns the password. The returned password might differ from the original
+	 * given one in case that the user was requested to change it while connecting.
 	 * 
 	 * @return The password.
 	 */
@@ -259,8 +257,8 @@ public class SSHTunnel {
 	}
 
 	/**
-	 * Check for SSHTunnel equality. Note that we do no compare passwords, as
-	 * the password itself can be modified during connections.
+	 * Check for SSHTunnel equality. Note that we do no compare passwords, as the
+	 * password itself can be modified during connections.
 	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */

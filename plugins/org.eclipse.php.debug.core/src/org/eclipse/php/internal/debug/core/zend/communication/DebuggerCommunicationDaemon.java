@@ -63,8 +63,7 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 		}
 
 		/**
-		 * Returns the server socket port used for the debug requests listening
-		 * thread.
+		 * Returns the server socket port used for the debug requests listening thread.
 		 * 
 		 * @return The port specified in the preferences.
 		 */
@@ -76,8 +75,7 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 		/**
 		 * Returns the Zend's debugger ID.
 		 * 
-		 * @return The debugger ID that is using this daemon (e.g. Zend debugger
-		 *         ID).
+		 * @return The debugger ID that is using this daemon (e.g. Zend debugger ID).
 		 * @since PDT 1.0
 		 */
 		@Override
@@ -91,12 +89,11 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 		}
 
 		/**
-		 * Initialize a ServerSocket or a SSLServerSocket to listen for debug
-		 * requests on a specified port. The port and the SSL definitions are
-		 * defined in the workspace preferences.
+		 * Initialize a ServerSocket or a SSLServerSocket to listen for debug requests
+		 * on a specified port. The port and the SSL definitions are defined in the
+		 * workspace preferences.
 		 * 
-		 * @return True, if the reset did not yield any errors; False,
-		 *         otherwise.
+		 * @return True, if the reset did not yield any errors; False, otherwise.
 		 */
 		@Override
 		public boolean resetSocket() {
@@ -124,9 +121,8 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 		}
 
 		/**
-		 * Starts a connection on the given Socket. This method can be
-		 * overridden by extending classes to create a different debug
-		 * connection.
+		 * Starts a connection on the given Socket. This method can be overridden by
+		 * extending classes to create a different debug connection.
 		 * 
 		 * @param socket
 		 */
@@ -211,8 +207,8 @@ public class DebuggerCommunicationDaemon implements ICommunicationDaemon {
 	/**
 	 * Creates and returns communication daemon that listens on given port. This
 	 * method is dedicated to be used if there is a need to create a temporary
-	 * daemon e.g. for communication test purposes. Clients should remember to
-	 * call #stopListen() on daemon after it is not longer used.
+	 * daemon e.g. for communication test purposes. Clients should remember to call
+	 * #stopListen() on daemon after it is not longer used.
 	 * 
 	 * @param port
 	 * @return new communication daemon

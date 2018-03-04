@@ -91,8 +91,7 @@ import org.eclipse.text.edits.*;
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jdt.internal.corext.dom.ASTRewriteFlattener#visit(org
+		 * @see org.eclipse.jdt.internal.corext.dom.ASTRewriteFlattener#visit(org
 		 * .eclipse.jdt.core.dom.Block)
 		 */
 		@Override
@@ -428,9 +427,9 @@ import org.eclipse.text.edits.*;
 	}
 
 	/*
-	 * Returns an InsertEdit edit for a situation where the edit was done also
-	 * on the prefix string. In this case, the edit always start from offset 0
-	 * and the added string contains the new line and the whitespace characters.
+	 * Returns an InsertEdit edit for a situation where the edit was done also on
+	 * the prefix string. In this case, the edit always start from offset 0 and the
+	 * added string contains the new line and the whitespace characters.
 	 */
 	private static InsertEdit getEndPrefixInsertion(String newPrefix) {
 		// collect the whitespace characters from the end of the new prefix

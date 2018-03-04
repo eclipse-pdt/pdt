@@ -287,8 +287,8 @@ public class XMLElement {
 	}
 
 	/**
-	 * Same as isEquivalent() but doesn't ignore exceptions for test purposes.
-	 * This avoids hiding an expected mismatch behind an unexpected exception.
+	 * Same as isEquivalent() but doesn't ignore exceptions for test purposes. This
+	 * avoids hiding an expected mismatch behind an unexpected exception.
 	 * 
 	 * @param obj
 	 *            XMLElement to compare

@@ -236,8 +236,7 @@ public abstract class AbstractRenameProcessor<R extends IResource> extends Renam
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.refactoring.core.rename.INameUpdating#getNewElement()
+	 * @see org.eclipse.php.refactoring.core.rename.INameUpdating#getNewElement()
 	 */
 	@Override
 	public abstract Object getNewElement() throws CoreException;

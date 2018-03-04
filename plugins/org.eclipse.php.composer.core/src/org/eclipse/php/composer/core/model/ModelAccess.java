@@ -161,17 +161,16 @@ public class ModelAccess implements NamespaceResolverInterface {
 
 	public IResource getComposer(InstalledPackage installed, IScriptProject project) {
 		/*
-		 * if (!namespaceMap.containsKey(project.getProject().getName())) {
-		 * return null; }
+		 * if (!namespaceMap.containsKey(project.getProject().getName())) { return null;
+		 * }
 		 * 
-		 * for (Namespace mapping :
-		 * namespaceMap.get(project.getProject().getName())) {
+		 * for (Namespace mapping : namespaceMap.get(project.getProject().getName())) {
 		 * 
 		 * if (mapping.getPath().contains(installed.name)) { IPath path = new
 		 * Path(mapping.getPath().substring(0,
-		 * mapping.getPath().lastIndexOf(installed.name)+installed.name.length()
-		 * )); if (installed.targetDir != null && installed.targetDir.length() >
-		 * 0) { path = path.append(installed.targetDir); } return
+		 * mapping.getPath().lastIndexOf(installed.name)+installed.name.length() )); if
+		 * (installed.targetDir != null && installed.targetDir.length() > 0) { path =
+		 * path.append(installed.targetDir); } return
 		 * project.getProject().findMember(path.append(ComposerConstants.
 		 * COMPOSER_JSON)); } }
 		 */

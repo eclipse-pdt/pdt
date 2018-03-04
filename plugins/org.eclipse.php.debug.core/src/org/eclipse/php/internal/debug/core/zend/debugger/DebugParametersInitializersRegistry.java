@@ -98,15 +98,12 @@ public class DebugParametersInitializersRegistry {
 	 * @return A new instance of an IDebugParametersInitializer
 	 */
 	public static IDebugParametersInitializer getParametersInitializer(String id) throws Exception {
-		DebugParametersInitializerFactory initializerFactory = getInstance()
-				.getInitializersFactories(RUN).get(id);
+		DebugParametersInitializerFactory initializerFactory = getInstance().getInitializersFactories(RUN).get(id);
 		if (initializerFactory == null) {
-			initializerFactory = getInstance().getInitializersFactories(PROFILE)
-					.get(id);
+			initializerFactory = getInstance().getInitializersFactories(PROFILE).get(id);
 		}
 		if (initializerFactory == null) {
-			initializerFactory = getInstance().getInitializersFactories(DEBUG)
-					.get(id);
+			initializerFactory = getInstance().getInitializersFactories(DEBUG).get(id);
 		}
 		if (initializerFactory != null) {
 			return initializerFactory.createParametersInitializer();
@@ -115,11 +112,11 @@ public class DebugParametersInitializersRegistry {
 	}
 
 	/**
-	 * Returns the currently configured IDebugParametersInitializer. The
-	 * returned IDebugParametersInitializer is always a new instance.
+	 * Returns the currently configured IDebugParametersInitializer. The returned
+	 * IDebugParametersInitializer is always a new instance.
 	 * 
-	 * @return A new instance of the current IDebugParametersInitializer
-	 *         (according to the preferences).
+	 * @return A new instance of the current IDebugParametersInitializer (according
+	 *         to the preferences).
 	 */
 	public static IDebugParametersInitializer getCurrentDebugParametersInitializer() {
 		try {
@@ -133,20 +130,20 @@ public class DebugParametersInitializersRegistry {
 	}
 
 	/**
-	 * Return best matching debug parameters initializer according the the
-	 * launch The returned IDebugParametersInitializer is always a new instance.
+	 * Return best matching debug parameters initializer according the the launch
+	 * The returned IDebugParametersInitializer is always a new instance.
 	 * 
 	 * @param launch
 	 * @return A new instance of a best match IDebugParametersInitializer
 	 */
 	public static IDebugParametersInitializer getBestMatchDebugParametersInitializer(ILaunch launch) {
 		try {
-			Dictionary<String, DebugParametersInitializerFactory> factories = getInstance().getInitializersFactories(launch.getLaunchMode());
+			Dictionary<String, DebugParametersInitializerFactory> factories = getInstance()
+					.getInitializersFactories(launch.getLaunchMode());
 
 			// 1st try to get the one with matching configuration type
 			for (Enumeration<DebugParametersInitializerFactory> e = factories.elements(); e.hasMoreElements();) {
-				DebugParametersInitializerFactory initializerFactory = e
-						.nextElement();
+				DebugParametersInitializerFactory initializerFactory = e.nextElement();
 				String configurationTypeId = initializerFactory.element
 						.getAttribute(LAUNCH_CONFIGURATION_TYPE_ATTRIBUTE);
 				if (configurationTypeId != null && !"".equals(configurationTypeId) //$NON-NLS-1$
@@ -157,8 +154,7 @@ public class DebugParametersInitializersRegistry {
 			// Then if not found try to get with empty configuration type and
 			// not a default one
 			for (Enumeration<DebugParametersInitializerFactory> e = factories.elements(); e.hasMoreElements();) {
-				DebugParametersInitializerFactory initializerFactory = e
-						.nextElement();
+				DebugParametersInitializerFactory initializerFactory = e.nextElement();
 				String configurationTypeId = initializerFactory.element
 						.getAttribute(LAUNCH_CONFIGURATION_TYPE_ATTRIBUTE);
 				if ((configurationTypeId == null || "" //$NON-NLS-1$
@@ -169,8 +165,7 @@ public class DebugParametersInitializersRegistry {
 			}
 			// Last, if nothing found get the default
 			for (Enumeration<DebugParametersInitializerFactory> e = factories.elements(); e.hasMoreElements();) {
-				DebugParametersInitializerFactory initializerFactory = e
-						.nextElement();
+				DebugParametersInitializerFactory initializerFactory = e.nextElement();
 				if (PHPDebugPlugin.getID().equals(initializerFactory.element.getNamespaceIdentifier())) {
 					return initializerFactory.createParametersInitializer();
 				}

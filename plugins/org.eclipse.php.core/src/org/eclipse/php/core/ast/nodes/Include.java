@@ -248,8 +248,7 @@ public class Include extends Expression {
 	 * Resolves and returns the binding for the source named in this include
 	 * declaration.
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be
-	 *         resolved
+	 * @return the binding, or <code>null</code> if the binding cannot be resolved
 	 */
 	public IBinding resolveBinding() {
 		return this.ast.getBindingResolver().resolveInclude(this);

@@ -37,19 +37,19 @@ public class PHPBuildpathDialogAccess {
 
 	/**
 	 * Shows the UI to select new JAR or ZIP archive entries located in the
-	 * workspace. The dialog returns the selected entries or <code>null</code>
-	 * if the dialog has been canceled. The dialog does not apply any changes.
+	 * workspace. The dialog returns the selected entries or <code>null</code> if
+	 * the dialog has been canceled. The dialog does not apply any changes.
 	 * 
 	 * @param shell
 	 *            The parent shell for the dialog.
 	 * @param initialSelection
-	 *            The path of the element (container or archive) to initially
-	 *            select or <code>null</code> to not select an entry.
+	 *            The path of the element (container or archive) to initially select
+	 *            or <code>null</code> to not select an entry.
 	 * @param usedEntries
-	 *            An array of paths that are already on the buildpath and
-	 *            therefore should not be selected again.
-	 * @return Returns the new buildpath container entry paths or
-	 *         <code>null</code> if the dialog has been canceled by the user.
+	 *            An array of paths that are already on the buildpath and therefore
+	 *            should not be selected again.
+	 * @return Returns the new buildpath container entry paths or <code>null</code>
+	 *         if the dialog has been canceled by the user.
 	 */
 	public static IPath[] chooseArchiveEntries(Shell shell, IPath initialSelection, IPath[] usedEntries) {
 		if (usedEntries == null) {
@@ -92,18 +92,17 @@ public class PHPBuildpathDialogAccess {
 	}
 
 	/**
-	 * Shows the UI to configure a JAR or ZIP archive located in the workspace.
-	 * The dialog returns the configured buildpath entry path or
-	 * <code>null</code> if the dialog has been canceled. The dialog does not
-	 * apply any changes.
+	 * Shows the UI to configure a JAR or ZIP archive located in the workspace. The
+	 * dialog returns the configured buildpath entry path or <code>null</code> if
+	 * the dialog has been canceled. The dialog does not apply any changes.
 	 * 
 	 * @param shell
 	 *            The parent shell for the dialog.
 	 * @param initialEntry
 	 *            The path of the initial archive entry
 	 * @param usedEntries
-	 *            An array of paths that are already on the buildpath and
-	 *            therefore should not be selected again.
+	 *            An array of paths that are already on the buildpath and therefore
+	 *            should not be selected again.
 	 * @return Returns the configured buildpath container entry path or
 	 *         <code>null</code> if the dialog has been canceled by the user.
 	 */
@@ -147,14 +146,14 @@ public class PHPBuildpathDialogAccess {
 	}
 
 	/**
-	 * Shows the UI to select new external JAR or ZIP archive entries. The
-	 * dialog returns the selected entry paths or <code>null</code> if the
-	 * dialog has been canceled. The dialog does not apply any changes.
+	 * Shows the UI to select new external JAR or ZIP archive entries. The dialog
+	 * returns the selected entry paths or <code>null</code> if the dialog has been
+	 * canceled. The dialog does not apply any changes.
 	 * 
 	 * @param shell
 	 *            The parent shell for the dialog.
-	 * @return Returns the new buildpath container entry paths or
-	 *         <code>null</code> if the dialog has been canceled by the user.
+	 * @return Returns the new buildpath container entry paths or <code>null</code>
+	 *         if the dialog has been canceled by the user.
 	 */
 	public static IPath[] chooseExternalArchiveEntries(Shell shell, IEnvironment environment) {
 		String lastUsedPath = DLTKUIPlugin.getDefault().getDialogSettings().get(IUIConstants.DIALOGSTORE_LASTEXTZIP);
@@ -190,9 +189,9 @@ public class PHPBuildpathDialogAccess {
 	}
 
 	/**
-	 * Shows the UI to configure an external JAR or ZIP archive. The dialog
-	 * returns the configured or <code>null</code> if the dialog has been
-	 * canceled. The dialog does not apply any changes.
+	 * Shows the UI to configure an external JAR or ZIP archive. The dialog returns
+	 * the configured or <code>null</code> if the dialog has been canceled. The
+	 * dialog does not apply any changes.
 	 * 
 	 * @param shell
 	 *            The parent shell for the dialog.
@@ -227,14 +226,14 @@ public class PHPBuildpathDialogAccess {
 	 * Shows the UI for selecting new variable classpath entries. See
 	 * {@link IClasspathEntry#CPE_VARIABLE} for details about variable classpath
 	 * entries. The dialog returns an array of the selected variable entries or
-	 * <code>null</code> if the dialog has been canceled. The dialog does not
-	 * apply any changes.
+	 * <code>null</code> if the dialog has been canceled. The dialog does not apply
+	 * any changes.
 	 *
 	 * @param shell
 	 *            The parent shell for the dialog.
 	 * @param existingPaths
-	 *            An array of paths that are already on the classpath and
-	 *            therefore should not be selected again.
+	 *            An array of paths that are already on the classpath and therefore
+	 *            should not be selected again.
 	 * @return Returns an non empty array of the selected variable entries or
 	 *         <code>null</code> if the dialog has been canceled.
 	 */

@@ -72,8 +72,7 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements IPHPDebugTar
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.model.PHPDebugElement#getLaunch()
+	 * @see org.eclipse.php.internal.debug.core.model.PHPDebugElement#getLaunch()
 	 */
 	@Override
 	public ILaunch getLaunch() {
@@ -138,8 +137,7 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements IPHPDebugTar
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.model.IDebugTarget#supportsBreakpoint(org.eclipse
+	 * @see org.eclipse.debug.core.model.IDebugTarget#supportsBreakpoint(org.eclipse
 	 * .debug.core.model.IBreakpoint)
 	 */
 	@Override
@@ -269,8 +267,7 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements IPHPDebugTar
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.IBreakpointListener#breakpointAdded(org.eclipse
+	 * @see org.eclipse.debug.core.IBreakpointListener#breakpointAdded(org.eclipse
 	 * .debug.core.model.IBreakpoint)
 	 */
 	@Override
@@ -283,8 +280,7 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements IPHPDebugTar
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.IBreakpointListener#breakpointRemoved(org.eclipse
+	 * @see org.eclipse.debug.core.IBreakpointListener#breakpointRemoved(org.eclipse
 	 * .debug.core.model.IBreakpoint, org.eclipse.core.resources.IMarkerDelta)
 	 */
 	@Override
@@ -297,8 +293,7 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements IPHPDebugTar
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.IBreakpointListener#breakpointChanged(org.eclipse
+	 * @see org.eclipse.debug.core.IBreakpointListener#breakpointChanged(org.eclipse
 	 * .debug.core.model.IBreakpoint, org.eclipse.core.resources.IMarkerDelta)
 	 */
 	@Override
@@ -352,8 +347,7 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements IPHPDebugTar
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.model.IMemoryBlockRetrieval#getMemoryBlock(long,
+	 * @see org.eclipse.debug.core.model.IMemoryBlockRetrieval#getMemoryBlock(long,
 	 * long)
 	 */
 	@Override
@@ -365,8 +359,7 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements IPHPDebugTar
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.php.internal.debug.core.model.IPHPDebugTarget#getOutputBuffer
-	 * ()
+	 * org.eclipse.php.internal.debug.core.model.IPHPDebugTarget#getOutputBuffer ()
 	 */
 	@Override
 	public DebugOutput getOutputBuffer() {
@@ -379,8 +372,7 @@ public class PHPMultiDebugTarget extends PHPDebugElement implements IPHPDebugTar
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.model.IPHPDebugTarget#isWaiting()
+	 * @see org.eclipse.php.internal.debug.core.model.IPHPDebugTarget#isWaiting()
 	 */
 	@Override
 	public boolean isWaiting() {

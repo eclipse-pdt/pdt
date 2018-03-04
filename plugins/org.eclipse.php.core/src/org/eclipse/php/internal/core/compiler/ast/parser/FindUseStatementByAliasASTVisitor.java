@@ -54,8 +54,8 @@ public class FindUseStatementByAliasASTVisitor extends AbstractUseStatementASTVi
 	 * Returns the found {@link UsePart} node that corresponds to the specified
 	 * alias name.
 	 * 
-	 * @return a <code>UsePart</code> node, or <code>null<code> if there is not
-	 *         use statement for the specified alias name.
+	 * @return a <code>UsePart</code> node, or <code>null<code> if there is not use
+	 *         statement for the specified alias name.
 	 */
 	public UsePart getResult() {
 		return result;
@@ -76,8 +76,8 @@ public class FindUseStatementByAliasASTVisitor extends AbstractUseStatementASTVi
 	}
 
 	/**
-	 * Compares the alias of the {@link UsePart} node being visited with the
-	 * alias name that the visitor is looking for.
+	 * Compares the alias of the {@link UsePart} node being visited with the alias
+	 * name that the visitor is looking for.
 	 */
 	@Override
 	protected boolean visit(UsePart usePart) {

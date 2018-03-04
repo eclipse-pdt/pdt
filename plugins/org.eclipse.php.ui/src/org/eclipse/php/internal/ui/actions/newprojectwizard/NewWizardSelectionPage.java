@@ -141,8 +141,8 @@ class NewWizardSelectionPage extends WorkbenchWizardSelectionPage {
 	}
 
 	/**
-	 * Answers whether the currently selected page, if any, advertises that it
-	 * may finish early.
+	 * Answers whether the currently selected page, if any, advertises that it may
+	 * finish early.
 	 * 
 	 * @return whether the page can finish early
 	 * @since 3.1

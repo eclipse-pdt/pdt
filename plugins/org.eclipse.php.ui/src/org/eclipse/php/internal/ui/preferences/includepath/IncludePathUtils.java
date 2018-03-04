@@ -65,8 +65,8 @@ public class IncludePathUtils {
 	}
 
 	/**
-	 * Resolves the model element entry include path relative to the project
-	 * include path configuration.
+	 * Resolves the model element entry include path relative to the project include
+	 * path configuration.
 	 * 
 	 * @param project
 	 * @param modelElement

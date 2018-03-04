@@ -19,7 +19,6 @@ import org.eclipse.php.core.ast.visitor.ApplyAll;
  *
  */
 public class TreeInfoCollector {
-	
 
 	class NodeCounter extends ApplyAll {
 
@@ -30,24 +29,23 @@ public class TreeInfoCollector {
 			this.numberOfNodes++;
 			return true;
 		}
-		
+
 	}
-		
+
 	private final Program fRoot;
 
 	public TreeInfoCollector(Program root) {
-		fRoot= root;
+		fRoot = root;
 	}
 
 	public int getSize() {
 		return 4;
 	}
-	
+
 	public int getNumberOfNodes() {
-		NodeCounter counter= new NodeCounter();
+		NodeCounter counter = new NodeCounter();
 		fRoot.accept(counter);
 		return counter.numberOfNodes;
 	}
-	
 
 }

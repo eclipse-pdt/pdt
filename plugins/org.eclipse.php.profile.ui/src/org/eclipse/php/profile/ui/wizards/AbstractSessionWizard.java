@@ -37,24 +37,20 @@ public abstract class AbstractSessionWizard extends Wizard {
 	}
 
 	protected void initSessionFromSelection(IWorkbench workbench) {
-		IWorkbenchPage page = workbench.getActiveWorkbenchWindow()
-				.getActivePage();
+		IWorkbenchPage page = workbench.getActiveWorkbenchWindow().getActivePage();
 		if (page != null) {
 			ProfilingMonitorView view = (ProfilingMonitorView) page
 					.findView(ProfilerUIConstants.PROFILING_MONITOR_VIEW);
 			if (view != null) {
-				ISelection selection = view.getSite().getSelectionProvider()
-						.getSelection();
+				ISelection selection = view.getSite().getSelectionProvider().getSelection();
 				if (selection instanceof IStructuredSelection) {
 					IStructuredSelection sSelection = (IStructuredSelection) selection;
 					Object element = sSelection.getFirstElement();
 					ProfilerDB session = null;
 					if (element instanceof ProfilingMonitorViewElement) {
-						session = ((ProfilingMonitorViewElement) element)
-								.getParent().getProfilerDB();
+						session = ((ProfilingMonitorViewElement) element).getParent().getProfilerDB();
 					} else if (element instanceof ProfilingMonitorElement) {
-						session = ((ProfilingMonitorElement) element)
-								.getProfilerDB();
+						session = ((ProfilingMonitorElement) element).getProfilerDB();
 					}
 					if (session != null) {
 						setSession(session);

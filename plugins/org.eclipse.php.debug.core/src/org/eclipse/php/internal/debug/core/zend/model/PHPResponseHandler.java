@@ -24,8 +24,7 @@ public class PHPResponseHandler {
 
 		@Override
 		public void started(boolean success) {
-			if (!success)
-			 {
+			if (!success) {
 				Logger.log(Logger.ERROR, "PHPResponseHandler: StartResponseHandler failed"); //$NON-NLS-1$
 			}
 
@@ -70,8 +69,8 @@ public class PHPResponseHandler {
 		@Override
 		public void breakpointRemoved(int id, boolean success) {
 			/**
-			 * Commented, because breakpoint may be removed twice: once it's
-			 * disabled, and another time - when it's actually removed (see:
+			 * Commented, because breakpoint may be removed twice: once it's disabled, and
+			 * another time - when it's actually removed (see:
 			 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=147870)
 			 */
 			// if (!success)
@@ -87,8 +86,7 @@ public class PHPResponseHandler {
 
 		@Override
 		public void stepInto(boolean success) {
-			if (!success)
-			 {
+			if (!success) {
 				Logger.log(Logger.ERROR, "PHPResponseHandler: StepIntoResponseHandler failed"); //$NON-NLS-1$
 			}
 
@@ -101,8 +99,7 @@ public class PHPResponseHandler {
 
 		@Override
 		public void stepOver(boolean success) {
-			if (!success)
-			 {
+			if (!success) {
 				Logger.log(Logger.ERROR, "PHPResponseHandler: StepOverResponseHandler failed"); //$NON-NLS-1$
 			}
 
@@ -115,8 +112,7 @@ public class PHPResponseHandler {
 
 		@Override
 		public void stepOut(boolean success) {
-			if (!success)
-			 {
+			if (!success) {
 				Logger.log(Logger.ERROR, "PHPResponseHandler: StepOutResponseHandler failed"); //$NON-NLS-1$
 			}
 
@@ -129,8 +125,7 @@ public class PHPResponseHandler {
 
 		@Override
 		public void go(boolean success) {
-			if (!success)
-			 {
+			if (!success) {
 				Logger.log(Logger.ERROR, "PHPResponseHandler: GoResponseHandler failed"); //$NON-NLS-1$
 			}
 
@@ -143,8 +138,7 @@ public class PHPResponseHandler {
 
 		@Override
 		public void pause(boolean success) {
-			if (!success)
-			 {
+			if (!success) {
 				Logger.log(Logger.ERROR, "PHPResponseHandler: PauseResponseHandler failed"); //$NON-NLS-1$
 			}
 
@@ -157,8 +151,7 @@ public class PHPResponseHandler {
 
 		@Override
 		public void addFiles(boolean success) {
-			if (!success)
-			 {
+			if (!success) {
 				Logger.log(Logger.ERROR, "PHPResponseHandler: AddFilesResponseHandler failed"); //$NON-NLS-1$
 			}
 		}

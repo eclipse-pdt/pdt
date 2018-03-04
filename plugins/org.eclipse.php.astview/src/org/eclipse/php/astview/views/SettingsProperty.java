@@ -16,11 +16,11 @@ import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.swt.graphics.Image;
 
 public class SettingsProperty extends ASTAttribute {
-	
+
 	private final Program fRoot;
 
 	public SettingsProperty(Program root) {
-		fRoot= root;
+		fRoot = root;
 	}
 
 	@Override
@@ -30,17 +30,15 @@ public class SettingsProperty extends ASTAttribute {
 
 	@Override
 	public Object[] getChildren() {
-		AST ast= fRoot.getAST();
-		Object[] res= {
-				new GeneralAttribute(this, "apiLevel", String.valueOf(ast.apiLevel())),
-				new GeneralAttribute(this, "hasResolvedBindings", String.valueOf(ast.hasResolvedBindings())),
-		};
+		AST ast = fRoot.getAST();
+		Object[] res = { new GeneralAttribute(this, "apiLevel", String.valueOf(ast.apiLevel())),
+				new GeneralAttribute(this, "hasResolvedBindings", String.valueOf(ast.hasResolvedBindings())), };
 		return res;
 	}
 
 	@Override
 	public String getLabel() {
-		return "> AST settings";  //$NON-NLS-1$
+		return "> AST settings"; //$NON-NLS-1$
 	}
 
 	@Override
@@ -58,7 +56,7 @@ public class SettingsProperty extends ASTAttribute {
 		}
 		return true;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return 19;

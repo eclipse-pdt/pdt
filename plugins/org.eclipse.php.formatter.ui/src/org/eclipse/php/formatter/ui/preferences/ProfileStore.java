@@ -114,10 +114,9 @@ public class ProfileStore {
 	}
 
 	/**
-	 * @return Returns the collection of profiles currently stored in the
-	 *         preference store or <code>null</code> if the loading failed. The
-	 *         elements are of type {@link CustomProfile} and are all updated to
-	 *         the latest version.
+	 * @return Returns the collection of profiles currently stored in the preference
+	 *         store or <code>null</code> if the loading failed. The elements are of
+	 *         type {@link CustomProfile} and are all updated to the latest version.
 	 * @throws CoreException
 	 */
 	public static List<Profile> readProfiles(IScopeContext scope) throws CoreException {
@@ -238,8 +237,8 @@ public class ProfileStore {
 	}
 
 	/**
-	 * Load profiles from a XML stream and add them to a map or
-	 * <code>null</code> if the source is not a profile store.
+	 * Load profiles from a XML stream and add them to a map or <code>null</code> if
+	 * the source is not a profile store.
 	 * 
 	 * @param inputSource
 	 *            The input stream
@@ -330,8 +329,8 @@ public class ProfileStore {
 	}
 
 	/*
-	 * Create a new profile element in the specified document. The profile is
-	 * not added to the document by this method.
+	 * Create a new profile element in the specified document. The profile is not
+	 * added to the document by this method.
 	 */
 	private static Element createProfileElement(Profile profile, Document document) {
 		final Element element = document.createElement(XML_NODE_PROFILE);

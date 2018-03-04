@@ -111,8 +111,7 @@ public class PHPInterpreterExecutionConfigurationBlock {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
+	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
 	public void init(IWorkbench workbench) {
 	}
@@ -120,8 +119,7 @@ public class PHPInterpreterExecutionConfigurationBlock {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse
+	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse
 	 * .swt.widgets.Composite)
 	 */
 	protected Control createControl(Composite ancestor) {

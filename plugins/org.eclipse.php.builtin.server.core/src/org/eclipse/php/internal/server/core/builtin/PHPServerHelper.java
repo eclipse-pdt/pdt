@@ -31,9 +31,9 @@ import org.eclipse.core.runtime.Status;
 public class PHPServerHelper {
 
 	/**
-	 * Reads the from the specified InputStream and returns the result as a
-	 * String. Each line is terminated by &quot;\n&quot;. Returns whatever is
-	 * read regardless of any errors that occurs while reading.
+	 * Reads the from the specified InputStream and returns the result as a String.
+	 * Each line is terminated by &quot;\n&quot;. Returns whatever is read
+	 * regardless of any errors that occurs while reading.
 	 * 
 	 * @param stream
 	 *            InputStream for the contents to be read
@@ -62,12 +62,12 @@ public class PHPServerHelper {
 	}
 
 	/**
-	 * Gets the base directory for this server. This directory is used as the
-	 * "base" property for the server.
+	 * Gets the base directory for this server. This directory is used as the "base"
+	 * property for the server.
 	 * 
 	 * @param ps
-	 *            PHPServer from which to derive the base directory directory.
-	 *            Only used to get the temp directory if needed.
+	 *            PHPServer from which to derive the base directory directory. Only
+	 *            used to get the temp directory if needed.
 	 * @return path to base directory
 	 */
 	public static IPath getStandardBaseDirectory(PHPServer ps) {
@@ -88,9 +88,8 @@ public class PHPServerHelper {
 	}
 
 	/**
-	 * Creates the specified deployment directory if it does not already exist.
-	 * It will include a default ROOT web application using the specified
-	 * web.xml.
+	 * Creates the specified deployment directory if it does not already exist. It
+	 * will include a default ROOT web application using the specified web.xml.
 	 * 
 	 * @param deployDir
 	 *            path to deployment directory to create
@@ -99,8 +98,7 @@ public class PHPServerHelper {
 	 * @return result status of the operation
 	 */
 	public static IStatus createDeploymentDirectory(IPath deployDir) {
-		if (Trace.isTraceEnabled())
-		 {
+		if (Trace.isTraceEnabled()) {
 			Trace.trace(Trace.FINER, "Creating deployment directory at " + deployDir.toOSString()); //$NON-NLS-1$
 		}
 

@@ -172,8 +172,9 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 						fWorkspacePathText.setText(resource.getFullPath().toString());
 					} else if (selectedElement instanceof IBuildpathEntry) {
 						IBuildpathEntry includePathEntry = (IBuildpathEntry) selectedElement;
-						fWorkspacePathText.setData(includePathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE
-								? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER);
+						fWorkspacePathText.setData(
+								includePathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE ? Type.INCLUDE_VAR
+										: Type.INCLUDE_FOLDER);
 						if (includePathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
 							IPath incPath = DLTKCore.getResolvedVariablePath(includePathEntry.getPath());
 							if (incPath != null) {
@@ -186,8 +187,9 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 					} else if (selectedElement instanceof IPFile) {
 						IPFile ipFile = (IPFile) selectedElement;
 						IBuildpathEntry includePathEntry = ipFile.includePathEntry;
-						fWorkspacePathText.setData(includePathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE
-								? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER);
+						fWorkspacePathText.setData(
+								includePathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE ? Type.INCLUDE_VAR
+										: Type.INCLUDE_FOLDER);
 						fWorkspacePathText.setText(ipFile.file.getAbsolutePath());
 					}
 				}

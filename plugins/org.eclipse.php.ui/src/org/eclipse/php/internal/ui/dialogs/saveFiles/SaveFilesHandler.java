@@ -54,8 +54,8 @@ public class SaveFilesHandler {
 	}
 
 	/**
-	 * Retreive an array of IEditorParts representing all the dirty editors open
-	 * for the files provided in the list.
+	 * Retreive an array of IEditorParts representing all the dirty editors open for
+	 * the files provided in the list.
 	 * 
 	 * @param files
 	 *            A list of IFiles.

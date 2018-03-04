@@ -54,8 +54,8 @@ public class PHPFacets {
 	}
 
 	/**
-	 * Returns true if the given project is a faceted project and the php core
-	 * facet is installed
+	 * Returns true if the given project is a faceted project and the php core facet
+	 * is installed
 	 * 
 	 * @param project
 	 *            the project

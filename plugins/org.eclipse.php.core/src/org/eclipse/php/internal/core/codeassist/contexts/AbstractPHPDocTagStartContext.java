@@ -65,9 +65,8 @@ public abstract class AbstractPHPDocTagStartContext extends PHPDocTagContext {
 	protected abstract List<String> getTags();
 
 	/**
-	 * only the lastWord is a valid class name prefix will return true if
-	 * lastWord "A::",than the prefix is "", then this method should return
-	 * false
+	 * only the lastWord is a valid class name prefix will return true if lastWord
+	 * "A::",than the prefix is "", then this method should return false
 	 * 
 	 * @param lastWord
 	 * @return

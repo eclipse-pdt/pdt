@@ -94,8 +94,8 @@ public final class AddGetterSetterOperation implements IWorkspaceRunnable {
 	 *            <code>true</code> if the resulting edit should be applied,
 	 *            <code>false</code> otherwise
 	 * @param save
-	 *            <code>true</code> if the changed compilation unit should be
-	 *            saved, <code>false</code> otherwise
+	 *            <code>true</code> if the changed compilation unit should be saved,
+	 *            <code>false</code> otherwise
 	 */
 	public AddGetterSetterOperation(final IType type, final IField[] getters, final IField[] setters,
 			final IField[] accessors, final Program unit, final IDocument document, final IMethod insert,

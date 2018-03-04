@@ -162,7 +162,8 @@ public class PHPToolkitUtil {
 	 */
 	public static boolean isFromPHPProject(IModelElement element) {
 		IProject project = element != null && element.getScriptProject() != null
-				? element.getScriptProject().getProject() : null;
+				? element.getScriptProject().getProject()
+				: null;
 		try {
 			return isPHPProject(project);
 		} catch (CoreException e) {

@@ -129,8 +129,8 @@ public class InternalClassHighlighting extends AbstractSemanticHighlighting {
 					PHPClassType.fromTypeName(fullName, getSourceModule(), identifier.getStart()), context,
 					identifier.getAST().getBindingResolver().getModelAccessCache());
 			/*
-			 * PhpModelAccess.getDefault().findTypes( fullName, MatchRule.EXACT,
-			 * 0, 0, createSearchScope(), null);
+			 * PhpModelAccess.getDefault().findTypes( fullName, MatchRule.EXACT, 0, 0,
+			 * createSearchScope(), null);
 			 */
 			if (elements != null && elements.length == 1 && elements[0] != null) {
 				if (ModelUtils.isExternalElement(elements[0])) {

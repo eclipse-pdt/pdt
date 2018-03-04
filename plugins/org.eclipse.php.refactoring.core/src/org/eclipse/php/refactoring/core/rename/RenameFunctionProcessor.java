@@ -42,15 +42,13 @@ import org.eclipse.php.refactoring.core.utils.RefactoringUtility;
  * 
  * @author Roy, 2007
  */
-public class RenameFunctionProcessor extends AbstractRenameProcessor<IFile>
-		implements ITextUpdating {
+public class RenameFunctionProcessor extends AbstractRenameProcessor<IFile> implements ITextUpdating {
 
 	private static final String RENAME_IS_PROCESSING = PHPRefactoringCoreMessages
 			.getString("RenameFunctionProcessor.0"); //$NON-NLS-1$
 	private static final String CREATING_MODIFICATIONS_LABEL = PHPRefactoringCoreMessages
 			.getString("RenameFunctionProcessor.1"); //$NON-NLS-1$
-	private static final String FUNCTION_IS_USED = PHPRefactoringCoreMessages
-			.getString("RenameFunctionProcessor.2"); //$NON-NLS-1$
+	private static final String FUNCTION_IS_USED = PHPRefactoringCoreMessages.getString("RenameFunctionProcessor.2"); //$NON-NLS-1$
 	private static final String ID_RENAME_FUNCTION = "php.refactoring.ui.rename.function"; //$NON-NLS-1$
 	protected static final String ATTRIBUTE_TEXTUAL_MATCHES = "textual"; //$NON-NLS-1$
 	public static final String RENAME_FUNCTION_PROCESSOR_NAME = PHPRefactoringCoreMessages
@@ -67,7 +65,7 @@ public class RenameFunctionProcessor extends AbstractRenameProcessor<IFile>
 	private boolean isUpdateTextualMatches;
 
 	public RenameFunctionProcessor(IFile operatedFile, ASTNode locateNode) {
-		super(operatedFile); 
+		super(operatedFile);
 		this.identifier = locateNode;
 	}
 
@@ -75,15 +73,12 @@ public class RenameFunctionProcessor extends AbstractRenameProcessor<IFile>
 	 * Derive the change
 	 */
 	@Override
-	public Change createChange(IProgressMonitor pm) throws CoreException,
-			OperationCanceledException {
+	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		CompositeChange rootChange = new CompositeChange(
-				PHPRefactoringCoreMessages
-						.getString("RenameFunctionProcessor.4")); //$NON-NLS-1$
+				PHPRefactoringCoreMessages.getString("RenameFunctionProcessor.4")); //$NON-NLS-1$
 		rootChange.markAsSynthetic();
 		try {
-			pm.beginTask(RenameFunctionProcessor.RENAME_IS_PROCESSING,
-					participantFiles.size());
+			pm.beginTask(RenameFunctionProcessor.RENAME_IS_PROCESSING, participantFiles.size());
 			pm.setTaskName(RenameFunctionProcessor.CREATING_MODIFICATIONS_LABEL);
 
 			if (pm.isCanceled()) {
@@ -97,8 +92,7 @@ public class RenameFunctionProcessor extends AbstractRenameProcessor<IFile>
 			for (Entry<IFile, Program> entry : participantFiles.entrySet()) {
 				final IFile file = entry.getKey();
 				final Program program = entry.getValue();
-				final RenameFunction rename = new RenameFunction(file,
-						getCurrentElementName(), newElementName,
+				final RenameFunction rename = new RenameFunction(file, getCurrentElementName(), newElementName,
 						getUpdateTextualMatches());
 
 				// aggregate the changes identifiers
@@ -128,11 +122,9 @@ public class RenameFunctionProcessor extends AbstractRenameProcessor<IFile>
 	protected void collectReferences(Program program, IProgressMonitor pm) {
 		final ArrayList<IResource> list = new ArrayList<>();
 
-		IScriptProject project = this.identifier.getProgramRoot()
-				.getSourceModule().getScriptProject();
+		IScriptProject project = this.identifier.getProgramRoot().getSourceModule().getScriptProject();
 
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(project,
-				getSearchFlags(false));
+		IDLTKSearchScope scope = SearchEngine.createSearchScope(project, getSearchFlags(false));
 
 		ASTNode node = identifier;
 		if (identifier instanceof Identifier) {
@@ -141,25 +133,19 @@ public class RenameFunctionProcessor extends AbstractRenameProcessor<IFile>
 
 		SearchPattern pattern = null;
 
-		int matchMode = SearchPattern.R_EXACT_MATCH
-				| SearchPattern.R_ERASURE_MATCH;
+		int matchMode = SearchPattern.R_EXACT_MATCH | SearchPattern.R_ERASURE_MATCH;
 
 		if (isFunctionElement(node)) {
-			pattern = SearchPattern.createPattern(getCurrentElementName(),
-					IDLTKSearchConstants.METHOD,
-					IDLTKSearchConstants.ALL_OCCURRENCES, matchMode,
-					PHPLanguageToolkit.getDefault());
+			pattern = SearchPattern.createPattern(getCurrentElementName(), IDLTKSearchConstants.METHOD,
+					IDLTKSearchConstants.ALL_OCCURRENCES, matchMode, PHPLanguageToolkit.getDefault());
 			SearchEngine engine = new SearchEngine();
 			try {
-				engine.search(pattern, new SearchParticipant[] { SearchEngine
-						.getDefaultSearchParticipant() }, scope,
+				engine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope,
 						new SearchRequestor() {
 							@Override
-							public void acceptSearchMatch(SearchMatch match)
-									throws CoreException {
+							public void acceptSearchMatch(SearchMatch match) throws CoreException {
 
-								IModelElement element = (IModelElement) match
-										.getElement();
+								IModelElement element = (IModelElement) match.getElement();
 								list.add(element.getResource());
 							}
 						}, new NullProgressMonitor());
@@ -171,8 +157,7 @@ public class RenameFunctionProcessor extends AbstractRenameProcessor<IFile>
 			IResource file = it.next();
 			if (file instanceof IFile) {
 				try {
-					participantFiles.put((IFile) file,
-							RefactoringUtility.getProgramForFile((IFile) file));
+					participantFiles.put((IFile) file, RefactoringUtility.getProgramForFile((IFile) file));
 				} catch (Exception e) {
 				}
 			}
@@ -180,8 +165,7 @@ public class RenameFunctionProcessor extends AbstractRenameProcessor<IFile>
 	}
 
 	private boolean isFunctionElement(ASTNode node) {
-		return node instanceof FunctionDeclaration
-				|| node instanceof FunctionInvocation
+		return node instanceof FunctionDeclaration || node instanceof FunctionInvocation
 				|| node instanceof FunctionName;
 	}
 
@@ -212,8 +196,7 @@ public class RenameFunctionProcessor extends AbstractRenameProcessor<IFile>
 		}
 
 		if (identifier instanceof FunctionDeclaration) {
-			return ((FunctionDeclaration) identifier).getFunctionName()
-					.getName();
+			return ((FunctionDeclaration) identifier).getFunctionName().getName();
 		}
 		return identifier.toString();
 	}
@@ -240,10 +223,8 @@ public class RenameFunctionProcessor extends AbstractRenameProcessor<IFile>
 
 	@Override
 	public RefactoringStatus getRefactoringStatus(IFile key, Program program) {
-		if (PHPElementConciliator.functionAlreadyExists(program,
-				getNewElementName())) {
-			final String message = MessageFormat.format(
-					RenameFunctionProcessor.FUNCTION_IS_USED,
+		if (PHPElementConciliator.functionAlreadyExists(program, getNewElementName())) {
+			final String message = MessageFormat.format(RenameFunctionProcessor.FUNCTION_IS_USED,
 					new Object[] { key.getName() });
 			return RefactoringStatus.createWarningStatus(message);
 		}

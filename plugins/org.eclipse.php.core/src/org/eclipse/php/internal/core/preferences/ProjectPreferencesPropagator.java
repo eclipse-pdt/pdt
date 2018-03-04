@@ -84,13 +84,12 @@ public class ProjectPreferencesPropagator extends AbstractPreferencesPropagator 
 	}
 
 	/**
-	 * Removes and returns the list of listeners assigned to the preferences
-	 * key, or null if non exists.
+	 * Removes and returns the list of listeners assigned to the preferences key, or
+	 * null if non exists.
 	 * 
 	 * @param preferencesKey
 	 *            The key that the listeners listen to.
-	 * @return The list of listeners assigned for the key, or null if non
-	 *         exists.
+	 * @return The list of listeners assigned for the key, or null if non exists.
 	 */
 	public List<IPreferencesPropagatorListener> removePropagatorListeners(String preferencesKey) {
 		return listenersMap.remove(preferencesKey);
@@ -137,8 +136,7 @@ public class ProjectPreferencesPropagator extends AbstractPreferencesPropagator 
 	}
 
 	/*
-	 * Returns a property value defined under the PHPCorePlugin preferences
-	 * store.
+	 * Returns a property value defined under the PHPCorePlugin preferences store.
 	 * 
 	 * @param id The property id.
 	 * 

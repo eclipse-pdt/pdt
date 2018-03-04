@@ -20,11 +20,11 @@ import org.eclipse.swt.graphics.Image;
  *
  */
 public class CommentsProperty extends ASTAttribute {
-	
+
 	private final Program fRoot;
 
 	public CommentsProperty(Program root) {
-		fRoot= root;
+		fRoot = root;
 	}
 
 	@Override
@@ -34,14 +34,14 @@ public class CommentsProperty extends ASTAttribute {
 
 	@Override
 	public Object[] getChildren() {
-		List<?> commentList= fRoot.comments();
+		List<?> commentList = fRoot.comments();
 		return (commentList == null ? EMPTY : commentList.toArray());
 	}
 
 	@Override
 	public String getLabel() {
-		List<?> commentList= fRoot.comments();
-		return "> comments (" +  (commentList == null ? 0 : commentList.size()) + ")";  //$NON-NLS-1$//$NON-NLS-2$
+		List<?> commentList = fRoot.comments();
+		return "> comments (" + (commentList == null ? 0 : commentList.size()) + ")"; //$NON-NLS-1$//$NON-NLS-2$
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class CommentsProperty extends ASTAttribute {
 		}
 		return true;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return 17;

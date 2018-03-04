@@ -78,8 +78,7 @@ public class PHPSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.action.IAction#runWithEvent(org.eclipse.swt.widgets
+	 * @see org.eclipse.jface.action.IAction#runWithEvent(org.eclipse.swt.widgets
 	 * .Event)
 	 * 
 	 * @since 3.2
@@ -122,8 +121,7 @@ public class PHPSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 		if (fHasCorrection) {
 			if (fAnnotation instanceof AssistAnnotation) {
 				initialize(fBundle, "PhpSelectAnnotationRulerAction_QuickAssist_"); //$NON-NLS-1$
-			}
-			else {
+			} else {
 				initialize(fBundle, "PhpSelectAnnotationRulerAction_QuickFix_"); //$NON-NLS-1$
 			}
 			return;

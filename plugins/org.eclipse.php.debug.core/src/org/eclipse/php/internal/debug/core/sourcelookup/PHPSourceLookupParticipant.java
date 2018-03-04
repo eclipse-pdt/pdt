@@ -70,9 +70,9 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 	}
 
 	/**
-	 * Helper class for finding workspace files that might point to provided
-	 * source location by means of being a linked/symbolic link files or be a
-	 * part of the chained structure that might consist of linked/symbolic link
+	 * Helper class for finding workspace files that might point to provided source
+	 * location by means of being a linked/symbolic link files or be a part of the
+	 * chained structure that might consist of linked/symbolic link
 	 * directories/files.
 	 */
 	private final class LinkSubjectFileFinder {
@@ -100,9 +100,8 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 								return true;
 							}
 							/*
-							 * The goal of this pre-check condition is to reduce
-							 * the amount of files to be checked by NIO
-							 * (comparing with NIO can be time consuming ).
+							 * The goal of this pre-check condition is to reduce the amount of files to be
+							 * checked by NIO (comparing with NIO can be time consuming ).
 							 */
 							if (resource.getName().equals(sourceFileName) || resource.isLinked()
 									|| PHPSymbolicLinksCache.INSTANCE.isSymbolicLink(resource)) {
@@ -200,8 +199,7 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.internal.core.sourcelookup.ISourceLookupParticipant
+	 * @see org.eclipse.debug.internal.core.sourcelookup.ISourceLookupParticipant
 	 * #getSourceName(java.lang.Object)
 	 */
 	@Override

@@ -107,8 +107,7 @@ public class RemoteFileStorageEditorInput extends ExternalStorageEditorInput
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.dltk.internal.ui.editor.ExternalStorageEditorInput#equals(
+	 * @see org.eclipse.dltk.internal.ui.editor.ExternalStorageEditorInput#equals(
 	 * java.lang.Object)
 	 */
 	@Override

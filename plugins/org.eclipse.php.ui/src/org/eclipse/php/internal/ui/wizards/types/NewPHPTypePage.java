@@ -691,16 +691,16 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 	}
 
 	/**
-	 * Denotes whether the new PHP element is inserted in an existing PHP file
-	 * (if true) or in a new php file (if false).
+	 * Denotes whether the new PHP element is inserted in an existing PHP file (if
+	 * true) or in a new php file (if false).
 	 */
 	public boolean isInExistingPHPFile() {
 		return existingFileBtn.getSelection();
 	}
 
 	/**
-	 * Denotes whether the created element will be inserted in the 1st block of
-	 * the existing PHP file , OR (if false) as a new PHP block
+	 * Denotes whether the created element will be inserted in the 1st block of the
+	 * existing PHP file , OR (if false) as a new PHP block
 	 */
 	public boolean isInFirstPHPBlock() {
 		return firstBlockBtn.getSelection();
@@ -721,9 +721,9 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 	}
 
 	/**
-	 * Returns a HashMap that represents the state of modifiers for the PHP
-	 * element. Key - the string name of the modifier. Value - a Boolean object
-	 * , whether the modifier is selected or not.
+	 * Returns a HashMap that represents the state of modifiers for the PHP element.
+	 * Key - the string name of the modifier. Value - a Boolean object , whether the
+	 * modifier is selected or not.
 	 */
 	public Map<String, Boolean> getModifiers() {
 		if (modifiers == null) {
@@ -817,8 +817,8 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 	}
 
 	/**
-	 * Initializes the source folder field with a valid root. The root is
-	 * computed from the given PHPlement.
+	 * Initializes the source folder field with a valid root. The root is computed
+	 * from the given PHPlement.
 	 * 
 	 * @param elem
 	 *            the PHP Element used to compute the initial root used as the
@@ -1408,8 +1408,8 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 	}
 
 	/**
-	 * Since source folder changing affects the PHP model, it should be
-	 * overriden by this class children.
+	 * Since source folder changing affects the PHP model, it should be overriden by
+	 * this class children.
 	 */
 	protected void sourceFolderChanged() {
 		sourceFolderStatus = new StatusInfo();
@@ -1629,8 +1629,8 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 	}
 
 	/**
-	 * Uses the standard container selection dialog to choose the new value for
-	 * the Source Folder field.
+	 * Uses the standard container selection dialog to choose the new value for the
+	 * Source Folder field.
 	 */
 	private void chooseNewSourceFolder() {
 		final ContainerSelectionDialog dialog = new ContainerSelectionDialog(getShell(),

@@ -312,15 +312,13 @@ public class VariableBlock {
 	private boolean doesChangeRequireFullBuild(List<?> removed, List<String> changed) {
 
 		/*
-		 * IProject[] projects =
-		 * PHPWorkspaceModelManager.getInstance().listProjects(); for (int i =
-		 * 0; i < projects.length; i++) { PHPProjectOptions options =
-		 * PHPProjectOptions.forProject(projects[i]); IIncludePathEntry[]
-		 * entries = options.readRawIncludePath(); for (int k = 0; k <
-		 * entries.length; k++) { IIncludePathEntry curr = entries[k]; if
-		 * (curr.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) { String var
-		 * = curr.getPath().segment(0); if (removed.contains(var) ||
-		 * changed.contains(var)) { return true; } } } }
+		 * IProject[] projects = PHPWorkspaceModelManager.getInstance().listProjects();
+		 * for (int i = 0; i < projects.length; i++) { PHPProjectOptions options =
+		 * PHPProjectOptions.forProject(projects[i]); IIncludePathEntry[] entries =
+		 * options.readRawIncludePath(); for (int k = 0; k < entries.length; k++) {
+		 * IIncludePathEntry curr = entries[k]; if (curr.getEntryKind() ==
+		 * IIncludePathEntry.IPE_VARIABLE) { String var = curr.getPath().segment(0); if
+		 * (removed.contains(var) || changed.contains(var)) { return true; } } } }
 		 */return false;
 	}
 
@@ -409,19 +407,17 @@ public class VariableBlock {
 
 		/*
 		 * String[] reservedName =
-		 * IncludePathVariableManager.instance().getReservedVariables();
-		 * ArrayList reserved = new ArrayList(reservedName.length);
-		 * addAll(reservedName, reserved);
+		 * IncludePathVariableManager.instance().getReservedVariables(); ArrayList
+		 * reserved = new ArrayList(reservedName.length); addAll(reservedName,
+		 * reserved);
 		 * 
-		 * String[] entries = PHPProjectOptions.getIncludePathVariableNames();
-		 * ArrayList elements = new ArrayList(entries.length); for (int i = 0; i
-		 * < entries.length; i++) { String name = entries[i]; IPVariableElement
-		 * elem; IPath entryPath =
-		 * PHPProjectOptions.getIncludePathVariable(name); if (entryPath !=
-		 * null) { elem = new IPVariableElement(name, entryPath,
-		 * reserved.contains(name)); elements.add(elem); if
-		 * (name.equals(initSelection)) { initSelectedElement = elem; } } else {
-		 * PHPCorePlugin .logErrorMessage(
+		 * String[] entries = PHPProjectOptions.getIncludePathVariableNames(); ArrayList
+		 * elements = new ArrayList(entries.length); for (int i = 0; i < entries.length;
+		 * i++) { String name = entries[i]; IPVariableElement elem; IPath entryPath =
+		 * PHPProjectOptions.getIncludePathVariable(name); if (entryPath != null) { elem
+		 * = new IPVariableElement(name, entryPath, reserved.contains(name));
+		 * elements.add(elem); if (name.equals(initSelection)) { initSelectedElement =
+		 * elem; } } else { PHPCorePlugin .logErrorMessage(
 		 * "VariableBlock: IncludePath variable with null value: " + name); } }
 		 * fVariablesList.setElements(elements);
 		 */

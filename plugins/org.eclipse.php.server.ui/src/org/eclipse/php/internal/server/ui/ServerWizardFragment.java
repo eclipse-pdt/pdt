@@ -93,8 +93,7 @@ public class ServerWizardFragment extends CompositeWizardFragment {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.server.ui.wizard.WizardFragment#performFinish
+	 * @see org.eclipse.php.internal.server.ui.wizard.WizardFragment#performFinish
 	 * (org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
@@ -109,8 +108,7 @@ public class ServerWizardFragment extends CompositeWizardFragment {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.server.ui.wizard.WizardFragment#performCancel
+	 * @see org.eclipse.php.internal.server.ui.wizard.WizardFragment#performCancel
 	 * (org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override

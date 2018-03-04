@@ -46,8 +46,7 @@ public class TarInputStream extends FilterInputStream {
 	}
 
 	/**
-	 * Create a new tar input stream, skipping ahead to the given entry in the
-	 * file.
+	 * Create a new tar input stream, skipping ahead to the given entry in the file.
 	 * 
 	 * @param in
 	 *            input stream
@@ -282,8 +281,8 @@ public class TarInputStream extends FilterInputStream {
 	}
 
 	/**
-	 * Moves ahead to the next file in the tar archive and returns a TarEntry
-	 * object describing it.
+	 * Moves ahead to the next file in the tar archive and returns a TarEntry object
+	 * describing it.
 	 * 
 	 * @return the next entry in the tar file
 	 * @throws TarException

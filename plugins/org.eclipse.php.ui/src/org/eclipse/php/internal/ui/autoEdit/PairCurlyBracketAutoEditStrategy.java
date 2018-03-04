@@ -200,8 +200,8 @@ public class PairCurlyBracketAutoEditStrategy implements IAfterNewLineAutoEditSt
 	}
 
 	/**
-	 * Copies the rest of the line (after the { ) into the buffer in order put
-	 * the text inside the curly brackets
+	 * Copies the rest of the line (after the { ) into the buffer in order put the
+	 * text inside the curly brackets
 	 * 
 	 * @return The number of characters the caret should be advanced at
 	 */

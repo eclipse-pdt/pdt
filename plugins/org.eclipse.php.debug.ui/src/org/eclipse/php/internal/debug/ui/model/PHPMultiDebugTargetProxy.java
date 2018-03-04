@@ -79,8 +79,7 @@ public class PHPMultiDebugTargetProxy extends DebugTargetProxy {
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.debug.internal.ui.viewers.update.DebugTargetProxy#
-	 * getNextSuspendedThreadDelta(org.eclipse.debug.core.model.IThread,
-	 * boolean)
+	 * getNextSuspendedThreadDelta(org.eclipse.debug.core.model.IThread, boolean)
 	 */
 	@Override
 	protected ModelDelta getNextSuspendedThreadDelta(IThread currentThread, boolean reverse) {

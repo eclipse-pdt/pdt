@@ -55,12 +55,12 @@ class InternalASTRewrite extends NodeEventHandler {
 	}
 
 	/**
-	 * Performs the rewrite: The rewrite events are translated to the
-	 * corresponding in text changes.
+	 * Performs the rewrite: The rewrite events are translated to the corresponding
+	 * in text changes.
 	 * 
 	 * @param document
-	 *            Document which describes the code of the AST that is passed in
-	 *            in the constructor. This document is accessed read-only.
+	 *            Document which describes the code of the AST that is passed in in
+	 *            the constructor. This document is accessed read-only.
 	 * @param options
 	 *            options
 	 * @throws IllegalArgumentException
@@ -75,11 +75,10 @@ class InternalASTRewrite extends NodeEventHandler {
 			TargetSourceRangeComputer xsrComputer = new TargetSourceRangeComputer() {
 				/**
 				 * This implementation of
-				 * {@link TargetSourceRangeComputer#computeSourceRange(ASTNode)}
-				 * is specialized to work in the case of internal AST rewriting,
-				 * where the original AST has been modified from its original
-				 * form. This means that one cannot trust that the root of the
-				 * given node is the compilation unit.
+				 * {@link TargetSourceRangeComputer#computeSourceRange(ASTNode)} is specialized
+				 * to work in the case of internal AST rewriting, where the original AST has
+				 * been modified from its original form. This means that one cannot trust that
+				 * the root of the given node is the compilation unit.
 				 */
 				@Override
 				public SourceRange computeSourceRange(ASTNode node) {

@@ -29,8 +29,8 @@ public interface IPHPDocAwareElement {
 	/**
 	 * Returns array of method return types
 	 * 
-	 * @return return types array or <code>null</code> if there were no return
-	 *         types declared
+	 * @return return types array or <code>null</code> if there were no return types
+	 *         declared
 	 */
 	String[] getReturnTypes();
 }

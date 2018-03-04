@@ -80,8 +80,7 @@ public class FilteredElementTreeSelectionDialog extends ElementTreeSelectionDial
 		}
 
 		/*
-		 * @see
-		 * org.eclipse.ui.dialogs.PatternFilter#isElementVisible(org.eclipse
+		 * @see org.eclipse.ui.dialogs.PatternFilter#isElementVisible(org.eclipse
 		 * .jface.viewers.Viewer, java.lang.Object)
 		 * 
 		 * @since 3.5

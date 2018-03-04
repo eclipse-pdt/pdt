@@ -67,8 +67,8 @@ public class BestMatchHover extends AbstractPHPEditorTextHover
 			return;
 		}
 
-		for (Iterator<PHPEditorTextHoverDescriptor> iterator = new ArrayList<>(
-				fTextHoverSpecifications).iterator(); iterator.hasNext();) {
+		for (Iterator<PHPEditorTextHoverDescriptor> iterator = new ArrayList<>(fTextHoverSpecifications)
+				.iterator(); iterator.hasNext();) {
 			PHPEditorTextHoverDescriptor spec = iterator.next();
 
 			IPHPTextHover hover = spec.createTextHover();
@@ -112,8 +112,7 @@ public class BestMatchHover extends AbstractPHPEditorTextHover
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.text.ITextHoverExtension2#getHoverInfo2(org.eclipse
+	 * @see org.eclipse.jface.text.ITextHoverExtension2#getHoverInfo2(org.eclipse
 	 * .jface.text.ITextViewer, org.eclipse.jface.text.IRegion)
 	 */
 	@Override

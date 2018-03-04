@@ -203,8 +203,7 @@ public class ExecutionFlowView extends AbstractProfilerFunctionsView
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.php.profile.ui.views.AbstractProfilerFunctionsView#getViewer(
-	 * )
+	 * org.eclipse.php.profile.ui.views.AbstractProfilerFunctionsView#getViewer( )
 	 */
 	@Override
 	public TreeViewer getViewer() {
@@ -214,8 +213,7 @@ public class ExecutionFlowView extends AbstractProfilerFunctionsView
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.ITreeViewerListener#treeCollapsed(org.eclipse
+	 * @see org.eclipse.jface.viewers.ITreeViewerListener#treeCollapsed(org.eclipse
 	 * .jface.viewers.TreeExpansionEvent)
 	 */
 	public void treeCollapsed(TreeExpansionEvent event) {
@@ -226,8 +224,7 @@ public class ExecutionFlowView extends AbstractProfilerFunctionsView
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.ITreeViewerListener#treeExpanded(org.eclipse
+	 * @see org.eclipse.jface.viewers.ITreeViewerListener#treeExpanded(org.eclipse
 	 * .jface.viewers.TreeExpansionEvent)
 	 */
 	public void treeExpanded(TreeExpansionEvent event) {
@@ -246,8 +243,7 @@ public class ExecutionFlowView extends AbstractProfilerFunctionsView
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface
+	 * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface
 	 * .action.IMenuManager)
 	 */
 	@Override

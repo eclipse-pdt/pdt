@@ -63,8 +63,7 @@ public class ProfilerCallTrace {
 	}
 
 	public ProfilerCallTraceLayer[] getLayers() {
-		ProfilerCallTraceLayer[] pctl = new ProfilerCallTraceLayer[fLayers
-				.size()];
+		ProfilerCallTraceLayer[] pctl = new ProfilerCallTraceLayer[fLayers.size()];
 		fLayers.toArray(pctl);
 		return pctl;
 	}

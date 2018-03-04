@@ -56,8 +56,7 @@ public class ParameterInfo {
 	}
 
 	/**
-	 * Creates a new ParameterInfo. Parameter is marked as added and not
-	 * resolvable
+	 * Creates a new ParameterInfo. Parameter is marked as added and not resolvable
 	 * 
 	 * @param type
 	 *            the fullyqualified type
@@ -65,9 +64,8 @@ public class ParameterInfo {
 	 *            the name
 	 * @return the parameter info object
 	 */
-	public static ParameterInfo createInfoForAddedParameter(String type,
-			String name) {
-		ParameterInfo info = new ParameterInfo("", INDEX_FOR_ADDED); //$NON-NLS-1$ 
+	public static ParameterInfo createInfoForAddedParameter(String type, String name) {
+		ParameterInfo info = new ParameterInfo("", INDEX_FOR_ADDED); //$NON-NLS-1$
 		info.setNewTypeName(type);
 		info.setNewName(name);
 		info.setResolve(false);
@@ -78,19 +76,17 @@ public class ParameterInfo {
 		fResolve = resolve;
 	}
 
-	public static ParameterInfo createInfoForAddedParameter(String type,
-			String name, String defaultValue) {
-		ParameterInfo info = new ParameterInfo("", INDEX_FOR_ADDED); //$NON-NLS-1$ 
+	public static ParameterInfo createInfoForAddedParameter(String type, String name, String defaultValue) {
+		ParameterInfo info = new ParameterInfo("", INDEX_FOR_ADDED); //$NON-NLS-1$
 		info.setNewTypeName(type);
 		info.setNewName(name);
 		info.setDefaultValue(defaultValue);
 		return info;
 	}
 
-	public static ParameterInfo createInfoForAddedParameter(
-			ITypeBinding typeBinding, String type, String name,
+	public static ParameterInfo createInfoForAddedParameter(ITypeBinding typeBinding, String type, String name,
 			String defaultValue) {
-		ParameterInfo info = new ParameterInfo(null, "", INDEX_FOR_ADDED); //$NON-NLS-1$ 
+		ParameterInfo info = new ParameterInfo(null, "", INDEX_FOR_ADDED); //$NON-NLS-1$
 		info.setNewTypeName(type);
 		info.setNewName(name);
 		info.setDefaultValue(defaultValue);

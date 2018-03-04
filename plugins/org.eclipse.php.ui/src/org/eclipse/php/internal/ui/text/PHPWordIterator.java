@@ -24,8 +24,8 @@ import com.ibm.icu.text.BreakIterator;
 public class PHPWordIterator extends BreakIterator {
 
 	/**
-	 * The underlying php break iterator. It returns all breaks, including
-	 * before and after every whitespace.
+	 * The underlying php break iterator. It returns all breaks, including before
+	 * and after every whitespace.
 	 */
 	private PHPBreakIterator fIterator;
 	/** The current index for the stateful operations. */

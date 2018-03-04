@@ -28,8 +28,8 @@ public class RenameGlobalVariable extends AbstractRename {
 			.getString("RenameGlobalVariableName.0"); //$NON-NLS-1$
 
 	/**
-	 * Holds if the context was changed and we should not change the
-	 * identifier's name
+	 * Holds if the context was changed and we should not change the identifier's
+	 * name
 	 */
 	private boolean isGlobalScope = true;
 

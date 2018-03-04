@@ -89,9 +89,9 @@ public class PHPPreferencePageBlocksRegistry {
 	 * 
 	 * @param preferencesPageID
 	 *            The PHP preferences page ID
-	 * @return An array of newly instanciated {@link IPHPPreferencePageBlock}s
-	 *         (an empty array, if non exists). Note: The returned order of the
-	 *         addons is by their ID.
+	 * @return An array of newly instanciated {@link IPHPPreferencePageBlock}s (an
+	 *         empty array, if non exists). Note: The returned order of the addons
+	 *         is by their ID.
 	 */
 	public static IPHPPreferencePageBlock[] getPHPPreferencePageBlock(String pageId) throws Exception {
 		List<?> addonFactories = getInstance().getPageBlocks().get(pageId);

@@ -221,8 +221,7 @@ public class DBGpStringValue extends AbstractDBGpValue {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
+	 * @see org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
 	 * getVariables()
 	 */
 	@Override
@@ -236,8 +235,7 @@ public class DBGpStringValue extends AbstractDBGpValue {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
+	 * @see org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
 	 * hasVariables()
 	 */
 	@Override
@@ -248,8 +246,7 @@ public class DBGpStringValue extends AbstractDBGpValue {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
+	 * @see org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
 	 * update(org.w3c.dom.Node)
 	 */
 	@Override
@@ -288,8 +285,7 @@ public class DBGpStringValue extends AbstractDBGpValue {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
+	 * @see org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
 	 * createValueString(org.eclipse.php.internal.debug.core.xdebug.dbgp.model.
 	 * AbstractDBGpValue.DBGpValueData)
 	 */
@@ -308,8 +304,7 @@ public class DBGpStringValue extends AbstractDBGpValue {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
+	 * @see org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
 	 * supportsValueModification()
 	 */
 	@Override
@@ -345,8 +340,7 @@ public class DBGpStringValue extends AbstractDBGpValue {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
+	 * @see org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
 	 * verifyValue(java.lang.String)
 	 */
 	@Override

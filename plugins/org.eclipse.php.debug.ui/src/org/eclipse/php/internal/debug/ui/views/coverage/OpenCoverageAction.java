@@ -34,8 +34,7 @@ public class OpenCoverageAction extends Action {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.
+	 * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.
 	 * Event)
 	 */
 	@Override

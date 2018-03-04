@@ -89,8 +89,7 @@ public class XMLPreferencesWriter {
 	}
 
 	/**
-	 * Writes a group of IXMLPreferencesStorables to the given plug-in
-	 * preferences.
+	 * Writes a group of IXMLPreferencesStorables to the given plug-in preferences.
 	 * 
 	 * @param pluginPreferences
 	 *            A Preferences instance

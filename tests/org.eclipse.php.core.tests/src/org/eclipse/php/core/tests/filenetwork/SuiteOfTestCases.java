@@ -32,23 +32,23 @@ import junit.framework.TestSuite;
 public abstract class SuiteOfTestCases extends TestCase {
 
 	/*
-	 * A test suite that initialize the test case's fields once, then that
-	 * copies the values of these fields intto each subsequent test case.
+	 * A test suite that initialize the test case's fields once, then that copies
+	 * the values of these fields intto each subsequent test case.
 	 */
 	public static class Suite extends TestSuite {
 		SuiteOfTestCases currentTestCase;
 
 		/*
-		 * Creates a new suite on the given class. This class must be a subclass
-		 * of SetupableTestSuite.
+		 * Creates a new suite on the given class. This class must be a subclass of
+		 * SetupableTestSuite.
 		 */
 		public Suite(Class<? extends SuiteOfTestCases> theClass) {
 			super(theClass);
 		}
 
 		/**
-		 * Creates a new suite on the given class. Only the methods specified in
-		 * the second parameter and included in the suite.
+		 * Creates a new suite on the given class. Only the methods specified in the
+		 * second parameter and included in the suite.
 		 * 
 		 * @param theClass
 		 * @param methodNames
@@ -161,8 +161,8 @@ public abstract class SuiteOfTestCases extends TestCase {
 				}
 			} else {
 				/*
-				 * If there was error in TestCase constructor - the test will
-				 * not be of the SuiteOfTestCases type
+				 * If there was error in TestCase constructor - the test will not be of the
+				 * SuiteOfTestCases type
 				 */
 				super.runTest(test, result);
 			}

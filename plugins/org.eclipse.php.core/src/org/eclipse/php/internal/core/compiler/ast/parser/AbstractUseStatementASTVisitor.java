@@ -66,9 +66,9 @@ public abstract class AbstractUseStatementASTVisitor extends ASTVisitor {
 	}
 
 	/**
-	 * The visitor must check if a {@link Statement} is an {@link UseStatement}.
-	 * If yes then call {@link #visit(UseStatement)}. Otherwise the visitor must
-	 * not look deeper in the AST tree.
+	 * The visitor must check if a {@link Statement} is an {@link UseStatement}. If
+	 * yes then call {@link #visit(UseStatement)}. Otherwise the visitor must not
+	 * look deeper in the AST tree.
 	 */
 	@Override
 	public boolean visit(Statement s) throws Exception {
@@ -98,8 +98,8 @@ public abstract class AbstractUseStatementASTVisitor extends ASTVisitor {
 	}
 
 	/**
-	 * In all other cases the visitor must not look deeper into the AST tree -
-	 * there is no chance to find an {@link UseStatement} there.
+	 * In all other cases the visitor must not look deeper into the AST tree - there
+	 * is no chance to find an {@link UseStatement} there.
 	 */
 	@Override
 	public boolean visitGeneral(ASTNode node) throws Exception {
@@ -110,9 +110,9 @@ public abstract class AbstractUseStatementASTVisitor extends ASTVisitor {
 	 * Visits a {@link UseStatement} node.
 	 * 
 	 * <p>
-	 * This is a default implementation that calls {@link #visit(UsePart)} for
-	 * each <code>UsePart<code> in the <code>UseStatement</code>. It can be
-	 * overridden by subclasses.
+	 * This is a default implementation that calls {@link #visit(UsePart)} for each
+	 * <code>UsePart<code> in the <code>UseStatement</code>. It can be overridden by
+	 * subclasses.
 	 * </p>
 	 * 
 	 * @param UseStatement
@@ -149,8 +149,8 @@ public abstract class AbstractUseStatementASTVisitor extends ASTVisitor {
 	 * 
 	 * @param node
 	 *            the <code>ASTNode<code> to check
-	 * @return <code>true</code> if the node's start position is before the
-	 *         offset, <code>false</code> - otherwise.
+	 * @return <code>true</code> if the node's start position is before the offset,
+	 *         <code>false</code> - otherwise.
 	 */
 	protected boolean isBeforeOffset(ASTNode node) {
 		return node.sourceStart() < offset;

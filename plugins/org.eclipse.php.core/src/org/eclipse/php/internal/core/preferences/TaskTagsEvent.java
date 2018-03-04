@@ -57,9 +57,9 @@ public class TaskTagsEvent extends EventObject {
 	}
 
 	/**
-	 * Returns the IProject that was effected by the task tags change. The
-	 * method will return null to indicate that the change was made in the
-	 * workspace settings.
+	 * Returns the IProject that was effected by the task tags change. The method
+	 * will return null to indicate that the change was made in the workspace
+	 * settings.
 	 * 
 	 * @return The effected IProject, or null if the effect is on the workspace.
 	 */
@@ -79,8 +79,8 @@ public class TaskTagsEvent extends EventObject {
 	/**
 	 * Returns true if the task tags are case sensitive.
 	 * 
-	 * @return The case sensitivity state of the task tags for the defined
-	 *         IProject or workspace.
+	 * @return The case sensitivity state of the task tags for the defined IProject
+	 *         or workspace.
 	 */
 	public boolean isCaseSensitive() {
 		return isCaseSensitive;

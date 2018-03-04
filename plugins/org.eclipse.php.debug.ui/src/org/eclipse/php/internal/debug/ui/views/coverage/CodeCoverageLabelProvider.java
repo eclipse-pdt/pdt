@@ -42,8 +42,7 @@ public class CodeCoverageLabelProvider extends AppearanceAwareLabelProvider
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang
+	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang
 	 * .Object, int)
 	 */
 	@Override
@@ -61,8 +60,7 @@ public class CodeCoverageLabelProvider extends AppearanceAwareLabelProvider
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang
+	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang
 	 * .Object, int)
 	 */
 	@Override
@@ -93,8 +91,7 @@ public class CodeCoverageLabelProvider extends AppearanceAwareLabelProvider
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.ITableColorProvider#getBackground(java.lang
+	 * @see org.eclipse.jface.viewers.ITableColorProvider#getBackground(java.lang
 	 * .Object, int)
 	 */
 	@Override
@@ -105,8 +102,7 @@ public class CodeCoverageLabelProvider extends AppearanceAwareLabelProvider
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.ITableColorProvider#getForeground(java.lang
+	 * @see org.eclipse.jface.viewers.ITableColorProvider#getForeground(java.lang
 	 * .Object, int)
 	 */
 	@Override
@@ -122,8 +118,7 @@ public class CodeCoverageLabelProvider extends AppearanceAwareLabelProvider
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.ITableFontProvider#getFont(java.lang.Object,
+	 * @see org.eclipse.jface.viewers.ITableFontProvider#getFont(java.lang.Object,
 	 * int)
 	 */
 	@Override

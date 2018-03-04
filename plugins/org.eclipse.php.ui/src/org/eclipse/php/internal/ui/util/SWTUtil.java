@@ -38,8 +38,8 @@ public class SWTUtil {
 
 	/**
 	 * Returns the standard display to be used. The method first checks, if the
-	 * thread calling this method has an associated display. If so, this display
-	 * is returned. Otherwise the method returns the default display.
+	 * thread calling this method has an associated display. If so, this display is
+	 * returned. Otherwise the method returns the default display.
 	 */
 	public static Display getStandardDisplay() {
 		Display display;
@@ -51,8 +51,8 @@ public class SWTUtil {
 	}
 
 	/**
-	 * Returns the shell for the given widget. If the widget doesn't represent a
-	 * SWT object that manage a shell, <code>null</code> is returned.
+	 * Returns the shell for the given widget. If the widget doesn't represent a SWT
+	 * object that manage a shell, <code>null</code> is returned.
 	 * 
 	 * @return the shell for the given widget
 	 */
@@ -113,8 +113,8 @@ public class SWTUtil {
 	}
 
 	/**
-	 * This method allows us to open the preference dialog on the specific page,
-	 * in this case the perspective page
+	 * This method allows us to open the preference dialog on the specific page, in
+	 * this case the perspective page
 	 * 
 	 * @param id
 	 *            the id of pref page to show
@@ -148,9 +148,8 @@ public class SWTUtil {
 	}
 
 	/**
-	 * Sets width and height hint for the button control. <b>Note:</b> This is a
-	 * NOP if the button's layout data is not an instance of
-	 * <code>GridData</code>.
+	 * Sets width and height hint for the button control. <b>Note:</b> This is a NOP
+	 * if the button's layout data is not an instance of <code>GridData</code>.
 	 * 
 	 * @param the
 	 *            button for which to set the dimension hint

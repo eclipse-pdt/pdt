@@ -49,8 +49,7 @@ public class MethodKeywordStrategy extends KeywordsStrategy {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.core.codeassist.strategies.KeywordsStrategy#
+	 * @see org.eclipse.php.internal.core.codeassist.strategies.KeywordsStrategy#
 	 * filterKeyword
 	 * (org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData)
 	 */

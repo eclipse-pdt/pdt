@@ -66,11 +66,11 @@ public class PHPSearchEngine implements IIncludepathListener {
 	 * @param path
 	 *            File path to resolve
 	 * @param currentWorkingDir
-	 *            Current working directory (usually: CWD of PHP process),
-	 *            absolute (workspace of file system)
+	 *            Current working directory (usually: CWD of PHP process), absolute
+	 *            (workspace of file system)
 	 * @param currentScriptDir
-	 *            Absolute (workspace of file system) directory of current
-	 *            script (which is interpreted by the PHP at this time)
+	 *            Absolute (workspace of file system) directory of current script
+	 *            (which is interpreted by the PHP at this time)
 	 * @param currentProject
 	 *            Current project to which current script belongs
 	 * @return resolved path, or <code>null</code> in case of failure

@@ -255,8 +255,8 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 	}
 
 	/**
-	 * Override the okPressed to save the URL to the URLs history for this PHP
-	 * IDE session. Also, add the URL to the launch configuration attributes.
+	 * Override the okPressed to save the URL to the URLs history for this PHP IDE
+	 * session. Also, add the URL to the launch configuration attributes.
 	 */
 	@Override
 	protected void buttonPressed(int buttonId) {
@@ -326,8 +326,8 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 	}
 
 	/**
-	 * Constructs the URL string according to the given context root and the
-	 * file name.
+	 * Constructs the URL string according to the given context root and the file
+	 * name.
 	 * 
 	 * @param fileName
 	 * @return

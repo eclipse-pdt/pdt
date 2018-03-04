@@ -142,8 +142,7 @@ public class PrefixExpression extends Expression implements IOperationNode {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString
-	 * ()
+	 * org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString ()
 	 */
 	@Override
 	public String getOperationString() {

@@ -53,8 +53,7 @@ public class DebugOutput {
 	}
 
 	/**
-	 * Returns how many times this debug output was updated with additional
-	 * data.
+	 * Returns how many times this debug output was updated with additional data.
 	 * 
 	 * @return
 	 */
@@ -64,8 +63,8 @@ public class DebugOutput {
 
 	/**
 	 * Returns content type determined from debug output header, or
-	 * <code>null</code> in case if it couldn't be detected (Content-Type header
-	 * was missing?)
+	 * <code>null</code> in case if it couldn't be detected (Content-Type header was
+	 * missing?)
 	 * 
 	 * @see #appendHeader(String)
 	 * @return

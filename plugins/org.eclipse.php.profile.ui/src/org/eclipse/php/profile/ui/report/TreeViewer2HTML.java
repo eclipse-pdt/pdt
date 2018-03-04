@@ -36,10 +36,8 @@ public class TreeViewer2HTML {
 		fTreeViewer = treeViewer;
 		fTree = treeViewer.getTree();
 		fLabelProvider = (ITableLabelProvider) treeViewer.getLabelProvider();
-		fContentProvider = (ITreeContentProvider) treeViewer
-				.getContentProvider();
-		fTableId = Integer.toHexString(new Random().nextInt()).substring(0, 3)
-				.toUpperCase();
+		fContentProvider = (ITreeContentProvider) treeViewer.getContentProvider();
+		fTableId = Integer.toHexString(new Random().nextInt()).substring(0, 3).toUpperCase();
 
 		fWriter = writer;
 	}
@@ -68,10 +66,11 @@ public class TreeViewer2HTML {
 	 * 
 	 * @param Object
 	 *            [] current items
-	 * @param int number of tabs
+	 * @param int
+	 *            number of tabs
 	 * @param String
-	 *            row id prefix (initial=table's prefix, then id_0, id_0_0,
-	 *            id_1, etc...)
+	 *            row id prefix (initial=table's prefix, then id_0, id_0_0, id_1,
+	 *            etc...)
 	 */
 	private void generateTableRow(Object[] items, int tabs, String idPrefix) {
 		if (items == null || items.length == 0) {
@@ -90,8 +89,7 @@ public class TreeViewer2HTML {
 			fWriter.print(newId);
 			if (items[i] instanceof IHTMLPresentableTreeElement) {
 				fWriter.print(" class=\""); //$NON-NLS-1$
-				fWriter.print(((IHTMLPresentableTreeElement) items[i])
-						.getTableRowClass());
+				fWriter.print(((IHTMLPresentableTreeElement) items[i]).getTableRowClass());
 				fWriter.print("\""); //$NON-NLS-1$
 			}
 			fWriter.println(">"); //$NON-NLS-1$
@@ -122,9 +120,7 @@ public class TreeViewer2HTML {
 						fWriter.print("<a href=\"#\""); //$NON-NLS-1$
 						if (items[i] instanceof IHTMLPresentableTreeElement) {
 							fWriter.print(" class=\""); //$NON-NLS-1$
-							fWriter
-									.print(((IHTMLPresentableTreeElement) items[i])
-											.getTableLinkClass());
+							fWriter.print(((IHTMLPresentableTreeElement) items[i]).getTableLinkClass());
 							fWriter.print("\""); //$NON-NLS-1$
 						}
 						fWriter.print(" onclick=\"return toggle('"); //$NON-NLS-1$
@@ -142,8 +138,7 @@ public class TreeViewer2HTML {
 					fWriter.print(HTMLReporter.IMAGES_DIR);
 					fWriter.print("/"); //$NON-NLS-1$
 					if (items[i] instanceof IHTMLPresentableTreeElement) {
-						fWriter.print(((IHTMLPresentableTreeElement) items[i])
-								.getImageURL());
+						fWriter.print(((IHTMLPresentableTreeElement) items[i]).getImageURL());
 					}
 					fWriter.print("\"/>"); //$NON-NLS-1$
 				}
@@ -151,8 +146,7 @@ public class TreeViewer2HTML {
 				fWriter.println("</td>"); //$NON-NLS-1$
 			}
 			fWriter.println("</tr>"); //$NON-NLS-1$
-			generateTableRow(fContentProvider.getChildren(items[i]), tabs + 1,
-					newId);
+			generateTableRow(fContentProvider.getChildren(items[i]), tabs + 1, newId);
 		}
 	}
 
@@ -160,8 +154,7 @@ public class TreeViewer2HTML {
 	 * Generates table rows
 	 */
 	private void generateTableRows() {
-		generateTableRow(fContentProvider.getChildren(fTreeViewer.getInput()),
-				0, fTableId);
+		generateTableRow(fContentProvider.getChildren(fTreeViewer.getInput()), 0, fTableId);
 	}
 
 	/**
@@ -172,8 +165,7 @@ public class TreeViewer2HTML {
 		fWriter.print("<table class=\"tree\" id="); //$NON-NLS-1$
 		fWriter.print(fTableId);
 		fWriter.println(">"); //$NON-NLS-1$
-		fWriter
-				.println("<colgroup><col width=\"200\" /><col width=\"0*\" /></colgroup>"); //$NON-NLS-1$
+		fWriter.println("<colgroup><col width=\"200\" /><col width=\"0*\" /></colgroup>"); //$NON-NLS-1$
 
 		generateTableHeader();
 		generateTableRows();
@@ -190,8 +182,7 @@ public class TreeViewer2HTML {
 	 *            stream to write the output to
 	 */
 	public static void process(TreeViewer treeViewer, PrintWriter writer) {
-		TreeViewer2HTML treeViewer2HTML = new TreeViewer2HTML(treeViewer,
-				writer);
+		TreeViewer2HTML treeViewer2HTML = new TreeViewer2HTML(treeViewer, writer);
 		treeViewer2HTML.generateTable();
 	}
 }

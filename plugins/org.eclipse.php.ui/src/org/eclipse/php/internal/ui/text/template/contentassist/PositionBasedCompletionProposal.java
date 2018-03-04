@@ -48,8 +48,8 @@ public class PositionBasedCompletionProposal
 
 	/**
 	 * Creates a new completion proposal based on the provided information. The
-	 * replacement string is considered being the display string too. All
-	 * remaining fields are set to <code>null</code>.
+	 * replacement string is considered being the display string too. All remaining
+	 * fields are set to <code>null</code>.
 	 * 
 	 * @param replacementString
 	 *            the actual string to be inserted into the document
@@ -64,8 +64,8 @@ public class PositionBasedCompletionProposal
 	}
 
 	/**
-	 * Creates a new completion proposal. All fields are initialized based on
-	 * the provided information.
+	 * Creates a new completion proposal. All fields are initialized based on the
+	 * provided information.
 	 * 
 	 * @param replacementString
 	 *            the actual string to be inserted into the document
@@ -139,8 +139,7 @@ public class PositionBasedCompletionProposal
 
 	/*
 	 * @see
-	 * org.eclipse.jface.text.contentassist.ICompletionProposal#getDisplayString
-	 * ()
+	 * org.eclipse.jface.text.contentassist.ICompletionProposal#getDisplayString ()
 	 */
 	@Override
 	public String getDisplayString() {
@@ -159,8 +158,7 @@ public class PositionBasedCompletionProposal
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.text.contentassist.ICompletionProposalExtension2#apply
+	 * @see org.eclipse.jface.text.contentassist.ICompletionProposalExtension2#apply
 	 * (org.eclipse.jface.text.ITextViewer, char, int, int)
 	 */
 	@Override
@@ -203,8 +201,7 @@ public class PositionBasedCompletionProposal
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.text.contentassist.ICompletionProposalExtension#apply
+	 * @see org.eclipse.jface.text.contentassist.ICompletionProposalExtension#apply
 	 * (org.eclipse.jface.text.IDocument, char, int)
 	 */
 	@Override

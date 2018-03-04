@@ -109,8 +109,8 @@ public abstract class CompositeFragment extends Composite {
 	/**
 	 * Returns the name of this runtime composite.
 	 * 
-	 * @return The display name of the composite. The returned value should
-	 *         never be null.
+	 * @return The display name of the composite. The returned value should never be
+	 *         null.
 	 */
 	public String getDisplayName() {
 		if (name == null) {
@@ -174,20 +174,19 @@ public abstract class CompositeFragment extends Composite {
 	}
 
 	/**
-	 * Returns if this runtime composite was designated for editing mode. When
-	 * in editing, the behavior of the composite's creation and validation
-	 * processes might be different.
+	 * Returns if this runtime composite was designated for editing mode. When in
+	 * editing, the behavior of the composite's creation and validation processes
+	 * might be different.
 	 * 
-	 * @return True, iff the composite was created in editing mode; false
-	 *         otherwise.
+	 * @return True, iff the composite was created in editing mode; false otherwise.
 	 */
 	public boolean isForEditing() {
 		return isForEditing;
 	}
 
 	/**
-	 * Returns a unique id of the CompositeFragment. The user must re-implement
-	 * this method to return a unique ID.
+	 * Returns a unique id of the CompositeFragment. The user must re-implement this
+	 * method to return a unique ID.
 	 * 
 	 * @return returns the unique ID.
 	 */
@@ -209,8 +208,8 @@ public abstract class CompositeFragment extends Composite {
 	}
 
 	/**
-	 * Performs special processing when this runtime composite when Cancel
-	 * button has been pressed.
+	 * Performs special processing when this runtime composite when Cancel button
+	 * has been pressed.
 	 * <p>
 	 * The default implementation of this method does nothing and returns
 	 * <code>true</code>.
@@ -246,8 +245,7 @@ public abstract class CompositeFragment extends Composite {
 	}
 
 	/**
-	 * Creates contents of this fragment with the use of provided parent
-	 * composite.
+	 * Creates contents of this fragment with the use of provided parent composite.
 	 * 
 	 * @param parent
 	 */

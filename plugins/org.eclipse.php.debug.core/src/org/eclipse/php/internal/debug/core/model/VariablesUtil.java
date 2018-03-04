@@ -112,8 +112,8 @@ public class VariablesUtil {
 	 * Checks if given variable name is a name of super global variable.
 	 * 
 	 * @param name
-	 * @return <code>true</code> if given variable name is a name of super
-	 *         global variable, <code>false</code> otherwise
+	 * @return <code>true</code> if given variable name is a name of super global
+	 *         variable, <code>false</code> otherwise
 	 */
 	public static boolean isSuperGlobal(String name) {
 		for (int i = 0; i < SUPER_GLOBAL_NAMES.length; i++) {
@@ -139,8 +139,8 @@ public class VariablesUtil {
 	 * Checks if given variable name is a name of virtual class indicator.
 	 * 
 	 * @param name
-	 * @return <code>true</code> if given variable name is a name of virtual
-	 *         class indicator, <code>false</code> otherwise
+	 * @return <code>true</code> if given variable name is a name of virtual class
+	 *         indicator, <code>false</code> otherwise
 	 */
 	public static boolean isClassIndicator(String name) {
 		return CLASS_INDICATOR.equalsIgnoreCase(name);

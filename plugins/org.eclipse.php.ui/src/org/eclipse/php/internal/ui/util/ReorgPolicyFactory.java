@@ -87,7 +87,8 @@ public class ReorgPolicyFactory {
 		}
 
 		if (ReorgUtils.hasElementsOfType(modelElements, IModelElement.PROJECT_FRAGMENT)) {
-			if (resources.length != 0 || ReorgUtils.hasElementsNotOfType(modelElements, IModelElement.PROJECT_FRAGMENT)) {
+			if (resources.length != 0
+					|| ReorgUtils.hasElementsNotOfType(modelElements, IModelElement.PROJECT_FRAGMENT)) {
 				return NO;
 			}
 			if (copy) {
@@ -142,11 +143,10 @@ public class ReorgPolicyFactory {
 
 	private static boolean hasElementsSmallerThanCuOrClassFile(IModelElement[] modelElements) {
 		for (int i = 0; i < modelElements.length; i++) {
-			if (ReorgUtils.isInsideSourceModule(modelElements[i]))
-			 {
+			if (ReorgUtils.isInsideSourceModule(modelElements[i])) {
 				return true;
-			// if (ReorgUtils.isInsideClassFile(modelElements[i]))
-			// return true;
+				// if (ReorgUtils.isInsideClassFile(modelElements[i]))
+				// return true;
 			}
 		}
 		return false;
@@ -539,15 +539,13 @@ public class ReorgPolicyFactory {
 			if (scriptDest instanceof IScriptFolder) {
 				return (IScriptFolder) scriptDest;
 			}
-			if (scriptDest instanceof IProjectFragment)
-			 {
+			if (scriptDest instanceof IProjectFragment) {
 				return ((IProjectFragment) scriptDest).getScriptFolder(""); //$NON-NLS-1$
 			}
 			if (scriptDest instanceof IScriptProject) {
 				try {
 					IProjectFragment root = ReorgUtils.getCorrespondingProjectFragment((IScriptProject) scriptDest);
-					if (root != null)
-					 {
+					if (root != null) {
 						return root.getScriptFolder(""); //$NON-NLS-1$
 					}
 				} catch (ModelException e) {
@@ -1642,12 +1640,11 @@ public class ReorgPolicyFactory {
 
 		private void confirmMovingReadOnly(IReorgQueries reorgQueries) throws CoreException {
 			if (!ReadOnlyResourceFinder.confirmMoveOfReadOnlyElements(getScriptElements(), getResources(),
-					reorgQueries))
-			 {
+					reorgQueries)) {
 				throw new OperationCanceledException(); // saying' no' to this
-			// one is like
-			// cancelling the whole
-			// operation
+				// one is like
+				// cancelling the whole
+				// operation
 			}
 		}
 
@@ -1753,12 +1750,11 @@ public class ReorgPolicyFactory {
 
 		private void confirmMovingReadOnly(IReorgQueries reorgQueries) throws CoreException {
 			if (!ReadOnlyResourceFinder.confirmMoveOfReadOnlyElements(getScriptElements(), getResources(),
-					reorgQueries))
-			 {
+					reorgQueries)) {
 				throw new OperationCanceledException(); // saying' no' to this
-			// one is like
-			// cancelling the whole
-			// operation
+				// one is like
+				// cancelling the whole
+				// operation
 			}
 		}
 
@@ -2084,12 +2080,11 @@ public class ReorgPolicyFactory {
 
 		private void confirmMovingReadOnly(IReorgQueries reorgQueries) throws CoreException {
 			if (!ReadOnlyResourceFinder.confirmMoveOfReadOnlyElements(getScriptElements(), getResources(),
-					reorgQueries))
-			 {
+					reorgQueries)) {
 				throw new OperationCanceledException(); // saying' no' to this
-			// one is like
-			// cancelling the whole
-			// operation
+				// one is like
+				// cancelling the whole
+				// operation
 			}
 		}
 

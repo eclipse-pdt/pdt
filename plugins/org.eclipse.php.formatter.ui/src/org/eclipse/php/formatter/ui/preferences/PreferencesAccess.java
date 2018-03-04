@@ -89,8 +89,8 @@ public class PreferencesAccess {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see org.eclipse.jdt.internal.ui.preferences.PreferencesAccess#
-		 * applyChanges ()
+		 * @see org.eclipse.jdt.internal.ui.preferences.PreferencesAccess# applyChanges
+		 * ()
 		 */
 		@Override
 		public void applyChanges() throws BackingStoreException {
@@ -121,8 +121,7 @@ public class PreferencesAccess {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.core.runtime.preferences.IScopeContext#getNode(java.lang
+		 * @see org.eclipse.core.runtime.preferences.IScopeContext#getNode(java.lang
 		 * .String)
 		 */
 		@Override

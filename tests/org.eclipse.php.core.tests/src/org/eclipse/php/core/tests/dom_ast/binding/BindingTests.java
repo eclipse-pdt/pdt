@@ -93,8 +93,8 @@ public class BindingTests {
 	}
 
 	/**
-	 * Locate the index of the marker (comment block) in the given content.
-	 * (start the search from the zero index)
+	 * Locate the index of the marker (comment block) in the given content. (start
+	 * the search from the zero index)
 	 */
 	private int locateElement(String content) {
 		return locateElement(content, 0);

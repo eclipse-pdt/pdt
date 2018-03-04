@@ -457,8 +457,7 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 			}
 			ISourceViewer viewer = fEditor.getTextViewer();
 			ITextViewerExtension5 viewer5 = (ITextViewerExtension5) viewer;
-			int widgetOffset = viewer5.modelOffset2WidgetOffset(
-					position.offset/* + position.length */);
+			int widgetOffset = viewer5.modelOffset2WidgetOffset(position.offset/* + position.length */);
 
 			StyledText textWidget = viewer.getTextWidget();
 			Point pos = textWidget.getLocationAtOffset(widgetOffset);
@@ -495,14 +494,12 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 				int originalSnapPosition = fSnapPosition;
 
 				/*
-				 * Feature in Tracker: it is not possible to directly control
-				 * the feedback, see
+				 * Feature in Tracker: it is not possible to directly control the feedback, see
 				 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=121300 and
 				 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=121298#c1 .
 				 * 
-				 * Workaround is to have an offscreen rectangle for tracking
-				 * mouse movement and a manually updated rectangle for the
-				 * actual drop target.
+				 * Workaround is to have an offscreen rectangle for tracking mouse movement and
+				 * a manually updated rectangle for the actual drop target.
 				 */
 				final Tracker tracker = new Tracker(textWidget, SWT.NONE);
 
@@ -522,8 +519,7 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 
 				ControlListener moveListener = new ControlAdapter() {
 					/*
-					 * @see
-					 * org.eclipse.swt.events.ControlAdapter#controlMoved(org
+					 * @see org.eclipse.swt.events.ControlAdapter#controlMoved(org
 					 * .eclipse.swt.events.ControlEvent)
 					 */
 					@Override
@@ -781,8 +777,7 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 	 */
 	private static String getOpenDialogBinding() {
 		IBindingService bindingService = PlatformUI.getWorkbench().getAdapter(IBindingService.class);
-		if (bindingService == null)
-		 {
+		if (bindingService == null) {
 			return ""; //$NON-NLS-1$
 		}
 		String binding = bindingService.getBestActiveBindingFormattedFor("org.eclipse.php.ui.edit.text.rename.element"); //$NON-NLS-1$

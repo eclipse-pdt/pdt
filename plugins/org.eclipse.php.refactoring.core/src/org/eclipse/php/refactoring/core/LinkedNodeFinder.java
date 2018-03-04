@@ -35,10 +35,10 @@ public class LinkedNodeFinder {
 	}
 
 	/**
-	 * Find all nodes connected to the given name node. If the node has a
-	 * binding then all nodes connected to this binding are returned. If the
-	 * node has no binding, then all nodes that also miss a binding and have the
-	 * same name are returned.
+	 * Find all nodes connected to the given name node. If the node has a binding
+	 * then all nodes connected to this binding are returned. If the node has no
+	 * binding, then all nodes that also miss a binding and have the same name are
+	 * returned.
 	 * 
 	 * @param root
 	 *            The root of the AST tree to search
@@ -58,8 +58,7 @@ public class LinkedNodeFinder {
 		OccurrenceLocation[] locations = null;
 		int type = PHPElementConciliator.concile(selectedNode);
 
-		IOccurrencesFinder finder = OccurrencesFinderFactory
-				.getOccurrencesFinder(type);
+		IOccurrencesFinder finder = OccurrencesFinderFactory.getOccurrencesFinder(type);
 		if (finder != null) {
 			if (finder.initialize(root, selectedNode) == null) {
 				locations = finder.getOccurrences();
@@ -70,10 +69,10 @@ public class LinkedNodeFinder {
 	}
 
 	/**
-	 * Find all nodes connected to the given name node. If the node has a
-	 * binding then all nodes connected to this binding are returned. If the
-	 * node has no binding, then all nodes that also miss a binding and have the
-	 * same name are returned.
+	 * Find all nodes connected to the given name node. If the node has a binding
+	 * then all nodes connected to this binding are returned. If the node has no
+	 * binding, then all nodes that also miss a binding and have the same name are
+	 * returned.
 	 * 
 	 * @param root
 	 *            The root of the AST tree to search
@@ -91,12 +90,10 @@ public class LinkedNodeFinder {
 			}
 		}
 
-		return locationList
-				.toArray(new OccurrenceLocation[locationList.size()]);
+		return locationList.toArray(new OccurrenceLocation[locationList.size()]);
 	}
 
-	public static Identifier[] findByBinding(ASTNode root,
-			IVariableBinding binding) {
+	public static Identifier[] findByBinding(ASTNode root, IVariableBinding binding) {
 		ArrayList<Identifier> res = new ArrayList<>();
 		BindingFinder nodeFinder = new BindingFinder(binding, res);
 		root.accept(nodeFinder);
@@ -127,8 +124,7 @@ public class LinkedNodeFinder {
 			} else if (binding.getKind() == IBinding.METHOD) {
 				IMethodBinding curr = (IMethodBinding) binding;
 				IMethodBinding methodBinding = (IMethodBinding) fBinding;
-				if (methodBinding.overrides(curr)
-						|| curr.overrides(methodBinding)) {
+				if (methodBinding.overrides(curr) || curr.overrides(methodBinding)) {
 					fResult.add(node);
 				}
 			}

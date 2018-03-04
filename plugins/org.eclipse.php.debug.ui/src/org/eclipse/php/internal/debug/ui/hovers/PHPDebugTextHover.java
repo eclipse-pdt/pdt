@@ -171,8 +171,8 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements 
 						variable = fetchClassConstant(className, nodeName);
 					}
 				}
-			} else if (node.getParent() instanceof StaticFieldAccess && node instanceof Variable && ((Variable) node)
-					.getName() instanceof Identifier /* avoid A::$$myVar */) {
+			} else if (node.getParent() instanceof StaticFieldAccess && node instanceof Variable
+					&& ((Variable) node).getName() instanceof Identifier /* avoid A::$$myVar */) {
 				Variable var = (Variable) node;
 				String nodeName = ((Identifier) var.getName()).getName();
 				StaticFieldAccess staticAccess = (StaticFieldAccess) node.getParent();

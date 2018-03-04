@@ -76,8 +76,8 @@ public final class TestUtils {
 		@Override
 		protected void run() throws CoreException, IOException {
 			/*
-			 * Check if there were some new index requests added to the queue in
-			 * the meantime, if so go back to the end of the queue.
+			 * Check if there were some new index requests added to the queue in the
+			 * meantime, if so go back to the end of the queue.
 			 */
 			if (indexManager.awaitingJobsCount() > 1) {
 				noWaitSignalThread.interrupt();
@@ -90,8 +90,8 @@ public final class TestUtils {
 			// Interrupt "wait for indexer" thread (no sleeping dude...).
 			noWaitSignalThread.interrupt();
 			/*
-			 * Requests queue is empty, we can assume that indexer has finished
-			 * so release semaphore to move on with processing.
+			 * Requests queue is empty, we can assume that indexer has finished so release
+			 * semaphore to move on with processing.
 			 */
 			waitForIndexerSemaphore.release();
 		}

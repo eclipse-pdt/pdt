@@ -47,8 +47,7 @@ public class ASTNodes {
 
 	/**
 	 * @param node
-	 * @return whether the given node is the only statement of a control
-	 *         statement
+	 * @return whether the given node is the only statement of a control statement
 	 */
 	public static boolean isControlStatement(ASTNode node) {
 		assert node != null;
@@ -81,13 +80,13 @@ public class ASTNodes {
 
 	/**
 	 * Tells if a variable is in the form of <code>${var}</code> or
-	 * <code>${var[0]}</code> inside a back-quoted string, a double-quoted
-	 * string or a heredoc section
+	 * <code>${var[0]}</code> inside a back-quoted string, a double-quoted string or
+	 * a heredoc section
 	 * 
 	 * @param variable
 	 * @return true if the variable is in the form of <code>${var}</code> or
-	 *         <code>${var[0]}</code> inside a back-quoted string, a
-	 *         double-quoted string or a heredoc section, false otherwise
+	 *         <code>${var[0]}</code> inside a back-quoted string, a double-quoted
+	 *         string or a heredoc section, false otherwise
 	 */
 	public static boolean isQuotedDollaredCurlied(Variable variable) {
 		if (variable.isDollared() || variable.getParent() == null) {

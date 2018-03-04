@@ -272,12 +272,10 @@ public class Util {
 	 * @see #concat(String, String)
 	 */
 	public static String concat(String s1, char c, String s2) {
-		if (s1 == null)
-		 {
+		if (s1 == null) {
 			s1 = "null"; //$NON-NLS-1$
 		}
-		if (s2 == null)
-		 {
+		if (s2 == null) {
 			s2 = "null"; //$NON-NLS-1$
 		}
 		int l1 = s1.length();
@@ -297,12 +295,10 @@ public class Util {
 	 * way around this.
 	 */
 	public static String concat(String s1, String s2) {
-		if (s1 == null)
-		 {
+		if (s1 == null) {
 			s1 = "null"; //$NON-NLS-1$
 		}
-		if (s2 == null)
-		 {
+		if (s2 == null) {
 			s2 = "null"; //$NON-NLS-1$
 		}
 		int l1 = s1.length();
@@ -428,16 +424,13 @@ public class Util {
 	 * @see #concat(String, String)
 	 */
 	public static String concat(String s1, String s2, String s3) {
-		if (s1 == null)
-		 {
+		if (s1 == null) {
 			s1 = "null"; //$NON-NLS-1$
 		}
-		if (s2 == null)
-		 {
+		if (s2 == null) {
 			s2 = "null"; //$NON-NLS-1$
 		}
-		if (s3 == null)
-		 {
+		if (s3 == null) {
 			s3 = "null"; //$NON-NLS-1$
 		}
 		int l1 = s1.length();
@@ -1032,8 +1025,7 @@ public class Util {
 		StringTokenizer tokenizer = new StringTokenizer(argumentsString, ARGUMENTS_DELIMITER);
 		while (tokenizer.hasMoreTokens()) {
 			String argument = tokenizer.nextToken();
-			if (argument.equals(EMPTY_ARGUMENT))
-			 {
+			if (argument.equals(EMPTY_ARGUMENT)) {
 				argument = ""; //$NON-NLS-1$
 			}
 			args[count++] = argument;
@@ -1312,8 +1304,7 @@ public class Util {
 	public static boolean isReadOnly(IResource resource) {
 		if (isReadOnlySupported()) {
 			ResourceAttributes resourceAttributes = resource.getResourceAttributes();
-			if (resourceAttributes == null)
-			 {
+			if (resourceAttributes == null) {
 				return false; // not supported on this platform for this
 			}
 			// resource
@@ -1921,8 +1912,7 @@ public class Util {
 	public static void setReadOnly(IResource resource, boolean readOnly) {
 		if (isReadOnlySupported()) {
 			ResourceAttributes resourceAttributes = resource.getResourceAttributes();
-			if (resourceAttributes == null)
-			 {
+			if (resourceAttributes == null) {
 				return; // not supported on this platform for this resource
 			}
 			resourceAttributes.setReadOnly(readOnly);

@@ -25,8 +25,7 @@ public class ProfilingMonitorLabelProvider extends LabelProvider {
 	private Image fProcessImage;
 
 	public ProfilingMonitorLabelProvider() {
-		fProcessImage = ProfilerUIImages
-				.get(ProfilerUIImages.IMG_OBJ_PROCESS);
+		fProcessImage = ProfilerUIImages.get(ProfilerUIImages.IMG_OBJ_PROCESS);
 	}
 
 	/*
@@ -58,10 +57,8 @@ public class ProfilingMonitorLabelProvider extends LabelProvider {
 			if (uri.length() == 0) {
 				uri = db.getGlobalData().getPath();
 			}
-			return NLS
-					.bind(
-							PHPProfileUIMessages
-									.getString("ProfilingMonitorLabelProvider.0"), uri, db.getProfileDate()); //$NON-NLS-1$
+			return NLS.bind(PHPProfileUIMessages.getString("ProfilingMonitorLabelProvider.0"), uri, //$NON-NLS-1$
+					db.getProfileDate());
 		}
 		if (element instanceof ProfilingMonitorViewElement) {
 			return ((ProfilingMonitorViewElement) element).getViewLabe();

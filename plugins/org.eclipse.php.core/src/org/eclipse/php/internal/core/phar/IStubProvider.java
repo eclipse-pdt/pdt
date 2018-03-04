@@ -21,8 +21,7 @@ public interface IStubProvider {
 	 *            the JAR package specification
 	 * @return the created Stub
 	 * @throws CoreException
-	 *             if access to any resource described by the JAR package has
-	 *             failed
+	 *             if access to any resource described by the JAR package has failed
 	 */
 	IStub create(PharPackage jarPackage) throws CoreException;
 }

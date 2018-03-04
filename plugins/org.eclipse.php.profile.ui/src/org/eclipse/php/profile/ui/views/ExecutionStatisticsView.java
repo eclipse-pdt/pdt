@@ -99,8 +99,7 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 				/*
 				 * (non-Javadoc)
 				 * 
-				 * @see
-				 * org.eclipse.swt.events.SelectionAdapter#widgetSelected(org
+				 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org
 				 * .eclipse.swt.events.SelectionEvent)
 				 */
 				@Override
@@ -259,8 +258,7 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org.eclipse
+	 * @see org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org.eclipse
 	 * .jface.viewers.DoubleClickEvent)
 	 */
 	@Override
@@ -300,8 +298,7 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.php.profile.ui.views.AbstractProfilerFunctionsView#getViewer(
-	 * )
+	 * org.eclipse.php.profile.ui.views.AbstractProfilerFunctionsView#getViewer( )
 	 */
 	@Override
 	public TreeViewer getViewer() {
@@ -311,8 +308,7 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.ITreeViewerListener#treeCollapsed(org.eclipse
+	 * @see org.eclipse.jface.viewers.ITreeViewerListener#treeCollapsed(org.eclipse
 	 * .jface.viewers.TreeExpansionEvent)
 	 */
 	@Override
@@ -324,8 +320,7 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.ITreeViewerListener#treeExpanded(org.eclipse
+	 * @see org.eclipse.jface.viewers.ITreeViewerListener#treeExpanded(org.eclipse
 	 * .jface.viewers.TreeExpansionEvent)
 	 */
 	@Override
@@ -345,8 +340,7 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface
+	 * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface
 	 * .action.IMenuManager)
 	 */
 	@Override

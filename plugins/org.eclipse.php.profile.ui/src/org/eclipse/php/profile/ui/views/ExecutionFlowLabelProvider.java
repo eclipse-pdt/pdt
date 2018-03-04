@@ -28,24 +28,20 @@ import org.eclipse.swt.graphics.Image;
  */
 public class ExecutionFlowLabelProvider implements ITableLabelProvider {
 
-	DecimalFormat fDecimalFormat = new DecimalFormat(
-			"#0.0#", new DecimalFormatSymbols(new Locale("en"))); //$NON-NLS-1$ //$NON-NLS-2$
+	DecimalFormat fDecimalFormat = new DecimalFormat("#0.0#", new DecimalFormatSymbols(new Locale("en"))); //$NON-NLS-1$ //$NON-NLS-2$
 
 	private Image fFunctionImage;
 	private Image fFileImage;
 
 	public ExecutionFlowLabelProvider() {
-		fFunctionImage = PHPUiPlugin.getImageDescriptorRegistry().get(
-				PHPPluginImages.DESC_MISC_PUBLIC);
-		fFileImage = PHPUiPlugin.getImageDescriptorRegistry().get(
-				PHPPluginImages.DESC_OBJS_CUNIT);
+		fFunctionImage = PHPUiPlugin.getImageDescriptorRegistry().get(PHPPluginImages.DESC_MISC_PUBLIC);
+		fFileImage = PHPUiPlugin.getImageDescriptorRegistry().get(PHPPluginImages.DESC_OBJS_CUNIT);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang
+	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang
 	 * .Object, int)
 	 */
 	@Override
@@ -62,16 +58,14 @@ public class ExecutionFlowLabelProvider implements ITableLabelProvider {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang
+	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang
 	 * .Object, int)
 	 */
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		if (element instanceof ExecutionFlowTreeElement) {
 			ExecutionFlowTreeElement executionFlowElement = (ExecutionFlowTreeElement) element;
-			ProfilerFunctionData functionData = (ProfilerFunctionData) executionFlowElement
-					.getData();
+			ProfilerFunctionData functionData = (ProfilerFunctionData) executionFlowElement.getData();
 			if (functionData != null) {
 				switch (columnIndex) {
 				case 0:
@@ -79,13 +73,10 @@ public class ExecutionFlowLabelProvider implements ITableLabelProvider {
 				case 1:
 					return functionData.getFileName();
 				case 2:
-					return NLS
-							.bind(
-									PHPProfileUIMessages
-											.getString("ExecutionFlowLabelProvider_0"), Double.toString(executionFlowElement.getTimePercentage())); //$NON-NLS-1$
+					return NLS.bind(PHPProfileUIMessages.getString("ExecutionFlowLabelProvider_0"), //$NON-NLS-1$
+							Double.toString(executionFlowElement.getTimePercentage()));
 				case 3:
-					return fDecimalFormat.format(executionFlowElement
-							.getDuration());
+					return fDecimalFormat.format(executionFlowElement.getDuration());
 				}
 			}
 		}
@@ -95,8 +86,7 @@ public class ExecutionFlowLabelProvider implements ITableLabelProvider {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.
+	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.
 	 * jface.viewers.ILabelProviderListener)
 	 */
 	@Override
@@ -119,8 +109,7 @@ public class ExecutionFlowLabelProvider implements ITableLabelProvider {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang
+	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang
 	 * .Object, java.lang.String)
 	 */
 	@Override
@@ -132,8 +121,7 @@ public class ExecutionFlowLabelProvider implements ITableLabelProvider {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse
+	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse
 	 * .jface.viewers.ILabelProviderListener)
 	 */
 	@Override

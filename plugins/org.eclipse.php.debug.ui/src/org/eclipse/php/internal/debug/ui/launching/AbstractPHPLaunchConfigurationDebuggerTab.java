@@ -48,8 +48,8 @@ import org.eclipse.swt.widgets.Label;
 public abstract class AbstractPHPLaunchConfigurationDebuggerTab extends AbstractPHPLaunchConfigurationTab {
 
 	/**
-	 * Widget listener that should be added to all controls that affects the
-	 * state of corresponding launch configuration.
+	 * Widget listener that should be added to all controls that affects the state
+	 * of corresponding launch configuration.
 	 */
 	public final class WidgetListener extends SelectionAdapter implements ModifyListener {
 		@Override
@@ -147,8 +147,7 @@ public abstract class AbstractPHPLaunchConfigurationDebuggerTab extends Abstract
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.ILaunchConfigurationTab#createControl(org.eclipse
+	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#createControl(org.eclipse
 	 * .swt.widgets.Composite)
 	 */
 	@Override
@@ -190,8 +189,7 @@ public abstract class AbstractPHPLaunchConfigurationDebuggerTab extends Abstract
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.ILaunchConfigurationTab#performApply(org.eclipse.
+	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#performApply(org.eclipse.
 	 * debug.core.ILaunchConfigurationWorkingCopy)
 	 */
 	@Override
@@ -203,8 +201,7 @@ public abstract class AbstractPHPLaunchConfigurationDebuggerTab extends Abstract
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.AbstractLaunchConfigurationTab#isValid(org.eclipse.
+	 * @see org.eclipse.debug.ui.AbstractLaunchConfigurationTab#isValid(org.eclipse.
 	 * debug.core.ILaunchConfiguration)
 	 */
 	@Override
@@ -254,8 +251,8 @@ public abstract class AbstractPHPLaunchConfigurationDebuggerTab extends Abstract
 	protected abstract String getCurrentDebuggerId();
 
 	/**
-	 * Implementors should provide the appropriate message in case when there is
-	 * no debugger attached to potential debugger settings owner.
+	 * Implementors should provide the appropriate message in case when there is no
+	 * debugger attached to potential debugger settings owner.
 	 * 
 	 * @return "No" debugger attached message.
 	 */

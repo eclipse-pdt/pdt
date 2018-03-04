@@ -395,8 +395,7 @@ public class ZendDebuggerServerSettingsSection implements IDebuggerSettingsSecti
 		}
 		ConfigureHostsDialog configureIPs = new ConfigureHostsDialog(userIPs, detectedIPs);
 		int choice = configureIPs.open();
-		if (choice != Window.OK)
-		 {
+		if (choice != Window.OK) {
 			return ""; //$NON-NLS-1$
 		}
 		List<Inet4Address> selectdIPs = configureIPs.getSelectedIPs();

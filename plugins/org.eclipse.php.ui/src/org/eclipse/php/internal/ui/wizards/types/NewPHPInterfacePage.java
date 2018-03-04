@@ -104,8 +104,8 @@ public class NewPHPInterfacePage extends NewPHPTypePage {
 	}
 
 	/**
-	 * This method was overriden to handle cases in which project's PHP version
-	 * is less than 5
+	 * This method was overriden to handle cases in which project's PHP version is
+	 * less than 5
 	 */
 	@Override
 	public void setVisible(boolean visible) {

@@ -147,6 +147,6 @@ public abstract class PHPTokenNames {
 	 * @return token name
 	 */
 	public static String getName(int token) {
-		return (String) token2Name.get(token);
+		return token2Name.get(token);
 	}
 }

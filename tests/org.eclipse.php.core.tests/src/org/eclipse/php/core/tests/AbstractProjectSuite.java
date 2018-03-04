@@ -94,8 +94,8 @@ public abstract class AbstractProjectSuite extends TestSuite {
 	}
 
 	/**
-	 * Returns the specified source module in the given project, root, and
-	 * folder or <code>null</code> if it does not exist.
+	 * Returns the specified source module in the given project, root, and folder or
+	 * <code>null</code> if it does not exist.
 	 */
 	public ISourceModule getSourceModule(String projectName, String rootPath, IPath path) throws ModelException {
 		IScriptFolder folder = getScriptFolder(projectName, rootPath, path.removeLastSegments(1));
@@ -115,9 +115,8 @@ public abstract class AbstractProjectSuite extends TestSuite {
 
 	/**
 	 * Returns the specified script folder in the given project and fragment, or
-	 * <code>null</code> if it does not exist. The rootPath must be specified as
-	 * a project relative path. The empty path refers to the default package
-	 * fragment.
+	 * <code>null</code> if it does not exist. The rootPath must be specified as a
+	 * project relative path. The empty path refers to the default package fragment.
 	 */
 	public IScriptFolder getScriptFolder(String projectName, String fragmentPath, IPath path) throws ModelException {
 		IProjectFragment root = getProjectFragment(projectName, fragmentPath);
@@ -130,10 +129,9 @@ public abstract class AbstractProjectSuite extends TestSuite {
 	/**
 	 * Returns the specified package fragment root in the given project, or
 	 * <code>null</code> if it does not exist. If relative, the rootPath must be
-	 * specified as a project relative path. The empty path refers to the
-	 * package fragment root that is the project folder iteslf. If absolute, the
-	 * rootPath refers to either an external zip, or a resource internal to the
-	 * workspace
+	 * specified as a project relative path. The empty path refers to the package
+	 * fragment root that is the project folder iteslf. If absolute, the rootPath
+	 * refers to either an external zip, or a resource internal to the workspace
 	 */
 	public IProjectFragment getProjectFragment(String projectName, String fragmentPath) throws ModelException {
 
@@ -165,8 +163,8 @@ public abstract class AbstractProjectSuite extends TestSuite {
 	}
 
 	/**
-	 * Returns the script Project with the given name in this test suite's
-	 * model. This is a convenience method.
+	 * Returns the script Project with the given name in this test suite's model.
+	 * This is a convenience method.
 	 */
 	public IScriptProject getScriptProject(String name) {
 		IProject project = getProject(name);
@@ -203,8 +201,8 @@ public abstract class AbstractProjectSuite extends TestSuite {
 	}
 
 	/**
-	 * Copy the given source directory (and all its contents) to the given
-	 * target directory.
+	 * Copy the given source directory (and all its contents) to the given target
+	 * directory.
 	 */
 	protected void copyDirectory(File source, File target) throws IOException {
 		if (!target.exists()) {
@@ -279,8 +277,8 @@ public abstract class AbstractProjectSuite extends TestSuite {
 	}
 
 	/*
-	 * Creates a script project with the given source folders an output
-	 * location. Add those on the project's buildpath.
+	 * Creates a script project with the given source folders an output location.
+	 * Add those on the project's buildpath.
 	 */
 	protected IScriptProject createScriptProject(String projectName, String[] natures, String[] sourceFolders)
 			throws CoreException {
@@ -288,8 +286,8 @@ public abstract class AbstractProjectSuite extends TestSuite {
 	}
 
 	/*
-	 * Creates a script project with the given source folders an output
-	 * location. Add those on the project's buildpath.
+	 * Creates a script project with the given source folders an output location.
+	 * Add those on the project's buildpath.
 	 */
 	protected IScriptProject createScriptProject(final String projectName, final String[] natures,
 			final String[] sourceFolders, final String[] projects) throws CoreException {

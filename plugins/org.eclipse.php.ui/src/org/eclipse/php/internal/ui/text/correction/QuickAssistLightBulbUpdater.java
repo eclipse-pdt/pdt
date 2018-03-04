@@ -87,9 +87,8 @@ public class QuickAssistLightBulbUpdater {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see org.eclipse.jface.text.source.Annotation#paint(org.eclipse.swt.
-		 * graphics .GC, org.eclipse.swt.widgets.Canvas,
-		 * org.eclipse.swt.graphics.Rectangle)
+		 * @see org.eclipse.jface.text.source.Annotation#paint(org.eclipse.swt. graphics
+		 * .GC, org.eclipse.swt.widgets.Canvas, org.eclipse.swt.graphics.Rectangle)
 		 */
 		@Override
 		public void paint(GC gc, Canvas canvas, Rectangle r) {

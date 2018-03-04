@@ -40,8 +40,7 @@ public class VariablePosition extends ProposalPosition {
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.text.link.ProposalPosition#equals(java.lang.Object)
+	 * @see org.eclipse.jface.text.link.ProposalPosition#equals(java.lang.Object)
 	 */
 	@Override
 	public boolean equals(Object o) {

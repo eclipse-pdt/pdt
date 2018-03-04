@@ -20,12 +20,12 @@ package org.eclipse.php.internal.debug.core.pathmapper;
 public interface ILocalFileSearchFilter {
 
 	/**
-	 * Filters the given list of multiple path entry results provided by local
-	 * file search engine.
+	 * Filters the given list of multiple path entry results provided by local file
+	 * search engine.
 	 * 
 	 * @param entries
-	 *            Set of path entry matches that are possible equivalents of
-	 *            local files for provided remote path
+	 *            Set of path entry matches that are possible equivalents of local
+	 *            files for provided remote path
 	 * @param remotePath
 	 *            Remote file path
 	 * @param serverUniqueId

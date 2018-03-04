@@ -68,8 +68,8 @@ public class FindUseStatementByNamespaceASTVisitor extends AbstractUseStatementA
 	 * Returns the found {@link UsePart} node that corresponds to the specified
 	 * namespace.
 	 * 
-	 * @return a <code>UsePart</code> node, or <code>null<code> if there is not
-	 *         use statement for the specified namespace.
+	 * @return a <code>UsePart</code> node, or <code>null<code> if there is not use
+	 *         statement for the specified namespace.
 	 */
 	public UsePart getResult() {
 		return result;

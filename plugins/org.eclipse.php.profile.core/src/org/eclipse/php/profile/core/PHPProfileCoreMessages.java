@@ -23,11 +23,11 @@ public class PHPProfileCoreMessages extends NLS {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, PHPProfileCoreMessages.class);
 	}
-	
+
 	public static String PHPProfilePerspectiveOpener_confirmDialog_0;
 	public static String PHPProfilePerspectiveOpener_confirmDialog_1;
 	public static String PHPProfilePerspectiveOpener_confirmDialog_2;
 	public static String ProfilerGlobalData_0;
 	public static String ZProfiler_0;
-	
+
 }

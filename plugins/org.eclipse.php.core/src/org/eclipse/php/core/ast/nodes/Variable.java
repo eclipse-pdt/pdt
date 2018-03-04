@@ -86,8 +86,8 @@ public class Variable extends VariableBase {
 	}
 
 	/**
-	 * A simple variable (like $a) can be constructed with a string The string
-	 * is warped by an identifier
+	 * A simple variable (like $a) can be constructed with a string The string is
+	 * warped by an identifier
 	 * 
 	 * @param start
 	 * @param end
@@ -165,8 +165,7 @@ public class Variable extends VariableBase {
 	}
 
 	/**
-	 * Sets the dollared property of this variable (true - the variable is
-	 * dollared)
+	 * Sets the dollared property of this variable (true - the variable is dollared)
 	 * 
 	 * @param value
 	 *            new value for is this variable
@@ -269,15 +268,14 @@ public class Variable extends VariableBase {
 	}
 
 	/**
-	 * Resolves and returns the binding for the field accessed by this
-	 * expression.
+	 * Resolves and returns the binding for the field accessed by this expression.
 	 * <p>
-	 * Note that bindings are generally unavailable unless requested when the
-	 * AST is being built.
+	 * Note that bindings are generally unavailable unless requested when the AST is
+	 * being built.
 	 * </p>
 	 *
-	 * @return the variable binding, or <code>null</code> if the binding cannot
-	 *         be resolved
+	 * @return the variable binding, or <code>null</code> if the binding cannot be
+	 *         resolved
 	 * @since 3.0
 	 */
 	public IVariableBinding resolveVariableBinding() {

@@ -31,11 +31,9 @@ public class OpenLocalFileSearchFilter implements ILocalFileSearchFilter {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.pathmapper.ILocalFileSearchFilter#
+	 * @see org.eclipse.php.internal.debug.core.pathmapper.ILocalFileSearchFilter#
 	 * filter(org.eclipse.php.internal.debug.core.pathmapper.PathEntry[],
-	 * org.eclipse.php.internal.debug.core.pathmapper.VirtualPath,
-	 * java.lang.String)
+	 * org.eclipse.php.internal.debug.core.pathmapper.VirtualPath, java.lang.String)
 	 */
 	@Override
 	public LocalFileSearchResult filter(final PathEntry[] entries, final VirtualPath remotePath,

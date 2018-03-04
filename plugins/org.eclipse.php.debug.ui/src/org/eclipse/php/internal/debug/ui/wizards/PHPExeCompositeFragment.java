@@ -381,8 +381,8 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 
 	/**
 	 * @param executable
-	 * @return PHP executable info or <code>null</code> if provided executable
-	 *         is invalid
+	 * @return PHP executable info or <code>null</code> if provided executable is
+	 *         invalid
 	 */
 	private PHPExeInfo getPHPInfo(File executable) {
 		try {

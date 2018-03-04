@@ -54,8 +54,7 @@ public interface IContextMenuConstants {
 	public static final String GROUP_SHOW = "group.show"; //$NON-NLS-1$
 
 	/**
-	 * Pop-up menu: name of group for new actions (value
-	 * <code>"group.new"</code>).
+	 * Pop-up menu: name of group for new actions (value <code>"group.new"</code>).
 	 * <p>
 	 * Examples for new actions are:
 	 * <ul>

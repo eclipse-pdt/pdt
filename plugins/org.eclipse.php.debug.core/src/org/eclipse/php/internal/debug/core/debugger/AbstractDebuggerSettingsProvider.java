@@ -77,8 +77,7 @@ public abstract class AbstractDebuggerSettingsProvider implements IDebuggerSetti
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.IDebuggerSettingsProvider
+	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerSettingsProvider
 	 * #getId()
 	 */
 	@Override
@@ -89,8 +88,7 @@ public abstract class AbstractDebuggerSettingsProvider implements IDebuggerSetti
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.IDebuggerSettingsProvider
+	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerSettingsProvider
 	 * #get(org.eclipse.php.internal.core.IUniqueIdentityElement)
 	 */
 	@Override
@@ -109,8 +107,7 @@ public abstract class AbstractDebuggerSettingsProvider implements IDebuggerSetti
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.IDebuggerSettingsProvider
+	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerSettingsProvider
 	 * #getAll()
 	 */
 	@Override
@@ -121,8 +118,7 @@ public abstract class AbstractDebuggerSettingsProvider implements IDebuggerSetti
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.IDebuggerSettingsProvider
+	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerSettingsProvider
 	 * #save(org.eclipse.php.internal.debug.core.debugger.IDebuggerSettings)
 	 */
 	@Override
@@ -134,8 +130,7 @@ public abstract class AbstractDebuggerSettingsProvider implements IDebuggerSetti
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.IDebuggerSettingsProvider
+	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerSettingsProvider
 	 * #delete(org.eclipse.php.internal.debug.core.debugger.IDebuggerSettings)
 	 */
 	@Override
@@ -145,8 +140,8 @@ public abstract class AbstractDebuggerSettingsProvider implements IDebuggerSetti
 	}
 
 	/**
-	 * Implementors should create and return the appropriate settings taking
-	 * into account the provided settings kind and debugger owner unique ID.
+	 * Implementors should create and return the appropriate settings taking into
+	 * account the provided settings kind and debugger owner unique ID.
 	 * 
 	 * @param kind
 	 * @param ownerId
@@ -155,9 +150,9 @@ public abstract class AbstractDebuggerSettingsProvider implements IDebuggerSetti
 	protected abstract IDebuggerSettings createSettings(DebuggerSettingsKind kind, String ownerId);
 
 	/**
-	 * Implementors should create and return the appropriate settings taking
-	 * into account the provided setting kind, debugger settings owner and
-	 * attributes map loaded from persistent storage.
+	 * Implementors should create and return the appropriate settings taking into
+	 * account the provided setting kind, debugger settings owner and attributes map
+	 * loaded from persistent storage.
 	 * 
 	 * @param kind
 	 * @param ownerId
@@ -200,8 +195,8 @@ public abstract class AbstractDebuggerSettingsProvider implements IDebuggerSetti
 	}
 
 	/**
-	 * Creates and hooks settings during provider startup if those don't exist
-	 * yet for persistent PHP servers and executable configurations.
+	 * Creates and hooks settings during provider startup if those don't exist yet
+	 * for persistent PHP servers and executable configurations.
 	 */
 	private void hookSettings() {
 		// Hook existing PHP executables
@@ -220,8 +215,7 @@ public abstract class AbstractDebuggerSettingsProvider implements IDebuggerSetti
 	 * Checks if given owner exists.
 	 * 
 	 * @param ownerId
-	 * @return <code>true</code> if given owner exists, <code>false</code>
-	 *         otherwise
+	 * @return <code>true</code> if given owner exists, <code>false</code> otherwise
 	 */
 	private boolean exists(String ownerId) {
 		// Check if owner with given ID exists
@@ -285,8 +279,8 @@ public abstract class AbstractDebuggerSettingsProvider implements IDebuggerSetti
 				}
 			}
 			/*
-			 * Do not restore settings if somehow the related owner doesn't
-			 * exist anymore. Set cleanup flag to remove trashes on shutdown.
+			 * Do not restore settings if somehow the related owner doesn't exist anymore.
+			 * Set cleanup flag to remove trashes on shutdown.
 			 */
 			if (!exists(ownerId)) {
 				cleanup = true;

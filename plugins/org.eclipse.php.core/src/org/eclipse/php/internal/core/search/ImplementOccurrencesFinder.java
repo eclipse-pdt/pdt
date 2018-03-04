@@ -35,8 +35,7 @@ public class ImplementOccurrencesFinder extends AbstractOccurrencesFinder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.ui.search.IOccurrencesFinder#initialize(org.
+	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#initialize(org.
 	 * eclipse.php.internal.core.ast.nodes.Program,
 	 * org.eclipse.php.internal.core.ast.nodes.ASTNode)
 	 */
@@ -98,8 +97,8 @@ public class ImplementOccurrencesFinder extends AbstractOccurrencesFinder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org.
-	 * eclipse .php.internal.core.ast.nodes.MethodDeclaration)
+	 * @see org.eclipse.php.core.ast.visitor.AbstractVisitor#visit(org. eclipse
+	 * .php.internal.core.ast.nodes.MethodDeclaration)
 	 */
 	@Override
 	public boolean visit(MethodDeclaration methodDeclaration) {
@@ -128,8 +127,7 @@ public class ImplementOccurrencesFinder extends AbstractOccurrencesFinder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.ui.search.IOccurrencesFinder#getElementName()
+	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getElementName()
 	 */
 	@Override
 	public String getElementName() {

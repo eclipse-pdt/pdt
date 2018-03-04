@@ -28,8 +28,8 @@ public class SSHTunnelFactory {
 	private static HashMap<SSHTunnel, SSHTunnel> tunnels = new HashMap<>();
 
 	/**
-	 * Returns a {@link SSHTunnel} for port-forwarding between a remote host to
-	 * this localhost. The returned tunnel may be connected or disconnected.
+	 * Returns a {@link SSHTunnel} for port-forwarding between a remote host to this
+	 * localhost. The returned tunnel may be connected or disconnected.
 	 * 
 	 * @param remoteHost
 	 * @param userName
@@ -37,10 +37,9 @@ public class SSHTunnelFactory {
 	 * @param localPort
 	 * @param remotePort
 	 * @param cacheTunnel
-	 *            Load/save the result tunnel from/to an inner cache for further
-	 *            use (note that the tunnel is not comparing passwords, so make
-	 *            sure that password is not changing when you are using the
-	 *            cache)
+	 *            Load/save the result tunnel from/to an inner cache for further use
+	 *            (note that the tunnel is not comparing passwords, so make sure
+	 *            that password is not changing when you are using the cache)
 	 * @return A {@link SSHTunnel} instance.
 	 */
 	public static SSHTunnel getSSHTunnel(String remoteHost, String userName, String password, int localPort,
@@ -57,8 +56,8 @@ public class SSHTunnelFactory {
 	}
 
 	/**
-	 * A convenient call to returned a possibly cached SSHTunnel. In case it was
-	 * not cached, a new tunnel will be returned and cached for further use. The
+	 * A convenient call to returned a possibly cached SSHTunnel. In case it was not
+	 * cached, a new tunnel will be returned and cached for further use. The
 	 * returned tunnel may be connected or disconnected.
 	 * 
 	 * @param remoteHost
@@ -75,16 +74,16 @@ public class SSHTunnelFactory {
 	}
 
 	/**
-	 * Returns whether or not there is a cached tunnel in this tunnel factory.
-	 * The cached tunnel may be in a connected or a disconnected state.
+	 * Returns whether or not there is a cached tunnel in this tunnel factory. The
+	 * cached tunnel may be in a connected or a disconnected state.
 	 * 
 	 * @param remoteHost
 	 * @param userName
 	 * @param password
 	 * @param localPort
 	 * @param remotePort
-	 * @return True, if there is a cached tunnel with the given parameters;
-	 *         False, otherwise.
+	 * @return True, if there is a cached tunnel with the given parameters; False,
+	 *         otherwise.
 	 */
 	public static boolean hasSSHTunnel(String remoteHost, String userName, String password, int localPort,
 			int remotePort) {
@@ -119,8 +118,8 @@ public class SSHTunnelFactory {
 	}
 
 	/**
-	 * Closes all the SSHTunnel connections that were initiated and caches in
-	 * this factory.
+	 * Closes all the SSHTunnel connections that were initiated and caches in this
+	 * factory.
 	 */
 	public static void closeAllConnections() {
 		for (SSHTunnel tunnel : tunnels.values()) {
@@ -129,10 +128,9 @@ public class SSHTunnelFactory {
 	}
 
 	/**
-	 * Returns an unmodifiable List of the SSHTunnels that were created and
-	 * cached using this factory. The returned SSHTunnels are the 'real'
-	 * reference to the one that might be in use currently (so careful about
-	 * disconnecting them).
+	 * Returns an unmodifiable List of the SSHTunnels that were created and cached
+	 * using this factory. The returned SSHTunnels are the 'real' reference to the
+	 * one that might be in use currently (so careful about disconnecting them).
 	 * 
 	 * @return An unmodifiable List of the SSHTunnels
 	 */

@@ -28,8 +28,8 @@ public final class CompletionHoverControlCreator extends AbstractReusableInforma
 	 */
 	private final IInformationControlCreator fInformationPresenterControlCreator;
 	/**
-	 * <code>true</code> to use the additional info affordance,
-	 * <code>false</code> to use the hover affordance.
+	 * <code>true</code> to use the additional info affordance, <code>false</code>
+	 * to use the hover affordance.
 	 */
 	private final boolean fAdditionalInfoAffordance;
 
@@ -90,7 +90,8 @@ public final class CompletionHoverControlCreator extends AbstractReusableInforma
 
 		if (control instanceof IInformationControlExtension4) {
 			String tooltipAffordanceString = fAdditionalInfoAffordance
-					? DLTKUIPlugin.getAdditionalInfoAffordanceString() : EditorsUI.getTooltipAffordanceString();
+					? DLTKUIPlugin.getAdditionalInfoAffordanceString()
+					: EditorsUI.getTooltipAffordanceString();
 			((IInformationControlExtension4) control).setStatusText(tooltipAffordanceString);
 		}
 

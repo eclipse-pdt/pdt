@@ -310,8 +310,8 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 	protected Group fOptionsGroup;
 
 	/**
-	 * A collection containing the categories tree. This is used as model for
-	 * the tree viewer.
+	 * A collection containing the categories tree. This is used as model for the
+	 * tree viewer.
 	 * 
 	 * @see TreeViewer
 	 */

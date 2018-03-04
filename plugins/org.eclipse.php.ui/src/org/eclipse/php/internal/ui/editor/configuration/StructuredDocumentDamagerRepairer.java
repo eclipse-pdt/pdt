@@ -35,9 +35,8 @@ public class StructuredDocumentDamagerRepairer extends DefaultDamagerRepairer {
 	}
 
 	/**
-	 * Returns presentation which covers only updated php tokens in case when
-	 * the damage covers whole PHP region and this regions has not been fully
-	 * reparsed.
+	 * Returns presentation which covers only updated php tokens in case when the
+	 * damage covers whole PHP region and this regions has not been fully reparsed.
 	 * 
 	 * @param region
 	 * @param damage

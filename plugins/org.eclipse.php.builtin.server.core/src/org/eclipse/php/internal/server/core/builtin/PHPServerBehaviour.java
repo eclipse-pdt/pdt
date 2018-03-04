@@ -117,8 +117,8 @@ public class PHPServerBehaviour extends ServerBehaviourDelegate implements IPHPS
 	}
 
 	/**
-	 * Cleans the entire work directory for this server. This involves deleting
-	 * all subdirectories of the server's work directory.
+	 * Cleans the entire work directory for this server. This involves deleting all
+	 * subdirectories of the server's work directory.
 	 * 
 	 * @param monitor
 	 *            a progress monitor
@@ -265,8 +265,7 @@ public class PHPServerBehaviour extends ServerBehaviourDelegate implements IPHPS
 			iterator = usedPorts.iterator();
 			boolean first = true;
 			while (iterator.hasNext()) {
-				if (!first)
-				 {
+				if (!first) {
 					portStr += ", "; //$NON-NLS-1$
 				}
 				first = false;
@@ -294,8 +293,7 @@ public class PHPServerBehaviour extends ServerBehaviourDelegate implements IPHPS
 		try {
 			String url = "http://" + getServer().getHost(); //$NON-NLS-1$
 			int port = configuration.getMainPort().getPort();
-			if (port != 80)
-			 {
+			if (port != 80) {
 				url += ":" + port; //$NON-NLS-1$
 			}
 			ping = new PingThread(getServer(), url, -1, this);
@@ -314,8 +312,7 @@ public class PHPServerBehaviour extends ServerBehaviourDelegate implements IPHPS
 
 		try {
 			setServerState(IServer.STATE_STOPPING);
-			if (Trace.isTraceEnabled())
-			 {
+			if (Trace.isTraceEnabled()) {
 				Trace.trace(Trace.FINER, "Killing the PHP Server process"); //$NON-NLS-1$
 			}
 			if (fLaunch != null) {
@@ -328,8 +325,7 @@ public class PHPServerBehaviour extends ServerBehaviourDelegate implements IPHPS
 	}
 
 	/**
-	 * Returns the runtime base path for relative paths in the server
-	 * configuration.
+	 * Returns the runtime base path for relative paths in the server configuration.
 	 * 
 	 * @return the base path
 	 */

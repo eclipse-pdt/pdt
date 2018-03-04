@@ -243,8 +243,7 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 
 		((CheckboxTableViewer) fHoverTableViewer).addCheckStateListener(new ICheckStateListener() {
 			/*
-			 * @seeorg.eclipse.jface.viewers.ICheckStateListener#
-			 * checkStateChanged
+			 * @seeorg.eclipse.jface.viewers.ICheckStateListener# checkStateChanged
 			 * (org.eclipse.jface.viewers.CheckStateChangedEvent)
 			 */
 			@Override
@@ -469,8 +468,7 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 				modifierString = modifierString.substring(1);
 			}
 
-			if (modifierString.equals(PHPEditorTextHoverDescriptor.NO_MODIFIER))
-			 {
+			if (modifierString.equals(PHPEditorTextHoverDescriptor.NO_MODIFIER)) {
 				modifierString = ""; //$NON-NLS-1$
 			}
 
@@ -519,8 +517,7 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 		fModifierEditor.setEnabled(enabled);
 		fModifierEditor.setText(fHoverConfigs[i].fModifierString);
 		String description = getContributedHovers()[i].getDescription();
-		if (description == null)
-		 {
+		if (description == null) {
 			description = ""; //$NON-NLS-1$
 		}
 		fDescription.setText(description);

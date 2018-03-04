@@ -91,8 +91,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	/**
-	 * Returns whether there are whitespace characters before the cursor where
-	 * code assist was being invoked
+	 * Returns whether there are whitespace characters before the cursor where code
+	 * assist was being invoked
 	 * 
 	 * @return <code>true</code> if there are whitespace characters before the
 	 *         cursor
@@ -113,9 +113,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 * document, this method will return false when cursor is at end of
 	 * companion.getDocument().
 	 * 
-	 * @return <code>true</code> if there is a space character at offset
-	 *         position, false otherwise or false when cursor is at end of
-	 *         document
+	 * @return <code>true</code> if there is a space character at offset position,
+	 *         false otherwise or false when cursor is at end of document
 	 */
 	public boolean hasSpaceAtPosition(int offset) {
 		try {
@@ -366,8 +365,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	/**
-	 * Returns next character after the cursor position (or ' ' if cursor
-	 * position is at end of document)
+	 * Returns next character after the cursor position (or ' ' if cursor position
+	 * is at end of document)
 	 * 
 	 * @throws BadLocationException
 	 */
@@ -730,8 +729,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	/**
 	 * Returns the qualifier. For global namespaces, it either returns null or
 	 * <code>PHPCoreConstants.GLOBAL_NAMESPACE</code> depending on the value of
-	 * parameter <code>useGlobal</code>. Other qualifiers will never be empty
-	 * and never be prefixed by a backslash.
+	 * parameter <code>useGlobal</code>. Other qualifiers will never be empty and
+	 * never be prefixed by a backslash.
 	 * 
 	 * @param useGlobal
 	 * @return non-empty qualifier or null

@@ -298,8 +298,7 @@ public class ExtractFunctionInputPage extends UserInputWizardPage {
 
 		// IPreferenceStore store=
 		// RefactoringUIPlugin.getDefault().getPreferenceStore();
-		fSignaturePreview = new PHPSourceViewer(composite,
-				SWT.READ_ONLY | SWT.V_SCROLL | SWT.WRAP /* | SWT.BORDER */);
+		fSignaturePreview = new PHPSourceViewer(composite, SWT.READ_ONLY | SWT.V_SCROLL | SWT.WRAP /* | SWT.BORDER */);
 		// fSignaturePreview.configure(new
 		// JavaSourceViewerConfiguration(JavaPlugin.getDefault().getJavaTextTools().getColorManager(),
 		// store, null, null));
@@ -330,8 +329,7 @@ public class ExtractFunctionInputPage extends UserInputWizardPage {
 			return;
 		}
 
-		if (text.length() == 0)
-		 {
+		if (text.length() == 0) {
 			text = "someMethodName"; //$NON-NLS-1$
 		}
 

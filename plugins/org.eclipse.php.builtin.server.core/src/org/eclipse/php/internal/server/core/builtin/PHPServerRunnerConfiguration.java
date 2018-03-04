@@ -61,8 +61,8 @@ public class PHPServerRunnerConfiguration {
 	 * 
 	 * @param path
 	 *            the absolute path to the working directory to be used by a
-	 *            launched VM, or <code>null</code> if the default working
-	 *            directory is to be inherited from the current process
+	 *            launched VM, or <code>null</code> if the default working directory
+	 *            is to be inherited from the current process
 	 * @since 2.0
 	 */
 	public void setWorkingDirectory(String path) {

@@ -90,16 +90,14 @@ public class BuildpathPackage {
 
 			// write archive end tag if necessary
 			if (hasExtraAttributes || hasRestrictions) {
-				xmlWriter.endTag(TAG_ARCHIVE, true/* insert tab */,
-						true/*
-							 * insert new line
-							 */);
+				xmlWriter.endTag(TAG_ARCHIVE, true/* insert tab */, true/*
+																		 * insert new line
+																		 */);
 			}
 		}
-		xmlWriter.endTag(TAG_USERLIBRARY, true/* insert tab */,
-				true/*
-					 * insert new line
-					 */);
+		xmlWriter.endTag(TAG_USERLIBRARY, true/* insert tab */, true/*
+																	 * insert new line
+																	 */);
 		writer.flush();
 		writer.close();
 		xmlWriter.close();
@@ -150,10 +148,9 @@ public class BuildpathPackage {
 					/*
 					 * IBuildpathAttribute[] extraAttributes = BuildpathEntry
 					 * .decodeExtraAttributes(attributeList); attributeList =
-					 * BuildpathEntry.getChildAttributes(
-					 * BuildpathEntry.TAG_ACCESS_RULES, children,
-					 * foundChildren); IAccessRule[] accessRules =
-					 * BuildpathEntry .decodeAccessRules(attributeList);
+					 * BuildpathEntry.getChildAttributes( BuildpathEntry.TAG_ACCESS_RULES, children,
+					 * foundChildren); IAccessRule[] accessRules = BuildpathEntry
+					 * .decodeAccessRules(attributeList);
 					 */
 
 					IBuildpathEntry entry = DLTKCore.newLibraryEntry(Path.fromPortableString(path), new IAccessRule[0],

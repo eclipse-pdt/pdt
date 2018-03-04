@@ -30,8 +30,7 @@ public class RemoteFileStorage extends PlatformObject implements IEncodedStorage
 	private String originalURL;
 
 	/**
-	 * Constructs a new RemoteFileStorage basing on already received file
-	 * content
+	 * Constructs a new RemoteFileStorage basing on already received file content
 	 * 
 	 * @param content
 	 *            File content

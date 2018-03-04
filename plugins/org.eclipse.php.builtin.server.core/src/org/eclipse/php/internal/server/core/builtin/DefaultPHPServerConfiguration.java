@@ -203,8 +203,7 @@ public class DefaultPHPServerConfiguration extends PHPServerConfiguration {
 			}
 			monitor.worked(200);
 
-			if (monitor.isCanceled())
-			 {
+			if (monitor.isCanceled()) {
 				throw new Exception("Cancelled"); //$NON-NLS-1$
 			}
 			monitor.done();

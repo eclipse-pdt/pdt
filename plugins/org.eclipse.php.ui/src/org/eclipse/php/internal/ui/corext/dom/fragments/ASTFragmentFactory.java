@@ -42,22 +42,21 @@ public class ASTFragmentFactory {
 
 	/**
 	 * If possible, this method creates a fragment whose source code range is
-	 * <code>range</code> within compilation unit <code>cu</code>, and which
-	 * resides somewhere within the subtree identified by <code>scope</code>.
+	 * <code>range</code> within compilation unit <code>cu</code>, and which resides
+	 * somewhere within the subtree identified by <code>scope</code>.
 	 * 
 	 * XXX: more doc (current assertions about input vs. output)
 	 * 
 	 * @param range
 	 *            The source range which the create fragment must have.
 	 * @param scope
-	 *            A node identifying the AST subtree in which the fragment must
-	 *            lie.
+	 *            A node identifying the AST subtree in which the fragment must lie.
 	 * @param cu
 	 *            The compilation unit to which the source range applies, and to
 	 *            which the AST corresponds.
 	 * @return IASTFragment A fragment whose source range is <code>range</code>
-	 *         within compilation unit <code>cu</code>, residing somewhere
-	 *         within the AST subtree identified by <code>scope</code>.
+	 *         within compilation unit <code>cu</code>, residing somewhere within
+	 *         the AST subtree identified by <code>scope</code>.
 	 * @throws JavaModelException
 	 */
 	public static IASTFragment createFragmentForSourceRange(SourceRange range, ASTNode scope, IDocument document)
@@ -76,8 +75,8 @@ public class ASTFragmentFactory {
 	}
 
 	/**
-	 * Returns <code>null</code> if the indices, taken with respect to the node,
-	 * do not correspond to a valid node-sub-part fragment.
+	 * Returns <code>null</code> if the indices, taken with respect to the node, do
+	 * not correspond to a valid node-sub-part fragment.
 	 * 
 	 * @param document
 	 * @throws Exception
@@ -106,8 +105,8 @@ public class ASTFragmentFactory {
 	/**
 	 * Creates and returns a fragment representing the entire subtree rooted at
 	 * <code>node</code>. It is not true in general that the node to which the
-	 * produced IASTFragment maps (see {@link IASTFragment IASTFragment}) will
-	 * be <code>node</code>.
+	 * produced IASTFragment maps (see {@link IASTFragment IASTFragment}) will be
+	 * <code>node</code>.
 	 * 
 	 * XXX: more doc (current assertions about input vs. output)
 	 * 
@@ -174,9 +173,8 @@ public class ASTFragmentFactory {
 		@Override
 		public boolean visit(InfixExpression node) {
 			/*
-			 * Try creating an associative infix expression fragment /* for the
-			 * full subtree. If this is not applicable, try something more
-			 * generic.
+			 * Try creating an associative infix expression fragment /* for the full
+			 * subtree. If this is not applicable, try something more generic.
 			 */
 			IASTFragment fragment = AssociativeInfixExpressionFragment.createFragmentForFullSubtree(node);
 			if (fragment == null) {

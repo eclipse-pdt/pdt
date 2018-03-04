@@ -30,8 +30,8 @@ public abstract class PHPIndexingVisitorExtension extends ASTVisitor {
 	protected ISourceModule sourceModule;
 
 	/**
-	 * This is a last chance before modifying element declaration information
-	 * before inserting it into index.
+	 * This is a last chance before modifying element declaration information before
+	 * inserting it into index.
 	 * 
 	 * @param node
 	 *            Declaration node
@@ -42,8 +42,8 @@ public abstract class PHPIndexingVisitorExtension extends ASTVisitor {
 	}
 
 	/**
-	 * This is a last chance before modifying element reference information
-	 * before inserting it into index.
+	 * This is a last chance before modifying element reference information before
+	 * inserting it into index.
 	 * 
 	 * @param node
 	 *            Reference node

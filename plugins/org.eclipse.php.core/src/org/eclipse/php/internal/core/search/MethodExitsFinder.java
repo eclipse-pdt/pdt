@@ -41,8 +41,7 @@ public class MethodExitsFinder extends AbstractOccurrencesFinder {
 		fExitPointNode = node;
 		if (isExitExecutionPath(node)) {
 			fFunctionDeclaration = (FunctionDeclaration) ASTNodes.getParent(node, ASTNode.FUNCTION_DECLARATION);
-			if (fFunctionDeclaration == null)
-			 {
+			if (fFunctionDeclaration == null) {
 				return "MethodExitsFinder_no_return_type_selected"; //$NON-NLS-1$
 			}
 			return null;
@@ -88,8 +87,7 @@ public class MethodExitsFinder extends AbstractOccurrencesFinder {
 	 * (non-Javadoc)
 	 * 
 	 * @seeorg.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#
-	 * getOccurrenceReadWriteType
-	 * (org.eclipse.php.internal.core.ast.nodes.ASTNode)
+	 * getOccurrenceReadWriteType (org.eclipse.php.internal.core.ast.nodes.ASTNode)
 	 */
 	@Override
 	protected int getOccurrenceType(ASTNode node) {

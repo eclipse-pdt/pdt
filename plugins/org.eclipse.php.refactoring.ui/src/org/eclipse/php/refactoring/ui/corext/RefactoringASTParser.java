@@ -112,8 +112,8 @@ public class RefactoringASTParser {
 	// }
 
 	/**
-	 * Tries to get the shared AST from the ASTProvider. If the shared AST is
-	 * not available, parses the type root with a RefactoringASTParser that uses
+	 * Tries to get the shared AST from the ASTProvider. If the shared AST is not
+	 * available, parses the type root with a RefactoringASTParser that uses
 	 * settings similar to the ASTProvider.
 	 * 
 	 * @param typeRoot

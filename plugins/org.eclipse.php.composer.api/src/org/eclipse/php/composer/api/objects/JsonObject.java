@@ -115,8 +115,7 @@ public class JsonObject extends AbstractJsonObject<JsonValue> {
 	}
 
 	/**
-	 * Returns the property raw value or <code>null</code> if it has not been
-	 * set.
+	 * Returns the property raw value or <code>null</code> if it has not been set.
 	 * 
 	 * @param property
 	 *            the property
@@ -144,8 +143,8 @@ public class JsonObject extends AbstractJsonObject<JsonValue> {
 	}
 
 	/**
-	 * Returns the property value as string or <code>null</code> if it has not
-	 * been set.
+	 * Returns the property value as string or <code>null</code> if it has not been
+	 * set.
 	 * 
 	 * @param property
 	 *            the property
@@ -159,8 +158,8 @@ public class JsonObject extends AbstractJsonObject<JsonValue> {
 	}
 
 	/**
-	 * Returns the property value as boolean or <code>null</code> if it has not
-	 * been set.
+	 * Returns the property value as boolean or <code>null</code> if it has not been
+	 * set.
 	 * 
 	 * @param property
 	 *            the property
@@ -174,8 +173,8 @@ public class JsonObject extends AbstractJsonObject<JsonValue> {
 	}
 
 	/**
-	 * Returns the property value as integer or <code>null</code> if it has not
-	 * been set.
+	 * Returns the property value as integer or <code>null</code> if it has not been
+	 * set.
 	 * 
 	 * @param property
 	 *            the property
@@ -189,8 +188,8 @@ public class JsonObject extends AbstractJsonObject<JsonValue> {
 	}
 
 	/**
-	 * Returns the property value as double or <code>null</code> if it has not
-	 * been set.
+	 * Returns the property value as double or <code>null</code> if it has not been
+	 * set.
 	 * 
 	 * @param property
 	 *            the property

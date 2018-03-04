@@ -119,16 +119,16 @@ public class RemoveBlockCommentHandler extends CommentHandler implements IHandle
 					ITextRegion textRegion = regionAtCharacterOffset.getRegionAtCharacterOffset(selectionOffset);
 
 					Stack<TextLocation> phpCommentLocationStack = new Stack<>(); // stack
-																								// of
-																								// ITextRegion
-																								// including
-																								// only
-																								// Comments'
-																								// Start
-																								// and
-																								// End
-																								// tokens
-																								// locations
+																					// of
+																					// ITextRegion
+																					// including
+																					// only
+																					// Comments'
+																					// Start
+																					// and
+																					// End
+																					// tokens
+																					// locations
 
 					try {
 						int textRegionOffset = textRegion.getStart();
@@ -141,10 +141,10 @@ public class RemoveBlockCommentHandler extends CommentHandler implements IHandle
 						for (ITextRegion token : phpTokens) {
 							if (lastOffsetParsed >= token.getEnd()) {
 								// to save
-																	// some
-																	// redundant
-																	// computation
-																	// cycles...
+								// some
+								// redundant
+								// computation
+								// cycles...
 								continue;
 							}
 

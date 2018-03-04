@@ -101,15 +101,15 @@ public class Identifier extends VariableBase {
 		if (isNullable()) {
 			buffer.append("' nullable='").append(nullable); //$NON-NLS-1$
 		}
-		buffer.append("'/>"); //$NON-NLS-1$ 
+		buffer.append("'/>"); //$NON-NLS-1$
 	}
 
 	/**
 	 * Equality check for Identifier.<br>
-	 * Two identifiers are equal iff they have equal names (disregarding its
-	 * offset and length) <br>
-	 * Note: The equality is checked by == since we {@link String#intern()} the
-	 * name field.
+	 * Two identifiers are equal iff they have equal names (disregarding its offset
+	 * and length) <br>
+	 * Note: The equality is checked by == since we {@link String#intern()} the name
+	 * field.
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -209,8 +209,7 @@ public class Identifier extends VariableBase {
 	/**
 	 * Resolves and returns the binding for the entity referred to by this name.
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be
-	 *         resolved
+	 * @return the binding, or <code>null</code> if the binding cannot be resolved
 	 */
 	public final IBinding resolveBinding() {
 		return this.ast.getBindingResolver().resolveName(this);

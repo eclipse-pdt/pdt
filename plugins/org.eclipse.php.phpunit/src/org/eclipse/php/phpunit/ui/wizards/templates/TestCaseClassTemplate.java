@@ -91,7 +91,8 @@ public class TestCaseClassTemplate extends TestCaseTemplate {
 	@Override
 	public void setMasterElement(IModelElement masterElement, String masterElementName, IProject project) {
 		if (masterElementName != null && masterElementName.length() > 0) {
-			set("MasterElementNameVar", masterElementName.substring(0, 1).toLowerCase() + masterElementName.substring(1)); //$NON-NLS-1$
+			set("MasterElementNameVar", //$NON-NLS-1$
+					masterElementName.substring(0, 1).toLowerCase() + masterElementName.substring(1));
 		} else {
 			set("MasterElementNameVar", ""); //$NON-NLS-1$ //$NON-NLS-2$
 		}

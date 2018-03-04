@@ -157,11 +157,11 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 
 	/**
 	 * The purpose of this method is to adapt the include path according to the
-	 * entries removed from the build path. If the user removed from the build
-	 * path source folders that are in the include path, he will not get code
-	 * completion and other functionality for this sources. The user is prompted
-	 * and asked if he wants to remove the relevant sources from the include
-	 * path as well see bug#255930
+	 * entries removed from the build path. If the user removed from the build path
+	 * source folders that are in the include path, he will not get code completion
+	 * and other functionality for this sources. The user is prompted and asked if
+	 * he wants to remove the relevant sources from the include path as well see
+	 * bug#255930
 	 */
 	private void adaptIncludePath() {
 		PHPBuildPathSourcePage buildPathSourcePage = (PHPBuildPathSourcePage) fSourceContainerPage;

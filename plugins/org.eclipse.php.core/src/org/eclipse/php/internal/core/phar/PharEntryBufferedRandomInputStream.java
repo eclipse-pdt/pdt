@@ -81,8 +81,7 @@ public class PharEntryBufferedRandomInputStream extends InputStream {
 	}
 
 	/**
-	 * this method is called in GZIPInputStreamForPhar see
-	 * GZIPInputStreamForPhar
+	 * this method is called in GZIPInputStreamForPhar see GZIPInputStreamForPhar
 	 * 
 	 * @return
 	 */

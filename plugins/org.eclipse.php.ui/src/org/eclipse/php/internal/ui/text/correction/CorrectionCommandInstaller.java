@@ -26,8 +26,7 @@ public class CorrectionCommandInstaller {
 	}
 
 	public static void registerCommands() {
-		final IHandlerService handlerService = PlatformUI.getWorkbench()
-				.getService(IHandlerService.class);
+		final IHandlerService handlerService = PlatformUI.getWorkbench().getService(IHandlerService.class);
 		registerDescriptors(PHPCorrectionProcessor.getAssistProcessors(), handlerService);
 		registerDescriptors(PHPCorrectionProcessor.getCorrectionProcessors(), handlerService);
 	}
@@ -47,8 +46,7 @@ public class CorrectionCommandInstaller {
 	}
 
 	public static void unregisterCommands() {
-		final IHandlerService handlerService = PlatformUI.getWorkbench()
-				.getService(IHandlerService.class);
+		final IHandlerService handlerService = PlatformUI.getWorkbench().getService(IHandlerService.class);
 		if (handlerService != null) {
 			handlerService.deactivateHandlers(fActivations.values());
 		}

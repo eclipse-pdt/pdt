@@ -16,15 +16,15 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
 public class NonRelevantFilter extends ViewerFilter {
-	
+
 	private boolean fShowNonRelevant;
-	
+
 	public boolean isShowNonRelevant() {
 		return fShowNonRelevant;
 	}
-	
+
 	public void setShowNonRelevant(boolean showNonRelevant) {
-		fShowNonRelevant= showNonRelevant;
+		fShowNonRelevant = showNonRelevant;
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class NonRelevantFilter extends ViewerFilter {
 		if (fShowNonRelevant) {
 			return true;
 		}
-		
+
 		if (element instanceof Binding) {
 			return ((Binding) element).isRelevant();
 		}
@@ -41,6 +41,5 @@ public class NonRelevantFilter extends ViewerFilter {
 		}
 		return true;
 	}
-	
 
 }

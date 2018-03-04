@@ -285,8 +285,7 @@ public final class ASTProvider {
 	}
 
 	/**
-	 * Returns whether this AST provider is active on the given compilation
-	 * unit.
+	 * Returns whether this AST provider is active on the given compilation unit.
 	 * 
 	 * @param cu
 	 *            the compilation unit
@@ -380,8 +379,8 @@ public final class ASTProvider {
 	/**
 	 * Returns a shared compilation unit AST for the given Java element.
 	 * <p>
-	 * Clients are not allowed to modify the AST and must synchronize all access
-	 * to its nodes.
+	 * Clients are not allowed to modify the AST and must synchronize all access to
+	 * its nodes.
 	 * </p>
 	 * 
 	 * @param input

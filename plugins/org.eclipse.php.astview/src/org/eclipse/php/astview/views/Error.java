@@ -14,16 +14,15 @@ package org.eclipse.php.astview.views;
 
 import org.eclipse.swt.graphics.Image;
 
-
 public class Error extends ExceptionAttribute {
-	
+
 	private final Object fParent;
 	private final String fLabel;
-	
+
 	public Error(Object parent, String label, Throwable thrownException) {
-		fParent= parent;
-		fLabel= label;
-		fException= thrownException;
+		fParent = parent;
+		fLabel = label;
+		fException = thrownException;
 	}
 
 	@Override
@@ -45,7 +44,7 @@ public class Error extends ExceptionAttribute {
 	public Object getParent() {
 		return fParent;
 	}
-	
+
 	/*
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -57,34 +56,33 @@ public class Error extends ExceptionAttribute {
 		if (obj == null || !obj.getClass().equals(getClass())) {
 			return false;
 		}
-		
-		Error other= (Error) obj;
+
+		Error other = (Error) obj;
 		if (fParent == null) {
 			if (other.fParent != null) {
 				return false;
 			}
-		} else if (! fParent.equals(other.fParent)) {
+		} else if (!fParent.equals(other.fParent)) {
 			return false;
 		}
-		
+
 		if (fLabel == null) {
 			if (other.fLabel != null) {
 				return false;
 			}
-		} else if (! fLabel.equals(other.fLabel)) {
+		} else if (!fLabel.equals(other.fLabel)) {
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	/*
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
-		return (fParent != null ? fParent.hashCode() : 0)
-				+ (fLabel != null ? fLabel.hashCode() : 0);
+		return (fParent != null ? fParent.hashCode() : 0) + (fLabel != null ? fLabel.hashCode() : 0);
 	}
 
 }

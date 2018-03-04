@@ -53,8 +53,7 @@ public class FileContentRequest extends DebugMessageRequestImpl implements IDebu
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.debug.core.debugger.messages.IDebugMessage#deserialize(
+	 * @see org.eclipse.php.debug.core.debugger.messages.IDebugMessage#deserialize(
 	 * java.io.DataInputStream)
 	 */
 	@Override

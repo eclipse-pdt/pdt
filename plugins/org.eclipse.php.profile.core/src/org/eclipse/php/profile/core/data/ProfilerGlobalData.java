@@ -39,9 +39,8 @@ public class ProfilerGlobalData {
 		fFileNames = new ArrayList<>();
 	}
 
-	public ProfilerGlobalData(String uri, String originalURL, String query,
-			String options, String path, int timeSeconds, int timeMicroSeconds,
-			int dataSize, int fileCount, ArrayList<String> fileNames) {
+	public ProfilerGlobalData(String uri, String originalURL, String query, String options, String path,
+			int timeSeconds, int timeMicroSeconds, int dataSize, int fileCount, ArrayList<String> fileNames) {
 		fURI = uri;
 		fOriginalURL = originalURL;
 		fQuery = query;
@@ -197,8 +196,7 @@ public class ProfilerGlobalData {
 	 * @return the double value of the result
 	 */
 	public double getGlobalTime() {
-		double time = ((double) fTimeSeconds * CONVERTION + fTimeMicroSeconds)
-				/ CONVERTION;
+		double time = ((double) fTimeSeconds * CONVERTION + fTimeMicroSeconds) / CONVERTION;
 		return time;
 	}
 

@@ -48,8 +48,7 @@ public class DebugStepFilterController implements IDebugStepFilterPrefListener {
 	}
 
 	/**
-	 * Checks whether the given file path is filtered in the Debug Step Filters
-	 * list
+	 * Checks whether the given file path is filtered in the Debug Step Filters list
 	 * 
 	 * @param path
 	 *            - a file path

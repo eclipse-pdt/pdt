@@ -69,8 +69,8 @@ public class PHPClassType extends ClassType implements IClassType {
 	}
 
 	/**
-	 * Constructs evaluated type for PHP class or interface that was declared
-	 * under some namespace
+	 * Constructs evaluated type for PHP class or interface that was declared under
+	 * some namespace
 	 */
 	public PHPClassType(String namespace, String typeName) {
 		if (namespace == null || typeName == null) {
@@ -98,8 +98,8 @@ public class PHPClassType extends ClassType implements IClassType {
 	}
 
 	/**
-	 * Returns namespace name part of this type or <code>null</code> if the type
-	 * is not declared under some namespace
+	 * Returns namespace name part of this type or <code>null</code> if the type is
+	 * not declared under some namespace
 	 * 
 	 * @return namespace name part or null
 	 */
@@ -209,7 +209,8 @@ public class PHPClassType extends ClassType implements IClassType {
 	 */
 	public static IEvaluatedType fromSimpleReference(SimpleReference name) {
 		String typeName = name instanceof FullyQualifiedReference
-				? ((FullyQualifiedReference) name).getFullyQualifiedName() : name.getName();
+				? ((FullyQualifiedReference) name).getFullyQualifiedName()
+				: name.getName();
 		IEvaluatedType simpleType = PHPSimpleTypes.fromString(typeName);
 		if (simpleType != null) {
 			return simpleType;

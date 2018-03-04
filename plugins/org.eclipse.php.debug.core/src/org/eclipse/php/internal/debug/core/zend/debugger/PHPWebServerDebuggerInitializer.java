@@ -73,8 +73,8 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 	}
 
 	/**
-	 * Start the debug session by opening a browser that will actually trigger
-	 * the URL connection to the debug server (with Zend Debugger installed).
+	 * Start the debug session by opening a browser that will actually trigger the
+	 * URL connection to the debug server (with Zend Debugger installed).
 	 * 
 	 * @param launch
 	 * @param parametersInitializer

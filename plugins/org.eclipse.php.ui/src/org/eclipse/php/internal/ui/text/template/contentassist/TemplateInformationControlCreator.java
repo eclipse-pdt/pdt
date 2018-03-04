@@ -78,8 +78,7 @@ public final class TemplateInformationControlCreator
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.text.IInformationControlCreatorExtension#canReuse(org
+	 * @see org.eclipse.jface.text.IInformationControlCreatorExtension#canReuse(org
 	 * .eclipse.jface.text.IInformationControl)
 	 */
 	@Override
@@ -88,8 +87,7 @@ public final class TemplateInformationControlCreator
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.text.IInformationControlCreatorExtension#canReplace
+	 * @see org.eclipse.jface.text.IInformationControlCreatorExtension#canReplace
 	 * (org.eclipse.jface.text.IInformationControlCreator)
 	 */
 	@Override

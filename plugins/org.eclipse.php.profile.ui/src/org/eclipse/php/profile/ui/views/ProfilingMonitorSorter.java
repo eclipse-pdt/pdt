@@ -37,24 +37,20 @@ public class ProfilingMonitorSorter extends ViewerSorter {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers
+	 * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers
 	 * .Viewer, java.lang.Object, java.lang.Object)
 	 */
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
-		if (e1 instanceof ProfilingMonitorElement
-				&& e2 instanceof ProfilingMonitorElement) {
+		if (e1 instanceof ProfilingMonitorElement && e2 instanceof ProfilingMonitorElement) {
 			ProfilingMonitorElement element1 = (ProfilingMonitorElement) e1;
 			ProfilingMonitorElement element2 = (ProfilingMonitorElement) e2;
 
 			if (fMode == BY_FILENAME) {
-				return super.compare(viewer, element1.getProfilerDB()
-						.getGlobalData().getURI(), element2.getProfilerDB()
-						.getGlobalData().getURI());
+				return super.compare(viewer, element1.getProfilerDB().getGlobalData().getURI(),
+						element2.getProfilerDB().getGlobalData().getURI());
 			} else if (fMode == BY_DATE) {
-				return element1.getProfilerDB().getProfileDate().compareTo(
-						element2.getProfilerDB().getProfileDate());
+				return element1.getProfilerDB().getProfileDate().compareTo(element2.getProfilerDB().getProfileDate());
 			}
 		}
 		return 0; // super.compare(viewer, e1, e2);

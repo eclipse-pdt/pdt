@@ -33,8 +33,7 @@ public class PHPTemplateAccess extends ScriptTemplateAccess {
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.dltk.ui.templates.ScriptTemplateAccess#getPreferenceStore()
+	 * @see org.eclipse.dltk.ui.templates.ScriptTemplateAccess#getPreferenceStore()
 	 */
 	@Override
 	protected IPreferenceStore getPreferenceStore() {
@@ -42,8 +41,7 @@ public class PHPTemplateAccess extends ScriptTemplateAccess {
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.dltk.ui.templates.ScriptTemplateAccess#getContextTypeId()
+	 * @see org.eclipse.dltk.ui.templates.ScriptTemplateAccess#getContextTypeId()
 	 */
 	@Override
 	protected String getContextTypeId() {
@@ -51,8 +49,7 @@ public class PHPTemplateAccess extends ScriptTemplateAccess {
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.dltk.ui.templates.ScriptTemplateAccess#getCustomTemplatesKey
+	 * @see org.eclipse.dltk.ui.templates.ScriptTemplateAccess#getCustomTemplatesKey
 	 * ()
 	 */
 	@Override

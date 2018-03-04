@@ -18,8 +18,7 @@ import org.eclipse.php.internal.server.ui.launching.PHPWebPageLaunchConfiguratio
 /**
  * PHP web server launch configuration profiler tab group.
  */
-public class ProfilePHPWebServerTabGroup
-		extends AbstractLaunchConfigurationTabGroup {
+public class ProfilePHPWebServerTabGroup extends AbstractLaunchConfigurationTabGroup {
 
 	/*
 	 * (non-Javadoc)
@@ -30,13 +29,11 @@ public class ProfilePHPWebServerTabGroup
 	 */
 	@Override
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
-		ArrayList<ILaunchConfigurationTab> tabs = new ArrayList<>(
-				10);
+		ArrayList<ILaunchConfigurationTab> tabs = new ArrayList<>(10);
 		tabs.add(new PHPWebPageLaunchConfigurationTab());
 		tabs.add(new PHPWebPageLaunchConfigurationProfilerTab());
 		tabs.add(new CommonTab());
-		AbstractLaunchConfigurationTab[] array = new AbstractLaunchConfigurationTab[tabs
-				.size()];
+		AbstractLaunchConfigurationTab[] array = new AbstractLaunchConfigurationTab[tabs.size()];
 		tabs.toArray(array);
 		setTabs(array);
 	}

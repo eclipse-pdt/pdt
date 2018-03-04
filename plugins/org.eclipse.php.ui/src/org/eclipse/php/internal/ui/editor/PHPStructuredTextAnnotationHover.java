@@ -162,7 +162,8 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 				if (line == markerLine) {
 					return 1;
 				}
-				if (markerLine <= line && line <= document.getLineOfOffset(position.getOffset() + position.getLength())) {
+				if (markerLine <= line
+						&& line <= document.getLineOfOffset(position.getOffset() + position.getLength())) {
 					return 2;
 				}
 			} catch (BadLocationException x) {

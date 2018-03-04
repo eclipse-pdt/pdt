@@ -40,8 +40,7 @@ public class CodeTemplateContext extends TemplateContext {
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jdt.internal.corext.template.TemplateContext#evaluate(org
+	 * @see org.eclipse.jdt.internal.corext.template.TemplateContext#evaluate(org
 	 * .eclipse.jdt.internal.corext.template.Template)
 	 */
 	@Override
@@ -101,8 +100,7 @@ public class CodeTemplateContext extends TemplateContext {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jdt.internal.corext.template.TemplateContext#canEvaluate(
+	 * @see org.eclipse.jdt.internal.corext.template.TemplateContext#canEvaluate(
 	 * org.eclipse.jdt.internal.corext.template.Template)
 	 */
 	@Override

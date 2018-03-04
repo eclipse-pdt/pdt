@@ -26,23 +26,22 @@ import org.eclipse.core.resources.IFolder;
 public interface ILibraryFolderChangeListener {
 
 	/**
-	 * Notifies this listener that some folders have changed from source folders
-	 * to library folders or vice versa.
+	 * Notifies this listener that some folders have changed from source folders to
+	 * library folders or vice versa.
 	 * 
 	 * <p>
-	 * This method is called by the {@link LibraryFolderManager}. It is not
-	 * intended to be called directly by clients.
+	 * This method is called by the {@link LibraryFolderManager}. It is not intended
+	 * to be called directly by clients.
 	 * </p>
 	 * 
 	 * <p>
-	 * This method is called after the WTP Validation Framework is updated with
-	 * the changed folders, but before the re-validation has been started.
+	 * This method is called after the WTP Validation Framework is updated with the
+	 * changed folders, but before the re-validation has been started.
 	 * </p>
 	 * 
 	 * <p>
-	 * Clients must provide a fast and non-blocking implementation of this
-	 * method. If a long-running operation is required, it must be executed in a
-	 * job.
+	 * Clients must provide a fast and non-blocking implementation of this method.
+	 * If a long-running operation is required, it must be executed in a job.
 	 * </p>
 	 * 
 	 * @param folders

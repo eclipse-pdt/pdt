@@ -42,7 +42,8 @@ public class MainAutoEditStrategy implements IAutoEditStrategy {
 		}
 
 		String previousPartitionType = command.offset > 0
-				? FormatterUtils.getPartitionType((IStructuredDocument) document, command.offset - 1) : null;
+				? FormatterUtils.getPartitionType((IStructuredDocument) document, command.offset - 1)
+				: null;
 
 		if (previousPartitionType == PHPPartitionTypes.PHP_QUOTED_STRING
 				&& partitionType == PHPPartitionTypes.PHP_QUOTED_STRING) {

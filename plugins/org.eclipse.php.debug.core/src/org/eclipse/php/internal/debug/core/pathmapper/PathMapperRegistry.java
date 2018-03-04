@@ -38,10 +38,8 @@ public class PathMapperRegistry implements IXMLPreferencesStorable {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.php.internal.server.core.manager.IServersManagerListener#
-		 * serverAdded(org.eclipse.php.internal.server.core.manager.
-		 * ServerManagerEvent)
+		 * @see org.eclipse.php.internal.server.core.manager.IServersManagerListener#
+		 * serverAdded(org.eclipse.php.internal.server.core.manager. ServerManagerEvent)
 		 */
 		@Override
 		public void serverAdded(ServerManagerEvent event) {
@@ -53,8 +51,7 @@ public class PathMapperRegistry implements IXMLPreferencesStorable {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.php.internal.server.core.manager.IServersManagerListener#
+		 * @see org.eclipse.php.internal.server.core.manager.IServersManagerListener#
 		 * serverModified(org.eclipse.php.internal.server.core.manager.
 		 * ServerManagerEvent)
 		 */
@@ -65,8 +62,7 @@ public class PathMapperRegistry implements IXMLPreferencesStorable {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.php.internal.server.core.manager.IServersManagerListener#
+		 * @see org.eclipse.php.internal.server.core.manager.IServersManagerListener#
 		 * serverRemoved(org.eclipse.php.internal.server.core.manager.
 		 * ServerManagerEvent)
 		 */
@@ -78,10 +74,8 @@ public class PathMapperRegistry implements IXMLPreferencesStorable {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.php.internal.debug.core.preferences.IPHPExesListener#
-		 * phpExeAdded(org.eclipse.php.internal.debug.core.preferences.
-		 * PHPExesEvent)
+		 * @see org.eclipse.php.internal.debug.core.preferences.IPHPExesListener#
+		 * phpExeAdded(org.eclipse.php.internal.debug.core.preferences. PHPExesEvent)
 		 */
 		@Override
 		public void phpExeAdded(PHPExesEvent event) {
@@ -93,10 +87,8 @@ public class PathMapperRegistry implements IXMLPreferencesStorable {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.php.internal.debug.core.preferences.IPHPExesListener#
-		 * phpExeRemoved(org.eclipse.php.internal.debug.core.preferences.
-		 * PHPExesEvent)
+		 * @see org.eclipse.php.internal.debug.core.preferences.IPHPExesListener#
+		 * phpExeRemoved(org.eclipse.php.internal.debug.core.preferences. PHPExesEvent)
 		 */
 		@Override
 		public void phpExeRemoved(PHPExesEvent event) {
@@ -169,8 +161,8 @@ public class PathMapperRegistry implements IXMLPreferencesStorable {
 			result = new PathMapper();
 			getInstance().serverPathMapper.put(server, result);
 			/*
-			 * Create the link to servers manager here in order not to create
-			 * tightly coupled relationship.
+			 * Create the link to servers manager here in order not to create tightly
+			 * coupled relationship.
 			 */
 			ServersManager.addManagerListener(getInstance().ownerListener);
 		}
@@ -190,16 +182,15 @@ public class PathMapperRegistry implements IXMLPreferencesStorable {
 			String serverName = launchConfiguration.getAttribute(Server.NAME, (String) null);
 			if (serverName != null) {
 				/*
-				 * Try to find path mapper with the use of the server that might
-				 * be bound to the corresponding launch configuration.
+				 * Try to find path mapper with the use of the server that might be bound to the
+				 * corresponding launch configuration.
 				 */
 				pathMapper = getByServer(ServersManager.getServer(serverName));
 			} else if (PHPLaunchUtilities.isLaunchConfigurationTypeOf(launchConfiguration,
 					IPHPDebugConstants.PHPRemoteLaunchType)) {
 				/*
-				 * If no server could be found (launch configuration for
-				 * externally triggered sessions), create temporary one and bind
-				 * it with the launch configuration.
+				 * If no server could be found (launch configuration for externally triggered
+				 * sessions), create temporary one and bind it with the launch configuration.
 				 */
 				pathMapper = getInstance().launchConfigPathMapper.get(launchConfiguration);
 				if (pathMapper == null) {
@@ -224,8 +215,7 @@ public class PathMapperRegistry implements IXMLPreferencesStorable {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable#
+	 * @see org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable#
 	 * restoreFromMap(java.util.Map)
 	 */
 	@Override
@@ -265,8 +255,7 @@ public class PathMapperRegistry implements IXMLPreferencesStorable {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable#
+	 * @see org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable#
 	 * storeToMap()
 	 */
 	@Override

@@ -65,8 +65,7 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerPart#setFlatLayout
+	 * @see org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerPart#setFlatLayout
 	 * (boolean)
 	 * 
 	 * Always displays in hierarchical mode, never flat.
@@ -129,8 +128,8 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 	}
 
 	/**
-	 * Overriding DTLK original setComerator, and setting "includePathContainer
-	 * - aware" comparators
+	 * Overriding DTLK original setComerator, and setting "includePathContainer -
+	 * aware" comparators
 	 */
 	@Override
 	protected void setComparator() {

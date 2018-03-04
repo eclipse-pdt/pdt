@@ -126,8 +126,7 @@ public class LinkedProposalModelPresenter {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.text.contentassist.ICompletionProposalExtension2
+		 * @see org.eclipse.jface.text.contentassist.ICompletionProposalExtension2
 		 * #apply(org.eclipse.jface.text.ITextViewer, char, int, int)
 		 */
 		@Override
@@ -169,8 +168,7 @@ public class LinkedProposalModelPresenter {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.text.contentassist.ICompletionProposal#getImage()
+		 * @see org.eclipse.jface.text.contentassist.ICompletionProposal#getImage()
 		 */
 		@Override
 		public Image getImage() {
@@ -180,8 +178,7 @@ public class LinkedProposalModelPresenter {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jdt.ui.text.java.IJavaCompletionProposal#getRelevance()
+		 * @see org.eclipse.jdt.ui.text.java.IJavaCompletionProposal#getRelevance()
 		 */
 		@Override
 		public int getRelevance() {
@@ -191,8 +188,7 @@ public class LinkedProposalModelPresenter {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.text.contentassist.ICompletionProposal#apply(org
+		 * @see org.eclipse.jface.text.contentassist.ICompletionProposal#apply(org
 		 * .eclipse.jface.text.IDocument)
 		 */
 		@Override
@@ -230,8 +226,7 @@ public class LinkedProposalModelPresenter {
 		}
 
 		/*
-		 * @see
-		 * org.eclipse.jface.text.contentassist.ICompletionProposalExtension2
+		 * @see org.eclipse.jface.text.contentassist.ICompletionProposalExtension2
 		 * #validate(org.eclipse.jface.text.IDocument, int,
 		 * org.eclipse.jface.text.DocumentEvent)
 		 */

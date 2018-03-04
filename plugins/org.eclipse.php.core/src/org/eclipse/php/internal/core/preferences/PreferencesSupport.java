@@ -29,8 +29,7 @@ public class PreferencesSupport {
 	 * Constructs a new PreferencesSupport.
 	 * 
 	 * @param nodeQualifier
-	 *            A string qualifier for the node (for example:
-	 *            PHPCorePlugin.ID)
+	 *            A string qualifier for the node (for example: PHPCorePlugin.ID)
 	 * @param preferenceStore
 	 *            The relevant preferences store.
 	 */
@@ -93,9 +92,8 @@ public class PreferencesSupport {
 	}
 
 	/**
-	 * Returns the value for the key by first searching for it as a
-	 * project-specific and if it is undefined as such, search it as a workspace
-	 * property.
+	 * Returns the value for the key by first searching for it as a project-specific
+	 * and if it is undefined as such, search it as a workspace property.
 	 * 
 	 * @param key
 	 *            The preferences key.

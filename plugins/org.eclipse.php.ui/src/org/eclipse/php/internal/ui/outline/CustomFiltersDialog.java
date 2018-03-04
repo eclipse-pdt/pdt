@@ -213,8 +213,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 		});
 		fCheckBoxList.addCheckStateListener(new ICheckStateListener() {
 			/*
-			 * @see
-			 * org.eclipse.jface.viewers.ICheckStateListener#checkStateChanged
+			 * @see org.eclipse.jface.viewers.ICheckStateListener#checkStateChanged
 			 * (org.eclipse.jface.viewers.CheckStateChangedEvent)
 			 */
 			@Override
@@ -418,8 +417,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 		StringBuilder strBuf = new StringBuilder();
 		if (length > 0) {
 			strBuf.append(escapeSeparator(patterns[0], separator));
-		}
-		else {
+		} else {
 			return ""; //$NON-NLS-1$
 		}
 		int i = 1;

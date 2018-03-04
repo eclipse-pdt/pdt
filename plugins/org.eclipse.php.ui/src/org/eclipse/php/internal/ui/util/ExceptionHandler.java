@@ -32,8 +32,8 @@ public class ExceptionHandler {
 	}
 
 	/**
-	 * Handles the given <code>CoreException</code>. The workbench shell is used
-	 * as a parent for the dialog window.
+	 * Handles the given <code>CoreException</code>. The workbench shell is used as
+	 * a parent for the dialog window.
 	 * 
 	 * @param e
 	 *            the <code>CoreException</code> to be handled
@@ -63,8 +63,8 @@ public class ExceptionHandler {
 	}
 
 	/**
-	 * Handles the given <code>InvocationTargetException</code>. The workbench
-	 * shell is used as a parent for the dialog window.
+	 * Handles the given <code>InvocationTargetException</code>. The workbench shell
+	 * is used as a parent for the dialog window.
 	 * 
 	 * @param e
 	 *            the <code>InvocationTargetException</code> to be handled
