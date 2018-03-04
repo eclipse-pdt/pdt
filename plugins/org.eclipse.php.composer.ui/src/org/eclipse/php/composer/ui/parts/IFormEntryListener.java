@@ -35,8 +35,8 @@ public interface IFormEntryListener extends IHyperlinkListener {
 	void textDirty(FormEntry entry);
 
 	/**
-	 * The value of the entry has been changed to be the text in the text
-	 * control (as a result of 'commit' action).
+	 * The value of the entry has been changed to be the text in the text control
+	 * (as a result of 'commit' action).
 	 * 
 	 * @param entry
 	 */

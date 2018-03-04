@@ -50,15 +50,14 @@ public interface IPHPDebugConstants {
 	public static final String SSH_TUNNEL_SECURE_PREF_NODE = "/org.eclipse.php/DEBUG"; //$NON-NLS-1$
 
 	/**
-	 * Status code indicating an unexpected internal error (value
-	 * <code>150</code>).
+	 * Status code indicating an unexpected internal error (value <code>150</code>).
 	 */
 	public static final int INTERNAL_ERROR = 150;
 
 	/**
-	 * Status code indicating an error while connecting to the debug server
-	 * (valuse <code>200</code>), usually, as a result of a debug session that
-	 * is initialized on a file that does not exist on the server side.
+	 * Status code indicating an error while connecting to the debug server (valuse
+	 * <code>200</code>), usually, as a result of a debug session that is
+	 * initialized on a file that does not exist on the server side.
 	 */
 	public static final int DEBUG_CONNECTION_ERROR = 200;
 

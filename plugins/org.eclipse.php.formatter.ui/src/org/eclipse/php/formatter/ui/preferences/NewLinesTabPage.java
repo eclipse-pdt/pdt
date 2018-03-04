@@ -32,7 +32,7 @@ public class NewLinesTabPage extends ModifyDialogTabPage {
 				// :
 				// "switch ($number){case RED: return RED; case GREEN: return
 				// GREEN; case BLUE: return BLUE; default: return BLACK ;}"+
-	"\n?>"; //$NON-NLS-1$
+			"\n?>"; //$NON-NLS-1$
 
 	private CheckboxPreference inEmptyClassBodyCB;
 	private CheckboxPreference inEmptyMethodBodyCB;

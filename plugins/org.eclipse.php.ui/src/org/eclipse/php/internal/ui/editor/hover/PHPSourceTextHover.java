@@ -41,8 +41,7 @@ public class PHPSourceTextHover extends ScriptSourceHover
 	private IInformationControlCreator fPresenterControlCreator;
 
 	/*
-	 * @see
-	 * IInformationProviderExtension2#getInformationPresenterControlCreator()
+	 * @see IInformationProviderExtension2#getInformationPresenterControlCreator()
 	 * 
 	 * @since 3.1 This is the format of the window on focus
 	 */

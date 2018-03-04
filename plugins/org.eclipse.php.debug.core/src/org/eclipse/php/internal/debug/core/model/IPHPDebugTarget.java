@@ -27,9 +27,9 @@ public interface IPHPDebugTarget extends IDebugTarget {
 	public DebugOutput getOutputBuffer();
 
 	/**
-	 * return true if the debug target is waiting for the next debug session.
-	 * This concept is applicable currently only to the xdebug implementation,
-	 * zend implementation will always return false.
+	 * return true if the debug target is waiting for the next debug session. This
+	 * concept is applicable currently only to the xdebug implementation, zend
+	 * implementation will always return false.
 	 * 
 	 * @return true if xdebug is waiting for the next debug session.
 	 */

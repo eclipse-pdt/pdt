@@ -17,8 +17,7 @@ import java.util.ResourceBundle;
 public class PHPRefactoringCoreMessages {
 	private static final String BUNDLE_NAME = "org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages"; //$NON-NLS-1$
 
-	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
-			.getBundle(BUNDLE_NAME);
+	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
 	private PHPRefactoringCoreMessages() {
 		// private constructor

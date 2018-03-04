@@ -22,7 +22,8 @@ public class XDebugPreferenceMgr {
 	// general
 	public static final String XDEBUG_PREF_PORT = PHPDebugPlugin.ID + ".xdebug_port"; //$NON-NLS-1$
 	public static final String XDEBUG_PREF_SHOWSUPERGLOBALS = PHPDebugPlugin.ID + ".xdebug_showSuperGlobals"; //$NON-NLS-1$
-	public static final String XDEBUG_PREF_USE_EXTENDED_PROPERTIES = PHPDebugPlugin.ID + ".xdebug_useExtendedProperties"; //$NON-NLS-1$
+	public static final String XDEBUG_PREF_USE_EXTENDED_PROPERTIES = PHPDebugPlugin.ID
+			+ ".xdebug_useExtendedProperties"; //$NON-NLS-1$
 	public static final String XDEBUG_PREF_ARRAYDEPTH = PHPDebugPlugin.ID + ".xdebug_arrayDepth"; //$NON-NLS-1$
 	public static final String XDEBUG_PREF_CHILDREN = PHPDebugPlugin.ID + ".xdebug_children"; //$NON-NLS-1$
 	public static final String XDEBUG_PREF_DATA = PHPDebugPlugin.ID + ".xdebug_data"; //$NON-NLS-1$

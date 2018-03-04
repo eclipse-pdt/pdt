@@ -45,8 +45,8 @@ abstract public class AbstractCorrectionProposal
 	 * @param relevance
 	 *            The relevance of this proposal.
 	 * @param image
-	 *            The image that is displayed for this proposal or
-	 *            <code>null</code> if no image is desired.
+	 *            The image that is displayed for this proposal or <code>null</code>
+	 *            if no image is desired.
 	 */
 	public AbstractCorrectionProposal(String name, int relevance, Image image) {
 		this(name, relevance, image, null);
@@ -60,8 +60,8 @@ abstract public class AbstractCorrectionProposal
 	 * @param relevance
 	 *            The relevance of this proposal.
 	 * @param image
-	 *            The image that is displayed for this proposal or
-	 *            <code>null</code> if no image is desired.
+	 *            The image that is displayed for this proposal or <code>null</code>
+	 *            if no image is desired.
 	 * @param commandId
 	 *            Command id for {@link CorrectionCommandHandler}
 	 */
@@ -165,8 +165,7 @@ abstract public class AbstractCorrectionProposal
 	}
 
 	/**
-	 * Set the proposal id to allow assigning a shortcut to the correction
-	 * proposal.
+	 * Set the proposal id to allow assigning a shortcut to the correction proposal.
 	 * 
 	 * @param commandId
 	 *            The proposal id for this proposal or <code>null</code> if no

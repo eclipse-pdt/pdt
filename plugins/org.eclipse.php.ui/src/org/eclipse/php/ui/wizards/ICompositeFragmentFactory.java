@@ -22,8 +22,8 @@ import org.eclipse.swt.widgets.Composite;
 public interface ICompositeFragmentFactory {
 
 	/**
-	 * Creates a WizardFragment used for any Wizard control that is related to
-	 * the PHP servers infrastructure.
+	 * Creates a WizardFragment used for any Wizard control that is related to the
+	 * PHP servers infrastructure.
 	 * 
 	 * @param serverContainer
 	 * @return

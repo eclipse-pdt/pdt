@@ -26,8 +26,8 @@ import org.eclipse.php.ui.editor.SharedASTProvider;
 public class PHPSelectionUtil {
 
 	/**
-	 * Returns an {@link IModelElement} from the given selection. In case that
-	 * the element is not resolvable, return null.
+	 * Returns an {@link IModelElement} from the given selection. In case that the
+	 * element is not resolvable, return null.
 	 * 
 	 * @param selection
 	 * @param sourceModule

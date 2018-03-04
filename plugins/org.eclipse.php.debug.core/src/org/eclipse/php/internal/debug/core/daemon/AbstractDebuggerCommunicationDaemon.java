@@ -43,8 +43,8 @@ public abstract class AbstractDebuggerCommunicationDaemon implements ICommunicat
 	}
 
 	/**
-	 * Initializes the ServerSocket and starts a listen thread. Also, initialize
-	 * a preferences change listener for the port that is used by this daemon.
+	 * Initializes the ServerSocket and starts a listen thread. Also, initialize a
+	 * preferences change listener for the port that is used by this daemon.
 	 */
 	@Override
 	public void init() {
@@ -110,8 +110,8 @@ public abstract class AbstractDebuggerCommunicationDaemon implements ICommunicat
 	}
 
 	/**
-	 * Initialize the ServerSocket to listen for debug requests on a specified
-	 * port. The port is defined in the workspace preferences.
+	 * Initialize the ServerSocket to listen for debug requests on a specified port.
+	 * The port is defined in the workspace preferences.
 	 * 
 	 * @return True, if the reset did not yield any errors; False, otherwise.
 	 */
@@ -148,16 +148,15 @@ public abstract class AbstractDebuggerCommunicationDaemon implements ICommunicat
 	}
 
 	/**
-	 * Returns the server socket port used for the debug requests listening
-	 * thread.
+	 * Returns the server socket port used for the debug requests listening thread.
 	 * 
 	 * @return The port specified in the preferences.
 	 */
 	public abstract int getReceiverPort();
 
 	/**
-	 * Starts a connection on the given Socket. This method should be overridden
-	 * by extending classes to create a different debug connections.
+	 * Starts a connection on the given Socket. This method should be overridden by
+	 * extending classes to create a different debug connections.
 	 * 
 	 * @param socket
 	 */
@@ -173,8 +172,8 @@ public abstract class AbstractDebuggerCommunicationDaemon implements ICommunicat
 	public abstract String getDebuggerID();
 
 	/**
-	 * Starts the listening thread. If the thread is already started, nothing
-	 * should happen.
+	 * Starts the listening thread. If the thread is already started, nothing should
+	 * happen.
 	 */
 	protected void startListenThread() {
 		synchronized (lock) {
@@ -199,8 +198,8 @@ public abstract class AbstractDebuggerCommunicationDaemon implements ICommunicat
 
 	/*
 	 * The thread responsible of listening for debug requests. On every debug
-	 * request, a new thread of DebugConnectionThread is created and a debug
-	 * session is initialized.
+	 * request, a new thread of DebugConnectionThread is created and a debug session
+	 * is initialized.
 	 */
 	private class ReceiverThread implements Runnable {
 		@Override
@@ -229,8 +228,7 @@ public abstract class AbstractDebuggerCommunicationDaemon implements ICommunicat
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.daemon.communication.ICommunicationDaemon
+	 * @see org.eclipse.php.internal.debug.daemon.communication.ICommunicationDaemon
 	 * #isEnabled()
 	 */
 	@Override

@@ -27,12 +27,9 @@ class OrganizeIncludesChange extends TextFileChange {
 
 	private int includeInsertionOffset;
 
-	public OrganizeIncludesChange(
-			OrganizeIncludesProcessorDelegate processorDelegate) {
-		super(
-				MessageFormat
-						.format(PHPRefactoringCoreMessages
-								.getString("OrganizeIncludesChange_In_File"), new Object[] { processorDelegate.getFile().getFullPath().toString() }), processorDelegate.getFile()); //$NON-NLS-1$
+	public OrganizeIncludesChange(OrganizeIncludesProcessorDelegate processorDelegate) {
+		super(MessageFormat.format(PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_In_File"), //$NON-NLS-1$
+				new Object[] { processorDelegate.getFile().getFullPath().toString() }), processorDelegate.getFile());
 		// 0. Initialize the change:
 		setTextType("php"); //$NON-NLS-1$
 		setEdit(new MultiTextEdit());
@@ -116,7 +113,12 @@ class OrganizeIncludesChange extends TextFileChange {
 	// allEdits.add(createDeleteIncludeEdit(include));
 	// }
 	// // add the group edit:
-	//		CategorizedTextEditGroup editGroup = new CategorizedTextEditGroup(insertionLabel, new GroupCategorySet(new GroupCategory("relocateIncludes", PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Movements"), PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Movements")))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	// CategorizedTextEditGroup editGroup = new
+	// CategorizedTextEditGroup(insertionLabel, new GroupCategorySet(new
+	// GroupCategory("relocateIncludes",
+	// PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Movements"),
+	// PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Movements"))));
+	// //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	//
 	// return createChangeEditGroup(allEdits.toArray(new
 	// TextEdit[allEdits.size()]), editGroup, false);
@@ -133,7 +135,9 @@ class OrganizeIncludesChange extends TextFileChange {
 	// String includeLocation =
 	// PHPModelUtil.getRelativeLocation(processorDelegate.getProject(),
 	// existingInclude);
-	//			String editGroupName = OrganizeIncludesUtils.getEditGroupName(PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Move_Up"), includeLocation, existingIncludes.get(existingInclude)); //$NON-NLS-1$
+	// String editGroupName =
+	// OrganizeIncludesUtils.getEditGroupName(PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Move_Up"),
+	// includeLocation, existingIncludes.get(existingInclude)); //$NON-NLS-1$
 	// Collection<IPath> includePaths =
 	// processorDelegate.fileNode.getIncludePaths(processorDelegate.network.getNode(processorDelegate.projectModel.getFileData(existingInclude)));
 	// List<PHPIncludeFileData> identicalIncludes = new
@@ -145,7 +149,8 @@ class OrganizeIncludesChange extends TextFileChange {
 	// for (IPath path : includePaths) {
 	// String includeString = IncludeStringHack.unhack(path.toString());
 	// String firstSegment = path.segment(0);
-	//					if (finalIncludeLocation == null && !"||".equals(firstSegment) && !"|".equals(firstSegment)) // not relative //$NON-NLS-1$ //$NON-NLS-2$
+	// if (finalIncludeLocation == null && !"||".equals(firstSegment) &&
+	// !"|".equals(firstSegment)) // not relative //$NON-NLS-1$ //$NON-NLS-2$
 	// finalIncludeLocation = includeString;
 	// if (new Path(element.getName()).equals(new Path(includeString)))
 	// identicalIncludes.add(element);
@@ -167,42 +172,37 @@ class OrganizeIncludesChange extends TextFileChange {
 	// String includeLocation =
 	// PHPModelUtil.getRelativeLocation(processorDelegate.getProject(),
 	// missingInclude.getName());
-	//			String editGroupName = OrganizeIncludesUtils.getEditGroupName(PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Add"), includeLocation, missingIncludes.get(missingInclude)); //$NON-NLS-1$
+	// String editGroupName =
+	// OrganizeIncludesUtils.getEditGroupName(PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Add"),
+	// includeLocation, missingIncludes.get(missingInclude)); //$NON-NLS-1$
 	// TextEditChangeGroup editChangeGroup =
 	// createIncludeAddition(editGroupName, includeLocation, groupEnabled);
 	// editGroups.put(includeLocation, editChangeGroup);
 	// }
 	// }
 
-	private TextEditChangeGroup createIncludeAddition(String insertionLabel,
-			String includeString, boolean enabled) {
+	private TextEditChangeGroup createIncludeAddition(String insertionLabel, String includeString, boolean enabled) {
 		InsertEdit edit = createInsertIncludeEdit(includeString);
-		CategorizedTextEditGroup editGroup = new CategorizedTextEditGroup(
-				insertionLabel,
-				new GroupCategorySet(
-						new GroupCategory(
-								PHPRefactoringCoreMessages
-										.getString("OrganizeIncludesChange_5"), PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Additions"), PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Additions")))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		return createChangeEditGroup(new TextEdit[] { edit }, editGroup,
-				enabled);
+		CategorizedTextEditGroup editGroup = new CategorizedTextEditGroup(insertionLabel,
+				new GroupCategorySet(new GroupCategory(PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_5"), //$NON-NLS-1$
+						PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Additions"), //$NON-NLS-1$
+						PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Additions")))); //$NON-NLS-1$
+		return createChangeEditGroup(new TextEdit[] { edit }, editGroup, enabled);
 	}
 
-	private TextEditChangeGroup createChangeEditGroup(TextEdit[] edits,
-			CategorizedTextEditGroup editGroup, boolean enabled) {
+	private TextEditChangeGroup createChangeEditGroup(TextEdit[] edits, CategorizedTextEditGroup editGroup,
+			boolean enabled) {
 		for (TextEdit element : edits) {
 			editGroup.addTextEdit(element);
 		}
-		TextEditChangeGroup editChangeGroup = new TextEditChangeGroup(this,
-				editGroup);
+		TextEditChangeGroup editChangeGroup = new TextEditChangeGroup(this, editGroup);
 		editChangeGroup.setEnabled(enabled);
 		return editChangeGroup;
 	}
 
 	private InsertEdit createInsertIncludeEdit(String includeString) {
-		return new InsertEdit(includeInsertionOffset, MessageFormat.format(
-				"require_once ''{0}'';{1}", new Object[] { //$NON-NLS-1$
-				includeString,
-						processorDelegate.getDocument().getLineDelimiter() }));
+		return new InsertEdit(includeInsertionOffset, MessageFormat.format("require_once ''{0}'';{1}", new Object[] { //$NON-NLS-1$
+				includeString, processorDelegate.getDocument().getLineDelimiter() }));
 	}
 
 	// private void deleteUnneededIncludes(List<PHPIncludeFileData>
@@ -210,7 +210,11 @@ class OrganizeIncludesChange extends TextFileChange {
 	// for (PHPIncludeFileData unneededInclude : unneededIncludes) {
 	// String includeLocation = unneededInclude.getName();
 	// String editGroupName = OrganizeIncludesUtils.getEditGroupName(
-	//				PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Remove"), includeLocation, unresolved ? PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Unresolved") : PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Possibly_Unused")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	// PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Remove"),
+	// includeLocation, unresolved ?
+	// PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Unresolved") :
+	// PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Possibly_Unused"));
+	// //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	// TextEditChangeGroup editChangeGroup = editGroups.get(includeLocation);
 	// if (editChangeGroup == null) {
 	// editChangeGroup = createIncludeDeletion(editGroupName, unneededInclude,
@@ -235,13 +239,17 @@ class OrganizeIncludesChange extends TextFileChange {
 	// // create and add the edit:
 	// TextEdit edit = createDeleteIncludeEdit(unneededInclude);
 	// // add the group edit:
-	//		CategorizedTextEditGroup editGroup = new CategorizedTextEditGroup(insertionLabel, new GroupCategorySet(new GroupCategory("deleteIncludes", PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Deletions"), PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Deletions")))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	// CategorizedTextEditGroup editGroup = new
+	// CategorizedTextEditGroup(insertionLabel, new GroupCategorySet(new
+	// GroupCategory("deleteIncludes",
+	// PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Deletions"),
+	// PHPRefactoringCoreMessages.getString("OrganizeIncludesChange_Deletions"))));
+	// //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	// return createChangeEditGroup(new TextEdit[] { edit }, editGroup,
 	// groupEnabled);
 	// }
 
-	private static void addEditsToGroup(TextEditChangeGroup editChangeGroup,
-			TextEdit[] edits) {
+	private static void addEditsToGroup(TextEditChangeGroup editChangeGroup, TextEdit[] edits) {
 		for (TextEdit element : edits) {
 			editChangeGroup.getTextEditGroup().addTextEdit(element);
 		}

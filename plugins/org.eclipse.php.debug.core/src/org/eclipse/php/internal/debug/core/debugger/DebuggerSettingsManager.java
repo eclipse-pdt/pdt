@@ -177,9 +177,9 @@ public enum DebuggerSettingsManager {
 	}
 
 	/**
-	 * Finds and returns debugger settings for given debugger type and owner.
-	 * May return <code>null</code> if there is no settings provider for
-	 * particular debugger type.
+	 * Finds and returns debugger settings for given debugger type and owner. May
+	 * return <code>null</code> if there is no settings provider for particular
+	 * debugger type.
 	 * 
 	 * @param ownerId
 	 * @param debuggerId
@@ -216,8 +216,8 @@ public enum DebuggerSettingsManager {
 	}
 
 	/**
-	 * Creates and returns editable working copy for provided settings. Callers
-	 * of this method should always use
+	 * Creates and returns editable working copy for provided settings. Callers of
+	 * this method should always use
 	 * {@link DebuggerSettingsManager#dropWorkingCopy(IDebuggerSettingsWorkingCopy)}
 	 * every time when corresponding working copy is no longer used.
 	 * 
@@ -268,8 +268,8 @@ public enum DebuggerSettingsManager {
 
 	/**
 	 * Saves the original settings with the use of provided working copy. This
-	 * method should always be used by a clients whenever original settings
-	 * should be saved to fire up the appropriate events.
+	 * method should always be used by a clients whenever original settings should
+	 * be saved to fire up the appropriate events.
 	 * 
 	 * @param settingsWorkingCopy
 	 */

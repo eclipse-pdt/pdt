@@ -96,8 +96,8 @@ public class EditTemplateDialog extends StatusDialog {
 		}
 
 		/**
-		 * Updates the enabled state of the action. Fires a property change if
-		 * the enabled state changes.
+		 * Updates the enabled state of the action. Fires a property change if the
+		 * enabled state changes.
 		 * 
 		 * @see Action#firePropertyChange(String, Object, Object)
 		 */

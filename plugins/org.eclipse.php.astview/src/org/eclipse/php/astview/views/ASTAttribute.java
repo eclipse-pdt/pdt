@@ -14,25 +14,27 @@ package org.eclipse.php.astview.views;
 import org.eclipse.php.core.ast.nodes.ASTNode;
 import org.eclipse.swt.graphics.Image;
 
-
 public abstract class ASTAttribute {
-	
-	protected static final Object[] EMPTY= new Object[0];
+
+	protected static final Object[] EMPTY = new Object[0];
 
 	public abstract Object getParent();
+
 	public abstract Object[] getChildren();
+
 	public abstract String getLabel();
+
 	public abstract Image getImage();
-	
+
 	public ASTNode getParentASTNode() {
-		Object parent= getParent();
+		Object parent = getParent();
 		while (parent instanceof ASTAttribute) {
-			parent= ((ASTAttribute) parent).getParent();
+			parent = ((ASTAttribute) parent).getParent();
 		}
 		if (parent instanceof ASTNode) {
 			return (ASTNode) parent;
 		}
 		return null;
 	}
-	
+
 }

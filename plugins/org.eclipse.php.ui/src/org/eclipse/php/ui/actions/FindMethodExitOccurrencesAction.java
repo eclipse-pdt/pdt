@@ -43,8 +43,8 @@ public class FindMethodExitOccurrencesAction extends org.eclipse.dltk.ui.actions
 	private PHPStructuredEditor fEditor;
 
 	/**
-	 * Note: This constructor is for internal use only. Clients should not call
-	 * this constructor.
+	 * Note: This constructor is for internal use only. Clients should not call this
+	 * constructor.
 	 * 
 	 * @param editor
 	 *            the Java editor
@@ -56,9 +56,9 @@ public class FindMethodExitOccurrencesAction extends org.eclipse.dltk.ui.actions
 	}
 
 	/**
-	 * Creates a new {@link FindMethodExitOccurrencesAction}. The action
-	 * requires that the selection provided by the site's selection provider is
-	 * of type <code>IStructuredSelection</code>.
+	 * Creates a new {@link FindMethodExitOccurrencesAction}. The action requires
+	 * that the selection provided by the site's selection provider is of type
+	 * <code>IStructuredSelection</code>.
 	 * 
 	 * @param site
 	 *            the site providing context information for this action

@@ -714,8 +714,7 @@ public class NewPHPsComboBlock {
 	}
 
 	/**
-	 * Populates the PHPexe table with existing PHPexes defined in the
-	 * workspace.
+	 * Populates the PHPexe table with existing PHPexes defined in the workspace.
 	 */
 	protected void fillWithWorkspacePHPexes() {
 		// fill with PHPexes

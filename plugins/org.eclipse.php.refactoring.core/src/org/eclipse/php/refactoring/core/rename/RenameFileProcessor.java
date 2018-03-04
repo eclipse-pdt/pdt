@@ -225,9 +225,9 @@ public class RenameFileProcessor extends AbstraceRenameResourceProcessor impleme
 	}
 
 	/**
-	 * Check if the supplied resource is read only or null. If it is then ask
-	 * the user if they want to continue. Return true if the resource is not
-	 * read only or if the user has given permission.
+	 * Check if the supplied resource is read only or null. If it is then ask the
+	 * user if they want to continue. Return true if the resource is not read only
+	 * or if the user has given permission.
 	 * 
 	 * @return boolean
 	 */
@@ -350,8 +350,7 @@ public class RenameFileProcessor extends AbstraceRenameResourceProcessor impleme
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.refactoring.core.rename.IReferenceUpdating#getAttribute(
+	 * @see org.eclipse.php.refactoring.core.rename.IReferenceUpdating#getAttribute(
 	 * java.lang.String)
 	 */
 	@Override
@@ -372,8 +371,7 @@ public class RenameFileProcessor extends AbstraceRenameResourceProcessor impleme
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.refactoring.core.rename.IReferenceUpdating#setAttribute(
+	 * @see org.eclipse.php.refactoring.core.rename.IReferenceUpdating#setAttribute(
 	 * java.lang.String, java.lang.String)
 	 */
 	@Override

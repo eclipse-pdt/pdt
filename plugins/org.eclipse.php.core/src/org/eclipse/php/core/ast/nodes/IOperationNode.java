@@ -23,16 +23,14 @@ package org.eclipse.php.core.ast.nodes;
 public interface IOperationNode {
 
 	/**
-	 * Returns the string representation of the operation (e.g. +, -, ~, ++,
-	 * etc.).
+	 * Returns the string representation of the operation (e.g. +, -, ~, ++, etc.).
 	 * 
 	 * @return The string representation of the operation
 	 */
 	public String getOperationString();
 
 	/**
-	 * Translate the given operation id to the string operation that it
-	 * describes.
+	 * Translate the given operation id to the string operation that it describes.
 	 * 
 	 * @param op
 	 *            The operation code.

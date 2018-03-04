@@ -68,8 +68,8 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 	}
 
 	/**
-	 * This method is called when 'Finish' button is pressed in the wizard. We
-	 * will create an operation and run it using wizard as execution context.
+	 * This method is called when 'Finish' button is pressed in the wizard. We will
+	 * create an operation and run it using wizard as execution context.
 	 */
 	@Override
 	public boolean performFinish() {
@@ -136,10 +136,9 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 	public static class FileCreator {
 
 		/**
-		 * The worker method. It will find the container, create the file if
-		 * missing or just replace its contents, and open the editor on the
-		 * newly created file. This method does not take an editor id to use
-		 * when opening the file.
+		 * The worker method. It will find the container, create the file if missing or
+		 * just replace its contents, and open the editor on the newly created file.
+		 * This method does not take an editor id to use when opening the file.
 		 * 
 		 * @param wizard
 		 * @param containerName
@@ -160,9 +159,8 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 		}
 
 		/**
-		 * The worker method. It will find the container, create the file if
-		 * missing or just replace its contents, and open the editor on the
-		 * newly created file.
+		 * The worker method. It will find the container, create the file if missing or
+		 * just replace its contents, and open the editor on the newly created file.
 		 * 
 		 * @param wizard
 		 * @param containerName
@@ -170,8 +168,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 		 * @param monitor
 		 * @param contents
 		 * @param editorID
-		 *            An optional editor ID to use when opening the file (can be
-		 *            null).
+		 *            An optional editor ID to use when opening the file (can be null).
 		 * @throws CoreException
 		 */
 		public void createFile(Wizard wizard, final IFile file, IProgressMonitor monitor, String contents,

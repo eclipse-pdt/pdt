@@ -199,8 +199,8 @@ public class ExecutionStatisticsFilterDialog extends StatusDialog {
 			/*
 			 * (non-Javadoc)
 			 * 
-			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.
-			 * eclipse .swt.events.SelectionEvent)
+			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org. eclipse
+			 * .swt.events.SelectionEvent)
 			 */
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -226,8 +226,7 @@ public class ExecutionStatisticsFilterDialog extends StatusDialog {
 			/*
 			 * (non-Javadoc)
 			 * 
-			 * @see
-			 * org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.
+			 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.
 			 * swt.events.ModifyEvent)
 			 */
 			@Override
@@ -287,8 +286,8 @@ public class ExecutionStatisticsFilterDialog extends StatusDialog {
 			/*
 			 * (non-Javadoc)
 			 * 
-			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.
-			 * eclipse .swt.events.SelectionEvent)
+			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org. eclipse
+			 * .swt.events.SelectionEvent)
 			 */
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -321,8 +320,7 @@ public class ExecutionStatisticsFilterDialog extends StatusDialog {
 			/*
 			 * (non-Javadoc)
 			 * 
-			 * @see
-			 * org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.
+			 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.
 			 * swt.events.ModifyEvent)
 			 */
 			@Override
@@ -366,8 +364,7 @@ public class ExecutionStatisticsFilterDialog extends StatusDialog {
 			/*
 			 * (non-Javadoc)
 			 * 
-			 * @seeorg.eclipse.jface.viewers.ISelectionChangedListener#
-			 * selectionChanged
+			 * @seeorg.eclipse.jface.viewers.ISelectionChangedListener# selectionChanged
 			 * (org.eclipse.jface.viewers.SelectionChangedEvent)
 			 */
 			@Override
@@ -518,8 +515,7 @@ public class ExecutionStatisticsFilterDialog extends StatusDialog {
 			/*
 			 * (non-Javadoc)
 			 * 
-			 * @see
-			 * org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.
+			 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.
 			 * swt.events.ModifyEvent)
 			 */
 			@Override
@@ -654,8 +650,7 @@ public class ExecutionStatisticsFilterDialog extends StatusDialog {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(
+		 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(
 		 * java.lang.Object)
 		 */
 		@Override
@@ -679,8 +674,7 @@ public class ExecutionStatisticsFilterDialog extends StatusDialog {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse
+		 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse
 		 * .jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 		 */
 		@Override
@@ -692,8 +686,7 @@ public class ExecutionStatisticsFilterDialog extends StatusDialog {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java
+		 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java
 		 * .lang.Object, int)
 		 */
 		@Override
@@ -704,8 +697,7 @@ public class ExecutionStatisticsFilterDialog extends StatusDialog {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.
+		 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.
 		 * lang.Object, int)
 		 */
 		@Override

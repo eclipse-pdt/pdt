@@ -28,15 +28,15 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 public interface IPHPScriptRegion extends ITextRegion {
 
 	/**
-	 * Returns an array of php tokens that intersects with the interval [from,
-	 * from + length - 1] and that includes (at least) value of
+	 * Returns an array of php tokens that intersects with the interval [from, from
+	 * + length - 1] and that includes (at least) value of
 	 * getPhpToken(relativeOffset)
 	 * 
 	 * @param relativeOffset
 	 * @param length
 	 * @throws BadLocationException
-	 *             when "relativeOffset" is an invalid offset or when "length"
-	 *             is < 0
+	 *             when "relativeOffset" is an invalid offset or when "length" is <
+	 *             0
 	 */
 	public abstract @NonNull ITextRegion[] getPHPTokens(int relativeOffset, int length) throws BadLocationException;
 
@@ -47,8 +47,8 @@ public interface IPHPScriptRegion extends ITextRegion {
 	public int getUpdatedTokensLength();
 
 	/**
-	 * Returns a single php token that lay in the given offset. If offset is
-	 * equal to getEnd(), the last php token from the region will be returned.
+	 * Returns a single php token that lay in the given offset. If offset is equal
+	 * to getEnd(), the last php token from the region will be returned.
 	 * 
 	 * @param relativeOffset
 	 * @return region (will never be null)
@@ -57,8 +57,8 @@ public interface IPHPScriptRegion extends ITextRegion {
 	public abstract @NonNull ITextRegion getPHPToken(int relativeOffset) throws BadLocationException;
 
 	/**
-	 * returns the php partition type of the token that lay in the given offset
-	 * PHP valid types:<br>
+	 * returns the php partition type of the token that lay in the given offset PHP
+	 * valid types:<br>
 	 * PHP_DEFAULT - {@link PHPPartitionTypes#PHP_DEFAULT}<br>
 	 * PHP_SINGLE_LINE_COMMENT -
 	 * {@link PHPPartitionTypes#PHP_SINGLE_LINE_COMMENT}<br>
@@ -73,8 +73,8 @@ public interface IPHPScriptRegion extends ITextRegion {
 	public abstract @NonNull String getPartition(int relativeOffset) throws BadLocationException;
 
 	/**
-	 * returns the php token type of the token that lays in the given offset
-	 * Please refer {@link PHPRegionTypes} for list of php token types
+	 * returns the php token type of the token that lays in the given offset Please
+	 * refer {@link PHPRegionTypes} for list of php token types
 	 * 
 	 * @param relativeOffset
 	 * @return php token type (will never be null)
@@ -83,8 +83,8 @@ public interface IPHPScriptRegion extends ITextRegion {
 	public abstract @NonNull String getPHPTokenType(int relativeOffset) throws BadLocationException;
 
 	/**
-	 * Returns true if the given offset is in a back-quoted string, a
-	 * single-quoted string, a double-quoted string or a heredoc/nowdoc section
+	 * Returns true if the given offset is in a back-quoted string, a single-quoted
+	 * string, a double-quoted string or a heredoc/nowdoc section
 	 * 
 	 * @param relativeOffset
 	 * @return
@@ -102,8 +102,7 @@ public interface IPHPScriptRegion extends ITextRegion {
 	public abstract void completeReparse(IDocument doc, int start, int length);
 
 	/**
-	 * Performs a complete reparse in the document on the given interval and
-	 * project
+	 * Performs a complete reparse in the document on the given interval and project
 	 * 
 	 * @param doc
 	 * @param start

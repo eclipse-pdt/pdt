@@ -30,8 +30,7 @@ import org.eclipse.ui.PlatformUI;
  * 
  * @author Bartlomiej Laczkowski
  */
-public class PHPExeLaunchConfigurationProfilerTab
-		extends AbstractPHPLaunchConfigurationProfilerTab {
+public class PHPExeLaunchConfigurationProfilerTab extends AbstractPHPLaunchConfigurationProfilerTab {
 
 	/*
 	 * (non-Javadoc)
@@ -43,11 +42,9 @@ public class PHPExeLaunchConfigurationProfilerTab
 	protected void handleConfigureProfiler() {
 		PHPexeItem phpExe = getPHPExe();
 		if (phpExe != null) {
-			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-					.getShell();
+			Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			NullProgressMonitor monitor = new NullProgressMonitor();
-			PHPExeEditDialog dialog = new PHPExeEditDialog(shell, phpExe,
-					PHPexes.getInstance().getAllItems(),
+			PHPExeEditDialog dialog = new PHPExeEditDialog(shell, phpExe, PHPexes.getInstance().getAllItems(),
 					DebuggerCompositeFragment.ID);
 			if (dialog.open() == Window.CANCEL) {
 				monitor.setCanceled(true);
@@ -79,11 +76,8 @@ public class PHPExeLaunchConfigurationProfilerTab
 	 */
 	@Override
 	protected String getNoProfilerMessage() {
-		return MessageFormat
-				.format(Messages.PHPExeLaunchConfigurationProfilerTab_No_profiler_is_attached,
-						getPHPExe() != null ? getPHPExe()
-								.getName()
-								: Messages.PHPExeLaunchConfigurationProfilerTab_None);
+		return MessageFormat.format(Messages.PHPExeLaunchConfigurationProfilerTab_No_profiler_is_attached,
+				getPHPExe() != null ? getPHPExe().getName() : Messages.PHPExeLaunchConfigurationProfilerTab_None);
 	}
 
 	/*

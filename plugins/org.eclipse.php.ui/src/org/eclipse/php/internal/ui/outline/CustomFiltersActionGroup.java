@@ -105,9 +105,9 @@ public class CustomFiltersActionGroup extends ActionGroup {
 			MenuItem mi = new MenuItem(menu, SWT.CHECK, index);
 			mi.setText("&" + fItemNumber + " " + fFilterName); //$NON-NLS-1$ //$NON-NLS-2$
 			/*
-			 * XXX: Don't set the image - would look bad because other menu
-			 * items don't provide image XXX: Get working set specific image
-			 * name from XML - would need to cache icons
+			 * XXX: Don't set the image - would look bad because other menu items don't
+			 * provide image XXX: Get working set specific image name from XML - would need
+			 * to cache icons
 			 */
 			// mi.setImage(DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_JAVA_WORKING_SET));
 			mi.setSelection(fState);
@@ -162,15 +162,13 @@ public class CustomFiltersActionGroup extends ActionGroup {
 	 */
 	private Stack<String> fLRUFilterIdsStack;
 	/**
-	 * Handle to menu manager to dynamically update the last recently used
-	 * filters.
+	 * Handle to menu manager to dynamically update the last recently used filters.
 	 * 
 	 * 
 	 */
 	private IMenuManager fMenuManager;
 	/**
-	 * The menu listener which dynamically updates the last recently used
-	 * filters.
+	 * The menu listener which dynamically updates the last recently used filters.
 	 * 
 	 * 
 	 */
@@ -226,8 +224,8 @@ public class CustomFiltersActionGroup extends ActionGroup {
 	}
 
 	/**
-	 * Returns a list of currently enabled filters. The filter is identified by
-	 * its id.
+	 * Returns a list of currently enabled filters. The filter is identified by its
+	 * id.
 	 * <p>
 	 * This method is for internal use only and should not be called by clients
 	 * outside of DLTK/UI.
@@ -259,8 +257,8 @@ public class CustomFiltersActionGroup extends ActionGroup {
 	 * @param element
 	 *            the element
 	 * @param contentProvider
-	 *            the content provider of the viewer from which the filters will
-	 *            be removed
+	 *            the content provider of the viewer from which the filters will be
+	 *            removed
 	 * 
 	 * @return the array of new filter ids
 	 */
@@ -388,8 +386,8 @@ public class CustomFiltersActionGroup extends ActionGroup {
 	 */
 	public void fillViewMenu(IMenuManager viewMenu) {
 		/*
-		 * Don't change the separator group name. Using this name ensures that
-		 * other filters get contributed to the same group.
+		 * Don't change the separator group name. Using this name ensures that other
+		 * filters get contributed to the same group.
 		 */
 		viewMenu.add(new Separator("filters")); //$NON-NLS-1$
 		viewMenu.add(new GroupMarker(RECENT_FILTERS_GROUP_NAME));

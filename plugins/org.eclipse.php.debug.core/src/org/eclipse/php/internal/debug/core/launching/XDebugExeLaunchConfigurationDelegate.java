@@ -52,8 +52,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.model.LaunchConfigurationDelegate#getLaunch(org.
+	 * @see org.eclipse.debug.core.model.LaunchConfigurationDelegate#getLaunch(org.
 	 * eclipse.debug.core.ILaunchConfiguration, java.lang.String)
 	 */
 	@Override
@@ -64,11 +63,9 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.model.ILaunchConfigurationDelegate#launch(org.
+	 * @see org.eclipse.debug.core.model.ILaunchConfigurationDelegate#launch(org.
 	 * eclipse.debug.core.ILaunchConfiguration, java.lang.String,
-	 * org.eclipse.debug.core.ILaunch,
-	 * org.eclipse.core.runtime.IProgressMonitor)
+	 * org.eclipse.debug.core.ILaunch, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
@@ -274,7 +271,8 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		if (phpExeProcess != null) {
 			subMonitor.worked(10);
 			String processName = mode.equals(ILaunchManager.DEBUG_MODE)
-					? (phpExe.toOSString() + ' ' + PHPDebugCoreMessages.PHPProcess_XDebug_suffix) : phpExe.toOSString();
+					? (phpExe.toOSString() + ' ' + PHPDebugCoreMessages.PHPProcess_XDebug_suffix)
+					: phpExe.toOSString();
 			eclipseProcessWrapper = DebugPlugin.newProcess(launch, phpExeProcess, processName, processAttributes);
 			if (eclipseProcessWrapper == null) {
 

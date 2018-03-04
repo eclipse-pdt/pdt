@@ -58,8 +58,8 @@ public class TarOutputStream extends FilterOutputStream {
 	}
 
 	/**
-	 * Close the current entry in the tar file. Must be called after each entry
-	 * is completed.
+	 * Close the current entry in the tar file. Must be called after each entry is
+	 * completed.
 	 * 
 	 * @throws IOException
 	 */

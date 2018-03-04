@@ -203,8 +203,7 @@ public class DebuggerCompositeFragment extends CompositeFragment {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.ui.wizards.CompositeFragment#performCancel()
+	 * @see org.eclipse.php.internal.ui.wizards.CompositeFragment#performCancel()
 	 */
 	@Override
 	public boolean performCancel() {

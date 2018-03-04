@@ -44,15 +44,13 @@ import org.eclipse.swt.widgets.Label;
  * 
  * @author Bartlomiej Laczkowski
  */
-public abstract class AbstractPHPLaunchConfigurationProfilerTab
-		extends AbstractPHPLaunchConfigurationTab {
+public abstract class AbstractPHPLaunchConfigurationProfilerTab extends AbstractPHPLaunchConfigurationTab {
 
 	/**
-	 * Widget listener that should be added to all controls that affects the
-	 * state of corresponding launch configuration.
+	 * Widget listener that should be added to all controls that affects the state
+	 * of corresponding launch configuration.
 	 */
-	public final class WidgetListener extends SelectionAdapter
-			implements ModifyListener {
+	public final class WidgetListener extends SelectionAdapter implements ModifyListener {
 		@Override
 		public void modifyText(ModifyEvent e) {
 			setDirty(true);
@@ -92,26 +90,21 @@ public abstract class AbstractPHPLaunchConfigurationProfilerTab
 
 	}
 
-	private final class NoneProfilerSection
-			extends ProfilerLaunchSettingsSectionAdapter {
+	private final class NoneProfilerSection extends ProfilerLaunchSettingsSectionAdapter {
 
 		@Override
 		public StatusMessage isValid(ILaunchConfiguration configuration) {
-			return new StatusMessage(IMessageProvider.ERROR,
-					getNoProfilerMessage());
+			return new StatusMessage(IMessageProvider.ERROR, getNoProfilerMessage());
 		}
 
 	}
 
-	private final class UnsupportedProfilerSection
-			extends ProfilerLaunchSettingsSectionAdapter {
+	private final class UnsupportedProfilerSection extends ProfilerLaunchSettingsSectionAdapter {
 
 		@Override
-		public void createSection(Composite parent,
-				WidgetListener widgetListener) {
+		public void createSection(Composite parent, WidgetListener widgetListener) {
 			Label info = new Label(parent, SWT.NONE);
-			info.setText(
-					Messages.AbstractPHPLaunchConfigurationProfilerTab_Unsupported_profiler_type);
+			info.setText(Messages.AbstractPHPLaunchConfigurationProfilerTab_Unsupported_profiler_type);
 		}
 
 		@Override
@@ -153,8 +146,7 @@ public abstract class AbstractPHPLaunchConfigurationProfilerTab
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.ILaunchConfigurationTab#createControl(org.eclipse
+	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#createControl(org.eclipse
 	 * .swt.widgets.Composite)
 	 */
 	@Override
@@ -188,22 +180,19 @@ public abstract class AbstractPHPLaunchConfigurationProfilerTab
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.ILaunchConfigurationTab#performApply(org.eclipse.
+	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#performApply(org.eclipse.
 	 * debug.core.ILaunchConfigurationWorkingCopy)
 	 */
 	@Override
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
-		configuration.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
-				getCurrentProfilerId());
+		configuration.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, getCurrentProfilerId());
 		getSection().performApply(configuration);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.AbstractLaunchConfigurationTab#isValid(org.eclipse.
+	 * @see org.eclipse.debug.ui.AbstractLaunchConfigurationTab#isValid(org.eclipse.
 	 * debug.core.ILaunchConfiguration)
 	 */
 	@Override
@@ -253,8 +242,8 @@ public abstract class AbstractPHPLaunchConfigurationProfilerTab
 	protected abstract String getCurrentProfilerId();
 
 	/**
-	 * Implementors should provide the appropriate message in case when there is
-	 * no profiler attached to potential profiler/debugger settings owner.
+	 * Implementors should provide the appropriate message in case when there is no
+	 * profiler attached to potential profiler/debugger settings owner.
 	 * 
 	 * @return "No" profiler attached message.
 	 */
@@ -278,8 +267,7 @@ public abstract class AbstractPHPLaunchConfigurationProfilerTab
 		mcLayout.marginWidth = 0;
 		mainComposite.setLayout(mcLayout);
 		mainComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		Composite profilerChoiceComposite = new Composite(mainComposite,
-				SWT.NONE);
+		Composite profilerChoiceComposite = new Composite(mainComposite, SWT.NONE);
 		GridLayout layout = new GridLayout(5, false);
 		profilerChoiceComposite.setLayout(layout);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
@@ -290,16 +278,14 @@ public abstract class AbstractPHPLaunchConfigurationProfilerTab
 		data = new GridData(SWT.BEGINNING);
 		label.setLayoutData(data);
 		label.setFont(font);
-		label.setText(
-				Messages.AbstractPHPLaunchConfigurationProfilerTab_Profiler_label);
+		label.setText(Messages.AbstractPHPLaunchConfigurationProfilerTab_Profiler_label);
 		profilerName = new Label(profilerChoiceComposite, SWT.NONE);
 		Label separator = new Label(profilerChoiceComposite, SWT.NONE);
 		data = new GridData(SWT.BEGINNING);
 		data.widthHint = 20;
 		separator.setLayoutData(data);
 		configureProfiler = createPushButton(profilerChoiceComposite,
-				Messages.AbstractPHPLaunchConfigurationProfilerTab_Configure,
-				null);
+				Messages.AbstractPHPLaunchConfigurationProfilerTab_Configure, null);
 		configureProfiler.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -315,25 +301,21 @@ public abstract class AbstractPHPLaunchConfigurationProfilerTab
 				performProfileTest();
 			}
 		});
-		Label lineSeparator = new Label(mainComposite,
-				SWT.SEPARATOR | SWT.HORIZONTAL);
-		lineSeparator
-				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		Label lineSeparator = new Label(mainComposite, SWT.SEPARATOR | SWT.HORIZONTAL);
+		lineSeparator.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 	}
 
 	private IProfilerLaunchSettingsSection getSection() {
 		try {
 			String launchTypeId = getConfiguration().getType().getIdentifier();
 			String profilerId = getCurrentProfilerId();
-			IProfilerLaunchSettingsSection section = currentSection
-					.get(profilerId);
+			IProfilerLaunchSettingsSection section = currentSection.get(profilerId);
 			if (section == null) {
 				// Debugger type has been changed, rebuild section
 				if (PHPDebuggersRegistry.NONE_DEBUGGER_ID.equals(profilerId)) {
 					section = new NoneProfilerSection();
 				} else {
-					section = ProfilerLaunchSettingsSectionRegistry
-							.getSection(profilerId, launchTypeId);
+					section = ProfilerLaunchSettingsSectionRegistry.getSection(profilerId, launchTypeId);
 					if (section == null) {
 						section = new UnsupportedProfilerSection();
 					}
@@ -350,8 +332,7 @@ public abstract class AbstractPHPLaunchConfigurationProfilerTab
 		return null;
 	}
 
-	private void buildSection(String debuggerId,
-			IProfilerLaunchSettingsSection section) {
+	private void buildSection(String debuggerId, IProfilerLaunchSettingsSection section) {
 		// Update debugger type data first
 		updateProfiler(debuggerId);
 		// Store as singular key map (most recent section by debugger ID)
@@ -375,18 +356,14 @@ public abstract class AbstractPHPLaunchConfigurationProfilerTab
 			if (getOriginalConfiguration().contentsEqual(getConfiguration())) {
 				// Only debugger might have been changed, update original
 				// configuration
-				ILaunchConfigurationWorkingCopy wc = getOriginalConfiguration()
-						.getWorkingCopy();
-				wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
-						profilerId);
+				ILaunchConfigurationWorkingCopy wc = getOriginalConfiguration().getWorkingCopy();
+				wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, profilerId);
 				wc.doSave();
 			}
 			// Update in working copy
 			if (getConfiguration() instanceof ILaunchConfigurationWorkingCopy) {
 				((ILaunchConfigurationWorkingCopy) getConfiguration())
-						.setAttribute(
-								PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
-								profilerId);
+						.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, profilerId);
 			}
 		} catch (CoreException e) {
 			Logger.logException(e);

@@ -36,14 +36,14 @@ import org.eclipse.php.internal.ui.util.Messages;
 public class ProfileManager extends Observable implements IProfileManager {
 
 	/**
-	 * A prefix which is prepended to every ID of a user-defined profile, in
-	 * order to differentiate it from a built-in profile.
+	 * A prefix which is prepended to every ID of a user-defined profile, in order
+	 * to differentiate it from a built-in profile.
 	 */
 	private final static String ID_PREFIX = "_"; //$NON-NLS-1$
 
 	/**
-	 * Represents a profile with a unique ID, a name and a map containing the
-	 * code formatter settings.
+	 * Represents a profile with a unique ID, a name and a map containing the code
+	 * formatter settings.
 	 */
 	public static abstract class Profile implements Comparable<Object>, IProfile {
 
@@ -312,8 +312,7 @@ public class ProfileManager extends Observable implements IProfileManager {
 	 * Create and initialize a new profile manager.
 	 * 
 	 * @param profiles
-	 *            Initial custom profiles (List of type
-	 *            <code>CustomProfile</code>)
+	 *            Initial custom profiles (List of type <code>CustomProfile</code>)
 	 */
 	public ProfileManager(List<Profile> profiles, IScopeContext context) {
 		fProfiles = new HashMap<>();
@@ -389,8 +388,7 @@ public class ProfileManager extends Observable implements IProfileManager {
 	}
 
 	/**
-	 * Notify observers with a message. The message must be one of the
-	 * following:
+	 * Notify observers with a message. The message must be one of the following:
 	 * 
 	 * @param message
 	 *            Message to send out
@@ -535,10 +533,9 @@ public class ProfileManager extends Observable implements IProfileManager {
 	}
 
 	/**
-	 * Get an immutable list as view on all profiles, sorted alphabetically.
-	 * Unless the set of profiles has been modified between the two calls, the
-	 * sequence is guaranteed to correspond to the one returned by
-	 * <code>getSortedNames</code>.
+	 * Get an immutable list as view on all profiles, sorted alphabetically. Unless
+	 * the set of profiles has been modified between the two calls, the sequence is
+	 * guaranteed to correspond to the one returned by <code>getSortedNames</code>.
 	 * 
 	 * @return a list of elements of type <code>Profile</code>
 	 * 
@@ -550,9 +547,9 @@ public class ProfileManager extends Observable implements IProfileManager {
 
 	/**
 	 * Get the names of all profiles stored in this profile manager, sorted
-	 * alphabetically. Unless the set of profiles has been modified between the
-	 * two calls, the sequence is guaranteed to correspond to the one returned
-	 * by <code>getSortedProfiles</code>.
+	 * alphabetically. Unless the set of profiles has been modified between the two
+	 * calls, the sequence is guaranteed to correspond to the one returned by
+	 * <code>getSortedProfiles</code>.
 	 * 
 	 * @return All names, sorted alphabetically
 	 * @see #getSortedProfiles()
@@ -580,8 +577,8 @@ public class ProfileManager extends Observable implements IProfileManager {
 	}
 
 	/**
-	 * Activate the selected profile, update all necessary options in
-	 * preferences and save profiles to disk.
+	 * Activate the selected profile, update all necessary options in preferences
+	 * and save profiles to disk.
 	 */
 	@Override
 	public void commitChanges(IScopeContext scopeContext) {
@@ -636,8 +633,8 @@ public class ProfileManager extends Observable implements IProfileManager {
 	}
 
 	/**
-	 * Check whether a user-defined profile in this profile manager already has
-	 * this name.
+	 * Check whether a user-defined profile in this profile manager already has this
+	 * name.
 	 * 
 	 * @param name
 	 *            The name to test for
@@ -679,8 +676,7 @@ public class ProfileManager extends Observable implements IProfileManager {
 	 * Delete the currently selected profile from this profile manager. The next
 	 * profile in the list is selected.
 	 * 
-	 * @return true if the profile has been successfully removed, false
-	 *         otherwise.
+	 * @return true if the profile has been successfully removed, false otherwise.
 	 */
 	public boolean deleteSelected() {
 		if (!(fSelected instanceof CustomProfile)) {

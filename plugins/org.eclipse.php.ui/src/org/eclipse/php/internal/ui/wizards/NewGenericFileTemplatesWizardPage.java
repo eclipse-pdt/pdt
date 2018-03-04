@@ -97,8 +97,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 	private class TemplateLabelProvider extends LabelProvider implements ITableLabelProvider {
 
 		/*
-		 * @see
-		 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java
+		 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java
 		 * .lang.Object, int)
 		 */
 		@Override
@@ -107,8 +106,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		}
 
 		/*
-		 * @see
-		 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.
+		 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.
 		 * lang.Object, int)
 		 */
 		@Override
@@ -381,8 +379,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 	}
 
 	/**
-	 * Enable/disable controls in page based on fUseTemplateButton's current
-	 * state.
+	 * Enable/disable controls in page based on fUseTemplateButton's current state.
 	 */
 	protected void enableTemplates() {
 		boolean enabled = fUseTemplateButton.getSelection();
@@ -392,8 +389,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 			Template template = getSelectedTemplate();
 			if (template != null) {
 				fLastSelectedTemplateName = template.getName();
-			}
-			else {
+			} else {
 				fLastSelectedTemplateName = ""; //$NON-NLS-1$
 			}
 
@@ -511,9 +507,9 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 	}
 
 	/**
-	 * Select a template in the table viewer given the template name. If
-	 * template name cannot be found or templateName is null, just select first
-	 * item in table. If no items in table select nothing.
+	 * Select a template in the table viewer given the template name. If template
+	 * name cannot be found or templateName is null, just select first item in
+	 * table. If no items in table select nothing.
 	 * 
 	 * @param templateName
 	 */

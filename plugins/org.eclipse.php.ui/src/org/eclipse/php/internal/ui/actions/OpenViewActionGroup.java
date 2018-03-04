@@ -71,8 +71,8 @@ public class OpenViewActionGroup extends ActionGroup {
 	}
 
 	/**
-	 * Note: This constructor is for internal use only. Clients should not call
-	 * this constructor.
+	 * Note: This constructor is for internal use only. Clients should not call this
+	 * constructor.
 	 * 
 	 * @param part
 	 *            the editor part
@@ -196,13 +196,11 @@ public class OpenViewActionGroup extends ActionGroup {
 		String keyBinding = null;
 
 		IBindingService bindingService = PlatformUI.getWorkbench().getAdapter(IBindingService.class);
-		if (bindingService != null)
-		 {
+		if (bindingService != null) {
 			keyBinding = bindingService.getBestActiveBindingFormattedFor("org.eclipse.ui.navigate.showInQuickMenu"); //$NON-NLS-1$
 		}
 
-		if (keyBinding == null)
-		 {
+		if (keyBinding == null) {
 			keyBinding = ""; //$NON-NLS-1$
 		}
 

@@ -247,8 +247,7 @@ public class VarCommentQuickAssistProcessor implements IQuickAssistProcessor {
 	}
 
 	/**
-	 * @see IQuickAssistProcessor#getAssists(IInvocationContext,
-	 *      IProblemLocation[])
+	 * @see IQuickAssistProcessor#getAssists(IInvocationContext, IProblemLocation[])
 	 */
 	@Override
 	public IScriptCompletionProposal[] getAssists(IInvocationContext context, IProblemLocation[] locations)

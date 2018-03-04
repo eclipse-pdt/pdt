@@ -71,8 +71,8 @@ public final class PHPExeUtil {
 	}
 
 	/**
-	 * Provides basic info about module installed (only its name and name of a
-	 * group to which it belongs) on PHP executable in pair with some INI file.
+	 * Provides basic info about module installed (only its name and name of a group
+	 * to which it belongs) on PHP executable in pair with some INI file.
 	 */
 	public static final class PHPModuleInfo {
 
@@ -237,8 +237,7 @@ public final class PHPExeUtil {
 			if (phpVersion.getMajor() >= 5) {
 				return PHPExeUtil.exec(exec.getAbsolutePath(), phpExeItem.isLoadDefaultINI() ? null : "-n", "-c", //$NON-NLS-1$ //$NON-NLS-2$
 						getINIFile(exec).getAbsolutePath(), "-i"); //$NON-NLS-1$
-			}
-			else {
+			} else {
 				return PHPExeUtil.exec(phpExeItem.getExecutable().getAbsolutePath(), "-c", //$NON-NLS-1$
 						getINIFile(exec).getAbsolutePath(), "-i"); //$NON-NLS-1$
 			}
@@ -249,8 +248,8 @@ public final class PHPExeUtil {
 	}
 
 	/**
-	 * Checks and outputs list of modules installed on top of given PHP
-	 * executable item.
+	 * Checks and outputs list of modules installed on top of given PHP executable
+	 * item.
 	 * 
 	 * @param phpExeItem
 	 * @return list of installed module names
@@ -264,8 +263,7 @@ public final class PHPExeUtil {
 			if (phpVersion.getMajor() >= 5) {
 				result = PHPExeUtil.exec(exec.getAbsolutePath(), phpExeItem.isLoadDefaultINI() ? null : "-n", "-c", //$NON-NLS-1$ //$NON-NLS-2$
 						getINIFile(exec).getAbsolutePath(), "-m"); //$NON-NLS-1$
-			}
-			else {
+			} else {
 				result = PHPExeUtil.exec(phpExeItem.getExecutable().getAbsolutePath(), "-c", //$NON-NLS-1$
 						getINIFile(exec).getAbsolutePath(), "-m"); //$NON-NLS-1$
 			}
@@ -338,7 +336,7 @@ public final class PHPExeUtil {
 	 */
 	public static String fetchVersion(File exec) throws IOException {
 		File emptyIni = PHPINIUtil.createTemporaryPHPINIFile();
-		return PHPExeUtil.exec(exec.getAbsolutePath(), "-c", //$NON-NLS-1$ 
+		return PHPExeUtil.exec(exec.getAbsolutePath(), "-c", //$NON-NLS-1$
 				emptyIni.getParentFile().getAbsolutePath(), "-v"); //$NON-NLS-1$
 	}
 
@@ -347,8 +345,8 @@ public final class PHPExeUtil {
 	}
 
 	/**
-	 * OSX doesn't like empty argument, so due bug 472349 we allow and filter
-	 * null values
+	 * OSX doesn't like empty argument, so due bug 472349 we allow and filter null
+	 * values
 	 * 
 	 * @param cmd
 	 * @return

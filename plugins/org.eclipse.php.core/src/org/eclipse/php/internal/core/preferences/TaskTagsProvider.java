@@ -86,14 +86,14 @@ public class TaskTagsProvider {
 	}
 
 	/**
-	 * Returns the IProject's task tags. In case the given project does not have
-	 * a specific task tags, null is returned (since the project uses the
-	 * workspace definitions).
+	 * Returns the IProject's task tags. In case the given project does not have a
+	 * specific task tags, null is returned (since the project uses the workspace
+	 * definitions).
 	 * 
 	 * @param project
 	 *            An IProject reference.
-	 * @return The specific task tags for the given project, or null if the
-	 *         project uses the workspace defined tags.
+	 * @return The specific task tags for the given project, or null if the project
+	 *         uses the workspace defined tags.
 	 */
 	public @Nullable TaskTag[] getProjectTaskTags(IProject project) {
 		if (project == null) {
@@ -111,9 +111,9 @@ public class TaskTagsProvider {
 	}
 
 	/**
-	 * Returns true if the defined project's task tags are case sensitive. In
-	 * case that the project does not have a specific settings, the return value
-	 * is by isWorkspaceTagsCaseSensitive.
+	 * Returns true if the defined project's task tags are case sensitive. In case
+	 * that the project does not have a specific settings, the return value is by
+	 * isWorkspaceTagsCaseSensitive.
 	 * 
 	 * @param project
 	 *            An IProject reference.
@@ -149,8 +149,8 @@ public class TaskTagsProvider {
 	}
 
 	/**
-	 * Removes the TaskTagsListener attached to a related project. Don't use
-	 * this method directly but use
+	 * Removes the TaskTagsListener attached to a related project. Don't use this
+	 * method directly but use
 	 * {@link TaskPatternsProvider#unregisterProject(IProject)} to clean up
 	 * everything correctly.
 	 * 

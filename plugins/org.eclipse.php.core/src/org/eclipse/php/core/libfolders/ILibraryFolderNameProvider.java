@@ -51,8 +51,8 @@ import org.eclipse.core.resources.IProject;
 public interface ILibraryFolderNameProvider {
 
 	/**
-	 * Returns the common names for library folders which applicable for the
-	 * given project.
+	 * Returns the common names for library folders which applicable for the given
+	 * project.
 	 * 
 	 * @param project
 	 *            a project

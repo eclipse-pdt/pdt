@@ -30,12 +30,12 @@ import org.eclipse.php.profile.core.messages.GetProfilerRequest;
 import org.eclipse.php.profile.core.messages.GetProfilerResponse;
 
 /**
- * This class extends Zend remote debugger, and adds functionality for profiling.
+ * This class extends Zend remote debugger, and adds functionality for
+ * profiling.
  */
 public class ZRemoteProfiler extends RemoteDebugger {
 
-	public ZRemoteProfiler(IDebugHandler debugHandler,
-			DebugConnection debugConnection) {
+	public ZRemoteProfiler(IDebugHandler debugHandler, DebugConnection debugConnection) {
 		super(debugHandler, debugConnection);
 	}
 
@@ -75,8 +75,7 @@ public class ZRemoteProfiler extends RemoteDebugger {
 			}
 			fileData = getProfilerFileResponse.getProfilerFileData();
 
-			String localFileName = convertToLocalFilename(fileData.getName(),
-					null, null);
+			String localFileName = convertToLocalFilename(fileData.getName(), null, null);
 			fileData.setLocalName(localFileName);
 
 			ProfilerFunctionData[] functions = fileData.getFunctions();
@@ -117,12 +116,10 @@ public class ZRemoteProfiler extends RemoteDebugger {
 		if (profilerGlobalData == null) {
 			return null;
 		}
-		profilerGlobalData.setOriginalURL(getDebugHandler().getDebugTarget()
-				.getURL());
+		profilerGlobalData.setOriginalURL(getDebugHandler().getDebugTarget().getURL());
 		profilerData.setGlobalData(profilerGlobalData);
 
-		String dummyFile = Platform.getPreferencesService().getString(
-				PHPDebugPlugin.ID,
+		String dummyFile = Platform.getPreferencesService().getString(PHPDebugPlugin.ID,
 				PHPDebugCorePreferenceNames.ZEND_DEBUG_DUMMY_FILE, "", //$NON-NLS-1$
 				null);
 		boolean isDummyFiltered = false;

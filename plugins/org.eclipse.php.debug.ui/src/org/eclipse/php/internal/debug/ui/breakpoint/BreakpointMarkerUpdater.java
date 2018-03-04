@@ -55,8 +55,8 @@ public class BreakpointMarkerUpdater implements IMarkerUpdater {
 	}
 
 	/**
-	 * @return true - the breakpoint marker updated false - the breakpoint
-	 *         marker will deleted
+	 * @return true - the breakpoint marker updated false - the breakpoint marker
+	 *         will deleted
 	 */
 	@Override
 	public boolean updateMarker(IMarker marker, IDocument document, Position position) {

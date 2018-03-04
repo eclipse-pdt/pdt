@@ -83,15 +83,15 @@ public class PHPActionDelegatorRegistry {
 	}
 
 	/**
-	 * Returns the action delegator factory with the highest priority
-	 * contributed with specified ID through extension point
+	 * Returns the action delegator factory with the highest priority contributed
+	 * with specified ID through extension point
 	 * <code>org.eclipse.php.ui.phpActionImplementor</code>.
 	 * 
 	 * @param id
 	 *            action id
-	 * @return The action delegator factory
-	 *         {@link IRenamePHPElementActionFactory} with the highest priority,
-	 *         or <code>null</code> if no pages where contributed.
+	 * @return The action delegator factory {@link IRenamePHPElementActionFactory}
+	 *         with the highest priority, or <code>null</code> if no pages where
+	 *         contributed.
 	 */
 	public static IRenamePHPElementActionFactory getActionDelegatorFactory(String id) {
 		final List<IConfigurationElement> elementsList = instance.actionDelegators.get(id);

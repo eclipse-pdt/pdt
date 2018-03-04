@@ -192,9 +192,8 @@ public class DebugConnection {
 		}
 
 		/**
-		 * This method is called by the message receiver so that the message
-		 * handler will queueIn an internal protocol message for the closure of
-		 * connection.
+		 * This method is called by the message receiver so that the message handler
+		 * will queueIn an internal protocol message for the closure of connection.
 		 */
 		void connectionClosed() {
 			queueIn(CONNECTION_CLOSED);
@@ -212,9 +211,9 @@ public class DebugConnection {
 	}
 
 	/**
-	 * This job manages the communication initiated by the peer. All the
-	 * messages that arrive from the peer are read by the MessageReceiver that
-	 * will then handle the message by the message type.
+	 * This job manages the communication initiated by the peer. All the messages
+	 * that arrive from the peer are read by the MessageReceiver that will then
+	 * handle the message by the message type.
 	 */
 	private class MessageReceiver extends Job {
 
@@ -257,11 +256,10 @@ public class DebugConnection {
 					// We have a new message. process it !!.
 					int messageType = connectionIn.readShort();
 					/*
-					 * If this is the first message, the protocol is still held
-					 * as invalid. Check that the first message has the
-					 * DebugSessionStartedNotification type. If not, then we can
-					 * assume that the remote debugger protocol has a different
-					 * version then expected.
+					 * If this is the first message, the protocol is still held as invalid. Check
+					 * that the first message has the DebugSessionStartedNotification type. If not,
+					 * then we can assume that the remote debugger protocol has a different version
+					 * then expected.
 					 */
 					if (!isValidProtocol && messageType != START_MESSAGE_ID) {
 						showProtocolError();
@@ -287,8 +285,7 @@ public class DebugConnection {
 						message.deserialize(connectionIn);
 						int messageId = ((IDebugResponseMessage) message).getID();
 						/*
-						 * INSERT RESPONSE TO TABLE AND RELEASE THE THREAD
-						 * WAITING FOR THE REQUEST
+						 * INSERT RESPONSE TO TABLE AND RELEASE THE THREAD WAITING FOR THE REQUEST
 						 */
 						// Find the handler.
 						ResponseHandler handler = responseHandlers.get(Integer.valueOf(messageId));
@@ -587,16 +584,13 @@ public class DebugConnection {
 					response = (IDebugResponseMessage) responseTable.remove(theMsg.getID());
 					if (response == null) {
 						/*
-						 * Display a progress dialog after a quarter of the
-						 * assigned time have passed.
+						 * Display a progress dialog after a quarter of the assigned time have passed.
 						 */
 						if (waitedTime > debugResponseTimeout / 4) {
 							/*
-							 * Display a message that we are waiting for the
-							 * server response. In case that the response
-							 * finally arrives, remove the message. In case we
-							 * have a timeout, close the connection and display
-							 * a different message.
+							 * Display a message that we are waiting for the server response. In case that
+							 * the response finally arrives, remove the message. In case we have a timeout,
+							 * close the connection and display a different message.
 							 */
 							PHPLaunchUtilities.showWaitForDebuggerMessage(this);
 						}
@@ -608,9 +602,8 @@ public class DebugConnection {
 					response = (IDebugResponseMessage) responseTable.remove(theMsg.getID());
 				}
 				/*
-				 * if the response is null. it means that there is no answer
-				 * from the server. This can be because on the
-				 * peerResponseTimeout.
+				 * if the response is null. it means that there is no answer from the server.
+				 * This can be because on the peerResponseTimeout.
 				 */
 				if (response == null && isConnected()) {
 					Logger.debugMSG("COMMUNICATION PROBLEMS (response is null)"); //$NON-NLS-1$
@@ -702,8 +695,8 @@ public class DebugConnection {
 			return true;
 		}
 		/*
-		 * There are no existing launches (created by user nor "mock" ones) for
-		 * incoming session ID, try to find/create new "mock" launch
+		 * There are no existing launches (created by user nor "mock" ones) for incoming
+		 * session ID, try to find/create new "mock" launch
 		 */
 		if (launch == null) {
 			launch = fetchLaunch(sessionDescriptor);
@@ -711,9 +704,8 @@ public class DebugConnection {
 			hookBuiltinServerLaunch(launch, sessionDescriptor);
 			return true;
 			/*
-			 * If session is primary (new one has come) and launch exists then
-			 * it means that session has been restarted. If so, terminate the
-			 * previous launch.
+			 * If session is primary (new one has come) and launch exists then it means that
+			 * session has been restarted. If so, terminate the previous launch.
 			 */
 		} else if (sessionDescriptor.isPrimary() && !launch.isTerminated()) {
 			try {
@@ -861,9 +853,9 @@ public class DebugConnection {
 	}
 
 	/**
-	 * Hook a session that should handle a file content request only when the
-	 * Zend Platform GUI is asking to display the source code of the script that
-	 * caused an event.
+	 * Hook a session that should handle a file content request only when the Zend
+	 * Platform GUI is asking to display the source code of the script that caused
+	 * an event.
 	 * 
 	 * @param fileName
 	 *            The requested file.
@@ -912,14 +904,14 @@ public class DebugConnection {
 	}
 
 	/**
-	 * Handle a debug session hook error. This method can be subclassed for
-	 * handling more complex causes. The default implementation is to display
-	 * the toString() value of the cause and return false.
+	 * Handle a debug session hook error. This method can be subclassed for handling
+	 * more complex causes. The default implementation is to display the toString()
+	 * value of the cause and return false.
 	 * 
 	 * @param cause
-	 *            An object that represents the cause for the error. Can be a
-	 *            String description or a different complex object that can
-	 *            supply more information.
+	 *            An object that represents the cause for the error. Can be a String
+	 *            description or a different complex object that can supply more
+	 *            information.
 	 * @return True, if the error was fixed in this method; False, otherwise.
 	 */
 	protected void hookError(Object cause) {
@@ -942,16 +934,15 @@ public class DebugConnection {
 			isProfile = true;
 		}
 		/*
-		 * The super implementation failed to hook the session to any existing
-		 * launch, or the session is a profile session.
+		 * The super implementation failed to hook the session to any existing launch,
+		 * or the session is a profile session.
 		 */
 		boolean isDebugOrProfileURL = isDebugOrProfileURL(query);
 		int sessionID = sessionDescriptor.getId();
 		if (!isDebugOrProfileURL) {
 			/*
-			 * First, find out if the session ID is not an older one that was
-			 * sent because the browser cached a cookie which is no longer valid
-			 * for us.
+			 * First, find out if the session ID is not an older one that was sent because
+			 * the browser cached a cookie which is no longer valid for us.
 			 */
 			if (sessionID > 0 && sessionID <= DebugSessionIdGenerator.getLastGenerated()) {
 				if (PHPDebugPlugin.DEBUG) {
@@ -962,14 +953,14 @@ public class DebugConnection {
 			}
 		}
 		/*
-		 * In this case we can assume that the launch is similar to a web server
-		 * debug or profile session.
+		 * In this case we can assume that the launch is similar to a web server debug
+		 * or profile session.
 		 */
 		ILaunchConfigurationType lcType = DebugPlugin.getDefault().getLaunchManager()
 				.getLaunchConfigurationType(REMOTE_LAUNCH_TYPE_ID);
 		/*
-		 * Prepare to use the debug or profile perspective in case it's not
-		 * installed yet (first time of using the Debug/Profile URL).
+		 * Prepare to use the debug or profile perspective in case it's not installed
+		 * yet (first time of using the Debug/Profile URL).
 		 */
 		if (!isProfile) {
 			DebugUITools.setLaunchPerspective(lcType, "debug", //$NON-NLS-1$
@@ -996,9 +987,9 @@ public class DebugConnection {
 		ILaunch launch = DebugUITools.buildAndLaunch(wc,
 				(isProfile) ? ILaunchManager.PROFILE_MODE : ILaunchManager.DEBUG_MODE, new NullProgressMonitor());
 		/*
-		 * In case we got here, we need to update the PHPSessionLaunchMapper
-		 * with the new launch and the acquired launch id. This is a case when
-		 * we get a launch id from the toolbar or from the Platform.
+		 * In case we got here, we need to update the PHPSessionLaunchMapper with the
+		 * new launch and the acquired launch id. This is a case when we get a launch id
+		 * from the toolbar or from the Platform.
 		 */
 		if (sessionID < 0) {
 			sessionID = DebugSessionIdGenerator.generateSessionID();
@@ -1012,8 +1003,8 @@ public class DebugConnection {
 	}
 
 	/**
-	 * Creates a new IDebugTarget. This create method is usually used when
-	 * hooking a PHP web page launch.
+	 * Creates a new IDebugTarget. This create method is usually used when hooking a
+	 * PHP web page launch.
 	 * 
 	 * @throws CoreException
 	 */
@@ -1023,8 +1014,8 @@ public class DebugConnection {
 	}
 
 	/**
-	 * Creates a new IDebugTarget. This create method is usually used when
-	 * hooking a PHP executable launch.
+	 * Creates a new IDebugTarget. This create method is usually used when hooking a
+	 * PHP executable launch.
 	 * 
 	 * @throws CoreException
 	 */
@@ -1071,8 +1062,8 @@ public class DebugConnection {
 	 * This method checks whether the server protocol is older than the latest
 	 * Studio protocol.
 	 * 
-	 * @return <code>true</code> if debugger protocol matches the Studio
-	 *         protocol, otherwise <code>false</code>
+	 * @return <code>true</code> if debugger protocol matches the Studio protocol,
+	 *         otherwise <code>false</code>
 	 */
 	protected boolean verifyProtocolID(int serverProtocolID) {
 		if (serverProtocolID < RemoteDebugger.PROTOCOL_ID_LATEST) {
@@ -1105,15 +1096,14 @@ public class DebugConnection {
 	private void hookDebugSession(DebugSessionStartedNotification debugSessionStartedNotification)
 			throws CoreException {
 		/*
-		 * Try to hook (debug session -> launch) only one at a time, just to
-		 * avoid an ugly mess with debug events.
+		 * Try to hook (debug session -> launch) only one at a time, just to avoid an
+		 * ugly mess with debug events.
 		 */
 		try {
 			// Do not lock forever
 			HOOK_LOCK.tryLock(HOOK_TIMEOUT, TimeUnit.MILLISECONDS);
 			SessionDescriptor sessionDescriptor = new SessionDescriptor(debugSessionStartedNotification);
-			if (!hookLaunch(sessionDescriptor))
-			 {
+			if (!hookLaunch(sessionDescriptor)) {
 				// May happen
 				hookError("No session id"); //$NON-NLS-1$
 			}
@@ -1134,8 +1124,8 @@ public class DebugConnection {
 		IDebugTarget target = launch.getDebugTarget();
 		if (target != null) {
 			/*
-			 * Launch already has one multiple-threaded target, extend it with
-			 * incoming sub-target.
+			 * Launch already has one multiple-threaded target, extend it with incoming
+			 * sub-target.
 			 */
 			if (target instanceof PHPMultiDebugTarget) {
 				PHPMultiDebugTarget multi = (PHPMultiDebugTarget) target;
@@ -1199,8 +1189,8 @@ public class DebugConnection {
 	}
 
 	/**
-	 * In case of a peerResponseTimeout exception we let the communication
-	 * client handle the logic of the peerResponseTimeout.
+	 * In case of a peerResponseTimeout exception we let the communication client
+	 * handle the logic of the peerResponseTimeout.
 	 */
 	private void handlePeerResponseTimeout() {
 		getCommunicationClient().handlePeerResponseTimeout();
@@ -1315,8 +1305,8 @@ public class DebugConnection {
 	}
 
 	/**
-	 * Check if specified notification for a new session is generated for the
-	 * same original URL as a terminated session with the same id.
+	 * Check if specified notification for a new session is generated for the same
+	 * original URL as a terminated session with the same id.
 	 * 
 	 * @param debugSessionStartedNotification
 	 *            fresh session started notification
@@ -1373,9 +1363,9 @@ public class DebugConnection {
 	}
 
 	/**
-	 * Check for the get_file_content string in the query string. If exist, then
-	 * the session should display the file content in the editor as a result to
-	 * a Platform request.
+	 * Check for the get_file_content string in the query string. If exist, then the
+	 * session should display the file content in the editor as a result to a
+	 * Platform request.
 	 * 
 	 * @param query
 	 *            The original query string arrived with the

@@ -145,8 +145,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 			for (int i = 0; i < fScriptElements.length; i++) {
 				if (fScriptElements[i] instanceof IScriptFolder) {
 					IScriptFolder scriptFolder = (IScriptFolder) fScriptElements[i];
-					if (scriptFolder.isRootFolder())
-					 {
+					if (scriptFolder.isRootFolder()) {
 						continue; // see bug 132576 (can remove this if(..)
 					}
 					// continue; statement when bug is fixed)
@@ -208,8 +207,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.dltk.internal.corext.refactoring.base.Refactoring#checkInput
+	 * @see org.eclipse.dltk.internal.corext.refactoring.base.Refactoring#checkInput
 	 * (org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
@@ -317,8 +315,8 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 	/*
 	 * The set of elements that will eventually be deleted may be very different
 	 * from the set originally selected - there may be fewer, more or different
-	 * elements. This method is used to calculate the set of elements that will
-	 * be deleted - if necessary, it asks the user.
+	 * elements. This method is used to calculate the set of elements that will be
+	 * deleted - if necessary, it asks the user.
 	 */
 	private void recalculateElementsToDelete() throws CoreException {
 		// the sequence is critical here
@@ -328,41 +326,27 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 		}
 
 		removeElementsWithParentsInSelection(); /*
-												 * ask before adding empty cus -
-												 * you don't want to ask if you,
-												 * for example deletethe
-												 * package, in which the cus
-												 * live
+												 * ask before adding empty cus - you don't want to ask if you, for
+												 * example deletethe package, in which the cus live
 												 */
 		removeUnconfirmedFoldersThatContainSourceFolders(); /*
-															 * a selected folder
-															 * may be a parent
-															 * of a source
-															 * folder we must
-															 * inform the user
-															 * about it and ask
-															 * if ok to delete
-															 * the folder
+															 * a selected folder may be a parent of a source folder we
+															 * must inform the user about it and ask if ok to delete the
+															 * folder
 															 */
 		removeUnconfirmedReferencedArchives();
 		addEmptySourceModulesToDelete();
 		removeScriptElementsChildrenOfScriptElements();/*
-														 * because adding cus
-														 * may create elements
-														 * (types in cus)whose
-														 * parents are in
-														 * selection
+														 * because adding cus may create elements (types in cus)whose
+														 * parents are in selection
 														 */
 		confirmDeletingReadOnly(); /*
-									 * after empty cus - you want to ask for all
-									 * cus that are to be deleted
+									 * after empty cus - you want to ask for all cus that are to be deleted
 									 */
 
 		addDeletableParentPackagesOnPackageDeletion(); /*
-														 * do not change the
-														 * sequence in
-														 * fScriptElements after
-														 * this method
+														 * do not change the sequence in fScriptElements after this
+														 * method
 														 */
 	}
 
@@ -474,8 +458,8 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 	}
 
 	/**
-	 * Returns true if this initially selected package is really deletable (if
-	 * it has non-selected subpackages, it may only be cleared).
+	 * Returns true if this initially selected package is really deletable (if it
+	 * has non-selected subpackages, it may only be cleared).
 	 * 
 	 */
 	private boolean canRemoveCompletely(IScriptFolder pack, List<?> packagesToDelete) throws ModelException {
@@ -490,8 +474,8 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 
 	/**
 	 * Adds deletable parent packages of the fragment "frag" to the list
-	 * "deletableParentPackages"; also adds the resources of those packages to
-	 * the set "resourcesToDelete".
+	 * "deletableParentPackages"; also adds the resources of those packages to the
+	 * set "resourcesToDelete".
 	 * 
 	 */
 	private void addDeletableParentPackages(IScriptFolder frag, List<?> initialPackagesToDelete,
@@ -686,11 +670,10 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements ICom
 
 	// ----------- read-only confirmation business ------
 	private void confirmDeletingReadOnly() throws CoreException {
-		if (!ReadOnlyResourceFinder.confirmDeleteOfReadOnlyElements(fScriptElements, fResources, fDeleteQueries))
-		 {
+		if (!ReadOnlyResourceFinder.confirmDeleteOfReadOnlyElements(fScriptElements, fResources, fDeleteQueries)) {
 			throw new OperationCanceledException(); // saying 'no' to this one
-		// is like cancelling the
-		// whole operation
+			// is like cancelling the
+			// whole operation
 		}
 	}
 

@@ -91,8 +91,8 @@ public class GenerateActionGroup extends ActionGroup {
 	private IHandlerService fHandlerService;
 
 	/**
-	 * Note: This constructor is for internal use only. Clients should not call
-	 * this constructor.
+	 * Note: This constructor is for internal use only. Clients should not call this
+	 * constructor.
 	 * 
 	 * @param editor
 	 *            the script editor

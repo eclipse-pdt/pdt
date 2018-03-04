@@ -36,8 +36,7 @@ public class RefactoringPlugin extends Plugin {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
+	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
 	 */
 	@Override
 	public void start(BundleContext context) throws Exception {
@@ -47,8 +46,7 @@ public class RefactoringPlugin extends Plugin {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
+	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
@@ -70,8 +68,7 @@ public class RefactoringPlugin extends Plugin {
 	}
 
 	public static void logException(String message, Exception e) {
-		IStatus status = new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK,
-				message, e);
+		IStatus status = new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, message, e);
 		getDefault().getLog().log(status);
 	}
 

@@ -386,9 +386,9 @@ public class DBGpMultiSessionTarget extends DBGpElement
 		boolean accepted = false;
 		synchronized (debugTargets) {
 			/*
-			 * We need to use single shot debug targets to ensure that they
-			 * terminate when complete and don't hang around waiting for another
-			 * session they won't receive.
+			 * We need to use single shot debug targets to ensure that they terminate when
+			 * complete and don't hang around waiting for another session they won't
+			 * receive.
 			 */
 			DBGpTarget target = new DBGpTarget(this.launch, this.scriptName, this.stopDebugURL, this.ideKey,
 					this.sessionID, this.stopAtStart);
@@ -397,9 +397,8 @@ public class DBGpMultiSessionTarget extends DBGpElement
 			accepted = target.SessionCreated(session);
 			if (accepted) {
 				/*
-				 * Need to make sure bpFacade is thread safe. cannot provide a
-				 * launch monitor here, unless this is the first launch, but it
-				 * doesn't matter.
+				 * Need to make sure bpFacade is thread safe. cannot provide a launch monitor
+				 * here, unless this is the first launch, but it doesn't matter.
 				 */
 				target.waitForInitialSession(bpFacade, sessionPreferences, null);
 				if (!target.isTerminated()) {

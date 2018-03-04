@@ -165,8 +165,8 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	}
 
 	/**
-	 * Modifies PHP project buildpath so it will contain path to the language
-	 * model library
+	 * Modifies PHP project buildpath so it will contain path to the language model
+	 * library
 	 * 
 	 * @param project
 	 *            Project handle
@@ -213,8 +213,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 					}
 				}
 			}
-			LanguageModelInitializer.providers = providers
-					.toArray(new ILanguageModelProvider[providers.size()]);
+			LanguageModelInitializer.providers = providers.toArray(new ILanguageModelProvider[providers.size()]);
 		}
 		return LanguageModelInitializer.providers;
 	}

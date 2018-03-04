@@ -85,8 +85,7 @@ public interface IVariableFacet {
 		 */
 		VIRTUAL_UNINIT,
 		/**
-		 * Facet indicating that corresponding element is 'virtual array'
-		 * member.
+		 * Facet indicating that corresponding element is 'virtual array' member.
 		 */
 		VIRTUAL_ARRAY_MEMBER;
 

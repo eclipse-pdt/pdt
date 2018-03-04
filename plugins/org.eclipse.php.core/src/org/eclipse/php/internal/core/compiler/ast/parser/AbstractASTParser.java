@@ -41,8 +41,7 @@ abstract public class AbstractASTParser extends lr_parser {
 	private String fileName;
 
 	/**
-	 * This is a place holder for statements that were found after unclosed
-	 * classes
+	 * This is a place holder for statements that were found after unclosed classes
 	 */
 	public Statement pendingStatement = null;
 

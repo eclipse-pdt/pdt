@@ -34,9 +34,8 @@ public interface INameUpdating {
 	public String getCurrentElementName();
 
 	/**
-	 * Gets the original elements. Since an <code>INameUpdating</code> only
-	 * renames one element, this method must return an array containing exactly
-	 * one element.
+	 * Gets the original elements. Since an <code>INameUpdating</code> only renames
+	 * one element, this method must return an array containing exactly one element.
 	 * 
 	 * @return an array containing exactly one element
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#getElements()
@@ -49,10 +48,8 @@ public interface INameUpdating {
 	public Object getNewElement() throws CoreException;
 
 	/**
-	 * Checks if the new name is valid for the entity that this refactoring
-	 * renames.
+	 * Checks if the new name is valid for the entity that this refactoring renames.
 	 */
-	public RefactoringStatus checkNewElementName(String newName)
-			throws CoreException;
+	public RefactoringStatus checkNewElementName(String newName) throws CoreException;
 
 }

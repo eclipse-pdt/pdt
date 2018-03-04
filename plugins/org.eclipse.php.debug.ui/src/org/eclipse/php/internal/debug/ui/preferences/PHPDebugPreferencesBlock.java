@@ -608,8 +608,8 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 	 *            the encoding to validate
 	 * @return <code>true</code> if the encoding is valid, <code>false</code>
 	 *         otherwise
-	 * @see org.eclipse.ui.ide.dialogs.AbstractEncodingFieldEditor.
-	 *      isValidEncoding (String)
+	 * @see org.eclipse.ui.ide.dialogs.AbstractEncodingFieldEditor. isValidEncoding
+	 *      (String)
 	 */
 	private boolean isValidEncoding(String enc) {
 		try {

@@ -51,9 +51,8 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 	private PHPStructuredEditor fEditor;
 
 	/**
-	 * Creates a new <code>OpenCallHierarchyAction</code>. The action requires
-	 * that the selection provided by the site's selection provider is of type
-	 * <code>
+	 * Creates a new <code>OpenCallHierarchyAction</code>. The action requires that
+	 * the selection provided by the site's selection provider is of type <code>
 	 * org.eclipse.jface.viewers.IStructuredSelection</code>.
 	 * 
 	 * @param site
@@ -69,8 +68,8 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 	}
 
 	/**
-	 * Note: This constructor is for internal use only. Clients should not call
-	 * this constructor.
+	 * Note: This constructor is for internal use only. Clients should not call this
+	 * constructor.
 	 */
 	public OpenCallHierarchyAction(PHPStructuredEditor editor) {
 		this(editor.getEditorSite());
@@ -135,8 +134,8 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 	}
 
 	/**
-	 * Returns true if the given selection is for an {@link IModelElement} that
-	 * is a TYPE (e.g. Class or Interface).
+	 * Returns true if the given selection is for an {@link IModelElement} that is a
+	 * TYPE (e.g. Class or Interface).
 	 */
 	private boolean isEnabled(ITextSelection selection) {
 

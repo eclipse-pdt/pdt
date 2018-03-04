@@ -58,8 +58,7 @@ public class PHPResourceMarkerAnnotationModel extends SourceModuleAnnotationMode
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.texteditor.AbstractMarkerAnnotationModel#isAcceptable(
+	 * @see org.eclipse.ui.texteditor.AbstractMarkerAnnotationModel#isAcceptable(
 	 * org.eclipse.core.resources.IMarker)
 	 */
 	@Override
@@ -103,9 +102,9 @@ public class PHPResourceMarkerAnnotationModel extends SourceModuleAnnotationMode
 	@Override
 	protected MarkerAnnotation createMarkerAnnotation(IMarker marker) {
 		/*
-		 * We need to do some special processing if marker is a validation (aka
-		 * problem) marker or if marker is a breakpoint marker so create a
-		 * special marker annotation for those markers. Otherwise, use default.
+		 * We need to do some special processing if marker is a validation (aka problem)
+		 * marker or if marker is a breakpoint marker so create a special marker
+		 * annotation for those markers. Otherwise, use default.
 		 */
 		if (MarkerUtilities.isMarkerType(marker, IMarker.PROBLEM)) {
 			return new StructuredMarkerAnnotation(marker);
@@ -149,8 +148,7 @@ public class PHPResourceMarkerAnnotationModel extends SourceModuleAnnotationMode
 		}
 
 		/**
-		 * Eventually will have to use IAnnotationPresentation &
-		 * IAnnotationExtension
+		 * Eventually will have to use IAnnotationPresentation & IAnnotationExtension
 		 * 
 		 * @see org.eclipse.ui.texteditor.MarkerAnnotation#getImage(org.eclipse.swt.widgets.Display)
 		 */
@@ -197,8 +195,8 @@ public class PHPResourceMarkerAnnotationModel extends SourceModuleAnnotationMode
 		}
 
 		/**
-		 * Initializes the annotation's icon representation and its drawing
-		 * layer based upon the properties of the underlying marker.
+		 * Initializes the annotation's icon representation and its drawing layer based
+		 * upon the properties of the underlying marker.
 		 */
 		protected void initAnnotationType() {
 

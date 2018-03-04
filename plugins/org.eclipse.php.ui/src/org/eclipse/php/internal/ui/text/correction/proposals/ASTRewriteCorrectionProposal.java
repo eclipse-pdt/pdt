@@ -45,13 +45,13 @@ public class ASTRewriteCorrectionProposal extends CUCorrectionProposal {
 	 * @param cu
 	 *            the compilation unit that is modified.
 	 * @param rewrite
-	 *            the AST rewrite that is invoked when the proposal is applied
-	 *            or <code>null</code> if {@link #getRewrite()} is overridden.
+	 *            the AST rewrite that is invoked when the proposal is applied or
+	 *            <code>null</code> if {@link #getRewrite()} is overridden.
 	 * @param relevance
 	 *            The relevance of this proposal.
 	 * @param image
-	 *            The image that is displayed for this proposal or
-	 *            <code>null</code> if no image is desired.
+	 *            The image that is displayed for this proposal or <code>null</code>
+	 *            if no image is desired.
 	 */
 	public ASTRewriteCorrectionProposal(String name, ISourceModule cu, ASTRewrite rewrite, int relevance, Image image) {
 		super(name, cu, relevance, image);
@@ -61,8 +61,7 @@ public class ASTRewriteCorrectionProposal extends CUCorrectionProposal {
 	/**
 	 * Returns the import rewriter used for this compilation unit. <code>
 	 * 
-	 * @return the import rewriter or <code>null</code> if no import rewriter is
-	 *         set
+	 * @return the import rewriter or <code>null</code> if no import rewriter is set
 	 */
 	public ImportRewrite getImportRewrite() {
 		return fImportRewrite;
@@ -115,14 +114,13 @@ public class ASTRewriteCorrectionProposal extends CUCorrectionProposal {
 	}
 
 	/**
-	 * Returns the rewriter that has been passed in the constructor.
-	 * Implementors can override this method to create the rewriter lazy. This
-	 * method will only be called once.
+	 * Returns the rewriter that has been passed in the constructor. Implementors
+	 * can override this method to create the rewriter lazy. This method will only
+	 * be called once.
 	 * 
 	 * @return returns the rewriter to be used.
 	 * @throws CoreException
-	 *             an exception is thrown when the rewriter could not be
-	 *             created.
+	 *             an exception is thrown when the rewriter could not be created.
 	 */
 	protected ASTRewrite getRewrite() throws CoreException {
 		if (fRewrite == null) {

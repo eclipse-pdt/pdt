@@ -133,9 +133,8 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 
 	/**
 	 * Show completions at caret position. If current position does not contain
-	 * quick fixes look for next quick fix on same line by moving from left to
-	 * right and restarting at end of line if the beginning of the line is
-	 * reached.
+	 * quick fixes look for next quick fix on same line by moving from left to right
+	 * and restarting at end of line if the beginning of the line is reached.
 	 * 
 	 * @see IQuickAssistAssistant#showPossibleQuickAssists()
 	 */
@@ -305,11 +304,11 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 	}
 
 	/**
-	 * Computes and returns the invocation offset given a new position, the
-	 * initial offset and the best invocation offset found so far.
+	 * Computes and returns the invocation offset given a new position, the initial
+	 * offset and the best invocation offset found so far.
 	 * <p>
-	 * The closest offset to the left of the initial offset is the best. If
-	 * there is no offset on the left, the closest on the right is the best.
+	 * The closest offset to the left of the initial offset is the best. If there is
+	 * no offset on the left, the closest on the right is the best.
 	 * </p>
 	 * 
 	 * @param newOffset
@@ -332,8 +331,7 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 			return -1; // further away
 		}
 
-		if (newOffset <= bestOffset)
-		 {
+		if (newOffset <= bestOffset) {
 			return newOffset; // we are closer or equal
 		}
 
@@ -366,8 +364,8 @@ public class PHPCorrectionAssistant extends QuickAssistAssistant {
 	 * Returns true if the last invoked completion was called with an updated
 	 * offset.
 	 * 
-	 * @return <code> true</code> if the last invoked completion was called with
-	 *         an updated offset.
+	 * @return <code> true</code> if the last invoked completion was called with an
+	 *         updated offset.
 	 */
 	public boolean isUpdatedOffset() {
 		return fPosition != null;

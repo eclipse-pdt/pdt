@@ -125,8 +125,8 @@ public class FormLayoutFactory {
 	}
 
 	/**
-	 * For miscellaneous grouping composites. For sections (as a whole - header
-	 * plus client).
+	 * For miscellaneous grouping composites. For sections (as a whole - header plus
+	 * client).
 	 * 
 	 * @param makeColumnsEqualWidth
 	 * @param numColumns
@@ -224,8 +224,8 @@ public class FormLayoutFactory {
 	}
 
 	/**
-	 * For miscellaneous grouping composites. For sections (as a whole - header
-	 * plus client).
+	 * For miscellaneous grouping composites. For sections (as a whole - header plus
+	 * client).
 	 * 
 	 * @param makeColumnsEqualWidth
 	 * @param numColumns

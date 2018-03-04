@@ -57,8 +57,8 @@ public class OccurrencesSearchGroup extends ActionGroup {
 	private FindMethodExitOccurrencesAction fMethodExitOccurrencesAction;
 
 	/**
-	 * Creates a new <code>ImplementorsSearchGroup</code>. The group requires
-	 * that the selection provided by the site's selection provider is of type
+	 * Creates a new <code>ImplementorsSearchGroup</code>. The group requires that
+	 * the selection provided by the site's selection provider is of type
 	 * <code>org.eclipse.jface.viewers.IStructuredSelection</code>.
 	 * 
 	 * @param site
@@ -79,8 +79,8 @@ public class OccurrencesSearchGroup extends ActionGroup {
 	}
 
 	/**
-	 * Note: This constructor is for internal use only. Clients should not call
-	 * this constructor.
+	 * Note: This constructor is for internal use only. Clients should not call this
+	 * constructor.
 	 * 
 	 * @param editor
 	 *            the Java editor

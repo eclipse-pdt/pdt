@@ -35,8 +35,8 @@ public class PharLeveledStructureProvider implements ILeveledImportStructureProv
 	private int stripLevel;
 
 	/**
-	 * Creates a <code>TarFileStructureProvider</code>, which will operate on
-	 * the passed tar file.
+	 * Creates a <code>TarFileStructureProvider</code>, which will operate on the
+	 * passed tar file.
 	 * 
 	 * @param sourceFile
 	 *            the source TarFile

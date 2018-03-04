@@ -18,8 +18,7 @@ import org.eclipse.php.internal.debug.core.zend.debugger.parameters.DefaultDebug
 /**
  * Zend profiler parameters initializer.
  */
-public class ProfileParametersInitializer extends
-		DefaultDebugParametersInitializer {
+public class ProfileParametersInitializer extends DefaultDebugParametersInitializer {
 
 	@Override
 	public Hashtable<String, String> getDebugParameters(ILaunch launch) {

@@ -41,14 +41,14 @@ public class WizardModel {
 	/**
 	 * Returns the object in the wizard model with the given id.
 	 * <p>
-	 * The id can be any of the predefined ids within WizardModel, or any other
-	 * key to retreive task-specific data.
+	 * The id can be any of the predefined ids within WizardModel, or any other key
+	 * to retreive task-specific data.
 	 * </p>
 	 * 
 	 * @param id
 	 *            an id for the object
-	 * @return the object with the given id, or <code>null</code> if no object
-	 *         could be found with that id
+	 * @return the object with the given id, or <code>null</code> if no object could
+	 *         be found with that id
 	 */
 	public Object getObject(String id) {
 		try {
@@ -61,8 +61,8 @@ public class WizardModel {
 	/**
 	 * Put an object into the wizard model with the given id.
 	 * <p>
-	 * The id can be any of the predefined ids within WizardModel, or any other
-	 * key to store task-specific data.
+	 * The id can be any of the predefined ids within WizardModel, or any other key
+	 * to store task-specific data.
 	 * </p>
 	 * 
 	 * @param id

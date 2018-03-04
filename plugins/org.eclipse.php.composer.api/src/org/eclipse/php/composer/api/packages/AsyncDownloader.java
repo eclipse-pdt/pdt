@@ -206,9 +206,9 @@ public class AsyncDownloader extends AbstractDownloader {
 	}
 
 	/**
-	 * Starts the async download. The returned number is the internal slot for
-	 * this download transfer, which can be used as parameter in abort to stop
-	 * this specific transfer.
+	 * Starts the async download. The returned number is the internal slot for this
+	 * download transfer, which can be used as parameter in abort to stop this
+	 * specific transfer.
 	 * 
 	 * @return slot
 	 */

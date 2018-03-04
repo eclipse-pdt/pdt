@@ -73,8 +73,8 @@ public class RefactoringStarter {
 	}
 
 	/**
-	 * Check if there are any unsaved files in the workspace and whether the
-	 * user selected that he wants to save them before the refactoring
+	 * Check if there are any unsaved files in the workspace and whether the user
+	 * selected that he wants to save them before the refactoring
 	 * 
 	 * @return boolean value
 	 * 

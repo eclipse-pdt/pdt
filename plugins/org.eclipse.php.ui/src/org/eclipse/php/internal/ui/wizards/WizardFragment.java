@@ -68,8 +68,8 @@ public abstract class WizardFragment {
 	}
 
 	/**
-	 * Sets the wizard task model. The wizard model is shared by all fragments
-	 * in the wizard and is used to share data.
+	 * Sets the wizard task model. The wizard model is shared by all fragments in
+	 * the wizard and is used to share data.
 	 * 
 	 * @param wizardModel
 	 *            the wizard model
@@ -88,13 +88,13 @@ public abstract class WizardFragment {
 	}
 
 	/**
-	 * Called when the wizard that this fragment belongs to has traversed into
-	 * this wizard fragment. It is called to give the fragment the opportunity
-	 * to initialize any values shown in the composite or update the task model.
+	 * Called when the wizard that this fragment belongs to has traversed into this
+	 * wizard fragment. It is called to give the fragment the opportunity to
+	 * initialize any values shown in the composite or update the task model.
 	 * <p>
 	 * When finish is pressed, the current fragment is exit()ed, and then
-	 * performFinish() is called on all of the fragments in the tree. enter()
-	 * and exit() are not called on the remaining fragments.
+	 * performFinish() is called on all of the fragments in the tree. enter() and
+	 * exit() are not called on the remaining fragments.
 	 * </p>
 	 */
 	public void enter() {
@@ -103,12 +103,12 @@ public abstract class WizardFragment {
 
 	/**
 	 * Called when the wizard that this fragment belongs to has traversed out of
-	 * this wizard fragment. It is called to give the fragment the opportunity
-	 * to save any values entered into the composite or update the wizard model.
+	 * this wizard fragment. It is called to give the fragment the opportunity to
+	 * save any values entered into the composite or update the wizard model.
 	 * <p>
 	 * When finish is pressed, the current fragment is exit()ed, and then
-	 * performFinish() is called on all of the fragments in the tree. enter()
-	 * and exit() are not called on the remaining fragments.
+	 * performFinish() is called on all of the fragments in the tree. enter() and
+	 * exit() are not called on the remaining fragments.
 	 * </p>
 	 */
 	public void exit() {
@@ -117,20 +117,19 @@ public abstract class WizardFragment {
 
 	/**
 	 * Called when the wizard that this fragment belongs to is finished. After
-	 * exit()ing the current page, all fragment's performFinish() methods are
-	 * called in order.
+	 * exit()ing the current page, all fragment's performFinish() methods are called
+	 * in order.
 	 * <p>
-	 * This method is not called on the UI thread and must not access the
-	 * composite. Not only might the user never have accessed the fragment's
-	 * composite, but this method may be called asynchronously on a job once the
-	 * wizard has closed.
+	 * This method is not called on the UI thread and must not access the composite.
+	 * Not only might the user never have accessed the fragment's composite, but
+	 * this method may be called asynchronously on a job once the wizard has closed.
 	 * </p>
 	 * 
 	 * @param monitor
-	 *            a progress monitor, or <code>null</code> if progress reporting
-	 *            and cancellation are not desired
-	 * @return <code>true</code> if page was finished successfully; otherwise
-	 *         return <code>false</code>
+	 *            a progress monitor, or <code>null</code> if progress reporting and
+	 *            cancellation are not desired
+	 * @return <code>true</code> if page was finished successfully; otherwise return
+	 *         <code>false</code>
 	 * @throws CoreException
 	 *             if something goes wrong
 	 */
@@ -140,18 +139,17 @@ public abstract class WizardFragment {
 
 	/**
 	 * Called when the wizard that this fragment belongs to is canceled. After
-	 * exit()ing the current page, all fragment's performCancel() methods are
-	 * called in order.
+	 * exit()ing the current page, all fragment's performCancel() methods are called
+	 * in order.
 	 * <p>
-	 * This method is not called on the UI thread and must not access the
-	 * composite. Not only might the user never have accessed the fragment's
-	 * composite, but this method may be called asynchronously on a job once the
-	 * wizard has closed.
+	 * This method is not called on the UI thread and must not access the composite.
+	 * Not only might the user never have accessed the fragment's composite, but
+	 * this method may be called asynchronously on a job once the wizard has closed.
 	 * </p>
 	 * 
 	 * @param monitor
-	 *            a progress monitor, or <code>null</code> if progress reporting
-	 *            and cancellation are not desired
+	 *            a progress monitor, or <code>null</code> if progress reporting and
+	 *            cancellation are not desired
 	 * @throws CoreException
 	 *             if something goes wrong
 	 */
@@ -182,11 +180,11 @@ public abstract class WizardFragment {
 	}
 
 	/**
-	 * This method is called by the implementation of getChildFragments() to
-	 * allow this fragment to add it's children. This method must cache and
-	 * return the same instance of any child fragment created. If new instances
-	 * are created each time the wizard is updated, the enablement state and the
-	 * flow of the wizard will be incorrect.
+	 * This method is called by the implementation of getChildFragments() to allow
+	 * this fragment to add it's children. This method must cache and return the
+	 * same instance of any child fragment created. If new instances are created
+	 * each time the wizard is updated, the enablement state and the flow of the
+	 * wizard will be incorrect.
 	 * 
 	 * @param list
 	 *            a list to add the child fragments to
@@ -196,14 +194,14 @@ public abstract class WizardFragment {
 	}
 
 	/**
-	 * Returns true if this fragment is complete (can finish). If it is complete
-	 * the user will be allowed to go to the next fragment or finish the wizard.
-	 * If the fragment is not complete, the Next button will be disabled. If the
-	 * fragment is complete but another fragment is not complete, the Finish
-	 * button will not be enabled.
+	 * Returns true if this fragment is complete (can finish). If it is complete the
+	 * user will be allowed to go to the next fragment or finish the wizard. If the
+	 * fragment is not complete, the Next button will be disabled. If the fragment
+	 * is complete but another fragment is not complete, the Finish button will not
+	 * be enabled.
 	 * 
-	 * @return <code>true</code> if the fragment is complete, and
-	 *         <code>false</code> otherwise
+	 * @return <code>true</code> if the fragment is complete, and <code>false</code>
+	 *         otherwise
 	 */
 	public boolean isComplete() {
 		return isComplete;

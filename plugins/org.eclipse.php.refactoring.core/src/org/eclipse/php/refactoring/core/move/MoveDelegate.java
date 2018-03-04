@@ -113,8 +113,8 @@ public class MoveDelegate {
 
 	/**
 	 * Creates the change for the move action. The change can be a simple change
-	 * (the move itslef) or a more complex change (including references update
-	 * and includes in the file itself) depending on the user selection (update
+	 * (the move itslef) or a more complex change (including references update and
+	 * includes in the file itself) depending on the user selection (update
 	 * references checkbox)
 	 * 
 	 * @param pm
@@ -160,10 +160,10 @@ public class MoveDelegate {
 	}
 
 	/**
-	 * Adds the text and move changes to the root change This change is the a
-	 * more global change, it includes both the file(s) move, the update of it's
-	 * includes and update all the references, all the files that have includes
-	 * to the moved file.
+	 * Adds the text and move changes to the root change This change is the a more
+	 * global change, it includes both the file(s) move, the update of it's includes
+	 * and update all the references, all the files that have includes to the moved
+	 * file.
 	 * 
 	 * @param pm
 	 *            - progress monitor
@@ -425,9 +425,9 @@ public class MoveDelegate {
 	}
 
 	/**
-	 * Creates the text changes for all the affected files. Updates all the
-	 * include statements in the current file and all the includes in the
-	 * "including " files. In case of folders, creates the changes recursively
+	 * Creates the text changes for all the affected files. Updates all the include
+	 * statements in the current file and all the includes in the "including "
+	 * files. In case of folders, creates the changes recursively
 	 * 
 	 * @param pm
 	 *            - progress monitor
@@ -630,20 +630,17 @@ public class MoveDelegate {
 		RefactoringStatus status = new RefactoringStatus();
 
 		Assert.isNotNull(destination);
-		if (!destination.exists() || destination.isPhantom())
-		 {
+		if (!destination.exists() || destination.isPhantom()) {
 			return RefactoringStatus.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("MoveDelegate.2")); //$NON-NLS-1$
 		}
-		if (!destination.isAccessible())
-		 {
+		if (!destination.isAccessible()) {
 			return RefactoringStatus.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("MoveDelegate.3")); //$NON-NLS-1$
 		}
 		Assert.isTrue(destination.getType() != IResource.ROOT);
 
 		IResource[] sourceResources = fProcessor.getSourceSelection();
 		for (IResource element : sourceResources) {
-			if (destination.equals(element.getParent()))
-			 {
+			if (destination.equals(element.getParent())) {
 				return RefactoringStatus.createFatalErrorStatus(PHPRefactoringCoreMessages.getString("MoveDelegate.4")); //$NON-NLS-1$
 			}
 			if (destination.equals(element)) {

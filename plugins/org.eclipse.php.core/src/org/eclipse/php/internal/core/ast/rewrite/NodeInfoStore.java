@@ -36,8 +36,8 @@ public final class NodeInfoStore {
 	}
 
 	/**
-	 * Marks a node as a placehoder for a plain string content. The type of the
-	 * node should correspond to the code's code content.
+	 * Marks a node as a placehoder for a plain string content. The type of the node
+	 * should correspond to the code's code content.
 	 * 
 	 * @param placeholder
 	 *            The placeholder node that acts for the string content.
@@ -51,12 +51,12 @@ public final class NodeInfoStore {
 	}
 
 	/**
-	 * Marks a node as a copy or move target. The copy target represents a
-	 * copied node at the target (copied) site.
+	 * Marks a node as a copy or move target. The copy target represents a copied
+	 * node at the target (copied) site.
 	 * 
 	 * @param target
-	 *            The node at the target site. Can be a placeholder node but
-	 *            also the source node itself.
+	 *            The node at the target site. Can be a placeholder node but also
+	 *            the source node itself.
 	 * @param copySource
 	 *            The info at the source site.
 	 */
@@ -67,8 +67,8 @@ public final class NodeInfoStore {
 	}
 
 	/**
-	 * Creates a placeholder node of the given type. <code>null</code> if the
-	 * type is not supported
+	 * Creates a placeholder node of the given type. <code>null</code> if the type
+	 * is not supported
 	 * 
 	 * @param nodeType
 	 *            Type of the node to create. Use the type constants in

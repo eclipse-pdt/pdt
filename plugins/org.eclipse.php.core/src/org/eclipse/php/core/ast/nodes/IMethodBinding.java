@@ -34,18 +34,18 @@ public interface IMethodBinding extends IFunctionBinding {
 	public boolean isConstructor();
 
 	/**
-	 * Returns the type binding representing the class or interface that
-	 * declares this method or constructor.
+	 * Returns the type binding representing the class or interface that declares
+	 * this method or constructor.
 	 * 
-	 * @return the binding of the class or interface that declares this method
-	 *         or constructor
+	 * @return the binding of the class or interface that declares this method or
+	 *         constructor
 	 */
 	public ITypeBinding getDeclaringClass();
 
 	/**
 	 * Returns whether this method overrides the given method, as specified in
-	 * section 8.4.8.1 of <em>The Java Language 
-	 * Specification, Third Edition</em> (JLS3).
+	 * section 8.4.8.1 of <em>The Java Language Specification, Third Edition</em>
+	 * (JLS3).
 	 * 
 	 * @param method
 	 *            the method that is possibly overriden

@@ -83,8 +83,7 @@ public class MultiVariable extends TemplateVariable {
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.text.templates.TemplateVariable#setValues(java.lang
+	 * @see org.eclipse.jface.text.templates.TemplateVariable#setValues(java.lang
 	 * .String[])
 	 */
 	@Override
@@ -132,8 +131,8 @@ public class MultiVariable extends TemplateVariable {
 	 * 
 	 * @param key
 	 *            the key
-	 * @return the choices for this variable and the given set, or
-	 *         <code>null</code> if the set is not defined.
+	 * @return the choices for this variable and the given set, or <code>null</code>
+	 *         if the set is not defined.
 	 */
 	public Object[] getChoices(Object key) {
 		return fValueMap.get(key);

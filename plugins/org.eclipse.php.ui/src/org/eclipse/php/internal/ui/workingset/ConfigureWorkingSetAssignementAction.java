@@ -235,8 +235,7 @@ public final class ConfigureWorkingSetAssignementAction extends SelectionDispatc
 		private static final String DIALOG_SETTINGS_SECTION = "WorkingSetModelAwareSelectionDialog"; //$NON-NLS-1$
 
 		/**
-		 * Key associated with the 'Show Only PE Visible Working Sets' check
-		 * box.
+		 * Key associated with the 'Show Only PE Visible Working Sets' check box.
 		 * 
 		 * @since 3.5
 		 */

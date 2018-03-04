@@ -79,8 +79,8 @@ public class LibraryFolderRenameParticipant extends RenameParticipant {
 	 * @param element
 	 *            the element to be refactored
 	 * 
-	 * @return the folder to be refactored or <code>null</code> if no folder can
-	 *         be determined by the given element.
+	 * @return the folder to be refactored or <code>null</code> if no folder can be
+	 *         determined by the given element.
 	 */
 	private IFolder getFolder(Object element) {
 		if (element instanceof IFolder) {

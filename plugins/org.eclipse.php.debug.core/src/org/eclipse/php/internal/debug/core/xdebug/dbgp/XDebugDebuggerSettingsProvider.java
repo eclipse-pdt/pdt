@@ -89,8 +89,7 @@ public class XDebugDebuggerSettingsProvider extends AbstractDebuggerSettingsProv
 	 * @see org.eclipse.php.internal.debug.core.debugger.
 	 * AbstractDebuggerSettingsProvider
 	 * #createSettings(org.eclipse.php.internal.debug.core.debugger.
-	 * DebuggerSettingsKind,
-	 * org.eclipse.php.internal.core.IUniqueIdentityElement)
+	 * DebuggerSettingsKind, org.eclipse.php.internal.core.IUniqueIdentityElement)
 	 */
 	@Override
 	protected IDebuggerSettings createSettings(DebuggerSettingsKind kind, String ownerId) {
@@ -111,8 +110,8 @@ public class XDebugDebuggerSettingsProvider extends AbstractDebuggerSettingsProv
 	 * @see org.eclipse.php.internal.debug.core.debugger.
 	 * AbstractDebuggerSettingsProvider
 	 * #createSettings(org.eclipse.php.internal.debug.core.debugger.
-	 * DebuggerSettingsKind,
-	 * org.eclipse.php.internal.core.IUniqueIdentityElement, java.util.Map)
+	 * DebuggerSettingsKind, org.eclipse.php.internal.core.IUniqueIdentityElement,
+	 * java.util.Map)
 	 */
 	@Override
 	protected IDebuggerSettings createSettings(DebuggerSettingsKind kind, String ownerId,
@@ -131,8 +130,7 @@ public class XDebugDebuggerSettingsProvider extends AbstractDebuggerSettingsProv
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.IDebuggerSettingsProvider
+	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerSettingsProvider
 	 * #createWorkingCopy
 	 * (org.eclipse.php.internal.debug.core.debugger.IDebuggerSettings)
 	 */

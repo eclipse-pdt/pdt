@@ -130,9 +130,9 @@ public class PharPackageWizard extends Wizard implements IExportWizard {
 	/**
 	 * Gets the current workspace page selection and converts it to a valid
 	 * selection for this wizard: - resources and projects are OK - CUs are OK -
-	 * Java projects are OK - Source package fragments and source packages
-	 * fragement roots are ok - Java elements below a CU are converted to their
-	 * CU - all other input elements are ignored
+	 * Java projects are OK - Source package fragments and source packages fragement
+	 * roots are ok - Java elements below a CU are converted to their CU - all other
+	 * input elements are ignored
 	 * 
 	 * @return a valid structured selection based on the current selection
 	 */

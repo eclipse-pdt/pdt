@@ -33,8 +33,8 @@ package org.eclipse.php.internal.core.ast.util;
  */
 public class CharArrayBuffer {
 	/**
-	 * This is the buffer of char arrays which must be appended together during
-	 * the getContents method.
+	 * This is the buffer of char arrays which must be appended together during the
+	 * getContents method.
 	 */
 	protected char[][] fBuffer;
 
@@ -54,9 +54,8 @@ public class CharArrayBuffer {
 	protected int fSize;
 
 	/**
-	 * A buffer of ranges which is maintained along with the buffer. Ranges are
-	 * of the form {start, length}. Enables append(char[] array, int start, int
-	 * end).
+	 * A buffer of ranges which is maintained along with the buffer. Ranges are of
+	 * the form {start, length}. Enables append(char[] array, int start, int end).
 	 */
 	protected int[][] fRanges;
 
@@ -68,26 +67,24 @@ public class CharArrayBuffer {
 	}
 
 	/**
-	 * Creates a <code>CharArrayBuffer</code> with the default buffer size, and
-	 * sets the first element in the buffer to be the given char[].
+	 * Creates a <code>CharArrayBuffer</code> with the default buffer size, and sets
+	 * the first element in the buffer to be the given char[].
 	 *
 	 * @param first
-	 *            - the first element to be placed in the buffer, ignored if
-	 *            null
+	 *            - the first element to be placed in the buffer, ignored if null
 	 */
 	public CharArrayBuffer(char[] first) {
 		this(first, DEFAULT_BUFFER_SIZE);
 	}
 
 	/**
-	 * Creates a <code>CharArrayBuffer</code> with the given buffer size, and
-	 * sets the first element in the buffer to be the given char array.
+	 * Creates a <code>CharArrayBuffer</code> with the given buffer size, and sets
+	 * the first element in the buffer to be the given char array.
 	 *
 	 * @param first
 	 *            - the first element of the buffer, ignored if null.
 	 * @param size
-	 *            - the buffer size, if less than 1, set to the
-	 *            DEFAULT_BUFFER_SIZE.
+	 *            - the buffer size, if less than 1, set to the DEFAULT_BUFFER_SIZE.
 	 */
 	public CharArrayBuffer(char[] first, int size) {
 		fSize = (size > 0) ? size : DEFAULT_BUFFER_SIZE;
@@ -193,8 +190,8 @@ public class CharArrayBuffer {
 	}
 
 	/**
-	 * Returns the entire contents of the buffer as one char[] or null if
-	 * nothing has been put in the buffer.
+	 * Returns the entire contents of the buffer as one char[] or null if nothing
+	 * has been put in the buffer.
 	 */
 	public char[] getContents() {
 		if (fEnd == 0) {

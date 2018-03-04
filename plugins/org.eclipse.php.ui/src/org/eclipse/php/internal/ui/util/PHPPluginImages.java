@@ -202,9 +202,8 @@ public class PHPPluginImages {
 		}
 
 		/*
-		 * try { ImageDescriptor id=
-		 * ImageDescriptor.createFromURL(makeIconFileURL("c" + type, relPath));
-		 * if (id != null) action.setHoverImageDescriptor(id); } catch
+		 * try { ImageDescriptor id= ImageDescriptor.createFromURL(makeIconFileURL("c" +
+		 * type, relPath)); if (id != null) action.setHoverImageDescriptor(id); } catch
 		 * (MalformedURLException e) { }
 		 */
 

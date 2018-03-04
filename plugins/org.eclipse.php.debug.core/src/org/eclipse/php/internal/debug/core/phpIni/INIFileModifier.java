@@ -99,8 +99,8 @@ public class INIFileModifier {
 	}
 
 	/**
-	 * Adds new entry to the INI file. New entry will be added to the given
-	 * section, no old entries will be replaced
+	 * Adds new entry to the INI file. New entry will be added to the given section,
+	 * no old entries will be replaced
 	 * 
 	 * @param sectionName
 	 *            Section name
@@ -114,9 +114,8 @@ public class INIFileModifier {
 	}
 
 	/**
-	 * Adds new entry to the INI file. If <code>replace</code> is
-	 * <code>true</code> the old entry will be replaced, otherwise - add a new
-	 * one.
+	 * Adds new entry to the INI file. If <code>replace</code> is <code>true</code>
+	 * the old entry will be replaced, otherwise - add a new one.
 	 * 
 	 * @param sectionName
 	 *            Section name
@@ -127,10 +126,9 @@ public class INIFileModifier {
 	 * @param replace
 	 *            Whether to replace the old entry or add a new one
 	 * @param replacePattern
-	 *            Pattern to check against existing entry value, before
-	 *            replacing it. If <code>replacePattern</code> is
-	 *            <code>null</code> - every entry that matches the given name
-	 *            will be replaced
+	 *            Pattern to check against existing entry value, before replacing
+	 *            it. If <code>replacePattern</code> is <code>null</code> - every
+	 *            entry that matches the given name will be replaced
 	 */
 	public void addEntry(String sectionName, String name, String value, boolean replace, String replacePattern) {
 		if (sectionName == null || name == null || value == null) {
@@ -163,9 +161,9 @@ public class INIFileModifier {
 	 * @param name
 	 *            Entry name
 	 * @param removePattern
-	 *            Pattern to check against existing entry value, before removing
-	 *            it. If <code>removePattern</code> is <code>null</code> every
-	 *            entry that matches the given name will be removed.
+	 *            Pattern to check against existing entry value, before removing it.
+	 *            If <code>removePattern</code> is <code>null</code> every entry
+	 *            that matches the given name will be removed.
 	 * @return <code>true</code> if some entry was removed, otherwise - false
 	 */
 	public boolean removeEntry(String name, String removePattern) {
@@ -192,9 +190,9 @@ public class INIFileModifier {
 	 * @param name
 	 *            Entry name
 	 * @param removePattern
-	 *            Pattern to check against existing entry value, before removing
-	 *            it. If <code>removePattern</code> is <code>null</code> every
-	 *            entry that matches the given name will be removed.
+	 *            Pattern to check against existing entry value, before removing it.
+	 *            If <code>removePattern</code> is <code>null</code> every entry
+	 *            that matches the given name will be removed.
 	 * 
 	 * @return <code>true</code> if some entry was removed, otherwise - false
 	 * @see #removeEntry(String, String, String)
@@ -207,15 +205,15 @@ public class INIFileModifier {
 	 * Removes entry from the INI file from the given section.
 	 * 
 	 * @param sectionName
-	 *            Section name. If <code>sectionName</code> is <code>null</code>
-	 *            , matching entries from all sections will be removed.
+	 *            Section name. If <code>sectionName</code> is <code>null</code> ,
+	 *            matching entries from all sections will be removed.
 	 * 
 	 * @param name
 	 *            Entry name
 	 * @param removePattern
-	 *            Pattern to check against existing entry value, before removing
-	 *            it. If <code>removePattern</code> is <code>null</code> every
-	 *            entry that matches the given name will be removed.
+	 *            Pattern to check against existing entry value, before removing it.
+	 *            If <code>removePattern</code> is <code>null</code> every entry
+	 *            that matches the given name will be removed.
 	 * @return <code>true</code> if some entry was removed, otherwise - false
 	 */
 	public boolean removeEntry(String sectionName, String name, String removePattern) {
@@ -250,9 +248,9 @@ public class INIFileModifier {
 	 * @param name
 	 *            Entry name
 	 * @param commentPattern
-	 *            Pattern to check against existing entry value, before removing
-	 *            it. If <code>commentPattern</code> is <code>null</code> every
-	 *            entry that matches the given name will be commented.
+	 *            Pattern to check against existing entry value, before removing it.
+	 *            If <code>commentPattern</code> is <code>null</code> every entry
+	 *            that matches the given name will be commented.
 	 */
 	public void commentEntry(String name, String commentPattern) {
 		commentEntry(GLOBAL_SECTION, name, commentPattern);
@@ -265,9 +263,9 @@ public class INIFileModifier {
 	 * @param name
 	 *            Entry name
 	 * @param commentPattern
-	 *            Pattern to check against existing entry value, before removing
-	 *            it. If <code>commentPattern</code> is <code>null</code> every
-	 *            entry that matches the given name will be commented.
+	 *            Pattern to check against existing entry value, before removing it.
+	 *            If <code>commentPattern</code> is <code>null</code> every entry
+	 *            that matches the given name will be commented.
 	 * 
 	 * @see #commentEntry(String, String, String)
 	 */
@@ -279,15 +277,15 @@ public class INIFileModifier {
 	 * Removes entry from the INI file from the given section.
 	 * 
 	 * @param sectionName
-	 *            Section name. If <code>sectionName</code> is <code>null</code>
-	 *            , matching entries from all sections will be commented.
+	 *            Section name. If <code>sectionName</code> is <code>null</code> ,
+	 *            matching entries from all sections will be commented.
 	 * 
 	 * @param name
 	 *            Entry name
 	 * @param commentPattern
-	 *            Pattern to check against existing entry value, before removing
-	 *            it. If <code>commentPattern</code> is <code>null</code> every
-	 *            entry that matches the given name will be commented.
+	 *            Pattern to check against existing entry value, before removing it.
+	 *            If <code>commentPattern</code> is <code>null</code> every entry
+	 *            that matches the given name will be commented.
 	 */
 	public void commentEntry(String sectionName, String name, String commentPattern) {
 		if (name == null) {
@@ -316,8 +314,7 @@ public class INIFileModifier {
 	}
 
 	/**
-	 * Checks if the entry with given key name exists in any of available
-	 * sections.
+	 * Checks if the entry with given key name exists in any of available sections.
 	 * 
 	 * @param sectionName
 	 * @return <code>true</code> if entry already exists, <code>false</code>

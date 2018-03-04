@@ -77,8 +77,7 @@ public class ServerType implements IServerType {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.server.core.types.IServerType#getDescription()
+	 * @see org.eclipse.php.internal.server.core.types.IServerType#getDescription()
 	 */
 	@Override
 	public String getDescription() {

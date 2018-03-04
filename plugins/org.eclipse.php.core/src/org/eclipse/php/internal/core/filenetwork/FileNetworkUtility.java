@@ -148,7 +148,8 @@ public class FileNetworkUtility {
 		}
 
 		IModelElement parentElement = (file instanceof ExternalSourceModule)
-				? ((ExternalSourceModule) file).getProjectFragment() : file.getScriptProject();
+				? ((ExternalSourceModule) file).getProjectFragment()
+				: file.getScriptProject();
 
 		IField[] includes = includesCache.get(parentElement);
 		if (includes == null) {
@@ -191,8 +192,8 @@ public class FileNetworkUtility {
 	}
 
 	/**
-	 * Analyzes file dependences, and builds tree of all source modules, which
-	 * are referenced by the given source module.
+	 * Analyzes file dependences, and builds tree of all source modules, which are
+	 * referenced by the given source module.
 	 * 
 	 * @param file
 	 *            Source module
@@ -206,8 +207,8 @@ public class FileNetworkUtility {
 	}
 
 	/**
-	 * Analyzes file dependences, and builds tree of all source modules, which
-	 * are referenced by the given source module.
+	 * Analyzes file dependences, and builds tree of all source modules, which are
+	 * referenced by the given source module.
 	 * 
 	 * @param file
 	 *            Source module

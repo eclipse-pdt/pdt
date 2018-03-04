@@ -57,8 +57,7 @@ public class LineBreakpointTypeChange extends LineBreakpointChange {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ltk.core.refactoring.Change#perform(org.eclipse.core.runtime
+	 * @see org.eclipse.ltk.core.refactoring.Change#perform(org.eclipse.core.runtime
 	 * .IProgressMonitor)
 	 */
 	@Override

@@ -39,11 +39,9 @@ public class PHPRemoteLaunchConfigurationDelegate implements ILaunchConfiguratio
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.model.ILaunchConfigurationDelegate#launch(org.
+	 * @see org.eclipse.debug.core.model.ILaunchConfigurationDelegate#launch(org.
 	 * eclipse.debug.core.ILaunchConfiguration, java.lang.String,
-	 * org.eclipse.debug.core.ILaunch,
-	 * org.eclipse.core.runtime.IProgressMonitor)
+	 * org.eclipse.debug.core.ILaunch, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
@@ -112,8 +110,7 @@ public class PHPRemoteLaunchConfigurationDelegate implements ILaunchConfiguratio
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.model.ILaunchConfigurationDelegate2#getLaunch(
+	 * @see org.eclipse.debug.core.model.ILaunchConfigurationDelegate2#getLaunch(
 	 * org.eclipse.debug.core.ILaunchConfiguration, java.lang.String)
 	 */
 	@Override
@@ -142,9 +139,9 @@ public class PHPRemoteLaunchConfigurationDelegate implements ILaunchConfiguratio
 		DebugEvent event = null;
 		if (launch.getDebugTarget() == null) {
 			/*
-			 * We have to force the termination of the ILaunch because at this
-			 * stage there is no PHPDebugTarget, thus we create a dummy debug
-			 * target to overcome this issue and terminate the launch.
+			 * We have to force the termination of the ILaunch because at this stage there
+			 * is no PHPDebugTarget, thus we create a dummy debug target to overcome this
+			 * issue and terminate the launch.
 			 */
 			IDebugTarget dummyDebugTarget = new DummyDebugTarget(launch);
 			event = new DebugEvent(dummyDebugTarget, DebugEvent.TERMINATE);

@@ -262,8 +262,7 @@ public class MarkOccurrencesConfigurationBlock implements IPreferenceConfigurati
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jdt.internal.ui.preferences.IPreferenceConfigurationBlock
+	 * @see org.eclipse.jdt.internal.ui.preferences.IPreferenceConfigurationBlock
 	 * #dispose()
 	 * 
 	 * @since 3.0

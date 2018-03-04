@@ -362,8 +362,8 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements I
 	}
 
 	/**
-	 * Note that this fragment does not directly represent this expression node,
-	 * but rather a part of it.
+	 * Note that this fragment does not directly represent this expression node, but
+	 * rather a part of it.
 	 */
 	@Override
 	public Expression getAssociatedExpression() {
@@ -371,8 +371,8 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements I
 	}
 
 	/**
-	 * Note that this fragment does not directly represent this node, but rather
-	 * a particular sort of part of its subtree.
+	 * Note that this fragment does not directly represent this node, but rather a
+	 * particular sort of part of its subtree.
 	 */
 	@Override
 	public ASTNode getAssociatedNode() {

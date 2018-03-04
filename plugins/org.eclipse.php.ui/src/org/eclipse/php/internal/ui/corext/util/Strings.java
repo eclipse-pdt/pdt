@@ -51,8 +51,8 @@ public class Strings {
 	}
 
 	/**
-	 * Adds special marks so that that the given styled string is readable in a
-	 * BIDI environment.
+	 * Adds special marks so that that the given styled string is readable in a BIDI
+	 * environment.
 	 * 
 	 * @param styledString
 	 *            the styled string
@@ -62,8 +62,7 @@ public class Strings {
 	public static StyledString markLTR(StyledString styledString) {
 
 		/*
-		 * NOTE: For performance reasons we do not call markLTR(styledString,
-		 * null)
+		 * NOTE: For performance reasons we do not call markLTR(styledString, null)
 		 */
 
 		if (!USE_TEXT_PROCESSOR) {
@@ -79,8 +78,8 @@ public class Strings {
 	}
 
 	/**
-	 * Adds special marks so that that the given styled string is readable in a
-	 * BIDI environment.
+	 * Adds special marks so that that the given styled string is readable in a BIDI
+	 * environment.
 	 * 
 	 * @param styledString
 	 *            the styled string
@@ -191,8 +190,8 @@ public class Strings {
 	}
 
 	/**
-	 * Converts the given string into an array of lines. The lines don't contain
-	 * any line delimiter characters.
+	 * Converts the given string into an array of lines. The lines don't contain any
+	 * line delimiter characters.
 	 * 
 	 * @param input
 	 *            the string
@@ -217,8 +216,8 @@ public class Strings {
 	}
 
 	/**
-	 * Returns <code>true</code> if the given string only consists of white
-	 * spaces according to Java. If the string is empty, <code>true
+	 * Returns <code>true</code> if the given string only consists of white spaces
+	 * according to Java. If the string is empty, <code>true
 	 * </code> is returned.
 	 * 
 	 * @param s
@@ -239,9 +238,8 @@ public class Strings {
 	}
 
 	/**
-	 * Removes leading tabs and spaces from the given string. If the string
-	 * doesn't contain any leading tabs or spaces then the string itself is
-	 * returned.
+	 * Removes leading tabs and spaces from the given string. If the string doesn't
+	 * contain any leading tabs or spaces then the string itself is returned.
 	 * 
 	 * @param line
 	 *            the line
@@ -287,14 +285,14 @@ public class Strings {
 	}
 
 	/**
-	 * Returns the indent of the given string in indentation units. Odd spaces
-	 * are not counted.
+	 * Returns the indent of the given string in indentation units. Odd spaces are
+	 * not counted.
 	 * 
 	 * @param line
 	 *            the text line
 	 * @param project
-	 *            the java project from which to get the formatter preferences,
-	 *            or <code>null</code> for global preferences
+	 *            the java project from which to get the formatter preferences, or
+	 *            <code>null</code> for global preferences
 	 * @return the number of indent units
 	 * @since 3.1
 	 */
@@ -306,8 +304,8 @@ public class Strings {
 	// }
 
 	/**
-	 * Returns the indent of the given string in indentation units. Odd spaces
-	 * are not counted.
+	 * Returns the indent of the given string in indentation units. Odd spaces are
+	 * not counted.
 	 * 
 	 * @param line
 	 *            the text line
@@ -324,9 +322,9 @@ public class Strings {
 	}
 
 	/**
-	 * Computes the visual length of the indentation of a
-	 * <code>CharSequence</code>, counting a tab character as the size until the
-	 * next tab stop and every other whitespace character as one.
+	 * Computes the visual length of the indentation of a <code>CharSequence</code>,
+	 * counting a tab character as the size until the next tab stop and every other
+	 * whitespace character as one.
 	 * 
 	 * @param line
 	 *            the string to measure the indent of
@@ -350,8 +348,8 @@ public class Strings {
 	 *            the indents to remove
 	 * 
 	 * @param project
-	 *            the java project from which to get the formatter preferences,
-	 *            or <code>null</code> for global preferences
+	 *            the java project from which to get the formatter preferences, or
+	 *            <code>null</code> for global preferences
 	 * @return the trimmed line
 	 * 
 	 * @since 3.1
@@ -385,15 +383,15 @@ public class Strings {
 	}
 
 	/**
-	 * Removes the common number of indents from all lines. If a line only
-	 * consists out of white space it is ignored.
+	 * Removes the common number of indents from all lines. If a line only consists
+	 * out of white space it is ignored.
 	 * 
 	 * @param lines
 	 *            the lines
 	 * 
 	 * @param project
-	 *            the java project from which to get the formatter preferences,
-	 *            or <code>null</code> for global preferences
+	 *            the java project from which to get the formatter preferences, or
+	 *            <code>null</code> for global preferences
 	 * @since 3.1
 	 */
 	// public static void trimIndentation(String[] lines, IScriptProject
@@ -402,8 +400,8 @@ public class Strings {
 	// CodeFormatterUtil.getIndentWidth(project), true);
 	// }
 	/**
-	 * Removes the common number of indents from all lines. If a line only
-	 * consists out of white space it is ignored.
+	 * Removes the common number of indents from all lines. If a line only consists
+	 * out of white space it is ignored.
 	 * 
 	 * @param lines
 	 *            the lines
@@ -419,19 +417,19 @@ public class Strings {
 	}
 
 	/**
-	 * Removes the common number of indents from all lines. If a line only
-	 * consists out of white space it is ignored. If <code>
+	 * Removes the common number of indents from all lines. If a line only consists
+	 * out of white space it is ignored. If <code>
 	 * considerFirstLine</code> is false the first line will be ignored.
 	 * 
 	 * @param lines
 	 *            the lines
 	 * 
 	 * @param project
-	 *            the java project from which to get the formatter preferences,
-	 *            or <code>null</code> for global preferences
+	 *            the java project from which to get the formatter preferences, or
+	 *            <code>null</code> for global preferences
 	 * @param considerFirstLine
-	 *            If <code>considerFirstLine</code> is false the first line will
-	 *            be ignored.
+	 *            If <code>considerFirstLine</code> is false the first line will be
+	 *            ignored.
 	 * @since 3.1
 	 */
 	// public static void trimIndentation(String[] lines, IScriptProject
@@ -441,8 +439,8 @@ public class Strings {
 	// }
 
 	/**
-	 * Removes the common number of indents from all lines. If a line only
-	 * consists out of white space it is ignored. If <code>
+	 * Removes the common number of indents from all lines. If a line only consists
+	 * out of white space it is ignored. If <code>
 	 * considerFirstLine</code> is false the first line will be ignored.
 	 * 
 	 * @param lines
@@ -452,8 +450,8 @@ public class Strings {
 	 * @param indentWidth
 	 *            the size of the indent in space equivalents
 	 * @param considerFirstLine
-	 *            If <code> considerFirstLine</code> is false the first line
-	 *            will be ignored.
+	 *            If <code> considerFirstLine</code> is false the first line will be
+	 *            ignored.
 	 * @since 3.1
 	 */
 	public static void trimIndentation(String[] lines, int tabWidth, int indentWidth, boolean considerFirstLine) {
@@ -498,8 +496,8 @@ public class Strings {
 	 * @param line
 	 *            the line to scan
 	 * @param project
-	 *            the java project from which to get the formatter preferences,
-	 *            or <code>null</code> for global preferences
+	 *            the java project from which to get the formatter preferences, or
+	 *            <code>null</code> for global preferences
 	 * @return the indent part of <code>line</code>, but no odd spaces
 	 * @since 3.1
 	 */
@@ -546,10 +544,10 @@ public class Strings {
 	}
 
 	/**
-	 * Change the indent of, possible multi-line, code range. The current indent
-	 * is removed, a new indent added. The first line of the code will not be
-	 * changed. (It is considered to have no indent as it might start in the
-	 * middle of a line)
+	 * Change the indent of, possible multi-line, code range. The current indent is
+	 * removed, a new indent added. The first line of the code will not be changed.
+	 * (It is considered to have no indent as it might start in the middle of a
+	 * line)
 	 * 
 	 * @param code
 	 *            the code
@@ -557,8 +555,8 @@ public class Strings {
 	 *            level of indentation
 	 * 
 	 * @param project
-	 *            the java project from which to get the formatter preferences,
-	 *            or <code>null</code> for global preferences
+	 *            the java project from which to get the formatter preferences, or
+	 *            <code>null</code> for global preferences
 	 * @param newIndent
 	 *            new indent
 	 * @param lineDelim
@@ -574,10 +572,10 @@ public class Strings {
 	// }
 
 	/**
-	 * Change the indent of, possible muti-line, code range. The current indent
-	 * is removed, a new indent added. The first line of the code will not be
-	 * changed. (It is considered to have no indent as it might start in the
-	 * middle of a line)
+	 * Change the indent of, possible muti-line, code range. The current indent is
+	 * removed, a new indent added. The first line of the code will not be changed.
+	 * (It is considered to have no indent as it might start in the middle of a
+	 * line)
 	 * 
 	 * @param code
 	 *            the code

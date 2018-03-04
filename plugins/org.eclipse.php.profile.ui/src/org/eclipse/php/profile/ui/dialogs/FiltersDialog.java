@@ -113,8 +113,8 @@ public class FiltersDialog extends StatusDialog {
 	 */
 	@Override
 	protected void okPressed() {
-		ExecutionStatisticsFiltersRegistry.saveFilters(
-				fFilters.toArray(new ExecutionStatisticsFilter[fFilters.size()]));
+		ExecutionStatisticsFiltersRegistry
+				.saveFilters(fFilters.toArray(new ExecutionStatisticsFilter[fFilters.size()]));
 		super.okPressed();
 	}
 
@@ -155,8 +155,7 @@ public class FiltersDialog extends StatusDialog {
 			/*
 			 * (non-Javadoc)
 			 * 
-			 * @see org.eclipse.jface.viewers.ISelectionChangedListener#
-			 * selectionChanged
+			 * @see org.eclipse.jface.viewers.ISelectionChangedListener# selectionChanged
 			 * (org.eclipse.jface.viewers.SelectionChangedEvent)
 			 */
 			@Override
@@ -176,8 +175,7 @@ public class FiltersDialog extends StatusDialog {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(
+		 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(
 		 * java.lang.Object)
 		 */
 		@Override
@@ -202,8 +200,7 @@ public class FiltersDialog extends StatusDialog {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse
+		 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse
 		 * .jface.viewers.Viewer, java.lang.Object, java.lang.Object)
 		 */
 		@Override
@@ -222,8 +219,7 @@ public class FiltersDialog extends StatusDialog {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
+		 * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
 		 */
 		@Override
 		public Image getImage(Object element) {
@@ -233,8 +229,7 @@ public class FiltersDialog extends StatusDialog {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+		 * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
 		 */
 		@Override
 		public String getText(Object element) {

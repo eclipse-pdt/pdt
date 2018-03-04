@@ -44,11 +44,11 @@ public class CurlyCloseIndentationStrategy implements IIndentationStrategy {
 	}
 
 	/**
-	 * This function returns the line in which the corresponding '{' of the '}'
-	 * was found
+	 * This function returns the line in which the corresponding '{' of the '}' was
+	 * found
 	 * 
-	 * TODO this function has a bug in it: if there is a '{' inside inner state
-	 * then it will not ignore it as it should.
+	 * TODO this function has a bug in it: if there is a '{' inside inner state then
+	 * it will not ignore it as it should.
 	 */
 	protected IRegion getCurlyOpenLineInformation(IStructuredDocument document, int forOffset)
 			throws BadLocationException {

@@ -36,10 +36,10 @@ public class UserInterfaceStarter {
 	}
 
 	/**
-	 * Actually activates the user interface. This default implementation
-	 * assumes that the configuration element passed to <code>initialize
-	 * </code> has an attribute wizard denoting the wizard class to be used for
-	 * the given refactoring.
+	 * Actually activates the user interface. This default implementation assumes
+	 * that the configuration element passed to <code>initialize
+	 * </code> has an attribute wizard denoting the wizard class to be used for the
+	 * given refactoring.
 	 * <p>
 	 * Subclasses may override to open a different user interface
 	 * 

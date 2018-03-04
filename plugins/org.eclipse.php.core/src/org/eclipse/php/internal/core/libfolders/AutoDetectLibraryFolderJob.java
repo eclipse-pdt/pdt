@@ -82,8 +82,8 @@ public class AutoDetectLibraryFolderJob extends WorkspaceJob {
 	}
 
 	/**
-	 * Returns whether the given project has the "disabled" preference available
-	 * in its WTP Validation Framework preference file.
+	 * Returns whether the given project has the "disabled" preference available in
+	 * its WTP Validation Framework preference file.
 	 * 
 	 * @param project
 	 *            a project
@@ -97,8 +97,8 @@ public class AutoDetectLibraryFolderJob extends WorkspaceJob {
 	}
 
 	/**
-	 * Returns the common library folder names by consulting the library folder
-	 * name providers registered in the extension point.
+	 * Returns the common library folder names by consulting the library folder name
+	 * providers registered in the extension point.
 	 * 
 	 * @param project
 	 *            a project
@@ -130,8 +130,8 @@ public class AutoDetectLibraryFolderJob extends WorkspaceJob {
 	}
 
 	/**
-	 * Converts the given array of folder names to an array of folders in the
-	 * given project.
+	 * Converts the given array of folder names to an array of folders in the given
+	 * project.
 	 * 
 	 * <p>
 	 * A folder name is converted to a folder only if it exists in the given

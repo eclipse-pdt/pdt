@@ -29,8 +29,7 @@ public class DebuggerCompositeFragmentFactory implements ICompositeFragmentFacto
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.php.ui.wizards.ICompositeFragmentFactory#createWizardFragment
-	 * ()
+	 * org.eclipse.php.ui.wizards.ICompositeFragmentFactory#createWizardFragment ()
 	 */
 	@Override
 	public WizardFragment createWizardFragment() {
@@ -40,8 +39,7 @@ public class DebuggerCompositeFragmentFactory implements ICompositeFragmentFacto
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.ui.wizards.ICompositeFragmentFactory#createComposite(
+	 * @see org.eclipse.php.ui.wizards.ICompositeFragmentFactory#createComposite(
 	 * org.eclipse.swt.widgets.Composite,
 	 * org.eclipse.php.internal.ui.wizards.IControlHandler)
 	 */

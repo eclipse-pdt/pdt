@@ -50,8 +50,8 @@ public class PathEntry {
 	 * @param type
 	 *            Path entry type
 	 * @param container
-	 *            This path container. It can be either workspace resource,
-	 *            include path, or folder on file system
+	 *            This path container. It can be either workspace resource, include
+	 *            path, or folder on file system
 	 */
 	public PathEntry(String path, Type type, Object container) {
 		this(new VirtualPath(path), type, container);
@@ -65,8 +65,8 @@ public class PathEntry {
 	 * @param type
 	 *            Path entry type
 	 * @param container
-	 *            This path container. It can be either workspace resource,
-	 *            include path, or folder on file system
+	 *            This path container. It can be either workspace resource, include
+	 *            path, or folder on file system
 	 */
 	public PathEntry(VirtualPath path, Type type, Object container) {
 		this.abstractPath = path;
@@ -93,8 +93,8 @@ public class PathEntry {
 	}
 
 	/**
-	 * Returns container of this file. It can be either workspace resource,
-	 * include path, or folder on file system
+	 * Returns container of this file. It can be either workspace resource, include
+	 * path, or folder on file system
 	 * 
 	 * @return container
 	 */
@@ -103,8 +103,8 @@ public class PathEntry {
 	}
 
 	/**
-	 * Returns path string of this entry. It can be either a path to existing
-	 * file, or path that contains variable from Include Path.
+	 * Returns path string of this entry. It can be either a path to existing file,
+	 * or path that contains variable from Include Path.
 	 * 
 	 * @return path string
 	 */
@@ -113,8 +113,8 @@ public class PathEntry {
 	}
 
 	/**
-	 * Returns path to the file that this entry contains. If original path
-	 * contained variables from Include Path it will be resolved.
+	 * Returns path to the file that this entry contains. If original path contained
+	 * variables from Include Path it will be resolved.
 	 * 
 	 * @return resolved path
 	 */

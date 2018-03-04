@@ -54,8 +54,8 @@ public class PHPMoveProcessor extends MoveProcessor {
 	}
 
 	/**
-	 * Instantiate the processor and builds an array of Resources representing
-	 * the resources selected by the user fot the move operation
+	 * Instantiate the processor and builds an array of Resources representing the
+	 * resources selected by the user fot the move operation
 	 * 
 	 * @param selection
 	 */
@@ -76,8 +76,7 @@ public class PHPMoveProcessor extends MoveProcessor {
 				resources.add(next);
 				continue;
 			} else if (next instanceof IAdaptable) {
-				Object resource = ((IAdaptable) next)
-						.getAdapter(IResource.class);
+				Object resource = ((IAdaptable) next).getAdapter(IResource.class);
 				if (resource != null) {
 					resources.add(resource);
 					continue;
@@ -85,31 +84,28 @@ public class PHPMoveProcessor extends MoveProcessor {
 			} else if (next != null) {
 				IAdapterManager adapterManager = Platform.getAdapterManager();
 
-				ResourceMapping mapping = adapterManager
-						.getAdapter(next, ResourceMapping.class);
+				ResourceMapping mapping = adapterManager.getAdapter(next, ResourceMapping.class);
 
 				if (mapping != null) {
 
 					ResourceTraversal[] traversals = null;
 					try {
-						traversals = mapping.getTraversals(
-								ResourceMappingContext.LOCAL_CONTEXT,
+						traversals = mapping.getTraversals(ResourceMappingContext.LOCAL_CONTEXT,
 								new NullProgressMonitor());
 					} catch (CoreException exception) {
 					}
 
 					if (traversals != null) {
 						for (int i = 0; i < traversals.length; i++) {
-							IResource[] traversalResources = traversals[i]
-									.getResources();
+							IResource[] traversalResources = traversals[i].getResources();
 							if (traversalResources != null) {
 								for (int j = 0; j < traversalResources.length; j++) {
 									resources.add(traversalResources[j]);
-								}// for
-							}// if
-						}// for
-					}// if
-				}// if
+								} // for
+							} // if
+						} // for
+					} // if
+				} // if
 			}
 		}
 		return resources.toArray(new IResource[resources.size()]);
@@ -122,8 +118,7 @@ public class PHPMoveProcessor extends MoveProcessor {
 	 * checkInitialConditions(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	public RefactoringStatus checkInitialConditions(IProgressMonitor pm)
-			throws OperationCanceledException {
+	public RefactoringStatus checkInitialConditions(IProgressMonitor pm) throws OperationCanceledException {
 		return fDelegate.checkInitialConditions();
 	}
 
@@ -135,8 +130,8 @@ public class PHPMoveProcessor extends MoveProcessor {
 	 * org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext)
 	 */
 	@Override
-	public RefactoringStatus checkFinalConditions(IProgressMonitor pm,
-			CheckConditionsContext context) throws OperationCanceledException {
+	public RefactoringStatus checkFinalConditions(IProgressMonitor pm, CheckConditionsContext context)
+			throws OperationCanceledException {
 		return fDelegate.checkFinalConditions();
 	}
 
@@ -147,8 +142,7 @@ public class PHPMoveProcessor extends MoveProcessor {
 	 * createChange(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	public Change createChange(IProgressMonitor pm) throws CoreException,
-			OperationCanceledException {
+	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 
 		CompositeChange rootChange = new CompositeChange(getProcessorName());
 		return fDelegate.createChange(pm, rootChange);
@@ -210,16 +204,13 @@ public class PHPMoveProcessor extends MoveProcessor {
 			SharableParticipants sharedParticipants) {
 
 		try {
-			String[] affectedNatures = ResourceProcessors
-					.computeAffectedNatures(fSourceResources);
-			MoveArguments arguments = new MoveArguments(fResourceDestination,
-					getUpdateReferences());
+			String[] affectedNatures = ResourceProcessors.computeAffectedNatures(fSourceResources);
+			MoveArguments arguments = new MoveArguments(fResourceDestination, getUpdateReferences());
 			List<IResource> resourceList = new ArrayList<>();
 			for (IResource fResource : fSourceResources) {
 				resourceList.add(fResource);
 			}
-			return ParticipantManager.loadMoveParticipants(status, this,
-					resourceList, arguments, null, affectedNatures,
+			return ParticipantManager.loadMoveParticipants(status, this, resourceList, arguments, null, affectedNatures,
 					sharedParticipants);
 		} catch (CoreException e) {
 			e.printStackTrace();

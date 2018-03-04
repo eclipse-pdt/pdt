@@ -30,8 +30,7 @@ public interface IElementNameMatch {
 
 	/**
 	 * Returns the matched element fully qualified name using '\' character as
-	 * separator (e.g. namespace name + '\' enclosing type names + '\' simple
-	 * name).
+	 * separator (e.g. namespace name + '\' enclosing type names + '\' simple name).
 	 *
 	 * @return Fully qualified name of the element
 	 */
@@ -77,8 +76,8 @@ public interface IElementNameMatch {
 	public String getPackageName();
 
 	/**
-	 * Returns the project fragment of the stored type. Project fragment cannot
-	 * be null and <strong>does</strong> exist.
+	 * Returns the project fragment of the stored type. Project fragment cannot be
+	 * null and <strong>does</strong> exist.
 	 *
 	 * @throws NullPointerException
 	 *             if matched type is <code> null</code>

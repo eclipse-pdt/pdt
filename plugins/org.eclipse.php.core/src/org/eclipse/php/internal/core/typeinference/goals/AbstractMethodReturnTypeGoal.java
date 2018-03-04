@@ -82,8 +82,10 @@ public abstract class AbstractMethodReturnTypeGoal extends AbstractTypeGoal {
 				if (context instanceof IModelCacheContext) {
 					cache = ((IModelCacheContext) context).getCache();
 				}
-				types = PHPTypeInferenceUtils.getModelElements(evaluatedType, cnt, cnt instanceof MethodContext
-						? ((MethodContext) cnt).getMethodNode().start() : cnt.getRootNode().end(), cache);
+				types = PHPTypeInferenceUtils.getModelElements(evaluatedType, cnt,
+						cnt instanceof MethodContext ? ((MethodContext) cnt).getMethodNode().start()
+								: cnt.getRootNode().end(),
+						cache);
 			}
 		}
 		return types;

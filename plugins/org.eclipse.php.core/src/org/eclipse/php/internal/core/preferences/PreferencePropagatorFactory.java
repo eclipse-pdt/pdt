@@ -41,8 +41,8 @@ public class PreferencePropagatorFactory {
 	}
 
 	/**
-	 * Returns a single instance of a {@link PreferencesPropagator} according to
-	 * the given nodeQualifier and the preferences store.
+	 * Returns a single instance of a {@link PreferencesPropagator} according to the
+	 * given nodeQualifier and the preferences store.
 	 * 
 	 * @param nodeQualifier
 	 * @return the ProjectPreferencesPropagator given a nodeQualifier and a

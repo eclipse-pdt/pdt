@@ -66,8 +66,7 @@ public class FileContentResponse extends DebugMessageResponseImpl implements IDe
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.debug.core.debugger.messages.IDebugMessage#deserialize(
+	 * @see org.eclipse.php.debug.core.debugger.messages.IDebugMessage#deserialize(
 	 * java.io.DataInputStream)
 	 */
 	@Override

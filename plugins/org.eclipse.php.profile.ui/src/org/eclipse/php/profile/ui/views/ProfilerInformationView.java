@@ -235,9 +235,8 @@ public class ProfilerInformationView extends AbstractProfilerView implements IPr
 								percentFormat.format(currentPercent));
 					}
 					labels[i] = NLS.bind(PHPProfileUIMessages.getString("ProfilerInformationView_12"), //$NON-NLS-1$
-							new String[] { currentFile.getName(),
-									file.isMicroSecOrLess() ? ("<= " + fDecimalFormat //$NON-NLS-1$
-											.format(file.getTime())) : fDecimalFormat.format(file.getTime()),
+							new String[] { currentFile.getName(), file.isMicroSecOrLess() ? ("<= " + fDecimalFormat //$NON-NLS-1$
+									.format(file.getTime())) : fDecimalFormat.format(file.getTime()),
 									percentageString });
 					String fullPath = currentFile.getAbsolutePath();
 					// to check whether it's the last file with the Other

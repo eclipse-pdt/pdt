@@ -137,8 +137,8 @@ abstract class RenameInputWizardPage extends TextInputWizardPage {
 	}
 
 	/**
-	 * Returns the new name for the Java element or <code>null</code> if no new
-	 * name is provided
+	 * Returns the new name for the Java element or <code>null</code> if no new name
+	 * is provided
 	 * 
 	 * @return the new name or <code>null</code>
 	 */
@@ -158,12 +158,11 @@ abstract class RenameInputWizardPage extends TextInputWizardPage {
 		if (saveSettings()) {
 			saveBooleanSetting(UPDATE_TEXTUAL_MATCHES, fUpdateTextualMatches);
 			saveBooleanSetting(UPDATE_QUALIFIED_NAMES, fUpdateQualifiedNames);
-			if (fQualifiedNameComponent != null)
-			 {
+			if (fQualifiedNameComponent != null) {
 				fQualifiedNameComponent.savePatterns(getRefactoringSettings());
-			// TODO : helps insert here
-			// DelegateUIHelper.saveLeaveDelegateSetting(fLeaveDelegateCheckBox);
-			// DelegateUIHelper.saveDeprecateDelegateSetting(fDeprecateDelegateCheckBox);
+				// TODO : helps insert here
+				// DelegateUIHelper.saveLeaveDelegateSetting(fLeaveDelegateCheckBox);
+				// DelegateUIHelper.saveDeprecateDelegateSetting(fDeprecateDelegateCheckBox);
 			}
 		}
 		super.dispose();
@@ -188,8 +187,7 @@ abstract class RenameInputWizardPage extends TextInputWizardPage {
 	}
 
 	private void addOptionalUpdateQualifiedNameComponent(Composite parent, RowLayouter layouter, int marginWidth) {
-		final IQualifiedNameUpdating ref = getRefactoring()
-				.getAdapter(IQualifiedNameUpdating.class);
+		final IQualifiedNameUpdating ref = getRefactoring().getAdapter(IQualifiedNameUpdating.class);
 		if (ref == null || !ref.canEnableQualifiedNameUpdating()) {
 			return;
 		}

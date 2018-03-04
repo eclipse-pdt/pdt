@@ -23,8 +23,7 @@ import org.eclipse.ui.PartInitException;
 /**
  * Abstract profiler functions view.
  */
-public abstract class AbstractProfilerFunctionsView extends
-		AbstractProfilerView {
+public abstract class AbstractProfilerFunctionsView extends AbstractProfilerView {
 
 	/**
 	 * Returns the associated tree viewer
@@ -33,20 +32,14 @@ public abstract class AbstractProfilerFunctionsView extends
 	 */
 	public abstract TreeViewer getViewer();
 
-	public void openFunctionInvocationStatisticsView(
-			ProfilerFunctionData function) {
+	public void openFunctionInvocationStatisticsView(ProfilerFunctionData function) {
 		IWorkbenchPage page = getSite().getWorkbenchWindow().getActivePage();
 		if (page != null) {
 			try {
-				IViewPart part = page
-						.showView(
-								ProfilerUIConstants.FUNCTION_INVOCATION_STATISTICS_VIEW,
-								Integer.toString(function.getID()),
-								IWorkbenchPage.VIEW_ACTIVATE);
-				if (part != null
-						&& part instanceof FunctionInvocationStatisticsView) { 
-					((FunctionInvocationStatisticsView) part).setInput(
-							getInput(), function);
+				IViewPart part = page.showView(ProfilerUIConstants.FUNCTION_INVOCATION_STATISTICS_VIEW,
+						Integer.toString(function.getID()), IWorkbenchPage.VIEW_ACTIVATE);
+				if (part != null && part instanceof FunctionInvocationStatisticsView) {
+					((FunctionInvocationStatisticsView) part).setInput(getInput(), function);
 				}
 			} catch (PartInitException e) {
 				ProfilerUiPlugin.log(e);
@@ -58,13 +51,10 @@ public abstract class AbstractProfilerFunctionsView extends
 		IWorkbenchPage page = getSite().getWorkbenchWindow().getActivePage();
 		if (page != null) {
 			try {
-				IViewPart part = page.showView(
-						ProfilerUIConstants.CODE_COVERAGE_VIEW, file.getName()
-								.replace(':', '_'),
+				IViewPart part = page.showView(ProfilerUIConstants.CODE_COVERAGE_VIEW, file.getName().replace(':', '_'),
 						IWorkbenchPage.VIEW_ACTIVATE);
 				if (part != null && part instanceof CodeCoverageView) {
-					((CodeCoverageView) part).setInput(file
-							.getCodeCoverageData());
+					((CodeCoverageView) part).setInput(file.getCodeCoverageData());
 				}
 			} catch (PartInitException e) {
 				ProfilerUiPlugin.log(e);
@@ -81,8 +71,7 @@ public abstract class AbstractProfilerFunctionsView extends
 	 */
 	public void storeExpandedElements(Object rootElement) {
 		if (rootElement != null) {
-			((TreeElement) rootElement).setExpanded(getViewer()
-					.getExpandedState(rootElement));
+			((TreeElement) rootElement).setExpanded(getViewer().getExpandedState(rootElement));
 			storeExpandedElements(((TreeElement) rootElement).getChildren());
 		}
 	}
@@ -94,8 +83,8 @@ public abstract class AbstractProfilerFunctionsView extends
 	}
 
 	/**
-	 * Saves information about currently expanded elements, starting from the
-	 * root element.
+	 * Saves information about currently expanded elements, starting from the root
+	 * element.
 	 */
 	public void storeExpandedElements() {
 		// getViewer().getControl().setRedraw(false);
@@ -112,8 +101,7 @@ public abstract class AbstractProfilerFunctionsView extends
 	 */
 	public void restoreExpandedElements(Object rootElement) {
 		if (rootElement != null) {
-			getViewer().setExpandedState(rootElement,
-					((TreeElement) rootElement).getExpanded());
+			getViewer().setExpandedState(rootElement, ((TreeElement) rootElement).getExpanded());
 			restoreExpandedElements(((TreeElement) rootElement).getChildren());
 		}
 	}
@@ -125,8 +113,7 @@ public abstract class AbstractProfilerFunctionsView extends
 	}
 
 	/**
-	 * Restores previously stored expanded elements, starting from the root
-	 * element.
+	 * Restores previously stored expanded elements, starting from the root element.
 	 */
 	public void restoreExpandedElements() {
 		// getViewer().getControl().setRedraw(false);

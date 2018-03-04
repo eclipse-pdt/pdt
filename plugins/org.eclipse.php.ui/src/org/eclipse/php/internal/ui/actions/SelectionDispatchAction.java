@@ -82,10 +82,9 @@ public abstract class SelectionDispatchAction extends Action implements ISelecti
 	}
 
 	/**
-	 * Updates the action's enablement state according to the given selection.
-	 * This default implementation calls one of the
-	 * <code>selectionChanged</code> methods depending on the type of the passed
-	 * selection.
+	 * Updates the action's enablement state according to the given selection. This
+	 * default implementation calls one of the <code>selectionChanged</code> methods
+	 * depending on the type of the passed selection.
 	 * 
 	 * @param selection
 	 *            the selection this action is working on
@@ -95,8 +94,8 @@ public abstract class SelectionDispatchAction extends Action implements ISelecti
 	}
 
 	/**
-	 * Notifies this action that the given structured selection has changed.
-	 * This default implementation calls
+	 * Notifies this action that the given structured selection has changed. This
+	 * default implementation calls
 	 * <code>selectionChanged(ISelection selection)</code>.
 	 * 
 	 * @param selection
@@ -118,9 +117,8 @@ public abstract class SelectionDispatchAction extends Action implements ISelecti
 	}
 
 	/**
-	 * Notifies this action that the given text selection has changed. This
-	 * default implementation calls
-	 * <code>selectionChanged(ISelection selection)</code>.
+	 * Notifies this action that the given text selection has changed. This default
+	 * implementation calls <code>selectionChanged(ISelection selection)</code>.
 	 * 
 	 * @param selection
 	 *            the new selection
@@ -152,8 +150,8 @@ public abstract class SelectionDispatchAction extends Action implements ISelecti
 	}
 
 	/**
-	 * Executes this actions with the given selection. This default
-	 * implementation does nothing.
+	 * Executes this actions with the given selection. This default implementation
+	 * does nothing.
 	 * 
 	 * @param selection
 	 *            the selection
@@ -198,18 +196,17 @@ public abstract class SelectionDispatchAction extends Action implements ISelecti
 	}
 
 	/**
-	 * Sets a special selection provider which will be used instead of the
-	 * site's selection provider. This method should be used directly after
-	 * constructing the action and before the action is registered as a
-	 * selection listener. The invocation will not a perform a selection change
-	 * notification.
+	 * Sets a special selection provider which will be used instead of the site's
+	 * selection provider. This method should be used directly after constructing
+	 * the action and before the action is registered as a selection listener. The
+	 * invocation will not a perform a selection change notification.
 	 * 
 	 * @param provider
-	 *            a special selection provider which is used instead of the
-	 *            site's selection provider or <code>null</code> to use the
-	 *            site's selection provider. Clients can for example use a
-	 *            {@link ConvertingSelectionProvider} to first convert a
-	 *            selection before passing it to the action.
+	 *            a special selection provider which is used instead of the site's
+	 *            selection provider or <code>null</code> to use the site's
+	 *            selection provider. Clients can for example use a
+	 *            {@link ConvertingSelectionProvider} to first convert a selection
+	 *            before passing it to the action.
 	 * 
 	 * @since 3.2
 	 */

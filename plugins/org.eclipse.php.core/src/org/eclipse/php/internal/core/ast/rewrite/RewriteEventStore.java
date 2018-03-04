@@ -60,9 +60,9 @@ public final class RewriteEventStore {
 	}
 
 	/**
-	 * Interface that allows to override the way how children are accessed from
-	 * a parent. Use this interface when the rewriter is set up on an already
-	 * modified AST's (as it is the case in the old ASTRewrite infrastructure)
+	 * Interface that allows to override the way how children are accessed from a
+	 * parent. Use this interface when the rewriter is set up on an already modified
+	 * AST's (as it is the case in the old ASTRewrite infrastructure)
 	 */
 	public static interface INodePropertyMapper {
 		/**
@@ -227,8 +227,7 @@ public final class RewriteEventStore {
 	}
 
 	/**
-	 * Iterates over all event parent nodes, tracked nodes and all copy/move
-	 * sources
+	 * Iterates over all event parent nodes, tracked nodes and all copy/move sources
 	 */
 	private class ParentIterator implements Iterator<Object> {
 
@@ -316,8 +315,8 @@ public final class RewriteEventStore {
 	List<CopySourceInfo> nodeCopySources;
 
 	/**
-	 * Stores node ranges that are used to copy or move (map of
-	 * <PropertyLocation, CopyRangeInfo>)
+	 * Stores node ranges that are used to copy or move (map of <PropertyLocation,
+	 * CopyRangeInfo>)
 	 */
 	Map<PropertyLocation, List<NodeRangeInfo>> nodeRangeInfos;
 
@@ -353,8 +352,8 @@ public final class RewriteEventStore {
 	 * Override the default way how to access children from a parent node.
 	 * 
 	 * @param nodePropertyMapper
-	 *            The new <code>INodePropertyMapper</code> or <code>null</code>.
-	 *            to use the default.
+	 *            The new <code>INodePropertyMapper</code> or <code>null</code>. to
+	 *            use the default.
 	 */
 	public void setNodePropertyMapper(INodePropertyMapper nodePropertyMapper) {
 		this.nodePropertyMapper = nodePropertyMapper;
@@ -546,8 +545,8 @@ public final class RewriteEventStore {
 	}
 
 	/*
-	 * Gets an original child from the AST. Temporarily overridden to port the
-	 * old rewriter to the new infrastructure.
+	 * Gets an original child from the AST. Temporarily overridden to port the old
+	 * rewriter to the new infrastructure.
 	 */
 	private Object accessOriginalValue(ASTNode parent, StructuralPropertyDescriptor childProperty) {
 		if (this.nodePropertyMapper != null) {
@@ -586,8 +585,8 @@ public final class RewriteEventStore {
 	}
 
 	/**
-	 * Marks a node as tracked. The edits added to the group editGroup can be
-	 * used to get the position of the node after the rewrite operation.
+	 * Marks a node as tracked. The edits added to the group editGroup can be used
+	 * to get the position of the node after the rewrite operation.
 	 * 
 	 * @param node
 	 *            The node to track

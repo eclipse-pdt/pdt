@@ -52,8 +52,8 @@ public class RefactoringRenameElementAction extends RenamePHPElementAction {
 
 	/**
 	 * if the selection is should not be handled by
-	 * <code>RefactoringRenameElementAction</code> we delegate it to the
-	 * workbench action
+	 * <code>RefactoringRenameElementAction</code> we delegate it to the workbench
+	 * action
 	 * 
 	 * @see selectionChanged
 	 */
@@ -149,8 +149,8 @@ public class RefactoringRenameElementAction extends RenamePHPElementAction {
 					// Seva: XXX why won't we process projects with PHP?
 					/*
 					 * if (resource instanceof IProject && action != null) {
-					 * resource.refreshLocal(IResource.DEPTH_INFINITE, null);
-					 * action.run(); return; }
+					 * resource.refreshLocal(IResource.DEPTH_INFINITE, null); action.run(); return;
+					 * }
 					 */
 					if (resource instanceof IFile) {
 						file = (IFile) resource;

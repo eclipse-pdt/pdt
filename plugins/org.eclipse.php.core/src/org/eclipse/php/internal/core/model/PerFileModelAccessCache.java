@@ -89,8 +89,8 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	}
 
 	/**
-	 * Analyzes file dependences, and builds tree of all source modules, which
-	 * are referenced by the given source module.
+	 * Analyzes file dependences, and builds tree of all source modules, which are
+	 * referenced by the given source module.
 	 * 
 	 * @param sourceModule
 	 *            Current source module
@@ -129,8 +129,8 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	}
 
 	/**
-	 * Filters given set of elements according to a file network, but only if
-	 * all elements represent the same type, name and namespace
+	 * Filters given set of elements according to a file network, but only if all
+	 * elements represent the same type, name and namespace
 	 * 
 	 * @param sourceModule
 	 *            Current file
@@ -211,8 +211,8 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	 *            namespace name
 	 * @param monitor
 	 *            Progress monitor
-	 * @return a collection of types according to a given name, or
-	 *         <code>null</code> if not found
+	 * @return a collection of types according to a given name, or <code>null</code>
+	 *         if not found
 	 */
 	@Override
 	public Collection<IType> getTypes(ISourceModule sourceModule, String typeName, String namespaceName,
@@ -260,8 +260,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	}
 
 	/**
-	 * Returns cached result of a namespace search, or invokes a new search
-	 * query
+	 * Returns cached result of a namespace search, or invokes a new search query
 	 * 
 	 * @param sourceModule
 	 *            Current source module

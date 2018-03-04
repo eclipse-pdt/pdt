@@ -26,13 +26,11 @@ public class ProfilingMonitorViewElement {
 	private String fViewLabel;
 	private Image fViewImage;
 
-	public ProfilingMonitorViewElement(ProfilingMonitorElement root,
-			String viewId) throws PartInitException {
+	public ProfilingMonitorViewElement(ProfilingMonitorElement root, String viewId) throws PartInitException {
 		fRoot = root;
 		fViewId = viewId;
 
-		IViewRegistry viewRegistry = WorkbenchPlugin.getDefault()
-				.getViewRegistry();
+		IViewRegistry viewRegistry = WorkbenchPlugin.getDefault().getViewRegistry();
 		IViewDescriptor viewDescriptor = viewRegistry.find(viewId);
 
 		fViewImage = viewDescriptor.getImageDescriptor().createImage();

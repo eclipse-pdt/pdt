@@ -248,8 +248,7 @@ public class ComboDialogField extends DialogField {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jdt.internal.ui.wizards.dialogfields.DialogField#refresh()
+	 * @see org.eclipse.jdt.internal.ui.wizards.dialogfields.DialogField#refresh()
 	 */
 	@Override
 	public void refresh() {

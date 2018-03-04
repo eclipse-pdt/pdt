@@ -85,8 +85,7 @@ public class PHPRuntimeComposite extends Composite {
 	}
 
 	/**
-	 * Provide a wizard page to change the PHP executable installation
-	 * directory.
+	 * Provide a wizard page to change the PHP executable installation directory.
 	 */
 	protected void createControl() {
 		setLayout(new GridLayout(2, false));

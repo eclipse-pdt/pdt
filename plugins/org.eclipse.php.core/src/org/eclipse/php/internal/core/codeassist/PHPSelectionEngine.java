@@ -991,7 +991,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		} else {
 			SimpleReference callName = callExpression.getCallName();
 			String methodName = callName instanceof FullyQualifiedReference
-					? ((FullyQualifiedReference) callName).getFullyQualifiedName() : callName.getName();
+					? ((FullyQualifiedReference) callName).getFullyQualifiedName()
+					: callName.getName();
 			IMember[] members = PHPModelUtils.getFunctions(methodName, sourceModule, offset, cache, null);
 			if (members.length == 0) {
 				final IType currentNamespace = PHPModelUtils.getCurrentNamespace(sourceModule,
@@ -1133,8 +1134,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	}
 
 	/**
-	 * Return workspace or method fields depending on current position: whether
-	 * we are inside method or in global scope.
+	 * Return workspace or method fields depending on current position: whether we
+	 * are inside method or in global scope.
 	 * 
 	 * @param sourceModule
 	 * @param offset

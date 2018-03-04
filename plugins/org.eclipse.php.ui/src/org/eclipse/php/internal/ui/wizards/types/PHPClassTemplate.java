@@ -530,16 +530,15 @@ public class PHPClassTemplate extends PHPElementTemplate {
 	}
 
 	/**
-	 * returns true if the given functions array contains a function by the
-	 * given name This method is used for avoiding multiple declaration of
-	 * constructors and destructors.
+	 * returns true if the given functions array contains a function by the given
+	 * name This method is used for avoiding multiple declaration of constructors
+	 * and destructors.
 	 * 
 	 * @param funcs
 	 *            the functions array to search in
 	 * @param name
 	 *            the name of the function to look for
-	 * @return true if there is a function by the name "name" in the array
-	 *         "funcs"
+	 * @return true if there is a function by the name "name" in the array "funcs"
 	 */
 	private boolean containsFunction(IMethod[] funcs, String name) {
 		for (int i = 0; i < funcs.length; i++) {

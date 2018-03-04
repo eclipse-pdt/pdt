@@ -108,8 +108,7 @@ public class CreateProjectJob extends ComposerJob {
 				try {
 					if (composerExists() /*
 											 * message != null && message.
-											 * equals("Loading composer repositories with package information"
-											 * )
+											 * equals("Loading composer repositories with package information" )
 											 */) {
 						notifyOnStart();
 					}

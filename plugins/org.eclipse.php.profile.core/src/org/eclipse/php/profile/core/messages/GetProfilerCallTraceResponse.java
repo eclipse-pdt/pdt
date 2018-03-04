@@ -22,8 +22,7 @@ import org.eclipse.php.debug.core.debugger.messages.IDebugResponseMessage;
 /**
  * Get profiler call trace response message.
  */
-public class GetProfilerCallTraceResponse extends DebugMessageResponseImpl
-		implements IDebugResponseMessage {
+public class GetProfilerCallTraceResponse extends DebugMessageResponseImpl implements IDebugResponseMessage {
 
 	private ProfilerCallTrace callTrace;
 
@@ -52,8 +51,8 @@ public class GetProfilerCallTraceResponse extends DebugMessageResponseImpl
 		ProfilerCallTrace callTrace = new ProfilerCallTrace();
 		callTrace.setLayersCount(in.readInt());
 		for (int i = 0; i < callTrace.getLayersCount(); i++) {
-			callTrace.addLayer(new ProfilerCallTraceLayer(in.readInt(), in
-					.readInt(), in.readInt(), in.readInt(), in.readInt()));
+			callTrace.addLayer(
+					new ProfilerCallTraceLayer(in.readInt(), in.readInt(), in.readInt(), in.readInt(), in.readInt()));
 		}
 		setCallTrace(callTrace);
 	}

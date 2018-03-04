@@ -16,8 +16,7 @@ package org.eclipse.php.internal.debug.core.zend.communication;
 public interface IRemoteFileContentRequestor {
 
 	/**
-	 * This method is called when file content requested by this class is
-	 * received
+	 * This method is called when file content requested by this class is received
 	 * 
 	 * @param content
 	 *            File content in bytes
@@ -30,8 +29,7 @@ public interface IRemoteFileContentRequestor {
 			int lineNumber);
 
 	/**
-	 * This method is called when the HTTP request to the debug server is
-	 * finished.
+	 * This method is called when the HTTP request to the debug server is finished.
 	 * 
 	 * @param e
 	 *            Exception if occurred or <code>null</code> in case of success

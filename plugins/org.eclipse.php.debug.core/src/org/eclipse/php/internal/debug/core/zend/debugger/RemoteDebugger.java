@@ -121,10 +121,9 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 	/**
 	 * Improved protocol ID from 06/2007 which provides new message type (
-	 * {@link StartProcessFileNotification}) that allows to control debug state
-	 * when debugger is preparing processing new file. We use this state for
-	 * doing on-demand path mapping, and for sending breakpoints for the next
-	 * file.
+	 * {@link StartProcessFileNotification}) that allows to control debug state when
+	 * debugger is preparing processing new file. We use this state for doing
+	 * on-demand path mapping, and for sending breakpoints for the next file.
 	 */
 	public static final int PROTOCOL_ID_2006040703 = 2006040703;
 
@@ -137,8 +136,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 	/**
 	 * New protocol ID from 12/2012 which provides new message type:
-	 * {@link AddFilesRequest} allows send initial list of files which contain
-	 * at least one breakpoint.
+	 * {@link AddFilesRequest} allows send initial list of files which contain at
+	 * least one breakpoint.
 	 */
 	public static final int PROTOCOL_ID_2012121702 = 2012121702;
 
@@ -152,17 +151,16 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 	/**
 	 * Original commercial debug protocol ID from 04/2006 which changes from
-	 * original PDT protocol by the {@link FileContentRequest} message which
-	 * allows to send file contents over the debug connection to/from debugger.
+	 * original PDT protocol by the {@link FileContentRequest} message which allows
+	 * to send file contents over the debug connection to/from debugger.
 	 */
 	public static final int COMMERCIAL_PROTOCOL_ID_2006040901 = 2006040901;
 
 	/**
 	 * Improved protocol ID from 06/2007 which provides new message type (
-	 * {@link StartProcessFileNotification}) that allows to control debug state
-	 * when debugger is preparing processing new file. We use this state for
-	 * doing on-demand path mapping, and for sending breakpoints for the next
-	 * file.
+	 * {@link StartProcessFileNotification}) that allows to control debug state when
+	 * debugger is preparing processing new file. We use this state for doing
+	 * on-demand path mapping, and for sending breakpoints for the next file.
 	 */
 	public static final int COMMERCIAL_PROTOCOL_ID_2006040903 = 2006040903;
 
@@ -175,8 +173,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 	/**
 	 * New protocol ID from 12/2012 which provides new message type:
-	 * {@link AddFilesRequest} allows send initial list of files which contain
-	 * at least one breakpoint.
+	 * {@link AddFilesRequest} allows send initial list of files which contain at
+	 * least one breakpoint.
 	 */
 	public static final int COMMERCIAL_PROTOCOL_ID_2012121702 = 2012121702;
 
@@ -189,8 +187,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 	// ===================================
 
 	/**
-	 * Original commercial debug protocol ID for Debugger i5-edition from
-	 * 04/2006 (parallel to COMMERCIAL_PROTOCOL_ID_2006040901)
+	 * Original commercial debug protocol ID for Debugger i5-edition from 04/2006
+	 * (parallel to COMMERCIAL_PROTOCOL_ID_2006040901)
 	 */
 	public static final int COMMERCIAL_I5_PROTOCOL_ID_2006040902 = 2006040902;
 
@@ -366,8 +364,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Returns local path corresponding to the current working directory of the
-	 * PHP script, which is currently running.
+	 * Returns local path corresponding to the current working directory of the PHP
+	 * script, which is currently running.
 	 * 
 	 * @return current working directory
 	 */
@@ -413,8 +411,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Returns local file name corresponding to the given remote path. This
-	 * method asks debugger for the current working directory before resolving.
+	 * Returns local file name corresponding to the given remote path. This method
+	 * asks debugger for the current working directory before resolving.
 	 * 
 	 * @param remoteFile
 	 *            File to resolve
@@ -541,8 +539,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 	public static String convertToRemoteFilename(String localFile, PHPDebugTarget debugTarget) {
 		IPath path = Path.fromPortableString(localFile);
 		/*
-		 * check if this is valid workspace path to avoid IAE e.g. when using
-		 * debug URL, localFile can be "c:\Program Files\..." see
+		 * check if this is valid workspace path to avoid IAE e.g. when using debug URL,
+		 * localFile can be "c:\Program Files\..." see
 		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=306834
 		 */
 		if (path.segmentCount() >= 2) {
@@ -576,8 +574,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	// ---------------------------------------------------------------------------
 
 	/**
-	 * Sends the request through the communication connection and returns
-	 * response
+	 * Sends the request through the communication connection and returns response
 	 * 
 	 * @param message
 	 *            request that will be sent to the debugger
@@ -667,8 +664,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Asynchronic removeBreakpoint Returns true if succeeded sending the
-	 * request, false otherwise.
+	 * Asynchronic removeBreakpoint Returns true if succeeded sending the request,
+	 * false otherwise.
 	 */
 	@Override
 	public boolean removeBreakpoint(int id, BreakpointRemovedResponseHandler responseHandler) {
@@ -702,8 +699,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Asynchronic removeBreakpoint Returns true if succeeded sending the
-	 * request, false otherwise.
+	 * Asynchronic removeBreakpoint Returns true if succeeded sending the request,
+	 * false otherwise.
 	 */
 	@Override
 	public boolean removeBreakpoint(Breakpoint breakpoint, BreakpointRemovedResponseHandler responseHandler) {
@@ -734,8 +731,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Synchronic removeAllBreakpoints Returns true if succeeded removing all
-	 * the Breakpoint.
+	 * Synchronic removeAllBreakpoints Returns true if succeeded removing all the
+	 * Breakpoint.
 	 */
 	@Override
 	public boolean removeAllBreakpoints() {
@@ -949,8 +946,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Asynchronous addFiles Returns true if succeeded sending the request,
-	 * false otherwise.
+	 * Asynchronous addFiles Returns true if succeeded sending the request, false
+	 * otherwise.
 	 */
 	@Override
 	public boolean addFiles(String[] paths, AddFilesResponseHandler responseHandler) {
@@ -1587,8 +1584,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 	/**
 	 * Requests Code Coverage information from the debugger and returns it.
 	 * 
-	 * @return CodeCoverageData[] Code coverage information. If this remote
-	 *         debugger is not active, or in case of error this method returns
+	 * @return CodeCoverageData[] Code coverage information. If this remote debugger
+	 *         is not active, or in case of error this method returns
 	 *         <code>null</code>.
 	 */
 	public CodeCoverageData[] getCodeCoverageData() {

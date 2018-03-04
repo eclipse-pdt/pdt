@@ -34,8 +34,7 @@ public class PHPStructuredDocumentReParser extends XMLStructuredDocumentReParser
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.wst.xml.core.internal.parser.XMLStructuredDocumentReParser
+	 * @see org.eclipse.wst.xml.core.internal.parser.XMLStructuredDocumentReParser
 	 * #newInstance()
 	 */
 	@Override
@@ -56,16 +55,14 @@ public class PHPStructuredDocumentReParser extends XMLStructuredDocumentReParser
 	}
 
 	/**
-	 * This function was added in order to support asp tags in PHP (bug fix
-	 * #150363)
+	 * This function was added in order to support asp tags in PHP (bug fix #150363)
 	 */
 	@Override
 	protected StructuredDocumentEvent checkForCrossStructuredDocumentRegionSyntax() {
 		StructuredDocumentEvent result = super.checkForCrossStructuredDocumentRegionSyntax();
 		if (result == null) {
 			result = checkForCriticalKey("<%"); //$NON-NLS-1$
-			if (result == null)
-			 {
+			if (result == null) {
 				result = checkForCriticalKey("%>"); //$NON-NLS-1$
 			}
 
@@ -92,8 +89,8 @@ public class PHPStructuredDocumentReParser extends XMLStructuredDocumentReParser
 	}
 
 	/**
-	 * This implementation updates the php tokens model after updating WST
-	 * editor model
+	 * This implementation updates the php tokens model after updating WST editor
+	 * model
 	 */
 	@Override
 	public StructuredDocumentEvent reparse() {

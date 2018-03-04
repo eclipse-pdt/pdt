@@ -20,14 +20,13 @@ import org.eclipse.swt.widgets.Composite;
  * 
  * @author Bartlomiej Laczkowski
  */
-public class XDebugProfileWebLaunchSettingsSection
-		extends AbstractProfileWebLaunchSettingsSection {
+public class XDebugProfileWebLaunchSettingsSection extends AbstractProfileWebLaunchSettingsSection {
 
 	@Override
 	protected void createTunnelGroup(Composite composite) {
 		// Do not create SSH tunnel group
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 

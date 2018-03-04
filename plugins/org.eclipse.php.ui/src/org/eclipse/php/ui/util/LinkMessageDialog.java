@@ -50,8 +50,7 @@ public abstract class LinkMessageDialog extends MessageDialog {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.dialogs.IconAndMessageDialog#createMessageArea(org.
+	 * @see org.eclipse.jface.dialogs.IconAndMessageDialog#createMessageArea(org.
 	 * eclipse.swt.widgets.Composite)
 	 */
 	@Override

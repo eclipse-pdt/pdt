@@ -25,8 +25,7 @@ import org.eclipse.php.profile.core.data.ProfilerGlobalData;
 /**
  * Get profiler response message.
  */
-public class GetProfilerResponse extends DebugMessageResponseImpl implements
-		IDebugResponseMessage {
+public class GetProfilerResponse extends DebugMessageResponseImpl implements IDebugResponseMessage {
 
 	private ProfilerGlobalData profilerGlobalData;
 
@@ -61,8 +60,7 @@ public class GetProfilerResponse extends DebugMessageResponseImpl implements
 		profilerGlobalData.setDataSize(in.readInt());
 		profilerGlobalData.setFileCount(in.readInt());
 
-		String dummyFile = Platform.getPreferencesService().getString(
-				PHPDebugPlugin.ID,
+		String dummyFile = Platform.getPreferencesService().getString(PHPDebugPlugin.ID,
 				PHPDebugCorePreferenceNames.ZEND_DEBUG_DUMMY_FILE, "", //$NON-NLS-1$
 				null);
 

@@ -20,8 +20,7 @@ import org.eclipse.php.debug.core.debugger.messages.IDebugRequestMessage;
 /**
  * Get profiler file request message.
  */
-public class GetProfilerFileRequest extends DebugMessageRequestImpl implements
-		IDebugRequestMessage {
+public class GetProfilerFileRequest extends DebugMessageRequestImpl implements IDebugRequestMessage {
 
 	public static final int TYPE = 42;
 

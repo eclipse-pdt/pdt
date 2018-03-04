@@ -260,9 +260,8 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	}
 
 	/*
-	 * Resolve the class declaration type for the given node. This method
-	 * traverse upward to find a defining ClassDeclaration and then resolves its
-	 * IType.
+	 * Resolve the class declaration type for the given node. This method traverse
+	 * upward to find a defining ClassDeclaration and then resolves its IType.
 	 */
 	protected ITypeBinding resolveDeclaringClassType(ASTNode node) {
 		IType[] types = new IType[2];
@@ -544,8 +543,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * (non-Javadoc)
 	 * 
 	 * @seeorg.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#
-	 * getOccurrenceReadWriteType
-	 * (org.eclipse.php.internal.core.ast.nodes.ASTNode)
+	 * getOccurrenceReadWriteType (org.eclipse.php.internal.core.ast.nodes.ASTNode)
 	 */
 	@Override
 	protected int getOccurrenceType(ASTNode node) {
@@ -580,8 +578,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.ui.search.IOccurrencesFinder#getElementName()
+	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getElementName()
 	 */
 	@Override
 	public String getElementName() {

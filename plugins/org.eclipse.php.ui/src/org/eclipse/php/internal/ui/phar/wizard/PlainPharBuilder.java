@@ -65,9 +65,8 @@ public class PlainPharBuilder extends PharBuilder {
 	}
 
 	/**
-	 * Checks if the JAR file can be overwritten. If the JAR package setting
-	 * does not allow to overwrite the JAR then a dialog will ask the user
-	 * again.
+	 * Checks if the JAR file can be overwritten. If the JAR package setting does
+	 * not allow to overwrite the JAR then a dialog will ask the user again.
 	 * 
 	 * @param parent
 	 *            the parent for the dialog, or <code>null</code> if no dialog

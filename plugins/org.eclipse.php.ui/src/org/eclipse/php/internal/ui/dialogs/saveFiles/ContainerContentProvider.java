@@ -37,16 +37,15 @@ public class ContainerContentProvider implements ITreeContentProvider {
 	}
 
 	/**
-	 * The visual part that is using this content provider is about to be
-	 * disposed. Deallocate all allocated SWT resources.
+	 * The visual part that is using this content provider is about to be disposed.
+	 * Deallocate all allocated SWT resources.
 	 */
 	@Override
 	public void dispose() {
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.
+	 * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.
 	 * Object)
 	 */
 	@Override
@@ -87,8 +86,7 @@ public class ContainerContentProvider implements ITreeContentProvider {
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java
+	 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java
 	 * .lang.Object)
 	 */
 	@Override
@@ -98,8 +96,7 @@ public class ContainerContentProvider implements ITreeContentProvider {
 
 	/*
 	 * @see
-	 * org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object
-	 * )
+	 * org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object )
 	 */
 	@Override
 	public Object getParent(Object element) {
@@ -110,8 +107,7 @@ public class ContainerContentProvider implements ITreeContentProvider {
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.
+	 * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.
 	 * Object)
 	 */
 	@Override
@@ -127,8 +123,8 @@ public class ContainerContentProvider implements ITreeContentProvider {
 	}
 
 	/**
-	 * Specify whether or not to show closed projects in the tree viewer.
-	 * Default is to show closed projects.
+	 * Specify whether or not to show closed projects in the tree viewer. Default is
+	 * to show closed projects.
 	 * 
 	 * @param show
 	 *            boolean if false, do not show closed projects in the tree

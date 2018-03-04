@@ -324,8 +324,8 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 	 * 
 	 * @param fileName
 	 *            The original file name that this shortcut shoul execute.
-	 * @return The new configuration name, or "New_configuration" in case it
-	 *         fails for some reason.
+	 * @return The new configuration name, or "New_configuration" in case it fails
+	 *         for some reason.
 	 */
 	protected static String getNewConfigurationName(String fileName) {
 		String configurationName = Messages.PHPWebPageLaunchShortcut_4;
@@ -360,8 +360,7 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.ILaunchShortcut2#getLaunchableResource(org.eclipse
+	 * @see org.eclipse.debug.ui.ILaunchShortcut2#getLaunchableResource(org.eclipse
 	 * .ui.IEditorPart)
 	 */
 	@Override
@@ -372,8 +371,7 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.ui.ILaunchShortcut2#getLaunchableResource(org.eclipse
+	 * @see org.eclipse.debug.ui.ILaunchShortcut2#getLaunchableResource(org.eclipse
 	 * .jface.viewers.ISelection)
 	 */
 	@Override
@@ -391,8 +389,8 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 	}
 
 	/**
-	 * Returns the resource containing the Java element associated with the
-	 * given adaptable, or <code>null</code>.
+	 * Returns the resource containing the Java element associated with the given
+	 * adaptable, or <code>null</code>.
 	 * 
 	 * @param adaptable
 	 *            adaptable object

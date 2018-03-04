@@ -26,8 +26,7 @@ public class PHPExceptionBreakpointAnnotationImageProvider implements IAnnotatio
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.texteditor.IAnnotationImageProvider#getManagedImage(org.
+	 * @see org.eclipse.ui.texteditor.IAnnotationImageProvider#getManagedImage(org.
 	 * eclipse.jface.text.source.Annotation)
 	 */
 	@Override
@@ -38,8 +37,7 @@ public class PHPExceptionBreakpointAnnotationImageProvider implements IAnnotatio
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.texteditor.IAnnotationImageProvider#getImageDescriptorId(
+	 * @see org.eclipse.ui.texteditor.IAnnotationImageProvider#getImageDescriptorId(
 	 * org.eclipse.jface.text.source.Annotation)
 	 */
 	@Override
@@ -58,8 +56,7 @@ public class PHPExceptionBreakpointAnnotationImageProvider implements IAnnotatio
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.texteditor.IAnnotationImageProvider#getImageDescriptor(
+	 * @see org.eclipse.ui.texteditor.IAnnotationImageProvider#getImageDescriptor(
 	 * java.lang.String)
 	 */
 	@Override

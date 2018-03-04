@@ -67,8 +67,8 @@ public class OverrideIndicatorLabelDecorator implements ILabelDecorator, ILightw
 	 * plugin's image registry.
 	 */
 	/**
-	 * Note: This constructor is for internal use only. Clients should not call
-	 * this constructor.
+	 * Note: This constructor is for internal use only. Clients should not call this
+	 * constructor.
 	 * 
 	 * @param registry
 	 *            The registry to use.
@@ -202,8 +202,7 @@ public class OverrideIndicatorLabelDecorator implements ILabelDecorator, ILightw
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.ILightweightLabelDecorator#decorate(java.lang
+	 * @see org.eclipse.jface.viewers.ILightweightLabelDecorator#decorate(java.lang
 	 * .Object, org.eclipse.jface.viewers.IDecoration)
 	 */
 	@Override

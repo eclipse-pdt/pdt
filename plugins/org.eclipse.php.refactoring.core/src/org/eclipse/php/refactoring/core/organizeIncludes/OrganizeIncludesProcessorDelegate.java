@@ -104,7 +104,8 @@ public class OrganizeIncludesProcessorDelegate {
 		// List<PHPIncludeFileData> unresolvedIncludes = new
 		// ArrayList<PHPIncludeFileData>();
 		//
-		//		monitor.beginTask(PHPRefactoringCoreMessages.getString("OrganizeIncludesProcessorDelegate.0"), 11); //$NON-NLS-1$
+		// monitor.beginTask(PHPRefactoringCoreMessages.getString("OrganizeIncludesProcessorDelegate.0"),
+		// 11); //$NON-NLS-1$
 		//
 		// // 1. Find the elements:
 		// if (monitor.isCanceled())
@@ -134,42 +135,41 @@ public class OrganizeIncludesProcessorDelegate {
 		// SubProgressMonitor(monitor, 1));
 
 		// 2. resolve includes for the elements:
-		if (monitor.isCanceled())
-		 {
+		if (monitor.isCanceled()) {
 			return null;
-		// resolveIncludes(foundClasses, existingIncludes, missingHardIncludes,
-		// missingSoftIncludes, new SubProgressMonitor(monitor, 1));
-		// if (monitor.isCanceled())
-		// return null;
-		// resolveIncludes(foundInterfaces, existingIncludes,
-		// missingHardIncludes, missingSoftIncludes, new
-		// SubProgressMonitor(monitor, 1));
-		// if (monitor.isCanceled())
-		// return null;
-		// resolveIncludes(foundFunctions, existingIncludes,
-		// missingHardIncludes, missingSoftIncludes, new
-		// SubProgressMonitor(monitor, 1));
-		// if (monitor.isCanceled())
-		// return null;
-		// resolveIncludes(foundConstants, existingIncludes,
-		// missingHardIncludes, missingSoftIncludes, new
-		// SubProgressMonitor(monitor, 1));
-		// if (monitor.isCanceled())
-		// return null;
-		// resolveIncludes(foundCallbacks, existingIncludes,
-		// missingHardIncludes, missingSoftIncludes, new
-		// SubProgressMonitor(monitor, 1));
-		//
-		// // 3. Collect unneeded includes:
-		// if (monitor.isCanceled())
-		// return null;
-		// collectUnneededIncludes(existingIncludes, unneededIncludes,
-		// unresolvedIncludes, new SubProgressMonitor(monitor, 1));
-		//
-		// // 4. Create the change:
-		// OrganizeIncludesChange change = new OrganizeIncludesChange(this);
-		// change.addEdits(existingIncludes, missingHardIncludes,
-		// missingSoftIncludes, unneededIncludes, unresolvedIncludes);
+			// resolveIncludes(foundClasses, existingIncludes, missingHardIncludes,
+			// missingSoftIncludes, new SubProgressMonitor(monitor, 1));
+			// if (monitor.isCanceled())
+			// return null;
+			// resolveIncludes(foundInterfaces, existingIncludes,
+			// missingHardIncludes, missingSoftIncludes, new
+			// SubProgressMonitor(monitor, 1));
+			// if (monitor.isCanceled())
+			// return null;
+			// resolveIncludes(foundFunctions, existingIncludes,
+			// missingHardIncludes, missingSoftIncludes, new
+			// SubProgressMonitor(monitor, 1));
+			// if (monitor.isCanceled())
+			// return null;
+			// resolveIncludes(foundConstants, existingIncludes,
+			// missingHardIncludes, missingSoftIncludes, new
+			// SubProgressMonitor(monitor, 1));
+			// if (monitor.isCanceled())
+			// return null;
+			// resolveIncludes(foundCallbacks, existingIncludes,
+			// missingHardIncludes, missingSoftIncludes, new
+			// SubProgressMonitor(monitor, 1));
+			//
+			// // 3. Collect unneeded includes:
+			// if (monitor.isCanceled())
+			// return null;
+			// collectUnneededIncludes(existingIncludes, unneededIncludes,
+			// unresolvedIncludes, new SubProgressMonitor(monitor, 1));
+			//
+			// // 4. Create the change:
+			// OrganizeIncludesChange change = new OrganizeIncludesChange(this);
+			// change.addEdits(existingIncludes, missingHardIncludes,
+			// missingSoftIncludes, unneededIncludes, unresolvedIncludes);
 		}
 
 		// TextEditChangeGroup[] textEditChangeGroups =
@@ -197,7 +197,8 @@ public class OrganizeIncludesProcessorDelegate {
 	// BucketMap<PHPFileData, CodeData> missingHardIncludes,
 	// BucketMap<PHPFileData, CodeData> missingSoftIncludes, IProgressMonitor
 	// monitor) {
-	//		monitor.beginTask(PHPRefactoringCoreMessages.getString("OrganizeIncludesProcessorDelegate.1"), foundElements.getFirst().getKeys().size()); //$NON-NLS-1$
+	// monitor.beginTask(PHPRefactoringCoreMessages.getString("OrganizeIncludesProcessorDelegate.1"),
+	// foundElements.getFirst().getKeys().size()); //$NON-NLS-1$
 	// for (String elementName : foundElements.getFirst().getKeys()) {
 	// CodeData elementData = null;
 	// PHPFileData container = null;
@@ -292,7 +293,8 @@ public class OrganizeIncludesProcessorDelegate {
 	// existingIncludes, List<PHPIncludeFileData> unneededIncludes,
 	// List<PHPIncludeFileData> unresolvedIncludes, IProgressMonitor monitor) {
 	// PHPIncludeFileData[] includes = fileData.getIncludeFiles();
-	//		monitor.beginTask(PHPRefactoringCoreMessages.getString("OrganizeIncludesProcessorDelegate.2"), includes.length); //$NON-NLS-1$
+	// monitor.beginTask(PHPRefactoringCoreMessages.getString("OrganizeIncludesProcessorDelegate.2"),
+	// includes.length); //$NON-NLS-1$
 	// for (PHPIncludeFileData element : includes) {
 	// FileNode includedNode =
 	// fileNode.getIncluded(FileNetworkUtils.getFilePath(element));

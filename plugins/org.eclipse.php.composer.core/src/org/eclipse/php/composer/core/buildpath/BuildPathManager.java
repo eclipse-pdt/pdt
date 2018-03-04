@@ -93,8 +93,7 @@ public class BuildPathManager {
 		exclusions = exs.toArray(new IPath[] {});
 
 		// clean build path
-		List<IBuildpathEntry> buildPath = new ArrayList<>(
-				Arrays.asList(scriptProject.getRawBuildpath()));
+		List<IBuildpathEntry> buildPath = new ArrayList<>(Arrays.asList(scriptProject.getRawBuildpath()));
 
 		for (Iterator<IBuildpathEntry> it = buildPath.iterator(); it.hasNext();) {
 			IBuildpathEntry entry = it.next();

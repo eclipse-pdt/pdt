@@ -116,8 +116,8 @@ public class RefactoringUIPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns a section in the Refactoring plugin's dialog settings. If the
-	 * section doesn't exist yet, it is created.
+	 * Returns a section in the Refactoring plugin's dialog settings. If the section
+	 * doesn't exist yet, it is created.
 	 * 
 	 * @param name
 	 *            the name of the section

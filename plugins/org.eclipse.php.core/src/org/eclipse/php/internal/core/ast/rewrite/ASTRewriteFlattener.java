@@ -55,8 +55,8 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 
 	/**
-	 * Appends the text representation of the given modifier modifiers, followed
-	 * by a single space.
+	 * Appends the text representation of the given modifier modifiers, followed by
+	 * a single space.
 	 * 
 	 * @param modifiers
 	 *            the modifiers

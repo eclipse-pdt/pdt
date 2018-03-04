@@ -73,8 +73,8 @@ public class DialogField {
 	// ------- focus management
 
 	/**
-	 * Tries to set the focus to the dialog field. Returns <code>true</code> if
-	 * the dialog field can take focus. To be reimplemented by dialog field
+	 * Tries to set the focus to the dialog field. Returns <code>true</code> if the
+	 * dialog field can take focus. To be reimplemented by dialog field
 	 * implementors.
 	 */
 	public boolean setFocus() {
@@ -94,9 +94,9 @@ public class DialogField {
 
 	/**
 	 * Creates all controls of the dialog field and fills it to a composite. The
-	 * composite is assumed to have <code>MGridLayout</code> as layout. The
-	 * dialog field will adjust its controls' spans to the number of columns
-	 * given. To be reimplemented by dialog field implementors.
+	 * composite is assumed to have <code>MGridLayout</code> as layout. The dialog
+	 * field will adjust its controls' spans to the number of columns given. To be
+	 * reimplemented by dialog field implementors.
 	 */
 	public Control[] doFillIntoGrid(Composite parent, int nColumns) {
 		assertEnoughColumns(nColumns);
@@ -208,8 +208,8 @@ public class DialogField {
 	}
 
 	/**
-	 * Brings the UI in sync with the model. Only needed when model was changed
-	 * in different thread whil UI was lready created.
+	 * Brings the UI in sync with the model. Only needed when model was changed in
+	 * different thread whil UI was lready created.
 	 */
 	public void refresh() {
 		updateEnableState();

@@ -51,8 +51,7 @@ public class BuildPathUtils {
 	}
 
 	/**
-	 * Adds the given entries to the Build Path. Check duplicating before
-	 * adding.
+	 * Adds the given entries to the Build Path. Check duplicating before adding.
 	 * 
 	 * @param scriptProject
 	 * @param entries
@@ -86,9 +85,8 @@ public class BuildPathUtils {
 
 	/**
 	 * Returns if the given item is in the list if the given list contains the
-	 * specified entry. If the list does not contain the entry, false is
-	 * returned. The check is applied on path only. exclusion/inclusion patterns
-	 * are ignored.
+	 * specified entry. If the list does not contain the entry, false is returned.
+	 * The check is applied on path only. exclusion/inclusion patterns are ignored.
 	 */
 	public static boolean buildpathContains(IBuildpathEntry[] list, IBuildpathEntry entry) {
 		for (int i = 0; i < list.length; i++) {
@@ -129,9 +127,9 @@ public class BuildPathUtils {
 	}
 
 	/**
-	 * Returns whether the given path is "under" the buildpath definitions
-	 * Meaning if one of the entries in the build path has the same path or
-	 * contains this resource
+	 * Returns whether the given path is "under" the buildpath definitions Meaning
+	 * if one of the entries in the build path has the same path or contains this
+	 * resource
 	 * 
 	 * @param project
 	 * @param resourcePath

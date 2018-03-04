@@ -32,8 +32,8 @@ public class TarEntry implements Cloneable {
 	public static final int DIRECTORY = '5';
 
 	/**
-	 * Create a new TarEntry for a file of the given name at the given position
-	 * in the file.
+	 * Create a new TarEntry for a file of the given name at the given position in
+	 * the file.
 	 * 
 	 * @param name
 	 *            filename
@@ -96,8 +96,7 @@ public class TarEntry implements Cloneable {
 	}
 
 	/**
-	 * Returns the modification time of the file in seconds since January 1st
-	 * 1970.
+	 * Returns the modification time of the file in seconds since January 1st 1970.
 	 * 
 	 * @return time
 	 */

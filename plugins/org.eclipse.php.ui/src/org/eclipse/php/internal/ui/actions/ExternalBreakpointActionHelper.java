@@ -169,15 +169,14 @@ public class ExternalBreakpointActionHelper {
 			try {
 				int markerLine = document.getLineOfOffset(position.getOffset());
 				int line = rulerInfo.getLineOfLastMouseButtonActivity();
-				if (line == markerLine)
-				 {
+				if (line == markerLine) {
 					return true;
-				// commented because of "1GEUOZ9: ITPJUI:ALL - Confusing UI
-				// for
-				// multiline Bookmarks and Tasks"
-				// return (markerLine <= line && line <=
-				// document.getLineOfOffset(position.getOffset() +
-				// position.getLength()));
+					// commented because of "1GEUOZ9: ITPJUI:ALL - Confusing UI
+					// for
+					// multiline Bookmarks and Tasks"
+					// return (markerLine <= line && line <=
+					// document.getLineOfOffset(position.getOffset() +
+					// position.getLength()));
 				}
 			} catch (BadLocationException x) {
 			}

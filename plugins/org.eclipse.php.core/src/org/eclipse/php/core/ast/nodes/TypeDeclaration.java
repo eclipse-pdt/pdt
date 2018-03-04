@@ -162,8 +162,7 @@ public abstract class TypeDeclaration extends Statement {
 	/**
 	 * Resolves and returns the binding for this type
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be
-	 *         resolved
+	 * @return the binding, or <code>null</code> if the binding cannot be resolved
 	 */
 	public final ITypeBinding resolveTypeBinding() {
 		return this.ast.getBindingResolver().resolveType(this);

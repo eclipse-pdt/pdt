@@ -112,8 +112,7 @@ public class PHPProjectWizardBasePage extends DataModelWizardPage implements IPr
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jem.util.ui.wizard.WTPWizardPage#createTopLevelComposite(
+	 * @see org.eclipse.jem.util.ui.wizard.WTPWizardPage#createTopLevelComposite(
 	 * org.eclipse.swt.widgets.Composite)
 	 */
 	@Override

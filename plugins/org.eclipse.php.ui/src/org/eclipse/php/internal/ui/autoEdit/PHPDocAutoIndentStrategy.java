@@ -74,9 +74,8 @@ public class PHPDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	}
 
 	/**
-	 * Copies the indentation of the previous line and adds a star. If the
-	 * Scriptdoc just started on this line add standard method tags and close
-	 * the Scriptdoc.
+	 * Copies the indentation of the previous line and adds a star. If the Scriptdoc
+	 * just started on this line add standard method tags and close the Scriptdoc.
 	 * 
 	 * @param d
 	 *            the document to work on
@@ -191,9 +190,9 @@ public class PHPDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	/**
 	 * Returns the range of the Scriptdoc prefix on the given line in
 	 * <code>document</code>. The prefix greedily matches the following regex
-	 * pattern: <code>\w*\*\w*</code>, that is, any number of whitespace
-	 * characters, followed by an asterisk ('*'), followed by any number of
-	 * whitespace characters.
+	 * pattern: <code>\w*\*\w*</code>, that is, any number of whitespace characters,
+	 * followed by an asterisk ('*'), followed by any number of whitespace
+	 * characters.
 	 * 
 	 * @param document
 	 *            the document to which <code>line</code> refers
@@ -353,8 +352,8 @@ public class PHPDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	 * @param indentation
 	 *            the base indentation
 	 * @param project
-	 *            the PHP project for the formatter settings, or
-	 *            <code>null</code> for global preferences
+	 *            the PHP project for the formatter settings, or <code>null</code>
+	 *            for global preferences
 	 * @param lineDelimiter
 	 *            the line delimiter
 	 * @return a trimmed version of <code>comment</code>
@@ -497,15 +496,15 @@ public class PHPDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	}
 
 	/**
-	 * Guesses if the command operates within a newly created Scriptdoc comment
-	 * or not. If in doubt, it will assume that the Scriptdoc is new.
+	 * Guesses if the command operates within a newly created Scriptdoc comment or
+	 * not. If in doubt, it will assume that the Scriptdoc is new.
 	 * 
 	 * @param document
 	 *            the document
 	 * @param commandOffset
 	 *            the command offset
-	 * @return <code>true</code> if the comment should be closed,
-	 *         <code>false</code> if not
+	 * @return <code>true</code> if the comment should be closed, <code>false</code>
+	 *         if not
 	 */
 	private boolean isNewComment(IDocument document, int commandOffset) {
 
@@ -700,12 +699,12 @@ public class PHPDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	}
 
 	/**
-	 * Finds the offset of the closing bracket of the comment block which starts
-	 * on "offset" The method search until EOF or another comment block begins
+	 * Finds the offset of the closing bracket of the comment block which starts on
+	 * "offset" The method search until EOF or another comment block begins
 	 * 
-	 * @return the closing bracket offset, or negative number if no relevant
-	 *         closing bracket was found TODO when there are // at the end of
-	 *         line this method will throw BadLocationException
+	 * @return the closing bracket offset, or negative number if no relevant closing
+	 *         bracket was found TODO when there are // at the end of line this
+	 *         method will throw BadLocationException
 	 */
 
 	private int getCommentEnd(IDocument d, int offset) throws BadLocationException {

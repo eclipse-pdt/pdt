@@ -44,30 +44,28 @@ public interface IInvocationContext {
 	int getSelectionLength();
 
 	/**
-	 * Returns an AST of the compilation unit, possibly only a partial AST
-	 * focused on the selection offset (see
+	 * Returns an AST of the compilation unit, possibly only a partial AST focused
+	 * on the selection offset (see
 	 * {@link org.eclipse.jdt.core.dom.ASTParser#setFocalPosition(int)}). The
-	 * returned AST is shared and therefore protected and cannot be modified.
-	 * The client must check the AST API level and do nothing if they are given
-	 * an AST they can't handle. (see
-	 * {@link org.eclipse.jdt.core.dom.AST#apiLevel()}).
+	 * returned AST is shared and therefore protected and cannot be modified. The
+	 * client must check the AST API level and do nothing if they are given an AST
+	 * they can't handle. (see {@link org.eclipse.jdt.core.dom.AST#apiLevel()}).
 	 * 
-	 * @return Returns the root of the AST corresponding to the current
-	 *         compilation unit.
+	 * @return Returns the root of the AST corresponding to the current compilation
+	 *         unit.
 	 */
 	Program getASTRoot();
 
 	/**
-	 * Convenience method to evaluate the AST node covering the current
-	 * selection.
+	 * Convenience method to evaluate the AST node covering the current selection.
 	 * 
 	 * @return Returns the node that covers the location of the problem
 	 */
 	ASTNode getCoveringNode();
 
 	/**
-	 * Convenience method to evaluate the AST node that is covered by the
-	 * current selection.
+	 * Convenience method to evaluate the AST node that is covered by the current
+	 * selection.
 	 * 
 	 * @return Returns the node that is covered by the location of the problem
 	 */

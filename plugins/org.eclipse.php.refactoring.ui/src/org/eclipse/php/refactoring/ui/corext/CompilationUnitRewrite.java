@@ -86,21 +86,20 @@ public class CompilationUnitRewrite {
 	}
 
 	/**
-	 * Controls whether the compiler should provide binding information for the
-	 * AST nodes it creates. To be effective, this method must be called before
-	 * any of {@link #getRoot()},{@link #getASTRewrite()},
-	 * {@link #getImportRemover()}. This method has no effect if the target
-	 * object has been created with
+	 * Controls whether the compiler should provide binding information for the AST
+	 * nodes it creates. To be effective, this method must be called before any of
+	 * {@link #getRoot()},{@link #getASTRewrite()}, {@link #getImportRemover()}.
+	 * This method has no effect if the target object has been created with
 	 * {@link #ProgramRewrite(ISourceModule, Program)}.
 	 * <p>
 	 * Defaults to <b><code>true</code></b> (do resolve bindings).
 	 * </p>
 	 * 
 	 * @param resolve
-	 *            <code>true</code> if bindings are wanted, and
-	 *            <code>false</code> if bindings are not of interest
-	 * @see org.eclipse.jdt.core.dom.ASTParser#setResolveBindings(boolean) Note:
-	 *      The default value (<code>true</code>) differs from the one of the
+	 *            <code>true</code> if bindings are wanted, and <code>false</code>
+	 *            if bindings are not of interest
+	 * @see org.eclipse.jdt.core.dom.ASTParser#setResolveBindings(boolean) Note: The
+	 *      default value (<code>true</code>) differs from the one of the
 	 *      corresponding method in ASTParser.
 	 */
 	public void setResolveBindings(boolean resolve) {
@@ -176,8 +175,8 @@ public class CompilationUnitRewrite {
 	 * @return a {@link SourceModuleChange}, or <code>null</code> for an empty
 	 *         change
 	 * @throws CoreException
-	 *             when text buffer acquisition or import rewrite text edit
-	 *             creation fails
+	 *             when text buffer acquisition or import rewrite text edit creation
+	 *             fails
 	 * @throws IllegalArgumentException
 	 *             when the AST rewrite encounters problems
 	 */
@@ -190,15 +189,15 @@ public class CompilationUnitRewrite {
 	 * compilation unit rewrite.
 	 * 
 	 * @param generateGroups
-	 *            <code>true</code> to generate text edit groups,
-	 *            <code>false</code> otherwise
+	 *            <code>true</code> to generate text edit groups, <code>false</code>
+	 *            otherwise
 	 * @param monitor
 	 *            the progress monitor or <code>null</code>
 	 * @return a {@link SourceModuleChange}, or <code>null</code> for an empty
 	 *         change
 	 * @throws CoreException
-	 *             when text buffer acquisition or import rewrite text edit
-	 *             creation fails
+	 *             when text buffer acquisition or import rewrite text edit creation
+	 *             fails
 	 * @throws IllegalArgumentException
 	 *             when the AST rewrite encounters problems
 	 */
@@ -213,15 +212,15 @@ public class CompilationUnitRewrite {
 	 * @param name
 	 *            the name of the change to create
 	 * @param generateGroups
-	 *            <code>true</code> to generate text edit groups,
-	 *            <code>false</code> otherwise
+	 *            <code>true</code> to generate text edit groups, <code>false</code>
+	 *            otherwise
 	 * @param monitor
 	 *            the progress monitor or <code>null</code>
 	 * @return a {@link SourceModuleChange}, or <code>null</code> for an empty
 	 *         change
 	 * @throws CoreException
-	 *             when text buffer acquisition or import rewrite text edit
-	 *             creation fails
+	 *             when text buffer acquisition or import rewrite text edit creation
+	 *             fails
 	 * @throws IllegalArgumentException
 	 *             when the AST rewrite encounters problems
 	 */
@@ -234,24 +233,24 @@ public class CompilationUnitRewrite {
 	}
 
 	/**
-	 * Attaches the changes of this compilation unit rewrite to the given CU
-	 * Change. The given change <b>must</b> either have no root edit, or a
-	 * MultiTextEdit as a root edit. The edits in the given change <b>must
-	 * not</b> overlap with the changes of this compilation unit.
+	 * Attaches the changes of this compilation unit rewrite to the given CU Change.
+	 * The given change <b>must</b> either have no root edit, or a MultiTextEdit as
+	 * a root edit. The edits in the given change <b>must not</b> overlap with the
+	 * changes of this compilation unit.
 	 * 
 	 * @param cuChange
-	 *            existing SourceModuleChange with a MultiTextEdit root or no
-	 *            root at all.
+	 *            existing SourceModuleChange with a MultiTextEdit root or no root
+	 *            at all.
 	 * @param generateGroups
-	 *            <code>true</code> to generate text edit groups,
-	 *            <code>false</code> otherwise
+	 *            <code>true</code> to generate text edit groups, <code>false</code>
+	 *            otherwise
 	 * @param monitor
 	 *            the progress monitor or <code>null</code>
-	 * @return a change combining the changes of this rewrite and the given
-	 *         rewrite, or <code>null</code> for an empty change
+	 * @return a change combining the changes of this rewrite and the given rewrite,
+	 *         or <code>null</code> for an empty change
 	 * @throws CoreException
-	 *             when text buffer acquisition or import rewrite text edit
-	 *             creation fails
+	 *             when text buffer acquisition or import rewrite text edit creation
+	 *             fails
 	 */
 	public SourceModuleChange attachChange(SourceModuleChange cuChange, boolean generateGroups,
 			IProgressMonitor monitor) throws CoreException {

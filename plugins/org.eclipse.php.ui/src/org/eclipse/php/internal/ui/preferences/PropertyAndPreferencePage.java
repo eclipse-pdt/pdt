@@ -138,8 +138,7 @@ public abstract class PropertyAndPreferencePage extends PreferencePage
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.preference.IPreferencePage#createContents(Composite)
+	 * @see org.eclipse.jface.preference.IPreferencePage#createContents(Composite)
 	 */
 	@Override
 	protected Control createContents(Composite parent) {
@@ -311,8 +310,7 @@ public abstract class PropertyAndPreferencePage extends PreferencePage
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
+	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
 	@Override
 	public void init(IWorkbench workbench) {
@@ -343,8 +341,7 @@ public abstract class PropertyAndPreferencePage extends PreferencePage
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.preference.PreferencePage#applyData(java.lang.Object)
+	 * @see org.eclipse.jface.preference.PreferencePage#applyData(java.lang.Object)
 	 */
 	@Override
 	public void applyData(Object data) {

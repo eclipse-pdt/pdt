@@ -192,8 +192,8 @@ public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider, IEx
 
 	/**
 	 * Finds a valid position somewhere on lineNumber in document, idoc, where a
-	 * breakpoint can be set and returns that position. -1 is returned if a
-	 * position could not be found.
+	 * breakpoint can be set and returns that position. -1 is returned if a position
+	 * could not be found.
 	 * 
 	 * @param idoc
 	 * @param editorLineNumber

@@ -116,8 +116,8 @@ public class PHPThread extends PHPDebugElement implements IThread {
 	 * none.
 	 * 
 	 * @param breakpoints
-	 *            the breakpoints this thread is suspended at, or
-	 *            <code>null</code> if none
+	 *            the breakpoints this thread is suspended at, or <code>null</code>
+	 *            if none
 	 */
 	protected void setBreakpoints(IBreakpoint[] breakpoints) {
 		fBreakpoints = breakpoints;

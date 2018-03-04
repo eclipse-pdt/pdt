@@ -115,10 +115,10 @@ public class UsePart extends ASTNode {
 
 	/**
 	 * Returns the fully qualified name (without leading '\') that is the
-	 * concatenation of the group use statement name (if any) and this use
-	 * statement part name. Supports normal use statements and grouped use
-	 * statements. <b>Returned name will not be null, will not be empty and will
-	 * have no leading '\'.</b>
+	 * concatenation of the group use statement name (if any) and this use statement
+	 * part name. Supports normal use statements and grouped use statements.
+	 * <b>Returned name will not be null, will not be empty and will have no leading
+	 * '\'.</b>
 	 * 
 	 * @return full use statement name
 	 */

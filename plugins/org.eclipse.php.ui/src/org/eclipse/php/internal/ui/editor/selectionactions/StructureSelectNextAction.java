@@ -116,8 +116,7 @@ public class StructureSelectNextAction extends StructureSelectionAction {
 
 	// -- helper methods for this class and subclasses
 
-	private static org.eclipse.php.core.ast.nodes.ASTNode getNextNode(
-			org.eclipse.php.core.ast.nodes.ASTNode parent,
+	private static org.eclipse.php.core.ast.nodes.ASTNode getNextNode(org.eclipse.php.core.ast.nodes.ASTNode parent,
 			org.eclipse.php.core.ast.nodes.ASTNode node) {
 		org.eclipse.php.core.ast.nodes.ASTNode[] siblingNodes = getSiblingNodes(node);
 		if (siblingNodes == null || siblingNodes.length == 0) {

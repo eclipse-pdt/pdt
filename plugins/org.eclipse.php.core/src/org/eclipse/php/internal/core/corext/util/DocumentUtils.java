@@ -82,9 +82,8 @@ public class DocumentUtils {
 	/**
 	 * Check if a classname is used in a string. The "excludePositions" list
 	 * contains positions where we should NOT look if the classname is used
-	 * (typically in comment sections). It is important that the
-	 * "excludePositions" list is sorted by increasing position, or this method
-	 * won't work correctly.
+	 * (typically in comment sections). It is important that the "excludePositions"
+	 * list is sorted by increasing position, or this method won't work correctly.
 	 */
 	public static boolean containsUseStatement(UsePart part, String contents, List<Position> excludePositions) {
 		String className = null != part.getAlias() ? part.getAlias().toString()
@@ -129,8 +128,8 @@ public class DocumentUtils {
 
 	/**
 	 * Returns the positions of a list of ASTNodes. It is important that the
-	 * returned list is sorted by increasing position, or the other
-	 * DocumentUtils methods (using this list) won't work correctly.
+	 * returned list is sorted by increasing position, or the other DocumentUtils
+	 * methods (using this list) won't work correctly.
 	 * 
 	 * @param nodes
 	 *            Node positions to exclude
@@ -151,10 +150,10 @@ public class DocumentUtils {
 
 	/**
 	 * Remove all the given use statements from a document. Be warned that the
-	 * "excludePositions" list will be updated to match the content of the
-	 * returned string. It is important that this list is sorted by increasing
-	 * position and that the statement positions don't intersect with any of the
-	 * exclude positions, or this method won't work correctly.
+	 * "excludePositions" list will be updated to match the content of the returned
+	 * string. It is important that this list is sorted by increasing position and
+	 * that the statement positions don't intersect with any of the exclude
+	 * positions, or this method won't work correctly.
 	 */
 	public static String stripUseStatements(UseStatement[] statements, IDocument old_doc,
 			List<Position> excludePositions) {
@@ -163,10 +162,10 @@ public class DocumentUtils {
 
 	/**
 	 * Remove all the given use statements from a document. Be warned that the
-	 * "excludePositions" list will be updated to match the content of the
-	 * returned string. It is important that this list is sorted by increasing
-	 * position and that the statement positions don't intersect with any of the
-	 * exclude positions, or this method won't work correctly.
+	 * "excludePositions" list will be updated to match the content of the returned
+	 * string. It is important that this list is sorted by increasing position and
+	 * that the statement positions don't intersect with any of the exclude
+	 * positions, or this method won't work correctly.
 	 */
 	public static String stripUseStatements(UseStatement[] statements, IDocument old_doc, int start, int end,
 			List<Position> excludePositions) {

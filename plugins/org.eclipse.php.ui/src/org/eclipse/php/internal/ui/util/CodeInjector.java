@@ -42,8 +42,8 @@ public class CodeInjector {
 
 	/**
 	 * @param existingPHPFile
-	 *            - The existing php file object in which we want to inject the
-	 *            new element
+	 *            - The existing php file object in which we want to inject the new
+	 *            element
 	 * @param offset
 	 *            - The StructuredDocument offset from which we inject the code
 	 */
@@ -111,16 +111,15 @@ public class CodeInjector {
 	}
 
 	/**
-	 * Format the given document according to the given offset and length fixed
-	 * bug 14448 - Change the formatter - used the new formatter based on the
-	 * AST
+	 * Format the given document according to the given offset and length fixed bug
+	 * 14448 - Change the formatter - used the new formatter based on the AST
 	 * 
 	 * @param document
 	 * @param offset
 	 * @param length
-	 *            TODO - Today, we perform format on the code AFTER it is
-	 *            injected. This issue needs to be reviewed again when OFFLINE
-	 *            formatting will be available.
+	 *            TODO - Today, we perform format on the code AFTER it is injected.
+	 *            This issue needs to be reviewed again when OFFLINE formatting will
+	 *            be available.
 	 */
 	public void formatDocument(IStructuredDocument document, int offset, int length) {
 		IContentFormatter formatter = null;

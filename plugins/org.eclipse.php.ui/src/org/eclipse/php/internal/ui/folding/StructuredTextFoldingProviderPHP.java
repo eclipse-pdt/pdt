@@ -68,8 +68,8 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 
 	/**
 	 * A context that contains the information needed to compute the folding
-	 * structure of an {@link ICompilationUnit} or an {@link IClassFile}.
-	 * Computed folding regions are collected via
+	 * structure of an {@link ICompilationUnit} or an {@link IClassFile}. Computed
+	 * folding regions are collected via
 	 * {@linkplain #addProjectionRange(StructuredTextFoldingProviderPHP.PHPProjectionAnnotation, Position)
 	 * addProjectionRange}.
 	 */
@@ -118,14 +118,13 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		}
 
 		/**
-		 * Returns <code>true</code> if newly created folding regions may be
-		 * collapsed, <code>false</code> if not. This is usually
-		 * <code>false</code> when updating the folding structure while typing;
-		 * it may be <code>true</code> when computing or restoring the initial
-		 * folding structure.
+		 * Returns <code>true</code> if newly created folding regions may be collapsed,
+		 * <code>false</code> if not. This is usually <code>false</code> when updating
+		 * the folding structure while typing; it may be <code>true</code> when
+		 * computing or restoring the initial folding structure.
 		 * 
-		 * @return <code>true</code> if newly created folding regions may be
-		 *         collapsed, <code>false</code> if not
+		 * @return <code>true</code> if newly created folding regions may be collapsed,
+		 *         <code>false</code> if not
 		 */
 		public boolean allowCollapsing() {
 			return fAllowCollapsing;
@@ -152,10 +151,9 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		}
 
 		/**
-		 * Adds a projection (folding) region to this context. The created
-		 * annotation / position pair will be added to the
-		 * {@link ProjectionAnnotationModel} of the {@link ProjectionViewer} of
-		 * the editor.
+		 * Adds a projection (folding) region to this context. The created annotation /
+		 * position pair will be added to the {@link ProjectionAnnotationModel} of the
+		 * {@link ProjectionViewer} of the editor.
 		 * 
 		 * @param annotation
 		 *            the annotation to add
@@ -322,8 +320,8 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		 * @param element
 		 *            the java element this annotation refers to
 		 * @param isComment
-		 *            <code>true</code> for a foldable comment,
-		 *            <code>false</code> for a foldable code element
+		 *            <code>true</code> for a foldable comment, <code>false</code> for a
+		 *            foldable code element
 		 */
 		public PHPProjectionAnnotation(boolean isCollapsed, IModelElement element, boolean isComment) {
 			super(isCollapsed);
@@ -436,8 +434,8 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	private class ElementChangedListener implements IElementChangedListener {
 
 		/*
-		 * @see org.eclipse.jdt.core.IElementChangedListener#elementChanged(org.
-		 * eclipse .jdt.core.ElementChangedEvent)
+		 * @see org.eclipse.jdt.core.IElementChangedListener#elementChanged(org. eclipse
+		 * .jdt.core.ElementChangedEvent)
 		 */
 		@Override
 		public void elementChanged(ElementChangedEvent e) {
@@ -456,8 +454,8 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		/**
 		 * Ignore the delta if there are errors on the caret line.
 		 * <p>
-		 * We don't ignore the delta if an import is added and the caret isn't
-		 * inside the import container.
+		 * We don't ignore the delta if an import is added and the caret isn't inside
+		 * the import container.
 		 * </p>
 		 * 
 		 * @param ast
@@ -468,8 +466,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		 * @since 3.3
 		 */
 		private boolean shouldIgnoreDelta(IModelElement ast, IModelElementDelta delta) {
-			if (ast == null)
-			 {
+			if (ast == null) {
 				return false; // can't compute
 			}
 
@@ -479,14 +476,12 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 			final IFile resource = (IFile) ast.getResource();
 
 			IDocument document = getDocument();
-			if (document == null)
-			 {
+			if (document == null) {
 				return false; // can't compute
 			}
 
 			PHPStructuredEditor editor = fEditor;
-			if (editor == null || editor.getCachedSelectedRange() == null)
-			 {
+			if (editor == null || editor.getCachedSelectedRange() == null) {
 				return false; // can't compute
 			}
 
@@ -552,9 +547,9 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	}
 
 	/**
-	 * Projection position that will return two foldable regions: one folding
-	 * away the region from after the '/**' to the beginning of the content, the
-	 * other from after the first content line until after the comment.
+	 * Projection position that will return two foldable regions: one folding away
+	 * the region from after the '/**' to the beginning of the content, the other
+	 * from after the first content line until after the comment.
 	 */
 	private static final class CommentPosition extends Position implements IProjectionPosition {
 		CommentPosition(int offset, int length) {
@@ -607,15 +602,15 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		}
 
 		/**
-		 * Finds the offset of the first identifier part within
-		 * <code>content</code>. Returns 0 if none is found.
+		 * Finds the offset of the first identifier part within <code>content</code>.
+		 * Returns 0 if none is found.
 		 * 
 		 * @param content
 		 *            the content to search
 		 * @param prefixEnd
 		 *            the end of the prefix
-		 * @return the first index of a unicode identifier part, or zero if none
-		 *         can be found
+		 * @return the first index of a unicode identifier part, or zero if none can be
+		 *         found
 		 */
 		private int findFirstContent(final CharSequence content, int prefixEnd) {
 			int lenght = content.length();
@@ -639,9 +634,9 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	}
 
 	/**
-	 * Projection position that will return two foldable regions: one folding
-	 * away the lines before the one containing the simple name of the php
-	 * element, one folding away any lines after the caption.
+	 * Projection position that will return two foldable regions: one folding away
+	 * the lines before the one containing the simple name of the php element, one
+	 * folding away any lines after the caption.
 	 */
 	private static final class PHPElementPosition extends Position implements IProjectionPosition {
 
@@ -667,11 +662,10 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 			int nameStart = offset;
 			try {
 				/*
-				 * The member's name range may not be correct. However,
-				 * reconciling would trigger another element delta which would
-				 * lead to reentrant situations. Therefore, we optimistically
-				 * assume that the name range is correct, but double check the
-				 * received lines below.
+				 * The member's name range may not be correct. However, reconciling would
+				 * trigger another element delta which would lead to reentrant situations.
+				 * Therefore, we optimistically assume that the name range is correct, but
+				 * double check the received lines below.
 				 */
 				ISourceRange nameRange = fMember.getNameRange();
 				if (nameRange != null) {
@@ -687,9 +681,8 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 			int lastLine = document.getLineOfOffset(offset + length);
 
 			/*
-			 * see comment above - adjust the caption line to be inside the
-			 * entire folded region, and rely on later element deltas to correct
-			 * the name range.
+			 * see comment above - adjust the caption line to be inside the entire folded
+			 * region, and rely on later element deltas to correct the name range.
 			 */
 			if (captionLine < firstLine) {
 				captionLine = firstLine;
@@ -767,8 +760,8 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		}
 
 		/**
-		 * Disposes of this listener and removes the projection listener from
-		 * the viewer.
+		 * Disposes of this listener and removes the projection listener from the
+		 * viewer.
 		 */
 		public void dispose() {
 			if (fViewer != null) {
@@ -818,8 +811,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	private PHPStructuredTextViewer viewer;
 	private IDocument fDocument;
 	/**
-	 * Maximum number of child nodes to add adapters to (limit for performance
-	 * sake)
+	 * Maximum number of child nodes to add adapters to (limit for performance sake)
 	 */
 	private static final int MAX_CHILDREN = 10;
 	/**
@@ -830,9 +822,9 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 
 	/**
 	 * Creates a new folding provider. It must be
-	 * {@link #install(ITextEditor, ProjectionViewer) installed} on an
-	 * editor/viewer pair before it can be used, and {@link #uninstall()
-	 * uninstalled} when not used any longer.
+	 * {@link #install(ITextEditor, ProjectionViewer) installed} on an editor/viewer
+	 * pair before it can be used, and {@link #uninstall() uninstalled} when not
+	 * used any longer.
 	 * <p>
 	 * The projection state may be reset by calling {@link #initialize()}.
 	 * </p>
@@ -894,21 +886,21 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	}
 
 	/**
-	 * Returns <code>true</code> if the provider is installed,
-	 * <code>false</code> otherwise.
+	 * Returns <code>true</code> if the provider is installed, <code>false</code>
+	 * otherwise.
 	 * 
-	 * @return <code>true</code> if the provider is installed,
-	 *         <code>false</code> otherwise
+	 * @return <code>true</code> if the provider is installed, <code>false</code>
+	 *         otherwise
 	 */
 	protected final boolean isInstalled() {
 		return fEditor != null;
 	}
 
 	/**
-	 * Called whenever projection is enabled, for example when the viewer issues
-	 * a {@link IProjectionListener#projectionEnabled() projectionEnabled}
-	 * message. When the provider is already enabled when this method is called,
-	 * it is first {@link #handleProjectionDisabled() disabled}.
+	 * Called whenever projection is enabled, for example when the viewer issues a
+	 * {@link IProjectionListener#projectionEnabled() projectionEnabled} message.
+	 * When the provider is already enabled when this method is called, it is first
+	 * {@link #handleProjectionDisabled() disabled}.
 	 * <p>
 	 * Subclasses may extend.
 	 * </p>
@@ -932,10 +924,10 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	/**
 	 * Called whenever projection is disabled, for example when the provider is
 	 * {@link #uninstall() uninstalled}, when the viewer issues a
-	 * {@link IProjectionListener#projectionDisabled() projectionDisabled}
-	 * message and before {@link #handleProjectionEnabled() enabling} the
-	 * provider. Implementations must be prepared to handle multiple calls to
-	 * this method even if the provider is already disabled.
+	 * {@link IProjectionListener#projectionDisabled() projectionDisabled} message
+	 * and before {@link #handleProjectionEnabled() enabling} the provider.
+	 * Implementations must be prepared to handle multiple calls to this method even
+	 * if the provider is already disabled.
 	 * <p>
 	 * Subclasses may extend.
 	 * </p>
@@ -962,8 +954,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	}
 
 	/**
-	 * Goes through every node and removes adapter from each for cleanup
-	 * purposes
+	 * Goes through every node and removes adapter from each for cleanup purposes
 	 */
 	private void removeAllAdapters() {
 		if (fDocument != null) {
@@ -1019,8 +1010,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProvider#initialize
+	 * @see org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProvider#initialize
 	 * ()
 	 */
 	@Override
@@ -1046,8 +1036,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	}
 
 	/**
-	 * Goes through every node and adds an adapter onto each for tracking
-	 * purposes
+	 * Goes through every node and adds an adapter onto each for tracking purposes
 	 */
 	private void addAllAdapters() {
 		if (fDocument != null) {
@@ -1227,13 +1216,12 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 			IModelElement element = newAnnotation.getElement();
 			/*
 			 * See https://bugs.eclipse.org/bugs/show_bug.cgi?id=130472 and
-			 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=127445 In the
-			 * presence of syntax errors, anonymous types may have a source
-			 * range offset of 0. When such a situation is encountered, we
-			 * ignore the proposed folding range: if no corresponding folding
-			 * range exists, it is silently ignored; if there *is* a matching
-			 * folding range, we ignore the position update and keep the old
-			 * range, in order to keep the folding structure stable.
+			 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=127445 In the presence of
+			 * syntax errors, anonymous types may have a source range offset of 0. When such
+			 * a situation is encountered, we ignore the proposed folding range: if no
+			 * corresponding folding range exists, it is silently ignored; if there *is* a
+			 * matching folding range, we ignore the position update and keep the old range,
+			 * in order to keep the folding structure stable.
 			 */
 			boolean isMalformedAnonymousType = newPosition.getOffset() == 0
 					&& element.getElementType() == IModelElement.TYPE;
@@ -1410,12 +1398,12 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 
 	/**
 	 * Computes the projection ranges for a given <code>ISourceReference</code>.
-	 * More than one range or none at all may be returned. If there are no
-	 * foldable regions, an empty array is returned.
+	 * More than one range or none at all may be returned. If there are no foldable
+	 * regions, an empty array is returned.
 	 * <p>
-	 * The last region in the returned array (if not empty) describes the region
-	 * for the java element that implements the source reference. Any preceding
-	 * regions describe javadoc comments of that java element.
+	 * The last region in the returned array (if not empty) describes the region for
+	 * the java element that implements the source reference. Any preceding regions
+	 * describe javadoc comments of that java element.
 	 * </p>
 	 * 
 	 * @param reference
@@ -1519,11 +1507,10 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 		// int start= 0;
 		// int end= range.getOffset();
 		/*
-		 * code adapted from CommentFormattingStrategy: scan the header content
-		 * up to the first type. Once a comment is found, accumulate any
-		 * additional comments up to the stop condition. The stop condition is
-		 * reaching a package declaration, import container, or the end of the
-		 * input.
+		 * code adapted from CommentFormattingStrategy: scan the header content up to
+		 * the first type. Once a comment is found, accumulate any additional comments
+		 * up to the stop condition. The stop condition is reaching a package
+		 * declaration, import container, or the end of the input.
 		 */
 		// IScanner scanner= ctx.getScanner();
 		// scanner.resetTo(start, end);
@@ -1589,20 +1576,19 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	}
 
 	/**
-	 * Aligns <code>region</code> to start and end at a line offset. The
-	 * region's start is decreased to the next line offset, and the end offset
-	 * increased to the next line start or the end of the document.
-	 * <code>null</code> is returned if <code>region</code> is <code>null</code>
-	 * itself or does not comprise at least one line delimiter, as a single line
-	 * cannot be folded.
+	 * Aligns <code>region</code> to start and end at a line offset. The region's
+	 * start is decreased to the next line offset, and the end offset increased to
+	 * the next line start or the end of the document. <code>null</code> is returned
+	 * if <code>region</code> is <code>null</code> itself or does not comprise at
+	 * least one line delimiter, as a single line cannot be folded.
 	 * 
 	 * @param region
 	 *            the region to align, may be <code>null</code>
 	 * @param ctx
 	 *            the folding context
-	 * @return a region equal or greater than <code>region</code> that is
-	 *         aligned with line offsets, <code>null</code> if the region is too
-	 *         small to be foldable (e.g. covers only one line)
+	 * @return a region equal or greater than <code>region</code> that is aligned
+	 *         with line offsets, <code>null</code> if the region is too small to be
+	 *         foldable (e.g. covers only one line)
 	 */
 	protected final IRegion alignRegion(IRegion region, FoldingStructureComputationContext ctx) {
 		if (region == null) {
@@ -1656,10 +1642,10 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 
 	/**
 	 * Matches deleted annotations to changed or added ones. A deleted
-	 * annotation/position tuple that has a matching addition / change is
-	 * updated and marked as changed. The matching tuple is not added (for
-	 * additions) or marked as deletion instead (for changes). The result is
-	 * that more annotations are changed and fewer get deleted/re-added.
+	 * annotation/position tuple that has a matching addition / change is updated
+	 * and marked as changed. The matching tuple is not added (for additions) or
+	 * marked as deletion instead (for changes). The result is that more annotations
+	 * are changed and fewer get deleted/re-added.
 	 * 
 	 * @param deletions
 	 *            list with deleted annotations
@@ -1721,12 +1707,12 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	/**
 	 * Finds a match for <code>tuple</code> in a collection of annotations. The
 	 * positions for the <code>JavaProjectionAnnotation</code> instances in
-	 * <code>annotations</code> can be found in the passed
-	 * <code>positionMap</code> or <code>fCachedModel</code> if
-	 * <code>positionMap</code> is <code>null</code>.
+	 * <code>annotations</code> can be found in the passed <code>positionMap</code>
+	 * or <code>fCachedModel</code> if <code>positionMap</code> is
+	 * <code>null</code>.
 	 * <p>
-	 * A tuple is said to match another if their annotations have the same
-	 * comment flag and their position offsets are equal.
+	 * A tuple is said to match another if their annotations have the same comment
+	 * flag and their position offsets are equal.
 	 * </p>
 	 * <p>
 	 * If a match is found, the annotation gets removed from
@@ -1819,8 +1805,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProviderExtension
+	 * @see org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProviderExtension
 	 * #collapseElements(org.eclipse.jdt.core.IModelElement[])
 	 */
 	@Override
@@ -1830,8 +1815,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProviderExtension
+	 * @see org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProviderExtension
 	 * #expandElements(org.eclipse.jdt.core.IModelElement[])
 	 */
 	@Override

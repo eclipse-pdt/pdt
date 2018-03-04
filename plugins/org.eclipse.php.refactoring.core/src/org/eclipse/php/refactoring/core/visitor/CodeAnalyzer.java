@@ -27,8 +27,7 @@ public class CodeAnalyzer extends StatementAnalyzer {
 
 	private ISourceModule sourceModule;
 
-	public CodeAnalyzer(Program cunit, ISourceModule sourceModule,
-			IDocument document, Selection selection,
+	public CodeAnalyzer(Program cunit, ISourceModule sourceModule, IDocument document, Selection selection,
 			boolean traverseSelectedNode) throws CoreException, IOException {
 		super(cunit, sourceModule, document, selection, traverseSelectedNode);
 		this.sourceModule = sourceModule;
@@ -44,11 +43,9 @@ public class CodeAnalyzer extends StatementAnalyzer {
 		ASTNode node = getFirstSelectedNode();
 		// TODO - check if this needs to be here at all
 		if (node instanceof SingleFieldDeclaration) {
-			status.addFatalError(
-					"Operation not applicable to the current selection.", //$NON-NLS-1$
+			status.addFatalError("Operation not applicable to the current selection.", //$NON-NLS-1$
 					new SourceModuleSourceContext(sourceModule,
-							new org.eclipse.dltk.corext.SourceRange(node
-									.getStart(), node.getLength())));
+							new org.eclipse.dltk.corext.SourceRange(node.getStart(), node.getLength())));
 		}
 	}
 }

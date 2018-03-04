@@ -18,8 +18,8 @@ import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 public interface ICodeCoverageFilter {
 
 	/**
-	 * Returns whether to filter the given path from the representation in a
-	 * Code Coverage view
+	 * Returns whether to filter the given path from the representation in a Code
+	 * Coverage view
 	 * 
 	 * @param path
 	 *            File path

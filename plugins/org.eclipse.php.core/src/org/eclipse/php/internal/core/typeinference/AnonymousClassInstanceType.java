@@ -36,7 +36,7 @@ public class AnonymousClassInstanceType implements IClassType {
 	@Override
 	public String getTypeName() {
 		if (clazz != null) {
-			return "anonymous class instance"; //$NON-NLS-1$ 
+			return "anonymous class instance"; //$NON-NLS-1$
 		}
 		return "class instance: !!unknown!!"; //$NON-NLS-1$
 	}

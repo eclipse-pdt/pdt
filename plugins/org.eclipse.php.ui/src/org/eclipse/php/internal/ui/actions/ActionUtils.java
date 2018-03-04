@@ -119,8 +119,8 @@ public class ActionUtils {
 		for (Object element : elements) {
 			if (element instanceof IModelElement || element instanceof IScriptProject) {
 				// element
-																											// instanceof
-																											// PHPWorkspaceModelManager)
+				// instanceof
+				// PHPWorkspaceModelManager)
 				if (!phpFileDataIsResource || !(element instanceof ISourceModule)) {
 					phpElements.add(element);
 				}
@@ -134,8 +134,8 @@ public class ActionUtils {
 		for (Object element : elements) {
 			if (element instanceof ISourceModule || element instanceof IScriptProject) {
 				// element
-																											// instanceof
-																											// PHPWorkspaceModelManager)
+				// instanceof
+				// PHPWorkspaceModelManager)
 				resources.add(element);
 			}
 		}

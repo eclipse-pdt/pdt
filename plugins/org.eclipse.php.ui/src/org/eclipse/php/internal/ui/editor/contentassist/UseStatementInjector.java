@@ -70,8 +70,8 @@ public class UseStatementInjector {
 	}
 
 	/**
-	 * Inserts USE statement into beginning of the document, or after the last
-	 * USE statement.
+	 * Inserts USE statement into beginning of the document, or after the last USE
+	 * statement.
 	 * 
 	 * @param document
 	 * @param textViewer
@@ -557,8 +557,7 @@ public class UseStatementInjector {
 	}
 
 	/**
-	 * Get all the class / namespace names which have been imported by use
-	 * statement
+	 * Get all the class / namespace names which have been imported by use statement
 	 * 
 	 * @param moduleDeclaration
 	 * @param offset

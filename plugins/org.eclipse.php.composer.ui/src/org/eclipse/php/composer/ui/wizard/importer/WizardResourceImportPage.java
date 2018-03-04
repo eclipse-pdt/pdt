@@ -157,12 +157,11 @@ public class WizardResourceImportPage extends WizardDataTransferPage {
 		 * 
 		 * @Override public void changeControlPressed(DialogField field) {
 		 * DirectoryDialog dialog = new DirectoryDialog(getShell(), SWT.OPEN);
-		 * dialog.setMessage("Select the target location"); target =
-		 * dialog.open(); try { handleTargetPathChange(); } catch (IOException
-		 * e) { Logger.logException(e); } } });
+		 * dialog.setMessage("Select the target location"); target = dialog.open(); try
+		 * { handleTargetPathChange(); } catch (IOException e) { Logger.logException(e);
+		 * } } });
 		 * 
-		 * targetPath.setLabelText("Target path");
-		 * targetPath.setButtonLabel("Browse");
+		 * targetPath.setLabelText("Target path"); targetPath.setButtonLabel("Browse");
 		 * targetPath.doFillIntoGrid(control, numColumns);
 		 * targetPath.getTextControl(null).setEnabled(false);
 		 * targetPath.setEnabled(false);

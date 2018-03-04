@@ -78,10 +78,10 @@ public class LibraryFolderActionGroup extends CommonActionProvider {
 	 * Returns the action to add to context menu based on the current selection.
 	 * 
 	 * <ul>
-	 * <li>If the current selection consists of only source folders then the
-	 * "Use As Library Folders" action will be returned</li>
-	 * <li>If the current selection consists of only library folders then the
-	 * "Use As Source Folders" action will be returned</li>
+	 * <li>If the current selection consists of only source folders then the "Use As
+	 * Library Folders" action will be returned</li>
+	 * <li>If the current selection consists of only library folders then the "Use
+	 * As Source Folders" action will be returned</li>
 	 * <li>In all other cases, this method returns <code>null</code></li>
 	 * </ul>
 	 * 
@@ -157,8 +157,8 @@ public class LibraryFolderActionGroup extends CommonActionProvider {
 	 * @param folders
 	 *            an array of folders
 	 * 
-	 * @return <code>true</code> if the given folders are either all library
-	 *         folders or source folder, and <code>false</code> otherwise
+	 * @return <code>true</code> if the given folders are either all library folders
+	 *         or source folder, and <code>false</code> otherwise
 	 */
 	private boolean allOfSameKind(IFolder[] folders) {
 		int libraryFolderCount = 0;

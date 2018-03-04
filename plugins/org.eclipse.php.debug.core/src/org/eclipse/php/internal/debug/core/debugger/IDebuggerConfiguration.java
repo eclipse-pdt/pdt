@@ -42,8 +42,8 @@ public interface IDebuggerConfiguration {
 	 */
 	public String DEBUGGER_ID = "id"; //$NON-NLS-1$
 	/**
-	 * Attribute key for the debugger's delegate for executing PHP scripts using
-	 * a local PHP executable.
+	 * Attribute key for the debugger's delegate for executing PHP scripts using a
+	 * local PHP executable.
 	 */
 	public String SCRIPT_LAUNCH_DELEGATE_CLASS = "scriptDelegateClass"; //$NON-NLS-1$
 	/**

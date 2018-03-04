@@ -74,10 +74,9 @@ public class BindingLabelProvider extends LabelProvider {
 			// if (typeBinding.isCapture()) {
 			// typeBinding.getWildcard();
 			// }
-			return getTypeImageDescriptor(
-					false /*
-							 * typeBinding.getDeclaringClass( ) != null
-							 */, typeBinding, flags);
+			return getTypeImageDescriptor(false /*
+												 * typeBinding.getDeclaringClass( ) != null
+												 */, typeBinding, flags);
 		} else if (binding instanceof IMethodBinding) {
 			// ITypeBinding type= ((IMethodBinding)
 			// binding).getDeclaringClass();
@@ -119,10 +118,7 @@ public class BindingLabelProvider extends LabelProvider {
 
 	private static void getFieldLabel(IVariableBinding binding, long flags, StringBuilder buffer) {
 		if (((flags & ScriptElementLabels.F_PRE_TYPE_SIGNATURE) != 0)/*
-																		 * &&
-																		 * !binding.
-																		 * isEnumConstant
-																		 * ()
+																		 * && !binding. isEnumConstant ()
 																		 */) {
 			getTypeLabel(binding.getType(), (flags & ScriptElementLabels.T_TYPE_PARAMETERS), buffer);
 			buffer.append(' ');
@@ -139,10 +135,7 @@ public class BindingLabelProvider extends LabelProvider {
 		}
 		buffer.append(binding.getName());
 		if (((flags & ScriptElementLabels.F_APP_TYPE_SIGNATURE) != 0)/*
-																		 * &&
-																		 * !binding.
-																		 * isEnumConstant
-																		 * ()
+																		 * && !binding. isEnumConstant ()
 																		 */) {
 			buffer.append(ScriptElementLabels.DECL_STRING);
 			getTypeLabel(binding.getType(), (flags & ScriptElementLabels.T_TYPE_PARAMETERS), buffer);
@@ -275,7 +268,8 @@ public class BindingLabelProvider extends LabelProvider {
 		buffer.append('(');
 		if ((flags & ScriptElementLabels.M_PARAMETER_TYPES | ScriptElementLabels.M_PARAMETER_NAMES) != 0) {
 			ITypeBinding[] parameters = ((flags & ScriptElementLabels.M_PARAMETER_TYPES) != 0)
-					? binding.getParameterTypes() : null;
+					? binding.getParameterTypes()
+					: null;
 			if (parameters != null) {
 				for (int index = 0; index < parameters.length; index++) {
 					if (index > 0) {
@@ -341,8 +335,7 @@ public class BindingLabelProvider extends LabelProvider {
 	private static ImageDescriptor getTypeImageDescriptor(boolean inner, ITypeBinding binding, int flags) {
 		/*
 		 * if (binding.isEnum()) return DLTKPluginImages.DESC_OBJS_ENUM; else if
-		 * (binding.isAnnotation()) return
-		 * DLTKPluginImages.DESC_OBJS_ANNOTATION; else
+		 * (binding.isAnnotation()) return DLTKPluginImages.DESC_OBJS_ANNOTATION; else
 		 */if (binding.isInterface()) {
 			if ((flags & ScriptElementImageProvider.LIGHT_TYPE_ICONS) != 0) {
 				return DLTKPluginImages.DESC_OBJS_INTERFACEALT;
@@ -531,8 +524,7 @@ public class BindingLabelProvider extends LabelProvider {
 	 * @param binding
 	 *            The binding to get the image for.
 	 * @param imageFlags
-	 *            The image flags as defined in
-	 *            {@link ScriptElementImageProvider}.
+	 *            The image flags as defined in {@link ScriptElementImageProvider}.
 	 * @return the image of the binding or null if there is no image
 	 */
 	public static ImageDescriptor getBindingImageDescriptor(IBinding binding, int imageFlags) {
@@ -540,7 +532,8 @@ public class BindingLabelProvider extends LabelProvider {
 		if (baseImage != null) {
 			int adornmentFlags = getAdornmentFlags(binding);
 			Point size = ((imageFlags & ScriptElementImageProvider.SMALL_ICONS) != 0)
-					? ScriptElementImageProvider.SMALL_SIZE : ScriptElementImageProvider.BIG_SIZE;
+					? ScriptElementImageProvider.SMALL_SIZE
+					: ScriptElementImageProvider.BIG_SIZE;
 			return new PHPElementImageDescriptor(baseImage, adornmentFlags, size);
 		}
 		return null;

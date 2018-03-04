@@ -85,9 +85,8 @@ public class XMLLabelProvider extends JFaceNodeLabelProvider {
 						}
 					}
 					/*
-					 * If no suitable attribute was found, try using a required
-					 * attribute, if none, then prefer "id" or "name", otherwise
-					 * just use first attribute
+					 * If no suitable attribute was found, try using a required attribute, if none,
+					 * then prefer "id" or "name", otherwise just use first attribute
 					 */
 					if (idTypedAttribute != null) {
 						shownAttribute = idTypedAttribute;

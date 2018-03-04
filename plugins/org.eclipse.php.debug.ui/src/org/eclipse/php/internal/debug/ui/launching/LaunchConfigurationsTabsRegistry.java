@@ -40,8 +40,8 @@ public class LaunchConfigurationsTabsRegistry {
 	private static LaunchConfigurationsTabsRegistry instance;
 
 	/**
-	 * Returns an array on newly initialized AbstractLaunchConfigurationTab that
-	 * are registered for the requested configuration tab group.
+	 * Returns an array on newly initialized AbstractLaunchConfigurationTab that are
+	 * registered for the requested configuration tab group.
 	 * 
 	 * @param launchConfigurationTabGroupId
 	 *            The group id for the requested launch configuration tabs.

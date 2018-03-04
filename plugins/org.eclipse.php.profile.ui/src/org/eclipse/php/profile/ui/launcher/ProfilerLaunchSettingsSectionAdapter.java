@@ -27,8 +27,7 @@ import org.eclipse.swt.widgets.Composite;
  * 
  * @author Bartlomiej Laczkowski
  */
-public class ProfilerLaunchSettingsSectionAdapter
-		implements IProfilerLaunchSettingsSection {
+public class ProfilerLaunchSettingsSectionAdapter implements IProfilerLaunchSettingsSection {
 
 	@Override
 	public void createSection(Composite parent, WidgetListener widgetListener) {

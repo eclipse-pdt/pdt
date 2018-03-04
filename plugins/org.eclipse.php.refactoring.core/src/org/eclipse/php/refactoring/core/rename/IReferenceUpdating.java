@@ -22,8 +22,8 @@ public interface IReferenceUpdating extends ITextUpdating {
 	public boolean getUpdateReferences();
 
 	/**
-	 * This method is used to inform the refactoring object whether references
-	 * to the refactored file should be updated.
+	 * This method is used to inform the refactoring object whether references to
+	 * the refactored file should be updated.
 	 */
 	public void setUpdateRefernces(boolean update);
 

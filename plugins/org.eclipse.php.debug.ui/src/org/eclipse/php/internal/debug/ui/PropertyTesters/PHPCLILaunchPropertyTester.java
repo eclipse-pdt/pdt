@@ -27,21 +27,20 @@ public class PHPCLILaunchPropertyTester extends PropertyTester {
 	private static final String PROPERTY = "launchableCLIPHP"; //$NON-NLS-1$
 
 	/**
-	 * Executes the property test determined by the parameter
-	 * <code>property</code>.
+	 * Executes the property test determined by the parameter <code>property</code>.
 	 * 
 	 * @param receiver
 	 *            the receiver of the property test
 	 * @param property
 	 *            the property to test
 	 * @param args
-	 *            additional arguments to evaluate the property. If no arguments
-	 *            are specified in the <code>test</code> expression an array of
-	 *            length 0 is passed
+	 *            additional arguments to evaluate the property. If no arguments are
+	 *            specified in the <code>test</code> expression an array of length 0
+	 *            is passed
 	 * @param expectedValue
-	 *            the expected value of the property. The value is either of
-	 *            type <code>java.lang.String</code> or a boxed base type. If no
-	 *            value was specified in the <code>test</code> expressions then
+	 *            the expected value of the property. The value is either of type
+	 *            <code>java.lang.String</code> or a boxed base type. If no value
+	 *            was specified in the <code>test</code> expressions then
 	 *            <code>null</code> is passed
 	 * 
 	 * @return returns

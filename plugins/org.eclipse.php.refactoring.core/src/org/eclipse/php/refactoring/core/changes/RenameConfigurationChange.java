@@ -35,8 +35,8 @@ public class RenameConfigurationChange extends Change {
 	private Map<ILaunchConfiguration, Map<String, String>> fConfigurationChanges;
 
 	/**
-	 * The constructor gets also a new name in case the move it's actually a
-	 * rename operation
+	 * The constructor gets also a new name in case the move it's actually a rename
+	 * operation
 	 * 
 	 * @param source
 	 * @param dest

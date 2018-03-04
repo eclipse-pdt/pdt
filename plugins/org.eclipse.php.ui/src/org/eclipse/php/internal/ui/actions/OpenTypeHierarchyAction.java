@@ -67,9 +67,8 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 	private PHPStructuredEditor fEditor;
 
 	/**
-	 * Creates a new <code>OpenTypeHierarchyAction</code>. The action requires
-	 * that the selection provided by the site's selection provider is of type
-	 * <code>
+	 * Creates a new <code>OpenTypeHierarchyAction</code>. The action requires that
+	 * the selection provided by the site's selection provider is of type <code>
 	 * org.eclipse.jface.viewers.IStructuredSelection</code>.
 	 * 
 	 * @param site
@@ -85,8 +84,8 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 	}
 
 	/**
-	 * Note: This constructor is for internal use only. Clients should not call
-	 * this constructor.
+	 * Note: This constructor is for internal use only. Clients should not call this
+	 * constructor.
 	 * 
 	 * @param editor
 	 *            the PHP editor
@@ -146,8 +145,8 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 	}
 
 	/**
-	 * Returns true if the given selection is for an {@link IModelElement} that
-	 * is a TYPE (e.g. Class or Interface).
+	 * Returns true if the given selection is for an {@link IModelElement} that is a
+	 * TYPE (e.g. Class or Interface).
 	 */
 	private boolean isEnabled(ITextSelection selection) {
 		if (fEditor == null || selection == null) {

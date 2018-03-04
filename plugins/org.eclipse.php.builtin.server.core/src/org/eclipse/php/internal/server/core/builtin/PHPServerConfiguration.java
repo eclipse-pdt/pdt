@@ -67,8 +67,8 @@ public abstract class PHPServerConfiguration implements IPHPServerConfiguration,
 
 	/**
 	 * Copies all files from the given directory in the workbench to the given
-	 * location. Can be overridden by version specific class to modify or
-	 * enhance what publish does.
+	 * location. Can be overridden by version specific class to modify or enhance
+	 * what publish does.
 	 * 
 	 * @param phpServerDir
 	 *            Destination PHP Server root directory.
@@ -98,8 +98,7 @@ public abstract class PHPServerConfiguration implements IPHPServerConfiguration,
 					IFile file = (IFile) children[i];
 					String name = file.getName();
 					monitor.subTask(NLS.bind(Messages.publisherPublishTask, new String[] { name }));
-					if (Trace.isTraceEnabled())
-					 {
+					if (Trace.isTraceEnabled()) {
 						Trace.trace(Trace.FINEST, "Publishing " + name); //$NON-NLS-1$
 					}
 
@@ -155,8 +154,7 @@ public abstract class PHPServerConfiguration implements IPHPServerConfiguration,
 				File file = files[i];
 				String name = file.getName();
 				monitor.subTask(NLS.bind(Messages.publisherPublishTask, new String[] { name }));
-				if (Trace.isTraceEnabled())
-				 {
+				if (Trace.isTraceEnabled()) {
 					Trace.trace(Trace.FINEST, "Publishing " + name); //$NON-NLS-1$
 				}
 
@@ -201,8 +199,8 @@ public abstract class PHPServerConfiguration implements IPHPServerConfiguration,
 	}
 
 	/**
-	 * Make any local changes to the server configuration at the specified
-	 * runtime base directory needed to complete publishing the server.
+	 * Make any local changes to the server configuration at the specified runtime
+	 * base directory needed to complete publishing the server.
 	 * 
 	 * @param baseDir
 	 *            runtime base directory for the server

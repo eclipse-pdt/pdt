@@ -5508,8 +5508,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	}
 
 	public static String join(Collection<String> s, String delimiter) {
-		if (s == null || s.isEmpty())
-		 {
+		if (s == null || s.isEmpty()) {
 			return ""; //$NON-NLS-1$
 		}
 		Iterator<String> iter = s.iterator();

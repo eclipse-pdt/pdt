@@ -84,8 +84,8 @@ public class ResourceAndContainerGroup implements Listener {
 	private static final int SIZING_TEXT_FIELD_WIDTH = 250;
 
 	/**
-	 * Create an instance of the group to allow the user to enter/select a
-	 * container and specify a resource name.
+	 * Create an instance of the group to allow the user to enter/select a container
+	 * and specify a resource name.
 	 * 
 	 * @param parent
 	 *            composite widget to parent the group
@@ -103,8 +103,8 @@ public class ResourceAndContainerGroup implements Listener {
 	}
 
 	/**
-	 * Create an instance of the group to allow the user to enter/select a
-	 * container and specify a resource name.
+	 * Create an instance of the group to allow the user to enter/select a container
+	 * and specify a resource name.
 	 * 
 	 * @param parent
 	 *            composite widget to parent the group
@@ -124,8 +124,8 @@ public class ResourceAndContainerGroup implements Listener {
 	}
 
 	/**
-	 * Create an instance of the group to allow the user to enter/select a
-	 * container and specify a resource name.
+	 * Create an instance of the group to allow the user to enter/select a container
+	 * and specify a resource name.
 	 * 
 	 * @param parent
 	 *            composite widget to parent the group
@@ -151,8 +151,8 @@ public class ResourceAndContainerGroup implements Listener {
 	}
 
 	/**
-	 * Returns a boolean indicating whether all controls in this group contain
-	 * valid values.
+	 * Returns a boolean indicating whether all controls in this group contain valid
+	 * values.
 	 * 
 	 * @return boolean
 	 */
@@ -218,9 +218,9 @@ public class ResourceAndContainerGroup implements Listener {
 	}
 
 	/**
-	 * Returns the path of the currently selected container or null if no
-	 * container has been selected. Note that the container may not exist yet if
-	 * the user entered a new container name in the field.
+	 * Returns the path of the currently selected container or null if no container
+	 * has been selected. Note that the container may not exist yet if the user
+	 * entered a new container name in the field.
 	 * 
 	 * @return The path of the container, or <code>null</code>
 	 */
@@ -229,8 +229,8 @@ public class ResourceAndContainerGroup implements Listener {
 	}
 
 	/**
-	 * Returns an error message indicating the current problem with the value of
-	 * a control in the group, or an empty message if all controls in the group
+	 * Returns an error message indicating the current problem with the value of a
+	 * control in the group, or an empty message if all controls in the group
 	 * contain valid values.
 	 * 
 	 * @return java.lang.String
@@ -249,11 +249,10 @@ public class ResourceAndContainerGroup implements Listener {
 	}
 
 	/**
-	 * Returns a string that is the name of the chosen resource, or an empty
-	 * string if no resource has been entered. <br>
+	 * Returns a string that is the name of the chosen resource, or an empty string
+	 * if no resource has been entered. <br>
 	 * <br>
-	 * The name will include the resource extension if the preconditions are
-	 * met.
+	 * The name will include the resource extension if the preconditions are met.
 	 * 
 	 * @see ResourceAndContainerGroup#setResourceExtension(String)
 	 * 
@@ -300,8 +299,8 @@ public class ResourceAndContainerGroup implements Listener {
 
 	/**
 	 * Handle the focus lost event from the resource name field. <br>
-	 * Adds the resource extension to the resource name field when it loses
-	 * focus (if the preconditions are met).
+	 * Adds the resource extension to the resource name field when it loses focus
+	 * (if the preconditions are met).
 	 * 
 	 * @see ResourceNameFocusListener
 	 * @see ResourceAndContainerGroup#setResourceExtension(String)
@@ -374,21 +373,20 @@ public class ResourceAndContainerGroup implements Listener {
 	/**
 	 * Set the only file extension allowed for the resource name field. <br>
 	 * <br>
-	 * If a resource extension is specified, then it will always be appended
-	 * with a '.' to the text from the resource name field for validation when
-	 * the following conditions are met: <br>
+	 * If a resource extension is specified, then it will always be appended with a
+	 * '.' to the text from the resource name field for validation when the
+	 * following conditions are met: <br>
 	 * <br>
 	 * (1) Resource extension length is greater than 0 <br>
 	 * (2) Resource name field text length is greater than 0 <br>
-	 * (3) Resource name field text does not already end with a '.' and the
-	 * resource extension specified (case sensitive) <br>
+	 * (3) Resource name field text does not already end with a '.' and the resource
+	 * extension specified (case sensitive) <br>
 	 * <br>
 	 * The resource extension will not be reflected in the actual resource name
 	 * field until the resource name field loses focus.
 	 * 
 	 * @param value
-	 *            The resource extension without the '.' prefix (e.g. 'java',
-	 *            'xml')
+	 *            The resource extension without the '.' prefix (e.g. 'java', 'xml')
 	 * @since 3.3
 	 */
 	public void setResourceExtension(String value) {
@@ -397,10 +395,9 @@ public class ResourceAndContainerGroup implements Listener {
 	}
 
 	/**
-	 * Returns a <code>boolean</code> indicating whether a container name
-	 * represents a valid container resource in the workbench. An error message
-	 * is stored for future reference if the name does not represent a valid
-	 * container.
+	 * Returns a <code>boolean</code> indicating whether a container name represents
+	 * a valid container resource in the workbench. An error message is stored for
+	 * future reference if the name does not represent a valid container.
 	 * 
 	 * @return <code>boolean</code> indicating validity of the container name
 	 */
@@ -432,10 +429,9 @@ public class ResourceAndContainerGroup implements Listener {
 	}
 
 	/**
-	 * Validates the values for each of the group's controls. If an invalid
-	 * value is found then a descriptive error message is stored for later
-	 * reference. Returns a boolean indicating the validity of all of the
-	 * controls in the group.
+	 * Validates the values for each of the group's controls. If an invalid value is
+	 * found then a descriptive error message is stored for later reference. Returns
+	 * a boolean indicating the validity of all of the controls in the group.
 	 */
 	protected boolean validateControls() {
 		// don't attempt to validate controls until they have been created
@@ -454,10 +450,10 @@ public class ResourceAndContainerGroup implements Listener {
 	}
 
 	/**
-	 * Returns a <code>boolean</code> indicating whether the specified resource
-	 * path represents a valid new resource in the workbench. An error message
-	 * is stored for future reference if the path does not represent a valid new
-	 * resource path.
+	 * Returns a <code>boolean</code> indicating whether the specified resource path
+	 * represents a valid new resource in the workbench. An error message is stored
+	 * for future reference if the path does not represent a valid new resource
+	 * path.
 	 * 
 	 * @param resourcePath
 	 *            the path to validate
@@ -484,9 +480,8 @@ public class ResourceAndContainerGroup implements Listener {
 
 	/**
 	 * Returns a <code>boolean</code> indicating whether the resource name rep-
-	 * resents a valid resource name in the workbench. An error message is
-	 * stored for future reference if the name does not represent a valid
-	 * resource name.
+	 * resents a valid resource name in the workbench. An error message is stored
+	 * for future reference if the name does not represent a valid resource name.
 	 * 
 	 * @return <code>boolean</code> indicating validity of the resource name
 	 */

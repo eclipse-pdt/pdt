@@ -112,8 +112,7 @@ public class ZendDebuggerSettingsProvider extends AbstractDebuggerSettingsProvid
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.debugger.IDebuggerSettingsProvider
+	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerSettingsProvider
 	 * #createWorkingCopy
 	 * (org.eclipse.php.internal.debug.core.debugger.IDebuggerSettings)
 	 */

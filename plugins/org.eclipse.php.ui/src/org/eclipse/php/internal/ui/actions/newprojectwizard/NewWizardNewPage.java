@@ -155,8 +155,8 @@ class NewWizardNewPage implements ISelectionChangedListener {
 	/**
 	 * @param category
 	 *            the wizard category
-	 * @return whether all of the wizards in the category are enabled via
-	 *         activity filtering
+	 * @return whether all of the wizards in the category are enabled via activity
+	 *         filtering
 	 */
 	private boolean allActivityEnabled(IWizardCategory category) {
 		IWizardDescriptor[] wizards = category.getWizards();
@@ -193,8 +193,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 			}
 		}
 
-		primaryWizards = newPrimaryWizards
-				.toArray(new WorkbenchWizardElement[newPrimaryWizards.size()]);
+		primaryWizards = newPrimaryWizards.toArray(new WorkbenchWizardElement[newPrimaryWizards.size()]);
 	}
 
 	/**
@@ -402,8 +401,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 			/*
 			 * (non-Javadoc)
 			 * 
-			 * @see
-			 * org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org
+			 * @see org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org
 			 * .eclipse.jface.viewers.DoubleClickEvent)
 			 */
 			@Override
@@ -529,8 +527,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 			/*
 			 * (non-Javadoc)
 			 * 
-			 * @see
-			 * org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse
+			 * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse
 			 * .swt.events.DisposeEvent)
 			 */
 			@Override
@@ -572,17 +569,16 @@ class NewWizardNewPage implements ISelectionChangedListener {
 	}
 
 	/**
-	 * Returns the single selected object contained in the passed
-	 * selectionEvent, or <code>null</code> if the selectionEvent contains
-	 * either 0 or 2+ selected objects.
+	 * Returns the single selected object contained in the passed selectionEvent, or
+	 * <code>null</code> if the selectionEvent contains either 0 or 2+ selected
+	 * objects.
 	 */
 	protected Object getSingleSelection(IStructuredSelection selection) {
 		return selection.size() == 1 ? selection.getFirstElement() : null;
 	}
 
 	/**
-	 * Set self's widgets to the values that they held last time this page was
-	 * open
+	 * Set self's widgets to the values that they held last time this page was open
 	 * 
 	 */
 	protected void restoreWidgetValues() {
@@ -591,8 +587,8 @@ class NewWizardNewPage implements ISelectionChangedListener {
 	}
 
 	/**
-	 * Store the current values of self's widgets so that they can be restored
-	 * in the next instance of self
+	 * Store the current values of self's widgets so that they can be restored in
+	 * the next instance of self
 	 * 
 	 */
 	public void saveWidgetValues() {
@@ -601,8 +597,8 @@ class NewWizardNewPage implements ISelectionChangedListener {
 	}
 
 	/**
-	 * The user selected either new wizard category(s) or wizard element(s).
-	 * Proceed accordingly.
+	 * The user selected either new wizard category(s) or wizard element(s). Proceed
+	 * accordingly.
 	 * 
 	 * @param selectionEvent
 	 *            ISelection
@@ -629,9 +625,9 @@ class NewWizardNewPage implements ISelectionChangedListener {
 	}
 
 	/**
-	 * Selects the wizard category and wizard in this page that were selected
-	 * last time this page was used. If a category or wizard that was previously
-	 * selected no longer exists then it is ignored.
+	 * Selects the wizard category and wizard in this page that were selected last
+	 * time this page was used. If a category or wizard that was previously selected
+	 * no longer exists then it is ignored.
 	 */
 	protected void selectPreviouslySelected() {
 		String selectedId = settings.get(STORE_SELECTED_ID);
@@ -675,9 +671,9 @@ class NewWizardNewPage implements ISelectionChangedListener {
 	}
 
 	/**
-	 * Stores the collection of currently-expanded categories in this page's
-	 * dialog store, in order to recreate this page's state in the next instance
-	 * of this page.
+	 * Stores the collection of currently-expanded categories in this page's dialog
+	 * store, in order to recreate this page's state in the next instance of this
+	 * page.
 	 */
 	protected void storeExpandedCategories() {
 		Object[] expandedElements = filteredTree.getViewer().getExpandedElements();
@@ -692,8 +688,8 @@ class NewWizardNewPage implements ISelectionChangedListener {
 	}
 
 	/**
-	 * Stores the currently-selected element in this page's dialog store, in
-	 * order to recreate this page's state in the next instance of this page.
+	 * Stores the currently-selected element in this page's dialog store, in order
+	 * to recreate this page's state in the next instance of this page.
 	 */
 	protected void storeSelectedCategoryAndWizard() {
 		Object selected = getSingleSelection((IStructuredSelection) filteredTree.getViewer().getSelection());

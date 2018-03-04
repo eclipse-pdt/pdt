@@ -514,8 +514,8 @@ public class NodeDeletionTests {
 	}
 
 	/**
-	 * Set the content into the document and initialize the parser, the program
-	 * and the ast.
+	 * Set the content into the document and initialize the parser, the program and
+	 * the ast.
 	 */
 	private Program initialize(IDocument document) throws Exception {
 		ASTParser parser = ASTParser.newParser(getPHPVersion(), ProjectOptions.useShortTags((IProject) null));

@@ -468,8 +468,8 @@ public abstract class PHPUnitWizardPage extends WizardPage {
 	}
 
 	/**
-	 * Initializes the source folder field with a valid root. The root is
-	 * computed from the given PHPlement.
+	 * Initializes the source folder field with a valid root. The root is computed
+	 * from the given PHPlement.
 	 * 
 	 * @param elem
 	 *            the PHP Element used to compute the initial root used as the

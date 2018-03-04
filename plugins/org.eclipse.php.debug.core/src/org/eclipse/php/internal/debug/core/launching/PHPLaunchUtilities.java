@@ -82,18 +82,17 @@ public class PHPLaunchUtilities {
 	private static DebuggerDelayProgressMonitorDialog progressDialog;
 
 	/**
-	 * Display the Debug Output view in case it's hidden or not initialized. In
-	 * case where the Browser Output view is visible, nothing will happen and
-	 * the Browser Output will remain as the visible view during the debug
-	 * session.
+	 * Display the Debug Output view in case it's hidden or not initialized. In case
+	 * where the Browser Output view is visible, nothing will happen and the Browser
+	 * Output will remain as the visible view during the debug session.
 	 * 
-	 * Note that the behavior given by this function is mainly needed when we
-	 * are in a PHP Perspective (not debug) and a session without a breakpoint
-	 * was launched. So in this case a 'force' output display is triggered.
+	 * Note that the behavior given by this function is mainly needed when we are in
+	 * a PHP Perspective (not debug) and a session without a breakpoint was
+	 * launched. So in this case a 'force' output display is triggered.
 	 * 
 	 * This function also take into account the
-	 * PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS flag and does not show the
-	 * debug views in case it was not chosen from the preferences.
+	 * PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS flag and does not show the debug
+	 * views in case it was not chosen from the preferences.
 	 */
 	public static void showDebugView() {
 		if (!Platform.getPreferencesService().getBoolean(PHPDebugPlugin.ID,
@@ -217,9 +216,9 @@ public class PHPLaunchUtilities {
 	}
 
 	/**
-	 * Switch from the PHP debug perspective to the PHP perspective (in case we
-	 * are not using it already). This method is called when the last active PHP
-	 * debug session was terminated.
+	 * Switch from the PHP debug perspective to the PHP perspective (in case we are
+	 * not using it already). This method is called when the last active PHP debug
+	 * session was terminated.
 	 */
 	public static void switchToPHPPerspective() {
 		Display display = PlatformUI.getWorkbench().getDisplay();
@@ -291,9 +290,8 @@ public class PHPLaunchUtilities {
 	}
 
 	/**
-	 * Make all the necessary checks to see if the current launch can be
-	 * launched with regards to the previous launches that has 'debug all pages'
-	 * attribute.
+	 * Make all the necessary checks to see if the current launch can be launched
+	 * with regards to the previous launches that has 'debug all pages' attribute.
 	 * 
 	 * @throws CoreException
 	 */
@@ -390,13 +388,12 @@ public class PHPLaunchUtilities {
 	}
 
 	/**
-	 * Returns if the given launch configuration holds an attribute for 'debug
-	 * all pages'.
+	 * Returns if the given launch configuration holds an attribute for 'debug all
+	 * pages'.
 	 * 
 	 * @param launchConfiguration
 	 *            An {@link ILaunchConfiguration}
-	 * @return True, if the configuration holds an attribute for 'debug all
-	 *         pages'.
+	 * @return True, if the configuration holds an attribute for 'debug all pages'.
 	 * @throws CoreException
 	 */
 	public static boolean isDebugAllPages(ILaunch launch) throws CoreException {
@@ -405,13 +402,12 @@ public class PHPLaunchUtilities {
 	}
 
 	/**
-	 * Returns if the given launch configuration holds an attribute for 'start
-	 * debug from'.
+	 * Returns if the given launch configuration holds an attribute for 'start debug
+	 * from'.
 	 * 
 	 * @param launchConfiguration
 	 *            An {@link ILaunchConfiguration}
-	 * @return True, if the configuration holds an attribute for 'start debug
-	 *         from'.
+	 * @return True, if the configuration holds an attribute for 'start debug from'.
 	 * @throws CoreException
 	 */
 	public static boolean isStartDebugFrom(ILaunch launch) throws CoreException {
@@ -441,11 +437,10 @@ public class PHPLaunchUtilities {
 
 	/**
 	 * Display a wait window, indicating the user that the debug session is in
-	 * progress and the PDT is waiting for the debugger's response. Once a
-	 * response arrives, the {@link #hideWaitForDebuggerMessage()} should be
-	 * called to remove the window. In case a response does not arrive, there is
-	 * a good chance that the {@link #showLaunchErrorMessage()} should be
-	 * called.
+	 * progress and the PDT is waiting for the debugger's response. Once a response
+	 * arrives, the {@link #hideWaitForDebuggerMessage()} should be called to remove
+	 * the window. In case a response does not arrive, there is a good chance that
+	 * the {@link #showLaunchErrorMessage()} should be called.
 	 * 
 	 * @param debugConnection
 	 * @see #hideWaitForDebuggerMessage()
@@ -489,9 +484,9 @@ public class PHPLaunchUtilities {
 	}
 
 	/**
-	 * Display a standard error message to indicating an fatal error detected
-	 * while staring a debug session. A fatal error occurs when the remote
-	 * debugger does not exist or has a different version.
+	 * Display a standard error message to indicating an fatal error detected while
+	 * staring a debug session. A fatal error occurs when the remote debugger does
+	 * not exist or has a different version.
 	 */
 	public static void showLaunchErrorMessage() {
 		showDebuggerErrorMessage(PHPDebugCoreMessages.Debugger_Launch_Error,
@@ -499,9 +494,9 @@ public class PHPLaunchUtilities {
 	}
 
 	/**
-	 * Display an error message to indicating an fatal error detected while
-	 * staring a debug session. A fatal error occurs when the remote debugger
-	 * does not exist or has a different version.
+	 * Display an error message to indicating an fatal error detected while staring
+	 * a debug session. A fatal error occurs when the remote debugger does not exist
+	 * or has a different version.
 	 * 
 	 * @param errorMessage
 	 *            The message to display.
@@ -511,9 +506,9 @@ public class PHPLaunchUtilities {
 	}
 
 	/**
-	 * Display an error message to indicating an fatal error detected while
-	 * staring a debug session. A fatal error occurs when the remote debugger
-	 * does not exist or has a different version.
+	 * Display an error message to indicating an fatal error detected while staring
+	 * a debug session. A fatal error occurs when the remote debugger does not exist
+	 * or has a different version.
 	 * 
 	 * @param title
 	 *            The error message title.
@@ -575,8 +570,7 @@ public class PHPLaunchUtilities {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.dialogs.ProgressMonitorDialog#createDialogArea(
+		 * @see org.eclipse.jface.dialogs.ProgressMonitorDialog#createDialogArea(
 		 * org.eclipse.swt.widgets.Composite)
 		 */
 		@Override
@@ -589,8 +583,8 @@ public class PHPLaunchUtilities {
 	}
 
 	/**
-	 * Opens the launch configuration dialog on the given launch configuration
-	 * in the given mode.
+	 * Opens the launch configuration dialog on the given launch configuration in
+	 * the given mode.
 	 * 
 	 * @param configuration
 	 *            An {@link ILaunchConfiguration}
@@ -633,11 +627,11 @@ public class PHPLaunchUtilities {
 
 	/**
 	 * Returns an array of system environment attributes from the given launch
-	 * configuration. If empty, then the current native environment attributes
-	 * will be returned. From this we append any additional environment
-	 * variables we might want to add. Note: Additional environments may
-	 * override the native environment attributes, but disregarded when an
-	 * equivalent launch configuration attribute is set for the given launch.
+	 * configuration. If empty, then the current native environment attributes will
+	 * be returned. From this we append any additional environment variables we
+	 * might want to add. Note: Additional environments may override the native
+	 * environment attributes, but disregarded when an equivalent launch
+	 * configuration attribute is set for the given launch.
 	 * 
 	 * @param configuration
 	 *            the launch configuration
@@ -681,8 +675,8 @@ public class PHPLaunchUtilities {
 	}
 
 	/*
-	 * Returns a map of Strings parsed from a given array of attributes in a
-	 * form of 'key=value'.
+	 * Returns a map of Strings parsed from a given array of attributes in a form of
+	 * 'key=value'.
 	 */
 	public static Map<String, String> asAttributesMap(String[] attributesArray) {
 		Map<String, String> map = new HashMap<>();
@@ -948,16 +942,15 @@ public class PHPLaunchUtilities {
 	}
 
 	/**
-	 * Creates and returns a command line invocation string for the execution of
-	 * the PHP script.
+	 * Creates and returns a command line invocation string for the execution of the
+	 * PHP script.
 	 * 
 	 * @param configuration
 	 *            Launch configuration
 	 * @param phpExe
 	 *            PHP Executable path
 	 * @param phpConfigDir
-	 *            PHP configuration file location (directory where php.ini
-	 *            resides)
+	 *            PHP configuration file location (directory where php.ini resides)
 	 * @param scriptPath
 	 *            Script path
 	 * @param phpIniLocation
@@ -1053,8 +1046,8 @@ public class PHPLaunchUtilities {
 	 * <code>null</code> if there is no any.
 	 * 
 	 * @param target
-	 * @return project that is related to given debug target or
-	 *         <code>null</code> if there is no any
+	 * @return project that is related to given debug target or <code>null</code> if
+	 *         there is no any
 	 */
 	public static IProject getProject(IDebugTarget target) {
 		ILaunch launch = target.getLaunch();
@@ -1136,8 +1129,8 @@ public class PHPLaunchUtilities {
 	}
 
 	/**
-	 * Generates debug query from parameters for the GET method. This method
-	 * encodes debug parameters.
+	 * Generates debug query from parameters for the GET method. This method encodes
+	 * debug parameters.
 	 * 
 	 * @param launch
 	 * @return
@@ -1169,13 +1162,13 @@ public class PHPLaunchUtilities {
 	/**
 	 * Returns a SSHTunnel instance in case defined in the given launch
 	 * configuration. The returned SSHTunnel may be null in case the given
-	 * configuration is not defined to use one. Also, the returned instance
-	 * might be shared between other launches as well, and might already be in a
-	 * connected state.
+	 * configuration is not defined to use one. Also, the returned instance might be
+	 * shared between other launches as well, and might already be in a connected
+	 * state.
 	 * 
 	 * @param configuration
-	 * @return An SSHTunnel instance; Null, in case the configuration does not
-	 *         need one.
+	 * @return An SSHTunnel instance; Null, in case the configuration does not need
+	 *         one.
 	 */
 	public static SSHTunnel getSSHTunnel(ILaunchConfiguration configuration) {
 		try {
@@ -1198,8 +1191,8 @@ public class PHPLaunchUtilities {
 	}
 
 	/**
-	 * Returns the port that is associated to the debugger that is involved in
-	 * the given launch configuration.
+	 * Returns the port that is associated to the debugger that is involved in the
+	 * given launch configuration.
 	 * 
 	 * @return The port in use. -1, in case of an error.
 	 */
@@ -1235,9 +1228,8 @@ public class PHPLaunchUtilities {
 	}
 
 	/**
-	 * Returns the host that is associated with the given launch configuration.
-	 * The returned host can be null in case of an error or a missing host
-	 * setting.
+	 * Returns the host that is associated with the given launch configuration. The
+	 * returned host can be null in case of an error or a missing host setting.
 	 * 
 	 * @return The host address, or null.
 	 */
@@ -1257,8 +1249,8 @@ public class PHPLaunchUtilities {
 	}
 
 	/**
-	 * Returns the secure storage node for the tunnel connections that are set
-	 * on the given host.
+	 * Returns the secure storage node for the tunnel connections that are set on
+	 * the given host.
 	 * 
 	 * @param host
 	 * 
@@ -1307,8 +1299,8 @@ public class PHPLaunchUtilities {
 	}
 
 	/**
-	 * Checks if there is any running debug daemon available for given debugger
-	 * type and port number.
+	 * Checks if there is any running debug daemon available for given debugger type
+	 * and port number.
 	 * 
 	 * @param port
 	 * @param debuggerId
@@ -1324,8 +1316,8 @@ public class PHPLaunchUtilities {
 	 * 
 	 * @param launchConfiguration
 	 * @param launchConfigurationType
-	 * @return <code>true</code> if given launch configurations is of provided
-	 *         type, <code>false</code> otherwise
+	 * @return <code>true</code> if given launch configurations is of provided type,
+	 *         <code>false</code> otherwise
 	 */
 	public static boolean isLaunchConfigurationTypeOf(ILaunchConfiguration launchConfiguration,
 			String launchConfigurationType) {

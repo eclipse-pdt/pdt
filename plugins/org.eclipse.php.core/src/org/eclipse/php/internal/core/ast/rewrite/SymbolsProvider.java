@@ -515,12 +515,12 @@ public class SymbolsProvider {
 			org.eclipse.php.internal.core.ast.scanner.php5.ParserConstants.T_ENDSWITCH);
 
 	/**
-	 * Returns a {@link Symbol} that holds a sym id that is computed by
-	 * identifying the correct id for the given php version. The given symID
-	 * should be one of this class ID constants, and the PHP version String
-	 * should be one of the {@link AST} defined PHP constants. The returned
-	 * Symbol will always be a non-null Symbol. In case the Symbol was not
-	 * recognized, an {@link SymbolsProvider#ERROR_SYMBOL} will be returned.
+	 * Returns a {@link Symbol} that holds a sym id that is computed by identifying
+	 * the correct id for the given php version. The given symID should be one of
+	 * this class ID constants, and the PHP version String should be one of the
+	 * {@link AST} defined PHP constants. The returned Symbol will always be a
+	 * non-null Symbol. In case the Symbol was not recognized, an
+	 * {@link SymbolsProvider#ERROR_SYMBOL} will be returned.
 	 * 
 	 * @param symID
 	 *            Symbol ID - One of this class constants.

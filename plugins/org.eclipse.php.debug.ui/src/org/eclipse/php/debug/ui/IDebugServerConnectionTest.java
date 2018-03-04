@@ -25,14 +25,13 @@ import org.eclipse.swt.widgets.Shell;
  */
 public interface IDebugServerConnectionTest {
 	/**
-	 * Performs a connection test on a Debug Server. Implementors should handle
-	 * and display messages using the received shell object.
+	 * Performs a connection test on a Debug Server. Implementors should handle and
+	 * display messages using the received shell object.
 	 * 
 	 * @param server
 	 *            - The Server object of the debug server
 	 * @param shell
-	 *            - The given shell in order to display result messages to the
-	 *            user
+	 *            - The given shell in order to display result messages to the user
 	 */
 	public void testConnection(Server server, Shell shell);
 }

@@ -50,8 +50,7 @@ public class RenameFileWizard extends RenameRefactoringWizard {
 
 			@Override
 			protected void addAdditionalOptions(Composite composite, RowLayouter layouter) {
-				final IReferenceUpdating refactoring = getRefactoring()
-						.getAdapter(IReferenceUpdating.class);
+				final IReferenceUpdating refactoring = getRefactoring().getAdapter(IReferenceUpdating.class);
 				String title = PHPRefactoringUIMessages.getString("RenameFileWizard.1"); //$NON-NLS-1$
 				boolean defaultValue = getBooleanSetting(UPDATE_REFERENCES, refactoring.getUpdateReferences());
 				fUpdateReferences = createCheckbox(composite, title, defaultValue, layouter);

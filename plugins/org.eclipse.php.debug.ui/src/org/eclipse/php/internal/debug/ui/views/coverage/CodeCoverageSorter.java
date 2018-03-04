@@ -16,7 +16,7 @@ import org.eclipse.dltk.ui.ModelElementSorter;
  * Code coverage elements sorter.
  */
 public class CodeCoverageSorter extends ModelElementSorter {
-	
+
 	// Nothing dedicated yet, use default model elements sorter.
 
 }

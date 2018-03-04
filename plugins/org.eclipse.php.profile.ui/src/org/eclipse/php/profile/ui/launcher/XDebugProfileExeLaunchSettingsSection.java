@@ -20,8 +20,7 @@ import org.eclipse.php.profile.ui.launcher.AbstractPHPLaunchConfigurationProfile
  * 
  * @author Bartlomiej Laczkowski
  */
-public class XDebugProfileExeLaunchSettingsSection
-		extends AbstractProfileExeLaunchSettingsSection {
+public class XDebugProfileExeLaunchSettingsSection extends AbstractProfileExeLaunchSettingsSection {
 
 	/*
 	 * (non-Javadoc)

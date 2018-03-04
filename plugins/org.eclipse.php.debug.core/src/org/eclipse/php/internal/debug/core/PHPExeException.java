@@ -32,8 +32,7 @@ public class PHPExeException extends Exception {
 	}
 
 	/**
-	 * Constructs a PHPExeException with the specified detail string and
-	 * throwable.
+	 * Constructs a PHPExeException with the specified detail string and throwable.
 	 * 
 	 * @param message
 	 * @param throwable

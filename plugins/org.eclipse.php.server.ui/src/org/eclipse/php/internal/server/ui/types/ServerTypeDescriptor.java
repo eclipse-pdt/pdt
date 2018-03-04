@@ -64,8 +64,7 @@ public class ServerTypeDescriptor implements IServerTypeDescriptor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.server.ui.types.IServerTypeDescriptor#getId()
+	 * @see org.eclipse.php.internal.server.ui.types.IServerTypeDescriptor#getId()
 	 */
 	@Override
 	public String getId() {
@@ -86,10 +85,8 @@ public class ServerTypeDescriptor implements IServerTypeDescriptor {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.server.ui.types.IServerTypeDescriptor#getImage
-	 * (org
-	 * .eclipse.php.internal.server.ui.types.IServerTypeDescriptor.ImageType)
+	 * @see org.eclipse.php.internal.server.ui.types.IServerTypeDescriptor#getImage
+	 * (org .eclipse.php.internal.server.ui.types.IServerTypeDescriptor.ImageType)
 	 */
 	@Override
 	public Image getImage(ImageType type) {
@@ -101,8 +98,7 @@ public class ServerTypeDescriptor implements IServerTypeDescriptor {
 	 * 
 	 * @see org.eclipse.php.internal.server.ui.types.IServerTypeDescriptor#
 	 * getImageDescriptor
-	 * (org.eclipse.php.internal.server.ui.types.IServerTypeDescriptor
-	 * .ImageType)
+	 * (org.eclipse.php.internal.server.ui.types.IServerTypeDescriptor .ImageType)
 	 */
 	@Override
 	public ImageDescriptor getImageDescriptor(ImageType type) {

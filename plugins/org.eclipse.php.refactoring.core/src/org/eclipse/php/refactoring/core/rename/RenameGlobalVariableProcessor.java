@@ -131,11 +131,9 @@ public class RenameGlobalVariableProcessor extends AbstractRenameProcessor<IFile
 
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(project, getSearchFlags(false));
 
-		SearchPattern pattern = SearchPattern.createPattern(
-				"$" //$NON-NLS-1$
-						+ getCurrentElementName(),
-				IDLTKSearchConstants.FIELD, IDLTKSearchConstants.ALL_OCCURRENCES, SearchPattern.R_ERASURE_MATCH,
-				PHPLanguageToolkit.getDefault());
+		SearchPattern pattern = SearchPattern.createPattern("$" //$NON-NLS-1$
+				+ getCurrentElementName(), IDLTKSearchConstants.FIELD, IDLTKSearchConstants.ALL_OCCURRENCES,
+				SearchPattern.R_ERASURE_MATCH, PHPLanguageToolkit.getDefault());
 
 		SearchEngine engine = new SearchEngine();
 		try {

@@ -159,8 +159,7 @@ public class PHPSourceViewerInformationControl
 	/**
 	 * Creates a default information control with the given shell as parent. The
 	 * given information presenter is used to process the information to be
-	 * displayed. The given styles are applied to the created styled text
-	 * widget.
+	 * displayed. The given styles are applied to the created styled text widget.
 	 * 
 	 * @param parent
 	 *            the parent shell
@@ -176,8 +175,7 @@ public class PHPSourceViewerInformationControl
 	/**
 	 * Creates a default information control with the given shell as parent. The
 	 * given information presenter is used to process the information to be
-	 * displayed. The given styles are applied to the created styled text
-	 * widget.
+	 * displayed. The given styles are applied to the created styled text widget.
 	 * 
 	 * @param parent
 	 *            the parent shell
@@ -279,8 +277,7 @@ public class PHPSourceViewerInformationControl
 	/**
 	 * Creates a default information control with the given shell as parent. The
 	 * given information presenter is used to process the information to be
-	 * displayed. The given styles are applied to the created styled text
-	 * widget.
+	 * displayed. The given styles are applied to the created styled text widget.
 	 * 
 	 * @param parent
 	 *            the parent shell
@@ -294,8 +291,7 @@ public class PHPSourceViewerInformationControl
 	/**
 	 * Creates a default information control with the given shell as parent. The
 	 * given information presenter is used to process the information to be
-	 * displayed. The given styles are applied to the created styled text
-	 * widget.
+	 * displayed. The given styles are applied to the created styled text widget.
 	 * 
 	 * @param parent
 	 *            the parent shell
@@ -312,8 +308,8 @@ public class PHPSourceViewerInformationControl
 
 	/**
 	 * Creates a default information control with the given shell as parent. No
-	 * information presenter is used to process the information to be displayed.
-	 * No additional styles are applied to the styled text widget.
+	 * information presenter is used to process the information to be displayed. No
+	 * additional styles are applied to the styled text widget.
 	 * 
 	 * @param parent
 	 *            the parent shell
@@ -324,8 +320,8 @@ public class PHPSourceViewerInformationControl
 
 	/**
 	 * Creates a default information control with the given shell as parent. No
-	 * information presenter is used to process the information to be displayed.
-	 * No additional styles are applied to the styled text widget.
+	 * information presenter is used to process the information to be displayed. No
+	 * additional styles are applied to the styled text widget.
 	 * 
 	 * @param parent
 	 *            the parent shell
@@ -350,8 +346,7 @@ public class PHPSourceViewerInformationControl
 	}
 
 	/*
-	 * @see
-	 * org.eclipse.jface.text.IInformationControlExtension2#setInput(java.lang
+	 * @see org.eclipse.jface.text.IInformationControlExtension2#setInput(java.lang
 	 * .Object)
 	 */
 	public void setInput(Object input) {

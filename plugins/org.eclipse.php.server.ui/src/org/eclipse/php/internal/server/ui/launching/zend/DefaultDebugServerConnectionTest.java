@@ -58,8 +58,7 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse
+		 * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse
 		 * .core.runtime.IProgressMonitor)
 		 */
 		@Override
@@ -103,9 +102,9 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 						return;
 					}
 					/*
-					 * The following condition test is due to immediate return,
-					 * but the client host that was sent is unavailable, i.e the
-					 * debugger will not return to 'Neon' version of debugger.
+					 * The following condition test is due to immediate return, but the client host
+					 * that was sent is unavailable, i.e the debugger will not return to 'Neon'
+					 * version of debugger.
 					 */
 					if (!checkTimeout(monitor)) {
 						break;
@@ -199,8 +198,8 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 				connection.setReadTimeout(DEFAULT_TIMEOUT);
 				inputStream = connection.getInputStream();
 				/*
-				 * this will fail when host not found and/or dummy.php not found
-				 * (2 different exceptions)
+				 * this will fail when host not found and/or dummy.php not found (2 different
+				 * exceptions)
 				 */
 			} finally {
 				if (inputStream != null) {
@@ -269,8 +268,7 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.debug.ui.IDebugServerConnectionTest#testConnection(org
+	 * @see org.eclipse.php.debug.ui.IDebugServerConnectionTest#testConnection(org
 	 * .eclipse.php.internal.server.core.Server, org.eclipse.swt.widgets.Shell)
 	 */
 	@Override
@@ -296,8 +294,7 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.php.internal.debug.core.zend.testConnection.
-	 * IDebugServerTestListener
-	 * #testEventReceived(org.eclipse.php.internal.debug.
+	 * IDebugServerTestListener #testEventReceived(org.eclipse.php.internal.debug.
 	 * core.zend.testConnection.DebugServerTestEvent)
 	 */
 	@Override

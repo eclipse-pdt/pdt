@@ -24,8 +24,7 @@ class ProfileSessionsLabelProvider extends LabelProvider {
 	private Image fProcessImage;
 
 	public ProfileSessionsLabelProvider() {
-		fProcessImage = ProfilerUIImages.
-				get(ProfilerUIImages.IMG_OBJ_PROCESS);
+		fProcessImage = ProfilerUIImages.get(ProfilerUIImages.IMG_OBJ_PROCESS);
 	}
 
 	@Override
@@ -40,10 +39,8 @@ class ProfileSessionsLabelProvider extends LabelProvider {
 	public String getText(Object element) {
 		if (element instanceof ProfilerDB) {
 			ProfilerDB db = (ProfilerDB) element;
-			return NLS
-					.bind(
-							PHPProfileUIMessages
-									.getString("ProfilingMonitorLabelProvider.0"), db.getGlobalData().getURI(), db.getProfileDate()); //$NON-NLS-1$
+			return NLS.bind(PHPProfileUIMessages.getString("ProfilingMonitorLabelProvider.0"), //$NON-NLS-1$
+					db.getGlobalData().getURI(), db.getProfileDate());
 		}
 		return super.getText(element);
 	}

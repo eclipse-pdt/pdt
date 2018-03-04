@@ -39,8 +39,7 @@ public class PHPVariable extends PHPDebugElement implements IVariable, IPHPDataT
 	private String fName = null;
 
 	/**
-	 * Constructs a variable contained in the given stack frame with the given
-	 * name.
+	 * Constructs a variable contained in the given stack frame with the given name.
 	 * 
 	 */
 	public PHPVariable(PHPDebugTarget target, Expression expression) {
@@ -110,8 +109,7 @@ public class PHPVariable extends PHPDebugElement implements IVariable, IPHPDataT
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.debug.core.model.IValueModification#setValue(java.lang.String
-	 * )
+	 * org.eclipse.debug.core.model.IValueModification#setValue(java.lang.String )
 	 */
 	@Override
 	public void setValue(String expression) throws DebugException {
@@ -134,8 +132,7 @@ public class PHPVariable extends PHPDebugElement implements IVariable, IPHPDataT
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.model.IValueModification#setValue(org.eclipse.
+	 * @see org.eclipse.debug.core.model.IValueModification#setValue(org.eclipse.
 	 * debug.core.model.IValue)
 	 */
 	@Override
@@ -146,8 +143,7 @@ public class PHPVariable extends PHPDebugElement implements IVariable, IPHPDataT
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.debug.core.model.IValueModification#supportsValueModification
-	 * ()
+	 * org.eclipse.debug.core.model.IValueModification#supportsValueModification ()
 	 */
 	@Override
 	public boolean supportsValueModification() {
@@ -161,8 +157,7 @@ public class PHPVariable extends PHPDebugElement implements IVariable, IPHPDataT
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.model.IValueModification#verifyValue(java.lang
+	 * @see org.eclipse.debug.core.model.IValueModification#verifyValue(java.lang
 	 * .String)
 	 */
 	@Override
@@ -192,8 +187,7 @@ public class PHPVariable extends PHPDebugElement implements IVariable, IPHPDataT
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.debug.core.model.IValueModification#verifyValue(org.eclipse
+	 * @see org.eclipse.debug.core.model.IValueModification#verifyValue(org.eclipse
 	 * .debug.core.model.IValue)
 	 */
 	@Override

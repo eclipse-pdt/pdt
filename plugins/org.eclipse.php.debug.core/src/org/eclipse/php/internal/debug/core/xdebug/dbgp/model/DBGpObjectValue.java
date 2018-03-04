@@ -53,8 +53,7 @@ public class DBGpObjectValue extends AbstractDBGpContainerValue {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
+	 * @see org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
 	 * createValueString(org.eclipse.php.internal.debug.core.xdebug.dbgp.model.
 	 * AbstractDBGpValue.DBGpValueData)
 	 */
@@ -68,8 +67,7 @@ public class DBGpObjectValue extends AbstractDBGpContainerValue {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
+	 * @see org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
 	 * supportsValueModification()
 	 */
 	@Override
@@ -80,8 +78,7 @@ public class DBGpObjectValue extends AbstractDBGpContainerValue {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
+	 * @see org.eclipse.php.internal.debug.core.xdebug.dbgp.model.AbstractDBGpValue#
 	 * verifyValue(java.lang.String)
 	 */
 	@Override

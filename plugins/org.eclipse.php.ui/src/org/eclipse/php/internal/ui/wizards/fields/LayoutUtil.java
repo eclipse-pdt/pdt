@@ -27,8 +27,7 @@ public class LayoutUtil {
 	 * Creates a composite and fills in the given editors.
 	 * 
 	 * @param labelOnTop
-	 *            Defines if the label of all fields should be on top of the
-	 *            fields
+	 *            Defines if the label of all fields should be on top of the fields
 	 */
 	public static void doDefaultLayout(final Composite parent, final DialogField[] editors, final boolean labelOnTop) {
 		doDefaultLayout(parent, editors, labelOnTop, 0, 0);
@@ -38,8 +37,7 @@ public class LayoutUtil {
 	 * Creates a composite and fills in the given editors.
 	 * 
 	 * @param labelOnTop
-	 *            Defines if the label of all fields should be on top of the
-	 *            fields
+	 *            Defines if the label of all fields should be on top of the fields
 	 * @param marginWidth
 	 *            The margin width to be used by the composite
 	 * @param marginHeight
@@ -107,8 +105,8 @@ public class LayoutUtil {
 	}
 
 	/**
-	 * Sets the horizontal grabbing of a control to true. Assumes that GridData
-	 * is used.
+	 * Sets the horizontal grabbing of a control to true. Assumes that GridData is
+	 * used.
 	 */
 	public static void setHorizontalGrabbing(final Control control) {
 		final Object ld = control.getLayoutData();

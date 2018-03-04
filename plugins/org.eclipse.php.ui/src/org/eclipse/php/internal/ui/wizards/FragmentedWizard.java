@@ -72,8 +72,7 @@ public class FragmentedWizard implements IWizard {
 	}
 
 	/**
-	 * Create a new TaskWizard with the given title, root fragment, and task
-	 * model.
+	 * Create a new TaskWizard with the given title, root fragment, and task model.
 	 * 
 	 * @param title
 	 *            a title
@@ -527,8 +526,7 @@ public class FragmentedWizard implements IWizard {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.wizard.IWizard#getNextPage(org.eclipse.jface.wizard
+	 * @see org.eclipse.jface.wizard.IWizard#getNextPage(org.eclipse.jface.wizard
 	 * .IWizardPage)
 	 */
 	@Override
@@ -663,8 +661,7 @@ public class FragmentedWizard implements IWizard {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.wizard.IWizard#setContainer(org.eclipse.jface.wizard
+	 * @see org.eclipse.jface.wizard.IWizard#setContainer(org.eclipse.jface.wizard
 	 * .IWizardContainer)
 	 */
 	@Override

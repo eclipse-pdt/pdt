@@ -366,8 +366,7 @@ public class MapLocalFileDialog extends TrayDialog {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.dialogs.Dialog#createContents(org.eclipse.swt.widgets.
+	 * @see org.eclipse.jface.dialogs.Dialog#createContents(org.eclipse.swt.widgets.
 	 * Composite)
 	 */
 	@Override

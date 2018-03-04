@@ -139,8 +139,8 @@ public class PHPDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 	}
 
 	/**
-	 * When the user double click on a variable in a comment, include the
-	 * preceding $ sign in the selection (bug#201079)
+	 * When the user double click on a variable in a comment, include the preceding
+	 * $ sign in the selection (bug#201079)
 	 * 
 	 * @param textViewer
 	 * @param structuredTextViewer

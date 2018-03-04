@@ -11,10 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.astview.views;
 
-
 public abstract class ExceptionAttribute extends ASTAttribute {
 
-	protected Throwable fException= null;
+	protected Throwable fException = null;
 
 	public Throwable getException() {
 		return fException;

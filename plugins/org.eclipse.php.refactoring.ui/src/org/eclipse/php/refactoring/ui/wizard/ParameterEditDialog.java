@@ -44,8 +44,8 @@ public class ParameterEditDialog extends StatusDialog {
 	 * @param canEditType
 	 * @param canEditDefault
 	 * @param context
-	 *            the <code>IPackageFragment</code> for type ContentAssist. Can
-	 *            be <code>null</code> if <code>canEditType</code> is
+	 *            the <code>IPackageFragment</code> for type ContentAssist. Can be
+	 *            <code>null</code> if <code>canEditType</code> is
 	 *            <code>false</code>.
 	 */
 	public ParameterEditDialog(Shell parentShell, ParameterInfo parameter, boolean canEditDefault,

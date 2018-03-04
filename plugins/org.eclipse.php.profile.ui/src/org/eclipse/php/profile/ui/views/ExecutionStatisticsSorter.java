@@ -23,8 +23,7 @@ public class ExecutionStatisticsSorter extends AbstractTableSorter {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers
+	 * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers
 	 * .Viewer, java.lang.Object, java.lang.Object)
 	 */
 	@Override
@@ -34,12 +33,10 @@ public class ExecutionStatisticsSorter extends AbstractTableSorter {
 		Object d1 = i1.getData();
 		Object d2 = i2.getData();
 
-		boolean showAsPercentage = ProfilerUiPlugin.getDefault()
-				.getPreferenceStore()
+		boolean showAsPercentage = ProfilerUiPlugin.getDefault().getPreferenceStore()
 				.getBoolean(PreferenceKeys.EXECUTION_VIEW_SHOW_AS_PERCENTAGE);
 
-		if (d1 instanceof ProfilerFunctionData
-				&& d2 instanceof ProfilerFunctionData) {
+		if (d1 instanceof ProfilerFunctionData && d2 instanceof ProfilerFunctionData) {
 			ProfilerFunctionData f1 = (ProfilerFunctionData) d1;
 			ProfilerFunctionData f2 = (ProfilerFunctionData) d2;
 			switch (getColumn()) {
@@ -49,13 +46,11 @@ public class ExecutionStatisticsSorter extends AbstractTableSorter {
 				double averageOwnTime1 = f1.getOwnTime();
 				double averageOwnTime2 = f2.getOwnTime();
 				if (f1.getCallsCount() > 0) {
-					averageOwnTime1 = f1.getOwnTime() / f1.getCallsCount()
-							/ f1.getTotalTime();
+					averageOwnTime1 = f1.getOwnTime() / f1.getCallsCount() / f1.getTotalTime();
 				}
 
 				if (f2.getCallsCount() > 0) {
-					averageOwnTime2 = f2.getOwnTime() / f2.getCallsCount()
-							/ f2.getTotalTime();
+					averageOwnTime2 = f2.getOwnTime() / f2.getCallsCount() / f2.getTotalTime();
 				}
 				return compare(averageOwnTime1, averageOwnTime2);
 			case 3:
