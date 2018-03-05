@@ -22,6 +22,7 @@ import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.evaluation.types.SimpleType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.evaluators.PHPTraitType;
@@ -440,6 +441,9 @@ public class TypeBinding implements ITypeBinding {
 
 						String typeName = PHPModelUtils.extractElementName(superTypeName);
 						String nameSpace = PHPModelUtils.extractNameSpaceName(superTypeName);
+						if (nameSpace == null) {
+							nameSpace = PHPCoreConstants.GLOBAL_NAMESPACE;
+						}
 						Collection<IType> types = resolver.getModelAccessCache().getClassesOrInterfaces(sourceModule,
 								typeName, nameSpace, null);
 						if (types != null) {
