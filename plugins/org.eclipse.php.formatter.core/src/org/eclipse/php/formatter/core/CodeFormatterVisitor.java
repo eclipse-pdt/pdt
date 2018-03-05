@@ -1097,6 +1097,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 				handleCharsWithoutComments(start, comment.sourceStart() + offset);
 				doNotIndent = false;
+				start = comment.sourceEnd() + offset;
 				resetEnableStatus(
 						document.get(comment.sourceStart() + offset, comment.sourceEnd() - comment.sourceStart()));
 
@@ -1114,7 +1115,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 					commentContent = document.get(comment.sourceStart() + offset,
 							comment.sourceEnd() - comment.sourceStart());
-					start = comment.sourceEnd() + offset;
 					boolean needInsertNewLine = commentContent.endsWith(lineSeparator);
 					if (!needInsertNewLine) {
 						String[] delimiters = document.getLegalLineDelimiters();
@@ -1173,7 +1173,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				} else {
 					commentContent = document.get(comment.sourceStart() + offset,
 							comment.sourceEnd() - comment.sourceStart());
-					start = comment.sourceEnd() + offset;
 					boolean needInsertNewLine = commentContent.endsWith(lineSeparator);
 					if (!needInsertNewLine) {
 						String[] delimiters = document.getLegalLineDelimiters();
