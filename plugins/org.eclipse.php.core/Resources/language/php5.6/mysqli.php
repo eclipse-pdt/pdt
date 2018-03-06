@@ -427,7 +427,7 @@ class mysqli  {
 	 * mysqli_poll is then used to get results from such
 	 * queries.
 	 * </p>
-	 * @return mysqli_result|boolean For successful SELECT, SHOW, DESCRIBE or
+	 * @return mysqli_result|boolean false on failure. For successful SELECT, SHOW, DESCRIBE or
 	 * EXPLAIN queries mysqli_query will return
 	 * a mysqli_result object. For other successful queries mysqli_query will
 	 * return true.
