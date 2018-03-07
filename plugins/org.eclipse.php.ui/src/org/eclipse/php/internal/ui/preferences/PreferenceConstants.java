@@ -134,7 +134,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
 	 */
-	public final static String EDITOR_CLOSE_BRACES = "closeBraces"; //$NON-NLS-1$
+	public static final String EDITOR_CLOSE_BRACES = "closeBraces"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls whether the 'close brackets' feature is
@@ -143,7 +143,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
 	 */
-	public final static String EDITOR_CLOSE_BRACKETS = "closeBrackets"; //$NON-NLS-1$
+	public static final String EDITOR_CLOSE_BRACKETS = "closeBrackets"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls whether the 'close strings' feature is
@@ -152,7 +152,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
 	 */
-	public final static String EDITOR_CLOSE_STRINGS = "closeStrings"; //$NON-NLS-1$
+	public static final String EDITOR_CLOSE_STRINGS = "closeStrings"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls whether the 'close phpdoc and comments'
@@ -161,7 +161,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
 	 */
-	public final static String EDITOR_CLOSE_PHPDOCS_AND_COMMENTS = "closePhpDocsAndComments"; //$NON-NLS-1$
+	public static final String EDITOR_CLOSE_PHPDOCS_AND_COMMENTS = "closePhpDocsAndComments"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls whether the 'close phpdoc and comments'
@@ -170,7 +170,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
 	 */
-	public final static String EDITOR_ADD_PHPDOC_TAGS = "autoAddPhpDocTags"; //$NON-NLS-1$
+	public static final String EDITOR_ADD_PHPDOC_TAGS = "autoAddPhpDocTags"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls whether the 'close php close tag' feature is
@@ -179,7 +179,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
 	 */
-	public final static String EDITOR_ADD_PHPCLOSE_TAGS = "autoAddPhpCloseTags"; //$NON-NLS-1$
+	public static final String EDITOR_ADD_PHPCLOSE_TAGS = "autoAddPhpCloseTags"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls whether the 'Add "php" after PHP start tag
@@ -188,7 +188,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
 	 */
-	public final static String EDITOR_ADD_PHP_FOR_PHPSTART_TAGS = "autoAddPhpForPhpStartTags"; //$NON-NLS-1$
+	public static final String EDITOR_ADD_PHP_FOR_PHPSTART_TAGS = "autoAddPhpForPhpStartTags"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that holds the color for the PHP comments
@@ -245,7 +245,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
 	 */
-	public final static String EDITOR_CORRECTION_INDICATION = "PHPEditorShowTemporaryProblem"; //$NON-NLS-1$
+	public static final String EDITOR_CORRECTION_INDICATION = "PHPEditorShowTemporaryProblem"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that holds the color for the heredoc
@@ -353,7 +353,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
 	 */
-	public final static String EDITOR_SYNC_OUTLINE_ON_CURSOR_MOVE = "PHPEditorSyncOutlineOnCursorMove"; //$NON-NLS-1$
+	public static final String EDITOR_SYNC_OUTLINE_ON_CURSOR_MOVE = "PHPEditorSyncOutlineOnCursorMove"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that holds the color for the PHP variable
@@ -642,7 +642,7 @@ public class PreferenceConstants {
 	 * </p>
 	 * 
 	 */
-	public final static String FORMATTER_COMMENT_CLEARBLANKLINES = "commentClearBlankLines"; //$NON-NLS-1$
+	public static final String FORMATTER_COMMENT_CLEARBLANKLINES = "commentClearBlankLines"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls whether HTML tags are formatted.
@@ -651,7 +651,7 @@ public class PreferenceConstants {
 	 * </p>
 	 * 
 	 */
-	public final static String FORMATTER_COMMENT_FORMATHTML = "commentFormatHtml"; //$NON-NLS-1$
+	public static final String FORMATTER_COMMENT_FORMATHTML = "commentFormatHtml"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls the line length of comments.
@@ -661,7 +661,7 @@ public class PreferenceConstants {
 	 * </p>
 	 * 
 	 */
-	public final static String FORMATTER_COMMENT_LINELENGTH = "commentLineLength"; //$NON-NLS-1$
+	public static final String FORMATTER_COMMENT_LINELENGTH = "commentLineLength"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls which profile is used by the code formatter.
@@ -855,7 +855,7 @@ public class PreferenceConstants {
 	 * @see org.eclipse.jface.resource.StringConverter
 	 * @see org.eclipse.jface.preference.PreferenceConverter
 	 */
-	public final static String CODEASSIST_PARAMETERS_BACKGROUND = "contentAssistParametersBackground"; //$NON-NLS-1$
+	public static final String CODEASSIST_PARAMETERS_BACKGROUND = "contentAssistParametersBackground"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that holds the foreground color used in the code assist
@@ -868,7 +868,7 @@ public class PreferenceConstants {
 	 * @see org.eclipse.jface.resource.StringConverter
 	 * @see org.eclipse.jface.preference.PreferenceConverter
 	 */
-	public final static String CODEASSIST_PARAMETERS_FOREGROUND = "contentAssistParametersForeground"; //$NON-NLS-1$
+	public static final String CODEASSIST_PARAMETERS_FOREGROUND = "contentAssistParametersForeground"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that holds the background color used in the code assist
@@ -881,7 +881,7 @@ public class PreferenceConstants {
 	 * @see org.eclipse.jface.resource.StringConverter
 	 * @see org.eclipse.jface.preference.PreferenceConverter
 	 */
-	public final static String CODEASSIST_PROPOSALS_BACKGROUND = "contentAssistProposalsBackground"; //$NON-NLS-1$
+	public static final String CODEASSIST_PROPOSALS_BACKGROUND = "contentAssistProposalsBackground"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that holds the foreground color used in the code assist
@@ -894,7 +894,7 @@ public class PreferenceConstants {
 	 * @see org.eclipse.jface.resource.StringConverter
 	 * @see org.eclipse.jface.preference.PreferenceConverter
 	 */
-	public final static String CODEASSIST_PROPOSALS_FOREGROUND = "contentAssistProposalsForeground"; //$NON-NLS-1$
+	public static final String CODEASSIST_PROPOSALS_FOREGROUND = "contentAssistProposalsForeground"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that holds the background color used in the code assist
@@ -907,7 +907,7 @@ public class PreferenceConstants {
 	 * @see org.eclipse.jface.resource.StringConverter
 	 * @see org.eclipse.jface.preference.PreferenceConverter
 	 */
-	public final static String CODEASSIST_REPLACEMENT_BACKGROUND = "contentAssistCompletionReplacementBackground"; //$NON-NLS-1$
+	public static final String CODEASSIST_REPLACEMENT_BACKGROUND = "contentAssistCompletionReplacementBackground"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that holds the foreground color used in the code assist
@@ -920,7 +920,7 @@ public class PreferenceConstants {
 	 * @see org.eclipse.jface.resource.StringConverter
 	 * @see org.eclipse.jface.preference.PreferenceConverter
 	 */
-	public final static String CODEASSIST_REPLACEMENT_FOREGROUND = "contentAssistCompletionReplacementForeground"; //$NON-NLS-1$
+	public static final String CODEASSIST_REPLACEMENT_FOREGROUND = "contentAssistCompletionReplacementForeground"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls whether new projects are generated using
@@ -999,20 +999,20 @@ public class PreferenceConstants {
 	 * 
 	 * @since 2.1
 	 */
-	public final static String EDITOR_SMART_PASTE = "smartPaste"; //$NON-NLS-1$
+	public static final String EDITOR_SMART_PASTE = "smartPaste"; //$NON-NLS-1$
 
 	/**
 	 * @since 5.3
 	 */
-	public final static String PROBLEM_CONFIGURATION_EXTENSION_POINT = "org.eclipse.php.ui.problemConfiguration"; //$NON-NLS-1$
+	public static final String PROBLEM_CONFIGURATION_EXTENSION_POINT = "org.eclipse.php.ui.problemConfiguration"; //$NON-NLS-1$
 
-	public final static String PROBLEM_CONFIGURATION_CATEGORY = "category"; //$NON-NLS-1$
-	public final static String PROBLEM_CONFIGURATION_PROBLEM = "problem"; //$NON-NLS-1$
-	public final static String PROBLEM_CONFIGURATION_IDENTIFIER = "identifier"; //$NON-NLS-1$
-	public final static String PROBLEM_CONFIGURATION_NAME = "name"; //$NON-NLS-1$
-	public final static String PROBLEM_CONFIGURATION_CLASS = "class"; //$NON-NLS-1$
-	public final static String PROBLEM_CONFIGURATION_ID = "id"; //$NON-NLS-1$
-	public final static String PROBLEM_CONFIGURATION_PRIORITY = "priority"; //$NON-NLS-1$
+	public static final String PROBLEM_CONFIGURATION_CATEGORY = "category"; //$NON-NLS-1$
+	public static final String PROBLEM_CONFIGURATION_PROBLEM = "problem"; //$NON-NLS-1$
+	public static final String PROBLEM_CONFIGURATION_IDENTIFIER = "identifier"; //$NON-NLS-1$
+	public static final String PROBLEM_CONFIGURATION_NAME = "name"; //$NON-NLS-1$
+	public static final String PROBLEM_CONFIGURATION_CLASS = "class"; //$NON-NLS-1$
+	public static final String PROBLEM_CONFIGURATION_ID = "id"; //$NON-NLS-1$
+	public static final String PROBLEM_CONFIGURATION_PRIORITY = "priority"; //$NON-NLS-1$
 
 	public static IPreferenceStore getPreferenceStore() {
 		return PHPUiPlugin.getDefault().getPreferenceStore();

@@ -26,182 +26,182 @@ public class ASTNodeLabels {
 	/**
 	 * Method names contain parameter types. e.g. <code>foo(int)</code>
 	 */
-	public final static int M_PARAMETER_TYPES = 1 << 0;
+	public static final int M_PARAMETER_TYPES = 1 << 0;
 
 	/**
 	 * Method names contain parameter names. e.g. <code>foo(index)</code>
 	 */
-	public final static int M_PARAMETER_NAMES = 1 << 1;
+	public static final int M_PARAMETER_NAMES = 1 << 1;
 
 	/**
 	 * Method names contain return type (appended) e.g. <code>foo : int</code>
 	 */
-	public final static int M_APP_RETURNTYPE = 1 << 3;
+	public static final int M_APP_RETURNTYPE = 1 << 3;
 
 	/**
 	 * Method names contain return type (appended) e.g. <code>int foo</code>
 	 */
-	public final static int M_PRE_RETURNTYPE = 1 << 4;
+	public static final int M_PRE_RETURNTYPE = 1 << 4;
 
 	/**
 	 * Method names are fully qualified. e.g. <code>java.util.Vector.size</code>
 	 */
-	public final static int M_FULLY_QUALIFIED = 1 << 5;
+	public static final int M_FULLY_QUALIFIED = 1 << 5;
 
 	/**
 	 * Method names are post qualified. e.g. <code>size - java.util.Vector</code>
 	 */
-	public final static int M_POST_QUALIFIED = 1 << 6;
+	public static final int M_POST_QUALIFIED = 1 << 6;
 
 	/**
 	 * Type names are post qualified. e.g. <code>{ ... } - java.util.Map</code>
 	 */
-	public final static int I_POST_QUALIFIED = 1 << 8;
+	public static final int I_POST_QUALIFIED = 1 << 8;
 
 	/**
 	 * Field names contain the declared type (appended) e.g.
 	 * <code>fHello : int</code>
 	 */
-	public final static int F_APP_TYPE_SIGNATURE = 1 << 9;
+	public static final int F_APP_TYPE_SIGNATURE = 1 << 9;
 
 	/**
 	 * Field names contain the declared type (prepended) e.g.
 	 * <code>int fHello</code>
 	 */
-	public final static int F_PRE_TYPE_SIGNATURE = 1 << 10;
+	public static final int F_PRE_TYPE_SIGNATURE = 1 << 10;
 
 	/**
 	 * Fields names are fully qualified. e.g. <code>java.lang.System.out</code>
 	 */
-	public final static int F_FULLY_QUALIFIED = 1 << 11;
+	public static final int F_FULLY_QUALIFIED = 1 << 11;
 
 	/**
 	 * Fields names are post qualified. e.g. <code>out - java.lang.System</code>
 	 */
-	public final static int F_POST_QUALIFIED = 1 << 12;
+	public static final int F_POST_QUALIFIED = 1 << 12;
 
 	/**
 	 * Type names are fully qualified. e.g. <code>java.util.Map.MapEntry</code>
 	 */
-	public final static int T_FULLY_QUALIFIED = 1 << 13;
+	public static final int T_FULLY_QUALIFIED = 1 << 13;
 
 	/**
 	 * Type names are type container qualified. e.g. <code>Map.MapEntry</code>
 	 */
-	public final static int T_CONTAINER_QUALIFIED = 1 << 14;
+	public static final int T_CONTAINER_QUALIFIED = 1 << 14;
 
 	/**
 	 * Type names are post qualified. e.g. <code>MapEntry - java.util.Map</code>
 	 */
-	public final static int T_POST_QUALIFIED = 1 << 15;
+	public static final int T_POST_QUALIFIED = 1 << 15;
 
 	/**
 	 * Compilation unit names are fully qualified. e.g.
 	 * <code>java.util.Vector.java</code>
 	 */
-	public final static int CU_QUALIFIED = 1 << 16;
+	public static final int CU_QUALIFIED = 1 << 16;
 
 	/**
 	 * Compilation unit names are post qualified. e.g.
 	 * <code>Vector.java - java.util</code>
 	 */
-	public final static int CU_POST_QUALIFIED = 1 << 17;
+	public static final int CU_POST_QUALIFIED = 1 << 17;
 
 	/**
 	 * Folder names are qualified. e.g. <code>MyProject/src/java.util</code>
 	 */
-	public final static int P_QUALIFIED = 1 << 22;
+	public static final int P_QUALIFIED = 1 << 22;
 
 	/**
 	 * Folder names are post qualified. e.g. <code>java.util - MyProject/src</code>
 	 */
-	public final static int P_POST_QUALIFIED = 1 << 23;
+	public static final int P_POST_QUALIFIED = 1 << 23;
 
 	/**
 	 * Folder Roots contain variable name if from a variable.
 	 */
-	public final static int ROOT_VARIABLE = 1 << 24;
+	public static final int ROOT_VARIABLE = 1 << 24;
 
 	/**
 	 * Folder Roots contain the project name if not an archive (prepended). e.g.
 	 * <code>MyProject/src</code>
 	 */
-	public final static int ROOT_QUALIFIED = 1 << 25;
+	public static final int ROOT_QUALIFIED = 1 << 25;
 
 	/**
 	 * Folder Roots contain the project name if not an archive (appended). e.g.
 	 * <code>src - MyProject</code>
 	 */
-	public final static int ROOT_POST_QUALIFIED = 1 << 26;
+	public static final int ROOT_POST_QUALIFIED = 1 << 26;
 
 	/**
 	 * Add root path to all elements except Folder Roots and PHP projects.
 	 */
-	public final static int APPEND_ROOT_PATH = 1 << 27;
+	public static final int APPEND_ROOT_PATH = 1 << 27;
 
 	/**
 	 * Add root path to all elements except Folder Roots and PHP projects.
 	 */
-	public final static int PREPEND_ROOT_PATH = 1 << 28;
+	public static final int PREPEND_ROOT_PATH = 1 << 28;
 
 	/**
 	 * Folder names are compressed. e.g. <code>o*.e*.search</code>
 	 */
-	public final static int P_COMPRESSED = 1 << 29;
+	public static final int P_COMPRESSED = 1 << 29;
 
-	public final static int REFERENCED_ROOT_POST_QUALIFIED = 1 << 30;
-	public final static long T_TYPE_PARAMETERS = 1L << 21;
-	public final static long CF_POST_QUALIFIED = 1L << 28;
-	public final static long CF_QUALIFIED = 1L << 27;
-	public final static long I_FULLY_QUALIFIED = 1L << 10;
-	public final static long D_QUALIFIED = 1L << 24;
-	public final static long D_POST_QUALIFIED = 1L << 25;
+	public static final int REFERENCED_ROOT_POST_QUALIFIED = 1 << 30;
+	public static final long T_TYPE_PARAMETERS = 1L << 21;
+	public static final long CF_POST_QUALIFIED = 1L << 28;
+	public static final long CF_QUALIFIED = 1L << 27;
+	public static final long I_FULLY_QUALIFIED = 1L << 10;
+	public static final long D_QUALIFIED = 1L << 24;
+	public static final long D_POST_QUALIFIED = 1L << 25;
 
 	/**
 	 * Qualify all elements
 	 */
-	public final static int ALL_FULLY_QUALIFIED = F_FULLY_QUALIFIED | M_FULLY_QUALIFIED | T_FULLY_QUALIFIED
+	public static final int ALL_FULLY_QUALIFIED = F_FULLY_QUALIFIED | M_FULLY_QUALIFIED | T_FULLY_QUALIFIED
 			| CU_QUALIFIED | P_QUALIFIED | ROOT_QUALIFIED;
 
 	/**
 	 * Post qualify all elements
 	 */
-	public final static int ALL_POST_QUALIFIED = F_POST_QUALIFIED | M_POST_QUALIFIED | I_POST_QUALIFIED
+	public static final int ALL_POST_QUALIFIED = F_POST_QUALIFIED | M_POST_QUALIFIED | I_POST_QUALIFIED
 			| T_POST_QUALIFIED | CU_POST_QUALIFIED | P_POST_QUALIFIED | ROOT_POST_QUALIFIED;
 
 	/**
 	 * Default options (M_PARAMETER_TYPES enabled)
 	 */
-	public final static int ALL_DEFAULT = M_PARAMETER_TYPES;
+	public static final int ALL_DEFAULT = M_PARAMETER_TYPES;
 
 	/**
 	 * Default qualify options (All except Root and Folder)
 	 */
-	public final static int DEFAULT_QUALIFIED = F_FULLY_QUALIFIED | M_FULLY_QUALIFIED | T_FULLY_QUALIFIED
+	public static final int DEFAULT_QUALIFIED = F_FULLY_QUALIFIED | M_FULLY_QUALIFIED | T_FULLY_QUALIFIED
 			| CU_QUALIFIED;
 
 	/**
 	 * Default post qualify options (All except Root and Folder)
 	 */
-	public final static int DEFAULT_POST_QUALIFIED = F_POST_QUALIFIED | M_POST_QUALIFIED | I_POST_QUALIFIED
+	public static final int DEFAULT_POST_QUALIFIED = F_POST_QUALIFIED | M_POST_QUALIFIED | I_POST_QUALIFIED
 			| T_POST_QUALIFIED | CU_POST_QUALIFIED;
 
 	/**
 	 * User-readable string for separating post qualified names (e.g. " - ").
 	 */
-	public final static String CONCAT_STRING = " - "; //$NON-NLS-1$
+	public static final String CONCAT_STRING = " - "; //$NON-NLS-1$
 	/**
 	 * User-readable string for separating list items (e.g. ", ").
 	 */
-	public final static String COMMA_STRING = ", "; //$NON-NLS-1$
+	public static final String COMMA_STRING = ", "; //$NON-NLS-1$
 	/**
 	 * User-readable string for separating the return type (e.g. " : ").
 	 */
-	public final static String DECL_STRING = " :"; //$NON-NLS-1$
+	public static final String DECL_STRING = " :"; //$NON-NLS-1$
 	/**
 	 * User-readable string for the default folder name (e.g. "(default folder)" ).
 	 */
-	public final static String DEFAULT_FOLDER = "(source)"; //$NON-NLS-1$
+	public static final String DEFAULT_FOLDER = "(source)"; //$NON-NLS-1$
 
 	/**
 	 * Returns the label for a PHP element. Flags as defined above.

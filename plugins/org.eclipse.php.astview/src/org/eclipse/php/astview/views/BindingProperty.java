@@ -39,14 +39,14 @@ public class BindingProperty extends ASTAttribute {
 
 	public BindingProperty(Binding parent, String name, boolean value, boolean isRelevant) {
 		fParent = parent;
-		fName = name + ": " + String.valueOf(value); //$NON-NLS-1$
+		fName = name + ": " + value; //$NON-NLS-1$
 		fValues = null;
 		fIsRelevant = isRelevant;
 	}
 
 	public BindingProperty(Binding parent, String name, int value, boolean isRelevant) {
 		fParent = parent;
-		fName = name + ": " + String.valueOf(value); //$NON-NLS-1$
+		fName = name + ": " + value; //$NON-NLS-1$
 		fValues = null;
 		fIsRelevant = isRelevant;
 	}
@@ -58,7 +58,7 @@ public class BindingProperty extends ASTAttribute {
 			fValues = null;
 		} else {
 			fValues = createBindings(bindings, isRelevant);
-			fName = name + " (" + String.valueOf(fValues.length) + ')'; //$NON-NLS-1$
+			fName = name + " (" + fValues.length + ')'; //$NON-NLS-1$
 		}
 		fIsRelevant = isRelevant;
 	}

@@ -66,7 +66,7 @@ public interface ITypeBinding extends IBinding {
 	 *             </ul>
 	 * @since 3.3
 	 */
-	public ITypeBinding createArrayType(int dimension);
+	ITypeBinding createArrayType(int dimension);
 
 	/**
 	 * Returns the binary name of this type binding. The binary name of a class is
@@ -80,7 +80,7 @@ public interface ITypeBinding extends IBinding {
 	 *         is unknown
 	 * @since 3.0
 	 */
-	public String getBinaryName();
+	String getBinaryName();
 
 	/**
 	 * Returns the binding representing the component type of this array type, or
@@ -94,7 +94,7 @@ public interface ITypeBinding extends IBinding {
 	 *         array type
 	 * @since 3.2
 	 */
-	public ITypeBinding getComponentType();
+	ITypeBinding getComponentType();
 
 	/**
 	 * Returns a list of bindings representing all the fields declared as members of
@@ -118,7 +118,7 @@ public interface ITypeBinding extends IBinding {
 	 * @return the list of bindings for the field members of this type, or the empty
 	 *         list if this type does not have field members
 	 */
-	public IVariableBinding[] getDeclaredFields();
+	IVariableBinding[] getDeclaredFields();
 
 	/**
 	 * Returns a list of method bindings representing all the methods and
@@ -139,7 +139,7 @@ public interface ITypeBinding extends IBinding {
 	 *         by this class, interface, or annotation type, or the empty list if
 	 *         this type does not declare any methods or constructors
 	 */
-	public IMethodBinding[] getDeclaredMethods();
+	IMethodBinding[] getDeclaredMethods();
 
 	/**
 	 * Returns the declared modifiers for this class or interface binding as
@@ -153,7 +153,7 @@ public interface ITypeBinding extends IBinding {
 	 * @see Modifiers
 	 */
 	@Override
-	public int getModifiers();
+	int getModifiers();
 
 	/**
 	 * Returns the dimensionality of this array type, or <code>0</code> if this is
@@ -162,7 +162,7 @@ public interface ITypeBinding extends IBinding {
 	 * @return the number of dimension of this array type binding, or <code>0</code>
 	 *         if this is not an array type
 	 */
-	public int getDimensions();
+	int getDimensions();
 
 	/**
 	 * Returns the binding representing the element type of this array type, or
@@ -172,7 +172,7 @@ public interface ITypeBinding extends IBinding {
 	 * @return the element type binding, or <code>null</code> if this is not an
 	 *         array type
 	 */
-	public ITypeBinding getElementType();
+	ITypeBinding getElementType();
 
 	/**
 	 * Returns a list of type bindings representing the direct superinterfaces of
@@ -202,7 +202,7 @@ public interface ITypeBinding extends IBinding {
 	 *         or enum, or interfaces extended by this interface, or otherwise the
 	 *         empty list
 	 */
-	public ITypeBinding[] getInterfaces();
+	ITypeBinding[] getInterfaces();
 
 	/**
 	 * Returns the unqualified name of the type represented by this binding if it
@@ -246,14 +246,14 @@ public interface ITypeBinding extends IBinding {
 	 * @see #getQualifiedName()
 	 */
 	@Override
-	public String getName();
+	String getName();
 
 	/**
 	 * Returns the type associated with this binding.
 	 * 
 	 * @return the type
 	 */
-	public IEvaluatedType getEvaluatedType();
+	IEvaluatedType getEvaluatedType();
 
 	/**
 	 * Returns the binding for the package in which this type is declared.
@@ -297,7 +297,7 @@ public interface ITypeBinding extends IBinding {
 	 *         <code>null</code> if none
 	 * @see AST#resolveWellKnownType(String)
 	 */
-	public ITypeBinding getSuperclass();
+	ITypeBinding getSuperclass();
 
 	/**
 	 * Returns the binding for the type declaration corresponding to this type
@@ -322,7 +322,7 @@ public interface ITypeBinding extends IBinding {
 	 * @return the type binding
 	 * @since 3.1
 	 */
-	public ITypeBinding getTypeDeclaration();
+	ITypeBinding getTypeDeclaration();
 
 	/**
 	 * Returns whether this type binding represents an annotation type.
@@ -334,7 +334,7 @@ public interface ITypeBinding extends IBinding {
 	 *         <code>false</code> otherwise
 	 * @since 3.1
 	 */
-	// public boolean isAnnotation();
+	// boolean isAnnotation();
 	/**
 	 * Returns whether this type binding represents an array type.
 	 * 
@@ -343,7 +343,7 @@ public interface ITypeBinding extends IBinding {
 	 * @see #getElementType()
 	 * @see #getDimensions()
 	 */
-	public boolean isArray();
+	boolean isArray();
 
 	/**
 	 * Returns whether this type binding represents a class type or a recovered
@@ -352,7 +352,7 @@ public interface ITypeBinding extends IBinding {
 	 * @return <code>true</code> if this object represents a class or a recovered
 	 *         binding, and <code>false</code> otherwise
 	 */
-	public boolean isClass();
+	boolean isClass();
 
 	/**
 	 * Returns whether this type binding represents a class type or a recovered
@@ -361,7 +361,7 @@ public interface ITypeBinding extends IBinding {
 	 * @return <code>true</code> if this object represents a trait or a recovered
 	 *         binding, and <code>false</code> otherwise
 	 */
-	public boolean isTrait();
+	boolean isTrait();
 
 	/**
 	 * Returns whether this type binding represents an interface type.
@@ -372,7 +372,7 @@ public interface ITypeBinding extends IBinding {
 	 * @return <code>true</code> if this object represents an interface, and
 	 *         <code>false</code> otherwise
 	 */
-	public boolean isInterface();
+	boolean isInterface();
 
 	/**
 	 * Returns whether this type binding represents the null type.
@@ -383,7 +383,7 @@ public interface ITypeBinding extends IBinding {
 	 * @return <code>true</code> if this type binding is for the null type, and
 	 *         <code>false</code> otherwise
 	 */
-	public boolean isNullType();
+	boolean isNullType();
 
 	/**
 	 * Returns whether this type binding represents a primitive type.
@@ -397,7 +397,7 @@ public interface ITypeBinding extends IBinding {
 	 * @return <code>true</code> if this type binding is for a primitive type, and
 	 *         <code>false</code> otherwise
 	 */
-	public boolean isPrimitive();
+	boolean isPrimitive();
 
 	/**
 	 * Returns whether this type is subtype compatible with the given type.
@@ -407,7 +407,7 @@ public interface ITypeBinding extends IBinding {
 	 * @return <code>true</code> if this type is subtype compatible with the given
 	 *         type, and <code>false</code> otherwise
 	 */
-	public boolean isSubTypeCompatible(ITypeBinding type);
+	boolean isSubTypeCompatible(ITypeBinding type);
 
 	/**
 	 * Returns whether this type is exact or ambiguous (may relate to two or more
@@ -416,7 +416,7 @@ public interface ITypeBinding extends IBinding {
 	 * @return <code>true</code> if this type is ambiguous and <code>false</code>
 	 *         otherwise
 	 */
-	public boolean isAmbiguous();
+	boolean isAmbiguous();
 
 	/**
 	 * Returns whether this type is known (found) by our binding engine
@@ -424,9 +424,9 @@ public interface ITypeBinding extends IBinding {
 	 * @return <code>true</code> if this type is known and <code>false</code>
 	 *         otherwise
 	 */
-	public boolean isUnknown();
+	boolean isUnknown();
 
-	public List<IType> getTraitList(boolean isMethod, String classMemberName, boolean includeSuper);
+	List<IType> getTraitList(boolean isMethod, String classMemberName, boolean includeSuper);
 
-	public org.eclipse.dltk.core.IModelElement[] getPHPElements();
+	org.eclipse.dltk.core.IModelElement[] getPHPElements();
 }

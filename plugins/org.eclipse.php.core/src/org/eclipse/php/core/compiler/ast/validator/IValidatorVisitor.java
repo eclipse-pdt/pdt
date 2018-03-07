@@ -22,42 +22,42 @@ import org.eclipse.php.core.compiler.ast.nodes.UsePart;
  */
 public interface IValidatorVisitor {
 	public interface ITypeReferenceInfo {
-		public boolean isGlobal();
+		boolean isGlobal();
 
-		public String getTypeName();
+		String getTypeName();
 
-		public String getFullyQualifiedName();
+		String getFullyQualifiedName();
 
-		public TypeReference getTypeReference();
+		TypeReference getTypeReference();
 
-		public boolean isUseStatement();
+		boolean isUseStatement();
 	}
 
 	public interface IUsePartInfo {
-		public UsePart getUsePart();
+		UsePart getUsePart();
 
-		public boolean isAlias();
+		boolean isAlias();
 
-		public String getRealName();
+		String getRealName();
 
-		public String getFullyQualifiedName();
+		String getFullyQualifiedName();
 
-		public String getNamespaceName();
+		String getNamespaceName();
 
-		public void increaseRefCount();
+		void increaseRefCount();
 
-		public int getRefCount();
+		int getRefCount();
 
-		public ITypeReferenceInfo getTypeReferenceInfo();
+		ITypeReferenceInfo getTypeReferenceInfo();
 	}
 
-	public void reportProblem(ASTNode s, String message, IProblemIdentifier id, ProblemSeverity severity);
+	void reportProblem(ASTNode s, String message, IProblemIdentifier id, ProblemSeverity severity);
 
-	public void reportProblem(int start, int end, String message, IProblemIdentifier id, ProblemSeverity severity);
+	void reportProblem(int start, int end, String message, IProblemIdentifier id, ProblemSeverity severity);
 
-	public IUsePartInfo getUsePartInfo(String name);
+	IUsePartInfo getUsePartInfo(String name);
 
-	public boolean hasNamespace();
+	boolean hasNamespace();
 
-	public NamespaceDeclaration getCurrentNamespace();
+	NamespaceDeclaration getCurrentNamespace();
 }

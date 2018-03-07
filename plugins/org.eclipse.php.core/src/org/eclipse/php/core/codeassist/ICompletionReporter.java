@@ -23,12 +23,12 @@ import org.eclipse.dltk.core.*;
  */
 public interface ICompletionReporter {
 
-	public final static int RELEVANCE_KEYWORD = 10000000;
-	public final static int RELEVANCE_VAR = 1000000;
-	public final static int RELEVANCE_METHOD = 100000;
-	public final static int RELEVANCE_CLASS = 10000;
-	public final static int RELEVANCE_CONST = 1000;
-	public final static int RELEVANCE_ADJUST = 100;
+	int RELEVANCE_KEYWORD = 10000000;
+	int RELEVANCE_VAR = 1000000;
+	int RELEVANCE_METHOD = 100000;
+	int RELEVANCE_CLASS = 10000;
+	int RELEVANCE_CONST = 1000;
+	int RELEVANCE_ADJUST = 100;
 
 	/**
 	 * Reports a PHP resource (file or folder)
@@ -43,7 +43,7 @@ public interface ICompletionReporter {
 	 *            The range in the document to be replaced with the completion
 	 *            proposal text
 	 */
-	public void reportResource(IModelElement model, IPath relative, String suffix, ISourceRange replaceRange);
+	void reportResource(IModelElement model, IPath relative, String suffix, ISourceRange replaceRange);
 
 	/**
 	 * Reports type: interface, namespace or class
@@ -56,7 +56,7 @@ public interface ICompletionReporter {
 	 *            The range in the document to be replaced with the completion
 	 *            proposal text
 	 */
-	public void reportType(IType type, String suffix, ISourceRange replaceRange);
+	void reportType(IType type, String suffix, ISourceRange replaceRange);
 
 	/**
 	 * Reports type: interface, namespace or class
@@ -71,11 +71,11 @@ public interface ICompletionReporter {
 	 * @param extraInfo
 	 *            extraInfo for CompletionProposal
 	 */
-	public void reportType(IType type, String suffix, ISourceRange replaceRange, Object extraInfo);
+	void reportType(IType type, String suffix, ISourceRange replaceRange, Object extraInfo);
 
-	public void reportType(IType type, String suffix, ISourceRange replaceRange, Object extraInfo, int subRelevance);
+	void reportType(IType type, String suffix, ISourceRange replaceRange, Object extraInfo, int subRelevance);
 
-	public void reportType(IType type, String prefix, String suffix, ISourceRange replaceRange, Object extraInfo,
+	void reportType(IType type, String prefix, String suffix, ISourceRange replaceRange, Object extraInfo,
 			int subRelevance);
 
 	/**
@@ -91,7 +91,7 @@ public interface ICompletionReporter {
 	 * @deprecated
 	 */
 	@Deprecated
-	public void reportMethod(IMethod method, String suffix, ISourceRange replaceRange);
+	void reportMethod(IMethod method, String suffix, ISourceRange replaceRange);
 
 	/**
 	 * Reports method or function
@@ -106,12 +106,11 @@ public interface ICompletionReporter {
 	 * @param extraInfo
 	 *            extraInfo for CompletionProposal
 	 */
-	public void reportMethod(IMethod method, String suffix, ISourceRange replaceRange, Object extraInfo);
+	void reportMethod(IMethod method, String suffix, ISourceRange replaceRange, Object extraInfo);
 
-	public void reportMethod(IMethod method, String suffix, ISourceRange replaceRange, Object extraInfo,
-			int subRelevance);
+	void reportMethod(IMethod method, String suffix, ISourceRange replaceRange, Object extraInfo, int subRelevance);
 
-	public void reportMethod(IMethod method, String prefix, String suffix, ISourceRange replaceRange, Object extraInfo,
+	void reportMethod(IMethod method, String prefix, String suffix, ISourceRange replaceRange, Object extraInfo,
 			int subRelevance);
 
 	/**
@@ -130,12 +129,12 @@ public interface ICompletionReporter {
 	 * @param extraInfo
 	 *            extraInfo for CompletionProposal
 	 */
-	public void reportField(IField field, String suffix, ISourceRange replaceRange, boolean removeDollar,
-			int subRelevance, Object extraInfo);
+	void reportField(IField field, String suffix, ISourceRange replaceRange, boolean removeDollar, int subRelevance,
+			Object extraInfo);
 
-	public void reportField(IField field, String suffix, ISourceRange replaceRange, boolean removeDollar);
+	void reportField(IField field, String suffix, ISourceRange replaceRange, boolean removeDollar);
 
-	public void reportField(IField field, String prefix, String suffix, ISourceRange replaceRange, int subRelevance,
+	void reportField(IField field, String prefix, String suffix, ISourceRange replaceRange, int subRelevance,
 			Object extraInfo);
 
 	/**
@@ -149,13 +148,13 @@ public interface ICompletionReporter {
 	 *            The range in the document to be replaced with the completion
 	 *            proposal text
 	 */
-	public void reportKeyword(String keyword, String suffix, ISourceRange replaceRange);
+	void reportKeyword(String keyword, String suffix, ISourceRange replaceRange);
 
-	public void reportKeyword(String keyword, String suffix, ISourceRange replaceRange, int subRelevance);
+	void reportKeyword(String keyword, String suffix, ISourceRange replaceRange, int subRelevance);
 
 	/**
 	 * @since 2.3
 	 * @return
 	 */
-	public IModuleSource getModule();
+	IModuleSource getModule();
 }

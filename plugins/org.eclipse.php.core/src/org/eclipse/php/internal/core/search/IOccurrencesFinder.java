@@ -16,16 +16,16 @@ import org.eclipse.php.core.ast.nodes.Program;
 
 public interface IOccurrencesFinder {
 
-	public static final int K_OCCURRENCE = 5;
+	int K_OCCURRENCE = 5;
 
-	public static final int K_EXCEPTION_OCCURRENCE = 6;
-	public static final int K_EXIT_POINT_OCCURRENCE = 7;
-	public static final int K_IMPLEMENTS_OCCURRENCE = 8;
-	public static final int K_BREAK_TARGET_OCCURRENCE = 9;
+	int K_EXCEPTION_OCCURRENCE = 6;
+	int K_EXIT_POINT_OCCURRENCE = 7;
+	int K_IMPLEMENTS_OCCURRENCE = 8;
+	int K_BREAK_TARGET_OCCURRENCE = 9;
 
-	public static final int F_WRITE_OCCURRENCE = 1;
-	public static final int F_READ_OCCURRENCE = 2;
-	public static final int F_EXCEPTION_DECLARATION = 8;
+	int F_WRITE_OCCURRENCE = 1;
+	int F_READ_OCCURRENCE = 2;
+	int F_EXCEPTION_DECLARATION = 8;
 
 	/**
 	 * Element representing a occurrence

@@ -25,12 +25,12 @@ public interface Debugger {
 	 * Asynchronic start Returns true if successed sending the request, false
 	 * otherwise.
 	 */
-	public boolean start(StartResponseHandler responseHandler);
+	boolean start(StartResponseHandler responseHandler);
 
 	/**
 	 * Synchronic start Returns true if successed start.
 	 */
-	public boolean start();
+	boolean start();
 
 	/**
 	 * Sets the protocol to be used.
@@ -39,13 +39,13 @@ public interface Debugger {
 	 *            The protocol identification number.
 	 * @return True, if the set protocol command was successful; False, otherwise.
 	 */
-	public boolean setProtocol(int protocolID);
+	boolean setProtocol(int protocolID);
 
 	/**
 	 * Asynchronic addBreakpoint Returns true if successed sending the request,
 	 * false otherwise.
 	 */
-	public boolean addBreakpoint(Breakpoint bp, BreakpointAddedResponseHandler responseHandler);
+	boolean addBreakpoint(Breakpoint bp, BreakpointAddedResponseHandler responseHandler);
 
 	/**
 	 * Synchronic addBreakpoint Returns true if successed adding the Breakpoint.
@@ -56,81 +56,81 @@ public interface Debugger {
 	 * Asynchronic removeBreakpoint Returns true if successed sending the request,
 	 * false otherwise.
 	 */
-	public boolean removeBreakpoint(int id, BreakpointRemovedResponseHandler responseHandler);
+	boolean removeBreakpoint(int id, BreakpointRemovedResponseHandler responseHandler);
 
 	/**
 	 * Synchronic removeBreakpoint Returns true if successed removing the
 	 * Breakpoint.
 	 */
-	public boolean removeBreakpoint(int id);
+	boolean removeBreakpoint(int id);
 
 	/**
 	 * Asynchronic removeBreakpoint Returns true if successed sending the request,
 	 * false otherwise.
 	 */
-	public boolean removeBreakpoint(Breakpoint breakpoint, BreakpointRemovedResponseHandler responseHandler);
+	boolean removeBreakpoint(Breakpoint breakpoint, BreakpointRemovedResponseHandler responseHandler);
 
 	/**
 	 * Synchronic removeBreakpoint Returns true if successed removing the
 	 * Breakpoint.
 	 */
-	public boolean removeBreakpoint(Breakpoint breakpoint);
+	boolean removeBreakpoint(Breakpoint breakpoint);
 
 	/**
 	 * Asynchronic removeAllBreakpoints Returns true if successed sending the
 	 * request, false otherwise.
 	 */
-	public boolean removeAllBreakpoints(AllBreakpointRemovedResponseHandler responseHandler);
+	boolean removeAllBreakpoints(AllBreakpointRemovedResponseHandler responseHandler);
 
 	/**
 	 * Synchronic removeAllBreakpoints Returns true if successed removing all the
 	 * Breakpoint.
 	 */
-	public boolean removeAllBreakpoints();
+	boolean removeAllBreakpoints();
 
 	/**
 	 * Asynchronic stepInto Returns true if successed sending the request, false
 	 * otherwise.
 	 */
-	public boolean stepInto(StepIntoResponseHandler responseHandler);
+	boolean stepInto(StepIntoResponseHandler responseHandler);
 
 	/**
 	 * Synchronic stepInto Returns true if successed stepInto.
 	 */
-	public boolean stepInto();
+	boolean stepInto();
 
 	/**
 	 * Asynchronic stepOver Returns true if successed sending the request, false
 	 * otherwise.
 	 */
-	public boolean stepOver(StepOverResponseHandler responseHandler);
+	boolean stepOver(StepOverResponseHandler responseHandler);
 
 	/**
 	 * Synchronic stepOver Returns true if successed stepOver.
 	 */
-	public boolean stepOver();
+	boolean stepOver();
 
 	/**
 	 * Asynchronic stepOut Returns true if successed sending the request, false
 	 * otherwise.
 	 */
-	public boolean stepOut(StepOutResponseHandler responseHandler);
+	boolean stepOut(StepOutResponseHandler responseHandler);
 
 	/**
 	 * Synchronic stepOut Returns true if successed stepOut.
 	 */
-	public boolean stepOut();
+	boolean stepOut();
 
 	/**
 	 * Asynchronic go Returns true if successed sending the request, false
 	 * otherwise.
 	 */
-	public boolean go(GoResponseHandler responseHandler);
+	boolean go(GoResponseHandler responseHandler);
 
 	/**
 	 * Synchronic go Returns true if successed go.
 	 */
-	public boolean go();
+	boolean go();
 
 	/** start methods are in the interface parent * */
 
@@ -138,18 +138,18 @@ public interface Debugger {
 	 * Asynchronic pause Returns true if successed sending the request, false
 	 * otherwise.
 	 */
-	public boolean pause(PauseResponseHandler responseHandler);
+	boolean pause(PauseResponseHandler responseHandler);
 
 	/**
 	 * Synchronic pause Returns true if successed pause.
 	 */
-	public boolean pause();
+	boolean pause();
 
 	/**
 	 * Asynchronic eval Returns true if successed sending the request, false
 	 * otherwise.
 	 */
-	public boolean eval(String commandString, EvalResponseHandler responseHandler);
+	boolean eval(String commandString, EvalResponseHandler responseHandler);
 
 	/**
 	 * Synchronic eval Returns the evaled commandString.
@@ -160,20 +160,18 @@ public interface Debugger {
 	 * Asynchronic assign value Returns true if successed sending the request, false
 	 * otherwise.
 	 */
-	public boolean assignValue(String var, String value, int depth, String[] path,
-			AssignValueResponseHandler responseHandler);
+	boolean assignValue(String var, String value, int depth, String[] path, AssignValueResponseHandler responseHandler);
 
 	/**
 	 * Synchronic assign value Returns true if successed assigning the value.
 	 */
-	public boolean assignValue(String var, String value, int depth, String[] path);
+	boolean assignValue(String var, String value, int depth, String[] path);
 
 	/**
 	 * Asynchronic getVariableValue Returns true if successed sending the request,
 	 * false otherwise.
 	 */
-	public boolean getVariableValue(String value, int depth, String[] path,
-			VariableValueResponseHandler responseHandler);
+	boolean getVariableValue(String value, int depth, String[] path, VariableValueResponseHandler responseHandler);
 
 	/**
 	 * Synchronic getVariableValue Returns the variable value.
@@ -184,7 +182,7 @@ public interface Debugger {
 	 * Asynchronic getCallStack Returns true if successed sending the request, false
 	 * otherwise.
 	 */
-	public boolean getCallStack(GetCallStackResponseHandler responseHandler);
+	boolean getCallStack(GetCallStackResponseHandler responseHandler);
 
 	/**
 	 * Synchronic getCallStack Returns the PHPstack;
@@ -195,7 +193,7 @@ public interface Debugger {
 	 * Asynchronic getStackVariableValue Returns true if successed sending the
 	 * request, false otherwise.
 	 */
-	public boolean getStackVariableValue(int stackDepth, String value, int depth, String[] path,
+	boolean getStackVariableValue(int stackDepth, String value, int depth, String[] path,
 			GetStackVariableValueResponseHandler responseHandler);
 
 	/**
@@ -207,12 +205,12 @@ public interface Debugger {
 	 * Asynchronous addFiles Returns true if succeeded sending the request, false
 	 * otherwise.
 	 */
-	public boolean addFiles(String[] paths, AddFilesResponseHandler responseHandler);
+	boolean addFiles(String[] paths, AddFilesResponseHandler responseHandler);
 
 	/**
 	 * Synchronous addFiles Returns true if succeeded adding the Breakpoint.
 	 */
-	public boolean addFiles(String[] paths);
+	boolean addFiles(String[] paths);
 
 	/**
 	 * Finish the debugger running.
@@ -222,7 +220,7 @@ public interface Debugger {
 	/**
 	 * Checks if the debugger is active.
 	 */
-	public boolean isActive();
+	boolean isActive();
 
 	/**
 	 * Returns PHP version that debug session is running on.
@@ -234,106 +232,105 @@ public interface Debugger {
 	// Interface for started response handler.
 	public static interface StartResponseHandler {
 
-		public void started(boolean success);
+		void started(boolean success);
 
 	}
 
 	// Interface for an breakpoint added response handler.
 	public static interface BreakpointAddedResponseHandler {
 
-		public void breakpointAdded(String fileName, int lineNumber, int id, boolean success);
+		void breakpointAdded(String fileName, int lineNumber, int id, boolean success);
 
 	}
 
 	// Interface for a breakpoint removed response handler.
 	public static interface BreakpointRemovedResponseHandler {
 
-		public void breakpointRemoved(int id, boolean success);
+		void breakpointRemoved(int id, boolean success);
 
 	}
 
 	// Interface for removed all breakpoints response handler.
 	public static interface AllBreakpointRemovedResponseHandler {
 
-		public void allBreakpointRemoved(boolean success);
+		void allBreakpointRemoved(boolean success);
 
 	}
 
 	// Interface for evaled response handler.
 	public static interface EvalResponseHandler {
 
-		public void evaled(String expression, String result, boolean success);
+		void evaled(String expression, String result, boolean success);
 
 	}
 
 	// Interface for stepInto response handler.
 	public static interface StepIntoResponseHandler {
 
-		public void stepInto(boolean success);
+		void stepInto(boolean success);
 
 	}
 
 	// Interface for stepOver response handler.
 	public static interface StepOverResponseHandler {
 
-		public void stepOver(boolean success);
+		void stepOver(boolean success);
 
 	}
 
 	// Interface for stepOut response handler.
 	public static interface StepOutResponseHandler {
 
-		public void stepOut(boolean success);
+		void stepOut(boolean success);
 
 	}
 
 	// Interface for go response handler.
 	public static interface GoResponseHandler {
 
-		public void go(boolean success);
+		void go(boolean success);
 
 	}
 
 	// Interface for pause response handler.
 	public static interface PauseResponseHandler {
 
-		public void pause(boolean success);
+		void pause(boolean success);
 
 	}
 
 	// Interface for assignValue response handler.
 	public static interface AssignValueResponseHandler {
 
-		public void valueAssigned(String var, String value, int depth, String[] path, boolean success);
+		void valueAssigned(String var, String value, int depth, String[] path, boolean success);
 
 	}
 
 	// Interface for getVariableValue response handler.
 	public static interface VariableValueResponseHandler {
 
-		public void variableValue(String value, int depth, String[] path, String reslut, boolean success);
+		void variableValue(String value, int depth, String[] path, String reslut, boolean success);
 
 	}
 
 	// Interface for getCallStack response handler.
 	public static interface GetCallStackResponseHandler {
 
-		public void callStack(PHPstack pstack, boolean success);
+		void callStack(PHPstack pstack, boolean success);
 
 	}
 
 	// Interface for getStackVariableValue response handler.
 	public static interface GetStackVariableValueResponseHandler {
 
-		public void stackVariableValue(int stackDepth, String value, int depth, String[] path, String reslut,
-				boolean success);
+		void stackVariableValue(int stackDepth, String value, int depth, String[] path, String reslut, boolean success);
 
 	}
 
 	// Interface for add files response handler.
 	public static interface AddFilesResponseHandler {
 
-		public void addFiles(boolean success);
+		void addFiles(boolean success);
 
 	}
 
@@ -351,87 +348,82 @@ public interface Debugger {
 	// ---------------------------------------------------------------------------
 
 	// Adapter for DebugResponseHandler.
-	static public class DefaultDebugResponseHandler implements DebugResponseHandler {
+	public static class DefaultDebugResponseHandler implements DebugResponseHandler {
 
 		@Override
 		public void breakpointAdded(String fileName, int lineNumber, int id, boolean success) {
-			// System.out.println("breakpointAdded: " + success + " " + fileName
-			// + " " + lineNumber);
+			// adapter
 		}
 
 		@Override
 		public void breakpointRemoved(int id, boolean success) {
-			// System.out.println("breakpointRemoved: " + success + " " + id);
+			// adapter
 		}
 
 		@Override
 		public void allBreakpointRemoved(boolean success) {
-			// System.out.println("allBreakpointRemoved: " + success);
+			// adapter
 		}
 
 		@Override
 		public void started(boolean success) {
-			// System.out.println("started: " + success);
+			// adapter
 		}
 
 		@Override
 		public void evaled(String expression, String result, boolean success) {
-			// System.out.println("evaled: " + expression + " " + result + " " +
-			// success);
+			// adapter
 		}
 
 		@Override
 		public void stepInto(boolean success) {
-			// System.out.println("stepInto: " + success);
+			// adapter
 		}
 
 		@Override
 		public void stepOver(boolean success) {
-			// System.out.println("stepOver: " + success);
+			// adapter
 		}
 
 		@Override
 		public void stepOut(boolean success) {
-			// System.out.println("stepOut: " + success);
+			// adapter
 		}
 
 		@Override
 		public void go(boolean success) {
-			// System.out.println("go: " + success);
+			// adapter
 		}
 
 		@Override
 		public void pause(boolean success) {
-			// System.out.println("pause: " + success);
+			// adapter
 		}
 
 		@Override
 		public void valueAssigned(String var, String value, int depth, String[] path, boolean success) {
-			// System.out.println("valueAssigned: " + value + " " + depth + " "
-			// + success);
+			// adapter
 		}
 
 		@Override
 		public void variableValue(String value, int depth, String[] path, String reslut, boolean success) {
-			// System.out.println("variableValue: " + value + " " + reslut + " "
-			// + success);
+			// adapter
 		}
 
 		@Override
 		public void callStack(PHPstack pstack, boolean success) {
-			// System.out.println("callStack: " + pstack + " " + success);
+			// adapter
 		}
 
 		@Override
 		public void stackVariableValue(int stackDepth, String value, int depth, String[] path, String reslut,
 				boolean success) {
-			// System.out.println("stackVariableValue: " + value + " " + reslut
-			// + " " + success);
+			// adapter
 		}
 
 		@Override
 		public void addFiles(boolean success) {
-			// System.out.println("addFiles: " + success);
+			// adapter
 		}
 
 	}
