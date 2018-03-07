@@ -911,15 +911,15 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 				reportProblem(acc.getDispatcher(), Messages.DynamicClassNotAllowed,
 						PHPProblemIdentifier.InvalidConstantExpression, ProblemSeverities.Error);
 			}
-		} else if (version.isGreaterThan(PHPVersion.PHP5_5) && astNode instanceof InfixExpression) {
-			InfixExpression expr = (InfixExpression) astNode;
-			validateConstantExpression(expr.getLeft());
-			validateConstantExpression(expr.getRight());
-		} else if (version.isGreaterThan(PHPVersion.PHP5_5) && astNode instanceof ArrayCreation) {
+		} else if (astNode instanceof ArrayCreation) {
 			((ArrayCreation) astNode).getElements().stream().forEach(n -> {
 				validateConstantExpression(n.getKey());
 				validateConstantExpression(n.getValue());
 			});
+		} else if (version.isGreaterThan(PHPVersion.PHP5_5) && astNode instanceof InfixExpression) {
+			InfixExpression expr = (InfixExpression) astNode;
+			validateConstantExpression(expr.getLeft());
+			validateConstantExpression(expr.getRight());
 		} else if (version.isGreaterThan(PHPVersion.PHP5_5) && astNode instanceof ReflectionArrayVariableReference) {
 			ReflectionArrayVariableReference ref = (ReflectionArrayVariableReference) astNode;
 			validateConstantExpression(ref.getExpression());
