@@ -687,6 +687,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 							}
 						}
 					}
+					// we inserted at least one "empty" line, now we can reset previous indentation
+					resetCommentIndentVariables();
 					if (doIndentForComment) {
 						indentForComment(indentationLevelDescending);
 					} else {
@@ -744,7 +746,11 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				}
 				indentStringForComment = afterNewLine;
 			}
-			indentationLevelDescending = false;
+			// when necessary, keep current indentation level for further "empty" lines
+			// insertion
+			if (!doIndentForComment) {
+				indentationLevelDescending = false;
+			}
 			// clear the buffer
 			replaceBuffer.setLength(0);
 		}
@@ -993,7 +999,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		int startLine = document.getLineOfOffset(offset);
 		int start = offset;
 		boolean needIndentNewLine = false;
-		boolean indentationLevelDescending = this.indentationLevelDescending;
 		boolean previousCommentIsSingleLine = false;
 		resetCommentIndentVariables();
 
