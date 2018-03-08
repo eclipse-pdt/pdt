@@ -1004,7 +1004,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			int position = replaceBuffer.lastIndexOf(lineSeparator);
 			boolean startAtFirstColumn = (document.getLineOffset(commentStartLine) == comment.sourceStart() + offset);
 			boolean endWithNewLineIndent = endWithNewLineIndent(replaceBuffer.toString());
-			String afterNewLine = EMPTY_STRING;
+			String indentAfterComment = EMPTY_STRING;
 			boolean doIndentForComment;
 			String commentContent;
 			switch (comment.getCommentType()) {
@@ -1016,10 +1016,15 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					ignoreEmptyLineSetting = true;
 					if (position >= 0) {
 						if (getBufferFirstChar(position + lineSeparator.length()) == '\0') {
-							afterNewLine = replaceBuffer.substring(position + lineSeparator.length(),
+							indentAfterComment = replaceBuffer.substring(position + lineSeparator.length(),
 									replaceBuffer.length());
 							removeFromLineWidth(replaceBuffer.length() - position, true);
-							insertSpace();
+							// No need to add a space if previous line (in replaceBuffer) already ends with
+							// a blank character.
+							// TODO: replace isPrevSpace with more generic isPrevBlank.
+							if (!isPrevSpace && !replaceBuffer.toString().endsWith("\t")) { //$NON-NLS-1$
+								insertSpaces(1);
+							}
 						} else {
 							insertSpace();
 						}
@@ -1034,9 +1039,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				} else {
 					if (getBufferFirstChar(0) == '\0') {
 						if (position >= 0) {
-							if (getBufferFirstChar(position + lineSeparator.length()) == '\0') {
-								removeFromLineWidth(replaceBuffer.length() - position, true);
-							}
+							removeFromLineWidth(replaceBuffer.length() - position, true);
 							insertNewLine();
 						} else {
 							doIndentForComment = false;
@@ -1080,7 +1083,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				if (this.editsEnabled && this.preferences.comment_format_line_comment
 						&& (startAtFirstColumn && this.preferences.comment_format_line_comment_starting_on_first_column
 								|| !startAtFirstColumn)) {
-					if (startLine == commentStartLine) {
+					if (startLine == commentStartLine && replaceBuffer.indexOf(lineSeparator) == -1) {
 						initCommentIndentVariables(offset, startLine, comment, endWithNewLineIndent);
 						lineWidth = indentLengthForComment;
 					}
@@ -1140,7 +1143,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						insertSpaces(1);
 						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=489488
 						needIndentNewLine = false;
-						afterNewLine = EMPTY_STRING;
+						indentAfterComment = EMPTY_STRING;
 					}
 				} else {
 					commentContent = document.get(comment.sourceStart() + offset,
@@ -1165,7 +1168,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					} else {
 						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=489488
 						needIndentNewLine = false;
-						afterNewLine = EMPTY_STRING;
+						indentAfterComment = EMPTY_STRING;
 					}
 				}
 
@@ -1378,10 +1381,15 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					if (position >= 0) {
 						// if (getBufferFirstChar(position
 						// + lineSeparator.length()) == '\0') {
-						afterNewLine = replaceBuffer.substring(position + lineSeparator.length(),
+						indentAfterComment = replaceBuffer.substring(position + lineSeparator.length(),
 								replaceBuffer.length());
 						removeFromLineWidth(replaceBuffer.length() - position, true);
-						insertSpace();
+						// No need to add a space if previous line (in replaceBuffer) already ends with
+						// a blank character.
+						// TODO: replace isPrevSpace with more generic isPrevBlank.
+						if (!isPrevSpace && !replaceBuffer.toString().endsWith("\t")) { //$NON-NLS-1$
+							insertSpaces(1);
+						}
 						// } else {
 						// insertSpace();
 						// }
@@ -1431,7 +1439,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						document.get(comment.sourceStart() + offset, comment.sourceEnd() - comment.sourceStart()));
 				needIndentNewLine = true;
 
-				if (startLine == commentStartLine) {
+				if (startLine == commentStartLine && replaceBuffer.indexOf(lineSeparator) == -1) {
 					initCommentIndentVariables(offset, startLine, comment, endWithNewLineIndent);
 					lineWidth = indentLengthForComment;
 				}
@@ -1549,9 +1557,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			if (needIndentNewLine) {
 				indent();
 				needIndentNewLine = false;
-				afterNewLine = EMPTY_STRING;
+				indentAfterComment = EMPTY_STRING;
 			}
-			appendToBuffer(afterNewLine);
+			appendToBuffer(indentAfterComment);
 		}
 		ignoreEmptyLineSetting = oldIgnoreEmptyLineSetting;
 		resetCommentIndentVariables();
@@ -1610,7 +1618,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	private void initCommentIndentVariables(int offset, int startLine,
 			org.eclipse.php.core.compiler.ast.nodes.Comment comment, boolean endWithNewLineIndent)
 			throws BadLocationException {
-		// TODO the value should be calculated from ReplaceEdit changes
+		// TODO the value should be calculated from the lineWidth of the (non-blank)
+		// formatted line previously located at startLine. This could also be done by
+		// simply saving lineWidth of the latest (non-blank) formatted line.
 		indentLengthForComment = 0;
 		indentStringForComment = ""; //$NON-NLS-1$
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=461701
