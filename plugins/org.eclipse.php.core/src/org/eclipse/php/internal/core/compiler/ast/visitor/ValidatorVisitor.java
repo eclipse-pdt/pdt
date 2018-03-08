@@ -876,23 +876,23 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 
 	@Override
 	public boolean visit(ConstantDeclaration s) throws Exception {
-		validateConstantExpression(s.getConstantValue());
+		validateConstantExpression(s.getConstantValue(), false);
 		return super.visit(s);
 	}
 
 	@Override
 	public boolean visit(FormalParameter s) throws Exception {
-		validateConstantExpression(s.getInitialization());
+		validateConstantExpression(s.getInitialization(), true);
 		return super.visit(s);
 	}
 
 	@Override
 	public boolean endvisit(PHPFieldDeclaration s) throws Exception {
-		validateConstantExpression(s.getVariableValue());
+		validateConstantExpression(s.getVariableValue(), true);
 		return super.endvisit(s);
 	}
 
-	private void validateConstantExpression(ASTNode astNode) {
+	private void validateConstantExpression(ASTNode astNode, boolean allowArray) {
 		if (astNode == null || astNode instanceof Scalar || astNode instanceof ConstantReference) {
 			return;
 		}
@@ -903,7 +903,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 				reportProblem(astNode, Messages.InvalidConstantExpression,
 						PHPProblemIdentifier.InvalidConstantExpression, ProblemSeverities.Error);
 			} else {
-				validateConstantExpression(op.getExpr());
+				validateConstantExpression(op.getExpr(), allowArray);
 			}
 		} else if (astNode instanceof StaticConstantAccess) {
 			StaticConstantAccess acc = (StaticConstantAccess) astNode;
@@ -911,19 +911,19 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 				reportProblem(acc.getDispatcher(), Messages.DynamicClassNotAllowed,
 						PHPProblemIdentifier.InvalidConstantExpression, ProblemSeverities.Error);
 			}
-		} else if (version.isGreaterThan(PHPVersion.PHP5_5) && astNode instanceof InfixExpression) {
+		} else if ((allowArray || version.isGreaterThan(PHPVersion.PHP5_5)) && astNode instanceof InfixExpression) {
 			InfixExpression expr = (InfixExpression) astNode;
-			validateConstantExpression(expr.getLeft());
-			validateConstantExpression(expr.getRight());
+			validateConstantExpression(expr.getLeft(), allowArray);
+			validateConstantExpression(expr.getRight(), allowArray);
 		} else if (version.isGreaterThan(PHPVersion.PHP5_5) && astNode instanceof ArrayCreation) {
 			((ArrayCreation) astNode).getElements().stream().forEach(n -> {
-				validateConstantExpression(n.getKey());
-				validateConstantExpression(n.getValue());
+				validateConstantExpression(n.getKey(), allowArray);
+				validateConstantExpression(n.getValue(), allowArray);
 			});
 		} else if (version.isGreaterThan(PHPVersion.PHP5_5) && astNode instanceof ReflectionArrayVariableReference) {
 			ReflectionArrayVariableReference ref = (ReflectionArrayVariableReference) astNode;
-			validateConstantExpression(ref.getExpression());
-			validateConstantExpression(ref.getIndex());
+			validateConstantExpression(ref.getExpression(), allowArray);
+			validateConstantExpression(ref.getIndex(), allowArray);
 		} else {
 			reportProblem(astNode, Messages.InvalidConstantExpression, PHPProblemIdentifier.InvalidConstantExpression,
 					ProblemSeverities.Error);
