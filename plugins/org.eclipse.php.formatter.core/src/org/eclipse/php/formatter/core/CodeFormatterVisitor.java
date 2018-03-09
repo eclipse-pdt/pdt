@@ -109,6 +109,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	private boolean isHeredocSemicolon = false;
 	private boolean isPHPEqualTag = false;
 	private int lineWidth = 0;
+	// most recent "non-blank line" width
+	private int mrnbLineWidth = 0;
 	private int binaryExpressionLineWrapPolicy = -1;
 	private int binaryExpressionIndentGap = 0;
 	private boolean wasBinaryExpressionWrapped = false;
@@ -116,6 +118,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	// top-most binary expression
 	private InfixExpression binaryExpressionSavedNode = null;
 	private int binaryExpressionSavedChangesIndex = -1;
+	private int binaryExpressionSavedMrnbLineWidth = 0;
 	private int binaryExpressionSavedLineWidth = 0;
 	private boolean binaryExpressionSavedIsPrevSpace = false;
 	private boolean binaryExpressionSavedIsHeredocSemicolon = false;
@@ -207,12 +210,18 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	}
 
-	private void addToLineWidth(int nbChars) {
+	private void addNonBlanksToLineWidth(int nbChars) {
+		isPrevSpace = false;
+		lineWidth += nbChars;
+		mrnbLineWidth = lineWidth;
+	}
+
+	private void addBlanksToLineWidth(int nbChars) {
 		isPrevSpace = false;
 		lineWidth += nbChars;
 	}
 
-	private void removeFromLineWidth(int nbChars, boolean recalculateLineWidth) {
+	private void removeBlanksFromLineWidth(int nbChars, boolean recalculateLineWidth) {
 		// XXX: should we adjust lineWidth depending on tabulation size?
 		lineWidth -= nbChars;
 		if (!recalculateLineWidth && lineWidth < 0) {
@@ -239,7 +248,18 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		if (lineSeparator.equals(obj)) {
 			lineWidth = 0;
 		} else {
-			addToLineWidth(obj.toString().length());
+			String value = obj.toString();
+			int rv = value.length();
+			for (; rv > 0; rv--) {
+				char currChar = value.charAt(rv - 1);
+				if (currChar != ' ' && currChar != '\t') {
+					break;
+				}
+			}
+			if (rv > 0) {
+				addNonBlanksToLineWidth(rv);
+			}
+			addBlanksToLineWidth(value.length() - rv);
 		}
 	}
 
@@ -687,7 +707,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 							}
 						}
 					}
-					// we inserted at least one "empty" line, now we can reset previous indentation
+					// we inserted at least one "empty" line, now we can reset
+					// previous indentation
 					resetCommentIndentVariables();
 					if (doIndentForComment) {
 						indentForComment(indentationLevelDescending);
@@ -746,7 +767,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				}
 				indentStringForComment = afterNewLine;
 			}
-			// when necessary, keep current indentation level for further "empty" lines
+			// when necessary, keep current indentation level for further
+			// "empty" lines
 			// insertion
 			if (!doIndentForComment) {
 				indentationLevelDescending = false;
@@ -792,6 +814,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		}
 
 		// save the changes index position
+		int savedMrnbLineWidth = mrnbLineWidth;
 		int savedlineWidth = lineWidth;
 		boolean savedIsPrevSpace = isPrevSpace;
 		boolean savedIsHeredocSemicolon = isHeredocSemicolon;
@@ -817,6 +840,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 			// after the first element and wrap policy is except first element
 			if (i == 1 && lineWrapPolicy == WRAP_ALL_ELEMENTS_EXCEPT_FIRST) {
+				savedMrnbLineWidth = mrnbLineWidth;
 				savedlineWidth = lineWidth;
 				savedIsPrevSpace = isPrevSpace;
 				savedIsHeredocSemicolon = isHeredocSemicolon;
@@ -852,8 +876,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				break;
 			case WRAP_FIRST_ELEMENT: // Always wrap first element, others when
 										// necessary
-				revert(savedBuffer, changesIndex, savedlineWidth, savedIsPrevSpace, savedIsHeredocSemicolon,
-						savedIsPHPEqualTag);
+				revert(savedBuffer, changesIndex, savedMrnbLineWidth, savedlineWidth, savedIsPrevSpace,
+						savedIsHeredocSemicolon, savedIsPHPEqualTag);
 				lastPosition = savedLastPosition;
 				i = 0;
 				lineWrapPolicy = WRAP_WHEN_NECESSARY;
@@ -867,8 +891,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			case WRAP_ALL_ELEMENTS: // Wrap all elements, every element on a new
 									// line
 				if (forceSplit || lineWidth + array[i].getLength() > this.preferences.line_wrap_line_split) {
-					revert(savedBuffer, changesIndex, savedlineWidth, savedIsPrevSpace, savedIsHeredocSemicolon,
-							savedIsPHPEqualTag);
+					revert(savedBuffer, changesIndex, savedMrnbLineWidth, savedlineWidth, savedIsPrevSpace,
+							savedIsHeredocSemicolon, savedIsPHPEqualTag);
 					lastPosition = savedLastPosition;
 					i = 0;
 					lineWrapPolicy = ALWAYS_WRAP_ELEMENT;
@@ -884,8 +908,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 													// all but the first element
 				if (forceSplit || lineWidth + array[i].getLength() > this.preferences.line_wrap_line_split) {
 					// revert the buffer
-					revert(savedBuffer, changesIndex, savedlineWidth, savedIsPrevSpace, savedIsHeredocSemicolon,
-							savedIsPHPEqualTag);
+					revert(savedBuffer, changesIndex, savedMrnbLineWidth, savedlineWidth, savedIsPrevSpace,
+							savedIsHeredocSemicolon, savedIsPHPEqualTag);
 					lastPosition = savedLastPosition;
 					i = 0;
 					lineWrapPolicy = ALWAYS_WRAP_ELEMENT_ADD_LEVEL;
@@ -902,8 +926,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 													// necessary
 				if (forceSplit || lineWidth + array[i].getLength() > this.preferences.line_wrap_line_split) {
 					// revert
-					revert(savedBuffer, changesIndex, savedlineWidth, savedIsPrevSpace, savedIsHeredocSemicolon,
-							savedIsPHPEqualTag);
+					revert(savedBuffer, changesIndex, savedMrnbLineWidth, savedlineWidth, savedIsPrevSpace,
+							savedIsHeredocSemicolon, savedIsPHPEqualTag);
 					lastPosition = savedLastPosition;
 					i = (i > 0) ? 1 : 0;
 					lineWrapPolicy = ALWAYS_WRAP_ELEMENT;
@@ -937,12 +961,16 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 			if (lastEmptyASTNodePosition >= 0 && array[i].getLength() == 0) {
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=531468
-				// We have a (fake) empty ASTNode. By construction, whitespaces "around" empty
+				// We have a (fake) empty ASTNode. By construction, whitespaces
+				// "around" empty
 				// ASTNodes are always located "after" ASTNode.getStart() (and
-				// ASTNode.getEnd()), so we have to "eat" those whitespaces to correctly
-				// generate/calculate ReplaceEdits in handleCharsWithoutComments().
+				// ASTNode.getEnd()), so we have to "eat" those whitespaces to
+				// correctly
+				// generate/calculate ReplaceEdits in
+				// handleCharsWithoutComments().
 				int end = i < array.length - 1 ? array[i + 1].getStart() : lastEmptyASTNodePosition;
-				// handleCharsWithoutComments() checks if offset - lastPosition ==
+				// handleCharsWithoutComments() checks if offset - lastPosition
+				// ==
 				// replaceBuffer.length(), so don't "eat" too many whitespaces.
 				end = Math.min(lastPosition + replaceBuffer.length(), end);
 				int offset = array[i].getStart();
@@ -988,11 +1016,11 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return lastPosition;
 	}
 
-	// TODO: Do correct comment placement
 	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=440209
 	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=440820
 	private void handleComments(int offset, int end, List<?> commentList, boolean isIndented, int indentGap)
 			throws Exception {
+		int savedMrnbLineWidth = mrnbLineWidth;
 		boolean oldIgnoreEmptyLineSetting = ignoreEmptyLineSetting;
 		ignoreEmptyLineSetting = false;
 
@@ -1011,22 +1039,32 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			boolean endWithNewLineIndent = endWithNewLineIndent(replaceBuffer.toString());
 			String indentAfterComment = EMPTY_STRING;
 			boolean doIndentForComment;
+			boolean isAtEndOfExpression;
 			String commentContent;
 			switch (comment.getCommentType()) {
 			case org.eclipse.php.core.compiler.ast.nodes.Comment.TYPE_SINGLE_LINE:
 				doIndentForComment = !startAtFirstColumn
 						|| !this.preferences.never_indent_line_comments_on_first_column;
-				if (startLine == commentStartLine) {
+				// When true, we guarantee that the comment will stay at the end
+				// of previous php expression.
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=531466
+				// Also useful to avoid code formatter...
+				isAtEndOfExpression = startLine == commentStartLine && !(position >= 0
+						&& position != replaceBuffer.indexOf(lineSeparator) && getBufferFirstChar(0) == '\0');
+				if (isAtEndOfExpression) {
 					doIndentForComment = false;
 					ignoreEmptyLineSetting = true;
 					if (position >= 0) {
 						if (getBufferFirstChar(position + lineSeparator.length()) == '\0') {
+							// ...to go here...
 							indentAfterComment = replaceBuffer.substring(position + lineSeparator.length(),
 									replaceBuffer.length());
-							removeFromLineWidth(replaceBuffer.length() - position, true);
-							// No need to add a space if previous line (in replaceBuffer) already ends with
+							removeBlanksFromLineWidth(replaceBuffer.length() - position, true);
+							// No need to add a space if previous line (in
+							// replaceBuffer) already ends with
 							// a blank character.
-							// TODO: replace isPrevSpace with more generic isPrevBlank.
+							// TODO: replace isPrevSpace with more generic
+							// isPrevBlank.
 							if (!isPrevSpace && !replaceBuffer.toString().endsWith("\t")) { //$NON-NLS-1$
 								insertSpaces(1);
 							}
@@ -1035,26 +1073,28 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						}
 					} else {
 						if (getBufferFirstChar(0) == '\0') {
-							removeFromLineWidth(replaceBuffer.length(), false);
+							removeBlanksFromLineWidth(replaceBuffer.length(), false);
 							insertSpaces(1);
 						} else {
 							insertSpace();
 						}
 					}
+					savedMrnbLineWidth += replaceBuffer.length();
 				} else {
 					if (getBufferFirstChar(0) == '\0') {
 						if (position >= 0) {
-							removeFromLineWidth(replaceBuffer.length() - position, true);
+							// ...and finally there
+							removeBlanksFromLineWidth(replaceBuffer.length() - position, true);
 							insertNewLine();
 						} else {
 							doIndentForComment = false;
 							ignoreEmptyLineSetting = true;
-							removeFromLineWidth(replaceBuffer.length(), false);
+							removeBlanksFromLineWidth(replaceBuffer.length(), false);
 							insertSpaces(1);
 						}
 					} else {
 						if (position >= 0 && getBufferFirstChar(position + lineSeparator.length()) == '\0') {
-							removeFromLineWidth(replaceBuffer.length() - position, true);
+							removeBlanksFromLineWidth(replaceBuffer.length() - position, true);
 						}
 						insertNewLine();
 					}
@@ -1088,8 +1128,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				if (this.editsEnabled && this.preferences.comment_format_line_comment
 						&& (startAtFirstColumn && this.preferences.comment_format_line_comment_starting_on_first_column
 								|| !startAtFirstColumn)) {
-					if (startLine == commentStartLine && replaceBuffer.indexOf(lineSeparator) == -1) {
-						initCommentIndentVariables(offset, startLine, comment, endWithNewLineIndent);
+					if (isAtEndOfExpression) {
+						initCommentIndentVariables(savedMrnbLineWidth, endWithNewLineIndent);
 						lineWidth = indentLengthForComment;
 					}
 					if (startAtFirstColumn && this.preferences.never_indent_line_comments_on_first_column) {
@@ -1362,9 +1402,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				// example while /* kuku */ ( /* kuku */$a > 0 )
 				if (getBufferFirstChar(0) != '\0') {
 					replaceBuffer.setLength(0);
-					isPrevSpace = false;
 					IRegion reg = document.getLineInformationOfOffset(end);
-					lineWidth += end - Math.max(reg.getOffset(), comment.sourceStart() + offset);
+					addNonBlanksToLineWidth(end - Math.max(reg.getOffset(), comment.sourceStart() + offset));
 					resetEnableStatus(
 							document.get(comment.sourceStart() + offset, comment.sourceEnd() - comment.sourceStart()));
 					for (; iter.hasNext();) {
@@ -1380,7 +1419,11 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				// buffer contains only whitespace chars
 				doIndentForComment = !startAtFirstColumn
 						|| !this.preferences.never_indent_block_comments_on_first_column;
-				if (startLine == commentStartLine) {
+				// When true, we guarantee that the comment will stay at the end
+				// of previous php expression.
+				isAtEndOfExpression = startLine == commentStartLine
+						&& !(position >= 0 && position != replaceBuffer.indexOf(lineSeparator));
+				if (isAtEndOfExpression) {
 					doIndentForComment = false;
 					ignoreEmptyLineSetting = true;
 					if (position >= 0) {
@@ -1388,10 +1431,12 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						// + lineSeparator.length()) == '\0') {
 						indentAfterComment = replaceBuffer.substring(position + lineSeparator.length(),
 								replaceBuffer.length());
-						removeFromLineWidth(replaceBuffer.length() - position, true);
-						// No need to add a space if previous line (in replaceBuffer) already ends with
+						removeBlanksFromLineWidth(replaceBuffer.length() - position, true);
+						// No need to add a space if previous line (in
+						// replaceBuffer) already ends with
 						// a blank character.
-						// TODO: replace isPrevSpace with more generic isPrevBlank.
+						// TODO: replace isPrevSpace with more generic
+						// isPrevBlank.
 						if (!isPrevSpace && !replaceBuffer.toString().endsWith("\t")) { //$NON-NLS-1$
 							insertSpaces(1);
 						}
@@ -1400,17 +1445,18 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						// }
 					} else {
 						// if (getBufferFirstChar(0) == '\0') {
-						removeFromLineWidth(replaceBuffer.length(), false);
+						removeBlanksFromLineWidth(replaceBuffer.length(), false);
 						insertSpaces(1);
 						// } else {
 						// insertSpace();
 						// }
 					}
+					savedMrnbLineWidth += replaceBuffer.length();
 				} else {
 					if (position >= 0) {
 						// if (getBufferFirstChar(position
 						// + lineSeparator.length()) == '\0') {
-						removeFromLineWidth(replaceBuffer.length() - (position + lineSeparator.length()), true);
+						removeBlanksFromLineWidth(replaceBuffer.length() - (position + lineSeparator.length()), true);
 						// } else {
 						// insertNewLine();
 						// }
@@ -1418,7 +1464,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						// if (getBufferFirstChar(0) == '\0') {
 						doIndentForComment = false;
 						ignoreEmptyLineSetting = true;
-						removeFromLineWidth(replaceBuffer.length(), false);
+						removeBlanksFromLineWidth(replaceBuffer.length(), false);
 						insertSpaces(1);
 						// } else {
 						// insertNewLine();
@@ -1427,7 +1473,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				}
 
 				resetCommentIndentVariables();
-				if (startLine != commentStartLine && blockEnd) {
+				if (!isAtEndOfExpression && blockEnd) {
 					recordCommentIndentVariables = true;
 				}
 				if (doIndentForComment) {
@@ -1444,8 +1490,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						document.get(comment.sourceStart() + offset, comment.sourceEnd() - comment.sourceStart()));
 				needIndentNewLine = true;
 
-				if (startLine == commentStartLine && replaceBuffer.indexOf(lineSeparator) == -1) {
-					initCommentIndentVariables(offset, startLine, comment, endWithNewLineIndent);
+				if (isAtEndOfExpression) {
+					initCommentIndentVariables(savedMrnbLineWidth, endWithNewLineIndent);
 					lineWidth = indentLengthForComment;
 				}
 				if (startAtFirstColumn && this.preferences.never_indent_block_comments_on_first_column) {
@@ -1611,21 +1657,16 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			lineWidth = indentLengthForComment;
 		} else {
 			indent();
-		}
-		if (indentationLevelDescending || blockEnd) {
-			for (int i = 0; i < preferences.indentationSize; i++) {
-				appendToBuffer(preferences.indentationChar);
-				addToLineWidth((preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3);
+			if (indentationLevelDescending || blockEnd) {
+				for (int i = 0; i < preferences.indentationSize; i++) {
+					appendToBuffer(preferences.indentationChar);
+					addBlanksToLineWidth((preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3);
+				}
 			}
 		}
 	}
 
-	private void initCommentIndentVariables(int offset, int startLine,
-			org.eclipse.php.core.compiler.ast.nodes.Comment comment, boolean endWithNewLineIndent)
-			throws BadLocationException {
-		// TODO the value should be calculated from the lineWidth of the (non-blank)
-		// formatted line previously located at startLine. This could also be done by
-		// simply saving lineWidth of the latest (non-blank) formatted line.
+	private void initCommentIndentVariables(int length, boolean endWithNewLineIndent) throws BadLocationException {
 		indentLengthForComment = 0;
 		indentStringForComment = ""; //$NON-NLS-1$
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=461701
@@ -1634,12 +1675,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		if (isPHPEqualTag) {
 			return;
 		}
-		IRegion startRegion = document.getLineInformation(startLine);
-		String startLineContent = document
-				.get(startRegion.getOffset(), comment.sourceStart() + offset - startRegion.getOffset()).trim();
-		// indentStringForComment = FormatterUtils.getLineBlanks(document,
-		// startRegion);
-
 		StringBuilder sb = new StringBuilder();
 		int lastIndentationLevel = indentationLevel;
 		if (endWithNewLineIndent) {
@@ -1654,21 +1689,19 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		for (int i = 0; i < lastIndentationLevel * preferences.indentationSize; i++) {
 			sb.append(preferences.indentationChar);
 		}
-		for (int i = 0; i < startLineContent.length(); i++) {
-			sb.append(" "); //$NON-NLS-1$
-		}
-		if (startLineContent.length() > 0) {
-			sb.append(" "); //$NON-NLS-1$
-		}
-		indentStringForComment = sb.toString();
-		char[] blankArray = indentStringForComment.toCharArray();
+		char[] blankArray = sb.toString().toCharArray();
 		for (int i = 0; i < blankArray.length; i++) {
 			if (blankArray[i] == '\t') {
-				indentLengthForComment += 3;
+				indentLengthForComment += 4;
 			} else {
 				indentLengthForComment++;
 			}
 		}
+		for (int i = 0, len = length - indentLengthForComment; i < len; i++) {
+			sb.append(" "); //$NON-NLS-1$
+			indentLengthForComment++;
+		}
+		indentStringForComment = sb.toString();
 	}
 
 	public static List<String> removeEmptyString(List<String> commentWords) {
@@ -1781,7 +1814,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		insertNewLine();
 		if (indentLength >= 0) {
 			appendToBuffer(blanks);
-			addToLineWidth(indentLength - blanks.length());
+			addBlanksToLineWidth(indentLength - blanks.length());
 		} else {
 			indent();
 		}
@@ -1855,7 +1888,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 							&& this.preferences.comment_indent_parameter_description) {
 						for (int i = 0; i < preferences.indentationSize; i++) {
 							appendToBuffer(preferences.indentationChar);
-							addToLineWidth(
+							addBlanksToLineWidth(
 									(preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3);
 						}
 
@@ -1898,7 +1931,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			insertNewLine();
 			if (indentLength >= 0) {
 				appendToBuffer(blanks);
-				addToLineWidth(indentLength - blanks.length());
+				addBlanksToLineWidth(indentLength - blanks.length());
 			} else {
 				indent();
 			}
@@ -1929,7 +1962,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						&& phpDocTag.getTagKind() == TagKind.PARAM) {
 					for (int i = 0; i < preferences.indentationSize; i++) {
 						appendToBuffer(preferences.indentationChar);
-						addToLineWidth((preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3);
+						addBlanksToLineWidth(
+								(preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3);
 					}
 				}
 			}
@@ -2028,7 +2062,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			indentationLevelList.add(indentationLevel);
 			for (int i = 0; i < indentationLevel * preferences.indentationSize; i++) {
 				appendToBuffer(preferences.indentationChar);
-				addToLineWidth((preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3);
+				addBlanksToLineWidth((preferences.indentationChar == CodeFormatterPreferences.SPACE_CHAR) ? 0 : 3);
 			}
 		}
 	}
@@ -2043,10 +2077,12 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			int lineForEnd = document.getLineOfOffset(node.getEnd());
 
 			if (lineForStart == lineForEnd) {
-				addToLineWidth(node.getLength());
+				// we assume that node content is not blank
+				addNonBlanksToLineWidth(node.getLength());
 			} else {
-				isPrevSpace = false;
-				lineWidth = document.getLineLength(lineForEnd);
+				lineWidth = 0;
+				// we assume that node content is not blank
+				addNonBlanksToLineWidth(document.getLineLength(lineForEnd));
 			}
 		} catch (BadLocationException e) {
 			Logger.logException(e);
@@ -2083,9 +2119,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	}
 
 	/**
-	 * Inserts "numberOfLines" newlines. When the "empty line indentation" rule is
-	 * enabled (and numberOfLines > 0), last empty line in replaceBuffer and next
-	 * (numberOfLines - 1) inserted empty lines will be indented.
+	 * Inserts "numberOfLines" newlines. When the "empty line indentation" rule
+	 * is enabled (and numberOfLines > 0), last empty line in replaceBuffer and
+	 * next (numberOfLines - 1) inserted empty lines will be indented.
 	 * 
 	 * @param numberOfLines
 	 *            number of newlines to insert
@@ -2215,8 +2251,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	// since when we need to go back to first element within comma-separated
 	// list
 	// after we already added the formatting changes into the buffer.
-	private void revert(String savedBuffer, int changesIndex, int previousLineWidth, boolean wasPrevSpace,
-			boolean wasHeredocSemicolon, boolean wasPHPEqualTag) {
+	private void revert(String savedBuffer, int changesIndex, int previousMrnbLineWidth, int previousLineWidth,
+			boolean wasPrevSpace, boolean wasHeredocSemicolon, boolean wasPHPEqualTag) {
+		mrnbLineWidth = previousMrnbLineWidth;
 		lineWidth = previousLineWidth;
 		isPrevSpace = wasPrevSpace;
 		isHeredocSemicolon = wasHeredocSemicolon;
@@ -2308,7 +2345,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		indentationLevelDescending = true;
 		handleChars(lastPosition, arrayAccess.getEnd() - 1);
-		addToLineWidth(1);// we need to add the closing bracket/curly
+		addNonBlanksToLineWidth(1);// we need to add the closing bracket/curly
 
 		return false;
 	}
@@ -2316,9 +2353,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	@Override
 	public boolean visit(ArrayCreation arrayCreation) {
 		if (arrayCreation.isHasArrayKey()) {
-			addToLineWidth(5); // 5 = "array".length()
+			addNonBlanksToLineWidth(5); // 5 = "array".length()
 		} else {
-			addToLineWidth(1); // 1 = "[".length()
+			addNonBlanksToLineWidth(1); // 1 = "[".length()
 		}
 		if (this.preferences.insert_space_before_opening_paren_in_array) {
 			insertSpace();
@@ -2329,6 +2366,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			lastPosition = arrayCreation.getStart() + 5;
 		} else {
 			// appendToBuffer(OPEN_BRACKET);
+			addNonBlanksToLineWidth(1);
 			lastPosition = arrayCreation.getStart() + 1;
 		}
 
@@ -2395,7 +2433,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		indentationLevelDescending = true;
 		handleChars(lastPosition, arrayCreation.getEnd() - 1);
-		addToLineWidth(1);// we need to add the closing bracket/parenthesis
+		addNonBlanksToLineWidth(1);// we need to add the closing
+									// bracket/parenthesis
 
 		return false;
 	}
@@ -2558,6 +2597,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			lastStatementEndOffset = block.getStart();
 		} else {
 			// start after curly position
+			addNonBlanksToLineWidth(1);
 			lastStatementEndOffset = block.getStart() + 1;
 		}
 
@@ -2717,26 +2757,33 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			}
 
 			// exclude closing curly
-			int end = endPosition - 1;
+			int endKeywordSize = 1;
+			int end = endPosition - endKeywordSize;
 			if (!block.isCurly()) {
 				switch (block.getParent().getType()) {
 				case ASTNode.SWITCH_STATEMENT:
-					end = endPosition - "endswitch".length();//$NON-NLS-1$
+					endKeywordSize = "endswitch".length();//$NON-NLS-1$
+					end = endPosition - endKeywordSize;
 					break;
 				case ASTNode.WHILE_STATEMENT:
-					end = endPosition - "endwhile".length();//$NON-NLS-1$
+					endKeywordSize = "endwhile".length();//$NON-NLS-1$
+					end = endPosition - endKeywordSize;
 					break;
 				case ASTNode.FOR_STATEMENT:
-					end = endPosition - "endfor".length();//$NON-NLS-1$
+					endKeywordSize = "endfor".length();//$NON-NLS-1$
+					end = endPosition - endKeywordSize;
 					break;
 				case ASTNode.FOR_EACH_STATEMENT:
-					end = endPosition - "endforeach".length();//$NON-NLS-1$
+					endKeywordSize = "endforeach".length();//$NON-NLS-1$
+					end = endPosition - endKeywordSize;
 					break;
 				case ASTNode.DECLARE_STATEMENT:
-					end = endPosition - "enddeclare".length();//$NON-NLS-1$
+					endKeywordSize = "enddeclare".length();//$NON-NLS-1$
+					end = endPosition - endKeywordSize;
 					break;
 				case ASTNode.IF_STATEMENT:
-					end = endPosition;
+					endKeywordSize = 0;
+					end = endPosition - endKeywordSize;
 					break;
 				}
 			}
@@ -2746,9 +2793,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			blockEnd = true;
 			handleChars(lastStatementEndOffset, end);
 			blockEnd = false;
-			if (block.isCurly()) {
-				addToLineWidth(1);// closing curly
-			}
+			addNonBlanksToLineWidth(endKeywordSize);
 		}
 		return false;
 	}
@@ -2768,7 +2813,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	@Override
 	public boolean visit(BreakStatement breakStatement) {
 		int lastPosition = breakStatement.getStart() + 5;
-		addToLineWidth(5);
+		addNonBlanksToLineWidth(5);
 		Expression expression = breakStatement.getExpression();
 		if (expression != null) {
 			insertSpace();
@@ -2849,7 +2894,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(CatchClause catchClause) {
-		addToLineWidth(5);
+		addNonBlanksToLineWidth(5);
 		// handle the chars between the 'catch' and the identifier start
 		// position
 		if (this.preferences.insert_space_before_opening_paren_in_catch) {
@@ -3090,7 +3135,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(CloneExpression cloneExpression) {
-		addToLineWidth(5);// the 'clone'
+		addNonBlanksToLineWidth(5);// the 'clone'
 		// till the expression
 		insertSpace();
 		Expression expression = cloneExpression.getExpression();
@@ -3174,7 +3219,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	@Override
 	public boolean visit(ContinueStatement continueStatement) {
 		int lastPosition = continueStatement.getStart() + 8;
-		addToLineWidth(8);
+		addNonBlanksToLineWidth(8);
 		Expression expression = continueStatement.getExpression();
 		if (expression != null) {
 			insertSpace();
@@ -3190,7 +3235,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(DeclareStatement declareStatement) {
-		addToLineWidth(7);
+		addNonBlanksToLineWidth(7);
 		boolean isFirst = true;
 		if (this.preferences.insert_space_before_opening_paren_in_declare) {
 			insertSpace();
@@ -3249,7 +3294,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	@Override
 	public boolean visit(DoStatement doStatement) {
 		// do-while body
-		addToLineWidth(2);
+		addNonBlanksToLineWidth(2);
 		Statement body = doStatement.getBody();
 		handleAction(doStatement.getStart() + 2, body, true);
 		if (preferences.control_statement_insert_newline_before_while_in_do) {
@@ -3270,7 +3315,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		if (positionOfWhile > lastPosition) {
 			// 5 = "while".length()
 			handleChars(lastPosition, positionOfWhile);
-			addToLineWidth(5);
+			addNonBlanksToLineWidth(5);
 			handleChars(positionOfWhile + 5, positionOfWhile + 5);
 			lastPosition = positionOfWhile + 5;
 		} else {
@@ -3311,7 +3356,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		// check if short echo syntax (<?=)
 		if (expressions.length > 0 && echoStatement.getStart() != expressions[0].getStart()) {
 			lastPosition += 4;
-			addToLineWidth(4);
+			addNonBlanksToLineWidth(4);
 			insertSpace();
 		}
 
@@ -3425,7 +3470,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(ForEachStatement forEachStatement) {
-		addToLineWidth(7);
+		addNonBlanksToLineWidth(7);
 		if (this.preferences.insert_space_before_open_paren_in_foreach) {
 			insertSpace();
 		}
@@ -3469,7 +3514,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		if (formalParameter.isMandatory()) {
 			// the word 'const'
 			lastPosition += 5;
-			addToLineWidth(5);
+			addNonBlanksToLineWidth(5);
 		}
 
 		// handle type
@@ -3509,7 +3554,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	@Override
 	public boolean visit(ForStatement forStatement) {
 		int lastPosition = forStatement.getStart() + 3;
-		addToLineWidth(3);
+		addNonBlanksToLineWidth(3);
 		if (this.preferences.insert_space_before_open_paren_in_for) {
 			insertSpace();
 		}
@@ -3739,7 +3784,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			return;
 		}
 
-		addToLineWidth(5); // 5 = "print".length()
+		addNonBlanksToLineWidth(5); // 5 = "print".length()
 		insertSpace();
 
 		Expression functionName = functionInvocation.getFunctionName().getName();
@@ -3765,7 +3810,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	@Override
 	public boolean visit(GlobalStatement globalStatement) {
 		int lastPosition = globalStatement.getStart() + 6;
-		addToLineWidth(6);// the word 'global'
+		addNonBlanksToLineWidth(6);// the word 'global'
 		insertSpace();
 
 		List<Variable> varList = globalStatement.variables();
@@ -3783,7 +3828,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	public boolean visit(Identifier identifier) {
 		// ListVariable can contain empty identifiers
 		if (identifier.getLength() > 0) {
-			addToLineWidth(identifier.getLength());
+			addNonBlanksToLineWidth(identifier.getLength());
 		}
 		return false;
 	}
@@ -3800,7 +3845,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			return false;
 		}
 
-		addToLineWidth(len); // add the word 'if' OR 'elseif'
+		addNonBlanksToLineWidth(len); // add the word 'if' OR 'elseif'
 		// handle the chars between the 'while' and the condition start position
 		if (this.preferences.insert_space_before_opening_paren_in_if) {
 			insertSpace();
@@ -4029,7 +4074,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		if (positionOfElse > lastPosition) {
 			// 4 = "else".length()
 			handleChars(lastPosition, positionOfElse);
-			addToLineWidth(4);
+			addNonBlanksToLineWidth(4);
 			handleChars(positionOfElse + 4, positionOfElse + 4);
 			lastPosition = positionOfElse + 4;
 		} else {
@@ -4040,7 +4085,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(IgnoreError ignoreError) {
-		addToLineWidth(1);// the '@' sign
+		addNonBlanksToLineWidth(1);// the '@' sign
 		ignoreError.getExpression().accept(this);
 		return false;
 	}
@@ -4051,7 +4096,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		int len = (include.getIncludeType() == Include.IT_INCLUDE || include.getIncludeType() == Include.IT_REQUIRE) ? 7
 				: 12;
 		lastPosition += len;
-		addToLineWidth(len);// add 'include' 'require' 'require_once'
+		addNonBlanksToLineWidth(len);// add 'include' 'require' 'require_once'
 
 		insertSpace();
 		handleChars(lastPosition, include.getExpression().getStart());
@@ -4064,9 +4109,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	 * 
 	 * @param inFixOperand
 	 * @param doFirstWrap
-	 *            true when the first line wrap can be done, false when a new line
-	 *            was already inserted and there is no need to add a "first" line
-	 *            wrap
+	 *            true when the first line wrap can be done, false when a new
+	 *            line was already inserted and there is no need to add a
+	 *            "first" line wrap
 	 * @return true if a new line was inserted, false otherwise
 	 */
 	public boolean indentInfixOperand(Expression inFixOperand, boolean doFirstWrap) {
@@ -4190,6 +4235,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		boolean oldWasBinaryExpressionWrapped = wasBinaryExpressionWrapped;
 
 		if (binaryExpressionSavedBuffer == null) {
+			binaryExpressionSavedMrnbLineWidth = mrnbLineWidth;
 			binaryExpressionSavedLineWidth = lineWidth;
 			binaryExpressionSavedIsPrevSpace = isPrevSpace;
 			binaryExpressionSavedIsHeredocSemicolon = isHeredocSemicolon;
@@ -4233,9 +4279,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		infixExpression.getRight().accept(this);
 
 		if (infixExpression == binaryExpressionSavedNode && binaryExpressionLineWrapPolicy == NO_LINE_WRAP) {
-			revert(binaryExpressionSavedBuffer, binaryExpressionSavedChangesIndex, binaryExpressionSavedLineWidth,
-					binaryExpressionSavedIsPrevSpace, binaryExpressionSavedIsHeredocSemicolon,
-					binaryExpressionSavedIsPHPEqualTag);
+			revert(binaryExpressionSavedBuffer, binaryExpressionSavedChangesIndex, binaryExpressionSavedMrnbLineWidth,
+					binaryExpressionSavedLineWidth, binaryExpressionSavedIsPrevSpace,
+					binaryExpressionSavedIsHeredocSemicolon, binaryExpressionSavedIsPHPEqualTag);
 			// undo everything
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=506488
 			binaryExpressionSavedBuffer = replaceBuffer.toString();
@@ -4256,6 +4302,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			binaryExpressionSavedNode = infixExpression;
 		}
 		if (infixExpression == binaryExpressionSavedNode) {
+			binaryExpressionSavedMrnbLineWidth = 0;
 			binaryExpressionSavedLineWidth = 0;
 			binaryExpressionSavedIsPrevSpace = false;
 			binaryExpressionSavedIsHeredocSemicolon = false;
@@ -4317,7 +4364,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(InterfaceDeclaration interfaceDeclaration) {
-		addToLineWidth(9);// interface
+		addNonBlanksToLineWidth(9);// interface
 		insertSpace();
 		handleChars(interfaceDeclaration.getStart() + 9, interfaceDeclaration.getName().getStart());
 		interfaceDeclaration.getName().accept(this);
@@ -4355,7 +4402,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(ListVariable listVariable) {
-		addToLineWidth(4);
+		addNonBlanksToLineWidth(4);
 		if (this.preferences.insert_space_before_opening_paren_in_list) {
 			insertSpace();
 		}
@@ -4686,14 +4733,14 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(Reference reference) {
-		addToLineWidth(1);// &$a
+		addNonBlanksToLineWidth(1);// &$a
 		reference.getExpression().accept(this);
 		return false;
 	}
 
 	@Override
 	public boolean visit(ReflectionVariable reflectionVariable) {
-		addToLineWidth(1);// $$a
+		addNonBlanksToLineWidth(1);// $$a
 		reflectionVariable.getName().accept(this);
 		return false;
 	}
@@ -4701,7 +4748,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	@Override
 	public boolean visit(ReturnStatement returnStatement) {
 		int lastPosition = returnStatement.getStart() + 6;
-		addToLineWidth(6);
+		addNonBlanksToLineWidth(6);
 
 		Expression expression = returnStatement.getExpression();
 		if (expression != null) {
@@ -4717,7 +4764,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(YieldExpression yieldExpression) {
-		addToLineWidth(5);
+		addNonBlanksToLineWidth(5);
 		// handle [key => expr] or just [expr]
 		int lastPosition = yieldExpression.getStart() + 5;
 		insertSpace();
@@ -4803,7 +4850,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	@Override
 	public boolean visit(StaticStatement staticStatement) {
 		int lastPosition = staticStatement.getStart() + 6;
-		addToLineWidth(6);
+		addNonBlanksToLineWidth(6);
 		insertSpace();
 
 		List<Expression> expList = staticStatement.expressions();
@@ -4823,13 +4870,13 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		// position/ first statement
 		int lastStatementEndOffset = 0;
 		if (switchCase.isDefault()) {
-			addToLineWidth(7);// the word 'default'
+			addNonBlanksToLineWidth(7);// the word 'default'
 			if (this.preferences.insert_space_after_switch_default) {
 				insertSpace();
 			}
 			lastStatementEndOffset = switchCase.getStart() + 7;
 		} else {
-			addToLineWidth(4);// the word 'case'
+			addNonBlanksToLineWidth(4);// the word 'case'
 			insertSpace();
 			handleChars(switchCase.getStart() + 4, switchCase.getValue().getStart());
 			switchCase.getValue().accept(this);
@@ -4875,7 +4922,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(SwitchStatement switchStatement) {
-		addToLineWidth(6);
+		addNonBlanksToLineWidth(6);
 		// handle the chars between the 'switch' and the expr start position
 		if (this.preferences.insert_space_before_opening_paren_in_switch) {
 			insertSpace();
@@ -4917,7 +4964,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(ThrowStatement throwStatement) {
-		addToLineWidth(5);
+		addNonBlanksToLineWidth(5);
 		insertSpace();
 		Expression expr = throwStatement.getExpression();
 		handleChars(throwStatement.getStart() + 5, expr.getStart());
@@ -4931,7 +4978,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(TryStatement tryStatement) {
-		addToLineWidth(3);
+		addNonBlanksToLineWidth(3);
 		boolean isIndentationAdded = handleBlockOpenBrace(this.preferences.brace_position_for_block,
 				this.preferences.insert_space_before_opening_brace_in_block);
 		Block body = tryStatement.getBody();
@@ -4995,7 +5042,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	@Override
 	public boolean visit(Variable variable) {
 		if (variable.isDollared()) {
-			addToLineWidth(1);
+			addNonBlanksToLineWidth(1);
 		}
 		variable.getName().accept(this);
 		return false;
@@ -5003,7 +5050,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(WhileStatement whileStatement) {
-		addToLineWidth(5);
+		addNonBlanksToLineWidth(5);
 		// handle the chars between the 'while' and the condition start position
 		if (this.preferences.insert_space_before_opening_paren_in_while) {
 			insertSpace();
@@ -5098,7 +5145,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	@Override
 	public boolean visit(UseStatement useStatement) {
 		int lastPosition = useStatement.getStart() + 3;
-		addToLineWidth(3);// the word 'use'
+		addNonBlanksToLineWidth(3);// the word 'use'
 		insertSpace();
 
 		appendStatementType(useStatement.getStatementType());
@@ -5275,7 +5322,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	public boolean visit(TraitUseStatement node) {
 		if (node.getTraitList().size() > 0) {
 			// int lastPosition = node.getStart() + 3;
-			addToLineWidth(3);// the word 'use'
+			addNonBlanksToLineWidth(3);// the word 'use'
 			insertSpace();
 			handleChars(node.getStart() + 3, node.getTraitList().get(0).getStart());
 		}
@@ -5390,8 +5437,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	/**
 	 * PHP Partitions can contain contiguous &lt;?php ?&gt; regions (see
-	 * {@link PHPStructuredTextPartitioner#computePartitioning(int, int)}), we have
-	 * to split them manually.
+	 * {@link PHPStructuredTextPartitioner#computePartitioning(int, int)}), we
+	 * have to split them manually.
 	 * 
 	 * @param partition
 	 *            PHP Partition
