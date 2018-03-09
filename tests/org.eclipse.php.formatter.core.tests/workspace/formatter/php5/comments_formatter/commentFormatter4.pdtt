@@ -69,8 +69,8 @@ interface Example
      * tags</li></ul>
      */
     function bar2 (); // This is a long comment that should be split in multiple
-                     // line comments in case the line comment formatting is
-                     // enabled
+                      // line comments in case the line comment formatting is
+                      // enabled
     /**
      * The following is some sample code which illustrates source formatting
      * within javadoc comments:
