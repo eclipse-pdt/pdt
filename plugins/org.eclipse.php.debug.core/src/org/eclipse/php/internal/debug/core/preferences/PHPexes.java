@@ -79,9 +79,9 @@ public class PHPexes {
 	private static PHPexes instance;
 
 	// Hold a mapping from the debugger ID to a map of installed
-	private HashMap<String, HashMap<String, PHPexeItem>> items = new HashMap<>();
+	private Map<String, Map<String, PHPexeItem>> items = new HashMap<>();
 	// Hold a mapping to each php version default PHPExeItem.
-	private HashMap<PHPVersion, PHPexeItem> defaultItemsForPHPVersion = new HashMap<>();
+	private Map<PHPVersion, PHPexeItem> defaultItemsForPHPVersion = new HashMap<>();
 	private final LinkedList<IPHPExesListener> listeners = new LinkedList<>();
 
 	/**
@@ -139,11 +139,7 @@ public class PHPexes {
 
 	private void storeItem(PHPexeItem item) {
 		String debuggerId = item.getDebuggerID();
-		HashMap<String, PHPexeItem> map = items.get(debuggerId);
-		if (map == null) {
-			map = new HashMap<>();
-			items.put(debuggerId, map);
-		}
+		Map<String, PHPexeItem> map = items.computeIfAbsent(debuggerId, k -> new HashMap<>());
 		map.put(item.getName(), item);
 		Iterator<IPHPExesListener> iter = listeners.iterator();
 		while (iter.hasNext()) {
@@ -161,7 +157,7 @@ public class PHPexes {
 	public void updateItem(PHPexeItem original, PHPexeItem copy) {
 		// Remove binding from debuggers ID map
 		String debuggerID = original.getDebuggerID();
-		HashMap<String, PHPexeItem> exes = items.get(debuggerID);
+		Map<String, PHPexeItem> exes = items.get(debuggerID);
 		if (exes != null) {
 			exes.remove(original.getName());
 		}
@@ -180,11 +176,7 @@ public class PHPexes {
 		original.setVersion(copy.getVersion());
 		// Add new binding after update
 		debuggerID = original.getDebuggerID();
-		exes = items.get(debuggerID);
-		if (exes == null) {
-			exes = new HashMap<>();
-			items.put(debuggerID, exes);
-		}
+		exes = items.computeIfAbsent(debuggerID, k -> new HashMap<>());
 		exes.put(original.getName(), original);
 		if (updateDefault) {
 			setDefaultItem(original);
@@ -209,8 +201,8 @@ public class PHPexes {
 	 * @see #hasItems()
 	 */
 	public boolean hasItems(String debuggerId) {
-		HashMap<String, PHPexeItem> map = items.get(debuggerId);
-		return map != null && map.size() > 0;
+		Map<String, PHPexeItem> map = items.get(debuggerId);
+		return map != null && !map.isEmpty();
 	}
 
 	/**
@@ -233,13 +225,11 @@ public class PHPexes {
 		Set<String> installedDebuggers = PHPDebuggersRegistry.getDebuggersIds();
 		ArrayList<PHPexeItem> list = new ArrayList<>();
 		for (String debuggerId : installedDebuggers) {
-			HashMap<String, PHPexeItem> installedExes = items.get(debuggerId);
-			if (installedExes != null) {
-				for (Entry<String, PHPexeItem> entry : installedExes.entrySet()) {
-					PHPexeItem exeItem = entry.getValue();
-					if (exeItem.isEditable()) {
-						list.add(exeItem);
-					}
+			Map<String, PHPexeItem> installedExes = items.getOrDefault(debuggerId, Collections.emptyMap());
+			for (Entry<String, PHPexeItem> entry : installedExes.entrySet()) {
+				PHPexeItem exeItem = entry.getValue();
+				if (exeItem.isEditable()) {
+					list.add(exeItem);
 				}
 			}
 		}
@@ -255,7 +245,7 @@ public class PHPexes {
 	 * @return A {@link PHPexeItem} or null if none is installed.
 	 */
 	public PHPexeItem getItem(String debuggerId, String name) {
-		HashMap<String, PHPexeItem> map = items.get(debuggerId);
+		Map<String, PHPexeItem> map = items.get(debuggerId);
 		if (map == null) {
 			return null;
 		}
@@ -263,9 +253,8 @@ public class PHPexes {
 	}
 
 	public PHPexeItem getItem(String name) {
-		for (Iterator<String> iterator = items.keySet().iterator(); iterator.hasNext();) {
-			String debuggerId = iterator.next();
-			HashMap<String, PHPexeItem> map = items.get(debuggerId);
+		for (Entry<String, Map<String, PHPexeItem>> entry : items.entrySet()) {
+			Map<String, PHPexeItem> map = entry.getValue();
 			if (map != null) {
 				PHPexeItem item = map.get(name);
 				if (item != null) {
@@ -277,9 +266,8 @@ public class PHPexes {
 	}
 
 	public PHPexeItem findItem(String id) {
-		for (Iterator<String> iterator = items.keySet().iterator(); iterator.hasNext();) {
-			String debuggerId = iterator.next();
-			HashMap<String, PHPexeItem> map = items.get(debuggerId);
+		for (Entry<String, Map<String, PHPexeItem>> entry : items.entrySet()) {
+			Map<String, PHPexeItem> map = entry.getValue();
 			if (map != null) {
 				for (PHPexeItem value : map.values()) {
 					if (value.getUniqueId().equals(id)) {
@@ -292,12 +280,10 @@ public class PHPexes {
 	}
 
 	public PHPexeItem getPHP54Item() {
-		for (Iterator<String> iterator = items.keySet().iterator(); iterator.hasNext();) {
-			String debuggerId = iterator.next();
-			HashMap<String, PHPexeItem> map = items.get(debuggerId);
+		for (Entry<String, Map<String, PHPexeItem>> entry : items.entrySet()) {
+			Map<String, PHPexeItem> map = entry.getValue();
 			if (map != null) {
-				for (Iterator<PHPexeItem> iterator2 = map.values().iterator(); iterator2.hasNext();) {
-					PHPexeItem item = iterator2.next();
+				for (PHPexeItem item : map.values()) {
 					if (item != null && item.getVersion().compareTo("5.4.0") >= 0) { //$NON-NLS-1$
 						return item;
 					}
@@ -309,12 +295,10 @@ public class PHPexes {
 
 	public List<PHPexeItem> getPHP54Items() {
 		List<PHPexeItem> result = new ArrayList<>();
-		for (Iterator<String> iterator = items.keySet().iterator(); iterator.hasNext();) {
-			String debuggerId = iterator.next();
-			HashMap<String, PHPexeItem> map = items.get(debuggerId);
+		for (Entry<String, Map<String, PHPexeItem>> entry : items.entrySet()) {
+			Map<String, PHPexeItem> map = entry.getValue();
 			if (map != null) {
-				for (Iterator<PHPexeItem> iterator2 = map.values().iterator(); iterator2.hasNext();) {
-					PHPexeItem item = iterator2.next();
+				for (PHPexeItem item : map.values()) {
 					if (item != null && item.getVersion().compareTo("5.4.0") >= 0) { //$NON-NLS-1$
 						result.add(item);
 					}
@@ -338,21 +322,19 @@ public class PHPexes {
 	public PHPexeItem getItemForFile(String exeFilePath, String iniFilePath) {
 		Set<String> installedDebuggers = PHPDebuggersRegistry.getDebuggersIds();
 		for (String debuggerId : installedDebuggers) {
-			HashMap<String, PHPexeItem> installedExes = items.get(debuggerId);
-			if (installedExes != null) {
-				for (Entry<String, PHPexeItem> entry : installedExes.entrySet()) {
-					PHPexeItem exeItem = entry.getValue();
-					// Check for ini equality
-					boolean iniEquals = true;
-					if (iniFilePath == null) {
-						iniEquals = exeItem.getINILocation() == null;
-					} else {
-						iniEquals = exeItem.getINILocation() == null ? iniFilePath.equals("") //$NON-NLS-1$
-								: iniFilePath.equals(exeItem.getINILocation().toString());
-					}
-					if (iniEquals && exeFilePath.equals(exeItem.getExecutable().toString())) {
-						return exeItem;
-					}
+			Map<String, PHPexeItem> installedExes = items.getOrDefault(debuggerId, Collections.emptyMap());
+			for (Entry<String, PHPexeItem> entry : installedExes.entrySet()) {
+				PHPexeItem exeItem = entry.getValue();
+				// Check for ini equality
+				boolean iniEquals = true;
+				if (iniFilePath == null) {
+					iniEquals = exeItem.getINILocation() == null;
+				} else {
+					iniEquals = exeItem.getINILocation() == null ? iniFilePath.equals("") //$NON-NLS-1$
+							: iniFilePath.equals(exeItem.getINILocation().toString());
+				}
+				if (iniEquals && exeFilePath.equals(exeItem.getExecutable().toString())) {
+					return exeItem;
 				}
 			}
 		}
@@ -368,7 +350,7 @@ public class PHPexes {
 	 *         executables.
 	 */
 	public PHPexeItem[] getItems(String debuggerId) {
-		HashMap<String, PHPexeItem> installedExes = items.get(debuggerId);
+		Map<String, PHPexeItem> installedExes = items.get(debuggerId);
 		if (installedExes == null) {
 			return null;
 		}
@@ -386,12 +368,10 @@ public class PHPexes {
 		ArrayList<PHPexeItem> allItems = new ArrayList<>();
 		Set<String> debuggers = items.keySet();
 		for (String debugger : debuggers) {
-			HashMap<String, PHPexeItem> debuggerItems = items.get(debugger);
-			if (debuggerItems != null) {
-				Collection<PHPexeItem> exeItems = debuggerItems.values();
-				for (PHPexeItem item : exeItems) {
-					allItems.add(item);
-				}
+			Map<String, PHPexeItem> debuggerItems = items.getOrDefault(debugger, Collections.emptyMap());
+			Collection<PHPexeItem> exeItems = debuggerItems.values();
+			for (PHPexeItem item : exeItems) {
+				allItems.add(item);
 			}
 		}
 		return allItems.toArray(new PHPexeItem[allItems.size()]);
@@ -639,7 +619,7 @@ public class PHPexes {
 	 */
 	public void removeItem(PHPexeItem item) {
 		String debuggerID = item.getDebuggerID();
-		HashMap<String, PHPexeItem> exes = items.get(debuggerID);
+		Map<String, PHPexeItem> exes = items.get(debuggerID);
 		PHPexeItem removedItem = null;
 		if (exes != null) {
 			removedItem = exes.remove(item.getName());
@@ -678,12 +658,7 @@ public class PHPexes {
 
 	private void detectDefaultItem() {
 		PHPexeItem[] allItems = getAllItems();
-		Comparator<PHPexeItem> sorter = new Comparator<PHPexeItem>() {
-			@Override
-			public int compare(PHPexeItem a, PHPexeItem b) {
-				return b.getVersion().compareTo(a.getVersion());
-			}
-		};
+		Comparator<PHPexeItem> sorter = (a, b) -> b.getVersion().compareTo(a.getVersion());
 		Arrays.sort(allItems, sorter);
 		if (allItems.length > 0) {
 			setDefaultItem(allItems[0]);
@@ -769,7 +744,7 @@ public class PHPexes {
 		return defaultItemsForPHPVersion.get(phpVersion);
 	}
 
-	public HashMap<PHPVersion, PHPexeItem> getDefaultItemsForPHPVersion() {
+	public Map<PHPVersion, PHPexeItem> getDefaultItemsForPHPVersion() {
 		return defaultItemsForPHPVersion;
 	}
 
