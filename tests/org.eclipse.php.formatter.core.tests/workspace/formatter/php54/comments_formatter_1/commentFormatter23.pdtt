@@ -1,0 +1,42 @@
+--TEST--
+Bug 532269 - Code formatter can cycle between 2 line wrapping policies when formatting a php file
+--FILE--
+<?php if ($isAddHooks) : ?>
+if ($ret) {
+    if ($this->archiveOnDelete) {
+        // do nothing yet. The object will be archived later when calling <?php echo $queryClassname ?>::delete().
+    } else {
+        $deleteQuery->setArchiveOnDelete(false);
+        $this->archiveOnDelete = true;
+    }
+}
+<?php else: ?>
+if ($this->archiveOnDelete) {
+    // do nothing yet. The object will be archived later when calling <?php echo $queryClassname ?>::delete().
+} else {
+    $deleteQuery->setArchiveOnDelete(false);
+    $this->archiveOnDelete = true;
+}
+<?php
+
+endif;
+--EXPECT--
+<?php if ($isAddHooks) : ?>
+if ($ret) {
+    if ($this->archiveOnDelete) {
+        // do nothing yet. The object will be archived later when calling <?php echo $queryClassname ?>::delete().
+    } else {
+        $deleteQuery->setArchiveOnDelete(false);
+        $this->archiveOnDelete = true;
+    }
+}
+<?php else: ?>
+if ($this->archiveOnDelete) {
+    // do nothing yet. The object will be archived later when calling <?php echo $queryClassname ?>::delete().
+} else {
+    $deleteQuery->setArchiveOnDelete(false);
+    $this->archiveOnDelete = true;
+}
+<?php
+
+endif;
