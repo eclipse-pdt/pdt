@@ -1,0 +1,39 @@
+--TEST--
+Bug 531466 - code formatter needs sometimes to be run twice to give final result
+--FILE--
+<?php
+class MyTableTableMap extends TableMap
+{
+	public function initialize()
+	{
+	} // initialize()
+	
+	/**
+	 * Build the RelationMap objects for this table relationships
+	 */
+	public function buildRelations()
+	{
+	} // buildRelations()
+	
+} // MyTableTableMap
+?>
+--EXPECT--
+<?php
+
+class MyTableTableMap extends TableMap
+{
+    
+    public function initialize()
+    {
+    }
+    
+    // initialize()
+    
+    /**
+     * Build the RelationMap objects for this table relationships
+     */
+    public function buildRelations()
+    {
+    } // buildRelations()
+} // MyTableTableMap
+?>

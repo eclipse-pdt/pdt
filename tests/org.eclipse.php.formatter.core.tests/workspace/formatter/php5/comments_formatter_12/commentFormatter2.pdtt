@@ -1,0 +1,32 @@
+--TEST--
+Bug 531466 - code formatter needs sometimes to be run twice to give final result
+--FILE--
+<?php
+class LoggerAppenderDailyFile extends LoggerAppenderFile
+{
+    public function append(LoggerLoggingEvent $event) {
+        if (!isset($this->currentDate)) {
+        }
+        
+        // Check if rollover is needed
+        else if ($this->currentDate !== $eventDate) {
+        }
+    }
+}
+?>
+--EXPECT--
+<?php
+
+class LoggerAppenderDailyFile extends LoggerAppenderFile {
+	
+	public function append(LoggerLoggingEvent $event) {
+		
+		if (! isset ( $this->currentDate )) {
+		} // Check if rollover is needed
+		else if ($this->currentDate !== $eventDate) {
+		}
+		
+	}
+	
+}
+?>

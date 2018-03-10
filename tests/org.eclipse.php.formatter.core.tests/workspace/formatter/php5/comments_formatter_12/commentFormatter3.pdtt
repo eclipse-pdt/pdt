@@ -1,0 +1,32 @@
+--TEST--
+Bug 531466 - code formatter needs sometimes to be run twice to give final result
+--FILE--
+<?php
+abstract class BaseActPeer
+{
+    public static function doCountJoinAll()
+    {
+
+        $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+
+        // Set the correct dbName
+        $criteria->setDbName(ActPeer::DATABASE_NAME);
+    }
+}
+?>
+--EXPECT--
+<?php
+
+abstract class BaseActPeer {
+	
+	public static function doCountJoinAll() {
+		
+		$criteria->clearOrderByColumns (); // ORDER BY won't ever affect the count
+		                                   
+		// Set the correct dbName
+		$criteria->setDbName ( ActPeer::DATABASE_NAME );
+		
+	}
+	
+}
+?>
