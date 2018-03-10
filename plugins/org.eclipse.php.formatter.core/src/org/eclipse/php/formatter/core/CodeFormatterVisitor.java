@@ -273,15 +273,18 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return count;
 	}
 
-	private char getBufferFirstChar(int position) throws BadLocationException {
+	private boolean isBufferBlank(int position) throws BadLocationException {
 		for (int offset = position; offset < replaceBuffer.length(); offset++) {
 			char currChar = replaceBuffer.charAt(offset);
 			if (currChar != ' ' && currChar != '\t' && currChar != '\r' && currChar != '\n') {
-				// not empty line
-				return currChar;
+				return false;
 			}
 		}
-		return '\0';
+		return true;
+	}
+
+	private boolean isBufferBlank() throws BadLocationException {
+		return isBufferBlank(0);
 	}
 
 	public List<ReplaceEdit> getChanges() {
@@ -756,12 +759,12 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				String afterNewLine = EMPTY_STRING;
 				int position = replaceBuffer.lastIndexOf(lineSeparator);
 				if (position >= 0) {
-					if (getBufferFirstChar(position + lineSeparator.length()) == '\0') {
+					if (isBufferBlank(position + lineSeparator.length())) {
 						afterNewLine = replaceBuffer.substring(position + lineSeparator.length(),
 								replaceBuffer.length());
 					}
 				} else {
-					if (getBufferFirstChar(0) == '\0') {
+					if (isBufferBlank()) {
 						afterNewLine = replaceBuffer.toString();
 					}
 				}
@@ -1044,13 +1047,13 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				// of previous php expression.
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=531466
 				// Also useful to avoid code formatter...
-				isAtEndOfExpression = startLine == commentStartLine && !(position >= 0
-						&& position != replaceBuffer.indexOf(lineSeparator) && getBufferFirstChar(0) == '\0');
+				isAtEndOfExpression = startLine == commentStartLine
+						&& !(position >= 0 && position != replaceBuffer.indexOf(lineSeparator) && isBufferBlank());
 				if (isAtEndOfExpression) {
 					doIndentForComment = false;
 					ignoreEmptyLineSetting = true;
 					if (position >= 0) {
-						if (getBufferFirstChar(position + lineSeparator.length()) == '\0') {
+						if (isBufferBlank(position + lineSeparator.length())) {
 							// ...to go here...
 							indentAfterComment = replaceBuffer.substring(position + lineSeparator.length(),
 									replaceBuffer.length());
@@ -1065,7 +1068,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 							insertSpace();
 						}
 					} else {
-						if (getBufferFirstChar(0) == '\0') {
+						if (isBufferBlank()) {
 							removeBlanksFromLineWidth(replaceBuffer.length(), false);
 							insertSpaces(1);
 						} else {
@@ -1074,7 +1077,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					}
 					savedMrnbLineWidth += replaceBuffer.length();
 				} else {
-					if (getBufferFirstChar(0) == '\0') {
+					if (isBufferBlank()) {
 						if (position >= 0) {
 							// ...before finally going there
 							removeBlanksFromLineWidth(replaceBuffer.length() - position, true);
@@ -1086,7 +1089,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 							insertSpaces(1);
 						}
 					} else {
-						if (position >= 0 && getBufferFirstChar(position + lineSeparator.length()) == '\0') {
+						if (position >= 0 && isBufferBlank(position + lineSeparator.length())) {
 							removeBlanksFromLineWidth(replaceBuffer.length() - position, true);
 						}
 						insertNewLine();
@@ -1393,7 +1396,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				previousCommentIsSingleLine = false;
 				// ignore multi line comments in the middle of code
 				// example while /* kuku */ ( /* kuku */$a > 0 )
-				if (getBufferFirstChar(0) != '\0') {
+				if (!isBufferBlank()) {
 					replaceBuffer.setLength(0);
 					IRegion reg = document.getLineInformationOfOffset(end);
 					addNonBlanksToLineWidth(end - Math.max(reg.getOffset(), comment.sourceStart() + offset));
@@ -2783,7 +2786,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			blockEnd = true;
 			handleChars(lastStatementEndOffset, end);
 			blockEnd = false;
-			addNonBlanksToLineWidth(endKeywordSize);
+			if (endKeywordSize > 0) {
+				addNonBlanksToLineWidth(endKeywordSize);
+			}
 		}
 		return false;
 	}
