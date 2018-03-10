@@ -859,7 +859,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			case NO_LINE_WRAP:
 				break;
 			case FIRST_WRAP_WHEN_NECESSARY: // Wrap only when necessary
-				if (lineWidth + array[i].getLength() > this.preferences.line_wrap_line_split) {
+				if (estimateCommaListItemWidth(array[i],
+						this.preferences.line_wrap_line_split) > this.preferences.line_wrap_line_split) {
 					lineWrapPolicy = WRAP_WHEN_NECESSARY;
 					if (!cio.indented) {
 						indentationLevel += indentGap;
@@ -870,7 +871,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				}
 				break;
 			case WRAP_WHEN_NECESSARY:
-				if (lineWidth + array[i].getLength() > this.preferences.line_wrap_line_split) {
+				if (estimateCommaListItemWidth(array[i],
+						this.preferences.line_wrap_line_split) > this.preferences.line_wrap_line_split) {
 					insertNewLines(1);
 					indent();
 					isInsertNewLine = true;
@@ -892,7 +894,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				break;
 			case WRAP_ALL_ELEMENTS: // Wrap all elements, every element on a new
 									// line
-				if (forceSplit || lineWidth + array[i].getLength() > this.preferences.line_wrap_line_split) {
+				if (forceSplit || estimateCommaListItemWidth(array[i],
+						this.preferences.line_wrap_line_split) > this.preferences.line_wrap_line_split) {
 					revert(savedBuffer, changesIndex, savedMrnbLineWidth, savedlineWidth, savedIsPrevSpace,
 							savedIsHeredocSemicolon, savedIsPHPEqualTag);
 					lastPosition = savedLastPosition;
@@ -908,7 +911,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				break;
 			case WRAP_ALL_ELEMENTS_NO_INDENT_FIRST: // Wrap all elements, indent
 													// all but the first element
-				if (forceSplit || lineWidth + array[i].getLength() > this.preferences.line_wrap_line_split) {
+				if (forceSplit || estimateCommaListItemWidth(array[i],
+						this.preferences.line_wrap_line_split) > this.preferences.line_wrap_line_split) {
 					// revert the buffer
 					revert(savedBuffer, changesIndex, savedMrnbLineWidth, savedlineWidth, savedIsPrevSpace,
 							savedIsHeredocSemicolon, savedIsPHPEqualTag);
@@ -926,7 +930,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			case WRAP_ALL_ELEMENTS_EXCEPT_FIRST: // Wrap all elements, except
 													// first element if not
 													// necessary
-				if (forceSplit || lineWidth + array[i].getLength() > this.preferences.line_wrap_line_split) {
+				if (forceSplit || estimateCommaListItemWidth(array[i],
+						this.preferences.line_wrap_line_split) > this.preferences.line_wrap_line_split) {
 					// revert
 					revert(savedBuffer, changesIndex, savedMrnbLineWidth, savedlineWidth, savedIsPrevSpace,
 							savedIsHeredocSemicolon, savedIsPHPEqualTag);
@@ -1423,8 +1428,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					doIndentForComment = false;
 					ignoreEmptyLineSetting = true;
 					if (position >= 0) {
-						// if (getBufferFirstChar(position
-						// + lineSeparator.length()) == '\0') {
+						// if (isBufferBlank(position
+						// + lineSeparator.length())) {
 						indentAfterComment = replaceBuffer.substring(position + lineSeparator.length(),
 								replaceBuffer.length());
 						removeBlanksFromLineWidth(replaceBuffer.length() - position, true);
@@ -1438,7 +1443,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						// insertSpace();
 						// }
 					} else {
-						// if (getBufferFirstChar(0) == '\0') {
+						// if (isBufferBlank()) {
 						removeBlanksFromLineWidth(replaceBuffer.length(), false);
 						insertSpaces(1);
 						// } else {
@@ -1448,14 +1453,14 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					savedMrnbLineWidth += replaceBuffer.length();
 				} else {
 					if (position >= 0) {
-						// if (getBufferFirstChar(position
-						// + lineSeparator.length()) == '\0') {
+						// if (isBufferBlank(position
+						// + lineSeparator.length())) {
 						removeBlanksFromLineWidth(replaceBuffer.length() - (position + lineSeparator.length()), true);
 						// } else {
 						// insertNewLine();
 						// }
 					} else {
-						// if (getBufferFirstChar(0) == '\0') {
+						// if (isBufferBlank()) {
 						doIndentForComment = false;
 						ignoreEmptyLineSetting = true;
 						removeBlanksFromLineWidth(replaceBuffer.length(), false);
@@ -4133,7 +4138,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			}
 			break;
 		case WRAP_WHEN_NECESSARY_ADD_INDENT:
-			if (calcLinesWidth(inFixOperand) > this.preferences.line_wrap_line_split) {
+			if (estimateInfixItemWidth(inFixOperand) > this.preferences.line_wrap_line_split) {
 				binaryExpressionLineWrapPolicy = WRAP_WHEN_NECESSARY;
 				if (doFirstWrap) {
 					indentationLevel += binaryExpressionIndentGap;
@@ -4145,7 +4150,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			}
 			break;
 		case WRAP_WHEN_NECESSARY:
-			if (calcLinesWidth(inFixOperand) > this.preferences.line_wrap_line_split) {
+			if (estimateInfixItemWidth(inFixOperand) > this.preferences.line_wrap_line_split) {
 				if (doFirstWrap) {
 					insertNewLines(1);
 					indent();
@@ -4167,7 +4172,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			break;
 		case WRAP_ALL_ELEMENTS: // Wrap all elements, every element on a new
 								// line
-			if (forceSplit || calcLinesWidth(inFixOperand) > this.preferences.line_wrap_line_split) {
+			if (forceSplit || estimateInfixItemWidth(inFixOperand) > this.preferences.line_wrap_line_split) {
 				binaryExpressionLineWrapPolicy = ALWAYS_WRAP_ELEMENT;
 				if (doFirstWrap) {
 					indentationLevel += binaryExpressionIndentGap;
@@ -4182,7 +4187,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			break;
 		case WRAP_ALL_ELEMENTS_NO_INDENT_FIRST: // Wrap all elements, indent all
 												// but the first element
-			if (forceSplit || calcLinesWidth(inFixOperand) > this.preferences.line_wrap_line_split) {
+			if (forceSplit || estimateInfixItemWidth(inFixOperand) > this.preferences.line_wrap_line_split) {
 				binaryExpressionLineWrapPolicy = ALWAYS_WRAP_ELEMENT_ADD_LEVEL;
 				if (doFirstWrap) {
 					indentationLevel += binaryExpressionIndentGap;
@@ -4197,7 +4202,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			break;
 		case WRAP_ALL_ELEMENTS_EXCEPT_FIRST:// Wrap all elements, except first
 											// element if not necessary
-			if (forceSplit || calcLinesWidth(inFixOperand) > this.preferences.line_wrap_line_split) {
+			if (forceSplit || estimateInfixItemWidth(inFixOperand) > this.preferences.line_wrap_line_split) {
 				binaryExpressionLineWrapPolicy = ALWAYS_WRAP_ELEMENT;
 				if (doFirstWrap) {
 					indentationLevel += binaryExpressionIndentGap;
@@ -4315,7 +4320,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
-	private int calcLinesWidth(ASTNode node) {
+	private int estimateInfixItemWidth(ASTNode node) {
 		int lineW = lineWidth;
 		try {
 			int lineForStart = document.getLineOfOffset(node.getStart());
@@ -4325,6 +4330,33 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				lineW += node.getLength();
 			} else {
 				lineW = document.getLineLength(lineForEnd);
+			}
+		} catch (BadLocationException e) {
+			Logger.logException(e);
+		}
+		return lineW;
+	}
+
+	private int estimateCommaListItemWidth(ASTNode node, int maxSize) {
+		int lineW = lineWidth;
+		try {
+			int lineForStart = document.getLineOfOffset(node.getStart());
+			int lineForEnd = document.getLineOfOffset(node.getEnd());
+
+			if (lineForStart == lineForEnd) {
+				lineW += node.getLength();
+			} else {
+				String content = document.get(node.getStart(), node.getLength());
+				if (lineW + content.length() <= maxSize) {
+					lineW += content.length();
+				} else {
+					String trimmedContent = content.replaceAll("([ \\t]*\\r?\\n[ \\t]*)+", " "); //$NON-NLS-1$ //$NON-NLS-2$
+					if (lineW + trimmedContent.length() <= maxSize) {
+						lineW += trimmedContent.length();
+					} else {
+						lineW += content.length();
+					}
+				}
 			}
 		} catch (BadLocationException e) {
 			Logger.logException(e);
