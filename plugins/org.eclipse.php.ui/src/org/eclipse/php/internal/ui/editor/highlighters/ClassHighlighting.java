@@ -158,6 +158,55 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 			return false;
 		}
 
+		@Override
+		public boolean visit(ClassName classConst) {
+			if (classConst.getName() instanceof NamespaceName) {
+				highlightNamespaceType((NamespaceName) classConst.getName());
+			} else if (classConst.getName() instanceof Identifier) {
+				highlight(classConst.getName());
+			}
+			return true;
+		}
+
+		@Override
+		public boolean visit(CatchClause catchStatement) {
+			catchStatement.getClassNames().stream().forEach(e -> {
+				if (e instanceof NamespaceName) {
+					highlightNamespaceType((NamespaceName) e);
+				} else if (e instanceof Identifier) {
+					highlight(e);
+				}
+			});
+			return true;
+		}
+
+		@Override
+		public boolean visit(StaticConstantAccess classConstant) {
+			highlightStatic(classConstant);
+			return true;
+		}
+
+		@Override
+		public boolean visit(StaticFieldAccess staticMember) {
+			highlightStatic(staticMember);
+			return true;
+		}
+
+		@Override
+		public boolean visit(StaticMethodInvocation staticMethodInvocation) {
+			highlightStatic(staticMethodInvocation);
+			return true;
+		}
+
+		private void highlightStatic(StaticDispatch dispatch) {
+			Expression className = dispatch.getClassName();
+			if (className instanceof NamespaceName) {
+				highlightNamespaceType((NamespaceName) className);
+			} else if (className instanceof Identifier) {
+				highlight(className);
+			}
+		}
+
 		private void highlightNamespaceType(NamespaceName name) {
 			highlightNamespaceType(name, false);
 		}

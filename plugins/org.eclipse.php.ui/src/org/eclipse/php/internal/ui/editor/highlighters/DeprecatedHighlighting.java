@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.ui.editor.highlighters;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.*;
@@ -103,6 +104,17 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 		}
 
 		@Override
+		public boolean visit(CatchClause catchStatement) {
+			catchStatement.getClassNames().stream().forEach(e -> {
+				ITypeBinding type = e.resolveTypeBinding();
+				if (type != null && ModelUtils.isDeprecated(type.getPHPElement())) {
+					highlight(e);
+				}
+			});
+			return true;
+		}
+
+		@Override
 		public boolean visit(StaticFieldAccess staticFieldAccess) {
 			ITypeBinding type = staticFieldAccess.getClassName().resolveTypeBinding();
 
@@ -143,6 +155,7 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 		@Override
 		public boolean visit(MethodInvocation methodInv) {
 			IMethod method = ModelUtils.getMethod(methodInv);
+			System.out.println(methodInv);
 			if (method != null && ModelUtils.isDeprecated(method)) {
 				highlight(methodInv.getMethod().getFunctionName());
 			} else if (method != null && method.getParent() instanceof IType
@@ -208,5 +221,17 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 	@Override
 	public String getDisplayName() {
 		return Messages.DeprecatedHighlighting_0;
+	}
+
+	@Override
+	protected AbstractSemanticHighlighting highlight(ASTNode node) {
+		if (node instanceof NamespaceName) {
+			List<Identifier> segments = ((NamespaceName) node).segments();
+			if (!segments.isEmpty()) {
+				return super.highlight(segments.get(segments.size() - 1));
+			}
+			return null;
+		}
+		return super.highlight(node);
 	}
 }
