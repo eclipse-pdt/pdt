@@ -3909,9 +3909,10 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				}
 				boolean processed = isProcessed(ifStatement);
 				if (!((Block) ifStatement.getTrueStatement()).isCurly() && !processed) {
-					handleChars(ifStatement.getFalseStatement().getEnd(), ifStatement.getEnd());
+					// 6 = "endif;".length()
+					handleChars(ifStatement.getFalseStatement().getEnd(), ifStatement.getEnd() - 6);
 					appendToBuffer("endif;"); //$NON-NLS-1$
-					handleChars(ifStatement.getEnd(), ifStatement.getEnd());
+					handleChars(ifStatement.getEnd() - 6, ifStatement.getEnd());
 				}
 			} else { // if the true statement is not a block then we should add
 				// new line
@@ -4041,9 +4042,10 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		}
 		if (ifStatement.getTrueStatement().getType() == ASTNode.BLOCK
 				&& !((Block) ifStatement.getTrueStatement()).isCurly() && !processed) {
-			handleChars(ifStatement.getFalseStatement().getEnd(), ifStatement.getEnd());
+			// 6 = "endif;".length()
+			handleChars(ifStatement.getFalseStatement().getEnd(), ifStatement.getEnd() - 6);
 			appendToBuffer("endif;"); //$NON-NLS-1$
-			handleChars(ifStatement.getEnd(), ifStatement.getEnd());
+			handleChars(ifStatement.getEnd() - 6, ifStatement.getEnd());
 		}
 	}
 
