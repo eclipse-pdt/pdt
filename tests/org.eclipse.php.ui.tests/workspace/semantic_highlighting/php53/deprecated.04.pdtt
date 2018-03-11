@@ -1,0 +1,38 @@
+--TEST--
+--FILE--
+<?php
+
+namespace App\Entity;
+use \App\Entity\B;
+try {
+    
+} catch(\App\Entity\F $e) {
+    
+} catch(B $e) {
+    
+}
+
+
+?>
+--FILE0--
+<?php
+namespace App\Entity;
+/**
+ *
+ * @deprecated
+ *
+ */
+class F extends \Exception {
+
+}
+/**
+ *
+ * @deprecated
+ *
+ */
+class B extends \Exception {
+}
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.DeprecatedHighlighting:
+highlight(F)
+highlight(B)

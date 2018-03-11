@@ -1,0 +1,18 @@
+--TEST--
+Bug internal class in multiple catch
+--FILE--
+<?php
+
+try {
+  echo Foo::BAR;
+  Foo2::call();
+  Foo3::$var = 1;
+} catch(\Exception | InternalException $e) {
+}
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.ClassHighlighting:
+highlight(Foo)
+highlight(Foo2)
+highlight(Foo3)
+highlight(Exception)
+highlight(InternalException)

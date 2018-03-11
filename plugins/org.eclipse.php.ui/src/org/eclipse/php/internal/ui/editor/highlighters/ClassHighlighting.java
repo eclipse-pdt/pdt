@@ -19,6 +19,7 @@ import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
 
 public class ClassHighlighting extends AbstractSemanticHighlighting {
+	private final static String SELF = "self"; //$NON-NLS-1$
 
 	protected class ClassApply extends AbstractSemanticApply {
 
@@ -80,7 +81,7 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 				highlightNamespaceType((NamespaceName) name, true);
 			} else if (name instanceof Identifier) {
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=496045
-				if ("self".equalsIgnoreCase(((Identifier) name).getName()) //$NON-NLS-1$
+				if (SELF.equalsIgnoreCase(((Identifier) name).getName())
 						|| "class".equalsIgnoreCase(((Identifier) name).getName())) { //$NON-NLS-1$
 					return true;
 				}
@@ -158,6 +159,47 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 			return false;
 		}
 
+		@Override
+		public boolean visit(CatchClause catchStatement) {
+			catchStatement.getClassNames().stream().forEach(e -> {
+				if (e instanceof NamespaceName) {
+					highlightNamespaceType((NamespaceName) e);
+				} else if (e instanceof Identifier) {
+					highlight(e);
+				}
+			});
+			return true;
+		}
+
+		@Override
+		public boolean visit(StaticConstantAccess classConstant) {
+			highlightStatic(classConstant);
+			return true;
+		}
+
+		@Override
+		public boolean visit(StaticFieldAccess staticMember) {
+			highlightStatic(staticMember);
+			return true;
+		}
+
+		@Override
+		public boolean visit(StaticMethodInvocation staticMethodInvocation) {
+			highlightStatic(staticMethodInvocation);
+			return true;
+		}
+
+		private void highlightStatic(StaticDispatch dispatch) {
+			Expression className = dispatch.getClassName();
+			if (className instanceof NamespaceName) {
+				highlightNamespaceType((NamespaceName) className, true);
+			} else if (className instanceof Identifier) {
+				if (!SELF.equalsIgnoreCase(((Identifier) className).getName())) {
+					highlight(className);
+				}
+			}
+		}
+
 		private void highlightNamespaceType(NamespaceName name) {
 			highlightNamespaceType(name, false);
 		}
@@ -168,7 +210,7 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 				Identifier segment = segments.get(segments.size() - 1);
 				if (!(segments.size() == 1 && !name.isGlobal()
 						&& (PHPSimpleTypes.isHintable(segment.getName(), name.getAST().apiLevel())
-								|| (excludeSelf && "self".equalsIgnoreCase(segment.getName()))))) { //$NON-NLS-1$
+								|| (excludeSelf && SELF.equalsIgnoreCase(segment.getName()))))) {
 					highlight(segment);
 				}
 			}
