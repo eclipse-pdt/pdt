@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016 IBM Corporation and others.
+ * Copyright (c) 2009, 2016, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,10 +12,13 @@
  *******************************************************************************/
 package org.eclipse.php.core.project;
 
+import org.eclipse.core.internal.resources.Project;
+import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.core.IModelElement;
@@ -32,6 +35,18 @@ public class ProjectOptions {
 	private ProjectOptions() {
 	}
 
+	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=459395
+	// XXX: the code formatter preview UI should always use latest php version to
+	// render php code samples, independently from the workspace default php version
+	// (or any project-specific php version).
+	// Ideally we should be able to set the php version in classes PHPScriptRegion,
+	// PHPSourceParser and PHPTokenizer (without defining an IProject), but let's do
+	// it simple for now by defining a fake DUMMY_PREVIEW_PROJECT project that will
+	// be used by class PHPPreview.
+	public static final Project DUMMY_PREVIEW_PROJECT = new Project(new Path("/"), //$NON-NLS-1$
+			(Workspace) ResourcesPlugin.getWorkspace()) {
+	};
+
 	private static @Nullable IProject getProject(@NonNull IModelElement modelElement) {
 		IScriptProject scriptProject = modelElement.getScriptProject();
 		if (scriptProject != null) {
@@ -45,6 +60,9 @@ public class ProjectOptions {
 	}
 
 	public static PHPVersion getPHPVersion(IProject project, PHPVersion defaultPHPVersion) {
+		if (project == DUMMY_PREVIEW_PROJECT) {
+			return PHPVersion.getLatestVersion();
+		}
 		if (project != null) {
 			PHPVersion version = PHPVersion
 					.byAlias(CorePreferencesSupport.getInstance().getPreferencesValue(Keys.PHP_VERSION, null, project));
@@ -56,6 +74,9 @@ public class ProjectOptions {
 	}
 
 	public static PHPVersion getPHPVersion(IProject project) {
+		if (project == DUMMY_PREVIEW_PROJECT) {
+			return PHPVersion.getLatestVersion();
+		}
 		if (project != null) {
 			PHPVersion version = PHPVersion
 					.byAlias(CorePreferencesSupport.getInstance().getPreferencesValue(Keys.PHP_VERSION, null, project));
@@ -92,18 +113,29 @@ public class ProjectOptions {
 	}
 
 	public static boolean setPHPVersion(@NonNull PHPVersion version, @NonNull IProject project) {
+		if (project == DUMMY_PREVIEW_PROJECT) {
+			return true;
+		}
 		return CorePreferencesSupport.getInstance().setProjectSpecificPreferencesValue(Keys.PHP_VERSION,
 				version.getAlias(), project);
 	}
 
 	public static final boolean isSupportingASPTags(@Nullable IProject project) {
-		return project == null ? false
-				: Boolean.valueOf(CorePreferencesSupport.getInstance().getPreferencesValue(Keys.EDITOR_USE_ASP_TAGS,
-						null, project)).booleanValue();
+		if (project == DUMMY_PREVIEW_PROJECT) {
+			return false;
+		}
+		String useShortTags = CorePreferencesSupport.getInstance().getPreferencesValue(Keys.EDITOR_USE_ASP_TAGS,
+				"false", //$NON-NLS-1$
+				project);
+		return "false".equals(useShortTags); //$NON-NLS-1$
 	}
 
 	public static boolean useShortTags(@Nullable IProject project) {
-		String useShortTags = CorePreferencesSupport.getInstance().getPreferencesValue(Keys.EDITOR_USE_SHORT_TAGS, null,
+		if (project == DUMMY_PREVIEW_PROJECT) {
+			return true;
+		}
+		String useShortTags = CorePreferencesSupport.getInstance().getPreferencesValue(Keys.EDITOR_USE_SHORT_TAGS,
+				"true", //$NON-NLS-1$
 				project);
 		return "true".equals(useShortTags); //$NON-NLS-1$
 	}
@@ -117,6 +149,9 @@ public class ProjectOptions {
 	}
 
 	public static final boolean setSupportingASPTags(boolean value, @NonNull IProject project) {
+		if (project == DUMMY_PREVIEW_PROJECT) {
+			return true;
+		}
 		return CorePreferencesSupport.getInstance().setProjectSpecificPreferencesValue(Keys.EDITOR_USE_ASP_TAGS,
 				Boolean.toString(value), project);
 	}
