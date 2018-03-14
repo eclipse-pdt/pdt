@@ -37,7 +37,7 @@ import org.eclipse.wst.xml.core.internal.Logger;
 
 /**
  * Description: This text region is a PHP foreign region that includes the php
- * tokens * In order to know that this text region is PhpScript one should use:
+ * tokens. In order to know that this text region is PhpScript one should use:
  * 
  * <code> if (region.getType() == PHPRegionContext())  { (PhpScriptRegion) region } </code>
  * 
