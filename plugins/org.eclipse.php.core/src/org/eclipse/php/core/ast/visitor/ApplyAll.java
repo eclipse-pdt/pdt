@@ -160,8 +160,13 @@ public abstract class ApplyAll extends AbstractVisitor {
 	}
 
 	@Override
-	public boolean visit(EmptyStatement evalStatement) {
-		return apply(evalStatement);
+	public boolean visit(EmptyStatement emptyStatement) {
+		return apply(emptyStatement);
+	}
+
+	@Override
+	public boolean visit(EmptyExpression emptyExpression) {
+		return apply(emptyExpression);
 	}
 
 	@Override
@@ -502,6 +507,11 @@ public abstract class ApplyAll extends AbstractVisitor {
 	@Override
 	public void endVisit(EmptyStatement emptyStatement) {
 		endVisitNode(emptyStatement);
+	}
+
+	@Override
+	public void endVisit(EmptyExpression emptyExpression) {
+		endVisitNode(emptyExpression);
 	}
 
 	@Override

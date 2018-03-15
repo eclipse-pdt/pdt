@@ -710,7 +710,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 							}
 						}
 					}
-					// we inserted at least one "empty" line, now we can reset previous indentation
+					// we inserted at least one "empty" line, now we can reset
+					// previous indentation
 					resetCommentIndentVariables();
 					if (doIndentForComment) {
 						indentForComment(indentationLevelDescending);
@@ -770,7 +771,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				}
 				indentStringForComment = afterNewLine;
 			}
-			// when necessary, keep current indentation level for further "empty" lines
+			// when necessary, keep current indentation level for further
+			// "empty" lines
 			// insertion
 			if (!doIndentForComment) {
 				indentationLevelDescending = false;
@@ -968,12 +970,16 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 			if (lastEmptyASTNodePosition >= 0 && array[i].getLength() == 0) {
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=531468
-				// We have a (fake) empty ASTNode. By construction, whitespaces "around" empty
+				// We have a (fake) empty ASTNode. By construction, whitespaces
+				// "around" empty
 				// ASTNodes are always located "after" ASTNode.getStart() (and
-				// ASTNode.getEnd()), so we have to "eat" those whitespaces to correctly
-				// generate/calculate ReplaceEdits in handleCharsWithoutComments().
+				// ASTNode.getEnd()), so we have to "eat" those whitespaces to
+				// correctly
+				// generate/calculate ReplaceEdits in
+				// handleCharsWithoutComments().
 				int end = i < array.length - 1 ? array[i + 1].getStart() : lastEmptyASTNodePosition;
-				// handleCharsWithoutComments() checks if offset - lastPosition ==
+				// handleCharsWithoutComments() checks if offset - lastPosition
+				// ==
 				// replaceBuffer.length(), so don't "eat" too many whitespaces.
 				end = Math.min(lastPosition + replaceBuffer.length(), end);
 				int offset = array[i].getStart();
@@ -1063,9 +1069,11 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 							indentAfterComment = replaceBuffer.substring(position + lineSeparator.length(),
 									replaceBuffer.length());
 							removeBlanksFromLineWidth(replaceBuffer.length() - position, true);
-							// No need to add a space if previous line (in replaceBuffer) already ends with
+							// No need to add a space if previous line (in
+							// replaceBuffer) already ends with
 							// a blank character.
-							// TODO: replace isPrevSpace with more generic isPrevBlank.
+							// TODO: replace isPrevSpace with more generic
+							// isPrevBlank.
 							if (!isPrevSpace && !replaceBuffer.toString().endsWith("\t")) { //$NON-NLS-1$
 								insertSpaces(1);
 							}
@@ -1433,9 +1441,11 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						indentAfterComment = replaceBuffer.substring(position + lineSeparator.length(),
 								replaceBuffer.length());
 						removeBlanksFromLineWidth(replaceBuffer.length() - position, true);
-						// No need to add a space if previous line (in replaceBuffer) already ends with
+						// No need to add a space if previous line (in
+						// replaceBuffer) already ends with
 						// a blank character.
-						// TODO: replace isPrevSpace with more generic isPrevBlank.
+						// TODO: replace isPrevSpace with more generic
+						// isPrevBlank.
 						if (!isPrevSpace && !replaceBuffer.toString().endsWith("\t")) { //$NON-NLS-1$
 							insertSpaces(1);
 						}
@@ -2118,9 +2128,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	}
 
 	/**
-	 * Inserts "numberOfLines" newlines. When the "empty line indentation" rule is
-	 * enabled (and numberOfLines > 0), last empty line in replaceBuffer and next
-	 * (numberOfLines - 1) inserted empty lines will be indented.
+	 * Inserts "numberOfLines" newlines. When the "empty line indentation" rule
+	 * is enabled (and numberOfLines > 0), last empty line in replaceBuffer and
+	 * next (numberOfLines - 1) inserted empty lines will be indented.
 	 * 
 	 * @param numberOfLines
 	 *            number of newlines to insert
@@ -2396,7 +2406,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			// work around for close bracket.
 			lineWidth++;
 
-			lastPosition = handleCommaList(elements, lastPosition,
+			lastPosition = handleCommaList(elements, lastPosition, arrayCreation.getEnd(),
 					this.preferences.insert_space_before_list_comma_in_array,
 					this.preferences.insert_space_after_list_comma_in_array,
 					this.preferences.line_wrap_expressions_in_array_init_line_wrap_policy, indentationGap,
@@ -2432,7 +2442,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		indentationLevelDescending = true;
 		handleChars(lastPosition, arrayCreation.getEnd() - 1);
-		addNonBlanksToLineWidth(1);// we need to add the closing bracket/parenthesis
+		addNonBlanksToLineWidth(1);// we need to add the closing
+									// bracket/parenthesis
 
 		return false;
 	}
@@ -3383,6 +3394,11 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	}
 
 	@Override
+	public boolean visit(EmptyExpression emptyExpression) {
+		return false;
+	}
+
+	@Override
 	public boolean visit(ExpressionStatement expressionStatement) {
 		Expression expression = expressionStatement.getExpression();
 		expression.accept(this);
@@ -3737,7 +3753,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				lineWidth++;
 			}
 
-			lastPosition = handleCommaList(parameters, lastPosition,
+			lastPosition = handleCommaList(parameters, lastPosition, functionInvocation.getEnd(),
 					this.preferences.insert_space_before_comma_in_function,
 					this.preferences.insert_space_after_comma_in_function,
 					this.preferences.line_wrap_arguments_in_method_invocation_line_wrap_policy, indentationGap,
@@ -3826,10 +3842,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(Identifier identifier) {
-		// ListVariable can contain empty identifiers
-		if (identifier.getLength() > 0) {
-			addNonBlanksToLineWidth(identifier.getLength());
-		}
+		addNonBlanksToLineWidth(identifier.getLength());
 		return false;
 	}
 
@@ -4111,9 +4124,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	 * 
 	 * @param inFixOperand
 	 * @param doFirstWrap
-	 *            true when the first line wrap can be done, false when a new line
-	 *            was already inserted and there is no need to add a "first" line
-	 *            wrap
+	 *            true when the first line wrap can be done, false when a new
+	 *            line was already inserted and there is no need to add a
+	 *            "first" line wrap
 	 * @return true if a new line was inserted, false otherwise
 	 */
 	public boolean indentInfixOperand(Expression inFixOperand, boolean doFirstWrap) {
@@ -4445,8 +4458,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		int lastPosition = listVariable.getStart() + 4;
 		List<Expression> variables = listVariable.variables();
-		// XXX: variablesArray will contain one empty Variable object (i.e. with
-		// zero-length name) to represent empty list() statements.
+		// XXX: variablesArray will contain one EmptyExpression object (i.e.
+		// with zero-length name) to represent empty list() statements.
 		Expression[] variablesArray = variables.toArray(new Expression[variables.size()]);
 		lastPosition = handleCommaList(variablesArray, lastPosition, listVariable.getEnd(),
 				this.preferences.insert_space_before_comma_in_list, this.preferences.insert_space_after_comma_in_list,
@@ -4641,7 +4654,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		List<Statement> statementList = program.statements();
 		Statement[] statements = new Statement[statementList.size()];
 		statements = statementList.toArray(statements);
-		// TODO: if the php file only contains comments, the comments will not be
+		// TODO: if the php file only contains comments, the comments will not
+		// be
 		// formatted
 		// if (statements.length == 0 && !program.comments().isEmpty()) {
 		// try {
@@ -5469,8 +5483,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	/**
 	 * PHP Partitions can contain contiguous &lt;?php ?&gt; regions (see
-	 * {@link PHPStructuredTextPartitioner#computePartitioning(int, int)}), we have
-	 * to split them manually.
+	 * {@link PHPStructuredTextPartitioner#computePartitioning(int, int)}), we
+	 * have to split them manually.
 	 * 
 	 * @param partition
 	 *            PHP Partition

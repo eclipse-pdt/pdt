@@ -56,7 +56,6 @@ public class ExtractFunctionRefactoring extends Refactoring {
 	private Program astRoot;
 	private boolean fReplaceAllOccurrences;
 	private String fNewFunctionName = null;
-	protected String[] arguments = null;
 	private DocumentChange textFileChange = null;
 	private RefactoringStatus matchingFragmentsStatus;
 
