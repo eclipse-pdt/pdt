@@ -101,6 +101,13 @@ isset($a, $b, $c, );
 								<Scalar start='181' length='1' type='int' value='3'/>
 							</Value>
 						</ArrayElement>
+						<ArrayElement start='183' length='0'>
+							<Key>
+							</Key>
+							<Value>
+								<EmptyExpression start='183' length='0'/>
+							</Value>
+						</ArrayElement>
 					</ArrayCreation>
 				</Value>
 			</Assignment>
@@ -122,6 +129,7 @@ isset($a, $b, $c, );
 					<Variable start='245' length='5' isDollared='true'>
 						<Identifier start='246' length='4' name='arg3'/>
 					</Variable>
+					<EmptyExpression start='251' length='0'/>
 				</Parameters>
 			</FunctionInvocation>
 		</ExpressionStatement>
@@ -149,6 +157,7 @@ isset($a, $b, $c, );
 							<Variable start='285' length='5' isDollared='true'>
 								<Identifier start='286' length='4' name='arg3'/>
 							</Variable>
+							<EmptyExpression start='291' length='0'/>
 						</Parameters>
 					</FunctionInvocation>
 				</Property>
@@ -169,6 +178,7 @@ isset($a, $b, $c, );
 					<Variable start='309' length='2' isDollared='true'>
 						<Identifier start='310' length='1' name='c'/>
 					</Variable>
+					<EmptyExpression start='312' length='0'/>
 				</Parameters>
 			</FunctionInvocation>
 		</ExpressionStatement>
@@ -187,6 +197,7 @@ isset($a, $b, $c, );
 					<Variable start='330' length='2' isDollared='true'>
 						<Identifier start='331' length='1' name='c'/>
 					</Variable>
+					<EmptyExpression start='333' length='0'/>
 				</Parameters>
 			</FunctionInvocation>
 		</ExpressionStatement>
