@@ -23,8 +23,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.core.tests.TestUtils;
-import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.AST;
 import org.eclipse.php.core.ast.nodes.ASTNode;
@@ -85,9 +83,11 @@ import org.eclipse.php.core.ast.nodes.Variable;
 import org.eclipse.php.core.ast.nodes.VariableBase;
 import org.eclipse.php.core.ast.nodes.WhileStatement;
 import org.eclipse.php.core.ast.visitor.ApplyAll;
+import org.eclipse.php.core.project.ProjectOptions;
+import org.eclipse.php.core.tests.TestSuiteWatcher;
+import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
 import org.eclipse.php.internal.core.ast.rewrite.ListRewrite;
-import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.text.edits.TextEdit;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -830,7 +830,8 @@ public class ASTRewriteTests {
 
 		List<ArrayCreation> arrays = getAllOfType(program, ArrayCreation.class);
 		assertTrue("Unexpected list size.", arrays.size() == 1);
-		arrays.get(0).elements().add(ast.newArrayElement(ast.newScalar("'foo'"), ast.newScalar("'boo'")));
+		assertTrue("Unexpected list size.", arrays.get(0).elements().size() == 4);
+		arrays.get(0).elements().add(3, ast.newArrayElement(ast.newScalar("'foo'"), ast.newScalar("'boo'")));
 		rewrite();
 		checkResult("<?php array(1,2,3, 'foo'=>'boo',); ?>");
 	}
@@ -842,7 +843,8 @@ public class ASTRewriteTests {
 
 		List<ArrayCreation> arrays = getAllOfType(program, ArrayCreation.class);
 		assertTrue("Unexpected list size.", arrays.size() == 1);
-		arrays.get(0).elements().add(ast.newArrayElement(null, ast.newScalar("4")));
+		assertTrue("Unexpected list size.", arrays.get(0).elements().size() == 4);
+		arrays.get(0).elements().add(3, ast.newArrayElement(null, ast.newScalar("4")));
 		rewrite();
 		checkResult("<?php array(1,2,3, 4,); ?>");
 	}
@@ -1971,8 +1973,8 @@ public class ASTRewriteTests {
 
 	// //////////////////////// Utility methods //////////////////////////
 	/**
-	 * Set the content into the document and initialize the parser, the program and
-	 * the ast.
+	 * Set the content into the document and initialize the parser, the program
+	 * and the ast.
 	 */
 	private void initialize(String content, PHPVersion phpVersion) throws Exception {
 		document = new Document(content);

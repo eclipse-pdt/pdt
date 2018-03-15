@@ -275,7 +275,7 @@ non terminal VariableBase function_call;
 non terminal Expression exit_expr;
 non terminal List ctor_arguments;
 non terminal Expression scalar;
-non terminal possible_comma;
+non terminal String possible_comma;
 non terminal Expression expr;
 non terminal VariableBase variable_class_name;
 non terminal Expression optional_expr;
@@ -1069,8 +1069,11 @@ T_CURLY_OPEN:token inner_statement_list:sList T_CURLY_CLOSE:e
 				new Identifier(sleft, sright, parser.ast, "use")), list));
 :}
 
-| T_UNSET:s T_OPEN_PARENTHESE unset_variables:list possible_comma T_CLOSE_PARENTHESE:closePar T_SEMICOLON:e
+| T_UNSET:s T_OPEN_PARENTHESE unset_variables:list possible_comma:comma T_CLOSE_PARENTHESE:closePar T_SEMICOLON:e
 {:
+	if (comma != null) {
+		list.add(new EmptyExpression(commaright, parser.ast));
+	}
 	RESULT = new ExpressionStatement(sleft, eright, parser.ast,
 		new FunctionInvocation(sleft, closeParright, parser.ast,
 			new FunctionName(sleft, sright, parser.ast,
@@ -1687,8 +1690,11 @@ optional_class_type ::=
 ;
 
 function_call_parameter_list ::=
-non_empty_argument_list:paramsList possible_comma
+non_empty_argument_list:paramsList possible_comma:comma
 {:
+	if (comma != null) {
+		paramsList.add(new EmptyExpression(commaright, parser.ast));
+	}
 	RESULT = paramsList;
 :}
 
@@ -2872,7 +2878,14 @@ T_LNUMBER:scalar
 /* do nothing */
 possible_comma ::=
 /* empty */
+{:
+	RESULT = null;
+:}
+
 | T_COMMA
+{:
+	RESULT = "";
+:}
 ;
 
 expr ::=
@@ -3107,7 +3120,7 @@ possible_array_pair:pair
 	if (pair != null) {
 		list.add(pair);
 	} else {
-		list.add(new Variable(pairleft, pairright, parser.ast, ""));
+		list.add(new EmptyExpression(pairright, parser.ast));
 	}
 	RESULT = list;
 :}
@@ -3117,7 +3130,7 @@ possible_array_pair:pair
 	if (pair != null) {
 		list.add(pair);
 	} else {
-		list.add(new Variable(pairleft, pairright, parser.ast, ""));
+		list.add(new EmptyExpression(pairright, parser.ast));
 	}
 	RESULT = list;
 :}
@@ -3156,6 +3169,8 @@ possible_array_pair:pair
 {:
 	if (pair != null) {
 		list.add(pair);
+	} else {
+		list.add(new EmptyExpression(pairright, parser.ast));
 	}
 	RESULT = list;
 :}
@@ -3284,8 +3299,11 @@ string_st:string
 ;
 
 internal_functions_in_yacc ::=
-T_ISSET:s T_OPEN_PARENTHESE isset_variables:varList possible_comma T_CLOSE_PARENTHESE:e
+T_ISSET:s T_OPEN_PARENTHESE isset_variables:varList possible_comma:comma T_CLOSE_PARENTHESE:e
 {:
+	if (comma != null) {
+		varList.add(new EmptyExpression(commaright, parser.ast));
+	}
 	RESULT = new FunctionInvocation(sleft, eright, parser.ast,
 		new FunctionName(sleft, sright, parser.ast,
 			new Identifier(sleft, sright, parser.ast, "isset")), varList);

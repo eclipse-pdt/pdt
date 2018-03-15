@@ -28,6 +28,13 @@ Test Array
 						<Scalar start='16' length='1' type='int' value='3'/>
 					</Value>
 				</ArrayElement>
+				<ArrayElement start='18' length='0'>
+					<Key>
+					</Key>
+					<Value>
+						<EmptyExpression start='18' length='0'/>
+					</Value>
+				</ArrayElement>
 			</ArrayCreation>
 		</ExpressionStatement>
 		<EmptyStatement start='20' length='2'/>
