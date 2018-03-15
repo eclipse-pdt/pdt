@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.php.builtin.server.ui
 Bundle-ManifestVersion: 2
 Bundle-Name: PDT Builtin Server Ui Plug-in
 Bundle-SymbolicName: org.eclipse.php.builtin.server.ui;singleton:=true

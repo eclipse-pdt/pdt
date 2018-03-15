@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.php.core.performance.test
 Bundle-ManifestVersion: 2
 Bundle-Name: PDT Core Performance Tests
 Bundle-SymbolicName: org.eclipse.php.core.performance.tests;singleton:=true
@@ -20,4 +21,4 @@ Require-Bundle: org.junit,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: Eclipse PDT
-Export-Package: org.eclipse.php.core.tests.performance
+Export-Package: org.eclipse.php.core.tests.performances

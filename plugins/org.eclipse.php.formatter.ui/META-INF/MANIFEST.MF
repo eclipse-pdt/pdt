@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.php.formatter.ui
 Bundle-ManifestVersion: 2
 Bundle-Name: Code Formatter UI Plug-in
 Bundle-SymbolicName: org.eclipse.php.formatter.ui;singleton:=true

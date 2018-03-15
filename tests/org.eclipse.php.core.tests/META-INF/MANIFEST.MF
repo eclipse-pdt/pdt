@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+Automatic-Module-Name: org.eclipse.php.core.tests
 Bundle-ManifestVersion: 2
 Bundle-Name: PDT Core Unit Tests
 Bundle-SymbolicName: org.eclipse.php.core.tests;singleton:=true
