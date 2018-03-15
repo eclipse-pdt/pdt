@@ -3114,4 +3114,11 @@
          </identifier>
       </problem>
    </extension>
+   <extension
+         point="org.eclipse.ui.ide.projectConfigurators">
+         <projectConfigurator
+            class="org.eclipse.php.internal.ui.importer.PHPProjectConfigurator"
+            label="PHP Project">
+      </projectConfigurator>
+   </extension>
 </plugin>
