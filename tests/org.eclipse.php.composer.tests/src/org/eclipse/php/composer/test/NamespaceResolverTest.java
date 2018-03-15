@@ -10,60 +10,65 @@
  *******************************************************************************/
 package org.eclipse.php.composer.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.php.composer.core.ComposerPlugin;
 import org.eclipse.php.composer.core.facet.FacetManager;
 import org.eclipse.php.composer.core.resources.IComposerProject;
 import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.core.project.ProjectOptions;
+import org.eclipse.php.core.tests.TestSuiteWatcher;
+import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.internal.core.facet.PHPFacets;
 import org.eclipse.php.internal.core.project.PHPNature;
+import org.junit.After;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.rules.TestWatcher;
 
-public class NamespaceResolverTest extends ComposerModelTests {
+public class NamespaceResolverTest {
 
-	public NamespaceResolverTest() {
-		super("Namespace Resolver tests"); //$NON-NLS-1$
-	}
+	private IProject project;
+
+	@ClassRule
+	public static TestWatcher watcher = new TestSuiteWatcher();
 
 	@Test
 	public void testNamespaceResolver() throws CoreException, IOException {
+		project = TestUtils.createProject("namespace-resolver"); //$NON-NLS-1$
 
-		IScriptProject scriptProject = ensureScriptProject("namespace-resolver"); //$NON-NLS-1$
+		assertNotNull(project);
 
-		assertNotNull(scriptProject);
+		ComposerCoreTestPlugin.copyProjectFiles(project);
+		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 
-		IProjectDescription desc = scriptProject.getProject().getDescription();
-		desc.setNatureIds(new String[] { PHPNature.ID });
-		scriptProject.getProject().setDescription(desc, null);
+		TestUtils.setProjectPHPVersion(project, PHPVersion.PHP5_3);
 
-		ProjectOptions.setPHPVersion(PHPVersion.PHP5_3, scriptProject.getProject());
+		PHPFacets.setFacetedVersion(project, PHPVersion.PHP5_3);
+		FacetManager.installFacets(project, PHPVersion.PHP5_3, new NullProgressMonitor());
 
-		PHPFacets.setFacetedVersion(scriptProject.getProject(), PHPVersion.PHP5_3);
-		FacetManager.installFacets(scriptProject.getProject(), PHPVersion.PHP5_3, new NullProgressMonitor());
+		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 
-		scriptProject.getProject().refreshLocal(IResource.DEPTH_INFINITE, null);
-		scriptProject.getProject().build(IncrementalProjectBuilder.FULL_BUILD, null);
+		TestUtils.waitForIndexer();
+		TestUtils.waitForAutoBuild();
 
-		ComposerCoreTestPlugin.waitForIndexer();
-		ComposerCoreTestPlugin.waitForAutoBuild();
-
-		IComposerProject project = ComposerPlugin.getDefault().getComposerProject(scriptProject);
+		IComposerProject project = ComposerPlugin.getDefault().getComposerProject(this.project);
 
 		IFile composerJson = project.getComposerJson();
 		assertNotNull(composerJson);
 
-		assertTrue(scriptProject.getProject().hasNature(PHPNature.ID));
-		assertTrue(FacetManager.hasComposerFacet(scriptProject.getProject()));
+		assertTrue(project.getProject().hasNature(PHPNature.ID));
+		assertTrue(FacetManager.hasComposerFacet(this.project));
 
 		assertEquals("Foo\\Bar", project.getNamespace(new Path("src/Foo/Bar"))); //$NON-NLS-1$ //$NON-NLS-2$
 		assertEquals("Foo\\Bar\\Baz", project.getNamespace(new Path("src/Foo/Bar/Baz"))); //$NON-NLS-1$ //$NON-NLS-2$
@@ -72,10 +77,12 @@ public class NamespaceResolverTest extends ComposerModelTests {
 		assertEquals("Wurst", project.getNamespace(new Path("src/Null/Wurst"))); //$NON-NLS-1$ //$NON-NLS-2$
 		assertEquals("Blut\\Wurst", project.getNamespace(new Path("src/Null/Blut/Wurst"))); //$NON-NLS-1$ //$NON-NLS-2$
 
-		// IResource resource = scriptProject.getProject().getFolder(new
-		// Path("src/Foobar/Sub"));
-		// IPath path = ModelAccess.getInstance().resolve(resource);
-		// assertNotNull(path);
-		// assertEquals("Foobar/Sub", path.toString());
+	}
+
+	@After
+	public void cleanup() throws CoreException {
+		if (project != null) {
+			project.delete(true, null);
+		}
 	}
 }
