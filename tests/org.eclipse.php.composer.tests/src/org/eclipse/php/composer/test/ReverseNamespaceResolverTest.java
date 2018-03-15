@@ -10,63 +10,67 @@
  *******************************************************************************/
 package org.eclipse.php.composer.test;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.php.composer.core.facet.FacetManager;
 import org.eclipse.php.composer.core.model.ModelAccess;
 import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.core.project.ProjectOptions;
+import org.eclipse.php.core.tests.TestSuiteWatcher;
+import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.internal.core.facet.PHPFacets;
 import org.eclipse.php.internal.core.project.PHPNature;
+import org.junit.After;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.rules.TestWatcher;
 
-public class ReverseNamespaceResolverTest extends ComposerModelTests {
+public class ReverseNamespaceResolverTest {
+	private IProject project;
 
-	public ReverseNamespaceResolverTest() {
-		super("Reverse Namespace Resolver tests"); //$NON-NLS-1$
-	}
+	@ClassRule
+	public static TestWatcher watcher = new TestSuiteWatcher();
 
 	@Test
 	public void testNamespaceResolver() throws CoreException, IOException {
 
-		IScriptProject scriptProject = ensureScriptProject("testproject2"); //$NON-NLS-1$
+		project = TestUtils.createProject("testproject2"); //$NON-NLS-1$
+		assertNotNull(project);
 
-		assertNotNull(scriptProject);
+		ComposerCoreTestPlugin.copyProjectFiles(project);
+		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 
-		IProjectDescription desc = scriptProject.getProject().getDescription();
-		desc.setNatureIds(new String[] { PHPNature.ID });
-		scriptProject.getProject().setDescription(desc, null);
+		TestUtils.setProjectPHPVersion(project, PHPVersion.PHP5_3);
 
-		ProjectOptions.setPHPVersion(PHPVersion.PHP5_3, scriptProject.getProject());
+		PHPFacets.setFacetedVersion(project, PHPVersion.PHP5_3);
+		FacetManager.installFacets(project, PHPVersion.PHP5_3, new NullProgressMonitor());
 
-		PHPFacets.setFacetedVersion(scriptProject.getProject(), PHPVersion.PHP5_3);
-		FacetManager.installFacets(scriptProject.getProject(), PHPVersion.PHP5_3, new NullProgressMonitor());
-
-		scriptProject.getProject().refreshLocal(IResource.DEPTH_INFINITE, null);
-		scriptProject.getProject().build(IncrementalProjectBuilder.FULL_BUILD, null);
-
-		ComposerCoreTestPlugin.waitForIndexer();
-		ComposerCoreTestPlugin.waitForAutoBuild();
-
-		IFile file = scriptProject.getProject().getFile("composer.json"); //$NON-NLS-1$
+		IFile file = project.getFile("composer.json"); //$NON-NLS-1$
 		assertNotNull(file);
 
-		assertTrue(scriptProject.getProject().hasNature(PHPNature.ID));
-		assertTrue(FacetManager.hasComposerFacet(scriptProject.getProject()));
+		assertTrue(project.hasNature(PHPNature.ID));
+		assertTrue(FacetManager.hasComposerFacet(project));
 
 		String namespace = "Foobar\\Sub"; //$NON-NLS-1$
 
-		IPath resolvedPath = ModelAccess.getInstance().reverseResolve(scriptProject.getProject(), namespace);
+		IPath resolvedPath = ModelAccess.getInstance().reverseResolve(project, namespace);
 		assertNotNull(resolvedPath);
-		assertTrue(scriptProject.getProject().getFolder(resolvedPath).exists());
-
+		assertTrue(project.getFolder(resolvedPath).exists());
 	}
+
+	@After
+	public void cleanup() throws CoreException {
+		if (project != null) {
+			project.delete(true, null);
+		}
+	}
+
 }
