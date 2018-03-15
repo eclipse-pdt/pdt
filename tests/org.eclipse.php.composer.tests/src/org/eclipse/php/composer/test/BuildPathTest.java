@@ -11,6 +11,8 @@
 package org.eclipse.php.composer.test;
 
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,56 +20,50 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.php.composer.core.ComposerPlugin;
 import org.eclipse.php.composer.core.buildpath.BuildPathParser;
 import org.eclipse.php.composer.core.facet.FacetManager;
 import org.eclipse.php.composer.core.resources.IComposerProject;
 import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.core.project.ProjectOptions;
+import org.eclipse.php.core.tests.TestSuiteWatcher;
+import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.internal.core.facet.PHPFacets;
 import org.eclipse.php.internal.core.project.PHPNature;
+import org.junit.After;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.rules.TestWatcher;
 
-public class BuildPathTest extends ComposerModelTests {
+public class BuildPathTest {
+	private IProject project;
 
-	public BuildPathTest() {
-		super("BuildPath tests"); //$NON-NLS-1$
-	}
+	@ClassRule
+	public static TestWatcher watcher = new TestSuiteWatcher();
 
 	@Test
 	public void testBuildpathParser() throws CoreException, IOException, InterruptedException {
-		IScriptProject scriptProject = ensureScriptProject("buildpath"); //$NON-NLS-1$
+		project = TestUtils.createProject("buildpath"); //$NON-NLS-1$
+		assertNotNull(project);
+		ComposerCoreTestPlugin.copyProjectFiles(project);
 
-		assertNotNull(scriptProject);
+		TestUtils.setProjectPHPVersion(project, PHPVersion.PHP5_3);
 
-		IProjectDescription desc = scriptProject.getProject().getDescription();
-		desc.setNatureIds(new String[] { PHPNature.ID });
-		scriptProject.getProject().setDescription(desc, null);
+		PHPFacets.setFacetedVersion(project, PHPVersion.PHP5_3);
+		FacetManager.installFacets(project, PHPVersion.PHP5_3, new NullProgressMonitor());
 
-		ProjectOptions.setPHPVersion(PHPVersion.PHP5_3, scriptProject.getProject());
+		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 
-		PHPFacets.setFacetedVersion(scriptProject.getProject(), PHPVersion.PHP5_3);
-		FacetManager.installFacets(scriptProject.getProject(), PHPVersion.PHP5_3, new NullProgressMonitor());
-
-		scriptProject.getProject().refreshLocal(IResource.DEPTH_INFINITE, null);
-		scriptProject.getProject().build(IncrementalProjectBuilder.FULL_BUILD, null);
-
-		ComposerCoreTestPlugin.waitForIndexer();
-		ComposerCoreTestPlugin.waitForAutoBuild();
-
-		IFile file = scriptProject.getProject().getFile("composer.json"); //$NON-NLS-1$
+		IFile file = project.getFile("composer.json"); //$NON-NLS-1$
 		assertNotNull(file);
 
-		assertTrue(scriptProject.getProject().hasNature(PHPNature.ID));
-		assertTrue(FacetManager.hasComposerFacet(scriptProject.getProject()));
+		assertTrue(project.hasNature(PHPNature.ID));
+		assertTrue(FacetManager.hasComposerFacet(project));
 
-		IComposerProject composerProject = ComposerPlugin.getDefault().getComposerProject(scriptProject.getProject());
+		IComposerProject composerProject = ComposerPlugin.getDefault().getComposerProject(project);
 		BuildPathParser parser = new BuildPathParser(composerProject);
 		List<String> paths = parser.getPaths();
 		List<String> expected = new ArrayList<>(Arrays.asList("mordor/composer", "mordor/gossi/ldap/src", //$NON-NLS-1$ //$NON-NLS-2$
@@ -76,8 +72,13 @@ public class BuildPathTest extends ComposerModelTests {
 		assertArrayEquals(paths.toArray(), expected.toArray());
 
 		// let indexing threads shutdown to avoid SWT thread access errors
-		Thread.sleep(2000);
+	}
 
+	@After
+	public void cleanup() throws CoreException {
+		if (project != null) {
+			project.delete(true, null);
+		}
 	}
 
 }

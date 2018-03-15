@@ -10,16 +10,16 @@
  *******************************************************************************/
 package org.eclipse.php.composer.test;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.dltk.internal.core.ModelManager;
-import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.core.project.ProjectOptions;
+import org.eclipse.php.core.tests.TestUtils;
+import org.eclipse.php.core.tests.TestUtils.ColliderType;
+import org.eclipse.php.core.tests.filenetwork.FileUtil;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.osgi.framework.BundleContext;
 
@@ -46,11 +46,13 @@ public class ComposerCoreTestPlugin extends Plugin {
 		plugin = this;
 
 		PHPCorePlugin.toolkitInitialized = true;
+		TestUtils.disableColliders(ColliderType.ALL);
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
+		TestUtils.enableColliders(ColliderType.ALL);
 		super.stop(context);
 	}
 
@@ -123,40 +125,10 @@ public class ComposerCoreTestPlugin extends Plugin {
 		return null;
 	}
 
-	public static void waitForIndexer() {
-		ModelManager.getModelManager().getIndexManager().waitUntilReady();
+	public static void copyProjectFiles(IProject project) throws IOException {
+		FileUtil.copyDirectory(new File(FileLocator
+				.toFileURL(ComposerCoreTestPlugin.getDefault().getBundle().getEntry("/workspace/" + project.getName())) //$NON-NLS-1$
+				.getFile()), new File(project.getLocationURI()));
 	}
 
-	/**
-	 * Wait for autobuild notification to occur, that is for the autbuild to
-	 * finish.
-	 */
-	public static void waitForAutoBuild() {
-		boolean wasInterrupted = false;
-		do {
-			try {
-				Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
-				wasInterrupted = false;
-			} catch (OperationCanceledException e) {
-				throw (e);
-			} catch (InterruptedException e) {
-				wasInterrupted = true;
-			}
-		} while (wasInterrupted);
-	}
-
-	/**
-	 * Set project PHP version
-	 * 
-	 * @param project
-	 * @param phpVersion
-	 * @throws CoreException
-	 */
-	public static void setProjectPhpVersion(IProject project, PHPVersion phpVersion) throws CoreException {
-		if (phpVersion != ProjectOptions.getPHPVersion(project)) {
-			ProjectOptions.setPHPVersion(phpVersion, project);
-			waitForAutoBuild();
-			waitForIndexer();
-		}
-	}
 }
