@@ -260,7 +260,7 @@ non terminal Expression common_scalar;
 non terminal Expression static_scalar;
 non terminal Expression scalar;
 non terminal List static_array_pair_list;
-non terminal possible_comma;
+non terminal String possible_comma;
 non terminal List non_empty_static_array_pair_list;
 non terminal Expression expr;
 non terminal Variable reference_variable;
@@ -2355,8 +2355,11 @@ static_array_pair_list ::=
 	RESULT = new LinkedList();
 :}
 
-| non_empty_static_array_pair_list:list possible_comma
+| non_empty_static_array_pair_list:list possible_comma:comma
 {:
+	if (comma != null) {
+		list.add(new EmptyExpression(commaright, parser.ast));
+	}
 	RESULT = list;
 :}
 ;
@@ -2364,7 +2367,14 @@ static_array_pair_list ::=
 /* do nothing */
 possible_comma ::=
 /* empty */
+{:
+	RESULT = null;
+:}
+
 | T_COMMA
+{:
+	RESULT = "";
+:}
 ;
 
 non_empty_static_array_pair_list ::=
@@ -2659,7 +2669,7 @@ assignment_list:listElements T_COMMA assignment_list_element:element
 	if (element != null) {
 		listElements.add(element);
 	} else {
-		listElements.add(new Variable(elementleft, elementright, parser.ast, ""));
+		listElements.add(new EmptyExpression(elementright, parser.ast));
 	}
 	RESULT = listElements;
 :}
@@ -2670,7 +2680,7 @@ assignment_list:listElements T_COMMA assignment_list_element:element
 	if (var != null) {
 		listElements.add(var);
 	} else {
-		listElements.add(new Variable(varleft, varright, parser.ast, ""));
+		listElements.add(new EmptyExpression(varright, parser.ast));
 	}
 	RESULT = listElements;
 :}
@@ -2699,8 +2709,11 @@ array_pair_list ::=
 	RESULT = new LinkedList();
 :}
 
-| non_empty_array_pair_list:list possible_comma
+| non_empty_array_pair_list:list possible_comma:comma
 {:
+	if (comma != null) {
+		list.add(new EmptyExpression(commaright, parser.ast));
+	}
 	RESULT = list;
 :}
 ;

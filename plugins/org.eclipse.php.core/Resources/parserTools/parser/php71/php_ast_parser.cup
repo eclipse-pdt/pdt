@@ -3107,7 +3107,7 @@ possible_array_pair:pair
 	if (pair != null) {
 		list.add(pair);
 	} else {
-		list.add(new Variable(pairleft, pairright, parser.ast, ""));
+		list.add(new EmptyExpression(pairright, parser.ast));
 	}
 	RESULT = list;
 :}
@@ -3117,7 +3117,7 @@ possible_array_pair:pair
 	if (pair != null) {
 		list.add(pair);
 	} else {
-		list.add(new Variable(pairleft, pairright, parser.ast, ""));
+		list.add(new EmptyExpression(pairright, parser.ast));
 	}
 	RESULT = list;
 :}
@@ -3156,6 +3156,8 @@ possible_array_pair:pair
 {:
 	if (pair != null) {
 		list.add(pair);
+	} else {
+		list.add(new EmptyExpression(pairright, parser.ast));
 	}
 	RESULT = list;
 :}
