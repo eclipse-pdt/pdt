@@ -27,7 +27,7 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * e.g.
  * 
  * <pre>
- * 1, 'Dodo'=>'Golo', $a, $b=>foo(), 1=>$myClass->getFirst() *
+ * 1, 'Dodo'=>'Golo', $a, $b=>foo(), 1=>$myClass->getFirst()
  */
 public class ArrayElement extends Expression {
 

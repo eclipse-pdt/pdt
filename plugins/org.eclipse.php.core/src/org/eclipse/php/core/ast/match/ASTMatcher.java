@@ -53,8 +53,8 @@ public class ASTMatcher {
 	 * Creates a new AST matcher instance.
 	 * <p>
 	 * For backwards compatibility, the matcher ignores tag elements below doc
-	 * comments by default. Use {@link #ASTMatcher(boolean) ASTMatcher(true)} for a
-	 * matcher that compares doc tags by default.
+	 * comments by default. Use {@link #ASTMatcher(boolean) ASTMatcher(true)}
+	 * for a matcher that compares doc tags by default.
 	 * </p>
 	 */
 	public ASTMatcher() {
@@ -64,16 +64,19 @@ public class ASTMatcher {
 	 * Returns whether the given lists of AST nodes match pair wise according to
 	 * <code>ASTNode.subtreeMatch</code>.
 	 * <p>
-	 * Note that this is a convenience method, useful for writing recursive subtree
-	 * matchers.
+	 * Note that this is a convenience method, useful for writing recursive
+	 * subtree matchers.
 	 * </p>
 	 * 
 	 * @param list1
-	 *            the first list of AST nodes (element type: <code>ASTNode</code>)
+	 *            the first list of AST nodes (element type:
+	 *            <code>ASTNode</code>)
 	 * @param list2
-	 *            the second list of AST nodes (element type: <code>ASTNode</code>)
-	 * @return <code>true</code> if the lists have the same number of elements and
-	 *         match pair-wise according to <code>ASTNode.subtreeMatch</code>
+	 *            the second list of AST nodes (element type:
+	 *            <code>ASTNode</code>)
+	 * @return <code>true</code> if the lists have the same number of elements
+	 *         and match pair-wise according to
+	 *         <code>ASTNode.subtreeMatch</code>
 	 * @see ASTNode#subtreeMatch(ASTMatcher matcher, Object other)
 	 */
 	public final boolean safeSubtreeListMatch(Collection<?> list1, Collection<?> list2) {
@@ -104,8 +107,8 @@ public class ASTMatcher {
 	 * Returns whether the given lists of AST nodes match pair wise according to
 	 * <code>ASTNode.subtreeMatch</code>.
 	 * <p>
-	 * Note that this is a convenience method, useful for writing recursive subtree
-	 * matchers.
+	 * Note that this is a convenience method, useful for writing recursive
+	 * subtree matchers.
 	 * </p>
 	 * 
 	 * @param list1
@@ -114,8 +117,9 @@ public class ASTMatcher {
 	 * @param list2
 	 *            the second array of AST expressions (element type:
 	 *            <code>ASTNode</code>)
-	 * @return <code>true</code> if the arrays have the same number of elements and
-	 *         match pair-wise according to <code>ASTNode.subtreeMatch</code>
+	 * @return <code>true</code> if the arrays have the same number of elements
+	 *         and match pair-wise according to
+	 *         <code>ASTNode.subtreeMatch</code>
 	 * @see ASTNode#subtreeMatch(ASTMatcher matcher, Object other)
 	 */
 	public final boolean safeSubtreeListMatch(Expression[] list1, Expression[] list2) {
@@ -126,8 +130,8 @@ public class ASTMatcher {
 	 * Returns whether the given lists of AST nodes match pair wise according to
 	 * <code>ASTNode.subtreeMatch</code>.
 	 * <p>
-	 * Note that this is a convenience method, useful for writing recursive subtree
-	 * matchers.
+	 * Note that this is a convenience method, useful for writing recursive
+	 * subtree matchers.
 	 * </p>
 	 * 
 	 * @param list1
@@ -136,8 +140,9 @@ public class ASTMatcher {
 	 * @param list2
 	 *            the second array of AST statements (element type:
 	 *            <code>ASTNode</code>)
-	 * @return <code>true</code> if the arrays have the same number of elements and
-	 *         match pair-wise according to <code>ASTNode.subtreeMatch</code>
+	 * @return <code>true</code> if the arrays have the same number of elements
+	 *         and match pair-wise according to
+	 *         <code>ASTNode.subtreeMatch</code>
 	 * @see ASTNode#subtreeMatch(ASTMatcher matcher, Object other)
 	 */
 	public final boolean safeSubtreeListMatch(Statement[] list1, Statement[] list2) {
@@ -148,16 +153,19 @@ public class ASTMatcher {
 	 * Returns whether the given lists of AST nodes match pair wise according to
 	 * <code>ASTNode.subtreeMatch</code>.
 	 * <p>
-	 * Note that this is a convenience method, useful for writing recursive subtree
-	 * matchers.
+	 * Note that this is a convenience method, useful for writing recursive
+	 * subtree matchers.
 	 * </p>
 	 * 
 	 * @param list1
-	 *            the first array of AST nodes (element type: <code>ASTNode</code>)
+	 *            the first array of AST nodes (element type:
+	 *            <code>ASTNode</code>)
 	 * @param list2
-	 *            the second array of AST nodes (element type: <code>ASTNode</code>)
-	 * @return <code>true</code> if the arrays have the same number of elements and
-	 *         match pair-wise according to <code>ASTNode.subtreeMatch</code>
+	 *            the second array of AST nodes (element type:
+	 *            <code>ASTNode</code>)
+	 * @return <code>true</code> if the arrays have the same number of elements
+	 *         and match pair-wise according to
+	 *         <code>ASTNode.subtreeMatch</code>
 	 * @see ASTNode#subtreeMatch(ASTMatcher matcher, Object other)
 	 */
 	public final boolean safeSubtreeListMatch(ASTNode[] list1, ASTNode[] list2) {
@@ -166,20 +174,20 @@ public class ASTMatcher {
 
 	/**
 	 * Returns whether the given nodes match according to
-	 * <code>AST.subtreeMatch</code>. Returns <code>false</code> if one or the other
-	 * of the nodes are <code>null</code>. Returns <code>true</code> if both nodes
-	 * are <code>null</code>.
+	 * <code>AST.subtreeMatch</code>. Returns <code>false</code> if one or the
+	 * other of the nodes are <code>null</code>. Returns <code>true</code> if
+	 * both nodes are <code>null</code>.
 	 * <p>
-	 * Note that this is a convenience method, useful for writing recursive subtree
-	 * matchers.
+	 * Note that this is a convenience method, useful for writing recursive
+	 * subtree matchers.
 	 * </p>
 	 * 
 	 * @param node1
-	 *            the first AST node, or <code>null</code>; must be an instance of
-	 *            <code>ASTNode</code>
+	 *            the first AST node, or <code>null</code>; must be an instance
+	 *            of <code>ASTNode</code>
 	 * @param node2
-	 *            the second AST node, or <code>null</code>; must be an instance of
-	 *            <code>ASTNode</code>
+	 *            the second AST node, or <code>null</code>; must be an instance
+	 *            of <code>ASTNode</code>
 	 * @return <code>true</code> if the nodes match according to
 	 *         <code>AST.subtreeMatch</code> or both are <code>null</code>, and
 	 *         <code>false</code> otherwise
@@ -197,16 +205,17 @@ public class ASTMatcher {
 	}
 
 	/**
-	 * Returns whether the given objects are equal according to <code>equals</code>.
-	 * Returns <code>false</code> if either node is <code>null</code>.
+	 * Returns whether the given objects are equal according to
+	 * <code>equals</code>. Returns <code>false</code> if either node is
+	 * <code>null</code>.
 	 * 
 	 * @param o1
 	 *            the first object, or <code>null</code>
 	 * @param o2
 	 *            the second object, or <code>null</code>
 	 * @return <code>true</code> if the nodes are equal according to
-	 *         <code>equals</code> or both <code>null</code>, and <code>false</code>
-	 *         otherwise
+	 *         <code>equals</code> or both <code>null</code>, and
+	 *         <code>false</code> otherwise
 	 */
 	public static boolean safeEquals(Object o1, Object o2) {
 		if (o1 == o2) {
@@ -230,9 +239,9 @@ public class ASTMatcher {
 	 *            the node
 	 * @param other
 	 *            the other object, or <code>null</code>
-	 * @return <code>true</code> if the subtree matches, or <code>false</code> if
-	 *         they do not match or the other object has a different node type or is
-	 *         <code>null</code>
+	 * @return <code>true</code> if the subtree matches, or <code>false</code>
+	 *         if they do not match or the other object has a different node
+	 *         type or is <code>null</code>
 	 * @since 3.1
 	 */
 
@@ -450,6 +459,15 @@ public class ASTMatcher {
 		}
 
 		// 2 empty statements are equal by definition
+		return true;
+	}
+
+	public boolean match(EmptyExpression node, Object other) {
+		if (!(other instanceof EmptyExpression)) {
+			return false;
+		}
+
+		// 2 empty expressions are equal by definition
 		return true;
 	}
 
