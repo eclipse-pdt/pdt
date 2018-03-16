@@ -2396,7 +2396,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			// work around for close bracket.
 			lineWidth++;
 
-			lastPosition = handleCommaList(elements, lastPosition,
+			lastPosition = handleCommaList(elements, lastPosition, arrayCreation.getEnd(),
 					this.preferences.insert_space_before_list_comma_in_array,
 					this.preferences.insert_space_after_list_comma_in_array,
 					this.preferences.line_wrap_expressions_in_array_init_line_wrap_policy, indentationGap,
@@ -3383,6 +3383,11 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	}
 
 	@Override
+	public boolean visit(EmptyExpression emptyExpression) {
+		return false;
+	}
+
+	@Override
 	public boolean visit(ExpressionStatement expressionStatement) {
 		Expression expression = expressionStatement.getExpression();
 		expression.accept(this);
@@ -3737,7 +3742,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				lineWidth++;
 			}
 
-			lastPosition = handleCommaList(parameters, lastPosition,
+			lastPosition = handleCommaList(parameters, lastPosition, functionInvocation.getEnd(),
 					this.preferences.insert_space_before_comma_in_function,
 					this.preferences.insert_space_after_comma_in_function,
 					this.preferences.line_wrap_arguments_in_method_invocation_line_wrap_policy, indentationGap,
@@ -3826,10 +3831,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(Identifier identifier) {
-		// ListVariable can contain empty identifiers
-		if (identifier.getLength() > 0) {
-			addNonBlanksToLineWidth(identifier.getLength());
-		}
+		addNonBlanksToLineWidth(identifier.getLength());
 		return false;
 	}
 
@@ -4445,8 +4447,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		int lastPosition = listVariable.getStart() + 4;
 		List<Expression> variables = listVariable.variables();
-		// XXX: variablesArray will contain one empty Variable object (i.e. with
-		// zero-length name) to represent empty list() statements.
+		// XXX: variablesArray will contain one EmptyExpression object (i.e.
+		// with zero-length name) to represent empty list() statements.
 		Expression[] variablesArray = variables.toArray(new Expression[variables.size()]);
 		lastPosition = handleCommaList(variablesArray, lastPosition, listVariable.getEnd(),
 				this.preferences.insert_space_before_comma_in_list, this.preferences.insert_space_after_comma_in_list,
