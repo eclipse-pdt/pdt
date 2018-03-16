@@ -3129,4 +3129,13 @@
             label="PHP Project">
       </projectConfigurator>
    </extension>
+   <extension
+         id="org.eclipse.php.ui.fragment"
+         point="org.eclipse.e4.workbench.model">
+      <processor
+            apply="always"
+            beforefragment="true"
+            class="org.eclipse.php.internal.ui.E4ModelProcessor">
+      </processor>
+   </extension>
 </plugin>
