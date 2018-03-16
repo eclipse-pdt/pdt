@@ -18,7 +18,7 @@ function foo (int $a, int $b){
 <?php
 $e = array(array('level' => 'INFO'), 
 // TODO comment
-array('level' => 'INFO'));
+array('level' => 'INFO'), );
 /**
  *
  * @param

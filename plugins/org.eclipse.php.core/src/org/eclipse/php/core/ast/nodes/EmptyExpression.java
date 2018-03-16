@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,15 +20,18 @@ import org.eclipse.php.core.ast.match.ASTMatcher;
 import org.eclipse.php.core.ast.visitor.Visitor;
 
 /**
- * This class represents an empty statement.
+ * This class represents an empty expression, mostly used for empty list
+ * elements.
  * 
  * <pre>
  * e.g.
  * 
- * ; while(true); - the while statement contains empty statement
+ * list($a, , ) = null; - all empty list() elements
+ * array($a, ); - the empty element after trailing comma
+ * foo($a, ); - the empty element after trailing comma
  * </pre>
  */
-public class EmptyStatement extends Statement {
+public class EmptyExpression extends Expression {
 
 	/**
 	 * A list of property descriptors (element type:
@@ -41,11 +44,11 @@ public class EmptyStatement extends Statement {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
-	public EmptyStatement(int start, int end, AST ast) {
-		super(start, end, ast);
+	public EmptyExpression(int position, AST ast) {
+		super(position, position, ast);
 	}
 
-	public EmptyStatement(AST ast) {
+	public EmptyExpression(AST ast) {
 		super(ast);
 	}
 
@@ -74,14 +77,14 @@ public class EmptyStatement extends Statement {
 
 	@Override
 	public void toString(StringBuilder buffer, String tab) {
-		buffer.append(tab).append("<EmptyStatement"); //$NON-NLS-1$
+		buffer.append(tab).append("<EmptyExpression"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append("/>"); //$NON-NLS-1$
 	}
 
 	@Override
 	public int getType() {
-		return ASTNode.EMPTY_STATEMENT;
+		return ASTNode.EMPTY_EXPRESSION;
 	}
 
 	/*
@@ -95,7 +98,7 @@ public class EmptyStatement extends Statement {
 
 	@Override
 	ASTNode clone0(AST target) {
-		final ASTNode result = new EmptyStatement(this.getStart(), this.getEnd(), target);
+		final ASTNode result = new EmptyExpression(this.getStart(), target);
 		return result;
 	}
 

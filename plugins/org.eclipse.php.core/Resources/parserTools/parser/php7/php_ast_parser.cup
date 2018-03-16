@@ -276,7 +276,7 @@ non terminal VariableBase function_call;
 non terminal Expression exit_expr;
 non terminal List ctor_arguments;
 non terminal Expression scalar;
-non terminal possible_comma;
+non terminal String possible_comma;
 non terminal Expression expr;
 non terminal VariableBase variable_class_name;
 non terminal Expression optional_expr;
@@ -2875,7 +2875,14 @@ T_LNUMBER:scalar
 /* do nothing */
 possible_comma ::=
 /* empty */
+{:
+	RESULT = null;
+:}
+
 | T_COMMA
+{:
+	RESULT = "";
+:}
 ;
 
 expr ::=
@@ -3102,7 +3109,7 @@ assignment_list:listElements T_COMMA assignment_list_element:element
 	if (element != null) {
 		listElements.add(element);
 	} else {
-		listElements.add(new Variable(elementleft, elementright, parser.ast, ""));
+		listElements.add(new EmptyExpression(elementright, parser.ast));
 	}
 	RESULT = listElements;
 :}
@@ -3113,7 +3120,7 @@ assignment_list:listElements T_COMMA assignment_list_element:element
 	if (var != null) {
 		listElements.add(var);
 	} else {
-		listElements.add(new Variable(varleft, varright, parser.ast, ""));
+		listElements.add(new EmptyExpression(varright, parser.ast));
 	}
 	RESULT = listElements;
 :}
@@ -3142,8 +3149,11 @@ array_pair_list ::=
 	RESULT = new LinkedList();
 :}
 
-| non_empty_array_pair_list:list possible_comma
+| non_empty_array_pair_list:list possible_comma:comma
 {:
+	if (comma != null) {
+		list.add(new EmptyExpression(commaright, parser.ast));
+	}
 	RESULT = list;
 :}
 ;
