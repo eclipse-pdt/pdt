@@ -264,7 +264,7 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 
 	private final Category fArrayInitializerExpressionsCategory = new Category(
 			CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_EXPRESSIONS_IN_ARRAY_INITIALIZER_KEY,
-			"class Example {var $a = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);}", //$NON-NLS-1$
+			"class Example {var $a = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, );}", //$NON-NLS-1$
 			FormatterMessages.LineWrappingTabPage_array_init);
 
 	private final Category fBinaryExpressionCategory = new Category(
@@ -305,13 +305,14 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 
 	private NumberPreference fMaxLineWidthPref;
 	private NumberPreference fDefaultIndentWrapLines;
+	private CheckboxPreference fTrailingComma;
 	// private NumberPreference fPreviewLineWidth;
 
 	protected Group fOptionsGroup;
 
 	/**
-	 * A collection containing the categories tree. This is used as model for the
-	 * tree viewer.
+	 * A collection containing the categories tree. This is used as model for
+	 * the tree viewer.
 	 * 
 	 * @see TreeViewer
 	 */
@@ -406,6 +407,10 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 				FormatterMessages.LineWrappingTabPage_width_indent_option_default_indent_wrapped, 0, 9999);
 		fDefaultIndentWrapLines.setValue(codeFormatterPreferences.line_wrap_wrapped_lines_indentation);
 
+		fTrailingComma = createCheckboxPref(lineWidthGroup, numColumns,
+				FormatterMessages.LineWrappingTabPage_keep_trailing_comma_in_list);
+		fTrailingComma.setIsChecked(codeFormatterPreferences.line_keep_trailing_comma_in_list);
+
 		fCategoriesViewer = new TreeViewer(composite /* categoryGroup */,
 				SWT.MULTI | SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL);
 		fCategoriesViewer.setContentProvider(new ITreeContentProvider() {
@@ -490,6 +495,7 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 		if (isInitialized) {
 			codeFormatterPreferences.line_wrap_line_split = fMaxLineWidthPref.getValue();
 			codeFormatterPreferences.line_wrap_wrapped_lines_indentation = fDefaultIndentWrapLines.getValue();
+			codeFormatterPreferences.line_keep_trailing_comma_in_list = fTrailingComma.isChecked();
 		}
 	}
 

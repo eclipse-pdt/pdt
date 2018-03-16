@@ -16,7 +16,7 @@ const BAR = 0x10;
 function foo() {
 	static $a = 1 ** 1;
 	static $b = [ 
-			1 << 2 
+			1 << 2
 	];
 	static $c = 0x01 | BAR;
 }
