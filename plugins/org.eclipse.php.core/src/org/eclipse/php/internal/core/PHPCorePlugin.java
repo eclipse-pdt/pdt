@@ -21,11 +21,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
-import org.eclipse.dltk.core.search.IDLTKSearchScope;
-import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.dltk.internal.core.search.ProjectIndexerManager;
 import org.eclipse.php.core.PHPToolkitUtil;
@@ -33,7 +29,6 @@ import org.eclipse.php.core.libfolders.LibraryFolderManager;
 import org.eclipse.php.core.validation.IProblemPreferences;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
-import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.util.ProjectBackwardCompatibilityUtil;
 import org.osgi.framework.BundleContext;
@@ -431,41 +426,12 @@ public class PHPCorePlugin extends Plugin {
 				monitor.beginTask(CoreMessages.PHPCorePlugin_initializingPHPToolkit, 125);
 			}
 
-			// dummy query for waiting until the indexes are ready
-			IDLTKSearchScope scope = SearchEngine.createWorkspaceScope(PHPLanguageToolkit.getDefault());
 			try {
 				LanguageModelInitializer.cleanup(monitor);
-				if (monitor != null) {
-					monitor.subTask(CoreMessages.PHPCorePlugin_initializingSearchEngine);
-					monitor.worked(25);
-				}
-
-				PHPModelAccess.getDefault().findMethods(ID, MatchRule.PREFIX, Modifiers.AccGlobal, 0, scope, monitor);
-				if (monitor != null) {
-					monitor.worked(25);
-				}
-
-				PHPModelAccess.getDefault().findTypes(ID, MatchRule.PREFIX, Modifiers.AccGlobal, 0, scope, monitor);
-				if (monitor != null) {
-					monitor.worked(25);
-				}
-
-				PHPModelAccess.getDefault().findFields(ID, MatchRule.PREFIX, Modifiers.AccGlobal, 0, scope, monitor);
-				if (monitor != null) {
-					monitor.worked(25);
-				}
-
-				PHPModelAccess.getDefault().findIncludes(ID, MatchRule.PREFIX, scope, monitor);
-				if (monitor != null) {
-					monitor.worked(25);
-				}
-
 			} catch (OperationCanceledException e) {
 				if (monitor != null && monitor.isCanceled()) {
 					throw e;
 				}
-				// else indexes were not ready: catch the exception so that jars
-				// are still refreshed
 			}
 		} finally {
 			if (monitor != null) {

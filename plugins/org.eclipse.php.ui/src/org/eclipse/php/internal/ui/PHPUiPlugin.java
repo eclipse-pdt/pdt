@@ -31,7 +31,6 @@ import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
-import org.eclipse.osgi.service.environment.EnvironmentInfo;
 import org.eclipse.php.core.libfolders.LibraryFolderManager;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.ui.corext.template.php.CodeTemplateContextType;
@@ -59,7 +58,6 @@ import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.jsdt.core.ITypeRoot;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
 import org.osgi.framework.BundleContext;
-import org.osgi.util.tracker.ServiceTracker;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -140,26 +138,15 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 * @param context
 	 */
 	void initializeAfterStart(final BundleContext context) {
-		CorrectionCommandInstaller.registerCommands();
 		Job job = new Job("") { //$NON-NLS-1$
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-
+				CorrectionCommandInstaller.registerCommands();
 				libraryFolderChangeListener = new LibraryFolderChangeListener();
 				LibraryFolderManager.getInstance().addListener(libraryFolderChangeListener);
 
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					@Override
-					public void run() {
-						processCommandLine(context);
-					}
-				});
-
 				if (PlatformUI.isWorkbenchRunning()) {
-					new InitializeAfterLoadJob().schedule(); // must be last
-					// call in
-					// start()
-					// method
+					new InitializeAfterLoadJob().schedule();
 				}
 				return Status.OK_STATUS;
 			}
@@ -170,22 +157,6 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	static void initializeAfterLoad(IProgressMonitor monitor) {
 		org.eclipse.dltk.internal.corext.util.OpenTypeHistory.getInstance(PHPUILanguageToolkit.getInstance())
 				.checkConsistency(monitor);
-	}
-
-	private void processCommandLine(BundleContext context) {
-		ServiceTracker<?, ?> environmentTracker = new ServiceTracker<>(context, EnvironmentInfo.class.getName(), null);
-		environmentTracker.open();
-		EnvironmentInfo environmentInfo = (EnvironmentInfo) environmentTracker.getService();
-		environmentTracker.close();
-		if (environmentInfo == null) {
-			return;
-		}
-		String[] args = environmentInfo.getNonFrameworkArgs();
-		if (args == null || args.length == 0) {
-			return;
-		}
-
-		return;
 	}
 
 	/**

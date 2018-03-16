@@ -46,6 +46,5 @@ public final class CoreMessages extends NLS {
 	}
 
 	public static String PHPCorePlugin_initializingPHPToolkit;
-	public static String PHPCorePlugin_initializingSearchEngine;
 	public static String PHPTodoTaskAstParser_0;
 }
