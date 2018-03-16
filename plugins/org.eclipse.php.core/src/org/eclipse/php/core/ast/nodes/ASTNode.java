@@ -114,6 +114,7 @@ public abstract class ASTNode implements Visitable {
 	public static final int FINALLY_CLAUSE = 76;
 	public static final int ANONYMOUS_CLASS_DECLARATION = 77;
 	public static final int RETURN_TYPE = 78;
+	public static final int EMPTY_EXPRESSION = 79;
 
 	/**
 	 * Internal convenience constant indicating that there is definite risk of
@@ -607,6 +608,8 @@ public abstract class ASTNode implements Visitable {
 			return EchoStatement.class;
 		case EMPTY_STATEMENT:
 			return EmptyStatement.class;
+		case EMPTY_EXPRESSION:
+			return EmptyExpression.class;
 		case EXPRESSION_STATEMENT:
 			return ExpressionStatement.class;
 		case FIELD_ACCESS:

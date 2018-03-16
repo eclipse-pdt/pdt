@@ -27,7 +27,7 @@ function small_numbers() {
 	return array (
 			0,
 			1,
-			2 
+			2
 	);
 }
 

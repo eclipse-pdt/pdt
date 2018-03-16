@@ -207,6 +207,7 @@ public class CodeFormatterPreferences {
 	public boolean new_line_for_empty_statement;
 	public int new_line_in_second_invoke;
 
+	public boolean line_keep_trailing_comma_in_list;
 	public int line_wrap_line_split;
 	public int line_wrap_wrapped_lines_indentation;
 	public int line_wrap_array_init_indentation;
@@ -615,6 +616,8 @@ public class CodeFormatterPreferences {
 		new_line_in_second_invoke = getIntValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_IN_SECOND_METHOD_INVOKE);
 
+		line_keep_trailing_comma_in_list = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_KEEP_TRAILING_COMMA_IN_LIST);
 		// line wrapping
 		line_wrap_line_split = getIntValue(preferences, CodeFormatterConstants.FORMATTER_LINE_SPLIT);
 		line_wrap_wrapped_lines_indentation = getIntValue(preferences,
@@ -1227,6 +1230,8 @@ public class CodeFormatterPreferences {
 		options.put(CodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_IN_SECOND_METHOD_INVOKE,
 				String.valueOf(new_line_in_second_invoke));
 
+		options.put(CodeFormatterConstants.FORMATTER_KEEP_TRAILING_COMMA_IN_LIST,
+				line_keep_trailing_comma_in_list ? TRUE : FALSE);
 		// line wrapping
 		options.put(CodeFormatterConstants.FORMATTER_LINE_SPLIT, String.valueOf(line_wrap_line_split));
 		options.put(CodeFormatterConstants.FORMATTER_CONTINUATION_INDENTATION,
