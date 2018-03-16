@@ -18,10 +18,10 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.formatter.core.CodeFormatterVisitor;
 import org.eclipse.php.formatter.core.profiles.CodeFormatterPreferences;
 import org.eclipse.php.formatter.ui.Logger;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.text.edits.ReplaceEdit;
 
@@ -47,7 +47,7 @@ public class CodeFormatterPreview extends PHPPreview {
 			fPreviewDocument.set(fOriInput);
 			IRegion region = new Region(0, fPreviewDocument.getLength());
 			CodeFormatterVisitor codeFormatter = new CodeFormatterVisitor(fPreviewDocument, codeFormatterPreferences,
-					System.getProperty(Platform.PREF_LINE_SEPARATOR), PHPVersion.PHP5_6, true, region);
+					System.getProperty(Platform.PREF_LINE_SEPARATOR), PHPVersion.getLatestVersion(), true, region);
 			List<?> changes = codeFormatter.getChanges();
 			fInput = applyChanges(fOriInput, changes);
 

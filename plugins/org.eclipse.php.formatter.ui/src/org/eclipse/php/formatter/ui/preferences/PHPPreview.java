@@ -18,7 +18,9 @@ import java.util.Iterator;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.formatter.core.profiles.CodeFormatterPreferences;
+import org.eclipse.php.internal.core.documentModel.parser.PHPSourceParser;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPHP;
 import org.eclipse.swt.SWT;
@@ -55,6 +57,9 @@ public abstract class PHPPreview {
 		// set the PHP parser
 		IModelManager mmanager = StructuredModelManager.getModelManager();
 		fParser = mmanager.createStructuredDocumentFor(ContentTypeIdForPHP.ContentTypeID_PHP).getParser();
+		if (fParser instanceof PHPSourceParser) {
+			((PHPSourceParser) fParser).setProject(ProjectOptions.DUMMY_PREVIEW_PROJECT);
+		}
 
 		this.codeFormatterPreferences = codeFormatterPreferences;
 
