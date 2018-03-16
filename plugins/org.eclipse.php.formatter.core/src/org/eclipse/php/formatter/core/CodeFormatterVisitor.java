@@ -787,18 +787,18 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	private int handleCommaList(ASTNode[] array, int lastPosition, boolean insertSpaceBeforeComma,
 			boolean insertSpaceAfterComma, int lineWrapPolicy, int indentGap, boolean forceSplit) {
-		return handleCommaList(array, lastPosition, -1, insertSpaceBeforeComma, insertSpaceAfterComma, lineWrapPolicy,
+		return handleCommaList(array, lastPosition, true, insertSpaceBeforeComma, insertSpaceAfterComma, lineWrapPolicy,
 				indentGap, forceSplit);
 	}
 
 	/**
-	 * handle comma list (e.g. 1,2,3)
+	 * handle comma list (e.g. 1,2,3,)
 	 * 
 	 * @param array
 	 *            ASTNode array
 	 * @param lastPosition
 	 *            the position after last ASTNode
-	 * @param lastEmptyASTNodePosition
+	 * @param keepTrailingComma
 	 * @param insertSpaceBeforeComma
 	 * @param insertSpaceAfterComma
 	 * @param lineWrapPolicy
@@ -806,7 +806,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	 * @param forceSplit
 	 * @return the last element end position
 	 */
-	private int handleCommaList(ASTNode[] array, int lastPosition, int lastEmptyASTNodePosition,
+	private int handleCommaList(ASTNode[] array, int lastPosition, boolean keepTrailingComma,
 			boolean insertSpaceBeforeComma, boolean insertSpaceAfterComma, int lineWrapPolicy, int indentGap,
 			boolean forceSplit) {
 		int oldIndentationLevel = indentationLevel;
@@ -832,12 +832,25 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		commentIndentationStack.add(cio);
 		// commentIndentationMap.put(array., cio);
 		boolean isFirst = true;
-		for (int i = 0; i < array.length; i++) {
+
+		int arrayLength = array.length;
+		// when necessary, remove the empty ASTNode (i.e. EmptyExpression) at end of
+		// array
+		if (!keepTrailingComma && array[arrayLength - 1].getLength() == 0) {
+			arrayLength--;
+		}
+
+		for (int i = 0; i < arrayLength; i++) {
 			if (!isFirst) {
 				if (insertSpaceBeforeComma) {
 					insertSpace();
 				}
 				appendToBuffer(COMMA);
+			}
+
+			if (i == arrayLength - 1 && array[i].getLength() == 0) {
+				// keep lastPosition, we're now "after" the empty ASTNode
+				break;
 			}
 
 			// after the first element and wrap policy is except first element
@@ -966,13 +979,13 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				wasBinaryExpressionWrapped = true;
 			}
 
-			if (lastEmptyASTNodePosition >= 0 && array[i].getLength() == 0) {
+			if (array[i].getLength() == 0) {
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=531468
-				// We have a (fake) empty ASTNode. By construction, whitespaces "around" empty
-				// ASTNodes are always located "after" ASTNode.getStart() (and
+				// We have an empty ASTNode (i.e. EmptyExpression). By construction, whitespaces
+				// "around" empty ASTNodes are always located "after" ASTNode.getStart() (and
 				// ASTNode.getEnd()), so we have to "eat" those whitespaces to correctly
 				// generate/calculate ReplaceEdits in handleCharsWithoutComments().
-				int end = i < array.length - 1 ? array[i + 1].getStart() : lastEmptyASTNodePosition;
+				int end = array[i + 1].getStart();
 				// handleCharsWithoutComments() checks if offset - lastPosition ==
 				// replaceBuffer.length(), so don't "eat" too many whitespaces.
 				end = Math.min(lastPosition + replaceBuffer.length(), end);
@@ -2342,9 +2355,12 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		// }
 		// handleChars(lastPosition, arrayAccess.getEnd());
 
+		boolean oldIgnoreEmptyLineSetting = ignoreEmptyLineSetting;
+		ignoreEmptyLineSetting = true;
 		indentationLevelDescending = true;
 		handleChars(lastPosition, arrayAccess.getEnd() - 1);
 		addNonBlanksToLineWidth(1);// we need to add the closing bracket/curly
+		ignoreEmptyLineSetting = oldIgnoreEmptyLineSetting;
 
 		return false;
 	}
@@ -2374,7 +2390,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		elements = eleList.toArray(elements);
 
 		if (elements.length > 0) {
-			if (this.preferences.insert_space_after_opening_paren_in_array) {
+			if (this.preferences.insert_space_after_opening_paren_in_array
+					&& !this.preferences.new_line_after_open_array_parenthesis) {
 				insertSpace();
 			}
 
@@ -2396,7 +2413,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			// work around for close bracket.
 			lineWidth++;
 
-			lastPosition = handleCommaList(elements, lastPosition,
+			lastPosition = handleCommaList(elements, lastPosition, this.preferences.line_keep_trailing_comma_in_list,
 					this.preferences.insert_space_before_list_comma_in_array,
 					this.preferences.insert_space_after_list_comma_in_array,
 					this.preferences.line_wrap_expressions_in_array_init_line_wrap_policy, indentationGap,
@@ -2405,7 +2422,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			// work around for close bracket.
 			lineWidth--;
 
-			if (this.preferences.insert_space_before_closing_paren_in_array) {
+			if (this.preferences.insert_space_before_closing_paren_in_array
+					&& !this.preferences.new_line_before_close_array_parenthesis_array) {
 				insertSpace();
 			}
 
@@ -2430,9 +2448,12 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		// }
 		// handleChars(lastPosition, arrayCreation.getEnd());
 
+		boolean oldIgnoreEmptyLineSetting = ignoreEmptyLineSetting;
+		ignoreEmptyLineSetting = true;
 		indentationLevelDescending = true;
 		handleChars(lastPosition, arrayCreation.getEnd() - 1);
 		addNonBlanksToLineWidth(1);// we need to add the closing bracket/parenthesis
+		ignoreEmptyLineSetting = oldIgnoreEmptyLineSetting;
 
 		return false;
 	}
@@ -3383,6 +3404,11 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	}
 
 	@Override
+	public boolean visit(EmptyExpression emptyExpression) {
+		return false;
+	}
+
+	@Override
 	public boolean visit(ExpressionStatement expressionStatement) {
 		Expression expression = expressionStatement.getExpression();
 		expression.accept(this);
@@ -3737,7 +3763,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				lineWidth++;
 			}
 
-			lastPosition = handleCommaList(parameters, lastPosition,
+			lastPosition = handleCommaList(parameters, lastPosition, this.preferences.line_keep_trailing_comma_in_list,
 					this.preferences.insert_space_before_comma_in_function,
 					this.preferences.insert_space_after_comma_in_function,
 					this.preferences.line_wrap_arguments_in_method_invocation_line_wrap_policy, indentationGap,
@@ -3826,10 +3852,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(Identifier identifier) {
-		// ListVariable can contain empty identifiers
-		if (identifier.getLength() > 0) {
-			addNonBlanksToLineWidth(identifier.getLength());
-		}
+		addNonBlanksToLineWidth(identifier.getLength());
 		return false;
 	}
 
@@ -4445,21 +4468,15 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		int lastPosition = listVariable.getStart() + 4;
 		List<Expression> variables = listVariable.variables();
-		// XXX: variablesArray will contain one empty Variable object (i.e. with
-		// zero-length name) to represent empty list() statements.
+		// VariablesArray will contain one EmptyExpression object (i.e.
+		// with zero-length name) to represent empty list() statements.
 		Expression[] variablesArray = variables.toArray(new Expression[variables.size()]);
-		lastPosition = handleCommaList(variablesArray, lastPosition, listVariable.getEnd(),
+		lastPosition = handleCommaList(variablesArray, lastPosition, true,
 				this.preferences.insert_space_before_comma_in_list, this.preferences.insert_space_after_comma_in_list,
 				NO_LINE_WRAP, NO_LINE_WRAP_INDENT, false);
 
 		if (this.preferences.insert_space_before_closing_paren_in_list) {
-			if (variablesArray[variablesArray.length - 1].getLength() == 0
-					&& this.preferences.insert_space_after_comma_in_list) {
-				// in the following case list($a,) we don't want the second
-				// empty parameter to have two spaces. (like this: list( $a, ))
-			} else {
-				insertSpace();
-			}
+			insertSpace();
 		}
 		appendToBuffer(CLOSE_PARN);
 		handleChars(lastPosition, listVariable.getEnd());

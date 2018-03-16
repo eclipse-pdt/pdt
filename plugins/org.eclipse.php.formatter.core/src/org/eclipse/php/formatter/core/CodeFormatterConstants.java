@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Zend Techologies Ltd.
+ * Copyright (c) 2013, 2018 Zend Techologies Ltd.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,7 +46,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option for alignment of arguments in allocation expression
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.alignment_for_arguments_in_allocation_expression&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.alignment_for_arguments_in_allocation_expression&quot;
 	 *     - possible values:   values returned by &lt;code&gt;createAlignmentValue(boolean, int, int)&lt;/code&gt; call
 	 *     - default:           createAlignmentValue(false, WRAP_COMPACT, INDENT_DEFAULT)
 	 * </pre>
@@ -66,7 +66,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option for alignment of arguments in method invocation
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.alignment_for_arguments_in_method_invocation&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.alignment_for_arguments_in_method_invocation&quot;
 	 *     - possible values:   values returned by &lt;code&gt;createAlignmentValue(boolean, int, int)&lt;/code&gt; call
 	 *     - default:           createAlignmentValue(false, WRAP_COMPACT, INDENT_DEFAULT)
 	 * </pre>
@@ -91,7 +91,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option for alignment of binary expression
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.alignment_for_binary_expression&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.alignment_for_binary_expression&quot;
 	 *     - possible values:   values returned by &lt;code&gt;createAlignmentValue(boolean, int, int)&lt;/code&gt; call
 	 *     - default:           createAlignmentValue(false, WRAP_COMPACT, INDENT_DEFAULT)
 	 * </pre>
@@ -124,7 +124,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option for alignment of expressions in array initializer
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.alignment_for_expressions_in_array_initializer&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.alignment_for_expressions_in_array_initializer&quot;
 	 *     - possible values:   values returned by &lt;code&gt;createAlignmentValue(boolean, int, int)&lt;/code&gt; call
 	 *     - default:           createAlignmentValue(false, WRAP_COMPACT, INDENT_DEFAULT)
 	 * </pre>
@@ -144,7 +144,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option for alignment of parameters in method declaration
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.alignment_for_parameters_in_method_declaration&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.alignment_for_parameters_in_method_declaration&quot;
 	 *     - possible values:   values returned by &lt;code&gt;createAlignmentValue(boolean, int, int)&lt;/code&gt; call
 	 *     - default:           createAlignmentValue(false, WRAP_COMPACT, INDENT_DEFAULT)
 	 * </pre>
@@ -170,7 +170,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option for alignment of superinterfaces in type declaration
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.alignment_for_superinterfaces_in_type_declaration&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.alignment_for_superinterfaces_in_type_declaration&quot;
 	 *     - possible values:   values returned by &lt;code&gt;createAlignmentValue(boolean, int, int)&lt;/code&gt; call
 	 *     - default:           createAlignmentValue(false, WRAP_COMPACT, INDENT_DEFAULT)
 	 * </pre>
@@ -190,7 +190,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to add blank lines at the beginning of the method body
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.number_of_blank_lines_at_beginning_of_method_body&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.number_of_blank_lines_at_beginning_of_method_body&quot;
 	 *     - possible values:   &quot;&lt;n&gt;&quot;, where n is zero or a positive integer
 	 *     - default:           &quot;0&quot;
 	 * </pre>
@@ -219,7 +219,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to add blank lines before a field declaration
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.blank_lines_before_field&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.blank_lines_before_field&quot;
 	 *     - possible values:   &quot;&lt;n&gt;&quot;, where n is zero or a positive integer
 	 *     - default:           &quot;0&quot;
 	 * </pre>
@@ -232,7 +232,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to add blank lines before a member type declaration
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.blank_lines_before_member_type&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.blank_lines_before_member_type&quot;
 	 *     - possible values:   &quot;&lt;n&gt;&quot;, where n is zero or a positive integer
 	 *     - default:           &quot;0&quot;
 	 * </pre>
@@ -244,7 +244,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to add blank lines before a method declaration
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.blank_lines_before_method&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.blank_lines_before_method&quot;
 	 *     - possible values:   &quot;&lt;n&gt;&quot;, where n is zero or a positive integer
 	 *     - default:           &quot;0&quot;
 	 * </pre>
@@ -257,7 +257,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to add blank lines between type declarations
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.blank_lines_between_type_declarations&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.blank_lines_between_type_declarations&quot;
 	 *     - possible values:   &quot;&lt;n&gt;&quot;, where n is zero or a positive integer
 	 *     - default:           &quot;0&quot;
 	 * </pre>
@@ -270,7 +270,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to position the braces of a block
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.brace_position_for_block&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.brace_position_for_block&quot;
 	 *     - possible values:   { END_OF_LINE, NEXT_LINE, NEXT_LINE_SHIFTED, NEXT_LINE_ON_WRAP }
 	 *     - default:           END_OF_LINE
 	 * </pre>
@@ -287,7 +287,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to position the braces of a method declaration
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.brace_position_for_method_declaration&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.brace_position_for_method_declaration&quot;
 	 *     - possible values:   { END_OF_LINE, NEXT_LINE, NEXT_LINE_SHIFTED, NEXT_LINE_ON_WRAP }
 	 *     - default:           END_OF_LINE
 	 * </pre>
@@ -304,7 +304,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to position the braces of a lambda function declaration
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.brace_position_for_lambda_function_declaration&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.brace_position_for_lambda_function_declaration&quot;
 	 *     - possible values:   { END_OF_LINE, NEXT_LINE, NEXT_LINE_SHIFTED, NEXT_LINE_ON_WRAP }
 	 *     - default:           END_OF_LINE
 	 * </pre>
@@ -320,7 +320,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to position the braces of a switch statement
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.brace_position_for_switch&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.brace_position_for_switch&quot;
 	 *     - possible values:   { END_OF_LINE, NEXT_LINE, NEXT_LINE_SHIFTED, NEXT_LINE_ON_WRAP }
 	 *     - default:           END_OF_LINE
 	 * </pre>
@@ -336,7 +336,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to position the braces of a type declaration
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.brace_position_for_type_declaration&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.brace_position_for_type_declaration&quot;
 	 *     - possible values:   { END_OF_LINE, NEXT_LINE, NEXT_LINE_SHIFTED, NEXT_LINE_ON_WRAP }
 	 *     - default:           END_OF_LINE
 	 * </pre>
@@ -355,7 +355,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to indent body declarations compare to its enclosing type header
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.indent_body_declarations_compare_to_type_header&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.indent_body_declarations_compare_to_type_header&quot;
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           TRUE
 	 * </pre>
@@ -369,7 +369,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to indent breaks compare to cases
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.indent_breaks_compare_to_cases&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.indent_breaks_compare_to_cases&quot;
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           TRUE
 	 * </pre>
@@ -383,7 +383,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to indent empty lines
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.indent_empty_lines&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.indent_empty_lines&quot;
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           FALSE
 	 * </pre>
@@ -397,7 +397,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to indent statements inside a block
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.indent_statements_compare_to_block&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.indent_statements_compare_to_block&quot;
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           TRUE
 	 * </pre>
@@ -411,7 +411,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to indent statements inside the body of a method or a constructor
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.indent_statements_compare_to_body&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.indent_statements_compare_to_body&quot;
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           TRUE
 	 * </pre>
@@ -425,7 +425,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to indent switch statements compare to cases
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.indent_switchstatements_compare_to_cases&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.indent_switchstatements_compare_to_cases&quot;
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           TRUE
 	 * </pre>
@@ -439,7 +439,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to indent switch statements compare to switch
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.indent_switchstatements_compare_to_switch&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.indent_switchstatements_compare_to_switch&quot;
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           TRUE
 	 * </pre>
@@ -454,7 +454,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to specify the equivalent number of spaces that represents one indentation
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.indentation.size&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.indentation.size&quot;
 	 *     - possible values:   &quot;&lt;n&gt;&quot;, where n is zero or a positive integer
 	 *     - default:           &quot;4&quot;
 	 * </pre>
@@ -471,7 +471,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a new line after the opening brace in an array initializer
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_new_line_after_opening_brace_in_array_initializer&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_new_line_after_opening_brace_in_array_initializer&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -486,7 +486,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a new line before the catch keyword in try statement
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_new_line_before_catch_in_try_statement&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_new_line_before_catch_in_try_statement&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -500,7 +500,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a new line before the closing brace in an array initializer
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_new_line_before_closing_brace_in_array_initializer&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_new_line_before_closing_brace_in_array_initializer&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -514,7 +514,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a new line before the else and elseif keywords in if statement
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_new_line_before_else_in_if_statement&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_new_line_before_else_in_if_statement&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -529,7 +529,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a new line before the finally keyword in try statement
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_new_line_before_finally_in_try_statement&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_new_line_before_finally_in_try_statement&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -543,7 +543,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a new line before while in do statement
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_new_line_before_while_in_do_statement&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_new_line_before_while_in_do_statement&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -558,7 +558,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a new line in an empty block
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_new_line_in_empty_block&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_new_line_in_empty_block&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -573,7 +573,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a new line in an empty method body
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_new_line_in_empty_method_body&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_new_line_in_empty_method_body&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -587,7 +587,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a new line in an empty type declaration
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_new_line_in_empty_type_declaration&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_new_line_in_empty_type_declaration&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -602,7 +602,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space after an assignment operator
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_after_assignment_operator&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_after_assignment_operator&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -617,7 +617,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space after a binary operator
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_after_binary_operator&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_after_binary_operator&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -632,7 +632,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space after the closing brace of a block
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_after_closing_brace_in_block&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_after_closing_brace_in_block&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -646,7 +646,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space after the closing parenthesis of a cast expression
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_after_closing_paren_in_cast&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_after_closing_paren_in_cast&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -661,7 +661,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space after the colon in a conditional expression
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_after_colon_in_conditional&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_after_colon_in_conditional&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -676,7 +676,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space after the comma in the initializations of a for statement
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_after_comma_in_for_inits&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_after_comma_in_for_inits&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -690,7 +690,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space after the comma in the parameters of a method declaration
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_after_comma_in_method_declaration_parameters&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_after_comma_in_method_declaration_parameters&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -705,7 +705,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space after the comma in the arguments of a method invocation
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_after_comma_in_method_invocation_arguments&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_after_comma_in_method_invocation_arguments&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -749,7 +749,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space after the comma in multiple field declaration
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_after_comma_in_multiple_field_declarations&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_after_comma_in_multiple_field_declarations&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -769,7 +769,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space after the comma in superinterfaces names of a type header
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_after_comma_in_superinterfaces&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_after_comma_in_superinterfaces&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -784,7 +784,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space after the opening bracket inside an array reference
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_bracket_in_array_reference&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_after_opening_bracket_in_array_reference&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -799,7 +799,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space after the opening parenthesis in a cast expression
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_cast&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_after_opening_paren_in_cast&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -813,7 +813,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space after the opening parenthesis in a catch
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_catch&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_after_opening_paren_in_catch&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -828,7 +828,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space after the opening parenthesis in a for statement
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_for&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_after_opening_paren_in_for&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -844,7 +844,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space after the opening parenthesis in an if statement
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_if&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_after_opening_paren_in_if&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -858,7 +858,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space after the opening parenthesis in a method declaration
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_method_declaration&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_after_opening_paren_in_method_declaration&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -872,7 +872,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space after the opening parenthesis in a method invocation
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_method_invocation&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_after_opening_paren_in_method_invocation&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -886,7 +886,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space after the opening parenthesis in a parenthesized expression
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_parenthesized_expression&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_after_opening_paren_in_parenthesized_expression&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -900,7 +900,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space after the opening parenthesis in a switch statement
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_switch&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_after_opening_paren_in_switch&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -915,7 +915,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space after the opening parenthesis in a while statement
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_while&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_after_opening_paren_in_while&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -929,7 +929,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space after a postfix operator
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_after_postfix_operator&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_after_postfix_operator&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -943,7 +943,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space after a prefix operator
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_after_prefix_operator&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_after_prefix_operator&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -957,7 +957,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space after question mark in a conditional expression
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_after_question_in_conditional&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_after_question_in_conditional&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -972,7 +972,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space after semicolon in a for statement
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_after_semicolon_in_for&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_after_semicolon_in_for&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -986,7 +986,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space after an unary operator
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_after_unary_operator&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_after_unary_operator&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -1001,7 +1001,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before an assignment operator
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_assignment_operator&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_assignment_operator&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -1016,7 +1016,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before an binary operator
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_binary_operator&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_binary_operator&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -1031,7 +1031,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before the closing bracket in an array reference
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_bracket_in_array_reference&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_closing_bracket_in_array_reference&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -1046,7 +1046,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before the closing parenthesis in a cast expression
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_cast&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_closing_paren_in_cast&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -1060,7 +1060,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before the closing parenthesis in a catch
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_catch&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_closing_paren_in_catch&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -1075,7 +1075,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before the closing parenthesis in a for statement
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_for&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_closing_paren_in_for&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -1091,7 +1091,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before the closing parenthesis in an if statement
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_if&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_closing_paren_in_if&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -1105,7 +1105,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before the closing parenthesis in a method declaration
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_method_declaration&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_closing_paren_in_method_declaration&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -1119,7 +1119,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before the closing parenthesis in a method invocation
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_method_invocation&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_closing_paren_in_method_invocation&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -1133,7 +1133,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before the closing parenthesis in a parenthesized expression
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_parenthesized_expression&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_closing_paren_in_parenthesized_expression&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -1147,7 +1147,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before the closing parenthesis in a switch statement
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_switch&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_closing_paren_in_switch&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -1162,7 +1162,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before the closing parenthesis in a while statement
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_while&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_closing_paren_in_while&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -1177,7 +1177,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before colon in a case statement
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_colon_in_case&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_colon_in_case&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -1191,7 +1191,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before colon in a conditional expression
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_colon_in_conditional&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_colon_in_conditional&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -1205,7 +1205,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before colon in a default statement
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_colon_in_default&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_colon_in_default&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -1220,7 +1220,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before comma in the initializations of a for statement
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_comma_in_for_inits&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_comma_in_for_inits&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -1242,7 +1242,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before comma in the parameters of a method declaration
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_comma_in_method_declaration_parameters&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_comma_in_method_declaration_parameters&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -1257,7 +1257,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before comma in the arguments of a method invocation
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_comma_in_method_invocation_arguments&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_comma_in_method_invocation_arguments&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -1271,7 +1271,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before comma in a multiple field declaration
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_comma_in_multiple_field_declarations&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_comma_in_multiple_field_declarations&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -1286,7 +1286,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before comma in the superinterfaces names in a type header
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_comma_in_superinterfaces&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_comma_in_superinterfaces&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -1301,7 +1301,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before the opening brace in a block
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_brace_in_block&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_opening_brace_in_block&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -1316,7 +1316,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before the opening brace in a method declaration
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_brace_in_method_declaration&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_opening_brace_in_method_declaration&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -1330,7 +1330,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before the opening brace in a switch statement
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_brace_in_switch&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_opening_brace_in_switch&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -1344,7 +1344,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before the opening brace in a type declaration
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_brace_in_type_declaration&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_opening_brace_in_type_declaration&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -1359,7 +1359,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before the opening bracket in an array reference
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_bracket_in_array_reference&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_opening_bracket_in_array_reference&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -1399,7 +1399,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before the opening parenthesis in a catch
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_catch&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_opening_paren_in_catch&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -1414,7 +1414,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before the opening parenthesis in a for statement
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_for&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_opening_paren_in_for&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -1430,7 +1430,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before the opening parenthesis in an if statement
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_if&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_opening_paren_in_if&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -1444,7 +1444,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before the opening parenthesis in a method declaration
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_method_declaration&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_opening_paren_in_method_declaration&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -1458,7 +1458,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before the opening parenthesis in a method invocation
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_method_invocation&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_opening_paren_in_method_invocation&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -1473,7 +1473,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before the opening parenthesis in a switch statement
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_switch&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_opening_paren_in_switch&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -1488,7 +1488,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before the opening parenthesis in a while statement
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_while&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_opening_paren_in_while&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -1503,7 +1503,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before a postfix operator
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_postfix_operator&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_postfix_operator&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -1517,7 +1517,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before a prefix operator
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_prefix_operator&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_prefix_operator&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -1531,7 +1531,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before question mark in a conditional expression
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_question_in_conditional&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_question_in_conditional&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -1546,7 +1546,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before semicolon
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_semicolon&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_semicolon&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -1560,7 +1560,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before semicolon in for statement
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_semicolon_in_for&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_semicolon_in_for&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -1574,7 +1574,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before unary operator
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_before_unary_operator&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_unary_operator&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -1589,7 +1589,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space between brackets in an array type reference
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_between_brackets_in_array_type_reference&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_between_brackets_in_array_type_reference&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -1604,7 +1604,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space between empty parenthesis in a method declaration
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_between_empty_parens_in_method_declaration&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_between_empty_parens_in_method_declaration&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -1625,7 +1625,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space between empty parenthesis in a method invocation
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.insert_space_between_empty_parens_in_method_invocation&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_between_empty_parens_in_method_invocation&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           DO_NOT_INSERT
 	 * </pre>
@@ -1639,7 +1639,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to keep else statement on the same line
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.keep_else_statement_on_same_line&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.keep_else_statement_on_same_line&quot;
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           FALSE
 	 * </pre>
@@ -1654,7 +1654,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to keep guardian clause on one line
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.format_guardian_clause_on_one_line&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.format_guardian_clause_on_one_line&quot;
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           FALSE
 	 * </pre>
@@ -1668,7 +1668,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to keep simple if statement on the one line
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.keep_imple_if_on_one_line&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.keep_imple_if_on_one_line&quot;
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           FALSE
 	 * </pre>
@@ -1682,7 +1682,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to keep then statement on the same line
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.keep_then_statement_on_same_line&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.keep_then_statement_on_same_line&quot;
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           FALSE
 	 * </pre>
@@ -1696,8 +1696,21 @@ public class CodeFormatterConstants {
 
 	/**
 	 * <pre>
+	 * FORMATTER / Option to control whether trailing list commas should be kept or not
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.keep_trailing_comma_in_list&quot;
+	 *     - possible values:   { TRUE, FALSE }
+	 *     - default:           FALSE
+	 * </pre>
+	 * 
+	 * @since 6.0
+	 */
+	public static final String FORMATTER_KEEP_TRAILING_COMMA_IN_LIST = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.keep_trailing_comma_in_list"; //$NON-NLS-1$
+
+	/**
+	 * <pre>
 	 * FORMATTER / Option to specify the length of the page. Beyond this length, the formatter will try to split the code
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.lineSplit&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.lineSplit&quot;
 	 *     - possible values:   &quot;&lt;n&gt;&quot;, where n is zero or a positive integer
 	 *     - default:           &quot;80&quot;
 	 * </pre>
@@ -1709,7 +1722,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to specify the number of empty lines to preserve
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.number_of_empty_lines_to_preserve&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.number_of_empty_lines_to_preserve&quot;
 	 *     - possible values:   &quot;&lt;n&gt;&quot;, where n is zero or a positive integer
 	 *     - default:           &quot;0&quot;
 	 * </pre>
@@ -1721,7 +1734,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to specify whether or not empty statement should be on a new line
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.put_empty_statement_on_new_line&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.put_empty_statement_on_new_line&quot;
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           FALSE
 	 * </pre>
@@ -1736,7 +1749,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to specify the equivalent number of spaces that represents one tabulation
-	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.tabulation.size&quot;
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.tabulation.size&quot;
 	 *     - possible values:   &quot;&lt;n&gt;&quot;, where n is zero or a positive integer
 	 *     - default:           &quot;4&quot;
 	 * </pre>
@@ -1757,7 +1770,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to control whether blank lines are cleared inside javadoc comments
-	 *     - option id:         "org.eclipse.jdt.core.formatter.comment.clear_blank_lines_in_javadoc_comment"
+	 *     - option id:         "org.eclipse.php.formatter.core.comment.clear_blank_lines_in_javadoc_comment"
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           FALSE
 	 * </pre>
@@ -1772,7 +1785,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to control whether blank lines are cleared inside block comments
-	 *     - option id:         "org.eclipse.jdt.core.formatter.comment.clear_blank_lines_in_block_comment"
+	 *     - option id:         "org.eclipse.php.formatter.core.comment.clear_blank_lines_in_block_comment"
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           FALSE
 	 * </pre>
@@ -1787,7 +1800,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to control whether single line comments are formatted
-	 *     - option id:         "org.eclipse.jdt.core.formatter.comment.format_line_comments"
+	 *     - option id:         "org.eclipse.php.formatter.core.comment.format_line_comments"
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           TRUE
 	 * </pre>
@@ -1801,7 +1814,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to format line comments that start on the first column
-	 *     - option id:         "org.eclipse.jdt.core.formatter.format_line_comment_starting_on_first_column"
+	 *     - option id:         "org.eclipse.php.formatter.core.format_line_comment_starting_on_first_column"
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           TRUE
 	 * </pre>
@@ -1822,7 +1835,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to control whether the white space between code and line comments should be preserved or replaced with a single space
-	 *     - option id:         "org.eclipse.jdt.core.formatter.comment.preserve_white_space_between_code_and_line_comments"
+	 *     - option id:         "org.eclipse.php.formatter.core.comment.preserve_white_space_between_code_and_line_comments"
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           FALSE
 	 * </pre>
@@ -1837,7 +1850,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to control whether multiple lines comments are formatted
-	 *     - option id:         "org.eclipse.jdt.core.formatter.comment.format_block_comments"
+	 *     - option id:         "org.eclipse.php.formatter.core.comment.format_block_comments"
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           TRUE
 	 * </pre>
@@ -1852,7 +1865,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to control whether javadoc comments are formatted
-	 *     - option id:         "org.eclipse.jdt.core.formatter.comment.format_javadoc_comments"
+	 *     - option id:         "org.eclipse.php.formatter.core.comment.format_javadoc_comments"
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           TRUE
 	 * </pre>
@@ -1867,7 +1880,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to control whether the header comment of a Java source file is formatted
-	 *     - option id:         "org.eclipse.jdt.core.formatter.comment.format_header"
+	 *     - option id:         "org.eclipse.php.formatter.core.comment.format_header"
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           FALSE
 	 * </pre>
@@ -1882,7 +1895,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to control whether HTML tags are formatted.
-	 *     - option id:         "org.eclipse.jdt.core.formatter.comment.format_html"
+	 *     - option id:         "org.eclipse.php.formatter.core.comment.format_html"
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           TRUE
 	 * </pre>
@@ -1897,7 +1910,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to control whether code snippets are formatted in comments
-	 *     - option id:         "org.eclipse.jdt.core.formatter.comment.format_source_code"
+	 *     - option id:         "org.eclipse.php.formatter.core.comment.format_source_code"
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           TRUE
 	 * </pre>
@@ -1912,7 +1925,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to control whether description of Javadoc parameters are indented
-	 *     - option id:         "org.eclipse.jdt.core.formatter.comment.indent_parameter_description"
+	 *     - option id:         "org.eclipse.php.formatter.core.comment.indent_parameter_description"
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           TRUE
 	 * </pre>
@@ -1927,7 +1940,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to control whether unknown tags should keep their content unchanged (i.e. no code formatting)
-	 *     - option id:         "org.eclipse.jdt.core.formatter.never_format_unknown_tags"
+	 *     - option id:         "org.eclipse.php.formatter.core.never_format_unknown_tags"
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           TRUE
 	 * </pre>
@@ -1942,7 +1955,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to control whether Javadoc root tags are indented.
-	 *     - option id:         "org.eclipse.jdt.core.formatter.comment.indent_root_tags"
+	 *     - option id:         "org.eclipse.php.formatter.core.comment.indent_root_tags"
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           TRUE
 	 * </pre>
@@ -1957,7 +1970,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert an empty line before the Javadoc root tag block
-	 *     - option id:         "org.eclipse.jdt.core.formatter.comment.insert_new_line_before_root_tags"
+	 *     - option id:         "org.eclipse.php.formatter.core.comment.insert_new_line_before_root_tags"
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -1972,7 +1985,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a new line after Javadoc root tag parameters
-	 *     - option id:         "org.eclipse.jdt.core.formatter.comment.insert_new_line_for_parameter"
+	 *     - option id:         "org.eclipse.php.formatter.core.comment.insert_new_line_for_parameter"
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
 	 *     - default:           INSERT
 	 * </pre>
@@ -1987,7 +2000,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to specify the line length for comments.
-	 *     - option id:         "org.eclipse.jdt.core.formatter.comment.line_length"
+	 *     - option id:         "org.eclipse.php.formatter.core.comment.line_length"
 	 *     - possible values:   "&lt;n&gt;", where n is zero or a positive integer
 	 *     - default:           "80"
 	 * </pre>
@@ -2000,7 +2013,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to control whether block comments will have new lines at boundaries
-	 *     - option id:         "org.eclipse.jdt.core.formatter.comment.new_lines_at_block_boundaries"
+	 *     - option id:         "org.eclipse.php.formatter.core.comment.new_lines_at_block_boundaries"
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           TRUE
 	 * </pre>
@@ -2015,7 +2028,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to control whether javadoc comments will have new lines at boundaries
-	 *     - option id:         "org.eclipse.jdt.core.formatter.comment.new_lines_at_javadoc_boundaries"
+	 *     - option id:         "org.eclipse.php.formatter.core.comment.new_lines_at_javadoc_boundaries"
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           TRUE
 	 * </pre>
@@ -2030,7 +2043,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to set the continuation indentation
-	 *     - option id:         "org.eclipse.jdt.core.formatter.continuation_indentation"
+	 *     - option id:         "org.eclipse.php.formatter.core.continuation_indentation"
 	 *     - possible values:   "&lt;n&gt;", where n is zero or a positive integer
 	 *     - default:           "2"
 	 * </pre>
@@ -2042,7 +2055,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to set the continuation indentation inside array initializer
-	 *     - option id:         "org.eclipse.jdt.core.formatter.continuation_indentation_for_array_initializer"
+	 *     - option id:         "org.eclipse.php.formatter.core.continuation_indentation_for_array_initializer"
 	 *     - possible values:   "&lt;n&gt;", where n is zero or a positive integer
 	 *     - default:           "2"
 	 * </pre>
@@ -2054,7 +2067,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to indent line comments that start on the first column
-	 *     - option id:         "org.eclipse.jdt.core.formatter.formatter.never_indent_line_comments_on_first_column"
+	 *     - option id:         "org.eclipse.php.formatter.core.formatter.never_indent_line_comments_on_first_column"
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           FALSE
 	 * </pre>
@@ -2079,7 +2092,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to indent block comments that start on the first column
-	 *     - option id:         "org.eclipse.jdt.core.formatter.formatter.never_indent_block_comments_on_first_column"
+	 *     - option id:         "org.eclipse.php.formatter.core.formatter.never_indent_block_comments_on_first_column"
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           FALSE
 	 * </pre>
@@ -2109,7 +2122,7 @@ public class CodeFormatterConstants {
 	 * 		will be unchanged by the formatter when this new preference is used,
 	 * 		even if the maximum line width would give it enough space to join the lines.
 	 * 
-	 *     - option id:         "org.eclipse.jdt.core.formatter.join_lines_in_comments"
+	 *     - option id:         "org.eclipse.php.formatter.core.join_lines_in_comments"
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           TRUE
 	 * </pre>
@@ -2122,7 +2135,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to use the disabling and enabling tags defined respectively by the {@link #FORMATTER_DISABLING_TAG} and the {@link #FORMATTER_ENABLING_TAG} options.
-	 *     - option id:         "org.eclipse.jdt.core.formatter.use_on_off_tags"
+	 *     - option id:         "org.eclipse.php.formatter.core.use_on_off_tags"
 	 *     - possible values:   TRUE / FALSE
 	 *     - default:           FALSE
 	 * </pre>
@@ -2133,7 +2146,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to define the tag to put in a comment to disable the formatting.
-	 *     - option id:         "org.eclipse.jdt.core.formatter.disabling_tag"
+	 *     - option id:         "org.eclipse.php.formatter.core.disabling_tag"
 	 *     - possible values:   String, with constraints mentioned below
 	 *     - default:           "@formatter:off"
 	 * 
@@ -2301,7 +2314,7 @@ public class CodeFormatterConstants {
 	/**
 	 * <pre>
 	 * FORMATTER / Option to define the tag to put in a comment to re-enable the formatting after it has been disabled (see {@link #FORMATTER_DISABLING_TAG})
-	 *     - option id:         "org.eclipse.jdt.core.formatter.enabling_tag"
+	 *     - option id:         "org.eclipse.php.formatter.core.enabling_tag"
 	 *     - possible values:   String, with constraints mentioned below
 	 *     - default:           "@formatter:on"
 	 * </pre>

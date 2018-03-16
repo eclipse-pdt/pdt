@@ -1633,6 +1633,15 @@ public class AST {
 	}
 
 	/**
+	 * Creates a new {@link EmptyExpression}.
+	 * 
+	 * @return A new EmptyExpression.
+	 */
+	public EmptyExpression newEmptyExpression() {
+		return new EmptyExpression(this);
+	}
+
+	/**
 	 * Creates a new {@link ExpressionStatement}.
 	 * 
 	 * @return A new ExpressionStatement.

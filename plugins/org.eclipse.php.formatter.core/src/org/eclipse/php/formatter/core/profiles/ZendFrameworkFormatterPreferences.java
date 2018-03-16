@@ -159,6 +159,7 @@ final public class ZendFrameworkFormatterPreferences implements ICodeFormatterPr
 
 		preferences.new_line_in_empty_class_body = true;
 
+		preferences.line_keep_trailing_comma_in_list = false;
 		preferences.line_wrap_line_split = 80;
 
 		// blank line

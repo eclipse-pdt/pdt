@@ -305,6 +305,7 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 
 	private NumberPreference fMaxLineWidthPref;
 	private NumberPreference fDefaultIndentWrapLines;
+	private CheckboxPreference fTrailingComma;
 	// private NumberPreference fPreviewLineWidth;
 
 	protected Group fOptionsGroup;
@@ -406,6 +407,10 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 				FormatterMessages.LineWrappingTabPage_width_indent_option_default_indent_wrapped, 0, 9999);
 		fDefaultIndentWrapLines.setValue(codeFormatterPreferences.line_wrap_wrapped_lines_indentation);
 
+		fTrailingComma = createCheckboxPref(lineWidthGroup, numColumns,
+				FormatterMessages.LineWrappingTabPage_keep_trailing_comma_in_list);
+		fTrailingComma.setIsChecked(codeFormatterPreferences.line_keep_trailing_comma_in_list);
+
 		fCategoriesViewer = new TreeViewer(composite /* categoryGroup */,
 				SWT.MULTI | SWT.BORDER | SWT.READ_ONLY | SWT.V_SCROLL);
 		fCategoriesViewer.setContentProvider(new ITreeContentProvider() {
@@ -490,6 +495,7 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 		if (isInitialized) {
 			codeFormatterPreferences.line_wrap_line_split = fMaxLineWidthPref.getValue();
 			codeFormatterPreferences.line_wrap_wrapped_lines_indentation = fDefaultIndentWrapLines.getValue();
+			codeFormatterPreferences.line_keep_trailing_comma_in_list = fTrailingComma.isChecked();
 		}
 	}
 
