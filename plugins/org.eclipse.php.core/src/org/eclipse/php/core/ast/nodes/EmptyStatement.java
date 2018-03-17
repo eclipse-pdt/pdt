@@ -25,8 +25,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * ; while(true); - the while statement contains empty statement
+ * </pre>
  */
 public class EmptyStatement extends Statement {
 

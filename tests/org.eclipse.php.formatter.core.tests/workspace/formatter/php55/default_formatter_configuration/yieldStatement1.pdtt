@@ -26,7 +26,7 @@ function small_numbers() {
 	$x = (yield $x => array (
 			0,
 			1,
-			2 
+			2
 	));
 }
 function &returns_reference() {

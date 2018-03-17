@@ -13,7 +13,7 @@ $c = array (      $a , $b         => foo (), 1         => $myClass->getFirst (),
 $a = array (
 		1,
 		2,
-		3 
+		3
 );
 $b = array (
 		'Dodo' => 'Golo',
@@ -23,7 +23,7 @@ $b = array (
 		'Dodo' => 'Golo',
 		'Dafna' => 'Dodidu',
 		'Dodo' => 'Golo',
-		'Dafna' => 'Dodidu' 
+		'Dafna' => 'Dodidu'
 );
 $c = array (
 		$a,
@@ -37,6 +37,6 @@ $c = array (
 		1 => $myClass->getFirst (),
 		$a,
 		$b => foo (),
-		1 => $myClass->getFirst () 
+		1 => $myClass->getFirst ()
 );
 ?>

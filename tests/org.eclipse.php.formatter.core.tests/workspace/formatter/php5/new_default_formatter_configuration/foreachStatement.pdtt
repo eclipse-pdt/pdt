@@ -61,7 +61,7 @@ $a = array (
 		1,
 		2,
 		3,
-		17 
+		17
 );
 
 foreach ( $a as $v ) {
@@ -74,7 +74,7 @@ $a = array (
 		1,
 		2,
 		3,
-		17 
+		17
 );
 
 $i = 0; /* for illustrative purposes only */
@@ -90,7 +90,7 @@ $a = array (
 		"one" => 1,
 		"two" => 2,
 		"three" => 3,
-		"seventeen" => 17 
+		"seventeen" => 17
 );
 
 foreach ( $a as $k => $v ) {
@@ -117,7 +117,7 @@ foreach ( array (
 		2,
 		3,
 		4,
-		5 
+		5
 ) as $v ) {
 	echo "$v\n";
 }

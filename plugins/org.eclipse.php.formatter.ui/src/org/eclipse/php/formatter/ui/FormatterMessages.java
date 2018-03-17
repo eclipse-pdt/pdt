@@ -275,6 +275,7 @@ final public class FormatterMessages extends NLS {
 	public static String LineWrappingTabPage_splitting_wrap_always_indent_all_but_first;
 	public static String LineWrappingTabPage_splitting_wrap_always_except_first_only_if_necessary;
 	public static String LineWrappingTabPage_width_indent;
+	public static String LineWrappingTabPage_keep_trailing_comma_in_list;
 	public static String LineWrappingTabPage_width_indent_option_max_line_width;
 	public static String LineWrappingTabPage_width_indent_option_default_indent_wrapped;
 	public static String LineWrappingTabPage_width_indent_option_default_indent_array;

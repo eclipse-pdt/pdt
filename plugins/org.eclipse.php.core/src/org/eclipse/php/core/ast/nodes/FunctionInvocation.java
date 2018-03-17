@@ -181,6 +181,11 @@ public class FunctionInvocation extends VariableBase {
 	}
 
 	/**
+	 * Retrieves the parameters component of this function invocation
+	 * expression. <b>Since PHP 7.2 the last element can be an EmptyExpression
+	 * object (whose length is 0) to handle the new php trailing comma
+	 * feature.</b>
+	 * 
 	 * @return the parameters component of this function invocation expression
 	 */
 	public List<Expression> parameters() {
@@ -211,7 +216,8 @@ public class FunctionInvocation extends VariableBase {
 	/**
 	 * Resolves and returns the binding for this function
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be resolved
+	 * @return the binding, or <code>null</code> if the binding cannot be
+	 *         resolved
 	 */
 	public IFunctionBinding resolveFunctionBinding() {
 		return this.ast.getBindingResolver().resolveFunction(this);

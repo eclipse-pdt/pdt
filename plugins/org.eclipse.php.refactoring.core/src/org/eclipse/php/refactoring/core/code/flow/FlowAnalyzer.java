@@ -244,6 +244,12 @@ abstract class FlowAnalyzer extends ApplyAll {
 	}
 
 	@Override
+	public boolean visit(EmptyExpression node) {
+		// Empty expressions aren't of any interest.
+		return false;
+	}
+
+	@Override
 	public boolean visit(TryStatement node) {
 		if (traverseNode(node)) {
 			fFlowContext.pushExcptions(node);
@@ -500,6 +506,10 @@ abstract class FlowAnalyzer extends ApplyAll {
 	@Override
 	public void endVisit(EmptyStatement node) {
 		// Leaf node.
+	}
+
+	@Override
+	public void endVisit(EmptyExpression node) {
 	}
 
 	@Override

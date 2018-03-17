@@ -12,7 +12,7 @@ echo data()['name'];
 function data() {
 	return [ 
 			'name' => 'Gonzalo',
-			'surname' => 'Ayuso' 
+			'surname' => 'Ayuso'
 	];
 }
 echo data () ['name'];

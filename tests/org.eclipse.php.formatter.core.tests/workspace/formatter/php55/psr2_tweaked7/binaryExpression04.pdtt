@@ -22,20 +22,17 @@ header('xxxx ' . rawurlencode(implode('-', TestMe::getAny($b, array(
 }
 --EXPECT--
 <?php
-
 class Foo
 {
-
     public function foo(
         array $_infos)
     {
         $a['tttt'] = TestMe::url(
             'xxx', 'yyy',
             $_infos + array ( 
-                'file' => $tmpFileName 
+                'file' => $tmpFileName
             ));
     }
-
     public function retrieveCumulDSN(
         array $_infos)
     {
@@ -47,7 +44,7 @@ class Foo
                         array ( 
                             'xxxxx' ,
                             'yyyyy' ,
-                            'zzzzz' 
+                            'zzzzz'
                         )))) . '.' .
             $a . '"');
     }
