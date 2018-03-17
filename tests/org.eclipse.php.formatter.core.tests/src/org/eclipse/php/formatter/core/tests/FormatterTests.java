@@ -65,15 +65,34 @@ public class FormatterTests {
 	static {
 		TESTS.put(PHPVersion.PHP5,
 				new String[] { "/workspace/formatter/php5", "/workspace/formatter_indent_empty_lines/php5" });
-		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/formatter/php53" });
-		TESTS.put(PHPVersion.PHP5_4, new String[] { "/workspace/formatter/php54" });
+		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/formatter/php5",
+				"/workspace/formatter_indent_empty_lines/php5", "/workspace/formatter/php53" });
+		TESTS.put(PHPVersion.PHP5_4,
+				new String[] { "/workspace/formatter/php5", "/workspace/formatter_indent_empty_lines/php5",
+						"/workspace/formatter/php53", "/workspace/formatter/php54" });
 		TESTS.put(PHPVersion.PHP5_5,
-				new String[] { "/workspace/formatter/php55", "/workspace/formatter_indent_empty_lines/php55" });
-		TESTS.put(PHPVersion.PHP5_6, new String[] { "/workspace/formatter/php56" });
+				new String[] { "/workspace/formatter/php5", "/workspace/formatter_indent_empty_lines/php5",
+						"/workspace/formatter/php53", "/workspace/formatter/php54", "/workspace/formatter/php55",
+						"/workspace/formatter_indent_empty_lines/php55" });
+		TESTS.put(PHPVersion.PHP5_6,
+				new String[] { "/workspace/formatter/php5", "/workspace/formatter_indent_empty_lines/php5",
+						"/workspace/formatter/php53", "/workspace/formatter/php54", "/workspace/formatter/php55",
+						"/workspace/formatter_indent_empty_lines/php55", "/workspace/formatter/php56" });
 		TESTS.put(PHPVersion.PHP7_0,
-				new String[] { "/workspace/formatter/php7", "/workspace/formatter_indent_empty_lines/php7" });
-		TESTS.put(PHPVersion.PHP7_1, new String[] { "/workspace/formatter/php71" });
-		TESTS.put(PHPVersion.PHP7_2, new String[] { "/workspace/formatter/php72" });
+				new String[] { "/workspace/formatter/php5", "/workspace/formatter_indent_empty_lines/php5",
+						"/workspace/formatter/php53", "/workspace/formatter/php54", "/workspace/formatter/php55",
+						"/workspace/formatter_indent_empty_lines/php55", "/workspace/formatter/php56",
+						"/workspace/formatter/php7", "/workspace/formatter_indent_empty_lines/php7" });
+		TESTS.put(PHPVersion.PHP7_1,
+				new String[] { "/workspace/formatter/php5", "/workspace/formatter_indent_empty_lines/php5",
+						"/workspace/formatter/php53", "/workspace/formatter/php54", "/workspace/formatter/php55",
+						"/workspace/formatter_indent_empty_lines/php55", "/workspace/formatter/php56",
+						"/workspace/formatter/php7", "/workspace/formatter/php71" });
+		TESTS.put(PHPVersion.PHP7_2,
+				new String[] { "/workspace/formatter/php5", "/workspace/formatter_indent_empty_lines/php5",
+						"/workspace/formatter/php53", "/workspace/formatter/php54", "/workspace/formatter/php55",
+						"/workspace/formatter_indent_empty_lines/php55", "/workspace/formatter/php56",
+						"/workspace/formatter/php7", "/workspace/formatter/php71", "/workspace/formatter/php72" });
 	};
 
 	protected static int suiteCounter = 0;

@@ -36,7 +36,7 @@ import org.junit.runners.model.Statement;
 import org.osgi.framework.Bundle;
 
 /**
- * Special runner for PDT test with parametters collected to Map<PHPVersion,
+ * Special runner for PDT test with parameters collected to Map<PHPVersion,
  * String[] dirs> or String[] dirs
  * 
  * TODO: Allow Before and After with fileName
@@ -49,8 +49,8 @@ public class PDTTList extends AbstractPDTTRunner {
 	@Target(ElementType.FIELD)
 	public static @interface Parameters {
 		/**
-		 * If true, tests will be with real directory structure, each level as seperate
-		 * test tree element
+		 * If true, tests will be with real directory structure, each level as
+		 * seperate test tree element
 		 */
 		boolean recursive() default false;
 	}
