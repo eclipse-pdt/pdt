@@ -34,7 +34,7 @@ $arr = array (
 		'three',
 		'four',
 		'stop',
-		'five' 
+		'five'
 );
 while ( list ( , $val ) = each ( $arr ) ) {
 	if ($val == 'stop') {

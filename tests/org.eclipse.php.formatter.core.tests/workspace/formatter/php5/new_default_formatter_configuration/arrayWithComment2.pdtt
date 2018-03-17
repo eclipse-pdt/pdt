@@ -15,7 +15,7 @@ class stats {
 	private $arr = array (
 			'map' => array (
 					2,
-					100 
+					100
 			) // 49
 
 	);

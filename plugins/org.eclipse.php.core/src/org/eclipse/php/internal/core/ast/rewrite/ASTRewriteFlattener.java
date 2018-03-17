@@ -485,6 +485,11 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 
 	@Override
+	public boolean visit(EmptyExpression emptyExpression) {
+		return false;
+	}
+
+	@Override
 	public boolean visit(ExpressionStatement expressionStatement) {
 		if (expressionStatement.getExpression() != null) {
 			expressionStatement.getExpression().accept(this);

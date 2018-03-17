@@ -9,7 +9,7 @@ echo $f();
 <?php
 $f = [ 
 		new Human ( "Gonzalo" ),
-		'hello' 
+		'hello'
 ] [0];
 echo $f ();
 ?>
