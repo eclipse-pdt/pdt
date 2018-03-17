@@ -193,6 +193,7 @@ public final class PHPDefaultFormatterPreferences implements ICodeFormatterPrefe
 		preferences.new_line_for_empty_statement = true;
 		preferences.new_line_after_open_array_parenthesis = false;
 
+		preferences.line_keep_trailing_comma_in_list = false;
 		preferences.line_wrap_line_split = 300;
 		preferences.line_wrap_wrapped_lines_indentation = 2;
 		preferences.line_wrap_array_init_indentation = 2;

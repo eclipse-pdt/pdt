@@ -136,7 +136,11 @@ public interface Visitor {
 
 	boolean visit(EmptyStatement emptyStatement);
 
+	boolean visit(EmptyExpression emptyExpression);
+
 	void endVisit(EmptyStatement emptyStatement);
+
+	void endVisit(EmptyExpression emptyExpression);
 
 	boolean visit(ExpressionStatement expressionStatement);
 

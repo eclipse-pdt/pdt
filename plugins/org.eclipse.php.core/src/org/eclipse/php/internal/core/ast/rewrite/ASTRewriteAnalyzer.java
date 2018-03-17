@@ -1994,6 +1994,20 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(EmptyExpression)
+	 */
+	@Override
+	public boolean visit(EmptyExpression node) {
+		if (!hasChildrenChanges(node)) {
+			return doVisitUnchangedChildren(node);
+		}
+		changeNotSupported(node); // no modification possible
+		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(ExpressionStatement)
 	 */
 	@Override

@@ -153,6 +153,11 @@ public abstract class AbstractVisitor implements Visitor {
 	}
 
 	@Override
+	public boolean visit(EmptyExpression emptyExpression) {
+		return true;
+	}
+
+	@Override
 	public boolean visit(ExpressionStatement expressionStatement) {
 		return true;
 	}
@@ -494,6 +499,10 @@ public abstract class AbstractVisitor implements Visitor {
 
 	@Override
 	public void endVisit(EmptyStatement emptyStatement) {
+	}
+
+	@Override
+	public void endVisit(EmptyExpression emptyExpression) {
 	}
 
 	@Override

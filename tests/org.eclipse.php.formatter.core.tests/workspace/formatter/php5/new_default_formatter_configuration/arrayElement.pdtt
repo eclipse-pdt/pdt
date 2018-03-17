@@ -12,6 +12,6 @@ $a = array (
 		'Dodo' => 'Golo',
 		$a [$a],
 		$b => foo (),
-		4 => $myClass->getFirst () 
+		4 => $myClass->getFirst ()
 );
 ?>
