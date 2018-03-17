@@ -3,6 +3,8 @@ Test formatting for ArrayAccess
 Bug 521884 - Code Formatter: comma after final array element for multi-line array definition
 --FILE--
 <?php
+use MyProject\Sub\Level\ { function MyAlias, const MyNamespace as OtherAlias, MyOtherNamespace, };
+use function MyProject\Sub\Level\ { MyAlias, MyNamespace as OtherAlias, MyOtherNamespace, };
 $a = array (1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,);
 $a = foo (1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,);
 $a = $obj->foo (1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,);
@@ -20,6 +22,16 @@ class Example {
 ?>
 --EXPECT--
 <?php
+use MyProject\Sub\Level\ {
+	function MyAlias,
+	const MyNamespace as OtherAlias,
+	MyOtherNamespace
+};
+use function MyProject\Sub\Level\ {
+	MyAlias,
+	MyNamespace as OtherAlias,
+	MyOtherNamespace
+};
 $a = array (1, 2, 3,
 		5, 6, 7, 8, 9,
 		10, 1, 2, 3,
