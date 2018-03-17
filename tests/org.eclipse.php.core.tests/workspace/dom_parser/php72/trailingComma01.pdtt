@@ -45,6 +45,7 @@ isset($a, $b, $c, );
 					</NamespaceName>
 				</Name>
 			</UseStatementPart>
+			<EmptyExpression start='56' length='0'/>
 		</UseStatement>
 		<UseStatement start='88' length='46'>
 			<NamespaceName start='92' length='8' global='false' current='false'>
@@ -72,6 +73,7 @@ isset($a, $b, $c, );
 					</NamespaceName>
 				</Name>
 			</UseStatementPart>
+			<EmptyExpression start='131' length='0'/>
 		</UseStatement>
 		<ExpressionStatement start='165' length='20'>
 			<Assignment start='165' length='19' operator='='>
