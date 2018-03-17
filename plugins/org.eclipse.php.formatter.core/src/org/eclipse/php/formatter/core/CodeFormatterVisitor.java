@@ -5202,6 +5202,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		int lineWrapPolicy = NO_LINE_WRAP;
 		int indentationGap = NO_LINE_WRAP_INDENT;
+		boolean keepTrailingComma = false;
 		boolean spaceBeforeComma = this.preferences.insert_space_before_comma_in_global;
 		boolean spaceAfterComma = this.preferences.insert_space_after_comma_in_global;
 		boolean forceSplit = false;
@@ -5217,13 +5218,25 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			lineWrapPolicy = WRAP_ALL_ELEMENTS;
 			forceSplit = true;
 			indentationGap = 1;
+			// NB: trailing comma works only with (mixed) group statements
+			keepTrailingComma = this.preferences.line_keep_trailing_comma_in_list;
 			spaceBeforeComma = false;
 			spaceAfterComma = false;
 		}
 
 		List<UseStatementPart> parts = useStatement.parts();
-		lastPosition = handleCommaList(parts.toArray(new ASTNode[parts.size()]), lastPosition, spaceBeforeComma,
-				spaceAfterComma, lineWrapPolicy, indentationGap, forceSplit);
+		ASTNode[] allParts;
+		if (useStatement.getEmptyPart() != null) {
+			allParts = parts.toArray(new ASTNode[parts.size() + 1]);
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=521884
+			// add the empty ASTNode (i.e. EmptyExpression) that is used
+			// to represent the trailing comma introduced in PHP 7.2
+			allParts[parts.size()] = useStatement.getEmptyPart();
+		} else {
+			allParts = parts.toArray(new ASTNode[parts.size()]);
+		}
+		lastPosition = handleCommaList(allParts, lastPosition, keepTrailingComma, spaceBeforeComma, spaceAfterComma,
+				lineWrapPolicy, indentationGap, forceSplit);
 
 		if (useStatement.getNamespace() != null) {
 			insertNewLines(1);

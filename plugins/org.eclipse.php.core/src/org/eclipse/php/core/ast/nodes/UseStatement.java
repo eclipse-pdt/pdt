@@ -32,7 +32,7 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * use MyProject\Sub\Level as MyAlias;
  * use \MyProject\Sub\Level as MyAlias;
  * use \MyProject\Sub\Level as MyAlias, MyNamespace as OtherAlias, MyOtherNamespace;
- * use MyProject\Sub\Level\ { MyAlias, MyNamespace as OtherAlias, MyOtherNamespace };
+ * use MyProject\Sub\Level\ { MyAlias, MyNamespace as OtherAlias, MyOtherNamespace, };
  * </pre>
  */
 public class UseStatement extends Statement {
@@ -47,6 +47,7 @@ public class UseStatement extends Statement {
 	private final ASTNode.NodeList<UseStatementPart> parts = new ASTNode.NodeList<>(PARTS_PROPERTY);
 	private int statementType;
 	private NamespaceName namespace;
+	private EmptyExpression emptyPart;
 
 	/**
 	 * The structural property of this node type.
@@ -58,6 +59,9 @@ public class UseStatement extends Statement {
 	public static final ChildPropertyDescriptor NAMESPACE_PROPERTY = new ChildPropertyDescriptor(UseStatement.class,
 			"namespace", NamespaceName.class, OPTIONAL, //$NON-NLS-1$
 			CYCLE_RISK);
+	public static final ChildPropertyDescriptor EMPTY_PART_PROPERTY = new ChildPropertyDescriptor(UseStatement.class,
+			"emptyPart", EmptyExpression.class, OPTIONAL, //$NON-NLS-1$
+			NO_CYCLE_RISK);
 
 	/**
 	 * A list of property descriptors (element type:
@@ -70,6 +74,7 @@ public class UseStatement extends Statement {
 		properyList.add(PARTS_PROPERTY);
 		properyList.add(STATEMENT_TYPE_PROPERTY);
 		properyList.add(NAMESPACE_PROPERTY);
+		properyList.add(EMPTY_PART_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
@@ -82,15 +87,20 @@ public class UseStatement extends Statement {
 	}
 
 	public UseStatement(int start, int end, AST ast, List<UseStatementPart> parts, int statementType) {
-		this(start, end, ast, null, parts, statementType);
+		this(start, end, ast, null, parts, null, statementType);
 	}
 
 	public UseStatement(int start, int end, AST ast, NamespaceName namespace, List<UseStatementPart> parts) {
-		this(start, end, ast, namespace, parts, T_NONE);
+		this(start, end, ast, namespace, parts, null, T_NONE);
 	}
 
 	public UseStatement(int start, int end, AST ast, NamespaceName namespace, List<UseStatementPart> parts,
-			int statementType) {
+			EmptyExpression emptyPart) {
+		this(start, end, ast, namespace, parts, emptyPart, T_NONE);
+	}
+
+	public UseStatement(int start, int end, AST ast, NamespaceName namespace, List<UseStatementPart> parts,
+			EmptyExpression emptyPart, int statementType) {
 		super(start, end, ast);
 
 		if (parts == null || parts.size() == 0) {
@@ -101,6 +111,7 @@ public class UseStatement extends Statement {
 		while (it.hasNext()) {
 			this.parts.add(it.next());
 		}
+		setEmptyPart(emptyPart);
 		setStatementType(statementType);
 	}
 
@@ -138,6 +149,9 @@ public class UseStatement extends Statement {
 		for (ASTNode node : this.parts) {
 			node.accept(visitor);
 		}
+		if (getEmptyPart() != null) {
+			getEmptyPart().accept(visitor);
+		}
 	}
 
 	@Override
@@ -149,6 +163,9 @@ public class UseStatement extends Statement {
 		for (ASTNode node : this.parts) {
 			node.traverseTopDown(visitor);
 		}
+		if (getEmptyPart() != null) {
+			getEmptyPart().traverseTopDown(visitor);
+		}
 	}
 
 	@Override
@@ -158,6 +175,9 @@ public class UseStatement extends Statement {
 		}
 		for (ASTNode node : this.parts) {
 			node.traverseBottomUp(visitor);
+		}
+		if (getEmptyPart() != null) {
+			getEmptyPart().traverseBottomUp(visitor);
 		}
 		accept(visitor);
 	}
@@ -177,6 +197,10 @@ public class UseStatement extends Statement {
 		}
 		for (UseStatementPart part : this.parts) {
 			part.toString(buffer, TAB + tab);
+			buffer.append("\n"); //$NON-NLS-1$
+		}
+		if (getEmptyPart() != null) {
+			getEmptyPart().toString(buffer, TAB + tab);
 			buffer.append("\n"); //$NON-NLS-1$
 		}
 		buffer.append(tab).append("</UseStatement>"); //$NON-NLS-1$
@@ -223,6 +247,17 @@ public class UseStatement extends Statement {
 		postReplaceChild(oldChild, namespace, NAMESPACE_PROPERTY);
 	}
 
+	public EmptyExpression getEmptyPart() {
+		return emptyPart;
+	}
+
+	public void setEmptyPart(EmptyExpression emptyPart) {
+		ASTNode oldChild = this.emptyPart;
+		preReplaceChild(oldChild, emptyPart, EMPTY_PART_PROPERTY);
+		this.emptyPart = emptyPart;
+		postReplaceChild(oldChild, emptyPart, EMPTY_PART_PROPERTY);
+	}
+
 	@Override
 	final List<? extends ASTNode> internalGetChildListProperty(ChildListPropertyDescriptor property) {
 		if (property == PARTS_PROPERTY) {
@@ -239,6 +274,14 @@ public class UseStatement extends Statement {
 				return getNamespace();
 			} else {
 				setNamespace((NamespaceName) child);
+				return null;
+			}
+		}
+		if (property == EMPTY_PART_PROPERTY) {
+			if (get) {
+				return getEmptyPart();
+			} else {
+				setEmptyPart((EmptyExpression) child);
 				return null;
 			}
 		}
@@ -272,7 +315,7 @@ public class UseStatement extends Statement {
 	ASTNode clone0(AST target) {
 		final List<UseStatementPart> parts = ASTNode.copySubtrees(target, parts());
 		final NamespaceName namespace = ASTNode.copySubtree(target, getNamespace());
-		return new UseStatement(getStart(), getEnd(), target, namespace, parts, getStatementType());
+		return new UseStatement(getStart(), getEnd(), target, namespace, parts, getEmptyPart(), getStatementType());
 	}
 
 	@Override

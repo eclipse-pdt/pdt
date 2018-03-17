@@ -817,16 +817,24 @@ T_FUNCTION
 ;
 
 group_use_declaration ::=
-use_namespace_name:ns T_CURLY_OPEN use_declarations:useDeclList possible_comma T_CURLY_CLOSE:end
+use_namespace_name:ns T_CURLY_OPEN use_declarations:useDeclList possible_comma:comma T_CURLY_CLOSE:end
 {:
-	RESULT = new UseStatement(nsleft, endright, parser.ast, ns, useDeclList);
+	if (comma != null) {
+		RESULT = new UseStatement(nsleft, endright, parser.ast, ns, useDeclList, new EmptyExpression(commaright, parser.ast));
+	} else {
+		RESULT = new UseStatement(nsleft, endright, parser.ast, ns, useDeclList);
+	}
 :}
 ;
 
 mixed_group_use_declaration ::=
-use_namespace_name:ns T_CURLY_OPEN inline_use_declarations:useDeclList possible_comma T_CURLY_CLOSE:end
+use_namespace_name:ns T_CURLY_OPEN inline_use_declarations:useDeclList possible_comma:comma T_CURLY_CLOSE:end
 {:
-	RESULT = new UseStatement(nsleft, endright, parser.ast, ns, useDeclList);
+	if (comma != null) {
+		RESULT = new UseStatement(nsleft, endright, parser.ast, ns, useDeclList, new EmptyExpression(commaright, parser.ast));
+	} else {
+		RESULT = new UseStatement(nsleft, endright, parser.ast, ns, useDeclList);
+	}
 :}
 ;
 
