@@ -1,0 +1,63 @@
+--TEST--
+Test formatting for comments
+Bug 367584 - Possible NPE in PHPDocTag
+Bug 521884 - Code Formatter: comma after final array element for multi-line array definition
+--FILE--
+<?php
+$e = array (
+       array('level'=>'INFO'),
+       // TODO comment
+       array('level'=>'INFO'),
+);
+$e = foo (
+       array('level'=>'INFO'),
+       // TODO comment
+       array('level'=>'INFO'),
+);
+$e = $obj->foo (
+       array('level'=>'INFO'),
+       // TODO comment
+       array('level'=>'INFO'),
+);
+/**
+ * @param
+ */
+function foo (int $a, int $b){
+}
+/**
+ * Object allocation arguments
+ */
+class Example {
+	function foo() {
+		return new Example ( 100, 200, 300, 400, 500, 600, 700, 800, 900, );
+	}
+}
+?>
+--EXPECT--
+<?php
+$e = array(array('level' => 'INFO'), 
+// TODO comment
+array('level' => 'INFO'));
+$e = foo(array('level' => 'INFO'), 
+// TODO comment
+array('level' => 'INFO'));
+$e = $obj->foo(array('level' => 'INFO'), 
+// TODO comment
+array('level' => 'INFO'));
+/**
+ *
+ * @param
+ */
+function foo (int $a, int $b)
+{}
+/**
+ * Object allocation arguments
+ */
+class Example
+{
+    function foo ()
+    {
+        return new Example(100, 200, 300, 400, 500, 600, 700, 800, 900);
+    }
+}
+?>

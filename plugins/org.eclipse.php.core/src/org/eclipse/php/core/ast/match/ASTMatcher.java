@@ -453,6 +453,15 @@ public class ASTMatcher {
 		return true;
 	}
 
+	public boolean match(EmptyExpression node, Object other) {
+		if (!(other instanceof EmptyExpression)) {
+			return false;
+		}
+
+		// 2 empty expressions are equal by definition
+		return true;
+	}
+
 	public boolean match(ExpressionStatement node, Object other) {
 		if (!(other instanceof ExpressionStatement)) {
 			return false;

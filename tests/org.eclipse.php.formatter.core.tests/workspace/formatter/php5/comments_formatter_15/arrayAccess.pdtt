@@ -1,0 +1,29 @@
+--TEST--
+Test formatting for ArrayAccess
+Bug 521884 - Code Formatter: comma after final array element for multi-line array definition
+--FILE--
+<?php
+$a = array (1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,);
+	echo $a[1] ;
+echo $a  [ $a [  1]];
+echo $a [       'aaa'];
+?>
+--EXPECT--
+<?php
+$a = array (1, 2, 3,
+		5, 6, 7, 8, 9,
+		10, 1, 2, 3,
+		5, 6, 7, 8, 9,
+		10, 1, 2, 3,
+		5, 6, 7, 8, 9,
+		10, 1, 2, 3,
+		5, 6, 7, 8, 9,
+		10, 1, 2, 3,
+		5, 6, 7, 8, 9,
+		10, 1, 2, 3,
+		5, 6, 7, 8, 9,
+		10, );
+echo $a [1];
+echo $a [$a [1]];
+echo $a ['aaa'];
+?>

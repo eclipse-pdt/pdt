@@ -242,7 +242,9 @@ public class ClassInstanceCreation extends VariableBase {
 	}
 
 	/**
-	 * List of expressions that were given to the the constructor
+	 * List of expressions that were given to the the constructor. <b>Since PHP
+	 * 7.2 the last element can be an EmptyExpression object (whose length is 0)
+	 * to handle the new php trailing comma feature.</b>
 	 * 
 	 * @return list of expressions that were given to the the constructor
 	 */

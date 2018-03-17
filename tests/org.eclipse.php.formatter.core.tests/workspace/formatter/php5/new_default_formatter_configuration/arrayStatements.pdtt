@@ -16,11 +16,11 @@ $array[]='first cell';
 list ( $a, $b ) = array (
 		1,
 		2,
-		3 
+		3
 );
 $array = array (
 		1 => 2,
-		2 => 3 
+		2 => 3
 );
 $array [$i]->foo ();
 $array {'kuku'}->foo ();

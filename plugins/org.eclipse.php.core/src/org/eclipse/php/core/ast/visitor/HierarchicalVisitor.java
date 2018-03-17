@@ -223,6 +223,11 @@ public class HierarchicalVisitor extends AbstractVisitor {
 	}
 
 	@Override
+	public boolean visit(EmptyExpression emptyExpression) {
+		return visit((Expression) emptyExpression);
+	}
+
+	@Override
 	public boolean visit(ExpressionStatement expressionStatement) {
 		return visit((Statement) expressionStatement);
 	}

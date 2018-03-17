@@ -163,7 +163,9 @@ public class ArrayCreation extends VariableBase {
 	}
 
 	/**
-	 * Retrieves elements parts of array creation
+	 * Retrieves elements parts of array creation. <b>The last element can be an
+	 * EmptyExpression object (whose length is 0) to handle the php trailing
+	 * comma feature.</b>
 	 * 
 	 * @return elements
 	 */
