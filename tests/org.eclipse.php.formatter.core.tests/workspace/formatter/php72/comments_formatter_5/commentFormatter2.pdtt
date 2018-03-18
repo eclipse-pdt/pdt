@@ -1,0 +1,27 @@
+--TEST--
+Test formatting for comments
+Bug 521884 - Code Formatter: comma after final array element for multi-line array definition
+--FILE--
+<?php
+list ($a, $b, // comment
+) = array(1, 2, // comment
+);
+($a == 2 // comment
+);
+echo ($a // comment
+);
+while (list (, $val) = each($arr // comment
+)) {}
+?>
+--EXPECT--
+<?php
+list ($a, $b, // comment
+) = array(1, 2 // comment
+);
+($a == 2 // comment
+);
+echo ($a // comment
+);
+while (list (, $val) = each($arr // comment
+)) {}
+?>
