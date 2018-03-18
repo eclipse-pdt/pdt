@@ -16,6 +16,9 @@ public interface PHPUiConstants {
 	public static final String PHP_EDITOR_ID = "org.eclipse.php.editor"; //$NON-NLS-1$
 	public static final String PHP_SOURCE_TYPE_ID = "org.eclipse.php.core.phpsource"; //$NON-NLS-1$
 
+	public static final String EDITOR_SCOPE = "org.eclipse.php.ui.phpEditorScope"; //$NON-NLS-1$
+	public static final String VIEW_SCOPE = "org.eclipse.dltk.ui.context.views"; //$NON-NLS-1$
+
 	// disable cut/copy/paste/rename etc on php elements within file
 	public static final boolean DISABLE_ELEMENT_REFACTORING = true;
 	public static final String CONTENT_ASSIST_PROFERENCE_PAGE = "org.eclipse.php.ui.preferences.PHPContentAssistPreferencePage"; //$NON-NLS-1$
