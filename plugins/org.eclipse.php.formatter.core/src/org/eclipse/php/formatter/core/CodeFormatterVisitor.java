@@ -3788,9 +3788,12 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		}
 
 		if (addParen) {
-			appendToBuffer(CLOSE_PARN);
+			// appendToBuffer(CLOSE_PARN);
+			handleChars(lastPosition, functionInvocation.getEnd() - 1);
+			addNonBlanksToLineWidth(1);// we need to add the closing parenthesis
+		} else {
+			handleChars(lastPosition, functionInvocation.getEnd());
 		}
-		handleChars(lastPosition, functionInvocation.getEnd());
 
 	}
 
@@ -4479,8 +4482,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		if (this.preferences.insert_space_before_closing_paren_in_list) {
 			insertSpace();
 		}
-		appendToBuffer(CLOSE_PARN);
-		handleChars(lastPosition, listVariable.getEnd());
+		// appendToBuffer(CLOSE_PARN);
+		handleChars(lastPosition, listVariable.getEnd() - 1);
+		addNonBlanksToLineWidth(1);// we need to add the closing parenthesis
 
 		return false;
 	}
@@ -4613,8 +4617,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		if (this.preferences.insert_space_before_close_paren_in_parenthesis_expression) {
 			insertSpace();
 		}
-		appendToBuffer(CLOSE_PARN);
-		handleChars(lastPosition, parenthesisExpression.getEnd());
+		// appendToBuffer(CLOSE_PARN);
+		handleChars(lastPosition, parenthesisExpression.getEnd() - 1);
+		addNonBlanksToLineWidth(1);// we need to add the closing parenthesis
 		return false;
 	}
 
