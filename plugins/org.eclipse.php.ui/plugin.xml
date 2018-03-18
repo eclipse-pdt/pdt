@@ -1292,10 +1292,6 @@
 	<extension point="org.eclipse.ui.contexts">
 		<context name="%context.editingPhpSource.name" description="%context.editingPhpSource.description"
 			parentId="org.eclipse.wst.sse.ui.structuredTextEditorScope" id="org.eclipse.php.ui.phpEditorScope" />
-		<context name="%context.editingPhpSource.name"
-			parentId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
-			description="%context.editingPhpSource.description" id="org.eclipse.php.core.phpsource">
-		</context>
 	</extension>
 
 	<extension point="org.eclipse.ui.commands">

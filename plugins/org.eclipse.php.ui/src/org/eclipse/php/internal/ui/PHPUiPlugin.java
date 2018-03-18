@@ -127,7 +127,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-
+		PHPContextActivator.getInstance().install();
 		initializeAfterStart(context);
 	}
 
@@ -165,7 +165,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
-
+		PHPContextActivator.getInstance().uninstall();
 		CorrectionCommandInstaller.unregisterCommands();
 
 		if (libraryFolderChangeListener != null) {
@@ -194,7 +194,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 * path.
 	 * 
 	 * @param path
-	 *            the path
+	 *                 the path
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
@@ -490,7 +490,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 * Returns the {@link ITypeRoot} wrapped by the given editor input.
 	 * 
 	 * @param editorInput
-	 *            the editor input
+	 *                        the editor input
 	 * @return the {@link ITypeRoot} wrapped by <code>editorInput</code> or
 	 *         <code>null</code> if the editor input does not stand for a ITypeRoot
 	 * 
