@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015, 2016, 2017 IBM Corporation and others.
+ * Copyright (c) 2009, 2015, 2016, 2017, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,11 +17,9 @@ import java.util.ListIterator;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.annotations.NonNull;
-import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.parser.AbstractPHPLexer;
 import org.eclipse.php.internal.core.documentModel.parser.PHPLexerFactory;
@@ -49,19 +47,9 @@ public class PHPScriptRegion extends ForeignRegion implements IPHPScriptRegion {
 	@NonNull
 	private static final ITextRegion[] EMPTY_REGION = new ITextRegion[0];
 	private PHPTokenContainer tokensContainer = new PHPTokenContainer();
-	private IProject project;
-	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=510509
-	// When a project php version changes,
-	// there seem to be a very small race window where PhpScriptRegion objects
-	// can be updated through updateRegion() with the new project php version
-	// *BEFORE* PHPStructuredEditor.fPhpVersionListener was notified to call
-	// completeReparse() to apply the project php version change.
-	// In this case a PhpScriptRegion object will contain tokens and lexer
-	// states for 2 different php versions!
-	// We introduce "currentPhpVersion" to check if updateRegion() is called
-	// with unchanged project php version and force a call to completeReparse()
-	// when necessary (to renew the "tokensContainer" content).
-	PHPVersion currentPhpVersion;
+	private PHPVersion phpVersion;
+	private boolean isSupportingASPTags;
+	private boolean useShortTags;
 	private int updatedTokensStart = -1;
 	private int updatedTokensEnd = -1;
 
@@ -85,12 +73,13 @@ public class PHPScriptRegion extends ForeignRegion implements IPHPScriptRegion {
 	// true when the last reparse action is full reparse
 	protected boolean isFullReparsed;
 
-	public PHPScriptRegion(String newContext, int startOffset, @Nullable IProject project,
-			@NonNull AbstractPHPLexer phpLexer) {
+	public PHPScriptRegion(String newContext, int startOffset, @NonNull PHPVersion phpVersion,
+			boolean isSupportingASPTags, boolean useShortTags, @NonNull AbstractPHPLexer phpLexer) {
 		super(newContext, startOffset, 0, 0, PHPScriptRegion.PHP_SCRIPT);
 
-		this.project = project;
-		currentPhpVersion = ProjectOptions.getPHPVersion(this.project);
+		this.phpVersion = phpVersion;
+		this.isSupportingASPTags = isSupportingASPTags;
+		this.useShortTags = useShortTags;
 		// must be done by the caller when phpLexer is newly created or when it
 		// was used on a different project:
 		// phpLexer.setAspTags(ProjectOptions.isSupportingAspTags(project));
@@ -242,12 +231,6 @@ public class PHPScriptRegion extends ForeignRegion implements IPHPScriptRegion {
 			}
 
 			synchronized (tokensContainer) {
-				if (ProjectOptions.getPHPVersion(project) != currentPhpVersion) {
-					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=510509
-					// force full reparse
-					return null;
-				}
-
 				// get the region to re-parse
 				ITextRegion tokenStart = tokensContainer.getToken(offset == 0 ? 0 : offset - 1);
 				ITextRegion tokenEnd = tokensContainer.getToken(offset + lengthToReplace);
@@ -312,7 +295,7 @@ public class PHPScriptRegion extends ForeignRegion implements IPHPScriptRegion {
 				final PHPTokenContainer newContainer = new PHPTokenContainer();
 				final AbstractPHPLexer phpLexer = getPHPLexer(
 						new DocumentReader(flatnode, changes, requestStart, lengthToReplace, newTokenOffset),
-						startState, currentPhpVersion);
+						startState, phpVersion);
 
 				LexerState state = startState;
 				try {
@@ -389,22 +372,25 @@ public class PHPScriptRegion extends ForeignRegion implements IPHPScriptRegion {
 	/**
 	 * @see IPHPScriptRegion#completeReparse(IDocument, int, int)
 	 */
+	@SuppressWarnings("null")
 	@Override
 	public synchronized void completeReparse(IDocument doc, int start, int length) {
-		completeReparse(doc, start, length, project);
+		completeReparse(doc, start, length, phpVersion, isSupportingASPTags, useShortTags);
 	}
 
 	/**
 	 * @see IPHPScriptRegion#completeReparse(IDocument, int, int, IProject)
 	 */
 	@Override
-	public synchronized void completeReparse(IDocument doc, int start, int length, @Nullable IProject project) {
-		this.project = project;
-		currentPhpVersion = ProjectOptions.getPHPVersion(this.project);
+	public synchronized void completeReparse(IDocument doc, int start, int length, @NonNull PHPVersion phpVersion,
+			boolean isSupportingASPTags, boolean useShortTags) {
+		this.phpVersion = phpVersion;
+		this.isSupportingASPTags = isSupportingASPTags;
+		this.useShortTags = useShortTags;
 		// bug fix for 225118 we need to refresh the constants since this
 		// function is being called
 		// after the project's PHP version was changed.
-		AbstractPHPLexer phpLexer = getPHPLexer(new BlockDocumentReader(doc, start, length), null, currentPhpVersion);
+		AbstractPHPLexer phpLexer = getPHPLexer(new BlockDocumentReader(doc, start, length), null, this.phpVersion);
 
 		// these values are specific to each PHP version lexer
 		inScriptingState = phpLexer.getInScriptingState();
@@ -434,8 +420,9 @@ public class PHPScriptRegion extends ForeignRegion implements IPHPScriptRegion {
 			// a deep copy, because tokens and lexer state changes are not
 			// cloned)
 			this.tokensContainer = (PHPTokenContainer) sRegion.tokensContainer.clone();
-			this.project = sRegion.project;
-			this.currentPhpVersion = sRegion.currentPhpVersion;
+			this.phpVersion = sRegion.phpVersion;
+			this.isSupportingASPTags = sRegion.isSupportingASPTags;
+			this.useShortTags = sRegion.useShortTags;
 			this.updatedTokensStart = sRegion.updatedTokensStart;
 			this.updatedTokensEnd = sRegion.updatedTokensEnd;
 			this.inScriptingState = sRegion.inScriptingState;
@@ -505,7 +492,7 @@ public class PHPScriptRegion extends ForeignRegion implements IPHPScriptRegion {
 		if (startState != null) {
 			startState.restoreState(lexer);
 		}
-		lexer.setAspTags(ProjectOptions.isSupportingASPTags(project));
+		lexer.setAspTags(isSupportingASPTags);
 		return lexer;
 	}
 

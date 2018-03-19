@@ -17,9 +17,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.annotations.NonNull;
-import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPScriptRegion;
 import org.eclipse.php.core.project.ProjectOptions;
@@ -88,6 +86,8 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 	private final XMLParserRegionFactory fRegionFactory = new XMLParserRegionFactory();
 	private PHPVersion phpVersion = ProjectOptions.getDefaultPHPVersion();
+	private boolean isSupportingASPTags = false;
+	private boolean useShortTags = true;
 /**
  * user method
  */
@@ -308,7 +308,7 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 			// spill over the end of the buffer while checking.
 			if (allowPHP && zzStartRead != fLastInternalBlockStart && zzCurrentPos > 0 && zzCurrentPos < zzEndRead - 1 &&
 					zzBuffer[zzCurrentPos - 1] == '<' &&
-					(zzBuffer[zzCurrentPos] == '?' || (zzBuffer[zzCurrentPos] == '%' && ProjectOptions.isSupportingASPTags(project)))) {
+					(zzBuffer[zzCurrentPos] == '?' || (zzBuffer[zzCurrentPos] == '%' && isSupportingASPTags))) {
 				fLastInternalBlockStart = zzMarkedPos = zzCurrentPos - 1;
 				zzCurrentPos = zzMarkedPos + 1;
 				int resumeState = yystate();
@@ -436,7 +436,7 @@ private final String doScanEndPHP(String searchContext, int exitState, int immed
 	yypushback(1); // begin with the last char
 
 	final AbstractPHPLexer phpLexer = getPHPLexer();
-	PHPScriptRegion region = new PHPScriptRegion(searchContext, yychar, project, phpLexer);
+	PHPScriptRegion region = new PHPScriptRegion(searchContext, yychar, phpVersion, isSupportingASPTags, useShortTags, phpLexer);
 
 	// restore the locations / states
 	reset(zzReader, phpLexer.getZZBuffer(), phpLexer.getParameters());
@@ -460,7 +460,7 @@ private AbstractPHPLexer getPHPLexer() {
 	currentParameters[6] = lexer.getInScriptingState();
 	lexer.reset(zzReader, zzBuffer, currentParameters);
 
-	lexer.setAspTags(ProjectOptions.isSupportingASPTags(project));
+	lexer.setAspTags(isSupportingASPTags);
 	return lexer;
 }
 
@@ -657,23 +657,21 @@ private final String doBlockTagScan() throws IOException {
 	return doScan("</" + fCurrentTagName, true, getBlockMarkerContext(fCurrentTagName), YYINITIAL, YYINITIAL);
 }
 
-private IProject project;
-
 /**
  * this method is only intended to be called at creation of a new
  * PHPTokenizer (and before first scan) to avoid problems with
  * bufferedTextRegion and other cached informations depending on project
  * properties and settings
  */
-public void setProject(@Nullable IProject project) {
-	this.project = project;
-	this.phpVersion = ProjectOptions.getPHPVersion(project);
+public void setProjectInfos(@NonNull PHPVersion phpVersion, boolean isSupportingASPTags, boolean useShortTags) {
+	this.phpVersion = phpVersion;
+	this.isSupportingASPTags = isSupportingASPTags;
+	this.useShortTags = useShortTags;
 	this.bufferedTextRegion = null;
 }
 
 // NB: this method resets the lexer only partially
 private void reset(java.io.Reader reader, char[] buffer, int[] parameters) {
-	this.phpVersion = ProjectOptions.getPHPVersion(project);
 	this.bufferedTextRegion = null;
 	this.zzReader = reader;
 	this.zzBuffer = buffer;
@@ -848,7 +846,6 @@ public void reset(java.io.Reader in, int newOffset) {
 	if (Debug.debugTokenizer) {
 		System.out.println("resetting tokenizer");//$NON-NLS-1$
 	}
-	this.phpVersion = ProjectOptions.getPHPVersion(project);
 	this.bufferedTextRegion = null;
 	fOffset = newOffset;
 
@@ -1629,16 +1626,16 @@ PHP_ASP_END=%>
 	if (Debug.debugTokenizer)
 		dump("\nprocessing instruction start");//$NON-NLS-1$
 	if ("<?".equals(yytext()) //$NON-NLS-1$
-			&& !ProjectOptions.useShortTags(project)) {
+			&& !useShortTags) {
 		yybegin(ST_PI);
 		return XML_PI_OPEN;
 	} else if ("<?=".equals(yytext()) //$NON-NLS-1$
 			&& !PHPVersion.PHP5_3.isLessThan(phpVersion)
-			&& !ProjectOptions.useShortTags(project)) {
+			&& !useShortTags) {
 		yybegin(ST_PI);
 		return XML_PI_OPEN;
 	} else if ("<%".equals(yytext()) //$NON-NLS-1$
-			&& !ProjectOptions.isSupportingASPTags(project)) {
+			&& !isSupportingASPTags) {
 		yypushback(1);
 		yybegin(ST_XML_TAG_NAME);
 		return XML_TAG_OPEN;
@@ -2010,7 +2007,7 @@ PHP_ASP_END=%>
 //PHP PROCESSING ACTIONS
 // XXX Rule can never be matched:
 <YYINITIAL,ST_XML_TAG_NAME, ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE, ST_XML_DECLARATION, ST_XML_DOCTYPE_DECLARATION, ST_XML_ELEMENT_DECLARATION, ST_XML_ATTLIST_DECLARATION, ST_XML_DECLARATION_CLOSE, ST_XML_DOCTYPE_ID_PUBLIC, ST_XML_DOCTYPE_ID_SYSTEM, ST_XML_DOCTYPE_EXTERNAL_ID, ST_XML_COMMENT, ST_XML_ATTRIBUTE_VALUE_DQUOTED, ST_XML_ATTRIBUTE_VALUE_SQUOTED, ST_BLOCK_TAG_INTERNAL_SCAN> {PHP_START} | {PHP_ASP_START} {
-	if (ProjectOptions.isSupportingASPTags(project) || yytext().charAt(1) != '%') {
+	if (isSupportingASPTags || yytext().charAt(1) != '%') {
 		//removing trailing whitespaces for the php open
 		String phpStart = yytext();
 		int i = phpStart.length() - 1;

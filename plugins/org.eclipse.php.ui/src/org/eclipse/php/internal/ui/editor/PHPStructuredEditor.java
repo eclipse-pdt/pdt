@@ -1409,11 +1409,11 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				// in case of PhpScriptRegion reparse the region text
 				StructuredTextViewer textViewer = getTextViewer();
 				if (textViewer instanceof PHPStructuredTextViewer) {
-					DocumentModelUtils.reparseAndReconcileDocument((PHPStructuredTextViewer) textViewer);
+					DocumentModelUtils.reparseAndReconcileDocument((PHPStructuredTextViewer) textViewer, getProject());
 				} else {
 					IDocumentProvider documentProvider = getDocumentProvider();
 					IDocument doc = documentProvider != null ? documentProvider.getDocument(getEditorInput()) : null;
-					DocumentModelUtils.reparseDocument(doc);
+					DocumentModelUtils.reparseDocument(doc, getProject());
 				}
 			}
 
@@ -2642,7 +2642,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		if (resource != null) {
 			if (PHPToolkitUtil.isPHPFile(resource)) {
 
-				PHPSourceParser.editFile.set(resource);
+				PHPSourceParser.projectThreadLocal.set(((IFile) resource).getProject());
 
 				super.doSetInput(input);
 

@@ -17,7 +17,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.SemanticHighlightingManager;
@@ -1137,10 +1136,6 @@ public class PreferenceConstants {
 		store.setDefault(getEnabledPreferenceKey(EDITOR_KEYWORD_PUBLIC_COLOR), true);
 		store.setDefault(getEnabledPreferenceKey(EDITOR_KEYWORD_PRIVATE_COLOR), true);
 		store.setDefault(getEnabledPreferenceKey(EDITOR_KEYWORD_PROTECTED_COLOR), true);
-
-		// PHP options
-		store.setDefault(PHPCoreConstants.PHP_OPTIONS_PHP_VERSION, PHPVersion.PHP5_3.toString());
-		store.setDefault(PHPCoreConstants.PHP_OPTIONS_PHP_ROOT_CONTEXT, ""); //$NON-NLS-1$
 
 		// Smart home/end
 		store.setDefault(USE_SMART_HOME_END, true);

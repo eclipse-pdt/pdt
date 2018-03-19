@@ -529,7 +529,6 @@ public final class PHPUIMessages extends NLS {
 	public static String TodoTaskConfigurationBlock_tasks_default;
 	public static String RefactoringAction_disabled;
 	public static String PHPUI_defaultDialogMessage;
-	public static String PHPRootContextField_0;
 	public static String CustomFiltersDialog_DeselectAllButton_label;
 	public static String IncludePath_AddEntryTitle;
 	public static String CodeTemplateBlock_export_error_hidden;

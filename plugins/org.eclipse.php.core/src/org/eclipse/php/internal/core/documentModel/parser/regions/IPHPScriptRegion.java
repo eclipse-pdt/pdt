@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016, 2017 IBM Corporation and others.
+ * Copyright (c) 2009, 2016, 2017, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,11 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.documentModel.parser.regions;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.annotations.NonNull;
-import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
@@ -103,13 +102,17 @@ public interface IPHPScriptRegion extends ITextRegion {
 
 	/**
 	 * Performs a complete reparse in the document on the given interval and project
+	 * configuration
 	 * 
 	 * @param doc
 	 * @param start
 	 * @param length
-	 * @param project
+	 * @param phpVersion
+	 * @param isSupportingASPTags
+	 * @param useShortTags
 	 */
-	public abstract void completeReparse(IDocument doc, int start, int length, @Nullable IProject project);
+	public abstract void completeReparse(IDocument doc, int start, int length, @NonNull PHPVersion phpVersion,
+			boolean isSupportingASPTags, boolean useShortTags);
 
 	/**
 	 * Returns true if the last operation was a full reparse action

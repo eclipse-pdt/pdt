@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016 IBM Corporation and others.
+ * Copyright (c) 2009, 2016, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,10 +13,8 @@ package org.eclipse.php.internal.core.documentModel.parser;
 
 import java.io.Reader;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.dltk.annotations.Nullable;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockTokenizer;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -28,37 +26,36 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 public class PHPSourceParser extends XMLSourceParser {
 
-	public static ThreadLocal<IResource> editFile = new ThreadLocal<>();
-	private IProject project = null;
+	public static ThreadLocal<IProject> projectThreadLocal = new ThreadLocal<>();
 
 	public PHPSourceParser() {
 		super();
-		IResource resource = editFile.get();
-		if (resource instanceof IProject) {
-			project = (IProject) resource;
-		} else if (resource instanceof IFile) {
-			project = ((IFile) resource).getProject();
-		}
 	}
 
 	/*
 	 * Change the Tokenizer used by the XMLSourceParser to make it PHP aware
 	 */
+	@SuppressWarnings("null")
 	@Override
 	public BlockTokenizer getTokenizer() {
 		if (fTokenizer == null) {
 			PHPTokenizer phpTokenizer = new PHPTokenizer();
-			phpTokenizer.setProject(project);
+			IProject project = projectThreadLocal.get();
+			phpTokenizer.setProjectInfos(ProjectOptions.getPHPVersion(project),
+					ProjectOptions.isSupportingASPTags(project), ProjectOptions.useShortTags(project));
 			fTokenizer = phpTokenizer;
 		}
 		return fTokenizer;
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	public RegionParser newInstance() {
 		PHPSourceParser newInstance = new PHPSourceParser();
 		PHPTokenizer tokenizer = (PHPTokenizer) getTokenizer().newInstance();
-		tokenizer.setProject(project);
+		IProject project = projectThreadLocal.get();
+		tokenizer.setProjectInfos(ProjectOptions.getPHPVersion(project), ProjectOptions.isSupportingASPTags(project),
+				ProjectOptions.useShortTags(project));
 		newInstance.setTokenizer(tokenizer);
 		return newInstance;
 	}
@@ -277,21 +274,5 @@ public class PHPSourceParser extends XMLSourceParser {
 	@Override
 	public void reset(Reader reader, int position) {
 		super.reset(reader, position);
-	}
-
-	public @Nullable IProject getProject() {
-		return project;
-	}
-
-	public void setProject(@Nullable IProject project) {
-		// Reset tokenizer if project changed (as tokenizer properties&settings
-		// can depend on a specific project; see PHPTokenizer and
-		// PhpScriptRegion). This way is more easy and safe than to propagate
-		// the new project value on already-used tokenizers...
-		// This method should only be used by class DocumentModelUtils.
-		if (this.project != project) {
-			fTokenizer = null;
-		}
-		this.project = project;
 	}
 }
