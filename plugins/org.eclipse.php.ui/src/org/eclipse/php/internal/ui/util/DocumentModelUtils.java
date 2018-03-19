@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 IBM Corporation and others.
+ * Copyright (c) 2016, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,7 +17,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.documentModel.parser.PHPSourceParser;
+import org.eclipse.php.internal.core.documentModel.parser.PHPTokenizer;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
@@ -37,18 +40,28 @@ public class DocumentModelUtils {
 	 * @param document
 	 * @param project
 	 */
-	private static void resetDocumentReParser(@Nullable IStructuredDocument document, @Nullable IProject project) {
-		if (document != null && document.getReParser() instanceof PHPSourceParser) {
-			((PHPSourceParser) document.getReParser()).setProject(project);
+	@SuppressWarnings("null")
+	private static void resetDocumentParser(@Nullable IStructuredDocument document, @Nullable IProject project) {
+		if (document != null && document.getParser() instanceof PHPSourceParser) {
+			PHPSourceParser.projectThreadLocal.set(project);
+
+			PHPSourceParser sourceParser = (PHPSourceParser) document.getParser();
+			if (sourceParser.getTokenizer() instanceof PHPTokenizer) {
+				PHPTokenizer tokenizer = (PHPTokenizer) sourceParser.getTokenizer();
+				tokenizer.setProjectSettings(ProjectOptions.getPHPVersion(project),
+						ProjectOptions.isSupportingASPTags(project), ProjectOptions.useShortTags(project));
+			}
 		}
 	}
 
 	/**
-	 * Reparse PhpScriptRegions content of document attached to textViewer. Also do
-	 * a document reconcile afterwards.
+	 * Reparse PhpScriptRegions content of document attached to textViewer, assuming
+	 * that project settings haven't changed. Also do a document reconcile
+	 * afterwards.
 	 * 
 	 * @param textViewer
 	 */
+	@Deprecated
 	public static void reparseAndReconcileDocument(@NonNull PHPStructuredTextViewer textViewer) {
 		IDocument document = textViewer.getDocument();
 		if (document instanceof IStructuredDocument) {
@@ -74,11 +87,13 @@ public class DocumentModelUtils {
 	}
 
 	/**
-	 * Reparse content of all document PhpScriptRegions.
+	 * Reparse content of all document PhpScriptRegions, assuming that project
+	 * settings haven't changed.
 	 * 
 	 * @param document
 	 */
 	@SuppressWarnings("null")
+	@Deprecated
 	public static void reparseDocument(@Nullable IDocument document) {
 		if (!(document instanceof IStructuredDocument)) {
 			return;
@@ -88,7 +103,7 @@ public class DocumentModelUtils {
 		IStructuredDocumentRegion[] sdRegions = structuredDocument.getStructuredDocumentRegions();
 		for (IStructuredDocumentRegion element : sdRegions) {
 			Iterator<?> regionsIt = element.getRegions().iterator();
-			reparseRegion(document, regionsIt, element.getStartOffset(), null, false);
+			reparseRegion(document, regionsIt, element.getStartOffset(), null, false, false, false);
 		}
 	}
 
@@ -107,12 +122,16 @@ public class DocumentModelUtils {
 		}
 		IStructuredDocument structuredDocument = (IStructuredDocument) document;
 
-		resetDocumentReParser((IStructuredDocument) document, project);
+		resetDocumentParser((IStructuredDocument) document, project);
 
+		PHPVersion phpVersion = ProjectOptions.getPHPVersion(project);
+		boolean isSupportingASPTags = ProjectOptions.isSupportingASPTags(project);
+		boolean useShortTags = ProjectOptions.useShortTags(project);
 		IStructuredDocumentRegion[] sdRegions = structuredDocument.getStructuredDocumentRegions();
 		for (IStructuredDocumentRegion element : sdRegions) {
 			Iterator<?> regionsIt = element.getRegions().iterator();
-			reparseRegion(document, regionsIt, element.getStartOffset(), project, true);
+			reparseRegion(document, regionsIt, element.getStartOffset(), phpVersion, isSupportingASPTags, useShortTags,
+					true);
 		}
 	}
 
@@ -126,26 +145,34 @@ public class DocumentModelUtils {
 	 *            regions iterator
 	 * @param offset
 	 *            the container region start offset
-	 * @param project
-	 *            the new project to use (only if setNewProject is set to true)
+	 * @param phpVersion
+	 *            the new php version to use (only if setNewProject is set to true;
+	 *            in this case phpVersion must be non-null)
+	 * @param isSupportingASPTags
+	 *            the new isSupportingASPTags value to use (only if setNewProject is
+	 *            set to true)
+	 * @param useShortTags
+	 *            the new useShortTags value to use (only if setNewProject is set to
+	 *            true)
 	 * @param setNewProject
-	 *            use the new project value (even if null) when setNewProject is set
-	 *            to true
+	 *            use the new project settings when setNewProject is set to true
 	 */
 	@SuppressWarnings("null")
 	private static void reparseRegion(@NonNull IDocument document, @NonNull Iterator<?> regionsIt, int offset,
-			@Nullable IProject project, boolean setNewProject) {
+			PHPVersion phpVersion, boolean isSupportingASPTags, boolean useShortTags, boolean setNewProject) {
+		assert !(setNewProject && phpVersion == null);
 		while (regionsIt.hasNext()) {
 			ITextRegion region = (ITextRegion) regionsIt.next();
 			if (region instanceof ITextRegionContainer) {
 				reparseRegion(document, ((ITextRegionContainer) region).getRegions().iterator(),
-						offset + region.getStart(), project, setNewProject);
+						offset + region.getStart(), phpVersion, isSupportingASPTags, useShortTags, setNewProject);
 			}
 			if (region instanceof IPHPScriptRegion) {
 				final IPHPScriptRegion phpRegion = (IPHPScriptRegion) region;
 				try {
 					if (setNewProject) {
-						phpRegion.completeReparse(document, offset + region.getStart(), region.getLength(), project);
+						phpRegion.completeReparse(document, offset + region.getStart(), region.getLength(), phpVersion,
+								isSupportingASPTags, useShortTags);
 					} else {
 						phpRegion.completeReparse(document, offset + region.getStart(), region.getLength());
 					}
