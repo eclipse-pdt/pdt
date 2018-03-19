@@ -5,7 +5,7 @@ org.eclipse.php.core/contentAssistShowStrictOptions=false
 --FILE--
 <?php
 
-use con|
+use cons|
 ?>
 --EXPECT--
 keyword(const)
