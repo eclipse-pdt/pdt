@@ -134,13 +134,16 @@ public interface Visitor {
 
 	void endVisit(EchoStatement echoStatement);
 
+	default boolean visit(EmptyExpression emptyExpression) {
+		return true;
+	}
+
 	boolean visit(EmptyStatement emptyStatement);
 
-	boolean visit(EmptyExpression emptyExpression);
+	default void endVisit(EmptyExpression emptyExpression) {
+	}
 
 	void endVisit(EmptyStatement emptyStatement);
-
-	void endVisit(EmptyExpression emptyExpression);
 
 	boolean visit(ExpressionStatement expressionStatement);
 
