@@ -22,8 +22,6 @@ import org.eclipse.php.internal.core.preferences.*;
 
 public class PHPVersionChangedHandler implements IResourceChangeListener {
 
-	private static final String PHP_VERSION = PHPCoreConstants.PHP_OPTIONS_PHP_VERSION;
-
 	private HashMap<IProject, HashSet<IPreferencesPropagatorListener>> projectListeners = new HashMap<>();
 	private HashMap<IProject, PreferencesPropagatorListener> preferencesPropagatorListeners = new HashMap<>();
 
@@ -124,7 +122,11 @@ public class PHPVersionChangedHandler implements IResourceChangeListener {
 		// register as a listener to the PP on this project
 		PreferencesPropagatorListener listener = new PreferencesPropagatorListener(project);
 		preferencesPropagatorListeners.put(project, listener);
-		preferencesPropagator.addPropagatorListener(listener, PHP_VERSION);
+		preferencesPropagator.addPropagatorListener(listener, PHPCoreConstants.PHP_OPTIONS_PHP_VERSION);
+		// XXX: those 2 settings must (at least) be listened by
+		// PHPStructuredEditor.fPhpVersionListener
+		preferencesPropagator.addPropagatorListener(listener, CorePreferenceConstants.Keys.EDITOR_USE_SHORT_TAGS);
+		preferencesPropagator.addPropagatorListener(listener, CorePreferenceConstants.Keys.EDITOR_USE_ASP_TAGS);
 	}
 
 	public void projectRemoved(IProject project) {
@@ -132,7 +134,9 @@ public class PHPVersionChangedHandler implements IResourceChangeListener {
 		if (listener == null) {
 			return;
 		}
-		preferencesPropagator.removePropagatorListener(listener, PHP_VERSION);
+		preferencesPropagator.removePropagatorListener(listener, CorePreferenceConstants.Keys.EDITOR_USE_ASP_TAGS);
+		preferencesPropagator.removePropagatorListener(listener, CorePreferenceConstants.Keys.EDITOR_USE_SHORT_TAGS);
+		preferencesPropagator.removePropagatorListener(listener, PHPCoreConstants.PHP_OPTIONS_PHP_VERSION);
 		preferencesPropagatorListeners.remove(project);
 
 		projectListeners.remove(project);
