@@ -36,7 +36,7 @@ import org.junit.runners.model.Statement;
 import org.osgi.framework.Bundle;
 
 /**
- * Special runner for PDT test with parametters collected to Map<PHPVersion,
+ * Special runner for PDT test with parameters collected to Map<PHPVersion,
  * String[] dirs> or String[] dirs
  * 
  * TODO: Allow Before and After with fileName

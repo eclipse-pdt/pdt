@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ListIterator;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -379,7 +378,8 @@ public class PHPScriptRegion extends ForeignRegion implements IPHPScriptRegion {
 	}
 
 	/**
-	 * @see IPHPScriptRegion#completeReparse(IDocument, int, int, IProject)
+	 * @see IPHPScriptRegion#completeReparse(IDocument, int, int, PHPVersion,
+	 *      boolean, boolean)
 	 */
 	@Override
 	public synchronized void completeReparse(IDocument doc, int start, int length, @NonNull PHPVersion phpVersion,

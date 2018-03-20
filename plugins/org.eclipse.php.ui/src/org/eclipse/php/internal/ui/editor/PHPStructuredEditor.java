@@ -2642,7 +2642,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		if (resource != null) {
 			if (PHPToolkitUtil.isPHPFile(resource)) {
 
-				PHPSourceParser.projectThreadLocal.set(((IFile) resource).getProject());
+				PHPSourceParser.projectThreadLocal.set(resource.getProject());
 
 				super.doSetInput(input);
 
