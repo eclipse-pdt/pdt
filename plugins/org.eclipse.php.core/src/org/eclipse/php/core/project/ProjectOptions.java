@@ -97,10 +97,13 @@ public class ProjectOptions {
 	}
 
 	public static final boolean isSupportingASPTags(@Nullable IProject project) {
-		String useShortTags = CorePreferencesSupport.getInstance().getPreferencesValue(Keys.EDITOR_USE_ASP_TAGS,
-				"false", //$NON-NLS-1$
+		PHPVersion phpVersion = getPHPVersion(project);
+		if (phpVersion != null && phpVersion.isGreaterOrEqualTo(PHPVersion.PHP7_0)) {
+			return false;
+		}
+		String useAspTags = CorePreferencesSupport.getInstance().getPreferencesValue(Keys.EDITOR_USE_ASP_TAGS, "false", //$NON-NLS-1$
 				project);
-		return "false".equals(useShortTags); //$NON-NLS-1$
+		return "false".equals(useAspTags); //$NON-NLS-1$
 	}
 
 	public static boolean useShortTags(@Nullable IProject project) {
