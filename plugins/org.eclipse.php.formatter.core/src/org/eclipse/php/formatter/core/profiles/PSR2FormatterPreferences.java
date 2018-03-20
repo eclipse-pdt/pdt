@@ -189,6 +189,7 @@ final public class PSR2FormatterPreferences implements ICodeFormatterPreferences
 		preferences.comment_never_format_unknown_tags = true;
 		preferences.comment_indent_root_tags = true;
 		preferences.comment_insert_empty_line_before_root_tags = true;
+		preferences.comment_keep_empty_line_for_empty_description = true;
 		preferences.comment_insert_new_line_for_parameter = true;
 		preferences.comment_new_lines_at_block_boundaries = true;
 		preferences.comment_new_lines_at_javadoc_boundaries = true;

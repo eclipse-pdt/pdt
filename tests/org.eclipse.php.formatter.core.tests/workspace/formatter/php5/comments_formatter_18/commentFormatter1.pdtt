@@ -1,5 +1,5 @@
 --TEST--
-Bug 423089 - Broken formatter with non-PHPDoc tags
+Bug 518856 - 'Blank line before PHPDocs tags' option modifies doc with @var
 --FILE--
 <?php
 /**

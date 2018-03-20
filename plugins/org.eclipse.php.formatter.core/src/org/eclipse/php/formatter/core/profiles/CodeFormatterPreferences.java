@@ -278,6 +278,7 @@ public class CodeFormatterPreferences {
 	public boolean comment_never_format_unknown_tags;
 	public boolean comment_indent_root_tags;
 	public boolean comment_insert_empty_line_before_root_tags;
+	public boolean comment_keep_empty_line_for_empty_description;
 	public boolean comment_insert_new_line_for_parameter;
 	public boolean comment_preserve_white_space_between_code_and_line_comments;
 	public int comment_line_length;
@@ -773,6 +774,12 @@ public class CodeFormatterPreferences {
 		if (commentInsertEmptyLineBeforeRootTagsOption != null) {
 			this.comment_insert_empty_line_before_root_tags = CodeFormatterConstants.TRUE
 					.equals(commentInsertEmptyLineBeforeRootTagsOption);
+		}
+		final Object commentKeepEmptyLineForEmptyDescription = preferences
+				.get(CodeFormatterConstants.FORMATTER_COMMENT_KEEP_EMPTY_LINE_FOR_EMPTY_DESCRIPTION);
+		if (commentKeepEmptyLineForEmptyDescription != null) {
+			this.comment_keep_empty_line_for_empty_description = CodeFormatterConstants.TRUE
+					.equals(commentKeepEmptyLineForEmptyDescription);
 		}
 		final Object commentInsertNewLineForParameterOption = preferences
 				.get(CodeFormatterConstants.FORMATTER_COMMENT_INSERT_NEW_LINE_FOR_PARAMETER);
@@ -1364,6 +1371,9 @@ public class CodeFormatterPreferences {
 				this.comment_indent_root_tags ? CodeFormatterConstants.TRUE : CodeFormatterConstants.FALSE);
 		options.put(CodeFormatterConstants.FORMATTER_COMMENT_INSERT_EMPTY_LINE_BEFORE_ROOT_TAGS,
 				this.comment_insert_empty_line_before_root_tags ? CodeFormatterConstants.TRUE
+						: CodeFormatterConstants.FALSE);
+		options.put(CodeFormatterConstants.FORMATTER_COMMENT_KEEP_EMPTY_LINE_FOR_EMPTY_DESCRIPTION,
+				this.comment_keep_empty_line_for_empty_description ? CodeFormatterConstants.TRUE
 						: CodeFormatterConstants.FALSE);
 		options.put(CodeFormatterConstants.FORMATTER_COMMENT_INSERT_NEW_LINE_FOR_PARAMETER,
 				this.comment_insert_new_line_for_parameter ? CodeFormatterConstants.TRUE
