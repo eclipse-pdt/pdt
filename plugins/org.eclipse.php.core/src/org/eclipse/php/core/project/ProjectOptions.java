@@ -100,7 +100,7 @@ public class ProjectOptions {
 		String useShortTags = CorePreferencesSupport.getInstance().getPreferencesValue(Keys.EDITOR_USE_ASP_TAGS,
 				"false", //$NON-NLS-1$
 				project);
-		return "false".equals(useShortTags); //$NON-NLS-1$
+		return "true".equals(useShortTags); //$NON-NLS-1$
 	}
 
 	public static boolean useShortTags(@Nullable IProject project) {

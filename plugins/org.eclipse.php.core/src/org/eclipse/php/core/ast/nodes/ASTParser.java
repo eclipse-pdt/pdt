@@ -106,8 +106,8 @@ public class ASTParser {
 		}
 		try {
 			final ASTParser parser = new ASTParser(new StringReader(""), //$NON-NLS-1$
-					version, false, ProjectOptions.useShortTags(sourceModule.getScriptProject().getProject()),
-					sourceModule);
+					version, ProjectOptions.isSupportingASPTags(sourceModule.getScriptProject().getProject()),
+					ProjectOptions.useShortTags(sourceModule.getScriptProject().getProject()), sourceModule);
 			parser.setSource(sourceModule.getSourceAsCharArray());
 			return parser;
 		} catch (IOException e) {

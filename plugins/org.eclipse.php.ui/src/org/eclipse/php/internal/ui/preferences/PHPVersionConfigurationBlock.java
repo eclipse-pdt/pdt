@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016 IBM Corporation and others.
+ * Copyright (c) 2009, 2016, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,11 +47,12 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 	private IStatus fTaskTagsStatus;
 	protected ValuedCombo versionCombo;
 	protected Button useShortTagsButton;
+	protected Button isSupportingASPTagsButton;
 	protected Label nameLabel;
 
 	protected PHPVersion minimumVersion = null;
 
-	private boolean hideShortTags;
+	private boolean hideTagButtons;
 
 	public PHPVersionConfigurationBlock(IStatusChangeListener context, IProject project,
 			IWorkbenchPreferenceContainer container) {
@@ -59,9 +60,9 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 	}
 
 	public PHPVersionConfigurationBlock(IStatusChangeListener context, IProject project,
-			IWorkbenchPreferenceContainer container, boolean hideShortTags) {
+			IWorkbenchPreferenceContainer container, boolean hideTagButtons) {
 		this(context, project, container);
-		this.hideShortTags = hideShortTags;
+		this.hideTagButtons = hideTagButtons;
 	}
 
 	public void setMinimumVersion(PHPVersion version) {
@@ -70,8 +71,9 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 
 	public void setEnabled(boolean isEnabled) {
 		versionCombo.setEnabled(isEnabled);
-		if (!hideShortTags) {
+		if (!hideTagButtons) {
 			useShortTagsButton.setEnabled(isEnabled);
+			isSupportingASPTagsButton.setEnabled(isEnabled);
 		}
 		nameLabel.setEnabled(isEnabled);
 	}
@@ -91,9 +93,11 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 		composite.setLayout(layout);
 		createVersionContent(composite);
 		unpackPHPVersion();
-		if (!hideShortTags) {
+		if (!hideTagButtons) {
 			createUseShortTagsContent(composite);
 			unpackUseShortTags();
+			createIsSupportingASPTagsContent(composite);
+			unpackIsSupportingASPTagsButton();
 		}
 		validateSettings(null, null, null);
 		return composite;
@@ -108,7 +112,17 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 				setUseShortTagsValue(Boolean.toString(useShortTagsButton.getSelection()));
 			}
 		});
+	}
 
+	private void createIsSupportingASPTagsContent(Composite composite) {
+		isSupportingASPTagsButton = new Button(composite, SWT.CHECK | SWT.RIGHT);
+		isSupportingASPTagsButton.setText(PHPUIMessages.Preferences_php_editor_useAspTagsAsPhp_label);
+		isSupportingASPTagsButton.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				setIsSupportingASPTagsValue(Boolean.toString(isSupportingASPTagsButton.getSelection()));
+			}
+		});
 	}
 
 	private Composite createVersionContent(Composite parent) {
@@ -159,6 +173,8 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 			if (PREF_PHP_VERSION.equals(changedKey)) {
 				fTaskTagsStatus = validatePHPVersion();
 			} else if (PREF_SHORT_TAGS.equals(changedKey)) {
+				fTaskTagsStatus = validatePHPVersion();
+			} else if (PREF_ASP_TAGS.equals(changedKey)) {
 				fTaskTagsStatus = validatePHPVersion();
 			} else {
 				return;
@@ -238,6 +254,11 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 		validateSettings(PREF_SHORT_TAGS, null, null);
 	}
 
+	private void setIsSupportingASPTagsValue(String value) {
+		setValue(PREF_ASP_TAGS, value);
+		validateSettings(PREF_ASP_TAGS, null, null);
+	}
+
 	@Override
 	protected String[] getFullBuildDialogStrings(boolean workspaceSettings) {
 		String title = PHPUIMessages.PHPVersionConfigurationBlock_needsbuild_title;
@@ -254,8 +275,9 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 	@Override
 	protected void updateControls() {
 		unpackPHPVersion();
-		if (!hideShortTags) {
+		if (!hideTagButtons) {
 			unpackUseShortTags();
+			unpackIsSupportingASPTagsButton();
 		}
 	}
 
@@ -277,13 +299,14 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 		useShortTagsButton.setSelection(Boolean.valueOf(value).booleanValue());
 	}
 
+	private void unpackIsSupportingASPTagsButton() {
+		String value = getValue(PREF_ASP_TAGS);
+		isSupportingASPTagsButton.setSelection(Boolean.valueOf(value).booleanValue());
+	}
+
 	// Accessed from the PHP project Wizard
 	public PHPVersion getPHPVersionValue() {
 		return PHPVersion.byAlias(getValue(PREF_PHP_VERSION));
-	}
-
-	private PHPVersion getOldPHPVersionValue() {
-		return getPHPVersionValue();
 	}
 
 	// Accessed from the PHP project Wizard
