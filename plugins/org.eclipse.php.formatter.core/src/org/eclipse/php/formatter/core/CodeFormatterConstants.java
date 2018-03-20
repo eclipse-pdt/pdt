@@ -1971,16 +1971,32 @@ public class CodeFormatterConstants {
 	 * <pre>
 	 * FORMATTER / Option to insert an empty line before the Javadoc root tag block
 	 *     - option id:         "org.eclipse.php.formatter.core.comment.insert_new_line_before_root_tags"
-	 *     - possible values:   { INSERT, DO_NOT_INSERT }
-	 *     - default:           INSERT
+	 *     - possible values:   { TRUE, FALSE }
+	 *     - default:           TRUE
 	 * </pre>
 	 * 
-	 * @see JavaCore#INSERT
-	 * @see JavaCore#DO_NOT_INSERT
+	 * @see #TRUE
+	 * @see #FALSE
 	 * @since 3.1
 	 */
 	public final static String FORMATTER_COMMENT_INSERT_EMPTY_LINE_BEFORE_ROOT_TAGS = FormatterCorePlugin.PLUGIN_ID
 			+ ".formatter.comment.insert_new_line_before_root_tags"; //$NON-NLS-1$
+
+	/**
+	 * <pre>
+	 * FORMATTER / Option to keep the empty line before the PHPDoc root tag block, when the PHPDoc description is empty.
+	 * Only active when value "org.eclipse.php.formatter.core.comment.insert_new_line_before_root_tags" is TRUE.
+	 *     - option id:         "org.eclipse.php.formatter.core.comment.keep_empty_line_for_empty_description"
+	 *     - possible values:   { TRUE, FALSE }
+	 *     - default:           TRUE
+	 * </pre>
+	 * 
+	 * @see #TRUE
+	 * @see #FALSE
+	 * @since 6.0
+	 */
+	public final static String FORMATTER_COMMENT_KEEP_EMPTY_LINE_FOR_EMPTY_DESCRIPTION = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.comment.keep_empty_line_for_empty_description"; //$NON-NLS-1$
 
 	/**
 	 * <pre>

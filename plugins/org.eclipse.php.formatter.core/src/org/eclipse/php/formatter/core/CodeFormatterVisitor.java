@@ -1263,14 +1263,20 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						texts = new org.eclipse.php.core.compiler.ast.nodes.Scalar[0];
 					}
 					if (this.preferences.comment_new_lines_at_javadoc_boundaries) {
-						insertNewLineForPHPDoc();
-						// description is blank
-						if (texts.length == 0) {
+						if (texts.length == 0 && tags != null && tags.length > 0
+								&& (!this.preferences.comment_insert_empty_line_before_root_tags
+										|| !this.preferences.comment_keep_empty_line_for_empty_description)) {
+							// description is blank, but there are tags in the comment
 							lastLineIsBlank = true;
+						} else {
+							insertNewLineForPHPDoc();
+							// description is blank
+							if (texts.length == 0) {
+								lastLineIsBlank = true;
+							}
 						}
 					}
-					int textsLength = texts.length;
-					for (int j = 0; j < textsLength; j++) {
+					for (int j = 0; j < texts.length; j++) {
 						org.eclipse.php.core.compiler.ast.nodes.Scalar scalar = texts[j];
 						String word = scalar.getValue();
 						if (word.trim().length() > 0) {

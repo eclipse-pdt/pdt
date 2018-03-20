@@ -108,7 +108,11 @@ public class CommentsTabPage extends ModifyDialogTabPage {
 			+ " * @param $a int The first parameter. For an optimum result, this should be an odd number" //$NON-NLS-1$
 			+ LINE_SEPARATOR + " * between 0 and 100." + LINE_SEPARATOR + " * @param $b int The second parameter." //$NON-NLS-1$ //$NON-NLS-2$
 			+ LINE_SEPARATOR + " * @return int The result of the foo operation, usually within 0 and 1000." //$NON-NLS-1$
-			+ LINE_SEPARATOR + " */" + " function foo(int $a, int $b);" + LINE_SEPARATOR + "}" + LINE_SEPARATOR //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			+ LINE_SEPARATOR + " */" + " function foo(int $a, int $b);" //$NON-NLS-1$ //$NON-NLS-2$
+			+ LINE_SEPARATOR + " /**" + LINE_SEPARATOR //$NON-NLS-1$
+			+ " * @param $a int The first parameter." //$NON-NLS-1$
+			+ LINE_SEPARATOR + " * @return int The result of the foo2 operation." //$NON-NLS-1$
+			+ LINE_SEPARATOR + " */" + " function foo2(int $a);" + LINE_SEPARATOR + "}" + LINE_SEPARATOR //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			+ "// This is a long comment    with\twhitespace     that should be split in multiple line comments in case the line comment formatting is enabled" //$NON-NLS-1$
 			+ LINE_SEPARATOR + "class Test {" + LINE_SEPARATOR + "\t\tfunction trailingCommented() {" + LINE_SEPARATOR //$NON-NLS-1$ //$NON-NLS-2$
 			+ "\t\t\t\techo(\"indented\");\t\t// comment" + LINE_SEPARATOR + "\t\t\t\techo(\"indent\");\t\t// comment" //$NON-NLS-1$ //$NON-NLS-2$
@@ -139,6 +143,8 @@ public class CommentsTabPage extends ModifyDialogTabPage {
 	// private CheckboxPreference code;
 
 	private CheckboxPreference blankJavadoc;
+
+	private CheckboxPreference blankRootDesc;
 
 	private CheckboxPreference indentJavadoc;
 
@@ -219,11 +225,15 @@ public class CommentsTabPage extends ModifyDialogTabPage {
 		// FormatterMessages.CommentsTabPage_format_code_snippets);
 		// code.setIsChecked(codeFormatterPreferences.comment_format_javadoc_comment);
 
-		blankJavadoc = createPrefInsert(settingsGroup, numColumns,
-				FormatterMessages.CommentsTabPage_blank_line_before_javadoc_tags,
-				CodeFormatterConstants.FORMATTER_COMMENT_INSERT_EMPTY_LINE_BEFORE_ROOT_TAGS);
+		blankJavadoc = createCheckboxPref(settingsGroup, numColumns,
+				FormatterMessages.CommentsTabPage_blank_line_before_javadoc_tags);
 		blankJavadoc.setIsChecked(codeFormatterPreferences.comment_insert_empty_line_before_root_tags);
 
+		blankRootDesc = createCheckboxPref(settingsGroup, numColumns,
+				FormatterMessages.CommentsTabPage_keep_blank_line_for_empty_description);
+		blankRootDesc.setIsChecked(codeFormatterPreferences.comment_keep_empty_line_for_empty_description);
+
+		((GridData) blankRootDesc.getControl().getLayoutData()).horizontalIndent = indent;
 		indentJavadoc = createCheckboxPref(settingsGroup, numColumns,
 				FormatterMessages.CommentsTabPage_indent_javadoc_tags);
 		indentJavadoc.setIsChecked(codeFormatterPreferences.comment_indent_root_tags);
@@ -232,11 +242,11 @@ public class CommentsTabPage extends ModifyDialogTabPage {
 				FormatterMessages.CommentsTabPage_indent_description_after_param);
 		indentDesc.setIsChecked(codeFormatterPreferences.comment_indent_parameter_description);
 
+		((GridData) indentDesc.getControl().getLayoutData()).horizontalIndent = indent;
 		nerverFormatUnknownTags = createCheckboxPref(settingsGroup, numColumns,
 				FormatterMessages.CommentsTabPage_never_format_unknown_tags);
 		nerverFormatUnknownTags.setIsChecked(codeFormatterPreferences.comment_never_format_unknown_tags);
 
-		((GridData) indentDesc.getControl().getLayoutData()).horizontalIndent = indent;
 		nlParam = createPrefInsert(settingsGroup, numColumns,
 				FormatterMessages.CommentsTabPage_new_line_after_param_tags,
 				CodeFormatterConstants.FORMATTER_COMMENT_INSERT_NEW_LINE_FOR_PARAMETER);
@@ -294,6 +304,21 @@ public class CommentsTabPage extends ModifyDialogTabPage {
 		javaDocSlaves.add(blankLinesJavadoc);
 
 		new OrController(javaDocMaster, javaDocSlaves);
+
+		ArrayList<CheckboxPreference> blankMasters = new ArrayList<>();
+		blankMasters.add(javadoc);
+		blankMasters.add(header);
+		blankMasters.add(blankJavadoc);
+
+		ArrayList<Object> blankSlaves = new ArrayList<>();
+		blankSlaves.add(blankRootDesc);
+
+		new Controller(blankMasters, blankSlaves) {
+			@Override
+			protected boolean areSlavesEnabled() {
+				return (javadoc.isChecked() || header.isChecked()) && blankJavadoc.isChecked();
+			}
+		}.update(null, null);
 
 		ArrayList<CheckboxPreference> indentMasters = new ArrayList<>();
 		indentMasters.add(javadoc);
@@ -379,6 +404,8 @@ public class CommentsTabPage extends ModifyDialogTabPage {
 			codeFormatterPreferences.join_lines_in_comments = chkbox4.isChecked();
 
 			codeFormatterPreferences.comment_insert_empty_line_before_root_tags = blankJavadoc.isChecked();
+
+			codeFormatterPreferences.comment_keep_empty_line_for_empty_description = blankRootDesc.isChecked();
 
 			codeFormatterPreferences.comment_indent_root_tags = indentJavadoc.isChecked();
 
