@@ -70,8 +70,11 @@ public class RemoveUnusedUseStatementProposal extends CUCorrectionProposal {
 
 			ASTNode coveredNode = fLocation.getCoveredNode(astRoot);
 			ASTNode current = coveredNode;
-			while (!(coveredNode instanceof UseStatement)) {
+			while (coveredNode != null && !(coveredNode instanceof UseStatement)) {
 				coveredNode = coveredNode.getParent();
+			}
+			if (coveredNode == null) {
+				return;
 			}
 			UseStatement use = (UseStatement) coveredNode;
 			List<UseStatementPart> parts = use.parts();
