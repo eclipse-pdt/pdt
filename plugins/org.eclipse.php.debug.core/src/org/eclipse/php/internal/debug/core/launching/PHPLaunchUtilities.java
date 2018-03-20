@@ -40,6 +40,7 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
@@ -1119,6 +1120,10 @@ public class PHPLaunchUtilities {
 	 * @return True, if ASP tags are supported, false otherwise.
 	 */
 	public static boolean isUsingASPTags(IProject project) {
+		PHPVersion phpVersion = ProjectOptions.getPHPVersion(project);
+		if (phpVersion.isGreaterThan(PHPVersion.PHP5_6)) {
+			return false;
+		}
 		PreferencesSupport preferencesSupport = new PreferencesSupport(PHPCorePlugin.getPluginId());
 		String value = preferencesSupport.getPreferencesValue(CorePreferenceConstants.Keys.EDITOR_USE_ASP_TAGS, null,
 				project);
