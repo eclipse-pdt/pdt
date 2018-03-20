@@ -31,7 +31,7 @@
 	<target name="build-doc">
 		<echo>Compile documentation</echo>
 		<mkdir dir="${doc.build.dir}" />
-		<script language="javascript" src="${basedir}/docs/build/compile.js">
+		<script language="javascript" src="${basedir}/docs/build/compile.js" classpathref="maven.plugin.classpath">
 		</script>
 	</target>
 </project>
