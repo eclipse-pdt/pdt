@@ -68,6 +68,10 @@ public enum PHPVersion {
 		return ordinal() > phpVersion.ordinal();
 	}
 
+	public boolean isGreaterOrEqualTo(PHPVersion phpVersion) {
+		return ordinal() >= phpVersion.ordinal();
+	}
+
 	public static Collection<PHPVersion> getAllVersions() {
 		return Aliases.map.values();
 	}
