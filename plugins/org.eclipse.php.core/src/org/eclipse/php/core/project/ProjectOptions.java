@@ -97,6 +97,10 @@ public class ProjectOptions {
 	}
 
 	public static final boolean isSupportingASPTags(@Nullable IProject project) {
+		PHPVersion phpVersion = getPHPVersion(project);
+		if (phpVersion.isGreaterThan(PHPVersion.PHP5_6)) {
+			return false;
+		}
 		String useShortTags = CorePreferencesSupport.getInstance().getPreferencesValue(Keys.EDITOR_USE_ASP_TAGS,
 				"false", //$NON-NLS-1$
 				project);

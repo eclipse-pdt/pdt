@@ -43,9 +43,6 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
-import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.preferences.CorePreferenceConstants;
-import org.eclipse.php.internal.core.preferences.PreferencesSupport;
 import org.eclipse.php.internal.debug.core.*;
 import org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
@@ -1109,23 +1106,6 @@ public class PHPLaunchUtilities {
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=298606
 		return DebugPlugin.parseArguments(
 				VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(arguments));
-	}
-
-	/**
-	 * Returns true if the given project is using ASP tags as PHP tags.
-	 * 
-	 * @param project
-	 *            an {@link IProject}.
-	 * @return True, if ASP tags are supported, false otherwise.
-	 */
-	public static boolean isUsingASPTags(IProject project) {
-		PreferencesSupport preferencesSupport = new PreferencesSupport(PHPCorePlugin.getPluginId());
-		String value = preferencesSupport.getPreferencesValue(CorePreferenceConstants.Keys.EDITOR_USE_ASP_TAGS, null,
-				project);
-		if (value == null) {
-			value = preferencesSupport.getWorkspacePreferencesValue(CorePreferenceConstants.Keys.EDITOR_USE_ASP_TAGS);
-		}
-		return Boolean.valueOf(value).booleanValue();
 	}
 
 	/**
