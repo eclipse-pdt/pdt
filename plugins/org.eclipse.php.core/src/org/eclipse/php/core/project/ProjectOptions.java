@@ -91,6 +91,14 @@ public class ProjectOptions {
 		return PHPVersion.byAlias(CorePreferencesSupport.getInstance().getWorkspacePreferencesValue(Keys.PHP_VERSION));
 	}
 
+	public static String getDefaultIsSupportingASPTags() {
+		return CorePreferencesSupport.getInstance().getWorkspacePreferencesValue(Keys.EDITOR_USE_ASP_TAGS);
+	}
+
+	public static String getDefaultUseShortTags() {
+		return CorePreferencesSupport.getInstance().getWorkspacePreferencesValue(Keys.EDITOR_USE_SHORT_TAGS);
+	}
+
 	public static boolean setPHPVersion(@NonNull PHPVersion version, @NonNull IProject project) {
 		return CorePreferencesSupport.getInstance().setProjectSpecificPreferencesValue(Keys.PHP_VERSION,
 				version.getAlias(), project);
@@ -101,16 +109,22 @@ public class ProjectOptions {
 		if (phpVersion.isGreaterThan(PHPVersion.PHP5_6)) {
 			return false;
 		}
-		String useShortTags = CorePreferencesSupport.getInstance().getPreferencesValue(Keys.EDITOR_USE_ASP_TAGS,
-				"false", //$NON-NLS-1$
-				project);
-		return "true".equals(useShortTags); //$NON-NLS-1$
+		String isSupportingASPTags = project != null
+				? CorePreferencesSupport.getInstance().getPreferencesValue(Keys.EDITOR_USE_ASP_TAGS, null, project)
+				: null;
+		if (isSupportingASPTags == null) {
+			isSupportingASPTags = getDefaultIsSupportingASPTags();
+		}
+		return "true".equals(isSupportingASPTags); //$NON-NLS-1$
 	}
 
 	public static boolean useShortTags(@Nullable IProject project) {
-		String useShortTags = CorePreferencesSupport.getInstance().getPreferencesValue(Keys.EDITOR_USE_SHORT_TAGS,
-				"true", //$NON-NLS-1$
-				project);
+		String useShortTags = project != null
+				? CorePreferencesSupport.getInstance().getPreferencesValue(Keys.EDITOR_USE_SHORT_TAGS, null, project)
+				: null;
+		if (useShortTags == null) {
+			useShortTags = getDefaultUseShortTags();
+		}
 		return "true".equals(useShortTags); //$NON-NLS-1$
 	}
 
