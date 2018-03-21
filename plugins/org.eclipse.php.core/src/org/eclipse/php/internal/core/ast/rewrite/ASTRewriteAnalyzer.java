@@ -110,7 +110,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		this.sourceCopyEndNodes = new Stack<>();
 
 		this.formatter = new ASTRewriteFormatter(document, nodeInfos, eventStore, options, lineDelim,
-				scanner.getPHPVersion(), true);
+				scanner.getPHPVersion(), true, true);
 
 		this.extendedSourceRangeComputer = extendedSourceRangeComputer;
 		this.lineCommentEndOffsets = new LineCommentEndOffsets(comments);

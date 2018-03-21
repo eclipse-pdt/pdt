@@ -17,17 +17,17 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.compiler.ast.nodes.UsePart;
+import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
-import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.compiler.ast.parser.AbstractPHPSourceParser;
 import org.eclipse.php.internal.core.compiler.ast.parser.PHPSourceParserFactory;
-import org.eclipse.php.core.project.ProjectOptions;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -57,7 +57,7 @@ public class FindUseStatementByAliasTests {
 		final PdttFile pdttFile = new PdttFile(fileName);
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(pdttFile.getFile().trim().getBytes());
 		ModuleDeclaration moduleDeclaration = (ModuleDeclaration) parser.parse(new InputStreamReader(inputStream), null,
-				ProjectOptions.useShortTags((IProject) null));
+				ProjectOptions.isSupportingASPTags((IProject) null), ProjectOptions.useShortTags((IProject) null));
 
 		String alias = pdttFile.getConfig().get("alias"); //$NON-NLS-1$
 		int offset = Integer.parseInt(pdttFile.getConfig().get("offset")); //$NON-NLS-1$
