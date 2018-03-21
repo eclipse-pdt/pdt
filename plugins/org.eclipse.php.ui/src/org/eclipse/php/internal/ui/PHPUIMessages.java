@@ -675,7 +675,6 @@ public final class PHPUIMessages extends NLS {
 	public static String Search_FindDeclarationsInProjectAction_label;
 	public static String Search_FindWriteReferencesInHierarchyAction_label;
 	public static String VariableBlock_needsbuild_title;
-	public static String Preferences_php_editor_useAspTagsAsPhp_label;
 	public static String FormatAllAction_error_message;
 	public static String ConvertToPDTProjectAction_convert;
 	public static String PHPElementAction_error_open_message;
@@ -973,6 +972,7 @@ public final class PHPUIMessages extends NLS {
 	public static String CodeTemplateBlock_export_exists_title;
 	public static String Search_FindOccurrencesInFile_label;
 	public static String Preferences_php_editor_useShortTagsAsPhp_label;
+	public static String Preferences_php_editor_useAspTagsAsPhp_label;
 	public static String PropertyAndPreferencePage_showprojectspecificsettings_label;
 	public static String StatusBarUpdater_num_elements_selected;
 	public static String SearchLabelProvider_potential_noCount;

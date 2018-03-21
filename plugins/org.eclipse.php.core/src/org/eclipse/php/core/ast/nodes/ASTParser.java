@@ -106,8 +106,8 @@ public class ASTParser {
 		}
 		try {
 			final ASTParser parser = new ASTParser(new StringReader(""), //$NON-NLS-1$
-					version, false, ProjectOptions.useShortTags(sourceModule.getScriptProject().getProject()),
-					sourceModule);
+					version, ProjectOptions.isSupportingASPTags(sourceModule.getScriptProject().getProject()),
+					ProjectOptions.useShortTags(sourceModule.getScriptProject().getProject()), sourceModule);
 			parser.setSource(sourceModule.getSourceAsCharArray());
 			return parser;
 		} catch (IOException e) {
@@ -117,18 +117,15 @@ public class ASTParser {
 		}
 	}
 
-	public static ASTParser newParser(Reader reader, PHPVersion version, boolean useShortTags) throws IOException {
-		return new ASTParser(reader, version, false, useShortTags);
-	}
-
 	public static ASTParser newParser(Reader reader, PHPVersion version, boolean useASPTags, boolean useShortTags)
 			throws IOException {
 		return new ASTParser(reader, version, useASPTags, useShortTags);
 	}
 
-	public static ASTParser newParser(Reader reader, PHPVersion version, boolean useASPTags, ISourceModule sourceModule)
+	public static ASTParser newParser(Reader reader, PHPVersion version, ISourceModule sourceModule)
 			throws IOException {
-		return new ASTParser(reader, version, useASPTags,
+		return new ASTParser(reader, version,
+				ProjectOptions.isSupportingASPTags(sourceModule.getScriptProject().getProject()),
 				ProjectOptions.useShortTags(sourceModule.getScriptProject().getProject()), sourceModule);
 	}
 
