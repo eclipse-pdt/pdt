@@ -46,6 +46,8 @@ public interface IFormatterProcessorFactory {
 	 * @param document
 	 * @param phpVersion
 	 *            the PHP version
+	 * @param useASPTags
+	 *            use ASP tags
 	 * @param useShortTags
 	 *            use short tags
 	 * @param region
@@ -54,5 +56,5 @@ public interface IFormatterProcessorFactory {
 	 * @throws Exception
 	 */
 	public ICodeFormattingProcessor getCodeFormattingProcessor(IDocument document, PHPVersion phpVersion,
-			boolean useShortTags, IRegion region) throws Exception;
+			boolean useASPTags, boolean useShortTags, IRegion region) throws Exception;
 }

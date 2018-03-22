@@ -132,8 +132,17 @@ public class ProjectOptions {
 		return useShortTags(getProject(modelElement));
 	}
 
+	public static final boolean setUseShortTags(boolean value, @NonNull IProject project) {
+		return CorePreferencesSupport.getInstance().setProjectSpecificPreferencesValue(Keys.EDITOR_USE_SHORT_TAGS,
+				Boolean.toString(value), project);
+	}
+
 	public static final boolean isSupportingASPTags(@NonNull IFile file) {
 		return isSupportingASPTags(file.getProject());
+	}
+
+	public static boolean isSupportingASPTags(@NonNull IModelElement modelElement) {
+		return isSupportingASPTags(getProject(modelElement));
 	}
 
 	public static final boolean setSupportingASPTags(boolean value, @NonNull IProject project) {
