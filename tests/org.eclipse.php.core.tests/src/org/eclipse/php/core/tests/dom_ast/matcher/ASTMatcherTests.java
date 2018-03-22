@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.match.ASTMatcher;
 import org.eclipse.php.core.ast.match.PHPASTMatcher;
@@ -30,6 +29,7 @@ import org.eclipse.php.core.ast.nodes.ASTParser;
 import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.php.core.ast.nodes.Statement;
 import org.eclipse.php.core.project.ProjectOptions;
+import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -58,7 +58,8 @@ public class ASTMatcherTests {
 
 	private ASTNode getAstNode(String str) throws Exception {
 		StringReader reader = new StringReader(str);
-		Program program = ASTParser.newParser(reader, PHPVersion.PHP5, ProjectOptions.useShortTags((IProject) null))
+		Program program = ASTParser.newParser(reader, PHPVersion.PHP5,
+				ProjectOptions.isSupportingASPTags((IProject) null), ProjectOptions.useShortTags((IProject) null))
 				.createAST(new NullProgressMonitor());
 		List<Statement> statements = program.statements();
 

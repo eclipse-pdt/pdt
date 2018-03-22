@@ -19,14 +19,14 @@ import java.util.Arrays;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.ASTNode;
 import org.eclipse.php.core.ast.nodes.ASTParser;
 import org.eclipse.php.core.ast.nodes.Expression;
 import org.eclipse.php.core.ast.nodes.Program;
-import org.eclipse.php.internal.core.ast.locator.Locator;
 import org.eclipse.php.core.project.ProjectOptions;
+import org.eclipse.php.core.tests.TestSuiteWatcher;
+import org.eclipse.php.internal.core.ast.locator.Locator;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -56,7 +56,8 @@ public class StaticScalarExpressionsTests {
 	@Test
 	public void test() throws Exception {
 		StringReader reader = new StringReader(fileContent);
-		Program program = ASTParser.newParser(reader, PHPVersion.PHP5, ProjectOptions.useShortTags((IProject) null))
+		Program program = ASTParser.newParser(reader, PHPVersion.PHP5,
+				ProjectOptions.isSupportingASPTags((IProject) null), ProjectOptions.useShortTags((IProject) null))
 				.createAST(new NullProgressMonitor());
 
 		final ASTNode locateNode = Locator.locateNode(program, offset);

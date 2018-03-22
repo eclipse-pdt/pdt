@@ -137,13 +137,17 @@ import org.eclipse.text.edits.*;
 	private final Map<String, String> options;
 	private IDocument document;
 	private PHPVersion phpVersion;
+	private boolean useASPTags;
 	private boolean useShortTags;
 
 	public ASTRewriteFormatter(IDocument document, NodeInfoStore placeholders, RewriteEventStore eventStore,
-			Map<String, String> options, String lineDelimiter, PHPVersion version, boolean useShortTags) {
+			Map<String, String> options, String lineDelimiter, PHPVersion version, boolean useASPTags,
+			boolean useShortTags) {
 		this.document = document;
 		this.placeholders = placeholders;
 		this.eventStore = eventStore;
+		this.useASPTags = useASPTags;
+		this.useShortTags = useShortTags;
 
 		if (options == null) {
 			options = PHPCorePlugin.getOptions();
@@ -288,7 +292,7 @@ import org.eclipse.text.edits.*;
 	private ICodeFormattingProcessor createCodeFormatter(Map<String, String> options, IRegion region,
 			IDocument document) throws Exception {
 		if (getContentFormatter() != null) {
-			return contentFormatter.getCodeFormattingProcessor(document, phpVersion, useShortTags, region);
+			return contentFormatter.getCodeFormattingProcessor(document, phpVersion, useASPTags, useShortTags, region);
 		}
 		return new DefaultCodeFormattingProcessor(options);
 	}

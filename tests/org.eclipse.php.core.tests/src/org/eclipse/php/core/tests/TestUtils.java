@@ -148,6 +148,27 @@ public final class TestUtils {
 	}
 
 	/**
+	 * Set project PHP version
+	 * 
+	 * @param project
+	 * @param phpVersion
+	 * @param useASPTags
+	 * @param useShortTags
+	 * @throws CoreException
+	 */
+	public static void setProjectPHPVersion(IProject project, PHPVersion phpVersion, boolean useASPTags,
+			boolean useShortTags) throws CoreException {
+		if (phpVersion != ProjectOptions.getPHPVersion(project)
+				|| useASPTags != ProjectOptions.isSupportingASPTags(project)
+				|| useShortTags != ProjectOptions.useShortTags(project)) {
+			ProjectOptions.setPHPVersion(phpVersion, project);
+			ProjectOptions.setSupportingASPTags(useASPTags, project);
+			ProjectOptions.setUseShortTags(useShortTags, project);
+			waitForIndexer();
+		}
+	}
+
+	/**
 	 * Creates new PHP project.
 	 * 
 	 * @param projectName

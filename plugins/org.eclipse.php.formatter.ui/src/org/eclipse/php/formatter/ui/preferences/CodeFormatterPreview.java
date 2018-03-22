@@ -47,7 +47,8 @@ public class CodeFormatterPreview extends PHPPreview {
 			fPreviewDocument.set(fOriInput);
 			IRegion region = new Region(0, fPreviewDocument.getLength());
 			CodeFormatterVisitor codeFormatter = new CodeFormatterVisitor(fPreviewDocument, codeFormatterPreferences,
-					System.getProperty(Platform.PREF_LINE_SEPARATOR), PHPVersion.getLatestVersion(), true, region);
+					System.getProperty(Platform.PREF_LINE_SEPARATOR), PHPVersion.getLatestVersion(), false, true,
+					region);
 			List<?> changes = codeFormatter.getChanges();
 			fInput = applyChanges(fOriInput, changes);
 
