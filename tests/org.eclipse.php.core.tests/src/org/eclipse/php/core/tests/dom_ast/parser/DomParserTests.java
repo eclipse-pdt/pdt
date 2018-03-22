@@ -67,7 +67,8 @@ public class DomParserTests {
 	private ASTParser parser;
 
 	public DomParserTests(PHPVersion phpVersion, String fileNames[]) {
-		parser = ASTParser.newParser(phpVersion, ProjectOptions.useShortTags((IProject) null));
+		parser = ASTParser.newParser(phpVersion, ProjectOptions.isSupportingASPTags((IProject) null),
+				ProjectOptions.useShortTags((IProject) null));
 	}
 
 	@Test

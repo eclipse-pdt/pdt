@@ -28,8 +28,8 @@ public class RefactoringASTParser {
 
 	private ASTParser fParser;
 
-	public RefactoringASTParser(PHPVersion phpVersion, boolean useShortTags) {
-		fParser = ASTParser.newParser(phpVersion, useShortTags);
+	public RefactoringASTParser(PHPVersion phpVersion, boolean useASPTags, boolean useShortTags) {
+		fParser = ASTParser.newParser(phpVersion, useASPTags, useShortTags);
 	}
 
 	public Program parse(ISourceModule typeRoot, boolean resolveBindings) throws Exception {
@@ -139,8 +139,9 @@ public class RefactoringASTParser {
 		if (cuNode != null) {
 			return cuNode;
 		} else {
-			return new RefactoringASTParser(PHPVersion.getLatestVersion(), true).parse(typeRoot, null, resolveBindings,
-					ASTProvider.SHARED_AST_STATEMENT_RECOVERY, ASTProvider.SHARED_BINDING_RECOVERY, pm);
+			return new RefactoringASTParser(PHPVersion.getLatestVersion(), false, true).parse(typeRoot, null,
+					resolveBindings, ASTProvider.SHARED_AST_STATEMENT_RECOVERY, ASTProvider.SHARED_BINDING_RECOVERY,
+					pm);
 		}
 	}
 
