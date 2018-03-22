@@ -98,6 +98,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	private CodeFormatterPreferences preferences;
 	private final IDocument document;
 	private PHPVersion phpVersion;
+	private boolean useASPTags;
 	private boolean useShortTags;
 
 	private int indentationLevel;
@@ -159,8 +160,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	private boolean ignoreEmptyLineSetting = false;
 
 	public CodeFormatterVisitor(IDocument document, CodeFormatterPreferences codeFormatterPreferences,
-			String lineSeparator, PHPVersion phpVersion, boolean useShortTags, IRegion region) throws Exception {
-		this(document, codeFormatterPreferences, lineSeparator, phpVersion, useShortTags, region, 0);
+			String lineSeparator, PHPVersion phpVersion, boolean useASPTags, boolean useShortTags, IRegion region)
+			throws Exception {
+		this(document, codeFormatterPreferences, lineSeparator, phpVersion, useASPTags, useShortTags, region, 0);
 	}
 
 	// public CodeFormatterVisitor(IDocument document, String lineSeparator,
@@ -172,9 +174,10 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	// }
 
 	public CodeFormatterVisitor(IDocument document, CodeFormatterPreferences codeFormatterPreferences,
-			String lineSeparator, PHPVersion phpVersion, boolean useShortTags, IRegion region, int indentationLevel)
-			throws Exception {
+			String lineSeparator, PHPVersion phpVersion, boolean useASPTags, boolean useShortTags, IRegion region,
+			int indentationLevel) throws Exception {
 		this.phpVersion = phpVersion;
+		this.useASPTags = useASPTags;
 		this.useShortTags = useShortTags;
 		this.document = document;
 		this.lineSeparator = lineSeparator;
@@ -188,7 +191,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		Program program = null;
 		try {
 			final Reader reader = new StringReader(document.get());
-			program = ASTParser.newParser(reader, phpVersion, true).createAST(new NullProgressMonitor());
+			program = ASTParser.newParser(reader, phpVersion, useASPTags, useShortTags)
+					.createAST(new NullProgressMonitor());
 		} catch (Exception e) {
 			Logger.log(Logger.INFO, "Parsing error, file could not be formatted.");//$NON-NLS-1$
 		}
@@ -336,7 +340,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		if (PHPVersion.PHP5.equals(phpVersion)) {
 			result = new org.eclipse.php.internal.core.compiler.ast.parser.php5.CompilerAstLexer(reader);
 			((org.eclipse.php.internal.core.compiler.ast.parser.php5.CompilerAstLexer) result)
-					.setAST(new AST(reader, PHPVersion.PHP5, false, useShortTags));
+					.setAST(new AST(reader, PHPVersion.PHP5, useASPTags, useShortTags));
 			stInScriptin = org.eclipse.php.internal.core.compiler.ast.parser.php5.CompilerAstLexer.ST_IN_SCRIPTING; // save
 			// the
 			// initial
@@ -350,7 +354,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		} else if (PHPVersion.PHP5_3.equals(phpVersion)) {
 			result = new org.eclipse.php.internal.core.compiler.ast.parser.php53.CompilerAstLexer(reader);
 			((org.eclipse.php.internal.core.compiler.ast.parser.php53.CompilerAstLexer) result)
-					.setAST(new AST(reader, PHPVersion.PHP5_3, false, useShortTags));
+					.setAST(new AST(reader, PHPVersion.PHP5_3, useASPTags, useShortTags));
 			stInScriptin = org.eclipse.php.internal.core.compiler.ast.parser.php53.CompilerAstLexer.ST_IN_SCRIPTING; // save
 			// the
 			// initial
@@ -364,7 +368,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		} else if (PHPVersion.PHP5_4.equals(phpVersion)) {
 			result = new org.eclipse.php.internal.core.compiler.ast.parser.php54.CompilerAstLexer(reader);
 			((org.eclipse.php.internal.core.compiler.ast.parser.php54.CompilerAstLexer) result)
-					.setAST(new AST(reader, PHPVersion.PHP5_4, false, useShortTags));
+					.setAST(new AST(reader, PHPVersion.PHP5_4, useASPTags, useShortTags));
 			stInScriptin = org.eclipse.php.internal.core.compiler.ast.parser.php54.CompilerAstLexer.ST_IN_SCRIPTING; // save
 			// the
 			// initial
@@ -378,7 +382,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		} else if (PHPVersion.PHP5_5.equals(phpVersion)) {
 			result = new org.eclipse.php.internal.core.compiler.ast.parser.php55.CompilerAstLexer(reader);
 			((org.eclipse.php.internal.core.compiler.ast.parser.php55.CompilerAstLexer) result)
-					.setAST(new AST(reader, PHPVersion.PHP5_5, false, useShortTags));
+					.setAST(new AST(reader, PHPVersion.PHP5_5, useASPTags, useShortTags));
 			stInScriptin = org.eclipse.php.internal.core.compiler.ast.parser.php55.CompilerAstLexer.ST_IN_SCRIPTING; // save
 			// the
 			// initial
@@ -392,7 +396,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		} else if (PHPVersion.PHP5_6.equals(phpVersion)) {
 			result = new org.eclipse.php.internal.core.compiler.ast.parser.php56.CompilerAstLexer(reader);
 			((org.eclipse.php.internal.core.compiler.ast.parser.php56.CompilerAstLexer) result)
-					.setAST(new AST(reader, PHPVersion.PHP5_6, false, useShortTags));
+					.setAST(new AST(reader, PHPVersion.PHP5_6, useASPTags, useShortTags));
 			stInScriptin = org.eclipse.php.internal.core.compiler.ast.parser.php56.CompilerAstLexer.ST_IN_SCRIPTING; // save
 			// the
 			// initial
@@ -406,7 +410,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		} else if (PHPVersion.PHP7_0.equals(phpVersion)) {
 			result = new org.eclipse.php.internal.core.compiler.ast.parser.php7.CompilerAstLexer(reader);
 			((org.eclipse.php.internal.core.compiler.ast.parser.php7.CompilerAstLexer) result)
-					.setAST(new AST(reader, PHPVersion.PHP7_0, false, useShortTags));
+					.setAST(new AST(reader, PHPVersion.PHP7_0, useASPTags, useShortTags));
 			stInScriptin = org.eclipse.php.internal.core.compiler.ast.parser.php7.CompilerAstLexer.ST_IN_SCRIPTING; // save
 			// the
 			// initial
@@ -420,7 +424,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		} else if (PHPVersion.PHP7_1.equals(phpVersion)) {
 			result = new org.eclipse.php.internal.core.compiler.ast.parser.php71.CompilerAstLexer(reader);
 			((org.eclipse.php.internal.core.compiler.ast.parser.php71.CompilerAstLexer) result)
-					.setAST(new AST(reader, PHPVersion.PHP7_1, false, useShortTags));
+					.setAST(new AST(reader, PHPVersion.PHP7_1, useASPTags, useShortTags));
 			stInScriptin = org.eclipse.php.internal.core.compiler.ast.parser.php71.CompilerAstLexer.ST_IN_SCRIPTING; // save
 			// the
 			// initial
@@ -434,7 +438,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		} else if (PHPVersion.PHP7_2.equals(phpVersion)) {
 			result = new org.eclipse.php.internal.core.compiler.ast.parser.php72.CompilerAstLexer(reader);
 			((org.eclipse.php.internal.core.compiler.ast.parser.php72.CompilerAstLexer) result)
-					.setAST(new AST(reader, PHPVersion.PHP7_2, false, useShortTags));
+					.setAST(new AST(reader, PHPVersion.PHP7_2, useASPTags, useShortTags));
 			stInScriptin = org.eclipse.php.internal.core.compiler.ast.parser.php72.CompilerAstLexer.ST_IN_SCRIPTING; // save
 			// the
 			// initial
@@ -456,6 +460,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		try {
 			// 6 = "<?php".length() + 1
 			String text = document.get(offset, Math.min(6, document.getLength() - offset)).toLowerCase();
+			if (text.startsWith("<%=")) { //$NON-NLS-1$
+				return PHP_OPEN_SHORT_TAG_WITH_EQUAL;
+			}
 			if (text.startsWith("<%")) { //$NON-NLS-1$
 				return PHP_OPEN_ASP_TAG;
 			}
@@ -1239,6 +1246,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						document.get(comment.sourceStart() + offset, comment.sourceEnd() - comment.sourceStart()));
 				String codeBeforeComment = document.get(0, comment.sourceStart() + offset).trim();
 				boolean isHeaderComment = codeBeforeComment.equals("<?") //$NON-NLS-1$
+						|| codeBeforeComment.equals("<%") //$NON-NLS-1$
 						|| codeBeforeComment.equals("<?php"); //$NON-NLS-1$
 				if ((!isHeaderComment || this.preferences.comment_format_header) && this.editsEnabled
 						&& this.preferences.comment_format_javadoc_comment
@@ -5577,11 +5585,11 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			return false;
 		}
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=418959
-		// Tag "?>" is optional to end a PHP region.
+		// Tag "?>" or "%>" is optional to end a PHP region.
 		// If this tag is missing at the very end of a PHP region,
 		// this region will not be considered as a single line.
-		return "?>".equals(document.get(start + length - endTagLength, //$NON-NLS-1$
-				endTagLength));
+		String endTag = document.get(start + length - endTagLength, endTagLength);
+		return "?>".equals(endTag) || "%>".equals(endTag); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public static String join(Collection<String> s, String delimiter) {
