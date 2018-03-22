@@ -214,13 +214,13 @@ public class MarkOccurrenceTests {
 	}
 
 	public Program createProgramFromSource(ISourceModule source) throws Exception {
-		PHPVersion version;
+		ASTParser newParser;
 		if (project != null) {
-			version = ProjectOptions.getPHPVersion(project);
+			newParser = ASTParser.newParser(project, source);
 		} else {
-			version = ProjectOptions.getDefaultPHPVersion();
+			newParser = ASTParser.newParser(ProjectOptions.getDefaultPHPVersion(),
+					ProjectOptions.getDefaultIsSupportingASPTags(), ProjectOptions.getDefaultUseShortTags(), source);
 		}
-		ASTParser newParser = ASTParser.newParser(version, source);
 		return newParser.createAST(null);
 	}
 

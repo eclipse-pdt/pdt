@@ -106,7 +106,8 @@ public class CommentMapperTests {
 	public void parseAndCompare(String programStr) throws Exception {
 		final IDocument document = new Document(programStr);
 		final Reader reader = new StringReader(programStr);
-		Program program = ASTParser.newParser(reader, PHPVersion.PHP5, ProjectOptions.useShortTags((IProject) null))
+		Program program = ASTParser.newParser(reader, PHPVersion.PHP5,
+				ProjectOptions.isSupportingASPTags((IProject) null), ProjectOptions.useShortTags((IProject) null))
 				.createAST(new NullProgressMonitor());
 
 		program.initCommentMapper(document, new PHPAstLexer(reader));
@@ -126,7 +127,8 @@ public class CommentMapperTests {
 	public void parseAndCompareInner(String programStr, int index) throws Exception {
 		final IDocument document = new Document(programStr);
 		final Reader reader = new StringReader(programStr);
-		Program program = ASTParser.newParser(reader, PHPVersion.PHP5, ProjectOptions.useShortTags((IProject) null))
+		Program program = ASTParser.newParser(reader, PHPVersion.PHP5,
+				ProjectOptions.isSupportingASPTags((IProject) null), ProjectOptions.useShortTags((IProject) null))
 				.createAST(new NullProgressMonitor());
 
 		program.initCommentMapper(document, new PHPAstLexer(reader));

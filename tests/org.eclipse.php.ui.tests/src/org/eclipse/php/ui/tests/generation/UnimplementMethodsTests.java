@@ -108,7 +108,7 @@ public class UnimplementMethodsTests {
 		pdttFile.applyPreferences();
 
 		IType type = createFile(pdttFile.getFile());
-		final ASTParser parser = ASTParser.newParser(phpVersion, type.getSourceModule());
+		final ASTParser parser = ASTParser.newParser(phpVersion, false, true, type.getSourceModule());
 		Program unit = parser.createAST(new NullProgressMonitor());
 
 		IEvaluatedType evaluatedType = PHPClassType.fromIType(type);
@@ -151,8 +151,8 @@ public class UnimplementMethodsTests {
 	}
 
 	/**
-	 * Creates test file with the specified content and calculates the source
-	 * range for the selection. Selection characters themself are stripped off.
+	 * Creates test file with the specified content and calculates the source range
+	 * for the selection. Selection characters themself are stripped off.
 	 * 
 	 * @param data
 	 *            File data
