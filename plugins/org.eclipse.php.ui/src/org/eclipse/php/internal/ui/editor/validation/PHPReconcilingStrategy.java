@@ -141,7 +141,9 @@ public class PHPReconcilingStrategy implements IReconcilingStrategy, IReconcilin
 
 			if (initialReconcile || astProvider.isActive(unit)) {
 				PHPVersion phpVersion = ProjectOptions.getPHPVersion(unit.getScriptProject().getProject());
-				ASTParser newParser = ASTParser.newParser(phpVersion, unit);
+				boolean isSupportingASPTags = ProjectOptions.isSupportingASPTags(unit.getScriptProject().getProject());
+				boolean useShortTags = ProjectOptions.useShortTags(unit.getScriptProject().getProject());
+				ASTParser newParser = ASTParser.newParser(phpVersion, isSupportingASPTags, useShortTags, unit);
 				createdAST = newParser != null ? newParser.createAST(null) : null;
 				if (createdAST != null && fDocument != null) {
 					createdAST.setSourceModule(unit);

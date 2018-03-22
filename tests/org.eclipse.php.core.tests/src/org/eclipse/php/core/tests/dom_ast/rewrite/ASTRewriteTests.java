@@ -1973,13 +1973,14 @@ public class ASTRewriteTests {
 
 	// //////////////////////// Utility methods //////////////////////////
 	/**
-	 * Set the content into the document and initialize the parser, the program
-	 * and the ast.
+	 * Set the content into the document and initialize the parser, the program and
+	 * the ast.
 	 */
 	private void initialize(String content, PHPVersion phpVersion) throws Exception {
 		document = new Document(content);
 
-		ASTParser parser = ASTParser.newParser(phpVersion, ProjectOptions.useShortTags((IProject) null));
+		ASTParser parser = ASTParser.newParser(phpVersion, ProjectOptions.isSupportingASPTags((IProject) null),
+				ProjectOptions.useShortTags((IProject) null));
 		parser.setSource(document.get().toCharArray());
 		program = parser.createAST(new NullProgressMonitor());
 		ast = program.getAST();

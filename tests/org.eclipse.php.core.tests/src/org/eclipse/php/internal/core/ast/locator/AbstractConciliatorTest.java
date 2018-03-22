@@ -86,13 +86,13 @@ public abstract class AbstractConciliatorTest {
 		if (resource instanceof IFile) {
 			project = ((IFile) resource).getProject();
 		}
-		PHPVersion version;
+		ASTParser newParser;
 		if (project != null) {
-			version = ProjectOptions.getPHPVersion(project);
+			newParser = ASTParser.newParser(project, source);
 		} else {
-			version = ProjectOptions.getDefaultPHPVersion();
+			newParser = ASTParser.newParser(ProjectOptions.getDefaultPHPVersion(),
+					ProjectOptions.getDefaultIsSupportingASPTags(), ProjectOptions.getDefaultUseShortTags(), source);
 		}
-		ASTParser newParser = ASTParser.newParser(version, source);
 		return newParser.createAST(null);
 	}
 
