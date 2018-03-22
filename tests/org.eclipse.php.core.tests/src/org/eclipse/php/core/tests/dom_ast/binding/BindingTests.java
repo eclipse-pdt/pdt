@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.ASTParser;
 import org.eclipse.php.core.ast.nodes.Assignment;
 import org.eclipse.php.core.ast.nodes.ClassDeclaration;
@@ -106,11 +105,11 @@ public class BindingTests {
 			// Wait for indexer...
 			TestUtils.waitForIndexer();
 		}
-		PHPVersion version = ProjectOptions.getDefaultPHPVersion();
 		ISourceModule sourceModule = null;
 		sourceModule = DLTKCore.createSourceModuleFrom(testFile);
-		ASTParser parser = ASTParser.newParser(new InputStreamReader(testFile.getContents()), version, false,
-				sourceModule);
+		ASTParser parser = ASTParser.newParser(new InputStreamReader(testFile.getContents()),
+				ProjectOptions.getDefaultPHPVersion(), ProjectOptions.getDefaultIsSupportingASPTags(),
+				ProjectOptions.getDefaultUseShortTags(), sourceModule);
 		return parser.createAST(new NullProgressMonitor());
 	}
 

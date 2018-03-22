@@ -28,8 +28,10 @@ public class PHPSourceParser extends AbstractPHPSourceParser {
 	}
 
 	@Override
-	public IModuleDeclaration parse(Reader in, IProblemReporter reporter, boolean useShortTags) throws Exception {
+	public IModuleDeclaration parse(Reader in, IProblemReporter reporter, boolean isSupportingASPTags,
+			boolean useShortTags) throws Exception {
 		CompilerAstLexer lexer = new CompilerAstLexer(in);
+		lexer.setUseAspTagsAsPHP(isSupportingASPTags);
 		lexer.setUseShortTags(useShortTags);
 		CompilerAstParser parser = new CompilerAstParser(lexer);
 		parser.setProblemReporter(reporter);

@@ -23,12 +23,10 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.resource.RenameResourceChange;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.ASTParser;
 import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.php.core.libfolders.LibraryFolderManager;
 import org.eclipse.php.core.libfolders.RenameLibraryFolderChange;
-import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.refactoring.core.PHPRefactoringCoreMessages;
@@ -319,9 +317,8 @@ public class RenameFolderProcessor extends AbstraceRenameResourceProcessor imple
 				for (IFile file : phpFilesSet) {
 					ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(file);
 					IProject project = file.getProject();
-					PHPVersion version = ProjectOptions.getPHPVersion(project);
 
-					ASTParser newParser = ASTParser.newParser(version, sourceModule);
+					ASTParser newParser = ASTParser.newParser(project, sourceModule);
 					Program program = newParser.createAST(null);
 					participantFiles.put(file, program);
 
