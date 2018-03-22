@@ -203,7 +203,7 @@ public abstract class AbstractWizardSecondPage extends CapabilityConfigurationPa
 	}
 
 	protected void setPhpLangOptions() {
-		boolean useASPTags = false;
+		boolean useASPTags = firstPage.versionGroup.fConfigurationBlock.getUseAspTagsValue();
 		PHPVersion phpVersion = firstPage.versionGroup.fConfigurationBlock.getPHPVersionValue();
 		ProjectOptions.setSupportingASPTags(useASPTags, getProject());
 		ProjectOptions.setPHPVersion(phpVersion, getProject());

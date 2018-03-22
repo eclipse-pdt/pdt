@@ -109,8 +109,7 @@ public class BindingTests {
 		PHPVersion version = ProjectOptions.getDefaultPHPVersion();
 		ISourceModule sourceModule = null;
 		sourceModule = DLTKCore.createSourceModuleFrom(testFile);
-		ASTParser parser = ASTParser.newParser(new InputStreamReader(testFile.getContents()), version, false,
-				sourceModule);
+		ASTParser parser = ASTParser.newParser(new InputStreamReader(testFile.getContents()), version, sourceModule);
 		return parser.createAST(new NullProgressMonitor());
 	}
 

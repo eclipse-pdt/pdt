@@ -85,7 +85,7 @@ public class CompilerParserTests {
 
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(pdttFile.getFile().trim().getBytes("UTF-8"));
 		IModuleDeclaration moduleDeclaration = parser.parse(new InputStreamReader(inputStream, "UTF-8"), null,
-				ProjectOptions.useShortTags((IProject) null));
+				ProjectOptions.isSupportingASPTags((IProject) null), ProjectOptions.useShortTags((IProject) null));
 		String actual = ASTPrintVisitor.toXMLString((ASTNode) moduleDeclaration);
 		PDTTUtils.assertContents(pdttFile.getExpected(), actual);
 	}

@@ -562,7 +562,7 @@ public class ASTView extends ViewPart implements IShowInSource {
 		} else {
 			ISourceModule sm = input;
 			StringReader st = new StringReader(sm.getBuffer().getContents());
-			ASTParser parser = ASTParser.newParser(st, phpVersion, false, sm);
+			ASTParser parser = ASTParser.newParser(st, phpVersion, sm);
 			startTime = System.currentTimeMillis();
 			root = parser.createAST(null);
 			endTime = System.currentTimeMillis();

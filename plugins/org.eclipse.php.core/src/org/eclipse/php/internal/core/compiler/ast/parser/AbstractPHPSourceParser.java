@@ -52,6 +52,7 @@ public abstract class AbstractPHPSourceParser extends AbstractSourceParser imple
 				reader = new CharArrayReader(input.getContentsAsCharArray());
 			}
 			return parse(reader, reporter,
+					ProjectOptions.isSupportingASPTags(input.getModelElement().getScriptProject().getProject()),
 					ProjectOptions.useShortTags(input.getModelElement().getScriptProject().getProject()));
 		} catch (Exception e) {
 			Logger.logException(e);
@@ -61,8 +62,8 @@ public abstract class AbstractPHPSourceParser extends AbstractSourceParser imple
 
 	}
 
-	public abstract IModuleDeclaration parse(Reader in, IProblemReporter reporter, boolean useShortTags)
-			throws Exception;
+	public abstract IModuleDeclaration parse(Reader in, IProblemReporter reporter, boolean isSupportingASPTags,
+			boolean useShortTags) throws Exception;
 
 	protected IModuleDeclaration parse(AbstractASTParser parser) {
 		parser.setFileName(fileName);
