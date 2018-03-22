@@ -208,7 +208,8 @@ public class RefactoringRenameElementAction extends RenamePHPElementAction {
 
 				// locate the php element to refactor
 				ASTParser parser = ASTParser.newParser(new StringReader(doc.get()),
-						ProjectOptions.getPHPVersion(project), ProjectOptions.useShortTags(project));
+						ProjectOptions.getPHPVersion(project), ProjectOptions.isSupportingASPTags(project),
+						ProjectOptions.useShortTags(project));
 				final Program program = parser.createAST(new NullProgressMonitor());
 				locateNode = Locator.locateNode(program, offset);
 			}

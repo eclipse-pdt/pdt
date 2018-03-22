@@ -28,10 +28,8 @@ import org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant;
 import org.eclipse.ltk.core.refactoring.participants.RenameProcessor;
 import org.eclipse.ltk.core.refactoring.participants.SharableParticipants;
 import org.eclipse.php.core.PHPToolkitUtil;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.ASTParser;
 import org.eclipse.php.core.ast.nodes.Program;
-import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree.Node;
@@ -102,9 +100,8 @@ public abstract class AbstractRenameProcessor<R extends IResource> extends Renam
 
 				ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(file);
 				IProject project = file.getProject();
-				PHPVersion version = ProjectOptions.getPHPVersion(project);
 
-				ASTParser newParser = ASTParser.newParser(version, sourceModule);
+				ASTParser newParser = ASTParser.newParser(project, sourceModule);
 				Program program = newParser.createAST(null);
 				participantFiles.put(file, program);
 
