@@ -825,8 +825,10 @@ public class CodeGeneration {
 	// XXX: make it private again once 438661 is fixed
 	public static Program generateProgram(IMember member, Program program) {
 		ISourceModule source = member.getSourceModule();
-		ASTParser parserForExpected = ASTParser
-				.newParser(ProjectOptions.getPHPVersion(source.getScriptProject().getProject()), source);
+		ASTParser parserForExpected = ASTParser.newParser(
+				ProjectOptions.getPHPVersion(source.getScriptProject().getProject()),
+				ProjectOptions.isSupportingASPTags(source.getScriptProject().getProject()),
+				ProjectOptions.useShortTags(source.getScriptProject().getProject()), source);
 		try {
 			parserForExpected.setSource(source);
 			program = parserForExpected.createAST(new NullProgressMonitor());

@@ -329,8 +329,9 @@ public class CompilationUnitRewrite {
 	public Program getRoot() {
 		if (fRoot == null) {
 			try {
-				fRoot = new RefactoringASTParser(ProjectOptions.getPHPVersion(fCu), ProjectOptions.useShortTags(fCu))
-						.parse(fCu, fOwner, fResolveBindings, fStatementsRecovery, fBindingsRecovery, null);
+				fRoot = new RefactoringASTParser(ProjectOptions.getPHPVersion(fCu),
+						ProjectOptions.isSupportingASPTags(fCu), ProjectOptions.useShortTags(fCu)).parse(fCu, fOwner,
+								fResolveBindings, fStatementsRecovery, fBindingsRecovery, null);
 			} catch (Exception e) {
 				RefactoringUIPlugin.log(e);
 			}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,8 +16,10 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.text.Document;
@@ -73,9 +75,9 @@ public class ASTParser {
 	/**
 	 * Factory methods for ASTParser
 	 */
-	public static ASTParser newParser(PHPVersion version, boolean useShortTags) {
+	public static ASTParser newParser(PHPVersion version, boolean useASPTags, boolean useShortTags) {
 		try {
-			return new ASTParser(new StringReader(""), version, false, //$NON-NLS-1$
+			return new ASTParser(new StringReader(""), version, useASPTags, //$NON-NLS-1$
 					useShortTags);
 		} catch (IOException e) {
 			assert false;
@@ -87,27 +89,24 @@ public class ASTParser {
 	/**
 	 * Factory methods for ASTParser
 	 */
-	public static ASTParser newParser(PHPVersion version) {
-		return newParser(version, true);
+	public static ASTParser newParser(ISourceModule sourceModule) {
+		if (sourceModule == null) {
+			throw new IllegalStateException("ASTParser - Can't parse with null ISourceModule"); //$NON-NLS-1$
+		}
+		return newParser(sourceModule.getScriptProject().getProject(), sourceModule);
 	}
 
 	/**
 	 * Factory methods for ASTParser
 	 */
-	public static ASTParser newParser(ISourceModule sourceModule) {
-		PHPVersion phpVersion = ProjectOptions.getPHPVersion(sourceModule.getScriptProject().getProject());
-
-		return newParser(phpVersion, sourceModule);
-	}
-
-	public static ASTParser newParser(PHPVersion version, ISourceModule sourceModule) {
+	public static ASTParser newParser(PHPVersion version, boolean useASPTags, boolean useShortTags,
+			ISourceModule sourceModule) {
 		if (sourceModule == null) {
 			throw new IllegalStateException("ASTParser - Can't parse with null ISourceModule"); //$NON-NLS-1$
 		}
 		try {
-			final ASTParser parser = new ASTParser(new StringReader(""), //$NON-NLS-1$
-					version, false, ProjectOptions.useShortTags(sourceModule.getScriptProject().getProject()),
-					sourceModule);
+			final ASTParser parser = new ASTParser(new StringReader(""), version, useASPTags, //$NON-NLS-1$
+					useShortTags, sourceModule);
 			parser.setSource(sourceModule.getSourceAsCharArray());
 			return parser;
 		} catch (IOException e) {
@@ -117,8 +116,21 @@ public class ASTParser {
 		}
 	}
 
-	public static ASTParser newParser(Reader reader, PHPVersion version, boolean useShortTags) throws IOException {
-		return new ASTParser(reader, version, false, useShortTags);
+	public static ASTParser newParser(IProject project, ISourceModule sourceModule) {
+		if (sourceModule == null) {
+			throw new IllegalStateException("ASTParser - Can't parse with null ISourceModule"); //$NON-NLS-1$
+		}
+		try {
+			final ASTParser parser = new ASTParser(new StringReader(""), //$NON-NLS-1$
+					ProjectOptions.getPHPVersion(project), ProjectOptions.isSupportingASPTags(project),
+					ProjectOptions.useShortTags(project), sourceModule);
+			parser.setSource(sourceModule.getSourceAsCharArray());
+			return parser;
+		} catch (IOException e) {
+			return null;
+		} catch (ModelException e) {
+			return null;
+		}
 	}
 
 	public static ASTParser newParser(Reader reader, PHPVersion version, boolean useASPTags, boolean useShortTags)
@@ -126,10 +138,9 @@ public class ASTParser {
 		return new ASTParser(reader, version, useASPTags, useShortTags);
 	}
 
-	public static ASTParser newParser(Reader reader, PHPVersion version, boolean useASPTags, ISourceModule sourceModule)
-			throws IOException {
-		return new ASTParser(reader, version, useASPTags,
-				ProjectOptions.useShortTags(sourceModule.getScriptProject().getProject()), sourceModule);
+	public static ASTParser newParser(Reader reader, PHPVersion version, boolean useASPTags, boolean useShortTags,
+			@Nullable ISourceModule sourceModule) throws IOException {
+		return new ASTParser(reader, version, useASPTags, useShortTags, sourceModule);
 	}
 
 	/**

@@ -800,7 +800,7 @@ public class CodeGenerationUtils {
 			ISourceModule source = method.getSourceModule();
 			IProject project = source.getScriptProject().getProject();
 			ASTParser parserForExpected = ASTParser.newParser(ProjectOptions.getPHPVersion(project),
-					ProjectOptions.useShortTags(project));
+					ProjectOptions.isSupportingASPTags(project), ProjectOptions.useShortTags(project));
 			try {
 				parserForExpected.setSource(source);
 				program = parserForExpected.createAST(new NullProgressMonitor());
@@ -1095,7 +1095,8 @@ public class CodeGenerationUtils {
 	 * @return program instance.
 	 */
 	public static Program getASTRoot(ISourceModule source, IDocument document, IProject project) {
-		ASTParser parserForExpected = ASTParser.newParser(ProjectOptions.getPHPVersion(project), source);
+		ASTParser parserForExpected = ASTParser.newParser(ProjectOptions.getPHPVersion(project),
+				ProjectOptions.isSupportingASPTags(project), ProjectOptions.useShortTags(project), source);
 
 		Program program = null;
 		try {

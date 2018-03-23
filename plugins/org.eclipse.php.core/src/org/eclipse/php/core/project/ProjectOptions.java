@@ -91,12 +91,18 @@ public class ProjectOptions {
 		return PHPVersion.byAlias(CorePreferencesSupport.getInstance().getWorkspacePreferencesValue(Keys.PHP_VERSION));
 	}
 
-	public static String getDefaultIsSupportingASPTags() {
-		return CorePreferencesSupport.getInstance().getWorkspacePreferencesValue(Keys.EDITOR_USE_ASP_TAGS);
+	public static boolean getDefaultIsSupportingASPTags() {
+		PHPVersion phpVersion = getDefaultPHPVersion();
+		if (phpVersion.isGreaterThan(PHPVersion.PHP5_6)) {
+			return false;
+		}
+		return "true".equalsIgnoreCase( //$NON-NLS-1$
+				CorePreferencesSupport.getInstance().getWorkspacePreferencesValue(Keys.EDITOR_USE_ASP_TAGS));
 	}
 
-	public static String getDefaultUseShortTags() {
-		return CorePreferencesSupport.getInstance().getWorkspacePreferencesValue(Keys.EDITOR_USE_SHORT_TAGS);
+	public static boolean getDefaultUseShortTags() {
+		return "true".equalsIgnoreCase( //$NON-NLS-1$
+				CorePreferencesSupport.getInstance().getWorkspacePreferencesValue(Keys.EDITOR_USE_SHORT_TAGS));
 	}
 
 	public static boolean setPHPVersion(@NonNull PHPVersion version, @NonNull IProject project) {
@@ -113,7 +119,7 @@ public class ProjectOptions {
 				? CorePreferencesSupport.getInstance().getPreferencesValue(Keys.EDITOR_USE_ASP_TAGS, null, project)
 				: null;
 		if (isSupportingASPTags == null) {
-			isSupportingASPTags = getDefaultIsSupportingASPTags();
+			return getDefaultIsSupportingASPTags();
 		}
 		return "true".equalsIgnoreCase(isSupportingASPTags); //$NON-NLS-1$
 	}
@@ -123,7 +129,7 @@ public class ProjectOptions {
 				? CorePreferencesSupport.getInstance().getPreferencesValue(Keys.EDITOR_USE_SHORT_TAGS, null, project)
 				: null;
 		if (useShortTags == null) {
-			useShortTags = getDefaultUseShortTags();
+			return getDefaultUseShortTags();
 		}
 		return "true".equalsIgnoreCase(useShortTags); //$NON-NLS-1$
 	}
@@ -132,8 +138,17 @@ public class ProjectOptions {
 		return useShortTags(getProject(modelElement));
 	}
 
+	public static final boolean setUseShortTags(boolean value, @NonNull IProject project) {
+		return CorePreferencesSupport.getInstance().setProjectSpecificPreferencesValue(Keys.EDITOR_USE_SHORT_TAGS,
+				Boolean.toString(value), project);
+	}
+
 	public static final boolean isSupportingASPTags(@NonNull IFile file) {
 		return isSupportingASPTags(file.getProject());
+	}
+
+	public static boolean isSupportingASPTags(@NonNull IModelElement modelElement) {
+		return isSupportingASPTags(getProject(modelElement));
 	}
 
 	public static final boolean setSupportingASPTags(boolean value, @NonNull IProject project) {

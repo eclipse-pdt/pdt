@@ -107,24 +107,24 @@ public class PHPCodeFormatter implements IContentFormatter, IFormatterProcessorF
 
 	@Override
 	public ICodeFormattingProcessor getCodeFormattingProcessor(IDocument document, PHPVersion phpVersion,
-			boolean useShortTags, IRegion region) throws Exception {
+			boolean useASPTags, boolean useShortTags, IRegion region) throws Exception {
 		IProject project = getProject(document);
-		return getCodeFormattingProcessor(project, document, phpVersion, useShortTags, region);
+		return getCodeFormattingProcessor(project, document, phpVersion, useASPTags, useShortTags, region);
 	}
 
 	@Override
 	public ICodeFormattingProcessor getCodeFormattingProcessor(IProject project, IDocument document, IRegion region)
 			throws Exception {
 		return getCodeFormattingProcessor(project, document, ProjectOptions.getPHPVersion(project),
-				ProjectOptions.useShortTags(project), region);
+				ProjectOptions.isSupportingASPTags(project), ProjectOptions.useShortTags(project), region);
 	}
 
 	private ICodeFormattingProcessor getCodeFormattingProcessor(IProject project, IDocument document,
-			PHPVersion phpVersion, boolean useShortTags, IRegion region) throws Exception {
+			PHPVersion phpVersion, boolean useASPTags, boolean useShortTags, IRegion region) throws Exception {
 		CodeFormatterPreferences fCodeFormatterPreferences = getPreferences(project);
 
 		ICodeFormattingProcessor codeFormattingProcessor = new CodeFormatterVisitor(document, fCodeFormatterPreferences,
-				PHPModelUtils.getLineSeparator(project), phpVersion, useShortTags, region);
+				PHPModelUtils.getLineSeparator(project), phpVersion, useASPTags, useShortTags, region);
 
 		return codeFormattingProcessor;
 	}

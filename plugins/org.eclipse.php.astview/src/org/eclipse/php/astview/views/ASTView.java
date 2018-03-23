@@ -21,6 +21,7 @@ import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.filebuffers.IFileBuffer;
 import org.eclipse.core.filebuffers.IFileBufferListener;
 import org.eclipse.core.filebuffers.ITextFileBuffer;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -332,6 +333,8 @@ public class ASTView extends ViewPart implements IShowInSource {
 	private Action fDeleteAction;
 
 	private PHPVersion fPHPVersion;
+	boolean fUseASPTags;
+	boolean fUseShortTags;
 
 	private ASTInputKindAction[] fASTInputKindActions;
 	private int fCurrentInputKind;
@@ -387,6 +390,8 @@ public class ASTView extends ViewPart implements IShowInSource {
 																						// use
 																						// recovery
 		fPHPVersion = PHPVersion.getLatestVersion();
+		fUseASPTags = false;
+		fUseShortTags = true;
 		fNonRelevantFilter = new NonRelevantFilter();
 		fNonRelevantFilter.setShowNonRelevant(fDialogSettings.getBoolean(SETTINGS_SHOW_NON_RELEVANT));
 	}
@@ -414,10 +419,6 @@ public class ASTView extends ViewPart implements IShowInSource {
 		}
 	}
 
-	public PHPVersion getCurrentPHPVersion() {
-		return fPHPVersion;
-	}
-
 	public int getCurrentInputKind() {
 		return fCurrentInputKind;
 	}
@@ -436,32 +437,33 @@ public class ASTView extends ViewPart implements IShowInSource {
 				throw new CoreException(getErrorStatus("Editor not showing a CU or class file", null)); //$NON-NLS-1$
 			}
 			fSourceRoot = typeRoot;
-			PHPVersion astLevel = getInitialASTLevel(typeRoot);
+			IProject project = typeRoot.getScriptProject().getProject();
+			PHPVersion astLevel = ProjectOptions.getPHPVersion(project);
+			boolean isSupportingASPTags = ProjectOptions.isSupportingASPTags(project);
+			boolean useShortTags = ProjectOptions.useShortTags(project);
 
 			ISelection selection = editor.getSelectionProvider().getSelection();
 			if (selection instanceof ITextSelection) {
 				ITextSelection textSelection = (ITextSelection) selection;
-				fRoot = internalSetInput(typeRoot, textSelection.getOffset(), textSelection.getLength(), astLevel);
+				fRoot = internalSetInput(typeRoot, textSelection.getOffset(), textSelection.getLength(), astLevel, isSupportingASPTags, useShortTags);
 				fEditor = editor;
-				setASTLevel(astLevel, false);
+				fPHPVersion = astLevel;
+				fUseASPTags = isSupportingASPTags;
+				fUseShortTags = useShortTags;
 			}
 			installModificationListener();
 		}
 
 	}
 
-	private PHPVersion getInitialASTLevel(ISourceModule typeRoot) {
-		return ProjectOptions.getPHPVersion(typeRoot.getScriptProject().getProject());
-	}
-
-	private Program internalSetInput(ISourceModule input, int offset, int length, PHPVersion phpVersion)
+	private Program internalSetInput(ISourceModule input, int offset, int length, PHPVersion phpVersion, boolean useASPTags, boolean useShortTags)
 			throws CoreException {
 		if (input.getBuffer() == null) {
 			throw new CoreException(getErrorStatus("Input has no buffer", null)); //$NON-NLS-1$
 		}
 
 		try {
-			Program root = createAST(input, phpVersion, offset);
+			Program root = createAST(input, phpVersion, useASPTags, useShortTags, offset);
 			resetView(root);
 			if (root == null) {
 				setContentDescription("AST could not be created."); //$NON-NLS-1$
@@ -502,7 +504,7 @@ public class ASTView extends ViewPart implements IShowInSource {
 		fPreviousDouble = null; // avoid leaking AST
 	}
 
-	private Program createAST(ISourceModule input, PHPVersion phpVersion, int offset) throws Exception {
+	private Program createAST(ISourceModule input, PHPVersion phpVersion, boolean useASPTags, boolean useShortTags, int offset) throws Exception {
 		long startTime;
 		long endTime;
 		Program root = null;
@@ -562,7 +564,7 @@ public class ASTView extends ViewPart implements IShowInSource {
 		} else {
 			ISourceModule sm = input;
 			StringReader st = new StringReader(sm.getBuffer().getContents());
-			ASTParser parser = ASTParser.newParser(st, phpVersion, false, sm);
+			ASTParser parser = ASTParser.newParser(st, phpVersion, useASPTags, useShortTags, sm);
 			startTime = System.currentTimeMillis();
 			root = parser.createAST(null);
 			endTime = System.currentTimeMillis();
@@ -947,22 +949,7 @@ public class ASTView extends ViewPart implements IShowInSource {
 			length = node.getLength();
 		}
 
-		internalSetInput(fSourceRoot, offset, length, getCurrentPHPVersion());
-	}
-
-	protected void setASTLevel(PHPVersion level, boolean doRefresh) {
-		PHPVersion oldLevel = fPHPVersion;
-		fPHPVersion = level;
-
-		if (doRefresh && fSourceRoot != null && oldLevel != fPHPVersion) {
-			try {
-				refreshAST();
-			} catch (CoreException e) {
-				showAndLogError("Could not set AST to new level.", e); //$NON-NLS-1$
-				// set back to old level
-				fPHPVersion = oldLevel;
-			}
-		}
+		internalSetInput(fSourceRoot, offset, length, fPHPVersion, fUseASPTags, fUseShortTags);
 	}
 
 	protected void setASTInputType(int inputKind) {

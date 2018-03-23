@@ -21,7 +21,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.ASTNode;
 import org.eclipse.php.core.ast.nodes.ASTParser;
@@ -44,6 +43,7 @@ import org.eclipse.php.core.ast.nodes.Statement;
 import org.eclipse.php.core.ast.nodes.SwitchStatement;
 import org.eclipse.php.core.ast.visitor.ApplyAll;
 import org.eclipse.php.core.project.ProjectOptions;
+import org.eclipse.php.core.tests.TestUtils;
 import org.eclipse.text.edits.TextEdit;
 import org.junit.Test;
 
@@ -518,7 +518,8 @@ public class NodeDeletionTests {
 	 * the ast.
 	 */
 	private Program initialize(IDocument document) throws Exception {
-		ASTParser parser = ASTParser.newParser(getPHPVersion(), ProjectOptions.useShortTags((IProject) null));
+		ASTParser parser = ASTParser.newParser(getPHPVersion(), ProjectOptions.isSupportingASPTags((IProject) null),
+				ProjectOptions.useShortTags((IProject) null));
 		parser.setSource(document.get().toCharArray());
 		Program program = parser.createAST(new NullProgressMonitor());
 

@@ -105,7 +105,7 @@ public class AddGetterSetterTests {
 		CodeGenerationSettings settings = new CodeGenerationSettings();
 		settings.createComments = true;
 
-		final ASTParser parser = ASTParser.newParser(phpVersion, type.getSourceModule());
+		final ASTParser parser = ASTParser.newParser(phpVersion, false, true, type.getSourceModule());
 		Program unit = parser.createAST(new NullProgressMonitor());
 		final AddGetterSetterOperation operation = new AddGetterSetterOperation(type, input, input, new IField[0], unit,
 				testDocument, null, settings, true);
@@ -135,8 +135,8 @@ public class AddGetterSetterTests {
 	}
 
 	/**
-	 * Creates test file with the specified content and calculates the source
-	 * range for the selection. Selection characters themself are stripped off.
+	 * Creates test file with the specified content and calculates the source range
+	 * for the selection. Selection characters themself are stripped off.
 	 * 
 	 * @param data
 	 *            File data

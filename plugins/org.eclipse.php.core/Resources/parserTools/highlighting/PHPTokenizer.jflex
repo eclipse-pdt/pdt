@@ -86,8 +86,8 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 	private final XMLParserRegionFactory fRegionFactory = new XMLParserRegionFactory();
 	private PHPVersion phpVersion = ProjectOptions.getDefaultPHPVersion();
-	private boolean isSupportingASPTags = false;
-	private boolean useShortTags = true;
+	private boolean isSupportingASPTags = ProjectOptions.getDefaultIsSupportingASPTags();
+	private boolean useShortTags = ProjectOptions.getDefaultUseShortTags();
 /**
  * user method
  */
@@ -1383,7 +1383,7 @@ WHITESPACE = [ \n\r\t]
 //PHP_START = {WHITESPACE}*(<\?{WHITESPACE}*)|(<\?[Pp][Hh][P|p]{WHITESPACE}+)
 PHP_START = <\?[Pp][Hh][P|p]{WHITESPACE}+
 //PIend = \?>
-PHP_ASP_START=<%
+PHP_ASP_START=<%[=]?
 PHP_ASP_END=%>
 %%
 
@@ -1634,9 +1634,10 @@ PHP_ASP_END=%>
 			&& !useShortTags) {
 		yybegin(ST_PI);
 		return XML_PI_OPEN;
-	} else if ("<%".equals(yytext()) //$NON-NLS-1$
+	} else if (("<%".equals(yytext()) //$NON-NLS-1$
+			|| "<%=".equals(yytext())) //$NON-NLS-1$
 			&& !isSupportingASPTags) {
-		yypushback(1);
+		yypushback(yylength() - 1);
 		yybegin(ST_XML_TAG_NAME);
 		return XML_TAG_OPEN;
 	} else {

@@ -28,7 +28,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.ASTParser;
 import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.php.core.project.ProjectOptions;
@@ -128,13 +127,13 @@ public class Util {
 
 	public static Program createProgramFromSource(ISourceModule source) throws Exception {
 		IProject project = source.getScriptProject().getProject();
-		PHPVersion version;
+		ASTParser newParser;
 		if (project != null) {
-			version = ProjectOptions.getPHPVersion(project);
+			newParser = ASTParser.newParser(project, source);
 		} else {
-			version = ProjectOptions.getDefaultPHPVersion();
+			newParser = ASTParser.newParser(ProjectOptions.getDefaultPHPVersion(),
+					ProjectOptions.getDefaultIsSupportingASPTags(), ProjectOptions.getDefaultUseShortTags(), source);
 		}
-		ASTParser newParser = ASTParser.newParser(version, source);
 		return newParser.createAST(null);
 	}
 
