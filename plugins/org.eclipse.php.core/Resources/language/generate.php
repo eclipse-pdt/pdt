@@ -36,10 +36,10 @@ function rewrite_phpdoc_return_types ($funckey, $returnTypes) {
 
 $splitFiles = true;
 $phpdocDir = null;
+$phpDir = null;
 
 preg_match('/^[^.]+\.[^.]+/', phpversion(), $matches);
 echo "PHP version: {$matches[0]}\n";
-$phpDir = "php".$matches[0];
 
 // Parse arguments:
 $argv = $_SERVER["argv"];
@@ -55,12 +55,22 @@ for ($i = 0; $i < count($argv); ++$i) {
 			break;
 
 		default:
-			$phpdocDir = $argv[$i];
+			if ($phpdocDir === null) {
+				$phpdocDir = $argv[$i];
+			} elseif ($phpDir === null) {
+				$phpDir = $argv[$i];
+			} else {
+				show_help();
+			}
+			break;
 	}
 }
 
-if (!$phpdocDir) {
+if ((string) $phpdocDir === '') {
 	show_help();
+}
+if ((string) $phpDir === '') {
+	$phpDir = dirname(__FILE__) . "/php".$matches[0];
 }
 
 $functionsDoc = parse_phpdoc_functions ($phpdocDir);
@@ -71,7 +81,12 @@ $processedFunctions = array();
 $processedClasses = array();
 $processedConstants = array();
 
-@mkdir ($phpDir);
+if (!is_dir($phpDir)) {
+	if (!mkdir($phpDir)) {
+		echo "Failed to create output directory.";
+		exit(1);
+	}
+}
 
 if (!$splitFiles) {
 	begin_file_output();
@@ -92,21 +107,23 @@ if ($splitFiles) {
 }
 $intFunctions = get_defined_functions();
 foreach ($intFunctions["internal"] as $intFunction) {
-	if (!@$processedFunctions[strtolower($intFunction)]) {
+	$intFunctionLower = strtolower($intFunction);
+	if (!isset($intFunctionLower) || !$processedFunctions[$intFunctionLower]) {
 		print_function (new ReflectionFunction ($intFunction));
 	}
 }
 
 $intClasses = array_merge (get_declared_classes(), get_declared_interfaces());
 foreach ($intClasses as $intClass) {
-	if (!@$processedClasses[strtolower($intClass)]) {
+	$intClassLower = strtolower($intClass);
+	if (!isset($processedClasses[strtolower($intClass)]) || !$processedClasses[strtolower($intClass)]) {
 		print_class (new ReflectionClass ($intClass));
 	}
 }
 
 print "\n";
 $constants = get_defined_constants(true);
-$intConstants = @$constants["internal"];
+$intConstants = isset($constants["internal"]) ? $constants["internal"] : array();
 // add magic constants:
 $intConstants['__FILE__'] = null;
 $intConstants['__LINE__'] = null;
@@ -118,7 +135,7 @@ if (version_compare(phpversion(), "5.3.0") >= 0) {
 	$intConstants['__NAMESPACE__'] = null;
 }
 foreach ($intConstants as $name => $value) {
-	if (!@$processedConstants[$name]) {
+	if (!isset($processedConstants[$name]) || !$processedConstants[$name]) {
 		print_constant ($name, $value);
 	}
 }
@@ -337,7 +354,11 @@ function parse_phpdoc_functions ($phpdocDir) {
 				foreach (parse_tags_content ('@<varlistentry(?:\s(?:[^>]*?[^/>])?)?>@s', '@</varlistentry>@s', $parameters) as $parameter) {
 					if (preg_match_all('@<varlistentry(?:\s(?:[^>]*?[^/>])?)?>.*?<parameter(?:\s(?:[^>]*?[^/>])?)?>(.*?)</parameter>.*?<listitem(?:\s(?:[^>]*?[^/>])?)?>(.*)</listitem>.*?</varlistentry>@s', $parameter, $match)) {
 						for ($i = 0; $i < count($match[0]); $i++) {
-							for ($j = 0; $j < count(@$functionsDoc[$refname]['parameters']); $j++) {
+							$n = 0;
+							if (isset($functionsDoc[$refname]['parameters'])) {
+								$n = count($functionsDoc[$refname]['parameters']);
+							}
+							for ($j = 0; $j < $n; $j++) {
 								if ($match[1][$i] == $functionsDoc[$refname]['parameters'][$j]['name']) {
 									$functionsDoc[$refname]['parameters'][$j]['paramdoc'] = xml_to_phpdoc ($match[2][$i]);
 									break;
@@ -619,10 +640,10 @@ function print_class ($classRef, $tabs = 0) {
 	}
 
 	global $fields_doc;
-	if (@$fields_doc[$className]) {
-		$fields = @$fields_doc[$className];
+	if (isset($fields_doc[$className]) && $fields_doc[$className]) {
+		$fields = $fields_doc[$className];
 		foreach ($fields as $field) {
-			if (!key_exists ($field['name'], $printedFields) && trim (@$field['modifier']) !== '') {
+			if (!key_exists ($field['name'], $printedFields) && isset($field['modifier']) && trim($field['modifier']) !== '') {
 
 				//print doc here
 				print("\n");
@@ -714,7 +735,7 @@ function print_function ($functionRef, $tabs = 0) {
 		print "&";
 	}
 	print "{$functionRef->getName()} (";
-	$parameters = @$functionsDoc[$funckey]['parameters'];
+	$parameters = isset($functionsDoc[$funckey]['parameters']) ? $functionsDoc[$funckey]['parameters'] : null;
 	if ($parameters) {
 		print_parameters ($parameters);
 	} else {
@@ -753,12 +774,12 @@ function print_parameters ($parameters) {
 					print "{$lowerType} ";
 				}
 			}
-			if (@$parameter['isreference']) {
+			if (isset($parameter['isreference']) && $parameter['isreference']) {
 				print "&";
 			}
 			print "\${$parameter['name']}";
-			if (@$parameter['isoptional']) {
-				if (@$parameter['defaultvalue']) {
+			if (isset($parameter['isoptional']) && $parameter['isoptional']) {
+				if (isset($parameter['defaultvalue']) && $parameter['defaultvalue']) {
 					$value = $parameter['defaultvalue'];
 					if (!is_numeric ($value)) {
 						$value = "'{$value}'";
@@ -837,15 +858,17 @@ function print_constant ($name, $value = null, $tabs = 0) {
 	}
 	$value = escape_const_value ($value);
 
-	$doc = @$constantsDoc[$name]['doc'];
-	if ($doc || @$constantsDoc[$name]['id']) {
+	$doc = isset($constantsDoc[$name]['doc']) ? $constantsDoc[$name]['doc'] : null;
+	if ($doc || !isset($constantsDoc[$name]['id']) || !$constantsDoc[$name]['id']) {
 		print "\n";
 		print_tabs ($tabs);
 		print "/**\n";
 		print_tabs ($tabs);
 		print " * ".newline_to_phpdoc($doc, $tabs)."\n";
-		print_tabs ($tabs);
-		print " * @link ".make_url($constantsDoc[$name]['id'])."\n";
+		if (isset($constantsDoc[$name]['id'])) {
+			print_tabs ($tabs);
+			print " * @link ".make_url($constantsDoc[$name]['id'])."\n";
+		}
 		print_tabs ($tabs);
 		print " */\n";
 	}
@@ -925,16 +948,16 @@ function print_doccomment ($ref, $tabs = 0) {
 	}
 	else if ($ref instanceof ReflectionClass) {
 		$refname = strtolower($ref->getName());
-		if (@$classesDoc[$refname]) {
+		if (isset($classesDoc[$refname]) && $classesDoc[$refname]) {
 			print_tabs ($tabs);
 			print "/**\n";
-			$doc = @$classesDoc[$refname]['doc'];
+			$doc = isset($classesDoc[$refname]['doc']) ? $classesDoc[$refname]['doc'] : null;
 			if ($doc) {
 				$doc = newline_to_phpdoc ($doc, $tabs);
 				print_tabs ($tabs);
 				print " * {$doc}\n";
 			}
-			if (@$classesDoc[$refname]['id']) {
+			if (isset($classesDoc[$refname]['id']) && $classesDoc[$refname]['id']) {
 				print_Tabs ($tabs);
 				$url = make_url ("class." . $refname);
 				print " * @link {$url}\n";
@@ -945,13 +968,13 @@ function print_doccomment ($ref, $tabs = 0) {
 	}
 	else if ($ref instanceof ReflectionFunctionAbstract) {
 		$funckey = make_funckey_from_ref ($ref);
-		$returntype = @$functionsDoc[$funckey]['returntype'];
-		$desc = @$functionsDoc[$funckey]['quickref'];
-		$deprecated = @$functionsDoc[$funckey]['deprecated'];
-		$returndoc = newline_to_phpdoc (@$functionsDoc[$funckey]['returndoc'], $tabs);
+		$returntype = isset($functionsDoc[$funckey]['returntype']) ? $functionsDoc[$funckey]['returntype'] : null;
+		$desc = isset($functionsDoc[$funckey]['quickref']) ? $functionsDoc[$funckey]['quickref'] : null;
+		$deprecated = isset($functionsDoc[$funckey]['deprecated']) ? $functionsDoc[$funckey]['deprecated'] : null;
+		$returndoc = newline_to_phpdoc (isset($functionsDoc[$funckey]['returndoc']) ? $functionsDoc[$funckey]['returndoc'] : null, $tabs);
 
 		$paramsRef = $ref->getParameters();
-		$parameters = @$functionsDoc[$funckey]['parameters'];
+		$parameters = isset($functionsDoc[$funckey]['parameters']) ? $functionsDoc[$funckey]['parameters'] : null;
 
 		if ($desc || count ($paramsRef) > 0 || $parameters || $returntype) {
 			print_tabs ($tabs);
@@ -960,7 +983,7 @@ function print_doccomment ($ref, $tabs = 0) {
 				print_tabs ($tabs);
 				print " * " . newline_to_phpdoc(xml_to_phpdoc($desc), $tabs) . "\n";
 			}
-			if (@$functionsDoc[$funckey]['id']) {
+			if (isset($functionsDoc[$funckey]['id']) && $functionsDoc[$funckey]['id']) {
 				print_tabs ($tabs);
 				$url = make_url ($functionsDoc[$funckey]['id']);
 				print " * @link {$url}\n";
@@ -973,10 +996,10 @@ function print_doccomment ($ref, $tabs = 0) {
 					} else {
 						print " * @param mixed \${$parameter['name']}";
 					}
-					if (@$parameter['isoptional']) {
+					if (isset($parameter['isoptional']) && $parameter['isoptional']) {
 						print " [optional]";
 					}
-					$paramdoc = newline_to_phpdoc (@$parameter['paramdoc'], $tabs);
+					$paramdoc = newline_to_phpdoc (isset($parameter['paramdoc']) ? $parameter['paramdoc'] : null, $tabs);
 					print " {$paramdoc}";
 					print "\n";
 				}
@@ -1225,13 +1248,13 @@ function show_help() {
 	global $argv0;
 
 	die (<<<EOF
-USAGE: {$argv0} [options] <PHP.net documentation directory>
+USAGE: {$argv0} [options] <phpdocDir> [<phpDir>]
 
-Where options are:
-
--help	Show this help.
--split	Split output to different files (one file per PHP extension).
-
+Where:
+  -help       Show this help.
+  -nosplit    Do not split output to different files.
+  <phpdocDir> The location of a local copy of http://svn.php.net/repository/phpdoc/en/trunk
+  <phpDir>    The output directory. If not specified we'll use ./php<php-version>
 EOF
 	);
 }
