@@ -472,7 +472,7 @@
         </page>
         <page name="%validationPage.name"
             class="org.eclipse.php.internal.ui.preferences.PHPInterpreterPreferencePage"
-            id="org.eclipse.php.ui.propertyPages.ValidationPreferencePage"
+            id="org.eclipse.php.ui.propertyPages.PHPInterpreterPreferencePage"
             category="org.eclipse.php.ui.propertyPages.PHPBasePreferencePage">
             <enabledWhen>
                 <adapt type="org.eclipse.core.resources.IProject">
@@ -516,7 +516,7 @@
 		<!-- -->		
 		<page
         class="org.eclipse.php.internal.ui.preferences.TodoTaskPreferencePage"
-        category="org.eclipse.php.ui.propertyPages.ValidationPreferencePage"
+        category="org.eclipse.php.ui.propertyPages.PHPInterpreterPreferencePage"
         id="org.eclipse.php.ui.propertyPages.TodoTaskPreferencePage"
         name="%todoPageName">
 			<enabledWhen>
@@ -564,7 +564,7 @@
             class="org.eclipse.php.internal.ui.preferences.PHPProblemsPreferencePage"
             id="org.eclipse.php.ui.propertyPages.PHPProblemsPropertyPage"
             name="%ProblemsPage.name"
-            category="org.eclipse.php.ui.propertyPages.ValidationPreferencePage">
+            category="org.eclipse.php.ui.propertyPages.PHPInterpreterPreferencePage">
             <enabledWhen>
 				<adapt type="org.eclipse.core.resources.IProject">
 				</adapt>
@@ -1776,10 +1776,10 @@
 		</page>
 		<page category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
 		  class="org.eclipse.php.internal.ui.preferences.PHPInterpreterPreferencePage"
-		  id="org.eclipse.php.ui.preferences.ValidationPreferencePage"
+		  id="org.eclipse.php.ui.preferences.PHPInterpreterPreferencePage"
 		  name="%validationPage.name">
 		</page>
-   		<page category="org.eclipse.php.ui.preferences.ValidationPreferencePage"
+   		<page category="org.eclipse.php.ui.preferences.PHPInterpreterPreferencePage"
 			class="org.eclipse.php.internal.ui.preferences.TodoTaskPreferencePage"
 			id="org.eclipse.php.ui.preferences.TodoTaskPreferencePage" 
 			name="%todoTaskPrefName">
@@ -1806,7 +1806,7 @@
           name="%SourcePathsPage.name">
     </page>
     <page
-          category="org.eclipse.php.ui.preferences.ValidationPreferencePage"
+          category="org.eclipse.php.ui.preferences.PHPInterpreterPreferencePage"
           class="org.eclipse.php.internal.ui.preferences.PHPProblemsPreferencePage"
           id="org.eclipse.php.ui.preferences.PHPProblemsPreferencePage"
           name="%ProblemsPage.name">
