@@ -1,6 +1,6 @@
 <?php
 
-// Start of xml v.7.1.1
+// Start of xml v.7.2.3
 
 /**
  * Create an XML parser
@@ -487,7 +487,7 @@ function xml_set_end_namespace_decl_handler ($parser, callable $handler) {}
  * xml_get_current_byte_index.
  * </p>
  * <p>
- * Entity errors are reported at the end of the data thus only if
+ * Some errors (such as entity errors) are reported at the end of the data, thus only if
  * is_final is set and true.
  * </p>
  */
@@ -641,23 +641,6 @@ function xml_parser_set_option ($parser, int $option, $value) {}
  * Else the option's value is returned.
  */
 function xml_parser_get_option ($parser, int $option) {}
-
-/**
- * Encodes an ISO-8859-1 string to UTF-8
- * @link http://www.php.net/manual/en/function.utf8-encode.php
- * @param string $data An ISO-8859-1 string.
- * @return string the UTF-8 translation of data.
- */
-function utf8_encode (string $data) {}
-
-/**
- * Converts a string with ISO-8859-1 characters encoded with UTF-8
- * to single-byte ISO-8859-1
- * @link http://www.php.net/manual/en/function.utf8-decode.php
- * @param string $data A UTF-8 encoded string.
- * @return string the ISO-8859-1 translation of data.
- */
-function utf8_decode (string $data) {}
 
 
 /**
@@ -823,4 +806,4 @@ define ('XML_OPTION_SKIP_WHITE', 4);
  */
 define ('XML_SAX_IMPL', "libxml");
 
-// End of xml v.7.1.1
+// End of xml v.7.2.3

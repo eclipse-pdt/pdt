@@ -1,6 +1,6 @@
 <?php
 
-// Start of xmlrpc v.7.1.1
+// Start of xmlrpc v.7.2.3
 
 /**
  * Generates XML for a PHP value
@@ -90,7 +90,7 @@ function xmlrpc_server_create () {}
  * Destroys server resources
  * @link http://www.php.net/manual/en/function.xmlrpc-server-destroy.php
  * @param resource $server 
- * @return int 
+ * @return bool 
  */
 function xmlrpc_server_destroy ($server) {}
 
@@ -141,4 +141,4 @@ function xmlrpc_server_add_introspection_data ($server, array $desc) {}
  */
 function xmlrpc_server_register_introspection_callback ($server, string $function) {}
 
-// End of xmlrpc v.7.1.1
+// End of xmlrpc v.7.2.3

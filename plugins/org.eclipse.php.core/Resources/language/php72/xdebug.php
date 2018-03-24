@@ -1,6 +1,6 @@
 <?php
 
-// Start of xdebug v.2.5.5
+// Start of xdebug v.2.6.0
 
 function xdebug_get_stack_depth () {}
 
@@ -57,6 +57,8 @@ function xdebug_disable () {}
 
 function xdebug_is_enabled () {}
 
+function xdebug_is_debugger_active () {}
+
 function xdebug_break () {}
 
 /**
@@ -77,6 +79,19 @@ function xdebug_get_profiler_filename () {}
 function xdebug_dump_aggr_profiling_data ($prefix = null) {}
 
 function xdebug_clear_aggr_profiling_data () {}
+
+/**
+ * @param $fname [optional]
+ */
+function xdebug_start_gcstats ($fname = null) {}
+
+function xdebug_stop_gcstats () {}
+
+function xdebug_get_gcstats_filename () {}
+
+function xdebug_get_gc_run_count () {}
+
+function xdebug_get_gc_total_collected_roots () {}
 
 function xdebug_memory_usage () {}
 
@@ -125,6 +140,13 @@ function xdebug_dump_superglobals () {}
 
 function xdebug_get_headers () {}
 
+/**
+ * @param $filter_group
+ * @param $filter_type
+ * @param $array_of_filters
+ */
+function xdebug_set_filter ($filter_group, $filter_type, $array_of_filters) {}
+
 define ('XDEBUG_TRACE_APPEND', 1);
 define ('XDEBUG_TRACE_COMPUTERIZED', 2);
 define ('XDEBUG_TRACE_HTML', 4);
@@ -133,5 +155,12 @@ define ('XDEBUG_CC_UNUSED', 1);
 define ('XDEBUG_CC_DEAD_CODE', 2);
 define ('XDEBUG_CC_BRANCH_CHECK', 4);
 define ('XDEBUG_STACK_NO_DESC', 1);
+define ('XDEBUG_FILTER_TRACING', 256);
+define ('XDEBUG_FILTER_CODE_COVERAGE', 512);
+define ('XDEBUG_FILTER_NONE', 0);
+define ('XDEBUG_PATH_WHITELIST', 1);
+define ('XDEBUG_PATH_BLACKLIST', 2);
+define ('XDEBUG_NAMESPACE_WHITELIST', 17);
+define ('XDEBUG_NAMESPACE_BLACKLIST', 18);
 
-// End of xdebug v.2.5.5
+// End of xdebug v.2.6.0

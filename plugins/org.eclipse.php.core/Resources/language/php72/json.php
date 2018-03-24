@@ -1,6 +1,6 @@
 <?php
 
-// Start of json v.1.5.0
+// Start of json v.1.6.0
 
 /**
  * Objects implementing JsonSerializable
@@ -87,7 +87,7 @@ function json_last_error () {}
 /**
  * Returns the error string of the last json_encode() or json_decode() call
  * @link http://www.php.net/manual/en/function.json-last-error-msg.php
- * @return string the error message on success, "No Error" if no
+ * @return string the error message on success, "No error" if no
  * error has occurred, or false on failure.
  */
 function json_last_error_msg () {}
@@ -198,6 +198,8 @@ define ('JSON_OBJECT_AS_ARRAY', 1);
  * @link http://www.php.net/manual/en/json.constants.php
  */
 define ('JSON_BIGINT_AS_STRING', 2);
+define ('JSON_INVALID_UTF8_IGNORE', 1048576);
+define ('JSON_INVALID_UTF8_SUBSTITUTE', 2097152);
 
 /**
  * No error has occurred.
@@ -290,4 +292,4 @@ define ('JSON_ERROR_INVALID_PROPERTY_NAME', 9);
  */
 define ('JSON_ERROR_UTF16', 10);
 
-// End of json v.1.5.0
+// End of json v.1.6.0

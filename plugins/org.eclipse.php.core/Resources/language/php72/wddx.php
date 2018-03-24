@@ -1,6 +1,6 @@
 <?php
 
-// Start of wddx v.7.1.1
+// Start of wddx v.7.2.3
 
 /**
  * Serialize a single value into a WDDX packet
@@ -57,4 +57,4 @@ function wddx_add_vars ($packet_id, $var_name, $_ = null) {}
  */
 function wddx_deserialize (string $packet) {}
 
-// End of wddx v.7.1.1
+// End of wddx v.7.2.3

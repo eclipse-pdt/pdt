@@ -1,6 +1,6 @@
 <?php
 
-// Start of zlib v.7.1.1
+// Start of zlib v.7.2.3
 
 /**
  * Output a gz-file
@@ -285,13 +285,13 @@ function gzdecode (string $data, int $length = null) {}
  * Compress data with the specified encoding
  * @link http://www.php.net/manual/en/function.zlib-encode.php
  * @param string $data The data to compress.
- * @param string $encoding The compression algorithm. Either ZLIB_ENCODING_RAW,
+ * @param int $encoding The compression algorithm. Either ZLIB_ENCODING_RAW,
  * ZLIB_ENCODING_DEFLATE or
  * ZLIB_ENCODING_GZIP.
- * @param string $level [optional] 
+ * @param int $level [optional] 
  * @return string 
  */
-function zlib_encode (string $data, string $encoding, string $level = null) {}
+function zlib_encode (string $data, int $encoding, int $level = null) {}
 
 /**
  * Uncompress any raw/gzip/zlib encoded data
@@ -433,6 +433,22 @@ function inflate_init (int $encoding, array $options = null) {}
 function inflate_add ($context, string $encoded_data, int $flush_mode = null) {}
 
 /**
+ * Get decompression status
+ * @link http://www.php.net/manual/en/function.inflate-get-status.php
+ * @param resource $resource 
+ * @return int decompression status or false on failure.
+ */
+function inflate_get_status ($resource) {}
+
+/**
+ * Get number of bytes read so far
+ * @link http://www.php.net/manual/en/function.inflate-get-read-len.php
+ * @param resource $resource 
+ * @return int number of bytes read so far or false on failure.
+ */
+function inflate_get_read_len ($resource) {}
+
+/**
  * ob_start callback function to gzip output buffer
  * @link http://www.php.net/manual/en/function.ob-gzhandler.php
  * @param string $buffer 
@@ -537,7 +553,16 @@ define ('ZLIB_FIXED', 4);
  * @link http://www.php.net/manual/en/zlib.constants.php
  */
 define ('ZLIB_DEFAULT_STRATEGY', 0);
-define ('ZLIB_VERSION', "1.2.8");
-define ('ZLIB_VERNUM', 4736);
+define ('ZLIB_VERSION', "1.2.11");
+define ('ZLIB_VERNUM', 4784);
+define ('ZLIB_OK', 0);
+define ('ZLIB_STREAM_END', 1);
+define ('ZLIB_NEED_DICT', 2);
+define ('ZLIB_ERRNO', -1);
+define ('ZLIB_STREAM_ERROR', -2);
+define ('ZLIB_DATA_ERROR', -3);
+define ('ZLIB_MEM_ERROR', -4);
+define ('ZLIB_BUF_ERROR', -5);
+define ('ZLIB_VERSION_ERROR', -6);
 
-// End of zlib v.7.1.1
+// End of zlib v.7.2.3

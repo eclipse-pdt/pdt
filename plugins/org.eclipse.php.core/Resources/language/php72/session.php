@@ -1,6 +1,6 @@
 <?php
 
-// Start of session v.7.1.1
+// Start of session v.7.2.3
 
 /**
  * SessionHandlerInterface is an
@@ -60,30 +60,47 @@ interface SessionHandlerInterface  {
 	 * Cleanup old sessions
 	 * @link http://www.php.net/manual/en/sessionhandlerinterface.gc.php
 	 * @param int $maxlifetime Sessions that have not updated for the last maxlifetime seconds will be removed.
-	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
+	 * @return int The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
 	abstract public function gc (int $maxlifetime);
 
 }
 
+/**
+ * @link http://www.php.net/manual/en/class.sessionidinterface.php
+ */
 interface SessionIdInterface  {
 
+	/**
+	 * Create session ID
+	 * @link http://www.php.net/manual/en/sessionidinterface.create-sid.php
+	 * @return string 
+	 */
 	abstract public function create_sid ();
 
 }
 
+/**
+ * @link http://www.php.net/manual/en/class.sessionupdatetimestamphandlerinterface.php
+ */
 interface SessionUpdateTimestampHandlerInterface  {
 
 	/**
-	 * @param $key
+	 * Validate ID
+	 * @link http://www.php.net/manual/en/sessionupdatetimestamphandlerinterface.validateid.php
+	 * @param string $key 
+	 * @return bool true for valid ID, false otherwise.
 	 */
-	abstract public function validateId ($key);
+	abstract public function validateId (string $key);
 
 	/**
-	 * @param $key
-	 * @param $val
+	 * Update timestamp
+	 * @link http://www.php.net/manual/en/sessionupdatetimestamphandlerinterface.updatetimestamp.php
+	 * @param string $key 
+	 * @param string $val 
+	 * @return bool true if the timestamp was updated, false otherwise.
 	 */
-	abstract public function updateTimestamp ($key, $val);
+	abstract public function updateTimestamp (string $key, string $val);
 
 }
 
@@ -170,7 +187,7 @@ class SessionHandler implements SessionHandlerInterface, SessionIdInterface {
 	 * Cleanup old sessions
 	 * @link http://www.php.net/manual/en/sessionhandler.gc.php
 	 * @param int $maxlifetime Sessions that have not updated for the last maxlifetime seconds will be removed.
-	 * @return bool The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
+	 * @return int The return value (usually true on success, false on failure). Note this value is returned internally to PHP for processing.
 	 */
 	public function gc (int $maxlifetime) {}
 
@@ -326,7 +343,7 @@ function session_destroy () {}
 /**
  * Free all session variables
  * @link http://www.php.net/manual/en/function.session-unset.php
- * @return void 
+ * @return bool true on success or false on failure
  */
 function session_unset () {}
 
@@ -451,7 +468,7 @@ function session_cache_expire (string $new_cache_expire = null) {}
  * @param bool $httponly [optional] If set to true then PHP will attempt to send the
  * httponly
  * flag when setting the session cookie.
- * @return void 
+ * @return bool true on success or false on failure
  */
 function session_set_cookie_params (int $lifetime, string $path = null, string $domain = null, bool $secure = null, bool $httponly = null) {}
 
@@ -483,21 +500,21 @@ function session_get_cookie_params () {}
 /**
  * Write session data and end session
  * @link http://www.php.net/manual/en/function.session-write-close.php
- * @return void 
+ * @return bool true on success or false on failure
  */
 function session_write_close () {}
 
 /**
  * Discard session array changes and finish session
  * @link http://www.php.net/manual/en/function.session-abort.php
- * @return void 
+ * @return bool true on success or false on failure
  */
 function session_abort () {}
 
 /**
  * Re-initialize session array with original values
  * @link http://www.php.net/manual/en/function.session-reset.php
- * @return void 
+ * @return bool true on success or false on failure
  */
 function session_reset () {}
 
@@ -547,4 +564,4 @@ define ('PHP_SESSION_NONE', 1);
  */
 define ('PHP_SESSION_ACTIVE', 2);
 
-// End of session v.7.1.1
+// End of session v.7.2.3

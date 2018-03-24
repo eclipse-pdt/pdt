@@ -1,6 +1,6 @@
 <?php
 
-// Start of curl v.7.1.1
+// Start of curl v.7.2.3
 
 /**
  * CURLFile should be used to upload a file with
@@ -2330,7 +2330,7 @@ function curl_share_init () {}
 function curl_share_close ($sh) {}
 
 /**
- * Set an option for a cURL share handle.
+ * Set an option for a cURL share handle
  * @link http://www.php.net/manual/en/function.curl-share-setopt.php
  * @param resource $sh A cURL share handle returned by curl_share_init.
  * @param int $option <table>
@@ -3376,7 +3376,7 @@ define ('CURLINFO_HEADER_SIZE', 2097163);
  * @link http://www.php.net/manual/en/curl.constants.php
  */
 define ('CURLINFO_HTTP_CODE', 2097154);
-define ('CURLINFO_LASTONE', 44);
+define ('CURLINFO_LASTONE', 49);
 
 /**
  * 
@@ -3466,7 +3466,7 @@ define ('CURLMSG_DONE', 1);
  * 
  * @link http://www.php.net/manual/en/curl.constants.php
  */
-define ('CURLVERSION_NOW', 3);
+define ('CURLVERSION_NOW', 4);
 
 /**
  * 
@@ -4440,6 +4440,30 @@ define ('CURL_PUSH_DENY', 1);
  * @link http://www.php.net/manual/en/curl.constants.php
  */
 define ('CURL_HTTP_VERSION_2TLS', 4);
+
+/**
+ * Available since PHP 7.0.7 and cURL 7.48.0
+ * @link http://www.php.net/manual/en/curl.constants.php
+ */
+define ('CURLOPT_TFTP_NO_OPTIONS', 242);
+
+/**
+ * Available since PHP 7.0.7 and cURL 7.49.0
+ * @link http://www.php.net/manual/en/curl.constants.php
+ */
+define ('CURL_HTTP_VERSION_2_PRIOR_KNOWLEDGE', 5);
+
+/**
+ * Available since PHP 7.0.7 and cURL 7.49.0
+ * @link http://www.php.net/manual/en/curl.constants.php
+ */
+define ('CURLOPT_CONNECT_TO', 10243);
+
+/**
+ * Available since PHP 7.0.7 and cURL 7.49.0
+ * @link http://www.php.net/manual/en/curl.constants.php
+ */
+define ('CURLOPT_TCP_FASTOPEN', 244);
 define ('CURLOPT_SAFE_UPLOAD', -1);
 
-// End of curl v.7.1.1
+// End of curl v.7.2.3

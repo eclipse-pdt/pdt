@@ -1,6 +1,6 @@
 <?php
 
-// Start of imap v.7.1.1
+// Start of imap v.7.2.3
 
 /**
  * Open an IMAP stream to a mailbox
@@ -9,7 +9,7 @@
  * A mailbox name consists of a server and a mailbox path on this server.
  * The special name INBOX stands for the current users
  * personal mailbox. Mailbox names that contain international characters
- * besides those in the printable ASCII space have to be encoded width
+ * besides those in the printable ASCII space have to be encoded with
  * imap_utf7_encode.
  * </p>
  * <p>
@@ -1308,7 +1308,7 @@ function imap_utf7_encode (string $data) {}
 
 /**
  * Encode a UTF-8 string to modified UTF-7
- * @link http://www.php.net/manual/en/function.imap_utf8_to_mutf7.php
+ * @link http://www.php.net/manual/en/function.imap-utf8-to-mutf7.php
  * @param string $in A UTF-8 encoded string.
  * @return string in converted to modified UTF-7,
  * or false on failure.
@@ -1317,7 +1317,7 @@ function imap_utf8_to_mutf7 (string $in) {}
 
 /**
  * Decode a modified UTF-7 string to UTF-8
- * @link http://www.php.net/manual/en/function.imap_mutf7_to_utf8.php
+ * @link http://www.php.net/manual/en/function.imap-mutf7-to-utf8.php
  * @param string $in A string encoded in modified UTF-7.
  * @return string in converted to UTF-8,
  * or false on failure.
@@ -2048,4 +2048,4 @@ define ('IMAP_GC_ENV', 2);
  */
 define ('IMAP_GC_TEXTS', 4);
 
-// End of imap v.7.1.1
+// End of imap v.7.2.3

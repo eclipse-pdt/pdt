@@ -1,9 +1,9 @@
 <?php
 
-// Start of enchant v.1.1.0
+// Start of enchant v.7.2.3
 
 /**
- * create a new broker object capable of requesting
+ * Create a new broker object capable of requesting
  * @link http://www.php.net/manual/en/function.enchant-broker-init.php
  * @return resource a broker resource on success or false.
  */
@@ -56,7 +56,7 @@ function enchant_broker_get_dict_path ($broker, int $dict_type) {}
 function enchant_broker_list_dicts ($broker) {}
 
 /**
- * create a new dictionary using a tag
+ * Create a new dictionary using a tag
  * @link http://www.php.net/manual/en/function.enchant-broker-request-dict.php
  * @param resource $broker Broker resource
  * @param string $tag A tag describing the locale, for example en_US, de_DE
@@ -65,7 +65,7 @@ function enchant_broker_list_dicts ($broker) {}
 function enchant_broker_request_dict ($broker, string $tag) {}
 
 /**
- * creates a dictionary using a PWL file
+ * Creates a dictionary using a PWL file
  * @link http://www.php.net/manual/en/function.enchant-broker-request-pwl-dict.php
  * @param resource $broker Broker resource
  * @param string $filename Path to the PWL file.
@@ -130,7 +130,7 @@ function enchant_dict_check ($dict, string $word) {}
 function enchant_dict_suggest ($dict, string $word) {}
 
 /**
- * add a word to personal word list
+ * Add a word to personal word list
  * @link http://www.php.net/manual/en/function.enchant-dict-add-to-personal.php
  * @param resource $dict Dictionary resource
  * @param string $word The word to add
@@ -139,7 +139,7 @@ function enchant_dict_suggest ($dict, string $word) {}
 function enchant_dict_add_to_personal ($dict, string $word) {}
 
 /**
- * add 'word' to this spell-checking session
+ * Add 'word' to this spell-checking session
  * @link http://www.php.net/manual/en/function.enchant-dict-add-to-session.php
  * @param resource $dict Dictionary resource
  * @param string $word The word to add
@@ -148,7 +148,7 @@ function enchant_dict_add_to_personal ($dict, string $word) {}
 function enchant_dict_add_to_session ($dict, string $word) {}
 
 /**
- * whether or not 'word' exists in this spelling-session
+ * Whether or not 'word' exists in this spelling-session
  * @link http://www.php.net/manual/en/function.enchant-dict-is-in-session.php
  * @param resource $dict Dictionary resource
  * @param string $word The word to lookup
@@ -210,4 +210,4 @@ define ('ENCHANT_MYSPELL', 1);
  */
 define ('ENCHANT_ISPELL', 2);
 
-// End of enchant v.1.1.0
+// End of enchant v.7.2.3

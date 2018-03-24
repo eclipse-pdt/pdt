@@ -1,6 +1,6 @@
 <?php
 
-// Start of openssl v.7.1.1
+// Start of openssl v.7.2.3
 
 /**
  * Retrieve the available certificate locations
@@ -285,7 +285,7 @@ function openssl_x509_export ($x509, string &$output, bool $notext = null) {}
  * @param mixed $x509 
  * @param string $hash_algorithm [optional] The digest method or hash algorithm to use, e.g. "sha256", one of openssl_get_md_methods.
  * @param bool $raw_output [optional] When set to true, outputs raw binary data. false outputs lowercase hexits.
- * @return bool a string containing the calculated certificate fingerprint as lowercase hexits unless raw_output is set to true in which case the raw binary representation of the message digest is returned.
+ * @return string a string containing the calculated certificate fingerprint as lowercase hexits unless raw_output is set to true in which case the raw binary representation of the message digest is returned.
  * <p>
  * Returns false on failure.
  * </p>
@@ -303,7 +303,7 @@ function openssl_x509_fingerprint ($x509, string $hash_algorithm = null, bool $r
 function openssl_x509_export_to_file ($x509, string $outfilename, bool $notext = null) {}
 
 /**
- * Exports a PKCS#12 Compatible Certificate Store File to variable.
+ * Exports a PKCS#12 Compatible Certificate Store File to variable
  * @link http://www.php.net/manual/en/function.openssl-pkcs12-export.php
  * @param mixed $x509 
  * @param string $out On success, this will hold the PKCS#12.
@@ -661,7 +661,7 @@ function openssl_seal (string $data, string &$sealed_data, array &$env_keys, arr
  * @param string $iv [optional] The initialization vector.
  * @return bool true on success or false on failure
  */
-function openssl_open (string $sealed_data, string &$open_data, string $env_key, $priv_key_id, string $method = null, string &$iv = null) {}
+function openssl_open (string $sealed_data, string &$open_data, string $env_key, $priv_key_id, string $method = null, string $iv = null) {}
 
 /**
  * Generates a PKCS5 v2 PBKDF2 string
@@ -695,11 +695,12 @@ function openssl_pbkdf2 (string $password, string $salt, int $key_length, int $i
  * @param string $content [optional] You can specify a filename with content that will
  * be filled with the verified data, but with the signature information
  * stripped.
+ * @param string $p7bfilename [optional] 
  * @return mixed true if the signature is verified, false if it is not correct
  * (the message has been tampered with, or the signing certificate is invalid),
  * or -1 on error.
  */
-function openssl_pkcs7_verify (string $filename, int $flags, string $outfilename = null, array $cainfo = null, string $extracerts = null, string $content = null) {}
+function openssl_pkcs7_verify (string $filename, int $flags, string $outfilename = null, array $cainfo = null, string $extracerts = null, string $content = null, string $p7bfilename = null) {}
 
 /**
  * Decrypts an S/MIME encrypted message
@@ -756,6 +757,15 @@ function openssl_pkcs7_sign (string $infilename, string $outfilename, $signcert,
  * @return bool true on success or false on failure
  */
 function openssl_pkcs7_encrypt (string $infile, string $outfile, $recipcerts, array $headers, int $flags = null, int $cipherid = null) {}
+
+/**
+ * Export the PKCS7 file to an array of PEM certificates
+ * @link http://www.php.net/manual/en/function.openssl-pkcs7-read.php
+ * @param string $infilename 
+ * @param array $certs 
+ * @return bool true on success or false on failure
+ */
+function openssl_pkcs7_read (string $infilename, array &$certs) {}
 
 /**
  * Encrypts data with private key
@@ -841,11 +851,11 @@ function openssl_get_cipher_methods (bool $aliases = null) {}
 function openssl_get_curve_names () {}
 
 /**
- * Computes shared secret for public value of remote DH key and local DH key
+ * Computes shared secret for public value of remote DH public key and local DH key
  * @link http://www.php.net/manual/en/function.openssl-dh-compute-key.php
- * @param string $pub_key Public key
- * @param resource $dh_key DH key
- * @return string computed key on success or false on failure.
+ * @param string $pub_key DH Public key of the remote party.
+ * @param resource $dh_key A local DH private key, corresponding to the public key to be shared with the remote party.
+ * @return string shared secret on success or false on failure.
  */
 function openssl_dh_compute_key (string $pub_key, $dh_key) {}
 
@@ -874,13 +884,13 @@ function openssl_error_string () {}
  * 
  * @link http://www.php.net/manual/en/openssl.constants.php
  */
-define ('OPENSSL_VERSION_TEXT', "OpenSSL 1.0.2j  26 Sep 2016");
+define ('OPENSSL_VERSION_TEXT', "OpenSSL 1.1.0g  2 Nov 2017");
 
 /**
  * 
  * @link http://www.php.net/manual/en/openssl.constants.php
  */
-define ('OPENSSL_VERSION_NUMBER', 268443823);
+define ('OPENSSL_VERSION_NUMBER', 269484159);
 
 /**
  * 
@@ -942,12 +952,6 @@ define ('OPENSSL_ALGO_MD5', 2);
  * @link http://www.php.net/manual/en/openssl.constants.php
  */
 define ('OPENSSL_ALGO_MD4', 3);
-
-/**
- * 
- * @link http://www.php.net/manual/en/openssl.constants.php
- */
-define ('OPENSSL_ALGO_DSS1', 5);
 
 /**
  * 
@@ -1159,6 +1163,7 @@ define ('OPENSSL_KEYTYPE_DH', 2);
 define ('OPENSSL_KEYTYPE_EC', 3);
 define ('OPENSSL_RAW_DATA', 1);
 define ('OPENSSL_ZERO_PADDING', 2);
+define ('OPENSSL_DONT_ZERO_PAD_KEY', 4);
 
 /**
  * Whether SNI support is available or not.
@@ -1166,4 +1171,4 @@ define ('OPENSSL_ZERO_PADDING', 2);
  */
 define ('OPENSSL_TLSEXT_SERVER_NAME', 1);
 
-// End of openssl v.7.1.1
+// End of openssl v.7.2.3

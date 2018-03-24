@@ -116,7 +116,7 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Seek
 	public function addFromString (string $localname, string $contents) {}
 
 	/**
-	 * Construct a phar archive from the files within a directory.
+	 * Construct a phar archive from the files within a directory
 	 * @link http://www.php.net/manual/en/phar.buildfromdirectory.php
 	 * @param string $base_dir The full or relative path to the directory that contains all files
 	 * to add to the archive.
@@ -130,7 +130,7 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Seek
 	public function buildFromDirectory (string $base_dir, string $regex = null) {}
 
 	/**
-	 * Construct a phar archive from an iterator.
+	 * Construct a phar archive from an iterator
 	 * @link http://www.php.net/manual/en/phar.buildfromiterator.php
 	 * @param Iterator $iter Any iterator that either associatively maps phar file to location or
 	 * returns SplFileInfo objects
@@ -279,15 +279,26 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Seek
 	 * Extract the contents of a phar archive to a directory
 	 * @link http://www.php.net/manual/en/phar.extractto.php
 	 * @param string $pathto Path to extract the given files to
-	 * @param string|array $files [optional] The name of a file or directory to extract, or an array of files/directories to extract
+	 * @param string|array $files [optional] The name of a file or directory to extract, or an array of files/directories to extract,
+	 * null to skip this param
 	 * @param bool $overwrite [optional] Set to true to enable overwriting existing files
 	 * @return bool returns true on success, but it is better to check for thrown exception,
 	 * and assume success if none is thrown.
 	 */
 	public function extractTo (string $pathto, $files = null, bool $overwrite = null) {}
 
+	/**
+	 * Get the alias for Phar
+	 * @link http://www.php.net/manual/en/phar.getalias.php
+	 * @return string the alias or null if there's no alias.
+	 */
 	public function getAlias () {}
 
+	/**
+	 * Get the real path to the Phar archive on disk
+	 * @link http://www.php.net/manual/en/phar.getpath.php
+	 * @return string 
+	 */
 	public function getPath () {}
 
 	/**
@@ -376,7 +387,7 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Seek
 	public function isWritable () {}
 
 	/**
-	 * determines whether a file exists in the phar
+	 * Determines whether a file exists in the phar
 	 * @link http://www.php.net/manual/en/phar.offsetexists.php
 	 * @param string $offset The filename (relative path) to look for in a Phar.
 	 * @return bool true if the file exists within the phar, or false if not.
@@ -393,7 +404,7 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Seek
 	public function offsetGet (string $offset) {}
 
 	/**
-	 * set the contents of an internal file to those of an external file
+	 * Set the contents of an internal file to those of an external file
 	 * @link http://www.php.net/manual/en/phar.offsetset.php
 	 * @param string $offset The filename (relative path) to modify in a Phar.
 	 * @param string $value Content of the file.
@@ -402,7 +413,7 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Seek
 	public function offsetSet (string $offset, string $value) {}
 
 	/**
-	 * remove a file from a phar
+	 * Remove a file from a phar
 	 * @link http://www.php.net/manual/en/phar.offsetunset.php
 	 * @param string $offset The filename (relative path) to modify in a Phar.
 	 * @return bool true on success or false on failure
@@ -437,7 +448,7 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Seek
 	public function setMetadata ($metadata, $metadata) {}
 
 	/**
-	 * set the signature algorithm for a phar and apply it.
+	 * Set the signature algorithm for a phar and apply it
 	 * @link http://www.php.net/manual/en/phardata.setsignaturealgorithm.php
 	 * @param int $sigtype One of Phar::MD5,
 	 * Phar::SHA1, Phar::SHA256,
@@ -537,7 +548,7 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Seek
 	final public static function getSupportedSignatures () {}
 
 	/**
-	 * instructs phar to intercept fopen, file_get_contents, opendir, and all of the stat-related functions
+	 * Instructs phar to intercept fopen, file_get_contents, opendir, and all of the stat-related functions
 	 * @link http://www.php.net/manual/en/phar.interceptfilefuncs.php
 	 * @return void 
 	 */
@@ -707,7 +718,7 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Seek
 	/**
 	 * Get sub path
 	 * @link http://www.php.net/manual/en/recursivedirectoryiterator.getsubpath.php
-	 * @return string The sub path (sub directory).
+	 * @return string The sub path.
 	 */
 	public function getSubPath () {}
 
@@ -765,7 +776,7 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Seek
 	public function setFlags (int $flags = null) {}
 
 	/**
-	 * Return file name of current DirectoryIterator item.
+	 * Return file name of current DirectoryIterator item
 	 * @link http://www.php.net/manual/en/directoryiterator.getfilename.php
 	 * @return string the file name of the current DirectoryIterator item.
 	 */
@@ -780,7 +791,7 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Seek
 	public function getExtension () {}
 
 	/**
-	 * Get base name of current DirectoryIterator item.
+	 * Get base name of current DirectoryIterator item
 	 * @link http://www.php.net/manual/en/directoryiterator.getbasename.php
 	 * @param string $suffix [optional] If the base name ends in suffix, 
 	 * this will be cut.
@@ -1029,7 +1040,7 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	 * Add an empty directory to the tar/zip archive
 	 * @link http://www.php.net/manual/en/phardata.addemptydir.php
 	 * @param string $dirname The name of the empty directory to create in the phar archive
-	 * @return bool no return value, exception is thrown on failure.
+	 * @return void no return value, exception is thrown on failure.
 	 */
 	public function addEmptyDir (string $dirname) {}
 
@@ -1048,12 +1059,12 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	 * @link http://www.php.net/manual/en/phardata.addfromstring.php
 	 * @param string $localname Path that the file will be stored in the archive.
 	 * @param string $contents The file contents to store
-	 * @return bool no return value, exception is thrown on failure.
+	 * @return void no return value, exception is thrown on failure.
 	 */
 	public function addFromString (string $localname, string $contents) {}
 
 	/**
-	 * Construct a tar/zip archive from the files within a directory.
+	 * Construct a tar/zip archive from the files within a directory
 	 * @link http://www.php.net/manual/en/phardata.buildfromdirectory.php
 	 * @param string $base_dir The full or relative path to the directory that contains all files
 	 * to add to the archive.
@@ -1067,7 +1078,7 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	public function buildFromDirectory (string $base_dir, string $regex = null) {}
 
 	/**
-	 * Construct a tar or zip archive from an iterator.
+	 * Construct a tar or zip archive from an iterator
 	 * @link http://www.php.net/manual/en/phardata.buildfromiterator.php
 	 * @param Iterator $iter Any iterator that either associatively maps tar/zip file to location or
 	 * returns SplFileInfo objects
@@ -1085,7 +1096,7 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	 * @param int $compression Compression must be one of Phar::GZ,
 	 * Phar::BZ2 to add compression, or Phar::NONE
 	 * to remove compression.
-	 * @return bool true on success or false on failure
+	 * @return void 
 	 */
 	public function compressFiles (int $compression) {}
 
@@ -1256,7 +1267,7 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	public function offsetGet ($entry) {}
 
 	/**
-	 * set the contents of a file within the tar/zip to those of an external file or string
+	 * Set the contents of a file within the tar/zip to those of an external file or string
 	 * @link http://www.php.net/manual/en/phardata.offsetset.php
 	 * @param string $offset The filename (relative path) to modify in a tar or zip archive.
 	 * @param string $value Content of the file.
@@ -1265,7 +1276,7 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	public function offsetSet (string $offset, string $value) {}
 
 	/**
-	 * remove a file from a tar/zip archive
+	 * Remove a file from a tar/zip archive
 	 * @link http://www.php.net/manual/en/phardata.offsetunset.php
 	 * @param string $offset The filename (relative path) to modify in the tar/zip archive.
 	 * @return bool true on success or false on failure
@@ -1273,7 +1284,7 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	public function offsetUnset (string $offset) {}
 
 	/**
-	 * dummy function (Phar::setAlias is not valid for PharData)
+	 * Dummy function (Phar::setAlias is not valid for PharData)
 	 * @link http://www.php.net/manual/en/phardata.setalias.php
 	 * @param string $alias A shorthand string that this archive can be referred to in phar
 	 * stream wrapper access. This parameter is ignored.
@@ -1282,7 +1293,7 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	public function setAlias (string $alias) {}
 
 	/**
-	 * dummy function (Phar::setDefaultStub is not valid for PharData)
+	 * Dummy function (Phar::setDefaultStub is not valid for PharData)
 	 * @link http://www.php.net/manual/en/phardata.setdefaultstub.php
 	 * @param string $index [optional] Relative path within the phar archive to run if accessed on the command-line
 	 * @param string $webindex [optional] Relative path within the phar archive to run if accessed through a web browser
@@ -1302,7 +1313,7 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	public function setSignatureAlgorithm ($algorithm, $privatekey = null) {}
 
 	/**
-	 * dummy function (Phar::setStub is not valid for PharData)
+	 * Dummy function (Phar::setStub is not valid for PharData)
 	 * @link http://www.php.net/manual/en/phardata.setstub.php
 	 * @param string $stub A string or an open stream handle to use as the executable stub for this
 	 * phar archive. This parameter is ignored.
@@ -1404,7 +1415,7 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	/**
 	 * Get sub path
 	 * @link http://www.php.net/manual/en/recursivedirectoryiterator.getsubpath.php
-	 * @return string The sub path (sub directory).
+	 * @return string The sub path.
 	 */
 	public function getSubPath () {}
 
@@ -1462,7 +1473,7 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	public function setFlags (int $flags = null) {}
 
 	/**
-	 * Return file name of current DirectoryIterator item.
+	 * Return file name of current DirectoryIterator item
 	 * @link http://www.php.net/manual/en/directoryiterator.getfilename.php
 	 * @return string the file name of the current DirectoryIterator item.
 	 */
@@ -1477,7 +1488,7 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	public function getExtension () {}
 
 	/**
-	 * Get base name of current DirectoryIterator item.
+	 * Get base name of current DirectoryIterator item
 	 * @link http://www.php.net/manual/en/directoryiterator.getbasename.php
 	 * @param string $suffix [optional] If the base name ends in suffix, 
 	 * this will be cut.
@@ -1752,6 +1763,11 @@ class PharFileInfo extends SplFileInfo  {
 	 */
 	public function getCRC32 () {}
 
+	/**
+	 * Get the complete file contents of the entry
+	 * @link http://www.php.net/manual/en/pharfileinfo.getcontent.php
+	 * @return string the file contents.
+	 */
 	public function getContent () {}
 
 	/**

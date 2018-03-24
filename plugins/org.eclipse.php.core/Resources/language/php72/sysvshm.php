@@ -1,6 +1,6 @@
 <?php
 
-// Start of sysvshm v.7.1.1
+// Start of sysvshm v.7.2.3
 
 /**
  * Creates or open a shared memory segment
@@ -74,4 +74,4 @@ function shm_get_var ($shm_identifier, int $variable_key) {}
  */
 function shm_remove_var ($shm_identifier, int $variable_key) {}
 
-// End of sysvshm v.7.1.1
+// End of sysvshm v.7.2.3

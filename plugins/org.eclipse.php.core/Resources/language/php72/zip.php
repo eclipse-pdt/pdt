@@ -1,12 +1,12 @@
 <?php
 
-// Start of zip v.1.13.5
+// Start of zip v.1.15.2
 
 /**
  * A file archive, compressed with Zip.
  * @link http://www.php.net/manual/en/class.ziparchive.php
  */
-class ZipArchive  {
+class ZipArchive implements Countable {
 	const CREATE = 1;
 	const EXCL = 2;
 	const CHECKCONS = 4;
@@ -82,6 +82,16 @@ class ZipArchive  {
 	const OPSYS_OS_400 = 18;
 	const OPSYS_OS_X = 19;
 	const OPSYS_DEFAULT = 3;
+	const EM_NONE = 0;
+	const EM_AES_128 = 257;
+	const EM_AES_192 = 258;
+	const EM_AES_256 = 259;
+
+	public $status;
+	public $statusSys;
+	public $numFiles;
+	public $filename;
+	public $comment;
 
 
 	/**
@@ -198,6 +208,13 @@ class ZipArchive  {
 	 * @return bool true on success or false on failure
 	 */
 	public function close () {}
+
+	/**
+	 * Counts the number of files in the achive
+	 * @link http://www.php.net/manual/en/ziparchive.count.php
+	 * @return int the number of files in the achive.
+	 */
+	public function count () {}
 
 	/**
 	 * Returns the status error message, system and/or zip messages
@@ -357,7 +374,7 @@ class ZipArchive  {
 	public function getCommentName (string $name, int $flags = null) {}
 
 	/**
-	 * delete an entry in the archive using its index
+	 * Delete an entry in the archive using its index
 	 * @link http://www.php.net/manual/en/ziparchive.deleteindex.php
 	 * @param int $index Index of the entry to delete.
 	 * @return bool true on success or false on failure
@@ -365,7 +382,7 @@ class ZipArchive  {
 	public function deleteIndex (int $index) {}
 
 	/**
-	 * delete an entry in the archive using its name
+	 * Delete an entry in the archive using its name
 	 * @link http://www.php.net/manual/en/ziparchive.deletename.php
 	 * @param string $name Name of the entry to delete.
 	 * @return bool true on success or false on failure
@@ -373,7 +390,7 @@ class ZipArchive  {
 	public function deleteName (string $name) {}
 
 	/**
-	 * Get the details of an entry defined by its name.
+	 * Get the details of an entry defined by its name
 	 * @link http://www.php.net/manual/en/ziparchive.statname.php
 	 * @param string $name Name of the entry
 	 * @param int $flags [optional] <p>
@@ -401,7 +418,7 @@ class ZipArchive  {
 	public function statName (string $name, int $flags = null) {}
 
 	/**
-	 * Get the details of an entry defined by its index.
+	 * Get the details of an entry defined by its index
 	 * @link http://www.php.net/manual/en/ziparchive.statindex.php
 	 * @param int $index Index of the entry
 	 * @param int $flags [optional] ZipArchive::FL_UNCHANGED may be ORed to it to request
@@ -444,7 +461,7 @@ class ZipArchive  {
 	public function getNameIndex (int $index, int $flags = null) {}
 
 	/**
-	 * Revert all global changes done in the archive.
+	 * Revert all global changes done in the archive
 	 * @link http://www.php.net/manual/en/ziparchive.unchangearchive.php
 	 * @return bool true on success or false on failure
 	 */
@@ -466,7 +483,7 @@ class ZipArchive  {
 	public function unchangeIndex (int $index) {}
 
 	/**
-	 * Revert all changes done to an entry with the given name.
+	 * Revert all changes done to an entry with the given name
 	 * @link http://www.php.net/manual/en/ziparchive.unchangename.php
 	 * @param string $name Name of the entry.
 	 * @return bool true on success or false on failure
@@ -536,7 +553,7 @@ class ZipArchive  {
 	public function getFromIndex (int $index, int $length = null, int $flags = null) {}
 
 	/**
-	 * Get a file handler to the entry defined by its name (read only).
+	 * Get a file handler to the entry defined by its name (read only)
 	 * @link http://www.php.net/manual/en/ziparchive.getstream.php
 	 * @param string $name The name of the entry to use.
 	 * @return resource a file pointer (resource) on success or false on failure.
@@ -614,6 +631,26 @@ class ZipArchive  {
 	 * @return bool true on success or false on failure
 	 */
 	public function setCompressionIndex (int $index, int $comp_method, int $comp_flags = null) {}
+
+	/**
+	 * Set the encryption method of an entry defined by its name
+	 * @link http://www.php.net/manual/en/ziparchive.setencryptionname.php
+	 * @param string $name Name of the entry.
+	 * @param int $method The encryption method defined by one of the ZipArchive::EM_ constants.
+	 * @param string $password [optional] Optional password, default used when missing.
+	 * @return bool true on success or false on failure
+	 */
+	public function setEncryptionName (string $name, int $method, string $password = null) {}
+
+	/**
+	 * Set the encryption method of an entry defined by its index
+	 * @link http://www.php.net/manual/en/ziparchive.setencryptionindex.php
+	 * @param int $index Index of the entry.
+	 * @param string $method The encryption method defined by one of the ZipArchive::EM_ constants.
+	 * @param string $password [optional] Optional password, default used when missing.
+	 * @return bool true on success or false on failure
+	 */
+	public function setEncryptionIndex (int $index, string $method, string $password = null) {}
 
 }
 
@@ -725,4 +762,4 @@ function zip_entry_compressedsize ($zip_entry) {}
  */
 function zip_entry_compressionmethod ($zip_entry) {}
 
-// End of zip v.1.13.5
+// End of zip v.1.15.2

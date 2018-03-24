@@ -1,6 +1,6 @@
 <?php
 
-// Start of gd v.7.1.1
+// Start of gd v.7.2.3
 
 /**
  * Retrieve information about the currently installed GD library
@@ -561,6 +561,22 @@ function imagecolorexactalpha ($image, int $red, int $green, int $blue, int $alp
 function imagecopyresampled ($dst_image, $src_image, int $dst_x, int $dst_y, int $src_x, int $src_y, int $dst_w, int $dst_h, int $src_w, int $src_h) {}
 
 /**
+ * Captures a window
+ * @link http://www.php.net/manual/en/function.imagegrabwindow.php
+ * @param int $window_handle The HWND window ID.
+ * @param int $client_area [optional] Include the client area of the application window.
+ * @return resource an image resource identifier on success, false on failure.
+ */
+function imagegrabwindow (int $window_handle, int $client_area = null) {}
+
+/**
+ * Captures the whole screen
+ * @link http://www.php.net/manual/en/function.imagegrabscreen.php
+ * @return resource an image resource identifier on success, false on failure.
+ */
+function imagegrabscreen () {}
+
+/**
  * Rotate an image with a given angle
  * @link http://www.php.net/manual/en/function.imagerotate.php
  * @param resource $image 
@@ -608,6 +624,15 @@ function imagerotate ($image, float $angle, int $bgd_color, int $ignore_transpar
  * @return bool true on success or false on failure
  */
 function imageflip ($image, int $mode) {}
+
+/**
+ * Should antialias functions be used or not
+ * @link http://www.php.net/manual/en/function.imageantialias.php
+ * @param resource $image 
+ * @param bool $enabled Whether to enable antialiasing or not.
+ * @return bool true on success or false on failure
+ */
+function imageantialias ($image, bool $enabled) {}
 
 /**
  * Crop an image to the given rectangle
@@ -720,7 +745,7 @@ function imageaffinematrixconcat (array $m1, array $m2) {}
  * Get an affine transformation matrix
  * @link http://www.php.net/manual/en/function.imageaffinematrixget.php
  * @param int $type One of the IMG_AFFINE_&#42; constants.
- * @param mixed $options <p>
+ * @param mixed $options [optional] <p>
  * If type is IMG_AFFINE_TRANSLATE
  * or IMG_AFFINE_SCALE,
  * options has to be an array with keys x
@@ -735,7 +760,7 @@ function imageaffinematrixconcat (array $m1, array $m2) {}
  * 0 to 5 and float values)
  * or false on failure.
  */
-function imageaffinematrixget (int $type, $options) {}
+function imageaffinematrixget (int $type, $options = null) {}
 
 /**
  * Set the interpolation method
@@ -907,6 +932,14 @@ function imagecreatefromgd2 (string $filename) {}
 function imagecreatefromgd2part (string $filename, int $srcX, int $srcY, int $width, int $height) {}
 
 /**
+ * Create a new image from file or URL
+ * @link http://www.php.net/manual/en/function.imagecreatefrombmp.php
+ * @param string $filename Path to the BMP image.
+ * @return resource an image resource identifier on success, false on errors.
+ */
+function imagecreatefrombmp (string $filename) {}
+
+/**
  * Output a PNG image to either the browser or a file
  * @link http://www.php.net/manual/en/function.imagepng.php
  * @param resource $image 
@@ -995,6 +1028,20 @@ function imagegd ($image, $to = null) {}
  * @return bool true on success or false on failure
  */
 function imagegd2 ($image, $to = null, int $chunk_size = null, int $type = null) {}
+
+/**
+ * Output a BMP image to browser or file
+ * @link http://www.php.net/manual/en/function.imagebmp.php
+ * @param resource $image 
+ * @param mixed $to [optional] <p>The path or an open stream resource (which is automatically being closed after this function returns) to save the file to. If not set or null, the raw image stream will be outputted directly.</p>
+ * <p>
+ * null is invalid if the compressed arguments is
+ * not used.
+ * </p>
+ * @param bool $compressed [optional] Whether the BMP should be compressed with run-length encoding (RLE), or not.
+ * @return bool true on success or false on failure
+ */
+function imagebmp ($image, $to = null, bool $compressed = null) {}
 
 /**
  * Destroy an image
@@ -1193,6 +1240,36 @@ function imageloadfont (string $file) {}
 function imagepolygon ($image, array $points, int $num_points, int $color) {}
 
 /**
+ * Draws an open polygon
+ * @link http://www.php.net/manual/en/function.imageopenpolygon.php
+ * @param resource $image 
+ * @param array $points An array containing the polygon's vertices, e.g.:
+ * <table>
+ * <tr valign="top">
+ * <td>points[0]</td>
+ * <td>= x0</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>points[1]</td>
+ * <td>= y0</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>points[2]</td>
+ * <td>= x1</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>points[3]</td>
+ * <td>= y1</td>
+ * </tr>
+ * </table>
+ * @param int $num_points Total number of points (vertices).
+ * @param int $color A color identifier created with 
+ * imagecolorallocate.
+ * @return bool true on success or false on failure
+ */
+function imageopenpolygon ($image, array $points, int $num_points, int $color) {}
+
+/**
  * Draw a rectangle
  * @link http://www.php.net/manual/en/function.imagerectangle.php
  * @param resource $image 
@@ -1264,6 +1341,37 @@ function imagesx ($image) {}
  * errors.
  */
 function imagesy ($image) {}
+
+/**
+ * Set the clipping rectangle
+ * @link http://www.php.net/manual/en/function.imagesetclip.php
+ * @param resource $im 
+ * @param int $x1 The x-coordinate of the upper left corner.
+ * @param int $y1 The y-coordinate of the upper left corner.
+ * @param int $x2 The x-coordinate of the lower right corner.
+ * @param int $y2 The y-coordinate of the lower right corner.
+ * @return bool true on success or false on failure
+ */
+function imagesetclip ($im, int $x1, int $y1, int $x2, int $y2) {}
+
+/**
+ * Get the clipping rectangle
+ * @link http://www.php.net/manual/en/function.imagegetclip.php
+ * @param resource $im 
+ * @return array The function returns an indexed array with the coordinates of the clipping
+ * rectangle which has the following entries:
+ * <p>
+ * <br>
+ * x-coordinate of the upper left corner
+ * <br>
+ * y-coordinate of the upper left corner
+ * <br>
+ * x-coordinate of the lower right corner
+ * <br>
+ * y-coordinate of the lower right corner
+ * </p>
+ */
+function imagegetclip ($im) {}
 
 /**
  * Draw a dashed line
@@ -1578,6 +1686,7 @@ function imagetypes () {}
  * @param int $dest_width Destination image width.
  * @param int $threshold Threshold value, between 0 and 8 (inclusive).
  * @return bool true on success or false on failure
+ * @deprecated 
  */
 function jpeg2wbmp (string $jpegname, string $wbmpname, int $dest_height, int $dest_width, int $threshold) {}
 
@@ -1590,6 +1699,7 @@ function jpeg2wbmp (string $jpegname, string $wbmpname, int $dest_height, int $d
  * @param int $dest_width Destination image width.
  * @param int $threshold Threshold value, between 0 and 8 (inclusive).
  * @return bool true on success or false on failure
+ * @deprecated 
  */
 function png2wbmp (string $pngname, string $wbmpname, int $dest_height, int $dest_width, int $threshold) {}
 
@@ -1756,6 +1866,20 @@ function imagefilter ($image, int $filtertype, int $arg1 = null, int $arg2 = nul
  */
 function imageconvolution ($image, array $matrix, float $div, float $offset) {}
 
+/**
+ * Get or set the resolution of the image
+ * @link http://www.php.net/manual/en/function.imageresolution.php
+ * @param resource $image 
+ * @param int $res_x [optional] The horizontal resolution in DPI.
+ * @param int $res_y [optional] The vertical resolution in DPI.
+ * @return mixed When used as getter (that is without the optional parameters), it returns
+ * true on success, or false on failure.
+ * When used as setter (that is with one or both optional parameters given),
+ * it returns an indexed array of the horizontal and vertical resolution on
+ * success, or false on failure.
+ */
+function imageresolution ($image, int $res_x = null, int $res_y = null) {}
+
 
 /**
  * gd.constants.types
@@ -1802,6 +1926,12 @@ define ('IMG_XPM', 16);
  * @link http://www.php.net/manual/en/image.constants.php
  */
 define ('IMG_WEBP', 32);
+
+/**
+ * gd.constants.types
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
+define ('IMG_BMP', 64);
 
 /**
  * gd.constants.color
@@ -1919,6 +2049,12 @@ define ('IMG_EFFECT_NORMAL', 2);
  * @link http://www.php.net/manual/en/image.constants.php
  */
 define ('IMG_EFFECT_OVERLAY', 3);
+
+/**
+ * gd.constants.effect
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
+define ('IMG_EFFECT_MULTIPLY', 4);
 define ('IMG_CROP_DEFAULT', 0);
 define ('IMG_CROP_TRANSPARENT', 1);
 define ('IMG_CROP_BLACK', 2);
@@ -2167,7 +2303,7 @@ define ('IMG_FILTER_PIXELATE', 11);
  * (Available as of PHP 5.2.4)
  * @link http://www.php.net/manual/en/image.constants.php
  */
-define ('GD_VERSION', "2.2.3");
+define ('GD_VERSION', "2.0.35");
 
 /**
  * The GD major version PHP was compiled against.
@@ -2181,14 +2317,14 @@ define ('GD_MAJOR_VERSION', 2);
  * (Available as of PHP 5.2.4)
  * @link http://www.php.net/manual/en/image.constants.php
  */
-define ('GD_MINOR_VERSION', 2);
+define ('GD_MINOR_VERSION', 0);
 
 /**
  * The GD release version PHP was compiled against.
  * (Available as of PHP 5.2.4)
  * @link http://www.php.net/manual/en/image.constants.php
  */
-define ('GD_RELEASE_VERSION', 3);
+define ('GD_RELEASE_VERSION', 35);
 
 /**
  * The GD "extra" version (beta/rc..) PHP was compiled against.
@@ -2239,4 +2375,4 @@ define ('PNG_FILTER_PAETH', 128);
  */
 define ('PNG_ALL_FILTERS', 248);
 
-// End of gd v.7.1.1
+// End of gd v.7.2.3

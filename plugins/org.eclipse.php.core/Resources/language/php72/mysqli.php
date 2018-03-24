@@ -1,6 +1,6 @@
 <?php
 
-// Start of mysqli v.7.1.11
+// Start of mysqli v.7.2.3
 
 /**
  * The mysqli exception handling class.
@@ -102,11 +102,13 @@ class mysqli  {
 	 * <p>
 	 * MYSQLI_TRANS_START_READ_ONLY: 
 	 * Start the transaction as "START TRANSACTION READ ONLY".
+	 * Requires MySQL 5.6 and above.
 	 * </p>
 	 * <br>
 	 * <p>
 	 * MYSQLI_TRANS_START_READ_WRITE: 
 	 * Start the transaction as "START TRANSACTION READ WRITE".
+	 * Requires MySQL 5.6 and above.
 	 * </p>
 	 * <br>
 	 * <p>
@@ -208,11 +210,6 @@ class mysqli  {
 	 */
 	public function get_charset () {}
 
-	/**
-	 * Get MySQL client info
-	 * @link http://www.php.net/manual/en/mysqli.get-client-info.php
-	 * @return string A string that represents the MySQL client library version
-	 */
 	public function get_client_info () {}
 
 	/**
@@ -293,7 +290,7 @@ class mysqli  {
 	 * MySQL database is determined by the host
 	 * parameter.
 	 * </p>
-	 * @return mysqli an object which represents the connection to a MySQL Server.
+	 * @return void an object which represents the connection to a MySQL Server.
 	 */
 	public function __construct (string $host = null, string $username = null, string $passwd = null, string $dbname = null, int $port = null, string $socket = null) {}
 
@@ -1477,8 +1474,9 @@ function mysqli_fetch_lengths ($result) {}
 
 /**
  * @param $result
+ * @param $result_type [optional]
  */
-function mysqli_fetch_all ($result) {}
+function mysqli_fetch_all ($result, $result_type = null) {}
 
 /**
  * @param $result
@@ -1531,7 +1529,7 @@ function mysqli_get_connection_stats ($link) {}
 
 /**
  * Returns client per-process statistics
- * @link http://www.php.net/manual/en/mysqli.get-client-stats.php
+ * @link http://www.php.net/manual/en/function.mysqli-get-client-stats.php
  * @return array an array with client stats if success, false otherwise.
  */
 function mysqli_get_client_stats () {}
@@ -1541,24 +1539,12 @@ function mysqli_get_client_stats () {}
  */
 function mysqli_get_charset ($link) {}
 
+function mysqli_get_client_info () {}
+
 /**
  * @param $link
  */
-function mysqli_get_client_info ($link) {}
-
-/**
- * Returns the MySQL client version as an integer
- * @link http://www.php.net/manual/en/mysqli.get-client-version.php
- * @param mysqli $link 
- * @return int A number that represents the MySQL client library version in format:
- * main_version&#42;10000 + minor_version &#42;100 + sub_version.
- * For example, 4.1.0 is returned as 40100.
- * <p>
- * This is useful to quickly determine the version of the client library
- * to know if some capability exits.
- * </p>
- */
-function mysqli_get_client_version (mysqli $link) {}
+function mysqli_get_client_version ($link) {}
 
 /**
  * Return information about open and cached links
@@ -1994,11 +1980,12 @@ define ('MYSQLI_OPT_LOCAL_INFILE', 8);
  * @link http://www.php.net/manual/en/mysqli.constants.php
  */
 define ('MYSQLI_INIT_COMMAND', 3);
+define ('MYSQLI_OPT_READ_TIMEOUT', 11);
 define ('MYSQLI_OPT_NET_CMD_BUFFER_SIZE', 202);
 define ('MYSQLI_OPT_NET_READ_BUFFER_SIZE', 203);
 define ('MYSQLI_OPT_INT_AND_FLOAT_NATIVE', 201);
 define ('MYSQLI_OPT_SSL_VERIFY_SERVER_CERT', 21);
-define ('MYSQLI_SERVER_PUBLIC_KEY', 27);
+define ('MYSQLI_SERVER_PUBLIC_KEY', 35);
 
 /**
  * Use SSL (encrypted protocol). This option should not be set by application programs; 
@@ -2038,7 +2025,7 @@ define ('MYSQLI_CLIENT_FOUND_ROWS', 2);
 define ('MYSQLI_CLIENT_SSL_VERIFY_SERVER_CERT', 1073741824);
 define ('MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT', 64);
 define ('MYSQLI_CLIENT_CAN_HANDLE_EXPIRED_PASSWORDS', 4194304);
-define ('MYSQLI_OPT_CAN_HANDLE_EXPIRED_PASSWORDS', 29);
+define ('MYSQLI_OPT_CAN_HANDLE_EXPIRED_PASSWORDS', 37);
 
 /**
  * For using buffered resultsets
@@ -2545,4 +2532,4 @@ define ('MYSQLI_TRANS_COR_RELEASE', 4);
  */
 define ('MYSQLI_TRANS_COR_NO_RELEASE', 8);
 
-// End of mysqli v.7.1.11
+// End of mysqli v.7.2.3

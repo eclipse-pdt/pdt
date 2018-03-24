@@ -1,6 +1,6 @@
 <?php
 
-// Start of exif v.1.4 $Id: 8bdc0c8f27c2c9dd1f7551f1f9fe3ab57a06a4b1 $
+// Start of exif v.7.2.3
 
 /**
  * Reads the EXIF headers from an image file
@@ -79,6 +79,7 @@ function exif_read_data ($stream, string $sections = null, bool $arrays = null, 
  * @param $sections_needed [optional]
  * @param $sub_arrays [optional]
  * @param $read_thumbnail [optional]
+ * @deprecated 
  */
 function read_exif_data ($filename, $sections_needed = null, $sub_arrays = null, $read_thumbnail = null) {}
 
@@ -130,4 +131,4 @@ function exif_imagetype (string $filename) {}
  */
 define ('EXIF_USE_MBSTRING', 1);
 
-// End of exif v.1.4 $Id: 8bdc0c8f27c2c9dd1f7551f1f9fe3ab57a06a4b1 $
+// End of exif v.7.2.3

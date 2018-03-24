@@ -1325,7 +1325,7 @@ class DOMDocument extends DOMNode  {
 /**
  * @link http://www.php.net/manual/en/class.domnodelist.php
  */
-class DOMNodeList implements Traversable {
+class DOMNodeList implements Traversable, Countable {
 
 	/**
 	 * The number of nodes in the list. The range of valid child node 
@@ -1345,12 +1345,19 @@ class DOMNodeList implements Traversable {
 	 */
 	public function item (int $index) {}
 
+	/**
+	 * Get number of nodes in the list
+	 * @link http://www.php.net/manual/en/domnodelist.count.php
+	 * @return int number of nodes in the list or false on failure.
+	 */
+	public function count () {}
+
 }
 
 /**
  * @link http://www.php.net/manual/en/class.domnamednodemap.php
  */
-class DOMNamedNodeMap implements Traversable {
+class DOMNamedNodeMap implements Traversable, Countable {
 
 	/**
 	 * The number of nodes in the map. The range of valid child node 
@@ -1409,6 +1416,8 @@ class DOMNamedNodeMap implements Traversable {
 	 * @param $localName [optional]
 	 */
 	public function removeNamedItemNS ($namespaceURI = null, $localName = null) {}
+
+	public function count () {}
 
 }
 
@@ -2316,6 +2325,11 @@ class DOMText extends DOMCharacterData  {
 	 */
 	public function isWhitespaceInElementContent () {}
 
+	/**
+	 * Returns whether this text node contains whitespace in element content
+	 * @link http://www.php.net/manual/en/domtext.iselementcontentwhitespace.php
+	 * @return bool true on success or false on failure
+	 */
 	public function isElementContentWhitespace () {}
 
 	/**
@@ -2883,6 +2897,11 @@ class DOMCdataSection extends DOMText  {
 	 */
 	public function isWhitespaceInElementContent () {}
 
+	/**
+	 * Returns whether this text node contains whitespace in element content
+	 * @link http://www.php.net/manual/en/domtext.iselementcontentwhitespace.php
+	 * @return bool true on success or false on failure
+	 */
 	public function isElementContentWhitespace () {}
 
 	/**

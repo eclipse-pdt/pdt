@@ -1,6 +1,6 @@
 <?php
 
-// Start of SimpleXML v.7.1.1
+// Start of SimpleXML v.7.2.3
 
 /**
  * Represents an element in an XML document.
@@ -202,7 +202,7 @@ class SimpleXMLIterator extends SimpleXMLElement implements Traversable, Recursi
 	public function next () {}
 
 	/**
-	 * Checks whether the current element has sub elements.
+	 * Checks whether the current element has sub elements
 	 * @link http://www.php.net/manual/en/simplexmliterator.haschildren.php
 	 * @return bool true if the current element has sub-elements, otherwise false
 	 */
@@ -408,7 +408,7 @@ function simplexml_load_file (string $filename, string $class_name = null, int $
 function simplexml_load_string (string $data, string $class_name = null, int $options = null, string $ns = null, bool $is_prefix = null) {}
 
 /**
- * Get a SimpleXMLElement object from a DOM node.
+ * Get a SimpleXMLElement object from a DOM node
  * @link http://www.php.net/manual/en/function.simplexml-import-dom.php
  * @param DOMNode $node A DOM Element node
  * @param string $class_name [optional] You may use this optional parameter so that
@@ -419,4 +419,4 @@ function simplexml_load_string (string $data, string $class_name = null, int $op
  */
 function simplexml_import_dom (DOMNode $node, string $class_name = null) {}
 
-// End of SimpleXML v.7.1.1
+// End of SimpleXML v.7.2.3

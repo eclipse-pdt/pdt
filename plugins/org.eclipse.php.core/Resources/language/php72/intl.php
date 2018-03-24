@@ -518,14 +518,14 @@ class NumberFormatter  {
 	public function getLocale (int $type = null) {}
 
 	/**
-	 * Get formatter's last error code.
+	 * Get formatter's last error code
 	 * @link http://www.php.net/manual/en/numberformatter.geterrorcode.php
 	 * @return int error code from last formatter call.
 	 */
 	public function getErrorCode () {}
 
 	/**
-	 * Get formatter's last error message.
+	 * Get formatter's last error message
 	 * @link http://www.php.net/manual/en/numberformatter.geterrormessage.php
 	 * @return string error message from last formatter call.
 	 */
@@ -579,7 +579,7 @@ class Normalizer  {
 
 	/**
 	 * Checks if the provided string is already in the specified normalization
-	 * form.
+	 * form
 	 * @link http://www.php.net/manual/en/normalizer.isnormalized.php
 	 * @param string $input The input string to normalize
 	 * @param int $form [optional] One of the normalization forms.
@@ -626,7 +626,7 @@ class Locale  {
 	public static function getDefault () {}
 
 	/**
-	 * sets the default runtime locale
+	 * Sets the default runtime locale
 	 * @link http://www.php.net/manual/en/locale.setdefault.php
 	 * @param string $locale Is a BCP 47 compliant language tag.
 	 * @return bool true on success or false on failure
@@ -740,7 +740,7 @@ class Locale  {
 	public static function composeLocale (array $subtags) {}
 
 	/**
-	 * Returns a key-value array of locale ID subtag elements.
+	 * Returns a key-value array of locale ID subtag elements
 	 * @link http://www.php.net/manual/en/locale.parselocale.php
 	 * @param string $locale The locale to extract the subtag array from. Note: The 'variant' and
 	 * 'private' subtags can take maximum 15 values whereas 'extlang' can take
@@ -891,7 +891,7 @@ class MessageFormatter  {
 	public function getPattern () {}
 
 	/**
-	 * Get the locale for which the formatter was created.
+	 * Get the locale for which the formatter was created
 	 * @link http://www.php.net/manual/en/messageformatter.getlocale.php
 	 * @return string The locale name
 	 */
@@ -1057,7 +1057,7 @@ class IntlDateFormatter  {
 	 * following forms:
 	 * </p>
 	 * reference.intl.inctimezoneparam
-	 * @return boolean true on success and false on failure.
+	 * @return bool true on success and false on failure.
 	 */
 	public function setTimeZone ($zone) {}
 
@@ -1136,7 +1136,7 @@ class IntlDateFormatter  {
 	 * IntlDateFormatter::SHORT,
 	 * IntlDateFormatter::MEDIUM,
 	 * IntlDateFormatter::LONG,
-	 * IntlDateFormatter::FULL), a long with
+	 * IntlDateFormatter::FULL), an integer with
 	 * the value of one of these constants (in which case it will be used both
 	 * for the time and the date) or a string with the format
 	 * described in the ICU
@@ -1179,7 +1179,7 @@ class IntlDateFormatter  {
 	public function getErrorCode () {}
 
 	/**
-	 * Get the error text from the last operation.
+	 * Get the error text from the last operation
 	 * @link http://www.php.net/manual/en/intldateformatter.geterrormessage.php
 	 * @return string Description of the last error.
 	 */
@@ -1237,14 +1237,14 @@ class ResourceBundle implements Traversable {
 	public static function getLocales (string $bundlename) {}
 
 	/**
-	 * Get bundle's last error code.
+	 * Get bundle's last error code
 	 * @link http://www.php.net/manual/en/resourcebundle.geterrorcode.php
 	 * @return int error code from last bundle object call.
 	 */
 	public function getErrorCode () {}
 
 	/**
-	 * Get bundle's last error message.
+	 * Get bundle's last error message
 	 * @link http://www.php.net/manual/en/resourcebundle.geterrormessage.php
 	 * @return string error message from last bundle object's call.
 	 */
@@ -1391,6 +1391,11 @@ class IntlTimeZone  {
 	 */
 	public static function getGMT () {}
 
+	/**
+	 * Get the "unknown" time zone
+	 * @link http://www.php.net/manual/en/intltimezone.getunknown.php
+	 * @return IntlTimeZone IntlTimeZone or null on failure.
+	 */
 	public static function getUnknown () {}
 
 	/**
@@ -1406,16 +1411,19 @@ class IntlTimeZone  {
 	 * Get the number of IDs in the equivalency group that includes the given ID
 	 * @link http://www.php.net/manual/en/intltimezone.countequivalentids.php
 	 * @param string $zoneId 
-	 * @return integer 
+	 * @return int 
 	 */
 	public static function countEquivalentIDs (string $zoneId) {}
 
 	/**
-	 * @param $zoneType
-	 * @param $region [optional]
-	 * @param $rawOffset [optional]
+	 * Get an enumeration over system time zone IDs with the given filter conditions
+	 * @link http://www.php.net/manual/en/intltimezone.createtimezoneidenumeration.php
+	 * @param int $zoneType 
+	 * @param string $region [optional] 
+	 * @param int $rawOffset [optional] 
+	 * @return IntlIterator IntlIterator or false on failure.
 	 */
-	public static function createTimeZoneIDEnumeration ($zoneType, $region = null, $rawOffset = null) {}
+	public static function createTimeZoneIDEnumeration (int $zoneType, string $region = null, int $rawOffset = null) {}
 
 	/**
 	 * Get the canonical system timezone ID or the normalized custom time zone ID for the given time zone ID
@@ -1427,9 +1435,12 @@ class IntlTimeZone  {
 	public static function getCanonicalID (string $zoneId, bool &$isSystemID = null) {}
 
 	/**
-	 * @param $zoneId
+	 * Get the region code associated with the given system time zone ID
+	 * @link http://www.php.net/manual/en/intltimezone.getregion.php
+	 * @param string $zoneId 
+	 * @return string Return region or false on failure.
 	 */
-	public static function getRegion ($zoneId) {}
+	public static function getRegion (string $zoneId) {}
 
 	/**
 	 * Get the timezone data version currently used by ICU
@@ -1442,7 +1453,7 @@ class IntlTimeZone  {
 	 * Get an ID in the equivalency group that includes the given ID
 	 * @link http://www.php.net/manual/en/intltimezone.getequivalentid.php
 	 * @param string $zoneId 
-	 * @param integer $index 
+	 * @param int $index 
 	 * @return string 
 	 */
 	public static function getEquivalentID (string $zoneId, int $index) {}
@@ -1466,16 +1477,16 @@ class IntlTimeZone  {
 	 * @link http://www.php.net/manual/en/intltimezone.getoffset.php
 	 * @param float $date 
 	 * @param bool $local 
-	 * @param integer $rawOffset 
-	 * @param integer $dstOffset 
-	 * @return integer 
+	 * @param int $rawOffset 
+	 * @param int $dstOffset 
+	 * @return int 
 	 */
 	public function getOffset (float $date, bool $local, int &$rawOffset, int &$dstOffset) {}
 
 	/**
 	 * Get the raw GMT offset (before taking daylight savings time into account
 	 * @link http://www.php.net/manual/en/intltimezone.getrawoffset.php
-	 * @return integer 
+	 * @return int 
 	 */
 	public function getRawOffset () {}
 
@@ -1491,7 +1502,7 @@ class IntlTimeZone  {
 	 * Get a name of this time zone suitable for presentation to the user
 	 * @link http://www.php.net/manual/en/intltimezone.getdisplayname.php
 	 * @param bool $isDaylight [optional] 
-	 * @param integer $style [optional] 
+	 * @param int $style [optional] 
 	 * @param string $locale [optional] 
 	 * @return string 
 	 */
@@ -1500,7 +1511,7 @@ class IntlTimeZone  {
 	/**
 	 * Get the amount of time to be added to local standard time to get local wall clock time
 	 * @link http://www.php.net/manual/en/intltimezone.getdstsavings.php
-	 * @return integer 
+	 * @return int 
 	 */
 	public function getDSTSavings () {}
 
@@ -1514,7 +1525,7 @@ class IntlTimeZone  {
 	/**
 	 * Get last error code on the object
 	 * @link http://www.php.net/manual/en/intltimezone.geterrorcode.php
-	 * @return integer 
+	 * @return int 
 	 */
 	public function getErrorCode () {}
 
@@ -1526,15 +1537,21 @@ class IntlTimeZone  {
 	public function getErrorMessage () {}
 
 	/**
-	 * @param $timezone
+	 * Translate a system timezone into a Windows timezone
+	 * @link http://www.php.net/manual/en/intltimezone.getwindowsid.php
+	 * @param string $timezone 
+	 * @return string the Windows timezone or false on failure.
 	 */
-	public static function getWindowsID ($timezone) {}
+	public static function getWindowsID (string $timezone) {}
 
 	/**
-	 * @param $timezone
-	 * @param $region [optional]
+	 * Translate a Windows timezone into a system timezone
+	 * @link http://www.php.net/manual/en/intltimezone.getidforwindowsid.php
+	 * @param string $timezone 
+	 * @param string $region [optional] 
+	 * @return string the system timezone or false on failure.
 	 */
-	public static function getIDForWindowsID ($timezone, $region = null) {}
+	public static function getIDForWindowsID (string $timezone, string $region = null) {}
 
 }
 
@@ -1608,7 +1625,7 @@ class IntlCalendar  {
 	 * @param string $key The locale keyword for which relevant values are to be queried. Only
 	 * 'calendar' is supported.
 	 * @param string $locale The locale onto which the keyword/value pair are to be appended.
-	 * @param boolean $commonlyUsed Whether to show only the values commonly used for the specified locale.
+	 * @param bool $commonlyUsed Whether to show only the values commonly used for the specified locale.
 	 * @return Iterator An iterator that yields strings with the locale keyword
 	 * values or false on failure.
 	 */
@@ -1930,10 +1947,10 @@ class IntlCalendar  {
 	/**
 	 * Set whether date/time interpretation is to be lenient
 	 * @link http://www.php.net/manual/en/intlcalendar.setlenient.php
-	 * @param string $isLenient Use true to activate the lenient mode; false otherwise.
-	 * @return ReturnType true on success. Failure can only happen due to invalid parameters.
+	 * @param bool $isLenient Use true to activate the lenient mode; false otherwise.
+	 * @return bool true on success. Failure can only happen due to invalid parameters.
 	 */
-	public function setLenient (string $isLenient) {}
+	public function setLenient (bool $isLenient) {}
 
 	/**
 	 * Set minimal number of days the first week in a year or month can have
@@ -2029,6 +2046,9 @@ class IntlCalendar  {
 
 }
 
+/**
+ * @link http://www.php.net/manual/en/class.intlgregoriancalendar.php
+ */
 class IntlGregorianCalendar extends IntlCalendar  {
 	const FIELD_ERA = 0;
 	const FIELD_YEAR = 1;
@@ -2072,6 +2092,8 @@ class IntlGregorianCalendar extends IntlCalendar  {
 
 
 	/**
+	 * Create the Gregorian Calendar class
+	 * @link http://www.php.net/manual/en/intlgregoriancalendar.construct.php
 	 * @param $timeZoneOrYear [optional]
 	 * @param $localeOrMonth [optional]
 	 * @param $dayOfMonth [optional]
@@ -2082,16 +2104,27 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	public function __construct ($timeZoneOrYear = null, $localeOrMonth = null, $dayOfMonth = null, $hour = null, $minute = null, $second = null) {}
 
 	/**
-	 * @param $date
+	 * Set the Gregorian Calendar the change date
+	 * @link http://www.php.net/manual/en/intlgregoriancalendar.setgregorianchange.php
+	 * @param float $date 
+	 * @return bool true on success or false on failure
 	 */
-	public function setGregorianChange ($date) {}
+	public function setGregorianChange (float $date) {}
 
+	/**
+	 * Get the Gregorian Calendar change date
+	 * @link http://www.php.net/manual/en/intlgregoriancalendar.getgregorianchange.php
+	 * @return float the change date or false on failure.
+	 */
 	public function getGregorianChange () {}
 
 	/**
-	 * @param $year
+	 * Determine if the given year is a leap year
+	 * @link http://www.php.net/manual/en/intlgregoriancalendar.isleapyear.php
+	 * @param int $year 
+	 * @return bool true for leap years, false otherwise and on failure.
 	 */
-	public function isLeapYear ($year) {}
+	public function isLeapYear (int $year) {}
 
 	/**
 	 * Create a new IntlCalendar
@@ -2112,7 +2145,7 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * @param string $key The locale keyword for which relevant values are to be queried. Only
 	 * 'calendar' is supported.
 	 * @param string $locale The locale onto which the keyword/value pair are to be appended.
-	 * @param boolean $commonlyUsed Whether to show only the values commonly used for the specified locale.
+	 * @param bool $commonlyUsed Whether to show only the values commonly used for the specified locale.
 	 * @return Iterator An iterator that yields strings with the locale keyword
 	 * values or false on failure.
 	 */
@@ -2434,10 +2467,10 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	/**
 	 * Set whether date/time interpretation is to be lenient
 	 * @link http://www.php.net/manual/en/intlcalendar.setlenient.php
-	 * @param string $isLenient Use true to activate the lenient mode; false otherwise.
-	 * @return ReturnType true on success. Failure can only happen due to invalid parameters.
+	 * @param bool $isLenient Use true to activate the lenient mode; false otherwise.
+	 * @return bool true on success. Failure can only happen due to invalid parameters.
 	 */
-	public function setLenient (string $isLenient) {}
+	public function setLenient (bool $isLenient) {}
 
 	/**
 	 * Set minimal number of days the first week in a year or month can have
@@ -2538,7 +2571,7 @@ class IntlGregorianCalendar extends IntlCalendar  {
  * and incorporates the varied writing systems of the world and their incorrect
  * usage can expose programs or systems to possible security attacks using
  * characters similarity.
- * <p>Provided methods alllow to check whether an individual string is likely an attempt
+ * <p>Provided methods allow to check whether an individual string is likely an attempt
  * at confusing the reader (spoof detection), such as "pаypаl"
  * spelled with Cyrillic 'а' characters.</p>
  * @link http://www.php.net/manual/en/class.spoofchecker.php
@@ -2591,10 +2624,10 @@ class Spoofchecker  {
 	/**
 	 * Set the checks to run
 	 * @link http://www.php.net/manual/en/spoofchecker.setchecks.php
-	 * @param long $checks 
+	 * @param int $checks 
 	 * @return void 
 	 */
-	public function setChecks ($checks) {}
+	public function setChecks (int $checks) {}
 
 }
 
@@ -2660,35 +2693,35 @@ class IntlIterator implements Iterator, Traversable {
 	/**
 	 * Get the current element
 	 * @link http://www.php.net/manual/en/intliterator.current.php
-	 * @return ReturnType 
+	 * @return mixed 
 	 */
 	public function current () {}
 
 	/**
 	 * Get the current key
 	 * @link http://www.php.net/manual/en/intliterator.key.php
-	 * @return ReturnType 
+	 * @return string 
 	 */
 	public function key () {}
 
 	/**
 	 * Move forward to the next element
 	 * @link http://www.php.net/manual/en/intliterator.next.php
-	 * @return ReturnType 
+	 * @return void 
 	 */
 	public function next () {}
 
 	/**
 	 * Rewind the iterator to the first element
 	 * @link http://www.php.net/manual/en/intliterator.rewind.php
-	 * @return ReturnType 
+	 * @return void 
 	 */
 	public function rewind () {}
 
 	/**
 	 * Check if current position is valid
 	 * @link http://www.php.net/manual/en/intliterator.valid.php
-	 * @return ReturnType 
+	 * @return bool 
 	 */
 	public function valid () {}
 
@@ -2743,152 +2776,152 @@ class IntlBreakIterator implements Traversable {
 	/**
 	 * Create break iterator for word breaks
 	 * @link http://www.php.net/manual/en/intlbreakiterator.createwordinstance.php
-	 * @param string $_locale_ [optional] 
-	 * @return ReturnType 
+	 * @param string $locale [optional] 
+	 * @return IntlBreakIterator 
 	 */
-	public static function createWordInstance (string $_locale_ = null) {}
+	public static function createWordInstance (string $locale = null) {}
 
 	/**
 	 * Create break iterator for logically possible line breaks
 	 * @link http://www.php.net/manual/en/intlbreakiterator.createlineinstance.php
-	 * @param string $_locale_ [optional] 
-	 * @return ReturnType 
+	 * @param string $locale [optional] 
+	 * @return IntlBreakIterator 
 	 */
-	public static function createLineInstance (string $_locale_ = null) {}
+	public static function createLineInstance (string $locale = null) {}
 
 	/**
 	 * Create break iterator for boundaries of combining character sequences
 	 * @link http://www.php.net/manual/en/intlbreakiterator.createcharacterinstance.php
-	 * @param string $_locale_ [optional] 
-	 * @return ReturnType 
+	 * @param string $locale [optional] 
+	 * @return IntlBreakIterator 
 	 */
-	public static function createCharacterInstance (string $_locale_ = null) {}
+	public static function createCharacterInstance (string $locale = null) {}
 
 	/**
 	 * Create break iterator for sentence breaks
 	 * @link http://www.php.net/manual/en/intlbreakiterator.createsentenceinstance.php
-	 * @param string $_locale_ [optional] 
-	 * @return ReturnType 
+	 * @param string $locale [optional] 
+	 * @return IntlBreakIterator 
 	 */
-	public static function createSentenceInstance (string $_locale_ = null) {}
+	public static function createSentenceInstance (string $locale = null) {}
 
 	/**
 	 * Create break iterator for title-casing breaks
 	 * @link http://www.php.net/manual/en/intlbreakiterator.createtitleinstance.php
-	 * @param string $_locale_ [optional] 
-	 * @return ReturnType 
+	 * @param string $locale [optional] 
+	 * @return IntlBreakIterator 
 	 */
-	public static function createTitleInstance (string $_locale_ = null) {}
+	public static function createTitleInstance (string $locale = null) {}
 
 	/**
 	 * Create break iterator for boundaries of code points
 	 * @link http://www.php.net/manual/en/intlbreakiterator.createcodepointinstance.php
-	 * @return ReturnType 
+	 * @return IntlBreakIterator 
 	 */
 	public static function createCodePointInstance () {}
 
 	/**
 	 * Get the text being scanned
 	 * @link http://www.php.net/manual/en/intlbreakiterator.gettext.php
-	 * @return ReturnType 
+	 * @return string 
 	 */
 	public function getText () {}
 
 	/**
 	 * Set the text being scanned
 	 * @link http://www.php.net/manual/en/intlbreakiterator.settext.php
-	 * @param string $_text_ 
-	 * @return ReturnType 
+	 * @param string $text 
+	 * @return bool 
 	 */
-	public function setText (string $_text_) {}
+	public function setText (string $text) {}
 
 	/**
 	 * Set position to the first character in the text
 	 * @link http://www.php.net/manual/en/intlbreakiterator.first.php
-	 * @return ReturnType 
+	 * @return int 
 	 */
 	public function first () {}
 
 	/**
 	 * Set the iterator position to index beyond the last character
 	 * @link http://www.php.net/manual/en/intlbreakiterator.last.php
-	 * @return ReturnType 
+	 * @return int 
 	 */
 	public function last () {}
 
 	/**
 	 * Set the iterator position to the boundary immediately before the current
 	 * @link http://www.php.net/manual/en/intlbreakiterator.previous.php
-	 * @return ReturnType 
+	 * @return int 
 	 */
 	public function previous () {}
 
 	/**
 	 * Advance the iterator the next boundary
 	 * @link http://www.php.net/manual/en/intlbreakiterator.next.php
-	 * @param string $_offset_ [optional] 
-	 * @return ReturnType 
+	 * @param int $offset [optional] 
+	 * @return int 
 	 */
-	public function next (string $_offset_ = null) {}
+	public function next (int $offset = null) {}
 
 	/**
 	 * Get index of current position
 	 * @link http://www.php.net/manual/en/intlbreakiterator.current.php
-	 * @return ReturnType 
+	 * @return int 
 	 */
 	public function current () {}
 
 	/**
 	 * Advance the iterator to the first boundary following specified offset
 	 * @link http://www.php.net/manual/en/intlbreakiterator.following.php
-	 * @param string $_offset_ 
-	 * @return ReturnType 
+	 * @param int $offset 
+	 * @return int 
 	 */
-	public function following (string $_offset_) {}
+	public function following (int $offset) {}
 
 	/**
 	 * Set the iterator position to the first boundary before an offset
 	 * @link http://www.php.net/manual/en/intlbreakiterator.preceding.php
-	 * @param string $_offset_ 
-	 * @return ReturnType 
+	 * @param int $offset 
+	 * @return int 
 	 */
-	public function preceding (string $_offset_) {}
+	public function preceding (int $offset) {}
 
 	/**
 	 * Tell whether an offset is a boundaryʼs offset
 	 * @link http://www.php.net/manual/en/intlbreakiterator.isboundary.php
-	 * @param string $_offset_ 
-	 * @return ReturnType 
+	 * @param int $offset 
+	 * @return bool 
 	 */
-	public function isBoundary (string $_offset_) {}
+	public function isBoundary (int $offset) {}
 
 	/**
 	 * Get the locale associated with the object
 	 * @link http://www.php.net/manual/en/intlbreakiterator.getlocale.php
-	 * @param string $_locale_type_ 
-	 * @return ReturnType 
+	 * @param string $locale_type 
+	 * @return string 
 	 */
-	public function getLocale (string $_locale_type_) {}
+	public function getLocale (string $locale_type) {}
 
 	/**
 	 * Create iterator for navigating fragments between boundaries
 	 * @link http://www.php.net/manual/en/intlbreakiterator.getpartsiterator.php
-	 * @param string $_key_type_ [optional] 
-	 * @return ReturnType 
+	 * @param string $key_type [optional] 
+	 * @return IntlPartsIterator 
 	 */
-	public function getPartsIterator (string $_key_type_ = null) {}
+	public function getPartsIterator (string $key_type = null) {}
 
 	/**
 	 * Get last error code on the object
 	 * @link http://www.php.net/manual/en/intlbreakiterator.geterrorcode.php
-	 * @return ReturnType 
+	 * @return int 
 	 */
 	public function getErrorCode () {}
 
 	/**
 	 * Get last error message on the object
 	 * @link http://www.php.net/manual/en/intlbreakiterator.geterrormessage.php
-	 * @return ReturnType 
+	 * @return string 
 	 */
 	public function getErrorMessage () {}
 
@@ -2935,180 +2968,180 @@ class IntlRuleBasedBreakIterator extends IntlBreakIterator implements Traversabl
 	/**
 	 * Get the rule set used to create this object
 	 * @link http://www.php.net/manual/en/intlrulebasedbreakiterator.getrules.php
-	 * @return ReturnType 
+	 * @return string 
 	 */
 	public function getRules () {}
 
 	/**
 	 * Get the largest status value from the break rules that determined the current break position
 	 * @link http://www.php.net/manual/en/intlrulebasedbreakiterator.getrulestatus.php
-	 * @return ReturnType 
+	 * @return int 
 	 */
 	public function getRuleStatus () {}
 
 	/**
 	 * Get the status values from the break rules that determined the current break position
 	 * @link http://www.php.net/manual/en/intlrulebasedbreakiterator.getrulestatusvec.php
-	 * @return ReturnType 
+	 * @return array 
 	 */
 	public function getRuleStatusVec () {}
 
 	/**
 	 * Get the binary form of compiled rules
 	 * @link http://www.php.net/manual/en/intlrulebasedbreakiterator.getbinaryrules.php
-	 * @return ReturnType 
+	 * @return string 
 	 */
 	public function getBinaryRules () {}
 
 	/**
 	 * Create break iterator for word breaks
 	 * @link http://www.php.net/manual/en/intlbreakiterator.createwordinstance.php
-	 * @param string $_locale_ [optional] 
-	 * @return ReturnType 
+	 * @param string $locale [optional] 
+	 * @return IntlBreakIterator 
 	 */
-	public static function createWordInstance (string $_locale_ = null) {}
+	public static function createWordInstance (string $locale = null) {}
 
 	/**
 	 * Create break iterator for logically possible line breaks
 	 * @link http://www.php.net/manual/en/intlbreakiterator.createlineinstance.php
-	 * @param string $_locale_ [optional] 
-	 * @return ReturnType 
+	 * @param string $locale [optional] 
+	 * @return IntlBreakIterator 
 	 */
-	public static function createLineInstance (string $_locale_ = null) {}
+	public static function createLineInstance (string $locale = null) {}
 
 	/**
 	 * Create break iterator for boundaries of combining character sequences
 	 * @link http://www.php.net/manual/en/intlbreakiterator.createcharacterinstance.php
-	 * @param string $_locale_ [optional] 
-	 * @return ReturnType 
+	 * @param string $locale [optional] 
+	 * @return IntlBreakIterator 
 	 */
-	public static function createCharacterInstance (string $_locale_ = null) {}
+	public static function createCharacterInstance (string $locale = null) {}
 
 	/**
 	 * Create break iterator for sentence breaks
 	 * @link http://www.php.net/manual/en/intlbreakiterator.createsentenceinstance.php
-	 * @param string $_locale_ [optional] 
-	 * @return ReturnType 
+	 * @param string $locale [optional] 
+	 * @return IntlBreakIterator 
 	 */
-	public static function createSentenceInstance (string $_locale_ = null) {}
+	public static function createSentenceInstance (string $locale = null) {}
 
 	/**
 	 * Create break iterator for title-casing breaks
 	 * @link http://www.php.net/manual/en/intlbreakiterator.createtitleinstance.php
-	 * @param string $_locale_ [optional] 
-	 * @return ReturnType 
+	 * @param string $locale [optional] 
+	 * @return IntlBreakIterator 
 	 */
-	public static function createTitleInstance (string $_locale_ = null) {}
+	public static function createTitleInstance (string $locale = null) {}
 
 	/**
 	 * Create break iterator for boundaries of code points
 	 * @link http://www.php.net/manual/en/intlbreakiterator.createcodepointinstance.php
-	 * @return ReturnType 
+	 * @return IntlBreakIterator 
 	 */
 	public static function createCodePointInstance () {}
 
 	/**
 	 * Get the text being scanned
 	 * @link http://www.php.net/manual/en/intlbreakiterator.gettext.php
-	 * @return ReturnType 
+	 * @return string 
 	 */
 	public function getText () {}
 
 	/**
 	 * Set the text being scanned
 	 * @link http://www.php.net/manual/en/intlbreakiterator.settext.php
-	 * @param string $_text_ 
-	 * @return ReturnType 
+	 * @param string $text 
+	 * @return bool 
 	 */
-	public function setText (string $_text_) {}
+	public function setText (string $text) {}
 
 	/**
 	 * Set position to the first character in the text
 	 * @link http://www.php.net/manual/en/intlbreakiterator.first.php
-	 * @return ReturnType 
+	 * @return int 
 	 */
 	public function first () {}
 
 	/**
 	 * Set the iterator position to index beyond the last character
 	 * @link http://www.php.net/manual/en/intlbreakiterator.last.php
-	 * @return ReturnType 
+	 * @return int 
 	 */
 	public function last () {}
 
 	/**
 	 * Set the iterator position to the boundary immediately before the current
 	 * @link http://www.php.net/manual/en/intlbreakiterator.previous.php
-	 * @return ReturnType 
+	 * @return int 
 	 */
 	public function previous () {}
 
 	/**
 	 * Advance the iterator the next boundary
 	 * @link http://www.php.net/manual/en/intlbreakiterator.next.php
-	 * @param string $_offset_ [optional] 
-	 * @return ReturnType 
+	 * @param int $offset [optional] 
+	 * @return int 
 	 */
-	public function next (string $_offset_ = null) {}
+	public function next (int $offset = null) {}
 
 	/**
 	 * Get index of current position
 	 * @link http://www.php.net/manual/en/intlbreakiterator.current.php
-	 * @return ReturnType 
+	 * @return int 
 	 */
 	public function current () {}
 
 	/**
 	 * Advance the iterator to the first boundary following specified offset
 	 * @link http://www.php.net/manual/en/intlbreakiterator.following.php
-	 * @param string $_offset_ 
-	 * @return ReturnType 
+	 * @param int $offset 
+	 * @return int 
 	 */
-	public function following (string $_offset_) {}
+	public function following (int $offset) {}
 
 	/**
 	 * Set the iterator position to the first boundary before an offset
 	 * @link http://www.php.net/manual/en/intlbreakiterator.preceding.php
-	 * @param string $_offset_ 
-	 * @return ReturnType 
+	 * @param int $offset 
+	 * @return int 
 	 */
-	public function preceding (string $_offset_) {}
+	public function preceding (int $offset) {}
 
 	/**
 	 * Tell whether an offset is a boundaryʼs offset
 	 * @link http://www.php.net/manual/en/intlbreakiterator.isboundary.php
-	 * @param string $_offset_ 
-	 * @return ReturnType 
+	 * @param int $offset 
+	 * @return bool 
 	 */
-	public function isBoundary (string $_offset_) {}
+	public function isBoundary (int $offset) {}
 
 	/**
 	 * Get the locale associated with the object
 	 * @link http://www.php.net/manual/en/intlbreakiterator.getlocale.php
-	 * @param string $_locale_type_ 
-	 * @return ReturnType 
+	 * @param string $locale_type 
+	 * @return string 
 	 */
-	public function getLocale (string $_locale_type_) {}
+	public function getLocale (string $locale_type) {}
 
 	/**
 	 * Create iterator for navigating fragments between boundaries
 	 * @link http://www.php.net/manual/en/intlbreakiterator.getpartsiterator.php
-	 * @param string $_key_type_ [optional] 
-	 * @return ReturnType 
+	 * @param string $key_type [optional] 
+	 * @return IntlPartsIterator 
 	 */
-	public function getPartsIterator (string $_key_type_ = null) {}
+	public function getPartsIterator (string $key_type = null) {}
 
 	/**
 	 * Get last error code on the object
 	 * @link http://www.php.net/manual/en/intlbreakiterator.geterrorcode.php
-	 * @return ReturnType 
+	 * @return int 
 	 */
 	public function getErrorCode () {}
 
 	/**
 	 * Get last error message on the object
 	 * @link http://www.php.net/manual/en/intlbreakiterator.geterrormessage.php
-	 * @return ReturnType 
+	 * @return string 
 	 */
 	public function getErrorMessage () {}
 
@@ -3144,7 +3177,7 @@ class IntlCodePointBreakIterator extends IntlBreakIterator implements Traversabl
 	/**
 	 * Get last code point passed over after advancing or receding the iterator
 	 * @link http://www.php.net/manual/en/intlcodepointbreakiterator.getlastcodepoint.php
-	 * @return ReturnType 
+	 * @return int 
 	 */
 	public function getLastCodePoint () {}
 
@@ -3157,152 +3190,152 @@ class IntlCodePointBreakIterator extends IntlBreakIterator implements Traversabl
 	/**
 	 * Create break iterator for word breaks
 	 * @link http://www.php.net/manual/en/intlbreakiterator.createwordinstance.php
-	 * @param string $_locale_ [optional] 
-	 * @return ReturnType 
+	 * @param string $locale [optional] 
+	 * @return IntlBreakIterator 
 	 */
-	public static function createWordInstance (string $_locale_ = null) {}
+	public static function createWordInstance (string $locale = null) {}
 
 	/**
 	 * Create break iterator for logically possible line breaks
 	 * @link http://www.php.net/manual/en/intlbreakiterator.createlineinstance.php
-	 * @param string $_locale_ [optional] 
-	 * @return ReturnType 
+	 * @param string $locale [optional] 
+	 * @return IntlBreakIterator 
 	 */
-	public static function createLineInstance (string $_locale_ = null) {}
+	public static function createLineInstance (string $locale = null) {}
 
 	/**
 	 * Create break iterator for boundaries of combining character sequences
 	 * @link http://www.php.net/manual/en/intlbreakiterator.createcharacterinstance.php
-	 * @param string $_locale_ [optional] 
-	 * @return ReturnType 
+	 * @param string $locale [optional] 
+	 * @return IntlBreakIterator 
 	 */
-	public static function createCharacterInstance (string $_locale_ = null) {}
+	public static function createCharacterInstance (string $locale = null) {}
 
 	/**
 	 * Create break iterator for sentence breaks
 	 * @link http://www.php.net/manual/en/intlbreakiterator.createsentenceinstance.php
-	 * @param string $_locale_ [optional] 
-	 * @return ReturnType 
+	 * @param string $locale [optional] 
+	 * @return IntlBreakIterator 
 	 */
-	public static function createSentenceInstance (string $_locale_ = null) {}
+	public static function createSentenceInstance (string $locale = null) {}
 
 	/**
 	 * Create break iterator for title-casing breaks
 	 * @link http://www.php.net/manual/en/intlbreakiterator.createtitleinstance.php
-	 * @param string $_locale_ [optional] 
-	 * @return ReturnType 
+	 * @param string $locale [optional] 
+	 * @return IntlBreakIterator 
 	 */
-	public static function createTitleInstance (string $_locale_ = null) {}
+	public static function createTitleInstance (string $locale = null) {}
 
 	/**
 	 * Create break iterator for boundaries of code points
 	 * @link http://www.php.net/manual/en/intlbreakiterator.createcodepointinstance.php
-	 * @return ReturnType 
+	 * @return IntlBreakIterator 
 	 */
 	public static function createCodePointInstance () {}
 
 	/**
 	 * Get the text being scanned
 	 * @link http://www.php.net/manual/en/intlbreakiterator.gettext.php
-	 * @return ReturnType 
+	 * @return string 
 	 */
 	public function getText () {}
 
 	/**
 	 * Set the text being scanned
 	 * @link http://www.php.net/manual/en/intlbreakiterator.settext.php
-	 * @param string $_text_ 
-	 * @return ReturnType 
+	 * @param string $text 
+	 * @return bool 
 	 */
-	public function setText (string $_text_) {}
+	public function setText (string $text) {}
 
 	/**
 	 * Set position to the first character in the text
 	 * @link http://www.php.net/manual/en/intlbreakiterator.first.php
-	 * @return ReturnType 
+	 * @return int 
 	 */
 	public function first () {}
 
 	/**
 	 * Set the iterator position to index beyond the last character
 	 * @link http://www.php.net/manual/en/intlbreakiterator.last.php
-	 * @return ReturnType 
+	 * @return int 
 	 */
 	public function last () {}
 
 	/**
 	 * Set the iterator position to the boundary immediately before the current
 	 * @link http://www.php.net/manual/en/intlbreakiterator.previous.php
-	 * @return ReturnType 
+	 * @return int 
 	 */
 	public function previous () {}
 
 	/**
 	 * Advance the iterator the next boundary
 	 * @link http://www.php.net/manual/en/intlbreakiterator.next.php
-	 * @param string $_offset_ [optional] 
-	 * @return ReturnType 
+	 * @param int $offset [optional] 
+	 * @return int 
 	 */
-	public function next (string $_offset_ = null) {}
+	public function next (int $offset = null) {}
 
 	/**
 	 * Get index of current position
 	 * @link http://www.php.net/manual/en/intlbreakiterator.current.php
-	 * @return ReturnType 
+	 * @return int 
 	 */
 	public function current () {}
 
 	/**
 	 * Advance the iterator to the first boundary following specified offset
 	 * @link http://www.php.net/manual/en/intlbreakiterator.following.php
-	 * @param string $_offset_ 
-	 * @return ReturnType 
+	 * @param int $offset 
+	 * @return int 
 	 */
-	public function following (string $_offset_) {}
+	public function following (int $offset) {}
 
 	/**
 	 * Set the iterator position to the first boundary before an offset
 	 * @link http://www.php.net/manual/en/intlbreakiterator.preceding.php
-	 * @param string $_offset_ 
-	 * @return ReturnType 
+	 * @param int $offset 
+	 * @return int 
 	 */
-	public function preceding (string $_offset_) {}
+	public function preceding (int $offset) {}
 
 	/**
 	 * Tell whether an offset is a boundaryʼs offset
 	 * @link http://www.php.net/manual/en/intlbreakiterator.isboundary.php
-	 * @param string $_offset_ 
-	 * @return ReturnType 
+	 * @param int $offset 
+	 * @return bool 
 	 */
-	public function isBoundary (string $_offset_) {}
+	public function isBoundary (int $offset) {}
 
 	/**
 	 * Get the locale associated with the object
 	 * @link http://www.php.net/manual/en/intlbreakiterator.getlocale.php
-	 * @param string $_locale_type_ 
-	 * @return ReturnType 
+	 * @param string $locale_type 
+	 * @return string 
 	 */
-	public function getLocale (string $_locale_type_) {}
+	public function getLocale (string $locale_type) {}
 
 	/**
 	 * Create iterator for navigating fragments between boundaries
 	 * @link http://www.php.net/manual/en/intlbreakiterator.getpartsiterator.php
-	 * @param string $_key_type_ [optional] 
-	 * @return ReturnType 
+	 * @param string $key_type [optional] 
+	 * @return IntlPartsIterator 
 	 */
-	public function getPartsIterator (string $_key_type_ = null) {}
+	public function getPartsIterator (string $key_type = null) {}
 
 	/**
 	 * Get last error code on the object
 	 * @link http://www.php.net/manual/en/intlbreakiterator.geterrorcode.php
-	 * @return ReturnType 
+	 * @return int 
 	 */
 	public function getErrorCode () {}
 
 	/**
 	 * Get last error message on the object
 	 * @link http://www.php.net/manual/en/intlbreakiterator.geterrormessage.php
-	 * @return ReturnType 
+	 * @return string 
 	 */
 	public function getErrorMessage () {}
 
@@ -3329,42 +3362,42 @@ class IntlPartsIterator extends IntlIterator implements Traversable, Iterator {
 	/**
 	 * Get IntlBreakIterator backing this parts iterator
 	 * @link http://www.php.net/manual/en/intlpartsiterator.getbreakiterator.php
-	 * @return ReturnType 
+	 * @return IntlBreakIterator 
 	 */
 	public function getBreakIterator () {}
 
 	/**
 	 * Get the current element
 	 * @link http://www.php.net/manual/en/intliterator.current.php
-	 * @return ReturnType 
+	 * @return mixed 
 	 */
 	public function current () {}
 
 	/**
 	 * Get the current key
 	 * @link http://www.php.net/manual/en/intliterator.key.php
-	 * @return ReturnType 
+	 * @return string 
 	 */
 	public function key () {}
 
 	/**
 	 * Move forward to the next element
 	 * @link http://www.php.net/manual/en/intliterator.next.php
-	 * @return ReturnType 
+	 * @return void 
 	 */
 	public function next () {}
 
 	/**
 	 * Rewind the iterator to the first element
 	 * @link http://www.php.net/manual/en/intliterator.rewind.php
-	 * @return ReturnType 
+	 * @return void 
 	 */
 	public function rewind () {}
 
 	/**
 	 * Check if current position is valid
 	 * @link http://www.php.net/manual/en/intliterator.valid.php
-	 * @return ReturnType 
+	 * @return bool 
 	 */
 	public function valid () {}
 
@@ -3458,14 +3491,14 @@ class UConverter  {
 	/**
 	 * Get the source convertor type
 	 * @link http://www.php.net/manual/en/uconverter.getsourcetype.php
-	 * @return integer 
+	 * @return int 
 	 */
 	public function getSourceType () {}
 
 	/**
 	 * Get the destination converter type
 	 * @link http://www.php.net/manual/en/uconverter.getdestinationtype.php
-	 * @return integer 
+	 * @return int 
 	 */
 	public function getDestinationType () {}
 
@@ -3487,10 +3520,10 @@ class UConverter  {
 	/**
 	 * Default "to" callback function
 	 * @link http://www.php.net/manual/en/uconverter.toucallback.php
-	 * @param integer $reason 
+	 * @param int $reason 
 	 * @param string $source 
 	 * @param string $codeUnits 
-	 * @param integer $error 
+	 * @param int $error 
 	 * @return mixed 
 	 */
 	public function toUCallback (int $reason, string $source, string $codeUnits, int &$error) {}
@@ -3498,10 +3531,10 @@ class UConverter  {
 	/**
 	 * Default "from" callback function
 	 * @link http://www.php.net/manual/en/uconverter.fromucallback.php
-	 * @param integer $reason 
+	 * @param int $reason 
 	 * @param string $source 
 	 * @param string $codePoint 
-	 * @param integer $error 
+	 * @param int $error 
 	 * @return mixed 
 	 */
 	public function fromUCallback (int $reason, string $source, string $codePoint, int &$error) {}
@@ -3529,7 +3562,7 @@ class UConverter  {
 	/**
 	 * Get last error code on the object
 	 * @link http://www.php.net/manual/en/uconverter.geterrorcode.php
-	 * @return integer 
+	 * @return int 
 	 */
 	public function getErrorCode () {}
 
@@ -3543,7 +3576,7 @@ class UConverter  {
 	/**
 	 * Get string representation of the callback reason
 	 * @link http://www.php.net/manual/en/uconverter.reasontext.php
-	 * @param integer $reason [optional] 
+	 * @param int $reason [optional] 
 	 * @return string 
 	 */
 	public static function reasonText (int $reason = null) {}
@@ -3579,7 +3612,7 @@ class UConverter  {
  * @link http://www.php.net/manual/en/class.intlchar.php
  */
 class IntlChar  {
-	const UNICODE_VERSION = 6.3;
+	const UNICODE_VERSION = 10.0;
 	const CODEPOINT_MIN = 0;
 	const CODEPOINT_MAX = 1114111;
 	const FOLD_CASE_DEFAULT = 0;
@@ -3643,7 +3676,7 @@ class IntlChar  {
 	const PROPERTY_CHANGES_WHEN_CASEFOLDED = 54;
 	const PROPERTY_CHANGES_WHEN_CASEMAPPED = 55;
 	const PROPERTY_CHANGES_WHEN_NFKC_CASEFOLDED = 56;
-	const PROPERTY_BINARY_LIMIT = 57;
+	const PROPERTY_BINARY_LIMIT = 64;
 	const PROPERTY_BIDI_CLASS = 4096;
 	const PROPERTY_INT_START = 4096;
 	const PROPERTY_BLOCK = 4097;
@@ -3973,7 +4006,39 @@ class IntlChar  {
 	const BLOCK_CODE_SORA_SOMPENG = 218;
 	const BLOCK_CODE_SUNDANESE_SUPPLEMENT = 219;
 	const BLOCK_CODE_TAKRI = 220;
-	const BLOCK_CODE_COUNT = 221;
+	const BLOCK_CODE_BASSA_VAH = 221;
+	const BLOCK_CODE_CAUCASIAN_ALBANIAN = 222;
+	const BLOCK_CODE_COPTIC_EPACT_NUMBERS = 223;
+	const BLOCK_CODE_COMBINING_DIACRITICAL_MARKS_EXTENDED = 224;
+	const BLOCK_CODE_DUPLOYAN = 225;
+	const BLOCK_CODE_ELBASAN = 226;
+	const BLOCK_CODE_GEOMETRIC_SHAPES_EXTENDED = 227;
+	const BLOCK_CODE_GRANTHA = 228;
+	const BLOCK_CODE_KHOJKI = 229;
+	const BLOCK_CODE_KHUDAWADI = 230;
+	const BLOCK_CODE_LATIN_EXTENDED_E = 231;
+	const BLOCK_CODE_LINEAR_A = 232;
+	const BLOCK_CODE_MAHAJANI = 233;
+	const BLOCK_CODE_MANICHAEAN = 234;
+	const BLOCK_CODE_MENDE_KIKAKUI = 235;
+	const BLOCK_CODE_MODI = 236;
+	const BLOCK_CODE_MRO = 237;
+	const BLOCK_CODE_MYANMAR_EXTENDED_B = 238;
+	const BLOCK_CODE_NABATAEAN = 239;
+	const BLOCK_CODE_OLD_NORTH_ARABIAN = 240;
+	const BLOCK_CODE_OLD_PERMIC = 241;
+	const BLOCK_CODE_ORNAMENTAL_DINGBATS = 242;
+	const BLOCK_CODE_PAHAWH_HMONG = 243;
+	const BLOCK_CODE_PALMYRENE = 244;
+	const BLOCK_CODE_PAU_CIN_HAU = 245;
+	const BLOCK_CODE_PSALTER_PAHLAVI = 246;
+	const BLOCK_CODE_SHORTHAND_FORMAT_CONTROLS = 247;
+	const BLOCK_CODE_SIDDHAM = 248;
+	const BLOCK_CODE_SINHALA_ARCHAIC_NUMBERS = 249;
+	const BLOCK_CODE_SUPPLEMENTAL_ARROWS_C = 250;
+	const BLOCK_CODE_TIRHUTA = 251;
+	const BLOCK_CODE_WARANG_CITI = 252;
+	const BLOCK_CODE_COUNT = 281;
 	const BLOCK_CODE_INVALID_CODE = -1;
 	const BPT_NONE = 0;
 	const BPT_OPEN = 1;
@@ -4079,7 +4144,35 @@ class IntlChar  {
 	const JG_FARSI_YEH = 55;
 	const JG_NYA = 56;
 	const JG_ROHINGYA_YEH = 57;
-	const JG_COUNT = 58;
+	const JG_MANICHAEAN_ALEPH = 58;
+	const JG_MANICHAEAN_AYIN = 59;
+	const JG_MANICHAEAN_BETH = 60;
+	const JG_MANICHAEAN_DALETH = 61;
+	const JG_MANICHAEAN_DHAMEDH = 62;
+	const JG_MANICHAEAN_FIVE = 63;
+	const JG_MANICHAEAN_GIMEL = 64;
+	const JG_MANICHAEAN_HETH = 65;
+	const JG_MANICHAEAN_HUNDRED = 66;
+	const JG_MANICHAEAN_KAPH = 67;
+	const JG_MANICHAEAN_LAMEDH = 68;
+	const JG_MANICHAEAN_MEM = 69;
+	const JG_MANICHAEAN_NUN = 70;
+	const JG_MANICHAEAN_ONE = 71;
+	const JG_MANICHAEAN_PE = 72;
+	const JG_MANICHAEAN_QOPH = 73;
+	const JG_MANICHAEAN_RESH = 74;
+	const JG_MANICHAEAN_SADHE = 75;
+	const JG_MANICHAEAN_SAMEKH = 76;
+	const JG_MANICHAEAN_TAW = 77;
+	const JG_MANICHAEAN_TEN = 78;
+	const JG_MANICHAEAN_TETH = 79;
+	const JG_MANICHAEAN_THAMEDH = 80;
+	const JG_MANICHAEAN_TWENTY = 81;
+	const JG_MANICHAEAN_WAW = 82;
+	const JG_MANICHAEAN_YODH = 83;
+	const JG_MANICHAEAN_ZAYIN = 84;
+	const JG_STRAIGHT_WAW = 85;
+	const JG_COUNT = 100;
 	const GCB_OTHER = 0;
 	const GCB_CONTROL = 1;
 	const GCB_CR = 2;
@@ -4093,7 +4186,7 @@ class IntlChar  {
 	const GCB_SPACING_MARK = 10;
 	const GCB_PREPEND = 11;
 	const GCB_REGIONAL_INDICATOR = 12;
-	const GCB_COUNT = 13;
+	const GCB_COUNT = 18;
 	const WB_OTHER = 0;
 	const WB_ALETTER = 1;
 	const WB_FORMAT = 2;
@@ -4111,7 +4204,7 @@ class IntlChar  {
 	const WB_HEBREW_LETTER = 14;
 	const WB_SINGLE_QUOTE = 15;
 	const WB_DOUBLE_QUOTE = 16;
-	const WB_COUNT = 17;
+	const WB_COUNT = 22;
 	const SB_OTHER = 0;
 	const SB_ATERM = 1;
 	const SB_CLOSE = 2;
@@ -4169,7 +4262,7 @@ class IntlChar  {
 	const LB_CONDITIONAL_JAPANESE_STARTER = 37;
 	const LB_HEBREW_LETTER = 38;
 	const LB_REGIONAL_INDICATOR = 39;
-	const LB_COUNT = 40;
+	const LB_COUNT = 43;
 	const NT_NONE = 0;
 	const NT_DECIMAL = 1;
 	const NT_DIGIT = 2;
@@ -5427,7 +5520,7 @@ function grapheme_strripos (string $haystack, string $needle, int $offset = null
 function grapheme_substr (string $string, int $start, int $length = null) {}
 
 /**
- * Returns part of haystack string from the first occurrence of needle to the end of haystack.
+ * Returns part of haystack string from the first occurrence of needle to the end of haystack
  * @link http://www.php.net/manual/en/function.grapheme-strstr.php
  * @param string $haystack The input string. Must be valid UTF-8.
  * @param string $needle The string to look for. Must be valid UTF-8.
@@ -5438,7 +5531,7 @@ function grapheme_substr (string $string, int $start, int $length = null) {}
 function grapheme_strstr (string $haystack, string $needle, bool $before_needle = null) {}
 
 /**
- * Returns part of haystack string from the first occurrence of case-insensitive needle to the end of haystack.
+ * Returns part of haystack string from the first occurrence of case-insensitive needle to the end of haystack
  * @link http://www.php.net/manual/en/function.grapheme-stristr.php
  * @param string $haystack The input string. Must be valid UTF-8.
  * @param string $needle The string to look for. Must be valid UTF-8.
@@ -5449,7 +5542,7 @@ function grapheme_strstr (string $haystack, string $needle, bool $before_needle 
 function grapheme_stristr (string $haystack, string $needle, bool $before_needle = null) {}
 
 /**
- * Function to extract a sequence of default grapheme clusters from a text buffer, which must be encoded in UTF-8.
+ * Function to extract a sequence of default grapheme clusters from a text buffer, which must be encoded in UTF-8
  * @link http://www.php.net/manual/en/function.grapheme-extract.php
  * @param string $haystack String to search.
  * @param int $size Maximum number items - based on the $extract_type - to return.
@@ -5479,7 +5572,7 @@ function grapheme_stristr (string $haystack, string $needle, bool $before_needle
 function grapheme_extract (string $haystack, int $size, int $extract_type = null, int $start = null, int &$next = null) {}
 
 /**
- * Convert domain name to IDNA ASCII form.
+ * Convert domain name to IDNA ASCII form
  * @link http://www.php.net/manual/en/function.idn-to-ascii.php
  * @param string $domain The domain to convert, which must be UTF-8 encoded.
  * @param int $options [optional] Conversion options - combination of IDNA_&#42; constants
@@ -5501,7 +5594,7 @@ function grapheme_extract (string $haystack, int $size, int $extract_type = null
 function idn_to_ascii (string $domain, int $options = null, int $variant = null, array &$idna_info = null) {}
 
 /**
- * Convert domain name from IDNA ASCII to Unicode.
+ * Convert domain name from IDNA ASCII to Unicode
  * @link http://www.php.net/manual/en/function.idn-to-utf8.php
  * @param string $domain Domain to convert in an IDNA ASCII-compatible format.
  * @param int $options [optional] Conversion options - combination of IDNA_&#42; constants
@@ -6029,8 +6122,8 @@ function intl_error_name (int $error_code) {}
  * @link http://www.php.net/manual/en/intl.constants.php
  */
 define ('INTL_MAX_LOCALE_LEN', 80);
-define ('INTL_ICU_VERSION', 52.1);
-define ('INTL_ICU_DATA_VERSION', 52.1);
+define ('INTL_ICU_VERSION', 60.2);
+define ('INTL_ICU_DATA_VERSION', 60.2);
 define ('ULOC_ACTUAL_LOCALE', 0);
 define ('ULOC_VALID_LOCALE', 1);
 define ('GRAPHEME_EXTR_COUNT', 0);
@@ -6161,7 +6254,7 @@ define ('U_REGEX_INVALID_BACK_REF', 66314);
 define ('U_REGEX_INVALID_FLAG', 66315);
 define ('U_REGEX_LOOK_BEHIND_LIMIT', 66316);
 define ('U_REGEX_SET_CONTAINS_STRING', 66317);
-define ('U_REGEX_ERROR_LIMIT', 66325);
+define ('U_REGEX_ERROR_LIMIT', 66326);
 define ('U_IDNA_PROHIBITED_ERROR', 66560);
 define ('U_IDNA_ERROR_START', 66560);
 define ('U_IDNA_UNASSIGNED_ERROR', 66561);

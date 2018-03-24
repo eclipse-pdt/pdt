@@ -1,6 +1,6 @@
 <?php
 
-// Start of Core v.7.1.1
+// Start of Core v.7.2.3
 
 class stdClass  {
 }
@@ -97,7 +97,7 @@ interface ArrayAccess  {
  * <p>Note, that when an old instance of a class that implements this interface
  * now, which had been serialized before the class implemeted the interface, is
  * unserialized, __wakeup() is called
- * instead of the serialize method, which might be useful for migration
+ * instead of the unserialize method, which might be useful for migration
  * purposes.</p>
  * @link http://www.php.net/manual/en/class.serializable.php
  */
@@ -109,6 +109,25 @@ interface Serializable  {
 	 * @param $serialized
 	 */
 	abstract public function unserialize ($serialized);
+
+}
+
+/**
+ * Classes implementing Countable can be used with the
+ * count function.
+ * @link http://www.php.net/manual/en/class.countable.php
+ */
+interface Countable  {
+
+	/**
+	 * Count elements of an object
+	 * @link http://www.php.net/manual/en/countable.count.php
+	 * @return int The custom count as an integer.
+	 * <p>
+	 * The return value is cast to an integer.
+	 * </p>
+	 */
+	abstract public function count ();
 
 }
 
@@ -797,7 +816,7 @@ function defined (string $name) {}
 function get_class ($object = null) {}
 
 /**
- * the "Late Static Binding" class name
+ * The "Late Static Binding" class name
  * @link http://www.php.net/manual/en/function.get-called-class.php
  * @return string the class name. Returns false if called from outside a class.
  */
@@ -915,7 +934,7 @@ function get_included_files () {}
 function get_required_files () {}
 
 /**
- * Checks if the object has this class as one of its parents or implements it.
+ * Checks if the object has this class as one of its parents or implements it
  * @link http://www.php.net/manual/en/function.is-subclass-of.php
  * @param mixed $object A class name or an object instance. No error is generated if the class does not exist.
  * @param string $class_name The class name
@@ -1158,6 +1177,7 @@ function get_defined_vars () {}
  * @param string $args The function arguments.
  * @param string $code The function code.
  * @return string a unique function name as a string, or false on error.
+ * @deprecated 
  */
 function create_function (string $args, string $code) {}
 
@@ -1593,15 +1613,16 @@ define ('FALSE', false);
 define ('ZEND_THREAD_SAFE', false);
 define ('ZEND_DEBUG_BUILD', false);
 define ('NULL', null);
-define ('PHP_VERSION', "7.1.1");
+define ('PHP_VERSION', "7.2.3");
 define ('PHP_MAJOR_VERSION', 7);
-define ('PHP_MINOR_VERSION', 1);
-define ('PHP_RELEASE_VERSION', 1);
+define ('PHP_MINOR_VERSION', 2);
+define ('PHP_RELEASE_VERSION', 3);
 define ('PHP_EXTRA_VERSION', "");
-define ('PHP_VERSION_ID', 70101);
+define ('PHP_VERSION_ID', 70203);
 define ('PHP_ZTS', 0);
 define ('PHP_DEBUG', 0);
 define ('PHP_OS', "Linux");
+define ('PHP_OS_FAMILY', "Linux");
 define ('PHP_SAPI', "cli");
 define ('DEFAULT_INCLUDE_PATH', ".:/usr/share/php");
 define ('PEAR_INSTALL_DIR', "/usr/share/php");
@@ -1614,8 +1635,8 @@ define ('PHP_LIBDIR', "/usr/lib/php");
 define ('PHP_DATADIR', "/usr/share/php/7.1");
 define ('PHP_SYSCONFDIR', "/etc");
 define ('PHP_LOCALSTATEDIR', "/var");
-define ('PHP_CONFIG_FILE_PATH', "/etc/php/7.1/cli");
-define ('PHP_CONFIG_FILE_SCAN_DIR', "/etc/php/7.1/cli/conf.d");
+define ('PHP_CONFIG_FILE_PATH', "/etc/php/7.2/cli");
+define ('PHP_CONFIG_FILE_SCAN_DIR', "/etc/php/7.2/cli/conf.d");
 define ('PHP_SHLIB_SUFFIX', "so");
 define ('PHP_EOL', "\n");
 define ('PHP_MAXPATHLEN', 4096);
@@ -1623,7 +1644,22 @@ define ('PHP_INT_MAX', 9223372036854775807);
 define ('PHP_INT_MIN', -9223372036854775808);
 define ('PHP_INT_SIZE', 8);
 define ('PHP_FD_SETSIZE', 1024);
-define ('PHP_BINARY', "/usr/bin/php7.1");
+define ('PHP_FLOAT_DIG', 15);
+define ('PHP_FLOAT_EPSILON', 2.2204460492503E-16);
+define ('PHP_FLOAT_MAX', 1.7976931348623E+308);
+define ('PHP_FLOAT_MIN', 2.2250738585072E-308);
+define ('PHP_WINDOWS_VERSION_MAJOR', 10);
+define ('PHP_WINDOWS_VERSION_MINOR', 0);
+define ('PHP_WINDOWS_VERSION_BUILD', 16299);
+define ('PHP_WINDOWS_VERSION_PLATFORM', 2);
+define ('PHP_WINDOWS_VERSION_SP_MAJOR', 0);
+define ('PHP_WINDOWS_VERSION_SP_MINOR', 0);
+define ('PHP_WINDOWS_VERSION_SUITEMASK', 256);
+define ('PHP_WINDOWS_VERSION_PRODUCTTYPE', 1);
+define ('PHP_WINDOWS_NT_DOMAIN_CONTROLLER', 2);
+define ('PHP_WINDOWS_NT_SERVER', 3);
+define ('PHP_WINDOWS_NT_WORKSTATION', 1);
+define ('PHP_BINARY', "/usr/bin/php-7.2.3");
 
 /**
  * Indicates that output buffering has begun.
@@ -1763,4 +1799,4 @@ define ('STDIN', "Resource id #1");
 define ('STDOUT', "Resource id #2");
 define ('STDERR', "Resource id #3");
 
-// End of Core v.7.1.1
+// End of Core v.7.2.3

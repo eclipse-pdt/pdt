@@ -1,6 +1,6 @@
 <?php
 
-// Start of standard v.7.1.1
+// Start of standard v.7.2.3
 
 class __PHP_Incomplete_Class  {
 }
@@ -750,7 +750,7 @@ function md5_file (string $filename, bool $raw_output = null) {}
 function crc32 (string $str) {}
 
 /**
- * Parse a binary IPTC block into single tags.
+ * Parse a binary IPTC block into single tags
  * @link http://www.php.net/manual/en/function.iptcparse.php
  * @param string $iptcblock A binary IPTC block.
  * @return array an array using the tagmarker as an index and the value as the
@@ -1231,7 +1231,7 @@ function substr_count (string $haystack, string $needle, int $offset = null, int
 
 /**
  * Finds the length of the initial segment of a string consisting
- * entirely of characters contained within a given mask.
+ * entirely of characters contained within a given mask
  * @link http://www.php.net/manual/en/function.strspn.php
  * @param string $subject The string to examine.
  * @param string $mask The list of allowable characters.
@@ -1368,7 +1368,7 @@ function strtolower (string $string) {}
  * @param int $offset [optional] If specified, search will start this number of characters counted from
  * the beginning of the string. If the offset is negative, the search will start
  * this number of characters counted from the end of the string.
- * @return mixed the position of where the needle exists relative to the beginning of
+ * @return int the position of where the needle exists relative to the beginning of
  * the haystack string (independent of offset).
  * Also note that string positions start at 0, and not 1.
  * <p>
@@ -1392,7 +1392,7 @@ function strpos (string $haystack, $needle, int $offset = null) {}
  * @param int $offset [optional] If specified, search will start this number of characters counted from
  * the beginning of the string. If the offset is negative, the search will start
  * this number of characters counted from the end of the string.
- * @return mixed the position of where the needle exists relative to the beginnning of
+ * @return int the position of where the needle exists relative to the beginnning of
  * the haystack string (independent of offset).
  * Also note that string positions start at 0, and not 1.
  * <p>
@@ -1603,7 +1603,7 @@ function strstr (string $haystack, $needle, bool $before_needle = null) {}
  * @param bool $before_needle [optional] If true, stristr
  * returns the part of the haystack before the
  * first occurrence of the needle (excluding needle).
- * @return mixed the matched substring. If needle is not
+ * @return string the matched substring. If needle is not
  * found, returns false.
  */
 function stristr (string $haystack, $needle, bool $before_needle = null) {}
@@ -1710,6 +1710,23 @@ function strpbrk (string $haystack, string $char_list) {}
  * false.
  */
 function substr_compare (string $main_str, string $str, int $offset, int $length = null, bool $case_insensitivity = null) {}
+
+/**
+ * Encodes an ISO-8859-1 string to UTF-8
+ * @link http://www.php.net/manual/en/function.utf8-encode.php
+ * @param string $data An ISO-8859-1 string.
+ * @return string the UTF-8 translation of data.
+ */
+function utf8_encode (string $data) {}
+
+/**
+ * Converts a string with ISO-8859-1 characters encoded with UTF-8
+ * to single-byte ISO-8859-1
+ * @link http://www.php.net/manual/en/function.utf8-decode.php
+ * @param string $data A UTF-8 encoded string.
+ * @return string the ISO-8859-1 translation of data.
+ */
+function utf8_decode (string $data) {}
 
 /**
  * Locale based string comparison
@@ -2118,7 +2135,7 @@ function rtrim (string $str, string $character_mask = null) {}
 function str_replace ($search, $replace, $subject, int &$count = null) {}
 
 /**
- * Case-insensitive version of str_replace.
+ * Case-insensitive version of str_replace
  * @link http://www.php.net/manual/en/function.str-ireplace.php
  * @param mixed $search The value being searched for, otherwise known as the
  * needle. An array may be used to designate
@@ -2271,16 +2288,30 @@ function strip_tags (string $str, string $allowable_tags = null) {}
  * Calculate the similarity between two strings
  * @link http://www.php.net/manual/en/function.similar-text.php
  * @param string $first The first string.
- * @param string $second The second string.
+ * @param string $second <p>
+ * The second string.
+ * </p>
+ * <p>
+ * Swapping the first and
+ * second may yield a different result; see the
+ * example below.
+ * </p>
  * @param float $percent [optional] By passing a reference as third argument,
  * similar_text will calculate the similarity in
- * percent for you.
+ * percent, by dividing the result of similar_text by
+ * the average of the lengths of the given strings times
+ * 100.
  * @return int the number of matching chars in both strings.
+ * <p>
+ * The number of matching characters is calculated by finding the longest first
+ * common substring, and then doing this for the prefixes and the suffixes,
+ * recursively. The lengths of all found common substrings are added.
+ * </p>
  */
 function similar_text (string $first, string $second, float &$percent = null) {}
 
 /**
- * Split a string by string
+ * Split a string by a string
  * @link http://www.php.net/manual/en/function.explode.php
  * @param string $delimiter The boundary string.
  * @param string $string The input string.
@@ -2812,8 +2843,18 @@ function parse_str (string $encoded_string, array &$result = null) {}
  * @param string $input The string to parse.
  * @param string $delimiter [optional] Set the field delimiter (one character only).
  * @param string $enclosure [optional] Set the field enclosure character (one character only).
- * @param string $escape [optional] Set the escape character (one character only). Defaults as a backslash
+ * @param string $escape [optional] <p>
+ * Set the escape character (one character only). Defaults as a backslash
  * (\)
+ * </p>
+ * Usually an enclosure character is escpaped inside
+ * a field by doubling it; however, the escape
+ * character can be used as an alternative. So for the default parameter
+ * values "" and \" have the same
+ * meaning. Other than allowing to escape the
+ * enclosure character the
+ * escape character has no special meaning; it isn't
+ * even meant to escape itself.
  * @return array an indexed array containing the fields read.
  */
 function str_getcsv (string $input, string $delimiter = null, string $enclosure = null, string $escape = null) {}
@@ -3609,7 +3650,7 @@ function proc_get_status ($process) {}
  * The new priority value, the value of this may differ on platforms.
  * </p>
  * <p>
- * on Unix, a low value, such as -20 means high priority 
+ * On Unix, a low value, such as -20 means high priority 
  * wheras a positive value have a lower priority.
  * </p>
  * <p>
@@ -3861,7 +3902,7 @@ function base64_encode (string $data) {}
  * in the password parameter being truncated to a
  * maximum length of 72 characters.
  * </p>
- * @param integer $algo A password algorithm constant denoting the algorithm to use when hashing the password.
+ * @param int $algo A password algorithm constant denoting the algorithm to use when hashing the password.
  * @param array $options [optional] <p>
  * An associative array containing options. See the password algorithm constants for documentation on the supported options for each algorithm.
  * </p>
@@ -3902,9 +3943,9 @@ function password_get_info (string $hash) {}
  * Checks if the given hash matches the given options
  * @link http://www.php.net/manual/en/function.password-needs-rehash.php
  * @param string $hash A hash created by password_hash.
- * @param integer $algo A password algorithm constant denoting the algorithm to use when hashing the password.
+ * @param int $algo A password algorithm constant denoting the algorithm to use when hashing the password.
  * @param array $options [optional] An associative array containing options. See the password algorithm constants for documentation on the supported options for each algorithm.
- * @return boolean true if the hash should be rehashed to match the given
+ * @return bool true if the hash should be rehashed to match the given
  * algo and options, or false
  * otherwise.
  */
@@ -3915,7 +3956,7 @@ function password_needs_rehash (string $hash, int $algo, array $options = null) 
  * @link http://www.php.net/manual/en/function.password-verify.php
  * @param string $password The useraposs password.
  * @param string $hash A hash created by password_hash.
- * @return boolean true if the password and hash match, or false otherwise.
+ * @return bool true if the password and hash match, or false otherwise.
  */
 function password_verify (string $password, string $hash) {}
 
@@ -3963,10 +4004,11 @@ function ceil (float $value) {}
  * Round fractions down
  * @link http://www.php.net/manual/en/function.floor.php
  * @param float $value The numeric value to round
- * @return mixed value rounded to the next lowest integer.
+ * @return float value rounded to the next lowest integer.
  * The return value of floor is still of type
  * float because the value range of float is 
- * usually bigger than that of integer. This function returns FALSE in case of an error (e.g. passing an array).
+ * usually bigger than that of integer.
+ * This function returns false in case of an error (e.g. passing an array).
  */
 function floor (float $value) {}
 
@@ -3999,14 +4041,14 @@ function floor (float $value) {}
  * <td>PHP_ROUND_HALF_EVEN</td>
  * <td>
  * Round val to precision decimal places
- * towards the next even value.
+ * towards the nearest even value.
  * </td>
  * </tr>
  * <tr valign="top">
  * <td>PHP_ROUND_HALF_ODD</td>
  * <td>
  * Round val to precision decimal places
- * towards the next odd value. 
+ * towards the nearest odd value. 
  * </td>
  * </tr>
  * </table>
@@ -4158,11 +4200,11 @@ function is_finite (float $val) {}
 /**
  * Finds whether a value is not a number
  * @link http://www.php.net/manual/en/function.is-nan.php
- * @param mixed $val The value to check
+ * @param float $val The value to check
  * @return bool true if val is 'not a number',
  * else false.
  */
-function is_nan ($val) {}
+function is_nan (float $val) {}
 
 /**
  * Finds whether a value is infinite
@@ -4499,6 +4541,8 @@ function long2ip (int $proper_address) {}
  * @return string the value of the environment variable
  * varname, or false if the environment
  * variable varname does not exist.
+ * If varname is omitted, all environment variables are
+ * returned as associative array.
  */
 function getenv (string $varname, bool $local_only = null) {}
 
@@ -4674,7 +4718,7 @@ function header_register_callback (callable $callback) {}
  * Gets the value of a PHP configuration option
  * @link http://www.php.net/manual/en/function.get-cfg-var.php
  * @param string $option The configuration option name.
- * @return string the current value of the PHP configuration variable specified by
+ * @return mixed the current value of the PHP configuration variable specified by
  * option, or false if an error occurs.
  */
 function get_cfg_var (string $option) {}
@@ -4899,8 +4943,8 @@ function serialize ($value) {}
  * if an undefined class should be instantiated during unserializing.
  * (to prevent getting an incomplete object "__PHP_Incomplete_Class".)
  * Use your php.ini, ini_set or htaccess 
- * to define 'unserialize_callback_func'. Everytime an undefined class
- * should be instantiated, it'll be called. To disable this feature just
+ * to define unserialize_callback_func.
+ * Everytime an undefined class should be instantiated, it'll be called. To disable this feature just
  * empty this setting.
  * </p>
  * </p>
@@ -5275,7 +5319,7 @@ function setrawcookie (string $name, string $value = null, int $expire = null, s
 /**
  * Send a raw HTTP header
  * @link http://www.php.net/manual/en/function.header.php
- * @param string $string <p>
+ * @param string $header <p>
  * The header string.
  * </p>
  * <p>
@@ -5326,11 +5370,11 @@ function setrawcookie (string $name, string $value = null, int $expire = null, s
  * </pre>
  * </p>
  * @param int $http_response_code [optional] Forces the HTTP response code to the specified value. Note that this 
- * parameter only has an effect if the string is 
+ * parameter only has an effect if the header is 
  * not empty.
  * @return void 
  */
-function header (string $string, bool $replace = null, int $http_response_code = null) {}
+function header (string $header, bool $replace = null, int $http_response_code = null) {}
 
 /**
  * Remove previously set headers
@@ -5858,7 +5902,7 @@ function strval ($var) {}
  * Get the boolean value of a variable
  * @link http://www.php.net/manual/en/function.boolval.php
  * @param mixed $var The scalar value being converted to a boolean.
- * @return boolean The boolean value of var.
+ * @return bool The boolean value of var.
  */
 function boolval ($var) {}
 
@@ -5884,6 +5928,8 @@ function boolval ($var) {}
  * "object"
  * <br>
  * "resource"
+ * <br>
+ * "resource (closed)" as of PHP 7.2.0
  * <br>
  * "NULL"
  * <br>
@@ -7264,12 +7310,26 @@ function stream_copy_to_stream ($source, $dest, int $maxlength = null, int $offs
 function stream_get_contents ($handle, int $maxlength = null, int $offset = null) {}
 
 /**
- * Tells whether the stream supports locking.
+ * Tells whether the stream supports locking
  * @link http://www.php.net/manual/en/function.stream-supports-lock.php
  * @param resource $stream The stream to check.
  * @return bool true on success or false on failure
  */
 function stream_supports_lock ($stream) {}
+
+/**
+ * Check if a stream is a TTY
+ * @link http://www.php.net/manual/en/function.stream-isatty.php
+ * @param resource $stream 
+ * @return bool true on success or false on failure
+ */
+function stream_isatty ($stream) {}
+
+/**
+ * @param $stream
+ * @param $enable [optional]
+ */
+function sapi_windows_vt100_support ($stream, $enable = null) {}
 
 /**
  * Gets line from file pointer and parse for CSV fields
@@ -7290,7 +7350,17 @@ function stream_supports_lock ($stream) {}
  * </p>
  * @param string $delimiter [optional] The optional delimiter parameter sets the field delimiter (one character only).
  * @param string $enclosure [optional] The optional enclosure parameter sets the field enclosure character (one character only).
- * @param string $escape [optional] The optional escape parameter sets the escape character (one character only).
+ * @param string $escape [optional] <p>
+ * The optional escape parameter sets the escape character (one character only).
+ * </p>
+ * Usually an enclosure character is escpaped inside
+ * a field by doubling it; however, the escape
+ * character can be used as an alternative. So for the default parameter
+ * values "" and \" have the same
+ * meaning. Other than allowing to escape the
+ * enclosure character the
+ * escape character has no special meaning; it isn't
+ * even meant to escape itself.
  * @return array an indexed array containing the fields read.
  * <p>
  * A blank line in a CSV file will be returned as an array
@@ -7608,10 +7678,11 @@ function stream_is_local ($stream_or_url) {}
  * @param int $format [optional] If the optional format parameter is set to non-zero,
  * get_headers parses the response and sets the 
  * array's keys.
+ * @param resource $context [optional] 
  * @return array an indexed or associative array with the headers, or false on
  * failure.
  */
-function get_headers (string $url, int $format = null) {}
+function get_headers (string $url, int $format = null, $context = null) {}
 
 /**
  * Set timeout period on a stream
@@ -7650,7 +7721,7 @@ function socket_get_status ($fp) {}
  * </p>
  * </p>
  * @return string the canonicalized absolute pathname on success. The resulting path 
- * will have no symbolic link, '/./' or '/../' components. Trailing delimiters,
+ * will have no symbolic link, /./ or /../ components. Trailing delimiters,
  * such as \ and /, are also removed.
  * <p>
  * realpath returns false on failure, e.g. if
@@ -7664,6 +7735,10 @@ function socket_get_status ($fp) {}
  * <p>
  * For case-insensitive filesystems realpath may or may
  * not normalize the character case.
+ * </p>
+ * <p>
+ * The function realpath will not work for a file which
+ * is inside a Phar as such path would be a virual path, not a real one.
  * </p>
  */
 function realpath (string $path) {}
@@ -7926,10 +8001,11 @@ function pack (string $format, $args = null, $_ = null) {}
  * @link http://www.php.net/manual/en/function.unpack.php
  * @param string $format See pack for an explanation of the format codes.
  * @param string $data The packed data.
+ * @param int $offset [optional] The offset to begin unpacking from.
  * @return array an associative array containing unpacked elements of binary
  * string.
  */
-function unpack (string $format, string $data) {}
+function unpack (string $format, string $data, int $offset = null) {}
 
 /**
  * Tells what the user's browser is capable of
@@ -8048,7 +8124,7 @@ function getcwd () {}
  * with opendir. If the directory handle is 
  * not specified, the last link opened by opendir 
  * is assumed.
- * @return void 
+ * @return void null on successreturn.falseforfailure.
  */
 function rewinddir ($dir_handle = null) {}
 
@@ -8626,8 +8702,8 @@ function realpath_cache_get () {}
  * ?&gt;</code>
  * </pre>
  * </p>
- * @param string $additional_headers [optional] <p>
- * String to be inserted at the end of the email header.
+ * @param mixed $additional_headers [optional] <p>
+ * String or array to be inserted at the end of the email header.
  * </p>
  * <p>
  * This is typically used to add extra headers (From, Cc, and Bcc).
@@ -8636,7 +8712,11 @@ function realpath_cache_get () {}
  * so that no unwanted headers could be injected. 
  * </p>
  * <p>
- * additional_headers does not have mail header
+ * If an array is passed, its keys are the header names and its
+ * values are the respective header values.
+ * </p>
+ * <p>
+ * Before PHP 5.4.42 and 5.5.27, repectively, additional_headers did not have mail header
  * injection protection. Therefore, users must make sure specified headers
  * are safe and contains headers only. i.e. Never start mail body by putting
  * multiple newlines.
@@ -8696,7 +8776,7 @@ function realpath_cache_get () {}
  * it does NOT mean the mail will actually reach the intended destination.
  * </p>
  */
-function mail (string $to, string $subject, string $message, string $additional_headers = null, string $additional_parameters = null) {}
+function mail (string $to, string $subject, string $message, $additional_headers = null, string $additional_parameters = null) {}
 
 /**
  * Calculate the hash value needed by EZMLM
@@ -10488,20 +10568,7 @@ function assert_options (int $what, $value = null) {}
  * @link http://www.php.net/manual/en/function.version-compare.php
  * @param string $version1 First version number.
  * @param string $version2 Second version number.
- * @param string $operator [optional] <p>
- * If the third optional operator argument is
- * specified, test for a particular relationship. The possible operators
- * are: &lt;, lt,
- * &lt;=, le, &gt;,
- * gt, &gt;=, ge,
- * ==, =, eq,
- * !=, &lt;&gt;, ne
- * respectively. 
- * </p>
- * <p>
- * This parameter is case-sensitive, values should be lowercase.
- * </p>
- * @return mixed By default, version_compare returns
+ * @return int By default, version_compare returns
  * -1 if the first version is lower than the second, 
  * 0 if they are equal, and
  * 1 if the second is lower. 
@@ -10511,7 +10578,7 @@ function assert_options (int $what, $value = null) {}
  * by the operator, false otherwise. 
  * </p>
  */
-function version_compare (string $version1, string $version2, string $operator = null) {}
+function version_compare (string $version1, string $version2) {}
 
 /**
  * Convert a pathname and a project identifier to a System V IPC key
@@ -10617,6 +10684,42 @@ function output_reset_rewrite_vars () {}
  * @return string the path of the temporary directory.
  */
 function sys_get_temp_dir () {}
+
+/**
+ * Set process codepage
+ * @link http://www.php.net/manual/en/function.sapi-windows-cp-set.php
+ * @param int $cp A codepage identifier.
+ * @return bool true on success or false on failure
+ */
+function sapi_windows_cp_set (int $cp) {}
+
+/**
+ * Get process codepage
+ * @link http://www.php.net/manual/en/function.sapi-windows-cp-get.php
+ * @param string $kind The kind of codepage: either 'ansi' or 'oem'.
+ * @return int the codepage identifier.
+ */
+function sapi_windows_cp_get (string $kind) {}
+
+/**
+ * Indicates whether the codepage is UTF-8 compatible
+ * @link http://www.php.net/manual/en/function.sapi-windows-cp-is-utf8.php
+ * @return bool whether the codepage of the current process is UTF-8 compatible.
+ */
+function sapi_windows_cp_is_utf8 () {}
+
+/**
+ * Convert string from one codepage to another
+ * @link http://www.php.net/manual/en/function.sapi-windows-cp-conv.php
+ * @param int|string $in_codepage The codepage of the subject string.
+ * Either the codepage name or identifier.
+ * @param int|string $out_codepage The codepage to convert the subject string to.
+ * Either the codepage name or identifier.
+ * @param string $subject The string to convert.
+ * @return string The subject string converted to
+ * out_codepage, or null on failure.
+ */
+function sapi_windows_cp_conv ($in_codepage, $out_codepage, string $subject) {}
 
 /**
  * Loads a PHP extension at runtime
@@ -11274,7 +11377,7 @@ define ('STREAM_CRYPTO_METHOD_ANY_CLIENT', 63);
 define ('STREAM_CRYPTO_METHOD_SSLv2_CLIENT', 3);
 define ('STREAM_CRYPTO_METHOD_SSLv3_CLIENT', 5);
 define ('STREAM_CRYPTO_METHOD_SSLv23_CLIENT', 57);
-define ('STREAM_CRYPTO_METHOD_TLS_CLIENT', 9);
+define ('STREAM_CRYPTO_METHOD_TLS_CLIENT', 57);
 define ('STREAM_CRYPTO_METHOD_TLSv1_0_CLIENT', 9);
 define ('STREAM_CRYPTO_METHOD_TLSv1_1_CLIENT', 17);
 define ('STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT', 33);
@@ -11282,7 +11385,7 @@ define ('STREAM_CRYPTO_METHOD_ANY_SERVER', 62);
 define ('STREAM_CRYPTO_METHOD_SSLv2_SERVER', 2);
 define ('STREAM_CRYPTO_METHOD_SSLv3_SERVER', 4);
 define ('STREAM_CRYPTO_METHOD_SSLv23_SERVER', 56);
-define ('STREAM_CRYPTO_METHOD_TLS_SERVER', 8);
+define ('STREAM_CRYPTO_METHOD_TLS_SERVER', 56);
 define ('STREAM_CRYPTO_METHOD_TLSv1_0_SERVER', 8);
 define ('STREAM_CRYPTO_METHOD_TLSv1_1_SERVER', 16);
 define ('STREAM_CRYPTO_METHOD_TLSv1_2_SERVER', 32);
@@ -11567,7 +11670,7 @@ define ('PASSWORD_DEFAULT', 1);
  * <p>
  * <br>
  * <p>
- * salt - to manually provide a salt to use when hashing the password.
+ * salt (string) - to manually provide a salt to use when hashing the password.
  * Note that this will override and prevent a salt from being automatically generated.
  * </p>
  * <p>
@@ -11578,7 +11681,59 @@ define ('PASSWORD_DEFAULT', 1);
  * @link http://www.php.net/manual/en/password.constants.php
  */
 define ('PASSWORD_BCRYPT', 1);
+
+/**
+ * <p>
+ * PASSWORD_ARGON2I is used to create new password
+ * hashes using the Argon2 algorithm.
+ * </p>
+ * <p>
+ * Supported Options:
+ * </p>
+ * <p>
+ * <br>
+ * <p>
+ * memory_cost (integer) - Maximum memory (in bytes) that may 
+ * be used to compute the Argon2 hash. Defaults to PASSWORD_ARGON2_DEFAULT_MEMORY_COST.
+ * </p>
+ * @link http://www.php.net/manual/en/password.constants.php
+ */
+define ('PASSWORD_ARGON2I', 2);
 define ('PASSWORD_BCRYPT_DEFAULT_COST', 10);
+
+/**
+ * <p>
+ * Default amount of memory in bytes that Argon2lib will use while trying to 
+ * compute a hash.
+ * </p>
+ * <p>
+ * Available as of PHP 7.2.0.
+ * </p>
+ * @link http://www.php.net/manual/en/password.constants.php
+ */
+define ('PASSWORD_ARGON2_DEFAULT_MEMORY_COST', 1024);
+
+/**
+ * <p>
+ * Default amount of time that Argon2lib will spend trying to compute a hash.
+ * </p>
+ * <p>
+ * Available as of PHP 7.2.0.
+ * </p>
+ * @link http://www.php.net/manual/en/password.constants.php
+ */
+define ('PASSWORD_ARGON2_DEFAULT_TIME_COST', 2);
+
+/**
+ * <p>
+ * Default number of threads that Argon2lib will use.
+ * </p>
+ * <p>
+ * Available as of PHP 7.2.0.
+ * </p>
+ * @link http://www.php.net/manual/en/password.constants.php
+ */
+define ('PASSWORD_ARGON2_DEFAULT_THREADS', 2);
 define ('MT_RAND_MT19937', 0);
 define ('MT_RAND_PHP', 1);
 define ('ABDAY_1', 131072);
@@ -12306,6 +12461,7 @@ define ('DNS_PTR', 2048);
  * @link http://www.php.net/manual/en/network.constants.php
  */
 define ('DNS_HINFO', 4096);
+define ('DNS_CAA', 8192);
 
 /**
  * Mail Exchanger Resource
@@ -12342,6 +12498,6 @@ define ('DNS_ANY', 268435456);
  * each available record type.
  * @link http://www.php.net/manual/en/network.constants.php
  */
-define ('DNS_ALL', 251713587);
+define ('DNS_ALL', 251721779);
 
-// End of standard v.7.1.1
+// End of standard v.7.2.3

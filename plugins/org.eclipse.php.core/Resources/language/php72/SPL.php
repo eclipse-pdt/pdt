@@ -1,6 +1,6 @@
 <?php
 
-// Start of SPL v.7.1.1
+// Start of SPL v.7.2.3
 
 /**
  * Exception that represents error in the program logic. This kind of
@@ -549,7 +549,7 @@ interface RecursiveIterator extends Iterator, Traversable {
 	abstract public function hasChildren ();
 
 	/**
-	 * Returns an iterator for the current entry.
+	 * Returns an iterator for the current entry
 	 * @link http://www.php.net/manual/en/recursiveiterator.getchildren.php
 	 * @return RecursiveIterator An iterator for the current entry.
 	 */
@@ -696,11 +696,11 @@ class RecursiveIteratorIterator implements Iterator, Traversable, OuterIterator 
 	/**
 	 * Set max depth
 	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.setmaxdepth.php
-	 * @param string $max_depth [optional] The maximum allowed depth. -1 is used
+	 * @param int $max_depth [optional] The maximum allowed depth. -1 is used
 	 * for any depth.
 	 * @return void 
 	 */
-	public function setMaxDepth (string $max_depth = null) {}
+	public function setMaxDepth (int $max_depth = null) {}
 
 	/**
 	 * Get max depth
@@ -719,7 +719,7 @@ class RecursiveIteratorIterator implements Iterator, Traversable, OuterIterator 
 interface OuterIterator extends Iterator, Traversable {
 
 	/**
-	 * Returns the inner iterator for the current entry.
+	 * Returns the inner iterator for the current entry
 	 * @link http://www.php.net/manual/en/outeriterator.getinneriterator.php
 	 * @return Iterator The inner iterator for the current entry.
 	 */
@@ -1183,25 +1183,6 @@ class ParentIterator extends RecursiveFilterIterator implements RecursiveIterato
 }
 
 /**
- * Classes implementing Countable can be used with the
- * count function.
- * @link http://www.php.net/manual/en/class.countable.php
- */
-interface Countable  {
-
-	/**
-	 * Count elements of an object
-	 * @link http://www.php.net/manual/en/countable.count.php
-	 * @return int The custom count as an integer.
-	 * <p>
-	 * The return value is cast to an integer.
-	 * </p>
-	 */
-	abstract public function count ();
-
-}
-
-/**
  * The Seekable iterator.
  * @link http://www.php.net/manual/en/class.seekableiterator.php
  */
@@ -1323,7 +1304,7 @@ class CachingIterator extends IteratorIterator implements OuterIterator, Travers
 
 
 	/**
-	 * Construct a new CachingIterator object for the iterator.
+	 * Construct a new CachingIterator object for the iterator
 	 * @link http://www.php.net/manual/en/cachingiterator.construct.php
 	 * @param Iterator $iterator
 	 * @param $flags [optional]
@@ -1633,7 +1614,7 @@ class NoRewindIterator extends IteratorIterator implements OuterIterator, Traver
 	public function __construct (Iterator $iterator) {}
 
 	/**
-	 * Prevents the rewind operation on the inner iterator.
+	 * Prevents the rewind operation on the inner iterator
 	 * @link http://www.php.net/manual/en/norewinditerator.rewind.php
 	 * @return void 
 	 */
@@ -1857,14 +1838,14 @@ class RegexIterator extends FilterIterator implements Iterator, Traversable, Out
 	public function accept () {}
 
 	/**
-	 * Returns operation mode.
+	 * Returns operation mode
 	 * @link http://www.php.net/manual/en/regexiterator.getmode.php
 	 * @return int the operation mode.
 	 */
 	public function getMode () {}
 
 	/**
-	 * Sets the operation mode.
+	 * Sets the operation mode
 	 * @link http://www.php.net/manual/en/regexiterator.setmode.php
 	 * @param int $mode <p>
 	 * The operation mode.
@@ -1925,7 +1906,7 @@ class RegexIterator extends FilterIterator implements Iterator, Traversable, Out
 	public function getFlags () {}
 
 	/**
-	 * Sets the flags.
+	 * Sets the flags
 	 * @link http://www.php.net/manual/en/regexiterator.setflags.php
 	 * @param int $flags <p>
 	 * The flags to set, a bitmask of class constants.
@@ -1955,14 +1936,14 @@ class RegexIterator extends FilterIterator implements Iterator, Traversable, Out
 	public function setFlags (int $flags) {}
 
 	/**
-	 * Returns the regular expression flags.
+	 * Returns the regular expression flags
 	 * @link http://www.php.net/manual/en/regexiterator.getpregflags.php
 	 * @return int a bitmask of the regular expression flags.
 	 */
 	public function getPregFlags () {}
 
 	/**
-	 * Sets the regular expression flags.
+	 * Sets the regular expression flags
 	 * @link http://www.php.net/manual/en/regexiterator.setpregflags.php
 	 * @param int $preg_flags The regular expression flags. See RegexIterator::__construct
 	 * for an overview of available flags.
@@ -2045,7 +2026,7 @@ class RecursiveRegexIterator extends RegexIterator implements OuterIterator, Tra
 	public $name;
 
 	/**
-	 * Creates a new RecursiveRegexIterator.
+	 * Creates a new RecursiveRegexIterator
 	 * @link http://www.php.net/manual/en/recursiveregexiterator.construct.php
 	 * @param RecursiveIterator $iterator
 	 * @param $regex
@@ -2058,28 +2039,28 @@ class RecursiveRegexIterator extends RegexIterator implements OuterIterator, Tra
 	public function accept () {}
 
 	/**
-	 * Returns whether an iterator can be obtained for the current entry.
+	 * Returns whether an iterator can be obtained for the current entry
 	 * @link http://www.php.net/manual/en/recursiveregexiterator.haschildren.php
 	 * @return bool true if an iterator can be obtained for the current entry, otherwise returns false.
 	 */
 	public function hasChildren () {}
 
 	/**
-	 * Returns an iterator for the current entry.
+	 * Returns an iterator for the current entry
 	 * @link http://www.php.net/manual/en/recursiveregexiterator.getchildren.php
 	 * @return RecursiveRegexIterator An iterator for the current entry, if it can be iterated over by the inner iterator.
 	 */
 	public function getChildren () {}
 
 	/**
-	 * Returns operation mode.
+	 * Returns operation mode
 	 * @link http://www.php.net/manual/en/regexiterator.getmode.php
 	 * @return int the operation mode.
 	 */
 	public function getMode () {}
 
 	/**
-	 * Sets the operation mode.
+	 * Sets the operation mode
 	 * @link http://www.php.net/manual/en/regexiterator.setmode.php
 	 * @param int $mode <p>
 	 * The operation mode.
@@ -2140,7 +2121,7 @@ class RecursiveRegexIterator extends RegexIterator implements OuterIterator, Tra
 	public function getFlags () {}
 
 	/**
-	 * Sets the flags.
+	 * Sets the flags
 	 * @link http://www.php.net/manual/en/regexiterator.setflags.php
 	 * @param int $flags <p>
 	 * The flags to set, a bitmask of class constants.
@@ -2170,14 +2151,14 @@ class RecursiveRegexIterator extends RegexIterator implements OuterIterator, Tra
 	public function setFlags (int $flags) {}
 
 	/**
-	 * Returns the regular expression flags.
+	 * Returns the regular expression flags
 	 * @link http://www.php.net/manual/en/regexiterator.getpregflags.php
 	 * @return int a bitmask of the regular expression flags.
 	 */
 	public function getPregFlags () {}
 
 	/**
-	 * Sets the regular expression flags.
+	 * Sets the regular expression flags
 	 * @link http://www.php.net/manual/en/regexiterator.setpregflags.php
 	 * @param int $preg_flags The regular expression flags. See RegexIterator::__construct
 	 * for an overview of available flags.
@@ -2415,12 +2396,18 @@ class RecursiveTreeIterator extends RecursiveIteratorIterator implements OuterIt
 	 */
 	public function getEntry () {}
 
-	public function setPostfix () {}
+	/**
+	 * Set postfix
+	 * @link http://www.php.net/manual/en/recursivetreeiterator.setpostfix.php
+	 * @param string $postfix 
+	 * @return void 
+	 */
+	public function setPostfix (string $postfix) {}
 
 	/**
 	 * Get the postfix
 	 * @link http://www.php.net/manual/en/recursivetreeiterator.getpostfix.php
-	 * @return void the string to place after the current element.
+	 * @return string the string to place after the current element.
 	 */
 	public function getPostfix () {}
 
@@ -2449,11 +2436,11 @@ class RecursiveTreeIterator extends RecursiveIteratorIterator implements OuterIt
 	/**
 	 * Set max depth
 	 * @link http://www.php.net/manual/en/recursiveiteratoriterator.setmaxdepth.php
-	 * @param string $max_depth [optional] The maximum allowed depth. -1 is used
+	 * @param int $max_depth [optional] The maximum allowed depth. -1 is used
 	 * for any depth.
 	 * @return void 
 	 */
-	public function setMaxDepth (string $max_depth = null) {}
+	public function setMaxDepth (int $max_depth = null) {}
 
 	/**
 	 * Get max depth
@@ -2531,9 +2518,9 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serial
 	public function append ($value) {}
 
 	/**
-	 * Creates a copy of the ArrayObject.
+	 * Creates a copy of the ArrayObject
 	 * @link http://www.php.net/manual/en/arrayobject.getarraycopy.php
-	 * @return array a copy of the array. When the ArrayObject refers to an object
+	 * @return array a copy of the array. When the ArrayObject refers to an object,
 	 * an array of the public properties of that object will be returned.
 	 */
 	public function getArrayCopy () {}
@@ -2549,14 +2536,14 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serial
 	public function count () {}
 
 	/**
-	 * Gets the behavior flags.
+	 * Gets the behavior flags
 	 * @link http://www.php.net/manual/en/arrayobject.getflags.php
 	 * @return int the behavior flags of the ArrayObject.
 	 */
 	public function getFlags () {}
 
 	/**
-	 * Sets the behavior flags.
+	 * Sets the behavior flags
 	 * @link http://www.php.net/manual/en/arrayobject.setflags.php
 	 * @param int $flags <p>
 	 * The new ArrayObject behavior.
@@ -2676,7 +2663,7 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serial
 	public function getIterator () {}
 
 	/**
-	 * Exchange the array for another one.
+	 * Exchange the array for another one
 	 * @link http://www.php.net/manual/en/arrayobject.exchangearray.php
 	 * @param mixed $input The new array or object to exchange with the current array.
 	 * @return array the old array.
@@ -2684,7 +2671,7 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serial
 	public function exchangeArray ($input) {}
 
 	/**
-	 * Sets the iterator classname for the ArrayObject.
+	 * Sets the iterator classname for the ArrayObject
 	 * @link http://www.php.net/manual/en/arrayobject.setiteratorclass.php
 	 * @param string $iterator_class The classname of the array iterator to use when iterating over this object.
 	 * @return void 
@@ -2692,7 +2679,7 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serial
 	public function setIteratorClass (string $iterator_class) {}
 
 	/**
-	 * Gets the iterator classname for the ArrayObject.
+	 * Gets the iterator classname for the ArrayObject
 	 * @link http://www.php.net/manual/en/arrayobject.getiteratorclass.php
 	 * @return string the iterator class name that is used to iterate over this object.
 	 */
@@ -2726,9 +2713,8 @@ class ArrayIterator implements Iterator, Traversable, ArrayAccess, SeekableItera
 	 * @link http://www.php.net/manual/en/arrayiterator.construct.php
 	 * @param $array [optional]
 	 * @param $ar_flags [optional]
-	 * @param $iterator_class [optional]
 	 */
-	public function __construct ($array = null, $ar_flags = null, $iterator_class = null) {}
+	public function __construct ($array = null, $ar_flags = null) {}
 
 	/**
 	 * Check if offset exists
@@ -2926,6 +2912,8 @@ class ArrayIterator implements Iterator, Traversable, ArrayAccess, SeekableItera
  * @link http://www.php.net/manual/en/class.recursivearrayiterator.php
  */
 class RecursiveArrayIterator extends ArrayIterator implements Countable, Serializable, SeekableIterator, ArrayAccess, Traversable, Iterator, RecursiveIterator {
+	const STD_PROP_LIST = 1;
+	const ARRAY_AS_PROPS = 2;
 	const CHILD_ARRAYS_ONLY = 4;
 
 
@@ -2937,7 +2925,7 @@ class RecursiveArrayIterator extends ArrayIterator implements Countable, Seriali
 	public $name;
 
 	/**
-	 * Returns whether current entry is an array or an object.
+	 * Returns whether current entry is an array or an object
 	 * @link http://www.php.net/manual/en/recursivearrayiterator.haschildren.php
 	 * @return bool true if the current entry is an array or an object,
 	 * otherwise false is returned.
@@ -2945,7 +2933,7 @@ class RecursiveArrayIterator extends ArrayIterator implements Countable, Seriali
 	public function hasChildren () {}
 
 	/**
-	 * Returns an iterator for the current entry if it is an array or an object.
+	 * Returns an iterator for the current entry if it is an array or an object
 	 * @link http://www.php.net/manual/en/recursivearrayiterator.getchildren.php
 	 * @return RecursiveArrayIterator An iterator for the current entry, if it is an array or object.
 	 */
@@ -2956,9 +2944,8 @@ class RecursiveArrayIterator extends ArrayIterator implements Countable, Seriali
 	 * @link http://www.php.net/manual/en/arrayiterator.construct.php
 	 * @param $array [optional]
 	 * @param $ar_flags [optional]
-	 * @param $iterator_class [optional]
 	 */
-	public function __construct ($array = null, $ar_flags = null, $iterator_class = null) {}
+	public function __construct ($array = null, $ar_flags = null) {}
 
 	/**
 	 * Check if offset exists
@@ -3401,7 +3388,7 @@ class DirectoryIterator extends SplFileInfo implements Iterator, Traversable, Se
 	public function __construct ($path) {}
 
 	/**
-	 * Return file name of current DirectoryIterator item.
+	 * Return file name of current DirectoryIterator item
 	 * @link http://www.php.net/manual/en/directoryiterator.getfilename.php
 	 * @return string the file name of the current DirectoryIterator item.
 	 */
@@ -3416,7 +3403,7 @@ class DirectoryIterator extends SplFileInfo implements Iterator, Traversable, Se
 	public function getExtension () {}
 
 	/**
-	 * Get base name of current DirectoryIterator item.
+	 * Get base name of current DirectoryIterator item
 	 * @link http://www.php.net/manual/en/directoryiterator.getbasename.php
 	 * @param string $suffix [optional] If the base name ends in suffix, 
 	 * this will be cut.
@@ -3454,7 +3441,7 @@ class DirectoryIterator extends SplFileInfo implements Iterator, Traversable, Se
 	public function key () {}
 
 	/**
-	 * Return the current DirectoryIterator item.
+	 * Return the current DirectoryIterator item
 	 * @link http://www.php.net/manual/en/directoryiterator.current.php
 	 * @return DirectoryIterator The current DirectoryIterator item.
 	 */
@@ -3742,7 +3729,7 @@ class FilesystemIterator extends DirectoryIterator implements SeekableIterator, 
 	public function setFlags (int $flags = null) {}
 
 	/**
-	 * Return file name of current DirectoryIterator item.
+	 * Return file name of current DirectoryIterator item
 	 * @link http://www.php.net/manual/en/directoryiterator.getfilename.php
 	 * @return string the file name of the current DirectoryIterator item.
 	 */
@@ -3757,7 +3744,7 @@ class FilesystemIterator extends DirectoryIterator implements SeekableIterator, 
 	public function getExtension () {}
 
 	/**
-	 * Get base name of current DirectoryIterator item.
+	 * Get base name of current DirectoryIterator item
 	 * @link http://www.php.net/manual/en/directoryiterator.getbasename.php
 	 * @param string $suffix [optional] If the base name ends in suffix, 
 	 * this will be cut.
@@ -4036,7 +4023,7 @@ class RecursiveDirectoryIterator extends FilesystemIterator implements Iterator,
 	/**
 	 * Get sub path
 	 * @link http://www.php.net/manual/en/recursivedirectoryiterator.getsubpath.php
-	 * @return string The sub path (sub directory).
+	 * @return string The sub path.
 	 */
 	public function getSubPath () {}
 
@@ -4094,7 +4081,7 @@ class RecursiveDirectoryIterator extends FilesystemIterator implements Iterator,
 	public function setFlags (int $flags = null) {}
 
 	/**
-	 * Return file name of current DirectoryIterator item.
+	 * Return file name of current DirectoryIterator item
 	 * @link http://www.php.net/manual/en/directoryiterator.getfilename.php
 	 * @return string the file name of the current DirectoryIterator item.
 	 */
@@ -4109,7 +4096,7 @@ class RecursiveDirectoryIterator extends FilesystemIterator implements Iterator,
 	public function getExtension () {}
 
 	/**
-	 * Get base name of current DirectoryIterator item.
+	 * Get base name of current DirectoryIterator item
 	 * @link http://www.php.net/manual/en/directoryiterator.getbasename.php
 	 * @param string $suffix [optional] If the base name ends in suffix, 
 	 * this will be cut.
@@ -4416,7 +4403,7 @@ class GlobIterator extends FilesystemIterator implements Iterator, Traversable, 
 	public function setFlags (int $flags = null) {}
 
 	/**
-	 * Return file name of current DirectoryIterator item.
+	 * Return file name of current DirectoryIterator item
 	 * @link http://www.php.net/manual/en/directoryiterator.getfilename.php
 	 * @return string the file name of the current DirectoryIterator item.
 	 */
@@ -4431,7 +4418,7 @@ class GlobIterator extends FilesystemIterator implements Iterator, Traversable, 
 	public function getExtension () {}
 
 	/**
-	 * Get base name of current DirectoryIterator item.
+	 * Get base name of current DirectoryIterator item
 	 * @link http://www.php.net/manual/en/directoryiterator.getbasename.php
 	 * @param string $suffix [optional] If the base name ends in suffix, 
 	 * this will be cut.
@@ -4667,7 +4654,7 @@ class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversabl
 
 
 	/**
-	 * Construct a new file object.
+	 * Construct a new file object
 	 * @link http://www.php.net/manual/en/splfileobject.construct.php
 	 * @param $file_name
 	 * @param $open_mode [optional]
@@ -4709,7 +4696,17 @@ class SplFileObject extends SplFileInfo implements RecursiveIterator, Traversabl
 	 * @link http://www.php.net/manual/en/splfileobject.fgetcsv.php
 	 * @param string $delimiter [optional] The field delimiter (one character only). Defaults as a comma or the value set using SplFileObject::setCsvControl.
 	 * @param string $enclosure [optional] The field enclosure character (one character only). Defaults as a double quotation mark or the value set using SplFileObject::setCsvControl.
-	 * @param string $escape [optional] The escape character (one character only). Defaults as a backslash (\) or the value set using SplFileObject::setCsvControl.
+	 * @param string $escape [optional] <p>
+	 * The escape character (one character only). Defaults as a backslash (\) or the value set using SplFileObject::setCsvControl.
+	 * </p>
+	 * Usually an enclosure character is escpaped inside
+	 * a field by doubling it; however, the escape
+	 * character can be used as an alternative. So for the default parameter
+	 * values "" and \" have the same
+	 * meaning. Other than allowing to escape the
+	 * enclosure character the
+	 * escape character has no special meaning; it isn't
+	 * even meant to escape itself.
 	 * @return array an indexed array containing the fields read, or false on error.
 	 * <p>
 	 * A blank line in a CSV file will be returned as an array
@@ -5240,7 +5237,17 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 	 * @link http://www.php.net/manual/en/splfileobject.fgetcsv.php
 	 * @param string $delimiter [optional] The field delimiter (one character only). Defaults as a comma or the value set using SplFileObject::setCsvControl.
 	 * @param string $enclosure [optional] The field enclosure character (one character only). Defaults as a double quotation mark or the value set using SplFileObject::setCsvControl.
-	 * @param string $escape [optional] The escape character (one character only). Defaults as a backslash (\) or the value set using SplFileObject::setCsvControl.
+	 * @param string $escape [optional] <p>
+	 * The escape character (one character only). Defaults as a backslash (\) or the value set using SplFileObject::setCsvControl.
+	 * </p>
+	 * Usually an enclosure character is escpaped inside
+	 * a field by doubling it; however, the escape
+	 * character can be used as an alternative. So for the default parameter
+	 * values "" and \" have the same
+	 * meaning. Other than allowing to escape the
+	 * enclosure character the
+	 * escape character has no special meaning; it isn't
+	 * even meant to escape itself.
 	 * @return array an indexed array containing the fields read, or false on error.
 	 * <p>
 	 * A blank line in a CSV file will be returned as an array
@@ -5783,7 +5790,7 @@ class SplDoublyLinkedList implements Iterator, Traversable, Countable, ArrayAcce
 	public function bottom () {}
 
 	/**
-	 * Checks whether the doubly linked list is empty.
+	 * Checks whether the doubly linked list is empty
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.isempty.php
 	 * @return bool whether the doubly linked list is empty.
 	 */
@@ -5824,7 +5831,7 @@ class SplDoublyLinkedList implements Iterator, Traversable, Countable, ArrayAcce
 	public function getIteratorMode () {}
 
 	/**
-	 * Counts the number of elements in the doubly linked list.
+	 * Counts the number of elements in the doubly linked list
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.count.php
 	 * @return int the number of elements in the doubly linked list.
 	 */
@@ -5950,7 +5957,7 @@ class SplQueue extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	public $name;
 
 	/**
-	 * Adds an element to the queue.
+	 * Adds an element to the queue
 	 * @link http://www.php.net/manual/en/splqueue.enqueue.php
 	 * @param mixed $value The value to enqueue.
 	 * @return void 
@@ -6009,7 +6016,7 @@ class SplQueue extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	public function bottom () {}
 
 	/**
-	 * Checks whether the doubly linked list is empty.
+	 * Checks whether the doubly linked list is empty
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.isempty.php
 	 * @return bool whether the doubly linked list is empty.
 	 */
@@ -6050,7 +6057,7 @@ class SplQueue extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	public function getIteratorMode () {}
 
 	/**
-	 * Counts the number of elements in the doubly linked list.
+	 * Counts the number of elements in the doubly linked list
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.count.php
 	 * @return int the number of elements in the doubly linked list.
 	 */
@@ -6220,7 +6227,7 @@ class SplStack extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	public function bottom () {}
 
 	/**
-	 * Checks whether the doubly linked list is empty.
+	 * Checks whether the doubly linked list is empty
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.isempty.php
 	 * @return bool whether the doubly linked list is empty.
 	 */
@@ -6261,7 +6268,7 @@ class SplStack extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	public function getIteratorMode () {}
 
 	/**
-	 * Counts the number of elements in the doubly linked list.
+	 * Counts the number of elements in the doubly linked list
 	 * @link http://www.php.net/manual/en/spldoublylinkedlist.count.php
 	 * @return int the number of elements in the doubly linked list.
 	 */
@@ -6382,14 +6389,14 @@ abstract class SplHeap implements Iterator, Traversable, Countable {
 	public $name;
 
 	/**
-	 * Extracts a node from top of the heap and sift up.
+	 * Extracts a node from top of the heap and sift up
 	 * @link http://www.php.net/manual/en/splheap.extract.php
 	 * @return mixed The value of the extracted node.
 	 */
 	public function extract () {}
 
 	/**
-	 * Inserts an element in the heap by sifting it up.
+	 * Inserts an element in the heap by sifting it up
 	 * @link http://www.php.net/manual/en/splheap.insert.php
 	 * @param mixed $value The value to insert.
 	 * @return void 
@@ -6404,14 +6411,14 @@ abstract class SplHeap implements Iterator, Traversable, Countable {
 	public function top () {}
 
 	/**
-	 * Counts the number of elements in the heap.
+	 * Counts the number of elements in the heap
 	 * @link http://www.php.net/manual/en/splheap.count.php
 	 * @return int the number of elements in the heap.
 	 */
 	public function count () {}
 
 	/**
-	 * Checks whether the heap is empty.
+	 * Checks whether the heap is empty
 	 * @link http://www.php.net/manual/en/splheap.isempty.php
 	 * @return bool whether the heap is empty.
 	 */
@@ -6453,16 +6460,21 @@ abstract class SplHeap implements Iterator, Traversable, Countable {
 	public function valid () {}
 
 	/**
-	 * Recover from the corrupted state and allow further actions on the heap.
+	 * Recover from the corrupted state and allow further actions on the heap
 	 * @link http://www.php.net/manual/en/splheap.recoverfromcorruption.php
 	 * @return void 
 	 */
 	public function recoverFromCorruption () {}
 
+	/**
+	 * Tells if the heap is in a corrupted state
+	 * @link http://www.php.net/manual/en/splheap.iscorrupted.php
+	 * @return bool true if the heap is corrupted, false otherwise.
+	 */
 	public function isCorrupted () {}
 
 	/**
-	 * Compare elements in order to place them correctly in the heap while sifting up.
+	 * Compare elements in order to place them correctly in the heap while sifting up
 	 * @link http://www.php.net/manual/en/splheap.compare.php
 	 * @param mixed $value1 The value of the first node being compared.
 	 * @param mixed $value2 The value of the second node being compared.
@@ -6489,7 +6501,7 @@ class SplMinHeap extends SplHeap implements Countable, Traversable, Iterator {
 	public $name;
 
 	/**
-	 * Compare elements in order to place them correctly in the heap while sifting up.
+	 * Compare elements in order to place them correctly in the heap while sifting up
 	 * @link http://www.php.net/manual/en/splminheap.compare.php
 	 * @param mixed $value1 The value of the first node being compared.
 	 * @param mixed $value2 The value of the second node being compared.
@@ -6501,14 +6513,14 @@ class SplMinHeap extends SplHeap implements Countable, Traversable, Iterator {
 	protected function compare ($value1, $value2) {}
 
 	/**
-	 * Extracts a node from top of the heap and sift up.
+	 * Extracts a node from top of the heap and sift up
 	 * @link http://www.php.net/manual/en/splheap.extract.php
 	 * @return mixed The value of the extracted node.
 	 */
 	public function extract () {}
 
 	/**
-	 * Inserts an element in the heap by sifting it up.
+	 * Inserts an element in the heap by sifting it up
 	 * @link http://www.php.net/manual/en/splheap.insert.php
 	 * @param mixed $value The value to insert.
 	 * @return void 
@@ -6523,14 +6535,14 @@ class SplMinHeap extends SplHeap implements Countable, Traversable, Iterator {
 	public function top () {}
 
 	/**
-	 * Counts the number of elements in the heap.
+	 * Counts the number of elements in the heap
 	 * @link http://www.php.net/manual/en/splheap.count.php
 	 * @return int the number of elements in the heap.
 	 */
 	public function count () {}
 
 	/**
-	 * Checks whether the heap is empty.
+	 * Checks whether the heap is empty
 	 * @link http://www.php.net/manual/en/splheap.isempty.php
 	 * @return bool whether the heap is empty.
 	 */
@@ -6572,12 +6584,17 @@ class SplMinHeap extends SplHeap implements Countable, Traversable, Iterator {
 	public function valid () {}
 
 	/**
-	 * Recover from the corrupted state and allow further actions on the heap.
+	 * Recover from the corrupted state and allow further actions on the heap
 	 * @link http://www.php.net/manual/en/splheap.recoverfromcorruption.php
 	 * @return void 
 	 */
 	public function recoverFromCorruption () {}
 
+	/**
+	 * Tells if the heap is in a corrupted state
+	 * @link http://www.php.net/manual/en/splheap.iscorrupted.php
+	 * @return bool true if the heap is corrupted, false otherwise.
+	 */
 	public function isCorrupted () {}
 
 }
@@ -6596,7 +6613,7 @@ class SplMaxHeap extends SplHeap implements Countable, Traversable, Iterator {
 	public $name;
 
 	/**
-	 * Compare elements in order to place them correctly in the heap while sifting up.
+	 * Compare elements in order to place them correctly in the heap while sifting up
 	 * @link http://www.php.net/manual/en/splmaxheap.compare.php
 	 * @param mixed $value1 The value of the first node being compared.
 	 * @param mixed $value2 The value of the second node being compared.
@@ -6608,14 +6625,14 @@ class SplMaxHeap extends SplHeap implements Countable, Traversable, Iterator {
 	protected function compare ($value1, $value2) {}
 
 	/**
-	 * Extracts a node from top of the heap and sift up.
+	 * Extracts a node from top of the heap and sift up
 	 * @link http://www.php.net/manual/en/splheap.extract.php
 	 * @return mixed The value of the extracted node.
 	 */
 	public function extract () {}
 
 	/**
-	 * Inserts an element in the heap by sifting it up.
+	 * Inserts an element in the heap by sifting it up
 	 * @link http://www.php.net/manual/en/splheap.insert.php
 	 * @param mixed $value The value to insert.
 	 * @return void 
@@ -6630,14 +6647,14 @@ class SplMaxHeap extends SplHeap implements Countable, Traversable, Iterator {
 	public function top () {}
 
 	/**
-	 * Counts the number of elements in the heap.
+	 * Counts the number of elements in the heap
 	 * @link http://www.php.net/manual/en/splheap.count.php
 	 * @return int the number of elements in the heap.
 	 */
 	public function count () {}
 
 	/**
-	 * Checks whether the heap is empty.
+	 * Checks whether the heap is empty
 	 * @link http://www.php.net/manual/en/splheap.isempty.php
 	 * @return bool whether the heap is empty.
 	 */
@@ -6679,12 +6696,17 @@ class SplMaxHeap extends SplHeap implements Countable, Traversable, Iterator {
 	public function valid () {}
 
 	/**
-	 * Recover from the corrupted state and allow further actions on the heap.
+	 * Recover from the corrupted state and allow further actions on the heap
 	 * @link http://www.php.net/manual/en/splheap.recoverfromcorruption.php
 	 * @return void 
 	 */
 	public function recoverFromCorruption () {}
 
+	/**
+	 * Tells if the heap is in a corrupted state
+	 * @link http://www.php.net/manual/en/splheap.iscorrupted.php
+	 * @return bool true if the heap is corrupted, false otherwise.
+	 */
 	public function isCorrupted () {}
 
 }
@@ -6708,7 +6730,7 @@ class SplPriorityQueue implements Iterator, Traversable, Countable {
 	public $name;
 
 	/**
-	 * Compare priorities in order to place elements correctly in the heap while sifting up.
+	 * Compare priorities in order to place elements correctly in the heap while sifting up
 	 * @link http://www.php.net/manual/en/splpriorityqueue.compare.php
 	 * @param mixed $priority1 The priority of the first node being compared.
 	 * @param mixed $priority2 The priority of the second node being compared.
@@ -6720,7 +6742,7 @@ class SplPriorityQueue implements Iterator, Traversable, Countable {
 	public function compare ($priority1, $priority2) {}
 
 	/**
-	 * Inserts an element in the queue by sifting it up.
+	 * Inserts an element in the queue by sifting it up
 	 * @link http://www.php.net/manual/en/splpriorityqueue.insert.php
 	 * @param mixed $value The value to insert.
 	 * @param mixed $priority The associated priority.
@@ -6748,6 +6770,11 @@ class SplPriorityQueue implements Iterator, Traversable, Countable {
 	 */
 	public function setExtractFlags (int $flags) {}
 
+	/**
+	 * Get the flags of extraction
+	 * @link http://www.php.net/manual/en/splpriorityqueue.getextractflags.php
+	 * @return int 
+	 */
 	public function getExtractFlags () {}
 
 	/**
@@ -6758,21 +6785,21 @@ class SplPriorityQueue implements Iterator, Traversable, Countable {
 	public function top () {}
 
 	/**
-	 * Extracts a node from top of the heap and shift up.
+	 * Extracts a node from top of the heap and shift up
 	 * @link http://www.php.net/manual/en/splpriorityqueue.extract.php
 	 * @return mixed The value or priority (or both) of the extracted node, depending on the extract flag.
 	 */
 	public function extract () {}
 
 	/**
-	 * Counts the number of elements in the queue.
+	 * Counts the number of elements in the queue
 	 * @link http://www.php.net/manual/en/splpriorityqueue.count.php
 	 * @return int the number of elements in the queue.
 	 */
 	public function count () {}
 
 	/**
-	 * Checks whether the queue is empty.
+	 * Checks whether the queue is empty
 	 * @link http://www.php.net/manual/en/splpriorityqueue.isempty.php
 	 * @return bool whether the queue is empty.
 	 */
@@ -6814,12 +6841,17 @@ class SplPriorityQueue implements Iterator, Traversable, Countable {
 	public function valid () {}
 
 	/**
-	 * Recover from the corrupted state and allow further actions on the queue.
+	 * Recover from the corrupted state and allow further actions on the queue
 	 * @link http://www.php.net/manual/en/splpriorityqueue.recoverfromcorruption.php
 	 * @return void 
 	 */
 	public function recoverFromCorruption () {}
 
+	/**
+	 * Tells if the priority queue is in a corrupted state
+	 * @link http://www.php.net/manual/en/splpriorityqueue.iscorrupted.php
+	 * @return bool true if the priority queue is corrupted, false otherwise.
+	 */
 	public function isCorrupted () {}
 
 }
@@ -7398,6 +7430,15 @@ function class_uses ($class, bool $autoload = null) {}
 function spl_object_hash ($obj) {}
 
 /**
+ * Return the integer object handle for given object
+ * @link http://www.php.net/manual/en/function.spl-object-id.php
+ * @param object $obj 
+ * @return int An integer identifier that is unique for each currently existing object and
+ * is always the same for each object.
+ */
+function spl_object_id ($obj) {}
+
+/**
  * Copy the iterator into an array
  * @link http://www.php.net/manual/en/function.iterator-to-array.php
  * @param Traversable $iterator The iterator being copied.
@@ -7407,7 +7448,7 @@ function spl_object_hash ($obj) {}
  * <p>
  * In PHP 5.5 and later, if a key is an array or
  * object, a warning will be generated. null keys will be
- * converted to an empty string, double keys will be
+ * converted to an empty string, float keys will be
  * truncated to their integer counterpart,
  * resource keys will generate a warning and be converted to
  * their resource ID, and boolean keys will be converted to
@@ -7443,4 +7484,4 @@ function iterator_count ($iterator) {}
  */
 function iterator_apply ($iterator, callable $function, array $args = null) {}
 
-// End of SPL v.7.1.1
+// End of SPL v.7.2.3

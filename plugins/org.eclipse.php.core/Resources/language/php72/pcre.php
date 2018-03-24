@@ -1,6 +1,6 @@
 <?php
 
-// Start of pcre v.7.1.1
+// Start of pcre v.7.2.3
 
 /**
  * Perform a regular expression match
@@ -576,6 +576,7 @@ define ('PREG_SET_ORDER', 2);
  * @link http://www.php.net/manual/en/pcre.constants.php
  */
 define ('PREG_OFFSET_CAPTURE', 256);
+define ('PREG_UNMATCHED_AS_NULL', 512);
 
 /**
  * This flag tells preg_split to return only non-empty
@@ -655,6 +656,6 @@ define ('PREG_JIT_STACKLIMIT_ERROR', 6);
  * PCRE version and release date (e.g. "7.0 18-Dec-2006").
  * @link http://www.php.net/manual/en/pcre.constants.php
  */
-define ('PCRE_VERSION', "8.39 2016-06-14");
+define ('PCRE_VERSION', "8.41 2017-07-05");
 
-// End of pcre v.7.1.1
+// End of pcre v.7.2.3

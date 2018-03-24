@@ -1,6 +1,6 @@
 <?php
 
-// Start of shmop v.7.1.1
+// Start of shmop v.7.2.3
 
 /**
  * Create or open shared memory block
@@ -93,4 +93,4 @@ function shmop_write ($shmid, string $data, int $offset) {}
  */
 function shmop_delete ($shmid) {}
 
-// End of shmop v.7.1.1
+// End of shmop v.7.2.3

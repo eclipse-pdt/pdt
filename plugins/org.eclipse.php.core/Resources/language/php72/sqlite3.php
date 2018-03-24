@@ -1,6 +1,6 @@
 <?php
 
-// Start of sqlite3 v.7.1.11
+// Start of sqlite3 v.7.2.3
 
 /**
  * A class that interfaces SQLite 3 databases.
@@ -552,4 +552,4 @@ define ('SQLITE3_OPEN_CREATE', 4);
  */
 define ('SQLITE3_DETERMINISTIC', 2048);
 
-// End of sqlite3 v.7.1.11
+// End of sqlite3 v.7.2.3

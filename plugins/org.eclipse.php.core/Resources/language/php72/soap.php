@@ -1,6 +1,6 @@
 <?php
 
-// Start of soap v.7.1.1
+// Start of soap v.7.2.3
 
 /**
  * The SoapClient class provides a client for SOAP 1.1, SOAP 1.2 servers. It can be used in WSDL
@@ -125,6 +125,11 @@ class SoapClient  {
 	 */
 	public function __setCookie (string $name, string $value = null) {}
 
+	/**
+	 * Get list of cookies
+	 * @link http://www.php.net/manual/en/soapclient.getcookies.php
+	 * @return array 
+	 */
 	public function __getCookies () {}
 
 	/**
@@ -860,4 +865,4 @@ define ('SOAP_SSL_METHOD_SSLv3', 2);
  */
 define ('SOAP_SSL_METHOD_SSLv23', 3);
 
-// End of soap v.7.1.1
+// End of soap v.7.2.3

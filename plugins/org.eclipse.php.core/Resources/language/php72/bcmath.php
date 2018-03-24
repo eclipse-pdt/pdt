@@ -1,6 +1,6 @@
 <?php
 
-// Start of bcmath v.7.1.1
+// Start of bcmath v.7.2.3
 
 /**
  * Add two arbitrary precision numbers
@@ -48,10 +48,11 @@ function bcdiv (string $dividend, string $divisor, int $scale = null) {}
  * @link http://www.php.net/manual/en/function.bcmod.php
  * @param string $dividend The dividend, as a string.
  * @param string $modulus The modulus, as a string.
+ * @param int $scale [optional] 
  * @return string the modulus as a string, or null if 
  * modulus is 0.
  */
-function bcmod (string $dividend, string $modulus) {}
+function bcmod (string $dividend, string $modulus, int $scale = null) {}
 
 /**
  * Raise an arbitrary precision number to another
@@ -78,10 +79,10 @@ function bcsqrt (string $operand, int $scale = null) {}
 /**
  * Set default scale parameter for all bc math functions
  * @link http://www.php.net/manual/en/function.bcscale.php
- * @param int $scale The scale factor.
- * @return bool true on success or false on failure
+ * @param int $scale [optional] The scale factor.
+ * @return int the old scale.
  */
-function bcscale (int $scale) {}
+function bcscale (int $scale = null) {}
 
 /**
  * Compare two arbitrary precision numbers
@@ -109,4 +110,4 @@ function bccomp (string $left_operand, string $right_operand, int $scale = null)
  */
 function bcpowmod (string $base, string $exponent, string $modulus, int $scale = null) {}
 
-// End of bcmath v.7.1.1
+// End of bcmath v.7.2.3

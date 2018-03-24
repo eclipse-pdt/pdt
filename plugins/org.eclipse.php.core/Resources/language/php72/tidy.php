@@ -1,6 +1,6 @@
 <?php
 
-// Start of tidy v.7.1.1
+// Start of tidy v.7.2.3
 
 /**
  * An HTML node in an HTML file, as detected by tidy.
@@ -409,10 +409,6 @@ function tidy_access_count (tidy $object) {}
  */
 function tidy_config_count (tidy $object) {}
 
-/**
- * @param $resource
- * @param $optname
- */
 function tidy_get_opt_doc ($resource, $optname) {}
 
 function tidy_get_root () {}
@@ -635,4 +631,4 @@ define ('TIDY_NODETYPE_PHP', 12);
  */
 define ('TIDY_NODETYPE_XMLDECL', 13);
 
-// End of tidy v.7.1.1
+// End of tidy v.7.2.3

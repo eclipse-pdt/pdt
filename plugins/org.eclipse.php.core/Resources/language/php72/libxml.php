@@ -1,6 +1,6 @@
 <?php
 
-// Start of libxml v.7.1.1
+// Start of libxml v.7.2.3
 
 /**
  * Contains various information about errors thrown by libxml. The error codes
@@ -114,7 +114,7 @@ function libxml_disable_entity_loader (bool $disable = null) {}
  * and system id, and a context (an array with four keys) as the third argument.
  * This callback should return a resource, a string from which a resource can be
  * opened, or null.
- * @return void 
+ * @return bool true on success or false on failure
  */
 function libxml_set_external_entity_loader (callable $resolver_function) {}
 
@@ -123,14 +123,14 @@ function libxml_set_external_entity_loader (callable $resolver_function) {}
  * libxml version like 20605 or 20617
  * @link http://www.php.net/manual/en/libxml.constants.php
  */
-define ('LIBXML_VERSION', 20904);
+define ('LIBXML_VERSION', 20907);
 
 /**
  * libxml version like 2.6.5 or 2.6.17
  * @link http://www.php.net/manual/en/libxml.constants.php
  */
-define ('LIBXML_DOTTED_VERSION', "2.9.4");
-define ('LIBXML_LOADED_VERSION', 20903);
+define ('LIBXML_DOTTED_VERSION', "2.9.7");
+define ('LIBXML_LOADED_VERSION', 20907);
 
 /**
  * Substitute entities
@@ -311,4 +311,4 @@ define ('LIBXML_ERR_ERROR', 2);
  */
 define ('LIBXML_ERR_FATAL', 3);
 
-// End of libxml v.7.1.1
+// End of libxml v.7.2.3

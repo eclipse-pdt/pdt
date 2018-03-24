@@ -1,6 +1,6 @@
 <?php
 
-// Start of gmp v.7.1.1
+// Start of gmp v.7.2.3
 
 /**
  * A GMP number. These objects support overloaded
@@ -38,21 +38,21 @@ function gmp_init ($number, int $base = null) {}
  * Import from a binary string
  * @link http://www.php.net/manual/en/function.gmp-import.php
  * @param string $data The binary string being imported
- * @param integer $word_size Default value is 1. The number of bytes in each chunk of binary data. This is mainly used in conjunction with the options parameter.
- * @param integer $options Default value is GMP_MSW_FIRST | GMP_NATIVE_ENDIAN.
+ * @param int $word_size [optional] Default value is 1. The number of bytes in each chunk of binary data. This is mainly used in conjunction with the options parameter.
+ * @param int $options [optional] Default value is GMP_MSW_FIRST | GMP_NATIVE_ENDIAN.
  * @return GMP a GMP number or false on failure.
  */
-function gmp_import (string $data, int $word_size, int $options) {}
+function gmp_import (string $data, int $word_size = null, int $options = null) {}
 
 /**
  * Export to a binary string
  * @link http://www.php.net/manual/en/function.gmp-export.php
  * @param GMP $gmpnumber The GMP number being exported
- * @param integer $word_size Default value is 1. The number of bytes in each chunk of binary data. This is mainly used in conjunction with the options parameter.
- * @param integer $options Default value is GMP_MSW_FIRST | GMP_NATIVE_ENDIAN.
+ * @param int $word_size [optional] Default value is 1. The number of bytes in each chunk of binary data. This is mainly used in conjunction with the options parameter.
+ * @param int $options [optional] Default value is GMP_MSW_FIRST | GMP_NATIVE_ENDIAN.
  * @return string a string or false on failure.
  */
-function gmp_export (GMP $gmpnumber, int $word_size, int $options) {}
+function gmp_export (GMP $gmpnumber, int $word_size = null, int $options = null) {}
 
 /**
  * Convert GMP number to integer
@@ -425,7 +425,10 @@ function gmp_cmp (GMP $a, GMP $b) {}
 /**
  * Sign of number
  * @link http://www.php.net/manual/en/function.gmp-sign.php
- * @param GMP $a Either a GMP number resource in PHP 5.5 and earlier, a GMP object in PHP 5.6 and later, or a numeric string provided that it is possible to convert the latter to a number.
+ * @param GMP $a Either a GMP number resource in PHP 5.5 and earlier,
+ * a GMP object in PHP 5.6 and later, or a numeric
+ * string provided that it is possible to convert the latter to an
+ * integer.
  * @return int 1 if a is positive,
  * -1 if a is negative,
  * and 0 if a is zero.
@@ -440,6 +443,7 @@ function gmp_sign (GMP $a) {}
  * </p>
  * <p>Either a GMP number resource in PHP 5.5 and earlier, a GMP object in PHP 5.6 and later, or a numeric string provided that it is possible to convert the latter to a number.</p>
  * @return GMP A random GMP number.
+ * @deprecated 
  */
 function gmp_random (int $limiter = null) {}
 
@@ -452,14 +456,14 @@ function gmp_random (int $limiter = null) {}
  * gmp_random_range functions.
  * </p>
  * <p>Either a GMP number resource in PHP 5.5 and earlier, a GMP object in PHP 5.6 and later, or a numeric string provided that it is possible to convert the latter to a number.</p>
- * @return mixed null on success.
+ * @return void null on successreturn.falseforfailure.
  */
 function gmp_random_seed ($seed) {}
 
 /**
  * Random number
  * @link http://www.php.net/manual/en/function.gmp-random-bits.php
- * @param integer $bits <p>
+ * @param int $bits <p>
  * The number of bits.
  * </p>
  * <p>Either a GMP number resource in PHP 5.5 and earlier, a GMP object in PHP 5.6 and later, or a numeric string provided that it is possible to convert the latter to a number.</p>
@@ -522,7 +526,7 @@ function gmp_xor (GMP $a, GMP $b) {}
  * @param bool $bit_on [optional] True to set the bit (set it to 1/on); false to clear the bit (set it to 0/off).
  * @return void A GMP number resource in PHP 5.5 and earlier, or a GMP object in PHP 5.6 and later.
  */
-function gmp_setbit (GMP &$a, int $index, bool $bit_on = null) {}
+function gmp_setbit (GMP $a, int $index, bool $bit_on = null) {}
 
 /**
  * Clear bit
@@ -619,12 +623,13 @@ define ('GMP_ROUND_PLUSINF', 1);
  * @link http://www.php.net/manual/en/gmp.constants.php
  */
 define ('GMP_ROUND_MINUSINF', 2);
+define ('GMP_MPIR_VERSION', "3.0.0");
 
 /**
  * The GMP library version
  * @link http://www.php.net/manual/en/gmp.constants.php
  */
-define ('GMP_VERSION', "6.1.0");
+define ('GMP_VERSION', "6.0.0");
 
 /**
  * 
@@ -656,4 +661,4 @@ define ('GMP_BIG_ENDIAN', 8);
  */
 define ('GMP_NATIVE_ENDIAN', 16);
 
-// End of gmp v.7.1.1
+// End of gmp v.7.2.3

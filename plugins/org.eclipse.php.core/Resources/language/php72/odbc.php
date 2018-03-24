@@ -1,6 +1,6 @@
 <?php
 
-// Start of odbc v.7.1.1
+// Start of odbc v.7.2.3
 
 /**
  * Toggle autocommit behaviour
@@ -475,7 +475,6 @@ function odbc_setoption ($id, int $function, int $option, int $param) {}
  * specified table, if any, that are automatically updated by the data source
  * when any value in the row is updated by any transaction.
  * @param string $qualifier The qualifier.
- * @param string $owner The owner.
  * @param string $table The table.
  * @param int $scope The scope, which orders the result set.
  * @param int $nullable The nullable option.
@@ -495,7 +494,7 @@ function odbc_setoption ($id, int $function, int $option, int $param) {}
  * </p>
  * </p>
  */
-function odbc_specialcolumns ($connection_id, int $type, string $qualifier, string $owner, string $table, int $scope, int $nullable) {}
+function odbc_specialcolumns ($connection_id, int $type, string $qualifier, string $table, int $scope, int $nullable) {}
 
 /**
  * Retrieve statistics about a table
@@ -1055,4 +1054,4 @@ define ('SQL_ENSURE', 1);
  */
 define ('SQL_QUICK', 0);
 
-// End of odbc v.7.1.1
+// End of odbc v.7.2.3

@@ -1,6 +1,6 @@
 <?php
 
-// Start of mbstring v.7.1.11
+// Start of mbstring v.7.2.3
 
 /**
  * Perform case folding on a string
@@ -204,7 +204,7 @@ function mb_preferred_mime_name (string $encoding) {}
  * @link http://www.php.net/manual/en/function.mb-strlen.php
  * @param string $str The string being checked for length.
  * @param string $encoding [optional] mbstring.encoding.parameter
- * @return mixed the number of characters in
+ * @return int the number of characters in
  * string str having character encoding
  * encoding. A multi-byte character is
  * counted as 1.
@@ -686,9 +686,10 @@ function mb_encode_numericentity (string $str, array $convmap, string $encoding 
  * @param array $convmap convmap is an array that specifies 
  * the code area to convert.
  * @param string $encoding [optional] mbstring.encoding.parameter
+ * @param bool $is_hex [optional] 
  * @return string The converted string.
  */
-function mb_decode_numericentity (string $str, array $convmap, string $encoding = null) {}
+function mb_decode_numericentity (string $str, array $convmap, string $encoding = null, bool $is_hex = null) {}
 
 /**
  * Send encoded mail
@@ -699,13 +700,17 @@ function mb_decode_numericentity (string $str, array $convmap, string $encoding 
  * This parameter is not automatically encoded.
  * @param string $subject The subject of the mail.
  * @param string $message The message of the mail.
- * @param string $additional_headers [optional] <p>
- * String to be inserted at the end of the email header.
+ * @param mixed $additional_headers [optional] <p>
+ * String or array to be inserted at the end of the email header.
  * </p>
  * <p>
  * This is typically used to add extra headers (From, Cc, and Bcc).
  * Multiple extra headers should be separated with a CRLF (\r\n).
  * Validate parameter not to be injected unwanted headers by attackers.
+ * </p>
+ * <p>
+ * If an array is passed, its keys are the header names and its
+ * values are the respective header values.
  * </p>
  * <p>
  * When sending mail, the mail must contain
@@ -752,7 +757,7 @@ function mb_decode_numericentity (string $str, array $convmap, string $encoding 
  * </p>
  * @return bool true on success or false on failure
  */
-function mb_send_mail (string $to, string $subject, string $message, string $additional_headers = null, string $additional_parameter = null) {}
+function mb_send_mail (string $to, string $subject, string $message, $additional_headers = null, string $additional_parameter = null) {}
 
 /**
  * Get internal settings of mbstring
@@ -782,6 +787,33 @@ function mb_get_info (string $type = null) {}
  * @return bool true on success or false on failure
  */
 function mb_check_encoding (string $var = null, string $encoding = null) {}
+
+/**
+ * Get code point of character
+ * @link http://www.php.net/manual/en/function.mb-ord.php
+ * @param string $str 
+ * @param string $encoding [optional] 
+ * @return int a code point of character or false on failure.
+ */
+function mb_ord (string $str, string $encoding = null) {}
+
+/**
+ * Get a specific character
+ * @link http://www.php.net/manual/en/function.mb-chr.php
+ * @param int $cp 
+ * @param string $encoding [optional] 
+ * @return string a specific character or false on failure.
+ */
+function mb_chr (int $cp, string $encoding = null) {}
+
+/**
+ * Description
+ * @link http://www.php.net/manual/en/function.mb-scrub.php
+ * @param string $str 
+ * @param string $encoding [optional] 
+ * @return string 
+ */
+function mb_scrub (string $str, string $encoding = null) {}
 
 /**
  * Set/Get character encoding for multibyte regex
@@ -958,16 +990,7 @@ function mb_eregi (string $pattern, string $string, array &$regs = null) {}
  * </p>
  * @param string $replacement The replacement text.
  * @param string $string The string being checked.
- * @param string $option [optional] Matching condition can be set by option
- * parameter. If i is specified for this
- * parameter, the case will be ignored. If x is
- * specified, white space will be ignored. If m
- * is specified, match will be executed in multiline mode and line
- * break will be included in '.'. If p is
- * specified, match will be executed in POSIX mode, line break 
- * will be considered as normal character. If e
- * is specified, replacement string will be
- * evaluated as PHP expression.
+ * @param string $option [optional] The search option. See mb_regex_set_options for explanation.
  * @return string The resultant string on success, or false on error.
  */
 function mb_ereg_replace (string $pattern, string $replacement, string $string, string $option = null) {}
@@ -978,8 +1001,7 @@ function mb_ereg_replace (string $pattern, string $replacement, string $string, 
  * @param string $pattern The regular expression pattern. Multibyte characters may be used. The case will be ignored.
  * @param string $replace The replacement text.
  * @param string $string The searched string.
- * @param string $option [optional] option has the same meaning as in
- * mb_ereg_replace.
+ * @param string $option [optional] The search option. See mb_regex_set_options for explanation.
  * @return string The resultant string or false on error.
  */
 function mb_eregi_replace (string $pattern, string $replace, string $string, string $option = null) {}
@@ -1010,15 +1032,7 @@ function mb_eregi_replace (string $pattern, string $replace, string $string, str
  * not used anywhere else. 
  * </p>
  * @param string $string The string being checked.
- * @param string $option [optional] Matching condition can be set by option
- * parameter. If i is specified for this
- * parameter, the case will be ignored. If x is
- * specified, white space will be ignored. If m
- * is specified, match will be executed in multiline mode and line
- * break will be included in '.'. If p is
- * specified, match will be executed in POSIX mode, line break 
- * will be considered as normal character. Note that e
- * cannot be used for mb_ereg_replace_callback.
+ * @param string $option [optional] The search option. See mb_regex_set_options for explanation.
  * @return string The resultant string on success, or false on error.
  */
 function mb_ereg_replace_callback (string $pattern, callable $callback, string $string, string $option = null) {}
@@ -1040,7 +1054,7 @@ function mb_split (string $pattern, string $string, int $limit = null) {}
  * @link http://www.php.net/manual/en/function.mb-ereg-match.php
  * @param string $pattern The regular expression pattern.
  * @param string $string The string being evaluated.
- * @param string $option [optional] 
+ * @param string $option [optional] The search option. See mb_regex_set_options for explanation.
  * @return bool 
  */
 function mb_ereg_match (string $pattern, string $string, string $option = null) {}
@@ -1049,7 +1063,7 @@ function mb_ereg_match (string $pattern, string $string, string $option = null) 
  * Multibyte regular expression match for predefined multibyte string
  * @link http://www.php.net/manual/en/function.mb-ereg-search.php
  * @param string $pattern [optional] The search pattern.
- * @param string $option [optional] The search option.
+ * @param string $option [optional] The search option. See mb_regex_set_options for explanation.
  * @return bool 
  */
 function mb_ereg_search (string $pattern = null, string $option = null) {}
@@ -1058,7 +1072,7 @@ function mb_ereg_search (string $pattern = null, string $option = null) {}
  * Returns position and length of a matched part of the multibyte regular expression for a predefined multibyte string
  * @link http://www.php.net/manual/en/function.mb-ereg-search-pos.php
  * @param string $pattern [optional] The search pattern.
- * @param string $option [optional] The search option.
+ * @param string $option [optional] The search option. See mb_regex_set_options for explanation.
  * @return array 
  */
 function mb_ereg_search_pos (string $pattern = null, string $option = null) {}
@@ -1067,7 +1081,7 @@ function mb_ereg_search_pos (string $pattern = null, string $option = null) {}
  * Returns the matched part of a multibyte regular expression
  * @link http://www.php.net/manual/en/function.mb-ereg-search-regs.php
  * @param string $pattern [optional] The search pattern.
- * @param string $option [optional] The search option.
+ * @param string $option [optional] The search option. See mb_regex_set_options for explanation.
  * @return array 
  */
 function mb_ereg_search_regs (string $pattern = null, string $option = null) {}
@@ -1077,7 +1091,7 @@ function mb_ereg_search_regs (string $pattern = null, string $option = null) {}
  * @link http://www.php.net/manual/en/function.mb-ereg-search-init.php
  * @param string $string The search string.
  * @param string $pattern [optional] The search pattern.
- * @param string $option [optional] The search option.
+ * @param string $option [optional] The search option. See mb_regex_set_options for explanation.
  * @return bool 
  */
 function mb_ereg_search_init (string $string, string $pattern = null, string $option = null) {}
@@ -1224,4 +1238,4 @@ define ('MB_CASE_LOWER', 1);
  */
 define ('MB_CASE_TITLE', 2);
 
-// End of mbstring v.7.1.11
+// End of mbstring v.7.2.3

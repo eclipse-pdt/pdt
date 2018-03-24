@@ -1,6 +1,6 @@
 <?php
 
-// Start of dba v.7.1.1
+// Start of dba v.7.2.3
 
 /**
  * Open database
@@ -277,4 +277,4 @@ function dba_list () {}
  */
 function dba_key_split ($key) {}
 
-// End of dba v.7.1.1
+// End of dba v.7.2.3

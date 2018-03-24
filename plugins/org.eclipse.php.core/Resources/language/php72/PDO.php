@@ -1,6 +1,6 @@
 <?php
 
-// Start of PDO v.7.1.11
+// Start of PDO v.7.2.3
 
 /**
  * Represents an error raised by PDO. You should not throw a
@@ -58,6 +58,8 @@ class PDO  {
 	const PARAM_LOB = 3;
 	const PARAM_STMT = 4;
 	const PARAM_INPUT_OUTPUT = 2147483648;
+	const PARAM_STR_NATL = 1073741824;
+	const PARAM_STR_CHAR = 536870912;
 	const PARAM_EVT_ALLOC = 0;
 	const PARAM_EVT_FREE = 1;
 	const PARAM_EVT_EXEC_PRE = 2;
@@ -103,6 +105,7 @@ class PDO  {
 	const ATTR_MAX_COLUMN_LEN = 18;
 	const ATTR_EMULATE_PREPARES = 20;
 	const ATTR_DEFAULT_FETCH_MODE = 19;
+	const ATTR_DEFAULT_STR_PARAM = 21;
 	const ERRMODE_SILENT = 0;
 	const ERRMODE_WARNING = 1;
 	const ERRMODE_EXCEPTION = 2;
@@ -140,12 +143,18 @@ class PDO  {
 	const MYSQL_ATTR_SERVER_PUBLIC_KEY = 1012;
 	const MYSQL_ATTR_MULTI_STATEMENTS = 1013;
 	const MYSQL_ATTR_SSL_VERIFY_SERVER_CERT = 1014;
+	const ODBC_ATTR_USE_CURSOR_LIBRARY = 1000;
+	const ODBC_ATTR_ASSUME_UTF8 = 1001;
+	const ODBC_SQL_USE_IF_NEEDED = 0;
+	const ODBC_SQL_USE_DRIVER = 2;
+	const ODBC_SQL_USE_ODBC = 1;
 	const PGSQL_ATTR_DISABLE_PREPARES = 1000;
 	const PGSQL_TRANSACTION_IDLE = 0;
 	const PGSQL_TRANSACTION_ACTIVE = 1;
 	const PGSQL_TRANSACTION_INTRANS = 2;
 	const PGSQL_TRANSACTION_INERROR = 3;
 	const PGSQL_TRANSACTION_UNKNOWN = 4;
+	const SQLITE_DETERMINISTIC = 2048;
 	const SQLSRV_ATTR_ENCODING = 1000;
 	const SQLSRV_ATTR_QUERY_TIMEOUT = 1001;
 	const SQLSRV_ATTR_DIRECT_QUERY = 1002;
@@ -304,7 +313,7 @@ class PDO  {
 	/**
 	 * Fetch the SQLSTATE associated with the last operation on the database handle
 	 * @link http://www.php.net/manual/en/pdo.errorcode.php
-	 * @return mixed an SQLSTATE, a five characters alphanumeric identifier defined in
+	 * @return string an SQLSTATE, a five characters alphanumeric identifier defined in
 	 * the ANSI SQL-92 standard. Briefly, an SQLSTATE consists of a
 	 * two characters class value followed by a three characters subclass value. A
 	 * class value of 01 indicates a warning and is accompanied by a return code
@@ -397,7 +406,7 @@ class PDO  {
 	public function getAttribute (int $attribute) {}
 
 	/**
-	 * Quotes a string for use in a query.
+	 * Quotes a string for use in a query
 	 * @link http://www.php.net/manual/en/pdo.quote.php
 	 * @param string $string The string to be quoted.
 	 * @param int $parameter_type [optional] Provides a data type hint for drivers that have alternate quoting styles.
@@ -674,7 +683,7 @@ class PDOStatement implements Traversable {
 	public function fetchAll (int $fetch_style = null, $fetch_argument = null, array $ctor_args = null) {}
 
 	/**
-	 * Fetches the next row and returns it as an object.
+	 * Fetches the next row and returns it as an object
 	 * @link http://www.php.net/manual/en/pdostatement.fetchobject.php
 	 * @param string $class_name [optional] Name of the created class.
 	 * @param array $ctor_args [optional] Elements of this array are passed to the constructor.
@@ -824,7 +833,7 @@ class PDOStatement implements Traversable {
 	public function nextRowset () {}
 
 	/**
-	 * Closes the cursor, enabling the statement to be executed again.
+	 * Closes the cursor, enabling the statement to be executed again
 	 * @link http://www.php.net/manual/en/pdostatement.closecursor.php
 	 * @return bool true on success or false on failure
 	 */
@@ -848,4 +857,4 @@ final class PDORow  {
 
 function pdo_drivers () {}
 
-// End of PDO v.7.1.11
+// End of PDO v.7.2.3

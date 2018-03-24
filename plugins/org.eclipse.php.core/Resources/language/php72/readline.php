@@ -1,6 +1,6 @@
 <?php
 
-// Start of readline v.7.1.1
+// Start of readline v.7.2.3
 
 /**
  * Reads a line
@@ -108,4 +108,4 @@ function readline_on_new_line () {}
 
 define ('READLINE_LIB', "libedit");
 
-// End of readline v.7.1.1
+// End of readline v.7.2.3

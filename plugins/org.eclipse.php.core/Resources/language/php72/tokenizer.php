@@ -1,6 +1,6 @@
 <?php
 
-// Start of tokenizer v.7.1.1
+// Start of tokenizer v.7.2.3
 
 /**
  * Split given source into PHP tokens
@@ -30,11 +30,11 @@ function token_get_all (string $source, int $flags = null) {}
  */
 function token_name (int $token) {}
 
-define ('T_REQUIRE_ONCE', 258);
-define ('T_REQUIRE', 259);
+define ('T_REQUIRE_ONCE', 262);
+define ('T_REQUIRE', 261);
 define ('T_EVAL', 260);
-define ('T_INCLUDE_ONCE', 261);
-define ('T_INCLUDE', 262);
+define ('T_INCLUDE_ONCE', 259);
+define ('T_INCLUDE', 258);
 define ('T_LOGICAL_OR', 263);
 define ('T_LOGICAL_XOR', 264);
 define ('T_LOGICAL_AND', 265);
@@ -42,52 +42,52 @@ define ('T_PRINT', 266);
 define ('T_YIELD', 267);
 define ('T_DOUBLE_ARROW', 268);
 define ('T_YIELD_FROM', 269);
-define ('T_POW_EQUAL', 270);
-define ('T_SR_EQUAL', 271);
-define ('T_SL_EQUAL', 272);
-define ('T_XOR_EQUAL', 273);
-define ('T_OR_EQUAL', 274);
-define ('T_AND_EQUAL', 275);
-define ('T_MOD_EQUAL', 276);
-define ('T_CONCAT_EQUAL', 277);
-define ('T_DIV_EQUAL', 278);
-define ('T_MUL_EQUAL', 279);
-define ('T_MINUS_EQUAL', 280);
-define ('T_PLUS_EQUAL', 281);
+define ('T_POW_EQUAL', 281);
+define ('T_SR_EQUAL', 280);
+define ('T_SL_EQUAL', 279);
+define ('T_XOR_EQUAL', 278);
+define ('T_OR_EQUAL', 277);
+define ('T_AND_EQUAL', 276);
+define ('T_MOD_EQUAL', 275);
+define ('T_CONCAT_EQUAL', 274);
+define ('T_DIV_EQUAL', 273);
+define ('T_MUL_EQUAL', 272);
+define ('T_MINUS_EQUAL', 271);
+define ('T_PLUS_EQUAL', 270);
 define ('T_COALESCE', 282);
 define ('T_BOOLEAN_OR', 283);
 define ('T_BOOLEAN_AND', 284);
-define ('T_SPACESHIP', 285);
-define ('T_IS_NOT_IDENTICAL', 286);
+define ('T_SPACESHIP', 289);
+define ('T_IS_NOT_IDENTICAL', 288);
 define ('T_IS_IDENTICAL', 287);
-define ('T_IS_NOT_EQUAL', 288);
-define ('T_IS_EQUAL', 289);
-define ('T_IS_GREATER_OR_EQUAL', 290);
-define ('T_IS_SMALLER_OR_EQUAL', 291);
-define ('T_SR', 292);
-define ('T_SL', 293);
+define ('T_IS_NOT_EQUAL', 286);
+define ('T_IS_EQUAL', 285);
+define ('T_IS_GREATER_OR_EQUAL', 291);
+define ('T_IS_SMALLER_OR_EQUAL', 290);
+define ('T_SR', 293);
+define ('T_SL', 292);
 define ('T_INSTANCEOF', 294);
-define ('T_UNSET_CAST', 295);
-define ('T_BOOL_CAST', 296);
-define ('T_OBJECT_CAST', 297);
-define ('T_ARRAY_CAST', 298);
+define ('T_UNSET_CAST', 303);
+define ('T_BOOL_CAST', 302);
+define ('T_OBJECT_CAST', 301);
+define ('T_ARRAY_CAST', 300);
 define ('T_STRING_CAST', 299);
-define ('T_DOUBLE_CAST', 300);
-define ('T_INT_CAST', 301);
-define ('T_DEC', 302);
-define ('T_INC', 303);
+define ('T_DOUBLE_CAST', 298);
+define ('T_INT_CAST', 297);
+define ('T_DEC', 296);
+define ('T_INC', 295);
 define ('T_POW', 304);
-define ('T_CLONE', 305);
-define ('T_NEW', 306);
+define ('T_CLONE', 306);
+define ('T_NEW', 305);
 define ('T_ELSEIF', 308);
 define ('T_ELSE', 309);
 define ('T_ENDIF', 310);
-define ('T_PUBLIC', 311);
-define ('T_PROTECTED', 312);
-define ('T_PRIVATE', 313);
-define ('T_FINAL', 314);
-define ('T_ABSTRACT', 315);
-define ('T_STATIC', 316);
+define ('T_PUBLIC', 316);
+define ('T_PROTECTED', 315);
+define ('T_PRIVATE', 314);
+define ('T_FINAL', 313);
+define ('T_ABSTRACT', 312);
+define ('T_STATIC', 311);
 define ('T_LNUMBER', 317);
 define ('T_DNUMBER', 318);
 define ('T_STRING', 319);
@@ -166,4 +166,4 @@ define ('T_ELLIPSIS', 391);
 define ('T_DOUBLE_COLON', 387);
 define ('TOKEN_PARSE', 1);
 
-// End of tokenizer v.7.1.1
+// End of tokenizer v.7.2.3

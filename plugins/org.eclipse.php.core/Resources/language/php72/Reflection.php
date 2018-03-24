@@ -1,6 +1,6 @@
 <?php
 
-// Start of Reflection v.7.1.1
+// Start of Reflection v.7.2.3
 
 /**
  * The ReflectionException class.
@@ -726,7 +726,7 @@ class ReflectionParameter implements Reflector {
 	/**
 	 * Gets declaring class
 	 * @link http://www.php.net/manual/en/reflectionparameter.getdeclaringclass.php
-	 * @return ReflectionClass A ReflectionClass object.
+	 * @return ReflectionClass A ReflectionClass object or null if called on function.
 	 */
 	public function getDeclaringClass () {}
 
@@ -858,8 +858,16 @@ class ReflectionType  {
 
 }
 
+/**
+ * @link http://www.php.net/manual/en/class.reflectionnamedtype.php
+ */
 class ReflectionNamedType extends ReflectionType  {
 
+	/**
+	 * Get the text of the type hint
+	 * @link http://www.php.net/manual/en/reflectionnamedtype.getname.php
+	 * @return string the text of the type hint.
+	 */
 	public function getName () {}
 
 	final private function __clone () {}
@@ -905,7 +913,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract implements Reflector {
 
 
 	/**
-	 * Export a reflection method.
+	 * Export a reflection method
 	 * @link http://www.php.net/manual/en/reflectionmethod.export.php
 	 * @param string $class The class name.
 	 * @param string $name The name of the method.
@@ -923,7 +931,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract implements Reflector {
 	public function __construct (string $class_method) {}
 
 	/**
-	 * Returns the string representation of the Reflection method object.
+	 * Returns the string representation of the Reflection method object
 	 * @link http://www.php.net/manual/en/reflectionmethod.tostring.php
 	 * @return string A string representation of this ReflectionMethod instance.
 	 */
@@ -1026,7 +1034,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract implements Reflector {
 	public function invokeArgs ($object, array $args) {}
 
 	/**
-	 * Gets declaring class for the reflected method.
+	 * Gets declaring class for the reflected method
 	 * @link http://www.php.net/manual/en/reflectionmethod.getdeclaringclass.php
 	 * @return ReflectionClass A ReflectionClass object of the class that the
 	 * reflected method is part of.
@@ -1034,7 +1042,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract implements Reflector {
 	public function getDeclaringClass () {}
 
 	/**
-	 * Gets the method prototype (if there is one).
+	 * Gets the method prototype (if there is one)
 	 * @link http://www.php.net/manual/en/reflectionmethod.getprototype.php
 	 * @return ReflectionMethod A ReflectionMethod instance of the method prototype.
 	 */
@@ -1267,7 +1275,7 @@ class ReflectionClass implements Reflector {
 	public function __construct ($argument) {}
 
 	/**
-	 * Returns the string representation of the ReflectionClass object.
+	 * Returns the string representation of the ReflectionClass object
 	 * @link http://www.php.net/manual/en/reflectionclass.tostring.php
 	 * @return string A string representation of this ReflectionClass instance.
 	 */
@@ -1362,7 +1370,7 @@ class ReflectionClass implements Reflector {
 	public function hasMethod (string $name) {}
 
 	/**
-	 * Gets a ReflectionMethod for a class method.
+	 * Gets a ReflectionMethod for a class method
 	 * @link http://www.php.net/manual/en/reflectionclass.getmethod.php
 	 * @param string $name The method name to reflect.
 	 * @return ReflectionMethod A ReflectionMethod.
@@ -1546,7 +1554,7 @@ class ReflectionClass implements Reflector {
 	public function isInstance ($object) {}
 
 	/**
-	 * Creates a new class instance from given arguments.
+	 * Creates a new class instance from given arguments
 	 * @link http://www.php.net/manual/en/reflectionclass.newinstance.php
 	 * @param mixed $args Accepts a variable number of arguments which are passed to the class
 	 * constructor, much like call_user_func.
@@ -1556,14 +1564,14 @@ class ReflectionClass implements Reflector {
 	public function newInstance ($args, $_ = null) {}
 
 	/**
-	 * Creates a new class instance without invoking the constructor.
+	 * Creates a new class instance without invoking the constructor
 	 * @link http://www.php.net/manual/en/reflectionclass.newinstancewithoutconstructor.php
 	 * @return object 
 	 */
 	public function newInstanceWithoutConstructor () {}
 
 	/**
-	 * Creates a new class instance from given arguments.
+	 * Creates a new class instance from given arguments
 	 * @link http://www.php.net/manual/en/reflectionclass.newinstanceargs.php
 	 * @param array $args [optional] The parameters to be passed to the class constructor as an array.
 	 * @return object a new instance of the class.
@@ -1573,7 +1581,7 @@ class ReflectionClass implements Reflector {
 	/**
 	 * Gets parent class
 	 * @link http://www.php.net/manual/en/reflectionclass.getparentclass.php
-	 * @return ReflectionClass A ReflectionClass.
+	 * @return ReflectionClass A ReflectionClass or null if there's no parent.
 	 */
 	public function getParentClass () {}
 
@@ -1608,10 +1616,10 @@ class ReflectionClass implements Reflector {
 	 * Sets static property value
 	 * @link http://www.php.net/manual/en/reflectionclass.setstaticpropertyvalue.php
 	 * @param string $name Property name.
-	 * @param string $value New property value.
+	 * @param mixed $value New property value.
 	 * @return void 
 	 */
-	public function setStaticPropertyValue (string $name, string $value) {}
+	public function setStaticPropertyValue (string $name, $value) {}
 
 	/**
 	 * Gets default properties
@@ -1623,6 +1631,14 @@ class ReflectionClass implements Reflector {
 	 * into account.
 	 */
 	public function getDefaultProperties () {}
+
+	/**
+	 * Check whether this class is iterable
+	 * @link http://www.php.net/manual/en/reflectionclass.isiterable.php
+	 * @return bool true if this class is iterable (can be used inside foreach),
+	 * false otherwise.
+	 */
+	public function isIterable () {}
 
 	/**
 	 * Checks if iterateable
@@ -1709,7 +1725,7 @@ class ReflectionObject extends ReflectionClass implements Reflector {
 	final private function __clone () {}
 
 	/**
-	 * Returns the string representation of the ReflectionClass object.
+	 * Returns the string representation of the ReflectionClass object
 	 * @link http://www.php.net/manual/en/reflectionclass.tostring.php
 	 * @return string A string representation of this ReflectionClass instance.
 	 */
@@ -1804,7 +1820,7 @@ class ReflectionObject extends ReflectionClass implements Reflector {
 	public function hasMethod (string $name) {}
 
 	/**
-	 * Gets a ReflectionMethod for a class method.
+	 * Gets a ReflectionMethod for a class method
 	 * @link http://www.php.net/manual/en/reflectionclass.getmethod.php
 	 * @param string $name The method name to reflect.
 	 * @return ReflectionMethod A ReflectionMethod.
@@ -1988,7 +2004,7 @@ class ReflectionObject extends ReflectionClass implements Reflector {
 	public function isInstance ($object) {}
 
 	/**
-	 * Creates a new class instance from given arguments.
+	 * Creates a new class instance from given arguments
 	 * @link http://www.php.net/manual/en/reflectionclass.newinstance.php
 	 * @param mixed $args Accepts a variable number of arguments which are passed to the class
 	 * constructor, much like call_user_func.
@@ -1998,14 +2014,14 @@ class ReflectionObject extends ReflectionClass implements Reflector {
 	public function newInstance ($args, $_ = null) {}
 
 	/**
-	 * Creates a new class instance without invoking the constructor.
+	 * Creates a new class instance without invoking the constructor
 	 * @link http://www.php.net/manual/en/reflectionclass.newinstancewithoutconstructor.php
 	 * @return object 
 	 */
 	public function newInstanceWithoutConstructor () {}
 
 	/**
-	 * Creates a new class instance from given arguments.
+	 * Creates a new class instance from given arguments
 	 * @link http://www.php.net/manual/en/reflectionclass.newinstanceargs.php
 	 * @param array $args [optional] The parameters to be passed to the class constructor as an array.
 	 * @return object a new instance of the class.
@@ -2015,7 +2031,7 @@ class ReflectionObject extends ReflectionClass implements Reflector {
 	/**
 	 * Gets parent class
 	 * @link http://www.php.net/manual/en/reflectionclass.getparentclass.php
-	 * @return ReflectionClass A ReflectionClass.
+	 * @return ReflectionClass A ReflectionClass or null if there's no parent.
 	 */
 	public function getParentClass () {}
 
@@ -2050,10 +2066,10 @@ class ReflectionObject extends ReflectionClass implements Reflector {
 	 * Sets static property value
 	 * @link http://www.php.net/manual/en/reflectionclass.setstaticpropertyvalue.php
 	 * @param string $name Property name.
-	 * @param string $value New property value.
+	 * @param mixed $value New property value.
 	 * @return void 
 	 */
-	public function setStaticPropertyValue (string $name, string $value) {}
+	public function setStaticPropertyValue (string $name, $value) {}
 
 	/**
 	 * Gets default properties
@@ -2065,6 +2081,14 @@ class ReflectionObject extends ReflectionClass implements Reflector {
 	 * into account.
 	 */
 	public function getDefaultProperties () {}
+
+	/**
+	 * Check whether this class is iterable
+	 * @link http://www.php.net/manual/en/reflectionclass.isiterable.php
+	 * @return bool true if this class is iterable (can be used inside foreach),
+	 * false otherwise.
+	 */
+	public function isIterable () {}
 
 	/**
 	 * Checks if iterateable
@@ -2293,12 +2317,17 @@ class ReflectionClassConstant implements Reflector {
 	public function __construct ($class, $name) {}
 
 	/**
-	 * Returns the string representation of the ReflectionClassConstant object.
+	 * Returns the string representation of the ReflectionClassConstant object
 	 * @link http://www.php.net/manual/en/reflectionclassconstant.tostring.php
 	 * @return string A string representation of this ReflectionClassConstant instance.
 	 */
 	public function __toString () {}
 
+	/**
+	 * Get name of the constant
+	 * @link http://www.php.net/manual/en/reflectionclassconstant.getname.php
+	 * @return string the constant's name.
+	 */
 	public function getName () {}
 
 	/**
@@ -2501,10 +2530,10 @@ class ReflectionZendExtension implements Reflector {
 	 * Export
 	 * @link http://www.php.net/manual/en/reflectionzendextension.export.php
 	 * @param string $name 
-	 * @param string $return [optional] 
+	 * @param bool $return [optional] 
 	 * @return string 
 	 */
-	public static function export (string $name, string $return = null) {}
+	public static function export (string $name, bool $return = null) {}
 
 	/**
 	 * Constructor
@@ -2556,4 +2585,4 @@ class ReflectionZendExtension implements Reflector {
 	public function getCopyright () {}
 
 }
-// End of Reflection v.7.1.1
+// End of Reflection v.7.2.3
