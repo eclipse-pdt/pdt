@@ -3112,6 +3112,14 @@
                id="UndefinedType"
                name="Undefined type">
          </identifier>
+         <identifier
+               id="UndefinedVariable"
+               name="Undefined variable">
+         </identifier>
+         <identifier
+               id="UnusedVariable"
+               name="Unused variable">
+         </identifier>
       </problem>
    </extension>
    <extension

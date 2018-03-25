@@ -960,4 +960,9 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		return currentNamespace;
 	}
 
+	@Override
+	public PHPVersion getPHPVersion() {
+		return version;
+	}
+
 }

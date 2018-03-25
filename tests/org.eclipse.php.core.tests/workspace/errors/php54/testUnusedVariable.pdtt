@@ -1,0 +1,18 @@
+--TEST--
+Test unused variable
+--FILE--
+<?php
+namespace space\testUnusedVariable\sample {
+    $x = '';
+    $x2 = '';
+    
+    $var1 = ($x2 ? $_POST : $_GET);
+}
+namespace space\testUnusedVariable\test {
+    $x = '';
+    echo $x;
+}
+?>
+--EXPECT--
+[line=3, start=54, end=56] Variable '$x' is never used
+[line=6, start=86, end=91] Variable '$var1' is never used

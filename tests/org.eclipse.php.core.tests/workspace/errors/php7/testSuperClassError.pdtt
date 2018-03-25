@@ -21,6 +21,7 @@ $a = new class() implements Foo {
 
 $a = new class() extends Foo implements IFoo {
 };
+echo $a;
 --EXPECT--
 [line=13, start=126, end=136] The type new FinalClass() {...} cannot subclass the final class FinalClass
 [line=16, start=171, end=174] The type Foo cannot be a superinterface of new Foo() {...}; a superinterface must be an interface

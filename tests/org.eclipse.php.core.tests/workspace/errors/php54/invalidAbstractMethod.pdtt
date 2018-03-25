@@ -9,7 +9,7 @@ trait Trait1 {
     abstract function foo2();
 
     abstract function foo3() {
-    	$a = 0;
+    	exit();
     }
 }
 
@@ -21,7 +21,7 @@ class MyClass1 {
     abstract function foo2();
 
     abstract function foo3() {
-    	$a = 0;
+    	exit();
     }
 }
 
@@ -31,7 +31,7 @@ abstract class MyClass2 {
     function foo1();
 
     abstract function foo2() {
-    	$a = 0;
+    	exit();
     }
 }
 
@@ -40,7 +40,7 @@ interface MyInterface1 {
     function foo1();
     
     function foo2() {
-        $a = 0;
+        exit();
     }
 }
 ?>

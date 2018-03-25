@@ -1,0 +1,11 @@
+--TEST--
+Test undefined with phpdoc
+--FILE--
+<?php
+/**
+ * @var string $var1
+ */
+ echo $var1, $var2;
+?>
+--EXPECT--
+[line=5, start=48, end=53] Variable '$var2' is undefined

@@ -479,4 +479,10 @@
              priority="0">
        </problemFactory>
    </extension>
+   <extension
+         point="org.eclipse.php.core.validatorExtension">
+      <validator
+            class="org.eclipse.php.internal.core.compiler.ast.validator.VariableValidator">
+      </validator>
+   </extension>
 </plugin>

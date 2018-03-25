@@ -1,0 +1,16 @@
+--TEST--
+Test undefined variable
+--FILE--
+<?php
+namespace space\testUnusedVariable\sample {
+    $x2 = '';
+    echo $x2;
+}
+namespace space\testUnusedVariable\test {
+    echo ($x2 ? $x3 : $x4);
+}
+?>
+--EXPECT--
+[line=7, start=132, end=135] Variable '$x2' is undefined
+[line=7, start=138, end=141] Variable '$x3' is undefined
+[line=7, start=144, end=147] Variable '$x4' is undefined

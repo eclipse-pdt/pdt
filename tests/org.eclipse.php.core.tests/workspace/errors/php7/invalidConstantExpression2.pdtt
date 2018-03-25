@@ -2,9 +2,10 @@
 Test unfinished method declaration error reporting
 --FILE--
 <?php
+$test = 1;
 class Foo {
     const BAR = $test::T;
 }
 ?>
 --EXPECT--
-[line=3, start=34, end=39] Dynamic class names are not allowed in compile-time class constant references
+[line=4, start=45, end=50] Dynamic class names are not allowed in compile-time class constant references

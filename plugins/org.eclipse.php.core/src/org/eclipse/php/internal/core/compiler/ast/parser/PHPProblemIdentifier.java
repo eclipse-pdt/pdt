@@ -21,7 +21,9 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
  */
 public enum PHPProblemIdentifier implements IProblemIdentifier, IProblemIdentifierExtension {
 
-	SYNTAX, USE_STATEMENTS /* deprecated */, AbstractMethodInAbstractClass, BodyForAbstractMethod, MethodRequiresBody, AbstractMethodsInConcreteClass, UndefinedType, ClassExtendFinalClass, CannotInstantiateType, ImportNotFound, DuplicateImport, UnusedImport, UnnecessaryImport, DuplicateDeclaration, AbstractMethodMustBeImplemented, SuperclassMustBeAClass, SuperInterfaceMustBeAnInterface, CannotUseTypeAsTrait, NestedNamespaceDeclarations, InvalidConstantExpression;
+	SYNTAX, USE_STATEMENTS /* deprecated */, AbstractMethodInAbstractClass, BodyForAbstractMethod, MethodRequiresBody, AbstractMethodsInConcreteClass, UndefinedType, ClassExtendFinalClass, CannotInstantiateType, ImportNotFound, DuplicateImport, UnusedImport, UnnecessaryImport, DuplicateDeclaration, AbstractMethodMustBeImplemented, SuperclassMustBeAClass, SuperInterfaceMustBeAnInterface, CannotUseTypeAsTrait, NestedNamespaceDeclarations, InvalidConstantExpression, UndefinedVariable, UnusedVariable
+
+	;
 
 	public static final String MARKER_TYPE_ID = "org.eclipse.php.core.phpproblemmarker"; //$NON-NLS-1$
 

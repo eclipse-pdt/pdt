@@ -14,6 +14,7 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.compiler.problem.IProblemIdentifier;
 import org.eclipse.dltk.compiler.problem.ProblemSeverity;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.core.compiler.ast.nodes.UsePart;
 
@@ -60,4 +61,6 @@ public interface IValidatorVisitor {
 	boolean hasNamespace();
 
 	NamespaceDeclaration getCurrentNamespace();
+
+	PHPVersion getPHPVersion();
 }

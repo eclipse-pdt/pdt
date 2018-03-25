@@ -1,0 +1,16 @@
+--TEST--
+Test unused variable
+--FILE--
+<?php
+
+function foo()
+{
+    static $static, $x;
+    if (! isset($static)) {
+        $static = 1;
+    }
+    return $static;
+} 
+?>
+--EXPECT--
+[line=5, start=44, end=46] Variable '$x' is never used

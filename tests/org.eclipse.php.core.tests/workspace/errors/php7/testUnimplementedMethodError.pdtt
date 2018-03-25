@@ -12,6 +12,7 @@ class Bar {
     function foo() {
         $a = new class() implements Foo {
         };
+        echo $a;
     }
 
 }

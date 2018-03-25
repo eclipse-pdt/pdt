@@ -1,6 +1,6 @@
 --TEST--
 Test invalid unpack argument order
 --FILE--
-<?php foo(...$lala, $plum) ?>
+<?php $lala = []; $plum = ""; foo(...$lala, $plum) ?>
 --EXPECT--
-[line=1, start=20, end=25] Cannot use positional argument after argument unpacking
+[line=1, start=44, end=49] Cannot use positional argument after argument unpacking
