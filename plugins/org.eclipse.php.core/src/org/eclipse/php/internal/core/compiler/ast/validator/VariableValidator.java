@@ -14,6 +14,7 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import org.eclipse.dltk.ast.ASTNode;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.compiler.problem.IProblemIdentifier;
@@ -60,8 +61,7 @@ public class VariableValidator implements IValidatorExtension {
 	@Override
 	public void visit(ASTNode s) throws Exception {
 		if (s instanceof PHPModuleDeclaration) {
-			PHPModuleDeclaration module = (PHPModuleDeclaration) s;
-			module.traverse(new VariableValidatorVisitor(module));
+			s.traverse(new VariableValidatorVisitor());
 		}
 	}
 
@@ -236,7 +236,9 @@ public class VariableValidator implements IValidatorExtension {
 
 	private class VariableValidatorVisitor extends PHPASTVisitor {
 
-		public VariableValidatorVisitor(PHPModuleDeclaration module) {
+		@Override
+		public boolean visit(ModuleDeclaration s) throws Exception {
+			PHPModuleDeclaration module = (PHPModuleDeclaration) s;
 			pushScope(0, module.end());
 			fileScope = true;
 			List<VarComment> varComments = module.getVarComments();
@@ -255,10 +257,18 @@ public class VariableValidator implements IValidatorExtension {
 
 				@Override
 				public int compare(PHPDocBlock o1, PHPDocBlock o2) {
-					return o2.sourceStart() - o1.sourceStart();
+					return Integer.compare(o1.sourceStart(), o2.sourceStart());
 				}
 			});
+			return true;
+		}
 
+		@Override
+		public boolean endvisit(ModuleDeclaration s) throws Exception {
+			if (fileScope) {
+				popScope();
+			}
+			return true;
 		}
 
 		@Override
@@ -391,11 +401,19 @@ public class VariableValidator implements IValidatorExtension {
 			}
 			if (s.getValue() != null) {
 				s.getValue().traverse(this);
+
 			}
 			operations.pop();
 
 			if (s.getStatement() != null) {
 				s.getStatement().traverse(this);
+			}
+
+			if (s.getValue() instanceof VariableReference) {
+				Variable v = current.variables.get(((VariableReference) s.getValue()).getName());
+				if (v != null && v.used() < 0) {
+					v.setUsed(s.getValue().sourceStart());
+				}
 			}
 
 			return false;
