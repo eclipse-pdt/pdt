@@ -4,6 +4,7 @@ Test unfinished class body error reporting
 <?php
 class A {
 $a = new A();
+echo $a;
 ?>
 --EXPECT--
 [line=4, start=14, end=15] syntax error, unfinished class declaration

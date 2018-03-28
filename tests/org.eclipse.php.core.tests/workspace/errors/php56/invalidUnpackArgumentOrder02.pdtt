@@ -3,11 +3,5 @@ Test invalid unpack argument order
 --FILE--
 <?php $lala = $lala2 = $plum = $plum2 = []; foo(...$lala, $plum, ...$lala2, $plum2) ?>
 --EXPECT--
-[line=1, start=14, end=20] Variable '$lala2' is undefined
-[line=1, start=23, end=28] Variable '$plum' is undefined
-[line=1, start=31, end=37] Variable '$plum2' is undefined
 [line=1, start=58, end=63] Cannot use positional argument after argument unpacking
-[line=1, start=58, end=63] Variable '$plum' is undefined
-[line=1, start=68, end=74] Variable '$lala2' is undefined
 [line=1, start=76, end=82] Cannot use positional argument after argument unpacking
-[line=1, start=76, end=82] Variable '$plum2' is undefined

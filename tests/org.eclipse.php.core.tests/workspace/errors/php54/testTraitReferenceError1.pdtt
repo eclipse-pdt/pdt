@@ -16,6 +16,7 @@ class Bar2 extends TFoo implements TFoo {
 }
 
 $t = new TFoo();
+echo $t;
 --EXPECT--
 [line=5, start=45, end=49] The type TFoo cannot be a superinterface of Bar1; a superinterface must be an interface
 [line=8, start=74, end=78] The type TFoo cannot be the superclass of Bar2; a superclass must be a class
