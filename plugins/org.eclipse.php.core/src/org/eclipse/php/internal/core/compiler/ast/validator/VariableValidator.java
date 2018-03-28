@@ -509,7 +509,7 @@ public class VariableValidator implements IValidatorExtension {
 		}
 
 		public boolean visit(ReflectionVariableReference s) throws Exception {
-			if (s.getExpression() instanceof Scalar && operations.peekLast() != Operation.USE_FIELD) {
+			if (s.getExpression() instanceof Scalar && operations.peekFirst() != Operation.USE_FIELD) {
 				Scalar name = (Scalar) s.getExpression();
 				if (name.getScalarType() == Scalar.TYPE_STRING) {
 					String dolarName = DOLLAR + ASTUtils.stripQuotes(name.getValue());
@@ -596,7 +596,7 @@ public class VariableValidator implements IValidatorExtension {
 		};
 
 		private boolean isInit() {
-			return !operations.isEmpty() && operations.peekLast() == Operation.ASSIGN;
+			return !operations.isEmpty() && operations.peekFirst() == Operation.ASSIGN;
 		}
 
 		@Override
@@ -605,7 +605,7 @@ public class VariableValidator implements IValidatorExtension {
 				if (el instanceof VariableReference) {
 					VariableReference ref = (VariableReference) el;
 					if (scopes.size() > 1) {
-						Scope parentScope = scopes.peekFirst();
+						Scope parentScope = scopes.peekLast();
 						if (parentScope.contains(ref.getName(), ref.sourceStart())) {
 							current.variables.put(ref.getName(),
 									new ImportedVariable(parentScope.variables.get(ref.getName())));
@@ -690,14 +690,14 @@ public class VariableValidator implements IValidatorExtension {
 			current = new Scope(start, end);
 			scopes.push(current);
 			depth++;
-			return scopes.peekLast();
+			return scopes.peekFirst();
 		}
 
 		private Scope popScope() {
 			Scope tmp = scopes.pop();
 			endScope(tmp);
 			if (!scopes.isEmpty()) {
-				current = scopes.peekLast();
+				current = scopes.peekFirst();
 			} else {
 				current = null;
 			}

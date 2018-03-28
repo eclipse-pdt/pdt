@@ -6,6 +6,7 @@ $x = function() {
     yield 1;
 };
 yield 2;
+echo $x;
 ?>
 --EXPECT--
 [line=6, start=40, end=47] syntax error, the yield expression can only be used inside a function
