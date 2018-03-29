@@ -297,11 +297,11 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	 * Deletes the selection and sets the caret before the deleted range.
 	 * 
 	 * @param selection
-	 *            the selection to delete
+	 *                       the selection to delete
 	 * @param textWidget
-	 *            the widget
+	 *                       the widget
 	 * @throws BadLocationException
-	 *             on document access failure
+	 *                                  on document access failure
 	 * @since 3.5
 	 */
 	private void deleteSelection(ITextSelection selection, StyledText textWidget) throws BadLocationException {
@@ -429,7 +429,6 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		fViewerConfiguration = configuration;
 
 		PHPStructuredTextViewerConfiguration phpConfiguration = (PHPStructuredTextViewerConfiguration) configuration;
-		fReconciler = phpConfiguration.replaceReconciler(fTextEditor, this);
 
 		IContentAssistant newPHPAssistant = phpConfiguration.getPHPContentAssistant(this, true);
 
@@ -540,7 +539,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	 * the viewer this call moves the listener to the beginning of the list.
 	 * 
 	 * @param listener
-	 *            the text presentation listener
+	 *                     the text presentation listener
 	 * @since 3.0
 	 */
 	@Override
@@ -562,9 +561,11 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	 * listeners.
 	 * 
 	 * @param offset
-	 *            the offset of the newly selected range in the visible document
+	 *                   the offset of the newly selected range in the visible
+	 *                   document
 	 * @param length
-	 *            the length of the newly selected range in the visible document
+	 *                   the length of the newly selected range in the visible
+	 *                   document
 	 */
 	@Override
 	protected void selectionChanged(int offset, int length) {

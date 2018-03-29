@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.configuration;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.*;
 
 import org.eclipse.core.runtime.IAdaptable;
@@ -36,7 +34,6 @@ import org.eclipse.jface.text.information.*;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.quickassist.IQuickAssistAssistant;
 import org.eclipse.jface.text.reconciler.IReconciler;
-import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.php.internal.core.PHPCoreConstants;
@@ -46,7 +43,6 @@ import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.php.internal.core.format.FormatterUtils;
 import org.eclipse.php.internal.core.format.IFormatterCommonPreferences;
-import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.autoEdit.CloseTagAutoEditStrategyPHP;
@@ -78,14 +74,11 @@ import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
 import org.eclipse.wst.sse.core.text.IStructuredPartitions;
-import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
-import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.StructuredContentAssistant;
 import org.eclipse.wst.sse.ui.internal.correction.CompoundQuickAssistProcessor;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.provisional.style.ReconcilerHighlighter;
 import org.eclipse.wst.sse.ui.internal.provisional.style.StructuredPresentationReconciler;
-import org.eclipse.wst.sse.ui.internal.reconcile.DocumentRegionProcessor;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
 import org.w3c.dom.Attr;
@@ -257,51 +250,12 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		return processors;
 	}
 
-	/**
-	 * Replace IReconciler (StructuredRegionProcessor) via Java reflection
-	 * 
-	 * @since 5.3
-	 */
-	public IReconciler replaceReconciler(ITextEditor editor, ISourceViewer sourceViewer) {
-
-		IReconciler oldReconciler = getReconciler(sourceViewer);
-		PHPStructuredRegionProcessor newReconciler = new PHPStructuredRegionProcessor(editor);
-		newReconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
-
-		newReconciler.install(sourceViewer);
-		Field fReconcilerField;
-		try {
-			// we have to replace old reconciler
-			fReconcilerField = StructuredTextViewerConfiguration.class.getDeclaredField("fReconciler"); //$NON-NLS-1$
-			fReconcilerField.setAccessible(true);
-			fReconcilerField.set(this, newReconciler);
-			fReconcilerField.setAccessible(false);
-		} catch (Exception e) {
-			Logger.logException(e);
+	@Override
+	protected IReconciler createReconciler(ISourceViewer sourceViewer) {
+		if (sourceViewer instanceof PHPStructuredTextViewer) {
+			return new PHPStructuredRegionProcessor(((PHPStructuredTextViewer) sourceViewer).getTextEditor());
 		}
-		newReconciler.setDocument(((StructuredTextViewer) sourceViewer).getDocument());
-
-		if (newReconciler instanceof DocumentRegionProcessor && oldReconciler instanceof DocumentRegionProcessor) {
-			Method accessHighlighter;
-			try {
-				// we need access to old semantic highlighting strategy and move it between
-				// reconcilers
-				accessHighlighter = DocumentRegionProcessor.class.getDeclaredMethod("getSemanticHighlightingStrategy");//$NON-NLS-1$
-				accessHighlighter.setAccessible(true);
-				IReconcilingStrategy highlighter = (IReconcilingStrategy) accessHighlighter.invoke(oldReconciler);
-				if (highlighter != null) {
-					((DocumentRegionProcessor) newReconciler).setSemanticHighlightingStrategy(highlighter);
-				}
-				accessHighlighter.setAccessible(false);
-			} catch (Exception e) {
-				Logger.logException(e);
-			}
-		}
-		if (oldReconciler != null) {
-			oldReconciler.uninstall();
-		}
-
-		return newReconciler;
+		return super.createReconciler(sourceViewer);
 	}
 
 	public IContentAssistant getPHPContentAssistant(ISourceViewer sourceViewer) {
@@ -588,7 +542,8 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	 * requested for the current cursor position.
 	 * 
 	 * @param sourceViewer
-	 *            the source viewer to be configured by this configuration
+	 *                         the source viewer to be configured by this
+	 *                         configuration
 	 * @return an information presenter
 	 * @since 2.1
 	 */
@@ -623,10 +578,11 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	 * information requested for the current cursor position.
 	 * 
 	 * @param sourceViewer
-	 *            the source viewer to be configured by this configuration
+	 *                          the source viewer to be configured by this
+	 *                          configuration
 	 * @param doCodeResolve
-	 *            a boolean which specifies whether code resolve should be used to
-	 *            compute the PHP element
+	 *                          a boolean which specifies whether code resolve
+	 *                          should be used to compute the PHP element
 	 * @return an information presenter
 	 * @since 3.4
 	 */
@@ -668,9 +624,10 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	 * <code>PHPOutlineInformationControl</code> instances.
 	 * 
 	 * @param sourceViewer
-	 *            the source viewer to be configured by this configuration
+	 *                         the source viewer to be configured by this
+	 *                         configuration
 	 * @param commandId
-	 *            the ID of the command that opens this control
+	 *                         the ID of the command that opens this control
 	 * @return an information control creator
 	 * @since 2.1
 	 */
