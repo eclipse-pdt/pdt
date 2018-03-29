@@ -2,12 +2,6 @@
 <?pde version="3.8"?><target name="org.eclipse.php.target.current" sequenceNumber="11">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
-
-<unit id="org.eclipse.wst.jsdt.feature.feature.group" version=""/>
-<unit id="org.eclipse.wst.web_ui.feature.feature.group" version=""/>
-<unit id="org.eclipse.wst.xml_ui.feature.feature.group" version=""/>
-<unit id="org.eclipse.wst.json_ui.feature.feature.group" version=""/>
-
 <unit id="org.eclipse.zest.layouts" version=""/>
 <unit id="org.eclipse.zest.core" version=""/>
 <unit id="org.eclipse.platform.feature.group" version=""/>
@@ -22,8 +16,18 @@
 <unit id="org.eclipse.birt.chart.engine.extension" version=""/>
 <unit id="org.eclipse.birt.chart.device.swt" version=""/>
 
-
+<unit id="org.eclipse.sdk.ide" version="0.0.0"/>
+<unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/releases/photon/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
+
+<unit id="org.eclipse.wst.jsdt.feature.feature.group" version=""/>
+<unit id="org.eclipse.wst.web_ui.feature.feature.group" version=""/>
+<unit id="org.eclipse.wst.xml_ui.feature.feature.group" version=""/>
+<unit id="org.eclipse.wst.json_ui.feature.feature.group" version=""/>
+
+<repository location="http://download.eclipse.org/webtools/downloads/drops/R3.10.0/I-latest/repository/"/>
 </location>
 
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
