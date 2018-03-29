@@ -1,32 +1,77 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?><target name="org.eclipse.php.target.current" sequenceNumber="11">
 <locations>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
+<unit id="org.eclipse.zest.layouts" version="0.0.0"/>
+<unit id="org.eclipse.zest.core" version="0.0.0"/>
+<unit id="org.eclipse.draw2d" version="0.0.0" />
+<unit id="org.eclipse.xsd" version="0.0.0" />
+<unit id="org.eclipse.xsd.edit" version="0.0.0" />
+<unit id="org.eclipse.gef" version="0.0.0" />
 
-<unit id="org.eclipse.wst.jsdt.feature.feature.group" version=""/>
-<unit id="org.eclipse.wst.web_ui.feature.feature.group" version=""/>
-<unit id="org.eclipse.wst.xml_ui.feature.feature.group" version=""/>
-<unit id="org.eclipse.wst.json_ui.feature.feature.group" version=""/>
+<unit id="org.eclipse.platform.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.e4.rcp.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.sdk.ide" version="0.0.0"/>
+<unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.equinox.p2.ui.discovery" version="0.0.0"/>
+<unit id="org.eclipse.remote.console" version="0.0.0" />
+<unit id="org.eclipse.remote.serial.core" version="0.0.0" />
+<unit id="org.eclipse.remote.serial.ui" version="0.0.0" />
+<unit id="org.eclipse.remote.telnet.core" version="0.0.0" />
+<unit id="org.eclipse.remote.telnet.ui" version="0.0.0" />
 
-<unit id="org.eclipse.zest.layouts" version=""/>
-<unit id="org.eclipse.zest.core" version=""/>
-<unit id="org.eclipse.platform.feature.group" version=""/>
-<unit id="org.eclipse.e4.rcp.feature.group" version=""/>
-<unit id="org.eclipse.equinox.p2.ui.discovery" version=""/>
-<unit id="org.eclipse.tm.terminal.feature.feature.group" version=""/>
-<unit id="org.eclipse.ptp.rdt.sync.feature.group" version=""/>
-<unit id="org.eclipse.ptp.remote.feature.group" version="" />
-<unit id="org.eclipse.remote.feature.group" version="" />
+<unit id="org.eclipse.tm.terminal.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.tm.terminal.view.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.tm.terminal.connector.local.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.tm.terminal.connector.ssh.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.tm.terminal.control.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.cdt.native.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.cdt.core" version="0.0.0"/>
 
-<unit id="org.eclipse.birt.chart.engine" version=""/>
-<unit id="org.eclipse.birt.chart.engine.extension" version=""/>
-<unit id="org.eclipse.birt.chart.device.swt" version=""/>
+<unit id="org.eclipse.ptp.rdt.sync.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.ptp.remote.feature.group" version="0.0.0" />
+<unit id="org.eclipse.remote.feature.group" version="0.0.0" />
+<unit id="org.eclipse.jgit" version="0.0.0"/>
 
+<unit id="org.eclipse.birt.core" version="0.0.0"/>
+<unit id="org.eclipse.birt.chart.engine" version="0.0.0"/>
+<unit id="org.eclipse.birt.chart.engine.extension" version="0.0.0"/>
+<unit id="org.eclipse.birt.chart.device.swt" version="0.0.0"/>
+
+<unit id="org.eclipse.mylyn.commons.sdk.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.context.sdk.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.mylyn.sdk_feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.equinox.p2.discovery.feature.feature.group" version="0.0.0"/>
 
 <repository location="http://download.eclipse.org/releases/photon/"/>
 </location>
 
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
+
+<unit id="org.eclipse.wst.jsdt.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.wst.jsdt_sdk.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.wst.web_core.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.wst.web_ui.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.wst.web_userdoc.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.wst.server_core.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.wst.server_ui.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.wst.server_userdoc.feature.feature.group" version="0.0.0" />
+<unit id="org.eclipse.wst.xml_core.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.wst.xml_ui.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.wst.xml_userdoc.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.wst.json_core.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.wst.json_ui.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.wst.common_core.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.wst.common_ui.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.wst.common.fproj.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.wst.xsl.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.wst.sse.core" version="0.0.0"/>
+<unit id="org.eclipse.wst.sse.ui" version="0.0.0"/>
+
+<repository location="http://download.eclipse.org/webtools/downloads/drops/R3.10.0/I-latest/repository/"/>
+</location>
+
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
 
 <unit id="org.apache.commons.lang3" version="0.0.0"/>
 <unit id="org.apache.httpcomponents.httpcore" version="4.3.3.v201411290715"/>
@@ -37,23 +82,28 @@
 <unit id="org.apache.commons.logging" version="0.0.0"/>
 <unit id="org.apache.commons.logging" version="0.0.0"/>
 <unit id="org.apache.commons.io" version="0.0.0"/>
+<unit id="com.google.protobuf" version="0.0.0"/>
+<unit id="javaewah" version="1.1.6.v20160919-1400"/>
 
+<unit id="org.slf4j.api" version="0.0.0" />
 
 <unit id="org.junit" version="4.12.0.v201504281640"/>
 
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20170919201930/repository/"/>
 </location>
 
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
 <unit id="org.eclipse.test.feature.group" version="3.5.100.v20120528-1714-7R7dBhBgLiCViQnG8ISKO73701A1"/>
 <repository location="http://download.eclipse.org/eclipse/updates/4.2/R-4.2-201206081400"/>
 </location>
 
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
 <unit id="org.eclipse.dltk.core.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.dltk.mylyn.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.dltk.core.index.lucene.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.dltk.core.tests" version="0.0.0" />
+<unit id="org.apache.lucene.analyzers-common" version="7.1.0.v20180122-2126"/>
+<unit id="org.apache.lucene.core" version="7.1.0.v20171214-1510"/>
+<unit id="org.apache.lucene.misc" version="7.1.0.v20180220-1923"/>
 <repository location="http://download.eclipse.org/technology/dltk/updates-dev/latest-nightly/"/>
 </location>
 </locations>
