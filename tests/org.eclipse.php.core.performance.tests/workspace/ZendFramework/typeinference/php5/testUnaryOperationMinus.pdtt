@@ -1,6 +1,0 @@
---TEST--
-Test Unary Operation Minus
---FILE--
-<?php $a = "s"; testUnaryOperationMinus(-$a); ?>
---EXPECT--
-number

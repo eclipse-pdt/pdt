@@ -1,6 +1,0 @@
---TEST--
-Test Scalar Number
---FILE--
-<?php testScalarNumber(5); ?>
---EXPECT--
-number

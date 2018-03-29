@@ -1,6 +1,0 @@
---TEST--
-Test Self Var Declaration
---FILE--
-<?php class A { static $a; function foo() { self::$a = 5; } } testSelfVarDeclaration(A::$a); ?>
---EXPECT--
-number

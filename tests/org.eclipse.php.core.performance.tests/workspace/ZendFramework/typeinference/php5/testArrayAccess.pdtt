@@ -1,6 +1,0 @@
---TEST--
-Test Array Access
---FILE--
-<?php $a = array(new A(), new B()); testArrayAccess($a[0]); ?>
---EXPECT--
-Ambigous <A, B>

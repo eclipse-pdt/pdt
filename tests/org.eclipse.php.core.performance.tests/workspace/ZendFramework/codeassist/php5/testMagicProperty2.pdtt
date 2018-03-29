@@ -1,9 +1,0 @@
---TEST--
-Test Magic Property With Binding
---FILE--
-<? /**
-     * @property A $b
-	  */ class A { function foo() { }  } ; $a = new A(); $a->b->|  ?>
---EXPECT--
-field($b)
-method(foo)

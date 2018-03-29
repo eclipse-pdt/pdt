@@ -1,6 +1,0 @@
---TEST--
-Test Typed Argument Reference
---FILE--
-<?php function foo(A $a) { testTypedArgumentReference($a); } ?>
---EXPECT--
-A

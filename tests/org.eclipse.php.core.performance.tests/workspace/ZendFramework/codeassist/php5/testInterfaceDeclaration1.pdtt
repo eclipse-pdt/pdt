@@ -1,6 +1,0 @@
---TEST--
-Test interface declaration
---FILE--
-<? interface Iface | ?>
---EXPECT--
-keyword(extends)

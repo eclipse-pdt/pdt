@@ -1,6 +1,0 @@
---TEST--
-Test Assignment Scalar
---FILE--
-<?php testAssignmentScalar($a = 5); ?>
---EXPECT--
-number

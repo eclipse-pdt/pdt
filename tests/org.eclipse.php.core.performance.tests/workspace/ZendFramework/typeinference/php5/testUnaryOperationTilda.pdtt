@@ -1,6 +1,0 @@
---TEST--
-Test Unary Operation Tilda
---FILE--
-<?php $a = "s"; testUnaryOperationTilda(~$a); ?>
---EXPECT--
-string

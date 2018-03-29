@@ -1,6 +1,0 @@
---TEST--
-Test Function Return Type Ambiguous
---FILE--
-<?php function foo() { return 5; return 3;} testFunctionReturnTypeAmbiguous(foo()); ?>
---EXPECT--
-number

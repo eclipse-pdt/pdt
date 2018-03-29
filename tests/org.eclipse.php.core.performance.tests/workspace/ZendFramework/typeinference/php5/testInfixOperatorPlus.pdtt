@@ -1,6 +1,0 @@
---TEST--
-Test Infix Operator Plus
---FILE--
-<?php testInfixOperatorPlus(3+3); ?>
---EXPECT--
-number

@@ -1,6 +1,0 @@
---TEST--
-Test Overrides Object
---FILE--
-<?php $a = new A(); $a = new B(); testOverridesObject($a); ?>
---EXPECT--
-B

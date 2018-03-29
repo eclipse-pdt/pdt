@@ -1,6 +1,0 @@
---TEST--
-Test Self Class Instance Creation
---FILE--
-<?php class A { function getInstance() { testSelfClassInstanceCreation(new self); } } ?>
---EXPECT--
-A

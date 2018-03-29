@@ -1,6 +1,0 @@
---TEST--
-Test Overridden Method Return Type
---FILE--
-<?php class A { function foo() { return 5; } } class B extends A { function foo() { return "t"; } } $b = new B(); testOverriddenMethodReturnType($b->foo()); ?>
---EXPECT--
-string

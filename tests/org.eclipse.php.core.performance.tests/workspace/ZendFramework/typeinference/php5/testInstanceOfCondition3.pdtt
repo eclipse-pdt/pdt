@@ -1,6 +1,0 @@
---TEST--
-Test Instance Of Condition3
---FILE--
-<? if ($a instanceof A) { $a = new B(); testInstanceOfCondition3($a); } ?>
---EXPECT--
-B

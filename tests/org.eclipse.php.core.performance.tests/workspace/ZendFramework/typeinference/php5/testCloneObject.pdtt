@@ -1,6 +1,0 @@
---TEST--
-Test Clone Object
---FILE--
-<?php class A {} testCloneObject(clone new A()); ?>
---EXPECT--
-A

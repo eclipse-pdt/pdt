@@ -1,6 +1,0 @@
---TEST--
-Test Class Instance Creation
---FILE--
-<?php class A {} testClassInstanceCreation(new A()); ?>
---EXPECT--
-A

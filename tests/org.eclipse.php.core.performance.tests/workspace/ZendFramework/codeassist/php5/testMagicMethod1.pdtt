@@ -1,9 +1,0 @@
---TEST--
-Test Magic Method
---FILE--
-<? /**
-     * @method A foo()
-	  */ class A { function goo() { $this->| } } ?>
---EXPECT--
-method(foo)
-method(goo)

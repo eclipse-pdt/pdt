@@ -1,6 +1,0 @@
---TEST--
-Test Self Field Access
---FILE--
-<?php class A { static $a = 5; function foo() { testSelfFieldAccess(self::$a); } } ?>
---EXPECT--
-number

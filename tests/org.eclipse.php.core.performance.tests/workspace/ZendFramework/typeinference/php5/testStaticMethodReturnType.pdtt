@@ -1,6 +1,0 @@
---TEST--
-Test Static Method Return Type
---FILE--
-<?php class A { function foo() { return 5; } } testStaticMethodReturnType(A::foo()); ?>
---EXPECT--
-number

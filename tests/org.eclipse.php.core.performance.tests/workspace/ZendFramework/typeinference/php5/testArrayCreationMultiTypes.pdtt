@@ -1,6 +1,0 @@
---TEST--
-Test Array Creation Multi Types
---FILE--
-<?php testArrayCreationMultiTypes(array(1 => "a", 2, new A())); ?>
---EXPECT--
-multitype:string number A

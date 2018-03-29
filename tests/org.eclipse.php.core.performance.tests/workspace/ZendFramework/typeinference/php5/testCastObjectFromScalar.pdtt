@@ -1,6 +1,0 @@
---TEST--
-Test Cast Object From Scalar
---FILE--
-<?php testCastObjectFromScalar((object)3); ?>
---EXPECT--
-StdClass

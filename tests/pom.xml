@@ -110,7 +110,6 @@
 
 	<modules>
 		<module>org.eclipse.php.core.tests</module>
-		<module>org.eclipse.php.core.performance.tests</module>
 		<module>org.eclipse.php.formatter.core.tests</module>
 		<module>org.eclipse.php.refactoring.core.tests</module>
 		<module>org.eclipse.php.ui.tests</module>

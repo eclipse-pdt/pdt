@@ -1,6 +1,0 @@
---TEST--
-Test Prefix Operator Plus Plus
---FILE--
-<?php $a=3; testPrefixOperatorPlusPlus(++$a); ?>
---EXPECT--
-number

@@ -1,6 +1,0 @@
---TEST--
-Test Parent Class Var Decl
---FILE--
-<?php class A { static $f = 5; } class B extends A {} testParentClassVarDecl(B::$f); ?>
---EXPECT--
-number
