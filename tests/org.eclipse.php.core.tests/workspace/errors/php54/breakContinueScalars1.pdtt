@@ -1,0 +1,13 @@
+--TEST--
+
+--FILE--
+<?php
+$x = 1;
+while (true) {
+continue 1+1;
+break $x;
+}
+?>
+--EXPECT--
+[line=4, start=38, end=41] 'continue' operator with non-constant operand is no longer supported
+[line=5, start=49, end=51] 'break' operator with non-constant operand is no longer supported

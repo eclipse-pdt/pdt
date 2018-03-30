@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
+import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.ConstantReference;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
@@ -31,6 +32,7 @@ import org.eclipse.dltk.core.builder.ISourceLineTracker;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.compiler.ast.nodes.*;
@@ -927,6 +929,34 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		} else {
 			reportProblem(astNode, Messages.InvalidConstantExpression, PHPProblemIdentifier.InvalidConstantExpression,
 					ProblemSeverities.Error);
+		}
+	}
+
+	@Override
+	public boolean visit(BreakStatement s) throws Exception {
+		validatePositiveConstantInteger(s.getExpr(), "break"); //$NON-NLS-1$
+		return true;
+	}
+
+	@Override
+	public boolean visit(ContinueStatement s) throws Exception {
+		validatePositiveConstantInteger(s.getExpr(), "continue"); //$NON-NLS-1$
+		return true;
+	}
+
+	private void validatePositiveConstantInteger(Expression expr, String operator) {
+		if (expr == null || version.isLessThan(PHPVersion.PHP5_4)) {
+			return;
+		}
+		if (!(expr instanceof Scalar)) {
+			reportProblem(expr, NLS.bind(Messages.UsupportedNonConstantOperand, operator), PHPProblemIdentifier.SYNTAX,
+					ProblemSeverities.Error);
+			return;
+		}
+		Scalar sc = (Scalar) expr;
+		if (sc.getScalarType() != Scalar.TYPE_INT || Integer.parseInt(sc.getValue()) < 1) {
+			reportProblem(expr, NLS.bind(Messages.OperatorAcceptOnlyPositiveNumbers, operator),
+					PHPProblemIdentifier.SYNTAX, ProblemSeverities.Error);
 		}
 	}
 

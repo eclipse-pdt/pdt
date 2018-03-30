@@ -53,6 +53,8 @@ public class Messages extends NLS {
 	public static String NestedNamespaceDeclarations;
 	public static String InvalidConstantExpression;
 	public static String DynamicClassNotAllowed;
+	public static String UsupportedNonConstantOperand;
+	public static String OperatorAcceptOnlyPositiveNumbers;
 
 	static {
 		// initialize resource bundle

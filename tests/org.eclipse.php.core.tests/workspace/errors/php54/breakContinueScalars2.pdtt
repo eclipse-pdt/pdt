@@ -1,0 +1,13 @@
+--TEST--
+
+--FILE--
+<?php
+
+while (true) {
+continue DIRECTORY_SEPARATOR;
+break -10;
+}
+?>
+--EXPECT--
+[line=4, start=31, end=50] 'continue' operator accepts only positive numbers
+[line=5, start=58, end=61] 'break' operator with non-constant operand is no longer supported

@@ -1,0 +1,13 @@
+--TEST--
+Test trait with superclass error reporting
+--FILE--
+<?php
+
+while (true) {
+continue 1.4;
+break 0;
+}
+?>
+--EXPECT--
+[line=4, start=31, end=34] 'continue' operator accepts only positive numbers
+[line=5, start=42, end=43] 'break' operator accepts only positive numbers
