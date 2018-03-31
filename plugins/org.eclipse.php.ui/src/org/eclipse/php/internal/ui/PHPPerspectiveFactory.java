@@ -31,7 +31,6 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 	public static final String PERSPECTIVE_ID = "org.eclipse.php.perspective"; //$NON-NLS-1$
 
 	// other view id's
-	private static final String ID_EXPLORER = "org.eclipse.php.ui.explorer"; //$NON-NLS-1$
 	private static final String ID_FUNCTIONS = "org.eclipse.php.ui.functions"; //$NON-NLS-1$
 	private static final String ID_PROJECT_OUTLINE = "org.eclipse.php.ui.projectOutline"; //$NON-NLS-1$
 	public static final String ID_MVC = "org.zend.php.framework.ui.views.mvc"; //$NON-NLS-1$
@@ -46,13 +45,13 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 		layout.addPerspectiveShortcut(PERSPECTIVE_ID);
 		layout.addPerspectiveShortcut(ORG_ECLIPSE_DEBUG_UI_DEBUG_PERSPECTIVE);
 
-		layout.addShowViewShortcut(ID_EXPLORER);
+		layout.addShowViewShortcut(IPageLayout.ID_PROJECT_EXPLORER);
 		// layout.addShowViewShortcut(ID_TYPEHIERARCHY);
 		layout.addShowViewShortcut(ID_FUNCTIONS);
 		layout.addShowViewShortcut(ID_PROJECT_OUTLINE);
 		layout.addShowViewShortcut(IConsoleConstants.ID_CONSOLE_VIEW);
 
-		layout.addShowInPart(ID_EXPLORER);
+		layout.addShowInPart(IPageLayout.ID_PROJECT_EXPLORER);
 	}
 
 	/*

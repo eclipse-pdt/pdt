@@ -10,7 +10,7 @@
  *     Zend Technologies
  *     Dawid Pakuła [469503]
  *******************************************************************************/
-package org.eclipse.php.internal.ui.explorer;
+package org.eclipse.php.internal.ui.navigator;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;

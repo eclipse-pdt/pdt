@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.navigator;
 
-import org.eclipse.php.internal.ui.explorer.PHPExplorerContentProvider;
-import org.eclipse.php.internal.ui.explorer.PHPExplorerLabelProvider;
-
 public class PHPNavigatorLabelProvider extends PHPExplorerLabelProvider {
 
 	public PHPNavigatorLabelProvider() {

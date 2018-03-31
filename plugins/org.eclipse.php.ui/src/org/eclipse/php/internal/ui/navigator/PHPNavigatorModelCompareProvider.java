@@ -14,7 +14,7 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.internal.ui.scriptview.BuildPathContainer;
 import org.eclipse.dltk.ui.IModelCompareCategories;
 import org.eclipse.dltk.ui.IModelCompareProvider;
-import org.eclipse.php.internal.ui.explorer.PHPExplorerContentProvider.IncludePathContainer;
+import org.eclipse.php.internal.ui.navigator.PHPExplorerContentProvider.IncludePathContainer;
 import org.eclipse.wst.jsdt.ui.ProjectLibraryRoot;
 
 public class PHPNavigatorModelCompareProvider implements IModelCompareProvider {

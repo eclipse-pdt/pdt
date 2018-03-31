@@ -36,7 +36,7 @@
       <perspectiveExtension targetID="org.eclipse.php.profile.ui.perspective">
          <actionSet id="org.eclipse.debug.ui.profileActionSet"/>
          <showInPart
-                id="org.eclipse.php.ui.explorer">
+                id="org.eclipse.ui.navigator.ProjectExplorer">
          </showInPart>
       </perspectiveExtension>
    </extension>

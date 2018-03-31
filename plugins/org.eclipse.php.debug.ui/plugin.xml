@@ -395,9 +395,6 @@
 		         relationship="stack"
 		         relative="org.eclipse.ui.console.ConsoleView">
 		   </view>
-		   <showInPart
-		         id="org.eclipse.php.ui.explorer">
-		   </showInPart>
 		   <actionSet
 		         id="org.eclipse.php.debug.ui.actionSet">
 		   </actionSet>
