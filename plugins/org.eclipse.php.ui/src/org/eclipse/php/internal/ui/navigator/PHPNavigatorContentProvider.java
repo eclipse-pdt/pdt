@@ -18,7 +18,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.PreferenceConstants;
-import org.eclipse.php.internal.ui.explorer.PHPExplorerContentProvider;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.navigator.ICommonContentExtensionSite;
 import org.eclipse.ui.navigator.IPipelinedTreeContentProvider;

@@ -64,7 +64,6 @@
 			<viewShortcut id="org.eclipse.ui.views.TaskList" />
 			<viewShortcut id="org.eclipse.dltk.ui.TypeHierarchy" />
 			<viewShortcut id="org.eclipse.ui.navigator.ProjectExplorer"/>
-			<viewShortcut id="org.eclipse.php.ui.explorer"/>
 
 			<!-- Add other Web document wizards shortcuts to the New menu:-->
 			<newWizardShortcut id="org.eclipse.php.ui.wizards.PHPProjectCreationWizard" />
@@ -82,7 +81,6 @@
 			<newWizardShortcut id="org.eclipse.php.ui.wizards.InterfaceWizard" />
 			<newWizardShortcut id="org.eclipse.php.ui.wizards.TraitWizard" />
 
-			<showInPart id="org.eclipse.php.ui.explorer"/>
 			<showInPart id="org.eclipse.egit.ui.RepositoriesView"/>
 			<showInPart id="org.eclipse.team.ui.GenericHistoryView"/>
 			<showInPart id="org.eclipse.ui.navigator.ProjectExplorer"/>
@@ -102,13 +100,6 @@
 
 	<extension point="org.eclipse.ui.views">
 		<category name="%category.name.0" id="org.eclipse.php.ui.views" />
-        <view
-        	category="org.eclipse.php.ui.views"
-	        class="org.eclipse.php.internal.ui.explorer.PHPExplorerPart"
-        	icon="icons/full/obj16/php_explorer.png"
-        	id="org.eclipse.php.ui.explorer"
-        	name="%view.name.0">
-        </view>
 		<view name="%view.name.1" category="org.eclipse.php.ui.views"
 			class="org.eclipse.php.internal.ui.functions.PHPFunctionsPart" icon="icons/full/obj16/phpfile.png"
 			id="org.eclipse.php.ui.functions" />
@@ -587,91 +578,6 @@
      </filter>
   </page>
 	</extension>
-	<extension point="org.eclipse.dltk.ui.dltkElementFilters">
-		<!-- Script Explorer -->
-		<filter description="%HideSystemFiles.description" enabled="true"
-			id="org.eclipse.php.ui.explorer.DotFilesFilter" name="%HideSystemFiles.label"
-			class="org.eclipse.php.internal.ui.filters.DotFileFilter"
-			targetId="org.eclipse.php.ui.explorer">
-		</filter>
-		<filter description="%ContainMembers.description" enabled="false"
-			id="org.eclipse.php.ui.explorer.ContainMembersFilter" name="%ContainMembers.label"
-			class="org.eclipse.dltk.internal.ui.filters.ContainMembersFilter"
-			targetId="org.eclipse.php.ui.explorer">
-		</filter>
-		<filter name="%HideEmptyPackages.label" enabled="false"
-			description="%HideEmptyPackages.description" class="org.eclipse.dltk.internal.ui.filters.EmptyPackageFilter"
-			id="org.eclipse.php.ui.explorer.EmptyPackageFilter"
-			targetId="org.eclipse.php.ui.explorer">
-		</filter>
-		<filter name="%HideEmptyInnerPackages.label" enabled="false"
-			description="%HideEmptyInnerPackages.description"
-			class="org.eclipse.dltk.internal.ui.filters.EmptyInnerPackageFilter"
-			id="org.eclipse.php.ui.explorer.EmptyInnerPackageFilter"
-			targetId="org.eclipse.php.ui.explorer">
-		</filter>
-		<filter name="%HideNonScriptElements.label" enabled="false"
-			description="%HideNonScriptElements.description"
-			class="org.eclipse.dltk.internal.ui.filters.NonScriptElementFilter"
-			id="org.eclipse.php.ui.explorer.NonScriptElementFilter"
-			targetId="org.eclipse.php.ui.explorer">
-		</filter>
-		<filter name="%HideReferencedLibraries.label" enabled="false"
-			description="%HideReferencedLibraries.description" class="org.eclipse.dltk.internal.ui.filters.LibraryFilter"
-			id="org.eclipse.php.ui.explorer.LibraryFilter"
-			targetId="org.eclipse.php.ui.explorer">
-		</filter>
-		<filter name="%HideContainedLibraries.label" enabled="false"
-			description="%HideContainedLibraries.description"
-			class="org.eclipse.dltk.internal.ui.filters.ContainedLibraryFilter"
-			id="org.eclipse.php.ui.explorer.ContainedLibraryFilter"
-			targetId="org.eclipse.php.ui.explorer">
-		</filter>
-		<filter name="%HideScriptFiles.label" enabled="false"
-			description="%HideScriptFiles.description" class="org.eclipse.dltk.internal.ui.filters.ScriptFileFilter"
-			id="org.eclipse.php.ui.explorer.SMFileFilter"
-			targetId="org.eclipse.php.ui.explorer">
-		</filter>
-		<filter name="%HideNonScriptProjects.label" enabled="false"
-			description="%HideNonScriptProjects.description"
-			class="org.eclipse.php.internal.ui.filters.NonPHPProjectsFilter"
-			id="org.eclipse.php.ui.explorer.NonScriptProjectsFilter"
-			targetId="org.eclipse.php.ui.explorer">
-		</filter>
-		<filter name="%HideNonSharedProjects.label" enabled="false"
-			description="%HideNonSharedProjects.description"
-			class="org.eclipse.dltk.internal.ui.filters.NonSharedProjectFilter"
-			id="org.eclipse.php.ui.explorer.NonSharedProjectsFilter"
-			targetId="org.eclipse.php.ui.explorer">
-		</filter>
-		<filter name="%HideClosedProjects.label" enabled="false"
-			description="%HideClosedProjects.description"
-			class="org.eclipse.dltk.internal.ui.filters.ClosedProjectFilter" id="org.eclipse.php.ui.explorer.ClosedProjectsFilter"
-			targetId="org.eclipse.php.ui.explorer">
-		</filter>
-		<filter name="%HideFields.label" enabled="false"
-			description="%HideFields.description" class="org.eclipse.dltk.internal.ui.filters.FieldsFilter"
-			id="org.eclipse.php.ui.explorer.FieldsFilter"
-			targetId="org.eclipse.php.ui.explorer">
-		</filter>
-		<filter name="%HideImportDeclarations.label" enabled="true"
-			description="%HideImportDeclarations.description" class="org.eclipse.dltk.internal.ui.filters.ImportDeclarationFilter"
-			id="org.eclipse.php.ui.explorer.UseStatementFilter"
-			targetId="org.eclipse.php.ui.explorer">
-		</filter>
-		<filter name="%HideNonPublic.label" enabled="false"
-			description="%HideNonPublic.description" class="org.eclipse.php.internal.ui.filters.NonPublicFilter"
-			id="org.eclipse.php.ui.explorer.NonPublicFilter"
-			targetId="org.eclipse.php.ui.explorer" />
-		<filter name="%HideHTMLFiles.label" enabled="false"
-			description="%HideHTMLFiles.description"
-			class="org.eclipse.php.internal.ui.filters.PHPContentTypeFilter" id="org.eclipse.php.ui.explorer.PHPHTMLFilter" 
-			targetId="org.eclipse.php.ui.explorer"/>
-		<filter class="org.eclipse.php.internal.ui.filters.RSEProjectFilter"
-			description="%HideRSETempProject.description" enabled="true"
-			id="org.eclipse.php.ui.explorer.RSEProjectFilter" name="%HideRSETempProject.label" 
-			targetId="org.eclipse.php.ui.explorer"/>
-	</extension>
 	
 	<extension point="org.eclipse.dltk.ui.dltkElementFilters">
 		<!-- Outline View -->
@@ -702,14 +608,10 @@
 			<part id="org.eclipse.php.editor" />
 		</actionSetPartAssociation>
 		<actionSetPartAssociation targetID="org.eclipse.php.ui.A_OpenActionSet">
-			<part id="org.eclipse.php.ui.explorer" />
 			<part id="org.eclipse.php.editor" />
 		</actionSetPartAssociation>
       <actionSetPartAssociation
             targetID="org.eclipse.php.ui.SearchActionSet">
-         <part
-               id="org.eclipse.php.ui.explorer">
-         </part>
          <part
                id="org.eclipse.dltk.callhierarchy.view">
          </part>
@@ -909,18 +811,6 @@
 	             id="org.eclipse.php.editor">
 	       </part>
 	    </actionSetPartAssociation>
-         <actionSetPartAssociation
-               targetID="org.eclipse.pdt.ui.RefactoringActionSet">
-            <part
-                  id="org.eclipse.php.ui.explorer">
-            </part>
-         </actionSetPartAssociation>
-     <actionSetPartAssociation
-           targetID="org.eclipse.pdt.ui.SourceActionsSet">
-        <part
-              id="org.eclipse.php.ui.explorer">
-        </part>
-     </actionSetPartAssociation>
      <actionSetPartAssociation
            targetID="org.eclipse.pdt.ui.SourceActionsSet">
         <part
@@ -1306,9 +1196,6 @@
 			id="org.eclipse.php.ui.category.refactoring" />
 
 		<!-- edit -->
-		<command name="%ActionDefinition.showInExplorerView.name"
-			description="%ActionDefinition.showInExplorerView.description"
-			categoryId="org.eclipse.ui.category.navigate" id="org.eclipse.php.ui.edit.text.show.in.explorer.view" />
 		<command name="%ActionDefinition.show.outline.name"
 			description="%ActionDefinition.show.outline.description" categoryId="org.eclipse.ui.category.navigate"
 			id="org.eclipse.pdt.ui.edit.text.php.show.outline" />
@@ -1337,10 +1224,6 @@
 		<!-- perspectives -->
 		<command name="%PerspectiveCommand.php.name" description="%PerspectiveCommand.php.description"
 			categoryId="org.eclipse.ui.category.perspectives" id="org.eclipse.php.perspective" />
-
-		<!-- views -->
-		<command name="%ViewCommand.packageExplorer.name" description="%ViewCommand.packageExplorer.description"
-			categoryId="org.eclipse.ui.category.views" id="org.eclipse.php.ui.explorer" />
 
 		<!-- refactoring -->
 		<command name="%command.name.0"
@@ -1517,13 +1400,6 @@
 		<!-- project -->
 		<!-- perspectives -->
 		<!-- views -->
-		<key sequence="M2+M3+Q E" commandId="org.eclipse.php.ui.explorer"
-			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-		<key platform="cocoa" sequence="M2+M3+Q P" commandId=""
-			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-		<key platform="cocoa" sequence="M1+M3+Q P" commandId="org.eclipse.php.ui.explorer"
-			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-			
 		<key
 			sequence="M1+M2+M"
 			commandId="org.eclipse.php.ui.navigate.open.method"
@@ -2815,7 +2691,7 @@
 			</actionProvider>
 			
 			<commonSorter
-					class="org.eclipse.php.internal.ui.explorer.PHPExplorerElementSorter"
+					class="org.eclipse.php.internal.ui.navigator.PHPExplorerElementSorter"
 					id="org.eclipse.php.ui.phpElementSorter">
 			</commonSorter>
 			

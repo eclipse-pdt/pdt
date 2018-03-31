@@ -187,7 +187,7 @@
          <actionSetPartAssociation
                targetID="org.eclipse.php.refactoring.ui.extractSet">
             <part
-                  id="org.eclipse.php.ui.explorer">
+                  id="org.eclipse.ui.navigator.ProjectExplorer">
             </part>
          </actionSetPartAssociation>
       </extension>

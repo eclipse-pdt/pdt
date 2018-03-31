@@ -31,13 +31,11 @@ import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
-import org.eclipse.php.core.libfolders.LibraryFolderManager;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.ui.corext.template.php.CodeTemplateContextType;
 import org.eclipse.php.internal.ui.editor.ast.ASTProvider;
 import org.eclipse.php.internal.ui.editor.templates.PHPCommentTemplateContextType;
 import org.eclipse.php.internal.ui.editor.templates.PHPTemplateContextType;
-import org.eclipse.php.internal.ui.explorer.LibraryFolderChangeListener;
 import org.eclipse.php.internal.ui.folding.PHPFoldingStructureProviderRegistry;
 import org.eclipse.php.internal.ui.preferences.PHPTemplateStore;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
@@ -92,7 +90,6 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	private PHPEditorTextHoverDescriptor[] fPHPEditorTextHoverDescriptors;
 	private PHPManualSiteDescriptor[] fPHPManualSiteDescriptors;
 	private ImagesOnFileSystemRegistry fImagesOnFSRegistry;
-	private LibraryFolderChangeListener libraryFolderChangeListener;
 
 	/**
 	 * The AST provider.
@@ -141,8 +138,6 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				CorrectionCommandInstaller.registerCommands();
-				libraryFolderChangeListener = new LibraryFolderChangeListener();
-				LibraryFolderManager.getInstance().addListener(libraryFolderChangeListener);
 
 				if (PlatformUI.isWorkbenchRunning()) {
 					new InitializeAfterLoadJob().schedule();
@@ -167,11 +162,6 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 		super.stop(context);
 		PHPContextActivator.getInstance().uninstall();
 		CorrectionCommandInstaller.unregisterCommands();
-
-		if (libraryFolderChangeListener != null) {
-			LibraryFolderManager.getInstance().removeListener(libraryFolderChangeListener);
-			libraryFolderChangeListener = null;
-		}
 
 		Job.getJobManager().cancel(OPEN_TYPE_HIERARCHY_ACTION_FAMILY_NAME);
 		Job.getJobManager().cancel(OPEN_CALL_HIERARCHY_ACTION_FAMILY_NAME);
