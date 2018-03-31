@@ -10,13 +10,13 @@
  *     Zend Technologies
  *     Dawid Pakuła - Extract to separate file	
  *******************************************************************************/
-package org.eclipse.php.internal.ui.explorer;
+package org.eclipse.php.internal.ui.navigator;
 
 import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.ModelElementSorter;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.php.internal.ui.explorer.PHPExplorerContentProvider.IncludePathContainer;
+import org.eclipse.php.internal.ui.navigator.PHPExplorerContentProvider.IncludePathContainer;
 import org.eclipse.php.internal.ui.util.NamespaceNode;
 
 public class PHPExplorerElementSorter extends ModelElementSorter {

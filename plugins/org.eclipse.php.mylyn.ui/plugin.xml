@@ -4,15 +4,6 @@
 	<extension
 		point="org.eclipse.mylyn.context.ui.bridges">
 		<preservedFilters
-			viewId="org.eclipse.php.ui.explorer">
-			<filter
-				class="org.eclipse.dltk.internal.mylyn.DLTKDeclarationsFilter">
-			</filter>
-			<filter
-				class="org.eclipse.dltk.internal.ui.filters.ClosedProjectFilter">
-			</filter>
-		</preservedFilters>
-		<preservedFilters
 			viewId="org.eclipse.ui.navigator.ProjectExplorer">
 		</preservedFilters>
 	</extension>
@@ -42,55 +33,6 @@
 	</extension>
 
 	<extension
-		point="org.eclipse.ui.viewActions">
-
-		<viewContribution
-			id="org.eclipse.mylyn.dltk.explorer.contribution"
-			targetID="org.eclipse.php.ui.explorer">
-			<action
-				class="org.eclipse.dltk.internal.mylyn.actions.FocusPackageExplorerAction"
-				disabledIcon="icons/elcl16/focus-disabled.gif"
-				enablesFor="*"
-				icon="icons/elcl16/focus.gif"
-				id="org.eclipse.mylyn.dltk.actions.focus.packageExplorer"
-				label="%action.label"
-				menubarPath="mylyn"
-				style="toggle"
-				toolbarPath="mylyn"
-				tooltip="%action.tooltip">
-				<enablement>
-					<systemProperty
-						name="org.eclipse.mylyn.context.core.context.active"
-						value="true">
-					</systemProperty>
-				</enablement>
-			</action>
-		</viewContribution>
-	</extension>
-
-	<extension
-		point="org.eclipse.ui.popupMenus">
-		<viewerContribution
-			id="org.eclipse.mylyn.context.ui.browse.filtered.contribution"
-			targetID="org.eclipse.php.ui.explorer">
-			<action
-				class="org.eclipse.dltk.internal.mylyn.actions.ShowFilteredChildrenAction"
-				enablesFor="1"
-				icon="icons/etool16/browse-filtered.gif"
-				id="org.eclipse.dltk.mylyn.action.browse.filtered"
-				label="%action.label.0"
-				menubarPath="group.reorganize">
-			</action>
-			<visibility>
-				<systemProperty
-					name="org.eclipse.mylyn.context.core.context.active"
-					value="true">
-				</systemProperty>
-			</visibility>
-		</viewerContribution>
-	</extension>
-
-	<extension
 		point="org.eclipse.ui.actionSetPartAssociations">
 		<actionSetPartAssociation
 			targetID="org.eclipse.mylyn.dltk.actionSet">
@@ -99,17 +41,4 @@
 			</part>
 		</actionSetPartAssociation>
 	</extension>
-
-	<extension
-		point="org.eclipse.dltk.ui.dltkElementFilters">
-		<filter
-			targetId="org.eclipse.php.ui.explorer"
-			name="%filter.name"
-			enabled="false"
-			description="%filter.description"
-			class="org.eclipse.dltk.internal.mylyn.DLTKDeclarationsFilter"
-			id="org.eclipse.dltk.mylyn.MembersFilter">
-		</filter>
-	</extension>
-
 </plugin>
