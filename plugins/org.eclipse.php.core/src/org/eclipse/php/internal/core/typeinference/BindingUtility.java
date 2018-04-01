@@ -58,7 +58,7 @@ public class BindingUtility {
 	 * Creates new instance of binding utility.
 	 * 
 	 * @param sourceModule
-	 *            Source module of the file.
+	 *                         Source module of the file.
 	 */
 	public BindingUtility(ISourceModule sourceModule) {
 		this.sourceModule = sourceModule;
@@ -69,9 +69,10 @@ public class BindingUtility {
 	 * Creates new instance of binding utility
 	 * 
 	 * @param sourceModule
-	 *            Source module of the file.
+	 *                         Source module of the file.
 	 * @param rootNode
-	 *            AST tree of the the file represented by the given source module.
+	 *                         AST tree of the the file represented by the given
+	 *                         source module.
 	 */
 	public BindingUtility(ISourceModule sourceModule, ASTNode rootNode) {
 		this.sourceModule = sourceModule;
@@ -98,14 +99,15 @@ public class BindingUtility {
 	 * cached type from previous evaluations (if exists).
 	 * 
 	 * @param node
-	 *            AST node that needs to be evaluated.
+	 *                 AST node that needs to be evaluated.
 	 * @return evaluated type.
 	 * @throws ModelException
 	 * 
 	 * @throws IllegalArgumentException
-	 *             in case if context cannot be found for the given node.
+	 *                                      in case if context cannot be found for
+	 *                                      the given node.
 	 * @throws NullPointerException
-	 *             if the given node is <code>null</code>.
+	 *                                      if the given node is <code>null</code>.
 	 */
 	public IEvaluatedType getType(ASTNode node) throws ModelException {
 		if (node == null) {
@@ -119,13 +121,15 @@ public class BindingUtility {
 	 * cached type from previous evaluations (if exists).
 	 * 
 	 * @param element
-	 *            Model element.
+	 *                    Model element.
 	 * @return evaluated type.
 	 * 
 	 * @throws IllegalArgumentException
-	 *             in case if context cannot be found for the given node.
+	 *                                      in case if context cannot be found for
+	 *                                      the given node.
 	 * @throws NullPointerException
-	 *             if the given element is <code>null</code>.
+	 *                                      if the given element is
+	 *                                      <code>null</code>.
 	 * @throws ModelException
 	 */
 	public IEvaluatedType getType(SourceRefElement element) throws ModelException {
@@ -144,13 +148,14 @@ public class BindingUtility {
 	 * and length. Returns cached type from previous evaluations (if exists).
 	 * 
 	 * @param startOffset
-	 *            Starting offset of the expression.
+	 *                        Starting offset of the expression.
 	 * @param length
-	 *            Length of the expression.
+	 *                        Length of the expression.
 	 * @return evaluated type.
 	 * 
 	 * @throws IllegalArgumentException
-	 *             in case if context cannot be found for the given node.
+	 *                                      in case if context cannot be found for
+	 *                                      the given node.
 	 */
 	public IEvaluatedType getType(int startOffset, int length) throws ModelException {
 		return getType(new SourceRange(startOffset, length));
@@ -194,14 +199,15 @@ public class BindingUtility {
 	 * method uses cached evaluated type from previous evaluations (if exists).
 	 * 
 	 * @param node
-	 *            AST node that needs to be evaluated.
+	 *                 AST node that needs to be evaluated.
 	 * @return model element or <code>null</code> in case it couldn't be found
 	 * @throws ModelException
 	 * 
 	 * @throws IllegalArgumentException
-	 *             in case if context cannot be found for the given node.
+	 *                                      in case if context cannot be found for
+	 *                                      the given node.
 	 * @throws NullPointerException
-	 *             if the given node is <code>null</code>.
+	 *                                      if the given node is <code>null</code>.
 	 */
 	public IModelElement[] getModelElement(ASTNode node) throws ModelException {
 		if (node == null) {
@@ -215,13 +221,15 @@ public class BindingUtility {
 	 * uses cached evaluated type from previous evaluations (if exists).
 	 * 
 	 * @param element
-	 *            Source Reference Model element.
+	 *                    Source Reference Model element.
 	 * @return model element or <code>null</code> in case it couldn't be found
 	 * 
 	 * @throws IllegalArgumentException
-	 *             in case if context cannot be found for the given node.
+	 *                                      in case if context cannot be found for
+	 *                                      the given node.
 	 * @throws NullPointerException
-	 *             if the given element is <code>null</code>.
+	 *                                      if the given element is
+	 *                                      <code>null</code>.
 	 * @throws ModelException
 	 */
 	public IModelElement[] getModelElement(SourceRefElement element) throws ModelException {
@@ -241,14 +249,15 @@ public class BindingUtility {
 	 * uses cached evaluated type from previous evaluations (if exists).
 	 * 
 	 * @param startOffset
-	 *            Starting offset of the expression.
+	 *                        Starting offset of the expression.
 	 * @param length
-	 *            Length of the expression.
+	 *                        Length of the expression.
 	 * @return model element or <code>null</code> in case it couldn't be found
 	 * @throws ModelException
 	 * 
 	 * @throws IllegalArgumentException
-	 *             in case if context cannot be found for the given node.
+	 *                                      in case if context cannot be found for
+	 *                                      the given node.
 	 * @see #getModelElement(int, int, boolean)
 	 */
 	public IModelElement[] getModelElement(int startOffset, int length) throws ModelException {
@@ -261,16 +270,17 @@ public class BindingUtility {
 	 * uses cached evaluated type from previous evaluations (if exists).
 	 * 
 	 * @param startOffset
-	 *            Starting offset of the expression.
+	 *                        Starting offset of the expression.
 	 * @param length
-	 *            Length of the expression.
+	 *                        Length of the expression.
 	 * @param cache
-	 *            Model access cache if available
+	 *                        Model access cache if available
 	 * @return model element or <code>null</code> in case it couldn't be found
 	 * @throws ModelException
 	 * 
 	 * @throws IllegalArgumentException
-	 *             in case if context cannot be found for the given node.
+	 *                                      in case if context cannot be found for
+	 *                                      the given node.
 	 * @see #getModelElement(int, int, boolean)
 	 */
 	public IModelElement[] getModelElement(int startOffset, int length, IModelAccessCache cache) throws ModelException {
@@ -283,16 +293,17 @@ public class BindingUtility {
 	 * (if exists).
 	 * 
 	 * @param startOffset
-	 *            Starting offset of the expression.
+	 *                        Starting offset of the expression.
 	 * @param length
-	 *            Length of the expression.
+	 *                        Length of the expression.
 	 * @param filter
-	 *            Filter the results using the 'File-Network'.
+	 *                        Filter the results using the 'File-Network'.
 	 * @return model element or <code>null</code> in case it couldn't be found
 	 * @throws ModelException
 	 * 
 	 * @throws IllegalArgumentException
-	 *             in case if context cannot be found for the given node.
+	 *                                      in case if context cannot be found for
+	 *                                      the given node.
 	 */
 	public IModelElement[] getModelElement(int startOffset, int length, boolean filter) throws ModelException {
 		return getModelElement(new SourceRange(startOffset, length), filter);
@@ -304,18 +315,19 @@ public class BindingUtility {
 	 * (if exists).
 	 * 
 	 * @param startOffset
-	 *            Starting offset of the expression.
+	 *                        Starting offset of the expression.
 	 * @param length
-	 *            Length of the expression.
+	 *                        Length of the expression.
 	 * @param filter
-	 *            Filter the results using the 'File-Network'.
+	 *                        Filter the results using the 'File-Network'.
 	 * @param cache
-	 *            Model access cache if available
+	 *                        Model access cache if available
 	 * @return model element or <code>null</code> in case it couldn't be found
 	 * @throws ModelException
 	 * 
 	 * @throws IllegalArgumentException
-	 *             in case if context cannot be found for the given node.
+	 *                                      in case if context cannot be found for
+	 *                                      the given node.
 	 */
 	public IModelElement[] getModelElement(int startOffset, int length, boolean filter, IModelAccessCache cache)
 			throws ModelException {
@@ -502,7 +514,7 @@ public class BindingUtility {
 			}
 		}
 		if (yieldExpressions.size() > 0) {
-			GeneratorClassType generator = new GeneratorClassType();
+			GenericClassType generator = new GenericClassType(GenericClassType.GENERATOR);
 			for (Expression expr : yieldExpressions) {
 				if (expr == null) {
 					generator.getTypes().add(PHPSimpleTypes.NULL);

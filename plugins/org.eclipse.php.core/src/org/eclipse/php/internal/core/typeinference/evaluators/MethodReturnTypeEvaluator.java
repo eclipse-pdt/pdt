@@ -157,7 +157,7 @@ public class MethodReturnTypeEvaluator extends AbstractMethodReturnTypeEvaluator
 	@Override
 	public Object produceResult() {
 		if (yieldEvaluated.size() > 0 || yieldGoals.size() > 0) {
-			GeneratorClassType generatorClassType = new GeneratorClassType();
+			GenericClassType generatorClassType = new GenericClassType(GenericClassType.GENERATOR);
 			generatorClassType.getTypes().addAll(yieldEvaluated);
 			evaluated.add(generatorClassType);
 		}

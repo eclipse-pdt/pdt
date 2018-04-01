@@ -31,7 +31,7 @@ import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag.TagKind;
 import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.typeinference.GeneratorClassType;
+import org.eclipse.php.internal.core.typeinference.GenericClassType;
 import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
@@ -72,9 +72,9 @@ public class IteratorTypeGoalEvaluator extends GoalEvaluator {
 			variableName = ((VariableReference) iteratorTypeGoal.getExpression()).getName();
 		}
 		if (state != GoalState.RECURSIVE) {
-			if (result instanceof GeneratorClassType) {
+			if (result instanceof GenericClassType) {
 				MultiTypeType type = new MultiTypeType();
-				type.getTypes().addAll(((GeneratorClassType) result).getTypes());
+				type.getTypes().addAll(((GenericClassType) result).getTypes());
 				this.result = type;
 				return IGoal.NO_GOALS;
 			} else if (result instanceof PHPClassType) {
