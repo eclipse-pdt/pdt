@@ -1,60 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="org.eclipse.php.target.current" sequenceNumber="11">
+<?pde version="3.8"?><target name="org.eclipse.php.target.current" sequenceNumber="87">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
-
-<unit id="org.eclipse.wst.jsdt.feature.feature.group" version=""/>
-<unit id="org.eclipse.wst.web_ui.feature.feature.group" version=""/>
-<unit id="org.eclipse.wst.xml_ui.feature.feature.group" version=""/>
-<unit id="org.eclipse.wst.json_ui.feature.feature.group" version=""/>
-
-<unit id="org.eclipse.zest.layouts" version=""/>
-<unit id="org.eclipse.zest.core" version=""/>
-<unit id="org.eclipse.platform.feature.group" version=""/>
-<unit id="org.eclipse.e4.rcp.feature.group" version=""/>
-<unit id="org.eclipse.equinox.p2.ui.discovery" version=""/>
-<unit id="org.eclipse.tm.terminal.feature.feature.group" version=""/>
-<unit id="org.eclipse.ptp.rdt.sync.feature.group" version=""/>
-<unit id="org.eclipse.ptp.remote.feature.group" version="" />
-<unit id="org.eclipse.remote.feature.group" version="" />
-
-<unit id="org.eclipse.birt.chart.engine" version=""/>
-<unit id="org.eclipse.birt.chart.engine.extension" version=""/>
-<unit id="org.eclipse.birt.chart.device.swt" version=""/>
-
-
-<repository location="http://download.eclipse.org/releases/photon/"/>
-</location>
-
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
-
-<unit id="org.apache.commons.lang3" version="0.0.0"/>
-<unit id="org.apache.httpcomponents.httpcore" version="4.3.3.v201411290715"/>
-<unit id="org.apache.httpcomponents.httpclient" version="4.3.6.v201511171540"/>
 <unit id="com.google.gson" version="2.2.4.v201311231704"/>
 <unit id="org.apache.commons.exec" version="0.0.0"/>
 <unit id="org.apache.commons.exec" version="0.0.0"/>
-<unit id="org.apache.commons.logging" version="0.0.0"/>
-<unit id="org.apache.commons.logging" version="0.0.0"/>
 <unit id="org.apache.commons.io" version="0.0.0"/>
-
-
+<unit id="org.apache.commons.lang3" version="0.0.0"/>
+<unit id="org.apache.commons.logging" version="0.0.0"/>
+<unit id="org.apache.commons.logging" version="0.0.0"/>
+<unit id="org.apache.httpcomponents.httpclient" version="4.3.6.v201511171540"/>
+<unit id="org.apache.httpcomponents.httpcore" version="4.3.3.v201411290715"/>
 <unit id="org.junit" version="4.12.0.v201504281640"/>
-
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20170919201930/repository/"/>
 </location>
-
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
-<unit id="org.eclipse.test.feature.group" version="3.5.100.v20120528-1714-7R7dBhBgLiCViQnG8ISKO73701A1"/>
-<repository location="http://download.eclipse.org/eclipse/updates/4.2/R-4.2-201206081400"/>
-</location>
-
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
 <unit id="org.eclipse.dltk.core.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.dltk.mylyn.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.dltk.core.index.lucene.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.dltk.core.tests" version="0.0.0" />
+<unit id="org.eclipse.dltk.core.tests" version="0.0.0"/>
+<unit id="org.eclipse.dltk.mylyn.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/technology/dltk/updates-dev/latest-nightly/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
+<unit id="org.eclipse.birt.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.ptp.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.ptp.pldt.upc.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.tm.terminal.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.wst.web_ui.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.zest.sdk.feature.group" version="0.0.0"/>
+<repository location="http://download.eclipse.org/releases/photon/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="false" type="InstallableUnit">
+<unit id="org.eclipse.equinox.p2.discovery.feature.feature.group" version="1.0.100.v20120524-0542-4-Bh9oB58A5N9L28PCQ"/>
+<unit id="org.eclipse.test.feature.group" version="3.5.100.v20120528-1714-7R7dBhBgLiCViQnG8ISKO73701A1"/>
+<repository location="http://download.eclipse.org/eclipse/updates/4.2/R-4.2-201206081400"/>
 </location>
 </locations>
 <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
