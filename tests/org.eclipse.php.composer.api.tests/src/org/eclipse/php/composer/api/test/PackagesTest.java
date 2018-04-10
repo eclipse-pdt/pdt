@@ -19,6 +19,7 @@ import org.eclipse.php.composer.api.ComposerConstants;
 import org.eclipse.php.composer.api.MinimalPackage;
 import org.eclipse.php.composer.api.RepositoryPackage;
 import org.eclipse.php.composer.api.packages.*;
+import org.junit.Rule;
 import org.junit.Test;
 
 import junit.framework.TestCase;
@@ -32,6 +33,9 @@ public class PackagesTest extends TestCase {
 	private String asyncQuery;
 	private int asyncCounter;
 	private int asyncAborts;
+
+	@Rule
+	public final RetryRule retry = new RetryRule(2, 3);
 
 	@Override
 	public void setUp() {
