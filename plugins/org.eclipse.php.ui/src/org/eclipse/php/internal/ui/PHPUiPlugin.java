@@ -127,7 +127,6 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		PHPContextActivator.getInstance().install();
 		initializeAfterStart(context);
 	}
 
@@ -155,6 +154,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	}
 
 	static void initializeAfterLoad(IProgressMonitor monitor) {
+		PHPContextActivator.getInstance().install();
 		org.eclipse.dltk.internal.corext.util.OpenTypeHistory.getInstance(PHPUILanguageToolkit.getInstance())
 				.checkConsistency(monitor);
 	}

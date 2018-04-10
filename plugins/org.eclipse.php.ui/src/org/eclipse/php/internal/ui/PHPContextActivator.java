@@ -115,6 +115,9 @@ public class PHPContextActivator implements IWindowListener, IPartListener2 {
 	}
 
 	public void install() {
+		if (!PlatformUI.isWorkbenchRunning()) {
+			return;
+		}
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		if (workbench == null) {
 			return;
