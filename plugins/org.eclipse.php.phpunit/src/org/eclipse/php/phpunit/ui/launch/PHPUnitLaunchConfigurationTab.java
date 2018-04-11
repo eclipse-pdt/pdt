@@ -10,9 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.phpunit.ui.launch;
 
-import static org.eclipse.php.phpunit.ui.launch.PHPUnitLaunchAttributes.*;
+import static org.eclipse.php.phpunit.launch.PHPUnitLaunchAttributes.*;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +50,8 @@ import org.eclipse.php.internal.ui.filters.RSEProjectFilter;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.php.phpunit.PHPUnitMessages;
 import org.eclipse.php.phpunit.PHPUnitPlugin;
-import org.eclipse.php.phpunit.ui.preference.PHPUnitPreferenceKeys;
+import org.eclipse.php.phpunit.PHPUnitPreferenceKeys;
+import org.eclipse.php.phpunit.launch.PHPUnitLaunchUtils;
 import org.eclipse.php.phpunit.ui.preference.PHPUnitPreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -883,7 +885,7 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 					IResource.PROJECT);
 			if (!status.isOK()) {
 				testElementFinder.cleareCaches();
-				setErrorMessage(PHPUnitMessages.format(PHPUnitMessages.PHPUnitLaunchConfigurationTab_Bad_Project_Name,
+				setErrorMessage(MessageFormat.format(PHPUnitMessages.PHPUnitLaunchConfigurationTab_Bad_Project_Name,
 						projectName));
 				return;
 			}
@@ -914,8 +916,8 @@ public class PHPUnitLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 					IType[] classes = PHPModelAccess.getDefault().findTypes(className, MatchRule.EXACT, 0,
 							Modifiers.AccInterface | Modifiers.AccNameSpace | Modifiers.AccAbstract, searchScope, null);
 					if (classes.length < 1) {
-						setErrorMessage(PHPUnitMessages.format(PHPUnitMessages.PHPUnitValidator_Not_In_Project,
-								new String[] { className, projectName }));
+						setErrorMessage(MessageFormat.format(PHPUnitMessages.PHPUnitValidator_Not_In_Project, className,
+								projectName));
 					}
 				}
 			}

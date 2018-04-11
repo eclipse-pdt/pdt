@@ -15,7 +15,7 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.php.phpunit.PHPUnitPlugin;
-import org.eclipse.php.phpunit.ui.preference.PHPUnitPreferenceKeys;
+import org.eclipse.php.phpunit.PHPUnitPreferenceKeys;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 public class ShowExecutionTimeHandler extends AbstractHandler {

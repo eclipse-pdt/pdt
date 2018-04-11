@@ -8,14 +8,13 @@
  * Contributors:
  *  Rogue Wave Software Inc. - initial implementation
  *******************************************************************************/
-package org.eclipse.php.phpunit.ui.preference;
+package org.eclipse.php.phpunit;
 
 import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.php.phpunit.PHPUnitPlugin;
 
 public class PHPUnitPreferenceKeys {
 

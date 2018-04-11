@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.phpunit;
 
-import java.text.MessageFormat;
-
 import org.eclipse.osgi.util.NLS;
 
 public class PHPUnitMessages extends NLS {
@@ -172,14 +170,6 @@ public class PHPUnitMessages extends NLS {
 	}
 
 	private PHPUnitMessages() {
-	}
-
-	public static String format(String message, Object object) {
-		return MessageFormat.format(message, new Object[] { object });
-	}
-
-	public static String format(String message, Object[] objects) {
-		return MessageFormat.format(message, objects);
 	}
 
 }

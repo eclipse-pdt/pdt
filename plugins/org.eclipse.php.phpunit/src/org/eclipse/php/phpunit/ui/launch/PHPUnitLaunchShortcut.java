@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.phpunit.ui.launch;
 
-import static org.eclipse.php.phpunit.ui.launch.PHPUnitLaunchAttributes.*;
+import static org.eclipse.php.phpunit.launch.PHPUnitLaunchAttributes.*;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -38,13 +38,13 @@ import org.eclipse.php.internal.debug.ui.launching.PHPExecutableLaunchTab;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.phpunit.PHPUnitMessages;
 import org.eclipse.php.phpunit.PHPUnitPlugin;
+import org.eclipse.php.phpunit.launch.PHPUnitLaunchUtils;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.ui.IEditorPart;
 
 public class PHPUnitLaunchShortcut implements ILaunchShortcut {
 
-	private static final Set<String> CONFIG_FILES = new HashSet<>(
-			Arrays.asList(new String[] { "phpunit.xml", "phpunit.xml.dist" })); //$NON-NLS-1$ //$NON-NLS-2$
+	private static final Set<String> CONFIG_FILES = new HashSet<>(Arrays.asList("phpunit.xml", "phpunit.xml.dist")); //$NON-NLS-1$ //$NON-NLS-2$
 
 	boolean launchInBackground = true;
 

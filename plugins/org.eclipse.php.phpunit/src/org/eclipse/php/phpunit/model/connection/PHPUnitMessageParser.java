@@ -17,6 +17,7 @@ import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.phpunit.model.elements.*;
+import org.eclipse.php.phpunit.ui.view.PHPUnitView;
 import org.eclipse.php.phpunit.ui.view.TestViewer;
 
 public class PHPUnitMessageParser {
@@ -46,7 +47,7 @@ public class PHPUnitMessageParser {
 	private PHPUnitTestCase currentTestCase;
 	private boolean inProgress = false;
 
-	private PHPUnitMessageParser() {
+	public PHPUnitMessageParser() {
 	}
 
 	public void parseMessage(Message message, final TestViewer viewer) {
@@ -75,6 +76,8 @@ public class PHPUnitMessageParser {
 				parseTestEnd(viewer, message);
 			}
 		}
+
+		PHPUnitView.getDefault().refresh(PHPUnitElementManager.getInstance().getRoot());
 	}
 
 	private void parseGroupStart(final TestViewer viewer, Message message) {

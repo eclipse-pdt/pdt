@@ -10,12 +10,13 @@
  *******************************************************************************/
 package org.eclipse.php.phpunit.model.elements;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
 import org.eclipse.php.phpunit.model.connection.MessageException;
 
 public class PHPUnitTestWarning extends PHPUnitTestEvent {
 
-	private String code = ""; //$NON-NLS-1$
+	private String code = StringUtils.EMPTY;
 
 	public PHPUnitTestWarning(MessageException warning, final PHPUnitElement parent, RemoteDebugger remoteDebugger) {
 		super(warning, parent, remoteDebugger);

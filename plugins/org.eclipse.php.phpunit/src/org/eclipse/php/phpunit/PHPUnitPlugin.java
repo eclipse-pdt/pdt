@@ -17,7 +17,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
 
 public class PHPUnitPlugin extends AbstractUIPlugin {
 
@@ -36,22 +35,6 @@ public class PHPUnitPlugin extends AbstractUIPlugin {
 		instance = this;
 	}
 
-	/**
-	 * This method is called upon plug-in activation
-	 */
-	@Override
-	public void start(final BundleContext context) throws Exception {
-		super.start(context);
-	}
-
-	/**
-	 * This method is called when the plug-in is stopped
-	 */
-	@Override
-	public void stop(final BundleContext context) throws Exception {
-		super.stop(context);
-	}
-
 	public static Image createImage(final String path) {
 		return getImageDescriptor(path).createImage();
 	}
@@ -68,7 +51,7 @@ public class PHPUnitPlugin extends AbstractUIPlugin {
 	 * path.
 	 * 
 	 * @param relativePath
-	 *            the path
+	 *                         the path
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(final String relativePath) {
