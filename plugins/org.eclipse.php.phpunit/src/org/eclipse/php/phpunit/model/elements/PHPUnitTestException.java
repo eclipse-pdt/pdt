@@ -36,7 +36,6 @@ public class PHPUnitTestException extends PHPUnitTestEvent {
 	}
 
 	public static void addAbnormalException(PHPUnitTestCase testCase) {
-		// if(ABNORMAL_EXCEPTION == null) {
 		MessageException exception = new MessageException(PHPUnitMessages.PHPUnitTestException_0,
 				PHPUnitMessages.PHPUnitTestException_1);
 		PHPUnitTestException abnormalException = new PHPUnitTestException(exception, null, null);

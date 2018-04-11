@@ -8,7 +8,7 @@
  * Contributors:
  *  Rogue Wave Software Inc. - initial implementation
  *******************************************************************************/
-package org.eclipse.php.phpunit.ui.launch;
+package org.eclipse.php.phpunit.launch;
 
 import org.eclipse.php.phpunit.PHPUnitPlugin;
 

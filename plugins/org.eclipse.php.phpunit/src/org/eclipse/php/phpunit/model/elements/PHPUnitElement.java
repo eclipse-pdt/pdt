@@ -13,7 +13,7 @@ package org.eclipse.php.phpunit.model.elements;
 import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
 import org.eclipse.php.phpunit.model.connection.MessageElement;
 
-abstract public class PHPUnitElement {
+public abstract class PHPUnitElement {
 
 	protected static final String SEPARATOR_LINE = ":"; //$NON-NLS-1$
 	protected static final String SEPARATOR_MESSAGE = "!"; //$NON-NLS-1$

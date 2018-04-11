@@ -39,6 +39,8 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.XDebugDebuggerSettingsUti
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler;
 import org.eclipse.php.internal.debug.core.zend.debugger.ProcessCrashDetector;
+import org.eclipse.php.phpunit.launch.PHPUnitLaunchAttributes;
+import org.eclipse.php.phpunit.launch.PHPUnitLaunchException;
 
 public class PHPUnitXDLauncher extends PHPUnitBasicLauncher {
 
@@ -48,24 +50,25 @@ public class PHPUnitXDLauncher extends PHPUnitBasicLauncher {
 
 	@Override
 	protected void launchRunMode(String fileName, File workingDir, String phpExeString, IProject project,
-			Map<String, String> envVariables, IProgressMonitor monitor) throws CoreException {
+			Map<String, String> envVariables, IProgressMonitor monitor) throws CoreException, PHPUnitLaunchException {
 		doLaunch(configuration, ILaunchManager.RUN_MODE, project, workingDir, launch, envVariables, monitor);
 	}
 
 	@Override
 	protected void launchDebugMode(String fileName, File workingDir, String phpExeString, IProject project,
-			Map<String, String> envVariables, IProgressMonitor monitor) throws CoreException {
+			Map<String, String> envVariables, IProgressMonitor monitor) throws CoreException, PHPUnitLaunchException {
 		doLaunch(configuration, ILaunchManager.DEBUG_MODE, project, workingDir, launch, envVariables, monitor);
 	}
 
 	@Override
 	protected void launchProfileMode(String fileName, File workingDir, String phpExeString, IProject project,
-			Map<String, String> envVariables, IProgressMonitor monitor) throws CoreException {
+			Map<String, String> envVariables, IProgressMonitor monitor) throws CoreException, PHPUnitLaunchException {
 		doLaunch(configuration, ILaunchManager.PROFILE_MODE, project, workingDir, launch, envVariables, monitor);
 	}
 
 	private void doLaunch(ILaunchConfiguration configuration, String mode, IProject project, File workingDirectory,
-			ILaunch launch, Map<String, String> envVariables, IProgressMonitor monitor) throws CoreException {
+			ILaunch launch, Map<String, String> envVariables, IProgressMonitor monitor)
+			throws CoreException, PHPUnitLaunchException {
 		if (monitor.isCanceled()) {
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
 			return;
@@ -78,8 +81,7 @@ public class PHPUnitXDLauncher extends PHPUnitBasicLauncher {
 		final String phpScriptString = configuration.getAttribute(IPHPDebugConstants.ATTR_FILE, (String) null);
 		if (phpScriptString == null || phpScriptString.trim().length() == 0) {
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
-			displayErrorMessage(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_0);
-			return;
+			throw new PHPUnitLaunchException(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_0);
 		}
 		if (monitor.isCanceled()) {
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
@@ -183,10 +185,9 @@ public class PHPUnitXDLauncher extends PHPUnitBasicLauncher {
 				if (proxyHandler.useProxy()) {
 					ideKey = proxyHandler.getCurrentIdeKey();
 					if (proxyHandler.registerWithProxy() == false) {
-						displayErrorMessage(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_2
-								+ proxyHandler.getErrorMsg());
 						DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
-						return;
+						throw new PHPUnitLaunchException(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_2
+								+ proxyHandler.getErrorMsg());
 					}
 				}
 			} else {
@@ -269,14 +270,14 @@ public class PHPUnitXDLauncher extends PHPUnitBasicLauncher {
 	 * create any environment variables that may be required
 	 * 
 	 * @param configuration
-	 *            launch configuration
+	 *                          launch configuration
 	 * @param sessionID
-	 *            the DBGp Session Id
+	 *                          the DBGp Session Id
 	 * @param ideKey
-	 *            the DBGp ide key
+	 *                          the DBGp ide key
 	 * @return string array containing the environment
 	 * @throws CoreException
-	 *             rethrown exception
+	 *                           rethrown exception
 	 */
 	public String[] createDebugLaunchEnvironment(ILaunchConfiguration configuration, String sessionID, String ideKey,
 			IPath phpExe) throws CoreException {
@@ -310,7 +311,7 @@ public class PHPUnitXDLauncher extends PHPUnitBasicLauncher {
 	 * create the LD_LIBRARY_PATH information
 	 * 
 	 * @param exePath
-	 *            the path to put into LD_LIBRARY_PATH
+	 *                    the path to put into LD_LIBRARY_PATH
 	 * @return environment string
 	 */
 	private String getLibraryPath(IPath exePath) {

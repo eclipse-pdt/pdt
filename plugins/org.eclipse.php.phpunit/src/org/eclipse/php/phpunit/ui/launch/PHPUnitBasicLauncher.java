@@ -22,7 +22,6 @@ import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.ui.CommonTab;
 import org.eclipse.debug.ui.RefreshTab;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
@@ -32,7 +31,7 @@ import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.core.zend.debugger.ProcessCrashDetector;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.php.phpunit.launch.PHPUnitLaunchException;
 
 public class PHPUnitBasicLauncher {
 
@@ -47,7 +46,7 @@ public class PHPUnitBasicLauncher {
 	}
 
 	public void launch(String mode, IProject project, File workingDir, Map<String, String> envVariables,
-			IProgressMonitor monitor) throws CoreException {
+			IProgressMonitor monitor) throws CoreException, PHPUnitLaunchException {
 		// Check for previous launches.
 		if (!PHPLaunchUtilities.notifyPreviousLaunches(launch)) {
 			monitor.setCanceled(true);
@@ -63,18 +62,8 @@ public class PHPUnitBasicLauncher {
 			return;
 		}
 		if (phpExeString == null) {
-			displayErrorMessage(PHPDebugCoreMessages.PHPExecutableLaunchDelegate_4);
-			return;
+			throw new PHPUnitLaunchException(PHPDebugCoreMessages.PHPExecutableLaunchDelegate_4);
 		}
-		// Locate the php.ini by using the attribute. If the attribute was null,
-		// try to locate an php.ini that exists next to the executable.
-		// File phpIni = (phpIniPath != null && new File(phpIniPath).exists()) ?
-		// new File(phpIniPath)
-		// : PHPINIUtil.findPHPIni(phpExeString);
-		// File tempIni = PHPINIUtil.prepareBeforeLaunch(phpIni, phpExeString,
-		// project);
-		// launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION,
-		// tempIni.getAbsolutePath());
 		if (mode.equals(ILaunchManager.PROFILE_MODE)) {
 			launchProfileMode(fileName, workingDir, phpExeString, project, envVariables, monitor);
 		} else if (mode.equals(ILaunchManager.DEBUG_MODE)) {
@@ -85,7 +74,7 @@ public class PHPUnitBasicLauncher {
 	}
 
 	protected void launchRunMode(String fileName, File workingDir, String phpExeString, IProject project,
-			Map<String, String> envVariables, IProgressMonitor monitor) throws CoreException {
+			Map<String, String> envVariables, IProgressMonitor monitor) throws CoreException, PHPUnitLaunchException {
 		// Resolve location
 		IPath phpExe = new Path(phpExeString);
 		String[] envp = DebugPlugin.getDefault().getLaunchManager().getEnvironment(configuration);
@@ -98,12 +87,10 @@ public class PHPUnitBasicLauncher {
 		}
 		// Detect PHP SAPI type:
 		String sapiType = null;
-		// String phpV = null;
 		PHPexeItem[] items = PHPexes.getInstance().getAllItems();
 		for (PHPexeItem item : items) {
 			if (item.getExecutable().equals(phpExeFile)) {
 				sapiType = item.getSapiType();
-				// phpV = item.getVersion();
 				break;
 			}
 		}
@@ -184,12 +171,12 @@ public class PHPUnitBasicLauncher {
 	}
 
 	protected void launchDebugMode(String fileName, File workingDir, String phpExeString, IProject project,
-			Map<String, String> envVariables, IProgressMonitor monitor) throws CoreException {
+			Map<String, String> envVariables, IProgressMonitor monitor) throws CoreException, PHPUnitLaunchException {
 		launchRunMode(fileName, workingDir, phpExeString, project, envVariables, monitor);
 	}
 
 	protected void launchProfileMode(String fileName, File workingDir, String phpExeString, IProject project,
-			Map<String, String> envVariables, IProgressMonitor monitor) throws CoreException {
+			Map<String, String> envVariables, IProgressMonitor monitor) throws CoreException, PHPUnitLaunchException {
 		launchRunMode(fileName, workingDir, phpExeString, project, envVariables, monitor);
 	}
 
@@ -210,12 +197,6 @@ public class PHPUnitBasicLauncher {
 		}
 
 		return cmdLineList.toArray(new String[cmdLineList.size()]);
-	}
-
-	protected void displayErrorMessage(final String message) {
-		final Display display = Display.getDefault();
-		display.asyncExec(() -> MessageDialog.openError(display.getActiveShell(),
-				PHPDebugCoreMessages.Debugger_LaunchError_title, message));
 	}
 
 }

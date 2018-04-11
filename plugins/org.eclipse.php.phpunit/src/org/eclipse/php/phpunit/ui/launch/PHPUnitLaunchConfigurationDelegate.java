@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.phpunit.ui.launch;
 
-import static org.eclipse.php.phpunit.ui.launch.PHPUnitLaunchAttributes.*;
+import static org.eclipse.php.phpunit.launch.PHPUnitLaunchAttributes.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,15 +21,13 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.debug.core.*;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -46,8 +44,12 @@ import org.eclipse.php.internal.debug.core.xdebug.communication.XDebugCommunicat
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.php.phpunit.PHPUnitMessages;
 import org.eclipse.php.phpunit.PHPUnitPlugin;
-import org.eclipse.php.phpunit.model.connection.PHPUnitConnection;
-import org.eclipse.php.phpunit.ui.preference.PHPUnitPreferenceKeys;
+import org.eclipse.php.phpunit.PHPUnitPreferenceKeys;
+import org.eclipse.php.phpunit.launch.PHPUnitLaunchAttributes;
+import org.eclipse.php.phpunit.launch.PHPUnitLaunchException;
+import org.eclipse.php.phpunit.launch.PHPUnitLaunchUtils;
+import org.eclipse.php.phpunit.model.connection.PHPUnitConnectionListener;
+import org.eclipse.php.phpunit.ui.view.PHPUnitView;
 import org.eclipse.swt.widgets.Display;
 
 public class PHPUnitLaunchConfigurationDelegate extends PHPExecutableLaunchDelegate {
@@ -105,7 +107,7 @@ public class PHPUnitLaunchConfigurationDelegate extends PHPExecutableLaunchDeleg
 			wconfig = config.getWorkingCopy();
 		}
 		setAdditionalAttributes(wconfig, fileToExecute, project);
-		setEnvironmentVariables(wconfig, project);
+		setEnvironmentVariables(wconfig);
 
 		PHPUnitOptionsList phpUnitOptionsList = createPHPUnitOptionsList(wconfig, project);
 		if (!wconfig.hasAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_RERUN)) {
@@ -133,9 +135,8 @@ public class PHPUnitLaunchConfigurationDelegate extends PHPExecutableLaunchDeleg
 		}
 
 		final int port = Integer.parseInt(envVariables.get(ENV_PORT));
-		if (!PHPUnitConnection.getInstance().listen(port, launch)) {
-			return;
-		}
+
+		startListening(port, launch);
 
 		PHPexeItem execItem = PHPLaunchUtilities.getPHPExe(config);
 		if (execItem != null) {
@@ -171,7 +172,11 @@ public class PHPUnitLaunchConfigurationDelegate extends PHPExecutableLaunchDeleg
 			}
 
 			launch.setAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_PHPUNIT_LAUNCH, Boolean.TRUE.toString());
-			launcher.launch(mode, project, workingDirectory, envVariables, monitor);
+			try {
+				launcher.launch(mode, project, workingDirectory, envVariables, monitor);
+			} catch (PHPUnitLaunchException e) {
+				displayErrorMessage(e.getMessage());
+			}
 		} else {
 			displayErrorMessage(PHPDebugCoreMessages.PHPExecutableLaunchDelegate_4);
 			return;
@@ -254,7 +259,7 @@ public class PHPUnitLaunchConfigurationDelegate extends PHPExecutableLaunchDeleg
 		if (config.hasAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_FILTER)) {
 			List<String> filters = config.getAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_FILTER,
 					Collections.emptyList());
-			if (filters.size() > 0) {
+			if (!filters.isEmpty()) {
 				int pos = 0;
 				StringBuilder sb = new StringBuilder();
 				for (String filter : filters) {
@@ -275,7 +280,7 @@ public class PHPUnitLaunchConfigurationDelegate extends PHPExecutableLaunchDeleg
 		if (config.hasAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_TEST_SUITE)) {
 			List<String> filters = config.getAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_TEST_SUITE,
 					Collections.emptyList());
-			if (filters.size() > 0) {
+			if (!filters.isEmpty()) {
 				int pos = 0;
 				StringBuilder sb = new StringBuilder();
 				for (String filter : filters) {
@@ -329,21 +334,27 @@ public class PHPUnitLaunchConfigurationDelegate extends PHPExecutableLaunchDeleg
 		wconfig.setAttribute(IPHPDebugConstants.PHP_Project, project.getName());
 	}
 
-	private void setEnvironmentVariables(final ILaunchConfigurationWorkingCopy wconfig, final IProject project)
-			throws CoreException {
+	private void setEnvironmentVariables(final ILaunchConfigurationWorkingCopy wconfig) throws CoreException {
 		// Try get any user variable at first.
 		envVariables = wconfig.getAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, new HashMap<String, String>());
-
-		if (envVariables == null) {
-			envVariables = new HashMap<>();
-		}
-
-		if (envVariables.get(ENV_PORT) == null) {
-			final int port = PHPUnitPreferenceKeys.getPort();
-			envVariables.put(ENV_PORT, String.valueOf(port));
-		}
+		envVariables = ObjectUtils.defaultIfNull(envVariables, new HashMap<>());
+		envVariables.computeIfAbsent(ENV_PORT, key -> {
+			final String port = String.valueOf(PHPUnitPreferenceKeys.getPort());
+			envVariables.put(key, port);
+			return port;
+		});
 
 		wconfig.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, envVariables);
+	}
+
+	private void startListening(int port, ILaunch launch) {
+		PHPUnitView.activateView(true);
+
+		PHPUnitConnectionListener listener = new PHPUnitConnectionListener(port, launch);
+		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(new PHPUnitLaunchListener(launch));
+		PHPUnitView.getDefault().startRunning(launch, listener);
+
+		listener.start();
 	}
 
 	private void displayErrorMessage(final String message) {

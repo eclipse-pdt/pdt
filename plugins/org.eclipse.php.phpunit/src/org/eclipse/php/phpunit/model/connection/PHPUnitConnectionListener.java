@@ -18,21 +18,19 @@ import java.net.Socket;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchesListener2;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.phpunit.PHPUnitMessages;
 import org.eclipse.php.phpunit.PHPUnitPlugin;
+import org.eclipse.php.phpunit.launch.PHPUnitLaunchUtils;
 import org.eclipse.php.phpunit.model.elements.PHPUnitElementManager;
-import org.eclipse.php.phpunit.ui.launch.PHPUnitLaunchUtils;
 import org.eclipse.php.phpunit.ui.view.PHPUnitView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
-public class PHPUnitConnectionListener implements Runnable, ILaunchesListener2 {
+public class PHPUnitConnectionListener implements Runnable {
 	protected ILaunch launch;
 	protected int port = 0;
 	protected ServerSocket serverSocket;
@@ -50,20 +48,18 @@ public class PHPUnitConnectionListener implements Runnable, ILaunchesListener2 {
 		if (!PHPUnitLaunchUtils.isPHPUnitRunning()) {
 			return;
 		}
-		try {
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
 			final PHPUnitMessageParser parser = PHPUnitMessageParser.getInstance();
 			parser.clean();
 			parser.setDebugTarget(PHPUnitView.getDefault().getLaunch().getDebugTarget());
-			final BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			String line;
 			parser.setInProgress(true);
+			String line;
 			while ((line = reader.readLine()) != null && parser.isInProgress()) {
 				try {
 					processLine(line, parser);
 				} catch (JsonSyntaxException e) {
 					PHPUnitPlugin.log(e);
 				}
-
 			}
 		} catch (final IOException e) {
 			PHPUnitPlugin.log(e);
@@ -76,19 +72,6 @@ public class PHPUnitConnectionListener implements Runnable, ILaunchesListener2 {
 		}
 		Message message = gson.fromJson(line, Message.class);
 		parser.parseMessage(message, PHPUnitView.getDefault().getViewer());
-		PHPUnitView.getDefault().refresh(PHPUnitElementManager.getInstance().getRoot());
-	}
-
-	@Override
-	public void launchesTerminated(final ILaunch[] launches) {
-		for (ILaunch launche : launches) {
-			if (launche == launch && launche.isTerminated()) {
-				if (!PHPUnitMessageParser.getInstance().isInProgress()) {
-					PHPUnitView.getDefault().stopRunning(true);
-				}
-				DebugPlugin.getDefault().getLaunchManager().removeLaunchListener(this);
-			}
-		}
 	}
 
 	@Override
@@ -144,18 +127,4 @@ public class PHPUnitConnectionListener implements Runnable, ILaunchesListener2 {
 		listenThread.start();
 	}
 
-	@Override
-	public void launchesAdded(final ILaunch[] launches) {
-		// ignore
-	}
-
-	@Override
-	public void launchesChanged(final ILaunch[] launches) {
-		// ignore
-	}
-
-	@Override
-	public void launchesRemoved(final ILaunch[] launches) {
-		// ignore
-	}
 }

@@ -13,7 +13,7 @@ package org.eclipse.php.phpunit.ui.view.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.php.phpunit.PHPUnitMessages;
 import org.eclipse.php.phpunit.PHPUnitPlugin;
-import org.eclipse.php.phpunit.ui.preference.PHPUnitPreferenceKeys;
+import org.eclipse.php.phpunit.PHPUnitPreferenceKeys;
 import org.eclipse.php.phpunit.ui.view.FailureTrace;
 
 /**

@@ -8,9 +8,9 @@
  * Contributors:
  *  Rogue Wave Software Inc. - initial implementation
  *******************************************************************************/
-package org.eclipse.php.phpunit.ui.launch;
+package org.eclipse.php.phpunit.launch;
 
-import static org.eclipse.php.phpunit.ui.launch.PHPUnitLaunchAttributes.*;
+import static org.eclipse.php.phpunit.launch.PHPUnitLaunchAttributes.*;
 
 import java.io.File;
 import java.io.FileReader;
@@ -33,7 +33,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.phpunit.PHPUnitPlugin;
-import org.eclipse.php.phpunit.ui.preference.PHPUnitPreferenceKeys;
+import org.eclipse.php.phpunit.PHPUnitPreferenceKeys;
 import org.eclipse.ui.*;
 import org.osgi.framework.Bundle;
 
@@ -77,42 +77,32 @@ public class PHPUnitLaunchUtils {
 	}
 
 	private static @Nullable IPath getVendorPath(@Nullable IProject project) {
-		if (project == null) {
+		if (project == null || project.getLocation() == null) {
 			return null;
 		}
+		String vendorDir = DEFAULT_COMPOSER_VENDORDIR;
 		IPath projectLocation = project.getLocation();
-		if (projectLocation == null) {
-			return null;
-		}
-		String vendorDir = null;
-		try {
-			File composerJsonFile = projectLocation.append(COMPOSER_JSON_FILENAME).toFile();
-			if (composerJsonFile.exists() && composerJsonFile.isFile() && composerJsonFile.length() > 0) {
-				FileReader reader;
-				reader = new FileReader(composerJsonFile);
-				if (reader != null) {
-					JsonParser parser = new JsonParser();
-					JsonElement jComposer = parser.parse(reader);
-					if (jComposer.isJsonObject() && ((JsonObject) jComposer).has(COMPOSER_JSON_CONFIG)) {
-						JsonElement jConfig = ((JsonObject) jComposer).get(COMPOSER_JSON_CONFIG);
-						if (jConfig.isJsonObject() && ((JsonObject) jConfig).has(COMPOSER_JSON_CONFIG_VENDORDIR)) {
-							JsonElement jVendorDir = ((JsonObject) jConfig).get(COMPOSER_JSON_CONFIG_VENDORDIR);
-							if (jVendorDir.isJsonPrimitive() && ((JsonPrimitive) jVendorDir).isString()) {
-								vendorDir = ((JsonPrimitive) jVendorDir).getAsString();
-								int vendorDirLength = vendorDir.length();
-								if (vendorDirLength > 1 && vendorDir.endsWith(COMPOSER_JSON_CONFIG_VENDORDIR_DIRSEP)) {
-									vendorDir = vendorDir.substring(0, vendorDirLength - 1);
-								}
+		File composerJsonFile = projectLocation.append(COMPOSER_JSON_FILENAME).toFile();
+		if (composerJsonFile.exists() && composerJsonFile.isFile() && composerJsonFile.length() > 0) {
+			try (FileReader reader = new FileReader(composerJsonFile)) {
+				JsonParser parser = new JsonParser();
+				JsonElement jComposer = parser.parse(reader);
+				if (jComposer.isJsonObject() && ((JsonObject) jComposer).has(COMPOSER_JSON_CONFIG)) {
+					JsonElement jConfig = ((JsonObject) jComposer).get(COMPOSER_JSON_CONFIG);
+					if (jConfig.isJsonObject() && ((JsonObject) jConfig).has(COMPOSER_JSON_CONFIG_VENDORDIR)) {
+						JsonElement jVendorDir = ((JsonObject) jConfig).get(COMPOSER_JSON_CONFIG_VENDORDIR);
+						if (jVendorDir.isJsonPrimitive() && ((JsonPrimitive) jVendorDir).isString()) {
+							vendorDir = ((JsonPrimitive) jVendorDir).getAsString();
+							int vendorDirLength = vendorDir.length();
+							if (vendorDirLength > 1 && vendorDir.endsWith(COMPOSER_JSON_CONFIG_VENDORDIR_DIRSEP)) {
+								vendorDir = vendorDir.substring(0, vendorDirLength - 1);
 							}
 						}
 					}
 				}
+			} catch (Exception e) {
+				PHPUnitPlugin.log(e);
 			}
-		} catch (Throwable e) {
-			PHPUnitPlugin.log(e);
-		}
-		if (vendorDir == null) {
-			vendorDir = DEFAULT_COMPOSER_VENDORDIR;
 		}
 		return projectLocation.append(vendorDir);
 	}

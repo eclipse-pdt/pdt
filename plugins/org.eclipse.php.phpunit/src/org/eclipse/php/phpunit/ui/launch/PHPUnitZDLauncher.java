@@ -42,6 +42,7 @@ import org.eclipse.php.internal.debug.core.zend.debugger.ProcessCrashDetector;
 import org.eclipse.php.internal.debug.core.zend.debugger.ZendDebuggerSettingsUtil;
 import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
 import org.eclipse.php.phpunit.PHPUnitPlugin;
+import org.eclipse.php.phpunit.launch.PHPUnitLaunchAttributes;
 import org.eclipse.swt.widgets.Display;
 
 import com.ibm.icu.text.MessageFormat;

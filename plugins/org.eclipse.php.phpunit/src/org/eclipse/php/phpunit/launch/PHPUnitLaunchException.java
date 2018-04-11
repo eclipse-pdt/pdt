@@ -1,22 +1,21 @@
 /*******************************************************************************
- * Copyright (c) 2017 Rogue Wave Software Inc. and others.
+ * Copyright (c) 2018 Michał Niewrzał and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *  Rogue Wave Software Inc. - initial implementation
+ *     Michał Niewrzał - initial API and implementation
  *******************************************************************************/
-package org.eclipse.php.phpunit.ui.preference;
+package org.eclipse.php.phpunit.launch;
 
-import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
+public class PHPUnitLaunchException extends Exception {
 
-public class PHPUnitPreferenceInitializer extends AbstractPreferenceInitializer {
+	private static final long serialVersionUID = 324325429298713366L;
 
-	@Override
-	public void initializeDefaultPreferences() {
-		PHPUnitPreferenceKeys.initializeDefaultValues();
+	public PHPUnitLaunchException(String message) {
+		super(message);
 	}
 
 }
