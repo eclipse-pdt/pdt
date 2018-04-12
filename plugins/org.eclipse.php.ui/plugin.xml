@@ -2806,10 +2806,10 @@
 		        description="%HideNonScriptElements.description"
 		        id="org.eclipse.php.ui.navigator.filters.HideNonScriptElements"/>   		
   		<commonFilter 
-		        class="org.eclipse.dltk.internal.ui.filters.NonScriptProjectsFilter"
+		        class="org.eclipse.php.internal.ui.filters.NonPHPProjectsFilter"
 		        name="%HideNonScriptProjects.label"
 		        description="%HideNonScriptProjects.description"
-		        id="org.eclipse.php.ui.navigator.filters.HideNonJavaProjects"/>   
+		        id="org.eclipse.php.ui.navigator.filters.HideNonPHPProjects"/>   
   		<commonFilter 
 		        class="org.eclipse.dltk.internal.ui.filters.NonSharedProjectFilter"
 		        name="%HideNonSharedProjects.label"
