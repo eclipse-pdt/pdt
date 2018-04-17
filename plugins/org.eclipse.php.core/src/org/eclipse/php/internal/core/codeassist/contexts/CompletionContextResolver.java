@@ -72,11 +72,12 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 	@Override
 	public ICompletionContext[] createContexts() {
 		return new ICompletionContext[] { new PHPDocTagStartContext(), new PHPDocThrowsStartContext(),
-				new PHPDocParamTagContext(), new PHPDocReturnTagContext(), new PHPDocMagicTagsContext(),
-				new PHPDocVarStartContext(), new ArrayKeyContext(), new CatchTypeContext(), new CatchVariableContext(),
-				new ClassDeclarationKeywordContext(), new ClassExtendsContext(), new ClassImplementsContext(),
-				new ClassInstantiationContext(), new ClassObjMemberContext(), new ClassStatementContext(),
-				new ClassStaticMemberContext(), new FunctionParameterTypeContext(), new FunctionReturnTypeContext(),
+				new PHPDocParamTagContext(), new PHPDocVarTagContext(), new PHPDocReturnTagContext(),
+				new PHPDocMagicTagsContext(), new PHPDocTagInnerContext(), new ArrayKeyContext(),
+				new CatchTypeContext(), new CatchVariableContext(), new ClassDeclarationKeywordContext(),
+				new ClassExtendsContext(), new ClassImplementsContext(), new ClassInstantiationContext(),
+				new ClassObjMemberContext(), new ClassStatementContext(), new ClassStaticMemberContext(),
+				new FunctionParameterTypeContext(), new FunctionReturnTypeContext(),
 				new FunctionParameterValueContext(), new FunctionParameterVariableContext(), new MethodNameContext(),
 				new GlobalStatementContext(), new GlobalMethodStatementContext(), new InstanceOfContext(),
 				new InterfaceExtendsContext(), new InterfaceDeclarationKeywordContext(), new UseAliasContext(),

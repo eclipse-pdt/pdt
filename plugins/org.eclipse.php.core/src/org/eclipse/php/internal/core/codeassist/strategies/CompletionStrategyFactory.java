@@ -91,7 +91,7 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		if (contextClass == PHPDocTagStartContext.class) {
 			return new ICompletionStrategy[] { new PHPDocTagStrategy(context) };
 		}
-		if (contextClass == PHPDocVarStartContext.class) {
+		if (contextClass == PHPDocTagInnerContext.class) {
 			return new ICompletionStrategy[] { new PHPDocReturnTypeStrategy(context) };
 		}
 		if (contextClass == PHPDocThrowsStartContext.class) {
@@ -99,6 +99,9 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		}
 		if (contextClass == PHPDocParamTagContext.class) {
 			return new ICompletionStrategy[] { new PHPDocParamVariableStrategy(context) };
+		}
+		if (contextClass == PHPDocVarTagContext.class) {
+			return new ICompletionStrategy[] { new PHPDocReturnTypeStrategy(context) };
 		}
 		if (contextClass == PHPDocReturnTagContext.class || contextClass == PHPDocMagicTagsContext.class) {
 			return new ICompletionStrategy[] { new PHPDocReturnTypeStrategy(context) };

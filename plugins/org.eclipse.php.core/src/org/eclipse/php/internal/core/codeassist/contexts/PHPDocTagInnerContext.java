@@ -19,22 +19,20 @@ import java.util.List;
  * 
  * <pre>
  *   1. /**
- *       * @var My_|
+ *       * @see My_|
  *       
  *   2. /**
- *       * @var |
+ *       * @see |
  * </pre>
  * 
  * @author zhao
  */
-public class PHPDocVarStartContext extends AbstractPHPDocTagStartContext {
+public class PHPDocTagInnerContext extends AbstractPHPDocTagStartContext {
 
 	public static List<String> TAGS = new ArrayList<>();
 
 	static {
-		TAGS.add("return"); //$NON-NLS-1$
 		TAGS.add("see"); //$NON-NLS-1$
-		TAGS.add("var"); //$NON-NLS-1$
 		TAGS.add("link"); //$NON-NLS-1$
 	}
 
