@@ -1,0 +1,10 @@
+--TEST--
+
+--FILE--
+<?
+function foo($_GET)
+{
+}
+?>
+--EXPECT--
+[line=2, start=16, end=21] Cannot re-assign auto-global variable $_GET

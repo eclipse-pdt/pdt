@@ -55,6 +55,7 @@ public class Messages extends NLS {
 	public static String DynamicClassNotAllowed;
 	public static String UsupportedNonConstantOperand;
 	public static String OperatorAcceptOnlyPositiveNumbers;
+	public static String ReassignAutoGlobalVariable;
 
 	static {
 		// initialize resource bundle

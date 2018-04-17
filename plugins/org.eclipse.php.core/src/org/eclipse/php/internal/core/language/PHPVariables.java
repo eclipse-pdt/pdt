@@ -15,6 +15,7 @@ package org.eclipse.php.internal.core.language;
 import java.util.*;
 import java.util.Map.Entry;
 
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.php.core.PHPVersion;
 
 /**
@@ -39,6 +40,19 @@ public class PHPVariables {
 		tmp.clear();
 		initializer.initializeSuperGlobals(tmp);
 		variables.put(SUPER_GLOBAL, tmp.toArray(new String[tmp.size()]));
+	}
+
+	public static boolean isVariable(@Nullable String name, PHPVersion phpVersion) {
+		if (name == null) {
+			return false;
+		}
+		String[] variables = getVariables(phpVersion);
+		for (String variable : variables) {
+			if (variable.equals(name)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static String[] getVariables(PHPVersion phpVersion) {

@@ -45,6 +45,7 @@ import org.eclipse.php.internal.core.codeassist.PHPSelectionEngine;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.compiler.ast.parser.Messages;
 import org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier;
+import org.eclipse.php.internal.core.language.PHPVariables;
 import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
@@ -885,6 +886,13 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	@Override
 	public boolean visit(FormalParameter s) throws Exception {
 		validateConstantExpression(s.getInitialization(), true);
+		if (version.isGreaterThan(PHPVersion.PHP5_3) && s.getParameterName() != null
+				&& PHPVariables.isVariable(s.getParameterName().getName(), version)) {
+			reportProblem(s.getParameterName(), Messages.ReassignAutoGlobalVariable,
+					PHPProblemIdentifier.ReassignAutoGlobalVariable, s.getParameterName().getName(),
+					ProblemSeverities.Error);
+		}
+
 		return super.visit(s);
 	}
 

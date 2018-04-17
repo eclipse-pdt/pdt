@@ -10,11 +10,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.highlighters;
 
-import org.eclipse.php.core.PHPVersion;
-import org.eclipse.php.core.ast.nodes.ArrayAccess;
+import org.eclipse.php.core.ast.nodes.ASTNodes;
 import org.eclipse.php.core.ast.nodes.Identifier;
 import org.eclipse.php.core.ast.nodes.Variable;
-import org.eclipse.php.core.ast.nodes.VariableBase;
 import org.eclipse.php.internal.core.language.PHPVariables;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
@@ -23,23 +21,18 @@ public class SuperGlobalHighlighting extends AbstractSemanticHighlighting {
 	protected class SuperGlobalApply extends AbstractSemanticApply {
 
 		@Override
-		public boolean visit(ArrayAccess n) {
-			if (isSuperGlobal(n.getName())) {
-				highlight(n.getName());
+		public boolean visit(Variable var) {
+			if (isSuperGlobal(var)) {
+				highlight(var.getName());
 			}
 			return true;
 		}
 
-		private boolean isSuperGlobal(VariableBase n) {
-			if (n instanceof Variable && ((Variable) n).getName() instanceof Identifier) {
+		private boolean isSuperGlobal(Variable v) {
+			if ((v.isDollared() || ASTNodes.isQuotedDollaredCurlied(v)) && v.getName() instanceof Identifier) {
 				String name = "$" //$NON-NLS-1$
-						+ ((Identifier) ((Variable) n).getName()).getName();
-				String[] globals = PHPVariables.getVariables(PHPVersion.PHP5_3);
-				for (String global : globals) {
-					if (global.equals(name)) {
-						return true;
-					}
-				}
+						+ ((Identifier) v.getName()).getName();
+				return PHPVariables.isVariable(name, v.getAST().apiLevel());
 			}
 			return false;
 		}
