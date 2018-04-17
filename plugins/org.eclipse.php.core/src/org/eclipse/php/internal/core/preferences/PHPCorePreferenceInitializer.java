@@ -68,6 +68,8 @@ public class PHPCorePreferenceInitializer extends AbstractPreferenceInitializer 
 				DefaultScope.INSTANCE);
 		problemPreferences.setSeverity(PHPProblemIdentifier.CannotUseTypeAsTrait, ProblemSeverity.ERROR,
 				DefaultScope.INSTANCE);
+		problemPreferences.setSeverity(PHPProblemIdentifier.ReassignAutoGlobalVariable, ProblemSeverity.ERROR,
+				DefaultScope.INSTANCE);
 
 		problemPreferences.setSeverity(PHPProblemIdentifier.UndefinedVariable, ProblemSeverity.WARNING,
 				DefaultScope.INSTANCE);

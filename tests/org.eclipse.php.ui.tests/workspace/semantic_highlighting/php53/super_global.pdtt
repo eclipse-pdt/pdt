@@ -13,6 +13,32 @@ echo $_REQUEST['test'];
 echo $_ENV['test'];
 echo $foo['test'];
 echo $_Test['test'];
+
+echo $GLOBALS;
+echo $_SERVER;
+echo $_GET;
+echo $_POST;
+echo $_FILES;
+echo $_COOKIE;
+echo $_SESSION;
+echo $_REQUEST;
+echo $_ENV;
+echo $foo;
+echo $_Test;
+
+$buffer = <<<EOF
+${GLOBALS}
+${_SERVER}
+${_GET}
+${_POST}
+${_FILES}
+${_COOKIE}
+${_SESSION}
+${_REQUEST}
+${_ENV}
+${foo}
+${_Test}
+EOF;
 ?>
 --EXPECT--
 org.eclipse.php.internal.ui.editor.highlighters.SuperGlobalHighlighting:
@@ -25,3 +51,21 @@ highlight($_COOKIE)
 highlight($_SESSION)
 highlight($_REQUEST)
 highlight($_ENV)
+highlight($GLOBALS)
+highlight($_SERVER)
+highlight($_GET)
+highlight($_POST)
+highlight($_FILES)
+highlight($_COOKIE)
+highlight($_SESSION)
+highlight($_REQUEST)
+highlight($_ENV)
+highlight(GLOBALS)
+highlight(_SERVER)
+highlight(_GET)
+highlight(_POST)
+highlight(_FILES)
+highlight(_COOKIE)
+highlight(_SESSION)
+highlight(_REQUEST)
+highlight(_ENV)

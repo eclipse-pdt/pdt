@@ -21,7 +21,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
  */
 public enum PHPProblemIdentifier implements IProblemIdentifier, IProblemIdentifierExtension {
 
-	SYNTAX, USE_STATEMENTS /* deprecated */, AbstractMethodInAbstractClass, BodyForAbstractMethod, MethodRequiresBody, AbstractMethodsInConcreteClass, UndefinedType, ClassExtendFinalClass, CannotInstantiateType, ImportNotFound, DuplicateImport, UnusedImport, UnnecessaryImport, DuplicateDeclaration, AbstractMethodMustBeImplemented, SuperclassMustBeAClass, SuperInterfaceMustBeAnInterface, CannotUseTypeAsTrait, NestedNamespaceDeclarations, InvalidConstantExpression, UndefinedVariable, UnusedVariable
+	SYNTAX, USE_STATEMENTS /* deprecated */, AbstractMethodInAbstractClass, BodyForAbstractMethod, MethodRequiresBody, AbstractMethodsInConcreteClass, UndefinedType, ClassExtendFinalClass, CannotInstantiateType, ImportNotFound, DuplicateImport, UnusedImport, UnnecessaryImport, DuplicateDeclaration, AbstractMethodMustBeImplemented, SuperclassMustBeAClass, SuperInterfaceMustBeAnInterface, CannotUseTypeAsTrait, NestedNamespaceDeclarations, InvalidConstantExpression, ReassignAutoGlobalVariable, UndefinedVariable, UnusedVariable
 
 	;
 
