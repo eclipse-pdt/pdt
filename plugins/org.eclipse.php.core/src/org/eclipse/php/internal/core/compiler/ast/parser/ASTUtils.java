@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.parser;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -375,6 +376,79 @@ public class ASTUtils {
 			return new FileContext(sourceModule, unit, offset);
 		}
 		return visitor.getContext();
+	}
+
+	/**
+	 * Finds all class (or trait) property declarations related to a PHP-doc block
+	 * 
+	 * @param moduleDeclaration
+	 *            AST root node
+	 * @param offset
+	 *            Offset somewhere strictly inside the PHP-doc block
+	 * @return class property declarations related to the PHP-doc block or
+	 *         <code>null</code> if first coming statement is not a class property
+	 *         declaration.
+	 */
+	public static List<PHPFieldDeclaration> findClassPropertiesAfterPHPdoc(ModuleDeclaration moduleDeclaration,
+			final int offset) {
+
+		final List<PHPFieldDeclaration> decls = new ArrayList<>();
+
+		ASTVisitor visitor = new ASTVisitor() {
+			boolean stop = false;
+
+			@Override
+			public boolean visit(MethodDeclaration m) {
+				if (!stop && m.sourceStart() > offset) {
+					stop = true;
+					return false;
+				}
+				return !stop;
+			}
+
+			@Override
+			public boolean visit(TypeDeclaration t) {
+				if (!stop && t.sourceStart() > offset) {
+					stop = true;
+					return false;
+				}
+				return !stop;
+			}
+
+			@Override
+			public boolean visit(Statement s) throws Exception {
+				if (!stop && s.sourceStart() > offset) {
+					if (s instanceof PHPFieldDeclaration) {
+						PHPFieldDeclaration field = (PHPFieldDeclaration) s;
+						if (field.getPHPDoc() == null || field.getPHPDoc().sourceStart() >= offset
+								|| field.getPHPDoc().sourceEnd() <= offset) {
+							stop = true;
+						} else {
+							decls.add(field);
+						}
+					} else {
+						stop = true;
+					}
+				}
+				return false;
+			}
+
+			@Override
+			public boolean visitGeneral(ASTNode n) {
+				if (!stop && n.sourceStart() > offset) {
+					stop = true;
+					return false;
+				}
+				return !stop;
+			}
+		};
+		try {
+			moduleDeclaration.traverse(visitor);
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+
+		return decls;
 	}
 
 	/**
