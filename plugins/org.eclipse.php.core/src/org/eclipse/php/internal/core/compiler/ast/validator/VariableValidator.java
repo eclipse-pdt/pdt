@@ -91,7 +91,7 @@ public class VariableValidator implements IValidatorExtension {
 
 	private class Scope {
 
-		public Map<String, Variable> variables = new HashMap<String, VariableValidator.Variable>();
+		public Map<String, Variable> variables = new HashMap<>();
 		public int start;
 		public int end;
 
@@ -144,7 +144,7 @@ public class VariableValidator implements IValidatorExtension {
 		public int end;
 		private int initialized = -1;
 		private int used = -1;
-		public TreeMap<Integer, Integer> other = new TreeMap<Integer, Integer>();
+		public TreeMap<Integer, Integer> other = new TreeMap<>();
 
 		Variable() {
 		}
@@ -240,16 +240,17 @@ public class VariableValidator implements IValidatorExtension {
 			pushScope(0, module.end());
 			fileScope = true;
 			List<VarComment> varComments = module.getVarComments();
-			varCommentList = new ArrayList<VarComment>(module.getVarComments().size());
+			varCommentList = new ArrayList<>(module.getVarComments().size());
 			varCommentList.addAll(varComments);
 			Collections.sort(varCommentList, new Comparator<VarComment>() {
 
+				@Override
 				public int compare(VarComment o1, VarComment o2) {
 					return o2.sourceStart() - o1.sourceStart();
 				}
 			});
 
-			docBlocks = new ArrayList<PHPDocBlock>(module.getPHPDocBlocks().size());
+			docBlocks = new ArrayList<>(module.getPHPDocBlocks().size());
 			docBlocks.addAll(module.getPHPDocBlocks());
 			Collections.sort(docBlocks, new Comparator<PHPDocBlock>() {
 
@@ -367,6 +368,7 @@ public class VariableValidator implements IValidatorExtension {
 			}
 		}
 
+		@Override
 		public boolean visit(NamespaceDeclaration s) throws Exception {
 			if (fileScope) {
 				fileScope = false;
@@ -376,11 +378,13 @@ public class VariableValidator implements IValidatorExtension {
 			return super.visit(s);
 		}
 
+		@Override
 		public boolean endvisit(NamespaceDeclaration s) throws Exception {
 			popScope();
 			return super.visit(s);
 		}
 
+		@Override
 		public boolean visit(ForEachStatement s) throws Exception {
 			if (s.getExpression() != null) {
 				s.getExpression().traverse(this);
@@ -489,6 +493,7 @@ public class VariableValidator implements IValidatorExtension {
 			return false;
 		}
 
+		@Override
 		public boolean visit(ReflectionArrayVariableReference s) throws Exception {
 			if (s.getExpression() instanceof Scalar) {
 				Scalar name = (Scalar) s.getExpression();
@@ -502,12 +507,14 @@ public class VariableValidator implements IValidatorExtension {
 			return super.visit(s);
 		}
 
+		@Override
 		public boolean endvisit(ReflectionArrayVariableReference s) throws Exception {
 			operations.pop();
 
 			return super.endvisit(s);
 		}
 
+		@Override
 		public boolean visit(ReflectionVariableReference s) throws Exception {
 			if (s.getExpression() instanceof Scalar && operations.peekFirst() != Operation.USE_FIELD) {
 				Scalar name = (Scalar) s.getExpression();
@@ -521,6 +528,7 @@ public class VariableValidator implements IValidatorExtension {
 			return super.visit(s);
 		}
 
+		@Override
 		public boolean endvisit(ReflectionVariableReference s) throws Exception {
 			operations.pop();
 			return super.endvisit(s);
@@ -564,6 +572,7 @@ public class VariableValidator implements IValidatorExtension {
 			return false;
 		}
 
+		@Override
 		public boolean visit(CatchClause s) throws Exception {
 			Scope prev = current;
 			pushScope(s.sourceStart(), s.sourceEnd());
@@ -585,6 +594,7 @@ public class VariableValidator implements IValidatorExtension {
 			return false;
 		}
 
+		@Override
 		public boolean visit(Assignment s) throws Exception {
 			operations.push(Operation.USE);
 			s.getValue().traverse(this);
