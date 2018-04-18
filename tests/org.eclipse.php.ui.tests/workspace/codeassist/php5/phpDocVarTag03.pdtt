@@ -1,0 +1,46 @@
+--TEST--
+Bug 533717 - code assist on PHPDoc @var tags should work the same as for @param tags
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
+--CONFIG--
+cursor: _
+--FILE--
+<?php
+class A
+{
+
+    /**
+     *
+     * @var array[DateTime]|DateTi_ $
+     */
+    private $abc = 1, $def = 2;
+
+    private $ghi = 3, $jkl = 4;
+
+    /**
+     *
+     * @var array[DateTime]|DateTi
+     */
+    private $mno = 5, $pqr = 6;
+
+    private $stu = 7, $vwx = 8;
+}
+?>
+--EXPECT--
+<?php
+class A
+{
+    /**
+     *
+     * @var array[DateTime]|DateTime $
+     */
+    private $abc = 1, $def = 2;
+    private $ghi = 3, $jkl = 4;
+    /**
+     *
+     * @var array[DateTime]|DateTi
+     */
+    private $mno = 5, $pqr = 6;
+    private $stu = 7, $vwx = 8;
+}
+?>
