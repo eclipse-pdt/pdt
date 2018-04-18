@@ -402,7 +402,7 @@ public class PHPClassTemplate extends PHPElementTemplate {
 						String phpdocParamValue = docTag.getValue();
 						// remove the line separator at the end of
 						// phpdocParamValue
-						phpdocParamValue = phpdocParamValue.replaceFirst("\\r?\\n$", ""); //$NON-NLS-1$ //$NON-NLS-2$
+						phpdocParamValue = phpdocParamValue.replaceFirst("(\\r\\n?|\\n)$", ""); //$NON-NLS-1$ //$NON-NLS-2$
 						set(FUNC_PHPDOC_PARAM_VAR, phpdocParamType + phpdocParamValue);
 						compile(FUNC_PHPDOC_PARAMS_STRUCT_COMPILED, FUNC_PHPDOC_PARAMS_STRUCT, true);
 					}

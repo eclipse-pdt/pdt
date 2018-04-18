@@ -189,7 +189,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 						lineSeparator = System.getProperty(Platform.PREF_LINE_SEPARATOR);
 					}
 					if (contents != null) {
-						contents = contents.replaceAll("(\n\r?|\r\n?)", lineSeparator); //$NON-NLS-1$
+						contents = contents.replaceAll("\r\n?|\n", lineSeparator); //$NON-NLS-1$
 					}
 
 					try {

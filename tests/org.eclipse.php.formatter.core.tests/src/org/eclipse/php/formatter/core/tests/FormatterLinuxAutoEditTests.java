@@ -74,7 +74,7 @@ public class FormatterLinuxAutoEditTests extends FormatterTests {
 		cmd.offset = offset1;
 		cmd.length = offset1 == offset2 ? 0 : offset2 - offset1 - 1;
 		if (pdttFile.getOther() != null) {
-			cmd.text = pdttFile.getOther().replaceAll("\r\n", "\n");
+			cmd.text = pdttFile.getOther().replaceAll("\r\n?", "\n");
 		} else {
 			cmd.text = "\n";
 		}
@@ -84,7 +84,7 @@ public class FormatterLinuxAutoEditTests extends FormatterTests {
 		indentLineAutoEditStrategy.customizeDocumentCommand(document, cmd);
 		document.replace(cmd.offset, cmd.length, cmd.text);
 		// Compare contents
-		PDTTUtils.assertContents(pdttFile.getExpected().replaceAll("\r\n", "\n"), document.get());
+		PDTTUtils.assertContents(pdttFile.getExpected().replaceAll("\r\n?", "\n"), document.get());
 	}
 
 }

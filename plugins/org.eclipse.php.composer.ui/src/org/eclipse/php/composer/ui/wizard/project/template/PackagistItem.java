@@ -96,7 +96,7 @@ public class PackagistItem extends AbstractDiscoveryItem<PackageFilterItem> {
 		if (descriptionText.length() > maxDescriptionLength) {
 			descriptionText = descriptionText.substring(0, maxDescriptionLength);
 		}
-		description.setText(descriptionText.replaceAll("(\\r\\n)|\\n|\\r", " ")); //$NON-NLS-1$ //$NON-NLS-2$
+		description.setText(descriptionText.replaceAll("\\r\\n?|\\n", " ")); //$NON-NLS-1$ //$NON-NLS-2$
 
 		createStatsPart();
 		createSeparator();

@@ -4401,7 +4401,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					// check if the node length is still greater than
 					// maxLineWidth when we remove all blanks from the beginning
 					// and the end of the node lines content
-					String trimmedContent = content.replaceAll("([ \\t]*\\r?\\n[ \\t]*)+", " "); //$NON-NLS-1$ //$NON-NLS-2$
+					String trimmedContent = content.replaceAll("([ \\t]*(\\r\\n?|\\n)[ \\t]*)+", " "); //$NON-NLS-1$ //$NON-NLS-2$
 					if (lineW + trimmedContent.length() <= maxLineWidth) {
 						lineW += trimmedContent.length();
 					} else {
