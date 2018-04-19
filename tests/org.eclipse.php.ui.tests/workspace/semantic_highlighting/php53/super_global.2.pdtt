@@ -1,0 +1,17 @@
+--TEST--
+Test super global Semantic highlighting
+--FILE--
+<?php
+class A
+{
+
+    public static $_POST = null;
+
+    public function foo()
+    {
+        $this->_POST = 10;
+        self::$_POST = 20;
+    }
+}
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.SuperGlobalHighlighting:

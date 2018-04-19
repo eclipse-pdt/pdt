@@ -116,8 +116,8 @@ public abstract class ApplyAll extends AbstractVisitor {
 	}
 
 	@Override
-	public boolean visit(FieldsDeclaration classVariableDeclaratio) {
-		return apply(classVariableDeclaratio);
+	public boolean visit(FieldsDeclaration classVariableDeclaration) {
+		return apply(classVariableDeclaration);
 	}
 
 	@Override
