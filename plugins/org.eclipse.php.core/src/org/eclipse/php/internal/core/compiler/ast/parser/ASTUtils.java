@@ -44,12 +44,13 @@ import org.eclipse.php.internal.core.typeinference.context.FileContext;
 
 public class ASTUtils {
 
+	// see also the ast_scanner.flex files to get full VarComment patterns
 	private static final Pattern VAR_COMMENT_PATTERN1 = Pattern.compile(
-			"(.*?@var\\p{javaWhitespace}+)([$][^$\\p{javaWhitespace}]+)(\\p{javaWhitespace}+)([^$\\p{javaWhitespace}]+).*", //$NON-NLS-1$
-			Pattern.CASE_INSENSITIVE);
+			"^(/[*].*?@var\\p{javaWhitespace}+)([$][^$\\p{javaWhitespace}]+)(\\p{javaWhitespace}+)([^$\\p{javaWhitespace}]+).*?[*]/$", //$NON-NLS-1$
+			Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 	private static final Pattern VAR_COMMENT_PATTERN2 = Pattern.compile(
-			"(.*?@var\\p{javaWhitespace}+)([^$\\p{javaWhitespace}]+)(\\p{javaWhitespace}+)([$][^$\\p{javaWhitespace}]+).*", //$NON-NLS-1$
-			Pattern.CASE_INSENSITIVE);
+			"^(/[*].*?@var\\p{javaWhitespace}+)([^$\\p{javaWhitespace}]+)(\\p{javaWhitespace}+)([$][^$\\p{javaWhitespace}]+).*?[*]/$", //$NON-NLS-1$
+			Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
 	/**
 	 * Parses @@var comment using regular expressions
