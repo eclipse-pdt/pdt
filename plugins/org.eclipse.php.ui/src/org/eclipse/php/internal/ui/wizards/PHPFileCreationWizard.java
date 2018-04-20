@@ -171,8 +171,8 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 		 *            An optional editor ID to use when opening the file (can be null).
 		 * @throws CoreException
 		 */
-		public void createFile(Wizard wizard, final IFile file, IProgressMonitor monitor, String contents,
-				final int offset, final String editorID) throws CoreException {
+		public void createFile(Wizard wizard, final IFile file, IProgressMonitor monitor, String contents, int offset,
+				final String editorID) throws CoreException {
 			// create a sample file
 			if (file != null) {
 				if (!file.isLinked()) {
@@ -189,6 +189,10 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 						lineSeparator = System.getProperty(Platform.PREF_LINE_SEPARATOR);
 					}
 					if (contents != null) {
+						if (offset <= contents.length()) {
+							// recalculate caret position after that line separator changed
+							offset = contents.substring(0, offset).replaceAll("\r\n?|\n", lineSeparator).length(); //$NON-NLS-1$
+						}
 						contents = contents.replaceAll("\r\n?|\n", lineSeparator); //$NON-NLS-1$
 					}
 
@@ -206,6 +210,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 					}
 
 				}
+				final int newOffset = offset;
 				monitor.worked(1);
 				monitor.setTaskName(NLS.bind(PHPUIMessages.newPhpFile_openning, file.getName()));
 				wizard.getShell().getDisplay().asyncExec(new Runnable() {
@@ -222,7 +227,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 							}
 							if (editor instanceof PHPStructuredEditor) {
 								StructuredTextViewer textViewer = ((PHPStructuredEditor) editor).getTextViewer();
-								textViewer.setSelectedRange(offset, 0);
+								textViewer.setSelectedRange(newOffset, 0);
 							}
 						} catch (PartInitException e) {
 						}
