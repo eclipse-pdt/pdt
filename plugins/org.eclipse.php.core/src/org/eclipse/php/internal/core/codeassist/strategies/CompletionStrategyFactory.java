@@ -103,7 +103,8 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		if (contextClass == PHPDocVarTagContext.class) {
 			return new ICompletionStrategy[] { new PHPDocVarVariableStrategy(context) };
 		}
-		if (contextClass == PHPDocReturnTagContext.class || contextClass == PHPDocMagicTagsContext.class) {
+		if (contextClass == PHPVarCommentContext.class || contextClass == PHPDocReturnTagContext.class
+				|| contextClass == PHPDocMagicTagsContext.class) {
 			return new ICompletionStrategy[] { new PHPDocReturnTypeStrategy(context) };
 		}
 		if (contextClass == ArrayKeyContext.class) {

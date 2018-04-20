@@ -1,0 +1,37 @@
+--TEST--
+Bug 533840 - add code assist for types inside VarComments
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
+--CONFIG--
+cursor: _
+--FILE--
+<?php
+function foo1()
+{
+    /* some comment */
+    /* @var array[DateTime]|DateTi_ $var */
+    $var = null;
+}
+
+function foo2()
+{
+    /* some comment */
+    /* @var $var array[DateTime]|DateTi */
+    $var = null;
+}
+?>
+--EXPECT--
+<?php
+function foo1()
+{
+    /* some comment */
+    /* @var array[DateTime]|DateTime $var */
+    $var = null;
+}
+function foo2()
+{
+    /* some comment */
+    /* @var $var array[DateTime]|DateTi */
+    $var = null;
+}
+?>

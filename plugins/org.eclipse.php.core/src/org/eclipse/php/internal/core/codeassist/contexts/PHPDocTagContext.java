@@ -45,7 +45,7 @@ public abstract class PHPDocTagContext extends PHPDocContext {
 
 	protected int tagStart;
 
-	public void setPatterns(IProject project) {
+	private void setPatterns(IProject project) {
 		if (project != null) {
 			todos = TaskPatternsProvider.getInstance().getPatternsForProject(project);
 		} else {
@@ -79,15 +79,22 @@ public abstract class PHPDocTagContext extends PHPDocContext {
 		return minimal;
 	}
 
-	private boolean isPHPTag(String tagName) {
+	protected boolean isPHPTag(String tagName) {
 		ArrayList<Matcher> matchers = createMatcherList(tagName);
 		Matcher matcher = getMinimalMatcher(matchers, 0);
 		return matcher != null;
 	}
 
+	protected boolean isValidStatementText() {
+		return true;
+	}
+
 	@Override
 	public boolean isValid(@NonNull ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
+			return false;
+		}
+		if (!isValidStatementText()) {
 			return false;
 		}
 		setPatterns(sourceModule.getScriptProject().getProject());
