@@ -1,0 +1,14 @@
+--TEST--
+Bug 533901 - autoedit should better handle heredocs when they contain php variables
+--FILE--
+<?php
+$this->buffer .= <<<EOF
+            |$this->pdf->Write(0, ' ');
+EOF;
+--OTHER--
+\$pdf
+--EXPECT--
+<?php
+$this->buffer .= <<<EOF
+            \$pdf$this->pdf->Write(0, ' ');
+EOF;

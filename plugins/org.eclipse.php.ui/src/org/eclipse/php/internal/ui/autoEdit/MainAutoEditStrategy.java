@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 IBM Corporation and others.
+ * Copyright (c) 2009, 2017, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,20 +41,20 @@ public class MainAutoEditStrategy implements IAutoEditStrategy {
 			return;
 		}
 
-		String previousPartitionType = command.offset > 0
-				? FormatterUtils.getPartitionType((IStructuredDocument) document, command.offset - 1)
-				: null;
+		boolean isPreviousQuotesState = command.offset > 0
+				? FormatterUtils.isPHPQuotesState((IStructuredDocument) document, command.offset - 1, false)
+				: false;
 
-		if (previousPartitionType == PHPPartitionTypes.PHP_QUOTED_STRING
-				&& partitionType == PHPPartitionTypes.PHP_QUOTED_STRING) {
-			String nextPartitionType = FormatterUtils.getPartitionType((IStructuredDocument) document, command.offset,
-					true);
+		if (isPreviousQuotesState) {
+			boolean isCurrentQuotesState = FormatterUtils.isPHPQuotesState((IStructuredDocument) document,
+					command.offset, true);
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=512891
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=533901
 			// At this point we only know that command.offset is inside or just
 			// after some "quoted string".
 			// Do an additional check to be sure we handle lines only when
 			// command.offset is lying inside "quoted strings".
-			if (nextPartitionType == PHPPartitionTypes.PHP_QUOTED_STRING) {
+			if (isCurrentQuotesState) {
 				return;
 			}
 		}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016, 2017 IBM Corporation and others.
+ * Copyright (c) 2009, 2016, 2017, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
+import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -61,7 +62,7 @@ public class FormatterUtils {
 					regionStart += tRegion.getStart();
 				}
 
-				if (tRegion != null && tRegion instanceof IPHPScriptRegion) {
+				if (tRegion instanceof IPHPScriptRegion) {
 					IPHPScriptRegion scriptRegion = (IPHPScriptRegion) tRegion;
 					int regionOffset = offset - regionStart;
 					ITextRegion innerRegion = scriptRegion.getPHPToken(regionOffset);
@@ -92,29 +93,90 @@ public class FormatterUtils {
 			if (tRegion != null && tRegion.getType().equals(PHPRegionContext.PHP_CLOSE)) {
 				tRegion = sdRegion.getRegionAtCharacterOffset(offset - 1);
 			}
+			if (tRegion != null) {
+				int regionStart = sdRegion.getStartOffset(tRegion);
 
-			int regionStart = sdRegion.getStartOffset(tRegion);
-
-			// in case of container we have to extract the PhpScriptRegion
-			if (tRegion != null && tRegion instanceof ITextRegionContainer) {
-				ITextRegionContainer container = (ITextRegionContainer) tRegion;
-				tRegion = container.getRegionAtCharacterOffset(offset);
-				regionStart += tRegion.getStart();
-			}
-
-			if (tRegion != null && tRegion instanceof IPHPScriptRegion) {
-				IPHPScriptRegion scriptRegion = (IPHPScriptRegion) tRegion;
-				if (preferNonWhitespacePartitions
-						&& scriptRegion.getPHPToken(offset - regionStart).getTextEnd() <= offset - regionStart) {
-					return scriptRegion.getPartition(scriptRegion.getPHPToken(offset - regionStart).getEnd());
+				// in case of container we have to extract the PhpScriptRegion
+				if (tRegion instanceof ITextRegionContainer) {
+					ITextRegionContainer container = (ITextRegionContainer) tRegion;
+					tRegion = container.getRegionAtCharacterOffset(offset);
+					regionStart += tRegion.getStart();
 				}
-				return scriptRegion.getPartition(offset - regionStart);
+
+				if (tRegion instanceof IPHPScriptRegion) {
+					IPHPScriptRegion scriptRegion = (IPHPScriptRegion) tRegion;
+					int regionOffset = offset - regionStart;
+					if (preferNonWhitespacePartitions
+							&& scriptRegion.getPHPToken(regionOffset).getTextEnd() <= regionOffset) {
+						return scriptRegion.getPartition(scriptRegion.getPHPToken(regionOffset).getEnd());
+					}
+					return scriptRegion.getPartition(regionOffset);
+				}
 			}
 		} catch (final BadLocationException e) {
 		}
 
 		partitioner.connect(document);
 		return partitioner.getContentType(offset);
+	}
+
+	/**
+	 * Extended version of the
+	 * <code>"FormatterUtils.getPartitionType(document, offset) == PHPPartitionTypes.PHP_QUOTED_STRING"</code>
+	 * check, since it also reports that variables (and other PHP code) inside
+	 * back-quoted strings, double-quoted strings and heredoc sections are "quoted
+	 * PHP code".
+	 * 
+	 * @param document
+	 * @param offset
+	 * @param preferNonWhitespacePartitions
+	 * @return true if offset is in the quoted string positions range, false
+	 *         otherwise
+	 * @see IPHPScriptRegion#isPHPQuotesState(int)
+	 * @see PHPPartitionTypes#isPHPQuotesState(String)
+	 */
+	public static boolean isPHPQuotesState(IStructuredDocument document, int offset,
+			boolean preferNonWhitespacePartitions) {
+		try {
+			IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
+			if (sdRegion == null) {
+				return false;
+			}
+
+			ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
+			if (tRegion == null && offset == document.getLength()) {
+				offset -= 1;
+				tRegion = sdRegion.getRegionAtCharacterOffset(offset);
+			}
+			// in case the cursor on the beginning of '?>' tag
+			// we decrease the offset to get the PhpScriptRegion
+			if (tRegion != null && tRegion.getType().equals(PHPRegionContext.PHP_CLOSE)) {
+				tRegion = sdRegion.getRegionAtCharacterOffset(offset - 1);
+			}
+			if (tRegion != null) {
+				int regionStart = sdRegion.getStartOffset(tRegion);
+
+				// in case of container we have to extract the PhpScriptRegion
+				if (tRegion instanceof ITextRegionContainer) {
+					ITextRegionContainer container = (ITextRegionContainer) tRegion;
+					tRegion = container.getRegionAtCharacterOffset(offset);
+					regionStart += tRegion.getStart();
+				}
+
+				if (tRegion instanceof IPHPScriptRegion) {
+					IPHPScriptRegion scriptRegion = (IPHPScriptRegion) tRegion;
+					int regionOffset = offset - regionStart;
+					if (preferNonWhitespacePartitions
+							&& scriptRegion.getPHPToken(regionOffset).getTextEnd() <= regionOffset) {
+						return scriptRegion.isPHPQuotesState(scriptRegion.getPHPToken(regionOffset).getEnd());
+					}
+					return scriptRegion.isPHPQuotesState(regionOffset);
+				}
+			}
+		} catch (final BadLocationException e) {
+		}
+
+		return false;
 	}
 
 	public static @Nullable String getPartitionType(IStructuredDocument document, int offset) {
