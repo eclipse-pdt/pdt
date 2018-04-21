@@ -13,7 +13,10 @@ package org.eclipse.php.internal.ui.editor.hover;
 
 import java.io.*;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
@@ -270,7 +273,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 
 		/**
 		 * @param informationPresenterControlCreator
-		 *            control creator for enriched hover
+		 *                                               control creator for enriched
+		 *                                               hover
 		 * @since 3.4
 		 */
 		public HoverControlCreator(IInformationControlCreator informationPresenterControlCreator) {
@@ -465,24 +469,19 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 			return null;
 		}
 		// filter the same namespace
-		Set<IModelElement> elementSet = new TreeSet<>(new Comparator<IModelElement>() {
-
-			@Override
-			public int compare(IModelElement o1, IModelElement o2) {
-				if (o1 instanceof IType && o2 instanceof IType) {
-					IType type1 = (IType) o1;
-					IType type2 = (IType) o2;
-					try {
-						if (PHPFlags.isNamespace(type1.getFlags()) && PHPFlags.isNamespace(type2.getFlags())
-								&& type1.getElementName().equals(type2.getElementName())) {
-							return 0;
-						}
-					} catch (ModelException e) {
+		Set<IModelElement> elementSet = new TreeSet<>((o1, o2) -> {
+			if (o1 instanceof IType && o2 instanceof IType) {
+				IType type1 = (IType) o1;
+				IType type2 = (IType) o2;
+				try {
+					if (PHPFlags.isNamespace(type1.getFlags()) && PHPFlags.isNamespace(type2.getFlags())
+							&& type1.getElementName().equals(type2.getElementName())) {
+						return 0;
 					}
+				} catch (ModelException e) {
 				}
-				return 1;
 			}
-
+			return 1;
 		});
 		List<IModelElement> elementList = new ArrayList<>();
 		for (int i = 0; i < elements.length; i++) {
@@ -510,19 +509,19 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 	 * Computes the hover info.
 	 * 
 	 * @param elements
-	 *            the resolved elements
+	 *                          the resolved elements
 	 * @param constantValue
-	 *            a constant value iff result contains exactly 1 constant field, or
-	 *            <code>null</code>
+	 *                          a constant value iff result contains exactly 1
+	 *                          constant field, or <code>null</code>
 	 * @param previousInput
-	 *            the previous input, or <code>null</code>
+	 *                          the previous input, or <code>null</code>
 	 * @return the HTML hover info for the given element(s) or <code>null</code> if
 	 *         no information is available
 	 * @since 3.4
 	 */
 	private static PHPDocumentationBrowserInformationControlInput getHoverInfo(IModelElement[] elements,
 			String constantValue, PHPDocumentationBrowserInformationControlInput previousInput) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder builder = new StringBuilder();
 		boolean hasContents = false;
 		IModelElement element = null;
 		int leadingImageWidth = 20;
@@ -530,7 +529,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 			element = elements[i];
 			if (element instanceof IMember) {
 				IMember member = (IMember) element;
-				HTMLPrinter.addSmallHeader(buffer, getInfoText(member, constantValue, true, i == 0));
+				HTMLPrinter.addSmallHeader(builder, getInfoText(member, constantValue, true, i == 0));
 				Reader reader = null;
 				try {
 					reader = getHTMLContent(member);
@@ -538,14 +537,14 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 				}
 
 				if (reader != null) {
-					HTMLPrinter.addParagraph(buffer, reader);
+					HTMLPrinter.addParagraph(builder, reader);
 				}
 				if (i != elements.length - 1) {
-					buffer.append("<hr>"); //$NON-NLS-1$
+					builder.append("<hr>"); //$NON-NLS-1$
 				}
 				hasContents = true;
 			} else if (element.getElementType() == IModelElement.FIELD) {
-				HTMLPrinter.addSmallHeader(buffer, getInfoText(element, constantValue, true, i == 0));
+				HTMLPrinter.addSmallHeader(builder, getInfoText(element, constantValue, true, i == 0));
 				hasContents = true;
 			}
 		}
@@ -554,10 +553,10 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 			return null;
 		}
 
-		if (buffer.length() > 0) {
-			HTMLPrinter.insertPageProlog(buffer, 0, getStyleSheet());
-			HTMLPrinter.addPageEpilog(buffer);
-			return new PHPDocumentationBrowserInformationControlInput(previousInput, element, buffer.toString(),
+		if (builder.length() > 0) {
+			HTMLPrinter.insertPageProlog(builder, 0, getStyleSheet());
+			HTMLPrinter.addPageEpilog(builder);
+			return new PHPDocumentationBrowserInformationControlInput(previousInput, element, builder.toString(),
 					leadingImageWidth);
 		}
 
@@ -605,9 +604,9 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 	 * Returns the constant value for the given field.
 	 * 
 	 * @param field
-	 *            the field
+	 *                        the field
 	 * @param hoverRegion
-	 *            the hover region
+	 *                        the hover region
 	 * @return the constant value for the given field or <code>null</code> if none
 	 * @since 3.4
 	 */
@@ -718,9 +717,9 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 	 * value.
 	 * 
 	 * @param constantValue
-	 *            the constant value
+	 *                          the constant value
 	 * @param hexValue
-	 *            the hex value
+	 *                          the hex value
 	 * @return a formatted string with constant and hex values
 	 * @since 3.4
 	 */

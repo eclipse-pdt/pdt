@@ -84,7 +84,7 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 			// element = (IType) element.getParent();
 			// }
 		}
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder builder = new StringBuilder();
 		String constantValue = null;
 		if (element instanceof IField) {
 			try {
@@ -97,7 +97,7 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 			}
 		}
 
-		HTMLPrinter.addSmallHeader(buffer, getInfoText(element, constantValue, true));
+		HTMLPrinter.addSmallHeader(builder, getInfoText(element, constantValue, true));
 		Reader reader = null;
 		try {
 			reader = getHTMLContent(element);
@@ -105,14 +105,14 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 		}
 
 		if (reader != null) {
-			HTMLPrinter.addParagraph(buffer, reader);
+			HTMLPrinter.addParagraph(builder, reader);
 		}
 
-		if (buffer.length() > 0) {
-			HTMLPrinter.insertPageProlog(buffer, 0, getStyleSheet());
-			HTMLPrinter.addPageEpilog(buffer);
+		if (builder.length() > 0) {
+			HTMLPrinter.insertPageProlog(builder, 0, getStyleSheet());
+			HTMLPrinter.addPageEpilog(builder);
 
-			return new StringReader(buffer.toString());
+			return new StringReader(builder.toString());
 		}
 		return null;
 	}
