@@ -522,7 +522,7 @@ public class PHPElementConciliatorTest extends AbstractConciliatorTest {
 
 		assertTrue(selectedNode instanceof TypeDeclaration);
 
-		assertTrue(PHPElementConciliator.classMemeberAlreadyExists((TypeDeclaration) selectedNode, "bar",
+		assertTrue(PHPElementConciliator.classMemberAlreadyExists((TypeDeclaration) selectedNode, "bar",
 				ASTNode.FUNCTION_DECLARATION));
 	}
 

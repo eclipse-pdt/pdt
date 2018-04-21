@@ -463,7 +463,7 @@ public class RenameClassMemberProcessor extends AbstractRenameProcessor<IFile> i
 		identifier.getParent();
 		if (type == PHPElementConciliator.CONCILIATOR_CLASS_MEMBER) {
 			final TypeDeclaration host = RefactoringUtility.getType(identifier);
-			if (host != null && PHPElementConciliator.classMemeberAlreadyExists(host, getNewElementName(),
+			if (host != null && PHPElementConciliator.classMemberAlreadyExists(host, getNewElementName(),
 					identifier.getParent().getType())) {
 				final String message = MessageFormat.format(
 						"A same class member with name {0} already exist in the same class scope", //$NON-NLS-1$

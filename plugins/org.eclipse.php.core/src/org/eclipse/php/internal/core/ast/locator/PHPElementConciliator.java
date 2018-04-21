@@ -640,7 +640,7 @@ public class PHPElementConciliator {
 	 *            the ASTNode type.
 	 * @return true - if the TypeDeclaration has a class member already.
 	 */
-	public static boolean classMemeberAlreadyExists(TypeDeclaration typeDeclaration, final String name, int type) {
+	public static boolean classMemberAlreadyExists(TypeDeclaration typeDeclaration, final String name, int type) {
 		assert typeDeclaration != null && name != null;
 
 		final ClassMemberSearcher checkClassVisitor = new ClassMemberSearcher(name, type);
