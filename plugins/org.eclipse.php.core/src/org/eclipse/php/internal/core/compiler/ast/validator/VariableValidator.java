@@ -14,6 +14,7 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import org.eclipse.dltk.ast.ASTNode;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.compiler.problem.IProblemIdentifier;
@@ -44,7 +45,6 @@ public class VariableValidator implements IValidatorExtension {
 	private Scope current;
 	private int depth = 0;
 	private int inClassDecl = -1;
-	private boolean fileScope = false;
 
 	final private static String THIS_VAR = "$this"; //$NON-NLS-1$
 	final private static char DOLLAR = '$';
@@ -60,8 +60,7 @@ public class VariableValidator implements IValidatorExtension {
 	@Override
 	public void visit(ASTNode s) throws Exception {
 		if (s instanceof PHPModuleDeclaration) {
-			PHPModuleDeclaration module = (PHPModuleDeclaration) s;
-			module.traverse(new VariableValidatorVisitor(module));
+			s.traverse(new VariableValidatorVisitor());
 		}
 	}
 
@@ -235,10 +234,10 @@ public class VariableValidator implements IValidatorExtension {
 	}
 
 	private class VariableValidatorVisitor extends PHPASTVisitor {
-
-		public VariableValidatorVisitor(PHPModuleDeclaration module) {
+		@Override
+		public boolean visit(ModuleDeclaration s) throws Exception {
+			PHPModuleDeclaration module = (PHPModuleDeclaration) s;
 			pushScope(0, module.end());
-			fileScope = true;
 			List<VarComment> varComments = module.getVarComments();
 			varCommentList = new ArrayList<>(module.getVarComments().size());
 			varCommentList.addAll(varComments);
@@ -259,16 +258,21 @@ public class VariableValidator implements IValidatorExtension {
 					return o2.sourceStart() - o1.sourceStart();
 				}
 			});
+			return true;
+		}
 
+		@Override
+		public boolean endvisit(ModuleDeclaration s) throws Exception {
+			popScope();
+			return false;
 		}
 
 		@Override
 		public boolean visit(PHPMethodDeclaration node) throws Exception {
-			pushScope(node.sourceStart(), node.sourceEnd());
 			if (node.isAbstract() || node.getBody() == null) {
-				popScope();
 				return false;
 			}
+			pushScope(node.sourceStart(), node.sourceEnd());
 			for (Object o : node.getArguments()) {
 				if (o instanceof FormalParameter) {
 					VariableReference parameterName = ((FormalParameter) o).getParameterName();
@@ -370,18 +374,14 @@ public class VariableValidator implements IValidatorExtension {
 
 		@Override
 		public boolean visit(NamespaceDeclaration s) throws Exception {
-			if (fileScope) {
-				fileScope = false;
-				popScope();
-			}
 			pushScope(s.sourceStart(), s.sourceEnd());
-			return super.visit(s);
+			return true;
 		}
 
 		@Override
 		public boolean endvisit(NamespaceDeclaration s) throws Exception {
 			popScope();
-			return super.visit(s);
+			return false;
 		}
 
 		@Override
@@ -428,7 +428,7 @@ public class VariableValidator implements IValidatorExtension {
 
 			check(name, s.start(), s.end());
 
-			return super.visit(s);
+			return true;
 		}
 
 		@Override
@@ -504,7 +504,7 @@ public class VariableValidator implements IValidatorExtension {
 			}
 			operations.push(Operation.USE);
 
-			return super.visit(s);
+			return true;
 		}
 
 		@Override
@@ -525,7 +525,7 @@ public class VariableValidator implements IValidatorExtension {
 			}
 			operations.push(Operation.USE);
 
-			return super.visit(s);
+			return true;
 		}
 
 		@Override
@@ -646,54 +646,54 @@ public class VariableValidator implements IValidatorExtension {
 			}
 			inClassDecl = depth;
 
-			return super.visit(s);
+			return true;
 		}
 
 		@Override
 		public boolean endvisit(ClassDeclaration s) throws Exception {
 			inClassDecl = -1;
 
-			return super.endvisit(s);
+			return false;
 		}
 
 		@Override
 		public boolean visit(TraitDeclaration s) throws Exception {
 			inClassDecl = depth;
 
-			return super.visit(s);
+			return true;
 		}
 
 		@Override
 		public boolean endvisit(TraitDeclaration s) throws Exception {
 			inClassDecl = -1;
 
-			return super.endvisit(s);
+			return false;
 		}
 
 		@Override
 		public boolean visit(InfixExpression s) throws Exception {
 			operations.push(Operation.USE);
-			return super.visit(s);
+			return true;
 		}
 
 		@Override
 		public boolean endvisit(InfixExpression s) throws Exception {
 			operations.pop();
-			return super.endvisit(s);
+			return false;
 		}
 
 		@Override
 		public boolean visit(ConditionalExpression s) throws Exception {
 			operations.push(Operation.USE);
 
-			return super.visit(s);
+			return true;
 		}
 
 		@Override
 		public boolean endvisit(ConditionalExpression s) throws Exception {
 			operations.pop();
 
-			return super.endvisit(s);
+			return false;
 		}
 
 		private Scope pushScope(int start, int end) {
