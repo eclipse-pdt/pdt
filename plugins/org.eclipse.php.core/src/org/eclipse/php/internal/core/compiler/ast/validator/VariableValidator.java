@@ -44,6 +44,7 @@ public class VariableValidator implements IValidatorExtension {
 	private Deque<Operation> operations = new ArrayDeque<>();
 	private Scope current;
 	private int depth = 0;
+	private Deque<Integer> classDeclarations = new ArrayDeque<>();
 	private int inClassDecl = -1;
 
 	final private static String THIS_VAR = "$this"; //$NON-NLS-1$
@@ -639,34 +640,52 @@ public class VariableValidator implements IValidatorExtension {
 			return false;
 		}
 
+		private void enterType() {
+			inClassDecl = depth;
+			classDeclarations.push(depth);
+		}
+
+		private void exitType() {
+			classDeclarations.pop();
+			inClassDecl = classDeclarations.isEmpty() ? -1 : classDeclarations.peekFirst();
+		}
+
 		@Override
 		public boolean visit(ClassDeclaration s) throws Exception {
 			if (s.isInterface()) {
 				return false;
 			}
-			inClassDecl = depth;
-
+			enterType();
 			return true;
 		}
 
 		@Override
 		public boolean endvisit(ClassDeclaration s) throws Exception {
-			inClassDecl = -1;
-
+			exitType();
 			return false;
 		}
 
 		@Override
 		public boolean visit(TraitDeclaration s) throws Exception {
-			inClassDecl = depth;
-
+			enterType();
 			return true;
 		}
 
 		@Override
 		public boolean endvisit(TraitDeclaration s) throws Exception {
-			inClassDecl = -1;
+			exitType();
+			return false;
+		}
 
+		@Override
+		public boolean visit(AnonymousClassDeclaration s) throws Exception {
+			enterType();
+			return true;
+		}
+
+		@Override
+		public boolean endvisit(AnonymousClassDeclaration s) throws Exception {
+			exitType();
 			return false;
 		}
 
