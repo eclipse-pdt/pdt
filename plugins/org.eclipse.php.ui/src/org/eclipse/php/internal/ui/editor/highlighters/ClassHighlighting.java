@@ -20,6 +20,8 @@ import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighti
 
 public class ClassHighlighting extends AbstractSemanticHighlighting {
 	private final static String SELF = "self"; //$NON-NLS-1$
+	private final static String PARENT = "parent"; //$NON-NLS-1$
+	private final static String CLASS = "class"; //$NON-NLS-1$
 
 	protected class ClassApply extends AbstractSemanticApply {
 
@@ -82,7 +84,8 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 			} else if (name instanceof Identifier) {
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=496045
 				if (SELF.equalsIgnoreCase(((Identifier) name).getName())
-						|| "class".equalsIgnoreCase(((Identifier) name).getName())) { //$NON-NLS-1$
+						|| CLASS.equalsIgnoreCase(((Identifier) name).getName())
+						|| PARENT.equalsIgnoreCase(((Identifier) name).getName())) {
 					return true;
 				}
 				highlight(name);
@@ -194,7 +197,8 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 			if (className instanceof NamespaceName) {
 				highlightNamespaceType((NamespaceName) className, true);
 			} else if (className instanceof Identifier) {
-				if (!SELF.equalsIgnoreCase(((Identifier) className).getName())) {
+				if (!SELF.equalsIgnoreCase(((Identifier) className).getName())
+						&& !PARENT.equalsIgnoreCase(((Identifier) className).getName())) {
 					highlight(className);
 				}
 			}
@@ -208,9 +212,11 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 			List<Identifier> segments = name.segments();
 			if (segments.size() > 0) {
 				Identifier segment = segments.get(segments.size() - 1);
-				if (!(segments.size() == 1 && !name.isGlobal()
-						&& (PHPSimpleTypes.isHintable(segment.getName(), name.getAST().apiLevel())
-								|| (excludeSelf && SELF.equalsIgnoreCase(segment.getName()))))) {
+
+				if (segments.size() > 1 || name.isGlobal()
+						|| !(PHPSimpleTypes.isHintable(segment.getName(), name.getAST().apiLevel())
+								|| (excludeSelf && SELF.equalsIgnoreCase(segment.getName()))
+								|| PARENT.equalsIgnoreCase(segment.getName()))) {
 					highlight(segment);
 				}
 			}
