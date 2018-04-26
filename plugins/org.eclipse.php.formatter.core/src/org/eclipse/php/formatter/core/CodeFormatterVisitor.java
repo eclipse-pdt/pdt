@@ -564,7 +564,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	 * handle the '{' of a block
 	 * 
 	 * @param bracePosition
-	 *            one of Sameline
+	 *                                      one of Sameline
 	 * @param placeSpaceBeforeOpenCurly
 	 * @return
 	 */
@@ -802,9 +802,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	 * handle comma list (e.g. 1,2,3,)
 	 * 
 	 * @param array
-	 *            ASTNode array
+	 *                                   ASTNode array
 	 * @param lastPosition
-	 *            the position after last ASTNode
+	 *                                   the position after last ASTNode
 	 * @param keepTrailingComma
 	 * @param insertSpaceBeforeComma
 	 * @param insertSpaceAfterComma
@@ -2025,9 +2025,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	 * handle the PHP end tag
 	 * 
 	 * @param start
-	 *            the end position of the ASTNode before the semicolon
+	 *                  the end position of the ASTNode before the semicolon
 	 * @param end
-	 *            the position of the semicolon -1
+	 *                  the position of the semicolon -1
 	 */
 	private void handlePHPEndTag(int start, int end, String endTagStr) {
 		appendToBuffer(endTagStr);
@@ -2051,9 +2051,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	 * handle the last semicolon of statement
 	 * 
 	 * @param start
-	 *            the end position of the ASTNode before the semicolon
+	 *                  the end position of the ASTNode before the semicolon
 	 * @param end
-	 *            the position of the semicolon -1
+	 *                  the position of the semicolon -1
 	 */
 	private void handleSemicolon(int start, int end) {
 		if (this.preferences.insert_space_before_semicolon && !isHeredocSemicolon) {
@@ -2150,7 +2150,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	 * (numberOfLines - 1) inserted empty lines will be indented.
 	 * 
 	 * @param numberOfLines
-	 *            number of newlines to insert
+	 *                          number of newlines to insert
 	 */
 	private void insertNewLines(int numberOfLines) {
 		for (int i = 1; i <= numberOfLines; i++) {
@@ -3028,6 +3028,11 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		}
 		handleSemicolon(lastPosition, classConstantDeclaration.getEnd());
 		return false;
+	}
+
+	@Override
+	public boolean visit(TraitDeclaration traitDeclaration) {
+		return visit((ClassDeclaration) traitDeclaration);
 	}
 
 	@Override
@@ -4157,9 +4162,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	 * 
 	 * @param inFixOperand
 	 * @param doFirstWrap
-	 *            true when the first line wrap can be done, false when a new line
-	 *            was already inserted and there is no need to add a "first" line
-	 *            wrap
+	 *                         true when the first line wrap can be done, false when
+	 *                         a new line was already inserted and there is no need
+	 *                         to add a "first" line wrap
 	 * @return true if a new line was inserted, false otherwise
 	 */
 	public boolean indentInfixOperand(Expression inFixOperand, boolean doFirstWrap) {
@@ -5528,7 +5533,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	 * to split them manually.
 	 * 
 	 * @param partition
-	 *            PHP Partition
+	 *                      PHP Partition
 	 * @return individual &lt;?php ?&gt; regions
 	 */
 	private List<IRegion> getAllPHPRegionsInPHPPartition(ITypedRegion partition) {
