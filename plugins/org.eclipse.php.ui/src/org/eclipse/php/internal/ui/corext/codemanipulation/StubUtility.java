@@ -93,8 +93,9 @@ public class StubUtility {
 		org.eclipse.dltk.ast.declarations.MethodDeclaration methodDeclaration = PHPModelUtils
 				.getNodeByMethod(moduleDeclaration, method);
 		List<org.eclipse.php.core.compiler.ast.nodes.FormalParameter> arguments = methodDeclaration.getArguments();
-
-		boolean supportNullable = ProjectOptions.getPHPVersion(unit).isGreaterThan(PHPVersion.PHP7_0);
+		PHPVersion phpVersion = ProjectOptions.getPHPVersion(unit);
+		boolean supportNullable = phpVersion.isGreaterThan(PHPVersion.PHP7_0);
+		boolean supportReturnType = phpVersion.isGreaterThan(PHPVersion.PHP5_6);
 		Map<String, ImportDeclaration> importContainers = getImportContainer(method);
 		String declaringNamespace = getDeclaringNamespace(method);
 		if (typeParams != null) {
@@ -125,9 +126,9 @@ public class StubUtility {
 
 		FullyQualifiedReference returnType = (FullyQualifiedReference) ((PHPMethodDeclaration) methodDeclaration)
 				.getReturnType();
-		if (returnType != null && supportNullable) {
+		if (returnType != null && supportReturnType) {
 			String returnTypeName = returnType.getName();
-			if (returnType.isNullable()) {
+			if (supportNullable && returnType.isNullable()) {
 				returnTypeName = '?' + returnTypeName;
 			}
 			func.setReturnType(ast.newIdentifier(returnTypeName));
@@ -476,20 +477,20 @@ public class StubUtility {
 	 * Don't use this method directly, use CodeGeneration.
 	 * 
 	 * @param templateID
-	 *            the template id of the type body to get. Valid id's are
-	 *            {@link CodeTemplateContextType#CLASSBODY_ID},
-	 *            {@link CodeTemplateContextType#INTERFACEBODY_ID},
-	 *            {@link CodeTemplateContextType#ENUMBODY_ID},
-	 *            {@link CodeTemplateContextType#ANNOTATIONBODY_ID},
+	 *                       the template id of the type body to get. Valid id's are
+	 *                       {@link CodeTemplateContextType#CLASSBODY_ID},
+	 *                       {@link CodeTemplateContextType#INTERFACEBODY_ID},
+	 *                       {@link CodeTemplateContextType#ENUMBODY_ID},
+	 *                       {@link CodeTemplateContextType#ANNOTATIONBODY_ID},
 	 * @param sp
-	 *            the compilation unit to which the template is added
+	 *                       the compilation unit to which the template is added
 	 * @param typeName
-	 *            the type name
+	 *                       the type name
 	 * @param lineDelim
-	 *            the line delimiter to use
+	 *                       the line delimiter to use
 	 * @return return the type body template or <code>null</code>
 	 * @throws CoreException
-	 *             thrown if the template could not be evaluated
+	 *                           thrown if the template could not be evaluated
 	 * @see org.eclipse.jdt.ui.CodeGeneration#getTypeBody(String, ICompilationUnit,
 	 *      String, String)
 	 */
@@ -909,7 +910,7 @@ public class StubUtility {
 	 * Returns the line delimiter which is used in the specified project.
 	 * 
 	 * @param project
-	 *            the java project, or <code>null</code>
+	 *                    the java project, or <code>null</code>
 	 * @return the used line delimiter
 	 */
 	public static String getLineDelimiterUsed(IScriptProject project) {
@@ -960,11 +961,11 @@ public class StubUtility {
 	 * Only to be used by tests
 	 * 
 	 * @param templateId
-	 *            the template id
+	 *                       the template id
 	 * @param pattern
-	 *            the new pattern
+	 *                       the new pattern
 	 * @param project
-	 *            not used
+	 *                       not used
 	 */
 	public static void setCodeTemplate(String templateId, String pattern, IScriptProject project) {
 		TemplateStore codeTemplateStore = PHPUiPlugin.getDefault().getCodeTemplateStore();
