@@ -1,0 +1,29 @@
+--TEST--
+Bug 534104 - Formatter ignore braces configuration for traits
+--FILE--
+<?php 
+trait PropertiesTrait 
+{
+    public $x = 1;
+}
+
+class PropertiesExample {
+    use PropertiesTrait;
+}
+
+$example = new PropertiesExample;
+$example->x;
+?>
+--EXPECT--
+<?php
+trait PropertiesTrait {
+	public $x = 1;
+}
+
+class PropertiesExample {
+	use PropertiesTrait;
+}
+
+$example = new PropertiesExample ();
+$example->x;
+?>

@@ -20,6 +20,8 @@ public class BracesTabPage extends ModifyDialogTabPage {
 	private final String PREVIEW = "<?php\n" + createPreviewHeader(FormatterMessages.BracesTabPage_preview_header) + //$NON-NLS-1$
 			"interface EmptyInterface {}\n" + //$NON-NLS-1$
 			"\n" + //$NON-NLS-1$
+			"trait EmptyTrait {}\n" + //$NON-NLS-1$
+			"\n" + //$NON-NLS-1$
 			"class Example {" + //$NON-NLS-1$
 			"  function bar($p) {" + //$NON-NLS-1$
 			"    for ($i= 0; $i<10; $i++) {" + //$NON-NLS-1$
