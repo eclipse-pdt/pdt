@@ -3030,8 +3030,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
-	@Override
-	public boolean visit(ClassDeclaration classDeclaration) {
+	private boolean visitClassOrTraitDeclaration(ClassDeclaration classDeclaration) {
 		// handle spaces between modifier, 'class' and class name
 		String modifier = ClassDeclaration.getModifier(classDeclaration.getModifier());
 		if (!modifier.equals(EMPTY_STRING)) {
@@ -3087,6 +3086,16 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			indentationLevelDescending = true;
 		}
 		return false;
+	}
+
+	@Override
+	public boolean visit(ClassDeclaration classDeclaration) {
+		return visitClassOrTraitDeclaration(classDeclaration);
+	}
+
+	@Override
+	public boolean visit(TraitDeclaration traitDeclaration) {
+		return visitClassOrTraitDeclaration(traitDeclaration);
 	}
 
 	@Override
