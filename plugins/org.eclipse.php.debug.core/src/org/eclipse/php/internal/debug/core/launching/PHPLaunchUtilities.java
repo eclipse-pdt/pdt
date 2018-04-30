@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.*;
 import java.util.*;
+import java.util.Map.Entry;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -74,6 +75,9 @@ import org.eclipse.ui.*;
  */
 public class PHPLaunchUtilities {
 
+	private static final String OFF = "off"; //$NON-NLS-1$
+	private static final String ON = "on" //$NON-NLS-1$
+	;
 	public static final String ID_PHPDebugOutput = "org.eclipse.debug.ui.PHPDebugOutput"; //$NON-NLS-1$
 	public static final String ID_PHPBrowserOutput = "org.eclipse.debug.ui.PHPBrowserOutput"; //$NON-NLS-1$
 	private static DebuggerDelayProgressMonitorDialog progressDialog;
@@ -389,7 +393,7 @@ public class PHPLaunchUtilities {
 	 * pages'.
 	 * 
 	 * @param launchConfiguration
-	 *            An {@link ILaunchConfiguration}
+	 *                                An {@link ILaunchConfiguration}
 	 * @return True, if the configuration holds an attribute for 'debug all pages'.
 	 * @throws CoreException
 	 */
@@ -403,7 +407,7 @@ public class PHPLaunchUtilities {
 	 * from'.
 	 * 
 	 * @param launchConfiguration
-	 *            An {@link ILaunchConfiguration}
+	 *                                An {@link ILaunchConfiguration}
 	 * @return True, if the configuration holds an attribute for 'start debug from'.
 	 * @throws CoreException
 	 */
@@ -496,7 +500,7 @@ public class PHPLaunchUtilities {
 	 * or has a different version.
 	 * 
 	 * @param errorMessage
-	 *            The message to display.
+	 *                         The message to display.
 	 */
 	public static void showLaunchErrorMessage(final String errorMessage) {
 		showDebuggerErrorMessage(PHPDebugCoreMessages.Debugger_Launch_Error, errorMessage);
@@ -508,9 +512,9 @@ public class PHPLaunchUtilities {
 	 * or has a different version.
 	 * 
 	 * @param title
-	 *            The error message title.
+	 *                         The error message title.
 	 * @param errorMessage
-	 *            The message to display.
+	 *                         The message to display.
 	 */
 	public static void showDebuggerErrorMessage(final String title, final String errorMessage) {
 		Display.getDefault().syncExec(new Runnable() {
@@ -584,9 +588,9 @@ public class PHPLaunchUtilities {
 	 * the given mode.
 	 * 
 	 * @param configuration
-	 *            An {@link ILaunchConfiguration}
+	 *                          An {@link ILaunchConfiguration}
 	 * @param mode
-	 *            The launch mode (Run/Debug)
+	 *                          The launch mode (Run/Debug)
 	 */
 	public static void openLaunchConfigurationDialog(final ILaunchConfiguration configuration, final String mode) {
 		// Run it on the UI thread
@@ -631,12 +635,12 @@ public class PHPLaunchUtilities {
 	 * configuration attribute is set for the given launch.
 	 * 
 	 * @param configuration
-	 *            the launch configuration
+	 *                          the launch configuration
 	 * @param additionalEnv
-	 *            additional environment strings
+	 *                          additional environment strings
 	 * @return the complete environment
 	 * @throws CoreException
-	 *             rethrown exception
+	 *                           rethrown exception
 	 */
 	public static String[] getEnvironment(ILaunchConfiguration configuration, String[] additionalEnv)
 			throws CoreException {
@@ -826,9 +830,9 @@ public class PHPLaunchUtilities {
 	 * libraries depending on the OS.
 	 * 
 	 * @param env
-	 *            Hash map to append environment variable to
+	 *                      Hash map to append environment variable to
 	 * @param phpExeDir
-	 *            Directory handle where PHP.exe is located
+	 *                      Directory handle where PHP.exe is located
 	 */
 	public static void appendLibrarySearchPathEnv(Map<String, String> env, File phpExeDir) {
 		String variable = getLibrarySearchEnvVariable();
@@ -843,9 +847,9 @@ public class PHPLaunchUtilities {
 	 * Append PHP executable at the beginning of PATH env variable
 	 * 
 	 * @param env
-	 *            Hash map to append environment variable to
+	 *                   Hash map to append environment variable to
 	 * @param phpExe
-	 *            php executable location
+	 *                   php executable location
 	 */
 	public static void appendExecutableToPathEnv(Map<String, String> env, File phpExeDir) {
 		String phpPath = phpExeDir.getPath();
@@ -879,7 +883,7 @@ public class PHPLaunchUtilities {
 	 * libraries depending on the OS.
 	 * 
 	 * @param phpExeDir
-	 *            Directory handle where PHP.exe is located
+	 *                      Directory handle where PHP.exe is located
 	 * @return string containing variable=value for appending it to the process
 	 *         environment vars array
 	 */
@@ -943,30 +947,34 @@ public class PHPLaunchUtilities {
 	 * PHP script.
 	 * 
 	 * @param configuration
-	 *            Launch configuration
+	 *                           Launch configuration
 	 * @param phpExe
-	 *            PHP Executable path
+	 *                           PHP Executable path
 	 * @param phpConfigDir
-	 *            PHP configuration file location (directory where php.ini resides)
+	 *                           PHP configuration file location (directory where
+	 *                           php.ini resides)
 	 * @param scriptPath
-	 *            Script path
+	 *                           Script path
 	 * @param phpIniLocation
-	 *            PHP configuration file path
+	 *                           PHP configuration file path
 	 * @param args
-	 *            Command line arguments, if using PHP CLI, otherwise -
-	 *            <code>null</code>
+	 *                           Command line arguments, if using PHP CLI, otherwise
+	 *                           - <code>null</code>
 	 * @param phpVersion
 	 * @return commands array
 	 * @throws CoreException
 	 */
 	public static String[] getCommandLine(ILaunchConfiguration configuration, String phpExe, String phpConfigDir,
-			String scriptPath, String[] args, String phpVersion) throws CoreException {
+			Map<String, String> additionalconfig, String scriptPath, String[] args, String phpVersion)
+			throws CoreException {
 		// Check if we should treat ASP tags as PHP tags
 		IProject project = getProject(configuration);
-		String aspTags = ProjectOptions.isSupportingASPTags(project) ? "on" //$NON-NLS-1$
-				: "off"; //$NON-NLS-1$
-		String shortOpenTag = ProjectOptions.useShortTags(project) ? "on" //$NON-NLS-1$
-				: "off"; //$NON-NLS-1$
+		Map<String, String> phpConfig = new TreeMap<>();
+		phpConfig.put("asp_tags", ProjectOptions.isSupportingASPTags(project) ? ON : OFF); //$NON-NLS-1$
+		phpConfig.put("short_open_tag", ProjectOptions.useShortTags(project) ? ON : OFF); //$NON-NLS-1$
+		if (additionalconfig != null) {
+			phpConfig.putAll(additionalconfig);
+		}
 
 		boolean builtIn = false;
 		final PHPexeItem[] phpItems = PHPexes.getInstance().getAllItems();
@@ -977,19 +985,27 @@ public class PHPLaunchUtilities {
 			}
 		}
 		List<String> cmdLineList = new LinkedList<>();
+		cmdLineList.add(phpExe);
 		if (builtIn) {
-			cmdLineList.addAll(Arrays.asList(new String[] { phpExe, "-n", "-c", //$NON-NLS-1$ //$NON-NLS-2$
-					phpConfigDir, "-d", "asp_tags=" + aspTags, "-d", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					"short_open_tag=" + shortOpenTag, scriptPath })); //$NON-NLS-1$
-		} else {
-			cmdLineList.addAll(Arrays.asList(new String[] { phpExe, "-c", //$NON-NLS-1$
-					phpConfigDir, "-d", "asp_tags=" + aspTags, "-d", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					"short_open_tag=" + shortOpenTag, scriptPath })); //$NON-NLS-1$
+			cmdLineList.add("-n"); //$NON-NLS-1$
 		}
+		cmdLineList.add("-c"); //$NON-NLS-1$
+		cmdLineList.add(phpConfigDir);
+		for (Entry<String, String> cfg : phpConfig.entrySet()) {
+			cmdLineList.add("-d"); //$NON-NLS-1$
+			cmdLineList.add(new StringBuilder(cfg.getKey()).append('=').append(cfg.getValue()).toString());
+		}
+
+		cmdLineList.add(scriptPath);
 		if (args != null) {
 			cmdLineList.addAll(Arrays.asList(args));
 		}
 		return cmdLineList.toArray(new String[cmdLineList.size()]);
+	}
+
+	public static String[] getCommandLine(ILaunchConfiguration configuration, String phpExe, String phpConfigDir,
+			String scriptPath, String[] args, String phpVersion) throws CoreException {
+		return getCommandLine(configuration, phpExe, phpConfigDir, null, scriptPath, args, phpVersion);
 	}
 
 	public static String[] getCommandLine(ILaunchConfiguration configuration, String phpExe, String phpConfigDir,
@@ -1002,10 +1018,8 @@ public class PHPLaunchUtilities {
 			throws CoreException {
 		// Check if we should treat ASP tags as PHP tags
 		IProject project = getProject(configuration);
-		String aspTags = ProjectOptions.isSupportingASPTags(project) ? "on" //$NON-NLS-1$
-				: "off"; //$NON-NLS-1$
-		String shortOpenTag = ProjectOptions.useShortTags(project) ? "on" //$NON-NLS-1$
-				: "off"; //$NON-NLS-1$
+		String aspTags = ProjectOptions.isSupportingASPTags(project) ? ON : OFF; // $NON-NLS-1$
+		String shortOpenTag = ProjectOptions.useShortTags(project) ? ON : OFF; // $NON-NLS-1$
 		if (server.startsWith("http://")) { //$NON-NLS-1$
 			server = server.substring(7);
 		} else if (server.startsWith("https://")) { //$NON-NLS-1$
@@ -1093,10 +1107,10 @@ public class PHPLaunchUtilities {
 	 * configuration attribute.
 	 * 
 	 * @param configuration
-	 *            the launch configuration
+	 *                          the launch configuration
 	 * @return the program arguments
 	 * @throws CoreException
-	 *             rethrown exception
+	 *                           rethrown exception
 	 */
 	public static String[] getProgramArguments(ILaunchConfiguration configuration) throws CoreException {
 		String arguments = configuration.getAttribute(IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS, (String) null);

@@ -13,6 +13,8 @@ package org.eclipse.php.profile.core;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.php.profile.core.engine.PHPLaunchListener;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -22,6 +24,8 @@ public class PHPProfileCorePlugin extends Plugin {
 
 	public static final String ID = "org.eclipse.php.profile.core"; //$NON-NLS-1$
 	public static final int INTERNAL_ERROR = 10001;
+
+	private PHPLaunchListener listener;
 
 	// The shared instance.
 	private static PHPProfileCorePlugin plugin;
@@ -39,6 +43,8 @@ public class PHPProfileCorePlugin extends Plugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		listener = new PHPLaunchListener();
+		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(listener);
 	}
 
 	/**
@@ -47,6 +53,7 @@ public class PHPProfileCorePlugin extends Plugin {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
+		DebugPlugin.getDefault().getLaunchManager().removeLaunchListener(listener);
 		plugin = null;
 	}
 

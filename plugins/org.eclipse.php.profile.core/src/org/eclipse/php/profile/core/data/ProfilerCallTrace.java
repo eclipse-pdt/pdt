@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.profile.core.data;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -22,7 +22,7 @@ public class ProfilerCallTrace {
 	private int fLayersCount;
 
 	public ProfilerCallTrace() {
-		fLayers = new ArrayList<>();
+		fLayers = new LinkedList<>();
 	}
 
 	public ProfilerCallTrace(List<ProfilerCallTraceLayer> layers) {

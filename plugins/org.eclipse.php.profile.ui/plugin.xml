@@ -192,7 +192,7 @@
               launchTypeId="org.eclipse.php.debug.core.launching.webPageLaunch"
               name="XDebug Profiler Web Launch Settings"
               profilerId="org.eclipse.php.debug.core.xdebugDebugger"
-              section="org.eclipse.php.profile.ui.launcher.ZendDebuggerProfileWebLaunchSettingsSection">
+              section="org.eclipse.php.profile.ui.launcher.XDebugProfileWebLaunchSettingsSection">
         </phpProfilerLaunchSettingsSection>
         <phpProfilerLaunchSettingsSection
               id="org.eclipse.php.profile.ui.zendDebuggerProfilerExeLaunchSettings"

@@ -45,12 +45,24 @@
             id="org.eclipse.php.profile.core.engine.ZProfiler"
             name="Zend Profiler">
       </handler>
+      <handler
+            class="org.eclipse.php.profile.core.engine.XProfiler"
+            id="org.eclipse.php.profile.core.engine.XProfiler"
+            name="xDebug Profiler">
+      </handler>
    </extension>
    <extension
          point="org.eclipse.php.debug.core.phpDebugParametersInitializers">
       <initializer
             class="org.eclipse.php.profile.core.engine.ProfileParametersInitializer"
             handler="org.eclipse.php.profile.core.engine.ZProfiler"
+            id="org.eclipse.php.profile.core.engine.ProfileParametersInitializer"
+            mode="profile"
+            name="Profile Parameters Initializer">
+      </initializer>
+      <initializer
+            class="org.eclipse.php.profile.core.engine.ProfileParametersInitializer"
+            handler="org.eclipse.php.profile.core.engine.XProfiler"
             id="org.eclipse.php.profile.core.engine.ProfileParametersInitializer"
             mode="profile"
             name="Profile Parameters Initializer">

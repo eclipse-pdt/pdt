@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 Rogue Wave Software Inc. and others.
+ * Copyright (c) 2017, 2018 Rogue Wave Software Inc. and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,13 +7,13 @@
  *
  * Contributors:
  *  Rogue Wave Software Inc. - initial implementation
+ *  Dawid Pakuła - xDebug profiling
  *******************************************************************************/
 package org.eclipse.php.profile.ui.launcher;
 
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.php.profile.ui.launcher.AbstractPHPLaunchConfigurationProfilerTab.StatusMessage;
+import org.eclipse.swt.widgets.Composite;
 
 /**
  * XDebug profiler settings section for CLI profiling (not supported yet).
@@ -22,28 +22,23 @@ import org.eclipse.php.profile.ui.launcher.AbstractPHPLaunchConfigurationProfile
  */
 public class XDebugProfileExeLaunchSettingsSection extends AbstractProfileExeLaunchSettingsSection {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.php.profile.ui.launcher.AbstractProfileExeLaunchSettingsSection#
-	 * isValid(org.eclipse.debug.core.ILaunchConfiguration)
-	 */
 	@Override
-	public StatusMessage isValid(ILaunchConfiguration configuration) {
-		return new StatusMessage(IMessageProvider.ERROR,
-				Messages.XDebugProfileLaunchSettingsSection_Profiling_is_not_supported);
+	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
+		super.setDefaults(configuration);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.php.profile.ui.launcher.IProfilerLaunchSettingsSection#
-	 * performApply(org.eclipse.debug.core.ILaunchConfigurationWorkingCopy)
-	 */
+	@Override
+	public void initialize(ILaunchConfiguration configuration) {
+		super.initialize(configuration);
+
+	}
+
 	@Override
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
-		// Ignore
+	}
+
+	@Override
+	protected void buildSection(Composite parent) {
 	}
 
 }
