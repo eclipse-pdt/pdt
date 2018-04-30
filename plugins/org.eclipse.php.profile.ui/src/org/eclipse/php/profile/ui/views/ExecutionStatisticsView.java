@@ -96,12 +96,6 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 
 			final int field = i;
 			tableColumn.addSelectionListener(new SelectionAdapter() {
-				/*
-				 * (non-Javadoc)
-				 * 
-				 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org
-				 * .eclipse.swt.events.SelectionEvent)
-				 */
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					fSorter.setColumn(field);
@@ -130,7 +124,7 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 		}
 
 		fTreeViewer = new TreeViewer(fTree);
-		fTreeViewer.setAutoExpandLevel(TreeViewer.ALL_LEVELS);
+		// fTreeViewer.setAutoExpandLevel(TreeViewer.ALL_LEVELS);
 		fTreeViewer.setContentProvider(new ExecutionStatisticsContentProvider());
 		fTreeViewer.setLabelProvider(new ExecutionStatisticsLabelProvider());
 		fTreeViewer.setSorter(fSorter);
@@ -212,12 +206,14 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 				SimpleHTMLPresentableTreeElement root = new SimpleHTMLPresentableTreeElement();
 				for (int i = 0; i < files.length; ++i) {
 					SimpleHTMLPresentableTreeElement fileItem = new SimpleHTMLPresentableTreeElement(root, files[i]);
+					fileItem.setExpanded(true);
 					root.addChild(fileItem);
 
 					ProfilerClassData[] classes = files[i].getClasses();
 					for (int j = 0; j < classes.length; ++j) {
 						SimpleHTMLPresentableTreeElement classItem = new SimpleHTMLPresentableTreeElement(fileItem,
 								classes[j]);
+						classItem.setExpanded(true);
 						fileItem.addChild(classItem);
 
 						ProfilerFunctionData[] methods = classes[j].getMethods();
@@ -232,6 +228,7 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 						if (functions[j].getClassName() == null) {
 							SimpleHTMLPresentableTreeElement element = new SimpleHTMLPresentableTreeElement(fileItem,
 									functions[j]);
+							element.setExpanded(false);
 							fileItem.addChild(element);
 						}
 					}
@@ -272,7 +269,8 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 			if (element instanceof ProfilerFunctionData) {
 				ProfilerFunctionData data = (ProfilerFunctionData) element;
 				try {
-					if (EditorUtility.openLocalFile(data.getLocalFileName(), data.getLineNumber()) == null) {
+					if (data.getLocalFileName() == null
+							|| EditorUtility.openLocalFile(data.getLocalFileName(), data.getLineNumber()) == null) {
 						String url = fProfilerDB.getGlobalData().getOriginalURL();
 						if (!ProfilerGlobalData.URL_NOT_AVAILABLE_MSG.equals(url)) {
 							// try to retrieve the file from server

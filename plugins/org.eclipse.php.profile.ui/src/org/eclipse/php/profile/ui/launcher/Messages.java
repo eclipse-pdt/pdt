@@ -49,7 +49,10 @@ public class Messages extends NLS {
 	public static String PHPExeLaunchConfigurationProfilerTab_No_profiler_is_attached;
 	public static String PHPExeLaunchConfigurationProfilerTab_None;
 	public static String PHPWebPageLaunchConfigurationProfilerTab_No_profiler_is_attached;
-	public static String XDebugProfileLaunchSettingsSection_Profiling_is_not_supported;
+
+	public static String XDebugProfileWebLaunchSettingsSection_0;
+
+	public static String XDebugProfileWebLaunchSettingsSection_1;
 	public static String ZendDebuggerProfileExeLaunchSettingsSection_General_group_name;
 	public static String ZendDebuggerProfileExeLaunchSettingsSection_Show_code_coverage;
 	public static String ZendDebuggerProfileWebLaunchSettingsSection_Browser;

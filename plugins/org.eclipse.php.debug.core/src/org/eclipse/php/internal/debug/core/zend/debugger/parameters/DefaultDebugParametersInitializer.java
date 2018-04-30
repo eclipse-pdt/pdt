@@ -25,6 +25,7 @@ import org.eclipse.php.debug.core.debugger.parameters.IWebDebugParametersInitial
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.launching.XDebugLaunch;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.zend.debugger.ZendDebuggerSettingsUtil;
 import org.eclipse.php.internal.server.core.Server;
@@ -51,16 +52,14 @@ public class DefaultDebugParametersInitializer extends AbstractDebugParametersIn
 	public static final String IS_PROFILE_URL = "isProfileURL"; //$NON-NLS-1$
 	public static final String DEBUG_LINE_BP = "debug_line_bp"; //$NON-NLS-1$
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.eclipse.php.internal.debug.core.debugger.parameters.
-	 * IDebugParametersInitializer
-	 * #generateQueryParameters(org.eclipse.debug.core.ILaunch)
-	 */
 	@Override
 	public Hashtable<String, String> getDebugParameters(ILaunch launch) {
 		Hashtable<String, String> parameters = new Hashtable<>();
+
+		if (launch instanceof XDebugLaunch) {
+			return parameters;
+		}
+
 		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
 		parameters.put(START_DEBUG, "1"); //$NON-NLS-1$
 

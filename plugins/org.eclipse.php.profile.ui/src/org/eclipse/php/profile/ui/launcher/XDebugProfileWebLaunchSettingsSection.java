@@ -10,10 +10,16 @@
  *******************************************************************************/
 package org.eclipse.php.profile.ui.launcher;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.php.profile.ui.launcher.AbstractPHPLaunchConfigurationProfilerTab.StatusMessage;
-import org.eclipse.swt.widgets.Composite;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.*;
 
 /**
  * XDebug profiler settings section for web profiling (not supported yet).
@@ -21,23 +27,56 @@ import org.eclipse.swt.widgets.Composite;
  * @author Bartlomiej Laczkowski
  */
 public class XDebugProfileWebLaunchSettingsSection extends AbstractProfileWebLaunchSettingsSection {
+	private Button useTrigger;
+
+	private Text triggerValue;
 
 	@Override
-	protected void createTunnelGroup(Composite composite) {
-		// Do not create SSH tunnel group
+	public void initialize(ILaunchConfiguration configuration) {
+		super.initialize(configuration);
+		try {
+			useTrigger.setSelection(configuration.getAttribute(IPHPDebugConstants.XDEBUG_PROFILE_TRIGGER, true));
+			triggerValue.setText(configuration.getAttribute(IPHPDebugConstants.XDEBUG_PROFILE_TRIGGER_VALUE, "")); //$NON-NLS-1$
+
+		} catch (CoreException e) {
+		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.php.profile.ui.launcher.AbstractProfileWebLaunchSettingsSection#
-	 * isValid(org.eclipse.debug.core.ILaunchConfiguration)
-	 */
 	@Override
-	public StatusMessage isValid(ILaunchConfiguration configuration) {
-		return new StatusMessage(IMessageProvider.ERROR,
-				Messages.XDebugProfileLaunchSettingsSection_Profiling_is_not_supported);
+	protected void buildSection(Composite parent) {
+		// super.buildSection(parent);
+		Group triggerGroup = new Group(parent, SWT.NONE);
+		triggerGroup.setLayout(new GridLayout(1, false));
+		triggerGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+		useTrigger = new Button(triggerGroup, SWT.CHECK);
+		useTrigger.setText(
+				Messages.XDebugProfileWebLaunchSettingsSection_0);
+		useTrigger.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				triggerValue.setEnabled(useTrigger.getSelection());
+			}
+		});
+		useTrigger.addSelectionListener(widgetListener);
+
+		Composite sub = new Composite(triggerGroup, SWT.NONE);
+		sub.setLayout(new GridLayout(2, false));
+		GridData data = new GridData(GridData.FILL_HORIZONTAL);
+		data.horizontalIndent = 20;
+		sub.setLayoutData(data);
+
+		new Label(sub, SWT.NONE).setText(Messages.XDebugProfileWebLaunchSettingsSection_1);
+		triggerValue = new Text(sub, SWT.BORDER | SWT.SINGLE);
+		triggerValue.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		triggerValue.addModifyListener(widgetListener);
+	}
+
+	@Override
+	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
+		super.performApply(configuration);
+		configuration.setAttribute(IPHPDebugConstants.XDEBUG_PROFILE_TRIGGER, useTrigger.getSelection());
+		configuration.setAttribute(IPHPDebugConstants.XDEBUG_PROFILE_TRIGGER_VALUE, triggerValue.getText());
 	}
 
 }

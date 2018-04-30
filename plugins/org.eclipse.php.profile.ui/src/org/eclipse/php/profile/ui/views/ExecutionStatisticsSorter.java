@@ -20,12 +20,6 @@ import org.eclipse.php.profile.ui.preferences.PreferenceKeys;
  */
 public class ExecutionStatisticsSorter extends AbstractTableSorter {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers
-	 * .Viewer, java.lang.Object, java.lang.Object)
-	 */
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
 		TreeElement i1 = (TreeElement) e1;
