@@ -57,25 +57,12 @@ public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.ILaunchConfigurationDelegate2#
-	 * finalLaunchCheck (org.eclipse.debug.core.ILaunchConfiguration,
-	 * java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
-	 */
 	@Override
 	public boolean finalLaunchCheck(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor)
 			throws CoreException {
 		return getConfigurationDelegate(configuration).finalLaunchCheck(configuration, mode, monitor);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.ILaunchConfigurationDelegate2#getLaunch(
-	 * org.eclipse.debug.core.ILaunchConfiguration, java.lang.String)
-	 */
 	@Override
 	public ILaunch getLaunch(ILaunchConfiguration configuration, String mode) throws CoreException {
 		ILaunchManager lm = DebugPlugin.getDefault().getLaunchManager();
@@ -90,27 +77,12 @@ public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 		return getConfigurationDelegate(configuration).getLaunch(configuration, mode);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.debug.core.model.ILaunchConfigurationDelegate2#preLaunchCheck
-	 * (org.eclipse.debug.core.ILaunchConfiguration, java.lang.String,
-	 * org.eclipse.core.runtime.IProgressMonitor)
-	 */
 	@Override
 	public boolean preLaunchCheck(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor)
 			throws CoreException {
 		return getConfigurationDelegate(configuration).preLaunchCheck(configuration, mode, monitor);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.ILaunchConfigurationDelegate#launch(org.
-	 * eclipse.debug.core.ILaunchConfiguration, java.lang.String,
-	 * org.eclipse.debug.core.ILaunch, org.eclipse.core.runtime.IProgressMonitor)
-	 */
 	@Override
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
 			throws CoreException {
@@ -130,7 +102,7 @@ public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 	 * plug-in as Eclipse-RegisterBuddy: org.eclipse.php.debug.core
 	 * 
 	 * @param configuration
-	 *            An {@link ILaunchConfiguration}
+	 *                          An {@link ILaunchConfiguration}
 	 */
 	protected ILaunchConfigurationDelegate2 getConfigurationDelegate(ILaunchConfiguration configuration)
 			throws CoreException {

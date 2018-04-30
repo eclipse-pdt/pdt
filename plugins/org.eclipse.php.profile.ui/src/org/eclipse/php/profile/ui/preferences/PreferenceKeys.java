@@ -27,6 +27,7 @@ public class PreferenceKeys {
 	public static final String PROFILING_MONITOR_SORT_ORDER = "profilingMonitorSortOrder"; //$NON-NLS-1$
 	public static final String EXECUTION_STATISTICS_VIEW_FILTERS = "executionStatisticsViewFilters"; //$NON-NLS-1$
 	public static final String EXECUTION_STATISTICS_SELECTED_FILTER = "executionStatisticsSelectedFilter"; //$NON-NLS-1$
+	public static final String IMPORT_TYPE = "importType"; //$NON-NLS-1$
 
 	public static IPreferenceStore getPreferenceStore() {
 		return ProfilerUiPlugin.getDefault().getPreferenceStore();

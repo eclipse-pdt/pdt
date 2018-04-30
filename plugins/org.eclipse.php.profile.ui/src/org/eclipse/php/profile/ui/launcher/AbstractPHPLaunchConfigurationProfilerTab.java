@@ -123,32 +123,16 @@ public abstract class AbstractPHPLaunchConfigurationProfilerTab extends Abstract
 	private Composite settingsComposite;
 	private Map<String, IProfilerLaunchSettingsSection> currentSection = new HashMap<>();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#getName()
-	 */
 	@Override
 	public String getName() {
 		return Messages.AbstractPHPLaunchConfigurationProfilerTab_Profiler_group_name;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.ui.AbstractLaunchConfigurationTab#getImage()
-	 */
 	@Override
 	public Image getImage() {
 		return ProfilerUIImages.get(ProfilerUIImages.IMG_OBJ_PROFILE_CONF);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#createControl(org.eclipse
-	 * .swt.widgets.Composite)
-	 */
 	@Override
 	public void createControl(Composite parent) {
 		// Create main composite
@@ -164,37 +148,18 @@ public abstract class AbstractPHPLaunchConfigurationProfilerTab extends Abstract
 		setControl(mainComposite);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.php.internal.debug.ui.launching.
-	 * AbstractPHPLaunchConfigurationTab#setDefaults(org.eclipse.debug.core.
-	 * ILaunchConfigurationWorkingCopy)
-	 */
 	@Override
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
 		super.setDefaults(configuration);
 		getSection().setDefaults(configuration);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#performApply(org.eclipse.
-	 * debug.core.ILaunchConfigurationWorkingCopy)
-	 */
 	@Override
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 		configuration.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, getCurrentProfilerId());
 		getSection().performApply(configuration);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.ui.AbstractLaunchConfigurationTab#isValid(org.eclipse.
-	 * debug.core.ILaunchConfiguration)
-	 */
 	@Override
 	public boolean isValid(ILaunchConfiguration launchConfig) {
 		setMessage(null);
@@ -215,13 +180,6 @@ public abstract class AbstractPHPLaunchConfigurationProfilerTab extends Abstract
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.php.internal.debug.ui.launching.
-	 * AbstractPHPLaunchConfigurationTab#initialize(org.eclipse.debug.core.
-	 * ILaunchConfiguration)
-	 */
 	@Override
 	protected void initialize(ILaunchConfiguration configuration) {
 		getSection().initialize(configuration);

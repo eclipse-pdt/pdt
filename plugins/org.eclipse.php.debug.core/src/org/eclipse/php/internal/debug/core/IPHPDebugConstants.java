@@ -39,6 +39,8 @@ public interface IPHPDebugConstants {
 	String RUN_WITH_DEBUG_INFO = ID_PHP_DEBUG_CORE + ".RunWithDebugInfo"; //$NON-NLS-1$
 	String OPEN_IN_BROWSER = ID_PHP_DEBUG_CORE + ".OpenInBrowser"; //$NON-NLS-1$
 
+	String CacheGrind_File = ID_PHP_DEBUG_CORE + ".CacheGrind_File"; //$NON-NLS-1$
+
 	String PHPEXELaunchType = "org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType"; //$NON-NLS-1$
 	String PHPServerLaunchType = "org.eclipse.php.debug.core.launching.webPageLaunch"; //$NON-NLS-1$
 	String PHPRemoteLaunchType = "org.eclipse.php.debug.core.remotePHPLaunchConfigurationType"; //$NON-NLS-1$
@@ -85,4 +87,8 @@ public interface IPHPDebugConstants {
 	String DEBUGGING_COLLECT_CODE_COVERAGE = "collectCodeCoverage"; //$NON-NLS-1$
 
 	String PREF_STEP_FILTERS_LIST = ID_PHP_DEBUG_CORE + ".pref_step_filters_list"; //$NON-NLS-1$
+
+	// TODO: Keep this in profile plugin
+	String XDEBUG_PROFILE_TRIGGER = ID_PHP_DEBUG_CORE + ".XDebugProfileTrigger"; //$NON-NLS-1$
+	String XDEBUG_PROFILE_TRIGGER_VALUE = ID_PHP_DEBUG_CORE + ".XDebugProfileTriggerValue"; //$NON-NLS-1$
 }
