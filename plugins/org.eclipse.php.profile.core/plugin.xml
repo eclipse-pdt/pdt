@@ -45,6 +45,11 @@
             id="org.eclipse.php.profile.core.engine.ZProfiler"
             name="Zend Profiler">
       </handler>
+      <handler
+            class="org.eclipse.php.profile.core.engine.XProfiler"
+            id="org.eclipse.php.profile.core.engine.XProfiler"
+            name="Zend Profiler">
+      </handler>
    </extension>
    <extension
          point="org.eclipse.php.debug.core.phpDebugParametersInitializers">

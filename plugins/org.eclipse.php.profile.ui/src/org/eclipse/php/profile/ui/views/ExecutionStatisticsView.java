@@ -96,12 +96,6 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 
 			final int field = i;
 			tableColumn.addSelectionListener(new SelectionAdapter() {
-				/*
-				 * (non-Javadoc)
-				 * 
-				 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org
-				 * .eclipse.swt.events.SelectionEvent)
-				 */
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					fSorter.setColumn(field);
@@ -272,7 +266,8 @@ public class ExecutionStatisticsView extends AbstractProfilerFunctionsView
 			if (element instanceof ProfilerFunctionData) {
 				ProfilerFunctionData data = (ProfilerFunctionData) element;
 				try {
-					if (EditorUtility.openLocalFile(data.getLocalFileName(), data.getLineNumber()) == null) {
+					if (data.getLocalFileName() == null
+							|| EditorUtility.openLocalFile(data.getLocalFileName(), data.getLineNumber()) == null) {
 						String url = fProfilerDB.getGlobalData().getOriginalURL();
 						if (!ProfilerGlobalData.URL_NOT_AVAILABLE_MSG.equals(url)) {
 							// try to retrieve the file from server
