@@ -23,12 +23,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.eclipse.php.internal.core.util.XMLWriter;
 import org.eclipse.php.internal.debug.core.zend.debugger.CodeCoverageData;
 import org.eclipse.php.profile.core.PHPProfileCorePlugin;
-import org.eclipse.php.profile.core.data.ProfilerCallTrace;
-import org.eclipse.php.profile.core.data.ProfilerCallTraceLayer;
-import org.eclipse.php.profile.core.data.ProfilerData;
-import org.eclipse.php.profile.core.data.ProfilerFileData;
-import org.eclipse.php.profile.core.data.ProfilerFunctionData;
-import org.eclipse.php.profile.core.data.ProfilerGlobalData;
+import org.eclipse.php.profile.core.data.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -45,7 +40,7 @@ public class ProfilerDataSerializationUtil {
 	 * Used for serialization
 	 * 
 	 * @param XMLWriter
-	 *            xml
+	 *                      xml
 	 */
 	private ProfilerDataSerializationUtil(XMLWriter xml) {
 		fXML = xml;
@@ -258,6 +253,7 @@ public class ProfilerDataSerializationUtil {
 					profilerDBs.add(db);
 				}
 			}
+
 			return profilerDBs.toArray(new ProfilerDB[profilerDBs.size()]);
 
 		} catch (Exception e) {

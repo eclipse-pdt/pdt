@@ -24,7 +24,9 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.profile.core.engine.ProfileSessionsManager;
 import org.eclipse.php.profile.core.engine.ProfilerDB;
 import org.eclipse.php.profile.core.engine.ProfilerDataSerializationUtil;
+import org.eclipse.php.profile.core.engine.cachegrind.CacheGrindModelParser;
 import org.eclipse.php.profile.ui.PHPProfileUIMessages;
+import org.eclipse.php.profile.ui.ProfilerUIConstants;
 import org.eclipse.php.profile.ui.ProfilerUIImages;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -47,8 +49,14 @@ public class ImportSessionWizard extends Wizard implements IImportWizard {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					ProfilerDB[] profilerDBs = ProfilerDataSerializationUtil
-							.deserialize(new FileInputStream(page1.getSourceFile()));
+					FileInputStream stream = new FileInputStream(page1.getSourceFile());
+					ProfilerDB[] profilerDBs;
+					if (page1.getSourceType() == ProfilerUIConstants.XDEBUG_TYPE) {
+						profilerDBs = CacheGrindModelParser.build(stream);
+					} else {
+						profilerDBs = ProfilerDataSerializationUtil.deserialize(stream);
+					}
+
 					if (profilerDBs != null && profilerDBs.length > 0) {
 						for (int i = 0; i < profilerDBs.length; ++i) {
 							ProfileSessionsManager.addSession(profilerDBs[i]);
