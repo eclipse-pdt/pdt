@@ -115,6 +115,7 @@
 		<module>org.eclipse.php.ui.tests</module>
 		<module>org.eclipse.php.composer.api.tests</module>
 		<module>org.eclipse.php.composer.tests</module>
+		<module>org.eclipse.php.profile.core.tests</module>
 	</modules>
 
 </project>

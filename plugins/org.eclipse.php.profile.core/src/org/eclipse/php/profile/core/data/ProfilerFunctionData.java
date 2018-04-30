@@ -10,7 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.profile.core.data;
 
-import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.regex.Pattern;
 
 /**
@@ -96,8 +97,8 @@ public class ProfilerFunctionData {
 	 * Sets the file name
 	 */
 	public void setFileName(String fileName) {
-		File f = new File(fileName);
-		this.fFileName = f.getName();
+		Path p = Paths.get(fileName);
+		this.fFileName = p.getFileName().toString();
 		this.fAbsoluteFileName = fileName;
 	}
 
@@ -112,7 +113,7 @@ public class ProfilerFunctionData {
 	 * Sets local file name
 	 * 
 	 * @param String
-	 *            file name
+	 *                   file name
 	 */
 	public void setLocalFileName(String name) {
 		this.fLocalFileName = name;
@@ -124,6 +125,9 @@ public class ProfilerFunctionData {
 	 * @return String file name
 	 */
 	public String getLocalFileName() {
+		if (this.fLocalFileName == null) {
+			return this.fAbsoluteFileName;
+		}
 		return this.fLocalFileName;
 	}
 

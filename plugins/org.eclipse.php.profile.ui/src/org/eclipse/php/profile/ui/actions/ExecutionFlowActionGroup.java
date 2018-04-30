@@ -94,12 +94,15 @@ public class ExecutionFlowActionGroup extends ActionGroup {
 			ProfilerFunctionData data = (ProfilerFunctionData) (caller.isRootElement() ? element.getData()
 					: caller.getData());
 			try {
-				if (EditorUtility.openLocalFile(data.getLocalFileName(), layer.getLineNumber()) == null) {
+				if (data.getLocalFileName() == null
+						|| EditorUtility.openLocalFile(data.getLocalFileName(), layer.getLineNumber()) == null) {
 					String url = fView.getInput().getGlobalData().getOriginalURL();
 					if (!ProfilerGlobalData.URL_NOT_AVAILABLE_MSG.equals(url)) {
 						// try to retrieve the file from server
 						RemoteDebugger.requestRemoteFile(new OpenRemoteFileContentRequestor(),
 								data.getAbsoluteFileName(), layer.getLineNumber(), url);
+					} else {
+
 					}
 				}
 			} catch (CoreException e) {

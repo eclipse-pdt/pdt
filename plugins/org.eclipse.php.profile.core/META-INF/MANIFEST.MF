@@ -16,4 +16,5 @@ Bundle-Vendor: Eclipse PDT
 Export-Package: org.eclipse.php.profile.core,
  org.eclipse.php.profile.core.data,
  org.eclipse.php.profile.core.engine,
+ org.eclipse.php.profile.core.engine.cachegrind,
  org.eclipse.php.profile.core.messages
