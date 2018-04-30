@@ -13,10 +13,14 @@ package org.eclipse.php.profile.ui.wizards;
 import java.io.File;
 
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.profile.ui.PHPProfileUIMessages;
+import org.eclipse.php.profile.ui.ProfilerUIConstants;
+import org.eclipse.php.profile.ui.ProfilerUiPlugin;
+import org.eclipse.php.profile.ui.preferences.PreferenceKeys;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -40,6 +44,7 @@ public class ImportSessionWizardFirstPage extends WizardPage {
 	private Text fSourceField;
 	private Button fSourceBtn;
 	private String fSourceFile;
+	private int fSourceType;
 
 	public ImportSessionWizardFirstPage() {
 		super(PHPProfileUIMessages.getString("ImportSessionWizardPage1.0")); //$NON-NLS-1$
@@ -52,23 +57,64 @@ public class ImportSessionWizardFirstPage extends WizardPage {
 		return fSourceFile;
 	}
 
+	public int getSourceType() {
+		return fSourceType;
+	}
+
 	@Override
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
+		try {
+			fSourceType = ProfilerUiPlugin.getDefault().getDialogSettings().getInt(PreferenceKeys.IMPORT_TYPE);
+		} catch (NumberFormatException e) {
+			fSourceType = ProfilerUIConstants.ECLIPSE_TYPE;
+		}
 
 		Composite composite = new Composite(parent, SWT.NULL);
 		GridLayout layout = new GridLayout();
 		layout.verticalSpacing = 10;
-		layout.numColumns = 2;
+		layout.numColumns = 3;
 		composite.setLayout(layout);
 		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		composite.setFont(parent.getFont());
 
 		Label label = new Label(composite, SWT.NONE);
-		label.setText(PHPProfileUIMessages.getString("ImportSessionWizardPage1.2")); //$NON-NLS-1$
+		label.setText(PHPProfileUIMessages.getString("ImportSessionWizardPage1.8")); //$NON-NLS-1$
+		ComboViewer typeCombo = new ComboViewer(composite, SWT.READ_ONLY);
+		typeCombo.setContentProvider(ArrayContentProvider.getInstance());
+		typeCombo.setLabelProvider(new LabelProvider() {
+			@Override
+			public String getText(Object element) {
+				if (element instanceof Integer) {
+					switch (Integer.valueOf((Integer) element)) {
+					case ProfilerUIConstants.ECLIPSE_TYPE:
+						return PHPProfileUIMessages.getString("ImportSessionWizardPage1.9"); //$NON-NLS-1$
+					case ProfilerUIConstants.XDEBUG_TYPE:
+						return PHPProfileUIMessages.getString("ImportSessionWizardPage1.10"); //$NON-NLS-1$
+					}
+				}
+				return super.getText(element);
+			}
+		});
+		typeCombo.setInput(new Integer[] { ProfilerUIConstants.ECLIPSE_TYPE, ProfilerUIConstants.XDEBUG_TYPE });
+		typeCombo.addSelectionChangedListener(new ISelectionChangedListener() {
+
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				if (event.getStructuredSelection() != null
+						&& event.getStructuredSelection().getFirstElement() instanceof Integer) {
+					fSourceType = (Integer) event.getStructuredSelection().getFirstElement();
+					ProfilerUiPlugin.getDefault().getDialogSettings().put(PreferenceKeys.IMPORT_TYPE, fSourceType);
+				}
+			}
+		});
+		typeCombo.setSelection(new StructuredSelection(fSourceType));
 		GridData gridData = new GridData();
 		gridData.horizontalSpan = 2;
-		label.setLayoutData(gridData);
+		typeCombo.getCombo().setLayoutData(gridData);
+
+		label = new Label(composite, SWT.NONE);
+		label.setText(PHPProfileUIMessages.getString("ImportSessionWizardPage1.2")); //$NON-NLS-1$
 
 		fSourceField = new Text(composite, SWT.BORDER);
 		fSourceField.addListener(SWT.Modify, fieldModifyListener);
@@ -80,7 +126,9 @@ public class ImportSessionWizardFirstPage extends WizardPage {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				FileDialog dialog = new FileDialog(fSourceBtn.getShell(), SWT.OPEN);
-				dialog.setFilterExtensions(new String[] { "*.xml", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$
+				if (fSourceType == ProfilerUIConstants.ECLIPSE_TYPE) {
+					dialog.setFilterExtensions(new String[] { "*.xml", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$
+				}
 				dialog.setText(PHPProfileUIMessages.getString("ImportSessionWizardPage1.4")); //$NON-NLS-1$
 
 				String dirName = new File(fSourceField.getText().trim()).getParent();

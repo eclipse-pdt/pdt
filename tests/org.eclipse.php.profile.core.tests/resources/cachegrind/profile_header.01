@@ -1,0 +1,34 @@
+# callgrind format
+events: Cycles Instructions Flops
+creator: xdebug 2.6.0 (PHP 7.1.13)
+version: something
+cmd: /src/web/app_dev.php
+part: 1
+positions: instr line
+pid: 10
+totals: 10 11
+summary: 10 12
+desc: unsupported
+version: 1
+
+fl=file1.c
+fi=file2.c
+fe=file3.c
+fn=main
+calls=23 -3 4
+23 0 0 3
+
+fl=(1) file1.c
+fl=(1)
+fn=(1) main
+
+cfl=cfile1.c
+cfi=cfile2.c
+cfn=main
+
+cfl=(2)
+
+
+
+
+

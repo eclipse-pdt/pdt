@@ -12,8 +12,10 @@
 package org.eclipse.php.internal.debug.core.launching;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -49,24 +51,11 @@ import org.eclipse.swt.widgets.Display;
 
 public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.LaunchConfigurationDelegate#getLaunch(org.
-	 * eclipse.debug.core.ILaunchConfiguration, java.lang.String)
-	 */
 	@Override
 	public ILaunch getLaunch(ILaunchConfiguration configuration, String mode) throws CoreException {
 		return new XDebugLaunch(configuration, mode, null);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.ILaunchConfigurationDelegate#launch(org.
-	 * eclipse.debug.core.ILaunchConfiguration, java.lang.String,
-	 * org.eclipse.debug.core.ILaunch, org.eclipse.core.runtime.IProgressMonitor)
-	 */
 	@Override
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
 			throws CoreException {
@@ -175,7 +164,8 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		// determine the environment variables
 		String[] envVarString = null;
 		DBGpTarget target = null;
-		if (mode.equals(ILaunchManager.DEBUG_MODE)) {
+		boolean enableDebugging = mode.equals(ILaunchManager.DEBUG_MODE);
+		if (enableDebugging) {
 			// check the launch for stop at first line, if not there go to
 			// project specifics
 			boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(project);
@@ -259,7 +249,22 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 
 		// define the command line for launching
 		String[] cmdLine = null;
-		cmdLine = PHPLaunchUtilities.getCommandLine(configuration, phpExe.toOSString(), tempIni.toString(),
+		Map<String, String> phpCfg = new TreeMap<>();
+		if (mode.equals(ILaunchManager.PROFILE_MODE)) {
+			try {
+				File tmp = File.createTempFile("xdebug", ".cachegrind"); //$NON-NLS-1$ //$NON-NLS-2$
+				phpCfg.put("xdebug.profiler_enable", "on"); //$NON-NLS-1$ //$NON-NLS-2$
+				phpCfg.put("xdebug.profiler_output_dir", tmp.getParentFile().getAbsolutePath()); //$NON-NLS-1$
+				phpCfg.put("xdebug.profiler_output_name", tmp.getName()); //$NON-NLS-1$
+				launch.setAttribute(IPHPDebugConstants.CacheGrind_File, tmp.getAbsolutePath());
+			} catch (IOException e) {
+				PHPLaunchUtilities.showLaunchErrorMessage(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_5);
+				monitor.setCanceled(true);
+				monitor.done();
+				return;
+			}
+		}
+		cmdLine = PHPLaunchUtilities.getCommandLine(configuration, phpExe.toOSString(), tempIni.toString(), phpCfg,
 				phpFile.toOSString(), args, phpV);
 
 		// Launch the process
@@ -270,7 +275,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		IProcess eclipseProcessWrapper = null;
 		if (phpExeProcess != null) {
 			subMonitor.worked(10);
-			String processName = mode.equals(ILaunchManager.DEBUG_MODE)
+			String processName = enableDebugging
 					? (phpExe.toOSString() + ' ' + PHPDebugCoreMessages.PHPProcess_XDebug_suffix)
 					: phpExe.toOSString();
 			eclipseProcessWrapper = DebugPlugin.newProcess(launch, phpExeProcess, processName, processAttributes);
@@ -285,7 +290,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 
 			// if launching in debug mode, create the debug infrastructure and
 			// link it with the launched process
-			if (mode.equals(ILaunchManager.DEBUG_MODE) && target != null) {
+			if (enableDebugging && target != null) {
 				target.setProcess(eclipseProcessWrapper);
 				launch.addDebugTarget(target);
 				subMonitor.subTask(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_4);
@@ -295,7 +300,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 
 		} else {
 			// we did not launch
-			if (mode.equals(ILaunchManager.DEBUG_MODE)) {
+			if (enableDebugging) {
 				DBGpSessionHandler.getInstance().removeSessionListener(target);
 			}
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
@@ -307,14 +312,14 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 	 * create any environment variables that may be required
 	 * 
 	 * @param configuration
-	 *            launch configuration
+	 *                          launch configuration
 	 * @param sessionID
-	 *            the DBGp Session Id
+	 *                          the DBGp Session Id
 	 * @param ideKey
-	 *            the DBGp ide key
+	 *                          the DBGp ide key
 	 * @return string array containing the environment
 	 * @throws CoreException
-	 *             rethrown exception
+	 *                           rethrown exception
 	 */
 	public String[] createDebugLaunchEnvironment(ILaunchConfiguration configuration, String sessionID, String ideKey,
 			IPath phpExe) throws CoreException {
@@ -353,7 +358,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 	 * Displays a dialog with an error message.
 	 * 
 	 * @param message
-	 *            The error to display.
+	 *                    The error to display.
 	 */
 	protected void displayErrorMessage(final String message) {
 		Display.getDefault().asyncExec(new Runnable() {
