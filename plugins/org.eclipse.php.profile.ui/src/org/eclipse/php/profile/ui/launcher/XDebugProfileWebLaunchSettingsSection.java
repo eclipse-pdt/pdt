@@ -10,34 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.profile.ui.launcher;
 
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.php.profile.ui.launcher.AbstractPHPLaunchConfigurationProfilerTab.StatusMessage;
-import org.eclipse.swt.widgets.Composite;
-
 /**
  * XDebug profiler settings section for web profiling (not supported yet).
  * 
  * @author Bartlomiej Laczkowski
  */
 public class XDebugProfileWebLaunchSettingsSection extends AbstractProfileWebLaunchSettingsSection {
-
-	@Override
-	protected void createTunnelGroup(Composite composite) {
-		// Do not create SSH tunnel group
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.php.profile.ui.launcher.AbstractProfileWebLaunchSettingsSection#
-	 * isValid(org.eclipse.debug.core.ILaunchConfiguration)
-	 */
-	@Override
-	public StatusMessage isValid(ILaunchConfiguration configuration) {
-		return new StatusMessage(IMessageProvider.ERROR,
-				Messages.XDebugProfileLaunchSettingsSection_Profiling_is_not_supported);
-	}
 
 }

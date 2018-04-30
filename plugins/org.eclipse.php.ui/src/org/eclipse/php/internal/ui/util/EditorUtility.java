@@ -95,13 +95,23 @@ public class EditorUtility {
 		});
 	}
 
+	public static IEditorPart openAbsoluteFile(String filePath, int lineNumber) throws CoreException {
+		IResource member = ResourcesPlugin.getWorkspace().getRoot().findMember(filePath);
+		if (member instanceof IFile) {
+			IEditorPart editor = org.eclipse.dltk.internal.ui.editor.EditorUtility.openInEditor(member, true);
+			org.eclipse.dltk.internal.ui.editor.EditorUtility.revealInEditor(editor, lineNumber);
+			return editor;
+		}
+		return null;
+	}
+
 	/**
 	 * Opens local file in editor just like {@link OpenLocalFileAction} does.
 	 * 
 	 * @param filePath
-	 *            Full path string of the local file
+	 *                       Full path string of the local file
 	 * @param lineNumber
-	 *            Line number to reveal
+	 *                       Line number to reveal
 	 * @throws CoreException
 	 */
 	public static IEditorPart openLocalFile(String filePath, int lineNumber) throws CoreException {

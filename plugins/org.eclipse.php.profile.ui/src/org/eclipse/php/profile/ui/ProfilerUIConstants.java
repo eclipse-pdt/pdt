@@ -31,4 +31,7 @@ public class ProfilerUIConstants {
 	public static int GROUP_BY_FILE = 0;
 	public static int GROUP_BY_CLASS = 1;
 	public static int GROUP_BY_FUNCTION = 2;
+
+	public static final int ECLIPSE_TYPE = 0;
+	public static final int XDEBUG_TYPE = 1;
 }

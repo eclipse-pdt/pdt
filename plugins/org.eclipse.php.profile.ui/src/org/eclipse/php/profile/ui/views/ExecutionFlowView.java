@@ -94,11 +94,6 @@ public class ExecutionFlowView extends AbstractProfilerFunctionsView
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.EXECUTION_FLOW_VIEW);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.part.WorkbenchPart#dispose()
-	 */
 	@Override
 	public void dispose() {
 		if (fViewer != null) {
@@ -112,22 +107,11 @@ public class ExecutionFlowView extends AbstractProfilerFunctionsView
 	public void setFocus() {
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.php.profile.ui.views.AbstractProfilerView#getInput()
-	 */
 	@Override
 	public ProfilerDB getInput() {
 		return fProfilerDB;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.php.profile.ui.views.AbstractProfilerView#setInput(org.
-	 * eclipse. php.profile.core.profiler.ProfilerDB)
-	 */
 	@Override
 	public void setInput(ProfilerDB profilerDB) {
 		if (fViewer == null || fViewer.getContentProvider() == null) {

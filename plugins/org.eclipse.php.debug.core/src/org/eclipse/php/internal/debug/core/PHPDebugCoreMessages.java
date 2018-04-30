@@ -145,6 +145,7 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String XDebug_ExeLaunchConfigurationDelegate_2;
 	public static String XDebug_ExeLaunchConfigurationDelegate_3;
 	public static String XDebug_ExeLaunchConfigurationDelegate_4;
+	public static String XDebug_ExeLaunchConfigurationDelegate_5;
 	public static String XDebug_WebLaunchConfigurationDelegate_0;
 	public static String XDebug_WebLaunchConfigurationDelegate_1;
 	public static String XDebug_WebLaunchConfigurationDelegate_2;
