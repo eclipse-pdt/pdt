@@ -32,26 +32,12 @@ public class ZendDebuggerProfileExeLaunchSettingsSection extends AbstractProfile
 	private Group fGeneralGroup;
 	private Button fCodeCoverageButton;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.php.profile.ui.launcher.AbstractProfileExeLaunchSettingsSection#
-	 * setDefaults(org.eclipse.debug.core.ILaunchConfigurationWorkingCopy)
-	 */
 	@Override
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
 		super.setDefaults(configuration);
 		configuration.setAttribute(IPHPDebugConstants.ATTR_ENABLE_CODE_COVERAGE, true);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.php.profile.ui.launcher.AbstractProfileExeLaunchSettingsSection#
-	 * initialize(org.eclipse.debug.core.ILaunchConfiguration)
-	 */
 	@Override
 	public void initialize(ILaunchConfiguration configuration) {
 		super.initialize(configuration);
@@ -66,12 +52,6 @@ public class ZendDebuggerProfileExeLaunchSettingsSection extends AbstractProfile
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.php.profile.ui.launcher.IProfilerLaunchSettingsSection#
-	 * performApply(org.eclipse.debug.core.ILaunchConfigurationWorkingCopy)
-	 */
 	@Override
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 		if (fGeneralGroup != null) {
@@ -80,13 +60,6 @@ public class ZendDebuggerProfileExeLaunchSettingsSection extends AbstractProfile
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.php.profile.ui.launcher.AbstractProfileExeLaunchSettingsSection#
-	 * buildSection(org.eclipse.swt.widgets.Composite)
-	 */
 	@Override
 	protected void buildSection(Composite parent) {
 		createGeneralGroup(parent);

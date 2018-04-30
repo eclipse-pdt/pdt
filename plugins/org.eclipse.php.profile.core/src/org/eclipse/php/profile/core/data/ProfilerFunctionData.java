@@ -62,6 +62,9 @@ public class ProfilerFunctionData {
 			fFunctionName = "eval()"; //$NON-NLS-1$
 		} else {
 			int i = functionName.indexOf("::"); //$NON-NLS-1$
+			if (i == -1) {
+				functionName.indexOf("->"); //$NON-NLS-1$
+			}
 			if (i != -1) {
 				setClassName(functionName.substring(0, i));
 				this.fFunctionName = functionName.substring(i + 2);
@@ -112,7 +115,7 @@ public class ProfilerFunctionData {
 	 * Sets local file name
 	 * 
 	 * @param String
-	 *            file name
+	 *                   file name
 	 */
 	public void setLocalFileName(String name) {
 		this.fLocalFileName = name;
