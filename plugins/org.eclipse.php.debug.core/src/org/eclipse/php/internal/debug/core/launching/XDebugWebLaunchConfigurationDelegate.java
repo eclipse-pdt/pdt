@@ -11,7 +11,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.launching;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -23,6 +27,7 @@ import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.debug.core.debugger.launching.ILaunchDelegateListener;
+import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.debug.core.*;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
@@ -39,6 +44,7 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.IDBGpDebugTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.IDBGpSessionListener;
+import org.eclipse.php.internal.debug.core.zend.debugger.DebugParametersInitializersRegistry;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.eclipse.php.internal.server.core.tunneling.SSHTunnel;
@@ -57,24 +63,11 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 		registerLaunchListeners();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.LaunchConfigurationDelegate#getLaunch(org.
-	 * eclipse.debug.core.ILaunchConfiguration, java.lang.String)
-	 */
 	@Override
 	public ILaunch getLaunch(ILaunchConfiguration configuration, String mode) throws CoreException {
 		return new XDebugLaunch(configuration, mode, null);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.ILaunchConfigurationDelegate#launch(org.
-	 * eclipse.debug.core.ILaunchConfiguration, java.lang.String,
-	 * org.eclipse.debug.core.ILaunch, org.eclipse.core.runtime.IProgressMonitor)
-	 */
 	@Override
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
 			throws CoreException {
@@ -133,6 +126,12 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 		 */
 		String[] startStopURLs;
 		String baseURL = new String(configuration.getAttribute(Server.BASE_URL, "").getBytes()); //$NON-NLS-1$
+
+		IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry
+				.getBestMatchDebugParametersInitializer(launch);
+
+		Hashtable<String, String> params = parametersInitializer.getDebugParameters(launch);
+
 		IDBGpDebugTarget target = null;
 		SSHTunnel tunnel = null;
 		if (mode.equals(ILaunchManager.DEBUG_MODE)) {
@@ -150,7 +149,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 			} else {
 				ideKey = DBGpSessionHandler.getInstance().getIDEKey();
 			}
-			startStopURLs = generateStartStopDebugURLs(baseURL, sessionId, ideKey);
+			startStopURLs = generateStartStopDebugURLs(baseURL, sessionId, ideKey, params);
 			String launchScript = configuration.getAttribute(Server.FILE_NAME, (String) null);
 			// Check if a tunneled connection is needed and create request for a
 			// tunnel if needed.
@@ -182,7 +181,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 			}
 
 		} else {
-			startStopURLs = new String[] { baseURL, null };
+			startStopURLs = generateStartStopDebugURLs(baseURL, null, null, params);
 		}
 		final String startURL = startStopURLs[0];
 		// Will be used in the future?
@@ -225,22 +224,47 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 	 * environment.
 	 * 
 	 * @param baseURL
-	 *            the base URL
+	 *                      the base URL
 	 * @param sessionId
-	 *            the DBGp session Id
+	 *                      the DBGp session Id
 	 * @param ideKey
-	 *            the DBGp IDE Key
+	 *                      the DBGp IDE Key
 	 * @return start and stop queries
 	 */
-	protected String[] generateStartStopDebugURLs(String baseURL, String sessionId, String ideKey) {
+	protected String[] generateStartStopDebugURLs(String baseURL, String sessionId, String ideKey,
+			Hashtable<String, String> params) {
 		String[] startStopURLs = new String[2];
-		if (baseURL.indexOf("?") > -1) { //$NON-NLS-1$
-			baseURL += "&"; //$NON-NLS-1$
-		} else {
-			baseURL += "?"; //$NON-NLS-1$
+		StringBuilder sb = new StringBuilder(baseURL);
+		if (sessionId != null || params.size() > 0) {
+			if (baseURL.indexOf("?") > -1) { //$NON-NLS-1$
+				sb.append('&');
+			} else {
+				sb.append('?');
+			}
+
+			Enumeration<String> e = params.keys();
+			while (e.hasMoreElements()) {
+				String key = e.nextElement();
+				sb.append(key).append('=');
+				try {
+					sb.append(URLEncoder.encode(params.get(key), "UTF-8")); //$NON-NLS-1$
+				} catch (UnsupportedEncodingException exc) {
+				}
+				sb.append('&');
+			}
+			if (sessionId == null) {
+				sb.setLength(sb.length() - 1);
+			}
 		}
-		startStopURLs[0] = baseURL + "XDEBUG_SESSION_START=" + ideKey + "&KEY=" + sessionId; //$NON-NLS-1$ //$NON-NLS-2$
-		startStopURLs[1] = baseURL + "XDEBUG_SESSION_STOP_NO_EXEC=" + ideKey + "&KEY=" + sessionId; //$NON-NLS-1$ //$NON-NLS-2$
+
+		if (sessionId == null) {
+			startStopURLs[0] = sb.toString();
+		} else {
+			baseURL = sb.toString();
+			startStopURLs[0] = baseURL + "XDEBUG_SESSION_START=" + ideKey + "&KEY=" + sessionId; //$NON-NLS-1$ //$NON-NLS-2$
+			startStopURLs[1] = baseURL + "XDEBUG_SESSION_STOP_NO_EXEC=" + ideKey + "&KEY=" + sessionId; //$NON-NLS-1$ //$NON-NLS-2$
+
+		}
 		return startStopURLs;
 	}
 
@@ -257,7 +281,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 	 * Displays a dialog with an error message.
 	 * 
 	 * @param message
-	 *            The error to display.
+	 *                    The error to display.
 	 */
 	protected void displayErrorMessage(final String message) {
 		Display.getDefault().asyncExec(new Runnable() {

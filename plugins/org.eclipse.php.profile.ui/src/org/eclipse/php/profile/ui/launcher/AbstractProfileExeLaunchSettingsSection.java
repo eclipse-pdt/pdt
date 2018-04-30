@@ -28,49 +28,22 @@ public abstract class AbstractProfileExeLaunchSettingsSection implements IProfil
 	protected WidgetListener widgetListener;
 	private ILaunchConfiguration configuration;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.php.profile.ui.launcher.IProfilerLaunchSettingsSection#
-	 * createSection(org.eclipse.swt.widgets.Composite,
-	 * org.eclipse.php.profile.ui.launcher.
-	 * AbstractPHPLaunchConfigurationProfilerTab.WidgetListener)
-	 */
 	@Override
 	public final void createSection(Composite parent, WidgetListener widgetListener) {
 		this.widgetListener = widgetListener;
 		buildSection(parent);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.php.profile.ui.launcher.IProfilerLaunchSettingsSection#
-	 * initialize(org.eclipse.debug.core.ILaunchConfiguration)
-	 */
 	@Override
 	public void initialize(ILaunchConfiguration configuration) {
 		this.configuration = configuration;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.php.profile.ui.launcher.IProfilerLaunchSettingsSection#
-	 * setDefaults(org.eclipse.debug.core.ILaunchConfigurationWorkingCopy)
-	 */
 	@Override
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
 		this.configuration = configuration;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.php.profile.ui.launcher.IProfilerLaunchSettingsSection#isValid(
-	 * org.eclipse.debug.core.ILaunchConfiguration)
-	 */
 	@Override
 	public StatusMessage isValid(ILaunchConfiguration configuration) {
 		// Nothing to validate here

@@ -136,9 +136,10 @@ public class ProfilerCallTraceLayer {
 	 * Sets the duration in according to the timestamp(enter time) and the exit time
 	 * 
 	 * @param exitTimeSeconds
-	 *            - the exit time from the function in seconds
+	 *                                 - the exit time from the function in seconds
 	 * @param exitTimeMicroseconds
-	 *            - the exit time from the function in microseconds
+	 *                                 - the exit time from the function in
+	 *                                 microseconds
 	 */
 	public void setDuration(long exitTimeSeconds, long exitTimeMicroseconds) {
 		long startSecond = fTimestampSeconds;
@@ -160,14 +161,14 @@ public class ProfilerCallTraceLayer {
 	/**
 	 * Sets the line number
 	 */
-	private void setLine(int lineNumber) {
+	public void setLine(int lineNumber) {
 		this.fLineNumber = lineNumber;
 	}
 
 	/**
 	 * Sets the calledID
 	 */
-	private void setCalledID(int calledID) {
+	public void setCalledID(int calledID) {
 		this.fCalledID = calledID;
 	}
 }

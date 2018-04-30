@@ -94,7 +94,7 @@ public class DebugParametersInitializersRegistry {
 	 * IDebugParametersInitializer is always a new instance.
 	 * 
 	 * @param id
-	 *            The debug parameters initializer ID
+	 *               The debug parameters initializer ID
 	 * @return A new instance of an IDebugParametersInitializer
 	 */
 	public static IDebugParametersInitializer getParametersInitializer(String id) throws Exception {
@@ -140,7 +140,6 @@ public class DebugParametersInitializersRegistry {
 		try {
 			Dictionary<String, DebugParametersInitializerFactory> factories = getInstance()
 					.getInitializersFactories(launch.getLaunchMode());
-
 			// 1st try to get the one with matching configuration type
 			for (Enumeration<DebugParametersInitializerFactory> e = factories.elements(); e.hasMoreElements();) {
 				DebugParametersInitializerFactory initializerFactory = e.nextElement();

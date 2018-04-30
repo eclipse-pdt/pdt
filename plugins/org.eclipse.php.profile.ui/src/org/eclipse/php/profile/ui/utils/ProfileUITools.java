@@ -13,7 +13,7 @@ package org.eclipse.php.profile.ui.utils;
 import org.eclipse.php.debug.core.debugger.IDebugHandler;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.zend.debugger.IRemoteDebugger;
-import org.eclipse.php.profile.core.engine.ZProfiler;
+import org.eclipse.php.profile.core.engine.IProfiler;
 import org.eclipse.php.profile.ui.ProfilerUiPlugin;
 import org.eclipse.ui.*;
 
@@ -28,11 +28,11 @@ public class ProfileUITools {
 	 * 
 	 * @return profiler
 	 */
-	public static ZProfiler getProfileContext() {
+	public static IProfiler getProfileContext() {
 		IRemoteDebugger debugger = PHPDebugPlugin.getActiveRemoteDebugger();
 		IDebugHandler debugHandler = debugger.getDebugHandler();
-		if (debugHandler instanceof ZProfiler) {
-			return (ZProfiler) debugHandler;
+		if (debugHandler instanceof IProfiler) {
+			return (IProfiler) debugHandler;
 		}
 		return null;
 	}
@@ -41,7 +41,7 @@ public class ProfileUITools {
 	 * Finds existing or opens new view using its ID
 	 * 
 	 * @param String
-	 *            id of the view
+	 *                   id of the view
 	 * @return IViewPart view, or <code>null</code> if didn's succeed
 	 */
 	public static IViewPart findExistingView(String id) {

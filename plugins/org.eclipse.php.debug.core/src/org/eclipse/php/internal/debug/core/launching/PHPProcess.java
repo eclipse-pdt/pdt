@@ -47,11 +47,6 @@ public class PHPProcess extends PlatformObject implements IProcess {
 		fireCreationEvent();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IProcess#getLabel()
-	 */
 	@Override
 	public String getLabel() {
 		String suffix = null;
@@ -65,32 +60,16 @@ public class PHPProcess extends PlatformObject implements IProcess {
 		return suffix != null ? (fName + ' ' + suffix) : fName;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IProcess#getLaunch()
-	 */
 	@Override
 	public ILaunch getLaunch() {
 		return fLaunch;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IProcess#getStreamsProxy()
-	 */
 	@Override
 	public IStreamsProxy getStreamsProxy() {
 		return fProxy;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IProcess#setAttribute(java.lang.String,
-	 * java.lang.String)
-	 */
 	@Override
 	public void setAttribute(String key, String value) {
 		if (fAttributes == null) {
@@ -104,11 +83,6 @@ public class PHPProcess extends PlatformObject implements IProcess {
 		fireChangeEvent();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IProcess#getAttribute(java.lang.String)
-	 */
 	@Override
 	public String getAttribute(String key) {
 		if (fAttributes == null) {
@@ -117,21 +91,11 @@ public class PHPProcess extends PlatformObject implements IProcess {
 		return fAttributes.get(key);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IProcess#getExitValue()
-	 */
 	@Override
 	public int getExitValue() throws DebugException {
 		return fExitValue;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.core.runtime.PlatformObject#getAdapter(java.lang.Class)
-	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Object getAdapter(Class adapter) {
@@ -154,31 +118,16 @@ public class PHPProcess extends PlatformObject implements IProcess {
 		return super.getAdapter(adapter);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.ITerminate#canTerminate()
-	 */
 	@Override
 	public boolean canTerminate() {
 		return !isTerminated();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.ITerminate#isTerminated()
-	 */
 	@Override
 	public boolean isTerminated() {
 		return fDebugTarget.isTerminated();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.ITerminate#terminate()
-	 */
 	@Override
 	public void terminate() throws DebugException {
 		// Terminate debug target
@@ -276,7 +225,7 @@ public class PHPProcess extends PlatformObject implements IProcess {
 	 * Fires the given debug event.
 	 * 
 	 * @param event
-	 *            debug event to fire
+	 *                  debug event to fire
 	 */
 	protected void fireEvent(DebugEvent event) {
 		DebugPlugin manager = DebugPlugin.getDefault();
