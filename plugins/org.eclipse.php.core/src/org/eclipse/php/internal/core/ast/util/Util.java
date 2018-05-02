@@ -126,9 +126,9 @@ public class Util {
 	 * </ol>
 	 * 
 	 * @param first
-	 *            the first array to concatenate
+	 *                   the first array to concatenate
 	 * @param second
-	 *            the array to add at the end of the first array
+	 *                   the array to add at the end of the first array
 	 * @return a new array adding the second array at the end of first array, or
 	 *         null if the two arrays are null.
 	 */
@@ -336,9 +336,9 @@ public class Util {
 	 * </ol>
 	 * 
 	 * @param array
-	 *            the given array
+	 *                      the given array
 	 * @param separator
-	 *            the given separator
+	 *                      the given separator
 	 * @return the concatenation of the given array parts using the given separator
 	 *         between each part
 	 */
@@ -392,11 +392,11 @@ public class Util {
 	 * </ol>
 	 * 
 	 * @param array
-	 *            the given array
+	 *                      the given array
 	 * @param name
-	 *            the given name
+	 *                      the given name
 	 * @param separator
-	 *            the given separator
+	 *                      the given separator
 	 * @return the concatenation of the given array parts using the given separator
 	 *         between each part and appending the given name at the end
 	 */
@@ -464,13 +464,13 @@ public class Util {
 	 * Return the given string if anything wrong happen while applying the edit.
 	 * 
 	 * @param original
-	 *            the given string
+	 *                     the given string
 	 * @param edit
-	 *            the given edit
+	 *                     the given edit
 	 * 
 	 * @return the updated string
 	 */
-	public final static String editedString(String original, TextEdit edit) {
+	public static final String editedString(String original, TextEdit edit) {
 		if (edit == null) {
 			return original;
 		}
@@ -478,10 +478,8 @@ public class Util {
 		try {
 			edit.apply(document, TextEdit.NONE);
 			return document.get();
-		} catch (MalformedTreeException e) {
-			e.printStackTrace();
-		} catch (BadLocationException e) {
-			e.printStackTrace();
+		} catch (MalformedTreeException | BadLocationException e) {
+			PHPCorePlugin.log(e);
 		}
 		return original;
 	}
@@ -722,23 +720,6 @@ public class Util {
 		return sig.substring(i + 1);
 	}
 
-	// private static IFile findFirstClassFile(IFolder folder) {
-	// try {
-	// IResource[] members = folder.members();
-	// for (int i = 0, max = members.length; i < max; i++) {
-	// IResource member = members[i];
-	// if (member.getType() == IResource.FOLDER) {
-	// return findFirstClassFile((IFolder) member);
-	// } else if (PHPToolkitUtil.hasPhpExtention(member.getName())) {
-	// return (IFile) member;
-	// }
-	// }
-	// } catch (CoreException e) {
-	// // ignore
-	// }
-	// return null;
-	// }
-
 	/**
 	 * Finds the first line separator used by the given text.
 	 * 
@@ -765,31 +746,6 @@ public class Util {
 		return null;
 	}
 
-	/*
-	 * public static IClassFileAttribute getAttribute(IClassFileReader
-	 * classFileReader, char[] attributeName) { IClassFileAttribute[] attributes =
-	 * classFileReader.getAttributes(); for (int i = 0, max = attributes.length; i <
-	 * max; i++) { if (CharOperation.equals(attributes[i].getAttributeName(),
-	 * attributeName)) { return attributes[i]; } } return null; }
-	 * 
-	 * public static IClassFileAttribute getAttribute(ICodeAttribute codeAttribute,
-	 * char[] attributeName) { IClassFileAttribute[] attributes =
-	 * codeAttribute.getAttributes(); for (int i = 0, max = attributes.length; i <
-	 * max; i++) { if (CharOperation.equals(attributes[i].getAttributeName(),
-	 * attributeName)) { return attributes[i]; } } return null; }
-	 * 
-	 * public static IClassFileAttribute getAttribute(IFieldInfo fieldInfo, char[]
-	 * attributeName) { IClassFileAttribute[] attributes =
-	 * fieldInfo.getAttributes(); for (int i = 0, max = attributes.length; i < max;
-	 * i++) { if (CharOperation.equals(attributes[i].getAttributeName(),
-	 * attributeName)) { return attributes[i]; } } return null; }
-	 * 
-	 * public static IClassFileAttribute getAttribute(IMethodInfo methodInfo, char[]
-	 * attributeName) { IClassFileAttribute[] attributes =
-	 * methodInfo.getAttributes(); for (int i = 0, max = attributes.length; i < max;
-	 * i++) { if (CharOperation.equals(attributes[i].getAttributeName(),
-	 * attributeName)) { return attributes[i]; } } return null; }
-	 */
 	/**
 	 * Returns the registered Java like extensions.
 	 */
@@ -841,37 +797,6 @@ public class Util {
 	}
 
 	/**
-	 * Get the jdk level of this root. The value can be:
-	 * <ul>
-	 * <li>major<<16 + minor : see predefined constants on ClassFileConstants</li>
-	 * <li><code>0</null> if the root is a source package fragment root or if a Java
-	 * model exception occured</li>
-	 * </ul>
-	 * Returns the jdk level
-	 */
-	/*
-	 * public static long getJdkLevel(Object targetLibrary) { try { ClassFileReader
-	 * reader = null; if (targetLibrary instanceof IFolder) { IFile classFile =
-	 * findFirstClassFile((IFolder) targetLibrary); // only internal classfolders
-	 * are allowed if (classFile != null) reader =
-	 * Util.newClassFileReader(classFile); } else { // root is a jar file or a zip
-	 * file ZipFile jar = null; try { IPath path = null; if (targetLibrary
-	 * instanceof IResource) { path = ((IResource)targetLibrary).getFullPath(); }
-	 * else if (targetLibrary instanceof File){ File f = (File) targetLibrary; if
-	 * (!f.isDirectory()) { path = new Path(((File)targetLibrary).getPath()); } } if
-	 * (path != null) { jar =
-	 * JavaModelManager.getJavaModelManager().getZipFile(path); for (Enumeration e=
-	 * jar.entries(); e.hasMoreElements();) { ZipEntry member= (ZipEntry)
-	 * e.nextElement(); String entryName= member.getName(); if
-	 * (org.eclipse.jdt.internal.compiler.util.Util.isClassFileName(entryName)) {
-	 * reader = ClassFileReader.read(jar, entryName); break; } } } } catch
-	 * (CoreException e) { // ignore } finally {
-	 * JavaModelManager.getJavaModelManager().closeZipFile(jar); } } if (reader !=
-	 * null) { return reader.getVersion(); } } catch (CoreException e) { // ignore }
-	 * catch(ClassFormatException e) { // ignore } catch(IOException e) { // ignore
-	 * } return 0; }
-	 */
-	/**
 	 * Returns the substring of the given file name, ending at the start of a Java
 	 * like extension. The entire file name is returned if it doesn't end with a
 	 * Java like extension.
@@ -922,26 +847,6 @@ public class Util {
 
 		// system line delimiter
 		return org.eclipse.dltk.compiler.util.Util.LINE_SEPARATOR;
-	}
-
-	/**
-	 * Returns the line separator used by the given buffer. Uses the given text if
-	 * none found.
-	 * 
-	 * @return </code>"\n"</code> or </code>"\r"</code> or </code>"\r\n"</code>
-	 */
-	private static String getLineSeparator(char[] text, char[] buffer) {
-		// search in this buffer's contents first
-		String lineSeparator = findLineSeparator(buffer);
-		if (lineSeparator == null) {
-			// search in the given text
-			lineSeparator = findLineSeparator(text);
-			if (lineSeparator == null) {
-				// default to system line separator
-				return getLineSeparator((String) null, (IScriptProject) null);
-			}
-		}
-		return lineSeparator;
 	}
 
 	/**
@@ -1321,90 +1226,6 @@ public class Util {
 		return isAttributeSupported(EFS.ATTRIBUTE_READ_ONLY);
 	}
 
-	/*
-	 * Returns whether the given java element is exluded from its root's classpath.
-	 * It doesn't check whether the root itself is on the classpath or not
-	 */
-	/*
-	 * public static final boolean isExcluded(IModelElement element) { int
-	 * elementType = element.getElementType(); switch (elementType) { case
-	 * IModelElement.JAVA_MODEL: case IJavaElement.JAVA_PROJECT: case
-	 * IJavaElement.PACKAGE_FRAGMENT_ROOT: return false;
-	 * 
-	 * case IJavaElement.PACKAGE_FRAGMENT: PackageFragmentRoot root =
-	 * (PackageFragmentRoot
-	 * )element.getAncestor(IJavaElement.PACKAGE_FRAGMENT_ROOT); IResource resource
-	 * = element.getResource(); return resource != null && isExcluded(resource,
-	 * root.fullInclusionPatternChars(), root.fullExclusionPatternChars());
-	 * 
-	 * case IJavaElement.COMPILATION_UNIT: root =
-	 * (PackageFragmentRoot)element.getAncestor
-	 * (IJavaElement.PACKAGE_FRAGMENT_ROOT); resource = element.getResource(); if
-	 * (resource == null) return false; if (isExcluded(resource,
-	 * root.fullInclusionPatternChars(), root.fullExclusionPatternChars())) return
-	 * true; return isExcluded(element.getParent());
-	 * 
-	 * default: IJavaElement cu =
-	 * element.getAncestor(IJavaElement.COMPILATION_UNIT); return cu != null &&
-	 * isExcluded(cu); } }
-	 *//*
-		 * Returns whether the given resource path matches one of the
-		 * inclusion/exclusion patterns. NOTE: should not be asked directly using pkg
-		 * root pathes
-		 * 
-		 * @see IClasspathEntry#getInclusionPatterns
-		 * 
-		 * @see IClasspathEntry#getExclusionPatterns
-		 */
-	/*
-	 * public final static boolean isExcluded(IPath resourcePath, char[][]
-	 * inclusionPatterns, char[][] exclusionPatterns, boolean isFolderPath) { if
-	 * (inclusionPatterns == null && exclusionPatterns == null) return false; return
-	 * org.eclipse.jdt.internal.compiler.util.Util.isExcluded(resourcePath
-	 * .toString().toCharArray(), inclusionPatterns, exclusionPatterns,
-	 * isFolderPath); }
-	 */
-	/*
-	 * Returns whether the given resource matches one of the exclusion patterns.
-	 * NOTE: should not be asked directly using pkg root pathes
-	 * 
-	 * @see IClasspathEntry#getExclusionPatterns
-	 */
-	/*
-	 * public final static boolean isExcluded(IResource resource, char[][]
-	 * inclusionPatterns, char[][] exclusionPatterns) { IPath path =
-	 * resource.getFullPath(); // ensure that folders are only excluded if all of
-	 * their children are excluded int resourceType = resource.getType(); return
-	 * isExcluded(path, inclusionPatterns, exclusionPatterns, resourceType ==
-	 * IResource.FOLDER || resourceType == IResource.PROJECT); }
-	 */
-
-	/**
-	 * Validate the given .class file name. A .class file name must obey the
-	 * following rules:
-	 * <ul>
-	 * <li>it must not be null
-	 * <li>it must include the <code>".class"</code> suffix
-	 * <li>its prefix must be a valid identifier
-	 * </ul>
-	 * </p>
-	 * 
-	 * @param name
-	 *            the name of a .class file
-	 * @param sourceLevel
-	 *            the source level
-	 * @param complianceLevel
-	 *            the compliance level
-	 * @return a status object with code <code>IStatus.OK</code> if the given name
-	 *         is valid as a .class file name, otherwise a status object indicating
-	 *         what is wrong with the name
-	 */
-	/*
-	 * public static boolean isValidClassFileName(String name, String sourceLevel,
-	 * String complianceLevel) { return JavaConventions.validateClassFileName(name,
-	 * sourceLevel, complianceLevel).getSeverity() != IStatus.ERROR; }
-	 */
-
 	/**
 	 * Validate the given compilation unit name. A compilation unit name must obey
 	 * the following rules:
@@ -1416,11 +1237,11 @@ public class Util {
 	 * </p>
 	 * 
 	 * @param name
-	 *            the name of a compilation unit
+	 *                            the name of a compilation unit
 	 * @param sourceLevel
-	 *            the source level
+	 *                            the source level
 	 * @param complianceLevel
-	 *            the compliance level
+	 *                            the compliance level
 	 * @return a status object with code <code>IStatus.OK</code> if the given name
 	 *         is valid as a compilation unit name, otherwise a status object
 	 *         indicating what is wrong with the name
@@ -1436,11 +1257,11 @@ public class Util {
 	 * not.
 	 * 
 	 * @param folderName
-	 *            the name of the folder
+	 *                            the name of the folder
 	 * @param sourceLevel
-	 *            the source level
+	 *                            the source level
 	 * @param complianceLevel
-	 *            the compliance level
+	 *                            the compliance level
 	 */
 
 	/*
@@ -1526,104 +1347,6 @@ public class Util {
 		PHPCorePlugin.log(status);
 	}
 
-	/*
-	 * public static ClassFileReader newClassFileReader(IResource resource) throws
-	 * CoreException, ClassFormatException, IOException { InputStream in = null; try
-	 * { in = ((IFile) resource).getContents(true); return ClassFileReader.read(in,
-	 * resource.getFullPath().toString()); } finally { if (in != null) in.close(); }
-	 * }
-	 */
-	/**
-	 * Normalizes the cariage returns in the given text. They are all changed to use
-	 * the given buffer's line separator.
-	 */
-	public static char[] normalizeCRs(char[] text, char[] buffer) {
-		CharArrayBuffer result = new CharArrayBuffer();
-		int lineStart = 0;
-		int length = text.length;
-		if (length == 0) {
-			return text;
-		}
-		String lineSeparator = getLineSeparator(text, buffer);
-		char nextChar = text[0];
-		for (int i = 0; i < length; i++) {
-			char currentChar = nextChar;
-			nextChar = i < length - 1 ? text[i + 1] : ' ';
-			switch (currentChar) {
-			case '\n':
-				int lineLength = i - lineStart;
-				char[] line = new char[lineLength];
-				System.arraycopy(text, lineStart, line, 0, lineLength);
-				result.append(line);
-				result.append(lineSeparator);
-				lineStart = i + 1;
-				break;
-			case '\r':
-				lineLength = i - lineStart;
-				if (lineLength >= 0) {
-					line = new char[lineLength];
-					System.arraycopy(text, lineStart, line, 0, lineLength);
-					result.append(line);
-					result.append(lineSeparator);
-					if (nextChar == '\n') {
-						nextChar = ' ';
-						lineStart = i + 2;
-					} else {
-						// when line separator are mixed in the same file
-						// \r might not be followed by a \n. If not, we should
-						// increment
-						// lineStart by one and not by two.
-						lineStart = i + 1;
-					}
-				} else {
-					// when line separator are mixed in the same file
-					// we need to prevent NegativeArraySizeException
-					lineStart = i + 1;
-				}
-				break;
-			}
-		}
-		char[] lastLine;
-		if (lineStart > 0) {
-			int lastLineLength = length - lineStart;
-			if (lastLineLength > 0) {
-				lastLine = new char[lastLineLength];
-				System.arraycopy(text, lineStart, lastLine, 0, lastLineLength);
-				result.append(lastLine);
-			}
-			return result.getContents();
-		}
-		return text;
-	}
-
-	/**
-	 * Normalizes the cariage returns in the given text. They are all changed to use
-	 * given buffer's line sepatator.
-	 */
-	public static String normalizeCRs(String text, String buffer) {
-		return new String(normalizeCRs(text.toCharArray(), buffer.toCharArray()));
-	}
-
-	/**
-	 * Converts the given relative path into a package name. Returns null if the
-	 * path is not a valid package name.
-	 * 
-	 * @param pkgPath
-	 *            the package path
-	 * @param sourceLevel
-	 *            the source level
-	 * @param complianceLevel
-	 *            the compliance level
-	 */
-	/*
-	 * public static String packageName(IPath pkgPath, String sourceLevel, String
-	 * complianceLevel) { StringBuffer pkgName = new
-	 * StringBuffer(IPackageFragment.DEFAULT_PACKAGE_NAME); for (int j = 0, max =
-	 * pkgPath.segmentCount(); j < max; j++) { String segment = pkgPath.segment(j);
-	 * if (!isValidFolderNameForPackage(segment, sourceLevel, complianceLevel)) {
-	 * return null; } pkgName.append(segment); if (j < pkgPath.segmentCount() - 1) {
-	 * pkgName.append("." ); //$NON-NLS-1$ } } return pkgName.toString(); }
-	 */
 	/**
 	 * Returns the length of the common prefix between s1 and s2.
 	 */
@@ -1864,17 +1587,18 @@ public class Util {
 	 * </ol>
 	 * 
 	 * @param divider
-	 *            the given divider
+	 *                    the given divider
 	 * @param string
-	 *            the given string
+	 *                    the given string
 	 * @param start
-	 *            the given starting index
+	 *                    the given starting index
 	 * @param end
-	 *            the given ending index
+	 *                    the given ending index
 	 * @return a new array which is the split of the given string using the given
 	 *         divider
 	 * @throws ArrayIndexOutOfBoundsException
-	 *             if start is lower than 0 or end is greater than the array length
+	 *                                            if start is lower than 0 or end is
+	 *                                            greater than the array length
 	 */
 	public static final String[] splitOn(char divider, String string, int start, int end) {
 		if (string == null || string.length() == 0 || start > end) {
@@ -1904,10 +1628,10 @@ public class Util {
 	 * no-op if the file system does not support the read-only attribute.
 	 * 
 	 * @param resource
-	 *            The resource to set as read-only
+	 *                     The resource to set as read-only
 	 * @param readOnly
-	 *            <code>true</code> to set it to read-only, <code>false</code> to
-	 *            unset
+	 *                     <code>true</code> to set it to read-only,
+	 *                     <code>false</code> to unset
 	 */
 	public static void setReadOnly(IResource resource, boolean readOnly) {
 		if (isReadOnlySupported()) {
@@ -1985,12 +1709,8 @@ public class Util {
 		int len = elements.length;
 		IModelElement[] copy = new IModelElement[len];
 		System.arraycopy(elements, 0, copy, 0, len);
-		sort(copy, new Comparer() {
-			@Override
-			public int compare(Object a, Object b) {
-				return ((ModelElement) a).toStringWithAncestors().compareTo(((ModelElement) b).toStringWithAncestors());
-			}
-		});
+		sort(copy, (a, b) -> ((ModelElement) a).toStringWithAncestors()
+				.compareTo(((ModelElement) b).toStringWithAncestors()));
 		return copy;
 	}
 
@@ -2400,7 +2120,7 @@ public class Util {
 	 * Returns true if the given name ends with one of the known java like
 	 * extension. (implementation is not creating extra strings)
 	 */
-	public final static boolean isJavaLikeFileName(String name) {
+	public static final boolean isJavaLikeFileName(String name) {
 		if (name == null) {
 			return false;
 		}
@@ -2411,7 +2131,7 @@ public class Util {
 	 * Returns true if the given name ends with one of the known java like
 	 * extension. (implementation is not creating extra strings)
 	 */
-	public final static boolean isJavaLikeFileName(char[] fileName) {
+	public static final boolean isJavaLikeFileName(char[] fileName) {
 		if (fileName == null) {
 			return false;
 		}
@@ -2450,12 +2170,12 @@ public class Util {
 	 * </pre>
 	 * 
 	 * @param string
-	 *            the signature string
+	 *                   the signature string
 	 * @param start
-	 *            the 0-based character index of the first character
+	 *                   the 0-based character index of the first character
 	 * @return the 0-based character index of the last character
 	 * @exception IllegalArgumentException
-	 *                if this is not a type signature
+	 *                                         if this is not a type signature
 	 */
 	public static int scanTypeSignature(char[] string, int start) {
 		// need a minimum 1 char
@@ -2507,12 +2227,12 @@ public class Util {
 	 * without complaint.
 	 * 
 	 * @param string
-	 *            the signature string
+	 *                   the signature string
 	 * @param start
-	 *            the 0-based character index of the first character
+	 *                   the 0-based character index of the first character
 	 * @return the 0-based character index of the last character
 	 * @exception IllegalArgumentException
-	 *                if this is not a base type signature
+	 *                                         if this is not a base type signature
 	 */
 	public static int scanBaseTypeSignature(char[] string, int start) {
 		// need a minimum 1 char
@@ -2537,12 +2257,13 @@ public class Util {
 	 * </pre>
 	 * 
 	 * @param string
-	 *            the signature string
+	 *                   the signature string
 	 * @param start
-	 *            the 0-based character index of the first character
+	 *                   the 0-based character index of the first character
 	 * @return the 0-based character index of the last character
 	 * @exception IllegalArgumentException
-	 *                if this is not an array type signature
+	 *                                         if this is not an array type
+	 *                                         signature
 	 */
 	public static int scanArrayTypeSignature(char[] string, int start) {
 		int length = string.length;
@@ -2576,12 +2297,13 @@ public class Util {
 	 * </pre>
 	 * 
 	 * @param string
-	 *            the signature string
+	 *                   the signature string
 	 * @param start
-	 *            the 0-based character index of the first character
+	 *                   the 0-based character index of the first character
 	 * @return the 0-based character index of the last character
 	 * @exception IllegalArgumentException
-	 *                if this is not a capture type signature
+	 *                                         if this is not a capture type
+	 *                                         signature
 	 */
 	public static int scanCaptureTypeSignature(char[] string, int start) {
 		// need a minimum 2 char
@@ -2605,12 +2327,13 @@ public class Util {
 	 * </pre>
 	 * 
 	 * @param string
-	 *            the signature string
+	 *                   the signature string
 	 * @param start
-	 *            the 0-based character index of the first character
+	 *                   the 0-based character index of the first character
 	 * @return the 0-based character index of the last character
 	 * @exception IllegalArgumentException
-	 *                if this is not a type variable signature
+	 *                                         if this is not a type variable
+	 *                                         signature
 	 */
 	public static int scanTypeVariableSignature(char[] string, int start) {
 		// need a minimum 3 chars "Tx;"
@@ -2637,12 +2360,12 @@ public class Util {
 	 * "&lt;", "&gt;", "/", ".".
 	 * 
 	 * @param string
-	 *            the signature string
+	 *                   the signature string
 	 * @param start
-	 *            the 0-based character index of the first character
+	 *                   the 0-based character index of the first character
 	 * @return the 0-based character index of the last character
 	 * @exception IllegalArgumentException
-	 *                if this is not an identifier
+	 *                                         if this is not an identifier
 	 */
 	public static int scanIdentifier(char[] string, int start) {
 		// need a minimum 1 char
@@ -2678,12 +2401,12 @@ public class Util {
 	 * complaint.
 	 * 
 	 * @param string
-	 *            the signature string
+	 *                   the signature string
 	 * @param start
-	 *            the 0-based character index of the first character
+	 *                   the 0-based character index of the first character
 	 * @return the 0-based character index of the last character
 	 * @exception IllegalArgumentException
-	 *                if this is not a class type signature
+	 *                                         if this is not a class type signature
 	 */
 	public static int scanClassTypeSignature(char[] string, int start) {
 		// need a minimum 3 chars "Lx;"
@@ -2726,12 +2449,13 @@ public class Util {
 	 * </pre>
 	 * 
 	 * @param string
-	 *            the signature string
+	 *                   the signature string
 	 * @param start
-	 *            the 0-based character index of the first character
+	 *                   the 0-based character index of the first character
 	 * @return the 0-based character index of the last character
 	 * @exception IllegalArgumentException
-	 *                if this is not a type variable signature
+	 *                                         if this is not a type variable
+	 *                                         signature
 	 */
 	public static int scanTypeBoundSignature(char[] string, int start) {
 		// need a minimum 1 char for wildcard
@@ -2789,12 +2513,13 @@ public class Util {
 	 * type argument signatures without complaint.
 	 * 
 	 * @param string
-	 *            the signature string
+	 *                   the signature string
 	 * @param start
-	 *            the 0-based character index of the first character
+	 *                   the 0-based character index of the first character
 	 * @return the 0-based character index of the last character
 	 * @exception IllegalArgumentException
-	 *                if this is not a list of type arguments signatures
+	 *                                         if this is not a list of type
+	 *                                         arguments signatures
 	 */
 	public static int scanTypeArgumentSignatures(char[] string, int start) {
 		// need a minimum 2 char "<>"
@@ -2835,12 +2560,13 @@ public class Util {
 	 * syntactic ambiguity. This method will accept them without complaint.
 	 * 
 	 * @param string
-	 *            the signature string
+	 *                   the signature string
 	 * @param start
-	 *            the 0-based character index of the first character
+	 *                   the 0-based character index of the first character
 	 * @return the 0-based character index of the last character
 	 * @exception IllegalArgumentException
-	 *                if this is not a type argument signature
+	 *                                         if this is not a type argument
+	 *                                         signature
 	 */
 	public static int scanTypeArgumentSignature(char[] string, int start) {
 		// need a minimum 1 char
@@ -2871,9 +2597,10 @@ public class Util {
 	 *      ['L','U',';'] ], [ ['L','B',';'] ] ]
 	 * 
 	 * @param typeSignatures
-	 *            Array of signatures (one per each type levels)
+	 *                           Array of signatures (one per each type levels)
 	 * @throws IllegalArgumentException
-	 *             If one of provided signature is malformed
+	 *                                      If one of provided signature is
+	 *                                      malformed
 	 * @return char[][][] Array of type arguments for each signature
 	 */
 	public final static char[][][] getAllTypeArguments(char[][] typeSignatures) {
@@ -2924,7 +2651,7 @@ public class Util {
 		 * <','L','B',';','>',';']
 		 * 
 		 * @param typeSignature
-		 *            ParameterizedSourceType type signature
+		 *                          ParameterizedSourceType type signature
 		 * @return char[][] Array of signatures for each level of given unique key
 		 */
 	public final static char[][] splitTypeLevelsSignature(String typeSignature) {
