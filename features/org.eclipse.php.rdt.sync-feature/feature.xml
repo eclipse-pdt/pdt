@@ -35,11 +35,14 @@
    </url>
 
    <requires>
-      <import feature="org.eclipse.php"/>
       <import feature="org.eclipse.ptp.rdt.sync"/>
       <import feature="org.eclipse.ptp.remote"/>
       <import feature="org.eclipse.remote"/>
    </requires>
+   
+   <includes
+         id="org.eclipse.php"
+         version="0.0.0"/>
 
    <plugin
          id="org.eclipse.php.rdt.sync.ui"
