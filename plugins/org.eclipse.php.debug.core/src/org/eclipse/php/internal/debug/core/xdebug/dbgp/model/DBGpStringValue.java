@@ -293,7 +293,9 @@ public class DBGpStringValue extends AbstractDBGpValue {
 	protected String createValueString(DBGpValueData valueData) {
 		fStringInfo = null;
 		String valueString = valueData.getValueString();
-		if (valueString != null && valueString.trim().length() > 0) {
+		if (valueString != null) {
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=533607
+			// return the value as-is, even when blank
 			return valueString;
 		} else {
 			fValueBytes = new byte[0];
