@@ -712,7 +712,9 @@ public class DBGpTarget extends DBGpElement
 		}
 		DBGpLogger.debug("browser is not null, sending " + stopDebugURL); //$NON-NLS-1$
 		try {
-			PHPDebugUtil.openLaunchURL(stopDebugURL);
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=534323
+			// launch asynchronously
+			PHPDebugUtil.openLaunchURL(stopDebugURL, false);
 		} catch (DebugException e) {
 			DBGpLogger.logException("Failed to send stop XDebug session URL: " + stopDebugURL, this, e); //$NON-NLS-1$
 		}

@@ -59,6 +59,26 @@ public final class PHPDebugUtil {
 	 * @throws MalformedURLException
 	 */
 	public static void openLaunchURL(final String launchURL) throws DebugException {
+		openLaunchURL(launchURL, true);
+	}
+
+	/**
+	 * Opens URL from debug/run launch configuration, through a synchronous or an
+	 * asynchronous UI thread call. When the UI thread is unavailable, the URL is
+	 * always handled synchronously in a non-graphical way. Users of this method
+	 * should handle exceptions that might be thrown but without need to log the
+	 * exception info (it is already handled by this implementation). <b>Note that
+	 * exceptions are only thrown when parameter doSyncExec is set to true or when
+	 * the UI thread is unavailable.</b>
+	 * 
+	 * @param launchURL
+	 * @param doSyncExec
+	 *                       opens URL synchronously when true, asynchronously
+	 *                       otherwise
+	 * @throws DebugException
+	 * @throws MalformedURLException
+	 */
+	public static void openLaunchURL(final String launchURL, final boolean doSyncExec) throws DebugException {
 		// If no display is available, it means eclipse is shutting down,
 		// try then to call the URL in a non-graphical way
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=517792
@@ -86,10 +106,9 @@ public final class PHPDebugUtil {
 			return;
 		}
 
-		final SyncObject<DebugException> e = new SyncObject<>();
+		final SyncObject<DebugException> e = doSyncExec ? new SyncObject<>() : null;
 
-		// Run synchronously to pass exception if any
-		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+		Runnable r = new Runnable() {
 			@Override
 			public void run() {
 				try {
@@ -117,14 +136,24 @@ public final class PHPDebugUtil {
 									launchURL),
 							t);
 					String errorMessage = PHPDebugCoreMessages.Debugger_Unexpected_Error_1;
-					e.set(new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(),
-							IPHPDebugConstants.INTERNAL_ERROR, errorMessage, t)));
+					if (e != null) {
+						e.set(new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(),
+								IPHPDebugConstants.INTERNAL_ERROR, errorMessage, t)));
+					}
 				}
 			}
-		});
-		DebugException ex = e.get();
-		if (ex != null) {
-			throw ex;
+		};
+
+		if (doSyncExec) {
+			// Run synchronously to pass exception if any
+			PlatformUI.getWorkbench().getDisplay().syncExec(r);
+			@SuppressWarnings("null")
+			DebugException ex = e.get();
+			if (ex != null) {
+				throw ex;
+			}
+		} else {
+			PlatformUI.getWorkbench().getDisplay().asyncExec(r);
 		}
 	}
 
