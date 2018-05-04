@@ -19,7 +19,6 @@
 <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.composer.ui"/>
 <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.core"/>
 <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.core.parser"/>
-<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,tests/org.eclipse.php.core.performance.tests"/>
 <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,tests/org.eclipse.php.core.tests"/>
 <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.debug.core"/>
 <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.debug.daemon"/>
@@ -47,10 +46,8 @@
 <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,features/org.eclipse.php.test-feature"/>
 <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,tests/org.eclipse.php.tests"/>
 <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.ui"/>
-<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,plugins/org.eclipse.php.ui.importer"/>
 <project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,tests/org.eclipse.php.ui.tests"/>
-<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,tests/org.eclipse.test.performance"/>
-<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,tests/org.eclipse.test.performance.ui"/>
+<project reference="1.0,http://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git,master,/"/>
 </provider>
 <workingSets editPageId="org.eclipse.jdt.ui.JavaWorkingSetPage" label="pdt" name="pdt">
 <item elementID="=org.eclipse.php.composer.api" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
@@ -72,14 +69,11 @@
 <item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.eclipse.php.help" type="4"/>
 <item elementID="=org.eclipse.php.profile.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.eclipse.php.composer.core" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.eclipse.test.performance" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.eclipse.php.phpunit" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.eclipse.php.server.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.eclipse.php.ui.importer" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.eclipse.php.ui.tests" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.eclipse.php.builtin.executables-feature" type="4"/>
 <item elementID="=org.eclipse.php.builtin.server.core" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.eclipse.php.core.performance.tests" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.eclipse.php.builtin.executables.macosx" type="4"/>
 <item elementID="=org.eclipse.php.refactoring.core.test" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.eclipse.php.builtin.executables-repository" type="4"/>
@@ -101,7 +95,7 @@
 <item elementID="=org.eclipse.php.debug.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.eclipse.php.formatter.core.tests" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.eclipse.php.tests" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=pdt" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.eclipse.php.phpunit-feature" type="4"/>
-<item elementID="=org.eclipse.test.performance.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 </workingSets>
 </psf>
