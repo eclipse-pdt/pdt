@@ -173,7 +173,7 @@ public class PHPRunToLineAdapter implements IRunToLineTarget {
 				// tags cannot have a breakpoint
 
 				if (lineText.equals("") //$NON-NLS-1$
-						|| lineText.matches("^(<%|<[?](=|php)?|[?%]>)+$") //$NON-NLS-1$
+						|| lineText.matches("^(<%[=]?|<[?](=|php)?|[?%]>)+$") //$NON-NLS-1$
 						|| lineText.startsWith("//")) { //$NON-NLS-1$
 					result = -1;
 				} else {
