@@ -11,10 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.util;
 
-import org.eclipse.dltk.core.IMember;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.ScriptElementImageProvider;
 import org.eclipse.dltk.ui.ScriptElementLabels;
@@ -22,6 +19,7 @@ import org.eclipse.dltk.ui.viewsupport.ImageDescriptorRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.php.core.PHPToolkitUtil;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.swt.graphics.Image;
@@ -45,9 +43,9 @@ public class PHPModelLabelProvider extends LabelProvider implements ILabelProvid
 
 	/**
 	 * @param textFlags
-	 *            Flags defined in {@link ScriptElementLabels}.
+	 *                       Flags defined in {@link ScriptElementLabels}.
 	 * @param imageFlags
-	 *            Flags defined in {@link ScriptElementImageProvider}.
+	 *                       Flags defined in {@link ScriptElementImageProvider}.
 	 */
 	public PHPModelLabelProvider(final long textFlags, final int imageFlags) {
 		fImageFlags = imageFlags;
@@ -95,7 +93,9 @@ public class PHPModelLabelProvider extends LabelProvider implements ILabelProvid
 	}
 
 	private ImageDescriptor getBaseImageDescriptor(IModelElement element, int imageFlags) {
-
+		if (element instanceof ISourceModule && PHPToolkitUtil.isPHPFile((ISourceModule) element)) {
+			return PHPPluginImages.getImageRegistry().getDescriptor(PHPPluginImages.IMG_OBJS_PHP_FILE);
+		}
 		return fImageProvider.getBaseImageDescriptor(element, imageFlags);
 	}
 
