@@ -16,10 +16,12 @@
 package org.eclipse.php.core.ast.nodes;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.evaluation.types.SimpleType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.core.compiler.PHPFlags;
@@ -84,7 +86,7 @@ public class DefaultBindingResolver extends BindingResolver {
 
 	/**
 	 * @param sourceModule
-	 *            of this resolver
+	 *                         of this resolver
 	 */
 	public DefaultBindingResolver(ISourceModule sourceModule, WorkingCopyOwner owner) {
 		this.sourceModule = sourceModule;
@@ -113,13 +115,43 @@ public class DefaultBindingResolver extends BindingResolver {
 		if (typeName == null) {
 			return null;
 		}
-		String key = IModelElement.TYPE + ":" + typeName; //$NON-NLS-1$
-		IBinding binding = bindingTables.bindingKeysToBindings.get(key);
-		if (binding == null) {
-			binding = new TypeBinding(this, type, modelElements);
-			bindingTables.bindingKeysToBindings.put(key, binding);
+
+		Map<String, List<IModelElement>> nameMap = new HashMap<String, List<IModelElement>>();
+		if (modelElements != null && modelElements.length > 0) {
+			for (IModelElement model : modelElements) {
+				String name = PHPModelUtils.getFullName(model);
+				if (!nameMap.containsKey(name)) {
+					nameMap.put(name, new LinkedList<>());
+				}
+				nameMap.get(name).add(model);
+			}
 		}
-		return (ITypeBinding) binding;
+
+		if (type instanceof SimpleType || modelElements == null || nameMap.size() < 2) {
+			String key = new StringBuilder(IModelElement.TYPE).append(":").append(type.getTypeName()).toString();
+			IBinding binding = bindingTables.bindingKeysToBindings.get(key);
+			if (binding == null) {
+				binding = new TypeBinding(this, type, modelElements);
+				bindingTables.bindingKeysToBindings.put(key, binding);
+			}
+			return (ITypeBinding) binding;
+		}
+		List<ITypeBinding> bindingList = new LinkedList<>();
+		for (Entry<String, List<IModelElement>> entry : nameMap.entrySet()) {
+			String key = new StringBuilder(IModelElement.TYPE).append(":").append(entry.getKey()).toString(); //$NON-NLS-1$
+			IBinding binding = bindingTables.bindingKeysToBindings.get(key);
+			if (binding == null) {
+				binding = new TypeBinding(this, new PHPClassType(entry.getKey()),
+						entry.getValue().toArray(new IModelElement[0]));
+				bindingTables.bindingKeysToBindings.put(key, binding);
+			}
+			bindingList.add((ITypeBinding) binding);
+		}
+		if (bindingList.size() == 1) {
+			return bindingList.get(0);
+		}
+
+		return new MultiTypeBinding(this, bindingList.toArray(new ITypeBinding[0]));
 	}
 
 	/**
@@ -131,7 +163,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	 * </p>
 	 * 
 	 * @param type
-	 *            the given type
+	 *                 the given type
 	 * @return the new type binding
 	 */
 	@Override
@@ -142,12 +174,6 @@ public class DefaultBindingResolver extends BindingResolver {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#getTypeBinding
-	 * (org.eclipse.dltk.core.IType[])
-	 */
 	@Override
 	ITypeBinding getTypeBinding(IType[] types) {
 		if (ArrayUtils.isNotEmpty(types)) {
@@ -161,7 +187,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	 * binding.
 	 * 
 	 * @param field
-	 *            An {@link IField}
+	 *                  An {@link IField}
 	 * @return the new variable binding, or null in case the given field is null.
 	 */
 	@Override
@@ -177,7 +203,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	 * Returns the new method binding corresponding to the given {@link IMethod} .
 	 * 
 	 * @param method
-	 *            An {@link IMethod}
+	 *                   An {@link IMethod}
 	 * @return the new method binding
 	 */
 	@Override
@@ -263,8 +289,8 @@ public class DefaultBindingResolver extends BindingResolver {
 	 * @param offset
 	 * @param length
 	 * @param filter
-	 *            Indicate whether to use the File-Network in order to filter the
-	 *            results.
+	 *                   Indicate whether to use the File-Network in order to filter
+	 *                   the results.
 	 * 
 	 * @see #getModelElements(int, int)
 	 * @see BindingUtility#getModelElement(int, int, boolean)
@@ -332,7 +358,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	 * </p>
 	 * 
 	 * @param method
-	 *            the method or constructor declaration of interest
+	 *                   the method or constructor declaration of interest
 	 * @return the binding for the given method declaration, or <code>null</code> if
 	 *         no binding is available
 	 */
@@ -832,8 +858,8 @@ public class DefaultBindingResolver extends BindingResolver {
 		 * declaration.
 		 * 
 		 * @param node
-		 *            the body declaration. Must either be a method declaration or an
-		 *            initializer.
+		 *                 the body declaration. Must either be a method declaration or
+		 *                 an initializer.
 		 * @return the maximum number of local variables
 		 */
 		public static int perform(ASTNode node, Variable variable) {

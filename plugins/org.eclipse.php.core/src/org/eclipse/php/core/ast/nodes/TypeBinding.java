@@ -85,15 +85,16 @@ public class TypeBinding implements ITypeBinding {
 	 * </p>
 	 * 
 	 * @param dimension
-	 *            the given dimension
+	 *                      the given dimension
 	 * @return an array type binding
 	 * @throws IllegalArgumentException
-	 *             :
-	 *             <ul>
-	 *             <li>if the receiver represents the void type</li>
-	 *             <li>if the resulting dimensions is lower than one or greater than
-	 *             255</li>
-	 *             </ul>
+	 *                                      :
+	 *                                      <ul>
+	 *                                      <li>if the receiver represents the void
+	 *                                      type</li>
+	 *                                      <li>if the resulting dimensions is lower
+	 *                                      than one or greater than 255</li>
+	 *                                      </ul>
 	 */
 	@Override
 	public ITypeBinding createArrayType(int dimension) {
@@ -660,7 +661,7 @@ public class TypeBinding implements ITypeBinding {
 	 * Returns whether this type is subtype compatible with the given type.
 	 * 
 	 * @param type
-	 *            the type to check compatibility against
+	 *                 the type to check compatibility against
 	 * @return <code>true</code> if this type is subtype compatible with the given
 	 *         type, and <code>false</code> otherwise
 	 * 
@@ -687,7 +688,7 @@ public class TypeBinding implements ITypeBinding {
 					supertypeHierarchy = type.newSupertypeHierarchy(new NullProgressMonitor());
 					hierarchy.put(type, supertypeHierarchy);
 				}
-				IModelElement[] otherElements = ((TypeBinding) otherType).elements;
+				IModelElement[] otherElements = otherType.getPHPElements();
 				if (otherElements != null) {
 					for (IModelElement modelElement : otherElements) {
 						if (modelElement instanceof IType && supertypeHierarchy.contains((IType) modelElement)) {
@@ -851,7 +852,7 @@ public class TypeBinding implements ITypeBinding {
 	 * {@link #isEqualTo(IBinding)}, which checks their keys.
 	 * 
 	 * @param other
-	 *            {@inheritDoc}
+	 *                  {@inheritDoc}
 	 * @return {@inheritDoc}
 	 */
 	@Override
