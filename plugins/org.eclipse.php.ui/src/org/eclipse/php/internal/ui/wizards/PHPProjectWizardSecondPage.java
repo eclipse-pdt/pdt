@@ -217,7 +217,7 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 			configureScriptProject(new SubProgressMonitor(monitor, 30));
 
 			// checking and adding JS nature,libs, include path if needed
-			if (fFirstPage.fJavaScriptSupportGroup.shouldSupportJavaScript()) {
+			if (fFirstPage.getJavaScriptSupportGroup().shouldSupportJavaScript()) {
 				addJavaScriptNature(monitor);
 			}
 
@@ -451,11 +451,11 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 	}
 
 	protected void setPHPLangOptions() {
-		if (fFirstPage.fVersionGroup.fDefaultValues.isSelected()) {
+		if (fFirstPage.getVersionGroup().fDefaultValues.isSelected()) {
 			return;
 		}
-		boolean useASPTags = fFirstPage.fVersionGroup.fConfigurationBlock.getUseAspTagsValue();
-		PHPVersion phpVersion = fFirstPage.fVersionGroup.fConfigurationBlock.getPHPVersionValue();
+		boolean useASPTags = fFirstPage.getVersionGroup().fConfigurationBlock.getUseAspTagsValue();
+		PHPVersion phpVersion = fFirstPage.getVersionGroup().fConfigurationBlock.getPHPVersionValue();
 		ProjectOptions.setSupportingASPTags(useASPTags, getProject());
 		ProjectOptions.setPHPVersion(phpVersion, getProject());
 	}
@@ -465,15 +465,15 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 	 * configured. No natures are added.
 	 * 
 	 * @param project
-	 *            The handle of the project to create.
+	 *                        The handle of the project to create.
 	 * @param locationURI
-	 *            The location of the project or <code>null</code> to create the
-	 *            project in the workspace
+	 *                        The location of the project or <code>null</code> to
+	 *                        create the project in the workspace
 	 * @param monitor
-	 *            a progress monitor to report progress or <code>null</code> if
-	 *            progress reporting is not desired
+	 *                        a progress monitor to report progress or
+	 *                        <code>null</code> if progress reporting is not desired
 	 * @throws CoreException
-	 *             if the project couldn't be created
+	 *                           if the project couldn't be created
 	 * @see org.eclipse.core.resources.IProjectDescription#setLocationURI(java.net.URI)
 	 * 
 	 */

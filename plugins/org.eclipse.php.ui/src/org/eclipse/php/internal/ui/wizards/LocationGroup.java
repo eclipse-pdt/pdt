@@ -43,16 +43,15 @@ import org.eclipse.swt.widgets.Shell;
  * or has been invoked programmatically.
  */
 public class LocationGroup extends Observable implements Observer, IStringButtonAdapter, IDialogFieldListener {
-	protected final SelectionButtonDialogField fWorkspaceRadio;
-	protected final SelectionButtonDialogField fExternalRadio;
-	protected final StringButtonDialogField fLocation;
-	// protected final ComboDialogField fEnvironment;
+	private final SelectionButtonDialogField fWorkspaceRadio;
+	private final SelectionButtonDialogField fExternalRadio;
+	private final StringButtonDialogField fLocation;
 	private IEnvironment[] environments;
 
 	private String fPreviousExternalLocation;
 	private int localEnv;
-	protected SelectionButtonDialogField fLocalServerRadio;
-	protected ComboDialogField fSeverLocationList;
+	private SelectionButtonDialogField fLocalServerRadio;
+	private ComboDialogField fSeverLocationList;
 	private String[] docRootArray;
 	private NameGroup fNameGroup;
 	private Shell shell;
@@ -174,11 +173,6 @@ public class LocationGroup extends Observable implements Observer, IStringButton
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-	 */
 	@Override
 	public void update(Observable o, Object arg) {
 		if (isInWorkspace()) {
@@ -220,7 +214,6 @@ public class LocationGroup extends Observable implements Observer, IStringButton
 		if (fWorkspaceRadio.isSelected()) {
 			return EnvironmentManager.getEnvironmentById(LocalEnvironment.ENVIRONMENT_ID);
 		}
-		// return environments[fEnvironment.getSelectionIndex()];
 		return environments[localEnv];
 	}
 

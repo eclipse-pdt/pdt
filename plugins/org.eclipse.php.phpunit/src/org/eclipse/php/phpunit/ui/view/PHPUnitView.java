@@ -69,9 +69,7 @@ public class PHPUnitView extends ViewPart {
 	private static final String RERUN_LAST_FAILED_COMMAND = "org.eclipse.php.phpunit.LaunchShortcut.rerunLastFailed"; //$NON-NLS-1$
 
 	static final int VIEW_ORIENTATION_AUTOMATIC = 2;
-
 	static final int VIEW_ORIENTATION_HORIZONTAL = 1;
-
 	static final int VIEW_ORIENTATION_VERTICAL = 0;
 
 	private static PHPUnitView instance = null;
@@ -106,35 +104,22 @@ public class PHPUnitView extends ViewPart {
 		return instance;
 	}
 
-	boolean codeCoverageTabVisibile = false;
+	private boolean codeCoverageTabVisibile = false;
 
-	final Image fCodeCoverageIcon = PHPUnitPlugin.createImage(CodeCoverageSection.CODE_COVERAGE_ICON_PATH);
-
-	Image fOriginalViewImage;
-
-	final Image fStackViewIcon = PHPUnitPlugin.createImage("eview16/stackframe.png");//$NON-NLS-1$
-
-	final Image fDiffViewIcon = PHPUnitPlugin.createImage("eview16/diff.png");//$NON-NLS-1$
-
-	boolean running = false;
+	private final Image fCodeCoverageIcon = PHPUnitPlugin.createImage(CodeCoverageSection.CODE_COVERAGE_ICON_PATH);
+	private final Image fStackViewIcon = PHPUnitPlugin.createImage("eview16/stackframe.png");//$NON-NLS-1$
+	private final Image fDiffViewIcon = PHPUnitPlugin.createImage("eview16/diff.png");//$NON-NLS-1$
 
 	/**
 	 * Whether the output scrolls and reveals tests as they are executed.
 	 */
-	protected boolean fAutoScroll = true;
-
-	protected CounterPanel fCounterPanel;
-
-	protected ProgressBar fProgressBar;
-
+	private boolean fAutoScroll = true;
+	private CounterPanel fCounterPanel;
+	private ProgressBar fProgressBar;
 	private CTabFolder bottomTabFolder;
-
 	private CTabItem codeCoverageTab;
-
 	private CodeCoverageSection fCodeCoverageSection;
-
 	private Action fCollapseAllAction;
-
 	private Composite fCounterComposite;
 
 	/**
@@ -150,7 +135,6 @@ public class PHPUnitView extends ViewPart {
 	/**
 	 * The tab that shows the stack trace of a failure
 	 */
-	// private DiffTrace fDiffTrace;
 	private FailureTrace fFailureTrace;
 
 	/**
@@ -220,7 +204,6 @@ public class PHPUnitView extends ViewPart {
 		fCounterComposite.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL));
 		final SashForm sashForm = createSashForm(parent);
 		sashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
-		fOriginalViewImage = getTitleImage();
 	}
 
 	public void handleTestSelected(final PHPUnitElement testInfo) {
@@ -326,8 +309,7 @@ public class PHPUnitView extends ViewPart {
 					title = filters.get(0);
 				}
 			}
-			final String configName = MessageFormat.format(PHPUnitMessages.PHPUnitView_Rerun_Config,
-					new Object[] { title });
+			final String configName = MessageFormat.format(PHPUnitMessages.PHPUnitView_Rerun_Config, title);
 			final ILaunchConfigurationWorkingCopy tmp = launchConfiguration.copy(configName);
 
 			tmp.setAttribute(PHPUnitLaunchAttributes.ATTRIBUTE_RERUN, true);
@@ -406,7 +388,6 @@ public class PHPUnitView extends ViewPart {
 	}
 
 	public void startRunning(final ILaunch launch, final PHPUnitConnectionListener listener) {
-		running = true;
 		setLaunch(launch);
 		this.listener = listener;
 		Display.getDefault().asyncExec(() -> reset());
@@ -445,7 +426,6 @@ public class PHPUnitView extends ViewPart {
 		if (input != null) {
 			PHPUnitMessageParser.getInstance().setInProgress(false);
 		}
-		running = false;
 	}
 
 	void computeOrientation() {

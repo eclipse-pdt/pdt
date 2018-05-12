@@ -22,13 +22,13 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 public class ConfigurationPage extends ComposerFormPage {
 
-	public final static String ID = "org.eclipse.php.composer.ui.editor.composer.ConfigurationPage"; //$NON-NLS-1$
+	public static final String ID = "org.eclipse.php.composer.ui.editor.composer.ConfigurationPage"; //$NON-NLS-1$
 
-	protected ComposerFormEditor editor;
+	private ComposerFormEditor editor;
 
-	protected ConfigSection configSection;
-	protected ScriptsSection scriptsSection;
-	protected RepositoriesSection repositoriesSection;
+	private ConfigSection configSection;
+	private ScriptsSection scriptsSection;
+	private RepositoriesSection repositoriesSection;
 
 	private Composite left;
 	private Composite right;

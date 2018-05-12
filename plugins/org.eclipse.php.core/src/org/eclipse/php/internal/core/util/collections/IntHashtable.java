@@ -57,12 +57,13 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 * specified load factor.
 	 * 
 	 * @param initialCapacity
-	 *            the initial capacity of the hashtable.
+	 *                            the initial capacity of the hashtable.
 	 * @param loadFactor
-	 *            the load factor of the hashtable.
+	 *                            the load factor of the hashtable.
 	 * @exception IllegalArgumentException
-	 *                if the initial capacity is less than zero, or if the load
-	 *                factor is nonpositive.
+	 *                                         if the initial capacity is less than
+	 *                                         zero, or if the load factor is
+	 *                                         nonpositive.
 	 */
 	public IntHashtable(int initialCapacity, float loadFactor) {
 		if (initialCapacity < 0) {
@@ -85,9 +86,10 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 * default load factor, which is <tt>0.75</tt>.
 	 * 
 	 * @param initialCapacity
-	 *            the initial capacity of the hashtable.
+	 *                            the initial capacity of the hashtable.
 	 * @exception IllegalArgumentException
-	 *                if the initial capacity is less than zero.
+	 *                                         if the initial capacity is less than
+	 *                                         zero.
 	 */
 	public IntHashtable(int initialCapacity) {
 		this(initialCapacity, 0.75f);
@@ -108,7 +110,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 * <tt>0.75</tt>.
 	 * 
 	 * @param t
-	 *            the map whose mappings are to be placed in this map.
+	 *              the map whose mappings are to be placed in this map.
 	 * @since 1.2
 	 */
 	public IntHashtable(IntMap t) {
@@ -171,12 +173,12 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 * is part of the Map interface in the collections framework).
 	 * 
 	 * @param value
-	 *            a value to search for.
+	 *                  a value to search for.
 	 * @return <code>true</code> if and only if some key maps to the
 	 *         <code>value</code> argument in this hashtable as determined by the
 	 *         <tt>equals</tt> method; <code>false</code> otherwise.
 	 * @exception NullPointerException
-	 *                if the value is <code>null</code>.
+	 *                                     if the value is <code>null</code>.
 	 * @see #containsValue(Object)
 	 * @see Map
 	 */
@@ -204,7 +206,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 * predates the Map interface).
 	 * 
 	 * @param value
-	 *            value whose presence in this Hashtable is to be tested.
+	 *                  value whose presence in this Hashtable is to be tested.
 	 * @return <tt>true</tt> if this map maps one or more keys to the specified
 	 *         value.
 	 * @see Map
@@ -219,7 +221,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 * Tests if the specified object is a key in this hashtable.
 	 * 
 	 * @param key
-	 *            possible key.
+	 *                possible key.
 	 * @return <code>true</code> if and only if the specified object is a key in
 	 *         this hashtable, as determined by the <tt>equals</tt> method;
 	 *         <code>false</code> otherwise.
@@ -228,7 +230,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	@Override
 	public synchronized boolean containsKey(int key) {
 		Entry tab[] = table;
-		int hash = key;// .hashCode();
+		int hash = key;
 		int index = (hash & 0x7FFFFFFF) % tab.length;
 		for (Entry e = tab[index]; e != null; e = e.next) {
 			if ((e.hash == hash) && e.key/* .equals( */ == key/* ) */) {
@@ -242,7 +244,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 * Returns the value to which the specified key is mapped in this hashtable.
 	 * 
 	 * @param key
-	 *            a key in the hashtable.
+	 *                a key in the hashtable.
 	 * @return the value to which the key is mapped in this hashtable;
 	 *         <code>null</code> if the key is not mapped to any value in this
 	 *         hashtable.
@@ -250,7 +252,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	@Override
 	public synchronized Object get(int key) {
 		Entry tab[] = table;
-		int hash = key;// .hashCode();
+		int hash = key;
 		int index = (hash & 0x7FFFFFFF) % tab.length;
 		for (Entry e = tab[index]; e != null; e = e.next) {
 			if ((e.hash == hash) && e.key/* .equals( */ == key/* ) */) {
@@ -298,13 +300,13 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 * that is equal to the original key.
 	 * 
 	 * @param key
-	 *            the hashtable key.
+	 *                  the hashtable key.
 	 * @param value
-	 *            the value.
+	 *                  the value.
 	 * @return the previous value of the specified key in this hashtable, or
 	 *         <code>null</code> if it did not have one.
 	 * @exception NullPointerException
-	 *                if the key or value is <code>null</code>.
+	 *                                     if the key or value is <code>null</code>.
 	 * @see Object#equals(Object)
 	 */
 	@Override
@@ -347,7 +349,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 * method does nothing if the key is not in the hashtable.
 	 * 
 	 * @param key
-	 *            the key that needs to be removed.
+	 *                the key that needs to be removed.
 	 * @return the value to which the key had been mapped in this hashtable, or
 	 *         <code>null</code> if the key did not have a mapping.
 	 */
@@ -379,7 +381,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 * keys currently in the specified Map.
 	 * 
 	 * @param t
-	 *            Mappings to be stored in this map.
+	 *              Mappings to be stored in this map.
 	 * @since 1.2
 	 */
 	@Override
@@ -419,7 +421,6 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 			for (int i = table.length; i-- > 0;) {
 				t.table[i] = (table[i] != null) ? (Entry) table[i].clone() : null;
 			}
-			// t.keySet = null;
 			t.entrySet = null;
 			t.values = null;
 			t.modCount = 0;
@@ -474,8 +475,6 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	}
 
 	// Views
-
-	// private transient Set keySet = null;
 	private transient Set<?> entrySet = null;
 	private transient Collection<?> values = null;
 
@@ -531,7 +530,7 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 			IntMap.Entry entry = (IntMap.Entry) o;
 			/* Object */int key = entry.getKey();
 			Entry tab[] = table;
-			int hash = key;// .hashCode();
+			int hash = key;
 			int index = (hash & 0x7FFFFFFF) % tab.length;
 
 			for (Entry e = tab[index]; e != null; e = e.next) {
@@ -746,10 +745,10 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	 * Hashtable collision list.
 	 */
 	private static class Entry implements IntMap.Entry {
-		int hash;
-		int key;
-		Object value;
-		Entry next;
+		private int hash;
+		private int key;
+		private Object value;
+		private Entry next;
 
 		protected Entry(int hash, int key, Object value, Entry next) {
 			this.hash = hash;
@@ -809,7 +808,6 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 	}
 
 	// Types of Enumerations/Iterations
-	// private static final int KEYS = 0;
 	private static final int VALUES = 1;
 	private static final int ENTRIES = 2;
 
@@ -872,7 +870,6 @@ public class IntHashtable implements IntMap, Cloneable, Serializable {
 			if (et != null) {
 				Entry e = lastReturned = entry;
 				entry = e.next;
-				// return type == KEYS ? e.key : (type == VALUES ? e.value : e);
 				return type == VALUES ? e.value : e;
 			}
 			throw new NoSuchElementException("Hashtable Enumerator"); //$NON-NLS-1$
