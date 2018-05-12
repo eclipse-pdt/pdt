@@ -21,7 +21,9 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.dltk.internal.ui.wizards.dialogfields.*;
+import org.eclipse.dltk.internal.ui.wizards.dialogfields.LayoutUtil;
+import org.eclipse.dltk.internal.ui.wizards.dialogfields.StringButtonDialogField;
+import org.eclipse.dltk.internal.ui.wizards.dialogfields.StringDialogField;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -50,21 +52,20 @@ import org.eclipse.ui.dialogs.WizardDataTransferPage;
  */
 public class WizardResourceImportPage extends WizardDataTransferPage {
 
-	protected String sourceFromDialog;
-	protected String source;
-	protected String target;
-	protected String projectName;
-	protected StringButtonDialogField sourcePath;
-	protected IPath json;
-	protected ComposerPackage composerPackage;
-	protected StringDialogField projectNameField;
-	protected IWorkspace workspace;
-	protected StringButtonDialogField targetPath;
-	protected Button useWorkspaceLocation;
-	protected final String defaultMessage = Messages.WizardResourceImportPage_Description;
-	protected String lastNameFromProjectFile = null;
+	private String sourceFromDialog;
+	private String source;
+	private String target;
+	private String projectName;
+	private StringButtonDialogField sourcePath;
+	private IPath json;
+	private ComposerPackage composerPackage;
+	private StringDialogField projectNameField;
+	private IWorkspace workspace;
+	private StringButtonDialogField targetPath;
+	private Button useWorkspaceLocation;
+	private static final String defaultMessage = Messages.WizardResourceImportPage_Description;
 
-	protected boolean useWorkspace = true;
+	private boolean useWorkspace = true;
 
 	public WizardResourceImportPage(IWorkbench aWorkbench, IStructuredSelection selection, String[] strings) {
 		super(Messages.WizardResourceImportPage_Name);
@@ -106,25 +107,19 @@ public class WizardResourceImportPage extends WizardDataTransferPage {
 		projectNameField.doFillIntoGrid(control, numColumns);
 		LayoutUtil.setHorizontalGrabbing(projectNameField.getTextControl(null));
 
-		projectNameField.setDialogFieldListener(new IDialogFieldListener() {
-			@Override
-			public void dialogFieldChanged(DialogField field) {
-				projectName = projectNameField.getText();
-				updatePageCompletion();
-			}
+		projectNameField.setDialogFieldListener(field -> {
+			projectName = projectNameField.getText();
+			updatePageCompletion();
 		});
 
-		sourcePath = new StringButtonDialogField(new IStringButtonAdapter() {
-			@Override
-			public void changeControlPressed(DialogField field) {
-				DirectoryDialog dialog = new DirectoryDialog(getShell(), SWT.OPEN);
-				dialog.setMessage(Messages.WizardResourceImportPage_BrowseDialogMessage);
-				sourceFromDialog = dialog.open();
-				try {
-					handleSourcePathChange();
-				} catch (Exception e) {
-					Logger.logException(e);
-				}
+		sourcePath = new StringButtonDialogField(field -> {
+			DirectoryDialog dialog = new DirectoryDialog(getShell(), SWT.OPEN);
+			dialog.setMessage(Messages.WizardResourceImportPage_BrowseDialogMessage);
+			sourceFromDialog = dialog.open();
+			try {
+				handleSourcePathChange();
+			} catch (Exception e) {
+				Logger.logException(e);
 			}
 		});
 
@@ -142,7 +137,7 @@ public class WizardResourceImportPage extends WizardDataTransferPage {
 		useWorkspaceLocation.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				targetPath.setEnabled(useWorkspaceLocation.getSelection() == false);
+				targetPath.setEnabled(!useWorkspaceLocation.getSelection());
 				useWorkspace = useWorkspaceLocation.getSelection();
 				updatePageCompletion();
 			}
@@ -151,21 +146,6 @@ public class WizardResourceImportPage extends WizardDataTransferPage {
 		// don't know if we can use this in the future. for now, simply use the
 		// source location as the project location
 		useWorkspaceLocation.setVisible(false);
-
-		/*
-		 * targetPath = new StringButtonDialogField(new IStringButtonAdapter() {
-		 * 
-		 * @Override public void changeControlPressed(DialogField field) {
-		 * DirectoryDialog dialog = new DirectoryDialog(getShell(), SWT.OPEN);
-		 * dialog.setMessage("Select the target location"); target = dialog.open(); try
-		 * { handleTargetPathChange(); } catch (IOException e) { Logger.logException(e);
-		 * } } });
-		 * 
-		 * targetPath.setLabelText("Target path"); targetPath.setButtonLabel("Browse");
-		 * targetPath.doFillIntoGrid(control, numColumns);
-		 * targetPath.getTextControl(null).setEnabled(false);
-		 * targetPath.setEnabled(false);
-		 */
 
 		LayoutUtil.setHorizontalGrabbing(sourcePath.getTextControl(null));
 		setControl(control);
@@ -177,11 +157,6 @@ public class WizardResourceImportPage extends WizardDataTransferPage {
 	}
 
 	protected void handleTargetPathChange() throws IOException {
-
-		if (target != null) {
-			// targetPath.setText(target);
-		}
-
 		updatePageCompletion();
 	}
 
@@ -242,7 +217,7 @@ public class WizardResourceImportPage extends WizardDataTransferPage {
 
 		projectNameField.getTextControl(null).setEnabled(true);
 
-		if (source == null || json == null || json.toFile().exists() == false) {
+		if (source == null || json == null || !json.toFile().exists()) {
 			setErrorMessage(Messages.WizardResourceImportPage_NoComposerJsonError);
 			return false;
 		}
@@ -262,7 +237,6 @@ public class WizardResourceImportPage extends WizardDataTransferPage {
 				projectName = projectDescription.getName();
 				projectNameField.setTextWithoutUpdate(projectName);
 				projectNameField.getTextControl(null).setEnabled(false);
-				lastNameFromProjectFile = projectName;
 
 				setMessage(Messages.WizardResourceImportPage_EclipseProjectAvailableMessage);
 				return true;

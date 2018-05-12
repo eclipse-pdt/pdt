@@ -27,8 +27,6 @@ import org.eclipse.php.composer.ui.controller.PackageController;
 import org.eclipse.php.composer.ui.editor.FormLayoutFactory;
 import org.eclipse.php.composer.ui.utils.WidgetFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -38,8 +36,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 public class PackageSearch implements PackageSearchListenerInterface, IPackageCheckStateChangedListener {
 
-	protected final static long QUERY_DELAY_MS = 300;
-	protected final static long RESET_QUERY_DELAY_MS = 1500;
+	protected static final long QUERY_DELAY_MS = 300;
+	protected static final long RESET_QUERY_DELAY_MS = 1500;
 
 	protected FormToolkit toolkit;
 	protected WidgetFactory factory;
@@ -124,24 +122,7 @@ public class PackageSearch implements PackageSearchListenerInterface, IPackageCh
 		searchField.setEnabled(enabled);
 		searchField.setEditable(enabled);
 		searchField.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		searchField.addModifyListener(new ModifyListener() {
-			@Override
-			public void modifyText(ModifyEvent e) {
-				searchTextChanged();
-			}
-		});
-
-		// clicking the cancel icon sets content to null and invokes
-		// modifyText()
-		// ... no need to to it manually
-		//
-		// searchField.addSelectionListener(new SelectionAdapter() {
-		// public void widgetDefaultSelected(SelectionEvent e) {
-		// if (e.detail == SWT.ICON_CANCEL) {
-		// clearSearchText();
-		// }
-		// }
-		// });
+		searchField.addModifyListener(e -> searchTextChanged());
 
 		// create search results viewer
 		int style = SWT.H_SCROLL | SWT.V_SCROLL;

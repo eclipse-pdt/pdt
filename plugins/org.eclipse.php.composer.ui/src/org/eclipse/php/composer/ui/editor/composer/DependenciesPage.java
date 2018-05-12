@@ -14,7 +14,6 @@
  */
 package org.eclipse.php.composer.ui.editor.composer;
 
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.php.composer.api.ComposerPackage;
 import org.eclipse.php.composer.api.collection.Dependencies;
 import org.eclipse.php.composer.ui.editor.ComposerFormPage;
@@ -22,7 +21,6 @@ import org.eclipse.php.composer.ui.editor.FormLayoutFactory;
 import org.eclipse.php.composer.ui.parts.composer.DependencySelectionFinishedListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
@@ -36,26 +34,19 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
  */
 public class DependenciesPage extends ComposerFormPage {
 
-	public final static String ID = "org.eclipse.php.composer.ui.editor.composer.DependencyPage"; //$NON-NLS-1$
+	public static final String ID = "org.eclipse.php.composer.ui.editor.composer.DependencyPage"; //$NON-NLS-1$
 
 	private ComposerPackage composerPackage;
-	protected ComposerFormEditor editor;
+	private ComposerFormEditor editor;
 
-	protected Composite left;
-	protected Composite right;
-	protected DependencySection activeSection;
+	private Composite left;
+	private Composite right;
+	private DependencySection activeSection;
 
-	protected DependencySection requireSection = null;
-	protected TableViewer requireView;
-	protected Button requireEdit;
-	protected Button requireRemove;
+	private DependencySection requireSection = null;
 
-	protected DependencySection requireDevSection;
-	protected TableViewer requireDevView;
-	protected Button requireDevEdit;
-	protected Button requireDevRemove;
-
-	protected DependencySearchSection searchSection;
+	private DependencySection requireDevSection;
+	private DependencySearchSection searchSection;
 
 	/**
 	 * @param editor

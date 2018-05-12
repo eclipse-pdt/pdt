@@ -31,9 +31,9 @@ import org.eclipse.ui.forms.widgets.*;
  */
 public class OverviewPage extends ComposerFormPage {
 
-	public final static String ID = "org.eclipse.php.composer.ui.editor.composer.OverviewPage"; //$NON-NLS-1$
+	public static final String ID = "org.eclipse.php.composer.ui.editor.composer.OverviewPage"; //$NON-NLS-1$
 
-	protected ComposerFormEditor editor;
+	private ComposerFormEditor editor;
 
 	private Composite left;
 	private Composite right;
