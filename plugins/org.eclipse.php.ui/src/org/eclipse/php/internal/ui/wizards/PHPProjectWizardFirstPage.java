@@ -79,29 +79,27 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 	}
 
 	private static final String FILENAME_PROJECT = ".project"; //$NON-NLS-1$
-	protected static final String FILENAME_BUILDPATH = ".buildpath"; //$NON-NLS-1$
-	protected URI fCurrProjectLocation; // null if location is platform location
+	private static final String FILENAME_BUILDPATH = ".buildpath"; //$NON-NLS-1$
+	private URI fCurrProjectLocation; // null if location is platform location
 
 	private boolean fKeepContent;
 	private boolean fProjectCreated = false;
 
-	private File fDotProjectBackup;
-	private File fDotBuildpathBackup;
 	private Boolean fIsAutobuild;
 
 	private static final String PAGE_NAME = NewWizardMessages.ScriptProjectWizardFirstPage_page_title;
 	public static final String ERROR_MESSAGE = "ErrorMessage"; //$NON-NLS-1$
 
-	protected Validator fPdtValidator;
-	protected String fInitialName;
-	protected NameGroup fNameGroup;
-	protected DetectGroup fDetectGroup;
-	protected VersionGroup fVersionGroup;
-	protected JavaScriptSupportGroup fJavaScriptSupportGroup;
-	protected LayoutGroup fLayoutGroup;
-	protected LocationGroup fPHPLocationGroup;
-	protected WorkingSetGroup fWorkingSetGroup;
-	protected WizardFragment fragment;
+	private Validator fPdtValidator;
+	private String fInitialName;
+	private NameGroup fNameGroup;
+	private DetectGroup fDetectGroup;
+	private VersionGroup fVersionGroup;
+	private JavaScriptSupportGroup fJavaScriptSupportGroup;
+	private LayoutGroup fLayoutGroup;
+	private LocationGroup fPHPLocationGroup;
+	private WorkingSetGroup fWorkingSetGroup;
+	private WizardFragment fragment;
 
 	@Override
 	public void createControl(Composite parent) {
@@ -775,15 +773,15 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 	 * configured. No natures are added.
 	 * 
 	 * @param project
-	 *            The handle of the project to create.
+	 *                        The handle of the project to create.
 	 * @param locationURI
-	 *            The location of the project or <code>null</code> to create the
-	 *            project in the workspace
+	 *                        The location of the project or <code>null</code> to
+	 *                        create the project in the workspace
 	 * @param monitor
-	 *            a progress monitor to report progress or <code>null</code> if
-	 *            progress reporting is not desired
+	 *                        a progress monitor to report progress or
+	 *                        <code>null</code> if progress reporting is not desired
 	 * @throws CoreException
-	 *             if the project couldn't be created
+	 *                           if the project couldn't be created
 	 * @see org.eclipse.core.resources.IProjectDescription#setLocationURI(java.net.URI)
 	 * 
 	 */
@@ -793,18 +791,15 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 	}
 
 	protected void rememberExistingFiles(URI projectLocation) throws CoreException {
-		fDotProjectBackup = null;
-		fDotBuildpathBackup = null;
-
 		IFileStore file = EFS.getStore(projectLocation);
 		if (file.fetchInfo().exists()) {
 			IFileStore projectFile = file.getChild(FILENAME_PROJECT);
 			if (projectFile.fetchInfo().exists()) {
-				fDotProjectBackup = createBackup(projectFile, "project-desc"); //$NON-NLS-1$
+				createBackup(projectFile, "project-desc"); //$NON-NLS-1$
 			}
 			IFileStore buildpathFile = file.getChild(FILENAME_BUILDPATH);
 			if (buildpathFile.fetchInfo().exists()) {
-				fDotBuildpathBackup = createBackup(buildpathFile, "buildpath-desc"); //$NON-NLS-1$
+				createBackup(buildpathFile, "buildpath-desc"); //$NON-NLS-1$
 			}
 		}
 	}

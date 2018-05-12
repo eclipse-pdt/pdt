@@ -51,78 +51,77 @@ import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
 public class PHPDebugTarget extends PHPDebugElement
 		implements IPHPDebugTarget, IBreakpointManagerListener, IStepFilters {
 
-	protected ContextManager fContextManager;
+	private ContextManager fContextManager;
 
 	// use step filter or not
-	protected boolean isStepFiltersEnabled;
+	private boolean isStepFiltersEnabled;
 
 	// containing launch object
-	protected ILaunch fLaunch;
-	protected IProcess fProcess;
+	private ILaunch fLaunch;
+	private IProcess fProcess;
 
 	// program name
-	protected String fName;
-	protected String fURL;
-	protected int fRequestPort;
-	protected DebugOutput fDebugOutput = new DebugOutput();
+	private String fName;
+	private String fURL;
+	private int fRequestPort;
+	private DebugOutput fDebugOutput = new DebugOutput();
 
 	// suspend state
-	protected boolean fSuspended = false;
+	private boolean fSuspended = false;
 
 	// terminated state
-	protected boolean fTerminated = false;
-	protected boolean fTermainateCalled = false;
+	private boolean fTerminated = false;
+	private boolean fTermainateCalled = false;
 
 	// threads
-	protected PHPThread fThread;
-	protected IThread[] fThreads;
-	protected IRemoteDebugger debugger;
-	protected String fLastcmd;
-	protected boolean fStatus;
-	protected int fLastStop;
-	protected String fLastFileName;
-	protected boolean fIsPHPCGI;
-	protected boolean fIsRunAsDebug;
+	private PHPThread fThread;
+	private IThread[] fThreads;
+	private IRemoteDebugger debugger;
+	private String fLastcmd;
+	private boolean fStatus;
+	private int fLastStop;
+	private String fLastFileName;
+	private boolean fIsPHPCGI;
+	private boolean fIsRunAsDebug;
 
-	protected PHPResponseHandler fPHPResponseHandler;
-	protected org.eclipse.php.internal.debug.core.zend.debugger.Debugger.StartResponseHandler fStartResponseHandler;
-	protected org.eclipse.php.internal.debug.core.zend.debugger.Debugger.BreakpointAddedResponseHandler fBreakpointAddedResponseHandler;
-	protected org.eclipse.php.internal.debug.core.zend.debugger.Debugger.BreakpointRemovedResponseHandler fBreakpointRemovedResponseHandler;
-	protected org.eclipse.php.internal.debug.core.zend.debugger.Debugger.StepIntoResponseHandler fStepIntoResponseHandler;
-	protected org.eclipse.php.internal.debug.core.zend.debugger.Debugger.StepOverResponseHandler fStepOverResponseHandler;
-	protected org.eclipse.php.internal.debug.core.zend.debugger.Debugger.StepOutResponseHandler fStepOutResponseHandler;
-	protected org.eclipse.php.internal.debug.core.zend.debugger.Debugger.GoResponseHandler fGoResponseHandler;
-	protected org.eclipse.php.internal.debug.core.zend.debugger.Debugger.PauseResponseHandler fPauseResponseHandler;
-	protected org.eclipse.php.internal.debug.core.zend.debugger.Debugger.AddFilesResponseHandler fAddFilesResponseHandler;
-	protected DefaultExpressionsManager expressionsManager;
+	private PHPResponseHandler fPHPResponseHandler;
+	private org.eclipse.php.internal.debug.core.zend.debugger.Debugger.StartResponseHandler fStartResponseHandler;
+	private org.eclipse.php.internal.debug.core.zend.debugger.Debugger.BreakpointAddedResponseHandler fBreakpointAddedResponseHandler;
+	private org.eclipse.php.internal.debug.core.zend.debugger.Debugger.BreakpointRemovedResponseHandler fBreakpointRemovedResponseHandler;
+	private org.eclipse.php.internal.debug.core.zend.debugger.Debugger.StepIntoResponseHandler fStepIntoResponseHandler;
+	private org.eclipse.php.internal.debug.core.zend.debugger.Debugger.StepOverResponseHandler fStepOverResponseHandler;
+	private org.eclipse.php.internal.debug.core.zend.debugger.Debugger.StepOutResponseHandler fStepOutResponseHandler;
+	private org.eclipse.php.internal.debug.core.zend.debugger.Debugger.GoResponseHandler fGoResponseHandler;
+	private org.eclipse.php.internal.debug.core.zend.debugger.Debugger.PauseResponseHandler fPauseResponseHandler;
+	private org.eclipse.php.internal.debug.core.zend.debugger.Debugger.AddFilesResponseHandler fAddFilesResponseHandler;
+	private DefaultExpressionsManager expressionsManager;
 
-	// private IVariable[] fVariables;
-	protected IProject fProject;
-	protected int fSuspendCount;
-	protected Vector<IPHPConsoleEventListener> fConsoleEventListeners = new Vector<>();
-	protected Set<DebugError> fDebugErrors = new HashSet<>();
-	protected StartLock fStartLock = new StartLock();
-	protected BreakpointSet fBreakpointSet;
-	protected IBreakpointManager fBreakpointManager;
-	protected boolean fIsServerWindows = false;
-	protected DebugConnection fDebugConnection;
-	protected Set<String> fAddFilesPaths;
+	private IProject fProject;
+	private int fSuspendCount;
+	private Vector<IPHPConsoleEventListener> fConsoleEventListeners = new Vector<>();
+	private Set<DebugError> fDebugErrors = new HashSet<>();
+	private StartLock fStartLock = new StartLock();
+	private BreakpointSet fBreakpointSet;
+	private IBreakpointManager fBreakpointManager;
+	private boolean fIsServerWindows = false;
+	private DebugConnection fDebugConnection;
+	private Set<String> fAddFilesPaths;
 
 	/**
 	 * Constructs a new debug target in the given launch for the associated PHP
 	 * Debugger on a Apache Server.
 	 * 
 	 * @param connection
-	 *            The debug connection for the communication read and write
-	 *            processes.
+	 *                        The debug connection for the communication read and
+	 *                        write processes.
 	 * @param launch
-	 *            containing launch
+	 *                        containing launch
 	 * @param URL
-	 *            URL of the debugger
+	 *                        URL of the debugger
 	 * @param requestPort
-	 *            port to send requests to the bebugger *
+	 *                        port to send requests to the bebugger *
 	 * @exception CoreException
-	 *                if unable to connect to host
+	 *                              if unable to connect to host
 	 */
 	public PHPDebugTarget(DebugConnection connection, ILaunch launch, String URL, int requestPort, IProcess process,
 			boolean runAsDebug, boolean stopAtFirstLine, IProject project) throws CoreException {
@@ -139,16 +138,16 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * Debugger using PHP exe.
 	 * 
 	 * @param connectionThread
-	 *            The debug connection for the communication read and write
-	 *            processes.
+	 *                             The debug connection for the communication read
+	 *                             and write processes.
 	 * @param launch
-	 *            containing launch
+	 *                             containing launch
 	 * @param String
-	 *            full path to the PHP executable
+	 *                             full path to the PHP executable
 	 * @param requestPort
-	 *            port to send requests to the bebugger *
+	 *                             port to send requests to the bebugger *
 	 * @exception CoreException
-	 *                if unable to connect to host
+	 *                              if unable to connect to host
 	 */
 	public PHPDebugTarget(DebugConnection connectionThread, ILaunch launch, String phpExe, IFile fileToDebug,
 			int requestPort, IProcess process, boolean runAsDebug, boolean stopAtFirstLine, IProject project)
@@ -513,7 +512,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * Notification the target has resumed for the given reason
 	 * 
 	 * @param detail
-	 *            reason for the resume
+	 *                   reason for the resume
 	 */
 	private void resumed(int detail) {
 		fSuspended = false;
@@ -524,7 +523,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * Notification the target has suspended for the given reason
 	 * 
 	 * @param detail
-	 *            reason for the suspend
+	 *                   reason for the suspend
 	 */
 	public void suspended(int detail) {
 		fSuspended = true;
@@ -748,7 +747,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * 
 	 * @return the current stack frames in the target
 	 * @throws DebugException
-	 *             if unable to perform the request
+	 *                            if unable to perform the request
 	 */
 	protected IStackFrame[] getStackFrames() throws DebugException {
 		return fContextManager.getStackFrames();
@@ -771,7 +770,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * Step Return the debugger.
 	 * 
 	 * @throws DebugException
-	 *             if the request fails
+	 *                            if the request fails
 	 */
 	protected void stepReturn() throws DebugException {
 		fLastcmd = "stepReturn"; //$NON-NLS-1$
@@ -790,7 +789,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * Step Over the debugger.
 	 * 
 	 * @throws DebugException
-	 *             if the request fails
+	 *                            if the request fails
 	 */
 	protected void stepOver() throws DebugException {
 		fLastcmd = "stepOver"; //$NON-NLS-1$
@@ -809,7 +808,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * Step Into the debugger.
 	 * 
 	 * @throws DebugException
-	 *             if the request fails
+	 *                            if the request fails
 	 */
 	protected void stepInto() throws DebugException {
 		Logger.debugMSG("PHPDebugTarget: stepInto "); //$NON-NLS-1$
@@ -838,7 +837,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * and fire a suspend event.
 	 * 
 	 * @param event
-	 *            debug event
+	 *                  debug event
 	 */
 	public void breakpointHit(String fileName, int lineNumber) {
 		// determine which breakpoint was hit, and set the thread's breakpoint
@@ -856,9 +855,9 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * Finds the breakpoint hit
 	 * 
 	 * @param fileName
-	 *            Filename containing the breakpoint
+	 *                       Filename containing the breakpoint
 	 * @param lineNumber
-	 *            Linenumber of breakpoint
+	 *                       Linenumber of breakpoint
 	 * @return the Local Variabales for the target
 	 * 
 	 */
@@ -886,7 +885,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * Finds the breakpoint hit
 	 * 
 	 * @param enabled
-	 *            Enabled or Disable breakpoints.
+	 *                    Enabled or Disable breakpoints.
 	 * 
 	 */
 	@Override
@@ -911,7 +910,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * registered.
 	 * 
 	 * @param listener
-	 *            event listener
+	 *                     event listener
 	 */
 	public void addConsoleEventListener(IPHPConsoleEventListener listener) {
 		if (!fConsoleEventListeners.contains(listener)) {
@@ -927,7 +926,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * currently registered.
 	 * 
 	 * @param listener
-	 *            event listener
+	 *                     event listener
 	 */
 	public void removeConsoleEventListener(IPHPConsoleEventListener listener) {
 		fConsoleEventListeners.remove(listener);
@@ -1050,7 +1049,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * Maps first debug file in the path mapper
 	 * 
 	 * @param remoteFile
-	 *            Server file path
+	 *                       Server file path
 	 * @return mapped path entry or <code>null</code> in case of error
 	 */
 	public PathEntry mapFirstDebugFile(String remoteFile) {

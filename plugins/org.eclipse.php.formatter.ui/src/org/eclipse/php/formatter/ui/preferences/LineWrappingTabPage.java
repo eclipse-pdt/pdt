@@ -53,7 +53,7 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 
 		/**
 		 * @param _name
-		 *            Category name
+		 *                  Category name
 		 */
 		public Category(String _name) {
 			this(null, null, _name);
@@ -191,7 +191,7 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 		private void evaluateElements(Iterator<Category> iterator) {
 			while (iterator.hasNext()) {
 				Category category = iterator.next();
-				if (category.children.size() == 0) {
+				if (category.children.isEmpty()) {
 					if (!fElements.contains(category)) {
 						fElements.add(category);
 					}
@@ -219,7 +219,7 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 
 		private void updateButton(Category category) {
 			boolean isSelected = Boolean
-					.valueOf(codeFormatterPreferences.getMap().get(category.getForceSplitKey()).toString());
+					.parseBoolean(codeFormatterPreferences.getMap().get(category.getForceSplitKey()).toString());
 			fForceSplit.setSelection(isSelected);
 		}
 
@@ -231,11 +231,11 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 		}
 	}
 
-	protected static final String[] INDENT_NAMES = { FormatterMessages.LineWrappingTabPage_indentation_default,
+	private static final String[] INDENT_NAMES = { FormatterMessages.LineWrappingTabPage_indentation_default,
 			FormatterMessages.LineWrappingTabPage_indentation_on_column,
 			FormatterMessages.LineWrappingTabPage_indentation_by_one };
 
-	protected static final String[] WRAPPING_NAMES = { FormatterMessages.LineWrappingTabPage_splitting_do_not_split,
+	private static final String[] WRAPPING_NAMES = { FormatterMessages.LineWrappingTabPage_splitting_do_not_split,
 			FormatterMessages.LineWrappingTabPage_splitting_wrap_when_necessary, // COMPACT_SPLIT
 			FormatterMessages.LineWrappingTabPage_splitting_always_wrap_first_others_when_necessary, // COMPACT_FIRST_BREAK_SPLIT
 			FormatterMessages.LineWrappingTabPage_splitting_wrap_always, // ONE_PER_LINE_SPLIT
@@ -281,7 +281,7 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 	/**
 	 * The default preview line width.
 	 */
-	private static int DEFAULT_PREVIEW_WINDOW_LINE_WIDTH = 40;
+	private static final int DEFAULT_PREVIEW_WINDOW_LINE_WIDTH = 40;
 
 	/**
 	 * The key to save the user's preview window width in the dialog settings.
@@ -292,27 +292,26 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 	/**
 	 * The dialog settings.
 	 */
-	protected final IDialogSettings fDialogSettings;
+	private final IDialogSettings fDialogSettings;
 
-	protected TreeViewer fCategoriesViewer;
-	protected Label fWrappingStylePolicy;
-	protected Combo fWrappingStyleCombo;
-	protected Label fIndentStylePolicy;
-	protected Combo fIndentStyleCombo;
-	protected Button fForceSplit;
+	private TreeViewer fCategoriesViewer;
+	private Label fWrappingStylePolicy;
+	private Combo fWrappingStyleCombo;
+	private Label fIndentStylePolicy;
+	private Combo fIndentStyleCombo;
+	private Button fForceSplit;
 
-	protected CodeFormatterPreview fPreview;
+	private CodeFormatterPreview fPreview;
 
 	private NumberPreference fMaxLineWidthPref;
 	private NumberPreference fDefaultIndentWrapLines;
 	private CheckboxPreference fTrailingComma;
-	// private NumberPreference fPreviewLineWidth;
 
-	protected Group fOptionsGroup;
+	private Group fOptionsGroup;
 
 	/**
-	 * A collection containing the categories tree. This is used as model for
-	 * the tree viewer.
+	 * A collection containing the categories tree. This is used as model for the
+	 * tree viewer.
 	 * 
 	 * @see TreeViewer
 	 */
@@ -321,27 +320,27 @@ public class LineWrappingTabPage extends ModifyDialogTabPage {
 	/**
 	 * The category listener which makes the selection persistent.
 	 */
-	protected final CategoryListener fCategoryListener;
+	private final CategoryListener fCategoryListener;
 
 	/**
 	 * The current selection of elements.
 	 */
-	protected IStructuredSelection fSelection;
+	private IStructuredSelection fSelection;
 
 	/**
 	 * An object containing the state for the UI.
 	 */
-	SelectionState fSelectionState;
+	private SelectionState fSelectionState;
 
 	/**
 	 * A special options store wherein the preview line width is kept.
 	 */
-	protected final Map<String, String> fPreviewPreferences;
+	private final Map<String, String> fPreviewPreferences;
 
 	/**
 	 * The key for the preview line width.
 	 */
-	private final String LINE_SPLIT = CodeFormatterConstants.FORMATTER_LINE_SPLIT;
+	private static final String LINE_SPLIT = CodeFormatterConstants.FORMATTER_LINE_SPLIT;
 
 	private boolean isInitialized;
 
