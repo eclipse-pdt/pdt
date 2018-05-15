@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2010 IBM Corporation and others.
+ * Copyright (c) 2009, 2010, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -56,13 +56,15 @@ public class PHPElementConciliator {
 			return CONCILIATOR_LOCAL_VARIABLE;
 		} else if (isDispatch(locateNode)) {
 			return CONCILIATOR_CLASS_MEMBER;
-		} else if (isGlobalConstant(locateNode)) {
+		} else if (isGlobalNamespacedConstant(locateNode)) {
+			return CONCILIATOR_CONSTANT;
+		} else if (isGlobalConstDeclaration(locateNode)) {
 			return CONCILIATOR_CONSTANT;
 		}
 		return CONCILIATOR_UNKNOWN;
 	}
 
-	public static boolean isGlobalConstant(ASTNode locateNode) {
+	public static boolean isGlobalNamespacedConstant(ASTNode locateNode) {
 		assert locateNode != null;
 
 		// check if it is an identifier
@@ -85,7 +87,32 @@ public class PHPElementConciliator {
 		}
 
 		return true;
+	}
 
+	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=533276
+	// look for "const FOO = ..." declarations OUTSIDE class or interface
+	// declaration
+	public static boolean isGlobalConstDeclaration(ASTNode locateNode) {
+		assert locateNode != null;
+
+		// check if it is an identifier
+		if (locateNode.getType() != ASTNode.IDENTIFIER) {
+			return false;
+		}
+
+		ASTNode parent = locateNode.getParent();
+		if (parent.getType() == ASTNode.CONSTANT_DECLARATION) {
+			while (parent.getParent() != null) {
+				parent = parent.getParent();
+				if (parent.getType() == ASTNode.CLASS_DECLARATION || parent.getType() == ASTNode.INTERFACE_DECLARATION
+						|| parent.getType() == ASTNode.ANONYMOUS_CLASS_DECLARATION) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -153,7 +180,8 @@ public class PHPElementConciliator {
 			}
 		}
 
-		if (parent.getType() == ASTNode.CONSTANT_DECLARATION) {
+		// look for "const FOO = ..." declarations INSIDE class or interface declaration
+		if (parent.getType() == ASTNode.CONSTANT_DECLARATION && !isGlobalConstDeclaration(locateNode)) {
 			return true;
 		}
 
