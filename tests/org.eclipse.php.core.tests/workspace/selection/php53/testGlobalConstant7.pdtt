@@ -1,0 +1,26 @@
+--TEST--
+Bug 533276 - const vs define and tooltips
+--FILE--
+<?php
+namespace MYNS1
+{
+    class MYCLASS1
+    {
+        const FOO = 'bar';
+    }
+
+    define('BAZ', 'QUX');
+
+    // NB: "const" are still "namespaced"
+    const FOO = 'bar';
+    echo MYCLASS1::FOO;
+    echo BAZ;
+    echo FOO;
+}
+namespace
+{
+    echo MYNS1\|FOO|;
+}
+?>
+--EXPECT--
+field(FOO)

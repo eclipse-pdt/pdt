@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016, 2017 IBM Corporation and others.
+ * Copyright (c) 2009, 2016, 2017, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -795,19 +795,18 @@ public class PHPModelUtils {
 					if (fields.length > 0) {
 						return fields;
 					}
-
-					// For functions and constants, PHP will fall back to global
-					// functions or constants if a namespaced function or
-					// constant does not exist:
-					IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
-					fields = PHPModelAccess.getDefault().findFields(fieldName, MatchRule.EXACT,
-							Modifiers.AccConstant | Modifiers.AccGlobal, 0, scope, null);
-
-					Collection<IField> filteredElements = filterElements(sourceModule,
-							filterTrueGlobal(Arrays.asList(fields)), cache, monitor);
-					return filteredElements.toArray(new IField[filteredElements.size()]);
 				}
 			}
+
+			// look for globals, class constants or namespaced/non-namespaced "const"
+			// fields (since PHP 5.3)
+			IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
+			IField[] fields = PHPModelAccess.getDefault().findFields(fieldName, MatchRule.EXACT,
+					Modifiers.AccConstant | Modifiers.AccGlobal, 0, scope, null);
+
+			Collection<IField> filteredElements = filterElements(sourceModule, filterTrueGlobal(Arrays.asList(fields)),
+					cache, monitor);
+			return filteredElements.toArray(new IField[filteredElements.size()]);
 		}
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
 		IField[] fields = PHPModelAccess.getDefault().findFields(fieldName, MatchRule.EXACT, Modifiers.AccGlobal, 0,
