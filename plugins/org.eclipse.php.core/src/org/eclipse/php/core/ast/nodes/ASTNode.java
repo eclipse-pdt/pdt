@@ -107,6 +107,9 @@ public abstract class ASTNode implements Visitable {
 	public static final int GOTO_STATEMENT = 69;
 	public static final int LAMBDA_FUNCTION_DECLARATION = 70;
 	public static final int TRAIT_USE_STATEMENT = 71;
+	/**
+	 * @deprecated
+	 */
 	public static final int TRAIT_DECLARATION = 72;
 	public static final int FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE = 73;
 	public static final int TRAIT_ALIAS = 74;

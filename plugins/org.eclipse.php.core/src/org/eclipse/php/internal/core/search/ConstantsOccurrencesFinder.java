@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,9 +35,10 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 
 	/**
 	 * @param root
-	 *            the AST root
+	 *                 the AST root
 	 * @param node
-	 *            the selected node (must be an {@link Scalar} instance)
+	 *                 the selected node (must be an {@link Scalar} or an
+	 *                 {@link Identifier} instance)
 	 * @return returns a message if there is a problem
 	 */
 	@Override
@@ -52,7 +53,7 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 				constantName = constantName.substring(1, constantName.length() - 1);
 			}
 			return null;
-		} else if (node.getType() == ASTNode.IDENTIFIER && node.getParent().getType() == ASTNode.NAMESPACE_NAME) {
+		} else if (node.getType() == ASTNode.IDENTIFIER) {
 			nameNode = node;
 			constantName = ((Identifier) node).getName();
 			return null;
@@ -84,11 +85,17 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 
 	@Override
 	public boolean visit(Identifier identifier) {
-		if (checkEquality(identifier.getName()) && PHPElementConciliator.isGlobalConstant(identifier)) {
-			nodeToFullName.put(identifier,
-					getFullName((Identifier) identifier.getParent(), fLastUseParts, fCurrentNamespace));
-			nodeToOccurrence.put(identifier, new OccurrenceLocation(identifier.getStart(), identifier.getLength(),
-					getOccurrenceType(identifier), fDescription));
+		if (checkEquality(identifier.getName())) {
+			if (PHPElementConciliator.isGlobalNamespacedConstant(identifier)) {
+				nodeToFullName.put(identifier,
+						getFullName((Identifier) identifier.getParent(), fLastUseParts, fCurrentNamespace));
+				nodeToOccurrence.put(identifier, new OccurrenceLocation(identifier.getStart(), identifier.getLength(),
+						getOccurrenceType(identifier), fDescription));
+			} else if (PHPElementConciliator.isGlobalConstDeclaration(identifier)) {
+				nodeToFullName.put(identifier, getFullName(identifier, fLastUseParts, fCurrentNamespace));
+				nodeToOccurrence.put(identifier, new OccurrenceLocation(identifier.getStart(), identifier.getLength(),
+						getOccurrenceType(identifier), fDescription));
+			}
 		}
 		return true;
 	}
