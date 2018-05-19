@@ -38,8 +38,7 @@ import org.eclipse.wst.server.core.util.SocketUtil;
 public class DefaultPHPServerDebugger extends DefaultPHPServerRunner {
 
 	private HttpReverseProxyServer proxyServer;
-	private int port = 0;
-
+	
 	@Override
 	public void run(PHPServerRunnerConfiguration configuration, ILaunch launch, IProgressMonitor monitor)
 			throws CoreException {
@@ -58,14 +57,6 @@ public class DefaultPHPServerDebugger extends DefaultPHPServerRunner {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	public int getServerPort() {
-		if (port == 0) {
-			port = SocketUtil.findUnusedPort(10080, 30080);
-		}
-		return port;
 	}
 
 	class HttpRequestHandler implements IHttpRequestHandler {
