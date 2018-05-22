@@ -51,6 +51,13 @@ public class ASTCache {
 		}
 	}
 
+	public void invalidate() {
+		synchronized (this) {
+			fState = STATES.NONE;
+			fAST = null;
+		}
+	}
+
 	public void reconciled(final Program ast, final ISourceModule input, final IProgressMonitor progressMonitor) {
 		ISourceModule refInput = fInput.get();
 

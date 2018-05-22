@@ -356,7 +356,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		 * Removes this selection changed listener from the given selection provider.
 		 * 
 		 * @param selectionProvider
-		 *            the selection provider
+		 *                              the selection provider
 		 */
 		public void uninstall(ISelectionProvider selectionProvider) {
 			if (selectionProvider == null) {
@@ -520,7 +520,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		 * Creates a new updater for the given <code>category</code>.
 		 *
 		 * @param category
-		 *            the new category.
+		 *                     the new category.
 		 */
 		public ExclusivePositionUpdater(String category) {
 			fCategory = category;
@@ -837,11 +837,11 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		 * Creates a dispatch action.
 		 * 
 		 * @param resourceBundle
-		 *            the resource bundle
+		 *                                the resource bundle
 		 * @param prefix
-		 *            the prefix
+		 *                                the prefix
 		 * @param textOperationAction
-		 *            the text operation action
+		 *                                the text operation action
 		 */
 		public InformationDispatchAction(final ResourceBundle resourceBundle, final String prefix,
 				final TextOperationAction textOperationAction) {
@@ -885,9 +885,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		 * Tries to make an annotation hover focusable (or "sticky").
 		 * 
 		 * @param sourceViewer
-		 *            the source viewer to display the hover over
+		 *                            the source viewer to display the hover over
 		 * @param annotationHover
-		 *            the hover to make focusable
+		 *                            the hover to make focusable
 		 * @return <code>true</code> if successful, <code>false</code> otherwise
 		 * @since 3.2
 		 */
@@ -972,9 +972,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		 * Tries to make a text hover focusable (or "sticky").
 		 * 
 		 * @param sourceViewer
-		 *            the source viewer to display the hover over
+		 *                         the source viewer to display the hover over
 		 * @param textHover
-		 *            the hover to make focusable
+		 *                         the hover to make focusable
 		 * @return <code>true</code> if successful, <code>false</code> otherwise
 		 * @since 3.2
 		 */
@@ -1168,42 +1168,26 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			}
 		}
 
-		/*
-		 * @see org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged
-		 * (org.eclipse.jface.text.DocumentEvent)
-		 */
 		@Override
 		public void documentAboutToBeChanged(DocumentEvent event) {
 			if (fOccurrencesFinderJob != null) {
 				fOccurrencesFinderJob.doCancel();
 			}
+			PHPUiPlugin.getDefault().getASTProvider().invalidateAST((ISourceModule) getModelElement());
 		}
 
-		/*
-		 * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse
-		 * .jface.text.DocumentEvent)
-		 */
 		@Override
 		public void documentChanged(DocumentEvent event) {
 		}
 
-		/*
-		 * @see org.eclipse.jface.text.ITextInputListener# inputDocumentAboutToBeChanged
-		 * (org.eclipse.jface.text.IDocument, org.eclipse.jface.text.IDocument)
-		 */
 		@Override
 		public void inputDocumentAboutToBeChanged(IDocument oldInput, IDocument newInput) {
 			if (oldInput == null) {
 				return;
 			}
-
 			oldInput.removeDocumentListener(this);
 		}
 
-		/*
-		 * @see org.eclipse.jface.text.ITextInputListener#inputDocumentChanged(org
-		 * .eclipse.jface.text.IDocument, org.eclipse.jface.text.IDocument)
-		 */
 		@Override
 		public void inputDocumentChanged(IDocument oldInput, IDocument newInput) {
 			if (newInput == null) {
@@ -1736,10 +1720,10 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		 * Creates a new smart line start action
 		 * 
 		 * @param textWidget
-		 *            the styled text widget
+		 *                       the styled text widget
 		 * @param doSelect
-		 *            a boolean flag which tells if the text up to the beginning of the
-		 *            line should be selected
+		 *                       a boolean flag which tells if the text up to the
+		 *                       beginning of the line should be selected
 		 */
 		public SmartLineStartAction(final StyledText textWidget, final boolean doSelect) {
 			super(textWidget, doSelect);
@@ -1891,10 +1875,10 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		 * Create a new line end action.
 		 * 
 		 * @param textWidget
-		 *            the styled text widget
+		 *                       the styled text widget
 		 * @param doSelect
-		 *            a boolean flag which tells if the text up to the line end should
-		 *            be selected
+		 *                       a boolean flag which tells if the text up to the line
+		 *                       end should be selected
 		 */
 		public SmartLineEndAction(StyledText textWidget, boolean doSelect) {
 			super(textWidget, ST.LINE_END);
@@ -2017,7 +2001,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		 * Creates a new next sub-word action.
 		 * 
 		 * @param code
-		 *            Action code for the default operation. Must be an action code from
+		 *                 Action code for the default operation. Must be an action code
+		 *                 from
 		 * @see org.eclipse.swt.custom.ST.
 		 */
 		protected NextSubWordAction(int code) {
@@ -2061,7 +2046,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		 * Finds the next position after the given position.
 		 * 
 		 * @param position
-		 *            the current position
+		 *                     the current position
 		 * @return the next position
 		 */
 		protected int findNextPosition(int position) {
@@ -2082,7 +2067,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		 * <code>position</code>.
 		 * 
 		 * @param position
-		 *            Position where the action should move the caret
+		 *                     Position where the action should move the caret
 		 */
 		protected abstract void setCaretPosition(int position);
 	}
@@ -2136,7 +2121,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		 * Creates a new previous sub-word action.
 		 * 
 		 * @param code
-		 *            Action code for the default operation. Must be an action code from
+		 *                 Action code for the default operation. Must be an action code
+		 *                 from
 		 * @see org.eclipse.swt.custom.ST.
 		 */
 		protected PreviousSubWordAction(final int code) {
@@ -2181,7 +2167,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		 * Finds the previous position before the given position.
 		 * 
 		 * @param position
-		 *            the current position
+		 *                     the current position
 		 * @return the previous position
 		 */
 		protected int findPreviousPosition(int position) {
@@ -2202,7 +2188,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		 * <code>position</code>.
 		 * 
 		 * @param position
-		 *            Position where the action should move the caret
+		 *                     Position where the action should move the caret
 		 */
 		protected abstract void setCaretPosition(int position);
 	}
@@ -2526,7 +2512,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 * </p>
 	 * 
 	 * @param sourceViewer
-	 *            the source viewer
+	 *                         the source viewer
 	 * @return a region denoting the current signed selection, for a resulting RtoL
 	 *         selections length is < 0
 	 */
@@ -2951,7 +2937,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 * the override indication.
 	 * 
 	 * @param event
-	 *            the event to be investigated
+	 *                  the event to be investigated
 	 * @return <code>true</code> if event causes a change
 	 */
 	protected boolean affectsOverrideIndicatorAnnotations(PropertyChangeEvent event) {
@@ -2988,9 +2974,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 * Returns the boolean preference for the given key.
 	 * 
 	 * @param store
-	 *            the preference store
+	 *                  the preference store
 	 * @param key
-	 *            the preference key
+	 *                  the preference key
 	 * @return <code>true</code> if the key exists in the store and its value is
 	 *         <code>true</code>
 	 * @since 3.0
@@ -3009,9 +2995,10 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 * changes.
 	 * 
 	 * @param actionId
-	 *            the action id
+	 *                     the action id
 	 * @param mark
-	 *            <code>true</code> if the action is cursor position dependent
+	 *                     <code>true</code> if the action is cursor position
+	 *                     dependent
 	 */
 	public void markAsCursorDependentAction(final String actionId, final boolean mark) {
 		assert actionId != null;
@@ -3037,7 +3024,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 * applicable.
 	 * 
 	 * @param actionId
-	 *            the action id
+	 *                     the action id
 	 */
 	private void updateAction(final String actionId) {
 		assert actionId != null;
@@ -3259,7 +3246,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 * Returns the most narrow model element including the given offset.
 	 * 
 	 * @param offset
-	 *            the offset inside of the requested element
+	 *                   the offset inside of the requested element
 	 * @return the most narrow model element
 	 */
 	protected IModelElement getElementAt(int offset) {
@@ -3273,9 +3260,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 * result if the editor's input element does not need to be reconciled.
 	 * 
 	 * @param offset
-	 *            the offset included by the retrieved element
+	 *                      the offset included by the retrieved element
 	 * @param reconcile
-	 *            <code>true</code> if working copy should be reconciled
+	 *                      <code>true</code> if working copy should be reconciled
 	 * @return the most narrow element which includes the given offset
 	 */
 	protected IModelElement getElementAt(int offset, boolean reconcile) {
@@ -3320,7 +3307,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 * Returns the lock object for the given annotation model.
 	 * 
 	 * @param annotationModel
-	 *            the annotation model
+	 *                            the annotation model
 	 * @return the annotation model's lock object
 	 * @since 3.0
 	 */
@@ -3342,9 +3329,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 * Updates the occurrences annotations based on the current selection.
 	 * 
 	 * @param selection
-	 *            the text selection
+	 *                      the text selection
 	 * @param astRoot
-	 *            the compilation unit AST
+	 *                      the compilation unit AST
 	 * @since 3.0
 	 */
 	protected void updateOccurrenceAnnotations(final ITextSelection selection, final IModelElement sourceModule) {
@@ -3398,6 +3385,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			return;
 		}
 
+		System.out.println("OCCURENCE:" + astRoot.getLength());
 		ISourceViewer viewer = getSourceViewer();
 		if (viewer == null) {
 			return;
@@ -3613,7 +3601,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 * Returns is the occurrences of the type should be marked.
 	 * 
 	 * @param type
-	 *            One of the {@link PHPElementConciliator} constants integer type.
+	 *                 One of the {@link PHPElementConciliator} constants integer
+	 *                 type.
 	 * @return True, if the type occurrences should be marked; False, otherwise.
 	 */
 	boolean markOccurrencesOfType(int type) {
@@ -3858,7 +3847,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 * editor adapter for drop target listeners.
 	 * 
 	 * @param viewer
-	 *            the viewer
+	 *                   the viewer
 	 * @since 3.0
 	 */
 	@Override
@@ -3895,7 +3884,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 * Installs text drag and drop on the given source viewer.
 	 * 
 	 * @param viewer
-	 *            the viewer
+	 *                   the viewer
 	 * @since 3.3
 	 */
 	@Override
@@ -4107,7 +4096,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 * Uninstalls text drag and drop from the given source viewer.
 	 * 
 	 * @param viewer
-	 *            the viewer
+	 *                   the viewer
 	 * @since 3.3
 	 */
 	@Override

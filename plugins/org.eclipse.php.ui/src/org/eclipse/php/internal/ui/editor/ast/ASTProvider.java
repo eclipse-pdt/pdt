@@ -239,6 +239,11 @@ public final class ASTProvider {
 		}
 	}
 
+	public void invalidateAST(@NonNull final ISourceModule javaElement) {
+
+		getCacheFor(javaElement).invalidate();
+	}
+
 	@NonNull
 	private ASTCache getCacheFor(@NonNull final ISourceModule javaElement) {
 		synchronized (cachedASTs) {
@@ -288,7 +293,7 @@ public final class ASTProvider {
 	 * Returns whether this AST provider is active on the given compilation unit.
 	 * 
 	 * @param cu
-	 *            the compilation unit
+	 *               the compilation unit
 	 * @return <code>true</code> if the given compilation unit is the active one
 	 * @since 3.1
 	 */
@@ -302,10 +307,11 @@ public final class ASTProvider {
 	 * Informs that reconciling for the given element is about to be started.
 	 * 
 	 * @param javaElement
-	 *            the Java element
+	 *                        the Java element
 	 * @see org.eclipse.jdt.internal.ui.text.java.IJavaReconcilingListener#aboutToBeReconciled()
 	 */
 	public void aboutToBeReconciled(final ISourceModule javaElement) {
+		System.out.println("BE RECONCILED");
 		if (ASTUtils.DEBUG) {
 			System.out.println(ASTUtils.getThreadName() + " - " + ASTUtils.DEBUG_PREFIX + "about to reconcile: " //$NON-NLS-1$ //$NON-NLS-2$
 					+ toString(javaElement));
@@ -346,7 +352,7 @@ public final class ASTProvider {
 	 * Returns a string for the given Java element used for debugging.
 	 * 
 	 * @param javaElement
-	 *            the compilation unit AST
+	 *                        the compilation unit AST
 	 * @return a string used for debugging
 	 */
 	private String toString(final ISourceModule javaElement) {
@@ -361,7 +367,7 @@ public final class ASTProvider {
 	 * Returns a string for the given AST used for debugging.
 	 * 
 	 * @param ast
-	 *            the compilation unit AST
+	 *                the compilation unit AST
 	 * @return a string used for debugging
 	 */
 	private String toString(final Program ast) {
@@ -384,13 +390,13 @@ public final class ASTProvider {
 	 * </p>
 	 * 
 	 * @param input
-	 *            the Java element, must not be <code>null</code>
+	 *                            the Java element, must not be <code>null</code>
 	 * @param waitFlag
-	 *            {@link SharedASTProvider#WAIT_YES},
-	 *            {@link SharedASTProvider#WAIT_NO} or
-	 *            {@link SharedASTProvider#WAIT_ACTIVE_ONLY}
+	 *                            {@link SharedASTProvider#WAIT_YES},
+	 *                            {@link SharedASTProvider#WAIT_NO} or
+	 *                            {@link SharedASTProvider#WAIT_ACTIVE_ONLY}
 	 * @param progressMonitor
-	 *            the progress monitor or <code>null</code>
+	 *                            the progress monitor or <code>null</code>
 	 * @return the AST or <code>null</code> if the AST is not available
 	 */
 	public Program getAST(final ISourceModule input, final WAIT_FLAG waitFlag, final IProgressMonitor progressMonitor) {
