@@ -116,7 +116,7 @@ public class SelectionListenerWithASTManager {
 		 * A selection event has occurred.
 		 * 
 		 * @param selection
-		 *            the selection
+		 *                      the selection
 		 */
 		public void fireSelectionChanged(final ITextSelection selection) {
 			if (fCurrentJob != null) {
@@ -128,7 +128,7 @@ public class SelectionListenerWithASTManager {
 		 * A post selection event has occurred.
 		 * 
 		 * @param selection
-		 *            the selection
+		 *                      the selection
 		 */
 		public void firePostSelectionChanged(final ITextSelection selection) {
 			if (fCurrentJob != null) {
@@ -145,7 +145,21 @@ public class SelectionListenerWithASTManager {
 					if (monitor == null) {
 						monitor = new NullProgressMonitor();
 					}
+
+					try {
+						if (!typeRoot.isConsistent()) {
+							synchronized (this) {
+								if (!monitor.isCanceled()) {
+									schedule(1000);
+								}
+							}
+							return Status.OK_STATUS;
+						}
+					} catch (ModelException e) {
+						// never happens, fall thru
+					}
 					synchronized (fJobLock) {
+						// The monitor is never null
 						return calculateASTandInform(typeRoot, selection, monitor);
 					}
 				}
@@ -198,9 +212,9 @@ public class SelectionListenerWithASTManager {
 	 * Registers a selection listener for the given editor part.
 	 * 
 	 * @param part
-	 *            The editor part to listen to.
+	 *                     The editor part to listen to.
 	 * @param listener
-	 *            The listener to register.
+	 *                     The listener to register.
 	 */
 	public void addListener(ITextEditor part, ISelectionListenerWithAST listener) {
 		synchronized (this) {
@@ -217,9 +231,9 @@ public class SelectionListenerWithASTManager {
 	 * Unregisters a selection listener.
 	 * 
 	 * @param part
-	 *            The editor part the listener was registered.
+	 *                     The editor part the listener was registered.
 	 * @param listener
-	 *            The listener to unregister.
+	 *                     The listener to unregister.
 	 */
 	public void removeListener(ITextEditor part, ISelectionListenerWithAST listener) {
 		synchronized (this) {
