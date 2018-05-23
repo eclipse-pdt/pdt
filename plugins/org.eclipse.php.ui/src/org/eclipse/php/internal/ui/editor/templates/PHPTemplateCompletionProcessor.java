@@ -38,6 +38,7 @@ import org.eclipse.php.internal.ui.text.template.contentassist.TemplateInformati
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.IWorkbenchPartOrientation;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -464,7 +465,7 @@ public class PHPTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 	 * except the new line characters are selected.
 	 * 
 	 * @param viewer
-	 *            the text viewer
+	 *                   the text viewer
 	 * @return <code>true</code> if one or multiple lines are selected
 	 * @since 2.1
 	 */
@@ -472,8 +473,16 @@ public class PHPTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 		if (viewer == null) {
 			return false;
 		}
-
-		Point s = viewer.getSelectedRange();
+		final Point[] range = new Point[1];
+		Runnable getRange = () -> {
+			range[0] = viewer.getSelectedRange();
+		};
+		if (Display.getCurrent() != null) {
+			getRange.run();
+		} else {
+			Display.getDefault().syncExec(getRange);
+		}
+		Point s = range[0];
 		if (s.y == 0) {
 			return false;
 		}
