@@ -12,8 +12,6 @@
 package org.eclipse.php.composer.core.buildpath;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.TreeSet;
 
 import org.eclipse.core.runtime.IPath;
@@ -59,17 +57,6 @@ public class BuildPathParser {
 
 	public BuildPathParser(IComposerProject project) {
 		this.project = project;
-	}
-
-	@Deprecated
-	public List<String> getPaths() {
-		TreeSet<BuildPathInfo> pathsInfo = getPathsInfo();
-		List<String> pathes = new ArrayList<>(pathsInfo.size());
-		for (BuildPathInfo info : pathsInfo) {
-			pathes.add(info.path);
-		}
-
-		return pathes;
 	}
 
 	public TreeSet<BuildPathInfo> getPathsInfo() {

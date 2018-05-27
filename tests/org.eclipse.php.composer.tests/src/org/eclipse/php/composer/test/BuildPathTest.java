@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -70,7 +71,7 @@ public class BuildPathTest {
 
 		IComposerProject composerProject = ComposerPlugin.getDefault().getComposerProject(project);
 		BuildPathParser parser = new BuildPathParser(composerProject);
-		List<String> paths = parser.getPaths();
+		List<String> paths = parser.getPathsInfo().stream().map(e -> e.path).collect(Collectors.toList());
 		List<String> expected = new ArrayList<>(Arrays.asList("mordor/composer", "mordor/gossi/ldap/src", //$NON-NLS-1$ //$NON-NLS-2$
 				"mordor/phing/phing/classes/phing", "mordor/propel/propel1/generator/lib", //$NON-NLS-1$ //$NON-NLS-2$
 				"mordor/propel/propel1/runtime/lib", "mordor/symfony/console", "nother", "src", "test")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$

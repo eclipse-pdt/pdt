@@ -175,31 +175,6 @@ public abstract class AbstractJsonArray<V> extends JsonEntity implements JsonCol
 		firePropertyChange("#" + index, value, null); //$NON-NLS-1$
 	}
 
-	/**
-	 * If oldValue exists, replaces with newValue
-	 * 
-	 * @param oldValue
-	 * @param newValue
-	 */
-	@Deprecated
-	public void replace(V oldValue, V newValue) {
-		if (values.contains(oldValue)) {
-			int index = values.indexOf(oldValue);
-			values.remove(oldValue);
-			values.add(index, newValue);
-
-			if (oldValue instanceof JsonEntity) {
-				((JsonEntity) oldValue).removePropertyChangeListener(propListener);
-			}
-
-			if (newValue instanceof JsonEntity) {
-				((JsonEntity) newValue).removePropertyChangeListener(propListener);
-			}
-
-			firePropertyChange("#" + index, oldValue, newValue); //$NON-NLS-1$
-		}
-	}
-
 	public Object[] toArray() {
 		return values.toArray();
 	}
