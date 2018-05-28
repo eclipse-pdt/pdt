@@ -193,7 +193,7 @@
 		<phpDebuggerLaunchSettingsSection
 			debuggerId="org.eclipse.php.debug.core.xdebugDebugger" id="org.eclipse.php.debug.ui.xDebugExeLaunchSettings"
 			launchTypeId="org.eclipse.php.phpunit.PHPUnitLaunchConfigurationType"
-			name="XDebug Exe Launch Settings"
+			name="Xdebug Exe Launch Settings"
 			section="org.eclipse.php.phpunit.ui.launch.PHPUnitXDLaunchSettingsSection">
 		</phpDebuggerLaunchSettingsSection>
 	</extension>
@@ -203,7 +203,7 @@
 		Debugger Profiler Exe Launch Settings" profilerId="org.eclipse.php.debug.core.zendDebugger" 
 		section="com.zend.php.profile.ui.launcher.ZendDebuggerProfileExeLaunchSettingsSection"> 
 		</phpProfilerLaunchSettingsSection> <phpProfilerLaunchSettingsSection id="org.eclipse.php.debug.ui.xdebugProfilerExeLaunchSettings" 
-		launchTypeId="org.eclipse.php.phpunit.PHPUnitLaunchConfigurationType" name="XDebug 
+		launchTypeId="org.eclipse.php.phpunit.PHPUnitLaunchConfigurationType" name="Xdebug 
 		Profiler Exe Launch Settings" profilerId="org.eclipse.php.debug.core.xdebugDebugger" 
 		section="com.zend.php.profile.ui.launcher.XDebugProfileExeLaunchSettingsSection"> 
 		</phpProfilerLaunchSettingsSection> </extension> -->

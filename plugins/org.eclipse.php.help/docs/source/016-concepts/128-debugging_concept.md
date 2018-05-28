@@ -18,7 +18,7 @@ See [Locally Debugging a PHP Script](../024-tasks/152-debugging/024-locally_debu
 
 #### Note:
 
-Your PHP executable must be running the XDebug or Zend Debugger in order for remote debugging  capabilities to function.
+Your PHP executable must be running the Xdebug or Zend Debugger in order for remote debugging  capabilities to function.
 
 <!--note-end-->
 
@@ -40,7 +40,7 @@ See [Debugging a PHP Web Page](../024-tasks/152-debugging/032-debugging_a_php_we
 
 #### Note:
 
-Your PHP server must be running the XDebug or Zend Debugger in order for remote debugging  capabilities to function.
+Your PHP server must be running the Xdebug or Zend Debugger in order for remote debugging  capabilities to function.
 
 <!--note-end-->
 

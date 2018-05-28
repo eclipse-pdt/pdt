@@ -29,7 +29,7 @@ PHP files (PHP CLI Application) on your workspace can be debugged locally using 
 
 #### Note:
 
-Your server must be running the XDebug or Zend Debugger in order for remote debugging capabilities to function.
+Your server must be running the Xdebug or Zend Debugger in order for remote debugging capabilities to function.
 
 <!--note-end-->
 
@@ -93,7 +93,7 @@ This procedure demonstrates how to debug a file using the internal debugger or y
 
 #### Note:
 
-Your server must be running the XDebug or Zend Debugger in order for remote debugging  capabilities to function.
+Your server must be running the Xdebug or Zend Debugger in order for remote debugging  capabilities to function.
 
 <!--note-end-->
 
@@ -105,7 +105,7 @@ PDT also allows you to debug applications, projects or files that are already on
 
 #### Note:
 
-Your server must be running the XDebug or Zend Debugger in order for remote debugging  capabilities to function.
+Your server must be running the Xdebug or Zend Debugger in order for remote debugging  capabilities to function.
 
 <!--note-end-->
 

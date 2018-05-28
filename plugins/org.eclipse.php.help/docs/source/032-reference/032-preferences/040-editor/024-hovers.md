@@ -14,7 +14,7 @@ You can configure key preferences for the following elements:
 
  * Combined Hover - Tries the hover in the sequence listed in the table and uses the one which fits best for the selected element and the current context.
  * Variable Values - Zend Debugger - Shows the value of the selected variable while debugging with the Zend Debugger.
- * Variable Values - XDebug - Shows the value of the selected variable while debugging with XDebug.
+ * Variable Values - Xdebug - Shows the value of the selected variable while debugging with Xdebug.
  * Documentation - Shows the documentation of the selected element.
  * Problem Description - Shows the description of the selected problem.
  * Source - Shows the source of the selected element.

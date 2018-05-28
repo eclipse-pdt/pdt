@@ -8,7 +8,7 @@ This procedure describes how to debug whole applications, projects, files or col
 
 #### Note:
 
-Your server must be running the XDebug or Zend Debugger in order for remote debugging  capabilities to function.
+Your server must be running the Xdebug or Zend Debugger in order for remote debugging  capabilities to function.
 
 <!--note-end-->
 

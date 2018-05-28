@@ -16,7 +16,7 @@ See [Running PHP Scripts Locally](../024-tasks/144-running_files_and_application
 
 #### Note:
 
-Your server must be running the XDebug or Zend Debugger in order for remote debugging  capabilities to function.
+Your server must be running the Xdebug or Zend Debugger in order for remote debugging  capabilities to function.
 
 <!--note-end-->
 
@@ -38,7 +38,7 @@ See [Running PHP Web Pages](../024-tasks/144-running_files_and_applications/024-
 
 #### Note:
 
-Your server must be running the XDebug or Zend Debugger in order for remote debugging  capabilities to function.
+Your server must be running the Xdebug or Zend Debugger in order for remote debugging  capabilities to function.
 
 <!--note-end-->
 

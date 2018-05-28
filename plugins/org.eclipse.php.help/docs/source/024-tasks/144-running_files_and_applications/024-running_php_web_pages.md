@@ -8,7 +8,7 @@ This procedure describes how to run whole applications, projects, files or colle
 
 #### Note:
 
-Your server must be running the XDebug or Zend Debugger in order for remote debugging  capabilities to function.
+Your server must be running the Xdebug or Zend Debugger in order for remote debugging  capabilities to function.
 
 <!--note-end-->
 
@@ -19,7 +19,7 @@ To run a PHP Web Page:
  1. Click the arrow next to the Run button ![run_icon.png](images/run_icon.png "run_icon.png") on the toolbar and select Run Configurations -or- go to Run | Run Configurations.  A Run dialog will open.
  2. Double-click the PHP Web Page option to create a new run configuration. <br />![run_configuration_webpage.png](images/run_configuration_webpage.png "run_configuration_webpage.png")
  3. Enter a name for the new configuration.
- 4. Select the Server Debugger to be used . PDT supports both the Zend Debugger and XDebug.
+ 4. Select the Server Debugger to be used . PDT supports both the Zend Debugger and Xdebug.
  5. Select your server from the PHP Server list.  If you have not yet configured your server, click New.  The PHP Server Creation Wizard will open.  Configure your server by following the instructions on '[adding a new server](../../032-reference/032-preferences/080-php_servers.md#Adding_servers)' under the [PHP Servers Preferences](../../032-reference/032-preferences/080-php_servers.md) page.
  6. To check whether your server connection is correctly configured and that PDT can communicate with your server debugger, click the 'Test Debugger' button.
  7. Under PHP File, click Browse and select the file which you would like to run.

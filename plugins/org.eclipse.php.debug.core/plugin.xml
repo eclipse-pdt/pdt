@@ -452,7 +452,7 @@
      <daemon
            class="org.eclipse.php.internal.debug.core.xdebug.communication.XDebugCommunicationDaemon"
            id="org.eclipse.php.debug.core.BasicXDebugDaemon"
-           name="Basic XDebug Debug Daemon">
+           name="Basic Xdebug Debug Daemon">
      </daemon>
      <daemon
            class="org.eclipse.php.internal.debug.core.zend.communication.BroadcastDaemon"
@@ -471,7 +471,7 @@
       <phpDebugger
             debuggerConfiguration="org.eclipse.php.internal.debug.core.xdebug.dbgp.XDebugDebuggerConfiguration"
             id="org.eclipse.php.debug.core.xdebugDebugger"
-            name="XDebug">
+            name="Xdebug">
       </phpDebugger>
    </extension>
    <extension
@@ -485,7 +485,7 @@
       <phpDebuggerSettingsProvider
             debuggerId="org.eclipse.php.debug.core.xdebugDebugger"
             id="org.eclipse.php.debug.core.xdebugDebuggerSettingsProvider"
-            name="XDebug Debugger Settings Provider"
+            name="Xdebug Debugger Settings Provider"
             provider="org.eclipse.php.internal.debug.core.xdebug.dbgp.XDebugDebuggerSettingsProvider">
       </phpDebuggerSettingsProvider>
    </extension>

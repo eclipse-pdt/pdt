@@ -684,7 +684,7 @@
       <phpDebuggerSettingsSectionBuilder
             builder="org.eclipse.php.internal.debug.ui.wizards.XDebugDebuggerSettingsSectionBuilder"
             id="org.eclipse.php.debug.ui.xdebugDebuggerSettingsSectionBuilder"
-            name="XDebug Debugger Settings Section Builder"
+            name="Xdebug Debugger Settings Section Builder"
             phpDebuggerSettingsProviderId="org.eclipse.php.debug.core.xdebugDebuggerSettingsProvider">
       </phpDebuggerSettingsSectionBuilder>
    </extension>
@@ -715,14 +715,14 @@
             debuggerId="org.eclipse.php.debug.core.xdebugDebugger"
             id="org.eclipse.php.debug.ui.xDebugExeLaunchSettings"
             launchTypeId="org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType"
-            name="XDebug Exe Launch Settings"
+            name="Xdebug Exe Launch Settings"
             section="org.eclipse.php.internal.debug.ui.launching.XDebugExeLaunchSettingsSection">
       </phpDebuggerLaunchSettingsSection>
       <phpDebuggerLaunchSettingsSection
             debuggerId="org.eclipse.php.debug.core.xdebugDebugger"
             id="org.eclipse.php.debug.ui.xDebugWebLaunchSettings"
             launchTypeId="org.eclipse.php.debug.core.launching.webPageLaunch"
-            name="XDebug Web Launch Settings"
+            name="Xdebug Web Launch Settings"
             section="org.eclipse.php.internal.debug.ui.launching.XDebugWebLaunchSettingsSection">
       </phpDebuggerLaunchSettingsSection>
       <phpDebuggerLaunchSettingsSection
