@@ -41,7 +41,7 @@ import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
 import org.eclipse.php.formatter.core.CodeFormatterConstants;
 import org.eclipse.php.formatter.core.profiles.PHPDefaultFormatterPreferences;
 import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.tests.PHPTestEditor;
 import org.eclipse.php.ui.tests.PHPUiTests;
@@ -108,15 +108,15 @@ public class ContentAssistTests {
 		project = TestUtils.createProject("Content Assist_" + this.phpVersion);
 		ResourcesPlugin.getWorkspace().getRoot().getProject("Content Assist_" + this.phpVersion);
 		/*
-		 * Set auto insert to true,if there are only one proposal in the CA,it will
-		 * insert the proposal,so we can test CA without UI interaction
+		 * Set auto insert to true,if there are only one proposal in the CA,it
+		 * will insert the proposal,so we can test CA without UI interaction
 		 */
-		DefaultScope.INSTANCE.getNode(PHPUiPlugin.ID).putBoolean(PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
+		DefaultScope.INSTANCE.getNode(PHPCorePlugin.ID).putBoolean(PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
 
 		/**
 		 * Disable async mode
 		 */
-		DefaultScope.INSTANCE.getNode(PHPUiPlugin.ID).putBoolean(PHPCoreConstants.CODEASSIST_ASYNC, false);
+		DefaultScope.INSTANCE.getNode(PHPCorePlugin.ID).putBoolean(PHPCoreConstants.CODEASSIST_ASYNC, false);
 		TestUtils.setProjectPHPVersion(project, phpVersion);
 
 		IEclipsePreferences node = DefaultScope.INSTANCE.getNode("org.eclipse.php.formatter.core");

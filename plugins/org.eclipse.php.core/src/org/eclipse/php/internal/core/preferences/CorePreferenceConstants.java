@@ -63,7 +63,7 @@ public class CorePreferenceConstants {
 		node.putBoolean(PHPCoreConstants.CODEASSIST_INSERT_FULL_QUALIFIED_NAME_FOR_NAMESPACE, true);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_SHOW_STRICT_OPTIONS, false);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION, true);
-		node.putBoolean(PHPCoreConstants.CODEASSIST_ASYNC, false);
+		node.putBoolean(PHPCoreConstants.CODEASSIST_ASYNC, true);
 		node.putInt(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, 200);
 	}
 
