@@ -4,7 +4,7 @@
 
 The Save Actions Properties page allows you to remove trailing whitespace from a file each time you save it.
 
-To access the Save Actions Properties page, right-click a PHP project in PHP Explorer view and select Properties | Resource -or- select the project and from the menu bar go to Project | Properties | Save Actions Properties .
+To access the Save Actions Properties page, right-click a PHP project in Project Explorer view and select Properties | Resource -or- select the project and from the menu bar go to Project | Properties | Save Actions Properties .
 
 <!--ref-start-->
 

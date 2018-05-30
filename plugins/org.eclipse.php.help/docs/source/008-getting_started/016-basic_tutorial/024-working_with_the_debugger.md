@@ -47,7 +47,7 @@ This procedure demonstrates how to debug a file using the internal debugger or y
  
  3\. Save the file.
  
- 4\. Click the arrow next to the debug button ![debug_icon.png](images/debug_icon.png "debug_icon.png") on the toolbar and select **Debug Configurations...** -or- select **Run | Debug Configurations** from the main menu -or- right-click the file in PHP Explorer view and select **Debug Configurations....**  A Debug dialog will appear.
+ 4\. Click the arrow next to the debug button ![debug_icon.png](images/debug_icon.png "debug_icon.png") on the toolbar and select **Debug Configurations...** -or- select **Run | Debug Configurations** from the main menu -or- right-click the file in Project Explorer view and select **Debug Configurations....**  A Debug dialog will appear.
  
  5\. Double-click the PHP CLI Application option to create a new debug configuration.<p>![New Debug Configuration](images/debug_phpscript_configuration.png "New Debug Configuration")</p>
 
@@ -138,7 +138,7 @@ This procedure demonstrates how to debug applications on a server:
 
  3\. Save both files and copy them to your server.
  
- 4\. Click the arrow next to the debug button ![debug_icon.png](images/debug_icon.png "debug_icon.png")  on the toolbar and select Debug Configurations... -or- right-click the file in PHP explorer or within the file's editor window and select **Debug as | Debug Configurations....**  A Debug dialog will appear.
+ 4\. Click the arrow next to the debug button ![debug_icon.png](images/debug_icon.png "debug_icon.png")  on the toolbar and select Debug Configurations... -or- right-click the file in Project explorer or within the file's editor window and select **Debug as | Debug Configurations....**  A Debug dialog will appear.
  
  5\. Double-click on the PHP Web Application option to create a new debug configuration.
  

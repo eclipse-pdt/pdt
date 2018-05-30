@@ -24,7 +24,7 @@ Refactoring should be used when you are reorganizing your project and changing n
 
 #### Note:
 
-Refactoring will only work from within PHP Explorer view and not from Navigator view.
+Refactoring will only work from within Project Explorer view.
 
 <!--note-end-->
 
@@ -50,7 +50,7 @@ This procedure demonstrates how to rename a file:
     ?>
 
 3. Save both files.
-4. In PHP Explorer view, right-click RenFile1 and select **Refactor | Rename** -or- select it and go to **Refactor | Rename** from the Main Menu.  
+4. In Project Explorer view, right-click RenFile1 and select **Refactor | Rename** -or- select it and go to **Refactor | Rename** from the Main Menu.  
    A Rename File dialog will appear.
 5. In the Rename File dialog box, rename RenFile1 to RenFile3.
 6. Check the "Update references" box and click **Preview**.
@@ -75,7 +75,7 @@ This procedure demonstrates how to move a file:
 
 1. Create files 'RenFile1' and 'RenFile2' as described in steps 1 to 3 under "Renaming a File", above.
 2. Within the same project, create an additional folder called 'RenFolder'.
-3. In PHP Explorer view, right-click RenFile1 and select **Refactor | Move** -or- select it and go to **Refactor | Move** from the Main Menu.
+3. In Project Explorer view, right-click RenFile1 and select **Refactor | Move** -or- select it and go to **Refactor | Move** from the Main Menu.
 4. In the Move dialog, select RenFolder.
 5. Click **Preview**.
    The Preview windows will display the changes that the move will apply to your script. Note that RenFile1's new location will automatically be updated in the reference to it in RenFile2.

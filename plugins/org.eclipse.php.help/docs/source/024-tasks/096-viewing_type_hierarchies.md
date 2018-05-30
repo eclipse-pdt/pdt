@@ -10,7 +10,7 @@
 
 To view a type in a Quick Type Hierarchy view:
 
- 1. Select the type name in the PHP editor, or PHP Explorer or outline views.
+ 1. Select the type name in the PHP editor, or Project Explorer or outline views.
  2. Press **Ctrl+T**.  -Or- from the Menu Bar go to **Navigate | Quick Type Hierarchy**.
 The Quick Type Hierarchy view will be displayed in the editor with the selected type.
 <br />![quick_type_hierarchy.png](images/quick_type_hierarchy.png "quick_type_hierarchy.png")
@@ -27,7 +27,7 @@ Pressing **Ctrl+T**while the quick type hierarchy view is shown will toggle betw
 
 ## ViewingTypes in the Type Hierarchy View
 
-Types can be viewed in the Type Hierarchy view by searching for them using the "Open Type in Hierarchy" dialog or by directly selecting the element in the editor or PHP Explorer.
+Types can be viewed in the Type Hierarchy view by searching for them using the "Open Type in Hierarchy" dialog or by directly selecting the element in the editor or Project Explorer.
 
 <!--ref-start-->
 
@@ -39,9 +39,9 @@ Through the "Open Type in Hierarchy" wizard:
  2. If a type was previously selected in the editor or outline views, it will be entered in the type field.  If a type was not selected, begin typing the string of the required type/method to filter the results.  You may use wild cards or CamelCase notation (e.g. DTB for DateTextBox).
  3. Select the required type and click **OK**.
 
-Directly from the editor or PHP Explorer:
+Directly from the editor or Project Explorer:
 
- 1. Select a type in the editor or PHP Explorer.
+ 1. Select a type in the editor or Project Explorer.
  2. Press **F4**.
 
 <!--note-start-->

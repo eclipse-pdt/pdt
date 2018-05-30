@@ -4,7 +4,7 @@
 
 The PHP Interpreter Properties page allows you to set the PHP version used for the project. This will affect the internal debugger, code analyzer and content assist options.
 
-To access the PHP Interpreter Properties page, right-click a PHP project in PHP Explorer view and select Properties | Resource -or- select the project and from the menu bar go to Project | Properties | PHP Interpreter Properties .
+To access the PHP Interpreter Properties page, right-click a PHP project in Project Explorer view and select Properties | Resource -or- select the project and from the menu bar go to Project | Properties | PHP Interpreter Properties .
 
 <!--ref-start-->
 

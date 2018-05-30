@@ -4,7 +4,7 @@
 
 This procedure describes how to profile a PHP Script from your workspace using an internal [PHP Executable](../../032-reference/032-preferences/056-php_executables/000-index.md).
 
-1. Click the arrow next to the Profile button ![Profile button](images/profile_icon.png "Profile button") on the toolbar and select **Profile Configurations...** -or- from the main menu go to **Run | Profile Configurations...** -or-right-click  in PHP Explorer view and select **Profile As | Profile Configurations...**
+1. Click the arrow next to the Profile button ![Profile button](images/profile_icon.png "Profile button") on the toolbar and select **Profile Configurations...** -or- from the main menu go to **Run | Profile Configurations...** -or-right-click  in Project Explorer view and select **Profile As | Profile Configurations...**
 2. A Profile launch configuration dialog will appear.
 3. Double-click the **PHP CLI Application** option to create a new Profile configuration.
 <p>![Profile CLI Script](images/profile_cli_configuration_1.png "Profile CLI Script")</p>

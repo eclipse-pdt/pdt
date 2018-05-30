@@ -20,7 +20,7 @@ These procedures describe how to [enable JavaScript support for new PHP projects
 
 To enable JavaScript support in new PHP Projects:
 
- 1. Go to File Menu and select **New | PHP Project**.  -Or- In PHP Explorer view, right-click and select **New | PHP Project**.  The new PHP Project wizard will launch.
+ 1. Go to File Menu and select **New | PHP Project**.  -Or- In Project Explorer view, right-click and select **New | PHP Project**.  The new PHP Project wizard will launch.
  2. Enter the required information in the various fields.
  3. To enable JavaScript support, mark the **Enable JavaScript support for this project** checkbox.
  4. Click Finish.
@@ -37,7 +37,7 @@ JavaScript libraries and features can be added to existing PHP projects in your 
 
 To enable JavaScript Support for existing PHP Projects:
 
-In PHP Explorer view, right-click the project for which you want to enable JavaScript support and select **Configure | Add Java Script** Support.
+In Project Explorer view, right-click the project for which you want to enable JavaScript support and select **Configure | Add Java Script** Support.
 JavaScript support will be enabled for the project.
 
 <!--ref-end-->
@@ -50,7 +50,7 @@ If you are not using JavaScript libraries or files in your project, you can remo
 
 To remove JavaScript Support for existing PHP Projects:
 
-In PHP Explorer view, right-click the project for which you want to enable JavaScript support and select **Configure | Remove JavaScript Support**.
+In Project Explorer view, right-click the project for which you want to enable JavaScript support and select **Configure | Remove JavaScript Support**.
 JavaScript support will be removed from the project and no JavaScript libraries or external files will be available to the project.
 
 <!--ref-end-->

@@ -14,7 +14,7 @@ The Refactoring feature allows you to:
 
 #### Note:
 
-Refactoring options will only be available from within PHP Explorer view and not from Navigator view.  
+Refactoring options will only be available from within Project Explorer view and not from Navigator view.  
 Using the Navigator view's move/rename functions will not update any referenced instances of the file/element.
 
 <!--note-end-->

@@ -33,7 +33,7 @@ You can use the default Workspace created by PDT or from the menu bar go to **Fi
 
 ### Creating a PHP Project
 
-A project is a group of files and resources which are displayed in a tree in the PHP Explorer view.
+A project is a group of files and resources which are displayed in a tree in the Project Explorer view.
 
 <!--ref-start-->
 
@@ -41,7 +41,7 @@ To create a new PHP project:
 
 Go to the Menu Bar and select **File | New | PHP Project**.
 
--Or- In the PHP Explorer View, right-click and select **New | PHP Project**.
+-Or- In the Project Explorer View, right-click and select **New | PHP Project**.
 
 <!--ref-end-->
 
@@ -55,7 +55,7 @@ To create a new PHP file:
 
 Go to the Menu Bar and select **File | New | PHP File**.
 
--Or- in PHP Explorer view, right-click the folder in which you want to create your file and select **New | PHP File**
+-Or- in Project Explorer view, right-click the folder in which you want to create your file and select **New | PHP File**
 
 -Or- click the New PHP File icon on the toolbar ![new_php_file.png](images/new_php_file.png "new_php_file.png"). This creates a file outside of a project.
 
@@ -72,7 +72,7 @@ The debugger detects and diagnoses errors in PHP code situated on local or remot
 To debug a PHP script situated on your workspace:
 
  1. Set breakpoints at the relevant locations in your script by double-clicking the Marker Bar (located at the left of the editor area) at the relevant line. A blue ball appears to indicate that a breakpoint is set.
- 2. From the main menu, select **Run | Debug Configurations**  -Or- right-click the file in PHP Explorer view and select **Debug As | Debug Configurations**.
+ 2. From the main menu, select **Run | Debug Configurations**  -Or- right-click the file in Project Explorer view and select **Debug As | Debug Configurations**.
  3. To create a new configuration, double-click the **PHP CLI Application** category.
  4. Enter all relevant information and click **Apply** and **Debug**.
 
@@ -82,7 +82,7 @@ To debug a PHP script situated on your workspace:
 
 To debug a PHP Web page situated on a server:
 
- 1. From the main menu, select **Run | Debug Configurations** -or- right-click the file in PHP Explorer view and select **Debug As | Debug Configurations**.
+ 1. From the main menu, select **Run | Debug Configurations** -or- right-click the file in Project Explorer view and select **Debug As | Debug Configurations**.
  2. To create a new configuration, double-click the **PHP Web Application** category.
  3. Enter the required information and click **Apply** and **Debug**.
 

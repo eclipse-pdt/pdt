@@ -34,7 +34,7 @@ You can make your search case sensitive by selecting the "Case sensitive" box.
  3. To extend your search to include interpreter system libraries, select the "Search the Interpreter system libraries" box. This allows PDT to search in the libraries of the PHP version you have selected in the [PHP Interpreter Preferences](../032-reference/032-preferences/064-php_interpreter.md).
  4. Select whether to search in your:
     * **Workspace** - The entire workspace.
-    * **Selected resources**- Select these in PHP Explorer view before opening the "Search" dialog. All sub-files and sub-folders within the selected resource will be included in the search.
+    * **Selected resources**- Select these in Project Explorer view before opening the "Search" dialog. All sub-files and sub-folders within the selected resource will be included in the search.
     * **Enclosing projects**- The projects which the selected resources are in.
     * **Working Set**- Click **Choose...**to select the required Working Set.
  5. Click **Search**

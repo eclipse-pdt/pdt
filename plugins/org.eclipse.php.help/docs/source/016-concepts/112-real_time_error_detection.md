@@ -6,7 +6,7 @@ PDT automatically highlights errors and problems in your PHP script.
 
 Errors and warnings will be displayed in the Problems view, accessed from ![command_link.png](images/command_link.png "command_link.png") <a href="javascript:executeCommand('org.eclipse.ui.views.showView(\'org.eclipse.ui.views.showView.viewId=org.eclipse.ui.views.ProblemView\')')">Window | Show View | Other | General | Problems</a>.
 
-In addition, error icons ![error_icon.png](images/error_icon.png "error_icon.png") and warning icons ![warning_icon.png](images/warning_icon.png "warning_icon.png") will be displayed in the vertical marker bar to the left of the editor window, as well as next to the relevant project in PHP Explorer view (these will be indicated in the PHP project/file icons - e.g. ![file_error.png](images/file_error.png "file_error.png")).
+In addition, error icons ![error_icon.png](images/error_icon.png "error_icon.png") and warning icons ![warning_icon.png](images/warning_icon.png "warning_icon.png") will be displayed in the vertical marker bar to the left of the editor window, as well as next to the relevant project in Project Explorer view (these will be indicated in the PHP project/file icons - e.g. ![file_error.png](images/file_error.png "file_error.png")).
 
 All warnings, errors and problems in open projects will be logged in the Problems view, which displays the following information:
 

@@ -4,7 +4,7 @@
 
 The Resource Properties page displays information about your project and allows you to set the project's text file encoding and line delimeters.
 
-To access the Resource Properties page, right-click a PHP project in PHP Explorer view and select Properties | Resource -or- select the project and from the menu bar go to Project | Properties | Resource.
+To access the Resource Properties page, right-click a PHP project in Project Explorer view and select Properties | Resource -or- select the project and from the menu bar go to Project | Properties | Resource.
 
 ![properties_resource.png](images/properties_resource.png "properties_resource.png")
 

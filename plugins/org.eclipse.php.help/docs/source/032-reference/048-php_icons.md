@@ -2,7 +2,7 @@
 
 <!--context:php_icons-->
 
-The following is a list of icons representing different PHP elements which are displayed in the PHP Explorer view and in Content Assist lists:
+The following is a list of icons representing different PHP elements which are displayed in the Project Explorer view and in Content Assist lists:
 
 ### PHP Elements
 
@@ -88,7 +88,7 @@ The following is a list of icons representing different PHP elements which are d
 
 #### Related Links:
 
- * [PHP Explorer View](../032-reference/008-php_perspectives_and_views/008-php_perspective_views/008-php_explorer_view.md)
+ * [Project Explorer View](../032-reference/008-php_perspectives_and_views/008-php_perspective_views/008-php_explorer_view.md)
  * [Content Assist](../016-concepts/016-code_assist_concept.md)
 
 <!--links-end-->

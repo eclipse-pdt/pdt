@@ -8,7 +8,7 @@ These procedures describe how to create new HTML files , allowing implementation
 
 To create a new HTML file:
 
- 1. In PHP Explorer view, select the folder into which you would like to create the file and from the Menu Bar go to **File | New | HTML Page** -or- right-click the folder and select **File | New | HTML. Page**.  The new HTML Page dialog will appear.
+ 1. In Project Explorer view, select the folder into which you would like to create the file and from the Menu Bar go to **File | New | HTML Page** -or- right-click the folder and select **File | New | HTML. Page**.  The new HTML Page dialog will appear.
  2. Enter the file's name and click **Next**.
  3. Select which HTML template to use for the new file and click **Finish**.
 

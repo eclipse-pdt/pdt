@@ -13,7 +13,7 @@ To access this menu, go to Window menu and select **Preferences | PHP**.
 
 <tr><td>[PHP](008-php.md)</td>
 
-<td>Configure the hierarchy display in PHP Explorer view.</td></tr>
+<td>Configure the hierarchy display in Project Explorer view.</td></tr>
 
 <tr><td>[Appearance](016-appearance.md)</td>
 

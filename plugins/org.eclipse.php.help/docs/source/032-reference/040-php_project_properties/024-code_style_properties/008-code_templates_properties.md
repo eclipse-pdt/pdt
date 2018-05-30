@@ -6,7 +6,7 @@ The Code Templates Properties page allows you to configure the code and comments
 
 See [Code Templates Preferences](../../../032-reference/032-preferences/024-code_style_preferences/008-code_templates_preferences.md) for more information.
 
-To access the Code Templates Properties page, right-click a PHP project in PHP Explorer view and select Properties | Resource -or- select the project and from the menu bar go to **Project | Properties | Code Style | Code Templates**.
+To access the Code Templates Properties page, right-click a PHP project in Project Explorer view and select Properties | Resource -or- select the project and from the menu bar go to **Project | Properties | Code Style | Code Templates**.
 
 See
 

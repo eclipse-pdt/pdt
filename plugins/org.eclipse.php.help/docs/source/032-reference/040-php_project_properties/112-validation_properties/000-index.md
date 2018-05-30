@@ -10,7 +10,7 @@
 
 The Validation Properties page allows you to specify the validators for your project.
 
-To access the Validation Properties page, right-click a PHP project in PHP Explorer view and select Properties | Resource -or- select the project and from the menu bar go to Project | Properties | PHP | Validation Properties .
+To access the Validation Properties page, right-click a PHP project in Project Explorer view and select Properties | Resource -or- select the project and from the menu bar go to Project | Properties | PHP | Validation Properties .
 
 <!--toc-->
 

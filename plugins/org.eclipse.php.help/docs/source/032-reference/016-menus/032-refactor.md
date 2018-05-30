@@ -11,13 +11,13 @@ The options available from the Refactor menu are:
 <tr><td>Move</td>
 <td>Alt+Shift+V</td>
 <td>Moves a file to a different folder. <br /><br />
-To move a file, select it from the PHP Explorer view.<br /><br />
+To move a file, select it from the Project Explorer view.<br /><br />
 A Move dialog will open. Select the required folder and click Preview to see all changes that will be made as a result of the Move.<br /><br />
 Click OK to implement your changes and move the file. All references to the file will be automatically updated to reflect its new location.</td></tr>
 <tr><td>Rename</td>
 <td>Alt+Shift+R</td>
 <td>Renames a file or element.<br /><br />
-To rename a file, select it from the PHP Explorer view. To rename an element within a file select it from the PHP Explorer view or highlight it in the editor view.<br /><br />
+To rename a file, select it from the Project Explorer view. To rename an element within a file select it from the Project Explorer view or highlight it in the editor view.<br /><br />
 A rename dialog will open. Enter the new name and click Preview to see all changes that will be made as a result of the rename.<br /><br />
 Click OK to implement your changes. All references to the file / element will be automatically updated to reflect the change.</td></tr>
 <tr><td>Extract Method</td>
@@ -32,7 +32,7 @@ Click OK to implement your changes. All references to the file / element will be
 
 #### Note:
 
-Refactoring options will only be available from within PHP Explorer view and not from Navigator view.  
+Refactoring options will only be available from within Project Explorer view and not from Navigator view.  
 Using the Navigator view's move/rename functions will not update any referenced instances of the file/element.
 
 <!--note-end-->

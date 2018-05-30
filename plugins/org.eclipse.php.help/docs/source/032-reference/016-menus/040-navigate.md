@@ -19,7 +19,7 @@ The options available from the Navigate menu are:
 
 <td>Goes into a selected folder so that only that folder's contents will be displayed in the Navigator view.
 <br />
-Note: This will not work in PHP Explorer view.</td></tr>
+Note: This will not work in Project Explorer view.</td></tr>
 
 <tr><td>Go To</td>
 
@@ -51,7 +51,7 @@ Will go up one level in the hierarchy in the Navigator view.</td></tr>
 <br />
 Goes to a resource within the files and folders displayed in the Navigator view.  Enter the first few letters of the a resource in the Go To Resource dialog, and select the required one from the list.
 <br />
-Note: This functionality will not work in the PHP Explorer view.</td></tr>
+Note: This functionality will not work in the Project Explorer view.</td></tr>
 
 <tr><td></td>
 
@@ -77,7 +77,7 @@ Select the required file and click OK to open it in an editor window.</td></tr>
 
 <td>Alt+Shift+W</td>
 
-<td>**PHP Explorer -** Displays the current active file in the PHP Explorer view.
+<td>**Project Explorer -** Displays the current active file in the Project Explorer view.
 <br />
 **Navigator** - Displays the current active file in the Navigator view.
 <br />

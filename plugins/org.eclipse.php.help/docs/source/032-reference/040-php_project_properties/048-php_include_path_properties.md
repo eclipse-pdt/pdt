@@ -2,7 +2,7 @@
 
 <!--context:php_include_path_properties-->
 
-The PHP Include Path Properties page allows you to configure the project's [Include Path.](../../016-concepts/144-include_paths.md)To access the PHP Include Path Properties page, right-click a PHP project in PHP Explorer view and select Properties | PHP Include Path -or- select the project and from the menu bar go to Project | Properties | PHP Include Path Properties.
+The PHP Include Path Properties page allows you to configure the project's [Include Path.](../../016-concepts/144-include_paths.md)To access the PHP Include Path Properties page, right-click a PHP project in Project Explorer view and select Properties | PHP Include Path -or- select the project and from the menu bar go to Project | Properties | PHP Include Path Properties.
 
 See [Configuring a Project's PHP Include Path](../../024-tasks/168-adding_elements_to_a_project_s_include_path.md) for more information.
 

@@ -4,7 +4,7 @@
 
 PDT can auto-format scripts to organize them into an easily readable format. The Formatter Properties page allows you to customize the way they are  formatted for the project.
 
-To access the Formatter Properties page, right-click a PHP project in PHP Explorer view and select **Properties | Resource** -or- select the project and from the menu bar go to **Project | Properties | Code Style | Formatter**.
+To access the Formatter Properties page, right-click a PHP project in Project Explorer view and select **Properties | Resource** -or- select the project and from the menu bar go to **Project | Properties | Code Style | Formatter**.
 
 <!--ref-start-->
 

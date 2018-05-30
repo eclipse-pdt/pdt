@@ -16,7 +16,7 @@ Ensure that you save any changes to the file before applying the refactoring fea
 
 To rename a file using the Refactoring feature:
 
-1. In PHP Explorer view, right-click the file which you would like to rename and select **Refactor | Rename** -or- select it and go to **Refactor | Rename** from the Menu Bar.  
+1. In Project Explorer view, right-click the file which you would like to rename and select **Refactor | Rename** -or- select it and go to **Refactor | Rename** from the Menu Bar.  
    A Rename File dialog will appear.
    ![refactor_rename_dialog.png](images/refactor_rename_dialog.png "Rename File dialog")
 2. Enter the file's new name.

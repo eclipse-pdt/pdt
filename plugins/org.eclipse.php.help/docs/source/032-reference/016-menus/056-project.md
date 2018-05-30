@@ -31,7 +31,7 @@ The option**s available from the Project menu are:**
 
 <td>Closes the currently selected project.
 <br />
-Closing a project does not cause it to be deleted from the file system. A closed project will still be displayed in PHP Explorer view, with a ![closed_project_icon.png](images/closed_project_icon.png "closed_project_icon.png")closed project icon, but its resources are no longer accessible from within the Workbench.
+Closing a project does not cause it to be deleted from the file system. A closed project will still be displayed in Project Explorer view, with a ![closed_project_icon.png](images/closed_project_icon.png "closed_project_icon.png")closed project icon, but its resources are no longer accessible from within the Workbench.
 <br />
 Closing projects takes up less memory and speeds up the build process.</td></tr>
 

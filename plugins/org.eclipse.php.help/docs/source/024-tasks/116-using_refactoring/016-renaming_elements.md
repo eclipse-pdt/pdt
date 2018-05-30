@@ -3,7 +3,7 @@
 <!--context:renaming_elements-->
 
 This procedure describes how to rename a PHP element and ensure that all references to that element are updated.  
-All PHP elements can be renamed and refactored from PHP Explorer view. The following is a list of applicable PHP elements:
+All PHP elements can be renamed and refactored from Project Explorer view. The following is a list of applicable PHP elements:
 
 * Classes
 * Interfaces
@@ -53,7 +53,7 @@ The element will be renamed and all instances where that element is referenced w
 To rename an element through the Refactor dialog:
 
 1. Ensure the 'Rename in editor without dialog' checkbox is unmarked in the [Code Refactor Preferences](../../032-reference/032-preferences/020-code_refactor.md) page (accessible from **Window | Preferences | PHP | Code Refactor**).
-2. In the editor, place your cursor on the element to be renamed or select it in the PHP Explorer.
+2. In the editor, place your cursor on the element to be renamed or select it in the Project Explorer.
 3. From the menu bar select **Refactor | Rename** -or- right-click and select **Refactor | Rename** -or- press **Alt-Shift-R**.  
    The Rename dialog box will be displayed. The name of the dialog will be dependent on the element type.
    ![refactor_rename_element_dialog.png](images/refactor_rename_element_dialog.png "Rename Global Variable")  

@@ -4,11 +4,7 @@
 
 This procedure describes how to profile whole applications, projects, files or collections of files that are already on the server.
 
-#### Note:
-
-For Xdebug, make sure [xdebug.profiler_enable_trigger](https://xdebug.org/docs/all_settings#profiler_enable_trigger) is enabled.
-
-1. Click the arrow next to the Profile button ![Profile button](images/profile_icon.png "Profile button") on the toolbar and select **Profile Configurations...** -or- from the main menu go to **Run | Profile Configurations...** -or-right-click  in PHP Explorer view and select **Profile As | Profile Configurations...**
+1. Click the arrow next to the Profile button ![Profile button](images/profile_icon.png "Profile button") on the toolbar and select **Profile Configurations...** -or- from the main menu go to **Run | Profile Configurations...** -or-right-click  in Project Explorer view and select **Profile As | Profile Configurations...**
 2. A Profile launch configuration dialog will appear.
 3. Double-click the **PHP Web Application** option to create a new Profile configuration.
 <p>![Profile Web Script](images/profile_web_configuration_1.png "Profile Web Script")</p>
@@ -29,9 +25,21 @@ The **PHP Profile Perspective** will open, displaying the **Profiling Monitor** 
 
 See [PHP Profile perspective](../../032-reference/008-php_perspectives_and_views/032-php_profile_perspective/000-index.md) for more on the information displayed once a profile session has been run. 
 
+<!--note-start-->
+
+#### Note:
+
+For Xdebug, make sure [xdebug.profiler_enable_trigger](https://xdebug.org/docs/all_settings#profiler_enable_trigger) is enabled.
+
+<!--note-end-->
+
+<!--note-start-->
+
 #### Note:
 
 With Xdebug profiler, you have to manually [import profile session](040-importing_profile_sessions.md).
+
+<!--note-end-->
 
 <!--links-start-->
 

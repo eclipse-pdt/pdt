@@ -16,7 +16,7 @@ Ensure that you save any changes to the file before applying the refactoring fea
 
 To move a file:
 
-1. In PHP Explorer view, right-click the file which you would like to rename and select **Refactor | Move** -or- press **Alt-Shift-V**.  
+1. In Project Explorer view, right-click the file which you would like to rename and select **Refactor | Move** -or- press **Alt-Shift-V**.  
    A Move File dialog will appear.
    ![refactor_move_dialog.png](images/refactor_move_dialog.png "Move location")
 2. Select the new location of the file.

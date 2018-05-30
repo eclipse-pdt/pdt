@@ -32,7 +32,7 @@ To apply Save Actions settings to a specific project only:
 
 #### Note:
 
-Save Action settings can also be configured for an existing project by right-clicking the project in PHP Explorer view and selecting **Properties | Save Actions**.
+Save Action settings can also be configured for an existing project by right-clicking the project in Project Explorer view and selecting **Properties | Save Actions**.
 
 <!--note-end-->
 

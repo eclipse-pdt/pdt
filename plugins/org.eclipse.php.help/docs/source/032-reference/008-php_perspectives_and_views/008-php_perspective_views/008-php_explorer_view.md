@@ -1,14 +1,22 @@
-# PHP Explorer View
+# Project Explorer View
 
 <!--context:php_explorer_view-->
 
-The PHP Explorer view is an internal file system browser, allowing you to view all PHP projects and files in your Workspace. It shows the PHP element hierarchy of PHP projects in the Workbench and provides you with a PHP-specific view of your available resources. Within each project, source folders and referenced libraries are shown in the tree. In addition, this view shows all PHP code elements (classes, functions, variables, etc.). Clicking an element or declaration will cause the corresponding code to be displayed in the PHP editor.
+<!--note-start-->
 
-See [PHP Icons](../../../032-reference/048-php_icons.md) for a description of the icons displayed in the PHP Explorer view.
+#### Note:
+
+Since 6.0.0, PHP Development Tools use common [Project Explorer](PLUGINS_ROOT/org.eclipse.platform.doc.user/reference/ref-27.htm).
+
+<!--note-end-->
+
+The Project Explorer view is an internal file system browser, allowing you to view all PHP projects and files in your Workspace. It shows the PHP element hierarchy of PHP projects in the Workbench and provides you with a PHP-specific view of your available resources. Within each project, source folders and referenced libraries are shown in the tree. In addition, this view shows all PHP code elements (classes, functions, variables, etc.). Clicking an element or declaration will cause the corresponding code to be displayed in the PHP editor.
+
+See [PHP Icons](../../../032-reference/048-php_icons.md) for a description of the icons displayed in the Project Explorer view.
 
 ![php_explorer_pdt.png](images/php_explorer_pdt.png "php_explorer_pdt.png")
 
-#### PHP Explorer View Toolbar Commands
+#### Project Explorer View Toolbar Commands
 
 <table>
 <tr><th>Icon</th>
@@ -32,7 +40,7 @@ See [PHP Icons](../../../032-reference/048-php_icons.md) for a description of th
 <td>If selected, elements will immediately be displayed in the editor when selected. If unselected, elements will be displayed in the editor when they are double-clicked.</td></tr>
 </table>
 
-#### PHP Explorer View Menu Commands
+#### Project Explorer View Menu Commands
 
 The view's menu can be accessed through the view menu icon ![menu_icon.png](images/menu_icon.png "menu_icon.png").
 
@@ -74,7 +82,7 @@ The view's menu can be accessed through the view menu icon ![menu_icon.png](imag
 
 #### Note:
 
-The PHP Explorer View is displayed by default as part of the PHP Perspective. To manually open the view, go to Window | Show View | Other | PHP Tools | PHP Explorer.
+The Project Explorer View is displayed by default as part of the PHP Perspective. To manually open the view, go to Window | Show View | Other | PHP Tools | Project Explorer.
 
 <!--note-end-->
 
@@ -86,5 +94,6 @@ The PHP Explorer View is displayed by default as part of the PHP Perspective. To
  * [PHP Functions View](../../../032-reference/008-php_perspectives_and_views/024-php_additional_views/008-php_functions_view.md)
  * [PHP Project Outline View](../../../032-reference/008-php_perspectives_and_views/024-php_additional_views/016-project_outline_view.md)
  * [Outline View](016-php_outline_view.md)
+ * [Eclipse Project Explorer](PLUGINS_ROOT/org.eclipse.platform.doc.user/reference/ref-27.htm)
 
 <!--links-end-->

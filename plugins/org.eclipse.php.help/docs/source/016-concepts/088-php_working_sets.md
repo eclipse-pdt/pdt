@@ -6,7 +6,7 @@ PHP Working Sets are groups of PHP resources which allow you to view or apply ac
 
 #### Example for using Working Sets:
 
-Selecting the 'Select Working Set' option in the PHP Explorer view's context menu allows you to choose specific Working Sets (i.e. group(s) of projects/files) to be displayed in the view.
+Selecting the 'Select Working Set' option in the Project Explorer view's context menu allows you to choose specific Working Sets (i.e. group(s) of projects/files) to be displayed in the view.
 
 ![Select Working Set Dialog](images/select_working_set_pdt.png "Select Working Set Dialog")
 
@@ -19,7 +19,7 @@ If you have not created PHP Working Sets, see [Creating PHP Working Sets](../024
 #### Related Links:
 
  * [Creating PHP Working Sets](../024-tasks/104-creating_php_working_sets.md)
- * [PHP Explorer View](../032-reference/008-php_perspectives_and_views/008-php_perspective_views/008-php_explorer_view.md)
+ * [Project Explorer View](../032-reference/008-php_perspectives_and_views/008-php_perspective_views/008-php_explorer_view.md)
  * [Window Menu](../032-reference/016-menus/080-window.md)
  * [Search Menu](../032-reference/016-menus/048-search.md)
  * [Searching for PHP Elements](../024-tasks/064-searching_for_php_elements.md)

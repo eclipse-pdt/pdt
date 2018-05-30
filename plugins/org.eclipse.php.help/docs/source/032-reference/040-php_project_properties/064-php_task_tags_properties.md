@@ -4,7 +4,7 @@
 
 The PHP Task Tags Properties page allows you to add new task tags and edit existing ones. Tasks are used as reminders of actions, work to do or any other action required by the programmer. Task tags are strings used by PDT to recognize when tasks are added in your script. Anything after these strings inside a comment will be recognized as a task.
 
-To access the PHP Task Tags Properties page, right-click a PHP project in PHP Explorer view and select Properties | Resource -or- select the project and from the menu bar go to Project | Properties | PHP Task Tags Properties .
+To access the PHP Task Tags Properties page, right-click a PHP project in Project Explorer view and select Properties | Resource -or- select the project and from the menu bar go to Project | Properties | PHP Task Tags Properties .
 
 <!--ref-start-->
 

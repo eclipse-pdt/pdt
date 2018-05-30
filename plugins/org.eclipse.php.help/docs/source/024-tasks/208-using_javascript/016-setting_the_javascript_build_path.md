@@ -20,7 +20,7 @@ The JavaScript Build Path is determined by the resources included in the project
 
 To configure the project's JavaScript Build Path:
 
- 1. In PHP Explorer view, right-click the required project and select **Properties | JavaScript | JavaScript Libraries**.  In this properties page you can add the following elements to the project's JavaScript Build Path:
+ 1. In Project Explorer view, right-click the required project and select **Properties | JavaScript | JavaScript Libraries**.  In this properties page you can add the following elements to the project's JavaScript Build Path:
  2. [Libraries](#libraries-tab) - Built-in and user defined libraries contain pre-written collections of JavaScript source files that have prototyped object/class definitions and JsDoc.
  3. [Source](#source) - Other folders/files/variables from your file system or linked from an external source.
  4. [Projects](#projects) - Other projects in the workspace or on your file system

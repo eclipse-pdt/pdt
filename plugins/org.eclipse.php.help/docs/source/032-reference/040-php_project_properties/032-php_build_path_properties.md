@@ -4,7 +4,7 @@
 
 The PHP Build Path Properties page allows you to configure the project's [PHP Build Path](../../016-concepts/152-build_paths.md).
 
-To access the PHP Build Path Properties page, right-click a PHP project in PHP Explorer view and select Properties | PHP Build Path Properties -or- select the project and from the menu bar go to Project | Properties | PHP Build Path Properties .
+To access the PHP Build Path Properties page, right-click a PHP project in Project Explorer view and select Properties | PHP Build Path Properties -or- select the project and from the menu bar go to Project | Properties | PHP Build Path Properties .
 
 See [Configuring a Project's PHP Build Path](../../024-tasks/176-configuring_build_paths.md) for more information.
 

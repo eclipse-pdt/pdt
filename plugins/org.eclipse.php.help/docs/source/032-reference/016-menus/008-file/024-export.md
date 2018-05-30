@@ -19,7 +19,7 @@ The options available under the Export submenu are:
 <br />
 Breakpoints - Exports breakpoints from the workbench to a breakpoint  file. A list of available breakpoints will be displayed in the Export Breakpoint wizard. Select the relevant breakpoints and the name and location of the file to which they should be exported.
 <br />
-Note: The Breakpoint (.bkpt) file will not appear in Navigator / PHP Explorer views.
+Note: The Breakpoint (.bkpt) file will not appear in Navigator / Project Explorer views.
 <br />
 File System - Export files from your workspace to your local file system.
 <br />

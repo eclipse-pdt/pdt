@@ -8,7 +8,7 @@ PHP projects are the containers within which all PHP and other application files
 
 To create a new PHP project:
 
- 1. From the menu bar, go to **File | New | PHP Project**  -Or- In PHP Explorer view, right-click and select **New | PHP Project**.  The New PHP Project wizard is displayed. <br />![new_php_project_wizard.png](images/new_php_project_wizard.png "new_php_project_wizard.png") 
+ 1. From the menu bar, go to **File | New | PHP Project**  -Or- In Project Explorer view, right-click and select **New | PHP Project**.  The New PHP Project wizard is displayed. <br />![new_php_project_wizard.png](images/new_php_project_wizard.png "new_php_project_wizard.png") 
  1. Enter the following information:
     * Project name - The required project name
     * Contents - Select whether to:
@@ -25,7 +25,7 @@ To create a new PHP project:
  3. Click **Next** to [configure the project's PHP Build Path](176-configuring_build_paths.md) (this can also be done following project creation).
  4. Click **Finish**.
 
-The new PHP project will be created in your workspace and displayed in [PHP Explorer View](../032-reference/008-php_perspectives_and_views/008-php_perspective_views/008-php_explorer_view.md).
+The new PHP project will be created in your workspace and displayed in [Project Explorer View](../032-reference/008-php_perspectives_and_views/008-php_perspective_views/008-php_explorer_view.md).
 
 You can now start to develop your application by [creating PHP Files](../024-tasks/016-file_creation/000-index.md) or adding other resources to your project.
 

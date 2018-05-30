@@ -4,7 +4,7 @@
 
 The PHP Debug Properties page allows you to configure default settings used when debugging files in the project.
 
-To access the PHP Debug Properties page, right-click a PHP project in PHP Explorer view and select Properties | Resource -or- select the project and from the menu bar go to Project | Properties | PHP Debug Properties .
+To access the PHP Debug Properties page, right-click a PHP project in Project Explorer view and select Properties | Resource -or- select the project and from the menu bar go to Project | Properties | PHP Debug Properties .
 
 <!--ref-start-->
 

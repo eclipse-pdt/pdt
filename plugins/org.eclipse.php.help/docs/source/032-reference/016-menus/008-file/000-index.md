@@ -27,7 +27,7 @@ Note: The options available in the New Menu for the current perspective can be c
 
 <td></td>
 
-<td>Opens a previously created file in an editor view. If the file is stored in your workspace's active projects, the file will be displayed in PHP Explorer / Navigator views.</td></tr>
+<td>Opens a previously created file in an editor view. If the file is stored in your workspace's active projects, the file will be displayed in Project Explorer / Navigator views.</td></tr>
 
 <tr><td>Close</td>
 

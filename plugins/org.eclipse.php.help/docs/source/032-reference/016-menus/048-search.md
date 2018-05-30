@@ -31,7 +31,7 @@ To run a File Search or Replace:
  <li>Select whether to search in:
  <ol>
    <li>Workspace - The entire workspace.</li>
-   <li>Selected resources - Select these in PHP Explorer view before opening the Source dialog.</li>
+   <li>Selected resources - Select these in Project Explorer view before opening the Source dialog.</li>
    <li>Enclosing projects - The projects which the selected resources are in.</li>
    <li>Working Set - Click 'Choose' to select the required Working Set.</li>
  </ol></li>

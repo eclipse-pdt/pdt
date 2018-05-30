@@ -8,7 +8,7 @@ The PHP Perspective is PDT 's default perspective. It incorporates all PDT 's PH
 
 The PHP Perspective contains the following views:
 
- * [PHP Explorer View](008-php_explorer_view.md)
+ * [Project Explorer View](008-php_explorer_view.md)
  * [Outline View](016-php_outline_view.md)
  * [Type Hierarchy View](024-type_hierarchy_view.md)
  * [Problems View](PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/cprbview.htm)

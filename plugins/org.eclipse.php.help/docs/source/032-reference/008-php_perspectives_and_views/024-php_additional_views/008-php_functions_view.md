@@ -51,7 +51,7 @@ The view's menu can be accessed through the view menu icon ![menu_icon.png](imag
 #### Related Links:
 
  * [PHP Perspective](../../../032-reference/008-php_perspectives_and_views/008-php_perspective_views/000-index.md)
- * [PHP Explorer view](../../../032-reference/008-php_perspectives_and_views/008-php_perspective_views/008-php_explorer_view.md)
+ * [Project Explorer view](../../../032-reference/008-php_perspectives_and_views/008-php_perspective_views/008-php_explorer_view.md)
  * [PHP Project Outline View](016-project_outline_view.md)
  * [Outline View](../../../032-reference/008-php_perspectives_and_views/008-php_perspective_views/016-php_outline_view.md)
 

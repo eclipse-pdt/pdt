@@ -11,6 +11,6 @@ Configuring the project's Build Path allows you to select PHP resources to inclu
 #### Related Links:
 
  * [Configuring a Project's Build Path](../024-tasks/176-configuring_build_paths.md)
- * [PHP Explorer View](../032-reference/008-php_perspectives_and_views/008-php_perspective_views/008-php_explorer_view.md)
+ * [Project Explorer View](../032-reference/008-php_perspectives_and_views/008-php_perspective_views/008-php_explorer_view.md)
 
 <!--links-end-->

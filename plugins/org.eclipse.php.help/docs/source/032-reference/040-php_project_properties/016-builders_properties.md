@@ -4,7 +4,7 @@
 
 The Builders Properties page allows you to configure the External Tool builders that are run when this project is built and add, remove, or reorder external tools in the build order.  The Eclipse build process scans external resources which are referenced in a project so that their contents can be made available for operations such as Content Assist and Refactoring.
 
-To access the Builders Properties page, right-click a PHP project in PHP Explorer view and select Properties | Resource -or- select the project and from the menu bar go to Project | Properties | Builders Properties .
+To access the Builders Properties page, right-click a PHP project in Project Explorer view and select Properties | Resource -or- select the project and from the menu bar go to Project | Properties | Builders Properties .
 
 ![properties_builders.png](images/properties_builders.png "properties_builders.png")
 

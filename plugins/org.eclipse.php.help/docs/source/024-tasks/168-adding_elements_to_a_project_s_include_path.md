@@ -10,7 +10,7 @@ This procedure describes how to configure your project's Include Path.
 
 To configure your project's Include Path:
 
-1. In PHP Explorer view, right-click the required project and select **Include Path |  Configure Include Path...**   -Or- right-click the project and select **Properties | Include Path**.The project's PHP Include Path properties page will appear. <br />
+1. In Project Explorer view, right-click the required project and select **Include Path |  Configure Include Path...**   -Or- right-click the project and select **Properties | Include Path**.The project's PHP Include Path properties page will appear. <br />
   ![Include Path Properties](images/include_path_properties.png "Include Path Properties")<br />
   From this page you can configure the following:
      * To configure source folders on your Include Path:

@@ -38,7 +38,7 @@ By configuring inclusion/exclusion patterns for the Build Path, you can select t
 
 To include/exclude resources from the Build Path:
 
- 1. In the Build Path Properties page, expand the node next to the folder whose Inclusion/Exclusion pattern you want to configure and click Edit.  -Or- In PHP Explorer view, right-click the folder whose Inclusion/Exclusion pattern you want to configure and select Build Path | Configure Inclusion / Exclusion Filters.  The Inclusion and Exclusion patterns dialog is displayed.
+ 1. In the Build Path Properties page, expand the node next to the folder whose Inclusion/Exclusion pattern you want to configure and click Edit.  -Or- In Project Explorer view, right-click the folder whose Inclusion/Exclusion pattern you want to configure and select Build Path | Configure Inclusion / Exclusion Filters.  The Inclusion and Exclusion patterns dialog is displayed.
 
  1. Click Add next to the Inclusion or Exclusion patterns panes.  The Add Inclusion/Exclusion Pattern dialog is displayed.
  2. Enter or select the required resource(s) or pattern to include / exclude and click OK.
@@ -52,7 +52,7 @@ All resources in the project which match an inclusion pattern but do not match a
 
 You can configure different inclusion/exclusion rules for child folders within a selected directory. However, you will need to exclude the selected child folder from the parent directory's Build Path and add it as a separate Build Path source folder. This is done to resolve any conflicts which may arise from configuring one pattern for the parent folder and another for the child.
 
-Source folders can be created and/or added from the PHP Build Path properties page or from PHP Explorer view.
+Source folders can be created and/or added from the PHP Build Path properties page or from Project Explorer view.
 
 <!--ref-start-->
 
@@ -75,7 +75,7 @@ In order to overcome the nesting conflict,  you should exclude the folder you ha
 
 ![build_path_add_source_folder.png](images/build_path_add_source_folder.png "build_path_add_source_folder.png")
 
-From PHP Explorer view:
+From Project Explorer view:
 
  1. Right-click the project and select Build Path | New Source Folder.  The New Source Folder dialog will be displayed.<br />
     ![build_path_new_source_folder.png](images/build_path_new_source_folder.png "build_path_new_source_folder.png") 1. Enter the name for the new folder in the Folder name field.
@@ -96,7 +96,7 @@ You can add an external source folder as a link to your project which will be sc
 
 To add an external source folder to the project's Build Path:
 
- 1. In the Build Path Properties page, click the 'Link Source...' button.  -Or- In PHP Explorer view, right-click the project and select Build Path | Link Source.  The Link Source dialog is displayed.<br />
+ 1. In the Build Path Properties page, click the 'Link Source...' button.  -Or- In Project Explorer view, right-click the project and select Build Path | Link Source.  The Link Source dialog is displayed.<br />
    ![build_path_link_source.png](images/build_path_link_source.png "build_path_link_source.png") 1. Click the 'Browse..' button and browse to the location of the folder you want to add to the Build Path.  Alternately, click Variables and select the variable which points to the required resource.
  2. The Folder name field will have been automatically populated with the name of the original folder.  Edit this entry if required.
  3. Adding a folder to a project's Build Path could cause a conflict between the inclusion/exclusion patterns configured for the project root and those configured for the selected folder.  In order to avoid these nesting conflicts, select one of the following options:

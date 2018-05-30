@@ -29,7 +29,7 @@ PHP Project Outline View Toolbar commands
 #### Related Links:
 
  * [PHP Perspective](../../../032-reference/008-php_perspectives_and_views/008-php_perspective_views/000-index.md)
- * [PHP Explorer view](../../../032-reference/008-php_perspectives_and_views/008-php_perspective_views/008-php_explorer_view.md)
+ * [Project Explorer view](../../../032-reference/008-php_perspectives_and_views/008-php_perspective_views/008-php_explorer_view.md)
  * [PHP Functions View](008-php_functions_view.md)
  * [Outline View](../../../032-reference/008-php_perspectives_and_views/008-php_perspective_views/016-php_outline_view.md)
 

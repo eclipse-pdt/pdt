@@ -156,7 +156,7 @@ The Outline View is displayed by default as part of the PHP Perspective. To manu
 #### Related Links:
 
  * [PHP Perspective](000-index.md)
- * [PHP Explorer view](008-php_explorer_view.md)
+ * [Project Explorer view](008-php_explorer_view.md)
  * [PHP Functions View](../../../032-reference/008-php_perspectives_and_views/024-php_additional_views/008-php_functions_view.md) 
  * [PHP Project Outline View](../../../032-reference/008-php_perspectives_and_views/024-php_additional_views/016-project_outline_view.md)
 

@@ -4,7 +4,7 @@
 
 The Project References Properties page allows you to set the projects which are referenced by your project. This affects actions such as opening and closing of projects. (i.e. if you close a project and re-open it, you will be prompted to also open the projects which it references.)
 
-To access the Project References Properties page, right-click a PHP project in PHP Explorer view and select Properties | Resource -or- select the project and from the menu bar go to Project | Properties | Project References Properties .
+To access the Project References Properties page, right-click a PHP project in Project Explorer view and select Properties | Resource -or- select the project and from the menu bar go to Project | Properties | Project References Properties .
 
 ![properties_project_references.gif](images/properties_project_references.gif "properties_project_references.gif")
 
