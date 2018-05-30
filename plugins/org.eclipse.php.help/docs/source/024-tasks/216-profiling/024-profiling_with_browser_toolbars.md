@@ -24,6 +24,16 @@ The relevant profile session will be launched in PDT.
 
 The relevant profile session will be launched in PDT.
 
+### Profiling with Xdebug toolbars
+
+1. Ensure the **Xdebug helper** or **The easiest Xdebug** is installed on your browser.
+2. Make sure [xdebug.profiler_enable_trigger](https://xdebug.org/docs/all_settings#profiler_enable_trigger) is enabled
+3. Open the web page you would like to profile in a browser.
+4. Ensure your PDT is open.
+5. Click the 'Profile' icon on the Xdebug Toolbar to profile the page currently displayed in the browser.
+
+You Xdebug will create CacheGrind. Now you can [import profile session](040-importing_profile_sessions.md)
+
 <!--links-start-->
 
 #### Related Links:

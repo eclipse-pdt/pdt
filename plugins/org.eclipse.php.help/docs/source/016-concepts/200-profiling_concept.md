@@ -17,7 +17,7 @@ See [Locally Profiling a PHP Script](../024-tasks/216-profiling/008-profiling_lo
 
 #### Note:
 
-Your PHP CLI must be running the Zend Debugger in order for profiling capabilities to function. Xdebug is not supported yet.
+Your PHP CLI must be running the Zend Debugger or Xdebug in order for profiling capabilities to function.
 
 <!--note-end-->
 
@@ -25,7 +25,7 @@ Your PHP CLI must be running the Zend Debugger in order for profiling capabiliti
 
 Allows you to profile applications situated on a server. It allows you to profile whole applications and projects.
 
-The PHP Web Page Profile setting has an option to give the files you are working on first priority when profiling, using the ”Local Copy” option. This means that, when possible, file content is taken from the files situated on your Workspace. This prevents you from having to upload the latest revisions.
+The PHP Web Page Profile setting has an option to give the files you are working on first priority when profiling, using the ï¿½Local Copyï¿½ option. This means that, when possible, file content is taken from the files situated on your Workspace. This prevents you from having to upload the latest revisions.
 
 See [Profiling a PHP Web Page ](../024-tasks/216-profiling/016-profiling_php_web_page.md)  for more information.
 
@@ -33,13 +33,19 @@ See [Profiling a PHP Web Page ](../024-tasks/216-profiling/016-profiling_php_web
 
 #### Note:
 
-Your PHP server must be running the Zend Debugger in order for profiling capabilities to function. Xdebug is not supported yet.
+Your PHP server must be running the Zend Debugger or Xdebug in order for profiling capabilities to function.
 
 <!--note-end-->
 
 #### Profiling with Browser Toolbars
 
+##### Zend Debugger
+
 You can also start profile session for a web application by using different browser toolbars like [Z-Ray](http://www.zend.com/en/products/server/z-ray) or [Zend Debugger Toolbar](https://addons.mozilla.org/en-US/firefox/addon/zend-debugger-toolbar/).
+
+#### Xdebug
+
+If you turn on [xdebug.profiler_enable_trigger](https://xdebug.org/docs/all_settings#profiler_enable_trigger) you will able to run via COOKIE/GET/POST parameter "XDEBUG_PROFILE=1". Cookie can be created via browser toolbar, for example [The easiest Xdebug](https://addons.mozilla.org/en-US/firefox/addon/the-easiest-xdebug/) or [Xdebug helper](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc).
 
 See [Profiling with Browser Toolbars](../024-tasks/216-profiling/024-profiling_with_browser_toolbars.md)  for more information.
 
@@ -47,7 +53,7 @@ See [Profiling with Browser Toolbars](../024-tasks/216-profiling/024-profiling_w
 
 #### Note:
 
-Your PHP server must be running the Zend Debugger in order for profiling capabilities to function. Xdebug is not supported yet.
+Your PHP server must be running the Zend Debugger or Xdebug in order for profiling capabilities to function.
 
 <!--note-end-->
 

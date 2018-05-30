@@ -4,6 +4,10 @@
 
 This procedure describes how to profile whole applications, projects, files or collections of files that are already on the server.
 
+#### Note:
+
+For Xdebug, make sure [xdebug.profiler_enable_trigger](https://xdebug.org/docs/all_settings#profiler_enable_trigger) is enabled.
+
 1. Click the arrow next to the Profile button ![Profile button](images/profile_icon.png "Profile button") on the toolbar and select **Profile Configurations...** -or- from the main menu go to **Run | Profile Configurations...** -or-right-click  in PHP Explorer view and select **Profile As | Profile Configurations...**
 2. A Profile launch configuration dialog will appear.
 3. Double-click the **PHP Web Application** option to create a new Profile configuration.
@@ -24,6 +28,10 @@ Click Yes. (If you would like the profiling perspective to open by default in th
 The **PHP Profile Perspective** will open, displaying the **Profiling Monitor** window with various Profiling views.
 
 See [PHP Profile perspective](../../032-reference/008-php_perspectives_and_views/032-php_profile_perspective/000-index.md) for more on the information displayed once a profile session has been run. 
+
+#### Note:
+
+With Xdebug profiler, you have to manually [import profile session](040-importing_profile_sessions.md).
 
 <!--links-start-->
 
