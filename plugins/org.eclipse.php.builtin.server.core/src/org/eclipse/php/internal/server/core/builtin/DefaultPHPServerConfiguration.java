@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -42,8 +43,9 @@ import org.eclipse.wst.server.core.ServerPort;
 @SuppressWarnings("restriction")
 public class DefaultPHPServerConfiguration extends PHPServerConfiguration {
 
-	private final static String DEFAULT_SERVER_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Server>\n\t<Port name=\"HTTP/1.1\" protocol=\"HTTP\">80</Port>\n</Server>"; //$NON-NLS-1$
-
+	private final static String DEFAULT_SERVER_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Server>\n\t<Port name=\"HTTP/1.1\" protocol=\"HTTP\">%PORT%</Port>\n</Server>"; //$NON-NLS-1$
+	private final static String PORT_VAR = "%PORT%"; //$NON-NLS-1$
+	
 	protected String fPhpIniFile;
 	protected Server server;
 	protected ServerInstance serverInstance;
@@ -154,7 +156,7 @@ public class DefaultPHPServerConfiguration extends PHPServerConfiguration {
 
 			serverFactory = new Factory();
 			serverFactory.setPackageName("org.eclipse.php.internal.server.core.builtin.xml"); //$NON-NLS-1$
-			server = (Server) serverFactory.loadDocument(DEFAULT_SERVER_XML);
+			server = (Server) serverFactory.loadDocument(DEFAULT_SERVER_XML.replaceAll(PORT_VAR, String.valueOf(ThreadLocalRandom.current().nextInt(8000, 9000))));
 			serverInstance = new ServerInstance(server);
 			monitor.worked(1);
 
