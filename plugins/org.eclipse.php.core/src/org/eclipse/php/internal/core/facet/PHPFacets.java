@@ -54,8 +54,8 @@ public class PHPFacets {
 	}
 
 	/**
-	 * Returns true if the given project is a faceted project and the php core facet
-	 * is installed
+	 * Returns true if the given project is a faceted project and the php core
+	 * facet is installed
 	 * 
 	 * @param project
 	 *            the project
@@ -178,8 +178,12 @@ public class PHPFacets {
 		facetedProject.setFixedProjectFacets(fixedFacets);
 
 		// install the fixed facets
-		facetedProject.installProjectFacet(coreFacet.getDefaultVersion(), null, monitor);
-		facetedProject.installProjectFacet(convertToFacetVersion(phpVersion), null, monitor);
+		if (!facetedProject.hasProjectFacet(coreFacet.getDefaultVersion())) {
+			facetedProject.installProjectFacet(coreFacet.getDefaultVersion(), null, monitor);
+		}
+		if (!facetedProject.hasProjectFacet(phpFacet)) {
+			facetedProject.installProjectFacet(convertToFacetVersion(phpVersion), null, monitor);
+		}
 	}
 
 	/**

@@ -84,14 +84,27 @@ public class PHPProjectCreationWizard extends NewElementWizard implements INewWi
 
 	@Override
 	protected void finishPage(IProgressMonitor monitor) throws InterruptedException, CoreException {
-		if (fFirstPage != null) {
-			fFirstPage.performFinish(monitor); // use the full progress monitor
-		}
-		if (fSecondPage != null) {
-			fSecondPage.performFinish(monitor); // use the full progress monitor
-		}
-		if (fThirdPage != null) {
-			fThirdPage.performFinish(monitor); // use the full progress monitor
+		try {
+			fFirstPage.performFinish(monitor); // use the full progress
+												// monitor
+			if (fSecondPage != null) {
+				fSecondPage.performFinish(monitor);
+			}
+			if (fThirdPage != null) {
+				fThirdPage.performFinish(monitor); // use the full
+													// progress monitor
+			}
+		} finally {
+			IProject project = fLastPage.getScriptProject().getProject();
+			PHPVersion version = fFirstPage.getPHPVersionValue();
+			if (version == null) {
+				version = ProjectOptions.getDefaultPHPVersion();
+			}
+			try {
+				PHPFacets.createFacetedProject(project, version, new NullProgressMonitor());
+			} catch (CoreException ex) {
+				PHPCorePlugin.log(ex);
+			}
 		}
 	}
 
@@ -103,17 +116,6 @@ public class PHPProjectCreationWizard extends NewElementWizard implements INewWi
 				BasicNewProjectResourceWizard.updatePerspective(fConfigElement);
 			}
 			selectAndReveal(fLastPage.getScriptProject().getProject());
-
-			IProject project = fLastPage.getScriptProject().getProject();
-			PHPVersion version = fFirstPage.getPHPVersionValue();
-			if (version == null) {
-				version = ProjectOptions.getDefaultPHPVersion();
-			}
-			try {
-				PHPFacets.createFacetedProject(project, version, new NullProgressMonitor());
-			} catch (CoreException ex) {
-				PHPCorePlugin.log(ex);
-			}
 
 			WizardModel model = fFirstPage.getWizardData();
 
@@ -144,8 +146,8 @@ public class PHPProjectCreationWizard extends NewElementWizard implements INewWi
 	}
 
 	/*
-	 * Stores the configuration element for the wizard. The config element will be
-	 * used in <code>performFinish</code> to set the result perspective.
+	 * Stores the configuration element for the wizard. The config element will
+	 * be used in <code>performFinish</code> to set the result perspective.
 	 */
 	@Override
 	public void setInitializationData(IConfigurationElement cfig, String propertyName, Object data) {
