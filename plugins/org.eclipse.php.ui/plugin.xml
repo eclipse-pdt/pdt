@@ -2583,6 +2583,7 @@
 					</and>
 					<and>
 						<instanceof value="org.eclipse.core.resources.IFile" />
+						<test property="org.eclipse.core.resources.contentTypeId" value="org.eclipse.php.core.phpsource" />
 					</and>
 					<instanceof	value="org.eclipse.dltk.core.IProjectFragment" />
 					<instanceof value="org.eclipse.dltk.internal.ui.navigator.ProjectFragmentContainer" />
@@ -2600,6 +2601,7 @@
 					</and>
 					<and>
 						<instanceof value="org.eclipse.core.resources.IFile" />
+						<test property="org.eclipse.core.resources.contentTypeId" value="org.eclipse.php.core.phpsource" />
           			</and>		
 					<instanceof	value="org.eclipse.dltk.core.IProjectFragment" />
 					<instanceof value="org.eclipse.dltk.internal.ui.navigator.ProjectFragmentContainer" />
