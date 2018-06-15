@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-    Copyright (c) 2014 Dawid Pakuła and others.
+    Copyright (c) 2014, 2018 Dawid Pakuła and others.
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the Eclipse Public License v1.0
     which accompanies this distribution, and is available at
@@ -13,7 +13,7 @@
 	<path id="wikitext.classpath">
 		<pathelement path="${compile_classpath}" />
 	</path>
-	<taskdef classpathref="wikitext.classpath" resource="org/eclipse/mylyn/wikitext/core/ant/tasks.properties" />
+	<taskdef classpathref="wikitext.classpath" resource="org/eclipse/mylyn/wikitext/ant/tasks.properties" />
 	<property name="help.base.dir" value="${basedir}" />
 	<property name="doc.source.dir" value="${basedir}/docs/source" />
 	<property name="doc.template.dir" value="${basedir}/docs/template" />

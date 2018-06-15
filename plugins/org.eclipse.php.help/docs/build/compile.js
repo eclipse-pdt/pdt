@@ -144,7 +144,7 @@ with (javaImporter) {
             task.setOverwrite(true);
             task.setXhtmlStrict(true);
             task.setValidate(false);
-            var style = new org.eclipse.mylyn.internal.wikitext.core.ant.MarkupToHtmlTask.Stylesheet();
+            var style = new org.eclipse.mylyn.wikitext.ant.internal.MarkupToHtmlTask.Stylesheet();
             var pre = '';
             for (var m = 0; m < tree.url.split('/').length - 1; m++) {
                 pre += '../';
