@@ -183,30 +183,41 @@ public class PharFile {
 			if (signatureLength < 24) {
 				throw new PharException(Messages.Phar_Signature_Corrupted);
 			} else {
-
-				bis.skip(signatureLength - 8);
-				buffer = new byte[4];
-				read(bis, buffer);
 				boolean found = false;
+				byte[] signatureData = new byte[signatureLength];
+				bis.read(signatureData);
+
+				// checking phar signature should be done from the end of file
+				// like done in phar.c (from php source)
+				// especially reading digest from signature begining is wrong in some cases
+
+				if (!PharUtil.byteArrayEquals(signatureData, PharConstants.GBMB, signatureData.length - 4)) {
+					throw new PharException(Messages.Phar_Signature_Corrupted);
+				}
+
+				byte[] digestFlags = Arrays.copyOfRange(signatureData, signatureData.length - 8,
+						signatureData.length - 4);
+
 				for (Iterator<Digest> iterator = Digest.DIGEST_MAP.values().iterator(); iterator.hasNext();) {
 					Digest digest = iterator.next();
-					if (PharUtil.byteArrayEquals(digest.getBitMap(), buffer)) {
-						if (digest.getDigest().digest().length != signatureLength - 8
-								|| !PharUtil.checkSignature(file, digest, signatureEntry.getPosition())) {
+					if (PharUtil.byteArrayEquals(digest.getBitMap(), digestFlags)) {
+						int digestLen = digest.getDigest().digest().length;
+						if (signatureData.length - 8 < digestLen) {
 							throw new PharException(Messages.Phar_Signature_Corrupted);
-						} else {
-							found = true;
-							break;
+						}
+						byte[] digestData = Arrays.copyOfRange(signatureData, signatureData.length - 8 - digestLen,
+								signatureData.length - 8);
+
+						if (!PharUtil.checkSignature(file, (int) (file.length() - 8 - digestLen), digest, digestData)) {
+							throw new PharException(Messages.Phar_Signature_Corrupted);
 						}
 
+						found = true;
+						break;
 					}
 				}
 				if (!found) {
 					throw new PharException(Messages.Phar_Signature_Unsupported);
-				}
-				read(bis, buffer);
-				if (!PharUtil.byteArrayEquals(PharConstants.GBMB, buffer)) {
-					throw new PharException(Messages.Phar_Signature_End);
 				}
 			}
 			pharEntryList.add(signatureEntry);

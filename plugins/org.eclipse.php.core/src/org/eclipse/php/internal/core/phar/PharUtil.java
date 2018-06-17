@@ -179,7 +179,27 @@ public class PharUtil {
 
 	}
 
-	public static boolean checkSignature(File file, Digest digest, int end) throws IOException {
+	public static boolean byteArrayEquals(byte[] b1, byte[] b2, int offset) {
+		if (b1 == null)
+			return false;
+		if (b2 == null)
+			return false;
+		if (offset < 0)
+			return false;
+		if (offset == 0)
+			return byteArrayEquals(b1, b2);
+		if (offset + b2.length > b1.length)
+			return false;
+
+		for (int i = 0; i < b2.length; ++i) {
+			if (b1[offset + i] != b2[i])
+				return false;
+		}
+
+		return true;
+	}
+
+	public static boolean checkSignature(File file, int fileEnd, Digest digest, byte[] digestData) throws IOException {
 		MessageDigest messageDigest = digest.getDigest();
 		messageDigest.reset();
 		int length = 0;
@@ -189,8 +209,8 @@ public class PharUtil {
 			int n;
 			int size = 4096;
 			byte[] readBuffer;
-			if (end < size) {
-				readBuffer = new byte[end];
+			if (fileEnd < size) {
+				readBuffer = new byte[fileEnd];
 			} else {
 				readBuffer = new byte[4096];
 			}
@@ -204,16 +224,14 @@ public class PharUtil {
 				// } else {
 				messageDigest.update(readBuffer, 0, n);
 				// }
-				if (length == end) {
+				if (length == fileEnd) {
 					break;
 				}
-				if (length + readBuffer.length > end) {
-					readBuffer = new byte[end - length];
+				if (length + readBuffer.length > fileEnd) {
+					readBuffer = new byte[fileEnd - length];
 				}
 			}
-			readBuffer = new byte[contentStream.available() - 8];
-			contentStream.read(readBuffer);
-			if (PharUtil.byteArrayEquals(messageDigest.digest(), readBuffer)) {
+			if (PharUtil.byteArrayEquals(messageDigest.digest(), digestData)) {
 				return true;
 			}
 		} finally {
