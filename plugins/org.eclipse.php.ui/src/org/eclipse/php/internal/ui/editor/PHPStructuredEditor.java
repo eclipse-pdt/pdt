@@ -38,7 +38,6 @@ import org.eclipse.dltk.ui.text.folding.IFoldingStructureProviderExtension;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.jface.action.*;
-import org.eclipse.jface.internal.text.html.HTMLTextPresenter;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
@@ -179,8 +178,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 */
 	private ISelection fForcedMarkOccurrencesSelection;
 	/**
-	 * The document modification stamp at the time when the last occurrence marking
-	 * took place.
+	 * The document modification stamp at the time when the last occurrence
+	 * marking took place.
 	 * 
 	 * @since 3.4
 	 */
@@ -200,16 +199,16 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 */
 	private Annotation[] fOccurrenceAnnotations = null;
 	/**
-	 * Tells whether all occurrences of the element at the current caret location
-	 * are automatically marked in this editor.
+	 * Tells whether all occurrences of the element at the current caret
+	 * location are automatically marked in this editor.
 	 * 
 	 * @since 3.4
 	 */
 	private boolean fMarkOccurrenceAnnotations;
 	/**
-	 * Tells whether the occurrence annotations are sticky i.e. whether they stay
-	 * even if there's no valid Java element at the current caret position. Only
-	 * valid if {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
+	 * Tells whether the occurrence annotations are sticky i.e. whether they
+	 * stay even if there's no valid Java element at the current caret position.
+	 * Only valid if {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
 	 * 
 	 * @since 3.4
 	 */
@@ -222,8 +221,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 */
 	private boolean fMarkTypeOccurrences;
 	/**
-	 * Tells whether to mark method and declaration occurrences in this editor. Only
-	 * valid if {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
+	 * Tells whether to mark method and declaration occurrences in this editor.
+	 * Only valid if {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
 	 * 
 	 * @since 3.4
 	 */
@@ -250,8 +249,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 */
 	private boolean fMarkGlobalVariableOccurrences;
 	/**
-	 * Tells whether to mark local variable occurrences in this editor. Only valid
-	 * if {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
+	 * Tells whether to mark local variable occurrences in this editor. Only
+	 * valid if {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
 	 * 
 	 * @since 3.4
 	 */
@@ -272,9 +271,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	private boolean fMarkMethodExitPoints;
 
 	/**
-	 * Tells whether to mark targets of <code>break</code> and <code>continue</code>
-	 * statements in this editor. Only valid if {@link #fMarkOccurrenceAnnotations}
-	 * is <code>true</code>.
+	 * Tells whether to mark targets of <code>break</code> and
+	 * <code>continue</code> statements in this editor. Only valid if
+	 * {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
 	 * 
 	 * @since 3.4
 	 */
@@ -303,7 +302,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	private boolean fIsTextDragAndDropInstalled = false;
 
 	/**
-	 * Helper token to decide whether drag and drop happens inside the same editor.
+	 * Helper token to decide whether drag and drop happens inside the same
+	 * editor.
 	 * 
 	 * @since 3.3
 	 */
@@ -334,10 +334,10 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	protected abstract class AbstractSelectionChangedListener implements ISelectionChangedListener {
 
 		/**
-		 * Installs this selection changed listener with the given selection provider.
-		 * If the selection provider is a post selection provider, post selection
-		 * changed events are the preferred choice, otherwise normal selection changed
-		 * events are requested.
+		 * Installs this selection changed listener with the given selection
+		 * provider. If the selection provider is a post selection provider,
+		 * post selection changed events are the preferred choice, otherwise
+		 * normal selection changed events are requested.
 		 * 
 		 * @param selectionProvider
 		 */
@@ -355,7 +355,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 
 		/**
-		 * Removes this selection changed listener from the given selection provider.
+		 * Removes this selection changed listener from the given selection
+		 * provider.
 		 * 
 		 * @param selectionProvider
 		 *            the selection provider
@@ -371,24 +372,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			} else {
 				selectionProvider.removeSelectionChangedListener(this);
 			}
-		}
-	}
-
-	/**
-	 * Updates the Java outline page selection and this editor's range indicator.
-	 * 
-	 * @since 3.0
-	 */
-	private class EditorSelectionChangedListener extends AbstractSelectionChangedListener {
-
-		/*
-		 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged
-		 * (org.eclipse.jface.viewers.SelectionChangedEvent)
-		 */
-		@Override
-		public void selectionChanged(SelectionChangedEvent event) {
-			// XXX: see https://bugs.eclipse.org/bugs/show_bug.cgi?id=56161
-			PHPStructuredEditor.this.selectionChanged();
 		}
 	}
 
@@ -508,8 +491,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	}
 
 	/**
-	 * Position updater that takes any changes at the borders of a position to not
-	 * belong to the position.
+	 * Position updater that takes any changes at the borders of a position to
+	 * not belong to the position.
 	 *
 	 * @since 3.0
 	 */
@@ -792,7 +775,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	/**
 	 * The editor selection changed listener.
 	 */
-	private EditorSelectionChangedListener fEditorSelectionChangedListener;
 	private IPreferencesPropagatorListener fPhpVersionListener;
 	private IPreferencesPropagatorListener fFormatterProfileListener;
 	private IPreferenceChangeListener fPreferencesListener;
@@ -825,10 +807,10 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	}
 
 	/**
-	 * This action behaves in two different ways: If there is no current text hover,
-	 * the javadoc is displayed using information presenter. If there is a current
-	 * text hover, it is converted into a information presenter in order to make it
-	 * sticky.
+	 * This action behaves in two different ways: If there is no current text
+	 * hover, the javadoc is displayed using information presenter. If there is
+	 * a current text hover, it is converted into a information presenter in
+	 * order to make it sticky.
 	 */
 	class InformationDispatchAction extends TextEditorAction {
 
@@ -1171,7 +1153,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 
 		/*
-		 * @see org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged
+		 * @see
+		 * org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged
 		 * (org.eclipse.jface.text.DocumentEvent)
 		 */
 		@Override
@@ -1182,7 +1165,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 
 		/*
-		 * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse
+		 * @see
+		 * org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse
 		 * .jface.text.DocumentEvent)
 		 */
 		@Override
@@ -1190,8 +1174,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 
 		/*
-		 * @see org.eclipse.jface.text.ITextInputListener# inputDocumentAboutToBeChanged
-		 * (org.eclipse.jface.text.IDocument, org.eclipse.jface.text.IDocument)
+		 * @see org.eclipse.jface.text.ITextInputListener#
+		 * inputDocumentAboutToBeChanged (org.eclipse.jface.text.IDocument,
+		 * org.eclipse.jface.text.IDocument)
 		 */
 		@Override
 		public void inputDocumentAboutToBeChanged(IDocument oldInput, IDocument newInput) {
@@ -1203,7 +1188,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 
 		/*
-		 * @see org.eclipse.jface.text.ITextInputListener#inputDocumentChanged(org
+		 * @see
+		 * org.eclipse.jface.text.ITextInputListener#inputDocumentChanged(org
 		 * .eclipse.jface.text.IDocument, org.eclipse.jface.text.IDocument)
 		 */
 		@Override
@@ -1360,8 +1346,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 
 		/*
-		 * @see org.eclipse.jface.text.information.IInformationProvider# getInformation
-		 * (org.eclipse.jface.text.ITextViewer, org.eclipse.jface.text.IRegion)
+		 * @see org.eclipse.jface.text.information.IInformationProvider#
+		 * getInformation (org.eclipse.jface.text.ITextViewer,
+		 * org.eclipse.jface.text.IRegion)
 		 */
 		@Override
 		public String getInformation(final ITextViewer textViewer, final IRegion subject) {
@@ -1369,7 +1356,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 
 		/*
-		 * @see org.eclipse.jface.text.information.IInformationProviderExtension#
+		 * @see
+		 * org.eclipse.jface.text.information.IInformationProviderExtension#
 		 * getInformation2(org.eclipse.jface.text.ITextViewer,
 		 * org.eclipse.jface.text.IRegion)
 		 * 
@@ -1381,7 +1369,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 
 		/*
-		 * @see org.eclipse.jface.text.information.IInformationProviderExtension2
+		 * @see
+		 * org.eclipse.jface.text.information.IInformationProviderExtension2
 		 * #getInformationPresenterControlCreator()
 		 */
 		@Override
@@ -1390,7 +1379,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 
 		/*
-		 * @see org.eclipse.jface.text.information.IInformationProvider#getSubject
+		 * @see
+		 * org.eclipse.jface.text.information.IInformationProvider#getSubject
 		 * (org.eclipse.jface.text.ITextViewer, int)
 		 */
 		@Override
@@ -1470,8 +1460,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 	public PHPStructuredEditor() {
 		/**
-		 * Bug fix: #158170 Set WST's folding support enablement according to PHP editor
-		 * folding support status. Must be removed, when WTP releases folding support
+		 * Bug fix: #158170 Set WST's folding support enablement according to
+		 * PHP editor folding support status. Must be removed, when WTP releases
+		 * folding support
 		 */
 		boolean foldingEnabled = PHPUiPlugin.getDefault().getPreferenceStore()
 				.getBoolean(PreferenceConstants.EDITOR_FOLDING_ENABLED);
@@ -1518,8 +1509,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	}
 
 	/**
-	 * Create a preference store that combines the source editor preferences with
-	 * the base editor's preferences.
+	 * Create a preference store that combines the source editor preferences
+	 * with the base editor's preferences.
 	 * 
 	 * @return IPreferenceStore
 	 */
@@ -1722,13 +1713,13 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	}
 
 	/**
-	 * This action implements smart home. (Taken from JDT implementation) Instead of
-	 * going to the start of a line it does the following: - if smart home/end is
-	 * enabled and the caret is after the line's first non-whitespace then the caret
-	 * is moved directly before it, taking PHPDoc and multi-line comments into
-	 * account. - if the caret is before the line's first non-whitespace the caret
-	 * is moved to the beginning of the line - if the caret is at the beginning of
-	 * the line see first case.
+	 * This action implements smart home. (Taken from JDT implementation)
+	 * Instead of going to the start of a line it does the following: - if smart
+	 * home/end is enabled and the caret is after the line's first
+	 * non-whitespace then the caret is moved directly before it, taking PHPDoc
+	 * and multi-line comments into account. - if the caret is before the line's
+	 * first non-whitespace the caret is moved to the beginning of the line - if
+	 * the caret is at the beginning of the line see first case.
 	 */
 	protected class SmartLineStartAction extends LineStartAction {
 
@@ -1740,8 +1731,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		 * @param textWidget
 		 *            the styled text widget
 		 * @param doSelect
-		 *            a boolean flag which tells if the text up to the beginning of the
-		 *            line should be selected
+		 *            a boolean flag which tells if the text up to the beginning
+		 *            of the line should be selected
 		 */
 		public SmartLineStartAction(final StyledText textWidget, final boolean doSelect) {
 			super(textWidget, doSelect);
@@ -1875,17 +1866,19 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 	/**
 	 * This action implements smart end. (Taken from
-	 * org.eclipse.ui.texteditor.AbstractTextEditor.LineEndAction) Instead of going
-	 * to the end of a line it does the following: - if smart home/end is enabled
-	 * and the caret is before the line's last non-whitespace and then the caret is
-	 * moved directly after it - if the caret is after last non-whitespace the caret
-	 * is moved at the end of the line - if the caret is at the end of the line the
-	 * caret is moved directly after the line's last non-whitespace character
+	 * org.eclipse.ui.texteditor.AbstractTextEditor.LineEndAction) Instead of
+	 * going to the end of a line it does the following: - if smart home/end is
+	 * enabled and the caret is before the line's last non-whitespace and then
+	 * the caret is moved directly after it - if the caret is after last
+	 * non-whitespace the caret is moved at the end of the line - if the caret
+	 * is at the end of the line the caret is moved directly after the line's
+	 * last non-whitespace character
 	 */
 	protected class SmartLineEndAction extends TextNavigationAction {
 
 		/**
-		 * boolean flag which tells if the text up to the line end should be selected.
+		 * boolean flag which tells if the text up to the line end should be
+		 * selected.
 		 */
 		private final boolean fDoSelect;
 
@@ -1895,8 +1888,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		 * @param textWidget
 		 *            the styled text widget
 		 * @param doSelect
-		 *            a boolean flag which tells if the text up to the line end should
-		 *            be selected
+		 *            a boolean flag which tells if the text up to the line end
+		 *            should be selected
 		 */
 		public SmartLineEndAction(StyledText textWidget, boolean doSelect) {
 			super(textWidget, ST.LINE_END);
@@ -2019,7 +2012,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		 * Creates a new next sub-word action.
 		 * 
 		 * @param code
-		 *            Action code for the default operation. Must be an action code from
+		 *            Action code for the default operation. Must be an action
+		 *            code from
 		 * @see org.eclipse.swt.custom.ST.
 		 */
 		protected NextSubWordAction(int code) {
@@ -2138,7 +2132,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		 * Creates a new previous sub-word action.
 		 * 
 		 * @param code
-		 *            Action code for the default operation. Must be an action code from
+		 *            Action code for the default operation. Must be an action
+		 *            code from
 		 * @see org.eclipse.swt.custom.ST.
 		 */
 		protected PreviousSubWordAction(final int code) {
@@ -2529,8 +2524,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 * 
 	 * @param sourceViewer
 	 *            the source viewer
-	 * @return a region denoting the current signed selection, for a resulting RtoL
-	 *         selections length is < 0
+	 * @return a region denoting the current signed selection, for a resulting
+	 *         RtoL selections length is < 0
 	 */
 	protected IRegion getSignedSelection(ISourceViewer sourceViewer) {
 		StyledText text = sourceViewer.getTextWidget();
@@ -2547,8 +2542,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	}
 
 	/**
-	 * Return whether document folding should be enabled according to the preference
-	 * store settings.
+	 * Return whether document folding should be enabled according to the
+	 * preference store settings.
 	 * 
 	 * @return <code>true</code> if document folding should be enabled
 	 */
@@ -2601,10 +2596,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		final IInformationControlCreator informationControlCreator = new IInformationControlCreator() {
 			@Override
 			public IInformationControl createInformationControl(Shell shell) {
-				boolean cutDown = false;
-				int style = cutDown ? SWT.NONE : SWT.V_SCROLL | SWT.H_SCROLL;
-				return new DefaultInformationControl(shell, SWT.RESIZE | SWT.TOOL, style,
-						new HTMLTextPresenter(cutDown));
+				return new DefaultInformationControl(shell, true);
 			}
 		};
 
@@ -2612,8 +2604,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		fInformationPresenter.setSizeConstraints(60, 10, true, true);
 		fInformationPresenter.install(getSourceViewer());
 
-		fEditorSelectionChangedListener = new EditorSelectionChangedListener();
-		fEditorSelectionChangedListener.install(getSelectionProvider());
 		PlatformUI.getWorkbench().addWindowListener(fActivationListener);
 
 		setHelpContextId(IPHPHelpContextIds.EDITOR_PREFERENCES);
@@ -2810,9 +2800,10 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		try {
 			if (AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH.equals(property)) {
 				/*
-				 * Ignore tab setting since we rely on the formatter preferences. We do this
-				 * outside the try-finally block to avoid that EDITOR_TAB_WIDTH is handled by
-				 * the sub-class (AbstractDecoratedTextEditor).
+				 * Ignore tab setting since we rely on the formatter
+				 * preferences. We do this outside the try-finally block to
+				 * avoid that EDITOR_TAB_WIDTH is handled by the sub-class
+				 * (AbstractDecoratedTextEditor).
 				 */
 				return;
 			}
@@ -2949,8 +2940,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	}
 
 	/**
-	 * Determines whether the preference change encoded by the given event changes
-	 * the override indication.
+	 * Determines whether the preference change encoded by the given event
+	 * changes the override indication.
 	 * 
 	 * @param event
 	 *            the event to be investigated
@@ -3247,8 +3238,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	}
 
 	/**
-	 * Returns the model element wrapped by this editors input. Most likely to be
-	 * the relevant source module
+	 * Returns the model element wrapped by this editors input. Most likely to
+	 * be the relevant source module
 	 * 
 	 * @return the model element wrapped by this editors input.
 	 * 
@@ -3271,8 +3262,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	/**
 	 * Returns the most narrow element including the given offset. If
 	 * <code>reconcile</code> is <code>true</code> the editor's input element is
-	 * reconciled in advance. If it is <code>false</code> this method only returns a
-	 * result if the editor's input element does not need to be reconciled.
+	 * reconciled in advance. If it is <code>false</code> this method only
+	 * returns a result if the editor's input element does not need to be
+	 * reconciled.
 	 * 
 	 * @param offset
 	 *            the offset included by the retrieved element
@@ -3504,8 +3496,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	}
 
 	/**
-	 * Checks whether or not the node is a scalar and return true only if the scalar
-	 * is not part of a string
+	 * Checks whether or not the node is a scalar and return true only if the
+	 * scalar is not part of a string
 	 * 
 	 * @param node
 	 * @return
@@ -3615,7 +3607,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	 * Returns is the occurrences of the type should be marked.
 	 * 
 	 * @param type
-	 *            One of the {@link PHPElementConciliator} constants integer type.
+	 *            One of the {@link PHPElementConciliator} constants integer
+	 *            type.
 	 * @return True, if the type occurrences should be marked; False, otherwise.
 	 */
 	boolean markOccurrencesOfType(int type) {
@@ -3703,8 +3696,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	}
 
 	/**
-	 * Computes and returns the source reference that includes the caret and serves
-	 * as provider for the outline page selection and the editor range indication.
+	 * Computes and returns the source reference that includes the caret and
+	 * serves as provider for the outline page selection and the editor range
+	 * indication.
 	 * 
 	 * @return the computed source reference
 	 */
@@ -3856,8 +3850,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	}
 
 	/**
-	 * Initializes the drag and drop support for the given viewer based on provided
-	 * editor adapter for drop target listeners.
+	 * Initializes the drag and drop support for the given viewer based on
+	 * provided editor adapter for drop target listeners.
 	 * 
 	 * @param viewer
 	 *            the viewer

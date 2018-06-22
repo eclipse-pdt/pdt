@@ -20,8 +20,10 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
+import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.internal.ui.typehierarchy.HierarchyInformationControl;
 import org.eclipse.dltk.ui.actions.IScriptEditorActionDefinitionIds;
+import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.*;
@@ -52,6 +54,7 @@ import org.eclipse.php.internal.ui.autoEdit.MainAutoEditStrategy;
 import org.eclipse.php.internal.ui.doubleclick.PHPDoubleClickStrategy;
 import org.eclipse.php.internal.ui.editor.PHPStructuredRegionProcessor;
 import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
+import org.eclipse.php.internal.ui.editor.adapter.DOMModelAdapterFactory.ModelSelection;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProcessor;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPContentAssistant;
 import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPHP;
@@ -151,6 +154,66 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		return super.getLineStyleProviders(sourceViewer, partitionType);
 	}
 
+	private class PHPStatusLineLabelProvider extends JFaceNodeLabelProvider {
+		private ScriptUILabelProvider parentProvider;
+
+		public PHPStatusLineLabelProvider() {
+			parentProvider = new ScriptUILabelProvider();
+		}
+
+		@Override
+		public String getText(Object element) {
+			if (element == null) {
+				return null;
+			}
+			if (element instanceof IModelElement) {
+				return parentProvider.getText(element);
+			}
+			if (element instanceof ModelSelection) {
+				return parentProvider.getText(((ModelSelection) element).getModelElement());
+			}
+
+			StringBuilder s = new StringBuilder();
+			Node node = (Node) element;
+			while (node != null) {
+				if (node.getNodeType() != Node.DOCUMENT_NODE) {
+					s.insert(0, super.getText(node));
+				}
+
+				if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
+					node = ((Attr) node).getOwnerElement();
+				} else {
+					node = node.getParentNode();
+				}
+
+				if (node != null && node.getNodeType() != Node.DOCUMENT_NODE) {
+					s.insert(0, IPath.SEPARATOR);
+				}
+			}
+			return s.toString();
+		}
+
+		@Override
+		public Image getImage(Object element) {
+			if (element instanceof IModelElement) {
+				return parentProvider.getImage(element);
+			}
+			if (element instanceof ModelSelection) {
+				return parentProvider.getImage(((ModelSelection) element).getModelElement());
+			}
+			if (element instanceof ElementImplForPHP) {
+				return null;
+			}
+			return super.getImage(element);
+		}
+
+		@Override
+		public void dispose() {
+			super.dispose();
+			parentProvider.dispose();
+		}
+	}
+
 	/**
 	 * Method overrides default status line label provider because HTML version
 	 * can freeze UI during searching image for status line for large PHP files.
@@ -160,41 +223,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	@Override
 	public ILabelProvider getStatusLineLabelProvider(ISourceViewer sourceViewer) {
 		if (fStatusLineLabelProvider == null) {
-			fStatusLineLabelProvider = new JFaceNodeLabelProvider() {
-				@Override
-				public String getText(Object element) {
-					if (element == null) {
-						return null;
-					}
-
-					StringBuilder s = new StringBuilder();
-					Node node = (Node) element;
-					while (node != null) {
-						if (node.getNodeType() != Node.DOCUMENT_NODE) {
-							s.insert(0, super.getText(node));
-						}
-
-						if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
-							node = ((Attr) node).getOwnerElement();
-						} else {
-							node = node.getParentNode();
-						}
-
-						if (node != null && node.getNodeType() != Node.DOCUMENT_NODE) {
-							s.insert(0, IPath.SEPARATOR);
-						}
-					}
-					return s.toString();
-				}
-
-				@Override
-				public Image getImage(Object element) {
-					if (element instanceof ElementImplForPHP) {
-						return null;
-					}
-					return super.getImage(element);
-				}
-			};
+			fStatusLineLabelProvider = new PHPStatusLineLabelProvider();
 		}
 		return fStatusLineLabelProvider;
 	}
