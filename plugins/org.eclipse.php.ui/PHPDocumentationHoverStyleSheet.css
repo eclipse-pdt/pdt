@@ -21,8 +21,8 @@ dt	         { margin-top: 0px; margin-bottom: 0px; font-weight: bold; }
 dd	         { margin-top: 0px; margin-bottom: 0px; }
 
 /* Styles and colors */
-a:link	     { color: #0000FF; }
-a:hover	     { color: #000080; }
+a:link	     { color: hyperlinkColor; }
+a:hover	     { color: activeHyperlinkColor; }
 a:visited    { text-decoration: underline; }
 a.header:link    { text-decoration: none; color: InfoText }
 a.header:visited { text-decoration: none; color: InfoText }

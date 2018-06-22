@@ -31,6 +31,7 @@ import org.eclipse.jface.internal.text.html.BrowserInformationControl;
 import org.eclipse.jface.internal.text.html.BrowserInformationControlInput;
 import org.eclipse.jface.internal.text.html.BrowserInput;
 import org.eclipse.jface.internal.text.html.HTMLPrinter;
+import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.IRegion;
@@ -53,6 +54,7 @@ import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
@@ -273,8 +275,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 
 		/**
 		 * @param informationPresenterControlCreator
-		 *                                               control creator for enriched
-		 *                                               hover
+		 *            control creator for enriched hover
 		 * @since 3.4
 		 */
 		public HoverControlCreator(IInformationControlCreator informationPresenterControlCreator) {
@@ -294,7 +295,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 				BrowserInformationControl iControl = new BrowserInformationControl(parent, font,
 						tooltipAffordanceString) {
 					/*
-					 * @see org.eclipse.jface.text.IInformationControlExtension5#
+					 * @see
+					 * org.eclipse.jface.text.IInformationControlExtension5#
 					 * getInformationPresenterControlCreator()
 					 */
 					@Override
@@ -391,8 +393,9 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 			/*
 			 * (non-Javadoc)
 			 * 
-			 * @see org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks .ILinkHandler
-			 * #handleInlineJavadocLink(org.eclipse.jdt.core .IModelElement)
+			 * @see org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks
+			 * .ILinkHandler #handleInlineJavadocLink(org.eclipse.jdt.core
+			 * .IModelElement)
 			 */
 			@Override
 			public void handleInlineLink(IModelElement linkTarget) {
@@ -409,8 +412,9 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 			/*
 			 * (non-Javadoc)
 			 * 
-			 * @see org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks .ILinkHandler
-			 * #handleDeclarationLink(org.eclipse.jdt.core. IModelElement)
+			 * @see org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks
+			 * .ILinkHandler #handleDeclarationLink(org.eclipse.jdt.core.
+			 * IModelElement)
 			 */
 			@Override
 			public void handleDeclarationLink(IModelElement linkTarget) {
@@ -454,7 +458,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 	}
 
 	/*
-	 * @see org.eclipse.jface.text.ITextHoverExtension2#getHoverInfo2(org.eclipse
+	 * @see
+	 * org.eclipse.jface.text.ITextHoverExtension2#getHoverInfo2(org.eclipse
 	 * .jface.text.ITextViewer, org.eclipse.jface.text.IRegion)
 	 */
 	@Override
@@ -509,14 +514,14 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 	 * Computes the hover info.
 	 * 
 	 * @param elements
-	 *                          the resolved elements
+	 *            the resolved elements
 	 * @param constantValue
-	 *                          a constant value iff result contains exactly 1
-	 *                          constant field, or <code>null</code>
+	 *            a constant value iff result contains exactly 1 constant field,
+	 *            or <code>null</code>
 	 * @param previousInput
-	 *                          the previous input, or <code>null</code>
-	 * @return the HTML hover info for the given element(s) or <code>null</code> if
-	 *         no information is available
+	 *            the previous input, or <code>null</code>
+	 * @return the HTML hover info for the given element(s) or <code>null</code>
+	 *         if no information is available
 	 * @since 3.4
 	 */
 	private static PHPDocumentationBrowserInformationControlInput getHoverInfo(IModelElement[] elements,
@@ -554,7 +559,10 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 		}
 
 		if (builder.length() > 0) {
-			HTMLPrinter.insertPageProlog(builder, 0, getStyleSheet());
+			ColorRegistry registry = JFaceResources.getColorRegistry();
+			RGB fgRGB = registry.getRGB("org.eclipse.php.ui.documentation.foregroundColor"); //$NON-NLS-1$
+			RGB bgRGB = registry.getRGB("org.eclipse.php.ui.documentation.backgroundColor"); //$NON-NLS-1$
+			HTMLPrinter.insertPageProlog(builder, 0, fgRGB, bgRGB, getStyleSheet());
 			HTMLPrinter.addPageEpilog(builder);
 			return new PHPDocumentationBrowserInformationControlInput(previousInput, element, builder.toString(),
 					leadingImageWidth);
@@ -604,10 +612,11 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 	 * Returns the constant value for the given field.
 	 * 
 	 * @param field
-	 *                        the field
+	 *            the field
 	 * @param hoverRegion
-	 *                        the hover region
-	 * @return the constant value for the given field or <code>null</code> if none
+	 *            the hover region
+	 * @return the constant value for the given field or <code>null</code> if
+	 *         none
 	 * @since 3.4
 	 */
 	private String getConstantValue(IField field, IRegion hoverRegion) {
@@ -713,13 +722,13 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 	}
 
 	/**
-	 * Creates and returns a formatted message for the given constant with its hex
-	 * value.
+	 * Creates and returns a formatted message for the given constant with its
+	 * hex value.
 	 * 
 	 * @param constantValue
-	 *                          the constant value
+	 *            the constant value
 	 * @param hexValue
-	 *                          the hex value
+	 *            the hex value
 	 * @return a formatted string with constant and hex values
 	 * @since 3.4
 	 */
@@ -729,8 +738,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover
 	}
 
 	/**
-	 * Returns the Javadoc hover style sheet with the current Javadoc font from the
-	 * preferences.
+	 * Returns the Javadoc hover style sheet with the current Javadoc font from
+	 * the preferences.
 	 * 
 	 * @return the updated style sheet
 	 * @since 3.4

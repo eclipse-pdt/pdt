@@ -57,3 +57,10 @@ IEclipsePreferences#org-eclipse-ui-editors:org-eclipse-php-ui {
         'overrideIndicatorColorForPHP=78,120,117'
 }
 
+
+IEclipsePreferences#org-eclipse-ui-workbench:org-eclipse-php-ui {
+	preferences:
+		'org.eclipse.php.ui.documentation.backgroundColor=52,57,61'
+		'org.eclipse.php.ui.documentation.foregroundColor=238,238,238'
+}
+
