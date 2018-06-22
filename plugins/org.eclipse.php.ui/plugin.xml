@@ -796,6 +796,13 @@
 			<adapter
             	type="org.eclipse.wst.sse.ui.internal.spelling.ISpellcheckDelegate"/>
 		</factory>
+  <factory
+        adaptableType="org.eclipse.php.internal.core.documentModel.DOMModelForPHP"
+        class="org.eclipse.php.internal.ui.editor.adapter.DOMModelAdapterFactory">
+     <adapter
+           type="org.eclipse.wst.sse.ui.SelectionConverter">
+     </adapter>
+  </factory>
 	</extension>
 
 	<!-- Editor actionsets -->
