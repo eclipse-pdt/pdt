@@ -1951,6 +1951,24 @@
 	<extension point="org.eclipse.ui.themes">
 		<themeElementCategory id="org.eclipse.php.ui.themePHP"
 			label="%themeElementCategory.label.0" />
+		<colorDefinition
+            label="%PHPDocumentationBackgroundColor.label"
+            categoryId="org.eclipse.php.ui.themePHP"
+            defaultsTo="org.eclipse.ui.workbench.INFORMATION_BACKGROUND"
+            id="org.eclipse.php.ui.documentation.backgroundColor">
+         <description>
+            %PHPDocumentationBackgroundColor.description
+         </description>
+      </colorDefinition>
+      <colorDefinition
+            label="%PHPDocumentationForegroundColor.label"
+            categoryId="org.eclipse.php.ui.themePHP"
+            defaultsTo="org.eclipse.ui.workbench.INFORMATION_FOREGROUND"
+            id="org.eclipse.php.ui.documentation.foregroundColor">
+         <description>
+            %PHPDocumentationForegroundColor.description
+         </description>
+      </colorDefinition>
 	</extension>
 	<extension point="org.eclipse.ui.decorators">
 		<decorator

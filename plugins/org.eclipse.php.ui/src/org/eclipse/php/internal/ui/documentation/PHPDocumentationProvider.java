@@ -23,6 +23,7 @@ import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.dltk.ui.documentation.IScriptDocumentationProvider;
 import org.eclipse.jface.internal.text.html.HTMLPrinter;
+import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.compiler.ast.nodes.ConstantDeclaration;
@@ -38,6 +39,7 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.hover.PHPDocumentationHover;
 import org.eclipse.php.ui.PHPElementLabels;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.RGB;
 import org.osgi.framework.Bundle;
 
 public class PHPDocumentationProvider implements IScriptDocumentationProvider {
@@ -109,7 +111,10 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 		}
 
 		if (builder.length() > 0) {
-			HTMLPrinter.insertPageProlog(builder, 0, getStyleSheet());
+			ColorRegistry registry = JFaceResources.getColorRegistry();
+			RGB fgRGB = registry.getRGB("org.eclipse.php.ui.documentation.foregroundColor"); //$NON-NLS-1$
+			RGB bgRGB = registry.getRGB("org.eclipse.php.ui.documentation.backgroundColor"); //$NON-NLS-1$
+			HTMLPrinter.insertPageProlog(builder, 0, fgRGB, bgRGB, getStyleSheet());
 			HTMLPrinter.addPageEpilog(builder);
 
 			return new StringReader(builder.toString());
@@ -170,8 +175,8 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 	}
 
 	/**
-	 * Returns the Javadoc hover style sheet with the current Javadoc font from the
-	 * preferences.
+	 * Returns the Javadoc hover style sheet with the current Javadoc font from
+	 * the preferences.
 	 * 
 	 * @return the updated style sheet
 	 */
