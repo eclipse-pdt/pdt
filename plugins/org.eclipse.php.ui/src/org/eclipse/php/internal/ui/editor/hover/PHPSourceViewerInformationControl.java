@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,8 @@ package org.eclipse.php.internal.ui.editor.hover;
 
 import java.util.*;
 
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -25,16 +27,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.*;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.internal.editors.text.EditorsPlugin;
+import org.eclipse.ui.texteditor.AbstractTextEditor;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.document.DocumentReader;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
@@ -49,8 +47,8 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
  * 
  * @since 3.0
  */
-public class PHPSourceViewerInformationControl
-		implements IInformationControl, IInformationControlExtension, DisposeListener {
+public class PHPSourceViewerInformationControl implements IInformationControl, IInformationControlExtension,
+		IInformationControlExtension2, IInformationControlExtension3, IInformationControlExtension5, DisposeListener {
 
 	/** Border thickness in pixels. */
 	private static final int BORDER = 1;
@@ -58,6 +56,8 @@ public class PHPSourceViewerInformationControl
 	private Shell fShell;
 	/** The control's text widget */
 	private StyledText fText;
+	/** The text font (do not dispose!) */
+	private Font fTextFont;
 	/** The control's source viewer */
 	private SourceViewer fViewer;
 	/**
@@ -96,6 +96,8 @@ public class PHPSourceViewerInformationControl
 	private RegionParser fParser = null;
 	private LineStyleProviderForPHP styleProvider;
 	private String fInput = ""; //$NON-NLS-1$
+	private Color fBackgroundColor;
+	private boolean fIsSystemBackgroundColor = false;
 
 	/**
 	 * @param newParser
@@ -159,7 +161,8 @@ public class PHPSourceViewerInformationControl
 	/**
 	 * Creates a default information control with the given shell as parent. The
 	 * given information presenter is used to process the information to be
-	 * displayed. The given styles are applied to the created styled text widget.
+	 * displayed. The given styles are applied to the created styled text
+	 * widget.
 	 * 
 	 * @param parent
 	 *            the parent shell
@@ -175,7 +178,8 @@ public class PHPSourceViewerInformationControl
 	/**
 	 * Creates a default information control with the given shell as parent. The
 	 * given information presenter is used to process the information to be
-	 * displayed. The given styles are applied to the created styled text widget.
+	 * displayed. The given styles are applied to the created styled text
+	 * widget.
 	 * 
 	 * @param parent
 	 *            the parent shell
@@ -194,7 +198,9 @@ public class PHPSourceViewerInformationControl
 
 		fShell = new Shell(parent, SWT.NO_FOCUS | SWT.ON_TOP | shellStyle);
 		Display display = fShell.getDisplay();
-		fShell.setBackground(display.getSystemColor(SWT.COLOR_BLACK));
+		// fShell.setBackground(display.getSystemColor(SWT.COLOR_BLACK));
+		style = style | SWT.V_SCROLL | SWT.H_SCROLL;
+		initializeColors();
 
 		Composite composite = fShell;
 		layout = new GridLayout(1, false);
@@ -210,11 +216,12 @@ public class PHPSourceViewerInformationControl
 			layout = new GridLayout(1, false);
 			layout.marginHeight = 0;
 			layout.marginWidth = 0;
+			layout.verticalSpacing = 1;
 			composite.setLayout(layout);
 			gd = new GridData(GridData.FILL_BOTH);
 			composite.setLayoutData(gd);
 			composite.setForeground(display.getSystemColor(SWT.COLOR_INFO_FOREGROUND));
-			composite.setBackground(display.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+			composite.setBackground(fBackgroundColor);
 		}
 
 		// Source viewer
@@ -225,7 +232,7 @@ public class PHPSourceViewerInformationControl
 		gd = new GridData(GridData.BEGINNING | GridData.FILL_BOTH);
 		fText.setLayoutData(gd);
 		fText.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
-		fText.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+		fText.setBackground(fBackgroundColor);
 
 		initializeFont();
 
@@ -274,10 +281,29 @@ public class PHPSourceViewerInformationControl
 		addDisposeListener(this);
 	}
 
+	private void initializeColors() {
+
+		final IPreferenceStore editorStore = EditorsPlugin.getDefault().getPreferenceStore();
+		RGB bgRGB;
+		if (editorStore.getBoolean(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT)) {
+			bgRGB = null;
+		} else {
+			bgRGB = PreferenceConverter.getColor(editorStore, AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND);
+		}
+		if (bgRGB != null) {
+			fBackgroundColor = new Color(fShell.getDisplay(), bgRGB);
+			fIsSystemBackgroundColor = false;
+		} else {
+			fBackgroundColor = fShell.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND);
+			fIsSystemBackgroundColor = true;
+		}
+	}
+
 	/**
 	 * Creates a default information control with the given shell as parent. The
 	 * given information presenter is used to process the information to be
-	 * displayed. The given styles are applied to the created styled text widget.
+	 * displayed. The given styles are applied to the created styled text
+	 * widget.
 	 * 
 	 * @param parent
 	 *            the parent shell
@@ -291,7 +317,8 @@ public class PHPSourceViewerInformationControl
 	/**
 	 * Creates a default information control with the given shell as parent. The
 	 * given information presenter is used to process the information to be
-	 * displayed. The given styles are applied to the created styled text widget.
+	 * displayed. The given styles are applied to the created styled text
+	 * widget.
 	 * 
 	 * @param parent
 	 *            the parent shell
@@ -308,8 +335,8 @@ public class PHPSourceViewerInformationControl
 
 	/**
 	 * Creates a default information control with the given shell as parent. No
-	 * information presenter is used to process the information to be displayed. No
-	 * additional styles are applied to the styled text widget.
+	 * information presenter is used to process the information to be displayed.
+	 * No additional styles are applied to the styled text widget.
 	 * 
 	 * @param parent
 	 *            the parent shell
@@ -320,8 +347,8 @@ public class PHPSourceViewerInformationControl
 
 	/**
 	 * Creates a default information control with the given shell as parent. No
-	 * information presenter is used to process the information to be displayed. No
-	 * additional styles are applied to the styled text widget.
+	 * information presenter is used to process the information to be displayed.
+	 * No additional styles are applied to the styled text widget.
 	 * 
 	 * @param parent
 	 *            the parent shell
@@ -335,20 +362,16 @@ public class PHPSourceViewerInformationControl
 	}
 
 	/**
-	 * Initialize the font to the Java editor font.
+	 * Initialize the font to the SSE editor font.
 	 * 
 	 * @since 3.2
 	 */
 	private void initializeFont() {
-		Font font = JFaceResources.getFont("org.eclipse.jdt.ui.editors.textfont"); //$NON-NLS-1$
+		fTextFont = JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont"); //$NON-NLS-1$
 		StyledText styledText = getViewer().getTextWidget();
-		styledText.setFont(font);
+		styledText.setFont(fTextFont);
 	}
 
-	/*
-	 * @see org.eclipse.jface.text.IInformationControlExtension2#setInput(java.lang
-	 * .Object)
-	 */
 	public void setInput(Object input) {
 		if (input instanceof String) {
 			setInformation((String) input);
@@ -357,9 +380,6 @@ public class PHPSourceViewerInformationControl
 		}
 	}
 
-	/*
-	 * @see IInformationControl#setInformation(String)
-	 */
 	@Override
 	public void setInformation(String content) {
 		if (content == null) {
@@ -402,23 +422,19 @@ public class PHPSourceViewerInformationControl
 		applyStyles();
 	}
 
-	/*
-	 * @see IInformationControl#setVisible(boolean)
-	 */
 	@Override
 	public void setVisible(boolean visible) {
 		fShell.setVisible(visible);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @since 3.0
-	 */
 	@Override
 	public void widgetDisposed(DisposeEvent event) {
 		if (fStatusTextFont != null && !fStatusTextFont.isDisposed()) {
 			fStatusTextFont.dispose();
+		}
+
+		if (fBackgroundColor != null && !fBackgroundColor.isDisposed() && !fIsSystemBackgroundColor) {
+			fBackgroundColor.dispose();
 		}
 
 		fStatusTextFont = null;
@@ -426,11 +442,11 @@ public class PHPSourceViewerInformationControl
 		fText = null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public final void dispose() {
+		if (fBackgroundColor != null && !fBackgroundColor.isDisposed() && !fIsSystemBackgroundColor) {
+			fBackgroundColor.dispose();
+		}
 		if (fShell != null && !fShell.isDisposed()) {
 			fShell.dispose();
 		} else {
@@ -438,9 +454,6 @@ public class PHPSourceViewerInformationControl
 		}
 	}
 
-	/*
-	 * @see IInformationControl#setSize(int, int)
-	 */
 	@Override
 	public void setSize(int width, int height) {
 
@@ -457,26 +470,17 @@ public class PHPSourceViewerInformationControl
 		}
 	}
 
-	/*
-	 * @see IInformationControl#setLocation(Point)
-	 */
 	@Override
 	public void setLocation(Point location) {
 		fShell.setLocation(location);
 	}
 
-	/*
-	 * @see IInformationControl#setSizeConstraints(int, int)
-	 */
 	@Override
 	public void setSizeConstraints(int maxWidth, int maxHeight) {
 		fMaxWidth = maxWidth;
 		fMaxHeight = maxHeight;
 	}
 
-	/*
-	 * @see IInformationControl#computeSizeHint()
-	 */
 	@Override
 	public Point computeSizeHint() {
 		// compute the preferred size
@@ -499,74 +503,47 @@ public class PHPSourceViewerInformationControl
 		return size;
 	}
 
-	/*
-	 * @see IInformationControl#addDisposeListener(DisposeListener)
-	 */
 	@Override
 	public void addDisposeListener(DisposeListener listener) {
 		fShell.addDisposeListener(listener);
 	}
 
-	/*
-	 * @see IInformationControl#removeDisposeListener(DisposeListener)
-	 */
 	@Override
 	public void removeDisposeListener(DisposeListener listener) {
 		fShell.removeDisposeListener(listener);
 	}
 
-	/*
-	 * @see IInformationControl#setForegroundColor(Color)
-	 */
 	@Override
 	public void setForegroundColor(Color foreground) {
 		fText.setForeground(foreground);
 	}
 
-	/*
-	 * @see IInformationControl#setBackgroundColor(Color)
-	 */
 	@Override
 	public void setBackgroundColor(Color background) {
 		fText.setBackground(background);
 	}
 
-	/*
-	 * @see IInformationControl#isFocusControl()
-	 */
 	@Override
 	public boolean isFocusControl() {
 		return fText.isFocusControl();
 	}
 
-	/*
-	 * @see IInformationControl#setFocus()
-	 */
 	@Override
 	public void setFocus() {
 		fShell.forceFocus();
 		fText.setFocus();
 	}
 
-	/*
-	 * @see IInformationControl#addFocusListener(FocusListener)
-	 */
 	@Override
 	public void addFocusListener(FocusListener listener) {
 		fText.addFocusListener(listener);
 	}
 
-	/*
-	 * @see IInformationControl#removeFocusListener(FocusListener)
-	 */
 	@Override
 	public void removeFocusListener(FocusListener listener) {
 		fText.removeFocusListener(listener);
 	}
 
-	/*
-	 * @see IInformationControlExtension#hasContents()
-	 */
 	@Override
 	public boolean hasContents() {
 		return fText.getCharCount() > 0;
@@ -574,5 +551,79 @@ public class PHPSourceViewerInformationControl
 
 	protected ISourceViewer getViewer() {
 		return fViewer;
+	}
+
+	@Override
+	public boolean containsControl(Control control) {
+		do {
+			if (control == fShell)
+				return true;
+			if (control instanceof Shell)
+				return false;
+			control = control.getParent();
+		} while (control != null);
+		return false;
+	}
+
+	@Override
+	public boolean isVisible() {
+		return fShell != null && !fShell.isDisposed() && fShell.isVisible();
+	}
+
+	@Override
+	public Point computeSizeConstraints(int widthInChars, int heightInChars) {
+		GC gc = new GC(fText);
+		gc.setFont(fTextFont);
+		double width = gc.getFontMetrics().getAverageCharacterWidth();
+		int height = fText.getLineHeight(); // https://bugs.eclipse.org/bugs/show_bug.cgi?id=377109
+		gc.dispose();
+
+		return new Point((int) (widthInChars * width), heightInChars * height);
+	}
+
+	@Override
+	public IInformationControlCreator getInformationPresenterControlCreator() {
+		return new IInformationControlCreator() {
+			@Override
+			public IInformationControl createInformationControl(Shell parent) {
+				return new PHPSourceViewerInformationControl(parent);
+			}
+		};
+	}
+
+	@Override
+	public Rectangle getBounds() {
+		return fShell.getBounds();
+	}
+
+	@Override
+	public Rectangle computeTrim() {
+		Rectangle trim = fShell.computeTrim(0, 0, 0, 0);
+		addInternalTrim(trim);
+		return trim;
+	}
+
+	private void addInternalTrim(Rectangle trim) {
+		Rectangle textTrim = fText.computeTrim(0, 0, 0, 0);
+		trim.x += textTrim.x;
+		trim.y += textTrim.y;
+		trim.width += textTrim.width;
+		trim.height += textTrim.height;
+
+		if (fStatusField != null) {
+			trim.height += fSeparator.computeSize(SWT.DEFAULT, SWT.DEFAULT).y;
+			trim.height += fStatusField.computeSize(SWT.DEFAULT, SWT.DEFAULT).y;
+			trim.height += 1; // verticalSpacing
+		}
+	}
+
+	@Override
+	public boolean restoresSize() {
+		return false;
+	}
+
+	@Override
+	public boolean restoresLocation() {
+		return false;
 	}
 }
