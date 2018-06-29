@@ -1,11 +1,11 @@
-/*********************************************************import java.util.Collection;
-import java.util.LinkedList;
-
-import org.eclipse.php.internal.core.ast.nodes.*;
-import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
-import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
-import org.eclipse.swt.graphics.RGB;
-rg/legal/epl-v10.html
+/*******************************************************************************
+ * Copyright (c) 2006, 2009 Zend Corporation and IBM Corporation.
+ *
+ * This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License 2.0
+ * which is available at https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   William Candillon {wcandillon@gmail.com} - Initial implementation

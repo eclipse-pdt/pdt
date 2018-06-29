@@ -1,9 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2018 Dawid Pakuła and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License 2.0
+ * which is available at https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
  * 
  * Contributors:
  *     Dawid Pakuła - initial API and implementation
@@ -294,10 +296,12 @@ with (javaImporter) {
     <contexts>\n';
     var file = '/*******************************************************************************\n\
      * Copyright (c) 2009, ' + (new Date().getFullYear()) + ' IBM Corporation and others.\n\
-     * All rights reserved. This program and the accompanying materials\n\
-     * are made available under the terms of the Eclipse Public License v1.0\n\
-     * which accompanies this distribution, and is available at\n\
-     * http://www.eclipse.org/legal/epl-v10.html\n\
+     *\n\
+     * This program and the accompanying materials are made\n\
+     * available under the terms of the Eclipse Public License 2.0\n\
+     * which is available at https://www.eclipse.org/legal/epl-2.0/\n\
+     *\n\
+     * SPDX-License-Identifier: EPL-2.0\n\
      * \n\
      * Contributors:\n\
      *     IBM Corporation - initial API and implementation\n\
@@ -317,10 +321,12 @@ with (javaImporter) {
     var toc = '<?xml version="1.0" encoding="utf-8"?>\n\
     <!--\n\
         Copyright (c) 2009 IBM Corporation and others.\n\
-        All rights reserved. This program and the accompanying materials\n\
-        are made available under the terms of the Eclipse Public License v1.0\n\
-        which accompanies this distribution, and is available at\n\
-        http://www.eclipse.org/legal/epl-v10.html\n\
+        \n\
+        This program and the accompanying materials are made\n\
+        available under the terms of the Eclipse Public License 2.0\n\
+        which is available at https://www.eclipse.org/legal/epl-2.0/\n\
+        \n\
+        SPDX-License-Identifier: EPL-2.0\n\
         \n\
         Contributors:\n\
             IBM Corporation - initial API and implementation\n\
