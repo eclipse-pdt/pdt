@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.builder.AbstractBuildParticipantType;
 import org.eclipse.dltk.core.builder.IBuildContext;
@@ -67,6 +68,13 @@ public class ValidatorBuildParticipantFactory extends AbstractBuildParticipantTy
 		private boolean isValidatorEnabled(IBuildContext context) throws CoreException {
 			if (Boolean.TRUE.equals(context.get(ParserBuildParticipantFactory.IN_LIBRARY_FOLDER))) {
 				return false;
+			}
+			if (context.getModelElement() != null) {
+				IModelElement module = context.getModelElement();
+				if (module.isReadOnly() || module.getScriptProject() == null
+						|| !module.getScriptProject().isOnBuildpath(module)) {
+					return false;
+				}
 			}
 			return true;
 		}
