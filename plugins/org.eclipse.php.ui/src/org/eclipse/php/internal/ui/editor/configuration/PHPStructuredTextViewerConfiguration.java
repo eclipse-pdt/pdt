@@ -67,9 +67,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.ui.texteditor.ITextEditorExtension3;
 import org.eclipse.wst.css.core.text.ICSSPartitions;
 import org.eclipse.wst.css.ui.internal.contentassist.CSSStructuredContentAssistProcessor;
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
@@ -110,8 +113,8 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	}
 
 	/*
-	 * Returns an array of all the contentTypes (partition names) supported by this
-	 * editor. They include all those supported by HTML editor plus PHP.
+	 * Returns an array of all the contentTypes (partition names) supported by
+	 * this editor. They include all those supported by HTML editor plus PHP.
 	 */
 	@Override
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
@@ -149,8 +152,8 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	}
 
 	/**
-	 * Method overrides default status line label provider because HTML version can
-	 * freeze UI during searching image for status line for large PHP files.
+	 * Method overrides default status line label provider because HTML version
+	 * can freeze UI during searching image for status line for large PHP files.
 	 * 
 	 * @see http://eclip.se\474115
 	 */
@@ -461,12 +464,49 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		return usedFormatter;
 	}
 
+	private static class SourceViewerAutoEditStrategy implements IAutoEditStrategy {
+
+		private ISourceViewer fViewer;
+
+		public SourceViewerAutoEditStrategy(ISourceViewer viewer) {
+			fViewer = viewer;
+		}
+
+		@Override
+		public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
+			ITextEditorExtension3 textEditor = null;
+
+			if (fViewer instanceof PHPStructuredTextViewer) {
+				ITextEditor tmp = ((PHPStructuredTextViewer) fViewer).getTextEditor();
+				if (tmp instanceof ITextEditorExtension3) {
+					textEditor = (ITextEditorExtension3) tmp;
+				}
+			} else {
+				IWorkbenchPage page = PHPUiPlugin.getActivePage();
+				if (page != null) {
+					IEditorPart part = page.getActiveEditor();
+					if (part instanceof ITextEditorExtension3) {
+						textEditor = (ITextEditorExtension3) part;
+					} else if (part != null) {
+						textEditor = part.getAdapter(ITextEditorExtension3.class);
+					}
+				}
+			}
+			if (textEditor != null && textEditor.getInsertMode() != ITextEditorExtension3.SMART_INSERT) {
+				return;
+			}
+
+			mainAutoEditStrategy.customizeDocumentCommand(document, command);
+		}
+
+	}
+
 	@Override
 	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
 		if (contentType.equals(PHPPartitionTypes.PHP_DEFAULT)) {
 			IAutoEditStrategy[] autoEditStrategies = super.getAutoEditStrategies(sourceViewer, contentType);
 			List<IAutoEditStrategy> strategies = new LinkedList<>();
-			strategies.add(mainAutoEditStrategy);
+			strategies.add(new SourceViewerAutoEditStrategy(sourceViewer));
 			for (IAutoEditStrategy strategy : autoEditStrategies) {
 				if (strategy instanceof org.eclipse.wst.html.ui.internal.autoedit.AutoEditStrategyForTabs
 						|| !(strategy instanceof IAutoEditStrategy)) {
@@ -545,8 +585,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	 * requested for the current cursor position.
 	 * 
 	 * @param sourceViewer
-	 *                         the source viewer to be configured by this
-	 *                         configuration
+	 *            the source viewer to be configured by this configuration
 	 * @return an information presenter
 	 * @since 2.1
 	 */
@@ -577,15 +616,14 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	}
 
 	/**
-	 * Returns the hierarchy presenter which will determine and shown type hierarchy
-	 * information requested for the current cursor position.
+	 * Returns the hierarchy presenter which will determine and shown type
+	 * hierarchy information requested for the current cursor position.
 	 * 
 	 * @param sourceViewer
-	 *                          the source viewer to be configured by this
-	 *                          configuration
+	 *            the source viewer to be configured by this configuration
 	 * @param doCodeResolve
-	 *                          a boolean which specifies whether code resolve
-	 *                          should be used to compute the PHP element
+	 *            a boolean which specifies whether code resolve should be used
+	 *            to compute the PHP element
 	 * @return an information presenter
 	 * @since 3.4
 	 */
@@ -627,10 +665,9 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	 * <code>PHPOutlineInformationControl</code> instances.
 	 * 
 	 * @param sourceViewer
-	 *                         the source viewer to be configured by this
-	 *                         configuration
+	 *            the source viewer to be configured by this configuration
 	 * @param commandId
-	 *                         the ID of the command that opens this control
+	 *            the ID of the command that opens this control
 	 * @return an information control creator
 	 * @since 2.1
 	 */
