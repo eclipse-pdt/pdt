@@ -168,7 +168,7 @@ public class PackagesTest extends TestCase {
 
 			assertNotNull(resource);
 			assertEquals("react/react", resource.getName());
-			assertEquals("Nuclear Reactor written in PHP.", resource.getDescription());
+			assertEquals("ReactPHP: Event-driven, non-blocking I/O with PHP.", resource.getDescription());
 			assertNotNull(resource.getVersions());
 			assertTrue(resource.getVersions().size() > 1);
 
