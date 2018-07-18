@@ -54,7 +54,6 @@ import org.eclipse.php.internal.ui.autoEdit.MainAutoEditStrategy;
 import org.eclipse.php.internal.ui.doubleclick.PHPDoubleClickStrategy;
 import org.eclipse.php.internal.ui.editor.PHPStructuredRegionProcessor;
 import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
-import org.eclipse.php.internal.ui.editor.adapter.DOMModelAdapterFactory.ModelSelection;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProcessor;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPContentAssistant;
 import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPHP;
@@ -169,9 +168,6 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 			if (element instanceof IModelElement) {
 				return parentProvider.getText(element);
 			}
-			if (element instanceof ModelSelection) {
-				return parentProvider.getText(((ModelSelection) element).getModelElement());
-			}
 
 			StringBuilder s = new StringBuilder();
 			Node node = (Node) element;
@@ -197,9 +193,6 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		public Image getImage(Object element) {
 			if (element instanceof IModelElement) {
 				return parentProvider.getImage(element);
-			}
-			if (element instanceof ModelSelection) {
-				return parentProvider.getImage(((ModelSelection) element).getModelElement());
 			}
 			if (element instanceof ElementImplForPHP) {
 				return null;

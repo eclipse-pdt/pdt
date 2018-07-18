@@ -14,28 +14,24 @@ package org.eclipse.php.internal.ui.editor.adapter;
 
 import java.util.Enumeration;
 
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.ISourceReference;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.BufferManager;
 import org.eclipse.dltk.internal.ui.editor.DocumentAdapter;
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.Region;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.ui.internal.editor.SelectionConvertor;
+import org.eclipse.wst.sse.ui.SelectionConverter;
 
 public class DOMModelAdapterFactory implements IAdapterFactory {
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getAdapter(Object adaptableObject, Class<T> adapterType) {
-		if (SelectionConvertor.class.equals(adapterType)) {
+		if (SelectionConverter.class.equals(adapterType)) {
 			return (T) new PHPSelectionConverter();
 		}
 		return null;
@@ -43,64 +39,10 @@ public class DOMModelAdapterFactory implements IAdapterFactory {
 
 	@Override
 	public Class<?>[] getAdapterList() {
-		return new Class<?>[] { SelectionConvertor.class };
+		return new Class<?>[] { SelectionConverter.class };
 	}
 
-	public class ModelSelection implements IndexedRegion, IAdaptable {
-		private IModelElement modelElement;
-
-		public ModelSelection(IModelElement modelElement) {
-			this.modelElement = modelElement;
-		}
-
-		public IModelElement getModelElement() {
-			return modelElement;
-		}
-
-		@Override
-		public boolean contains(int testPosition) {
-			return getStartOffset() >= testPosition && getEndOffset() <= testPosition;
-		}
-
-		@Override
-		public int getEndOffset() {
-			return getStartOffset() + getLength();
-		}
-
-		@Override
-		public int getStartOffset() {
-			try {
-				return ((ISourceReference) modelElement).getSourceRange().getOffset();
-			} catch (ModelException e) {
-				Logger.logException(e);
-			}
-
-			return 0;
-		}
-
-		@Override
-		public int getLength() {
-			try {
-				return ((ISourceReference) modelElement).getSourceRange().getLength();
-			} catch (ModelException e) {
-				Logger.logException(e);
-			}
-
-			return 0;
-		}
-
-		@Override
-		public <T> T getAdapter(Class<T> adapter) {
-			if (IResource.class.equals(adapter)) {
-				return (T) modelElement.getResource();
-			} else if (IModelElement.class.equals(adapter)) {
-				return (T) modelElement;
-			}
-			return null;
-		}
-	}
-
-	private class PHPSelectionConverter extends SelectionConvertor {
+	private class PHPSelectionConverter extends SelectionConverter {
 		@Override
 		public Object[] getElements(IStructuredModel model, int start, int end) {
 			DOMModelForPHP impl = (DOMModelForPHP) model;
@@ -120,8 +62,12 @@ public class DOMModelAdapterFactory implements IAdapterFactory {
 			if (modelElement != null) {
 				try {
 					IModelElement elementAt = modelElement.getElementAt(start);
+					if (elementAt instanceof IField
+							&& (elementAt.getParent() instanceof IMethod || elementAt.getParent() instanceof IType)) {
+						elementAt = elementAt.getParent();
+					}
 					if (elementAt instanceof ISourceReference) {
-						return new Object[] { new ModelSelection(elementAt) };
+						return new Object[] { elementAt };
 					}
 				} catch (ModelException e) {
 					Logger.logException(e);
@@ -129,6 +75,20 @@ public class DOMModelAdapterFactory implements IAdapterFactory {
 			}
 
 			return super.getElements(model, start, end);
+		}
+
+		@Override
+		public IRegion getRegion(Object o) {
+			if (o instanceof ISourceReference) {
+				ISourceRange sourceRange;
+				try {
+					sourceRange = ((ISourceReference) o).getSourceRange();
+					return new Region(sourceRange.getOffset(), sourceRange.getLength());
+				} catch (ModelException e) {
+					Logger.logException(e);
+				}
+			}
+			return super.getRegion(o);
 		}
 	}
 
