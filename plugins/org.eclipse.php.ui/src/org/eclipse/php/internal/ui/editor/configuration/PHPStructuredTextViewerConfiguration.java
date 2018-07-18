@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.internal.ui.typehierarchy.HierarchyInformationControl;
+import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.dltk.ui.actions.IScriptEditorActionDefinitionIds;
 import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -158,6 +159,11 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 		public PHPStatusLineLabelProvider() {
 			parentProvider = new ScriptUILabelProvider();
+			parentProvider.setTextFlags(ScriptElementLabels.DEFAULT_QUALIFIED | ScriptElementLabels.ROOT_POST_QUALIFIED
+					| ScriptElementLabels.APPEND_ROOT_PATH | ScriptElementLabels.M_PARAMETER_TYPES
+					| ScriptElementLabels.M_PARAMETER_NAMES | ScriptElementLabels.M_PARAMETER_INITIALIZERS
+					| ScriptElementLabels.M_APP_RETURNTYPE | ScriptElementLabels.M_EXCEPTIONS
+					| ScriptElementLabels.F_APP_TYPE_SIGNATURE | ScriptElementLabels.T_TYPE_PARAMETERS);
 		}
 
 		@Override
