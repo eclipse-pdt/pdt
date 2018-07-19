@@ -47,10 +47,10 @@ public abstract class ClassMemberContext extends StatementContext {
 	 * Trigger type of the member invocation
 	 */
 	public enum Trigger {
-		/** Class trigger type: '::' */
-		CLASS("::"), //$NON-NLS-1$
-		/** Object trigger type: '->' */
-		OBJECT("->"),; //$NON-NLS-1$
+	/** Class trigger type: '::' */
+	CLASS("::"), //$NON-NLS-1$
+	/** Object trigger type: '->' */
+	OBJECT("->"),; //$NON-NLS-1$
 
 		String name;
 
@@ -105,6 +105,9 @@ public abstract class ClassMemberContext extends StatementContext {
 			IModelElement enclosingElement = getEnclosingElement();
 			while (enclosingElement instanceof IMethod) {
 				enclosingElement = enclosingElement.getParent();
+				if (enclosingElement instanceof IField) { // anonymous function
+					enclosingElement = enclosingElement.getParent();
+				}
 			}
 			if (enclosingElement instanceof IType && PHPFlags.isAnonymous(((IType) enclosingElement).getFlags())) {
 				tmpTypes.add((IType) enclosingElement);

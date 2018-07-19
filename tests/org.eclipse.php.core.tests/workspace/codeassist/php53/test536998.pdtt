@@ -1,0 +1,29 @@
+--TEST--
+Bug http://eclip.se/536998
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+
+class FormDefinition
+{
+    public function getFields() {}
+}
+
+class FormType
+{
+    public function configureFields()
+    {
+        $configCallback = function ()
+        {
+            $formDefinition = new FormDefinition();
+            return $formDefinition->|;
+        };
+        return [
+            'callback' => $configCallback
+        ];
+    }
+}
+
+--EXPECT--
+method(getFields)
