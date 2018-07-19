@@ -3714,15 +3714,16 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		final int[] caret = new int[1];
 		if (sourceViewer instanceof ITextViewerExtension5) {
 			final ITextViewerExtension5 extension = (ITextViewerExtension5) sourceViewer;
-			Display.getDefault().syncExec(new Runnable() {
-				@Override
-				public void run() {
-					if (!styledText.isDisposed()) {
-						caret[0] = extension.widgetOffset2ModelOffset(styledText.getCaretOffset());
-					}
+			Runnable caretRunnable = () -> {
+				if (!styledText.isDisposed()) {
+					caret[0] = extension.widgetOffset2ModelOffset(styledText.getCaretOffset());
 				}
-			});
-
+			};
+			if (Display.getCurrent() != null) {
+				caretRunnable.run();
+			} else {
+				Display.getDefault().syncExec(caretRunnable);
+			}
 		} else {
 			int offset = sourceViewer.getVisibleRegion().getOffset();
 			caret[0] = offset + styledText.getCaretOffset();
@@ -3740,12 +3741,14 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			return;
 		}
 		final ISelection[] selection = new ISelection[1];
-		Display.getDefault().syncExec(new Runnable() {
-			@Override
-			public void run() {
-				selection[0] = getSelectionProvider().getSelection();
-			}
-		});
+		Runnable getSelection = () -> {
+			selection[0] = getSelectionProvider().getSelection();
+		};
+		if (Display.getCurrent() != null) {
+			getSelection.run();
+		} else {
+			Display.getDefault().syncExec(getSelection);
+		}
 		if (selection[0] == null) {
 			return;
 		}

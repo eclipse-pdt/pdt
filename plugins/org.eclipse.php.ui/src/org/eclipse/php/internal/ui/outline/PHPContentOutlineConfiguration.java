@@ -291,9 +291,12 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 				if (lastSelection instanceof IStructuredSelection && lastSelection instanceof TextSelection) {
 					IEditorPart activeEditor = PHPUiPlugin.getActiveEditor();
 					if (activeEditor instanceof PHPStructuredEditor) {
-						ISourceReference computedSourceReference = ((PHPStructuredEditor) activeEditor)
-								.computeHighlightRangeSourceReference();
-						if (computedSourceReference != null) {
+						ISelection editorSelection = ((PHPStructuredEditor) activeEditor).getSelectionProvider()
+								.getSelection();
+						if (editorSelection instanceof IStructuredSelection && ((IStructuredSelection) editorSelection)
+								.getFirstElement() instanceof ISourceReference) {
+							ISourceReference computedSourceReference = (ISourceReference) ((IStructuredSelection) editorSelection)
+									.getFirstElement();
 							Object parent = ((PHPOutlineContentProvider) contentProvider)
 									.getParent(computedSourceReference);
 							for (Object element : ((PHPOutlineContentProvider) contentProvider).getChildren(parent)) {
@@ -305,6 +308,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 							lastSelection = new StructuredSelection(parent);
 							return lastSelection;
 						}
+
 					}
 				}
 			}
