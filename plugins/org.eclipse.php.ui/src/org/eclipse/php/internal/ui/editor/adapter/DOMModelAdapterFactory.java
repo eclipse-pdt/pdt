@@ -42,7 +42,7 @@ public class DOMModelAdapterFactory implements IAdapterFactory {
 		return new Class<?>[] { SelectionConverter.class };
 	}
 
-	private class PHPSelectionConverter extends SelectionConverter {
+	private static class PHPSelectionConverter extends SelectionConverter {
 		@Override
 		public Object[] getElements(IStructuredModel model, int start, int end) {
 			DOMModelForPHP impl = (DOMModelForPHP) model;
@@ -83,6 +83,23 @@ public class DOMModelAdapterFactory implements IAdapterFactory {
 				ISourceRange sourceRange;
 				try {
 					sourceRange = ((ISourceReference) o).getSourceRange();
+					return new Region(sourceRange.getOffset(), sourceRange.getLength());
+				} catch (ModelException e) {
+					Logger.logException(e);
+				}
+			}
+			return super.getRegion(o);
+		}
+
+		@Override
+		public IRegion getSelectionRegion(Object o) {
+			if (o instanceof ISourceReference) {
+				ISourceRange sourceRange;
+				try {
+					sourceRange = ((ISourceReference) o).getNameRange();
+					if (sourceRange == null) {
+						sourceRange = ((ISourceReference) o).getSourceRange();
+					}
 					return new Region(sourceRange.getOffset(), sourceRange.getLength());
 				} catch (ModelException e) {
 					Logger.logException(e);

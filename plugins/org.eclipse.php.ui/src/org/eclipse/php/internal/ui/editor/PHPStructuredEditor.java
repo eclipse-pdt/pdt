@@ -130,7 +130,6 @@ import org.eclipse.wst.sse.ui.internal.contentoutline.ConfigurableContentOutline
 import org.eclipse.wst.sse.ui.internal.projection.AbstractStructuredFoldingStrategy;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
-import org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration;
 
 import com.ibm.icu.text.BreakIterator;
 
@@ -373,33 +372,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				selectionProvider.removeSelectionChangedListener(this);
 			}
 		}
-	}
-
-	/**
-	 * Updates the selection in the editor's widget with the selection of the
-	 * outline page.
-	 */
-	class OutlineSelectionChangedListener extends AbstractSelectionChangedListener implements IDoubleClickListener {
-
-		private ContentOutlineConfiguration configuration;
-
-		public OutlineSelectionChangedListener(ContentOutlineConfiguration configuration) {
-			this.configuration = configuration;
-		}
-
-		@Override
-		public void selectionChanged(SelectionChangedEvent event) {
-			if (!configuration.isLinkedWithEditor(null)) {
-				return;
-			}
-			doSelectionChanged(event);
-		}
-
-		@Override
-		public void doubleClick(DoubleClickEvent event) {
-			doSelectionChanged(event);
-		}
-
 	}
 
 	private class ExitPolicy implements IExitPolicy {
@@ -1563,14 +1535,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 		// some things in the configuration need to clean
 		// up after themselves
-		if (fPHPOutlinePage != null) {
-			if (fPHPOutlinePage instanceof ConfigurableContentOutlinePage && fPHPOutlinePageListener != null) {
-				((ConfigurableContentOutlinePage) fPHPOutlinePage).removeDoubleClickListener(fPHPOutlinePageListener);
-			}
-			if (fPHPOutlinePageListener != null) {
-				fPHPOutlinePageListener.uninstall(fPHPOutlinePage);
-			}
-		}
 		uninstallOccurrencesFinder();
 		uninstallOverrideIndicator();
 
@@ -2707,8 +2671,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		return null;
 	}
 
-	OutlineSelectionChangedListener fPHPOutlinePageListener;
-
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Object getAdapter(Class required) {
@@ -2734,11 +2696,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		if (adapter instanceof ConfigurableContentOutlinePage && IContentOutlinePage.class.equals(required)
 				&& shouldOutlineViewBeLoaded()) {
 			final ConfigurableContentOutlinePage outlinePage = (ConfigurableContentOutlinePage) adapter;
-			if (fPHPOutlinePageListener == null) {
-				fPHPOutlinePageListener = new OutlineSelectionChangedListener(outlinePage.getConfiguration());
-				outlinePage.addDoubleClickListener(fPHPOutlinePageListener);
-			}
-			fPHPOutlinePageListener.install(outlinePage);
 			fPHPOutlinePage = outlinePage;
 			outlinePage.setInput(getModelElement());
 		}
