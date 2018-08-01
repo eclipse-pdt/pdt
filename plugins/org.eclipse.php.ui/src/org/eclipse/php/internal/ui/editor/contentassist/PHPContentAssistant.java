@@ -215,7 +215,7 @@ public class PHPContentAssistant extends StructuredContentAssistant implements I
 						|| (pos > 0 && e.character == '\\' && Character.isWhitespace(document.getChar(pos - 1)))
 						|| e.character == ',' || e.character == '(' || e.character == ')' || e.character == '{'
 						|| e.character == '}' || e.character == '[' || e.character == ']' || e.character == '\''
-						|| e.character == '"' || e.character == '*') {
+						|| e.character == '"' || e.character == '*' || e.character == ';') {
 					stop();
 					return;
 				}
