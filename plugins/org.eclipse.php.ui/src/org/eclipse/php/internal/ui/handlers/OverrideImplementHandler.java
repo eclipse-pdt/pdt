@@ -72,10 +72,7 @@ public class OverrideImplementHandler extends AbstractHandler {
 		// Selection are on view.
 		if (selection instanceof IStructuredSelection) {
 			execute(event, ((IStructuredSelection) selection));
-		}
-
-		// Selection are on editor.
-		if (selection instanceof ITextSelection) {
+		} else if (selection instanceof ITextSelection) {
 			execute(event, (ITextSelection) selection);
 		}
 

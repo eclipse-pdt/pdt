@@ -23,10 +23,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.resource.StringConverter;
 import org.eclipse.jface.text.ITextSelection;
-import org.eclipse.jface.viewers.CheckboxTreeViewer;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PHPCodeTemplatePreferencePage;
 import org.eclipse.swt.SWT;
@@ -153,7 +150,7 @@ public class PHPSourceActionDialog extends CheckedTreeSelectionDialog {
 		try {
 			restoreWidgetsValue(methods);
 		} catch (ModelException e) {
-
+			PHPUiPlugin.log(e);
 		}
 
 	}
@@ -189,7 +186,18 @@ public class PHPSourceActionDialog extends CheckedTreeSelectionDialog {
 		if (editor == null) {
 			return -1;
 		}
-		int offset = ((ITextSelection) editor.getSelectionProvider().getSelection()).getOffset();
+		ISelection selection = editor.getSelectionProvider().getSelection();
+		int offset = -1;
+		if (selection instanceof IStructuredSelection) {
+			Object firstElement = ((IStructuredSelection) selection).getFirstElement();
+			if (firstElement instanceof ISourceReference) {
+				offset = ((ISourceReference) firstElement).getSourceRange().getOffset() + 1;
+			}
+		}
+		if (offset == -1 && selection instanceof ITextSelection) {
+			offset = ((ITextSelection) selection).getOffset();
+
+		}
 
 		for (int i = 0; i < members.length; i++) {
 			IMember curr = (IMember) members[i];
@@ -506,8 +514,8 @@ public class PHPSourceActionDialog extends CheckedTreeSelectionDialog {
 	}
 
 	/***
-	 * Set insert position valid input is 0 for the first position, 1 for the last
-	 * position, > 1 for all else.
+	 * Set insert position valid input is 0 for the first position, 1 for the
+	 * last position, > 1 for all else.
 	 */
 	private void setInsertPosition(int insert) {
 		fCurrentPositionIndex = insert;

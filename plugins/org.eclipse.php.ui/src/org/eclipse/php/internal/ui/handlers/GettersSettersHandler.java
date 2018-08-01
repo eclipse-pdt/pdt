@@ -74,10 +74,7 @@ public class GettersSettersHandler extends AbstractHandler {
 		// The action is run from a view.
 		if (selection instanceof IStructuredSelection) {
 			execute((IStructuredSelection) selection);
-		}
-
-		// The action is run from a editor.
-		if (selection instanceof ITextSelection) {
+		} else if (selection instanceof ITextSelection) {
 			execute(event, (ITextSelection) selection);
 		}
 
