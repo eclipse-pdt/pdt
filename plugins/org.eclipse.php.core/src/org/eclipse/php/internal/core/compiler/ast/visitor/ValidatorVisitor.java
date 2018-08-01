@@ -358,10 +358,10 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	}
 
 	/**
-	 * Generic checks to only visit PHPDoc type references whose names are valid php
-	 * identifier names. See also
-	 * {@link PHPSelectionEngine#lookForMatchingElements()} for more complete and
-	 * precise PHPDoc type references handling.
+	 * Generic checks to only visit PHPDoc type references whose names are valid
+	 * php identifier names. See also
+	 * {@link PHPSelectionEngine#lookForMatchingElements()} for more complete
+	 * and precise PHPDoc type references handling.
 	 */
 	@SuppressWarnings("null")
 	private void visitCommentType(TypeReference typeReference, ProblemSeverity severity) throws Exception {
@@ -908,7 +908,11 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		if (astNode == null || astNode instanceof Scalar || astNode instanceof ConstantReference) {
 			return;
 		}
-		if (astNode instanceof UnaryOperation) {
+		if (astNode instanceof Quote) {
+			for (ASTNode expr : ((Quote) astNode).getExpressions()) {
+				validateConstantExpression(expr, allowArray);
+			}
+		} else if (astNode instanceof UnaryOperation) {
 			UnaryOperation op = (UnaryOperation) astNode;
 			if (version.isLessThan(PHPVersion.PHP5_6) && op.getOperatorType() != UnaryOperation.OP_MINUS
 					&& op.getOperatorType() != UnaryOperation.OP_PLUS) {
