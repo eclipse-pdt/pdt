@@ -8,7 +8,7 @@ phpDoc blocks are descriptive comments that are part of the application code. Th
 
 #### Example:
 
-When creating a phpDoc Block commen for the following function:
+When creating a phpDoc Block comment for the following function:
 
 
 	function add ($a, $b) {
