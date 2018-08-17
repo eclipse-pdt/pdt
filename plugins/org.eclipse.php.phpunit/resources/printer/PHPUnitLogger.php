@@ -50,7 +50,7 @@ if (_RUNNER_VERSION  >= 7) {
 $logger = <<<'LOGGER'
     class PHPUnitLogger extends TextPrinter implements TestListener
     {
-        protected $loggers = [];
+        protected $loggers = array();
         public function __construct($out = null)
         {
             parent::__construct('php://stdout', true);
@@ -171,7 +171,7 @@ LOGGER;
 $logger = <<<'LOGGER'
     class PHPUnitLogger extends TextPrinter implements TestListener
     {
-        protected $loggers = [];
+        protected $loggers = array();
         public function __construct($out = null)
         {
             parent::__construct('php://stdout', true);
@@ -294,7 +294,7 @@ LOGGER;
     $logger = <<<'LOGGER'
     class PHPUnitLogger extends TextPrinter implements TestListener
     {
-        protected $loggers = [];
+        protected $loggers = array();
         public function __construct($out = null)
         {
             parent::__construct('php://stdout', true);
@@ -876,7 +876,7 @@ class ZendPHPUnitUserErrorException extends Exception
 
 function filterTrace($trace)
 {
-    $filteredTrace = [];
+    $filteredTrace = array();
     
     
     $blacklist = null;
