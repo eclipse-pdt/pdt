@@ -18,8 +18,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -39,7 +37,6 @@ import org.eclipse.php.core.compiler.ast.nodes.Comment;
 import org.eclipse.php.core.compiler.ast.nodes.PHPModuleDeclaration;
 import org.eclipse.php.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.preferences.TaskPatternsProvider;
 import org.eclipse.php.internal.core.preferences.TaskTagsProvider;
 import org.eclipse.wst.sse.core.internal.provisional.tasks.TaskTag;
@@ -138,7 +135,6 @@ public class TaskTagBuildParticipantFactory extends AbstractBuildParticipantType
 		 * Reports the task
 		 * 
 		 * @param document
-		 * @param file
 		 * @param taskReporter
 		 * @param offset
 		 * @param end
@@ -147,43 +143,15 @@ public class TaskTagBuildParticipantFactory extends AbstractBuildParticipantType
 		 * @throws BadLocationException
 		 * @throws CoreException
 		 */
-		private void reportTask(IDocument document, IFile file, ITaskReporter taskReporter, int offset, int end,
-				Scalar nextTaskTag, int priority) throws BadLocationException, CoreException {
+		private void reportTask(IDocument document, ITaskReporter taskReporter, int offset, int end, Scalar nextTaskTag,
+				int priority) throws BadLocationException, CoreException {
 			int lineNumber = document.getLineOfOffset(offset);
 
 			String taskStr = getTaskStr(document, lineNumber, offset, end, nextTaskTag);
 			// the end of the string to be highlighted
 			int charEnd = offset + taskStr.length();
 
-			// report the task
-			createMarker(file, taskStr, lineNumber, priority, offset, charEnd);
-		}
-
-		/**
-		 * Creates a PHP task marker based on the given information
-		 * 
-		 * @param file
-		 * @param taskStr
-		 * @param lineNumber
-		 * @param priority
-		 * @param offset
-		 * @param charEnd
-		 * @throws CoreException
-		 */
-		private void createMarker(IFile file, String taskStr, int lineNumber, int priority, int offset, int charEnd)
-				throws CoreException {
-			IMarker marker = file.createMarker(PHPCoreConstants.PHP_MARKER_TYPE);
-			if (!marker.exists()) {
-				return;
-			}
-
-			marker.setAttribute(IMarker.TASK, true);
-			marker.setAttribute(IMarker.LINE_NUMBER, lineNumber + 1);
-			marker.setAttribute(IMarker.CHAR_START, offset);
-			marker.setAttribute(IMarker.CHAR_END, charEnd);
-			marker.setAttribute(IMarker.MESSAGE, taskStr);
-			marker.setAttribute(IMarker.USER_EDITABLE, false);
-			marker.setAttribute(IMarker.PRIORITY, priority);
+			taskReporter.reportTask(taskStr, lineNumber, priority, offset, charEnd);
 		}
 
 		/**
@@ -236,12 +204,6 @@ public class TaskTagBuildParticipantFactory extends AbstractBuildParticipantType
 				return;
 			}
 
-			// remove the markers currently existing for this file
-			try {
-				context.getFile().deleteMarkers(PHPCoreConstants.PHP_MARKER_TYPE, false, IResource.DEPTH_INFINITE);
-			} catch (CoreException e) {
-			}
-
 			final ModuleDeclaration moduleDeclaration = (ModuleDeclaration) context
 					.get(IBuildContext.ATTR_MODULE_DECLARATION);
 
@@ -281,7 +243,7 @@ public class TaskTagBuildParticipantFactory extends AbstractBuildParticipantType
 								String taskKeyword = document.get(foundTaskTag.start(),
 										foundTaskTag.end() - foundTaskTag.start());
 								int priority = getTaskPriority(taskTags, taskKeyword);
-								reportTask(document, context.getFile(), context.getTaskReporter(), foundTaskTag.start(),
+								reportTask(document, context.getTaskReporter(), foundTaskTag.start(),
 										comment.start() + commentContent.length(),
 										i + 1 < foundTaskTags.size() ? foundTaskTags.get(i + 1) : null, priority);
 							}
@@ -293,5 +255,4 @@ public class TaskTagBuildParticipantFactory extends AbstractBuildParticipantType
 			}
 		}
 	}
-
 }
