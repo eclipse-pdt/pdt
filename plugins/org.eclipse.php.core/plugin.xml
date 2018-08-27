@@ -264,7 +264,7 @@
 		<attribute
 			name="userEditable" />
 		<super
-			type="org.eclipse.core.resources.taskmarker" />
+			type="org.eclipse.dltk.core.task" />
 	</extension>
 
 <!--

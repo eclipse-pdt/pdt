@@ -16,11 +16,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.preferences.IScopeContext;
-import org.eclipse.dltk.compiler.problem.DefaultProblemFactory;
-import org.eclipse.dltk.compiler.problem.IProblemIdentifier;
-import org.eclipse.dltk.compiler.problem.IProblemSeverityTranslator;
-import org.eclipse.dltk.compiler.problem.ProblemSeverity;
+import org.eclipse.dltk.compiler.problem.*;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 
 public class ProblemFactory extends DefaultProblemFactory {
@@ -57,6 +55,14 @@ public class ProblemFactory extends DefaultProblemFactory {
 			return severity;
 		}
 
+	}
+
+	@Override
+	public String getMarkerType(IProblem problem) {
+		if (problem.isTask()) {
+			return PHPCoreConstants.PHP_MARKER_TYPE;
+		}
+		return super.getMarkerType(problem);
 	}
 
 }
