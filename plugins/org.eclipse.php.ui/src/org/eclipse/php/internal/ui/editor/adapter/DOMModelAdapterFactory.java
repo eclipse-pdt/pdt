@@ -79,13 +79,21 @@ public class DOMModelAdapterFactory implements IAdapterFactory {
 
 		@Override
 		public IRegion getRegion(Object o) {
-			if (o instanceof ISourceReference) {
-				ISourceRange sourceRange;
+			while (o instanceof ISourceReference) {
 				try {
-					sourceRange = ((ISourceReference) o).getSourceRange();
+					ISourceRange sourceRange = ((ISourceReference) o).getSourceRange();
 					return new Region(sourceRange.getOffset(), sourceRange.getLength());
 				} catch (ModelException e) {
 					Logger.logException(e);
+					if (o instanceof IModelElement && ((IModelElement) o).getParent() != null) {
+						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=536109#c5
+						// travel up and try to get source range from
+						// nearest parent
+						o = ((IModelElement) o).getParent();
+					} else {
+						// or abort
+						return new Region(0, 0);
+					}
 				}
 			}
 			return super.getRegion(o);
@@ -93,16 +101,24 @@ public class DOMModelAdapterFactory implements IAdapterFactory {
 
 		@Override
 		public IRegion getSelectionRegion(Object o) {
-			if (o instanceof ISourceReference) {
-				ISourceRange sourceRange;
+			while (o instanceof ISourceReference) {
 				try {
-					sourceRange = ((ISourceReference) o).getNameRange();
+					ISourceRange sourceRange = ((ISourceReference) o).getNameRange();
 					if (sourceRange == null) {
 						sourceRange = ((ISourceReference) o).getSourceRange();
 					}
 					return new Region(sourceRange.getOffset(), sourceRange.getLength());
 				} catch (ModelException e) {
 					Logger.logException(e);
+					if (o instanceof IModelElement && ((IModelElement) o).getParent() != null) {
+						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=536109#c5
+						// travel up and try to get source range from
+						// nearest parent
+						o = ((IModelElement) o).getParent();
+					} else {
+						// or abort
+						return new Region(0, 0);
+					}
 				}
 			}
 			return super.getRegion(o);
