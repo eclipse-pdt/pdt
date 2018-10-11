@@ -172,7 +172,7 @@ public class CreateProfileDialog extends StatusDialog {
 
 	@Override
 	protected void okPressed() {
-		if (!getStatus().isOK()) {
+		if (!getStatus().isOK() || fProfileCombo.getSelectionIndex() == -1) {
 			return;
 		}
 
