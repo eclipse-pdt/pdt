@@ -4388,7 +4388,11 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			if (lineForStart == lineForEnd) {
 				lineW += node.getLength();
 			} else {
-				lineW = document.getLineLength(lineForEnd);
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=540018
+				for (int i = lineForStart; i <= lineForEnd; i++) {
+					lineW += document.getLineLength(i);
+				}
+				lineW -= node.getStart() - document.getLineOffset(lineForStart);
 			}
 		} catch (BadLocationException e) {
 			Logger.logException(e);
