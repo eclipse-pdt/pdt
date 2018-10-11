@@ -881,7 +881,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			case NO_LINE_WRAP:
 				break;
 			case FIRST_WRAP_WHEN_NECESSARY: // Wrap only when necessary
-				if (estimateCommaListItemWidth(array[i],
+				if (estimateNodeWidth(array[i],
 						this.preferences.line_wrap_line_split) > this.preferences.line_wrap_line_split) {
 					lineWrapPolicy = WRAP_WHEN_NECESSARY;
 					if (!cio.indented) {
@@ -893,7 +893,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				}
 				break;
 			case WRAP_WHEN_NECESSARY:
-				if (estimateCommaListItemWidth(array[i],
+				if (estimateNodeWidth(array[i],
 						this.preferences.line_wrap_line_split) > this.preferences.line_wrap_line_split) {
 					insertNewLines(1);
 					indent();
@@ -916,7 +916,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				break;
 			case WRAP_ALL_ELEMENTS: // Wrap all elements, every element on a new
 									// line
-				if (forceSplit || estimateCommaListItemWidth(array[i],
+				if (forceSplit || estimateNodeWidth(array[i],
 						this.preferences.line_wrap_line_split) > this.preferences.line_wrap_line_split) {
 					revert(savedBuffer, changesIndex, savedMrnbLineWidth, savedlineWidth, savedIsPrevSpace,
 							savedIsHeredocSemicolon, savedIsPHPEqualTag);
@@ -933,7 +933,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				break;
 			case WRAP_ALL_ELEMENTS_NO_INDENT_FIRST: // Wrap all elements, indent
 													// all but the first element
-				if (forceSplit || estimateCommaListItemWidth(array[i],
+				if (forceSplit || estimateNodeWidth(array[i],
 						this.preferences.line_wrap_line_split) > this.preferences.line_wrap_line_split) {
 					// revert the buffer
 					revert(savedBuffer, changesIndex, savedMrnbLineWidth, savedlineWidth, savedIsPrevSpace,
@@ -952,7 +952,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			case WRAP_ALL_ELEMENTS_EXCEPT_FIRST: // Wrap all elements, except
 													// first element if not
 													// necessary
-				if (forceSplit || estimateCommaListItemWidth(array[i],
+				if (forceSplit || estimateNodeWidth(array[i],
 						this.preferences.line_wrap_line_split) > this.preferences.line_wrap_line_split) {
 					// revert
 					revert(savedBuffer, changesIndex, savedMrnbLineWidth, savedlineWidth, savedIsPrevSpace,
@@ -4197,7 +4197,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			}
 			break;
 		case WRAP_WHEN_NECESSARY_ADD_INDENT:
-			if (estimateInfixOperandWidth(inFixOperand) > this.preferences.line_wrap_line_split) {
+			if (estimateNodeWidth(inFixOperand,
+					this.preferences.line_wrap_line_split) > this.preferences.line_wrap_line_split) {
 				binaryExpressionLineWrapPolicy = WRAP_WHEN_NECESSARY;
 				if (doFirstWrap) {
 					indentationLevel += binaryExpressionIndentGap;
@@ -4209,7 +4210,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			}
 			break;
 		case WRAP_WHEN_NECESSARY:
-			if (estimateInfixOperandWidth(inFixOperand) > this.preferences.line_wrap_line_split) {
+			if (estimateNodeWidth(inFixOperand,
+					this.preferences.line_wrap_line_split) > this.preferences.line_wrap_line_split) {
 				if (doFirstWrap) {
 					insertNewLines(1);
 					indent();
@@ -4231,7 +4233,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			break;
 		case WRAP_ALL_ELEMENTS: // Wrap all elements, every element on a new
 								// line
-			if (forceSplit || estimateInfixOperandWidth(inFixOperand) > this.preferences.line_wrap_line_split) {
+			if (forceSplit || estimateNodeWidth(inFixOperand,
+					this.preferences.line_wrap_line_split) > this.preferences.line_wrap_line_split) {
 				binaryExpressionLineWrapPolicy = ALWAYS_WRAP_ELEMENT;
 				if (doFirstWrap) {
 					indentationLevel += binaryExpressionIndentGap;
@@ -4246,7 +4249,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			break;
 		case WRAP_ALL_ELEMENTS_NO_INDENT_FIRST: // Wrap all elements, indent all
 												// but the first element
-			if (forceSplit || estimateInfixOperandWidth(inFixOperand) > this.preferences.line_wrap_line_split) {
+			if (forceSplit || estimateNodeWidth(inFixOperand,
+					this.preferences.line_wrap_line_split) > this.preferences.line_wrap_line_split) {
 				binaryExpressionLineWrapPolicy = ALWAYS_WRAP_ELEMENT_ADD_LEVEL;
 				if (doFirstWrap) {
 					indentationLevel += binaryExpressionIndentGap;
@@ -4261,7 +4265,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			break;
 		case WRAP_ALL_ELEMENTS_EXCEPT_FIRST:// Wrap all elements, except first
 											// element if not necessary
-			if (forceSplit || estimateInfixOperandWidth(inFixOperand) > this.preferences.line_wrap_line_split) {
+			if (forceSplit || estimateNodeWidth(inFixOperand,
+					this.preferences.line_wrap_line_split) > this.preferences.line_wrap_line_split) {
 				binaryExpressionLineWrapPolicy = ALWAYS_WRAP_ELEMENT;
 				if (doFirstWrap) {
 					indentationLevel += binaryExpressionIndentGap;
@@ -4379,24 +4384,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
-	private int estimateInfixOperandWidth(ASTNode node) {
-		int lineW = lineWidth;
-		try {
-			int lineForStart = document.getLineOfOffset(node.getStart());
-			int lineForEnd = document.getLineOfOffset(node.getEnd());
-
-			if (lineForStart == lineForEnd) {
-				lineW += node.getLength();
-			} else {
-				lineW = document.getLineLength(lineForEnd);
-			}
-		} catch (BadLocationException e) {
-			Logger.logException(e);
-		}
-		return lineW;
-	}
-
-	private int estimateCommaListItemWidth(ASTNode node, int maxLineWidth) {
+	private int estimateNodeWidth(ASTNode node, int maxLineWidth) {
 		int lineW = lineWidth;
 		try {
 			int lineForStart = document.getLineOfOffset(node.getStart());
