@@ -4197,7 +4197,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			}
 			break;
 		case WRAP_WHEN_NECESSARY_ADD_INDENT:
-			if (estimateInfixOperandWidth(inFixOperand) > this.preferences.line_wrap_line_split) {
+			if (estimateInfixOperandWidth(inFixOperand, lineWidth) > this.preferences.line_wrap_line_split) {
 				binaryExpressionLineWrapPolicy = WRAP_WHEN_NECESSARY;
 				if (doFirstWrap) {
 					indentationLevel += binaryExpressionIndentGap;
@@ -4209,7 +4209,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			}
 			break;
 		case WRAP_WHEN_NECESSARY:
-			if (estimateInfixOperandWidth(inFixOperand) > this.preferences.line_wrap_line_split) {
+			if (estimateInfixOperandWidth(inFixOperand, lineWidth) > this.preferences.line_wrap_line_split) {
 				if (doFirstWrap) {
 					insertNewLines(1);
 					indent();
@@ -4231,7 +4231,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			break;
 		case WRAP_ALL_ELEMENTS: // Wrap all elements, every element on a new
 								// line
-			if (forceSplit || estimateInfixOperandWidth(inFixOperand) > this.preferences.line_wrap_line_split) {
+			if (forceSplit
+					|| estimateInfixOperandWidth(inFixOperand, lineWidth) > this.preferences.line_wrap_line_split) {
 				binaryExpressionLineWrapPolicy = ALWAYS_WRAP_ELEMENT;
 				if (doFirstWrap) {
 					indentationLevel += binaryExpressionIndentGap;
@@ -4246,7 +4247,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			break;
 		case WRAP_ALL_ELEMENTS_NO_INDENT_FIRST: // Wrap all elements, indent all
 												// but the first element
-			if (forceSplit || estimateInfixOperandWidth(inFixOperand) > this.preferences.line_wrap_line_split) {
+			if (forceSplit
+					|| estimateInfixOperandWidth(inFixOperand, lineWidth) > this.preferences.line_wrap_line_split) {
 				binaryExpressionLineWrapPolicy = ALWAYS_WRAP_ELEMENT_ADD_LEVEL;
 				if (doFirstWrap) {
 					indentationLevel += binaryExpressionIndentGap;
@@ -4261,7 +4263,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			break;
 		case WRAP_ALL_ELEMENTS_EXCEPT_FIRST:// Wrap all elements, except first
 											// element if not necessary
-			if (forceSplit || estimateInfixOperandWidth(inFixOperand) > this.preferences.line_wrap_line_split) {
+			if (forceSplit
+					|| estimateInfixOperandWidth(inFixOperand, lineWidth) > this.preferences.line_wrap_line_split) {
 				binaryExpressionLineWrapPolicy = ALWAYS_WRAP_ELEMENT;
 				if (doFirstWrap) {
 					indentationLevel += binaryExpressionIndentGap;
@@ -4309,7 +4312,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			binaryExpressionIndentGap = calculateIndentGap(this.preferences.line_wrap_binary_expression_indent_policy,
 					this.preferences.line_wrap_wrapped_lines_indentation);
 
-			indentInfixOperand(infixExpression.getLeft(), !wasBinaryExpressionWrapped);
+			// NB: look for infixExpression and not infixExpression.getLeft()
+			// to check full expression length
+			indentInfixOperand(infixExpression, !wasBinaryExpressionWrapped);
 		}
 
 		handleChars(infixExpression.getStart(), infixExpression.getLeft().getStart());
@@ -4317,8 +4322,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		infixExpression.getLeft().accept(this);
 
 		int operator = infixExpression.getOperator();
-		boolean isStringOperator = ((operator == InfixExpression.OP_STRING_AND)
-				|| (operator == InfixExpression.OP_STRING_OR) || (operator == InfixExpression.OP_STRING_XOR));
+		boolean isStringOperator = isStringOperator(operator);
 
 		if (isStringOperator || this.preferences.insert_space_before_binary_operation) {
 			insertSpace();
@@ -4379,21 +4383,42 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
-	private int estimateInfixOperandWidth(ASTNode node) {
-		int lineW = lineWidth;
+	private boolean isStringOperator(int operator) {
+		return ((operator == InfixExpression.OP_STRING_AND) || (operator == InfixExpression.OP_STRING_OR)
+				|| (operator == InfixExpression.OP_STRING_XOR));
+	}
+
+	// TODO: we could merge this method and estimateCommaListItemWidth(), but
+	// for now estimateCommaListItemWidth() is slower and less precise
+	private int estimateInfixOperandWidth(ASTNode node, int currentLineWidth) {
 		try {
 			int lineForStart = document.getLineOfOffset(node.getStart());
 			int lineForEnd = document.getLineOfOffset(node.getEnd());
 
 			if (lineForStart == lineForEnd) {
-				lineW += node.getLength();
+				currentLineWidth += node.getLength();
+			} else if (node instanceof InfixExpression) {
+				InfixExpression expr = (InfixExpression) node;
+				currentLineWidth = estimateInfixOperandWidth(expr.getLeft(), currentLineWidth);
+
+				int operator = expr.getOperator();
+				boolean isStringOperator = isStringOperator(operator);
+				if (isStringOperator || this.preferences.insert_space_before_binary_operation) {
+					currentLineWidth++;
+				}
+				currentLineWidth += InfixExpression.getOperator(operator).length();
+				if (isStringOperator || this.preferences.insert_space_after_binary_operation) {
+					currentLineWidth++;
+				}
+
+				currentLineWidth = estimateInfixOperandWidth(expr.getRight(), currentLineWidth);
 			} else {
-				lineW = document.getLineLength(lineForEnd);
+				currentLineWidth = node.getEnd() - document.getLineOffset(lineForEnd);
 			}
 		} catch (BadLocationException e) {
 			Logger.logException(e);
 		}
-		return lineW;
+		return currentLineWidth;
 	}
 
 	private int estimateCommaListItemWidth(ASTNode node, int maxLineWidth) {
