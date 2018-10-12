@@ -1,0 +1,24 @@
+--TEST--
+Bug 540018 - Line Wrapping with Binary conditions keep toggling the formatting
+--FILE--
+<?php
+class Foo
+{
+    public function foo($req)
+    {
+        $isAlreadyResolved = $request->getAttribute("DomainModelInterface::class") !== null;
+    }
+}
+--EXPECT--
+<?php
+
+class Foo
+{
+
+    public function foo($req)
+    {
+        $isAlreadyResolved = 
+            $request->getAttribute(DomainModelInterface::class) !==
+            null;
+    }
+}
