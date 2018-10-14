@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2010 Zend Technologies Ltd. and others.
+ * Copyright (c) 2009, 2010, 2018 Zend Technologies Ltd. and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -15,17 +15,24 @@ package org.eclipse.php.ui.format;
 import java.io.IOException;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.format.FormatterUtils;
+import org.eclipse.php.internal.core.format.IFormatterProcessorFactory;
+import org.eclipse.php.internal.core.preferences.PreferencesSupport;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
+import org.eclipse.text.edits.DeleteEdit;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
@@ -54,6 +61,23 @@ public class PHPFormatProcessorProxy implements IStructuredFormatProcessor {
 				phpFormatterElement = element;
 			}
 		}
+	}
+
+	private boolean removeTrailingWhitespacesEnabled = false;
+	private boolean ignoreEmptyLines = false;
+
+	/*
+	 * Gets the preferences set for this editor in the Save Actions section
+	 */
+	public void updateSaveActionsState(@Nullable IProject project) {
+		PreferencesSupport prefSupport = new PreferencesSupport(PHPUiPlugin.ID);
+		String doCleanupPref = prefSupport.getPreferencesValue(PreferenceConstants.FORMAT_REMOVE_TRAILING_WHITESPACES,
+				null, project);
+		String ignoreEmptyPref = prefSupport.getPreferencesValue(
+				PreferenceConstants.FORMAT_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY, null, project);
+
+		removeTrailingWhitespacesEnabled = Boolean.parseBoolean(doCleanupPref);
+		ignoreEmptyLines = Boolean.parseBoolean(ignoreEmptyPref);
 	}
 
 	public static IContentFormatter getFormatter() {
@@ -109,6 +133,13 @@ public class PHPFormatProcessorProxy implements IStructuredFormatProcessor {
 				if (formatter != null) {
 					formatter.format(document, region);
 				}
+				if (formatter instanceof IFormatterProcessorFactory) {
+					updateSaveActionsState(file != null ? file.getProject() : null);
+					if (removeTrailingWhitespacesEnabled) {
+						DeleteEdit[] deletes = FormatterUtils.getTrailingWhitespaces(document, ignoreEmptyLines);
+						FormatterUtils.removeTrailingWhitespaces(document, deletes);
+					}
+				}
 			}
 		} catch (Exception e) {
 			PHPCorePlugin.log(e);
@@ -125,7 +156,8 @@ public class PHPFormatProcessorProxy implements IStructuredFormatProcessor {
 	 * (non-Javadoc)
 	 * 
 	 * @seeorg.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor#
-	 * formatModel (org.eclipse.wst.sse.core.internal.provisional.IStructuredModel)
+	 * formatModel
+	 * (org.eclipse.wst.sse.core.internal.provisional.IStructuredModel)
 	 */
 	@Override
 	public void formatModel(IStructuredModel structuredModel) {
@@ -140,8 +172,9 @@ public class PHPFormatProcessorProxy implements IStructuredFormatProcessor {
 	 * (non-Javadoc)
 	 * 
 	 * @seeorg.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor#
-	 * formatModel (org.eclipse.wst.sse.core.internal.provisional.IStructuredModel,
-	 * int, int)
+	 * formatModel
+	 * (org.eclipse.wst.sse.core.internal.provisional.IStructuredModel, int,
+	 * int)
 	 */
 	@Override
 	public void formatModel(IStructuredModel structuredModel, int start, int length) {
