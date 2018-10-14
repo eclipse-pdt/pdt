@@ -244,7 +244,6 @@ class I18nBehaviorObjectBuilderModifier
 }
 --EXPECT--
 <?php
-
 /**
  * This file is part of the Propel package.
  * For the full copyright and license information, please view the LICENSE
@@ -252,7 +251,6 @@ class I18nBehaviorObjectBuilderModifier
  *
  * @license MIT License
  */
-
 /**
  * Allows translation of text columns through transparent one-to-many relationship.
  * Modifier for the object builder.
@@ -263,47 +261,40 @@ class I18nBehaviorObjectBuilderModifier
  */
 class I18nBehaviorObjectBuilderModifier
 {
-
     protected $behavior, $table, $builder;
-
     public function __construct($behavior)
     {
         $this->behavior = $behavior;
         $this->table = $behavior->getTable();
     }
-
     public function postDelete($builder)
     {
         $this->builder = $builder;
         if (! $builder->getPlatform()->supportsNativeDeleteTrigger() &&
             ! $builder->getBuildProperty('emulateForeignKeyConstraints')) {
             $i18nTable = $this->behavior->getI18nTable();
-
             return $this->behavior->renderTemplate('objectPostDelete', array(
-                                                                            'i18nQueryName' => $builder->getNewStubQueryBuilder($i18nTable)
-                                                                                ->getClassname(),
-                                                                            'objectClassname' => $builder->getNewStubObjectBuilder($this->behavior->getTable())
-                                                                                ->getClassname()
+                                                                                'i18nQueryName' => $builder->getNewStubQueryBuilder($i18nTable)
+                                                                                    ->getClassname(),
+                                                                                'objectClassname' => $builder->getNewStubObjectBuilder($this->behavior->getTable())
+                                                                                    ->getClassname()
             ));
         }
     }
-
     public function objectAttributes($builder)
     {
         return $this->behavior->renderTemplate('objectAttributes', array(
-                                                                        'defaultLocale' => $this->behavior->getDefaultLocale(),
-                                                                        'objectClassname' => $builder->getNewStubObjectBuilder($this->behavior->getI18nTable())
-                                                                            ->getClassname()
+                                                                            'defaultLocale' => $this->behavior->getDefaultLocale(),
+                                                                            'objectClassname' => $builder->getNewStubObjectBuilder($this->behavior->getI18nTable())
+                                                                                ->getClassname()
         ));
     }
-
     public function objectClearReferences($builder)
     {
         return $this->behavior->renderTemplate('objectClearReferences', array(
-                                                                            'defaultLocale' => $this->behavior->getDefaultLocale()
+                                                                                'defaultLocale' => $this->behavior->getDefaultLocale()
         ));
     }
-
     public function objectMethods($builder)
     {
         $this->builder = $builder;
@@ -321,10 +312,8 @@ class I18nBehaviorObjectBuilderModifier
             $script .= $this->addTranslatedColumnGetter($column);
             $script .= $this->addTranslatedColumnSetter($column);
         }
-
         return $script;
     }
-
     protected function addSetLocale()
     {
         return $this->behavior->renderTemplate('objectSetLocale', array(
@@ -333,52 +322,45 @@ class I18nBehaviorObjectBuilderModifier
                                                                         'defaultLocale' => $this->behavior->getDefaultLocale()
         ));
     }
-
     protected function addGetLocale()
     {
         return $this->behavior->renderTemplate('objectGetLocale');
     }
-
     protected function addSetLocaleAlias($alias)
     {
         return $this->behavior->renderTemplate('objectSetLocaleAlias', array(
-                                                                            'objectClassname' => $this->builder->getStubObjectBuilder($this->table)
-                                                                                ->getClassname(),
-                                                                            'defaultLocale' => $this->behavior->getDefaultLocale(),
-                                                                            'alias' => ucfirst($alias)
+                                                                                'objectClassname' => $this->builder->getStubObjectBuilder($this->table)
+                                                                                    ->getClassname(),
+                                                                                'defaultLocale' => $this->behavior->getDefaultLocale(),
+                                                                                'alias' => ucfirst($alias)
         ));
     }
-
     protected function addGetLocaleAlias($alias)
     {
         return $this->behavior->renderTemplate('objectGetLocaleAlias', array(
-                                                                            'alias' => ucfirst($alias)
+                                                                                'alias' => ucfirst($alias)
         ));
     }
-
     protected function addGetTranslation()
     {
         $i18nTable = $this->behavior->getI18nTable();
         $fk = $this->behavior->getI18nForeignKey();
-
         return $this->behavior->renderTemplate('objectGetTranslation', array(
-                                                                            'i18nTablePhpName' => $this->builder->getNewStubObjectBuilder($i18nTable)
-                                                                                ->getClassname(),
-                                                                            'defaultLocale' => $this->behavior->getDefaultLocale(),
-                                                                            'i18nListVariable' => $this->builder->getRefFKCollVarName($fk),
-                                                                            'localeColumnName' => $this->behavior->getLocaleColumn()
-                                                                                ->getPhpName(),
-                                                                            'i18nQueryName' => $this->builder->getNewStubQueryBuilder($i18nTable)
-                                                                                ->getClassname(),
-                                                                            'i18nSetterMethod' => $this->builder->getRefFKPhpNameAffix($fk, $plural = false)
+                                                                                'i18nTablePhpName' => $this->builder->getNewStubObjectBuilder($i18nTable)
+                                                                                    ->getClassname(),
+                                                                                'defaultLocale' => $this->behavior->getDefaultLocale(),
+                                                                                'i18nListVariable' => $this->builder->getRefFKCollVarName($fk),
+                                                                                'localeColumnName' => $this->behavior->getLocaleColumn()
+                                                                                    ->getPhpName(),
+                                                                                'i18nQueryName' => $this->builder->getNewStubQueryBuilder($i18nTable)
+                                                                                    ->getClassname(),
+                                                                                'i18nSetterMethod' => $this->builder->getRefFKPhpNameAffix($fk, $plural = false)
         ));
     }
-
     protected function addRemoveTranslation()
     {
         $i18nTable = $this->behavior->getI18nTable();
         $fk = $this->behavior->getI18nForeignKey();
-
         return $this->behavior->renderTemplate('objectRemoveTranslation', array(
                                                                                 'objectClassname' => $this->builder->getStubObjectBuilder($this->table)
                                                                                     ->getClassname(),
@@ -390,7 +372,6 @@ class I18nBehaviorObjectBuilderModifier
                                                                                     ->getPhpName()
         ));
     }
-
     protected function addGetCurrentTranslation()
     {
         return $this->behavior->renderTemplate('objectGetCurrentTranslation', array(
@@ -398,7 +379,6 @@ class I18nBehaviorObjectBuilderModifier
                                                                                         ->getClassname()
         ));
     }
-
     // FIXME: the connection used by getCurrentTranslation in the generated code
     // cannot be specified by the user
     protected function addTranslatedColumnGetter(Column $column)
@@ -421,15 +401,13 @@ class I18nBehaviorObjectBuilderModifier
         $comment = preg_replace('/^\t/m', '', $comment);
         $functionStatement = preg_replace('/^\t/m', '', $functionStatement);
         preg_match_all('/\$[a-z]+/i', $functionStatement, $params);
-
         return $this->behavior->renderTemplate('objectTranslatedColumnGetter', array(
-                                                                                    'comment' => $comment,
-                                                                                    'functionStatement' => $functionStatement,
-                                                                                    'columnPhpName' => $column->getPhpName(),
-                                                                                    'params' => implode(', ', $params[0])
+                                                                                        'comment' => $comment,
+                                                                                        'functionStatement' => $functionStatement,
+                                                                                        'columnPhpName' => $column->getPhpName(),
+                                                                                        'params' => implode(', ', $params[0])
         ));
     }
-
     // FIXME: the connection used by getCurrentTranslation in the generated code
     // cannot be specified by the user
     protected function addTranslatedColumnSetter(Column $column)
@@ -455,26 +433,24 @@ class I18nBehaviorObjectBuilderModifier
         $comment = preg_replace('/^\t/m', '', $comment);
         $comment = str_replace('@return ' .
                                 $i18nTablePhpName, '@return ' .
-                                                $tablePhpName, $comment);
+                                                    $tablePhpName, $comment);
         $functionStatement = preg_replace('/^\t/m', '', $functionStatement);
         preg_match_all('/\$[a-z]+/i', $functionStatement, $params);
-
         return $this->behavior->renderTemplate('objectTranslatedColumnSetter', array(
-                                                                                    'comment' => $comment,
-                                                                                    'functionStatement' => $functionStatement,
-                                                                                    'columnPhpName' => $column->getPhpName(),
-                                                                                    'params' => implode(', ', $params[0])
+                                                                                        'comment' => $comment,
+                                                                                        'functionStatement' => $functionStatement,
+                                                                                        'columnPhpName' => $column->getPhpName(),
+                                                                                        'params' => implode(', ', $params[0])
         ));
     }
-
     public function objectFilter(&$script, $builder)
     {
         $i18nTable = $this->behavior->getI18nTable();
         $i18nTablePhpName = $this->builder->getNewStubObjectBuilder($i18nTable)->getUnprefixedClassname();
         $localeColumnName = $this->behavior->getLocaleColumn()->getPhpName();
         $pattern = '/public function add' .
-                $i18nTablePhpName .
-                '.*[\r\n]\s*\{/';
+                    $i18nTablePhpName .
+                    '.*[\r\n]\s*\{/';
         $addition = "
         if (\$l && \$locale = \$l->get$localeColumnName()) {
             \$this->setLocale(\$locale);

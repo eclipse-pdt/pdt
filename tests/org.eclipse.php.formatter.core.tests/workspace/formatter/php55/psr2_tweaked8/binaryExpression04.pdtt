@@ -1,0 +1,50 @@
+--TEST--
+Bug 540018 - Line Wrapping with Binary conditions keep toggling the formatting
+--FILE--
+<?php
+
+class TestBinExpression
+{
+
+    public final static function toTablesArray($object,
+        $allowNullObjectParameter = false, $addFormatting = false, $addRelations = true)
+    {
+        Assert::isTrue(
+            ($allowNullObjectParameter &&
+            $object ===
+            null) ||
+            $object instanceof BaseObject);
+    }
+
+    protected function strcmp($val1, $val2, $column)
+    {
+        return $this->_sortingSign *
+            ($this->_useCaseSensitiveHashCode ? strcmp((string) $val1,
+                (string) $val2) : strcmp(mb_strtoupper((string) $val1),
+                mb_strtoupper((string) $val2)));
+    }
+}
+--EXPECT--
+<?php
+
+class TestBinExpression
+{
+
+    public final static function toTablesArray($object,
+        $allowNullObjectParameter = false, $addFormatting = false, $addRelations = true)
+    {
+        Assert::isTrue(
+            ($allowNullObjectParameter &&
+            $object ===
+            null) ||
+            $object instanceof BaseObject);
+    }
+
+    protected function strcmp($val1, $val2, $column)
+    {
+        return $this->_sortingSign *
+            ($this->_useCaseSensitiveHashCode ? strcmp((string) $val1,
+                (string) $val2) : strcmp(mb_strtoupper((string) $val1),
+                mb_strtoupper((string) $val2)));
+    }
+}

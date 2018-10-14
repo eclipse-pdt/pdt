@@ -15,6 +15,7 @@ package org.eclipse.php.formatter.core;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.*;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -95,6 +96,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	private static final char QUESTION_MARK = '?';
 	private static final String ELLIPSIS = "..."; //$NON-NLS-1$
 	private static final String FROM = "from"; //$NON-NLS-1$
+	private static final Pattern SURROUNDING_BLANKS_PATTERN = Pattern.compile("([ \\t]*(\\r\\n?|\\n)[ \\t]*)+"); //$NON-NLS-1$
 	private String lineSeparator;
 
 	private CodeFormatterPreferences preferences;
@@ -823,6 +825,10 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		if (array.length == 0) {
 			return lastPosition;
 		}
+		// XXX: most comma-separated lists end with a closing bracket/parenthesis
+		// or with some other character like ';', so keep it simple and add it to
+		// the estimate length returned by estimateCommaListItemWidth()
+		int nbListClosingChars = 1;
 
 		// save the changes index position
 		int savedMrnbLineWidth = mrnbLineWidth;
@@ -881,8 +887,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			case NO_LINE_WRAP:
 				break;
 			case FIRST_WRAP_WHEN_NECESSARY: // Wrap only when necessary
-				if (estimateCommaListItemWidth(array[i],
-						this.preferences.line_wrap_line_split) > this.preferences.line_wrap_line_split) {
+				if (estimateCommaListItemWidth(array[i]) + nbListClosingChars > this.preferences.line_wrap_line_split) {
 					lineWrapPolicy = WRAP_WHEN_NECESSARY;
 					if (!cio.indented) {
 						indentationLevel += indentGap;
@@ -893,8 +898,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				}
 				break;
 			case WRAP_WHEN_NECESSARY:
-				if (estimateCommaListItemWidth(array[i],
-						this.preferences.line_wrap_line_split) > this.preferences.line_wrap_line_split) {
+				if (estimateCommaListItemWidth(array[i]) + nbListClosingChars > this.preferences.line_wrap_line_split) {
 					insertNewLines(1);
 					indent();
 					isInsertNewLine = true;
@@ -916,8 +920,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				break;
 			case WRAP_ALL_ELEMENTS: // Wrap all elements, every element on a new
 									// line
-				if (forceSplit || estimateCommaListItemWidth(array[i],
-						this.preferences.line_wrap_line_split) > this.preferences.line_wrap_line_split) {
+				if (forceSplit || estimateCommaListItemWidth(array[i])
+						+ nbListClosingChars > this.preferences.line_wrap_line_split) {
 					revert(savedBuffer, changesIndex, savedMrnbLineWidth, savedlineWidth, savedIsPrevSpace,
 							savedIsHeredocSemicolon, savedIsPHPEqualTag);
 					lastPosition = savedLastPosition;
@@ -933,8 +937,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				break;
 			case WRAP_ALL_ELEMENTS_NO_INDENT_FIRST: // Wrap all elements, indent
 													// all but the first element
-				if (forceSplit || estimateCommaListItemWidth(array[i],
-						this.preferences.line_wrap_line_split) > this.preferences.line_wrap_line_split) {
+				if (forceSplit || estimateCommaListItemWidth(array[i])
+						+ nbListClosingChars > this.preferences.line_wrap_line_split) {
 					// revert the buffer
 					revert(savedBuffer, changesIndex, savedMrnbLineWidth, savedlineWidth, savedIsPrevSpace,
 							savedIsHeredocSemicolon, savedIsPHPEqualTag);
@@ -952,8 +956,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			case WRAP_ALL_ELEMENTS_EXCEPT_FIRST: // Wrap all elements, except
 													// first element if not
 													// necessary
-				if (forceSplit || estimateCommaListItemWidth(array[i],
-						this.preferences.line_wrap_line_split) > this.preferences.line_wrap_line_split) {
+				if (forceSplit || estimateCommaListItemWidth(array[i])
+						+ nbListClosingChars > this.preferences.line_wrap_line_split) {
 					// revert
 					revert(savedBuffer, changesIndex, savedMrnbLineWidth, savedlineWidth, savedIsPrevSpace,
 							savedIsHeredocSemicolon, savedIsPHPEqualTag);
@@ -2110,7 +2114,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			} else {
 				lineWidth = 0;
 				// we assume that node content is not blank
-				addNonBlanksToLineWidth(document.getLineLength(lineForEnd));
+				addNonBlanksToLineWidth(node.getEnd() - document.getLineOffset(lineForEnd));
 			}
 		} catch (BadLocationException e) {
 			Logger.logException(e);
@@ -2426,17 +2430,11 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			int indentationGap = calculateIndentGap(this.preferences.line_wrap_expressions_in_array_init_indent_policy,
 					this.preferences.line_wrap_array_init_indentation);
 
-			// work around for close bracket.
-			lineWidth++;
-
 			lastPosition = handleCommaList(elements, lastPosition, this.preferences.line_keep_trailing_comma_in_list,
 					this.preferences.insert_space_before_list_comma_in_array,
 					this.preferences.insert_space_after_list_comma_in_array,
 					this.preferences.line_wrap_expressions_in_array_init_line_wrap_policy, indentationGap,
 					this.preferences.line_wrap_expressions_in_array_init_force_split);
-
-			// work around for close bracket.
-			lineWidth--;
 
 			if (this.preferences.insert_space_before_closing_paren_in_array
 					&& !this.preferences.new_line_before_close_array_parenthesis_array) {
@@ -2483,9 +2481,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			// we increase the indentationLevel to get the gap
 			int lineIndentation;
 			if (this.preferences.indentationChar == '\t') {
-				lineIndentation = (int) Math.ceil(lineWidth / 4);
+				lineIndentation = (lineWidth + 3) / 4;
 			} else {
-				lineIndentation = (int) Math.ceil(lineWidth / this.preferences.indentationSize);
+				lineIndentation = (lineWidth + this.preferences.indentationSize - 1) / this.preferences.indentationSize;
 			}
 			return lineIndentation - indentationLevel;
 		case INDENT_ONE:
@@ -3779,16 +3777,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			Expression[] parameters = new Expression[parametersList.size()];
 			parameters = parametersList.toArray(parameters);
 
-			// work around. count close bracket now.
-			if (addParen) {
-				lineWidth++;
-			}
-
-			// work around. count space now.
-			if (this.preferences.insert_space_before_closing_paren_in_function) {
-				lineWidth++;
-			}
-
 			lastPosition = handleCommaList(parameters, lastPosition, this.preferences.line_keep_trailing_comma_in_list,
 					this.preferences.insert_space_before_comma_in_function,
 					this.preferences.insert_space_after_comma_in_function,
@@ -3796,14 +3784,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					this.preferences.line_wrap_arguments_in_method_invocation_force_split);
 
 			if (this.preferences.insert_space_before_closing_paren_in_function) {
-				// work around. count space now.
-				lineWidth--;
 				insertSpace();
-			}
-
-			// work around. count close bracket now.
-			if (addParen) {
-				lineWidth--;
 			}
 
 		} else {
@@ -4197,7 +4178,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			}
 			break;
 		case WRAP_WHEN_NECESSARY_ADD_INDENT:
-			if (estimateInfixOperandWidth(inFixOperand) > this.preferences.line_wrap_line_split) {
+			if (estimateInfixOperandWidth(inFixOperand, lineWidth) > this.preferences.line_wrap_line_split) {
 				binaryExpressionLineWrapPolicy = WRAP_WHEN_NECESSARY;
 				if (doFirstWrap) {
 					indentationLevel += binaryExpressionIndentGap;
@@ -4209,7 +4190,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			}
 			break;
 		case WRAP_WHEN_NECESSARY:
-			if (estimateInfixOperandWidth(inFixOperand) > this.preferences.line_wrap_line_split) {
+			if (estimateInfixOperandWidth(inFixOperand, lineWidth) > this.preferences.line_wrap_line_split) {
 				if (doFirstWrap) {
 					insertNewLines(1);
 					indent();
@@ -4231,7 +4212,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			break;
 		case WRAP_ALL_ELEMENTS: // Wrap all elements, every element on a new
 								// line
-			if (forceSplit || estimateInfixOperandWidth(inFixOperand) > this.preferences.line_wrap_line_split) {
+			if (forceSplit
+					|| estimateInfixOperandWidth(inFixOperand, lineWidth) > this.preferences.line_wrap_line_split) {
 				binaryExpressionLineWrapPolicy = ALWAYS_WRAP_ELEMENT;
 				if (doFirstWrap) {
 					indentationLevel += binaryExpressionIndentGap;
@@ -4246,7 +4228,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			break;
 		case WRAP_ALL_ELEMENTS_NO_INDENT_FIRST: // Wrap all elements, indent all
 												// but the first element
-			if (forceSplit || estimateInfixOperandWidth(inFixOperand) > this.preferences.line_wrap_line_split) {
+			if (forceSplit
+					|| estimateInfixOperandWidth(inFixOperand, lineWidth) > this.preferences.line_wrap_line_split) {
 				binaryExpressionLineWrapPolicy = ALWAYS_WRAP_ELEMENT_ADD_LEVEL;
 				if (doFirstWrap) {
 					indentationLevel += binaryExpressionIndentGap;
@@ -4261,7 +4244,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			break;
 		case WRAP_ALL_ELEMENTS_EXCEPT_FIRST:// Wrap all elements, except first
 											// element if not necessary
-			if (forceSplit || estimateInfixOperandWidth(inFixOperand) > this.preferences.line_wrap_line_split) {
+			if (forceSplit
+					|| estimateInfixOperandWidth(inFixOperand, lineWidth) > this.preferences.line_wrap_line_split) {
 				binaryExpressionLineWrapPolicy = ALWAYS_WRAP_ELEMENT;
 				if (doFirstWrap) {
 					indentationLevel += binaryExpressionIndentGap;
@@ -4309,7 +4293,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			binaryExpressionIndentGap = calculateIndentGap(this.preferences.line_wrap_binary_expression_indent_policy,
 					this.preferences.line_wrap_wrapped_lines_indentation);
 
-			indentInfixOperand(infixExpression.getLeft(), !wasBinaryExpressionWrapped);
+			// NB: look for infixExpression and not infixExpression.getLeft()
+			// to check full expression length
+			indentInfixOperand(infixExpression, !wasBinaryExpressionWrapped);
 		}
 
 		handleChars(infixExpression.getStart(), infixExpression.getLeft().getStart());
@@ -4317,8 +4303,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		infixExpression.getLeft().accept(this);
 
 		int operator = infixExpression.getOperator();
-		boolean isStringOperator = ((operator == InfixExpression.OP_STRING_AND)
-				|| (operator == InfixExpression.OP_STRING_OR) || (operator == InfixExpression.OP_STRING_XOR));
+		boolean isStringOperator = isStringOperator(operator);
 
 		if (isStringOperator || this.preferences.insert_space_before_binary_operation) {
 			insertSpace();
@@ -4379,51 +4364,64 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
-	private int estimateInfixOperandWidth(ASTNode node) {
-		int lineW = lineWidth;
-		try {
-			int lineForStart = document.getLineOfOffset(node.getStart());
-			int lineForEnd = document.getLineOfOffset(node.getEnd());
-
-			if (lineForStart == lineForEnd) {
-				lineW += node.getLength();
-			} else {
-				lineW = document.getLineLength(lineForEnd);
-			}
-		} catch (BadLocationException e) {
-			Logger.logException(e);
-		}
-		return lineW;
+	private boolean isStringOperator(int operator) {
+		return ((operator == InfixExpression.OP_STRING_AND) || (operator == InfixExpression.OP_STRING_OR)
+				|| (operator == InfixExpression.OP_STRING_XOR));
 	}
 
-	private int estimateCommaListItemWidth(ASTNode node, int maxLineWidth) {
-		int lineW = lineWidth;
+	// XXX: we could merge this method and estimateCommaListItemWidth(), but
+	// for now estimateCommaListItemWidth() is still a bit slower and less
+	// precise
+	private int estimateInfixOperandWidth(ASTNode node, int currentLineLength) {
 		try {
 			int lineForStart = document.getLineOfOffset(node.getStart());
 			int lineForEnd = document.getLineOfOffset(node.getEnd());
 
 			if (lineForStart == lineForEnd) {
-				lineW += node.getLength();
+				currentLineLength += node.getLength();
+			} else if (node instanceof InfixExpression) {
+				InfixExpression expr = (InfixExpression) node;
+				currentLineLength = estimateInfixOperandWidth(expr.getLeft(), currentLineLength);
+
+				int operator = expr.getOperator();
+				boolean isStringOperator = isStringOperator(operator);
+				if (isStringOperator || this.preferences.insert_space_before_binary_operation) {
+					currentLineLength++;
+				}
+				currentLineLength += InfixExpression.getOperator(operator).length();
+				if (isStringOperator || this.preferences.insert_space_after_binary_operation) {
+					currentLineLength++;
+				}
+
+				currentLineLength = estimateInfixOperandWidth(expr.getRight(), currentLineLength);
 			} else {
 				String content = document.get(node.getStart(), node.getLength());
-				if (lineW + content.length() <= maxLineWidth) {
-					lineW += content.length();
-				} else {
-					// check if the node length is still greater than
-					// maxLineWidth when we remove all blanks from the beginning
-					// and the end of the node lines content
-					String trimmedContent = content.replaceAll("([ \\t]*(\\r\\n?|\\n)[ \\t]*)+", " "); //$NON-NLS-1$ //$NON-NLS-2$
-					if (lineW + trimmedContent.length() <= maxLineWidth) {
-						lineW += trimmedContent.length();
-					} else {
-						lineW += content.length();
-					}
-				}
+				String trimmedContent = SURROUNDING_BLANKS_PATTERN.matcher(content).replaceAll(" "); //$NON-NLS-1$
+				currentLineLength += Math.min(content.length(), trimmedContent.length());
 			}
 		} catch (BadLocationException e) {
 			Logger.logException(e);
 		}
-		return lineW;
+		return currentLineLength;
+	}
+
+	private int estimateCommaListItemWidth(ASTNode node) {
+		int currentLineLength = lineWidth;
+		try {
+			int lineForStart = document.getLineOfOffset(node.getStart());
+			int lineForEnd = document.getLineOfOffset(node.getEnd());
+
+			if (lineForStart == lineForEnd) {
+				currentLineLength += node.getLength();
+			} else {
+				String content = document.get(node.getStart(), node.getLength());
+				String trimmedContent = SURROUNDING_BLANKS_PATTERN.matcher(content).replaceAll(" "); //$NON-NLS-1$
+				currentLineLength += Math.min(content.length(), trimmedContent.length());
+			}
+		} catch (BadLocationException e) {
+			Logger.logException(e);
+		}
+		return currentLineLength;
 	}
 
 	@Override

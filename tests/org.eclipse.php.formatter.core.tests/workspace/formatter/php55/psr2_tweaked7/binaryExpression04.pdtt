@@ -29,7 +29,8 @@ class Foo
     {
         $a['tttt'] = TestMe::url(
             'xxx', 'yyy',
-            $_infos + array ( 
+            $_infos +
+            array ( 
                 'file' => $tmpFileName
             ));
     }
@@ -37,7 +38,8 @@ class Foo
         array $_infos)
     {
         header(
-            'xxxx ' . rawurlencode(
+            'xxxx ' .
+            rawurlencode(
                 implode('-',
                     TestMe::getAny(
                         $b,
@@ -45,7 +47,7 @@ class Foo
                             'xxxxx' ,
                             'yyyyy' ,
                             'zzzzz'
-                        )))) . '.' .
-            $a . '"');
+                        )))) .
+            '.' . $a . '"');
     }
 }
