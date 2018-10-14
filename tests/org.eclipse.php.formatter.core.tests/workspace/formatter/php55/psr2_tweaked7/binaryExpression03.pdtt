@@ -43,19 +43,23 @@ array(array(100 +
 $concat = array ( 
     array ( 
         100 + 200 + 300 + 400
-    ) + array ( 
-        500 + 600 + array ( 
+    ) +
+    array ( 
+        500 + 600 +
+        array ( 
             100 + 200 + 300 +
             400
         ) + 800
     ) ,
     array ( 
         100 + 200 + 300 + 400
-    ) + array ( 
+    ) +
+    array ( 
         array ( 
             500 + 600 + 700 +
             800
-        ) + 600 + array ( 
+        ) + 600 +
+        array ( 
             array ( 
                 100 + 200 + 300 +
                 400

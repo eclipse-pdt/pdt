@@ -57,7 +57,9 @@
 <setting id="org.eclipse.php.formatter.core.formatter.comment.indent_root_tags" value="true"/>
 <setting id="org.eclipse.php.formatter.core.formatter.comment.insert_new_line_before_root_tags" value="true"/>
 <setting id="org.eclipse.php.formatter.core.formatter.comment.insert_new_line_for_parameter" value="true"/>
+<setting id="org.eclipse.php.formatter.core.formatter.comment.keep_empty_line_for_empty_description" value="true"/>
 <setting id="org.eclipse.php.formatter.core.formatter.comment.line_length" value="9999"/>
+<setting id="org.eclipse.php.formatter.core.formatter.comment.never_format_unknown_tags" value="true"/>
 <setting id="org.eclipse.php.formatter.core.formatter.comment.new_lines_at_block_boundaries" value="true"/>
 <setting id="org.eclipse.php.formatter.core.formatter.comment.new_lines_at_javadoc_boundaries" value="true"/>
 <setting id="org.eclipse.php.formatter.core.formatter.comment.preserve_white_space_between_code_and_line_comments" value="false"/>
@@ -69,7 +71,7 @@
 <setting id="org.eclipse.php.formatter.core.formatter.format_line_comment_starting_on_first_column" value="true"/>
 <setting id="org.eclipse.php.formatter.core.formatter.indent_body_declarations_compare_to_type_header" value="true"/>
 <setting id="org.eclipse.php.formatter.core.formatter.indent_breaks_compare_to_cases" value="true"/>
-<setting id="org.eclipse.php.formatter.core.formatter.indent_empty_lines" value="true"/>
+<setting id="org.eclipse.php.formatter.core.formatter.indent_empty_lines" value="false"/>
 <setting id="org.eclipse.php.formatter.core.formatter.indent_statements_compare_to_block" value="true"/>
 <setting id="org.eclipse.php.formatter.core.formatter.indent_statements_compare_to_body" value="true"/>
 <setting id="org.eclipse.php.formatter.core.formatter.indent_switchstatements_compare_to_cases" value="true"/>
@@ -190,6 +192,7 @@
 <setting id="org.eclipse.php.formatter.core.formatter.keep_elseif_statement_on_same_line" value="false"/>
 <setting id="org.eclipse.php.formatter.core.formatter.keep_imple_if_on_one_line" value="false"/>
 <setting id="org.eclipse.php.formatter.core.formatter.keep_then_statement_on_same_line" value="false"/>
+<setting id="org.eclipse.php.formatter.core.formatter.keep_trailing_comma_in_list" value="false"/>
 <setting id="org.eclipse.php.formatter.core.formatter.lineSplit" value="80"/>
 <setting id="org.eclipse.php.formatter.core.formatter.never_indent_block_comments_on_first_column" value="false"/>
 <setting id="org.eclipse.php.formatter.core.formatter.never_indent_line_comments_on_first_column" value="false"/>

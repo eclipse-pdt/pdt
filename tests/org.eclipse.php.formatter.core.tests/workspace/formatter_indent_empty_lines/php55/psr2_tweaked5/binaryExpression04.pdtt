@@ -22,7 +22,6 @@ header('xxxx ' . rawurlencode(implode('-', TestMe::getAny($b, array(
 }
 --EXPECT--
 <?php
-
 class Foo
 {
     
@@ -30,7 +29,7 @@ class Foo
     {
         $a['tttt'] = TestMe::url('xxx', 'yyy', $_infos +
             array(
-                'file' => $tmpFileName
+                    'file' => $tmpFileName
             ));
     }
     

@@ -123,7 +123,6 @@ class LoggerLayoutSerializedTest extends PHPUnit_Framework_TestCase
 }
 --EXPECT--
 <?php
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.
@@ -148,14 +147,12 @@ class LoggerLayoutSerializedTest extends PHPUnit_Framework_TestCase
  * @version $Revision$
  * @link http://logging.apache.org/log4php
  */
-
 /**
  *
  * @group layouts
  */
 class LoggerLayoutSerializedTest extends PHPUnit_Framework_TestCase
 {
-
     public function testLocationInfo()
     {
         $layout = new LoggerLayoutSerialized();
@@ -165,7 +162,6 @@ class LoggerLayoutSerializedTest extends PHPUnit_Framework_TestCase
         $layout->setLocationInfo(false);
         self::assertFalse($layout->getLocationInfo());
     }
-
     /**
      *
      * @expectedException PHPUnit_Framework_Error
@@ -176,67 +172,59 @@ class LoggerLayoutSerializedTest extends PHPUnit_Framework_TestCase
         $layout = new LoggerLayoutSerialized();
         $layout->setLocationInfo('foo');
     }
-
     public function testLayout()
     {
         Logger::configure(array(
                                 'appenders' => array(
-                                                    'default' => array(
-                                                                    'class' => 'LoggerAppenderEcho',
-                                                                    'layout' => array(
-                                                                                    'class' => 'LoggerLayoutSerialized'
-                                                                    )
-                                                    )
+                                                        'default' => array(
+                                                                            'class' => 'LoggerAppenderEcho',
+                                                                            'layout' => array(
+                                                                                                'class' => 'LoggerLayoutSerialized'
+                                                                            )
+                                                        )
                                 ),
                                 'rootLogger' => array(
-                                                    'appenders' => array(
-                                                                        'default'
-                                                    )
+                                                        'appenders' => array(
+                                                                                'default'
+                                                        )
                                 )
         ));
-
         ob_start();
         $foo = Logger::getLogger('foo');
         $foo->info("Interesting message.");
         $actual = ob_get_contents();
         ob_end_clean();
-
         $event = unserialize($actual);
-
         self::assertInstanceOf('LoggerLoggingEvent', $event);
         self::assertEquals('Interesting message.', $event->getMessage());
         self::assertEquals(LoggerLevel::getLevelInfo(), $event->getLevel());
     }
-
     public function testLayoutWithLocationInfo()
     {
         Logger::configure(array(
                                 'appenders' => array(
-                                                    'default' => array(
-                                                                    'class' => 'LoggerAppenderEcho',
-                                                                    'layout' => array(
-                                                                                    'class' => 'LoggerLayoutSerialized',
-                                                                                    'params' => array(
-                                                                                                    'locationInfo' => true
-                                                                                    )
-                                                                    )
-                                                    )
+                                                        'default' => array(
+                                                                            'class' => 'LoggerAppenderEcho',
+                                                                            'layout' => array(
+                                                                                                'class' => 'LoggerLayoutSerialized',
+                                                                                                'params' => array(
+                                                                                                                    'locationInfo' => true
+                                                                                                )
+                                                                            )
+                                                        )
                                 ),
                                 'rootLogger' => array(
-                                                    'appenders' => array(
-                                                                        'default'
-                                                    )
+                                                        'appenders' => array(
+                                                                                'default'
+                                                        )
                                 )
         ));
-
         ob_start();
         $foo = Logger::getLogger('foo');
         $foo->info("Interesting message.");
         $actual = ob_get_contents();
         ob_end_clean();
-
         $event = unserialize($actual);
-
         self::assertInstanceOf('LoggerLoggingEvent', $event);
         self::assertEquals('Interesting message.', $event->getMessage());
         self::assertEquals(LoggerLevel::getLevelInfo(), $event->getLevel());
