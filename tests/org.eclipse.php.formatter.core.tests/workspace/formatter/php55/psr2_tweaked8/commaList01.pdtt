@@ -1,0 +1,54 @@
+--TEST--
+Bug 540018 - Line Wrapping with Binary conditions keep toggling the formatting
+--FILE--
+<?php
+
+class TestCommaList
+{
+
+    public function foo()
+    {
+        if (true) {
+            $script .= sprintf(
+                "
+        \$criteria->addJoin(%s, %s, \$join_behavior);
+",
+                $this->getColumnConstant($table->getColumn($lftCol)),
+                $joinedTablePeerBuilder->getColumnConstant(
+                    $joinTable->getColumn($lfMap[$lftCol])));
+        } else {
+            foreach ($lftCols as $columnName) {
+                $script .= sprintf("        array(%s, %s),
+",
+                    $this->getColumnConstant($table->getColumn($columnName)),
+                    $joinedTablePeerBuilder->getColumnConstant(
+                        $joinTable->getColumn($lfMap[$columnName])));
+            }
+        }
+    }
+}
+--EXPECT--
+<?php
+
+class TestCommaList
+{
+
+    public function foo()
+    {
+        if (true) {
+            $script .= sprintf(
+                "
+        \$criteria->addJoin(%s, %s, \$join_behavior);
+", $this->getColumnConstant($table->getColumn($lftCol)),
+                $joinedTablePeerBuilder->getColumnConstant(
+                    $joinTable->getColumn($lfMap[$lftCol])));
+        } else {
+            foreach ($lftCols as $columnName) {
+                $script .= sprintf("        array(%s, %s),
+", $this->getColumnConstant($table->getColumn($columnName)),
+                    $joinedTablePeerBuilder->getColumnConstant(
+                        $joinTable->getColumn($lfMap[$columnName])));
+            }
+        }
+    }
+}

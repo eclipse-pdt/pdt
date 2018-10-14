@@ -1,0 +1,30 @@
+--TEST--
+Bug 540018 - Line Wrapping with Binary conditions keep toggling the formatting
+--FILE--
+<?php
+
+class TestCommaList
+{
+    
+    public function nextQuery()
+    {
+        while (true) {
+            $line = ProjectConfigurator::replaceProperties($project,
+                trim($line), $project->getProperties());
+        }
+    }
+}
+--EXPECT--
+<?php
+
+class TestCommaList
+{
+
+    public function nextQuery()
+    {
+        while (true) {
+            $line = ProjectConfigurator::replaceProperties($project, trim($line),
+                $project->getProperties());
+        }
+    }
+}

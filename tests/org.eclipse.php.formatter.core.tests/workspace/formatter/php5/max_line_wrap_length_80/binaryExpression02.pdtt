@@ -1,0 +1,24 @@
+--TEST--
+Bug 540018 - Line Wrapping with Binary conditions keep toggling the formatting
+--FILE--
+<?php
+
+function myFunction()
+{
+	if ($conditionA && $conditionnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnB > 0 &&
+			$conditionH) {
+        return true;
+    } else {
+        return false;
+    }
+}
+--EXPECT--
+<?php
+function myFunction() {
+	if ($conditionA && $conditionnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnB > 0 &&
+			$conditionH) {
+		return true;
+	} else {
+		return false;
+	}
+}
