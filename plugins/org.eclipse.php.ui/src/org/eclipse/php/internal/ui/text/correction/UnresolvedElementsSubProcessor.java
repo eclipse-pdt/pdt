@@ -38,7 +38,11 @@ public class UnresolvedElementsSubProcessor {
 			Collection<IScriptCompletionProposal> proposals) throws CoreException {
 		ISourceModule cu = context.getCompilationUnit();
 
-		ASTNode selectedNode = problem.getCoveringNode(context.getASTRoot());
+		Program astRoot = context.getASTRoot();
+		if (astRoot == null) {
+			return;
+		}
+		ASTNode selectedNode = problem.getCoveringNode(astRoot);
 		if (selectedNode == null) {
 			return;
 		}
@@ -54,7 +58,7 @@ public class UnresolvedElementsSubProcessor {
 			int start = problem.getOffset();
 			int end = problem.getOffset() + problem.getLength();
 			String nodeName = cu.getSource().substring(start, end);
-			node = new Identifier(start, end, context.getASTRoot().getAST(), nodeName);
+			node = new Identifier(start, end, astRoot.getAST(), nodeName);
 			node.setParent(selectedNode, Comment.COMMENT_TYPE_PROPERTY);
 			selectedNode = node;
 		} else {

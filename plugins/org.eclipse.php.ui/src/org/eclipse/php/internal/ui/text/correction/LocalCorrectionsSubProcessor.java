@@ -35,7 +35,11 @@ public class LocalCorrectionsSubProcessor {
 	public static void addUnimplementedMethodsProposals(IInvocationContext context, IProblemLocation problem,
 			Collection<IScriptCompletionProposal> proposals) {
 		ISourceModule cu = context.getCompilationUnit();
-		ASTNode selectedNode = problem.getCoveringNode(context.getASTRoot());
+		Program astRoot = context.getASTRoot();
+		if (astRoot == null) {
+			return;
+		}
+		ASTNode selectedNode = problem.getCoveringNode(astRoot);
 		if (selectedNode == null) {
 			return;
 		}
@@ -70,7 +74,11 @@ public class LocalCorrectionsSubProcessor {
 
 	public static void getInterfaceExtendsClassProposals(IInvocationContext context, IProblemLocation problem,
 			Collection<IScriptCompletionProposal> proposals) {
-		ASTNode selectedNode = problem.getCoveringNode(context.getASTRoot());
+		Program astRoot = context.getASTRoot();
+		if (astRoot == null) {
+			return;
+		}
+		ASTNode selectedNode = problem.getCoveringNode(astRoot);
 		if (selectedNode == null) {
 			return;
 		}
@@ -111,7 +119,7 @@ public class LocalCorrectionsSubProcessor {
 				property = AnonymousClassDeclaration.INTERFACES_PROPERTY;
 			}
 
-			ASTRewrite rewrite = ASTRewrite.create(context.getASTRoot().getAST());
+			ASTRewrite rewrite = ASTRewrite.create(astRoot.getAST());
 			ASTNode placeHolder = rewrite.createMoveTarget(selectedNode);
 			ListRewrite interfaces = rewrite.getListRewrite(typeDecl, property);
 			interfaces.insertFirst(placeHolder, null);
@@ -124,7 +132,7 @@ public class LocalCorrectionsSubProcessor {
 		}
 		{
 			// ASTRewrite rewrite =
-			// ASTRewrite.create(context.getASTRoot().getAST());
+			// ASTRewrite.create(astRoot.getAST());
 			//
 			// rewrite.set(typeDecl, ClassDeclaration.INTERFACES_PROPERTY,
 			// Boolean.TRUE, null);

@@ -54,7 +54,7 @@ public interface IInvocationContext {
 	 * they can't handle. (see {@link org.eclipse.jdt.core.dom.AST#apiLevel()}).
 	 * 
 	 * @return Returns the root of the AST corresponding to the current compilation
-	 *         unit.
+	 *         unit or null if the root of the AST couldn't be retrieved.
 	 */
 	Program getASTRoot();
 

@@ -69,6 +69,9 @@ public class RemoveUnusedUseStatementProposal extends CUCorrectionProposal {
 		super.addEdits(doc, root);
 		try {
 			Program astRoot = fContext.getASTRoot();
+			if (astRoot == null) {
+				return;
+			}
 
 			ASTNode coveredNode = fLocation.getCoveredNode(astRoot);
 			ASTNode current = coveredNode;
