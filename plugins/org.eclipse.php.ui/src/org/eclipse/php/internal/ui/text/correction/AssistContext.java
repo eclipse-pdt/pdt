@@ -157,8 +157,12 @@ public class AssistContext extends TextInvocationContext implements IInvocationC
 	 */
 	@Override
 	public ASTNode getCoveringNode() {
+		Program astRoot = getASTRoot();
+		if (astRoot == null) {
+			return null;
+		}
 		NodeFinder finder = new NodeFinder(getOffset(), getLength());
-		getASTRoot().accept(finder);
+		astRoot.accept(finder);
 		return finder.getCoveringNode();
 	}
 
@@ -169,8 +173,12 @@ public class AssistContext extends TextInvocationContext implements IInvocationC
 	 */
 	@Override
 	public ASTNode getCoveredNode() {
+		Program astRoot = getASTRoot();
+		if (astRoot == null) {
+			return null;
+		}
 		NodeFinder finder = new NodeFinder(getOffset(), getLength());
-		getASTRoot().accept(finder);
+		astRoot.accept(finder);
 		return finder.getCoveredNode();
 	}
 

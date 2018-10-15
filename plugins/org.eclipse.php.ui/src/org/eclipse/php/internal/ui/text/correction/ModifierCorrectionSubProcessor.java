@@ -47,7 +47,11 @@ public class ModifierCorrectionSubProcessor {
 
 	public static void addNonAccessibleReferenceProposal(IInvocationContext context, IProblemLocation problem,
 			Collection<IScriptCompletionProposal> proposals, int kind, int relevance) throws CoreException {
-		ASTNode selectedNode = problem.getCoveringNode(context.getASTRoot());
+		Program astRoot = context.getASTRoot();
+		if (astRoot == null) {
+			return;
+		}
+		ASTNode selectedNode = problem.getCoveringNode(astRoot);
 		if (selectedNode == null) {
 			return;
 		}
@@ -113,9 +117,13 @@ public class ModifierCorrectionSubProcessor {
 	public static void addMethodRequiresBodyProposals(IInvocationContext context, IProblemLocation problem,
 			Collection<IScriptCompletionProposal> proposals) {
 		ISourceModule cu = context.getCompilationUnit();
-		AST ast = context.getASTRoot().getAST();
+		Program astRoot = context.getASTRoot();
+		if (astRoot == null) {
+			return;
+		}
+		AST ast = astRoot.getAST();
 
-		ASTNode selectedNode = problem.getCoveringNode(context.getASTRoot());
+		ASTNode selectedNode = problem.getCoveringNode(astRoot);
 		if (!(selectedNode.getParent() instanceof FunctionDeclaration)) {
 			return;
 		}
@@ -151,6 +159,9 @@ public class ModifierCorrectionSubProcessor {
 		ISourceModule cu = context.getCompilationUnit();
 
 		Program astRoot = context.getASTRoot();
+		if (astRoot == null) {
+			return;
+		}
 
 		ASTNode selectedNode = problem.getCoveringNode(astRoot);
 		if (selectedNode == null) {
@@ -224,6 +235,9 @@ public class ModifierCorrectionSubProcessor {
 	public static void addAbstractTypeProposals(IInvocationContext context, IProblemLocation problem,
 			Collection<IScriptCompletionProposal> proposals) {
 		Program astRoot = context.getASTRoot();
+		if (astRoot == null) {
+			return;
+		}
 
 		ASTNode selectedNode = problem.getCoveringNode(astRoot);
 		if (selectedNode == null) {
