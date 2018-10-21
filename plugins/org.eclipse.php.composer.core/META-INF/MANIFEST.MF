@@ -35,6 +35,7 @@ Export-Package:
  org.eclipse.php.composer.core.util,
  org.eclipse.php.composer.core.validation,
  org.eclipse.php.composer.core.visitor,
- org.eclipse.php.composer.internal.core.resources
+ org.eclipse.php.composer.internal.core.resources,
+ org.eclipse.php.composer.internal.core.util
 
 

@@ -147,7 +147,6 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 	private Button addTraitsBtn;
 	private String initialElementName;
 	private IPreferenceStore preferenceStore;
-	private int removedSegmentNumber;
 	private IFile existingFile;
 	private Button namespaceCheckbox;
 
@@ -444,12 +443,8 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		if (!existingFileBtn.getSelection() && namespaceCheckbox.getSelection()) {
 			String sourceFolder = getSourceText();
 			IPath sourcePath = new Path(sourceFolder);
-			sourcePath = sourcePath.removeLastSegments(sourcePath.segmentCount() - removedSegmentNumber);
-			String[] segments = namespaceText.getText().split("\\\\");//$NON-NLS-1$
-			for (String segment : segments) {
-				sourcePath = sourcePath.append(segment);
-			}
-			sourceText.setText(sourcePath.toOSString());
+			sourceText.setText(PHPToolkitUtil.getNamespaceResolver(getCurrentProject())
+					.resolveLocation(sourcePath, namespaceText.getText()).toOSString());
 		}
 
 		validatePageValues(VALIDATE_NAMESPACE);
@@ -459,54 +454,21 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		if (namespaceText == null) {
 			return;
 		}
-		IFile existingFile = getExisitngFile();
 		String sourceFolder = getSourceText();
 
-		if (!sourceFolder.isEmpty()) {
-			IPath sourcePath = new Path(sourceFolder);
-			removedSegmentNumber = firstSegmentsToRemoveForNamespace(sourcePath);
-		}
 		if (existingFileBtn.getSelection()) {
+			IFile existingFile = getExisitngFile();
 			if (existingFile != null) {
 				String defaultNamespace = getLastNamespace();
 				if (defaultNamespace != null) {
 					namespaceText.setText(defaultNamespace);
 				}
 			}
-		} else {
-			if (!sourceFolder.isEmpty()) {
-				IPath sourcePath = new Path(sourceFolder);
-				sourcePath = sourcePath.removeFirstSegments(removedSegmentNumber);
-				if (sourcePath.segmentCount() > 0) {
-					String defaultNamespace = sourcePath.toString().replace("/", //$NON-NLS-1$
-							"\\");//$NON-NLS-1$
-					if (defaultNamespace.endsWith("\\")) {//$NON-NLS-1$
-						defaultNamespace = defaultNamespace.substring(0, defaultNamespace.length() - 1);
-					}
-					namespaceText.setText(defaultNamespace);
-				} else {
-					namespaceText.setText("");//$NON-NLS-1$
-				}
-			}
+		} else if (!sourceFolder.isEmpty()) {
+			IPath sourcePath = new Path(sourceFolder);
+			namespaceText
+					.setText(PHPToolkitUtil.getNamespaceResolver(getCurrentProject()).resolveNamespace(sourcePath));
 		}
-	}
-
-	private int firstSegmentsToRemoveForNamespace(IPath sourcePath) {
-		try {
-			IScriptProject project = getProject();
-			if (!project.exists() || !PHPToolkitUtil.isFromPHPProject(project)) {
-				return 1;
-			}
-			for (IProjectFragment projectFragment : project.getProjectFragments()) {
-				int matching = projectFragment.getPath().matchingFirstSegments(sourcePath);
-				if (matching > 1) {
-					return matching;
-				}
-			}
-		} catch (ModelException e) {
-			PHPUiPlugin.log(e);
-		}
-		return 1;
 	}
 
 	/**
