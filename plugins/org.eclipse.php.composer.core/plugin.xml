@@ -154,4 +154,11 @@
         <super type="org.eclipse.core.resources.problemmarker"/> 
         <super type="org.eclipse.wst.common.project.facet.core.validation.marker"/>
    </extension>
+   <extension
+         point="org.eclipse.php.core.namespaceResolver">
+      <resolver
+            class="org.eclipse.php.composer.internal.core.util.NamespaceResolver"
+            priority="0">
+      </resolver>
+   </extension>
 </plugin>

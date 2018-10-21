@@ -27,6 +27,7 @@ import org.eclipse.php.composer.api.objects.Autoload;
 import org.eclipse.php.composer.api.objects.Namespace;
 import org.eclipse.php.composer.core.log.Logger;
 import org.eclipse.php.composer.core.resources.IComposerProject;
+import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 
 public class ComposerProject implements IComposerProject {
 
@@ -187,10 +188,11 @@ public class ComposerProject implements IComposerProject {
 		return new ComposerPackages();
 	}
 
-	@Override
 	public String getNamespace(IPath path) {
+		if (path.isAbsolute()) {
+			path = path.removeFirstSegments(1).makeRelative();
+		}
 		Autoload autoload = getComposerPackage().getAutoload();
-
 		// look for psr4 first
 		String namespace = getPsrNamespace(path, autoload.getPsr4());
 
@@ -213,7 +215,7 @@ public class ComposerProject implements IComposerProject {
 
 	private String getPsrNamespace(IPath path, Psr psr) {
 		IPath appendix = new Path(""); //$NON-NLS-1$
-		while (!path.isEmpty()) {
+		while (!path.isEmpty() && !path.isRoot()) {
 			Namespace namespace = psr.getNamespaceForPath(path.addTrailingSeparator().toString());
 			if (namespace == null) {
 				namespace = psr.getNamespaceForPath(path.removeTrailingSeparator().toString());
@@ -245,4 +247,53 @@ public class ComposerProject implements IComposerProject {
 
 		return null;
 	}
+
+	@Override
+	public IPath getNamespaceDir(IPath source, String namespace) {
+		Autoload[] autoloads = new Autoload[] { getComposerPackage().getAutoload(),
+				getComposerPackage().getAutoloadDev() };
+		Namespace matched = null;
+		for (Autoload autoload : autoloads) {
+			for (Namespace name : autoload.getPsr4().getNamespaces()) {
+				matched = match(namespace, name, matched);
+			}
+			for (Namespace name : autoload.getPsr0().getNamespaces()) {
+				matched = match(namespace, name, matched);
+			}
+		}
+		if (matched != null) {
+			String path = matched.getPaths().get(0).toString();
+			IPath result = new Path(source.segment(0)).makeAbsolute();
+
+			int move = matched.getNamespace().length();
+			if (matched.getNamespace().endsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
+				move--;
+			}
+			String addon = namespace.substring(move);
+			if (addon.endsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
+				addon = addon.substring(0, addon.length() - 1);
+			}
+			result = result.append(new Path(path));
+			result = result.append(new Path(addon.replace(NamespaceReference.NAMESPACE_SEPARATOR, IPath.SEPARATOR)));
+			return result;
+		}
+
+		return null;
+	}
+
+	private Namespace match(String namespace, Namespace current, Namespace previous) {
+		namespace = namespace + NamespaceReference.NAMESPACE_DELIMITER;
+		if (!namespace.startsWith(current.getNamespace())) {
+			return previous;
+		}
+		if (previous == null) {
+			return current;
+		}
+		if (previous.getNamespace().length() > current.getNamespace().length()) {
+			return previous;
+		} else {
+			return current;
+		}
+	}
+
 }
