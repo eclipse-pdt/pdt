@@ -20,7 +20,8 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ NamespaceResolverTest.class, ValidationTest.class, StringUtilTest.class, BuildPathTest.class })
+@SuiteClasses({ NamespaceResolverTest.class, ValidationTest.class, StringUtilTest.class, BuildPathTest.class,
+		CoreNamespaceResolverTests.class })
 public class AllTests {
 	@ClassRule
 	public static TestWatcher watcher = new TestAllSuiteWatcher();

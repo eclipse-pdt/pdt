@@ -41,6 +41,7 @@ import org.eclipse.php.core.tests.phpmodelutils.PHPModelUtilsTests;
 import org.eclipse.php.core.tests.selection.SelectionEngineTests;
 import org.eclipse.php.core.tests.text.PHPTextSequenceUtilitiesTests;
 import org.eclipse.php.core.tests.typeinference.TypeInferenceTests;
+import org.eclipse.php.core.tests.util.NamespaceResolverTests;
 import org.junit.ClassRule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.RunWith;
@@ -63,7 +64,8 @@ import org.junit.runners.Suite;
 		// Concilator tests:
 		org.eclipse.php.internal.core.ast.locator.AllTests.class, MarkOccurrenceTests.class,
 		// test language functions
-		org.eclipse.php.core.tests.searchEngine.AllTests.class, PHPTextSequenceUtilitiesTests.class })
+		org.eclipse.php.core.tests.searchEngine.AllTests.class, PHPTextSequenceUtilitiesTests.class,
+		NamespaceResolverTests.class })
 public final class AllTests {
 
 	@ClassRule

@@ -25,12 +25,14 @@ import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ZipArchiveFile;
+import org.eclipse.php.core.util.INamespaceResolver;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.phar.PharArchiveFile;
 import org.eclipse.php.internal.core.phar.PharException;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.tar.TarArchiveFile;
 import org.eclipse.php.internal.core.tar.TarException;
+import org.eclipse.php.internal.core.util.ConfiguredNamespaceResolver;
 
 public class PHPToolkitUtil {
 
@@ -277,6 +279,10 @@ public class PHPToolkitUtil {
 
 		}
 		return null;
+	}
+
+	public static INamespaceResolver getNamespaceResolver(IProject project) {
+		return new ConfiguredNamespaceResolver(project);
 	}
 
 }

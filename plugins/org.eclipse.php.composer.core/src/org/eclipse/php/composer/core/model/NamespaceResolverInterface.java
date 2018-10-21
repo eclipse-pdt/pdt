@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IPath;
 /**
  *
  */
+@Deprecated
 public interface NamespaceResolverInterface {
 	/**
 	 * Resolve the namespace of a given resource.

@@ -16,7 +16,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.IScriptProject;
-
 import org.eclipse.php.composer.api.ComposerPackage;
 import org.eclipse.php.composer.api.collection.ComposerPackages;
 
@@ -45,8 +44,11 @@ public interface IComposerProject {
 
 	public String getNamespace(IPath path);
 
+	public IPath getNamespaceDir(IPath source, String namespace);
+
 	/**
-	 * Returns the full, absolute path of this resource relative to the workspace.
+	 * Returns the full, absolute path of this resource relative to the
+	 * workspace.
 	 * 
 	 * @return the path
 	 */
