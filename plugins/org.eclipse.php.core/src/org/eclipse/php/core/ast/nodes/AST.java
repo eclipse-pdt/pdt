@@ -161,7 +161,7 @@ public class AST {
 	 * Internal ast rewriter used to record ast modification when record mode is
 	 * enabled.
 	 */
-	InternalASTRewrite rewriter;
+	InternalASTRewriter rewriter;
 
 	/**
 	 * The binding resolver for this AST. Initially a binding resolver that does not
@@ -980,7 +980,7 @@ public class AST {
 			throw new IllegalArgumentException("Root node is not owned by this ast"); //$NON-NLS-1$
 		}
 
-		this.rewriter = new InternalASTRewrite(root);
+		this.rewriter = new InternalASTRewriter(root);
 		this.setEventHandler(this.rewriter);
 	}
 

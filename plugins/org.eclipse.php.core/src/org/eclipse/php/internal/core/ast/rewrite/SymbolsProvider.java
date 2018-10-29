@@ -80,7 +80,7 @@ public class SymbolsProvider {
 	private static final Symbol RPAREN_SYMBOL_PHP72 = new Symbol(
 			org.eclipse.php.internal.core.ast.scanner.php72.ParserConstants.T_CLOSE_PARENTHESE);
 	private static final Symbol INTERFACE_SYMBOL_PHP72 = new Symbol(
-			org.eclipse.php.internal.core.ast.scanner.php7.ParserConstants.T_INTERFACE);
+			org.eclipse.php.internal.core.ast.scanner.php72.ParserConstants.T_INTERFACE);
 	private static final Symbol CLASS_SYMBOL_PHP72 = new Symbol(
 			org.eclipse.php.internal.core.ast.scanner.php72.ParserConstants.T_CLASS);
 	private static final Symbol RETURN_SYMBOL_PHP72 = new Symbol(
@@ -138,7 +138,7 @@ public class SymbolsProvider {
 	private static final Symbol RPAREN_SYMBOL_PHP71 = new Symbol(
 			org.eclipse.php.internal.core.ast.scanner.php71.ParserConstants.T_CLOSE_PARENTHESE);
 	private static final Symbol INTERFACE_SYMBOL_PHP71 = new Symbol(
-			org.eclipse.php.internal.core.ast.scanner.php7.ParserConstants.T_INTERFACE);
+			org.eclipse.php.internal.core.ast.scanner.php71.ParserConstants.T_INTERFACE);
 	private static final Symbol CLASS_SYMBOL_PHP71 = new Symbol(
 			org.eclipse.php.internal.core.ast.scanner.php71.ParserConstants.T_CLASS);
 	private static final Symbol RETURN_SYMBOL_PHP71 = new Symbol(

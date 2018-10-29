@@ -30,7 +30,7 @@ import org.eclipse.text.edits.TextEdit;
  * Internal class: not intended to be used by client. When AST modifications
  * recording is enabled, all changes are recorded by this class.
  */
-class InternalASTRewrite extends NodeEventHandler {
+class InternalASTRewriter extends NodeEventHandler {
 
 	/** root node for the rewrite: Only nodes under this root are accepted */
 	private Program root;
@@ -48,7 +48,7 @@ class InternalASTRewrite extends NodeEventHandler {
 	 * @param root
 	 *            root node of the recorded ast.
 	 */
-	public InternalASTRewrite(Program root) {
+	public InternalASTRewriter(Program root) {
 		this.root = root;
 		this.eventStore = new RewriteEventStore();
 		this.nodeStore = new NodeInfoStore(root.getAST());
