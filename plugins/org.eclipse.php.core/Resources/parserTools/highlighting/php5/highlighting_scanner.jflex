@@ -840,7 +840,8 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	String heredoc = getHeredocId();
 	int heredoc_len = heredoc.length();
 	int startIndex = label_len - heredoc_len;
-	if (startIndex > 0 && yytext.substring(startIndex, label_len).equals(heredoc)) {
+	if (startIndex > 0 && yytext.substring(startIndex, label_len).equals(heredoc)
+		&& (yytext.charAt(startIndex - 1) == '\n' || yytext.charAt(startIndex - 1) == '\r')) {
 
 		if (startIndex - 2 >= 0
 			&& yytext.charAt(startIndex - 2) == '\r'
@@ -878,9 +879,11 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 
 	String heredoc = getHeredocId();
 	int heredoc_len = heredoc.length();
-	if (label_len > heredoc_len
+	if (label_len > heredoc_len && startIndex > 0
 			&& yytext.substring(startIndex, label_len).equals(
-					heredoc)) {
+					heredoc)
+			&& (yytext.charAt(startIndex - 1) == '\n'
+				|| yytext.charAt(startIndex - 1) == '\r')) {
 		// we must (at least) push the newline character back
 		yypushback(1);
 		popHeredocId();
