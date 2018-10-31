@@ -709,7 +709,6 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 <ST_IN_SCRIPTING>"{" {
 	pushState(ST_IN_SCRIPTING);
 	return createSymbol(ParserConstants.T_CURLY_OPEN);
-
 }
 
 <ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC>"${" {
@@ -1091,11 +1090,14 @@ if (parsePHPDoc()) {
 	String heredoc = heredocIds.peek();
 	int heredocLength = heredoc.length();
 	if (textLength > heredocLength && yytext.substring(textLength - heredocLength, textLength).equals(heredoc)) {
-		nb_pushback += heredocLength;
-		// we need to remove the closing label from the symbol value
-		yypushback(nb_pushback);
-		yybegin(ST_END_HEREDOC);
-		return createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
+		char c = yytext.charAt(textLength - heredocLength - 1);
+		if (c == '\n' || c == '\r') {
+			nb_pushback += heredocLength;
+			// we need to remove the closing label from the symbol value
+			yypushback(nb_pushback);
+			yybegin(ST_END_HEREDOC);
+			return createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
+		}
 	}
 	// we must (at least) push the newline character back
 	yypushback(1);
@@ -1157,11 +1159,14 @@ if (parsePHPDoc()) {
 	String nowdoc = heredocIds.peek();
 	int nowdocLength = nowdoc.length();
 	if (textLength > nowdocLength && yytext.substring(textLength - nowdocLength, textLength).equals(nowdoc)) {
-		nb_pushback += nowdocLength;
-		// we need to remove the closing label from the symbol value
-		yypushback(nb_pushback);
-		yybegin(ST_END_HEREDOC);
-		return createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
+		char c = yytext.charAt(textLength - nowdocLength - 1);
+		if (c == '\n' || c == '\r') {
+			nb_pushback += nowdocLength;
+			// we need to remove the closing label from the symbol value
+			yypushback(nb_pushback);
+			yybegin(ST_END_HEREDOC);
+			return createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
+		}
 	}
 	// we must (at least) push the newline character back
 	yypushback(1);
