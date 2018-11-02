@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009-2018 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -117,8 +117,8 @@ public class AST {
 	private NodeEventHandler eventHandler = new NodeEventHandler();
 
 	/**
-	 * Internal modification count; initially 0; increases monotonically <b>by one
-	 * or more</b> as the AST is successively modified.
+	 * Internal modification count; initially 0; increases monotonically <b>by
+	 * one or more</b> as the AST is successively modified.
 	 */
 	private long modificationCount = 0;
 
@@ -132,8 +132,8 @@ public class AST {
 	private long originalModificationCount = 0;
 
 	/**
-	 * When disableEvents > 0, events are not reported and the modification count
-	 * stays fixed.
+	 * When disableEvents > 0, events are not reported and the modification
+	 * count stays fixed.
 	 * <p>
 	 * This mechanism is used in lazy initialization of a node to prevent events
 	 * from being reported for the modification of the node as well as for the
@@ -145,8 +145,8 @@ public class AST {
 	private int disableEvents = 0;
 
 	/**
-	 * Internal object unique to the AST instance. Readers must synchronize on this
-	 * object when the modifying instance fields.
+	 * Internal object unique to the AST instance. Readers must synchronize on
+	 * this object when the modifying instance fields.
 	 * 
 	 * @since 3.0
 	 */
@@ -164,8 +164,8 @@ public class AST {
 	InternalASTRewriter rewriter;
 
 	/**
-	 * The binding resolver for this AST. Initially a binding resolver that does not
-	 * resolve names at all.
+	 * The binding resolver for this AST. Initially a binding resolver that does
+	 * not resolve names at all.
 	 */
 	private BindingResolver resolver = new BindingResolver();
 
@@ -227,6 +227,11 @@ public class AST {
 			lexer72.setUseAspTagsAsPHP(aspTagsAsPhp);
 			lexer72.setUseShortTags(useShortTags);
 			return lexer72;
+		} else if (PHPVersion.PHP7_3 == phpVersion) {
+			final AstLexer lexer73 = getLexer73(reader);
+			lexer73.setUseAspTagsAsPHP(aspTagsAsPhp);
+			lexer73.setUseShortTags(useShortTags);
+			return lexer73;
 		} else {
 			if (phpVersion == null) {
 				throw new IllegalArgumentException(CoreMessages.getString("UnknownPHPVersion_0")); //$NON-NLS-1$
@@ -235,6 +240,13 @@ public class AST {
 						Messages.format(CoreMessages.getString("UnknownPHPVersion_1"), phpVersion)); //$NON-NLS-1$
 			}
 		}
+	}
+
+	private AstLexer getLexer73(Reader reader) throws IOException {
+		final org.eclipse.php.internal.core.ast.scanner.php73.PHPAstLexer phpAstLexer = new org.eclipse.php.internal.core.ast.scanner.php73.PHPAstLexer(
+				reader);
+		phpAstLexer.setAST(this);
+		return phpAstLexer;
 	}
 
 	private AstLexer getLexer72(Reader reader) throws IOException {
@@ -334,6 +346,11 @@ public class AST {
 					lexer);
 			parser.setAST(this);
 			return parser;
+		} else if (PHPVersion.PHP7_3 == phpVersion) {
+			final org.eclipse.php.internal.core.ast.scanner.php73.PHPAstParser parser = new org.eclipse.php.internal.core.ast.scanner.php73.PHPAstParser(
+					lexer);
+			parser.setAST(this);
+			return parser;
 		} else {
 			if (phpVersion == null) {
 				throw new IllegalArgumentException(CoreMessages.getString("UnknownPHPVersion_0")); //$NON-NLS-1$
@@ -346,8 +363,8 @@ public class AST {
 
 	/**
 	 * Returns the modification count for this AST. The modification count is a
-	 * non-negative value that increases (by 1 or perhaps by more) as this AST or
-	 * its nodes are changed. The initial value is unspecified.
+	 * non-negative value that increases (by 1 or perhaps by more) as this AST
+	 * or its nodes are changed. The initial value is unspecified.
 	 * <p>
 	 * The following things count as modifying an AST:
 	 * <ul>
@@ -357,17 +374,17 @@ public class AST {
 	 * <li>setting a non-node attribute of a node owned by this AST.</li>
 	 * </ul>
 	 * </p>
-	 * Operations which do not entail creating or modifying existing nodes do not
-	 * increase the modification count.
+	 * Operations which do not entail creating or modifying existing nodes do
+	 * not increase the modification count.
 	 * <p>
-	 * N.B. This method may be called several times in the course of a single client
-	 * operation. The only promise is that the modification count increases
-	 * monotonically as the AST or its nodes change; there is no promise that a
-	 * modifying operation increases the count by exactly 1.
+	 * N.B. This method may be called several times in the course of a single
+	 * client operation. The only promise is that the modification count
+	 * increases monotonically as the AST or its nodes change; there is no
+	 * promise that a modifying operation increases the count by exactly 1.
 	 * </p>
 	 * 
-	 * @return the current value (non-negative) of the modification counter of this
-	 *         AST
+	 * @return the current value (non-negative) of the modification counter of
+	 *         this AST
 	 */
 	public long modificationCount() {
 		return this.modificationCount;
@@ -385,8 +402,8 @@ public class AST {
 	 * </ul>
 	 * </p>
 	 * <p>
-	 * N.B. This method may be called several times in the course of a single client
-	 * operation.
+	 * N.B. This method may be called several times in the course of a single
+	 * client operation.
 	 * </p>
 	 */
 	void modifying() {
@@ -791,7 +808,8 @@ public class AST {
 	}
 
 	/**
-	 * Set <code>originalModificationCount</code> to the current modification count
+	 * Set <code>originalModificationCount</code> to the current modification
+	 * count
 	 * 
 	 * @since 3.0
 	 */
@@ -802,8 +820,8 @@ public class AST {
 	/**
 	 * Returns the type binding for a "well known" type.
 	 * <p>
-	 * Note that bindings are generally unavailable unless requested when the AST is
-	 * being built.
+	 * Note that bindings are generally unavailable unless requested when the
+	 * AST is being built.
 	 * </p>
 	 * <p>
 	 * The following type names are supported:
@@ -823,8 +841,8 @@ public class AST {
 	 * @param name
 	 *            the name of a well known type
 	 * @return the corresponding type binding, or <code>null</code> if the named
-	 *         type is not considered well known or if no binding can be found for
-	 *         it
+	 *         type is not considered well known or if no binding can be found
+	 *         for it
 	 */
 	public ITypeBinding resolveWellKnownType(String name) {
 		if (name == null) {
@@ -856,7 +874,8 @@ public class AST {
 	}
 
 	/**
-	 * Checks that this AST operation is only used when building level JLS2 ASTs.
+	 * Checks that this AST operation is only used when building level JLS2
+	 * ASTs.
 	 * 
 	 * @exception UnsupportedOperationException
 	 * @since 3.0
@@ -889,8 +908,8 @@ public class AST {
 	private int bits;
 
 	/**
-	 * Creates an unparented node of the given node class (non-abstract subclass of
-	 * {@link ASTNode}).
+	 * Creates an unparented node of the given node class (non-abstract subclass
+	 * of {@link ASTNode}).
 	 * 
 	 * @param nodeClass
 	 *            AST node class
@@ -929,8 +948,8 @@ public class AST {
 	}
 
 	/**
-	 * Creates an unparented node of the given node type. This convenience method is
-	 * equivalent to:
+	 * Creates an unparented node of the given node type. This convenience
+	 * method is equivalent to:
 	 * 
 	 * <pre>
 	 * createInstance(ASTNode.nodeClassForType(nodeType))
@@ -955,17 +974,17 @@ public class AST {
 	/**
 	 * Enables the recording of changes to the given compilation unit and its
 	 * descendents. The compilation unit must have been created by
-	 * <code>ASTParser</code> and still be in its original state. Once recording is
-	 * on, arbitrary changes to the subtree rooted at the compilation unit are
-	 * recorded internally. Once the modification has been completed, call
-	 * <code>rewrite</code> to get an object representing the corresponding edits to
-	 * the original source code string.
+	 * <code>ASTParser</code> and still be in its original state. Once recording
+	 * is on, arbitrary changes to the subtree rooted at the compilation unit
+	 * are recorded internally. Once the modification has been completed, call
+	 * <code>rewrite</code> to get an object representing the corresponding
+	 * edits to the original source code string.
 	 * 
 	 * @exception IllegalArgumentException
-	 *                if this compilation unit is marked as unmodifiable, or if this
-	 *                compilation unit has already been tampered with, or if
-	 *                recording has already been enabled, or if <code>root</code> is
-	 *                not owned by this AST
+	 *                if this compilation unit is marked as unmodifiable, or if
+	 *                this compilation unit has already been tampered with, or
+	 *                if recording has already been enabled, or if
+	 *                <code>root</code> is not owned by this AST
 	 * @see Program#recordModifications()
 	 * @since 3.0
 	 */
@@ -986,24 +1005,25 @@ public class AST {
 
 	/**
 	 * Converts all modifications recorded into an object representing the
-	 * corresponding text edits to the given document containing the original source
-	 * code for the compilation unit that gave rise to this AST.
+	 * corresponding text edits to the given document containing the original
+	 * source code for the compilation unit that gave rise to this AST.
 	 * 
 	 * @param document
-	 *            original document containing source code for the compilation unit
+	 *            original document containing source code for the compilation
+	 *            unit
 	 * @param options
 	 *            the table of formatter options (key type: <code>String</code>;
-	 *            value type: <code>String</code>); or <code>null</code> to use the
-	 *            standard global options {@link PHPCore#getOptions()
+	 *            value type: <code>String</code>); or <code>null</code> to use
+	 *            the standard global options {@link PHPCore#getOptions()
 	 *            PHPCore.getOptions()}.
-	 * @return text edit object describing the changes to the document corresponding
-	 *         to the recorded AST modifications
+	 * @return text edit object describing the changes to the document
+	 *         corresponding to the recorded AST modifications
 	 * @exception IllegalArgumentException
 	 *                if the document passed is <code>null</code> or does not
 	 *                correspond to this AST
 	 * @exception IllegalStateException
-	 *                if <code>recordModifications</code> was not called to enable
-	 *                recording
+	 *                if <code>recordModifications</code> was not called to
+	 *                enable recording
 	 * @see Program#rewrite(IDocument, Map)
 	 * @since 3.0
 	 */
@@ -1653,11 +1673,12 @@ public class AST {
 	}
 
 	/**
-	 * Creates a new {@link ExpressionStatement} with a given {@link Expression} as
-	 * an expression.
+	 * Creates a new {@link ExpressionStatement} with a given {@link Expression}
+	 * as an expression.
 	 * 
 	 * @param identifier
-	 *            The {@link Expression} that is the expression of the statement.
+	 *            The {@link Expression} that is the expression of the
+	 *            statement.
 	 * @return A new ExpressionStatement
 	 */
 	public ExpressionStatement newExpressionStatement(Expression expression) {
@@ -2365,7 +2386,8 @@ public class AST {
 	 * @param string
 	 *            The scalar's value.
 	 * @param scalarType
-	 *            The scalar's type (e.g. Scalar.TYPE_STRING, Scalar.TYPE_INT etc.).
+	 *            The scalar's type (e.g. Scalar.TYPE_STRING, Scalar.TYPE_INT
+	 *            etc.).
 	 * @return A new {@link Scalar}.
 	 */
 	public Scalar newScalar(String string, int scalarType) {
