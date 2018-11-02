@@ -1159,7 +1159,7 @@ if (parsePHPDoc()) {
 	}
 }
 
-<ST_NOWDOC>({NOWDOC_CHARS}+{NEWLINE}+|{NEWLINE}+){LABEL}";"?[\n\r] {
+<ST_NOWDOC>{NOWDOC_CHARS}*{NEWLINE}+{LABEL}";"?[\n\r] {
 	String yytext = yytext();
 	int nb_pushback;
 	if (yytext.charAt(yytext.length() - 2) == ';') {
@@ -1240,6 +1240,10 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
 */
 <ST_HEREDOC>{HEREDOC_CHARS}*({HEREDOC_NEWLINE}+({LABEL}";"?)?)?("{""{"+|"$""$"+) {
 	yypushback(1);
+	return createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
+}
+
+<ST_NOWDOC>{NOWDOC_CHARS}*({NEWLINE}+({LABEL}";"?)?)? {
 	return createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
 }
 
