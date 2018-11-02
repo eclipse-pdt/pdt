@@ -3320,6 +3320,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			expressionStart++;
 			break;
 		case Quote.QT_HEREDOC:
+		case Quote.QT_NOWDOC:
 			// search for the first new line
 			int quoteEnd = quote.getEnd();
 			for (; expressionStart < quoteEnd; expressionStart++) {

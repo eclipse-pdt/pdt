@@ -1066,20 +1066,18 @@ if (parsePHPDoc()) {
 	int heredoc_len = hereOrNowDoc.length();
 
 	Symbol sym = createFullSymbol(ParserConstants.T_START_HEREDOC);
+	sym.value = hereOrNowDoc;
 
 	if (hereOrNowDoc.charAt(0) == '\'') {
-		sym.value = hereOrNowDoc.substring(1, heredoc_len - 1);
-		heredocIds.push((String) sym.value);
+		heredocIds.push(hereOrNowDoc.substring(1, heredoc_len - 1));
 		heredoc_len -= 2;
 		yybegin(ST_START_NOWDOC);
 	} else if (hereOrNowDoc.charAt(0) == '"') {
-		sym.value = hereOrNowDoc.substring(1, heredoc_len - 1);
-		heredocIds.push((String) sym.value);
+		heredocIds.push(hereOrNowDoc.substring(1, heredoc_len - 1));
 		heredoc_len -= 2;
 		yybegin(ST_START_HEREDOC);
 	} else {
-		sym.value = hereOrNowDoc;
-		heredocIds.push((String) sym.value);
+		heredocIds.push(hereOrNowDoc);
 		yybegin(ST_START_HEREDOC);
 	}
 	return sym;

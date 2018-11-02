@@ -43,7 +43,7 @@ EOF;
 <Program start='0' length='581'>
 	<Statements>
 		<ExpressionStatement start='6' length='572'>
-			<Quote start='6' length='571' type='heredoc'>
+			<Quote start='6' length='571' type='nowdoc'>
 				<Scalar start='295' length='279' type='string' value='
 {
 class Pearlike_WithComments

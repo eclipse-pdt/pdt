@@ -41,7 +41,7 @@ function a()
 							</Variable>
 						</FunctionName>
 						<Parameters>
-							<Quote start='17' length='67' type='heredoc'>
+							<Quote start='17' length='67' type='nowdoc'>
 								<Scalar start='29' length='49' type='string' value='    ${a[$a[0]]} {$a[$a[$a[$a[0]]]]} ${a} ${a[0]}
 '/>
 							</Quote>

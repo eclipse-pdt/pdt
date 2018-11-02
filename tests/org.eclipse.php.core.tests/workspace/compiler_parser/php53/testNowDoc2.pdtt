@@ -42,7 +42,7 @@ EOF;
 --EXPECT--
 <ModuleDeclaration start="0" end="582">
 	<ExpressionStatement start="6" end="578">
-		<Quote start="6" end="577" type="heredoc">
+		<Quote start="6" end="577" type="nowdoc">
 			<Scalar start="295" end="574" type="string" value="
 {
 class Pearlike_WithComments

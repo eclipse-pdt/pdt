@@ -10,7 +10,7 @@ EOT;
 --EXPECT--
 <ModuleDeclaration start="0" end="159">
 	<EchoStatement start="6" end="155">
-		<Quote start="11" end="154" type="heredoc">
+		<Quote start="11" end="154" type="nowdoc">
 			<Scalar start="20" end="151" type="string" value="My name is &quot;$name&quot;.I am printing some $foo-&gt;foo.
 Now, I am printing some {$foo-&gt;bar[1]}.
 This should not print a capital &apos;A&apos;: \x41

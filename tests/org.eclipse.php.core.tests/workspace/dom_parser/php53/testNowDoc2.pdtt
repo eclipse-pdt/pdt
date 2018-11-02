@@ -29,7 +29,7 @@ FOO;
 						</Variable>
 					</VariableName>
 					<InitialValue>
-						<Quote start='32' length='22' type='heredoc'>
+						<Quote start='32' length='22' type='nowdoc'>
 							<Scalar start='50' length='1' type='string' value='
 '/>
 						</Quote>
