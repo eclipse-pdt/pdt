@@ -865,36 +865,12 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	}
 }
 
-<ST_PHP_END_HEREDOC>{NEWLINE}*({ANY_CHAR}[^\n\r;])*{LABEL}";"?[\n\r] {
-	String yytext = yytext();
-	int label_len = yylength() - 1;
-	int startIndex = 0;
-	if (yytext.charAt(label_len - 1) == ';') {
-		label_len--;
-	}
-	while (yytext.charAt(startIndex) == '\r'
-			|| yytext.charAt(startIndex) == '\n') {
-		startIndex++;
-	}
-
-	String heredoc = getHeredocId();
-	int heredoc_len = heredoc.length();
-	if (label_len > heredoc_len && startIndex > 0
-			&& yytext.substring(startIndex, label_len).equals(
-					heredoc)
-			&& (yytext.charAt(startIndex - 1) == '\n'
-				|| yytext.charAt(startIndex - 1) == '\r')) {
-		// we must (at least) push the newline character back
-		yypushback(1);
-		popHeredocId();
-		popState();
-		return PHP_HEREDOC_CLOSE_TAG;
-	} else {
-		// we must (at least) push the newline character back
-		yypushback(1);
-		yybegin(ST_PHP_HEREDOC);
-		return PHP_ENCAPSED_AND_WHITESPACE;
-	}
+<ST_PHP_END_HEREDOC>{NEWLINE}{LABEL}";"?[\n\r] {
+	// we must (at least) push the newline character back
+	yypushback(1);
+	popHeredocId();
+	popState();
+	return PHP_HEREDOC_CLOSE_TAG;
 }
 
 <ST_PHP_DOUBLE_QUOTES,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC,ST_PHP_QUOTES_AFTER_VARIABLE>"{$" {

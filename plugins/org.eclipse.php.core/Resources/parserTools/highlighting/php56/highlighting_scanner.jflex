@@ -932,50 +932,12 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	}
 }
 
-<ST_PHP_END_HEREDOC>{NEWLINE}*({ANY_CHAR}[^\n\r;])*{LABEL}";"?[\n\r] {
-	String yytext = yytext();
-	int label_len = yylength() - 1;
-	int startIndex = 0;
-	if (yytext.charAt(label_len - 1) == ';') {
-		label_len--;
-	}
-	while (yytext.charAt(startIndex) == '\r'
-			|| yytext.charAt(startIndex) == '\n') {
-		startIndex++;
-	}
-
-	String heredoc = getHeredocId();
-	int heredoc_len = heredoc.length();
-	if (label_len > heredoc_len && startIndex > 0
-			&& yytext.substring(startIndex, label_len).equals(
-					heredoc)
-			&& (yytext.charAt(startIndex - 1) == '\n'
-				|| yytext.charAt(startIndex - 1) == '\r')) {
-		// we must (at least) push the newline character back
-		yypushback(1);
-		popHeredocId();
-		popState();
-		return PHP_HEREDOC_CLOSE_TAG;
-	} else {
-		// we must (at least) push the newline character back
-		yypushback(1);
-		yybegin(ST_PHP_HEREDOC);
-		return PHP_ENCAPSED_AND_WHITESPACE;
-	}
-}
-
-<ST_PHP_END_HEREDOC>{NEWLINE}*{LABEL}({TABS_AND_SPACES}[^\n\r])+";"?[\n\r] {
+<ST_PHP_END_HEREDOC>{NEWLINE}{LABEL}";"?[\n\r] {
 	// we must (at least) push the newline character back
 	yypushback(1);
-	yybegin(ST_PHP_HEREDOC);
-	return PHP_ENCAPSED_AND_WHITESPACE;
-}
-
-<ST_PHP_END_HEREDOC>{NEWLINE}*({TABS_AND_SPACES}[^\n\r])+{LABEL}";"?[\n\r] {
-	// we must (at least) push the newline character back
-	yypushback(1);
-	yybegin(ST_PHP_HEREDOC);
-	return PHP_ENCAPSED_AND_WHITESPACE;
+	popHeredocId();
+	popState();
+	return PHP_HEREDOC_CLOSE_TAG;
 }
 
 <ST_PHP_START_NOWDOC>{ANY_CHAR} {
@@ -1006,7 +968,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	}
 }
 
-<ST_PHP_NOWDOC>({NOWDOC_CHARS}+{NEWLINE}+|{NEWLINE}+){LABEL}";"?[\n\r] {
+<ST_PHP_NOWDOC>{NOWDOC_CHARS}*{NEWLINE}+{LABEL}";"?[\n\r] {
 	String yytext = yytext();
 	int label_len = yylength() - 1;
 
@@ -1096,7 +1058,7 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
 	return PHP_ENCAPSED_AND_WHITESPACE;
 }
 
-<ST_PHP_NOWDOC>{NOWDOC_CHARS}*({HEREDOC_NEWLINE}+({LABEL}";"?)?)? {
+<ST_PHP_NOWDOC>{NOWDOC_CHARS}*({NEWLINE}+({LABEL}";"?)?)? {
 	return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
