@@ -992,20 +992,26 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	@Override
 	public boolean visit(Quote quote) {
 		switch (quote.getQuoteType()) {
-		case 0:
+		case Quote.QT_QUOTE:
 			result.append("\""); //$NON-NLS-1$
 			acceptQuoteExpression(quote.expressions());
 			result.append("\""); //$NON-NLS-1$
 			break;
-		case 1:
+		case Quote.QT_SINGLE:
 			result.append("\'"); //$NON-NLS-1$
 			acceptQuoteExpression(quote.expressions());
 			result.append("\'"); //$NON-NLS-1$
 			break;
-		case 2:
+		case Quote.QT_HEREDOC:
 			result.append("<<<Heredoc\n"); //$NON-NLS-1$
 			acceptQuoteExpression(quote.expressions());
 			result.append("\nHeredoc"); //$NON-NLS-1$
+			break;
+		case Quote.QT_NOWDOC:
+			result.append("<<<'Nowdoc'\n"); //$NON-NLS-1$
+			acceptQuoteExpression(quote.expressions());
+			result.append("\nNowdoc"); //$NON-NLS-1$
+			break;
 		}
 		return false;
 	}

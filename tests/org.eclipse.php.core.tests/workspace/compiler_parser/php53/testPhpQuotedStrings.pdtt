@@ -36,7 +36,7 @@ function a()
 					<VariableReference start="14" end="16" name="$a">
 					</VariableReference>
 					<PHPCallArgumentsList start="17" end="85">
-						<Quote start="17" end="84" type="heredoc">
+						<Quote start="17" end="84" type="nowdoc">
 							<Scalar start="29" end="78" type="string" value="    ${a[$a[0]]} {$a[$a[$a[$a[0]]]]} ${a} ${a[0]}
 ">
 							</Scalar>

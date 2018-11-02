@@ -4798,7 +4798,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	@Override
 	public boolean visit(Quote quote) {
 		updateLinesWidth(quote);
-		if (quote.getQuoteType() == Quote.QT_HEREDOC) {
+		if (quote.getQuoteType() == Quote.QT_HEREDOC || quote.getQuoteType() == Quote.QT_NOWDOC) {
 			int i = quote.getEnd();
 			if (isContainChar(i, i + 1, SEMICOLON)) {
 				isHeredocSemicolon = true;
