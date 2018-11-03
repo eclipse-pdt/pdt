@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009-2018 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -45,6 +45,9 @@ public class PHPLexerFactory {
 		}
 		if (phpVersion == PHPVersion.PHP7_2) {
 			return new org.eclipse.php.internal.core.documentModel.parser.php72.PHPLexer(reader);
+		}
+		if (phpVersion == PHPVersion.PHP7_3) {
+			return new org.eclipse.php.internal.core.documentModel.parser.php73.PHPLexer(reader);
 		}
 		if (phpVersion == null) {
 			throw new IllegalArgumentException(CoreMessages.getString("UnknownPHPVersion_0")); //$NON-NLS-1$

@@ -27,7 +27,8 @@ import org.eclipse.php.internal.formatter.core.FormatterCorePlugin;
 public class CodeFormatterConstants {
 
 	/**
-	 * A named preference that controls which profile is used by the code formatter.
+	 * A named preference that controls which profile is used by the code
+	 * formatter.
 	 * <p>
 	 * Value is of type <code>String</code>.
 	 * </p>
@@ -396,6 +397,19 @@ public class CodeFormatterConstants {
 	 */
 	public static final String FORMATTER_INDENT_EMPTY_LINES = FormatterCorePlugin.PLUGIN_ID
 			+ ".formatter.indent_empty_lines"; //$NON-NLS-1$
+	/**
+	 * <pre>
+	 * FORMATTER / Option to indent heredocs and nowdocs
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.indent_heredocs&quot;
+	 *     - possible values:   { TRUE, FALSE }
+	 *     - default:           TRUE
+	 * </pre>
+	 * 
+	 * @see #TRUE
+	 * @see #FALSE
+	 * @since PHP 7.3
+	 */
+	public static final String FORMATTER_INDENT_HEREDOCS = FormatterCorePlugin.PLUGIN_ID + ".formatter.indent_heredocs"; //$NON-NLS-1$
 	/**
 	 * <pre>
 	 * FORMATTER / Option to indent statements inside a block
@@ -2096,8 +2110,8 @@ public class CodeFormatterConstants {
 	 * {@link ToolFactory#M_FORMAT_NEW}</li>
 	 * <li>even with this option activated, the formatter still can ignore line
 	 * comments starting at first column if the option
-	 * {@link #FORMATTER_COMMENT_FORMAT_LINE_COMMENT_STARTING_ON_FIRST_COLUMN} is
-	 * set to {@value #FALSE}</li>
+	 * {@link #FORMATTER_COMMENT_FORMAT_LINE_COMMENT_STARTING_ON_FIRST_COLUMN}
+	 * is set to {@value #FALSE}</li>
 	 * </ul>
 	 * 
 	 * @see #TRUE
@@ -2115,8 +2129,8 @@ public class CodeFormatterConstants {
 	 *     - default:           FALSE
 	 * </pre>
 	 * 
-	 * Note that this option is ignored if the formatter is created with the mode
-	 * {@link ToolFactory#M_FORMAT_NEW}.
+	 * Note that this option is ignored if the formatter is created with the
+	 * mode {@link ToolFactory#M_FORMAT_NEW}.
 	 * 
 	 * @see #TRUE
 	 * @see #FALSE
@@ -2176,26 +2190,27 @@ public class CodeFormatterConstants {
 	 * <ol>
 	 * <li>This tag is used by the formatter only if the
 	 * {@link #FORMATTER_USE_ON_OFF_TAGS} option is set to {@link #TRUE}.</li>
-	 * <li>The tag name will be trimmed. Hence if it does contain white spaces at
-	 * the beginning or at the end, they will not be taken into account while
+	 * <li>The tag name will be trimmed. Hence if it does contain white spaces
+	 * at the beginning or at the end, they will not be taken into account while
 	 * searching for the tag in the comments</li>
-	 * <li>If a tag is starting with a letter or digit, then it cannot be leaded by
-	 * another letter or digit to be recognized ( <code>"ToDisableFormatter"</code>
-	 * will not be recognized as a disabling tag <code>"DisableFormatter"</code>,
-	 * but <code>"To:DisableFormatter"</code> will be detected for either tag
+	 * <li>If a tag is starting with a letter or digit, then it cannot be leaded
+	 * by another letter or digit to be recognized (
+	 * <code>"ToDisableFormatter"</code> will not be recognized as a disabling
+	 * tag <code>"DisableFormatter"</code>, but
+	 * <code>"To:DisableFormatter"</code> will be detected for either tag
 	 * <code>"DisableFormatter"</code> or <code>":DisableFormatter"</code>).<br>
 	 * Respectively, a tag ending with a letter or digit cannot be followed by a
-	 * letter or digit to be recognized (<code>"DisableFormatter1"</code> will not
-	 * be recognized as a disabling tag <code>"DisableFormatter"</code>, but
+	 * letter or digit to be recognized (<code>"DisableFormatter1"</code> will
+	 * not be recognized as a disabling tag <code>"DisableFormatter"</code>, but
 	 * <code>"DisableFormatter:1"</code> will be detected either for tag
 	 * <code>"DisableFormatter"</code> or <code>"DisableFormatter:"</code>)</li>
-	 * <li>As soon as the formatter encounters the defined disabling tag, it stops
-	 * to format the code from the beginning of the comment including this tag. If
-	 * it was already disabled, the tag has no special effect.
+	 * <li>As soon as the formatter encounters the defined disabling tag, it
+	 * stops to format the code from the beginning of the comment including this
+	 * tag. If it was already disabled, the tag has no special effect.
 	 * <p>
 	 * For example, the second default enabling tag &quot;<b>@formatter:off</b>
-	 * &quot; in the following snippet is not necessary as the formatter was already
-	 * disabled since the first one:
+	 * &quot; in the following snippet is not necessary as the formatter was
+	 * already disabled since the first one:
 	 * 
 	 * <pre>
 	 * class X {
@@ -2219,8 +2234,8 @@ public class CodeFormatterConstants {
 	 * </li>
 	 * <li>If no enabling tag is found by the formatter after the disabling tag,
 	 * then the end of the snippet won't be formatted.<br>
-	 * For example, when a disabling tag is put at the beginning of the code, then
-	 * the entire content of a compilation unit is not formatted:
+	 * For example, when a disabling tag is put at the beginning of the code,
+	 * then the entire content of a compilation unit is not formatted:
 	 * 
 	 * <pre>
 	 * // @formatter:off
@@ -2240,21 +2255,21 @@ public class CodeFormatterConstants {
 	 * </pre>
 	 * 
 	 * </li>
-	 * <li>If a mix of disabling and enabling tags is done in the same comment, then
-	 * the formatter will only take into account the last encountered tag in the
-	 * comment.
+	 * <li>If a mix of disabling and enabling tags is done in the same comment,
+	 * then the formatter will only take into account the last encountered tag
+	 * in the comment.
 	 * <p>
-	 * For example, in the following snippet, the formatter will be disabled after
-	 * the comment:
+	 * For example, in the following snippet, the formatter will be disabled
+	 * after the comment:
 	 * </p>
 	 * 
 	 * <pre>
 	 * class X {
 	 * 	/*
 	 * 	 * This is a comment with a mix of disabling and enabling tags: -
-	 * 	 * &lt;b&gt;@formatter:off&lt;/b&gt; - &lt;b&gt;@formatter:on&lt;/b&gt; - &lt;b&gt;@formatter:off&lt;/b&gt;
-	 * 	 * The formatter will stop to format from the beginning of this
-	 * 	 * comment...
+	 * 	 * &lt;b&gt;@formatter:off&lt;/b&gt; - &lt;b&gt;@formatter:on&lt;/b&gt; -
+	 * 	 * &lt;b&gt;@formatter:off&lt;/b&gt; The formatter will stop to format from the
+	 * 	 * beginning of this comment...
 	 * 	&#42;/
 	 * 	void foo() {
 	 * 	}
@@ -2268,11 +2283,12 @@ public class CodeFormatterConstants {
 	 * <li>The tag cannot include newline character (i.e. '\n') but it can have
 	 * white spaces.<br>
 	 * E.g. "<b>format: off</b>" is a valid disabling tag.<br>
-	 * In the future, newlines may be used to support multiple disabling tags.</li>
+	 * In the future, newlines may be used to support multiple disabling
+	 * tags.</li>
 	 * <li>The tag can include line or block comments start/end tokens.
 	 * <p>
-	 * If such tags are used, e.g. "<b>//J-</b>", then the single comment can also
-	 * stop the formatting as shown in the following snippet:
+	 * If such tags are used, e.g. "<b>//J-</b>", then the single comment can
+	 * also stop the formatting as shown in the following snippet:
 	 * </p>
 	 * 
 	 * <pre>
@@ -2285,8 +2301,8 @@ public class CodeFormatterConstants {
 	 * </pre>
 	 * 
 	 * <p>
-	 * As any disabling tags, as soon as a comment includes it, the formatting stops
-	 * from this comment:
+	 * As any disabling tags, as soon as a comment includes it, the formatting
+	 * stops from this comment:
 	 * </p>
 	 * 
 	 * <pre>
@@ -2302,8 +2318,8 @@ public class CodeFormatterConstants {
 	 * 	}
 	 * 
 	 * 	/*
-	 * 	 * Block comment including the disabling tag: //J+ The formatter stops
-	 * 	 * from this comment...
+	 * 	 * Block comment including the disabling tag: //J+ The formatter
+	 * 	 * stops from this comment...
 	 * 	&#42;/
 	 * 	void foo2() {
 	 * 	}
@@ -2314,8 +2330,8 @@ public class CodeFormatterConstants {
 	 * 	}
 	 * 
 	 * 	/**
-	 * 	 * Javadoc comment including the enabling tag: //J+ The formatter stops
-	 * 	 * from this comment...
+	 * 	 * Javadoc comment including the enabling tag: //J+ The formatter
+	 * 	 * stops from this comment...
 	 * 	&#42;/
 	 * 	void foo3() {
 	 * 	}
@@ -2342,26 +2358,28 @@ public class CodeFormatterConstants {
 	 * <ol>
 	 * <li>This tag is used by the formatter only if the
 	 * {@link #FORMATTER_USE_ON_OFF_TAGS} option is set to {@link #TRUE}.</li>
-	 * <li>The tag name will be trimmed. Hence if it does contain white spaces at
-	 * the beginning or at the end, they will not be taken into account while
+	 * <li>The tag name will be trimmed. Hence if it does contain white spaces
+	 * at the beginning or at the end, they will not be taken into account while
 	 * searching for the tag in the comments</li>
-	 * <li>If a tag is starting with a letter or digit, then it cannot be leaded by
-	 * another letter or digit to be recognized ( <code>"ReEnableFormatter"</code>
-	 * will not be recognized as an enabling tag <code>"EnableFormatter"</code>, but
-	 * <code>"Re:EnableFormatter"</code> will be detected for either tag
-	 * <code>"EnableFormatter"</code> or <code>":EnableFormatter"</code>).<br>
+	 * <li>If a tag is starting with a letter or digit, then it cannot be leaded
+	 * by another letter or digit to be recognized (
+	 * <code>"ReEnableFormatter"</code> will not be recognized as an enabling
+	 * tag <code>"EnableFormatter"</code>, but <code>"Re:EnableFormatter"</code>
+	 * will be detected for either tag <code>"EnableFormatter"</code> or
+	 * <code>":EnableFormatter"</code>).<br>
 	 * Respectively, a tag ending with a letter or digit cannot be followed by a
-	 * letter or digit to be recognized (<code>"EnableFormatter1"</code> will not be
-	 * recognized as an enabling tag <code>"EnableFormatter"</code>, but
+	 * letter or digit to be recognized (<code>"EnableFormatter1"</code> will
+	 * not be recognized as an enabling tag <code>"EnableFormatter"</code>, but
 	 * <code>"EnableFormatter:1"</code> will be detected either for tag
 	 * <code>"EnableFormatter"</code> or <code>"EnableFormatter:"</code>)</li>
 	 * <li>As soon as the formatter encounters the defined enabling tag, it
-	 * re-starts to format the code just after the comment including this tag. If it
-	 * was already active, i.e. already re-enabled or never disabled, the tag has no
-	 * special effect.
+	 * re-starts to format the code just after the comment including this tag.
+	 * If it was already active, i.e. already re-enabled or never disabled, the
+	 * tag has no special effect.
 	 * <p>
-	 * For example, the default enabling tag &quot;<b>@formatter:on</b>&quot; in the
-	 * following snippet is not necessary as the formatter has never been disabled:
+	 * For example, the default enabling tag &quot;<b>@formatter:on</b>&quot; in
+	 * the following snippet is not necessary as the formatter has never been
+	 * disabled:
 	 * 
 	 * <pre>
 	 * class X {
@@ -2380,8 +2398,8 @@ public class CodeFormatterConstants {
 	 * }
 	 * </pre>
 	 * 
-	 * Or, in the following other snippet, the second enabling tag is not necessary
-	 * as the formatting will have been re-enabled by the first one:
+	 * Or, in the following other snippet, the second enabling tag is not
+	 * necessary as the formatting will have been re-enabled by the first one:
 	 * 
 	 * <pre>
 	 * class X {
@@ -2404,12 +2422,12 @@ public class CodeFormatterConstants {
 	 * 
 	 * </p>
 	 * </li>
-	 * <li>If a mix of disabling and enabling tags is done in the same comment, then
-	 * the formatter will only take into account the last encountered tag in the
-	 * comment.
+	 * <li>If a mix of disabling and enabling tags is done in the same comment,
+	 * then the formatter will only take into account the last encountered tag
+	 * in the comment.
 	 * <p>
-	 * For example, in the following snippet, the formatter will be re-enabled after
-	 * the comment:
+	 * For example, in the following snippet, the formatter will be re-enabled
+	 * after the comment:
 	 * </p>
 	 * 
 	 * <pre>
@@ -2417,8 +2435,9 @@ public class CodeFormatterConstants {
 	 * class X {
 	 * 	/*
 	 * 	 * This is a comment with a mix of disabling and enabling tags: -
-	 * 	 * &lt;b&gt;@formatter:on&lt;/b&gt; - &lt;b&gt;@formatter:off&lt;/b&gt; - &lt;b&gt;@formatter:on&lt;/b&gt;
-	 * 	 * The formatter will restart to format after this comment...
+	 * 	 * &lt;b&gt;@formatter:on&lt;/b&gt; - &lt;b&gt;@formatter:off&lt;/b&gt; -
+	 * 	 * &lt;b&gt;@formatter:on&lt;/b&gt; The formatter will restart to format after
+	 * 	 * this comment...
 	 * 	&#42;/
 	 * 	void foo() {
 	 * 	}
@@ -2432,12 +2451,13 @@ public class CodeFormatterConstants {
 	 * <li>The tag cannot include newline character (i.e. '\n') but it can have
 	 * white spaces.<br>
 	 * E.g. "<b>format: on</b>" is a valid enabling tag<br>
-	 * In the future, newlines may be used to support multiple enabling tags.</li>
+	 * In the future, newlines may be used to support multiple enabling
+	 * tags.</li>
 	 * <li>The tag can include line or block comments start/end tokens. Javadoc
 	 * tokens are not considered as valid tags.
 	 * <p>
-	 * If such tags are used, e.g. "<b>//J+</b>", then the single comment can also
-	 * start the formatting as shown in the following snippet:
+	 * If such tags are used, e.g. "<b>//J+</b>", then the single comment can
+	 * also start the formatting as shown in the following snippet:
 	 * </p>
 	 * 
 	 * <pre>
@@ -2474,8 +2494,8 @@ public class CodeFormatterConstants {
 	 * 	}
 	 * 
 	 * 	/*
-	 * 	 * Block comment including the enabling tag: //J+ The formatter restarts
-	 * 	 * after this comment...
+	 * 	 * Block comment including the enabling tag: //J+ The formatter
+	 * 	 * restarts after this comment...
 	 * 	&#42;/
 	 * 	// Formatting restarts from here...
 	 * 	void bar2() {

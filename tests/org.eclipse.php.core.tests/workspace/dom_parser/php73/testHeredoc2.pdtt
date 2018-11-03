@@ -1,0 +1,98 @@
+--TEST--
+Bug 516306 - Syntax error in Heredoc
+--FILE--
+<?php
+<<<EOF
+namespace Namespaced
+{
+class WithComments
+{
+public static $loaded = true;
+}
+$string ='string should not be   modified {$string}';
+$heredoc = (<<<HD
+
+
+Heredoc should not be   modified {$string}
+
+
+HD
+);
+$nowdoc =<<<'ND'
+
+
+Nowdoc should not be   modified {$string}
+
+
+ND
+;
+}
+namespace
+{
+class Pearlike_WithComments
+{
+public static $loaded = true;
+}
+}
+namespace {require __DIR__.'/Fixtures/Namespaced/WithDirMagic.php';}
+namespace {require __DIR__.'/Fixtures/Namespaced/WithFileMagic.php';}
+namespace {require __DIR__.'/Fixtures/Namespaced/WithHaltCompiler.php';}
+EOF;
+?>
+--EXPECT--
+<Program start='0' length='579'>
+	<Statements>
+		<ExpressionStatement start='6' length='570'>
+			<Quote start='6' length='569' type='heredoc'>
+				<Scalar start='63' length='8' type='string' value=' static '/>
+				<Variable start='71' length='7' isDollared='true'>
+					<Identifier start='72' length='6' name='loaded'/>
+				</Variable>
+				<Scalar start='78' length='11' type='string' value=' = true;
+}
+'/>
+				<Variable start='89' length='7' isDollared='true'>
+					<Identifier start='90' length='6' name='string'/>
+				</Variable>
+				<Scalar start='96' length='35' type='string' value=' =&apos;string should not be   modified '/>
+				<ReflectionVariable start='131' length='9'>
+					<Variable start='132' length='7' isDollared='true'>
+						<Identifier start='133' length='6' name='string'/>
+					</Variable>
+				</ReflectionVariable>
+				<Scalar start='140' length='3' type='string' value='&apos;;
+'/>
+				<Variable start='143' length='8' isDollared='true'>
+					<Identifier start='144' length='7' name='heredoc'/>
+				</Variable>
+				<Scalar start='170' length='26' type='string' value=' should not be   modified '/>
+				<ReflectionVariable start='196' length='9'>
+					<Variable start='197' length='7' isDollared='true'>
+						<Identifier start='198' length='6' name='string'/>
+					</Variable>
+				</ReflectionVariable>
+				<Scalar start='210' length='4' type='string' value='
+);
+'/>
+				<Variable start='214' length='7' isDollared='true'>
+					<Identifier start='215' length='6' name='nowdoc'/>
+				</Variable>
+				<Scalar start='239' length='26' type='string' value=' should not be   modified '/>
+				<ReflectionVariable start='265' length='9'>
+					<Variable start='266' length='7' isDollared='true'>
+						<Identifier start='267' length='6' name='string'/>
+					</Variable>
+				</ReflectionVariable>
+				<Scalar start='332' length='8' type='string' value=' static '/>
+				<Variable start='340' length='7' isDollared='true'>
+					<Identifier start='341' length='6' name='loaded'/>
+				</Variable>
+				<Scalar start='508' length='64' type='string' value=' {require __DIR__.&apos;/Fixtures/Namespaced/WithHaltCompiler.php&apos;;}
+'/>
+			</Quote>
+		</ExpressionStatement>
+		<EmptyStatement start='577' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>
