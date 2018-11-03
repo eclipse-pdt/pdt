@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 IBM Corporation and others.
+ * Copyright (c) 2012-2018 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -26,4 +26,5 @@ public class PHPFacetsConstants {
 	public static final String PHP_COMPONENT_VERSION_7 = "7"; //$NON-NLS-1$
 	public static final String PHP_COMPONENT_VERSION_7_1 = "7.1"; //$NON-NLS-1$
 	public static final String PHP_COMPONENT_VERSION_7_2 = "7.2"; //$NON-NLS-1$
+	public static final String PHP_COMPONENT_VERSION_7_3 = "7.3"; //$NON-NLS-1$
 }

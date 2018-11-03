@@ -167,7 +167,6 @@ import java_cup.runtime.Symbol;
 	}
 
 	protected void handleVarComment() {
-		commentStartPosition = getTokenStartPosition();
 		addComment(Comment.TYPE_MULTILINE);
 	}
 
@@ -949,11 +948,13 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\u007f-\uffff\n\r]|({LABEL}([^a-zA-Z0-
 }
 
 <ST_IN_SCRIPTING>"/*"{WHITESPACES}?"@var"{WHITESPACES}"$"{LABEL}{WHITESPACES}("\\"|{LABEL}|"["|"]"|"|")+{WHITESPACES}?"*/" {
+	handleCommentStart();
 	handleVarComment();
 	//return createFullSymbol(ParserConstants.T_VAR_COMMENT);
 }
 
 <ST_IN_SCRIPTING>"/*"{WHITESPACES}?"@var"{WHITESPACES}("\\"|{LABEL}|"["|"]"|"|")+{WHITESPACES}"$"{LABEL}{WHITESPACES}?"*/" {
+	handleCommentStart();
 	handleVarComment();
 	//return createFullSymbol(ParserConstants.T_VAR_COMMENT);
 }

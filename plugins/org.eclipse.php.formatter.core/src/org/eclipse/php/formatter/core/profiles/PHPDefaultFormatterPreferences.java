@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Zend Techologies Ltd.
+ * Copyright (c) 2013, 2018 Zend Techologies Ltd.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -162,6 +162,7 @@ public final class PHPDefaultFormatterPreferences implements ICodeFormatterPrefe
 		preferences.indent_statements_within_function = true;
 
 		preferences.indent_empty_lines = false;
+		preferences.indent_heredocs = true;
 
 		preferences.insert_space_before_comma_in_static = false;
 		preferences.insert_space_after_comma_in_static = true;

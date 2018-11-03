@@ -111,7 +111,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	private int startRegionPosition = -1;
 	private int endRegionPosition = Integer.MAX_VALUE;
 	private boolean isPrevSpace = false;
-	private boolean isHeredocSemicolon = false;
+	private boolean isHeredocSemicolonPre73 = false;
 	private boolean isPHPEqualTag = false;
 	private int lineWidth = 0;
 	// most recent "non-blank line" width
@@ -126,7 +126,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	private int binaryExpressionSavedMrnbLineWidth = 0;
 	private int binaryExpressionSavedLineWidth = 0;
 	private boolean binaryExpressionSavedIsPrevSpace = false;
-	private boolean binaryExpressionSavedIsHeredocSemicolon = false;
+	private boolean binaryExpressionSavedIsHeredocSemicolonPre73 = false;
 	private boolean binaryExpressionSavedIsPHPEqualTag = false;
 
 	// append chars to buffer through insertSpace or appendToBuffer
@@ -453,6 +453,20 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			stWhile = org.eclipse.php.internal.core.ast.scanner.php72.ParserConstants.T_WHILE;
 			stElse = org.eclipse.php.internal.core.ast.scanner.php72.ParserConstants.T_ELSE;
 			stElseIf = org.eclipse.php.internal.core.ast.scanner.php72.ParserConstants.T_ELSEIF;
+		} else if (PHPVersion.PHP7_3.equals(phpVersion)) {
+			result = new org.eclipse.php.internal.core.compiler.ast.parser.php73.CompilerAstLexer(reader);
+			((org.eclipse.php.internal.core.compiler.ast.parser.php73.CompilerAstLexer) result)
+					.setAST(new AST(reader, PHPVersion.PHP7_3, useASPTags, useShortTags));
+			stInScriptin = org.eclipse.php.internal.core.compiler.ast.parser.php73.CompilerAstLexer.ST_IN_SCRIPTING; // save
+			// the
+			// initial
+			// state
+			// for
+			// reset
+			// operation
+			stWhile = org.eclipse.php.internal.core.ast.scanner.php73.ParserConstants.T_WHILE;
+			stElse = org.eclipse.php.internal.core.ast.scanner.php73.ParserConstants.T_ELSE;
+			stElseIf = org.eclipse.php.internal.core.ast.scanner.php73.ParserConstants.T_ELSEIF;
 		} else {
 			throw new IllegalArgumentException("unrecognized version " //$NON-NLS-1$
 					+ phpVersion);
@@ -721,7 +735,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 							}
 						}
 					}
-					// we inserted at least one "empty" line, now we can reset previous indentation
+					// we inserted at least one "empty" line, now we can reset
+					// previous indentation
 					resetCommentIndentVariables();
 					if (doIndentForComment) {
 						indentForComment(indentationLevelDescending);
@@ -781,8 +796,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				}
 				indentStringForComment = afterNewLine;
 			}
-			// when necessary, keep current indentation level for further "empty" lines
-			// insertion
+			// when necessary, keep current indentation level for further
+			// "empty" lines insertion
 			if (!doIndentForComment) {
 				indentationLevelDescending = false;
 			}
@@ -825,16 +840,17 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		if (array.length == 0) {
 			return lastPosition;
 		}
-		// XXX: most comma-separated lists end with a closing bracket/parenthesis
-		// or with some other character like ';', so keep it simple and add it to
-		// the estimate length returned by estimateCommaListItemWidth()
+		// XXX: most comma-separated lists end with a closing
+		// bracket/parenthesis
+		// or with some other character like ';', so keep it simple and add it
+		// to the estimate length returned by estimateCommaListItemWidth()
 		int nbListClosingChars = 1;
 
 		// save the changes index position
 		int savedMrnbLineWidth = mrnbLineWidth;
 		int savedlineWidth = lineWidth;
 		boolean savedIsPrevSpace = isPrevSpace;
-		boolean savedIsHeredocSemicolon = isHeredocSemicolon;
+		boolean savedIsHeredocSemicolonPre73 = isHeredocSemicolonPre73;
 		boolean savedIsPHPEqualTag = isPHPEqualTag;
 		String savedBuffer = replaceBuffer.toString();
 		int changesIndex = changes.size() - 1;
@@ -849,8 +865,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		boolean isFirst = true;
 
 		int arrayLength = array.length;
-		// when necessary, remove the empty ASTNode (i.e. EmptyExpression) at end of
-		// array
+		// when necessary, remove the empty ASTNode (i.e. EmptyExpression) at
+		// end of array
 		if (!keepTrailingComma && array[arrayLength - 1].getLength() == 0) {
 			arrayLength--;
 		}
@@ -873,7 +889,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				savedMrnbLineWidth = mrnbLineWidth;
 				savedlineWidth = lineWidth;
 				savedIsPrevSpace = isPrevSpace;
-				savedIsHeredocSemicolon = isHeredocSemicolon;
+				savedIsHeredocSemicolonPre73 = isHeredocSemicolonPre73;
 				savedIsPHPEqualTag = isPHPEqualTag;
 				savedBuffer = replaceBuffer.toString();
 				changesIndex = changes.size() - 1;
@@ -907,7 +923,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			case WRAP_FIRST_ELEMENT: // Always wrap first element, others when
 										// necessary
 				revert(savedBuffer, changesIndex, savedMrnbLineWidth, savedlineWidth, savedIsPrevSpace,
-						savedIsHeredocSemicolon, savedIsPHPEqualTag);
+						savedIsHeredocSemicolonPre73, savedIsPHPEqualTag);
 				lastPosition = savedLastPosition;
 				i = 0;
 				lineWrapPolicy = WRAP_WHEN_NECESSARY;
@@ -923,7 +939,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				if (forceSplit || estimateCommaListItemWidth(array[i])
 						+ nbListClosingChars > this.preferences.line_wrap_line_split) {
 					revert(savedBuffer, changesIndex, savedMrnbLineWidth, savedlineWidth, savedIsPrevSpace,
-							savedIsHeredocSemicolon, savedIsPHPEqualTag);
+							savedIsHeredocSemicolonPre73, savedIsPHPEqualTag);
 					lastPosition = savedLastPosition;
 					i = 0;
 					lineWrapPolicy = ALWAYS_WRAP_ELEMENT;
@@ -941,7 +957,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						+ nbListClosingChars > this.preferences.line_wrap_line_split) {
 					// revert the buffer
 					revert(savedBuffer, changesIndex, savedMrnbLineWidth, savedlineWidth, savedIsPrevSpace,
-							savedIsHeredocSemicolon, savedIsPHPEqualTag);
+							savedIsHeredocSemicolonPre73, savedIsPHPEqualTag);
 					lastPosition = savedLastPosition;
 					i = 0;
 					lineWrapPolicy = ALWAYS_WRAP_ELEMENT_ADD_LEVEL;
@@ -960,7 +976,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						+ nbListClosingChars > this.preferences.line_wrap_line_split) {
 					// revert
 					revert(savedBuffer, changesIndex, savedMrnbLineWidth, savedlineWidth, savedIsPrevSpace,
-							savedIsHeredocSemicolon, savedIsPHPEqualTag);
+							savedIsHeredocSemicolonPre73, savedIsPHPEqualTag);
 					lastPosition = savedLastPosition;
 					i = (i > 0) ? 1 : 0;
 					lineWrapPolicy = ALWAYS_WRAP_ELEMENT;
@@ -994,12 +1010,17 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 			if (array[i].getLength() == 0) {
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=531468
-				// We have an empty ASTNode (i.e. EmptyExpression). By construction, whitespaces
-				// "around" empty ASTNodes are always located "after" ASTNode.getStart() (and
-				// ASTNode.getEnd()), so we have to "eat" those whitespaces to correctly
-				// generate/calculate ReplaceEdits in handleCharsWithoutComments().
+				// We have an empty ASTNode (i.e. EmptyExpression). By
+				// construction, whitespaces
+				// "around" empty ASTNodes are always located "after"
+				// ASTNode.getStart() (and
+				// ASTNode.getEnd()), so we have to "eat" those whitespaces to
+				// correctly
+				// generate/calculate ReplaceEdits in
+				// handleCharsWithoutComments().
 				int end = array[i + 1].getStart();
-				// handleCharsWithoutComments() checks if offset - lastPosition ==
+				// handleCharsWithoutComments() checks if offset - lastPosition
+				// ==
 				// replaceBuffer.length(), so don't "eat" too many whitespaces.
 				end = Math.min(lastPosition + replaceBuffer.length(), end);
 				int offset = array[i].getStart();
@@ -1089,9 +1110,11 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 							indentAfterComment = replaceBuffer.substring(position + lineSeparator.length(),
 									replaceBuffer.length());
 							removeBlanksFromLineWidth(replaceBuffer.length() - position, true);
-							// No need to add a space if previous line (in replaceBuffer) already ends with
+							// No need to add a space if previous line (in
+							// replaceBuffer) already ends with
 							// a blank character.
-							// TODO: replace isPrevSpace with more generic isPrevBlank.
+							// TODO: replace isPrevSpace with more generic
+							// isPrevBlank.
 							if (!isPrevSpace && !replaceBuffer.toString().endsWith("\t")) { //$NON-NLS-1$
 								insertSpaces(1);
 							}
@@ -1280,7 +1303,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						if (texts.length == 0 && tags != null && tags.length > 0
 								&& (!this.preferences.comment_insert_empty_line_before_root_tags
 										|| !this.preferences.comment_keep_empty_line_for_empty_description)) {
-							// description is blank, but there are tags in the comment
+							// description is blank, but there are tags in the
+							// comment
 							lastLineIsBlank = true;
 						} else {
 							insertNewLineForPHPDoc();
@@ -1466,9 +1490,11 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						indentAfterComment = replaceBuffer.substring(position + lineSeparator.length(),
 								replaceBuffer.length());
 						removeBlanksFromLineWidth(replaceBuffer.length() - position, true);
-						// No need to add a space if previous line (in replaceBuffer) already ends with
+						// No need to add a space if previous line (in
+						// replaceBuffer) already ends with
 						// a blank character.
-						// TODO: replace isPrevSpace with more generic isPrevBlank.
+						// TODO: replace isPrevSpace with more generic
+						// isPrevBlank.
 						if (!isPrevSpace && !replaceBuffer.toString().endsWith("\t")) { //$NON-NLS-1$
 							insertSpaces(1);
 						}
@@ -2062,20 +2088,24 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	 *            the position of the semicolon -1
 	 */
 	private void handleSemicolon(int start, int end) {
-		if (this.preferences.insert_space_before_semicolon && !isHeredocSemicolon) {
-			insertSpace();
+		if (this.preferences.insert_space_before_semicolon) {
+			if (!(PHPVersion.PHP7_3.isGreaterThan(phpVersion) && isHeredocSemicolonPre73)) {
+				insertSpace();
+			}
 		}
 		// check if the statement end with ; or ?>
 		if (isContainChar(start, end, SEMICOLON)) {
 			appendToBuffer(SEMICOLON);
-			if (isHeredocSemicolon && isPHPEqualTag) {
-				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=411322
-				// always insert a new line after the closing HEREDOC tag
-				isPHPEqualTag = false;
-				insertNewLine();
-				isPHPEqualTag = true;
+			if (PHPVersion.PHP7_3.isGreaterThan(phpVersion)) {
+				if (isHeredocSemicolonPre73 && isPHPEqualTag) {
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=411322
+					// always insert a new line after the closing HEREDOC tag
+					isPHPEqualTag = false;
+					insertNewLine();
+					isPHPEqualTag = true;
+				}
+				isHeredocSemicolonPre73 = false;
 			}
-			isHeredocSemicolon = false;
 		} else if (isContainChar(start, end, QUESTION_MARK)) {
 			handlePHPEndTag(start, end, "?>"); //$NON-NLS-1$
 		} else {
@@ -2151,9 +2181,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	}
 
 	/**
-	 * Inserts "numberOfLines" newlines. When the "empty line indentation" rule is
-	 * enabled (and numberOfLines > 0), last empty line in replaceBuffer and next
-	 * (numberOfLines - 1) inserted empty lines will be indented.
+	 * Inserts "numberOfLines" newlines. When the "empty line indentation" rule
+	 * is enabled (and numberOfLines > 0), last empty line in replaceBuffer and
+	 * next (numberOfLines - 1) inserted empty lines will be indented.
 	 * 
 	 * @param numberOfLines
 	 *            number of newlines to insert
@@ -2284,11 +2314,11 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	// list
 	// after we already added the formatting changes into the buffer.
 	private void revert(String savedBuffer, int changesIndex, int previousMrnbLineWidth, int previousLineWidth,
-			boolean wasPrevSpace, boolean wasHeredocSemicolon, boolean wasPHPEqualTag) {
+			boolean wasPrevSpace, boolean wasHeredocSemicolonPre73, boolean wasPHPEqualTag) {
 		mrnbLineWidth = previousMrnbLineWidth;
 		lineWidth = previousLineWidth;
 		isPrevSpace = wasPrevSpace;
-		isHeredocSemicolon = wasHeredocSemicolon;
+		isHeredocSemicolonPre73 = wasHeredocSemicolonPre73;
 		isPHPEqualTag = wasPHPEqualTag;
 		replaceBuffer.setLength(0);
 		replaceBuffer.append(savedBuffer);
@@ -2466,7 +2496,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		boolean oldIgnoreEmptyLineSetting = ignoreEmptyLineSetting;
 		ignoreEmptyLineSetting = true;
 		handleChars(lastPosition, arrayCreation.getEnd() - 1);
-		addNonBlanksToLineWidth(1);// we need to add the closing bracket/parenthesis
+		addNonBlanksToLineWidth(1);// we need to add the closing
+									// bracket/parenthesis
 		ignoreEmptyLineSetting = oldIgnoreEmptyLineSetting;
 
 		return false;
@@ -3800,7 +3831,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				handleChars(lastPosition, functionInvocation.getEnd());
 			} else {
 				handleChars(lastPosition, functionInvocation.getEnd() - 1);
-				addNonBlanksToLineWidth(1);// we need to add the closing parenthesis
+				addNonBlanksToLineWidth(1);// we need to add the closing
+											// parenthesis
 			}
 		} else {
 			handleChars(lastPosition, functionInvocation.getEnd());
@@ -4149,9 +4181,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	 * 
 	 * @param inFixOperand
 	 * @param doFirstWrap
-	 *            true when the first line wrap can be done, false when a new line
-	 *            was already inserted and there is no need to add a "first" line
-	 *            wrap
+	 *            true when the first line wrap can be done, false when a new
+	 *            line was already inserted and there is no need to add a
+	 *            "first" line wrap
 	 * @return true if a new line was inserted, false otherwise
 	 */
 	public boolean indentInfixOperand(Expression inFixOperand, boolean doFirstWrap) {
@@ -4281,7 +4313,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			binaryExpressionSavedMrnbLineWidth = mrnbLineWidth;
 			binaryExpressionSavedLineWidth = lineWidth;
 			binaryExpressionSavedIsPrevSpace = isPrevSpace;
-			binaryExpressionSavedIsHeredocSemicolon = isHeredocSemicolon;
+			binaryExpressionSavedIsHeredocSemicolonPre73 = isHeredocSemicolonPre73;
 			binaryExpressionSavedIsPHPEqualTag = isPHPEqualTag;
 			binaryExpressionSavedBuffer = replaceBuffer.toString();
 			binaryExpressionSavedNode = infixExpression;
@@ -4325,7 +4357,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		if (infixExpression == binaryExpressionSavedNode && binaryExpressionLineWrapPolicy == NO_LINE_WRAP) {
 			revert(binaryExpressionSavedBuffer, binaryExpressionSavedChangesIndex, binaryExpressionSavedMrnbLineWidth,
 					binaryExpressionSavedLineWidth, binaryExpressionSavedIsPrevSpace,
-					binaryExpressionSavedIsHeredocSemicolon, binaryExpressionSavedIsPHPEqualTag);
+					binaryExpressionSavedIsHeredocSemicolonPre73, binaryExpressionSavedIsPHPEqualTag);
 			// undo everything
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=506488
 			binaryExpressionSavedBuffer = replaceBuffer.toString();
@@ -4349,7 +4381,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			binaryExpressionSavedMrnbLineWidth = 0;
 			binaryExpressionSavedLineWidth = 0;
 			binaryExpressionSavedIsPrevSpace = false;
-			binaryExpressionSavedIsHeredocSemicolon = false;
+			binaryExpressionSavedIsHeredocSemicolonPre73 = false;
 			binaryExpressionSavedIsPHPEqualTag = false;
 			binaryExpressionSavedBuffer = null;
 			binaryExpressionSavedNode = null;
@@ -4692,8 +4724,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		List<Statement> statementList = program.statements();
 		Statement[] statements = new Statement[statementList.size()];
 		statements = statementList.toArray(statements);
-		// TODO: if the php file only contains comments, the comments will not be
-		// formatted
+		// TODO: if the php file only contains comments, the comments will not
+		// be formatted
 		// if (statements.length == 0 && !program.comments().isEmpty()) {
 		// try {
 		// Comment comment = program.comments().get(
@@ -4795,21 +4827,80 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return false;
 	}
 
+	private String getTextIndentation(String text) {
+		int i = 0;
+		int length = text.length();
+		for (; i < length; i++) {
+			if (text.charAt(i) != ' ' && text.charAt(i) != '\t') {
+				break;
+			}
+		}
+		return i == length ? text : text.substring(0, i);
+	}
+
+	private void doHeredocIndentation(int start, int end, String newHeredocIndentation) {
+		try {
+			int heredocEndLine = document.getLineOfOffset(end);
+			int heredocEndLineOffset = document.getLineOffset(heredocEndLine);
+
+			String closingTagContent = document.get(heredocEndLineOffset, end - heredocEndLineOffset);
+			String closingTagIndentation = getTextIndentation(closingTagContent);
+
+			// always update lineWidth
+			lineWidth = closingTagContent.length();
+
+			if (!preferences.indent_heredocs) {
+				return;
+			}
+			if (closingTagIndentation.equals(newHeredocIndentation)) {
+				// the indentation is unchanged, nothing to do
+				return;
+			}
+
+			int heredocStartLine = document.getLineOfOffset(start);
+			assert heredocEndLine > heredocStartLine;
+
+			// apply indentation from second to penultimate heredoc/nowdoc line
+			for (int i = heredocStartLine + 1; i <= heredocEndLine - 1; i++) {
+				int currentLineOffset = document.getLineOffset(i);
+				int currentLineLength = document.getLineLength(i);
+				String currentLineContent = document.get(currentLineOffset, currentLineLength);
+				String currentLineIndentation = getTextIndentation(currentLineContent);
+				if (currentLineIndentation.startsWith(closingTagIndentation)) {
+					insertString(currentLineOffset, currentLineOffset + closingTagIndentation.length(),
+							newHeredocIndentation);
+				}
+			}
+			// now handle last heredoc/nowdoc line
+			insertString(heredocEndLineOffset, heredocEndLineOffset + closingTagIndentation.length(),
+					newHeredocIndentation);
+			// update lineWidth
+			lineWidth = newHeredocIndentation.length() + (closingTagContent.length() - closingTagIndentation.length());
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+	}
+
 	@Override
 	public boolean visit(Quote quote) {
 		updateLinesWidth(quote);
-		if (quote.getQuoteType() == Quote.QT_HEREDOC || quote.getQuoteType() == Quote.QT_NOWDOC) {
-			int i = quote.getEnd();
-			if (isContainChar(i, i + 1, SEMICOLON)) {
-				isHeredocSemicolon = true;
-			} else {
-				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=411322
-				// always insert a new line after the closing HEREDOC tag
-				boolean isPHPEqualTagOld = isPHPEqualTag;
-				isPHPEqualTag = false;
-				insertNewLine();
-				isPHPEqualTag = isPHPEqualTagOld;
+		// phpVersion < 7.3
+		if (PHPVersion.PHP7_3.isGreaterThan(phpVersion)) {
+			if (quote.getQuoteType() == Quote.QT_HEREDOC || quote.getQuoteType() == Quote.QT_NOWDOC) {
+				int i = quote.getEnd();
+				if (isContainChar(i, i + 1, SEMICOLON)) {
+					isHeredocSemicolonPre73 = true;
+				} else {
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=411322
+					// always insert a new line after the closing HEREDOC tag
+					boolean isPHPEqualTagOld = isPHPEqualTag;
+					isPHPEqualTag = false;
+					insertNewLine();
+					isPHPEqualTag = isPHPEqualTagOld;
+				}
 			}
+		} else if (quote.getQuoteType() == Quote.QT_HEREDOC || quote.getQuoteType() == Quote.QT_NOWDOC) {
+			doHeredocIndentation(quote.getStart(), quote.getEnd(), getIndent());
 		}
 		return false;
 	}
@@ -5533,8 +5624,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	/**
 	 * PHP Partitions can contain contiguous &lt;?php ?&gt; regions (see
-	 * {@link PHPStructuredTextPartitioner#computePartitioning(int, int)}), we have
-	 * to split them manually.
+	 * {@link PHPStructuredTextPartitioner#computePartitioning(int, int)}), we
+	 * have to split them manually.
 	 * 
 	 * @param partition
 	 *            PHP Partition

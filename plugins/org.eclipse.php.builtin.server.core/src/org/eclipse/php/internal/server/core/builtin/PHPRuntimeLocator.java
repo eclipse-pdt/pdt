@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 Alex Xu and others.
+ * Copyright (c) 2017, 2018 Alex Xu and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -43,7 +43,7 @@ public class PHPRuntimeLocator extends RuntimeLocatorDelegate {
 	protected static final String[] runtimeTypes = new String[] { "org.eclipse.php.server.runtime.54", //$NON-NLS-1$
 			"org.eclipse.php.server.runtime.55", "org.eclipse.php.server.runtime.56", //$NON-NLS-1$ //$NON-NLS-2$
 			"org.eclipse.php.server.runtime.70", "org.eclipse.php.server.runtime.71", //$NON-NLS-1$ //$NON-NLS-2$
-			"org.eclipse.php.server.runtime.72" }; //$NON-NLS-1$
+			"org.eclipse.php.server.runtime.72", "org.eclipse.php.server.runtime.73" }; //$NON-NLS-1$ //$NON-NLS-2$
 
 	/*
 	 * (non-Javadoc)
