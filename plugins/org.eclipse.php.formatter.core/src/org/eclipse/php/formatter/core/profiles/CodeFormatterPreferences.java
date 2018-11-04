@@ -171,6 +171,7 @@ public class CodeFormatterPreferences {
 	public boolean indent_statements_within_type_declaration;
 	public boolean indent_statements_within_function;
 	public boolean indent_empty_lines;
+	public boolean indent_heredocs;
 
 	public boolean insert_space_before_comma_in_static;
 	public boolean insert_space_after_comma_in_static;
@@ -314,409 +315,558 @@ public class CodeFormatterPreferences {
 			indentationChar = indentChar.charAt(0);
 		}
 
-		indentationSize = getIntValue(preferences, CodeFormatterConstants.FORMATTER_INDENTATION_SIZE);
-		tabSize = getIntValue(preferences, CodeFormatterConstants.FORMATTER_TAB_SIZE);
+		indentationSize = getIntValue(preferences, CodeFormatterConstants.FORMATTER_INDENTATION_SIZE, indentationSize);
+		tabSize = getIntValue(preferences, CodeFormatterConstants.FORMATTER_TAB_SIZE, tabSize);
 
 		insert_space_after_opening_paren_in_while = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_WHILE);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_WHILE,
+				insert_space_after_opening_paren_in_while);
 		insert_space_before_opening_paren_in_while = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_WHILE);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_WHILE,
+				insert_space_before_opening_paren_in_while);
 		insert_space_before_closing_paren_in_while = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_WHILE);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_WHILE,
+				insert_space_before_closing_paren_in_while);
 
 		insert_space_before_opening_paren_in_switch = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_SWITCH);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_SWITCH,
+				insert_space_before_opening_paren_in_switch);
 		insert_space_after_opening_paren_in_switch = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_SWITCH);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_SWITCH,
+				insert_space_after_opening_paren_in_switch);
 		insert_space_before_closing_paren_in_switch = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_SWITCH);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_SWITCH,
+				insert_space_before_closing_paren_in_switch);
 		insert_space_before_opening_brace_in_switch = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_SWITCH);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_SWITCH,
+				insert_space_before_opening_brace_in_switch);
 		brace_position_for_switch = getByteValue(preferences,
-				CodeFormatterConstants.FORMATTER_BRACE_POSITION_FOR_SWITCH);
+				CodeFormatterConstants.FORMATTER_BRACE_POSITION_FOR_SWITCH, brace_position_for_switch);
 		indent_statements_within_switch = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INDENT_SWITCHSTATEMENTS_COMPARE_TO_SWITCH);
+				CodeFormatterConstants.FORMATTER_INDENT_SWITCHSTATEMENTS_COMPARE_TO_SWITCH,
+				indent_statements_within_switch);
 		insert_space_after_switch_default = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_DEFAULT);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_DEFAULT,
+				insert_space_after_switch_default);
 		insert_space_after_switch_case_value = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_CASE);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_CASE,
+				insert_space_after_switch_case_value);
 		indent_statements_within_case = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INDENT_SWITCHSTATEMENTS_COMPARE_TO_CASES);
+				CodeFormatterConstants.FORMATTER_INDENT_SWITCHSTATEMENTS_COMPARE_TO_CASES,
+				indent_statements_within_case);
 		indent_break_statements_within_case = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INDENT_BREAKS_COMPARE_TO_CASES);
+				CodeFormatterConstants.FORMATTER_INDENT_BREAKS_COMPARE_TO_CASES, indent_break_statements_within_case);
 
-		brace_position_for_block = getByteValue(preferences, CodeFormatterConstants.FORMATTER_BRACE_POSITION_FOR_BLOCK);
+		brace_position_for_block = getByteValue(preferences, CodeFormatterConstants.FORMATTER_BRACE_POSITION_FOR_BLOCK,
+				brace_position_for_block);
 		insert_space_before_opening_brace_in_block = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_BLOCK);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_BLOCK,
+				insert_space_before_opening_brace_in_block);
 		insert_space_after_closing_brace_in_block = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_CLOSING_BRACE_IN_BLOCK);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_CLOSING_BRACE_IN_BLOCK,
+				insert_space_after_closing_brace_in_block);
 		indent_statements_within_block = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INDENT_STATEMENTS_COMPARE_TO_BLOCK);
+				CodeFormatterConstants.FORMATTER_INDENT_STATEMENTS_COMPARE_TO_BLOCK, indent_statements_within_block);
 		insert_space_before_semicolon = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_SEMICOLON);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_SEMICOLON, insert_space_before_semicolon);
 
 		insert_space_before_assignment = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ASSIGNMENT_OPERATOR);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ASSIGNMENT_OPERATOR,
+				insert_space_before_assignment);
 		insert_space_after_assignment = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ASSIGNMENT_OPERATOR);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ASSIGNMENT_OPERATOR, insert_space_after_assignment);
 		insert_space_before_binary_operation = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_BINARY_OPERATOR);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_BINARY_OPERATOR,
+				insert_space_before_binary_operation);
 		insert_space_after_binary_operation = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_BINARY_OPERATOR);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_BINARY_OPERATOR,
+				insert_space_after_binary_operation);
 		insert_space_before_postfix_expression = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_POSTFIX_OPERATOR);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_POSTFIX_OPERATOR,
+				insert_space_before_postfix_expression);
 		insert_space_after_postfix_expression = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_POSTFIX_OPERATOR);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_POSTFIX_OPERATOR,
+				insert_space_after_postfix_expression);
 		insert_space_before_prefix_expression = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_PREFIX_OPERATOR);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_PREFIX_OPERATOR,
+				insert_space_before_prefix_expression);
 		insert_space_after_prefix_expression = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_PREFIX_OPERATOR);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_PREFIX_OPERATOR,
+				insert_space_after_prefix_expression);
 		insert_space_before_unary_expression = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_UNARY_OPERATOR);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_UNARY_OPERATOR,
+				insert_space_before_unary_expression);
 		insert_space_after_unary_expression = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_UNARY_OPERATOR);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_UNARY_OPERATOR,
+				insert_space_after_unary_expression);
 
 		insert_space_before_cast_type = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_CAST);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_CAST,
+				insert_space_before_cast_type);
 		insert_space_after_cast_type = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_CAST);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_CAST,
+				insert_space_after_cast_type);
 		insert_space_after_cast_expression = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_CLOSING_PAREN_IN_CAST);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_CLOSING_PAREN_IN_CAST,
+				insert_space_after_cast_expression);
 
 		insert_space_after_conditional_colon = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLON_IN_CONDITIONAL);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLON_IN_CONDITIONAL,
+				insert_space_after_conditional_colon);
 		insert_space_before_conditional_colon = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_CONDITIONAL);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLON_IN_CONDITIONAL,
+				insert_space_before_conditional_colon);
 		insert_space_after_conditional_question_mark = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_QUESTION_IN_CONDITIONAL);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_QUESTION_IN_CONDITIONAL,
+				insert_space_after_conditional_question_mark);
 		insert_space_before_conditional_question_mark = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_QUESTION_IN_CONDITIONAL);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_QUESTION_IN_CONDITIONAL,
+				insert_space_before_conditional_question_mark);
 
 		insert_space_before_opening_paren_in_catch = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_CATCH);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_CATCH,
+				insert_space_before_opening_paren_in_catch);
 		insert_space_after_opening_paren_in_catch = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_CATCH);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_CATCH,
+				insert_space_after_opening_paren_in_catch);
 		insert_space_before_closing_paren_in_catch = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_CATCH);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_CATCH,
+				insert_space_before_closing_paren_in_catch);
 
 		insert_space_before_comma_in_implements = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_SUPERINTERFACES);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_SUPERINTERFACES,
+				insert_space_before_comma_in_implements);
 		insert_space_after_comma_in_implements = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_SUPERINTERFACES);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_SUPERINTERFACES,
+				insert_space_after_comma_in_implements);
 		brace_position_for_class = getByteValue(preferences,
-				CodeFormatterConstants.FORMATTER_BRACE_POSITION_FOR_TYPE_DECLARATION);
+				CodeFormatterConstants.FORMATTER_BRACE_POSITION_FOR_TYPE_DECLARATION, brace_position_for_class);
 		insert_space_before_opening_brace_in_class = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_TYPE_DECLARATION);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_TYPE_DECLARATION,
+				insert_space_before_opening_brace_in_class);
 
 		insert_space_before_opening_paren_in_function = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_METHOD_INVOCATION);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_METHOD_INVOCATION,
+				insert_space_before_opening_paren_in_function);
 		insert_space_after_opening_paren_in_function = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_METHOD_INVOCATION);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_METHOD_INVOCATION,
+				insert_space_after_opening_paren_in_function);
 		insert_space_before_comma_in_function = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_METHOD_INVOCATION_ARGUMENTS);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_METHOD_INVOCATION_ARGUMENTS,
+				insert_space_before_comma_in_function);
 		insert_space_after_comma_in_function = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_METHOD_INVOCATION_ARGUMENTS);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_METHOD_INVOCATION_ARGUMENTS,
+				insert_space_after_comma_in_function);
 		insert_space_before_closing_paren_in_function = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_METHOD_INVOCATION);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_METHOD_INVOCATION,
+				insert_space_before_closing_paren_in_function);
 		insert_space_between_empty_paren_in_function = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BETWEEN_EMPTY_PARENS_IN_METHOD_INVOCATION);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BETWEEN_EMPTY_PARENS_IN_METHOD_INVOCATION,
+				insert_space_between_empty_paren_in_function);
 		insert_space_before_arrow_in_method_invocation = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_METHOD_INVOCATION);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_METHOD_INVOCATION,
+				insert_space_before_arrow_in_method_invocation);
 		insert_space_after_arrow_in_method_invocation = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_METHOD_INVOCATION);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_METHOD_INVOCATION,
+				insert_space_after_arrow_in_method_invocation);
 		insert_space_before_coloncolon_in_method_invocation = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLONCOLON_IN_METHOD_INVOCATION);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLONCOLON_IN_METHOD_INVOCATION,
+				insert_space_before_coloncolon_in_method_invocation);
 		insert_space_after_coloncolon_in_method_invocation = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLONCOLON_IN_METHOD_INVOCATION);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLONCOLON_IN_METHOD_INVOCATION,
+				insert_space_after_coloncolon_in_method_invocation);
 
 		insert_space_before_arrow_in_field_access = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_FIELD_ACCESS);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_FIELD_ACCESS,
+				insert_space_before_arrow_in_field_access);
 		insert_space_after_arrow_in_field_access = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_FIELD_ACCESS);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_FIELD_ACCESS,
+				insert_space_after_arrow_in_field_access);
 		insert_space_before_coloncolon_in_field_access = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLONCOLON_IN_FIELD_ACCESS);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COLONCOLON_IN_FIELD_ACCESS,
+				insert_space_before_coloncolon_in_field_access);
 		insert_space_after_coloncolon_in_field_access = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLONCOLON_IN_FIELD_ACCESS);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLONCOLON_IN_FIELD_ACCESS,
+				insert_space_after_coloncolon_in_field_access);
 
 		insert_space_before_open_paren_in_for = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_FOR);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_FOR,
+				insert_space_before_open_paren_in_for);
 		insert_space_after_open_paren_in_for = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_FOR);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_FOR,
+				insert_space_after_open_paren_in_for);
 		insert_space_before_close_paren_in_for = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_FOR);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_FOR,
+				insert_space_before_close_paren_in_for);
 		insert_space_before_comma_in_for = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_FOR);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_FOR, insert_space_before_comma_in_for);
 		insert_space_after_comma_in_for = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_FOR);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_FOR, insert_space_after_comma_in_for);
 		insert_space_before_semicolon_in_for = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_SEMICOLON_IN_FOR);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_SEMICOLON_IN_FOR,
+				insert_space_before_semicolon_in_for);
 		insert_space_after_semicolon_in_for = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_SEMICOLON_IN_FOR);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_SEMICOLON_IN_FOR,
+				insert_space_after_semicolon_in_for);
 
 		insert_space_before_open_paren_in_foreach = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_FOREACH);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_FOREACH,
+				insert_space_before_open_paren_in_foreach);
 		insert_space_after_open_paren_in_foreach = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_FOREACH);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_FOREACH,
+				insert_space_after_open_paren_in_foreach);
 		insert_space_before_close_paren_in_foreach = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_FOREACH);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_FOREACH,
+				insert_space_before_close_paren_in_foreach);
 		insert_space_before_arrow_in_foreach = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_FOREACH);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_FOREACH,
+				insert_space_before_arrow_in_foreach);
 		insert_space_after_arrow_in_foreach = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_FOREACH);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_FOREACH,
+				insert_space_after_arrow_in_foreach);
 
 		insert_space_before_arrow_in_yield = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_YIELD);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_YIELD,
+				insert_space_before_arrow_in_yield);
 		insert_space_after_arrow_in_yield = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_YIELD);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_YIELD, insert_space_after_arrow_in_yield);
 
 		insert_space_before_comma_in_class_variable = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_MULTIPLE_FIELD_DECLARATIONS);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_MULTIPLE_FIELD_DECLARATIONS,
+				insert_space_before_comma_in_class_variable);
 		insert_space_after_comma_in_class_variable = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_MULTIPLE_FIELD_DECLARATIONS);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_MULTIPLE_FIELD_DECLARATIONS,
+				insert_space_after_comma_in_class_variable);
 		insert_space_before_comma_in_class_constant = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_MULTIPLE_CONSTANT_DECLARATIONS);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_MULTIPLE_CONSTANT_DECLARATIONS,
+				insert_space_before_comma_in_class_constant);
 		insert_space_after_comma_in_class_constant = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_MULTIPLE_CONSTANT_DECLARATIONS);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_MULTIPLE_CONSTANT_DECLARATIONS,
+				insert_space_after_comma_in_class_constant);
 
 		insert_space_before_opening_bracket_in_array = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACKET_IN_ARRAY_REFERENCE);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACKET_IN_ARRAY_REFERENCE,
+				insert_space_before_opening_bracket_in_array);
 		insert_space_after_opening_bracket_in_array = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_BRACKET_IN_ARRAY_REFERENCE);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_BRACKET_IN_ARRAY_REFERENCE,
+				insert_space_after_opening_bracket_in_array);
 		insert_space_before_closing_bracket_in_array = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_BRACKET_IN_ARRAY_REFERENCE);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_BRACKET_IN_ARRAY_REFERENCE,
+				insert_space_before_closing_bracket_in_array);
 		insert_space_between_empty_brackets = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BETWEEN_EMPTY_BRACKETS_IN_ARRAY_TYPE_REFERENCE);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BETWEEN_EMPTY_BRACKETS_IN_ARRAY_TYPE_REFERENCE,
+				insert_space_between_empty_brackets);
 
 		insert_space_before_opening_paren_in_array = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_ARRAY_CREATION);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_ARRAY_CREATION,
+				insert_space_before_opening_paren_in_array);
 		insert_space_after_opening_paren_in_array = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_ARRAY_CREATION);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_ARRAY_CREATION,
+				insert_space_after_opening_paren_in_array);
 		insert_space_before_closing_paren_in_array = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_ARRAY_CREATION);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_ARRAY_CREATION,
+				insert_space_before_closing_paren_in_array);
 		insert_space_before_list_comma_in_array = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_ARRAY_CREATION);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_ARRAY_CREATION,
+				insert_space_before_list_comma_in_array);
 		insert_space_after_list_comma_in_array = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_ARRAY_CREATION);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_ARRAY_CREATION,
+				insert_space_after_list_comma_in_array);
 		insert_space_before_arrow_in_array = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_ARRAY_CREATION);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_ARRAY_CREATION,
+				insert_space_before_arrow_in_array);
 		insert_space_after_arrow_in_array = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_ARRAY_CREATION);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_ARRAY_CREATION,
+				insert_space_after_arrow_in_array);
 
 		insert_space_before_opening_paren_in_list = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_LIST);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_LIST,
+				insert_space_before_opening_paren_in_list);
 		insert_space_after_opening_paren_in_list = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_LIST);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_LIST,
+				insert_space_after_opening_paren_in_list);
 		insert_space_before_closing_paren_in_list = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_LIST);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_LIST,
+				insert_space_before_closing_paren_in_list);
 		insert_space_before_comma_in_list = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_LIST);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_LIST, insert_space_before_comma_in_list);
 		insert_space_after_comma_in_list = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_LIST);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_LIST, insert_space_after_comma_in_list);
 
 		insert_space_before_opening_paren_in_function_declaration = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_METHOD_DECLARATION);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_METHOD_DECLARATION,
+				insert_space_before_opening_paren_in_function_declaration);
 		insert_space_after_opening_paren_in_function_declaration = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_METHOD_DECLARATION);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_METHOD_DECLARATION,
+				insert_space_after_opening_paren_in_function_declaration);
 		insert_space_between_empty_paren_in_function_declaration = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BETWEEN_EMPTY_PARENS_IN_METHOD_DECLARATION);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BETWEEN_EMPTY_PARENS_IN_METHOD_DECLARATION,
+				insert_space_between_empty_paren_in_function_declaration);
 		insert_space_before_closing_paren_in_function_declaration = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_METHOD_DECLARATION);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_METHOD_DECLARATION,
+				insert_space_before_closing_paren_in_function_declaration);
 		insert_space_before_comma_in_function_declaration = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_METHOD_DECLARATION_PARAMETERS);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_METHOD_DECLARATION_PARAMETERS,
+				insert_space_before_comma_in_function_declaration);
 		insert_space_after_comma_in_function_declaration = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_METHOD_DECLARATION_PARAMETERS);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_METHOD_DECLARATION_PARAMETERS,
+				insert_space_after_comma_in_function_declaration);
 		brace_position_for_function = getByteValue(preferences,
-				CodeFormatterConstants.FORMATTER_BRACE_POSITION_FOR_METHOD_DECLARATION);
+				CodeFormatterConstants.FORMATTER_BRACE_POSITION_FOR_METHOD_DECLARATION, brace_position_for_function);
 		brace_position_for_lambda_function = getByteValue(preferences,
 				CodeFormatterConstants.FORMATTER_BRACE_POSITION_FOR_LAMBDA_FUNCTION_DECLARATION,
-				brace_position_for_function);
+				brace_position_for_lambda_function); // XXX: previously we used
+														// brace_position_for_function
+														// as default value
 		insert_space_before_opening_brace_in_function = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_METHOD_DECLARATION);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_BRACE_IN_METHOD_DECLARATION,
+				insert_space_before_opening_brace_in_function);
 
 		insert_space_before_opening_paren_in_if = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_IF);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_IF,
+				insert_space_before_opening_paren_in_if);
 		insert_space_after_opening_paren_in_if = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_IF);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_IF,
+				insert_space_after_opening_paren_in_if);
 		insert_space_before_closing_paren_in_if = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_IF);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_IF,
+				insert_space_before_closing_paren_in_if);
 
 		insert_space_before_opening_paren_in_declare = getBooleanValue(preferences,
-				"insert_space_before_opening_paren_in_declare"); //$NON-NLS-1$
+				"insert_space_before_opening_paren_in_declare", insert_space_before_opening_paren_in_declare); //$NON-NLS-1$
 		insert_space_after_opening_paren_in_declare = getBooleanValue(preferences,
-				"insert_space_after_opening_paren_in_declare"); //$NON-NLS-1$
+				"insert_space_after_opening_paren_in_declare", insert_space_after_opening_paren_in_declare); //$NON-NLS-1$
 		insert_space_before_closing_paren_in_declare = getBooleanValue(preferences,
-				"insert_space_before_closing_paren_in_declare"); //$NON-NLS-1$
+				"insert_space_before_closing_paren_in_declare", insert_space_before_closing_paren_in_declare); //$NON-NLS-1$
 
 		indent_statements_within_type_declaration = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INDENT_BODY_DECLARATIONS_COMPARE_TO_TYPE_HEADER);
+				CodeFormatterConstants.FORMATTER_INDENT_BODY_DECLARATIONS_COMPARE_TO_TYPE_HEADER,
+				indent_statements_within_type_declaration);
 		indent_statements_within_function = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INDENT_STATEMENTS_COMPARE_TO_BODY);
-		indent_empty_lines = getBooleanValue(preferences, CodeFormatterConstants.FORMATTER_INDENT_EMPTY_LINES);
+				CodeFormatterConstants.FORMATTER_INDENT_STATEMENTS_COMPARE_TO_BODY, indent_statements_within_function);
+		indent_empty_lines = getBooleanValue(preferences, CodeFormatterConstants.FORMATTER_INDENT_EMPTY_LINES,
+				indent_empty_lines);
+		indent_heredocs = getBooleanValue(preferences, CodeFormatterConstants.FORMATTER_INDENT_HEREDOCS,
+				indent_heredocs);
 
 		insert_space_before_comma_in_static = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_STATIC);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_STATIC,
+				insert_space_before_comma_in_static);
 		insert_space_after_comma_in_static = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_STATIC);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_STATIC,
+				insert_space_after_comma_in_static);
 		insert_space_before_comma_in_global = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_GLOBAL);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_GLOBAL,
+				insert_space_before_comma_in_global);
 		insert_space_after_comma_in_global = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_GLOBAL);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_GLOBAL,
+				insert_space_after_comma_in_global);
 		insert_space_before_comma_in_echo = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_ECHO);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_ECHO, insert_space_before_comma_in_echo);
 		insert_space_after_comma_in_echo = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_ECHO);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COMMA_IN_ECHO, insert_space_after_comma_in_echo);
 
 		insert_space_after_open_paren_in_parenthesis_expression = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_PARENTHESIZED_EXPRESSION);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_PARENTHESIZED_EXPRESSION,
+				insert_space_after_open_paren_in_parenthesis_expression);
 		insert_space_before_close_paren_in_parenthesis_expression = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_PARENTHESIZED_EXPRESSION);
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_PARENTHESIZED_EXPRESSION,
+				insert_space_before_close_paren_in_parenthesis_expression);
 
 		blank_line_preserve_empty_lines = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_NUMBER_OF_EMPTY_LINES_TO_PRESERVE);
+				CodeFormatterConstants.FORMATTER_NUMBER_OF_EMPTY_LINES_TO_PRESERVE, blank_line_preserve_empty_lines);
 		blank_line_before_class_declaration = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_BLANK_LINES_BETWEEN_TYPE_DECLARATIONS);
+				CodeFormatterConstants.FORMATTER_BLANK_LINES_BETWEEN_TYPE_DECLARATIONS,
+				blank_line_before_class_declaration);
 		blank_line_before_constant_declaration = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_BLANK_LINES_BEFORE_MEMBER_TYPE);
+				CodeFormatterConstants.FORMATTER_BLANK_LINES_BEFORE_MEMBER_TYPE,
+				blank_line_before_constant_declaration);
 		blank_line_before_field_declaration = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_BLANK_LINES_BEFORE_FIELD);
+				CodeFormatterConstants.FORMATTER_BLANK_LINES_BEFORE_FIELD, blank_line_before_field_declaration);
 		blank_line_before_method_declaration = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_BLANK_LINES_BEFORE_METHOD);
+				CodeFormatterConstants.FORMATTER_BLANK_LINES_BEFORE_METHOD, blank_line_before_method_declaration);
 		blank_line_at_begin_of_method = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_BLANK_LINES_AT_BEGINNING_OF_METHOD_BODY);
+				CodeFormatterConstants.FORMATTER_BLANK_LINES_AT_BEGINNING_OF_METHOD_BODY,
+				blank_line_at_begin_of_method);
 		blank_line_at_end_of_class = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_BLANK_LINES_AT_END_OF_CLASS_BODY);
+				CodeFormatterConstants.FORMATTER_BLANK_LINES_AT_END_OF_CLASS_BODY, blank_line_at_end_of_class);
 		blank_line_at_end_of_method = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_BLANK_LINES_AT_END_OF_METHOD_BODY);
+				CodeFormatterConstants.FORMATTER_BLANK_LINES_AT_END_OF_METHOD_BODY, blank_line_at_end_of_method);
 
 		// namespace
 		blank_lines_before_namespace = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_BLANK_LINES_BEFORE_NAMESPACE);
+				CodeFormatterConstants.FORMATTER_BLANK_LINES_BEFORE_NAMESPACE, blank_lines_before_namespace);
 		blank_lines_after_namespace = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_BLANK_LINES_AFTER_NAMESPACE);
+				CodeFormatterConstants.FORMATTER_BLANK_LINES_AFTER_NAMESPACE, blank_lines_after_namespace);
 		blank_lines_before_use_statements = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_BLANK_LINES_BEFORE_USE_STATEMENTS);
+				CodeFormatterConstants.FORMATTER_BLANK_LINES_BEFORE_USE_STATEMENTS, blank_lines_before_use_statements);
 		blank_lines_after_use_statements = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_BLANK_LINES_AFTER_USE_STATEMENTS);
+				CodeFormatterConstants.FORMATTER_BLANK_LINES_AFTER_USE_STATEMENTS, blank_lines_after_use_statements);
 		blank_lines_between_use_statements = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_BLANK_LINES_BETWEEN_USE_STATEMENTS);
+				CodeFormatterConstants.FORMATTER_BLANK_LINES_BETWEEN_USE_STATEMENTS,
+				blank_lines_between_use_statements);
 		blank_lines_between_namespaces = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_BLANK_LINES_BETWEEN_NAMESPACES);
+				CodeFormatterConstants.FORMATTER_BLANK_LINES_BETWEEN_NAMESPACES, blank_lines_between_namespaces);
 
 		// new line
 		new_line_in_empty_class_body = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_IN_EMPTY_TYPE_DECLARATION);
+				CodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_IN_EMPTY_TYPE_DECLARATION,
+				new_line_in_empty_class_body);
 		new_line_in_empty_method_body = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_IN_EMPTY_METHOD_BODY);
+				CodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_IN_EMPTY_METHOD_BODY, new_line_in_empty_method_body);
 		new_line_in_empty_block = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_IN_EMPTY_BLOCK);
+				CodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_IN_EMPTY_BLOCK, new_line_in_empty_block);
 		new_line_for_empty_statement = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_PUT_EMPTY_STATEMENT_ON_NEW_LINE);
+				CodeFormatterConstants.FORMATTER_PUT_EMPTY_STATEMENT_ON_NEW_LINE, new_line_for_empty_statement);
 		new_line_after_open_array_parenthesis = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_AFTER_OPENING_BRACE_IN_ARRAY_INITIALIZER);
+				CodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_AFTER_OPENING_BRACE_IN_ARRAY_INITIALIZER,
+				new_line_after_open_array_parenthesis);
 		new_line_before_close_array_parenthesis_array = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_BEFORE_CLOSING_BRACE_IN_ARRAY_INITIALIZER);
+				CodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_BEFORE_CLOSING_BRACE_IN_ARRAY_INITIALIZER,
+				new_line_before_close_array_parenthesis_array);
 
 		new_line_in_second_invoke = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_IN_SECOND_METHOD_INVOKE);
+				CodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_IN_SECOND_METHOD_INVOKE, new_line_in_second_invoke);
 
 		line_keep_trailing_comma_in_list = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_KEEP_TRAILING_COMMA_IN_LIST);
+				CodeFormatterConstants.FORMATTER_KEEP_TRAILING_COMMA_IN_LIST, line_keep_trailing_comma_in_list);
 		// line wrapping
-		line_wrap_line_split = getIntValue(preferences, CodeFormatterConstants.FORMATTER_LINE_SPLIT);
+		line_wrap_line_split = getIntValue(preferences, CodeFormatterConstants.FORMATTER_LINE_SPLIT,
+				line_wrap_line_split);
 		line_wrap_wrapped_lines_indentation = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_CONTINUATION_INDENTATION);
+				CodeFormatterConstants.FORMATTER_CONTINUATION_INDENTATION, line_wrap_wrapped_lines_indentation);
 		line_wrap_array_init_indentation = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_CONTINUATION_INDENTATION_FOR_ARRAY_INITIALIZER);
+				CodeFormatterConstants.FORMATTER_CONTINUATION_INDENTATION_FOR_ARRAY_INITIALIZER,
+				line_wrap_array_init_indentation);
 
 		line_wrap_superclass_in_type_declaration_line_wrap_policy = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_SUPERCLASS_IN_TYPE_DECLARATION_LINE_WRAP_POLICY);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_SUPERCLASS_IN_TYPE_DECLARATION_LINE_WRAP_POLICY,
+				line_wrap_superclass_in_type_declaration_line_wrap_policy);
 		line_wrap_superclass_in_type_declaration_indent_policy = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_SUPERCLASS_IN_TYPE_DECLARATION_INDENT_POLICY);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_SUPERCLASS_IN_TYPE_DECLARATION_INDENT_POLICY,
+				line_wrap_superclass_in_type_declaration_indent_policy);
 		line_wrap_superclass_in_type_declaration_force_split = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_SUPERCLASS_IN_TYPE_DECLARATION_FORCE_SPLIT);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_SUPERCLASS_IN_TYPE_DECLARATION_FORCE_SPLIT,
+				line_wrap_superclass_in_type_declaration_force_split);
 
 		line_wrap_superinterfaces_in_type_declaration_line_wrap_policy = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_SUPERINTERFACES_IN_TYPE_DECLARATION_LINE_WRAP_POLICY);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_SUPERINTERFACES_IN_TYPE_DECLARATION_LINE_WRAP_POLICY,
+				line_wrap_superinterfaces_in_type_declaration_line_wrap_policy);
 		line_wrap_superinterfaces_in_type_declaration_indent_policy = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_SUPERINTERFACES_IN_TYPE_DECLARATION_INDENT_POLICY);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_SUPERINTERFACES_IN_TYPE_DECLARATION_INDENT_POLICY,
+				line_wrap_superinterfaces_in_type_declaration_indent_policy);
 		line_wrap_superinterfaces_in_type_declaration_force_split = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_SUPERINTERFACES_IN_TYPE_DECLARATION_FORCE_SPLIT);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_SUPERINTERFACES_IN_TYPE_DECLARATION_FORCE_SPLIT,
+				line_wrap_superinterfaces_in_type_declaration_force_split);
 
 		line_wrap_parameters_in_method_declaration_line_wrap_policy = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_PARAMETERS_IN_METHOD_DECLARATION_LINE_WRAP_POLICY);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_PARAMETERS_IN_METHOD_DECLARATION_LINE_WRAP_POLICY,
+				line_wrap_parameters_in_method_declaration_line_wrap_policy);
 		line_wrap_parameters_in_method_declaration_indent_policy = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_PARAMETERS_IN_METHOD_DECLARATION_INDENT_POLICY);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_PARAMETERS_IN_METHOD_DECLARATION_INDENT_POLICY,
+				line_wrap_parameters_in_method_declaration_indent_policy);
 		line_wrap_parameters_in_method_declaration_force_split = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_PARAMETERS_IN_METHOD_DECLARATION_FORCE_SPLIT);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_PARAMETERS_IN_METHOD_DECLARATION_FORCE_SPLIT,
+				line_wrap_parameters_in_method_declaration_force_split);
 
 		line_wrap_arguments_in_method_invocation_line_wrap_policy = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_METHOD_INVOCATION_LINE_WRAP_POLICY);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_METHOD_INVOCATION_LINE_WRAP_POLICY,
+				line_wrap_arguments_in_method_invocation_line_wrap_policy);
 		line_wrap_arguments_in_method_invocation_indent_policy = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_METHOD_INVOCATION_INDENT_POLICY);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_METHOD_INVOCATION_INDENT_POLICY,
+				line_wrap_arguments_in_method_invocation_indent_policy);
 		line_wrap_arguments_in_method_invocation_force_split = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_METHOD_INVOCATION_FORCE_SPLIT);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_METHOD_INVOCATION_FORCE_SPLIT,
+				line_wrap_arguments_in_method_invocation_force_split);
 
 		line_wrap_arguments_in_allocation_expression_line_wrap_policy = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_ALLOCATION_EXPRESSION_LINE_WRAP_POLICY);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_ALLOCATION_EXPRESSION_LINE_WRAP_POLICY,
+				line_wrap_arguments_in_allocation_expression_line_wrap_policy);
 		line_wrap_arguments_in_allocation_expression_indent_policy = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_ALLOCATION_EXPRESSION_INDENT_POLICY);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_ALLOCATION_EXPRESSION_INDENT_POLICY,
+				line_wrap_arguments_in_allocation_expression_indent_policy);
 		line_wrap_arguments_in_allocation_expression_force_split = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_ALLOCATION_EXPRESSION_FORCE_SPLIT);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ARGUMENTS_IN_ALLOCATION_EXPRESSION_FORCE_SPLIT,
+				line_wrap_arguments_in_allocation_expression_force_split);
 
 		line_wrap_binary_expression_line_wrap_policy = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_BINARY_EXPRESSION_LINE_WRAP_POLICY);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_BINARY_EXPRESSION_LINE_WRAP_POLICY,
+				line_wrap_binary_expression_line_wrap_policy);
 		line_wrap_binary_expression_indent_policy = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_BINARY_EXPRESSION_INDENT_POLICY);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_BINARY_EXPRESSION_INDENT_POLICY,
+				line_wrap_binary_expression_indent_policy);
 		line_wrap_binary_expression_force_split = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_BINARY_EXPRESSION_FORCE_SPLIT);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_BINARY_EXPRESSION_FORCE_SPLIT,
+				line_wrap_binary_expression_force_split);
 
 		line_wrap_conditional_expression_line_wrap_policy = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_CONDITIONAL_EXPRESSION_LINE_WRAP_POLICY);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_CONDITIONAL_EXPRESSION_LINE_WRAP_POLICY,
+				line_wrap_conditional_expression_line_wrap_policy);
 		line_wrap_conditional_expression_indent_policy = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_CONDITIONAL_EXPRESSION_INDENT_POLICY);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_CONDITIONAL_EXPRESSION_INDENT_POLICY,
+				line_wrap_conditional_expression_indent_policy);
 		line_wrap_conditional_expression_force_split = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_CONDITIONAL_EXPRESSION_FORCE_SPLIT);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_CONDITIONAL_EXPRESSION_FORCE_SPLIT,
+				line_wrap_conditional_expression_force_split);
 
 		line_wrap_expressions_in_array_init_line_wrap_policy = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_EXPRESSIONS_IN_ARRAY_INITIALIZER_LINE_WRAP_POLICY);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_EXPRESSIONS_IN_ARRAY_INITIALIZER_LINE_WRAP_POLICY,
+				line_wrap_expressions_in_array_init_line_wrap_policy);
 		line_wrap_expressions_in_array_init_indent_policy = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_EXPRESSIONS_IN_ARRAY_INITIALIZER_INDENT_POLICY);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_EXPRESSIONS_IN_ARRAY_INITIALIZER_INDENT_POLICY,
+				line_wrap_expressions_in_array_init_indent_policy);
 		line_wrap_expressions_in_array_init_force_split = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_EXPRESSIONS_IN_ARRAY_INITIALIZER_FORCE_SPLIT);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_EXPRESSIONS_IN_ARRAY_INITIALIZER_FORCE_SPLIT,
+				line_wrap_expressions_in_array_init_force_split);
 
 		line_wrap_assignments_expression_line_wrap_policy = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ASSIGNMENT_LINE_WRAP_POLICY);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ASSIGNMENT_LINE_WRAP_POLICY,
+				line_wrap_assignments_expression_line_wrap_policy);
 		line_wrap_assignments_expression_indent_policy = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ASSIGNMENT_INDENT_POLICY);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ASSIGNMENT_INDENT_POLICY,
+				line_wrap_assignments_expression_indent_policy);
 		line_wrap_assignments_expression_force_split = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ASSIGNMENT_FORCE_SPLIT);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_ASSIGNMENT_FORCE_SPLIT,
+				line_wrap_assignments_expression_force_split);
 
 		line_wrap_compact_if_line_wrap_policy = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_COMPACT_IF_LINE_WRAP_POLICY);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_COMPACT_IF_LINE_WRAP_POLICY,
+				line_wrap_compact_if_line_wrap_policy);
 		line_wrap_compact_if_indent_policy = getIntValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_COMPACT_IF_INDENT_POLICY);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_COMPACT_IF_INDENT_POLICY,
+				line_wrap_compact_if_indent_policy);
 		line_wrap_compact_if_force_split = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_COMPACT_IF_FORCE_SPLIT);
+				CodeFormatterConstants.FORMATTER_ALIGNMENT_FOR_COMPACT_IF_FORCE_SPLIT,
+				line_wrap_compact_if_force_split);
 
 		// control statements
 		control_statement_insert_newline_before_else_and_elseif_in_if = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_BEFORE_ELSE_AND_ELSEIF_IN_IF_STATEMENT);
+				CodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_BEFORE_ELSE_AND_ELSEIF_IN_IF_STATEMENT,
+				control_statement_insert_newline_before_else_and_elseif_in_if);
 		control_statement_insert_newline_before_catch_in_try = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_BEFORE_CATCH_IN_TRY_STATEMENT);
+				CodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_BEFORE_CATCH_IN_TRY_STATEMENT,
+				control_statement_insert_newline_before_catch_in_try);
 		control_statement_insert_newline_before_finally_in_try = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_BEFORE_FINALLY_IN_TRY_STATEMENT);
+				CodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_BEFORE_FINALLY_IN_TRY_STATEMENT,
+				control_statement_insert_newline_before_finally_in_try);
 		control_statement_insert_newline_before_while_in_do = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_BEFORE_WHILE_IN_DO_STATEMENT);
+				CodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_BEFORE_WHILE_IN_DO_STATEMENT,
+				control_statement_insert_newline_before_while_in_do);
 		control_statement_keep_then_on_same_line = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_KEEP_THEN_STATEMENT_ON_SAME_LINE);
+				CodeFormatterConstants.FORMATTER_KEEP_THEN_STATEMENT_ON_SAME_LINE,
+				control_statement_keep_then_on_same_line);
 		control_statement_keep_simple_if_on_one_line = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_KEEP_SIMPLE_IF_ON_ONE_LINE);
+				CodeFormatterConstants.FORMATTER_KEEP_SIMPLE_IF_ON_ONE_LINE,
+				control_statement_keep_simple_if_on_one_line);
 		control_statement_keep_else_on_same_line = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_KEEP_ELSE_STATEMENT_ON_SAME_LINE);
+				CodeFormatterConstants.FORMATTER_KEEP_ELSE_STATEMENT_ON_SAME_LINE,
+				control_statement_keep_else_on_same_line);
 		control_statement_keep_else_if_on_same_line = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_KEEP_ELSEIF_STATEMENT_ON_SAME_LINE);
+				CodeFormatterConstants.FORMATTER_KEEP_ELSEIF_STATEMENT_ON_SAME_LINE,
+				control_statement_keep_else_if_on_same_line);
 		control_statement_keep_guardian_on_one_line = getBooleanValue(preferences,
-				CodeFormatterConstants.FORMATTER_KEEP_GUARDIAN_CLAUSE_ON_ONE_LINE);
+				CodeFormatterConstants.FORMATTER_KEEP_GUARDIAN_CLAUSE_ON_ONE_LINE,
+				control_statement_keep_guardian_on_one_line);
 
 		// comments
 
@@ -886,17 +1036,12 @@ public class CodeFormatterPreferences {
 		}
 	}
 
-	private int getIntValue(Map<String, Object> preferences, String prefName) {
+	private int getIntValue(Map<String, Object> preferences, String prefName, int defaultValue) {
 		String value = (String) preferences.get(prefName);
 		if (value != null) {
 			return Integer.parseInt(value);
 		}
-		return 0;
-	}
-
-	private byte getByteValue(Map<String, Object> preferences, String key) {
-		String value = (String) preferences.get(key);
-		return Byte.parseByte(value);
+		return defaultValue;
 	}
 
 	private byte getByteValue(Map<String, Object> preferences, String key, byte defaultValue) {
@@ -907,8 +1052,12 @@ public class CodeFormatterPreferences {
 		return Byte.parseByte(value);
 	}
 
-	private boolean getBooleanValue(Map<String, Object> preferences, String key) {
-		return TRUE.equals(preferences.get(key));
+	private boolean getBooleanValue(Map<String, Object> preferences, String key, boolean defaultValue) {
+		Object value = preferences.get(key);
+		if (value == null) {
+			return defaultValue;
+		}
+		return TRUE.equals(value);
 	}
 	//
 	// public static CodeFormatterPreferences getDefaultPreferences() {
@@ -1172,6 +1321,7 @@ public class CodeFormatterPreferences {
 		options.put(CodeFormatterConstants.FORMATTER_INDENT_STATEMENTS_COMPARE_TO_BODY,
 				indent_statements_within_function ? TRUE : FALSE);
 		options.put(CodeFormatterConstants.FORMATTER_INDENT_EMPTY_LINES, indent_empty_lines ? TRUE : FALSE);
+		options.put(CodeFormatterConstants.FORMATTER_INDENT_HEREDOCS, indent_heredocs ? TRUE : FALSE);
 
 		options.put(CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_COMMA_IN_STATIC,
 				insert_space_before_comma_in_static ? TRUE : FALSE);

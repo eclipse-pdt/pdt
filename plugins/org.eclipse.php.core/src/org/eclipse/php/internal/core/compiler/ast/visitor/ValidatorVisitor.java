@@ -974,6 +974,26 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		}
 	}
 
+	private boolean isMixedIndentation(String indentation) {
+		return indentation.indexOf(' ') != -1 && indentation.indexOf('\t') != -1;
+	}
+
+	@Override
+	public boolean endvisit(Quote quote) throws Exception {
+		// phpVersion >= 7.3
+		if (version.isGreaterThan(PHPVersion.PHP7_2)) {
+			if (quote.getQuoteType() == Quote.QT_HEREDOC || quote.getQuoteType() == Quote.QT_NOWDOC) {
+				if (isMixedIndentation(quote.getInnerIndentation())) {
+					int lastLineOffset = context.getLineTracker().getLineInformationOfOffset(quote.end()).getOffset();
+					reportProblem(lastLineOffset, lastLineOffset + quote.getInnerIndentation().length(),
+							Messages.InvalidHeredocMarkerIndentation, PHPProblemIdentifier.SYNTAX,
+							ProblemSeverities.Error);
+				}
+			}
+		}
+		return super.endvisit(quote);
+	}
+
 	@Override
 	public boolean visitGeneral(ASTNode node) throws Exception {
 		for (IValidatorExtension extension : extensions) {
