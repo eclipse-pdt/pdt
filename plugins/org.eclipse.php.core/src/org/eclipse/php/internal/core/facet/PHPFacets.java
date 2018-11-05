@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 IBM Corporation and others.
+ * Copyright (c) 2012-2018 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -117,6 +117,9 @@ public class PHPFacets {
 				if (PHPFacetsConstants.PHP_COMPONENT_VERSION_7_2.equals(version.getVersionString())) {
 					return PHPVersion.PHP7_2;
 				}
+				if (PHPFacetsConstants.PHP_COMPONENT_VERSION_7_3.equals(version.getVersionString())) {
+					return PHPVersion.PHP7_3;
+				}
 			}
 		} catch (CoreException ex) {
 			// silently ignore
@@ -150,8 +153,10 @@ public class PHPFacets {
 		case PHP7_1:
 			return phpFacet.getVersion(PHPFacetsConstants.PHP_COMPONENT_VERSION_7_1);
 		case PHP7_2:
-		default:
 			return phpFacet.getVersion(PHPFacetsConstants.PHP_COMPONENT_VERSION_7_2);
+		case PHP7_3:
+		default:
+			return phpFacet.getVersion(PHPFacetsConstants.PHP_COMPONENT_VERSION_7_3);
 		}
 	}
 

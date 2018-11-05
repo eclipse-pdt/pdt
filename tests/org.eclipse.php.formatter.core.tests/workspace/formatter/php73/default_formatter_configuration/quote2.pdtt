@@ -1,0 +1,77 @@
+--TEST--
+Test formatting for heredoc, bug 411322
+--FILE--
+<?php
+    foo(<<< HEREDOC
+blah blah
+    blah
+blah blah
+HEREDOC
+    );
+$var1 = <<< HEREDOC
+blah blah
+    blah
+blah blah
+HEREDOC;
+$var2 = <<< HEREDOC
+blah blah
+    blah
+blah blah
+HEREDOC
+?>
+<?=<<< HEREDOC
+blah blah
+    barbaz
+    blah
+blah blah
+HEREDOC;
+?>
+<?=<<< HEREDOC
+blah blah
+    barbaz
+    blah
+blah blah
+HEREDOC
+?>
+<?=foo(<<< HEREDOC
+blah blah
+    barbaz
+    blah
+blah blah
+HEREDOC
+)?>
+--EXPECT--
+<?php
+foo ( <<< HEREDOC
+blah blah
+    blah
+blah blah
+HEREDOC );
+$var1 = <<< HEREDOC
+blah blah
+    blah
+blah blah
+HEREDOC;
+$var2 = <<< HEREDOC
+blah blah
+    blah
+blah blah
+HEREDOC?>
+<?=<<< HEREDOC
+blah blah
+    barbaz
+    blah
+blah blah
+HEREDOC;?>
+<?=<<< HEREDOC
+blah blah
+    barbaz
+    blah
+blah blah
+HEREDOC?>
+<?=foo ( <<< HEREDOC
+blah blah
+    barbaz
+    blah
+blah blah
+HEREDOC )?>
