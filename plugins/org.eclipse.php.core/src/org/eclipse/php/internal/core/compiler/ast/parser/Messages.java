@@ -58,6 +58,7 @@ public class Messages extends NLS {
 	public static String UsupportedNonConstantOperand;
 	public static String OperatorAcceptOnlyPositiveNumbers;
 	public static String ReassignAutoGlobalVariable;
+	public static String InvalidHeredocMarkerIndentation;
 
 	static {
 		// initialize resource bundle
