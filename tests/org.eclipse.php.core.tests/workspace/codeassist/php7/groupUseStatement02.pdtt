@@ -13,7 +13,7 @@ namespace Foo {
 		test
 	};
 
-	test()->createF|
+	test()->createFromF|
 }
 --EXPECT--
 method(createFromFormat)

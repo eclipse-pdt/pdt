@@ -1,0 +1,32 @@
+--TEST--
+Bug 537608 - PHP 7.3 Support
+--FILE--
+<?php
+echo <<<EOF
+Comment1
+ Comment2
+  Comment2
+   Comment2
+    Comment2
+    	Comment2
+	Comment2
+		Comment2
+			Comment2
+				Comment2
+ 	 Comment2
+  	 Comment2
+   	 Comment2
+    EOF;
+?>
+--EXPECT--
+[line=3, start=18, end=18] Invalid body indentation level (expecting an indentation level of at least 4)
+[line=4, start=27, end=28] Invalid body indentation level (expecting an indentation level of at least 4)
+[line=5, start=37, end=39] Invalid body indentation level (expecting an indentation level of at least 4)
+[line=6, start=48, end=51] Invalid body indentation level (expecting an indentation level of at least 4)
+[line=9, start=87, end=88] Invalid indentation - tabs and spaces cannot be mixed
+[line=10, start=97, end=99] Invalid indentation - tabs and spaces cannot be mixed
+[line=11, start=108, end=111] Invalid indentation - tabs and spaces cannot be mixed
+[line=12, start=120, end=124] Invalid indentation - tabs and spaces cannot be mixed
+[line=13, start=133, end=136] Invalid indentation - tabs and spaces cannot be mixed
+[line=14, start=145, end=149] Invalid indentation - tabs and spaces cannot be mixed
+[line=15, start=158, end=162] Invalid indentation - tabs and spaces cannot be mixed

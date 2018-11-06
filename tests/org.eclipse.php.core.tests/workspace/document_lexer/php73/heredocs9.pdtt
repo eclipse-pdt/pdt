@@ -1,0 +1,104 @@
+--TEST--
+Bug 516306 - Syntax error in Heredoc
+Bug 537608 - PHP 7.3 Support
+--FILE--
+<?php
+<<<'EOF'
+    namespace Namespaced
+    {
+    class WithComments
+    {
+    public static $loaded = true;
+    }
+    $string ='string should not be   modified {$string}';
+    $heredoc = (<<<HD
+        
+        
+        Heredoc should not be   modified {$string}
+        
+        
+        HD
+    );
+    $nowdoc =<<<'ND'
+        
+        
+        Nowdoc should not be   modified {$string}
+        
+        
+        ND
+    ;
+    }
+    namespace
+    {
+    class Pearlike_WithComments
+    {
+    public static $loaded = true;
+    }
+    }
+    namespace {require __DIR__.'/Fixtures/Namespaced/WithDirMagic.php';}
+    namespace {require __DIR__.'/Fixtures/Namespaced/WithFileMagic.php';}
+    namespace {require __DIR__.'/Fixtures/Namespaced/WithHaltCompiler.php';}
+    EOF;
+?>
+--EXPECT--
+PHP_TOKEN|<|2
+PHP_TOKEN|?|2
+PHP_LABEL|php|2
+WHITESPACE|
+|2
+PHP_NOWDOC_START_TAG|<<<'EOF'
+|18
+PHP_CONSTANT_ENCAPSED_STRING|    namespace|18
+PHP_CONSTANT_ENCAPSED_STRING| Namespaced|18
+PHP_CONSTANT_ENCAPSED_STRING|
+    {
+    class|14
+PHP_CONSTANT_ENCAPSED_STRING| WithComments
+    {
+    public|14
+PHP_CONSTANT_ENCAPSED_STRING| static $loaded = true;
+    }
+    $string ='string should not be   modified {$string}';
+    $heredoc = (<<<HD
+        
+        
+        Heredoc|14
+PHP_CONSTANT_ENCAPSED_STRING| should not be   modified {$string}
+        
+        
+        HD|14
+PHP_CONSTANT_ENCAPSED_STRING|
+    );
+    $nowdoc =<<<'ND'
+        
+        
+        Nowdoc|14
+PHP_CONSTANT_ENCAPSED_STRING| should not be   modified {$string}
+        
+        
+        ND|14
+PHP_CONSTANT_ENCAPSED_STRING|
+    ;
+    }
+    namespace|14
+PHP_CONSTANT_ENCAPSED_STRING|
+    {
+    class|14
+PHP_CONSTANT_ENCAPSED_STRING| Pearlike_WithComments
+    {
+    public|14
+PHP_CONSTANT_ENCAPSED_STRING| static $loaded = true;
+    }
+    }
+    namespace|14
+PHP_CONSTANT_ENCAPSED_STRING| {require __DIR__.'/Fixtures/Namespaced/WithDirMagic.php';}
+    namespace|14
+PHP_CONSTANT_ENCAPSED_STRING| {require __DIR__.'/Fixtures/Namespaced/WithFileMagic.php';}
+    namespace|14
+PHP_CONSTANT_ENCAPSED_STRING| {require __DIR__.'/Fixtures/Namespaced/WithHaltCompiler.php';}|34
+PHP_NOWDOC_CLOSE_TAG|
+    EOF|2
+PHP_SEMICOLON|;|2
+WHITESPACE|
+|2
+PHP_CLOSETAG|?>|2
