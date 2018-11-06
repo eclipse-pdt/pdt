@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Zend Techologies Ltd.
+ * Copyright (c) 2013-2018 Zend Techologies Ltd.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -385,6 +385,7 @@ final public class FormatterMessages extends NLS {
 	public static String IndentationTabPage_switch_group_option_indent_statements_within_case_body;
 	public static String IndentationTabPage_switch_group_option_indent_break_statements;
 	public static String IndentationTabPage_indent_empty_lines;
+	public static String IndentationTabPage_indent_heredocs;
 	public static String IndentationTabPage_use_tabs_only_for_leading_indentations;
 	public static String ModifyDialog_dialog_title;
 	public static String ModifyDialog_apply_button;

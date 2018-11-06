@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 Alex Xu and others.
+ * Copyright (c) 2017, 2018 Alex Xu and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -71,6 +71,8 @@ public class PHPProjectModuleFactory extends ProjectModuleFactoryDelegate {
 			return "7.1"; //$NON-NLS-1$
 		case PHP7_2:
 			return "7.2"; //$NON-NLS-1$
+		case PHP7_3:
+			return "7.3"; //$NON-NLS-1$
 		default:
 			return null;
 		}
