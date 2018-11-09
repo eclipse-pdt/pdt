@@ -241,7 +241,7 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 		label = PHPUIMessages.typingPage_autoClose_braces;
 		addCheckBox(composite, label, PreferenceConstants.EDITOR_CLOSE_BRACES, 0);
 
-		label = PHPUIMessages.typingPage_autoClose_phpDoc_and_commens;
+		label = PHPUIMessages.typingPage_autoClose_phpDoc_and_comments;
 		master = addCheckBox(composite, label, PreferenceConstants.EDITOR_CLOSE_PHPDOCS_AND_COMMENTS, 0);
 
 		label = PHPUIMessages.typingPage_autoAdd_phpDoc_tags;
