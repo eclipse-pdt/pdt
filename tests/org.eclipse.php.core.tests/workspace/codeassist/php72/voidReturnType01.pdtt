@@ -1,0 +1,10 @@
+--TEST--
+Test anonymous class
+--FILE--
+<?php
+class FooBar {
+function test() : voi|{
+}
+}
+--EXPECT--
+keyword(void)
