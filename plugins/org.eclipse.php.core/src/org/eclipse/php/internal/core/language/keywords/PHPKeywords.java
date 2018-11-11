@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 IBM Corporation and others.
+ * Copyright (c) 2009, 2017, 2018 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -151,6 +151,8 @@ public class PHPKeywords {
 					instance = new PHPKeywords(new KeywordInitializerPHP_7_1());
 				} else if (PHPVersion.PHP7_2 == version) {
 					instance = new PHPKeywords(new KeywordInitializerPHP_7_2());
+				} else if (PHPVersion.PHP7_3 == version) {
+					instance = new PHPKeywords(new KeywordInitializerPHP_7_3());
 				} else {
 					if (version == null) {
 						throw new IllegalArgumentException(CoreMessages.getString("UnknownPHPVersion_0")); //$NON-NLS-1$

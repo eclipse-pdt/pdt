@@ -1,0 +1,75 @@
+--TEST--
+Bug 455696 - Code formatter will delete non ACSII function name
+--FILE--
+<?php
+function say_здравствуйте() {
+$say_здравствуйте = 'say_здравствуйте';
+$say_здравствуйте = "say_здравствуйте";
+echo <<<say_здравствуйте
+    {$say_здравствуйте}
+    say_здравствуйте;
+}
+say_здравствуйте();
+?>
+--EXPECT--
+<Program start='0' length='211'>
+	<Statements>
+		<FunctionDeclaration start='6' length='182' isReference='false'>
+			<FunctionName>
+				<Identifier start='15' length='16' name='say_здравствуйте'/>
+			</FunctionName>
+			<FormalParameters>
+			</FormalParameters>
+			<FunctionBody>
+				<Block start='34' length='154' isCurly='true'>
+					<ExpressionStatement start='36' length='39'>
+						<Assignment start='36' length='38' operator='='>
+							<Variable start='36' length='17' isDollared='true'>
+								<Identifier start='37' length='16' name='say_здравствуйте'/>
+							</Variable>
+							<Value>
+								<Scalar start='56' length='18' type='string' value='&apos;say_здравствуйте&apos;'/>
+							</Value>
+						</Assignment>
+					</ExpressionStatement>
+					<ExpressionStatement start='76' length='39'>
+						<Assignment start='76' length='38' operator='='>
+							<Variable start='76' length='17' isDollared='true'>
+								<Identifier start='77' length='16' name='say_здравствуйте'/>
+							</Variable>
+							<Value>
+								<Scalar start='96' length='18' type='string' value='"say_здравствуйте"'/>
+							</Value>
+						</Assignment>
+					</ExpressionStatement>
+					<EchoStatement start='116' length='70'>
+						<Quote start='121' length='64' type='heredoc'>
+							<Scalar start='141' length='4' type='string' value='    '/>
+							<ReflectionVariable start='145' length='19'>
+								<Variable start='146' length='17' isDollared='true'>
+									<Identifier start='147' length='16' name='say_здравствуйте'/>
+								</Variable>
+							</ReflectionVariable>
+							<Scalar start='164' length='5' type='string' value='
+    '/>
+						</Quote>
+					</EchoStatement>
+				</Block>
+			</FunctionBody>
+		</FunctionDeclaration>
+		<ExpressionStatement start='189' length='19'>
+			<FunctionInvocation start='189' length='18'>
+				<FunctionName start='189' length='16'>
+					<NamespaceName start='189' length='16' global='false' current='false'>
+						<Identifier start='189' length='16' name='say_здравствуйте'/>
+					</NamespaceName>
+				</FunctionName>
+				<Parameters>
+				</Parameters>
+			</FunctionInvocation>
+		</ExpressionStatement>
+		<EmptyStatement start='209' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

@@ -1,0 +1,13 @@
+--TEST--
+Test unfinished method declaration error reporting
+--FILE--
+<?php
+class MyClass {
+    const FOO = <<<BAR
+    SOMETHING $var 
+    BAR;
+}
+?>
+--EXPECT--
+[line=4, start=59, end=63] Constant expression contains invalid operations
+[line=4, start=59, end=63] Variable '$var' is undefined

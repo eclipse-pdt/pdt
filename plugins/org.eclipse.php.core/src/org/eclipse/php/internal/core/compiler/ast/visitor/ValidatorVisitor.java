@@ -86,6 +86,14 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	 */
 	private Stack<NamespaceDeclaration> fNamespaceDeclarations = new Stack<>();
 
+	private static class Indentation {
+		private static final int HAS_SPACE = 1;
+		private static final int HAS_TAB = 2;
+
+		private int flags = 0;
+		private String value = ""; //$NON-NLS-1$
+	}
+
 	@SuppressWarnings("null")
 	public ValidatorVisitor(IBuildContext context) {
 		this.context = context;
@@ -972,6 +980,87 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 			reportProblem(expr, NLS.bind(Messages.OperatorAcceptOnlyPositiveNumbers, operator),
 					PHPProblemIdentifier.SYNTAX, ProblemSeverities.Error);
 		}
+	}
+
+	/**
+	 * See also CodeFormatterVisitor.getTextIndentation()
+	 */
+	private Indentation getTextIndentation(char[] text, int start, int length) {
+		Indentation indentation = new Indentation();
+		int i = start;
+		loop: for (int max = start + length; i < max; i++) {
+			switch (text[i]) {
+			case ' ':
+				indentation.flags |= Indentation.HAS_SPACE;
+				break;
+			case '\t':
+				indentation.flags |= Indentation.HAS_TAB;
+				break;
+			default:
+				break loop;
+			}
+		}
+		indentation.value = new String(text, start, i - start);
+		return indentation;
+	}
+
+	private void checkHeredocIndentations(Quote quote) {
+		int heredocIndentationLength = quote.getInnerIndentation().length();
+		if (heredocIndentationLength == 0) {
+			// nothing to check
+			return;
+		}
+
+		boolean hasHeredocSpace = quote.getInnerIndentation().indexOf(' ') != -1;
+		boolean hasHeredocTab = quote.getInnerIndentation().indexOf('\t') != -1;
+
+		assert getTextIndentation(quote.getInnerIndentation().toCharArray(), 0, heredocIndentationLength).value
+				.length() == heredocIndentationLength;
+		assert hasHeredocSpace || hasHeredocTab;
+
+		if (hasHeredocSpace && hasHeredocTab) {
+			int lastLineOffset = context.getLineTracker().getLineInformationOfOffset(quote.end()).getOffset();
+			reportProblem(lastLineOffset, lastLineOffset + heredocIndentationLength, Messages.HeredocMixedIndentation,
+					PHPProblemIdentifier.SYNTAX, ProblemSeverities.Error);
+			// do not go further
+			return;
+		}
+
+		// check indentation from second to penultimate heredoc/nowdoc line
+		int currentLine = context.getLineTracker().getLineNumberOfOffset(quote.start()) + 1;
+		int lastLine = context.getLineTracker().getLineNumberOfOffset(quote.end()) - 1;
+
+		while (currentLine <= lastLine) {
+			int currentLineOffset = context.getLineTracker().getLineOffset(currentLine);
+			int currentLineLength = context.getLineTracker().getLineLength(currentLine);
+			int maxCheckIndentationLength = Math.min(currentLineLength, heredocIndentationLength);
+			Indentation currentLineIndentation = getTextIndentation(context.getContents(), currentLineOffset,
+					maxCheckIndentationLength);
+
+			if ((hasHeredocSpace && (currentLineIndentation.flags & Indentation.HAS_TAB) == Indentation.HAS_TAB)
+					|| (hasHeredocTab
+							&& (currentLineIndentation.flags & Indentation.HAS_SPACE) == Indentation.HAS_SPACE)) {
+				reportProblem(currentLineOffset, currentLineOffset + currentLineIndentation.value.length(),
+						Messages.HeredocMixedIndentation, PHPProblemIdentifier.SYNTAX, ProblemSeverities.Error);
+			} else if (!currentLineIndentation.value.startsWith(quote.getInnerIndentation())) {
+				reportProblem(currentLineOffset, currentLineOffset + currentLineIndentation.value.length(),
+						MessageFormat.format(Messages.HeredocInvalidIndentation,
+								new Object[] { heredocIndentationLength }),
+						PHPProblemIdentifier.SYNTAX, ProblemSeverities.Error);
+			}
+			currentLine++;
+		}
+	}
+
+	@Override
+	public boolean endvisit(Quote quote) throws Exception {
+		// phpVersion >= 7.3
+		if (version.isGreaterThan(PHPVersion.PHP7_2)) {
+			if (quote.getQuoteType() == Quote.QT_HEREDOC || quote.getQuoteType() == Quote.QT_NOWDOC) {
+				checkHeredocIndentations(quote);
+			}
+		}
+		return super.endvisit(quote);
 	}
 
 	@Override

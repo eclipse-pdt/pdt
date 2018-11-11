@@ -23,7 +23,7 @@ import org.eclipse.php.core.ast.visitor.Visitor;
 
 /**
  * Represents complex qoute(i.e. qoute that includes string and variables). Also
- * represents heredoc
+ * represents heredoc and nowdoc.
  * 
  * <pre>
  * e.g.

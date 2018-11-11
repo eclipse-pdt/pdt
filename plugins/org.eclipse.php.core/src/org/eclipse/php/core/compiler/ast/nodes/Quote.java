@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2018 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -15,14 +15,15 @@ package org.eclipse.php.core.compiler.ast.nodes;
 
 import java.util.List;
 
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
- * Represents complex qoute(i.e. qoute that includes string and variables). Also
- * represents heredoc
+ * Represents complex quote(i.e. quote that includes string and variables). Also
+ * represents heredoc/nowdoc.
  * 
  * <pre>
  * e.g.
@@ -41,12 +42,21 @@ public class Quote extends Expression {
 
 	private final List<? extends Expression> expressions;
 	private final int quoteType;
+	private final String innerIndentation;
 
-	public Quote(int start, int end, List<? extends Expression> expressions, int type) {
+	public Quote(int start, int end, List<? extends Expression> expressions, int type, String innerIndentation) {
 		super(start, end);
+		if (innerIndentation == null) {
+			throw new IllegalArgumentException();
+		}
 
 		this.expressions = expressions;
 		this.quoteType = type;
+		this.innerIndentation = innerIndentation;
+	}
+
+	public Quote(int start, int end, List<? extends Expression> expressions, int type) {
+		this(start, end, expressions, type, ""); //$NON-NLS-1$
 	}
 
 	public static String getType(int type) {
@@ -87,6 +97,21 @@ public class Quote extends Expression {
 
 	public int getQuoteType() {
 		return quoteType;
+	}
+
+	/**
+	 * Returns the (inner) indentation of a HEREDOC or a NOWDOC section, based
+	 * on the indentation of the closing HEREDOC/NOWDOC marker. The returned
+	 * value has no special meaning for any other <code>quoteType</code> value.
+	 * 
+	 * @return the HEREDOC/NOWDOC inner indentation, or an empty string
+	 *         otherwise
+	 * @since PHP 7.3
+	 */
+	@SuppressWarnings("null")
+	@NonNull
+	public String getInnerIndentation() {
+		return innerIndentation;
 	}
 
 	/**
