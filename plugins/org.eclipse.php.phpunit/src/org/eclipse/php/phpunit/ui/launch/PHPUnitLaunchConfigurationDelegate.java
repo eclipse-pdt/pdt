@@ -338,15 +338,18 @@ public class PHPUnitLaunchConfigurationDelegate extends PHPExecutableLaunchDeleg
 
 	private void setEnvironmentVariables(final ILaunchConfigurationWorkingCopy wconfig) throws CoreException {
 		// Try get any user variable at first.
-		envVariables = wconfig.getAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, new HashMap<String, String>());
-		envVariables = ObjectUtils.defaultIfNull(envVariables, new HashMap<>());
-		envVariables.computeIfAbsent(ENV_PORT, key -> {
-			final String port = String.valueOf(PHPUnitPreferenceKeys.getPort());
-			envVariables.put(key, port);
-			return port;
-		});
+		synchronized (wconfig) {
+			envVariables = wconfig.getAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES,
+					new HashMap<String, String>());
+			envVariables = ObjectUtils.defaultIfNull(envVariables, new HashMap<>());
+			envVariables.computeIfAbsent(ENV_PORT, key -> {
+				final String port = String.valueOf(PHPUnitPreferenceKeys.getPort());
+				envVariables.put(key, port);
+				return port;
+			});
+			wconfig.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, envVariables);
+		}
 
-		wconfig.setAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES, envVariables);
 	}
 
 	private void startListening(int port, ILaunch launch) {
