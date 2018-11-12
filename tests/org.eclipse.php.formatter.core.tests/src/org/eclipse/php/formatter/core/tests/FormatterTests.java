@@ -76,6 +76,7 @@ public class FormatterTests {
 				new String[] { "/workspace/formatter/php7", "/workspace/formatter_indent_empty_lines/php7" });
 		TESTS.put(PHPVersion.PHP7_1, new String[] { "/workspace/formatter/php71" });
 		TESTS.put(PHPVersion.PHP7_2, new String[] { "/workspace/formatter/php72" });
+		TESTS.put(PHPVersion.PHP7_3, new String[] { "/workspace/formatter/php73" });
 	};
 
 	protected static int suiteCounter = 0;

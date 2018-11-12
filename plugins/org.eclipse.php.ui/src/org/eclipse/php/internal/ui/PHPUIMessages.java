@@ -996,7 +996,7 @@ public final class PHPUIMessages extends NLS {
 	public static String CPListLabelProvider_all;
 	public static String NewPHPManualSiteDialog_localDirectory;
 	public static String PHPElementAction_operationUnavailable_title;
-	public static String typingPage_autoClose_phpDoc_and_comments;
+	public static String typingPage_autoClose_phpDoc_and_commens;
 	public static String FoldingConfigurationBlock_info_no_preferences;
 	public static String VariableBlock_vars_add_button;
 	public static String VariableBlock_operation_desc;

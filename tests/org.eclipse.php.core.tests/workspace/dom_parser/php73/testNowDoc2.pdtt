@@ -1,0 +1,23 @@
+--TEST--
+Test Now Doc
+--FILE--
+<?php echo <<<'EOT'
+    My name is "$name".I am printing some $foo->foo.
+    Now, I am printing some {$foo->bar[1]}.
+    This should not print a capital 'A': \x41
+    EOT;
+?>
+--EXPECT--
+<Program start='0' length='174'>
+	<Statements>
+		<EchoStatement start='6' length='165'>
+			<Quote start='11' length='159' type='nowdoc'>
+				<Scalar start='125' length='42' type='string' value=' should not print a capital &apos;A&apos;: \x41
+    '/>
+			</Quote>
+		</EchoStatement>
+		<EmptyStatement start='172' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

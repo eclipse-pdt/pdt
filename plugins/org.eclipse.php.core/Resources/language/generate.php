@@ -1019,6 +1019,8 @@ function print_doccomment ($ref, $tabs = 0) {
 						if ($paramRef->isArray()) {
 							print "[]";
 						}
+					} else {
+						print " mixed";
 					}
 					print " \${$name}";
 					if ($paramRef->isOptional()) {

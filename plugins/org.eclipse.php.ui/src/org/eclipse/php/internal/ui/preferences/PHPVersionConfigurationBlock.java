@@ -231,6 +231,11 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 			phpVersionNames = new HashMap<>();
 			for (IConfigurationElement verInfo : configurationElementsFor) {
 				StringBuilder sb = new StringBuilder(verInfo.getAttribute(PHPUiConstants.PHP_VERSION_INFO_ATTR_NAME));
+				String alias = verInfo.getAttribute(PHPUiConstants.PHP_VERSION_INFO_ATTR_VERSION);
+				PHPVersion version = alias != null ? PHPVersion.byAlias(alias) : null;
+				if (version != null && version.isExperimentalSupport()) {
+					sb.append(" [EXPERIMENTAL]"); //$NON-NLS-1$
+				}
 				IConfigurationElement[] list = verInfo.getChildren(PHPUiConstants.PHP_VERSION_INFO_FEATURE_NAME);
 				if (list.length > 0) {
 					sb.append(" ("); //$NON-NLS-1$

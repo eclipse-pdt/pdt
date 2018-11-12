@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009-2018 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -41,17 +41,24 @@ public enum PHPVersion {
 	PHP5_6("php5.6"), //$NON-NLS-1$
 	PHP7_0("php7.0"), //$NON-NLS-1$
 	PHP7_1("php7.1"), //$NON-NLS-1$
-	PHP7_2("php7.2"); //$NON-NLS-1$
+	PHP7_2("php7.2"), //$NON-NLS-1$
+	PHP7_3("php7.3", true); //$NON-NLS-1$
 
 	private String alias;
+	private boolean isExperimentalSupport;
 
 	private static class Aliases {
 		private static Map<String, PHPVersion> map = new HashMap<>();
 	}
 
-	PHPVersion(String alias) {
+	PHPVersion(String alias, boolean isExperimentalSupport) {
 		this.alias = alias;
+		this.isExperimentalSupport = isExperimentalSupport;
 		Aliases.map.put(alias, this);
+	}
+
+	PHPVersion(String alias) {
+		this(alias, false);
 	}
 
 	public String getAlias() {
@@ -70,12 +77,16 @@ public enum PHPVersion {
 		return ordinal() > phpVersion.ordinal();
 	}
 
+	public boolean isExperimentalSupport() {
+		return isExperimentalSupport;
+	}
+
 	public static Collection<PHPVersion> getAllVersions() {
 		return Aliases.map.values();
 	}
 
 	public static PHPVersion[] supportedVersions() {
-		return new PHPVersion[] { PHP7_2, PHP7_1, PHP7_0, PHP5_6, PHP5_5, PHP5_4, PHP5_3, PHP5 };
+		return new PHPVersion[] { PHP7_3, PHP7_2, PHP7_1, PHP7_0, PHP5_6, PHP5_5, PHP5_4, PHP5_3, PHP5 };
 	}
 
 	/**
@@ -83,7 +94,7 @@ public enum PHPVersion {
 	 * @return
 	 */
 	public static PHPVersion getLatestVersion() {
-		return PHPVersion.PHP7_2;
+		return PHPVersion.PHP7_3;
 	}
 
 }
