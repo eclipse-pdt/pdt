@@ -37,6 +37,12 @@ public class IndentationTabPage extends ModifyDialogTabPage {
 			"  function bar($v) {" + //$NON-NLS-1$
 			"    for ($i= 0; $i < 10; $i++) {" + //$NON-NLS-1$
 			"      $v->add($i);" + //$NON-NLS-1$
+			"      $t = <<< HEREDOC\n" + //$NON-NLS-1$
+			"var $i\n" + //$NON-NLS-1$
+			"HEREDOC;\n" + //$NON-NLS-1$
+			"      $u = <<< 'NOWDOC'\n" + //$NON-NLS-1$
+			"some text\n" + //$NON-NLS-1$
+			"NOWDOC;\n" + //$NON-NLS-1$
 			"    }" + //$NON-NLS-1$
 			"  }" + //$NON-NLS-1$
 			"} \n?>"; //$NON-NLS-1$
@@ -54,6 +60,7 @@ public class IndentationTabPage extends ModifyDialogTabPage {
 	private CheckboxPreference caseIndent;
 	private CheckboxPreference breakIndent;
 	private CheckboxPreference emptylineIndent;
+	private CheckboxPreference heredocIndent;
 
 	private boolean isInitialized = false;
 
@@ -148,6 +155,9 @@ public class IndentationTabPage extends ModifyDialogTabPage {
 		emptylineIndent = createCheckboxPref(classGroup, numColumns,
 				FormatterMessages.IndentationTabPage_indent_empty_lines);
 		emptylineIndent.setIsChecked(codeFormatterPreferences.indent_empty_lines);
+		heredocIndent = createCheckboxPref(classGroup, numColumns,
+				FormatterMessages.IndentationTabPage_indent_heredocs);
+		heredocIndent.setIsChecked(codeFormatterPreferences.indent_heredocs);
 
 		isInitialized = true;
 	}
@@ -160,7 +170,8 @@ public class IndentationTabPage extends ModifyDialogTabPage {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.jdt.internal.ui.preferences.formatter.ModifyDialogTabPage
+	 * @see
+	 * org.eclipse.jdt.internal.ui.preferences.formatter.ModifyDialogTabPage
 	 * #doCreateJavaPreview(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
@@ -172,7 +183,8 @@ public class IndentationTabPage extends ModifyDialogTabPage {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.jdt.internal.ui.preferences.formatter.ModifyDialogTabPage
+	 * @see
+	 * org.eclipse.jdt.internal.ui.preferences.formatter.ModifyDialogTabPage
 	 * #doUpdatePreview()
 	 */
 	@Override
@@ -198,6 +210,7 @@ public class IndentationTabPage extends ModifyDialogTabPage {
 			codeFormatterPreferences.indent_statements_within_case = caseIndent.isChecked();
 			codeFormatterPreferences.indent_break_statements_within_case = breakIndent.isChecked();
 			codeFormatterPreferences.indent_empty_lines = emptylineIndent.isChecked();
+			codeFormatterPreferences.indent_heredocs = heredocIndent.isChecked();
 		}
 	}
 

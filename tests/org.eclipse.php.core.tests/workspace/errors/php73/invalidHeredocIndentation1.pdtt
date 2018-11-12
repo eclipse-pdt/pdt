@@ -1,0 +1,11 @@
+--TEST--
+Bug 537608 - PHP 7.3 Support
+--FILE--
+<?php
+echo <<<EOF
+Comment1
+Comment2
+	 	EOF;
+?>
+--EXPECT--
+[line=5, start=36, end=39] Invalid indentation - tabs and spaces cannot be mixed

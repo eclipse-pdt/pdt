@@ -1,0 +1,25 @@
+--TEST--
+Bug 540647 - better detection of heredoc and nowdoc marker names
+--FILE--
+<?php
+$a = <<< 'AAAA'
+    test
+    BAAAA;
+?>
+--EXPECT--
+PHP_TOKEN|<|2
+PHP_TOKEN|?|2
+PHP_LABEL|php|2
+WHITESPACE|
+|2
+PHP_VARIABLE|$a|2
+WHITESPACE| |2
+PHP_TOKEN|=|2
+WHITESPACE| |2
+PHP_NOWDOC_START_TAG|<<< 'AAAA'
+|18
+PHP_CONSTANT_ENCAPSED_STRING|    test|18
+PHP_CONSTANT_ENCAPSED_STRING|
+    BAAAA|14
+PHP_CONSTANT_ENCAPSED_STRING|;
+?>|14

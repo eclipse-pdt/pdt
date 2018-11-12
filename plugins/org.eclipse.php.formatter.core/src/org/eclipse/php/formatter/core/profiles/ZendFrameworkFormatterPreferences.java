@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Zend Techologies Ltd.
+ * Copyright (c) 2013, 2018 Zend Techologies Ltd.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -42,6 +42,7 @@ final public class ZendFrameworkFormatterPreferences implements ICodeFormatterPr
 		preferences.indent_statements_within_type_declaration = true;
 		preferences.indent_break_statements_within_case = true;
 		preferences.indent_empty_lines = false;
+		preferences.indent_heredocs = true;
 		preferences.indent_statements_within_block = true;
 		preferences.indent_statements_within_function = true;
 		preferences.indent_statements_within_case = true;
