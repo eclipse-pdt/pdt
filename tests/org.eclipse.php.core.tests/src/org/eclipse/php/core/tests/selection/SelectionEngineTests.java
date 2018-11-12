@@ -76,6 +76,10 @@ public class SelectionEngineTests {
 				new String[] { "/workspace/selection/php5", "/workspace/selection/php53", "/workspace/selection/php54",
 						"/workspace/selection/php55", "/workspace/selection/php56", "/workspace/selection/php7",
 						"/workspace/selection/php71", "/workspace/selection/php72" });
+		TESTS.put(PHPVersion.PHP7_3,
+				new String[] { "/workspace/selection/php5", "/workspace/selection/php53", "/workspace/selection/php54",
+						"/workspace/selection/php55", "/workspace/selection/php56", "/workspace/selection/php7",
+						"/workspace/selection/php71", "/workspace/selection/php72", "/workspace/selection/php73" });
 	};
 
 	protected IProject project;
@@ -176,8 +180,8 @@ public class SelectionEngineTests {
 	}
 
 	/**
-	 * Creates test file with the specified content and calculates the source range
-	 * for the selection. Selection characters themself are stripped off.
+	 * Creates test file with the specified content and calculates the source
+	 * range for the selection. Selection characters themself are stripped off.
 	 * 
 	 * @param data
 	 *            File data

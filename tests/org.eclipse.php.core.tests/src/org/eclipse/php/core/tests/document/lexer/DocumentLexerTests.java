@@ -19,13 +19,13 @@ import java.io.InputStreamReader;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
-import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.documentModel.parser.AbstractPHPLexer;
 import org.eclipse.php.internal.core.documentModel.parser.PHPLexerFactory;
 import org.junit.ClassRule;
@@ -52,6 +52,7 @@ public class DocumentLexerTests {
 		TESTS.put(PHPVersion.PHP5_6, new String[] { "/workspace/document_lexer/php53",
 				"/workspace/document_lexer/php54", "/workspace/document_lexer/php56" });
 		TESTS.put(PHPVersion.PHP7_0, new String[] { "/workspace/document_lexer/php7" });
+		TESTS.put(PHPVersion.PHP7_3, new String[] { "/workspace/document_lexer/php73" });
 	};
 
 	private final PHPVersion version;

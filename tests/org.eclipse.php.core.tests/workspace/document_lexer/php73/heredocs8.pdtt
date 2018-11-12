@@ -1,0 +1,126 @@
+--TEST--
+Bug 516306 - Syntax error in Heredoc
+Bug 537608 - PHP 7.3 Support
+--FILE--
+<?php
+<<<EOF
+    namespace Namespaced
+    {
+    class WithComments
+    {
+    public static $loaded = true;
+    }
+    $string ='string should not be   modified {$string}';
+    $heredoc = (<<<HD
+        
+        
+        Heredoc should not be   modified {$string}
+        
+        
+        HD
+    );
+    $nowdoc =<<<'ND'
+        
+        
+        Nowdoc should not be   modified {$string}
+        
+        
+        ND
+    ;
+    }
+    namespace
+    {
+    class Pearlike_WithComments
+    {
+    public static $loaded = true;
+    }
+    }
+    namespace {require __DIR__.'/Fixtures/Namespaced/WithDirMagic.php';}
+    namespace {require __DIR__.'/Fixtures/Namespaced/WithFileMagic.php';}
+    namespace {require __DIR__.'/Fixtures/Namespaced/WithHaltCompiler.php';}
+    EOF;
+?>
+--EXPECT--
+PHP_TOKEN|<|2
+PHP_TOKEN|?|2
+PHP_LABEL|php|2
+WHITESPACE|
+|2
+PHP_HEREDOC_START_TAG|<<<EOF
+|16
+PHP_ENCAPSED_AND_WHITESPACE|    namespace|16
+PHP_ENCAPSED_AND_WHITESPACE| Namespaced|16
+PHP_ENCAPSED_AND_WHITESPACE|
+    {
+    class|12
+PHP_ENCAPSED_AND_WHITESPACE| WithComments
+    {
+    public|12
+PHP_ENCAPSED_AND_WHITESPACE| static |12
+PHP_VARIABLE|$loaded|10
+PHP_ENCAPSED_AND_WHITESPACE| = true;
+    }
+    |12
+PHP_VARIABLE|$string|10
+PHP_ENCAPSED_AND_WHITESPACE| ='string should not be   modified |12
+PHP_CURLY_OPEN|{|2
+PHP_VARIABLE|$string|2
+PHP_CURLY_CLOSE|}|12
+PHP_ENCAPSED_AND_WHITESPACE|';
+    |12
+PHP_VARIABLE|$heredoc|10
+PHP_ENCAPSED_AND_WHITESPACE| = (<<<HD
+        
+        
+        Heredoc|12
+PHP_ENCAPSED_AND_WHITESPACE| should not be   modified |12
+PHP_CURLY_OPEN|{|2
+PHP_VARIABLE|$string|2
+PHP_CURLY_CLOSE|}|12
+PHP_ENCAPSED_AND_WHITESPACE|
+        
+        
+        HD|12
+PHP_ENCAPSED_AND_WHITESPACE|
+    );
+    |12
+PHP_VARIABLE|$nowdoc|10
+PHP_ENCAPSED_AND_WHITESPACE| =<<<'ND'
+        
+        
+        Nowdoc|12
+PHP_ENCAPSED_AND_WHITESPACE| should not be   modified |12
+PHP_CURLY_OPEN|{|2
+PHP_VARIABLE|$string|2
+PHP_CURLY_CLOSE|}|12
+PHP_ENCAPSED_AND_WHITESPACE|
+        
+        
+        ND|12
+PHP_ENCAPSED_AND_WHITESPACE|
+    ;
+    }
+    namespace|12
+PHP_ENCAPSED_AND_WHITESPACE|
+    {
+    class|12
+PHP_ENCAPSED_AND_WHITESPACE| Pearlike_WithComments
+    {
+    public|12
+PHP_ENCAPSED_AND_WHITESPACE| static |12
+PHP_VARIABLE|$loaded|10
+PHP_ENCAPSED_AND_WHITESPACE| = true;
+    }
+    }
+    namespace|12
+PHP_ENCAPSED_AND_WHITESPACE| {require __DIR__.'/Fixtures/Namespaced/WithDirMagic.php';}
+    namespace|12
+PHP_ENCAPSED_AND_WHITESPACE| {require __DIR__.'/Fixtures/Namespaced/WithFileMagic.php';}
+    namespace|12
+PHP_ENCAPSED_AND_WHITESPACE| {require __DIR__.'/Fixtures/Namespaced/WithHaltCompiler.php';}|20
+PHP_HEREDOC_CLOSE_TAG|
+    EOF|2
+PHP_SEMICOLON|;|2
+WHITESPACE|
+|2
+PHP_CLOSETAG|?>|2
