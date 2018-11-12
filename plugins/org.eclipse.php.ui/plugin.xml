@@ -2986,6 +2986,13 @@
              <feature name="group use statements trailing comma"></feature>
              <feature name="trailing comma in function and method calls"></feature>
        </phpVersion>
+       <phpVersion
+             name="7.3"
+             version="php7.3">
+             <feature name="flexible Heredoc/Nowdoc syntaxes"></feature>
+             <feature name="list() reference assignment"></feature>
+             <feature name="trailing comma in function and method calls"></feature>
+       </phpVersion>
    </extension>
    <extension
          point="org.eclipse.php.ui.problemConfiguration">

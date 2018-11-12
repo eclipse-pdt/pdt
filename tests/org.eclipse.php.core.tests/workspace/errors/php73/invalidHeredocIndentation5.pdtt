@@ -1,0 +1,21 @@
+--TEST--
+Bug 537608 - PHP 7.3 Support
+--FILE--
+<?php
+echo <<<EOF
+Comment1
+ Comment2
+  Comment2
+   Comment2
+    Comment2
+    	Comment2
+	Comment2
+		Comment2
+			Comment2
+				Comment2
+ 	 Comment2
+  	 Comment2
+   	 Comment2
+EOF;
+?>
+--EXPECT--

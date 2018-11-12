@@ -1,0 +1,65 @@
+--TEST--
+Bug 455696 - Code formatter will delete non ACSII function name
+--FILE--
+<?php
+function say_здравствуйте() {
+$say_здравствуйте = 'say_здравствуйте';
+$say_здравствуйте = "say_здравствуйте";
+echo <<<say_здравствуйте
+    {$say_здравствуйте}
+    say_здравствуйте;
+}
+say_здравствуйте();
+?>
+--EXPECT--
+PHP_TOKEN|<|2
+PHP_TOKEN|?|2
+PHP_LABEL|php|2
+WHITESPACE|
+|2
+PHP_FUNCTION|function|36
+WHITESPACE| |36
+PHP_LABEL|say_здравствуйте|2
+PHP_TOKEN|(|2
+PHP_TOKEN|)|2
+WHITESPACE| |2
+PHP_CURLY_OPEN|{
+|2
+PHP_VARIABLE|$say_здравствуйте|2
+WHITESPACE| |2
+PHP_TOKEN|=|2
+WHITESPACE| |2
+PHP_CONSTANT_ENCAPSED_STRING|'say_здравствуйте'|2
+PHP_SEMICOLON|;|2
+WHITESPACE|
+|2
+PHP_VARIABLE|$say_здравствуйте|2
+WHITESPACE| |2
+PHP_TOKEN|=|2
+WHITESPACE| |2
+PHP_CONSTANT_ENCAPSED_STRING|"say_здравствуйте"|2
+PHP_SEMICOLON|;|2
+WHITESPACE|
+|2
+PHP_ECHO|echo|2
+WHITESPACE| |2
+PHP_HEREDOC_START_TAG|<<<say_здравствуйте
+|16
+PHP_ENCAPSED_AND_WHITESPACE|    |12
+PHP_CURLY_OPEN|{|2
+PHP_VARIABLE|$say_здравствуйте|2
+PHP_CURLY_CLOSE|}|12
+PHP_HEREDOC_CLOSE_TAG|
+    say_здравствуйте|2
+PHP_SEMICOLON|;|2
+WHITESPACE|
+|2
+PHP_CURLY_CLOSE|}
+|2
+PHP_LABEL|say_здравствуйте|2
+PHP_TOKEN|(|2
+PHP_TOKEN|)|2
+PHP_SEMICOLON|;|2
+WHITESPACE|
+|2
+PHP_CLOSETAG|?>|2
