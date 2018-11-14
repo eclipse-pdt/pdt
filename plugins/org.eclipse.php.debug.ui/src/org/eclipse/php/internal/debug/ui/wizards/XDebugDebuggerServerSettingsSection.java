@@ -20,6 +20,7 @@ import static org.eclipse.php.internal.debug.core.xdebug.dbgp.XDebugDebuggerSett
 import java.text.MessageFormat;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.debugger.IDebuggerSettingsWorkingCopy;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.xdebug.communication.XDebugCommunicationDaemon;
@@ -96,9 +97,27 @@ public class XDebugDebuggerServerSettingsSection implements IDebuggerSettingsSec
 					IMessageProvider.ERROR);
 			return;
 		}
-		int port = Integer.valueOf(clientPort);
-		if (!PHPLaunchUtilities.isPortAvailable(port)
-				&& !PHPLaunchUtilities.isDebugDaemonActive(port, XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID)) {
+		Integer portNumber = null;
+		try {
+			portNumber = Integer.valueOf(clientPort);
+			int i = portNumber.intValue();
+			if (i < 1 || i > 65535) {
+				compositeFragment.setMessage(PHPDebugCoreMessages.DebugConfigurationDialog_invalidPortRange,
+						IMessageProvider.ERROR);
+				return;
+			}
+		} catch (NumberFormatException ex) {
+			compositeFragment.setMessage(PHPDebugCoreMessages.DebugConfigurationDialog_invalidPort,
+					IMessageProvider.ERROR);
+			return;
+		} catch (Exception e) {
+			compositeFragment.setMessage(PHPDebugCoreMessages.DebugConfigurationDialog_invalidPort,
+					IMessageProvider.ERROR);
+			return;
+		}
+		// Check ports
+		if (!PHPLaunchUtilities.isPortAvailable(portNumber)
+				&& !PHPLaunchUtilities.isDebugDaemonActive(portNumber, XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID)) {
 			compositeFragment.setMessage(
 					MessageFormat.format(Messages.DebuggerCommonSettingsSection_Port_is_already_in_use, clientPort),
 					IMessageProvider.WARNING);
