@@ -1097,7 +1097,7 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
 	return PHP_ENCAPSED_AND_WHITESPACE;
 }
 
-<ST_PHP_NOWDOC>{NOWDOC_CHARS}*(({HEREDOC_NEWLINE}{TABS_AND_SPACES})+)? {
+<ST_PHP_NOWDOC>{NOWDOC_CHARS}*(({NEWLINE}{TABS_AND_SPACES})+)? {
 	return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
