@@ -487,30 +487,31 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 
 	private void unregisterListeners() {
 		if (defaultPortListener != null) {
-			InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID).addPreferenceChangeListener(defaultPortListener);
+			InstanceScope.INSTANCE.getNode(PHPDebugPlugin.ID).removePreferenceChangeListener(defaultPortListener);
 		}
 		if (debuggerSettingsListener != null) {
-			DebuggerSettingsManager.INSTANCE.addSettingsListener(debuggerSettingsListener);
+			DebuggerSettingsManager.INSTANCE.removeSettingsListener(debuggerSettingsListener);
 		}
 	}
 
 	private synchronized void reset() {
 		Set<Integer> ports = PHPDebugUtil.getDebugPorts(getDebuggerID());
-		List<AbstractDebuggerCommunicationDaemon> daemonsToSet = new ArrayList<>();
+		List<AbstractDebuggerCommunicationDaemon> daemonsToRemove = new ArrayList<>();
 		// Shutdown daemons that should not listen anymore
 		for (AbstractDebuggerCommunicationDaemon daemon : daemons) {
 			boolean isRedundant = true;
 			for (int port : ports) {
 				if (daemon.getReceiverPort() == port) {
-					daemonsToSet.add(daemon);
 					isRedundant = false;
 					break;
 				}
 			}
 			if (isRedundant) {
 				daemon.stopListen();
+				daemonsToRemove.add(daemon);
 			}
 		}
+		daemons.removeAll(daemonsToRemove);
 		// Start new daemons if there should be any
 		for (int port : ports) {
 			boolean isRunning = false;
@@ -522,10 +523,9 @@ public class XDebugCommunicationDaemon implements ICommunicationDaemon {
 			}
 			if (!isRunning) {
 				AbstractDebuggerCommunicationDaemon newDaemon = new CommunicationDaemon(port);
-				daemonsToSet.add(newDaemon);
+				daemons.add(newDaemon);
 			}
 		}
-		daemons = daemonsToSet;
 	}
 
 }
