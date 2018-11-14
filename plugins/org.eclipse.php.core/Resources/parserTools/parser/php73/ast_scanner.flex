@@ -1275,6 +1275,10 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
 	return createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
 }
 
+<ST_NOWDOC>{NOWDOC_CHARS}*(({NEWLINE}{TABS_AND_SPACES})+)? {
+	return createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
+}
+
 <ST_DOUBLE_QUOTES>[\"] {
 	yybegin(ST_IN_SCRIPTING);
 	return createSymbol(ParserConstants.T_QUATE);
