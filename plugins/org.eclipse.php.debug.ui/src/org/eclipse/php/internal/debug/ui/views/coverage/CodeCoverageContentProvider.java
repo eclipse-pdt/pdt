@@ -311,16 +311,18 @@ public class CodeCoverageContentProvider implements ITreeContentProvider {
 			final ISourceModule fileData = PHPToolkitUtil.getSourceModule((IModelElement) child);
 			if (fileData != null) {
 				String name = fileData.getResource().getName();
-				if (coveredFilesMap.containsKey(new VirtualPath(name))) {
-					remoteFiles.remove(name);
+				VirtualPath vp = new VirtualPath(name);
+				if (fileDataMap.containsKey(vp)) {
+					remoteFiles.remove(vp);
 					return false;
 				}
 			}
 		}
 		if (child instanceof IFile) {
 			IFile localFile = (IFile) child;
-			if (coveredFilesMap.containsKey(new VirtualPath(localFile.getFullPath().toString()))) {
-				remoteFiles.remove(localFile.getFullPath().toString());
+			VirtualPath vp = new VirtualPath(localFile.getFullPath().toString());
+			if (fileDataMap.containsKey(vp)) {
+				remoteFiles.remove(vp);
 				return false;
 			}
 		}

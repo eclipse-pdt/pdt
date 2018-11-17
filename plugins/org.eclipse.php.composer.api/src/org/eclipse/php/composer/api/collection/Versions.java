@@ -104,10 +104,17 @@ public class Versions extends AbstractIterableJsonObject<ComposerPackage> {
 				List<Integer> majorList = majors.get(major);
 
 				String minor = v.getMinor();
-				if (minor != null && !majorList.contains(minor)) {
-					majors.get(major).add(Integer.parseInt(minor));
-					Collections.sort(majorList);
-					Collections.reverse(majorList);
+				if (minor != null) {
+					try {
+						Integer minorInt = Integer.parseInt(minor);
+						if (!majorList.contains(minorInt)) {
+							majorList.add(minorInt);
+							Collections.sort(majorList);
+							Collections.reverse(majorList);
+						}
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
@@ -211,9 +218,17 @@ public class Versions extends AbstractIterableJsonObject<ComposerPackage> {
 						List<Integer> majorList = majors.get(major);
 
 						String minor = v.getMinor();
-						if (minor != null && majorList.contains(minor)) {
-							majorList.remove(minor);
-							Collections.sort(majorList);
+						if (minor != null) {
+							try {
+								Integer minorInt = Integer.parseInt(minor);
+								if (!majorList.contains(minorInt)) {
+									majorList.remove(minorInt);
+									Collections.sort(majorList);
+									Collections.reverse(majorList);
+								}
+							} catch (NumberFormatException e) {
+								e.printStackTrace();
+							}
 						}
 
 						if (majorList.size() == 0) {
