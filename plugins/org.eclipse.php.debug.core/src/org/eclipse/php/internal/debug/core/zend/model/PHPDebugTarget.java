@@ -1222,6 +1222,8 @@ public class PHPDebugTarget extends PHPDebugElement
 				if (container == null || !container.exists()) {
 					return;
 				}
+			} else {
+				return;
 			}
 		}
 		IResource[] members = container.members();
