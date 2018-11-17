@@ -327,9 +327,6 @@ public class PHPSearchEngine implements IIncludepathListener {
 	 *            IncludePathEntry)
 	 */
 	public static void buildIncludePath(IProject project, Set<IncludePath> results) {
-		if (results.contains(project)) {
-			return;
-		}
 		if (!project.isAccessible() || !project.isOpen()) {
 			return;
 		}

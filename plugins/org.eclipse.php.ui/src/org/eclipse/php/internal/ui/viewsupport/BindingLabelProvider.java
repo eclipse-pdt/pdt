@@ -268,7 +268,7 @@ public class BindingLabelProvider extends LabelProvider {
 
 		// parameters
 		buffer.append('(');
-		if ((flags & ScriptElementLabels.M_PARAMETER_TYPES | ScriptElementLabels.M_PARAMETER_NAMES) != 0) {
+		if ((flags & (ScriptElementLabels.M_PARAMETER_TYPES | ScriptElementLabels.M_PARAMETER_NAMES)) != 0) {
 			ITypeBinding[] parameters = ((flags & ScriptElementLabels.M_PARAMETER_TYPES) != 0)
 					? binding.getParameterTypes()
 					: null;
