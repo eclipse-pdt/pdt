@@ -1488,8 +1488,9 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener, IS
 				return null;
 			}
 			int start = phpToken.getStart();
-			ITextRegion lastToken = null;
-			while (lastToken != phpToken && !PHPPartitionTypes.isPHPDocEndRegion(phpToken.getType())) {
+			ITextRegion previousToken = null;
+			while (previousToken != phpToken && !PHPPartitionTypes.isPHPDocEndRegion(phpToken.getType())) {
+				previousToken = phpToken;
 				phpToken = textRegion.getPHPToken(phpToken.getEnd());
 			}
 
