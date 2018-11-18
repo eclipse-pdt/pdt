@@ -3,7 +3,7 @@ Test anonymous class
 --FILE--
 <?php
 class FooBar {
-function test() : vo|{
+function test() : voi|{
 }
 }
 --EXPECT--
