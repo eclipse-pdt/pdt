@@ -32,7 +32,7 @@ import org.eclipse.php.composer.api.entities.Version;
 public class Versions extends AbstractIterableJsonObject<ComposerPackage> {
 
 	private Map<String, Version> detailedVersions = null;
-	private SortedMap<String, List<Integer>> majors = new TreeMap<>();
+	private SortedMap<String, SortedSet<Integer>> majors = new TreeMap<>();
 
 	public Versions() {
 	}
@@ -98,16 +98,21 @@ public class Versions extends AbstractIterableJsonObject<ComposerPackage> {
 			String major = v.getMajor();
 			if (major != null) {
 				if (!majors.containsKey(major)) {
-					majors.put(major, new ArrayList<Integer>());
+					majors.put(major, new TreeSet<Integer>(Comparator.reverseOrder()));
 				}
 
-				List<Integer> majorList = majors.get(major);
+				// reverse ordered
+				SortedSet<Integer> majorList = majors.get(major);
 
 				String minor = v.getMinor();
-				if (minor != null && !majorList.contains(minor)) {
-					majors.get(major).add(Integer.parseInt(minor));
-					Collections.sort(majorList);
-					Collections.reverse(majorList);
+				if (minor != null) {
+					try {
+						Integer minorInt = Integer.parseInt(minor);
+						// add if not present
+						majorList.add(minorInt);
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
@@ -181,7 +186,7 @@ public class Versions extends AbstractIterableJsonObject<ComposerPackage> {
 		prepareDetailedVersions();
 
 		if (majors.containsKey(major) && majors.get(major).size() > 0) {
-			return majors.get(major).get(0).toString();
+			return majors.get(major).toArray()[0].toString();
 		}
 
 		return null;
@@ -208,12 +213,18 @@ public class Versions extends AbstractIterableJsonObject<ComposerPackage> {
 				String major = v.getMajor();
 				if (major != null) {
 					if (majors.containsKey(major)) {
-						List<Integer> majorList = majors.get(major);
+						// reverse ordered
+						SortedSet<Integer> majorList = majors.get(major);
 
 						String minor = v.getMinor();
-						if (minor != null && majorList.contains(minor)) {
-							majorList.remove(minor);
-							Collections.sort(majorList);
+						if (minor != null) {
+							try {
+								Integer minorInt = Integer.parseInt(minor);
+								// remove if present
+								majorList.remove(minorInt);
+							} catch (NumberFormatException e) {
+								e.printStackTrace();
+							}
 						}
 
 						if (majorList.size() == 0) {
