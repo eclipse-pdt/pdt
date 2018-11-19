@@ -46,9 +46,11 @@ class OpenCodeCoverageViewAction extends Action {
 		ISelection selection = fView.getViewer().getSelection();
 		if (selection != null && selection instanceof IStructuredSelection) {
 			TreeElement element = (TreeElement) ((IStructuredSelection) selection).getFirstElement();
-			Object data = element.getData();
-			if (data != null && data instanceof ProfilerFileData) {
-				fView.openCodeCoverageView((ProfilerFileData) data);
+			if (element != null) {
+				Object data = element.getData();
+				if (data != null && data instanceof ProfilerFileData) {
+					fView.openCodeCoverageView((ProfilerFileData) data);
+				}
 			}
 		}
 	}

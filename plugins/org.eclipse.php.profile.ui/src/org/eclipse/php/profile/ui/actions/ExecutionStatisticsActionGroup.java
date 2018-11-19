@@ -100,11 +100,14 @@ public class ExecutionStatisticsActionGroup extends ActionGroup {
 		ISelection selection = fView.getViewer().getSelection();
 		if (selection != null && selection instanceof IStructuredSelection) {
 			TreeElement element = (TreeElement) ((IStructuredSelection) selection).getFirstElement();
-			Object data = element.getData();
-			if (data instanceof ProfilerFunctionData) {
-				menu.add(fOpenFunctionInvocationStatisticsAction);
-			} else if (data instanceof ProfilerFileData && ((ProfilerFileData) data).getCodeCoverageData() != null) {
-				// menu.add(fOpenCodeCoverageViewAction);
+			if (element != null) {
+				Object data = element.getData();
+				if (data instanceof ProfilerFunctionData) {
+					menu.add(fOpenFunctionInvocationStatisticsAction);
+				} else if (data instanceof ProfilerFileData
+						&& ((ProfilerFileData) data).getCodeCoverageData() != null) {
+					// menu.add(fOpenCodeCoverageViewAction);
+				}
 			}
 		}
 		menu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
