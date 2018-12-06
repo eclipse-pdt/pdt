@@ -17,6 +17,7 @@ import java.util.*;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.evaluation.types.AmbiguousType;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
@@ -25,8 +26,12 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.core.ast.visitor.AbstractVisitor;
+import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.Constants;
+import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.evaluators.PHPEvaluationUtils;
 import org.eclipse.php.internal.ui.corext.codemanipulation.StubUtility;
@@ -583,6 +588,40 @@ public class CodeGeneration {
 	 */
 	public static String getMethodComment(IMethod method, IMethod overridden, String lineDelimiter)
 			throws CoreException {
+		boolean useFQN = Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID,
+				PHPCoreConstants.CODEASSIST_INSERT_FULL_QUALIFIED_NAME_IN_COMMENTS, false, null);
+		return getMethodComment(method, overridden, lineDelimiter, useFQN);
+
+	}
+
+	/**
+	 * Returns the comment for a method or constructor using the comment code
+	 * templates (constructor / method / overriding method). <code>null</code>
+	 * is returned if the template is empty.
+	 * <p>
+	 * The returned string is unformatted and not indented.
+	 * 
+	 * @param method
+	 *            The method to be documented. The method must exist.
+	 * @param overridden
+	 *            The method that will be overridden by the created method or
+	 *            <code>null</code> for non-overriding methods. If not
+	 *            <code>null</code>, the method must exist.
+	 * @param lineDelimiter
+	 *            The line delimiter to be used.
+	 * @param useFQN
+	 *            Generate fully-qualified type names.
+	 * @return Returns the constructed comment or <code>null</code> if the
+	 *         comment code template is empty. The returned string is
+	 *         unformatted and and has no indent (formatting required).
+	 * @throws CoreException
+	 *             Thrown when the evaluation of the code template fails.
+	 *             Contributed by zhaozw - bug #255204 [regression] Parameters
+	 *             type is not displayed in Generated element comments doc block
+	 */
+	public static String getMethodComment(IMethod method, IMethod overridden, String lineDelimiter, boolean useFQN)
+			throws CoreException {
+
 		// FIXME - 'retType' should be initialized to null after the
 		// 'getReturnType will be functional, so void/c'tor will not have
 		// 'return' tag
@@ -719,7 +758,12 @@ public class CodeGeneration {
 				FormalParameter formalParameter = (FormalParameter) node;
 				Expression parameterType = formalParameter.getParameterType();
 				if (parameterType != null) {
-					String typeName = ((Identifier) parameterType).getName();
+					String typeName;
+					if (useFQN) {
+						typeName = resolveFQN((Identifier) parameterType, method.getSourceModule());
+					} else {
+						typeName = ((Identifier) parameterType).getName();
+					}
 					parameterTypes[i++] = typeName;
 					continue;
 				}
@@ -776,6 +820,10 @@ public class CodeGeneration {
 						retType = returnTypeBuffer.substring(0, returnTypeBuffer.length() - 1);
 					}
 				}
+			}
+
+			if (retType != null && useFQN) {
+				retType = resolveFQN(retType, method.getSourceModule(), method.getSourceRange().getOffset());
 			}
 
 			typeParametersTypes = resolvedBinding.getParameterTypes();
@@ -839,6 +887,26 @@ public class CodeGeneration {
 		} catch (Exception e) {
 		}
 		return program;
+	}
+
+	private static String resolveFQN(Identifier identifier, ISourceModule sourceModule) {
+		return resolveFQN(identifier.getName(), sourceModule, identifier.getStart());
+	}
+
+	private static String resolveFQN(String typeName, ISourceModule sourceModule, int sourceLocation) {
+		if (typeName.indexOf(Constants.TYPE_SEPARATOR_CHAR) >= 0) {
+			String[] typeNames = typeName.split("\\" + Constants.TYPE_SEPARATOR_CHAR); //$NON-NLS-1$
+			for (int index = typeNames.length - 1; index >= 0; index--) {
+				typeNames[index] = resolveFQN(typeNames[index], sourceModule, sourceLocation);
+			}
+			return String.join(String.valueOf(Constants.TYPE_SEPARATOR_CHAR), typeNames);
+		}
+		if (typeName.length() == 0 || typeName.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+			return typeName;
+		}
+		PHPClassType classType = PHPClassType.fromTypeName(typeName, sourceModule, sourceLocation);
+
+		return classType.getTypeName();
 	}
 
 	private static List<ITypeBinding> removeDuplicateTypes(ITypeBinding[] returnTypes) {
