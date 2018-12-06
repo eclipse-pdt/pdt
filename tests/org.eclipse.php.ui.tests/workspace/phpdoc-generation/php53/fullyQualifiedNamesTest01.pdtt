@@ -1,0 +1,54 @@
+--TEST--
+Tests creating fully qualified class names.
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertFullyQualifiedNameInCommentsCheckBox=true
+--RESTORE_PREFERENCES--
+org.eclipse.php.core/contentAssistInsertFullyQualifiedNameInCommentsCheckBox=false
+--FILE--
+<?php
+namespace TestNamespace
+{
+    use \Other\Namespace1\ClassName;
+    use \Other\Namespace2\ClassName as AliasName;
+    use \stdClass as StdClassAlias;
+    /**|
+    function test(ClassName $param1, array $param2, AliasName $param3)
+    {
+        return new StdClassAlias();
+    }
+}
+namespace Other\Namespace1
+{
+    class ClassName{}
+}
+namespace Other\Namespace2
+{
+    class ClassName{}
+}
+--EXPECT--
+<?php
+namespace TestNamespace
+{
+    use \Other\Namespace1\ClassName;
+    use \Other\Namespace2\ClassName as AliasName;
+    use \stdClass as StdClassAlias;
+    /**
+     * 
+     * @param \Other\Namespace1\ClassName $param1
+     * @param array $param2
+     * @param \Other\Namespace2\ClassName $param3
+     * @return \stdClass
+     */
+    function test(ClassName $param1, array $param2, AliasName $param3)
+    {
+        return new StdClassAlias();
+    }
+}
+namespace Other\Namespace1
+{
+    class ClassName{}
+}
+namespace Other\Namespace2
+{
+    class ClassName{}
+}

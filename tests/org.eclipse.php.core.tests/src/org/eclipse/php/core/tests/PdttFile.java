@@ -50,6 +50,8 @@ import org.osgi.framework.Bundle;
  * Custom configuration
  * --PREFERENCES--
  * Eclipse preference options to set before running this test
+ * --RESTORE_PREFERENCES--
+ * Eclipse preference options to set after running this test
  * --FILE--
  * &lt;? some PHP code ?&gt;
  * --EXPECT--
@@ -60,8 +62,9 @@ public class PdttFile {
 
 	protected enum STATES {
 
-		TEST("--TEST--"), CONFIG("--CONFIG--"), PREFERENCES("--PREFERENCES--"), FILE("--FILE--"), EXPECT(
-				"--EXPECT--"), OTHER("--OTHER--"), OTHER_FILE("--FILE([0-9]+)--");
+		TEST("--TEST--"), CONFIG("--CONFIG--"), PREFERENCES("--PREFERENCES--"), RESTORE_PREFERENCES(
+				"--RESTORE_PREFERENCES--"), FILE(
+						"--FILE--"), EXPECT("--EXPECT--"), OTHER("--OTHER--"), OTHER_FILE("--FILE([0-9]+)--");
 
 		private static class Names {
 			private static Map<String, STATES> map = new HashMap<>();
@@ -87,6 +90,7 @@ public class PdttFile {
 	private Bundle testBundle;
 	private Map<String, String> config = new HashMap<>();
 	private String preferences;
+	private String restorePreferences;
 	private String description;
 	private String file = "";
 	/**
@@ -178,11 +182,42 @@ public class PdttFile {
 	}
 
 	/**
+	 * Returns the preferences to be restored after test executions (--RESTORE
+	 * PREFERENCES-- section contents)
+	 * 
+	 * @return
+	 */
+	public String getRestorePreferences() {
+		return restorePreferences;
+	}
+
+	/**
 	 * Applies Eclipse preferences specified in --PREFERENCES-- option.
 	 * 
 	 * @throws CoreException
 	 */
 	public void applyPreferences() throws CoreException {
+		applyPreferences(this.preferences);
+	}
+
+	/**
+	 * Applies Eclipse preferences specified in --RESTORE_PREFERENCES-- option.
+	 * 
+	 * @throws CoreException
+	 */
+	public void restorePreferences() throws CoreException {
+		applyPreferences(this.restorePreferences);
+	}
+
+	/**
+	 * Applies Eclipse preferences specified in --PREFERENCES-- or --RESTORE
+	 * PREFERENCES-- options.
+	 *
+	 * @param preferences
+	 *            The preferences to be applied
+	 * @throws CoreException
+	 */
+	private static void applyPreferences(String preferences) throws CoreException {
 		if (preferences != null) {
 			Platform.getPreferencesService().importPreferences(new ByteArrayInputStream(preferences.getBytes()));
 		}
@@ -264,7 +299,7 @@ public class PdttFile {
 		String line = bReader.readLine();
 		STATES state = null;
 		while (line != null) {
-			if (line.matches("--[A-Z0-9]+--")) {
+			if (line.matches("--[A-Z0-9]+(_[A-Z0-9]+)*--")) {
 				state = parseStateLine(line);
 				if (state == null) {
 					throw new Exception("Wrong state: " + line);
@@ -284,6 +319,10 @@ public class PdttFile {
 
 	public void setPreferences(String preferences) {
 		this.preferences = preferences;
+	}
+
+	public void setRestorePreferences(String preferences) {
+		this.restorePreferences = preferences;
 	}
 
 	public void setDescription(String description) {
@@ -323,6 +362,10 @@ public class PdttFile {
 		if (preferences != null) {
 			w.println(STATES.PREFERENCES.getName());
 			w.println(preferences.trim());
+		}
+		if (restorePreferences != null) {
+			w.println(STATES.RESTORE_PREFERENCES.getName());
+			w.println(restorePreferences.trim());
 		}
 		w.println(STATES.FILE.getName());
 		w.println(file.trim());
@@ -404,6 +447,15 @@ public class PdttFile {
 					this.preferences = (line + "\n");
 				} else {
 					this.preferences += (line + "\n");
+				}
+			}
+			break;
+		case RESTORE_PREFERENCES:
+			if (line != null && line.length() > 0) {
+				if (restorePreferences == null) {
+					this.restorePreferences = (line + "\n");
+				} else {
+					this.restorePreferences += (line + "\n");
 				}
 			}
 			break;
