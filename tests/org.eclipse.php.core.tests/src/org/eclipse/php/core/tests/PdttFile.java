@@ -183,6 +183,26 @@ public class PdttFile {
 	 * @throws CoreException
 	 */
 	public void applyPreferences() throws CoreException {
+		this.applyPreferences((String) null);
+	}
+
+	/**
+	 * Applies Eclipse preferences specified in --PREFERENCES-- option.
+	 *
+	 * @param defaultPreferences
+	 *            The default preferences to be used before applying the
+	 *            preferences from the pdtt
+	 * @throws CoreException
+	 */
+	public void applyPreferences(String defaultPreferences) throws CoreException {
+		if (defaultPreferences != null) {
+			defaultPreferences = defaultPreferences.trim();
+			if (defaultPreferences.length() > 0) {
+				defaultPreferences += "\n";
+				Platform.getPreferencesService()
+						.importPreferences(new ByteArrayInputStream(defaultPreferences.getBytes()));
+			}
+		}
 		if (preferences != null) {
 			Platform.getPreferencesService().importPreferences(new ByteArrayInputStream(preferences.getBytes()));
 		}

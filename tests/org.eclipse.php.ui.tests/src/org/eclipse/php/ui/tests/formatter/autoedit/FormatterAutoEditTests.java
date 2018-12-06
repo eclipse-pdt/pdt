@@ -138,6 +138,7 @@ public class FormatterAutoEditTests {
 	@Test
 	public void formatter(String fileName) throws Exception {
 		final PdttFile pdttFile = new PdttFile(PHPUiTests.getDefault().getBundle(), fileName);
+		pdttFile.applyPreferences("org.eclipse.php.core/contentAssistInsertFullyQualifiedNameInCommentsCheckBox=false");
 		final String cursor = getCursor(pdttFile) != null ? getCursor(pdttFile) : DEFAULT_CURSOR;
 		final DocumentCommand cmd = createFile(pdttFile.getFile().trim(), cursor);
 		final Exception[] err = new Exception[1];
