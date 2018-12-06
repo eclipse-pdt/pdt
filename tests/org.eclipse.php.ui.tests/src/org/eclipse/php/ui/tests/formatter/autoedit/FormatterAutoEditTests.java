@@ -138,6 +138,7 @@ public class FormatterAutoEditTests {
 	@Test
 	public void formatter(String fileName) throws Exception {
 		final PdttFile pdttFile = new PdttFile(PHPUiTests.getDefault().getBundle(), fileName);
+		pdttFile.applyPreferences();
 		final String cursor = getCursor(pdttFile) != null ? getCursor(pdttFile) : DEFAULT_CURSOR;
 		final DocumentCommand cmd = createFile(pdttFile.getFile().trim(), cursor);
 		final Exception[] err = new Exception[1];
@@ -159,7 +160,11 @@ public class FormatterAutoEditTests {
 			throw err[0];
 		}
 		// Compare contents
-		PDTTUtils.assertContents(pdttFile.getExpected(), document.get());
+		try {
+			PDTTUtils.assertContents(pdttFile.getExpected(), document.get());
+		} finally {
+			pdttFile.restorePreferences();
+		}
 	}
 
 	protected DocumentCommand createFile(String data, String cursor) throws Exception {

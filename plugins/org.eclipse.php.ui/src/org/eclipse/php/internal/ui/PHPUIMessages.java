@@ -709,6 +709,7 @@ public final class PHPUIMessages extends NLS {
 	public static String ShowInExplorerViewAction_description;
 	public static String PHPFileCreationWizardPage_14;
 	public static String CodeAssistPreferencePage_insertFullyQualifiedNameForNamespace;
+	public static String CodeAssistPreferencePage_insertFullyQualifiedNameInComments;
 	public static String PHPFileCreationWizardPage_12;
 	public static String ResourceTransferDragAdapter_moving_resource;
 	public static String PHPFileCreationWizardPage_11;

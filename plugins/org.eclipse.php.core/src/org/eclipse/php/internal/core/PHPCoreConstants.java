@@ -198,6 +198,18 @@ public interface PHPCoreConstants {
 	String CODEASSIST_INSERT_FULL_QUALIFIED_NAME_FOR_NAMESPACE = "contentAssistInsertFullyQualifiedNameForNamespaceCheckBox"; //$NON-NLS-1$
 
 	/**
+	 * A named preference that controls if code assist insert full qualified
+	 * name in comments.
+	 * <p>
+	 * Value is of type <code>Boolean</code>. if
+	 * <code>false<code> code assist may insert class names without a fully qualified class name. If
+	 * <code>true</code> code assist always insert use statement with the full
+	 * qualified name.
+	 * </p>
+	 */
+	String CODEASSIST_INSERT_FULL_QUALIFIED_NAME_IN_COMMENTS = "contentAssistInsertFullyQualifiedNameInCommentsCheckBox"; //$NON-NLS-1$
+
+	/**
 	 * A named preference that controls if code assist also contains proposals from
 	 * other files
 	 * <p>
