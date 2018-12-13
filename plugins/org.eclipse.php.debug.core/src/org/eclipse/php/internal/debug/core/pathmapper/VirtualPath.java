@@ -47,8 +47,7 @@ public class VirtualPath implements Cloneable {
 			sepChar = '\\';
 			device = "\\\\"; //$NON-NLS-1$
 			path = path.substring(2);
-		}
-		if (path.startsWith("\\")) { //$NON-NLS-1$
+		} else if (path.startsWith("\\")) { //$NON-NLS-1$
 			sepChar = '\\';
 			device = "\\"; //$NON-NLS-1$
 			path = path.substring(1);
