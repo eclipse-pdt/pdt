@@ -15,6 +15,7 @@ package org.eclipse.php.profile.ui.views;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
@@ -170,14 +171,18 @@ public class ProfilerInformationView extends AbstractProfilerView implements IPr
 
 			String[] fileNames = globalData.getFileNames();
 			int fileCount = fileNames.length;
-			FileTime[] allValues = new FileTime[fileCount];
+			ArrayList<FileTime> fileTimeValues = new ArrayList<>();
 			// create FileTime values
 			for (int i = 0; i < fileCount; i++) {
 				ProfilerFileData fileData = db.getFileData(fileNames[i]);
 				if (fileData != null) {
-					allValues[i] = new FileTime(fileData.getTotalOwnTimeInMilli(), fileData.getName());
+					fileTimeValues.add(new FileTime(fileData.getTotalOwnTimeInMilli(), fileData.getName()));
 				}
 			}
+			// recalculate the number of FileTime values
+			fileCount = fileTimeValues.size();
+			FileTime[] allValues = fileTimeValues.toArray(new FileTime[fileCount]);
+			// sort them
 			Arrays.sort(allValues);
 
 			int slicesLimit = 5;
