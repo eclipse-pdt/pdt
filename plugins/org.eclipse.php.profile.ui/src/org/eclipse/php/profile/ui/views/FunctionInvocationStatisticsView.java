@@ -717,34 +717,36 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 															// callers
 
 				ProfilerCallTrace callTrace = fProfilerDB.getCallTrace();
-				ProfilerCallTraceLayer[] layers = callTrace.getLayers();
-				if (layers.length > 0) {
-					callerIDs.add(layers[0].getCalledID()); // store
-															// first
-															// caller
-					for (int i = 1; i < layers.length; ++i) {
-						if (layers[i].getType() == ProfilerCallTraceLayer.EXIT && callerIDs.size() > 0) {
-							callerIDs.removeElementAt(callerIDs.size() - 1);
-							continue;
-						}
-						if (layers[i].getCalledID() == function.getID() && callerIDs.size() > 0) { // this
-																									// function
-																									// is
-																									// called
-							int id = callerIDs.lastElement().intValue(); // get
-																			// last
-																			// caller
-							if (invokers.containsKey(id)) {
-								InvokeFunctionTableElement invoker = (InvokeFunctionTableElement) invokers.get(id);
-								invoker.setInvokesNumber(invoker.getInvokesNumber() + 1);
-							} else {
-								InvokeFunctionTableElement invoker = new InvokeFunctionTableElement();
-								invoker.setFunctionData(fProfilerDB.getFunctionData(id));
-								invoker.setInvokesNumber(1);
-								invokers.put(id, invoker);
+				if (callTrace != null) {
+					ProfilerCallTraceLayer[] layers = callTrace.getLayers();
+					if (layers.length > 0) {
+						callerIDs.add(layers[0].getCalledID()); // store
+																// first
+																// caller
+						for (int i = 1; i < layers.length; ++i) {
+							if (layers[i].getType() == ProfilerCallTraceLayer.EXIT && callerIDs.size() > 0) {
+								callerIDs.removeElementAt(callerIDs.size() - 1);
+								continue;
 							}
+							if (layers[i].getCalledID() == function.getID() && callerIDs.size() > 0) { // this
+																										// function
+																										// is
+																										// called
+								int id = callerIDs.lastElement().intValue(); // get
+																				// last
+																				// caller
+								if (invokers.containsKey(id)) {
+									InvokeFunctionTableElement invoker = (InvokeFunctionTableElement) invokers.get(id);
+									invoker.setInvokesNumber(invoker.getInvokesNumber() + 1);
+								} else {
+									InvokeFunctionTableElement invoker = new InvokeFunctionTableElement();
+									invoker.setFunctionData(fProfilerDB.getFunctionData(id));
+									invoker.setInvokesNumber(1);
+									invokers.put(id, invoker);
+								}
+							}
+							callerIDs.add(layers[i].getCalledID());
 						}
-						callerIDs.add(layers[i].getCalledID());
 					}
 				}
 				Object[] elements = new Object[invokers.size()];
@@ -778,34 +780,37 @@ public class FunctionInvocationStatisticsView extends ViewPart {
 															// callers
 
 				ProfilerCallTrace callTrace = fProfilerDB.getCallTrace();
-				ProfilerCallTraceLayer[] layers = callTrace.getLayers();
-				if (layers.length > 0) {
-					callerIDs.add(layers[0].getCalledID()); // store
-															// first
-															// caller
-					for (int i = 1; i < layers.length; ++i) {
-						if (layers[i].getType() == ProfilerCallTraceLayer.EXIT && callerIDs.size() > 0) {
-							callerIDs.removeElementAt(callerIDs.size() - 1);
-							continue;
-						}
-						if (callerIDs.size() > 0) {
-							if (callerIDs.lastElement().intValue() == function.getID()) { // this
-																							// function
-																							// calls
-																							// somebody
-								int id = layers[i].getCalledID();
-								if (invokees.containsKey(id)) {
-									InvokeFunctionTableElement invokee = (InvokeFunctionTableElement) invokees.get(id);
-									invokee.setInvokesNumber(invokee.getInvokesNumber() + 1);
-								} else {
-									InvokeFunctionTableElement invokee = new InvokeFunctionTableElement();
-									invokee.setFunctionData(fProfilerDB.getFunctionData(id));
-									invokee.setInvokesNumber(1);
-									invokees.put(id, invokee);
+				if (callTrace != null) {
+					ProfilerCallTraceLayer[] layers = callTrace.getLayers();
+					if (layers.length > 0) {
+						callerIDs.add(layers[0].getCalledID()); // store
+																// first
+																// caller
+						for (int i = 1; i < layers.length; ++i) {
+							if (layers[i].getType() == ProfilerCallTraceLayer.EXIT && callerIDs.size() > 0) {
+								callerIDs.removeElementAt(callerIDs.size() - 1);
+								continue;
+							}
+							if (callerIDs.size() > 0) {
+								if (callerIDs.lastElement().intValue() == function.getID()) { // this
+																								// function
+																								// calls
+																								// somebody
+									int id = layers[i].getCalledID();
+									if (invokees.containsKey(id)) {
+										InvokeFunctionTableElement invokee = (InvokeFunctionTableElement) invokees
+												.get(id);
+										invokee.setInvokesNumber(invokee.getInvokesNumber() + 1);
+									} else {
+										InvokeFunctionTableElement invokee = new InvokeFunctionTableElement();
+										invokee.setFunctionData(fProfilerDB.getFunctionData(id));
+										invokee.setInvokesNumber(1);
+										invokees.put(id, invokee);
+									}
 								}
 							}
+							callerIDs.add(layers[i].getCalledID());
 						}
-						callerIDs.add(layers[i].getCalledID());
 					}
 				}
 				Object[] elements = new Object[invokees.size()];
