@@ -42,6 +42,8 @@ public class XDebugProfileWebLaunchSettingsSection extends AbstractProfileWebLau
 
 		} catch (CoreException e) {
 		}
+
+		updateTriggerValueState();
 	}
 
 	@Override
@@ -52,12 +54,11 @@ public class XDebugProfileWebLaunchSettingsSection extends AbstractProfileWebLau
 		triggerGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		useTrigger = new Button(triggerGroup, SWT.CHECK);
-		useTrigger.setText(
-				Messages.XDebugProfileWebLaunchSettingsSection_0);
+		useTrigger.setText(Messages.XDebugProfileWebLaunchSettingsSection_0);
 		useTrigger.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				triggerValue.setEnabled(useTrigger.getSelection());
+				updateTriggerValueState();
 			}
 		});
 		useTrigger.addSelectionListener(widgetListener);
@@ -72,6 +73,13 @@ public class XDebugProfileWebLaunchSettingsSection extends AbstractProfileWebLau
 		triggerValue = new Text(sub, SWT.BORDER | SWT.SINGLE);
 		triggerValue.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		triggerValue.addModifyListener(widgetListener);
+	}
+
+	private void updateTriggerValueState() {
+		if (!useTrigger.getSelection()) {
+			triggerValue.setText(""); //$NON-NLS-1$
+		}
+		triggerValue.setEnabled(useTrigger.getSelection());
 	}
 
 	@Override
