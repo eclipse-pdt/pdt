@@ -59,6 +59,9 @@ public class Program extends ASTNode {
 
 	private List<NamespaceDeclaration> fNamespaceDeclarations;
 
+	/* Only top-most heredoc or nowdoc quotes */
+	private List<Quote> fTopMostHeredocs;
+
 	/**
 	 * The structural property of this node type.
 	 */
@@ -724,6 +727,16 @@ public class Program extends ASTNode {
 		return fUseStatements.get(namespace);
 	}
 
+	public List<Quote> getTopMostHeredocs() {
+		if (fTopMostHeredocs == null) {
+			fTopMostHeredocs = new ArrayList<>();
+			TopMostHeredocFinder visitor = new TopMostHeredocFinder();
+			this.accept(visitor);
+			fTopMostHeredocs.addAll(visitor.getTopMostHeredocs());
+		}
+		return fTopMostHeredocs;
+	}
+
 	public NamespaceDeclaration getNamespaceDeclaration(int position) {
 		List<NamespaceDeclaration> namespaceDeclarations = getNamespaceDeclarations();
 		for (NamespaceDeclaration namespace : namespaceDeclarations) {
@@ -776,6 +789,27 @@ public class Program extends ASTNode {
 
 		public List<UseStatement> getUseStatements() {
 			return useStatements;
+		}
+
+	}
+
+	private class TopMostHeredocFinder extends ApplyAll {
+
+		private List<Quote> topMostHeredocs = new ArrayList<>();
+
+		@Override
+		protected boolean apply(ASTNode node) {
+			if (node instanceof Quote && (((Quote) node).getQuoteType() == Quote.QT_NOWDOC
+					|| ((Quote) node).getQuoteType() == Quote.QT_HEREDOC)) {
+				topMostHeredocs.add((Quote) node);
+				// do not look for nested heredocs
+				return false;
+			}
+			return true;
+		}
+
+		public List<Quote> getTopMostHeredocs() {
+			return topMostHeredocs;
 		}
 
 	}

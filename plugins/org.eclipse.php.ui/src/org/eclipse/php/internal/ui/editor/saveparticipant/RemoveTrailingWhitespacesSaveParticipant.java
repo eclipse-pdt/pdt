@@ -13,6 +13,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.saveparticipant;
 
+import java.util.ArrayList;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -30,9 +32,12 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.ltk.core.refactoring.TextFileChange;
+import org.eclipse.php.core.ast.nodes.Program;
+import org.eclipse.php.core.ast.nodes.Quote;
 import org.eclipse.php.internal.core.preferences.PreferencesSupport;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
+import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.text.edits.DeleteEdit;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.saveparticipant.SaveParticipantDescriptor;
@@ -89,7 +94,14 @@ public class RemoveTrailingWhitespacesSaveParticipant implements IPostSaveListen
 		return false;
 	}
 
-	protected @NonNull MultiTextEdit computeTextEdit(@NonNull IDocument document) throws BadLocationException {
+	protected @NonNull MultiTextEdit computeTextEdit(@NonNull IDocument document, @Nullable Program program)
+			throws BadLocationException {
+		/*
+		 * It is important that the "topMostHeredocs" list is sorted by
+		 * increasing position, or this method won't work correctly.
+		 */
+		ArrayList<Quote> topMostHeredocs = program != null ? new ArrayList<>(program.getTopMostHeredocs())
+				: new ArrayList<>();
 		int lineCount = document.getNumberOfLines();
 
 		MultiTextEdit multiEdit = new MultiTextEdit();
@@ -101,6 +113,41 @@ public class RemoveTrailingWhitespacesSaveParticipant implements IPostSaveListen
 			}
 			int lineStart = region.getOffset();
 			int lineExclusiveEnd = lineStart + region.getLength();
+			int lineExclusiveDelimiterEnd = lineStart + document.getLineLength(i);
+			boolean isInHeredoc = false;
+
+			for (int j = 0, len = topMostHeredocs.size(); j < len; j++) {
+				Quote heredoc = topMostHeredocs.get(j);
+				if (lineExclusiveDelimiterEnd <= heredoc.getStart()) {
+					// the next heredocs/nowdocs will all start after
+					// lineExclusiveDelimiterEnd (if the topMostHeredocs list
+					// is correctly sorted), so we're sure current line isn't
+					// part of any heredocs/nowdoc
+					break;
+				}
+				if (heredoc.getEnd() <= lineStart) {
+					// at this point of the document, current heredoc/nowdoc
+					// will never be matched again, so remove it from the
+					// topMostHeredocs list
+					topMostHeredocs.remove(j);
+					len--;
+					// will be re-incremented afterwards
+					j--;
+					continue;
+				}
+				// check if last character of current line (i.e.
+				// lineExclusiveDelimiterEnd - 1) is enclosed in a
+				// heredoc/nowdoc
+				if (heredoc.getStart() < lineExclusiveDelimiterEnd && heredoc.getEnd() >= lineExclusiveDelimiterEnd) {
+					isInHeredoc = true;
+					break;
+				}
+			}
+			if (isInHeredoc) {
+				// don't remove trailing whitespaces inside heredocs or nowdocs
+				continue;
+			}
+
 			int j = lineExclusiveEnd - 1;
 			while (j >= lineStart && Character.isWhitespace(document.getChar(j))) {
 				--j;
@@ -129,8 +176,9 @@ public class RemoveTrailingWhitespacesSaveParticipant implements IPostSaveListen
 		}
 
 		try {
+			Program astRoot = SharedASTProvider.getAST(compilationUnit, SharedASTProvider.WAIT_YES, null);
 			IDocument document = new Document(compilationUnit.getSource());
-			MultiTextEdit edits = computeTextEdit(document);
+			MultiTextEdit edits = computeTextEdit(document, astRoot);
 			if (edits.hasChildren()) {
 				final SourceModuleChange change = new SourceModuleChange(
 						"Remove trailing whitespaces from " + compilationUnit.getElementName(), compilationUnit); //$NON-NLS-1$
