@@ -16,12 +16,16 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.PreferencesLookupDelegate;
 import org.eclipse.dltk.ui.editor.saveparticipant.IPostSaveListener;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.php.core.ast.nodes.ASTParser;
+import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.preferences.PreferencesSupport;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.actions.OrganizeUseStatementsAction;
@@ -97,8 +101,15 @@ public class OrganizeUseStatmentsSaveParticipant implements IPostSaveListener {
 		}
 		IEditorPart part = p.findEditor(input);
 		if (part instanceof PHPStructuredEditor) {
-			OrganizeUseStatementsAction action = new OrganizeUseStatementsAction(part);
-			action.run(compilationUnit);
+			try {
+				ASTParser parser = ASTParser.newParser(compilationUnit);
+				Program astRoot = parser.createAST(monitor);
+
+				OrganizeUseStatementsAction action = new OrganizeUseStatementsAction(part);
+				action.run(compilationUnit, astRoot);
+			} catch (Exception e) {
+				throw new CoreException(new Status(IStatus.ERROR, PHPUiPlugin.ID, e.toString(), e));
+			}
 		}
 	}
 

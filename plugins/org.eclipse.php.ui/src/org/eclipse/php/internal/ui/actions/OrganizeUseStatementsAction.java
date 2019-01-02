@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Comparator;
 
+import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.ModelException;
@@ -144,31 +145,35 @@ public class OrganizeUseStatementsAction extends SelectionDispatchAction {
 	public void run(ISourceModule sourceModule) {
 		try {
 			Program astRoot = SharedASTProvider.getAST(sourceModule, SharedASTProvider.WAIT_ACTIVE_ONLY, null);
-			OrganizeUseStatementsOperation op = new OrganizeUseStatementsOperation(sourceModule, astRoot,
-					createChooseImportQuery(fEditor));
-			IRewriteTarget target = (IRewriteTarget) fEditor.getAdapter(IRewriteTarget.class);
-			if (target != null) {
-				target.beginCompoundChange();
-			}
-
-			IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-			IRunnableContext context = getSite().getWorkbenchWindow();
-			IEditingSupport helper = createViewerHelper();
-			try {
-				registerHelper(helper, fEditor);
-				progressService.runInUI(context, new WorkbenchRunnableAdapter(op, op.getScheduleRule()),
-						op.getScheduleRule());
-				setStatusBarMessage(getOrganizeInfo(op), fEditor);
-			} catch (InvocationTargetException e) {
-			} catch (InterruptedException e) {
-			} finally {
-				deregisterHelper(helper, fEditor);
-				if (target != null) {
-					target.endCompoundChange();
-				}
-			}
+			run(sourceModule, astRoot);
 		} catch (ModelException | IOException e) {
 			PHPUiPlugin.log(e);
+		}
+	}
+
+	public void run(ISourceModule sourceModule, @Nullable Program astRoot) {
+		OrganizeUseStatementsOperation op = new OrganizeUseStatementsOperation(sourceModule, astRoot,
+				createChooseImportQuery(fEditor));
+		IRewriteTarget target = (IRewriteTarget) fEditor.getAdapter(IRewriteTarget.class);
+		if (target != null) {
+			target.beginCompoundChange();
+		}
+
+		IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+		IRunnableContext context = getSite().getWorkbenchWindow();
+		IEditingSupport helper = createViewerHelper();
+		try {
+			registerHelper(helper, fEditor);
+			progressService.runInUI(context, new WorkbenchRunnableAdapter(op, op.getScheduleRule()),
+					op.getScheduleRule());
+			setStatusBarMessage(getOrganizeInfo(op), fEditor);
+		} catch (InvocationTargetException e) {
+		} catch (InterruptedException e) {
+		} finally {
+			deregisterHelper(helper, fEditor);
+			if (target != null) {
+				target.endCompoundChange();
+			}
 		}
 	}
 
