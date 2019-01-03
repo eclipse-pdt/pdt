@@ -457,7 +457,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 		String sourceFolder = getSourceText();
 
 		if (existingFileBtn.getSelection()) {
-			IFile existingFile = getExisitngFile();
+			IFile existingFile = getExistingFile();
 			if (existingFile != null) {
 				String defaultNamespace = getLastNamespace();
 				if (defaultNamespace != null) {
@@ -649,7 +649,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 	 * carefully since it can contain a non EMPTY/NULL value even when the user
 	 * request to create the PHP element in a NEW PHP file.
 	 */
-	public IFile getExisitngFile() {
+	public IFile getExistingFile() {
 		String sourceText = getSourceText();
 		String existingFileName = getExistingFileName();
 		if (existingFileName == null || existingFileName.isEmpty()) {
@@ -961,7 +961,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 	}
 
 	protected boolean isNamespaceEnabled() {
-		ISourceModule existingPHPFile = DLTKCore.createSourceModuleFrom(getExisitngFile());
+		ISourceModule existingPHPFile = DLTKCore.createSourceModuleFrom(getExistingFile());
 		if (existingPHPFile != null && existingPHPFile.exists()) {
 			try {
 				IModelElement[] rootElements = existingPHPFile.getChildren();
@@ -980,7 +980,7 @@ public abstract class NewPHPTypePage extends BasicPHPWizardPage implements IDial
 	}
 
 	protected String getLastNamespace() {
-		ISourceModule existingPHPFile = DLTKCore.createSourceModuleFrom(getExisitngFile());
+		ISourceModule existingPHPFile = DLTKCore.createSourceModuleFrom(getExistingFile());
 		if (existingPHPFile != null && existingPHPFile.exists()) {
 			try {
 				IModelElement[] rootElements = existingPHPFile.getChildren();

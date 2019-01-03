@@ -57,7 +57,7 @@ public class NewPHPClassWizard extends NewPHPTypeWizard implements INewWizard {
 	public boolean performFinish() {
 		if (page.isInExistingPHPFile()) {
 			// add the existing file's name to the already existings requires !
-			existingPHPFile = DLTKCore.createSourceModuleFrom(page.getExisitngFile());
+			existingPHPFile = DLTKCore.createSourceModuleFrom(page.getExistingFile());
 		}
 
 		// populate data members from the UI's values using the Post Finish
