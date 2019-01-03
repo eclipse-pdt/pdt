@@ -13,17 +13,26 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.format;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.php.core.ast.nodes.ASTNode;
+import org.eclipse.php.core.ast.nodes.Program;
+import org.eclipse.php.core.ast.nodes.Quote;
+import org.eclipse.php.core.ast.visitor.ApplyAll;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
+import org.eclipse.text.edits.DeleteEdit;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -36,6 +45,27 @@ public class FormatterUtils {
 
 	public static final String PARTITION_CSS_STYLE = "org.eclipse.wst.css.STYLE"; //$NON-NLS-1$
 	public static final String PARTITION_JS_SCRIPT = "org.eclipse.wst.html.SCRIPT"; //$NON-NLS-1$
+
+	private static class TopMostHeredocFinder extends ApplyAll {
+
+		private List<Quote> topMostHeredocs = new ArrayList<>();
+
+		@Override
+		protected boolean apply(ASTNode node) {
+			if (node instanceof Quote && (((Quote) node).getQuoteType() == Quote.QT_NOWDOC
+					|| ((Quote) node).getQuoteType() == Quote.QT_HEREDOC)) {
+				topMostHeredocs.add((Quote) node);
+				// do not look for nested heredocs
+				return false;
+			}
+			return true;
+		}
+
+		public List<Quote> getTopMostHeredocs() {
+			return topMostHeredocs;
+		}
+
+	}
 
 	public static @Nullable String getRegionType(IStructuredDocument document, int offset) {
 		try {
@@ -251,5 +281,98 @@ public class FormatterUtils {
 
 		return usedFormatter;
 
+	}
+
+	@SuppressWarnings("null")
+	public static @NonNull DeleteEdit[] getTrailingWhitespaces(@NonNull IDocument document, @Nullable Program astRoot,
+			boolean ignoreEmptyLines) throws BadLocationException {
+		List<Quote> topMostHeredocs;
+
+		if (astRoot != null) {
+			/*
+			 * It is important that the "topMostHeredocs" list is sorted by increasing
+			 * position, or this method won't work correctly.
+			 */
+			TopMostHeredocFinder visitor = new TopMostHeredocFinder();
+			astRoot.accept(visitor);
+			topMostHeredocs = visitor.getTopMostHeredocs();
+		} else {
+			topMostHeredocs = new ArrayList<>();
+		}
+
+		int lineCount = document.getNumberOfLines();
+		List<DeleteEdit> changes = new ArrayList<>();
+
+		for (int i = 0; i < lineCount; i++) {
+			IRegion region = document.getLineInformation(i);
+			if (region.getLength() == 0) {
+				continue;
+			}
+			int lineStart = region.getOffset();
+			int lineExclusiveEnd = lineStart + region.getLength();
+			int lineExclusiveDelimiterEnd = lineStart + document.getLineLength(i);
+			boolean isInHeredoc = false;
+
+			for (int j = 0, len = topMostHeredocs.size(); j < len; j++) {
+				Quote heredoc = topMostHeredocs.get(j);
+				if (lineExclusiveDelimiterEnd <= heredoc.getStart()) {
+					// the next heredocs/nowdocs will all start after
+					// lineExclusiveDelimiterEnd (if the topMostHeredocs list
+					// is correctly sorted), so we're sure current line isn't
+					// part of any heredocs/nowdoc
+					break;
+				}
+				if (heredoc.getEnd() <= lineStart) {
+					// at this point of the document, current heredoc/nowdoc
+					// will never be matched again, so remove it from the
+					// topMostHeredocs list
+					topMostHeredocs.remove(j);
+					len--;
+					// will be re-incremented afterwards
+					j--;
+					continue;
+				}
+				// check if last character of current line (i.e.
+				// lineExclusiveDelimiterEnd - 1) is enclosed in a
+				// heredoc/nowdoc
+				if (heredoc.getStart() < lineExclusiveDelimiterEnd && heredoc.getEnd() >= lineExclusiveDelimiterEnd) {
+					isInHeredoc = true;
+					break;
+				}
+			}
+			if (isInHeredoc) {
+				// don't remove trailing whitespaces inside heredocs or nowdocs
+				continue;
+			}
+
+			int j = lineExclusiveEnd - 1;
+			while (j >= lineStart && Character.isWhitespace(document.getChar(j))) {
+				--j;
+			}
+			++j;
+			// A flag for skipping empty lines, if required
+			if (ignoreEmptyLines && j == lineStart) {
+				continue;
+			}
+			if (j < lineExclusiveEnd) {
+				changes.add(new DeleteEdit(j, lineExclusiveEnd - j));
+			}
+		}
+
+		return changes.toArray(new DeleteEdit[changes.size()]);
+	}
+
+	public static void removeTrailingWhitespaces(@NonNull IDocument document, @NonNull DeleteEdit[] deletes)
+			throws BadLocationException {
+		if (deletes.length == 0) {
+			// nothing to do
+			return;
+		}
+		StringBuilder buffer = new StringBuilder(document.get());
+		for (int i = deletes.length - 1; i >= 0; i--) {
+			DeleteEdit delete = deletes[i];
+			buffer.replace(delete.getOffset(), delete.getExclusiveEnd(), ""); //$NON-NLS-1$
+		}
+		document.set(buffer.toString());
 	}
 }
