@@ -46,8 +46,13 @@ if (class_exists('PHPUnit_Util_Printer')) {
     
     define('_RUNNER_VERSION', (int)$version);
 }
+if (class_exists('PHP_Timer')) {
+    class_alias('PHP_Timer', 'Timer');
+} else {
+    class_alias('SebastianBergmann\Timer\Timer', 'Timer');
+}
 if (_RUNNER_VERSION  >= 7) {
-$logger = <<<'LOGGER'
+    $logger = <<<'LOGGER'
     class PHPUnitLogger extends TextPrinter implements TestListener
     {
         protected $loggers = array();
@@ -60,7 +65,7 @@ $logger = <<<'LOGGER'
                 new PHPUnitEclipseLogger()
             );
         }
-        
+                    
         public function setAutoFlush($autoFlush): void
         {
             parent::setAutoFlush($autoFlush);
@@ -68,7 +73,7 @@ $logger = <<<'LOGGER'
                 $logger->setAutoFlush($autoFlush);
             }
         }
-        
+                
         public function flush(): void
         {
             parent::flush();
@@ -76,7 +81,7 @@ $logger = <<<'LOGGER'
                 $logger->flush();
             }
         }
-        
+                
         public function incrementalFlush(): void
         {
             parent::incrementalFlush();
@@ -84,15 +89,15 @@ $logger = <<<'LOGGER'
                 $logger->incrementalFlush();
             }
         }
-        
-        public function addError(Test $test, Throwable $t, float $time): void 
+                
+        public function addError(Test $test, Throwable $t, float $time): void
         {
             parent::addError($test, $t, $time);
             foreach ($this->loggers as $logger) {
                 $logger->addError($test, $t, $time);
             }
         }
-        
+                
         public function addWarning(Test $test, Warning $e, $time): void
         {
             parent::addWarning($test, $e, $time);
@@ -100,7 +105,7 @@ $logger = <<<'LOGGER'
                 $logger->addWarning($test, $e, $time);
             }
         }
-        
+                
         public function addFailure(Test $test, AssertionFailedError $e, $time): void
         {
             parent::addFailure($test, $e, $time);
@@ -108,7 +113,7 @@ $logger = <<<'LOGGER'
                 $logger->addFailure($test, $e, $time);
             }
         }
-        
+                
         public function addIncompleteTest(Test $test, Throwable $t, $time): void
         {
             parent::addIncompleteTest($test, $t, $time);
@@ -116,7 +121,7 @@ $logger = <<<'LOGGER'
                 $logger->addIncompleteTest($test, $t, $time);
             }
         }
-        
+                
         public function addRiskyTest(Test $test, Throwable $t, $time): void
         {
             parent::addRiskyTest($test, $t, $time);
@@ -124,7 +129,7 @@ $logger = <<<'LOGGER'
                 $logger->addRiskyTest($test, $t, $time);
             }
         }
-        
+                
         public function addSkippedTest(Test $test, Throwable $t, $time): void
         {
             parent::addSkippedTest($test, $t, $time);
@@ -132,7 +137,7 @@ $logger = <<<'LOGGER'
                 $logger->addSkippedTest($test, $t, $time);
             }
         }
-        
+                
         public function startTestSuite(TestSuite $suite): void
         {
             parent::startTestSuite($suite);
@@ -140,7 +145,7 @@ $logger = <<<'LOGGER'
                 $logger->startTestSuite($suite);
             }
         }
-        
+                
         public function endTestSuite(TestSuite $suite): void
         {
             parent::endTestSuite($suite);
@@ -148,16 +153,16 @@ $logger = <<<'LOGGER'
                 $logger->endTestSuite($suite);
             }
         }
-        
+                
         public function startTest(Test $test): void
         {
             parent::startTest($test);
-            
+                
             foreach ($this->loggers as $logger) {
                 $logger->startTest($test);
             }
         }
-        
+                
         public function endTest(Test $test, $time): void
         {
             parent::endTest($test, $time);
@@ -168,22 +173,22 @@ $logger = <<<'LOGGER'
     }
 LOGGER;
 } elseif (_RUNNER_VERSION == 6) {
-$logger = <<<'LOGGER'
+    $logger = <<<'LOGGER'
     class PHPUnitLogger extends TextPrinter implements TestListener
     {
         protected $loggers = array();
         public function __construct($out = null)
         {
             parent::__construct('php://stdout', true);
-            
+                
             class_alias('PHPUnit\Framework\ExceptionWrapper', 'ExceptionWrapper');
             class_alias('PHPUnit\Util\Blacklist', 'Blacklist');
-             
+                
             $this->loggers = array(
                 new PHPUnitEclipseLogger()
             );
         }
-        
+                    
         public function setAutoFlush($autoFlush)
         {
             parent::setAutoFlush($autoFlush);
@@ -191,7 +196,7 @@ $logger = <<<'LOGGER'
                 $logger->setAutoFlush($autoFlush);
             }
         }
-        
+                
         public function flush()
         {
             parent::flush();
@@ -199,7 +204,7 @@ $logger = <<<'LOGGER'
                 $logger->flush();
             }
         }
-        
+                
         public function incrementalFlush()
         {
             parent::incrementalFlush();
@@ -207,7 +212,7 @@ $logger = <<<'LOGGER'
                 $logger->incrementalFlush();
             }
         }
-        
+                
         public function addError(Test $test, Exception $t, $time)
         {
             parent::addError($test, $t, $time);
@@ -215,7 +220,7 @@ $logger = <<<'LOGGER'
                 $logger->addError($test, $t, $time);
             }
         }
-        
+                
         public function addWarning(Test $test, Warning $e, $time)
         {
             parent::addWarning($test, $e, $time);
@@ -223,7 +228,7 @@ $logger = <<<'LOGGER'
                 $logger->addWarning($test, $e, $time);
             }
         }
-        
+                
         public function addFailure(Test $test, AssertionFailedError $e, $time)
         {
             parent::addFailure($test, $e, $time);
@@ -231,7 +236,7 @@ $logger = <<<'LOGGER'
                 $logger->addFailure($test, $e, $time);
             }
         }
-        
+                
         public function addIncompleteTest(Test $test, Exception $t, $time)
         {
             parent::addIncompleteTest($test, $t, $time);
@@ -239,7 +244,7 @@ $logger = <<<'LOGGER'
                 $logger->addIncompleteTest($test, $t, $time);
             }
         }
-        
+                
         public function addRiskyTest(Test $test, Exception $t, $time)
         {
             parent::addRiskyTest($test, $t, $time);
@@ -247,7 +252,7 @@ $logger = <<<'LOGGER'
                 $logger->addRiskyTest($test, $t, $time);
             }
         }
-        
+                
         public function addSkippedTest(Test $test, Exception $t, $time)
         {
             parent::addSkippedTest($test, $t, $time);
@@ -255,7 +260,7 @@ $logger = <<<'LOGGER'
                 $logger->addSkippedTest($test, $t, $time);
             }
         }
-        
+                
         public function startTestSuite(TestSuite $suite)
         {
             parent::startTestSuite($suite);
@@ -263,7 +268,7 @@ $logger = <<<'LOGGER'
                 $logger->startTestSuite($suite);
             }
         }
-        
+                
         public function endTestSuite(TestSuite $suite)
         {
             parent::endTestSuite($suite);
@@ -271,16 +276,16 @@ $logger = <<<'LOGGER'
                 $logger->endTestSuite($suite);
             }
         }
-        
+                
         public function startTest(Test $test)
         {
             parent::startTest($test);
-            
+                
             foreach ($this->loggers as $logger) {
                 $logger->startTest($test);
             }
         }
-        
+                
         public function endTest(Test $test, $time)
         {
             parent::endTest($test, $time);
@@ -305,7 +310,7 @@ LOGGER;
                 new PHPUnitEclipseLogger()
             );
         }
-        
+                    
         public function setAutoFlush($autoFlush)
         {
             parent::setAutoFlush($autoFlush);
@@ -313,7 +318,7 @@ LOGGER;
                 $logger->setAutoFlush($autoFlush);
             }
         }
-        
+                
         public function flush()
         {
             parent::flush();
@@ -321,7 +326,7 @@ LOGGER;
                 $logger->flush();
             }
         }
-        
+                
         public function incrementalFlush()
         {
             parent::incrementalFlush();
@@ -329,7 +334,7 @@ LOGGER;
                 $logger->incrementalFlush();
             }
         }
-        
+                
         public function addError(Test $test, Exception $t, $time)
         {
             parent::addError($test, $t, $time);
@@ -337,7 +342,7 @@ LOGGER;
                 $logger->addError($test, $t, $time);
             }
         }
-        
+                
         public function addWarning(Test $test, Warning $e, $time)
         {
             parent::addWarning($test, $e, $time);
@@ -345,7 +350,7 @@ LOGGER;
                 $logger->addWarning($test, $e, $time);
             }
         }
-        
+                
         public function addFailure(Test $test, AssertionFailedError $e, $time)
         {
             parent::addFailure($test, $e, $time);
@@ -353,7 +358,7 @@ LOGGER;
                 $logger->addFailure($test, $e, $time);
             }
         }
-        
+                
         public function addIncompleteTest(Test $test, Exception $t, $time)
         {
             parent::addIncompleteTest($test, $t, $time);
@@ -361,7 +366,7 @@ LOGGER;
                 $logger->addIncompleteTest($test, $t, $time);
             }
         }
-        
+                
         public function addRiskyTest(Test $test, Exception $t, $time)
         {
             parent::addRiskyTest($test, $t, $time);
@@ -369,7 +374,7 @@ LOGGER;
                 $logger->addRiskyTest($test, $t, $time);
             }
         }
-        
+                
         public function addSkippedTest(Test $test, Exception $t, $time)
         {
             parent::addSkippedTest($test, $t, $time);
@@ -377,7 +382,7 @@ LOGGER;
                 $logger->addSkippedTest($test, $t, $time);
             }
         }
-        
+                
         public function startTestSuite(TestSuite $suite)
         {
             parent::startTestSuite($suite);
@@ -385,7 +390,7 @@ LOGGER;
                 $logger->startTestSuite($suite);
             }
         }
-        
+                
         public function endTestSuite(TestSuite $suite)
         {
             parent::endTestSuite($suite);
@@ -393,16 +398,16 @@ LOGGER;
                 $logger->endTestSuite($suite);
             }
         }
-        
+                
         public function startTest(Test $test)
         {
             parent::startTest($test);
-            
+                
             foreach ($this->loggers as $logger) {
                 $logger->startTest($test);
             }
         }
-        
+                
         public function endTest(Test $test, $time)
         {
             parent::endTest($test, $time);
@@ -417,22 +422,22 @@ LOGGER;
 eval($logger);
 class PHPUnitEclipseLogger
 {
-
+    
     private $status;
-
+    
     private $exception;
-
+    
     private $time;
-
+    
     private $warnings;
-
+    
     private $varx;
-
+    
     /**
      * data provider support - enumerates the test cases
      */
     private $dataProviderNumerator = - 1;
-
+    
     public function __construct()
     {
         $this->cleanTest();
@@ -440,68 +445,68 @@ class PHPUnitEclipseLogger
         $port = isset($_SERVER['PHPUNIT_PORT']) ? $_SERVER['PHPUNIT_PORT'] : 7478;
         $this->out = fsockopen('127.0.0.1', $port, $errno, $errstr, 5);
     }
-
+    
     public function startTestSuite(TestSuite $suite)
     {
         $this->writeTest($suite, 'start');
     }
-
+    
     public function startTest(Test $test)
     {
         ZendPHPUnitErrorHandlerTracer::getInstance()->start();
         $this->cleanTest();
         $this->writeTest($test, 'start', true);
     }
-
+    
     public function addError(Test $test, $e, $time)
     {
         $this->status = 'error';
         $this->exception = $e;
     }
-
+    
     public function addWarning(Test $test, Warning $e, $time)
     {
         $this->status = 'warning';
         $this->exception = $e;
     }
-
+    
     public function addFailure(Test $test, AssertionFailedError $e, $time)
     {
         $this->status = 'fail';
         $this->exception = $e;
     }
-
+    
     public function addIncompleteTest(Test $test, $e, $time)
     {
         $this->status = 'incomplete';
         $this->exception = $e;
     }
-
+    
     public function addSkippedTest(Test $test, $e, $time)
     {
         $this->status = 'skip';
         $this->exception = $e;
     }
-
+    
     public function endTest(Test $test, $time)
     {
         $this->warnings = ZendPHPUnitErrorHandlerTracer::getInstance()->stop();
         $this->time = $time;
         $this->writeTest($test, $this->status);
     }
-
+    
     public function endTestSuite(TestSuite $suite)
     {
         $this->writeTest($suite, 'end');
     }
-
+    
     public function addRiskyTest(Test $test, $e, $time)
     {}
-
+    
     public function flush()
     {
     }
-
+    
     public function getWrappedTrace($e)
     {
         if ($e->getPrevious() != null) {
@@ -512,7 +517,7 @@ class PHPUnitEclipseLogger
         }
         return $e->getTrace();
     }
-
+    
     public function getWrappedName($e)
     {
         if ($e->getPrevious() != null) {
@@ -523,7 +528,7 @@ class PHPUnitEclipseLogger
         }
         return get_class($e);
     }
-
+    
     private function cleanTest()
     {
         $this->status = 'pass';
@@ -531,13 +536,13 @@ class PHPUnitEclipseLogger
         $this->warnings = array();
         $this->time = 0;
     }
-
+    
     private function writeArray($array)
     {
         $result = $this->writeJson($this->encodeJson($array));
         return $result;
     }
-
+    
     private function writeTest(Test $test, $event, $isTestCase = false)
     {
         // echo out test output
@@ -563,35 +568,35 @@ class PHPUnitEclipseLogger
                 return;
             }
             if (preg_match("*::*", $test->getName()) != 0) { // if it is a dataprovider test suite
-                                                             // $result['target'] = 'testsuite-dataprovider';
+                // $result['target'] = 'testsuite-dataprovider';
                 $result['target'] = 'testsuite';
                 if ($event == 'start')
                     $this->dataProviderNumerator = 0;
-                elseif ($event == 'end')
+                    elseif ($event == 'end')
                     $this->dataProviderNumerator = - 1;
-                
-                try {
-                    $ex = explode('::', $test->getName(), 2);
-                    $class = new ReflectionClass($ex[0]);
-                    $name = $test->getName();
-                    $file = $class->getFileName();
-                    $line = $class->getStartLine();
-                    $result['test'] = array(
-                        'name' => $name,
-                        'tests' => $test->count(),
-                        'file' => $file,
-                        'line' => $line
-                    );
                     
-                    $method = $class->getMethod($ex[1]);
-                    $result['test']['line'] = $method->getStartLine();
-                } catch (ReflectionException $re) {
-                    $name = $test->getName();
-                    $result['test'] = array(
-                        'name' => $name,
-                        'tests' => $test->count()
-                    );
-                }
+                    try {
+                        $ex = explode('::', $test->getName(), 2);
+                        $class = new ReflectionClass($ex[0]);
+                        $name = $test->getName();
+                        $file = $class->getFileName();
+                        $line = $class->getStartLine();
+                        $result['test'] = array(
+                            'name' => $name,
+                            'tests' => $test->count(),
+                            'file' => $file,
+                            'line' => $line
+                        );
+                        
+                        $method = $class->getMethod($ex[1]);
+                        $result['test']['line'] = $method->getStartLine();
+                    } catch (ReflectionException $re) {
+                        $name = $test->getName();
+                        $result['test'] = array(
+                            'name' => $name,
+                            'tests' => $test->count()
+                        );
+                    }
             } else {
                 $result['target'] = 'testsuite';
                 $this->dataProviderNumerator = - 1;
@@ -645,10 +650,10 @@ class PHPUnitEclipseLogger
             if ($this->exception instanceof ExpectationFailedException) {
                 if (method_exists($this->exception, "getDescription")) {
                     $message = $this->exception->getDescription();
-                } else 
+                } else
                     if (method_exists($this->exception, "getMessage")) { // PHPUnit 3.6.3
                         $message = $this->exception->getMessage();
-                    }
+                }
                 if (method_exists($this->exception, "getComparisonFailure") && method_exists($this->exception->getComparisonFailure(), "getDiff")) {
                     $diff = $this->exception->getComparisonFailure()->getDiff();
                 }
@@ -677,14 +682,14 @@ class PHPUnitEclipseLogger
             die();
         }
     }
-
+    
     private function writeJson($buffer)
     {
         if ($this->out && ! @feof($this->out)) {
             return @fwrite($this->out, "$buffer\n");
         }
     }
-
+    
     private function escapeString($string)
     {
         return str_replace(array(
@@ -707,7 +712,7 @@ class PHPUnitEclipseLogger
             '\t'
         ), $string);
     }
-
+    
     private function encodeJson($array)
     {
         $result = '';
@@ -715,27 +720,27 @@ class PHPUnitEclipseLogger
             $array = array(
                 $array
             );
-        $first = true;
-        foreach ($array as $key => $value) {
-            if (! $first)
-                $result .= ',';
-            else
-                $first = false;
-            $result .= sprintf('"%s":', $this->escapeString($key));
-            if (is_array($value) || is_object($value))
-                $result .= sprintf('%s', $this->encodeJson($value));
-            else
-                $result .= sprintf('"%s"', $this->escapeString($value));
-        }
-        return '{' . $result . '}';
+            $first = true;
+            foreach ($array as $key => $value) {
+                if (! $first)
+                    $result .= ',';
+                    else
+                        $first = false;
+                        $result .= sprintf('"%s":', $this->escapeString($key));
+                        if (is_array($value) || is_object($value))
+                            $result .= sprintf('%s', $this->encodeJson($value));
+                            else
+                                $result .= sprintf('"%s"', $this->escapeString($value));
+            }
+            return '{' . $result . '}';
     }
 }
 
 class ZendPHPUnitErrorHandlerTracer extends ZendPHPUnitErrorHandler
 {
-
+    
     private static $ZendPHPUnitErrorHandlerTracer;
-
+    
     /**
      *
      * @return ZendPHPUnitErrorHandlerTracer
@@ -747,7 +752,7 @@ class ZendPHPUnitErrorHandlerTracer extends ZendPHPUnitErrorHandler
         }
         return self::$ZendPHPUnitErrorHandlerTracer;
     }
-
+    
     public static $errorCodes = array(
         E_ERROR => 'Error',
         E_WARNING => 'Warning',
@@ -765,9 +770,9 @@ class ZendPHPUnitErrorHandlerTracer extends ZendPHPUnitErrorHandler
         E_DEPRECATED => 'Deprecated',
         E_USER_DEPRECATED => 'User Deprecated'
     );
-
+    
     protected $warnings;
-
+    
     public function handle($errno, $errstr, $errfile, $errline)
     {
         parent::handle($errno, $errstr, $errfile, $errline);
@@ -777,7 +782,7 @@ class ZendPHPUnitErrorHandlerTracer extends ZendPHPUnitErrorHandler
             'file' => $errfile,
             'line' => $errline,
             'trace' => filterTrace(debug_backtrace()),
-            'time' => PHP_Timer::resourceUsage()
+            'time' => Timer::resourceUsage()
         );
         $return = false;
         switch ($errno) { // ignoring user abort
@@ -788,13 +793,13 @@ class ZendPHPUnitErrorHandlerTracer extends ZendPHPUnitErrorHandler
         $this->warnings[] = $warning;
         return $return;
     }
-
+    
     public function start()
     {
         $this->warnings = array();
         parent::start();
     }
-
+    
     public function stop()
     {
         parent::stop();
@@ -806,9 +811,9 @@ class ZendPHPUnitErrorHandlerTracer extends ZendPHPUnitErrorHandler
 
 class ZendPHPUnitErrorHandler
 {
-
+    
     private static $ZendPHPUnitErrorHandler;
-
+    
     /**
      *
      * @return ZendPHPUnitErrorHandler
@@ -820,7 +825,7 @@ class ZendPHPUnitErrorHandler
         }
         return self::$ZendPHPUnitErrorHandler;
     }
-
+    
     public function handle($errno, $errstr, $errfile, $errline)
     {
         if (! ($errno & error_reporting())) {
@@ -855,7 +860,7 @@ class ZendPHPUnitErrorHandler
         
         throw new $exception($errstr, $errno, $errfile, $errline, $trace = null);
     }
-
+    
     public function start()
     {
         set_error_handler(array(
@@ -863,7 +868,7 @@ class ZendPHPUnitErrorHandler
             'handle'
         ));
     }
-
+    
     public function stop()
     {
         restore_error_handler();
