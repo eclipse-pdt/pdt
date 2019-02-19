@@ -1,0 +1,9 @@
+--TEST--
+Test undefined arrays with varComment
+--FILE--
+<?php
+/* @var array $var1 */
+ echo $var1[1], $var2;
+?>
+--EXPECT--
+[line=3, start=45, end=50] Variable '$var2' is undefined

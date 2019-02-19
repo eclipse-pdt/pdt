@@ -479,14 +479,7 @@ public class VariableValidator implements IValidatorExtension {
 				}
 				return false;
 			}
-			Variable var = current.variables.get(name);
-			if (var == null) {
-				validator.reportProblem(s.start(), s.start() + s.getName().length(),
-						NLS.bind(Messages.VariableValidator_IsUndefined, name), PHPProblemIdentifier.UndefinedVariable,
-						ProblemSeverity.WARNING);
-			} else if (!isInit()) {
-				var.setUsed(s.start());
-			}
+			check(name, s.start(), s.start() + s.getName().length());
 			if (s.getIndex() != null) {
 				operations.push(Operation.USE);
 				s.getIndex().traverse(this);
