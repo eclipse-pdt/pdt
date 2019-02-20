@@ -42,7 +42,7 @@ public enum PHPVersion {
 	PHP7_0("php7.0"), //$NON-NLS-1$
 	PHP7_1("php7.1"), //$NON-NLS-1$
 	PHP7_2("php7.2"), //$NON-NLS-1$
-	PHP7_3("php7.3", true); //$NON-NLS-1$
+	PHP7_3("php7.3"); //$NON-NLS-1$
 
 	private String alias;
 	private boolean isExperimentalSupport;
