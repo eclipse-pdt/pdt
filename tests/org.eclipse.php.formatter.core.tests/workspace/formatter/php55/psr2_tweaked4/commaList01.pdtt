@@ -1,0 +1,51 @@
+--TEST--
+Bug 544637 - better handling of multiline comments at end of comma-separated lists
+--FILE--
+<?php
+if (true) {
+    foo($value, $key /* comment1 */ /* comment2 */); /* comment3 */
+}
+
+function foo(&$value, $key)
+{
+    $value = str_replace(array(
+        '_',
+        '%' /* comment4 */
+    ), array(
+        '\\_',
+        '\\%'
+    ), $value);
+}
+
+$var = array(
+    0 => array(
+        'pipe',
+        'r'
+    ), // STDIN
+    1 => array(
+        'pipe',
+        'w'
+    ), // STDOUT
+    2 => array(
+        'pipe',
+        'w'
+    ) // STDERR
+);
+--EXPECT--
+<?php
+if (true) {
+    foo($value, $key /* comment1 */ /* comment2 */); /* comment3 */
+}
+function foo(&$value, $key)
+{
+    $value = str_replace(array('_','%' /* comment4 */
+    ), array('\\_','\\%'
+    ), $value);
+}
+$var = array(0 => array('pipe','r'
+), // STDIN
+1 => array('pipe','w'
+), // STDOUT
+2 => array('pipe','w'
+) // STDERR
+);
