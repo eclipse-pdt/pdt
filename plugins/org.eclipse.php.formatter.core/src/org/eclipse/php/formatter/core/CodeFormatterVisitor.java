@@ -606,7 +606,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		return isIndentationAdded;
 	}
 
-	private void handleChars(int offset, int end) {
+	private void handleChars(int offset, int end, int addSpacesNoNewlineAfterLastSingleLineComment) {
 		try {
 			// check if the changed region is in the formatting requested region
 			if (startRegionPosition < end && endRegionPosition >= end) {
@@ -614,7 +614,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 				if (hasComments) {
 					// handle the comments
-					handleComments(offset, end, astLexer.getCommentList(), false, 0);
+					handleComments(offset, end, astLexer.getCommentList(), false, 0,
+							addSpacesNoNewlineAfterLastSingleLineComment);
 				} else {
 					handleCharsWithoutComments(offset, end);
 				}
@@ -627,6 +628,10 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		}
 	}
 
+	private void handleChars(int offset, int end) {
+		handleChars(offset, end, -1);
+	}
+
 	private void handleChars1(int offset, int end, boolean isIndented, int indentGap) {
 		try {
 			// check if the changed region is in the formatting requested region
@@ -635,7 +640,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 				if (hasComments) {
 					// handle the comments
-					handleComments(offset, end, astLexer.getCommentList(), isIndented, indentGap);
+					handleComments(offset, end, astLexer.getCommentList(), isIndented, indentGap, -1);
 				} else {
 					handleCharsWithoutComments(offset, end);
 				}
@@ -1068,8 +1073,10 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=440209
 	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=440820
-	private void handleComments(int offset, int end, List<?> commentList, boolean isIndented, int indentGap)
-			throws Exception {
+	// NB: set addSpacesNoNewlineAfterLastSingleLineComment to -1 to disable the
+	// "replace newline by spaces after last single-line comment" feature
+	private void handleComments(int offset, int end, List<?> commentList, boolean isIndented, int indentGap,
+			int addSpacesNoNewlineAfterLastSingleLineComment) throws Exception {
 		int savedMrnbLineWidth = mrnbLineWidth;
 		boolean oldIgnoreEmptyLineSetting = ignoreEmptyLineSetting;
 		ignoreEmptyLineSetting = false;
@@ -1586,7 +1593,20 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 							commentWords = new ArrayList<>();
 							handleCharsWithoutComments(comment.sourceStart() + offset, comment.sourceEnd() + offset,
 									true, true);
-							insertNewLine();
+							// https://bugs.eclipse.org/bugs/show_bug.cgi?id=544637
+							// last comment ending a comma-separated list (i.e.
+							// just before closing parenthesis/bracket) doesn't
+							// always need a newline,
+							// for example "foo($var /* comment */);"
+							boolean shouldNotInsertNewLineOnLastComment = addSpacesNoNewlineAfterLastSingleLineComment >= 0
+									&& !iter.hasNext() && isAtEndOfExpression;
+							if (shouldNotInsertNewLineOnLastComment) {
+								insertSpaces(addSpacesNoNewlineAfterLastSingleLineComment);
+								needIndentNewLine = false;
+								indentAfterComment = EMPTY_STRING;
+							} else {
+								insertNewLine();
+							}
 							break;
 						}
 						commentWords = new ArrayList<>();
@@ -2366,6 +2386,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(ArrayAccess arrayAccess) {
+		int addSpacesNoNewlineAfterLastSingleLineComment = 0;
 		Expression variableName = arrayAccess.getName();
 		variableName.accept(this);
 		if (this.preferences.insert_space_before_opening_bracket_in_array) {
@@ -2379,6 +2400,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		int lastPosition = variableName.getEnd();
 		if (arrayAccess.getIndex() == null) {
 			if (this.preferences.insert_space_between_empty_brackets) {
+				addSpacesNoNewlineAfterLastSingleLineComment = 1;
 				insertSpace();
 			}
 		} else {
@@ -2389,6 +2411,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 			arrayAccess.getIndex().accept(this);
 			if (this.preferences.insert_space_before_closing_bracket_in_array) {
+				addSpacesNoNewlineAfterLastSingleLineComment = 1;
 				insertSpace();
 			}
 			lastPosition = arrayAccess.getIndex().getEnd();
@@ -2408,7 +2431,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		indentationLevelDescending = true;
 		boolean oldIgnoreEmptyLineSetting = ignoreEmptyLineSetting;
 		ignoreEmptyLineSetting = true;
-		handleChars(lastPosition, arrayAccess.getEnd() - 1);
+		handleChars(lastPosition, arrayAccess.getEnd() - 1, addSpacesNoNewlineAfterLastSingleLineComment);
 		addNonBlanksToLineWidth(1);// we need to add the closing bracket/curly
 		ignoreEmptyLineSetting = oldIgnoreEmptyLineSetting;
 
@@ -2417,6 +2440,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(ArrayCreation arrayCreation) {
+		int addSpacesNoNewlineAfterLastSingleLineComment = 0;
 		if (arrayCreation.isHasArrayKey()) {
 			addNonBlanksToLineWidth(5); // 5 = "array".length()
 		} else {
@@ -2468,6 +2492,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 			if (this.preferences.insert_space_before_closing_paren_in_array
 					&& !this.preferences.new_line_before_close_array_parenthesis_array) {
+				addSpacesNoNewlineAfterLastSingleLineComment = 1;
 				insertSpace();
 			}
 
@@ -2475,10 +2500,12 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			wasBinaryExpressionWrapped = oldWasBinaryExpressionWrapped;
 
 			if (this.preferences.new_line_before_close_array_parenthesis_array) {
+				addSpacesNoNewlineAfterLastSingleLineComment = -1;// -1 disables
+																	// this
+																	// feature
 				insertNewLines(1);
 				indent();
 			}
-
 		}
 
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=468155
@@ -2495,7 +2522,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		indentationLevelDescending = true;
 		boolean oldIgnoreEmptyLineSetting = ignoreEmptyLineSetting;
 		ignoreEmptyLineSetting = true;
-		handleChars(lastPosition, arrayCreation.getEnd() - 1);
+		handleChars(lastPosition, arrayCreation.getEnd() - 1, addSpacesNoNewlineAfterLastSingleLineComment);
 		addNonBlanksToLineWidth(1);// we need to add the closing
 									// bracket/parenthesis
 		ignoreEmptyLineSetting = oldIgnoreEmptyLineSetting;
@@ -3784,6 +3811,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	}
 
 	private void innerVisit(FunctionInvocation functionInvocation, boolean addParen) {
+		int addSpacesNoNewlineAfterLastSingleLineComment = -1; // -1 disables
+																// this feature
 		Expression functionName = functionInvocation.getFunctionName().getName();
 		functionName.accept(this);
 
@@ -3793,6 +3822,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		if (addParen) {
 			appendToBuffer(OPEN_PARN);
+			addSpacesNoNewlineAfterLastSingleLineComment = 0;
 		}
 
 		int lastPosition = functionName.getEnd();
@@ -3815,11 +3845,13 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 					this.preferences.line_wrap_arguments_in_method_invocation_force_split);
 
 			if (this.preferences.insert_space_before_closing_paren_in_function) {
+				addSpacesNoNewlineAfterLastSingleLineComment = 1;
 				insertSpace();
 			}
 
 		} else {
 			if (this.preferences.insert_space_between_empty_paren_in_function) {
+				addSpacesNoNewlineAfterLastSingleLineComment = 1;
 				insertSpace();
 			}
 		}
@@ -3830,7 +3862,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				appendToBuffer(CLOSE_PARN);
 				handleChars(lastPosition, functionInvocation.getEnd());
 			} else {
-				handleChars(lastPosition, functionInvocation.getEnd() - 1);
+				handleChars(lastPosition, functionInvocation.getEnd() - 1,
+						addSpacesNoNewlineAfterLastSingleLineComment);
 				addNonBlanksToLineWidth(1);// we need to add the closing
 											// parenthesis
 			}
@@ -4521,6 +4554,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(ListVariable listVariable) {
+		int addSpacesNoNewlineAfterLastSingleLineComment = 0;
 		addNonBlanksToLineWidth(4);
 		if (this.preferences.insert_space_before_opening_paren_in_list) {
 			insertSpace();
@@ -4540,10 +4574,11 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				NO_LINE_WRAP, NO_LINE_WRAP_INDENT, false);
 
 		if (this.preferences.insert_space_before_closing_paren_in_list) {
+			addSpacesNoNewlineAfterLastSingleLineComment = 1;
 			insertSpace();
 		}
 		// appendToBuffer(CLOSE_PARN);
-		handleChars(lastPosition, listVariable.getEnd() - 1);
+		handleChars(lastPosition, listVariable.getEnd() - 1, addSpacesNoNewlineAfterLastSingleLineComment);
 		addNonBlanksToLineWidth(1);// we need to add the closing parenthesis
 
 		return false;
@@ -4662,6 +4697,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(ParenthesisExpression parenthesisExpression) {
+		int addSpacesNoNewlineAfterLastSingleLineComment = 0;
 		appendToBuffer(OPEN_PARN);
 		if (this.preferences.insert_space_after_open_paren_in_parenthesis_expression) {
 			insertSpace();
@@ -4675,10 +4711,11 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			lastPosition = expression.getEnd();
 		}
 		if (this.preferences.insert_space_before_close_paren_in_parenthesis_expression) {
+			addSpacesNoNewlineAfterLastSingleLineComment = 1;
 			insertSpace();
 		}
 		// appendToBuffer(CLOSE_PARN);
-		handleChars(lastPosition, parenthesisExpression.getEnd() - 1);
+		handleChars(lastPosition, parenthesisExpression.getEnd() - 1, addSpacesNoNewlineAfterLastSingleLineComment);
 		addNonBlanksToLineWidth(1);// we need to add the closing parenthesis
 		return false;
 	}
