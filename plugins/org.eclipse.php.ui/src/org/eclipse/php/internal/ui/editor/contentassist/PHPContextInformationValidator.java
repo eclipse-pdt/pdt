@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -90,7 +90,11 @@ public class PHPContextInformationValidator implements IContextInformationValida
 						start = getCommentEnd(document, start + 1, end);
 					} else if (next == '/') {
 						// '//'-comment: nothing to do anymore on this line
-						start = end;
+						IRegion line = document.getLineInformationOfOffset(start);
+						// NB: the line ending offset could be greater than the
+						// value of "end" but that's still ok because the new
+						// value of "start" will stop the while-loop anyway
+						start = line.getOffset() + line.getLength();
 					}
 				}
 				break;
