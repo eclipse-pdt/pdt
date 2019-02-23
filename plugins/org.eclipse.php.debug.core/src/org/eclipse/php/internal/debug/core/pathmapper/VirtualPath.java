@@ -43,16 +43,19 @@ public class VirtualPath implements Cloneable {
 		if (path == null) {
 			throw new NullPointerException();
 		}
+		String originalPath = path;
 		if (path.startsWith("\\\\")) { // Network path //$NON-NLS-1$
 			sepChar = '\\';
 			device = "\\\\"; //$NON-NLS-1$
 			path = path.substring(2);
-		}
-		if (path.startsWith("\\")) { //$NON-NLS-1$
+		} else if (path.startsWith("\\")) { //$NON-NLS-1$
 			sepChar = '\\';
 			device = "\\"; //$NON-NLS-1$
 			path = path.substring(1);
 		} else {
+			if (path.toLowerCase().startsWith("file://")) { //$NON-NLS-1$
+				path = path.substring("file://".length()); //$NON-NLS-1$
+			}
 			Matcher m = VOLNAME.matcher(path);
 			if (m.matches()) { // Windows path
 				sepChar = '\\';
@@ -69,7 +72,7 @@ public class VirtualPath implements Cloneable {
 					device = m.group(1);
 					path = m.group(2);
 				} else {
-					throw new IllegalArgumentException("Illegal or not full path: " + path);//$NON-NLS-1$
+					throw new IllegalArgumentException("Illegal or not full path: " + originalPath);//$NON-NLS-1$
 				}
 			}
 		}
@@ -82,6 +85,17 @@ public class VirtualPath implements Cloneable {
 				segments.add(segment);
 			}
 		}
+	}
+
+	/**
+	 * Checks whether the given path is local
+	 * 
+	 * @param path
+	 * @return <code>true</code> if given path is a local path, otherwise
+	 *         <code>false</code>
+	 */
+	public static boolean isLocal(String path) {
+		return (VOLNAME.matcher(path).matches() || path.startsWith("/") || path.toLowerCase().startsWith("file://")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
