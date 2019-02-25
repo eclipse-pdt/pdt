@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -641,26 +641,37 @@ public class PHPDebugTarget extends PHPDebugElement
 			return;
 		}
 		int deltaLNumber = delta.getAttribute(IMarker.LINE_NUMBER, 0);
+		boolean deltaEnabled = delta.getAttribute(IBreakpoint.ENABLED, true);
 		IMarker marker = breakpoint.getMarker();
 		int lineNumber = marker.getAttribute(IMarker.LINE_NUMBER, 0);
+		boolean enabled = marker.getAttribute(IBreakpoint.ENABLED, true);
 		if (supportsBreakpoint(breakpoint)) {
 			try {
 				if (((PHPLineBreakpoint) breakpoint).isConditionChanged()) {
 					((PHPLineBreakpoint) breakpoint).setConditionChanged(false);
 					if (breakpoint.isEnabled()) {
 						breakpointRemoved(breakpoint, null);
-					} else {
-						return;
+						breakpointAdded(breakpoint);
 					}
+					return;
 				}
 				if (lineNumber != deltaLNumber) {
 					if (breakpoint.isEnabled()) {
 						breakpointRemoved(breakpoint, null);
-					} else {
-						return;
+						breakpointAdded(breakpoint);
 					}
+					return;
+				}
+				if (enabled != deltaEnabled) {
+					if (breakpoint.isEnabled()) {
+						breakpointAdded(breakpoint);
+					} else {
+						breakpointRemoved(breakpoint, null);
+					}
+					return;
 				}
 				if (breakpoint.isEnabled()) {
+					breakpointRemoved(breakpoint, null);
 					breakpointAdded(breakpoint);
 				} else {
 					breakpointRemoved(breakpoint, null);
