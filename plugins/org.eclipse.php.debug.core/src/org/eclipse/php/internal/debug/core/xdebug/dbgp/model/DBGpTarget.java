@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 IBM Corporation and others.
+ * Copyright (c) 2009, 2017, 2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -1981,7 +1981,19 @@ public class DBGpTarget extends DBGpElement
 	 */
 	@Override
 	public void breakpointRemoved(IBreakpoint breakpoint, IMarkerDelta delta) {
+		breakpointRemoved(breakpoint, true);
+	}
+
+	public void breakpointRemoved(IBreakpoint breakpoint, boolean lookForEnableState) {
 		if (supportsBreakpoint(breakpoint)) {
+			IMarker marker = breakpoint.getMarker();
+			boolean enabled = marker.getAttribute(IBreakpoint.ENABLED, true);
+			if (lookForEnableState && !enabled) {
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=538315
+				// already handled by breakpointChanged(IBreakpoint, IMarkerDelta),
+				// nothing more to do
+				return;
+			}
 			DBGpBreakpoint bp = bpFacade.createDBGpBreakpoint(breakpoint);
 			if (isSuspended() || (asyncSupported && isRunning())) {
 				// aysnc mode and running or we are suspended so send the remove
@@ -2039,10 +2051,12 @@ public class DBGpTarget extends DBGpElement
 		if (!bmgr.isEnabled()) {
 			return;
 		}
-		int deltaLNumber = delta.getAttribute(IMarker.LINE_NUMBER, 0);
-		IMarker marker = breakpoint.getMarker();
-		int lineNumber = marker.getAttribute(IMarker.LINE_NUMBER, 0);
 		if (supportsBreakpoint(breakpoint)) {
+			int deltaLNumber = delta.getAttribute(IMarker.LINE_NUMBER, 0);
+			boolean deltaEnabled = delta.getAttribute(IBreakpoint.ENABLED, true);
+			IMarker marker = breakpoint.getMarker();
+			int lineNumber = marker.getAttribute(IMarker.LINE_NUMBER, 0);
+			boolean enabled = marker.getAttribute(IBreakpoint.ENABLED, true);
 			try {
 
 				// did the condition change ?
@@ -2054,9 +2068,9 @@ public class DBGpTarget extends DBGpElement
 					bp.resetConditionChanged();
 					if (breakpoint.isEnabled()) {
 						breakpointRemoved(breakpoint, null);
-					} else {
-						return;
+						breakpointAdded(breakpoint);
 					}
+					return;
 				}
 
 				// did the line number change ?
@@ -2067,17 +2081,33 @@ public class DBGpTarget extends DBGpElement
 
 					if (breakpoint.isEnabled()) {
 						breakpointRemoved(breakpoint, null);
-					} else {
-						return;
+						breakpointAdded(breakpoint);
 					}
+					return;
+				}
+
+				// did the line enable state change ?
+				if (enabled != deltaEnabled) {
+					if (DBGpLogger.debugBP()) {
+						DBGpLogger.debug("enable state changed for breakpoint with ID: " + bp.getID()); //$NON-NLS-1$
+					}
+
+					// enable or disable a breakpoint from the "Breakpoints" view
+					if (breakpoint.isEnabled()) {
+						breakpointAdded(breakpoint);
+					} else {
+						// force removal of this breakpoint
+						breakpointRemoved(breakpoint, false);
+					}
+					return;
 				}
 
 				// add or remove the break point depending on whether it was
 				// enabled or not
 				if (breakpoint.isEnabled()) {
-					breakpointAdded(breakpoint);
-				} else {
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=538315
 					breakpointRemoved(breakpoint, null);
+					breakpointAdded(breakpoint);
 				}
 			} catch (CoreException e) {
 				DBGpLogger.logException("Exception Changing Breakpoint", this, e); //$NON-NLS-1$
