@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 IBM Corporation and others.
+ * Copyright (c) 2009, 2017, 2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -2040,8 +2040,10 @@ public class DBGpTarget extends DBGpElement
 			return;
 		}
 		int deltaLNumber = delta.getAttribute(IMarker.LINE_NUMBER, 0);
+		boolean deltaEnabled = delta.getAttribute(IBreakpoint.ENABLED, true);
 		IMarker marker = breakpoint.getMarker();
 		int lineNumber = marker.getAttribute(IMarker.LINE_NUMBER, 0);
+		boolean enabled = marker.getAttribute(IBreakpoint.ENABLED, true);
 		if (supportsBreakpoint(breakpoint)) {
 			try {
 
@@ -2054,9 +2056,9 @@ public class DBGpTarget extends DBGpElement
 					bp.resetConditionChanged();
 					if (breakpoint.isEnabled()) {
 						breakpointRemoved(breakpoint, null);
-					} else {
-						return;
+						breakpointAdded(breakpoint);
 					}
+					return;
 				}
 
 				// did the line number change ?
@@ -2067,14 +2069,31 @@ public class DBGpTarget extends DBGpElement
 
 					if (breakpoint.isEnabled()) {
 						breakpointRemoved(breakpoint, null);
-					} else {
-						return;
+						breakpointAdded(breakpoint);
 					}
+					return;
+				}
+
+				// did the line enable state change ?
+				if (enabled != deltaEnabled) {
+					if (DBGpLogger.debugBP()) {
+						DBGpLogger.debug("enable state changed for breakpoint with ID: " + bp.getID()); //$NON-NLS-1$
+					}
+
+					// enable or disable a breakpoint from the "Breakpoints" view
+					if (breakpoint.isEnabled()) {
+						breakpointAdded(breakpoint);
+					} else {
+						breakpointRemoved(breakpoint, null);
+					}
+					return;
 				}
 
 				// add or remove the break point depending on whether it was
 				// enabled or not
 				if (breakpoint.isEnabled()) {
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=538315
+					breakpointRemoved(breakpoint, null);
 					breakpointAdded(breakpoint);
 				} else {
 					breakpointRemoved(breakpoint, null);
