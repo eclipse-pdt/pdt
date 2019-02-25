@@ -346,6 +346,11 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 			setError(Messages.PathMapperEntryDialog_9);
 			return;
 		}
+		// XXX: Should we add following test?
+		// if (!VirtualPath.isLocal(remotePathStr)) {
+		// setError(Messages.PathMapperEntryDialog_10);
+		// return;
+		// }
 		try {
 			mapping.remotePath = new VirtualPath(remotePathStr);
 		} catch (IllegalArgumentException e) {
@@ -361,15 +366,11 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 				return;
 			}
 
-			boolean pathExistsInWorkspace = false;
-			mapping.type = (Type) fWorkspacePathText.getData();
-			if (mapping.type == Type.INCLUDE_FOLDER || mapping.type == Type.INCLUDE_VAR) {
-				pathExistsInWorkspace = new File(workspacePath).exists();
-			} else {
-				pathExistsInWorkspace = (ResourcesPlugin.getWorkspace().getRoot().findMember(workspacePath) != null);
-			}
-			if (!pathExistsInWorkspace) {
-				setError(NLS.bind(Messages.PathMapperEntryDialog_12, workspacePath));
+			// Workaround bug 542652 - Path Mapping for PHP Server does not
+			// accept UNC paths
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=542652
+			if (!VirtualPath.isLocal(workspacePath)) {
+				setError(Messages.PathMapperEntryDialog_13);
 				return;
 			}
 			try {
@@ -378,24 +379,44 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 				setError(Messages.PathMapperEntryDialog_13);
 				return;
 			}
+			boolean pathExistsInWorkspace = false;
+			mapping.type = (Type) fWorkspacePathText.getData();
+			if (mapping.type == Type.INCLUDE_FOLDER || mapping.type == Type.INCLUDE_VAR) {
+				pathExistsInWorkspace = new File(mapping.localPath.toString()).exists();
+			} else {
+				pathExistsInWorkspace = (ResourcesPlugin.getWorkspace().getRoot()
+						.findMember(mapping.localPath.toString()) != null);
+			}
+			if (!pathExistsInWorkspace) {
+				setError(NLS.bind(Messages.PathMapperEntryDialog_12, workspacePath));
+				return;
+			}
 		} else if (ignoreMappingBtn.getSelection()) {
-			mapping.type = Type.SERVER;
 			mapping.localPath = mapping.remotePath.clone();
+			mapping.type = Type.SERVER;
 		} else { // External file:
 			String externalPath = fExternalPathText.getText().trim();
 			if (externalPath.length() == 0) {
 				setError(Messages.PathMapperEntryDialog_14);
 				return;
 			}
-			if (!new File(externalPath).exists()) {
-				setError(NLS.bind(Messages.PathMapperEntryDialog_15, externalPath));
+
+			// Workaround bug 542652 - Path Mapping for PHP Server does not
+			// accept UNC paths
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=542652
+			if (!VirtualPath.isLocal(externalPath)) {
+				setError(Messages.PathMapperEntryDialog_16);
 				return;
 			}
 			try {
-				mapping.type = Type.EXTERNAL;
 				mapping.localPath = new VirtualPath(externalPath);
 			} catch (IllegalArgumentException e) {
 				setError(Messages.PathMapperEntryDialog_16);
+				return;
+			}
+			mapping.type = Type.EXTERNAL;
+			if (!new File(mapping.localPath.toString()).exists()) {
+				setError(NLS.bind(Messages.PathMapperEntryDialog_15, externalPath));
 				return;
 			}
 		}
