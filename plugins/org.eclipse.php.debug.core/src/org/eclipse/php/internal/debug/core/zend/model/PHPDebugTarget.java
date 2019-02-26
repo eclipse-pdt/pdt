@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -612,8 +612,20 @@ public class PHPDebugTarget extends PHPDebugElement
 	 */
 	@Override
 	public void breakpointRemoved(IBreakpoint breakpoint, IMarkerDelta delta) {
+		breakpointRemoved(breakpoint, true);
+	}
+
+	public void breakpointRemoved(IBreakpoint breakpoint, boolean onlyHandleEnabledBreakpoints) {
 		if (supportsBreakpoint(breakpoint)) {
-			if (breakpoint instanceof PHPRunToLineBreakpoint) {
+			try {
+				if (onlyHandleEnabledBreakpoints && !breakpoint.isEnabled()) {
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=538315
+					// already handled by breakpointChanged(IBreakpoint, IMarkerDelta),
+					// nothing more to do
+					return;
+				}
+			} catch (CoreException e) {
+				Logger.logException("PHPDebugTarget: Exception Removing Breakpoint", e); //$NON-NLS-1$
 				return;
 			}
 			fLastcmd = "breakpointRemoved"; //$NON-NLS-1$
@@ -640,30 +652,41 @@ public class PHPDebugTarget extends PHPDebugElement
 		if (!fBreakpointManager.isEnabled()) {
 			return;
 		}
-		int deltaLNumber = delta.getAttribute(IMarker.LINE_NUMBER, 0);
-		IMarker marker = breakpoint.getMarker();
-		int lineNumber = marker.getAttribute(IMarker.LINE_NUMBER, 0);
 		if (supportsBreakpoint(breakpoint)) {
 			try {
+				int deltaLNumber = delta.getAttribute(IMarker.LINE_NUMBER, 0);
+				boolean deltaEnabled = delta.getAttribute(IBreakpoint.ENABLED, breakpoint.isEnabled());
+				IMarker marker = breakpoint.getMarker();
+				int lineNumber = marker.getAttribute(IMarker.LINE_NUMBER, 0);
 				if (((PHPLineBreakpoint) breakpoint).isConditionChanged()) {
 					((PHPLineBreakpoint) breakpoint).setConditionChanged(false);
 					if (breakpoint.isEnabled()) {
 						breakpointRemoved(breakpoint, null);
-					} else {
-						return;
+						breakpointAdded(breakpoint);
 					}
+					return;
 				}
 				if (lineNumber != deltaLNumber) {
 					if (breakpoint.isEnabled()) {
 						breakpointRemoved(breakpoint, null);
-					} else {
-						return;
+						breakpointAdded(breakpoint);
 					}
+					return;
+				}
+				if (breakpoint.isEnabled() != deltaEnabled) {
+					// enable or disable a breakpoint from the "Breakpoints" view
+					if (breakpoint.isEnabled()) {
+						breakpointAdded(breakpoint);
+					} else {
+						// force removal of this breakpoint
+						breakpointRemoved(breakpoint, false);
+					}
+					return;
 				}
 				if (breakpoint.isEnabled()) {
-					breakpointAdded(breakpoint);
-				} else {
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=538315
 					breakpointRemoved(breakpoint, null);
+					breakpointAdded(breakpoint);
 				}
 			} catch (CoreException e) {
 				Logger.logException("PHPDebugTarget: Exception Changing Breakpoint", e); //$NON-NLS-1$
