@@ -20,10 +20,7 @@ import static org.eclipse.php.internal.debug.core.model.IVariableFacet.Facet.VIR
 
 import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
-import java.util.Vector;
+import java.util.*;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
@@ -52,7 +49,11 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpoint;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpPreferences;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.*;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.Base64;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpCommand;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpUtils;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.EngineTypes;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.IDBGpSessionListener;
@@ -2056,10 +2057,8 @@ public class DBGpTarget extends DBGpElement
 		}
 		if (supportsBreakpoint(breakpoint)) {
 			try {
-				int deltaLNumber = delta.getAttribute(IMarker.LINE_NUMBER, 0);
 				boolean deltaEnabled = delta.getAttribute(IBreakpoint.ENABLED, breakpoint.isEnabled());
 				IMarker marker = breakpoint.getMarker();
-				int lineNumber = marker.getAttribute(IMarker.LINE_NUMBER, 0);
 
 				// did the condition change ?
 				DBGpBreakpoint bp = bpFacade.createDBGpBreakpoint(breakpoint);
@@ -2075,26 +2074,13 @@ public class DBGpTarget extends DBGpElement
 					return;
 				}
 
-				// did the line number change ?
-				if (lineNumber != deltaLNumber) {
-					if (DBGpLogger.debugBP()) {
-						DBGpLogger.debug("line number changed for breakpoint with ID: " + bp.getID()); //$NON-NLS-1$
-					}
-
-					if (breakpoint.isEnabled()) {
-						breakpointRemoved(breakpoint, null);
-						breakpointAdded(breakpoint);
-					}
-					return;
-				}
-
 				// did the line enable state change ?
 				if (breakpoint.isEnabled() != deltaEnabled) {
 					if (DBGpLogger.debugBP()) {
 						DBGpLogger.debug("enable state changed for breakpoint with ID: " + bp.getID()); //$NON-NLS-1$
 					}
-
-					// enable or disable a breakpoint from the "Breakpoints" view
+					// enable or disable a breakpoint from the "Breakpoints"
+					// view
 					if (breakpoint.isEnabled()) {
 						breakpointAdded(breakpoint);
 					} else {
@@ -2104,9 +2090,29 @@ public class DBGpTarget extends DBGpElement
 					return;
 				}
 
-				// add or remove the break point depending on whether it was
-				// enabled or not
+				// Did any other marker attribute change?
+				// For example: the line number could have changed.
+				Map<String, Object> map = marker.getAttributes();
+				Map<String, Object> deltaMap = delta.getAttributes();
+				if (map == null) {
+					map = new HashMap<>();
+				}
+				if (deltaMap == null) {
+					deltaMap = new HashMap<>();
+				}
+				if (map.equals(deltaMap)) {
+					// no changes were found, this
+					// happens when another breakpoint
+					// (than current one) was deleted
+					// and breakpointChanged() was
+					// unnecessarily called for current
+					// breakpoint
+					return;
+				}
 				if (breakpoint.isEnabled()) {
+					if (DBGpLogger.debugBP()) {
+						DBGpLogger.debug("an attribute changed for breakpoint with ID: " + bp.getID()); //$NON-NLS-1$
+					}
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=538315
 					breakpointRemoved(breakpoint, null);
 					breakpointAdded(breakpoint);
