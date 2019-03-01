@@ -654,10 +654,8 @@ public class PHPDebugTarget extends PHPDebugElement
 		}
 		if (supportsBreakpoint(breakpoint)) {
 			try {
-				int deltaLNumber = delta.getAttribute(IMarker.LINE_NUMBER, 0);
 				boolean deltaEnabled = delta.getAttribute(IBreakpoint.ENABLED, breakpoint.isEnabled());
 				IMarker marker = breakpoint.getMarker();
-				int lineNumber = marker.getAttribute(IMarker.LINE_NUMBER, 0);
 				if (((PHPLineBreakpoint) breakpoint).isConditionChanged()) {
 					((PHPLineBreakpoint) breakpoint).setConditionChanged(false);
 					if (breakpoint.isEnabled()) {
@@ -666,21 +664,34 @@ public class PHPDebugTarget extends PHPDebugElement
 					}
 					return;
 				}
-				if (lineNumber != deltaLNumber) {
-					if (breakpoint.isEnabled()) {
-						breakpointRemoved(breakpoint, null);
-						breakpointAdded(breakpoint);
-					}
-					return;
-				}
 				if (breakpoint.isEnabled() != deltaEnabled) {
-					// enable or disable a breakpoint from the "Breakpoints" view
+					// enable or disable a breakpoint from the "Breakpoints"
+					// view
 					if (breakpoint.isEnabled()) {
 						breakpointAdded(breakpoint);
 					} else {
 						// force removal of this breakpoint
 						breakpointRemoved(breakpoint, false);
 					}
+					return;
+				}
+				// Did any other marker attribute change?
+				// For example: the line number could have changed.
+				Map<String, Object> map = marker.getAttributes();
+				Map<String, Object> deltaMap = delta.getAttributes();
+				if (map == null) {
+					map = new HashMap<>();
+				}
+				if (deltaMap == null) {
+					deltaMap = new HashMap<>();
+				}
+				if (map.equals(deltaMap)) {
+					// no changes were found, this
+					// happens when another breakpoint
+					// (than current one) was deleted
+					// and breakpointChanged() was
+					// unnecessarily called for current
+					// breakpoint
 					return;
 				}
 				if (breakpoint.isEnabled()) {
