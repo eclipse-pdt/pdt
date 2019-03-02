@@ -618,10 +618,14 @@ public class PHPDebugTarget extends PHPDebugElement
 	public void breakpointRemoved(IBreakpoint breakpoint, boolean onlyHandleEnabledBreakpoints) {
 		if (supportsBreakpoint(breakpoint)) {
 			try {
-				if (onlyHandleEnabledBreakpoints && !breakpoint.isEnabled()) {
+				if (onlyHandleEnabledBreakpoints
+						// CTRL-SHIFT-B, so add getMarker().exists() check.
+						&& breakpoint.getMarker().exists() && !breakpoint.isEnabled()) {
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=538315
-					// already handled by breakpointChanged(IBreakpoint, IMarkerDelta),
-					// nothing more to do
+					// XXX: the breakpoint removal was already handled by
+					// breakpointChanged(IBreakpoint, IMarkerDelta), stop here...
+					// ... except that getMarker().exists() will be false when
+					// deleting an already-disabled breakpoint using CTRL-SHIFT-B.
 					return;
 				}
 			} catch (CoreException e) {
@@ -670,6 +674,7 @@ public class PHPDebugTarget extends PHPDebugElement
 					if (breakpoint.isEnabled()) {
 						breakpointAdded(breakpoint);
 					} else {
+						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=538315
 						// force removal of this breakpoint
 						breakpointRemoved(breakpoint, false);
 					}
@@ -685,7 +690,7 @@ public class PHPDebugTarget extends PHPDebugElement
 				if (deltaMap == null) {
 					deltaMap = new HashMap<>();
 				}
-				if (map.equals(deltaMap)) {
+				if (map.entrySet().containsAll(deltaMap.entrySet())) {
 					// no changes were found, this
 					// happens when another breakpoint
 					// (than current one) was deleted
@@ -695,7 +700,6 @@ public class PHPDebugTarget extends PHPDebugElement
 					return;
 				}
 				if (breakpoint.isEnabled()) {
-					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=538315
 					breakpointRemoved(breakpoint, null);
 					breakpointAdded(breakpoint);
 				}
