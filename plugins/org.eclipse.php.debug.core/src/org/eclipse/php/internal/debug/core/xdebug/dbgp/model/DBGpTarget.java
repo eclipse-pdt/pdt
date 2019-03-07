@@ -505,6 +505,7 @@ public class DBGpTarget extends DBGpElement
 		stackFrames = null;
 		currentVariables = null;
 		superGlobalVars = null;
+		clearQueuedBpCmds();
 		// Clear any previous debug output object and create a new one.
 		debugOutput = new DebugOutput();
 		session.startSession();
@@ -1077,6 +1078,7 @@ public class DBGpTarget extends DBGpElement
 			setState(STATE_DISCONNECTED);
 			// TODO: May need to synchronize
 			if (session != null) {
+				clearQueuedBpCmds();
 				if (!isWebLaunch()) {
 					// not a web launch, but could be multi session so we
 					// can't just detach
@@ -1103,7 +1105,6 @@ public class DBGpTarget extends DBGpElement
 					langThread.setBreakpoints(null);
 					setState(STATE_STARTED_SESSION_WAIT);
 					resumed(DebugEvent.RESUME);
-
 				}
 			}
 		}
@@ -1199,6 +1200,7 @@ public class DBGpTarget extends DBGpElement
 	 */
 	private void resumed(int detail) {
 		setState(STATE_STARTED_RUNNING);
+		processQueuedBpCmds();
 		fireResumeEvent(detail);
 		langThread.fireResumeEvent(detail);
 	}
@@ -2254,6 +2256,10 @@ public class DBGpTarget extends DBGpElement
 			// always add an add
 			DBGpCmdQueue.add(bpCmd);
 		}
+	}
+
+	private void clearQueuedBpCmds() {
+		DBGpCmdQueue.clear();
 	}
 
 	/**
