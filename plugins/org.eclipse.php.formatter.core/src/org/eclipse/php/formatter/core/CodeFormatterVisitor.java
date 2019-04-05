@@ -3655,6 +3655,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 			// handle the chars between the variable to the value
 			handleChars(formalParameter.getParameterName().getEnd(), formalParameter.getDefaultValue().getStart());
+			formalParameter.getDefaultValue().accept(this);
 		}
 		return false;
 	}

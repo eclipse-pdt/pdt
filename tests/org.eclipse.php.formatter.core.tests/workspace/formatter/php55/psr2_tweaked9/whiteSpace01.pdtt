@@ -1,0 +1,18 @@
+--TEST--
+Bug 545761 - White space before closing parenthesis not working in methods with default arguments
+--FILE--
+<?php
+
+function foo()
+{}
+
+function bar(MyClass $x, $y, $z = 1)
+{}
+--EXPECT--
+<?php
+
+function foo()
+{}
+
+function bar(MyClass $x, $y, $z = 1 )
+{}

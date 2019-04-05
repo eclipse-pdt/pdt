@@ -31,7 +31,8 @@ class TestBinExpression
 {
 
     public final static function toTablesArray($object,
-        $allowNullObjectParameter = false, $addFormatting = false, $addRelations = true)
+        $allowNullObjectParameter = false, $addFormatting = false,
+        $addRelations = true)
     {
         Assert::isTrue(
             ($allowNullObjectParameter &&
