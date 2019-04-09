@@ -683,7 +683,7 @@ public class CacheGrindParser {
 			StringBuilder buff = new StringBuilder();
 			List<State> states = CacheGrindParser.mainStates;
 			while (letter != -1) {
-				if (letter == '\n') {
+				if (letter == '\n' || letter == '\r') {
 					if (states.size() != 1) {
 						if (buff.length() > 0) {
 							listener.unknown(buff.toString());

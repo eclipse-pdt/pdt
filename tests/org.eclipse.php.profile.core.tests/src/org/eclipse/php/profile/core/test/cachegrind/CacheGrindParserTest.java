@@ -273,4 +273,60 @@ public class CacheGrindParserTest {
 		file.close();
 
 	}
+
+	@Test
+	public void test2() throws IOException {
+		InputStream file = getFile("/resources/cachegrind/profile_header.02");
+
+		CacheGrindParser parser = new CacheGrindParser(file);
+		Listener listener = new Listener();
+		parser.parse(listener);
+
+		assertEquals("xdebug 2.6.0 (PHP 7.1.13)", listener.creator);
+		assertEquals("1", listener.version);
+		assertEquals("/src/web/app_dev.php", listener.cmd);
+		assertEquals(10, listener.pid);
+		assertEquals(1, listener.part);
+
+		assertArrayEquals(new String[] { "instr", "line" }, listener.positions);
+		assertArrayEquals(new String[] { "Cycles", "Instructions", "Flops" }, listener.events);
+
+		assertArrayEquals(new int[] { 10, 11 }, listener.totals);
+		assertArrayEquals(new int[] { 10, 12 }, listener.summary);
+		assertArrayEquals(new String[] { "desc: unsupported" }, listener.unknown.toArray(new String[0]));
+
+		// files
+		assertEquals(5, listener.files.size());
+		assertEquals(new Name(-1, "file1.c"), listener.files.get(0));
+		assertEquals(new Name(-1, "file2.c"), listener.files.get(1));
+		assertEquals(new Name(-1, "file3.c"), listener.files.get(2));
+		assertEquals(new Name(1, "file1.c"), listener.files.get(3));
+		assertEquals(new Name(1, null), listener.files.get(4));
+
+		// functions
+		assertEquals(2, listener.functions.size());
+		assertEquals(new Name(-1, "main"), listener.functions.get(0));
+		assertEquals(new Name(1, "main"), listener.functions.get(1));
+
+		// next files
+		assertEquals(3, listener.nextFiles.size());
+		assertEquals(new Name(-1, "cfile1.c"), listener.nextFiles.get(0));
+		assertEquals(new Name(-1, "cfile2.c"), listener.nextFiles.get(1));
+		assertEquals(new Name(2, null), listener.nextFiles.get(2));
+
+		// next functions
+		assertEquals(1, listener.nextFunctions.size());
+		assertEquals(new Name(-1, "main"), listener.nextFunctions.get(0));
+
+		// calls
+		assertEquals(1, listener.calls.size());
+		assertEquals(new Nums(23, new int[] { -3, 4 }), listener.calls.get(0));
+
+		// cost
+		assertEquals(1, listener.costs.size());
+		assertEquals(new Nums(23, new int[] { 0, 0, 3 }), listener.costs.get(0));
+
+		file.close();
+
+	}
 }
