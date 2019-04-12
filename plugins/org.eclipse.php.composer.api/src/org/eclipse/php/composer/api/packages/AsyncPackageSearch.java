@@ -44,7 +44,7 @@ public class AsyncPackageSearch extends AsyncDownloadClient {
 	}
 
 	private void init() {
-		downloader.addDownloadListener(new DownloadListenerAdapater() {
+		downloader.addDownloadListener(new DownloadListenerAdapter() {
 			private String getQuery(String url) {
 				try {
 					return URLDecoder.decode(url.replaceFirst(".+q=([^?&]+).*", "$1"), StandardCharsets.UTF_8.name()); //$NON-NLS-1$ //$NON-NLS-2$

@@ -14,7 +14,7 @@ package org.eclipse.php.composer.api.packages;
 
 import java.io.InputStream;
 
-public class DownloadListenerAdapater implements DownloadListenerInterface {
+public class DownloadListenerAdapter implements DownloadListenerInterface {
 
 	@Override
 	public void aborted(String url) {
