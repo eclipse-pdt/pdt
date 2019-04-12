@@ -52,7 +52,7 @@ public class PackagesTest extends TestCase {
 	public void testAsyncDownloader() {
 		try {
 			AsyncDownloader downloader = new AsyncDownloader(ComposerConstants.PHAR_URL);
-			downloader.addDownloadListener(new DownloadListenerAdapater() {
+			downloader.addDownloadListener(new DownloadListenerAdapter() {
 				@Override
 				public void dataReceived(InputStream content, String url) {
 					asyncResult = content;
@@ -91,7 +91,7 @@ public class PackagesTest extends TestCase {
 	public void testAsyncComposerDownload() {
 		try {
 			AsyncPharDownloader downloader = new AsyncPharDownloader();
-			downloader.addDownloadListener(new DownloadListenerAdapater() {
+			downloader.addDownloadListener(new DownloadListenerAdapter() {
 				@Override
 				public void dataReceived(InputStream content, String url) {
 					asyncResult = content;

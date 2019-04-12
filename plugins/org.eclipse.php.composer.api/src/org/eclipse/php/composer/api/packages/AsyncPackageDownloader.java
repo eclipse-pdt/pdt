@@ -49,7 +49,7 @@ public class AsyncPackageDownloader extends AsyncDownloadClient {
 	public int loadPackage(String packageName) {
 		downloader.setUrl(createUrl(packageName));
 		if (downloadListener == null) {
-			downloadListener = new DownloadListenerAdapater() {
+			downloadListener = new DownloadListenerAdapter() {
 				@Override
 				public void dataReceived(InputStream content, String url) {
 					try {
