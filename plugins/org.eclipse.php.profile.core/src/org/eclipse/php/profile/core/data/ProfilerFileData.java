@@ -23,7 +23,6 @@ import org.eclipse.php.internal.debug.core.zend.debugger.CodeCoverageData;
  * Profiler file data.
  */
 public class ProfilerFileData {
-
 	private String fName;
 	private String fLocalName;
 	private int fFunctionsCount;
@@ -36,12 +35,12 @@ public class ProfilerFileData {
 	}
 
 	public ProfilerFileData(String name) {
-		this.fName = name;
+		this.setName(name);
 	}
 
 	public ProfilerFileData(String fileName, String localFileName, int functionsCount, double totalOwnTime,
 			List<ProfilerFunctionData> functions) {
-		fName = fileName;
+		this.setName(fileName);
 		fLocalName = localFileName;
 		fFunctionsCount = functionsCount;
 		fTotalOwnTime = totalOwnTime;

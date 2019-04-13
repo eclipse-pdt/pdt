@@ -24,6 +24,9 @@ import org.eclipse.php.profile.core.engine.cachegrind.CacheGrindParser.CacheGrin
 
 public class CacheGrindModelParser {
 	private static final String MAIN = "{main}"; //$NON-NLS-1$
+	private static final String PHP_INTERNAL = "php:internal"; //$NON-NLS-1$
+	private static final String PHP_CLASS = "php"; //$NON-NLS-1$
+	private static final String PHP_FILE = "PHP"; //$NON-NLS-1$
 	private CacheGrindParser source;
 	private ProfilerData model;
 	private List<ProfilerData> models = new ArrayList<>();
@@ -247,6 +250,9 @@ public class CacheGrindModelParser {
 	}
 
 	private File regFile(int id, String name) {
+		if (name != null && name.equals(PHP_INTERNAL)) {
+			name = PHP_FILE;
+		}
 		if (id == -1) {
 			if (fileIds.containsKey(name)) {
 				return files.get(fileIds.get(name));
@@ -319,7 +325,7 @@ public class CacheGrindModelParser {
 					if (fName.equals(file.name)) {
 						modelFnc.setFunctionName(new StringBuilder(className).append(':').append(fName).toString());
 					} else {
-						if (!file.name.equals("php:internal") && !className.equals("php")) { //$NON-NLS-1$ //$NON-NLS-2$
+						if (!file.name.equals(PHP_FILE) && !className.equals(PHP_CLASS)) {
 							modelFnc.setClassName(className);
 						}
 						modelFnc.setFunctionName(fName);
