@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016, 2017 PDT Extension Group and others.
+ * Copyright (c) 2012, 2016, 2017, 2019 PDT Extension Group and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -13,42 +13,38 @@
  *******************************************************************************/
 package org.eclipse.php.composer.api.packages;
 
-import java.net.ProxySelector;
 import java.net.URI;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.HttpClientConnection;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpResponseException;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
-import org.apache.http.conn.ConnectionRequest;
-import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
-import org.apache.http.protocol.HttpRequestExecutor;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
 
 public class AsyncDownloader extends AbstractDownloader {
 
-	public final static int TIMEOUT = 30;
+	public final static int TIMEOUT_SECONDS = 30;
 	private int lastSlot = 1;
 	private Log log = LogFactory.getLog(AsyncDownloader.class);
 	private PoolingHttpClientConnectionManager connectionManager;
@@ -79,42 +75,65 @@ public class AsyncDownloader extends AbstractDownloader {
 
 			try {
 				URI uri = URI.create(url);
-				final HttpGet httpGet = new HttpGet(uri);
-				httpGet.addHeader("Accept", "*/*"); //$NON-NLS-1$ //$NON-NLS-2$
-				httpGet.addHeader("User-Agent", getClass().getName()); //$NON-NLS-1$
-				httpGet.addHeader("Host", uri.getHost()); //$NON-NLS-1$
-				HttpHost host = new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
-				SystemDefaultRoutePlanner planner = new SystemDefaultRoutePlanner(ProxySelector.getDefault());
-				HttpClientContext context = HttpClientContext.create();
-				HttpRoute route = planner.determineRoute(host, httpGet, context);
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=546208
+				//
+				// Previous connection code didn't take care about proxy
+				// authentication, even if SystemDefaultRoutePlanner would
+				// "luckily" be able to find the right proxy.
+				// All proxy authentication informations (and the manual
+				// proxy definitions) are part of the proxy data settings stored
+				// and managed by eclipse, and can be retrieved
+				// by using IProxyService and a service tracker.
+				// Also calling directly planner.determineRoute() won't take
+				// care about all the proxy authentication handling,
+				// see InternalHttpClient.doExecute().
+				//
+				// final HttpGet httpGet = new HttpGet(uri);
+				// httpGet.addHeader("Accept", "*/*"); //$NON-NLS-1$
+				// //$NON-NLS-2$
+				// httpGet.addHeader("User-Agent", getClass().getName());
+				// //$NON-NLS-1$
+				// httpGet.addHeader("Host", uri.getHost()); //$NON-NLS-1$
+				// HttpHost host = new HttpHost(uri.getHost(), uri.getPort(),
+				// uri.getScheme());
+				// SystemDefaultRoutePlanner planner = new
+				// SystemDefaultRoutePlanner(ProxySelector.getDefault());
+				// HttpClientContext context = HttpClientContext.create();
+				// HttpRoute route = planner.determineRoute(host, httpGet,
+				// context);
 
-				ConnectionRequest connRequest = connectionManager.requestConnection(route, null);
-				HttpClientConnection conn = connRequest.get(TIMEOUT, TimeUnit.SECONDS);
+				HttpClientBuilder httpClientBuilder = ProxyHelper.createHttpClientBuilder(uri);
+
+				httpClientBuilder.setUserAgent("org.eclipse.php.composer.api"); //$NON-NLS-1$
+				httpClientBuilder.setConnectionManager(connectionManager);
+				RequestConfig.Builder requestBuilder = RequestConfig.custom();
+				requestBuilder = requestBuilder.setConnectTimeout(TIMEOUT_SECONDS * 1000)
+						.setConnectionRequestTimeout(TIMEOUT_SECONDS * 1000).setSocketTimeout(TIMEOUT_SECONDS * 1000);
+				httpClientBuilder.setDefaultRequestConfig(requestBuilder.build());
+
+				CloseableHttpClient httpClient = httpClientBuilder.build();
+				HttpHost target = new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
+				HttpGet httpGet = new HttpGet(uri);
+
+				CloseableHttpResponse response = null;
+
 				try {
 					if (Thread.currentThread().isInterrupted()) {
 						closed();
 						return;
 					}
 
-					connectionManager.connect(conn, route, 1000, context);
-					if (Thread.currentThread().isInterrupted()) {
-						closed();
-						return;
-					}
-					connectionManager.routeComplete(conn, route, context);
-					if (Thread.currentThread().isInterrupted()) {
-						closed();
-						return;
-					}
+					response = httpClient.execute(target, httpGet);
 
-					HttpRequestExecutor exeRequest = new HttpRequestExecutor();
-					context.setTargetHost(host);
-					HttpResponse response = exeRequest.execute(httpGet, conn, context);
+					if (Thread.currentThread().isInterrupted()) {
+						httpGet.abort();
+						closed();
+						return;
+					}
 
 					if (response.getStatusLine().getStatusCode() >= 300) {
 						throw new HttpResponseException(response.getStatusLine().getStatusCode(),
 								response.getStatusLine().getReasonPhrase());
-
 					}
 
 					HttpEntity entity = response.getEntity();
@@ -147,9 +166,13 @@ public class AsyncDownloader extends AbstractDownloader {
 						EntityUtils.consume(entity);
 					}
 				} finally {
-					if (conn != null) {
-						connectionManager.releaseConnection(conn, null, 1, TimeUnit.SECONDS);
+					if (response != null) {
+						response.close();
 					}
+					// Closing httpClient also shuts the
+					// PoolingHttpClientConnectionManager "connectionManager"
+					// down, don't do that.
+					// httpClient.close();
 				}
 
 			} catch (Exception ex) {
@@ -208,9 +231,9 @@ public class AsyncDownloader extends AbstractDownloader {
 	}
 
 	/**
-	 * Starts the async download. The returned number is the internal slot for this
-	 * download transfer, which can be used as parameter in abort to stop this
-	 * specific transfer.
+	 * Starts the async download. The returned number is the internal slot for
+	 * this download transfer, which can be used as parameter in abort to stop
+	 * this specific transfer.
 	 * 
 	 * @return slot
 	 */
@@ -275,6 +298,15 @@ public class AsyncDownloader extends AbstractDownloader {
 				}
 			}
 			connectionManager.shutdown();
+		}
+	}
+
+	@Override
+	protected void finalize() throws Throwable {
+		try {
+			shutdown();
+		} finally {
+			super.finalize();
 		}
 	}
 }
