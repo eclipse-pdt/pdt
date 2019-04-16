@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.php.composer.api.packages.ProxyHelper;
 import org.eclipse.php.composer.core.model.ModelAccess;
 import org.eclipse.php.composer.core.resources.IComposerProject;
 import org.eclipse.php.composer.internal.core.resources.ComposerProject;
@@ -50,13 +51,14 @@ public class ComposerPlugin extends Plugin {
 		};
 		workspace.addResourceChangeListener(listener);
 
+		ProxyHelper.acquireProxyService(bundleContext);
 	}
 
 	@Override
 	public void stop(BundleContext bundleContext) throws Exception {
-
-		super.stop(bundleContext);
 		plugin = null;
+		super.stop(bundleContext);
+		ProxyHelper.releaseProxyService();
 	}
 
 	public static ComposerPlugin getDefault() {
