@@ -60,6 +60,7 @@ public class Messages extends NLS {
 	public static String ReassignAutoGlobalVariable;
 	public static String HeredocMixedIndentation;
 	public static String HeredocInvalidIndentation;
+	public static String CannotUseReservedWord;
 
 	static {
 		// initialize resource bundle

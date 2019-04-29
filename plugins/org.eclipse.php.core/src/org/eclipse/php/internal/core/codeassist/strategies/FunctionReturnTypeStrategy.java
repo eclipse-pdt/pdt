@@ -48,7 +48,7 @@ public class FunctionReturnTypeStrategy extends TypesStrategy {
 		ISourceRange replaceRange = getReplacementRange(context);
 		PHPVersion phpVersion = context.getPHPVersion();
 		for (SimpleProposal proposal : TYPES) {
-			if (proposal.isValid(prefix, phpVersion)) {
+			if (proposal.isValidPrefix(prefix, phpVersion)) {
 				reporter.reportKeyword(proposal.getProposal(), suffix, replaceRange);
 			}
 		}

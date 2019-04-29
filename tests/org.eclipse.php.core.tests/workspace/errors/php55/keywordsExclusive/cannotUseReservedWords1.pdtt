@@ -1,0 +1,277 @@
+--TEST--
+Bug 443037 - Restricted word 'parent' can be used as class name (no error)
+--FILE--
+<?php
+namespace bool
+{
+
+    class bool
+    {
+    }
+
+    interface bool
+    {
+    }
+
+    trait bool
+    {
+    }
+}
+
+namespace float
+{
+
+    class float
+    {
+    }
+
+    interface float
+    {
+    }
+
+    trait float
+    {
+    }
+}
+
+namespace int
+{
+
+    class int
+    {
+    }
+
+    interface int
+    {
+    }
+
+    trait int
+    {
+    }
+}
+
+namespace string
+{
+
+    class string
+    {
+    }
+
+    interface string
+    {
+    }
+
+    trait string
+    {
+    }
+}
+
+namespace iterable
+{
+
+    class iterable
+    {
+    }
+
+    interface iterable
+    {
+    }
+
+    trait iterable
+    {
+    }
+}
+
+namespace object
+{
+
+    class object
+    {
+    }
+
+    interface object
+    {
+    }
+
+    trait object
+    {
+    }
+}
+
+namespace self
+{
+
+    class self
+    {
+    }
+
+    interface self
+    {
+    }
+
+    trait self
+    {
+    }
+}
+
+namespace parent
+{
+
+    class parent
+    {
+    }
+
+    interface parent
+    {
+    }
+
+    trait parent
+    {
+    }
+}
+
+namespace void
+{
+
+    class void
+    {
+    }
+
+    interface void
+    {
+    }
+
+    trait void
+    {
+    }
+}
+
+namespace null
+{
+
+    class null
+    {
+    }
+
+    interface null
+    {
+    }
+
+    trait null
+    {
+    }
+}
+
+namespace true
+{
+
+    class true
+    {
+    }
+
+    interface true
+    {
+    }
+
+    trait true
+    {
+    }
+}
+
+namespace false
+{
+
+    class false
+    {
+    }
+
+    interface false
+    {
+    }
+
+    trait false
+    {
+    }
+}
+
+namespace main\bool
+{
+}
+
+namespace main\float
+{
+}
+
+namespace main\int
+{
+}
+
+namespace main\string
+{
+}
+
+namespace main\iterable
+{
+}
+
+namespace main\object
+{
+}
+
+namespace main\self
+{
+}
+
+namespace main\parent
+{
+}
+
+namespace main\void
+{
+}
+
+namespace main\null
+{
+}
+
+namespace main\true
+{
+}
+
+namespace main\false
+{
+}
+?>
+--EXPECT--
+[line=9, start=66, end=70] Cannot declare type bool because the name is already in use
+[line=13, start=94, end=98] Cannot declare type bool because the name is already in use
+[line=25, start=176, end=181] Cannot declare type float because the name is already in use
+[line=29, start=205, end=210] Cannot declare type float because the name is already in use
+[line=41, start=284, end=287] Cannot declare type int because the name is already in use
+[line=45, start=311, end=314] Cannot declare type int because the name is already in use
+[line=57, start=394, end=400] Cannot declare type string because the name is already in use
+[line=61, start=424, end=430] Cannot declare type string because the name is already in use
+[line=73, start=514, end=522] Cannot declare type iterable because the name is already in use
+[line=77, start=546, end=554] Cannot declare type iterable because the name is already in use
+[line=89, start=634, end=640] Cannot declare type object because the name is already in use
+[line=93, start=664, end=670] Cannot declare type object because the name is already in use
+[line=98, start=696, end=700] Cannot use 'self' as namespace name as it is a reserved word
+[line=101, start=714, end=718] Cannot use 'self' as class name as it is a reserved word
+[line=105, start=746, end=750] Cannot declare type self because the name is already in use
+[line=105, start=746, end=750] Cannot use 'self' as interface name as it is a reserved word
+[line=109, start=774, end=778] Cannot declare type self because the name is already in use
+[line=109, start=774, end=778] Cannot use 'self' as trait name as it is a reserved word
+[line=114, start=804, end=810] Cannot use 'parent' as namespace name as it is a reserved word
+[line=117, start=824, end=830] Cannot use 'parent' as class name as it is a reserved word
+[line=121, start=858, end=864] Cannot declare type parent because the name is already in use
+[line=121, start=858, end=864] Cannot use 'parent' as interface name as it is a reserved word
+[line=125, start=888, end=894] Cannot declare type parent because the name is already in use
+[line=125, start=888, end=894] Cannot use 'parent' as trait name as it is a reserved word
+[line=137, start=970, end=974] Cannot declare type void because the name is already in use
+[line=141, start=998, end=1002] Cannot declare type void because the name is already in use
+[line=153, start=1078, end=1082] Cannot declare type null because the name is already in use
+[line=157, start=1106, end=1110] Cannot declare type null because the name is already in use
+[line=169, start=1186, end=1190] Cannot declare type true because the name is already in use
+[line=173, start=1214, end=1218] Cannot declare type true because the name is already in use
+[line=185, start=1296, end=1301] Cannot declare type false because the name is already in use
+[line=189, start=1325, end=1330] Cannot declare type false because the name is already in use

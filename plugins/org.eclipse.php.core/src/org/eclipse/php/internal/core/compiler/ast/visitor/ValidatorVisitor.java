@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017, 2018 Alex Xu and others.
+ * Copyright (c) 2017, 2018, 2019 Alex Xu and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -44,6 +44,7 @@ import org.eclipse.php.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.PHPSelectionEngine;
+import org.eclipse.php.internal.core.codeassist.strategies.SimpleProposal;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.compiler.ast.parser.Messages;
 import org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier;
@@ -61,6 +62,27 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	private static final String PAAMAYIM_NEKUDOTAIM = "::"; //$NON-NLS-1$
 	private static final List<String> TYPE_SKIP = new ArrayList<>();
 	private static final List<String> COMMENT_TYPE_SKIP = new ArrayList<>();
+
+	// https://www.php.net/manual/en/reserved.other-reserved-words.php
+	private static final List<SimpleProposal> RESERVED_WORDS = new ArrayList<>();
+
+	static {
+		RESERVED_WORDS.add(new SimpleProposal("bool", PHPVersion.PHP7_0)); //$NON-NLS-1$
+		RESERVED_WORDS.add(new SimpleProposal("float", PHPVersion.PHP7_0)); //$NON-NLS-1$
+		RESERVED_WORDS.add(new SimpleProposal("int", PHPVersion.PHP7_0)); //$NON-NLS-1$
+		RESERVED_WORDS.add(new SimpleProposal("string", PHPVersion.PHP7_0)); //$NON-NLS-1$
+
+		RESERVED_WORDS.add(new SimpleProposal("iterable", PHPVersion.PHP7_1)); //$NON-NLS-1$
+
+		RESERVED_WORDS.add(new SimpleProposal("object", PHPVersion.PHP7_2)); //$NON-NLS-1$
+
+		RESERVED_WORDS.add(new SimpleProposal("self")); //$NON-NLS-1$
+		RESERVED_WORDS.add(new SimpleProposal("parent")); //$NON-NLS-1$
+		RESERVED_WORDS.add(new SimpleProposal("void", PHPVersion.PHP7_1)); //$NON-NLS-1$
+		RESERVED_WORDS.add(new SimpleProposal("null", PHPVersion.PHP7_0)); //$NON-NLS-1$
+		RESERVED_WORDS.add(new SimpleProposal("true", PHPVersion.PHP7_0)); //$NON-NLS-1$
+		RESERVED_WORDS.add(new SimpleProposal("false", PHPVersion.PHP7_0)); //$NON-NLS-1$
+	}
 
 	static {
 		TYPE_SKIP.add("parent"); //$NON-NLS-1$
@@ -142,6 +164,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		hasNamespace = true;
 		currentNamespace = s;
 		fNamespaceDeclarations.push(s);
+		checkReservedWord(s, "namespace"); //$NON-NLS-1$
 		if (fNamespaceDeclarations.size() > 1) {
 			reportProblem(s, Messages.NestedNamespaceDeclarations, PHPProblemIdentifier.NestedNamespaceDeclarations,
 					ProblemSeverities.Error);
@@ -256,6 +279,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 
 	@Override
 	public boolean visit(ClassDeclaration s) throws Exception {
+		checkReservedWord(s, "class"); //$NON-NLS-1$
 		checkUnimplementedMethods(s, s.getRef());
 		if (s.getSuperClass() != null) {
 			checkSuperclass(s.getSuperClass(), false, s.getName());
@@ -289,6 +313,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 
 	@Override
 	public boolean visit(InterfaceDeclaration s) throws Exception {
+		checkReservedWord(s, "interface"); //$NON-NLS-1$
 		if (s.getSuperClasses() == null) {
 			return visitGeneral(s);
 		}
@@ -300,6 +325,9 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 
 	@Override
 	public boolean visit(TypeDeclaration s) throws Exception {
+		if (s instanceof TraitDeclaration) {
+			checkReservedWord(s, "trait"); //$NON-NLS-1$
+		}
 		if (!(s instanceof NamespaceDeclaration)) {
 			checkDuplicateTypeDeclaration(s);
 		}
@@ -503,6 +531,21 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		checkUnimplementedMethods(statement, classNode.sourceStart(), classNode.sourceEnd());
 	}
 
+	private void checkReservedWord(TypeDeclaration declaration, String nodeTypeMessage) throws ModelException {
+		String name = declaration.getName();
+		if (name == null || name.length() == 0) {
+			return;
+		}
+		for (SimpleProposal proposal : RESERVED_WORDS) {
+			if (proposal.isValid(name.toLowerCase(), version)) {
+				reportProblem(declaration.getNameStart(), declaration.getNameEnd(), Messages.CannotUseReservedWord,
+						PHPProblemIdentifier.CannotUseReservedWord, new String[] { name, nodeTypeMessage },
+						ProblemSeverities.Error);
+				break;
+			}
+		}
+	}
+
 	private void checkUnimplementedMethods(Statement statement, int nodeStart, int nodeEnd) throws ModelException {
 		IModelElement element = sourceModule.getElementAt(statement.start());
 		if (!(element instanceof IType)) {
@@ -624,6 +667,12 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		}
 		elementExists.put(name, isFound);
 		return isFound;
+	}
+
+	private void reportProblem(int start, int end, String message, IProblemIdentifier id, String[] stringArguments,
+			ProblemSeverity severity) {
+		message = MessageFormat.format(message, (Object[]) stringArguments);
+		reportProblem(start, end, message, id, severity);
 	}
 
 	private void reportProblem(ASTNode s, String message, IProblemIdentifier id, String[] stringArguments,
