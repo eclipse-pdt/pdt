@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017, 2018 Alex Xu and others.
+ * Copyright (c) 2017, 2018, 2019 Alex Xu and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -44,6 +44,7 @@ import org.eclipse.php.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.PHPSelectionEngine;
+import org.eclipse.php.internal.core.codeassist.strategies.SimpleProposal;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.compiler.ast.parser.Messages;
 import org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier;
@@ -61,6 +62,15 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	private static final String PAAMAYIM_NEKUDOTAIM = "::"; //$NON-NLS-1$
 	private static final List<String> TYPE_SKIP = new ArrayList<>();
 	private static final List<String> COMMENT_TYPE_SKIP = new ArrayList<>();
+
+	// https://www.php.net/manual/en/reserved.other-reserved-words.php
+	private static final List<SimpleProposal> RESERVED_WORDS = new ArrayList<>(
+			Arrays.asList(SimpleProposal.BASIC_TYPES));
+
+	static {
+		RESERVED_WORDS.add(new SimpleProposal("true", PHPVersion.PHP7_0)); //$NON-NLS-1$
+		RESERVED_WORDS.add(new SimpleProposal("false", PHPVersion.PHP7_0)); //$NON-NLS-1$
+	}
 
 	static {
 		TYPE_SKIP.add("parent"); //$NON-NLS-1$
@@ -142,6 +152,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		hasNamespace = true;
 		currentNamespace = s;
 		fNamespaceDeclarations.push(s);
+		checkReservedWord(s, s.getName(), "namespace"); //$NON-NLS-1$
 		if (fNamespaceDeclarations.size() > 1) {
 			reportProblem(s, Messages.NestedNamespaceDeclarations, PHPProblemIdentifier.NestedNamespaceDeclarations,
 					ProblemSeverities.Error);
@@ -256,14 +267,17 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 
 	@Override
 	public boolean visit(ClassDeclaration s) throws Exception {
+		checkReservedWord(s, s.getName(), "class"); //$NON-NLS-1$
 		checkUnimplementedMethods(s, s.getRef());
 		if (s.getSuperClass() != null) {
+			checkReservedWord(s.getSuperClass(), s.getSuperClass().getName(), "class"); //$NON-NLS-1$
 			checkSuperclass(s.getSuperClass(), false, s.getName());
 		}
 
 		Collection<TypeReference> interfaces = s.getInterfaceList();
 		if (interfaces != null && interfaces.size() > 0) {
 			for (TypeReference itf : interfaces) {
+				checkReservedWord(itf, itf != null ? itf.getName() : null, "interface"); //$NON-NLS-1$
 				checkSuperclass(itf, true, s.getName());
 			}
 		}
@@ -289,10 +303,12 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 
 	@Override
 	public boolean visit(InterfaceDeclaration s) throws Exception {
+		checkReservedWord(s, s.getName(), "interface"); //$NON-NLS-1$
 		if (s.getSuperClasses() == null) {
 			return visitGeneral(s);
 		}
 		for (ASTNode node : s.getSuperClasses().getChilds()) {
+			checkReservedWord(node, node != null ? ((TypeReference) node).getName() : null, "interface"); //$NON-NLS-1$
 			checkSuperclass((TypeReference) node, true, s.getName());
 		}
 		return visitGeneral(s);
@@ -300,6 +316,9 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 
 	@Override
 	public boolean visit(TypeDeclaration s) throws Exception {
+		if (s instanceof TraitDeclaration) {
+			checkReservedWord(s, ((TypeDeclaration) s).getName(), "trait"); //$NON-NLS-1$
+		}
 		if (!(s instanceof NamespaceDeclaration)) {
 			checkDuplicateTypeDeclaration(s);
 		}
@@ -501,6 +520,19 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 
 	private void checkUnimplementedMethods(Statement statement, ASTNode classNode) throws ModelException {
 		checkUnimplementedMethods(statement, classNode.sourceStart(), classNode.sourceEnd());
+	}
+
+	private void checkReservedWord(ASTNode node, String name, String nodeTypeMessage) throws ModelException {
+		if (name == null || name.length() == 0) {
+			return;
+		}
+		for (SimpleProposal proposal : RESERVED_WORDS) {
+			if (proposal.isValid(name.toLowerCase(), version)) {
+				reportProblem(node, Messages.CannotUseReservedWord, PHPProblemIdentifier.CannotUseReservedWord,
+						new String[] { name, nodeTypeMessage }, ProblemSeverities.Error);
+				break;
+			}
+		}
 	}
 
 	private void checkUnimplementedMethods(Statement statement, int nodeStart, int nodeEnd) throws ModelException {
