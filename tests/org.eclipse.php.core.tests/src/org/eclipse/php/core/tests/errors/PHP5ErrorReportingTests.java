@@ -14,16 +14,16 @@
  *******************************************************************************/
 package org.eclipse.php.core.tests.errors;
 
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
-import org.eclipse.php.core.PHPVersion;
 import org.junit.runner.RunWith;
 
 @RunWith(PDTTList.class)
 public class PHP5ErrorReportingTests extends AbstractErrorReportingTests {
 
 	@Parameters
-	public static final String[] TEST_DIRS = { "/workspace/errors/php5" };
+	public static final String[] TEST_DIRS = { "/workspace/errors/php5", "/workspace/errors/php5/keywordsExclusive" };
 
 	public PHP5ErrorReportingTests(String[] fileNames) {
 		super(fileNames);

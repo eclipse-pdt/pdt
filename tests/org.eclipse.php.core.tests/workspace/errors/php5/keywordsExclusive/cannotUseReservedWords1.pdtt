@@ -1,0 +1,117 @@
+--TEST--
+Bug 443037 - Restricted word 'parent' can be used as class name (no error)
+--FILE--
+<?php
+    class bool
+    {
+    }
+
+    interface bool
+    {
+    }
+
+    class float
+    {
+    }
+
+    interface float
+    {
+    }
+
+    class int
+    {
+    }
+
+    interface int
+    {
+    }
+
+    class string
+    {
+    }
+
+    interface string
+    {
+    }
+
+    class iterable
+    {
+    }
+
+    interface iterable
+    {
+    }
+
+    class object
+    {
+    }
+
+    interface object
+    {
+    }
+
+    class self
+    {
+    }
+
+    interface self
+    {
+    }
+
+    class parent
+    {
+    }
+
+    interface parent
+    {
+    }
+
+    class void
+    {
+    }
+
+    interface void
+    {
+    }
+
+    class null
+    {
+    }
+
+    interface null
+    {
+    }
+
+    class true
+    {
+    }
+
+    interface true
+    {
+    }
+
+    class false
+    {
+    }
+
+    interface false
+    {
+    }
+?>
+--EXPECT--
+[line=6, start=48, end=52] Cannot declare type bool because the name is already in use
+[line=14, start=109, end=114] Cannot declare type float because the name is already in use
+[line=22, start=169, end=172] Cannot declare type int because the name is already in use
+[line=30, start=230, end=236] Cannot declare type string because the name is already in use
+[line=38, start=296, end=304] Cannot declare type iterable because the name is already in use
+[line=46, start=362, end=368] Cannot declare type object because the name is already in use
+[line=50, start=392, end=396] Cannot use 'self' as class name as it is a reserved word
+[line=54, start=424, end=428] Cannot declare type self because the name is already in use
+[line=54, start=424, end=428] Cannot use 'self' as interface name as it is a reserved word
+[line=58, start=452, end=458] Cannot use 'parent' as class name as it is a reserved word
+[line=62, start=486, end=492] Cannot declare type parent because the name is already in use
+[line=62, start=486, end=492] Cannot use 'parent' as interface name as it is a reserved word
+[line=70, start=548, end=552] Cannot declare type void because the name is already in use
+[line=78, start=608, end=612] Cannot declare type null because the name is already in use
+[line=86, start=668, end=672] Cannot declare type true because the name is already in use
+[line=94, start=729, end=734] Cannot declare type false because the name is already in use

@@ -1,0 +1,215 @@
+--TEST--
+Bug 443037 - Restricted word 'parent' can be used as class name (no error)
+--FILE--
+<?php
+namespace bool
+{
+
+    class bool
+    {
+    }
+
+    interface bool
+    {
+    }
+}
+
+namespace float
+{
+
+    class float
+    {
+    }
+
+    interface float
+    {
+    }
+}
+
+namespace int
+{
+
+    class int
+    {
+    }
+
+    interface int
+    {
+    }
+}
+
+namespace string
+{
+
+    class string
+    {
+    }
+
+    interface string
+    {
+    }
+}
+
+namespace iterable
+{
+
+    class iterable
+    {
+    }
+
+    interface iterable
+    {
+    }
+}
+
+namespace object
+{
+
+    class object
+    {
+    }
+
+    interface object
+    {
+    }
+}
+
+namespace self
+{
+
+    class self
+    {
+    }
+
+    interface self
+    {
+    }
+}
+
+namespace parent
+{
+
+    class parent
+    {
+    }
+
+    interface parent
+    {
+    }
+}
+
+namespace void
+{
+
+    class void
+    {
+    }
+
+    interface void
+    {
+    }
+}
+
+namespace null
+{
+
+    class null
+    {
+    }
+
+    interface null
+    {
+    }
+}
+
+namespace true
+{
+
+    class true
+    {
+    }
+
+    interface true
+    {
+    }
+}
+
+namespace false
+{
+
+    class false
+    {
+    }
+
+    interface false
+    {
+    }
+}
+
+namespace main\bool
+{
+}
+
+namespace main\float
+{
+}
+
+namespace main\int
+{
+}
+
+namespace main\string
+{
+}
+
+namespace main\iterable
+{
+}
+
+namespace main\object
+{
+}
+
+namespace main\self
+{
+}
+
+namespace main\parent
+{
+}
+
+namespace main\void
+{
+}
+
+namespace main\null
+{
+}
+
+namespace main\true
+{
+}
+
+namespace main\false
+{
+}
+?>
+--EXPECT--
+[line=9, start=66, end=70] Cannot declare type bool because the name is already in use
+[line=21, start=148, end=153] Cannot declare type float because the name is already in use
+[line=33, start=227, end=230] Cannot declare type int because the name is already in use
+[line=45, start=310, end=316] Cannot declare type string because the name is already in use
+[line=57, start=400, end=408] Cannot declare type iterable because the name is already in use
+[line=69, start=488, end=494] Cannot declare type object because the name is already in use
+[line=74, start=520, end=524] Cannot use 'self' as namespace name as it is a reserved word
+[line=77, start=538, end=542] Cannot use 'self' as class name as it is a reserved word
+[line=81, start=570, end=574] Cannot declare type self because the name is already in use
+[line=81, start=570, end=574] Cannot use 'self' as interface name as it is a reserved word
+[line=86, start=600, end=606] Cannot use 'parent' as namespace name as it is a reserved word
+[line=89, start=620, end=626] Cannot use 'parent' as class name as it is a reserved word
+[line=93, start=654, end=660] Cannot declare type parent because the name is already in use
+[line=93, start=654, end=660] Cannot use 'parent' as interface name as it is a reserved word
+[line=105, start=736, end=740] Cannot declare type void because the name is already in use
+[line=117, start=816, end=820] Cannot declare type null because the name is already in use
+[line=129, start=896, end=900] Cannot declare type true because the name is already in use
+[line=141, start=978, end=983] Cannot declare type false because the name is already in use

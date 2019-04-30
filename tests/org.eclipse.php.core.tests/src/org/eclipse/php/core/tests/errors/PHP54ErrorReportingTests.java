@@ -14,9 +14,9 @@
  *******************************************************************************/
 package org.eclipse.php.core.tests.errors;
 
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.tests.runner.PDTTList;
 import org.eclipse.php.core.tests.runner.PDTTList.Parameters;
-import org.eclipse.php.core.PHPVersion;
 import org.junit.runner.RunWith;
 
 @RunWith(PDTTList.class)
@@ -24,7 +24,7 @@ public class PHP54ErrorReportingTests extends AbstractErrorReportingTests {
 
 	@Parameters
 	public static final String[] TEST_DIRS = { "/workspace/errors/php54", "/workspace/errors/php54/exclusive",
-			"/workspace/errors/php53" };
+			"/workspace/errors/php54/keywordsExclusive", "/workspace/errors/php53" };
 
 	public PHP54ErrorReportingTests(String[] fileNames) {
 		super(fileNames);

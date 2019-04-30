@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2017 Zend Technologies and others.
+ * Copyright (c) 2014, 2017, 2019 Zend Technologies and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -23,7 +23,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
  */
 public enum PHPProblemIdentifier implements IProblemIdentifier, IProblemIdentifierExtension {
 
-	SYNTAX, USE_STATEMENTS /* deprecated */, AbstractMethodInAbstractClass, BodyForAbstractMethod, MethodRequiresBody, AbstractMethodsInConcreteClass, UndefinedType, ClassExtendFinalClass, CannotInstantiateType, ImportNotFound, DuplicateImport, UnusedImport, UnnecessaryImport, DuplicateDeclaration, AbstractMethodMustBeImplemented, SuperclassMustBeAClass, SuperInterfaceMustBeAnInterface, CannotUseTypeAsTrait, NestedNamespaceDeclarations, InvalidConstantExpression, ReassignAutoGlobalVariable, UndefinedVariable, UnusedVariable
+	SYNTAX, USE_STATEMENTS /* deprecated */, AbstractMethodInAbstractClass, BodyForAbstractMethod, MethodRequiresBody, AbstractMethodsInConcreteClass, UndefinedType, ClassExtendFinalClass, CannotInstantiateType, ImportNotFound, DuplicateImport, UnusedImport, UnnecessaryImport, DuplicateDeclaration, AbstractMethodMustBeImplemented, SuperclassMustBeAClass, SuperInterfaceMustBeAnInterface, CannotUseTypeAsTrait, NestedNamespaceDeclarations, InvalidConstantExpression, ReassignAutoGlobalVariable, CannotUseReservedWord, UndefinedVariable, UnusedVariable
 
 	;
 

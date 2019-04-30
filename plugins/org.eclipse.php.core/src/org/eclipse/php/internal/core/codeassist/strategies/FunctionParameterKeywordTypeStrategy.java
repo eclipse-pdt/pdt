@@ -76,7 +76,7 @@ public class FunctionParameterKeywordTypeStrategy extends KeywordsStrategy {
 
 		PHPVersion phpVersion = context.getPHPVersion();
 		for (SimpleProposal proposal : SimpleProposal.BASIC_TYPES) {
-			if (proposal.isValid(prefix, phpVersion)) {
+			if (proposal.isValidPrefix(prefix, phpVersion)) {
 				reporter.reportKeyword(proposal.getProposal(), suffix, replaceRange);
 			}
 		}
