@@ -861,6 +861,9 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 					// for use statement, no need to lookup the use statement
 					// to compute namespace name
 					if (!isUseStatement) {
+						// Bug 517368 - Use statement doesn't take care
+						// Annotation / Alias
+						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=517368
 						// use first segment of namespace to lookup the use
 						// statements
 						String[] segments = namespaceName.split("\\\\", 2); //$NON-NLS-1$
