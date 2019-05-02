@@ -38,7 +38,9 @@ public class NamespaceReference extends TypeReference {
 	/**
 	 * Returns whether the namespace name is prefixed with a '\' character. <br>
 	 * <b>WARNING:</b> isGlobal() will always return false for
-	 * NamespaceReferences used inside any kind of use statement declaration.
+	 * NamespaceReferences used inside any kind of use statement declaration,
+	 * because we never set this property for any kind of use statement
+	 * declaration.
 	 * 
 	 * @return
 	 */
@@ -59,7 +61,11 @@ public class NamespaceReference extends TypeReference {
 	 * Returns whether the namespace name is prefixed with a 'namespace'
 	 * keyword. <br>
 	 * <b>WARNING:</b> despite its name, method isLocal() is <b>not</b> related
-	 * to method isGlobal().
+	 * to method isGlobal(). <br>
+	 * <b>WARNING:</b> isLocal() will always return false for
+	 * NamespaceReferences used inside any kind of use statement declaration,
+	 * because we never set this property for any kind of use statement
+	 * declaration.
 	 * 
 	 * @return
 	 */
