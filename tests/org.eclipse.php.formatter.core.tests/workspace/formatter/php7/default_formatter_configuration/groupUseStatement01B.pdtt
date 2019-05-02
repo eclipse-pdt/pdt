@@ -1,0 +1,33 @@
+--TEST--
+Test group use statement
+--FILE--
+<?php 
+
+use \foo\math\ { \Math, const 	PI, function sin    as TestSin };
+
+use \Test\Boo\ {
+	Foo,FooX as MyAlias
+		};
+	
+use function \Test\Boo\ {
+			FooX};
+use const \Test\Boo\ {FooX};
+--EXPECT--
+<?php
+use foo\math\ {
+	Math,
+	const PI,
+	function sin as TestSin
+};
+
+use Test\Boo\ {
+	Foo,
+	FooX as MyAlias
+};
+
+use function Test\Boo\ {
+	FooX
+};
+use const Test\Boo\ {
+	FooX
+};

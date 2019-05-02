@@ -1,0 +1,13 @@
+--TEST--
+Bug 516485 - Constants are validated as types
+--FILE--
+<?php
+namespace name;
+
+use \Test\Boo\ {
+	Exception,
+	const Foo, 
+	function FooX as MyAlias
+};
+--EXPECT--
+[line=5, start=41, end=50] The import Test\Boo\Exception cannot be resolved

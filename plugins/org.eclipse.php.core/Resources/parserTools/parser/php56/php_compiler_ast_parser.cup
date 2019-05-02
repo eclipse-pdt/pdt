@@ -675,7 +675,7 @@ namespace_name:name
 
 | T_NS_SEPARATOR:s namespace_name:name
 {:
-	// NB: leading backslash is optional and has no special meaning here
+	// NB: leading backslash is optional and has no special meaning here, so totally ignore it
 	name.setElementType(FullyQualifiedReference.T_TYPE);
 	UsePart usePart = new UsePart(name, null);
 	RESULT = usePart;
@@ -683,7 +683,7 @@ namespace_name:name
 
 | T_NS_SEPARATOR:s namespace_name:name T_AS T_STRING:aliasName
 {:
-	// NB: leading backslash is optional and has no special meaning here
+	// NB: leading backslash is optional and has no special meaning here, so totally ignore it
 	name.setElementType(FullyQualifiedReference.T_TYPE);
 	UsePart usePart = new UsePart(name,
 		new SimpleReference(aliasNameleft, aliasNameright, aliasName));

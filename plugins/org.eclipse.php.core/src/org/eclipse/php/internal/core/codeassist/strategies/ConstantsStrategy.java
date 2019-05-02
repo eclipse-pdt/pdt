@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 IBM Corporation and others.
+ * Copyright (c) 2009, 2017, 2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -69,6 +69,10 @@ public class ConstantsStrategy extends ElementsStrategy {
 		boolean isUseConstStatement = false;
 		if (context instanceof UseStatementContext) {
 			nsUseGroupPrefix = ((UseStatementContext) context).getGroupPrefixBeforeOpeningCurly();
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=501654
+			if (nsUseGroupPrefix != null && nsUseGroupPrefix.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
+				nsUseGroupPrefix = nsUseGroupPrefix.substring(1);
+			}
 			isUseConstStatement = ((UseStatementContext) context).isUseConstStatement();
 		}
 

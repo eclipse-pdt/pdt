@@ -25,6 +25,7 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.php.core.codeassist.*;
 import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.contexts.CompletionContextResolver;
 import org.eclipse.php.internal.core.codeassist.strategies.CompletionStrategyFactory;
@@ -162,7 +163,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			return;
 		}
 		processedFields.add(field);
+		noProposal = false;
 
+		assert StringUtils.isEmpty(prefix) || !prefix.startsWith(NamespaceReference.NAMESPACE_DELIMITER);
 		assert !(removeDollar && StringUtils.isNotEmpty(prefix));
 
 		int flags = 0;
@@ -173,8 +176,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 		}
 		int relevance = PHPFlags.isConstant(flags) ? relevanceConst : relevanceVar;
 		relevance += subRelevance;
-
-		noProposal = false;
 
 		if (!requestor.isIgnored(CompletionProposal.FIELD_REF)) {
 
@@ -191,7 +192,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 						&& StringUtils.startsWithIgnoreCase(elementFullName, prefix)) {
 					completionName = elementFullName.substring(prefix.length());
 				}
-
 			} else if (removeDollar && completionName.startsWith("$")) { //$NON-NLS-1$
 				completionName = completionName.substring(1);
 			}
@@ -291,8 +291,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			return;
 		}
 		processedElements.put(method, method);
-
 		noProposal = false;
+
+		assert StringUtils.isEmpty(prefix) || !prefix.startsWith(NamespaceReference.NAMESPACE_DELIMITER);
 
 		if (!requestor.isIgnored(CompletionProposal.METHOD_REF)) {
 			CompletionProposal proposal = createProposal(CompletionProposal.METHOD_REF, actualCompletionPosition);
@@ -380,8 +381,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			return;
 		}
 		processedElements.put(type, type);
-
 		noProposal = false;
+
+		assert StringUtils.isEmpty(prefix) || !prefix.startsWith(NamespaceReference.NAMESPACE_DELIMITER);
 
 		if (!requestor.isIgnored(CompletionProposal.TYPE_REF)) {
 

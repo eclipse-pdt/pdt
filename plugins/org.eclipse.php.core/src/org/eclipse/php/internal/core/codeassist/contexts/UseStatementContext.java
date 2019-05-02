@@ -38,6 +38,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
  *  3. use A as |
  *  4. use A as B|
  *  5. use A\{ B, \C| }
+ *  6. use \A\{ B, \C| }
  *  etc...
  * </pre>
  * 
@@ -69,16 +70,16 @@ public abstract class UseStatementContext extends StatementContext {
 	}
 
 	/**
-	 * Returns true when the use statement (TYPES.USE) or the group use statement
-	 * (TYPES.USE_GROUP) contains the keyword "function".
+	 * Returns true when the use statement (TYPES.USE) or the group use
+	 * statement (TYPES.USE_GROUP) contains the keyword "function".
 	 */
 	public boolean isUseFunctionStatement() {
 		return isUseFunctionStatement;
 	}
 
 	/**
-	 * Returns true when the use statement (TYPES.USE) or the group use statement
-	 * (TYPES.USE_GROUP) contains the keyword "const".
+	 * Returns true when the use statement (TYPES.USE) or the group use
+	 * statement (TYPES.USE_GROUP) contains the keyword "const".
 	 */
 	public boolean isUseConstStatement() {
 		return isUseConstStatement;
@@ -151,6 +152,9 @@ public abstract class UseStatementContext extends StatementContext {
 			// "use X\Y\ { A, B, \C\D| };" with '|' the cursor position.
 			// When found, at this point statementText will contain "A, B, \C\D"
 			// and statementTextBeforeCurly will contain "use X\Y\ ".
+			// Note that "use \X\Y\ { A, B, \C\D| };" is also a valid "grouped
+			// use statement" syntax, even if it's not a well-documented php
+			// feature.
 			TextSequence statementTextBeforeOpeningCurly = PHPTextSequenceUtilities
 					.getStatement(foundDelimiter[0].getStart(), sdRegion, true);
 			if (hasUsePrefix(statementTextBeforeOpeningCurly)) {
@@ -193,8 +197,8 @@ public abstract class UseStatementContext extends StatementContext {
 						// statementTextBeforeOpeningCurly.length() +
 						// statementText.length()
 						fullStatementText.length() - (statementText.length() - idxS2));
-				// 4. store "X\Y\" in biggestCommonStatementText and "C\D" in
-				// longestStatementTextBeforeCursor
+				// 4. store "use X\Y\" in biggestCommonStatementText and "C\D"
+				// in longestStatementTextBeforeCursor
 				biggestCommonStatementText = statementTextBeforeOpeningCurly.cutTextSequence(endS1,
 						statementTextBeforeOpeningCurly.length());
 				longestPrefixTextBeforeCursor = statementText.cutTextSequence(0, idx3);
@@ -221,9 +225,11 @@ public abstract class UseStatementContext extends StatementContext {
 	}
 
 	/**
-	 * Prefix part of a "grouped use statement", in the statement part before '{'.
-	 * Returned value is null for other statement types. For example, with "use X\Y\
-	 * { A, B, \C\D| };" this method would return "X\Y\".
+	 * Non-null prefix part of a "grouped use statement", in the statement part
+	 * before '{'. <b>Returned value is null if it's not a "grouped use
+	 * statement".</b> For example, this method would return "X\Y\" with
+	 * <code>"use X\Y\ { A, B, \C\D| };"</code> and would return "\X\Y\" with
+	 * <code>"use \X\Y\ { A, B, \C\D| };"</code>.
 	 * 
 	 * @return
 	 */
@@ -241,9 +247,11 @@ public abstract class UseStatementContext extends StatementContext {
 	}
 
 	/**
-	 * When isCursorInsideGroupStatement() is true, only the prefix part after '{'
-	 * is returned, otherwise same content as getPrefix() is returned. For example,
-	 * with "use X\Y\ { A, B, \C\D| };" this method would return "\C\D".
+	 * When isCursorInsideGroupStatement() is true, only the non-null prefix
+	 * part after '{' is returned, otherwise same content as getPrefix() is
+	 * returned. For example, this method would return <code>"\C\D"</code> with
+	 * <code>"use X\Y\ { A, B, \C\D| };"</code> or with
+	 * <code>"use \X\Y\ { A, B, \C\D| };"</code>.
 	 * 
 	 * @return
 	 */
