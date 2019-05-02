@@ -1,0 +1,25 @@
+--TEST--
+Test group use statement
+--FILE--
+<?php
+namespace ns2\ns3\ns4;
+
+class MyFooClass3 {
+}
+
+class MyFooClass4 {
+}
+
+namespace ns5;
+
+/* comment */ use \/* comment */ ns2\ns3\ /* comment */    {
+    
+    /* comment */  ns4\MyFooClass3
+    
+    /* comment */  ,  /* comment */  \ns4\|  /* comment */
+    
+    
+};
+--EXPECT--
+type(MyFooClass3)
+type(MyFooClass4)

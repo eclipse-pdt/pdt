@@ -1,0 +1,23 @@
+--TEST--
+Test group use statement
+--FILE--
+<?php
+namespace Foo;
+
+use \Boo\Boo2\ {
+	Boo3\MyClass as MyAlias
+};
+
+$var = new MyAlias ();
+$var->tes|
+--FILE0--
+<?php
+namespace Boo\Boo2\Boo3;
+
+class MyClass {
+	public function test($param) {
+		echo $param;
+	}
+}
+--EXPECT--
+method(test)

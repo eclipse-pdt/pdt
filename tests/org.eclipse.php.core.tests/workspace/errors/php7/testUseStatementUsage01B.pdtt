@@ -1,0 +1,25 @@
+--TEST--
+Bug 519914 - Group Use declarations not recognized
+--FILE--
+<?php
+namespace grup3\model3\model4;
+
+class Foo3 {
+}
+
+class Foo4 {
+}
+
+namespace popo3;
+
+use \grup3\model3\ { \model4, \mode, \model2, \model4\Foo4 };
+use \grup3\model3\ { model4, mode, model2, model4\Foo4 };
+
+new model4\Foo3();
+--EXPECT--
+[line=12, start=119, end=123] The import grup3\model3\mode cannot be resolved
+[line=12, start=126, end=132] The import grup3\model3\model2 cannot be resolved
+[line=13, start=171, end=177] Cannot use grup3\model3\model4 as model4 because the name is already in use
+[line=13, start=179, end=183] The import grup3\model3\mode cannot be resolved
+[line=13, start=185, end=191] The import grup3\model3\model2 cannot be resolved
+[line=13, start=193, end=204] Cannot use grup3\model3\model4\Foo4 as Foo4 because the name is already in use

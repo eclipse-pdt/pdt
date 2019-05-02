@@ -534,14 +534,14 @@ namespace_name:list
 
 | T_NS_SEPARATOR:s namespace_name:list
 {:
-	// NB: leading backslash is optional and has no special meaning here
+	// NB: leading backslash is optional and has no special meaning here, so totally ignore it
 	RESULT = new UseStatementPart(sright, listright, parser.ast,
 		new NamespaceName(sright, listright, parser.ast, list, false, false), null);
 :}
 
 | T_NS_SEPARATOR:s namespace_name:list T_AS T_STRING:aliasName
 {:
-	// NB: leading backslash is optional and has no special meaning here
+	// NB: leading backslash is optional and has no special meaning here, so totally ignore it
 	RESULT = new UseStatementPart(sright, aliasNameright, parser.ast,
 		new NamespaceName(sright, listright, parser.ast, list, false, false),
 		new Identifier(aliasNameleft, aliasNameright, parser.ast, aliasName));

@@ -1,0 +1,95 @@
+--TEST--
+Bug 519914 - Group Use declarations not recognized
+--FILE--
+<?php
+namespace Foo\Bar\X1
+{
+
+    class MyClass
+    {
+    }
+
+    function myFunction()
+    {
+    }
+
+    const MyConst = 10;
+}
+namespace Foo\Bar\X2
+{
+
+    use function \Foo\Bar\X1\ {
+        myFunction as myAlias1
+    };
+    use const \Foo\Bar\X1\ {
+        MyConst as myAlias2
+    };
+    use \Foo\Bar\X1\ {
+        MyClass as myAlias3
+    };
+}
+--EXPECT--
+<ModuleDeclaration start="0" end="344">
+	<NamespaceDeclaration start="6" end="125" modifiers="" name="Foo\Bar\X1">
+		<ClassDeclaration start="34" end="59" modifiers="" name="MyClass">
+		</ClassDeclaration>
+		<PHPMethodDeclaration start="65" end="98" modifiers="" name="myFunction">
+		</PHPMethodDeclaration>
+		<ConstantDeclaration start="104" end="122" modifiers="">
+			<ConstantReference start="110" end="117" name="MyConst">
+			</ConstantReference>
+			<Scalar start="120" end="122" type="int" value="10">
+			</Scalar>
+		</ConstantDeclaration>
+	</NamespaceDeclaration>
+	<NamespaceDeclaration start="126" end="343" modifiers="" name="Foo\Bar\X2">
+		<UseStatement start="154" end="219" statementType="1">
+			<Namespace>
+				<FullyQualifiedReference start="168" end="179" name="Foo\Bar\X1">
+					<NamespaceReference start="168" end="175" name="Foo\Bar" global="false" local="false">
+					</NamespaceReference>
+				</FullyQualifiedReference>
+			</Namespace>
+			<Parts>
+				<UsePart start="0" end="0" statementType="1">
+					<FullyQualifiedReference start="190" end="200" name="myFunction">
+					</FullyQualifiedReference>
+					<SimpleReference start="204" end="212" name="myAlias1">
+					</SimpleReference>
+				</UsePart>
+			</Parts>
+		</UseStatement>
+		<UseStatement start="224" end="283" statementType="2">
+			<Namespace>
+				<FullyQualifiedReference start="235" end="246" name="Foo\Bar\X1">
+					<NamespaceReference start="235" end="242" name="Foo\Bar" global="false" local="false">
+					</NamespaceReference>
+				</FullyQualifiedReference>
+			</Namespace>
+			<Parts>
+				<UsePart start="0" end="0" statementType="2">
+					<FullyQualifiedReference start="257" end="264" name="MyConst">
+					</FullyQualifiedReference>
+					<SimpleReference start="268" end="276" name="myAlias2">
+					</SimpleReference>
+				</UsePart>
+			</Parts>
+		</UseStatement>
+		<UseStatement start="288" end="341">
+			<Namespace>
+				<FullyQualifiedReference start="293" end="304" name="Foo\Bar\X1">
+					<NamespaceReference start="293" end="300" name="Foo\Bar" global="false" local="false">
+					</NamespaceReference>
+				</FullyQualifiedReference>
+			</Namespace>
+			<Parts>
+				<UsePart start="0" end="0">
+					<FullyQualifiedReference start="315" end="322" name="MyClass">
+					</FullyQualifiedReference>
+					<SimpleReference start="326" end="334" name="myAlias3">
+					</SimpleReference>
+				</UsePart>
+			</Parts>
+		</UseStatement>
+	</NamespaceDeclaration>
+</ModuleDeclaration>

@@ -1,0 +1,19 @@
+--TEST--
+Test group use statement
+--FILE--
+<?php
+namespace Boo {
+	function test(){
+		return new \DateTime();
+	}
+}
+
+namespace Foo {
+	use function \Boo\ {
+		test
+	};
+
+	test()->createFromF|
+}
+--EXPECT--
+method(createFromFormat)

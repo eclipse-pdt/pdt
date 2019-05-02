@@ -55,6 +55,20 @@ public class ASTRewriteTestsPHP71 extends ASTRewriteTestsPHP7 {
 	}
 
 	@Test
+	public void useStatementFunctionSet2b() throws Exception {
+		String str = "<?php use \\Foo\\{Bar}; \n ?>";
+		initialize(str);
+
+		List<UseStatement> statements = getAllOfType(program, UseStatement.class);
+		assertTrue("Unexpected list size.", statements.size() == 1);
+		assertTrue("Unexpected parts list size.", statements.get(0).parts().size() == 1);
+		statements.get(0).parts().get(0).setStatementType(UseStatement.T_FUNCTION);
+
+		rewrite();
+		checkResult("<?php use \\Foo\\{function Bar}; \n ?>");
+	}
+
+	@Test
 	public void useStatementConstSet2() throws Exception {
 		String str = "<?php use Foo\\{Bar}; \n ?>";
 		initialize(str);
@@ -69,8 +83,37 @@ public class ASTRewriteTestsPHP71 extends ASTRewriteTestsPHP7 {
 	}
 
 	@Test
+	public void useStatementConstSet2b() throws Exception {
+		String str = "<?php use \\Foo\\{Bar}; \n ?>";
+		initialize(str);
+
+		List<UseStatement> statements = getAllOfType(program, UseStatement.class);
+		assertTrue("Unexpected list size.", statements.size() == 1);
+		assertTrue("Unexpected parts list size.", statements.get(0).parts().size() == 1);
+		statements.get(0).parts().get(0).setStatementType(UseStatement.T_CONST);
+
+		rewrite();
+		checkResult("<?php use \\Foo\\{const Bar}; \n ?>");
+	}
+
+	@Test
 	public void useStatementFunctionSet3() throws Exception {
 		String str = "<?php use function Foo\\{Bar, Bar2}; \n ?>";
+		initialize(str);
+
+		List<UseStatement> statements = getAllOfType(program, UseStatement.class);
+		assertTrue("Unexpected list size.", statements.size() == 1);
+		statements.get(0).setStatementType(UseStatement.T_NONE);
+		assertTrue("Unexpected parts list size.", statements.get(0).parts().size() == 2);
+		statements.get(0).parts().get(1).setStatementType(UseStatement.T_FUNCTION);
+
+		rewrite();
+		checkResult("<?php use Foo\\{Bar, function Bar2}; \n ?>");
+	}
+
+	@Test
+	public void useStatementFunctionSet3b() throws Exception {
+		String str = "<?php use function \\Foo\\{Bar, Bar2}; \n ?>";
 		initialize(str);
 
 		List<UseStatement> statements = getAllOfType(program, UseStatement.class);
@@ -97,8 +140,37 @@ public class ASTRewriteTestsPHP71 extends ASTRewriteTestsPHP7 {
 	}
 
 	@Test
+	public void useStatementConstSet3b() throws Exception {
+		String str = "<?php use function \\Foo\\{Bar, Bar2}; \n ?>";
+		initialize(str);
+
+		List<UseStatement> statements = getAllOfType(program, UseStatement.class);
+		assertTrue("Unexpected list size.", statements.size() == 1);
+		statements.get(0).setStatementType(UseStatement.T_CONST);
+
+		rewrite();
+		checkResult("<?php use const Foo\\{Bar, Bar2}; \n ?>");
+	}
+
+	@Test
 	public void useStatementConstSet4() throws Exception {
 		String str = "<?php use Foo\\{const Bar, function Bar2}; \n ?>";
+		initialize(str);
+
+		List<UseStatement> statements = getAllOfType(program, UseStatement.class);
+		assertTrue("Unexpected list size.", statements.size() == 1);
+		statements.get(0).setStatementType(UseStatement.T_CONST);
+		assertTrue("Unexpected parts list size.", statements.get(0).parts().size() == 2);
+		statements.get(0).parts().get(0).setStatementType(UseStatement.T_NONE);
+		statements.get(0).parts().get(1).setStatementType(UseStatement.T_NONE);
+
+		rewrite();
+		checkResult("<?php use const Foo\\{Bar, Bar2}; \n ?>");
+	}
+
+	@Test
+	public void useStatementConstSet4b() throws Exception {
+		String str = "<?php use \\Foo\\{const Bar, function Bar2}; \n ?>";
 		initialize(str);
 
 		List<UseStatement> statements = getAllOfType(program, UseStatement.class);
@@ -129,8 +201,40 @@ public class ASTRewriteTestsPHP71 extends ASTRewriteTestsPHP7 {
 	}
 
 	@Test
+	public void useStatementNoneSet2b() throws Exception {
+		String str = "<?php use \\Foo\\{const Bar, function Bar2}; \n ?>";
+		initialize(str);
+
+		List<UseStatement> statements = getAllOfType(program, UseStatement.class);
+		assertTrue("Unexpected list size.", statements.size() == 1);
+		statements.get(0).setStatementType(UseStatement.T_NONE);
+		assertTrue("Unexpected parts list size.", statements.get(0).parts().size() == 2);
+		statements.get(0).parts().get(0).setStatementType(UseStatement.T_NONE);
+		statements.get(0).parts().get(1).setStatementType(UseStatement.T_NONE);
+
+		rewrite();
+		checkResult("<?php use \\Foo\\{Bar, Bar2}; \n ?>");
+	}
+
+	@Test
 	public void useStatementNoneSet3() throws Exception {
 		String str = "<?php use function Foo\\{Bar, Bar2}; \n ?>";
+		initialize(str);
+
+		List<UseStatement> statements = getAllOfType(program, UseStatement.class);
+		assertTrue("Unexpected list size.", statements.size() == 1);
+		statements.get(0).setStatementType(UseStatement.T_NONE);
+		assertTrue("Unexpected parts list size.", statements.get(0).parts().size() == 2);
+		statements.get(0).parts().get(0).setStatementType(UseStatement.T_NONE);
+		statements.get(0).parts().get(1).setStatementType(UseStatement.T_NONE);
+
+		rewrite();
+		checkResult("<?php use Foo\\{Bar, Bar2}; \n ?>");
+	}
+
+	@Test
+	public void useStatementNoneSet3b() throws Exception {
+		String str = "<?php use function \\Foo\\{Bar, Bar2}; \n ?>";
 		initialize(str);
 
 		List<UseStatement> statements = getAllOfType(program, UseStatement.class);
@@ -159,6 +263,23 @@ public class ASTRewriteTestsPHP71 extends ASTRewriteTestsPHP7 {
 
 		rewrite();
 		checkResult("<?php use Foo\\{Bar, Bar, Bar}; \n ?>");
+	}
+
+	@Test
+	public void useStatementNoneSet4b() throws Exception {
+		String str = "<?php use \\Foo\\{function Bar, Bar, const Bar}; \n ?>";
+		initialize(str);
+
+		List<UseStatement> statements = getAllOfType(program, UseStatement.class);
+		assertTrue("Unexpected list size.", statements.size() == 1);
+		statements.get(0).setStatementType(UseStatement.T_NONE);
+		assertTrue("Unexpected parts list size.", statements.get(0).parts().size() == 3);
+		statements.get(0).parts().get(0).setStatementType(UseStatement.T_NONE);
+		statements.get(0).parts().get(1).setStatementType(UseStatement.T_NONE);
+		statements.get(0).parts().get(2).setStatementType(UseStatement.T_NONE);
+
+		rewrite();
+		checkResult("<?php use \\Foo\\{Bar, Bar, Bar}; \n ?>");
 	}
 
 }

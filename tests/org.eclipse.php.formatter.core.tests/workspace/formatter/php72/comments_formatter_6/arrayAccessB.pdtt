@@ -1,0 +1,49 @@
+--TEST--
+Test formatting for ArrayAccess
+Bug 521884 - Code Formatter: comma after final array element for multi-line array definition
+--FILE--
+<?php
+use \MyProject\Sub\Level\ { function MyAlias, const MyNamespace as OtherAlias, MyOtherNamespace, };
+use function \MyProject\Sub\Level\ { MyAlias, MyNamespace as OtherAlias, MyOtherNamespace, };
+$a = array (1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,);
+$a = foo (1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,);
+$a = $obj->foo (1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,1,2,3,5,6,7,8,9,10,);
+	echo $a[1] ;
+echo $a  [ $a [  1]];
+echo $a [       'aaa'];
+/**
+ * Object allocation arguments
+ */
+class Example {
+	function foo() {
+		return new Example ( 100, 200, 300, 400, 500, 600, 700, 800, 900, );
+	}
+}
+?>
+--EXPECT--
+<?php
+use MyProject\Sub\Level\ {
+	function MyAlias,
+	const MyNamespace as OtherAlias,
+	MyOtherNamespace
+};
+use function MyProject\Sub\Level\ {
+	MyAlias,
+	MyNamespace as OtherAlias,
+	MyOtherNamespace
+};
+$a = array (1, 2, 3, 5, 6, 7, 8, 9, 10, 1, 2, 3, 5, 6, 7, 8, 9, 10, 1, 2, 3, 5, 6, 7, 8, 9, 10, 1, 2, 3, 5, 6, 7, 8, 9, 10, 1, 2, 3, 5, 6, 7, 8, 9, 10, 1, 2, 3, 5, 6, 7, 8, 9, 10 );
+$a = foo ( 1, 2, 3, 5, 6, 7, 8, 9, 10, 1, 2, 3, 5, 6, 7, 8, 9, 10, 1, 2, 3, 5, 6, 7, 8, 9, 10, 1, 2, 3, 5, 6, 7, 8, 9, 10, 1, 2, 3, 5, 6, 7, 8, 9, 10, 1, 2, 3, 5, 6, 7, 8, 9, 10 );
+$a = $obj->foo ( 1, 2, 3, 5, 6, 7, 8, 9, 10, 1, 2, 3, 5, 6, 7, 8, 9, 10, 1, 2, 3, 5, 6, 7, 8, 9, 10, 1, 2, 3, 5, 6, 7, 8, 9, 10, 1, 2, 3, 5, 6, 7, 8, 9, 10, 1, 2, 3, 5, 6, 7, 8, 9, 10 );
+echo $a [1];
+echo $a [$a [1]];
+echo $a ['aaa'];
+/**
+ * Object allocation arguments
+ */
+class Example {
+	function foo() {
+		return new Example ( 100, 200, 300, 400, 500, 600, 700, 800, 900 );
+	}
+}
+?>

@@ -1,0 +1,17 @@
+--TEST--
+Test group use statement
+--FILE--
+<?php
+namespace Boo {
+	const TEST = 1;
+}
+
+namespace Foo {
+	use \Boo\ {
+		const TEST
+	};
+
+	echo |TEST|;
+}
+--EXPECT--
+field(TEST)

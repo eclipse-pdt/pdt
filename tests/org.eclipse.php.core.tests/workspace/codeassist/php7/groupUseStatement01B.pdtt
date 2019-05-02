@@ -1,0 +1,22 @@
+--TEST--
+Test group use statement
+--FILE--
+<?php
+namespace Boo {
+	class MyClass {
+		public function test($param) {
+			echo $param;
+		}
+	}
+}
+
+namespace Foo {
+	use \Boo\ {
+		MyClass
+	};
+
+	$var = new MyClass();
+	$var->tes|
+}
+--EXPECT--
+method(test)

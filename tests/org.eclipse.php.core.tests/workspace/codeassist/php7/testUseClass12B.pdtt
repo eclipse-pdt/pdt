@@ -1,0 +1,47 @@
+--TEST--
+No bug - better CA for mixed use group statements
+--FILE--
+<?php
+namespace MyUseClass01\Space;
+class MyClass
+{
+}
+
+const CONST1 = 0;
+
+function foo1() {
+}
+
+namespace MyUseClass01\Space\A;
+class MyClass2
+{
+}
+
+const CONST1 = 0;
+
+function foo1() {
+}
+
+namespace MyUseClass01\Space2\A;
+class MyClass2
+{
+}
+
+const CONST1 = 0;
+
+function foo1() {
+}
+
+namespace MyUseClass01\Space\AB;
+class MyClass3
+{
+}
+
+const CONST1 = 0;
+
+function foo1() {
+}
+
+use \MyUseClass01\ { \Space2\A\MyClass2 as D, function \Space\AB\foo1 as E, const \Space\A\| as C };
+--EXPECT--
+field(CONST1)

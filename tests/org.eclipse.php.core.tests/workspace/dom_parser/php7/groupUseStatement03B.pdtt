@@ -1,0 +1,41 @@
+--TEST--
+Test group use statement
+--FILE--
+<?php use \foo\math\ { Math, const PI, function sin as TestSin };
+--EXPECT--
+<Program start='0' length='65'>
+	<Statements>
+		<UseStatement start='6' length='59'>
+			<NamespaceName start='11' length='9' global='false' current='false'>
+				<Identifier start='11' length='3' name='foo'/>
+				<Identifier start='15' length='4' name='math'/>
+			</NamespaceName>
+			<UseStatementPart start='23' length='4'>
+				<Name>
+					<NamespaceName start='23' length='4' global='false' current='false'>
+						<Identifier start='23' length='4' name='Math'/>
+					</NamespaceName>
+				</Name>
+			</UseStatementPart>
+			<UseStatementPart start='35' length='2' statementType='2'>
+				<Name>
+					<NamespaceName start='35' length='2' global='false' current='false'>
+						<Identifier start='35' length='2' name='PI'/>
+					</NamespaceName>
+				</Name>
+			</UseStatementPart>
+			<UseStatementPart start='48' length='14' statementType='1'>
+				<Name>
+					<NamespaceName start='48' length='3' global='false' current='false'>
+						<Identifier start='48' length='3' name='sin'/>
+					</NamespaceName>
+				</Name>
+				<Alias>
+					<Identifier start='55' length='7' name='TestSin'/>
+				</Alias>
+			</UseStatementPart>
+		</UseStatement>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>
