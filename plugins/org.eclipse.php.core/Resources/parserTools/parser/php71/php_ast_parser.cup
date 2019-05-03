@@ -275,7 +275,6 @@ non terminal VariableBase function_call;
 non terminal Expression exit_expr;
 non terminal List ctor_arguments;
 non terminal Expression scalar;
-non terminal possible_comma;
 non terminal Expression expr;
 non terminal VariableBase variable_class_name;
 non terminal Expression optional_expr;
@@ -2873,12 +2872,6 @@ T_LNUMBER:scalar
 {:
 	RESULT = ref;
 :}
-;
-
-/* do nothing */
-possible_comma ::=
-/* empty */
-| T_COMMA
 ;
 
 expr ::=

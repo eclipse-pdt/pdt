@@ -263,7 +263,6 @@ non terminal Expression function_call;
 non terminal Expression exit_expr;
 non terminal PHPCallArgumentsList ctor_arguments;
 non terminal Expression scalar;
-non terminal possible_comma;
 non terminal Expression expr;
 non terminal Expression variable_class_name;
 non terminal Expression optional_expr;
@@ -3477,12 +3476,6 @@ T_LNUMBER:scalar
 {:
 	RESULT = classConstant;
 :}
-;
-
-/* do nothing */
-possible_comma ::=
-/* empty */
-| T_COMMA
 ;
 
 expr ::=
