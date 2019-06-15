@@ -582,10 +582,12 @@ public class ASTUtils {
 	 * @param namespace
 	 *            Namespace name
 	 * @param offset
-	 *            Current position in the file (this is needed since we don't want
-	 *            to take USE statements placed below current position into account)
-	 * @return USE statement part node, or <code>null</code> in case relevant
-	 *         statement couldn't be found
+	 *            Current position in the file (this is needed since we don't
+	 *            want to take USE statements placed below current position into
+	 *            account)
+	 * @return USE statement part node (having getFullUseStatementName() equal
+	 *         to value of parameter "namespace"), or <code>null</code> in case
+	 *         relevant statement couldn't be found
 	 */
 	public static UsePart findUseStatementByNamespace(ModuleDeclaration moduleDeclaration, final String namespace,
 			final int offset) {
