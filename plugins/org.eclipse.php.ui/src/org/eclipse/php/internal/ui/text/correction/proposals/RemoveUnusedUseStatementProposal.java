@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 Alex Xu and others.
+ * Copyright (c) 2017, 2019 Alex Xu and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -14,12 +14,15 @@ package org.eclipse.php.internal.ui.text.correction.proposals;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.core.ast.nodes.*;
-import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.core.ast.nodes.ASTNode;
+import org.eclipse.php.core.ast.nodes.Program;
+import org.eclipse.php.core.ast.nodes.UseStatement;
+import org.eclipse.php.core.ast.nodes.UseStatementPart;
 import org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.text.correction.CorrectionMessages;
@@ -74,32 +77,44 @@ public class RemoveUnusedUseStatementProposal extends CUCorrectionProposal {
 			}
 
 			ASTNode coveredNode = fLocation.getCoveredNode(astRoot);
-			ASTNode current = coveredNode;
+			// "currentUseStatementPart" will be non-null inside group use
+			// statements:
+			UseStatementPart currentUseStatementPart = null;
 			while (coveredNode != null && !(coveredNode instanceof UseStatement)) {
+				if (coveredNode instanceof UseStatementPart) {
+					currentUseStatementPart = (UseStatementPart) coveredNode;
+				}
 				coveredNode = coveredNode.getParent();
 			}
-			if (coveredNode == null) {
+			if (coveredNode == null || currentUseStatementPart == null) {
 				return;
 			}
-			UseStatement use = (UseStatement) coveredNode;
-			List<UseStatementPart> parts = use.parts();
+			UseStatement currentUseStatement = (UseStatement) coveredNode;
+			List<UseStatementPart> parts = currentUseStatement.parts();
+			// Remove group use statements with only a use part or remove single
+			// use statements:
 			if (parts.size() == 1) {
-				int line = doc.getLineOfOffset(coveredNode.getStart());
-				int lineStart = doc.getLineOffset(line);
-				int length = doc.getLineLength(line);
-				root.addChild(new DeleteEdit(lineStart, length));
+				int currentStartOffset = coveredNode.getStart();
+				int currentEndOffset = coveredNode.getEnd();
+				int lineStart = doc.getLineOfOffset(currentStartOffset);
+				int lineEnd = doc.getLineOfOffset(currentEndOffset);
+				int lineStartOffset = doc.getLineOffset(lineStart);
+				// End offset *after* the line's delimiter:
+				int lineEndOffset = doc.getLineOffset(lineEnd) + doc.getLineLength(lineEnd);
+				if (currentStartOffset > lineStartOffset
+						&& StringUtils.isBlank(doc.get(lineStartOffset, currentStartOffset - lineStartOffset))) {
+					currentStartOffset = lineStartOffset;
+				}
+				if (currentEndOffset < lineEndOffset
+						&& StringUtils.isBlank(doc.get(currentEndOffset, lineEndOffset - currentEndOffset))) {
+					currentEndOffset = lineEndOffset;
+				}
+				root.addChild(new DeleteEdit(currentStartOffset, currentEndOffset - currentStartOffset));
 				return;
-			}
-			String currentNamespace = null;
-			if (current instanceof NamespaceName) {
-				currentNamespace = getNamespaceName((NamespaceName) current);
-			} else {
-				currentNamespace = ((Identifier) current).getName();
 			}
 			int index = 0;
 			for (UseStatementPart part : parts) {
-				String namespace = part.getFullUseStatementName();
-				if (currentNamespace.equals(namespace)) {
+				if (part == currentUseStatementPart) {
 					int start = part.getStart();
 					int length = 0;
 					if (index == 0) {
@@ -119,21 +134,6 @@ public class RemoveUnusedUseStatementProposal extends CUCorrectionProposal {
 		} catch (BadLocationException e) {
 			PHPUiPlugin.log(e);
 		}
-	}
-
-	private static String getNamespaceName(NamespaceName namespace) {
-		StringBuilder namespaces = new StringBuilder(""); //$NON-NLS-1$
-		List<Identifier> segments = namespace.segments();
-		int idx = 0;
-		for (Identifier segment : segments) {
-			if (idx == 0) {
-				namespaces.append(segment.getName());
-			} else {
-				namespaces.append(NamespaceReference.NAMESPACE_DELIMITER).append(segment.getName());
-			}
-			idx++;
-		}
-		return namespaces.toString();
 	}
 
 }
