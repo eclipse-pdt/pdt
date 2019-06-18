@@ -3724,7 +3724,13 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 					insertString = "const "; //$NON-NLS-1$
 				}
 
-				int start = useStatement.getStart() + 4; // move after 'use '
+				// move after 'use '
+				int start = useStatement.getStart() + 3;
+				if (content.length > start && content[start] == ' ') {
+					start++;
+				} else {
+					insertString = " " + insertString; //$NON-NLS-1$
+				}
 				int length = 0;
 				if (!useStatement.parts().isEmpty() && useStatement.getNamespace() == null) {
 					length = useStatement.parts().get(0).getStart() - start;
