@@ -52,14 +52,14 @@ isset($a, $b, $c, );
 				<Identifier start='94' length='3' name='Foo'/>
 				<Identifier start='98' length='3' name='Bar'/>
 			</NamespaceName>
-			<UseStatementPart start='113' length='3' statementType='1'>
+			<UseStatementPart start='104' length='12' statementType='1'>
 				<Name>
 					<NamespaceName start='113' length='3' global='false' current='false'>
 						<Identifier start='113' length='3' name='Foo'/>
 					</NamespaceName>
 				</Name>
 			</UseStatementPart>
-			<UseStatementPart start='124' length='3' statementType='2'>
+			<UseStatementPart start='118' length='9' statementType='2'>
 				<Name>
 					<NamespaceName start='124' length='3' global='false' current='false'>
 						<Identifier start='124' length='3' name='Bar'/>

@@ -3785,7 +3785,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 				} else if (useStatementPart.getStatementType() == UseStatement.T_CONST) {
 					insertString += "const "; //$NON-NLS-1$
 				}
-				int length = useStatementPart.getStart() - start;
+				int length = useStatementPart.getName().getStart() - start;
 				doTextReplace(start, length, insertString, getEditGroup(event));
 				break;
 			}
