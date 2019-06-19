@@ -5416,6 +5416,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	@Override
 	public boolean visit(UseStatementPart useStatementPart) {
 		appendStatementType(useStatementPart.getStatementType());
+		handleChars(useStatementPart.getStart(), useStatementPart.getName().getStart());
 
 		useStatementPart.getName().accept(this);
 		Identifier alias = useStatementPart.getAlias();

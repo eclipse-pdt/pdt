@@ -17,14 +17,14 @@ Test group use statement
 					</NamespaceName>
 				</Name>
 			</UseStatementPart>
-			<UseStatementPart start='35' length='2' statementType='2'>
+			<UseStatementPart start='29' length='8' statementType='2'>
 				<Name>
 					<NamespaceName start='35' length='2' global='false' current='false'>
 						<Identifier start='35' length='2' name='PI'/>
 					</NamespaceName>
 				</Name>
 			</UseStatementPart>
-			<UseStatementPart start='48' length='14' statementType='1'>
+			<UseStatementPart start='39' length='23' statementType='1'>
 				<Name>
 					<NamespaceName start='48' length='3' global='false' current='false'>
 						<Identifier start='48' length='3' name='sin'/>

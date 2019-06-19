@@ -6,7 +6,7 @@ Test Use Global
 <Program start='0' length='16'>
 	<Statements>
 		<UseStatement start='6' length='7'>
-			<UseStatementPart start='11' length='1'>
+			<UseStatementPart start='10' length='2'>
 				<Name>
 					<NamespaceName start='11' length='1' global='false' current='false'>
 						<Identifier start='11' length='1' name='A'/>

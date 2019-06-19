@@ -82,7 +82,8 @@ public class UnusedUseStatementProcessor implements IQuickFixProcessor {
 				}
 				if (coveringNode instanceof UseStatement) {
 					rewrite.remove(coveringNode, editGroup);
-				} else if (coveringNode instanceof UseStatementPart) {
+				} else if (coveringNode instanceof UseStatementPart
+						&& coveringNode.getParent() instanceof UseStatement) {
 					UseStatement useStatement = (UseStatement) coveringNode.getParent();
 					if (useStatement.parts().size() == 1) {
 						rewrite.remove(useStatement, editGroup);
