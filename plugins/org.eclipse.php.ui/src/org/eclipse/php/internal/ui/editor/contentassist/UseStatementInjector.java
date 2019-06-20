@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009-2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -72,8 +72,8 @@ public class UseStatementInjector {
 	}
 
 	/**
-	 * Inserts USE statement into beginning of the document, or after the last USE
-	 * statement.
+	 * Inserts USE statement into beginning of the document, or after the last
+	 * USE statement.
 	 * 
 	 * @param document
 	 * @param textViewer
@@ -121,7 +121,8 @@ public class UseStatementInjector {
 				if (offset > 0) {
 					String prefix = document.get(proposal.getReplacementOffset(), proposal.getReplacementLength());
 					String fullName = ((IType) modelElement).getElementName();
-					if (fullName.startsWith(prefix) && prefix.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) < 0) {
+					if (fullName.toLowerCase().startsWith(prefix.toLowerCase())
+							&& prefix.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) < 0) {
 						// int
 						ITextEditor textEditor = ((PHPStructuredTextViewer) textViewer).getTextEditor();
 						if (textEditor instanceof PHPStructuredEditor) {
@@ -163,7 +164,7 @@ public class UseStatementInjector {
 
 								// if the class/namespace has not been imported
 								// add use statement
-								if (program != null && !importedTypeName.contains(typeName)) {
+								if (program != null && !importedTypeName.contains(typeName.toLowerCase())) {
 
 									program.recordModifications();
 									AST ast = program.getAST();
@@ -231,7 +232,10 @@ public class UseStatementInjector {
 									offset += edits.getLength();
 									proposal.setReplacementOffset(replacementOffset);
 								} else if (!useAlias && (usePart == null
-										|| !usePartName.equals(usePart.getFullUseStatementName()))) {
+								// Redondant check:
+								// || !usePartName.equalsIgnoreCase(usePart
+								// .getFullUseStatementName())
+								)) {
 									// if the type name already exists, use
 									// fully
 									// qualified name to replace
@@ -239,9 +243,7 @@ public class UseStatementInjector {
 								}
 							}
 						}
-
 					}
-					return offset;
 				}
 				return offset;
 			} else
@@ -308,14 +310,14 @@ public class UseStatementInjector {
 			List<String> importedTypeName = getImportedTypeName(moduleDeclaration, offset);
 			String typeName = ""; //$NON-NLS-1$
 			if (!useAlias) {
-				typeName = modelElement.getElementName().toLowerCase();
+				typeName = modelElement.getElementName();
 			} else {
 				if (usePart != null && usePart.getAlias() != null && usePart.getAlias().getName() != null) {
 					typeName = usePart.getAlias().getName();
 				} else {
 					String elementName = PHPModelUtils.extractElementName(namespaceName);
 					if (elementName != null) {
-						typeName = elementName.toLowerCase();
+						typeName = elementName;
 					}
 				}
 			}
@@ -323,7 +325,7 @@ public class UseStatementInjector {
 			PHPVersion phpVersion = ProjectOptions.getPHPVersion(modelElement);
 			// if the class/namespace has not been imported
 			// add use statement
-			if (program != null && !importedTypeName.contains(typeName)
+			if (program != null && !importedTypeName.contains(typeName.toLowerCase())
 					&& canInsertUseStatement(getUseStatementType(modelElement), phpVersion)) {
 				program.recordModifications();
 				AST ast = program.getAST();
@@ -399,7 +401,11 @@ public class UseStatementInjector {
 				int replacementOffset = proposal.getReplacementOffset() + edits.getLength();
 				offset += edits.getLength();
 				proposal.setReplacementOffset(replacementOffset);
-			} else if (!useAlias && (usePart == null || !usePartName.equals(usePart.getFullUseStatementName()))) {
+			} else if (!useAlias && (usePart == null
+			// Redondant check:
+			// || !usePartName.equalsIgnoreCase(usePart
+			// .getFullUseStatementName())
+			)) {
 				String namespacePrefix = NamespaceReference.NAMESPACE_SEPARATOR + namespaceName
 						+ NamespaceReference.NAMESPACE_SEPARATOR;
 				String replacementString = proposal.getReplacementString();
@@ -559,7 +565,8 @@ public class UseStatementInjector {
 	}
 
 	/**
-	 * Get all the class / namespace names which have been imported by use statement
+	 * Get all the class / namespace names which have been imported by use
+	 * statement
 	 * 
 	 * @param moduleDeclaration
 	 * @param offset
@@ -622,7 +629,7 @@ public class UseStatementInjector {
 		if (currentNamespace == null) {
 			return false;
 		}
-		if (namespaceName.equals(getNamespaceName(currentNamespace))) {
+		if (namespaceName.equalsIgnoreCase(getNamespaceName(currentNamespace))) {
 			return true;
 		}
 		return false;
