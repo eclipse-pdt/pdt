@@ -1,0 +1,60 @@
+--TEST--
+Bug 548280 - do better case-insensitive comparisons in class UseStatementInjector
+--FILE--
+<?php
+
+namespace Bar\baz
+{
+	class Target { function bar_baz(); }
+}
+
+namespace foo
+{
+	class TestAbsolute
+	{
+		/**
+		 * @return \bar\baz\Target
+		 */
+		function test() {}
+	}
+
+	class TestRelative
+	{
+		/**
+		 * @return bar\baz\Target
+		 */
+		function test() {}
+	}
+	bar| //call CA here
+}
+?>
+--EXPECT--
+<?php
+
+namespace Bar\baz
+{
+	class Target { function bar_baz(); }
+}
+
+namespace foo
+{
+	use Bar;
+	
+	class TestAbsolute
+	{
+		/**
+		 * @return \bar\baz\Target
+		 */
+		function test() {}
+	}
+
+	class TestRelative
+	{
+		/**
+		 * @return bar\baz\Target
+		 */
+		function test() {}
+	}
+	Bar\baz\ //call CA here
+}
+?>

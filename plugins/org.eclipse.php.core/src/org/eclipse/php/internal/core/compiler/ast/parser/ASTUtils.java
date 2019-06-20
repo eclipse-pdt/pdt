@@ -582,10 +582,12 @@ public class ASTUtils {
 	 * @param namespace
 	 *            Namespace name
 	 * @param offset
-	 *            Current position in the file (this is needed since we don't want
-	 *            to take USE statements placed below current position into account)
-	 * @return USE statement part node, or <code>null</code> in case relevant
-	 *         statement couldn't be found
+	 *            Current position in the file (this is needed since we don't
+	 *            want to take USE statements placed below current position into
+	 *            account)
+	 * @return USE statement part node (whose getFullUseStatementName() value is
+	 *         case-insensitive-equal to the value of parameter "namespace"), or
+	 *         <code>null</code> when relevant statement couldn't be found
 	 */
 	public static UsePart findUseStatementByNamespace(ModuleDeclaration moduleDeclaration, final String namespace,
 			final int offset) {
@@ -607,7 +609,7 @@ public class ASTUtils {
 	 * example, this method will return an object for type <code>"A\B\C\D\E"</code>
 	 * from statement <code>"use A\B\ { \C\D\E };"</code>. <b>Note that this type
 	 * will have its source start and end range limited to the source start and end
-	 * range of <code>"\C\D\E"</code>. Also note that UsePart aliases are not
+	 * range of <code>"C\D\E"</code>. Also note that UsePart aliases are not
 	 * handled by this method.</b>
 	 * 
 	 * @param usePart
