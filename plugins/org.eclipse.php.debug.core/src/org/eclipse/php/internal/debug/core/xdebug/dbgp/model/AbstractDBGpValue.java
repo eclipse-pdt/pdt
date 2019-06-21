@@ -33,7 +33,7 @@ public abstract class AbstractDBGpValue extends DBGpElement implements IValue, I
 	 */
 	protected class DBGpValueData {
 
-		private byte[] fValueBytes = null;
+		private byte[] fValueBytes = null; // XXX: never set
 		private String fValueString;
 
 		protected DBGpValueData(Node property) {

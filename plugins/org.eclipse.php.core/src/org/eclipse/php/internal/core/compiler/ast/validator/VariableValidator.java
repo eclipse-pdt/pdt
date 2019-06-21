@@ -756,8 +756,6 @@ public class VariableValidator implements IValidatorExtension {
 				if (global.equals(name)) {
 					return true;
 				}
-				context.equals(null);
-
 			}
 			return false;
 		}
