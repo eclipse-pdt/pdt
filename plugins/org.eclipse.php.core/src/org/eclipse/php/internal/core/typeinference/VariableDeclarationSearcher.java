@@ -172,7 +172,7 @@ public class VariableDeclarationSearcher extends ContextFinder {
 		return super.visit(node);
 	}
 
-	private void addDeclaredVariables(Expression variable, Expression node) {
+	protected void addDeclaredVariables(Expression variable, Expression node) {
 		if (variable instanceof VariableReference) {
 			VariableReference varReference = (VariableReference) variable;
 			getScope().addDeclaration(varReference.getName(), node);
