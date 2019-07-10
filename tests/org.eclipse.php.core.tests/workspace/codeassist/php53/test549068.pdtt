@@ -1,0 +1,17 @@
+--TEST--
+Bug http://eclip.se/549068
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+namespace Foo {
+	class Bar {
+		public function func() {
+			$v = clone $this;
+			$v->|
+		}
+	}
+}
+
+--EXPECT--
+method(func)

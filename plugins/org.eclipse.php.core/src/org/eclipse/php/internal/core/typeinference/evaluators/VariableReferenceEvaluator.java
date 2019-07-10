@@ -275,15 +275,15 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 
 		@Override
 		protected boolean isInteresting(ASTNode node) {
+			return node.sourceStart() <= variableOffset;
+		}
 
-			if (node.sourceStart() <= variableOffset) {
-				if (node instanceof Assignment && ((Assignment) node).getValue() instanceof CloneExpression) {
-					return false;
-				}
-				return true;
+		@Override
+		protected void addDeclaredVariables(Expression variable, Expression node) {
+			if (node.start() <= variableOffset && node.end() > variableOffset) {
+				return;
 			}
-
-			return false;
+			super.addDeclaredVariables(variable, node);
 		}
 	}
 }
