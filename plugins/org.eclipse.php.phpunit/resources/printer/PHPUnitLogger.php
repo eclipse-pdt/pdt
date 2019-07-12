@@ -66,7 +66,7 @@ if (_RUNNER_VERSION  >= 7) {
             );
         }
         
-        public function setAutoFlush($autoFlush): void
+        public function setAutoFlush(bool $autoFlush): void
         {
             parent::setAutoFlush($autoFlush);
             foreach ($this->loggers as $logger) {
@@ -98,7 +98,7 @@ if (_RUNNER_VERSION  >= 7) {
             }
         }
         
-        public function addWarning(Test $test, Warning $e, $time): void
+        public function addWarning(Test $test, Warning $e, float $time): void
         {
             parent::addWarning($test, $e, $time);
             foreach ($this->loggers as $logger) {
@@ -106,7 +106,7 @@ if (_RUNNER_VERSION  >= 7) {
             }
         }
         
-        public function addFailure(Test $test, AssertionFailedError $e, $time): void
+        public function addFailure(Test $test, AssertionFailedError $e, float $time): void
         {
             parent::addFailure($test, $e, $time);
             foreach ($this->loggers as $logger) {
@@ -114,7 +114,7 @@ if (_RUNNER_VERSION  >= 7) {
             }
         }
         
-        public function addIncompleteTest(Test $test, Throwable $t, $time): void
+        public function addIncompleteTest(Test $test, Throwable $t, float $time): void
         {
             parent::addIncompleteTest($test, $t, $time);
             foreach ($this->loggers as $logger) {
@@ -122,7 +122,7 @@ if (_RUNNER_VERSION  >= 7) {
             }
         }
         
-        public function addRiskyTest(Test $test, Throwable $t, $time): void
+        public function addRiskyTest(Test $test, Throwable $t, float $time): void
         {
             parent::addRiskyTest($test, $t, $time);
             foreach ($this->loggers as $logger) {
@@ -130,7 +130,7 @@ if (_RUNNER_VERSION  >= 7) {
             }
         }
         
-        public function addSkippedTest(Test $test, Throwable $t, $time): void
+        public function addSkippedTest(Test $test, Throwable $t, float $time): void
         {
             parent::addSkippedTest($test, $t, $time);
             foreach ($this->loggers as $logger) {
@@ -163,7 +163,7 @@ if (_RUNNER_VERSION  >= 7) {
             }
         }
         
-        public function endTest(Test $test, $time): void
+        public function endTest(Test $test, float $time): void
         {
             parent::endTest($test, $time);
             foreach ($this->loggers as $logger) {
