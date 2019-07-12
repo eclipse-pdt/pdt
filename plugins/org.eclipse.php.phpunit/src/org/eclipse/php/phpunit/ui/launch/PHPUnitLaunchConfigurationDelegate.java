@@ -341,7 +341,7 @@ public class PHPUnitLaunchConfigurationDelegate extends PHPExecutableLaunchDeleg
 		synchronized (wconfig) {
 			envVariables = wconfig.getAttribute(ILaunchManager.ATTR_ENVIRONMENT_VARIABLES,
 					new HashMap<String, String>());
-			envVariables = ObjectUtils.defaultIfNull(envVariables, new HashMap<>());
+			envVariables = Collections.synchronizedMap(ObjectUtils.defaultIfNull(envVariables, new HashMap<>()));
 			envVariables.computeIfAbsent(ENV_PORT, key -> {
 				final String port = String.valueOf(PHPUnitPreferenceKeys.getPort());
 				envVariables.put(key, port);
