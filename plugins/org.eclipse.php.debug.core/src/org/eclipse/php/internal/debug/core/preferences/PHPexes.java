@@ -124,9 +124,10 @@ public class PHPexes {
 	}
 
 	/**
-	 * Adds a {@link PHPexeItem} to the list of installed items that are assigned to
-	 * its debugger id. Note that the first inserted item will set to be the default
-	 * one until a call to {@link #setDefaultItem(PHPexeItem)} is made.
+	 * Adds a {@link PHPexeItem} to the list of installed items that are
+	 * assigned to its debugger id. Note that the first inserted item will set
+	 * to be the default one until a call to {@link #setDefaultItem(PHPexeItem)}
+	 * is made.
 	 * 
 	 * @param item
 	 * @see #setDefaultItem(PHPexeItem)
@@ -195,11 +196,13 @@ public class PHPexes {
 	}
 
 	/**
-	 * Returns true if there are PHP executables registered to the given debugger.
+	 * Returns true if there are PHP executables registered to the given
+	 * debugger.
 	 * 
 	 * @param debuggerId
 	 *            The debugger id.
-	 * @return True, if there are executables for this debugger; False, otherwise.
+	 * @return True, if there are executables for this debugger; False,
+	 *         otherwise.
 	 * @see #hasItems()
 	 */
 	public boolean hasItems(String debuggerId) {
@@ -239,8 +242,8 @@ public class PHPexes {
 	}
 
 	/**
-	 * Returns the {@link PHPexeItem} for the given debuggerId that has the given
-	 * name.
+	 * Returns the {@link PHPexeItem} for the given debuggerId that has the
+	 * given name.
 	 * 
 	 * @param debuggerId
 	 * @param name
@@ -312,8 +315,8 @@ public class PHPexes {
 
 	/**
 	 * Search for the executable file name in all of the registered
-	 * {@link PHPexeItem}s and return a reference to the one that refer to the same
-	 * file.
+	 * {@link PHPexeItem}s and return a reference to the one that refer to the
+	 * same file.
 	 * 
 	 * @param exeFilePath
 	 *            The executable file name.
@@ -347,8 +350,8 @@ public class PHPexes {
 	 * Returns the PHPExeItems registered for the given debugger id.
 	 * 
 	 * @param debuggerId
-	 * @return An array of installed exe items for the given debugger; null if no
-	 *         such debugger is registered, or the debugger does not have any
+	 * @return An array of installed exe items for the given debugger; null if
+	 *         no such debugger is registered, or the debugger does not have any
 	 *         executables.
 	 */
 	public PHPexeItem[] getItems(String debuggerId) {
@@ -581,8 +584,8 @@ public class PHPexes {
 							continue; // not adding "problematic" executables
 						}
 						/*
-						 * Override unique ID to be always the same when loading item from extension
-						 * once again (restart)
+						 * Override unique ID to be always the same when loading
+						 * item from extension once again (restart)
 						 */
 						String uniqueID = (id != null) ? id : "php-extension-exe-" + file.getPath().toString(); //$NON-NLS-1$
 						newItem.setUniqueId(uniqueID);
@@ -612,9 +615,9 @@ public class PHPexes {
 	}
 
 	/**
-	 * Removes an item. In case the removed item was the default one, a different
-	 * random item will be picked to be the new default one for the specific
-	 * debugger.
+	 * Removes an item. In case the removed item was the default one, a
+	 * different random item will be picked to be the new default one for the
+	 * specific debugger.
 	 * 
 	 * @param debuggerID
 	 * @param item
@@ -660,7 +663,17 @@ public class PHPexes {
 
 	private void detectDefaultItem() {
 		PHPexeItem[] allItems = getAllItems();
-		Comparator<PHPexeItem> sorter = (a, b) -> b.getVersion().compareTo(a.getVersion());
+		Comparator<PHPexeItem> sorter = (a, b) -> {
+			if (a.getVersion() == null && b.getVersion() == null) {
+				return 0;
+			} else if (a.getVersion() == null) {
+				return -1;
+			} else if (b.getVersion() == null) {
+				return 1;
+			}
+
+			return b.getVersion().compareTo(a.getVersion());
+		};
 		Arrays.sort(allItems, sorter);
 		if (allItems.length > 0) {
 			setDefaultItem(allItems[0]);
