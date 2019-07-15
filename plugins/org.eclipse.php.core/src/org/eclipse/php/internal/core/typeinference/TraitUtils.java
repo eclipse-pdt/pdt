@@ -74,8 +74,22 @@ public class TraitUtils {
 			String name = typeReference.getName();
 			if (typeReference instanceof FullyQualifiedReference) {
 				FullyQualifiedReference reference = (FullyQualifiedReference) typeReference;
-				if (reference.getNamespace() != null) {
-					name = reference.getNamespace().getName() + NamespaceReference.NAMESPACE_SEPARATOR + name;
+				NamespaceReference namespace = reference.getNamespace();
+				if (namespace != null) {
+					String namespaceName = namespace.getName();
+					if (namespaceName.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+						namespaceName = namespaceName.substring(1);
+					}
+					if (namespaceName.length() > 0) {
+						name = namespaceName + NamespaceReference.NAMESPACE_SEPARATOR + name;
+					}
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=549197
+					// Do not do alias resolution when the namespace name is
+					// already fully qualified.
+					if (namespace.isGlobal()) {
+						useTrait.getTraits().add(name);
+						continue;
+					}
 				}
 			}
 			useTrait.getTraits().add(PHPModelUtils.getFullName(name, sourceModule, offset));
