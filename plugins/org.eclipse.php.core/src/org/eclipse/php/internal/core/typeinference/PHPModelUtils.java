@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016, 2017, 2018 IBM Corporation and others.
+ * Copyright (c) 2009, 2016-2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -191,28 +191,43 @@ public class PHPModelUtils {
 	}
 
 	/**
-	 * if the elementName is a class alias for a namespace class, we get its
-	 * original name from its alias
+	 * If the elementName is a class alias for a namespace class "elementName"
+	 * (and for a specific namespace "namespace"), we get its original name from
+	 * its alias.
 	 * 
+	 * @param fqNamespaceName
+	 *            fully qualified namespace name (<b>without any leading
+	 *            '\'</b>), empty name "" means global namespace, leading
+	 *            "namespace\" is allowed. The resulting name <b>must</b> have
+	 *            fqNamespaceName as its fully qualified namespace or it will be
+	 *            rejected.
 	 * @param elementName
+	 *            namespace class
 	 * @param sourceModule
 	 * @param offset
 	 * @param defaultClassName
-	 * @return
+	 *            return this value when elementName couldn't be resolved
+	 *            against fqNamespaceName, or when no alias was found
+	 * @return original name from its alias (if available and applicable),
+	 *         defaultClassName otherwise
 	 */
-	public static String getRealName(String elementName, ISourceModule sourceModule, final int offset,
-			String defaultClassName) {
-
+	public static String getRealName(@NonNull String fqNamespaceName, @NonNull String elementName,
+			@NonNull ISourceModule sourceModule, final int offset, String defaultClassName) {
 		// Check class name aliasing:
 		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 		UsePart usePart = ASTUtils.findUseStatementByAlias(moduleDeclaration, elementName, offset);
 		if (usePart != null) {
-			elementName = usePart.getFullUseStatementName();
-			int nsIndex = elementName.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
-			if (nsIndex != -1) {
-				defaultClassName = elementName.substring(nsIndex + 1);
-			} else {
-				defaultClassName = elementName;
+			String fullName = usePart.getFullUseStatementName();
+			String newElementName = PHPModelUtils.extractElementName(fullName);
+			String newNamespace = PHPModelUtils.extractNameSpaceName(fullName);
+			if (newNamespace == null) {
+				// No namespace prefix found, translate it as global namespace
+				newNamespace = ""; //$NON-NLS-1$
+			}
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=549197
+			// Avoid namespace mismatches
+			if (fqNamespaceName.equalsIgnoreCase(newNamespace)) {
+				return newElementName;
 			}
 		}
 		return defaultClassName;
@@ -1879,8 +1894,8 @@ public class PHPModelUtils {
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=515844
 					// only look for aliases when there is no namespace
 					// separator in the type name
-					if (typeNameSpaceName == null) {
-						typeName = getRealName(typeName, sourceModule, offset, typeName);
+					if (typeNameSpaceName == null && typeName != null) {
+						typeName = getRealName(namespace, typeName, sourceModule, offset, typeName);
 					}
 
 					IType[] types = getNamespaceType(namespace, typeName, true, sourceModule, cache, monitor, isType);
@@ -2348,11 +2363,16 @@ public class PHPModelUtils {
 	}
 
 	@NonNull
-	public static String getFullName(@NonNull String typeName, ISourceModule sourceModule, final int offset) {
+	public static String getFullName(@NonNull String typeName, @NonNull ISourceModule sourceModule, final int offset) {
 		String namespace = extractNamespaceName(typeName, sourceModule, offset);
 		String elementName = extractElementName(typeName);
+		// XXX: cannot be null here, but we need to silence null type mismatch
+		// error:
+		if (elementName == null) {
+			return ""; //$NON-NLS-1$
+		}
 		if (namespace != null) {
-			elementName = getRealName(elementName, sourceModule, offset, elementName);
+			elementName = getRealName(namespace, elementName, sourceModule, offset, elementName);
 			if (namespace.length() > 0) {
 				elementName = namespace + NamespaceReference.NAMESPACE_SEPARATOR + elementName;
 			}

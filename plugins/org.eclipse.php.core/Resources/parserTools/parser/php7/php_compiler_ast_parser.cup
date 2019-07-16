@@ -3294,7 +3294,7 @@ namespace_name:name
 | T_NAMESPACE:s T_NS_SEPARATOR namespace_name:name
 {:
 	if (name.getNamespace() == null) {
-		name.setNamespace(new NamespaceReference(nameleft, nameleft, null));
+		name.setNamespace(new NamespaceReference(nameleft, nameleft, ""));
 	}
 
 	name.getNamespace().setLocal(true);

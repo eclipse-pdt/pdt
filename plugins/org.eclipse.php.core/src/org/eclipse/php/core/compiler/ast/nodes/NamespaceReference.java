@@ -13,6 +13,7 @@
  *******************************************************************************/
 package org.eclipse.php.core.compiler.ast.nodes;
 
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.ast.references.TypeReference;
 
 /**
@@ -82,7 +83,14 @@ public class NamespaceReference extends TypeReference {
 		this.local = local;
 	}
 
+	/**
+	 * Returns namespace name, prefixed by "\" for global namespaces or
+	 * "namespace\" for local namespaces. The returned value is never null and
+	 * never empty.
+	 */
+	@SuppressWarnings("null")
 	@Override
+	@NonNull
 	public String getName() {
 		StringBuilder buf = new StringBuilder();
 		if (global) {
@@ -92,6 +100,10 @@ public class NamespaceReference extends TypeReference {
 			buf.append("namespace\\"); //$NON-NLS-1$
 		}
 		buf.append(super.getName());
-		return buf.toString();
+		String name = buf.toString();
+
+		assert name.length() > 0;
+
+		return name;
 	}
 }

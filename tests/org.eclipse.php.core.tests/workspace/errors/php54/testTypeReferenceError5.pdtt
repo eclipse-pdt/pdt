@@ -1,0 +1,32 @@
+--TEST--
+Bug 549197 - Validator gets confused when a class alias matches the same name as a used trait
+--FILE--
+<?php
+use stdClass as StuffMaker3;
+
+class AStuffMaker3 implements IStuffMaker3
+{
+    use Traits3\StuffMaker3;
+}
+?>
+--FILE0--
+<?php
+interface IStuffMaker3
+{
+    public function makeStuff();
+}
+?>
+--FILE1--
+<?php
+namespace Traits3;
+
+trait StuffMaker3
+{
+    public function makeStuff()
+    {
+        //code
+    }
+}
+?>
+--EXPECT--
+[line=2, start=10, end=18] The import stdClass is never used

@@ -83,6 +83,9 @@ abstract public class AbstractErrorReportingTests {
 			PdttFile pdttFile = new PdttFile(fileName);
 			pdttFiles.put(fileName, pdttFile);
 			files.put(fileName, createFile(pdttFile.getFile().trim()));
+			for (String otherFile : pdttFile.getOtherFiles()) {
+				createFile(otherFile.trim());
+			}
 		}
 		TestUtils.setProjectPHPVersion(project, getPHPVersion());
 		// Perform full build to trigger errors check
