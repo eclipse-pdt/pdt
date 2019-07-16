@@ -239,7 +239,7 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 				parentNamespace = extractedNamespace;
 				// See also code from PHPClassType.fromTypeName(...) and
 				// PHPClassType.fromTraitName(...)
-				elementName = PHPModelUtils.getRealName(fullyQualifiedName, sourceModule, offset, elementName);
+				elementName = PHPModelUtils.getRealName(extractedNamespace, fullyQualifiedName, sourceModule, offset, elementName);
 			}
 			if (PHPModelUtils.isInUseTraitStatement(((ISourceModuleContext) context).getRootNode(),
 					typeReference.sourceStart())) {

@@ -139,10 +139,10 @@ public class PHPClassType extends ClassType implements IClassType {
 	public static PHPClassType fromTypeName(String typeName, ISourceModule sourceModule, int offset) {
 		String namespace = PHPModelUtils.extractNamespaceName(typeName, sourceModule, offset);
 		String elementName = PHPModelUtils.extractElementName(typeName);
-		if (namespace != null) {
+		if (namespace != null && typeName != null && sourceModule != null && elementName != null) {
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=515844
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=527153
-			elementName = PHPModelUtils.getRealName(typeName, sourceModule, offset, elementName);
+			elementName = PHPModelUtils.getRealName(namespace, typeName, sourceModule, offset, elementName);
 		}
 		final ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 		if (PHPModelUtils.isInUseTraitStatement(moduleDeclaration, offset)) {
@@ -166,10 +166,10 @@ public class PHPClassType extends ClassType implements IClassType {
 	public static PHPClassType fromTraitName(String typeName, ISourceModule sourceModule, int offset) {
 		String namespace = PHPModelUtils.extractNamespaceName(typeName, sourceModule, offset);
 		String elementName = PHPModelUtils.extractElementName(typeName);
-		if (namespace != null) {
+		if (namespace != null && typeName != null && sourceModule != null && elementName != null) {
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=515844
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=527153
-			elementName = PHPModelUtils.getRealName(typeName, sourceModule, offset, elementName);
+			elementName = PHPModelUtils.getRealName(namespace, typeName, sourceModule, offset, elementName);
 		}
 
 		if (namespace != null) {

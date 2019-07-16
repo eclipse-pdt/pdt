@@ -1,0 +1,37 @@
+--TEST--
+Bug 549197 - Validator gets confused when a class alias matches the same name as a used trait
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+namespace Traits
+{
+
+    trait StuffMaker
+    {
+
+        public function makeStuff()
+        {
+            //code
+        }
+    }
+}
+namespace
+{
+
+    use stdClass as StuffMaker;
+
+    interface IStuffMaker
+    {
+
+        public function makeStuff();
+    }
+
+    class AStuffMaker implements IStuffMaker
+    {
+        use Traits\|;
+    }
+}
+?>
+--EXPECT--
+type(StuffMaker)
