@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016, 2017 IBM Corporation and others.
+ * Copyright (c) 2009, 2016, 2017, 2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -239,7 +239,7 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 				parentNamespace = extractedNamespace;
 				// See also code from PHPClassType.fromTypeName(...) and
 				// PHPClassType.fromTraitName(...)
-				elementName = PHPModelUtils.getRealName(fullyQualifiedName, sourceModule, offset, elementName);
+				elementName = PHPModelUtils.getRealName(extractedNamespace, fullyQualifiedName, sourceModule, offset, elementName);
 			}
 			if (PHPModelUtils.isInUseTraitStatement(((ISourceModuleContext) context).getRootNode(),
 					typeReference.sourceStart())) {
