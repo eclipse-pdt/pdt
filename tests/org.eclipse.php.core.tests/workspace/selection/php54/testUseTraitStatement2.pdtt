@@ -1,0 +1,34 @@
+--TEST--
+Bug 549197 - Validator gets confused when a class alias matches the same name as a used trait
+--FILE--
+<?php
+namespace Traits2
+{
+
+    trait StuffMaker2
+    {
+
+        public function makeStuff()
+        {
+            //code
+        }
+    }
+}
+namespace
+{
+
+    use stdClass as StuffMaker2;
+
+    interface IStuffMaker2
+    {
+
+        public function makeStuff();
+    }
+
+    class AStuffMaker2 implements IStuffMaker2
+    {
+        use \Traits2\|StuffMaker2|;
+    }
+}
+--EXPECT--
+type(StuffMaker2)
