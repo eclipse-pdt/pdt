@@ -1058,12 +1058,12 @@ function print_doccomment ($ref, $tabs = 0) {
 function xml_to_phpdoc ($str) {
 	$str = str_replace ("&return.success;", "Returns true on success or false on failure.", $str);
 	$str = str_replace ("&return.void;", "", $str);
-	$str = str_replace("&Alias;", "Alias:", $str);
+	$str = str_replace ("&Alias;", "Alias:", $str);
 	// rewrite all non-html entities like "&null;", "&true;", "&false;"
 	// as "null", "true", "false"
 	preg_match_all ('@&([a-zA-Z0-9._-]+);@s', $str, $matches);
 	if ($matches) {
-		foreach ($matches[1] as $v) {
+		foreach (array_unique ($matches[1]) as $v) {
 			if (html_entity_decode ("&" . $v . ";") === "&" . $v . ";") {
 				$str = str_replace ("&" . $v . ";", $v, $str);
 			}
@@ -1151,7 +1151,7 @@ function strip_tags_special ($str) {
 	$str = str_replace ("]]>", "###(/pre)###", $str);
 	preg_match_all ('@(<\?php.*?\?>)@si', $str, $matches);
 	if ($matches) {
-		foreach ($matches[1] as $v) {
+		foreach (array_unique ($matches[1]) as $v) {
 			$str = str_replace ($v, "###(code)###" . strtr (htmlspecialchars ($v), array(
 				"/" => "&#47;",
 				"*" => "&#42;",
