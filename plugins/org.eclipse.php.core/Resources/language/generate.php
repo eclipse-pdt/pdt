@@ -578,7 +578,7 @@ function print_extension ($extRef) {
 /**
  * Prints ReflectionClass in format of PHP code
  * @param $classRef ReflectionClass object
- * @param $tabs integer[optional] number of tabs for indentation
+ * @param $tabs integer [optional] number of tabs for indentation
  */
 function print_class ($classRef, $tabs = 0) {
 	global $processedClasses;
@@ -707,7 +707,7 @@ function print_class ($classRef, $tabs = 0) {
 /**
  * Prints ReflectionProperty in format of PHP code
  * @param $propertyRef ReflectionProperty object
- * @param $tabs integer[optional] number of tabs for indentation
+ * @param $tabs integer [optional] number of tabs for indentation
  */
 function print_property ($propertyRef, $tabs = 0) {
 	print_doccomment ($propertyRef, $tabs);
@@ -840,7 +840,7 @@ function print_parameters_ref ($paramsRef) {
 /**
  * Prints constants in format of PHP code
  * @param $constants array containing constants, where key is a name of constant
- * @param $tabs integer[optional] number of tabs for indentation
+ * @param $tabs integer [optional] number of tabs for indentation
  */
 function print_constants ($constants, $tabs = 0) {
 	foreach ($constants as $name => $value) {
@@ -900,7 +900,7 @@ function escape_const_value ($value) {
 /**
  * Prints class constants in format of PHP code
  * @param $constants array containing constants, where key is a name of constant
- * @param $tabs integer[optional] number of tabs for indentation
+ * @param $tabs integer [optional] number of tabs for indentation
  */
 function print_class_constants ($constants, $tabs = 0) {
 	foreach ($constants as $name => $value) {
@@ -926,7 +926,7 @@ function print_modifiers ($ref, $excludeModifierKeywords = array()) {
 
 /**
  * Makes PHP Manual URL from the given ID
- * @param $id PHP Element ID
+ * @param $id string PHP Element ID
  * @return string URL
  */
 function make_url ($id) {
@@ -936,7 +936,7 @@ function make_url ($id) {
 /**
  * Prints PHPDOC comment before specified reflection object
  * @param $ref Reflection some reflection object
- * @param $tabs integer[optional] number of tabs for indentation
+ * @param $tabs integer [optional] number of tabs for indentation
  */
 function print_doccomment ($ref, $tabs = 0) {
 	global $functionsDoc;
@@ -1063,7 +1063,7 @@ function xml_to_phpdoc ($str) {
 	// as "null", "true", "false"
 	preg_match_all ('@&([a-zA-Z0-9._-]+);@s', $str, $matches);
 	if ($matches) {
-		foreach ($matches[1] as $v) {
+		foreach (array_unique($matches[1]) as $v) {
 			if (html_entity_decode ("&" . $v . ";") === "&" . $v . ";") {
 				$str = str_replace ("&" . $v . ";", $v, $str);
 			}
@@ -1079,7 +1079,7 @@ function xml_to_phpdoc ($str) {
 /**
  * Converts newlines to PHPDOC prefixes in the given string
  * @param $str string
- * @param $tabs integer[optional] number of tabs for indentation
+ * @param $tabs integer [optional] number of tabs for indentation
  * @return string PHPDOC string
  */
 function newline_to_phpdoc ($str, $tabs = 0) {
@@ -1122,7 +1122,7 @@ function begin_file_output() {
 
 /**
  * Ends outputing, and dumps the output to the specified file
- * @param $filename File to dump the output
+ * @param $filename string File to dump the output
  */
 function finish_file_output($filename) {
 	//if (file_exists ($filename)) {
@@ -1151,7 +1151,7 @@ function strip_tags_special ($str) {
 	$str = str_replace ("]]>", "###(/pre)###", $str);
 	preg_match_all ('@(<\?php.*?\?>)@si', $str, $matches);
 	if ($matches) {
-		foreach ($matches[1] as $v) {
+		foreach (array_unique($matches[1]) as $v) {
 			$str = str_replace ($v, "###(code)###" . strtr (htmlspecialchars ($v), array(
 				"/" => "&#47;",
 				"*" => "&#42;",
@@ -1196,7 +1196,6 @@ function load_entities()
 {
 	global $phpdocDir;
 	$result = array();
-	$needExpand = array();
 	$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($phpdocDir));
 	foreach ($iterator as $file) {
 		if (! $file->isFile() || !in_array($file->getExtension(), array("xml", "ent"))) {
