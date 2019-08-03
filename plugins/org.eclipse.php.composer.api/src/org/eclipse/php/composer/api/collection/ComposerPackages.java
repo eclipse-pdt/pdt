@@ -32,6 +32,8 @@ import org.eclipse.php.composer.api.json.ParseException;
  */
 public class ComposerPackages extends AbstractJsonArray<ComposerPackage> {
 
+	private static String PACKAGES = "packages";
+
 	public ComposerPackages() {
 	}
 
@@ -54,8 +56,12 @@ public class ComposerPackages extends AbstractJsonArray<ComposerPackage> {
 	@Override
 	@SuppressWarnings("rawtypes")
 	protected void doParse(Object obj) {
+		if (obj instanceof LinkedHashMap && ((LinkedHashMap) obj).containsKey(PACKAGES)) {
+			obj = ((LinkedHashMap) obj).get(PACKAGES);
+		}
 		clear();
 		if (obj instanceof LinkedHashMap) {
+
 			add(new ComposerPackage(obj));
 		} else if (obj instanceof LinkedList) {
 			LinkedList array = (LinkedList) obj;
