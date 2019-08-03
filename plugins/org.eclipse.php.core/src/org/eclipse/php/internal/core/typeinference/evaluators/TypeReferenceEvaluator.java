@@ -29,6 +29,7 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.evaluation.types.AmbiguousType;
+import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.internal.core.ImportDeclaration;
 import org.eclipse.dltk.ti.GoalState;
@@ -186,9 +187,9 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 				elementType = ((FullyQualifiedReference) typeReference).getElementType();
 			} else {
 				fullyQualifiedName = typeReference.getName();
+				fullyQualifiedName = PHPEvaluationUtils.extractArrayType(fullyQualifiedName);
 
-				elementName = PHPEvaluationUtils.extractArrayType(fullyQualifiedName);
-				elementName = PHPModelUtils.extractElementName(elementName);
+				elementName = PHPModelUtils.extractElementName(fullyQualifiedName);
 			}
 			ISourceModule sourceModule = ((ISourceModuleContext) context).getSourceModule();
 			int offset = typeReference.sourceStart();
@@ -239,7 +240,8 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 				parentNamespace = extractedNamespace;
 				// See also code from PHPClassType.fromTypeName(...) and
 				// PHPClassType.fromTraitName(...)
-				elementName = PHPModelUtils.getRealName(extractedNamespace, fullyQualifiedName, sourceModule, offset, elementName);
+				elementName = PHPModelUtils.getRealName(extractedNamespace, fullyQualifiedName, sourceModule, offset,
+						elementName);
 			}
 			if (PHPModelUtils.isInUseTraitStatement(((ISourceModuleContext) context).getRootNode(),
 					typeReference.sourceStart())) {
@@ -260,6 +262,12 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 				} else {
 					result = new PHPClassType(elementName);
 				}
+			}
+			if (PHPEvaluationUtils.isArrayType(typeReference.getName())) {
+				// XXX Quick Fix for bug 549308
+				MultiTypeType tmp = new MultiTypeType();
+				tmp.addType(result);
+				result = tmp;
 			}
 		}
 
