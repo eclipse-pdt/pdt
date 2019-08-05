@@ -4,27 +4,26 @@ Fix bug 549308
 org.eclipse.php.core/contentAssistShowStrictOptions=true
 --FILE--
 <?php
-namespace App\Tmp;
+namespace App2\Tmp;
 
-use App\Foo;
+use App2\Foo2;
 
-class Bar
+class Bar2
 {
     public function test()
     {
-        /** @var Foo[] $list */
-        $list = $this->getList();
+        /* @var Foo2[] $list */
+        $list;
 
         foreach ($list as $item) {
             $item->|
         }
     }
-  
 }
 --FILE0--
 <?php
-namespace App;
-final class Foo
+namespace App2;
+final class Foo2
 {
     public function getText() {}
 }
