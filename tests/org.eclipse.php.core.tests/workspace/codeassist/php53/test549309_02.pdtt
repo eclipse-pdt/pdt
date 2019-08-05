@@ -1,0 +1,31 @@
+--TEST--
+Fix bug 549308
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=true
+--FILE--
+<?php
+namespace App\Tmp;
+
+use App\Foo2;
+
+class Bar2
+{
+    public function test()
+    {
+        /* @var Foo2[] $list */
+        $list;
+
+        foreach ($list as $item) {
+            echo $item->|
+        }
+    }
+}
+--FILE0--
+<?php
+namespace App;
+final class Foo2
+{
+    public function getText() {}
+}
+--EXPECT--
+method(getText)

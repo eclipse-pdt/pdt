@@ -12,7 +12,7 @@ class Bar
 {
     public function test()
     {
-        /** @var Foo[] $list */
+        /* @var Foo[] $list */
         $list = $this->getList();
 
         foreach ($list as $item) {
