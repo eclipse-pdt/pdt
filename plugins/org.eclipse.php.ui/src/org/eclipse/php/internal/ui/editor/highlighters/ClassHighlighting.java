@@ -21,9 +21,9 @@ import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
 
 public class ClassHighlighting extends AbstractSemanticHighlighting {
-	private final static String SELF = "self"; //$NON-NLS-1$
-	private final static String PARENT = "parent"; //$NON-NLS-1$
-	private final static String CLASS = "class"; //$NON-NLS-1$
+	public final static String SELF = "self"; //$NON-NLS-1$
+	public final static String PARENT = "parent"; //$NON-NLS-1$
+	public final static String CLASS = "class"; //$NON-NLS-1$
 
 	protected class ClassApply extends AbstractSemanticApply {
 
@@ -85,6 +85,7 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 				highlightNamespaceType((NamespaceName) name, true);
 			} else if (name instanceof Identifier) {
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=496045
+				// See also DeprecatedHighlighting#visit(ClassName)
 				if (SELF.equalsIgnoreCase(((Identifier) name).getName())
 						|| CLASS.equalsIgnoreCase(((Identifier) name).getName())
 						|| PARENT.equalsIgnoreCase(((Identifier) name).getName())) {
@@ -210,6 +211,10 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 			highlightNamespaceType(name, false);
 		}
 
+		/**
+		 * 
+		 * @see DeprecatedHighlighting#highlightNamespaceType()
+		 */
 		private void highlightNamespaceType(NamespaceName name, boolean excludeSelf) {
 			List<Identifier> segments = name.segments();
 			if (segments.size() > 0) {
