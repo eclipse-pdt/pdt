@@ -206,6 +206,10 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 			}
 		}
 
+		/**
+		 * 
+		 * @see DeprecatedHighlighting#highlightNamespaceType()
+		 */
 		private void highlightNamespaceType(NamespaceName name) {
 			highlightNamespaceType(name, false);
 		}

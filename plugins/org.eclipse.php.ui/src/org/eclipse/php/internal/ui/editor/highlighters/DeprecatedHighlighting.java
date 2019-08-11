@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2006-2019 Zend Corporation and IBM Corporation.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -58,9 +58,10 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 
 		@Override
 		public boolean visit(ClassName classConst) {
-			if (classConst.getName() instanceof Identifier) {
+			Expression classNode = classConst.getName();
+			if (classNode instanceof Identifier) {
 
-				String className = ((Identifier) classConst.getName()).getName();
+				String className = ((Identifier) classNode).getName();
 				IModelAccessCache cache = classConst.getAST().getBindingResolver().getModelAccessCache();
 				try {
 					IType[] types = PHPModelUtils.getTypes(className, getSourceModule(), classConst.getStart(), cache,
@@ -68,7 +69,21 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 					if (types != null) {
 						for (IType type : types) {
 							if (ModelUtils.isDeprecated(type)) {
+								// SemanticHighlightingPresenter.updatePresentation()
+								// sorts the "highlighting" areas by
+								// ascending position.
+								// Any fully-qualified class name highlighting
+								// will always be rendered before its class name
+								// highlighting (when their start positions
+								// differ)...
 								highlight(classConst);
+								if (classNode instanceof NamespaceName) {
+									// ...so we must render again the class
+									// name "Deprecated Highlighting"
+									// on top of the class name
+									// "Class Highlighting"
+									highlightNamespaceType((NamespaceName) classNode);
+								}
 								break;
 							}
 						}
@@ -222,6 +237,21 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 	@Override
 	public String getDisplayName() {
 		return Messages.DeprecatedHighlighting_0;
+	}
+
+	/**
+	 * 
+	 * @see ClassHighlighting#highlightNamespaceType()
+	 */
+	private void highlightNamespaceType(NamespaceName name) {
+		List<Identifier> segments = name.segments();
+		if (segments.size() > 0) {
+			Identifier segment = segments.get(segments.size() - 1);
+
+			if (segments.size() > 1 || name.isGlobal()) {
+				highlight(segment);
+			}
+		}
 	}
 
 	@Override
