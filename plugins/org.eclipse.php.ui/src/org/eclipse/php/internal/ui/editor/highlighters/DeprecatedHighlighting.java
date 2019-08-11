@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2006-2019 Zend Corporation and IBM Corporation.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -24,6 +24,7 @@ import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
 import org.eclipse.php.internal.ui.editor.highlighter.ModelUtils;
+import org.eclipse.php.internal.ui.editor.highlighters.ClassHighlighting.ClassApply;
 
 public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 
@@ -58,9 +59,10 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 
 		@Override
 		public boolean visit(ClassName classConst) {
-			if (classConst.getName() instanceof Identifier) {
+			Expression classNode = classConst.getName();
+			if (classNode instanceof Identifier) {
 
-				String className = ((Identifier) classConst.getName()).getName();
+				String className = ((Identifier) classNode).getName();
 				IModelAccessCache cache = classConst.getAST().getBindingResolver().getModelAccessCache();
 				try {
 					IType[] types = PHPModelUtils.getTypes(className, getSourceModule(), classConst.getStart(), cache,
@@ -68,7 +70,29 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 					if (types != null) {
 						for (IType type : types) {
 							if (ModelUtils.isDeprecated(type)) {
-								highlight(classConst);
+								// SemanticHighlightingPresenter.updatePresentation()
+								// sorts the "highlighting" areas by
+								// ascending position.
+								// Any fully-qualified class name highlighting
+								// will always be rendered before its class name
+								// highlighting (when their start positions
+								// differ)...
+								// https://bugs.eclipse.org/bugs/show_bug.cgi?id=496045
+								// https://bugs.eclipse.org/bugs/show_bug.cgi?id=549957
+								// See also
+								// ClassHighlighting#visit(ClassInstanceCreation)
+								if (!(ClassHighlighting.SELF.equalsIgnoreCase(className)
+										|| ClassHighlighting.CLASS.equalsIgnoreCase(className)
+										|| ClassHighlighting.PARENT.equalsIgnoreCase(className))) {
+									highlight(classConst);
+								}
+								if (classNode instanceof NamespaceName) {
+									// ...so we must render again the class
+									// name "Deprecated Highlighting"
+									// on top of the class name
+									// "Class Highlighting"
+									highlightLastNamespaceSegment((NamespaceName) classNode);
+								}
 								break;
 							}
 						}
@@ -222,6 +246,21 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 	@Override
 	public String getDisplayName() {
 		return Messages.DeprecatedHighlighting_0;
+	}
+
+	/**
+	 * 
+	 * @see ClassApply#highlightNamespaceType(NamespaceName, boolean)
+	 */
+	private void highlightLastNamespaceSegment(NamespaceName name) {
+		List<Identifier> segments = name.segments();
+		if (segments.size() > 0) {
+			Identifier segment = segments.get(segments.size() - 1);
+
+			if (segments.size() > 1 || name.isGlobal()) {
+				highlight(segment);
+			}
+		}
 	}
 
 	@Override

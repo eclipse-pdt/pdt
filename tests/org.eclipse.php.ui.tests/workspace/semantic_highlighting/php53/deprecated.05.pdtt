@@ -1,0 +1,46 @@
+--TEST--
+Bug 549957 - Deprecated class highlighting doesn't work on class instantiation
+--FILE--
+<?php
+namespace A\B
+{
+
+    /**
+     *
+     * @deprecated
+     */
+    class myClass
+    {
+    }
+    new myClass();
+    new \A\B\myClass();
+}
+namespace
+{
+
+    /**
+     *
+     * @deprecated
+     */
+    class myClass2
+    {
+    }
+    new myClass2();
+    new \myClass2();
+    new A\B\myClass();
+    new \A\B\myClass();
+}
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.DeprecatedHighlighting:
+highlight(myClass)
+highlight(myClass2)
+highlight(myClass)
+highlight(\A\B\myClass)
+highlight(myClass)
+highlight(myClass2)
+highlight(\myClass2)
+highlight(myClass2)
+highlight(A\B\myClass)
+highlight(myClass)
+highlight(\A\B\myClass)
+highlight(myClass)
