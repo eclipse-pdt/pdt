@@ -60,6 +60,14 @@ class myClass4 extends myClass3
         return self::foo1();
     }
 }
+
+/**
+ *
+ * @deprecated
+ */
+class myClass5 extends \A\B\myClass3
+{
+}
 --EXPECT--
 org.eclipse.php.internal.ui.editor.highlighters.DeprecatedHighlighting:
 highlight(myClass3)
@@ -68,6 +76,8 @@ highlight(myClass4)
 highlight($a)
 highlight(foo1)
 highlight(foo2)
+highlight(myClass5)
+highlight(myClass3)
 highlight($a)
 highlight(myClass3)
 highlight(foo1)
@@ -76,3 +86,5 @@ highlight(myClass3)
 highlight(foo1)
 highlight(foo1)
 highlight(foo1)
+highlight(\A\B\myClass3)
+highlight(myClass3)

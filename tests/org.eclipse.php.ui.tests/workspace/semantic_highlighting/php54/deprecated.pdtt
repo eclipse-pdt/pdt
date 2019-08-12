@@ -1,0 +1,119 @@
+--TEST--
+No bug - Add Deprecation highlighting on class&trait inheritance and use trait statements
+--FILE--
+<?php
+namespace C\D;
+
+/**
+ *
+ * @deprecated
+ */
+trait A
+{
+
+    /**
+     *
+     * @deprecated
+     */
+    public function smallTalk()
+    {
+        echo 'a';
+    }
+
+    /**
+     *
+     * @deprecated
+     */
+    public function bigTalk()
+    {
+        echo 'A';
+    }
+}
+
+/**
+ *
+ * @deprecated
+ */
+trait B
+{
+
+    /**
+     *
+     * @deprecated
+     */
+    public function smallTalk()
+    {
+        echo 'b';
+    }
+
+    /**
+     *
+     * @deprecated
+     */
+    public function bigTalk()
+    {
+        echo 'B';
+    }
+}
+
+/**
+ *
+ * @deprecated
+ */
+class Talker
+{
+    use \C\D\A, \C\D\B {
+        \C\D\B::smallTalk insteadof \C\D\A;
+        \C\D\A::bigTalk insteadof \C\D\B;
+    }
+}
+
+/**
+ *
+ * @deprecated
+ */
+class Aliased_Talker
+{
+    use \C\D\A, \C\D\B {
+        \C\D\B::smallTalk insteadof \C\D\A;
+        \C\D\A::bigTalk insteadof \C\D\B;
+        \C\D\B::bigTalk as talk;
+    }
+}
+?>
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.DeprecatedHighlighting:
+highlight(A)
+highlight(smallTalk)
+highlight(bigTalk)
+highlight(B)
+highlight(smallTalk)
+highlight(bigTalk)
+highlight(Talker)
+highlight(Aliased_Talker)
+highlight(\C\D\A)
+highlight(A)
+highlight(\C\D\B)
+highlight(B)
+highlight(\C\D\B)
+highlight(B)
+highlight(\C\D\A)
+highlight(A)
+highlight(\C\D\A)
+highlight(A)
+highlight(\C\D\B)
+highlight(B)
+highlight(\C\D\A)
+highlight(A)
+highlight(\C\D\B)
+highlight(B)
+highlight(\C\D\B)
+highlight(B)
+highlight(\C\D\A)
+highlight(A)
+highlight(\C\D\A)
+highlight(A)
+highlight(\C\D\B)
+highlight(B)
+highlight(\C\D\B)
+highlight(B)
