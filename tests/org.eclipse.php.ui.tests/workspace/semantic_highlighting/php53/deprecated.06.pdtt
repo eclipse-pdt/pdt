@@ -1,0 +1,77 @@
+--TEST--
+Bug 549957 - Deprecated class highlighting doesn't work on class instantiation
+--FILE--
+<?php
+namespace A\B;
+
+/**
+ *
+ * @deprecated
+ */
+class myClass3
+{
+
+    /**
+     *
+     * @return integer
+     * @deprecated
+     */
+    public function foo1()
+    {
+        return 1;
+    }
+}
+
+/**
+ *
+ * @deprecated
+ */
+class myClass4 extends myClass3
+{
+
+    /**
+     *
+     * @var integer
+     * @deprecated
+     */
+    public static $a = 1;
+
+    /**
+     *
+     * @return integer
+     * @deprecated
+     */
+    public function foo1()
+    {
+        return self::$a;
+    }
+
+    /**
+     *
+     * @return integer
+     * @deprecated
+     */
+    public function foo2()
+    {
+        myClass3::foo1();
+        \A\B\myClass3::foo1();
+        parent::foo1();
+        return self::foo1();
+    }
+}
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.DeprecatedHighlighting:
+highlight(myClass3)
+highlight(foo1)
+highlight(myClass4)
+highlight($a)
+highlight(foo1)
+highlight(foo2)
+highlight($a)
+highlight(myClass3)
+highlight(foo1)
+highlight(\A\B\myClass3)
+highlight(myClass3)
+highlight(foo1)
+highlight(foo1)
+highlight(foo1)

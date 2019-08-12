@@ -195,6 +195,9 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 			return true;
 		}
 
+		/**
+		 * @see DeprecatedHighlighting#highlightStatic(StaticDispatch)
+		 */
 		private void highlightStatic(StaticDispatch dispatch) {
 			Expression className = dispatch.getClassName();
 			if (className instanceof NamespaceName) {
@@ -212,7 +215,6 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 		}
 
 		/**
-		 * 
 		 * @see DeprecatedHighlighting#highlightLastNamespaceSegment(NamespaceName)
 		 */
 		private void highlightNamespaceType(NamespaceName name, boolean excludeSelf) {
