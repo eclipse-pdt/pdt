@@ -58,14 +58,14 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 		}
 
 		@Override
-		public boolean visit(ClassName classConst) {
-			Expression classNode = classConst.getName();
+		public boolean visit(ClassName className) {
+			Expression classNode = className.getName();
 			if (classNode instanceof Identifier) {
 
-				String className = ((Identifier) classNode).getName();
-				IModelAccessCache cache = classConst.getAST().getBindingResolver().getModelAccessCache();
+				String typeName = ((Identifier) classNode).getName();
+				IModelAccessCache cache = className.getAST().getBindingResolver().getModelAccessCache();
 				try {
-					IType[] types = PHPModelUtils.getTypes(className, getSourceModule(), classConst.getStart(), cache,
+					IType[] types = PHPModelUtils.getTypes(typeName, getSourceModule(), className.getStart(), cache,
 							new NullProgressMonitor());
 					if (types != null) {
 						for (IType type : types) {
@@ -81,16 +81,22 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 								// https://bugs.eclipse.org/bugs/show_bug.cgi?id=549957
 								// See also
 								// ClassHighlighting#visit(ClassInstanceCreation)
-								if (!(ClassHighlighting.SELF.equalsIgnoreCase(className)
-										|| ClassHighlighting.CLASS.equalsIgnoreCase(className)
-										|| ClassHighlighting.PARENT.equalsIgnoreCase(className))) {
-									highlight(classConst);
+								// and
+								// DeprecatedHighlighting#highlightStatic(StaticDispatch).
+								if (!(ClassHighlighting.SELF.equalsIgnoreCase(typeName)
+										|| ClassHighlighting.CLASS.equalsIgnoreCase(typeName)
+										|| ClassHighlighting.PARENT.equalsIgnoreCase(typeName))) {
+									// We want to highlight all NamespaceName
+									// segments, so don't do
+									// highlight(classNode) that will only
+									// highlight last NamespaceName segment.
+									highlight(className);
 								}
 								if (classNode instanceof NamespaceName) {
 									// ...so we must render again the class
 									// name "Deprecated Highlighting"
 									// on top of the class name
-									// "Class Highlighting"
+									// "Class Highlighting".
 									highlightLastNamespaceSegment((NamespaceName) classNode);
 								}
 								break;
@@ -110,7 +116,7 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 			ITypeBinding type = staticConstantAccess.getClassName().resolveTypeBinding();
 
 			if (type != null && ModelUtils.isDeprecated(type.getPHPElement())) {
-				highlight(staticConstantAccess.getClassName());
+				highlightStatic(staticConstantAccess);
 			}
 
 			String fieldName = staticConstantAccess.getConstant().getName();
@@ -145,7 +151,7 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 			ITypeBinding type = staticFieldAccess.getClassName().resolveTypeBinding();
 
 			if (type != null && ModelUtils.isDeprecated(type.getPHPElement())) {
-				highlight(staticFieldAccess.getClassName());
+				highlightStatic(staticFieldAccess);
 			}
 
 			String fieldName = null;
@@ -197,7 +203,7 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 				ITypeBinding type = methodInvocation.getClassName().resolveTypeBinding();
 
 				if (type != null && ModelUtils.isDeprecated(type.getPHPElement())) {
-					highlight(methodInvocation.getClassName());
+					highlightStatic(methodInvocation);
 				}
 
 				IMethod method = ModelUtils.getMethod(methodInvocation);
@@ -249,7 +255,25 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 	}
 
 	/**
-	 * 
+	 * @see ClassApply#highlightStatic(StaticDispatch)
+	 */
+	private void highlightStatic(StaticDispatch dispatch) {
+		Expression className = dispatch.getClassName();
+		if (className instanceof Identifier) {
+			if (!ClassHighlighting.SELF.equalsIgnoreCase(((Identifier) className).getName())
+					&& !ClassHighlighting.PARENT.equalsIgnoreCase(((Identifier) className).getName())) {
+				// We want to highlight all NamespaceName segments,
+				// so don't use this.highlight(className) that will only
+				// highlight last NamespaceName segment.
+				super.highlight(className);
+			}
+		}
+		if (className instanceof NamespaceName) {
+			highlightLastNamespaceSegment((NamespaceName) className);
+		}
+	}
+
+	/**
 	 * @see ClassApply#highlightNamespaceType(NamespaceName, boolean)
 	 */
 	private void highlightLastNamespaceSegment(NamespaceName name) {
