@@ -58,55 +58,34 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 		}
 
 		@Override
+		public boolean visit(ClassDeclaration clazz) {
+			Expression superClass = clazz.getSuperClass();
+			if (superClass instanceof Identifier) {
+				highlightWhenIdentifierIsDeprecated((Identifier) superClass);
+			}
+			for (Identifier identifier : clazz.interfaces()) {
+				highlightWhenIdentifierIsDeprecated(identifier);
+			}
+			return true;
+		}
+
+		@Override
+		public boolean visit(TraitDeclaration trait) {
+			Expression superClass = trait.getSuperClass();
+			if (superClass instanceof Identifier) {
+				highlightWhenIdentifierIsDeprecated((Identifier) superClass);
+			}
+			for (Identifier identifier : trait.interfaces()) {
+				highlightWhenIdentifierIsDeprecated(identifier);
+			}
+			return true;
+		}
+
+		@Override
 		public boolean visit(ClassName className) {
 			Expression classNode = className.getName();
 			if (classNode instanceof Identifier) {
-
-				String typeName = ((Identifier) classNode).getName();
-				IModelAccessCache cache = className.getAST().getBindingResolver().getModelAccessCache();
-				try {
-					IType[] types = PHPModelUtils.getTypes(typeName, getSourceModule(), className.getStart(), cache,
-							new NullProgressMonitor());
-					if (types != null) {
-						for (IType type : types) {
-							if (ModelUtils.isDeprecated(type)) {
-								// SemanticHighlightingPresenter.updatePresentation()
-								// sorts the "highlighting" areas by
-								// ascending position.
-								// Any fully-qualified class name highlighting
-								// will always be rendered before its class name
-								// highlighting (when their start positions
-								// differ)...
-								// https://bugs.eclipse.org/bugs/show_bug.cgi?id=496045
-								// https://bugs.eclipse.org/bugs/show_bug.cgi?id=549957
-								// See also
-								// ClassHighlighting#visit(ClassInstanceCreation)
-								// and
-								// DeprecatedHighlighting#highlightStatic(StaticDispatch).
-								if (!(ClassHighlighting.SELF.equalsIgnoreCase(typeName)
-										|| ClassHighlighting.CLASS.equalsIgnoreCase(typeName)
-										|| ClassHighlighting.PARENT.equalsIgnoreCase(typeName))) {
-									// We want to highlight all NamespaceName
-									// segments, so don't do
-									// highlight(classNode) that will only
-									// highlight last NamespaceName segment.
-									highlight(className);
-								}
-								if (classNode instanceof NamespaceName) {
-									// ...so we must render again the class
-									// name "Deprecated Highlighting"
-									// on top of the class name
-									// "Class Highlighting".
-									highlightLastNamespaceSegment((NamespaceName) classNode);
-								}
-								break;
-							}
-						}
-					}
-				} catch (ModelException e) {
-					Logger.logException(e);
-				}
-
+				highlightWhenIdentifierIsDeprecated((Identifier) classNode);
 			}
 			return true;
 		}
@@ -133,6 +112,35 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 			}
 
 			return super.visit(staticConstantAccess);
+		}
+
+		@Override
+		public boolean visit(TraitUseStatement node) {
+			List<NamespaceName> traitList = node.getTraitList();
+			for (NamespaceName namespaceName : traitList) {
+				highlightWhenIdentifierIsDeprecated(namespaceName, true);
+			}
+			List<TraitStatement> tsList = node.getTsList();
+			for (TraitStatement traitStatement : tsList) {
+				if (traitStatement instanceof TraitAliasStatement) {
+					TraitAliasStatement statement = (TraitAliasStatement) traitStatement;
+					if (statement.getAlias().getTraitMethod() instanceof FullyQualifiedTraitMethodReference) {
+						FullyQualifiedTraitMethodReference reference = (FullyQualifiedTraitMethodReference) statement
+								.getAlias().getTraitMethod();
+						highlightWhenIdentifierIsDeprecated(reference.getClassName(), true);
+					}
+
+				} else if (traitStatement instanceof TraitPrecedenceStatement) {
+					TraitPrecedenceStatement statement = (TraitPrecedenceStatement) traitStatement;
+					FullyQualifiedTraitMethodReference reference = statement.getPrecedence().getMethodReference();
+					highlightWhenIdentifierIsDeprecated(reference.getClassName());
+					traitList = statement.getPrecedence().getTrList();
+					for (NamespaceName namespaceName : traitList) {
+						highlightWhenIdentifierIsDeprecated(namespaceName, true);
+					}
+				}
+			}
+			return false;
 		}
 
 		@Override
@@ -260,8 +268,9 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 	private void highlightStatic(StaticDispatch dispatch) {
 		Expression className = dispatch.getClassName();
 		if (className instanceof Identifier) {
-			if (!ClassHighlighting.SELF.equalsIgnoreCase(((Identifier) className).getName())
-					&& !ClassHighlighting.PARENT.equalsIgnoreCase(((Identifier) className).getName())) {
+			if (!(ClassHighlighting.SELF.equalsIgnoreCase(((Identifier) className).getName())
+					|| ClassHighlighting.CLASS.equalsIgnoreCase(((Identifier) className).getName())
+					|| ClassHighlighting.PARENT.equalsIgnoreCase(((Identifier) className).getName()))) {
 				// We want to highlight all NamespaceName segments,
 				// so don't use this.highlight(className) that will only
 				// highlight last NamespaceName segment.
@@ -282,8 +291,62 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 			Identifier segment = segments.get(segments.size() - 1);
 
 			if (segments.size() > 1 || name.isGlobal()) {
-				highlight(segment);
+				super.highlight(segment);
 			}
+		}
+	}
+
+	private void highlightWhenIdentifierIsDeprecated(Identifier identifier) {
+		highlightWhenIdentifierIsDeprecated(identifier, false);
+	}
+
+	private void highlightWhenIdentifierIsDeprecated(Identifier identifier, boolean isTrait) {
+		String typeName = identifier.getName();
+		IModelAccessCache cache = identifier.getAST().getBindingResolver().getModelAccessCache();
+		try {
+			IType[] types = isTrait
+					? PHPModelUtils.getTraits(typeName, getSourceModule(), identifier.getStart(), cache,
+							new NullProgressMonitor())
+					: PHPModelUtils.getTypes(typeName, getSourceModule(), identifier.getStart(), cache,
+							new NullProgressMonitor());
+			if (types != null) {
+				for (IType type : types) {
+					if (ModelUtils.isDeprecated(type)) {
+						// SemanticHighlightingPresenter.updatePresentation()
+						// sorts the "highlighting" areas by
+						// ascending position.
+						// Any fully-qualified class name highlighting
+						// will always be rendered before its class name
+						// highlighting (when their start positions
+						// differ)...
+						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=496045
+						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=549957
+						// See also
+						// ClassHighlighting#visit(ClassInstanceCreation)
+						// and
+						// DeprecatedHighlighting#highlightStatic(StaticDispatch).
+						if (!(ClassHighlighting.SELF.equalsIgnoreCase(typeName)
+								|| ClassHighlighting.CLASS.equalsIgnoreCase(typeName)
+								|| ClassHighlighting.PARENT.equalsIgnoreCase(typeName))) {
+							// We want to highlight all NamespaceName
+							// segments, so don't do
+							// highlight(identifier) that will only
+							// highlight last NamespaceName segment.
+							super.highlight(identifier);
+						}
+						if (identifier instanceof NamespaceName) {
+							// ...so we must render again the class
+							// name "Deprecated Highlighting"
+							// on top of the class name
+							// "Class Highlighting".
+							highlightLastNamespaceSegment((NamespaceName) identifier);
+						}
+						break;
+					}
+				}
+			}
+		} catch (ModelException e) {
+			Logger.logException(e);
 		}
 	}
 
