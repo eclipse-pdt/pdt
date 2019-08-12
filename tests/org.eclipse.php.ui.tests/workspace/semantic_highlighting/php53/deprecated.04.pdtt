@@ -34,5 +34,5 @@ class B extends \Exception {
 }
 --EXPECT--
 org.eclipse.php.internal.ui.editor.highlighters.DeprecatedHighlighting:
-highlight(F)
+highlight(\App\Entity\F)
 highlight(B)
