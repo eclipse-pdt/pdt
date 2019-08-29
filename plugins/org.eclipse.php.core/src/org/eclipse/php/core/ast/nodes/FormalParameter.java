@@ -27,14 +27,17 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * $a, MyClass $a, $a = 3, int $a = 3
+ * </pre>
  */
 public class FormalParameter extends ASTNode {
 
 	private Expression parameterType;
 	private Expression parameterName;
 	private Expression defaultValue;
+	/**
+	 * @deprecated
+	 */
 	private boolean isMandatory; // php4 "const" keyword
 	private boolean isVariadic;
 
@@ -234,6 +237,8 @@ public class FormalParameter extends ASTNode {
 
 	/**
 	 * indicates if this parameter is mandatory when invoking the function
+	 * 
+	 * @deprecated
 	 */
 	public boolean isMandatory() {
 		return isMandatory;
@@ -421,15 +426,16 @@ public class FormalParameter extends ASTNode {
 	/**
 	 * Resolves and returns the binding for this formal parameter
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be resolved
+	 * @return the binding, or <code>null</code> if the binding cannot be
+	 *         resolved
 	 */
 	public final ITypeBinding resolveTypeBinding() {
 		return this.ast.getBindingResolver().resolveTypeParameter(this);
 	}
 
 	/**
-	 * Returns true if this FormalParemeter has a valid (non null and with value)
-	 * default value.
+	 * Returns true if this FormalParemeter has a valid (non null and with
+	 * value) default value.
 	 * 
 	 * @return True, iff the default value is valid.
 	 */

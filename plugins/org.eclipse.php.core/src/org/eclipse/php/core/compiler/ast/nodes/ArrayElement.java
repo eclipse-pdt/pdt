@@ -25,8 +25,8 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * 1, 'Dodo'=>'Golo', $a, $b=>foo(), 1=>$myClass->getFirst() *
+ * </pre>
  */
 public class ArrayElement extends Expression {
 

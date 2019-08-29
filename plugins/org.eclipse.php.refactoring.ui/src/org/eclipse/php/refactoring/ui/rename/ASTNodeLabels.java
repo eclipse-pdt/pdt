@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2015 Zend Technologies and others.
+ * Copyright (c) 2006-2019 Zend Technologies and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -51,7 +51,8 @@ public class ASTNodeLabels {
 	public static final int M_FULLY_QUALIFIED = 1 << 5;
 
 	/**
-	 * Method names are post qualified. e.g. <code>size - java.util.Vector</code>
+	 * Method names are post qualified. e.g.
+	 * <code>size - java.util.Vector</code>
 	 */
 	public static final int M_POST_QUALIFIED = 1 << 6;
 
@@ -115,7 +116,8 @@ public class ASTNodeLabels {
 	public static final int P_QUALIFIED = 1 << 22;
 
 	/**
-	 * Folder names are post qualified. e.g. <code>java.util - MyProject/src</code>
+	 * Folder names are post qualified. e.g.
+	 * <code>java.util - MyProject/src</code>
 	 */
 	public static final int P_POST_QUALIFIED = 1 << 23;
 
@@ -201,7 +203,8 @@ public class ASTNodeLabels {
 	 */
 	public static final String DECL_STRING = " :"; //$NON-NLS-1$
 	/**
-	 * User-readable string for the default folder name (e.g. "(default folder)" ).
+	 * User-readable string for the default folder name (e.g. "(default folder)"
+	 * ).
 	 */
 	public static final String DEFAULT_FOLDER = "(source)"; //$NON-NLS-1$
 
@@ -327,11 +330,13 @@ public class ASTNodeLabels {
 
 		final Variable[] variableNames = field.getVariableNames();
 		for (int i = 0; i < variableNames.length; i++) {
+			if (i > 0) {
+				buf.append(" ,"); //$NON-NLS-1$
+			}
 			Variable variable = variableNames[i];
 			assert variable.getName() instanceof Identifier;
 			Identifier identifier = (Identifier) variable.getName();
 			buf.append(identifier.getName());
-			buf.append(" ,"); //$NON-NLS-1$
 		}
 
 		// post qualification
@@ -395,7 +400,11 @@ public class ASTNodeLabels {
 			if (i > 0) {
 				buf.append(COMMA_STRING);
 			}
-			buf.append(parameters.get(i).getParameterType().toString());
+			Expression parameterType = parameters.get(i).getParameterType();
+			if (parameterType != null) {
+				buf.append(" "); //$NON-NLS-1$
+				buf.append(parameterType.toString());
+			}
 			buf.append(" $" + parameters.get(i).getParameterNameIdentifier().getName()); //$NON-NLS-1$
 		}
 		buf.append(')');

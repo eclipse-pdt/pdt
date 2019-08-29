@@ -25,8 +25,8 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * $a = 5; $a; 3+2;
+ * </pre>
  */
 public class ExpressionStatement extends Statement {
 

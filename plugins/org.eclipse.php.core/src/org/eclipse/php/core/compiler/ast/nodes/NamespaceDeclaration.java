@@ -24,11 +24,10 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * 
  * <pre>
  * 
- * <pre>
  * e.g.
  * 
- * <pre>
  * namespace A; namespace A { } namespace { }
+ * </pre>
  */
 public class NamespaceDeclaration extends TypeDeclaration implements IPHPDocAwareDeclaration {
 

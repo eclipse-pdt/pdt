@@ -327,7 +327,9 @@ public class VariableValidator implements IValidatorExtension {
 			if (inClassDecl < depth && prev.contains(THIS_VAR, 0)) { // $NON-NLS-1$
 				current.variables.put(THIS_VAR, prev.variables.get(THIS_VAR)); // $NON-NLS-1$
 			}
-			decl.getBody().traverse(this);
+			if (decl.getBody() != null) {
+				decl.getBody().traverse(this);
+			}
 
 			popScope();
 

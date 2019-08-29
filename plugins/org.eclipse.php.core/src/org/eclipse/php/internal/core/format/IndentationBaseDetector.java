@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2016 IBM Corporation and others.
+ * Copyright (c) 2014-2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -252,6 +252,7 @@ public class IndentationBaseDetector {
 						if (biggest == openParenPeer) {
 							if (tokenTypeSet.contains(PHPRegionTypes.PHP_NEW)
 									|| tokenTypeSet.contains(PHPRegionTypes.PHP_FUNCTION)
+									|| tokenTypeSet.contains(PHPRegionTypes.PHP_FN)
 									|| tokenTypeSet.contains(PHPRegionTypes.PHP_ARRAY)) {
 								return true;
 							}

@@ -27,8 +27,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * echo "hello", echo "hello", "world"
+ * </pre>
  */
 public class EchoStatement extends Statement {
 

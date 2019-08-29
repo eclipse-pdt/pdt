@@ -28,8 +28,8 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * global $a global $a, $b global ${foo()->bar()}, global $$a
+ * </pre>
  */
 public class GlobalStatement extends Statement {
 

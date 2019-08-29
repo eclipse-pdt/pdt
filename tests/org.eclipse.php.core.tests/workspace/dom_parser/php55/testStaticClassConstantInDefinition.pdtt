@@ -47,6 +47,8 @@ Test Static ClassConstant in definitions
 			</Interfaces>
 			<Block start='50' length='34' isCurly='true'>
 				<FieldsDeclaration start='52' length='30' modifier='public'>
+					<Type>
+					</Type>
 					<VariableName>
 						<Variable start='59' length='4' isDollared='true'>
 							<Identifier start='60' length='3' name='foo'/>

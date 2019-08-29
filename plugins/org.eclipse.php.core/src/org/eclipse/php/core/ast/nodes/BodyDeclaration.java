@@ -43,7 +43,7 @@ public abstract class BodyDeclaration extends Statement {
 	}
 
 	/**
-	 * Complets the modidifer to public if needed
+	 * Complets the modifier to public if needed
 	 * 
 	 * @param mod
 	 */

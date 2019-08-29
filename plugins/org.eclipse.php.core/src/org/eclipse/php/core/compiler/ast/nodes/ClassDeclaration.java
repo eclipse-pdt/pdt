@@ -30,13 +30,12 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * 
  * <pre>
  * 
- * <pre>
  * e.g.
  * 
- * <pre>
  * class MyClass { }, class MyClass extends SuperClass implements Interface1,
  * Interface2 { const MY_CONSTANT = 3; public static final $myVar = 5, $yourVar;
  * var $anotherOne; private function myFunction($a) { } }
+ * </pre>
  */
 public class ClassDeclaration extends TypeDeclaration implements IPHPDocAwareDeclaration, IRecoverable {
 
@@ -160,7 +159,8 @@ public class ClassDeclaration extends TypeDeclaration implements IPHPDocAwareDec
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.php.internal.core.compiler.ast.nodes.IRecoverable#isRecovered ()
+	 * org.eclipse.php.internal.core.compiler.ast.nodes.IRecoverable#isRecovered
+	 * ()
 	 */
 	@Override
 	public boolean isRecovered() {

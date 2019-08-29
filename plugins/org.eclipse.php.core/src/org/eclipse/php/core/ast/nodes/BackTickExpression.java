@@ -27,8 +27,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * `.\exec.sh`
+ * </pre>
  */
 public class BackTickExpression extends Expression {
 

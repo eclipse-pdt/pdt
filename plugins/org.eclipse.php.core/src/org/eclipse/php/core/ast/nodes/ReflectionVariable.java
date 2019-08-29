@@ -27,8 +27,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * $$a $$foo()
+ * </pre>
  */
 public class ReflectionVariable extends Variable {
 

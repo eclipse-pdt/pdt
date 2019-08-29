@@ -27,8 +27,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * use A; use A as B; use \A\B as C;
+ * </pre>
  */
 public class TraitUseStatement extends Statement {
 

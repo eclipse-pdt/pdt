@@ -27,7 +27,6 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * function foo() {}
  * 
  * function &foo() {}
@@ -37,6 +36,7 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * function foo(); -abstract function in class declaration
  * 
  * function foo() : MyType {};
+ * </pre>
  */
 public class FunctionDeclaration extends Statement {
 
@@ -416,7 +416,8 @@ public class FunctionDeclaration extends Statement {
 	/**
 	 * Resolves and returns the binding for this function
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be resolved
+	 * @return the binding, or <code>null</code> if the binding cannot be
+	 *         resolved
 	 */
 	public IFunctionBinding resolveFunctionBinding() {
 		return this.ast.getBindingResolver().resolveFunction(this);

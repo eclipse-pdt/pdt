@@ -27,8 +27,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * <html> </html> <html> <?php ?> </html> <?php ?>
+ * </pre>
  */
 public class InLineHtml extends Statement {
 

@@ -24,8 +24,8 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * 'string', 1, 1.3, __CLASS__ "string"[0] `
+ * </pre>
  */
 public class Scalar extends StringLiteral implements Dereferencable {
 	// 'int'

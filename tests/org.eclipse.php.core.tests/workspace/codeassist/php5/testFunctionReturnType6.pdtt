@@ -10,8 +10,8 @@ class Test {
 /**
  * @return Test[]
  */
-function fn() {}
-$arr = fn();
+function foo() {}
+$arr = foo();
 foreach ($arr as $object) {
 	$object->|
 }

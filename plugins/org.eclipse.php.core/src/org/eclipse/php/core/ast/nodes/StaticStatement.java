@@ -28,8 +28,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * static $a static $a, $b=5;
+ * </pre>
  */
 public class StaticStatement extends Statement {
 

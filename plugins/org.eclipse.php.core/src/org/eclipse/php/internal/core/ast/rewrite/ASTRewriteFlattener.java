@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016 IBM Corporation and others.
+ * Copyright (c) 2009-2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -57,8 +57,8 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 
 	/**
-	 * Appends the text representation of the given modifier modifiers, followed by
-	 * a single space.
+	 * Appends the text representation of the given modifier modifiers, followed
+	 * by a single space.
 	 * 
 	 * @param modifiers
 	 *            the modifiers
@@ -189,6 +189,13 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 			result.append("=>"); //$NON-NLS-1$
 		}
 		arrayElement.getValue().accept(this);
+		return false;
+	}
+
+	@Override
+	public boolean visit(ArraySpreadElement arraySpreadElement) {
+		result.append("..."); //$NON-NLS-1$
+		arraySpreadElement.getValue().accept(this);
 		return false;
 	}
 
@@ -516,6 +523,10 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		Expression[] initialValues = fieldsDeclaration.getInitialValues();
 		for (int i = 0; i < variableNames.length; i++) {
 			result.append(fieldsDeclaration.getModifierString() + " "); //$NON-NLS-1$
+			if (fieldsDeclaration.getFieldsType() != null) {
+				fieldsDeclaration.getFieldsType().accept(this);
+				result.append(" "); //$NON-NLS-1$
+			}
 			variableNames[i].accept(this);
 			if (initialValues[i] != null) {
 				result.append(" = "); //$NON-NLS-1$
@@ -899,6 +910,40 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 				}
 			}
 			result.append(')');
+		}
+
+		if (functionDeclaration.getReturnType() != null) {
+			result.append(':');
+			functionDeclaration.getReturnType().accept(this);
+		}
+
+		if (functionDeclaration.getBody() != null) {
+			functionDeclaration.getBody().accept(this);
+		}
+		return false;
+	}
+
+	@Override
+	public boolean visit(ArrowFunctionDeclaration functionDeclaration) {
+		result.append(" fn "); //$NON-NLS-1$
+		if (functionDeclaration.isReference()) {
+			result.append('&');
+		}
+		result.append('(');
+		List<FormalParameter> formalParametersList = functionDeclaration.formalParameters();
+		Iterator<FormalParameter> paramIt = formalParametersList.iterator();
+		while (paramIt.hasNext()) {
+			paramIt.next().accept(this);
+			if (paramIt.hasNext()) {
+				result.append(", "); //$NON-NLS-1$
+			}
+		}
+		result.append(')');
+
+		if (functionDeclaration.getReturnType() != null) {
+			result.append(':');
+			functionDeclaration.getReturnType().accept(this);
+			result.append(' ');
 		}
 
 		if (functionDeclaration.getBody() != null) {

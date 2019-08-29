@@ -21,8 +21,8 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 /**
  * Represents a goto label.
  * 
- * <pre>
  * e.g. LABEL:
+ * </pre>
  */
 public class GotoLabel extends Statement {
 

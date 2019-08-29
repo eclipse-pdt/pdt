@@ -22,8 +22,8 @@ import org.eclipse.dltk.ast.expressions.Expression;
  * <pre>
  * e.g.
  * 
- * <pre>
  * $a->$b
+ * </pre>
  */
 public class FieldAccess extends Dispatch {
 

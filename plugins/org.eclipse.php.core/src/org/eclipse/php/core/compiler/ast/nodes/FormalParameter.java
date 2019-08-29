@@ -27,14 +27,17 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * $a, MyClass $a, $a = 3, int $a = 3
+ * </pre>
  */
 public class FormalParameter extends Argument {
 
 	private final SimpleReference parameterType; // this can be either type
 													// reference or array
 	private final VariableReference parameterName;
+	/**
+	 * @deprecated
+	 */
 	private final boolean isMandatory;
 	private final boolean isVariadic;
 
@@ -91,6 +94,9 @@ public class FormalParameter extends Argument {
 		return ASTNodeKinds.FORMAL_PARAMETER;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public boolean isMandatory() {
 		return isMandatory;
 	}

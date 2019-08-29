@@ -26,12 +26,11 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * 
  * <pre>
  * 
- * <pre>
  * e.g.
  * 
- * <pre>
  * interface MyInterface { }, interface MyInterface extends Interface1,
  * Interface2 { const MY_CONSTANT = 3; public function myFunction($a); }
+ * </pre>
  */
 public class InterfaceDeclaration extends TypeDeclaration {
 

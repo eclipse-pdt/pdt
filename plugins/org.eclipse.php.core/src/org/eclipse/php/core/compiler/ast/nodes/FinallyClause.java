@@ -25,8 +25,8 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * catch (ClassName $e) { },
+ * </pre>
  * 
  */
 public class FinallyClause extends Statement {

@@ -28,10 +28,10 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * for (expr1; expr2; expr3) statement;
  * 
  * for (expr1; expr2; expr3): statement ... endfor;
+ * </pre>
  */
 public class ForStatement extends Statement {
 

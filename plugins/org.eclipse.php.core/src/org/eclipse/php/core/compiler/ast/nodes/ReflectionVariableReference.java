@@ -24,8 +24,8 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * $$a $$foo() ${foo()}
+ * </pre>
  */
 public class ReflectionVariableReference extends Expression {
 

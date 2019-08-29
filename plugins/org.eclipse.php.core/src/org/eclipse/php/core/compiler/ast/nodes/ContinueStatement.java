@@ -25,8 +25,8 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * continue; continue $a;
+ * </pre>
  */
 public class ContinueStatement extends Statement {
 

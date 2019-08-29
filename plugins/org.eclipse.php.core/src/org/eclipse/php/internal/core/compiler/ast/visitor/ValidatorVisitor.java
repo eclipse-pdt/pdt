@@ -169,7 +169,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 			reportProblem(s, Messages.NestedNamespaceDeclarations, PHPProblemIdentifier.NestedNamespaceDeclarations,
 					ProblemSeverities.Error);
 		}
-		visitGeneral(s);
+		super.visit(s);
 		return true;
 	}
 
@@ -186,7 +186,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		if (s.getPHPDoc() != null) {
 			s.getPHPDoc().traverse(this);
 		}
-		return visitGeneral(s);
+		return super.visit(s);
 	}
 
 	@Override
@@ -205,7 +205,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		if (node.getArgs() != null) {
 			node.getArgs().traverse(this);
 		}
-		visitGeneral(node);
+		super.visit(node);
 		return false;
 	}
 
@@ -230,7 +230,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 			skip = PHPSimpleTypes.isHintable(node.getName(), version);
 		}
 		if (skip || TYPE_SKIP.contains(node.getName().toLowerCase())) {
-			visitGeneral(node);
+			super.visit(node);
 			return true;
 		}
 		TypeReferenceInfo tri = new TypeReferenceInfo(node, false);
@@ -250,7 +250,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		if (!isFound) {
 			reportProblem(node, Messages.UndefinedType, PHPProblemIdentifier.UndefinedType, node.getName(), severity);
 		}
-		visitGeneral(node);
+		super.visit(node);
 		return false;
 	}
 
@@ -291,7 +291,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 				checkSuperclass(itf, true, s.getName());
 			}
 		}
-		return visitGeneral(s);
+		return super.visit(s);
 	}
 
 	@Override
@@ -308,19 +308,19 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 				}
 			}
 		}
-		return visitGeneral(s);
+		return super.visit(s);
 	}
 
 	@Override
 	public boolean visit(InterfaceDeclaration s) throws Exception {
 		checkReservedWord(s, "interface"); //$NON-NLS-1$
 		if (s.getSuperClasses() == null) {
-			return visitGeneral(s);
+			return super.visit(s);
 		}
 		for (ASTNode node : s.getSuperClasses().getChilds()) {
 			checkSuperclass((TypeReference) node, true, s.getName());
 		}
-		return visitGeneral(s);
+		return super.visit(s);
 	}
 
 	@Override
@@ -345,7 +345,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 					|| elementType == FullyQualifiedReference.T_FUNCTION) {
 				// TODO implement later, skip check for function and constant
 				// for now
-				visitGeneral(part);
+				super.visit(part);
 				return false;
 			}
 		}
@@ -372,7 +372,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 					new String[] { name }, ProblemSeverities.Warning);
 		}
 		usePartInfo.put(lcName, info);
-		visitGeneral(part);
+		super.visit(part);
 		return false;
 	}
 
@@ -390,7 +390,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 				}
 			}
 		}
-		return visitGeneral(s);
+		return super.visit(s);
 	}
 
 	/**
@@ -455,7 +455,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		for (TypeReference fullTypeReference : phpDocTag.getTypeReferences()) {
 			visitCommentTypes(fullTypeReference);
 		}
-		visitGeneral(phpDocTag);
+		super.visit(phpDocTag);
 		return false;
 	}
 
@@ -466,7 +466,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		for (TypeReference fullTypeReference : varComment.getTypeReferences()) {
 			visitCommentTypes(fullTypeReference);
 		}
-		visitGeneral(varComment);
+		super.visit(varComment);
 		return false;
 	}
 

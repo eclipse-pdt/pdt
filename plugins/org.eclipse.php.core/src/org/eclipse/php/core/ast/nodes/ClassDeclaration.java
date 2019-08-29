@@ -26,13 +26,12 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * 
  * <pre>
  * 
- * <pre>
  * e.g.
  * 
- * <pre>
  * class MyClass { }, class MyClass extends SuperClass implements Interface1,
  * Interface2 { const MY_CONSTANT = 3; public static final $myVar = 5, $yourVar;
  * var $anotherOne; private function myFunction($a) { } }
+ * </pre>
  */
 public class ClassDeclaration extends TypeDeclaration {
 

@@ -28,8 +28,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * MyClass::foo($a)
+ * </pre>
  */
 public class StaticMethodInvocation extends StaticDispatch {
 
@@ -202,7 +202,8 @@ public class StaticMethodInvocation extends StaticDispatch {
 	/**
 	 * Resolves and returns the binding for this method
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be resolved
+	 * @return the binding, or <code>null</code> if the binding cannot be
+	 *         resolved
 	 */
 	public IMethodBinding resolveMethodBinding() {
 		return this.ast.getBindingResolver().resolveMethod(this);

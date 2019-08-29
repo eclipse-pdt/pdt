@@ -24,8 +24,8 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * ; while(true); - the while statement contains empty statement
+ * </pre>
  */
 public class EmptyStatement extends Statement {
 

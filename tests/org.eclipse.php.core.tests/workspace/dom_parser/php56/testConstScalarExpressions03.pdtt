@@ -15,6 +15,8 @@ Test power operator
 			</Interfaces>
 			<Block start='16' length='27' isCurly='true'>
 				<FieldsDeclaration start='18' length='23' modifier='public'>
+					<Type>
+					</Type>
 					<VariableName>
 						<Variable start='25' length='6' isDollared='true'>
 							<Identifier start='26' length='5' name='field'/>

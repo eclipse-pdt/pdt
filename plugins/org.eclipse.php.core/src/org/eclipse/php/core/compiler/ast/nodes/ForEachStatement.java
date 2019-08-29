@@ -25,12 +25,12 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * foreach (array_expression as $value) statement;
  *
  * foreach (array_expression as $key => $value) statement;
  *
  * foreach (array_expression as $key => $value): statement; ... endforeach;
+ * </pre>
  */
 public class ForEachStatement extends Statement {
 

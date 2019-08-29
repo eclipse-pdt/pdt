@@ -28,8 +28,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * 1, 'Dodo'=>'Golo', $a, $b=>foo(), 1=>$myClass->getFirst()
+ * </pre>
  */
 public class ArrayElement extends Expression {
 
@@ -173,7 +173,7 @@ public class ArrayElement extends Expression {
 	}
 
 	/**
-	 * Sets the key of this array expression.
+	 * Sets the value of this array expression.
 	 * 
 	 * @param expression
 	 *            the right operand node

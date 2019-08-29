@@ -24,7 +24,6 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * yield;
  * yield $a;
  * yield $k => $b;
