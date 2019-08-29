@@ -26,8 +26,8 @@ import org.eclipse.dltk.ast.references.SimpleReference;
  * <pre>
  * e.g.
  * 
- * <pre>
  * MyClass::foo($a)
+ * </pre>
  */
 public class StaticMethodInvocation extends PHPCallExpression {
 	/**

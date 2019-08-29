@@ -93,5 +93,7 @@ public interface ASTNodeKinds {
 	int FINALLY_CLAUSE = 75;
 	int ANONYMOUS_CLASS_DECLARATION = 76;
 	int RETURN_TYPE = 77;
+	int ARROW_FUNCTION = 78;
+	int ARRAY_SPREAD_ELEMENT = 79;
 
 }

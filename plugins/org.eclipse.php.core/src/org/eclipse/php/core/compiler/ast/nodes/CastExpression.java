@@ -24,8 +24,8 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * (int) $a, (string) $b->foo()
+ * </pre>
  */
 public class CastExpression extends Expression {
 

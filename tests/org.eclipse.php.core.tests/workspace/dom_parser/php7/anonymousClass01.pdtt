@@ -46,6 +46,8 @@ new class($var) extends SuperClass01 implements Interface01, Interface02 {
 								</InitialValue>
 							</ConstantDeclaration>
 							<FieldsDeclaration start='99' length='17' modifier='protected'>
+								<Type>
+								</Type>
 								<VariableName>
 									<Variable start='109' length='6' isDollared='true'>
 										<Identifier start='110' length='5' name='field'/>

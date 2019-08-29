@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009-2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -56,6 +56,11 @@ public abstract class AbstractVisitor implements Visitor {
 
 	@Override
 	public boolean visit(ArrayElement arrayElement) {
+		return true;
+	}
+
+	@Override
+	public boolean visit(ArraySpreadElement arraySpreadElement) {
 		return true;
 	}
 
@@ -265,6 +270,11 @@ public abstract class AbstractVisitor implements Visitor {
 	}
 
 	@Override
+	public boolean visit(ArrowFunctionDeclaration arrowFunctionDeclaration) {
+		return true;
+	}
+
+	@Override
 	public boolean visit(AnonymousClassDeclaration anonymousClassDeclaration) {
 		return true;
 	}
@@ -432,6 +442,10 @@ public abstract class AbstractVisitor implements Visitor {
 	}
 
 	@Override
+	public void endVisit(ArraySpreadElement arraySpreadElement) {
+	}
+
+	@Override
 	public void endVisit(ASTError astError) {
 	}
 
@@ -589,6 +603,10 @@ public abstract class AbstractVisitor implements Visitor {
 
 	@Override
 	public void endVisit(LambdaFunctionDeclaration lambdaFunctionDeclaration) {
+	}
+
+	@Override
+	public void endVisit(ArrowFunctionDeclaration arrowFunctionDeclaration) {
 	}
 
 	@Override

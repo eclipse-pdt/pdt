@@ -25,8 +25,8 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * throw $exceptionClass;
+ * </pre>
  */
 public class ThrowStatement extends Statement {
 

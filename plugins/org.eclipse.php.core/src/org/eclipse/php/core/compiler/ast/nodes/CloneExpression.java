@@ -24,8 +24,8 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * clone $a, $a = clone $b
+ * </pre>
  */
 public class CloneExpression extends Expression {
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -33,6 +33,11 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 	}
 
 	public boolean endvisit(ArrayElement s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+
+	public boolean endvisit(ArraySpreadElement s) throws Exception {
 		endvisitGeneral(s);
 		return false;
 	}
@@ -412,6 +417,11 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		return false;
 	}
 
+	public boolean endvisit(ArrowFunctionDeclaration s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+
 	public boolean endvisit(AnonymousClassDeclaration s) throws Exception {
 		endvisitGeneral(s);
 		return false;
@@ -422,6 +432,10 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 	}
 
 	public boolean visit(ArrayElement s) throws Exception {
+		return visitGeneral(s);
+	}
+
+	public boolean visit(ArraySpreadElement s) throws Exception {
 		return visitGeneral(s);
 	}
 
@@ -726,6 +740,10 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		return visitGeneral(s);
 	}
 
+	public boolean visit(ArrowFunctionDeclaration s) throws Exception {
+		return visitGeneral(s);
+	}
+
 	public boolean visit(AnonymousClassDeclaration s) throws Exception {
 		return visitGeneral(s);
 	}
@@ -738,6 +756,9 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		}
 		if (nodeClass.equals(ArrayElement.class)) {
 			return endvisit((ArrayElement) s);
+		}
+		if (nodeClass.equals(ArraySpreadElement.class)) {
+			return endvisit((ArraySpreadElement) s);
 		}
 		if (nodeClass.equals(ArrayVariableReference.class)) {
 			return endvisit((ArrayVariableReference) s);
@@ -961,6 +982,9 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		if (nodeClass.equals(LambdaFunctionDeclaration.class)) {
 			return endvisit((LambdaFunctionDeclaration) s);
 		}
+		if (nodeClass.equals(ArrowFunctionDeclaration.class)) {
+			return endvisit((ArrowFunctionDeclaration) s);
+		}
 		if (nodeClass.equals(AnonymousClassDeclaration.class)) {
 			return endvisit((AnonymousClassDeclaration) s);
 		}
@@ -1033,6 +1057,9 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		}
 		if (nodeClass.equals(ArrayElement.class)) {
 			return visit((ArrayElement) s);
+		}
+		if (nodeClass.equals(ArraySpreadElement.class)) {
+			return visit((ArraySpreadElement) s);
 		}
 		if (nodeClass.equals(ArrayVariableReference.class)) {
 			return visit((ArrayVariableReference) s);
@@ -1255,6 +1282,9 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		}
 		if (nodeClass.equals(LambdaFunctionDeclaration.class)) {
 			return visit((LambdaFunctionDeclaration) s);
+		}
+		if (nodeClass.equals(ArrowFunctionDeclaration.class)) {
+			return visit((ArrowFunctionDeclaration) s);
 		}
 		if (nodeClass.equals(AnonymousClassDeclaration.class)) {
 			return visit((AnonymousClassDeclaration) s);

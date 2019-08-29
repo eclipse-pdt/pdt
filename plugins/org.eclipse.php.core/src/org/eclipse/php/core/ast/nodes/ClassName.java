@@ -27,9 +27,9 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * MyClass, getClassName() - the function getClassName return a class name
  * $className - the variable $a holds the class name
+ * </pre>
  */
 public class ClassName extends ASTNode {
 

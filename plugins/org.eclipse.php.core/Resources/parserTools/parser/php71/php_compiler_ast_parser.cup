@@ -3150,7 +3150,7 @@ T_LIST:start T_OPEN_PARENTHESE array_pair_list:list T_CLOSE_PARENTHESE:end T_EQU
 T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE lexical_vars:varsList return_type:returnType
 {:
 	LambdaFunctionDeclaration functionDeclaration = new LambdaFunctionDeclaration(sleft, varsListright, paramList, varsList,
-		new Block(varsListright, varsListright, null), isReference.booleanValue(), false, returnType);
+		null, isReference.booleanValue(), false, returnType);
 	parser.addDeclarationStatement(functionDeclaration);
 	parser.declarations.push(functionDeclaration);
 :}
@@ -3162,7 +3162,7 @@ lambda_function_body:body
 T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE lexical_vars:varsList return_type:returnType
 {:
 	LambdaFunctionDeclaration functionDeclaration = new LambdaFunctionDeclaration(sleft, varsListright, paramList, varsList,
-		new Block(varsListright, varsListright, null), isReference.booleanValue(), true, returnType);
+		null, isReference.booleanValue(), true, returnType);
 	parser.addDeclarationStatement(functionDeclaration);
 	parser.declarations.push(functionDeclaration);
 :}
@@ -3176,11 +3176,8 @@ lambda_function_body ::=
 T_CURLY_OPEN:blockStart inner_statement_list:statementList T_CURLY_CLOSE:blockEnd
 {:
 	LambdaFunctionDeclaration functionDeclaration = (LambdaFunctionDeclaration) parser.declarations.pop();
-	Block block = functionDeclaration.getBody();
-	block.setStart(blockStartleft);
-	block.setEnd(blockEndright);
-	block.getStatements().clear();
-	block.acceptStatements(statementList);
+	Block block = new Block(blockStartleft, blockEndright, statementList);
+	functionDeclaration.setBody(block);
 	functionDeclaration.setEnd(blockEndright);
 	RESULT = functionDeclaration;
 :}

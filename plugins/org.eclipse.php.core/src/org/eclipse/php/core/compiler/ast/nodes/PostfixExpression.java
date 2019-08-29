@@ -24,8 +24,8 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * $a++, foo()--
+ * </pre>
  */
 public class PostfixExpression extends Expression {
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016 IBM Corporation and others.
+ * Copyright (c) 2009-2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -114,6 +114,12 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	@Override
 	public boolean endvisit(ArrayElement s) throws Exception {
 		xmlWriter.endTag("ArrayElement"); //$NON-NLS-1$
+		return true;
+	}
+
+	@Override
+	public boolean endvisit(ArraySpreadElement s) throws Exception {
+		xmlWriter.endTag("ArraySpreadElement"); //$NON-NLS-1$
 		return true;
 	}
 
@@ -570,6 +576,12 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	}
 
 	@Override
+	public boolean endvisit(ArrowFunctionDeclaration s) throws Exception {
+		xmlWriter.endTag("ArrowFunctionDeclaration"); //$NON-NLS-1$
+		return true;
+	}
+
+	@Override
 	public boolean endvisit(AnonymousClassDeclaration s) throws Exception {
 		xmlWriter.endTag("AnonymousClassDeclaration"); //$NON-NLS-1$
 		return true;
@@ -586,6 +598,13 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	public boolean visit(ArrayElement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ArrayElement", parameters); //$NON-NLS-1$
+		return true;
+	}
+
+	@Override
+	public boolean visit(ArraySpreadElement s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		xmlWriter.startTag("ArraySpreadElement", parameters); //$NON-NLS-1$
 		return true;
 	}
 
@@ -801,6 +820,9 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		if (s.isVariadic()) {
 			parameters.put("isVariadic", Boolean.toString(s.isVariadic())); //$NON-NLS-1$
 		}
+		if (s.getParameterType() != null) {
+			parameters.put("parameterType", s.getParameterType().getName()); //$NON-NLS-1$
+		}
 		xmlWriter.startTag("FormalParameter", parameters); //$NON-NLS-1$
 		return true;
 	}
@@ -951,6 +973,9 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	@Override
 	public boolean visit(PHPFieldDeclaration s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
+		if (s.getFieldType() != null) {
+			parameters.put("fieldType", s.getFieldType().getName()); //$NON-NLS-1$
+		}
 		xmlWriter.startTag("PHPFieldDeclaration", parameters); //$NON-NLS-1$
 		return true;
 	}
@@ -1276,7 +1301,37 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 			xmlWriter.endTag("ReturnType"); //$NON-NLS-1$
 		}
 
-		s.getBody().traverse(this);
+		if (s.getBody() != null) {
+			s.getBody().traverse(this);
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean visit(ArrowFunctionDeclaration s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		parameters.put("isReference", Boolean.toString(s.isReference())); //$NON-NLS-1$
+		if (s.isStatic()) {
+			parameters.put("isStatic", Boolean.toString(s.isStatic())); //$NON-NLS-1$
+		}
+		xmlWriter.startTag("ArrowFunctionDeclaration", parameters); //$NON-NLS-1$
+
+		xmlWriter.startTag("Arguments", new HashMap<String, String>()); //$NON-NLS-1$
+		for (FormalParameter p : s.getArguments()) {
+			p.traverse(this);
+		}
+		xmlWriter.endTag("Arguments"); //$NON-NLS-1$
+
+		if (s.getReturnType() != null) {
+			xmlWriter.startTag("ReturnType", new HashMap<String, String>()); //$NON-NLS-1$
+			s.getReturnType().traverse(this);
+			xmlWriter.endTag("ReturnType"); //$NON-NLS-1$
+		}
+
+		if (s.getBody() != null) {
+			s.getBody().traverse(this);
+		}
 
 		return false;
 	}

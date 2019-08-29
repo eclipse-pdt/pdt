@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2016 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2006-2019 Zend Corporation and IBM Corporation.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -114,6 +114,19 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 				highlightNamespaceType((NamespaceName) type);
 			} else if (type instanceof Identifier) {
 				if (!PHPSimpleTypes.isHintable(((Identifier) type).getName(), param.getAST().apiLevel())) {
+					highlight(type);
+				}
+			}
+			return true;
+		}
+
+		@Override
+		public boolean visit(FieldsDeclaration fieldsDeclaration) {
+			Expression type = fieldsDeclaration.getFieldsType();
+			if (type instanceof NamespaceName) {
+				highlightNamespaceType((NamespaceName) type);
+			} else if (type instanceof Identifier) {
+				if (!PHPSimpleTypes.isHintable(((Identifier) type).getName(), fieldsDeclaration.getAST().apiLevel())) {
 					highlight(type);
 				}
 			}

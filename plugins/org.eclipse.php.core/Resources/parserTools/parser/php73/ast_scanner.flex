@@ -255,21 +255,21 @@ DNUM=([0-9]*"."[0-9]+)|([0-9]+"."[0-9]*)
 EXPONENT_DNUM=(({LNUM}|{DNUM})[eE][+-]?{LNUM})
 HNUM="0x"[0-9a-fA-F]+
 BNUM="0b"[01]+
-LABEL=[a-zA-Z_\u007f-\uffff][a-zA-Z0-9_\u007f-\uffff]*
+LABEL=[a-zA-Z_\u0080-\uffff][a-zA-Z0-9_\u0080-\uffff]*
 WHITESPACES=[ \n\r\t]+
 TABS_AND_SPACES=[ \t]*
 ANY_CHAR=[^]
 NEWLINE=("\r"|"\n"|"\r\n")
-DOUBLE_QUOTES_LITERAL_DOLLAR=("$"+([^a-zA-Z_\u007f-\uffff$\"\\{]|("\\"{ANY_CHAR})))
-BACKQUOTE_LITERAL_DOLLAR=("$"+([^a-zA-Z_\u007f-\uffff$`\\{]|("\\"{ANY_CHAR})))
-HEREDOC_LITERAL_DOLLAR=("$"+([^a-zA-Z_\u007f-\uffff$\n\r\\{]|("\\"[^\n\r])))
+DOUBLE_QUOTES_LITERAL_DOLLAR=("$"+([^a-zA-Z_\u0080-\uffff$\"\\{]|("\\"{ANY_CHAR})))
+BACKQUOTE_LITERAL_DOLLAR=("$"+([^a-zA-Z_\u0080-\uffff$`\\{]|("\\"{ANY_CHAR})))
+HEREDOC_LITERAL_DOLLAR=("$"+([^a-zA-Z_\u0080-\uffff$\n\r\\{]|("\\"[^\n\r])))
 HEREDOC_NEWLINE=((("{"*|"$"*)"\\"?){NEWLINE})
 HEREDOC_CURLY_OR_ESCAPE_OR_DOLLAR=(("{"+[^$\n\r\\{])|("{"*"\\"[^\n\r])|{HEREDOC_LITERAL_DOLLAR})
-HEREDOC_NON_LABEL=([^a-zA-Z_\u007f-\uffff$\n\r \t\\{]|{HEREDOC_CURLY_OR_ESCAPE_OR_DOLLAR})
+HEREDOC_NON_LABEL=([^a-zA-Z_\u0080-\uffff$\n\r \t\\{]|{HEREDOC_CURLY_OR_ESCAPE_OR_DOLLAR})
 DOUBLE_QUOTES_CHARS=("{"*([^$\"\\{]|("\\"{ANY_CHAR}))|{DOUBLE_QUOTES_LITERAL_DOLLAR})
 BACKQUOTE_CHARS=("{"*([^$`\\{]|("\\"{ANY_CHAR}))|{BACKQUOTE_LITERAL_DOLLAR})
 HEREDOC_CHARS=("{"*([^$\n\r\\{]|("\\"[^\n\r]))|{HEREDOC_LITERAL_DOLLAR}|({HEREDOC_NEWLINE}+{TABS_AND_SPACES}{HEREDOC_NON_LABEL}))
-NOWDOC_CHARS=([^\n\r]|{NEWLINE}+{TABS_AND_SPACES}[^a-zA-Z_\u007f-\uffff\n\r \t])
+NOWDOC_CHARS=([^\n\r]|{NEWLINE}+{TABS_AND_SPACES}[^a-zA-Z_\u0080-\uffff\n\r \t])
 
 %%
 
@@ -786,10 +786,6 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+{TABS_AND_SPACES}[^a-zA-Z_\u007f-\uffff\n\r \t])
 	return createFullSymbol(ParserConstants.T_DNUMBER);
 }
 
-<ST_VAR_OFFSET>[0]|([1-9][0-9]*) { /* Offset could be treated as a long */
-	return createFullSymbol(ParserConstants.T_NUM_STRING);
-}
-
 <ST_VAR_OFFSET>{LNUM}|{HNUM}|{BNUM} { /* treat numbers (almost) as strings inside encapsulated strings */
 	return createFullSymbol(ParserConstants.T_NUM_STRING);
 }
@@ -868,7 +864,7 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+{TABS_AND_SPACES}[^a-zA-Z_\u007f-\uffff\n\r \t])
 	return createFullSymbol(ParserConstants.T_VARIABLE);
 }
 
-<ST_DOUBLE_QUOTES,ST_HEREDOC,ST_BACKQUOTE>"$"{LABEL}"->"[a-zA-Z_\u007f-\uffff] {
+<ST_DOUBLE_QUOTES,ST_HEREDOC,ST_BACKQUOTE>"$"{LABEL}"->"[a-zA-Z_\u0080-\uffff] {
 	yypushback(3);
 	pushState(ST_LOOKING_FOR_PROPERTY);
 	return createFullSymbol(ParserConstants.T_VARIABLE);

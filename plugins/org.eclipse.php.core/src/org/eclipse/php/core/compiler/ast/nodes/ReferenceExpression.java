@@ -24,8 +24,8 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * &$a, &$a[0], &$$a, &$a{'key'}
+ * </pre>
  */
 public class ReferenceExpression extends Expression {
 

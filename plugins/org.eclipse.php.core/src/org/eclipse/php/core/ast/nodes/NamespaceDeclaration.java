@@ -27,8 +27,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * namespace MyNamespace; namespace MyProject\Sub\Level;
+ * </pre>
  */
 public class NamespaceDeclaration extends Statement {
 

@@ -27,12 +27,12 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * foreach (array_expression as $value) statement;
  * 
  * foreach (array_expression as $key => $value) statement;
  * 
  * foreach (array_expression as $key => $value): statement; ... endforeach;
+ * </pre>
  */
 public class ForEachStatement extends Statement {
 

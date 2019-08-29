@@ -27,8 +27,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * do { echo $i; } while ($i > 0);
+ * </pre>
  */
 public class DoStatement extends Statement {
 

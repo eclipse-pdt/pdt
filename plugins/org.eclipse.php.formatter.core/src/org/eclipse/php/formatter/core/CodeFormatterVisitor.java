@@ -467,6 +467,20 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			stWhile = org.eclipse.php.internal.core.ast.scanner.php73.ParserConstants.T_WHILE;
 			stElse = org.eclipse.php.internal.core.ast.scanner.php73.ParserConstants.T_ELSE;
 			stElseIf = org.eclipse.php.internal.core.ast.scanner.php73.ParserConstants.T_ELSEIF;
+		} else if (PHPVersion.PHP7_4.equals(phpVersion)) {
+			result = new org.eclipse.php.internal.core.compiler.ast.parser.php74.CompilerAstLexer(reader);
+			((org.eclipse.php.internal.core.compiler.ast.parser.php74.CompilerAstLexer) result)
+					.setAST(new AST(reader, PHPVersion.PHP7_4, useASPTags, useShortTags));
+			stInScriptin = org.eclipse.php.internal.core.compiler.ast.parser.php74.CompilerAstLexer.ST_IN_SCRIPTING; // save
+			// the
+			// initial
+			// state
+			// for
+			// reset
+			// operation
+			stWhile = org.eclipse.php.internal.core.ast.scanner.php74.ParserConstants.T_WHILE;
+			stElse = org.eclipse.php.internal.core.ast.scanner.php74.ParserConstants.T_ELSE;
+			stElseIf = org.eclipse.php.internal.core.ast.scanner.php74.ParserConstants.T_ELSEIF;
 		} else {
 			throw new IllegalArgumentException("unrecognized version " //$NON-NLS-1$
 					+ phpVersion);
@@ -2569,6 +2583,14 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	}
 
 	@Override
+	public boolean visit(ArraySpreadElement arraySpreadElement) {
+		appendToBuffer(ELLIPSIS);
+		handleChars(arraySpreadElement.getStart(), arraySpreadElement.getValue().getStart());
+		arraySpreadElement.getValue().accept(this);
+		return false;
+	}
+
+	@Override
 	public boolean visit(Assignment assignment) {
 		VariableBase leftSide = assignment.getLeftHandSide();
 		leftSide.accept(this);
@@ -3521,7 +3543,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		boolean isFirst = true;
 		Variable[] variableNames = fieldsDeclaration.getVariableNames();
 		Expression[] initialValues = fieldsDeclaration.getInitialValues();
-		int lastPosition = variableNames[0].getStart();
+		int lastPosition = fieldsDeclaration.getStart();
 
 		// handle field modifiers
 		String modifier = fieldsDeclaration.getModifierString();
@@ -3539,7 +3561,20 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		appendToBuffer(modifier);
 		insertSpace();
 
-		handleChars(fieldsDeclaration.getStart(), lastPosition);
+		// handle field type (since PHP 7.4)
+		Expression fieldsType = fieldsDeclaration.getFieldsType();
+		if (fieldsType != null) {
+			if (fieldsType instanceof Identifier && ((Identifier) fieldsType).isNullable()) {
+				appendToBuffer(QUESTION_MARK);
+			}
+			handleChars(lastPosition, fieldsType.getStart());
+			fieldsType.accept(this);
+			lastPosition = fieldsType.getEnd();
+			insertSpace();
+		}
+
+		handleChars(lastPosition, variableNames[0].getStart());
+		lastPosition = variableNames[0].getStart();
 
 		for (int i = 0; i < variableNames.length; i++) {
 			// handle comma between variables
@@ -3631,7 +3666,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			if (parameterType instanceof Identifier && ((Identifier) parameterType).isNullable()) {
 				appendToBuffer(QUESTION_MARK);
 			}
-			handleChars(formalParameter.getStart(), parameterType.getStart());
+			handleChars(lastPosition, parameterType.getStart());
 			parameterType.accept(this);
 			lastPosition = parameterType.getEnd();
 			insertSpace();
@@ -5542,6 +5577,87 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			}
 		} else {
 			handleSemicolon(lastPosition, lambdaFunctionDeclaration.getEnd());
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean visit(ArrowFunctionDeclaration arrowFunctionDeclaration) {
+		StringBuilder buffer = new StringBuilder();
+		if (arrowFunctionDeclaration.isStatic()) {
+			buffer.append("static "); //$NON-NLS-1$
+		}
+		buffer.append(getDocumentString(arrowFunctionDeclaration.getStart(), arrowFunctionDeclaration.getStart() + 2));// append
+																														// 'function'
+
+		// handle referenced function with '&'
+		if (arrowFunctionDeclaration.isReference()) {
+			buffer.append(" &"); //$NON-NLS-1$
+		}
+
+		appendToBuffer(buffer.toString());
+		handleChars(arrowFunctionDeclaration.getStart(), arrowFunctionDeclaration.getStart() + 2);
+
+		if (this.preferences.insert_space_before_opening_paren_in_function_declaration
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=492770
+				|| !arrowFunctionDeclaration.isReference()) {
+			insertSpace();
+		}
+		appendToBuffer(OPEN_PARN);
+		List<FormalParameter> formalParameters = arrowFunctionDeclaration.formalParameters();
+		ASTNode[] params = formalParameters.toArray(new FormalParameter[formalParameters.size()]);
+		int lastPosition = arrowFunctionDeclaration.getStart() + 2;
+		if (params.length > 0) {
+			if (this.preferences.insert_space_after_opening_paren_in_function_declaration) {
+				insertSpace();
+			}
+			int indentationGap = calculateIndentGap(
+					this.preferences.line_wrap_parameters_in_method_declaration_indent_policy,
+					this.preferences.line_wrap_wrapped_lines_indentation);
+			lastPosition = handleCommaList(params, lastPosition,
+					this.preferences.insert_space_before_comma_in_function_declaration,
+					this.preferences.insert_space_after_comma_in_function_declaration,
+					this.preferences.line_wrap_parameters_in_method_declaration_line_wrap_policy, indentationGap,
+					this.preferences.line_wrap_parameters_in_method_declaration_force_split);
+
+			if (this.preferences.insert_space_before_closing_paren_in_function_declaration) {
+				insertSpace();
+			}
+		} else {
+			if (this.preferences.insert_space_between_empty_paren_in_function_declaration) {
+				insertSpace();
+			}
+		}
+		appendToBuffer(CLOSE_PARN);
+
+		if (arrowFunctionDeclaration.getReturnType() != null) {
+			appendToBuffer(COLON);
+			insertSpace();
+			if (arrowFunctionDeclaration.getReturnType().isNullable()) {
+				appendToBuffer(QUESTION_MARK);
+			}
+			handleChars(lastPosition, arrowFunctionDeclaration.getReturnType().getStart());
+			arrowFunctionDeclaration.getReturnType().accept(this);
+
+			lastPosition = arrowFunctionDeclaration.getReturnType().getEnd();
+		}
+
+		// handle function body
+		if (arrowFunctionDeclaration.getBody() != null) {
+			// XXX: create specific arrow function preferences
+			if (this.preferences.insert_space_before_arrow_in_array) {
+				insertSpace();
+			}
+			appendToBuffer(KEY_VALUE_OPERATOR);
+			if (this.preferences.insert_space_after_arrow_in_array) {
+				insertSpace();
+			}
+			handleChars(lastPosition, arrowFunctionDeclaration.getBody().getStart());
+
+			arrowFunctionDeclaration.getBody().accept(this);
+		} else {
+			handleSemicolon(lastPosition, arrowFunctionDeclaration.getEnd());
 		}
 
 		return false;

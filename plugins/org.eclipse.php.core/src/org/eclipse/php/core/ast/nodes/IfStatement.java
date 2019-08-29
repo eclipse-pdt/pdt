@@ -27,11 +27,11 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * if ($a > $b) { echo "a is bigger than b"; } elseif ($a == $b) { echo "a is
  * equal to b"; } else { echo "a is smaller than b"; },
  * 
  * if ($a): echo "a is bigger than b"; echo "a is NOT bigger than b"; endif;
+ * </pre>
  */
 public class IfStatement extends Statement {
 
@@ -190,9 +190,9 @@ public class IfStatement extends Statement {
 	/**
 	 * Sets the "then" part of this if statement.
 	 * <p>
-	 * Special note: The Java language does not allow a local variable declaration
-	 * to appear as the "then" part of an if statement (they may only appear within
-	 * a block). However, the AST will allow a
+	 * Special note: The Java language does not allow a local variable
+	 * declaration to appear as the "then" part of an if statement (they may
+	 * only appear within a block). However, the AST will allow a
 	 * <code>VariableDeclarationStatement</code> as the thenStatement of a
 	 * <code>IfStatement</code>. To get something that will compile, be sure to
 	 * embed the <code>VariableDeclarationStatement</code> inside a
@@ -220,11 +220,11 @@ public class IfStatement extends Statement {
 	}
 
 	/**
-	 * Returns the "else" part of this if statement, or <code>null</code> if this if
-	 * statement has <b>no</b> "else" part.
+	 * Returns the "else" part of this if statement, or <code>null</code> if
+	 * this if statement has <b>no</b> "else" part.
 	 * <p>
-	 * Note that there is a subtle difference between having no else statement and
-	 * having an empty statement ("{}") or null statement (";").
+	 * Note that there is a subtle difference between having no else statement
+	 * and having an empty statement ("{}") or null statement (";").
 	 * </p>
 	 * 
 	 * @return the "else" statement node, or <code>null</code> if none
@@ -241,9 +241,9 @@ public class IfStatement extends Statement {
 	 * "if(true){}else{}") or null statement (as in "if(true){}else;").
 	 * </p>
 	 * <p>
-	 * Special note: The Java language does not allow a local variable declaration
-	 * to appear as the "else" part of an if statement (they may only appear within
-	 * a block). However, the AST will allow a
+	 * Special note: The Java language does not allow a local variable
+	 * declaration to appear as the "else" part of an if statement (they may
+	 * only appear within a block). However, the AST will allow a
 	 * <code>VariableDeclarationStatement</code> as the elseStatement of a
 	 * <code>IfStatement</code>. To get something that will compile, be sure to
 	 * embed the <code>VariableDeclarationStatement</code> inside a
@@ -251,7 +251,8 @@ public class IfStatement extends Statement {
 	 * </p>
 	 * 
 	 * @param statement
-	 *            the "else" statement node, or <code>null</code> if there is none
+	 *            the "else" statement node, or <code>null</code> if there is
+	 *            none
 	 * @exception IllegalArgumentException
 	 *                if:
 	 *                <ul>

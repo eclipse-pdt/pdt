@@ -27,8 +27,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * echo ; for () {}
+ * </pre>
  */
 public class ASTError extends Statement {
 

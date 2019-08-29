@@ -24,8 +24,8 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * $a + 1, 3 - 2, foo() * $a->bar(), 'string'.$c
+ * </pre>
  */
 public class InfixExpression extends Expression {
 

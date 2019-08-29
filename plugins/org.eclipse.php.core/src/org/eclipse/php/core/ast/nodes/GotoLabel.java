@@ -27,8 +27,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * START:
+ * </pre>
  */
 public class GotoLabel extends Statement {
 

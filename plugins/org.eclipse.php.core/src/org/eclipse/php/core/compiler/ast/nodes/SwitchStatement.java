@@ -26,9 +26,9 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * switch ($i) { case 0: echo "i equals 0"; break; case 1: echo "i equals 1";
  * break; default: echo "i not equals 0 or 1"; break; }
+ * </pre>
  */
 public class SwitchStatement extends Statement {
 

@@ -10,7 +10,7 @@ hi([new Human("Gonzalo"), 'hello']);
 --EXPECT--
 <ModuleDeclaration start="0" end="85">
 	<PHPMethodDeclaration start="6" end="44" modifiers="" name="hi">
-		<FormalParameter start="18" end="20" modifiers="" isMandatory="true">
+		<FormalParameter start="18" end="20" modifiers="" isMandatory="true" parameterType="callable">
 			<FullyQualifiedReference start="18" end="26" name="callable">
 			</FullyQualifiedReference>
 			<VariableReference start="27" end="29" name="$f">

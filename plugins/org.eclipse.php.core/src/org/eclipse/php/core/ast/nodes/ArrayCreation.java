@@ -27,9 +27,9 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * array(1,2,3,), array('Dodo'=>'Golo','Dafna'=>'Dodidu') array($a, $b=>foo(),
  * 1=>$myClass->getFirst())
+ * </pre>
  */
 public class ArrayCreation extends VariableBase {
 
@@ -42,8 +42,8 @@ public class ArrayCreation extends VariableBase {
 	public static final ChildListPropertyDescriptor ELEMENTS_PROPERTY = new ChildListPropertyDescriptor(
 			ArrayCreation.class, "elements", ArrayElement.class, CYCLE_RISK); //$NON-NLS-1$
 
-	public static final SimplePropertyDescriptor HAS_ARRAY_KEY = new SimplePropertyDescriptor(
-			LambdaFunctionDeclaration.class, "hasArrayKey", Boolean.class, OPTIONAL); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor HAS_ARRAY_KEY = new SimplePropertyDescriptor(ArrayCreation.class,
+			"hasArrayKey", Boolean.class, OPTIONAL); //$NON-NLS-1$
 	/**
 	 * A list of property descriptors (element type:
 	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
@@ -61,11 +61,11 @@ public class ArrayCreation extends VariableBase {
 		super(ast);
 	}
 
-	public ArrayCreation(int start, int end, AST ast, List<ArrayElement> elements) {
+	public ArrayCreation(int start, int end, AST ast, List<Expression> elements) {
 		this(start, end, ast, elements, true);
 	}
 
-	public ArrayCreation(int start, int end, AST ast, List<ArrayElement> elements, boolean hasArrayKey) {
+	public ArrayCreation(int start, int end, AST ast, List<Expression> elements, boolean hasArrayKey) {
 		super(start, end, ast);
 
 		if (elements == null) {
@@ -189,7 +189,7 @@ public class ArrayCreation extends VariableBase {
 	 */
 	@Override
 	ASTNode clone0(AST target) {
-		final List<ArrayElement> elements = ASTNode.copySubtrees(target, elements());
+		final List<Expression> elements = ASTNode.copySubtrees(target, elements());
 		return new ArrayCreation(this.getStart(), this.getEnd(), target, elements, isHasArrayKey());
 	}
 

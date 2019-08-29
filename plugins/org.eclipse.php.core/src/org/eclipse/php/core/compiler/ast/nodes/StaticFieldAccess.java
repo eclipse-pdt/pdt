@@ -22,8 +22,8 @@ import org.eclipse.dltk.ast.expressions.Expression;
  * <pre>
  * e.g.
  * 
- * <pre>
  * MyClass::$a MyClass::$$a[3]
+ * </pre>
  */
 public class StaticFieldAccess extends StaticDispatch {
 

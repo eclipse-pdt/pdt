@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2018 IBM Corporation and others.
+ * Copyright (c) 2009-2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -232,6 +232,11 @@ public class AST {
 			lexer73.setUseAspTagsAsPHP(aspTagsAsPhp);
 			lexer73.setUseShortTags(useShortTags);
 			return lexer73;
+		} else if (PHPVersion.PHP7_4 == phpVersion) {
+			final AstLexer lexer74 = getLexer74(reader);
+			lexer74.setUseAspTagsAsPHP(aspTagsAsPhp);
+			lexer74.setUseShortTags(useShortTags);
+			return lexer74;
 		} else {
 			if (phpVersion == null) {
 				throw new IllegalArgumentException(CoreMessages.getString("UnknownPHPVersion_0")); //$NON-NLS-1$
@@ -240,6 +245,13 @@ public class AST {
 						Messages.format(CoreMessages.getString("UnknownPHPVersion_1"), phpVersion)); //$NON-NLS-1$
 			}
 		}
+	}
+
+	private AstLexer getLexer74(Reader reader) throws IOException {
+		final org.eclipse.php.internal.core.ast.scanner.php74.PHPAstLexer phpAstLexer = new org.eclipse.php.internal.core.ast.scanner.php74.PHPAstLexer(
+				reader);
+		phpAstLexer.setAST(this);
+		return phpAstLexer;
 	}
 
 	private AstLexer getLexer73(Reader reader) throws IOException {
@@ -348,6 +360,11 @@ public class AST {
 			return parser;
 		} else if (PHPVersion.PHP7_3 == phpVersion) {
 			final org.eclipse.php.internal.core.ast.scanner.php73.PHPAstParser parser = new org.eclipse.php.internal.core.ast.scanner.php73.PHPAstParser(
+					lexer);
+			parser.setAST(this);
+			return parser;
+		} else if (PHPVersion.PHP7_4 == phpVersion) {
+			final org.eclipse.php.internal.core.ast.scanner.php74.PHPAstParser parser = new org.eclipse.php.internal.core.ast.scanner.php74.PHPAstParser(
 					lexer);
 			parser.setAST(this);
 			return parser;
@@ -1204,6 +1221,28 @@ public class AST {
 	}
 
 	/**
+	 * Creates a new {@link ArraySpreadElement}.
+	 * 
+	 * @return a new ArraySpreadElement.
+	 */
+	public ArraySpreadElement newArraySpreadElement() {
+		return new ArraySpreadElement(this);
+	}
+
+	/**
+	 * Creates a new {@link ArraySpreadElement}.
+	 * 
+	 * @param value
+	 *            - an {@link Expression} rapresenting the element value
+	 * @return a new ArrayElement.
+	 */
+	public ArraySpreadElement newArraySpreadElement(Expression value) {
+		ArraySpreadElement arraySpreadElement = new ArraySpreadElement(this);
+		arraySpreadElement.setValue(value);
+		return arraySpreadElement;
+	}
+
+	/**
 	 * Creates a new {@link Assignment}.
 	 * 
 	 * @return A new Assignment.
@@ -1831,17 +1870,20 @@ public class AST {
 	 * 
 	 * @param functionName
 	 * @param formalParameters
+	 * @param returnType
 	 * @param body
 	 * @param isReference
 	 * @return A new FunctionDeclaration.
 	 */
-	public FunctionDeclaration newFunctionDeclaration(Identifier functionName, List<FormalParameter> formalParameters,
-			Block body, final boolean isReference) {
+	public FunctionDeclaration newFunctionDeclaration(final Identifier functionName,
+			final List<FormalParameter> formalParameters, final Identifier returnType, final Block body,
+			final boolean isReference) {
 		FunctionDeclaration functionDeclaration = new FunctionDeclaration(this);
 		functionDeclaration.setFunctionName(functionName);
 		functionDeclaration.formalParameters().addAll(formalParameters);
 		functionDeclaration.setBody(body);
 		functionDeclaration.setIsReference(isReference);
+		functionDeclaration.setReturnType(returnType);
 		return functionDeclaration;
 	}
 
@@ -2794,14 +2836,32 @@ public class AST {
 	 * @return A new LambdaFunctionDeclaration.
 	 */
 	public LambdaFunctionDeclaration newLambdaFunctionDeclaration(final Collection<FormalParameter> formalParameters,
-			final Collection<Variable> lexicalVars, final Block body, final boolean isReference,
-			final boolean isStatic) {
+			final Collection<Variable> lexicalVars, final Identifier returnType, final Block body,
+			final boolean isReference, final boolean isStatic) {
 		LambdaFunctionDeclaration lfDeclaration = new LambdaFunctionDeclaration(this);
 		lfDeclaration.setBody(body);
 		lfDeclaration.setIsReference(isReference);
 		lfDeclaration.setStatic(isStatic);
 		lfDeclaration.formalParameters().addAll(formalParameters);
 		lfDeclaration.lexicalVariables().addAll(lexicalVars);
+		lfDeclaration.setReturnType(returnType);
+		return lfDeclaration;
+	}
+
+	/**
+	 * Creates a new {@link ArrowFunctionDeclaration}.
+	 * 
+	 * @param label
+	 * @return A new ArrowFunctionDeclaration.
+	 */
+	public ArrowFunctionDeclaration newArrowFunctionDeclaration(final Collection<FormalParameter> formalParameters,
+			final Identifier returnType, final Expression body, final boolean isReference, final boolean isStatic) {
+		ArrowFunctionDeclaration lfDeclaration = new ArrowFunctionDeclaration(this);
+		lfDeclaration.setBody(body);
+		lfDeclaration.setIsReference(isReference);
+		lfDeclaration.setStatic(isStatic);
+		lfDeclaration.formalParameters().addAll(formalParameters);
+		lfDeclaration.setReturnType(returnType);
 		return lfDeclaration;
 	}
 

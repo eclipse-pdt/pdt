@@ -28,8 +28,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * foo(), $a(), foo($a, 'a', 12)
+ * </pre>
  */
 public class FunctionInvocation extends VariableBase {
 

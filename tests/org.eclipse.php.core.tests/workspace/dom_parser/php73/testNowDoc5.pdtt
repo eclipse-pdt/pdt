@@ -23,6 +23,8 @@ class Foo {
 			</Interfaces>
 			<Block start='16' length='76' isCurly='true'>
 				<FieldsDeclaration start='19' length='44' modifier='private'>
+					<Type>
+					</Type>
 					<VariableName>
 						<Variable start='27' length='2' isDollared='true'>
 							<Identifier start='28' length='1' name='x'/>
@@ -36,6 +38,8 @@ class Foo {
 					</InitialValue>
 				</FieldsDeclaration>
 				<FieldsDeclaration start='65' length='13' modifier='protected'>
+					<Type>
+					</Type>
 					<VariableName>
 						<Variable start='75' length='2' isDollared='true'>
 							<Identifier start='76' length='1' name='y'/>
@@ -45,6 +49,8 @@ class Foo {
 					</InitialValue>
 				</FieldsDeclaration>
 				<FieldsDeclaration start='80' length='10' modifier='public'>
+					<Type>
+					</Type>
 					<VariableName>
 						<Variable start='87' length='2' isDollared='true'>
 							<Identifier start='88' length='1' name='z'/>

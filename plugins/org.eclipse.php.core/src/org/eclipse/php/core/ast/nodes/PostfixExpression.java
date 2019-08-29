@@ -27,8 +27,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * $a++, foo()--
+ * </pre>
  */
 public class PostfixExpression extends Expression implements IOperationNode {
 
@@ -140,7 +140,8 @@ public class PostfixExpression extends Expression implements IOperationNode {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString ()
+	 * org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString
+	 * ()
 	 */
 	@Override
 	public String getOperationString() {

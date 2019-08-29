@@ -22,6 +22,8 @@ $example->x;
 			</TraitName>
 			<Block start='29' length='22' isCurly='true'>
 				<FieldsDeclaration start='35' length='14' modifier='public'>
+					<Type>
+					</Type>
 					<VariableName>
 						<Variable start='42' length='2' isDollared='true'>
 							<Identifier start='43' length='1' name='x'/>

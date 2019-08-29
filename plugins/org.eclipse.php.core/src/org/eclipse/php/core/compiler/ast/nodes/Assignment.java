@@ -24,8 +24,8 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * $a = 5, $a += 5, $a .= $b,
+ * </pre>
  */
 public class Assignment extends Expression {
 
@@ -57,6 +57,8 @@ public class Assignment extends Expression {
 	public static final int OP_REF_EQUAL = 12;
 	// '**='
 	public static final int OP_POW_EQUAL = 13;
+	// '??='
+	public static final int OP_COALESCE_EQUAL = 14;
 
 	private final Expression variable;
 	private final int operator;
@@ -113,6 +115,8 @@ public class Assignment extends Expression {
 			return "=&"; //$NON-NLS-1$
 		case OP_POW_EQUAL:
 			return "**="; //$NON-NLS-1$
+		case OP_COALESCE_EQUAL:
+			return "??="; //$NON-NLS-1$
 		default:
 			throw new IllegalArgumentException();
 		}

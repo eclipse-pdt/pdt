@@ -87,6 +87,8 @@ class MyHelloWorld {
 			</Interfaces>
 			<Block start='168' length='178' isCurly='true'>
 				<FieldsDeclaration start='174' length='15' modifier='private'>
+					<Type>
+					</Type>
 					<VariableName>
 						<Variable start='182' length='6' isDollared='true'>
 							<Identifier start='183' length='5' name='world'/>

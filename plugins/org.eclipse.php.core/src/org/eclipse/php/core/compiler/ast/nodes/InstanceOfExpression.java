@@ -24,8 +24,8 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * $a instanceof MyClass, foo() instanceof $myClass, $a instanceof $b->$myClass
+ * </pre>
  */
 public class InstanceOfExpression extends Expression {
 

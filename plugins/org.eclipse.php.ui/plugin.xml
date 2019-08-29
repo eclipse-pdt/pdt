@@ -2993,6 +2993,14 @@
              <feature name="list() reference assignment"></feature>
              <feature name="trailing comma in function and method calls"></feature>
        </phpVersion>
+       <phpVersion
+             name="7.4"
+             version="php7.4">
+             <feature name="arrow functions"></feature>
+             <feature name="spread operator in arrays"></feature>
+             <feature name="typed properties"></feature>
+             <feature name="null coalescing assignment operator"></feature>
+       </phpVersion>
    </extension>
    <extension
          point="org.eclipse.php.ui.problemConfiguration">

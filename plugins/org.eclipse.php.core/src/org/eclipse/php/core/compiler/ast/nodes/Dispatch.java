@@ -23,8 +23,8 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * $a->$b, foo()->bar(), $myClass->foo()->bar(), A::$a->foo()
+ * </pre>
  */
 public abstract class Dispatch extends Expression {
 

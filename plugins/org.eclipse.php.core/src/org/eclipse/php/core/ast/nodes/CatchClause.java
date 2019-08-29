@@ -27,8 +27,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * catch (ExceptionClassName $variable) { body; },
+ * </pre>
  * 
  */
 public class CatchClause extends Statement {

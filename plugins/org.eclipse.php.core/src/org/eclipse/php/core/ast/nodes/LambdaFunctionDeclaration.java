@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009-2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -35,7 +35,6 @@ public class LambdaFunctionDeclaration extends Expression {
 
 	private boolean isReference;
 	private boolean isStatic;
-	private int staticStart;
 	private final ASTNode.NodeList<FormalParameter> formalParameters = new ASTNode.NodeList<>(
 			FORMAL_PARAMETERS_PROPERTY);
 	private final ASTNode.NodeList<Expression> lexicalVariables = new ASTNode.NodeList<>(LEXICAL_VARIABLES_PROPERTY);
@@ -83,18 +82,35 @@ public class LambdaFunctionDeclaration extends Expression {
 
 	public LambdaFunctionDeclaration(int start, int end, AST ast, List<FormalParameter> formalParameters,
 			List<Expression> lexicalVars, Block body, final boolean isReference) {
-		this(start, end, ast, formalParameters, lexicalVars, body, isReference, false, -1);
+		this(start, end, ast, formalParameters, lexicalVars, body, isReference, false);
 	}
 
 	public LambdaFunctionDeclaration(int start, int end, AST ast, List<FormalParameter> formalParameters,
-			List<Expression> lexicalVars, Block body, final boolean isReference, final boolean isStatic,
-			int staticStart) {
-		this(start, end, ast, formalParameters, lexicalVars, body, isReference, isStatic, staticStart, null);
+			List<Expression> lexicalVars, Block body, final boolean isReference, final boolean isStatic) {
+		this(start, end, ast, formalParameters, lexicalVars, body, isReference, isStatic, null);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public LambdaFunctionDeclaration(int start, int end, AST ast, List<FormalParameter> formalParameters,
 			List<Expression> lexicalVars, Block body, final boolean isReference, final boolean isStatic,
 			int staticStart, Identifier returnType) {
+		this(start, end, ast, formalParameters, lexicalVars, body, isReference, isStatic, returnType);
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public LambdaFunctionDeclaration(int start, int end, AST ast, List<FormalParameter> formalParameters,
+			List<Expression> lexicalVars, Block body, final boolean isReference, final boolean isStatic,
+			int staticStart) {
+		this(start, end, ast, formalParameters, lexicalVars, body, isReference, isStatic, null);
+	}
+
+	public LambdaFunctionDeclaration(int start, int end, AST ast, List<FormalParameter> formalParameters,
+			List<Expression> lexicalVars, Block body, final boolean isReference, final boolean isStatic,
+			Identifier returnType) {
 		super(start, end, ast);
 
 		if (formalParameters == null) {
@@ -120,7 +136,6 @@ public class LambdaFunctionDeclaration extends Expression {
 			setBody(body);
 		}
 		setStatic(isStatic);
-		this.staticStart = staticStart;
 	}
 
 	public LambdaFunctionDeclaration(AST ast) {
@@ -423,7 +438,7 @@ public class LambdaFunctionDeclaration extends Expression {
 		final boolean isRef = isReference();
 		final Identifier returnType = ASTNode.copySubtree(target, getReturnType());
 		return new LambdaFunctionDeclaration(getStart(), getEnd(), target, formalParams, lexicalVars, body, isRef,
-				isStatic(), this.staticStart, returnType);
+				isStatic(), returnType);
 	}
 
 	@Override

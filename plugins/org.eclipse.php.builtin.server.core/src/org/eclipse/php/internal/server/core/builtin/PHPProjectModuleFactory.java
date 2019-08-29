@@ -73,6 +73,8 @@ public class PHPProjectModuleFactory extends ProjectModuleFactoryDelegate {
 			return "7.2"; //$NON-NLS-1$
 		case PHP7_3:
 			return "7.3"; //$NON-NLS-1$
+		case PHP7_4:
+			return "7.4"; //$NON-NLS-1$
 		default:
 			return null;
 		}

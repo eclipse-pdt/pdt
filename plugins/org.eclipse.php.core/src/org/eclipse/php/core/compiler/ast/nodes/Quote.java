@@ -28,11 +28,11 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * "this is $a quote", "'single ${$complex->quote()}'" >>>Heredoc\n This is here
  * documents \nHeredoc;\n
  * 
  * Note: "This is".$not." a quote node", 'This is $not a quote too'
+ * </pre>
  */
 public class Quote extends Expression {
 	public static final int QT_QUOTE = 0;

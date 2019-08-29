@@ -28,10 +28,10 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * case expr: statement1; break;,
  *
  * default: statement2;
+ * </pre>
  */
 public class SwitchCase extends Statement {
 

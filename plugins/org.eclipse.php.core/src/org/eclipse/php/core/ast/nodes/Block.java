@@ -27,8 +27,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * { statement1; statement2; }, : statement1; statement2; ,
+ * </pre>
  */
 public class Block extends Statement {
 
@@ -146,8 +146,8 @@ public class Block extends Statement {
 	 * 
 	 * @deprecated <code>setBracketAsBodyStartSymbol</code>,
 	 *             <code>setColonAsBodyStartSymbol</code> or
-	 *             <code>clearBodyStartSymbol</code> should be use instead of this
-	 *             method.
+	 *             <code>clearBodyStartSymbol</code> should be use instead of
+	 *             this method.
 	 */
 	@Deprecated
 	public void setIsCurly(boolean isCurly) {

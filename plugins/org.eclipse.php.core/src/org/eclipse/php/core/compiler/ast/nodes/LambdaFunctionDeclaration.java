@@ -39,7 +39,7 @@ public class LambdaFunctionDeclaration extends Expression {
 	private final boolean isStatic;
 	private final List<? extends Expression> lexicalVars;
 	protected List<FormalParameter> arguments = new LinkedList<>();
-	private Block body = new Block();
+	private Block body;
 	private ReturnType returnType;
 
 	public LambdaFunctionDeclaration(int start, int end, List<FormalParameter> formalParameters,
@@ -103,6 +103,10 @@ public class LambdaFunctionDeclaration extends Expression {
 
 	public Block getBody() {
 		return body;
+	}
+
+	public void setBody(Block body) {
+		this.body = body;
 	}
 
 	public boolean isReference() {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009-2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -120,6 +120,8 @@ public abstract class ASTNode implements Visitable {
 	public static final int ANONYMOUS_CLASS_DECLARATION = 77;
 	public static final int RETURN_TYPE = 78;
 	public static final int EMPTY_EXPRESSION = 79;
+	public static final int ARROW_FUNCTION_DECLARATION = 80;
+	public static final int ARRAY_SPREAD_ELEMENT = 81;
 
 	/**
 	 * Internal convenience constant indicating that there is definite risk of
@@ -158,33 +160,33 @@ public abstract class ASTNode implements Visitable {
 	 * Flag constant (bit mask, value 2) indicating that this is a node that was
 	 * created by the parser (as opposed to one created by another party).
 	 * <p>
-	 * The standard parser (<code>ASTParser</code>) sets this flag on the nodes it
-	 * creates.
+	 * The standard parser (<code>ASTParser</code>) sets this flag on the nodes
+	 * it creates.
 	 * </p>
 	 */
 	public static final char ORIGINAL = 2;
 
 	/**
-	 * Flag constant (bit mask, value 4) indicating that this node is unmodifiable.
-	 * When a node is marked unmodifiable, the following operations result in a
-	 * runtime exception:
+	 * Flag constant (bit mask, value 4) indicating that this node is
+	 * unmodifiable. When a node is marked unmodifiable, the following
+	 * operations result in a runtime exception:
 	 * <ul>
 	 * <li>Change a simple property of this node.</li>
 	 * <li>Add or remove a child node from this node.</li>
 	 * <li>Parent (or re-parent) this node.</li>
 	 * </ul>
 	 * <p>
-	 * The standard parser (<code>ASTParser</code>) does not set this flag on the
-	 * nodes it creates. However, clients may set this flag on a node to prevent
-	 * further modification of the its structural properties.
+	 * The standard parser (<code>ASTParser</code>) does not set this flag on
+	 * the nodes it creates. However, clients may set this flag on a node to
+	 * prevent further modification of the its structural properties.
 	 * </p>
 	 */
 	public static final char PROTECT = 4;
 
 	/**
-	 * Flag constant (bit mask, value 8) indicating that this node or a part of this
-	 * node is recovered from source that contains a syntax error detected in the
-	 * vicinity.
+	 * Flag constant (bit mask, value 8) indicating that this node or a part of
+	 * this node is recovered from source that contains a syntax error detected
+	 * in the vicinity.
 	 * <p>
 	 * The standard parser (<code>ASTParser</code>) sets this flag on a node to
 	 * indicate a recovered node.
@@ -241,9 +243,9 @@ public abstract class ASTNode implements Visitable {
 	 * Primary field used in representing node properties efficiently. If
 	 * <code>null</code>, this node has no properties. If a <code>String</code>,
 	 * this is the name of this node's sole property, and <code>property2</code>
-	 * contains its value. If a <code>HashMap</code>, this is the table of property
-	 * name-value mappings; <code>property2</code>, if non-null is its unmodifiable
-	 * equivalent. Initially <code>null</code>.
+	 * contains its value. If a <code>HashMap</code>, this is the table of
+	 * property name-value mappings; <code>property2</code>, if non-null is its
+	 * unmodifiable equivalent. Initially <code>null</code>.
 	 * 
 	 * @see #property2
 	 */
@@ -303,8 +305,8 @@ public abstract class ASTNode implements Visitable {
 	}
 
 	/**
-	 * Accepts the given visitor on a type-specific visit of the current node. This
-	 * method must be implemented in all concrete AST node types.
+	 * Accepts the given visitor on a type-specific visit of the current node.
+	 * This method must be implemented in all concrete AST node types.
 	 * <p>
 	 * General template for implementation on each concrete ASTNode class:
 	 * 
@@ -320,7 +322,8 @@ public abstract class ASTNode implements Visitable {
 	 * </pre>
 	 * 
 	 * Note that the caller (<code>accept</code>) take cares of invoking
-	 * <code>visitor.preVisit(this)</code> and <code>visitor.postVisit(this)</code>.
+	 * <code>visitor.preVisit(this)</code> and
+	 * <code>visitor.postVisit(this)</code>.
 	 * </p>
 	 * 
 	 * @param visitor
@@ -329,27 +332,29 @@ public abstract class ASTNode implements Visitable {
 	abstract void accept0(Visitor visitor);
 
 	/**
-	 * Returns whether the subtree rooted at the given node matches the given other
-	 * object as decided by the given matcher.
+	 * Returns whether the subtree rooted at the given node matches the given
+	 * other object as decided by the given matcher.
 	 * <p>
-	 * This internal method is implemented in each of the concrete node subclasses.
+	 * This internal method is implemented in each of the concrete node
+	 * subclasses.
 	 * </p>
 	 * 
 	 * @param matcher
 	 *            the matcher
 	 * @param other
 	 *            the other object, or <code>null</code>
-	 * @return <code>true</code> if the subtree matches, or <code>false</code> if
-	 *         they do not match
+	 * @return <code>true</code> if the subtree matches, or <code>false</code>
+	 *         if they do not match
 	 */
 	public abstract boolean subtreeMatch(ASTMatcher matcher, Object other);
 
 	/**
-	 * Returns an integer value identifying the type of this concrete AST node. The
-	 * values are small positive integers, suitable for use in switch statements.
+	 * Returns an integer value identifying the type of this concrete AST node.
+	 * The values are small positive integers, suitable for use in switch
+	 * statements.
 	 * <p>
-	 * For each concrete node type there is a unique node type constant (name and
-	 * value).
+	 * For each concrete node type there is a unique node type constant (name
+	 * and value).
 	 * </p>
 	 * 
 	 * @return one of the node type constants
@@ -357,8 +362,8 @@ public abstract class ASTNode implements Visitable {
 	public abstract int getType();
 
 	/**
-	 * Returns the location of this node within its parent, or <code>null</code> if
-	 * this is a root node.
+	 * Returns the location of this node within its parent, or <code>null</code>
+	 * if this is a root node.
 	 * <p>
 	 * 
 	 * <pre>
@@ -374,20 +379,20 @@ public abstract class ASTNode implements Visitable {
 	 * 
 	 * </p>
 	 * <p>
-	 * Note that the relationship between an AST node and its parent node may change
-	 * over the lifetime of a node.
+	 * Note that the relationship between an AST node and its parent node may
+	 * change over the lifetime of a node.
 	 * </p>
 	 * 
-	 * @return the location of this node in its parent, or <code>null</code> if this
-	 *         node has no parent
+	 * @return the location of this node in its parent, or <code>null</code> if
+	 *         this node has no parent
 	 */
 	public final StructuralPropertyDescriptor getLocationInParent() {
 		return this.location;
 	}
 
 	/**
-	 * Returns the value of the given structural property for this node. The value
-	 * returned depends on the kind of property:
+	 * Returns the value of the given structural property for this node. The
+	 * value returned depends on the kind of property:
 	 * <ul>
 	 * <li>{@link SimplePropertyDescriptor} - the value of the given simple
 	 * property, or <code>null</code> if none; primitive values are "boxed"</li>
@@ -441,8 +446,8 @@ public abstract class ASTNode implements Visitable {
 	 * @param value
 	 *            the property value
 	 * @exception RuntimeException
-	 *                if this node does not have the given property, or if the given
-	 *                property cannot be set
+	 *                if this node does not have the given property, or if the
+	 *                given property cannot be set
 	 */
 	public final void setStructuralProperty(StructuralPropertyDescriptor property, Object value) {
 		if (property instanceof SimplePropertyDescriptor) {
@@ -478,11 +483,11 @@ public abstract class ASTNode implements Visitable {
 	}
 
 	/**
-	 * Returns a list of structural property descriptors for nodes of the same type
-	 * as this node. Clients must not modify the result.
+	 * Returns a list of structural property descriptors for nodes of the same
+	 * type as this node. Clients must not modify the result.
 	 * <p>
-	 * Note that property descriptors are a meta-level mechanism for manipulating
-	 * ASTNodes in a generic way. They are unrelated to
+	 * Note that property descriptors are a meta-level mechanism for
+	 * manipulating ASTNodes in a generic way. They are unrelated to
 	 * <code>get/setProperty</code>.
 	 * </p>
 	 * 
@@ -494,12 +499,13 @@ public abstract class ASTNode implements Visitable {
 	}
 
 	/**
-	 * Returns a list of property descriptors for this node type. Clients must not
-	 * modify the result. This abstract method must be implemented in each concrete
-	 * AST node type.
+	 * Returns a list of property descriptors for this node type. Clients must
+	 * not modify the result. This abstract method must be implemented in each
+	 * concrete AST node type.
 	 * <p>
 	 * N.B. This method is package-private, so that the implementations of this
-	 * method in each of the concrete AST node types do not clutter up the API doc.
+	 * method in each of the concrete AST node types do not clutter up the API
+	 * doc.
 	 * </p>
 	 * 
 	 * @param apiLevel
@@ -520,8 +526,8 @@ public abstract class ASTNode implements Visitable {
 	 * Returns this node's parent node, or <code>null</code> if this is the root
 	 * node.
 	 * <p>
-	 * Note that the relationship between an AST node and its parent node may change
-	 * over the lifetime of a node.
+	 * Note that the relationship between an AST node and its parent node may
+	 * change over the lifetime of a node.
 	 * </p>
 	 * 
 	 * @return the parent of this node, or <code>null</code> if none
@@ -573,6 +579,8 @@ public abstract class ASTNode implements Visitable {
 			return ArrayCreation.class;
 		case ARRAY_ELEMENT:
 			return ArrayElement.class;
+		case ARRAY_SPREAD_ELEMENT:
+			return ArraySpreadElement.class;
 		case ASSIGNMENT:
 			return Assignment.class;
 		case AST_ERROR:
@@ -657,6 +665,8 @@ public abstract class ASTNode implements Visitable {
 			return InterfaceDeclaration.class;
 		case LAMBDA_FUNCTION_DECLARATION:
 			return LambdaFunctionDeclaration.class;
+		case ARROW_FUNCTION_DECLARATION:
+			return ArrowFunctionDeclaration.class;
 		case LIST_VARIABLE:
 			return ListVariable.class;
 		case METHOD_DECLARATION:
@@ -806,8 +816,8 @@ public abstract class ASTNode implements Visitable {
 	}
 
 	/**
-	 * Sets the source range of the original source file where the source fragment
-	 * corresponding to this node was found.
+	 * Sets the source range of the original source file where the source
+	 * fragment corresponding to this node was found.
 	 * <p>
 	 * See {@link ASTParser#setKind(int)} for details on precisely where source
 	 * ranges are supposed to begin and end.
@@ -835,13 +845,13 @@ public abstract class ASTNode implements Visitable {
 	}
 
 	/**
-	 * Removes this node from its parent. Has no effect if this node is unparented.
-	 * If this node appears as an element of a child list property of its parent,
-	 * then this node is removed from the list using <code>List.remove</code>. If
-	 * this node appears as the value of a child property of its parent, then this
-	 * node is detached from its parent by passing <code>null</code> to the
-	 * appropriate setter method; this operation fails if this node is in a
-	 * mandatory property.
+	 * Removes this node from its parent. Has no effect if this node is
+	 * unparented. If this node appears as an element of a child list property
+	 * of its parent, then this node is removed from the list using
+	 * <code>List.remove</code>. If this node appears as the value of a child
+	 * property of its parent, then this node is detached from its parent by
+	 * passing <code>null</code> to the appropriate setter method; this
+	 * operation fails if this node is in a mandatory property.
 	 * 
 	 */
 	public final void delete() {
@@ -861,9 +871,9 @@ public abstract class ASTNode implements Visitable {
 	}
 
 	/**
-	 * Prelude portion of the "3 step program" for replacing the old child of this
-	 * node with another node. Here is the code pattern found in all AST node
-	 * subclasses:
+	 * Prelude portion of the "3 step program" for replacing the old child of
+	 * this node with another node. Here is the code pattern found in all AST
+	 * node subclasses:
 	 * 
 	 * <pre>
 	 * ASTNode oldChild = this.foo;
@@ -872,27 +882,28 @@ public abstract class ASTNode implements Visitable {
 	 * postReplaceChild(oldChild, newFoo, FOO_PROPERTY);
 	 * </pre>
 	 * 
-	 * The first part (preReplaceChild) does all the precondition checks, reports
-	 * pre-delete events, and changes parent links. The old child is delinked from
-	 * its parent (making it a root node), and the new child node is linked to its
-	 * parent. The new child node must be a root node in the same AST as its new
-	 * parent, and must not be an ancestor of this node. All three nodes must be
-	 * modifiable (not PROTECTED). The replace operation must fail atomically; so it
-	 * is crucial that all precondition checks be done before any linking and
-	 * delinking happens. The final part (postReplaceChild )reports post-add events.
+	 * The first part (preReplaceChild) does all the precondition checks,
+	 * reports pre-delete events, and changes parent links. The old child is
+	 * delinked from its parent (making it a root node), and the new child node
+	 * is linked to its parent. The new child node must be a root node in the
+	 * same AST as its new parent, and must not be an ancestor of this node. All
+	 * three nodes must be modifiable (not PROTECTED). The replace operation
+	 * must fail atomically; so it is crucial that all precondition checks be
+	 * done before any linking and delinking happens. The final part
+	 * (postReplaceChild )reports post-add events.
 	 * <p>
 	 * This method calls <code>ast.modifying()</code> for the nodes affected.
 	 * </p>
 	 * 
 	 * @param oldChild
-	 *            the old child of this node, or <code>null</code> if there was no
-	 *            old child to replace
+	 *            the old child of this node, or <code>null</code> if there was
+	 *            no old child to replace
 	 * @param newChild
-	 *            the new child of this node, or <code>null</code> if there is no
-	 *            replacement child
+	 *            the new child of this node, or <code>null</code> if there is
+	 *            no replacement child
 	 * @param property
-	 *            the property descriptor of this node describing the relationship
-	 *            between node and child
+	 *            the property descriptor of this node describing the
+	 *            relationship between node and child
 	 * @exception RuntimeException
 	 *                if:
 	 *                <ul>
@@ -936,8 +947,8 @@ public abstract class ASTNode implements Visitable {
 	}
 
 	/**
-	 * Postlude portion of the "3 step program" for replacing the old child of this
-	 * node with another node. See
+	 * Postlude portion of the "3 step program" for replacing the old child of
+	 * this node with another node. See
 	 * {@link #preReplaceChild(ASTNode, ASTNode, ChildPropertyDescriptor)} for
 	 * details.
 	 */
@@ -955,9 +966,9 @@ public abstract class ASTNode implements Visitable {
 	}
 
 	/**
-	 * Prelude portion of the "3 step program" for changing the value of a simple
-	 * property of this node. Here is the code pattern found in all AST node
-	 * subclasses:
+	 * Prelude portion of the "3 step program" for changing the value of a
+	 * simple property of this node. Here is the code pattern found in all AST
+	 * node subclasses:
 	 * 
 	 * <pre>
 	 * preValueChange(FOO_PROPERTY);
@@ -965,11 +976,11 @@ public abstract class ASTNode implements Visitable {
 	 * postValueChange(FOO_PROPERTY);
 	 * </pre>
 	 * 
-	 * The first part (preValueChange) does the precondition check to make sure the
-	 * node is modifiable (not PROTECTED). The change operation must fail
-	 * atomically; so it is crucial that the precondition checks are done before the
-	 * field is hammered. The final part (postValueChange)reports post-change
-	 * events.
+	 * The first part (preValueChange) does the precondition check to make sure
+	 * the node is modifiable (not PROTECTED). The change operation must fail
+	 * atomically; so it is crucial that the precondition checks are done before
+	 * the field is hammered. The final part (postValueChange)reports
+	 * post-change events.
 	 * <p>
 	 * This method calls <code>ast.modifying()</code> for the node affected.
 	 * </p>
@@ -992,9 +1003,9 @@ public abstract class ASTNode implements Visitable {
 	}
 
 	/**
-	 * Postlude portion of the "3 step program" for replacing the old child of this
-	 * node with another node. See {@link #preValueChange(SimplePropertyDescriptor)}
-	 * for details.
+	 * Postlude portion of the "3 step program" for replacing the old child of
+	 * this node with another node. See
+	 * {@link #preValueChange(SimplePropertyDescriptor)} for details.
 	 */
 	final void postValueChange(SimplePropertyDescriptor property) {
 		this.ast.postValueChangeEvent(this, property);
@@ -1015,8 +1026,8 @@ public abstract class ASTNode implements Visitable {
 	}
 
 	/**
-	 * Begin lazy initialization of this node. Here is the code pattern found in all
-	 * AST node subclasses:
+	 * Begin lazy initialization of this node. Here is the code pattern found in
+	 * all AST node subclasses:
 	 * 
 	 * <pre>
 	 * if (this.foo == null) {
@@ -1044,11 +1055,11 @@ public abstract class ASTNode implements Visitable {
 	 * End lazy initialization of this node.
 	 * 
 	 * @param newChild
-	 *            the new child of this node, or <code>null</code> if there is no
-	 *            replacement child
+	 *            the new child of this node, or <code>null</code> if there is
+	 *            no replacement child
 	 * @param property
-	 *            the property descriptor of this node describing the relationship
-	 *            between node and child
+	 *            the property descriptor of this node describing the
+	 *            relationship between node and child
 	 * @since 3.0
 	 */
 	final void postLazyInit(ASTNode newChild, ChildPropertyDescriptor property) {
@@ -1094,15 +1105,16 @@ public abstract class ASTNode implements Visitable {
 	 * Sets the named property of this node to the given value, or to
 	 * <code>null</code> to clear it.
 	 * <p>
-	 * Clients should employ property names that are sufficiently unique to avoid
-	 * inadvertent conflicts with other clients that might also be setting
+	 * Clients should employ property names that are sufficiently unique to
+	 * avoid inadvertent conflicts with other clients that might also be setting
 	 * properties on the same node.
 	 * </p>
 	 * <p>
-	 * Note that modifying a property is not considered a modification to the AST
-	 * itself. This is to allow clients to decorate existing nodes with their own
-	 * properties without jeopardizing certain things (like the validity of
-	 * bindings), which rely on the underlying tree remaining static.
+	 * Note that modifying a property is not considered a modification to the
+	 * AST itself. This is to allow clients to decorate existing nodes with
+	 * their own properties without jeopardizing certain things (like the
+	 * validity of bindings), which rely on the underlying tree remaining
+	 * static.
 	 * </p>
 	 * 
 	 * @param propertyName
@@ -1212,8 +1224,8 @@ public abstract class ASTNode implements Visitable {
 	 * <li>{@link #ORIGINAL} - indicates original node created by ASTParser</li>
 	 * <li>{@link #PROTECT} - indicates node is protected from further
 	 * modification</li>
-	 * <li>{@link #RECOVERED} - indicates node or a part of this node is recovered
-	 * from source that contains a syntax error</li>
+	 * <li>{@link #RECOVERED} - indicates node or a part of this node is
+	 * recovered from source that contains a syntax error</li>
 	 * </ul>
 	 * Other bit positions are reserved for future use.
 	 * </p>
@@ -1235,14 +1247,14 @@ public abstract class ASTNode implements Visitable {
 	 * <li>{@link #ORIGINAL} - indicates original node created by ASTParser</li>
 	 * <li>{@link #PROTECT} - indicates node is protected from further
 	 * modification</li>
-	 * <li>{@link #RECOVERED} - indicates node or a part of this node is recovered
-	 * from source that contains a syntax error</li>
+	 * <li>{@link #RECOVERED} - indicates node or a part of this node is
+	 * recovered from source that contains a syntax error</li>
 	 * </ul>
 	 * Other bit positions are reserved for future use.
 	 * </p>
 	 * <p>
-	 * Note that the flags are <em>not</em> considered a structural property of the
-	 * node, and can be changed even if the node is marked as protected.
+	 * Note that the flags are <em>not</em> considered a structural property of
+	 * the node, and can be changed even if the node is marked as protected.
 	 * </p>
 	 * 
 	 * @param flags
@@ -1255,17 +1267,18 @@ public abstract class ASTNode implements Visitable {
 	}
 
 	/**
-	 * Returns a deep copy of the subtree of AST nodes rooted at the given node. The
-	 * resulting nodes are owned by the given AST, which may be different from the
-	 * ASTs of the given node. Even if the given node has a parent, the result node
-	 * will be unparented.
+	 * Returns a deep copy of the subtree of AST nodes rooted at the given node.
+	 * The resulting nodes are owned by the given AST, which may be different
+	 * from the ASTs of the given node. Even if the given node has a parent, the
+	 * result node will be unparented.
 	 * <p>
-	 * Source range information on the original nodes is automatically copied to the
-	 * new nodes. Client properties (<code>properties</code>) are not carried over.
+	 * Source range information on the original nodes is automatically copied to
+	 * the new nodes. Client properties (<code>properties</code>) are not
+	 * carried over.
 	 * </p>
 	 * <p>
-	 * The node's <code>AST</code> and the target <code>AST</code> must support the
-	 * same API level.
+	 * The node's <code>AST</code> and the target <code>AST</code> must support
+	 * the same API level.
 	 * </p>
 	 * 
 	 * @param target
@@ -1291,13 +1304,14 @@ public abstract class ASTNode implements Visitable {
 	}
 
 	/**
-	 * Returns a deep copy of the subtrees of AST nodes rooted at the given list of
-	 * nodes. The resulting nodes are owned by the given AST, which may be different
-	 * from the ASTs of the nodes in the list. Even if the nodes in the list have
-	 * parents, the nodes in the result will be unparented.
+	 * Returns a deep copy of the subtrees of AST nodes rooted at the given list
+	 * of nodes. The resulting nodes are owned by the given AST, which may be
+	 * different from the ASTs of the nodes in the list. Even if the nodes in
+	 * the list have parents, the nodes in the result will be unparented.
 	 * <p>
-	 * Source range information on the original nodes is automatically copied to the
-	 * new nodes. Client properties (<code>properties</code>) are not carried over.
+	 * Source range information on the original nodes is automatically copied to
+	 * the new nodes. Client properties (<code>properties</code>) are not
+	 * carried over.
 	 * </p>
 	 * 
 	 * @param target
@@ -1319,9 +1333,9 @@ public abstract class ASTNode implements Visitable {
 
 	/**
 	 * Returns a deep copy of the subtree of AST nodes rooted at this node. The
-	 * resulting nodes are owned by the given AST, which may be different from the
-	 * AST of this node. Even if this node has a parent, the result node will be
-	 * unparented.
+	 * resulting nodes are owned by the given AST, which may be different from
+	 * the AST of this node. Even if this node has a parent, the result node
+	 * will be unparented.
 	 * <p>
 	 * This method reports pre- and post-clone events, and dispatches to
 	 * <code>clone0(AST)</code> which is reimplemented in node subclasses.
@@ -1340,20 +1354,21 @@ public abstract class ASTNode implements Visitable {
 
 	/**
 	 * Returns a deep copy of the subtree of AST nodes rooted at this node. The
-	 * resulting nodes are owned by the given AST, which may be different from the
-	 * AST of this node. Even if this node has a parent, the result node will be
-	 * unparented.
+	 * resulting nodes are owned by the given AST, which may be different from
+	 * the AST of this node. Even if this node has a parent, the result node
+	 * will be unparented.
 	 * <p>
 	 * This method must be implemented in subclasses.
 	 * </p>
 	 * <p>
-	 * This method does not report pre- and post-clone events. All callers should
-	 * instead call <code>clone(AST)</code> to ensure that pre- and post-clone
-	 * events are reported.
+	 * This method does not report pre- and post-clone events. All callers
+	 * should instead call <code>clone(AST)</code> to ensure that pre- and
+	 * post-clone events are reported.
 	 * </p>
 	 * <p>
 	 * N.B. This method is package-private, so that the implementations of this
-	 * method in each of the concrete AST node types do not clutter up the API doc.
+	 * method in each of the concrete AST node types do not clutter up the API
+	 * doc.
 	 * </p>
 	 * 
 	 * @param target
@@ -1363,19 +1378,19 @@ public abstract class ASTNode implements Visitable {
 	abstract ASTNode clone0(AST target);
 
 	/**
-	 * Checks whether the given new child node is a node in a different AST from its
-	 * parent-to-be, whether it is already has a parent, whether adding it to its
-	 * parent-to-be would create a cycle, and whether the child is of the right
-	 * type. The parent-to-be is the enclosing instance.
+	 * Checks whether the given new child node is a node in a different AST from
+	 * its parent-to-be, whether it is already has a parent, whether adding it
+	 * to its parent-to-be would create a cycle, and whether the child is of the
+	 * right type. The parent-to-be is the enclosing instance.
 	 * 
 	 * @param node
 	 *            the parent-to-be node
 	 * @param newChild
 	 *            the new child of the parent
 	 * @param cycleCheck
-	 *            <code>true</code> if cycles are possible and need to be checked,
-	 *            <code>false</code> if cycles are impossible and do not need to be
-	 *            checked
+	 *            <code>true</code> if cycles are possible and need to be
+	 *            checked, <code>false</code> if cycles are impossible and do
+	 *            not need to be checked
 	 * @param nodeType
 	 *            a type constraint on child nodes, or <code>null</code> if no
 	 *            special check is required
@@ -1414,22 +1429,23 @@ public abstract class ASTNode implements Visitable {
 	}
 
 	/**
-	 * Sets the value of the given int-valued property for this node. The default
-	 * implementation of this method throws an exception explaining that this node
-	 * does not have such a property. This method should be extended in subclasses
-	 * that have at leasy one simple property whose value type is int.
+	 * Sets the value of the given int-valued property for this node. The
+	 * default implementation of this method throws an exception explaining that
+	 * this node does not have such a property. This method should be extended
+	 * in subclasses that have at leasy one simple property whose value type is
+	 * int.
 	 * 
 	 * @param property
 	 *            the property
 	 * @param get
-	 *            <code>true</code> for a get operation, and <code>false</code> for
-	 *            a set operation
+	 *            <code>true</code> for a get operation, and <code>false</code>
+	 *            for a set operation
 	 * @param value
 	 *            the new property value; ignored for get operations
 	 * @return the value; always returns <code>0</code> for set operations
 	 * @exception RuntimeException
-	 *                if this node does not have the given property, or if the given
-	 *                value cannot be set as specified
+	 *                if this node does not have the given property, or if the
+	 *                given value cannot be set as specified
 	 */
 	int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
 		throw new RuntimeException("Node does not have this property"); //$NON-NLS-1$
@@ -1438,21 +1454,21 @@ public abstract class ASTNode implements Visitable {
 	/**
 	 * Sets the value of the given boolean-valued property for this node. The
 	 * default implementation of this method throws an exception explaining that
-	 * this node does not have such a property. This method should be extended in
-	 * subclasses that have at least one simple property whose value type is
+	 * this node does not have such a property. This method should be extended
+	 * in subclasses that have at least one simple property whose value type is
 	 * boolean.
 	 * 
 	 * @param property
 	 *            the property
 	 * @param get
-	 *            <code>true</code> for a get operation, and <code>false</code> for
-	 *            a set operation
+	 *            <code>true</code> for a get operation, and <code>false</code>
+	 *            for a set operation
 	 * @param value
 	 *            the new property value; ignored for get operations
 	 * @return the value; always returns <code>false</code> for set operations
 	 * @exception RuntimeException
-	 *                if this node does not have the given property, or if the given
-	 *                value cannot be set as specified
+	 *                if this node does not have the given property, or if the
+	 *                given value cannot be set as specified
 	 */
 	boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean value) {
 		throw new RuntimeException("Node does not have this property"); //$NON-NLS-1$
@@ -1460,23 +1476,24 @@ public abstract class ASTNode implements Visitable {
 
 	/**
 	 * Sets the value of the given property for this node. The default
-	 * implementation of this method throws an exception explaining that this node
-	 * does not have such a property. This method should be extended in subclasses
-	 * that have at leasy one simple property whose value type is a reference type.
+	 * implementation of this method throws an exception explaining that this
+	 * node does not have such a property. This method should be extended in
+	 * subclasses that have at leasy one simple property whose value type is a
+	 * reference type.
 	 * 
 	 * @param property
 	 *            the property
 	 * @param get
-	 *            <code>true</code> for a get operation, and <code>false</code> for
-	 *            a set operation
+	 *            <code>true</code> for a get operation, and <code>false</code>
+	 *            for a set operation
 	 * @param value
-	 *            the new property value, or <code>null</code> if none; ignored for
-	 *            get operations
+	 *            the new property value, or <code>null</code> if none; ignored
+	 *            for get operations
 	 * @return the value, or <code>null</code> if none; always returns
 	 *         <code>null</code> for set operations
 	 * @exception RuntimeException
-	 *                if this node does not have the given property, or if the given
-	 *                value cannot be set as specified
+	 *                if this node does not have the given property, or if the
+	 *                given value cannot be set as specified
 	 */
 	Object internalGetSetObjectProperty(SimplePropertyDescriptor property, boolean get, Object value) {
 		throw new RuntimeException("Node does not have this property"); //$NON-NLS-1$
@@ -1484,23 +1501,23 @@ public abstract class ASTNode implements Visitable {
 
 	/**
 	 * Sets the child value of the given property for this node. The default
-	 * implementation of this method throws an exception explaining that this node
-	 * does not have such a property. This method should be extended in subclasses
-	 * that have at leasy one child property.
+	 * implementation of this method throws an exception explaining that this
+	 * node does not have such a property. This method should be extended in
+	 * subclasses that have at leasy one child property.
 	 * 
 	 * @param property
 	 *            the property
 	 * @param get
-	 *            <code>true</code> for a get operation, and <code>false</code> for
-	 *            a set operation
+	 *            <code>true</code> for a get operation, and <code>false</code>
+	 *            for a set operation
 	 * @param child
 	 *            the new child value, or <code>null</code> if none; always
 	 *            <code>null</code> for get operations
 	 * @return the child, or <code>null</code> if none; always returns
 	 *         <code>null</code> for set operations
 	 * @exception RuntimeException
-	 *                if this node does not have the given property, or if the given
-	 *                child cannot be set as specified
+	 *                if this node does not have the given property, or if the
+	 *                given child cannot be set as specified
 	 */
 	ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		throw new RuntimeException("Node does not have this property"); //$NON-NLS-1$
@@ -1508,9 +1525,9 @@ public abstract class ASTNode implements Visitable {
 
 	/**
 	 * Returns the list value of the given property for this node. The default
-	 * implementation of this method throws an exception explaining that this noed
-	 * does not have such a property. This method should be extended in subclasses
-	 * that have at leasy one child list property.
+	 * implementation of this method throws an exception explaining that this
+	 * noed does not have such a property. This method should be extended in
+	 * subclasses that have at leasy one child list property.
 	 * 
 	 * @param property
 	 *            the property
@@ -1529,14 +1546,15 @@ public abstract class ASTNode implements Visitable {
 	class NodeList<T extends ASTNode> extends AbstractList<T> {
 
 		/**
-		 * The underlying list in which the nodes of this list are stored (element type:
-		 * <code>ASTNode</code>).
+		 * The underlying list in which the nodes of this list are stored
+		 * (element type: <code>ASTNode</code>).
 		 * <p>
 		 * Be stingy on storage - assume that list will be empty.
 		 * </p>
 		 * <p>
-		 * This field declared default visibility (rather than private) so that accesses
-		 * from <code>NodeList.Cursor</code> do not require a synthetic accessor method.
+		 * This field declared default visibility (rather than private) so that
+		 * accesses from <code>NodeList.Cursor</code> do not require a synthetic
+		 * accessor method.
 		 * </p>
 		 */
 		ArrayList<T> store = new ArrayList<>(0);
@@ -1547,14 +1565,14 @@ public abstract class ASTNode implements Visitable {
 		ChildListPropertyDescriptor propertyDescriptor;
 
 		/**
-		 * A cursor for iterating over the elements of the list. Does not lose its
-		 * position if the list is changed during the iteration.
+		 * A cursor for iterating over the elements of the list. Does not lose
+		 * its position if the list is changed during the iteration.
 		 */
 		class Cursor implements Iterator<T> {
 			/**
-			 * The position of the cursor between elements. If the value is N, then the
-			 * cursor sits between the element at positions N-1 and N. Initially just before
-			 * the first element of the list.
+			 * The position of the cursor between elements. If the value is N,
+			 * then the cursor sits between the element at positions N-1 and N.
+			 * Initially just before the first element of the list.
 			 */
 			private int position = 0;
 
@@ -1585,7 +1603,8 @@ public abstract class ASTNode implements Visitable {
 			}
 
 			/**
-			 * Adjusts this cursor to accomodate an add/remove at the given index.
+			 * Adjusts this cursor to accomodate an add/remove at the given
+			 * index.
 			 * 
 			 * @param index
 			 *            the position at which the element was added or removed
@@ -1601,21 +1620,22 @@ public abstract class ASTNode implements Visitable {
 		}
 
 		/**
-		 * A list of currently active cursors (element type: <code>Cursor</code> ), or
-		 * <code>null</code> if there are no active cursors.
+		 * A list of currently active cursors (element type: <code>Cursor</code>
+		 * ), or <code>null</code> if there are no active cursors.
 		 * <p>
-		 * It is important for storage considerations to maintain the null-means-empty
-		 * invariant; otherwise, every NodeList instance will waste a lot of space. A
-		 * cursor is needed only for the duration of a visit to the child nodes. Under
-		 * normal circumstances, only a single cursor is needed; multiple cursors are
-		 * only required if there are multiple visits going on at the same time.
+		 * It is important for storage considerations to maintain the
+		 * null-means-empty invariant; otherwise, every NodeList instance will
+		 * waste a lot of space. A cursor is needed only for the duration of a
+		 * visit to the child nodes. Under normal circumstances, only a single
+		 * cursor is needed; multiple cursors are only required if there are
+		 * multiple visits going on at the same time.
 		 * </p>
 		 */
 		private List<Cursor> cursors = null;
 
 		/**
-		 * Creates a new empty list of nodes owned by this node. This node will be the
-		 * common parent of all nodes added to this list.
+		 * Creates a new empty list of nodes owned by this node. This node will
+		 * be the common parent of all nodes added to this list.
 		 * 
 		 * @param property
 		 *            the property descriptor
@@ -1741,8 +1761,8 @@ public abstract class ASTNode implements Visitable {
 		 * Allocate a cursor to use for a visit. The client must call
 		 * <code>releaseCursor</code> when done.
 		 * <p>
-		 * This method is internally synchronized on this NodeList. It is thread-safe to
-		 * create a cursor.
+		 * This method is internally synchronized on this NodeList. It is
+		 * thread-safe to create a cursor.
 		 * </p>
 		 * 
 		 * @return a new cursor positioned before the first element of the list
@@ -1763,8 +1783,8 @@ public abstract class ASTNode implements Visitable {
 		/**
 		 * Releases the given cursor at the end of a visit.
 		 * <p>
-		 * This method is internally synchronized on this NodeList. It is thread-safe to
-		 * release a cursor.
+		 * This method is internally synchronized on this NodeList. It is
+		 * thread-safe to release a cursor.
 		 * </p>
 		 * 
 		 * @param cursor
@@ -1785,8 +1805,8 @@ public abstract class ASTNode implements Visitable {
 		/**
 		 * Adjusts all cursors to accomodate an add/remove at the given index.
 		 * <p>
-		 * This method is only used when the list is being modified. The AST is not
-		 * thread-safe if any of the clients are modifying it.
+		 * This method is only used when the list is being modified. The AST is
+		 * not thread-safe if any of the clients are modifying it.
 		 * </p>
 		 * 
 		 * @param index

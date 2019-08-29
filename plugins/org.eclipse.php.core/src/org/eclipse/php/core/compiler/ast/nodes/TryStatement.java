@@ -28,9 +28,9 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * try { statements... } catch (Exception $e) { statements... } catch
  * (AnotherException $ae) { statements... } finally { statements... (php 5.5) }
+ * </pre>
  */
 public class TryStatement extends Statement {
 

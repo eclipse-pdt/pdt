@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009-2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -28,16 +28,19 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
- * var $a, $b; public $a = 3; final private static $var;
+ * var $a, $b; public $a = 3; final private static $var; final private ?\Exception $exception;
+ * </pre>
  */
 public class FieldsDeclaration extends BodyDeclaration {
 
+	private Expression fieldsType;
 	private final ASTNode.NodeList<SingleFieldDeclaration> fields = new ASTNode.NodeList<>(FIELDS_PROPERTY);
 
 	/**
 	 * The structural property of this node type.
 	 */
+	public static final ChildPropertyDescriptor FIELDS_TYPE_PROPERTY = new ChildPropertyDescriptor(
+			FieldsDeclaration.class, "fieldsType", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
 	public static final ChildListPropertyDescriptor FIELDS_PROPERTY = new ChildListPropertyDescriptor(
 			FieldsDeclaration.class, "fields", SingleFieldDeclaration.class, CYCLE_RISK); //$NON-NLS-1$
 	public static final SimplePropertyDescriptor MODIFIER_PROPERTY = new SimplePropertyDescriptor(
@@ -56,17 +59,22 @@ public class FieldsDeclaration extends BodyDeclaration {
 
 	static {
 		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(1);
-		properyList.add(FIELDS_PROPERTY);
+		properyList.add(FIELDS_TYPE_PROPERTY);
 		properyList.add(MODIFIER_PROPERTY);
+		properyList.add(FIELDS_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
-	public FieldsDeclaration(int start, int end, AST ast, int modifier,
+	public FieldsDeclaration(int start, int end, AST ast, int modifier, Expression type,
 			List<SingleFieldDeclaration> variablesAndDefaults) {
 		super(start, end, ast, modifier);
 
 		if (variablesAndDefaults == null || variablesAndDefaults.size() == 0) {
 			throw new IllegalArgumentException();
+		}
+
+		if (type != null) {
+			setFieldsType(type);
 		}
 
 		for (Iterator<SingleFieldDeclaration> iter = variablesAndDefaults.iterator(); iter.hasNext();) {
@@ -79,6 +87,14 @@ public class FieldsDeclaration extends BodyDeclaration {
 				this.fields.add(field);
 			}
 		}
+	}
+
+	/**
+	 * @since PHP 7.4
+	 */
+	public FieldsDeclaration(int start, int end, AST ast, int modifier,
+			List<SingleFieldDeclaration> variablesAndDefaults) {
+		this(start, end, ast, modifier, null, variablesAndDefaults);
 	}
 
 	public FieldsDeclaration(AST ast) {
@@ -103,6 +119,9 @@ public class FieldsDeclaration extends BodyDeclaration {
 
 	@Override
 	public void childrenAccept(Visitor visitor) {
+		if (fieldsType != null) {
+			fieldsType.accept(visitor);
+		}
 		for (ASTNode node : this.fields) {
 			node.accept(visitor);
 		}
@@ -111,6 +130,9 @@ public class FieldsDeclaration extends BodyDeclaration {
 	@Override
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
+		if (fieldsType != null) {
+			fieldsType.accept(visitor);
+		}
 		for (ASTNode node : this.fields) {
 			node.traverseTopDown(visitor);
 		}
@@ -118,6 +140,9 @@ public class FieldsDeclaration extends BodyDeclaration {
 
 	@Override
 	public void traverseBottomUp(Visitor visitor) {
+		if (fieldsType != null) {
+			fieldsType.accept(visitor);
+		}
 		for (ASTNode node : this.fields) {
 			node.traverseBottomUp(visitor);
 		}
@@ -128,7 +153,14 @@ public class FieldsDeclaration extends BodyDeclaration {
 	public void toString(StringBuilder buffer, String tab) {
 		buffer.append(tab).append("<FieldsDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" modifier='").append(getModifierString()).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		buffer.append(" modifier='").append(getModifierString()); //$NON-NLS-1$
+		buffer.append("'>\n"); //$NON-NLS-1$
+		buffer.append(TAB).append(tab).append("<Type>\n"); //$NON-NLS-1$
+		if (fieldsType != null) {
+			fieldsType.toString(buffer, TAB + TAB + tab);
+			buffer.append("\n"); //$NON-NLS-1$
+		}
+		buffer.append(TAB).append(tab).append("</Type>\n"); //$NON-NLS-1$
 		for (SingleFieldDeclaration node : this.fields) {
 			buffer.append(tab).append(TAB).append("<VariableName>\n"); //$NON-NLS-1$
 			node.getName().toString(buffer, TAB + TAB + tab);
@@ -148,6 +180,37 @@ public class FieldsDeclaration extends BodyDeclaration {
 	@Override
 	public int getType() {
 		return ASTNode.FIELD_DECLARATION;
+	}
+
+	/**
+	 * @return the type of this parameter
+	 */
+	public Expression getFieldsType() {
+		return fieldsType;
+	}
+
+	/**
+	 * Sets the type of these fields
+	 * 
+	 * @param id
+	 *            the type name of this fields declaration.
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
+	public void setFieldsType(Expression id) {
+		if (id != null && !(id instanceof Identifier) && !(id instanceof NamespaceName)) {
+			throw new IllegalArgumentException();
+		}
+		// an Assignment may occur inside a Expression - must check cycles
+		Expression oldChild = this.fieldsType;
+		preReplaceChild(oldChild, id, FIELDS_TYPE_PROPERTY);
+		this.fieldsType = id;
+		postReplaceChild(oldChild, id, FIELDS_TYPE_PROPERTY);
 	}
 
 	/**
@@ -186,6 +249,20 @@ public class FieldsDeclaration extends BodyDeclaration {
 		return super.internalGetChildListProperty(property);
 	}
 
+	@Override
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+		if (property == FIELDS_TYPE_PROPERTY) {
+			if (get) {
+				return getFieldsType();
+			} else {
+				setFieldsType((Expression) child);
+				return null;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
+	}
+
 	/*
 	 * Method declared on ASTNode.
 	 */
@@ -197,9 +274,10 @@ public class FieldsDeclaration extends BodyDeclaration {
 
 	@Override
 	ASTNode clone0(AST target) {
+		final Expression type = ASTNode.copySubtree(target, this.getFieldsType());
 		final List<SingleFieldDeclaration> fields = ASTNode.copySubtrees(target, fields());
 		final int modifier = getModifier();
-		return new FieldsDeclaration(getStart(), getEnd(), target, modifier, fields);
+		return new FieldsDeclaration(getStart(), getEnd(), target, modifier, type, fields);
 	}
 
 	@Override
@@ -210,7 +288,8 @@ public class FieldsDeclaration extends BodyDeclaration {
 	/**
 	 * Resolves and returns the binding for this field
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be resolved
+	 * @return the binding, or <code>null</code> if the binding cannot be
+	 *         resolved
 	 */
 	public final IVariableBinding resolveTypeBinding() {
 		return this.ast.getBindingResolver().resolveVariable(this);
