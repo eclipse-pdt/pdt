@@ -27,8 +27,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * $a->$b
+ * </pre>
  */
 public class FieldAccess extends Dispatch {
 
@@ -198,9 +198,11 @@ public class FieldAccess extends Dispatch {
 	}
 
 	/**
-	 * Resolves and returns the binding for the field accessed by this expression.
+	 * Resolves and returns the binding for the field accessed by this
+	 * expression.
 	 * 
-	 * @return the binding, or <code>null</code> if the binding cannot be resolved
+	 * @return the binding, or <code>null</code> if the binding cannot be
+	 *         resolved
 	 */
 	public IVariableBinding resolveFieldBinding() {
 		return this.ast.getBindingResolver().resolveField(this);

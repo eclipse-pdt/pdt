@@ -27,8 +27,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * break; break $a;
+ * </pre>
  */
 public class BreakStatement extends Statement {
 

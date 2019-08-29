@@ -936,7 +936,7 @@ public class ASTRewriteTests {
 				.add(ast.newFormalParameter(ast.newIdentifier("int"), ast.newVariable("a"), ast.newScalar("5"), false));
 		formalParameters.add(ast.newFormalParameter(null, ast.newVariable("b"), ast.newScalar("'boobo'"), false));
 		Block body = ast.newBlock();
-		program.statements().add(0, ast.newFunctionDeclaration(name, formalParameters, body, true));
+		program.statements().add(0, ast.newFunctionDeclaration(name, formalParameters, null, body, true));
 		rewrite();
 		checkResult("<?php function &foo(int $a = 5,  $b = 'boobo') {\n}\n?> ");
 	}
@@ -1975,8 +1975,8 @@ public class ASTRewriteTests {
 
 	// //////////////////////// Utility methods //////////////////////////
 	/**
-	 * Set the content into the document and initialize the parser, the program and
-	 * the ast.
+	 * Set the content into the document and initialize the parser, the program
+	 * and the ast.
 	 */
 	private void initialize(String content, PHPVersion phpVersion) throws Exception {
 		document = new Document(content);

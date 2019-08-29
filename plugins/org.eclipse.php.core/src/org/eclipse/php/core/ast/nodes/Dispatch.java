@@ -19,8 +19,8 @@ package org.eclipse.php.core.ast.nodes;
  * <pre>
  * e.g.
  * 
- * <pre>
  * $a->$b, foo()->bar(), $myClass->foo()->bar(), A::$a->foo()
+ * </pre>
  */
 public abstract class Dispatch extends VariableBase {
 

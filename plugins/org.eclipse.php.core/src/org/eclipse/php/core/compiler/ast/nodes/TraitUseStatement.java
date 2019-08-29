@@ -28,8 +28,8 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * use A; use A as B; use \A\B as C;
+ * </pre>
  */
 public class TraitUseStatement extends Statement {
 

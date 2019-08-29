@@ -26,8 +26,8 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * const MY_CONST = 5; const MY_CONST = 5, YOUR_CONSTANT = 8;
+ * </pre>
  */
 public class ConstantDeclaration extends Declaration implements IPHPDocAwareDeclaration {
 

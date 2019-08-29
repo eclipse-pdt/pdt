@@ -27,9 +27,9 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * // this is a single line comment # this is a single line comment /** this is
  * php doc block (end php docblock here)
+ * </pre>
  */
 public class Comment extends ASTNode {
 

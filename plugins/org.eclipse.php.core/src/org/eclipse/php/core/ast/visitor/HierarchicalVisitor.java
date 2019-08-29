@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009-2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -34,13 +34,13 @@ import org.eclipse.php.core.ast.nodes.*;
  * </p>
  * 
  * <p>
- * This class has a visit(XX node) method for every for every class (concrete or
- * abstract) XX in the ASTNode hierarchy. In this class' default implementations
- * of these methods, the method corresponding to a given ASTNode descendant
- * class will call (and return the return value of) the visit(YY) method for
- * it's superclass YY, with the exception of the visit(ASTNode) method which
- * simply returns true, since ASTNode doesn't have a superclass that is within
- * the ASTNode hierarchy.
+ * This class has a visit(XX node) method for every class (concrete or abstract)
+ * XX in the ASTNode hierarchy. In this class' default implementations of these
+ * methods, the method corresponding to a given ASTNode descendant class will
+ * call (and return the return value of) the visit(YY) method for it's
+ * superclass YY, with the exception of the visit(ASTNode) method which simply
+ * returns true, since ASTNode doesn't have a superclass that is within the
+ * ASTNode hierarchy.
  * </p>
  * 
  * <p>
@@ -111,12 +111,17 @@ public class HierarchicalVisitor extends AbstractVisitor {
 
 	@Override
 	public boolean visit(ArrayCreation arrayCreation) {
-		return visit((Expression) arrayCreation);
+		return visit((VariableBase) arrayCreation);
 	}
 
 	@Override
 	public boolean visit(ArrayElement arrayElement) {
-		return visit((ASTNode) arrayElement);
+		return visit((Expression) arrayElement);
+	}
+
+	@Override
+	public boolean visit(ArraySpreadElement arraySpreadElement) {
+		return visit((Expression) arraySpreadElement);
 	}
 
 	@Override
@@ -176,7 +181,7 @@ public class HierarchicalVisitor extends AbstractVisitor {
 
 	@Override
 	public boolean visit(ClassInstanceCreation classInstanceCreation) {
-		return visit((Expression) classInstanceCreation);
+		return visit((VariableBase) classInstanceCreation);
 	}
 
 	@Override
@@ -281,7 +286,7 @@ public class HierarchicalVisitor extends AbstractVisitor {
 
 	@Override
 	public boolean visit(Identifier identifier) {
-		return visit((Expression) identifier);
+		return visit((VariableBase) identifier);
 	}
 
 	@Override
@@ -336,7 +341,7 @@ public class HierarchicalVisitor extends AbstractVisitor {
 
 	@Override
 	public boolean visit(ParenthesisExpression parenthesisExpression) {
-		return visit((Expression) parenthesisExpression);
+		return visit((VariableBase) parenthesisExpression);
 
 	}
 
@@ -357,7 +362,7 @@ public class HierarchicalVisitor extends AbstractVisitor {
 
 	@Override
 	public boolean visit(Quote quote) {
-		return visit((Expression) quote);
+		return visit((VariableBase) quote);
 	}
 
 	@Override
@@ -382,7 +387,7 @@ public class HierarchicalVisitor extends AbstractVisitor {
 
 	@Override
 	public boolean visit(Scalar scalar) {
-		return visit((Expression) scalar);
+		return visit((VariableBase) scalar);
 	}
 
 	@Override

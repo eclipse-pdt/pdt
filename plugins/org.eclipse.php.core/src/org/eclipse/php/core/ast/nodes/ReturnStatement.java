@@ -27,8 +27,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * return; return $a;
+ * </pre>
  */
 public class ReturnStatement extends Statement {
 

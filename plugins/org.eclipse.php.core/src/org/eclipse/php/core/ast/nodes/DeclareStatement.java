@@ -28,8 +28,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * declare(ticks=1) { } declare(ticks=2) { for ($x = 1; $x < 50; ++$x) { } }
+ * </pre>
  */
 public class DeclareStatement extends Statement {
 

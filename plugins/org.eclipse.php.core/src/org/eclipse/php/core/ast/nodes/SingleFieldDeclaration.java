@@ -27,8 +27,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * var $a, $b; public $a = 3; final private static $var;
+ * </pre>
  */
 public class SingleFieldDeclaration extends ASTNode {
 

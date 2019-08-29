@@ -27,8 +27,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * 'string', 1, 1.3, __CLASS__
+ * </pre>
  */
 public class Scalar extends VariableBase {
 
@@ -258,7 +258,8 @@ public class Scalar extends VariableBase {
 	/**
 	 * Resolves and returns the binding for the entity referred to by this name.
 	 *
-	 * @return the binding, or <code>null</code> if the binding cannot be resolved
+	 * @return the binding, or <code>null</code> if the binding cannot be
+	 *         resolved
 	 */
 	public final IBinding resolveBinding() {
 		return this.ast.getBindingResolver().resolveField(this);

@@ -27,8 +27,8 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * list($a,$b) = array (1,2), list($a, list($b, $c))
+ * </pre>
  */
 public class ListVariable extends Expression {
 

@@ -30,7 +30,6 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * function foo() {}
  * 
  * function &amp;foo() {}
@@ -40,6 +39,7 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * function foo(); -abstract function in class declaration
  * 
  * function foo() : MyClass;
+ * </pre>
  */
 public class PHPMethodDeclaration extends MethodDeclaration implements IPHPDocAwareDeclaration {
 

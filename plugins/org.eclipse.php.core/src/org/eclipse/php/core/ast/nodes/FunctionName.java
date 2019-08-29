@@ -27,8 +27,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * foo() - the name is foo $a() - the variable $a holds the function name
+ * </pre>
  */
 public class FunctionName extends ASTNode {
 

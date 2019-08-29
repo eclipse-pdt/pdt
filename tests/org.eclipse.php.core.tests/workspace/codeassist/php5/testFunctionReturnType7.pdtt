@@ -10,8 +10,8 @@ class Test {
 /**
  * @return Test[]
  */
-function fn() {return new Exception();}
-$arr = fn();
+function foo() {return new Exception();}
+$arr = foo();
 foreach ($arr as $object) {
 	$object->|
 }

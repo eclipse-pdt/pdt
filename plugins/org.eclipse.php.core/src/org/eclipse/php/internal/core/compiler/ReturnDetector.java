@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Dawid Pakuła and others.
+ * Copyright (c) 2016-2019 Dawid Pakuła and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -16,8 +16,7 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.FieldDeclaration;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
-import org.eclipse.php.core.compiler.ast.nodes.ReturnStatement;
-import org.eclipse.php.core.compiler.ast.nodes.YieldExpression;
+import org.eclipse.php.core.compiler.ast.nodes.*;
 import org.eclipse.php.core.compiler.ast.visitor.PHPASTVisitor;
 
 public class ReturnDetector extends PHPASTVisitor {
@@ -41,6 +40,21 @@ public class ReturnDetector extends PHPASTVisitor {
 	@Override
 	public boolean visit(YieldExpression node) {
 		found = true;
+		return false;
+	}
+
+	@Override
+	public boolean visit(LambdaFunctionDeclaration s) throws Exception {
+		return false;
+	}
+
+	@Override
+	public boolean visit(ArrowFunctionDeclaration s) throws Exception {
+		return false;
+	}
+
+	@Override
+	public boolean visit(AnonymousClassDeclaration s) throws Exception {
 		return false;
 	}
 

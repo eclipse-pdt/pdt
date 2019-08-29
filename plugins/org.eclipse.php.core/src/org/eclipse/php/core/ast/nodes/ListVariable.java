@@ -27,8 +27,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * list($a,$b) = array (1,2), list($a, list($b, $c))
+ * </pre>
  */
 public class ListVariable extends VariableBase {
 

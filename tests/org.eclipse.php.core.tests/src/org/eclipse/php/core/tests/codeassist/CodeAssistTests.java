@@ -138,6 +138,10 @@ public class CodeAssistTests {
 				new String[] { "/workspace/codeassist/php5", "/workspace/codeassist/php53",
 						"/workspace/codeassist/php54", "/workspace/codeassist/php55", "/workspace/codeassist/php56",
 						"/workspace/codeassist/php7", "/workspace/codeassist/php71", "/workspace/codeassist/php72" });
+		TESTS.put(PHPVersion.PHP7_4,
+				new String[] { "/workspace/codeassist/php5", "/workspace/codeassist/php53",
+						"/workspace/codeassist/php54", "/workspace/codeassist/php55", "/workspace/codeassist/php56",
+						"/workspace/codeassist/php7", "/workspace/codeassist/php71", "/workspace/codeassist/php72" });
 	};
 
 	private IProject project;

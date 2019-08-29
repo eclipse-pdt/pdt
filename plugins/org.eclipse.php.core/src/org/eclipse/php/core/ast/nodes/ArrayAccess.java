@@ -27,8 +27,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * $a[], $a[1], $a[$b], $a{'name'}
+ * </pre>
  */
 public class ArrayAccess extends Variable {
 

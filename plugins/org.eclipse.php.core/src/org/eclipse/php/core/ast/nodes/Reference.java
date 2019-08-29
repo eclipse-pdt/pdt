@@ -27,14 +27,14 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * &$a, &new MyClass() &foo()
+ * </pre>
  */
 public class Reference extends Expression {
 
 	/**
-	 * the expressions can be either variable or class instantiation note that other
-	 * expressions can not be assigned to this field
+	 * the expressions can be either variable or class instantiation note that
+	 * other expressions can not be assigned to this field
 	 */
 	private Expression expression;
 

@@ -26,6 +26,8 @@ Test Class Declaration With Declarations
 					</InitialValue>
 				</ConstantDeclaration>
 				<FieldsDeclaration start='104' length='41' modifier='public static final'>
+					<Type>
+					</Type>
 					<VariableName>
 						<Variable start='124' length='6' isDollared='true'>
 							<Identifier start='125' length='5' name='myVar'/>
@@ -43,6 +45,8 @@ Test Class Declaration With Declarations
 					</InitialValue>
 				</FieldsDeclaration>
 				<FieldsDeclaration start='146' length='16' modifier='public'>
+					<Type>
+					</Type>
 					<VariableName>
 						<Variable start='150' length='11' isDollared='true'>
 							<Identifier start='151' length='10' name='anotherOne'/>

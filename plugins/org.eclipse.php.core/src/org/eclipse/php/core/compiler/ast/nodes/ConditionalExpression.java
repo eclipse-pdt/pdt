@@ -25,8 +25,8 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * (bool) $a ? 3 : 4, $a > 0 ? $a : -$a, $a ?? 0;
+ * </pre>
  */
 public class ConditionalExpression extends Expression {
 

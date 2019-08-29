@@ -27,4 +27,5 @@ public class PHPFacetsConstants {
 	public static final String PHP_COMPONENT_VERSION_7_1 = "7.1"; //$NON-NLS-1$
 	public static final String PHP_COMPONENT_VERSION_7_2 = "7.2"; //$NON-NLS-1$
 	public static final String PHP_COMPONENT_VERSION_7_3 = "7.3"; //$NON-NLS-1$
+	public static final String PHP_COMPONENT_VERSION_7_4 = "7.4"; //$NON-NLS-1$
 }

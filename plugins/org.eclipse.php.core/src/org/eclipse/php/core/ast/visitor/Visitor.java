@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009-2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -63,6 +63,10 @@ public interface Visitor {
 	boolean visit(ArrayElement arrayElement);
 
 	void endVisit(ArrayElement arrayElement);
+
+	boolean visit(ArraySpreadElement arraySpreadElement);
+
+	void endVisit(ArraySpreadElement arraySpreadElement);
 
 	boolean visit(Assignment assignment);
 
@@ -230,6 +234,10 @@ public interface Visitor {
 	boolean visit(LambdaFunctionDeclaration lambdaFunctionDeclaration);
 
 	void endVisit(LambdaFunctionDeclaration lambdaFunctionDeclaration);
+
+	boolean visit(ArrowFunctionDeclaration arrowFunctionDeclaration);
+
+	void endVisit(ArrowFunctionDeclaration arrowFunctionDeclaration);
 
 	boolean visit(ListVariable listVariable);
 

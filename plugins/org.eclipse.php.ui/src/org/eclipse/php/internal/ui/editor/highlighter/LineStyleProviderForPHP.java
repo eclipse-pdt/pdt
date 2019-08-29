@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2016 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2006-2019 Zend Corporation and IBM Corporation.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -98,6 +98,7 @@ public class LineStyleProviderForPHP extends AbstractLineStyleProvider implement
 		fColorTypes.put(PHPRegionTypes.PHP_FOR, PreferenceConstants.EDITOR_KEYWORD_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHP_FOREACH, PreferenceConstants.EDITOR_KEYWORD_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHP_FUNCTION, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_FN, PreferenceConstants.EDITOR_KEYWORD_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHP_IF, PreferenceConstants.EDITOR_KEYWORD_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHP_HALT_COMPILER, PreferenceConstants.EDITOR_KEYWORD_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHP_INCLUDE, PreferenceConstants.EDITOR_KEYWORD_COLOR);
@@ -213,8 +214,8 @@ public class LineStyleProviderForPHP extends AbstractLineStyleProvider implement
 	}
 
 	/**
-	 * Look up the TextAttribute for the given region context. Might return null for
-	 * unusual text.
+	 * Look up the TextAttribute for the given region context. Might return null
+	 * for unusual text.
 	 * 
 	 * @param type
 	 * @return
@@ -224,8 +225,8 @@ public class LineStyleProviderForPHP extends AbstractLineStyleProvider implement
 	}
 
 	/**
-	 * Looks up the colorKey in the preference store and adds the style information
-	 * to list of TextAttributes
+	 * Looks up the colorKey in the preference store and adds the style
+	 * information to list of TextAttributes
 	 * 
 	 * @param colorKey
 	 */

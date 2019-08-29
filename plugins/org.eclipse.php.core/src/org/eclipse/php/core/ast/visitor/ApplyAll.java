@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009-2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -40,6 +40,11 @@ public abstract class ApplyAll extends AbstractVisitor {
 	@Override
 	public boolean visit(ArrayElement arrayElement) {
 		return apply(arrayElement);
+	}
+
+	@Override
+	public boolean visit(ArraySpreadElement arraySpreadElement) {
+		return apply(arraySpreadElement);
 	}
 
 	@Override
@@ -397,6 +402,11 @@ public abstract class ApplyAll extends AbstractVisitor {
 	}
 
 	@Override
+	public boolean visit(ArrowFunctionDeclaration func) {
+		return apply(func);
+	}
+
+	@Override
 	public boolean visit(GotoLabel gotoLabel) {
 		return apply(gotoLabel);
 	}
@@ -419,6 +429,11 @@ public abstract class ApplyAll extends AbstractVisitor {
 	@Override
 	public void endVisit(ArrayElement arrayElement) {
 		endVisitNode(arrayElement);
+	}
+
+	@Override
+	public void endVisit(ArraySpreadElement arraySpreadElement) {
+		endVisitNode(arraySpreadElement);
 	}
 
 	@Override
@@ -758,6 +773,11 @@ public abstract class ApplyAll extends AbstractVisitor {
 
 	@Override
 	public void endVisit(LambdaFunctionDeclaration func) {
+		endVisitNode(func);
+	}
+
+	@Override
+	public void endVisit(ArrowFunctionDeclaration func) {
 		endVisitNode(func);
 	}
 

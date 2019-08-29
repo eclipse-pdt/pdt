@@ -27,8 +27,8 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * $a = 5, $a += 5, $a .= $b,
+ * </pre>
  */
 public class Assignment extends Expression implements IOperationNode {
 
@@ -58,6 +58,8 @@ public class Assignment extends Expression implements IOperationNode {
 	public static final int OP_SR_EQUAL = 11;
 	// '**='
 	public static final int OP_POW_EQUAL = 12;
+	// '??='
+	public static final int OP_COALESCE_EQUAL = 13;
 
 	private VariableBase leftHandSide;
 	private int operator;
@@ -130,6 +132,8 @@ public class Assignment extends Expression implements IOperationNode {
 			return ">>="; //$NON-NLS-1$
 		case OP_POW_EQUAL:
 			return "**="; //$NON-NLS-1$
+		case OP_COALESCE_EQUAL:
+			return "??="; //$NON-NLS-1$
 		default:
 			throw new IllegalArgumentException();
 		}
@@ -194,7 +198,8 @@ public class Assignment extends Expression implements IOperationNode {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString ()
+	 * org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString
+	 * ()
 	 */
 	@Override
 	public String getOperationString() {

@@ -27,10 +27,10 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * while (expr) statement;
  * 
  * while (expr): statement ... endwhile;
+ * </pre>
  */
 public class WhileStatement extends Statement {
 

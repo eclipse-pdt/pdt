@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016, 2017 IBM Corporation and others.
+ * Copyright (c) 2009-2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -244,6 +244,8 @@ public interface PHPRegionTypes {
 	// static final String PHP_LNUMBER = "PHP_LNUMBER";
 
 	static final String PHP_FUNCTION = "PHP_FUNCTION"; //$NON-NLS-1$
+
+	static final String PHP_FN = "PHP_FN"; //$NON-NLS-1$
 
 	static final String PHP_PROTECTED = "PHP_PROTECTED"; //$NON-NLS-1$
 

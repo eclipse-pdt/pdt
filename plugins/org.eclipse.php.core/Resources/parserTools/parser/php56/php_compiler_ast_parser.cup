@@ -2818,7 +2818,7 @@ list_variable:vars T_EQUAL expr:expr
 T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE lexical_vars:varsList
 {:
 	LambdaFunctionDeclaration functionDeclaration = new LambdaFunctionDeclaration(sleft, varsListright, paramList, varsList,
-		new Block(varsListright, varsListright, null), isReference.booleanValue());
+		null, isReference.booleanValue());
 	parser.addDeclarationStatement(functionDeclaration);
 	parser.declarations.push(functionDeclaration);
 :}
@@ -2832,7 +2832,7 @@ T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE lexical_vars:varsL
 {:
 
 	LambdaFunctionDeclaration functionDeclaration = new LambdaFunctionDeclaration(sleft, varsListright, paramList, varsList,
-		new Block(varsListright, varsListright, null), isReference.booleanValue(), true);
+		null, isReference.booleanValue(), true);
 	parser.addDeclarationStatement(functionDeclaration);
 	parser.declarations.push(functionDeclaration);
 :}
@@ -2846,11 +2846,8 @@ lambda_function_body ::=
 T_CURLY_OPEN:blockStart inner_statement_list:statementList T_CURLY_CLOSE:blockEnd
 {:
 	LambdaFunctionDeclaration functionDeclaration = (LambdaFunctionDeclaration) parser.declarations.pop();
-	Block block = functionDeclaration.getBody();
-	block.setStart(blockStartleft);
-	block.setEnd(blockEndright);
-	block.getStatements().clear();
-	block.acceptStatements(statementList);
+	Block block = new Block(blockStartleft, blockEndright, statementList);
+	functionDeclaration.setBody(block);
 	functionDeclaration.setEnd(blockEndright);
 	RESULT = functionDeclaration;
 :}

@@ -26,8 +26,8 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * $a[], $a[1], $a[$b], $a{'name'}
+ * </pre>
  */
 public class ArrayVariableReference extends VariableReference {
 

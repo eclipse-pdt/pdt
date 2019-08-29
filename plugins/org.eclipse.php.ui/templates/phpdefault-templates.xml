@@ -315,6 +315,14 @@ ${cursor}</template>
 </template>
 
 <template
+	name="fn"
+	description="%description.php.arrowStatement"
+	id="org.eclipse.php.ui.editor.templates.php.fn"
+	context="php-statements"
+	enabled="true"
+	autoinsert="false">fn (${parameters}) => ${cursor}</template>
+
+<template
 	name="closure"
 	description="%description.php.lambdaStatement"
 	id="org.eclipse.php.ui.editor.templates.php.closure"
@@ -384,8 +392,7 @@ ${cursor}</template>
 	enabled="true"
 	autoinsert="false">use ${trait_name1}, ${trait_name2} {
 		${trait_name1}::${function_name1} insteadof ${trait_name2};
-		${trait_name1}::${function_name2} as static ${function_name3};
-		${trait_name1}::${function_name4} as ${function_name5};
+		${trait_name1}::${function_name2} as ${function_name3};
 	}
 </template>
 

@@ -28,11 +28,11 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * "this is $a quote", "'single ${$complex->quote()}'" <<<Heredoc\n This is here
  * documents \nHeredoc;\n
  * 
  * Note: "This is".$not." a quote node", 'This is $not a quote too'
+ * </pre>
  */
 public class Quote extends VariableBase {
 
@@ -49,7 +49,7 @@ public class Quote extends VariableBase {
 	 */
 	public static final ChildListPropertyDescriptor EXPRESSIONS_PROPERTY = new ChildListPropertyDescriptor(Quote.class,
 			"expressions", Expression.class, CYCLE_RISK); //$NON-NLS-1$
-	public static final SimplePropertyDescriptor QUOTE_TYPE_PROPERTY = new SimplePropertyDescriptor(Block.class,
+	public static final SimplePropertyDescriptor QUOTE_TYPE_PROPERTY = new SimplePropertyDescriptor(Quote.class,
 			"quoteType", Integer.class, OPTIONAL); //$NON-NLS-1$
 
 	/**

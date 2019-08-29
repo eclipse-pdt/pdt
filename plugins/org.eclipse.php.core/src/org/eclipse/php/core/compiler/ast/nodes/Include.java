@@ -25,9 +25,9 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
  * include('myFile.php'), include_once($myFile),
  * require($myClass->getFileName()), require_once(A::FILE_NAME)
+ * </pre>
  */
 public class Include extends Reference {
 

@@ -26,9 +26,10 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * <pre>
- * // this is a single line comment # this is a single line comment /** this is
+ * // this is a single line comment # this is a single line comment
+ * /** this is
  * php doc block (end php docblock here)
+ * </pre>
  */
 public class Comment extends ASTNode {
 
@@ -69,7 +70,8 @@ public class Comment extends ASTNode {
 	}
 
 	/**
-	 * @return list of todo task tags set by TaskTagBuildParticipantFactory or null
+	 * @return list of todo task tags set by TaskTagBuildParticipantFactory or
+	 *         null
 	 */
 	public List<Scalar> getTaskTags() {
 		return taskTags;
