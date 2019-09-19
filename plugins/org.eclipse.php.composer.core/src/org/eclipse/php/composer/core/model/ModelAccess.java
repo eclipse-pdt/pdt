@@ -16,18 +16,14 @@ package org.eclipse.php.composer.core.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.php.composer.api.collection.Psr;
 import org.eclipse.php.composer.api.json.ParseException;
-import org.eclipse.php.composer.api.objects.Namespace;
 import org.eclipse.php.composer.core.ComposerPlugin;
 import org.eclipse.php.composer.core.log.Logger;
 import org.osgi.service.prefs.BackingStoreException;
@@ -39,7 +35,7 @@ import org.osgi.service.prefs.BackingStoreException;
  * @author Robert Gruendler <r.gruendler@gmail.com>
  *
  */
-public class ModelAccess implements NamespaceResolverInterface {
+public class ModelAccess {
 	private PackageManager packageManager = null;
 	private static ModelAccess instance = null;
 	private Map<String, Psr> psr0Map = new HashMap<>();
@@ -68,58 +64,6 @@ public class ModelAccess implements NamespaceResolverInterface {
 		}
 
 		return instance;
-	}
-
-	@Override
-	public IPath resolve(IResource resource) {
-		IPath root = resource.getFullPath().removeFirstSegments(1);
-
-		if (!psr0Map.containsKey(resource.getProject().getName())) {
-			return null;
-		}
-
-		Psr namespaces = psr0Map.get(resource.getProject().getName());
-
-		for (Namespace namespace : namespaces) {
-			for (Object object : namespace.getPaths()) {
-				if (!(object instanceof String)) {
-					continue;
-				}
-				String path = (String) object;
-				if (root.toString().startsWith(path)) {
-					String replacement = path;
-					if (!replacement.endsWith("/")) { //$NON-NLS-1$
-						replacement += "/"; //$NON-NLS-1$
-					}
-					return new Path(root.toString().replace(replacement, "")); //$NON-NLS-1$
-				}
-			}
-		}
-
-		return null;
-	}
-
-	@Override
-	public IPath reverseResolve(IProject project, String namespace) {
-
-		if (!psr0Map.containsKey(project.getName()) || namespace == null) {
-			return null;
-		}
-
-		Psr psr0 = psr0Map.get(project.getName());
-
-		String nsPath = namespace.replace("\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
-		for (Namespace ns : psr0) {
-			String other = ns.getNamespace();
-			if (namespace.startsWith(other)) {
-				for (Object path : ns.getPaths()) {
-					IFolder folder = project.getFolder(new Path((String) path).append(nsPath));
-					return folder.getFullPath().removeFirstSegments(1);
-				}
-			}
-		}
-
-		return null;
 	}
 
 	public PackageManager getPackageManager() {
@@ -163,16 +107,17 @@ public class ModelAccess implements NamespaceResolverInterface {
 
 	public IResource getComposer(InstalledPackage installed, IScriptProject project) {
 		/*
-		 * if (!namespaceMap.containsKey(project.getProject().getName())) { return null;
-		 * }
+		 * if (!namespaceMap.containsKey(project.getProject().getName())) {
+		 * return null; }
 		 * 
-		 * for (Namespace mapping : namespaceMap.get(project.getProject().getName())) {
+		 * for (Namespace mapping :
+		 * namespaceMap.get(project.getProject().getName())) {
 		 * 
 		 * if (mapping.getPath().contains(installed.name)) { IPath path = new
 		 * Path(mapping.getPath().substring(0,
-		 * mapping.getPath().lastIndexOf(installed.name)+installed.name.length() )); if
-		 * (installed.targetDir != null && installed.targetDir.length() > 0) { path =
-		 * path.append(installed.targetDir); } return
+		 * mapping.getPath().lastIndexOf(installed.name)+installed.name.length()
+		 * )); if (installed.targetDir != null && installed.targetDir.length() >
+		 * 0) { path = path.append(installed.targetDir); } return
 		 * project.getProject().findMember(path.append(ComposerConstants.
 		 * COMPOSER_JSON)); } }
 		 */

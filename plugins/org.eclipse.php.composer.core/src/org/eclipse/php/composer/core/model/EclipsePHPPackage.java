@@ -13,7 +13,6 @@
  *******************************************************************************/
 package org.eclipse.php.composer.core.model;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
@@ -21,7 +20,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.php.composer.api.ComposerPackage;
 import org.eclipse.php.composer.api.objects.Autoload;
 
-public class EclipsePHPPackage implements NamespaceResolverInterface, InstallableItem {
+public class EclipsePHPPackage implements InstallableItem {
 	private final ComposerPackage phpPackage;
 
 	private IPath path;
@@ -30,16 +29,6 @@ public class EclipsePHPPackage implements NamespaceResolverInterface, Installabl
 
 		Assert.isNotNull(phpPackage);
 		this.phpPackage = phpPackage;
-	}
-
-	@Override
-	public IPath resolve(IResource resource) {
-		IPath ns = resolve(resource, phpPackage.getAutoload());
-		if (ns == null) {
-			ns = resolve(resource, phpPackage.getAutoloadDev());
-		}
-
-		return ns;
 	}
 
 	protected IPath resolve(IResource resource, Autoload autoload) {
@@ -92,9 +81,4 @@ public class EclipsePHPPackage implements NamespaceResolverInterface, Installabl
 		return phpPackage;
 	}
 
-	@Override
-	public IPath reverseResolve(IProject project, String namespace) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

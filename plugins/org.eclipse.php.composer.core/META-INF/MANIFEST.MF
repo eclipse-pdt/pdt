@@ -16,7 +16,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.apache.commons.logging,
  org.eclipse.php.composer.api,
  org.eclipse.wst.validation,
- org.eclipse.e4.core.di.annotations
+ org.eclipse.e4.core.di.annotations,
+ javax.inject
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: 
