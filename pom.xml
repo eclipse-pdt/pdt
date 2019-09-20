@@ -214,7 +214,7 @@
 				</property>
 			</activation>
 			<properties>
-				<eclipse.name>2019-09</eclipse.name>
+				<eclipse.name>2019-12</eclipse.name>
 			</properties>
 			<modules>
 				<module>dev/org.eclipse.php.target.next</module>
@@ -246,7 +246,7 @@
 				</property>
 			</activation>
 			<properties>
-				<eclipse.name>2019-06</eclipse.name>
+				<eclipse.name>2019-09</eclipse.name>
 			</properties>
 			<modules>
 				<module>dev/org.eclipse.php.target.current</module>

@@ -130,19 +130,12 @@ public class NewWizardMenu extends BaseNewWizardMenu {
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.actions.BaseNewWizardMenu#addItems(org.eclipse.jface.
-	 * action .IContributionManager)
-	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	protected void addItems(List list) {
-		ArrayList<ActionContributionItem> shortCuts = new ArrayList<>();
+	protected void addItems(List<IContributionItem> list) {
+		List<IContributionItem> shortCuts = new ArrayList<>();
 		addShortcuts(shortCuts);
 
-		for (Iterator<ActionContributionItem> iterator = shortCuts.iterator(); iterator.hasNext();) {
+		for (Iterator<IContributionItem> iterator = shortCuts.iterator(); iterator.hasNext();) {
 			Object curr = iterator.next();
 			if (curr instanceof ActionContributionItem
 					&& isNewProjectWizardAction(((ActionContributionItem) curr).getAction())) {
@@ -167,10 +160,10 @@ public class NewWizardMenu extends BaseNewWizardMenu {
 		list.add(new ActionContributionItem(getShowDialogAction()));
 	}
 
-	private ArrayList<ActionContributionItem> sortShortcuts(ArrayList<ActionContributionItem> shortCuts) {
-		ArrayList<ActionContributionItem> result = new ArrayList<>();
+	private List<IContributionItem> sortShortcuts(List<IContributionItem> shortCuts) {
+		List<IContributionItem> result = new ArrayList<>();
 		for (String id : PROJECT_WIZARD_ID) {
-			for (Iterator<ActionContributionItem> iterator = shortCuts.iterator(); iterator.hasNext();) {
+			for (Iterator<IContributionItem> iterator = shortCuts.iterator(); iterator.hasNext();) {
 				Object curr = iterator.next();
 				if (curr instanceof ActionContributionItem) {
 					ActionContributionItem item = (ActionContributionItem) curr;
