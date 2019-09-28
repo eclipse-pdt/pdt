@@ -40,23 +40,14 @@ Bug 516306 - Syntax error in Heredoc
     EOF;
 ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="582">
-	<ExpressionStatement start="6" end="578">
-		<Quote start="6" end="577" type="heredoc">
-			<Scalar start="295" end="574" type="string" value="
-{
-class Pearlike_WithComments
-{
-public static $loaded = true;
-}
-}
-namespace {require __DIR__.&apos;/Fixtures/Namespaced/WithDirMagic.php&apos;;}
-namespace {require __DIR__.&apos;/Fixtures/Namespaced/WithFileMagic.php&apos;;}
-namespace {require __DIR__.&apos;/Fixtures/Namespaced/WithHaltCompiler.php&apos;;}
-">
+<ModuleDeclaration start="0" end="770">
+	<ExpressionStatement start="6" end="766">
+		<Quote start="6" end="765" type="nowdoc">
+			<Scalar start="694" end="762" type="string" value=" {require __DIR__.&apos;/Fixtures/Namespaced/WithHaltCompiler.php&apos;;}
+    ">
 			</Scalar>
 		</Quote>
 	</ExpressionStatement>
-	<EmptyStatement start="579" end="581">
+	<EmptyStatement start="767" end="769">
 	</EmptyStatement>
 </ModuleDeclaration>

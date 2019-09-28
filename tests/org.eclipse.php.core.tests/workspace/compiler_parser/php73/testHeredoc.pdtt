@@ -9,7 +9,7 @@ Heredoc;
 <ModuleDeclaration start="0" end="55">
 	<ExpressionStatement start="6" end="51">
 		<Quote start="6" end="50" type="heredoc">
-			<Scalar start="17" end="43" type="string" value="  This is here documents 
+			<Scalar start="23" end="43" type="string" value=" is here documents 
 ">
 			</Scalar>
 		</Quote>

@@ -88,14 +88,14 @@ public class CompilerParserTests {
 				new String[] { "/workspace/compiler_parser/php53", "/workspace/compiler_parser/php54",
 						"/workspace/compiler_parser/php55", "/workspace/compiler_parser/php56",
 						"/workspace/compiler_parser/php7", "/workspace/compiler_parser/php71",
-						"/workspace/compiler_parser/php72", "/workspace/compiler_parser/php53/php73",
-						"/workspace/compiler_parser/php53/phplowerthan74" });
+						"/workspace/compiler_parser/php72", "/workspace/compiler_parser/php73",
+						"/workspace/compiler_parser/php53/php73", "/workspace/compiler_parser/php53/phplowerthan74" });
 		TESTS.put(PHPVersion.PHP7_4,
 				new String[] { "/workspace/compiler_parser/php53", "/workspace/compiler_parser/php54",
 						"/workspace/compiler_parser/php55", "/workspace/compiler_parser/php56",
 						"/workspace/compiler_parser/php7", "/workspace/compiler_parser/php71",
-						"/workspace/compiler_parser/php72", "/workspace/compiler_parser/php53/php73",
-						"/workspace/compiler_parser/php53/php74" });
+						"/workspace/compiler_parser/php72", "/workspace/compiler_parser/php73",
+						"/workspace/compiler_parser/php53/php73", "/workspace/compiler_parser/php53/php74" });
 	};
 
 	private AbstractPHPSourceParser parser;
