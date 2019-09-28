@@ -21,3 +21,21 @@ Test Quote With Curly
 	<EmptyStatement start="41" end="43">
 	</EmptyStatement>
 </ModuleDeclaration>
+
+ACTUAL:
+--------------
+<ModuleDeclaration start="0" end="52">
+	<ExpressionStatement start="6" end="48">
+		<Assignment start="6" end="47" operator="=">
+			<VariableReference start="6" end="11" name="$text">
+			</VariableReference>
+			<Quote start="14" end="47" type="heredoc">
+				<Scalar start="29" end="44" type="string" value="{test}test
+    ">
+				</Scalar>
+			</Quote>
+		</Assignment>
+	</ExpressionStatement>
+	<EmptyStatement start="49" end="51">
+	</EmptyStatement>
+</ModuleDeclaration>

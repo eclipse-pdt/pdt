@@ -6,14 +6,14 @@ Test Heredoc
     Heredoc;
 ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="55">
-	<ExpressionStatement start="6" end="51">
-		<Quote start="6" end="50" type="heredoc">
-			<Scalar start="17" end="43" type="string" value="  This is here documents 
-">
+<ModuleDeclaration start="0" end="63">
+	<ExpressionStatement start="6" end="59">
+		<Quote start="6" end="58" type="heredoc">
+			<Scalar start="27" end="51" type="string" value=" is here documents 
+    ">
 			</Scalar>
 		</Quote>
 	</ExpressionStatement>
-	<EmptyStatement start="52" end="54">
+	<EmptyStatement start="60" end="62">
 	</EmptyStatement>
 </ModuleDeclaration>

@@ -1,0 +1,282 @@
+--TEST--
+Bug 551434 - false syntax error for Heredoc/Nowdoc expressions
+--FILE--
+<?php
+class nowdocDemo {
+    
+    const EXAMPLE_1 = <<< 'NOWDOC'
+Example string literal #1
+    
+-
+NOWDOC;
+    
+    const EXAMPLE_2 = <<< 'NOWDOC'
+Example string literal #2
+    
+-
+NOWDOC;
+    
+    const EXAMPLE_3 = <<< 'NOWDOC'
+Example string literal #3
+    
+=
+NOWDOC;
+    
+    const EXAMPLE_4 = <<< 'NOWDOC'
+Example string literal #4
+    
+-
+NOWDOC;
+    
+    const EXAMPLE_5 = <<< "NOWDOC"
+Example string literal #5
+
+-
+NOWDOC;
+    
+    const EXAMPLE_6 = <<< 'NOWDOC'
+Example string literal #6
+    
+-
+NOWDOC;
+    
+    const EXAMPLE_7 = <<< 'NOWDOC'
+Example string literal #7
+Another line with some content
+Yet another line with some content
+Another
+    
+-
+NOWDOC;
+    
+    const EXAMPLE_8 = <<< 'NOWDOC'
+Example string literal #8
+    
+- Content after the special char
+NOWDOC;
+    
+    public $example9 = <<< 'NOWDOC'
+Example string literal #9
+    
+-
+NOWDOC;
+    
+    public function __construct() {
+        
+        $example10 = <<< 'NOWDOC'
+Example string literal #10
+    
+-
+NOWDOC;
+        
+        var_dump(
+            <<< 'NOWDOC'
+Example string literal #11
+            
+-
+NOWDOC
+            );
+        
+        <<< 'NOWDOC'
+Example string literal
+    
+-
+NOWDOC  && 1;
+    }
+}
+?>
+--EXPECT--
+<Program start='0' length='1182'>
+	<Statements>
+		<ClassDeclaration start='6' length='1173' modifier=''>
+			<ClassName>
+				<Identifier start='12' length='10' name='nowdocDemo'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='23' length='1156' isCurly='true'>
+				<ConstantDeclaration start='34' length='71' modifier=''>
+					<VariableName>
+						<Identifier start='40' length='9' name='EXAMPLE_1'/>
+					</VariableName>
+					<InitialValue>
+						<Quote start='52' length='52' type='nowdoc'>
+							<Scalar start='72' length='26' type='string' value=' string literal #1
+    
+-
+'/>
+						</Quote>
+					</InitialValue>
+				</ConstantDeclaration>
+				<ConstantDeclaration start='115' length='71' modifier=''>
+					<VariableName>
+						<Identifier start='121' length='9' name='EXAMPLE_2'/>
+					</VariableName>
+					<InitialValue>
+						<Quote start='133' length='52' type='nowdoc'>
+							<Scalar start='153' length='26' type='string' value=' string literal #2
+    
+-
+'/>
+						</Quote>
+					</InitialValue>
+				</ConstantDeclaration>
+				<ConstantDeclaration start='196' length='71' modifier=''>
+					<VariableName>
+						<Identifier start='202' length='9' name='EXAMPLE_3'/>
+					</VariableName>
+					<InitialValue>
+						<Quote start='214' length='52' type='nowdoc'>
+							<Scalar start='234' length='26' type='string' value=' string literal #3
+    
+=
+'/>
+						</Quote>
+					</InitialValue>
+				</ConstantDeclaration>
+				<ConstantDeclaration start='277' length='71' modifier=''>
+					<VariableName>
+						<Identifier start='283' length='9' name='EXAMPLE_4'/>
+					</VariableName>
+					<InitialValue>
+						<Quote start='295' length='52' type='nowdoc'>
+							<Scalar start='315' length='26' type='string' value=' string literal #4
+    
+-
+'/>
+						</Quote>
+					</InitialValue>
+				</ConstantDeclaration>
+				<ConstantDeclaration start='358' length='67' modifier=''>
+					<VariableName>
+						<Identifier start='364' length='9' name='EXAMPLE_5'/>
+					</VariableName>
+					<InitialValue>
+						<Quote start='376' length='48' type='heredoc'>
+							<Scalar start='396' length='22' type='string' value=' string literal #5
+-
+'/>
+						</Quote>
+					</InitialValue>
+				</ConstantDeclaration>
+				<ConstantDeclaration start='435' length='71' modifier=''>
+					<VariableName>
+						<Identifier start='441' length='9' name='EXAMPLE_6'/>
+					</VariableName>
+					<InitialValue>
+						<Quote start='453' length='52' type='nowdoc'>
+							<Scalar start='473' length='26' type='string' value=' string literal #6
+    
+-
+'/>
+						</Quote>
+					</InitialValue>
+				</ConstantDeclaration>
+				<ConstantDeclaration start='516' length='145' modifier=''>
+					<VariableName>
+						<Identifier start='522' length='9' name='EXAMPLE_7'/>
+					</VariableName>
+					<InitialValue>
+						<Quote start='534' length='126' type='nowdoc'>
+							<Scalar start='646' length='8' type='string' value='
+    
+-
+'/>
+						</Quote>
+					</InitialValue>
+				</ConstantDeclaration>
+				<ConstantDeclaration start='671' length='102' modifier=''>
+					<VariableName>
+						<Identifier start='677' length='9' name='EXAMPLE_8'/>
+					</VariableName>
+					<InitialValue>
+						<Quote start='689' length='83' type='nowdoc'>
+							<Scalar start='709' length='57' type='string' value=' string literal #8
+    
+- Content after the special char
+'/>
+						</Quote>
+					</InitialValue>
+				</ConstantDeclaration>
+				<FieldsDeclaration start='783' length='72' modifier='public'>
+					<Type>
+					</Type>
+					<VariableName>
+						<Variable start='790' length='9' isDollared='true'>
+							<Identifier start='791' length='8' name='example9'/>
+						</Variable>
+					</VariableName>
+					<InitialValue>
+						<Quote start='802' length='52' type='nowdoc'>
+							<Scalar start='822' length='26' type='string' value=' string literal #9
+    
+-
+'/>
+						</Quote>
+					</InitialValue>
+				</FieldsDeclaration>
+				<MethodDeclaration start='865' length='312' modifier='public'>
+					<FunctionDeclaration start='872' length='305' isReference='false'>
+						<FunctionName>
+							<Identifier start='881' length='11' name='__construct'/>
+						</FunctionName>
+						<FormalParameters>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='895' length='282' isCurly='true'>
+								<ExpressionStatement start='914' length='67'>
+									<Assignment start='914' length='66' operator='='>
+										<Variable start='914' length='10' isDollared='true'>
+											<Identifier start='915' length='9' name='example10'/>
+										</Variable>
+										<Value>
+											<Quote start='927' length='53' type='nowdoc'>
+												<Scalar start='947' length='27' type='string' value=' string literal #10
+    
+-
+'/>
+											</Quote>
+										</Value>
+									</Assignment>
+								</ExpressionStatement>
+								<ExpressionStatement start='999' length='98'>
+									<FunctionInvocation start='999' length='97'>
+										<FunctionName start='999' length='8'>
+											<NamespaceName start='999' length='8' global='false' current='false'>
+												<Identifier start='999' length='8' name='var_dump'/>
+											</NamespaceName>
+										</FunctionName>
+										<Parameters>
+											<Quote start='1021' length='61' type='nowdoc'>
+												<Scalar start='1041' length='35' type='string' value=' string literal #11
+            
+-
+'/>
+											</Quote>
+										</Parameters>
+									</FunctionInvocation>
+								</ExpressionStatement>
+								<ExpressionStatement start='1115' length='56'>
+									<InfixExpression start='1115' length='55' operator='&amp;&amp;'>
+										<Quote start='1115' length='49' type='nowdoc'>
+											<Scalar start='1135' length='23' type='string' value=' string literal
+    
+-
+'/>
+										</Quote>
+										<Scalar start='1169' length='1' type='int' value='1'/>
+									</InfixExpression>
+								</ExpressionStatement>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</ClassDeclaration>
+		<EmptyStatement start='1180' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>
