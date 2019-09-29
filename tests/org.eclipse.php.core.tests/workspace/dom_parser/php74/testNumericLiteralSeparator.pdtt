@@ -1,0 +1,75 @@
+--TEST--
+Bug 551301 - PHP 7.4 Support
+--FILE--
+<?php
+$threshold = 1_000_000_000; // a billion!
+$testValue = 107_925_284.88; // scale is hundreds of millions
+$discount = 135_00; // $135, stored as cents
+
+6.674_083e-11; // float
+299_792_458; // decimal
+0xCAFE_F00D; // hexadecimal
+0b0101_1111; // binary
+0137_041; // octal
+?>
+--EXPECT--
+<Program start='0' length='276'>
+	<Statements>
+		<ExpressionStatement start='6' length='27'>
+			<Assignment start='6' length='26' operator='='>
+				<Variable start='6' length='10' isDollared='true'>
+					<Identifier start='7' length='9' name='threshold'/>
+				</Variable>
+				<Value>
+					<Scalar start='19' length='13' type='int' value='1_000_000_000'/>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='48' length='28'>
+			<Assignment start='48' length='27' operator='='>
+				<Variable start='48' length='10' isDollared='true'>
+					<Identifier start='49' length='9' name='testValue'/>
+				</Variable>
+				<Value>
+					<Scalar start='61' length='14' type='real' value='107_925_284.88'/>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='110' length='19'>
+			<Assignment start='110' length='18' operator='='>
+				<Variable start='110' length='9' isDollared='true'>
+					<Identifier start='111' length='8' name='discount'/>
+				</Variable>
+				<Value>
+					<Scalar start='122' length='6' type='int' value='135_00'/>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='156' length='14'>
+			<Scalar start='156' length='13' type='real' value='6.674_083e-11'/>
+		</ExpressionStatement>
+		<ExpressionStatement start='180' length='12'>
+			<Scalar start='180' length='11' type='int' value='299_792_458'/>
+		</ExpressionStatement>
+		<ExpressionStatement start='204' length='12'>
+			<Scalar start='204' length='11' type='real' value='0xCAFE_F00D'/>
+		</ExpressionStatement>
+		<ExpressionStatement start='232' length='12'>
+			<Scalar start='232' length='11' type='bin' value='0b0101_1111'/>
+		</ExpressionStatement>
+		<ExpressionStatement start='255' length='9'>
+			<Scalar start='255' length='8' type='int' value='0137_041'/>
+		</ExpressionStatement>
+		<EmptyStatement start='274' length='2'/>
+	</Statements>
+	<Comments>
+		<Comment start='34' length='14' commentType='singleLine'/>
+		<Comment start='77' length='33' commentType='singleLine'/>
+		<Comment start='130' length='25' commentType='singleLine'/>
+		<Comment start='171' length='9' commentType='singleLine'/>
+		<Comment start='193' length='11' commentType='singleLine'/>
+		<Comment start='217' length='15' commentType='singleLine'/>
+		<Comment start='245' length='10' commentType='singleLine'/>
+		<Comment start='265' length='9' commentType='singleLine'/>
+	</Comments>
+</Program>

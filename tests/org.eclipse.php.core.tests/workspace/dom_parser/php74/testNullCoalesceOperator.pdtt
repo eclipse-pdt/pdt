@@ -1,0 +1,24 @@
+--TEST--
+Bug 551301 - PHP 7.4 Support
+--FILE--
+<?php
+$a ??= 'value';
+?>
+--EXPECT--
+<Program start='0' length='24'>
+	<Statements>
+		<ExpressionStatement start='6' length='15'>
+			<Assignment start='6' length='14' operator='??='>
+				<Variable start='6' length='2' isDollared='true'>
+					<Identifier start='7' length='1' name='a'/>
+				</Variable>
+				<Value>
+					<Scalar start='13' length='7' type='string' value='&apos;value&apos;'/>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<EmptyStatement start='22' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

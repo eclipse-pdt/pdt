@@ -1,0 +1,345 @@
+--TEST--
+Bug 551301 - PHP 7.4 Support
+--FILE--
+<?php
+
+class User
+{
+
+    public int $id;
+
+    public string $name;
+
+    public function __construct(int $id, string $name)
+    {
+        $this->id = $id;
+        $this->name = $name;
+    }
+}
+
+class Example
+{
+
+    // All types with the exception of "void" and "callable" are supported
+    public int $scalarType;
+
+    protected User $classType;
+
+    private ?User $nullableClassType;
+
+    // Types are also legal on static properties
+    public static iterable $staticProp;
+
+    // Types can also be used with the "var" notation
+    var bool $flag;
+
+    // Typed properties may have default values (more below)
+    public string $str = "foo";
+
+    public ?string $nullableStr = null;
+
+    // The type applies to all properties in one declaration
+    public float $x, $y;
+
+    // equivalent to:
+    public float $x;
+
+    public float $y;
+}
+?>
+--EXPECT--
+<Program start='0' length='840'>
+	<Statements>
+		<ClassDeclaration start='7' length='183' modifier=''>
+			<ClassName>
+				<Identifier start='13' length='4' name='User'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='18' length='172' isCurly='true'>
+				<FieldsDeclaration start='25' length='15' modifier='public'>
+					<Type>
+						<NamespaceName start='32' length='3' global='false' current='false'>
+							<Identifier start='32' length='3' name='int'/>
+						</NamespaceName>
+					</Type>
+					<VariableName>
+						<Variable start='36' length='3' isDollared='true'>
+							<Identifier start='37' length='2' name='id'/>
+						</Variable>
+					</VariableName>
+					<InitialValue>
+					</InitialValue>
+				</FieldsDeclaration>
+				<FieldsDeclaration start='46' length='20' modifier='public'>
+					<Type>
+						<NamespaceName start='53' length='6' global='false' current='false'>
+							<Identifier start='53' length='6' name='string'/>
+						</NamespaceName>
+					</Type>
+					<VariableName>
+						<Variable start='60' length='5' isDollared='true'>
+							<Identifier start='61' length='4' name='name'/>
+						</Variable>
+					</VariableName>
+					<InitialValue>
+					</InitialValue>
+				</FieldsDeclaration>
+				<MethodDeclaration start='72' length='116' modifier='public'>
+					<FunctionDeclaration start='79' length='109' isReference='false'>
+						<FunctionName>
+							<Identifier start='88' length='11' name='__construct'/>
+						</FunctionName>
+						<FormalParameters>
+							<FormalParameter start='100' length='7' isMandatory='false'>
+								<Type>
+									<NamespaceName start='100' length='3' global='false' current='false'>
+										<Identifier start='100' length='3' name='int'/>
+									</NamespaceName>
+								</Type>
+								<ParameterName>
+									<Variable start='104' length='3' isDollared='true'>
+										<Identifier start='105' length='2' name='id'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+								</DefaultValue>
+							</FormalParameter>
+							<FormalParameter start='109' length='12' isMandatory='false'>
+								<Type>
+									<NamespaceName start='109' length='6' global='false' current='false'>
+										<Identifier start='109' length='6' name='string'/>
+									</NamespaceName>
+								</Type>
+								<ParameterName>
+									<Variable start='116' length='5' isDollared='true'>
+										<Identifier start='117' length='4' name='name'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+								</DefaultValue>
+							</FormalParameter>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='127' length='61' isCurly='true'>
+								<ExpressionStatement start='137' length='16'>
+									<Assignment start='137' length='15' operator='='>
+										<FieldAccess start='137' length='9'>
+											<Dispatcher>
+												<Variable start='137' length='5' isDollared='true'>
+													<Identifier start='138' length='4' name='this'/>
+												</Variable>
+											</Dispatcher>
+											<Property>
+												<Variable start='144' length='2' isDollared='false'>
+													<Identifier start='144' length='2' name='id'/>
+												</Variable>
+											</Property>
+										</FieldAccess>
+										<Value>
+											<Variable start='149' length='3' isDollared='true'>
+												<Identifier start='150' length='2' name='id'/>
+											</Variable>
+										</Value>
+									</Assignment>
+								</ExpressionStatement>
+								<ExpressionStatement start='162' length='20'>
+									<Assignment start='162' length='19' operator='='>
+										<FieldAccess start='162' length='11'>
+											<Dispatcher>
+												<Variable start='162' length='5' isDollared='true'>
+													<Identifier start='163' length='4' name='this'/>
+												</Variable>
+											</Dispatcher>
+											<Property>
+												<Variable start='169' length='4' isDollared='false'>
+													<Identifier start='169' length='4' name='name'/>
+												</Variable>
+											</Property>
+										</FieldAccess>
+										<Value>
+											<Variable start='176' length='5' isDollared='true'>
+												<Identifier start='177' length='4' name='name'/>
+											</Variable>
+										</Value>
+									</Assignment>
+								</ExpressionStatement>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</ClassDeclaration>
+		<ClassDeclaration start='192' length='645' modifier=''>
+			<ClassName>
+				<Identifier start='198' length='7' name='Example'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='206' length='631' isCurly='true'>
+				<FieldsDeclaration start='288' length='23' modifier='public'>
+					<Type>
+						<NamespaceName start='295' length='3' global='false' current='false'>
+							<Identifier start='295' length='3' name='int'/>
+						</NamespaceName>
+					</Type>
+					<VariableName>
+						<Variable start='299' length='11' isDollared='true'>
+							<Identifier start='300' length='10' name='scalarType'/>
+						</Variable>
+					</VariableName>
+					<InitialValue>
+					</InitialValue>
+				</FieldsDeclaration>
+				<FieldsDeclaration start='317' length='26' modifier='protected'>
+					<Type>
+						<NamespaceName start='327' length='4' global='false' current='false'>
+							<Identifier start='327' length='4' name='User'/>
+						</NamespaceName>
+					</Type>
+					<VariableName>
+						<Variable start='332' length='10' isDollared='true'>
+							<Identifier start='333' length='9' name='classType'/>
+						</Variable>
+					</VariableName>
+					<InitialValue>
+					</InitialValue>
+				</FieldsDeclaration>
+				<FieldsDeclaration start='349' length='33' modifier='private'>
+					<Type>
+						<NamespaceName start='358' length='4' global='false' current='false' nullable='true'>
+							<Identifier start='358' length='4' name='User'/>
+						</NamespaceName>
+					</Type>
+					<VariableName>
+						<Variable start='363' length='18' isDollared='true'>
+							<Identifier start='364' length='17' name='nullableClassType'/>
+						</Variable>
+					</VariableName>
+					<InitialValue>
+					</InitialValue>
+				</FieldsDeclaration>
+				<FieldsDeclaration start='437' length='35' modifier='public static'>
+					<Type>
+						<NamespaceName start='451' length='8' global='false' current='false'>
+							<Identifier start='451' length='8' name='iterable'/>
+						</NamespaceName>
+					</Type>
+					<VariableName>
+						<Variable start='460' length='11' isDollared='true'>
+							<Identifier start='461' length='10' name='staticProp'/>
+						</Variable>
+					</VariableName>
+					<InitialValue>
+					</InitialValue>
+				</FieldsDeclaration>
+				<FieldsDeclaration start='532' length='15' modifier='public'>
+					<Type>
+						<NamespaceName start='536' length='4' global='false' current='false'>
+							<Identifier start='536' length='4' name='bool'/>
+						</NamespaceName>
+					</Type>
+					<VariableName>
+						<Variable start='541' length='5' isDollared='true'>
+							<Identifier start='542' length='4' name='flag'/>
+						</Variable>
+					</VariableName>
+					<InitialValue>
+					</InitialValue>
+				</FieldsDeclaration>
+				<FieldsDeclaration start='614' length='27' modifier='public'>
+					<Type>
+						<NamespaceName start='621' length='6' global='false' current='false'>
+							<Identifier start='621' length='6' name='string'/>
+						</NamespaceName>
+					</Type>
+					<VariableName>
+						<Variable start='628' length='4' isDollared='true'>
+							<Identifier start='629' length='3' name='str'/>
+						</Variable>
+					</VariableName>
+					<InitialValue>
+						<Scalar start='635' length='5' type='string' value='"foo"'/>
+					</InitialValue>
+				</FieldsDeclaration>
+				<FieldsDeclaration start='647' length='35' modifier='public'>
+					<Type>
+						<NamespaceName start='655' length='6' global='false' current='false' nullable='true'>
+							<Identifier start='655' length='6' name='string'/>
+						</NamespaceName>
+					</Type>
+					<VariableName>
+						<Variable start='662' length='12' isDollared='true'>
+							<Identifier start='663' length='11' name='nullableStr'/>
+						</Variable>
+					</VariableName>
+					<InitialValue>
+						<Scalar start='677' length='4' type='string' value='null'/>
+					</InitialValue>
+				</FieldsDeclaration>
+				<FieldsDeclaration start='749' length='20' modifier='public'>
+					<Type>
+						<NamespaceName start='756' length='5' global='false' current='false'>
+							<Identifier start='756' length='5' name='float'/>
+						</NamespaceName>
+					</Type>
+					<VariableName>
+						<Variable start='762' length='2' isDollared='true'>
+							<Identifier start='763' length='1' name='x'/>
+						</Variable>
+					</VariableName>
+					<InitialValue>
+					</InitialValue>
+					<VariableName>
+						<Variable start='766' length='2' isDollared='true'>
+							<Identifier start='767' length='1' name='y'/>
+						</Variable>
+					</VariableName>
+					<InitialValue>
+					</InitialValue>
+				</FieldsDeclaration>
+				<FieldsDeclaration start='797' length='16' modifier='public'>
+					<Type>
+						<NamespaceName start='804' length='5' global='false' current='false'>
+							<Identifier start='804' length='5' name='float'/>
+						</NamespaceName>
+					</Type>
+					<VariableName>
+						<Variable start='810' length='2' isDollared='true'>
+							<Identifier start='811' length='1' name='x'/>
+						</Variable>
+					</VariableName>
+					<InitialValue>
+					</InitialValue>
+				</FieldsDeclaration>
+				<FieldsDeclaration start='819' length='16' modifier='public'>
+					<Type>
+						<NamespaceName start='826' length='5' global='false' current='false'>
+							<Identifier start='826' length='5' name='float'/>
+						</NamespaceName>
+					</Type>
+					<VariableName>
+						<Variable start='832' length='2' isDollared='true'>
+							<Identifier start='833' length='1' name='y'/>
+						</Variable>
+					</VariableName>
+					<InitialValue>
+					</InitialValue>
+				</FieldsDeclaration>
+			</Block>
+		</ClassDeclaration>
+		<EmptyStatement start='838' length='2'/>
+	</Statements>
+	<Comments>
+		<Comment start='213' length='71' commentType='singleLine'/>
+		<Comment start='388' length='45' commentType='singleLine'/>
+		<Comment start='478' length='50' commentType='singleLine'/>
+		<Comment start='553' length='57' commentType='singleLine'/>
+		<Comment start='688' length='57' commentType='singleLine'/>
+		<Comment start='775' length='18' commentType='singleLine'/>
+	</Comments>
+</Program>

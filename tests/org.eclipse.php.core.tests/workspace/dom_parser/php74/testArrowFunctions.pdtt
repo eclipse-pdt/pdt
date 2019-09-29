@@ -1,0 +1,614 @@
+--TEST--
+Bug 551301 - PHP 7.4 Support
+--FILE--
+<?php
+$y = 1;
+
+$fn1 = fn ($x) => $x + $y;
+
+$fn2 = function ($x) use ($y) {
+    return $x + $y;
+};
+
+$z = 1;
+$fn = fn ($x) => fn ($y) => $x * $y + $z;
+
+fn (array $x) => $x;
+fn (): int => $x;
+fn ($x = 42) => $x;
+fn (&$x) => $x;
+fn &($x) => $x;
+fn ($x, ...$rest) => $rest;
+
+class Test
+{
+
+    public function method()
+    {
+        $fn = fn () => var_dump($this);
+        $fn(); // object(Test)#1 { ... }
+
+        $fn = static fn () => var_dump($this);
+        $fn(); // Error: Using $this when not in object context
+    }
+}
+
+$fn = fn () => $undef;
+$fn();
+
+fn ($x) => $x + $y;
+
+fn ($x) => ($x + $y);
+
+(fn ($x) => $x) + $y;
+
+$extended = fn ($c) => $callable($factory($c), $c);
+?>
+--EXPECT--
+<Program start='0' length='673'>
+	<Statements>
+		<ExpressionStatement start='6' length='7'>
+			<Assignment start='6' length='6' operator='='>
+				<Variable start='6' length='2' isDollared='true'>
+					<Identifier start='7' length='1' name='y'/>
+				</Variable>
+				<Value>
+					<Scalar start='11' length='1' type='int' value='1'/>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='15' length='26'>
+			<Assignment start='15' length='25' operator='='>
+				<Variable start='15' length='4' isDollared='true'>
+					<Identifier start='16' length='3' name='fn1'/>
+				</Variable>
+				<Value>
+					<ArrowFunctionDeclaration start='22' length='18' isReference='false'>
+						<FormalParameters>
+							<FormalParameter start='26' length='2' isMandatory='false'>
+								<Type>
+								</Type>
+								<ParameterName>
+									<Variable start='26' length='2' isDollared='true'>
+										<Identifier start='27' length='1' name='x'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+								</DefaultValue>
+							</FormalParameter>
+						</FormalParameters>
+						<FunctionBody>
+							<InfixExpression start='33' length='7' operator='+'>
+								<Variable start='33' length='2' isDollared='true'>
+									<Identifier start='34' length='1' name='x'/>
+								</Variable>
+								<Variable start='38' length='2' isDollared='true'>
+									<Identifier start='39' length='1' name='y'/>
+								</Variable>
+							</InfixExpression>
+						</FunctionBody>
+					</ArrowFunctionDeclaration>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='43' length='54'>
+			<Assignment start='43' length='53' operator='='>
+				<Variable start='43' length='4' isDollared='true'>
+					<Identifier start='44' length='3' name='fn2'/>
+				</Variable>
+				<Value>
+					<LambdaFunctionDeclaration start='50' length='46' isReference='false'>
+						<FormalParameters>
+							<FormalParameter start='60' length='2' isMandatory='false'>
+								<Type>
+								</Type>
+								<ParameterName>
+									<Variable start='60' length='2' isDollared='true'>
+										<Identifier start='61' length='1' name='x'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+								</DefaultValue>
+							</FormalParameter>
+						</FormalParameters>
+						<LexicalVariables>
+							<Variable start='69' length='2' isDollared='true'>
+								<Identifier start='70' length='1' name='y'/>
+							</Variable>
+						</LexicalVariables>
+						<FunctionBody>
+							<Block start='73' length='23' isCurly='true'>
+								<ReturnStatement start='79' length='15'>
+									<InfixExpression start='86' length='7' operator='+'>
+										<Variable start='86' length='2' isDollared='true'>
+											<Identifier start='87' length='1' name='x'/>
+										</Variable>
+										<Variable start='91' length='2' isDollared='true'>
+											<Identifier start='92' length='1' name='y'/>
+										</Variable>
+									</InfixExpression>
+								</ReturnStatement>
+							</Block>
+						</FunctionBody>
+					</LambdaFunctionDeclaration>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='99' length='7'>
+			<Assignment start='99' length='6' operator='='>
+				<Variable start='99' length='2' isDollared='true'>
+					<Identifier start='100' length='1' name='z'/>
+				</Variable>
+				<Value>
+					<Scalar start='104' length='1' type='int' value='1'/>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='107' length='41'>
+			<Assignment start='107' length='40' operator='='>
+				<Variable start='107' length='3' isDollared='true'>
+					<Identifier start='108' length='2' name='fn'/>
+				</Variable>
+				<Value>
+					<ArrowFunctionDeclaration start='113' length='34' isReference='false'>
+						<FormalParameters>
+							<FormalParameter start='117' length='2' isMandatory='false'>
+								<Type>
+								</Type>
+								<ParameterName>
+									<Variable start='117' length='2' isDollared='true'>
+										<Identifier start='118' length='1' name='x'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+								</DefaultValue>
+							</FormalParameter>
+						</FormalParameters>
+						<FunctionBody>
+							<ArrowFunctionDeclaration start='124' length='23' isReference='false'>
+								<FormalParameters>
+									<FormalParameter start='128' length='2' isMandatory='false'>
+										<Type>
+										</Type>
+										<ParameterName>
+											<Variable start='128' length='2' isDollared='true'>
+												<Identifier start='129' length='1' name='y'/>
+											</Variable>
+										</ParameterName>
+										<DefaultValue>
+										</DefaultValue>
+									</FormalParameter>
+								</FormalParameters>
+								<FunctionBody>
+									<InfixExpression start='135' length='12' operator='+'>
+										<InfixExpression start='135' length='7' operator='*'>
+											<Variable start='135' length='2' isDollared='true'>
+												<Identifier start='136' length='1' name='x'/>
+											</Variable>
+											<Variable start='140' length='2' isDollared='true'>
+												<Identifier start='141' length='1' name='y'/>
+											</Variable>
+										</InfixExpression>
+										<Variable start='145' length='2' isDollared='true'>
+											<Identifier start='146' length='1' name='z'/>
+										</Variable>
+									</InfixExpression>
+								</FunctionBody>
+							</ArrowFunctionDeclaration>
+						</FunctionBody>
+					</ArrowFunctionDeclaration>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='150' length='20'>
+			<ArrowFunctionDeclaration start='150' length='19' isReference='false'>
+				<FormalParameters>
+					<FormalParameter start='154' length='8' isMandatory='false'>
+						<Type>
+							<Identifier start='154' length='5' name='array'/>
+						</Type>
+						<ParameterName>
+							<Variable start='160' length='2' isDollared='true'>
+								<Identifier start='161' length='1' name='x'/>
+							</Variable>
+						</ParameterName>
+						<DefaultValue>
+						</DefaultValue>
+					</FormalParameter>
+				</FormalParameters>
+				<FunctionBody>
+					<Variable start='167' length='2' isDollared='true'>
+						<Identifier start='168' length='1' name='x'/>
+					</Variable>
+				</FunctionBody>
+			</ArrowFunctionDeclaration>
+		</ExpressionStatement>
+		<ExpressionStatement start='171' length='17'>
+			<ArrowFunctionDeclaration start='171' length='16' isReference='false'>
+				<FormalParameters>
+				</FormalParameters>
+				<ReturnType>
+					<NamespaceName start='178' length='3' global='false' current='false'>
+						<Identifier start='178' length='3' name='int'/>
+					</NamespaceName>
+				</ReturnType>
+				<FunctionBody>
+					<Variable start='185' length='2' isDollared='true'>
+						<Identifier start='186' length='1' name='x'/>
+					</Variable>
+				</FunctionBody>
+			</ArrowFunctionDeclaration>
+		</ExpressionStatement>
+		<ExpressionStatement start='189' length='19'>
+			<ArrowFunctionDeclaration start='189' length='18' isReference='false'>
+				<FormalParameters>
+					<FormalParameter start='193' length='7' isMandatory='false'>
+						<Type>
+						</Type>
+						<ParameterName>
+							<Variable start='193' length='2' isDollared='true'>
+								<Identifier start='194' length='1' name='x'/>
+							</Variable>
+						</ParameterName>
+						<DefaultValue>
+							<Scalar start='198' length='2' type='int' value='42'/>
+						</DefaultValue>
+					</FormalParameter>
+				</FormalParameters>
+				<FunctionBody>
+					<Variable start='205' length='2' isDollared='true'>
+						<Identifier start='206' length='1' name='x'/>
+					</Variable>
+				</FunctionBody>
+			</ArrowFunctionDeclaration>
+		</ExpressionStatement>
+		<ExpressionStatement start='209' length='15'>
+			<ArrowFunctionDeclaration start='209' length='14' isReference='false'>
+				<FormalParameters>
+					<FormalParameter start='213' length='3' isMandatory='false'>
+						<Type>
+						</Type>
+						<ParameterName>
+							<Reference start='213' length='3'>
+								<Variable start='214' length='2' isDollared='true'>
+									<Identifier start='215' length='1' name='x'/>
+								</Variable>
+							</Reference>
+						</ParameterName>
+						<DefaultValue>
+						</DefaultValue>
+					</FormalParameter>
+				</FormalParameters>
+				<FunctionBody>
+					<Variable start='221' length='2' isDollared='true'>
+						<Identifier start='222' length='1' name='x'/>
+					</Variable>
+				</FunctionBody>
+			</ArrowFunctionDeclaration>
+		</ExpressionStatement>
+		<ExpressionStatement start='225' length='15'>
+			<ArrowFunctionDeclaration start='225' length='14' isReference='true'>
+				<FormalParameters>
+					<FormalParameter start='230' length='2' isMandatory='false'>
+						<Type>
+						</Type>
+						<ParameterName>
+							<Variable start='230' length='2' isDollared='true'>
+								<Identifier start='231' length='1' name='x'/>
+							</Variable>
+						</ParameterName>
+						<DefaultValue>
+						</DefaultValue>
+					</FormalParameter>
+				</FormalParameters>
+				<FunctionBody>
+					<Variable start='237' length='2' isDollared='true'>
+						<Identifier start='238' length='1' name='x'/>
+					</Variable>
+				</FunctionBody>
+			</ArrowFunctionDeclaration>
+		</ExpressionStatement>
+		<ExpressionStatement start='241' length='27'>
+			<ArrowFunctionDeclaration start='241' length='26' isReference='false'>
+				<FormalParameters>
+					<FormalParameter start='245' length='2' isMandatory='false'>
+						<Type>
+						</Type>
+						<ParameterName>
+							<Variable start='245' length='2' isDollared='true'>
+								<Identifier start='246' length='1' name='x'/>
+							</Variable>
+						</ParameterName>
+						<DefaultValue>
+						</DefaultValue>
+					</FormalParameter>
+					<FormalParameter start='252' length='5' isMandatory='false isVariadic='true'>
+						<Type>
+						</Type>
+						<ParameterName>
+							<Variable start='252' length='5' isDollared='true'>
+								<Identifier start='253' length='4' name='rest'/>
+							</Variable>
+						</ParameterName>
+						<DefaultValue>
+						</DefaultValue>
+					</FormalParameter>
+				</FormalParameters>
+				<FunctionBody>
+					<Variable start='262' length='5' isDollared='true'>
+						<Identifier start='263' length='4' name='rest'/>
+					</Variable>
+				</FunctionBody>
+			</ArrowFunctionDeclaration>
+		</ExpressionStatement>
+		<ClassDeclaration start='270' length='249' modifier=''>
+			<ClassName>
+				<Identifier start='276' length='4' name='Test'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='281' length='238' isCurly='true'>
+				<MethodDeclaration start='288' length='229' modifier='public'>
+					<FunctionDeclaration start='295' length='222' isReference='false'>
+						<FunctionName>
+							<Identifier start='304' length='6' name='method'/>
+						</FunctionName>
+						<FormalParameters>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='317' length='200' isCurly='true'>
+								<ExpressionStatement start='327' length='31'>
+									<Assignment start='327' length='30' operator='='>
+										<Variable start='327' length='3' isDollared='true'>
+											<Identifier start='328' length='2' name='fn'/>
+										</Variable>
+										<Value>
+											<ArrowFunctionDeclaration start='333' length='24' isReference='false'>
+												<FormalParameters>
+												</FormalParameters>
+												<FunctionBody>
+													<FunctionInvocation start='342' length='15'>
+														<FunctionName start='342' length='8'>
+															<NamespaceName start='342' length='8' global='false' current='false'>
+																<Identifier start='342' length='8' name='var_dump'/>
+															</NamespaceName>
+														</FunctionName>
+														<Parameters>
+															<Variable start='351' length='5' isDollared='true'>
+																<Identifier start='352' length='4' name='this'/>
+															</Variable>
+														</Parameters>
+													</FunctionInvocation>
+												</FunctionBody>
+											</ArrowFunctionDeclaration>
+										</Value>
+									</Assignment>
+								</ExpressionStatement>
+								<ExpressionStatement start='367' length='6'>
+									<FunctionInvocation start='367' length='5'>
+										<FunctionName start='367' length='3'>
+											<Variable start='367' length='3' isDollared='true'>
+												<Identifier start='368' length='2' name='fn'/>
+											</Variable>
+										</FunctionName>
+										<Parameters>
+										</Parameters>
+									</FunctionInvocation>
+								</ExpressionStatement>
+								<ExpressionStatement start='409' length='38'>
+									<Assignment start='409' length='37' operator='='>
+										<Variable start='409' length='3' isDollared='true'>
+											<Identifier start='410' length='2' name='fn'/>
+										</Variable>
+										<Value>
+											<ArrowFunctionDeclaration start='422' length='24' isReference='false isStatic='true'>
+												<FormalParameters>
+												</FormalParameters>
+												<FunctionBody>
+													<FunctionInvocation start='431' length='15'>
+														<FunctionName start='431' length='8'>
+															<NamespaceName start='431' length='8' global='false' current='false'>
+																<Identifier start='431' length='8' name='var_dump'/>
+															</NamespaceName>
+														</FunctionName>
+														<Parameters>
+															<Variable start='440' length='5' isDollared='true'>
+																<Identifier start='441' length='4' name='this'/>
+															</Variable>
+														</Parameters>
+													</FunctionInvocation>
+												</FunctionBody>
+											</ArrowFunctionDeclaration>
+										</Value>
+									</Assignment>
+								</ExpressionStatement>
+								<ExpressionStatement start='456' length='6'>
+									<FunctionInvocation start='456' length='5'>
+										<FunctionName start='456' length='3'>
+											<Variable start='456' length='3' isDollared='true'>
+												<Identifier start='457' length='2' name='fn'/>
+											</Variable>
+										</FunctionName>
+										<Parameters>
+										</Parameters>
+									</FunctionInvocation>
+								</ExpressionStatement>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</ClassDeclaration>
+		<ExpressionStatement start='521' length='22'>
+			<Assignment start='521' length='21' operator='='>
+				<Variable start='521' length='3' isDollared='true'>
+					<Identifier start='522' length='2' name='fn'/>
+				</Variable>
+				<Value>
+					<ArrowFunctionDeclaration start='527' length='15' isReference='false'>
+						<FormalParameters>
+						</FormalParameters>
+						<FunctionBody>
+							<Variable start='536' length='6' isDollared='true'>
+								<Identifier start='537' length='5' name='undef'/>
+							</Variable>
+						</FunctionBody>
+					</ArrowFunctionDeclaration>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='544' length='6'>
+			<FunctionInvocation start='544' length='5'>
+				<FunctionName start='544' length='3'>
+					<Variable start='544' length='3' isDollared='true'>
+						<Identifier start='545' length='2' name='fn'/>
+					</Variable>
+				</FunctionName>
+				<Parameters>
+				</Parameters>
+			</FunctionInvocation>
+		</ExpressionStatement>
+		<ExpressionStatement start='552' length='19'>
+			<ArrowFunctionDeclaration start='552' length='18' isReference='false'>
+				<FormalParameters>
+					<FormalParameter start='556' length='2' isMandatory='false'>
+						<Type>
+						</Type>
+						<ParameterName>
+							<Variable start='556' length='2' isDollared='true'>
+								<Identifier start='557' length='1' name='x'/>
+							</Variable>
+						</ParameterName>
+						<DefaultValue>
+						</DefaultValue>
+					</FormalParameter>
+				</FormalParameters>
+				<FunctionBody>
+					<InfixExpression start='563' length='7' operator='+'>
+						<Variable start='563' length='2' isDollared='true'>
+							<Identifier start='564' length='1' name='x'/>
+						</Variable>
+						<Variable start='568' length='2' isDollared='true'>
+							<Identifier start='569' length='1' name='y'/>
+						</Variable>
+					</InfixExpression>
+				</FunctionBody>
+			</ArrowFunctionDeclaration>
+		</ExpressionStatement>
+		<ExpressionStatement start='573' length='21'>
+			<ArrowFunctionDeclaration start='573' length='20' isReference='false'>
+				<FormalParameters>
+					<FormalParameter start='577' length='2' isMandatory='false'>
+						<Type>
+						</Type>
+						<ParameterName>
+							<Variable start='577' length='2' isDollared='true'>
+								<Identifier start='578' length='1' name='x'/>
+							</Variable>
+						</ParameterName>
+						<DefaultValue>
+						</DefaultValue>
+					</FormalParameter>
+				</FormalParameters>
+				<FunctionBody>
+					<ParenthesisExpression start='584' length='9'>
+						<InfixExpression start='585' length='7' operator='+'>
+							<Variable start='585' length='2' isDollared='true'>
+								<Identifier start='586' length='1' name='x'/>
+							</Variable>
+							<Variable start='590' length='2' isDollared='true'>
+								<Identifier start='591' length='1' name='y'/>
+							</Variable>
+						</InfixExpression>
+					</ParenthesisExpression>
+				</FunctionBody>
+			</ArrowFunctionDeclaration>
+		</ExpressionStatement>
+		<ExpressionStatement start='596' length='21'>
+			<InfixExpression start='596' length='20' operator='+'>
+				<ParenthesisExpression start='596' length='15'>
+					<ArrowFunctionDeclaration start='597' length='13' isReference='false'>
+						<FormalParameters>
+							<FormalParameter start='601' length='2' isMandatory='false'>
+								<Type>
+								</Type>
+								<ParameterName>
+									<Variable start='601' length='2' isDollared='true'>
+										<Identifier start='602' length='1' name='x'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+								</DefaultValue>
+							</FormalParameter>
+						</FormalParameters>
+						<FunctionBody>
+							<Variable start='608' length='2' isDollared='true'>
+								<Identifier start='609' length='1' name='x'/>
+							</Variable>
+						</FunctionBody>
+					</ArrowFunctionDeclaration>
+				</ParenthesisExpression>
+				<Variable start='614' length='2' isDollared='true'>
+					<Identifier start='615' length='1' name='y'/>
+				</Variable>
+			</InfixExpression>
+		</ExpressionStatement>
+		<ExpressionStatement start='619' length='51'>
+			<Assignment start='619' length='50' operator='='>
+				<Variable start='619' length='9' isDollared='true'>
+					<Identifier start='620' length='8' name='extended'/>
+				</Variable>
+				<Value>
+					<ArrowFunctionDeclaration start='631' length='38' isReference='false'>
+						<FormalParameters>
+							<FormalParameter start='635' length='2' isMandatory='false'>
+								<Type>
+								</Type>
+								<ParameterName>
+									<Variable start='635' length='2' isDollared='true'>
+										<Identifier start='636' length='1' name='c'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+								</DefaultValue>
+							</FormalParameter>
+						</FormalParameters>
+						<FunctionBody>
+							<FunctionInvocation start='642' length='27'>
+								<FunctionName start='642' length='9'>
+									<Variable start='642' length='9' isDollared='true'>
+										<Identifier start='643' length='8' name='callable'/>
+									</Variable>
+								</FunctionName>
+								<Parameters>
+									<FunctionInvocation start='652' length='12'>
+										<FunctionName start='652' length='8'>
+											<Variable start='652' length='8' isDollared='true'>
+												<Identifier start='653' length='7' name='factory'/>
+											</Variable>
+										</FunctionName>
+										<Parameters>
+											<Variable start='661' length='2' isDollared='true'>
+												<Identifier start='662' length='1' name='c'/>
+											</Variable>
+										</Parameters>
+									</FunctionInvocation>
+									<Variable start='666' length='2' isDollared='true'>
+										<Identifier start='667' length='1' name='c'/>
+									</Variable>
+								</Parameters>
+							</FunctionInvocation>
+						</FunctionBody>
+					</ArrowFunctionDeclaration>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<EmptyStatement start='671' length='2'/>
+	</Statements>
+	<Comments>
+		<Comment start='374' length='26' commentType='singleLine'/>
+		<Comment start='463' length='49' commentType='singleLine'/>
+	</Comments>
+</Program>

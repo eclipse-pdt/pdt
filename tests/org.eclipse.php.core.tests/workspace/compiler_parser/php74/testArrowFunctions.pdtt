@@ -1,0 +1,379 @@
+--TEST--
+Bug 551301 - PHP 7.4 Support
+--FILE--
+<?php
+$y = 1;
+
+$fn1 = fn ($x) => $x + $y;
+
+$fn2 = function ($x) use ($y) {
+    return $x + $y;
+};
+
+$z = 1;
+$fn = fn ($x) => fn ($y) => $x * $y + $z;
+
+fn (array $x) => $x;
+fn (): int => $x;
+fn ($x = 42) => $x;
+fn (&$x) => $x;
+fn &($x) => $x;
+fn ($x, ...$rest) => $rest;
+
+class Test
+{
+
+    public function method()
+    {
+        $fn = fn () => var_dump($this);
+        $fn(); // object(Test)#1 { ... }
+
+        $fn = static fn () => var_dump($this);
+        $fn(); // Error: Using $this when not in object context
+    }
+}
+
+$fn = fn () => $undef;
+$fn();
+
+fn ($x) => $x + $y;
+
+fn ($x) => ($x + $y);
+
+(fn ($x) => $x) + $y;
+
+$extended = fn ($c) => $callable($factory($c), $c);
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="674">
+	<ExpressionStatement start="6" end="13">
+		<Assignment start="6" end="12" operator="=">
+			<VariableReference start="6" end="8" name="$y">
+			</VariableReference>
+			<Scalar start="11" end="12" type="int" value="1">
+			</Scalar>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="15" end="41">
+		<Assignment start="15" end="40" operator="=">
+			<VariableReference start="15" end="19" name="$fn1">
+			</VariableReference>
+			<ArrowFunctionDeclaration start="22" end="40" isReference="false">
+				<Arguments>
+					<FormalParameter start="26" end="28" modifiers="" isMandatory="true">
+						<VariableReference start="26" end="28" name="$x">
+						</VariableReference>
+					</FormalParameter>
+				</Arguments>
+				<InfixExpression start="33" end="40" operator="+">
+					<VariableReference start="33" end="35" name="$x">
+					</VariableReference>
+					<VariableReference start="38" end="40" name="$y">
+					</VariableReference>
+				</InfixExpression>
+			</ArrowFunctionDeclaration>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="43" end="97">
+		<Assignment start="43" end="96" operator="=">
+			<VariableReference start="43" end="47" name="$fn2">
+			</VariableReference>
+			<LambdaFunctionDeclaration start="50" end="96" isReference="false">
+				<Arguments>
+					<FormalParameter start="60" end="62" modifiers="" isMandatory="true">
+						<VariableReference start="60" end="62" name="$x">
+						</VariableReference>
+					</FormalParameter>
+				</Arguments>
+				<LexicalVars>
+					<VariableReference start="69" end="71" name="$y">
+					</VariableReference>
+				</LexicalVars>
+				<ReturnStatement start="79" end="94">
+					<InfixExpression start="86" end="93" operator="+">
+						<VariableReference start="86" end="88" name="$x">
+						</VariableReference>
+						<VariableReference start="91" end="93" name="$y">
+						</VariableReference>
+					</InfixExpression>
+				</ReturnStatement>
+			</LambdaFunctionDeclaration>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="99" end="106">
+		<Assignment start="99" end="105" operator="=">
+			<VariableReference start="99" end="101" name="$z">
+			</VariableReference>
+			<Scalar start="104" end="105" type="int" value="1">
+			</Scalar>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="107" end="148">
+		<Assignment start="107" end="147" operator="=">
+			<VariableReference start="107" end="110" name="$fn">
+			</VariableReference>
+			<ArrowFunctionDeclaration start="113" end="147" isReference="false">
+				<Arguments>
+					<FormalParameter start="117" end="119" modifiers="" isMandatory="true">
+						<VariableReference start="117" end="119" name="$x">
+						</VariableReference>
+					</FormalParameter>
+				</Arguments>
+				<ArrowFunctionDeclaration start="124" end="147" isReference="false">
+					<Arguments>
+						<FormalParameter start="128" end="130" modifiers="" isMandatory="true">
+							<VariableReference start="128" end="130" name="$y">
+							</VariableReference>
+						</FormalParameter>
+					</Arguments>
+					<InfixExpression start="135" end="147" operator="+">
+						<InfixExpression start="135" end="142" operator="*">
+							<VariableReference start="135" end="137" name="$x">
+							</VariableReference>
+							<VariableReference start="140" end="142" name="$y">
+							</VariableReference>
+						</InfixExpression>
+						<VariableReference start="145" end="147" name="$z">
+						</VariableReference>
+					</InfixExpression>
+				</ArrowFunctionDeclaration>
+			</ArrowFunctionDeclaration>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="150" end="170">
+		<ArrowFunctionDeclaration start="150" end="169" isReference="false">
+			<Arguments>
+				<FormalParameter start="154" end="156" modifiers="" isMandatory="true" parameterType="array">
+					<FullyQualifiedReference start="154" end="159" name="array">
+					</FullyQualifiedReference>
+					<VariableReference start="160" end="162" name="$x">
+					</VariableReference>
+				</FormalParameter>
+			</Arguments>
+			<VariableReference start="167" end="169" name="$x">
+			</VariableReference>
+		</ArrowFunctionDeclaration>
+	</ExpressionStatement>
+	<ExpressionStatement start="171" end="188">
+		<ArrowFunctionDeclaration start="171" end="187" isReference="false">
+			<Arguments>
+			</Arguments>
+			<ReturnType>
+				<FullyQualifiedReference start="178" end="181" name="int">
+				</FullyQualifiedReference>
+			</ReturnType>
+			<VariableReference start="185" end="187" name="$x">
+			</VariableReference>
+		</ArrowFunctionDeclaration>
+	</ExpressionStatement>
+	<ExpressionStatement start="189" end="208">
+		<ArrowFunctionDeclaration start="189" end="207" isReference="false">
+			<Arguments>
+				<FormalParameter start="193" end="200" modifiers="" isMandatory="false">
+					<VariableReference start="193" end="195" name="$x">
+					</VariableReference>
+					<Scalar start="198" end="200" type="int" value="42">
+					</Scalar>
+				</FormalParameter>
+			</Arguments>
+			<VariableReference start="205" end="207" name="$x">
+			</VariableReference>
+		</ArrowFunctionDeclaration>
+	</ExpressionStatement>
+	<ExpressionStatement start="209" end="224">
+		<ArrowFunctionDeclaration start="209" end="223" isReference="false">
+			<Arguments>
+				<FormalParameterByReference start="213" end="215" modifiers="">
+					<VariableReference start="214" end="216" name="$x">
+					</VariableReference>
+				</FormalParameterByReference>
+			</Arguments>
+			<VariableReference start="221" end="223" name="$x">
+			</VariableReference>
+		</ArrowFunctionDeclaration>
+	</ExpressionStatement>
+	<ExpressionStatement start="225" end="240">
+		<ArrowFunctionDeclaration start="225" end="239" isReference="true">
+			<Arguments>
+				<FormalParameter start="230" end="232" modifiers="" isMandatory="true">
+					<VariableReference start="230" end="232" name="$x">
+					</VariableReference>
+				</FormalParameter>
+			</Arguments>
+			<VariableReference start="237" end="239" name="$x">
+			</VariableReference>
+		</ArrowFunctionDeclaration>
+	</ExpressionStatement>
+	<ExpressionStatement start="241" end="268">
+		<ArrowFunctionDeclaration start="241" end="267" isReference="false">
+			<Arguments>
+				<FormalParameter start="245" end="247" modifiers="" isMandatory="true">
+					<VariableReference start="245" end="247" name="$x">
+					</VariableReference>
+				</FormalParameter>
+				<FormalParameter start="252" end="257" modifiers="" isMandatory="false" isVariadic="true">
+					<VariableReference start="252" end="257" name="$rest">
+					</VariableReference>
+				</FormalParameter>
+			</Arguments>
+			<VariableReference start="262" end="267" name="$rest">
+			</VariableReference>
+		</ArrowFunctionDeclaration>
+	</ExpressionStatement>
+	<ClassDeclaration start="270" end="519" modifiers="" name="Test">
+		<PHPMethodDeclaration start="288" end="517" modifiers="public" name="method">
+			<ExpressionStatement start="327" end="358">
+				<Assignment start="327" end="357" operator="=">
+					<VariableReference start="327" end="330" name="$fn">
+					</VariableReference>
+					<ArrowFunctionDeclaration start="333" end="357" isReference="false">
+						<Arguments>
+						</Arguments>
+						<PHPCallExpression start="342" end="357">
+							<FullyQualifiedReference start="342" end="350" name="var_dump">
+							</FullyQualifiedReference>
+							<PHPCallArgumentsList start="351" end="356">
+								<VariableReference start="351" end="356" name="$this">
+								</VariableReference>
+							</PHPCallArgumentsList>
+						</PHPCallExpression>
+					</ArrowFunctionDeclaration>
+				</Assignment>
+			</ExpressionStatement>
+			<ExpressionStatement start="367" end="373">
+				<ReflectionCallExpression start="367" end="372">
+					<VariableReference start="367" end="370" name="$fn">
+					</VariableReference>
+					<PHPCallArgumentsList start="371" end="371">
+					</PHPCallArgumentsList>
+				</ReflectionCallExpression>
+			</ExpressionStatement>
+			<ExpressionStatement start="409" end="447">
+				<Assignment start="409" end="446" operator="=">
+					<VariableReference start="409" end="412" name="$fn">
+					</VariableReference>
+					<ArrowFunctionDeclaration start="422" end="446" isReference="false" isStatic="true">
+						<Arguments>
+						</Arguments>
+						<PHPCallExpression start="431" end="446">
+							<FullyQualifiedReference start="431" end="439" name="var_dump">
+							</FullyQualifiedReference>
+							<PHPCallArgumentsList start="440" end="445">
+								<VariableReference start="440" end="445" name="$this">
+								</VariableReference>
+							</PHPCallArgumentsList>
+						</PHPCallExpression>
+					</ArrowFunctionDeclaration>
+				</Assignment>
+			</ExpressionStatement>
+			<ExpressionStatement start="456" end="462">
+				<ReflectionCallExpression start="456" end="461">
+					<VariableReference start="456" end="459" name="$fn">
+					</VariableReference>
+					<PHPCallArgumentsList start="460" end="460">
+					</PHPCallArgumentsList>
+				</ReflectionCallExpression>
+			</ExpressionStatement>
+		</PHPMethodDeclaration>
+	</ClassDeclaration>
+	<ExpressionStatement start="521" end="543">
+		<Assignment start="521" end="542" operator="=">
+			<VariableReference start="521" end="524" name="$fn">
+			</VariableReference>
+			<ArrowFunctionDeclaration start="527" end="542" isReference="false">
+				<Arguments>
+				</Arguments>
+				<VariableReference start="536" end="542" name="$undef">
+				</VariableReference>
+			</ArrowFunctionDeclaration>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="544" end="550">
+		<ReflectionCallExpression start="544" end="549">
+			<VariableReference start="544" end="547" name="$fn">
+			</VariableReference>
+			<PHPCallArgumentsList start="548" end="548">
+			</PHPCallArgumentsList>
+		</ReflectionCallExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="552" end="571">
+		<ArrowFunctionDeclaration start="552" end="570" isReference="false">
+			<Arguments>
+				<FormalParameter start="556" end="558" modifiers="" isMandatory="true">
+					<VariableReference start="556" end="558" name="$x">
+					</VariableReference>
+				</FormalParameter>
+			</Arguments>
+			<InfixExpression start="563" end="570" operator="+">
+				<VariableReference start="563" end="565" name="$x">
+				</VariableReference>
+				<VariableReference start="568" end="570" name="$y">
+				</VariableReference>
+			</InfixExpression>
+		</ArrowFunctionDeclaration>
+	</ExpressionStatement>
+	<ExpressionStatement start="573" end="594">
+		<ArrowFunctionDeclaration start="573" end="593" isReference="false">
+			<Arguments>
+				<FormalParameter start="577" end="579" modifiers="" isMandatory="true">
+					<VariableReference start="577" end="579" name="$x">
+					</VariableReference>
+				</FormalParameter>
+			</Arguments>
+			<InfixExpression start="585" end="592" operator="+">
+				<VariableReference start="585" end="587" name="$x">
+				</VariableReference>
+				<VariableReference start="590" end="592" name="$y">
+				</VariableReference>
+			</InfixExpression>
+		</ArrowFunctionDeclaration>
+	</ExpressionStatement>
+	<ExpressionStatement start="596" end="617">
+		<InfixExpression start="596" end="616" operator="+">
+			<ArrowFunctionDeclaration start="597" end="610" isReference="false">
+				<Arguments>
+					<FormalParameter start="601" end="603" modifiers="" isMandatory="true">
+						<VariableReference start="601" end="603" name="$x">
+						</VariableReference>
+					</FormalParameter>
+				</Arguments>
+				<VariableReference start="608" end="610" name="$x">
+				</VariableReference>
+			</ArrowFunctionDeclaration>
+			<VariableReference start="614" end="616" name="$y">
+			</VariableReference>
+		</InfixExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="619" end="670">
+		<Assignment start="619" end="669" operator="=">
+			<VariableReference start="619" end="628" name="$extended">
+			</VariableReference>
+			<ArrowFunctionDeclaration start="631" end="669" isReference="false">
+				<Arguments>
+					<FormalParameter start="635" end="637" modifiers="" isMandatory="true">
+						<VariableReference start="635" end="637" name="$c">
+						</VariableReference>
+					</FormalParameter>
+				</Arguments>
+				<ReflectionCallExpression start="642" end="669">
+					<VariableReference start="642" end="651" name="$callable">
+					</VariableReference>
+					<PHPCallArgumentsList start="652" end="668">
+						<ReflectionCallExpression start="652" end="664">
+							<VariableReference start="652" end="660" name="$factory">
+							</VariableReference>
+							<PHPCallArgumentsList start="661" end="663">
+								<VariableReference start="661" end="663" name="$c">
+								</VariableReference>
+							</PHPCallArgumentsList>
+						</ReflectionCallExpression>
+						<VariableReference start="666" end="668" name="$c">
+						</VariableReference>
+					</PHPCallArgumentsList>
+				</ReflectionCallExpression>
+			</ArrowFunctionDeclaration>
+		</Assignment>
+	</ExpressionStatement>
+	<EmptyStatement start="671" end="673">
+	</EmptyStatement>
+</ModuleDeclaration>

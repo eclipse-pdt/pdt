@@ -1,0 +1,21 @@
+--TEST--
+Bug 551301 - PHP 7.4 Support
+--FILE--
+<?php
+// these all produce "Parse error: syntax error":
+100_;       // trailing
+1__1;       // next to underscore
+1_.0; 1._0; // next to decimal point
+0x_123;     // next to x
+0b_101;     // next to b
+1_e2; 1e_2; // next to e
+?>
+--EXPECT--
+[line=3, start=59, end=60] syntax error, unexpected '_'
+[line=4, start=81, end=84] syntax error, unexpected '__1'
+[line=5, start=115, end=116] syntax error, unexpected '_'
+[line=5, start=122, end=124] syntax error, unexpected '_0'
+[line=6, start=152, end=157] syntax error, unexpected 'x_123'
+[line=7, start=177, end=182] syntax error, unexpected 'b_101'
+[line=8, start=202, end=205] syntax error, unexpected '_e2'
+[line=8, start=208, end=211] syntax error, unexpected 'e_2'

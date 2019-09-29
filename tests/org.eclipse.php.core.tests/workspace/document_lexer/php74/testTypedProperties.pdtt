@@ -1,0 +1,250 @@
+--TEST--
+Bug 551301 - PHP 7.4 Support
+--FILE--
+<?php
+
+class User
+{
+
+    public int $id;
+
+    public string $name;
+
+    public function __construct(int $id, string $name)
+    {
+        $this->id = $id;
+        $this->name = $name;
+    }
+}
+
+class Example
+{
+
+    // All types with the exception of "void" and "callable" are supported
+    public int $scalarType;
+
+    protected User $classType;
+
+    private ?User $nullableClassType;
+
+    // Types are also legal on static properties
+    public static iterable $staticProp;
+
+    // Types can also be used with the "var" notation
+    var bool $flag;
+
+    // Typed properties may have default values (more below)
+    public string $str = "foo";
+
+    public ?string $nullableStr = null;
+
+    // The type applies to all properties in one declaration
+    public float $x, $y;
+
+    // equivalent to:
+    public float $x;
+
+    public float $y;
+}
+?>
+--EXPECT--
+PHP_TOKEN|<|2
+PHP_TOKEN|?|2
+PHP_LABEL|php|2
+WHITESPACE|
+|2
+PHP_CLASS|class|2
+WHITESPACE| |2
+PHP_LABEL|User|2
+WHITESPACE|
+|2
+PHP_CURLY_OPEN|{
+    |2
+PHP_PUBLIC|public|2
+WHITESPACE| |2
+PHP_INT|int|2
+WHITESPACE| |2
+PHP_VARIABLE|$id|2
+PHP_SEMICOLON|;|2
+WHITESPACE|
+    |2
+PHP_PUBLIC|public|2
+WHITESPACE| |2
+PHP_STRING|string|2
+WHITESPACE| |2
+PHP_VARIABLE|$name|2
+PHP_SEMICOLON|;|2
+WHITESPACE|
+    |2
+PHP_PUBLIC|public|2
+WHITESPACE| |2
+PHP_FUNCTION|function|36
+WHITESPACE| |36
+PHP_LABEL|__construct|2
+PHP_TOKEN|(|2
+PHP_INT|int|2
+WHITESPACE| |2
+PHP_VARIABLE|$id|2
+PHP_TOKEN|,|2
+WHITESPACE| |2
+PHP_STRING|string|2
+WHITESPACE| |2
+PHP_VARIABLE|$name|2
+PHP_TOKEN|)|2
+WHITESPACE|
+    |2
+PHP_CURLY_OPEN|{
+        |2
+PHP_THIS|$this|2
+PHP_OBJECT_OPERATOR|->|22
+PHP_LABEL|id|2
+WHITESPACE| |2
+PHP_TOKEN|=|2
+WHITESPACE| |2
+PHP_VARIABLE|$id|2
+PHP_SEMICOLON|;|2
+WHITESPACE|
+        |2
+PHP_THIS|$this|2
+PHP_OBJECT_OPERATOR|->|22
+PHP_LABEL|name|2
+WHITESPACE| |2
+PHP_TOKEN|=|2
+WHITESPACE| |2
+PHP_VARIABLE|$name|2
+PHP_SEMICOLON|;|2
+WHITESPACE|
+    |2
+PHP_CURLY_CLOSE|}
+|2
+PHP_CURLY_CLOSE|}
+|2
+PHP_CLASS|class|2
+WHITESPACE| |2
+PHP_LABEL|Example|2
+WHITESPACE|
+|2
+PHP_CURLY_OPEN|{
+    |2
+PHP_LINE_COMMENT|//|30
+PHP_LINE_COMMENT| All types with the exception of "void" and "callable" are supported
+|2
+WHITESPACE|    |2
+PHP_PUBLIC|public|2
+WHITESPACE| |2
+PHP_INT|int|2
+WHITESPACE| |2
+PHP_VARIABLE|$scalarType|2
+PHP_SEMICOLON|;|2
+WHITESPACE|
+    |2
+PHP_PROTECTED|protected|2
+WHITESPACE| |2
+PHP_LABEL|User|2
+WHITESPACE| |2
+PHP_VARIABLE|$classType|2
+PHP_SEMICOLON|;|2
+WHITESPACE|
+    |2
+PHP_PRIVATE|private|2
+WHITESPACE| |2
+PHP_TOKEN|?|2
+PHP_LABEL|User|2
+WHITESPACE| |2
+PHP_VARIABLE|$nullableClassType|2
+PHP_SEMICOLON|;|2
+WHITESPACE|
+    |2
+PHP_LINE_COMMENT|//|30
+PHP_LINE_COMMENT| Types are also legal on static properties
+|2
+WHITESPACE|    |2
+PHP_PUBLIC|public|2
+WHITESPACE| |2
+PHP_STATIC|static|2
+WHITESPACE| |2
+PHP_LABEL|iterable|2
+WHITESPACE| |2
+PHP_VARIABLE|$staticProp|2
+PHP_SEMICOLON|;|2
+WHITESPACE|
+    |2
+PHP_LINE_COMMENT|//|30
+PHP_LINE_COMMENT| Types can also be used with the "var" notation
+|2
+WHITESPACE|    |2
+PHP_VAR|var|2
+WHITESPACE| |2
+PHP_BOOL|bool|2
+WHITESPACE| |2
+PHP_VARIABLE|$flag|2
+PHP_SEMICOLON|;|2
+WHITESPACE|
+    |2
+PHP_LINE_COMMENT|//|30
+PHP_LINE_COMMENT| Typed properties may have default values (more below)
+|2
+WHITESPACE|    |2
+PHP_PUBLIC|public|2
+WHITESPACE| |2
+PHP_STRING|string|2
+WHITESPACE| |2
+PHP_VARIABLE|$str|2
+WHITESPACE| |2
+PHP_TOKEN|=|2
+WHITESPACE| |2
+PHP_CONSTANT_ENCAPSED_STRING|"foo"|2
+PHP_SEMICOLON|;|2
+WHITESPACE|
+    |2
+PHP_PUBLIC|public|2
+WHITESPACE| |2
+PHP_TOKEN|?|2
+PHP_STRING|string|2
+WHITESPACE| |2
+PHP_VARIABLE|$nullableStr|2
+WHITESPACE| |2
+PHP_TOKEN|=|2
+WHITESPACE| |2
+PHP_KEYWORD|null|2
+PHP_SEMICOLON|;|2
+WHITESPACE|
+    |2
+PHP_LINE_COMMENT|//|30
+PHP_LINE_COMMENT| The type applies to all properties in one declaration
+|2
+WHITESPACE|    |2
+PHP_PUBLIC|public|2
+WHITESPACE| |2
+PHP_FLOAT|float|2
+WHITESPACE| |2
+PHP_VARIABLE|$x|2
+PHP_TOKEN|,|2
+WHITESPACE| |2
+PHP_VARIABLE|$y|2
+PHP_SEMICOLON|;|2
+WHITESPACE|
+    |2
+PHP_LINE_COMMENT|//|30
+PHP_LINE_COMMENT| equivalent to:
+|2
+WHITESPACE|    |2
+PHP_PUBLIC|public|2
+WHITESPACE| |2
+PHP_FLOAT|float|2
+WHITESPACE| |2
+PHP_VARIABLE|$x|2
+PHP_SEMICOLON|;|2
+WHITESPACE|
+    |2
+PHP_PUBLIC|public|2
+WHITESPACE| |2
+PHP_FLOAT|float|2
+WHITESPACE| |2
+PHP_VARIABLE|$y|2
+PHP_SEMICOLON|;|2
+WHITESPACE|
+|2
+PHP_CURLY_CLOSE|}
+|2
+PHP_CLOSETAG|?>|2

@@ -25,7 +25,7 @@ public class PHP74ErrorReportingTests extends AbstractErrorReportingTests {
 	@Parameters
 	public static final String[] TEST_DIRS = { "/workspace/errors/php54", "/workspace/errors/php55",
 			"/workspace/errors/php56", "/workspace/errors/php7", "/workspace/errors/php71", "/workspace/errors/php72",
-			"/workspace/errors/php73" };
+			"/workspace/errors/php73", "/workspace/errors/php74" };
 
 	public PHP74ErrorReportingTests(String[] fileNames) {
 		super(fileNames);

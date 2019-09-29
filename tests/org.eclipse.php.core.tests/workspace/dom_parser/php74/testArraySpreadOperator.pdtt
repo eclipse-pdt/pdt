@@ -1,0 +1,518 @@
+--TEST--
+Bug 551301 - PHP 7.4 Support
+--FILE--
+<?php
+$parts = [
+    'apple',
+    'pear'
+];
+$fruits = [
+    'banana',
+    'orange',
+    ...$parts,
+    'watermelon'
+];
+
+$arr1 = [
+    1,
+    2,
+    3
+];
+$arr2 = [
+    ...$arr1
+]; //[1, 2, 3]
+$arr3 = [
+    0,
+    ...$arr1
+]; //[0, 1, 2, 3]
+$arr4 = array(
+    ...$arr1,
+    ...$arr2,
+    111
+); //[1, 2, 3, 1, 2, 3, 111]
+$arr5 = [
+    ...$arr1,
+    ...$arr1
+];
+
+//[1, 2, 3, 1, 2, 3]
+function getArr()
+{
+    return [
+        'a',
+        'b'
+    ];
+}
+$arr6 = [
+    ...getArr(),
+    'c'
+]; //['a', 'b', 'c']
+
+$arr7 = [
+    ...new ArrayIterator([
+        'a',
+        'b',
+        'c'
+    ])
+];
+
+//['a', 'b', 'c']
+function arrGen()
+{
+    for ($i = 11; $i < 15; $i ++) {
+        yield $i;
+    }
+}
+$arr8 = [
+    ...arrGen()
+]; //[11, 12, 13, 14]
+?>
+--EXPECT--
+<Program start='0' length='741'>
+	<Statements>
+		<ExpressionStatement start='6' length='37'>
+			<Assignment start='6' length='36' operator='='>
+				<Variable start='6' length='6' isDollared='true'>
+					<Identifier start='7' length='5' name='parts'/>
+				</Variable>
+				<Value>
+					<ArrayCreation start='15' length='27'>
+						<ArrayElement start='21' length='7'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='21' length='7' type='string' value='&apos;apple&apos;'/>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='34' length='6'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='34' length='6' type='string' value='&apos;pear&apos;'/>
+							</Value>
+						</ArrayElement>
+					</ArrayCreation>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='44' length='74'>
+			<Assignment start='44' length='73' operator='='>
+				<Variable start='44' length='7' isDollared='true'>
+					<Identifier start='45' length='6' name='fruits'/>
+				</Variable>
+				<Value>
+					<ArrayCreation start='54' length='63'>
+						<ArrayElement start='60' length='8'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='60' length='8' type='string' value='&apos;banana&apos;'/>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='74' length='8'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='74' length='8' type='string' value='&apos;orange&apos;'/>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='88' length='9'>
+							<Key>
+							</Key>
+							<Value>
+								<ArraySpreadElement start='88' length='9'>
+									<Value>
+										<Variable start='91' length='6' isDollared='true'>
+											<Identifier start='92' length='5' name='parts'/>
+										</Variable>
+									</Value>
+								</ArraySpreadElement>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='103' length='12'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='103' length='12' type='string' value='&apos;watermelon&apos;'/>
+							</Value>
+						</ArrayElement>
+					</ArrayCreation>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='120' length='32'>
+			<Assignment start='120' length='31' operator='='>
+				<Variable start='120' length='5' isDollared='true'>
+					<Identifier start='121' length='4' name='arr1'/>
+				</Variable>
+				<Value>
+					<ArrayCreation start='128' length='23'>
+						<ArrayElement start='134' length='1'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='134' length='1' type='int' value='1'/>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='141' length='1'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='141' length='1' type='int' value='2'/>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='148' length='1'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='148' length='1' type='int' value='3'/>
+							</Value>
+						</ArrayElement>
+					</ArrayCreation>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='153' length='25'>
+			<Assignment start='153' length='24' operator='='>
+				<Variable start='153' length='5' isDollared='true'>
+					<Identifier start='154' length='4' name='arr2'/>
+				</Variable>
+				<Value>
+					<ArrayCreation start='161' length='16'>
+						<ArrayElement start='167' length='8'>
+							<Key>
+							</Key>
+							<Value>
+								<ArraySpreadElement start='167' length='8'>
+									<Value>
+										<Variable start='170' length='5' isDollared='true'>
+											<Identifier start='171' length='4' name='arr1'/>
+										</Variable>
+									</Value>
+								</ArraySpreadElement>
+							</Value>
+						</ArrayElement>
+					</ArrayCreation>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='191' length='32'>
+			<Assignment start='191' length='31' operator='='>
+				<Variable start='191' length='5' isDollared='true'>
+					<Identifier start='192' length='4' name='arr3'/>
+				</Variable>
+				<Value>
+					<ArrayCreation start='199' length='23'>
+						<ArrayElement start='205' length='1'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='205' length='1' type='int' value='0'/>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='212' length='8'>
+							<Key>
+							</Key>
+							<Value>
+								<ArraySpreadElement start='212' length='8'>
+									<Value>
+										<Variable start='215' length='5' isDollared='true'>
+											<Identifier start='216' length='4' name='arr1'/>
+										</Variable>
+									</Value>
+								</ArraySpreadElement>
+							</Value>
+						</ArrayElement>
+					</ArrayCreation>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='239' length='53'>
+			<Assignment start='239' length='52' operator='='>
+				<Variable start='239' length='5' isDollared='true'>
+					<Identifier start='240' length='4' name='arr4'/>
+				</Variable>
+				<Value>
+					<ArrayCreation start='247' length='44'>
+						<ArrayElement start='258' length='8'>
+							<Key>
+							</Key>
+							<Value>
+								<ArraySpreadElement start='258' length='8'>
+									<Value>
+										<Variable start='261' length='5' isDollared='true'>
+											<Identifier start='262' length='4' name='arr1'/>
+										</Variable>
+									</Value>
+								</ArraySpreadElement>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='272' length='8'>
+							<Key>
+							</Key>
+							<Value>
+								<ArraySpreadElement start='272' length='8'>
+									<Value>
+										<Variable start='275' length='5' isDollared='true'>
+											<Identifier start='276' length='4' name='arr2'/>
+										</Variable>
+									</Value>
+								</ArraySpreadElement>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='286' length='3'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='286' length='3' type='int' value='111'/>
+							</Value>
+						</ArrayElement>
+					</ArrayCreation>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='319' length='39'>
+			<Assignment start='319' length='38' operator='='>
+				<Variable start='319' length='5' isDollared='true'>
+					<Identifier start='320' length='4' name='arr5'/>
+				</Variable>
+				<Value>
+					<ArrayCreation start='327' length='30'>
+						<ArrayElement start='333' length='8'>
+							<Key>
+							</Key>
+							<Value>
+								<ArraySpreadElement start='333' length='8'>
+									<Value>
+										<Variable start='336' length='5' isDollared='true'>
+											<Identifier start='337' length='4' name='arr1'/>
+										</Variable>
+									</Value>
+								</ArraySpreadElement>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='347' length='8'>
+							<Key>
+							</Key>
+							<Value>
+								<ArraySpreadElement start='347' length='8'>
+									<Value>
+										<Variable start='350' length='5' isDollared='true'>
+											<Identifier start='351' length='4' name='arr1'/>
+										</Variable>
+									</Value>
+								</ArraySpreadElement>
+							</Value>
+						</ArrayElement>
+					</ArrayCreation>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<FunctionDeclaration start='381' length='66' isReference='false'>
+			<FunctionName>
+				<Identifier start='390' length='6' name='getArr'/>
+			</FunctionName>
+			<FormalParameters>
+			</FormalParameters>
+			<FunctionBody>
+				<Block start='399' length='48' isCurly='true'>
+					<ReturnStatement start='405' length='40'>
+						<ArrayCreation start='412' length='32'>
+							<ArrayElement start='422' length='3'>
+								<Key>
+								</Key>
+								<Value>
+									<Scalar start='422' length='3' type='string' value='&apos;a&apos;'/>
+								</Value>
+							</ArrayElement>
+							<ArrayElement start='435' length='3'>
+								<Key>
+								</Key>
+								<Value>
+									<Scalar start='435' length='3' type='string' value='&apos;b&apos;'/>
+								</Value>
+							</ArrayElement>
+						</ArrayCreation>
+					</ReturnStatement>
+				</Block>
+			</FunctionBody>
+		</FunctionDeclaration>
+		<ExpressionStatement start='448' length='37'>
+			<Assignment start='448' length='36' operator='='>
+				<Variable start='448' length='5' isDollared='true'>
+					<Identifier start='449' length='4' name='arr6'/>
+				</Variable>
+				<Value>
+					<ArrayCreation start='456' length='28'>
+						<ArrayElement start='462' length='11'>
+							<Key>
+							</Key>
+							<Value>
+								<ArraySpreadElement start='462' length='11'>
+									<Value>
+										<FunctionInvocation start='465' length='8'>
+											<FunctionName start='465' length='6'>
+												<NamespaceName start='465' length='6' global='false' current='false'>
+													<Identifier start='465' length='6' name='getArr'/>
+												</NamespaceName>
+											</FunctionName>
+											<Parameters>
+											</Parameters>
+										</FunctionInvocation>
+									</Value>
+								</ArraySpreadElement>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='479' length='3'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='479' length='3' type='string' value='&apos;c&apos;'/>
+							</Value>
+						</ArrayElement>
+					</ArrayCreation>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='505' length='84'>
+			<Assignment start='505' length='83' operator='='>
+				<Variable start='505' length='5' isDollared='true'>
+					<Identifier start='506' length='4' name='arr7'/>
+				</Variable>
+				<Value>
+					<ArrayCreation start='513' length='75'>
+						<ArrayElement start='519' length='67'>
+							<Key>
+							</Key>
+							<Value>
+								<ArraySpreadElement start='519' length='67'>
+									<Value>
+										<ClassInstanceCreation start='522' length='64'>
+											<ClassName start='526' length='13'>
+												<NamespaceName start='526' length='13' global='false' current='false'>
+													<Identifier start='526' length='13' name='ArrayIterator'/>
+												</NamespaceName>
+											</ClassName>
+											<ConstructorParameters>
+												<ArrayCreation start='540' length='45'>
+													<ArrayElement start='550' length='3'>
+														<Key>
+														</Key>
+														<Value>
+															<Scalar start='550' length='3' type='string' value='&apos;a&apos;'/>
+														</Value>
+													</ArrayElement>
+													<ArrayElement start='563' length='3'>
+														<Key>
+														</Key>
+														<Value>
+															<Scalar start='563' length='3' type='string' value='&apos;b&apos;'/>
+														</Value>
+													</ArrayElement>
+													<ArrayElement start='576' length='3'>
+														<Key>
+														</Key>
+														<Value>
+															<Scalar start='576' length='3' type='string' value='&apos;c&apos;'/>
+														</Value>
+													</ArrayElement>
+												</ArrayCreation>
+											</ConstructorParameters>
+										</ClassInstanceCreation>
+									</Value>
+								</ArraySpreadElement>
+							</Value>
+						</ArrayElement>
+					</ArrayCreation>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<FunctionDeclaration start='609' length='81' isReference='false'>
+			<FunctionName>
+				<Identifier start='618' length='6' name='arrGen'/>
+			</FunctionName>
+			<FormalParameters>
+			</FormalParameters>
+			<FunctionBody>
+				<Block start='627' length='63' isCurly='true'>
+					<ForStatement start='633' length='55'>
+						<Initializations>
+							<Assignment start='638' length='7' operator='='>
+								<Variable start='638' length='2' isDollared='true'>
+									<Identifier start='639' length='1' name='i'/>
+								</Variable>
+								<Value>
+									<Scalar start='643' length='2' type='int' value='11'/>
+								</Value>
+							</Assignment>
+						</Initializations>
+						<Conditions>
+							<InfixExpression start='647' length='7' operator='&lt;'>
+								<Variable start='647' length='2' isDollared='true'>
+									<Identifier start='648' length='1' name='i'/>
+								</Variable>
+								<Scalar start='652' length='2' type='int' value='15'/>
+							</InfixExpression>
+						</Conditions>
+						<Increasements>
+							<PostfixExpression start='656' length='5' operator='++'>
+								<Variable start='656' length='2' isDollared='true'>
+									<Identifier start='657' length='1' name='i'/>
+								</Variable>
+							</PostfixExpression>
+						</Increasements>
+						<Block start='663' length='25' isCurly='true'>
+							<ExpressionStatement start='673' length='9'>
+								<YieldExpression start='673' length='8'>
+									<Variable start='679' length='2' isDollared='true'>
+										<Identifier start='680' length='1' name='i'/>
+									</Variable>
+								</YieldExpression>
+							</ExpressionStatement>
+						</Block>
+					</ForStatement>
+				</Block>
+			</FunctionBody>
+		</FunctionDeclaration>
+		<ExpressionStatement start='691' length='28'>
+			<Assignment start='691' length='27' operator='='>
+				<Variable start='691' length='5' isDollared='true'>
+					<Identifier start='692' length='4' name='arr8'/>
+				</Variable>
+				<Value>
+					<ArrayCreation start='699' length='19'>
+						<ArrayElement start='705' length='11'>
+							<Key>
+							</Key>
+							<Value>
+								<ArraySpreadElement start='705' length='11'>
+									<Value>
+										<FunctionInvocation start='708' length='8'>
+											<FunctionName start='708' length='6'>
+												<NamespaceName start='708' length='6' global='false' current='false'>
+													<Identifier start='708' length='6' name='arrGen'/>
+												</NamespaceName>
+											</FunctionName>
+											<Parameters>
+											</Parameters>
+										</FunctionInvocation>
+									</Value>
+								</ArraySpreadElement>
+							</Value>
+						</ArrayElement>
+					</ArrayCreation>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<EmptyStatement start='739' length='2'/>
+	</Statements>
+	<Comments>
+		<Comment start='179' length='12' commentType='singleLine'/>
+		<Comment start='224' length='15' commentType='singleLine'/>
+		<Comment start='293' length='26' commentType='singleLine'/>
+		<Comment start='360' length='21' commentType='singleLine'/>
+		<Comment start='486' length='18' commentType='singleLine'/>
+		<Comment start='591' length='18' commentType='singleLine'/>
+		<Comment start='720' length='19' commentType='singleLine'/>
+	</Comments>
+</Program>

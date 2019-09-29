@@ -1,0 +1,178 @@
+--TEST--
+Bug 551301 - PHP 7.4 Support
+--FILE--
+<?php
+
+class User
+{
+
+    public int $id;
+
+    public string $name;
+
+    public function __construct(int $id, string $name)
+    {
+        $this->id = $id;
+        $this->name = $name;
+    }
+}
+
+class Example
+{
+
+    // All types with the exception of "void" and "callable" are supported
+    public int $scalarType;
+
+    protected User $classType;
+
+    private ?User $nullableClassType;
+
+    // Types are also legal on static properties
+    public static iterable $staticProp;
+
+    // Types can also be used with the "var" notation
+    var bool $flag;
+
+    // Typed properties may have default values (more below)
+    public string $str = "foo";
+
+    public ?string $nullableStr = null;
+
+    // The type applies to all properties in one declaration
+    public float $x, $y;
+
+    // equivalent to:
+    public float $x;
+
+    public float $y;
+}
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="841">
+	<ClassDeclaration start="7" end="190" modifiers="" name="User">
+		<PHPFieldDeclaration start="36" end="39" modifiers="public" fieldType="int">
+			<FullyQualifiedReference start="32" end="35" name="int">
+			</FullyQualifiedReference>
+			<SimpleReference start="36" end="39" name="$id">
+			</SimpleReference>
+		</PHPFieldDeclaration>
+		<PHPFieldDeclaration start="60" end="65" modifiers="public" fieldType="string">
+			<FullyQualifiedReference start="53" end="59" name="string">
+			</FullyQualifiedReference>
+			<SimpleReference start="60" end="65" name="$name">
+			</SimpleReference>
+		</PHPFieldDeclaration>
+		<PHPMethodDeclaration start="72" end="188" modifiers="public" name="__construct">
+			<FormalParameter start="100" end="103" modifiers="" isMandatory="true" parameterType="int">
+				<FullyQualifiedReference start="100" end="103" name="int">
+				</FullyQualifiedReference>
+				<VariableReference start="104" end="107" name="$id">
+				</VariableReference>
+			</FormalParameter>
+			<FormalParameter start="109" end="114" modifiers="" isMandatory="true" parameterType="string">
+				<FullyQualifiedReference start="109" end="115" name="string">
+				</FullyQualifiedReference>
+				<VariableReference start="116" end="121" name="$name">
+				</VariableReference>
+			</FormalParameter>
+			<ExpressionStatement start="137" end="153">
+				<Assignment start="137" end="152" operator="=">
+					<FieldAccess start="137" end="146">
+						<VariableReference start="137" end="142" name="$this">
+						</VariableReference>
+						<SimpleReference start="144" end="146" name="id">
+						</SimpleReference>
+					</FieldAccess>
+					<VariableReference start="149" end="152" name="$id">
+					</VariableReference>
+				</Assignment>
+			</ExpressionStatement>
+			<ExpressionStatement start="162" end="182">
+				<Assignment start="162" end="181" operator="=">
+					<FieldAccess start="162" end="173">
+						<VariableReference start="162" end="167" name="$this">
+						</VariableReference>
+						<SimpleReference start="169" end="173" name="name">
+						</SimpleReference>
+					</FieldAccess>
+					<VariableReference start="176" end="181" name="$name">
+					</VariableReference>
+				</Assignment>
+			</ExpressionStatement>
+		</PHPMethodDeclaration>
+	</ClassDeclaration>
+	<ClassDeclaration start="192" end="837" modifiers="" name="Example">
+		<PHPFieldDeclaration start="299" end="310" modifiers="public" fieldType="int">
+			<FullyQualifiedReference start="295" end="298" name="int">
+			</FullyQualifiedReference>
+			<SimpleReference start="299" end="310" name="$scalarType">
+			</SimpleReference>
+		</PHPFieldDeclaration>
+		<PHPFieldDeclaration start="332" end="342" modifiers="protected" fieldType="User">
+			<FullyQualifiedReference start="327" end="331" name="User">
+			</FullyQualifiedReference>
+			<SimpleReference start="332" end="342" name="$classType">
+			</SimpleReference>
+		</PHPFieldDeclaration>
+		<PHPFieldDeclaration start="363" end="381" modifiers="private" fieldType="User">
+			<FullyQualifiedReference start="358" end="362" name="User" nullable="true">
+			</FullyQualifiedReference>
+			<SimpleReference start="363" end="381" name="$nullableClassType">
+			</SimpleReference>
+		</PHPFieldDeclaration>
+		<PHPFieldDeclaration start="460" end="471" modifiers="public,static" fieldType="iterable">
+			<FullyQualifiedReference start="451" end="459" name="iterable">
+			</FullyQualifiedReference>
+			<SimpleReference start="460" end="471" name="$staticProp">
+			</SimpleReference>
+		</PHPFieldDeclaration>
+		<PHPFieldDeclaration start="541" end="546" modifiers="public" fieldType="bool">
+			<FullyQualifiedReference start="536" end="540" name="bool">
+			</FullyQualifiedReference>
+			<SimpleReference start="541" end="546" name="$flag">
+			</SimpleReference>
+		</PHPFieldDeclaration>
+		<PHPFieldDeclaration start="628" end="640" modifiers="public" fieldType="string">
+			<FullyQualifiedReference start="621" end="627" name="string">
+			</FullyQualifiedReference>
+			<SimpleReference start="628" end="632" name="$str">
+			</SimpleReference>
+			<Scalar start="635" end="640" type="string" value="&quot;foo&quot;">
+			</Scalar>
+		</PHPFieldDeclaration>
+		<PHPFieldDeclaration start="662" end="681" modifiers="public" fieldType="string">
+			<FullyQualifiedReference start="655" end="661" name="string" nullable="true">
+			</FullyQualifiedReference>
+			<SimpleReference start="662" end="674" name="$nullableStr">
+			</SimpleReference>
+			<Scalar start="677" end="681" type="string" value="null">
+			</Scalar>
+		</PHPFieldDeclaration>
+		<PHPFieldDeclaration start="762" end="764" modifiers="public" fieldType="float">
+			<FullyQualifiedReference start="756" end="761" name="float">
+			</FullyQualifiedReference>
+			<SimpleReference start="762" end="764" name="$x">
+			</SimpleReference>
+		</PHPFieldDeclaration>
+		<PHPFieldDeclaration start="766" end="768" modifiers="public" fieldType="float">
+			<FullyQualifiedReference start="756" end="761" name="float">
+			</FullyQualifiedReference>
+			<SimpleReference start="766" end="768" name="$y">
+			</SimpleReference>
+		</PHPFieldDeclaration>
+		<PHPFieldDeclaration start="810" end="812" modifiers="public" fieldType="float">
+			<FullyQualifiedReference start="804" end="809" name="float">
+			</FullyQualifiedReference>
+			<SimpleReference start="810" end="812" name="$x">
+			</SimpleReference>
+		</PHPFieldDeclaration>
+		<PHPFieldDeclaration start="832" end="834" modifiers="public" fieldType="float">
+			<FullyQualifiedReference start="826" end="831" name="float">
+			</FullyQualifiedReference>
+			<SimpleReference start="832" end="834" name="$y">
+			</SimpleReference>
+		</PHPFieldDeclaration>
+	</ClassDeclaration>
+	<EmptyStatement start="838" end="840">
+	</EmptyStatement>
+</ModuleDeclaration>

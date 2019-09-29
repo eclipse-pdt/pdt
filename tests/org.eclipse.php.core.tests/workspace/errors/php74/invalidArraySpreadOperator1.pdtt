@@ -1,0 +1,8 @@
+--TEST--
+Bug 551301 - PHP 7.4 Support
+--FILE--
+<?php
+$arr2 = [...&$arr1]; //invalid syntax
+?>
+--EXPECT--
+[line=2, start=18, end=19] syntax error, unexpected '&'
