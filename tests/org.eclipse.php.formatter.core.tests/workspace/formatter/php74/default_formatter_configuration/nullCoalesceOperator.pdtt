@@ -1,0 +1,10 @@
+--TEST--
+Bug 551301 - PHP 7.4 Support
+--FILE--
+<?php
+$a??='value';
+?>
+--EXPECT--
+<?php
+$a ??= 'value';
+?>

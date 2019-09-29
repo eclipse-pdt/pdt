@@ -1,0 +1,78 @@
+--TEST--
+Bug 551301 - PHP 7.4 Support
+--FILE--
+<?php
+
+class User
+{
+
+public int $id;
+
+public string $name;
+
+public function __construct(int $id, string $name)
+{
+$this->id=$id;
+$this->name=$name;
+}
+}
+
+class Example
+{
+
+// All types with the exception of "void" and "callable" are supported
+public int $scalarType;
+
+protected User $classType;
+
+private ?User $nullableClassType;
+
+// Types are also legal on static properties
+public static iterable $staticProp;
+
+// Types can also be used with the "var" notation
+var bool $flag;
+
+// Typed properties may have default values (more below)
+public string $str="foo";
+
+public ?string $nullableStr=null;
+
+// The type applies to all properties in one declaration
+public float $x, $y;
+
+// equivalent to:
+public float $x;
+
+public float $y;
+}
+?>
+--EXPECT--
+<?php
+class User {
+	public int $id;
+	public string $name;
+	public function __construct(int $id, string $name) {
+		$this->id = $id;
+		$this->name = $name;
+	}
+}
+class Example {
+	// All types with the exception of "void" and "callable" are supported
+	public int $scalarType;
+	protected User $classType;
+	private ?User $nullableClassType;
+	// Types are also legal on static properties
+	public static iterable $staticProp;
+	// Types can also be used with the "var" notation
+	var bool $flag;
+	// Typed properties may have default values (more below)
+	public string $str = "foo";
+	public ?string $nullableStr = null;
+	// The type applies to all properties in one declaration
+	public float $x, $y;
+	// equivalent to:
+	public float $x;
+	public float $y;
+}
+?>

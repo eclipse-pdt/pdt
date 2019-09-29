@@ -1,0 +1,25 @@
+--TEST--
+Bug 551301 - PHP 7.4 Support
+--FILE--
+<?php
+$threshold=1_000_000_000; // a billion!
+$testValue=107_925_284.88; // scale is hundreds of millions
+$discount=135_00; // $135, stored as cents
+
+6.674_083e-11; // float
+299_792_458; // decimal
+0xCAFE_F00D; // hexadecimal
+0b0101_1111; // binary
+0137_041; // octal
+?>
+--EXPECT--
+<?php
+$threshold = 1_000_000_000; // a billion!
+$testValue = 107_925_284.88; // scale is hundreds of millions
+$discount = 135_00; // $135, stored as cents
+6.674_083e-11; // float
+299_792_458; // decimal
+0xCAFE_F00D; // hexadecimal
+0b0101_1111; // binary
+0137_041; // octal
+?>
