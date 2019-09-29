@@ -1,0 +1,76 @@
+--TEST--
+Bug 551301 - PHP 7.4 Support
+--FILE--
+<?php
+$y=1;
+
+$fn1=fn($x)=>$x+$y;
+
+$fn2=function($x)use($y){
+return$x+$y;
+};
+
+$z=1;
+$fn=fn($x)=>fn($y)=>$x*$y+$z;
+
+fn(array$x)=>$x;
+fn():int=>$x;
+fn($x=42)=>$x;
+fn(&$x)=>$x;
+fn&($x)=>$x;
+fn($x,...$rest)=>$rest;
+
+class Test
+{
+
+public function method()
+{
+$fn=fn()=>var_dump($this);
+$fn();
+
+$fn=staticfn()=>var_dump($this);
+$fn();
+}
+}
+
+$fn=fn()=>$undef;
+$fn();
+
+fn($x)=>$x+$y;
+
+fn($x)=>($x+$y);
+
+(fn($x)=>$x)+$y;
+
+$extended=fn($c)=>$callable($factory($c),$c);
+?>
+--EXPECT--
+<?php
+$y = 1;
+$fn1 = fn ($x) => $x + $y;
+$fn2 = function ($x) use ($y) {
+	return $x + $y;
+};
+$z = 1;
+$fn = fn ($x) => fn ($y) => $x * $y + $z;
+fn (array $x) => $x;
+fn (): int => $x;
+fn ($x = 42) => $x;
+fn (&$x) => $x;
+fn &($x) => $x;
+fn ($x, ...$rest) => $rest;
+class Test {
+	public function method() {
+		$fn = fn () => var_dump ( $this );
+		$fn ();
+$fn=staticfn()=>var_dump ( $this );
+		$fn ();
+	}
+}
+$fn = fn () => $undef;
+$fn ();
+fn ($x) => $x + $y;
+fn ($x) => ($x + $y);
+(fn ($x) => $x) + $y;
+$extended = fn ($c) => $callable ( $factory ( $c ), $c );
+?>

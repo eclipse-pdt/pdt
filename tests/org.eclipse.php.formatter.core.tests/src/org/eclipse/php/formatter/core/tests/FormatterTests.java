@@ -77,6 +77,7 @@ public class FormatterTests {
 		TESTS.put(PHPVersion.PHP7_1, new String[] { "/workspace/formatter/php71" });
 		TESTS.put(PHPVersion.PHP7_2, new String[] { "/workspace/formatter/php72" });
 		TESTS.put(PHPVersion.PHP7_3, new String[] { "/workspace/formatter/php73" });
+		TESTS.put(PHPVersion.PHP7_4, new String[] { "/workspace/formatter/php74" });
 	};
 
 	protected static int suiteCounter = 0;
