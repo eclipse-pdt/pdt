@@ -29,6 +29,9 @@ public class Autoload extends JsonObject {
 	private JsonArray classmap = new JsonArray();
 	private JsonArray files = new JsonArray();
 
+	@Name("exclude-from-classmap")
+	private JsonArray excludeFromClassMap = new JsonArray();
+
 	@Name("psr-0")
 	private Psr psr0 = new Psr();
 
@@ -72,8 +75,16 @@ public class Autoload extends JsonObject {
 		return classmap;
 	}
 
+	public boolean hasExcludeFromClassMap() {
+		return excludeFromClassMap != null && excludeFromClassMap.size() > 0;
+	}
+
+	public JsonArray getExcludeFromClassMap() {
+		return excludeFromClassMap;
+	}
+
 	@Override
 	public int size() {
-		return super.size() + classmap.size() + files.size() + psr0.size() + psr4.size();
+		return super.size() + classmap.size() + files.size() + psr0.size() + psr4.size() + excludeFromClassMap.size();
 	}
 }

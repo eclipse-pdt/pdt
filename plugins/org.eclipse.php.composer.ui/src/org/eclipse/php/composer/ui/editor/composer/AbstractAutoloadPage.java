@@ -32,6 +32,9 @@ abstract public class AbstractAutoloadPage extends ComposerFormPage {
 	private Psr0Section psr0Section;
 	private Psr4Section psr4Section;
 
+	private FilesSection filesSection;
+	private ClassMapSection classmapSection;
+
 	abstract protected Autoload getAutoload();
 
 	public AbstractAutoloadPage(ComposerFormEditor editor, String id, String title) {
@@ -61,6 +64,11 @@ abstract public class AbstractAutoloadPage extends ComposerFormPage {
 		right.setLayout(FormLayoutFactory.createFormPaneGridLayout(false, 1));
 		right.setLayoutData(new GridData(GridData.FILL_BOTH));
 
+		filesSection = new FilesSection(this, right);
+		filesSection.setEnabled(enabled);
+
+		classmapSection = new ClassMapSection(this, right);
+		classmapSection.setEnabled(enabled);
 	}
 
 	@Override
@@ -73,6 +81,14 @@ abstract public class AbstractAutoloadPage extends ComposerFormPage {
 
 		if (psr4Section != null) {
 			psr4Section.setEnabled(enabled);
+		}
+
+		if (filesSection != null) {
+			filesSection.setEnabled(enabled);
+		}
+
+		if (classmapSection != null) {
+			classmapSection.setEnabled(enabled);
 		}
 	}
 }

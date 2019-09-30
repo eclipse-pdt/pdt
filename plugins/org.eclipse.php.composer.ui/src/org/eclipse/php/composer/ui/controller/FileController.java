@@ -19,10 +19,11 @@ import org.eclipse.php.composer.api.entities.AbstractJsonArray;
 import org.eclipse.php.composer.ui.ComposerUIPluginImages;
 import org.eclipse.swt.graphics.Image;
 
-public class PathController extends LabelProvider implements IStructuredContentProvider {
+public class FileController extends LabelProvider implements IStructuredContentProvider {
 
 	private AbstractJsonArray<Object> paths;
 	protected Image pathImage = ComposerUIPluginImages.PACKAGE_FOLDER.createImage();
+	protected Image pageImage = ComposerUIPluginImages.PAGE.createImage();
 
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
@@ -31,7 +32,11 @@ public class PathController extends LabelProvider implements IStructuredContentP
 
 	@Override
 	public Image getImage(Object element) {
-		return pathImage;
+		if (element.toString().endsWith("/")) {
+			return pathImage;
+		}
+
+		return pageImage;
 	}
 
 	@Override
