@@ -6,18 +6,18 @@ Test Quote With Curly
     EOF;
 ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="44">
-	<ExpressionStatement start="6" end="40">
-		<Assignment start="6" end="39" operator="=">
+<ModuleDeclaration start="0" end="52">
+	<ExpressionStatement start="6" end="48">
+		<Assignment start="6" end="47" operator="=">
 			<VariableReference start="6" end="11" name="$text">
 			</VariableReference>
-			<Quote start="14" end="39" type="heredoc">
-				<Scalar start="21" end="36" type="string" value="test{test}test
-">
+			<Quote start="14" end="47" type="heredoc">
+				<Scalar start="29" end="44" type="string" value="{test}test
+    ">
 				</Scalar>
 			</Quote>
 		</Assignment>
 	</ExpressionStatement>
-	<EmptyStatement start="41" end="43">
+	<EmptyStatement start="49" end="51">
 	</EmptyStatement>
 </ModuleDeclaration>

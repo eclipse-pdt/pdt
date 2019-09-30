@@ -12,7 +12,7 @@ EOF;
 			<VariableReference start="6" end="11" name="$text">
 			</VariableReference>
 			<Quote start="14" end="39" type="heredoc">
-				<Scalar start="21" end="36" type="string" value="test{test}test
+				<Scalar start="25" end="36" type="string" value="{test}test
 ">
 				</Scalar>
 			</Quote>

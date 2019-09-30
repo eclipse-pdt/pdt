@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2018 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2018-2019 Zend Corporation and IBM Corporation.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -268,8 +268,8 @@ HEREDOC_CURLY_OR_ESCAPE_OR_DOLLAR=(("{"+[^$\n\r\\{])|("{"*"\\"[^\n\r])|{HEREDOC_
 HEREDOC_NON_LABEL=([^a-zA-Z_\u007f-\uffff$\n\r \t\\{]|{HEREDOC_CURLY_OR_ESCAPE_OR_DOLLAR})
 DOUBLE_QUOTES_CHARS=("{"*([^$\"\\{]|("\\"{ANY_CHAR}))|{DOUBLE_QUOTES_LITERAL_DOLLAR})
 BACKQUOTE_CHARS=("{"*([^$`\\{]|("\\"{ANY_CHAR}))|{BACKQUOTE_LITERAL_DOLLAR})
-HEREDOC_CHARS=("{"*([^$\n\r\\{]|("\\"[^\n\r]))|{HEREDOC_LITERAL_DOLLAR}|({HEREDOC_NEWLINE}+{TABS_AND_SPACES}{HEREDOC_NON_LABEL}))
-NOWDOC_CHARS=([^\n\r]|{NEWLINE}+{TABS_AND_SPACES}[^a-zA-Z_\u007f-\uffff\n\r \t])
+HEREDOC_CHARS=("{"*([^$\n\r\\{]|("\\"[^\n\r]))|{HEREDOC_LITERAL_DOLLAR}|(({HEREDOC_NEWLINE}{TABS_AND_SPACES})+{HEREDOC_NON_LABEL}))
+NOWDOC_CHARS=([^\n\r]|({NEWLINE}{TABS_AND_SPACES})+[^a-zA-Z_\u007f-\uffff\n\r \t])
 
 %%
 
