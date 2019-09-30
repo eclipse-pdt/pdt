@@ -3762,8 +3762,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	@Override
 	public boolean visit(FunctionDeclaration functionDeclaration) {
 		StringBuilder buffer = new StringBuilder();
-		buffer.append(getDocumentString(functionDeclaration.getStart(), functionDeclaration.getStart() + 8));// append
-																												// 'function'
+		buffer.append("function"); //$NON-NLS-1$
 
 		// handle referenced function with '&'
 		if (functionDeclaration.isReference()) {
@@ -5492,21 +5491,23 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(LambdaFunctionDeclaration lambdaFunctionDeclaration) {
+		int lastPosition = lambdaFunctionDeclaration.getStart();
 		StringBuilder buffer = new StringBuilder();
 		if (lambdaFunctionDeclaration.isStatic()) {
 			buffer.append("static "); //$NON-NLS-1$
+			lastPosition += 7; // "static ".length()
 		}
-		buffer.append(
-				getDocumentString(lambdaFunctionDeclaration.getStart(), lambdaFunctionDeclaration.getStart() + 8));// append
-																													// 'function'
+		buffer.append("function"); //$NON-NLS-1$
+		lastPosition += 8; // "function".length()
 
 		// handle referenced function with '&'
 		if (lambdaFunctionDeclaration.isReference()) {
 			buffer.append(" &"); //$NON-NLS-1$
+			lastPosition += 2; // " &".length()
 		}
 
 		appendToBuffer(buffer.toString());
-		handleChars(lambdaFunctionDeclaration.getStart(), lambdaFunctionDeclaration.getStart() + 8);
+		handleChars(lambdaFunctionDeclaration.getStart(), lastPosition);
 
 		if (this.preferences.insert_space_before_opening_paren_in_function_declaration
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=492770
@@ -5516,7 +5517,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		appendToBuffer(OPEN_PARN);
 		List<FormalParameter> formalParameters = lambdaFunctionDeclaration.formalParameters();
 		ASTNode[] params = formalParameters.toArray(new FormalParameter[formalParameters.size()]);
-		int lastPosition = lambdaFunctionDeclaration.getStart() + 8;
 		if (params.length > 0) {
 			if (this.preferences.insert_space_after_opening_paren_in_function_declaration) {
 				insertSpace();
@@ -5599,20 +5599,23 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(ArrowFunctionDeclaration arrowFunctionDeclaration) {
+		int lastPosition = arrowFunctionDeclaration.getStart();
 		StringBuilder buffer = new StringBuilder();
 		if (arrowFunctionDeclaration.isStatic()) {
 			buffer.append("static "); //$NON-NLS-1$
+			lastPosition += 7; // "static ".length()
 		}
-		buffer.append(getDocumentString(arrowFunctionDeclaration.getStart(), arrowFunctionDeclaration.getStart() + 2));// append
-																														// 'function'
+		buffer.append("fn"); //$NON-NLS-1$
+		lastPosition += 2; // "fn".length()
 
 		// handle referenced function with '&'
 		if (arrowFunctionDeclaration.isReference()) {
 			buffer.append(" &"); //$NON-NLS-1$
+			lastPosition += 2; // " &".length()
 		}
 
 		appendToBuffer(buffer.toString());
-		handleChars(arrowFunctionDeclaration.getStart(), arrowFunctionDeclaration.getStart() + 2);
+		handleChars(arrowFunctionDeclaration.getStart(), lastPosition);
 
 		if (this.preferences.insert_space_before_opening_paren_in_function_declaration
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=492770
@@ -5622,7 +5625,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		appendToBuffer(OPEN_PARN);
 		List<FormalParameter> formalParameters = arrowFunctionDeclaration.formalParameters();
 		ASTNode[] params = formalParameters.toArray(new FormalParameter[formalParameters.size()]);
-		int lastPosition = arrowFunctionDeclaration.getStart() + 2;
 		if (params.length > 0) {
 			if (this.preferences.insert_space_after_opening_paren_in_function_declaration) {
 				insertSpace();

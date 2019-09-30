@@ -8,7 +8,7 @@ Test Lambda Function
 		<Assignment start="6" end="38" operator="=">
 			<VariableReference start="6" end="13" name="$lambda">
 			</VariableReference>
-			<LambdaFunctionDeclaration start="23" end="38" isReference="false" isStatic="true">
+			<LambdaFunctionDeclaration start="16" end="38" isReference="false" isStatic="true">
 				<Arguments>
 				</Arguments>
 			</LambdaFunctionDeclaration>

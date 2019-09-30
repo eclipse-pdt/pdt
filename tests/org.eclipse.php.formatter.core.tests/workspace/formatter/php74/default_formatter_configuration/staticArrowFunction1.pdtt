@@ -1,0 +1,10 @@
+--TEST--
+Bug 551632 - Formatter doesn't correctly handle static keyword for lambda and arrow functions
+--FILE--
+<?php
+static   fn   &   ($x)   =>   $x;
+?>
+--EXPECT--
+<?php
+static fn &($x) => $x;
+?>

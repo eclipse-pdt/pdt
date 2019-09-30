@@ -252,7 +252,7 @@ $extended = fn ($c) => $callable($factory($c), $c);
 				<Assignment start="409" end="446" operator="=">
 					<VariableReference start="409" end="412" name="$fn">
 					</VariableReference>
-					<ArrowFunctionDeclaration start="422" end="446" isReference="false" isStatic="true">
+					<ArrowFunctionDeclaration start="415" end="446" isReference="false" isStatic="true">
 						<Arguments>
 						</Arguments>
 						<PHPCallExpression start="431" end="446">

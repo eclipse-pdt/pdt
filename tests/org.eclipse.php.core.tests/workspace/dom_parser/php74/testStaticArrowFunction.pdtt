@@ -1,0 +1,36 @@
+--TEST--
+Bug 551632 - Formatter doesn't correctly handle static keyword for lambda and arrow functions
+--FILE--
+<?php
+static   fn   &   ($x)   =>   $x;
+?>
+--EXPECT--
+<Program start='0' length='42'>
+	<Statements>
+		<ExpressionStatement start='6' length='33'>
+			<ArrowFunctionDeclaration start='6' length='32' isReference='true isStatic='true'>
+				<FormalParameters>
+					<FormalParameter start='25' length='2' isMandatory='false'>
+						<Type>
+						</Type>
+						<ParameterName>
+							<Variable start='25' length='2' isDollared='true'>
+								<Identifier start='26' length='1' name='x'/>
+							</Variable>
+						</ParameterName>
+						<DefaultValue>
+						</DefaultValue>
+					</FormalParameter>
+				</FormalParameters>
+				<FunctionBody>
+					<Variable start='36' length='2' isDollared='true'>
+						<Identifier start='37' length='1' name='x'/>
+					</Variable>
+				</FunctionBody>
+			</ArrowFunctionDeclaration>
+		</ExpressionStatement>
+		<EmptyStatement start='40' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>
