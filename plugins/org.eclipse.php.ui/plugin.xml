@@ -3013,6 +3013,14 @@
             category="org.eclipse.php.ui.problem.defaultCategory"
             class="org.eclipse.php.internal.core.compiler.ast.parser.PHPProblemIdentifier">
          <identifier
+               id="CannotInstantiateType"
+               name="Cannot instantiate type">
+         </identifier>
+         <identifier
+               id="DuplicateDeclaration"
+               name="Duplicate type declaration">
+         </identifier>
+         <identifier
                id="ImportNotFound"
                name="Import not found">
          </identifier>
@@ -3023,10 +3031,6 @@
          <identifier
                id="UnusedImport"
                name="Unused import">
-         </identifier>
-         <identifier
-               id="CannotInstantiateType"
-               name="Cannot instantiate type">
          </identifier>
          <identifier
                id="UndefinedType"
