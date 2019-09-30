@@ -3175,10 +3175,10 @@ lambda_function_body:body
 {:
 	RESULT = body;
 :}
-| T_STATIC T_FUNCTION:s is_reference:isReference
+| T_STATIC:modifier T_FUNCTION:s is_reference:isReference
 T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE lexical_vars:varsList return_type:returnType
 {:
-	LambdaFunctionDeclaration functionDeclaration = new LambdaFunctionDeclaration(sleft, varsListright, paramList, varsList,
+	LambdaFunctionDeclaration functionDeclaration = new LambdaFunctionDeclaration(modifierleft, varsListright, paramList, varsList,
 		null, isReference.booleanValue(), true, returnType);
 	parser.addDeclarationStatement(functionDeclaration);
 	parser.declarations.push(functionDeclaration);
@@ -3199,10 +3199,10 @@ arrow_function_body:body
 {:
 	RESULT = body;
 :}
-| T_STATIC T_FN:s is_reference:isReference
+| T_STATIC:modifier T_FN:s is_reference:isReference
 T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE:e return_type:returnType
 {:
-	ArrowFunctionDeclaration functionDeclaration = new ArrowFunctionDeclaration(sleft, eright, paramList,
+	ArrowFunctionDeclaration functionDeclaration = new ArrowFunctionDeclaration(modifierleft, eright, paramList,
 		null, isReference.booleanValue(), true, returnType);
 	parser.addDeclarationStatement(functionDeclaration);
 	parser.declarations.push(functionDeclaration);

@@ -1,0 +1,23 @@
+--TEST--
+Bug 551632 - Formatter doesn't correctly handle static keyword for lambda and arrow functions
+--FILE--
+<?php
+static   function   &   ($x)   {   $x;   }
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="52">
+	<ExpressionStatement start="6" end="51">
+		<LambdaFunctionDeclaration start="6" end="48" isReference="true" isStatic="true">
+			<Arguments>
+				<FormalParameter start="31" end="33" modifiers="" isMandatory="true">
+					<VariableReference start="31" end="33" name="$x">
+					</VariableReference>
+				</FormalParameter>
+			</Arguments>
+			<ExpressionStatement start="41" end="44">
+				<VariableReference start="41" end="43" name="$x">
+				</VariableReference>
+			</ExpressionStatement>
+		</LambdaFunctionDeclaration>
+	</ExpressionStatement>
+</ModuleDeclaration>

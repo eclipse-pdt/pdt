@@ -403,7 +403,7 @@ $extended = fn ($c) => $callable($factory($c), $c);
 											<Identifier start='410' length='2' name='fn'/>
 										</Variable>
 										<Value>
-											<ArrowFunctionDeclaration start='422' length='24' isReference='false isStatic='true'>
+											<ArrowFunctionDeclaration start='415' length='31' isReference='false isStatic='true'>
 												<FormalParameters>
 												</FormalParameters>
 												<FunctionBody>
