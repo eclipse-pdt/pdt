@@ -80,7 +80,7 @@ public class CompilerParserTests {
 				new String[] { "/workspace/compiler_parser/php53", "/workspace/compiler_parser/php54",
 						"/workspace/compiler_parser/php55", "/workspace/compiler_parser/php56",
 						"/workspace/compiler_parser/php7", "/workspace/compiler_parser/php71",
-						"/workspace/compiler_parser/php72", "/workspace/compiler_parser/php53/php73" });
+						"/workspace/compiler_parser/php72", "/workspace/compiler_parser/php73" });
 	};
 
 	private AbstractPHPSourceParser parser;

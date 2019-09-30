@@ -1,0 +1,227 @@
+--TEST--
+Bug 551434 - false syntax error for Heredoc/Nowdoc expressions
+--FILE--
+<?php
+class heredocDemo {
+    
+    const EXAMPLE_1 = <<< HEREDOC
+Example string literal #1
+
+-
+HEREDOC;
+    
+    const EXAMPLE_2 = <<< HEREDOC
+Example string literal #2
+
+-
+HEREDOC;
+    
+    const EXAMPLE_3 = <<< HEREDOC
+Example string literal #3
+
+=
+HEREDOC;
+    
+    const EXAMPLE_4 = <<< HEREDOC
+Example string literal #4
+
+-
+HEREDOC;
+    
+    const EXAMPLE_5 = <<< "HEREDOC"
+Example string literal #5
+
+-
+HEREDOC;
+    
+    const EXAMPLE_6 = <<< 'NOWDOC'
+Example string literal #6
+    
+-
+NOWDOC;
+    
+    const EXAMPLE_7 = <<< HEREDOC
+Example string literal #7
+Another line with some content
+Yet another line with some content
+Another
+    
+-
+HEREDOC;
+    
+    const EXAMPLE_8 = <<< HEREDOC
+Example string literal #8
+
+- Content after the special char
+HEREDOC;
+    
+    public $example9 = <<< HEREDOC
+Example string literal #9
+
+-
+HEREDOC;
+    
+    public function __construct() {
+        
+        $example10 = <<< HEREDOC
+Example string literal #10
+
+-
+HEREDOC;
+        
+        var_dump(
+            <<< HEREDOC
+Example string literal #11
+            
+-
+HEREDOC
+            );
+        
+        <<< HEREDOC
+Example string literal
+
+-
+HEREDOC  && 1;
+    }
+}
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="1154">
+	<ClassDeclaration start="6" end="1150" modifiers="" name="heredocDemo">
+		<ConstantDeclaration start="35" end="101" modifiers="">
+			<ConstantReference start="41" end="50" name="EXAMPLE_1">
+			</ConstantReference>
+			<Quote start="53" end="101" type="heredoc">
+				<Scalar start="72" end="94" type="string" value=" string literal #1
+-
+">
+				</Scalar>
+			</Quote>
+		</ConstantDeclaration>
+		<ConstantDeclaration start="112" end="178" modifiers="">
+			<ConstantReference start="118" end="127" name="EXAMPLE_2">
+			</ConstantReference>
+			<Quote start="130" end="178" type="heredoc">
+				<Scalar start="149" end="171" type="string" value=" string literal #2
+-
+">
+				</Scalar>
+			</Quote>
+		</ConstantDeclaration>
+		<ConstantDeclaration start="189" end="255" modifiers="">
+			<ConstantReference start="195" end="204" name="EXAMPLE_3">
+			</ConstantReference>
+			<Quote start="207" end="255" type="heredoc">
+				<Scalar start="226" end="248" type="string" value=" string literal #3
+=
+">
+				</Scalar>
+			</Quote>
+		</ConstantDeclaration>
+		<ConstantDeclaration start="266" end="332" modifiers="">
+			<ConstantReference start="272" end="281" name="EXAMPLE_4">
+			</ConstantReference>
+			<Quote start="284" end="332" type="heredoc">
+				<Scalar start="303" end="325" type="string" value=" string literal #4
+-
+">
+				</Scalar>
+			</Quote>
+		</ConstantDeclaration>
+		<ConstantDeclaration start="343" end="411" modifiers="">
+			<ConstantReference start="349" end="358" name="EXAMPLE_5">
+			</ConstantReference>
+			<Quote start="361" end="411" type="heredoc">
+				<Scalar start="382" end="404" type="string" value=" string literal #5
+-
+">
+				</Scalar>
+			</Quote>
+		</ConstantDeclaration>
+		<ConstantDeclaration start="422" end="492" modifiers="">
+			<ConstantReference start="428" end="437" name="EXAMPLE_6">
+			</ConstantReference>
+			<Quote start="440" end="492" type="nowdoc">
+				<Scalar start="460" end="486" type="string" value=" string literal #6
+    
+-
+">
+				</Scalar>
+			</Quote>
+		</ConstantDeclaration>
+		<ConstantDeclaration start="503" end="647" modifiers="">
+			<ConstantReference start="509" end="518" name="EXAMPLE_7">
+			</ConstantReference>
+			<Quote start="521" end="647" type="heredoc">
+				<Scalar start="632" end="640" type="string" value="
+    
+-
+">
+				</Scalar>
+			</Quote>
+		</ConstantDeclaration>
+		<ConstantDeclaration start="658" end="755" modifiers="">
+			<ConstantReference start="664" end="673" name="EXAMPLE_8">
+			</ConstantReference>
+			<Quote start="676" end="755" type="heredoc">
+				<Scalar start="695" end="748" type="string" value=" string literal #8
+- Content after the special char
+">
+				</Scalar>
+			</Quote>
+		</ConstantDeclaration>
+		<PHPFieldDeclaration start="773" end="833" modifiers="public">
+			<SimpleReference start="773" end="782" name="$example9">
+			</SimpleReference>
+			<Quote start="785" end="833" type="heredoc">
+				<Scalar start="804" end="826" type="string" value=" string literal #9
+-
+">
+				</Scalar>
+			</Quote>
+		</PHPFieldDeclaration>
+		<PHPMethodDeclaration start="844" end="1148" modifiers="public" name="__construct">
+			<ExpressionStatement start="893" end="956">
+				<Assignment start="893" end="955" operator="=">
+					<VariableReference start="893" end="903" name="$example10">
+					</VariableReference>
+					<Quote start="906" end="955" type="heredoc">
+						<Scalar start="925" end="948" type="string" value=" string literal #10
+-
+">
+						</Scalar>
+					</Quote>
+				</Assignment>
+			</ExpressionStatement>
+			<ExpressionStatement start="974" end="1072">
+				<PHPCallExpression start="974" end="1071">
+					<FullyQualifiedReference start="974" end="982" name="var_dump">
+					</FullyQualifiedReference>
+					<PHPCallArgumentsList start="983" end="1070">
+						<Quote start="996" end="1057" type="heredoc">
+							<Scalar start="1015" end="1050" type="string" value=" string literal #11
+            
+-
+">
+							</Scalar>
+						</Quote>
+					</PHPCallArgumentsList>
+				</PHPCallExpression>
+			</ExpressionStatement>
+			<ExpressionStatement start="1090" end="1142">
+				<InfixExpression start="1090" end="1141" operator="&amp;&amp;">
+					<Quote start="1090" end="1135" type="heredoc">
+						<Scalar start="1109" end="1128" type="string" value=" string literal
+-
+">
+						</Scalar>
+					</Quote>
+					<Scalar start="1140" end="1141" type="int" value="1">
+					</Scalar>
+				</InfixExpression>
+			</ExpressionStatement>
+		</PHPMethodDeclaration>
+	</ClassDeclaration>
+	<EmptyStatement start="1151" end="1153">
+	</EmptyStatement>
+</ModuleDeclaration>
