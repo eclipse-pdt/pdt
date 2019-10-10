@@ -4880,6 +4880,21 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						}
 					}
 					isPHPMode = false;
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=551622
+					// We can have multiple successive InLineHtml statements
+					// when the HTML portion contains opening PHP short tags or
+					// opening asp tags and we did set useASPTags or
+					// useShortTags to false while creating our ASTParser.
+					// In this case these "undesired" tags will be represented
+					// as individual InLineHtml statements.
+					for (int j = i + 1; j < statements.length; j++) {
+						if (statements[j].getType() == ASTNode.IN_LINE_HTML) {
+							statements[j - 1].accept(this);
+							i++;
+						} else {
+							break;
+						}
+					}
 				} else if (!isPHPMode && !isHtmlStatement) {
 					// HTML -> PHP
 					if (!isStatementAfterError) {
