@@ -2734,6 +2734,15 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 				} else if (isPHPMode && isHtmlStatement) {
 					// PHP -> HTML
 					isPHPMode = false;
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=551622
+					for (int j = i + 1; j < statements.length; j++) {
+						if (statements[j].getType() == ASTNode.IN_LINE_HTML) {
+							statements[j - 1].accept(this);
+							i++;
+						} else {
+							break;
+						}
+					}
 				} else if (!isPHPMode && !isHtmlStatement) {
 					// HTML -> PHP
 					if (!isStatementAfterError) {
@@ -3631,7 +3640,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 			if (parameterType instanceof Identifier && ((Identifier) parameterType).isNullable()) {
 				appendToBuffer(QUESTION_MARK);
 			}
-			handleChars(formalParameter.getStart(), parameterType.getStart());
+			handleChars(lastPosition, parameterType.getStart());
 			parameterType.accept(this);
 			lastPosition = parameterType.getEnd();
 			insertSpace();
@@ -3712,8 +3721,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	@Override
 	public boolean visit(FunctionDeclaration functionDeclaration) {
 		StringBuilder buffer = new StringBuilder();
-		buffer.append(getDocumentString(functionDeclaration.getStart(), functionDeclaration.getStart() + 8));// append
-																												// 'function'
+		buffer.append("function"); //$NON-NLS-1$
 
 		// handle referenced function with '&'
 		if (functionDeclaration.isReference()) {
@@ -4831,6 +4839,15 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 						}
 					}
 					isPHPMode = false;
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=551622
+					for (int j = i + 1; j < statements.length; j++) {
+						if (statements[j].getType() == ASTNode.IN_LINE_HTML) {
+							statements[j - 1].accept(this);
+							i++;
+						} else {
+							break;
+						}
+					}
 				} else if (!isPHPMode && !isHtmlStatement) {
 					// HTML -> PHP
 					if (!isStatementAfterError) {
@@ -5442,21 +5459,23 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 	@Override
 	public boolean visit(LambdaFunctionDeclaration lambdaFunctionDeclaration) {
+		int lastPosition = lambdaFunctionDeclaration.getStart();
 		StringBuilder buffer = new StringBuilder();
 		if (lambdaFunctionDeclaration.isStatic()) {
 			buffer.append("static "); //$NON-NLS-1$
+			lastPosition += 7; // "static ".length()
 		}
-		buffer.append(
-				getDocumentString(lambdaFunctionDeclaration.getStart(), lambdaFunctionDeclaration.getStart() + 8));// append
-																													// 'function'
+		buffer.append("function"); //$NON-NLS-1$
+		lastPosition += 8; // "function".length()
 
 		// handle referenced function with '&'
 		if (lambdaFunctionDeclaration.isReference()) {
 			buffer.append(" &"); //$NON-NLS-1$
+			lastPosition += 2; // " &".length()
 		}
 
 		appendToBuffer(buffer.toString());
-		handleChars(lambdaFunctionDeclaration.getStart(), lambdaFunctionDeclaration.getStart() + 8);
+		handleChars(lambdaFunctionDeclaration.getStart(), lastPosition);
 
 		if (this.preferences.insert_space_before_opening_paren_in_function_declaration
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=492770
@@ -5466,7 +5485,6 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 		appendToBuffer(OPEN_PARN);
 		List<FormalParameter> formalParameters = lambdaFunctionDeclaration.formalParameters();
 		ASTNode[] params = formalParameters.toArray(new FormalParameter[formalParameters.size()]);
-		int lastPosition = lambdaFunctionDeclaration.getStart() + 8;
 		if (params.length > 0) {
 			if (this.preferences.insert_space_after_opening_paren_in_function_declaration) {
 				insertSpace();

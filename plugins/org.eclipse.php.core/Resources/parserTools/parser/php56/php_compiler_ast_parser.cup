@@ -2827,11 +2827,11 @@ lambda_function_body:body
 	RESULT = body;
 :}
 
-| T_STATIC T_FUNCTION:s is_reference:isReference
+| T_STATIC:modifier T_FUNCTION:s is_reference:isReference
 T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE lexical_vars:varsList
 {:
 
-	LambdaFunctionDeclaration functionDeclaration = new LambdaFunctionDeclaration(sleft, varsListright, paramList, varsList,
+	LambdaFunctionDeclaration functionDeclaration = new LambdaFunctionDeclaration(modifierleft, varsListright, paramList, varsList,
 		new Block(varsListright, varsListright, null), isReference.booleanValue(), true);
 	parser.addDeclarationStatement(functionDeclaration);
 	parser.declarations.push(functionDeclaration);
