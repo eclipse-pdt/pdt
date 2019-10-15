@@ -19,7 +19,7 @@
 	<parent>
         <artifactId>tests</artifactId>
         <groupId>org.eclipse.php</groupId>
-        <version>6.3.1-SNAPSHOT</version>
+        <version>6.3.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
