@@ -33,7 +33,6 @@ import org.eclipse.php.internal.core.ast.locator.PHPElementConciliator;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewriteFlattener;
 import org.eclipse.php.internal.core.ast.rewrite.ListRewrite;
-import org.eclipse.php.internal.core.ast.scanner.php5.PHPAstLexer;
 import org.eclipse.php.internal.core.ast.util.Util;
 import org.eclipse.php.internal.core.corext.dom.Selection;
 import org.eclipse.php.internal.ui.corext.util.Resources;
@@ -120,11 +119,11 @@ public class ExtractFunctionRefactoring extends Refactoring {
 			}
 			try {
 				astRoot = ASTUtils.createProgramFromSource(sourceModule);
+				fAST = astRoot.getAST();
 
 				final Reader reader = new StringReader(document.get());
-				astRoot.initCommentMapper(document, new PHPAstLexer(reader));
+				astRoot.initCommentMapper(document, reader, fAST.lexer());
 
-				fAST = astRoot.getAST();
 				astRoot.accept(createVisitor());
 
 			} catch (Exception e) {

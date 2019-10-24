@@ -86,11 +86,6 @@
 	// where the last internal container block was found
 	private int fLastInternalBlockStart = -1;
 
-	/**
-	 * Creates a new scanner
-	 *
-	 * @param   in  the java.io.Reader to read input from.
-	 */
 --- constructor declaration
 
 

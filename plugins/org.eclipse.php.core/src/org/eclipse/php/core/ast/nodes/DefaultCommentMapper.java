@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009-2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -241,7 +241,7 @@ public class DefaultCommentMapper {
 	 * compilation unit. Scanner is necessary to scan between nodes and comments and
 	 * verify if there's nothing else than white spaces.
 	 */
-	void initialize(Program unit, AstLexer sc, IDocument document) {
+	void initialize(Program unit, IDocument document, Reader reader, AstLexer sc) throws IOException {
 
 		if (document == null) {
 			throw new IllegalArgumentException();
@@ -266,6 +266,8 @@ public class DefaultCommentMapper {
 		// Init scanner and start ranges computing
 		this.scanner = sc;
 		// TODO : this.scanner.tokenizeWhiteSpace = true;
+		this.scanner.yyreset(reader);
+		this.scanner.resetCommentList();
 
 		// Start unit visit
 		AbstractVisitor commentVisitor = new CommentMapperVisitor();

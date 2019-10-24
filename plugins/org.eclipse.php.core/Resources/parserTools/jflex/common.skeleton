@@ -88,11 +88,6 @@
 	private boolean useOldString = false;
 	private int startPos = 0;
 
-	/**
-	 * Creates a new scanner
-	 *
-	 * @param   in  the java.io.Reader to read input from.
-	 */
 --- constructor declaration
 
 

@@ -107,6 +107,7 @@ public class AST {
 	final lr_parser parser;
 	final PHPVersion apiLevel;
 	final boolean useASPTags;
+	final boolean useShortTags;
 
 	/**
 	 * The event handler for this AST. Initially an event handler that does not
@@ -171,6 +172,7 @@ public class AST {
 
 	public AST(Reader reader, PHPVersion apiLevel, boolean aspTagsAsPhp, boolean useShortTags) throws IOException {
 		this.useASPTags = aspTagsAsPhp;
+		this.useShortTags = useShortTags;
 		this.apiLevel = apiLevel;
 		this.lexer = getLexerInstance(reader, apiLevel, aspTagsAsPhp, useShortTags);
 		this.parser = getParserInstance(apiLevel, this.lexer);
@@ -1118,6 +1120,13 @@ public class AST {
 	 */
 	public boolean useASPTags() {
 		return useASPTags;
+	}
+
+	/**
+	 * @return true if this AST "permits" short tags
+	 */
+	public boolean useShortTags() {
+		return useShortTags;
 	}
 
 	/**
