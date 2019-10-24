@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009-2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -13,6 +13,8 @@
  *******************************************************************************/
 package org.eclipse.php.core.ast.nodes;
 
+import java.io.IOException;
+import java.io.Reader;
 import java.util.*;
 
 import org.eclipse.core.resources.IMarker;
@@ -266,11 +268,12 @@ public class Program extends ASTNode {
 	 * 
 	 * @param scanner
 	 *            the scanner
+	 * @throws IOException
 	 * @since 3.0
 	 */
-	public void initCommentMapper(IDocument document, AstLexer scanner) {
+	public void initCommentMapper(IDocument document, Reader reader, AstLexer scanner) throws IOException {
 		this.commentMapper = new DefaultCommentMapper(this.comments().toArray(new Comment[this.comments().size()]));
-		this.commentMapper.initialize(this, scanner, document);
+		this.commentMapper.initialize(this, document, reader, scanner);
 	}
 
 	/**

@@ -29,7 +29,6 @@ import org.eclipse.php.core.ast.nodes.Program;
 import org.eclipse.php.core.ast.nodes.Statement;
 import org.eclipse.php.core.project.ProjectOptions;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
-import org.eclipse.php.internal.core.ast.scanner.php5.PHPAstLexer;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -112,7 +111,7 @@ public class CommentMapperTests {
 				ProjectOptions.isSupportingASPTags((IProject) null), ProjectOptions.useShortTags((IProject) null))
 				.createAST(new NullProgressMonitor());
 
-		program.initCommentMapper(document, new PHPAstLexer(reader));
+		program.initCommentMapper(document, reader, program.getAST().lexer());
 
 		final Statement node = program.statements().get(0);
 		final int extendedLength = program.getExtendedLength(node);
@@ -133,7 +132,7 @@ public class CommentMapperTests {
 				ProjectOptions.isSupportingASPTags((IProject) null), ProjectOptions.useShortTags((IProject) null))
 				.createAST(new NullProgressMonitor());
 
-		program.initCommentMapper(document, new PHPAstLexer(reader));
+		program.initCommentMapper(document, reader, program.getAST().lexer());
 
 		final ClassDeclaration node = (ClassDeclaration) program.statements().get(0);
 		final Statement statement = node.getBody().statements().get(index);
