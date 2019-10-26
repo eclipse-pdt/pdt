@@ -29,6 +29,11 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * 
  * { statement1; statement2; }, : statement1; statement2; ,
  * </pre>
+ * 
+ * @todo Merge methods isCurly() and isBracketed()
+ * @todo Remove useless BodyStartSymbol.NONE
+ * @todo By default, set isCurly to true and bodyStartSymbol to
+ *       BodyStartSymbol.BRACKLET
  */
 public class Block extends Statement {
 
@@ -143,13 +148,7 @@ public class Block extends Statement {
 	 *            the assignment operator
 	 * @exception IllegalArgumentException
 	 *                if the argument is incorrect
-	 * 
-	 * @deprecated <code>setBracketAsBodyStartSymbol</code>,
-	 *             <code>setColonAsBodyStartSymbol</code> or
-	 *             <code>clearBodyStartSymbol</code> should be use instead of
-	 *             this method.
 	 */
-	@Deprecated
 	public void setIsCurly(boolean isCurly) {
 		preValueChange(IS_CURLY_PROPERTY);
 		this.isCurly = isCurly;
@@ -161,23 +160,25 @@ public class Block extends Statement {
 		postValueChange(IS_CURLY_PROPERTY);
 	}
 
+	@Deprecated
 	public boolean isBracketed() {
 		return bodyStartSymbol == BodyStartSymbol.BRACKLET;
 	}
 
-	public void setBracketAsBodyStartSymbol() {
+	protected void setBracketAsBodyStartSymbol() {
 		bodyStartSymbol = BodyStartSymbol.BRACKLET;
 	}
 
+	@Deprecated
 	public boolean isColon() {
 		return bodyStartSymbol == BodyStartSymbol.COLON;
 	}
 
-	public void setColonAsBodyStartSymbol() {
+	protected void setColonAsBodyStartSymbol() {
 		bodyStartSymbol = BodyStartSymbol.COLON;
 	}
 
-	public void clearBodyStartSymbol() {
+	protected void clearBodyStartSymbol() {
 		bodyStartSymbol = BodyStartSymbol.NONE;
 	}
 
