@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009-2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -29,6 +29,9 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * 
  * namespace MyNamespace; namespace MyProject\Sub\Level;
  * </pre>
+ * 
+ * @todo Delete property "bracketed" and make method isBracketed() depend on
+ *       getBody().isCurly()
  */
 public class NamespaceDeclaration extends Statement {
 
@@ -76,7 +79,7 @@ public class NamespaceDeclaration extends Statement {
 		this.bracketed = bracketed;
 
 		if (body == null) {
-			body = new Block(end, end, ast, new ArrayList<Statement>(), false);
+			body = new Block(end, end, ast, new ArrayList<Statement>(), bracketed);
 		}
 		body.setParent(this, BODY_PROPERTY);
 
@@ -92,6 +95,7 @@ public class NamespaceDeclaration extends Statement {
 	 * Returns whether this namespace declaration has a bracketed syntax
 	 * 
 	 * @return
+	 * @todo Return the value of this.body.isCurly()
 	 */
 	public boolean isBracketed() {
 		return bracketed;
@@ -138,6 +142,9 @@ public class NamespaceDeclaration extends Statement {
 	 *                </ul>
 	 */
 	public void setBody(Block block) {
+		if (block == null) {
+			throw new IllegalArgumentException();
+		}
 		// an Assignment may occur inside a Expression - must check cycles
 		ASTNode oldChild = this.body;
 		preReplaceChild(oldChild, block, BODY_PROPERTY);
