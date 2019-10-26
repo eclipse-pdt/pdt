@@ -22,6 +22,33 @@ import org.eclipse.php.core.ast.nodes.*;
 import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.core.compiler.PHPFlags;
 
+/**
+ * This class can be called on a newly created empty node that will serve as a
+ * container for an existing node that should be moved in the AST using a
+ * NodeRewriteEvent. At first place, this new node was created using
+ * <code>ASTRewrite#createMoveTarget(ASTNode node)</code> which in turn called
+ * <code>NodeInfoStore#newPlaceholderNode(int nodeType)</code> and
+ * <code>AST#createInstance(int nodeType)</code>. The
+ * <code>AST#createInstance(int nodeType)</code> creates nodes using the
+ * minimalistic constructor <code>ASTNode(AST ast)</code>, so many ASTNode (or
+ * subtype) instances will not have their required (non-null) node attributes
+ * properly initialized, leading to NPE while using the ASTRewriteFlattener
+ * class.<br>
+ * <br>
+ * There are many possible solutions to initialize required node attributes:<br>
+ * - initialize the required node attributes with fake values in
+ * NodeInfoStore#newPlaceholderNode(int nodeType)<br>
+ * - allow code rewrite for only a set of container nodes in
+ * AST#createInstance(int nodeType)<br>
+ * - consolidate the checks in class ASTRewriteFlattener to be able to work on
+ * nodes (created using the constructor <code>ASTNode(AST ast)</code>) whose
+ * required attributes were not initialized<br>
+ *
+ * @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=552366
+ * @see {@link ASTRewriteFormatter#getFormattedResult(ASTNode, int, java.util.Collection)}
+ * @see {@link ASTRewriteFlattener#visitList(ASTNode, StructuralPropertyDescriptor, String)}
+ *
+ */
 public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public static String asString(ASTNode node, RewriteEventStore store) {
@@ -188,22 +215,30 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 			arrayElement.getKey().accept(this);
 			result.append("=>"); //$NON-NLS-1$
 		}
-		arrayElement.getValue().accept(this);
+		if (arrayElement.getValue() != null) {
+			arrayElement.getValue().accept(this);
+		}
 		return false;
 	}
 
 	@Override
 	public boolean visit(ArraySpreadElement arraySpreadElement) {
 		result.append("..."); //$NON-NLS-1$
-		arraySpreadElement.getValue().accept(this);
+		if (arraySpreadElement.getValue() != null) {
+			arraySpreadElement.getValue().accept(this);
+		}
 		return false;
 	}
 
 	@Override
 	public boolean visit(Assignment assignment) {
-		assignment.getLeftHandSide().accept(this);
+		if (assignment.getLeftHandSide() != null) {
+			assignment.getLeftHandSide().accept(this);
+		}
 		result.append(Assignment.getOperator(assignment.getOperator()));
-		assignment.getRightHandSide().accept(this);
+		if (assignment.getRightHandSide() != null) {
+			assignment.getRightHandSide().accept(this);
+		}
 		return false;
 	}
 
@@ -225,6 +260,13 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	@Override
 	public boolean visit(Block block) {
+		// Handle non-bracketed NamespaceDeclaration body (see also
+		// CodeFormatterVisitor#visit(Block block)):
+		if (!block.isCurly() && block.getParent() != null && block.getParent().getType() == ASTNode.NAMESPACE) {
+			visitList(block, Block.STATEMENTS_PROPERTY, null);
+			return false;
+		}
+
 		if (block.isBracketed()) {
 			result.append("{\n"); //$NON-NLS-1$
 		} else if (block.isColon()) {
@@ -276,30 +318,41 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		result.append("("); //$NON-NLS-1$
 		result.append(CastExpression.getCastType(castExpression.getCastingType()));
 		result.append(")"); //$NON-NLS-1$
-		castExpression.getExpression().accept(this);
+		if (castExpression.getExpression() != null) {
+			castExpression.getExpression().accept(this);
+		}
 		return false;
 	}
 
 	@Override
 	public boolean visit(CatchClause catchClause) {
 		result.append("catch ("); //$NON-NLS-1$
-		catchClause.getClassNames().get(0).accept(this);
-		for (int i = 1; i < catchClause.getClassNames().size(); i++) {
-			result.append(" | "); //$NON-NLS-1$
-			Expression className = catchClause.getClassNames().get(0);
-			className.accept(this);
+		int size = catchClause.getClassNames().size();
+		if (size > 0) {
+			catchClause.getClassNames().get(0).accept(this);
+			for (int i = 1; i < size; i++) {
+				result.append(" | "); //$NON-NLS-1$
+				Expression className = catchClause.getClassNames().get(i);
+				className.accept(this);
+			}
 		}
 		result.append(" "); //$NON-NLS-1$
-		catchClause.getVariable().accept(this);
+		if (catchClause.getVariable() != null) {
+			catchClause.getVariable().accept(this);
+		}
 		result.append(") "); //$NON-NLS-1$
-		catchClause.getBody().accept(this);
+		if (catchClause.getBody() != null) {
+			catchClause.getBody().accept(this);
+		}
 		return false;
 	}
 
 	@Override
 	public boolean visit(FinallyClause finallyClause) {
 		result.append("finally "); //$NON-NLS-1$
-		finallyClause.getBody().accept(this);
+		if (finallyClause.getBody() != null) {
+			finallyClause.getBody().accept(this);
+		}
 		return false;
 	}
 
@@ -325,12 +378,16 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	@Override
 	public boolean visit(TraitDeclaration traitDeclaration) {
 		result.append("trait "); //$NON-NLS-1$
-		traitDeclaration.getName().accept(this);
+		if (traitDeclaration.getName() != null) {
+			traitDeclaration.getName().accept(this);
+		}
 		if (traitDeclaration.getSuperClass() != null) {
 			result.append(" extends "); //$NON-NLS-1$
 			traitDeclaration.getSuperClass().accept(this);
 		}
-		traitDeclaration.getBody().accept(this);
+		if (traitDeclaration.getBody() != null) {
+			traitDeclaration.getBody().accept(this);
+		}
 		return false;
 	}
 
@@ -342,7 +399,9 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 			result.append(' ');
 		}
 		result.append("class "); //$NON-NLS-1$
-		classDeclaration.getName().accept(this);
+		if (classDeclaration.getName() != null) {
+			classDeclaration.getName().accept(this);
+		}
 		if (classDeclaration.getSuperClass() != null) {
 			result.append(" extends "); //$NON-NLS-1$
 			classDeclaration.getSuperClass().accept(this);
@@ -356,17 +415,21 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 				iterator.next().accept(this);
 			}
 		}
-		classDeclaration.getBody().accept(this);
+		if (classDeclaration.getBody() != null) {
+			classDeclaration.getBody().accept(this);
+		}
 		return false;
 	}
 
 	@Override
 	public boolean visit(ClassInstanceCreation classInstanceCreation) {
 		result.append("new "); //$NON-NLS-1$
-		classInstanceCreation.getClassName().accept(this);
-		if (classInstanceCreation.getEnd() != classInstanceCreation.getClassName().getEnd()
-				|| classInstanceCreation.getClassName().getStart() == -1) {
-			result.append("("); //$NON-NLS-1$
+		if (classInstanceCreation.getClassName() != null) {
+			classInstanceCreation.getClassName().accept(this);
+			if (classInstanceCreation.getEnd() != classInstanceCreation.getClassName().getEnd()
+					|| classInstanceCreation.getClassName().getStart() == -1) {
+				result.append("("); //$NON-NLS-1$
+			}
 		}
 		Iterator<Expression> ctorParams = classInstanceCreation.ctorParams().iterator();
 		if (ctorParams.hasNext()) {
@@ -376,23 +439,29 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 				ctorParams.next().accept(this);
 			}
 		}
-		if (classInstanceCreation.getEnd() != classInstanceCreation.getClassName().getEnd()
-				|| classInstanceCreation.getClassName().getStart() == -1) {
-			result.append(")"); //$NON-NLS-1$
+		if (classInstanceCreation.getClassName() != null) {
+			if (classInstanceCreation.getEnd() != classInstanceCreation.getClassName().getEnd()
+					|| classInstanceCreation.getClassName().getStart() == -1) {
+				result.append(")"); //$NON-NLS-1$
+			}
 		}
 		return false;
 	}
 
 	@Override
 	public boolean visit(ClassName className) {
-		className.getName().accept(this);
+		if (className.getName() != null) {
+			className.getName().accept(this);
+		}
 		return false;
 	}
 
 	@Override
 	public boolean visit(CloneExpression cloneExpression) {
 		result.append("clone "); //$NON-NLS-1$
-		cloneExpression.getExpression().accept(this);
+		if (cloneExpression.getExpression() != null) {
+			cloneExpression.getExpression().accept(this);
+		}
 		return false;
 	}
 
@@ -418,11 +487,24 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	@Override
 	public boolean visit(ConditionalExpression conditionalExpression) {
-		conditionalExpression.getCondition().accept(this);
-		result.append(" ? "); //$NON-NLS-1$
-		conditionalExpression.getIfTrue().accept(this);
-		result.append(" : "); //$NON-NLS-1$
-		conditionalExpression.getIfFalse().accept(this);
+		if (conditionalExpression.getCondition() != null) {
+			conditionalExpression.getCondition().accept(this);
+		}
+		if (conditionalExpression.getOperatorType() == ConditionalExpression.OP_TERNARY) {
+			result.append(" ? "); //$NON-NLS-1$
+			if (conditionalExpression.getIfTrue() != null) {
+				conditionalExpression.getIfTrue().accept(this);
+			}
+			result.append(" : "); //$NON-NLS-1$
+			if (conditionalExpression.getIfFalse() != null) {
+				conditionalExpression.getIfFalse().accept(this);
+			}
+		} else if (conditionalExpression.getOperatorType() == ConditionalExpression.OP_COALESCE) {
+			result.append(" ?? "); //$NON-NLS-1$
+			if (conditionalExpression.getIfTrue() != null) {
+				conditionalExpression.getIfTrue().accept(this);
+			}
+		}
 		return false;
 	}
 
@@ -452,7 +534,9 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 			isFirst = false;
 		}
 		result.append(")"); //$NON-NLS-1$
-		declareStatement.getBody().accept(this);
+		if (declareStatement.getBody() != null) {
+			declareStatement.getBody().accept(this);
+		}
 		return false;
 	}
 
@@ -511,9 +595,13 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	@Override
 	public boolean visit(FieldAccess fieldAccess) {
-		fieldAccess.getDispatcher().accept(this);
+		if (fieldAccess.getDispatcher() != null) {
+			fieldAccess.getDispatcher().accept(this);
+		}
 		result.append("->"); //$NON-NLS-1$
-		fieldAccess.getField().accept(this);
+		if (fieldAccess.getField() != null) {
+			fieldAccess.getField().accept(this);
+		}
 		return false;
 	}
 
@@ -554,20 +642,22 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 			value.accept(this);
 		}
 		result.append(")"); //$NON-NLS-1$
-		forEachStatement.getStatement().accept(this);
+		if (forEachStatement.getStatement() != null) {
+			forEachStatement.getStatement().accept(this);
+		}
 		return false;
 	}
 
 	@Override
 	public boolean visit(NamespaceDeclaration namespaceDeclaration) {
 		result.append("namespace "); //$NON-NLS-1$
-		namespaceDeclaration.getName().accept(this);
-		if (namespaceDeclaration.getBody() == null) {
+		if (namespaceDeclaration.getName() != null) {
+			namespaceDeclaration.getName().accept(this);
+		}
+		if (!namespaceDeclaration.isBracketed()) {
 			result.append(";\n"); //$NON-NLS-1$
-		} else {
-			if (namespaceDeclaration.getBody().isBracketed() != true) {
-				result.append(";\n"); //$NON-NLS-1$
-			}
+		}
+		if (namespaceDeclaration.getBody() != null) {
 			namespaceDeclaration.getBody().accept(this);
 		}
 		return false;
@@ -628,7 +718,9 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 				result.append("const "); //$NON-NLS-1$
 			}
 		}
-		useStatementPart.getName().accept(this);
+		if (useStatementPart.getName() != null) {
+			useStatementPart.getName().accept(this);
+		}
 		Identifier alias = useStatementPart.getAlias();
 		if (alias != null) {
 			result.append(" as "); //$NON-NLS-1$
@@ -649,7 +741,9 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 			result.append("..."); //$NON-NLS-1$
 		}
 
-		formalParameter.getParameterName().accept(this);
+		if (formalParameter.getParameterName() != null) {
+			formalParameter.getParameterName().accept(this);
+		}
 		Expression defaultValue = formalParameter.getDefaultValue();
 		if (defaultValue != null /* && defaultValue.getLength() > 0 */) {
 			result.append(" = "); //$NON-NLS-1$
@@ -704,7 +798,9 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		if (functionDeclaration.isReference()) {
 			result.append('&');
 		}
-		functionDeclaration.getFunctionName().accept(this);
+		if (functionDeclaration.getFunctionName() != null) {
+			functionDeclaration.getFunctionName().accept(this);
+		}
 		result.append('(');
 		List<FormalParameter> formalParametersList = functionDeclaration.formalParameters();
 		FormalParameter[] formalParameters = formalParametersList
@@ -731,7 +827,9 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	@Override
 	public boolean visit(FunctionInvocation functionInvocation) {
-		functionInvocation.getFunctionName().accept(this);
+		if (functionInvocation.getFunctionName() != null) {
+			functionInvocation.getFunctionName().accept(this);
+		}
 		result.append('(');
 		Iterator<Expression> parameters = functionInvocation.parameters().iterator();
 		if (parameters.hasNext()) {
@@ -747,7 +845,9 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	@Override
 	public boolean visit(FunctionName functionName) {
-		functionName.getName().accept(this);
+		if (functionName.getName() != null) {
+			functionName.getName().accept(this);
+		}
 		return false;
 	}
 
@@ -768,7 +868,9 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	@Override
 	public boolean visit(GotoLabel gotoLabel) {
-		gotoLabel.getName().accept(this);
+		if (gotoLabel.getName() != null) {
+			gotoLabel.getName().accept(this);
+		}
 		result.append(":\n "); //$NON-NLS-1$
 		return false;
 	}
@@ -776,7 +878,9 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	@Override
 	public boolean visit(GotoStatement gotoStatement) {
 		result.append("goto "); //$NON-NLS-1$
-		gotoStatement.getLabel().accept(this);
+		if (gotoStatement.getLabel() != null) {
+			gotoStatement.getLabel().accept(this);
+		}
 		result.append(";\n "); //$NON-NLS-1$
 		return false;
 	}
@@ -809,7 +913,9 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	@Override
 	public boolean visit(IgnoreError ignoreError) {
 		result.append("@"); //$NON-NLS-1$
-		ignoreError.getExpression().accept(this);
+		if (ignoreError.getExpression() != null) {
+			ignoreError.getExpression().accept(this);
+		}
 		return false;
 	}
 
@@ -817,18 +923,24 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	public boolean visit(Include include) {
 		result.append(Include.getType(include.getIncludeType()));
 		result.append(" ("); //$NON-NLS-1$
-		include.getExpression().accept(this);
+		if (include.getExpression() != null) {
+			include.getExpression().accept(this);
+		}
 		result.append(")"); //$NON-NLS-1$
 		return false;
 	}
 
 	@Override
 	public boolean visit(InfixExpression infixExpression) {
-		infixExpression.getLeft().accept(this);
+		if (infixExpression.getLeft() != null) {
+			infixExpression.getLeft().accept(this);
+		}
 		result.append(' ');
 		result.append(InfixExpression.getOperator(infixExpression.getOperator()));
 		result.append(' ');
-		infixExpression.getRight().accept(this);
+		if (infixExpression.getRight() != null) {
+			infixExpression.getRight().accept(this);
+		}
 		return false;
 	}
 
@@ -840,16 +952,22 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	@Override
 	public boolean visit(InstanceOfExpression instanceOfExpression) {
-		instanceOfExpression.getExpression().accept(this);
+		if (instanceOfExpression.getExpression() != null) {
+			instanceOfExpression.getExpression().accept(this);
+		}
 		result.append(" instanceof "); //$NON-NLS-1$
-		instanceOfExpression.getClassName().accept(this);
+		if (instanceOfExpression.getClassName() != null) {
+			instanceOfExpression.getClassName().accept(this);
+		}
 		return false;
 	}
 
 	@Override
 	public boolean visit(InterfaceDeclaration interfaceDeclaration) {
 		result.append("interface "); //$NON-NLS-1$
-		interfaceDeclaration.getName().accept(this);
+		if (interfaceDeclaration.getName() != null) {
+			interfaceDeclaration.getName().accept(this);
+		}
 		List<Identifier> interfaces;
 		if (interfaceDeclaration.interfaces().size() > 0) {
 			result.append(" extends "); //$NON-NLS-1$
@@ -863,7 +981,9 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 				isFirst = false;
 			}
 		}
-		interfaceDeclaration.getBody().accept(this);
+		if (interfaceDeclaration.getBody() != null) {
+			interfaceDeclaration.getBody().accept(this);
+		}
 		return false;
 	}
 
@@ -965,15 +1085,21 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 			comment.accept(this);
 		}
 		result.append(methodDeclaration.getModifierString());
-		methodDeclaration.getFunction().accept(this);
+		if (methodDeclaration.getFunction() != null) {
+			methodDeclaration.getFunction().accept(this);
+		}
 		return false;
 	}
 
 	@Override
 	public boolean visit(MethodInvocation methodInvocation) {
-		methodInvocation.getDispatcher().accept(this);
+		if (methodInvocation.getDispatcher() != null) {
+			methodInvocation.getDispatcher().accept(this);
+		}
 		result.append("->"); //$NON-NLS-1$
-		methodInvocation.getMethod().accept(this);
+		if (methodInvocation.getMethod() != null) {
+			methodInvocation.getMethod().accept(this);
+		}
 		return false;
 	}
 
@@ -990,14 +1116,18 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	@Override
 	public boolean visit(PostfixExpression postfixExpressions) {
-		postfixExpressions.getVariable().accept(this);
+		if (postfixExpressions.getVariable() != null) {
+			postfixExpressions.getVariable().accept(this);
+		}
 		result.append(PostfixExpression.getOperator(postfixExpressions.getOperator()));
 		return false;
 	}
 
 	@Override
 	public boolean visit(PrefixExpression prefixExpression) {
-		prefixExpression.getVariable().accept(this);
+		if (prefixExpression.getVariable() != null) {
+			prefixExpression.getVariable().accept(this);
+		}
 		result.append(PrefixExpression.getOperator(prefixExpression.getOperator()));
 		return false;
 	}
@@ -1070,14 +1200,18 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	@Override
 	public boolean visit(Reference reference) {
 		result.append("&"); //$NON-NLS-1$
-		reference.getExpression().accept(this);
+		if (reference.getExpression() != null) {
+			reference.getExpression().accept(this);
+		}
 		return false;
 	}
 
 	@Override
 	public boolean visit(ReflectionVariable reflectionVariable) {
 		result.append("$"); //$NON-NLS-1$
-		reflectionVariable.getName().accept(this);
+		if (reflectionVariable.getName() != null) {
+			reflectionVariable.getName().accept(this);
+		}
 		return false;
 	}
 
@@ -1113,25 +1247,37 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	@Override
 	public boolean visit(StaticConstantAccess staticFieldAccess) {
-		staticFieldAccess.getClassName().accept(this);
+		if (staticFieldAccess.getClassName() != null) {
+			staticFieldAccess.getClassName().accept(this);
+		}
 		result.append("::"); //$NON-NLS-1$
-		staticFieldAccess.getConstant().accept(this);
+		if (staticFieldAccess.getConstant() != null) {
+			staticFieldAccess.getConstant().accept(this);
+		}
 		return false;
 	}
 
 	@Override
 	public boolean visit(StaticFieldAccess staticFieldAccess) {
-		staticFieldAccess.getClassName().accept(this);
+		if (staticFieldAccess.getClassName() != null) {
+			staticFieldAccess.getClassName().accept(this);
+		}
 		result.append("::"); //$NON-NLS-1$
-		staticFieldAccess.getField().accept(this);
+		if (staticFieldAccess.getField() != null) {
+			staticFieldAccess.getField().accept(this);
+		}
 		return false;
 	}
 
 	@Override
 	public boolean visit(StaticMethodInvocation staticMethodInvocation) {
-		staticMethodInvocation.getClassName().accept(this);
+		if (staticMethodInvocation.getClassName() != null) {
+			staticMethodInvocation.getClassName().accept(this);
+		}
 		result.append("::"); //$NON-NLS-1$
-		staticMethodInvocation.getMethod().accept(this);
+		if (staticMethodInvocation.getMethod() != null) {
+			staticMethodInvocation.getMethod().accept(this);
+		}
 		return false;
 	}
 
@@ -1186,7 +1332,9 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	@Override
 	public boolean visit(ThrowStatement throwStatement) {
 		result.append("throw "); //$NON-NLS-1$
-		throwStatement.getExpression().accept(this);
+		if (throwStatement.getExpression() != null) {
+			throwStatement.getExpression().accept(this);
+		}
 		result.append(";\n"); //$NON-NLS-1$
 		return false;
 	}
@@ -1209,7 +1357,9 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	@Override
 	public boolean visit(UnaryOperation unaryOperation) {
 		result.append(UnaryOperation.getOperator(unaryOperation.getOperator()));
-		unaryOperation.getExpression().accept(this);
+		if (unaryOperation.getExpression() != null) {
+			unaryOperation.getExpression().accept(this);
+		}
 		return false;
 	}
 
@@ -1218,7 +1368,9 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		if (variable.isDollared()) {
 			result.append("$"); //$NON-NLS-1$
 		}
-		variable.getName().accept(this);
+		if (variable.getName() != null) {
+			variable.getName().accept(this);
+		}
 		return false;
 	}
 
@@ -1240,7 +1392,9 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	@Override
 	public boolean visit(SingleFieldDeclaration singleFieldDeclaration) {
-		singleFieldDeclaration.getName().accept(this);
+		if (singleFieldDeclaration.getName() != null) {
+			singleFieldDeclaration.getName().accept(this);
+		}
 		Expression value = singleFieldDeclaration.getValue();
 		if (value != null) {
 			result.append(" = ");//$NON-NLS-1$
