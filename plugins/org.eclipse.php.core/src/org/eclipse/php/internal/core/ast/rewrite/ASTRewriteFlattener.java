@@ -267,17 +267,17 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 			return false;
 		}
 
-		if (block.isBracketed()) {
+		if (block.isCurly()) {
 			result.append("{\n"); //$NON-NLS-1$
-		} else if (block.isColon()) {
+		} else {
 			result.append(":\n"); //$NON-NLS-1$
 		}
 
 		visitList(block, Block.STATEMENTS_PROPERTY, null);
 
-		if (block.isBracketed()) {
+		if (block.isCurly()) {
 			result.append("}\n"); //$NON-NLS-1$
-		} else if (block.isColon()) {
+		} else {
 			StructuralPropertyDescriptor locationInParent = block.getLocationInParent();
 			if (locationInParent == IfStatement.TRUE_STATEMENT_PROPERTY) {
 				if (((IfStatement) block.getParent()).getFalseStatement() == null) {

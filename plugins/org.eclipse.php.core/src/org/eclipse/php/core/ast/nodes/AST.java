@@ -21,7 +21,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.internal.core.CoreMessages;
@@ -2780,11 +2779,10 @@ public class AST {
 	 * @param body
 	 * @return A new NamespaceDeclaration.
 	 */
-	public NamespaceDeclaration newNamespaceDeclaration(NamespaceName name, @NonNull Block body) {
+	public NamespaceDeclaration newNamespaceDeclaration(NamespaceName name, Block body) {
 		NamespaceDeclaration namespaceDeclaration = new NamespaceDeclaration(this);
 		namespaceDeclaration.setName(name);
 		namespaceDeclaration.setBody(body);
-		namespaceDeclaration.setBracketed(body.isCurly());
 		return namespaceDeclaration;
 	}
 

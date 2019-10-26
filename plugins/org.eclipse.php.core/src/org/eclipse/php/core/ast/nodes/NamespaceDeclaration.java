@@ -29,15 +29,11 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * 
  * namespace MyNamespace; namespace MyProject\Sub\Level;
  * </pre>
- * 
- * @todo Delete property "bracketed" and make method isBracketed() depend on
- *       getBody().isCurly()
  */
 public class NamespaceDeclaration extends Statement {
 
 	private NamespaceName name;
 	private Block body;
-	private boolean bracketed = true;
 
 	/**
 	 * The "namespace" structural property of this node type.
@@ -47,9 +43,6 @@ public class NamespaceDeclaration extends Statement {
 
 	public static final ChildPropertyDescriptor BODY_PROPERTY = new ChildPropertyDescriptor(NamespaceDeclaration.class,
 			"body", Block.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
-
-	public static final SimplePropertyDescriptor BRACKETED_PROPERTY = new SimplePropertyDescriptor(
-			NamespaceDeclaration.class, "bracketed", Boolean.class, MANDATORY); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type:
@@ -61,7 +54,6 @@ public class NamespaceDeclaration extends Statement {
 		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(2);
 		properyList.add(NAME_PROPERTY);
 		properyList.add(BODY_PROPERTY);
-		properyList.add(BRACKETED_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
@@ -69,17 +61,11 @@ public class NamespaceDeclaration extends Statement {
 		super(ast);
 	}
 
-	public NamespaceDeclaration(int start, int end, AST ast, NamespaceName name, Block body, boolean bracketed) {
+	public NamespaceDeclaration(int start, int end, AST ast, NamespaceName name, Block body) {
 		super(start, end, ast);
 
-		if (!bracketed && name == null) {
-			throw new IllegalArgumentException("Namespace name must not be null in an un-bracketed statement"); //$NON-NLS-1$
-		}
-
-		this.bracketed = bracketed;
-
 		if (body == null) {
-			body = new Block(end, end, ast, new ArrayList<Statement>(), bracketed);
+			body = new Block(end, end, ast, new ArrayList<Statement>(), false);
 		}
 		body.setParent(this, BODY_PROPERTY);
 
@@ -98,13 +84,7 @@ public class NamespaceDeclaration extends Statement {
 	 * @todo Return the value of getBody().isCurly()
 	 */
 	public boolean isBracketed() {
-		return bracketed;
-	}
-
-	public void setBracketed(boolean bracketed) {
-		preValueChange(BRACKETED_PROPERTY);
-		this.bracketed = bracketed;
-		postValueChange(BRACKETED_PROPERTY);
+		return body != null ? body.isCurly() : false;
 	}
 
 	public void addStatement(Statement statement) {
@@ -218,7 +198,7 @@ public class NamespaceDeclaration extends Statement {
 	public void toString(StringBuilder buffer, String tab) {
 		buffer.append(tab).append("<NamespaceDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" isBracketed='").append(bracketed).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		buffer.append(" isBracketed='").append(isBracketed()).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		NamespaceName name = getName();
 		if (name != null) {
@@ -263,28 +243,14 @@ public class NamespaceDeclaration extends Statement {
 	ASTNode clone0(AST target) {
 		final NamespaceName name = ASTNode.copySubtree(target, getName());
 		final Block body = ASTNode.copySubtree(target, getBody());
-		final boolean bracketed = isBracketed();
-		final NamespaceDeclaration result = new NamespaceDeclaration(this.getStart(), this.getEnd(), target, name, body,
-				bracketed);
+		final NamespaceDeclaration result = new NamespaceDeclaration(this.getStart(), this.getEnd(), target, name,
+				body);
 		return result;
 	}
 
 	@Override
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
-	}
-
-	@Override
-	boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean value) {
-		if (property == BRACKETED_PROPERTY) {
-			if (get) {
-				return isBracketed();
-			} else {
-				setBracketed(value);
-				return false;
-			}
-		}
-		return super.internalGetSetBooleanProperty(property, get, value);
 	}
 
 	@Override

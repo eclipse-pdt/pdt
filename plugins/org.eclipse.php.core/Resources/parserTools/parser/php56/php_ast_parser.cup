@@ -499,20 +499,20 @@ statement:statement
 | T_NAMESPACE:s namespace_name:list T_SEMICOLON:e
 {:
 	RESULT = new NamespaceDeclaration(sleft, eright, parser.ast,
-		new NamespaceName(listleft, listright, parser.ast, list, false, false), null, false);
+		new NamespaceName(listleft, listright, parser.ast, list, false, false), null);
 :}
 
 | T_NAMESPACE:s namespace_name:list T_CURLY_OPEN:token top_statement_list:sList T_CURLY_CLOSE:e
 {:
 	RESULT = new NamespaceDeclaration(sleft, eright, parser.ast,
 		new NamespaceName(listleft, listright, parser.ast, list, false, false),
-		new Block(tokenleft, eright, parser.ast, sList), true);
+		new Block(tokenleft, eright, parser.ast, sList));
 :}
 
 | T_NAMESPACE:s T_CURLY_OPEN:token top_statement_list:sList T_CURLY_CLOSE:e
 {:
 	RESULT = new NamespaceDeclaration(sleft, eright, parser.ast, null,
-		new Block(tokenleft, eright, parser.ast, sList), true);
+		new Block(tokenleft, eright, parser.ast, sList));
 :}
 
 | T_USE:s use_declarations:list T_SEMICOLON:e
