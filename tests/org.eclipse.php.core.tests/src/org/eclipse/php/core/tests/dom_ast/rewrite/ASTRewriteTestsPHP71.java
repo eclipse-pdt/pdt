@@ -19,6 +19,11 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.ast.nodes.CatchClause;
+import org.eclipse.php.core.ast.nodes.ConditionalExpression;
+import org.eclipse.php.core.ast.nodes.NamespaceDeclaration;
+import org.eclipse.php.core.ast.nodes.NamespaceName;
+import org.eclipse.php.core.ast.nodes.Scalar;
 import org.eclipse.php.core.ast.nodes.UseStatement;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -280,6 +285,54 @@ public class ASTRewriteTestsPHP71 extends ASTRewriteTestsPHP7 {
 
 		rewrite();
 		checkResult("<?php use \\Foo\\{Bar, Bar, Bar}; \n ?>");
+	}
+
+	@Test
+	public void useMultipleExceptions() throws Exception {
+		String str = "<?php try { } catch (Exception1 | Exception2 | Exception3 $e) { } \n ?>";
+		initialize(str);
+
+		List<CatchClause> catchClauses = getAllOfType(program, CatchClause.class);
+		assertTrue("Unexpected list size.", catchClauses.size() == 1);
+		assertTrue("Unexpected exceptions list size.", catchClauses.get(0).getClassNames().size() == 3);
+		assertTrue("Unexpected content.", catchClauses.get(0).getClassNames().get(2) instanceof NamespaceName);
+		((NamespaceName) catchClauses.get(0).getClassNames().get(2)).segments().get(0).setName("Exception4");
+
+		rewrite();
+		checkResult("<?php try {} catch (Exception1 | Exception2 | Exception4 $e) {} \n ?>");
+	}
+
+	@Test
+	public void useCoalesceOperator() throws Exception {
+		String str = "<?php $a = $test ?? 0; \n ?>";
+		initialize(str);
+
+		List<ConditionalExpression> conditionalExpressions = getAllOfType(program, ConditionalExpression.class);
+		assertTrue("Unexpected list size.", conditionalExpressions.size() == 1);
+		assertTrue("Unexpected content 1.", conditionalExpressions.get(0).getIfTrue() instanceof Scalar);
+		assertTrue("Unexpected content 2.",
+				conditionalExpressions.get(0).getIfFalse() == conditionalExpressions.get(0).getCondition());
+		assertTrue("Unexpected content 3.",
+				conditionalExpressions.get(0).getOperatorType() == ConditionalExpression.OP_COALESCE);
+		((Scalar) conditionalExpressions.get(0).getIfTrue()).setStringValue("1");
+
+		rewrite();
+		checkResult("<?php $a = $test ?? 1; \n ?>");
+	}
+
+	@Test
+	public void useBracketedNamespaceDeclaration() throws Exception {
+		String str = "<?php namespace A {$a = 5;} \n ?>";
+		initialize(str);
+
+		List<NamespaceDeclaration> namespaceDeclarations = getAllOfType(program, NamespaceDeclaration.class);
+		assertTrue("Unexpected list size.", namespaceDeclarations.size() == 1);
+		assertTrue("Unexpected content 1.", namespaceDeclarations.get(0).isBracketed());
+		assertTrue("Unexpected content 2.", namespaceDeclarations.get(0).getBody() != null);
+		namespaceDeclarations.get(0).getBody().statements().clear();
+
+		rewrite();
+		checkResult("<?php namespace A {} \n ?>");
 	}
 
 }
