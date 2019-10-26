@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009-2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -29,22 +29,11 @@ import org.eclipse.php.core.ast.visitor.Visitor;
  * 
  * { statement1; statement2; }, : statement1; statement2; ,
  * </pre>
- * 
- * @todo Merge methods isCurly() and isBracketed()
- * @todo Remove useless BodyStartSymbol.NONE
- * @todo By default, set isCurly to true and bodyStartSymbol to
- *       BodyStartSymbol.BRACKLET
  */
 public class Block extends Statement {
 
 	private final ASTNode.NodeList<Statement> statements = new ASTNode.NodeList<>(STATEMENTS_PROPERTY);
-	private boolean isCurly;
-
-	private static enum BodyStartSymbol {
-		NONE, BRACKLET, COLON
-	};
-
-	private BodyStartSymbol bodyStartSymbol = BodyStartSymbol.NONE;
+	private boolean isCurly = true;
 
 	/**
 	 * The "statements" structural property of this node type.
@@ -152,34 +141,7 @@ public class Block extends Statement {
 	public void setIsCurly(boolean isCurly) {
 		preValueChange(IS_CURLY_PROPERTY);
 		this.isCurly = isCurly;
-		if (isCurly == true) {
-			setBracketAsBodyStartSymbol();
-		} else {
-			setColonAsBodyStartSymbol();
-		}
 		postValueChange(IS_CURLY_PROPERTY);
-	}
-
-	@Deprecated
-	public boolean isBracketed() {
-		return bodyStartSymbol == BodyStartSymbol.BRACKLET;
-	}
-
-	protected void setBracketAsBodyStartSymbol() {
-		bodyStartSymbol = BodyStartSymbol.BRACKLET;
-	}
-
-	@Deprecated
-	public boolean isColon() {
-		return bodyStartSymbol == BodyStartSymbol.COLON;
-	}
-
-	protected void setColonAsBodyStartSymbol() {
-		bodyStartSymbol = BodyStartSymbol.COLON;
-	}
-
-	protected void clearBodyStartSymbol() {
-		bodyStartSymbol = BodyStartSymbol.NONE;
 	}
 
 	/**
