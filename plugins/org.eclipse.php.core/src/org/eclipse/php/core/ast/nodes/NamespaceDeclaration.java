@@ -138,6 +138,9 @@ public class NamespaceDeclaration extends Statement {
 	 *                </ul>
 	 */
 	public void setBody(Block block) {
+		if (block == null) {
+			throw new IllegalArgumentException();
+		}
 		// an Assignment may occur inside a Expression - must check cycles
 		ASTNode oldChild = this.body;
 		preReplaceChild(oldChild, block, BODY_PROPERTY);
