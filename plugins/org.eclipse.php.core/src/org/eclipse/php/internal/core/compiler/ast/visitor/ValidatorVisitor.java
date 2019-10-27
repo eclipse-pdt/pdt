@@ -19,6 +19,7 @@ import java.util.regex.Matcher;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
@@ -236,11 +237,11 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		TypeReferenceInfo tri = new TypeReferenceInfo(node, false);
 		String nodeName = tri.getTypeName();
 		String key = null;
-		if (tri.isGlobal()) {
-			key = nodeName;
-		} else {
-			key = getFirstSegmentOfTypeName(nodeName);
-		}
+		// if (tri.isGlobal()) {
+		// key = nodeName;
+		// } else {
+		key = getFirstSegmentOfTypeName(nodeName);
+		// }
 		UsePartInfo info = usePartInfo.get(key.toLowerCase());
 
 		if (info != null) {
@@ -334,6 +335,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		return super.visit(s);
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	public boolean visit(UsePart part) throws Exception {
 		UsePartInfo info = new UsePartInfo(part);
@@ -355,7 +357,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		if (currentNamespace == null || currentNamespace.isGlobal()) {
 			currentNamespaceName = ""; //$NON-NLS-1$
 		} else {
-			currentNamespaceName = currentNamespace.getName();
+			currentNamespaceName = addLeadingSeparator(currentNamespace.getName());
 		}
 		String lcName = info.getRealName().toLowerCase();
 		if (!findElement(tri)) {
@@ -779,12 +781,8 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 			if (tri.getNamespaceName() != null) {
 				fullyQualifiedName = tri.getNamespaceName();
 			}
-			fullyQualifiedName = PHPModelUtils.concatFullyQualifiedNames(fullyQualifiedName,
-					usePart.getNamespace().getName());
-			if (fullyQualifiedName.length() > 0
-					&& fullyQualifiedName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
-				fullyQualifiedName = NamespaceReference.NAMESPACE_SEPARATOR + fullyQualifiedName;
-			}
+			fullyQualifiedName = addLeadingSeparator(
+					PHPModelUtils.concatFullyQualifiedNames(fullyQualifiedName, usePart.getNamespace().getName()));
 		}
 
 		@Override
@@ -847,54 +845,69 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		private String fullyQualifiedName;
 		private boolean isUseStatement;
 
+		@SuppressWarnings("null")
 		public TypeReferenceInfo(TypeReference typeReference, boolean isUseStatement) {
 			this.typeReference = typeReference;
 			this.isUseStatement = isUseStatement;
+			// NB: typeReference.getName() returns directly a fqn *only* when
+			// typeReference is *not* an instance of FullyQualifiedReference:
+			this.typeName = typeReference.getName();
+
 			FullyQualifiedReference fullTypeReference = null;
 			if (typeReference instanceof FullyQualifiedReference) {
 				fullTypeReference = (FullyQualifiedReference) typeReference;
 				if (fullTypeReference.getNamespace() != null) {
 					if (!fullTypeReference.getNamespace().isLocal()) {
 						hasNamespace = true;
+
+						// NB: isGlobal() will always return false
+						// for NamespaceReferences used inside any kind of use
+						// statement declaration
+						isGlobal = fullTypeReference.getNamespace().isGlobal();
 						namespaceName = fullTypeReference.getNamespace().getName();
-					}
-					// for use statement, no need to lookup the use statement
-					// to compute namespace name
-					if (!isUseStatement) {
-						// Bug 517368 - Use statement doesn't take care
-						// Annotation / Alias
-						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=517368
-						// use first segment of namespace to lookup the use
-						// statements
-						String[] segments = namespaceName.split("\\\\", 2); //$NON-NLS-1$
-						UsePartInfo info = usePartInfo.get(segments[0].toLowerCase());
-						if (info != null) {
-							String restSegs = ""; //$NON-NLS-1$
-							if (segments.length > 1) {
-								restSegs = segments[1];
+						typeName = fullTypeReference.getFullyQualifiedName();
+
+						// for use statement, no need to lookup the use
+						// statement to compute namespace name
+						if (!isUseStatement && !isGlobal) {
+							// Bug 517368 - Use statement doesn't take care
+							// Annotation / Alias
+							// https://bugs.eclipse.org/bugs/show_bug.cgi?id=517368
+							// use first segment of namespace to lookup the use
+							// statements
+							String[] segments = namespaceName.split("\\\\", 2); //$NON-NLS-1$
+							UsePartInfo info = usePartInfo.get(segments[0].toLowerCase());
+							if (info != null) {
+								String restSegs = ""; //$NON-NLS-1$
+								if (segments.length > 1) {
+									restSegs = segments[1];
+								}
+								namespaceName = PHPModelUtils.concatFullyQualifiedNames(info.getFullyQualifiedName(),
+										restSegs);
 							}
-							namespaceName = PHPModelUtils.concatFullyQualifiedNames(info.getFullyQualifiedName(),
-									restSegs);
+						}
+						if (isUseStatement) {
+							isGlobal = true;
+							namespaceName = addLeadingSeparator(namespaceName);
 						}
 					}
+				} else {
+					if (isUseStatement) {
+						isGlobal = true;
+					}
 				}
-			}
-
-			if (fullTypeReference != null && hasNamespace) {
-				isGlobal = fullTypeReference.getNamespace().isGlobal();
-				typeName = fullTypeReference.getFullyQualifiedName();
 			} else {
-				typeName = typeReference.getName();
+				isGlobal = typeName.startsWith(NamespaceReference.NAMESPACE_DELIMITER);
 			}
 
-			if (fullTypeReference != null && isGlobal) {
-				fullyQualifiedName = fullTypeReference.getFullyQualifiedName();
-			} else if (hasNamespace) {
+			if (isGlobal) {
+				fullyQualifiedName = addLeadingSeparator(typeName);
+			} else if (hasNamespace /* && !isGlobal */) {
 				fullyQualifiedName = PHPModelUtils.concatFullyQualifiedNames(namespaceName, typeReference.getName());
 			} else {
 				fullyQualifiedName = typeName;
 			}
-			if (!isUseStatement && !fullyQualifiedName.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
+			if (!fullyQualifiedName.startsWith(NamespaceReference.NAMESPACE_DELIMITER)) {
 				String key = getFirstSegmentOfTypeName(fullyQualifiedName).toLowerCase();
 				if (usePartInfo.containsKey(key)) {
 					fullyQualifiedName = usePartInfo.get(key).getFullyQualifiedName();
@@ -902,32 +915,51 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 					fullyQualifiedName = PHPModelUtils.concatFullyQualifiedNames(currentNamespace.getName(),
 							fullyQualifiedName);
 				}
-			}
-			if (fullyQualifiedName.length() > 0
-					&& fullyQualifiedName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
-				fullyQualifiedName = NamespaceReference.NAMESPACE_SEPARATOR + fullyQualifiedName;
+				fullyQualifiedName = addLeadingSeparator(fullyQualifiedName);
 			}
 		}
 
+		/**
+		 * @return true when type reference is a global reference, using "use
+		 *         statements" resolution when necessary, false otherwise
+		 *         (includes using "current namespace" resolution)
+		 */
 		@Override
 		public boolean isGlobal() {
 			return isGlobal;
 		}
 
+		/**
+		 * @return calculated fully qualified type name when typeReference is an
+		 *         instance of FullyQualifiedReference, raw type name (with or
+		 *         without leading namespace separator) otherwise (using
+		 *         typeReference.getName())
+		 */
 		@Override
 		public String getTypeName() {
 			return typeName;
 		}
 
+		/**
+		 * @return calculated fully qualified name
+		 */
 		@Override
 		public String getFullyQualifiedName() {
 			return fullyQualifiedName;
 		}
 
+		/**
+		 * @return calculated namespace name for typeReference when
+		 *         typeReference is an instance of FullyQualifiedReference, ""
+		 *         otherwise
+		 */
 		public String getNamespaceName() {
 			return namespaceName;
 		}
 
+		/**
+		 * @return type reference
+		 */
 		@Override
 		public TypeReference getTypeReference() {
 			return typeReference;
@@ -1032,6 +1064,14 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 			reportProblem(expr, NLS.bind(Messages.OperatorAcceptOnlyPositiveNumbers, operator),
 					PHPProblemIdentifier.SYNTAX, ProblemSeverities.Error);
 		}
+	}
+
+	@NonNull
+	private String addLeadingSeparator(@NonNull String fullyQualifiedName) {
+		if (fullyQualifiedName.length() > 0 && fullyQualifiedName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+			fullyQualifiedName = NamespaceReference.NAMESPACE_SEPARATOR + fullyQualifiedName;
+		}
+		return fullyQualifiedName;
 	}
 
 	/**
