@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 IBM Corporation and others.
+ * Copyright (c) 2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -13,36 +13,29 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.highlighters;
 
-import java.util.List;
-
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.php.core.ast.nodes.Program;
-import org.eclipse.php.core.compiler.ast.nodes.Comment;
 import org.eclipse.php.core.compiler.ast.nodes.PHPModuleDeclaration;
-import org.eclipse.php.core.compiler.ast.nodes.Scalar;
+import org.eclipse.php.core.compiler.ast.nodes.VarComment;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
 
 /**
  * @author blind
  */
-public class TaskTagHighlighting extends AbstractSemanticHighlighting {
+public class VarDocHighlighting extends AbstractSemanticHighlighting {
 
-	protected class TaskTagApply extends AbstractSemanticApply {
+	protected class VarDocApply extends AbstractSemanticApply {
 		@Override
 		public boolean visit(Program program) {
 			ISourceModule sourceModule = getSourceModule();
 			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
 			if (moduleDeclaration instanceof PHPModuleDeclaration) {
-				for (Comment comment : ((PHPModuleDeclaration) moduleDeclaration).getCommentList()) {
-					List<Scalar> taskTags = comment.getTaskTags();
-					if (taskTags != null) {
-						for (Scalar taskTag : taskTags) {
-							highlight(taskTag.start(), taskTag.end() - taskTag.start());
-						}
-					}
+				for (VarComment comment : ((PHPModuleDeclaration) moduleDeclaration).getVarComments()) {
+					highlight(comment.getVarTagStart(), 4); // 4 =
+															// "@var".length()
 				}
 			}
 			return false;
@@ -51,21 +44,21 @@ public class TaskTagHighlighting extends AbstractSemanticHighlighting {
 
 	@Override
 	public AbstractSemanticApply getSemanticApply() {
-		return new TaskTagApply();
+		return new VarDocApply();
 	}
 
 	@Override
 	protected void initDefaultPreferences() {
-		getStyle().setDefaultTextColor(124, 165, 213).setBoldByDefault(true).setEnabledByDefault(true);
+		getStyle().setDefaultTextColor(127, 175, 143).setBoldByDefault(true).setEnabledByDefault(true);
 	}
 
 	@Override
 	public int getPriority() {
-		return 120;
+		return 112;
 	}
 
 	@Override
 	public String getDisplayName() {
-		return Messages.TaskTagHighlighting_0;
+		return Messages.VarDocHighlighting_0;
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2016 IBM Corporation and others.
+ * Copyright (c) 2009, 2016, 2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -941,11 +941,12 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 			initHighlightingPositions();
 		}
 		String found = null;
-		for (Entry<String, Position[]> entry : highlightingPositionMap.entrySet()) {
+		loop: for (Entry<String, Position[]> entry : highlightingPositionMap.entrySet()) {
 			Position[] positions = entry.getValue();
 			for (int i = 0; i < positions.length; i++) {
 				if (offset >= positions[i].offset && offset < positions[i].offset + positions[i].length) {
 					found = entry.getKey();
+					break loop;
 				}
 			}
 		}
@@ -1240,6 +1241,38 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 						return TaskTagHighlighting.class.getName();
 					}
 				});
+				highlightings.add(new VarDocCommentHighlighting() {
+					@Override
+					protected Program getProgram(IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return VarDocCommentHighlighting.class.getName();
+					}
+				});
+				highlightings.add(new VarDocHighlighting() {
+					@Override
+					protected Program getProgram(IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return VarDocHighlighting.class.getName();
+					}
+				});
 
 				Collections.sort(highlightings);
 
@@ -1486,8 +1519,8 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 	}
 
 	/**
-	 * Creates a highlighting style based on the preferences defined in the semantic
-	 * highlighting
+	 * Creates a highlighting style based on the preferences defined in the
+	 * semantic highlighting
 	 * 
 	 * @param highlighting
 	 *            the semantic highlighting
@@ -1538,26 +1571,30 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 	}
 
 	/**
-	 * Looks up a boolean preference by <code>key</code> from the preference store
+	 * Looks up a boolean preference by <code>key</code> from the preference
+	 * store
 	 * 
 	 * @param store
 	 *            the preference store to lookup the preference from
 	 * @param key
 	 *            the key the preference is stored under
-	 * @return the preference value from the preference store iff key is not null
+	 * @return the preference value from the preference store iff key is not
+	 *         null
 	 */
 	private boolean getBoolean(IPreferenceStore store, String key) {
 		return (key == null) ? false : store.getBoolean(key);
 	}
 
 	/**
-	 * Looks up a String preference by <code>key</code> from the preference store
+	 * Looks up a String preference by <code>key</code> from the preference
+	 * store
 	 * 
 	 * @param store
 	 *            the preference store to lookup the preference from
 	 * @param key
 	 *            the key the preference is stored under
-	 * @return the preference value from the preference store iff key is not null
+	 * @return the preference value from the preference store iff key is not
+	 *         null
 	 */
 	private String getString(IPreferenceStore store, String key) {
 		return (key == null) ? null : store.getString(key);

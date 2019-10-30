@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009-2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -31,6 +31,8 @@ public class Messages extends NLS {
 	public static String StaticMethodHighlighting_0;
 	public static String SuperGlobalHighlighting_0;
 	public static String TaskTagHighlighting_0;
+	public static String VarDocCommentHighlighting_0;
+	public static String VarDocHighlighting_0;
 
 	static {
 		// initialize resource bundle

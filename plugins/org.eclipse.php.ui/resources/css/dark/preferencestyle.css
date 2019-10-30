@@ -50,6 +50,9 @@ IEclipsePreferences#org-eclipse-php-ui {
         'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.SuperGlobalHighlighting.color=#FFBF26'
         'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.TaskTagHighlighting.bold=true'
         'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.TaskTagHighlighting.color=#9a8c7c'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.VarDocCommentHighlighting.color=#626262'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.VarDocHighlighting.bold=true'
+        'semanticHighlighting.org.eclipse.php.internal.ui.editor.highlighters.VarDocHighlighting.color=#9a8c7c'
 }
 
 IEclipsePreferences#org-eclipse-ui-editors:org-eclipse-php-ui {

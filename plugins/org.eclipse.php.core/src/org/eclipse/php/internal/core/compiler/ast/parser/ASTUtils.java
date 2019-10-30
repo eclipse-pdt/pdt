@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015, 2017, 2018 IBM Corporation and others.
+ * Copyright (c) 2009-2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -48,10 +48,10 @@ public class ASTUtils {
 
 	// see also the ast_scanner.flex files to get full VarComment patterns
 	private static final Pattern VAR_COMMENT_PATTERN1 = Pattern.compile(
-			"^(/[*].*?@var\\p{javaWhitespace}+)([$][^$\\p{javaWhitespace}]+)(\\p{javaWhitespace}+)([^$\\p{javaWhitespace}]+).*?[*]/$", //$NON-NLS-1$
+			"^((/[*].*?)@var\\p{javaWhitespace}+)([$][^$\\p{javaWhitespace}]+)(\\p{javaWhitespace}+)([^$\\p{javaWhitespace}]+).*?[*]/$", //$NON-NLS-1$
 			Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 	private static final Pattern VAR_COMMENT_PATTERN2 = Pattern.compile(
-			"^(/[*].*?@var\\p{javaWhitespace}+)([^$\\p{javaWhitespace}]+)(\\p{javaWhitespace}+)([$][^$\\p{javaWhitespace}]+).*?[*]/$", //$NON-NLS-1$
+			"^((/[*].*?)@var\\p{javaWhitespace}+)([^$\\p{javaWhitespace}]+)(\\p{javaWhitespace}+)([$][^$\\p{javaWhitespace}]+).*?[*]/$", //$NON-NLS-1$
 			Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
 	/**
@@ -68,21 +68,23 @@ public class ASTUtils {
 	public static VarComment parseVarComment(String content, int start, int end) {
 		Matcher m = null;
 		String types = null, varName = null;
-		int typeStart = -1, varStart = -1, varEnd = -1;
+		int typeStart = -1, varStart = -1, varEnd = -1, varTagPosition = -1;
 		boolean foundMatch = false;
 
 		if ((m = VAR_COMMENT_PATTERN1.matcher(content)).matches()) {
-			types = m.group(4);
-			varName = m.group(2);
+			varTagPosition = start + m.group(2).length();
+			types = m.group(5);
+			varName = m.group(3);
 			varStart = start + m.group(1).length();
 			varEnd = varStart + varName.length();
-			typeStart = varEnd + m.group(3).length();
+			typeStart = varEnd + m.group(4).length();
 			foundMatch = true;
 		} else if ((m = VAR_COMMENT_PATTERN2.matcher(content)).matches()) {
-			types = m.group(2);
-			varName = m.group(4);
+			varTagPosition = start + m.group(2).length();
+			types = m.group(3);
+			varName = m.group(5);
 			typeStart = start + m.group(1).length();
-			varStart = typeStart + types.length() + m.group(3).length();
+			varStart = typeStart + types.length() + m.group(4).length();
 			varEnd = varStart + varName.length();
 			foundMatch = true;
 		}
@@ -110,7 +112,7 @@ public class ASTUtils {
 			}
 
 			VariableReference varReference = new VariableReference(varStart, varEnd, varName);
-			VarComment varComment = new VarComment(start, end, varReference,
+			VarComment varComment = new VarComment(start, end, varTagPosition, varReference,
 					typeReferences.toArray(new TypeReference[typeReferences.size()]));
 			return varComment;
 		}
@@ -118,8 +120,8 @@ public class ASTUtils {
 	}
 
 	/**
-	 * Strips single or double quotes from the start and from the end of the given
-	 * string
+	 * Strips single or double quotes from the start and from the end of the
+	 * given string
 	 * 
 	 * @param name
 	 *            String
@@ -373,7 +375,8 @@ public class ASTUtils {
 		}
 		if (visitor.getContext() == null) {
 			/*
-			 * offset can be bigger than unit.end when sourceunit have syntax error on end
+			 * offset can be bigger than unit.end when sourceunit have syntax
+			 * error on end
 			 */
 			Logger.log(Logger.WARNING_DEBUG, "Context is null"); //$NON-NLS-1$
 			return new FileContext(sourceModule, unit, offset);
@@ -382,15 +385,16 @@ public class ASTUtils {
 	}
 
 	/**
-	 * Finds all class (or trait) property declarations related to a PHP-doc block
+	 * Finds all class (or trait) property declarations related to a PHP-doc
+	 * block
 	 * 
 	 * @param moduleDeclaration
 	 *            AST root node
 	 * @param offset
 	 *            Offset somewhere strictly inside the PHP-doc block
 	 * @return class property declarations related to the PHP-doc block or
-	 *         <code>null</code> if first coming statement is not a class property
-	 *         declaration.
+	 *         <code>null</code> if first coming statement is not a class
+	 *         property declaration.
 	 */
 	public static List<PHPFieldDeclaration> findClassPropertiesAfterPHPdoc(ModuleDeclaration moduleDeclaration,
 			final int offset) {
@@ -522,13 +526,13 @@ public class ASTUtils {
 	}
 
 	/**
-	 * Creates declaration of constant for the given call expression in case if it
-	 * represents define() call expression.
+	 * Creates declaration of constant for the given call expression in case if
+	 * it represents define() call expression.
 	 * 
 	 * @param callExpression
 	 *            Call expression
-	 * @return constant declaration if the given call expression represents define()
-	 *         expression, otherwise <code>null</code>
+	 * @return constant declaration if the given call expression represents
+	 *         define() expression, otherwise <code>null</code>
 	 */
 	public static FieldDeclaration getConstantDeclaration(CallExpression callExpression) {
 		String name = callExpression.getName();
@@ -556,8 +560,9 @@ public class ASTUtils {
 	 * @param aliasName
 	 *            The alias name.
 	 * @param offset
-	 *            Current position in the file (this is needed since we don't want
-	 *            to take USE statements placed below current position into account)
+	 *            Current position in the file (this is needed since we don't
+	 *            want to take USE statements placed below current position into
+	 *            account)
 	 * @return USE statement part node, or <code>null</code> in case relevant
 	 *         statement couldn't be found
 	 */
@@ -606,16 +611,18 @@ public class ASTUtils {
 	/**
 	 * Used to create a fake FullyQualifiedReference object that combines use
 	 * statement namespace and use part namespace of a group use statement. For
-	 * example, this method will return an object for type <code>"A\B\C\D\E"</code>
-	 * from statement <code>"use A\B\ { \C\D\E };"</code>. <b>Note that this type
-	 * will have its source start and end range limited to the source start and end
-	 * range of <code>"C\D\E"</code>. Also note that UsePart aliases are not
-	 * handled by this method.</b>
+	 * example, this method will return an object for type
+	 * <code>"A\B\C\D\E"</code> from statement
+	 * <code>"use A\B\ { \C\D\E };"</code>. <b>Note that this type will have its
+	 * source start and end range limited to the source start and end range of
+	 * <code>"C\D\E"</code>. Also note that UsePart aliases are not handled by
+	 * this method.</b>
 	 * 
 	 * @param usePart
-	 * @return fake type, null if usePart is not part of a group use statement (i.e.
-	 *         when usePart.getGroupNamespace() is null)
-	 * @see PHPModelUtils.concatFullyQualifiedNames(currentUseStatement, usePart)
+	 * @return fake type, null if usePart is not part of a group use statement
+	 *         (i.e. when usePart.getGroupNamespace() is null)
+	 * @see PHPModelUtils.concatFullyQualifiedNames(currentUseStatement,
+	 *      usePart)
 	 */
 	@Nullable
 	public static FullyQualifiedReference createFakeGroupUseType(UsePart usePart) {
@@ -652,8 +659,9 @@ public class ASTUtils {
 	 * @param moduleDeclaration
 	 *            The AST root node
 	 * @param offset
-	 *            Current position in the file (this is needed since we don't want
-	 *            to take USE statements placed below current position into account)
+	 *            Current position in the file (this is needed since we don't
+	 *            want to take USE statements placed below current position into
+	 *            account)
 	 * @return USE statements list
 	 */
 	public static UseStatement[] getUseStatements(ModuleDeclaration moduleDeclaration, final int offset) {

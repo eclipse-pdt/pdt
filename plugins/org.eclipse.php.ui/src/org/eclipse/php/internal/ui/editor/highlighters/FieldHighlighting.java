@@ -27,7 +27,7 @@ import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighti
 
 public class FieldHighlighting extends AbstractSemanticHighlighting {
 
-	protected class FielApply extends AbstractSemanticApply {
+	protected class FieldApply extends AbstractSemanticApply {
 
 		private int visitField = 0;
 
@@ -196,7 +196,7 @@ public class FieldHighlighting extends AbstractSemanticHighlighting {
 
 	@Override
 	public AbstractSemanticApply getSemanticApply() {
-		return new FielApply();
+		return new FieldApply();
 	}
 
 	@Override

@@ -314,7 +314,7 @@ public class PreferenceConstants {
 	public static final String EDITOR_NUMBER_DEFAULT_COLOR = ColorHelper.getColorString(0, 0, 0);
 
 	/**
-	 * A named preference that holds the color for the PHPDoc comments
+	 * A named preference that holds the color for the PHPDoc tags
 	 * <p>
 	 * Value is of type <code>String</code>.
 	 * </p>
@@ -322,7 +322,7 @@ public class PreferenceConstants {
 	public static final String EDITOR_PHPDOC_COLOR = "editorColorPhpdoc"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that holds the default color for the PHPDoc comments
+	 * A named preference that holds the default color for the PHPDoc tags
 	 * <p>
 	 * Value is of type <code>String</code>.
 	 * </p>
