@@ -39,6 +39,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.compiler.ast.nodes.*;
+import org.eclipse.php.core.compiler.ast.nodes.PHPDocTag.TagKind;
 import org.eclipse.php.core.compiler.ast.validator.IValidatorExtension;
 import org.eclipse.php.core.compiler.ast.validator.IValidatorVisitor;
 import org.eclipse.php.core.compiler.ast.visitor.PHPASTVisitor;
@@ -97,8 +98,10 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	private Map<String, UsePartInfo> usePartInfo = new LinkedHashMap<>();
 	private Map<String, Boolean> elementExists = new HashMap<>();
 	private NamespaceDeclaration currentNamespace;
+	private IPHPDocAwareDeclaration currentDeclaration;
 	private Set<String> typeDeclared = new HashSet<>();
 	private ArrayList<VarComment> varComments = new ArrayList<>();
+	private ArrayList<PHPDocBlock> docBlocks = new ArrayList<>();
 	private boolean hasNamespace;
 	private ISourceModule sourceModule;
 	private PHPVersion version;
@@ -146,6 +149,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		if (s instanceof PHPModuleDeclaration) {
 			// See also VariableReferenceEvaluator.init().
 			varComments.addAll(((PHPModuleDeclaration) s).getVarComments());
+			docBlocks.addAll(((PHPModuleDeclaration) s).getPHPDocBlocks());
 		}
 		return super.visit(s);
 	}
@@ -162,6 +166,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 
 	@Override
 	public boolean visit(NamespaceDeclaration s) throws Exception {
+		currentDeclaration = s;
 		hasNamespace = true;
 		currentNamespace = s;
 		fNamespaceDeclarations.push(s);
@@ -184,6 +189,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 
 	@Override
 	public boolean visit(PHPMethodDeclaration s) throws Exception {
+		currentDeclaration = s;
 		if (s.getPHPDoc() != null) {
 			s.getPHPDoc().traverse(this);
 		}
@@ -192,6 +198,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 
 	@Override
 	public boolean visit(PHPFieldDeclaration s) throws Exception {
+		currentDeclaration = s;
 		if (s.getPHPDoc() != null) {
 			s.getPHPDoc().traverse(this);
 		}
@@ -280,6 +287,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 
 	@Override
 	public boolean visit(ClassDeclaration s) throws Exception {
+		currentDeclaration = s;
 		checkReservedWord(s, "class"); //$NON-NLS-1$
 		checkUnimplementedMethods(s, s.getRef());
 		if (s.getSuperClass() != null) {
@@ -314,6 +322,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 
 	@Override
 	public boolean visit(InterfaceDeclaration s) throws Exception {
+		currentDeclaration = s;
 		checkReservedWord(s, "interface"); //$NON-NLS-1$
 		if (s.getSuperClasses() == null) {
 			return super.visit(s);
@@ -462,6 +471,16 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	}
 
 	/**
+	 * Fake VarComment visitor (visit the @var tags inside a PHPDocBlock).
+	 */
+	private boolean visitVarTags(PHPDocBlock s) throws Exception {
+		for (PHPDocTag phpDocTag : s.getTags(TagKind.VAR)) {
+			visit(phpDocTag);
+		}
+		return false;
+	}
+
+	/**
 	 * Fake VarComment visitor.
 	 */
 	private boolean visit(VarComment varComment) throws Exception {
@@ -491,6 +510,25 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 			}
 			visit(varComment);
 			itr.remove();
+		}
+		if (currentDeclaration instanceof ASTNode) {
+			// currentDeclaration.sourceStart() is the minimal position to look
+			// for PHPDocBlocks, to avoid getting out of current declaration
+			// block
+			minPos = Math.max(minPos, ((ASTNode) currentDeclaration).sourceStart());
+		}
+		Iterator<PHPDocBlock> itr2 = docBlocks.iterator();
+		while (itr2.hasNext()) {
+			PHPDocBlock docBlock = itr2.next();
+			if (docBlock.sourceStart() < minPos) {
+				itr2.remove();
+				continue;
+			}
+			if (docBlock.sourceEnd() > maxPos) {
+				break;
+			}
+			visitVarTags(docBlock);
+			itr2.remove();
 		}
 	}
 
@@ -973,6 +1011,7 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 
 	@Override
 	public boolean visit(ConstantDeclaration s) throws Exception {
+		currentDeclaration = s;
 		validateConstantExpression(s.getConstantValue(), false);
 		return super.visit(s);
 	}

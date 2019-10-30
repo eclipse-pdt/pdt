@@ -147,14 +147,23 @@ public class PHPModuleDeclaration extends ModuleDeclaration {
 		this.hasErrors = hasErrors;
 	}
 
+	/**
+	 * Naturally sorted by order of appearance in the file.
+	 */
 	public List<VarComment> getVarComments() {
 		return varComments;
 	}
 
+	/**
+	 * Naturally sorted by order of appearance in the file.
+	 */
 	public List<PHPDocBlock> getPHPDocBlocks() {
 		return phpDocBlocks;
 	}
 
+	/**
+	 * Naturally sorted by order of appearance in the file.
+	 */
 	public List<Comment> getCommentList() {
 		return commentList;
 	}
