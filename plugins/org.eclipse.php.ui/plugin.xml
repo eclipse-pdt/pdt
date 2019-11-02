@@ -2310,13 +2310,25 @@
 	        class="org.eclipse.php.internal.ui.editor.highlighters.DeprecatedHighlighting"
 	        target="org.eclipse.php.core.phpsource" 
 	        id="org.eclipse.php.ui.editor.highlighters.deprecated"
-	        after="org.eclipse.php.ui.editor.highlighters.staticMethod" />
+	        after="org.eclipse.php.ui.editor.highlighters.varDoc" />
         
         <highlighting
 	        class="org.eclipse.php.internal.ui.editor.highlighters.TaskTagHighlighting"
 	        target="org.eclipse.php.core.phpsource"
 	        id="org.eclipse.php.ui.editor.highlighters.task"
+	        after="org.eclipse.php.ui.editor.highlighters.varDoc" />
+        
+        <highlighting
+	        class="org.eclipse.php.internal.ui.editor.highlighters.VarDocCommentHighlighting"
+	        target="org.eclipse.php.core.phpsource" 
+	        id="org.eclipse.php.ui.editor.highlighters.varDocComment"
 	        after="org.eclipse.php.ui.editor.highlighters.staticMethod" />
+        
+        <highlighting
+	        class="org.eclipse.php.internal.ui.editor.highlighters.VarDocHighlighting"
+	        target="org.eclipse.php.core.phpsource" 
+	        id="org.eclipse.php.ui.editor.highlighters.varDoc"
+	        after="org.eclipse.php.ui.editor.highlighters.varDocComment" />
     </extension>
     <extension
           id="commentTemplateProposalCategory"
