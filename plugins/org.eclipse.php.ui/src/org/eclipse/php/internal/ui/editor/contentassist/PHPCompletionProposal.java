@@ -20,14 +20,9 @@ import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.dltk.ui.text.ScriptTextTools;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposal;
-import org.eclipse.jface.internal.text.html.BrowserInformationControl;
-import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IInformationControl;
-import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
@@ -37,16 +32,9 @@ import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.strategies.IncludeStatementStrategy;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.text.hover.CompletionHoverControlCreator;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Shell;
 
 public class PHPCompletionProposal extends ScriptCompletionProposal implements IPHPCompletionProposalExtension {
-
-	/**
-	 * The control creator.
-	 */
-	private IInformationControlCreator fCreator;
 
 	public PHPCompletionProposal(String replacementString, int replacementOffset, int replacementLength,
 			Supplier<Image> image, StyledString displayString, int relevance) {
@@ -189,24 +177,6 @@ public class PHPCompletionProposal extends ScriptCompletionProposal implements I
 	@Override
 	protected ScriptTextTools getTextTools() {
 		return PHPUiPlugin.getDefault().getTextTools();
-	}
-
-	@Override
-	public IInformationControlCreator getInformationControlCreator() {
-		if (fCreator == null) {
-			fCreator = new CompletionHoverControlCreator(new IInformationControlCreator() {
-				@Override
-				public IInformationControl createInformationControl(Shell parent) {
-					if (BrowserInformationControl.isAvailable(parent)) {
-						return new BrowserInformationControl(parent, PreferenceConstants.APPEARANCE_DOCUMENTATION_FONT,
-								true);
-					} else {
-						return new DefaultInformationControl(parent, true);
-					}
-				}
-			}, true);
-		}
-		return fCreator;
 	}
 
 	@Override

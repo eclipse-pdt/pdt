@@ -15,11 +15,10 @@ package org.eclipse.php.internal.ui.editor.contentassist;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.dltk.ui.text.ScriptTextTools;
 import org.eclipse.dltk.ui.text.completion.ScriptOverrideCompletionProposal;
-import org.eclipse.jface.internal.text.html.BrowserInformationControl;
-import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.contentassist.ContextInformation;
 import org.eclipse.jface.text.contentassist.ICompletionProposalExtension4;
@@ -30,15 +29,9 @@ import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.text.hover.CompletionHoverControlCreator;
-import org.eclipse.swt.widgets.Shell;
 
 public class PHPOverrideCompletionProposal extends ScriptOverrideCompletionProposal
 		implements ICompletionProposalExtension4 {
-	/**
-	 * The control creator.
-	 */
-	private IInformationControlCreator fCreator;
 
 	public PHPOverrideCompletionProposal(IScriptProject jproject, ISourceModule cu, String methodName,
 			String[] paramTypes, int start, int length, StyledString displayName, String completionProposal) {
@@ -181,24 +174,6 @@ public class PHPOverrideCompletionProposal extends ScriptOverrideCompletionPropo
 	@Override
 	protected ScriptTextTools getTextTools() {
 		return PHPUiPlugin.getDefault().getTextTools();
-	}
-
-	@Override
-	public IInformationControlCreator getInformationControlCreator() {
-		if (fCreator == null) {
-			fCreator = new CompletionHoverControlCreator(new IInformationControlCreator() {
-				@Override
-				public IInformationControl createInformationControl(Shell parent) {
-					if (BrowserInformationControl.isAvailable(parent)) {
-						return new BrowserInformationControl(parent, PreferenceConstants.APPEARANCE_DOCUMENTATION_FONT,
-								true);
-					} else {
-						return new DefaultInformationControl(parent, true);
-					}
-				}
-			}, true);
-		}
-		return fCreator;
 	}
 
 }
