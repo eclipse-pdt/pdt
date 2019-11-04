@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009-2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -77,8 +77,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @param scanner
 	 *            An {@link AstLexer} scanner.
 	 * @param document
-	 *            The IDocument that contains the content of the compilation unit to
-	 *            rewrite.
+	 *            The IDocument that contains the content of the compilation
+	 *            unit to rewrite.
 	 * @param lineInfo
 	 *            line information for the content of the compilation unit to
 	 *            rewrite.
@@ -87,13 +87,14 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @param eventStore
 	 *            the event store containing the description of changes
 	 * @param nodeInfos
-	 *            annotations to nodes, such as if a node is a string placeholder or
-	 *            a copy target
+	 *            annotations to nodes, such as if a node is a string
+	 *            placeholder or a copy target
 	 * @param comments
-	 *            list of comments of the compilation unit to rewrite (elements of
-	 *            type <code>Comment</code>) or <code>null</code>.
+	 *            list of comments of the compilation unit to rewrite (elements
+	 *            of type <code>Comment</code>) or <code>null</code>.
 	 * @param options
-	 *            the current options (formatting/compliance) or <code>null</code>.
+	 *            the current options (formatting/compliance) or
+	 *            <code>null</code>.
 	 * @param extendedSourceRangeComputer
 	 *            the source range computer to use
 	 */
@@ -1082,7 +1083,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	}
 
 	/*
-	 * Next token is a left parentheses. Returns the offset of the open parentheses.
+	 * Next token is a left parentheses. Returns the offset of the open
+	 * parentheses.
 	 * 
 	 * @throws CoreException
 	 */
@@ -1110,6 +1112,26 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	private int getLeftBracketStartPosition(int pos) throws CoreException {
 		return getSymbolStartPosition(pos,
 				SymbolsProvider.getSymbol(SymbolsProvider.LBRACKET_ID, scanner.getPHPVersion()));
+	}
+
+	/*
+	 * Next token is a "function" keyword. Returns the offset of the "function"
+	 * keyword.
+	 * 
+	 * @throws CoreException
+	 */
+	private int getFunctionStartPosition(int pos) throws CoreException {
+		return getSymbolStartPosition(pos,
+				SymbolsProvider.getSymbol(SymbolsProvider.FUNCTION_ID, scanner.getPHPVersion()));
+	}
+
+	/*
+	 * Next token is a "fn" keyword. Returns the offset of the "fn" keyword.
+	 * 
+	 * @throws CoreException
+	 */
+	private int getFnStartPosition(int pos) throws CoreException {
+		return getSymbolStartPosition(pos, SymbolsProvider.getSymbol(SymbolsProvider.FN_ID, scanner.getPHPVersion()));
 	}
 
 	// /*
@@ -1544,7 +1566,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	}
 
 	/*
-	 * Rewrite the If statement blocks from curly to 'Alternative syntax' blocks.
+	 * Rewrite the If statement blocks from curly to 'Alternative syntax'
+	 * blocks.
 	 * 
 	 * @param node
 	 * 
@@ -1651,8 +1674,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 
 	/*
 	 * Scan to the first semicolon that appears in the content after the given
-	 * position. The scan skip all the whitespace characters and tries to locate the
-	 * first non-whitespace that is a semicolon (;). The return value is the
+	 * position. The scan skip all the whitespace characters and tries to locate
+	 * the first non-whitespace that is a semicolon (;). The return value is the
 	 * semicolon index. The given index is returned when no semicolon was found
 	 * right after the whitespaces.
 	 */
@@ -1816,6 +1839,20 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		int pos = rewriteRequiredNode(node, Assignment.LEFT_HAND_SIDE_PROPERTY);
 		rewriteOperation(node, Assignment.OPERATOR_PROPERTY, pos);
 		rewriteRequiredNode(node, Assignment.RIGHT_HAND_SIDE_PROPERTY);
+		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(ArraySpreadElement)
+	 */
+	@Override
+	public boolean visit(ArraySpreadElement node) {
+		if (!hasChildrenChanges(node)) {
+			return doVisitUnchangedChildren(node);
+		}
+
 		return false;
 	}
 
@@ -2038,8 +2075,14 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			return doVisitUnchangedChildren(node);
 		}
 		rewriteModifiers(node, FieldsDeclaration.MODIFIER_PROPERTY, node.getStart());
-		rewriteNodeList(node, FieldsDeclaration.FIELDS_PROPERTY, node.getStart() + node.getModifierString().length(),
-				"", ", "); //$NON-NLS-1$ //$NON-NLS-2$
+		// TODO: do better offset calculation, for now it's just an
+		// approximation
+		rewriteNode(node, FieldsDeclaration.FIELDS_TYPE_PROPERTY, node.getStart() + node.getModifierString().length(),
+				ASTRewriteFormatter.SPACE);
+		// TODO: do better offset calculation, for now it's just an
+		// approximation
+		rewriteNodeList(node, FieldsDeclaration.FIELDS_PROPERTY, node.getStart() + node.getModifierString().length()
+				+ (node.getFieldsType() != null ? node.getFieldsType().getLength() : 0), "", ", "); //$NON-NLS-1$ //$NON-NLS-2$
 		return false;
 	}
 
@@ -2063,10 +2106,10 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	}
 
 	/*
-	 * Rewrite an optional value property. This should handle declarations like $a =
-	 * 3 etc. and add, remove or modify the assigned value. Note that the new value
-	 * that will be used must be an ASTNode, so in any other case where a value
-	 * property does not hold an ASTNode this call will fail.
+	 * Rewrite an optional value property. This should handle declarations like
+	 * $a = 3 etc. and add, remove or modify the assigned value. Note that the
+	 * new value that will be used must be an ASTNode, so in any other case
+	 * where a value property does not hold an ASTNode this call will fail.
 	 * 
 	 * @param node The node that we rewrite
 	 * 
@@ -2241,7 +2284,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		if (getChangeKind(node, desc) == RewriteEvent.REPLACED) {
 			int leftOperandEnd = getExtendedEnd((ASTNode) getOriginalValue(node, desc));
 			try {
-				int offset = getScanner().getNextStartOffset(leftOperandEnd/* , true */); // instanceof
+				int offset = getScanner()
+						.getNextStartOffset(leftOperandEnd/* , true */); // instanceof
 
 				if (offset == leftOperandEnd) {
 					doTextInsert(offset, String.valueOf(' '), getEditGroup(node, desc));
@@ -3019,6 +3063,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			pos = getRightParenthesesStartPosition(pos) + 1;
 			pos = doVisit(functionDeclaration, FunctionDeclaration.RETURN_TYPE_PROPERTY, pos);
 		} catch (CoreException e) {
+			handleException(e);
 		}
 		// Body
 		rewriteMethodBody(functionDeclaration, pos);
@@ -3555,45 +3600,40 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			return doVisitUnchangedChildren(lambdaFunctionDeclaration);
 		}
 
-		// static FIXME
-		// RewriteEvent staticEvent = getEvent(lambdaFunctionDeclaration,
-		// LambdaFunctionDeclaration.IS_STATIC);
-		// if (staticEvent != null && staticEvent.getChangeKind() ==
-		// RewriteEvent.REPLACED) {
-		// boolean isStatic = (Boolean) staticEvent.getNewValue();
-		//
-		// try {
-		// TextEditGroup editGroup = getEditGroup(staticEvent);
-		// int startDeletionFrom = lambdaFunctionDeclaration.getStart() + 8;
-		// int startOffset = getLeftParenthesesStartPosition(startDeletionFrom);
-		// doTextRemove(startDeletionFrom,
-		// startOffset - startDeletionFrom, editGroup);
-		// if (isStatic) {
-		// doTextInsert(startDeletionFrom, " & ", editGroup);
-		// } else {
-		// doTextInsert(startDeletionFrom, " ", editGroup);
-		// }
-		// } catch (CoreException e) {
-		// handleException(e);
-		// }
-		// }
-
-		// Reference
-		RewriteEvent event = getEvent(lambdaFunctionDeclaration, LambdaFunctionDeclaration.IS_REFERENCE_PROPERTY);
-		if (event != null && event.getChangeKind() == RewriteEvent.REPLACED) {
-			boolean isReference = (Boolean) event.getNewValue();
+		// Is static
+		RewriteEvent eventStatic = getEvent(lambdaFunctionDeclaration, LambdaFunctionDeclaration.IS_STATIC);
+		if (eventStatic != null && eventStatic.getChangeKind() == RewriteEvent.REPLACED) {
+			boolean isStatic = (Boolean) eventStatic.getNewValue();
 
 			try {
-				TextEditGroup editGroup = getEditGroup(event);
+				TextEditGroup editGroup = getEditGroup(eventStatic);
+				// we need to remove everything before the word 'function'.
+				int startDeletionFrom = lambdaFunctionDeclaration.getStart();
+				int startOffset = getFunctionStartPosition(startDeletionFrom);
+				doTextRemove(startDeletionFrom, startOffset - startDeletionFrom, editGroup);
+
+				if (isStatic) {
+					// we need to insert the 'static' keyword
+					doTextInsert(startDeletionFrom, "static ", editGroup); //$NON-NLS-1$
+				}
+			} catch (CoreException e) {
+				handleException(e);
+			}
+		}
+
+		// Reference
+		RewriteEvent eventReference = getEvent(lambdaFunctionDeclaration,
+				LambdaFunctionDeclaration.IS_REFERENCE_PROPERTY);
+		if (eventReference != null && eventReference.getChangeKind() == RewriteEvent.REPLACED) {
+			boolean isReference = (Boolean) eventReference.getNewValue();
+
+			try {
+				TextEditGroup editGroup = getEditGroup(eventReference);
 				// we need to remove everything between the word 'function' to
 				// the start of the function's
 				// name and then place a blank or an &.
-				int startDeletionFrom = lambdaFunctionDeclaration.getStart() + 8; // 8
-				// is
-				// the
-				// 'function'
-				// keyword
-				// length
+				int startDeletionFrom = getFunctionStartPosition(lambdaFunctionDeclaration.getStart()) + 8; // 8
+				// is the 'function' keyword length
 				int startOffset = getLeftParenthesesStartPosition(startDeletionFrom);
 				doTextRemove(startDeletionFrom, startOffset - startDeletionFrom, editGroup);
 				if (isReference) {
@@ -3610,12 +3650,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		// Parameters
 		if (isChanged(lambdaFunctionDeclaration, LambdaFunctionDeclaration.FORMAL_PARAMETERS_PROPERTY)) {
 			try {
-				int startDeletionFrom = lambdaFunctionDeclaration.getStart() + 8; // 8
-				// is
-				// the
-				// 'function'
-				// keyword
-				// length
+				int startDeletionFrom = getFunctionStartPosition(lambdaFunctionDeclaration.getStart()) + 8; // 8
+				// is the 'function' keyword length
 				int startOffset = getLeftParenthesesStartPosition(startDeletionFrom);
 				rewriteNodeList(lambdaFunctionDeclaration, LambdaFunctionDeclaration.FORMAL_PARAMETERS_PROPERTY,
 						startOffset, "", ", "); //$NON-NLS-1$ //$NON-NLS-2$
@@ -3629,12 +3665,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		// Lexical vars
 		if (isChanged(lambdaFunctionDeclaration, LambdaFunctionDeclaration.LEXICAL_VARIABLES_PROPERTY)) {
 			try {
-				int startDeletionFrom = lambdaFunctionDeclaration.getStart() + 8; // 8
-				// is
-				// the
-				// 'function'
-				// keyword
-				// length
+				int startDeletionFrom = getFunctionStartPosition(lambdaFunctionDeclaration.getStart()) + 8; // 8
+				// is the 'function' keyword length
 				int startOffset = getRightBraceStartPosition(startDeletionFrom) + 1;
 				rewriteNodeList(lambdaFunctionDeclaration, LambdaFunctionDeclaration.LEXICAL_VARIABLES_PROPERTY,
 						startOffset, " as ", ", "); //$NON-NLS-1$ //$NON-NLS-2$
@@ -3647,6 +3679,107 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 
 		// Body
 		rewriteRequiredNode(lambdaFunctionDeclaration, LambdaFunctionDeclaration.BODY_PROPERTY);
+
+		return false;
+	}
+
+	@Override
+	public boolean visit(ArrowFunctionDeclaration arrowFunctionDeclaration) {
+		if (!hasChildrenChanges(arrowFunctionDeclaration)) {
+			return doVisitUnchangedChildren(arrowFunctionDeclaration);
+		}
+
+		// Is static
+		RewriteEvent eventStatic = getEvent(arrowFunctionDeclaration, ArrowFunctionDeclaration.IS_STATIC);
+		if (eventStatic != null && eventStatic.getChangeKind() == RewriteEvent.REPLACED) {
+			boolean isStatic = (Boolean) eventStatic.getNewValue();
+
+			try {
+				TextEditGroup editGroup = getEditGroup(eventStatic);
+				// we need to remove everything before the word 'fn'.
+				int startDeletionFrom = arrowFunctionDeclaration.getStart();
+				int startOffset = getFnStartPosition(startDeletionFrom);
+				doTextRemove(startDeletionFrom, startOffset - startDeletionFrom, editGroup);
+
+				if (isStatic) {
+					// we need to insert the 'static' keyword
+					doTextInsert(startDeletionFrom, "static ", editGroup); //$NON-NLS-1$
+				}
+			} catch (CoreException e) {
+				handleException(e);
+			}
+		}
+
+		// Reference
+		RewriteEvent eventReference = getEvent(arrowFunctionDeclaration,
+				ArrowFunctionDeclaration.IS_REFERENCE_PROPERTY);
+		if (eventReference != null && eventReference.getChangeKind() == RewriteEvent.REPLACED) {
+			boolean isReference = (Boolean) eventReference.getNewValue();
+
+			try {
+				TextEditGroup editGroup = getEditGroup(eventReference);
+				// we need to remove everything between the word 'fn' to
+				// the start of the fn
+				// name and then place a blank or an &.
+				int startDeletionFrom = getFnStartPosition(arrowFunctionDeclaration.getStart()) + 2; // 2
+				// is the 'fn' keyword length
+				int startOffset = getLeftParenthesesStartPosition(startDeletionFrom);
+				doTextRemove(startDeletionFrom, startOffset - startDeletionFrom, editGroup);
+				if (isReference) {
+					// we need to insert the &
+					doTextInsert(startDeletionFrom, " & ", editGroup); //$NON-NLS-1$
+				} else {
+					doTextInsert(startDeletionFrom, " ", editGroup); //$NON-NLS-1$
+				}
+			} catch (CoreException e) {
+				handleException(e);
+			}
+		}
+
+		// Parameters
+		if (isChanged(arrowFunctionDeclaration, ArrowFunctionDeclaration.FORMAL_PARAMETERS_PROPERTY)) {
+			try {
+				int startDeletionFrom = getFnStartPosition(arrowFunctionDeclaration.getStart()) + 2; // 2
+				// is the 'fn' keyword length
+				int startOffset = getLeftParenthesesStartPosition(startDeletionFrom);
+				rewriteNodeList(arrowFunctionDeclaration, ArrowFunctionDeclaration.FORMAL_PARAMETERS_PROPERTY,
+						startOffset, "", ", "); //$NON-NLS-1$ //$NON-NLS-2$
+			} catch (CoreException e) {
+				handleException(e);
+			}
+		} else {
+			voidVisit(arrowFunctionDeclaration, ArrowFunctionDeclaration.FORMAL_PARAMETERS_PROPERTY);
+		}
+
+		if (isChanged(arrowFunctionDeclaration, ArrowFunctionDeclaration.RETURN_TYPE_PROPERTY)) {
+			try {
+				int startDeletionFrom = getFnStartPosition(arrowFunctionDeclaration.getStart()) + 2; // 2
+				// is the 'fn' keyword length
+				int startOffset = getRightParenthesesStartPosition(startDeletionFrom) + 1;
+				rewriteNode(arrowFunctionDeclaration, ArrowFunctionDeclaration.RETURN_TYPE_PROPERTY, startOffset,
+						new Prefix() {
+
+							@Override
+							public String getPrefix(int indent) {
+								return ": "; //$NON-NLS-1$
+							}
+						});
+			} catch (CoreException e) {
+				handleException(e);
+			}
+		}
+
+		try {
+			int startDeletionFrom = getFnStartPosition(arrowFunctionDeclaration.getStart()) + 2; // 2
+			// is the 'fn' keyword length
+			int startOffset = getRightParenthesesStartPosition(startDeletionFrom) + 1;
+			doVisit(arrowFunctionDeclaration, ArrowFunctionDeclaration.RETURN_TYPE_PROPERTY, startOffset);
+		} catch (CoreException e) {
+			handleException(e);
+		}
+
+		// Body
+		rewriteRequiredNode(arrowFunctionDeclaration, ArrowFunctionDeclaration.BODY_PROPERTY);
 
 		return false;
 	}
@@ -3796,9 +3929,9 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * A general visit implementations that calls
 	 * {@link #doVisitUnchangedChildren(ASTNode)} in case that the node has no
 	 * changes in its children, and calls
-	 * {@link #rewriteRequiredNode(ASTNode, StructuralPropertyDescriptor)} on the
-	 * given {@link StructuralPropertyDescriptor} properties. The given property
-	 * descriptors should be only {@link ChildPropertyDescriptor} and
+	 * {@link #rewriteRequiredNode(ASTNode, StructuralPropertyDescriptor)} on
+	 * the given {@link StructuralPropertyDescriptor} properties. The given
+	 * property descriptors should be only {@link ChildPropertyDescriptor} and
 	 * {@link SimplePropertyDescriptor}. In any other case,
 	 * {@link #rewriteNodeList(ASTNode, StructuralPropertyDescriptor, int, String, String)}
 	 * might be needed.
