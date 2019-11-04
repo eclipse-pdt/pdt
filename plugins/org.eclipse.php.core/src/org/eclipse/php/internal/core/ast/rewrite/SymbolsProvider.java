@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2018 IBM Corporation and others.
+ * Copyright (c) 2009-2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -55,6 +55,8 @@ public class SymbolsProvider {
 	public static final int END_SWITCH_ID = 25;
 	public static final int OBJECT_OP_SYMBOL_ID = 26;
 	public static final int YIELD_ID = 27;
+	public static final int FUNCTION_ID = 28;
+	public static final int FN_ID = 29;
 
 	public static final Symbol ERROR_SYMBOL = new Symbol(Integer.MIN_VALUE);
 
@@ -115,6 +117,10 @@ public class SymbolsProvider {
 			org.eclipse.php.internal.core.ast.scanner.php74.ParserConstants.T_ENDSWITCH);
 	private static final Symbol YIELD_SYMBOL_PHP74 = new Symbol(
 			org.eclipse.php.internal.core.ast.scanner.php74.ParserConstants.T_YIELD);
+	private static final Symbol FUNCTION_SYMBOL_PHP74 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php74.ParserConstants.T_FUNCTION);
+	private static final Symbol FN_SYMBOL_PHP74 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php74.ParserConstants.T_FN);
 
 	// Pre-defined PHP 7.3 Symbols.
 	private static final Symbol OBJECT_OP_SYMBOL_PHP73 = new Symbol(
@@ -173,6 +179,8 @@ public class SymbolsProvider {
 			org.eclipse.php.internal.core.ast.scanner.php73.ParserConstants.T_ENDSWITCH);
 	private static final Symbol YIELD_SYMBOL_PHP73 = new Symbol(
 			org.eclipse.php.internal.core.ast.scanner.php73.ParserConstants.T_YIELD);
+	private static final Symbol FUNCTION_SYMBOL_PHP73 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php73.ParserConstants.T_FUNCTION);
 
 	// Pre-defined PHP 7.2 Symbols.
 	private static final Symbol OBJECT_OP_SYMBOL_PHP72 = new Symbol(
@@ -231,6 +239,8 @@ public class SymbolsProvider {
 			org.eclipse.php.internal.core.ast.scanner.php72.ParserConstants.T_ENDSWITCH);
 	private static final Symbol YIELD_SYMBOL_PHP72 = new Symbol(
 			org.eclipse.php.internal.core.ast.scanner.php72.ParserConstants.T_YIELD);
+	private static final Symbol FUNCTION_SYMBOL_PHP72 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php72.ParserConstants.T_FUNCTION);
 
 	// Pre-defined PHP 7.1 Symbols.
 	private static final Symbol OBJECT_OP_SYMBOL_PHP71 = new Symbol(
@@ -289,6 +299,8 @@ public class SymbolsProvider {
 			org.eclipse.php.internal.core.ast.scanner.php71.ParserConstants.T_ENDSWITCH);
 	private static final Symbol YIELD_SYMBOL_PHP71 = new Symbol(
 			org.eclipse.php.internal.core.ast.scanner.php71.ParserConstants.T_YIELD);
+	private static final Symbol FUNCTION_SYMBOL_PHP71 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php71.ParserConstants.T_FUNCTION);
 
 	// Pre-defined PHP 7 Symbols.
 	private static final Symbol OBJECT_OP_SYMBOL_PHP7 = new Symbol(
@@ -347,6 +359,8 @@ public class SymbolsProvider {
 			org.eclipse.php.internal.core.ast.scanner.php7.ParserConstants.T_ENDSWITCH);
 	private static final Symbol YIELD_SYMBOL_PHP7 = new Symbol(
 			org.eclipse.php.internal.core.ast.scanner.php7.ParserConstants.T_YIELD);
+	private static final Symbol FUNCTION_SYMBOL_PHP7 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php7.ParserConstants.T_FUNCTION);
 
 	// Pre-defined PHP 56 Symbols.
 	private static final Symbol OBJECT_OP_SYMBOL_PHP56 = new Symbol(
@@ -405,6 +419,8 @@ public class SymbolsProvider {
 			org.eclipse.php.internal.core.ast.scanner.php56.ParserConstants.T_ENDSWITCH);
 	private static final Symbol YIELD_SYMBOL_PHP56 = new Symbol(
 			org.eclipse.php.internal.core.ast.scanner.php56.ParserConstants.T_YIELD);
+	private static final Symbol FUNCTION_SYMBOL_PHP56 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php56.ParserConstants.T_FUNCTION);
 
 	// Pre-defined PHP 55 Symbols.
 	private static final Symbol OBJECT_OP_SYMBOL_PHP55 = new Symbol(
@@ -463,6 +479,8 @@ public class SymbolsProvider {
 			org.eclipse.php.internal.core.ast.scanner.php55.ParserConstants.T_ENDSWITCH);
 	private static final Symbol YIELD_SYMBOL_PHP55 = new Symbol(
 			org.eclipse.php.internal.core.ast.scanner.php55.ParserConstants.T_YIELD);
+	private static final Symbol FUNCTION_SYMBOL_PHP55 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php55.ParserConstants.T_FUNCTION);
 
 	// Pre-defined PHP 54 Symbols.
 	private static final Symbol OBJECT_OP_SYMBOL_PHP54 = new Symbol(
@@ -519,6 +537,8 @@ public class SymbolsProvider {
 			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_ENDFOREACH);
 	private static final Symbol END_SWITCH_SYMBOL_PHP54 = new Symbol(
 			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_ENDSWITCH);
+	private static final Symbol FUNCTION_SYMBOL_PHP54 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_FUNCTION);
 
 	// Pre-defined PHP 53 Symbols.
 	private static final Symbol OBJECT_OP_SYMBOL_PHP53 = new Symbol(
@@ -575,6 +595,8 @@ public class SymbolsProvider {
 			org.eclipse.php.internal.core.ast.scanner.php53.ParserConstants.T_ENDFOREACH);
 	private static final Symbol END_SWITCH_SYMBOL_PHP53 = new Symbol(
 			org.eclipse.php.internal.core.ast.scanner.php53.ParserConstants.T_ENDSWITCH);
+	private static final Symbol FUNCTION_SYMBOL_PHP53 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php53.ParserConstants.T_FUNCTION);
 
 	// Pre-defined PHP 5 Symbols.
 	private static final Symbol OBJECT_OP_SYMBOL_PHP5 = new Symbol(
@@ -631,6 +653,8 @@ public class SymbolsProvider {
 			org.eclipse.php.internal.core.ast.scanner.php5.ParserConstants.T_ENDFOREACH);
 	private static final Symbol END_SWITCH_SYMBOL_PHP5 = new Symbol(
 			org.eclipse.php.internal.core.ast.scanner.php5.ParserConstants.T_ENDSWITCH);
+	private static final Symbol FUNCTION_SYMBOL_PHP5 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php5.ParserConstants.T_FUNCTION);
 
 	/**
 	 * Returns a {@link Symbol} that holds a sym id that is computed by
@@ -703,10 +727,13 @@ public class SymbolsProvider {
 				return END_SWITCH_SYMBOL_PHP5;
 			case OBJECT_OP_SYMBOL_ID:
 				return OBJECT_OP_SYMBOL_PHP5;
+			case FUNCTION_ID:
+				return FUNCTION_SYMBOL_PHP5;
 			default:
 				break;
 			}
 		}
+
 		if (PHPVersion.PHP5_3 == phpVersion) {
 			switch (symID) {
 			case DOT_SYMBOL_ID:
@@ -763,10 +790,13 @@ public class SymbolsProvider {
 				return END_SWITCH_SYMBOL_PHP53;
 			case OBJECT_OP_SYMBOL_ID:
 				return OBJECT_OP_SYMBOL_PHP53;
+			case FUNCTION_ID:
+				return FUNCTION_SYMBOL_PHP53;
 			default:
 				break;
 			}
 		}
+
 		if (PHPVersion.PHP5_4 == phpVersion) {
 			switch (symID) {
 			case DOT_SYMBOL_ID:
@@ -823,6 +853,8 @@ public class SymbolsProvider {
 				return END_SWITCH_SYMBOL_PHP54;
 			case OBJECT_OP_SYMBOL_ID:
 				return OBJECT_OP_SYMBOL_PHP54;
+			case FUNCTION_ID:
+				return FUNCTION_SYMBOL_PHP54;
 			default:
 				break;
 			}
@@ -886,6 +918,8 @@ public class SymbolsProvider {
 				return OBJECT_OP_SYMBOL_PHP55;
 			case YIELD_ID:
 				return YIELD_SYMBOL_PHP55;
+			case FUNCTION_ID:
+				return FUNCTION_SYMBOL_PHP55;
 			default:
 				break;
 			}
@@ -949,6 +983,8 @@ public class SymbolsProvider {
 				return OBJECT_OP_SYMBOL_PHP56;
 			case YIELD_ID:
 				return YIELD_SYMBOL_PHP56;
+			case FUNCTION_ID:
+				return FUNCTION_SYMBOL_PHP56;
 			default:
 				break;
 			}
@@ -1012,6 +1048,8 @@ public class SymbolsProvider {
 				return OBJECT_OP_SYMBOL_PHP7;
 			case YIELD_ID:
 				return YIELD_SYMBOL_PHP7;
+			case FUNCTION_ID:
+				return FUNCTION_SYMBOL_PHP7;
 			default:
 				break;
 			}
@@ -1075,6 +1113,8 @@ public class SymbolsProvider {
 				return OBJECT_OP_SYMBOL_PHP71;
 			case YIELD_ID:
 				return YIELD_SYMBOL_PHP71;
+			case FUNCTION_ID:
+				return FUNCTION_SYMBOL_PHP71;
 			default:
 				break;
 			}
@@ -1138,6 +1178,8 @@ public class SymbolsProvider {
 				return OBJECT_OP_SYMBOL_PHP72;
 			case YIELD_ID:
 				return YIELD_SYMBOL_PHP72;
+			case FUNCTION_ID:
+				return FUNCTION_SYMBOL_PHP72;
 			default:
 				break;
 			}
@@ -1201,6 +1243,8 @@ public class SymbolsProvider {
 				return OBJECT_OP_SYMBOL_PHP73;
 			case YIELD_ID:
 				return YIELD_SYMBOL_PHP73;
+			case FUNCTION_ID:
+				return FUNCTION_SYMBOL_PHP73;
 			default:
 				break;
 			}
@@ -1264,6 +1308,10 @@ public class SymbolsProvider {
 				return OBJECT_OP_SYMBOL_PHP74;
 			case YIELD_ID:
 				return YIELD_SYMBOL_PHP74;
+			case FUNCTION_ID:
+				return FUNCTION_SYMBOL_PHP74;
+			case FN_ID:
+				return FN_SYMBOL_PHP74;
 			default:
 				break;
 			}

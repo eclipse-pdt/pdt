@@ -39,12 +39,12 @@ public class FieldsDeclaration extends BodyDeclaration {
 	/**
 	 * The structural property of this node type.
 	 */
+	public static final SimplePropertyDescriptor MODIFIER_PROPERTY = new SimplePropertyDescriptor(
+			FieldsDeclaration.class, "modifier", Integer.class, OPTIONAL); //$NON-NLS-1$
 	public static final ChildPropertyDescriptor FIELDS_TYPE_PROPERTY = new ChildPropertyDescriptor(
 			FieldsDeclaration.class, "fieldsType", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
 	public static final ChildListPropertyDescriptor FIELDS_PROPERTY = new ChildListPropertyDescriptor(
 			FieldsDeclaration.class, "fields", SingleFieldDeclaration.class, CYCLE_RISK); //$NON-NLS-1$
-	public static final SimplePropertyDescriptor MODIFIER_PROPERTY = new SimplePropertyDescriptor(
-			FieldsDeclaration.class, "modifier", Integer.class, OPTIONAL); //$NON-NLS-1$
 
 	@Override
 	public final SimplePropertyDescriptor getModifierProperty() {
@@ -59,8 +59,8 @@ public class FieldsDeclaration extends BodyDeclaration {
 
 	static {
 		List<StructuralPropertyDescriptor> properyList = new ArrayList<>(1);
-		properyList.add(FIELDS_TYPE_PROPERTY);
 		properyList.add(MODIFIER_PROPERTY);
+		properyList.add(FIELDS_TYPE_PROPERTY);
 		properyList.add(FIELDS_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
