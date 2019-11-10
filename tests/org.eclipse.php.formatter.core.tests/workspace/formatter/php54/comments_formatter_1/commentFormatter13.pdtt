@@ -932,7 +932,7 @@ class Application
         }
         ksort($namespacedCommands);
 
-        foreach ($namespacedCommands as &$commands) {
+        foreach ($namespacedCommands as  &  $commands) {
             ksort($commands);
         }
 
