@@ -6,7 +6,7 @@ if (true) {
     foo($value, $key /* comment1 */ /* comment2 */); /* comment3 */
 }
 
-function foo(&$value, $key)
+function foo(  &  $value, $key)
 {
     $value = str_replace(array(
         '_',

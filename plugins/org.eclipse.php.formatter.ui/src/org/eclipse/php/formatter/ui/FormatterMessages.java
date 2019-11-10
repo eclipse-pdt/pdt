@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013-2018 Zend Techologies Ltd.
+ * Copyright (c) 2013-2019 Zend Techologies Ltd.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -93,7 +93,7 @@ final public class FormatterMessages extends NLS {
 	public static String WhiteSpaceTabPage_type_parameters;
 	public static String WhiteSpaceTabPage_conditionals;
 	public static String WhiteSpaceTabPage_typecasts;
-	public static String WhiteSpaceTabPage_parenexpr;
+	public static String WhiteSpaceTabPage_paren_expr;
 	public static String WhiteSpaceTabPage_declarations;
 	public static String WhiteSpaceTabPage_expressions;
 	public static String WhiteSpaceTabPage_arrays;
@@ -135,6 +135,8 @@ final public class FormatterMessages extends NLS {
 	public static String WhiteSpaceTabPage_before_and_list;
 	public static String WhiteSpaceTabPage_after_and_list;
 	public static String WhiteSpaceTabPage_before_parenthesized_expressions;
+	public static String WhiteSpaceTabPage_ref_expr;
+	public static String WhiteSpaceTabPage_after_reference_symbol;
 	public static String WhiteSpaceTabPage_insert_space;
 	public static String WhiteSpaceOptions_return;
 	public static String WhiteSpaceOptions_before;
@@ -161,6 +163,7 @@ final public class FormatterMessages extends NLS {
 	public static String WhiteSpaceOptions_method;
 	public static String WhiteSpaceOptions_method_call;
 	public static String WhiteSpaceOptions_paren_expr;
+	public static String WhiteSpaceOptions_ref_expr;
 	public static String WhiteSpaceOptions_type_cast;
 	public static String WhiteSpaceOptions_parameterized_type;
 	public static String WhiteSpaceOptions_type_arguments;
@@ -449,6 +452,7 @@ final public class FormatterMessages extends NLS {
 	public static String WhiteSpaceOptions_after_arrow;
 	public static String WhiteSpaceOptions_before_coloncolon;
 	public static String WhiteSpaceOptions_after_coloncolon;
+	public static String WhiteSpaceOptions_after_reference_symbol;
 	public static String WhiteSpaceOptions_field_access;
 	public static String WhiteSpaceOptions_array;
 

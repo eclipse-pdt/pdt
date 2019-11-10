@@ -30,7 +30,7 @@ class MyClass extends MyBaseClass
 class MyClass extends MyBaseClass
 {
 
-    private function foo(& $row)
+    private function foo(&$row)
     {
         /*
          * indentation string for this comment should not be stored...
