@@ -23,8 +23,8 @@ class MyClass
 {
 }
 $a = 0;
-$b = & $a;
-$bb = & new MyClass();
-$bbb = & foo();
-$newref = & returns_reference();
+$b = &$a;
+$bb = &new MyClass();
+$bbb = &foo();
+$newref = &returns_reference();
 ?>

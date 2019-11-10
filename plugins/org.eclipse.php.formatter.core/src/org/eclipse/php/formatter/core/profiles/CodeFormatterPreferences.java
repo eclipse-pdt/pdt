@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Zend Techologies Ltd.
+ * Copyright (c) 2013-2019 Zend Techologies Ltd.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -182,6 +182,8 @@ public class CodeFormatterPreferences {
 
 	public boolean insert_space_after_open_paren_in_parenthesis_expression;
 	public boolean insert_space_before_close_paren_in_parenthesis_expression;
+
+	public boolean insert_space_after_reference_symbol_in_referenced_expression;
 
 	public boolean insert_space_before_arrow_in_yield;
 	public boolean insert_space_after_arrow_in_yield;
@@ -672,6 +674,10 @@ public class CodeFormatterPreferences {
 		insert_space_before_close_paren_in_parenthesis_expression = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_PARENTHESIZED_EXPRESSION,
 				insert_space_before_close_paren_in_parenthesis_expression);
+
+		insert_space_after_reference_symbol_in_referenced_expression = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_REFERENCE_SYMBOL_IN_REFERENCED_EXPRESSION,
+				insert_space_after_reference_symbol_in_referenced_expression);
 
 		blank_line_preserve_empty_lines = getIntValue(preferences,
 				CodeFormatterConstants.FORMATTER_NUMBER_OF_EMPTY_LINES_TO_PRESERVE, blank_line_preserve_empty_lines);
@@ -1340,6 +1346,9 @@ public class CodeFormatterPreferences {
 				insert_space_after_open_paren_in_parenthesis_expression ? TRUE : FALSE);
 		options.put(CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_PARENTHESIZED_EXPRESSION,
 				insert_space_before_close_paren_in_parenthesis_expression ? TRUE : FALSE);
+
+		options.put(CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_REFERENCE_SYMBOL_IN_REFERENCED_EXPRESSION,
+				insert_space_after_reference_symbol_in_referenced_expression ? TRUE : FALSE);
 
 		options.put(CodeFormatterConstants.FORMATTER_NUMBER_OF_EMPTY_LINES_TO_PRESERVE,
 				String.valueOf(blank_line_preserve_empty_lines));

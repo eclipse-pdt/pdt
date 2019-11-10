@@ -6,7 +6,7 @@ Check that indentation string is valid and recalculated for each group of commen
 class MyClass extends MyBaseClass
 {
 
-    private function foo(& $row)
+    private function foo(&$row)
     {
         /*
          * indentation string for this comment should not be stored...
@@ -28,14 +28,12 @@ class MyClass extends MyBaseClass
 <?php
 class MyClass extends MyBaseClass
 {
-    
-    private function foo(&$row)
+    private function foo(& $row)
     {
         /*
          * indentation string for this comment should not be stored...
          */
     }
-    
     function addColumns(Table $table)
     {
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

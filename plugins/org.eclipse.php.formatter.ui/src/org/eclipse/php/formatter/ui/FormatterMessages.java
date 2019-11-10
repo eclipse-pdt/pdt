@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013-2018 Zend Techologies Ltd.
+ * Copyright (c) 2013-2019 Zend Techologies Ltd.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -135,6 +135,8 @@ final public class FormatterMessages extends NLS {
 	public static String WhiteSpaceTabPage_before_and_list;
 	public static String WhiteSpaceTabPage_after_and_list;
 	public static String WhiteSpaceTabPage_before_parenthesized_expressions;
+	public static String WhiteSpaceTabPage_refexpr;
+	public static String WhiteSpaceTabPage_after_reference_symbol;
 	public static String WhiteSpaceTabPage_insert_space;
 	public static String WhiteSpaceOptions_return;
 	public static String WhiteSpaceOptions_before;
@@ -449,6 +451,7 @@ final public class FormatterMessages extends NLS {
 	public static String WhiteSpaceOptions_after_arrow;
 	public static String WhiteSpaceOptions_before_coloncolon;
 	public static String WhiteSpaceOptions_after_coloncolon;
+	public static String WhiteSpaceOptions_after_reference_symbol;
 	public static String WhiteSpaceOptions_field_access;
 	public static String WhiteSpaceOptions_array;
 

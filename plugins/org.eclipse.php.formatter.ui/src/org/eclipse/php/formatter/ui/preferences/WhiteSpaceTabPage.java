@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Zend Techologies Ltd.
+ * Copyright (c) 2013-2019 Zend Techologies Ltd.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -37,8 +37,8 @@ import org.eclipse.ui.part.PageBook;
 public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 
 	/**
-	 * Encapsulates a view of the options tree which is structured by syntactical
-	 * element.
+	 * Encapsulates a view of the options tree which is structured by
+	 * syntactical element.
 	 */
 
 	private final class SyntaxComponent
@@ -765,6 +765,9 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 				preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_PARENTHESIZED_EXPRESSION);
 
+		codeFormatterPreferences.insert_space_after_reference_symbol_in_referenced_expression = getBooleanValue(
+				preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_REFERENCE_SYMBOL_IN_REFERENCED_EXPRESSION);
 	}
 
 	private boolean getBooleanValue(Map<String, Object> preferences, String key) {

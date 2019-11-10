@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2018 Zend Techologies Ltd.
+ * Copyright (c) 2013-2019 Zend Techologies Ltd.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -173,6 +173,8 @@ public final class PHPDefaultFormatterPreferences implements ICodeFormatterPrefe
 
 		preferences.insert_space_after_open_paren_in_parenthesis_expression = false;
 		preferences.insert_space_before_close_paren_in_parenthesis_expression = false;
+
+		preferences.insert_space_after_reference_symbol_in_referenced_expression = false;
 
 		preferences.blank_line_preserve_empty_lines = 1;
 		preferences.blank_line_before_class_declaration = 0;

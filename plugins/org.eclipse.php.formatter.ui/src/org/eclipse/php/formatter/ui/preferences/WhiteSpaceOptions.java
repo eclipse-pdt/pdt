@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Zend Techologies Ltd.
+ * Copyright (c) 2013-2019 Zend Techologies Ltd.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -201,12 +201,15 @@ public final class WhiteSpaceOptions {
 
 	private final static String PARENTHESIS_EXPRESSION_PREVIEW = "(($a));"; //$NON-NLS-1$
 
+	private final static String REFERENCED_EXPRESSION_PREVIEW = "$b = &$a;"; //$NON-NLS-1$
+
 	private final static String MULT_FIELD_PREVIEW = "class MyClass {public $a=0,$b=1,$c=2,$d=3; const MY_TRUE=1,MY_FALSE=2;}"; //$NON-NLS-1$
 
 	private final static String BLOCK_PREVIEW = "if (true) { return 1; } else if(true) {return 3; }else { return 2; }"; //$NON-NLS-1$
 
 	/**
-	 * Create the tree, in this order: syntax element - position - abstract element
+	 * Create the tree, in this order: syntax element - position - abstract
+	 * element
 	 * 
 	 * @param workingValues
 	 * @return returns roots (type <code>Node</code>)
@@ -311,11 +314,16 @@ public final class WhiteSpaceOptions {
 		createAfterColoncolonTree(workingValues, element);
 		roots.add(element);
 
+		element = new InnerNode(null, workingValues, FormatterMessages.WhiteSpaceOptions_after_reference_symbol);
+		createAfterReferenceSymbolTree(workingValues, element);
+		roots.add(element);
+
 		return roots;
 	}
 
 	/**
-	 * Create the tree, in this order: position - syntax element - abstract element
+	 * Create the tree, in this order: position - syntax element - abstract
+	 * element
 	 * 
 	 * @param workingValues
 	 * @return returns roots (type <code>Node</code>)
@@ -400,6 +408,10 @@ public final class WhiteSpaceOptions {
 
 		parent = createParentNode(roots, workingValues, FormatterMessages.WhiteSpaceOptions_after_coloncolon);
 		createAfterColoncolonTree(workingValues, parent);
+
+		parent = createParentNode(roots, workingValues, FormatterMessages.WhiteSpaceOptions_after_reference_symbol);
+		createAfterReferenceSymbolTree(workingValues, parent);
+
 		return roots;
 	}
 
@@ -441,6 +453,7 @@ public final class WhiteSpaceOptions {
 		createTypecastTree(workingValues, expressions);
 		createConditionalTree(workingValues, expressions);
 		createParenthesisExpressionTree(workingValues, expressions);
+		createReferencedExpressionTree(workingValues, expressions);
 
 		final InnerNode arrays = new InnerNode(null, workingValues, FormatterMessages.WhiteSpaceTabPage_arrays);
 		createArrayCreationTree(workingValues, arrays);
@@ -610,6 +623,12 @@ public final class WhiteSpaceOptions {
 		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_method_call,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_COLONCOLON_IN_METHOD_INVOCATION,
 				METHOD_CALL_PREVIEW);
+	}
+
+	private static void createAfterReferenceSymbolTree(Map<String, Object> workingValues, InnerNode parent) {
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_paren_expr,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_REFERENCE_SYMBOL_IN_REFERENCED_EXPRESSION,
+				REFERENCED_EXPRESSION_PREVIEW);
 	}
 
 	private static void createBeforeColoncolonTree(Map<String, Object> workingValues, InnerNode parent) {
@@ -1124,6 +1143,15 @@ public final class WhiteSpaceOptions {
 		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_before_closing_paren,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CLOSING_PAREN_IN_PARENTHESIZED_EXPRESSION,
 				PARENTHESIS_EXPRESSION_PREVIEW);
+		return root;
+	}
+
+	private static InnerNode createReferencedExpressionTree(Map<String, Object> workingValues, InnerNode parent) {
+		final InnerNode root = new InnerNode(parent, workingValues, FormatterMessages.WhiteSpaceTabPage_refexpr);
+
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_after_reference_symbol,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_REFERENCE_SYMBOL_IN_REFERENCED_EXPRESSION,
+				REFERENCED_EXPRESSION_PREVIEW);
 		return root;
 	}
 
