@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2018 Zend Techologies Ltd.
+ * Copyright (c) 2013-2019 Zend Techologies Ltd.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -913,6 +913,20 @@ public class CodeFormatterConstants {
 	 */
 	public static final String FORMATTER_INSERT_SPACE_AFTER_OPENING_PAREN_IN_PARENTHESIZED_EXPRESSION = FormatterCorePlugin.PLUGIN_ID
 			+ ".formatter.insert_space_after_opening_paren_in_parenthesized_expression"; //$NON-NLS-1$
+	/**
+	 * <pre>
+	 * FORMATTER / Option to insert a space after the reference symbol in a referenced expression
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_after_reference_symbol_in_referenced_expression&quot;
+	 *     - possible values:   { INSERT, DO_NOT_INSERT }
+	 *     - default:           DO_NOT_INSERT
+	 * </pre>
+	 * 
+	 * @see JavaCore#INSERT
+	 * @see JavaCore#DO_NOT_INSERT
+	 * @since 3.0
+	 */
+	public static final String FORMATTER_INSERT_SPACE_AFTER_REFERENCE_SYMBOL_IN_REFERENCED_EXPRESSION = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.insert_space_after_reference_symbol_in_referenced_expression"; //$NON-NLS-1$
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space after the opening parenthesis in a switch statement

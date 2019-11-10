@@ -5011,6 +5011,10 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	@Override
 	public boolean visit(Reference reference) {
 		addNonBlanksToLineWidth(1);// &$a
+		if (this.preferences.insert_space_after_reference_symbol_in_referenced_expression) {
+			insertSpace();
+		}
+		handleChars(reference.getStart() + 1, reference.getExpression().getStart());
 		reference.getExpression().accept(this);
 		return false;
 	}
