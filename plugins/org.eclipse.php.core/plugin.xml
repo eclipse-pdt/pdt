@@ -26,7 +26,19 @@
  	<extension-point id="libraryFolderNameProviders" name="Library Folder Name Providers" schema="schema/libraryFolderNameProviders.exsd"/>
  	<extension-point id="validatorExtension" name="PHP Validator Extension" schema="schema/validatorExtension.exsd"/>
  	<extension-point id="namespaceResolver" name="PHP Namespace Resolver Extension" schema="schema/namespaceResolver.exsd"/>
-
+	<extension
+         point="org.eclipse.core.runtime.adapters" id="org.eclipse.php.core.adapters">
+      <factory
+            adaptableType="org.eclipse.dltk.core.IMember"
+            class="org.eclipse.php.internal.core.adapters.MemberResourceAdapterFactory">
+         <adapter
+               type="org.eclipse.core.resources.IResource">
+         </adapter>
+         <adapter
+               type="org.eclipse.core.resources.IFile">
+         </adapter>
+      </factory>
+   </extension>
 	<!-- PHP Model Handler -->
 	<extension
 		point="org.eclipse.wst.sse.core.modelHandler">
@@ -37,6 +49,7 @@
 			id="org.eclipse.php.core.documentModel.handler">
 		</modelHandler>
 	</extension>
+	
 
 	<!--
 		DocumentFactory extension for PHP: This is needed in order to
