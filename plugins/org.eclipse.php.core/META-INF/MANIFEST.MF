@@ -38,6 +38,7 @@ Export-Package: org.eclipse.php.core,
  org.eclipse.php.core.libfolders,
  org.eclipse.php.core.project,
  org.eclipse.php.core.util,
+ org.eclipse.php.internal.core.adapters;x-internal:=true,
  org.eclipse.php.internal.core;
   x-friends:="org.eclipse.php.refactoring.core.tests,
    org.eclipse.php.refactoring.core,
