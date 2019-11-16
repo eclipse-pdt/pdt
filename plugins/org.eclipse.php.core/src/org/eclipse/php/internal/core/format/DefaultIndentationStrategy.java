@@ -117,6 +117,35 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		placeMatchingBlanksForStructuredDocument(document, result, lineNumber, forOffset, BLANK);
 	}
 
+	/**
+	 * Taken from CodeFormatterVisitor#resetEnableStatus(String content).<br>
+	 * 
+	 * @todo we should look for all successive comments at a certain document
+	 *       position and search for the latest formatter enabling/disabling
+	 *       tag. The formatter enabling/disabling tag names themselves depend
+	 *       on CodeFormatterConstants.FORMATTER_ENABLING_TAG and
+	 *       CodeFormatterConstants.FORMATTER_DISABLING_TAG preferences.
+	 * 
+	 * @param content
+	 *            to check
+	 * @return true if FORMATTER_DISABLING_TAG was found, false otherwise
+	 */
+	private boolean hasDisableStatus(String content) {
+		if (!content.trim().startsWith("//")) { //$NON-NLS-1$
+			return false;
+		}
+		int enablingTagIndex = -1;
+		int disablingTagIndex = -1;
+		disablingTagIndex = content.lastIndexOf("@formatter:off"); //$NON-NLS-1$
+		enablingTagIndex = content.lastIndexOf("@formatter:on"); //$NON-NLS-1$
+		if (enablingTagIndex < disablingTagIndex) {
+			return true;
+		} else if (enablingTagIndex > disablingTagIndex) {
+			return false;
+		}
+		return false;
+	}
+
 	private void placeMatchingBlanksForStructuredDocument(final IStructuredDocument document,
 			final StringBuilder result, final int lineNumber, final int forOffset, String commandText)
 			throws BadLocationException {
@@ -182,11 +211,16 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				while (lastNonEmptyLineIndex >= 0) {
 					IRegion lineInfo = document.getLineInformation(lastNonEmptyLineIndex);
 					String content = document.get(lineInfo.getOffset(), lineInfo.getLength());
+					if (hasDisableStatus(content)) {
+						result.append(FormatterUtils.getLineBlanks(document, document.getLineInformation(lineNumber)));
+						return;
+					}
 					if (StringUtils.isNotBlank(content)) {
 						break;
 					}
 					lastNonEmptyLineIndex--;
 				}
+				assert lastNonEmptyLineIndex >= 0;
 				if (!isEndOfStatement(document, offset, lastNonEmptyLineIndex)) {
 					if (indentationBaseLineIndex == lastNonEmptyLineIndex) {
 						// this only deal with "$a = 'aaa'.|","|" is the
