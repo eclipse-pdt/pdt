@@ -1,0 +1,22 @@
+--TEST--
+Bug 553378 - fix boolean type detection for generated class property PHPDocs
+--FILE--
+<?php
+class foo
+{
+    /**|
+    public $prop1 = false, $prop2 = true, $prop3 = 0, $prop4 = 0.5;
+}
+--EXPECT--
+<?php
+class foo
+{
+    /**
+     * 
+     * @var boolean $prop1
+     * @var boolean $prop2
+     * @var integer $prop3
+     * @var number $prop4
+     */
+    public $prop1 = false, $prop2 = true, $prop3 = 0, $prop4 = 0.5;
+}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2015, 2017 IBM Corporation and others.
+ * Copyright (c) 2009-2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -386,8 +386,15 @@ public class CodeGeneration {
 				case Scalar.TYPE_INT:
 					fieldTypes[i] = "integer"; //$NON-NLS-1$
 					break;
+				case Scalar.TYPE_REAL:
+					fieldTypes[i] = PHPSimpleTypes.NUMBER.getTypeName();
+					break;
 				case Scalar.TYPE_STRING:
-					if (!expression.isNullExpression()) {
+					String value = scalar.getStringValue();
+					if ("true".equalsIgnoreCase(value) //$NON-NLS-1$
+							|| "false".equalsIgnoreCase(value)) { //$NON-NLS-1$
+						fieldTypes[i] = PHPSimpleTypes.BOOLEAN.getTypeName();
+					} else if (!expression.isNullExpression()) {
 						fieldTypes[i] = PHPSimpleTypes.STRING.getTypeName();
 					} else {
 						// we don't want to use varType to describe
