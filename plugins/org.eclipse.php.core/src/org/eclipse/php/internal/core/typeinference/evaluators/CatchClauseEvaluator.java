@@ -23,6 +23,7 @@ import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.core.compiler.ast.nodes.CatchClause;
+import org.eclipse.php.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 
@@ -42,7 +43,26 @@ public class CatchClauseEvaluator extends GoalEvaluator {
 		List<TypeReference> classNames = catchClause.getClassNames();
 		for (TypeReference className : classNames) {
 			if (className != null) {
-				result.add(PHPClassType.fromSimpleReference(className));
+				String typeName = className.getName();
+				String namespace = null;
+				if (className instanceof FullyQualifiedReference) {
+					FullyQualifiedReference fqn = (FullyQualifiedReference) className;
+					if (fqn.getNamespace() != null) {
+						namespace = fqn.getNamespace().getName();
+					}
+				}
+				// if (namespace == null) {
+				// String fullName = PHPModelUtils.getFullName(typeName,
+				// methodContext.getSourceModule(),
+				// className.start());
+				// typeName = PHPModelUtils.extractElementName(fullName);
+				// namespace = PHPModelUtils.extractNameSpaceName(fullName);
+				// }
+				if (namespace != null) {
+					result.add(new PHPClassType(namespace, typeName));
+				} else {
+					result.add(new PHPClassType(typeName));
+				}
 			}
 		}
 		return IGoal.NO_GOALS;

@@ -32,6 +32,7 @@ import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.core.compiler.ast.nodes.AnonymousClassDeclaration;
+import org.eclipse.php.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.core.compiler.ast.nodes.TraitDeclaration;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
@@ -142,10 +143,50 @@ public abstract class ContextFinder extends ASTVisitor {
 
 		MultiTypeType multiTypeType = new MultiTypeType();
 		if (node.getSuperClass() != null) {
-			multiTypeType.addType(PHPClassType.fromSimpleReference(node.getSuperClass()));
+			String typeName = node.getSuperClass().getName();
+			String namespace = null;
+			if (node.getSuperClass() instanceof FullyQualifiedReference) {
+				FullyQualifiedReference fqn = (FullyQualifiedReference) node.getSuperClass();
+				if (fqn.getNamespace() != null) {
+					namespace = fqn.getNamespace().getName();
+				}
+			}
+			// if (namespace == null) {
+			// String fullName = PHPModelUtils.getFullName(typeName,
+			// methodContext.getSourceModule(),
+			// className.start());
+			// typeName = PHPModelUtils.extractElementName(fullName);
+			// namespace = PHPModelUtils.extractNameSpaceName(fullName);
+			// }
+			if (namespace != null) {
+				multiTypeType.addType(new PHPClassType(namespace, typeName));
+			} else {
+				multiTypeType.addType(new PHPClassType(typeName));
+			}
 		}
 		if (node.getInterfaceList() != null) {
 			for (TypeReference typeReference : node.getInterfaceList()) {
+				String typeName = typeReference.getName();
+				String namespace = null;
+				if (typeReference instanceof FullyQualifiedReference) {
+					FullyQualifiedReference fqn = (FullyQualifiedReference) typeReference;
+					if (fqn.getNamespace() != null) {
+						namespace = fqn.getNamespace().getName();
+					}
+				}
+				// if (namespace == null) {
+				// String fullName = PHPModelUtils.getFullName(typeName,
+				// methodContext.getSourceModule(),
+				// className.start());
+				// typeName = PHPModelUtils.extractElementName(fullName);
+				// namespace = PHPModelUtils.extractNameSpaceName(fullName);
+				// }
+				if (namespace != null) {
+					multiTypeType.addType(new PHPClassType(namespace, typeName));
+				} else {
+					multiTypeType.addType(new PHPClassType(typeName));
+				}
+
 				multiTypeType.addType(PHPClassType.fromSimpleReference(typeReference));
 			}
 		}
