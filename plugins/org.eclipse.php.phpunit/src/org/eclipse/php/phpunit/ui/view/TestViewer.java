@@ -552,4 +552,5 @@ public class TestViewer {
 			fTreeViewer.update(test, null); // if in tree: update
 		}
 	}
+
 }

@@ -15,14 +15,20 @@ package org.eclipse.php.phpunit.model.connection;
 import java.util.ArrayList;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.phpunit.model.elements.*;
 import org.eclipse.php.phpunit.ui.view.PHPUnitView;
 import org.eclipse.php.phpunit.ui.view.TestViewer;
+import org.eclipse.swt.widgets.Display;
 
-public class PHPUnitMessageParser {
+public class PHPUnitMessageParser implements ISchedulingRule {
 
 	public static final String CALL_DYNAMIC = "->"; //$NON-NLS-1$
 
@@ -48,38 +54,63 @@ public class PHPUnitMessageParser {
 	private PHPUnitTestGroup currentGroup;
 	private PHPUnitTestCase currentTestCase;
 	private boolean inProgress = false;
+	private RefreshJob refreshJob = new RefreshJob(this);
+
+	private class RefreshJob extends Job {
+
+		public RefreshJob(PHPUnitMessageParser phpUnitMessageParser) {
+			super("Refresh PHPUnitView"); //$NON-NLS-1$
+			setRule(phpUnitMessageParser);
+			setSystem(true);
+		}
+
+		@Override
+		protected IStatus run(IProgressMonitor monitor) {
+
+			Display.getDefault().syncExec(() -> {
+				PHPUnitView.getDefault().refresh(PHPUnitElementManager.getInstance().getRoot());
+			});
+
+			return Status.OK_STATUS;
+		}
+
+	}
 
 	public PHPUnitMessageParser() {
 	}
 
 	public void parseMessage(Message message, final TestViewer viewer) {
-		if (!isInProgress()) {
-			setInProgress(true);
-		}
 		if (message == null) {
 			return;
 		}
+		try {
+			Job.getJobManager().beginRule(this, null);
+			if (!isInProgress()) {
+				setInProgress(true);
+			}
+			final String target = message.getTarget();
+			final MessageEventType event = message.getEvent();
+			if (target.equals(ELEMENT_TARGET_TESTSUITE)) {
+				if (event == MessageEventType.start) {
+					parseGroupStart(viewer, message);
+				} else if (event == MessageEventType.end) {
+					parseGroupEnd(viewer, message);
+				} else {
+					currentGroup.setStatus(event);
+					currentGroup.addRunCount(1);
+				}
+			} else if (target.equals(ELEMENT_TARGET_TESTCASE)) {
+				if (event == MessageEventType.start) {
+					parseTestStart(viewer, message);
+				} else {
+					parseTestEnd(viewer, message);
+				}
+			}
+			refreshJob.schedule(50);
+		} finally {
+			Job.getJobManager().endRule(this);
 
-		final String target = message.getTarget();
-		final MessageEventType event = message.getEvent();
-		if (target.equals(ELEMENT_TARGET_TESTSUITE)) {
-			if (event == MessageEventType.start) {
-				parseGroupStart(viewer, message);
-			} else if (event == MessageEventType.end) {
-				parseGroupEnd(viewer, message);
-			} else {
-				currentGroup.setStatus(event);
-				currentGroup.addRunCount(1);
-			}
-		} else if (target.equals(ELEMENT_TARGET_TESTCASE)) {
-			if (event == MessageEventType.start) {
-				parseTestStart(viewer, message);
-			} else {
-				parseTestEnd(viewer, message);
-			}
 		}
-
-		PHPUnitView.getDefault().refresh(PHPUnitElementManager.getInstance().getRoot());
 	}
 
 	private void parseGroupStart(final TestViewer viewer, Message message) {
@@ -197,5 +228,15 @@ public class PHPUnitMessageParser {
 
 	public PHPUnitTestCase getCurrentTestCase() {
 		return currentTestCase;
+	}
+
+	@Override
+	public boolean contains(ISchedulingRule rule) {
+		return rule == this;
+	}
+
+	@Override
+	public boolean isConflicting(ISchedulingRule rule) {
+		return rule == this;
 	}
 }

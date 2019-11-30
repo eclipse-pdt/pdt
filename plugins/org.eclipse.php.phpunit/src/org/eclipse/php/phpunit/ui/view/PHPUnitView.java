@@ -76,8 +76,8 @@ public class PHPUnitView extends ViewPart {
 
 	private static PHPUnitView instance = null;
 
-	public static synchronized void activateView(final boolean focus) {
-		PlatformUI.getWorkbench().getDisplay().syncExec(() -> {
+	public static void activateView(final boolean focus) {
+		Runnable uiTask = () -> {
 			final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 			if (window != null) {
 				final IWorkbenchPage activePage = window.getActivePage();
@@ -85,21 +85,28 @@ public class PHPUnitView extends ViewPart {
 					return;
 				}
 				try {
-					if (focus) {
-						instance = (PHPUnitView) activePage.showView(NAME);
-					} else {
-						IViewPart foundView = activePage.findView(NAME);
-						if (foundView != null) {
-							instance = (PHPUnitView) foundView;
-						} else {
+					synchronized (window) {
+						if (focus) {
 							instance = (PHPUnitView) activePage.showView(NAME);
+						} else {
+							IViewPart foundView = activePage.findView(NAME);
+							if (foundView != null) {
+								instance = (PHPUnitView) foundView;
+							} else {
+								instance = (PHPUnitView) activePage.showView(NAME);
+							}
 						}
 					}
 				} catch (final PartInitException e) {
 					PHPUnitPlugin.log(e);
 				}
 			}
-		});
+		};
+		if (Display.getCurrent() != null) {
+			uiTask.run();
+		} else {
+			PlatformUI.getWorkbench().getDisplay().syncExec(uiTask);
+		}
 	}
 
 	public static PHPUnitView getDefault() {
@@ -241,12 +248,19 @@ public class PHPUnitView extends ViewPart {
 	}
 
 	public void refresh(final PHPUnitTestGroup root) {
-		activateView(false);
+		if (getDefault() == null) {
+			return;
+		}
 		setInput(root);
-		getSite().getShell().getDisplay().asyncExec(() -> {
+		Runnable uiTask = () -> {
 			final PHPUnitView view = getDefault();
 			view.processChangesInUI();
-		});
+		};
+		if (Display.getCurrent() != null) {
+			uiTask.run();
+		} else {
+			getSite().getShell().getDisplay().asyncExec(uiTask);
+		}
 	}
 
 	public void refreshCounters() {
@@ -355,7 +369,7 @@ public class PHPUnitView extends ViewPart {
 	}
 
 	public void setCodeCoverageTabVisible(final boolean visible) {
-		Display.getDefault().asyncExec(() -> {
+		Runnable uiTask = () -> {
 			if (!visible) {
 				if (codeCoverageTab != null && !codeCoverageTab.isDisposed()) {
 					codeCoverageTab.dispose();
@@ -363,7 +377,12 @@ public class PHPUnitView extends ViewPart {
 			} else if (codeCoverageTab == null || codeCoverageTab.isDisposed()) {
 				createCodeCoverageTab(bottomTabFolder);
 			}
-		});
+		};
+		if (Display.getCurrent() != null) {
+			uiTask.run();
+		} else {
+			Display.getDefault().asyncExec(uiTask);
+		}
 		codeCoverageTabVisibile = visible;
 	}
 
@@ -632,7 +651,8 @@ public class PHPUnitView extends ViewPart {
 	 */
 	private ViewForm createCodeCoverageForm(final Composite parent) {
 		final ViewForm codeCoverageForm = new ViewForm(parent, SWT.NONE);
-		fCodeCoverageSection = new CodeCoverageSection(codeCoverageForm, this, null /* codeCoverageToolBar */);
+		fCodeCoverageSection = new CodeCoverageSection(codeCoverageForm, this,
+				null /* codeCoverageToolBar */);
 		fCodeCoverageSection.addFilter(new ViewerFilter() {
 			@Override
 			public boolean select(Viewer viewer, Object parentElement, Object element) {

@@ -158,4 +158,5 @@ public class PHPUnitTestGroup extends PHPUnitTest {
 		}
 		return result;
 	}
+
 }
