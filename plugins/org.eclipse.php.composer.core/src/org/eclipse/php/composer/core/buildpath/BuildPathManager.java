@@ -15,8 +15,7 @@ package org.eclipse.php.composer.core.buildpath;
 
 import java.util.*;
 
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.dltk.core.DLTKCore;
@@ -38,6 +37,9 @@ public class BuildPathManager {
 								// thought? DI 'n stuff...
 	private IPath vendorPath;
 	private IPath composerPath;
+	final private static String COMPOSER_DIR = "composer"; //$NON-NLS-1$
+	private static FileInfoMatcherDescription folderMatcher = new FileInfoMatcherDescription(
+			"org.eclipse.ui.ide.multiFilter", "1.0-name-matches-false-false-*"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	public BuildPathManager(IComposerProject composerProject) {
 		this.composerProject = composerProject;
@@ -132,6 +134,21 @@ public class BuildPathManager {
 		if (folder != null && folder.exists()) {
 			if (!folder.isDerived()) {
 				folder.setDerived(true, monitor);
+			}
+
+			IFolder sub = folder.getFolder(COMPOSER_DIR);
+			if (sub.exists()) {
+				boolean found = false;
+				for (IResourceFilterDescription filter : sub.getFilters()) {
+					if (filter.getFileInfoMatcherDescription().equals(folderMatcher)) {
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
+					sub.createFilter(IResourceFilterDescription.EXCLUDE_ALL | IResourceFilterDescription.FOLDERS,
+							folderMatcher, IResource.BACKGROUND_REFRESH, monitor);
+				}
 			}
 
 			// disable validation in the vendor folder

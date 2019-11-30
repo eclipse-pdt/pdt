@@ -24,7 +24,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.php.composer.core.launch.ScriptLauncher;
 
-public class UpdateDevJob extends ComposerJob {
+public class UpdateDevJob extends AbstractInstallJob {
 
 	private String[] packages = null;
 
@@ -42,6 +42,7 @@ public class UpdateDevJob extends ComposerJob {
 
 	@Override
 	protected void launch(ScriptLauncher launcher) throws ExecuteException, IOException, InterruptedException {
+		super.launch(launcher);
 		List<String> params = new ArrayList<>();
 		if (packages != null) {
 			params.addAll(Arrays.asList(packages));
