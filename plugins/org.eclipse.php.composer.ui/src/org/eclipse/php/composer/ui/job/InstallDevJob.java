@@ -23,7 +23,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.php.composer.core.launch.ScriptLauncher;
 
-public class InstallDevJob extends ComposerJob {
+public class InstallDevJob extends AbstractInstallJob {
 
 	public InstallDevJob(IProject project) {
 		super(project, Messages.InstallDevJob_Name);
@@ -31,6 +31,7 @@ public class InstallDevJob extends ComposerJob {
 
 	@Override
 	protected void launch(ScriptLauncher launcher) throws ExecuteException, IOException, InterruptedException {
+		super.launch(launcher);
 		List<String> params = new ArrayList<>();
 		// workaround for incorrect progress displaying on Windows
 		if (Platform.OS_WIN32.equals(Platform.getOS())) {
