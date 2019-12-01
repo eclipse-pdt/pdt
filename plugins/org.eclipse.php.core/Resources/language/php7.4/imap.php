@@ -1,6 +1,6 @@
 <?php
 
-// Start of imap v.7.3.7
+// Start of imap v.7.4.0
 
 /**
  * Open an IMAP stream to a mailbox
@@ -685,7 +685,7 @@ function imap_expunge ($imap_stream) {}
  * @param resource $imap_stream 
  * @param int $msg_number The message number
  * @param int $options [optional] You can set the FT_UID which tells the function
- * to treat the msg_number argument as an
+ * to treat the msg_number argument as a
  * UID.
  * @return bool true.
  */
@@ -2124,4 +2124,4 @@ define ('IMAP_GC_ENV', 2);
  */
 define ('IMAP_GC_TEXTS', 4);
 
-// End of imap v.7.3.7
+// End of imap v.7.4.0

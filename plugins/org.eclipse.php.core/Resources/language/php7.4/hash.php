@@ -1,6 +1,6 @@
 <?php
 
-// Start of hash v.7.3.7
+// Start of hash v.7.4.0
 
 /**
  * @link http://www.php.net/manual/en/class.hashcontext.php
@@ -318,5 +318,6 @@ define ('MHASH_FNV1A32', 30);
 define ('MHASH_FNV164', 31);
 define ('MHASH_FNV1A64', 32);
 define ('MHASH_JOAAT', 33);
+define ('MHASH_CRC32C', 34);
 
-// End of hash v.7.3.7
+// End of hash v.7.4.0

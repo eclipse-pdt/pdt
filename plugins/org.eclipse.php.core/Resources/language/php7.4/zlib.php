@@ -1,6 +1,6 @@
 <?php
 
-// Start of zlib v.7.3.7
+// Start of zlib v.7.4.0
 
 /**
  * Output a gz-file
@@ -564,4 +564,4 @@ define ('ZLIB_MEM_ERROR', -4);
 define ('ZLIB_BUF_ERROR', -5);
 define ('ZLIB_VERSION_ERROR', -6);
 
-// End of zlib v.7.3.7
+// End of zlib v.7.4.0

@@ -1,6 +1,6 @@
 <?php
 
-// Start of PDO v.7.3.7
+// Start of PDO v.7.4.0
 
 /**
  * Represents an error raised by PDO. You should not throw a
@@ -124,6 +124,39 @@ class PDO  {
 	const FETCH_ORI_REL = 5;
 	const CURSOR_FWDONLY = 0;
 	const CURSOR_SCROLL = 1;
+	const MYSQL_ATTR_USE_BUFFERED_QUERY = 1000;
+	const MYSQL_ATTR_LOCAL_INFILE = 1001;
+	const MYSQL_ATTR_INIT_COMMAND = 1002;
+	const MYSQL_ATTR_COMPRESS = 1003;
+	const MYSQL_ATTR_DIRECT_QUERY = 1004;
+	const MYSQL_ATTR_FOUND_ROWS = 1005;
+	const MYSQL_ATTR_IGNORE_SPACE = 1006;
+	const MYSQL_ATTR_SSL_KEY = 1007;
+	const MYSQL_ATTR_SSL_CERT = 1008;
+	const MYSQL_ATTR_SSL_CA = 1009;
+	const MYSQL_ATTR_SSL_CAPATH = 1010;
+	const MYSQL_ATTR_SSL_CIPHER = 1011;
+	const MYSQL_ATTR_SERVER_PUBLIC_KEY = 1012;
+	const MYSQL_ATTR_MULTI_STATEMENTS = 1013;
+	const MYSQL_ATTR_SSL_VERIFY_SERVER_CERT = 1014;
+	const ODBC_ATTR_USE_CURSOR_LIBRARY = 1000;
+	const ODBC_ATTR_ASSUME_UTF8 = 1001;
+	const ODBC_SQL_USE_IF_NEEDED = 0;
+	const ODBC_SQL_USE_DRIVER = 2;
+	const ODBC_SQL_USE_ODBC = 1;
+	const PGSQL_ATTR_DISABLE_PREPARES = 1000;
+	const PGSQL_TRANSACTION_IDLE = 0;
+	const PGSQL_TRANSACTION_ACTIVE = 1;
+	const PGSQL_TRANSACTION_INTRANS = 2;
+	const PGSQL_TRANSACTION_INERROR = 3;
+	const PGSQL_TRANSACTION_UNKNOWN = 4;
+	const SQLITE_DETERMINISTIC = 2048;
+	const SQLITE_ATTR_OPEN_FLAGS = 1000;
+	const SQLITE_OPEN_READONLY = 1;
+	const SQLITE_OPEN_READWRITE = 2;
+	const SQLITE_OPEN_CREATE = 4;
+	const SQLITE_ATTR_READONLY_STATEMENT = 1001;
+	const SQLITE_ATTR_EXTENDED_RESULT_CODES = 1002;
 
 
 	/**
@@ -364,10 +397,6 @@ class PDO  {
 	 * this way.
 	 */
 	public function quote (string $string, int $parameter_type = null) {}
-
-	final public function __wakeup () {}
-
-	final public function __sleep () {}
 
 	/**
 	 * Return an array of available PDO drivers
@@ -795,10 +824,6 @@ class PDOStatement implements Traversable {
 	 */
 	public function debugDumpParams () {}
 
-	final public function __wakeup () {}
-
-	final public function __sleep () {}
-
 }
 
 final class PDORow  {
@@ -806,4 +831,4 @@ final class PDORow  {
 
 function pdo_drivers () {}
 
-// End of PDO v.7.3.7
+// End of PDO v.7.4.0

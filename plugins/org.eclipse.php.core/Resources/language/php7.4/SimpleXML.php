@@ -1,12 +1,12 @@
 <?php
 
-// Start of SimpleXML v.7.3.7
+// Start of SimpleXML v.7.4.0
 
 /**
  * Represents an element in an XML document.
  * @link http://www.php.net/manual/en/class.simplexmlelement.php
  */
-class SimpleXMLElement implements Traversable {
+class SimpleXMLElement implements Traversable, Countable {
 
 	/**
 	 * Creates a new SimpleXMLElement object
@@ -157,7 +157,7 @@ class SimpleXMLElement implements Traversable {
  * The SimpleXMLIterator provides recursive iteration over all nodes of a SimpleXMLElement object.
  * @link http://www.php.net/manual/en/class.simplexmliterator.php
  */
-class SimpleXMLIterator extends SimpleXMLElement implements Traversable, RecursiveIterator, Iterator, Countable {
+class SimpleXMLIterator extends SimpleXMLElement implements Countable, Traversable, RecursiveIterator, Iterator {
 
 	/**
 	 * Prop description
@@ -419,4 +419,4 @@ function simplexml_load_string (string $data, string $class_name = null, int $op
  */
 function simplexml_import_dom (DOMNode $node, string $class_name = null) {}
 
-// End of SimpleXML v.7.3.7
+// End of SimpleXML v.7.4.0

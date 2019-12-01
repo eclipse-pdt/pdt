@@ -1,6 +1,6 @@
 <?php
 
-// Start of gd v.7.3.7
+// Start of gd v.7.4.0
 
 /**
  * Retrieve information about the currently installed GD library
@@ -934,6 +934,11 @@ function imagecreatefromgd2part (string $filename, int $srcX, int $srcY, int $wi
 function imagecreatefrombmp (string $filename) {}
 
 /**
+ * @param mixed $filename
+ */
+function imagecreatefromtga ($filename) {}
+
+/**
  * Output a PNG image to either the browser or a file
  * @link http://www.php.net/manual/en/function.imagepng.php
  * @param resource $image 
@@ -1073,7 +1078,7 @@ function imagefill ($image, int $x, int $y, int $color) {}
  * @param resource $image 
  * @param array $points An array containing the x and y
  * coordinates of the polygons vertices consecutively.
- * @param int $num_points Total number of vertices, which must be at least 3.
+ * @param int $num_points Total number of points (vertices), which must be at least 3.
  * @param int $color gd.identifier.color
  * @return bool true on success or false on failure
  */
@@ -1221,7 +1226,7 @@ function imageloadfont (string $file) {}
  * <td>= y1</td>
  * </tr>
  * </table>
- * @param int $num_points Total number of points (vertices).
+ * @param int $num_points Total number of points (vertices), which must be at least 3.
  * @param int $color gd.identifier.color
  * @return bool true on success or false on failure
  */
@@ -1250,7 +1255,7 @@ function imagepolygon ($image, array $points, int $num_points, int $color) {}
  * <td>= y1</td>
  * </tr>
  * </table>
- * @param int $num_points Total number of points (vertices).
+ * @param int $num_points Total number of points (vertices), which must be at least 3.
  * @param int $color gd.identifier.color
  * @return bool true on success or false on failure
  */
@@ -1928,6 +1933,7 @@ define ('IMG_WEBP', 32);
  * @link http://www.php.net/manual/en/image.constants.php
  */
 define ('IMG_BMP', 64);
+define ('IMG_TGA', 128);
 
 /**
  * gd.constants.color
@@ -2295,6 +2301,13 @@ define ('IMG_FILTER_SMOOTH', 10);
 define ('IMG_FILTER_PIXELATE', 11);
 
 /**
+ * gd.constants.filter
+ * (Available as of PHP 7.4.0)
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
+define ('IMG_FILTER_SCATTER', 12);
+
+/**
  * The GD version PHP was compiled against.
  * (Available as of PHP 5.2.4)
  * @link http://www.php.net/manual/en/image.constants.php
@@ -2371,4 +2384,4 @@ define ('PNG_FILTER_PAETH', 128);
  */
 define ('PNG_ALL_FILTERS', 248);
 
-// End of gd v.7.3.7
+// End of gd v.7.4.0

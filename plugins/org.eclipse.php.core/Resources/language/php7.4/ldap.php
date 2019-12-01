@@ -1,13 +1,12 @@
 <?php
 
-// Start of ldap v.7.3.0
+// Start of ldap v.7.4.0
 
 /**
  * Connect to an LDAP server
  * @link http://www.php.net/manual/en/function.ldap-connect.php
- * @param string $host [optional] <p>
- * This field supports using a hostname or, with OpenLDAP 2.x.x and
- * later, a full LDAP URI of the form ldap://hostname:port
+ * @param string $ldap_uri [optional] <p>
+ * A full LDAP URI of the form ldap://hostname:port
  * or ldaps://hostname:port for SSL encryption.
  * </p>
  * <p>
@@ -16,21 +15,20 @@
  * <p>
  * Note that hostname:port is not a supported LDAP URI as the schema is missing.
  * </p>
- * @param int $port [optional] The port to connect to. Not used when using LDAP URIs.
- * @return resource a positive LDAP link identifier when the provided hostname/port combination or LDAP URI
- * seems plausible. It's a syntactic check of the provided parameters but the server(s) will not
+ * @return resource a positive LDAP link identifier when the provided LDAP URI
+ * seems plausible. It's a syntactic check of the provided parameter but the server(s) will not
  * be contacted! If the syntactic check fails it returns false.
- * When OpenLDAP 2.x.x is used, ldap_connect will always
+ * ldap_connect will otherwise
  * return a resource as it does not actually connect but just
  * initializes the connecting parameters. The actual connect happens with
  * the next calls to ldap_&#42; funcs, usually with
  * ldap_bind.
  * <p>
- * If no arguments are specified then the link identifier of the already
+ * If no argument is specified then the link identifier of the already
  * opened link will be returned.
  * </p>
  */
-function ldap_connect (string $host = null, int $port = null) {}
+function ldap_connect (string $ldap_uri = null) {}
 
 /**
  * Alias: ldap_unbind
@@ -45,17 +43,21 @@ function ldap_close ($link_identifier) {}
  * @param resource $link_identifier An LDAP link identifier, returned by ldap_connect.
  * @param string $bind_rdn [optional] 
  * @param string $bind_password [optional] 
+ * @param array $serverctrls [optional] Array of LDAP Controls to send with the request.
  * @return bool true on success or false on failure
  */
-function ldap_bind ($link_identifier, string $bind_rdn = null, string $bind_password = null) {}
+function ldap_bind ($link_identifier, string $bind_rdn = null, string $bind_password = null, array $serverctrls = null) {}
 
 /**
- * @param mixed $link_identifier
- * @param mixed $bind_rdn [optional]
- * @param mixed $bind_password [optional]
- * @param mixed $servercontrols [optional]
+ * Bind to LDAP directory
+ * @link http://www.php.net/manual/en/function.ldap-bind-ext.php
+ * @param resource $link_identifier 
+ * @param string $bind_rdn [optional] 
+ * @param string $bind_password [optional] 
+ * @param array $serverctrls [optional] 
+ * @return resource an LDAP result identifier or false on error.
  */
-function ldap_bind_ext ($link_identifier, $bind_rdn = null, $bind_password = null, $servercontrols = null) {}
+function ldap_bind_ext ($link_identifier, string $bind_rdn = null, string $bind_password = null, array $serverctrls = null) {}
 
 /**
  * Bind to LDAP directory using SASL
@@ -86,7 +88,7 @@ function ldap_unbind ($link_identifier) {}
  * @param resource $link_identifier An LDAP link identifier, returned by ldap_connect.
  * @param string $base_dn The base DN for the directory.
  * @param string $filter An empty filter is not allowed. If you want to retrieve absolutely all
- * information for this entry, use a filter of 
+ * information for this entry, use a filter of
  * objectClass=&#42;. If you know which entry types are
  * used on the directory server, you might use an appropriate filter such
  * as objectClass=inetOrgPerson.
@@ -97,7 +99,7 @@ function ldap_unbind ($link_identifier) {}
  * </p>
  * <p>
  * Using this parameter is much more efficient than the default action
- * (which is to return all attributes and their associated values). 
+ * (which is to return all attributes and their associated values).
  * The use of this parameter should therefore be considered good
  * practice.
  * </p>
@@ -145,7 +147,7 @@ function ldap_unbind ($link_identifier) {}
  * always.
  * </p>
  * </p>
- * @param array $serverctrls [optional] 
+ * @param array $serverctrls [optional] Array of LDAP Controls to send with the request.
  * @return resource a search result identifier or false on error.
  */
 function ldap_read ($link_identifier, string $base_dn, string $filter, array $attributes = null, int $attrsonly = null, int $sizelimit = null, int $timelimit = null, int $deref = null, array $serverctrls = null) {}
@@ -163,7 +165,7 @@ function ldap_read ($link_identifier, string $base_dn, string $filter, array $at
  * </p>
  * <p>
  * Using this parameter is much more efficient than the default action
- * (which is to return all attributes and their associated values). 
+ * (which is to return all attributes and their associated values).
  * The use of this parameter should therefore be considered good
  * practice.
  * </p>
@@ -211,7 +213,7 @@ function ldap_read ($link_identifier, string $base_dn, string $filter, array $at
  * always.
  * </p>
  * </p>
- * @param array $serverctrls [optional] 
+ * @param array $serverctrls [optional] Array of LDAP Controls to send with the request.
  * @return resource a search result identifier or false on error.
  */
 function ldap_list ($link_identifier, string $base_dn, string $filter, array $attributes = null, int $attrsonly = null, int $sizelimit = null, int $timelimit = null, int $deref = null, array $serverctrls = null) {}
@@ -232,7 +234,7 @@ function ldap_list ($link_identifier, string $base_dn, string $filter, array $at
  * </p>
  * <p>
  * Using this parameter is much more efficient than the default action
- * (which is to return all attributes and their associated values). 
+ * (which is to return all attributes and their associated values).
  * The use of this parameter should therefore be considered good
  * practice.
  * </p>
@@ -280,7 +282,7 @@ function ldap_list ($link_identifier, string $base_dn, string $filter, array $at
  * always.
  * </p>
  * </p>
- * @param array $serverctrls [optional] 
+ * @param array $serverctrls [optional] Array of LDAP Controls to send with the request.
  * @return resource a search result identifier or false on error.
  */
 function ldap_search ($link_identifier, string $base_dn, string $filter, array $attributes = null, int $attrsonly = null, int $sizelimit = null, int $timelimit = null, int $deref = null, array $serverctrls = null) {}
@@ -461,35 +463,41 @@ function ldap_dn2ufn (string $dn) {}
  * $entry[&quot;attribute2&quot;][1] = &quot;value2&quot;;
  * ?&gt;</code>
  * </pre>
- * @param array $serverctrls [optional] 
+ * @param array $serverctrls [optional] Array of LDAP Controls to send with the request.
  * @return bool true on success or false on failure
  */
 function ldap_add ($link_identifier, string $dn, array $entry, array $serverctrls = null) {}
 
 /**
- * @param mixed $link_identifier
- * @param mixed $dn
- * @param mixed $entry
- * @param mixed $servercontrols [optional]
+ * Add entries to LDAP directory
+ * @link http://www.php.net/manual/en/function.ldap-add-ext.php
+ * @param resource $link_identifier 
+ * @param string $dn 
+ * @param array $entry 
+ * @param array $serverctrls [optional] 
+ * @return resource an LDAP result identifier or false on error.
  */
-function ldap_add_ext ($link_identifier, $dn, $entry, $servercontrols = null) {}
+function ldap_add_ext ($link_identifier, string $dn, array $entry, array $serverctrls = null) {}
 
 /**
  * Delete an entry from a directory
  * @link http://www.php.net/manual/en/function.ldap-delete.php
  * @param resource $link_identifier An LDAP link identifier, returned by ldap_connect.
  * @param string $dn The distinguished name of an LDAP entity.
- * @param array $serverctrls [optional] 
+ * @param array $serverctrls [optional] Array of LDAP Controls to send with the request.
  * @return bool true on success or false on failure
  */
 function ldap_delete ($link_identifier, string $dn, array $serverctrls = null) {}
 
 /**
- * @param mixed $link_identifier
- * @param mixed $dn
- * @param mixed $servercontrols [optional]
+ * Delete an entry from a directory
+ * @link http://www.php.net/manual/en/function.ldap-delete-ext.php
+ * @param resource $link_identifier 
+ * @param string $dn 
+ * @param array $serverctrls [optional] 
+ * @return resource an LDAP result identifier or false on error.
  */
-function ldap_delete_ext ($link_identifier, $dn, $servercontrols = null) {}
+function ldap_delete_ext ($link_identifier, string $dn, array $serverctrls = null) {}
 
 /**
  * Batch and execute modifications on an LDAP entry
@@ -544,7 +552,7 @@ function ldap_delete_ext ($link_identifier, $dn, $servercontrols = null) {}
  * any value for modtype must be one of the
  * LDAP_MODIFY_BATCH_&#42; constants listed above.
  * </p>
- * @param array $serverctrls [optional] 
+ * @param array $serverctrls [optional] Array of LDAP Controls to send with the request.
  * @return bool true on success or false on failure
  */
 function ldap_modify_batch ($link_identifier, string $dn, array $entry, array $serverctrls = null) {}
@@ -565,18 +573,21 @@ function ldap_modify ($link_identifier, $dn, $entry, $servercontrols = null) {}
  * @param resource $link_identifier An LDAP link identifier, returned by ldap_connect.
  * @param string $dn The distinguished name of an LDAP entity.
  * @param array $entry An associative array listing the attirbute values to add. If an attribute was not existing yet it will be added. If an attribute is existing you can only add values to it if it supports multiple values.
- * @param array $serverctrls [optional] 
+ * @param array $serverctrls [optional] Array of LDAP Controls to send with the request.
  * @return bool true on success or false on failure
  */
 function ldap_mod_add ($link_identifier, string $dn, array $entry, array $serverctrls = null) {}
 
 /**
- * @param mixed $link_identifier
- * @param mixed $dn
- * @param mixed $entry
- * @param mixed $servercontrols [optional]
+ * Add attribute values to current attributes
+ * @link http://www.php.net/manual/en/function.ldap-mod_add-ext.php
+ * @param resource $link_identifier 
+ * @param string $dn 
+ * @param array $entry 
+ * @param array $serverctrls [optional] 
+ * @return resource an LDAP result identifier or false on error.
  */
-function ldap_mod_add_ext ($link_identifier, $dn, $entry, $servercontrols = null) {}
+function ldap_mod_add_ext ($link_identifier, string $dn, array $entry, array $serverctrls = null) {}
 
 /**
  * Replace attribute values with new ones
@@ -584,18 +595,21 @@ function ldap_mod_add_ext ($link_identifier, $dn, $entry, $servercontrols = null
  * @param resource $link_identifier An LDAP link identifier, returned by ldap_connect.
  * @param string $dn The distinguished name of an LDAP entity.
  * @param array $entry An associative array listing the attributes to replace. Sending an empty array as value will remove the attribute, while sending an attribute not existing yet on this entry will add it.
- * @param array $serverctrls [optional] 
+ * @param array $serverctrls [optional] Array of LDAP Controls to send with the request.
  * @return bool true on success or false on failure
  */
 function ldap_mod_replace ($link_identifier, string $dn, array $entry, array $serverctrls = null) {}
 
 /**
- * @param mixed $link_identifier
- * @param mixed $dn
- * @param mixed $entry
- * @param mixed $servercontrols [optional]
+ * Replace attribute values with new ones
+ * @link http://www.php.net/manual/en/function.ldap-mod_replace-ext.php
+ * @param resource $link_identifier 
+ * @param string $dn 
+ * @param array $entry 
+ * @param array $serverctrls [optional] 
+ * @return resource an LDAP result identifier or false on error.
  */
-function ldap_mod_replace_ext ($link_identifier, $dn, $entry, $servercontrols = null) {}
+function ldap_mod_replace_ext ($link_identifier, string $dn, array $entry, array $serverctrls = null) {}
 
 /**
  * Delete attribute values from current attributes
@@ -603,18 +617,21 @@ function ldap_mod_replace_ext ($link_identifier, $dn, $entry, $servercontrols = 
  * @param resource $link_identifier An LDAP link identifier, returned by ldap_connect.
  * @param string $dn The distinguished name of an LDAP entity.
  * @param array $entry 
- * @param array $serverctrls [optional] 
+ * @param array $serverctrls [optional] Array of LDAP Controls to send with the request.
  * @return bool true on success or false on failure
  */
 function ldap_mod_del ($link_identifier, string $dn, array $entry, array $serverctrls = null) {}
 
 /**
- * @param mixed $link_identifier
- * @param mixed $dn
- * @param mixed $entry
- * @param mixed $servercontrols [optional]
+ * Delete attribute values from current attributes
+ * @link http://www.php.net/manual/en/function.ldap-mod_del-ext.php
+ * @param resource $link_identifier 
+ * @param string $dn 
+ * @param array $entry 
+ * @param array $serverctrls [optional] 
+ * @return resource an LDAP result identifier or false on error.
  */
-function ldap_mod_del_ext ($link_identifier, $dn, $entry, $servercontrols = null) {}
+function ldap_mod_del_ext ($link_identifier, string $dn, array $entry, array $serverctrls = null) {}
 
 /**
  * Return the LDAP error number of the last LDAP command
@@ -648,7 +665,7 @@ function ldap_error ($link_identifier) {}
  * @param string $dn The distinguished name of an LDAP entity.
  * @param string $attribute The attribute name.
  * @param string $value The compared value.
- * @param array $serverctrls [optional] 
+ * @param array $serverctrls [optional] Array of LDAP Controls to send with the request.
  * @return mixed true if value matches otherwise returns
  * false. Returns -1 on error.
  */
@@ -675,20 +692,23 @@ function ldap_sort ($link, $result, string $sortfilter) {}
  * @param string $newparent The new parent/superior entry.
  * @param bool $deleteoldrdn If true the old RDN value(s) is removed, else the old RDN value(s)
  * is retained as non-distinguished values of the entry.
- * @param array $serverctrls [optional] 
+ * @param array $serverctrls [optional] Array of LDAP Controls to send with the request.
  * @return bool true on success or false on failure
  */
 function ldap_rename ($link_identifier, string $dn, string $newrdn, string $newparent, bool $deleteoldrdn, array $serverctrls = null) {}
 
 /**
- * @param mixed $link_identifier
- * @param mixed $dn
- * @param mixed $newrdn
- * @param mixed $newparent
- * @param mixed $deleteoldrdn
- * @param mixed $servercontrols [optional]
+ * Modify the name of an entry
+ * @link http://www.php.net/manual/en/function.ldap-rename-ext.php
+ * @param resource $link_identifier 
+ * @param string $dn 
+ * @param string $newrdn 
+ * @param string $newparent 
+ * @param bool $deleteoldrdn 
+ * @param array $serverctrls [optional] 
+ * @return resource an LDAP result identifier or false on error.
  */
-function ldap_rename_ext ($link_identifier, $dn, $newrdn, $newparent, $deleteoldrdn, $servercontrols = null) {}
+function ldap_rename_ext ($link_identifier, string $dn, string $newrdn, string $newparent, bool $deleteoldrdn, array $serverctrls = null) {}
 
 /**
  * Get the current value for given option
@@ -1081,7 +1101,7 @@ function ldap_parse_reference ($link, $entry, array &$referrals) {}
  * @param array $referrals [optional] A reference to a variable that will be set to an array set
  * to all of the referral strings in the result, or an empty array if no
  * referrals were returned.
- * @param array $serverctrls [optional] 
+ * @param array $serverctrls [optional] An array of LDAP Controls which have been sent with the response.
  * @return bool true on success or false on failure
  */
 function ldap_parse_result ($link, $result, int &$errcode, string &$matcheddn = null, string &$errmsg = null, array &$referrals = null, array &$serverctrls = null) {}
@@ -1100,7 +1120,7 @@ function ldap_start_tls ($link) {}
  * @param resource $link An LDAP link identifier, returned by ldap_connect.
  * @param string $reqoid The extended operation request OID. You may use one of LDAP_EXOP_START_TLS, LDAP_EXOP_MODIFY_PASSWD, LDAP_EXOP_REFRESH, LDAP_EXOP_WHO_AM_I, LDAP_EXOP_TURN, or a string with the OID of the operation you want to send.
  * @param string $reqdata [optional] The extended operation request data. May be NULL for some operations like LDAP_EXOP_WHO_AM_I, may also need to be BER encoded.
- * @param array $servercontrols [optional] Unused as of PHP 7.2.
+ * @param array $serverctrls [optional] Array of LDAP Controls to send with the request.
  * @param string $retdata [optional] Will be filled with the extended operation response data if provided.
  * If not provided you may use ldap_parse_exop on the result object
  * later to get this data.
@@ -1108,7 +1128,7 @@ function ldap_start_tls ($link) {}
  * @return mixed When used with retdata, returns true on success or false on error.
  * When used without retdata, returns a result identifier or false on error.
  */
-function ldap_exop ($link, string $reqoid, string $reqdata = null, array $servercontrols = null, string &$retdata = null, string &$retoid = null) {}
+function ldap_exop ($link, string $reqoid, string $reqdata = null, array $serverctrls = null, string &$retdata = null, string &$retoid = null) {}
 
 /**
  * PASSWD extended operation helper
@@ -1117,7 +1137,9 @@ function ldap_exop ($link, string $reqoid, string $reqdata = null, array $server
  * @param string $user [optional] dn of the user to change the password of.
  * @param string $oldpw [optional] The old password of this user. May be ommited depending of server configuration.
  * @param string $newpw [optional] The new password for this user. May be omitted or empty to have a generated password.
- * @param array $serverctrls [optional] 
+ * @param array $serverctrls [optional] If provided, a password policy request control is send with the request and this is
+ * filled with an array of LDAP Controls
+ * returned with the request.
  * @return mixed the generated password if newpw is empty or omitted.
  * Otherwise returns true on success and false on failure.
  */
@@ -1171,6 +1193,7 @@ function ldap_parse_exop ($link, $result, string &$retdata = null, string &$reto
  * LDAP_ESCAPE_FILTER for filters to be used with
  * ldap_search, or
  * LDAP_ESCAPE_DN for DNs.
+ * If neither flag is passed, all chars are escaped.
  * @return string the escaped string.
  */
 function ldap_escape (string $value, string $ignore = null, int $flags = null) {}
@@ -1186,6 +1209,7 @@ function ldap_escape (string $value, string $ignore = null, int $flags = null) {
  * @param string $cookie [optional] An opaque structure sent by the server 
  * (ldap_control_paged_result_response).
  * @return bool true on success or false on failure
+ * @deprecated 
  */
 function ldap_control_paged_result ($link, int $pagesize, bool $iscritical = null, string $cookie = null) {}
 
@@ -1197,6 +1221,7 @@ function ldap_control_paged_result ($link, int $pagesize, bool $iscritical = nul
  * @param string $cookie [optional] An opaque structure sent by the server.
  * @param int $estimated [optional] The estimated number of entries to retrieve.
  * @return bool true on success or false on failure
+ * @deprecated 
  */
 function ldap_control_paged_result_response ($link, $result, string &$cookie = null, int &$estimated = null) {}
 
@@ -1474,29 +1499,173 @@ define ('LDAP_EXOP_WHO_AM_I', "1.3.6.1.4.1.4203.1.11.3");
  * @link http://www.php.net/manual/en/ldap.constants.php
  */
 define ('LDAP_EXOP_TURN', "1.3.6.1.1.19");
+
+/**
+ * Control Constant - Manage DSA IT (RFC 3296).
+ * Available as of PHP 7.3.0.
+ * @link http://www.php.net/manual/en/ldap.constants.php
+ */
 define ('LDAP_CONTROL_MANAGEDSAIT', "2.16.840.1.113730.3.4.2");
+
+/**
+ * Control Constant - Proxied Authorization (RFC 4370).
+ * Available as of PHP 7.3.0.
+ * @link http://www.php.net/manual/en/ldap.constants.php
+ */
 define ('LDAP_CONTROL_PROXY_AUTHZ', "2.16.840.1.113730.3.4.18");
+
+/**
+ * Control Constant - Subentries (RFC 3672).
+ * Available as of PHP 7.3.0.
+ * @link http://www.php.net/manual/en/ldap.constants.php
+ */
 define ('LDAP_CONTROL_SUBENTRIES', "1.3.6.1.4.1.4203.1.10.1");
+
+/**
+ * Control Constant - Filter returned values (RFC 3876).
+ * Available as of PHP 7.3.0.
+ * @link http://www.php.net/manual/en/ldap.constants.php
+ */
 define ('LDAP_CONTROL_VALUESRETURNFILTER', "1.2.826.0.1.3344810.2.3");
+
+/**
+ * Control Constant - Assertion (RFC 4528).
+ * Available as of PHP 7.3.0.
+ * @link http://www.php.net/manual/en/ldap.constants.php
+ */
 define ('LDAP_CONTROL_ASSERT', "1.3.6.1.1.12");
+
+/**
+ * Control Constant - Pre read (RFC 4527).
+ * Available as of PHP 7.3.0.
+ * @link http://www.php.net/manual/en/ldap.constants.php
+ */
 define ('LDAP_CONTROL_PRE_READ', "1.3.6.1.1.13.1");
+
+/**
+ * Control Constant - Post read (RFC 4527).
+ * Available as of PHP 7.3.0.
+ * @link http://www.php.net/manual/en/ldap.constants.php
+ */
 define ('LDAP_CONTROL_POST_READ', "1.3.6.1.1.13.2");
+
+/**
+ * Control Constant - Sort request (RFC 2891).
+ * Available as of PHP 7.3.0.
+ * @link http://www.php.net/manual/en/ldap.constants.php
+ */
 define ('LDAP_CONTROL_SORTREQUEST', "1.2.840.113556.1.4.473");
+
+/**
+ * Control Constant - Sort response (RFC 2891).
+ * Available as of PHP 7.3.0.
+ * @link http://www.php.net/manual/en/ldap.constants.php
+ */
 define ('LDAP_CONTROL_SORTRESPONSE', "1.2.840.113556.1.4.474");
+
+/**
+ * Control Constant - Paged results (RFC 2696).
+ * Available as of PHP 7.3.0.
+ * @link http://www.php.net/manual/en/ldap.constants.php
+ */
 define ('LDAP_CONTROL_PAGEDRESULTS', "1.2.840.113556.1.4.319");
+
+/**
+ * Control Constant - Content Synchronization Operation (RFC 4533).
+ * Available as of PHP 7.3.0.
+ * @link http://www.php.net/manual/en/ldap.constants.php
+ */
 define ('LDAP_CONTROL_SYNC', "1.3.6.1.4.1.4203.1.9.1.1");
+
+/**
+ * Control Constant - Content Synchronization Operation State (RFC 4533).
+ * Available as of PHP 7.3.0.
+ * @link http://www.php.net/manual/en/ldap.constants.php
+ */
 define ('LDAP_CONTROL_SYNC_STATE', "1.3.6.1.4.1.4203.1.9.1.2");
+
+/**
+ * Control Constant - Content Synchronization Operation Done (RFC 4533).
+ * Available as of PHP 7.3.0.
+ * @link http://www.php.net/manual/en/ldap.constants.php
+ */
 define ('LDAP_CONTROL_SYNC_DONE', "1.3.6.1.4.1.4203.1.9.1.3");
+
+/**
+ * Control Constant - Don't Use Copy (RFC 6171).
+ * Available as of PHP 7.3.0.
+ * @link http://www.php.net/manual/en/ldap.constants.php
+ */
 define ('LDAP_CONTROL_DONTUSECOPY', "1.3.6.1.1.22");
+
+/**
+ * Control Constant - Password Policy Request.
+ * Available as of PHP 7.3.0.
+ * @link http://www.php.net/manual/en/ldap.constants.php
+ */
 define ('LDAP_CONTROL_PASSWORDPOLICYREQUEST', "1.3.6.1.4.1.42.2.27.8.5.1");
+
+/**
+ * Control Constant - Password Policy Response.
+ * Available as of PHP 7.3.0.
+ * @link http://www.php.net/manual/en/ldap.constants.php
+ */
 define ('LDAP_CONTROL_PASSWORDPOLICYRESPONSE', "1.3.6.1.4.1.42.2.27.8.5.1");
+
+/**
+ * Control Constant - Active Directory Incremental Values.
+ * Available as of PHP 7.3.0.
+ * @link http://www.php.net/manual/en/ldap.constants.php
+ */
 define ('LDAP_CONTROL_X_INCREMENTAL_VALUES', "1.2.840.113556.1.4.802");
+
+/**
+ * Control Constant - Active Directory Domain Scope.
+ * Available as of PHP 7.3.0.
+ * @link http://www.php.net/manual/en/ldap.constants.php
+ */
 define ('LDAP_CONTROL_X_DOMAIN_SCOPE', "1.2.840.113556.1.4.1339");
+
+/**
+ * Control Constant - Active Directory Permissive Modify.
+ * Available as of PHP 7.3.0.
+ * @link http://www.php.net/manual/en/ldap.constants.php
+ */
 define ('LDAP_CONTROL_X_PERMISSIVE_MODIFY', "1.2.840.113556.1.4.1413");
+
+/**
+ * Control Constant - Active Directory Search Options.
+ * Available as of PHP 7.3.0.
+ * @link http://www.php.net/manual/en/ldap.constants.php
+ */
 define ('LDAP_CONTROL_X_SEARCH_OPTIONS', "1.2.840.113556.1.4.1340");
+
+/**
+ * Control Constant - Active Directory Tree Delete.
+ * Available as of PHP 7.3.0.
+ * @link http://www.php.net/manual/en/ldap.constants.php
+ */
 define ('LDAP_CONTROL_X_TREE_DELETE', "1.2.840.113556.1.4.805");
+
+/**
+ * Control Constant - Active Directory Extended DN.
+ * Available as of PHP 7.3.0.
+ * @link http://www.php.net/manual/en/ldap.constants.php
+ */
 define ('LDAP_CONTROL_X_EXTENDED_DN', "1.2.840.113556.1.4.529");
+
+/**
+ * Control Constant - Virtual List View Request.
+ * Available as of PHP 7.3.0.
+ * @link http://www.php.net/manual/en/ldap.constants.php
+ */
 define ('LDAP_CONTROL_VLVREQUEST', "2.16.840.1.113730.3.4.9");
+
+/**
+ * Control Constant - Virtual List View Response.
+ * Available as of PHP 7.3.0.
+ * @link http://www.php.net/manual/en/ldap.constants.php
+ */
 define ('LDAP_CONTROL_VLVRESPONSE', "2.16.840.1.113730.3.4.10");
 
-// End of ldap v.7.3.0
+// End of ldap v.7.4.0

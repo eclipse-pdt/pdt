@@ -1,6 +1,6 @@
 <?php
 
-// Start of Core v.7.3.7
+// Start of Core v.7.4.0
 
 class stdClass  {
 }
@@ -622,8 +622,6 @@ final class Generator implements Iterator, Traversable {
 
 	public function getReturn () {}
 
-	public function __wakeup () {}
-
 }
 
 class ClosedGeneratorException extends Exception implements Throwable {
@@ -659,6 +657,27 @@ class ClosedGeneratorException extends Exception implements Throwable {
 	final public function getTraceAsString () {}
 
 	public function __toString () {}
+
+}
+
+/**
+ * Weak references allow the programmer to retain a reference to an object which does not prevent
+ * the object from being destroyed. They are useful for implementing cache like structures.
+ * <p>The class WeakReference is not to be confused with the class
+ * WeakRef of the Weakref extension.</p>
+ * <p>WeakReferences cannot be serialized.</p>
+ * @link http://www.php.net/manual/en/class.weakreference.php
+ */
+final class WeakReference  {
+
+	public function __construct () {}
+
+	/**
+	 * @param mixed $referent
+	 */
+	public static function create ($referent) {}
+
+	public function get () {}
 
 }
 
@@ -1025,6 +1044,11 @@ function get_class_vars (string $class_name) {}
  * not been assigned a value, it will be returned with a null value.
  */
 function get_object_vars ($object) {}
+
+/**
+ * @param mixed $obj
+ */
+function get_mangled_object_vars ($obj) {}
 
 /**
  * Gets the class methods' names
@@ -1676,12 +1700,14 @@ define ('FALSE', false);
 define ('ZEND_THREAD_SAFE', false);
 define ('ZEND_DEBUG_BUILD', false);
 define ('NULL', null);
-define ('PHP_VERSION', "7.3.7");
+define ('PHP_WINDOWS_EVENT_CTRL_C', 0);
+define ('PHP_WINDOWS_EVENT_CTRL_BREAK', 1);
+define ('PHP_VERSION', "7.4.0");
 define ('PHP_MAJOR_VERSION', 7);
-define ('PHP_MINOR_VERSION', 3);
-define ('PHP_RELEASE_VERSION', 7);
+define ('PHP_MINOR_VERSION', 4);
+define ('PHP_RELEASE_VERSION', 0);
 define ('PHP_EXTRA_VERSION', "");
-define ('PHP_VERSION_ID', 70307);
+define ('PHP_VERSION_ID', 70400);
 define ('PHP_ZTS', 0);
 define ('PHP_DEBUG', 0);
 define ('PHP_OS', "WINNT");
@@ -1712,7 +1738,7 @@ define ('PHP_FLOAT_MAX', 1.7976931348623E+308);
 define ('PHP_FLOAT_MIN', 2.2250738585072E-308);
 define ('PHP_WINDOWS_VERSION_MAJOR', 10);
 define ('PHP_WINDOWS_VERSION_MINOR', 0);
-define ('PHP_WINDOWS_VERSION_BUILD', 17134);
+define ('PHP_WINDOWS_VERSION_BUILD', 17763);
 define ('PHP_WINDOWS_VERSION_PLATFORM', 2);
 define ('PHP_WINDOWS_VERSION_SP_MAJOR', 0);
 define ('PHP_WINDOWS_VERSION_SP_MINOR', 0);
@@ -1857,8 +1883,9 @@ define ('UPLOAD_ERR_NO_FILE', 4);
 define ('UPLOAD_ERR_NO_TMP_DIR', 6);
 define ('UPLOAD_ERR_CANT_WRITE', 7);
 define ('UPLOAD_ERR_EXTENSION', 8);
+define ('PHP_CLI_PROCESS_TITLE', true);
 define ('STDIN', "Resource id #1");
 define ('STDOUT', "Resource id #2");
 define ('STDERR', "Resource id #3");
 
-// End of Core v.7.3.7
+// End of Core v.7.4.0

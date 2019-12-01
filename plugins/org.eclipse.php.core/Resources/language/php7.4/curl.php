@@ -1,6 +1,6 @@
 <?php
 
-// Start of curl v.7.3.7
+// Start of curl v.7.4.0
 
 /**
  * CURLFile should be used to upload a file with
@@ -59,13 +59,6 @@ class CURLFile  {
 	 * @return void 
 	 */
 	public function setPostFilename (string $postname) {}
-
-	/**
-	 * Unserialization handler
-	 * @link http://www.php.net/manual/en/curlfile.wakeup.php
-	 * @return void 
-	 */
-	public function __wakeup () {}
 
 }
 
@@ -3389,7 +3382,7 @@ define ('CURLINFO_HEADER_SIZE', 2097163);
  * @link http://www.php.net/manual/en/curl.constants.php
  */
 define ('CURLINFO_HTTP_CODE', 2097154);
-define ('CURLINFO_LASTONE', 56);
+define ('CURLINFO_LASTONE', 57);
 
 /**
  * 
@@ -3479,7 +3472,7 @@ define ('CURLMSG_DONE', 1);
  * 
  * @link http://www.php.net/manual/en/curl.constants.php
  */
-define ('CURLVERSION_NOW', 4);
+define ('CURLVERSION_NOW', 5);
 
 /**
  * 
@@ -4815,6 +4808,12 @@ define ('CURLINFO_TOTAL_TIME_T', 6291506);
 define ('CURLOPT_DISALLOW_USERNAME_IN_URL', 278);
 define ('CURLOPT_PROXY_TLS13_CIPHERS', 10277);
 define ('CURLOPT_TLS13_CIPHERS', 10276);
+
+/**
+ * Available since PHP 7.3.6 and cURL 7.64.1
+ * @link http://www.php.net/manual/en/curl.constants.php
+ */
+define ('CURL_VERSION_ALTSVC', 16777216);
 define ('CURLOPT_SAFE_UPLOAD', -1);
 
-// End of curl v.7.3.7
+// End of curl v.7.4.0

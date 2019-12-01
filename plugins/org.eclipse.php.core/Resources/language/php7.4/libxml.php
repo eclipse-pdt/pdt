@@ -1,6 +1,6 @@
 <?php
 
-// Start of libxml v.7.3.7
+// Start of libxml v.7.4.0
 
 /**
  * Contains various information about errors thrown by libxml. The error codes
@@ -123,14 +123,14 @@ function libxml_set_external_entity_loader (callable $resolver_function) {}
  * libxml version like 20605 or 20617
  * @link http://www.php.net/manual/en/libxml.constants.php
  */
-define ('LIBXML_VERSION', 20909);
+define ('LIBXML_VERSION', 20910);
 
 /**
  * libxml version like 2.6.5 or 2.6.17
  * @link http://www.php.net/manual/en/libxml.constants.php
  */
-define ('LIBXML_DOTTED_VERSION', "2.9.9");
-define ('LIBXML_LOADED_VERSION', 20909);
+define ('LIBXML_DOTTED_VERSION', "2.9.10");
+define ('LIBXML_LOADED_VERSION', 20910);
 
 /**
  * Substitute entities
@@ -311,4 +311,4 @@ define ('LIBXML_ERR_ERROR', 2);
  */
 define ('LIBXML_ERR_FATAL', 3);
 
-// End of libxml v.7.3.7
+// End of libxml v.7.4.0

@@ -1,6 +1,6 @@
 <?php
 
-// Start of xmlrpc v.7.3.7
+// Start of xmlrpc v.7.4.0
 
 /**
  * Generates XML for a PHP value
@@ -141,4 +141,4 @@ function xmlrpc_server_add_introspection_data ($server, array $desc) {}
  */
 function xmlrpc_server_register_introspection_callback ($server, string $function) {}
 
-// End of xmlrpc v.7.3.7
+// End of xmlrpc v.7.4.0

@@ -1,6 +1,6 @@
 <?php
 
-// Start of Reflection v.7.3.7
+// Start of Reflection v.7.4.0
 
 /**
  * The ReflectionException class.
@@ -62,6 +62,7 @@ class Reflection  {
 	 * @param Reflector $reflector The reflection to export.
 	 * @param bool $return [optional] reflection.export.param.return
 	 * @return string reflection.export.return
+	 * @deprecated 
 	 */
 	public static function export ($reflector, bool $return = null) {}
 
@@ -73,13 +74,6 @@ class Reflection  {
  * @link http://www.php.net/manual/en/class.reflector.php
  */
 interface Reflector  {
-
-	/**
-	 * Exports
-	 * @link http://www.php.net/manual/en/reflector.export.php
-	 * @return string 
-	 */
-	abstract public static function export ();
 
 	/**
 	 * To string
@@ -285,13 +279,6 @@ abstract class ReflectionFunctionAbstract implements Reflector {
 	public function getReturnType () {}
 
 	/**
-	 * Exports
-	 * @link http://www.php.net/manual/en/reflector.export.php
-	 * @return string 
-	 */
-	abstract public static function export ();
-
-	/**
 	 * To string
 	 * @link http://www.php.net/manual/en/reflector.tostring.php
 	 * @return string 
@@ -306,7 +293,7 @@ abstract class ReflectionFunctionAbstract implements Reflector {
  * @link http://www.php.net/manual/en/class.reflectionfunction.php
  */
 class ReflectionFunction extends ReflectionFunctionAbstract implements Reflector {
-	const IS_DEPRECATED = 262144;
+	const IS_DEPRECATED = 2048;
 
 	public $name;
 
@@ -332,6 +319,7 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflector
 	 * @param string $name The reflection to export.
 	 * @param string $return [optional] reflection.export.param.return
 	 * @return string reflection.export.return
+	 * @deprecated 
 	 */
 	public static function export (string $name, string $return = null) {}
 
@@ -675,6 +663,7 @@ class ReflectionParameter implements Reflector {
 	 * @param string $parameter The parameter name.
 	 * @param bool $return [optional] reflection.export.param.return
 	 * @return string The exported reflection.
+	 * @deprecated 
 	 */
 	public static function export (string $function, string $parameter, bool $return = null) {}
 
@@ -851,6 +840,7 @@ class ReflectionType  {
 	 * To string
 	 * @link http://www.php.net/manual/en/reflectiontype.tostring.php
 	 * @return string the type of the parameter.
+	 * @deprecated 
 	 */
 	public function __toString () {}
 
@@ -888,6 +878,7 @@ class ReflectionNamedType extends ReflectionType  {
 	 * To string
 	 * @link http://www.php.net/manual/en/reflectiontype.tostring.php
 	 * @return string the type of the parameter.
+	 * @deprecated 
 	 */
 	public function __toString () {}
 
@@ -899,12 +890,12 @@ class ReflectionNamedType extends ReflectionType  {
  * @link http://www.php.net/manual/en/class.reflectionmethod.php
  */
 class ReflectionMethod extends ReflectionFunctionAbstract implements Reflector {
-	const IS_STATIC = 1;
-	const IS_PUBLIC = 256;
-	const IS_PROTECTED = 512;
-	const IS_PRIVATE = 1024;
-	const IS_ABSTRACT = 2;
-	const IS_FINAL = 4;
+	const IS_STATIC = 16;
+	const IS_PUBLIC = 1;
+	const IS_PROTECTED = 2;
+	const IS_PRIVATE = 4;
+	const IS_ABSTRACT = 64;
+	const IS_FINAL = 32;
 
 	public $name;
 	public $class;
@@ -917,6 +908,7 @@ class ReflectionMethod extends ReflectionFunctionAbstract implements Reflector {
 	 * @param string $name The name of the method.
 	 * @param bool $return [optional] reflection.export.param.return
 	 * @return string reflection.export.return
+	 * @deprecated 
 	 */
 	public static function export (string $class, string $name, bool $return = null) {}
 
@@ -1246,8 +1238,8 @@ class ReflectionMethod extends ReflectionFunctionAbstract implements Reflector {
  */
 class ReflectionClass implements Reflector {
 	const IS_IMPLICIT_ABSTRACT = 16;
-	const IS_EXPLICIT_ABSTRACT = 32;
-	const IS_FINAL = 4;
+	const IS_EXPLICIT_ABSTRACT = 64;
+	const IS_FINAL = 32;
 
 	public $name;
 
@@ -1260,6 +1252,7 @@ class ReflectionClass implements Reflector {
 	 * @param mixed $argument The reflection to export.
 	 * @param bool $return [optional] reflection.export.param.return
 	 * @return string reflection.export.return
+	 * @deprecated 
 	 */
 	public static function export ($argument, bool $return = null) {}
 
@@ -1694,8 +1687,8 @@ class ReflectionClass implements Reflector {
  */
 class ReflectionObject extends ReflectionClass implements Reflector {
 	const IS_IMPLICIT_ABSTRACT = 16;
-	const IS_EXPLICIT_ABSTRACT = 32;
-	const IS_FINAL = 4;
+	const IS_EXPLICIT_ABSTRACT = 64;
+	const IS_FINAL = 32;
 
 	public $name;
 
@@ -1706,6 +1699,7 @@ class ReflectionObject extends ReflectionClass implements Reflector {
 	 * @param string $argument The reflection to export.
 	 * @param bool $return [optional] reflection.export.param.return
 	 * @return string reflection.export.return
+	 * @deprecated 
 	 */
 	public static function export (string $argument, bool $return = null) {}
 
@@ -2141,10 +2135,10 @@ class ReflectionObject extends ReflectionClass implements Reflector {
  * @link http://www.php.net/manual/en/class.reflectionproperty.php
  */
 class ReflectionProperty implements Reflector {
-	const IS_STATIC = 1;
-	const IS_PUBLIC = 256;
-	const IS_PROTECTED = 512;
-	const IS_PRIVATE = 1024;
+	const IS_STATIC = 16;
+	const IS_PUBLIC = 1;
+	const IS_PROTECTED = 2;
+	const IS_PRIVATE = 4;
 
 	public $name;
 	public $class;
@@ -2164,6 +2158,7 @@ class ReflectionProperty implements Reflector {
 	 * @param string $name The property name.
 	 * @param bool $return [optional] reflection.export.param.return
 	 * @return string 
+	 * @deprecated 
 	 */
 	public static function export ($class, string $name, bool $return = null) {}
 
@@ -2210,6 +2205,11 @@ class ReflectionProperty implements Reflector {
 	 * @return void 
 	 */
 	public function setValue ($object, $value) {}
+
+	/**
+	 * @param mixed $object [optional]
+	 */
+	public function isInitialized ($object = null) {}
 
 	/**
 	 * Checks if property is public
@@ -2276,6 +2276,10 @@ class ReflectionProperty implements Reflector {
 	 */
 	public function setAccessible (bool $accessible) {}
 
+	public function getType () {}
+
+	public function hasType () {}
+
 }
 
 /**
@@ -2297,6 +2301,7 @@ class ReflectionClassConstant implements Reflector {
 	 * @param string $name The class constant name.
 	 * @param bool $return [optional] reflection.export.param.return
 	 * @return string 
+	 * @deprecated 
 	 */
 	public static function export ($class, string $name, bool $return = null) {}
 
@@ -2397,6 +2402,7 @@ class ReflectionExtension implements Reflector {
 	 * @param string $name The reflection to export.
 	 * @param string $return [optional] reflection.export.param.return
 	 * @return string reflection.export.return
+	 * @deprecated 
 	 */
 	public static function export (string $name, string $return = null) {}
 
@@ -2524,6 +2530,7 @@ class ReflectionZendExtension implements Reflector {
 	 * @param string $name 
 	 * @param bool $return [optional] 
 	 * @return string 
+	 * @deprecated 
 	 */
 	public static function export (string $name, bool $return = null) {}
 
@@ -2577,4 +2584,20 @@ class ReflectionZendExtension implements Reflector {
 	public function getCopyright () {}
 
 }
-// End of Reflection v.7.3.7
+
+class ReflectionReference  {
+
+	/**
+	 * @param mixed $array
+	 * @param mixed $key
+	 */
+	public static function fromArrayElement ($array, $key) {}
+
+	public function getId () {}
+
+	private function __clone () {}
+
+	private function __construct () {}
+
+}
+// End of Reflection v.7.4.0

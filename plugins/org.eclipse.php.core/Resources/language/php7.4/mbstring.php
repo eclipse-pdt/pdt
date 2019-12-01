@@ -1,6 +1,6 @@
 <?php
 
-// Start of mbstring v.7.3.7
+// Start of mbstring v.7.4.0
 
 /**
  * Perform case folding on a string
@@ -277,6 +277,13 @@ function mb_output_handler (string $contents, int $status) {}
 function mb_preferred_mime_name (string $encoding) {}
 
 /**
+ * @param mixed $str
+ * @param mixed $split_length [optional]
+ * @param mixed $encoding [optional]
+ */
+function mb_str_split ($str, $split_length = null, $encoding = null) {}
+
+/**
  * Get string length
  * @link http://www.php.net/manual/en/function.mb-strlen.php
  * @param string $str The string being checked for length.
@@ -529,8 +536,8 @@ function mb_strimwidth (string $str, int $start, int $width, string $trimmarker 
 /**
  * Convert character encoding
  * @link http://www.php.net/manual/en/function.mb-convert-encoding.php
- * @param string $str The string being encoded.
- * @param string $to_encoding The type of encoding that str is being converted to.
+ * @param mixed $val The string or array being encoded.
+ * @param string $to_encoding The type of encoding that val is being converted to.
  * @param mixed $from_encoding [optional] <p>
  * Is specified by character code names before conversion. It is either
  * an array, or a comma separated enumerated list.
@@ -541,9 +548,9 @@ function mb_strimwidth (string $str, int $start, int $width, string $trimmarker 
  * See supported
  * encodings.
  * </p>
- * @return string The encoded string.
+ * @return mixed The encoded string or array.
  */
-function mb_convert_encoding (string $str, string $to_encoding, $from_encoding = null) {}
+function mb_convert_encoding ($val, string $to_encoding, $from_encoding = null) {}
 
 /**
  * Detect character encoding
@@ -748,7 +755,8 @@ function mb_convert_variables (string $to_encoding, $from_encoding, &$vars, &$_ 
  * @param array $convmap convmap is array specifies code area to
  * convert.
  * @param string $encoding [optional] mbstring.encoding.parameter
- * @param bool $is_hex [optional] 
+ * @param bool $is_hex [optional] Whether the returned entity reference should be in hexadecimal notation
+ * (otherwise it is in decimal notation).
  * @return string The converted string.
  */
 function mb_encode_numericentity (string $str, array $convmap, string $encoding = null, bool $is_hex = null) {}
@@ -760,7 +768,7 @@ function mb_encode_numericentity (string $str, array $convmap, string $encoding 
  * @param array $convmap convmap is an array that specifies 
  * the code area to convert.
  * @param string $encoding [optional] mbstring.encoding.parameter
- * @param bool $is_hex [optional] 
+ * @param bool $is_hex [optional] This parameter is not used.
  * @return string The converted string.
  */
 function mb_decode_numericentity (string $str, array $convmap, string $encoding = null, bool $is_hex = null) {}
@@ -853,14 +861,14 @@ function mb_send_mail (string $to, string $subject, string $message, $additional
 function mb_get_info (string $type = null) {}
 
 /**
- * Check if the string is valid for the specified encoding
+ * Check if strings are valid for the specified encoding
  * @link http://www.php.net/manual/en/function.mb-check-encoding.php
- * @param string $var [optional] The byte stream to check. If it is omitted, this function checks
+ * @param mixed $var [optional] The byte stream or array to check. If it is omitted, this function checks
  * all the input from the beginning of the request.
  * @param string $encoding [optional] The expected encoding.
  * @return bool true on success or false on failure
  */
-function mb_check_encoding (string $var = null, string $encoding = null) {}
+function mb_check_encoding ($var = null, string $encoding = null) {}
 
 /**
  * Get code point of character
@@ -1119,7 +1127,7 @@ function mb_ereg_replace_callback (string $pattern, callable $callback, string $
  * @param int $limit [optional] If optional parameter limit is specified, 
  * it will be split in limit elements as
  * maximum.
- * @return array The result as an array.
+ * @return array The result as an array, or false on failure.
  */
 function mb_split (string $pattern, string $string, int $limit = null) {}
 
@@ -1329,6 +1337,11 @@ define ('MB_CASE_TITLE', 2);
  * @link http://www.php.net/manual/en/mbstring.constants.php
  */
 define ('MB_CASE_FOLD', 3);
+
+/**
+ * Available since PHP 7.3.
+ * @link http://www.php.net/manual/en/mbstring.constants.php
+ */
 define ('MB_CASE_UPPER_SIMPLE', 4);
 
 /**
@@ -1349,4 +1362,11 @@ define ('MB_CASE_TITLE_SIMPLE', 6);
  */
 define ('MB_CASE_FOLD_SIMPLE', 7);
 
-// End of mbstring v.7.3.7
+/**
+ * The Oniguruma version, e.g. 6.9.4.
+ * Available since PHP 7.4.
+ * @link http://www.php.net/manual/en/mbstring.constants.php
+ */
+define ('MB_ONIGURUMA_VERSION', "6.9.3");
+
+// End of mbstring v.7.4.0

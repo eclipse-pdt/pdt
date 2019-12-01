@@ -1,6 +1,6 @@
 <?php
 
-// Start of soap v.7.3.0
+// Start of soap v.7.4.0
 
 /**
  * The SoapClient class provides a client for SOAP 1.1, SOAP 1.2 servers. It can be used in WSDL
@@ -211,12 +211,10 @@ class SoapServer  {
 	 * Sets the class which handles SOAP requests
 	 * @link http://www.php.net/manual/en/soapserver.setclass.php
 	 * @param string $class_name The name of the exported class.
-	 * @param mixed $args [optional] These optional parameters will be passed to the default class constructor
-	 * during object creation.
 	 * @param mixed $_ [optional] 
 	 * @return void 
 	 */
-	public function setClass (string $class_name, $args = null, $_ = null) {}
+	public function setClass (string $class_name, $_ = null) {}
 
 	/**
 	 * Sets the object which will be used to handle SOAP requests
@@ -865,4 +863,4 @@ define ('SOAP_SSL_METHOD_SSLv3', 2);
  */
 define ('SOAP_SSL_METHOD_SSLv23', 3);
 
-// End of soap v.7.3.0
+// End of soap v.7.4.0

@@ -1,6 +1,6 @@
 <?php
 
-// Start of mysqli v.7.3.0
+// Start of mysqli v.7.4.0
 
 /**
  * The mysqli exception handling class.
@@ -76,7 +76,6 @@ class mysqli  {
 	public $insert_id;
 	public $server_info;
 	public $server_version;
-	public $stat;
 	public $sqlstate;
 	public $protocol_version;
 	public $thread_id;
@@ -290,7 +289,8 @@ class mysqli  {
 	 * MySQL database is determined by the host
 	 * parameter.
 	 * </p>
-	 * @return void an object which represents the connection to a MySQL Server.
+	 * @return void an object which represents the connection to a MySQL Server,
+	 * or false on failure.
 	 */
 	public function __construct (string $host = null, string $username = null, string $passwd = null, string $dbname = null, int $port = null, string $socket = null) {}
 
@@ -756,9 +756,10 @@ final class mysqli_warning  {
 	protected function __construct () {}
 
 	/**
-	 * The next purpose
+	 * Fetch next warning
 	 * @link http://www.php.net/manual/en/mysqli-warning.next.php
-	 * @return void 
+	 * @return bool true if next warning was fetched successfully.
+	 * If there are no more warnings, it will return false
 	 */
 	public function next () {}
 
@@ -1245,10 +1246,9 @@ class mysqli_stmt  {
 	/**
 	 * Get result of SHOW WARNINGS
 	 * @link http://www.php.net/manual/en/mysqli-stmt.get-warnings.php
-	 * @param mysqli_stmt $stmt 
 	 * @return object 
 	 */
-	public function get_warnings (mysqli_stmt $stmt) {}
+	public function get_warnings () {}
 
 	/**
 	 * Returns result set metadata from a prepared statement
@@ -1541,10 +1541,7 @@ function mysqli_get_charset ($link) {}
 
 function mysqli_get_client_info () {}
 
-/**
- * @param mixed $link
- */
-function mysqli_get_client_version ($link) {}
+function mysqli_get_client_version () {}
 
 /**
  * Return information about open and cached links
@@ -2532,4 +2529,4 @@ define ('MYSQLI_TRANS_COR_RELEASE', 4);
  */
 define ('MYSQLI_TRANS_COR_NO_RELEASE', 8);
 
-// End of mysqli v.7.3.0
+// End of mysqli v.7.4.0

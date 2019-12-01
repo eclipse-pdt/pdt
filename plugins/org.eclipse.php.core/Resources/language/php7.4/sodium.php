@@ -1,6 +1,6 @@
 <?php
 
-// Start of sodium v.7.3.0
+// Start of sodium v.7.4.0
 
 /**
  * @link http://www.php.net/manual/en/class.sodiumexception.php
@@ -395,33 +395,33 @@ function sodium_crypto_kdf_keygen () {}
  * @param string $salt string A salt to add to the password before hashing. The salt should be unpredictable, ideally generated from a good random mumber source such as random_bytes, and have a length of at least SODIUM_CRYPTO_PWHASH_SALTBYTES bytes.
  * @param int $opslimit Represents a maximum amount of computations to perform. Raising this number will make the function require more CPU cycles to compute a key. There are some constants available to set the operations limit to appropriate values depending on intended use, in order of strength: SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE, SODIUM_CRYPTO_PWHASH_OPSLIMIT_MODERATE and SODIUM_CRYPTO_PWHASH_OPSLIMIT_SENSITIVE.
  * @param int $memlimit The maximum amount of RAM that the function will use, in bytes. There are constants to help you choose an appropriate value, in order of size: SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE, SODIUM_CRYPTO_PWHASH_MEMLIMIT_MODERATE, and SODIUM_CRYPTO_PWHASH_MEMLIMIT_SENSITIVE. Typically these should be paired with the matching opslimit values.
- * @param int $alg [optional] integer A number indicating the hash algorithm to use. By default SODIUM_CRYPTO_PWHASH_ALG_DEFAULT (the currently recommended algorithm, which can change from one version of libsodium to another), or explicitly using SODIUM_CRYPTO_PWHASH_ALG_ARGON2I13, representing the Argon2id algorithm version 1.3.
- * @return string the hashed password, or false on failure.
- * <p>
- * The used algorithm, opslimit, memlimit and salt are embedded within the hash, so
- * all information needed to verify the hash is included. This allows
- * the password_verify function to verify the hash without
- * needing separate storage for the salt or algorithm information.
- * </p>
+ * @param int $alg [optional] integer A number indicating the hash algorithm to use. By default SODIUM_CRYPTO_PWHASH_ALG_DEFAULT (the currently recommended algorithm, which can change from one version of libsodium to another), or explicitly using SODIUM_CRYPTO_PWHASH_ALG_ARGON2ID13, representing the Argon2id algorithm version 1.3.
+ * @return string the derived key, or false on failure. The return value is a binary string of the hash, not an ASCII-encoded representation, and does not contain additional information about the parameters used to create the hash, so you will need to keep that information if you are ever going to verify the password in future. Use sodium_crypto_pwhash_str to avoid needing to do all that.
  */
 function sodium_crypto_pwhash (int $length, string $password, string $salt, int $opslimit, int $memlimit, int $alg = null) {}
 
 /**
- * Get an ASCII encoded hash
+ * Get an ASCII-encoded hash
  * @link http://www.php.net/manual/en/function.sodium-crypto-pwhash-str.php
- * @param string $password 
- * @param int $opslimit 
- * @param int $memlimit 
- * @return string 
+ * @param string $password string; The password to generate a hash for.
+ * @param int $opslimit Represents a maximum amount of computations to perform. Raising this number will make the function require more CPU cycles to compute a key. There are constants available to set the operations limit to appropriate values depending on intended use, in order of strength: SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE, SODIUM_CRYPTO_PWHASH_OPSLIMIT_MODERATE and SODIUM_CRYPTO_PWHASH_OPSLIMIT_SENSITIVE.
+ * @param int $memlimit The maximum amount of RAM that the function will use, in bytes. There are constants to help you choose an appropriate value, in order of size: SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE, SODIUM_CRYPTO_PWHASH_MEMLIMIT_MODERATE, and SODIUM_CRYPTO_PWHASH_MEMLIMIT_SENSITIVE. Typically these should be paired with the matching opslimit values.
+ * @return string the hashed password, or false on failure.
+ * <p>
+ * In order to produce the same password hash from the same password, the same values for opslimit and memlimit must be used. These are embedded within the generated hash, so
+ * everything that's needed to verify the hash is included. This allows
+ * the sodium_crypto_pwhash_str_verify function to verify the hash without
+ * needing separate storage for the other parameters.
+ * </p>
  */
 function sodium_crypto_pwhash_str (string $password, int $opslimit, int $memlimit) {}
 
 /**
- * Verify that hash is a valid password verification string
+ * Verifies that a password matches a hash
  * @link http://www.php.net/manual/en/function.sodium-crypto-pwhash-str-verify.php
- * @param string $hash 
- * @param string $password 
- * @return bool 
+ * @param string $hash A hash created by password_hash.
+ * @param string $password The useraposs password.
+ * @return bool true if the password and hash match, or false otherwise.
  */
 function sodium_crypto_pwhash_str_verify (string $hash, string $password) {}
 
@@ -584,10 +584,10 @@ function sodium_crypto_sign (string $msg, string $secret_key) {}
  * Sign the message
  * @link http://www.php.net/manual/en/function.sodium-crypto-sign-detached.php
  * @param string $msg 
- * @param string $keypair 
+ * @param string $secretkey 
  * @return string 
  */
-function sodium_crypto_sign_detached (string $msg, string $keypair) {}
+function sodium_crypto_sign_detached (string $msg, string $secretkey) {}
 
 /**
  * Convert an Ed25519 public key to a Curve25519 public key
@@ -625,10 +625,10 @@ function sodium_crypto_sign_keypair_from_secretkey_and_publickey (string $secret
  * Check that the signed message has a valid signature
  * @link http://www.php.net/manual/en/function.sodium-crypto-sign-open.php
  * @param string $string 
- * @param string $keypair 
+ * @param string $public_key 
  * @return string 
  */
-function sodium_crypto_sign_open (string $string, string $keypair) {}
+function sodium_crypto_sign_open (string $string, string $public_key) {}
 
 /**
  * Description
@@ -667,10 +667,10 @@ function sodium_crypto_sign_seed_keypair (string $key) {}
  * @link http://www.php.net/manual/en/function.sodium-crypto-sign-verify-detached.php
  * @param string $signature 
  * @param string $msg 
- * @param string $key 
+ * @param string $public_key 
  * @return bool 
  */
-function sodium_crypto_sign_verify_detached (string $signature, string $msg, string $key) {}
+function sodium_crypto_sign_verify_detached (string $signature, string $msg, string $public_key) {}
 
 /**
  * Generate a deterministic sequence of bytes from a seed
@@ -809,7 +809,7 @@ function sodium_crypto_scalarmult_base ($string_1, $string_2) {}
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
  */
-define ('SODIUM_LIBRARY_VERSION', "1.0.16");
+define ('SODIUM_LIBRARY_VERSION', "1.0.17");
 
 /**
  * 
@@ -821,7 +821,7 @@ define ('SODIUM_LIBRARY_MAJOR_VERSION', 10);
  * 
  * @link http://www.php.net/manual/en/sodium.constants.php
  */
-define ('SODIUM_LIBRARY_MINOR_VERSION', 1);
+define ('SODIUM_LIBRARY_MINOR_VERSION', 2);
 
 /**
  * 
@@ -1241,4 +1241,4 @@ define ('SODIUM_BASE64_VARIANT_ORIGINAL_NO_PADDING', 3);
 define ('SODIUM_BASE64_VARIANT_URLSAFE', 5);
 define ('SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING', 7);
 
-// End of sodium v.7.3.0
+// End of sodium v.7.4.0

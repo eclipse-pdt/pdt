@@ -1,6 +1,6 @@
 <?php
 
-// Start of json v.1.7.0
+// Start of json v.7.4.0
 
 /**
  * Objects implementing JsonSerializable
@@ -365,4 +365,4 @@ define ('JSON_ERROR_INVALID_PROPERTY_NAME', 9);
  */
 define ('JSON_ERROR_UTF16', 10);
 
-// End of json v.1.7.0
+// End of json v.7.4.0

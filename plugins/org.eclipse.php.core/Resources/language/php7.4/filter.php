@@ -1,6 +1,6 @@
 <?php
 
-// Start of filter v.7.3.7
+// Start of filter v.7.4.0
 
 /**
  * Gets a specific external variable by name and optionally filters it
@@ -481,4 +481,4 @@ define ('FILTER_FLAG_HOSTNAME', 1048576);
  */
 define ('FILTER_FLAG_EMAIL_UNICODE', 1048576);
 
-// End of filter v.7.3.7
+// End of filter v.7.4.0
