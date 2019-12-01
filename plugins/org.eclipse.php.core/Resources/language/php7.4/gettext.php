@@ -1,6 +1,6 @@
 <?php
 
-// Start of gettext v.7.3.7
+// Start of gettext v.7.4.0
 
 /**
  * Sets the default domain
@@ -99,4 +99,4 @@ function dcngettext (string $domain, string $msgid1, string $msgid2, int $n, int
  */
 function bind_textdomain_codeset (string $domain, string $codeset) {}
 
-// End of gettext v.7.3.7
+// End of gettext v.7.4.0

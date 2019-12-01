@@ -1,6 +1,6 @@
 <?php
 
-// Start of SPL v.7.3.7
+// Start of SPL v.7.4.0
 
 /**
  * Exception that represents error in the program logic. This kind of
@@ -2656,6 +2656,13 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serial
 	public function serialize () {}
 
 	/**
+	 * @param mixed $serialized
+	 */
+	public function __unserialize ($serialized) {}
+
+	public function __serialize () {}
+
+	/**
 	 * Create a new iterator from an ArrayObject instance
 	 * @link http://www.php.net/manual/en/arrayobject.getiterator.php
 	 * @return ArrayIterator An iterator from an ArrayObject.
@@ -2712,9 +2719,9 @@ class ArrayIterator implements Iterator, Traversable, ArrayAccess, SeekableItera
 	 * Construct an ArrayIterator
 	 * @link http://www.php.net/manual/en/arrayiterator.construct.php
 	 * @param mixed $array [optional]
-	 * @param mixed $ar_flags [optional]
+	 * @param mixed $flags [optional]
 	 */
-	public function __construct ($array = null, $ar_flags = null) {}
+	public function __construct ($array = null, $flags = null) {}
 
 	/**
 	 * Check if offset exists
@@ -2873,7 +2880,7 @@ class ArrayIterator implements Iterator, Traversable, ArrayAccess, SeekableItera
 	 * Unserialize
 	 * @link http://www.php.net/manual/en/arrayiterator.unserialize.php
 	 * @param string $serialized The serialized ArrayIterator object to be unserialized.
-	 * @return string The ArrayIterator.
+	 * @return void 
 	 */
 	public function unserialize (string $serialized) {}
 
@@ -2883,6 +2890,13 @@ class ArrayIterator implements Iterator, Traversable, ArrayAccess, SeekableItera
 	 * @return string The serialized ArrayIterator.
 	 */
 	public function serialize () {}
+
+	/**
+	 * @param mixed $serialized
+	 */
+	public function __unserialize ($serialized) {}
+
+	public function __serialize () {}
 
 	/**
 	 * Rewind array back to the start
@@ -2967,9 +2981,9 @@ class RecursiveArrayIterator extends ArrayIterator implements Countable, Seriali
 	 * Construct an ArrayIterator
 	 * @link http://www.php.net/manual/en/arrayiterator.construct.php
 	 * @param mixed $array [optional]
-	 * @param mixed $ar_flags [optional]
+	 * @param mixed $flags [optional]
 	 */
-	public function __construct ($array = null, $ar_flags = null) {}
+	public function __construct ($array = null, $flags = null) {}
 
 	/**
 	 * Check if offset exists
@@ -3128,7 +3142,7 @@ class RecursiveArrayIterator extends ArrayIterator implements Countable, Seriali
 	 * Unserialize
 	 * @link http://www.php.net/manual/en/arrayiterator.unserialize.php
 	 * @param string $serialized The serialized ArrayIterator object to be unserialized.
-	 * @return string The ArrayIterator.
+	 * @return void 
 	 */
 	public function unserialize (string $serialized) {}
 
@@ -3138,6 +3152,13 @@ class RecursiveArrayIterator extends ArrayIterator implements Countable, Seriali
 	 * @return string The serialized ArrayIterator.
 	 */
 	public function serialize () {}
+
+	/**
+	 * @param mixed $serialized
+	 */
+	public function __unserialize ($serialized) {}
+
+	public function __serialize () {}
 
 	/**
 	 * Rewind array back to the start
@@ -5988,6 +6009,13 @@ class SplDoublyLinkedList implements Iterator, Traversable, Countable, ArrayAcce
 	 */
 	public function serialize () {}
 
+	/**
+	 * @param mixed $serialized
+	 */
+	public function __unserialize ($serialized) {}
+
+	public function __serialize () {}
+
 }
 
 /**
@@ -6214,6 +6242,13 @@ class SplQueue extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	 */
 	public function serialize () {}
 
+	/**
+	 * @param mixed $serialized
+	 */
+	public function __unserialize ($serialized) {}
+
+	public function __serialize () {}
+
 }
 
 /**
@@ -6424,6 +6459,13 @@ class SplStack extends SplDoublyLinkedList implements Serializable, ArrayAccess,
 	 * @return string The serialized string.
 	 */
 	public function serialize () {}
+
+	/**
+	 * @param mixed $serialized
+	 */
+	public function __unserialize ($serialized) {}
+
+	public function __serialize () {}
 
 }
 
@@ -7228,6 +7270,13 @@ class SplObjectStorage implements Countable, Iterator, Traversable, Serializable
 	public function serialize () {}
 
 	/**
+	 * @param mixed $serialized
+	 */
+	public function __unserialize ($serialized) {}
+
+	public function __serialize () {}
+
+	/**
 	 * Checks whether an object exists in the storage
 	 * @link http://www.php.net/manual/en/splobjectstorage.offsetexists.php
 	 * @param object $object The object to look for.
@@ -7541,4 +7590,4 @@ function iterator_count ($iterator) {}
  */
 function iterator_apply ($iterator, callable $function, array $args = null) {}
 
-// End of SPL v.7.3.7
+// End of SPL v.7.4.0

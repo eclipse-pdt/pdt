@@ -1,6 +1,6 @@
 <?php
 
-// Start of sqlite3 v.7.3.0
+// Start of sqlite3 v.7.4.0
 
 /**
  * A class that interfaces SQLite 3 databases.
@@ -78,6 +78,13 @@ class SQLite3  {
 	 * recent failed SQLite request.
 	 */
 	public function lastErrorCode () {}
+
+	public function lastExtendedErrorCode () {}
+
+	/**
+	 * @param mixed $enable
+	 */
+	public function enableExtendedResultCodes ($enable) {}
 
 	/**
 	 * Returns English text describing the most recent failed SQLite request
@@ -320,6 +327,13 @@ class SQLite3  {
 	public function enableExceptions (bool $enableExceptions = null) {}
 
 	/**
+	 * @param mixed $destination_db
+	 * @param mixed $source_dbname [optional]
+	 * @param mixed $destination_dbname [optional]
+	 */
+	public function backup ($destination_db, $source_dbname = null, $destination_dbname = null) {}
+
+	/**
 	 * Instantiates an SQLite3 object and opens an SQLite 3 database
 	 * @link http://www.php.net/manual/en/sqlite3.construct.php
 	 * @param mixed $filename
@@ -376,8 +390,12 @@ class SQLite3Stmt  {
 	/**
 	 * Binds a parameter to a statement variable
 	 * @link http://www.php.net/manual/en/sqlite3stmt.bindparam.php
-	 * @param mixed $sql_param Either a string or an int identifying the statement variable to which the
-	 * parameter should be bound.
+	 * @param mixed $sql_param Either a string (for named parameters) or an int
+	 * (for positional parameters) identifying the statement variable to which the
+	 * value should be bound.
+	 * If a named parameter does not start with a colon (:) or an
+	 * at sign (@), a colon (:) is automatically preprended.
+	 * Positional parameters start with 1.
 	 * @param mixed $param The parameter to bind to a statement variable.
 	 * @param int $type [optional] <p>
 	 * The data type of the parameter to bind.
@@ -431,8 +449,12 @@ class SQLite3Stmt  {
 	/**
 	 * Binds the value of a parameter to a statement variable
 	 * @link http://www.php.net/manual/en/sqlite3stmt.bindvalue.php
-	 * @param mixed $sql_param Either a string or an int identifying the statement variable to which the
+	 * @param mixed $sql_param Either a string (for named parameters) or an int
+	 * (for positional parameters) identifying the statement variable to which the
 	 * value should be bound.
+	 * If a named parameter does not start with a colon (:) or an
+	 * at sign (@), a colon (:) is automatically preprended.
+	 * Positional parameters start with 1.
 	 * @param mixed $value The value to bind to a statement variable.
 	 * @param int $type [optional] <p>
 	 * The data type of the value to bind.
@@ -489,6 +511,15 @@ class SQLite3Stmt  {
 	 * @return bool true if a statement is definitely read only, false otherwise.
 	 */
 	public function readOnly () {}
+
+	/**
+	 * Get the SQL of the statement
+	 * @link http://www.php.net/manual/en/sqlite3stmt.getsql.php
+	 * @param bool $expanded [optional] Whether to retrieve the expanded SQL. Passing true is only supported as
+	 * of libsqlite 3.14.
+	 * @return string the SQL of the prepared statement, or false on failure.
+	 */
+	public function getSQL (bool $expanded = null) {}
 
 	/**
 	 * @param mixed $sqlite3
@@ -671,4 +702,4 @@ define ('SQLITE3_OPEN_CREATE', 4);
  */
 define ('SQLITE3_DETERMINISTIC', 2048);
 
-// End of sqlite3 v.7.3.0
+// End of sqlite3 v.7.4.0

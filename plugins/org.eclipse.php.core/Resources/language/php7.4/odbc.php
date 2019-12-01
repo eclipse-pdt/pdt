@@ -1,6 +1,6 @@
 <?php
 
-// Start of odbc v.7.3.0
+// Start of odbc v.7.4.0
 
 /**
  * Toggle autocommit behaviour
@@ -1052,4 +1052,4 @@ define ('SQL_ENSURE', 1);
  */
 define ('SQL_QUICK', 0);
 
-// End of odbc v.7.3.0
+// End of odbc v.7.4.0

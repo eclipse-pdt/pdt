@@ -1,6 +1,6 @@
 <?php
 
-// Start of gmp v.7.3.7
+// Start of gmp v.7.4.0
 
 /**
  * A GMP number. These objects support overloaded
@@ -697,4 +697,4 @@ define ('GMP_BIG_ENDIAN', 8);
  */
 define ('GMP_NATIVE_ENDIAN', 16);
 
-// End of gmp v.7.3.7
+// End of gmp v.7.4.0

@@ -1,6 +1,6 @@
 <?php
 
-// Start of tidy v.7.3.7
+// Start of tidy v.7.4.0
 
 /**
  * An HTML node in an HTML file, as detected by tidy.
@@ -391,9 +391,10 @@ final class tidyNode  {
 }
 
 /**
+ * @param mixed $object
  * @param mixed $option
  */
-function tidy_getopt ($option) {}
+function tidy_getopt ($object, $option) {}
 
 /**
  * @param mixed $input
@@ -513,11 +514,20 @@ function tidy_config_count (tidy $object) {}
  */
 function tidy_get_opt_doc ($resource, $optname) {}
 
-function tidy_get_root () {}
+/**
+ * @param mixed $object
+ */
+function tidy_get_root ($object) {}
 
-function tidy_get_head () {}
+/**
+ * @param mixed $object
+ */
+function tidy_get_head ($object) {}
 
-function tidy_get_html () {}
+/**
+ * @param mixed $object
+ */
+function tidy_get_html ($object) {}
 
 /**
  * @param mixed $tidy
@@ -1235,6 +1245,174 @@ define ('TIDY_TAG_WBR', 120);
 define ('TIDY_TAG_XMP', 121);
 
 /**
+ * Added in libtidy 5.0.0. Available as of PHP 7.4.0.
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
+define ('TIDY_TAG_ARTICLE', 123);
+
+/**
+ * Added in libtidy 5.0.0. Available as of PHP 7.4.0.
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
+define ('TIDY_TAG_ASIDE', 124);
+
+/**
+ * Added in libtidy 5.0.0. Available as of PHP 7.4.0.
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
+define ('TIDY_TAG_AUDIO', 125);
+
+/**
+ * Added in libtidy 5.0.0. Available as of PHP 7.4.0.
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
+define ('TIDY_TAG_BDI', 126);
+
+/**
+ * Added in libtidy 5.0.0. Available as of PHP 7.4.0.
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
+define ('TIDY_TAG_CANVAS', 127);
+
+/**
+ * Added in libtidy 5.0.0. Available as of PHP 7.4.0.
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
+define ('TIDY_TAG_COMMAND', 128);
+
+/**
+ * Added in libtidy 5.0.0. Available as of PHP 7.4.0.
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
+define ('TIDY_TAG_DATALIST', 129);
+
+/**
+ * Added in libtidy 5.0.0. Available as of PHP 7.4.0.
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
+define ('TIDY_TAG_DETAILS', 130);
+
+/**
+ * Added in libtidy 5.0.0. Available as of PHP 7.4.0.
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
+define ('TIDY_TAG_DIALOG', 131);
+
+/**
+ * Added in libtidy 5.0.0. Available as of PHP 7.4.0.
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
+define ('TIDY_TAG_FIGCAPTION', 132);
+
+/**
+ * Added in libtidy 5.0.0. Available as of PHP 7.4.0.
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
+define ('TIDY_TAG_FIGURE', 133);
+
+/**
+ * Added in libtidy 5.0.0. Available as of PHP 7.4.0.
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
+define ('TIDY_TAG_FOOTER', 134);
+
+/**
+ * Added in libtidy 5.0.0. Available as of PHP 7.4.0.
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
+define ('TIDY_TAG_HEADER', 135);
+
+/**
+ * Added in libtidy 5.0.0. Available as of PHP 7.4.0.
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
+define ('TIDY_TAG_HGROUP', 136);
+
+/**
+ * Added in libtidy 5.0.0. Available as of PHP 7.4.0.
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
+define ('TIDY_TAG_MAIN', 137);
+
+/**
+ * Added in libtidy 5.0.0. Available as of PHP 7.4.0.
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
+define ('TIDY_TAG_MARK', 138);
+
+/**
+ * Added in libtidy 5.0.0. Available as of PHP 7.4.0.
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
+define ('TIDY_TAG_MENUITEM', 139);
+
+/**
+ * Added in libtidy 5.0.0. Available as of PHP 7.4.0.
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
+define ('TIDY_TAG_METER', 140);
+
+/**
+ * Added in libtidy 5.0.0. Available as of PHP 7.4.0.
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
+define ('TIDY_TAG_NAV', 141);
+
+/**
+ * Added in libtidy 5.0.0. Available as of PHP 7.4.0.
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
+define ('TIDY_TAG_OUTPUT', 142);
+
+/**
+ * Added in libtidy 5.0.0. Available as of PHP 7.4.0.
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
+define ('TIDY_TAG_PROGRESS', 143);
+
+/**
+ * Added in libtidy 5.0.0. Available as of PHP 7.4.0.
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
+define ('TIDY_TAG_SECTION', 144);
+
+/**
+ * Added in libtidy 5.0.0. Available as of PHP 7.4.0.
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
+define ('TIDY_TAG_SOURCE', 145);
+
+/**
+ * Added in libtidy 5.0.0. Available as of PHP 7.4.0.
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
+define ('TIDY_TAG_SUMMARY', 146);
+
+/**
+ * Added in libtidy 5.0.0. Available as of PHP 7.4.0.
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
+define ('TIDY_TAG_TEMPLATE', 147);
+
+/**
+ * Added in libtidy 5.0.0. Available as of PHP 7.4.0.
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
+define ('TIDY_TAG_TIME', 148);
+
+/**
+ * Added in libtidy 5.0.0. Available as of PHP 7.4.0.
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
+define ('TIDY_TAG_TRACK', 149);
+
+/**
+ * Added in libtidy 5.0.0. Available as of PHP 7.4.0.
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
+define ('TIDY_TAG_VIDEO', 150);
+
+/**
  * root node
  * @link http://www.php.net/manual/en/tidy.constants.php
  */
@@ -1318,4 +1496,4 @@ define ('TIDY_NODETYPE_PHP', 12);
  */
 define ('TIDY_NODETYPE_XMLDECL', 13);
 
-// End of tidy v.7.3.7
+// End of tidy v.7.4.0

@@ -1,6 +1,6 @@
 <?php
 
-// Start of xsl v.7.3.7
+// Start of xsl v.7.4.0
 
 /**
  * @link http://www.php.net/manual/en/class.xsltprocessor.php
@@ -215,4 +215,4 @@ define ('LIBEXSLT_VERSION', 820);
  */
 define ('LIBEXSLT_DOTTED_VERSION', "0.8.20");
 
-// End of xsl v.7.3.7
+// End of xsl v.7.4.0

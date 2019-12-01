@@ -1,6 +1,6 @@
 <?php
 
-// Start of date v.7.3.7
+// Start of date v.7.4.0
 
 /**
  * DateTimeInterface is meant so that both DateTime and DateTimeImmutable can
@@ -2564,4 +2564,4 @@ define ('SUNFUNCS_RET_STRING', 1);
  */
 define ('SUNFUNCS_RET_DOUBLE', 2);
 
-// End of date v.7.3.7
+// End of date v.7.4.0

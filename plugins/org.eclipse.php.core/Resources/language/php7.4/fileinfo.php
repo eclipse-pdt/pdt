@@ -1,6 +1,6 @@
 <?php
 
-// Start of fileinfo v.7.3.7
+// Start of fileinfo v.7.4.0
 
 /**
  * This class provides an object oriented interface into the fileinfo
@@ -190,4 +190,4 @@ define ('FILEINFO_RAW', 256);
  */
 define ('FILEINFO_EXTENSION', 16777216);
 
-// End of fileinfo v.7.3.7
+// End of fileinfo v.7.4.0

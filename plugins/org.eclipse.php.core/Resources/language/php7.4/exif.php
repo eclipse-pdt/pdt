@@ -1,6 +1,6 @@
 <?php
 
-// Start of exif v.7.3.0
+// Start of exif v.7.4.0
 
 /**
  * Reads the EXIF headers from an image file
@@ -124,11 +124,11 @@ function exif_imagetype (string $filename) {}
 
 
 /**
- * This constant have a value of 1 if the 
- * mbstring is enabled, otherwise 
- * the value is 0.
+ * This constant has a value of 1 if the
+ * mbstring is enabled, otherwise
+ * it has a value of 0.
  * @link http://www.php.net/manual/en/exif.constants.php
  */
 define ('EXIF_USE_MBSTRING', 1);
 
-// End of exif v.7.3.0
+// End of exif v.7.4.0

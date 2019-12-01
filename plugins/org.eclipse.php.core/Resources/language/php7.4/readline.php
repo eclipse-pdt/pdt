@@ -1,6 +1,6 @@
 <?php
 
-// Start of readline v.7.3.7
+// Start of readline v.7.4.0
 
 /**
  * Reads a line
@@ -43,6 +43,14 @@ function readline_add_history (string $line) {}
 function readline_clear_history () {}
 
 /**
+ * Lists the history
+ * @link http://www.php.net/manual/en/function.readline-list-history.php
+ * @return array an array of the entire command line history. The elements are
+ * indexed by integers starting at zero.
+ */
+function readline_list_history () {}
+
+/**
  * Reads the history
  * @link http://www.php.net/manual/en/function.readline-read-history.php
  * @param string $filename [optional] Path to the filename containing the command history.
@@ -76,4 +84,4 @@ function readline_completion_function (callable $function) {}
  */
 define ('READLINE_LIB', "libedit");
 
-// End of readline v.7.3.7
+// End of readline v.7.4.0

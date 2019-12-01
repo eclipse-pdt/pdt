@@ -1,6 +1,6 @@
 <?php
 
-// Start of iconv v.7.3.7
+// Start of iconv v.7.4.0
 
 /**
  * Convert string to requested character encoding
@@ -381,7 +381,7 @@ define ('ICONV_IMPL', "\"libiconv\"");
  * string
  * @link http://www.php.net/manual/en/iconv.constants.php
  */
-define ('ICONV_VERSION', 1.15);
+define ('ICONV_VERSION', 1.16);
 
 /**
  * integer
@@ -395,4 +395,4 @@ define ('ICONV_MIME_DECODE_STRICT', 1);
  */
 define ('ICONV_MIME_DECODE_CONTINUE_ON_ERROR', 2);
 
-// End of iconv v.7.3.7
+// End of iconv v.7.4.0

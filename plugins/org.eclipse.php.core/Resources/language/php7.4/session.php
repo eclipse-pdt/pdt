@@ -1,6 +1,6 @@
 <?php
 
-// Start of session v.7.3.7
+// Start of session v.7.4.0
 
 /**
  * SessionHandlerInterface is an
@@ -229,7 +229,7 @@ function session_name (string $name = null) {}
  * @param string $module [optional] If module is specified, that module will be
  * used instead.
  * Passing "user" to this parameter is forbidden. Instead
- * set_set_save_handler has to be called to set a user
+ * session_set_save_handler has to be called to set a user
  * defined session handler.
  * @return string the name of the current session module.
  */
@@ -570,4 +570,4 @@ define ('PHP_SESSION_NONE', 1);
  */
 define ('PHP_SESSION_ACTIVE', 2);
 
-// End of session v.7.3.7
+// End of session v.7.4.0

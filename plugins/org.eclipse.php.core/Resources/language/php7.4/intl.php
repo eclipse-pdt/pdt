@@ -1,6 +1,6 @@
 <?php
 
-// Start of intl v.7.3.7
+// Start of intl v.7.4.0
 
 /**
  * Provides string comparison capability with support for appropriate
@@ -1203,7 +1203,7 @@ class IntlDateFormatter  {
 /**
  * @link http://www.php.net/manual/en/class.resourcebundle.php
  */
-class ResourceBundle implements Traversable {
+class ResourceBundle implements Traversable, Countable {
 
 	/**
 	 * @param mixed $locale
@@ -6182,8 +6182,8 @@ function intl_error_name (int $error_code) {}
  * @link http://www.php.net/manual/en/intl.constants.php
  */
 define ('INTL_MAX_LOCALE_LEN', 156);
-define ('INTL_ICU_VERSION', 64.2);
-define ('INTL_ICU_DATA_VERSION', 64.2);
+define ('INTL_ICU_VERSION', 65.1);
+define ('INTL_ICU_DATA_VERSION', 65.1);
 define ('ULOC_ACTUAL_LOCALE', 0);
 define ('ULOC_VALID_LOCALE', 1);
 define ('GRAPHEME_EXTR_COUNT', 0);
@@ -6416,4 +6416,4 @@ define ('IDNA_ERROR_INVALID_ACE_LABEL', 1024);
 define ('IDNA_ERROR_BIDI', 2048);
 define ('IDNA_ERROR_CONTEXTJ', 4096);
 
-// End of intl v.7.3.7
+// End of intl v.7.4.0

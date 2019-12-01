@@ -1,6 +1,6 @@
 <?php
 
-// Start of pgsql v.7.3.0
+// Start of pgsql v.7.4.0
 
 /**
  * Open a PostgreSQL connection
@@ -1459,13 +1459,13 @@ function pg_setclientencoding ($connection = null, $encoding = null) {}
  * Short libpq version that contains only numbers and dots.
  * @link http://www.php.net/manual/en/pgsql.constants.php
  */
-define ('PGSQL_LIBPQ_VERSION', "9.6.9");
+define ('PGSQL_LIBPQ_VERSION', 11.4);
 
 /**
  * Long libpq version that includes compiler information.
  * @link http://www.php.net/manual/en/pgsql.constants.php
  */
-define ('PGSQL_LIBPQ_VERSION_STR', "PostgreSQL 9.6.9 (win32)");
+define ('PGSQL_LIBPQ_VERSION_STR', "PostgreSQL 11.4, compiled by Visual C++, 64-bit");
 
 /**
  * Passed to pg_connect to force the creation of a new connection,
@@ -1907,4 +1907,4 @@ define ('PGSQL_DML_ASYNC', 1024);
  */
 define ('PGSQL_DML_STRING', 2048);
 
-// End of pgsql v.7.3.0
+// End of pgsql v.7.4.0

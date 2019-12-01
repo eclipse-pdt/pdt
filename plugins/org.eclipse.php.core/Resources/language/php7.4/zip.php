@@ -1,6 +1,6 @@
 <?php
 
-// Start of zip v.1.15.4
+// Start of zip v.1.15.5
 
 /**
  * A file archive, compressed with Zip.
@@ -763,4 +763,4 @@ function zip_entry_compressedsize ($zip_entry) {}
  */
 function zip_entry_compressionmethod ($zip_entry) {}
 
-// End of zip v.1.15.4
+// End of zip v.1.15.5

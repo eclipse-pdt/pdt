@@ -1,6 +1,6 @@
 <?php
 
-// Start of pcre v.7.3.7
+// Start of pcre v.7.4.0
 
 /**
  * Perform a regular expression match
@@ -708,9 +708,9 @@ define ('PREG_JIT_STACKLIMIT_ERROR', 6);
  * PCRE version and release date (e.g. "7.0 18-Dec-2006").
  * @link http://www.php.net/manual/en/pcre.constants.php
  */
-define ('PCRE_VERSION', "10.32 2018-09-10");
+define ('PCRE_VERSION', "10.33 2019-04-16");
 define ('PCRE_VERSION_MAJOR', 10);
-define ('PCRE_VERSION_MINOR', 32);
+define ('PCRE_VERSION_MINOR', 33);
 define ('PCRE_JIT_SUPPORT', true);
 
-// End of pcre v.7.3.7
+// End of pcre v.7.4.0

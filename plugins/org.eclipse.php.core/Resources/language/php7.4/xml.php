@@ -1,6 +1,6 @@
 <?php
 
-// Start of xml v.7.3.7
+// Start of xml v.7.4.0
 
 /**
  * Create an XML parser
@@ -807,4 +807,4 @@ define ('XML_OPTION_SKIP_WHITE', 4);
  */
 define ('XML_SAX_IMPL', "libxml");
 
-// End of xml v.7.3.7
+// End of xml v.7.4.0

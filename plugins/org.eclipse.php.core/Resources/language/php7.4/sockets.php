@@ -1,6 +1,6 @@
 <?php
 
-// Start of sockets v.7.3.0
+// Start of sockets v.7.4.0
 
 /**
  * Runs the select() system call on the given arrays of sockets with a specified timeout
@@ -1239,20 +1239,31 @@ function socket_getopt ($socket, $level, $optname) {}
 function socket_setopt ($socket, $level, $optname, $optval) {}
 
 /**
- * @param mixed $socket
- * @param mixed $target_pid
+ * Exports the WSAPROTOCOL_INFO Structure
+ * @link http://www.php.net/manual/en/function.socket-wsaprotocol-info-export.php
+ * @param resource $socket A valid socket resource.
+ * @param int $target_pid The ID of the process which will import the socket.
+ * @return string an identifier to be used for the import, or false on failure
  */
-function socket_wsaprotocol_info_export ($socket, $target_pid) {}
+function socket_wsaprotocol_info_export ($socket, int $target_pid) {}
 
 /**
- * @param mixed $info_id
+ * Imports a Socket from another Process
+ * @link http://www.php.net/manual/en/function.socket-wsaprotocol-info-import.php
+ * @param string $info_id The ID which has been returned by a former call to
+ * socket_wsaprotocol_info_export.
+ * @return resource the socket resource, or false on failure
  */
-function socket_wsaprotocol_info_import ($info_id) {}
+function socket_wsaprotocol_info_import (string $info_id) {}
 
 /**
- * @param mixed $info_id
+ * Releases an exported WSAPROTOCOL_INFO Structure
+ * @link http://www.php.net/manual/en/function.socket-wsaprotocol-info-release.php
+ * @param string $info_id The ID which has been returned by a former call to
+ * socket_wsaprotocol_info_export.
+ * @return bool true on success or false on failure
  */
-function socket_wsaprotocol_info_release ($info_id) {}
+function socket_wsaprotocol_info_release (string $info_id) {}
 
 
 /**
@@ -1797,4 +1808,4 @@ define ('IPV6_HOPLIMIT', 21);
 define ('IPV6_RECVTCLASS', 40);
 define ('IPV6_TCLASS', 39);
 
-// End of sockets v.7.3.0
+// End of sockets v.7.4.0

@@ -1,6 +1,6 @@
 <?php
 
-// Start of openssl v.7.3.7
+// Start of openssl v.7.4.0
 
 /**
  * Retrieve the available certificate locations
@@ -268,6 +268,12 @@ function openssl_x509_checkpurpose ($x509cert, int $purpose, array $cainfo = nul
  * corresponds to cert, or false otherwise.
  */
 function openssl_x509_check_private_key ($cert, $key) {}
+
+/**
+ * @param mixed $cert
+ * @param mixed $key
+ */
+function openssl_x509_verify ($cert, $key) {}
 
 /**
  * Exports a certificate as a string
@@ -891,13 +897,13 @@ function openssl_error_string () {}
  * Added in PHP 5.2.0.
  * @link http://www.php.net/manual/en/openssl.constants.php
  */
-define ('OPENSSL_VERSION_TEXT', "OpenSSL 1.1.1c  28 May 2019");
+define ('OPENSSL_VERSION_TEXT', "OpenSSL 1.1.1d  10 Sep 2019");
 
 /**
  * Added in PHP 5.2.0.
  * @link http://www.php.net/manual/en/openssl.constants.php
  */
-define ('OPENSSL_VERSION_NUMBER', 269488191);
+define ('OPENSSL_VERSION_NUMBER', 269488207);
 
 /**
  * 
@@ -1179,4 +1185,4 @@ define ('OPENSSL_DONT_ZERO_PAD_KEY', 4);
  */
 define ('OPENSSL_TLSEXT_SERVER_NAME', 1);
 
-// End of openssl v.7.3.7
+// End of openssl v.7.4.0
