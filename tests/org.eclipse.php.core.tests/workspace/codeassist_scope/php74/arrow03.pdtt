@@ -1,0 +1,10 @@
+--TEST--
+
+--FILE--
+<?php 
+fn(My $cl): \Date|Time => $cl;
+
+--EXPECT--
+HEAD(9,19)
+FUNCTION(7,29)
+FILE(0,38)

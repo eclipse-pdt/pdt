@@ -1,0 +1,9 @@
+--TEST--
+
+--FILE--
+<?php 
+class Foo {}
+fn() => new Fo|;
+
+--EXPECT--
+method(Foo)

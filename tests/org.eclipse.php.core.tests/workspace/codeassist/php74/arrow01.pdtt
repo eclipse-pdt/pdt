@@ -1,0 +1,11 @@
+--TEST--
+
+--FILE--
+<?php 
+fn(arr| $cl) => $cl;
+
+--EXPECT--
+type(ArrayAccess)
+type(ArrayObject)
+type(ArrayIterator)
+keyword(array)

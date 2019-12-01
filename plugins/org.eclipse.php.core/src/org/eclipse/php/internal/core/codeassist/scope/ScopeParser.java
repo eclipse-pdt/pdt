@@ -50,13 +50,23 @@ public class ScopeParser {
 			this.start = start;
 			this.length = length;
 		}
+
+		public String toString() {
+			return type.name() + "(" + start + ", " + (start + length - 1) + "," + length + ")";
+		}
+
 	}
 
 	private class SimpleBlockState extends State {
 		public SimpleBlockState(Type type, int start) {
 			super(type, start);
 		}
+	}
 
+	private class OneLinerState extends State {
+		public OneLinerState(Type type, int start) {
+			super(type, start);
+		}
 	}
 
 	private class ControlState extends State {
@@ -76,6 +86,7 @@ public class ScopeParser {
 	}
 
 	private Deque<State> states;
+	private State previous = null;
 	private Deque<State> memory;
 	private LinkedList<ITextRegion> buffer;
 	private boolean collectName = false;
@@ -90,6 +101,7 @@ public class ScopeParser {
 	}
 
 	public ICompletionScope parse(int offset) {
+		previous = null;
 		states = new LinkedList<>();
 		states.push(new State(Type.FILE, parentScope.getOffset(), parentScope.getLength()));
 		memory = new LinkedList<>();
@@ -105,6 +117,7 @@ public class ScopeParser {
 		ICompletionScope scope = mainScope;
 		internalOffset = offset;
 		ITextRegion previousRegion = null;
+		int lastNonWhiteSpaceOffset = 0;
 		for (IStructuredDocumentRegion region : document.getStructuredDocumentRegions()) {
 			if (region.getStartOffset() > offset) {
 				break;
@@ -173,6 +186,24 @@ public class ScopeParser {
 							case PHPRegionTypes.PHP_NAMESPACE:
 								pushState(new NamedState(Type.NAMESPACE, tokenStart));
 								break;
+							case PHPRegionTypes.PHP_FN:
+								pushState(new NamedState(Type.FUNCTION, tokenStart));
+								break;
+							case PHPRegionTypes.PHP_OPERATOR:
+								if (phpToken.getLength() > 1 && document.getChar(tokenStart) == '='
+										&& document.getChar(tokenStart + 1) == '>') {
+									if (current.type == Type.HEAD && current.nest == -1) {
+										popState(lastNonWhiteSpaceOffset);
+										current = states.peek();
+										if (current.type != Type.FUNCTION) {
+											pushState(previous);
+										}
+									}
+									if (current.type == Type.FUNCTION) {
+										pushState(new OneLinerState(Type.BLOCK, tokenEnd + 1));
+									}
+								}
+								break;
 							case PHPRegionTypes.PHP_FUNCTION:
 								if (current.type == Type.USE) {
 									states.pop();
@@ -187,6 +218,10 @@ public class ScopeParser {
 								}
 								break;
 							case PHPRegionTypes.PHP_CURLY_OPEN:
+								if (current.type == Type.HEAD && current.nest == -1) {
+									popState(tokenStart);
+									previous = null;
+								}
 								if (current.type == Type.USE || current.type == Type.USE_CONST
 										|| current.type == Type.USE_FUNCTION) {
 									pushState(new State(Type.USE_GROUP, tokenStart));
@@ -278,6 +313,17 @@ public class ScopeParser {
 								break;
 							case PHPRegionTypes.PHP_SEMICOLON:
 								collectName = false;
+								if (current.type == Type.HEAD && current.nest == -1) {
+									popState(tokenEnd);
+								} else if (current instanceof OneLinerState && current.nest == 0) {
+									while (current instanceof OneLinerState && current.nest == 0) {
+										popState(tokenEnd);
+										popState(tokenEnd);
+										current = states.peek();
+									}
+									break;
+
+								}
 								switch (current.type) {
 								case NAMESPACE:
 									current.length = parentScope.getLength() - current.start;
@@ -311,6 +357,7 @@ public class ScopeParser {
 
 									popState(tokenEnd);
 									break;
+
 								default:
 								}
 								break;
@@ -326,10 +373,22 @@ public class ScopeParser {
 										pushState(new State(Type.BLOCK, tokenStart));
 										collectName = false;
 										break;
+									case FUNCTION:
+										if (previous != null && previous.type == Type.HEAD) {
+											pushState(previous);
+											previous.nest = -1;
+											previous = null;
+
+											break;
+										}
 									default:
 									}
 									break;
 								case '(':
+									if (current instanceof OneLinerState) {
+										current.nest++;
+										break;
+									}
 									switch (current.type) {
 									case SWITCH:
 									case WHILE:
@@ -342,6 +401,7 @@ public class ScopeParser {
 										pushState(new State(Type.HEAD, tokenStart));
 										collectName = false;
 										break;
+
 									case HEAD:
 										current.nest++;
 										break;
@@ -351,9 +411,21 @@ public class ScopeParser {
 									if (current.type == Type.HEAD) {
 										if (current.nest > 0) {
 											current.nest--;
-										} else {
+										} else if (current.nest == 0) {
 											popState(tokenStart + 1); // ignore
 																		// whitespace
+										}
+									} else if (current instanceof OneLinerState) {
+										if (current.nest == 0) {
+											while (current instanceof OneLinerState && current.nest == 0) {
+												popState(tokenStart - 1);
+												popState(tokenStart - 1);
+												current = states.peek();
+											}
+											break;
+
+										} else if (current.nest > 0) {
+											current.nest--;
 										}
 									}
 								}
@@ -443,10 +515,14 @@ public class ScopeParser {
 							}
 
 							// System.out.println(phpToken);
-							// System.out.println("'" + document.get(tokenStart,
-							// phpToken.getLength()) +
-							// "'");
+							// System.out.println(tokenStart + ":" + tokenEnd +
+							// ":" + "'"
+							// + document.get(tokenStart, phpToken.getLength())
+							// + "'");
 							previousRegion = phpToken;
+							if (phpToken.getType() != PHPRegionTypes.WHITESPACE) {
+								lastNonWhiteSpaceOffset = tokenEnd;
+							}
 						}
 					} catch (BadLocationException e) {
 						Logger.logException(e);
@@ -477,8 +553,11 @@ public class ScopeParser {
 	private void popState(int end) {
 		State state = states.pop();
 		state.length = end - state.start;
-		if (state.start <= internalOffset && end >= internalOffset) {
-			memory.addFirst(state);
+		previous = state;
+		if (state.start < internalOffset && end >= internalOffset) {
+			if (memory.size() == 0 || memory.getFirst() != state) {
+				memory.addFirst(state);
+			}
 		}
 		if (states.peek() instanceof SimpleBlockState) {
 			popState(end);

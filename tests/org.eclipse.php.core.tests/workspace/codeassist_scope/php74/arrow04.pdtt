@@ -1,0 +1,10 @@
+--TEST--
+
+--FILE--
+<?php 
+fn(My $cl): \DateTime => $c|l;
+
+--EXPECT--
+BLOCK(32,4)
+FUNCTION(7,29)
+FILE(0,38)

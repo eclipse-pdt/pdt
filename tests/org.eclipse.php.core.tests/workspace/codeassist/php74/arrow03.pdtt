@@ -1,0 +1,8 @@
+--TEST--
+
+--FILE--
+<?php 
+fn(): stri| => $cl;
+
+--EXPECT--
+keyword(string)

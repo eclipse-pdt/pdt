@@ -16,7 +16,9 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
+import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.codeassist.ICompletionScope;
+import org.eclipse.php.core.codeassist.ICompletionScope.Type;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
 /**
@@ -34,7 +36,7 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
  */
 public abstract class FunctionDeclarationContext extends DeclarationContext {
 
-	private int functionEnd;
+	private int functionEnd = -1;
 
 	@Override
 	public boolean isValid(@NonNull ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
@@ -42,17 +44,43 @@ public abstract class FunctionDeclarationContext extends DeclarationContext {
 			return false;
 		}
 
-		TextSequence statementText = getStatementText();
-		functionEnd = PHPTextSequenceUtilities.isInFunctionDeclaration(statementText);
-		if (functionEnd == -1) {
+		ICompletionScope currentScope = getCompanion().getScope();
+		if (currentScope.getType() != Type.FUNCTION
+				&& !(currentScope.getType() == Type.HEAD && currentScope.getParent().getType() == Type.FUNCTION)) {
 			return false;
 		}
-		return true;
+
+		TextSequence statementText = this.getStatementText();
+		StringBuilder sb = new StringBuilder();
+		int pos = 0;
+		while (statementText.length() > pos) {
+			char ch = statementText.charAt(pos);
+			if (Character.isJavaIdentifierPart(ch)) {
+				sb.append(ch);
+			} else if (ch == '(' || Character.isWhitespace(ch)) {
+				if (sb.toString().equalsIgnoreCase("function")) { //$NON-NLS-1$
+					functionEnd = pos;
+					return true;
+				} else if (PHPVersion.PHP7_3.isLessThan(getCompanion().getPHPVersion()) && sb.toString().equals("fn")) { //$NON-NLS-1$
+					functionEnd = pos;
+					return true;
+				}
+				if (ch == '(') {
+					return false;
+				}
+				sb.setLength(0);
+			}
+
+			pos++;
+		}
+
+		return false;
+
 	}
 
 	/**
-	 * Returns the end offset of word 'function' in function declaration relative to
-	 * the statement text.
+	 * Returns the end offset of word 'function' in function declaration
+	 * relative to the statement text.
 	 * 
 	 * @see #getStatementText()
 	 * @return

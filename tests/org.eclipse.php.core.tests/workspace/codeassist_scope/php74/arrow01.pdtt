@@ -1,0 +1,10 @@
+--TEST--
+
+--FILE--
+<?php 
+fn(My| $cl) => $cl;
+
+--EXPECT--
+HEAD(9,8)
+FUNCTION(7,18)
+FILE(0,27)

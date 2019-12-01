@@ -1,0 +1,10 @@
+--TEST--
+
+--FILE--
+<?php 
+fn(My $cl) => $|cl;
+
+--EXPECT--
+BLOCK(21,4)
+FUNCTION(7,18)
+FILE(0,27)

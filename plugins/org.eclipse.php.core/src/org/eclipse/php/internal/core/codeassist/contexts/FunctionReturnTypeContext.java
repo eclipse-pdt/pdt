@@ -16,6 +16,7 @@ import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.codeassist.ICompletionScope.Type;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
@@ -37,6 +38,10 @@ public class FunctionReturnTypeContext extends FunctionDeclarationContext {
 			return false;
 		}
 		if (getCompanion().getPHPVersion().isLessThan(PHPVersion.PHP7_0)) {
+			return false;
+		}
+		if (this.getCompanion().getScope().getType() != Type.HEAD
+				&& this.getCompanion().getScope().getParent().getType() != Type.FUNCTION) {
 			return false;
 		}
 

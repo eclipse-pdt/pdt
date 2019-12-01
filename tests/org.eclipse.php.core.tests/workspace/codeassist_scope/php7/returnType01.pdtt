@@ -1,0 +1,14 @@
+--TEST--
+Test function return type completion
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+class FooBar {}
+function test(): Foo| {
+}
+
+--EXPECT--
+HEAD(35,8)
+FUNCTION(22,24,test)
+FILE(0,48)

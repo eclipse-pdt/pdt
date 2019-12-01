@@ -1,0 +1,11 @@
+--TEST--
+
+--FILE--
+<?php 
+class Foo {
+	public function bar();
+}
+fn(Foo $cl) => $cl->|;
+
+--EXPECT--
+method(bar)
