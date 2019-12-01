@@ -52,13 +52,11 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 		layout.addShowViewShortcut(ID_FUNCTIONS);
 		layout.addShowViewShortcut(ID_PROJECT_OUTLINE);
 		layout.addShowViewShortcut(IConsoleConstants.ID_CONSOLE_VIEW);
-
-		layout.addShowInPart(IPageLayout.ID_PROJECT_EXPLORER);
 	}
 
 	/*
-	 * This method add the default views that are part of the perspective and lays
-	 * them out in relation to each other and the editor area.
+	 * This method add the default views that are part of the perspective and
+	 * lays them out in relation to each other and the editor area.
 	 */
 	protected void addViews(IPageLayout layout) {
 

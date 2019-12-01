@@ -55,6 +55,7 @@ public class PHPNavigatorActionProvider extends CommonActionProvider {
 
 				fOpenViewGroup = new OpenViewActionGroup(viewPart);
 				fOpenViewGroup.containsOpenPropertiesAction(false);
+				fOpenViewGroup.containsShowInAction(false);
 
 				fInViewPart = true;
 			}

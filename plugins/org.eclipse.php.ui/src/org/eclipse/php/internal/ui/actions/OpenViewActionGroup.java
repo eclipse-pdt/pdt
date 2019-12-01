@@ -45,6 +45,7 @@ public class OpenViewActionGroup extends ActionGroup {
 	private ISelectionProvider fSelectionProvider;
 
 	private boolean fShowOpenPropertiesAction = true;
+	private boolean fShowInAction = true;
 
 	/**
 	 * Creates a new <code>OpenActionGroup</code>. The group requires that the
@@ -73,8 +74,8 @@ public class OpenViewActionGroup extends ActionGroup {
 	}
 
 	/**
-	 * Note: This constructor is for internal use only. Clients should not call this
-	 * constructor.
+	 * Note: This constructor is for internal use only. Clients should not call
+	 * this constructor.
 	 * 
 	 * @param part
 	 *            the editor part
@@ -152,11 +153,12 @@ public class OpenViewActionGroup extends ActionGroup {
 				&& selection != null && fOpenPropertiesDialog.isApplicableForSelection(selection)) {
 			menu.appendToGroup(IContextMenuConstants.GROUP_PROPERTIES, fOpenPropertiesDialog);
 		}
-
-		MenuManager showInSubMenu = new MenuManager(getShowInMenuLabel());
-		IWorkbenchWindow workbenchWindow = fSite.getWorkbenchWindow();
-		showInSubMenu.add(ContributionItemFactory.VIEWS_SHOW_IN.create(workbenchWindow));
-		menu.appendToGroup(IContextMenuConstants.GROUP_OPEN, showInSubMenu);
+		if (fShowInAction) {
+			MenuManager showInSubMenu = new MenuManager(getShowInMenuLabel());
+			IWorkbenchWindow workbenchWindow = fSite.getWorkbenchWindow();
+			showInSubMenu.add(ContributionItemFactory.VIEWS_SHOW_IN.create(workbenchWindow));
+			menu.appendToGroup(IContextMenuConstants.GROUP_OPEN, showInSubMenu);
+		}
 	}
 
 	/*
@@ -211,6 +213,10 @@ public class OpenViewActionGroup extends ActionGroup {
 
 	public void containsOpenPropertiesAction(boolean enable) {
 		fShowOpenPropertiesAction = enable;
+	}
+
+	public void containsShowInAction(boolean enable) {
+		fShowInAction = enable;
 	}
 
 }
