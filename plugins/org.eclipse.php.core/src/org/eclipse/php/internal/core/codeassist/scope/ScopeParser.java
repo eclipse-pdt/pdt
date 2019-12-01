@@ -173,6 +173,9 @@ public class ScopeParser {
 							case PHPRegionTypes.PHP_NAMESPACE:
 								pushState(new NamedState(Type.NAMESPACE, tokenStart));
 								break;
+							case PHPRegionTypes.PHP_FN:
+								pushState(new NamedState(Type.FUNCTION, tokenStart));
+								break;
 							case PHPRegionTypes.PHP_FUNCTION:
 								if (current.type == Type.USE) {
 									states.pop();

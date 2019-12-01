@@ -65,21 +65,21 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	private static final String GLOBAL_NAMESPACE_CONTAINER_NAME = "global namespace"; //$NON-NLS-1$
 	private static final String ANONYMOUS_CLASS_TEMPLATE = "new %s() {...}"; //$NON-NLS-1$
 	/**
-	 * This should replace the need for fInClass, fInMethod and fCurrentMethod since
-	 * in php the type declarations can be nested.
+	 * This should replace the need for fInClass, fInMethod and fCurrentMethod
+	 * since in php the type declarations can be nested.
 	 */
 	protected Stack<ASTNode> declarations = new Stack<>();
 	private PHPSourceElementRequestorExtension[] extensions;
 
 	/**
-	 * Deferred elements that where declared in method/function but should belong to
-	 * the global scope.
+	 * Deferred elements that where declared in method/function but should
+	 * belong to the global scope.
 	 */
 	protected List<ASTNode> deferredDeclarations = new LinkedList<>();
 
 	/**
-	 * Deferred elements that where declared in method/function but should belong to
-	 * current namespace scope
+	 * Deferred elements that where declared in method/function but should
+	 * belong to current namespace scope
 	 */
 	protected List<ASTNode> deferredNamespacedDeclarations = new LinkedList<>();
 
@@ -141,9 +141,6 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			fInfoStack.pop();
 			fNodes.pop();
 		}
-		for (PHPSourceElementRequestorExtension visitor : extensions) {
-			visitor.endvisit(lambdaMethod);
-		}
 		return true;
 	}
 
@@ -160,6 +157,18 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 		for (PHPSourceElementRequestorExtension visitor : extensions) {
 			visitor.endvisit(anonymousClassDeclaration);
+		}
+		return true;
+	}
+
+	public boolean endvisit(ArrowFunctionDeclaration arrowFunction) throws Exception {
+		methodGlobalVars.pop();
+		this.fInMethod = false;
+
+		if (!fNodes.isEmpty() && fNodes.peek() == arrowFunction) {
+			fRequestor.exitMethod(arrowFunction.sourceEnd() - 1);
+			fInfoStack.pop();
+			fNodes.pop();
 		}
 		return true;
 	}
@@ -211,22 +220,11 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return super.endvisit(type);
 	}
 
-	public boolean visit(LambdaFunctionDeclaration lambdaMethod) throws Exception {
-
-		fNodes.push(lambdaMethod);
+	public boolean visit(ArrowFunctionDeclaration arrowMethod) throws Exception {
+		fNodes.push(arrowMethod);
 		methodGlobalVars.add(new HashSet<String>());
 
-		// Declaration parentDeclaration = null;
-		// if (!declarations.empty()
-		// && declarations.peek() instanceof MethodDeclaration) {
-		// parentDeclaration = declarations.peek();
-		// // In case we are entering a nested element - just add to the
-		// // deferred list and get out of the nested element visiting process
-		// deferredDeclarations.add(lambdaMethod);
-		// return visitGeneral(lambdaMethod);
-		// }
-
-		Collection<FormalParameter> arguments = lambdaMethod.getArguments();
+		Collection<FormalParameter> arguments = arrowMethod.getArguments();
 		StringBuilder metadata = new StringBuilder();
 		String[] parameters;
 		ISourceElementRequestor.MethodInfo mi = new ISourceElementRequestor.MethodInfo();
@@ -251,9 +249,74 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			parameters = new String[0];
 		}
 
-		// Add method declaration:
-		for (PHPSourceElementRequestorExtension visitor : extensions) {
-			visitor.visit(lambdaMethod);
+		mi.parameterNames = parameters;
+		mi.name = PHPCoreConstants.ANONYMOUS;
+
+		if (arrowMethod.isStatic()) {
+			mi.modifiers |= Modifiers.AccStatic;
+		}
+		mi.nameSourceStart = arrowMethod.sourceStart();
+		mi.nameSourceEnd = arrowMethod.sourceEnd();
+		mi.declarationStart = mi.nameSourceStart;
+		mi.isConstructor = false;
+
+		fInfoStack.push(mi);
+		this.fRequestor.enterMethod(mi);
+		this.fInMethod = true;
+
+		if (arguments != null) {
+			for (Argument arg : arguments) {
+				ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
+				info.name = arg.getName();
+				info.modifiers = Modifiers.AccPublic;
+				info.nameSourceStart = arg.getNameStart();
+				info.nameSourceEnd = arg.getNameEnd() - 1;
+				info.declarationStart = arg.sourceStart();
+				fRequestor.enterField(info);
+				fRequestor.exitField(arg.sourceEnd() - 1);
+			}
+		}
+		return true;
+	}
+
+	public boolean visit(LambdaFunctionDeclaration lambdaMethod) throws Exception {
+
+		fNodes.push(lambdaMethod);
+		methodGlobalVars.add(new HashSet<String>());
+
+		// Declaration parentDeclaration = null;
+		// if (!declarations.empty()
+		// && declarations.peek() instanceof MethodDeclaration) {
+		// parentDeclaration = declarations.peek();
+		// // In case we are entering a nested element - just add to the
+		// // deferred list and get out of the nested element visiting process
+		// deferredDeclarations.add(lambdaMethod);
+		// return visitGeneral(lambdaMethod);
+		// }
+
+		Collection<FormalParameter> arguments = lambdaMethod.getArguments();
+		StringBuilder metadata = new StringBuilder();
+		String[] parameters;
+		ISourceElementRequestor.MethodInfo mi = new ISourceElementRequestor.MethodInfo();
+		mi.modifiers = Modifiers.AccPublic | IPHPModifiers.AccArrow;
+		if (arguments != null) {
+			parameters = new String[arguments.size()];
+			Iterator<FormalParameter> i = arguments.iterator();
+			int indx = 0;
+			while (i.hasNext()) {
+				FormalParameter arg = i.next();
+				metadata.append(arg.getName());
+				parameters[indx] = arg.getName();
+				if (arg.isVariadic()) {
+					mi.modifiers |= IPHPModifiers.AccVariadic;
+				}
+				indx++;
+				if (i.hasNext()) {
+					metadata.append(","); //$NON-NLS-1$
+				}
+			}
+		} else {
+			parameters = new String[0];
 		}
 
 		mi.parameterNames = parameters;
@@ -299,10 +362,6 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 		fNodes.push(anonymousClassDeclaration);
 		declarations.push(anonymousClassDeclaration);
-
-		for (PHPSourceElementRequestorExtension visitor : extensions) {
-			visitor.visit(anonymousClassDeclaration);
-		}
 
 		List<String> superClasses = new ArrayList<>();
 		String name = null;
@@ -1200,6 +1259,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		if (node instanceof LambdaFunctionDeclaration) {
 			return visit((LambdaFunctionDeclaration) node);
 		}
+		if (node instanceof ArrowFunctionDeclaration) {
+			return visit((ArrowFunctionDeclaration) node);
+		}
 		if (node instanceof AnonymousClassDeclaration) {
 			return visit((AnonymousClassDeclaration) node);
 		}
@@ -1222,6 +1284,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 		if (node instanceof LambdaFunctionDeclaration) {
 			return endvisit((LambdaFunctionDeclaration) node);
+		}
+		if (node instanceof ArrowFunctionDeclaration) {
+			return endvisit((ArrowFunctionDeclaration) node);
 		}
 		if (node instanceof AnonymousClassDeclaration) {
 			return endvisit((AnonymousClassDeclaration) node);

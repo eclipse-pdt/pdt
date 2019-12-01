@@ -18,13 +18,14 @@ import org.eclipse.dltk.core.Flags;
 public class PHPFlags extends Flags implements IPHPModifiers {
 
 	/**
-	 * Returns whether the given integer includes the <code>default</code> modifier.
-	 * That usually means that the element has no 'public', 'protected' or 'private'
-	 * modifiers at all.
+	 * Returns whether the given integer includes the <code>default</code>
+	 * modifier. That usually means that the element has no 'public',
+	 * 'protected' or 'private' modifiers at all.
 	 * 
 	 * @param flags
 	 *            the flags
-	 * @return <code>true</code> if the <code>default</code> modifier is included
+	 * @return <code>true</code> if the <code>default</code> modifier is
+	 *         included
 	 */
 	public static boolean isDefault(int flags) {
 		return !isPrivate(flags) && !isProtected(flags) && !isPublic(flags);
@@ -36,7 +37,8 @@ public class PHPFlags extends Flags implements IPHPModifiers {
 	 * 
 	 * @param flags
 	 *            the flags
-	 * @return <code>true</code> if the <code>namespace</code> modifier is included
+	 * @return <code>true</code> if the <code>namespace</code> modifier is
+	 *         included
 	 */
 	public static boolean isNamespace(int flags) {
 		return (flags & AccNameSpace) != 0;
@@ -48,7 +50,8 @@ public class PHPFlags extends Flags implements IPHPModifiers {
 	 * 
 	 * @param flags
 	 *            the flags
-	 * @return <code>true</code> if the <code>namespace</code> modifier is included
+	 * @return <code>true</code> if the <code>namespace</code> modifier is
+	 *         included
 	 */
 	public static boolean isTrait(int flags) {
 		return (flags & AccTrait) != 0;
@@ -64,14 +67,16 @@ public class PHPFlags extends Flags implements IPHPModifiers {
 	 * 
 	 * @param flags
 	 *            the flags
-	 * @return <code>true</code> if the <code>constant</code> modifier is included
+	 * @return <code>true</code> if the <code>constant</code> modifier is
+	 *         included
 	 */
 	public static boolean isConstant(int flags) {
 		return (flags & AccConstant) != 0;
 	}
 
 	/**
-	 * Returns whether the given integer includes the <code>class</code> modifier.
+	 * Returns whether the given integer includes the <code>class</code>
+	 * modifier.
 	 * 
 	 * @param flags
 	 *            the flags

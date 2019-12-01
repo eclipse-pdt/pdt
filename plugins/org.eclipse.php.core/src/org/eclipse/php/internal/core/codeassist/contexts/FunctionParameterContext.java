@@ -13,6 +13,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.contexts;
 
+import org.eclipse.dltk.annotations.NonNull;
+import org.eclipse.dltk.core.CompletionRequestor;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.php.core.codeassist.ICompletionScope.Type;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
 /**
@@ -30,10 +34,22 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
  */
 public abstract class FunctionParameterContext extends FunctionDeclarationContext {
 
+	@Override
+	public boolean isValid(@NonNull ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+		if (!super.isValid(sourceModule, offset, requestor)) {
+			return false;
+		}
+		if (this.getCompanion().getScope().getType() == Type.HEAD) {
+			return true;
+		}
+
+		return false;
+	}
+
 	/**
-	 * Scans the function parameters from the end to the beginning, and looks for
-	 * the special character that determines what kind of code assist should we
-	 * invoke:
+	 * Scans the function parameters from the end to the beginning, and looks
+	 * for the special character that determines what kind of code assist should
+	 * we invoke:
 	 * <ul>
 	 * <li>'$' means: variable code assist</li>
 	 * <li>'=' means: variable initializer code assist</li>

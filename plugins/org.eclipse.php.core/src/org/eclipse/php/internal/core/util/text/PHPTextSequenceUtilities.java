@@ -69,16 +69,16 @@ public class PHPTextSequenceUtilities {
 
 	/**
 	 * This function returns statement text depending on the current offset. It
-	 * searches backwards (starting from offset - 1) until it finds delimiter ';',
-	 * '{' or '}'.
+	 * searches backwards (starting from offset - 1) until it finds delimiter
+	 * ';', '{' or '}'.
 	 * 
 	 * @param offset
 	 *            The absolute offset in the document
 	 * @param sdRegion
 	 *            Structured document region of the offset
 	 * @param removeComments
-	 *            Flag determining whether to remove comments in the resulted text
-	 *            sequence
+	 *            Flag determining whether to remove comments in the resulted
+	 *            text sequence
 	 * 
 	 * @return text sequence of the statement, cannot be null
 	 */
@@ -89,31 +89,32 @@ public class PHPTextSequenceUtilities {
 
 	/**
 	 * This function returns statement text depending on the current offset. It
-	 * searches backwards (starting from offset - 1) until it finds delimiter ';',
-	 * '{' or '}'.
+	 * searches backwards (starting from offset - 1) until it finds delimiter
+	 * ';', '{' or '}'.
 	 * 
 	 * @param offset
 	 *            The absolute offset in the document
 	 * @param sdRegion
 	 *            Structured document region of the offset
 	 * @param removeComments
-	 *            Flag determining whether to remove comments in the resulted text
-	 *            sequence
+	 *            Flag determining whether to remove comments in the resulted
+	 *            text sequence
 	 * @param ignoreDelimiters
 	 *            Delimiter types that will be ignored while searching backwards
 	 *            (ignoreDelimiters can be null). Supported delimiter types are
-	 *            PHPRegionTypes.PHP_CURLY_OPEN, PHPRegionTypes.PHP_CURLY_CLOSE and
-	 *            PHPRegionTypes.PHP_SEMICOLON
+	 *            PHPRegionTypes.PHP_CURLY_OPEN, PHPRegionTypes.PHP_CURLY_CLOSE
+	 *            and PHPRegionTypes.PHP_SEMICOLON
 	 * @param limit
-	 *            Controls how many times a delimiter (from ignoreDelimiters) should
-	 *            be ignored. 0 or less means no limit.
+	 *            Controls how many times a delimiter (from ignoreDelimiters)
+	 *            should be ignored. 0 or less means no limit.
 	 * @param foundDelimiter
-	 *            If foundDelimiter is not null and foundDelimiter length is greater
-	 *            than 0 then foundDelimiter[0] will contain the delimiter region
-	 *            found while searching backwards (or null if no delimiter was
-	 *            found, typically when the backward search reached the beginning of
-	 *            sdRegion). Note that the foundDelimiter[0] offset will be
-	 *            <b>relative to the beginning of the document</b>.
+	 *            If foundDelimiter is not null and foundDelimiter length is
+	 *            greater than 0 then foundDelimiter[0] will contain the
+	 *            delimiter region found while searching backwards (or null if
+	 *            no delimiter was found, typically when the backward search
+	 *            reached the beginning of sdRegion). Note that the
+	 *            foundDelimiter[0] offset will be <b>relative to the beginning
+	 *            of the document</b>.
 	 * 
 	 * @return text sequence of the statement, cannot be null
 	 */
@@ -207,13 +208,14 @@ public class PHPTextSequenceUtilities {
 
 	/**
 	 * <p>
-	 * This function returns statement region depending on the current offset. It
-	 * searches backwards (starting from offset - 1) until it finds ';', '{' or '}'.
+	 * This function returns statement region depending on the current offset.
+	 * It searches backwards (starting from offset - 1) until it finds ';', '{'
+	 * or '}'.
 	 * </p>
 	 * <p>
-	 * <b> Be careful, empty region can be returned (i.e. region's length is 0) when
-	 * no statement was found. In this case, the offset from the returned region has
-	 * no special meaning.
+	 * <b> Be careful, empty region can be returned (i.e. region's length is 0)
+	 * when no statement was found. In this case, the offset from the returned
+	 * region has no special meaning.
 	 * </p>
 	 * </b>
 	 * 
@@ -283,51 +285,6 @@ public class PHPTextSequenceUtilities {
 		}
 		if (textSequence.length() > offset && textSequence.charAt(offset) == ')') {
 			return offset + 1;
-		}
-		return -1;
-	}
-
-	/**
-	 * Checks if we are inside function declaration statement. If yes the start
-	 * offset of the function, otherwise returns -1.
-	 */
-	public static int isInFunctionDeclaration(@NonNull TextSequence textSequence) {
-		Matcher matcher = FUNCTION_PATTERN.matcher(textSequence);
-		// search for the 'function' word.
-		while (matcher.find()) {
-			// verify char before 'function' word.
-			int functionStart = matcher.start();
-			if (functionStart != 0 && Character.isJavaIdentifierStart(textSequence.charAt(functionStart - 1))) {
-				continue;
-			}
-
-			// verfy state
-			String type = TextSequenceUtilities.getType(textSequence, functionStart + 1);
-			if (PHPPartitionTypes.isPHPRegularState(type)) {
-				// verify the function is not closed.
-				int offset;
-				boolean possibleReturnType = false;
-				boolean returnType = false;
-				for (offset = matcher.end(); offset < textSequence.length(); offset++) {
-					if (textSequence.charAt(offset) == ')') {
-						// verify state
-						type = TextSequenceUtilities.getType(textSequence, offset);
-						if (PHPPartitionTypes.isPHPRegularState(type)) {
-							possibleReturnType = true;
-						}
-					} else if ((possibleReturnType || returnType) && textSequence.charAt(offset) == '{') {
-						break;
-					} else if (possibleReturnType && textSequence.charAt(offset) == ':') {
-						possibleReturnType = false;
-						returnType = true;
-					} else if (possibleReturnType && !Character.isWhitespace(textSequence.charAt(offset))) {
-						break;
-					}
-				}
-				if (offset == textSequence.length()) {
-					return functionStart;
-				}
-			}
 		}
 		return -1;
 	}
@@ -565,7 +522,8 @@ public class PHPTextSequenceUtilities {
 	}
 
 	/**
-	 * Returns the next position on the text where one the given delimiters start
+	 * Returns the next position on the text where one the given delimiters
+	 * start
 	 * 
 	 * @param textSequence
 	 *            - The input text sequence
@@ -738,7 +696,8 @@ public class PHPTextSequenceUtilities {
 				textSequence = textSequence.subSequence(1, textSequence.length());
 			}
 			if (textSequence == null) {
-				// should never happen (but makes @Nullable control for parameter textSequence
+				// should never happen (but makes @Nullable control for
+				// parameter textSequence
 				// happy)
 				return args.toArray(new String[args.size()]);
 			}
