@@ -23,18 +23,6 @@ import java.util.Map;
 public enum PHPVersion {
 
 	PHP5("php5"), //$NON-NLS-1$
-
-	/**
-	 * This 5.3 is a major version - it should be 5.0, actually.
-	 * <p>
-	 * New in this version:
-	 * <ul>
-	 * <li><a href="http://www.php.net/language.namespaces">Namespaces</a>
-	 * <li><a href="http://wiki.php.net/rfc/closures">Closures</a>
-	 * <li><a href="http://www.php.net/oop5.late-static-bindings">Late Static
-	 * Binding</a>
-	 * </ul>
-	 */
 	PHP5_3("php5.3"), //$NON-NLS-1$
 	PHP5_4("php5.4"), //$NON-NLS-1$
 	PHP5_5("php5.5"), //$NON-NLS-1$
@@ -43,7 +31,10 @@ public enum PHPVersion {
 	PHP7_1("php7.1"), //$NON-NLS-1$
 	PHP7_2("php7.2"), //$NON-NLS-1$
 	PHP7_3("php7.3"), //$NON-NLS-1$
-	PHP7_4("php7.4", true); //$NON-NLS-1$
+	/**
+	 * @since 7.0
+	 */
+	PHP7_4("php7.4"); //$NON-NLS-1$
 
 	private String alias;
 	private boolean isExperimentalSupport;
