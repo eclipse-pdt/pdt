@@ -64,7 +64,8 @@ public final class TypeStatementContext extends AbstractGlobalStatementContext {
 
 			if (scope.getType() == ICompletionScope.Type.FIELD || scope.getType() == ICompletionScope.Type.FUNCTION
 					|| scope.getType() == ICompletionScope.Type.TRAIT_USE
-					|| scope.getType() == ICompletionScope.Type.TRAIT_PRECEDENCE) {
+					|| scope.getType() == ICompletionScope.Type.TRAIT_PRECEDENCE
+					|| scope.getType() == ICompletionScope.Type.TYPE_STATEMENT) {
 				scope = scope.getParent();
 			}
 			if (scope.getType() != ICompletionScope.Type.BLOCK) {

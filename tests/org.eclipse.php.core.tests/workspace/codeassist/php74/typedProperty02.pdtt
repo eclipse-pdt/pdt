@@ -1,0 +1,11 @@
+--TEST--
+
+--FILE--
+<?php 
+class Foo {}
+class Bar {
+	private static Fo| $x;
+}
+
+--EXPECT--
+type(Foo)
