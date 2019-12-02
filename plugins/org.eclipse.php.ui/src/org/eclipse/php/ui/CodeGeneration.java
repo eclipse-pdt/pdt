@@ -700,13 +700,19 @@ public class CodeGeneration {
 			formalParameters = methodDeclaration.getFunction().formalParameters();
 			Identifier returnType = methodDeclaration.getFunction().getReturnType();
 			if (returnType != null) {
+				String returnTypeName;
+				if (useFQN) {
+					returnTypeName = resolveFQN(returnType, method.getSourceModule());
+				} else {
+					returnTypeName = returnType.getName();
+				}
 				if (returnType.isNullable()) {
 					StringBuilder returnTypeBuffer = new StringBuilder();
-					returnTypeBuffer.append(returnType.getName()).append(Constants.TYPE_SEPARATOR_CHAR)
+					returnTypeBuffer.append(returnTypeName).append(Constants.TYPE_SEPARATOR_CHAR)
 							.append(PHPSimpleTypes.NULL.getTypeName());
 					retType = returnTypeBuffer.toString();
 				} else {
-					retType = returnType.getName();
+					retType = returnTypeName;
 				}
 			}
 		} else if (elementAt instanceof FunctionDeclaration) {
@@ -715,13 +721,19 @@ public class CodeGeneration {
 			formalParameters = functionDeclaration.formalParameters();
 			Identifier returnType = functionDeclaration.getReturnType();
 			if (returnType != null) {
+				String returnTypeName;
+				if (useFQN) {
+					returnTypeName = resolveFQN(returnType, method.getSourceModule());
+				} else {
+					returnTypeName = returnType.getName();
+				}
 				if (returnType.isNullable()) {
 					StringBuilder returnTypeBuffer = new StringBuilder();
-					returnTypeBuffer.append(returnType.getName()).append(Constants.TYPE_SEPARATOR_CHAR)
+					returnTypeBuffer.append(returnTypeName).append(Constants.TYPE_SEPARATOR_CHAR)
 							.append(PHPSimpleTypes.NULL.getTypeName());
 					retType = returnTypeBuffer.toString();
 				} else {
-					retType = returnType.getName();
+					retType = returnTypeName;
 				}
 			}
 		}
@@ -734,7 +746,13 @@ public class CodeGeneration {
 					ClassInstanceCreation cic = (ClassInstanceCreation) throwStatement.getExpression();
 					if (cic.getClassName().getName() instanceof Identifier) {
 						Identifier name = (Identifier) cic.getClassName().getName();
-						exceptions.add(name.getName());
+						String className;
+						if (useFQN) {
+							className = resolveFQN(name, method.getSourceModule());
+						} else {
+							className = name.getName();
+						}
+						exceptions.add(className);
 					}
 				}
 				if (expression instanceof Variable) {
