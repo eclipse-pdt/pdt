@@ -1,0 +1,35 @@
+--TEST--
+Bug 553383 - fix PHPDoc generation for functions throwing exceptions
+--FILE--
+<?php
+namespace A;
+
+class B
+{
+    /**|
+    public function foo()
+    {
+        try {
+        } catch (\Exception $ex) {
+            throw $ex;
+        } 
+    }
+}
+--EXPECT--
+<?php
+namespace A;
+
+class B
+{
+    /**
+     * 
+     * @throws \Exception
+     */
+    public function foo()
+    {
+        try {
+        } catch (\Exception $ex) {
+            throw $ex;
+        } 
+    }
+}
