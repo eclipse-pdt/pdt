@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2019 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -23,6 +23,7 @@ import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.core.compiler.ast.nodes.CatchClause;
+import org.eclipse.php.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 
@@ -42,7 +43,19 @@ public class CatchClauseEvaluator extends GoalEvaluator {
 		List<TypeReference> classNames = catchClause.getClassNames();
 		for (TypeReference className : classNames) {
 			if (className != null) {
-				result.add(PHPClassType.fromSimpleReference(className));
+				String typeName = className.getName();
+				String namespace = null;
+				if (className instanceof FullyQualifiedReference) {
+					FullyQualifiedReference fqn = (FullyQualifiedReference) className;
+					if (fqn.getNamespace() != null) {
+						namespace = fqn.getNamespace().getName();
+					}
+				}
+				if (namespace != null) {
+					result.add(new PHPClassType(namespace, typeName));
+				} else {
+					result.add(new PHPClassType(typeName));
+				}
 			}
 		}
 		return IGoal.NO_GOALS;

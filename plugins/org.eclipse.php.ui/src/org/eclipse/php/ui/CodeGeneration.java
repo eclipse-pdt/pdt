@@ -734,7 +734,13 @@ public class CodeGeneration {
 					ClassInstanceCreation cic = (ClassInstanceCreation) throwStatement.getExpression();
 					if (cic.getClassName().getName() instanceof Identifier) {
 						Identifier name = (Identifier) cic.getClassName().getName();
-						exceptions.add(name.getName());
+						String className;
+						if (useFQN) {
+							className = resolveFQN(name, method.getSourceModule());
+						} else {
+							className = name.getName();
+						}
+						exceptions.add(className);
 					}
 				}
 				if (expression instanceof Variable) {

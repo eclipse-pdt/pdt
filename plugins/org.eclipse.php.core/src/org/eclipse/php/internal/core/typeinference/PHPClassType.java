@@ -61,8 +61,7 @@ public class PHPClassType extends ClassType implements IClassType {
 			// check is global namespace
 			if (typeName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
 				// make the type name fully qualified:
-				typeName = new StringBuilder().append(NamespaceReference.NAMESPACE_SEPARATOR).append(typeName)
-						.toString();
+				typeName = new StringBuilder(NamespaceReference.NAMESPACE_DELIMITER).append(typeName).toString();
 				i += 1;
 			}
 			this.namespace = typeName.substring(0, i);
@@ -71,22 +70,25 @@ public class PHPClassType extends ClassType implements IClassType {
 	}
 
 	/**
-	 * Constructs evaluated type for PHP class or interface that was declared under
-	 * some namespace
+	 * Constructs evaluated type for PHP class or interface that was declared
+	 * under some namespace
 	 */
 	public PHPClassType(String namespace, String typeName) {
 		if (namespace == null || typeName == null) {
 			throw new IllegalArgumentException();
 		}
 
-		// make the namespace fully qualified
-		if (namespace.length() > 0 && namespace.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
-			namespace = NamespaceReference.NAMESPACE_SEPARATOR + namespace;
+		if (namespace.length() == 0 || namespace.equals(NamespaceReference.NAMESPACE_DELIMITER)) {
+			global = true;
+			this.namespace = ""; // $NON-NLS-1$
+		} else if (namespace.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+			this.namespace = namespace;
+		} else {
+			// make the namespace fully qualified
+			this.namespace = new StringBuilder(NamespaceReference.NAMESPACE_DELIMITER).append(namespace).toString();
 		}
-
-		this.namespace = namespace;
-		this.typeName = new StringBuilder(namespace).append(NamespaceReference.NAMESPACE_SEPARATOR).append(typeName)
-				.toString();
+		this.typeName = new StringBuilder(this.namespace).append(NamespaceReference.NAMESPACE_DELIMITER)
+				.append(typeName).toString();
 	}
 
 	/**
@@ -100,8 +102,8 @@ public class PHPClassType extends ClassType implements IClassType {
 	}
 
 	/**
-	 * Returns namespace name part of this type or <code>null</code> if the type is
-	 * not declared under some namespace
+	 * Returns namespace name part of this type or <code>null</code> if the type
+	 * is not declared under some namespace
 	 * 
 	 * @return namespace name part or null
 	 */
