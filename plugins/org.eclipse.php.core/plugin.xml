@@ -527,4 +527,14 @@
             class="org.eclipse.php.internal.core.compiler.ast.validator.VariableValidator">
       </validator>
    </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="org.eclipse.php.internal.core.expressions.BuildpathPropertyTester"
+            id="org.eclipse.php.core.buildpathPropertyTester"
+            namespace="org.eclipse.php"
+            properties="isOnBuildpath"
+            type="org.eclipse.core.resources.IResource">
+      </propertyTester>
+   </extension>
 </plugin>

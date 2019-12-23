@@ -2694,10 +2694,12 @@
 						<and>
 							<instanceof	value="org.eclipse.core.resources.IFile" />
 							<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.core.PHPNature" />
+							<test property="org.eclipse.php.isOnBuildpath" />
 						</and>							
 						<and>
 							<instanceof	value="org.eclipse.core.resources.IFolder" />
 							<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.php.core.PHPNature" />
+							<test property="org.eclipse.php.isOnBuildpath" />
 						</and>
 						<instanceof value="org.eclipse.dltk.core.IModelElement" />
 					</or>

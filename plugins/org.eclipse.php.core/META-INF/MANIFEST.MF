@@ -20,7 +20,8 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.4.0",
  org.eclipse.wst.common.project.facet.core,
  org.eclipse.ltk.core.refactoring,
  org.apache.commons.lang3,
- org.eclipse.dltk.annotations;resolution:=optional
+ org.eclipse.dltk.annotations;resolution:=optional,
+ org.eclipse.core.expressions
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.php.core,
  org.eclipse.php.core.validation,
@@ -39,6 +40,7 @@ Export-Package: org.eclipse.php.core,
  org.eclipse.php.core.project,
  org.eclipse.php.core.util,
  org.eclipse.php.internal.core.adapters;x-internal:=true,
+ org.eclipse.php.internal.core.expressions;x-internal:=true,
  org.eclipse.php.internal.core;
   x-friends:="org.eclipse.php.refactoring.core.tests,
    org.eclipse.php.refactoring.core,
