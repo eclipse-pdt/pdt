@@ -82,6 +82,7 @@ final public class ZendFrameworkFormatterPreferences implements ICodeFormatterPr
 		preferences.insert_space_after_opening_paren_in_switch = false;
 		preferences.insert_space_after_opening_paren_in_while = false;
 		preferences.insert_space_after_postfix_expression = false;
+		preferences.insert_space_after_concatenation_operation = true;
 		preferences.insert_space_after_prefix_expression = true;
 		preferences.insert_space_after_conditional_question_mark = true;
 		preferences.insert_space_after_semicolon_in_for = true;
@@ -137,6 +138,7 @@ final public class ZendFrameworkFormatterPreferences implements ICodeFormatterPr
 		preferences.insert_space_before_opening_paren_in_switch = true;
 		preferences.insert_space_before_opening_paren_in_while = true;
 		preferences.insert_space_before_postfix_expression = true;
+		preferences.insert_space_before_concatenation_operation = true;
 		preferences.insert_space_before_prefix_expression = false;
 		preferences.insert_space_before_conditional_question_mark = true;
 		preferences.insert_space_before_semicolon = false;

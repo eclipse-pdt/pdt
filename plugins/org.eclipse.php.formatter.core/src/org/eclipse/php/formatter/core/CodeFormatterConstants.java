@@ -972,6 +972,20 @@ public class CodeFormatterConstants {
 			+ ".formatter.insert_space_after_postfix_operator"; //$NON-NLS-1$
 	/**
 	 * <pre>
+	 * FORMATTER / Option to insert a space after a concatenation operator
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_after_concatenation_operator&quot;
+	 *     - possible values:   { INSERT, DO_NOT_INSERT }
+	 *     - default:           DO_NOT_INSERT
+	 * </pre>
+	 * 
+	 * @see JavaCore#INSERT
+	 * @see JavaCore#DO_NOT_INSERT
+	 * @since 7.1
+	 */
+	public static final String FORMATTER_INSERT_SPACE_AFTER_CONCATENATION_OPERATOR = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.insert_space_after_concatenation_operator"; //$NON-NLS-1$
+	/**
+	 * <pre>
 	 * FORMATTER / Option to insert a space after a prefix operator
 	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_after_prefix_operator&quot;
 	 *     - possible values:   { INSERT, DO_NOT_INSERT }
@@ -1499,7 +1513,6 @@ public class CodeFormatterConstants {
 	 */
 	public static final String FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_METHOD_INVOCATION = FormatterCorePlugin.PLUGIN_ID
 			+ ".formatter.insert_space_before_opening_paren_in_method_invocation"; //$NON-NLS-1$
-
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before the opening parenthesis in a switch statement
@@ -1514,7 +1527,6 @@ public class CodeFormatterConstants {
 	 */
 	public static final String FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_SWITCH = FormatterCorePlugin.PLUGIN_ID
 			+ ".formatter.insert_space_before_opening_paren_in_switch"; //$NON-NLS-1$
-
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before the opening parenthesis in a while statement
@@ -1529,7 +1541,6 @@ public class CodeFormatterConstants {
 	 */
 	public static final String FORMATTER_INSERT_SPACE_BEFORE_OPENING_PAREN_IN_WHILE = FormatterCorePlugin.PLUGIN_ID
 			+ ".formatter.insert_space_before_opening_paren_in_while"; //$NON-NLS-1$
-
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before a postfix operator
@@ -1544,6 +1555,20 @@ public class CodeFormatterConstants {
 	 */
 	public static final String FORMATTER_INSERT_SPACE_BEFORE_POSTFIX_OPERATOR = FormatterCorePlugin.PLUGIN_ID
 			+ ".formatter.insert_space_before_postfix_operator"; //$NON-NLS-1$
+	/**
+	 * <pre>
+	 * FORMATTER / Option to insert a space before a concatenation operator
+	 *     - option id:         &quot;org.eclipse.php.formatter.core.insert_space_before_concatenation_operator&quot;
+	 *     - possible values:   { INSERT, DO_NOT_INSERT }
+	 *     - default:           DO_NOT_INSERT
+	 * </pre>
+	 * 
+	 * @see JavaCore#INSERT
+	 * @see JavaCore#DO_NOT_INSERT
+	 * @since 7.1
+	 */
+	public static final String FORMATTER_INSERT_SPACE_BEFORE_CONCATENATION_OPERATOR = FormatterCorePlugin.PLUGIN_ID
+			+ ".formatter.insert_space_before_concatenation_operator"; //$NON-NLS-1$
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before a prefix operator
@@ -1572,7 +1597,6 @@ public class CodeFormatterConstants {
 	 */
 	public static final String FORMATTER_INSERT_SPACE_BEFORE_QUESTION_IN_CONDITIONAL = FormatterCorePlugin.PLUGIN_ID
 			+ ".formatter.insert_space_before_question_in_conditional"; //$NON-NLS-1$
-
 	/**
 	 * <pre>
 	 * FORMATTER / Option to insert a space before semicolon

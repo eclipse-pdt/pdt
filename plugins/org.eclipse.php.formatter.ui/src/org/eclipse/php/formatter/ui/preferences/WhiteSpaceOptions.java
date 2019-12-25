@@ -195,7 +195,7 @@ public final class WhiteSpaceOptions {
 
 	private final static String CLASS_DECL_PREVIEW = "class MyClass implements I0, I1, I2 {}"; //$NON-NLS-1$
 
-	private final static String OPERATOR_PREVIEW = "$a= -4 + -9; $b= $a++ / --$number; $c += 4; $value= true && false;"; //$NON-NLS-1$
+	private final static String OPERATOR_PREVIEW = "$a= -4 + -9; $b= $a++ / --$number; $c += 4; $value= true && false; $txt = 'abc' . 'def';"; //$NON-NLS-1$
 
 	private final static String CAST_PREVIEW = "$s= (string)$object;"; //$NON-NLS-1$
 
@@ -531,6 +531,8 @@ public final class WhiteSpaceOptions {
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_PREFIX_OPERATOR, OPERATOR_PREVIEW);
 		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_postfix_operator,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_POSTFIX_OPERATOR, OPERATOR_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_concatenation_operator,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CONCATENATION_OPERATOR, OPERATOR_PREVIEW);
 	}
 
 	private static void createBeforeClosingBracketTree(Map<String, Object> workingValues, final InnerNode parent) {
@@ -717,6 +719,8 @@ public final class WhiteSpaceOptions {
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_PREFIX_OPERATOR, OPERATOR_PREVIEW);
 		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_postfix_operator,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_POSTFIX_OPERATOR, OPERATOR_PREVIEW);
+		createOption(parent, workingValues, FormatterMessages.WhiteSpaceOptions_concatenation_operator,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_CONCATENATION_OPERATOR, OPERATOR_PREVIEW);
 	}
 
 	private static void createAfterOpenBracketTree(Map<String, Object> workingValues, final InnerNode parent) {
@@ -822,6 +826,10 @@ public final class WhiteSpaceOptions {
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_POSTFIX_OPERATOR, OPERATOR_PREVIEW);
 		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_operators_after_postfix_operators,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_POSTFIX_OPERATOR, OPERATOR_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_operators_before_concatenation_operators,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CONCATENATION_OPERATOR, OPERATOR_PREVIEW);
+		createOption(root, workingValues, FormatterMessages.WhiteSpaceTabPage_operators_after_concatenation_operators,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_CONCATENATION_OPERATOR, OPERATOR_PREVIEW);
 		return root;
 	}
 

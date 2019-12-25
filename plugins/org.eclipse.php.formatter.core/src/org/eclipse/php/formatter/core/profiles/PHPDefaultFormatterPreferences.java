@@ -61,6 +61,8 @@ public final class PHPDefaultFormatterPreferences implements ICodeFormatterPrefe
 		preferences.insert_space_after_binary_operation = true;
 		preferences.insert_space_before_postfix_expression = true;
 		preferences.insert_space_after_postfix_expression = false;
+		preferences.insert_space_before_concatenation_operation = true;
+		preferences.insert_space_after_concatenation_operation = true;
 		preferences.insert_space_before_prefix_expression = false;
 		preferences.insert_space_after_prefix_expression = true;
 		preferences.insert_space_before_unary_expression = false;

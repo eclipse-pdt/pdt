@@ -73,6 +73,8 @@ public class CodeFormatterPreferences {
 	public boolean insert_space_after_binary_operation;
 	public boolean insert_space_before_postfix_expression;
 	public boolean insert_space_after_postfix_expression;
+	public boolean insert_space_before_concatenation_operation;
+	public boolean insert_space_after_concatenation_operation;
 	public boolean insert_space_before_prefix_expression;
 	public boolean insert_space_after_prefix_expression;
 	public boolean insert_space_before_unary_expression;
@@ -389,6 +391,12 @@ public class CodeFormatterPreferences {
 		insert_space_after_postfix_expression = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_POSTFIX_OPERATOR,
 				insert_space_after_postfix_expression);
+		insert_space_before_concatenation_operation = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CONCATENATION_OPERATOR,
+				insert_space_before_concatenation_operation);
+		insert_space_after_concatenation_operation = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_CONCATENATION_OPERATOR,
+				insert_space_after_concatenation_operation);
 		insert_space_before_prefix_expression = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_PREFIX_OPERATOR,
 				insert_space_before_prefix_expression);
@@ -1143,6 +1151,10 @@ public class CodeFormatterPreferences {
 				insert_space_after_postfix_expression ? TRUE : FALSE);
 		options.put(CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_POSTFIX_OPERATOR,
 				insert_space_before_postfix_expression ? TRUE : FALSE);
+		options.put(CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CONCATENATION_OPERATOR,
+				insert_space_before_concatenation_operation ? TRUE : FALSE);
+		options.put(CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_CONCATENATION_OPERATOR,
+				insert_space_after_concatenation_operation ? TRUE : FALSE);
 		options.put(CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_PREFIX_OPERATOR,
 				insert_space_before_prefix_expression ? TRUE : FALSE);
 		options.put(CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_PREFIX_OPERATOR,

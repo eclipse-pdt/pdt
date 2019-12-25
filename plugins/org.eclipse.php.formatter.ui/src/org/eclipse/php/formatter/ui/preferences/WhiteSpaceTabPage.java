@@ -573,6 +573,10 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_POSTFIX_OPERATOR);
 		codeFormatterPreferences.insert_space_after_postfix_expression = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_POSTFIX_OPERATOR);
+		codeFormatterPreferences.insert_space_before_concatenation_operation = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_CONCATENATION_OPERATOR);
+		codeFormatterPreferences.insert_space_after_concatenation_operation = getBooleanValue(preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_CONCATENATION_OPERATOR);
 		codeFormatterPreferences.insert_space_before_prefix_expression = getBooleanValue(preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_PREFIX_OPERATOR);
 		codeFormatterPreferences.insert_space_after_prefix_expression = getBooleanValue(preferences,

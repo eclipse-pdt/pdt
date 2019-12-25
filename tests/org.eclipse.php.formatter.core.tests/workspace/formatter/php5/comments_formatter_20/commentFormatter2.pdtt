@@ -1,0 +1,24 @@
+--TEST--
+Bug 438715 - Code formatter's add whitespace options missing for concatenation operator
+--FILE--
+<?php
+$a = - 4 + - 9;
+$b = $a ++ / -- $number;
+$c += 4;
+$value = true && false;
+$txt = 'abc'.'def';
+$a instanceof MyClass;
+foo() instanceof $myClass;
+$a instanceof $myClass;
+?>
+--EXPECT--
+<?php
+$a = - 4 + - 9;
+$b = $a ++ / -- $number;
+$c += 4;
+$value = true && false;
+$txt = 'abc' . 'def';
+$a instanceof MyClass;
+foo() instanceof $myClass;
+$a instanceof $myClass;
+?>

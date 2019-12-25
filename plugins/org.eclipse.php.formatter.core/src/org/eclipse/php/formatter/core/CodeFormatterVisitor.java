@@ -4417,8 +4417,10 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		int operator = infixExpression.getOperator();
 		boolean isStringOperator = isStringOperator(operator);
+		boolean isConcatOperator = operator == InfixExpression.OP_CONCAT;
 
-		if (isStringOperator || this.preferences.insert_space_before_binary_operation) {
+		if (isStringOperator || (!isConcatOperator && this.preferences.insert_space_before_binary_operation)
+				|| (isConcatOperator && this.preferences.insert_space_before_concatenation_operation)) {
 			insertSpace();
 		}
 
@@ -4426,7 +4428,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 		boolean isInsertNewLine = indentInfixOperand(infixExpression.getRight(), true);
 
-		if (!isInsertNewLine && (isStringOperator || this.preferences.insert_space_after_binary_operation)) {
+		if (!isInsertNewLine
+				&& (isStringOperator || (!isConcatOperator && this.preferences.insert_space_after_binary_operation)
+						|| (isConcatOperator && this.preferences.insert_space_after_concatenation_operation))) {
 			insertSpace();
 		}
 
@@ -4498,11 +4502,14 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 
 				int operator = expr.getOperator();
 				boolean isStringOperator = isStringOperator(operator);
-				if (isStringOperator || this.preferences.insert_space_before_binary_operation) {
+				boolean isConcatOperator = operator == InfixExpression.OP_CONCAT;
+				if (isStringOperator || (!isConcatOperator && this.preferences.insert_space_before_binary_operation)
+						|| (isConcatOperator && this.preferences.insert_space_before_concatenation_operation)) {
 					currentLineLength++;
 				}
 				currentLineLength += InfixExpression.getOperator(operator).length();
-				if (isStringOperator || this.preferences.insert_space_after_binary_operation) {
+				if (isStringOperator || (!isConcatOperator && this.preferences.insert_space_after_binary_operation)
+						|| (isConcatOperator && this.preferences.insert_space_after_concatenation_operation)) {
 					currentLineLength++;
 				}
 
@@ -4546,13 +4553,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements ICodeFormat
 	@Override
 	public boolean visit(InstanceOfExpression instanceOfExpression) {
 		instanceOfExpression.getExpression().accept(this);
-		if (this.preferences.insert_space_before_binary_operation) {
-			insertSpace();
-		}
+		insertSpace();
 		appendToBuffer("instanceof"); //$NON-NLS-1$
-		if (this.preferences.insert_space_after_binary_operation) {
-			insertSpace();
-		}
+		insertSpace();
 
 		// handle the chars between the variable to the value
 		handleChars(instanceOfExpression.getExpression().getEnd(), instanceOfExpression.getClassName().getStart());
