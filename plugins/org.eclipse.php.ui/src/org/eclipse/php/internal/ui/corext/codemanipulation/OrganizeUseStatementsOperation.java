@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 Alex Xu and others.
+ * Copyright (c) 2017, 2019 Alex Xu and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -21,6 +21,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.compiler.problem.IProblemIdentifier;
@@ -34,9 +36,13 @@ import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.core.search.TypeNameMatch;
 import org.eclipse.dltk.ui.viewsupport.BasicElementLabels;
 import org.eclipse.ltk.core.refactoring.*;
+import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.ast.nodes.*;
+import org.eclipse.php.core.ast.nodes.NamespaceDeclaration;
+import org.eclipse.php.core.ast.nodes.Scalar;
+import org.eclipse.php.core.ast.nodes.UseStatement;
 import org.eclipse.php.core.ast.visitor.ApplyAll;
-import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.locator.PHPElementConciliator;
 import org.eclipse.php.internal.core.ast.rewrite.ImportRewrite;
 import org.eclipse.php.internal.core.ast.rewrite.ImportRewrite.ImportRewriteContext;
@@ -63,9 +69,10 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 		 * @param openChoices
 		 *            From each array, a type reference has to be selected
 		 * @param ranges
-		 *            For each choice the range of the corresponding type reference.
-		 * @return Returns <code>null</code> to cancel the operation, or the selected
-		 *         imports.
+		 *            For each choice the range of the corresponding type
+		 *            reference.
+		 * @return Returns <code>null</code> to cancel the operation, or the
+		 *         selected imports.
 		 */
 		IElementNameMatch[] chooseImports(IElementNameMatch[][] openChoices, ISourceRange[] ranges);
 	}
@@ -241,7 +248,8 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 		}
 
 		/**
-		 * Tries to find the given element name and add it to the import structure.
+		 * Tries to find the given element name and add it to the import
+		 * structure.
 		 * 
 		 * @param ref
 		 *            the name node
@@ -797,6 +805,7 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 	static class ReferencesCollector extends ApplyAll {
 		private static final List<String> TYPE_SKIP = new ArrayList<>();
 		private static final Pattern CONSTANT_NAME = Pattern.compile("[a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*"); //$NON-NLS-1$
+		private static final List<NamespaceDeclaration> reversedNamespaceDeclarations = new ArrayList<>();
 
 		static {
 			TYPE_SKIP.add("parent"); //$NON-NLS-1$
@@ -808,6 +817,104 @@ public class OrganizeUseStatementsOperation implements IWorkspaceRunnable {
 
 		public ReferencesCollector(List<ASTNode> elementReferences) {
 			fElementReferences = elementReferences;
+		}
+
+		/**
+		 * Create a namespaced identifier whose parent is either the namespace
+		 * where it's located, or the program (if applicable).
+		 * 
+		 * @param start
+		 * @param end
+		 * @param ast
+		 * @param className
+		 * @param program
+		 * @return a NamespaceName
+		 */
+		private NamespaceName createNamespaceName(int start, int end, AST ast, String className, Program program) {
+			List<Identifier> segments = new ArrayList<>();
+			String[] names = className.split(Pattern.quote(NamespaceReference.NAMESPACE_DELIMITER));
+			boolean global = names[0].length() == 0 ? true : false;
+			int pos = start;
+			for (String name : names) {
+				if (name.length() == 0) {
+					pos++;
+					continue;
+				}
+				int nextPos = pos + name.length();
+				segments.add(new Identifier(pos, nextPos, ast, name));
+				pos = nextPos + 1;
+			}
+			NamespaceName n = new NamespaceName(start, end, ast, segments, global, false);
+			boolean foundNamespaceDeclaration = false;
+			for (NamespaceDeclaration namespaceDeclaration : reversedNamespaceDeclarations) {
+				if (namespaceDeclaration.getBody().getStart() <= n.getStart()) {
+					foundNamespaceDeclaration = true;
+					n.setParent(namespaceDeclaration, NamespaceDeclaration.BODY_PROPERTY);
+					break;
+				}
+			}
+			if (!foundNamespaceDeclaration) {
+				n.setParent(program, Program.COMMENTS_PROPERTY);
+			}
+			return n;
+		}
+
+		private boolean visitComment(NamespaceName name) {
+			if (!name.isGlobal()) {
+				if (PHPSimpleTypes.isHintable(name.getName(), name.getAST().apiLevel())
+						|| TYPE_SKIP.contains(name.getName())) {
+					return false;
+				}
+				List<Identifier> segs = name.segments();
+				if (segs.size() > 0) {
+					fElementReferences.add(name);
+				}
+			}
+			return false;
+		}
+
+		@Override
+		public boolean visit(NamespaceDeclaration decl) {
+			reversedNamespaceDeclarations.add(decl);
+			return true;
+		}
+
+		@Override
+		public void endVisit(Program program) {
+			if (program.getAST() == null || program.getAST().apiLevel().isLessThan(PHPVersion.PHP5_3)) {
+				// use statements don't seem to be supported
+				return;
+			}
+			// Sort in reverse order:
+			reversedNamespaceDeclarations.sort(new Comparator<NamespaceDeclaration>() {
+				@Override
+				public int compare(NamespaceDeclaration o1, NamespaceDeclaration o2) {
+					return o2.getStart() - o1.getStart();
+				}
+			});
+			// Extract all type references from all available comments and
+			// convert them as NamespaceNames. Each NamespaceName parent will
+			// either be the NamespaceDeclaration containing the comment (where
+			// the NamespaceName was found) or be the Program itself (if
+			// applicable).
+			ISourceModule sourceModule = program.getSourceModule();
+			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+			if (moduleDeclaration instanceof PHPModuleDeclaration) {
+				for (PHPDocBlock docBlock : ((PHPModuleDeclaration) moduleDeclaration).getPHPDocBlocks()) {
+					for (PHPDocTag tag : docBlock.getTags()) {
+						for (TypeReference reference : tag.getTypeReferences()) {
+							visitComment(createNamespaceName(reference.start(), reference.end(), program.getAST(),
+									reference.getStringRepresentation(), program));
+						}
+					}
+				}
+				for (VarComment varComment : ((PHPModuleDeclaration) moduleDeclaration).getVarComments()) {
+					for (TypeReference reference : varComment.getTypeReferences()) {
+						visitComment(createNamespaceName(reference.start(), reference.end(), program.getAST(),
+								reference.getStringRepresentation(), program));
+					}
+				}
+			}
 		}
 
 		@Override
