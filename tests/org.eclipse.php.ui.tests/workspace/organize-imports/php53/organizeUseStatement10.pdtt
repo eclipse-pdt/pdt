@@ -1,0 +1,23 @@
+--TEST--
+Test organize imports action
+--FILE--
+<?php
+namespace A;
+
+class MyClass1
+{
+}
+
+namespace B;
+
+use A\MyClass1;
+
+/**
+ * @param MyClass1 $param
+ */
+function foo($param)
+{
+}
+?>
+--EXPECT--
+This test should fail but it succeeds!!!
