@@ -14,7 +14,6 @@
 package org.eclipse.php.ui.tests.actions;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -34,6 +33,7 @@ import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
 import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.TestUtils;
@@ -83,7 +83,7 @@ public class OrganizeUseStatementsActionTests {
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<>();
 
 	static {
-		TESTS.put(PHPVersion.PHP7_0, new String[] { "/workspace/organize-imports/php53",
+		TESTS.put(PHPVersion.getLatestVersion(), new String[] { "/workspace/organize-imports/php53",
 				"/workspace/organize-imports/php54", "/workspace/organize-imports/php56" });
 	};
 
@@ -145,6 +145,7 @@ public class OrganizeUseStatementsActionTests {
 		final PdttFile pdttFile = new PdttFile(PHPUiTests.getDefault().getBundle(), fileName);
 		pdttFile.applyPreferences();
 
+		final String[] result = new String[1];
 		final Exception[] err = new Exception[1];
 		Display.getDefault().syncExec(new Runnable() {
 
@@ -155,16 +156,8 @@ public class OrganizeUseStatementsActionTests {
 					createFile(pdttFile.getFile(), Long.toString(System.currentTimeMillis()),
 							prepareOtherStreams(pdttFile));
 					openEditor();
-					String result = execute();
+					result[0] = execute();
 					closeEditor();
-					if (!pdttFile.getExpected().replace("\r", "").trim().equals(result.replace("\r", "").trim())) {
-						StringBuilder errorBuf = new StringBuilder();
-						errorBuf.append("\nEXPECTED RESULT:\n-----------------------------\n");
-						errorBuf.append(pdttFile.getExpected());
-						errorBuf.append("\nACTUAL RESULT:\n-----------------------------\n");
-						errorBuf.append(result);
-						fail(errorBuf.toString());
-					}
 				} catch (Exception e) {
 					err[0] = e;
 				}
@@ -173,6 +166,7 @@ public class OrganizeUseStatementsActionTests {
 		if (err[0] != null) {
 			throw err[0];
 		}
+		PDTTUtils.assertContents(pdttFile.getExpected(), result[0]);
 	}
 
 	protected InputStream[] prepareOtherStreams(PdttFile file) {

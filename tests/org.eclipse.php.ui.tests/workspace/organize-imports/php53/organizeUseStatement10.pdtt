@@ -1,0 +1,40 @@
+--TEST--
+Bug 558630 - Organize use statements incorrectly removes statements that are only used in comments
+--FILE--
+<?php
+namespace A;
+
+class MyClass1
+{
+}
+
+namespace B;
+
+use A\MyClass1;
+
+/**
+ * @param MyClass1 $param
+ */
+function foo($param)
+{
+}
+?>
+--EXPECT--
+<?php
+namespace A;
+
+class MyClass1
+{
+}
+
+namespace B;
+
+use A\MyClass1;
+
+/**
+ * @param MyClass1 $param
+ */
+function foo($param)
+{
+}
+?>
