@@ -32,6 +32,7 @@ import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.SourceRange;
 import org.eclipse.php.core.PHPVersion;
+import org.eclipse.php.core.tests.PDTTUtils;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.TestSuiteWatcher;
 import org.eclipse.php.core.tests.TestUtils;
@@ -81,7 +82,7 @@ public class CommandsTests {
 	public static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<>();
 
 	static {
-		TESTS.put(PHPVersion.PHP7_0, new String[] { "/workspace/commands/php53" });
+		TESTS.put(PHPVersion.getLatestVersion(), new String[] { "/workspace/commands/php53" });
 	};
 
 	@Context
@@ -125,6 +126,7 @@ public class CommandsTests {
 		final PdttFile pdttFile = new PdttFile(PHPUiTests.getDefault().getBundle(), fileName);
 		pdttFile.applyPreferences();
 
+		final String[] result = new String[1];
 		final Exception[] err = new Exception[1];
 		Display.getDefault().syncExec(new Runnable() {
 
@@ -134,16 +136,8 @@ public class CommandsTests {
 					ISourceRange range = createFile(pdttFile.getFile(), Long.toString(System.currentTimeMillis()),
 							prepareOtherStreams(pdttFile));
 					openEditor();
-					String result = selectAndExecute(getCommandId(pdttFile), range.getOffset(), range.getLength());
+					result[0] = selectAndExecute(getCommandId(pdttFile), range.getOffset(), range.getLength());
 					closeEditor();
-					if (!pdttFile.getExpected().trim().equals(result.trim())) {
-						StringBuilder errorBuf = new StringBuilder();
-						errorBuf.append("\nEXPECTED RESULT:\n-----------------------------\n");
-						errorBuf.append(pdttFile.getExpected());
-						errorBuf.append("\nACTUAL RESULT:\n-----------------------------\n");
-						errorBuf.append(result);
-						fail(errorBuf.toString());
-					}
 				} catch (Exception e) {
 					err[0] = e;
 				}
@@ -152,6 +146,7 @@ public class CommandsTests {
 		if (err[0] != null) {
 			throw err[0];
 		}
+		PDTTUtils.assertContents(pdttFile.getExpected(), result[0]);
 	}
 
 	protected InputStream[] prepareOtherStreams(PdttFile file) {
