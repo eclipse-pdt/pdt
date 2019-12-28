@@ -13,7 +13,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.*;
@@ -22,13 +24,12 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
-import org.eclipse.php.core.codeassist.ICompletionScope.Type;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
-import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext;
-import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext.Trigger;
+import org.eclipse.php.internal.core.codeassist.contexts.IClassMemberContext;
+import org.eclipse.php.internal.core.codeassist.contexts.IClassMemberContext.Trigger;
 import org.eclipse.php.internal.core.language.PHPMagicMethods;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
@@ -50,17 +51,19 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		ICompletionContext context = getContext();
-		if (!(context instanceof ClassMemberContext)) {
+		if (!(context instanceof IClassMemberContext) || !(context instanceof AbstractCompletionContext)) {
 			return;
 		}
 
-		ClassMemberContext concreteContext = (ClassMemberContext) context;
-		CompletionRequestor requestor = concreteContext.getCompletionRequestor();
+		IClassMemberContext concreteContext = (IClassMemberContext) context;
+		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
 
-		String prefix = concreteContext.getPrefix().isEmpty() ? concreteContext.getPreviousWord()
-				: concreteContext.getPrefix();
+		CompletionRequestor requestor = abstractContext.getCompletionRequestor();
+
+		String prefix = abstractContext.getPrefix().isEmpty() ? abstractContext.getPreviousWord()
+				: abstractContext.getPrefix();
 		boolean isParentCall = isParentCall(concreteContext);
-		String suffix = getSuffix(concreteContext);
+		String suffix = getSuffix(abstractContext);
 
 		ISourceRange replaceRange = null;
 		if (suffix.equals("")) { //$NON-NLS-1$
@@ -79,8 +82,6 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 				&& getCompanion().getDocument().getChar(getCompanion().getOffset() - 1) == '(') {
 			exactName = true;
 		}
-		List<IMethod> result = new LinkedList<>();
-		boolean inUseTrait = getCompanion().getScope().findParent(Type.TRAIT_USE) != null;
 		for (IType type : concreteContext.getLhsTypes()) {
 			try {
 				ITypeHierarchy hierarchy = getCompanion().getSuperTypeHierarchy(type, null);
@@ -91,32 +92,31 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 
 				boolean inConstructor = isInConstructor(type, type.getMethods(), concreteContext);
 				for (IMethod method : removeOverriddenElements(Arrays.asList(methods))) {
-
-					if (inUseTrait) {
-						// result.add(method);
-						reporter.reportMethod(method, "", //$NON-NLS-1$
-								replaceRange, ProposalExtraInfo.METHOD_ONLY | ProposalExtraInfo.FULL_NAME);
-					} else if ((!PHPModelUtils.isConstructor(method)
-							|| inConstructor && isSuperConstructor(method, type, concreteContext))
-							&& !isFiltered(method, type, concreteContext)) {
-						if (magicMethods.contains(method.getElementName())) {
-							reporter.reportMethod(method, suffix, replaceRange,
-									ProposalExtraInfo.MAGIC_METHOD | ProposalExtraInfo.FULL_NAME);
-						} else {
-							result.add(method);
-						}
-					}
+					reportMethod(method, type, concreteContext, inConstructor, magicMethods, suffix, replaceRange,
+							reporter);
 				}
 			} catch (CoreException e) {
 				PHPCorePlugin.log(e);
 			}
 		}
-		for (IMethod method : result) {
-			reporter.reportMethod(method, suffix, replaceRange, ProposalExtraInfo.FULL_NAME);
+
+	}
+
+	protected void reportMethod(IMethod method, IType type, IClassMemberContext concreteContext, boolean inConstructor,
+			Set<String> magicMethods, String suffix, ISourceRange replaceRange, ICompletionReporter reporter)
+			throws ModelException {
+		if ((!PHPModelUtils.isConstructor(method) || inConstructor && isSuperConstructor(method, type, concreteContext))
+				&& !isFiltered(method, type, concreteContext)) {
+			if (magicMethods.contains(method.getElementName())) {
+				reporter.reportMethod(method, suffix, replaceRange,
+						ProposalExtraInfo.MAGIC_METHOD | ProposalExtraInfo.FULL_NAME);
+			} else {
+				reporter.reportMethod(method, suffix, replaceRange, ProposalExtraInfo.FULL_NAME);
+			}
 		}
 	}
 
-	private boolean isInConstructor(IType type, IMethod[] methods, ClassMemberContext concreteContext) {
+	private boolean isInConstructor(IType type, IMethod[] methods, IClassMemberContext concreteContext) {
 		try {
 			for (int i = 0; i < methods.length; i++) {
 				IMethod method = methods[i];
@@ -133,7 +133,7 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 		return false;
 	}
 
-	private boolean isSuperConstructor(IMethod method, IType type, ClassMemberContext context) {
+	private boolean isSuperConstructor(IMethod method, IType type, IClassMemberContext context) {
 		if (PHPModelUtils.isConstructor(method) && context.getTriggerType() == Trigger.CLASS && isParent(context)
 				&& !method.getDeclaringType().equals(type)) {
 			return true;
@@ -147,7 +147,7 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 	 * @param context
 	 * @return
 	 */
-	private boolean isParent(ClassMemberContext context) {
+	private boolean isParent(IClassMemberContext context) {
 		return !isThisCall(context) && isParentCall(context) && isDirectParentCall(context);
 	}
 
@@ -163,7 +163,7 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 	// }
 
 	@Override
-	protected boolean showNonStaticMembers(ClassMemberContext context) {
+	protected boolean showNonStaticMembers(IClassMemberContext context) {
 		return super.showNonStaticMembers(context) || context.getTriggerType() == Trigger.CLASS;
 	}
 

@@ -26,9 +26,10 @@ import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext;
-import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext.Trigger;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassObjMemberContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassStaticMemberContext;
+import org.eclipse.php.internal.core.codeassist.contexts.IClassMemberContext;
+import org.eclipse.php.internal.core.codeassist.contexts.IClassMemberContext.Trigger;
 import org.eclipse.php.internal.core.model.PHPModelAccess;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.TraitUtils;
@@ -62,31 +63,31 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 				|| getCompanion().getPHPVersion().isGreaterThan(PHPVersion.PHP5);
 	}
 
-	protected boolean showNonStaticMembers(ClassMemberContext context) {
+	protected boolean showNonStaticMembers(IClassMemberContext context) {
 		return context.getTriggerType() == Trigger.OBJECT || isParentCall(context);
 	}
 
-	protected boolean isThisCall(ClassMemberContext context) {
+	protected boolean isThisCall(IClassMemberContext context) {
 		return ((context instanceof ClassObjMemberContext) && ((ClassObjMemberContext) context).isThis());
 	}
 
-	protected boolean isDirectThis(ClassMemberContext context) {
+	protected boolean isDirectThis(IClassMemberContext context) {
 		return ((context instanceof ClassObjMemberContext) && ((ClassObjMemberContext) context).isDirectThis());
 	}
 
-	protected boolean isSelfCall(ClassMemberContext context) {
+	protected boolean isSelfCall(IClassMemberContext context) {
 		return ((context instanceof ClassStaticMemberContext) && ((ClassStaticMemberContext) context).isSelf());
 	}
 
-	protected boolean isDirectSelfCall(ClassMemberContext context) {
+	protected boolean isDirectSelfCall(IClassMemberContext context) {
 		return ((context instanceof ClassStaticMemberContext) && ((ClassStaticMemberContext) context).isDirectSelf());
 	}
 
-	protected boolean isParentCall(ClassMemberContext context) {
+	protected boolean isParentCall(IClassMemberContext context) {
 		return ((context instanceof ClassStaticMemberContext) && ((ClassStaticMemberContext) context).isParent());
 	}
 
-	protected boolean isDirectParentCall(ClassMemberContext context) {
+	protected boolean isDirectParentCall(IClassMemberContext context) {
 		return ((context instanceof ClassStaticMemberContext) && ((ClassStaticMemberContext) context).isDirectParent());
 	}
 
@@ -115,7 +116,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	}
 
 	/**
-	 * Returns whether the specified member should be filtered from the code assist
+	 * Returns whether the specified member should be filtered from the code
+	 * assist
 	 * 
 	 * @param member
 	 * @param type
@@ -123,7 +125,11 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	 * @return
 	 * @throws ModelException
 	 */
-	protected boolean isFiltered(IMember member, IType type, ClassMemberContext context) throws ModelException {
+	protected boolean isFiltered(IMember member, IType type, ICompletionContext ctx) throws ModelException {
+		if (!(ctx instanceof ClassMemberContext)) {
+			return false;
+		}
+		ClassMemberContext context = (ClassMemberContext) ctx;
 		/* check 0 */
 		int flags = member.getFlags();
 		if (PHPFlags.isConstant(member.getFlags())) {
@@ -465,8 +471,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	}
 
 	/**
-	 * class A { static private $var = 0; function foo() { A::$var; //has an access
-	 * to private $var field } }
+	 * class A { static private $var = 0; function foo() { A::$var; //has an
+	 * access to private $var field } }
 	 * 
 	 * @param context
 	 * @return
@@ -476,8 +482,9 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	}
 
 	/**
-	 * class A { static private $var = 0; public function foo() {} } A::$var; //has
-	 * no access to private $var field A::foo(); //has access to public function foo
+	 * class A { static private $var = 0; public function foo() {} } A::$var;
+	 * //has no access to private $var field A::foo(); //has access to public
+	 * function foo
 	 * 
 	 * 
 	 * @param context
@@ -498,8 +505,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	}
 
 	/**
-	 * class A { static private $var = 0; function foo() { $a = new A(); $a->| } }
-	 * access level as for 'this' keyword in this case.
+	 * class A { static private $var = 0; function foo() { $a = new A(); $a->| }
+	 * } access level as for 'this' keyword in this case.
 	 * 
 	 * @param context
 	 * @return
@@ -522,8 +529,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	 * Removes overridden members from the completion list
 	 * 
 	 * @param members
-	 *            Class/Interface members in type hierarchy order (from bottom to
-	 *            up)
+	 *            Class/Interface members in type hierarchy order (from bottom
+	 *            to up)
 	 */
 	protected <T extends IMember> Collection<T> removeOverriddenElements(Collection<T> members) {
 		List<T> result = new LinkedList<>();

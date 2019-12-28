@@ -18,6 +18,7 @@ import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionScope;
+import org.eclipse.php.core.codeassist.ICompletionScope.Type;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.format.PHPHeuristicScanner;
 
@@ -36,16 +37,6 @@ import org.eclipse.php.internal.core.format.PHPHeuristicScanner;
 public final class TypeStatementContext extends AbstractGlobalStatementContext {
 	private boolean isAssignment = false;
 
-	public enum Type {
-		CLASS, TRAIT, INTERFACE;
-	}
-
-	private Type type;
-
-	public Type getType() {
-		return type;
-	}
-
 	@Override
 	public boolean isValid(@NonNull ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
@@ -62,25 +53,18 @@ public final class TypeStatementContext extends AbstractGlobalStatementContext {
 			}
 			ICompletionScope scope = getCompanion().getScope();
 
-			if (scope.getType() == ICompletionScope.Type.FIELD || scope.getType() == ICompletionScope.Type.FUNCTION
-					|| scope.getType() == ICompletionScope.Type.TRAIT_USE
-					|| scope.getType() == ICompletionScope.Type.TRAIT_PRECEDENCE
-					|| scope.getType() == ICompletionScope.Type.TYPE_STATEMENT) {
+			if (scope.getType() == Type.FIELD || scope.getType() == Type.FUNCTION
+					|| scope.getType() == Type.TYPE_STATEMENT) {
 				scope = scope.getParent();
 			}
-			if (scope.getType() != ICompletionScope.Type.BLOCK) {
+			if (scope.getType() != Type.BLOCK) {
 				return false;
 			}
 			scope = scope.getParent();
 			switch (scope.getType()) {
 			case CLASS:
-				type = Type.CLASS;
-				break;
 			case INTERFACE:
-				type = Type.INTERFACE;
-				break;
 			case TRAIT:
-				type = Type.TRAIT;
 				break;
 			default:
 				return false;

@@ -42,27 +42,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
  * 
  * @author michael
  */
-public abstract class ClassMemberContext extends StatementContext {
-
-	/**
-	 * Trigger type of the member invocation
-	 */
-	public enum Trigger {
-	/** Class trigger type: '::' */
-	CLASS("::"), //$NON-NLS-1$
-	/** Object trigger type: '->' */
-	OBJECT("->"),; //$NON-NLS-1$
-
-		String name;
-
-		Trigger(String name) {
-			this.name = name;
-		}
-
-		public String getName() {
-			return name;
-		}
-	}
+public abstract class ClassMemberContext extends StatementContext implements IClassMemberContext {
 
 	private Trigger triggerType;
 	private IType[] types;
@@ -71,6 +51,9 @@ public abstract class ClassMemberContext extends StatementContext {
 	@Override
 	public boolean isValid(@NonNull ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
+			return false;
+		}
+		if (this.getCompanion().getScope().findParent(Type.TRAIT_CONFLICT) != null) {
 			return false;
 		}
 
@@ -115,8 +98,7 @@ public abstract class ClassMemberContext extends StatementContext {
 		} catch (ModelException e) {
 			PHPCorePlugin.log(e);
 		}
-		tmpTypes.addAll(Arrays.asList(
-				getCompanion().getLeftHandType(this, getCompanion().getScope().findParent(Type.TRAIT_USE) == null)));
+		tmpTypes.addAll(Arrays.asList(getCompanion().getLeftHandType(this, true)));
 		types = tmpTypes.toArray(new IType[0]);
 		return true;
 	}

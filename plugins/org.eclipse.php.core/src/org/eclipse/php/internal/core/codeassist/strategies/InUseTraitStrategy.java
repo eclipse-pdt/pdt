@@ -44,10 +44,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 /**
- * This strategy completes builtin array keys, like in _SERVER.
- * 
- * body only
- * 
  * @author michael
  */
 public class InUseTraitStrategy extends AbstractCompletionStrategy {

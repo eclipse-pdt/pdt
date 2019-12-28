@@ -150,7 +150,8 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 	}
 
 	/**
-	 * Returns whether the left hand side expression has the type of parent class
+	 * Returns whether the left hand side expression has the type of parent
+	 * class
 	 */
 	public boolean isParent() {
 		return isParent;

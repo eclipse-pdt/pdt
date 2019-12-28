@@ -27,13 +27,13 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.PHPVersion;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionReporter;
-import org.eclipse.php.core.codeassist.ICompletionScope.Type;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext;
-import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext.Trigger;
+import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassStaticMemberContext;
+import org.eclipse.php.internal.core.codeassist.contexts.IClassMemberContext;
+import org.eclipse.php.internal.core.codeassist.contexts.IClassMemberContext.Trigger;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.typeinference.FakeField;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
@@ -60,18 +60,17 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 	@Override
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		ICompletionContext context = getContext();
-		if (!(context instanceof ClassMemberContext)) {
+		if (!(context instanceof IClassMemberContext) || !(context instanceof AbstractCompletionContext)) {
 			return;
 		}
+		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
+		IClassMemberContext concreteContext = (IClassMemberContext) context;
+		CompletionRequestor requestor = abstractContext.getCompletionRequestor();
 
-		ClassMemberContext concreteContext = (ClassMemberContext) context;
-		CompletionRequestor requestor = concreteContext.getCompletionRequestor();
-
-		String prefix = concreteContext.getPrefix();
+		String prefix = abstractContext.getPrefix();
 		ISourceRange replaceRange = getReplacementRange(concreteContext);
 
 		List<IField> result = new LinkedList<>();
-		boolean inUseTrait = getCompanion().getScope().findParent(Type.TRAIT_USE) != null;
 		for (IType type : concreteContext.getLhsTypes()) {
 			try {
 				ITypeHierarchy hierarchy = getCompanion().getSuperTypeHierarchy(type, null);
@@ -92,9 +91,7 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 				}
 
 				for (IField field : removeOverriddenElements(Arrays.asList(fields))) {
-					if (inUseTrait) {
-						result.add(field);
-					} else if (!isFiltered(field, type, concreteContext)) {
+					if (!isFiltered(field, type, concreteContext)) {
 						result.add(field);
 					}
 				}
@@ -103,7 +100,7 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 			}
 		}
 		if (concreteContext instanceof ClassStaticMemberContext && concreteContext.getTriggerType() == Trigger.CLASS
-				&& !inUseTrait && PHPVersion.PHP5_4.isLessThan(getCompanion().getPHPVersion())
+				&& PHPVersion.PHP5_4.isLessThan(getCompanion().getPHPVersion())
 				&& (CLASS_KEYWORD.startsWith(prefix.toLowerCase()) || CLASS_KEYWORD.equals(prefix.toLowerCase()))) {
 			try {
 				ITextRegion phpToken = getCompanion().getPHPScriptRegion()
@@ -133,7 +130,7 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 	}
 
 	@Override
-	protected boolean showNonStaticMembers(ClassMemberContext context) {
+	protected boolean showNonStaticMembers(IClassMemberContext context) {
 		return super.showNonStaticMembers(context) && !isParentCall(context);
 	}
 

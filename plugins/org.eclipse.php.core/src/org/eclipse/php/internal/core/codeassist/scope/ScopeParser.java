@@ -226,7 +226,7 @@ public class ScopeParser {
 										|| current.type == Type.USE_FUNCTION) {
 									pushState(new State(Type.USE_GROUP, tokenStart));
 								} else if (current.type == Type.TRAIT_USE) {
-									pushState(new State(Type.TRAIT_PRECEDENCE, tokenStart));
+									pushState(new State(Type.TRAIT_CONFLICT, tokenStart));
 								} else {
 									pushState(new State(Type.BLOCK, tokenStart));
 								}
@@ -278,10 +278,10 @@ public class ScopeParser {
 								break;
 							case PHPRegionTypes.PHP_CURLY_CLOSE:
 								if (current.type == Type.BLOCK || current.type == Type.USE_GROUP
-										|| current.type == Type.TRAIT_PRECEDENCE) {
+										|| current.type == Type.TRAIT_CONFLICT) {
 									popState(tokenEnd);
 									current = states.peek();
-									if (current.type == Type.TRAIT_PRECEDENCE) {
+									if (current.type == Type.TRAIT_CONFLICT) {
 										popState(tokenEnd);
 										current = states.peek();
 									}

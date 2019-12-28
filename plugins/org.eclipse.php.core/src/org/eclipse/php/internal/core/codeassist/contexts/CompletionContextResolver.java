@@ -85,7 +85,8 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 				new InterfaceExtendsContext(), new InterfaceDeclarationKeywordContext(), new UseAliasContext(),
 				new UseNameContext(), new UseConstNameContext(), new UseFunctionNameContext(),
 				new GotoStatementContext(), new NamespaceDeclContext(), new IncludeStatementContext(),
-				new ExceptionClassInstantiationContext(), new TypeCastingContext(), new QuotesContext() };
+				new ExceptionClassInstantiationContext(), new TypeCastingContext(), new QuotesContext(),
+				new TraitConflictContext() };
 	}
 
 	@Override

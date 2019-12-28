@@ -13,9 +13,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.contexts;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.annotations.Nullable;
 import org.eclipse.dltk.ast.ASTNode;
@@ -31,17 +28,12 @@ import org.eclipse.php.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPHPScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.format.PHPHeuristicScanner;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 /**
  * This is an abstract completion context containing all common utilities.
@@ -50,9 +42,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
  */
 public abstract class AbstractCompletionContext implements ICompletionContext {
 
-	public static final int NONE = 0;
-	public static final int TRAIT_NAME = 1;
-	public static final int TRAIT_KEYWORD = 2;
 	private CompletionCompanion companion;
 	private CompletionRequestor requestor;
 	private ISourceModule sourceModule;
@@ -95,8 +84,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	/**
-	 * Returns whether there are whitespace characters before the cursor where code
-	 * assist was being invoked
+	 * Returns whether there are whitespace characters before the cursor where
+	 * code assist was being invoked
 	 * 
 	 * @return <code>true</code> if there are whitespace characters before the
 	 *         cursor
@@ -117,8 +106,9 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 * document, this method will return false when cursor is at end of
 	 * companion.getDocument().
 	 * 
-	 * @return <code>true</code> if there is a space character at offset position,
-	 *         false otherwise or false when cursor is at end of document
+	 * @return <code>true</code> if there is a space character at offset
+	 *         position, false otherwise or false when cursor is at end of
+	 *         document
 	 */
 	public boolean hasSpaceAtPosition(int offset) {
 		try {
@@ -369,8 +359,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	/**
-	 * Returns next character after the cursor position (or ' ' if cursor position
-	 * is at end of document)
+	 * Returns next character after the cursor position (or ' ' if cursor
+	 * position is at end of document)
 	 * 
 	 * @throws BadLocationException
 	 */
@@ -391,118 +381,6 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 			return ' ';
 		}
 		return companion.getDocument().getChar(offset);
-	}
-
-	public int getUseTraitStatementContext() {
-		return getUseTraitStatementContext(offset, companion.getStructuredDocumentRegion());
-	}
-
-	public int getUseTraitStatementContext(int offset, IStructuredDocumentRegion sdRegion) {
-		List<String> types = new ArrayList<>();
-		if (sdRegion == null) {
-			sdRegion = companion.getStructuredDocumentRegion();
-		}
-		int documentOffset = offset;
-		if (documentOffset == sdRegion.getEndOffset()) {
-			documentOffset -= 1;
-		}
-		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(documentOffset);
-
-		ITextRegionCollection container = sdRegion;
-
-		if (tRegion instanceof ITextRegionContainer) {
-			container = (ITextRegionContainer) tRegion;
-			tRegion = container.getRegionAtCharacterOffset(offset);
-		}
-		if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CLOSE) {
-			tRegion = container.getRegionAtCharacterOffset(container.getStartOffset() + tRegion.getStart() - 1);
-		}
-
-		// This text region must be of type PhpScriptRegion:
-		if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-			IPHPScriptRegion phpScriptRegion = (IPHPScriptRegion) tRegion;
-
-			try {
-				// Set default starting position to the beginning of the
-				// PhpScriptRegion:
-				int startOffset = container.getStartOffset() + phpScriptRegion.getStart();
-
-				// Now, search backwards for the statement start (in this
-				// PhpScriptRegion):
-				ITextRegion startTokenRegion;
-				if (documentOffset == startOffset) {
-					startTokenRegion = phpScriptRegion.getPHPToken(0);
-				} else {
-					startTokenRegion = phpScriptRegion.getPHPToken(offset - startOffset - 1);
-				}
-				// If statement start is at the beginning of the PHP script
-				// region:
-				while (true) {
-					if (startTokenRegion.getStart() == 0) {
-						return NONE;
-					}
-					if (!PHPPartitionTypes.isPHPCommentState(startTokenRegion.getType())
-							&& startTokenRegion.getType() != PHPRegionTypes.WHITESPACE) {
-						types.add(startTokenRegion.getType());
-					}
-					if (startTokenRegion.getType() == PHPRegionTypes.PHP_CURLY_OPEN
-							|| startTokenRegion.getType() == PHPRegionTypes.PHP_INSTEADOF
-							|| startTokenRegion.getType() == PHPRegionTypes.PHP_SEMICOLON
-							|| startTokenRegion.getType() == PHPRegionTypes.PHP_AS) {
-						break;
-					}
-
-					startTokenRegion = phpScriptRegion.getPHPToken(startTokenRegion.getStart() - 1);
-				}
-
-			} catch (BadLocationException e) {
-			}
-		}
-		if (types.size() == 1) {
-			String type = types.get(0);
-			if (type == PHPRegionTypes.PHP_CURLY_OPEN || type == PHPRegionTypes.PHP_INSTEADOF
-					|| type == PHPRegionTypes.PHP_SEMICOLON) {
-				return TRAIT_NAME;
-			} else if (type == PHPRegionTypes.PHP_AS) {
-				return TRAIT_KEYWORD;
-			}
-			if (type == PHPRegionTypes.PHP_INSTEADOF) {
-				return TRAIT_KEYWORD;
-			}
-		} else if (types.size() == 2) {
-			String type1 = types.get(0);
-			String type = types.get(1);
-			try {
-				if (type == PHPRegionTypes.PHP_SEMICOLON && type1 == PHPRegionTypes.PHP_LABEL
-						&& Character.isWhitespace(companion.getDocument().getChar(offset - 1))) {
-
-					return TRAIT_KEYWORD;
-				}
-			} catch (BadLocationException e) {
-			}
-			if (type == PHPRegionTypes.PHP_CURLY_OPEN || type == PHPRegionTypes.PHP_INSTEADOF
-					|| type == PHPRegionTypes.PHP_SEMICOLON || type1 == PHPRegionTypes.PHP_LABEL) {
-				return TRAIT_NAME;
-			}
-		} else if (types.size() == 3) {
-			String type = types.get(0);
-			String type1 = types.get(1);
-			String type2 = types.get(2);
-			if (type == PHPRegionTypes.PHP_LABEL && type1 == PHPRegionTypes.PHP_LABEL
-					&& type2 == PHPRegionTypes.PHP_SEMICOLON) {
-				return TRAIT_KEYWORD;
-			}
-		} else if (types.size() == 4) {
-			String type = types.get(0);
-			String type1 = types.get(1);
-			String type2 = types.get(2);
-			if (type == PHPRegionTypes.PHP_LABEL && type1 == PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM
-					&& type2 == PHPRegionTypes.PHP_LABEL) {
-				return TRAIT_KEYWORD;
-			}
-		}
-
-		return NONE;
 	}
 
 	/**
@@ -641,8 +519,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	/**
 	 * Returns the qualifier. For global namespaces, it either returns null or
 	 * <code>PHPCoreConstants.GLOBAL_NAMESPACE</code> depending on the value of
-	 * parameter <code>useGlobal</code>. Other qualifiers will never be empty and
-	 * never be prefixed by a backslash.
+	 * parameter <code>useGlobal</code>. Other qualifiers will never be empty
+	 * and never be prefixed by a backslash.
 	 * 
 	 * @param useGlobal
 	 * @return non-empty qualifier or null

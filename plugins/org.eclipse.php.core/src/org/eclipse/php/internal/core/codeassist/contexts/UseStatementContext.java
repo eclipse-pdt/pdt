@@ -144,7 +144,7 @@ public abstract class UseStatementContext extends StatementContext {
 			isCursorInsideGroupStatement = true;
 			break;
 		case TRAIT_USE:
-		case TRAIT_PRECEDENCE:
+		case TRAIT_CONFLICT:
 			type = TYPES.TRAIT;
 			if (getCompanion().getPHPVersion().isLessThan(PHPVersion.PHP5_4)) {
 				return false;

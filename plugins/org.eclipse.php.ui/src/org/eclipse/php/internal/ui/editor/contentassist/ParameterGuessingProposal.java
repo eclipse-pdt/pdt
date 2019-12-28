@@ -94,7 +94,6 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 		try {
 			dealPrefix();
 			dealSuffix(document, offset);
-
 			// TODO lengthChange is workaround for replacement string changed by
 			// super class, this needs better solution
 			int lengthChange = getReplacementString().length();
@@ -110,7 +109,7 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 				PHPUiPlugin.log(e);
 			}
 
-			if (hasParameters && getTextViewer() != null) {
+			if (!ProposalExtraInfo.isMethodOnly(extraInfo) && hasParameters && getTextViewer() != null) {
 				LinkedModeModel model = new LinkedModeModel();
 
 				if ((fPositions != null && fPositions.length > 0)) {
@@ -246,7 +245,7 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 					setReplacementLength(getReplacementLength() + (posLP + 1) + (posRP + 1));
 				}
 			}
-		} else {
+		} else if (!ProposalExtraInfo.isMethodOnly(extraInfo)) {
 			// unset all existing parameters (if any), they are useless now
 			fPositions = null;
 			fChoices = null;
@@ -278,9 +277,9 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 	 * @param offset
 	 * @param search
 	 *            character to search
-	 * @return position of "search" character relative to offset, -1 if not found or
-	 *         if there are non-whitespace characters between "offset" position and
-	 *         the first occurrence of the "search" character
+	 * @return position of "search" character relative to offset, -1 if not
+	 *         found or if there are non-whitespace characters between "offset"
+	 *         position and the first occurrence of the "search" character
 	 */
 	private int getRelativePositionOf(IDocument document, int offset, char search) {
 		try {
@@ -351,8 +350,8 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 	}
 
 	/**
-	 * if modelElement is an instance of FakeConstructor, we need to get the real
-	 * constructor
+	 * if modelElement is an instance of FakeConstructor, we need to get the
+	 * real constructor
 	 * 
 	 * @param modelElement
 	 * @return
@@ -384,8 +383,8 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 	 * Returns <code>true</code> if the argument list should be inserted by the
 	 * proposal, <code>false</code> if not.
 	 * 
-	 * @return <code>true</code> when the proposal is not in javadoc nor within an
-	 *         import and comprises the parameter list
+	 * @return <code>true</code> when the proposal is not in javadoc nor within
+	 *         an import and comprises the parameter list
 	 */
 	protected boolean hasArgumentList() {
 		if (CompletionProposal.METHOD_NAME_REFERENCE == fProposal.getKind()) {
@@ -427,7 +426,8 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 	}
 
 	private boolean hasParameters() throws ModelException {
-		return method.getParameters() != null && hasNondefaultValues(method.getParameters());
+		return !ProposalExtraInfo.isMethodOnly(extraInfo) && method.getParameters() != null
+				&& hasNondefaultValues(method.getParameters());
 	}
 
 	private boolean hasNondefaultValues(IParameter[] parameters) {
@@ -441,8 +441,8 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 	}
 
 	/**
-	 * Creates the completion string. Offsets and Lengths are set to the offsets and
-	 * lengths of the parameters.
+	 * Creates the completion string. Offsets and Lengths are set to the offsets
+	 * and lengths of the parameters.
 	 * 
 	 * @param prefix
 	 *            completion prefix
@@ -496,10 +496,11 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 	}
 
 	/**
-	 * Appends everything up to the method name including the opening parenthesis.
+	 * Appends everything up to the method name including the opening
+	 * parenthesis.
 	 * <p>
-	 * In case of {@link CompletionProposal#METHOD_REF_WITH_CASTED_RECEIVER} it add
-	 * cast.
+	 * In case of {@link CompletionProposal#METHOD_REF_WITH_CASTED_RECEIVER} it
+	 * add cast.
 	 * </p>
 	 * 
 	 * @param buffer
@@ -579,7 +580,8 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 			model.addLinkingListener(new ILinkedModeListener() {
 
 				/*
-				 * @see org.eclipse.jface.text.link.ILinkedModeListener#left(org.
+				 * @see
+				 * org.eclipse.jface.text.link.ILinkedModeListener#left(org.
 				 * eclipse.jface.text.link.LinkedModeModel, int)
 				 */
 				@Override
@@ -614,18 +616,20 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 	}
 
 	/**
-	 * Returns the matches for the type and name argument, ordered by match quality.
+	 * Returns the matches for the type and name argument, ordered by match
+	 * quality.
 	 * 
 	 * @param expectedType
 	 *            - the qualified type of the parameter we are trying to match
 	 * @param paramName
-	 *            - the name of the parameter (used to find similarly named matches)
+	 *            - the name of the parameter (used to find similarly named
+	 *            matches)
 	 * @param pos
 	 * @param suggestions
 	 *            the suggestions or <code>null</code>
 	 * @param fillBestGuess
-	 * @return returns the name of the best match, or <code>null</code> if no match
-	 *         found
+	 * @return returns the name of the best match, or <code>null</code> if no
+	 *         match found
 	 * @throws JavaModelException
 	 *             if it fails
 	 */
@@ -654,8 +658,8 @@ public final class ParameterGuessingProposal extends PHPOverrideCompletionPropos
 			// insert a proposal with the argument name
 			ICompletionProposal[] extended = new ICompletionProposal[ret.length + 1];
 			System.arraycopy(ret, 0, extended, 1, ret.length);
-			extended[0] = new PositionBasedCompletionProposal(paramName, pos, replacementLength/* paramName.length() */,
-					null, paramName, null, null, NO_TRIGGERS);
+			extended[0] = new PositionBasedCompletionProposal(paramName, pos,
+					replacementLength/* paramName.length() */, null, paramName, null, null, NO_TRIGGERS);
 			return extended;
 		}
 		return ret;
