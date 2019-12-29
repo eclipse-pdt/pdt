@@ -21,6 +21,8 @@ public class Messages extends NLS {
 	public static String ParameterGuessingProposal_0;
 	public static String PHPContentAssistant_0;
 	public static String AssignToLocalCompletionProposal_name;
+	public static String PHPCompletionProposalOverride;
+	public static String PHPCompletionProposalQualifier;
 
 	static {
 		// initialize resource bundle

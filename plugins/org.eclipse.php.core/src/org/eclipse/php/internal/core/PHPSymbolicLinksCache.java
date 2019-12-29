@@ -41,6 +41,8 @@ public enum PHPSymbolicLinksCache {
 			super(CoreMessages.getString("PHPSymbolicLinksCache_Initializing_symbolic_links_cache")); //$NON-NLS-1$
 			setSystem(true);
 			setUser(false);
+			setRule(ResourcesPlugin.getWorkspace().getRuleFactory()
+					.refreshRule(ResourcesPlugin.getWorkspace().getRoot()));
 		}
 
 		@Override

@@ -55,6 +55,10 @@ public final class ProposalExtraInfo {
 		return (flags & FULL_NAME) != 0;
 	}
 
+	public static boolean isStub(int flags) {
+		return (flags & STUB) != 0;
+	}
+
 	public static boolean isTypeOnly(Object flags) {
 		if (flags instanceof Integer) {
 			return isTypeOnly(((Integer) flags).intValue());
@@ -86,6 +90,14 @@ public final class ProposalExtraInfo {
 	public static boolean isFullName(Object flags) {
 		if (flags instanceof Integer) {
 			return isFullName(((Integer) flags).intValue());
+		} else {
+			return false;
+		}
+	}
+
+	public static boolean isStub(Object flags) {
+		if (flags instanceof Integer) {
+			return isStub(((Integer) flags).intValue());
 		} else {
 			return false;
 		}

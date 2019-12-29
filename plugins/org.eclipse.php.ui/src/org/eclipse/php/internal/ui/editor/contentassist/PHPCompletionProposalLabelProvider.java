@@ -24,6 +24,7 @@ import org.eclipse.dltk.ui.text.completion.ICompletionProposalLabelProviderExten
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposalCollector;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.core.compiler.IPHPModifiers;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
@@ -74,7 +75,7 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 
 		appendMethodType(nameBuffer, methodProposal);
 
-		appendQualifier(nameBuffer, method.getParent());
+		appendQualifier(nameBuffer, method.getParent(), Messages.PHPCompletionProposalOverride);
 
 		return nameBuffer;
 	}
@@ -260,27 +261,24 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 
 	protected StyledString createStyledMethodProposalLabel(CompletionProposal methodProposal) {
 		StyledString nameBuffer = new StyledString();
-		boolean isAlias = methodProposal.getModelElement() instanceof AliasMethod;
+		IMethod method = (IMethod) methodProposal.getModelElement();
 
-		// method name
-		if (isAlias) {
-			AliasMethod aliasMethod = (AliasMethod) methodProposal.getModelElement();
+		if (method instanceof FakeConstructor && method.getParent() instanceof AliasType) {
+			AliasType aliasType = (AliasType) method.getParent();
+			nameBuffer.append(aliasType.getAlias());
+		} else if (method instanceof AliasMethod) {
+			AliasMethod aliasMethod = (AliasMethod) method;
 			nameBuffer.append(aliasMethod.getAlias());
 		} else {
-			nameBuffer.append(methodProposal.getName());
+			nameBuffer.append(method.getElementName());
 		}
-
 		// parameters
 		nameBuffer.append('(');
 		appendStyledParameterList(nameBuffer, methodProposal);
 		nameBuffer.append(')');
 
 		appendMethodType(nameBuffer, methodProposal);
-		if (isAlias) {
-			return nameBuffer;
-		}
 
-		IModelElement method = methodProposal.getModelElement();
 		appendQualifier(nameBuffer, method.getParent());
 
 		return nameBuffer;
@@ -417,17 +415,23 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 	}
 
 	protected void appendQualifier(StyledString buffer, IModelElement modelElement) {
+		appendQualifier(buffer, modelElement, Messages.PHPCompletionProposalQualifier);
+	}
+
+	protected void appendQualifier(StyledString buffer, IModelElement modelElement, String suffix) {
 		if (modelElement == null) {
 			return;
 		}
-		buffer.append(" - ", StyledString.QUALIFIER_STYLER); //$NON-NLS-1$
 
+		String name = null;
 		if (modelElement instanceof IType) {
 			IType type = (IType) modelElement;
-			buffer.append(type.getTypeQualifiedName(ENCLOSING_TYPE_SEPARATOR), StyledString.QUALIFIER_STYLER);
+			name = type.getTypeQualifiedName(ENCLOSING_TYPE_SEPARATOR);
 		} else {
-			buffer.append(modelElement.getElementName(), StyledString.QUALIFIER_STYLER);
+			name = modelElement.getElementName();
 		}
+		buffer.append(' ');
+		buffer.append(NLS.bind(suffix, new String[] { name }), StyledString.QUALIFIER_STYLER);
 	}
 
 }

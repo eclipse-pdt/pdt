@@ -90,7 +90,9 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 	@Override
 	protected IScriptCompletionProposal createScriptCompletionProposal(CompletionProposal proposal) {
 		ScriptCompletionProposal completionProposal;
-		if (proposal.getKind() == CompletionProposal.METHOD_REF) {
+		if (proposal.getKind() == CompletionProposal.METHOD_REF
+				|| proposal.getKind() == CompletionProposal.METHOD_DECLARATION
+				|| proposal.getKind() == CompletionProposal.POTENTIAL_METHOD_DECLARATION) {
 			completionProposal = createMethodDeclarationProposal(proposal);
 		} else if (proposal.getKind() == CompletionProposal.TYPE_REF) {
 			completionProposal = (ScriptCompletionProposal) createTypeProposal(proposal);
@@ -152,15 +154,18 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 
 		int start = proposal.getReplaceStart();
 		int length = getLength(proposal);
-		StyledString label = ((PHPCompletionProposalLabelProvider) getLabelProvider())
-				.createStyledOverrideMethodProposalLabel(proposal);
-
-		StyledString displayString = ((PHPCompletionProposalLabelProvider) getLabelProvider())
-				.createStyledMethodProposalLabel(proposal);
+		StyledString label = null;
+		if (proposal.getKind() == CompletionProposal.METHOD_DECLARATION) {
+			label = ((PHPCompletionProposalLabelProvider) getLabelProvider())
+					.createStyledOverrideMethodProposalLabel(proposal);
+		} else {
+			label  = ((PHPCompletionProposalLabelProvider) getLabelProvider())
+					.createStyledMethodProposalLabel(proposal);
+		}
 
 		ScriptCompletionProposal scriptProposal = null;
 		if (ProposalExtraInfo.isNotInsertUse(proposal.getExtraInfo())) {
-			scriptProposal = new PHPCompletionProposal(completion, replaceStart, length, null, displayString, 0) {
+			scriptProposal = new PHPCompletionProposal(completion, replaceStart, length, null, label, 0) {
 				private boolean fReplacementStringComputed = false;
 
 				@Override
@@ -206,6 +211,9 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 				}
 
 			};
+		} else if (ProposalExtraInfo.isStub(proposal.getExtraInfo())) {
+			scriptProposal = createMethodOverrideCompletionProposal(getScriptProject(), getSourceModule(), name,
+					paramTypes, start, length, label, String.valueOf(proposal.getCompletion()));
 		} else {
 			scriptProposal = createParameterGuessingProposal(proposal, name, paramTypes, start, length, label,
 					completion, proposal.getExtraInfo());
@@ -218,6 +226,13 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 
 		scriptProposal.setRelevance(computeRelevance(proposal));
 		return scriptProposal;
+	}
+
+	private ScriptCompletionProposal createMethodOverrideCompletionProposal(IScriptProject scriptProject,
+			ISourceModule sourceModule, String name, String[] paramTypes, int start, int length, StyledString label,
+			String completionProposal) {
+		return new MethodOverrideCompletionProposal(scriptProject, sourceModule, name, paramTypes, start, length, label,
+				completionProposal);
 	}
 
 	private ScriptCompletionProposal createParameterGuessingProposal(CompletionProposal proposal, String name,

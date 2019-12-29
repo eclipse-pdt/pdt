@@ -15,7 +15,9 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.dltk.core.CompletionRequestor;
+import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.IType;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionScope;
 import org.eclipse.php.core.codeassist.ICompletionScope.Type;
@@ -34,7 +36,7 @@ import org.eclipse.php.internal.core.format.PHPHeuristicScanner;
  * 
  * @author michael
  */
-public final class TypeStatementContext extends AbstractGlobalStatementContext {
+public final class TypeStatementContext extends AbstractGlobalStatementContext implements IClassMemberContext {
 	private boolean isAssignment = false;
 
 	@Override
@@ -82,5 +84,25 @@ public final class TypeStatementContext extends AbstractGlobalStatementContext {
 
 	public boolean isAssignment() {
 		return isAssignment;
+	}
+
+	@Override
+	public Trigger getTriggerType() {
+		return Trigger.CLASS;
+	}
+
+	@Override
+	public IType[] getLhsTypes() {
+		IModelElement enclosingElement = getEnclosingElement();
+		if (enclosingElement == null) {
+			return new IType[0];
+		}
+
+		enclosingElement = enclosingElement.getAncestor(IModelElement.TYPE);
+		if (enclosingElement instanceof IType) {
+			return new IType[] { (IType) enclosingElement };
+		}
+
+		return new IType[0];
 	}
 }

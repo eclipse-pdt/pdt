@@ -142,7 +142,8 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 				return new ICompletionStrategy[] { new ClassKeywordsStrategy(context), new ConstantsStrategy(context),
 						new TypesStrategy(context) };
 			} else {
-				return new ICompletionStrategy[] { new ClassKeywordsStrategy(context), new PropertyTypeStrategy(context)
+				return new ICompletionStrategy[] { new ClassKeywordsStrategy(context),
+						new PropertyTypeStrategy(context), new ClassMethodOverrideStrategy(context),
 						// new ConstantsStrategy(context),
 						// new TypesStrategy(context)
 				};

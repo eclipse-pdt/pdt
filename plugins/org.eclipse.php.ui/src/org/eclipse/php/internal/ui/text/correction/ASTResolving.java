@@ -247,4 +247,15 @@ public class ASTResolving {
 		}
 		return kind;
 	}
+
+	public static ASTNode findParentType(ASTNode node) {
+		while (node != null) {
+			if (node.getType() == ASTNode.CLASS_DECLARATION || node.getType() == ASTNode.ANONYMOUS_CLASS_DECLARATION
+					|| node.getType() == ASTNode.INTERFACE_DECLARATION) {
+				return node;
+			}
+			node = node.getParent();
+		}
+		return null;
+	}
 }
