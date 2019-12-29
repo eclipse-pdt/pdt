@@ -157,6 +157,9 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		if (expressionClass == CatchClause.class) {
 			return new CatchClauseEvaluator(exprGoal);
 		}
+		if (expressionClass == AnonymousClassDeclaration.class) {
+			return new PHPAnonymousClassEvaluator(exprGoal, (AnonymousClassDeclaration) expression);
+		}
 
 		return null;
 	}
