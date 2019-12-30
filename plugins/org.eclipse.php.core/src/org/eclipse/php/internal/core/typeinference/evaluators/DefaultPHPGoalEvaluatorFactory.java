@@ -36,7 +36,6 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 	public GoalEvaluator createEvaluator(IGoal goal) {
 
 		Class<?> goalClass = goal.getClass();
-
 		if (goalClass == ExpressionTypeGoal.class) {
 			ExpressionTypeGoal exprGoal = (ExpressionTypeGoal) goal;
 			return createExpressionEvaluator(exprGoal);

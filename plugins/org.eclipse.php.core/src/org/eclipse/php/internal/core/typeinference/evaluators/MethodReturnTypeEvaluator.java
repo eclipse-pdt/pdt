@@ -20,6 +20,7 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.core.*;
@@ -28,10 +29,7 @@ import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.core.compiler.ast.nodes.LambdaFunctionDeclaration;
-import org.eclipse.php.core.compiler.ast.nodes.PHPMethodDeclaration;
-import org.eclipse.php.core.compiler.ast.nodes.ReturnStatement;
-import org.eclipse.php.core.compiler.ast.nodes.YieldExpression;
+import org.eclipse.php.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.typeinference.*;
 import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
@@ -116,6 +114,7 @@ public class MethodReturnTypeEvaluator extends AbstractMethodReturnTypeEvaluator
 							} else {
 								subGoals.add(new ExpressionTypeGoal(innerContext, expr));
 							}
+							return false;
 						} else if (node instanceof YieldExpression) {
 							YieldExpression statement = (YieldExpression) node;
 							Expression expr = statement.getExpr();
@@ -126,6 +125,11 @@ public class MethodReturnTypeEvaluator extends AbstractMethodReturnTypeEvaluator
 								subGoals.add(yg);
 								yieldGoals.add(yg);
 							}
+							return false;
+						} else if (node instanceof AnonymousClassDeclaration || node instanceof TypeDeclaration
+								|| node instanceof LambdaFunctionDeclaration) {
+							// stop on nested declaration
+							return false;
 						}
 						return super.visitGeneral(node);
 					}

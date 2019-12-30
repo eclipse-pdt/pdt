@@ -1,0 +1,43 @@
+--TEST--
+Test anonymous class instantiation
+--FILE--
+<?php
+class main {
+  
+  static function level1($val) : object {
+    return new class($val) {
+      private $value;
+      
+      function __construct(string $value) {
+        $this->value = $value;
+      }
+      
+      function level2() : object {
+        return new class($this->value) {
+          private $value2;
+          
+          function __construct(?string $value2) {
+             $this->value2 = $value2;
+          }
+            
+          function uppercase() {
+            print strtoupper($this->value2);
+          }
+            
+          function lowercase() {
+            print strtolower($this->value2);
+          }
+            
+        };
+      }
+      
+    };
+  }
+}
+
+$a = main::level1("frED");
+$a->level2()->lowercase();
+$a->level2()->|
+--EXPECT--
+method(lowercase)
+method(uppercase)
