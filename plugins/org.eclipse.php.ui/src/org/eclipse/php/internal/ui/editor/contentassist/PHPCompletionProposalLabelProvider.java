@@ -28,6 +28,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.core.compiler.IPHPModifiers;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.codeassist.AliasField;
 import org.eclipse.php.internal.core.codeassist.AliasMethod;
 import org.eclipse.php.internal.core.codeassist.AliasType;
@@ -426,7 +427,15 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 		String name = null;
 		if (modelElement instanceof IType) {
 			IType type = (IType) modelElement;
-			name = type.getTypeQualifiedName(ENCLOSING_TYPE_SEPARATOR);
+			try {
+				if (PHPFlags.isAnonymous(type.getFlags())) {
+					name = PHPCoreConstants.ANONYMOUS;
+				} else {
+					name = type.getTypeQualifiedName(ENCLOSING_TYPE_SEPARATOR);
+				}
+			} catch (ModelException e) {
+			}
+
 		} else {
 			name = modelElement.getElementName();
 		}
