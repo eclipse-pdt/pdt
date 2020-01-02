@@ -40,12 +40,6 @@ public interface IPHPEditorActionDefinitionIds extends ITextEditorActionDefiniti
 	String CONTENT_ASSIST_COMPLETE_PREFIX = "org.eclipse.php.ui.edit.text.complete.prefix"; //$NON-NLS-1$
 
 	/**
-	 * Action definition ID of the edit -> show PHPdoc action (value
-	 * <code>"org.eclipse.php.ui.edit.text.show.phpdoc"</code>).
-	 */
-	String SHOW_PHPDOC = "org.eclipse.php.ui.edit.text.show.phpdoc"; //$NON-NLS-1$
-
-	/**
 	 * Action definition ID of the navigate -> Show Outline action (value
 	 * <code>"org.eclipse.php.ui.edit.text.show.outline"</code>).
 	 * 
@@ -126,8 +120,9 @@ public interface IPHPEditorActionDefinitionIds extends ITextEditorActionDefiniti
 	String OPEN_EDITOR = "org.eclipse.php.ui.edit.text.open.editor"; //$NON-NLS-1$
 
 	/**
-	 * Action definition ID of the navigate -> show in php explorer action (value
-	 * <code>"org.eclipse.php.ui.edit.text.show.in.explorer.view"</code> ).
+	 * Action definition ID of the navigate -> show in php explorer action
+	 * (value <code>"org.eclipse.php.ui.edit.text.show.in.explorer.view"</code>
+	 * ).
 	 */
 	String SHOW_IN_EXPLORER_VIEW = "org.eclipse.php.ui.edit.text.show.in.explorer.view"; //$NON-NLS-1$
 
@@ -147,8 +142,8 @@ public interface IPHPEditorActionDefinitionIds extends ITextEditorActionDefiniti
 	String SEARCH_METHOD_EXIT_OCCURRENCES = "org.eclipse.php.ui.edit.text.search.method.exits"; //$NON-NLS-1$
 
 	/**
-	 * Action definition ID of the search -> occurrences in file quick menu action
-	 * (value
+	 * Action definition ID of the search -> occurrences in file quick menu
+	 * action (value
 	 * <code>"org.eclipse.php.ui.edit.text.search.occurrences.in.file.quickMenu"</code>
 	 * ).
 	 * 
@@ -159,14 +154,15 @@ public interface IPHPEditorActionDefinitionIds extends ITextEditorActionDefiniti
 	// miscellaneous
 
 	/**
-	 * Action definition ID of the toggle text hover tool bar button action (value
-	 * <code>"org.eclipse.php.ui.edit.text.toggle.text.hover"</code>).
+	 * Action definition ID of the toggle text hover tool bar button action
+	 * (value <code>"org.eclipse.php.ui.edit.text.toggle.text.hover"</code>).
 	 */
 	String TOGGLE_TEXT_HOVER = "org.eclipse.php.ui.edit.text.toggle.text.hover"; //$NON-NLS-1$
 
 	/**
 	 * Action definition ID of the remove occurrence annotations action (value
-	 * <code>"org.eclipse.php.ui.edit.text.remove.occurrence.annotations"</code> ).
+	 * <code>"org.eclipse.php.ui.edit.text.remove.occurrence.annotations"</code>
+	 * ).
 	 * 
 	 * @since 3.0
 	 */

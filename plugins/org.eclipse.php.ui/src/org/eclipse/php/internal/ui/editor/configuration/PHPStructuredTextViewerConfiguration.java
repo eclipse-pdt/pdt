@@ -766,7 +766,6 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 			if (fTextHover instanceof IInformationProviderExtension2) {
 				return ((IInformationProviderExtension2) fTextHover).getInformationPresenterControlCreator();
 			}
-
 			return null;
 		}
 

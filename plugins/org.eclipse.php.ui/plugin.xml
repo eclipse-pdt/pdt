@@ -1244,9 +1244,6 @@
 			id="org.eclipse.php.ui.edit.text.move.element" />
 		<command name="%command.openFunctionsManual.name" description="%command.openFunctionsManual.description"
 			categoryId="org.eclipse.php.ui.category.source" id="org.eclipse.php.ui.edit.text.php.open.manual" />
-		<command categoryId="org.eclipse.ui.category.edit"
-			description="%ActionDefinition.showJavadoc.description" id="org.eclipse.php.ui.edit.text.show.phpdoc"
-			name="%ActionDefinition.showJavadoc.name" />
 		<command categoryId="org.eclipse.ui.category.navigate"
 			description="%ActionDefinition.gotoMatchingBracket.description" id="org.eclipse.php.ui.editor.goto.matching.bracket"
 			name="%ActionDefinition.gotoMatchingBracket.name" />
@@ -1458,9 +1455,7 @@
 			commandId="org.eclipse.wst.sse.ui.format.document" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="M1+I" commandId="org.eclipse.wst.sse.ui.format.active.elements"
 			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-		<key commandId="org.eclipse.php.ui.edit.text.show.phpdoc"
-			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-			sequence="F2" />
+		
 		<key commandId="org.eclipse.php.ui.editor.goto.matching.bracket"
 			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
 			sequence="M1+M2+P" />

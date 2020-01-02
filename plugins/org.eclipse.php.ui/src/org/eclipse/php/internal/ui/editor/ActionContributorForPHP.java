@@ -32,6 +32,7 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.actions.RetargetAction;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.RetargetTextEditorAction;
 import org.eclipse.wst.html.ui.internal.edit.ui.ActionContributorHTML;
 import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
@@ -53,7 +54,6 @@ public class ActionContributorForPHP extends ActionContributorHTML {
 	private static final String[] EDITOR_IDS = { "org.eclipse.php.core.phpsource", //$NON-NLS-1$
 			"org.eclipse.wst.sse.ui.StructuredTextEditor" }; //$NON-NLS-1$
 
-	private RetargetAction fRetargetShowPHPDoc;
 	private List<RetargetAction> fPartListeners = new ArrayList<>();
 	private RetargetTextEditorAction fShowPHPDoc;
 
@@ -80,16 +80,8 @@ public class ActionContributorForPHP extends ActionContributorHTML {
 
 		ResourceBundle resourceBundle = DLTKEditorMessages.getBundleForConstructedKeys();
 
-		fRetargetShowPHPDoc = new RetargetAction(PHPActionConstants.SHOW_PHP_DOC, PHPUIMessages.ShowPHPDoc_label);
-		fRetargetShowPHPDoc.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
-		fPartListeners.add(fRetargetShowPHPDoc);
-
-		fShowPHPDoc = new RetargetTextEditorAction(resourceBundle, "ShowPHPDoc."); //$NON-NLS-1$
-		fShowPHPDoc.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
-
-		// fAddDescription = new RetargetTextEditorAction(resourceBundle,
-		// PHPActionConstants.ADD_DESCRIPTION_NAME + "_"); //$NON-NLS-1$
-		// fAddDescription.setActionDefinitionId(IPHPEditorActionDefinitionIds.ADD_DESCRIPTION);
+		fShowPHPDoc = new RetargetTextEditorAction(resourceBundle, "Editor.ShowToolTip."); //$NON-NLS-1$
+		fShowPHPDoc.setActionDefinitionId(ITextEditorActionConstants.SHOW_INFORMATION);
 
 		fGotoMatchingBracket = new RetargetTextEditorAction(resourceBundle, "GotoMatchingBracket."); //$NON-NLS-1$
 		fGotoMatchingBracket.setActionDefinitionId(IPHPEditorActionDefinitionIds.GOTO_MATCHING_BRACKET);
@@ -157,6 +149,11 @@ public class ActionContributorForPHP extends ActionContributorHTML {
 			// Do we really want to extends from SSE's action contributor?
 			navigateMenu.remove(new ActionContributionItem(fOpenFileAction));
 		}
+
+		IMenuManager editMenu = menu.findMenuUsingPath(IWorkbenchActionConstants.M_EDIT);
+		if (editMenu != null) {
+			editMenu.appendToGroup(ITextEditorActionConstants.GROUP_INFORMATION, fShowPHPDoc);
+		}
 	}
 
 	@Override
@@ -206,6 +203,7 @@ public class ActionContributorForPHP extends ActionContributorHTML {
 		fToggleComment.setEnabled(editor != null && editor.isEditable());
 		fAddBlockComment.setEnabled(editor != null && editor.isEditable());
 		fRemoveBlockComment.setEnabled(editor != null && editor.isEditable());
+		fShowPHPDoc.setAction(getAction(editor, ITextEditorActionConstants.SHOW_INFORMATION));
 
 		if (part instanceof PHPStructuredEditor) {
 			PHPStructuredEditor phpEditor = (PHPStructuredEditor) part;
@@ -223,11 +221,6 @@ public class ActionContributorForPHP extends ActionContributorHTML {
 			getPage().removePartListener(e.next());
 		}
 		fPartListeners.clear();
-
-		if (fRetargetShowPHPDoc != null) {
-			fRetargetShowPHPDoc.dispose();
-			fRetargetShowPHPDoc = null;
-		}
 
 		setActiveEditor(null);
 		super.dispose();

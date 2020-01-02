@@ -43,10 +43,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.information.IInformationProvider;
-import org.eclipse.jface.text.information.IInformationProviderExtension;
-import org.eclipse.jface.text.information.IInformationProviderExtension2;
-import org.eclipse.jface.text.information.InformationPresenter;
 import org.eclipse.jface.text.link.*;
 import org.eclipse.jface.text.link.LinkedModeUI.ExitFlags;
 import org.eclipse.jface.text.link.LinkedModeUI.IExitPolicy;
@@ -81,7 +77,6 @@ import org.eclipse.php.internal.ui.actions.GotoMatchingBracketAction;
 import org.eclipse.php.internal.ui.autoEdit.TabAutoEditStrategy;
 import org.eclipse.php.internal.ui.autoEdit.TypingPreferences;
 import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
-import org.eclipse.php.internal.ui.editor.hover.PHPSourceViewerInformationControl;
 import org.eclipse.php.internal.ui.editor.selectionactions.*;
 import org.eclipse.php.internal.ui.folding.IStructuredTextFoldingProvider;
 import org.eclipse.php.internal.ui.folding.PHPFoldingStructureProviderProxy;
@@ -93,8 +88,6 @@ import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.php.internal.ui.viewsupport.ISelectionListenerWithAST;
 import org.eclipse.php.internal.ui.viewsupport.SelectionListenerWithASTManager;
 import org.eclipse.php.ui.editor.SharedASTProvider;
-import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
-import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ST;
 import org.eclipse.swt.custom.StyledText;
@@ -779,253 +772,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	}
 
 	/**
-	 * This action behaves in two different ways: If there is no current text
-	 * hover, the javadoc is displayed using information presenter. If there is
-	 * a current text hover, it is converted into a information presenter in
-	 * order to make it sticky.
-	 */
-	class InformationDispatchAction extends TextEditorAction {
-
-		/** The wrapped text operation action. */
-		private final TextOperationAction fTextOperationAction;
-
-		/**
-		 * Creates a dispatch action.
-		 * 
-		 * @param resourceBundle
-		 *            the resource bundle
-		 * @param prefix
-		 *            the prefix
-		 * @param textOperationAction
-		 *            the text operation action
-		 */
-		public InformationDispatchAction(final ResourceBundle resourceBundle, final String prefix,
-				final TextOperationAction textOperationAction) {
-			super(resourceBundle, prefix, PHPStructuredEditor.this);
-			if (textOperationAction == null) {
-				throw new IllegalArgumentException();
-			}
-			fTextOperationAction = textOperationAction;
-		}
-
-		// modified version from TextViewer
-		private int computeOffsetAtLocation(final ITextViewer textViewer, final int x, final int y) {
-
-			final StyledText styledText = textViewer.getTextWidget();
-			final IDocument document = textViewer.getDocument();
-
-			if (styledText == null || document == null) {
-				return -1;
-			}
-
-			try {
-				int widgetOffset = styledText.getOffsetAtLocation(new Point(x, y));
-				final Point p = styledText.getLocationAtOffset(widgetOffset);
-				if (p.x > x) {
-					widgetOffset--;
-				}
-
-				if (textViewer instanceof ITextViewerExtension5) {
-					final ITextViewerExtension5 extension = (ITextViewerExtension5) textViewer;
-					return extension.widgetOffset2ModelOffset(widgetOffset);
-				}
-				final IRegion visibleRegion = textViewer.getVisibleRegion();
-				return widgetOffset + visibleRegion.getOffset();
-			} catch (final IllegalArgumentException e) {
-				return -1;
-			}
-
-		}
-
-		/**
-		 * Tries to make an annotation hover focusable (or "sticky").
-		 * 
-		 * @param sourceViewer
-		 *            the source viewer to display the hover over
-		 * @param annotationHover
-		 *            the hover to make focusable
-		 * @return <code>true</code> if successful, <code>false</code> otherwise
-		 * @since 3.2
-		 */
-		private boolean makeAnnotationHoverFocusable(final ISourceViewer sourceViewer,
-				final IAnnotationHover annotationHover) {
-			final IVerticalRulerInfo info = getVerticalRuler();
-			final int line = info.getLineOfLastMouseButtonActivity();
-			if (line == -1) {
-				return false;
-			}
-
-			try {
-
-				// compute the hover information
-				Object hoverInfo;
-				if (annotationHover instanceof IAnnotationHoverExtension) {
-					final IAnnotationHoverExtension extension = (IAnnotationHoverExtension) annotationHover;
-					final ILineRange hoverLineRange = extension.getHoverLineRange(sourceViewer, line);
-					if (hoverLineRange == null) {
-						return false;
-					}
-					final int maxVisibleLines = Integer.MAX_VALUE; // allow any
-					// number of
-					// lines
-					// being
-					// displayed,
-					// as we
-					// support scrolling
-					hoverInfo = extension.getHoverInfo(sourceViewer, hoverLineRange, maxVisibleLines);
-				} else {
-					hoverInfo = annotationHover.getHoverInfo(sourceViewer, line);
-				}
-
-				// hover region: the beginning of the concerned line to place
-				// the control right over the line
-				final IDocument document = sourceViewer.getDocument();
-				final int offset = document.getLineOffset(line);
-				final String contentType = TextUtilities.getContentType(document, PHPPartitionTypes.PHP_DOC, offset,
-						true);
-
-				IInformationControlCreator controlCreator = null;
-
-				/*
-				 * XXX: This is a hack to avoid API changes at the end of 3.2,
-				 */
-				if ("org.eclipse.jface.text.source.projection.ProjectionAnnotationHover" //$NON-NLS-1$
-						.equals(annotationHover.getClass().getName())) {
-					controlCreator = new IInformationControlCreator() {
-						@Override
-						public IInformationControl createInformationControl(final Shell shell) {
-							final int shellStyle = SWT.RESIZE | SWT.TOOL | getOrientation();
-							final int style = SWT.V_SCROLL | SWT.H_SCROLL;
-							return new PHPSourceViewerInformationControl(shell, shellStyle, style);
-						}
-					};
-				} else if (annotationHover instanceof IInformationProviderExtension2) {
-					controlCreator = ((IInformationProviderExtension2) annotationHover)
-							.getInformationPresenterControlCreator();
-				} else if (annotationHover instanceof IAnnotationHoverExtension) {
-					controlCreator = ((IAnnotationHoverExtension) annotationHover).getHoverControlCreator();
-				}
-
-				final IInformationProvider informationProvider = new InformationProvider(new Region(offset, 0),
-						hoverInfo, controlCreator);
-
-				fInformationPresenter.setOffset(offset);
-				fInformationPresenter.setAnchor(AbstractInformationControlManager.ANCHOR_RIGHT);
-				fInformationPresenter.setMargins(4, 0); // AnnotationBarHoverManager
-				// sets (5,0), minus
-				// SourceViewer.GAP_SIZE_1
-				fInformationPresenter.setInformationProvider(informationProvider, contentType);
-				fInformationPresenter.showInformation();
-
-				return true;
-
-			} catch (final BadLocationException e) {
-				return false;
-			}
-		}
-
-		/**
-		 * Tries to make a text hover focusable (or "sticky").
-		 * 
-		 * @param sourceViewer
-		 *            the source viewer to display the hover over
-		 * @param textHover
-		 *            the hover to make focusable
-		 * @return <code>true</code> if successful, <code>false</code> otherwise
-		 * @since 3.2
-		 */
-		private boolean makeTextHoverFocusable(final ISourceViewer sourceViewer, final ITextHover textHover) {
-			final Point hoverEventLocation = ((ITextViewerExtension2) sourceViewer).getHoverEventLocation();
-			final int offset = computeOffsetAtLocation(sourceViewer, hoverEventLocation.x, hoverEventLocation.y);
-			if (offset == -1) {
-				return false;
-			}
-
-			try {
-				final IRegion hoverRegion = textHover.getHoverRegion(sourceViewer, offset);
-				if (hoverRegion == null) {
-					return false;
-				}
-
-				String hoverInfo = textHover.getHoverInfo(sourceViewer, hoverRegion);
-
-				if (textHover instanceof IPHPTextHover) {
-					final IHoverMessageDecorator decorator = ((IPHPTextHover) textHover).getMessageDecorator();
-					if (decorator != null) {
-						final String decoratedMessage = decorator.getDecoratedMessage(hoverInfo);
-						if (decoratedMessage != null && decoratedMessage.length() > 0) {
-							hoverInfo = decoratedMessage;
-						}
-					}
-				}
-
-				IInformationControlCreator controlCreator = null;
-				if (textHover instanceof IInformationProviderExtension2) {
-					controlCreator = ((IInformationProviderExtension2) textHover)
-							.getInformationPresenterControlCreator();
-				}
-
-				final IInformationProvider informationProvider = new InformationProvider(hoverRegion, hoverInfo,
-						controlCreator);
-
-				fInformationPresenter.setOffset(offset);
-				fInformationPresenter.setAnchor(AbstractInformationControlManager.ANCHOR_BOTTOM);
-				fInformationPresenter.setMargins(6, 6); // default values from
-				// AbstractInformationControlManager
-				final String contentType = TextUtilities.getContentType(sourceViewer.getDocument(),
-						PHPPartitionTypes.PHP_DOC, offset, true);
-				fInformationPresenter.setInformationProvider(informationProvider, contentType);
-				fInformationPresenter.showInformation();
-
-				return true;
-
-			} catch (final BadLocationException e) {
-				return false;
-			}
-		}
-
-		/*
-		 * @see org.eclipse.jface.action.IAction#run()
-		 */
-		@Override
-		public void run() {
-
-			final ISourceViewer sourceViewer = getSourceViewer();
-			if (sourceViewer == null) {
-				fTextOperationAction.run();
-				return;
-			}
-
-			if (sourceViewer instanceof ITextViewerExtension4) {
-				final ITextViewerExtension4 extension4 = (ITextViewerExtension4) sourceViewer;
-				if (extension4.moveFocusToWidgetToken()) {
-					return;
-				}
-			}
-
-			if (sourceViewer instanceof ITextViewerExtension2) {
-				// does a text hover exist?
-				final ITextHover textHover = ((ITextViewerExtension2) sourceViewer).getCurrentTextHover();
-				if (textHover != null && makeTextHoverFocusable(sourceViewer, textHover)) {
-					return;
-				}
-			}
-
-			if (sourceViewer instanceof ISourceViewerExtension3) {
-				// does an annotation hover exist?
-				final IAnnotationHover annotationHover = ((ISourceViewerExtension3) sourceViewer)
-						.getCurrentAnnotationHover();
-				if (annotationHover != null && makeAnnotationHoverFocusable(sourceViewer, annotationHover)) {
-					return;
-				}
-			}
-
-			// otherwise, just run the action
-			fTextOperationAction.run();
-		}
-	}
-
-	/**
 	 * Internal activation listener.
 	 * 
 	 * @since 3.0
@@ -1298,69 +1044,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 	}
 
-	/**
-	 * Information provider used to present focusable information shells.
-	 * 
-	 * @since 3.2
-	 */
-	private static final class InformationProvider
-			implements IInformationProvider, IInformationProviderExtension, IInformationProviderExtension2 {
-
-		private final IInformationControlCreator fControlCreator;
-		private final Object fHoverInfo;
-		private final IRegion fHoverRegion;
-
-		InformationProvider(final IRegion hoverRegion, final Object hoverInfo,
-				final IInformationControlCreator controlCreator) {
-			fHoverRegion = hoverRegion;
-			fHoverInfo = hoverInfo;
-			fControlCreator = controlCreator;
-		}
-
-		/*
-		 * @see org.eclipse.jface.text.information.IInformationProvider#
-		 * getInformation (org.eclipse.jface.text.ITextViewer,
-		 * org.eclipse.jface.text.IRegion)
-		 */
-		@Override
-		public String getInformation(final ITextViewer textViewer, final IRegion subject) {
-			return fHoverInfo == null ? null : fHoverInfo.toString();
-		}
-
-		/*
-		 * @see
-		 * org.eclipse.jface.text.information.IInformationProviderExtension#
-		 * getInformation2(org.eclipse.jface.text.ITextViewer,
-		 * org.eclipse.jface.text.IRegion)
-		 * 
-		 * @since 3.2
-		 */
-		@Override
-		public Object getInformation2(final ITextViewer textViewer, final IRegion subject) {
-			return fHoverInfo;
-		}
-
-		/*
-		 * @see
-		 * org.eclipse.jface.text.information.IInformationProviderExtension2
-		 * #getInformationPresenterControlCreator()
-		 */
-		@Override
-		public IInformationControlCreator getInformationPresenterControlCreator() {
-			return fControlCreator;
-		}
-
-		/*
-		 * @see
-		 * org.eclipse.jface.text.information.IInformationProvider#getSubject
-		 * (org.eclipse.jface.text.ITextViewer, int)
-		 */
-		@Override
-		public IRegion getSubject(final ITextViewer textViewer, final int invocationOffset) {
-			return fHoverRegion;
-		}
-	}
-
 	private void initPHPVersionsListener() {
 		if (fPhpVersionListener != null) {
 			return;
@@ -1426,9 +1109,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 	/** Cursor dependent actions. */
 	private final List<String> fCursorActions = new ArrayList<>(5);
-
-	/** The information presenter. */
-	protected InformationPresenter fInformationPresenter;
 
 	public PHPStructuredEditor() {
 		/**
@@ -1508,10 +1188,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		if (fActionGroups != null) {
 			fActionGroups.dispose();
 			fActionGroups = null;
-		}
-		if (fInformationPresenter != null) {
-			fInformationPresenter.dispose();
-			fInformationPresenter = null;
 		}
 		if (fPhpVersionListener != null) {
 			PHPVersionChangedHandler.getInstance().removePHPVersionChangedListener(fPhpVersionListener);
@@ -2322,13 +1998,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		setAction(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY, action);
 		markAsCursorDependentAction(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY, true);
 
-		ResourceAction resAction = new TextOperationAction(DLTKEditorMessages.getBundleForConstructedKeys(),
-				"ShowPHPDoc.", //$NON-NLS-1$
-				this, ISourceViewer.INFORMATION, true);
-		resAction = new InformationDispatchAction(DLTKEditorMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", //$NON-NLS-1$
-				(TextOperationAction) resAction);
-		resAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
-		setAction("ShowPHPDoc", resAction); //$NON-NLS-1$
+		ResourceAction resAction = null;
 
 		resAction = new TextOperationAction(DLTKEditorMessages.getBundleForConstructedKeys(), "ShowOutline.", this, //$NON-NLS-1$
 				PHPStructuredTextViewer.SHOW_OUTLINE, true);
@@ -2563,10 +2233,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				return new DefaultInformationControl(shell, true);
 			}
 		};
-
-		fInformationPresenter = new InformationPresenter(informationControlCreator);
-		fInformationPresenter.setSizeConstraints(60, 10, true, true);
-		fInformationPresenter.install(getSourceViewer());
 
 		PlatformUI.getWorkbench().addWindowListener(fActivationListener);
 
