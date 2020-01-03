@@ -24,12 +24,12 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.resource.StringConverter;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.*;
+import org.eclipse.php.core.ast.nodes.ITypeBinding;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PHPCodeTemplatePreferencePage;
+import org.eclipse.php.internal.ui.util.PatternMatcher;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
@@ -381,6 +381,25 @@ public class PHPSourceActionDialog extends CheckedTreeSelectionDialog {
 		return null; // No link as default
 	}
 
+	/**
+	 * Returns a composite containing the label created at the top of the
+	 * dialog. Returns null if there is the message for the label is null.
+	 * 
+	 * @param composite
+	 *            the parent composite
+	 * @return the label
+	 */
+	@Override
+	protected Label createMessageArea(Composite composite) {
+		if (getMessage() != null) {
+			Label label = new Label(composite, SWT.NONE);
+			label.setText(getMessage());
+			label.setFont(composite.getFont());
+			return label;
+		}
+		return null;
+	}
+
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		initializeDialogUnits(parent);
@@ -410,6 +429,13 @@ public class PHPSourceActionDialog extends CheckedTreeSelectionDialog {
 		inner.setLayout(innerLayout);
 		inner.setFont(parent.getFont());
 
+		Text filterText = createFilterComposite(inner);
+		if (filterText != null) {
+			gd = new GridData();
+			gd.widthHint = convertWidthInCharsToPixels(fWidth);
+			gd.horizontalSpan = 2;
+			filterText.setLayoutData(gd);
+		}
 		CheckboxTreeViewer treeViewer = createTreeViewer(inner);
 
 		gd = new GridData(GridData.FILL_BOTH);
@@ -438,9 +464,71 @@ public class PHPSourceActionDialog extends CheckedTreeSelectionDialog {
 		gd = new GridData(GridData.FILL_BOTH);
 		composite.setLayoutData(gd);
 
+		if (filterText != null) {
+			addSearchFilter(filterText, treeViewer);
+			filterText.forceFocus();
+		}
+
 		applyDialogFont(composite);
 
 		return composite;
+	}
+
+	protected void addSearchFilter(Text filterText, CheckboxTreeViewer treeViewer) {
+		filterText.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) {
+				final String searchText = filterText.getText();
+
+				PatternMatcher matcher = new PatternMatcher(searchText);
+				ViewerFilter vf = null;
+				if (!searchText.trim().isEmpty()) {
+					vf = new ViewerFilter() {
+
+						@Override
+						public boolean select(Viewer viewer, Object parentElement, Object element) {
+							IBaseLabelProvider lblProvider = getTreeViewer().getLabelProvider();
+							if (element instanceof ITypeBinding) {
+								return true;
+							}
+
+							String filterableName = null;
+							if (lblProvider instanceof LabelProvider) {
+								filterableName = ((LabelProvider) lblProvider).getText(element);
+								if (matcher.matches(filterableName)) {
+									return true;
+								}
+								return hasUnfilteredChild(treeViewer, element);
+							}
+
+							return false;
+						}
+
+						private boolean hasUnfilteredChild(TreeViewer viewer, Object element) {
+							Object[] children = ((ITreeContentProvider) viewer.getContentProvider())
+									.getChildren(element);
+							for (int i = 0; i < children.length; i++)
+								if (select(viewer, element, children[i]))
+									return true;
+							return false;
+						}
+
+					};
+					treeViewer.setFilters(vf);
+					treeViewer.expandAll();
+				} else {
+					treeViewer.resetFilters();
+				}
+			}
+		});
+	}
+
+	protected Text createFilterComposite(Composite inner) {
+		Label filterTextLabel = new Label(inner, SWT.NONE);
+		filterTextLabel.setText(Messages.OverrideMethodDialog_filter_description);
+		Text filterText = new Text(inner, SWT.SEARCH | SWT.BORDER);
+		filterText.setMessage(Messages.OverrideMethodDialog_searchtext_message);
+		return filterText;
 	}
 
 	@Override
