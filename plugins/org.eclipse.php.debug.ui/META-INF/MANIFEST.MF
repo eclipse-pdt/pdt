@@ -29,7 +29,8 @@ Require-Bundle: org.eclipse.ui,
  com.ibm.icu;bundle-version="4.0.1",
  org.eclipse.dltk.debug.ui,
  org.eclipse.equinox.security;bundle-version="1.0.100",
- org.eclipse.ltk.core.refactoring
+ org.eclipse.ltk.core.refactoring,
+ org.eclipse.urischeme
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.php.debug.ui,
  org.eclipse.php.debug.ui.wizards,
@@ -54,6 +55,7 @@ Export-Package: org.eclipse.php.debug.ui,
  org.eclipse.php.internal.debug.ui.views.coverage;x-friends:="org.eclipse.php.phpunit",
  org.eclipse.php.internal.debug.ui.views.variables;x-internal:=true,
  org.eclipse.php.internal.debug.ui.watch;x-internal:=true,
- org.eclipse.php.internal.debug.ui.wizards;x-internal:=true
+ org.eclipse.php.internal.debug.ui.wizards;x-internal:=true,
+ org.eclipse.php.internal.debug.ui.uri;x-internal:=true
 Bundle-Vendor: Eclipse PDT
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

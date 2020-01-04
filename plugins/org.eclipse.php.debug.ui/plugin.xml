@@ -845,4 +845,11 @@
            viewId="org.eclipse.ui.console.ConsoleView">
       </contextViewBinding>
    </extension>
+   <extension point="org.eclipse.urischeme.uriSchemeHandlers">
+      <uriSchemeHandler
+            class="org.eclipse.php.internal.debug.ui.uri.XDebugURISchemeHandler"
+            uriScheme="xdebug"
+            uriSchemeDescription="XDebug file link">
+      </uriSchemeHandler>
+   </extension>
 </plugin>
