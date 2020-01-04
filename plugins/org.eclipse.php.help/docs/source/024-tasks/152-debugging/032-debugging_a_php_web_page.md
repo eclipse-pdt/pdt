@@ -56,6 +56,17 @@ See the "[Running and Analyzing Debugger results](040-analyzing_debugger_results
 
 #### Note:
 
+Since 7.1 PDT have support for Xdebug stack trace links. To enable this, in your `php.ini` add this line:
+
+    xdebug.file_link_format=xdebug://%f@%l
+
+
+<!--note-end-->
+
+<!--note-start-->
+
+#### Note:
+
 If the file contains 'include' or 'require' calls to files which are not contained within the project, you must [add them to the project's Include Path](../../024-tasks/168-adding_elements_to_a_project_s_include_path.md) in order to simulate your production environment.  In addition, if a file defined with an absolute path to a server location (See '[Include Paths](../../016-concepts/144-include_paths.md)' for more on absolute file locations) is called, a Path Mapping dialog will appear. See [Path Mapping](../../016-concepts/160-path_mapping.md) for more information.
 
 <!--note-end-->
