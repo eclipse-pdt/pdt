@@ -33,6 +33,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.actions.RetargetAction;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
+import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.RetargetTextEditorAction;
 import org.eclipse.wst.html.ui.internal.edit.ui.ActionContributorHTML;
 import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
@@ -81,7 +82,7 @@ public class ActionContributorForPHP extends ActionContributorHTML {
 		ResourceBundle resourceBundle = DLTKEditorMessages.getBundleForConstructedKeys();
 
 		fShowPHPDoc = new RetargetTextEditorAction(resourceBundle, "Editor.ShowToolTip."); //$NON-NLS-1$
-		fShowPHPDoc.setActionDefinitionId(ITextEditorActionConstants.SHOW_INFORMATION);
+		fShowPHPDoc.setActionDefinitionId(ITextEditorActionDefinitionIds.SHOW_INFORMATION);
 
 		fGotoMatchingBracket = new RetargetTextEditorAction(resourceBundle, "GotoMatchingBracket."); //$NON-NLS-1$
 		fGotoMatchingBracket.setActionDefinitionId(IPHPEditorActionDefinitionIds.GOTO_MATCHING_BRACKET);
