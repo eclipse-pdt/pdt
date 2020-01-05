@@ -11,7 +11,7 @@ html {
 
 body {
     margin: 0px;
-    padding: 10px
+    padding: 10px;
 }
 
 code {
@@ -42,13 +42,11 @@ ul>li {
     list-style-type: disc
 }
 
->
-*:first-child {
+> *:first-child {
     margin-top: 0 !important
 }
 
->
-*:last-child {
+> *:last-child {
     margin-bottom: 0 !important
 }
 
@@ -143,8 +141,7 @@ hr {
     margin: 15px 0
 }
 
->
-h2:first-child, >h1:first-child, >h1:first-child+h2, >h3:first-child, >h4:first-child,
+> h2:first-child, >h1:first-child, >h1:first-child+h2, >h3:first-child, >h4:first-child,
     >h5:first-child, >h6:first-child, a:first-child h1, a:first-child h2,
     a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6
     {
@@ -443,5 +440,75 @@ kbd {
     }
     #help_breadcrumbs {
         font-size: 10px !important
+    }
+}
+@media (prefers-color-scheme: dark) {
+    html {
+        background-color: #3d3d3d;
+        color: #f0f0f0;
+    }
+    .ref, .links {
+    }
+    code {
+        color: #ccc;
+    }
+    a, a code {
+        color: #3ac6ff !important
+    }
+    a:hover {
+        color: #f0f0f0 !important; 
+    }
+    a.absent {
+        color: #cf9b9b !important
+    }
+    h1 .octicon-link, h2 .octicon-link, h3 .octicon-link, h4 .octicon-link,
+    h5 .octicon-link, h6 .octicon-link {
+        display: none;
+        color: #f0f0f0;
+    }
+    h1, h2 {
+        color: #f0f0f0;
+        border-bottom-color: #616161;
+    }
+    h6 {
+        color: #cfcdcd;
+    }
+    hr {
+        color: #333;
+    }
+    blockquote {
+        color: #cfcdcd;
+    }
+    table th, table td {
+        border-color: #333;
+    }
+    table tr {
+        background-color: #2d2d2d;
+    }
+    table tr:nth-child(2n) {
+        background-color: #3d3d3d;
+    }
+    span.frame>span  {
+        border-color: #333;
+    }
+    span.frame span span {
+        color: #bbb;
+    }
+    code, tt {
+        border: 1px solid #1d1d1d;
+        background-color: #0c0c0c;
+    }
+    .footer {
+        border-top-color: #616161;
+    }
+    .note {
+        background: #2b2b2b;
+    }
+    .note h4 {
+        border-bottom-color: #616161;
+    }
+    pre {
+        background-color: #333;
+        border-color: #252525;
     }
 }
