@@ -702,6 +702,46 @@
              	</reference>
              </enabledWhen>
        </handler>
+       <handler
+             class="org.eclipse.php.internal.ui.editor.selectionactions.StructureSelectEnclosingHandler"
+             commandId="org.eclipse.wst.sse.ui.structure.select.enclosing">
+          <activeWhen>
+				<reference definitionId="org.eclipse.php.ui.phpContentType.definition" />
+			</activeWhen>
+			<enabledWhen>
+				<reference definitionId="org.eclipse.php.ui.phpContentType.definition" />
+			</enabledWhen>
+       </handler>
+       <handler
+             class="org.eclipse.php.internal.ui.editor.selectionactions.StructureSelectNextHandler"
+             commandId="org.eclipse.wst.sse.ui.structure.select.next">
+          <activeWhen>
+				<reference definitionId="org.eclipse.php.ui.phpContentType.definition" />
+			</activeWhen>
+			<enabledWhen>
+				<reference definitionId="org.eclipse.php.ui.phpContentType.definition" />
+			</enabledWhen>
+       </handler>
+       <handler
+             class="org.eclipse.php.internal.ui.editor.selectionactions.StructureSelectPreviousHandler"
+             commandId="org.eclipse.wst.sse.ui.structure.select.previous">
+          <activeWhen>
+				<reference definitionId="org.eclipse.php.ui.phpContentType.definition" />
+			</activeWhen>
+			<enabledWhen>
+				<reference definitionId="org.eclipse.php.ui.phpContentType.definition" />
+			</enabledWhen>
+       </handler>
+       <handler
+             class="org.eclipse.php.internal.ui.editor.selectionactions.StructureSelectHistoryHandler"
+             commandId="org.eclipse.wst.sse.ui.structure.select.last">
+          <activeWhen>
+				<reference definitionId="org.eclipse.php.ui.phpContentType.definition" />
+			</activeWhen>
+			<enabledWhen>
+				<reference definitionId="org.eclipse.php.ui.phpContentType.definition" />
+			</enabledWhen>
+       </handler>
 	</extension>
 
 	<!--Adapters:-->
@@ -1195,6 +1235,7 @@
 			parentId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
 			description="%context.editingPhpSource.description" id="org.eclipse.php.core.phpsource">
 		</context>
+		
 	</extension>
 
 	<extension point="org.eclipse.ui.commands">
@@ -1289,30 +1330,6 @@
       </command>
       
 <!-- edit -->
-      <command
-            name="%ActionDefinition.selectEnclosing.name"
-            description="%ActionDefinition.selectEnclosing.description"
-            categoryId="org.eclipse.ui.category.edit"
-            id="org.eclipse.pdt.ui.edit.text.select.enclosing">
-      </command>
-      <command
-            name="%ActionDefinition.selectNext.name"
-            description="%ActionDefinition.selectNext.description"
-            categoryId="org.eclipse.ui.category.edit"
-            id="org.eclipse.pdt.ui.edit.text.select.next">
-      </command>
-      <command
-            name="%ActionDefinition.selectPrevious.name"
-            description="%ActionDefinition.selectPrevious.description"
-            categoryId="org.eclipse.ui.category.edit"
-            id="org.eclipse.pdt.ui.edit.text.select.previous">
-      </command>
-      <command
-            name="%ActionDefinition.selectLast.name"
-            description="%ActionDefinition.selectLast.description"
-            categoryId="org.eclipse.ui.category.edit"
-            id="org.eclipse.pdt.ui.edit.text.select.last">
-      </command>
       <command
             name="%ActionDefinition.assignToLocalCommand.name"
             description="%ActionDefinition.assignToLocalCommand.description"
@@ -1486,75 +1503,7 @@
             sequence="M1+M2+TAB"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 <!-- edit -->
-      <key
-            sequence="M2+M3+ARROW_UP"
-            contextId="org.eclipse.php.ui.phpEditorScope"
-            commandId="org.eclipse.pdt.ui.edit.text.select.enclosing"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
-      <key
-            platform="cocoa"
-            sequence="M2+M3+ARROW_UP"
-            contextId="org.eclipse.php.ui.phpEditorScope"
-            commandId=""
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
-      <key
-            platform="cocoa"
-            sequence="M4+M2+ARROW_UP"
-            contextId="org.eclipse.php.ui.phpEditorScope"
-            commandId="org.eclipse.pdt.ui.edit.text.select.enclosing"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
-            
-      <key
-            sequence="M2+M3+ARROW_RIGHT"
-            contextId="org.eclipse.php.ui.phpEditorScope"
-            commandId="org.eclipse.pdt.ui.edit.text.select.next"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
-      <key
-            platform="cocoa"
-            sequence="M2+M3+ARROW_RIGHT"
-            contextId="org.eclipse.php.ui.phpEditorScope"
-            commandId=""
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
-      <key
-            platform="cocoa"
-            sequence="M4+M2+ARROW_RIGHT"
-            contextId="org.eclipse.php.ui.phpEditorScope"
-            commandId="org.eclipse.pdt.ui.edit.text.select.next"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
-      <key
-            sequence="M2+M3+ARROW_LEFT"
-            contextId="org.eclipse.php.ui.phpEditorScope"
-            commandId="org.eclipse.pdt.ui.edit.text.select.previous"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
-      <key
-            platform="cocoa"
-            sequence="M2+M3+ARROW_LEFT"
-            contextId="org.eclipse.php.ui.phpEditorScope"
-            commandId=""
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
-      <key
-            platform="cocoa"
-            sequence="M4+M2+ARROW_LEFT"
-            contextId="org.eclipse.php.ui.phpEditorScope"
-            commandId="org.eclipse.pdt.ui.edit.text.select.previous"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
-      <key
-            sequence="M2+M3+ARROW_DOWN"
-            contextId="org.eclipse.php.ui.phpEditorScope"
-            commandId="org.eclipse.pdt.ui.edit.text.select.last"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
-      <key
-            platform="cocoa"
-            sequence="M2+M3+ARROW_DOWN"
-            contextId="org.eclipse.php.ui.phpEditorScope"
-            commandId=""
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
-      <key
-            platform="cocoa"
-            sequence="M4+M2+ARROW_DOWN"
-            contextId="org.eclipse.php.ui.phpEditorScope"
-            commandId="org.eclipse.pdt.ui.edit.text.select.last"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+     
       <key
             sequence="M1+M2+O"
             contextId="org.eclipse.php.ui.phpEditorScope"
