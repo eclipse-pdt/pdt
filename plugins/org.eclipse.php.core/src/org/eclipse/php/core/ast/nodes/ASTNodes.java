@@ -13,6 +13,8 @@
  *******************************************************************************/
 package org.eclipse.php.core.ast.nodes;
 
+import java.util.List;
+
 import org.eclipse.php.core.ast.visitor.AbstractVisitor;
 
 ;
@@ -49,7 +51,8 @@ public class ASTNodes {
 
 	/**
 	 * @param node
-	 * @return whether the given node is the only statement of a control statement
+	 * @return whether the given node is the only statement of a control
+	 *         statement
 	 */
 	public static boolean isControlStatement(ASTNode node) {
 		assert node != null;
@@ -82,13 +85,13 @@ public class ASTNodes {
 
 	/**
 	 * Tells if a variable is in the form of <code>${var}</code> or
-	 * <code>${var[0]}</code> inside a back-quoted string, a double-quoted string or
-	 * a heredoc section
+	 * <code>${var[0]}</code> inside a back-quoted string, a double-quoted
+	 * string or a heredoc section
 	 * 
 	 * @param variable
 	 * @return true if the variable is in the form of <code>${var}</code> or
-	 *         <code>${var[0]}</code> inside a back-quoted string, a double-quoted
-	 *         string or a heredoc section, false otherwise
+	 *         <code>${var[0]}</code> inside a back-quoted string, a
+	 *         double-quoted string or a heredoc section, false otherwise
 	 */
 	public static boolean isQuotedDollaredCurlied(Variable variable) {
 		if (variable.isDollared() || variable.getParent() == null) {
@@ -113,5 +116,29 @@ public class ASTNodes {
 		}
 
 		return enclosing.getType() == ASTNode.QUOTE || enclosing.getType() == ASTNode.BACK_TICK_EXPRESSION;
+	}
+
+	/**
+	 * Variant of
+	 * {@link ASTNode#getStructuralProperty(StructuralPropertyDescriptor)} that
+	 * avoids unchecked casts in the caller.
+	 * <p>
+	 * To improve type-safety, callers can add the expected element type as
+	 * explicit type argument, e.g.:
+	 * <p>
+	 * {@code ASTNodes.<BodyDeclaration>getChildListProperty(typeDecl, bodyDeclarationsProperty)}
+	 *
+	 * @param node
+	 *            the node
+	 * @param propertyDescriptor
+	 *            the child list property to get
+	 * @return the child list
+	 * @exception RuntimeException
+	 *                if this node does not have the given property
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T extends ASTNode> List<T> getChildListProperty(ASTNode node,
+			ChildListPropertyDescriptor propertyDescriptor) {
+		return (List<T>) node.getStructuralProperty(propertyDescriptor);
 	}
 }
