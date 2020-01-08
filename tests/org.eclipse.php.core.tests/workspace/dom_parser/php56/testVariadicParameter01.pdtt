@@ -10,7 +10,7 @@ Test Variadic Parameter
 				<Identifier start='15' length='4' name='test'/>
 			</FunctionName>
 			<FormalParameters>
-				<FormalParameter start='23' length='7' isMandatory='false isVariadic='true'>
+				<FormalParameter start='20' length='10' isMandatory='false isVariadic='true'>
 					<Type>
 					</Type>
 					<ParameterName>

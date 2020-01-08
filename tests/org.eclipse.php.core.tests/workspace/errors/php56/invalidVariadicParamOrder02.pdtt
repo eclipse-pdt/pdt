@@ -3,4 +3,4 @@ Test Variadic parameter not at the end
 --FILE--
 <?php function foo(...$lala, ...$plum) {} ?>
 --EXPECT--
-[line=1, start=22, end=27] Only the last parameter can be variadic
+[line=1, start=19, end=27] Only the last parameter can be variadic

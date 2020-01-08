@@ -10,7 +10,7 @@ Test Variadic Parameter
 			<VariableReference start="23" end="27" name="$tmp">
 			</VariableReference>
 		</FormalParameter>
-		<FormalParameter start="32" end="39" modifiers="" isMandatory="false" isVariadic="true">
+		<FormalParameter start="29" end="39" modifiers="" isMandatory="false" isVariadic="true">
 			<VariableReference start="32" end="39" name="$params">
 			</VariableReference>
 		</FormalParameter>

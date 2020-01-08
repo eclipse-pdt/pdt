@@ -24,31 +24,31 @@ class Token {
 			<Scalar start="76" end="77" type="int" value="0">
 			</Scalar>
 		</ConstantDeclaration>
-		<ConstantDeclaration start="158" end="181" modifiers="private">
+		<ConstantDeclaration start="150" end="181" modifiers="private">
 			<ConstantReference start="164" end="177" name="PRIVATE_CONST">
 			</ConstantReference>
 			<Scalar start="180" end="181" type="int" value="0">
 			</Scalar>
 		</ConstantDeclaration>
-		<ConstantDeclaration start="201" end="226" modifiers="protected">
+		<ConstantDeclaration start="191" end="226" modifiers="protected">
 			<ConstantReference start="207" end="222" name="PROTECTED_CONST">
 			</ConstantReference>
 			<Scalar start="225" end="226" type="int" value="0">
 			</Scalar>
 		</ConstantDeclaration>
-		<ConstantDeclaration start="243" end="269" modifiers="public">
+		<ConstantDeclaration start="236" end="269" modifiers="public">
 			<ConstantReference start="249" end="265" name="PUBLIC_CONST_TWO">
 			</ConstantReference>
 			<Scalar start="268" end="269" type="int" value="0">
 			</Scalar>
 		</ConstantDeclaration>
-		<ConstantDeclaration start="355" end="368" modifiers="private">
+		<ConstantDeclaration start="347" end="368" modifiers="private">
 			<ConstantReference start="361" end="364" name="FOO">
 			</ConstantReference>
 			<Scalar start="367" end="368" type="int" value="1">
 			</Scalar>
 		</ConstantDeclaration>
-		<ConstantDeclaration start="355" end="377" modifiers="private">
+		<ConstantDeclaration start="347" end="377" modifiers="private">
 			<ConstantReference start="370" end="373" name="BAR">
 			</ConstantReference>
 			<Scalar start="376" end="377" type="int" value="2">

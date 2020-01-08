@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009-2020 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -27,7 +27,7 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>
  * e.g.
  * 
- * $a, MyClass $a, $a = 3, int $a = 3
+ * $a, MyClass $a, $a = 3, int $a = 3, ...$a, &$a, &...$a
  * </pre>
  */
 public class FormalParameter extends Argument {
@@ -44,6 +44,14 @@ public class FormalParameter extends Argument {
 	public FormalParameter(int start, int end, SimpleReference type, final VariableReference parameterName,
 			Expression defaultValue, boolean isMandatory, boolean isVariadic) {
 		super(parameterName, start, end, defaultValue, 0);
+
+		// XXX: the Argument class constructor does setEnd(start +
+		// parameterName.getName().length())
+		// which will give wrong results in case of hinted, referenced and/or
+		// variadic parameters.
+		if (parameterName != null && defaultValue == null) {
+			setEnd(parameterName.sourceEnd());
+		}
 
 		SimpleReference ref = getRef();
 		if (ref != null) {

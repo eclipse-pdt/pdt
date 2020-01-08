@@ -35,7 +35,7 @@ class Token {
 						<Scalar start='78' length='1' type='int' value='0'/>
 					</InitialValue>
 				</ConstantDeclaration>
-				<ConstantDeclaration start='160' length='24' modifier='private'>
+				<ConstantDeclaration start='152' length='32' modifier='private'>
 					<VariableName>
 						<Identifier start='166' length='13' name='PRIVATE_CONST'/>
 					</VariableName>
@@ -43,7 +43,7 @@ class Token {
 						<Scalar start='182' length='1' type='int' value='0'/>
 					</InitialValue>
 				</ConstantDeclaration>
-				<ConstantDeclaration start='203' length='26' modifier='protected'>
+				<ConstantDeclaration start='193' length='36' modifier='protected'>
 					<VariableName>
 						<Identifier start='209' length='15' name='PROTECTED_CONST'/>
 					</VariableName>
@@ -51,7 +51,7 @@ class Token {
 						<Scalar start='227' length='1' type='int' value='0'/>
 					</InitialValue>
 				</ConstantDeclaration>
-				<ConstantDeclaration start='245' length='27' modifier='public'>
+				<ConstantDeclaration start='238' length='34' modifier='public'>
 					<VariableName>
 						<Identifier start='251' length='16' name='PUBLIC_CONST_TWO'/>
 					</VariableName>
@@ -59,7 +59,7 @@ class Token {
 						<Scalar start='270' length='1' type='int' value='0'/>
 					</InitialValue>
 				</ConstantDeclaration>
-				<ConstantDeclaration start='357' length='23' modifier='private'>
+				<ConstantDeclaration start='349' length='31' modifier='private'>
 					<VariableName>
 						<Identifier start='363' length='3' name='FOO'/>
 					</VariableName>
