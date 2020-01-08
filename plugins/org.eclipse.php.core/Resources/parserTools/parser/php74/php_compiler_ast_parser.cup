@@ -2003,9 +2003,9 @@ optional_type:type T_VARIABLE:var
 	RESULT = parameter;
 :}
 
-| optional_type:type T_ELLIPSIS T_VARIABLE:var
+| optional_type:type T_ELLIPSIS:e T_VARIABLE:var
 {:
-	int start = type == null ? varleft : typeleft;
+	int start = type == null ? eleft : typeleft;
 	VariableReference v = new VariableReference(varleft, varright, var, PHPVariableKind.LOCAL);
 	FormalParameter parameter = new FormalParameter(start, varright, type, v, null, false, true);
 	RESULT = parameter;
@@ -2256,7 +2256,7 @@ variable_modifiers:modifier optional_type:type property_list:decList T_SEMICOLON
 
 		int start = constant.sourceStart();
 		int end = (initializer == null ? constant.sourceEnd() : initializer.sourceEnd());
-		parser.addDeclarationStatement(new ConstantDeclaration(constant, initializer, modifierValue, sleft, end, docBlock));
+		parser.addDeclarationStatement(new ConstantDeclaration(constant, initializer, modifierValue, methodStart, end, docBlock));
 		docBlock = null;
 	}
 :}
