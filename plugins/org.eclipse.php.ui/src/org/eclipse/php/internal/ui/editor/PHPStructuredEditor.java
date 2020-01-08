@@ -100,7 +100,6 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.*;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionGroup;
@@ -2202,13 +2201,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		if (isMarkingOccurrences()) {
 			installOccurrencesFinder(true);
 		}
-
-		final IInformationControlCreator informationControlCreator = new IInformationControlCreator() {
-			@Override
-			public IInformationControl createInformationControl(Shell shell) {
-				return new DefaultInformationControl(shell, true);
-			}
-		};
 
 		PlatformUI.getWorkbench().addWindowListener(fActivationListener);
 
