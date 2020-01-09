@@ -1,0 +1,11 @@
+--TEST--
+Test duplicated method
+--FILE--
+<?php
+class Foo {
+	public function bar() {}
+	public function bar() {}
+}
+?>
+--EXPECT--
+[line=4, start=61, end=64] Cannot declare method bar because the name is already in use
