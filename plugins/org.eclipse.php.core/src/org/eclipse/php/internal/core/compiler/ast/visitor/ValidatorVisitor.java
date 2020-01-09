@@ -24,6 +24,7 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.ast.parser.IModuleDeclaration;
 import org.eclipse.dltk.ast.references.ConstantReference;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
@@ -107,6 +108,8 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	private PHPVersion version;
 	private IBuildContext context;
 	private IValidatorExtension[] extensions;
+	private Deque<Map<String, ISourceNode>> declarationScope;
+	private Deque<ISourceNode> typeDeclarations;
 	/**
 	 * Used to hold visited namespaces in depth
 	 */
@@ -150,6 +153,10 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 			// See also VariableReferenceEvaluator.init().
 			varComments.addAll(((PHPModuleDeclaration) s).getVarComments());
 			docBlocks.addAll(((PHPModuleDeclaration) s).getPHPDocBlocks());
+			declarationScope = new ArrayDeque<Map<String, ISourceNode>>();
+			typeDeclarations = new ArrayDeque<ISourceNode>();
+			typeDeclarations.addLast(s);
+			declarationScope.addLast(new HashMap<String, ISourceNode>());
 		}
 		return super.visit(s);
 	}
@@ -161,6 +168,8 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		if (!hasNamespace) {
 			checkUnusedImport();
 		}
+		declarationScope = null;
+		typeDeclarations = null;
 		return res;
 	}
 
@@ -193,6 +202,17 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		if (s.getPHPDoc() != null) {
 			s.getPHPDoc().traverse(this);
 		}
+		String id = "m" + s.getName().toLowerCase(); //$NON-NLS-1$
+		Map<String, ISourceNode> childs = declarationScope.peekLast();
+		ISourceNode parentType = typeDeclarations.peekLast();
+		if (childs.containsKey(id) && !(parentType instanceof NamespaceDeclaration)
+				&& !(parentType instanceof IModuleDeclaration)) {
+			reportProblem(s.getNameStart(), s.getNameEnd(), Messages.DuplicateMethodDeclaration,
+					PHPProblemIdentifier.DuplicateMethodDeclaration, new String[] { s.getName() },
+					ProblemSeverities.Error);
+		} else {
+			childs.put(id, s);
+		}
 		return super.visit(s);
 	}
 
@@ -201,6 +221,17 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 		currentDeclaration = s;
 		if (s.getPHPDoc() != null) {
 			s.getPHPDoc().traverse(this);
+		}
+		String id = "f" + s.getName(); //$NON-NLS-1$
+		Map<String, ISourceNode> childs = declarationScope.peekLast();
+		ISourceNode parentType = typeDeclarations.peekLast();
+		if (childs.containsKey(id) && !(parentType instanceof NamespaceDeclaration)
+				&& !(parentType instanceof IModuleDeclaration)) {
+			reportProblem(s.getNameStart(), s.getNameEnd(), Messages.DuplicateFieldDeclaration,
+					PHPProblemIdentifier.DuplicateFieldDeclaration, new String[] { s.getName() },
+					ProblemSeverities.Error);
+		} else {
+			childs.put(id, s);
 		}
 		return super.visit(s);
 	}
@@ -266,6 +297,8 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	public boolean visit(AnonymousClassDeclaration s) throws Exception {
 		int end = s.start();
 		int start = end - 1;
+		declarationScope.addLast(new HashMap<String, ISourceNode>());
+		typeDeclarations.addLast(s);
 		while (sourceModule.getSource().charAt(start) != ' ') {
 			start--;
 		}
@@ -283,6 +316,13 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 			}
 		}
 		return super.visit(s);
+	}
+
+	@Override
+	public boolean endvisit(AnonymousClassDeclaration s) throws Exception {
+		declarationScope.pollLast();
+		typeDeclarations.pollLast();
+		return super.endvisit(s);
 	}
 
 	@Override
@@ -335,6 +375,8 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 
 	@Override
 	public boolean visit(TypeDeclaration s) throws Exception {
+		declarationScope.addLast(new HashMap<String, ISourceNode>());
+		typeDeclarations.addLast(s);
 		if (s instanceof TraitDeclaration) {
 			checkReservedWord(s, "trait"); //$NON-NLS-1$
 		}
@@ -342,6 +384,13 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 			checkDuplicateTypeDeclaration(s);
 		}
 		return super.visit(s);
+	}
+
+	@Override
+	public boolean endvisit(TypeDeclaration s) throws Exception {
+		declarationScope.pollLast();
+		typeDeclarations.pollLast();
+		return super.endvisit(s);
 	}
 
 	@SuppressWarnings("null")
@@ -1013,6 +1062,15 @@ public class ValidatorVisitor extends PHPASTVisitor implements IValidatorVisitor
 	public boolean visit(ConstantDeclaration s) throws Exception {
 		currentDeclaration = s;
 		validateConstantExpression(s.getConstantValue(), false);
+		String id = "c" + s.getName(); //$NON-NLS-1$
+		Map<String, ISourceNode> childs = declarationScope.peekLast();
+		if (childs.containsKey(id)) {
+			reportProblem(s.getConstantName(), Messages.DuplicateConstantDeclaration,
+					PHPProblemIdentifier.DuplicateConstantDeclaration, new String[] { s.getName() },
+					ProblemSeverities.Error);
+		} else {
+			childs.put(id, s.getConstantName());
+		}
 		return super.visit(s);
 	}
 

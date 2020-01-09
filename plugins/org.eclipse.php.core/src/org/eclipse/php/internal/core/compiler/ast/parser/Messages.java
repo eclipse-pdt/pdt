@@ -45,6 +45,9 @@ public class Messages extends NLS {
 	public static String ImportNotFound;
 	public static String DuplicateImport;
 	public static String DuplicateDeclaration;
+	public static String DuplicateMethodDeclaration;
+	public static String DuplicateFieldDeclaration;
+	public static String DuplicateConstantDeclaration;
 	public static String UnusedImport;
 	public static String UnnecessaryImport;
 	public static String ClassExtendFinalClass;
