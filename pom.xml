@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.eclipse.php</groupId>
@@ -18,10 +19,11 @@
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 		<sonar.exclusions>**/gen/**,**/*Messages.java</sonar.exclusions>
-		<sonar.jacoco.reportPath>../../target/jacoco.exec</sonar.jacoco.reportPath>
+		<sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../../target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho.scmUrl>scm:git:git://git.eclipse.org/gitroot/pdt/org.eclipse.pdt.git</tycho.scmUrl>
 		<tycho.testArgLine />
+		<jacoco.version>0.8.0</jacoco.version>
 		<eclipseNext>false</eclipseNext>
 		<p2.mirrorsPrefix>/tools/pdt/updates/7.1/</p2.mirrorsPrefix>
 		<p2.statsURI>https://download.eclipse.org/stats</p2.statsURI>
@@ -141,7 +143,7 @@
 				<artifactId>target-platform-configuration</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
-    				<executionEnvironmentDefaul>JavaSE-1.8</executionEnvironmentDefaul>
+					<executionEnvironmentDefaul>JavaSE-1.8</executionEnvironmentDefaul>
 					<environments>
 						<environment>
 							<os>win32</os>
@@ -203,7 +205,11 @@
 		<profile>
 			<id>foundation-proxy</id>
 			<properties>
-				<test.proxy>-Dhttp.proxyHost=proxy.eclipse.org -Dhttp.proxyPort=9898 -Dhttps.proxyHost=proxy.eclipse.org -Dhttps.proxyPort=9898 -Dhttp.nonProxyHosts=*.eclipse.org -Dhttps.nonProxyHosts=*.eclipse.org -Dftp.proxyHost=proxy.eclipse.org -Dftp.proxyPort=9898 -Dftp.nonProxyHosts=*.eclipse.org</test.proxy>
+				<test.proxy>-Dhttp.proxyHost=proxy.eclipse.org -Dhttp.proxyPort=9898
+					-Dhttps.proxyHost=proxy.eclipse.org -Dhttps.proxyPort=9898
+					-Dhttp.nonProxyHosts=*.eclipse.org -Dhttps.nonProxyHosts=*.eclipse.org
+					-Dftp.proxyHost=proxy.eclipse.org -Dftp.proxyPort=9898
+					-Dftp.nonProxyHosts=*.eclipse.org</test.proxy>
 			</properties>
 		</profile>
 		<profile>
@@ -267,6 +273,27 @@
 								</artifact>
 							</target>
 						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>coverage</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<version>${jacoco.version}</version>
+						<executions>
+							<execution>
+								<id>report</id>
+								<goals>
+									<goal>report-aggregate</goal>
+								</goals>
+								<phase>verify</phase>
+							</execution>
+						</executions>
 					</plugin>
 				</plugins>
 			</build>
