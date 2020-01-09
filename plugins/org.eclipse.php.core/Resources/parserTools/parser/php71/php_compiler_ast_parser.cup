@@ -1991,9 +1991,9 @@ optional_class_type:classType T_VARIABLE:var
 	RESULT = parameter;
 :}
 
-| optional_class_type:classType T_ELLIPSIS T_VARIABLE:var
+| optional_class_type:classType T_ELLIPSIS:e T_VARIABLE:var
 {:
-	int start = classType == null ? varleft : classTypeleft;
+	int start = classType == null ? eleft : classTypeleft;
 	VariableReference v = new VariableReference(varleft, varright, var, PHPVariableKind.LOCAL);
 	FormalParameter parameter = new FormalParameter(start, varright, classType, v, null, false, true);
 	RESULT = parameter;
@@ -2244,7 +2244,7 @@ variable_modifiers:modifier property_list:decList T_SEMICOLON
 
 		int start = constant.sourceStart();
 		int end = (initializer == null ? constant.sourceEnd() : initializer.sourceEnd());
-		parser.addDeclarationStatement(new ConstantDeclaration(constant, initializer, modifierValue, sleft, end, docBlock));
+		parser.addDeclarationStatement(new ConstantDeclaration(constant, initializer, modifierValue, methodStart, end, docBlock));
 		docBlock = null;
 	}
 :}

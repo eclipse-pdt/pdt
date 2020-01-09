@@ -6,7 +6,7 @@ Test Variadic Parameter
 --EXPECT--
 <ModuleDeclaration start="0" end="44">
 	<PHPMethodDeclaration start="6" end="37" modifiers="" name="prepare">
-		<FormalParameter start="26" end="33" modifiers="" isMandatory="false" isVariadic="true">
+		<FormalParameter start="23" end="33" modifiers="" isMandatory="false" isVariadic="true">
 			<VariableReference start="26" end="33" name="$params">
 			</VariableReference>
 		</FormalParameter>

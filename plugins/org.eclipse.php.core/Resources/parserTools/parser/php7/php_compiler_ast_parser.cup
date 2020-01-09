@@ -2007,9 +2007,9 @@ optional_class_type:classType T_VARIABLE:var
 	RESULT = parameter;
 :}
 
-| optional_class_type:classType T_ELLIPSIS T_VARIABLE:var
+| optional_class_type:classType T_ELLIPSIS:e T_VARIABLE:var
 {:
-	int start = classType == null ? varleft : classTypeleft;
+	int start = classType == null ? eleft : classTypeleft;
 	VariableReference v = new VariableReference(varleft, varright, var, PHPVariableKind.LOCAL);
 	FormalParameter parameter = new FormalParameter(start, varright, classType, v, null, false, true);
 	RESULT = parameter;

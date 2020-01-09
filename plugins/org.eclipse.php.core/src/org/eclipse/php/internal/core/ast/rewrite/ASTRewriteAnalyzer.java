@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2019 IBM Corporation and others.
+ * Copyright (c) 2009-2020 IBM Corporation and others.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -3008,8 +3008,6 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			} else {
 				if (formalParameter.getParameterName() instanceof Reference) {
 					start++;
-				} else {
-					start -= 3;
 				}
 				doTextRemove(start, 3, editGroup);
 			}

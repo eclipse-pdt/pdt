@@ -63,13 +63,13 @@ class Example
 			</SimpleReference>
 		</PHPFieldDeclaration>
 		<PHPMethodDeclaration start="72" end="188" modifiers="public" name="__construct">
-			<FormalParameter start="100" end="103" modifiers="" isMandatory="true" parameterType="int">
+			<FormalParameter start="100" end="107" modifiers="" isMandatory="true" parameterType="int">
 				<FullyQualifiedReference start="100" end="103" name="int">
 				</FullyQualifiedReference>
 				<VariableReference start="104" end="107" name="$id">
 				</VariableReference>
 			</FormalParameter>
-			<FormalParameter start="109" end="114" modifiers="" isMandatory="true" parameterType="string">
+			<FormalParameter start="109" end="121" modifiers="" isMandatory="true" parameterType="string">
 				<FullyQualifiedReference start="109" end="115" name="string">
 				</FullyQualifiedReference>
 				<VariableReference start="116" end="121" name="$name">

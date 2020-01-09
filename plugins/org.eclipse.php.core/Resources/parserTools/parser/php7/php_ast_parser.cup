@@ -1653,9 +1653,9 @@ optional_class_type:classType T_VARIABLE:var
 	RESULT = new FormalParameter(s, varright, parser.ast, classType, v);
 :}
 
-| optional_class_type:classType T_ELLIPSIS T_VARIABLE:var
+| optional_class_type:classType T_ELLIPSIS:e T_VARIABLE:var
 {:
-	int s = classType == null ? varleft : classTypeleft;
+	int s = classType == null ? eleft : classTypeleft;
 	Variable v = new Variable(varleft, varright, parser.ast, var);
 	RESULT = new FormalParameter(s, varright, parser.ast, classType, v, null, false, true);
 :}
