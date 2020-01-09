@@ -161,6 +161,8 @@ public class CodeAssistTests {
 
 	@BeforeList
 	public void setUpSuite() throws Exception {
+		TestUtils.disableColliders(ColliderType.WTP_VALIDATION);
+		TestUtils.disableColliders(ColliderType.LIBRARY_AUTO_DETECTION);
 		project = TestUtils.createProject("CodeAssistTests_" + version.toString());
 		TestUtils.setProjectPHPVersion(project, version);
 		TestUtils.enableColliders(ColliderType.AUTO_BUILD);
@@ -170,6 +172,8 @@ public class CodeAssistTests {
 	public void tearDownSuite() throws Exception {
 		TestUtils.deleteProject(project);
 		TestUtils.disableColliders(ColliderType.AUTO_BUILD);
+		TestUtils.enableColliders(ColliderType.WTP_VALIDATION);
+		TestUtils.enableColliders(ColliderType.LIBRARY_AUTO_DETECTION);
 	}
 
 	@Test
