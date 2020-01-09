@@ -14,7 +14,7 @@ Test Ref Lambda Function With Params With Vars With Statements
 						<VariableReference start="28" end="35" name="$param1">
 						</VariableReference>
 					</FormalParameter>
-					<FormalParameterByReference start="37" end="44" modifiers="">
+					<FormalParameterByReference start="37" end="45" modifiers="">
 						<VariableReference start="38" end="45" name="$param2">
 						</VariableReference>
 					</FormalParameterByReference>

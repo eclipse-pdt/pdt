@@ -23,6 +23,7 @@ import org.eclipse.php.core.ast.nodes.ArrayCreation;
 import org.eclipse.php.core.ast.nodes.ArraySpreadElement;
 import org.eclipse.php.core.ast.nodes.ArrowFunctionDeclaration;
 import org.eclipse.php.core.ast.nodes.FieldsDeclaration;
+import org.eclipse.php.core.ast.nodes.FormalParameter;
 import org.eclipse.php.core.ast.nodes.LambdaFunctionDeclaration;
 import org.eclipse.php.core.ast.nodes.Scalar;
 import org.eclipse.php.core.ast.nodes.Variable;
@@ -468,4 +469,16 @@ public class ASTRewriteTestsPHP74 extends ASTRewriteTestsPHP71 {
 		checkResult("<?php class A { private float   $prop0 = 10; } ?>");
 	}
 
+	@Test
+	public void variadicParameterUnset() throws Exception {
+		String str = "<?php function test(&...$tmp) {} \n ?>";
+		initialize(str);
+
+		List<FormalParameter> statements = getAllOfType(program, FormalParameter.class);
+		assertTrue("Unexpected list size.", statements.size() == 1);
+		statements.get(0).setIsVariadic(false);
+
+		rewrite();
+		checkResult("<?php function test(&$tmp) {} \n ?>");
+	}
 }

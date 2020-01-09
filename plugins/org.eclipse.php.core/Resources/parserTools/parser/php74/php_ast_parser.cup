@@ -1661,9 +1661,9 @@ optional_type:type T_VARIABLE:var
 	RESULT = new FormalParameter(s, varright, parser.ast, type, v);
 :}
 
-| optional_type:type T_ELLIPSIS T_VARIABLE:var
+| optional_type:type T_ELLIPSIS:e T_VARIABLE:var
 {:
-	int s = type == null ? varleft : typeleft;
+	int s = type == null ? eleft : typeleft;
 	Variable v = new Variable(varleft, varright, parser.ast, var);
 	RESULT = new FormalParameter(s, varright, parser.ast, type, v, null, false, true);
 :}
@@ -1876,7 +1876,7 @@ variable_modifiers:modifier optional_type:type property_list:decList T_SEMICOLON
 {:
 	int methodStart = modifier == null ? cleft : modifierleft;
 	int modifierValue = modifier == null ? 0 : modifier.intValue();
-	RESULT = new ConstantDeclaration(cleft, eright, parser.ast, modifierValue, list);
+	RESULT = new ConstantDeclaration(methodStart, eright, parser.ast, modifierValue, list);
 :}
 
 | method_modifiers:modifier T_FUNCTION:s is_reference:isReference identifier:fn

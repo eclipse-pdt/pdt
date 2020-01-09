@@ -322,7 +322,7 @@ $extended = fn ($c) => $callable($factory($c), $c);
 						<DefaultValue>
 						</DefaultValue>
 					</FormalParameter>
-					<FormalParameter start='252' length='5' isMandatory='false isVariadic='true'>
+					<FormalParameter start='249' length='8' isMandatory='false isVariadic='true'>
 						<Type>
 						</Type>
 						<ParameterName>
