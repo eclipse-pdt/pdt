@@ -94,6 +94,8 @@
 									<includes>
 										<include>org.eclipse.php.*</include>
 									</includes>
+									<propertyName>jacoco.argLine</propertyName>
+									<append>true</append>
 								</configuration>
 							</execution>
 							<execution>
