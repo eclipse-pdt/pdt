@@ -21,6 +21,11 @@ import org.eclipse.jface.bindings.keys.IKeyLookup;
 import org.eclipse.jface.bindings.keys.KeyLookupFactory;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.preference.JFacePreferences;
+import org.eclipse.jface.resource.ColorRegistry;
+import org.eclipse.jface.resource.JFaceColors;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.resource.ResourceLocator;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.link.LinkedPosition;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -39,6 +44,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Region;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IPartListener2;
@@ -266,7 +272,7 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 		final Display display = workbenchShell.getDisplay();
 
 		fPopup = new Shell(workbenchShell, SWT.ON_TOP | SWT.NO_TRIM | SWT.TOOL);
-		fPopupLayout = new GridLayout(2, false);
+		fPopupLayout = new GridLayout(3, false);
 		fPopupLayout.marginWidth = 1;
 		fPopupLayout.marginHeight = 1;
 		fPopupLayout.marginLeft = 4;
@@ -459,7 +465,8 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 			}
 			ISourceViewer viewer = fEditor.getTextViewer();
 			ITextViewerExtension5 viewer5 = (ITextViewerExtension5) viewer;
-			int widgetOffset = viewer5.modelOffset2WidgetOffset(position.offset/* + position.length */);
+			int widgetOffset = viewer5.modelOffset2WidgetOffset(
+					position.offset/* + position.length */);
 
 			StyledText textWidget = viewer.getTextWidget();
 			Point pos = textWidget.getLocationAtOffset(widgetOffset);
@@ -496,12 +503,14 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 				int originalSnapPosition = fSnapPosition;
 
 				/*
-				 * Feature in Tracker: it is not possible to directly control the feedback, see
+				 * Feature in Tracker: it is not possible to directly control
+				 * the feedback, see
 				 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=121300 and
 				 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=121298#c1 .
 				 * 
-				 * Workaround is to have an offscreen rectangle for tracking mouse movement and
-				 * a manually updated rectangle for the actual drop target.
+				 * Workaround is to have an offscreen rectangle for tracking
+				 * mouse movement and a manually updated rectangle for the
+				 * actual drop target.
 				 */
 				final Tracker tracker = new Tracker(textWidget, SWT.NONE);
 
@@ -521,7 +530,8 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 
 				ControlListener moveListener = new ControlAdapter() {
 					/*
-					 * @see org.eclipse.swt.events.ControlAdapter#controlMoved(org
+					 * @see
+					 * org.eclipse.swt.events.ControlAdapter#controlMoved(org
 					 * .eclipse.swt.events.ControlEvent)
 					 */
 					@Override
@@ -630,11 +640,12 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 
 	private void createContent(Composite parent) {
 		Display display = parent.getDisplay();
-		Color foreground = display.getSystemColor(SWT.COLOR_INFO_FOREGROUND);
-		Color background = display.getSystemColor(SWT.COLOR_INFO_BACKGROUND);
+		Color foreground = getInformationForegroundColor(display);
+		Color background = getInformationBackgroundColor(display);
 		addMoveSupport(fPopup, parent);
 
 		StyledText hint = new StyledText(fPopup, SWT.READ_ONLY | SWT.SINGLE);
+		hint.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
 		String enterKeyName = getEnterBinding();
 		String hintTemplate = Messages.RenameInformationPopup_2;
 		hint.setText(NLS.bind(hintTemplate, enterKeyName));
@@ -643,18 +654,32 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 		hint.setEnabled(false); // text must not be selectable
 		addMoveSupport(fPopup, hint);
 
+		addLink(parent);
 		addViewMenu(parent);
 
 		recursiveSetBackgroundColor(parent, background);
 
 	}
 
+	private void addLink(Composite parent) {
+		Link link = new Link(parent, SWT.NONE);
+		link.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
+		link.setText(Messages.RenameInformationPopup_OptionsLink);
+		link.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				activateEditor();
+				fRenameLinkedMode.startFullDialog();
+			}
+		});
+	}
+
 	private ToolBar addViewMenu(final Composite parent) {
 		fToolBar = new ToolBar(parent, SWT.FLAT);
 		final ToolItem menuButton = new ToolItem(fToolBar, SWT.PUSH, 0);
-		fMenuImage = RefactoringUIPlugin
-				.imageDescriptorFromPlugin(RefactoringUIPlugin.PLUGIN_ID, "icons/full/elcl16/view_menu.png") //$NON-NLS-1$
-				.createImage();
+		fMenuImage = ResourceLocator
+				.imageDescriptorFromBundle(RefactoringUIPlugin.PLUGIN_ID, "icons/full/elcl16/view_menu.png") //$NON-NLS-1$
+				.get().createImage();
 		menuButton.setImage(fMenuImage);
 		menuButton.setToolTipText(Messages.RenameInformationPopup_3);
 		fToolBar.addMouseListener(new MouseAdapter() {
@@ -669,6 +694,7 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 				showMenu(fToolBar);
 			}
 		});
+		fToolBar.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false));
 		fToolBar.pack();
 		return fToolBar;
 	}
@@ -836,5 +862,27 @@ public class RenameInformationPopup implements IWidgetTokenKeeper, IWidgetTokenK
 			showMenu(fToolBar);
 		}
 		return true;
+	}
+
+	private static Color getInformationForegroundColor(Display display) {
+		ColorRegistry colorRegistry = JFaceResources.getColorRegistry();
+		Color foreground = colorRegistry.get(JFacePreferences.INFORMATION_FOREGROUND_COLOR);
+
+		if (foreground == null) {
+			return JFaceColors.getInformationViewerForegroundColor(display);
+		}
+
+		return foreground;
+	}
+
+	private static Color getInformationBackgroundColor(Display display) {
+		ColorRegistry colorRegistry = JFaceResources.getColorRegistry();
+		Color background = colorRegistry.get(JFacePreferences.INFORMATION_BACKGROUND_COLOR);
+
+		if (background == null) {
+			return JFaceColors.getInformationViewerBackgroundColor(display);
+		}
+
+		return background;
 	}
 }
