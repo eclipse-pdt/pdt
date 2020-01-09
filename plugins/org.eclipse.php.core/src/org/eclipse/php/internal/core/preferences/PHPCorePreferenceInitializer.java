@@ -62,6 +62,12 @@ public class PHPCorePreferenceInitializer extends AbstractPreferenceInitializer 
 				DefaultScope.INSTANCE);
 		problemPreferences.setSeverity(PHPProblemIdentifier.DuplicateDeclaration, ProblemSeverity.ERROR,
 				DefaultScope.INSTANCE);
+		problemPreferences.setSeverity(PHPProblemIdentifier.DuplicateMethodDeclaration, ProblemSeverity.ERROR,
+				DefaultScope.INSTANCE);
+		problemPreferences.setSeverity(PHPProblemIdentifier.DuplicateFieldDeclaration, ProblemSeverity.ERROR,
+				DefaultScope.INSTANCE);
+		problemPreferences.setSeverity(PHPProblemIdentifier.DuplicateConstantDeclaration, ProblemSeverity.ERROR,
+				DefaultScope.INSTANCE);
 		problemPreferences.setSeverity(PHPProblemIdentifier.AbstractMethodMustBeImplemented, ProblemSeverity.ERROR,
 				DefaultScope.INSTANCE);
 		problemPreferences.setSeverity(PHPProblemIdentifier.SuperclassMustBeAClass, ProblemSeverity.ERROR,
