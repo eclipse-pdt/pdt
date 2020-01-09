@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Zend Techologies Ltd.
+ * Copyright (c) 2013-2020 Zend Techologies Ltd.
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -71,7 +71,14 @@ class HTMLFormatterFactoryForPHPCode {
 		if (name == null) {
 			return false;
 		}
-		return name.equalsIgnoreCase("STYLE");//$NON-NLS-1$
+		boolean isStyleNode = name.equalsIgnoreCase("STYLE");//$NON-NLS-1$
+		if (isStyleNode && node.getTextContent().indexOf("<?") != -1) { //$NON-NLS-1$
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=528379
+			// Do not use the CSS formatter when a "style" node contains PHP
+			// code.
+			return false;
+		}
+		return isStyleNode;
 	}
 
 	private HTMLFormatterFactoryForPHPCode() {
