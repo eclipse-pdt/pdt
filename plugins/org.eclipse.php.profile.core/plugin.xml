@@ -50,7 +50,7 @@
       <handler
             class="org.eclipse.php.profile.core.engine.XProfiler"
             id="org.eclipse.php.profile.core.engine.XProfiler"
-            name="xDebug Profiler">
+            name="Xdebug Profiler">
       </handler>
    </extension>
    <extension
