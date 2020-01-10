@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -56,6 +57,8 @@ public class XMLUtil {
 		if (documentBuilder == null) {
 			try {
 				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+				factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, new String()); 
+				factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, new String());
 				factory.setValidating(false);
 				factory.setNamespaceAware(false);
 				factory.setExpandEntityReferences(false);

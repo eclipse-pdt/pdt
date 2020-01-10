@@ -16,6 +16,7 @@ package org.eclipse.php.formatter.ui.preferences;
 import java.io.*;
 import java.util.*;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.*;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -116,9 +117,10 @@ public class ProfileStore {
 	}
 
 	/**
-	 * @return Returns the collection of profiles currently stored in the preference
-	 *         store or <code>null</code> if the loading failed. The elements are of
-	 *         type {@link CustomProfile} and are all updated to the latest version.
+	 * @return Returns the collection of profiles currently stored in the
+	 *         preference store or <code>null</code> if the loading failed. The
+	 *         elements are of type {@link CustomProfile} and are all updated to
+	 *         the latest version.
 	 * @throws CoreException
 	 */
 	public static List<Profile> readProfiles(IScopeContext scope) throws CoreException {
@@ -239,8 +241,8 @@ public class ProfileStore {
 	}
 
 	/**
-	 * Load profiles from a XML stream and add them to a map or <code>null</code> if
-	 * the source is not a profile store.
+	 * Load profiles from a XML stream and add them to a map or
+	 * <code>null</code> if the source is not a profile store.
 	 * 
 	 * @param inputSource
 	 *            The input stream
@@ -253,6 +255,8 @@ public class ProfileStore {
 		try {
 			final SAXParserFactory factory = SAXParserFactory.newInstance();
 			final SAXParser parser = factory.newSAXParser();
+			parser.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, new String());
+			parser.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, new String());
 			parser.parse(inputSource, handler);
 		} catch (SAXException e) {
 			throw createException(e, FormatterMessages.CodingStyleConfigurationBlock_error_reading_xml_message);
@@ -303,6 +307,8 @@ public class ProfileStore {
 
 		try {
 			final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, new String());
+			factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, new String());
 			final DocumentBuilder builder = factory.newDocumentBuilder();
 			final Document document = builder.newDocument();
 
@@ -331,8 +337,8 @@ public class ProfileStore {
 	}
 
 	/*
-	 * Create a new profile element in the specified document. The profile is not
-	 * added to the document by this method.
+	 * Create a new profile element in the specified document. The profile is
+	 * not added to the document by this method.
 	 */
 	private static Element createProfileElement(Profile profile, Document document) {
 		final Element element = document.createElement(XML_NODE_PROFILE);

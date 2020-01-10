@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -92,14 +93,16 @@ public class BuildpathPackage {
 
 			// write archive end tag if necessary
 			if (hasExtraAttributes || hasRestrictions) {
-				xmlWriter.endTag(TAG_ARCHIVE, true/* insert tab */, true/*
-																		 * insert new line
-																		 */);
+				xmlWriter.endTag(TAG_ARCHIVE, true/* insert tab */,
+						true/*
+							 * insert new line
+							 */);
 			}
 		}
-		xmlWriter.endTag(TAG_USERLIBRARY, true/* insert tab */, true/*
-																	 * insert new line
-																	 */);
+		xmlWriter.endTag(TAG_USERLIBRARY, true/* insert tab */,
+				true/*
+					 * insert new line
+					 */);
 		writer.flush();
 		writer.close();
 		xmlWriter.close();
@@ -110,7 +113,10 @@ public class BuildpathPackage {
 	public static BuildpathPackage createFromString(Reader reader) throws IOException {
 		Element cpElement;
 		try {
-			DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, new String());
+			factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, new String());
+			DocumentBuilder parser = factory.newDocumentBuilder();
 			cpElement = parser.parse(new InputSource(reader)).getDocumentElement();
 		} catch (SAXException e) {
 			throw new IOException(Messages.file_badFormat);
@@ -150,9 +156,10 @@ public class BuildpathPackage {
 					/*
 					 * IBuildpathAttribute[] extraAttributes = BuildpathEntry
 					 * .decodeExtraAttributes(attributeList); attributeList =
-					 * BuildpathEntry.getChildAttributes( BuildpathEntry.TAG_ACCESS_RULES, children,
-					 * foundChildren); IAccessRule[] accessRules = BuildpathEntry
-					 * .decodeAccessRules(attributeList);
+					 * BuildpathEntry.getChildAttributes(
+					 * BuildpathEntry.TAG_ACCESS_RULES, children,
+					 * foundChildren); IAccessRule[] accessRules =
+					 * BuildpathEntry .decodeAccessRules(attributeList);
 					 */
 
 					IBuildpathEntry entry = DLTKCore.newLibraryEntry(Path.fromPortableString(path), new IAccessRule[0],
