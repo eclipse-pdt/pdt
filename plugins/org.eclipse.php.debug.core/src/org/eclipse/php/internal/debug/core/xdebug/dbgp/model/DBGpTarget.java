@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.*;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
+import org.eclipse.dltk.annotations.NonNull;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.internal.core.phar.PharPath;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
@@ -396,13 +397,13 @@ public class DBGpTarget extends DBGpElement
 	}
 
 	/**
-	 * test the initial script to see if we can locate it. If the script is within
-	 * the workspace, then we don't need to do anything. If it isn't check to see if
-	 * there is a path mapper for it. If not, see if we can create a path map entry
-	 * based on the launch information. If we still cannot do this, prompt the user
-	 * as we may need info in order to set breakpoints correctly. TODO: XDebug
-	 * seemed to accept relative paths as well as absolute paths, need to
-	 * investigate further.
+	 * test the initial script to see if we can locate it. If the script is
+	 * within the workspace, then we don't need to do anything. If it isn't
+	 * check to see if there is a path mapper for it. If not, see if we can
+	 * create a path map entry based on the launch information. If we still
+	 * cannot do this, prompt the user as we may need info in order to set
+	 * breakpoints correctly. TODO: XDebug seemed to accept relative paths as
+	 * well as absolute paths, need to investigate further.
 	 */
 	private void testInitialScriptLocating() {
 		String initScript = session.getInitialScript();
@@ -494,8 +495,8 @@ public class DBGpTarget extends DBGpElement
 
 	/**
 	 * initiate the session, this cannot be called from the DBGpSession response
-	 * handler thread as we install breakpoints synchronously and block waiting for
-	 * the response thread to pick them up, so we will deadlock
+	 * handler thread as we install breakpoints synchronously and block waiting
+	 * for the response thread to pick them up, so we will deadlock
 	 * 
 	 */
 	private void initiateSession() {
@@ -522,18 +523,18 @@ public class DBGpTarget extends DBGpElement
 		}
 		if (!stopAtStart) {
 			/*
-			 * Set state before issuing a run otherwise a timing window occurs where a run
-			 * could suspend, the thread sets state to suspend but then this thread sets it
-			 * to running.
+			 * Set state before issuing a run otherwise a timing window occurs
+			 * where a run could suspend, the thread sets state to suspend but
+			 * then this thread sets it to running.
 			 */
 			setState(STATE_STARTED_RUNNING);
 			session.sendAsyncCmd(DBGpCommand.run);
 			return;
 		}
 		/*
-		 * We have a related source and "Break at First Line" option on. First say we
-		 * are suspended on a breakpoint to trigger a perspective switch then do an
-		 * initial step into to step onto the 1st line
+		 * We have a related source and "Break at First Line" option on. First
+		 * say we are suspended on a breakpoint to trigger a perspective switch
+		 * then do an initial step into to step onto the 1st line
 		 */
 		suspended(DebugEvent.BREAKPOINT);
 		try {
@@ -725,11 +726,12 @@ public class DBGpTarget extends DBGpElement
 	}
 
 	/**
-	 * Called by DBGpSession when the session terminates. The session terminates if
-	 * we explicitly stop the session, or the script completes process then it will
-	 * be a remote server version, so we don't want to terminate the debug target,
-	 * but the session will have ended. This target needs to either be terminated
-	 * manually or wait for another debug session to be attached.
+	 * Called by DBGpSession when the session terminates. The session terminates
+	 * if we explicitly stop the session, or the script completes process then
+	 * it will be a remote server version, so we don't want to terminate the
+	 * debug target, but the session will have ended. This target needs to
+	 * either be terminated manually or wait for another debug session to be
+	 * attached.
 	 */
 	public void sessionEnded() {
 		boolean unexpectedTermination = false;
@@ -875,7 +877,8 @@ public class DBGpTarget extends DBGpElement
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.debug.core.model.IMemoryBlockRetrieval#getMemoryBlock(long,
+	 * @see
+	 * org.eclipse.debug.core.model.IMemoryBlockRetrieval#getMemoryBlock(long,
 	 * long)
 	 */
 	@Override
@@ -1283,11 +1286,11 @@ public class DBGpTarget extends DBGpElement
 	protected synchronized IStackFrame[] getCurrentStackFrames() throws DebugException {
 		/*
 		 * <response command="stack_get" transaction_id="transaction_id"> <stack
-		 * level="{NUM}" type="file|eval|?" filename="..." lineno="{NUM}" where=""
-		 * cmdbegin="line_number:offset" cmdend="line_number:offset"/> <stack
-		 * level="{NUM}" type="file|eval|?" filename="..." lineno="{NUM}"> <input
-		 * level="{NUM}" type="file|eval|?" filename="..." lineno="{NUM}"/> </stack>
-		 * </response>
+		 * level="{NUM}" type="file|eval|?" filename="..." lineno="{NUM}"
+		 * where="" cmdbegin="line_number:offset" cmdend="line_number:offset"/>
+		 * <stack level="{NUM}" type="file|eval|?" filename="..."
+		 * lineno="{NUM}"> <input level="{NUM}" type="file|eval|?"
+		 * filename="..." lineno="{NUM}"/> </stack> </response>
 		 */
 
 		// this can be called from multiple threads, as the data it manages
@@ -1358,8 +1361,8 @@ public class DBGpTarget extends DBGpElement
 	}
 
 	/**
-	 * get the super globals. never returns null (IVariable[0]). Cache the info so
-	 * that it is never got again when going to other stack levels to view
+	 * get the super globals. never returns null (IVariable[0]). Cache the info
+	 * so that it is never got again when going to other stack levels to view
 	 * variables.
 	 * 
 	 * @return
@@ -1375,9 +1378,9 @@ public class DBGpTarget extends DBGpElement
 	}
 
 	/**
-	 * get all variables to be displayed. Never returns null (IVariable[0]) cache
-	 * the top level stack frame as this is the one most likely always requested
-	 * multiple times.
+	 * get all variables to be displayed. Never returns null (IVariable[0])
+	 * cache the top level stack frame as this is the one most likely always
+	 * requested multiple times.
 	 * 
 	 * @param level
 	 * @return
@@ -1490,8 +1493,7 @@ public class DBGpTarget extends DBGpElement
 	/**
 	 * set a variable to a particular value
 	 * 
-	 * @param fFullName
-	 * @param fStackLevel
+	 * @param var
 	 * @param data
 	 * @return
 	 */
@@ -1510,8 +1512,9 @@ public class DBGpTarget extends DBGpElement
 			encoded = Base64.encode(data.getBytes());
 		}
 		String fullName = var.getFullName();
+		String escapedFullName = fullName != null ? escapeFullName(fullName) : ""; //$NON-NLS-1$
 		String stackLevel = String.valueOf(var.getStackLevel());
-		String args = "-n " + fullName + " -d " + stackLevel + " -l " + encoded.length() + " -- " + encoded; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		String args = "-n " + escapedFullName + " -d " + stackLevel + " -l " + encoded.length() + " -- " + encoded; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		if (var.getDataType() == DataType.PHP_STRING) {
 			// this ensures XDebug doesn't use eval
 			args = "-t string " + args; //$NON-NLS-1$
@@ -1545,15 +1548,16 @@ public class DBGpTarget extends DBGpElement
 	 */
 	public Node getProperty(String fullName, String stackLevel, int page) {
 		if (fullName != null && fullName.trim().length() != 0) {
-			String args = "-n " + fullName + " -d " + stackLevel + " -p " + page; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			String escapedFullName = escapeFullName(fullName);
+			String args = "-n " + escapedFullName + " -d " + stackLevel + " -p " + page; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			if (stackLevel.equals("-1")) { //$NON-NLS-1$
 				// the following line should work but doesn't in 2.0.0rc1 of
 				// XDebug
-				// args = "-n " + fullName + " -c 1 -p " + page;
+				// args = "-n " + escapedFullName + " -c 1 -p " + page;
 				// but the following works for both rc1 and beyond so will keep
 				// it
 				// like this for now.
-				args = "-n " + fullName + " -d " + getCurrentStackLevel() + " -p " + page; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				args = "-n " + escapedFullName + " -d " + getCurrentStackLevel() + " -p " + page; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 			synchronized (sessionMutex) {
 				if (session != null && session.isActive()) {
@@ -1581,15 +1585,16 @@ public class DBGpTarget extends DBGpElement
 	 */
 	public Node getCompleteString(String fullName, String stackLevel, int length) {
 		if (fullName != null && fullName.trim().length() != 0) {
-			String args = "-n " + fullName + " -d " + stackLevel; //$NON-NLS-1$ //$NON-NLS-2$
+			String escapedFullName = escapeFullName(fullName);
+			String args = "-n " + escapedFullName + " -d " + stackLevel; //$NON-NLS-1$ //$NON-NLS-2$
 			if (stackLevel.equals("-1")) { //$NON-NLS-1$
 				// the following line should work but doesn't in 2.0.0rc1 of
 				// XDebug
-				// args = "-n " + fullName + " -c 1 -p " + page;
+				// args = "-n " + escapedFullName + " -c 1 -p " + page;
 				// but the following works for both rc1 and beyond so will keep
 				// it
 				// like this for now.
-				args = "-n " + fullName + " -d " + getCurrentStackLevel(); //$NON-NLS-1$ //$NON-NLS-2$
+				args = "-n " + escapedFullName + " -d " + getCurrentStackLevel(); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			// I don't believe the -m option is required for getValue as the
 			// spec says you should use getValue to retrieve the entire data
@@ -1726,13 +1731,13 @@ public class DBGpTarget extends DBGpElement
 	// }
 
 	/**
-	 * map the file on this file system to the external one expected by xdebug 1.
-	 * file is in the workspace a) use PDT Path mapper workspace definition b) if no
-	 * mapping found use external file name and PDT path mapper file system
-	 * definition c) if no mapping found then send external file name 2. file is
-	 * outside of the workspace a) use PDT Path mapper and PDT path mapper file
-	 * system definition b) if no mapping found then send as is (cannot use Internal
-	 * Path mapper here)
+	 * map the file on this file system to the external one expected by xdebug
+	 * 1. file is in the workspace a) use PDT Path mapper workspace definition
+	 * b) if no mapping found use external file name and PDT path mapper file
+	 * system definition c) if no mapping found then send external file name 2.
+	 * file is outside of the workspace a) use PDT Path mapper and PDT path
+	 * mapper file system definition b) if no mapping found then send as is
+	 * (cannot use Internal Path mapper here)
 	 * 
 	 * @param bp
 	 *            the breakpoint which references the file to be mapped to an
@@ -1775,11 +1780,11 @@ public class DBGpTarget extends DBGpElement
 	}
 
 	/**
-	 * map a decoded external absolute file to an absolute one the workspace will
-	 * hopefully recognise. rules to decide if mapping is required:
+	 * map a decoded external absolute file to an absolute one the workspace
+	 * will hopefully recognise. rules to decide if mapping is required:
 	 * 
-	 * 1. if the file does exist a) if it mapping found -> remap b) otherwise don't
-	 * remap 2. if the file does not exit -> remap
+	 * 1. if the file does exist a) if it mapping found -> remap b) otherwise
+	 * don't remap 2. if the file does not exit -> remap
 	 * 
 	 * @param decodedFile
 	 * @return absolute path to a workspace registered file.
@@ -1838,7 +1843,8 @@ public class DBGpTarget extends DBGpElement
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.debug.core.model.IDebugTarget#supportsBreakpoint(org.eclipse
+	 * @see
+	 * org.eclipse.debug.core.model.IDebugTarget#supportsBreakpoint(org.eclipse
 	 * .debug.core.model.IBreakpoint)
 	 */
 	@Override
@@ -1856,7 +1862,8 @@ public class DBGpTarget extends DBGpElement
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.debug.core.IBreakpointListener#breakpointAdded(org.eclipse
+	 * @see
+	 * org.eclipse.debug.core.IBreakpointListener#breakpointAdded(org.eclipse
 	 * .debug.core.model.IBreakpoint)
 	 */
 	@Override
@@ -1959,8 +1966,9 @@ public class DBGpTarget extends DBGpElement
 		resp = session.sendSyncCmd(DBGpCommand.breakPointSet, args);
 		if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
 			/*
-			 * <response command="breakpoint_set" transaction_id="TRANSACTION_ID"
-			 * state="STATE" id="BREAKPOINT_ID"/>
+			 * <response command="breakpoint_set"
+			 * transaction_id="TRANSACTION_ID" state="STATE"
+			 * id="BREAKPOINT_ID"/>
 			 */
 			String bpId = resp.getTopAttribute("id"); //$NON-NLS-1$
 			if (bp instanceof DBGpLineBreakpoint) {
@@ -1979,7 +1987,8 @@ public class DBGpTarget extends DBGpElement
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.debug.core.IBreakpointListener#breakpointRemoved(org.eclipse
+	 * @see
+	 * org.eclipse.debug.core.IBreakpointListener#breakpointRemoved(org.eclipse
 	 * .debug.core.model.IBreakpoint, org.eclipse.core.resources.IMarkerDelta)
 	 */
 	@Override
@@ -1997,9 +2006,11 @@ public class DBGpTarget extends DBGpElement
 						&& breakpoint.getMarker().exists() && !breakpoint.isEnabled()) {
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=538315
 					// XXX: the breakpoint removal was already handled by
-					// breakpointChanged(IBreakpoint, IMarkerDelta), stop here...
+					// breakpointChanged(IBreakpoint, IMarkerDelta), stop
+					// here...
 					// ... except that getMarker().exists() will be false when
-					// deleting an already-disabled breakpoint using CTRL-SHIFT-B.
+					// deleting an already-disabled breakpoint using
+					// CTRL-SHIFT-B.
 					return;
 				}
 			} catch (CoreException e) {
@@ -2054,7 +2065,8 @@ public class DBGpTarget extends DBGpElement
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.debug.core.IBreakpointListener#breakpointChanged(org.eclipse
+	 * @see
+	 * org.eclipse.debug.core.IBreakpointListener#breakpointChanged(org.eclipse
 	 * .debug.core.model.IBreakpoint, org.eclipse.core.resources.IMarkerDelta)
 	 */
 	@Override
@@ -2132,8 +2144,8 @@ public class DBGpTarget extends DBGpElement
 	}
 
 	/**
-	 * Notification a breakpoint was encountered. Determine which breakpoint was hit
-	 * and fire a suspend event.
+	 * Notification a breakpoint was encountered. Determine which breakpoint was
+	 * hit and fire a suspend event.
 	 * 
 	 * @param event
 	 *            debug event
@@ -2169,7 +2181,8 @@ public class DBGpTarget extends DBGpElement
 	}
 
 	/**
-	 * setup the currently defined breakpoints before the execution of the script.
+	 * setup the currently defined breakpoints before the execution of the
+	 * script.
 	 */
 	private void loadPredefinedBreakpoints() {
 		IBreakpointManager bmgr = DebugPlugin.getDefault().getBreakpointManager();
@@ -2481,4 +2494,28 @@ public class DBGpTarget extends DBGpElement
 		return breakpointSet;
 	}
 
+	/**
+	 * Escape a full PHP name, especially when it contains an array name + an
+	 * associative array index, for example <code>$var['my idx']</code>
+	 * 
+	 * @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=528162
+	 * 
+	 * @param fullName
+	 * @return escaped full name
+	 */
+	@NonNull
+	private String escapeFullName(@NonNull String fullName) {
+		// 1. unescape already escaped single-quotes
+		// 2. escape backslash characters
+		// 3. espace double-quotes
+		String newVariableName = fullName.replace("\\'", "'").replace("\\", "\\\\").replace("\"", "\\\""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+		// 4. we must escape in a special way all the '$' characters appearing
+		// in associative array keys. It seems that string keys are always
+		// delimited by double-quotes:
+		int idx = fullName.indexOf('"');
+		if (idx != -1) {
+			newVariableName = newVariableName.substring(0, idx) + newVariableName.substring(idx).replace("$", "\\\\$"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		return "\"" + newVariableName + "\""; //$NON-NLS-1$ //$NON-NLS-2$
+	}
 }
