@@ -17,6 +17,7 @@ import java.io.ByteArrayInputStream;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -83,6 +84,8 @@ public class XMLPreferencesReader {
 	protected static Map<String, Object> read(String str, boolean skipEmptyNodes) {
 		try {
 			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+			docBuilderFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, new String());
+			docBuilderFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, new String());
 			DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
 			Document doc = docBuilder.parse(new ByteArrayInputStream(str.getBytes()));
 			return read(doc.getChildNodes(), skipEmptyNodes);

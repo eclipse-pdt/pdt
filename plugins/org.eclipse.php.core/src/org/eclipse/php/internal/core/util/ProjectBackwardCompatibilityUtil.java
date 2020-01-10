@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -82,7 +83,10 @@ public class ProjectBackwardCompatibilityUtil {
 			final Reader reader = new StringReader(includePathXml);
 
 			try {
-				final DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+				factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, new String());
+				factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, new String());
+				final DocumentBuilder parser = factory.newDocumentBuilder();
 				cpElement = parser.parse(new InputSource(reader)).getDocumentElement();
 			} catch (final Exception e) {
 				throw new IOException(CoreMessages.getString("PHPProjectOptions_1")); //$NON-NLS-1$
@@ -270,12 +274,13 @@ public class ProjectBackwardCompatibilityUtil {
 		}
 
 		/**
-		 * Returns resolved IPath from the given path string that starts from include
-		 * path variable
+		 * Returns resolved IPath from the given path string that starts from
+		 * include path variable
 		 * 
 		 * @param path
 		 *            Path string
-		 * @return resolved IPath or <code>null</code> if it couldn't be resolved
+		 * @return resolved IPath or <code>null</code> if it couldn't be
+		 *         resolved
 		 */
 		public IPath resolveVariablePath(String path) {
 			int index = path.indexOf('/');

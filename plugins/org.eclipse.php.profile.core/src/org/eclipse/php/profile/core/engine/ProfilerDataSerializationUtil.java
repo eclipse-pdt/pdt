@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -42,7 +43,7 @@ public class ProfilerDataSerializationUtil {
 	 * Used for serialization
 	 * 
 	 * @param XMLWriter
-	 *                      xml
+	 *            xml
 	 */
 	private ProfilerDataSerializationUtil(XMLWriter xml) {
 		fXML = xml;
@@ -240,6 +241,8 @@ public class ProfilerDataSerializationUtil {
 	public static ProfilerDB[] deserialize(InputStream in) {
 		try {
 			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+			docBuilderFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, new String());
+			docBuilderFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, new String());
 			// docBuilderFactory.setValidating(true);
 			DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
 			Document doc = docBuilder.parse(in);
