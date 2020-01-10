@@ -95,7 +95,7 @@
 										<include>org.eclipse.php.*</include>
 									</includes>
 									<propertyName>jacoco.argLine</propertyName>
-									<append>true</append>
+									<outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
 								</configuration>
 							</execution>
 							<execution>
