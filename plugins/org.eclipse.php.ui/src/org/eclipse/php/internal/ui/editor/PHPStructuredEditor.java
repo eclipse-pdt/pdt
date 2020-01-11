@@ -28,7 +28,6 @@ import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.ui.actions.CompositeActionGroup;
-import org.eclipse.dltk.internal.ui.actions.FoldingMessages;
 import org.eclipse.dltk.internal.ui.editor.*;
 import org.eclipse.dltk.internal.ui.text.ScriptWordFinder;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
@@ -103,7 +102,6 @@ import org.eclipse.ui.*;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.editors.text.EditorsUI;
-import org.eclipse.ui.editors.text.IFoldingCommandIds;
 import org.eclipse.ui.texteditor.*;
 import org.eclipse.ui.texteditor.link.EditorLinkedModeUI;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -1962,21 +1960,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				PHPStructuredTextViewer.SHOW_OUTLINE, true);
 		resAction.setActionDefinitionId(IScriptEditorActionDefinitionIds.SHOW_OUTLINE);
 		setAction(IScriptEditorActionDefinitionIds.SHOW_OUTLINE, resAction);
-
-		// workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=305786
-		// collapse by shortcut does not work
-		resAction = new TextOperationAction(FoldingMessages.getResourceBundle(), "Projection.Expand.", this, //$NON-NLS-1$
-				ProjectionViewer.EXPAND, true);
-		resAction.setActionDefinitionId(IFoldingCommandIds.FOLDING_EXPAND);
-		setAction("FoldingExpand", resAction); //$NON-NLS-1$
-		resAction.setEnabled(true);
-
-		resAction = new TextOperationAction(FoldingMessages.getResourceBundle(), "Projection.Collapse.", this, //$NON-NLS-1$
-				ProjectionViewer.COLLAPSE, true);
-		resAction.setActionDefinitionId(IFoldingCommandIds.FOLDING_COLLAPSE);
-		setAction("FoldingCollapse", resAction); //$NON-NLS-1$
-		resAction.setEnabled(true);
-		// workaround end
 
 		if (isExternal) {
 			// Override the way breakpoints are set on external files.
