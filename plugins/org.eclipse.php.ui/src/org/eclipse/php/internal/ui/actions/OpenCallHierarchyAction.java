@@ -19,11 +19,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobManager;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
@@ -37,9 +34,7 @@ import org.eclipse.dltk.ui.util.ExceptionHandler;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
-import org.eclipse.php.internal.ui.util.PHPSelectionUtil;
 import org.eclipse.ui.IWorkbenchSite;
 
 /**
@@ -53,8 +48,9 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 	private PHPStructuredEditor fEditor;
 
 	/**
-	 * Creates a new <code>OpenCallHierarchyAction</code>. The action requires that
-	 * the selection provided by the site's selection provider is of type <code>
+	 * Creates a new <code>OpenCallHierarchyAction</code>. The action requires
+	 * that the selection provided by the site's selection provider is of type
+	 * <code>
 	 * org.eclipse.jface.viewers.IStructuredSelection</code>.
 	 * 
 	 * @param site
@@ -70,8 +66,8 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 	}
 
 	/**
-	 * Note: This constructor is for internal use only. Clients should not call this
-	 * constructor.
+	 * Note: This constructor is for internal use only. Clients should not call
+	 * this constructor.
 	 */
 	public OpenCallHierarchyAction(PHPStructuredEditor editor) {
 		this(editor.getEditorSite());
@@ -81,42 +77,15 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 
 	@Override
 	public void selectionChanged(final ITextSelection selection) {
-
-		IJobManager jobManager = Job.getJobManager();
-		if (jobManager.find(PHPUiPlugin.OPEN_CALL_HIERARCHY_ACTION_FAMILY_NAME).length > 0) {
-			jobManager.cancel(PHPUiPlugin.OPEN_CALL_HIERARCHY_ACTION_FAMILY_NAME);
-		}
-
-		Job job = new Job(PHPUiPlugin.OPEN_CALL_HIERARCHY_ACTION_FAMILY_NAME) {
-
-			@Override
-			protected IStatus run(IProgressMonitor monitor) {
-				setEnabled(isEnabled(selection));
-				return Status.OK_STATUS;
-			}
-
-			@Override
-			public boolean belongsTo(Object family) {
-				return getName().equals(family);
-			}
-		};
-		job.setSystem(true);
-		job.setPriority(Job.DECORATE);
-		job.schedule();
-
 	}
 
 	@Override
 	public void selectionChanged(IStructuredSelection selection) {
-		if (selection instanceof ITextSelection) {
-			selectionChanged((ITextSelection) selection);
-		} else {
-			setEnabled(isEnabled(selection));
-		}
+		setEnabled(isEnabled(selection));
 	}
 
 	private boolean isEnabled(IStructuredSelection selection) {
-		if (selection.size() != 1) {
+		if (selection == null || selection.size() != 1) {
 			return false;
 		}
 		Object input = selection.getFirstElement();
@@ -133,32 +102,6 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 		default:
 			return false;
 		}
-	}
-
-	/**
-	 * Returns true if the given selection is for an {@link IModelElement} that is a
-	 * TYPE (e.g. Class or Interface).
-	 */
-	private boolean isEnabled(ITextSelection selection) {
-
-		if (fEditor == null || selection == null) {
-			return false;
-		}
-		if (fEditor.getModelElement() instanceof ISourceModule) {
-			ISourceModule sourceModule = (ISourceModule) fEditor.getModelElement();
-			IModelElement element = PHPSelectionUtil.getSelectionModelElement(selection.getOffset(),
-					selection.getLength(), sourceModule);
-			if (element == null) {
-				return false;
-			}
-			switch (element.getElementType()) {
-			case IModelElement.METHOD:
-				return true;
-			default:
-				return false;
-			}
-		}
-		return false;
 	}
 
 	@Override
@@ -198,13 +141,6 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 		IModelElement enclosingElement = null;
 		try {
 			switch (input.getElementType()) {
-			// case IModelElement.CLASS_FILE :
-			// IClassFile classFile= (IClassFile)
-			// input.getAncestor(IModelElement.CLASS_FILE);
-			// if (classFile != null) {
-			// enclosingElement= classFile.getElementAt(selection.getOffset());
-			// }
-			// break;
 			case IModelElement.SOURCE_MODULE:
 				ISourceModule cu = (ISourceModule) input.getAncestor(IModelElement.SOURCE_MODULE);
 				if (cu != null) {
@@ -248,28 +184,6 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 			} else {
 				openErrorDialog(status);
 			}
-			// ISourceModule sourceModule = (ISourceModule) input;
-			// String fileName = sourceModule.getElementName();
-			// IModelElement element = DLTKCore.create(ResourcesPlugin
-			// .getWorkspace().getRoot().getFile(
-			// Path.fromOSString(fileName)));
-			// if (element instanceof ISourceModule) {
-			// int offset = 0;
-			// try {
-			// offset = sourceModule.getSourceRange().getOffset();
-			// } catch (ModelException e) {
-			// // TODO Auto-generated catch block
-			// e.printStackTrace();
-			// }// getUserData().getStopPosition();
-			// IModelElement modelElement = getSelectionModelElement(offset,
-			// 1, (ISourceModule) element);
-			// if (modelElement != null) {
-			// if (!ActionUtil.isProcessable(getShell(), modelElement)) {
-			// return;
-			// }
-			// run(new IModelElement[] { modelElement });
-			// }
-			// }
 		}
 	}
 
