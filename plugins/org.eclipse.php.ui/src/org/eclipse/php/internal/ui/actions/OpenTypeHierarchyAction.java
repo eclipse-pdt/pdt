@@ -12,26 +12,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
-/*******************************************************************************
- * Copyright (c) 2000, 2006 IBM Corporation and others.
- *
- * This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License 2.0
- * which is available at https://www.eclipse.org/legal/epl-2.0/
- *
- * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *******************************************************************************/
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.jobs.IJobManager;
-import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.ui.actions.ActionUtil;
 import org.eclipse.dltk.internal.ui.actions.OpenActionUtil;
@@ -42,10 +30,7 @@ import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.util.ExceptionHandler;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.text.ITextSelection;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.util.PHPSelectionUtil;
@@ -71,8 +56,9 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 	private PHPStructuredEditor fEditor;
 
 	/**
-	 * Creates a new <code>OpenTypeHierarchyAction</code>. The action requires that
-	 * the selection provided by the site's selection provider is of type <code>
+	 * Creates a new <code>OpenTypeHierarchyAction</code>. The action requires
+	 * that the selection provided by the site's selection provider is of type
+	 * <code>
 	 * org.eclipse.jface.viewers.IStructuredSelection</code>.
 	 * 
 	 * @param site
@@ -88,8 +74,8 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 	}
 
 	/**
-	 * Note: This constructor is for internal use only. Clients should not call this
-	 * constructor.
+	 * Note: This constructor is for internal use only. Clients should not call
+	 * this constructor.
 	 * 
 	 * @param editor
 	 *            the PHP editor
@@ -100,83 +86,30 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 		setEnabled(SelectionConverter.canOperateOn(fEditor));
 	}
 
-	/*
-	 * (non-Javadoc) Method declared on SelectionDispatchAction.
-	 */
 	@Override
 	public void selectionChanged(final ITextSelection selection) {
 
-		IJobManager jobManager = Job.getJobManager();
-		if (jobManager.find(PHPUiPlugin.OPEN_TYPE_HIERARCHY_ACTION_FAMILY_NAME).length > 0) {
-			jobManager.cancel(PHPUiPlugin.OPEN_TYPE_HIERARCHY_ACTION_FAMILY_NAME);
-		}
-
-		Job job = new Job(PHPUiPlugin.OPEN_TYPE_HIERARCHY_ACTION_FAMILY_NAME) {
-			@Override
-			protected IStatus run(IProgressMonitor monitor) {
-				setEnabled(isEnabled(selection));
-				return Status.OK_STATUS;
-			}
-
-			@Override
-			public boolean belongsTo(Object family) {
-				return getName().equals(family);
-			}
-		};
-
-		job.setSystem(true);
-		job.setPriority(Job.DECORATE);
-		job.schedule();
 	}
 
-	/*
-	 * (non-Javadoc) Method declared on SelectionDispatchAction.
-	 */
 	@Override
 	public void selectionChanged(IStructuredSelection selection) {
-		if (selection == null || selection.size() != 1) {
-			setEnabled(false);
-		} else if (selection instanceof ITextSelection) {
-			selectionChanged((ITextSelection) selection);
-		} else if (selection instanceof ITreeSelection) {
-			Object firstElement = selection.getFirstElement();
-			if (firstElement instanceof IMethod) {
-				setEnabled(((IMethod) firstElement).getParent() instanceof IType);
-			} else {
-				setEnabled(firstElement instanceof IType || firstElement instanceof IField);
-			}
-		}
+		setEnabled(isEnabled(selection));
+
 	}
 
-	/**
-	 * Returns true if the given selection is for an {@link IModelElement} that is a
-	 * TYPE (e.g. Class or Interface).
-	 */
-	private boolean isEnabled(ITextSelection selection) {
-		if (fEditor == null || selection == null) {
+	private boolean isEnabled(IStructuredSelection selection) {
+		if (selection == null || selection.size() != 1) {
 			return false;
 		}
-		if (fEditor.getModelElement() instanceof ISourceModule) {
-			ISourceModule sourceModule = (ISourceModule) fEditor.getModelElement();
-			IModelElement element = PHPSelectionUtil.getSelectionModelElement(selection.getOffset(),
-					selection.getLength(), sourceModule);
-			if (element == null) {
-				return false;
-			}
-			switch (element.getElementType()) {
-			case IModelElement.TYPE:
-			case IModelElement.FIELD:
-			case IModelElement.METHOD:
-			case IModelElement.SOURCE_MODULE:
-				return true;
-			}
+
+		Object firstElement = selection.getFirstElement();
+		if (firstElement instanceof IMethod) {
+			return ((IMethod) firstElement).getParent() instanceof IType;
+		} else {
+			return firstElement instanceof IType || firstElement instanceof IField;
 		}
-		return false;
 	}
 
-	/*
-	 * (non-Javadoc) Method declared on SelectionDispatchAction.
-	 */
 	@Override
 	public void run(ITextSelection selection) {
 		IModelElement input = EditorUtility.getEditorInputModelElement(fEditor, true);
@@ -188,9 +121,6 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 		run(new IModelElement[] { selectionModelElement });
 	}
 
-	/*
-	 * (non-Javadoc) Method declared on SelectionDispatchAction.
-	 */
 	@Override
 	public void run(IStructuredSelection selection) {
 		if (selection instanceof ITextSelection) {
@@ -209,8 +139,6 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 				input = fragments[0];
 			}
 
-			// || firstElement instanceof PHPSuperClassNameData || firstElement
-			// instanceof PHPInterfaceNameData
 			if (!(input instanceof IModelElement)) {
 				IStatus status = createStatus(Messages.OpenTypeHierarchyAction_3);
 				ErrorDialog.openError(getShell(), getDialogTitle(), "", //$NON-NLS-1$
@@ -230,28 +158,6 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 				ErrorDialog.openError(getShell(), getDialogTitle(), "", //$NON-NLS-1$
 						status);
 			}
-			// ISourceModule sourceModule = (ISourceModule) input;
-			// String fileName = sourceModule.getElementName();
-			// IModelElement element = DLTKCore.create(ResourcesPlugin
-			// .getWorkspace().getRoot().getFile(
-			// Path.fromOSString(fileName)));
-			// if (element instanceof ISourceModule) {
-			// int offset = 0;
-			// try {
-			// offset = sourceModule.getSourceRange().getOffset();
-			// } catch (ModelException e) {
-			// // TODO Auto-generated catch block
-			// e.printStackTrace();
-			// }
-			// IModelElement modelElement = getSelectionModelElement(offset,
-			// 1, (ISourceModule) element);
-			// if (modelElement != null) {
-			// if (!ActionUtil.isProcessable(getShell(), modelElement)) {
-			// return;
-			// }
-			// run(new IModelElement[] { modelElement });
-			// }
-			// }
 		}
 	}
 
@@ -318,24 +224,6 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 		setEnabled(fEditor != null);
 	}
 
-	/**
-	 * @return text selection in the editor
-	 */
-	protected ITextSelection getCurrentSelection() {
-		if (fEditor == null) {
-			return null;
-		}
-		ISelectionProvider provider = fEditor.getSelectionProvider();
-		if (provider == null) {
-			return null;
-		}
-		ISelection selection = provider.getSelection();
-		if (selection instanceof ITextSelection) {
-			return (ITextSelection) selection;
-		}
-		return null;
-	}
-
 	private static IStatus compileCandidates(List<IModelElement> result, IModelElement elem) {
 		IStatus ok = new Status(IStatus.OK, PHPUiPlugin.getPluginId(), 0, "", null); //$NON-NLS-1$
 		try {
@@ -357,23 +245,6 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 			case IModelElement.PACKAGE_DECLARATION:
 				result.add(elem.getAncestor(IModelElement.SCRIPT_FOLDER));
 				return ok;
-			// case IModelElement.IMPORT_DECLARATION:
-			// IImportDeclaration decl= (IImportDeclaration) elem;
-			// if (decl.isOnDemand()) {
-			// elem= JavaModelUtil.findTypeContainer(elem.getJavaProject(),
-			// Signature.getQualifier(elem.getElementName()));
-			// } else {
-			// elem= elem.getJavaProject().findType(elem.getElementName());
-			// }
-			// if (elem != null) {
-			// result.add(elem);
-			// return ok;
-			// }
-			// return createStatus(ActionMessages.
-			// OpenTypeHierarchyAction_messages_unknown_import_decl);
-			// case IJavaElement.CLASS_FILE:
-			// result.add(((IClassFile)elem).getType());
-			// return ok;
 			case IModelElement.SOURCE_MODULE:
 				ISourceModule cu = (ISourceModule) elem;
 				IType[] types = cu.getTypes();
