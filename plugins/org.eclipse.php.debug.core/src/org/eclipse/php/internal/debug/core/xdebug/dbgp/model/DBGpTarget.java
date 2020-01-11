@@ -1512,19 +1512,20 @@ public class DBGpTarget extends DBGpElement
 	 * @param data
 	 * @return
 	 */
-	public boolean setProperty(DBGpVariable var, String data) {
+	public boolean setProperty(@NonNull DBGpVariable var, @NonNull String data) {
 
 		// XDebug expects all data to be base64 encoded.
 		// In this case we don't use session encoding, we use transfer
 		// encoding as we want control over the bytes being placed into the
 		// variable at the other end.
-		String encoded;
+		String encoded = escapeValue(data);
+
 		try {
-			encoded = Base64.encode(data.getBytes(getBinaryEncoding()));
+			encoded = Base64.encode(encoded.getBytes(getBinaryEncoding()));
 		} catch (UnsupportedEncodingException e1) {
 			// should never happen
 			DBGpLogger.logException("unexpected encoding problem", this, e1); //$NON-NLS-1$
-			encoded = Base64.encode(data.getBytes());
+			encoded = Base64.encode(encoded.getBytes());
 		}
 		String fullName = var.getFullName();
 		String escapedFullName = fullName != null ? escapeFullName(fullName) : ""; //$NON-NLS-1$
@@ -2508,6 +2509,27 @@ public class DBGpTarget extends DBGpElement
 			breakpointSet = new BreakpointSet(PHPLaunchUtilities.getProject(this), !webLaunch);
 		}
 		return breakpointSet;
+	}
+
+	/**
+	 * Escape a PHP value, especially when it contains double-quotes and
+	 * backslashes
+	 * 
+	 * @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=559062
+	 * @see https://xdebug.org/docs/dbgp#id33 for Xdebug's escaping rules
+	 * 
+	 * @param value
+	 * @return escaped value
+	 */
+	@NonNull
+	private String escapeValue(@NonNull final String value) {
+		String escapedValue = value;
+		// 1. escape backslash characters
+		// 2. espace double-quotes
+		escapedValue = escapedValue.replace("\\", "\\\\") //$NON-NLS-1$ //$NON-NLS-2$
+				.replace("\"", "\\\""); //$NON-NLS-1$ //$NON-NLS-2$
+		// 3. protect the resulting string
+		return "\"" + escapedValue + "\""; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
