@@ -28,11 +28,6 @@ public class PHPTestEditor extends PHPStructuredEditor {
 	public static final String ID = "org.eclipse.php.test.editor";
 
 	@Override
-	protected void selectionChanged() {
-		// No need to react
-	}
-
-	@Override
 	protected void installOverrideIndicator(boolean provideAST) {
 		// Do not install
 	}

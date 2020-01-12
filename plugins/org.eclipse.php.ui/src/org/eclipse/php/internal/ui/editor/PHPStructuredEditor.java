@@ -294,55 +294,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	/** The bracket inserter. */
 	private final BracketInserter fBracketInserter = new BracketInserter();
 
-	/**
-	 * Internal implementation class for a change listener.
-	 * 
-	 * @since 3.0
-	 */
-	protected abstract class AbstractSelectionChangedListener implements ISelectionChangedListener {
-
-		/**
-		 * Installs this selection changed listener with the given selection
-		 * provider. If the selection provider is a post selection provider,
-		 * post selection changed events are the preferred choice, otherwise
-		 * normal selection changed events are requested.
-		 * 
-		 * @param selectionProvider
-		 */
-		public void install(ISelectionProvider selectionProvider) {
-			if (selectionProvider == null) {
-				return;
-			}
-
-			if (selectionProvider instanceof IPostSelectionProvider) {
-				IPostSelectionProvider provider = (IPostSelectionProvider) selectionProvider;
-				provider.addPostSelectionChangedListener(this);
-			} else {
-				selectionProvider.addSelectionChangedListener(this);
-			}
-		}
-
-		/**
-		 * Removes this selection changed listener from the given selection
-		 * provider.
-		 * 
-		 * @param selectionProvider
-		 *            the selection provider
-		 */
-		public void uninstall(ISelectionProvider selectionProvider) {
-			if (selectionProvider == null) {
-				return;
-			}
-
-			if (selectionProvider instanceof IPostSelectionProvider) {
-				IPostSelectionProvider provider = (IPostSelectionProvider) selectionProvider;
-				provider.removePostSelectionChangedListener(this);
-			} else {
-				selectionProvider.removeSelectionChangedListener(this);
-			}
-		}
-	}
-
 	private class ExitPolicy implements IExitPolicy {
 
 		final char fExitCharacter;
@@ -2806,51 +2757,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	}
 
 	/**
-	 * Returns the most narrow model element including the given offset.
-	 * 
-	 * @param offset
-	 *            the offset inside of the requested element
-	 * @return the most narrow model element
-	 */
-	protected IModelElement getElementAt(int offset) {
-		return getElementAt(offset, true);
-	}
-
-	/**
-	 * Returns the most narrow element including the given offset. If
-	 * <code>reconcile</code> is <code>true</code> the editor's input element is
-	 * reconciled in advance. If it is <code>false</code> this method only
-	 * returns a result if the editor's input element does not need to be
-	 * reconciled.
-	 * 
-	 * @param offset
-	 *            the offset included by the retrieved element
-	 * @param reconcile
-	 *            <code>true</code> if working copy should be reconciled
-	 * @return the most narrow element which includes the given offset
-	 */
-	protected IModelElement getElementAt(int offset, boolean reconcile) {
-		ISourceModule unit = (ISourceModule) getModelElement();
-		if (unit != null) {
-			try {
-				if (reconcile) {
-					ScriptModelUtil.reconcile(unit);
-					return unit.getElementAt(offset);
-				} else if (unit.isConsistent()) {
-					return unit.getElementAt(offset);
-				}
-			} catch (ModelException x) {
-				if (!x.isDoesNotExist()) {
-					// DLTKUIPlugin.log(x.getStatus());
-					System.err.println(x.getStatus());
-					// nothing found, be tolerant and go on
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * Returns project that holds the edited file (if any)
 	 * 
 	 * @return project or <code>null</code> if there's no one
@@ -3226,71 +3132,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		IPartService service = window.getPartService();
 		IWorkbenchPart part = service.getActivePart();
 		return part;
-	}
-
-	/**
-	 * React to changed selection.
-	 * 
-	 * @since 3.0
-	 */
-	protected void selectionChanged() {
-		if (getSelectionProvider() == null) {
-			return;
-		}
-		Job job = new Job("PHPStructuredEditor selection changed job") { //$NON-NLS-1$
-
-			@Override
-			protected IStatus run(IProgressMonitor monitor) {
-				ISourceReference element = computeHighlightRangeSourceReference();
-				setSelection(element, false);
-				return Status.OK_STATUS;
-			}
-		};
-		job.setPriority(Job.DECORATE);
-		job.setSystem(true);
-		job.schedule();
-
-	}
-
-	/**
-	 * Computes and returns the source reference that includes the caret and
-	 * serves as provider for the outline page selection and the editor range
-	 * indication.
-	 * 
-	 * @return the computed source reference
-	 */
-	public ISourceReference computeHighlightRangeSourceReference() {
-		ISourceViewer sourceViewer = getSourceViewer();
-		if (sourceViewer == null) {
-			return null;
-		}
-		final StyledText styledText = sourceViewer.getTextWidget();
-		if (styledText == null) {
-			return null;
-		}
-		final int[] caret = new int[1];
-		if (sourceViewer instanceof ITextViewerExtension5) {
-			final ITextViewerExtension5 extension = (ITextViewerExtension5) sourceViewer;
-			Runnable caretRunnable = () -> {
-				if (!styledText.isDisposed()) {
-					caret[0] = extension.widgetOffset2ModelOffset(styledText.getCaretOffset());
-				}
-			};
-			if (Display.getCurrent() != null) {
-				caretRunnable.run();
-			} else {
-				Display.getDefault().syncExec(caretRunnable);
-			}
-		} else {
-			int offset = sourceViewer.getVisibleRegion().getOffset();
-			caret[0] = offset + styledText.getCaretOffset();
-		}
-		IModelElement element = getElementAt(caret[0], false);
-		// IModelElement element = getElementAt(caret[0], true);
-		if (!(element instanceof ISourceReference)) {
-			return null;
-		}
-		return (ISourceReference) element;
 	}
 
 	protected void setSelection(ISourceReference reference, boolean moveCursor) {
