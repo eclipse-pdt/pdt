@@ -60,15 +60,20 @@ public class PHPUnitLaunchShortcut implements ILaunchShortcut {
 
 	@Override
 	public void launch(final IEditorPart editor, final String mode) {
-		IModelElement element = ((PHPStructuredEditor) editor).getModelElement();
-		final ISourceReference highlighted = ((PHPStructuredEditor) editor).computeHighlightRangeSourceReference();
-		if (highlighted instanceof IMethod) {
-			final String elementName = ((IMethod) highlighted).getElementName();
-			final TextViewer textViewer = ((PHPStructuredEditor) editor).getTextViewer();
-			final StyledText textWidget = textViewer == null ? null : textViewer.getTextWidget();
-			String selectionText = textWidget == null ? null : textWidget.getSelectionText();
-			if (selectionText != null && selectionText.equals(elementName) && selectionText.startsWith("test")) { //$NON-NLS-1$
-				element = ((IMethod) highlighted).getPrimaryElement();
+		PHPStructuredEditor phpEditor = ((PHPStructuredEditor) editor);
+		IModelElement element = phpEditor.getModelElement();
+
+		ISelection selection = phpEditor.getSelectionProvider().getSelection();
+		if (selection instanceof IStructuredSelection) {
+			Object highlighted = ((IStructuredSelection) selection).getFirstElement();
+			if (highlighted instanceof IMethod) {
+				final String elementName = ((IMethod) highlighted).getElementName();
+				final TextViewer textViewer = ((PHPStructuredEditor) editor).getTextViewer();
+				final StyledText textWidget = textViewer == null ? null : textViewer.getTextWidget();
+				String selectionText = textWidget == null ? null : textWidget.getSelectionText();
+				if (selectionText != null && selectionText.equals(elementName) && selectionText.startsWith("test")) { //$NON-NLS-1$
+					element = ((IMethod) highlighted).getPrimaryElement();
+				}
 			}
 		}
 
