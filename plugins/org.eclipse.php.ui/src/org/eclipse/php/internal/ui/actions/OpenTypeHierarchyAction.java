@@ -16,10 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.ui.actions.ActionUtil;
 import org.eclipse.dltk.internal.ui.actions.OpenActionUtil;
@@ -31,6 +28,7 @@ import org.eclipse.dltk.ui.util.ExceptionHandler;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPHP;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.util.PHPSelectionUtil;
@@ -103,10 +101,34 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 		}
 
 		Object firstElement = selection.getFirstElement();
-		if (firstElement instanceof IMethod) {
-			return ((IMethod) firstElement).getParent() instanceof IType;
-		} else {
-			return firstElement instanceof IType || firstElement instanceof IField;
+		if (firstElement instanceof ElementImplForPHP) {
+			return true;
+		}
+		if (firstElement instanceof LogicalPackage) {
+			return true;
+		}
+		if (!(firstElement instanceof IModelElement) && (firstElement instanceof IAdaptable)) {
+			firstElement = ((IAdaptable) firstElement).getAdapter(IModelElement.class);
+		}
+
+		if (!(firstElement instanceof IModelElement))
+			return false;
+		switch (((IModelElement) firstElement).getElementType()) {
+		// case IModelElement.INITIALIZER:
+		case IModelElement.METHOD:
+		case IModelElement.FIELD:
+		case IModelElement.TYPE:
+			return true;
+		case IModelElement.PROJECT_FRAGMENT:
+		case IModelElement.SOURCE_MODULE:
+		case IModelElement.PACKAGE_DECLARATION:
+		case IModelElement.IMPORT_DECLARATION:
+			return true;
+		// case IModelElement.LOCAL_VARIABLE:
+		case IModelElement.SCRIPT_PROJECT:
+		case IModelElement.SCRIPT_FOLDER:
+		default:
+			return false;
 		}
 	}
 

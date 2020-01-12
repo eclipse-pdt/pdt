@@ -34,6 +34,7 @@ import org.eclipse.dltk.ui.util.ExceptionHandler;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPHP;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.ui.IWorkbenchSite;
 
@@ -88,17 +89,33 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 		if (selection == null || selection.size() != 1) {
 			return false;
 		}
-		Object input = selection.getFirstElement();
-		if (!(input instanceof IModelElement) && (input instanceof IAdaptable)) {
-			input = ((IAdaptable) input).getAdapter(IModelElement.class);
+		Object firstElement = selection.getFirstElement();
+		if (firstElement instanceof ElementImplForPHP) {
+			return true;
 		}
-		if (!(input instanceof IModelElement)) {
-			return false;
+		if (!(firstElement instanceof IModelElement) && (firstElement instanceof IAdaptable)) {
+			firstElement = ((IAdaptable) firstElement).getAdapter(IModelElement.class);
 		}
 
-		switch (((IModelElement) input).getElementType()) {
+		if (!(firstElement instanceof IModelElement)) {
+			return false;
+		}
+		if (!(firstElement instanceof IModelElement))
+			return false;
+		switch (((IModelElement) firstElement).getElementType()) {
+		// case IModelElement.INITIALIZER:
 		case IModelElement.METHOD:
+		case IModelElement.FIELD:
+		case IModelElement.TYPE:
 			return true;
+		case IModelElement.PROJECT_FRAGMENT:
+		case IModelElement.SOURCE_MODULE:
+		case IModelElement.PACKAGE_DECLARATION:
+		case IModelElement.IMPORT_DECLARATION:
+			return true;
+		// case IModelElement.LOCAL_VARIABLE:
+		case IModelElement.SCRIPT_PROJECT:
+		case IModelElement.SCRIPT_FOLDER:
 		default:
 			return false;
 		}
