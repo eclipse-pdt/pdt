@@ -30,10 +30,14 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.DebugEvent;
+import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.model.IStepFilters;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
+import org.eclipse.php.internal.debug.core.preferences.stepFilters.DebugStepFilterController;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.*;
@@ -45,8 +49,8 @@ import org.w3c.dom.Node;
 public class DBGpSession {
 
 	/**
-	 * Reads all responses from DBGp based debugger, this runs on a background job
-	 * thread.
+	 * Reads all responses from DBGp based debugger, this runs on a background
+	 * job thread.
 	 */
 	private class ResponseReader extends Job {
 
@@ -60,8 +64,8 @@ public class DBGpSession {
 			byte[] response = null;
 			while (sessionActive) {
 				/*
-				 * Here we need to block waiting for a response then process that response by
-				 * related handler.
+				 * Here we need to block waiting for a response then process
+				 * that response by related handler.
 				 */
 				try {
 					response = readResponse();
@@ -70,8 +74,9 @@ public class DBGpSession {
 						parsedResponse.parseResponse(response);
 						int respErrorCode = parsedResponse.getErrorCode();
 						/*
-						 * We have received something back from the debugger so first we try to process
-						 * a stop or break async response, even if the response was invalid.
+						 * We have received something back from the debugger so
+						 * first we try to process a stop or break async
+						 * response, even if the response was invalid.
 						 */
 						if (respErrorCode == DBGpResponse.ERROR_OK
 								|| respErrorCode == DBGpResponse.ERROR_INVALID_RESPONSE) {
@@ -94,7 +99,8 @@ public class DBGpSession {
 							}
 						}
 						/*
-						 * Unblock any Sync caller who might be waiting regardless of what we got back.
+						 * Unblock any Sync caller who might be waiting
+						 * regardless of what we got back.
 						 */
 						unblockSyncCaller(parsedResponse);
 					}
@@ -104,20 +110,20 @@ public class DBGpSession {
 				}
 			}
 			/*
-			 * If the socket is closed or the session terminated then we inform the debug
-			 * target.
+			 * If the socket is closed or the session terminated then we inform
+			 * the debug target.
 			 */
 			try {
 				/*
-				 * Wait a very brief period to ensure console displays everything before stating
-				 * the debug session has ended.
+				 * Wait a very brief period to ensure console displays
+				 * everything before stating the debug session has ended.
 				 */
 				Thread.sleep(50);
 			} catch (InterruptedException e) {
 			}
 			/*
-			 * End the session here as we most likely terminated cleanly. It doesn't matter
-			 * if endSession is called multiple times.
+			 * End the session here as we most likely terminated cleanly. It
+			 * doesn't matter if endSession is called multiple times.
 			 */
 			endSession();
 			return Status.OK_STATUS;
@@ -130,8 +136,9 @@ public class DBGpSession {
 		 */
 		private void unblockSyncCaller(DBGpResponse parsedResponse) {
 			/*
-			 * Look to see if another thread is waiting for this response, if not then the
-			 * response is lost must protect if the response doesn't include a txn id.
+			 * Look to see if another thread is waiting for this response, if
+			 * not then the response is lost must protect if the response
+			 * doesn't include a txn id.
 			 */
 			Integer idObj = null;
 			try {
@@ -147,8 +154,9 @@ public class DBGpSession {
 				postAndSignalCaller(idObj, parsedResponse);
 			} else {
 				/*
-				 * No one waiting for the response, so we need to check the response was ok and
-				 * generate log info. This could have been a response to an async invocation.
+				 * No one waiting for the response, so we need to check the
+				 * response was ok and generate log info. This could have been a
+				 * response to an async invocation.
 				 */
 				DBGpUtils.isGoodDBGpResponse(this, parsedResponse);
 			}
@@ -244,23 +252,27 @@ public class DBGpSession {
 				Node breakData = response.getParentNode().getFirstChild();
 				String exception = DBGpResponse.getAttribute(breakData, "exception"); //$NON-NLS-1$
 				/*
-				 * We have suspended, so now we can go off and handle outstanding breakpoint
-				 * requests debugTarget.processDBGpQueuedCmds();
+				 * We have suspended, so now we can go off and handle
+				 * outstanding breakpoint requests
+				 * debugTarget.processDBGpQueuedCmds();
 				 */
 				if (response.getReason().equals(DBGpResponse.REASON_OK)) {
 					// we have hit a breakpoint, or completed a step
 					String cmd = response.getCommand();
 					if (cmd.equals(DBGpCommand.run) || !exception.isEmpty()) {
 						/*
-						 * OK we hit a break point somewhere, we need to get the stack information to
-						 * find out which breakpoint we hit as no info is provided in the response. We
-						 * cannot use the DBGpTarget version here as we do an async call. Plus we need
-						 * to handle the possibility of STATUS_STOPPED being returned.
+						 * OK we hit a break point somewhere, we need to get the
+						 * stack information to find out which breakpoint we hit
+						 * as no info is provided in the response. We cannot use
+						 * the DBGpTarget version here as we do an async call.
+						 * Plus we need to handle the possibility of
+						 * STATUS_STOPPED being returned.
 						 */
 						response = sendSyncCmd(DBGpCommand.stackGet, null);
 						if (response != null) {
 							/*
-							 * We could have received a stop here so we need to check for this.
+							 * We could have received a stop here so we need to
+							 * check for this.
 							 */
 							if (response.getStatus().equals(DBGpResponse.STATUS_STOPPED)) {
 								handleStop();
@@ -287,12 +299,30 @@ public class DBGpSession {
 					} else if (cmd.equals(DBGpCommand.stepInto) || cmd.equals(DBGpCommand.StepOut)
 							|| cmd.equals(DBGpCommand.stepOver)) {
 						// Debug target might be already disconnected
+
 						if (debugTarget != null) {
 							debugTarget.suspended(DebugEvent.STEP_END);
+							IStepFilters stepFilter = debugTarget.getAdapter(IStepFilters.class);
+							Node stackData = response.getParentNode().getFirstChild();
+							if (stackData != null && stepFilter != null
+									&& ((IStepFilters) debugTarget).isStepFiltersEnabled()) {
+								String sourceName = DBGpUtils
+										.getFilenameFromURIString(DBGpResponse.getAttribute(stackData, "filename")); //$NON-NLS-1$
+								sourceName = debugTarget.mapToWorkspaceFileIfRequired(sourceName);
+								if (sourceName != null
+										&& DebugStepFilterController.getInstance().isFiltered(sourceName)) {
+									try {
+										debugTarget.stepInto();
+									} catch (DebugException e) {
+										Logger.logException(e);
+									}
+								}
+							}
 						}
 					} else {
 						/*
-						 * we got another status response, probably due to cannot get property error.
+						 * we got another status response, probably due to
+						 * cannot get property error.
 						 */
 					}
 				}
@@ -396,8 +426,9 @@ public class DBGpSession {
 	}
 
 	/**
-	 * Start the session. This schedules the job that listens for incoming responses
-	 * from the system being debugged as these can happen asynchronously.
+	 * Start the session. This schedules the job that listens for incoming
+	 * responses from the system being debugged as these can happen
+	 * asynchronously.
 	 * 
 	 */
 	public void startSession() {
@@ -457,9 +488,9 @@ public class DBGpSession {
 	public DBGpResponse sendSyncCmd(String cmd, String arguments) {
 		if (sessionActive) {
 			/*
-			 * this must be done before the command is sent because the savedResponses must
-			 * have the id and event in the table so that the response handler can locate
-			 * it.
+			 * this must be done before the command is sent because the
+			 * savedResponses must have the id and event in the table so that
+			 * the response handler can locate it.
 			 */
 			int id = DBGpCommand.getNextId();
 			Event idev = new Event();
@@ -485,8 +516,8 @@ public class DBGpSession {
 	 */
 	public synchronized void endSession() {
 		/*
-		 * We are ending the session so ensure anything that is waiting for a response
-		 * is unblocked.
+		 * We are ending the session so ensure anything that is waiting for a
+		 * response is unblocked.
 		 */
 		unblockAllCallers(null);
 		if (sessionActive) {
@@ -531,8 +562,8 @@ public class DBGpSession {
 	}
 
 	/**
-	 * get the Thread id for this session. A blank threadid usually indicates that
-	 * no thread id was returned.
+	 * get the Thread id for this session. A blank threadid usually indicates
+	 * that no thread id was returned.
 	 * 
 	 * @return the thread id
 	 */
@@ -644,8 +675,9 @@ public class DBGpSession {
 		Object responder = savedResponses.get(idObj);
 		if (responder instanceof Event) {
 			/*
-			 * We have an event for the id so we need to respond and unblock the caller,
-			 * otherwise it has already been done (maybe from unblockAllCallers)
+			 * We have an event for the id so we need to respond and unblock the
+			 * caller, otherwise it has already been done (maybe from
+			 * unblockAllCallers)
 			 */
 			Event idev = (Event) responder;
 			savedResponses.put(idObj, parsedResponse);
@@ -654,8 +686,9 @@ public class DBGpSession {
 	}
 
 	/**
-	 * DBGp protocol is as follows "xxx\0" where xxx is the length of the message to
-	 * follow "message\0" where message is the data we are interested in.
+	 * DBGp protocol is as follows "xxx\0" where xxx is the length of the
+	 * message to follow "message\0" where message is the data we are interested
+	 * in.
 	 * 
 	 * @return
 	 */
@@ -665,8 +698,8 @@ public class DBGpSession {
 		int remainingBytesToRead = 0;
 		try {
 			/*
-			 * The first part of the DBGp protocol is the length as a string, so we read it
-			 * and convert it to an int
+			 * The first part of the DBGp protocol is the length as a string, so
+			 * we read it and convert it to an int
 			 */
 			while ((receivedByte = DBGpReader.readByte()) != 0) {
 				remainingBytesToRead = remainingBytesToRead * 10 + receivedByte - 48;
@@ -681,23 +714,25 @@ public class DBGpSession {
 			// Final part of the protocol is a null value
 			if ((DBGpReader.readByte()) != 0) {
 				/*
-				 * Unexpected message so the message is not valid, end the session as things
-				 * could become very confused.
+				 * Unexpected message so the message is not valid, end the
+				 * session as things could become very confused.
 				 */
 				endSession();
 				return null;
 			}
 		} catch (IOException e) {
 			/*
-			 * The exception could be caused by the user terminating or disconnecting
-			 * however due to the nature of the debug framework, a termination request may
-			 * not be sent to the debug target or may be sent after it terminates the
-			 * process, so we cannot rely on testing the debug target for it's state to
-			 * determine if there has been any user activity that may have caused this. we
-			 * could have tested and even check the type of exception but on windows you get
-			 * SocketException: Connection Reset and on Linux you get EOFException, so for
-			 * other platforms you don't know what to expect as an exception. So it is
-			 * better to ignore the information.
+			 * The exception could be caused by the user terminating or
+			 * disconnecting however due to the nature of the debug framework, a
+			 * termination request may not be sent to the debug target or may be
+			 * sent after it terminates the process, so we cannot rely on
+			 * testing the debug target for it's state to determine if there has
+			 * been any user activity that may have caused this. we could have
+			 * tested and even check the type of exception but on windows you
+			 * get SocketException: Connection Reset and on Linux you get
+			 * EOFException, so for other platforms you don't know what to
+			 * expect as an exception. So it is better to ignore the
+			 * information.
 			 */
 			endSession();
 			return null;

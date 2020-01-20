@@ -35,13 +35,15 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandle
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.IDBGpSessionListener;
 
 public class DBGpMultiSessionTarget extends DBGpElement
-		implements IPHPDebugTarget, IDBGpDebugTarget, IDBGpSessionListener, IDebugEventSetListener {
+		implements IPHPDebugTarget, IDBGpDebugTarget, IDBGpSessionListener, IDebugEventSetListener, IStepFilters {
 
 	// used to identify this debug target with the associated
 	// script being debugged.
 	private String sessionID; // XXX: never set
 
 	private String ideKey;
+
+	private boolean isStepFiltersEnabled;
 
 	private boolean webLaunch = false;
 
@@ -388,9 +390,9 @@ public class DBGpMultiSessionTarget extends DBGpElement
 		boolean accepted = false;
 		synchronized (debugTargets) {
 			/*
-			 * We need to use single shot debug targets to ensure that they terminate when
-			 * complete and don't hang around waiting for another session they won't
-			 * receive.
+			 * We need to use single shot debug targets to ensure that they
+			 * terminate when complete and don't hang around waiting for another
+			 * session they won't receive.
 			 */
 			DBGpTarget target = new DBGpTarget(this.launch, this.scriptName, this.stopDebugURL, this.ideKey,
 					this.sessionID, this.stopAtStart);
@@ -399,8 +401,9 @@ public class DBGpMultiSessionTarget extends DBGpElement
 			accepted = target.SessionCreated(session);
 			if (accepted) {
 				/*
-				 * Need to make sure bpFacade is thread safe. cannot provide a launch monitor
-				 * here, unless this is the first launch, but it doesn't matter.
+				 * Need to make sure bpFacade is thread safe. cannot provide a
+				 * launch monitor here, unless this is the first launch, but it
+				 * doesn't matter.
 				 */
 				target.waitForInitialSession(bpFacade, sessionPreferences, null);
 				if (!target.isTerminated()) {
@@ -532,5 +535,27 @@ public class DBGpMultiSessionTarget extends DBGpElement
 			}
 		}
 		return isWaiting;
+	}
+
+	@Override
+	public boolean supportsStepFilters() {
+		return true;
+	}
+
+	@Override
+	public boolean isStepFiltersEnabled() {
+		return isStepFiltersEnabled;
+	}
+
+	@Override
+	public void setStepFiltersEnabled(boolean enabled) {
+		synchronized (debugTargets) {
+			for (int i = 0; i < debugTargets.size(); i++) {
+				IStepFilters target = debugTargets.get(i).getAdapter(IStepFilters.class);
+				if (target != null) {
+					target.setStepFiltersEnabled(enabled);
+				}
+			}
+		}
 	}
 }

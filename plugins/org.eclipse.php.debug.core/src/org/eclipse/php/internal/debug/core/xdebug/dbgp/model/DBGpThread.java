@@ -33,11 +33,6 @@ public class DBGpThread extends DBGpElement implements IThread {
 		super(target);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IThread#getName()
-	 */
 	@Override
 	public String getName() throws DebugException {
 		// PHP only has one thread, so no special naming required
@@ -45,21 +40,11 @@ public class DBGpThread extends DBGpElement implements IThread {
 		return PHPDebugCoreMessages.XDebug_DBGpThread_0;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IThread#getPriority()
-	 */
 	@Override
 	public int getPriority() throws DebugException {
 		return 0;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IThread#getBreakpoints()
-	 */
 	@Override
 	public IBreakpoint[] getBreakpoints() {
 		if (breakpoints == null) {
@@ -68,11 +53,6 @@ public class DBGpThread extends DBGpElement implements IThread {
 		return breakpoints;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IThread#getStackFrames()
-	 */
 	@Override
 	public IStackFrame[] getStackFrames() throws DebugException {
 		if (isSuspended()) {
@@ -82,11 +62,6 @@ public class DBGpThread extends DBGpElement implements IThread {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IThread#getTopStackFrame()
-	 */
 	@Override
 	public IStackFrame getTopStackFrame() throws DebugException {
 		IStackFrame[] frames = getStackFrames();
@@ -96,161 +71,81 @@ public class DBGpThread extends DBGpElement implements IThread {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IThread#hasStackFrames()
-	 */
 	@Override
 	public boolean hasStackFrames() throws DebugException {
 		return isSuspended();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.ISuspendResume#canResume()
-	 */
 	@Override
 	public boolean canResume() {
 		return getDebugTarget().canResume();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.ISuspendResume#canSuspend()
-	 */
 	@Override
 	public boolean canSuspend() {
 		return getDebugTarget().canSuspend();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.ISuspendResume#isSuspended()
-	 */
 	@Override
 	public boolean isSuspended() {
 		return getDebugTarget().isSuspended();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.ITerminate#canTerminate()
-	 */
 	@Override
 	public boolean canTerminate() {
 		return getDebugTarget().canTerminate();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.ITerminate#isTerminated()
-	 */
 	@Override
 	public boolean isTerminated() {
 		return getDebugTarget().isTerminated();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IStep#canStepInto()
-	 */
 	@Override
 	public boolean canStepInto() {
 		return ((IStep) getDebugTarget()).canStepInto();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IStep#canStepOver()
-	 */
 	@Override
 	public boolean canStepOver() {
 		return ((IStep) getDebugTarget()).canStepOver();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IStep#canStepReturn()
-	 */
 	@Override
 	public boolean canStepReturn() {
 		return ((IStep) getDebugTarget()).canStepReturn();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IStep#isStepping()
-	 */
 	@Override
 	public boolean isStepping() {
 		return ((IStep) getDebugTarget()).isStepping();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.ISuspendResume#resume()
-	 */
 	@Override
 	public void resume() throws DebugException {
 		getDebugTarget().resume();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.ISuspendResume#suspend()
-	 */
 	@Override
 	public void suspend() throws DebugException {
 		getDebugTarget().suspend();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IStep#stepInto()
-	 */
 	@Override
 	public void stepInto() throws DebugException {
 		((IStep) getDebugTarget()).stepInto();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IStep#stepOver()
-	 */
 	@Override
 	public void stepOver() throws DebugException {
 		((IStep) getDebugTarget()).stepOver();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IStep#stepReturn()
-	 */
 	@Override
 	public void stepReturn() throws DebugException {
 		((IStep) getDebugTarget()).stepReturn();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.ITerminate#terminate()
-	 */
 	@Override
 	public void terminate() throws DebugException {
 		getDebugTarget().terminate();
