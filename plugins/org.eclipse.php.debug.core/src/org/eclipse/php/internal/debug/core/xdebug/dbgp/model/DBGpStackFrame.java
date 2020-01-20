@@ -53,10 +53,10 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 		}
 
 		/**
-		 * Merges incoming variable. Merge is done by means of checking if related child
-		 * variable existed in "one step back" state of a frame. If related variable
-		 * existed, it is updated with the use of the most recent descriptor and
-		 * returned instead of the incoming one.
+		 * Merges incoming variable. Merge is done by means of checking if
+		 * related child variable existed in "one step back" state of a frame.
+		 * If related variable existed, it is updated with the use of the most
+		 * recent descriptor and returned instead of the incoming one.
 		 * 
 		 * @param variable
 		 * @param descriptor
@@ -116,244 +116,124 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 		update(stackData);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IStackFrame#getCharEnd()
-	 */
 	@Override
 	public int getCharEnd() throws DebugException {
 		// Don't support expression level stepping, only line level stepping
 		return -1;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IStackFrame#getCharStart()
-	 */
 	@Override
 	public int getCharStart() throws DebugException {
 		return -1;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IStackFrame#getLineNumber()
-	 */
 	@Override
 	public int getLineNumber() throws DebugException {
 		DBGpLogger.debug(this.hashCode() + "::DBGpStackFrame=" + lineNo); //$NON-NLS-1$
 		return lineNo;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IStackFrame#getName()
-	 */
 	@Override
 	public String getName() throws DebugException {
 		return name;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IStackFrame#hasRegisterGroups()
-	 */
 	@Override
 	public boolean hasRegisterGroups() throws DebugException {
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IStackFrame#getRegisterGroups()
-	 */
 	@Override
 	public IRegisterGroup[] getRegisterGroups() throws DebugException {
 		return new IRegisterGroup[0];
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IStackFrame#getThread()
-	 */
 	@Override
 	public IThread getThread() {
 		return owningThread;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IStackFrame#getVariables()
-	 */
 	@Override
 	public synchronized IVariable[] getVariables() throws DebugException {
 		DBGpLogger.debug("getting variables for stackframe on line: " + lineNo); //$NON-NLS-1$
 		return variablesContainer.getVariables();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IStackFrame#hasVariables()
-	 */
 	@Override
 	public boolean hasVariables() throws DebugException {
 		return (getVariables() != null && getVariables().length > 0);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IStep#canStepInto()
-	 */
 	@Override
 	public boolean canStepInto() {
 		return owningThread.canStepInto();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IStep#canStepOver()
-	 */
 	@Override
 	public boolean canStepOver() {
 		return owningThread.canStepOver();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IStep#canStepReturn()
-	 */
 	@Override
 	public boolean canStepReturn() {
 		return owningThread.canStepReturn();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IStep#isStepping()
-	 */
 	@Override
 	public boolean isStepping() {
 		return owningThread.isStepping();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IStep#stepInto()
-	 */
 	@Override
 	public void stepInto() throws DebugException {
 		owningThread.stepInto();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IStep#stepOver()
-	 */
 	@Override
 	public void stepOver() throws DebugException {
 		owningThread.stepOver();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IStep#stepReturn()
-	 */
 	@Override
 	public void stepReturn() throws DebugException {
 		owningThread.stepReturn();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.ISuspendResume#canResume()
-	 */
 	@Override
 	public boolean canResume() {
 		return owningThread.canResume();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.ISuspendResume#canSuspend()
-	 */
 	@Override
 	public boolean canSuspend() {
 		return owningThread.canSuspend();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.ISuspendResume#isSuspended()
-	 */
 	@Override
 	public boolean isSuspended() {
 		return owningThread.isSuspended();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.ISuspendResume#resume()
-	 */
 	@Override
 	public void resume() throws DebugException {
 		owningThread.resume();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.ISuspendResume#suspend()
-	 */
 	@Override
 	public void suspend() throws DebugException {
 		owningThread.suspend();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.ITerminate#canTerminate()
-	 */
 	@Override
 	public boolean canTerminate() {
 		return owningThread.canTerminate();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.ITerminate#isTerminated()
-	 */
 	@Override
 	public boolean isTerminated() {
 		return owningThread.isTerminated();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.ITerminate#terminate()
-	 */
 	@Override
 	public void terminate() throws DebugException {
 		owningThread.terminate();
@@ -368,11 +248,6 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 		return fileName;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof DBGpStackFrame) {
@@ -410,11 +285,6 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		return getQualifiedFile().hashCode() + stackLevel.hashCode() + owningThread.hashCode();

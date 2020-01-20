@@ -33,21 +33,11 @@ public abstract class PHPDebugElement extends DebugElement {
 		super(target);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IDebugElement#getModelIdentifier()
-	 */
 	@Override
 	public String getModelIdentifier() {
 		return IPHPDebugConstants.ID_PHP_DEBUG_CORE;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.core.model.IDebugElement#getLaunch()
-	 */
 	@Override
 	public ILaunch getLaunch() {
 		return getDebugTarget().getLaunch();
