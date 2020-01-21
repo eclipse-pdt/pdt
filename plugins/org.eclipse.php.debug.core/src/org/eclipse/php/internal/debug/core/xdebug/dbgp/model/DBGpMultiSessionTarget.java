@@ -43,8 +43,6 @@ public class DBGpMultiSessionTarget extends DBGpElement
 
 	private String ideKey;
 
-	private boolean isStepFiltersEnabled;
-
 	private boolean webLaunch = false;
 
 	// required for EXE target support
@@ -539,12 +537,20 @@ public class DBGpMultiSessionTarget extends DBGpElement
 
 	@Override
 	public boolean supportsStepFilters() {
-		return true;
+		return !(isTerminated() || isDisconnected());
 	}
 
 	@Override
 	public boolean isStepFiltersEnabled() {
-		return isStepFiltersEnabled;
+		for (int i = 0; i < debugTargets.size(); i++) {
+			IStepFilters target = debugTargets.get(i).getAdapter(IStepFilters.class);
+			if (target != null) {
+				if (target.isStepFiltersEnabled()) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	@Override

@@ -2404,7 +2404,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget, IDBGpDeb
 
 	@Override
 	public boolean supportsStepFilters() {
-		return true;
+		return !(isTerminated() || isDisconnected());
 	}
 
 	@Override

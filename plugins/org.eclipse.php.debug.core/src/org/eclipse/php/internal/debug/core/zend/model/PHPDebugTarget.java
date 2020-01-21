@@ -40,6 +40,7 @@ import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
 import org.eclipse.php.internal.debug.core.zend.communication.DebugConnection;
 import org.eclipse.php.internal.debug.core.zend.debugger.*;
 import org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint;
+import org.eclipse.php.internal.debug.core.zend.model.PHPResponseHandler.*;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
@@ -114,16 +115,16 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * Debugger on a Apache Server.
 	 * 
 	 * @param connection
-	 *                        The debug connection for the communication read and
-	 *                        write processes.
+	 *            The debug connection for the communication read and write
+	 *            processes.
 	 * @param launch
-	 *                        containing launch
+	 *            containing launch
 	 * @param URL
-	 *                        URL of the debugger
+	 *            URL of the debugger
 	 * @param requestPort
-	 *                        port to send requests to the bebugger *
+	 *            port to send requests to the bebugger *
 	 * @exception CoreException
-	 *                              if unable to connect to host
+	 *                if unable to connect to host
 	 */
 	public PHPDebugTarget(DebugConnection connection, ILaunch launch, String URL, int requestPort, IProcess process,
 			boolean runAsDebug, boolean stopAtFirstLine, IProject project) throws CoreException {
@@ -140,16 +141,16 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * Debugger using PHP exe.
 	 * 
 	 * @param connectionThread
-	 *                             The debug connection for the communication read
-	 *                             and write processes.
+	 *            The debug connection for the communication read and write
+	 *            processes.
 	 * @param launch
-	 *                             containing launch
+	 *            containing launch
 	 * @param String
-	 *                             full path to the PHP executable
+	 *            full path to the PHP executable
 	 * @param requestPort
-	 *                             port to send requests to the bebugger *
+	 *            port to send requests to the bebugger *
 	 * @exception CoreException
-	 *                              if unable to connect to host
+	 *                if unable to connect to host
 	 */
 	public PHPDebugTarget(DebugConnection connectionThread, ILaunch launch, String phpExe, IFile fileToDebug,
 			int requestPort, IProcess process, boolean runAsDebug, boolean stopAtFirstLine, IProject project)
@@ -329,7 +330,8 @@ public class PHPDebugTarget extends PHPDebugElement
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.debug.core.model.IDebugTarget#supportsBreakpoint(org.eclipse
+	 * @see
+	 * org.eclipse.debug.core.model.IDebugTarget#supportsBreakpoint(org.eclipse
 	 * .debug.core.model.IBreakpoint)
 	 */
 	@Override
@@ -514,7 +516,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * Notification the target has resumed for the given reason
 	 * 
 	 * @param detail
-	 *                   reason for the resume
+	 *            reason for the resume
 	 */
 	private void resumed(int detail) {
 		fSuspended = false;
@@ -525,7 +527,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * Notification the target has suspended for the given reason
 	 * 
 	 * @param detail
-	 *                   reason for the suspend
+	 *            reason for the suspend
 	 */
 	public void suspended(int detail) {
 		fSuspended = true;
@@ -559,7 +561,8 @@ public class PHPDebugTarget extends PHPDebugElement
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.debug.core.IBreakpointListener#breakpointAdded(org.eclipse
+	 * @see
+	 * org.eclipse.debug.core.IBreakpointListener#breakpointAdded(org.eclipse
 	 * .debug.core.model.IBreakpoint)
 	 */
 	@Override
@@ -607,7 +610,8 @@ public class PHPDebugTarget extends PHPDebugElement
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.debug.core.IBreakpointListener#breakpointRemoved(org.eclipse
+	 * @see
+	 * org.eclipse.debug.core.IBreakpointListener#breakpointRemoved(org.eclipse
 	 * .debug.core.model.IBreakpoint, org.eclipse.core.resources.IMarkerDelta)
 	 */
 	@Override
@@ -625,9 +629,11 @@ public class PHPDebugTarget extends PHPDebugElement
 						&& breakpoint.getMarker().exists() && !breakpoint.isEnabled()) {
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=538315
 					// XXX: the breakpoint removal was already handled by
-					// breakpointChanged(IBreakpoint, IMarkerDelta), stop here...
+					// breakpointChanged(IBreakpoint, IMarkerDelta), stop
+					// here...
 					// ... except that getMarker().exists() will be false when
-					// deleting an already-disabled breakpoint using CTRL-SHIFT-B.
+					// deleting an already-disabled breakpoint using
+					// CTRL-SHIFT-B.
 					return;
 				}
 			} catch (CoreException e) {
@@ -650,7 +656,8 @@ public class PHPDebugTarget extends PHPDebugElement
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.debug.core.IBreakpointListener#breakpointChanged(org.eclipse
+	 * @see
+	 * org.eclipse.debug.core.IBreakpointListener#breakpointChanged(org.eclipse
 	 * .debug.core.model.IBreakpoint, org.eclipse.core.resources.IMarkerDelta)
 	 */
 	@Override
@@ -754,7 +761,8 @@ public class PHPDebugTarget extends PHPDebugElement
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.debug.core.model.IMemoryBlockRetrieval#getMemoryBlock(long,
+	 * @see
+	 * org.eclipse.debug.core.model.IMemoryBlockRetrieval#getMemoryBlock(long,
 	 * long)
 	 */
 	@Override
@@ -771,16 +779,19 @@ public class PHPDebugTarget extends PHPDebugElement
 	}
 
 	/**
-	 * Install breakpoints that are already registered with the breakpoint manager.
-	 * In case {@link #isRunWithDebug()} returns true, nothing will happen.
+	 * Install breakpoints that are already registered with the breakpoint
+	 * manager. In case {@link #isRunWithDebug()} returns true, nothing will
+	 * happen.
 	 */
 	public void installDeferredBreakpoints() throws CoreException {
 		/*
-		 * if (fIsRunAsDebug) { return; } if (!fBreakpointManager.isEnabled()) return;
-		 * IBreakpoint[] breakpoints = fBreakpointManager.getBreakpoints(
+		 * if (fIsRunAsDebug) { return; } if (!fBreakpointManager.isEnabled())
+		 * return; IBreakpoint[] breakpoints =
+		 * fBreakpointManager.getBreakpoints(
 		 * IPHPDebugConstants.ID_PHP_DEBUG_CORE); for (IBreakpoint element :
-		 * breakpoints) { ((PHPLineBreakpoint) element).setConditionChanged(false); if
-		 * (element.isEnabled()){ breakpointAdded(element); } }
+		 * breakpoints) { ((PHPLineBreakpoint)
+		 * element).setConditionChanged(false); if (element.isEnabled()){
+		 * breakpointAdded(element); } }
 		 */
 	}
 
@@ -789,7 +800,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * 
 	 * @return the current stack frames in the target
 	 * @throws DebugException
-	 *                            if unable to perform the request
+	 *             if unable to perform the request
 	 */
 	protected IStackFrame[] getStackFrames() throws DebugException {
 		return fContextManager.getStackFrames();
@@ -812,7 +823,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * Step Return the debugger.
 	 * 
 	 * @throws DebugException
-	 *                            if the request fails
+	 *             if the request fails
 	 */
 	protected void stepReturn() throws DebugException {
 		fLastcmd = "stepReturn"; //$NON-NLS-1$
@@ -831,7 +842,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * Step Over the debugger.
 	 * 
 	 * @throws DebugException
-	 *                            if the request fails
+	 *             if the request fails
 	 */
 	protected void stepOver() throws DebugException {
 		fLastcmd = "stepOver"; //$NON-NLS-1$
@@ -850,7 +861,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * Step Into the debugger.
 	 * 
 	 * @throws DebugException
-	 *                            if the request fails
+	 *             if the request fails
 	 */
 	protected void stepInto() throws DebugException {
 		Logger.debugMSG("PHPDebugTarget: stepInto "); //$NON-NLS-1$
@@ -875,11 +886,11 @@ public class PHPDebugTarget extends PHPDebugElement
 	}
 
 	/**
-	 * Notification a breakpoint was encountered. Determine which breakpoint was hit
-	 * and fire a suspend event.
+	 * Notification a breakpoint was encountered. Determine which breakpoint was
+	 * hit and fire a suspend event.
 	 * 
 	 * @param event
-	 *                  debug event
+	 *            debug event
 	 */
 	public void breakpointHit(String fileName, int lineNumber) {
 		// determine which breakpoint was hit, and set the thread's breakpoint
@@ -897,9 +908,9 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * Finds the breakpoint hit
 	 * 
 	 * @param fileName
-	 *                       Filename containing the breakpoint
+	 *            Filename containing the breakpoint
 	 * @param lineNumber
-	 *                       Linenumber of breakpoint
+	 *            Linenumber of breakpoint
 	 * @return the Local Variabales for the target
 	 * 
 	 */
@@ -927,7 +938,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * Finds the breakpoint hit
 	 * 
 	 * @param enabled
-	 *                    Enabled or Disable breakpoints.
+	 *            Enabled or Disable breakpoints.
 	 * 
 	 */
 	@Override
@@ -947,12 +958,12 @@ public class PHPDebugTarget extends PHPDebugElement
 	}
 
 	/**
-	 * Registers the given event listener. The listener will be notified of events
-	 * in the program being interpretted. Has no effect if the listener is already
-	 * registered.
+	 * Registers the given event listener. The listener will be notified of
+	 * events in the program being interpretted. Has no effect if the listener
+	 * is already registered.
 	 * 
 	 * @param listener
-	 *                     event listener
+	 *            event listener
 	 */
 	public void addConsoleEventListener(IPHPConsoleEventListener listener) {
 		if (!fConsoleEventListeners.contains(listener)) {
@@ -964,11 +975,11 @@ public class PHPDebugTarget extends PHPDebugElement
 	}
 
 	/**
-	 * Deregisters the given event listener. Has no effect if the listener is not
-	 * currently registered.
+	 * Deregisters the given event listener. Has no effect if the listener is
+	 * not currently registered.
 	 * 
 	 * @param listener
-	 *                     event listener
+	 *            event listener
 	 */
 	public void removeConsoleEventListener(IPHPConsoleEventListener listener) {
 		fConsoleEventListeners.remove(listener);
@@ -1091,7 +1102,7 @@ public class PHPDebugTarget extends PHPDebugElement
 	 * Maps first debug file in the path mapper
 	 * 
 	 * @param remoteFile
-	 *                       Server file path
+	 *            Server file path
 	 * @return mapped path entry or <code>null</code> in case of error
 	 */
 	public PathEntry mapFirstDebugFile(String remoteFile) {
@@ -1167,7 +1178,7 @@ public class PHPDebugTarget extends PHPDebugElement
 
 	@Override
 	public boolean supportsStepFilters() {
-		return isStepFiltersEnabled;
+		return !(isTerminated() || isDisconnected());
 	}
 
 	/**
