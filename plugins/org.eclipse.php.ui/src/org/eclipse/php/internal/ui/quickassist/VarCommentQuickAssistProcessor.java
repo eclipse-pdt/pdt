@@ -24,7 +24,7 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.search.IDLTKSearchConstants;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
-import org.eclipse.dltk.internal.ui.dialogs.OpenTypeSelectionDialog2;
+import org.eclipse.dltk.internal.ui.dialogs.OpenTypeSelectionDialog;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.IDLTKUILanguageToolkit;
@@ -155,12 +155,12 @@ public class VarCommentQuickAssistProcessor implements IQuickAssistProcessor {
 
 			final Shell parent = DLTKUIPlugin.getActiveWorkbenchShell();
 			IDLTKSearchScope searchScope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
-			OpenTypeSelectionDialog2 dialog = new OpenTypeSelectionDialog2(parent, true,
+			OpenTypeSelectionDialog dialog = new OpenTypeSelectionDialog(parent, true,
 					PlatformUI.getWorkbench().getProgressService(), searchScope, IDLTKSearchConstants.TYPE,
 					languageToolkit);
 			dialog.setTitle(Messages.VarCommentQuickAssistProcessor_OpenTypeAction_dialogTitle);
 			dialog.setMessage(NLS.bind(Messages.VarCommentQuickAssistProcessor_OpenTypeAction_dialogMessage, varName));
-			dialog.setFilter(""); //$NON-NLS-1$
+			dialog.setInitialPattern(""); //$NON-NLS-1$
 
 			return dialog;
 		}
@@ -249,7 +249,8 @@ public class VarCommentQuickAssistProcessor implements IQuickAssistProcessor {
 	}
 
 	/**
-	 * @see IQuickAssistProcessor#getAssists(IInvocationContext, IProblemLocation[])
+	 * @see IQuickAssistProcessor#getAssists(IInvocationContext,
+	 *      IProblemLocation[])
 	 */
 	@Override
 	public IScriptCompletionProposal[] getAssists(IInvocationContext context, IProblemLocation[] locations)
