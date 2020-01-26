@@ -98,6 +98,12 @@
 			categoryId="org.eclipse.debug.ui.category.run"
 			id="org.eclipse.php.phpunit.LaunchShortcut.rerunLastFailed">
 		</command>
+		<command
+			name="%toggleAutorun"
+			description="%toggleAutorun"
+			categoryId="org.eclipse.debug.ui.category.run"
+			id="org.eclipse.php.phpunit.LaunchShortcut.toggleAutorun">
+		</command>
 	</extension>
 	<extension point="org.eclipse.ui.bindings">
 		<key commandId="org.eclipse.php.phpunit.LaunchShortcut.run"

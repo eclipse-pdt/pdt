@@ -19,9 +19,7 @@ import java.util.Set;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -69,12 +67,18 @@ public class PHPUnitView extends ViewPart {
 
 	private static final String RERUN_LAST_COMMAND = "org.eclipse.php.phpunit.LaunchShortcut.rerunLast"; //$NON-NLS-1$
 	private static final String RERUN_LAST_FAILED_COMMAND = "org.eclipse.php.phpunit.LaunchShortcut.rerunLastFailed"; //$NON-NLS-1$
+	private static final String TOGGLE_AUTORUN_COMMAND = "org.eclipse.php.phpunit.LaunchShortcut.toggleAutorun"; //$NON-NLS-1$
 
 	static final int VIEW_ORIENTATION_AUTOMATIC = 2;
 	static final int VIEW_ORIENTATION_HORIZONTAL = 1;
 	static final int VIEW_ORIENTATION_VERTICAL = 0;
 
+	private IMemento fMemento;
+
 	private static PHPUnitView instance = null;
+	static final String TAG_SCROLL = "scroll"; //$NON-NLS-1$
+	static final String TAG_LAYOUT = "layout"; //$NON-NLS-1$
+	static final String TAG_FAILURES_ONLY = "failuresOnly"; //$NON-NLS-1$
 
 	public static void activateView(final boolean focus) {
 		Runnable uiTask = () -> {
@@ -166,6 +170,7 @@ public class PHPUnitView extends ViewPart {
 
 	private RerunLastAction fRerunLastTestAction;
 	private RerunLastFailedTestAction fRerunLastFailedTestAction;
+	private ToggleAutoRunAction fToggleAutoRunAction;
 
 	private SashForm fSashForm;
 
@@ -191,11 +196,21 @@ public class PHPUnitView extends ViewPart {
 
 	private IHandlerActivation fRerunLastTestHandler;
 
+	private IHandlerActivation fToggleAutorunHandler;
+
+	private IResourceChangeListener fAutorunListener;
+
 	public PHPUnitView() {
 		super();
 		if (instance == null) {
 			instance = this;
 		}
+	}
+
+	@Override
+	public void init(IViewSite site, IMemento memento) throws PartInitException {
+		super.init(site, memento);
+		fMemento = memento;
 	}
 
 	@Override
@@ -213,6 +228,11 @@ public class PHPUnitView extends ViewPart {
 		fCounterComposite.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL));
 		final SashForm sashForm = createSashForm(parent);
 		sashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+		if (fMemento != null) {
+			restoreLayoutState(fMemento);
+		}
+		fMemento = null;
 	}
 
 	public void handleTestSelected(final PHPUnitElement testInfo) {
@@ -414,6 +434,7 @@ public class PHPUnitView extends ViewPart {
 		Display.getDefault().asyncExec(() -> reset());
 		fRerunLastTestAction.setEnabled(false);
 		fRerunLastFailedTestAction.setEnabled(false);
+		fToggleAutoRunAction.setEnabled(true);
 		fStopAction.setEnabled(true);
 	}
 
@@ -576,6 +597,9 @@ public class PHPUnitView extends ViewPart {
 
 		fRerunLastTestAction = new RerunLastAction();
 		fRerunLastFailedTestAction = new RerunLastFailedTestAction();
+		fToggleAutoRunAction = new ToggleAutoRunAction();
+		fToggleAutoRunAction.setEnabled(false);
+		fToggleAutoRunAction.setChecked(false);
 
 		IHandlerService handlerService = getSite().getWorkbenchWindow().getService(IHandlerService.class);
 
@@ -607,6 +631,20 @@ public class PHPUnitView extends ViewPart {
 			}
 		});
 
+		fToggleAutorunHandler = handlerService.activateHandler(TOGGLE_AUTORUN_COMMAND, new AbstractHandler() {
+
+			@Override
+			public Object execute(ExecutionEvent event) throws ExecutionException {
+				fToggleAutoRunAction.run();
+				return null;
+			}
+
+			@Override
+			public boolean isEnabled() {
+				return fRerunLastFailedTestAction.isEnabled() || fStopAction.isEnabled();
+			}
+		});
+
 		fFailuresOnlyFilterAction = new FailuresOnlyFilterAction();
 
 		fScrollLockAction = new ScrollLockAction(this);
@@ -633,6 +671,7 @@ public class PHPUnitView extends ViewPart {
 		toolBar.add(fRerunLastTestAction);
 		toolBar.add(fRerunLastFailedTestAction);
 		toolBar.add(fStopAction);
+		toolBar.add(fToggleAutoRunAction);
 		viewMenu.add(new Separator());
 
 		final MenuManager layoutSubMenu = new MenuManager(PHPUnitMessages.PHPUnitView_Layout);
@@ -643,6 +682,7 @@ public class PHPUnitView extends ViewPart {
 		viewMenu.add(new Separator());
 
 		actionBars.updateActionBars();
+
 	}
 
 	/**
@@ -749,6 +789,58 @@ public class PHPUnitView extends ViewPart {
 		firePropertyChange(PROP_TITLE);
 	}
 
+	private void uninstallAutorun() {
+		if (fAutorunListener != null) {
+			ResourcesPlugin.getWorkspace().removeResourceChangeListener(fAutorunListener);
+			fAutorunListener = null;
+		}
+	}
+
+	private void installAutorun() {
+		if (fAutorunListener == null) {
+			fAutorunListener = new AutorunListener();
+			ResourcesPlugin.getWorkspace().addResourceChangeListener(fAutorunListener,
+					IResourceChangeEvent.POST_CHANGE);
+		}
+	}
+
+	@Override
+	public void saveState(IMemento memento) {
+		super.saveState(memento);
+		if (fSashForm == null) {
+			return;
+		}
+		memento.putBoolean(TAG_SCROLL, fAutoScroll);
+		memento.putInteger(TAG_LAYOUT, fOrientation);
+		memento.putBoolean(TAG_FAILURES_ONLY, fFailuresOnlyFilterAction.isChecked());
+	}
+
+	private void restoreLayoutState(IMemento memento) {
+		Boolean val = memento.getBoolean(TAG_SCROLL);
+		if (val != null) {
+			fScrollLockAction.setChecked(!val);
+			setAutoScroll(val);
+		}
+		val = memento.getBoolean(TAG_FAILURES_ONLY);
+		if (val != null) {
+			setShowFailuresOnly(val);
+		}
+		Integer orientation = memento.getInteger(TAG_LAYOUT);
+		if (orientation != null) {
+			setOrientation(orientation);
+		}
+	}
+
+	private class AutorunListener implements IResourceChangeListener {
+		@Override
+		public void resourceChanged(IResourceChangeEvent event) {
+			if (fRerunLastTestAction.isEnabled() && !fStopAction.isEnabled()) {
+				fRerunLastTestAction.run();
+			}
+
+		}
+	}
+
 	private class CollapseAllAction extends Action {
 		public CollapseAllAction() {
 			setText(PHPUnitMessages.PHPUnitView_Collapse_Name);
@@ -794,7 +886,7 @@ public class PHPUnitView extends ViewPart {
 		}
 	}
 
-	public class RerunAction extends Action {
+	private class RerunAction extends Action {
 		protected ILaunchConfiguration fConfiguration;
 		protected String fMode;
 		private RerunLastAction fParent;
@@ -895,6 +987,27 @@ public class PHPUnitView extends ViewPart {
 		}
 	}
 
+	private class ToggleAutoRunAction extends Action {
+		public ToggleAutoRunAction() {
+			super(PHPUnitMessages.PHPUnitView_ToggleAutorun_Tooltip, AS_CHECK_BOX);
+			setToolTipText(PHPUnitMessages.PHPUnitView_ToggleAutorun_Tooltip);
+			setDisabledImageDescriptor(PHPUnitPlugin.getImageDescriptor("dlcl16/toggleAuto.png")); //$NON-NLS-1$
+			setHoverImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/toggleAuto.png")); //$NON-NLS-1$
+			setImageDescriptor(PHPUnitPlugin.getImageDescriptor("elcl16/toggleAuto.png")); //$NON-NLS-1$
+			setActionDefinitionId(TOGGLE_AUTORUN_COMMAND);
+			setChecked(false);
+		}
+
+		@Override
+		public void run() {
+			if (this.isChecked()) {
+				installAutorun();
+			} else {
+				uninstallAutorun();
+			}
+		}
+	}
+
 	private class StopAction extends Action {
 		public StopAction() {
 			setText(PHPUnitMessages.PHPUnitView_Stop_Name);
@@ -952,6 +1065,9 @@ public class PHPUnitView extends ViewPart {
 		IHandlerService handlerService = getSite().getWorkbenchWindow().getService(IHandlerService.class);
 		handlerService.deactivateHandler(fRerunLastTestHandler);
 		handlerService.deactivateHandler(fRerunLastFailedTestHandler);
+		handlerService.deactivateHandler(fToggleAutorunHandler);
+
+		uninstallAutorun();
 	}
 
 	public void rerunFailedTests() {
