@@ -1,6 +1,6 @@
 <?php
 
-// Start of date v.7.4.0
+// Start of date v.7.4.2
 
 /**
  * DateTimeInterface is meant so that both DateTime and DateTimeImmutable can
@@ -1353,7 +1353,7 @@ function strtotime (string $time, int $now = null) {}
  * </tr>
  * <tr valign="top">
  * <td>O</td>
- * <td>Difference to Greenwich time (GMT) in hours</td>
+ * <td>Difference to Greenwich time (GMT) without colon between hours and minutes</td>
  * <td>Example: +0200</td>
  * </tr>
  * <tr valign="top">
@@ -2564,4 +2564,4 @@ define ('SUNFUNCS_RET_STRING', 1);
  */
 define ('SUNFUNCS_RET_DOUBLE', 2);
 
-// End of date v.7.4.0
+// End of date v.7.4.2

@@ -376,6 +376,16 @@ function curl_version (int $age = null) {}
  * </td>
  * </tr>
  * <tr valign="top">
+ * <td>CURLOPT_HTTP09_ALLOWED </td>
+ * <td>
+ * Whether to allow HTTP/0.9 responses. Defaults to false as of libcurl 7.66.0;
+ * formerly it defaulted to true.
+ * </td>
+ * <td>
+ * Available since PHP 7.3.15 and 7.4.3, respectively, if built against libcurl >= 7.64.0 
+ * </td>
+ * </tr>
+ * <tr valign="top">
  * <td>CURLOPT_HTTPGET</td>
  * <td>
  * true to reset the HTTP request method to GET.
@@ -391,6 +401,15 @@ function curl_version (int $age = null) {}
  * true to tunnel through a given HTTP proxy.
  * </td>
  * <td>
+ * </td>
+ * </tr>
+ * <tr valign="top">
+ * <td>CURLOPT_HTTP_CONTENT_DECODING</td>
+ * <td>
+ * false to get the raw HTTP response body.
+ * </td>
+ * <td>
+ * Available as of PHP 5.5.0 if built against libcurl >= 7.16.2.
  * </td>
  * </tr>
  * <tr valign="top">

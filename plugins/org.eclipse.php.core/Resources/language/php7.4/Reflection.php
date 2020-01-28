@@ -1,6 +1,6 @@
 <?php
 
-// Start of Reflection v.7.4.0
+// Start of Reflection v.7.4.2
 
 /**
  * The ReflectionException class.
@@ -2207,7 +2207,13 @@ class ReflectionProperty implements Reflector {
 	public function setValue ($object, $value) {}
 
 	/**
-	 * @param mixed $object [optional]
+	 * Checks whether a property is initialized
+	 * @link http://www.php.net/manual/en/reflectionproperty.isinitialized.php
+	 * @param object $object [optional] If the property is non-static an object must be provided to fetch the
+	 * property from.
+	 * @return bool false for typed properties prior to initialization,
+	 * and for properties that have been explicitly unset.
+	 * For all other properties true will be returned.
 	 */
 	public function isInitialized ($object = null) {}
 
@@ -2276,8 +2282,19 @@ class ReflectionProperty implements Reflector {
 	 */
 	public function setAccessible (bool $accessible) {}
 
+	/**
+	 * Gets a property's type
+	 * @link http://www.php.net/manual/en/reflectionproperty.gettype.php
+	 * @return mixed a ReflectionType if the property has a type,
+	 * and null otherwise.
+	 */
 	public function getType () {}
 
+	/**
+	 * Checks if property has a type
+	 * @link http://www.php.net/manual/en/reflectionproperty.hastype.php
+	 * @return bool true if a type is specified, false otherwise.
+	 */
 	public function hasType () {}
 
 }
@@ -2600,4 +2617,4 @@ class ReflectionReference  {
 	private function __construct () {}
 
 }
-// End of Reflection v.7.4.0
+// End of Reflection v.7.4.2

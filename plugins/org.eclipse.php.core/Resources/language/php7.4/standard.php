@@ -1,6 +1,6 @@
 <?php
 
-// Start of standard v.7.4.0
+// Start of standard v.7.4.2
 
 class __PHP_Incomplete_Class  {
 }
@@ -1698,7 +1698,7 @@ function strcoll (string $str1, string $str2) {}
 /**
  * Return part of a string
  * @link http://www.php.net/manual/en/function.substr.php
- * @param string $string The input string. Must be one character or longer.
+ * @param string $string The input string.
  * @param int $start <p>
  * If start is non-negative, the returned string
  * will start at the start'th position in
@@ -2369,7 +2369,7 @@ function localeconv () {}
  * Calculate the soundex key of a string
  * @link http://www.php.net/manual/en/function.soundex.php
  * @param string $str The input string.
- * @return string the soundex key as a string.
+ * @return string the soundex key as a string, or false on failure.
  */
 function soundex (string $str) {}
 
@@ -2915,6 +2915,8 @@ function shell_exec (string $cmd) {}
  * cmd.exe shell when set to true
  * blocking_pipes (windows only): force
  * blocking pipes when set to true
+ * create_process_group (windows only): allow the
+ * child process to handle CTRL events when set to true
  * </p>
  * </p>
  * @return resource a resource representing the process, which should be freed using
@@ -3686,7 +3688,9 @@ function rad2deg (float $number) {}
 /**
  * Binary to decimal
  * @link http://www.php.net/manual/en/function.bindec.php
- * @param string $binary_string The binary string to convert
+ * @param string $binary_string The binary string to convert.
+ * Any invalid characters in binary_string are silently ignored.
+ * As of PHP 7.4.0 supplying any invalid characters is deprecated.
  * @return number The decimal value of binary_string
  */
 function bindec (string $binary_string) {}
@@ -3702,7 +3706,9 @@ function hexdec (string $hex_string) {}
 /**
  * Octal to decimal
  * @link http://www.php.net/manual/en/function.octdec.php
- * @param string $octal_string The octal string to convert
+ * @param string $octal_string The octal string to convert.
+ * Any invalid characters in octal_string are silently ignored.
+ * As of PHP 7.4.0 supplying any invalid characters is deprecated.
  * @return number The decimal representation of octal_string
  */
 function octdec (string $octal_string) {}
@@ -3857,6 +3863,7 @@ function dechex (int $number) {}
  * @link http://www.php.net/manual/en/function.base-convert.php
  * @param string $number The number to convert. Any invalid characters in
  * number are silently ignored.
+ * As of PHP 7.4.0 supplying any invalid characters is deprecated.
  * @param int $frombase The base number is in
  * @param int $tobase The base to convert number to
  * @return string number converted to base tobase
@@ -4454,7 +4461,7 @@ function register_tick_function (callable $function, $_ = null) {}
 /**
  * De-register a function for execution on each tick
  * @link http://www.php.net/manual/en/function.unregister-tick-function.php
- * @param callable $function 
+ * @param callable $function The function to de-register.
  * @return void 
  */
 function unregister_tick_function (callable $function) {}
@@ -8745,8 +8752,8 @@ function arsort (array &$array, int $sort_flags = null) {}
  * Sorting type flags:
  * <p>
  * <br>
- * SORT_REGULAR - compare items normally
- * (don't change types)
+ * SORT_REGULAR - compare items normally;
+ * the details are described in the comparison operators section
  * <br>
  * SORT_NUMERIC - compare items numerically
  * <br>
@@ -9893,6 +9900,11 @@ function array_filter (array $array, callable $callback = null, int $flag = null
  * function to the corresponding index of array1
  * (and ... if more arrays are provided)
  * used as arguments for the callback.
+ * <p>
+ * The returned array will preserve the keys of the array argument if and only
+ * if exactly one array is passed. If more than one array is passed, the
+ * returned array will have sequential integer keys.
+ * </p>
  */
 function array_map (callable $callback, array $array1, array $_ = null) {}
 
@@ -10021,7 +10033,33 @@ function assert ($assertion, string $description = null) {}
  * </tr>
  * </table>
  * </table>
- * @param mixed $value [optional] An optional new value for the option.
+ * @param mixed $value [optional] <p>
+ * An optional new value for the option.
+ * </p>
+ * <p>
+ * The callback function set via ASSERT_CALLBACK or assert.callback should
+ * have the following signature:
+ * voidassert_callback
+ * stringfile
+ * intline
+ * stringassertion
+ * stringdescription
+ * <p>
+ * file
+ * <br>
+ * The file where assert has been called.
+ * line
+ * <br>
+ * The line where assert has been called.
+ * assertion
+ * <br>
+ * The assertion that has been passed to assert,
+ * converted to a string.
+ * description
+ * <br>
+ * The description that has been passed to assert.
+ * </p>
+ * </p>
  * @return mixed the original setting of any option or false on errors.
  */
 function assert_options (int $what, $value = null) {}
@@ -10186,16 +10224,40 @@ function sapi_windows_cp_is_utf8 () {}
 function sapi_windows_cp_conv ($in_codepage, $out_codepage, string $subject) {}
 
 /**
- * @param mixed $callable
- * @param mixed $add [optional]
+ * Set or remove a CTRL event handler
+ * @link http://www.php.net/manual/en/function.sapi-windows-set-ctrl-handler.php
+ * @param callable $callable <p>
+ * A callback function to set or remove. If set, this function will be called
+ * whenever a CTRL+C or CTRL+BREAK event
+ * occurs. The function is supposed to have the following signature:
+ * voidhandler
+ * intevent
+ * <p>
+ * event
+ * <br>
+ * The CTRL event which has been received;
+ * either PHP_WINDOWS_EVENT_CTRL_C
+ * or PHP_WINDOWS_EVENT_CTRL_BREAK.
+ * </p>
+ * Setting a null callable causes the process to ignore
+ * CTRL+C events, but not CTRL+BREAK events.
+ * </p>
+ * @param bool $add [optional] If true, the handler is set. If false, the handler is removed.
+ * @return bool true on success or false on failure
  */
-function sapi_windows_set_ctrl_handler ($callable, $add = null) {}
+function sapi_windows_set_ctrl_handler (callable $callable, bool $add = null) {}
 
 /**
- * @param mixed $event
- * @param mixed $pid [optional]
+ * Send a CTRL event to another process
+ * @link http://www.php.net/manual/en/function.sapi-windows-generate-ctrl-event.php
+ * @param int $event The CTRL even to send;
+ * either PHP_WINDOWS_EVENT_CTRL_C
+ * or PHP_WINDOWS_EVENT_CTRL_BREAK.
+ * @param int $pid [optional] The ID of the process to which to send the event to. If 0
+ * is given, the event is sent to all processes of the process group.
+ * @return bool true on success or false on failure
  */
-function sapi_windows_generate_ctrl_event ($event, $pid = null) {}
+function sapi_windows_generate_ctrl_event (int $event, int $pid = null) {}
 
 /**
  * Loads a PHP extension at runtime
@@ -11933,4 +11995,4 @@ define ('DNS_ANY', 268435456);
  */
 define ('DNS_ALL', 251721779);
 
-// End of standard v.7.4.0
+// End of standard v.7.4.2

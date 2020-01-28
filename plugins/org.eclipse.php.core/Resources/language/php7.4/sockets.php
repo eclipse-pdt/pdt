@@ -1198,7 +1198,7 @@ function socket_addrinfo_lookup (string $host, string $service = null, array $hi
 /**
  * Create and connect to a socket from a given addrinfo
  * @link http://www.php.net/manual/en/function.socket-addrinfo-connect.php
- * @param resource $addr Resource created from socket_addrinfo_lookup()
+ * @param resource $addr Resource created from socket_addrinfo_lookup
  * @return resource a Socket resource on success or null on failure.
  */
 function socket_addrinfo_connect ($addr) {}
@@ -1206,7 +1206,7 @@ function socket_addrinfo_connect ($addr) {}
 /**
  * Create and bind to a socket from a given addrinfo
  * @link http://www.php.net/manual/en/function.socket-addrinfo-bind.php
- * @param resource $addr Resource created from socket_addrinfo_lookup().
+ * @param resource $addr Resource created from socket_addrinfo_lookup.
  * @return resource a Socket resource on success or null on failure.
  */
 function socket_addrinfo_bind ($addr) {}
@@ -1214,7 +1214,7 @@ function socket_addrinfo_bind ($addr) {}
 /**
  * Get information about addrinfo
  * @link http://www.php.net/manual/en/function.socket-addrinfo-explain.php
- * @param resource $addr Resource created from socket_addrinfo_lookup()
+ * @param resource $addr Resource created from socket_addrinfo_lookup
  * @return array an array containing the fields in the addrinfo structure.
  */
 function socket_addrinfo_explain ($addr) {}

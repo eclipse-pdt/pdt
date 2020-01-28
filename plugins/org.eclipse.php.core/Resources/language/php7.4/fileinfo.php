@@ -179,7 +179,7 @@ define ('FILEINFO_PRESERVE_ATIME', 128);
 define ('FILEINFO_RAW', 256);
 
 /**
- * Returns the file extension appropiate for a the MIME type detected in 
+ * Returns the file extension appropriate for the MIME type detected in 
  * the file.
  * For types that commonly have multiple file extensions, such as JPEG 
  * images, then the return value is multiple extensions separated by a forward slash e.g.: 
