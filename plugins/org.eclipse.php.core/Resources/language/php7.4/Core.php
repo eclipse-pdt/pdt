@@ -1,6 +1,6 @@
 <?php
 
-// Start of Core v.7.4.0
+// Start of Core v.7.4.2
 
 class stdClass  {
 }
@@ -1040,8 +1040,7 @@ function get_class_vars (string $class_name) {}
  * @link http://www.php.net/manual/en/function.get-object-vars.php
  * @param object $object An object instance.
  * @return array an associative array of defined object accessible non-static properties 
- * for the specified object in scope. If a property has
- * not been assigned a value, it will be returned with a null value.
+ * for the specified object in scope.
  */
 function get_object_vars ($object) {}
 
@@ -1702,12 +1701,12 @@ define ('ZEND_DEBUG_BUILD', false);
 define ('NULL', null);
 define ('PHP_WINDOWS_EVENT_CTRL_C', 0);
 define ('PHP_WINDOWS_EVENT_CTRL_BREAK', 1);
-define ('PHP_VERSION', "7.4.0");
+define ('PHP_VERSION', "7.4.2");
 define ('PHP_MAJOR_VERSION', 7);
 define ('PHP_MINOR_VERSION', 4);
-define ('PHP_RELEASE_VERSION', 0);
+define ('PHP_RELEASE_VERSION', 2);
 define ('PHP_EXTRA_VERSION', "");
-define ('PHP_VERSION_ID', 70400);
+define ('PHP_VERSION_ID', 70402);
 define ('PHP_ZTS', 0);
 define ('PHP_DEBUG', 0);
 define ('PHP_OS', "WINNT");
@@ -1738,7 +1737,7 @@ define ('PHP_FLOAT_MAX', 1.7976931348623E+308);
 define ('PHP_FLOAT_MIN', 2.2250738585072E-308);
 define ('PHP_WINDOWS_VERSION_MAJOR', 10);
 define ('PHP_WINDOWS_VERSION_MINOR', 0);
-define ('PHP_WINDOWS_VERSION_BUILD', 17763);
+define ('PHP_WINDOWS_VERSION_BUILD', 18363);
 define ('PHP_WINDOWS_VERSION_PLATFORM', 2);
 define ('PHP_WINDOWS_VERSION_SP_MAJOR', 0);
 define ('PHP_WINDOWS_VERSION_SP_MINOR', 0);
@@ -1888,4 +1887,4 @@ define ('STDIN', "Resource id #1");
 define ('STDOUT', "Resource id #2");
 define ('STDERR', "Resource id #3");
 
-// End of Core v.7.4.0
+// End of Core v.7.4.2

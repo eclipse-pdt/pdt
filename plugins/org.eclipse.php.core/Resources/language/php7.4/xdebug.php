@@ -1,6 +1,6 @@
 <?php
 
-// Start of xdebug v.2.5.5
+// Start of xdebug v.2.9.1
 
 function xdebug_get_stack_depth () {}
 
@@ -37,17 +37,17 @@ function xdebug_call_file ($depth = null) {}
 function xdebug_call_line ($depth = null) {}
 
 /**
- * @param $var
+ * @param mixed $var
  */
 function xdebug_var_dump ($var) {}
 
 /**
- * @param $var
+ * @param mixed $var
  */
 function xdebug_debug_zval ($var) {}
 
 /**
- * @param $var
+ * @param mixed $var
  */
 function xdebug_debug_zval_stdout ($var) {}
 
@@ -56,6 +56,8 @@ function xdebug_enable () {}
 function xdebug_disable () {}
 
 function xdebug_is_enabled () {}
+
+function xdebug_is_debugger_active () {}
 
 function xdebug_break () {}
 
@@ -72,11 +74,17 @@ function xdebug_get_tracefile_name () {}
 function xdebug_get_profiler_filename () {}
 
 /**
- * @param mixed $prefix [optional]
+ * @param mixed $fname [optional]
  */
-function xdebug_dump_aggr_profiling_data ($prefix = null) {}
+function xdebug_start_gcstats ($fname = null) {}
 
-function xdebug_clear_aggr_profiling_data () {}
+function xdebug_stop_gcstats () {}
+
+function xdebug_get_gcstats_filename () {}
+
+function xdebug_get_gc_run_count () {}
+
+function xdebug_get_gc_total_collected_roots () {}
 
 function xdebug_memory_usage () {}
 
@@ -94,7 +102,7 @@ function xdebug_stop_error_collection () {}
 function xdebug_get_collected_errors ($clear = null) {}
 
 /**
- * @param $functions_to_monitor
+ * @param mixed $functions_to_monitor
  */
 function xdebug_start_function_monitor ($functions_to_monitor) {}
 
@@ -125,13 +133,27 @@ function xdebug_dump_superglobals () {}
 
 function xdebug_get_headers () {}
 
+/**
+ * @param mixed $filter_group
+ * @param mixed $filter_type
+ * @param mixed $array_of_filters
+ */
+function xdebug_set_filter ($filter_group, $filter_type, $array_of_filters) {}
+
+define ('XDEBUG_STACK_NO_DESC', 1);
+define ('XDEBUG_CC_UNUSED', 1);
+define ('XDEBUG_CC_DEAD_CODE', 2);
+define ('XDEBUG_CC_BRANCH_CHECK', 4);
 define ('XDEBUG_TRACE_APPEND', 1);
 define ('XDEBUG_TRACE_COMPUTERIZED', 2);
 define ('XDEBUG_TRACE_HTML', 4);
 define ('XDEBUG_TRACE_NAKED_FILENAME', 8);
-define ('XDEBUG_CC_UNUSED', 1);
-define ('XDEBUG_CC_DEAD_CODE', 2);
-define ('XDEBUG_CC_BRANCH_CHECK', 4);
-define ('XDEBUG_STACK_NO_DESC', 1);
+define ('XDEBUG_FILTER_TRACING', 256);
+define ('XDEBUG_FILTER_CODE_COVERAGE', 512);
+define ('XDEBUG_FILTER_NONE', 0);
+define ('XDEBUG_PATH_WHITELIST', 1);
+define ('XDEBUG_PATH_BLACKLIST', 2);
+define ('XDEBUG_NAMESPACE_WHITELIST', 17);
+define ('XDEBUG_NAMESPACE_BLACKLIST', 18);
 
-// End of xdebug v.2.5.5
+// End of xdebug v.2.9.1

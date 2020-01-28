@@ -1,6 +1,6 @@
 <?php
 
-// Start of SPL v.7.4.0
+// Start of SPL v.7.4.2
 
 /**
  * Exception that represents error in the program logic. This kind of
@@ -6954,8 +6954,8 @@ class SplPriorityQueue implements Iterator, Traversable, Countable {
  * The SplFixedArray class provides the main functionalities of array. The 
  * main differences between a SplFixedArray and a normal PHP array is that 
  * the SplFixedArray is of fixed length and allows only integers within 
- * the range as indexes. The advantage is that it allows a faster array
- * implementation.
+ * the range as indexes. The advantage is that it uses less memory than
+ * a standard array.
  * @link http://www.php.net/manual/en/class.splfixedarray.php
  */
 class SplFixedArray implements Iterator, Traversable, ArrayAccess, Countable {
@@ -7590,4 +7590,4 @@ function iterator_count ($iterator) {}
  */
 function iterator_apply ($iterator, callable $function, array $args = null) {}
 
-// End of SPL v.7.4.0
+// End of SPL v.7.4.2

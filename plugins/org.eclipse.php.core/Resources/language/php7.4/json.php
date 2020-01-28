@@ -1,6 +1,6 @@
 <?php
 
-// Start of json v.7.4.0
+// Start of json v.7.4.2
 
 /**
  * Objects implementing JsonSerializable
@@ -359,10 +359,10 @@ define ('JSON_ERROR_INVALID_PROPERTY_NAME', 9);
 
 /**
  * Single unpaired UTF-16 surrogate in unicode escape contained in the
- * JSON string passed to json_encode.
+ * JSON string passed to json_decode.
  * Available as of PHP 7.0.0.
  * @link http://www.php.net/manual/en/json.constants.php
  */
 define ('JSON_ERROR_UTF16', 10);
 
-// End of json v.7.4.0
+// End of json v.7.4.2

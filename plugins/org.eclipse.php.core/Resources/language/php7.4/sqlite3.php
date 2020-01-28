@@ -43,7 +43,7 @@ class SQLite3  {
 	/**
 	 * Closes the database connection
 	 * @link http://www.php.net/manual/en/sqlite3.close.php
-	 * @return bool true on success, false on failure.
+	 * @return bool true on success or false on failure
 	 */
 	public function close () {}
 
@@ -98,7 +98,7 @@ class SQLite3  {
 	 * @link http://www.php.net/manual/en/sqlite3.busytimeout.php
 	 * @param int $msecs The milliseconds to sleep. Setting this value to a value less than
 	 * or equal to zero, will turn off an already set timeout handler.
-	 * @return bool true on success, false on failure.
+	 * @return bool true on success, or false on failure.
 	 */
 	public function busyTimeout (int $msecs) {}
 
@@ -278,8 +278,7 @@ class SQLite3  {
 	 * @param int $argument_count [optional] The number of arguments that the SQL aggregate takes. If
 	 * this parameter is negative, then the SQL aggregate may take
 	 * any number of arguments.
-	 * @return bool true upon successful creation of the aggregate, false on
-	 * failure.
+	 * @return bool true upon successful creation of the aggregate, or false on failure.
 	 */
 	public function createAggregate (string $name, $step_callback, $final_callback, int $argument_count = null) {}
 
@@ -367,7 +366,7 @@ class SQLite3Stmt  {
 	/**
 	 * Resets the prepared statement
 	 * @link http://www.php.net/manual/en/sqlite3stmt.reset.php
-	 * @return bool true if the statement is successfully reset, false on failure.
+	 * @return bool true if the statement is successfully reset, or false on failure.
 	 */
 	public function reset () {}
 
@@ -500,8 +499,7 @@ class SQLite3Stmt  {
 	 * SQLITE3_NULL, regardless of the given
 	 * type.
 	 * </p>
-	 * @return bool true if the value is bound to the statement variable, false
-	 * on failure.
+	 * @return bool true if the value is bound to the statement variable, or false on failure.
 	 */
 	public function bindValue ($sql_param, $value, int $type = null) {}
 

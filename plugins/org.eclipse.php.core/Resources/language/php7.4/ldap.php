@@ -43,10 +43,9 @@ function ldap_close ($link_identifier) {}
  * @param resource $link_identifier An LDAP link identifier, returned by ldap_connect.
  * @param string $bind_rdn [optional] 
  * @param string $bind_password [optional] 
- * @param array $serverctrls [optional] Array of LDAP Controls to send with the request.
  * @return bool true on success or false on failure
  */
-function ldap_bind ($link_identifier, string $bind_rdn = null, string $bind_password = null, array $serverctrls = null) {}
+function ldap_bind ($link_identifier, string $bind_rdn = null, string $bind_password = null) {}
 
 /**
  * Bind to LDAP directory
